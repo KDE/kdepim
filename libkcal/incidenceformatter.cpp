@@ -3374,8 +3374,6 @@ static QDateTime pureISOToLocalQDateTime( const QString& dtStr,
 
 QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
 {
-  bool bOk = false;
-
   KTNEFParser parser;
   QBuffer buf( tnef );
   CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
@@ -3577,7 +3575,6 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
           event->addAlarm( alarm );
         }
         cal.addEvent( event );
-        bOk = true;
         // we finished composing a vCal
       } else if( bCompatClassNote || "IPM.CONTACT" == msgClass ) {
         addressee.setUid( stringProp( tnefMsg, attMSGID ) );
@@ -3666,7 +3663,6 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         if( !s.isEmpty() )
           addressee.setBirthday( QDateTime::fromString( s ) );
 
-        bOk = ( !addressee.isEmpty() );
       } else if( "IPM.NOTE" == msgClass ) {
 
       } // else if ... and so on ...
