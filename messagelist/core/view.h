@@ -49,6 +49,7 @@ class Aggregation;
 class Delegate;
 class Item;
 class MessageItem;
+class GroupHeaderItem;
 class Model;
 class Theme;
 class SortOrder;
@@ -596,6 +597,18 @@ public slots:
    * Expands all the group headers (if present in the current Aggregation)
    */
   void slotExpandAllGroups();
+
+  /**
+   * Expands the currect item.
+   * If it's a Message, it expands its thread, if its a group header it expands the group
+   */
+  void slotExpandCurrentItem();
+
+  /**
+   * Collapses the currect item.
+   * If it's a Message, it collapses its thread, if its a group header it collapses the group
+   */
+  void slotCollapseCurrentItem();
 
 protected slots:
 

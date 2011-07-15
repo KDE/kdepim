@@ -2625,6 +2625,16 @@ void View::slotExpandAllGroups()
   setAllGroupsExpanded( true );
 }
 
+void View::slotCollapseCurrentItem()
+{
+  setCurrentThreadExpanded( false );
+}
+
+void View::slotExpandCurrentItem()
+{
+  setCurrentThreadExpanded( true );
+}
+
 void View::focusQuickSearch()
 {
   d->mWidget->focusQuickSearch();
