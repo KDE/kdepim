@@ -1,4 +1,15 @@
 
+Friday 15 July 2011
+
+Problems addressed
+------------------
+
+* kolab/issue3075: Extra slash ('/') in freebusy trigger for calender folders in "user" namespace
+* kolab/issue3076: Failed pfb triggers should be dealt with
+* kolab/issue4761: Invitation update message tells about 'attendee removed' instead of 'event canceled' (rt#10013)
+
+
+
 Monday 27 June 2011
 
 Problems addressed
