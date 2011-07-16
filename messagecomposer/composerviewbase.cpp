@@ -339,15 +339,15 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
       }
     }
     QStringList unExpandedTo, unExpandedCc, unExpandedBcc;
-    foreach( QString exp, resolveJob->expandedTo() ) {
+    foreach( const QString &exp, resolveJob->expandedTo() ) {
       if( !mExpandedTo.contains( exp ) ) // this address was expanded, so save it explicitly
         unExpandedTo << exp;
     }
-    foreach( QString exp, resolveJob->expandedCc() ) {
+    foreach( const QString& exp, resolveJob->expandedCc() ) {
         if( !mExpandedCc.contains( exp ) )
         unExpandedCc << exp;
     }
-    foreach( QString exp, resolveJob->expandedBcc() ) {
+    foreach( const QString& exp, resolveJob->expandedBcc() ) {
       if( !mExpandedBcc.contains( exp ) ) // this address was expanded, so save it explicitly
         unExpandedBcc << exp;
     }
