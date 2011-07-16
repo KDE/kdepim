@@ -605,7 +605,8 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-Link-Message" );
   if( m_msg->headerByType( "X-KMail-Link-Type" ) )
     extras << m_msg->headerByType( "X-KMail-Link-Type" );
-
+  if( m_msg->headerByType( "X-Face" ) )
+    extras << m_msg->headerByType( "X-Face" );
   infoPart->setExtraHeaders( extras );
 }
 
