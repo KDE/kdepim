@@ -286,7 +286,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
 {
   mRoot->setContent( mOrigMsg->encodedContent() );
   mRoot->parse();
-
+//verify if this is OK
   MessageViewer::EmptySource emptySource;
   mOtp = new MessageViewer::ObjectTreeParser( &emptySource );
   mOtp->setAllowAsync( false );
@@ -380,7 +380,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
           QString plainStr = pipe( pipe_cmd, plainMessageText( shouldStripSignature(), NoSelectionAllowed ) );
-          QString plainQuote = quotedPlainText( mQuoteString, plainStr );
+          QString plainQuote = quotedPlainText( plainStr );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
@@ -395,7 +395,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: QUOTE";
         i += strlen( "QUOTE" );
         if ( mOrigMsg ) {
-          QString plainQuote = quotedPlainText( mQuoteString, plainMessageText( shouldStripSignature(), SelectionAllowed ) );
+          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
@@ -409,7 +409,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: QHEADERS";
         i += strlen( "QHEADERS" );
         if ( mOrigMsg ) {
-          QString plainQuote = quotedPlainText( mQuoteString, MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
+          QString plainQuote = quotedPlainText( MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
           if ( plainQuote.endsWith( '\n' ) ) {
                plainQuote.chop( 1 );
           }
@@ -1399,40 +1399,33 @@ QString TemplateParser::htmlMessageText( bool aStripSignature,
   return htmlElement;
 }
 
-QString TemplateParser::quotedPlainText( const QString& aIndentStr, const QString& selection /*.clear() */) const
-{
-  QString polishedContent = clearBlankLines( selection );
-
-  const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr, mOrigMsg->from()->asUnicodeString() );
-#ifndef Q_OS_WINCE
-  if ( GlobalSettings::self()->smartQuote() && mWrap) {
-    polishedContent = MessageCore::StringUtil::smartQuote( polishedContent, mColWrap - indentStr.length() );
-  }
-#endif
-  polishedContent.replace( '\n', '\n' + indentStr );
-  polishedContent.prepend( indentStr );
-  polishedContent += '\n';
-
-  return polishedContent;
-}
-
-QString TemplateParser::quotedHtmlText( const QString& selection /*.clear() */) const
-{
-  QString polishedContent = clearBlankLines( selection );
-//FIXME implement vertical bar for quoted HTML mail
-  return polishedContent;
-}
-
-QString TemplateParser::clearBlankLines( const QString& selection ) const
+QString TemplateParser::quotedPlainText( const QString& selection /*.clear() */) const
 {
   QString content = selection;
-
   // Remove blank lines at the beginning:
   const int firstNonWS = content.indexOf( QRegExp( "\\S" ) );
   const int lineStart = content.lastIndexOf( '\n', firstNonWS );
   if ( lineStart >= 0 )
     content.remove( 0, static_cast<unsigned int>( lineStart ) );
 
+  const QString indentStr = MessageCore::StringUtil::formatString( mQuoteString, mOrigMsg->from()->asUnicodeString() );
+#ifndef Q_OS_WINCE
+  if ( GlobalSettings::self()->smartQuote() && mWrap) {
+    content = MessageCore::StringUtil::smartQuote( content, mColWrap - indentStr.length() );
+  }
+#endif
+  content.replace( '\n', '\n' + indentStr );
+  content.prepend( indentStr );
+  content += '\n';
+
+  return content;
+}
+
+QString TemplateParser::quotedHtmlText( const QString& selection /*.clear() */) const
+{
+  QString content = selection;
+//TODO look for all the variations of <br>  and remove the blank lines
+//TODO implement vertical bar for quoted HTML mail
   return content;
 }
 

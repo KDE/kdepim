@@ -209,8 +209,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       * smart quoting is turned on. Signed or encrypted texts
       * get converted to plain text when allowDecryption is true.
     */
-    QString quotedPlainText( const QString &indentStr,
-                             const QString & election=QString() ) const;
+    QString quotedPlainText( const QString & election=QString() ) const;
 
     /**
       * Returns HTML message body.
@@ -266,11 +265,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * mime type, charset and CTE of its respective text/plain part and text/html part.
      */
     KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
-
-    /**
-     * Remove any blank lines from the selection
-     */
-    QString clearBlankLines( const QString& selection  ) const;
 
 };
 
