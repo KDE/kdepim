@@ -101,8 +101,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2010-08-24</date>
-<releaseinfo>&kde; 4.5</releaseinfo>
+<date>2011-06-24</date>
+<releaseinfo>&kde; 4.7</releaseinfo>
 
 <abstract><para>&korganizer; is an easy to use personal information manager
 (<acronym>PIM</acronym>).  You can write journal entries, schedule appointments,
@@ -125,7 +125,7 @@ help you keep your schedule. </para></abstract>
 
 </bookinfo>
 
-<chapter id="introduction"> <!-- updated to 4.5-->
+<chapter id="introduction"> <!-- updated to 4.6/7-->
 <title>Introduction</title>
 
 <para>&korganizer; is an intuitive and easy to use personal information manager
@@ -180,7 +180,7 @@ linkend="managing-data">the documentation</link>!</para>
 
 </chapter>
 
-<chapter id="five-minute-course"> <!-- updated to 4.5-->
+<chapter id="five-minute-course"> <!-- updated to 4.6/7-->
 <title>Five-minute Fly-over Course of &korganizer;</title>
 <subtitle> (for the experienced and for the impatient)</subtitle>
 
@@ -220,7 +220,7 @@ this area, or just start typing the title of the event to open the
 <guilabel>New Event</guilabel> dialog.</para></step>
 
 <step><para><link linkend="entering-data-events">Enter event details</link>. 
-Use tabs <guilabel>General</guilabel>,and <guilabel>Attendees</guilabel> to move
+Use the five tabs at the bottom of the window to move
 around the dialog and access all the event's characteristics.</para></step>
 
 <step><para>Press <guibutton>OK</guibutton> to save the
@@ -233,13 +233,12 @@ event.</para></step>
 
 <procedure>
 <step><para>Select the <xref linkend="menu-actions-new-todo"/>
-<!--menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>New To-do...</guimenuitem></menuchoice--> menu item to open the
+menu item to open the
 <guilabel>New To-do</guilabel> dialog.</para></step>
 
 <step><para><link linkend="entering-data-to-do">Enter the to-do details</link>.
-Use tabs <guilabel>General</guilabel> and
-<guilabel>Attendees</guilabel> to move around the dialog.</para></step>
+Use the five tabs at the bottom of the window to move
+around the dialog and access all the event's characteristics.</para></step>
 
 <step><para>Press <guibutton>OK</guibutton> to save the
 to-do.</para></step>
@@ -349,7 +348,7 @@ should at least skip through the <link linkend="faq">&FAQ;</link>.</para>
 
 </chapter>
 
-<chapter id="managing-data"> <!-- updated to 4.5 except available resources-->
+<chapter id="managing-data"> <!-- updated to 4.6/7 except managing-resources-->
 <title>Importing, Exporting, and Managing Calendars</title>
 
 <para>&korganizer; can store (and retrieve) events, journals entries
@@ -429,7 +428,7 @@ groupware server to use it!</para></note>
 </para>
 <para>Alternatively open the context menu in the
 <guilabel>Calendar Manager</guilabel> sidebar with a &RMB; click 
-and select <guilabel>New Calendar...</guilabel></para></step>
+and select <guilabel>Add Calendar...</guilabel></para></step>
 <step><para>If the <guilabel>Calendar Manager</guilabel> is not displayed on the sidebar,
 choose the <menuchoice><guimenu>Settings</guimenu><guisubmenu>Sidebar</guisubmenu>
 <guimenuitem>Show Calendar Manager</guimenuitem></menuchoice> menu item to
@@ -443,58 +442,112 @@ disable it.</para></step>
 
 <step><para>Later, if you want to edit or delete a resource, select it on the
 <guilabel>Calendar Manager</guilabel> sidebar and press <guibutton>Delete Calendar</guibutton> to delete it or
-<guibutton>Edit...</guibutton> to modify it.</para></step>
+<guibutton>Calendar Properties ...</guibutton> to modify it.</para></step>
 
 </procedure>
+<para>Among the existing resources, you can find in &korganizer;:</para>
 
+<variablelist>
+<!--this is in korganizer 4.6, relation to KDE Resources and Akonadi Resources in systemsettings?
+  KDE Resources in 4.7.0 no longer kcmodul/in systemsettings?-->
+
+<varlistentry>
+<term><guilabel>Birthdays &amp; Anniversaries</guilabel></term>
+<listitem><para>Provides access to birthday and anniversary dates of contacts in your address book as calendar events.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>DAV groupware resource</guilabel></term>
+<listitem><para>Resource to manage DAV calendars and address books (CalDAV, GroupDAV).</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>ICal Calendar File</guilabel></term>
+<listitem><para>Loads data from an iCal file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>KDE Address Book (traditional)</guilabel></term>
+<listitem><para>Loads data from a traditional KDE address book resource.</para></listitem>
+</varlistentry>
+<!-- Knut An agent for debugging purpose -->
+<varlistentry>
+<term><guilabel>Kolab Groupware Server</guilabel></term>
+<listitem><para>Provides access to Kolab groupware folders on an IMAP server (IMAP accounts need to be set up separately).</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Open-Xchange Groupware Server</guilabel></term>
+<listitem><para>Provides access to the appointments, tasks, and contacts of an Open-Xchange groupware server.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<!-- KDE Resources no longer in 4.7 ???-->
 <para>Alternatively, you can configure the &korganizer; resources (plus all
 other &kde; resources), in the &systemsettings;, using the <guilabel>&kde;
 Resources</guilabel> configuration module.</para>
 
-<para>Among the existing resources, you can find:</para>
-
 <variablelist>
-<!--this is in korganizer 4.5 
-KDE Resources in systemsettings has a lot more entries, relation to Akonadi Resources in systemsettings?
-
+<!--
+Akonadi Ressources Configuration 4.6
+AkoNotes
 Birthdays &amp; Anniversaries 
-Provides access to birthday and anniversary dates of contacts in your address book as calendar events
-
+Calendar Search Agent (disabled)
 DAV groupware resource
-Resource to manage DAV calendars and address books (CalDAV, GroupDAV)
-
+Dummy MailTransport Resource
 ICal Calendar File
-Loads data from an iCal file
-
+IMAP E-Mail Server
+Invitations Dispatcher Agent
+KDE Accounts
 KDE Address Book (traditional)
-Loads data from a traditional KDE address book resource
-
+KDE Calendar (traditional)
+KMail Maildir
 Knut
-An agent for debugging purpose
-
 Kolab Groupware Server
-Provides access to Kolab groupware folders on an IMAP server (IMAP accounts need to be set up separately).
-
+Local Bookmarks
+Mail Dispatcher Agent (disabled)
+Maildir
+Mbox
+Microblog (Twitter and Identi.ca)
+Nepomuk Calendar Feeder
+Nepomuk Contact Feeder
+Nepomuk EMail Feeder
+Nepomuk Tags (Virtual Folders)
+Notes
 Open-Xchange Groupware Server
-Provides access to the appointments, tasks, and contacts of an Open-Xchange groupware server.
+POP3
+Personal Contacs
+Usenet Usegroups (NNTP)
+VCard Directory
+VCard File
+
+KDE Resources 4.7
+Calendar:
+Akonadi, Journal in a blog, Bugzilla To-do List, Calendar in Local File, Novell GroupWise Server, 
+Calendar in Local Directory, Calendar in remote File
+Notes: Notes in Local Files
+Contacts:
+Akonadi Address Book, Folder, File, Novell GroupWise Server, LDAP, Network
+Alarms:
+Alarms in Local File, Alarms in Local Directory, Alarms in Remote File
 -->
 
-
-<!--the following is outdated and has to be updated to 4.5-->
+<!--the following is outdated and has to be updated to 4.6/7-->
 
 <varlistentry>
 <term><guilabel>Akonadi</guilabel></term>
 <listitem><para>Provides access to calendars stored in Akonadi calendar 
 folders.</para></listitem>
 </varlistentry>
-
+<!-- not in 4.7?
 <varlistentry>
 <term><guilabel>Birthdays from &kaddressbook;</guilabel></term>
 <listitem><para>Add this resource to view birthdays from contacts in &kaddressbook;
 in your calendar. The birthday appears in your calendar as a read only event and
 without associated time.</para></listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term><guilabel>Journal in a blog</guilabel></term>
 <listitem><para>Add this resource to be able to read your blogs as journal entries,
@@ -509,11 +562,12 @@ information. Bugzilla is an open source bug tracking system.</para>
 
 <para>If you are a developer working on a project that uses bugzilla, you can
 use this resource to view as to-dos the open bugs of the applications or
-libraries you are interested in (they are called <quote>products</quote> and / or <quote>components</quote> in bugzilla). This resource is available as part of
+libraries you are interested in (they are called <quote>products</quote> and / 
+or <quote>components</quote> in bugzilla). This resource is available as part of
 the &kde; Software Development kit.
 </para></listitem>
 </varlistentry>
-
+<!-- not in 4.7?
 <varlistentry>
 <term><guilabel>&XML; Feature Plan</guilabel></term>
 <listitem><para>Add this resource to load a &XML; Feature Plan as to-dos.
@@ -524,7 +578,7 @@ needs, but can be helpful for any software project. The information from the
 features of new release or the status of the new features of a future release.
 </para></listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term><guilabel>Calendar in Local File</guilabel></term>
 <listitem><para>Add this resource to be able to save (and load) your events,
@@ -545,7 +599,7 @@ user name and your password. The GroupDav protocol supports the storage of
 contacts, so you may want to add and configure the &kaddressbook;
 resource too.</para>
 <para>As of June 2005, the groupware servers that implement this protocol
-are the <ulink url="http://www.opengropware.org">OpenGroupware server</ulink>
+are the <ulink url="http://www.opengroupware.org">OpenGroupware server</ulink>
 and the <ulink url="http://www.citadel.org">Citadel server</ulink>. An up to
 date list can be obtained at the
 <ulink url="http://www.groupdav.org">GroupDav website</ulink>.
@@ -572,7 +626,7 @@ The wizard will configure not only &korganizer; to use the
 GroupWise resources, but &kmail;, &kaddressbook; too.</para>
 </listitem>
 </varlistentry>
-
+<!-- no Groupware tab in kmail anymore, is this outdated? -->
 <varlistentry>
 <term><guilabel>Calendar on IMAP Server via &kmail;</guilabel></term>
 <listitem><para>
@@ -596,7 +650,7 @@ the <menuchoice><guimenu>Settings</guimenu>
 Click the <guilabel>Accounts</guilabel> icon in the configure dialog sidebar
 and add the IMAP server as a disconnected IMAP incoming account. Now click the
 <guilabel>Misc</guilabel> icon in the sidebar and click the
-<guilabel>Groupware tab</guilabel> to enable and configure the IMAP resource
+<guilabel>Groupware</guilabel> tab to enable and configure the IMAP resource
 folder options. Only then you can add the &korganizer; (and &kaddressbook;)
 resources. For more information on configuring &kmail;, consult the &kmail;
 handbook.</para>
@@ -635,7 +689,7 @@ when saving or loading, just one single calendar item. Also, in case of file
 corruption, you will lose only one calendar item, not the whole calendar.</para>
 </listitem>
 </varlistentry>
-
+<!-- obsolete? no program exchangewizard in debian! 
 <varlistentry>
 <term><guilabel>Calendar on Exchange Server (Experimental)</guilabel></term>
 <listitem><para>
@@ -646,7 +700,6 @@ events FIXME:,journals, free/busy information and to-dos? to the server. To add 
 need to know the server &URL;, FIXME:port? your user name and your password. There
 is support for (read only) contacts, so you may want to configure &kaddressbook;
 resource.</para>
-<!--FIXME: does the wizard work?-->
 <para>The most practical way to configure the access to a Exchange server is
 to use the <application>exchangewizard</application> wizard. You can start it
 from the command line prompt:
@@ -657,7 +710,7 @@ The wizard will configure not only &korganizer; to use the
 Exchange resources, but &kmail;, &kaddressbook; too.</para>
 </listitem>
 </varlistentry>
-
+-->
 
 <varlistentry>
 <term><guilabel>Calendar in Remote File</guilabel></term>
@@ -725,14 +778,14 @@ the file, his changes will be lost.
 
 </listitem>
 </varlistentry>
-
+<!-- obsolete? no <application>sloxwizard</application>in kdepim > 4.4 
 <varlistentry>
 <term><guilabel>SUSE &Linux; OpenExchange Server</guilabel></term>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.novell.com/coolsolutions/openexchange/">SUSE &Linux; OpenExchange
 Server</ulink>, version 4.1, add this resource in order to be able to save
-(and load) events, free/busy information <!--,journals ?-->and to-dos to the server. To add the
+(and load) events, free/busy information and to-dos to the server. To add the
 resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
 &kaddressbook; resource.</para>
@@ -746,16 +799,15 @@ The wizard will configure not only &korganizer; to use the
 OpenExchange resources, but &kmail;, &kaddressbook; too.</para>
 </listitem>
 </varlistentry>
-
+-->
+  <!-- obsolete? no <application>egroupwarewizard</application>in kdepim >4.4
 <varlistentry>
-
-<!--FIXME: are there other XML-RPC servers?-->
 <term><guilabel>eGroupware Server (via &XML;-RPC)</guilabel></term>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.egroupware.org">eGroupware
 Server</ulink>, version 1.0, add this resource in order to be able to save
-(and load) events, free/busy information <!--,journals ?-->and to-dos to the server. To add the
+(and load) events, free/busy information and to-dos to the server. To add the
 resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
 &kaddressbook; resource.</para>
@@ -769,12 +821,12 @@ The wizard will configure not only &korganizer; to use the
 eGroupware resources, but &kmail;, &kaddressbook; too.</para>
 </listitem>
 </varlistentry>
-
+-->
 </variablelist>
 
 </sect1>
 
-<sect1 id="managing-import-export">
+<sect1 id="managing-import-export">  <!-- updated to 4.7-->
 <title>Importing, Exporting and Maintaining Calendars</title>
 
 <para>While local files are just one among many other resources that can be used
@@ -805,7 +857,7 @@ older calendar program for &UNIX;, you may wish to <action>import your events,
 journal entries, and to-dos</action> directly to &korganizer;. To do so, choose the
 <menuchoice><guimenu>File</guimenu><guisubmenu>Import</guisubmenu>
 <guimenuitem>Import From &UNIX; Ical Tool</guimenuitem></menuchoice>.
-This action will read the <filename>.calendar</filename> file from your home
+This action will read the <filename class="extension">.calendar</filename> file from your home
 folder and merge any entries it contains into your current calendar.
 If any errors or suspicious things occur during the process, you will be
 notified via a message box.</para>
@@ -869,10 +921,9 @@ to-do list</guilabel> box.</para></step>
 <step><para>If you want to export events formatted as a list of events, check the
 <guilabel>Export events as list</guilabel> box.</para></step>
 <step><para>Specify the web output file in the <guilabel>Output filename</guilabel>
-field. If set another location, press the <guibutton>Open file dialog</guibutton> 
-<inlinemediaobject>
+field. If set another location, press the <inlinemediaobject>
 <imageobject><imagedata fileref="document-open.png" format="PNG"/></imageobject>
-</inlinemediaobject>button to find it.</para></step>
+</inlinemediaobject><guibutton>Open file dialog</guibutton> button to find it.</para></step>
 </substeps></step>
 <step><para><guilabel>Events</guilabel> tab: specify if you want to include
 categories and attendees in the exported web page.</para></step>
@@ -918,7 +969,7 @@ do not wish to view in the to-do lists, consider
 
 </sect1>
 <!-- only import ??-->
-<sect1 id="managing-get-hot-new-stuff">
+<sect1 id="managing-get-hot-new-stuff">  <!-- updated to 4.7-->
 <title>Downloading Using Get Hot New Stuff</title>
 
 <!--para>If you have a calendar containing events of public interest, such as
@@ -950,7 +1001,7 @@ choose the <menuchoice><guimenu>File</guimenu><guisubmenu>Export</guisubmenu>
 
 </chapter>
 
-<chapter id="chapter-views-and-filters"><!-- updated to 4.5-->
+<chapter id="chapter-views-and-filters"><!-- updated to 4.6/7-->
 
 <title>Views and Filters</title>
 
@@ -1069,7 +1120,11 @@ menu item.</para>
 
 <para>The agenda view presents your events or due to-dos for one or more days,
 sorted chronologically. You can also see the length of each event in the day
-timetable. The <guilabel>Day</guilabel>, <guilabel>Work Week</guilabel> and
+timetable. To enable the agenda views choose the <menuchoice><guimenu>View</guimenu>
+<guimenuitem>Agenda</guimenuitem></menuchoice> menu item or press the
+<inlinemediaobject><imageobject><imagedata fileref="view-calendar-agenda.png"
+format="PNG"/></imageobject></inlinemediaobject>toolbar button.</para>
+<para>The <guilabel>Day</guilabel>, <guilabel>Work Week</guilabel> and
 <guilabel>Week</guilabel> views are variations of the agenda view.
 In fact, you can set the days shown in the agenda view at any time by selecting
 them in the date navigator.</para>
@@ -1143,7 +1198,7 @@ can be <link linkend="config-main-views">customized in the preferences dialog</l
 a single day.</para>
 
 <para>Switch the display to the day view by choosing the
-<menuchoice><guimenu>View</guimenu>
+<menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Day</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-day.png"
  format="PNG"/></imageobject></inlinemediaobject><guilabel>Day</guilabel> button
@@ -1304,7 +1359,6 @@ available drag-and-drop operations.</para>
 
 <sect2 id="journal-view">
 <title>Journal View</title>
-<!-- to check crashes allways-->
 <para>The journal view provides a place for you to record your reflections,
 occurrences or experiences. You can display the journal view in the main
 panel if you press the <inlinemediaobject><imageobject>
@@ -1335,12 +1389,10 @@ later when searching, filtering, and displaying events and to-dos.</para>
 
 <para>To assign categories when editing or creating new
 <link linkend="entering-data-events-general">events</link> or
-<link linkend="entering-data-to-do-general">to-dos</link>, press the
-<guilabel>Select</guilabel> button at the right of the <guilabel>Categories</guilabel> 
-field in the <guilabel>General</guilabel> tab to open the
-<guilabel>Select Categories</guilabel> dialog. You can assign more than
+<link linkend="entering-data-to-do-general">to-dos</link>, select a category
+from the drop down box labelled <guilabel>Categories</guilabel> 
+in the <guilabel>General</guilabel> tab. You can assign more than
 one category for each item.</para>
-<!--journal has a Select Categories... button -->
 
 <para>To create, delete and edit categories, choose the <menuchoice>
 <guimenu>Settings</guimenu><guimenuitem>Manage Categories...</guimenuitem>
@@ -1421,7 +1473,7 @@ or edit the event or to-do details. Get more information about these details in
 
 </chapter>
 
-<chapter id="entering-data"> <!--has to be updated to 4.5, changes in 4.6 ?-->
+<chapter id="entering-data">  <!--updated to 4.7-->
 
 <title>Entering Data</title>
 
@@ -1435,8 +1487,7 @@ holidays.</para>
 <para>Entering a new event is very easy. Just choose the
 <menuchoice><guimenu>Actions</guimenu><guimenuitem>New
 Event...</guimenuitem></menuchoice> menu item. A window with
-<guilabel>General</guilabel> and
-<guilabel>Attachments</guilabel> tabs will appear.</para>
+five tabs at the bottom will appear.</para>
 
 <para>If you wish you can use a different way to create a new event:</para>
 
@@ -1455,14 +1506,18 @@ to-dos, described below.</para></step>
 <step><para>In the main panel, double click the time and date when your
 event starts. </para></step>
 
-<step><para>A dialog with
-<guilabel>General</guilabel> and
-<guilabel>Attachments</guilabel> tabs appears.
+<step><para>A dialog with five tabs at the bottom of the window appears.
 Enter your data as described below.</para></step>
 </procedure>
 
-<sect2 id="entering-data-events-general">
-<title>General Tab</title>
+<screenshot id="screenshot-event-general">
+<screeninfo>A screenshot of &korganizer;'s Edit Event dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="event-general.png" format="PNG"/></imageobject>
+<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit Event dialog</para></caption>
+</mediaobject>
+</screenshot>
 
 <para>This is a thorough description of the individual event window fields and
 widgets. Not all fields have to be filled in; some can be left empty. Read the
@@ -1470,15 +1525,6 @@ widgets. Not all fields have to be filled in; some can be left empty. Read the
 for detailed information. And if you prefer to learn by example, there's one
 in the <link linkend="examples-entering-event">Entering event</link> section.
 </para>
-
-<screenshot id="screenshot-event-general">
-<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - General tab</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="event-general.png" format="PNG"/></imageobject>
-<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - General tab</phrase></textobject>
-<caption><para>A screenshot of &korganizer;'s Edit Event dialog - General tab</para></caption>
-</mediaobject>
-</screenshot>
 
 <variablelist>
 <varlistentry>
@@ -1495,23 +1541,7 @@ where the event will take place.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Categories</guilabel></term>
-<listitem><para>You can assign several
-<link linkend="categories-view">categories</link> to a calendar item. Click the
-<guilabel>Select</guilabel> button to open the
-<guilabel>Select Categories</guilabel> dialog. Check the category boxes to
-assign suitable categories to the event. You can also add a new category, modify
-a category or delete a category by pressing the button
-<guilabel>Edit Category</guilabel>.</para>
-
-<tip><para>Your language lesson at work may belong to both Business
-and Education categories, while the anniversary of your marriage belongs to
-either Personal or Special Occasion - it is your choice.</para></tip>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Date &amp; Time</guilabel></term>
+<term><guilabel>Start</guilabel> and <guilabel>End</guilabel></term>
 <listitem><para>The &korganizer; suggested Start and End dates of your event.
  Events are
 expected to start and end on the same date. Change these dates as desired. Enter
@@ -1519,10 +1549,44 @@ the dates directly or use the <link linkend="glossary"
  endterm="gloss-calendar-widget">
 Calendar Widget</link>.  Select the time from quarter hour intervals, or enter
 the desired time directly into the time fields. These fields are only available
-when the <guilabel>Time associated</guilabel> box is checked.</para></listitem>
+when the <guilabel>Takes the whole day</guilabel> box is not checked.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<sect2 id="entering-data-events-general">
+<title>General Tab</title>
+
+<variablelist>
+<varlistentry>
+<term>Details:</term>
+<listitem><para>Enter a long description of the event in the large, untitled
+rectangle. You can write as many details as you wish here. For example, If the
+event is, say, planned general repair of your car, you can list all items that
+need repairing. Later on you can print this list and hand it over to the
+serviceman. If the event is shopping, you should list the goods that you
+need to buy. Print the event and take it to the shop with
+you.</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Categories</guilabel></term>
+<listitem><para>You can assign several
+<link linkend="categories-view">categories</link> to a calendar item. Click the
+drop down box to open the
+<guilabel>Select Categories</guilabel> dialog. Check the category boxes to
+assign suitable categories to the event.</para> 
+<para>You can also add a new category, modify a category or delete a category in the 
+<guilabel>Edit Categories</guilabel> dialog. Open this dialog with <menuchoice>
+<guimenu>Settings</guimenu> <guimenuitem>Manage Categories</guimenuitem></menuchoice>.</para>
+
+<tip><para>Your language lesson at work may belong to both Business
+and Education categories, while the anniversary of your marriage belongs to
+either Personal or Special Occasion - it is your choice.</para></tip>
+</listitem>
+</varlistentry>
+
+<!--varlistentry not in 4.6.0 lueck>
 <term><guilabel>Time associated</guilabel></term>
 <listitem><para>Uncheck the <guilabel>Time associated</guilabel> box if your
 event is not scheduled on an exact time.</para>
@@ -1530,12 +1594,11 @@ event is not scheduled on an exact time.</para>
 <tip><para>Most events are scheduled to an exact time. If your event does not
 need specific time, perhaps it should be created as a <link
 linkend="entering-data-to-do">to-do</link></para></tip></listitem>
-</varlistentry>
+</varlistentry-->
 
-<!--TODO: check if the following is still true-->
 <varlistentry>
 <term><guilabel>Access:</guilabel></term>
-<listitem><para>Choose <guilabel>Private</guilabel> or <guilabel>Confidential</guilabel>
+<listitem><para>Choose <guilabel>Public</guilabel>, <guilabel>Private</guilabel> or <guilabel>Confidential</guilabel>
 to keep the event private or confidential. Currently, this choice correctly
 sets the <quote>CLASS</quote> attribute of the events to
 <quote>PUBLIC</quote>, <quote>PRIVATE</quote> or <quote>CONFIDENTIAL</quote>.
@@ -1550,85 +1613,135 @@ keep items really confidential, make sure you use a resource that
 only you can access.</para></warning></listitem>
 </varlistentry>
 
-<varlistentry>
+</variablelist>
+<!-- not in 4.6.0 lueck varlistentry>
 <term><guilabel>Show Time As:</guilabel></term>
 <listitem><para>The duration of the event may be shown as Busy or Free in your
 schedule. Choose it from the <guilabel>Show Time As</guilabel>
 drop down box.</para></listitem>
+</varlistentry-->
+
+</sect2>
+
+<sect2 id="entering-data-events-attendees">
+<title>Attendees Tab</title>
+
+<para>Choose in this tab the people you want to invite to your event.</para>
+
+<screenshot id="screenshot-event-attendees">
+<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="event-attendees.png" format="PNG"/></imageobject>
+<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Meeting Organizer:</guilabel></term>
+<listitem><para>Sets the identity corresponding to the organizer of this to-do
+or event. If &korganizer; is configured to send invitation mails, the identity
+selected on this combo box will be used when sending these mails. The default
+identity can be set in the <guilabel>Personal</guilabel> section of the
+&korganizer; configuration, other identities in the <guilabel>Account Details</guilabel>-&gt;
+<guilabel>Password &amp; User Account</guilabel> module 
+of the &systemsettings;. In addition, identities are gathered from your &kmail;
+settings and from your address book. If you choose to set it globally for &kde;
+in the &systemsettings;, be sure to check the <guilabel>Use email settings from
+System Settings</guilabel> box in the <guilabel>Personal</guilabel> section of
+the &korganizer; configuration.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Reminder</guilabel></term>
-<listitem><para>Check the <guilabel>Reminder</guilabel> box if
-&korganizer; should remind you about an event.</para>
-<!--
-<tip><para>&korganizer; can also run a specific program at that time.
-Make sure, however, that you have sufficient rights to run that
-program; if you do not, the program will not run.</para></tip>-->
-<para>Choose how many minutes, hours or days before the event you want to be
-reminded, or click the <guibutton>Advanced</guibutton> button to open the
-<guilabel>Edit Reminders</guilabel> dialog. Using this dialog, you can set
-repeating intervals for your reminders, and create special reminders that play
-sounds or run programs.</para>
-
-<!--Click the musical <guiicon>Note</guiicon> symbol to choose the
-alarm sound. Click the <guiicon>Gear</guiicon> icon to browse for a
-program that should run at the alarm time.</para>--></listitem>
+<term>Attendee list</term>
+<listitem><para>The list in the center of the tab displays the attendees
+selected for this event, and lets you add attendees by entering the name and mail address, 
+edit or remove them.</para>
+<para>If the attendee(s) are in your Address Book, you do not have to
+remember or type his email address to add it to the attendee list. Just click
+the <guibutton>Select Addressee...</guibutton>  button and choose the attendee(s)
+from the list. Please note that this is the standard &kde; address book, which
+is also used by &kmail; and can also be called as a separate application
+(&kaddressbook;).</para>
+</listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Details:</term>
-<listitem><para>Enter a long description of the event in the large, untitled
-rectangle. You can write as many details as you wish here. For example, If the
-event is, say, planned general repair of your car, you can list all items that
-need repairing. Later on you can print this list and hand it over to the
-serviceman. If the event is shopping, you should list the goods that you
-need to buy. Print the event and take it to the shop with
-you.</para></listitem>
+<term>Participiants</term>
+<listitem><para>Choose the role of the attendee (Participant,
+Optional Participant, Observer, Chair) from the drop down menu at the left side of an entry. 
+The role is a simple reminder of what part the attendee plays in this event.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Status</term>
+<listitem><para>Choose the status of the attendee (Needs Action, Accepted,
+Declined, Tentative, Delegated) from the drop down menu at the right side of an entry. 
+If you use groupware schedule and request responses from your
+attendees, as you receive the responses the status of the attendee will be
+updated. If you do not request responses, you will have to update the status
+manually.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Request Response</term>
+<listitem><para>Select <guilabel>Request Response</guilabel> from the drop down box if
+this attendee should respond to your schedule plan. Consequently the attendee
+will be emailed with the event schedule information. A small envelope will
+appear in the details list to indicate this. This feature is specially useful
+when groupware scheduling is enabled, as the attendees status are updated 
+automatically.</para></listitem>
+</varlistentry>
+
+ <!-- Participiants: no conflicts Reschedule button
+ What is that? How does it work?-->
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="entering-data-events-reminder">
+<title>Reminder Tab</title>
+<variablelist>
+<varlistentry>
+<term>Reminder</term>
+<listitem><para>Select a default reminder in the drop down box and press 
+<guibutton>Add</guibutton> if &korganizer; should remind you about an event.</para>
+<para>Use the <guibutton>Configure</guibutton> button to open the
+<guilabel>Edit existing reminder</guilabel> dialog. Using this dialog, you can choose 
+how many minutes, hours or days before or after the events start or end you want to be reminded, you can set
+repeating intervals for your reminders, and create special reminders that display text, send emails, play
+sounds or run programs and scripts.</para>
+<tip><para>If you select to run a specific program or script at the reminder time, 
+make sure, however, that you have sufficient rights to run that
+program; if you do not, the program will not run.</para></tip>
+</listitem>
 </varlistentry>
 
 </variablelist>
 
-<para>When you want to confirm, apply or call off the entered data, choose
-among the <link linkend="reference-action-buttons">Action Buttons</link>,
-<guibutton>OK</guibutton>, <guibutton>Apply</guibutton> and
-<guibutton>Cancel</guibutton>.</para>
-
 </sect2>
 
 <sect2 id="entering-data-events-recurrence">
-<title>Recurrence dialog</title>
+<title>Recurrence tab</title>
 
 <para>Some events take place regularly. You can specify their exact scheduling
 here.</para>
 
 <screenshot id="screenshot-event-recurrence">
-<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Recurrence dialog</screeninfo>
+<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Recurrence tab</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="event-recurrence.png" format="PNG"/></imageobject>
-<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Recurrence dialog</phrase></textobject>
-<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Recurrence dialog</para></caption>
+<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Recurrence tab</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Recurrence tab</para></caption>
 </mediaobject>
 </screenshot>
 
-
-<note><para>To activate the settings, start by checking the
-<guilabel>Enable recurrence</guilabel> check box. If it is not checked, you are 
-not able to make any changes on this tab.</para></note>
-
-<para>The Recurrence tab window is divided into four groups:
-<guilabel>Appointment Time</guilabel>, <guilabel>Recurrence Rule</guilabel>,
-<guilabel>Recurrence Range</guilabel>, and <guilabel>Exceptions</guilabel>.
-</para>
-
-<sect3 id="recurrence-event-time">
-<title><guilabel>Appointment Time</guilabel></title>
-
-<para>The appointment time is set in the <link linkend="entering-data-events-general">
-<guilabel>General</guilabel> tab window</link>. It is displayed here to guide
-you while you set the recurrence options.</para>
-
-</sect3>
+<note><para>To activate the settings, start by selecting a recurrence rule at 
+the right of <guilabel>Repeats</guilabel> from the drop down box. If <guilabel>Never</guilabel> 
+is selected, you are not able to make any changes on this tab.</para></note>
 
 <sect3 id="recurrence-recurrence-rule">
 <title>Recurrence Rule</title>
@@ -1665,11 +1778,9 @@ on.</para></listitem>
 <listitem>
 <para>This is similar to Monthly.  You need to choose whether or not you
 are indicating a calendar day of the year (&eg;, the 250th day of the
-year) - <guilabel>Recur on day <replaceable>#</replaceable> of the
-year</guilabel>, in a specific week on a specific day of the week of a month
+year), in a specific week on a specific day of the week of a month
 (&eg;, the 2nd Tuesday of March), or the day of the month in a
-particular month of the year - <guilabel>Recur on day <replaceable>#</replaceable>
-of the <replaceable>month</replaceable></guilabel>.  By default, &korganizer;
+particular month of the year.  By default, &korganizer;
 assumes you mean the day of the month.  You can adjust the period to
 reflect events that occur bi-annually, every four years, and so on.</para>
 </listitem>
@@ -1681,11 +1792,9 @@ reflect events that occur bi-annually, every four years, and so on.</para>
 <title>Recurrence Range</title>
 
 <para>By default, events which repeat will do so forever; there is no
-<quote>end</quote> to the repetition.  This may or may not be desirable,
-so you are provided with two ways of terminating the repetition: either
-by giving an ending date, or by specifying a total number of
-recurrences.  In this area, you can choose the method that is suitable
-for this event.</para>
+<quote>end</quote> to the repetition. This may or may not be desirable,
+so you are provided to terminate the repetition by selecting an end date
+or a number of occurrences.</para>
 
 </sect3>
 
@@ -1702,10 +1811,6 @@ date selector, and press <guibutton>Add</guibutton> to include it. For
 removing dates, highlight them in the box on the right side, and then
 click <guibutton>Delete</guibutton>.</para>
 
-<para>When you want to confirm, call off or revert the entered data,
-choose among the <link linkend="reference-action-buttons">Action
-Buttons</link>, <guibutton>OK</guibutton>, <guibutton>Apply</guibutton>
-and <guibutton>Cancel</guibutton>.</para>
 </sect3>
 </sect2>
 
@@ -1713,16 +1818,15 @@ and <guibutton>Cancel</guibutton>.</para>
 <title>Attachments</title>
 
 <para>Events and to-dos can contain attachments. Attachments can either be stored as links
-or inline. To add an attachment press the <inlinemediaobject><imageobject>
-<imagedata fileref="list-add.png" format="PNG"/></imageobject></inlinemediaobject>
+or inline. To add an attachment press the <guibutton>Add</guibutton>
 button.</para>
 
 <screenshot id="screenshot-event-attachments">
-<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attachments dialog</screeninfo>
+<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="event-attachments.png" format="PNG"/></imageobject>
-<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Attachments dialog</phrase></textobject>
-<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Attachments dialog</para></caption>
+<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -1737,22 +1841,27 @@ often or may be moved (or removed) from their current location.</para>
 <variablelist>
 
 <varlistentry>
-<term><guibutton>Show</guibutton></term>
+<term><guimenuitem>Open</guimenuitem></term>
 <listitem><para>Display the selected attachment with the associated application.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guibutton>Save As...</guibutton></term>
+<term><guimenuitem>Save As...</guimenuitem></term>
 <listitem><para>Allows to save an existing attachment with a different name.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guibutton>Remove</guibutton></term>
+<term><guimenuitem>Copy</guimenuitem>, <guimenuitem>Cut</guimenuitem> and <guimenuitem>Paste</guimenuitem></term>
+<listitem><para>Allows to copy, cut and paste to and from the clipboard.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Remove</guimenuitem></term>
 <listitem><para>Deletes the selected attachment.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guibutton>Properties...</guibutton></term>
+<term><guimenuitem>Properties...</guimenuitem></term>
 <listitem><para>Allows to change an existing attachment.</para></listitem>
 </varlistentry>
 
@@ -1760,113 +1869,10 @@ often or may be moved (or removed) from their current location.</para>
 
 </sect2>
 
-<sect2 id="entering-data-events-attendees">
-<title>Attendees Tab</title>
-
-<para>Choose in this tab the people you want to invite to your event.</para>
-
-<screenshot id="screenshot-event-attendees">
-<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="event-attendees.png" format="PNG"/></imageobject>
-<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</phrase></textobject>
-<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</para></caption>
-</mediaobject>
-</screenshot>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Identity as organizer:</guilabel></term>
-<listitem><para>Sets the identity corresponding to the organizer of this to-do
-or event. If &korganizer; is configured to send invitation mails, the identity
-selected on this combo box will be used when sending these mails. The default
-identity can be set in the <guilabel>Personal</guilabel> section of the
-&korganizer; configuration, other identities in the <guilabel>Account Details</guilabel>-&gt;
-<guilabel>Password &amp; User Account</guilabel> module 
-of the &systemsettings;. In addition, identities are gathered from your &kmail;
-settings and from your address book. If you choose to set it globally for &kde;
-in the &systemsettings;, be sure to check the <guilabel>Use email settings from
-System Settings</guilabel> box in the <guilabel>Personal</guilabel> section of
-the &korganizer; configuration.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Attendee list</term>
-<listitem><para>The list in the center of the tab displays the attendees
-selected for this event, and lets you select attendees to edit or
-remove. Please note that you can change the order of attendees.
-Click any of the column headings (Name, Email, Role, Status,
-<acronym>RSVP</acronym>) to sort the list according to that column.
-The <acronym>RSVP</acronym> column indicates whether or not a response is
-requested from the attendee.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Name</guilabel> field</term>
-<listitem><para>Fill in the Attendee <guilabel>Name</guilabel> and
-<guilabel>Email</guilabel> address fields, or select one of the attendees in
-the list above to edit it.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Role</guilabel></term>
-<listitem><para>Choose the role of the attendee (Participant,
-Optional participant, Observer, Chair) from the drop down menu. The role is a
-simple reminder of what part the attendee plays in this event. It can be used
-for sorting (see above).
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Status</guilabel></term>
-<listitem><para>Choose the status of the attendee (Needs Action, Accepted,
-Declined, Tentative, Delegated, Completed, In progress). The status, which
-is displayed in the details list window gives you quick overview of what
-should be done to make the event successful. It can be used for sorting (see
-above). If you use groupware schedule and request responses from your
-attendees, as you receive the responses the status of the attendee will be
-updated. If you do not request responses, you will have to update the status
-manually.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Request Response</guilabel></term>
-<listitem><para>Check the <guilabel>Request Response</guilabel> check box if
-this attendee should respond to your schedule plan. Consequently the attendee
-will be emailed with the event schedule information. A small envelope will
-appear in the details list to indicate this. This feature is specially useful
-when groupware scheduling is enabled, as the attendees status are updated 
-automatically.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guibutton>New</guibutton></term>
-<listitem><para>Press the <guibutton>New</guibutton> button to add a new
-manually added attendee to the list. If you want to add contacts from your
-address book, press <guibutton>Select Addressee</guibutton> instead.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guibutton>Select Addressee</guibutton></term>
-<listitem><para>If the attendee(s) are in your Address Book, you do not have to
-remember or type his email address to add it to the attendee list. Just click
-the <guibutton>Select Addressee...</guibutton>  button and choose the attendee(s)
-from the list. Please note that this is the standard &kde; address book, which
-is also used by &kmail; and can also be called as a separate application
-(&kaddressbook;).</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>When you want to confirm, call off or revert the entered data, choose
-among the <link linkend="reference-action-buttons">Action Buttons</link>,
-<guibutton>OK</guibutton>, <guibutton>Apply</guibutton> and
-<guibutton>Cancel</guibutton>.</para>
-
-</sect2>
-
-<sect2 id="entering-data-events-freebusy">
+<!-- not in 4.6.0 lueck
+Does this work via Reschedule button on Attendees tab???
+-->
+<!--sect2 id="entering-data-events-freebusy"> 
 <title>Free/Busy</title>
 
 <para>When adding attendees to your event, you need to know if they are
@@ -1926,7 +1932,7 @@ among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <guibutton>OK</guibutton>, <guibutton>Apply</guibutton> and
 <guibutton>Cancel</guibutton>.</para>
 
-</sect2>
+</sect2-->
 
 <sect2 id="entering-data-events-template-buttons">
 <title>Manage Templates</title>
@@ -1956,18 +1962,18 @@ finished at the latest (date due).</para>
 
 <para>To enter a new to-do, choose
 <menuchoice><guimenu>Actions</guimenu><guimenuitem>New
-To-do...</guimenuitem></menuchoice>. A window with <guilabel>General</guilabel> 
-and <guilabel>Attachments</guilabel> tabs appears.</para>
+To-do...</guimenuitem></menuchoice>. A window with 
+five tabs at the bottom will appear.</para>
 
 <sect2 id="entering-data-to-do-general">
 <title>General Tab</title>
 
 <screenshot id="screenshot-todo-general">
-<screeninfo>A screenshot of &korganizer;'s Edit To-do dialog - General tab</screeninfo>
+<screeninfo>A screenshot of &korganizer;'s Edit To-do dialog</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="todo-general.png" format="PNG"/></imageobject>
-<textobject><phrase>A screenshot of &korganizer;'s Edit To-do dialog - General tab</phrase></textobject>
-<caption><para>A screenshot of &korganizer;'s Edit To-do dialog - General tab</para></caption>
+<textobject><phrase>A screenshot of &korganizer;'s Edit To-do dialog</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit To-do dialog</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -1976,7 +1982,7 @@ but has some additional items for To-dos:</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Completed</guilabel></term>
+<term><guilabel>Completion</guilabel></term>
 <listitem><para>
 This is a percent completed pull down menu initially set at 0% complete.
 Later on, you can indicate your progress by adjusting the percent completed
@@ -2005,13 +2011,13 @@ empty when entering events and to-dos:</para>
 <itemizedlist>
 <listitem><para>In the <guilabel>General</guilabel> Tab, you should at least
 fill the <guilabel>Title</guilabel> field and the description (the large
-rectangle), even though neither is mandatory. If you check the
-<guilabel>Reminder</guilabel> check box, you should also specify the time, and
+rectangle), even though neither is mandatory. If you set a <guilabel>Reminder</guilabel>, 
+you should also specify the time, and
 either the sound to be played or the program to be run.</para></listitem>
 <listitem><para>The <guilabel>Attendees</guilabel> tab may be left completely
 empty.</para></listitem>
-<listitem><para>The <guilabel>Recurrence</guilabel> dialog must only be filled if
-you checked the <guilabel>Enable Recurrence</guilabel> check box.
+<listitem><para>The <guilabel>Recurrence</guilabel> tab must only be filled if
+you select a daily, weekly, monthly or yearly repeat.
 </para></listitem>
 <listitem><para>The <guilabel>Attachments</guilabel> dialog may be left completely
 empty.</para></listitem>
@@ -2019,7 +2025,7 @@ empty.</para></listitem>
 </sect1>
 </chapter>
 
-<chapter id="group-scheduling"> <!--has to be updated to 4.5-->
+<chapter id="group-scheduling">   <!--updated to 4.7-->
 <title>Group Scheduling</title>
 
 <para>The group schedule functionality of &korganizer; allows you to
@@ -2302,21 +2308,17 @@ that you enter <userinput>Product launch event</userinput>.</para></step>
 area. For the sake of this simple example, enter <userinput>Introduction,
 The Plan, Conclusion</userinput> on three separate lines.</para></step>
 
-<step><para>Check the <guilabel>Reminder</guilabel> check box.  Set the
+<step><para>Go to the <guilabel>Reminder</guilabel> tab.  Set the
 reminder time to 15 minutes, just long enough to brew a cup of tea
 prior to the meeting start.</para></step>
 
-<step><para>Click the <guibutton>Select...</guibutton> at the right of
-<guilabel>Categories</guilabel> field.</para></step>
+<step><para>Select <guilabel>Appointment</guilabel> from the 
+<guilabel>Categories</guilabel> drop down box.</para></step>
 
-<step><para>Check <guilabel>Appointment</guilabel> in the available
-categories. Then click the
-<guibutton>OK</guibutton> button.</para></step>
-
-<step><para>Click the <guilabel>Recurrence</guilabel> icon and check the 
-<guilabel>Enable recurrence</guilabel> box.</para>
+<step><para>Go to the <guilabel>Recurrence</guilabel> tab and select the 
+<guilabel>Weekly</guilabel> repeats.</para>
 <note><para>Most work has been done for you automatically. &korganizer;
-defaults to recurring weekly. Also note that <guilabel>No ending date</guilabel> 
+defaults to recurring weekly. Also note that <guilabel>Ends:</guilabel> <guilabel>never</guilabel> 
 is chosen. This means that this event will be repeated each
 Monday (starting, of course, on Monday August 30, 2010) until the end of
 time (that is, until you delete it).</para></note></step>
@@ -2328,30 +2330,24 @@ time (that is, until you delete it).</para></note></step>
 following:</para>
 <substeps>
 
-<step><para>You will see that you are the organizer of the event. Click
-the <guilabel>New</guilabel> button to add the other attendees.</para></step>
+<step><para>You will see that you are the organizer of the event.</para></step>
 
-<step><para>In the <guilabel>Name</guilabel> field, enter the email in the
+<step><para>In the first input field enter the email in the
 <userinput>Name &#060;email&#062;</userinput> format. In our example, enter
 <userinput>Joan Holden &#060;jholden@thiscompany.com&#062;</userinput>.
 <tip><para>If the attendees are already in your &kde; address book, instead of typing the
-names and emails, you can press the <guibutton>Select Addressee...</guibutton>
+names and emails, you can press the <guibutton>Select Adttendees...</guibutton>
 button to add them.</para></tip></para></step>
 
 <step><para>Choose <emphasis>Chair</emphasis> as the role.</para></step>
 
-<step><para>Click <guilabel>New</guilabel>.</para></step>
-
-<step><para>In the <guilabel>Name</guilabel> field, enter <userinput>Peter
+<step><para>In the next input field enter <userinput>Peter
 Krzinski &#060;pkrzinski@thiscompany.com&#062;</userinput>.</para></step>
 
-<step><para>Click <guilabel>New</guilabel>.</para></step>
-
-<step><para>In the <guilabel>Name</guilabel> field, enter
+<step><para>In the next input field enter
 <userinput>Kirsten Friese &#060;kfriese@thiscompany.com&#062;</userinput>.
 </para></step>
 
-<step><para>Click <guilabel>Apply</guilabel>.</para></step>
 </substeps>
 </step>
 
@@ -2359,7 +2355,7 @@ Krzinski &#060;pkrzinski@thiscompany.com&#062;</userinput>.</para></step>
 you will be asked if you want to send an email to the attendees, with details
 of the event and asking for a response if the
 <guilabel>Request response</guilabel> box from the
-<guilabel>attendees</guilabel> tab is checked. Else, you can
+<guilabel>Attendees</guilabel> tab is checked. Else, you can
 send the invitations choosing the <menuchoice><guimenu>Schedule</guimenu>
 <guimenuitem>Send Invitation to Attendees</guimenuitem></menuchoice> menu
 item.</para></step>
@@ -2377,7 +2373,11 @@ If you are satisfied, click <guibutton>OK</guibutton>.</para></step>
 
 </chapter>
 
-<chapter id="config">  <!--updated to 4.5, a few items missing-->
+<chapter id="config">  <!--updated to 4.7, a few items missing
+System Tray tab
+Calendars tab
+
+-->
 <title>&korganizer; Configuration</title>
 
 <para>To change &korganizer;'s look and behavior, choose the
@@ -2470,11 +2470,11 @@ excluding attachments or only a link to the email.</para>
 <varlistentry>
 <term><guilabel>Export to &HTML; periodically</guilabel></term>
 <listitem><para>By checking this option, you can order &korganizer; to export
-your calendar and to-do list to an html file in your home folder at an export interval
+your calendar and to-do list to an &HTML; file in your home folder at an export interval
 which defaults to 10 minutes.</para></listitem>
 </varlistentry>
 
-<!--varlistentry>
+<!--not in 4.7 varlistentry>
 <term><guilabel>Enable automatic saving of manually opened calendar files</guilabel></term>
 <listitem><para>When this box is checked,
 manually opened calendar files are saved automatically when you exit
@@ -2516,7 +2516,7 @@ and which information is published in the shared folders.</para>
 
 <!-- System Tray tab missing-->
 
-<!-- Calendars tab- missing-->
+<!-- Calendars tab missing-->
 
 </sect2>
 
@@ -2594,9 +2594,16 @@ some other manner such that &korganizer; cannot guess its duration,
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Default reminder time</guilabel></term>
-<listitem><para>Select how long before the actual event's scheduled time will
-the alarm activate.</para></listitem>
+<term><guilabel>Reminders</guilabel></term>
+<listitem><para>
+Select a <guilabel>Default reminder time</guilabel> to determine how long before 
+the actual event's scheduled time will the alarm activate.</para>
+<para>Set a file to be used as the default sound file for new reminders. You can 
+always specify another file in the Advanced Reminder accessible from the 
+Event or To-do editors.</para>
+<para>Check the next two boxes if you want to enable reminders for all newly created Events
+or To-dos. You can always turn-off the reminders in the editor dialogs.</para>
+</listitem>
 </varlistentry>
 
 </variablelist>
@@ -2608,8 +2615,9 @@ the alarm activate.</para></listitem>
 
 <para>These options let you configure &korganizer; views:</para>
 
+<sect3 id="config-main-views-general">
+<title>General tab</title>
 <variablelist>
-<!--General-->
 <varlistentry>
 <term><guilabel>Next x days:</guilabel></term>
 <listitem><para>This option allows you to change the amount of days of the
@@ -2626,6 +2634,12 @@ displayed when the hovering the mouse pointer over the appointment for a few
 seconds.</para></listitem>
 </varlistentry>
 
+<varlistentry>	
+<term><guilabel>To-dos use category colors</guilabel></term>
+<listitem><para>Check this box so that to-dos will use category colors and not 
+colors specific to their due, due today or overdue state.</para></listitem>
+</varlistentry>
+
 <!--varlistentry>
 <term><guilabel>Show to-dos in day, week and month views</guilabel></term>
 <listitem><para>This check box toggles the display of to-dos in the day, week
@@ -2633,7 +2647,6 @@ and month views in the agenda (day and week) and month views. If you have
 too many to-dos which have due date associated, you may want to turn them
 off to avoid clutter.</para></listitem>
 </varlistentry-->
-
 </variablelist>
 
 <para><link linkend="description-view">Date Navigator</link> options:</para>
@@ -2641,17 +2654,29 @@ off to avoid clutter.</para></listitem>
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Show events that recur daily</guilabel></term>
-<listitem><para>If the <guilabel>Show events that recur daily</guilabel> in date
+<term><guilabel>Show items that recur daily</guilabel></term>
+<listitem><para>If the <guilabel>Show items that recur daily</guilabel> in date
 navigator box is checked, the days containing daily recurring
 events are shown in bold typeface in the date navigator.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show events that recur weekly</guilabel></term>
-<listitem><para>If the <guilabel>Show events that recur weekly</guilabel> in date
+<term><guilabel>Show items that recur weekly</guilabel></term>
+<listitem><para>If the <guilabel>Show items that recur weekly</guilabel> in date
 navigator box is checked, the days containing weekly recurring
 events are shown in bold typeface in the date navigator.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show to-dos instead of events when in Todo View</guilabel></term>
+<listitem><para>Check this box to show the days containing to-dos in bold typeface in the 
+Date Navigator when in to-do view.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show journals instead of events when in Journal View</guilabel></term>
+<listitem><para>Check this box to show the days containing journals in bold typeface in the 
+Date Navigator when in journal view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2663,7 +2688,11 @@ through normal 7-day weeks.</para></listitem>
 </varlistentry>
 
 </variablelist>
-<!--Agenda View tab-->
+</sect3>
+
+<sect3 id="config-main-views-agenda">
+<title>Agenda View tab</title>
+
 <para><link linkend="agenda-view">Agenda View</link> options:</para>
 
 <variablelist>
@@ -2672,6 +2701,20 @@ through normal 7-day weeks.</para></listitem>
 <term><guilabel>Hour size:</guilabel></term>
 <listitem><para>By using this slider you can control the height of the rows
 in the agenda view.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show icons in agenda view items</guilabel></term>
+<listitem><para>Check this box to display icons (alarm, recursion &etc;) 
+in agenda view items</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show to-dos</guilabel></term>
+<listitem><para>This check box toggles the display of to-dos in the day, week
+and month views in the agenda views. If you have
+too many to-dos which have due date associated, you may want to turn them
+off to avoid clutter.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2697,6 +2740,28 @@ plan.</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Color Usage</guilabel></term>
+<listitem>
+<para>Select the <guilabel>Category inside, calendar outside</guilabel> option if you would like to 
+draw calendar items in their associated category color, with the item's 
+border drawn in the color of its calendar.</para>
+
+<para>Select the <guilabel>Calendar inside, category outside</guilabel> option if you would like to 
+draw calendar items in their associated calendar color, with the item's 
+border drawn in the color of its category.</para>
+
+<para>Select the <guilabel>Only category</guilabel> option if you would like to draw calendar items 
+(both inside and border) in the color of their associated category.</para>
+
+<para>Select the <guilabel>Only calendar</guilabel> option if you would like to draw calendar items 
+(both inside and border) in the color of their calendar.</para>  
+
+<para>Please use the <link linkend="config-main-colors">Colors and Fonts</link> 
+configuration page for setting these colors.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Color busy days with a different background color</guilabel></term>
 <listitem><para>Check this box if you want agenda's background to be filled with a
 different color on days which have at least one all day event marked as busy.</para>
@@ -2705,35 +2770,35 @@ busy color of your choosing.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Color Usage</guilabel></term>
-<listitem><para>With &korganizer;, you can
-<link linkend="config-main-colors">assign a different color to each
-resource</link>. This check box toggles the use the resource color when
-displaying the to-do or event in the agenda view on and off. Note that if you
-do not assign different colors, there is little sense in using this feature,
-as &korganizer; default configuration is to use the same color for
-all resources.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Multiple Calendar Display</guilabel></term>
 <listitem><para>
 Select if all calendars should be merged into one agenda view, each calendar should
 be displayed in its own agenda view or if both view should be available via tabs.
+The side by side view can be customized with <guimenuitem>Configure View</guimenuitem> 
+from the context menu.
 </para></listitem>
 </varlistentry>
 
 </variablelist>
-<!--Month view tab -->
+</sect3>
+
+<sect3 id="config-main-views-month">
+<title>Month View tab</title>
+
 <para><link linkend="month-view">Month view</link> options:</para>
 
 <variablelist>
-
-<varlistentry>
+<!--varlistentry>
 <term><guilabel>Enable scrollbars in month view items</guilabel></term>
 <listitem><para>This check box toggles the cell scrollbars in the
 month view on and off. Even if you check this box, the scrollbars will
 only appear when needed.</para></listitem>
+</varlistentry>
+not in 4.6.0 -->
+<varlistentry>
+<term><guilabel>Display Options</guilabel></term>
+<listitem><para>Use the first four check boxes to display the time, icons (alarm, recursion &etc;), 
+to-dos or journals in month view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2752,6 +2817,14 @@ busy color of your choosing.</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Color Usage</guilabel></term>
+<listitem>
+<para>Configure the colors for the month view like in <link linkend=
+"config-main-views-agenda">Agenda View</link>.</para></listitem>
+</varlistentry>
+
+<!--not in 4.6.0-->
+<!--varlistentry>
 <term><guilabel>Month view uses category colors</guilabel></term>
 <listitem><para>With &korganizer;, you can
 <link linkend="config-main-colors">assign a different color to each
@@ -2760,9 +2833,9 @@ view will reflect the category color, instead of using no color, or only the
 resource color. Note that if you do not assign different category colors,
 there is little sense in using this feature, as &korganizer; default
 configuration is to use the same color for all categories.</para></listitem>
-</varlistentry>
-
-<varlistentry>
+</varlistentry-->
+<!--not in 4.6.0-->
+<!--varlistentry>
 <term><guilabel>Month view uses resource colors</guilabel></term>
 <listitem><para>With &korganizer;, you can
 <link linkend="config-main-colors">assign a different color to each
@@ -2771,19 +2844,30 @@ view will reflect the resource color, instead of using no color, or only the
 category color. Note that if you do not assign different resource colors, there
 is little sense in using this feature, as &korganizer; default configuration
 is to use the same color for all resources.</para></listitem>
-</varlistentry>
+</varlistentry-->
 
 </variablelist>
-<!-- Todo View tab-->
+</sect3>
+
+<sect3 id="config-main-views-todo">
+<title>Todo View tab</title>
+
 <para><link linkend="todo-view">Todo view</link> options:</para>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>To-do list view uses full window</guilabel></term>
-<listitem><para>If you enable this option, the to-do list view will be displayed
-in the whole &korganizer; window instead of  sharing the window with the sidebar
-(the date navigator, the to-dos and the calendar resources).</para></listitem>
+<term><guilabel>Always display completed to-dos at the bottom of the list</guilabel></term>
+<listitem><para>If you enable this option, all completed to-dos will be always 
+grouped at the bottom of the to-do list.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>To-do list uses full window</guilabel></term>
+<listitem><para>Enable this option to use the full &korganizer; window when displaying 
+the to-do list view. You will gain some space for the to-do list view, but other widgets, 
+such as the date navigator, the to-do details and the calendars list, will not be displayed.
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2793,9 +2877,9 @@ a journal entry for every completed to-dos.</para></listitem>
 </varlistentry>
 
 </variablelist>
-
+</sect3>
 </sect2>
-<!-- Colors and Fonts page-->
+
 <sect2 id="config-main-colors-fonts">
 <title>Colors and Fonts</title>
 
@@ -2817,23 +2901,23 @@ allowing you to select the holiday color. The holiday color will be used for the
 holiday name in the month view and the holiday number in the date
 navigator.</para></listitem>
 </varlistentry>
-
-<varlistentry>
+<!--not in 4.6.0-->
+<!--varlistentry>
 <term><guilabel>Highlight color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
 allowing you to select the highlight color. The highlight color will be used for
 marking the currently selected area in your agenda and in the date
 navigator.</para></listitem>
-</varlistentry>
-
-<varlistentry>
+</varlistentry-->
+<!--not in 4.6.0-->
+<!--varlistentry>
 <term><guilabel>Default event color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
 allowing you to select the default event color. The default event color will
 be used for events categories in your agenda and (depending on the settings) in
 the month view. Note that you can specify a separate color for each event
 category below.</para></listitem>
-</varlistentry>
+</varlistentry-->
 
 <varlistentry>
 <term><guilabel>Agenda view background color</guilabel></term>
@@ -2842,11 +2926,17 @@ allowing you to select the agenda view background color.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Agenda/Month view background busy color</guilabel></term>
+<term><guilabel>Busy days background color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
 allowing you to select the agenda or month view background busy color.
 This color is only used when the option for drawing busy days with a
 different color is set in either of these views.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Agenda view current-time line color</guilabel></term>
+<listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
+allowing you to select a color for the current-time (Marcus Bains) line.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2893,7 +2983,7 @@ view.</para></listitem>
 </sect3>
 
 <sect3 id="config-main-fonts">
-<title>Fonts page</title>
+<title>Fonts tab</title>
 
 <variablelist>
 
@@ -2918,7 +3008,7 @@ agenda view (day, week and work week views).</para></listitem>
 <varlistentry>
 <term><guilabel>Current-time line</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-Marcus Bains line (a red line in the agenda view indicating the current
+Marcus Bains line (a colored line in the agenda view indicating the current
 time).</para></listitem>
 </varlistentry>
 
@@ -3026,7 +3116,9 @@ times are published, not the events, reasons or attendees.</para>
 <para>&korganizer; supports publishing and retrieving free/busy information,
 either manually or automatically.</para>
 
-<para><guilabel>Publish Tab</guilabel>: by publishing your free/busy
+<sect3 id="config-main-free-busy-publish">
+<title>Publish</title>
+<para>By publishing your free/busy
 information, you allow others to take your busy time schedule into account
 when inviting you to an event.</para>
 
@@ -3093,7 +3185,12 @@ file for security reasons.</para></warning></listitem>
 
 </variablelist>
 
-<para><guilabel>Retrieve Tab</guilabel>: by retrieving other peoples' free/busy
+</sect3>
+
+<sect3 id="config-main-free-busy-retrieve">
+<title>Retrieve</title>
+
+<para>By retrieving other peoples' free/busy
 information, you can take their busy time schedule into account
 when inviting them to an event.</para>
 
@@ -3151,7 +3248,7 @@ configuration file for security reasons.</para></warning>
 </varlistentry>
 
 </variablelist>
-
+</sect3>
 </sect2>
 
 <sect2 id="config-main-plugins">
@@ -3161,11 +3258,19 @@ configuration file for security reasons.</para></warning>
 <xref linkend="plugins-chapter" /></para>
 
 </sect2>
+<!--
+<sect2 id="config-custom-pages">
+<title>Custom Pages</title>
 
-<!--Custom Pages missing-->
+<para>This page allows you to add your own &GUI; Elements to store your own 
+values into &korganizer;.</para>
+<para>Create your elements as described in <guilabel>How does this work?</guilabel></para>
+
+</sect2>
+-->
 </sect1>
 
-<sect1 id="config-toolbars"><!--updated to 4.5-->
+<sect1 id="config-toolbars"><!--updated to 4.7-->
 <title>Toolbars Configuration</title>
 
 <para>&korganizer; has four toolbars: a Main toolbar (with
@@ -3235,6 +3340,11 @@ right arrows (located between the rectangles) you can move icons from the
 toolbar will have every icon that is in the <guilabel>Current actions</guilabel>
 box. The up and down arrows allow you reposition an icon.</para>
 
+<para>The buttons below the <guilabel>Current actions</guilabel> list allows you 
+to change the icon and the text of a button. In the <guilabel>Change Text</guilabel>
+dialog you can select <guilabel>Hide text when toolbar shows text alongside icons</guilabel>
+to save space in this mode so that all buttons are visible.</para>
+
 <tip><para>Remember that less icons may be better, because the screen is less
 busy and therefore it is easier to find the toolbar buttons you actually use.
 For instance if you always cut and paste with the keyboard hotkeys, you do not
@@ -3250,6 +3360,12 @@ need the <guiicon>Cut</guiicon>, <guiicon>Copy</guiicon> and
 <para>This menu allows you to change the look of the toolbars.
 <mousebutton>Right</mousebutton> click the toolbar to access this
 menu.</para>
+
+<sect3 id="config-toolbars-text-display">
+<title>Show Text</title>
+
+<para>If text is shown alongside icons choose if the text of the button is displayed.</para>
+</sect3>
 
 <sect3 id="config-toolbars-text-position">
 <title>Text Position</title>
@@ -3291,7 +3407,7 @@ left, right side or even outside the main &korganizer; window.</para>
 
 </chapter>
 
-<chapter id="plugins-chapter"><!--updated to 4.5-->
+<chapter id="plugins-chapter"><!--updated to 4.7-->
 
 <title>Plugins</title>
 
@@ -3359,10 +3475,10 @@ The plugin allows you to print out a yearly calendar.
 
 </chapter>
 
-<chapter id="reference"><!--updated to 4.5, a few items missing-->
+<chapter id="reference">
 <title>Reference</title>
 
-<sect1 id="reference-menus">
+<sect1 id="reference-menus"><!--updated to 4.6/7, missing Timespent, Send as iCalendar, Show Menubar-->
 <title>Menus</title>
 
 <para>When &korganizer; starts, the main &korganizer; window
@@ -3385,7 +3501,8 @@ the entire calendar.</para>
 
 <variablelist>
 
-<!--varlistentry id="menu-file-new">
+<!-- not in 4.6 lueck 
+<varlistentry id="menu-file-new">
 <term><menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut><guimenu>File</guimenu> <guimenuitem>New</guimenuitem></menuchoice>
@@ -3432,7 +3549,8 @@ new one.</para>
 </listitem> 
 </varlistentry>
 
-<!--varlistentry id="menu-file-open-recent">
+<!-- not in 4.6 lueck 
+<varlistentry id="menu-file-open-recent">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Open Recent</guimenuitem>
@@ -3548,7 +3666,7 @@ vCalendar with a few entries via email, for instance.</para>
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guisubmenu>Import</guisubmenu>
-<guimenuitem>Import From &UNIX; Ical Tool</guimenuitem>
+<guimenuitem>Import From UNIX Ical Tool</guimenuitem>
 </menuchoice></term>
 <listitem><para>If you have used <application>ical</application>, a popular but
 older calendar program for &UNIX;, you may wish to <action>import your events
@@ -3616,7 +3734,8 @@ file.</para>
 </listitem>
 </varlistentry>
 
-<!--varlistentry id="menu-file-export-ghns">
+<!--not in 4.6.0
+varlistentry id="menu-file-export-ghns">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guisubmenu>Export</guisubmenu>
@@ -3643,7 +3762,8 @@ events.</action></para>
 </listitem>
 </varlistentry>
 
-<!--<varlistentry id="menu-file-make-active">
+<!--not in 4.6.0
+<varlistentry id="menu-file-make-active">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Make active</guimenuitem>
@@ -3679,7 +3799,7 @@ active calendar.</para>
 <xref linkend="managing-purge-archive" />.</para>
 </listitem></varlistentry>
 
-<!--
+<!--not in 4.6.0
 <varlistentry id="menu-file-close">
 <term><menuchoice>
 <shortcut>
@@ -4254,7 +4374,15 @@ event or to-do.
 <xref linkend="counter" />.</para></listitem>
 </varlistentry>
 
-<!--Send as iCalendar-->
+<!--varlistentry id="menu-schedule-mail-icalendar">
+<term><menuchoice>
+<guimenu>Schedule</guimenu>
+<guimenuitem>Send as iCalendar...</guimenuitem>
+</menuchoice></term>
+<listitem><para>.</para>
+<para>For more information about this action, please refer to
+<xref linkend="????" />.</para></listitem>
+</varlistentry-->
 
 <varlistentry id="menu-schedule-mail-freebusy">
 <term><menuchoice>
@@ -4285,9 +4413,18 @@ Other users will then be able to retrieve the information.</para>
 <sect2 id="reference-menus-settings">
 <title>Settings</title>
 
-<!-- Show Menubar -->
-
 <variablelist>
+<!--varlistentry id="menu-settings-show-menubar">
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
+</shortcut>
+<guimenu>Settings</guimenu>
+<guisubmenu>Show Menubar</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>.</action></para></listitem>
+</varlistentry-->
+
 <varlistentry id="menu-settings-show-toolbar">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
@@ -4316,7 +4453,7 @@ status bar on and off</action>.</para></listitem>
 when <link linkend="config-main-views">the current view does not use the full
 window.</link></para></listitem>
 </varlistentry>
-<!--
+<!-- not in 4.6.0
 <varlistentry id="menu-settings-show-resource-buttons">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
@@ -4409,13 +4546,13 @@ dialog</link>.</para>
 
 </sect1>
 
-<sect1 id="reference-hotkey"> <!--has to be updated to 4.5-->
+<sect1 id="reference-hotkey"> <!--updated to 4.6, five shortcuts missing-->
 <title>HotKeys</title>
 
 <para>This is a reference to all hotkeys and their corresponding description in
 the handbook.</para>
 
-
+<!--Ctrl+M, Del, Shift+F1, Ctrl+Z, Ctrl+Shift+Z missing -->
 <sect2 id="reference-hotkey-sortalpha">
 <title>Hotkeys Sorted Alphabetically</title> 
 
@@ -4454,12 +4591,12 @@ the handbook.</para>
   <guimenuitem>New</guimenuitem></menuchoice></link> equivalent; create and open
   new calendar.</entry>
 </row-->
-<!--row>
+<row>
   <entry><keycombo action="simul">&Ctrl; <keycap>O</keycap></keycombo></entry>
   <entry><link linkend="menu-file-open"><menuchoice><guimenu>File</guimenu>
   <guimenuitem>Open</guimenuitem></menuchoice></link> equivalent; open a
   calendar file in the current window.</entry>
-</row-->
+</row>
 <row>
   <entry><keycombo action="simul">&Ctrl; <keycap>P</keycap></keycombo></entry>
   <entry><link linkend="menu-file-print"><menuchoice><guimenu>File</guimenu>
@@ -4553,12 +4690,12 @@ the handbook.</para>
   equivalent; create and open new calendar.</entry>
   <entry><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></entry>
 </row-->
-<!--row>
+<row>
   <entry><emphasis>Open:</emphasis> <link linkend="menu-file-open"> <menuchoice>
   <guimenu>File</guimenu> <guimenuitem>Open</guimenuitem></menuchoice></link>
   equivalent; open a calendar file in the current window.</entry>
   <entry><keycombo action="simul">&Ctrl;<keycap>O</keycap></keycombo></entry>
-</row-->
+</row>
 <row>
   <entry><emphasis>Paste:</emphasis> <link linkend="menu-edit-paste"> <menuchoice>
   <guimenu>Edit</guimenu> <guimenuitem>Paste</guimenuitem></menuchoice></link>
@@ -4636,7 +4773,7 @@ editing will be forgotten, and &korganizer; will close the
 
 </chapter>
 
-<chapter id="other-features">
+<chapter id="other-features">  <!--updated to 4.7-->
 <title>Other Features</title>
 
 <para>In this chapter, you'll learn other useful features of
@@ -4696,7 +4833,7 @@ KPart inside &konqueror;</quote>.</para>
 </chapter>
 
 <chapter id="faq">
-<title>Questions and Answers</title>
+<title>Questions and Answers</title> <!-- link to userbase faq? -->
 
 <qandaset id="faq-questions">
 <qandaentry>
@@ -4724,11 +4861,13 @@ linkend="config-main-free-busy">Free/Busy</link>.</para>
 
 <para>&korganizer;</para>
 
-<para>Program copyright 2000-2004, The &kde; Developers</para>
+<para>Program copyright 2000-2010, The &kde; Developers</para>
 
 <para>Contributors:</para>
 
 <itemizedlist>
+  <listitem><para>Allen Winter <email>winter@kde.org</email></para>
+</listitem>
 <listitem><para>Reinhold Kainhofer <email>reinhold@kainhofer.com</email></para>
 </listitem>
 <listitem><para>&Cornelius.Schumacher; &Cornelius.Schumacher.mail;</para>
