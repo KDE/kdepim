@@ -93,6 +93,7 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
   mDebug( false ), mQuoteString( "> " ), mOrigRoot( 0 ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
   mMsg = amsg;
+  mRoot = new KMime::Content;
 }
 
 void TemplateParser::setSelection( const QString &selection )
@@ -281,16 +282,15 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
   return process( aorig_msg, afolder );
 }
 
-void TemplateParser::processWithTemplate( const QString &tmpl )
+void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecryption
 {
-  KMime::Content *root = new KMime::Content;
-  root->setContent( mOrigMsg->encodedContent() );
-  root->parse();
+  mRoot->setContent( mOrigMsg->encodedContent() );
+  mRoot->parse();
 
   MessageViewer::EmptySource emptySource;
-  MessageViewer::ObjectTreeParser otp( &emptySource ); // all defaults are ok
-  otp.setAllowAsync( false );
-  otp.parseObjectTree( root );
+  mOtp = new MessageViewer::ObjectTreeParser( &emptySource );
+  mOtp->setAllowAsync( false );
+  mOtp->parseObjectTree( mRoot );
 
   QString plainBody, htmlBody;
 
@@ -379,14 +379,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString plainStr = pipe( pipe_cmd, plainMessageText( &otp, shouldStripSignature(), NoSelectionAllowed ) );
+          QString plainStr = pipe( pipe_cmd, plainMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           QString plainQuote = quotedPlainText( mQuoteString, plainStr );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
-          QString htmlStr = pipe( pipe_cmd, htmlMessageText( &otp, shouldStripSignature(), NoSelectionAllowed ) );
+          QString htmlStr = pipe( pipe_cmd, htmlMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           QString htmlQuote = quotedHtmlText( htmlStr );
           htmlBody.append( htmlQuote );
         }
@@ -395,13 +395,13 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: QUOTE";
         i += strlen( "QUOTE" );
         if ( mOrigMsg ) {
-          QString plainQuote = quotedPlainText( mQuoteString, plainMessageText( &otp, shouldStripSignature(), SelectionAllowed ) );
+          QString plainQuote = quotedPlainText( mQuoteString, plainMessageText( shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
-          QString htmlQuote = quotedHtmlText( htmlMessageText( &otp, shouldStripSignature(), SelectionAllowed ) );
+          QString htmlQuote = quotedHtmlText( htmlMessageText( shouldStripSignature(), SelectionAllowed ) );
           htmlBody.append( htmlQuote );
         }
 
@@ -436,10 +436,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString plainStr = pipe( pipe_cmd, plainMessageText( &otp, shouldStripSignature(), NoSelectionAllowed ) );
+          QString plainStr = pipe( pipe_cmd, plainMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           plainBody.append( plainStr );
 
-          QString htmlStr = pipe( pipe_cmd, htmlMessageText( &otp, shouldStripSignature(), NoSelectionAllowed ) );
+          QString htmlStr = pipe( pipe_cmd, htmlMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           htmlBody.append( htmlStr );
         }
 
@@ -490,10 +490,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: TEXT";
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          QString plainQuote = plainMessageText( &otp, shouldStripSignature(), NoSelectionAllowed );
+          QString plainQuote = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
           plainBody.append( plainQuote );
 
-          QString htmlQuote = htmlMessageText( &otp, shouldStripSignature(), NoSelectionAllowed );
+          QString htmlQuote = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
           htmlBody.append( htmlQuote );
         }
 
@@ -510,10 +510,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTEXT";
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          QString plainQuote = plainMessageText( &otp, shouldStripSignature(), NoSelectionAllowed );
+          QString plainQuote = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
           plainBody.append( plainQuote );
 
-          QString htmlQuote = htmlMessageText( &otp, shouldStripSignature(), NoSelectionAllowed );
+          QString htmlQuote = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
           htmlBody.append( htmlQuote );
         }
 
@@ -1037,8 +1037,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       htmlBody.append( c );
     }
   }
-  addProcessedBodyToMessage( plainBody, htmlBody, root );
-  delete root;
+  addProcessedBodyToMessage( plainBody, htmlBody );
 }
 
 QString TemplateParser::getSignature() const
@@ -1060,11 +1059,11 @@ QString TemplateParser::getSignature() const
   }
 }
 
-void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody, KMime::Content *root )
+void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody )
 {
   // Get the attachments of the original mail
   MessageCore::AttachmentCollector ac;
-  ac.collectAttachmentsFrom( root );
+  ac.collectAttachmentsFrom( mRoot );
 
   // Now, delete the old content and set the new content, which
   // is either only the new text or the new text with some attachments.
@@ -1346,9 +1345,8 @@ void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
   mColWrap = wrapColWidth;
 }
 
-QString TemplateParser::plainMessageText( MessageViewer::ObjectTreeParser *otp,
-                                          bool aStripSignature,
-                                          AllowSelection isSelectionAllowed ) const//TODO mAllowDecryption
+QString TemplateParser::plainMessageText( bool aStripSignature,
+                                          AllowSelection isSelectionAllowed ) const
 {
   if ( !mSelection.isEmpty() && ( isSelectionAllowed == SelectionAllowed ) ) {
     return mSelection;
@@ -1358,10 +1356,10 @@ QString TemplateParser::plainMessageText( MessageViewer::ObjectTreeParser *otp,
     return QString();
   }
 
-  QString result = otp->plainTextContent();
+  QString result = mOtp->plainTextContent();
 
   if ( result.isEmpty() ) { //HTML-only mails
-    result = otp->convertedTextContent();
+    result = mOtp->convertedTextContent();
   }
 
   if ( aStripSignature ) {
@@ -1371,11 +1369,10 @@ QString TemplateParser::plainMessageText( MessageViewer::ObjectTreeParser *otp,
   return result;
 }
 
-QString TemplateParser::htmlMessageText( MessageViewer::ObjectTreeParser *otp,
-                                         bool aStripSignature,
-                                         AllowSelection isSelectionAllowed ) const//TODO mAllowDecryption
+QString TemplateParser::htmlMessageText( bool aStripSignature,
+                                         AllowSelection isSelectionAllowed ) const
 {
-  const QString htmlElement = otp->htmlContent();
+  const QString htmlElement = mOtp->htmlContent();
 
   QWebPage page;
   //TODO to be tested/verified if this is not an issue

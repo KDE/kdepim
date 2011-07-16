@@ -161,11 +161,13 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString mQuoteString;
     QString mTo, mCC;
     KMime::Content *mOrigRoot;
+    KMime::Content *mRoot;
     KPIMIdentities::IdentityManager* m_identityManager;
     bool mWrap;
     int mColWrap;
     QStringList m_charsets;
     AllowSelection isSelectionAllowed;
+    MessageViewer::ObjectTreeParser *mOtp;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to
@@ -180,7 +182,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * and @p htmlBody.
      * Attachments of the original message are also added back to the new message.
      */
-    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody, KMime::Content *root );
+    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody );
 
     /**
      * Determines whether the signature should be stripped when getting the text of the original
@@ -232,15 +234,13 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * @param aStripSignature strips the signature out of the message
      *
      */
-    QString plainMessageText( MessageViewer::ObjectTreeParser *otp,
-                              bool aStripSignature,
+    QString plainMessageText( bool aStripSignature,
                               AllowSelection isSelectionAllowed ) const;
 
     /**
      * Returns the HTML content of the message as plain text
      */
-    QString htmlMessageText( MessageViewer::ObjectTreeParser *otp,
-                             bool aStripSignature,
+    QString htmlMessageText( bool aStripSignature,
                              AllowSelection isSelectionAllowed ) const;
 
     /** @return the UOID of the identity for this message.
