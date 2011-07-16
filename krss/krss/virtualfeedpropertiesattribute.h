@@ -29,6 +29,7 @@ namespace KRss {
 class KRSS_EXPORT VirtualFeedPropertiesAttribute : public Akonadi::Attribute
 {
 public:
+    VirtualFeedPropertiesAttribute() {}
     QByteArray type() const;
     VirtualFeedPropertiesAttribute* clone() const;
     QByteArray serialized() const;
