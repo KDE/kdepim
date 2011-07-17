@@ -90,10 +90,13 @@ QByteArray selectCharset( const QStringList &charsets, const QString &text )
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
   mMode( amode ), mIdentity( 0 ),
   mAllowDecryption( false ),
-  mDebug( false ), mQuoteString( "> " ), mOrigRoot( 0 ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
+  mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
   mMsg = amsg;
   mRoot = new KMime::Content;
+  mEmptySource = new MessageViewer::EmptySource;
+  mOtp = new MessageViewer::ObjectTreeParser( mEmptySource );
+  mOtp->setAllowAsync( false );
 }
 
 void TemplateParser::setSelection( const QString &selection )
@@ -129,8 +132,7 @@ void TemplateParser::setCharsets( const QStringList& charsets )
 
 TemplateParser::~TemplateParser()
 {
-  delete mOrigRoot;
-  mOrigRoot = 0;
+  delete mEmptySource;
 }
 
 int TemplateParser::parseQuotes( const QString &prefix, const QString &str,
@@ -286,10 +288,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
 {
   mRoot->setContent( mOrigMsg->encodedContent() );
   mRoot->parse();
-//verify if this is OK
-  MessageViewer::EmptySource emptySource;
-  mOtp = new MessageViewer::ObjectTreeParser( &emptySource );
-  mOtp->setAllowAsync( false );
+
   mOtp->parseObjectTree( mRoot );
 
   QString plainBody, htmlBody;
@@ -1014,8 +1013,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
       } else if ( cmd.startsWith( QLatin1String( "SIGNATURE" ) ) ) {
         kDebug() << "Command: SIGNATURE";
         i += strlen( "SIGNATURE" );
-        plainBody.append( getSignature() );
-        htmlBody.append( getSignature() );
+        plainBody.append( getPlainSignature() );
+        //TODO getHtmlSignature
+        //htmlBody.append( getHtmlSignature() );
 
       } else {
         // wrong command, do nothing
@@ -1040,7 +1040,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
   addProcessedBodyToMessage( plainBody, htmlBody );
 }
 
-QString TemplateParser::getSignature() const
+QString TemplateParser::getPlainSignature() const
 {
   const KPIMIdentities::Identity &identity =
     m_identityManager->identityForUoid( mIdentity );
@@ -1051,14 +1051,25 @@ QString TemplateParser::getSignature() const
                                                   ( identity ).signature();
   if ( signature.type() == KPIMIdentities::Signature::Inlined &&
        signature.isInlinedHtml() ) {
-    // templates don't support HTML; convert to plain text
     return signature.toPlainText();
   }
   else {
     return signature.rawText();
   }
 }
+/*
+QString TemplateParser::getHtmlSignature() const
+{
+  const KPIMIdentities::Identity &identity =
+    m_identityManager->identityForUoid( mIdentity );
+  if ( identity.isNull() )
+    return QString();
 
+  KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
+                                                  ( identity ).signature();
+  return signature.rawText();
+}
+*/
 void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody )
 {
   // Get the attachments of the original mail
@@ -1345,8 +1356,7 @@ void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
   mColWrap = wrapColWidth;
 }
 
-QString TemplateParser::plainMessageText( bool aStripSignature,
-                                          AllowSelection isSelectionAllowed ) const
+QString TemplateParser::plainMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const
 {
   if ( !mSelection.isEmpty() && ( isSelectionAllowed == SelectionAllowed ) ) {
     return mSelection;
@@ -1369,8 +1379,7 @@ QString TemplateParser::plainMessageText( bool aStripSignature,
   return result;
 }
 
-QString TemplateParser::htmlMessageText( bool aStripSignature,
-                                         AllowSelection isSelectionAllowed ) const
+QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const
 {
   const QString htmlElement = mOtp->htmlContent();
 

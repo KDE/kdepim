@@ -26,6 +26,7 @@
 
 #include <qobject.h>
 #include <akonadi/collection.h>
+#include <messageviewer/objecttreeemptysource.h>
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -160,7 +161,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     bool mDebug;
     QString mQuoteString;
     QString mTo, mCC;
-    KMime::Content *mOrigRoot;
     KMime::Content *mRoot;
     KPIMIdentities::IdentityManager* m_identityManager;
     bool mWrap;
@@ -168,6 +168,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QStringList m_charsets;
     AllowSelection isSelectionAllowed;
     MessageViewer::ObjectTreeParser *mOtp;
+    MessageViewer::EmptySource *mEmptySource;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to
@@ -190,14 +191,18 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      */
     bool shouldStripSignature() const;
 
-    int parseQuotes( const QString &prefix, const QString &str,
-                     QString &quote ) const;
+    int parseQuotes( const QString &prefix, const QString &str, QString &quote ) const;
 
   private:
     /**
      * Return the text signature used the by current identity.
      */
-    QString getSignature() const;
+    QString getPlainSignature() const;
+
+    /**
+     * Return the text signature used the by current identity.
+     */
+    //QString getHtmlSignature() const;
 
     /**
       * Returns message body indented by the
@@ -233,14 +238,12 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * @param aStripSignature strips the signature out of the message
      *
      */
-    QString plainMessageText( bool aStripSignature,
-                              AllowSelection isSelectionAllowed ) const;
+    QString plainMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const;
 
     /**
      * Returns the HTML content of the message as plain text
      */
-    QString htmlMessageText( bool aStripSignature,
-                             AllowSelection isSelectionAllowed ) const;
+    QString htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const;
 
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
