@@ -2819,8 +2819,7 @@ busy color of your choosing.</para></listitem>
 <varlistentry>
 <term><guilabel>Color Usage</guilabel></term>
 <listitem>
-<para>Configure the colors for the month view like in <link linkend=
-"config-main-views-agenda">Agenda View</link>.</para></listitem>
+<para>Configure the colors for the month view like in <link linkend="config-main-views-agenda">Agenda View</link>.</para></listitem>
 </varlistentry>
 
 <!--not in 4.6.0-->
