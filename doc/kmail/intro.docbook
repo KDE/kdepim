@@ -11,8 +11,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-07-13</date>
-<releaseinfo>1.7</releaseinfo>
+<date>2011-07-15</date>
+<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
 </chapterinfo>
 
 <title>Introduction</title>
@@ -34,11 +34,11 @@ collection of the most helpful tips:</para>
 <para>You do not have to use your mouse to use &kmail;. Everything can
 be done by using <link linkend="keyboard-shortcuts">Keyboard Shortcuts</link>.</para>
 </listitem>
+<!-- adapt to kmail2/akonadi lueck 31.05.2011-->
 <listitem>
 <para>Although &kmail; can be considered reliable you should keep 
 backups of your messages, &ie; just copy the files and folders 
-in <filename class="directory">~/Mail</filename>
-(including the hidden ones that start with a dot) to a safe place.</para>
+listed on <ulink url=" http://userbase.kde.org/KMail/FAQs_Hints_and_Tips#Transfer_mail_and_settings_to_another_computer_.28or_another_user_account_on_the_same_machine.29  ">KMail/FAQs</ulink> to a safe place.</para>
 </listitem>
 <!-- TODO: add other tips for "invisible" features here -->
 
