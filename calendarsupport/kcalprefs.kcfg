@@ -41,7 +41,7 @@
 
     <entry type="Path" key="Reminder Audio File"  name="audioFilePath">
       <label>Default audio file</label>
-      <whatsthis>Set a file to be used as the default sound file for new reminders. You can always specify another file in the Reminder configurationaccessible from the Event or To-do editors.</whatsthis>
+      <whatsthis>Set a file to be used as the default sound file for new reminders. You can always specify another file in the Reminder configuration accessible from the Event or To-do editors.</whatsthis>
     </entry>
 
     <entry type="Bool" key="Enable Event Reminders" name="defaultEventReminders">
