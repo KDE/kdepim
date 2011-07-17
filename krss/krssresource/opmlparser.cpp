@@ -168,7 +168,8 @@ void ParsedFeed::setType( const QString& type )
 Akonadi::Collection ParsedFeed::toAkonadiCollection() const
 {
     KRss::FeedCollection feed;
-    feed.setRemoteId( attribute( QLatin1String("remoteid") ) );
+    //feed.setRemoteId( attribute( QLatin1String("remoteid") ) );
+    feed.setRemoteId( d->htmlUrl );
     feed.setTitle( title() );
     feed.setXmlUrl( d->xmlUrl );
     feed.setHtmlUrl( d->htmlUrl );
