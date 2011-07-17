@@ -442,7 +442,7 @@ disable it.</para></step>
 
 <step><para>Later, if you want to edit or delete a resource, select it on the
 <guilabel>Calendar Manager</guilabel> sidebar and press <guibutton>Delete Calendar</guibutton> to delete it or
-<guibutton>Calendar Properties ...</guibutton> to modify it.</para></step>
+<guibutton>Calendar Properties...</guibutton> to modify it.</para></step>
 
 </procedure>
 <para>Among the existing resources, you can find in &korganizer;:</para>
@@ -1668,7 +1668,7 @@ is also used by &kmail; and can also be called as a separate application
 </varlistentry>
 
 <varlistentry>
-<term>Participiants</term>
+<term>Participants</term>
 <listitem><para>Choose the role of the attendee (Participant,
 Optional Participant, Observer, Chair) from the drop down menu at the left side of an entry. 
 The role is a simple reminder of what part the attendee plays in this event.
@@ -2336,7 +2336,7 @@ following:</para>
 <userinput>Name &#060;email&#062;</userinput> format. In our example, enter
 <userinput>Joan Holden &#060;jholden@thiscompany.com&#062;</userinput>.
 <tip><para>If the attendees are already in your &kde; address book, instead of typing the
-names and emails, you can press the <guibutton>Select Adttendees...</guibutton>
+names and emails, you can press the <guibutton>Select Attendees...</guibutton>
 button to add them.</para></tip></para></step>
 
 <step><para>Choose <emphasis>Chair</emphasis> as the role.</para></step>
@@ -2863,7 +2863,7 @@ grouped at the bottom of the to-do list.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>To-do list uses full window</guilabel></term>
+<term><guilabel>To-do list view uses full window</guilabel></term>
 <listitem><para>Enable this option to use the full &korganizer; window when displaying 
 the to-do list view. You will gain some space for the to-do list view, but other widgets, 
 such as the date navigator, the to-do details and the calendars list, will not be displayed.
