@@ -132,7 +132,7 @@ void CustomTemplates::slotHelpLinkClicked( const QString& )
       "<p>Here you can add, edit, and delete custom message "
       "templates to use when you compose a reply or forwarding message. "
       "Create the custom template by typing the name into the input box "
-      " and press the '+' button. Also, you can bind a keyboard "
+      "and press the '+' button. Also, you can bind a keyboard "
       "combination to the template for faster operations.</p>"
       "<p>Message templates support substitution commands, "
       "by simply typing them or selecting them from the "
