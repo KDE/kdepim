@@ -533,7 +533,7 @@ Standard Templates</link> tab in the <guilabel>Composer</guilabel> page
 </para>
 </sect3>
 <sect3 id="folders-properties-maintainance">
-<title>Maintainance</title>
+<title>Maintenance</title>
 <para>This tab shows an overview about the folder type and its size, 
 the number of read and unread messages in the folder and allows you to enable
 text indexing.</para>
@@ -1500,7 +1500,7 @@ list.</para>
 <step>
 <para>In the <guilabel>Filter Criteria</guilabel> area, select <guilabel>Anywhere 
 in Headers</guilabel> and <guilabel>contains</guilabel> from the drop down boxes and type
-<userinput>Priority</userinput> in the text field. Select the same critia 
+<userinput>Priority</userinput> in the text field. Select the same criteria 
 in the next line and type <userinput>urgent</userinput> in the
 text field of the second drop-down box.</para>
 <para>So your filter will match all messages containing a
@@ -1826,7 +1826,7 @@ optionally remember it for some time.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>When encrypting, always also encrypt to the certificate of my own identity</guilabel></term>
+<term><guilabel>When encrypting emails, always also encrypt to the certificate of my own identity</guilabel></term>
 <listitem>
 <para>If this option is off and you want to send an encrypted message to somebody,
 then you cannot read this message any longer after you have composed and
