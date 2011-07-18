@@ -46,6 +46,7 @@
 
 #include <KHolidays/Holidays>
 #include <KGuiItem>
+#include <KGlobal>
 #include <KLocale>
 #include <kcheckableproxymodel.h>
 #include <kviewstatemaintainer.h>
@@ -58,6 +59,8 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 using namespace Future;
+
+static const KCatalogLoader loader("libeventviews");
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
