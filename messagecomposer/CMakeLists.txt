@@ -80,6 +80,7 @@ configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecom
 
 kde4_add_kcfg_files(messagecomposer_src
   messagecomposersettings_base.kcfgc 
+  custommimeheader.kcfgc
 )
 
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )

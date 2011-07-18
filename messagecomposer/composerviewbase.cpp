@@ -127,18 +127,18 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
 
   // If we are loading from a draft, load unexpanded aliases as well
   if( m_msg->hasHeader( "X-KMail-UnExpanded-To" ) ) {
-      QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-To" )->asUnicodeString().split( QLatin1String( "," ) );
-      foreach( QString addr, spl )
+      const QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-To" )->asUnicodeString().split( QLatin1String( "," ) );
+      foreach( const QString& addr, spl )
         m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::To );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-CC" ) ) {
-      QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-CC" )->asUnicodeString().split( QLatin1String( "," ) );
-      foreach( QString addr, spl )
+      const QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-CC" )->asUnicodeString().split( QLatin1String( "," ) );
+      foreach( const QString& addr, spl )
         m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Cc );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-BCC" ) ) {
-      QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-BCC" )->asUnicodeString().split( QLatin1String( "," ) );
-      foreach( QString addr, spl )
+      const QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-BCC" )->asUnicodeString().split( QLatin1String( "," ) );
+      foreach( const QString& addr, spl )
         m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Bcc );
   }
 
@@ -300,15 +300,15 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
       }
     }
     QStringList unExpandedTo, unExpandedCc, unExpandedBcc;
-    foreach( QString exp, resolveJob->expandedTo() ) {
+    foreach( const QString &exp, resolveJob->expandedTo() ) {
       if( !mExpandedTo.contains( exp ) ) // this address was expanded, so save it explicitly
         unExpandedTo << exp;
     }
-    foreach( QString exp, resolveJob->expandedCc() ) {
+    foreach( const QString& exp, resolveJob->expandedCc() ) {
         if( !mExpandedCc.contains( exp ) )
         unExpandedCc << exp;
     }
-    foreach( QString exp, resolveJob->expandedBcc() ) {
+    foreach( const QString& exp, resolveJob->expandedBcc() ) {
       if( !mExpandedBcc.contains( exp ) ) // this address was expanded, so save it explicitly
         unExpandedBcc << exp;
     }
@@ -566,7 +566,8 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-Link-Message" );
   if( m_msg->headerByType( "X-KMail-Link-Type" ) )
     extras << m_msg->headerByType( "X-KMail-Link-Type" );
-
+  if( m_msg->headerByType( "X-Face" ) )
+    extras << m_msg->headerByType( "X-Face" );
   infoPart->setExtraHeaders( extras );
 }
 
@@ -609,11 +610,11 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
 
 void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
 {
-  foreach( QByteArray address, msg->to()->addresses() )
+  foreach( const QByteArray& address, msg->to()->addresses() )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
-  foreach( QByteArray address, msg->cc()->addresses() )
+  foreach( const QByteArray& address, msg->cc()->addresses() )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
-  foreach( QByteArray address, msg->bcc()->addresses() )
+  foreach( const QByteArray& address, msg->bcc()->addresses() )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
 }
 

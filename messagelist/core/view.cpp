@@ -800,22 +800,28 @@ void View::slotHeaderContextMenuTriggered( QAction * act )
   applyThemeColumns();
 }
 
-MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
+Item* View::currentItem() const
 {
   QModelIndex idx = currentIndex();
   if ( !idx.isValid() )
     return 0;
   Item * it = static_cast< Item * >( idx.internalPointer() );
   Q_ASSERT( it );
-  if ( it->type() != Item::Message )
+  return it;
+}
+
+MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
+{
+  Item *it = currentItem();
+  if ( !it || ( it->type() != Item::Message ) )
     return 0;
 
   if ( selectIfNeeded )
   {
     // Keep things coherent, if the user didn't select it, but acted on it via
     // a shortcut, do select it now.
-    if ( !selectionModel()->isSelected( idx ) )
-      selectionModel()->select( idx, QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
+    if ( !selectionModel()->isSelected( currentIndex() ) )
+      selectionModel()->select( currentIndex(), QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
   }
 
   return static_cast< MessageItem * >( it );
@@ -949,24 +955,32 @@ void View::Private::expandFullThread( const QModelIndex & index )
 
 void View::setCurrentThreadExpanded( bool expand )
 {
-  MessageItem * message = currentMessageItem();
-  if ( !message )
+  Item *it = currentItem();
+  if (!it)
     return;
 
-  while ( message->parent() )
-  {
-    if ( message->parent()->type() != Item::Message )
-      break;
-    message = static_cast< MessageItem * >( message->parent() );
-  }
+  if ( it->type() == Item::GroupHeader ) {
+    setExpanded( currentIndex(), expand );
+  } else if ( it->type() == Item::Message ) {
+    MessageItem * message = static_cast< MessageItem *>( it );
+    if ( !message )
+      return;
 
-  if ( expand )
-  {
-    setExpanded( d->mModel->index( message, 0 ), true );
-    setChildrenExpanded( message, true );
-  } else {
-    setChildrenExpanded( message, false );
-    setExpanded( d->mModel->index( message, 0 ), false );
+    while ( message->parent() )
+    {
+      if ( message->parent()->type() != Item::Message )
+        break;
+      message = static_cast< MessageItem * >( message->parent() );
+    }
+
+    if ( expand )
+    {
+      setExpanded( d->mModel->index( message, 0 ), true );
+      setChildrenExpanded( message, true );
+    } else {
+      setChildrenExpanded( message, false );
+      setExpanded( d->mModel->index( message, 0 ), false );
+    }
   }
 }
 
@@ -2107,15 +2121,22 @@ void View::mousePressEvent( QMouseEvent * e )
       switch ( e->button() )
       {
         case Qt::LeftButton:
-          if ( !d->mDelegate->hitContentItem() )
-            return;
-
-          if ( d->mDelegate->hitContentItem()->type() == Theme::ContentItem::ExpandedStateIcon )
           {
-            if ( groupHeaderItem->childItemCount() > 0 )
+            QModelIndex index = d->mModel->index( groupHeaderItem, 0 );
+
+            if ( index.isValid() )
+              setCurrentIndex( index );
+
+            if ( !d->mDelegate->hitContentItem() )
+              return;
+
+            if ( d->mDelegate->hitContentItem()->type() == Theme::ContentItem::ExpandedStateIcon )
             {
-              // toggle expanded state
-              setExpanded( d->mDelegate->hitIndex(), !isExpanded( d->mDelegate->hitIndex() ) );
+              if ( groupHeaderItem->childItemCount() > 0 )
+              {
+                // toggle expanded state
+                setExpanded( d->mDelegate->hitIndex(), !isExpanded( d->mDelegate->hitIndex() ) );
+              }
             }
           }
         break;
@@ -2151,6 +2172,33 @@ void View::mouseMoveEvent( QMouseEvent * e )
     return;
 
   d->mWidget->viewStartDragRequest();
+}
+
+void View::contextMenuEvent( QContextMenuEvent * e )
+{
+  QModelIndex index = currentIndex();
+  if ( index.isValid() ) {
+    QRect indexRect = this->visualRect( index );
+    QPoint pos;
+
+    if ( ( indexRect.isValid() ) && ( indexRect.bottom() > 0 ) ) {
+      if ( indexRect.bottom() > viewport()->height() ) {
+        if ( indexRect.top() <= viewport()->height() ) {
+          pos = indexRect.topLeft();
+        }
+      } else {
+        pos = indexRect.bottomLeft();
+      }
+    }
+
+    Item *item = static_cast< Item * >( index.internalPointer() );
+    if ( item ) {
+      if ( item->type() == Item::GroupHeader )
+        d->mWidget->viewGroupHeaderContextPopupRequest( static_cast< GroupHeaderItem * >( item ), viewport()->mapToGlobal( pos ) );
+      else if ( !selectionEmpty() )
+        d->mWidget->viewMessageListContextPopupRequest( selectionAsMessageItemList(), viewport()->mapToGlobal( pos ) );
+    }
+  }
 }
 
 void View::dragEnterEvent( QDragEnterEvent * e )
@@ -2575,6 +2623,16 @@ void View::slotCollapseAllGroups()
 void View::slotExpandAllGroups()
 {
   setAllGroupsExpanded( true );
+}
+
+void View::slotCollapseCurrentItem()
+{
+  setCurrentThreadExpanded( false );
+}
+
+void View::slotExpandCurrentItem()
+{
+  setCurrentThreadExpanded( true );
 }
 
 void View::focusQuickSearch()
