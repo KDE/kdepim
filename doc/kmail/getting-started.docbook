@@ -25,21 +25,18 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2011-07-15</date>
-<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
+<date>2004-07-13</date>
+<releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Getting Started</title>
-
-<!-- Accounts Wizard missing, launched at the first start on a system
-  the wizard can be later started with Tools->Accounts Wizard from the menu-->
 
 <para>This is a short introduction to &kmail; and its usage so you can
 start working with it right away. For more in-depth information see the
 <link linkend="using-kmail">Using &kmail;</link> section. Note that
 &kmail;'s installation is described in <link linkend="installation">the
 appendix</link>.</para>
-<!-- adapt to kmail2/akonadi lueck 31.05.2011-->
+
 <para>Invoking &kmail; for the first time creates a folder called
 <filename class="directory">Mail</filename> in your home folder.
 This folder contains the initial folders
@@ -137,7 +134,7 @@ your default identity and for all other identities that have no own
 way of sending messages. You can use different ways of sending
 messages for different identities by selecting the <guilabel>Special
 transport</guilabel> checkbox in the <guilabel>Advanced</guilabel>
-tab of the <guilabel>Identities</guilabel> page.</para>
+tab of the <guilabel>Identities</guilabel> section.</para>
 
 <para>A description of the other options can be found
 in the <link linkend="configure-accounts-sending">Configuration</link>
@@ -153,25 +150,25 @@ chapter.</para>
 
 <sect2 id="receiving-mail">
 <title>Receiving Messages</title>
-<!-- review - changed to akonadi ressources? lueck 31.05.2011-->
+
 <para>To set up an account so you can receive mail, press the
 <guibutton>Add...</guibutton> button in the <guilabel>Receiving</guilabel>
 tab. You will then be prompted for the type of your email account.  Most users should
-select <guilabel>POP3</guilabel> or <guilabel>IMAP E-Mail Server</guilabel>. If
+select <guilabel>POP3</guilabel> or <guilabel>IMAP</guilabel>. If
 you want to use a local mailbox file, please see the <link linkend="faq-file-locking">FAQ
 about file locking</link>.</para>
 
 <para>You will then be presented with
-the <guilabel>Akonadi.Resource</guilabel> window. First, fill in the
+the <guilabel>Add Account</guilabel> window. First, fill in the
 <guilabel>Account name</guilabel> field to name your account. You can choose any name
-you like.  <guilabel>Username</guilabel>, <guilabel>Password</guilabel>, and
+you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Incoming mail server</guilabel> should be filled in with the appropriate information
 from your <acronym>ISP</acronym> or system administrator. You should not
 need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 <userinput>110</userinput>, the default for <acronym>IMAP</acronym> is
 <userinput>143</userinput>).</para>
 
-<sect3 id="receiving-mail-kolab"><!-- review - still relevant? remove? lueck 31.05.2011-->
+<sect3 id="receiving-mail-kolab">
 <title>Options relevant to <acronym>Kolab</acronym> server</title>
 <para>
 select <guilabel>Disconnected IMAP</guilabel> when choosing your <guilabel>Account Type</guilabel>. Fill in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields with respectively your user email address and password on the <guilabel>Kolab</guilabel> server. In the <guilabel>Security</guilabel> section click on the <guilabel>Check What the Server Support</guilabel> button for automated set-up of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab</guilabel> server supports <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
@@ -180,7 +177,7 @@ If you want to use the <guilabel>"Out of Office" Replies</guilabel> functionalit
 </para>
 </sect3>
 
-<sect3 id="receiving-mail-dimap-misc"><!-- review - still relevant? remove? lueck 31.05.2011-->
+<sect3 id="receiving-mail-dimap-misc">
 <title>Options only relevant to DIMAP (<acronym>Kolab</acronym> server)</title>
 <para>
 After having configured your <guilabel>Disconnect IMAP</guilabel> account, you
@@ -221,15 +218,15 @@ folders whose name starts with a dot are also displayed.</para>
 <para>Select <guilabel>Leave fetched messages on the server</guilabel> if you want to
 leave your messages on the server after you downloaded them.</para>
 
-<para>Select <guilabel>Include in Manual Mail Check</guilabel> if you
-do want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check
+<para>Select <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> if you
+do not want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check
 Mail</guimenuitem></menuchoice>.  You can still check for new messages on this account
 with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
 In</guimenuitem></menuchoice>.</para>
 
 <para>Select <guilabel>Enable interval mail checking</guilabel> if you want
 &kmail; to check for new messages automatically. The interval can be specified below
-under <guilabel>Check mail interval</guilabel>.</para>
+under <guilabel>Check interval</guilabel>.</para>
 
 <para><guilabel>inbox</guilabel> is the default folder for incoming
 messages. If you want to change that for some reason, you can do so with
@@ -242,7 +239,7 @@ will execute just before fetching mail. Please specify the full path
 (do not use <quote>~</quote>) and note that &kmail; will not continue
 until the program returns.</para>
 
-<para>In the <guilabel>POP Settings</guilabel> group you can select <guilabel>Use
+<para>On the <guilabel>POP Settings</guilabel> tab you can select <guilabel>Use
 pipelining for faster mail download</guilabel> if this is supported by your
 server. You should carefully test this to make sure it works safely.</para>
 </sect3>
@@ -261,8 +258,8 @@ people who can access your configuration files (&eg; system
 administrators) can easily get your password if you select this
 option.</para></warning>
 
-<para>&kmail; supports encryption via <guilabel>SSL/TLS</guilabel> and
-<guilabel>STARTTLS</guilabel> (<guilabel>SSL/TLS</guilabel> should be preferred
+<para>&kmail; supports encryption via <guilabel>SSL</guilabel> and
+<guilabel>TLS</guilabel> (<guilabel>TLS</guilabel> should be preferred
 if it is available).</para>
 
 <para>For POP3 &kmail; supports:</para>

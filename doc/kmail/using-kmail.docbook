@@ -11,8 +11,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2011-07-16</date>
-<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
+<date>2004-09-24</date>
+<releaseinfo>1.7.50</releaseinfo>
 </chapterinfo>
 
 <title>Using &kmail;</title>
@@ -65,12 +65,12 @@ at the bottom of the message, either as icons or embedded in the message,
 depending on <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Attachments</guimenuitem></menuchoice>. For complex messages
 the structure of the message is shown in the message structure viewer below
-the preview pane. <!--The placement of the preview pane as well as the placement
+the preview pane. The placement of the preview pane as well as the placement
 of the structure viewer can be changed under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel>
 in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 &kmail;...</guimenuitem></menuchoice> dialog. Moreover, you can disable the 
 preview pane and you can choose when the message structure viewer should be
-  shown.not in 2.1.0 lueck-->
+shown.
 You can scroll through the message page-by-page
 using the <keycap>Page Up</keycap> and <keycap>Page down</keycap> keys, or 
 line-by-line using the <keycap>up arrow</keycap> and <keycap>down arrow</keycap>
@@ -103,19 +103,11 @@ at the bottom.</entry>
 </row>
 <row>
 <entry><keycap>Right Arrow</keycap> or <keycap>N</keycap></entry>
-<entry>Go to the next message in the current folder and display the message preview.</entry>
+<entry>Go to the next message in the current folder.</entry>
 </row>
 <row>
 <entry><keycap>Left Arrow</keycap> key or <keycap>P</keycap></entry>
-<entry>Go to the previous message in the current folder and display the message preview.</entry>
-</row>
-<row>
-<entry><keycombo action="simul">&Alt;<keycap>Right Arrow</keycap></keycombo></entry>
-<entry>Scroll down the message list in the current folder, the message preview does not change.</entry>
-</row>
-<row>
-<entry><keycombo action="simul">&Alt;<keycap>Left Arrow</keycap></keycombo></entry>
-<entry>Scroll up the message list in the current folder, the message preview does not change.</entry>
+<entry>Go to the previous message in the current folder.</entry>
 </row>
 <row>
 <entry><keycap>+</keycap></entry>
@@ -134,19 +126,19 @@ at the bottom.</entry>
 <entry>Go to the previous folder with unread messages.</entry>
 </row>
 <row>
-<entry><keycombo action="simul">&Alt;<keycap>Up Arrow</keycap></keycombo></entry>
+<entry><keycombo action="simul">&Ctrl;<keycap>Up Arrow</keycap></keycombo></entry>
 <entry>Go to the next folder in the folder list (if the folder list has focus.)</entry>
 </row>
 <row>
-<entry><keycombo action="simul">&Alt;<keycap>Down Arrow</keycap></keycombo></entry>
+<entry><keycombo action="simul">&Ctrl;<keycap>Down Arrow</keycap></keycombo></entry>
 <entry>Go to the previous folder in the folder list (if the folder list has focus.)</entry>
 </row>
-<!-- wrong in 4.7 lueck
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo></entry>
 <entry>Walk upwards in the list of folders. Use 
 <keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
 enter the folder.</entry>
+<!-- TODO: or wait for timeout so the folder is selected? -->
 </row>
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo></entry>
@@ -160,7 +152,6 @@ enter the folder.</entry>
 to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> or
 <keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo>.</entry>
 </row>
--->
 <row>
 <entry><keycombo action="simul">&Shift;<keycap>Left Arrow</keycap></keycombo> and
 <keycombo action="simul">&Shift;<keycap>Right Arrow</keycap></keycombo></entry>
@@ -195,7 +186,7 @@ the current identity will become the default identity when you open
 a new composer next time.</para>
 
 <para>There are a variety of shortcuts to help
-you with writing your messages. The <guibutton>Select...</guibutton> buttons next to
+you with writing your messages. The <guibutton>...</guibutton> buttons next to
 the <guilabel>To:</guilabel>, <guilabel>CC:</guilabel>, and
 <guilabel>BCC:</guilabel> fields will call up the address book so that you can
 select addresses from there.</para>
@@ -216,8 +207,8 @@ You may need to specify fully qualified addresses
 users, depending on your system configuration.</para>
 
 <para>When you are finished with your
-message, click the <guiicon>Send</guiicon> icon (the envelope) to send
-the message now, or click the <guiicon>Queue</guiicon> icon to put
+message, click the <guiicon>Send Now</guiicon> icon (the envelope) to send
+the message now, or click the <guiicon>Send Later</guiicon> icon to put
 the message in the outbox. If your message is not finished yet, select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice>.
 </para></sect2>
@@ -253,7 +244,7 @@ if necessary, &ie; if you send messages to users of email clients that cannot
 handle the more advanced formats.</para></listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>OpenPGP/MIME</guilabel></term>
+<term><guilabel>PGP/MIME</guilabel></term>
 <listitem>
 <para>This format is the successor of the inline OpenPGP format. If you
 use this format then the message text and all attachments will be signed
@@ -263,7 +254,7 @@ use OpenPGP.</para></listitem>
 <varlistentry>
 <term><guilabel>S/MIME</guilabel></term>
 <listitem>
-<para>This format is an alternative format to OpenPGP/MIME. If you
+<para>This format is an alternative format to PGP/MIME. If you
 use this format then the message text and all attachments will be signed
 and/or encrypted (at least by default). This format is mostly used by
 corporations.</para></listitem>
@@ -327,8 +318,8 @@ window -- that message will then be attached;</para>
 
 <para>Once a file is attached to your message, it appears in the attachments
 pane at the bottom of the composer window. You can use the
-&RMB; on each attachment to <guimenuitem>Open</guimenuitem>, <guimenuitem>View</guimenuitem>,
-<guimenuitem>Save As...</guimenuitem> or <guimenuitem>Remove</guimenuitem>
+&RMB; on each attachment to <guimenuitem>View</guimenuitem>,
+<guimenuitem>Save</guimenuitem> or <guimenuitem>Remove</guimenuitem>
 the attachment.</para>
 
 <para>Use the <guimenuitem>Properties</guimenuitem> item to
@@ -343,7 +334,7 @@ if you want to suggest to the recipient the automatic (inline) display of this a
 and on his settings.</para>
 
 <para>You can also attach public keys to the message by using the appropriate options in the
-<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>GnuGP</application>
+<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>PGP</application>
 key attachments are handled like file attachments.</para>
 
 </sect2>
@@ -396,17 +387,17 @@ snippetDelimiter=$
 
 <sect1 id="folders">
 <title>Message Folders</title>
-<!-- review and adapt to kmail2/akonadi lueck 31.05.2011-->
-<para>Message Folders are used to organize your email messages. <!-- By default,
+
+<para>Message Folders are used to organize your email messages. By default,
 if you have no existing message folders, messages are stored in the folder
 <filename
 class="directory">$<envar>KDEHOME</envar>/share/apps/kmail/</filename>.  If
 you have existing message folders in <filename
-  class="directory">~/Mail</filename>, these will be used instead.-->  When you
+class="directory">~/Mail</filename>, these will be used instead.  When you
 first start &kmail; the <guilabel>inbox</guilabel>,
 <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>,
-<guilabel>trash</guilabel>, <guilabel>drafts</guilabel> and <guilabel>templates</guilabel> 
-folders are created. These folders each have special functions:</para>
+<guilabel>trash</guilabel> and <guilabel>drafts</guilabel> folders are
+created.  These folders each have special functions:</para>
 
 <variablelist>
 <varlistentry>
@@ -444,19 +435,20 @@ folder instead of sending them.</para>
 </listitem>
 </varlistentry>
 </variablelist>
-<!-- missing templates folder lueck 31.05.2011-->
+
 <para>You may find that the standard folders are fine for your
 needs; eventually, though, you will probably need folders to help you organize
 your messages. To create a new folder, select
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Add Folder...</guimenuitem></menuchoice>. 
-The <link linkend="folders-properties-window">folder properties</link> dialog
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>New Folder...</guimenuitem></menuchoice>: 
+the <link linkend="folders-properties-window">folder properties</link> dialog
 will then prompt you for the necessary information. If you ever need to change
 the settings for a folder, select the folder you wish to modify in the Folders pane and select
-<guimenuitem>Folder Properties</guimenuitem> from the context menu.</para>
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Properties</guimenuitem>
+</menuchoice>.</para>
 
 <para>To move messages from one folder into another, select the message(s) you
 want to move and press the <keycap>M</keycap> key or select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Move Messages 
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Move
 To</guimenuitem></menuchoice>. A list of folders will appear; select the folder
 from the list that you want to move the messages to.  Messages can also be moved
 by dragging them from the Message list to a folder in the Folder list.</para>
@@ -478,96 +470,58 @@ or renamed.</para>
 
 <sect3 id="folders-properties-general">
 <title>General</title>
+
 <para>Rename a folder by changing the entry in the <guilabel>Name:</guilabel> field.</para>
-<!-- not in kmail 2.0.96 lueck 31.05.2011
+
 <para>You can make a folder a subfolder of another folder by choosing a new parent
 folder using the <guilabel>Belongs to</guilabel> selection. </para>
+
+<para>The <guilabel>Folder Icons</guilabel> section lets you choose
+icons that are different from the default ones in the folder list.</para>
+
 <para>See the <link linkend="folders-format">Folder Format</link> section
 for information about the <guilabel>Mailbox format.</guilabel></para>
--->
-<para>Check <guilabel>Act on new/unread mail in this folder</guilabel> if you 
-want to be informed about new mail that arrives in this folder. Setting this option is for
-example useful for the folder where you move all detected spam messages to.</para>
-<para>Check <guilabel>Keep replies in this folder</guilabel> if you want
-replies to messages in this folder to be filed also into this folder rather 
-than into a special sent-mail folder.</para>
-<para>Check <guilabel>Hide this folder in the folder selection dialog</guilabel> 
-if you do not want this folder to be shown in folder "selection dialogs, 
-such as the <guimenuitem>Jump to Folder</guimenuitem> dialog.</para>
-<para>With the <guilabel>Sender identity</guilabel> option you can set the default
+
+<para>With the <guilabel>Identity</guilabel> section you can set the default
 identity that should be used for new messages if this folder is selected.
 Replies to messages that were sent directly
 to you will still default to the message's <quote>To</quote> address if an
 according identity is found.</para>
-</sect3>
-<sect3 id="folders-properties-view">
-<title>View</title>
-<para>The <guilabel>Use custom icons</guilabel> option lets you choose
-icons that are different from the default ones in the folder list.</para>
-<para>With <guilabel>Show columns</guilabel> you can set the 
-visible columns in the header pane to <guilabel>Default</guilabel>,
-<guilabel>Sender</guilabel> or <guilabel>Receiver</guilabel>. This is useful 
-if you use a folder to save your own sent messages.</para>
-<para>In the <guilabel>Message List</guilabel> section you can select and
-configure an <guilabel>Aggregation</guilabel> and <guilabel>Theme</guilabel>
-for this folder different from the default configured in &kmail;s settings.
-For more details see the <link linkend="configure-appearance-message-list">
-Message List</link> tab in the <guilabel>Appearance</guilabel> page.</para>
-</sect3>
-<sect3 id="folders-properties-retrieval">
-<title>Retrieval</title>
-<para>Deselect <guilabel>Use options from parent folder or account</guilabel> 
-to set folder-specific options for synchronizing and retrieval of messages.
-<!-- use case ??? where and how to set the defaults??? 
-missing:
-Synchronize when selecting this folder
-Automatically synchronize after
-Retrevial Options - Always retriew full messages, Retrieve nessage bodies on demand, Keep message bodies loacally for
---></para>
-</sect3>
-<sect3 id="folders-properties-templates">
-<title>Templates</title>
-<para>On this tab you can define folder-specific templates for your custom folders.  
-For more details see the <link linkend="configure-composer-standard-templates">
-Standard Templates</link> tab in the <guilabel>Composer</guilabel> page
-</para>
-</sect3>
-<sect3 id="folders-properties-maintainance">
-<title>Maintenance</title>
-<para>This tab shows an overview about the folder type and its size, 
-the number of read and unread messages in the folder and allows you to enable
-text indexing.</para>
-</sect3>
-</sect2>
 
-<!-- in kmail 2.0.96  Expiry action in context menu of each folder-->
-<sect2 id="folders-properties-expiry">
+<para>With <guilabel>Show Sender/Receiver</guilabel> you can set the 
+visible columns in the header pane. This is useful if you use a
+folder to save your own sent messages.</para>
+
+<para>Check <guilabel>Ignore new mail in this folder</guilabel> if you do not
+want to be informed about new mail that arrives in this folder. This is for
+example useful for the folder where you move all detected spam messages to.</para>
+
+<para>Check <guilabel>Keep replies in this folder</guilabel> if you want
+replies to messages in this folder to be filed also into this folder rather 
+than into a special sent-mail folder.</para>
+
+</sect3>
+
+<sect3 id="folders-properties-expiry">
 <title>Old Message Expiry</title>
 
-<para>From the context menu of a folder select <guimenuitem>Expire</guimenuitem> 
-to open the <guilabel>Mail Expiry Property</guilabel> dialog. 
-Here you can select what should happen with old messages in this
-folder. If you enable to expire old read or unread messages in this folder 
+<para>Here you can select what should happen with old messages in this
+folder. If you enable <guilabel>Expire old messages in this folder</guilabel>
 then &kmail; will regularly, depending on your choice, either delete old 
-messages or move old messages to another folder. 
-<!-- not in kmail 2.0.96  lueck 31.05.2011 You can also start
+messages or move old messages to another folder. You can also start
 expiration of old messages manually via <menuchoice><guimenu>Folder</guimenu><guisubmenu>Expire</guisubmenu></menuchoice> and via
 <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
-  All Folders</guisubmenu></menuchoice> -->
-</para>
+All Folders</guisubmenu></menuchoice></para>
 
 <warning><para>Messages that are deleted during expiration of old messages 
 cannot be restored, so be careful with this setting.</para></warning>
 
-</sect2>
+</sect3>
 
-<sect2 id="folders-properties-mailinglist">
+<sect3 id="folders-properties-mailinglist">
 <title>Mailing List</title>
 
-<para>If you are going to use the folder for a mailing list open the 
-<guilabel>Mailinglist Folder Properties</guilabel> dialog with 
-<menuchoice><guimenu>Folder</guimenu> <guimenuitem>Mailing List Management</guimenuitem>
-</menuchoice> from the menu. Then you should
+<para>If you are going to use the folder for a mailing list then you should
 check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
 with the mailing list. Next you should
 click on <guilabel>Detect Automatically</guilabel>. &kmail; will then try
@@ -659,9 +613,9 @@ Message to Mailing-List...</guimenuitem></menuchoice> or by clicking with
 the <mousebutton>middle</mousebutton> mousebutton on the folder in the folder
 list.</para>
 
-</sect2>
+</sect3>
 
- <sect2 id="folders-properties-acl"><!-- valid for kmail 2.1.96?  lueck 31.05.2011-->
+      <sect3 id="folders-properties-acl">
 	<title>Access Control tab (&imap; only)</title>
 
 	<para>
@@ -946,9 +900,10 @@ list.</para>
 	  </tgroup>
 	</table>
 
-      </sect2>
+      </sect3>
 
-<!-- not valid for kmail 2.0.96, adapt to akonadi lueck 31.05.2011
+</sect2>
+
 <sect2 id="folders-format">
 <title>Folder Format</title>
 
@@ -965,7 +920,7 @@ between both formats automatically, but you can just move all messages from an o
 vice-versa.</para>
 
 </sect2>
--->
+
 </sect1>
 
 <sect1 id="filters">
@@ -976,6 +931,11 @@ vice-versa.</para>
 sorting out the new messages in your inbox when they arrive. Filters allow you
 to automatically perform certain actions on incoming messages and to manually
 perform actions on selected messages in a folder.</para>
+
+<para>Please note that the filters described in this section are
+applied <emphasis>after</emphasis> the messages have been downloaded
+from your account -- if you want to filter messages on the server, see
+<link linkend="popfilters">Download Filters</link>.</para>
 
 <para>Filters consist of: filter criteria, whose rules are used as
 criteria to determine whether this filter should be applied to a given
@@ -996,7 +956,7 @@ of messages. To selectively filter messages, select the messages you
 want to filter in the message list and either type <keycombo
 action="simul">&Ctrl;<keycap>J</keycap> </keycombo> or select
 <menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
-Filter</guimenuitem></menuchoice>: this will apply all filters that
+Filters</guimenuitem></menuchoice>: this will apply all filters that
 have been marked for manual filtering in the <link
 linkend="filter-dialog">filter dialog</link> to those messages.</para>
 
@@ -1005,7 +965,7 @@ linkend="filter-dialog">filter dialog</link> to those messages.</para>
 
 <para>There are two methods for creating a filter; the quick method is
 to use <menuchoice><guimenu>Message</guimenu><guimenuitem>Create
-Filter</guimenuitem></menuchoice> and select a criteria from the submenu: this will call the filter dialog
+Filter</guimenuitem></menuchoice>: this will call the filter dialog
 and present you with a new filter which has the first rule of the
 search pattern and the first action (as <guilabel>Move into Folder</guilabel>) 
 preset. In most cases, all you have to do is select the folder where the message
@@ -1040,8 +1000,7 @@ Filter</guisubmenu></menuchoice> or
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
 Filters...</guimenuitem></menuchoice>.</para>
 
-<para>The dialog is divided into three main sections on the <guilabel>General</guilabel> 
-and <guilabel>Advanced</guilabel> tab:</para>
+<para>The dialog is divided into four main sections:</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Available Filters</guilabel></term>
@@ -1092,30 +1051,22 @@ removes all but one action and resets that one.</para>
 that allow you to refine your filtering.</para>
 
 <para>Using the first row of check boxes, you can toggle when the
-filter is applied: the <guilabel>Apply this filter to incoming messages</guilabel>
+filter is applied: the <guilabel>to incoming messages</guilabel>
 option means that the filter is applied to messages when you receive
-them (&ie; on <guiicon>Check Mail</guiicon>).
-The filter can be applied to all messages, to all but online IMAP accounts and
-to a selection of inciming folders.</para>
-<para>The <guilabel>Apply this filter to sent
+them (&ie; on <guiicon>Check Mail</guiicon>); the <guilabel>to sent
 messages</guilabel> options means that the filter is applied to
-messages when you send them and the <guilabel>Apply this filter on manual
+messages when you send them and the <guilabel>on manual
 filtering</guilabel> option controls whether to apply this filter when
 filtering is specifically selected (&ie; via
 <menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
 Filters</guimenuitem></menuchoice>.)</para>
-<para>If <guilabel>Apply this filter to sent messages</guilabel> is checked
-the filter will be triggered <emphasis>after</emphasis> the message is sent and it will 
-only affect the local copy of the message. If the recipient's copy 
-also needs to be modified, please use <guilabel>Apply this filter before 
-sending messages</guilabel>.
-</para>
+
 <para>The <guilabel>If this filter matches, stop processing here</guilabel>
-check box controls whether or not the filters after
+check box in the second row controls whether or not the filters after
 the current filter will be applied, if the current filter matches.</para>
 
 <para>If the <guilabel>Add this filter to the Apply Filter menu</guilabel>
-check box is selected, this filter will be inserted
+check box in the third row is selected, this filter will be inserted
 in the <menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
 Filter</guimenuitem></menuchoice> submenu. You can then apply this
 filter to a message. Another way of applying filters is to use
@@ -1311,7 +1262,7 @@ Folder</guilabel>. Here is a list of all possible actions:</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Move Into Folder</guilabel></term>
+<term><guilabel>Move into Folder</guilabel></term>
 <listitem>
 <para>This will file the message into another folder, removing it from
 its current folder if necessary; you cannot, currently 
@@ -1320,7 +1271,7 @@ use &imap; folders as a target.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>Copy Into Folder</guilabel></term>
+<term><guilabel>Copy to Folder</guilabel></term>
 <listitem>
 <para>This will copy the message to another folder.</para>
 <note><para>You currently cannot use &imap;
@@ -1498,10 +1449,9 @@ Filters...</guimenuitem></menuchoice> dialog and click the
 list.</para>
 </step>
 <step>
-<para>In the <guilabel>Filter Criteria</guilabel> area, select <guilabel>Anywhere 
-in Headers</guilabel> and <guilabel>contains</guilabel> from the drop down boxes and type
-<userinput>Priority</userinput> in the text field. Select the same criteria 
-in the next line and type <userinput>urgent</userinput> in the
+<para>In the <guilabel>Filter Criteria</guilabel> area, type
+<userinput>Priority</userinput> in the text field of the first
+drop-down box, and type <userinput>urgent</userinput> in the
 text field of the second drop-down box.</para>
 <para>So your filter will match all messages containing a
 <quote>Priority: urgent</quote> header field.</para>
@@ -1565,17 +1515,17 @@ filter. It will appear as <guilabel>&lt;unknown&gt;</guilabel>.</para>
 </step>
 <step>
 <para>In the <guilabel> Filter Criteria</guilabel> area, select
-<guilabel>All Recipients</guilabel> from the first drop down box,
-<guilabel>contains</guilabel> from the second drop down box, and type
+<guilabel>&lt;recipients&gt;</guilabel> from the first drop-down box,
+<guilabel>contains</guilabel> from the second drop-down box, and type
 <userinput>kde@kde.org</userinput> in the text
 field.</para>
 </step>
 <step>
-<para>Skip down to the <guilabel>Filter Actions</guilabel> section. Select <guilabel>Move Into
-Folder</guilabel> from the first drop-down box. Click on the folder icon and a window 
+<para>Skip down to the <guilabel>Filter Actions</guilabel> section. Select <guilabel>file into
+folder</guilabel> from the first drop-down box. A new drop-down box
 containing a list of folders will appear. Select the folder that you
 want the filtered messages to be transferred to. For this example, you would select
-<guilabel>KDE-General</guilabel>.</para>
+<guilabel>KDE-General</guilabel> from the drop-down box.</para>
 </step>
 </procedure>
 
@@ -1663,15 +1613,15 @@ a rule based on the complete message.
 <term>Check the order of your filters:</term>
 <listitem>
 <para>All the different filter actions have a different complexity. 
-The most expensive filter actions are <guilabel>Pipe Through</guilabel> 
-and <guilabel>Execute Command</guilabel>, because both need external 
+The most expensive filter actions are <guilabel>pipe through</guilabel> 
+and <guilabel>execute command</guilabel>, because both need external 
 programs to be run. Placing filters containing these filter actions
 behind other filters that can reduce the number of times these complex
 actions are required is useful, if the filter logic does allow
 this.</para> 
 <para>An example is filtering messages from a mailing list and detecting 
 spam messages. For the spam detection you will usually use an external 
-tool via a <guilabel>Pipe Through</guilabel> action. Filtering the messages 
+tool via a <guilabel>pipe through</guilabel> action. Filtering the messages 
 for the mailing list is done via the List-Id header. If you do not want to 
 check the messages from the mailing list for spam too, it is better to
 use the filter for the mailing list messages before the filter for the 
@@ -1697,6 +1647,127 @@ you need to debug your filtering process.
 </sect2>
 </sect1>
 
+<!-- dnaber update 2004-02-22 -->
+<sect1 id="popfilters">
+<title>Download Filters</title>
+
+<para>Download Filters can be used to filter mail from a POP server,
+<emphasis>before</emphasis> they are completely downloaded; you can use them
+to prevent &kmail; from downloading huge messages and save time this
+way.</para>
+
+<para>In the configuration dialog of the POP account you can enable 
+download filtering by checking the <guilabel>Filter messages if
+they are greater than</guilabel> box; once you have done that, you can specify a size 
+which is used as a threshold: messages exceeding this size will be
+checked against the filter rules you defined -- if no filter rule
+matches, they will be shown in a confirmation dialog and you can
+decide what to do with them. The default size for filtering is 50,000
+Bytes; this is a good value as the overhead is kept to a minimum -- 
+every message that is looked at by the filter causes additional
+traffic because the header of the message is downloaded twice. The
+default action is <guilabel>Download mail</guilabel> to prevent the
+loss of messages.</para>
+
+<warning><para>Be careful with the <guilabel>Delete mail from
+server</guilabel> option since once a mail is deleted on the server
+there is no way to get it back.</para></warning>
+
+<para>With a really good set of filter rules, it is possible that all
+messages that exceed the threshold size are automatically tagged
+(&ie; downloaded, kept on the server or deleted) and you would never
+be bugged by the confirmation dialog. Be careful though, since once a
+message is matched by a filter rule, you have no guarantee that you
+can change the action before it is executed: the confirmation dialog will
+be displayed <emphasis>only</emphasis> if there is a message left that
+was not matched by a filter rule.</para>
+
+<sect2 id="popfilters-dialog">
+<title>The <guilabel>Configure Pop Filter</guilabel> Dialog</title>
+
+<para>Adding filter rules works similar as for <link
+linkend="filters">message  filters</link>. On the left hand side you
+can manage the existing filters. Use the <guiicon>New</guiicon>
+button to add a filter. On the right hand side you can configure
+under which conditions the current filter should match. Using <guilabel>Filter
+Action</guilabel> you specify what will happen to a message that is 
+matched by this rule. The available options are:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Download mail</guilabel></term>
+<listitem>
+<para>Will download the messages matched by the filter, just as any other message
+that does not exceed the threshold size.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Download mail later</guilabel></term>
+<listitem>
+<para>Will tag the messages for later download. This means the messages matched
+will stay on the POP server until you choose to download them by
+changing the action manually.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delete mail from server</guilabel></term>
+<listitem>
+<para>Will delete the message from the server and does not download it. Once you 
+deleted a message from the server, there is <emphasis>no</emphasis> way you can undo this.
+Be careful, as rules could match messages you actually want, too.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>The option <guilabel>Always show matched 'Download Later' messages in
+confirmation  dialog</guilabel> will cause the confirmation dialog to
+show up during mailbox check if at least one message was tagged for
+<guilabel>Download Later</guilabel> - even if all messages exceeding
+the threshold size were matched by a rule. This option is useful in the
+case you have messages matched by a rule and tagged for
+<guilabel>Download Later</guilabel>, but you do not get any message
+exceeding the size limit for a very long time. Without this option,
+the confirmation dialog would never show up and you would never have
+a chance to get the queued message by changing the action manually.</para>
+
+</sect2>
+
+<sect2 id="popfilters-confirmation">
+<title>The Confirmation Dialog</title>
+
+<para>This dialog shows up whenever you have POP filtering switched
+on and  messages were found on the server that exceed the threshold
+size you defined for the POP account. Now you have the chance to
+decide what you want to do with that message. The options are
+<guilabel>Download</guilabel> (green), <guilabel>Download
+later</guilabel> (yellow with egg watch) and <guilabel>Delete from
+server</guilabel> (red <quote>X</quote>). Be cautious with the delete
+option, since once you deleted a mail from the server, there is no
+way to undelete it again.</para>
+
+<para>In the <guilabel>Filtered Messages</guilabel> section you can
+check the box if you receive messages that were automatically tagged for
+a certain action (download, download later, delete) by a filter rule.
+The checkbox is only enabled if you receive some messages that were
+matched by a filter rule; once you check it, a list similar to the
+one for the not-automatically-tagged messages will be displayed and you 
+can change the action for every single message.</para>
+
+<para>Please note that if there is a message exceeding the size
+limit, but all messages are matched by a filter rule the dialog will
+not be displayed. One exception occurs if you have checked 
+<guilabel>Always show matched 'Download Later' messages</guilabel> in
+the <guilabel>Global Options</guilabel> section of the POP filter
+configuration dialog; then, the dialog will also be displayed if you only
+have matched messages, but at least one message was tagged for
+<guilabel>Download later</guilabel>.</para>
+
+</sect2>
+
+</sect1>
+
 <sect1 id="multiple-accounts">
 <title>Using Multiple Accounts</title>
 
@@ -1717,25 +1788,30 @@ Mail</guiicon> icon for some time to get a list of accounts.</para>
 
 <sect1 id="pgp">
 <!-- This section is from Andreas Gungl, 2000-05-21, updated 2002-10-06 by Ingo Kloecker -->
-<title>Signing and Encrypting Messages with <application>GnuPG</application></title>
+<title>Signing and Encrypting Messages with <application>PGP</application> 
+or <application>GnuPG</application></title>
 
-<!--
 <note><para>There have been major changes in the way &kmail; handles 
 signing/encryption. The following introduction applies to the previous
 version of &kmail;. You can still read the introduction to get an overview
 about how to sign/encrypt messages, but the details, especially those of
 the configuration, will differ.</para></note>
--->
+
 <para>This is a short introduction on how to setup &kmail;'s
-<application>GnuGP</application> (<application>GNU Privacy Guard</application>) support; 
+<application>PGP</application> (<application>Pretty Good Privacy</application>) support; 
 it gives some hints on the use of
-<application>GnuGP</application> too. It is written for people who are beginners in
-this area; if you are familiar with the use of <application>GnuGP</application>, you can
-skip most of the steps.</para>
+<application>PGP</application> too. It is written for people who are beginners in
+this area; if you are familiar with the use of <application>PGP</application>, you can
+skip most of the steps. This documentation, and the &kmail; user interface,
+generally talk only about  <quote>PGP</quote>, but it applies to 
+both <application>PGP</application> and <application>GnuPG</application> 
+(<application>GNU Privacy Guard</application>), 
+(although some <application>GnuPG</application> command-line parameters 
+may be different.)</para>
 
 <para>Please
 also check out the <link linkend="pgp-faq">&FAQ; item about
-<application>GnuGP</application></link>.</para>
+<application>PGP</application></link>.</para>
 
 <warning><para>Attachments will not be signed/encrypted if you are using
 inline OpenPGP: to sign/encrypt attachments, you have to install GnuPG and
@@ -1743,23 +1819,25 @@ some necessary libraries;
 then, you can decide for each attachment whether it should be signed/encrypted or not.
 </para></warning>
 
-<warning><para>&kmail; has to rely on <application>GnuGP</application>'s
+<warning><para>&kmail; has to rely on <application>PGP</application>'s
 output; this output is often different between different versions of 
-<application>GnuGP</application>, so it is important that you test if encryption
+<application>PGP</application>, so it is important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails -- enable 
 <guilabel>Show signed/encrypted text
 after composing</guilabel>.  </para></warning>
 
-<para>To setup and use <application>GnuGP</application> support in &kmail; it is
-necessary to have <application>GnuGP</application> installed and set up
+<para>To setup and use <application>PGP</application> support in &kmail; it is
+necessary to have <application>PGP</application> installed and set up
 properly; of course, we cannot give you a full introduction of
-<application>GnuGP</application> here. We will only mention the steps you have to
-do to get <application>GnuGP</application> going. For details you should have a look at 
-the <ulink url="http://www.gnupg.org/docs.html#guides">The GNU Privacy Handbook</ulink>.</para> 
+<application>PGP</application> here. We will only mention the steps you have to
+do to get <application>PGP</application> going. For details you should have a look at 
+the excellent  <application>PGP</application> documentation 
+or <ulink url="http://www.gnupg.org/docs.html#guides">The GNU Privacy Handbook</ulink>.</para> 
 
 <para>It is certainly a good idea to study this documentation as well as an
-introduction into public key cryptography: there you can learn a lot about
+introduction into public key cryptography (&eg; out of the
+<application>PGP</application> 6.5.x package): there you can learn a lot about
 the basic concepts, which will help you to understand what is going on; also,
 many security related issues you should know about are discussed there.</para>
 
@@ -1768,30 +1846,32 @@ many security related issues you should know about are discussed there.</para>
 <sect2 id="pgp-preconditions">
 <title>Preconditions</title>
 
-<para>&kmail; expects that your <application>GnuGP</application> binary is called
-<command>gpg</command>. If this is not the case for you,
+<para>&kmail; expects that your <application>PGP</application> binary is called
+<command>pgp</command>; in the case of <application>GnuPG</application>, it expects
+the binary to be called <command>gpg</command>. If this is not the case for you,
 just make a symlink.</para>
 
 <para>If you have not done so, you have to generate a key pair (secret and public
-key) for your identity. Either do that using &kgpg; or &kleopatra; or do this at the command line: 
-<userinput><command>gpg</command> <option>--gen-key</option></userinput>: &kmail;
+key) for your identity. You must do this at the command line: use
+<userinput><command>pgp</command> <option>-kg</option></userinput>
+or <userinput><command>gpg</command> <option>--gen-key</option></userinput>: &kmail;
 has no internal support for <application>pgp</application>'s key generation at
 this time. The identity (normally your name followed by your email address
 within brackets, such as <userinput>John Doe
 &lt;john@example.com&gt;</userinput>) and your passphrase are important for the
-co-operation between &kmail; and <application>GnuGP</application>.</para>
+co-operation between &kmail; and <application>PGP</application>.</para>
 
 </sect2>
 
 <sect2 id="pgp-settings">
-<title><application>GnuGP</application>-Related Settings in &kmail;</title>
+<title><application>PGP</application>-Related Settings in &kmail;</title>
 
-<para>Select the <guilabel>Composing</guilabel> tab on
+<para>Select the <guilabel>OpenPGP</guilabel> tab on
 the <guilabel>Security</guilabel> settings page; there you will find the
 following options:</para>
 
 <variablelist>
-<!-- not in 2.0.96?
+
 <varlistentry>
 <term><guilabel>Encryption tool</guilabel></term>
 <listitem>
@@ -1800,14 +1880,6 @@ following options:</para>
 software at all; of course, the program you select has to be
 installed on your system (it is also important to select the correct
 version.)</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry>
-<term><guilabel>Automatically sign messages</guilabel></term>
-<listitem><para>This lets you toggle whether to automatically sign your messages
-by default; of course, it is still possible to send unsigned messages by deselecting
-the icon in the composer window.</para> 
 </listitem>
 </varlistentry>
 
@@ -1826,7 +1898,7 @@ optionally remember it for some time.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>When encrypting emails, always also encrypt to the certificate of my own identity</guilabel></term>
+<term><guilabel>Always encrypt to self</guilabel></term>
 <listitem>
 <para>If this option is off and you want to send an encrypted message to somebody,
 then you cannot read this message any longer after you have composed and
@@ -1845,15 +1917,6 @@ strongly recommended to use this option.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Store sent messages encrypted</guilabel></term>
-<listitem>
-<para>When this box is checked, sent messages are stored encrypted like they were 
-sent. This is not recommended, as you will not be able to read the messages 
-any longer if a necessary certificate expires.</para> 
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Always show the encryption keys for approval</guilabel></term>
 <listitem>
 <para>This will always open a dialog that lets you choose the keys used for
@@ -1861,6 +1924,14 @@ each recipient when you are sending an encrypted message; if this
 option is off, &kmail; will show this dialog only when it cannot
 find a key for a recipient or when there are conflicting or unset encryption
 preferences.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Automatically sign messages using OpenPGP</guilabel></term>
+<listitem><para>This lets you toggle whether to automatically sign your messages
+by default; of course, it is still possible to send unsigned messages by deselecting
+the icon in the composer window.</para> 
 </listitem>
 </varlistentry>
 
@@ -1879,16 +1950,17 @@ should be encrypted or not.</para></listitem>
 <para>Now that you have setup the encryption tool you have tell &kmail; which
 OpenPGP key you want to use for signing and for encrypting messages;
 to do this go to the <link linkend="configure-identity">Identities configuration</link>
-and set the key that should be used on the <guilabel>Cryptography</guilabel> tab of the
+and set the key that should be used on the <guilabel>Advanced</guilabel> tab of the
 identity configuration.</para>
 
 <para>Now you are able to sign outgoing messages; to let people send you
 encrypted messages and to let them verify your signature you
 must send them your public key or upload your public key to a public
-<application>GnuGP</application> key server so that they can fetch your key from there.
+<application>PGP</application> key server so that they can fetch your key from there.
 To send encrypted messages to other people or to verify their signed
 messages you will need their public keys;  you can store your public key(s) on a
-public <application>GnuGP</application> key server.</para>
+public <application>PGP</application> key server such as <ulink
+url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/</ulink>.</para>
 
 </sect2>
 
@@ -1896,12 +1968,12 @@ public <application>GnuGP</application> key server.</para>
 <title>Sign your Messages</title>
 
 <para>You can compose your message as usual in the composer
-window of &kmail;. Before you send the message, check the <guibutton>Sign</guibutton>
+window of &kmail;. Before you send the message, check the <guiicon>Sign Message</guiicon>
 icon on the toolbar of the composer window; then, you can send
 the message. The identity you are using to write the current message needs to 
 be connected to an <guilabel>OpenPGP Key</guilabel> in the <guilabel>Identity</guilabel>
 section of the <guilabel>Configure</guilabel> dialog.
-To sign the message, &kmail; needs to know your <application>GnuGP</application> 
+To sign the message, &kmail; needs to know your <application>PGP</application> 
 passphrase: if you did not select <guilabel>Keep passphrase in memory</guilabel> in the
 <guilabel>Security</guilabel> section, &kmail; will ask you for it; otherwise,
 if you have already given the phrase to &kmail;, it will sign the
@@ -1914,15 +1986,15 @@ message without any further prompt.</para>
 
 <para>To send an encrypted message to somebody of whom you have a
 public key, you simply create the message in the composer window.
-Before you send the message, check the <guibutton>Encrypt</guibutton> 
-button in the toolbar of the composer window; note
+Before you send the message, check the <guibutton>Encrypt
+Message</guibutton> button in the toolbar of the composer window; note
 that you might not have to check the button if <guilabel>Automatically
 encrypt messages whenever possible</guilabel> is selected in
 &kmail;'s configuration (see <link linkend="pgp-sign-your-messages">above</link>).
 Then send the message.</para>
 
 <para>
-If you checked the <guibutton>Encrypt</guibutton> button and &kmail;
+If you checked the <guilabel>Encrypt Message</guilabel> button and &kmail;
 cannot find a matching key for a recipient, it will display a list containing
 all available keys in the <guilabel>Encryption Key Selection</guilabel> dialog;
 if &kmail; finds more than one trusted key for a recipient, it will
@@ -1944,8 +2016,7 @@ possible</guilabel>, will automatically encrypt your message if there is a
 trusted key for each recipient.</para>
 
 <para>As mentioned above, you will not be able to read your own encrypted sent
-messages if you do not check <guilabel>When encrypting emails, always also encrypt 
-to the certificate of my own identity</guilabel> in the
+messages if you do not check <guilabel>Always encrypt to self</guilabel> in the
 settings' <guilabel>Security</guilabel> page.</para>
 
 </sect2>
@@ -1964,7 +2035,7 @@ that the receiver will get the correct key: there can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
 key. That is why the recipient should verify the attached key by checking the
 key's fingerprint against the one he received in a secure way from you; have a look
-at the <application>GnuGP</application> documentation for further details.</para>
+at the <application>PGP</application> documentation for further details.</para>
 
 </sect2>
 
@@ -1986,9 +2057,12 @@ encrypted, so nobody can read these messages without knowing your passphrase.</p
 Before you can use this key to encrypt a message to the owner of the
 key, you should verify the key (check its fingerprint or look for
 trusted signatures); then, you can add this key to your public keyring
-by typing <userinput><command>gpg</command> <option>--import</option>
-<replaceable>filename</replaceable></userinput> at the command line. 
-If the key is not certified with a trusted signature 
+by typing <userinput><command>pgp</command> <option>-ka</option>
+<replaceable>filename</replaceable></userinput> at the command line (if you are using 
+<application>PGP</application>) or by typing 
+<userinput><command>gpg</command> <option>--import</option>
+<replaceable>filename</replaceable></userinput> at the command line (if you are using
+<application>GnuPG</application>). If the key is not certified with a trusted signature 
 you cannot use it to encrypt messages unless you have signed the key with your key.
 </para>
 

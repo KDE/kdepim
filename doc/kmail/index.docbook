@@ -78,6 +78,9 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->  
 </authorgroup>
 
+<date>2004-07-13</date>
+<releaseinfo>1.7</releaseinfo>
+
 <copyright>
 <year>1999</year>
 <year>2000</year>
@@ -95,12 +98,8 @@
 <holder>Ingo Kl&ouml;cker</holder>
 </copyright>
 
-<legalnotice>&FDLNotice;</legalnotice>
-<date>2011-07-15</date>
-<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
-
 <abstract>
-
+	
 <para>&kmail; is &kde;'s powerful and user friendly email client.</para>
 
 </abstract>
@@ -119,13 +118,13 @@
 </keywordset>
 </bookinfo>
 
- &kmail-intro; <!-- 4.7-->
-&kmail-getting-started; <!-- 4.7-->
-&kmail-using-kmail; <!-- 4.7-->
-&kmail-configure;  <!-- 4.7 except Message List-->
-&kmail-menus;  <!-- 4.7 except missing menu items and Mark Message table-->
-&kmail-faq;  <!-- updated by Yuri with topics from userbase -->
-&kmail-importing; <!-- not reviewed -->
+&kmail-intro;
+&kmail-getting-started;
+&kmail-using-kmail;
+&kmail-configure;
+&kmail-menus;
+&kmail-faq;
+&kmail-importing;
 &kmail-credits-and-licenses;
 
 <appendix id="installation">
