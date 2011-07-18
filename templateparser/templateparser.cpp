@@ -1090,7 +1090,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have no attachment, simply create a text/plain part or multipart/alternative
   //and set the processed template text as the body
   if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = htmlBody.length() < plainBody.length() ?
+    KMime::Content* const mainTextPart = mOtp->htmlContent().isEmpty() ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mainTextPart->assemble();
@@ -1107,7 +1107,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = htmlBody.length() < plainBody.length() ?
+    KMime::Content* const mainTextPart = mOtp->htmlContent().isEmpty() ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mMsg->addContent( mainTextPart );
