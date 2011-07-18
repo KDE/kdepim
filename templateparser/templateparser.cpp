@@ -286,10 +286,7 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
 
 void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecryption
 {
-  mRoot->setContent( mOrigMsg->encodedContent() );
-  mRoot->parse();
-
-  mOtp->parseObjectTree( mRoot );
+  mOtp->parseObjectTree( mOrigMsg.get() );
 
   QString plainBody, htmlBody;
 
@@ -1074,7 +1071,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
 {
   // Get the attachments of the original mail
   MessageCore::AttachmentCollector ac;
-  ac.collectAttachmentsFrom( mRoot );
+  ac.collectAttachmentsFrom( mOrigMsg.get() );
 
   // Now, delete the old content and set the new content, which
   // is either only the new text or the new text with some attachments.
