@@ -38,6 +38,7 @@
 
 #include "nodehelper.h"
 #include "objecttreesourceif.h"
+#include "objecttreeemptysource.h"
 
 #include <libkleo/kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>
@@ -64,7 +65,6 @@ class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
 class NodeHelper;
-
 
 class ProcessResult {
 public:
@@ -293,7 +293,7 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   ObjectTreeParser( const ObjectTreeParser & other );
 
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf * source,
+  explicit ObjectTreeParser( ObjectTreeSourceIf * source = new EmptySource(),
                              NodeHelper *nodeHelper = 0,
                              const Kleo::CryptoBackend::Protocol * protocol=0,
                              bool showOneMimePart=false,

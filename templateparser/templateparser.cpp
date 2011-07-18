@@ -31,7 +31,6 @@
 #include "messagecore/stringutil.h"
 #include "messagecore/attachmentcollector.h"
 #include "messageviewer/objecttreeparser.h"
-#include "messageviewer/objecttreeemptysource.h"
 #include "messageviewer/nodehelper.h"
 #include "messagecomposer/messagehelper.h"
 
@@ -94,8 +93,7 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
 {
   mMsg = amsg;
   mRoot = new KMime::Content;
-  mEmptySource = new MessageViewer::EmptySource;
-  mOtp = new MessageViewer::ObjectTreeParser( mEmptySource );
+  mOtp = new MessageViewer::ObjectTreeParser( );
   mOtp->setAllowAsync( false );
 }
 
@@ -132,7 +130,6 @@ void TemplateParser::setCharsets( const QStringList& charsets )
 
 TemplateParser::~TemplateParser()
 {
-  delete mEmptySource;
 }
 
 int TemplateParser::parseQuotes( const QString &prefix, const QString &str,
