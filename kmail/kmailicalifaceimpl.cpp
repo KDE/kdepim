@@ -1549,16 +1549,16 @@ void KMailICalIfaceImpl::handleFolderSynced( KMFolder* folder,
   if ( ( _changes & KMailICalIface::Contents ) ||
        ( _changes & KMailICalIface::ACL ) ) {
     if ( storageFormat( folder ) == StorageXML && folder->storage()->contentsType() == KMail::ContentsTypeCalendar )
-      triggerKolabFreeBusy( folderURL );
+      triggerKolabFreeBusy( folderURL, true /*report errors*/ );
   }
 }
 
 void KMailICalIfaceImpl::folderDeletedOnServer( const KURL& folderURL )
 {
-  triggerKolabFreeBusy( folderURL );
+  triggerKolabFreeBusy( folderURL, false /*do not report errors*/ );
 }
 
-void KMailICalIfaceImpl::triggerKolabFreeBusy( const KURL& folderURL )
+void KMailICalIfaceImpl::triggerKolabFreeBusy( const KURL& folderURL, bool report )
 {
   /* Steffen said: you must issue an authenticated HTTP GET request to
      https://kolabserver/freebusy/trigger/user@domain/Folder/NestedFolder.pfb
@@ -1596,9 +1596,11 @@ void KMailICalIfaceImpl::triggerKolabFreeBusy( const KURL& folderURL )
   httpURL = KURL( httpURL.url(0,106), 106 );
   kdDebug() << "Triggering PFB update for " << folderURL << " : getting " << httpURL << endl;
 
-  KIO::Job* job = KIO::get( httpURL, false, false /*no progress info*/ );
-  job->addMetaData( "errorPage", "false" ); // we want an error in case of 404
-  connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( slotFreeBusyTriggerResult( KIO::Job* ) ) );
+  if ( report ) {
+    KIO::Job* job = KIO::get( httpURL, false, false /*no progress info*/ );
+    job->addMetaData( "errorPage", "false" ); // we want an error in case of 404
+    connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( slotFreeBusyTriggerResult( KIO::Job* ) ) );
+  }
 }
 
 void KMailICalIfaceImpl::slotFreeBusyTriggerResult( KIO::Job *job )

@@ -299,7 +299,7 @@ private:
   void handleFolderSynced( KMFolder* folder,
                            const KURL& folderURL,
                            int _changes );
-  void triggerKolabFreeBusy( const KURL& folderURL );
+  void triggerKolabFreeBusy( const KURL& folderURL, bool report );
 
   StorageFormat globalStorageFormat() const;
 
