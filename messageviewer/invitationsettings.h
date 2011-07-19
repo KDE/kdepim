@@ -45,6 +45,7 @@ public:
   /*reimp*/ void save();
   QString helpAnchor() const;
   /*reimp*/ void doLoadFromGlobalSettings();
+  void doResetToDefaultsOther();
 
 private slots:
   void slotLegacyBodyInvitesToggled( bool on );
