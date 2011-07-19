@@ -1391,6 +1391,7 @@ QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection is
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
 
+  //TODO: Extract any style sheet in the head part
   if( !bodyElement.isEmpty() && ( isSelectionAllowed == NoSelectionAllowed ) ) {
     return bodyElement;
   }
