@@ -43,7 +43,7 @@
     <listitem>
       <para>for all other Linux distributions:
       </para>
-      <para>in your user directory in <filename>.kde/share/config/kdeglobals</filename> add the line <userinput> BrowserApplication[$e]=!firefox</userinput> under category <guilabel>[General]</guilabel>  If <emphasis>General</emphasis> category does't exist you should add it.</para>
+      <para>in your user directory in <filename>.kde/share/config/kdeglobals</filename> add the line <userinput> BrowserApplication[$e]=!firefox</userinput> under category <guilabel>[General]</guilabel>  If <emphasis>General</emphasis> category does not exist you should add it.</para>
     </listitem>
   </itemizedlist>
 <para>You can also use the script in <ulink url="http://userbase.kde.org/Special:myLanguage/Tutorials/Modify_KDE_defaults">Tutorials/Modify_KDE_defaults</ulink></para>
@@ -801,7 +801,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 </para></listitem>
 <listitem><para>Setting up a pipe filter
 <itemizedlist>
-<listitem><para>In <guilabel>Kmail</guilabel> go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure filters</guimenuitem></menuchoice>
+<listitem><para>In &kmail; go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure filters</guimenuitem></menuchoice>
 </para></listitem>
 <listitem><para>create a new filter and name it <guilabel>Translate</guilabel>
 </para></listitem>

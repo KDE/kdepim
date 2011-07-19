@@ -545,7 +545,7 @@ text indexing.</para>
 <title>Old Message Expiry</title>
 
 <para>From the context menu of a folder select <guimenuitem>Expire</guimenuitem> 
-to open the <guilabel>Mail Expiry Property</guilabel> dialog. 
+to open the <guilabel>Mail Expiry Properties</guilabel> dialog. 
 Here you can select what should happen with old messages in this
 folder. If you enable to expire old read or unread messages in this folder 
 then &kmail; will regularly, depending on your choice, either delete old 
@@ -1096,9 +1096,9 @@ filter is applied: the <guilabel>Apply this filter to incoming messages</guilabe
 option means that the filter is applied to messages when you receive
 them (&ie; on <guiicon>Check Mail</guiicon>).
 The filter can be applied to all messages, to all but online IMAP accounts and
-to a selection of inciming folders.</para>
+to a selection of incoming folders.</para>
 <para>The <guilabel>Apply this filter to sent
-messages</guilabel> options means that the filter is applied to
+messages</guilabel> option means that the filter is applied to
 messages when you send them and the <guilabel>Apply this filter on manual
 filtering</guilabel> option controls whether to apply this filter when
 filtering is specifically selected (&ie; via
@@ -1775,7 +1775,7 @@ just make a symlink.</para>
 <para>If you have not done so, you have to generate a key pair (secret and public
 key) for your identity. Either do that using &kgpg; or &kleopatra; or do this at the command line: 
 <userinput><command>gpg</command> <option>--gen-key</option></userinput>: &kmail;
-has no internal support for <application>pgp</application>'s key generation at
+has no internal support for <application>gpg</application>'s key generation at
 this time. The identity (normally your name followed by your email address
 within brackets, such as <userinput>John Doe
 &lt;john@example.com&gt;</userinput>) and your passphrase are important for the
