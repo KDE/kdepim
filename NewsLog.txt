@@ -1,4 +1,13 @@
 
+Monday 18 July 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4767: Sync after deletion of a folder triggers an error message
+
+
+
 Monday 27 June 2011
 
 Problems addressed
