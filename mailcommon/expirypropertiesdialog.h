@@ -22,7 +22,7 @@ class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
     Q_OBJECT
 
 public:
-    ExpiryPropertiesDialog(
+    explicit ExpiryPropertiesDialog(
       QWidget *tree,
       const QSharedPointer<FolderCollection> &folder);
     ~ExpiryPropertiesDialog();

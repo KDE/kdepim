@@ -45,7 +45,7 @@ class ExpireJob : public ScheduledJob
 {
   Q_OBJECT
 public:
-  ExpireJob( const Akonadi::Collection& folder, bool immediate );
+  explicit ExpireJob( const Akonadi::Collection& folder, bool immediate );
   virtual ~ExpireJob();
 
   virtual void execute();
