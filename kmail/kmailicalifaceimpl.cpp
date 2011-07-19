@@ -1604,7 +1604,8 @@ void KMailICalIfaceImpl::triggerKolabFreeBusy( const KURL& folderURL )
 void KMailICalIfaceImpl::slotFreeBusyTriggerResult( KIO::Job *job )
 {
   if ( job->error() ) {
-    KMessageBox::sorry(0, i18n("Could not trigger Free/Busy information update: %1.").arg( job->errorText() ) );
+    KURL url( job->errorText() );
+    KMessageBox::sorry(0, i18n("Could not trigger Free/Busy information update: %1.").arg( url.prettyURL() ) );
   }
 }
 
