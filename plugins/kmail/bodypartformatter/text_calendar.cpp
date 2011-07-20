@@ -517,6 +517,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           } else if ( todo ) {
             queryStr = i18n( "Do you still want to forward this task?" );
           }
+        } else if ( path == "cancel" ) {
+          if ( event ) {
+            queryStr = i18n( "Do you still want to cancel this invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to cancel this task?" );
+          }
         } else if ( path == "check_calendar" ) {
           queryStr = i18n( "Do you still want to check your calendar?" );
         } else if ( path == "record" ) {
