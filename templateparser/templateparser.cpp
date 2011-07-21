@@ -482,11 +482,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: TEXT";
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          QString plainQuote = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
-          plainBody.append( plainQuote );
+          QString plainStr = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
+          plainBody.append( plainStr );
 
-          QString htmlQuote = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
-          htmlBody.append( htmlQuote );
+          QString htmlStr = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
+          htmlBody.append( htmlStr );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTEXTSIZE") ) ) {
@@ -502,11 +502,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OTEXT";
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          QString plainQuote = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
-          plainBody.append( plainQuote );
+          QString plainStr = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
+          plainBody.append( plainStr );
 
-          QString htmlQuote = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
-          htmlBody.append( htmlQuote );
+          QString htmlStr = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
+          htmlBody.append( htmlStr );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OADDRESSEESADDR") ) ) {
