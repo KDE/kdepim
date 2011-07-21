@@ -92,7 +92,6 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
   mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
   mMsg = amsg;
-  mRoot = new KMime::Content;
   mOtp = new MessageViewer::ObjectTreeParser( );
   mOtp->setAllowAsync( false );
 }

@@ -161,7 +161,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     bool mDebug;
     QString mQuoteString;
     QString mTo, mCC;
-    KMime::Content *mRoot;
     KPIMIdentities::IdentityManager* m_identityManager;
     bool mWrap;
     int mColWrap;
