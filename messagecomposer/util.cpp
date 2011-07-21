@@ -48,7 +48,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       result->contentType()->setBoundary( boundary );
     }
 
-    if( format & Kleo::AnySMIME ) {
+    if( format & Kleo::SMIMEOpaqueFormat ) {
       result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
       result->contentDisposition()->setFilename( QString::fromAscii( "smime.p7m" ) );
     }
