@@ -727,7 +727,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
   bool expandableInserted = false;
 
 
-  foreach( KMime::Types::Mailbox mailbox, mailboxList ) {
+  foreach( const KMime::Types::Mailbox& mailbox, mailboxList ) {
     if( !mailbox.prettyAddress().isEmpty() ) {
       numberAddresses++;
       if( expandable == ExpandableAddresses && !expandableInserted && numberAddresses > collapseNumber ) {

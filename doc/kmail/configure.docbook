@@ -527,7 +527,7 @@ It is shown in the recipient's mail client (if supported).</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Send picture with every messages</guilabel></term>
+<term><guilabel>Send picture with every message</guilabel></term>
 <listitem>
 <para>Check this box if you want KMail to add a so-called X-Face header to 
 messages written with this identity. An X-Face is a small (48x48 pixels) 
@@ -892,7 +892,7 @@ replaced by emoticons (small pictures).</para>
 <para>Enable <guilabel>Reduce font size for quoted text</guilabel> to show quoted 
 text with a smaller font.</para>
 
-<para>Enable <guilabel>Show expand/collapse quote marked</guilabel> to show 
+<para>Enable <guilabel>Show expand/collapse quote marks</guilabel> to show 
 different levels of quoted text. Disable to hide 
 the levels of quoted text.</para>
 

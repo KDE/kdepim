@@ -282,7 +282,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
 void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
 {
   if ( job->error() ) {
-    // TODO: After string freeze, show nice error dialog here.
+    KMessageBox::information( this, i18n("Unable to create distribution list: %1", job->errorString() ));
     kWarning() << "Unable to create distribution list:" << job->errorText();
   } else {
     accept();

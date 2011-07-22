@@ -343,7 +343,7 @@ if you want to suggest to the recipient the automatic (inline) display of this a
 and on his settings.</para>
 
 <para>You can also attach public keys to the message by using the appropriate options in the
-<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>GnuGP</application>
+<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>GnuPG</application>
 key attachments are handled like file attachments.</para>
 
 </sect2>
@@ -545,7 +545,7 @@ text indexing.</para>
 <title>Old Message Expiry</title>
 
 <para>From the context menu of a folder select <guimenuitem>Expire</guimenuitem> 
-to open the <guilabel>Mail Expiry Property</guilabel> dialog. 
+to open the <guilabel>Mail Expiry Properties</guilabel> dialog. 
 Here you can select what should happen with old messages in this
 folder. If you enable to expire old read or unread messages in this folder 
 then &kmail; will regularly, depending on your choice, either delete old 
@@ -1096,9 +1096,9 @@ filter is applied: the <guilabel>Apply this filter to incoming messages</guilabe
 option means that the filter is applied to messages when you receive
 them (&ie; on <guiicon>Check Mail</guiicon>).
 The filter can be applied to all messages, to all but online IMAP accounts and
-to a selection of inciming folders.</para>
+to a selection of incoming folders.</para>
 <para>The <guilabel>Apply this filter to sent
-messages</guilabel> options means that the filter is applied to
+messages</guilabel> option means that the filter is applied to
 messages when you send them and the <guilabel>Apply this filter on manual
 filtering</guilabel> option controls whether to apply this filter when
 filtering is specifically selected (&ie; via
@@ -1727,15 +1727,15 @@ about how to sign/encrypt messages, but the details, especially those of
 the configuration, will differ.</para></note>
 -->
 <para>This is a short introduction on how to setup &kmail;'s
-<application>GnuGP</application> (<application>GNU Privacy Guard</application>) support; 
+<application>GnuPG</application> (<application>GNU Privacy Guard</application>) support; 
 it gives some hints on the use of
-<application>GnuGP</application> too. It is written for people who are beginners in
-this area; if you are familiar with the use of <application>GnuGP</application>, you can
+<application>GnuPG</application> too. It is written for people who are beginners in
+this area; if you are familiar with the use of <application>GnuPG</application>, you can
 skip most of the steps.</para>
 
 <para>Please
 also check out the <link linkend="pgp-faq">&FAQ; item about
-<application>GnuGP</application></link>.</para>
+<application>GnuPG</application></link>.</para>
 
 <warning><para>Attachments will not be signed/encrypted if you are using
 inline OpenPGP: to sign/encrypt attachments, you have to install GnuPG and
@@ -1743,19 +1743,19 @@ some necessary libraries;
 then, you can decide for each attachment whether it should be signed/encrypted or not.
 </para></warning>
 
-<warning><para>&kmail; has to rely on <application>GnuGP</application>'s
+<warning><para>&kmail; has to rely on <application>GnuPG</application>'s
 output; this output is often different between different versions of 
-<application>GnuGP</application>, so it is important that you test if encryption
+<application>GnuPG</application>, so it is important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails -- enable 
 <guilabel>Show signed/encrypted text
 after composing</guilabel>.  </para></warning>
 
-<para>To setup and use <application>GnuGP</application> support in &kmail; it is
-necessary to have <application>GnuGP</application> installed and set up
+<para>To setup and use <application>GnuPG</application> support in &kmail; it is
+necessary to have <application>GnuPG</application> installed and set up
 properly; of course, we cannot give you a full introduction of
-<application>GnuGP</application> here. We will only mention the steps you have to
-do to get <application>GnuGP</application> going. For details you should have a look at 
+<application>GnuPG</application> here. We will only mention the steps you have to
+do to get <application>GnuPG</application> going. For details you should have a look at 
 the <ulink url="http://www.gnupg.org/docs.html#guides">The GNU Privacy Handbook</ulink>.</para> 
 
 <para>It is certainly a good idea to study this documentation as well as an
@@ -1768,23 +1768,23 @@ many security related issues you should know about are discussed there.</para>
 <sect2 id="pgp-preconditions">
 <title>Preconditions</title>
 
-<para>&kmail; expects that your <application>GnuGP</application> binary is called
+<para>&kmail; expects that your <application>GnuPG</application> binary is called
 <command>gpg</command>. If this is not the case for you,
 just make a symlink.</para>
 
 <para>If you have not done so, you have to generate a key pair (secret and public
 key) for your identity. Either do that using &kgpg; or &kleopatra; or do this at the command line: 
 <userinput><command>gpg</command> <option>--gen-key</option></userinput>: &kmail;
-has no internal support for <application>pgp</application>'s key generation at
+has no internal support for <application>gpg</application>'s key generation at
 this time. The identity (normally your name followed by your email address
 within brackets, such as <userinput>John Doe
 &lt;john@example.com&gt;</userinput>) and your passphrase are important for the
-co-operation between &kmail; and <application>GnuGP</application>.</para>
+co-operation between &kmail; and <application>GnuPG</application>.</para>
 
 </sect2>
 
 <sect2 id="pgp-settings">
-<title><application>GnuGP</application>-Related Settings in &kmail;</title>
+<title><application>GnuPG</application>-Related Settings in &kmail;</title>
 
 <para>Select the <guilabel>Composing</guilabel> tab on
 the <guilabel>Security</guilabel> settings page; there you will find the
@@ -1885,10 +1885,10 @@ identity configuration.</para>
 <para>Now you are able to sign outgoing messages; to let people send you
 encrypted messages and to let them verify your signature you
 must send them your public key or upload your public key to a public
-<application>GnuGP</application> key server so that they can fetch your key from there.
+<application>GnuPG</application> key server so that they can fetch your key from there.
 To send encrypted messages to other people or to verify their signed
 messages you will need their public keys;  you can store your public key(s) on a
-public <application>GnuGP</application> key server.</para>
+public <application>GnuPG</application> key server.</para>
 
 </sect2>
 
@@ -1901,7 +1901,7 @@ icon on the toolbar of the composer window; then, you can send
 the message. The identity you are using to write the current message needs to 
 be connected to an <guilabel>OpenPGP Key</guilabel> in the <guilabel>Identity</guilabel>
 section of the <guilabel>Configure</guilabel> dialog.
-To sign the message, &kmail; needs to know your <application>GnuGP</application> 
+To sign the message, &kmail; needs to know your <application>GnuPG</application> 
 passphrase: if you did not select <guilabel>Keep passphrase in memory</guilabel> in the
 <guilabel>Security</guilabel> section, &kmail; will ask you for it; otherwise,
 if you have already given the phrase to &kmail;, it will sign the
@@ -1964,7 +1964,7 @@ that the receiver will get the correct key: there can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
 key. That is why the recipient should verify the attached key by checking the
 key's fingerprint against the one he received in a secure way from you; have a look
-at the <application>GnuGP</application> documentation for further details.</para>
+at the <application>GnuPG</application> documentation for further details.</para>
 
 </sect2>
 

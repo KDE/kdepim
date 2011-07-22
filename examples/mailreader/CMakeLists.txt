@@ -1,5 +1,7 @@
 project(mailreader)
 
+add_subdirectory(kmail-plasma)
+
 set(mailreader_SRCS
    mailreader.cpp
    main.cpp

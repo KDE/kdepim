@@ -29,7 +29,7 @@
   
 <qandaentry><question><para>How to set Firefox as your default browser?</para></question> 
 <answer>
-  <para>You want to click on a link in &kmail; and have it opened in <guilabel>Firefox</guilabel>. At the moment, another browser is used. You want to change this.</para>
+  <para>You want to click on a link in &kmail; and have it opened in <application>Firefox</application>. At the moment, another browser is used. You want to change this.</para>
   <para>This solution will affect all of &kde;, not just &kmail;. Start <menuchoice><guimenu>&systemsettings;</guimenu><guisubmenu>Default Applications</guisubmenu><guimenuitem>Web Browser</guimenuitem><guimenuitem>Open http and https &URL;s in the following browser</guimenuitem><guimenuitem>firefox</guimenuitem></menuchoice>.</para>
   <para>If you are an administrator and want to set this setting automatically for your users, it is</para>
   <itemizedlist>
@@ -43,7 +43,7 @@
     <listitem>
       <para>for all other Linux distributions:
       </para>
-      <para>in your user directory in <filename>.kde/share/config/kdeglobals</filename> add the line <userinput> BrowserApplication[$e]=!firefox</userinput> under category <guilabel>[General]</guilabel>  If <emphasis>General</emphasis> category does't exist you should add it.</para>
+      <para>in your user directory in <filename>.kde/share/config/kdeglobals</filename> add the line <userinput> BrowserApplication[$e]=!firefox</userinput> under category <guilabel>[General]</guilabel>  If <emphasis>General</emphasis> category does not exist you should add it.</para>
     </listitem>
   </itemizedlist>
 <para>You can also use the script in <ulink url="http://userbase.kde.org/Special:myLanguage/Tutorials/Modify_KDE_defaults">Tutorials/Modify_KDE_defaults</ulink></para>
@@ -97,7 +97,7 @@
   </markup></screen> 
   </para>
   <para>If you have <emphasis>maildir</emphasis> folders, each recipe must end with a <quote>/</quote>. If your folders are <emphasis>mbox</emphasis>, just omit the <quote>/</quote></para>
-  <para>If you have been using <guilabel>bogofilter</guilabel> with <emphasis>'kmail</emphasis> you will already have a <emphasis>wordlist</emphasis>. This can be used at server level, too, so you won't have to start training from scratch. The trick is to set this before the <guilabel>procmail</guilabel> recipes:</para>
+  <para>If you have been using <guilabel>bogofilter</guilabel> with &kmail; you will already have a <emphasis>wordlist</emphasis>. This can be used at server level, too, so you won't have to start training from scratch. The trick is to set this before the <guilabel>procmail</guilabel> recipes:</para>
   <para><screen><markup>:0fw
  | bogofilter -e -p
  
@@ -801,7 +801,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 </para></listitem>
 <listitem><para>Setting up a pipe filter
 <itemizedlist>
-<listitem><para>In <guilabel>Kmail</guilabel> go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure filters</guimenuitem></menuchoice>
+<listitem><para>In &kmail; go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure filters</guimenuitem></menuchoice>
 </para></listitem>
 <listitem><para>create a new filter and name it <guilabel>Translate</guilabel>
 </para></listitem>
