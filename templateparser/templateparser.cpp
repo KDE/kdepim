@@ -336,8 +336,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         QString q;
         int len = parseQuotes( "SYSTEM=", cmd, q );
         i += len;
-        QString pipe_cmd = q;
-        QString str = pipe( pipe_cmd, "" );
+        const QString pipe_cmd = q;
+        const QString str = pipe( pipe_cmd, "" );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -369,7 +369,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         QString q;
         int len = parseQuotes( "QUOTEPIPE=", cmd, q );
         i += len;
-        QString pipe_cmd = q;
+        const QString pipe_cmd = q;
         if ( mOrigMsg ) {
           QString plainStr = pipe( pipe_cmd, plainMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           QString plainQuote = quotedPlainText( plainStr );
@@ -407,7 +407,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
           }
           plainBody.append( plainQuote );
 
-          QString htmlQuote = quotedHtmlText( MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
+          const QString htmlQuote = quotedHtmlText( MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
           htmlBody.append( htmlQuote );
         }
 
@@ -415,7 +415,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: HEADERS";
         i += strlen( "HEADERS" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::headerAsSendableString( mOrigMsg );
+          const QString str = MessageCore::StringUtil::headerAsSendableString( mOrigMsg );
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -426,12 +426,12 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         QString q;
         int len = parseQuotes( "TEXTPIPE=", cmd, q );
         i += len;
-        QString pipe_cmd = q;
+        const QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString plainStr = pipe( pipe_cmd, plainMessageText( shouldStripSignature(), NoSelectionAllowed ) );
+          const QString plainStr = pipe( pipe_cmd, plainMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           plainBody.append( plainStr );
 
-          QString htmlStr = pipe( pipe_cmd, htmlMessageText( shouldStripSignature(), NoSelectionAllowed ) );
+          const QString htmlStr = pipe( pipe_cmd, htmlMessageText( shouldStripSignature(), NoSelectionAllowed ) );
           htmlBody.append( htmlStr );
         }
 
@@ -443,7 +443,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString str = pipe( pipe_cmd, mOrigMsg->encodedContent() );
+          const QString str = pipe( pipe_cmd, mOrigMsg->encodedContent() );
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -455,10 +455,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         int len = parseQuotes( "BODYPIPE=", cmd, q );
         i += len;
         QString pipe_cmd = q;
-        QString plainStr = pipe( pipe_cmd, plainBody );
+        const QString plainStr = pipe( pipe_cmd, plainBody );
         plainBody.append( plainStr );
 
-        QString htmlStr = pipe( pipe_cmd, htmlBody );
+        const QString htmlStr = pipe( pipe_cmd, htmlBody );
         htmlBody.append( htmlStr );
 
       } else if ( cmd.startsWith( QLatin1String("CLEARPIPE=") ) ) {
@@ -468,11 +468,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         QString q;
         int len = parseQuotes( "CLEARPIPE=", cmd, q );
         i += len;
-        QString pipe_cmd = q;
-        QString plainStr = pipe( pipe_cmd, plainBody );
+        const QString pipe_cmd = q;
+        const QString plainStr = pipe( pipe_cmd, plainBody );
         plainBody = plainStr;
 
-        QString htmlStr = pipe( pipe_cmd, htmlBody );
+        const QString htmlStr = pipe( pipe_cmd, htmlBody );
         htmlBody = htmlStr;
 
         KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(), QString::number( 0 ), "utf-8" );
@@ -482,10 +482,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: TEXT";
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          QString plainStr = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
+          const QString plainStr = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
           plainBody.append( plainStr );
 
-          QString htmlStr = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
+          const QString htmlStr = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
           htmlBody.append( htmlStr );
         }
 
@@ -493,7 +493,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OTEXTSIZE";
         i += strlen( "OTEXTSIZE" );
         if ( mOrigMsg ) {
-          QString str = QString( "%1" ).arg( mOrigMsg->body().length() );
+          const QString str = QString( "%1" ).arg( mOrigMsg->body().length() );
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -502,10 +502,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OTEXT";
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          QString plainStr = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
+          const QString plainStr = plainMessageText( shouldStripSignature(), NoSelectionAllowed );
           plainBody.append( plainStr );
 
-          QString htmlStr = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
+          const QString htmlStr = htmlMessageText( shouldStripSignature(), NoSelectionAllowed );
           htmlBody.append( htmlStr );
         }
 
@@ -532,7 +532,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
       } else if ( cmd.startsWith( QLatin1String("CCADDR") ) ) {
         kDebug() << "Command: CCADDR";
         i += strlen( "CCADDR" );
-        QString str = mMsg->cc()->asUnicodeString();
+        const QString str = mMsg->cc()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -560,7 +560,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
       } else if ( cmd.startsWith( QLatin1String("TOADDR") ) ) {
         kDebug() << "Command: TOADDR";
         i += strlen( "TOADDR" );
-        QString str = mMsg->to()->asUnicodeString();
+        const QString str = mMsg->to()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -588,14 +588,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
       } else if ( cmd.startsWith( QLatin1String("TOLIST") ) ) {
         kDebug() << "Command: TOLIST";
         i += strlen( "TOLIST" );
-        QString str = mMsg->to()->asUnicodeString();
+        const QString str = mMsg->to()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("FROMADDR") ) ) {
         kDebug() << "Command: FROMADDR";
         i += strlen( "FROMADDR" );
-        QString str = mMsg->from()->asUnicodeString();
+        const QString str = mMsg->from()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -623,21 +623,21 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
       } else if ( cmd.startsWith( QLatin1String("FULLSUBJECT") ) ) {
         kDebug() << "Command: FULLSUBJECT";
         i += strlen( "FULLSUBJECT" );
-        QString str = mMsg->subject()->asUnicodeString();
+        const QString str = mMsg->subject()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("FULLSUBJ") ) ) {
         kDebug() << "Command: FULLSUBJ";
         i += strlen( "FULLSUBJ" );
-        QString str = mMsg->subject()->asUnicodeString();
+        const QString str = mMsg->subject()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("MSGID") ) ) {
         kDebug() << "Command: MSGID";
         i += strlen( "MSGID" );
-        QString str = mMsg->messageID()->asUnicodeString();
+        const QString str = mMsg->messageID()->asUnicodeString();
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -648,8 +648,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         int len = parseQuotes( "OHEADER=", cmd, q );
         i += len;
         if ( mOrigMsg ) {
-          QString hdr = q;
-          QString str = mOrigMsg->headerByType(hdr.toLocal8Bit() ) ? mOrigMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
+          const QString hdr = q;
+          const QString str = mOrigMsg->headerByType(hdr.toLocal8Bit() ) ? mOrigMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -660,8 +660,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         QString q;
         int len = parseQuotes( "HEADER=", cmd, q );
         i += len;
-        QString hdr = q;
-        QString str = mMsg->headerByType(hdr.toLocal8Bit() ) ? mMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
+        const QString hdr = q;
+        const QString str = mMsg->headerByType(hdr.toLocal8Bit() ) ? mMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -676,8 +676,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
           i += strlen( "HEADER( " );
         } else {
           i += re.matchedLength();
-          QString hdr = re.cap( 1 );
-          QString str = mMsg->headerByType( hdr.toLocal8Bit() ) ? mMsg->headerByType( hdr.toLocal8Bit() )->asUnicodeString() : "";
+          const QString hdr = re.cap( 1 );
+          const QString str = mMsg->headerByType( hdr.toLocal8Bit() ) ? mMsg->headerByType( hdr.toLocal8Bit() )->asUnicodeString() : "";
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -686,7 +686,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OCCADDR";
         i += strlen( "OCCADDR" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->cc()->asUnicodeString();
+          const QString str = mOrigMsg->cc()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -722,7 +722,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OTOADDR";
         i += strlen( "OTOADDR" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->to()->asUnicodeString();
+          const QString str = mOrigMsg->to()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -758,7 +758,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OTOLIST";
         i += strlen( "OTOLIST" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->to()->asUnicodeString();
+          const QString str = mOrigMsg->to()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -767,7 +767,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OTO";
         i += strlen( "OTO" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->to()->asUnicodeString();
+          const QString str = mOrigMsg->to()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -776,7 +776,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OFROMADDR";
         i += strlen( "OFROMADDR" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->from()->asUnicodeString();
+          const QString str = mOrigMsg->from()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -812,7 +812,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OFULLSUBJECT";
         i += strlen( "OFULLSUBJECT" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->subject()->asUnicodeString();
+          const QString str = mOrigMsg->subject()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -821,7 +821,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OFULLSUBJ";
         i += strlen( "OFULLSUBJ" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->subject()->asUnicodeString();
+          const QString str = mOrigMsg->subject()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -830,7 +830,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: OMSGID";
         i += strlen( "OMSGID" );
         if ( mOrigMsg ) {
-          QString str = mOrigMsg->messageID()->asUnicodeString();
+          const QString str = mOrigMsg->messageID()->asUnicodeString();
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -840,7 +840,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         i += strlen( "DATEEN" );
         QDateTime date = QDateTime::currentDateTime();
         KLocale locale( "C" );
-        QString str = locale.formatDate( date.date(), KLocale::LongDate );
+        const QString str = locale.formatDate( date.date(), KLocale::LongDate );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -848,7 +848,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: DATESHORT";
         i += strlen( "DATESHORT" );
         QDateTime date = QDateTime::currentDateTime();
-        QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
+        const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -856,7 +856,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: DATE";
         i += strlen( "DATE" );
         QDateTime date = QDateTime::currentDateTime();
-        QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+        const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -864,7 +864,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: DOW";
         i += strlen( "DOW" );
         QDateTime date = QDateTime::currentDateTime();
-        QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
+        const QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
                       KCalendarSystem::LongDayName );
         plainBody.append( str );
         htmlBody.append( str );
@@ -874,7 +874,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         i += strlen( "TIMELONGEN" );
         QDateTime date = QDateTime::currentDateTime();
         KLocale locale( "C");
-        QString str = locale.formatTime( date.time(), true );
+        const QString str = locale.formatTime( date.time(), true );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -882,7 +882,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: TIMELONG";
         i += strlen( "TIMELONG" );
         QDateTime date = QDateTime::currentDateTime();
-        QString str = KGlobal::locale()->formatTime( date.time(), true );
+        const QString str = KGlobal::locale()->formatTime( date.time(), true );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -890,7 +890,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: TIME";
         i += strlen( "TIME" );
         QDateTime date = QDateTime::currentDateTime();
-        QString str = KGlobal::locale()->formatTime( date.time(), false );
+        const QString str = KGlobal::locale()->formatTime( date.time(), false );
         plainBody.append( str );
         htmlBody.append( str );
 
@@ -900,7 +900,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         if ( mOrigMsg ) {
           QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           KLocale locale( "C");
-          QString str = locale.formatDate( date.date(), KLocale::LongDate );
+          const QString str = locale.formatDate( date.date(), KLocale::LongDate );
           plainBody.append( str );
           htmlBody.append( str );
         }
@@ -910,7 +910,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         i += strlen( "ODATESHORT");
         if ( mOrigMsg ) {
           QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-          QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
+          const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
           plainBody.append( str );
           htmlBody.append( str );
         }
