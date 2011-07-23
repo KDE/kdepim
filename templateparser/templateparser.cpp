@@ -1033,11 +1033,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
   }
   //make htmlBody a valid html if it does not have html/head/body tag
   if( !htmlBody.isEmpty() && !htmlBody.contains( "<html>" ) ) {
-    if( !htmlBody.contains( "<head>" ) ) {
-      htmlBody = "<head></head>" + htmlBody;
-    }
     if( !htmlBody.contains( "<body>" ) ) {
       htmlBody = "<body>" + htmlBody + "</body>";
+    }
+    if( !htmlBody.contains( "<head>" ) ) {
+      htmlBody = "<head></head>" + htmlBody;
     }
     htmlBody = "<html>" + htmlBody + "</html>";
   }
@@ -1063,7 +1063,7 @@ QString TemplateParser::getPlainSignature() const
 }
 //TODO If %SIGNATURE command is on, then override it with signature from "KMail configure->General->identity->signature".
 //There should be no two signatures.
-QString TemplateParser::getHtmlSignature() const //FIXME multiline plain text signatures. Convert \n to <br />
+QString TemplateParser::getHtmlSignature() const
 {
   const KPIMIdentities::Identity &identity =
     m_identityManager->identityForUoid( mIdentity );
@@ -1072,6 +1072,9 @@ QString TemplateParser::getHtmlSignature() const //FIXME multiline plain text si
 
   KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
                                                   ( identity ).signature();
+  if( !signature.isInlinedHtml() ) {
+    return signature.rawText().replace( QRegExp( "\n" ), "<br />" );
+  }
   return signature.rawText();
 }
 
