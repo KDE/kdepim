@@ -200,7 +200,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Return the text signature used the by current identity.
      */
-    //QString getHtmlSignature() const;
+    QString getHtmlSignature() const;
 
     /**
       * Returns message body indented by the
@@ -266,6 +266,8 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * mime type, charset and CTE of its respective text/plain part and text/html part.
      */
     KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
+
+    bool mHasHtmlSignature;
 
 };
 

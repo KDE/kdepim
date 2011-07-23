@@ -90,10 +90,12 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
   mMode( amode ), mIdentity( 0 ),
   mAllowDecryption( false ),
   mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
+  /*mHasHtmlSignature( false )*/
 {
   mMsg = amsg;
-  mOtp = new MessageViewer::ObjectTreeParser( );
+  mOtp = new MessageViewer::ObjectTreeParser();
   mOtp->setAllowAsync( false );
+  mOtp->setAllowDecryption( mAllowDecryption );
 }
 
 void TemplateParser::setSelection( const QString &selection )
@@ -104,6 +106,7 @@ void TemplateParser::setSelection( const QString &selection )
 void TemplateParser::setAllowDecryption( const bool allowDecryption )
 {
   mAllowDecryption = allowDecryption;
+  mOtp->setAllowDecryption( mAllowDecryption );
 }
 
 bool TemplateParser::shouldStripSignature() const
@@ -1007,8 +1010,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
         kDebug() << "Command: SIGNATURE";
         i += strlen( "SIGNATURE" );
         plainBody.append( getPlainSignature() );
-        //TODO getHtmlSignature
-        //htmlBody.append( getHtmlSignature() );
+        htmlBody.append( getHtmlSignature() );
 
       } else {
         // wrong command, do nothing
@@ -1030,6 +1032,16 @@ void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecr
       htmlBody.append( c );
     }
   }
+  //make htmlBody a valid html if it does not have html/head/body tag
+  if( !htmlBody.isEmpty() && !htmlBody.contains( "<html>" ) ) {
+    if( !htmlBody.contains( "<head>" ) ) {
+      htmlBody = "<head></head>" + htmlBody;
+    }
+    if( !htmlBody.contains( "<body>" ) ) {
+      htmlBody = "<body>" + htmlBody + "</body>";
+    }
+    htmlBody = "<html>" + htmlBody + "</html>";
+  }
   addProcessedBodyToMessage( plainBody, htmlBody );
 }
 
@@ -1050,7 +1062,7 @@ QString TemplateParser::getPlainSignature() const
     return signature.rawText();
   }
 }
-/*
+
 QString TemplateParser::getHtmlSignature() const
 {
   const KPIMIdentities::Identity &identity =
@@ -1060,9 +1072,12 @@ QString TemplateParser::getHtmlSignature() const
 
   KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
                                                   ( identity ).signature();
+  /*if ( signature.isInlinedHtml() ) {
+    mHasHtmlSignature = true;
+  }*/
   return signature.rawText();
 }
-*/
+
 void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody )
 {
   // Get the attachments of the original mail
@@ -1086,7 +1101,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have no attachment, simply create a text/plain part or multipart/alternative
   //and set the processed template text as the body
   if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = mOtp->htmlContent().isEmpty() ?
+    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty()/* && !mHasHtmlSignature*/ ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mainTextPart->assemble();
@@ -1103,7 +1118,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = mOtp->htmlContent().isEmpty() ?
+    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty()/* && !mHasHtmlSignature*/ ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mMsg->addContent( mainTextPart );
@@ -1374,7 +1389,11 @@ QString TemplateParser::plainMessageText( bool aStripSignature, AllowSelection i
 
 QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const
 {
-  const QString htmlElement = mOtp->htmlContent();
+  QString htmlElement = mOtp->htmlContent();
+
+  if ( htmlElement.isEmpty() ) { //HTML-only mails
+    htmlElement = mOtp->convertedHtmlContent();
+  }
 
   QWebPage page;
   //TODO to be tested/verified if this is not an issue

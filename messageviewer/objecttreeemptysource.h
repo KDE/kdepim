@@ -36,6 +36,7 @@ class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf {
   bool htmlLoadExternal();
   bool showSignatureDetails();
   void setHtmlMode( Util::HtmlMode mode );
+  void setAllowDecryption( bool allowDecryption );
   int levelQuote();
   const QTextCodec * overrideCodec();
   QString createMessageHeader( KMime::Message *message );
@@ -43,6 +44,9 @@ class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf {
   HtmlWriter * htmlWriter();
   CSSHelper* cssHelper();
   QObject *sourceObject();
+
+private:
+  bool mAllowDecryption;
 };
 
 }

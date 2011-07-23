@@ -95,6 +95,7 @@
 
 // Qt includes
 #include <QApplication>
+#include <QTextDocument>
 #include <QDir>
 #include <QFile>
 #include <QTextCodec>
@@ -117,6 +118,7 @@
 #include <unistd.h>
 #include <memory>
 #include <messagecore/nodehelper.h>
+#include <qtextdocument.h>
 
 using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
@@ -3366,5 +3368,22 @@ QString ObjectTreeParser::convertedTextContent() const
 #endif
   } else {
     return mPlainTextContent;
+  }
+}
+
+void ObjectTreeParser::setAllowDecryption( bool allowDecryption )
+{
+  static_cast<EmptySource*>(mSource)->setAllowDecryption( allowDecryption );
+}
+
+QString ObjectTreeParser::convertedHtmlContent()
+{
+  QString convertedHtml;
+  if ( mHtmlContent.isEmpty() ) {
+    Qt::escape( mPlainTextContent );
+    convertedHtml = "<html><head></head><body>" + mPlainTextContent + "</body></html>";
+    return convertedHtml;
+  } else {
+    return mHtmlContent;
   }
 }

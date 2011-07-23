@@ -64,7 +64,7 @@ public:
     /** Return true if external sources should be loaded in a html mail */
     virtual bool htmlLoadExternal() = 0;
 
-    /** Return true to include the signature detailes in the generated html */
+    /** Return true to include the signature details in the generated html */
     virtual bool showSignatureDetails() = 0;
 
     virtual int levelQuote() = 0;

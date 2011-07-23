@@ -311,6 +311,8 @@ public:
 
   bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
 
+  void setAllowDecryption( bool allowDecryption );
+
   /**
    * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during
    * the centuries.
@@ -349,6 +351,11 @@ public:
    * or htmlContent() converted to plain text otherwise.
    */
   QString convertedTextContent() const;
+
+  /** Returns a HTML version of the plain text mail. If the HTML content is already available, it
+   * returns the HTML content as it is.
+   */
+  QString convertedHtmlContent();
 
   /**
    * The original charset of MIME part the plain text was extracted from.
