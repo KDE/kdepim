@@ -1061,7 +1061,8 @@ QString TemplateParser::getPlainSignature() const
     return signature.rawText();
   }
 }
-
+//TODO If %SIGNATURE command is on, then override it with signature from "KMail configure->General->identity->signature".
+//There should be no two signatures.
 QString TemplateParser::getHtmlSignature() const //FIXME multiline plain text signatures. Convert \n to <br />
 {
   const KPIMIdentities::Identity &identity =
