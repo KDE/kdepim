@@ -90,7 +90,6 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
   mMode( amode ), mIdentity( 0 ),
   mAllowDecryption( false ),
   mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
-  /*mHasHtmlSignature( false )*/
 {
   mMsg = amsg;
   mOtp = new MessageViewer::ObjectTreeParser();
@@ -283,7 +282,7 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
   return process( aorig_msg, afolder );
 }
 
-void TemplateParser::processWithTemplate( const QString &tmpl )//TODO mAllowDecryption
+void TemplateParser::processWithTemplate( const QString &tmpl )
 {
   mOtp->parseObjectTree( mOrigMsg.get() );
 
@@ -1063,7 +1062,7 @@ QString TemplateParser::getPlainSignature() const
   }
 }
 
-QString TemplateParser::getHtmlSignature() const
+QString TemplateParser::getHtmlSignature() const //FIXME multiline plain text signatures. Convert \n to <br />
 {
   const KPIMIdentities::Identity &identity =
     m_identityManager->identityForUoid( mIdentity );
@@ -1072,9 +1071,6 @@ QString TemplateParser::getHtmlSignature() const
 
   KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
                                                   ( identity ).signature();
-  /*if ( signature.isInlinedHtml() ) {
-    mHasHtmlSignature = true;
-  }*/
   return signature.rawText();
 }
 
@@ -1101,7 +1097,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have no attachment, simply create a text/plain part or multipart/alternative
   //and set the processed template text as the body
   if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty()/* && !mHasHtmlSignature*/ ) ?
+    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mainTextPart->assemble();
@@ -1118,7 +1114,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty()/* && !mHasHtmlSignature*/ ) ?
+    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mMsg->addContent( mainTextPart );
@@ -1465,6 +1461,17 @@ uint TemplateParser::identityUoid( const KMime::Message::Ptr &msg ) const
   return id;
 }
 
+bool TemplateParser::isHtmlSignature()
+{
+  const KPIMIdentities::Identity &identity =
+    m_identityManager->identityForUoid( mIdentity );
+  if ( identity.isNull() )
+    return true; //Can it be verified?
+
+  KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
+                                                  ( identity ).signature();
+  return signature.isInlinedHtml();
+}
 
 } // namespace TemplateParser
 

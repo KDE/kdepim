@@ -267,7 +267,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      */
     KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
 
-    bool mHasHtmlSignature;
+    bool isHtmlSignature();
 
 };
 
