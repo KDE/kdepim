@@ -52,11 +52,11 @@ void ProgressItem::setComplete()
     if ( !mCanceled ) {
       setProgress( 100 );
     }
-    emit progressItemCompleted( this );
+    //emit progressItemCompleted( this );
     if ( parent() ) {
       parent()->removeChild( this );
     }
-    deleteLater();
+    emit progressItemCompleted( this );
   } else {
     mWaitingForKids = true;
   }
@@ -73,7 +73,7 @@ void ProgressItem::removeChild( ProgressItem *kiddo )
   // in case we were waiting for the last kid to go away, now is the time
   if ( mChildren.count() == 0 && mWaitingForKids ) {
     emit progressItemCompleted( this );
-    deleteLater();
+    //deleteLater();
   }
 }
 

@@ -158,7 +158,14 @@ void StatusbarProgressWidget::slotProgressItemAdded( ProgressItem *item )
 
 void StatusbarProgressWidget::slotProgressItemCompleted( ProgressItem *item )
 {
-  if ( item->parent() ) return; // we are only interested in top level items
+  if ( item->parent() ) 
+  {
+	  item->deleteLater();
+	  item = 0;
+	  return; // we are only interested in top level items
+  }
+  item->deleteLater();
+  item = 0;
   connectSingleItem(); // if going back to 1 item
   if ( ProgressManager::instance()->isEmpty() ) { // No item
     // Done. In 5s the progress-widget will close, then we can clean up the statusbar
