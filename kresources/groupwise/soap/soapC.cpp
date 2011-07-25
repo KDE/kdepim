@@ -6,6 +6,7 @@
 */
 
 #include "soapH.h"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.3 2006-05-18 13:53:47 GMT")
 
