@@ -267,8 +267,16 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      */
     KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
 
+    /**
+     * Checks if the signature is HTML or not.
+     */
     bool isHtmlSignature();
 
+    /**
+     * Does the necessary conversions like escaping charecters, changing "\n" to breakline tag before
+     * appending text to htmlBody
+     */
+//    void plainToHtml( QString &body);
 };
 
 } // namespace TemplateParser

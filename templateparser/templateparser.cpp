@@ -88,7 +88,7 @@ QByteArray selectCharset( const QStringList &charsets, const QString &text )
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
   mMode( amode ), mIdentity( 0 ),
-  mAllowDecryption( false ),
+  mAllowDecryption( true ),
   mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
   mMsg = amsg;
@@ -327,6 +327,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           QByteArray content = file.readAll();
           QString str = QString::fromLocal8Bit( content, content.size() );
           plainBody.append( str );
+          //plainToHtml( str );
           htmlBody.append( str );
         } else if ( mDebug ) {
           KMessageBox::error( 0, i18nc( "@info:status", "Cannot insert content from file %1: %2", path, file.errorString() ) );
@@ -341,6 +342,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         const QString pipe_cmd = q;
         const QString str = pipe( pipe_cmd, "" );
         plainBody.append( str );
+        //plainToHtml( str );
         htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("PUT=") ) ) {
@@ -1073,6 +1075,7 @@ QString TemplateParser::getHtmlSignature() const
   KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
                                                   ( identity ).signature();
   if( !signature.isInlinedHtml() ) {
+    Qt::escape( signature.rawText() );
     return signature.rawText().replace( QRegExp( "\n" ), "<br />" );
   }
   return signature.rawText();
@@ -1470,13 +1473,19 @@ bool TemplateParser::isHtmlSignature()
   const KPIMIdentities::Identity &identity =
     m_identityManager->identityForUoid( mIdentity );
   if ( identity.isNull() )
-    return true; //Can it be verified?
+    return false;
 
-  KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
+  const KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>
                                                   ( identity ).signature();
   return signature.isInlinedHtml();
 }
-
+/*
+void TemplateParser::plainToHtml( QString& body )
+{
+  Qt::escape( body );
+  body.replace( QRegExp( "\n" ), "<br />" );
+}
+*/
 } // namespace TemplateParser
 
 #include "templateparser.moc"

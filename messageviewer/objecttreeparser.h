@@ -359,7 +359,7 @@ public:
 
   /**
    * The original charset of MIME part the plain text was extracted from.
-   * 
+   *
    * If there were more than one text/plain MIME parts in the mail, the this is the charset
    * of the last MIME part processed.
    */

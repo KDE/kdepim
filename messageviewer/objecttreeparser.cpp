@@ -3378,10 +3378,9 @@ void ObjectTreeParser::setAllowDecryption( bool allowDecryption )
 
 QString ObjectTreeParser::convertedHtmlContent()
 {
-  QString convertedHtml;
   if ( mHtmlContent.isEmpty() ) {
     Qt::escape( mPlainTextContent );
-    convertedHtml = "<html><head></head><body>" + mPlainTextContent + "</body></html>";
+    const QString convertedHtml = "<html><head></head><body>" + mPlainTextContent + "</body></html>";
     return convertedHtml.replace( QRegExp( "\n" ), "<br />" );
   } else {
     return mHtmlContent;
