@@ -40,7 +40,7 @@ namespace KPIM {
 
 class ProgressItem;
 class ProgressManager;
-typedef QMap<QPointer<ProgressItem >, bool> ProgressItemMap;
+typedef QMap<ProgressItem *, bool> ProgressItemMap;
 
 class KDEPIM_EXPORT ProgressItem : public QObject
 {

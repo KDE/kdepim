@@ -86,9 +86,9 @@ void ProgressItem::cancel()
   kDebug() << label();
   mCanceled = true;
   // Cancel all children.
-  QList<QPointer<ProgressItem> > kids = mChildren.keys();
-  QList<QPointer<ProgressItem> >::Iterator it( kids.begin() );
-  QList<QPointer<ProgressItem> >::Iterator end( kids.end() );
+  QList<ProgressItem* > kids = mChildren.keys();
+  QList<ProgressItem* >::Iterator it( kids.begin() );
+  QList<ProgressItem* >::Iterator end( kids.end() );
   for ( ; it != end; it++ ) {
     ProgressItem *kid = *it;
     if ( kid->canBeCanceled() ) {
