@@ -32,6 +32,7 @@
 #include <libkcal/filestorage.h>
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendar.h>
+#include <libkcal/calhelper.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include "koprefs.h"
@@ -108,8 +109,17 @@ void EventArchiver::run( Calendar* calendar, const QDate& limitDate, QWidget* wi
     }
   }
 
-  incidences = Calendar::mergeIncidenceList( events, todos, journals );
+  const Incidence::List allIncidences = Calendar::mergeIncidenceList( events, todos, journals );
 
+  if (KOPrefs::instance()->mArchiveOwnFoldersOnly) {
+    for (int i = 0; i < allIncidences.count(); ++i) {
+      Incidence *incidence = allIncidences[i];
+      if (CalHelper::isMyCalendarIncidence( calendar, incidence ) )
+        incidences.append( incidence );
+    }
+  } else {
+    incidences = allIncidences;
+  }
 
   kdDebug(5850) << "EventArchiver: archiving incidences before " << limitDate << " -> "
                 << incidences.count() << " incidences found." << endl;

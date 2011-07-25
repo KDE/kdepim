@@ -152,12 +152,31 @@ ArchiveDialog::ArchiveDialog(Calendar *cal,QWidget *parent, const char *name)
   connect(mArchiveFile->lineEdit(),SIGNAL(textChanged ( const QString & )),
           this,SLOT(slotEnableUser1()));
 
+  QVBoxLayout *archiveModeLayout = new QVBoxLayout(0);
+  archiveModeLayout->setMargin(marginHint());
+  mArchiveOwnFolders = new QRadioButton( i18n("Archive own folders only (no shared folders)"), this );
+  mArchiveAllFolders = new QRadioButton( i18n("Archive all folders with write access (including shared folders)"), this );
+  archiveModeLayout->addWidget( new QLabel( i18n("<b>Warning:</b> Archiving all folders will archive/delete the events and to-dos from <b>all</b> calendars you have write access to, including shared folders!"), this ) );
+  archiveModeLayout->addWidget( mArchiveOwnFolders );
+  archiveModeLayout->addWidget( mArchiveAllFolders );
+  topLayout->addLayout( archiveModeLayout );
+
+  QButtonGroup *archiveModeGroup = new QButtonGroup(this);
+  archiveModeGroup->hide();
+  archiveModeGroup->insert(mArchiveOwnFolders);
+  archiveModeGroup->insert(mArchiveAllFolders);
+
   // Load settings from KOPrefs
   mExpiryTimeNumInput->setValue( KOPrefs::instance()->mExpiryTime );
   mExpiryUnitsComboBox->setCurrentItem( KOPrefs::instance()->mExpiryUnit );
   mDeleteCb->setChecked( KOPrefs::instance()->mArchiveAction == KOPrefs::actionDelete );
   mEvents->setChecked( KOPrefs::instance()->mArchiveEvents );
   mTodos->setChecked( KOPrefs::instance()->mArchiveTodos );
+  if ( KOPrefs::instance()->mArchiveOwnFoldersOnly ) {
+    mArchiveOwnFolders->setChecked( true );
+  } else {
+    mArchiveAllFolders->setChecked( true );
+  }
 
   slotEnableUser1();
 
@@ -199,6 +218,8 @@ void ArchiveDialog::slotUser1()
   KOPrefs::instance()->mAutoArchive = mAutoArchiveRB->isChecked();
   KOPrefs::instance()->mExpiryTime = mExpiryTimeNumInput->value();
   KOPrefs::instance()->mExpiryUnit = mExpiryUnitsComboBox->currentItem();
+
+  KOPrefs::instance()->mArchiveOwnFoldersOnly = mArchiveOwnFolders->isChecked();
 
   if (mDeleteCb->isChecked()) {
     KOPrefs::instance()->mArchiveAction = KOPrefs::actionDelete;

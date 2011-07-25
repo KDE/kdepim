@@ -66,6 +66,8 @@ class ArchiveDialog : public KDialogBase
     QComboBox *mExpiryUnitsComboBox;
     QCheckBox *mEvents;
     QCheckBox *mTodos;
+    QRadioButton *mArchiveOwnFolders;
+    QRadioButton *mArchiveAllFolders;
 
     Calendar *mCalendar;
 };

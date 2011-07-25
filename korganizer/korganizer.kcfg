@@ -71,6 +71,9 @@
     <entry type="String" key="Archive File">
       <label>URL of the file where old events should be archived</label>
     </entry>
+    <entry type="Bool" name="ArchiveOwnFoldersOnly">
+      <default>true</default>
+    </entry>
 
     <entry type="Bool" key="Html With Save">
       <label>Export to HTML with every save</label>
