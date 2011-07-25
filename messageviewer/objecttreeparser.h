@@ -38,7 +38,6 @@
 
 #include "nodehelper.h"
 #include "objecttreesourceif.h"
-#include "objecttreeemptysource.h"
 
 #include <libkleo/kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>
@@ -293,7 +292,7 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   ObjectTreeParser( const ObjectTreeParser & other );
 
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf * source = new EmptySource(),
+  explicit ObjectTreeParser( ObjectTreeSourceIf * source,
                              NodeHelper *nodeHelper = 0,
                              const Kleo::CryptoBackend::Protocol * protocol=0,
                              bool showOneMimePart=false,
@@ -310,8 +309,6 @@ public:
   bool allowAsync() const { return mAllowAsync; }
 
   bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
-
-  void setAllowDecryption( bool allowDecryption );
 
   /**
    * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during

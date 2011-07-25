@@ -31,6 +31,7 @@
 #include "messagecore/stringutil.h"
 #include "messagecore/attachmentcollector.h"
 #include "messageviewer/objecttreeparser.h"
+#include "messageviewer/objecttreeemptysource.h"
 #include "messageviewer/nodehelper.h"
 #include "messagecomposer/messagehelper.h"
 
@@ -92,9 +93,12 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
   mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
   mMsg = amsg;
-  mOtp = new MessageViewer::ObjectTreeParser();
+
+  mEmptySource = new MessageViewer::EmptySource;
+  mEmptySource->setAllowDecryption( mAllowDecryption );
+
+  mOtp = new MessageViewer::ObjectTreeParser( mEmptySource );
   mOtp->setAllowAsync( false );
-  mOtp->setAllowDecryption( mAllowDecryption );
 }
 
 void TemplateParser::setSelection( const QString &selection )
@@ -105,7 +109,7 @@ void TemplateParser::setSelection( const QString &selection )
 void TemplateParser::setAllowDecryption( const bool allowDecryption )
 {
   mAllowDecryption = allowDecryption;
-  mOtp->setAllowDecryption( mAllowDecryption );
+  mEmptySource->setAllowDecryption( mAllowDecryption );
 }
 
 bool TemplateParser::shouldStripSignature() const
@@ -131,6 +135,7 @@ void TemplateParser::setCharsets( const QStringList& charsets )
 
 TemplateParser::~TemplateParser()
 {
+  delete mEmptySource;
 }
 
 int TemplateParser::parseQuotes( const QString &prefix, const QString &str,

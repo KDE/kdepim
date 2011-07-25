@@ -167,6 +167,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QStringList m_charsets;
     AllowSelection isSelectionAllowed;
     MessageViewer::ObjectTreeParser *mOtp;
+    MessageViewer::EmptySource *mEmptySource;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to

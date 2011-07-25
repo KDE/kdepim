@@ -3371,16 +3371,11 @@ QString ObjectTreeParser::convertedTextContent() const
   }
 }
 
-void ObjectTreeParser::setAllowDecryption( bool allowDecryption )
-{
-  static_cast<EmptySource*>(mSource)->setAllowDecryption( allowDecryption );
-}
-
 QString ObjectTreeParser::convertedHtmlContent()
 {
   if ( mHtmlContent.isEmpty() ) {
     Qt::escape( mPlainTextContent );
-    const QString convertedHtml = "<html><head></head><body>" + mPlainTextContent + "</body></html>";
+    QString convertedHtml = "<html><head></head><body>" + mPlainTextContent + "</body></html>";
     return convertedHtml.replace( QRegExp( "\n" ), "<br />" );
   } else {
     return mHtmlContent;
