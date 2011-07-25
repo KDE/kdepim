@@ -270,7 +270,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Checks if the signature is HTML or not.
      */
-    bool isHtmlSignature();
+    bool isHtmlSignature() const;
 
     /**
      * Does the necessary conversions like escaping charecters, changing "\n" to breakline tag before

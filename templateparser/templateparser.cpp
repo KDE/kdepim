@@ -1468,7 +1468,7 @@ uint TemplateParser::identityUoid( const KMime::Message::Ptr &msg ) const
   return id;
 }
 
-bool TemplateParser::isHtmlSignature()
+bool TemplateParser::isHtmlSignature() const
 {
   const KPIMIdentities::Identity &identity =
     m_identityManager->identityForUoid( mIdentity );
