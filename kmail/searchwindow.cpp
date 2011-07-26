@@ -226,7 +226,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
     mFolder = collection;
     mSearchFolderEdt->setText( collection.name() );
     Q_ASSERT ( !mResultModel );
-    mResultModel = new Akonadi::ItemModel( this );
+    mResultModel = new Akonadi::MessageModel( this );
     mResultModel->setCollection( mFolder );
     mLbxMatches->setModel( mResultModel );
     mAkonadiStandardAction = new Akonadi::StandardMailActionManager( actionCollection(), this );
@@ -359,11 +359,19 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
 SearchWindow::~SearchWindow()
 {
-  if ( mResultModel ) {    
-    GlobalSettings::self()->setSubjectWidth( mLbxMatches->columnWidth( 0 ) );
-    GlobalSettings::self()->setSenderWidth( mLbxMatches->columnWidth( 1 ) );
-    GlobalSettings::self()->setDateWidth( mLbxMatches->columnWidth( 2 ) );
-    GlobalSettings::self()->setFolderWidth( mLbxMatches->columnWidth( 3 ) );
+  if ( mResultModel ) {
+    if ( mLbxMatches->columnWidth( 0 ) > 0 ) {
+      GlobalSettings::self()->setSubjectWidth( mLbxMatches->columnWidth( 0 )  );
+    }
+    if ( mLbxMatches->columnWidth( 1 ) > 0 ) {
+      GlobalSettings::self()->setSenderWidth( mLbxMatches->columnWidth( 1 ) );
+    }
+    if ( mLbxMatches->columnWidth( 2 ) > 0 ) {
+      GlobalSettings::self()->setDateWidth( mLbxMatches->columnWidth( 2 ) );
+    }
+    if ( mLbxMatches->columnWidth( 3 ) > 0 ) {
+      GlobalSettings::self()->setFolderWidth( mLbxMatches->columnWidth( 3 ) );
+    }
     GlobalSettings::self()->setSearchWidgetWidth( width() );
     GlobalSettings::self()->setSearchWidgetHeight( height() );
     GlobalSettings::self()->requestSync();
@@ -516,6 +524,9 @@ void SearchWindow::searchDone( KJob* job )
   Q_ASSERT( job == mSearchJob );
   if ( job->error() ) {
     KMessageBox::sorry( this, i18n("Can not get search result. %1", job->errorString() ) );
+    if ( mSearchJob ) {
+      mSearchJob = 0;
+    }
   }
   else
   {

@@ -24,7 +24,7 @@
   In addition, as a special exception, the copyright holders give
   permission to link the code of this program with any edition of
   the Qt library by Trolltech AS, Norway (or with modified versions
-  of Qt that use the same license as Qt), and distribute liinitialCheckForChangesnked
+  of Qt that use the same license as Qt), and distribute linked
   combinations including the two.  You must obey the GNU General
   Public License in all respects for all of the code used other than
   Qt.  If you modify this file, you may extend this exception to
@@ -36,9 +36,12 @@
 #ifndef FREEBUSYMANAGER_P_H
 #define FREEBUSYMANAGER_P_H
 
+#include <KCalCore/FreeBusy>
 #include <KCalCore/ICalFormat>
 
 #include <QtCore/QPointer>
+#include <QtDBus/QDBusContext>
+#include <QtDBus/QDBusInterface>
 
 class KJob;
 
@@ -53,12 +56,41 @@ class FreeBusyManagerPrivate : public QObject
   FreeBusyManager *const q_ptr;
   Q_DECLARE_PUBLIC( FreeBusyManager )
 
+  public: /// Structs
+
+    struct FreeBusyProviderRequest
+    {
+      FreeBusyProviderRequest( const QString &provider );
+
+      enum Status {
+        NotStarted,
+        HandlingRequested,
+        FreeBusyRequested
+      };
+
+      Status mRequestStatus;
+      QSharedPointer<QDBusInterface> mInterface;
+    };
+
+    struct FreeBusyProvidersRequestsQueue
+    {
+      explicit FreeBusyProvidersRequestsQueue( const QString &start = QString(), const QString &end = QString() );
+      FreeBusyProvidersRequestsQueue( const KDateTime &start, const KDateTime &end );
+
+      QString mStartTime;
+      QString mEndTime;
+      QList<FreeBusyProviderRequest> mRequests;
+      int mHandlersCount;
+      KCalCore::FreeBusy::Ptr mResultingFreeBusy;
+    };
+
   public: /// Members
     CalendarSupport::Calendar *mCalendar;
     KCalCore::ICalFormat mFormat;
 
     QStringList mRetrieveQueue;
     QMap<KUrl, QString> mFreeBusyUrlEmailMap;
+    QMap<QString, FreeBusyProvidersRequestsQueue> mProvidersRequestsByEmail;
 
     // Free/Busy uploading
     QDateTime mNextUploadTime;
@@ -81,11 +113,17 @@ class FreeBusyManagerPrivate : public QObject
     void processFreeBusyDownloadResult( KJob *_job );
     void processFreeBusyUploadResult( KJob *_job );
     void uploadFreeBusy();
+    QStringList getFreeBusyProviders() const;
+    void queryFreeBusyProviders( const QStringList &providers, const QString &email );
+    void queryFreeBusyProviders( const QStringList &providers, const QString &email,
+                                 const KDateTime &start, const KDateTime &end );
 
   public slots:
     void processRetrieveQueue();
     void contactSearchJobFinished( KJob *_job );
     void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
+    void onHandlesFreeBusy( const QString &email, bool handles );
+    void onFreeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText );
 
   signals:
     void freeBusyUrlRetrieved( const QString &email, const KUrl &url );

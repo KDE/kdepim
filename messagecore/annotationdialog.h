@@ -42,7 +42,7 @@ class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
      * @param uri The Nepomuk resource uri of the email.
      * @param parent The parent widget.
      */
-    AnnotationEditDialog( const QUrl &uri, QWidget *parent = 0 );
+    explicit AnnotationEditDialog( const QUrl &uri, QWidget *parent = 0 );
 
     /**
      * Destroys the annotation edit dialog.

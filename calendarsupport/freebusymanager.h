@@ -68,17 +68,33 @@ class CALENDARSUPPORT_EXPORT FreeBusyManager : public QObject, public KCalCore::
       Mail the freebusy information.
      */
     void mailFreeBusy( int daysToPublish = 30, QWidget *parentWidget = 0 );
-     
+
    /**
       Retrieve the freebusy information of somebody else, i.e. it will not try
-      to download our own freebusy information. This method makes use of a local
-      cache, if the information for a given email is already downloaded it will
-      return the information from the cache.
+      to download our own freebusy information.
+
+      This method will first try to find Akonadi resource that have the
+      'FreeBusyProvider' capablity set. If none is found then there is a fallback
+      on the URL mechanism (see below). If at least one is found then it will
+      be first queried over D-Bus to know if it can handle free-busy information
+      for that email address. If true then it will be queried for the free-busy
+      data for a period ranging from today to today plus 14 days, defined in
+      FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue()
+      as hard-coded magic value. If the Akonadi resource responds successfully
+      (still over D-Bus) then the freeBusyRetrieved signal is emitted. If any
+      of those steps then the URL mechanism will be used as a fallback.
+
+      The URL mechanism makes use of a local cache, if the information
+      for a given email is already downloaded it will return the information
+      from the cache. The free-busy information must be accessible using HTTP
+      and the URL is build dynamically from the email address and the global
+      groupware settings.
 
       The call is asynchronous, a download is started in the background (if
       needed) and freeBusyRetrieved will be emitted when the download is finished.
 
       @see KCalPrefs::thatIsMe( const QString &email );
+      @see Akonadi::FreeBusyProviderBase
 
       @param email Address of the person for which the F/B list should be
              retrieved.
@@ -88,6 +104,23 @@ class CALENDARSUPPORT_EXPORT FreeBusyManager : public QObject, public KCalCore::
     */
     bool retrieveFreeBusy( const QString &email, bool forceDownload,
                            QWidget *parentWidget = 0 );
+
+    /**
+       Retrieve the freebusy information of a contact for a specified period.
+
+       This method works as the previous one except that there is no fallback
+       on the URL mechanism.
+
+       @param email Address of the person for which the F/B list should be
+              retrieved
+       @param start Start of the period to get F/B data for
+       @param end End of the period to get F/B data for
+       @return true if a free-busy provider has been contacted, regardless
+               of the fact that it will respond positively to the handling
+               request
+     */
+    bool retrieveFreeBusy( const QString &email, const KDateTime &start,
+                           const KDateTime &end );
 
     /**
       Clears the retrieval queue, i.e. all retrieval request that are not started

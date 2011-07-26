@@ -603,8 +603,8 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount()
   const Akonadi::AgentInstance instance =  mAccountsReceiving.mAccountList->currentAgentInstance();
 
   int rc = KMessageBox::questionYesNo( this,
-                                       i18n("Do you want to remove account: %1", instance.name()),
-                                       i18n("Remove account"));
+                                       i18n("Do you want to remove account '%1'?", instance.name()),
+                                       i18n("Remove account?"));
   if ( rc == KMessageBox::No ) {
     return;
   }
@@ -899,6 +899,12 @@ void AppearancePage::FontsTab::save()
     }
   }
 }
+
+void AppearancePage::FontsTab::doResetToDefaultsOther()
+{
+  mCustomFontCheck->setChecked( false );
+}
+
 
 QString AppearancePage::ColorsTab::helpAnchor() const
 {
@@ -1978,7 +1984,7 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
 
   qSort( mMsgTagList.begin(), mMsgTagList.end(), KMail::Tag::compare );
 
-  foreach( const KMail::Tag::Ptr tag, mMsgTagList ) {
+  foreach( const KMail::Tag::Ptr& tag, mMsgTagList ) {
     new QListWidgetItem( KIcon( tag->iconName ), tag->tagName, mTagListBox );
     if ( tag->priority == -1 )
       tag->priority = mTagListBox->count() - 1;
@@ -2574,6 +2580,23 @@ void ComposerPage::SubjectTab::save()
   MessageComposer::MessageComposerSettings::self()->setReplyPrefixes( mReplyListEditor->stringList() );
   MessageComposer::MessageComposerSettings::self()->setForwardPrefixes( mForwardListEditor->stringList() );
 }
+
+void ComposerPage::SubjectTab::doResetToDefaultsOther()
+{
+    const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults( true );
+  const QStringList messageReplyPrefixes = MessageComposer::MessageComposerSettings::replyPrefixes();
+  const bool useMessageReplyPrefixes = MessageComposer::MessageComposerSettings::replaceReplyPrefix();
+
+  const QStringList messageForwardPrefixes = MessageComposer::MessageComposerSettings::forwardPrefixes();
+  const bool useMessageForwardPrefixes = MessageComposer::MessageComposerSettings::replaceForwardPrefix();
+  
+  MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
+  mReplyListEditor->setStringList( messageReplyPrefixes );
+  mReplaceReplyPrefixCheck->setChecked( useMessageReplyPrefixes );
+  mForwardListEditor->setStringList( messageForwardPrefixes );
+  mReplaceForwardPrefixCheck->setChecked( useMessageForwardPrefixes );
+}
+
 
 QString ComposerPage::CharsetTab::helpAnchor() const
 {
@@ -3729,6 +3752,7 @@ void MiscPage::FolderTab::doLoadFromGlobalSettings()
   mMMTab.mDelayedMarkAsRead->setChecked( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() );
   mMMTab.mDelayedMarkTime->setValue( MessageViewer::GlobalSettings::self()->delayedMarkTime() );
   mMMTab.mShowPopupAfterDnD->setChecked( GlobalSettings::self()->showPopupAfterDnD() );
+  doLoadOther();
 }
 
 void MiscPage::FolderTab::doLoadOther()
@@ -3775,6 +3799,10 @@ void MiscPage::InviteTab::save()
   mInvitationUi->save();
 }
 
+void MiscPage::InviteTab::doResetToDefaultsOther()
+{
+  mInvitationUi->doResetToDefaultsOther();
+}
 
 //----------------------------
 #include "configuredialog.moc"
