@@ -286,8 +286,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-EncryptActionEnabled" );
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
-
   readyForSending();
+}
+
+void Message::ComposerViewBase::setCustomHeader( const QString& custHeaderName, const QString& custHeaderValue )
+{
+  m_msg->setHeader( new KMime::Headers::Generic( custHeaderName.toLatin1(), m_msg.get(), custHeaderValue,"utf-8") );
 }
 
 void Message::ComposerViewBase::readyForSending()
