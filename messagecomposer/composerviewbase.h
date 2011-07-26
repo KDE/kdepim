@@ -167,7 +167,7 @@ public:
   void setUrgent( bool urgent );
 
   void setAutoSaveInterval( int interval );
-  void setCustomHeader( const QString& custHeaderName, const QString& custHeaderValue );
+  void setCustomHeader( const QMap<QByteArray, QString>&customHeader );
 
   /**
    * Enables/disables autosaving depending on the value of the autosave
@@ -304,6 +304,8 @@ private:
   QString mExpandedFrom, m_from, m_replyTo, m_subject;
   QStringList mExpandedTo, mExpandedCc, mExpandedBcc;
   QList< QByteArray > m_charsets;
+  QMap<QByteArray, QString> m_customHeader;
+
   int m_pendingQueueJobs;
 
   QTimer *m_autoSaveTimer;

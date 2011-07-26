@@ -1,9 +1,0 @@
-File=custommimeheader.kcfg
-ClassName=CustomMimeHeader
-Mutators=true
-ItemAccessors=true
-SetUserTexts=true
-NameSpace=MessageComposer
-Visibility=MESSAGECOMPOSER_EXPORT
-IncludeFiles=messagecomposer_export.h
-

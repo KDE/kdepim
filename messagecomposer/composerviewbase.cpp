@@ -286,12 +286,13 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-EncryptActionEnabled" );
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
+
   readyForSending();
 }
 
-void Message::ComposerViewBase::setCustomHeader( const QString& custHeaderName, const QString& custHeaderValue )
+void Message::ComposerViewBase::setCustomHeader( const QMap<QByteArray, QString>&customHeader )
 {
-  m_msg->setHeader( new KMime::Headers::Generic( custHeaderName.toLatin1(), m_msg.get(), custHeaderValue,"utf-8") );
+  m_customHeader = customHeader;
 }
 
 void Message::ComposerViewBase::readyForSending()
@@ -696,8 +697,14 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   fillQueueJobHeaders( qjob, message, infoPart );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );
-  message->assemble();
 
+  QMapIterator<QByteArray, QString> customHeader(m_customHeader);
+  while (customHeader.hasNext()) {
+     customHeader.next();
+     message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
+  }
+  message->assemble();
+  
   connect( qjob, SIGNAL( result(KJob*) ), this, SLOT( slotQueueResult( KJob* ) ) );
   m_pendingQueueJobs++;
   qjob->start();
