@@ -277,7 +277,8 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Does the necessary conversions like escaping charecters, changing "\n" to breakline tag before
      * appending text to htmlBody
      */
-//    void plainToHtml( QString &body);
+    QString plainToHtml( const QString &body);//any better name for the function?
+
 };
 
 } // namespace TemplateParser

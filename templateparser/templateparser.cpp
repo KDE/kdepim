@@ -332,8 +332,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           QByteArray content = file.readAll();
           QString str = QString::fromLocal8Bit( content, content.size() );
           plainBody.append( str );
-          //plainToHtml( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         } else if ( mDebug ) {
           KMessageBox::error( 0, i18nc( "@info:status", "Cannot insert content from file %1: %2", path, file.errorString() ) );
         }
@@ -347,8 +347,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         const QString pipe_cmd = q;
         const QString str = pipe( pipe_cmd, "" );
         plainBody.append( str );
-        //plainToHtml( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("PUT=") ) ) {
         // insert content of specified file as is
@@ -367,7 +367,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( file.open( QIODevice::ReadOnly ) ) {
           QByteArray content = file.readAll();
           plainBody.append( QString::fromLocal8Bit( content, content.size() ) );
-          htmlBody.append( QString::fromLocal8Bit( content, content.size() ) );
+
+          QString body = plainToHtml( QString::fromLocal8Bit( content, content.size() ) );
+          htmlBody.append( body );
         } else if ( mDebug ) {
           KMessageBox::error( 0, i18nc( "@info:status", "Cannot insert content from file %1: %2", path, file.errorString() ));
         }
@@ -417,7 +419,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           plainBody.append( plainQuote );
 
           const QString htmlQuote = quotedHtmlText( MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
-          htmlBody.append( htmlQuote );
+          QString str = plainToHtml( htmlQuote );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("HEADERS") ) ) {
@@ -426,7 +429,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = MessageCore::StringUtil::headerAsSendableString( mOrigMsg );
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("TEXTPIPE=") ) ) {
@@ -454,7 +458,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = pipe( pipe_cmd, mOrigMsg->encodedContent() );
           plainBody.append( str );
-          htmlBody.append( str );
+
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("BODYPIPE=") ) ) {
@@ -468,7 +474,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         plainBody.append( plainStr );
 
         const QString htmlStr = pipe( pipe_cmd, htmlBody );
-        htmlBody.append( htmlStr );
+        QString body = plainToHtml( htmlStr );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("CLEARPIPE=") ) ) {
         // pipe message body generated so far through command and
@@ -526,15 +533,18 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           const QString cc = mOrigMsg->cc()->asUnicodeString();
           if ( !to.isEmpty() ) {
             plainBody.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
-            htmlBody.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+            QString body = plainToHtml( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+            htmlBody.append( body );
           }
           if ( !to.isEmpty() && !cc.isEmpty() ) {
             plainBody.append( QLatin1Char( '\n' ) );
-            htmlBody.append( QLatin1Char( '\n' ) );
+            QString str = plainToHtml( QString( QLatin1Char( '\n' ) ) );
+            htmlBody.append( str );
           }
           if ( !cc.isEmpty() ) {
             plainBody.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
-            htmlBody.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+            QString str = plainToHtml( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+            htmlBody.append( str );
           }
 	}
 
@@ -543,7 +553,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "CCADDR" );
         const QString str = mMsg->cc()->asUnicodeString();
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("CCNAME") ) ) {
         kDebug() << "Command: CCNAME";
@@ -571,7 +582,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "TOADDR" );
         const QString str = mMsg->to()->asUnicodeString();
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("TONAME") ) ) {
         kDebug() << "Command: TONAME";
@@ -599,14 +611,16 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "TOLIST" );
         const QString str = mMsg->to()->asUnicodeString();
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("FROMADDR") ) ) {
         kDebug() << "Command: FROMADDR";
         i += strlen( "FROMADDR" );
         const QString str = mMsg->from()->asUnicodeString();
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("FROMNAME") ) ) {
         kDebug() << "Command: FROMNAME";
@@ -634,14 +648,16 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "FULLSUBJECT" );
         const QString str = mMsg->subject()->asUnicodeString();
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("FULLSUBJ") ) ) {
         kDebug() << "Command: FULLSUBJ";
         i += strlen( "FULLSUBJ" );
         const QString str = mMsg->subject()->asUnicodeString();
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("MSGID") ) ) {
         kDebug() << "Command: MSGID";
@@ -660,7 +676,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           const QString hdr = q;
           const QString str = mOrigMsg->headerByType(hdr.toLocal8Bit() ) ? mOrigMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("HEADER=") ) ) {
@@ -672,7 +689,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         const QString hdr = q;
         const QString str = mMsg->headerByType(hdr.toLocal8Bit() ) ? mMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
         plainBody.append( str );
-        htmlBody.append( str );
+        QString body = plainToHtml( str );
+        htmlBody.append( body );
 
       } else if ( cmd.startsWith( QLatin1String("HEADER( ") ) ) {
         // insert specified content of header from current message
@@ -688,7 +706,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           const QString hdr = re.cap( 1 );
           const QString str = mMsg->headerByType( hdr.toLocal8Bit() ) ? mMsg->headerByType( hdr.toLocal8Bit() )->asUnicodeString() : "";
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OCCADDR") ) ) {
@@ -697,7 +716,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->cc()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OCCNAME") ) ) {
@@ -733,7 +753,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->to()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTONAME") ) ) {
@@ -769,7 +790,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->to()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTO") ) ) {
@@ -778,7 +800,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->to()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFROMADDR") ) ) {
@@ -787,7 +810,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->from()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFROMNAME") ) ) {
@@ -823,7 +847,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->subject()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFULLSUBJ") ) ) {
@@ -832,7 +857,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString str = mOrigMsg->subject()->asUnicodeString();
           plainBody.append( str );
-          htmlBody.append( str );
+          QString body = plainToHtml( str );
+          htmlBody.append( body );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OMSGID") ) ) {
@@ -1484,13 +1510,14 @@ bool TemplateParser::isHtmlSignature() const
                                                   ( identity ).signature();
   return signature.isInlinedHtml();
 }
-/*
-void TemplateParser::plainToHtml( QString& body )
+
+QString TemplateParser::plainToHtml( const QString &body )//Any better name for the function?
 {
-  Qt::escape( body );
-  body.replace( QRegExp( "\n" ), "<br />" );
+  QString str = body;
+  str = Qt::escape( str );
+  return str.replace( QRegExp( "\n" ), "<br />" );
 }
-*/
+
 } // namespace TemplateParser
 
 #include "templateparser.moc"
