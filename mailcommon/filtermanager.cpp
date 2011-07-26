@@ -208,7 +208,12 @@ void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
 void FilterManager::Private::moveJobResult( KJob *job )
 {
   if ( job->error() ) {
-    kError() << "Error while moving items. " << job->error() << job->errorString();
+    const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob*>( job );
+    if( movejob ) {
+	  kError() << "Error while moving items. "<< job->error() << job->errorString()<<" to distinationCollection.id() :"<< movejob->destinationCollection().id();
+    } else {
+          kError() << "Error while moving items. " << job->error() << job->errorString();
+    }
     // TODO: kmail should tell the user that this failed
   }
 }

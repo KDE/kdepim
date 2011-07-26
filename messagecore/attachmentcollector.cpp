@@ -48,7 +48,7 @@ static bool isInExclusionList( KMime::Content * node )
     return true;
 
   if ( node->contentType()->mediaType() == "application" ) {
-    QString subType = node->contentType()->subType();
+    const QString subType = node->contentType()->subType();
     if ( subType == "pkcs7-mime"  || subType == "pkcs7-signature" || subType == "pgp-signature" || subType == "pgp-encrypted" ) {
       return true;
     }

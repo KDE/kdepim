@@ -167,6 +167,7 @@ public:
   void setUrgent( bool urgent );
 
   void setAutoSaveInterval( int interval );
+  void setCustomHeader( const QString& custHeaderName, const QString& custHeaderValue );
 
   /**
    * Enables/disables autosaving depending on the value of the autosave
@@ -267,7 +268,7 @@ private:
   * Also appends the msgNum to the filename as a message can have a number of
   * KMime::Messages
   */
-  void writeAutoSaveToDisk( KMime::Message::Ptr message );
+  void writeAutoSaveToDisk( const KMime::Message::Ptr& message );
 
   /**
     * Returns the autosave interval in milliseconds (as needed for QTimer).

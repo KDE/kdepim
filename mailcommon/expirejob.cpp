@@ -202,7 +202,9 @@ void ExpireJob::done()
 
 void ExpireJob::slotMessagesMoved( KJob* job )
 {
-  kDebug() << job << job->error();
+  if ( job->error() ) {
+    kError() << job->error() << job->errorString();
+  }
   QString msg;
   QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
   if ( fd ) {

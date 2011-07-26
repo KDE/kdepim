@@ -52,11 +52,11 @@ void ProgressItem::setComplete()
     if ( !mCanceled ) {
       setProgress( 100 );
     }
-    emit progressItemCompleted( this );
+    //emit progressItemCompleted( this );
     if ( parent() ) {
       parent()->removeChild( this );
     }
-    deleteLater();
+    emit progressItemCompleted( this );
   } else {
     mWaitingForKids = true;
   }
@@ -73,7 +73,7 @@ void ProgressItem::removeChild( ProgressItem *kiddo )
   // in case we were waiting for the last kid to go away, now is the time
   if ( mChildren.count() == 0 && mWaitingForKids ) {
     emit progressItemCompleted( this );
-    deleteLater();
+    //deleteLater();
   }
 }
 
@@ -86,9 +86,9 @@ void ProgressItem::cancel()
   kDebug() << label();
   mCanceled = true;
   // Cancel all children.
-  QList<QPointer<ProgressItem> > kids = mChildren.keys();
-  QList<QPointer<ProgressItem> >::Iterator it( kids.begin() );
-  QList<QPointer<ProgressItem> >::Iterator end( kids.end() );
+  QList<ProgressItem* > kids = mChildren.keys();
+  QList<ProgressItem* >::Iterator it( kids.begin() );
+  QList<ProgressItem* >::Iterator end( kids.end() );
   for ( ; it != end; it++ ) {
     ProgressItem *kid = *it;
     if ( kid->canBeCanceled() ) {

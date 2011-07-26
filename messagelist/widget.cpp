@@ -49,6 +49,7 @@
 #include <KDE/KXMLGUIFactory>
 
 #include <Nepomuk/Tag>
+#include "core/groupheaderitem.h"
 
 namespace MessageList
 {
@@ -307,6 +308,19 @@ void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderI
 
   QAction *act;
 
+  QModelIndex index = view()->model()->index( ghi, 0 );
+  view()->setCurrentIndex(index);
+
+  if ( view()->isExpanded( view()->model()->index( ghi, 0 ) ) ) {
+    act = menu.addAction( i18n ( "Collapse Group" ) );
+    connect( act, SIGNAL( triggered( bool ) ),
+             view(), SLOT( slotCollapseCurrentItem() ) );
+  } else {
+    act = menu.addAction( i18n ( "Expand Group" ) );
+    connect( act, SIGNAL( triggered( bool ) ),
+             view(), SLOT( slotExpandCurrentItem() ) );
+  }
+  
   menu.addSeparator();
 
   act = menu.addAction( i18n( "Expand All Groups" ) );
