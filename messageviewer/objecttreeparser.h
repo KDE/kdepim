@@ -293,7 +293,7 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   ObjectTreeParser( const ObjectTreeParser & other );
 
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf * source = new EmptySource(),
+  explicit ObjectTreeParser( ObjectTreeSourceIf * source = 0,
                              NodeHelper *nodeHelper = 0,
                              const Kleo::CryptoBackend::Protocol * protocol=0,
                              bool showOneMimePart=false,
@@ -606,7 +606,7 @@ private:
   QString mCollapseIcon;
   QString mExpandIcon;
   bool mDeleteNodeHelper;
-
+  bool isInternalSource;
 };
 
 }

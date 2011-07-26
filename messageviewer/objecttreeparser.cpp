@@ -175,8 +175,13 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
     mHasPendingAsyncJobs( false ),
     mAllowAsync( false ),
     mShowRawToltecMail( false ),
-    mAttachmentStrategy( strategy )
+    mAttachmentStrategy( strategy ),
+    isInternalSource( false )
 {
+  if( !mSource ) {
+    isInternalSource = true;
+    mSource = new EmptySource;
+  }
   init();
 }
 
@@ -204,7 +209,8 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
     mHasPendingAsyncJobs( other.hasPendingAsyncJobs() ),
     mAllowAsync( other.allowAsync() ),
     mAttachmentStrategy( other.attachmentStrategy() ),
-    mDeleteNodeHelper( false ) // TODO see above
+    mDeleteNodeHelper( false ), // TODO see above
+    isInternalSource( false )
 {
 
 }
@@ -214,6 +220,10 @@ ObjectTreeParser::~ObjectTreeParser()
   if ( mDeleteNodeHelper ) {
     delete mNodeHelper;
     mNodeHelper = 0;
+  }
+  if( isInternalSource ) {
+    delete mSource;
+    mSource = 0;
   }
 }
 
