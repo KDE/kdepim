@@ -65,6 +65,8 @@
 #include <recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
+#include "custommimeheader.h"
+
 
 static QStringList encodeIdn( const QStringList &emails )
 {
@@ -286,6 +288,15 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-EncryptActionEnabled" );
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
+#if 0
+  int num = MessageComposer::CustomMimeHeader::self()->custHeaderCount();
+  for(int ix=0; ix<num; ix++) {
+    MessageComposer::CustomMimeHeader customMimeHeader( QString::number(ix) );
+    customMimeHeader.readConfig();
+    m_msg->setHeader( new KMime::Headers::Generic( customMimeHeader.custHeaderName(), customMimeHeader.custHeaderValue() ));
+  }
+#endif
+
 
   readyForSending();
 }
@@ -862,7 +873,7 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
   }
 }
 
-void Message::ComposerViewBase::writeAutoSaveToDisk( KMime::Message::Ptr message )
+void Message::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
 {
   const QString filename = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave/" ) +
     m_autoSaveUUID;
@@ -1349,14 +1360,13 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
 
 bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords ) 
 {
+  if ( attachmentKeywords.isEmpty() )
+    return false;	  
   if ( m_attachmentModel->rowCount() > 0 ) {
     return false;
   }
 
   QStringList attachWordsList = attachmentKeywords;
-  if ( attachWordsList.isEmpty() ) {
-    return false;
-  }
 
   QRegExp rx ( QString::fromLatin1("\\b") +
                attachWordsList.join( QString::fromLatin1("\\b|\\b") ) +
@@ -1376,7 +1386,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
     QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
     QTextDocument *doc = m_editor->document();
     for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
-      QString line = it.text();
+      const QString line = it.text();
       gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
                  ( rx.indexIn( line ) >= 0 );
       if ( gotMatch ) {
