@@ -65,7 +65,6 @@
 #include <recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
-#include "custommimeheader.h"
 
 
 static QStringList encodeIdn( const QStringList &emails )
@@ -288,17 +287,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-EncryptActionEnabled" );
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
-#if 0
-  int num = MessageComposer::CustomMimeHeader::self()->custHeaderCount();
-  for(int ix=0; ix<num; ix++) {
-    MessageComposer::CustomMimeHeader customMimeHeader( QString::number(ix) );
-    customMimeHeader.readConfig();
-    m_msg->setHeader( new KMime::Headers::Generic( customMimeHeader.custHeaderName(), customMimeHeader.custHeaderValue() ));
-  }
-#endif
-
-
   readyForSending();
+}
+
+void Message::ComposerViewBase::setCustomHeader( const QString& custHeaderName, const QString& custHeaderValue )
+{
+  m_msg->setHeader( new KMime::Headers::Generic( custHeaderName.toLatin1(), m_msg.get(), custHeaderValue,"utf-8") );
 }
 
 void Message::ComposerViewBase::readyForSending()

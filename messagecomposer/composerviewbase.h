@@ -167,6 +167,7 @@ public:
   void setUrgent( bool urgent );
 
   void setAutoSaveInterval( int interval );
+  void setCustomHeader( const QString& custHeaderName, const QString& custHeaderValue );
 
   /**
    * Enables/disables autosaving depending on the value of the autosave
