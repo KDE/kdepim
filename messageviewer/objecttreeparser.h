@@ -43,6 +43,7 @@
 #include <gpgme++/verificationresult.h>
 
 #include <QList>
+#include "objecttreeemptysource.h"
 
 class QString;
 
@@ -292,7 +293,7 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   ObjectTreeParser( const ObjectTreeParser & other );
 
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf * source,
+  explicit ObjectTreeParser( ObjectTreeSourceIf * source = new EmptySource(),
                              NodeHelper *nodeHelper = 0,
                              const Kleo::CryptoBackend::Protocol * protocol=0,
                              bool showOneMimePart=false,
