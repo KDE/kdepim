@@ -250,6 +250,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     bool mCanceled;
     bool mUsesCrypto;
     bool mUsesBusyIndicator;
+    bool mCompletedCalled;
 };
 
 struct ProgressManagerPrivate;

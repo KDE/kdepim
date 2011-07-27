@@ -37,7 +37,7 @@ ProgressItem::ProgressItem( ProgressItem *parent, const QString &id,
   : mId( id ), mLabel( label ), mStatus( status ), mParent( parent ),
     mCanBeCanceled( canBeCanceled ), mProgress( 0 ), mTotal( 0 ),
     mCompleted( 0 ), mWaitingForKids( false ), mCanceled( false ),
-    mUsesCrypto( usesCrypto ), mUsesBusyIndicator( false )
+    mUsesCrypto( usesCrypto ), mUsesBusyIndicator( false ), mCompletedCalled( false )
 {
 }
 
@@ -49,10 +49,12 @@ void ProgressItem::setComplete()
 {
 //   kDebug() << label();
   if ( mChildren.isEmpty() ) {
+    if ( mCompletedCalled ) 
+       return;
     if ( !mCanceled ) {
       setProgress( 100 );
     }
-    //emit progressItemCompleted( this );
+    mCompletedCalled = true;
     if ( parent() ) {
       parent()->removeChild( this );
     }
@@ -73,7 +75,6 @@ void ProgressItem::removeChild( ProgressItem *kiddo )
   // in case we were waiting for the last kid to go away, now is the time
   if ( mChildren.count() == 0 && mWaitingForKids ) {
     emit progressItemCompleted( this );
-    //deleteLater();
   }
 }
 
