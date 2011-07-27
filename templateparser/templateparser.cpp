@@ -1064,16 +1064,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       htmlBody.append( c );
     }
   }
-  //make htmlBody a valid html if it does not have html/head/body tag
-  if( !htmlBody.isEmpty() && !htmlBody.contains( "<html>" ) ) {
-    if( !htmlBody.contains( "<body>" ) ) {
-      htmlBody = "<body>" + htmlBody + "</body>";
-    }
-    if( !htmlBody.contains( "<head>" ) ) {
-      htmlBody = "<head></head>" + htmlBody;
-    }
-    htmlBody = "<html>" + htmlBody + "</html>";
-  }
+  htmlBody = makeValidHtml( htmlBody );
   addProcessedBodyToMessage( plainBody, htmlBody );
 }
 
@@ -1421,7 +1412,7 @@ QString TemplateParser::plainMessageText( bool aStripSignature, AllowSelection i
   return result;
 }
 
-QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const
+QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed )
 {
   QString htmlElement = mOtp->htmlContent();
 
@@ -1439,19 +1430,23 @@ QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection is
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
   const QString bodyElement = page.currentFrame()->evaluateJavaScript(
-    "document.getElementsByTagName('body')[0].innerHTML()").toString();
+    "document.getElementsByTagName('body')[0].innerHTML").toString();
+
+  mHeadElement = page.currentFrame()->evaluateJavaScript(
+    "document.getElementsByTagName('head')[0].innerHTML" ).toString();
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
 
-  //TODO: Extract any style sheet in the head part
-  if( !bodyElement.isEmpty() && ( isSelectionAllowed == NoSelectionAllowed ) ) {
+  if( !bodyElement.isEmpty() ) {
+    if ( aStripSignature ) {
+      return MessageCore::StringUtil::stripSignature( bodyElement );//FIXME strip signature doesnt work for HTML mails
+    }
     return bodyElement;
   }
 
   if ( aStripSignature ) {
-    return MessageCore::StringUtil::stripSignature( htmlElement );
+    return MessageCore::StringUtil::stripSignature( htmlElement );//FIXME strip signature doesnt work for HTML mails
   }
-
   return htmlElement;
 }
 
@@ -1480,8 +1475,13 @@ QString TemplateParser::quotedPlainText( const QString& selection /*.clear() */)
 QString TemplateParser::quotedHtmlText( const QString& selection /*.clear() */) const
 {
   QString content = selection;
-//TODO look for all the variations of <br>  and remove the blank lines
-//TODO implement vertical bar for quoted HTML mail
+  //TODO 1) look for all the variations of <br>  and remove the blank lines
+  //2) implement vertical bar for quoted HTML mail.
+  //3) After vertical bar is implemented, If a user wants to edit quoted message,
+  // then the <blockquote> tags below should open and close as when required.
+
+  //Add blockquote tag, so that quoted message can be differentiated from normal message
+  content = "<blockquote>" + content + "</blockquote>";
   return content;
 }
 
@@ -1516,6 +1516,20 @@ QString TemplateParser::plainToHtml( const QString &body )//Any better name for 
   QString str = body;
   str = Qt::escape( str );
   return str.replace( QRegExp( "\n" ), "<br />" );
+}
+
+QString TemplateParser::makeValidHtml(QString& body) const
+{
+  if( !body.isEmpty() && !body.contains( QRegExp( "<html.*>") ) ) {
+    if( !body.contains( QRegExp( "<body.*>" ) ) ) {
+      body = "<body>" + body + "</body>";
+    }
+    if( !body.contains( QRegExp("<head.*>") ) ) {
+      body = "<head>" + mHeadElement +"</head>" + body;
+    }
+    body = "<html>" + body + "</html>";
+  }
+  return body;
 }
 
 } // namespace TemplateParser

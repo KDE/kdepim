@@ -168,6 +168,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     AllowSelection isSelectionAllowed;
     MessageViewer::ObjectTreeParser *mOtp;
     MessageViewer::EmptySource *mEmptySource;
+    QString mHeadElement;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to
@@ -242,7 +243,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Returns the HTML content of the message as plain text
      */
-    QString htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const;
+    QString htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed );
 
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
@@ -277,7 +278,12 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Does the necessary conversions like escaping charecters, changing "\n" to breakline tag before
      * appending text to htmlBody
      */
-    QString plainToHtml( const QString &body);//any better name for the function?
+    QString plainToHtml( const QString &body );//any better name for the function?
+
+    /**
+     * Make a HTML content valid by adding missing html/head/body tag
+     */
+    QString makeValidHtml( QString &body ) const;
 
 };
 
