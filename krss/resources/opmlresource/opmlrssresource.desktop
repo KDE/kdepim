@@ -1,0 +1,31 @@
+[Desktop Entry]
+Name=Akonadi RSS Resource for an OPML file
+Name[et]=Akonadi OPML-faili RSS-i ressurss
+Name[ga]=Acmhainn RSS Akonadi le haghaidh comhaid OPML
+Name[gl]=Recurso RSS para Akonadi para un ficheiro OPML
+Name[km]=ធនធាន RSS របស់ Akonadi RSS សម្រាប់​ឯកសារ OPML
+Name[nds]=Akonadi-RSS-Ressource för en OPML-Datei
+Name[pt]=Recurso de RSS do Akonadi para um Ficheiro OPML
+Name[pt_BR]=Recurso de RSS do Akonadi para um arquivo OPML
+Name[sv]=Akonadi RSS-resurs för en OPML-fil
+Name[tr]=Bir OPML dosyası için Akonadi RSS Kaynağı
+Name[uk]=RSS-ресурс Akonadi для файла OPML
+Name[x-test]=xxAkonadi RSS Resource for an OPML filexx
+Comment=Stores your RSS subscriptions in an OPML file
+Comment[et]=Sinu RSS-i tellimuste salvestamine OPML-failina
+Comment[ga]=Stórálann sé seo do shíntiúis RSS i gcomhad OPML
+Comment[gl]=Garda as subscricións RSS nun ficheiro OPML
+Comment[km]=ទុក​ការ​ជាវ RSS របស់​អ្នក​នៅ​ក្នុង​ឯកសារ OPML
+Comment[nds]=Sekert Dien RSS-Bestellen na en OPML-Datei
+Comment[pt]=Guarda as suas inscrições de RSS num ficheiro OPML
+Comment[pt_BR]=Guarda as suas inscrições de RSS num ficheiro OPML
+Comment[sv]=Lagrar dina RSS-prenumerationer i en OPML-fil
+Comment[uk]=Зберігає ваші підписки RSS у файлі OPML
+Comment[x-test]=xxStores your RSS subscriptions in an OPML filexx
+Type=AkonadiResource
+Exec=akonadi_opml_rss_resource
+Icon=akregator
+
+X-Akonadi-MimeTypes=application/rss+xml
+X-Akonadi-Capabilities=Resource,RssResource
+X-Akonadi-Identifier=akonadi_opml_rss_resource

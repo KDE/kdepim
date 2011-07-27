@@ -1,0 +1,79 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.krss">
+    <signal name="fetchStarted">
+      <arg name="id" type="x" direction="out"/>
+    </signal>
+    <signal name="fetchPercent">
+      <arg name="id" type="x" direction="out"/>
+      <arg name="percentage" type="u" direction="out"/>
+    </signal>
+    <signal name="fetchFinished">
+      <arg name="id" type="x" direction="out"/>
+    </signal>
+    <signal name="fetchFailed">
+      <arg name="id" type="x" direction="out"/>
+      <arg name="errorMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="fetchAborted">
+      <arg name="id" type="x" direction="out"/>
+    </signal>
+    <signal name="fetchQueueStarted">
+    </signal>
+    <signal name="fetchQueueFinished">
+    </signal>
+    <method name="addFeed">
+      <arg type="a{sv}" direction="out">
+        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      </arg>
+      <arg name="xmlUrl" type="s" direction="in"/>
+      <arg name="subscriptionLabel" type="s" direction="in"/>
+    </method>
+    <method name="fetchFeed">
+      <arg name="id" type="x" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="abortFetch">
+      <arg name="id" type="x" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="removeFeed">
+      <arg type="b" direction="out"/>
+      <arg name="id" type="x" direction="in"/>
+    </method>
+    <method name="subscribe">
+      <arg type="b" direction="out"/>
+      <arg name="id" type="x" direction="in"/>
+      <arg name="subscriptionLabel" type="s" direction="in"/>
+    </method>
+    <method name="unsubscribe">
+      <arg type="b" direction="out"/>
+      <arg name="id" type="x" direction="in"/>
+      <arg name="subscriptionLabel" type="s" direction="in"/>
+    </method>
+    <method name="subscriptions">
+      <arg type="as" direction="out"/>
+      <arg name="id" type="x" direction="in"/>
+    </method>
+    <method name="importOpml">
+      <arg type="a{sv}" direction="out">
+        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      </arg>
+      <arg name="path" type="s" direction="in"/>
+      <arg name="defaultTag" type="s" direction="in"/>
+    </method>
+    <method name="exportOpml">
+      <arg type="a{sv}" direction="out">
+        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      </arg>
+      <arg name="path" type="s" direction="in"/>
+    </method>
+    <method name="importItems">
+      <arg type="a{sv}" direction="out">
+        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      </arg>
+      <arg name="url" type="s" direction="in"/>
+      <arg name="path" type="s" direction="in"/>
+    </method>
+  </interface>
+</node>

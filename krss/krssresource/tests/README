@@ -1,0 +1,31 @@
+How to run performance tests.
+
+Since the test data file with the items imported from Akregator
+weights about 25MB it is hosted at my server http://partimage-ng.net.
+The file contains 9000+ RSS items.
+
+There are two performance tests:
+
+1. ItemImportReader test measures the performance of the item
+   reader's parser.
+
+2. ImportItemsJob test measures how fast the items get imported
+   into Akonadi.
+
+I cannot figure out why the tests don't print the benchmark results
+when run non-interactive so here's the steps how to run them manually.
+
+1. Go to tests/
+2. Run './gettestdata.sh' (will download planetkde-performance.xml from
+   partimage-ng.net)
+3. Run 'akonaditest -c unitestenv/config2.xml -testenv testenv.sh &'
+   (start the Akonadi test environment)
+4. Run 'source ./testenv.sh'
+5. Go to the build dir ('cb' if using dfaure's bashrc functions)
+6. Run the test './itemimportreadertest.shell' and then
+   './importitemsjobtest.shell'
+7. Wait for the results :-)
+8. Run 'shutdown-testenvironment'
+
+If planetkde-performance.xml is not found in tests/unittestenv/kdehome2/
+the tests will be skipped.

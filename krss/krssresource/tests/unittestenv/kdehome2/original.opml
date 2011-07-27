@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+<head/>
+<body>
+
+<outline isOpen="true" id="86934463" text="Linux" >
+  <outline isOpen="true" id="1369658234" text="Planets" >
+
+<outline text="Planet KDE" title="Planet KDE" description="Planet KDE - http://planetKDE.org/" htmlUrl="http://planetKDE.org/" xmlUrl="http://planetkde.org/rss20.xml"/>
+
+  </outline>
+</outline>
+</body></opml>

@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Planet KDE</title>
+    <link>http://planetKDE.org/</link>
+    <language>en</language>
+    <description>Planet KDE - http://planetKDE.org/</description>
+    <atom:link href="http://planetKDE.org/rss20.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <guid isPermaLink="false">http://metelliuscode.wordpress.com/?p=72</guid>
+      <title>Harald Hvaal (metellius): A binary package-based system with own patches?</title>
+      <pubDate>Thu, 05 Feb 2009 02:19:55 +0000</pubDate>
+      <link>http://metelliuscode.wordpress.com/2009/02/05/a-binary-package-based-system-with-own-patches/</link>
+      <description>&lt;div class='snap_preview'&gt;&lt;br /&gt;&lt;p&gt;I&amp;#8217;m increasingly getting an urge to expanding my hackings into other parts of kde, as to actually fix the small things that annoy me myself. There is only one problem though; I am very happy with the updated packages the kubuntu team supplies, and especially with my small laptop being my only available system, keeping a constantly complete self-compiled environment is something I don&amp;#8217;t want to do.&lt;/p&gt;
+&lt;p&gt;So I&amp;#8217;m wondering, maybe there is a middleway? Maybe there is a way I can for example get the source for the plasma package, hackety-hack up a small feature patch, send the patch off to review, commiting and whatnot, and while all this is happening, be able to keep these few patches in my own system easily, even with all the other parts of the system being based on packages.&lt;/p&gt;
+&lt;p&gt;For the apps that I regularly hack on (ark and kiten) I actually have placed empty placeholder packages in the system and compile them myself, but for larger system packages I also want the various improvements and settings that the packagers supply. So what say you, planeteers? Are any of you keeping custom patches on your package-based system? (source-based distros do not count)&lt;/p&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/metelliuscode.wordpress.com/72/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/metelliuscode.wordpress.com/72/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godelicious/metelliuscode.wordpress.com/72/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/delicious/metelliuscode.wordpress.com/72/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gostumble/metelliuscode.wordpress.com/72/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/stumble/metelliuscode.wordpress.com/72/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godigg/metelliuscode.wordpress.com/72/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/digg/metelliuscode.wordpress.com/72/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/goreddit/metelliuscode.wordpress.com/72/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/reddit/metelliuscode.wordpress.com/72/" /&gt;&lt;/a&gt; &lt;img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=metelliuscode.wordpress.com&amp;blog=3982938&amp;post=72&amp;subd=metelliuscode&amp;ref=&amp;feed=1" /&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://frinring.wordpress.com/?p=213</guid>
+      <title>Friedrich Kossebau (frinring): Bonjour, what services are in this location?</title>
+      <pubDate>Wed, 04 Feb 2009 23:59:15 +0000</pubDate>
+      <link>http://frinring.wordpress.com/2009/02/04/bonjour-what-services-are-in-this-location/</link>
+      <description>&lt;div class='snap_preview'&gt;&lt;br /&gt;&lt;p&gt;I just committed a KDE 4 port of the SLP kioslave into &lt;a href="http://websvn.kde.org/trunk/playground/network/kio_slp/"&gt;playground&lt;/a&gt;. The KDE 3 version might be at least known to the OpenSuse users, as Novell is a strong supporter of the &lt;a href="http://en.wikipedia.org/wiki/Service_Location_Protocol"&gt;Service Location Protocol (SLP, srvloc)&lt;/a&gt;, and so it had been developed in some Suse repository and always been installed with the OpenSuses.&lt;/p&gt;
+&lt;p&gt;So far it&amp;#8217;s a 1:1 port, perhaps with new bugs introduced by the port:&lt;br /&gt;
+&lt;a href="http://frinring.files.wordpress.com/2009/02/slp-kde-4-kioslave.png"&gt;&lt;img src="http://frinring.files.wordpress.com/2009/02/slp-kde-4-kioslave.png?w=90&amp;#038;h=96" alt="SLP kioslave ported to KDE 4 " title="SLP kioslave ported to KDE 4" width="90" height="96" class="alignnone size-thumbnail wp-image-215" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Why did I do this port? I am looking to see of there could be a better presentation of the units and services in a network, e.g. in Konqueror, Dolphin and the filedialog. I was at least impressed by the environment view of &lt;a href="http://sugarlabs.org/go/Main_Page"&gt;Sugar&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Before I ported the SLP kioslave I had made myself a little familiar with the zeroconf kioslave residing in the module &lt;a href="http://websvn.kde.org/trunk/KDE/kdenetwork/kdnssd/"&gt;kdenetwork&lt;/a&gt;, for the &lt;a href="http://en.wikipedia.org/wiki/Zeroconf"&gt;Zero Configuration Networking (Zeroconfig)&lt;/a&gt;. Perhaps I can take up, where Jakub has stopped previously, and move all service discovery services (recursiveness ahead) behind an abstraction/wrapping layer, best support for multiple backends at the same time.&lt;/p&gt;
+&lt;p&gt;In the end I hope to reach a system in which programs that support realtime collaboration on the same data do not need to provide a second selector view to choose the document to connect to, but can just reuse the filedialog. Or get started from the &amp;#8220;file&amp;#8221; manager by a click on the relevant service item.&lt;br /&gt;
+There are lots of possibilities in this area. E.g. you could checkout a module from a repository to a place on your disk with one drag. Just let your imagination roll what is possible&amp;#8230;&lt;/p&gt;
+&lt;p&gt;Our friends in the GNOME camp are already some more happy camper with regard to realtime collaboration. See for GTK+ &lt;a href="http://blogs.gnome.org/carlosg/2009/01/19/more-multitouchy-fun/"&gt;getting support for MPX&lt;/a&gt;, the same for Vino &lt;a href="http://blog.printf.net/articles/2009/01/26/multi-pointer-remote-desktop"&gt;for a multi-pointer remote desktop&lt;/a&gt;, the GTK+-using AbiWord getting &lt;a href="http://cass.no-ip.com/~cassidy/blog/index.php/post/2009/01/24/Desktop-integration-of-the-Abiword-collaboration"&gt;support for the Telepathy tubes&lt;/a&gt;, or just the working &lt;a href="http://gobby.0x539.de/"&gt;Gobby&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At least concerning Gobby there is hope for KDE, see some recent &lt;a href="http://blog.greghaynes.net/index.php?/archives/35-Kobby-Inserted-Its-First-Collaborative-Text.html"&gt;update on the state of Kobby&lt;/a&gt;. And then there is the Teamwork plugin for KDevelop, but I haven&amp;#8217;t yet managed to get it running. My plans for Okteta in this regard are stalled a little by the work on the service discovery, but it&amp;#8217;s them which are driving me there  &lt;img src='http://s.wordpress.com/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /&gt; &lt;/p&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/frinring.wordpress.com/213/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/frinring.wordpress.com/213/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godelicious/frinring.wordpress.com/213/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/delicious/frinring.wordpress.com/213/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gostumble/frinring.wordpress.com/213/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/stumble/frinring.wordpress.com/213/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godigg/frinring.wordpress.com/213/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/digg/frinring.wordpress.com/213/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/goreddit/frinring.wordpress.com/213/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/reddit/frinring.wordpress.com/213/" /&gt;&lt;/a&gt; &lt;img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=frinring.wordpress.com&amp;blog=251139&amp;post=213&amp;subd=frinring&amp;ref=&amp;feed=1" /&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">tag:blogger.com,1999:blog-7615673.post-4973191055261341797</guid>
+      <title>Aaron Seigo (aseigo): some days you have to try harder than others</title>
+      <pubDate>Wed, 04 Feb 2009 23:56:00 +0000</pubDate>
+      <link>http://aseigo.blogspot.com/2009/02/some-days-you-have-to-try-harder-than.html</link>
+      <description>Usually when I travel it's no problem: I sail into one airport and (eventually, often with some stops in between) out of another. Nothing interesting happens, and that is certainly a good thing when it comes to the actual transit part of travel.&lt;br /&gt;&lt;br /&gt;Some days, though .......&lt;br /&gt;&lt;br /&gt;I arrived at the airport two hours early, after saying goodbye to P. and his mom, M., who has come in to house sit and look after the P-man while I'm out of the country. I go to the express check in counter (hooray for the small benefits of traveling too much! ;) and I get my first heart stopper: the woman isn't sure my passport has enough time left on it. It expires this year, but not exactly soon and I certainly haven't had enough time in the country to apply for a new one. My plan was to do so as soon as I return from this trip. So here I am being told that they might not even let me out of Canada?! *sigh* She checks into it some more, I point out that I do have a return ticket, that I travel in and out of Europe rather regularly, etc ... and she decides that, yes, I will be allowed to travel around Europe at least one more time on my current passport. Holy heart attacks!&lt;br /&gt;&lt;br /&gt;I brought a guitar with me this time, a small one to be sure but not small enough to just through in the Lufthansa overheads and so Air Canada makes me put it into the oversized baggage. I swear that it must be the smallest oversized bag in the load. Unfortunately the Russian junior hockey team &lt;i&gt;and&lt;/i&gt; the Swedish ski team are simultaneously wreaking havoc on the oversized baggage security check. You can't make this stuff up.&lt;br /&gt;&lt;br /&gt;I'm in that line for nearly 40 minutes when I decide that I need to take matters into my own hands here and so beg my way to the front of the line as my flight will leave without me otherwise. Social skills are useful. :)&lt;br /&gt;&lt;br /&gt;Next stop: security. Of course, the line is horrendously long. I've never been through that side of YYC when it was that long. I was going to miss my flight now for sure. Not.&lt;br /&gt;&lt;br /&gt;I walked right past the line, waited for the fellow who checks people's boarding passes at the entrance to finish with his current passenger and then interjected myself. I asked the people who were next for just a moment's grace and then pleaded my case to the gatekeeper. Turns out ... he used to work in oversized baggage and completely empathized. He said with an empathetic smile, "I probably shouldn't, but just this time ... just go through. I know how bad oversize can be!" &lt;br /&gt;&lt;br /&gt;With the final hurdle cleared, I am now sitting at the boarding gate waiting for boarding to commence. Thankfully YYC now has free wifi so I can blog my pain in near real time. ;)&lt;br /&gt;&lt;br /&gt;Porto, here I come!</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://plagioastral.wordpress.com/?p=147</guid>
+      <title>Tomaz Canabrava (tomaz): Latex file for Kde-Qt code coloring</title>
+      <pubDate>Wed, 04 Feb 2009 23:38:45 +0000</pubDate>
+      <link>http://plagioastral.wordpress.com/2009/02/04/latex-file-for-kde-qt-code-coloring/</link>
+      <description>&lt;div class='snap_preview'&gt;&lt;br /&gt;&lt;p&gt;Hey all.&#xA0;&lt;/p&gt;
+&lt;p&gt;I was lost a few days on the land of the strange latex files, trying to do some code coloring on it. the thing that I`v seen that worked almost, but not quite I was expecting was lstlistings using c++ as the default language. after a bit more of a research, I found a `C coloring in latex with tango` and a few other projects that translated the code into a non-compreensible-to-humans format that could output color to latex generate pdf.&lt;/p&gt;
+&lt;p&gt;&#xA0;&lt;/p&gt;
+&lt;p&gt;Well, Suffer no more. I humbly give you all my modification of the C++ language on the lstlistings package that pretty colours your code.&lt;/p&gt;
+&lt;p&gt;OBS:. the file is .tex, I just changed the extension to .png so WordPress will let me upload it. please, rename it to .tex &lt;img src='http://s.wordpress.com/wp-includes/images/smilies/icon_wink.gif' alt=';)' class='wp-smiley' /&gt; &#xA0;&lt;/p&gt;
+&lt;p&gt;The file:&#xA0;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://plagioastral.files.wordpress.com/2009/02/kdetex.png"&gt;&lt;img class="alignnone size-full wp-image-148" title="kdetex" src="http://plagioastral.files.wordpress.com/2009/02/kdetex.png" alt="rename it to kdetex.tex, please." /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;(remember to rename it kdetex.tex)&lt;/p&gt;
+&lt;p&gt;and a PDF that I used this thingy.:&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://plagioastral.files.wordpress.com/2009/02/livro.pdf"&gt;livro&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;to test it, just put the code into a lstlisting block.&lt;/p&gt;
+&lt;p&gt;Comments, Tougths?&lt;/p&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/plagioastral.wordpress.com/147/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/plagioastral.wordpress.com/147/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godelicious/plagioastral.wordpress.com/147/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/delicious/plagioastral.wordpress.com/147/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gostumble/plagioastral.wordpress.com/147/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/stumble/plagioastral.wordpress.com/147/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godigg/plagioastral.wordpress.com/147/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/digg/plagioastral.wordpress.com/147/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/goreddit/plagioastral.wordpress.com/147/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/reddit/plagioastral.wordpress.com/147/" /&gt;&lt;/a&gt; &lt;img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=plagioastral.wordpress.com&amp;blog=2029050&amp;post=147&amp;subd=plagioastral&amp;ref=&amp;feed=1" /&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.purinchu.net/wp/?p=352</guid>
+      <title>Michael Pyne (mpyne): Another programming tidbit</title>
+      <pubDate>Wed, 04 Feb 2009 23:13:36 +0000</pubDate>
+      <link>http://www.purinchu.net/wp/2009/02/04/another-programming-tidbit/</link>
+      <description>&lt;p&gt;Now that Super Bowl weekend is over (Go &lt;a href="http://sports.yahoo.com/nfl/recap?gid=20090201022"&gt;Steelers&lt;/a&gt;!) it&amp;#8217;s time to get back to fixing bugs and typing up code.  That brings me to my helpful tidbit for today.&lt;/p&gt;
+&lt;p&gt;A few JuK bugs have been related to this issue, and I just saw a second kdelibs bug today which I think is related to this (the actual bug is unimportant) so I think it&amp;#8217;s important to get out the following message: QObjects do not free you up from having to write proper destructors.&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s a more detailed explanation of the problem.  Let&amp;#8217;s say you have a widget, which has a private &lt;a href="http://techbase.kde.org/Policies/Library_Code_Policy#D-Pointers"&gt;d pointer&lt;/a&gt;.  Your widget itself contains several sub widgets which are children of your widget.  One or a few of these widgets rely on an object contained in your d-pointer.  It may look something like this:&lt;/p&gt;
+&lt;p&gt;&lt;center&gt;&lt;img height="304" width="421" alt="A simple class diagram" src="/dumping-ground/object-layout.png"/&gt;&lt;/center&gt;&lt;/p&gt;
+&lt;p&gt;Of course, graphically illustrated the problem might seem obvious here, especially if you know how QObject&amp;#8217;s destructor works:  If you delete the d pointer while the View is still using it then you run the very real risk of a crash.  This can occur if your destructor looks like this, for instance:&lt;/p&gt;
+&lt;pre&gt;Widget::~Widget() {
+  delete d;
+}&lt;/pre&gt;
+&lt;p&gt;After your &lt;code&gt;~Widget&lt;/code&gt; has run then your d pointer and its DataStore are no more, but your View and Button are still alive.  This is usually OK, as the QObject destructor will delete them and there will be no memory leak.  However, if anything happens to the View which would cause it to access the DataStore object before the program gets to that point, then you have a crash on your hands.  The race window is very small here if you&amp;#8217;re racing with an event handler for instance.  The problem is a lot easier if View uses DataStore in its destructor since it will pretty much always crash there.&lt;/p&gt;
+&lt;p&gt;If DataStore had somehow been a child of View there wouldn&amp;#8217;t have been an issue (since QObject deletes children first), but that unnecessarily fouls up the class design and besides, it&amp;#8217;s usually either not possible or desirable.  But when you have situations where you have children that depend on siblings for their functionality, you must delete them manually in your destructor or else the effectively random order that is chosen by QObject is what you&amp;#8217;ll get, which can lead to hard-to-reproduce crashes.  In this case, we would delete View before we deleted the d pointer.  We don&amp;#8217;t have to delete the Button manually since it does not depend on any of its siblings, although it doesn&amp;#8217;t hurt either.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kdedevelopers.org/3879 at http://www.kdedevelopers.org</guid>
+      <title>Marijn Kruisselbrink: KDE 4.2.0 and KOffice 2.0 beta6 packages for Maemo</title>
+      <pubDate>Wed, 04 Feb 2009 22:30:16 +0000</pubDate>
+      <link>http://www.kdedevelopers.org/node/3879</link>
+      <description>After quite a while of not doing much maemo related, I finally found the time to build a bit more up-to-date kde packages for maemo. I've now uploaded kdelibs, kdepimlibs and kdebase from KDE 4.2.0 (more modules will follow), and also the just released koffice 2.0beta6 (unfortunately no kspread yet, as I couldn't get it to compile with the old gcc version in scratchbox). If you want to play with kde and/or koffice on your maemo powered device, add the following line to your /etc/apt/sources.list:&lt;tt&gt;deb &lt;a href="http://93.157.1.37/~marijn/maemo" title="http://93.157.1.37/~marijn/maemo"&gt;http://93.157.1.37/~marijn/maemo&lt;/a&gt; binary/&lt;/tt&gt;, and install kde and/or koffice related packages (you probably don't want to install them to the small rootfs, as the packages are still a bit big). The state of maemo/hildon integration for kde applications hasn't changed much since my previous packages (for example applications still don't have a correct icon in the taskbar), but I hope to be able to spend some time in that area as well.
+
+&lt;a href="http://93.157.1.37/~marijn/7866067f5ff7c7354bf8aef97def2032.png"&gt;&lt;img src="http://93.157.1.37/~marijn/7866067f5ff7c7354bf8aef97def2032_small.png" alt="Plasma on Maemo"&gt;&lt;/a&gt;&lt;br&gt;
+
+I'll also be at fosdem this weekend, so if anyone has problems getting the packages to work, you could try to find me there :)</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kdedevelopers.org/3878 at http://www.kdedevelopers.org</guid>
+      <title>Richard Dale: Creating QMetaObjects from GObject Introspection data</title>
+      <pubDate>Wed, 04 Feb 2009 17:57:07 +0000</pubDate>
+      <link>http://www.kdedevelopers.org/node/3878</link>
+      <description>&lt;p&gt;With the next Akademy and GUADEC being co-located in Gran Canaria, I thought it would be nice to do a bit of 'cross-desktopping'. My Gnome friend, Alberto Ruiz, is organizing the &lt;a href="http://aruiz.typepad.com/siliconisland/2009/02/gtk-30-theming.html"&gt;Gtk+ 3.0 Theming API Hackfest&lt;/a&gt; with some GTK hackers along with Jens Bache-Wiig from Qt Software. That is really good news as it means they'll be thinking about making the toolkits apis compatible at the look and feel level right from the start.&lt;/p&gt;
+&lt;p&gt;My own idea for improving toolkit inter-operability is so see if it is possible to generate Qt's runtime introspeciton data in the form of QMetaObjects, from a GObject introspection repository and vice versa. So a Qt program looking at a GTK class would see slot names in camel case using Qt datatypes such as QStrings, qreals and QList types, and it would be able to connect Qt signals to the GTK slots as though they were native.&lt;/p&gt;
+&lt;p&gt;I began looking into how GObjects worked when Norbert Frese started a discussion on the kde-core-devel mailing list about a GIO-KIO bridge that he was working on. But I found there wasn't enough introspection data in a vanilla GObject to make it possible to construct a QMetaObject. I met Norbert at last years Akademy and he showed my the code for the bridge and explained what the problems were, and he also told me about the &lt;a href="http://live.gnome.org/GObjectIntrospection/"&gt;'gobject introspection'&lt;/a&gt; project to make it easier to produce language bindings for the GTK apis. Although GIO is a Gnome library it didn't actually make much use of GObjects which meant that it wouldn't be possible to automate the GIO-KIO bridge and it looked like there was a heroic amount of hand crafted code that would be needed.&lt;/p&gt;
+&lt;p&gt;I've done some initial work on seeing how gobject introspection works by writing code to dump the contents of the Clutter api, and it looks pretty good. You can get the names of methods and their arg types, class names and the class hierarchy, property names, enums and flags. In fact everything that goes into making up QMetaObjects is in there. One problem though is that the enums are C based and global in scope and I haven't worked out how to solve that yet. I know how to construct QMetaObjects on the fly because thats how the QtRuby and Qyoto bindings work, and so it shouldn't be too hard. QObjects have a virtual method called metaObject() and all you need to do is to override that and return your custom constructed meta object.&lt;/p&gt;
+&lt;p&gt;After the meta objects have been created the next problem is the get the runtime invocation part working. All slot and property invocations go through a method called qt_metacall() which looks like this:&lt;/p&gt;
+&lt;pre&gt;
+int MyClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QWidget::qt_metacall(_c, _id, _a);
+    if (_id &amp;lt; 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: foobar((*reinterpret_cast&amp;lt; int(*)&amp;gt;(_a[1]))); break;
+        case 1: frob((*reinterpret_cast&amp;lt; const QImage(*)&amp;gt;(_a[1]))); break;
+
+&lt;/pre&gt;&lt;p&gt;
+qt_metacall() takes an integer '_id' arg and it is used in a big switch statement in the moc generated code to despatch the call the the right slot method. The QMetaObject::Call arg tells you what sort of call is being made - calling a slot, setting a property and so on. Finally, the 'void ** _a' arg is an array of the argument values to use. To get GTK slot invocations working it will mean marshalling code from the '_a' array to the form expected by libffi in the g_function_info_invoke() function. After the ffi call has been made, any arg types whose values can be changed must be copied back into the C++ '_a' array along with the return value.&lt;/p&gt;
+&lt;p&gt;And that is about all there is to it  - what could possibly go wrong? I asked on the irc.gnome.org #introspection channel whether anyone was going to FOSDEM this year and there were several people going. So I'm looking forward to have some discussion and getting a 'hello world' working there.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">tag:blogger.com,1999:blog-1989639885226488074.post-5872053365983765501</guid>
+      <title>Tobias Koenig (tokoe): W3C XML Schema validation with Qt</title>
+      <pubDate>Wed, 04 Feb 2009 12:14:00 +0000</pubDate>
+      <link>http://tokoe-kde.blogspot.com/2009/02/w3c-xml-schema-validation-with-qt.html</link>
+      <description>For all of you who want to make use of advanced XML processing with Qt and KDE, here is a &lt;a href="http://labs.trolltech.com/blogs/2009/02/03/w3c-xml-schema-validation-with-qt/"&gt;preview story&lt;/a&gt;. Now we can maybe get rid of the libxml2 dependency at several places in KDE.</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://chani.wordpress.com/?p=264</guid>
+      <title>Chani Armitage (Chani): on the road again</title>
+      <pubDate>Wed, 04 Feb 2009 11:17:21 +0000</pubDate>
+      <link>http://chani.wordpress.com/2009/02/04/on-the-road-again/</link>
+      <description>&lt;div class='snap_preview'&gt;&lt;br /&gt;&lt;p&gt;so in three hours my alarm is going to go off, and I&amp;#8217;ll have to head out to the airport yet again. somehow I find myself blogging instead of sleeping, though.&lt;/p&gt;
+&lt;p&gt;I haven&amp;#8217;t touched plasma this week - I&amp;#8217;ve been busy catching up on homework, then trying to get ahead so that I can ignore it during tokamak. :) it&amp;#8217;ll be great to see the plasma team in person and get some solid hacking time in. whee :)&lt;/p&gt;
+&lt;p&gt;so, um, yeah. I&amp;#8217;m still alive, and I get to go to portugal! woo! the amount of travel I&amp;#8217;ve done in the last year has been kinda crazy. crazy awesome.&lt;/p&gt;
+&lt;p&gt;I think I&amp;#8217;m gonna pass out now. more blogs will come, with code. mmm, code. (actually, I did some haskell programming on hte weekend for homeork. that was fun. and hurt my brain.)&lt;/p&gt;
+&lt;p&gt;also, my desktop is prettier than your desktop ;P here&amp;#8217;s my &lt;a href="http://chani.ccdevnet.org/sshots/activity-misc.png"&gt;main activity&lt;/a&gt; and one of my &lt;a href="http://chani.ccdevnet.org/sshots/activity-379.png"&gt;school activities&lt;/a&gt;&lt;/p&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/chani.wordpress.com/264/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/chani.wordpress.com/264/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godelicious/chani.wordpress.com/264/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/delicious/chani.wordpress.com/264/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gostumble/chani.wordpress.com/264/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/stumble/chani.wordpress.com/264/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godigg/chani.wordpress.com/264/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/digg/chani.wordpress.com/264/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/goreddit/chani.wordpress.com/264/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/reddit/chani.wordpress.com/264/" /&gt;&lt;/a&gt; &lt;img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=chani.wordpress.com&amp;blog=344550&amp;post=264&amp;subd=chani&amp;ref=&amp;feed=1" /&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">tag:blogger.com,1999:blog-3856624862131672592.post-5287570169105871917</guid>
+      <title>Fabrizio Montesi (fmontesi): Major distribution bug in Java support for unix sockets?</title>
+      <pubDate>Wed, 04 Feb 2009 11:04:20 +0000</pubDate>
+      <link>http://fmontesi.blogspot.com/2009/01/major-distribution-bug-in-java-support.html</link>
+      <description>If you're trying to use local unix sockets using libmatthew with a Java program (as it's the case for JOLIE and thus MetaService), you might get a similar error:&lt;br /&gt;&lt;br /&gt;Exception in thread "main" java.lang.UnsatisfiedLinkError: /usr/lib/libunix-java.so: /usr/lib/libunix-java.so: undefined symbol: __stack_chk_fail_local&lt;br /&gt;&lt;br /&gt;I get it using the libmatthew-java package from openSUSE 11.1. It looks like &lt;a href="https://bugs.launchpad.net/ubuntu/+source/dbus-java/+bug/218658"&gt;Ubuntu users are suffering of the same problem&lt;/a&gt; (there causing a bug in dbus-java). If you read their bug thread, you'll find that they appoint the problem to a compilation flag. I've tried to simply download libmatthew sources from &lt;a href="http://www.matthew.ath.cx/projects/java/libmatthew-java-0.7.1.tar.gz"&gt;here&lt;/a&gt; and compiling them: they just work (except that you have to fix the Makefile by substituting the java compiler flag -source 5.0 with -source 1.5).&lt;br /&gt;&lt;br /&gt;This problem really looks worth going into some official update repository for each bugged distro. I have already filed a &lt;a href="https://bugzilla.novell.com/show_bug.cgi?id=468886"&gt;bug for openSUSE&lt;/a&gt;, but I cannot confirm it for other distros. Could *you* (dear reader) check for it and send an appropriate bug report? =)&lt;br /&gt;&lt;br /&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; the bug has been fixed! Thanks to all the people involved! =) If you're using openSUSE 11.1, you can fetch a backport from the Java repository (http://download.opensuse.org/repositories/Java:/packages/openSUSE_11.1/).</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://amarok.kde.org/blog/archives/882-guid.html</guid>
+      <title>Myriam Schweingruber (Mamarok): Free alternatives to proprietary PDF readers now easy to find</title>
+      <pubDate>Wed, 04 Feb 2009 09:12:00 +0000</pubDate>
+      <link>http://amarok.kde.org/blog/archives/882-Free-alternatives-to-proprietary-PDF-readers-now-easy-to-find.html</link>
+      <description>&lt;img src="http://okular.kde.org/images/okular.png" alt="" /&gt;&lt;br /&gt;
+I suppose we all have come across that &lt;em&gt;"red button"&lt;/em&gt; on websites asking you to download Acrobat Reader to read a PDF document. Even free for download, it still is a proprietary solution and in no way a Free Software tool.&lt;br /&gt;
+&lt;br /&gt;
+Now, my friends at the &lt;a href="http://fsfeurope.org/"  title="http://fsfeurope.org/"&gt;Free Software Foundation Europe&lt;/a&gt; have been busy working on a website to propose alternative readers for all OS platforms: &lt;a href="http://pdfreaders.org"  title="pdfreaders.org"&gt;pdfreaders.org&lt;/a&gt;. And it seems that there is only one alternative package running on &lt;em&gt;all&lt;/em&gt; operating systems: &lt;a href="http://okular.kde.org/"  title="Okular"&gt;Okular&lt;/a&gt; &lt;img src="http://amarok.kde.org/blog/templates/default/img/emoticons/smile.png" alt=":-)" style="display: inline; vertical-align: bottom;" class="emoticon" /&gt; Another proof that KDE is "The Universal Desktop".&lt;br /&gt;
+&lt;br /&gt;
+Don't forget to use the buttons provided for your websites: &lt;a href="http://pdfreaders.org/" target="_blank"&gt;&lt;img src="http://pdfreaders.org/graphics/pdfreaders-free.png" alt="pdfreaders.org" width="112" height="33" border="0" /&gt;&lt;/a&gt; There are other models in the &lt;a href="http://pdfreaders.org/graphics.html title="Graphics"&gt; "Graphics"&lt;/a&gt; part of the website.&lt;br /&gt;
+&lt;br /&gt;
+Update: if you want to get in touch with the authors of &lt;a href="http://pdfreaders.org"  title="pdfreaders.org"&gt;pdfreaders.org&lt;/a&gt;, you can drop them a &lt;a href="mailto:feedback@pdfreaders.org"  title="feedback@pdfreaders.org"&gt;mail with this link&lt;/a&gt;.</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">tag:blogger.com,1999:blog-27901662.post-1553039831242783761</guid>
+      <title>Zack Rusin (zrusin): Latest changes</title>
+      <pubDate>Wed, 04 Feb 2009 06:06:00 +0000</pubDate>
+      <link>http://zrusin.blogspot.com/2009/02/latest-changes.html</link>
+      <description>I actually went through all my blog entries and removed spam. That means that you won't be able to find anymore links to stuff that can enlarge your penis. I hope this action will not shatter your lives and you'll find consolation in all the spam that you're getting via email anyway. And if not I saved some of the links. You never know, I say.&lt;br /&gt;I also changed the template, I'd slap something ninja related on it, but I don't have anything that fits. Besides nowadays everyone is a graphics ninja. I'm counting hours until the term will be added to the dictionary. So my new nickname will be "The Lost Son of Norway, Duke of Poland and King of England". Aim high is my motto.&lt;br /&gt;&lt;br /&gt;As a proud owner of exactly zero babies I got lots of time to think about stuff. Mostly about squirrels, goats and the letter q. So I wanted to talk about some of the things I've been thinking about lately.&lt;br /&gt;&lt;br /&gt;Our friend ("our" as in the KDE communities, if you're not a part of it, then obviously not your friend, in fact he told me he doesn't like you at all) Ignacio Casta&#xF1;o has a very nice blog entry about &lt;a href="http://castano.ludicon.com/blog/2009/01/10/10-fun-things-to-do-with-tessellation/"&gt;10 things one might do with tessellation&lt;/a&gt;.&lt;br /&gt;The graphics pipeline continues evolving and while reading Ignacio's entry I realized that we haven't been that good about communicating the evolution of Gallium3D.&lt;br /&gt;So here we go.&lt;br /&gt;&lt;br /&gt;I've been slowly working towards support for geometry shaders in Gallium3D. Interface wise the changes are quite trivial, but a little bigger issue is that some (quite modern) hardware, while perfectly capable of emitting geometry in the pipeline is not quite capable of actually supporting all of the features of geometry shader extension. The question of how to handle that is an interesting one, because just simple emission of geometry via a shader is a very desirable feature (for example path rendering in OpenVG would profit from that).&lt;br /&gt;&lt;br /&gt;I've been doing some small API cleanups lately. Jose made some great changes to the concept of surfaces, which became pure views on textures. As a follow up, over the last few days we have disassociated buffers from them, to make it really explicit. It gives drivers the opportunity to optimize a few things and with some changes Michel is working on avoid some redundant copies.&lt;br /&gt;&lt;br /&gt;A lot of work went into winsys. Winsys, which is a little misnomer, was a part of Gallium that did too much. It was supposed to be a resource manager, handle command submission and handle integration with windowing systems and OS'es. We've been slowly chopping parts of it away. Making it a lot smaller and over the weekend managed to hide it completely from the state tracker side.&lt;br /&gt;&lt;br /&gt;Keith extracted the Xlib and DRI code from winsys and put it into separate state trackers. Meaning that just like WGL state tracker, the code is actually sharable between all the drivers. That is great news.&lt;br /&gt;&lt;br /&gt;Brian has been fixing and implementing so many bugs/features that people should start writing folk songs about him. Just the fact that we now support GL_ARB_framebuffer_object deserves at least a poem (not a big one, but certainly none of that white, non-rhyming stuff, we're talking full fledged rhymes and everything... You can tell that I know a lot about poetry can't you)&lt;br /&gt;&lt;br /&gt;One thing that never got a lot of attention is that Thomas (who did get one of them baby thingies lately) released his &lt;a href="http://wiki.x.org/wiki/libwsbm"&gt;window systems buffer manager code&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Another thing that didn't get a lot of attention is Alan's &lt;a href="http://cgit.freedesktop.org/xorg/driver/xf86-video-modesetting/"&gt;xf86-video-modesetting&lt;/a&gt; driver. It's a dummy X11 driver that uses DRM for modesetting and Gallium3D for graphics acceleration. Because of that it's hardware independent, meaning that all hardware that has a DRM driver and Gallium3D driver automatically works and is accelerated under X11. Very neat stuff.&lt;br /&gt;&lt;br /&gt;Alright, I feel like I'm cutting into your youtube/facebook time and like all "Lost Sons of Norway, Dukes of Poland and Kings of England" I know my place, so that's it.</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://zwabel.wordpress.com/?p=64</guid>
+      <title>David Nolden: KDevelop4: Automatic include-directives and forward-declarations</title>
+      <pubDate>Wed, 04 Feb 2009 01:09:21 +0000</pubDate>
+      <link>http://zwabel.wordpress.com/2009/02/04/automatic-include-directives-and-forward-declarations/</link>
+      <description>&lt;div class='snap_preview'&gt;&lt;br /&gt;&lt;p&gt;&lt;strong&gt;Missing Include Completion&lt;/strong&gt;&lt;br /&gt;
+C++ is a great and powerful programming-language. Yet it has the downside against some other languages, that you always have to deal with include-directives or forward-declarations before you can use a class.&lt;/p&gt;
+&lt;p&gt;This is a factor that often motivates me not to create too many different source-files, although design-wise that would make sense. Wouldn&amp;#8217;t it be nice if you could just start hacking without caring about the whole visibility stuff? Especially when you have to do the same includes again and again, and already know the library you&amp;#8217;re using and it&amp;#8217;s classes, this is nothing more than an annoyance.&lt;/p&gt;
+&lt;p&gt;I had implemented a feature to automatically add include-directives within KDevelop 4 about a year ago, but it wasn&amp;#8217;t as comfortable and useful as it could be. During the last days, I&amp;#8217;ve taken the time to polish up this feature so it&amp;#8217;s worth a blog-post.&lt;/p&gt;
+&lt;p&gt;The whole thing is based on the DUChain, and it respects all declarations from within the global duchain store. This means that from the moment on that KDevelop has processed a source-file, you can start just using the declarations from within that file from anywhere. Whenever you type something and the completion-list does not offer any completions, which means it&amp;#8217;s not visible, then the missing-include completion will start searching the duchain store for matching declarations, and when it finds some, it will offer you right within the completion-list to automatically add an include-directive for you. &lt;/p&gt;
+&lt;p&gt;This works in many different situations: If you try calling a function or constructing a class, template-instantiate a class, if you try to access the contents of a class that is either unresolved or has only been forward-declared, or if you just type in the name of an arbitrary declaration.&lt;/p&gt;
+&lt;p&gt;Sometimes however when writing header files, you do not need the whole class-definition but rather just a forward-declaration. From today on, the very same list will show you an entry to automatically add a forward-declaration for the typed class for you. This even works with template-classes, and it correctly respects namespaces, creating namespace declarations around the forward-declarations as needed.&lt;/p&gt;
+&lt;p&gt;Together, under the circumstance that KDevelop already knows the classes you are working with, this frees you of one annoying part of the hacking.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Examples&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This is what happens when you try calling a known function that has not been included yet:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/missing_include_completion_function_call.png?w=934&amp;#038;h=646" alt="missing_include_completion_function_call" title="missing_include_completion_function_call" width="934" height="646" class="alignnone size-full wp-image-65" /&gt;&lt;/p&gt;
+&lt;p&gt;And this is the effect you will have when you push the up-arrow and execute the &amp;#8220;Add #include &amp;#8230;&amp;#8221; action:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/missing_include_completion_function_call_result.png?w=934&amp;#038;h=646" alt="missing_include_completion_function_call_result" title="missing_include_completion_function_call_result" width="934" height="646" class="alignnone size-full wp-image-66" /&gt;&lt;/p&gt;
+&lt;p&gt;This is what happens when you simply type the name of a known class:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/missing_include_normal_completion1.png?w=934&amp;#038;h=646" alt="missing_include_normal_completion1" title="missing_include_normal_completion1" width="934" height="646" class="alignnone size-full wp-image-68" /&gt;&lt;/p&gt;
+&lt;p&gt;And this is what you&amp;#8217;ll get when you pick  the &amp;#8220;Add forward-declaration&amp;#8221; action. A fully valid forward-declaration was inserted. Well, apart from the fact that std::allocator is not defined. &lt;img src='http://s.wordpress.com/wp-includes/images/smilies/icon_wink.gif' alt=';-)' class='wp-smiley' /&gt;&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/missing_include_normal_completion_result.png?w=934&amp;#038;h=646" alt="missing_include_normal_completion_result" title="missing_include_normal_completion_result" width="934" height="646" class="alignnone size-full wp-image-69" /&gt;&lt;/p&gt;
+&lt;p&gt;Now std::vector is forward-declared. But what if you actually try using it? KDevelop will notice it, and will offer you including the correct header for being able to use it:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/missing_include_member_completion.png?w=934&amp;#038;h=646" alt="missing_include_member_completion" title="missing_include_member_completion" width="934" height="646" class="alignnone size-full wp-image-70" /&gt;&lt;/p&gt;
+&lt;p&gt;And this is what happens when you try to instantiate a known but not included template. Notice that it does offer to include the forwarding-header &amp;#8220;QMap&amp;#8221;, and not only the header that really contains the class which is &amp;#8220;qmap.h&amp;#8221;:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/missing_include_template_completion.png?w=934&amp;#038;h=646" alt="missing_include_template_completion" title="missing_include_template_completion" width="934" height="646" class="alignnone size-full wp-image-71" /&gt;&lt;/p&gt;
+&lt;p&gt;And now a little demonstration how this can help you using most any library:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/icore_1.png?w=934&amp;#038;h=646" alt="icore_1" title="icore_1" width="934" height="646" class="alignnone size-full wp-image-72" /&gt;&lt;/p&gt;
+&lt;p&gt;See that ICore has a lot of members that again return pointers to other classes, that of course were only forward-declared. This usually means that before you can use the result of activeSession(), you have to find out where KDevelop::ISession is defined, and include it manually:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/icore_2.png?w=934&amp;#038;h=646" alt="icore_2" title="icore_2" width="934" height="646" class="alignnone size-full wp-image-73" /&gt;&lt;/p&gt;
+&lt;p&gt;With KDevelop4, the content is only one key-press away:&lt;br /&gt;
+&lt;img src="http://zwabel.files.wordpress.com/2009/02/icore_3.png?w=934&amp;#038;h=646" alt="icore_3" title="icore_3" width="934" height="646" class="alignnone size-full wp-image-74" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt;&lt;br /&gt;
+This is a feature for experienced users who know what they are doing. It always has to be reviewed, and KDevelop does NOT do any programming for you. &lt;img src='http://s.wordpress.com/wp-includes/images/smilies/icon_wink.gif' alt=';-)' class='wp-smiley' /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Development Update&lt;/strong&gt;&lt;br /&gt;
+Although I don&amp;#8217;t have that much time any more, I did find enough time to do quite some polishing during the last weeks. Many crashes and bugs were fixed, and I even found time to imlement some smaller features.&lt;br /&gt;
+Here the most important points:&lt;br /&gt;
+- The implementation-helper and signal/slot completions now are shown within separate groups in the completion-list, that are shown in an appropriate place(usually right at the top)&lt;br /&gt;
+- Access-rights is now fully respected by the completion-list, including friend-declarations.&lt;br /&gt;
+- Not found declarations can be highlighted with an error-underline now(There&amp;#8217;s a new &amp;#8220;highlight semantic problems&amp;#8221; option in the configuration)&lt;br /&gt;
+- Added context-sensitive code-completion for builtin C++ keywords&lt;br /&gt;
+- Full code-completion, use-building and refactoring for namespace names&lt;br /&gt;
+- Less annoying automatic completion, because it auto-hides when an item in the list is matched&lt;br /&gt;
+- Workaround a multi-threading problem within kdelibs and ksycoca that caused KDevelop to crash very often&lt;br /&gt;
+- Fix a repository-locking problem that made kdevelop reproducably crash under special circumstances&lt;/p&gt;
+&lt;p&gt;Although we do not have all the features we want together, we will be releasing a beta-version of KDevelop4 soon, because we believe it&amp;#8217;s already a useful application. Aleix Pol Gonzales has started working on the much needed documentation integration, and Hamish Rodda has today started some new discussion on the debugger, and is planning to bring it into a usable state.&lt;/p&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zwabel.wordpress.com/64/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zwabel.wordpress.com/64/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godelicious/zwabel.wordpress.com/64/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/delicious/zwabel.wordpress.com/64/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gostumble/zwabel.wordpress.com/64/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/stumble/zwabel.wordpress.com/64/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godigg/zwabel.wordpress.com/64/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/digg/zwabel.wordpress.com/64/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/goreddit/zwabel.wordpress.com/64/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/reddit/zwabel.wordpress.com/64/" /&gt;&lt;/a&gt; &lt;img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zwabel.wordpress.com&amp;blog=2107769&amp;post=64&amp;subd=zwabel&amp;ref=&amp;feed=1" /&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://blog.cryos.net/archives/208-guid.html</guid>
+      <title>Marcus Hanwell (cryos): New Avogadro Screencast and Updates</title>
+      <pubDate>Tue, 03 Feb 2009 23:04:27 +0000</pubDate>
+      <link>http://blog.cryos.net/archives/208-New-Avogadro-Screencast-and-Updates.html</link>
+      <description>&lt;span&gt;&lt;p&gt;I made a new &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL2F2b2dhZHJvLm9wZW5tb2xlY3VsZXMubmV0Lw==&amp;amp;entry_id=208" title="http://avogadro.openmolecules.net/"  onmouseover="window.status='http://avogadro.openmolecules.net/';return true;" onmouseout="window.status='';return true;"&gt;Avogadro&lt;/a&gt; screencast earlier today, trying new formats and preparing a showcase of features in the recent &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL2F2b2dhZHJvLm9wZW5tb2xlY3VsZXMubmV0L3dpa2kvQXZvZ2Fkcm9fMC45LjA=&amp;amp;entry_id=208" title="http://avogadro.openmolecules.net/wiki/Avogadro_0.9.0"  onmouseover="window.status='http://avogadro.openmolecules.net/wiki/Avogadro_0.9.0';return true;" onmouseout="window.status='';return true;"&gt;0.9.0 release&lt;/a&gt;. Unfortunately, due to an API change in &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL2VpZ2VuLnR1eGZhbWlseS5vcmcv&amp;amp;entry_id=208" title="http://eigen.tuxfamily.org/"  onmouseover="window.status='http://eigen.tuxfamily.org/';return true;" onmouseout="window.status='';return true;"&gt;Eigen&lt;/a&gt; this release only builds with eigen-2.0_beta6. The sources in git work with the recently released eigen-2.0, and I will try to make a new release in the near future.&lt;/p&gt;
+
+&lt;center&gt;&lt;embed src="http://blip.tv/play/AeqzMQA" type="application/x-shockwave-flash" width="800" height="622" allowscriptaccess="always" allowfullscreen="true"&gt;&lt;/embed&gt;&lt;/center&gt;
+
+&lt;p&gt;The video shown above, is also available on &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXB5SURpY21waGlr&amp;amp;entry_id=208" title="http://www.youtube.com/watch?v=pyIDicmphik"  onmouseover="window.status='http://www.youtube.com/watch?v=pyIDicmphik';return true;" onmouseout="window.status='';return true;"&gt;YouTube&lt;/a&gt;, but the encoding does not look as good as on &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL2JsaXAudHYvZmlsZS8xNzM0NTY0&amp;amp;entry_id=208" title="http://blip.tv/file/1734564"  onmouseover="window.status='http://blip.tv/file/1734564';return true;" onmouseout="window.status='';return true;"&gt;blip.tv&lt;/a&gt;. It shows off several of the features present in the current Avogadro release. There are a few issues with the Windows installer, which is another reason to put a small bug fix release out soon.&lt;/p&gt;
+
+&lt;p&gt;I have been putting my newly acquired &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL3d3dy5jbWFrZS5vcmcvPkNNYWtlPC9hPiBib29rIHRvIGdyZWF0IHVzZSBieSB3b3JraW5nIG9uIGltcHJvdmVtZW50cyB0byBvdXIgYnVpbGQgc3lzdGVtLiBJIGZvdW5kIG91dCBmaXJzdCBoYW5kIGp1c3QgaG93IGxvbmcgPGEgaHJlZj0=&amp;amp;entry_id=208" title="http://www.cmake.org/&amp;gt;CMake&amp;lt;/a&amp;gt; book to great use by working on improvements to our build system. I found out first hand just how long &amp;lt;a href="  onmouseover="window.status='http://www.cmake.org/&amp;gt;CMake&amp;lt;/a&amp;gt; book to great use by working on improvements to our build system. I found out first hand just how long &amp;lt;a href=';return true;" onmouseout="window.status='';return true;"http://www.qtsoftware.com/"&gt;Qt&lt;/a&gt; takes to compile in a Windows virtual machine, I do have a working Windows build environment now. I got &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL3d3dy5jZGFzaC5vcmcv&amp;amp;entry_id=208" title="http://www.cdash.org/"  onmouseover="window.status='http://www.cdash.org/';return true;" onmouseout="window.status='';return true;"&gt;CDash&lt;/a&gt; working for our project, even without unit tests it is great for flagging build errors/warnings on multiple platforms. I also have CPack generating our NSIS based Windows installer now. There are a few rough edges remaining that I hope to iron out soon, but I think our packaging just got a lot easier - thanks to Bill and &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL3d3dy5raXR3YXJlLmNvbS8=&amp;amp;entry_id=208" title="http://www.kitware.com/"  onmouseover="window.status='http://www.kitware.com/';return true;" onmouseout="window.status='';return true;"&gt;Kitware&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Things have been really hectic since I got back from &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL2NhbXAua2RlLm9yZy8=&amp;amp;entry_id=208" title="http://camp.kde.org/"  onmouseover="window.status='http://camp.kde.org/';return true;" onmouseout="window.status='';return true;"&gt;Camp KDE&lt;/a&gt;. Had a great time, met lots of really interesting people, did not sleep very much (need to take ear plugs next time) and found my Eee PC with &lt;a href="http://blog.cryos.net/exit.php?url=aHR0cDovL3d3dy5rZGUub3JnLw==&amp;amp;entry_id=208" title="http://www.kde.org/"  onmouseover="window.status='http://www.kde.org/';return true;" onmouseout="window.status='';return true;"&gt;KDE 4.2&lt;/a&gt; (rc at the time) worked great the whole week, and it is so light.&lt;/p&gt;
+
+&lt;p&gt;When I got back I found out that our espresso machine broke, and the electronics shop declared it a lost cause earlier today &lt;img src="http://blog.cryos.net/templates/default/img/emoticons/sad.png" alt=":-(" style="display: inline; vertical-align: bottom;" class="emoticon" /&gt; This has meant a serious espresso shortage since my return! Why do they always concentrate on redundant power systems for the clusters, but not redundant espresso systems for the researchers???&lt;/p&gt;
+
+&lt;p&gt;So really busy right now, hopefully good news coming soon on several fronts - keep your fingers crossed! I am loving KDE 4.2, CMake and Qt but in dire need of espresso products &lt;img src="http://blog.cryos.net/templates/default/img/emoticons/wink.png" alt=";-)" style="display: inline; vertical-align: bottom;" class="emoticon" /&gt;&lt;/p&gt;&lt;/span&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kuarepoti-dju.net//blog/2009-02-03-kde42frankfurt/</guid>
+      <title>Josef Spillner: KDE 4.2 Release Party in Frankfurt am Main</title>
+      <pubDate>Tue, 03 Feb 2009 20:50:33 +0000</pubDate>
+      <link>http://www.kuarepoti-dju.net//blog/2009-02-03-kde42frankfurt/</link>
+      <description>&lt;p&gt;Last Friday, January 30, Dominik Haumann and me went from Darmstadt to Frankfurt am Main
+to join the KDE 4.2 Release Party in the Brotfabrik. It wasn't the biggest such event,
+but had a nice mix of users and contributors, of locals and guests.&lt;/p&gt;
+
+&lt;p&gt;I had my N810 with me, which was unfortunately out of battery that evening, as well as
+a similarly-spec'd subnotebook which proves that the latest KDE compiles and runs just fine
+on a 400 MHz processor with 256 MB RAM. Not fast as light, but a lot more usable than it
+might appear at first.&lt;/p&gt;
+
+&lt;p&gt;The photo below shows, in clock-wise order starting from the lower left:
+Meinhard, Andreas (openSUSE website guy), Manuel (Quassel IRC client guy), Claudia
+(e.V. office), Jens-Michael (Marble hacker), Isabel (Linux-something, &lt;em&gt;sorry can't
+decipher, and not visible on this photo&lt;/em&gt;), Andreas (a KDE-Win32 user), Thomas (DE-CIX), Lukas (Linux Lancers captain),
+Alex (of CMake fame), Dominik (of Kate fame), myself and Michael (KHotKeys).
+Aren't they a great bunch of people whom you'd entrust the fate of your desktop?
+(At least compared to making informed decisions about buying cameras which handle perspectives correctly, ahem.)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.kuarepoti-dju.net//tags/community:desktop/./../../pics/kde42frankfurt.jpg"&gt;&lt;img src="http://www.kuarepoti-dju.net//tags/community:desktop/./../../pics/kde42frankfurt.jpg" alt="KDE 4.2 Release Party in Frankfurt am Main" width="600" height="354" /&gt;&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kdedevelopers.org/3877 at http://www.kdedevelopers.org</guid>
+      <title>Helio Castro (heliocastro): Mandriva 2009.0 KDE 4.2.0 packages available</title>
+      <pubDate>Tue, 03 Feb 2009 18:06:26 +0000</pubDate>
+      <link>http://www.kdedevelopers.org/node/3877</link>
+      <description>&lt;p&gt;Thanks to a good earphone playing lots and lots of loud and good trance music, i'm providing Mandriva 2009.0 KDE 4.2.0 packages.&lt;br /&gt;
+For now only i586 packages are available, x86_64 packages will be provided after initial feedback.&lt;br /&gt;
+A standard urpmi repository is available.&lt;br /&gt;
+&lt;a href="ftp://ftp.kde.org/pub/kde/stable/4.2.0/Mandriva/README"&gt;README&lt;/a&gt; for some detailed information.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kdedevelopers.org/3876 at http://www.kdedevelopers.org</guid>
+      <title>Richard Dale: QtRuby, Korundum and Wt::Ruby ported to Ruby 1.9.1</title>
+      <pubDate>Tue, 03 Feb 2009 14:20:46 +0000</pubDate>
+      <link>http://www.kdedevelopers.org/node/3876</link>
+      <description>&lt;p&gt;The implementation of the Ruby runtime in the new 1.9.1 release is a complete rewrite based on a virtual machine, YARV, instead of interpreting the AST directly and slowly like the previous version. So I was expecting that there would be a lot of changes required for QtRuby as it has a fair amount of C interface code. However, it turned out to be not so bad at all, and I'm pleased to announce that the QtRuby, Korundum and Wt::Ruby projects will all now build against Ruby 1.9.1 as well as the older 1.8.x versions.&lt;/p&gt;
+&lt;p&gt;A couple of months ago Davor Ocelic posted a patch from a 'Mr Napalm' (clearly da bomb!) to make QtRuby 1.4.10 build with Ruby 1.9. Davor ported the code in the patch to the trunk version of QtRuby and we added that. There were some changes though that needed some '#ifdefs' on the Ruby version and conditional compilation, and I added them yesterday.&lt;/p&gt;
+&lt;p&gt;The cmake detection for 1.9 doesn't seem to be 100% yet, and it got a bit confused with my 1.8 installation in /usr and 1.9 installation in /usr/local. I needed to hand tweak the CMakeCache.txt a bit to correct the paths of the Ruby lib, and Ruby headers. Ruby doesn't come with a version number in a header that you can use for #ifs, and I needed to add some cmake stuff to get a RUBY_VERSION from the Ruby interpreter to pass to the build as a '-D' macro symbol.&lt;/p&gt;
+&lt;p&gt;The were some changes to the Array and String handlers macros used in the C interface, like this: &lt;/p&gt;
+&lt;pre&gt;
+    # Old Ruby
+    int count = RARRAY(list)-&amp;gt;len;
+    memcpy((void *) data, (const void *) RSTRING(data_value)-&amp;gt;ptr, RSTRING(data_value)-&amp;gt;len);
+
+    # New Ruby
+    int count = RARRAY_LEN(list);
+    memcpy((void *) data, (const void *) RSTRING_PTR(data_value), RSTRING_LEN(data_value));
+
+&lt;/pre&gt;&lt;p&gt;
+We added these macros to the qtruby.h header so they were defined if missing, and that meant nearly all the code was the same with no need for #ifs on the Ruby version. There was an obscure function for getting the name of the last function called that needed conditional compilation:&lt;/p&gt;
+&lt;pre&gt;
+#if RUBY_VERSION &amp;gt;= 0x10900
+	QLatin1String signalname(rb_id2name(rb_frame_callee()));
+#else
+	QLatin1String signalname(rb_id2name(rb_frame_last_func()));
+#endif
+&lt;/pre&gt;&lt;p&gt;
+The biggest difference was in the QString &amp;lt;-&amp;gt; Ruby String marshalling code because in Ruby 1.9 each string has its own individual encoding. In Ruby 1.8.x there was a global variable $KCODE which you set according to which encoding you wanted (usually utf8 for Qt programs) and all of your strings worked that way. Now you can add an encoding comment at the top of your program like this:&lt;/p&gt;
+&lt;pre&gt;
+# encoding: utf-8
+&lt;/pre&gt;&lt;p&gt;
+The downside of this is that whenever the QtRuby runtime marshalls a Ruby string to a QString it needs to obtain the encoding and use an appropriate conversion, usually utf8 to utf16. This may be a bit slower than before and will take away some of the speed advantages of YARV. I haven't actually done any tests yet on the speed or memory consumption of Ruby 1.9.&lt;/p&gt;
+&lt;p&gt;For embedded Ruby code the way you start the Ruby interpreter has changed slightly, instead of ruby_run() you call ruby_run_node() like this:&lt;/p&gt;
+&lt;pre&gt;
+#ifdef RUBY_INIT_STACK
+    RUBY_INIT_STACK
+#endif
+    ruby_init();
+    ruby_init_loadpath();
+    ruby_incpush(QFile::encodeName(program.path()));
+#if RUBY_VERSION &amp;lt; 0x10900
+    ruby_options(argc+1, rubyargs); 
+    ruby_script(QFile::encodeName(program.fileName()));
+    ruby_run();
+#else
+    ruby_script(QFile::encodeName(program.fileName()));
+    ruby_run_node(ruby_options(argc+1, rubyargs));
+#endif
+&lt;/pre&gt;&lt;p&gt;
+In the Wt::Ruby code examples, the main change I needed to make was to case statements, as you can no longer terminate the condition part of a case with a colon:&lt;/p&gt;
+&lt;pre&gt;
+      # Old style works with a colon:
+      case foo
+      when Wt::WValidator::Valid:
+        puts "valid"
+        ...
+
+     # Remove the colon for 1.9
+     case foo
+      when Wt::WValidator::Valid
+        puts "valid"
+        ...
+&lt;/pre&gt;&lt;p&gt;
+Single character literals are now strings of length 1, instead of an integer value. I added an '.ord' call to them so that the same code would work with both old and new Ruby. For example:&lt;/p&gt;
+&lt;pre&gt;
+    # Old Ruby will return 97 and new Ruby "a"
+    ?a 
+
+   # This will return 97 under both interpreters:
+   ?a.ord
+&lt;/pre&gt;&lt;p&gt;And that is about it. I'm really looking forward to getting a copy of the new Pickaxe with a full write up of the differences, but in the meantime &lt;a href="http://eigenclass.org/hiki.rb?Changes+in+Ruby+1.9"&gt;Changes in Ruby 1.9&lt;/a&gt; is a good summary.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">tag:blogger.com,1999:blog-7615673.post-1405112187565131010</guid>
+      <title>Aaron Seigo (aseigo): when the fever breaks</title>
+      <pubDate>Tue, 03 Feb 2009 09:18:00 +0000</pubDate>
+      <link>http://aseigo.blogspot.com/2009/02/when-fever-breaks.html</link>
+      <description>The day after I returned home I came down with a horrendous fever that left me shivering in bed for the last two days. It finally broke yesterday evening and I'm feeling 90% now, which is about 10,000% better than I was a few hours earlier.&lt;br /&gt;&lt;br /&gt;Better than beating the bug, however, was news that we now have an "official" &lt;a href="http://reviewboard.kde.org"&gt;KDE review board installation&lt;/a&gt;. We've been using review board in Plasma for nearly a year now and it's been a terrific tool in helping with the peer review of non-trivial patches before they go in. My experience tells me that once code goes in, the chances of fixing problems with it often go down slightly, or even dramatically depending on whether the submitter is a regular contributor or not.&lt;br /&gt;&lt;br /&gt;What makes a patch "non-trivial" also varies in definition depending on the submitter and we've found that review board can be a nice set of training wheels for new contributors. Most importantly, though, it prevents losing patches on mailing lists. Since review board integrates with mailing lists, all discussion around patches for a given project can appear on the respective mailing lists as well, so it's certainly both/and: you get mailing list activity and a place where patches are collected.&lt;br /&gt;&lt;br /&gt;The inline commenting, threaded discussion and screenshot support are also really nice.&lt;br /&gt;&lt;br /&gt;So if you'd lik to take review board for a spin for your KDE-hosted project, run over to the reviewboard.kde.org now and register!&lt;br /&gt;&lt;br /&gt;Thanks to people at VMWare for contributing this fine piece of software to humanity, and to David Solbach for being a terrific sys admin and setting it all up!</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://techfreaks4u.com/blog/?p=1262</guid>
+      <title>Shashank Singh (ssingh): OGV format file of the &#x201C;clutter gtk+&#x201D; Water ripple effect video</title>
+      <pubDate>Tue, 03 Feb 2009 07:36:51 +0000</pubDate>
+      <link>http://techfreaks4u.com/blog/?p=1262</link>
+      <description>so here i present the same video in OGV format :)
+REF :http://techfreaks4u.com/blog/?p=1254</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://blog.uninstall.it/?p=180</guid>
+      <title>Davide Bettio (WindowsUninstall): Don&#x2019;t confuse users: Don&#x2019;t say &#x201C;applet&#x201D;.</title>
+      <pubDate>Tue, 03 Feb 2009 00:44:42 +0000</pubDate>
+      <link>http://blog.uninstall.it/2009/02/03/dont-confuse-users-dont-say-applet/</link>
+      <description>&lt;p&gt;Use the word &amp;#8220;applet&amp;#8221; only in development contexts (when you are talking about Plasma::Applet), in any other case use the word &amp;#8220;widget&amp;#8221;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://ivan.fomentgroup.org/blog/?p=409</guid>
+      <title>Ivan Cukic (ivan): KDE 4.2 and laptops</title>
+      <pubDate>Mon, 02 Feb 2009 22:51:42 +0000</pubDate>
+      <link>http://ivan.fomentgroup.org/blog/2009/02/02/kde-42-and-laptops/</link>
+      <description>&lt;p&gt;I haven&amp;#8217;t been looking at the PowerDevil+Plasma related news with enthusiasm before (or, tbh, I haven&amp;#8217;t looked at &amp;#8216;em at all). And now that I need it, the battery applet and all that, I&amp;#8217;m just astonished how well it performs. And how many options it has. Kudos for all involved!&lt;/p&gt;
+&lt;p&gt;then there is &lt;a href="http://www.kde.org/" class="kblinker" target="_blank"&gt;kde&lt;/a&gt; bluetooth stack. Again awesome, cell-to-laptop-to-main-computer&amp;#8230;&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/uploads/2009/02/sp_a0134-300x297.jpg" alt="KWin on eee" title="KWin on eee" width="300" height="297" class="alignnone size-medium wp-image-410" /&gt;&lt;/p&gt;
+&lt;p&gt;KWin is fast, &lt;a href="http://plasma.kde.org/" class="kblinker" target="_blank"&gt;plasma&lt;/a&gt; also, everything is just&amp;#8230; awesome!&lt;/p&gt;
+&lt;p&gt;BTW, this is the first time I don&amp;#8217;t use self-compiled KDE4 packages, and it&amp;#8217;s not bad at all. Debian&amp;#8217;s KDE team made very good packages of 4.2, and even though 4.2 is in experimental repo (I&amp;#8217;m using Sid on this eee), it behaves better than kubuntu installations on my familie&amp;#8217;s computers.&lt;/p&gt;
+&lt;p&gt;So three times &amp;#8220;hurray&amp;#8221; to all mentioned above!&lt;/p&gt;
+
+
+
+
+	&lt;a rel="nofollow" href="mailto:?subject=KDE%204.2%20and%20laptops&amp;amp;body=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F" title="E-mail this story to a friend!"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/email_link.png" title="E-mail this story to a friend!" alt="E-mail this story to a friend!" class="sociable-hovers" /&gt;&lt;/a&gt;
+	&lt;a rel="nofollow" href="http://digg.com/submit?phase=2&amp;amp;url=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F&amp;amp;title=KDE%204.2%20and%20laptops" title="Digg"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/digg.png" title="Digg" alt="Digg" class="sociable-hovers" /&gt;&lt;/a&gt;
+	&lt;a rel="nofollow" href="http://technorati.com/faves?add=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F" title="Technorati"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/technorati.png" title="Technorati" alt="Technorati" class="sociable-hovers" /&gt;&lt;/a&gt;
+	&lt;a rel="nofollow" href="http://del.icio.us/post?url=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F&amp;amp;title=KDE%204.2%20and%20laptops" title="del.icio.us"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/delicious.png" title="del.icio.us" alt="del.icio.us" class="sociable-hovers" /&gt;&lt;/a&gt;
+	&lt;a rel="nofollow" href="http://twitter.com/home?status=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F" title="TwitThis"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/twitter.gif" title="TwitThis" alt="TwitThis" class="sociable-hovers" /&gt;&lt;/a&gt;
+	&lt;a rel="nofollow" href="http://reddit.com/submit?url=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F&amp;amp;title=KDE%204.2%20and%20laptops" title="Reddit"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/reddit.png" title="Reddit" alt="Reddit" class="sociable-hovers" /&gt;&lt;/a&gt;
+	&lt;a rel="nofollow" href="http://www.google.com/bookmarks/mark?op=edit&amp;amp;bkmk=http%3A%2F%2Fivan.fomentgroup.org%2Fblog%2F2009%2F02%2F02%2Fkde-42-and-laptops%2F&amp;amp;title=KDE%204.2%20and%20laptops" title="Google"&gt;&lt;img src="http://ivan.fomentgroup.org/blog/wp-content/plugins/sociable/images/googlebookmark.png" title="Google" alt="Google" class="sociable-hovers" /&gt;&lt;/a&gt;
+
+
+&lt;br/&gt;&lt;br/&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kdedevelopers.org/3875 at http://www.kdedevelopers.org</guid>
+      <title>Alexander Neundorf: How to debug udev/HAL/dbus/solid problems ?</title>
+      <pubDate>Mon, 02 Feb 2009 22:24:22 +0000</pubDate>
+      <link>http://www.kdedevelopers.org/node/3875</link>
+      <description>&lt;p&gt;Hi,&lt;/p&gt;
+&lt;p&gt;in the good old times(TM) using Linux was simple.&lt;/p&gt;
+&lt;p&gt;If you wanted to access some drive, e.g. CD-ROM, floppy disk (you know these 3.5" square plastic things which could hold a whopping 1.44 MB of data, if you formatted them with special tools you could push even a bit more on it), you just had to know the device file and the file system and if you knew that, it just worked (TM):&lt;/p&gt;
+&lt;p&gt; $ mount -tiso 9660 /dev/hdb /media/cdrom &lt;/p&gt;
+&lt;p&gt;Now times have changed and everything works automatically and without requiring that knowledge. This is very nice (as long as it works). Now, on my notebook which has OpenSUSE 11.1 (great release, KDE 4.1 looks beautiful and is stable), everything I connected to it was mounted automatically until a few days ago.&lt;br /&gt;
+Now it doesn't do that anymore and I'd like to find out why.&lt;/p&gt;
+&lt;p&gt;The thing is, there was some problem with permissions and scanning, i.e. only when running as root the scan programs found the scanner. Then one week ago, I changed some things, e.g. the entry for the usbfs in /etc/fstab, but I'm quite sure I also changed it back to the way it was before.&lt;/p&gt;
+&lt;p&gt;Anyway, yesterday I plugged in a USB memory stick, solid showed me that something has been plugged in, and I clicked on it. Dolphin opened, but it showed $HOME/Documents/, instead of the mounted USB drive. Same for an SD-card in the internal card reader (probably also connected via USB, so the same problem).&lt;/p&gt;
+&lt;p&gt;Now I feel a bit lost. How can I debug this ? Which part doesn't work here ? Is it udev (I don't think so), HAL (maybe), dbus (shouldn't), or solid (maybe ?). Or is some *Kit involved and it is a permission problem ?&lt;/p&gt;
+&lt;p&gt;So, if you know how to debug such problems, please let me know &lt;img src="http://www.kdedevelopers.org/misc/smileys/smile.png" title="Smiling" alt="Smiling" class="smiley-content" /&gt;&lt;/p&gt;
+&lt;p&gt;Alex&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">tag:blogger.com,1999:blog-24319740.post-3892078401696176371</guid>
+      <title>Bart Cerneels (Stecchino): Amarok Junior Job: Auto-download new podcasts</title>
+      <pubDate>Mon, 02 Feb 2009 20:02:47 +0000</pubDate>
+      <link>http://commonideas.blogspot.com/2009/02/amarok-junior-job-auto-download-new.html</link>
+      <description>A &lt;a href="http://amarok.kde.org/en/releases/2.0.1.1#comment-11723"&gt;recent comment&lt;/a&gt; by progmanos on the post of the 2.0.1.1 release reminded that I still have to implement Podcast episode auto-downloading. In the hurry to get 2.0 released I did add the config option, but forgot to add the actual code to make it work.&lt;br /&gt;&lt;br /&gt;&lt;a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://1.bp.blogspot.com/_dHagi-przjU/SYdCmobFJqI/AAAAAAAAAWs/Ny-r2eKYvIY/s1600-h/podcast_config.png"&gt;&lt;img style="margin: 0pt 0pt 10px 10px; float: right; cursor: pointer; width: 321px; height: 159px;" src="http://1.bp.blogspot.com/_dHagi-przjU/SYdCmobFJqI/AAAAAAAAAWs/Ny-r2eKYvIY/s320/podcast_config.png" alt="" id="BLOGGER_PHOTO_ID_5298276718078142114" border="0" /&gt;&lt;/a&gt;&lt;br /&gt;In Amarok 2 Podcasts are implemented in classes derived from PodcastProvider. There can be mutliple providers, which allows for instance podcast syncing between Amarok and an iPod.&lt;br /&gt;The default provider is &lt;a href="http://websvn.kde.org/trunk/extragear/multimedia/amarok/src/podcasts/sql/SqlPodcastProvider.cpp?view=log"&gt;SqlPodcastProvider&lt;/a&gt;. This is where the auto-download function should get implemented.&lt;br /&gt;&lt;br /&gt;This is a nicelly contained and not to steep introduction to Amarok development. So it's an excelent Junior Job.&lt;br /&gt;If progmanos or anyone else would like to have a go at it, contact me on #amarok on irc.freenode.net. My nickname is Stecchino.</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://www.kdedevelopers.org/3874 at http://www.kdedevelopers.org</guid>
+      <title>Jos van den Oever (vandenoever): Rejoice: A fresh Strigi</title>
+      <pubDate>Mon, 02 Feb 2009 19:30:04 +0000</pubDate>
+      <link>http://www.kdedevelopers.org/node/3874</link>
+      <description>&lt;p&gt;Another epic owl release! Granted, not as epic as &lt;a href="http://bjacob.livejournal.com/9510.html"&gt;Eigen 2.0&lt;/a&gt;, but still very nice.&lt;br /&gt;
+&lt;a href="http://kde-apps.org/content/show.php/Strigi?content=40889"&gt;Strigi 0.6.4&lt;/a&gt; gives some nice index speed-ups and fixes a few annoying bugs. There is one new feature: &lt;a href="http://www.kdedevelopers.org/node/3853"&gt;LZMA support&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;See the &lt;a href="http://www.vandenoever.info/software/strigi/ChangeLog"&gt;ChangeLog&lt;/a&gt; for more details.&lt;/p&gt;
+&lt;p&gt;The coming months will see more smaller Strigi releases. They will have emphasis on useful analyzers and improving KDE integration.&lt;/p&gt;
+&lt;p&gt;If you want to catch up with me to discuss desktop search, file formats or semantic technologies, I will be at &lt;a href="http://www.fosdem.org"&gt;FOSDEM&lt;/a&gt; this weekend.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090202-190000</guid>
+      <title>Paul Adams: Regarding Snow And Productivity</title>
+      <pubDate>Mon, 02 Feb 2009 19:00:00 +0000</pubDate>
+      <link>http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090202-190000</link>
+      <description>&lt;p&gt;Today, London came to a practical standstill. &lt;a href="http://news.bbc.co.uk/1/hi/uk/7865378.stm"&gt;All because a little bit of snow.&lt;/a&gt; Likewise across much of the UK. Other places have (not) been lucky and avoided it. For now.&lt;/p&gt;&#xD;
+&#xD;
+&lt;p&gt;So, while across the UK kids get a day off school and people get a day off work, has effort on my PhD suffered? Well... maybe a little...&lt;/p&gt;&#xD;
+&#xD;
+&lt;center&gt;&lt;img src="images/DSCF0102.JPG" width="612" height="815" border="0" alt="" /&gt;&lt;br/&gt;&lt;b&gt;Mr. P. F. McGhinty&lt;/b&gt;&lt;/center&gt;&#xD;
+&#xD;
+&lt;p&gt;I will take this opportunity to say a huge "thank you" to everyone who has wished me well with the conclusion of my PhD. Many of you are KDE folk and I'm looking forward to seeing you this weekend in Brussels.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://techfreaks4u.com/blog/?p=1254</guid>
+      <title>Shashank Singh (ssingh): Something one of my friend made using Clutter - gtk+</title>
+      <pubDate>Mon, 02 Feb 2009 18:53:39 +0000</pubDate>
+      <link>http://techfreaks4u.com/blog/?p=1254</link>
+      <description>much needed Disclaimer : :) .. i am not planning to start any holy-API war :P ..this video looked cool so i am posting ,,and no i can&amp;#8217;t post it&amp;#8217;s source code cause i didnt code it .
+btw More info about clutter can be found at open hand
+and btw as i know it , clutter</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://bjacob.livejournal.com/9510.html</guid>
+      <title>Benoit Jacob (bjacob): Eigen 2.0 released !</title>
+      <pubDate>Mon, 02 Feb 2009 18:47:31 +0000</pubDate>
+      <link>http://bjacob.livejournal.com/9510.html</link>
+      <description>&lt;img src="http://eigen.tuxfamily.org/images/Eigen_Silly_Professor_135x135.png" /&gt;&lt;br /&gt;&lt;br /&gt;We just released &lt;a href="http://eigen.tuxfamily.org"&gt;Eigen 2.0&lt;/a&gt; !&lt;br /&gt;&lt;br /&gt;Our mailing list is bubbling with activity right now and we're scheduling the 2.1 release for July.&lt;br /&gt;&lt;br /&gt;That's all :)</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://mikearthur.co.uk/?p=277</guid>
+      <title>Mike Arthur (mikearthur): Naked Generations</title>
+      <pubDate>Mon, 02 Feb 2009 18:05:18 +0000</pubDate>
+      <link>http://mikearthur.co.uk/2009/02/naked-generations/</link>
+      <description>&lt;p&gt;Came across a really interesting blog on the web the other day called &lt;a href="http://www.nakedgenerations.blogspot.com/"&gt;&lt;strong&gt;Naked Generations&lt;/strong&gt;&lt;/a&gt;. It&amp;#8217;s a company-run blog for a for-profit company, but I must say it&amp;#8217;s definitely one of the most interesting blogs I read (out of over a hundred).&lt;/p&gt;
+&lt;p&gt;Apparently I&amp;#8217;m a member of &lt;a href="http://en.wikipedia.org/wiki/Generation_Y"&gt;Generation Y&lt;/a&gt; as I was born in 1984. As I&amp;#8217;ve been working in the last few years, especially in my time at BT, I&amp;#8217;ve found myself having a very different attitude to my older coworkers. I&amp;#8217;ve sometimes felt that maybe I&amp;#8217;m just a &amp;#8220;&lt;em&gt;rebel&lt;/em&gt;&amp;#8221; and need to &lt;strong&gt;learn to conform&lt;/strong&gt;, but reading this blog has been a bit of a wake-up call in helping me to realise why I do some of the things I do and how I can be &lt;strong&gt;better motivated&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;d say it&amp;#8217;s a must-read if you are either in Generation Y yourself, or you are a manager who has staff from Generation Y working for you and want to understand how to keep them &lt;strong&gt;well motivated&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If you want to find out even more about this stuff, the company behind the blog Naked Generations does consultancy and have worked with some pretty big names already including the &lt;a href="http://nakedgenerations.blogspot.com/2009/01/british-government-invites-naked.html"&gt;British government&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Check it out!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://blog.froglogic.com/?p=110</guid>
+      <title>Harri Porten: Local Free Software Community meeting</title>
+      <pubDate>Mon, 02 Feb 2009 14:19:25 +0000</pubDate>
+      <link>http://blog.froglogic.com/2009/02/local-free-software-community-meeting/</link>
+      <description>&lt;p&gt;On Saturday the non-profit association eXis-unlimited.org had organized the meanwhile &lt;a href="http://www.linuxwiki.de/Communities/MeetingHamburg2009"&gt;second meeting&lt;/a&gt; of the Free Software community in our home town Hamburg. This time the organizers Sven Reumann and Ozder Abdurrachman had invited into the trading hall of the former coffee exchange in Hamburg&amp;#8217;s harbor area. Some pictures can be found &lt;a href="http://www.guckes.net/flosshh/df1hx/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The event was well attended and almost 30 users groups and projects presented their agenda, work in progress and meeting details. Among them were representatives from Open Streep Map, Ruby on Rails, OpenSolaris, Chaos Computer Club, working groups of local universities and Scribus. The sidux  project handed out freshly burnt CDs of their distribution based on Debian unstable featuring KDE 4.2. Being invited for a short address in our function as a company sponsor I used the opportunity to call for all local KDE developers to come forward and unite. Everyone I got to talk to afterwards had reverted to version 3.5 though and currently wasn&amp;#8217;t in the mood for any experiments. &lt;img src='http://blog.froglogic.com/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /&gt; &lt;/p&gt;
+&lt;p&gt;Everyone sitting through the presentation marathon was rewarded with a buffet and drinks being served afterwards. A good opportunity to network with members of other groups. The presentations were taped on video as well as recorded by makers of &lt;a href="http://www.fsk-hh.org/sendung/NerdAlert/ueberblick"&gt;NerdAlert&lt;/a&gt; - a show aired by the free local radio station &lt;a href="http://www.fsk-hh.org/"&gt;FSK&lt;/a&gt; who also conducted individual interviews. So one can expect some online and on-air coverage appearing in the next days.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <guid isPermaLink="false">http://plagioastral.wordpress.com/2009/02/02/back-from-dead/</guid>
+      <title>Tomaz Canabrava (tomaz): Back  from dead</title>
+      <pubDate>Mon, 02 Feb 2009 13:26:00 +0000</pubDate>
+      <link>http://plagioastral.wordpress.com/2009/02/02/back-from-dead/</link>
+      <description>&lt;div class='snap_preview'&gt;&lt;br /&gt;&lt;p&gt;This should be my first Planet post, so let me introduce myself.&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;m Tomaz Canabrava, already helping kde for about a year (but much less than I hoped) translating techbase articles to PT_BR and developing an app for Graph Theory teachers and students (or at least trying to. ) and Writting a book in PT_BR for KDE Development ( that should be finished when it&amp;#8217;s finished. but it&amp;#8217;s in Creative Commons, and I will post each chapter on my blog as soon as I finish it. )&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;m 25, I can cook, origami and tapdance.&lt;/p&gt;
+&lt;p&gt;and of course, annma is my mother ( and so Jucato&amp;#8217;s ).&lt;/p&gt;
+&lt;p&gt;Think that is, Farewell.&lt;/p&gt;
+&lt;p&gt;edit: activated comments. ( why everytime I post something from korganizer it comes comment-disabled? )&lt;/p&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/plagioastral.wordpress.com/144/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/plagioastral.wordpress.com/144/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godelicious/plagioastral.wordpress.com/144/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/delicious/plagioastral.wordpress.com/144/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/gostumble/plagioastral.wordpress.com/144/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/stumble/plagioastral.wordpress.com/144/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/godigg/plagioastral.wordpress.com/144/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/digg/plagioastral.wordpress.com/144/" /&gt;&lt;/a&gt; &lt;a rel="nofollow" href="http://feeds.wordpress.com/1.0/goreddit/plagioastral.wordpress.com/144/"&gt;&lt;img alt="" border="0" src="http://feeds.wordpress.com/1.0/reddit/plagioastral.wordpress.com/144/" /&gt;&lt;/a&gt; &lt;img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=plagioastral.wordpress.com&amp;blog=2029050&amp;post=144&amp;subd=plagioastral&amp;ref=&amp;feed=1" /&gt;&lt;/div&gt;</description>
+    </item>
+  </channel>
+</rss>

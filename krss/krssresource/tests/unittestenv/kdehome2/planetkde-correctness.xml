@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<n1:feed xmlns:n1="http://www.w3.org/2005/Atom" xmlns="http://www.w3.org/2005/Atom" xmlns:comment="http://wellformedweb.org/CommentAPI/" xmlns:akregator="http://akregator.kde.org/StorageExporter#" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <title type="html">Akregator Export for http://planetkde.org/rss20.xml</title>
+  <entry>
+    <id>tag:blogger.com,1999:blog-6431293039768060590.post-962616740612527640</id>
+    <published>2009-03-18T13:53:11</published>
+    <akregator:itemProperties>
+      <akregator:hash>44457</akregator:hash>
+      <akregator:readStatus>new</akregator:readStatus>
+    </akregator:itemProperties>
+    <title type="html">Sam Duff (Socceroos): Odd, but cool</title>
+    <link rel="alternate" href="http://socceroosd.blogspot.com/2009/03/odd-but-cool.html"/>
+    <summary type="html">Content 1</summary>
+  </entry>
+  <entry>
+    <id>http://labs.trolltech.com/blogs/2009/03/18/maccocoa-binary-package-available-for-testing/</id>
+    <published>2009-03-18T12:42:41</published>
+    <akregator:itemProperties>
+      <akregator:hash>38709</akregator:hash>
+      <akregator:readStatus>unread</akregator:readStatus>
+    </akregator:itemProperties>
+    <title type="html">Morten Srvig: Mac/Cocoa binary package available for testing</title>
+    <link rel="alternate" href="http://labs.trolltech.com/blogs/2009/03/18/maccocoa-binary-package-available-for-testing/"/>
+    <summary type="html">Content 2</summary>
+  </entry>
+  <entry>
+    <id>http://wm161.net/?p=467</id>
+    <published>2009-03-18T06:01:54</published>
+    <akregator:itemProperties>
+      <akregator:deleted>true</akregator:deleted>
+    </akregator:itemProperties>
+  </entry>
+  <entry>
+    <id>http://blusrcu.ba/nookie/?p=17</id>
+    <published>2009-03-17T23:04:49</published>
+    <akregator:itemProperties>
+      <akregator:hash>27276</akregator:hash>
+    </akregator:itemProperties>
+    <title type="html">Mensur Zahirovic (Nookie): Some stuff i would like to have fixed..</title>
+    <link rel="alternate" href="http://blusrcu.ba/nookie/?p=17"/>
+    <summary type="html">Content 3</summary>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-2333161201961104586.post-3320000861926986867</id>
+    <published>2009-03-17T15:19:51</published>
+    <akregator:itemProperties>
+      <akregator:hash>63415</akregator:hash>
+      <akregator:important>true</akregator:important>
+    </akregator:itemProperties>
+    <title type="html">Mauro Iazzi (iazzi): Hello Planet</title>
+    <link rel="alternate" href="http://mauroiazzi.blogspot.com/2009/03/hello-planet.html"/>
+    <summary type="html">Content 4</summary>
+  </entry>
+  <entry>
+    <id>http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090317-065020</id>
+    <published>2009-03-17T09:50:09</published>
+    <akregator:itemProperties>
+      <akregator:hash>1999</akregator:hash>
+      <akregator:readStatus>new</akregator:readStatus>
+      <akregator:important>true</akregator:important>
+    </akregator:itemProperties>
+    <title type="html">Paul Adams: What Were You Doing For KDE In 2002 And 2007: Redux</title>
+    <link rel="alternate" href="http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090317-065020"/>
+    <summary type="html">Content 5</summary>
+  </entry>
+  <entry>
+    <id>http://www.purinchu.net/wp/?p=414</id>
+    <published>2009-03-16T01:46:25</published>
+    <akregator:itemProperties>
+      <akregator:hash>35106</akregator:hash>
+      <akregator:readStatus>unread</akregator:readStatus>
+      <akregator:important>true</akregator:important>
+    </akregator:itemProperties>
+    <title type="html">Michael Pyne (mpyne): Documentation KIOSlaves</title>
+    <link rel="alternate" href="http://www.purinchu.net/wp/2009/03/15/documentation-kioslaves/"/>
+    <summary type="html">Content 6</summary>
+  </entry>
+</n1:feed>

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Nepomuk RSS Feeder
+Name[en_GB]=Nepomuk RSS Feeder
+Name[x-test]=xxNepomuk RSS Feederxx
+Comment=Extension to push RSS items into Nepomuk
+Comment[x-test]=xxExtension to push RSS items into Nepomukxx
+Type=AkonadiAgent
+Exec=akonadi_nepomuk_rss_feeder
+Icon=nepomuk
+
+X-Akonadi-MimeTypes=application/rss+xml
+X-Akonadi-Capabilities=Unique
+X-Akonadi-Identifier=akonadi_nepomuk_rss_feeder

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+<head/>
+<body>
+
+<outline isOpen="true" id="86934463" text="Linux" >
+  <outline isOpen="true" id="1369658234" text="Planets" >
+
+<outline text="planet.freedesktop.org" title="planet.freedesktop.org" description="planet.freedesktop.org - http://planet.freedesktop.org" htmlUrl="http://planet.freedesktop.org" xmlUrl="http://planet.freedesktop.org/rss20.xml"/>
+
+<outline id="2PLptx4quo" text="Planet Ubuntu" title="Planet Ubuntu" description="Planet Ubuntu - http://planet.ubuntu.com/" htmlUrl="http://planet.ubuntu.com/" xmlUrl="http://planet.ubuntu.com/rss20.xml" category="Linux,Ubuntu" />
+
+  </outline>
+</outline>
+
+<outline title="Astronomy Picture of the Day" description="A different image or photograph of our fascinating universe"
+htmlUrl="http://antwrp.gsfc.nasa.gov/apod/" xmlUrl="http://www.jwz.org/cheesegrater/RSS/apod.rss" text="Astronomy Picture of the Day" />
+
+<outline title="LWN.net" description="LWN.net is a comprehensive source of news and opinions from and about the Linux community"
+htmlUrl="http://lwn.net" xmlUrl="http://lwn.net/headlines/newrss" text="LWN.net" category="/Linux/News,/Technology" />
+
+<outline title="BBC News | News Front Page | World Edition" description="Visit BBC News for up-to-the-minute news"
+htmlUrl="http://news.bbc.co.uk/go/rss/-/2/hi/default.stm" xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml"
+text="BBC News | News Front Page | World Edition" category="/News" />
+
+</body></opml>
