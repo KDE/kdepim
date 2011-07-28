@@ -76,6 +76,7 @@ Name[zh_TW]=郵件管理_KMail
 # ctxt: KMail plasma widget's comment, NOT translators' e-mail addresses.
 Comment=Your emails
 Comment[ca]=Els vostres correus
+Comment[cs]=Vaše emaily
 Comment[da]=Dine e-mails
 Comment[de]=Ihre E-Mails
 Comment[es]=Sus direcciones de correo
@@ -100,6 +101,7 @@ Comment[sr@ijekavian]=Ваша е‑пошта
 Comment[sr@ijekavianlatin]=Vaša e‑pošta
 Comment[sr@latin]=Vaša e‑pošta
 Comment[sv]=Dina brev
+Comment[ug]=Abduqadir Abliz <sahran.ug@gmail.com>, Gheyret Kenji <gheyret@gmail.com>
 Comment[uk]=Ваші поштові скриньки
 Comment[x-test]=xxYour emailsxx
 Comment[zh_TW]=您的電子郵件地址

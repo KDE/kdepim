@@ -167,6 +167,7 @@ public:
   void setUrgent( bool urgent );
 
   void setAutoSaveInterval( int interval );
+  void setCustomHeader( const QMap<QByteArray, QString>&customHeader );
 
   /**
    * Enables/disables autosaving depending on the value of the autosave
@@ -266,7 +267,7 @@ private:
   * Also appends the msgNum to the filename as a message can have a number of
   * KMime::Messages
   */
-  void writeAutoSaveToDisk( KMime::Message::Ptr message );
+  void writeAutoSaveToDisk( const KMime::Message::Ptr& message );
 
   /**
     * Returns the autosave interval in milliseconds (as needed for QTimer).
@@ -302,6 +303,8 @@ private:
   QString mExpandedFrom, m_from, m_replyTo, m_subject;
   QStringList mExpandedTo, mExpandedCc, mExpandedBcc;
   QList< QByteArray > m_charsets;
+  QMap<QByteArray, QString> m_customHeader;
+
   int m_pendingQueueJobs;
 
   QTimer *m_autoSaveTimer;

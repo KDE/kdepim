@@ -66,6 +66,7 @@
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
 
+
 static QStringList encodeIdn( const QStringList &emails )
 {
   QStringList encoded;
@@ -249,6 +250,11 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   }
 
   readyForSending();
+}
+
+void Message::ComposerViewBase::setCustomHeader( const QMap<QByteArray, QString>&customHeader )
+{
+  m_customHeader = customHeader;
 }
 
 void Message::ComposerViewBase::readyForSending()
@@ -653,8 +659,14 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   fillQueueJobHeaders( qjob, message, infoPart );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );
-  message->assemble();
 
+  QMapIterator<QByteArray, QString> customHeader(m_customHeader);
+  while (customHeader.hasNext()) {
+     customHeader.next();
+     message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
+  }
+  message->assemble();
+  
   connect( qjob, SIGNAL( result(KJob*) ), this, SLOT( slotQueueResult( KJob* ) ) );
   m_pendingQueueJobs++;
   qjob->start();
@@ -823,7 +835,7 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
   }
 }
 
-void Message::ComposerViewBase::writeAutoSaveToDisk( KMime::Message::Ptr message )
+void Message::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
 {
   const QString filename = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave/" ) +
     m_autoSaveUUID;
@@ -1310,14 +1322,13 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
 
 bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords ) 
 {
+  if ( attachmentKeywords.isEmpty() )
+    return false;	  
   if ( m_attachmentModel->rowCount() > 0 ) {
     return false;
   }
 
   QStringList attachWordsList = attachmentKeywords;
-  if ( attachWordsList.isEmpty() ) {
-    return false;
-  }
 
   QRegExp rx ( QString::fromLatin1("\\b") +
                attachWordsList.join( QString::fromLatin1("\\b|\\b") ) +
@@ -1337,7 +1348,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
     QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
     QTextDocument *doc = m_editor->document();
     for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
-      QString line = it.text();
+      const QString line = it.text();
       gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
                  ( rx.indexIn( line ) >= 0 );
       if ( gotMatch ) {
