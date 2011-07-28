@@ -124,7 +124,7 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
   if ( !msg )
     return;
 
-  const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type );
+  const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type, true );
   if ( mdnSend.first ) {
     const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
     MessageFactory factory( msg, Akonadi::Item().id() );

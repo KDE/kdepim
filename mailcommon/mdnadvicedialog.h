@@ -49,7 +49,7 @@ public:
   * Will also set the MessageCore::MDNStateAttribute on the given item
   * to what the user has selected.
   */
-  QPair< bool, KMime::MDN::SendingMode > checkAndSetMDNInfo( const Akonadi::Item &item, KMime::MDN::DispositionType d );
+  QPair< bool, KMime::MDN::SendingMode > checkAndSetMDNInfo( const Akonadi::Item &item, KMime::MDN::DispositionType d, bool forceSend = false );
 
   MessageCore::MDNStateAttribute::MDNSentState dispositionToSentState( KMime::MDN::DispositionType d );
 
