@@ -50,20 +50,20 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
                 Qt::WindowFlags aFlags )
   : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( this, mainWindow, actionCollection ) )
 {
-  connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ),
-          SIGNAL( replaceMsgByUnencryptedVersion() ) );
-  connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ),
-           SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
-  connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ),
-           SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
-  connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
-  connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString& ) ),
-           SIGNAL( showReader( KMime::Content*, bool, const QString& )) );
-  connect( d_ptr, SIGNAL( showMessage(KMime::Message::Ptr, const QString& )), this, SIGNAL( showMessage(KMime::Message::Ptr, const QString&)) );
-  connect( d_ptr, SIGNAL( showStatusBarMessage( const QString & ) ),
-           this, SIGNAL( showStatusBarMessage( const QString & ) ) );
-  connect( d_ptr, SIGNAL( itemRemoved() ),
-           this, SIGNAL( itemRemoved() ) );
+  connect( d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
+          SIGNAL(replaceMsgByUnencryptedVersion()) );
+  connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)),
+           SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)) );
+  connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
+           SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
+  connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
+  connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
+           SIGNAL(showReader(KMime::Content*,bool,QString)) );
+  connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );
+  connect( d_ptr, SIGNAL(showStatusBarMessage(QString)),
+           this, SIGNAL(showStatusBarMessage(QString)) );
+  connect( d_ptr, SIGNAL(itemRemoved()),
+           this, SIGNAL(itemRemoved()) );
 
   setMessage( KMime::Message::Ptr(), Delayed );
 }
@@ -284,7 +284,7 @@ QWidget* Viewer::configWidget()
 {
   Q_D(Viewer);
   ConfigureWidget *w = new ConfigureWidget();
-  connect( w, SIGNAL( settingsChanged() ), d, SLOT( slotSettingsChanged() ) );
+  connect( w, SIGNAL(settingsChanged()), d, SLOT(slotSettingsChanged()) );
   return w;
 }
 

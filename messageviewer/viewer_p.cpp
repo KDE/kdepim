@@ -221,8 +221,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
            this, SLOT(updateReaderWin()) );
 
-  connect( mColorBar, SIGNAL( clicked() ),
-           this, SLOT( slotToggleHtmlMode() ) );
+  connect( mColorBar, SIGNAL(clicked()),
+           this, SLOT(slotToggleHtmlMode()) );
 
   // FIXME: Don't use the full payload here when attachment loading on demand is used, just
   //        like in KMMainWidget::slotMessageActivated().
@@ -230,12 +230,12 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   fs.fetchFullPayload();
   fs.fetchAttribute<MailTransport::ErrorAttribute>();
   mMonitor.setItemFetchScope( fs );
-  connect( &mMonitor, SIGNAL( itemChanged( Akonadi::Item,QSet<QByteArray> ) ),
-           this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
-  connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
-           this, SLOT( slotClear() ) );
-  connect( &mMonitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           this, SLOT( slotItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+           this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
+  connect( &mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
+           this, SLOT(slotClear()) );
+  connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+           this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -438,35 +438,35 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   QAction *action;
 
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
-  connect( attachmentMapper, SIGNAL( mapped( int ) ),
-           this, SLOT( slotHandleAttachment( int ) ) );
+  connect( attachmentMapper, SIGNAL(mapped(int)),
+           this, SLOT(slotHandleAttachment(int)) );
 
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
-  connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Open );
 
   action = menu->addAction(i18n("Open With..."));
-  connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::OpenWith );
 
   action = menu->addAction(i18nc("to view something", "View") );
-  connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::View );
 
   const bool attachmentInHeader = mViewer->isAttachmentInjectionPoint( globalPos );
   const bool hasScrollbar = mViewer->hasVerticalScrollBar();
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
-    connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+    connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
     attachmentMapper->setMapping( action, Viewer::ScrollTo );
   }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
-  connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Save );
 
   action = menu->addAction(SmallIcon("edit-copy"), i18n("Copy") );
-  connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Copy );
 
   const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
@@ -490,11 +490,11 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive )
        && Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" )) {
     action = menu->addAction( i18n( "Decrypt With Chiasmus..." ) );
-    connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+    connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
     attachmentMapper->setMapping( action, Viewer::ChiasmusEncrypt );
   }
   action = menu->addAction(i18n("Properties") );
-  connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( globalPos );
   delete menu;
@@ -713,9 +713,9 @@ void ViewerPrivate::displayMessage()
   mColorBar->update();
 
   htmlWriter()->queue("</body></html>");
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ), Qt::UniqueConnection );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( toggleFullAddressList() ), Qt::UniqueConnection );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotMessageRendered() ), Qt::UniqueConnection );
+  connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(injectAttachments()), Qt::UniqueConnection );
+  connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(toggleFullAddressList()), Qt::UniqueConnection );
+  connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotMessageRendered()), Qt::UniqueConnection );
   htmlWriter()->flush();
 }
 
@@ -791,8 +791,8 @@ void ViewerPrivate::postProcessMessage( ObjectTreeParser *otp, KMMsgEncryptionSt
       //       on the wrong item!
       Akonadi::CollectionFetchJob* job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(),
                                                                           Akonadi::CollectionFetchJob::Recursive );
-      connect( job, SIGNAL( result( KJob* ) ),
-              this, SLOT( collectionFetchedForStoringDecryptedMessage( KJob* ) ) );
+      connect( job, SIGNAL(result(KJob*)),
+              this, SLOT(collectionFetchedForStoringDecryptedMessage(KJob*)) );
     }
   }
 }
@@ -942,7 +942,7 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
-  connect( mViewer, SIGNAL(popupMenu(QUrl,QPoint) ),
+  connect( mViewer, SIGNAL(popupMenu(QUrl,QPoint)),
            SLOT(slotUrlPopup(QUrl,QPoint)) );
 }
 
@@ -1109,8 +1109,8 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
 
 void ViewerPrivate::printMessage( const Akonadi::Item &message )
 {
-  disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
+  connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   setMessageItem( message, Viewer::Force );
 }
 
@@ -1279,10 +1279,10 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setModel( mMimePartModel );
   mMimePartTree->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
-  connect(mMimePartTree, SIGNAL( activated( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
-  connect(mMimePartTree, SIGNAL( destroyed(QObject*) ), this, SLOT( slotMimePartDestroyed() ) );
+  connect(mMimePartTree, SIGNAL(activated(QModelIndex)), this, SLOT(slotMimePartSelected(QModelIndex)) );
+  connect(mMimePartTree, SIGNAL(destroyed(QObject*)), this, SLOT(slotMimePartDestroyed()) );
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
+  connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
 #endif
 
@@ -1344,35 +1344,35 @@ void ViewerPrivate::createActions()
 
   raction  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
   ac->addAction("view_headers_fancy", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotFancyHeaders()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotFancyHeaders()));
   raction->setHelpText( i18n("Show the list of headers in a fancy format") );
   group->addAction( raction );
   headerMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
   ac->addAction("view_headers_brief", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotBriefHeaders()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotBriefHeaders()));
   raction->setHelpText( i18n("Show brief list of message headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
   ac->addAction("view_headers_standard", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotStandardHeaders()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotStandardHeaders()));
   raction->setHelpText( i18n("Show standard list of message headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
   ac->addAction("view_headers_long", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotLongHeaders()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotLongHeaders()));
   raction->setHelpText( i18n("Show long list of message headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
   ac->addAction("view_headers_all", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotAllHeaders()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotAllHeaders()));
   raction->setHelpText( i18n("Show all message headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
@@ -1387,36 +1387,36 @@ void ViewerPrivate::createActions()
   group = new QActionGroup( this );
   raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
   ac->addAction("view_attachments_as_icons", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotIconicAttachments()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotIconicAttachments()));
   raction->setHelpText( i18n("Show all attachments as icons. Click to see them.") );
   group->addAction( raction );
   attachmentMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->attachments->", "&Smart"), this);
   ac->addAction("view_attachments_smart", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotSmartAttachments()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotSmartAttachments()));
   raction->setHelpText( i18n("Show attachments as suggested by sender.") );
   group->addAction( raction );
   attachmentMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->attachments->", "&Inline"), this);
   ac->addAction("view_attachments_inline", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotInlineAttachments()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotInlineAttachments()));
   raction->setHelpText( i18n("Show all attachments inline (if possible)") );
   group->addAction( raction );
   attachmentMenu->addAction( raction );
 
   raction  = new KToggleAction(i18nc("View->attachments->", "&Hide"), this);
   ac->addAction("view_attachments_hide", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotHideAttachments()));
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotHideAttachments()));
   raction->setHelpText( i18n("Do not show attachments in the message viewer") );
   group->addAction( raction );
   attachmentMenu->addAction( raction );
 
   mHeaderOnlyAttachmentsAction = new KToggleAction( i18nc( "View->attachments->", "In Header Only" ), this );
   ac->addAction( "view_attachments_headeronly", mHeaderOnlyAttachmentsAction );
-  connect( mHeaderOnlyAttachmentsAction, SIGNAL( triggered( bool ) ),
-           SLOT( slotHeaderOnlyAttachments() ) );
+  connect( mHeaderOnlyAttachmentsAction, SIGNAL(triggered(bool)),
+           SLOT(slotHeaderOnlyAttachments()) );
   mHeaderOnlyAttachmentsAction->setHelpText( i18n( "Show Attachments only in the header of the mail" ) );
   group->addAction( mHeaderOnlyAttachmentsAction );
   attachmentMenu->addAction( mHeaderOnlyAttachmentsAction );
@@ -1425,8 +1425,8 @@ void ViewerPrivate::createActions()
   mSelectEncodingAction  = new KSelectAction(KIcon("character-set"), i18n("&Set Encoding"), this);
   mSelectEncodingAction->setToolBarMode( KSelectAction::MenuMode );
   ac->addAction("encoding", mSelectEncodingAction );
-  connect(mSelectEncodingAction,SIGNAL( triggered(int)),
-          SLOT( slotSetEncoding() ));
+  connect(mSelectEncodingAction,SIGNAL(triggered(int)),
+          SLOT(slotSetEncoding()));
   QStringList encodings = NodeHelper::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   mSelectEncodingAction->setItems( encodings );
@@ -1447,7 +1447,7 @@ void ViewerPrivate::createActions()
   // copy all text to clipboard
   mSelectAllAction  = new KAction(i18n("Select All Text"), this);
   ac->addAction("mark_all_text", mSelectAllAction );
-  connect(mSelectAllAction, SIGNAL(triggered(bool) ), SLOT(selectAll()));
+  connect(mSelectAllAction, SIGNAL(triggered(bool)), SLOT(selectAll()));
   mSelectAllAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ) );
 
   // copy Email address to clipboard
@@ -1475,12 +1475,12 @@ void ViewerPrivate::createActions()
 
   mViewSourceAction  = new KAction(i18n("&View Source"), this);
   ac->addAction("view_source", mViewSourceAction );
-  connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotShowMessageSource()));
+  connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
   mSaveMessageAction = new KAction(i18n("&Save message"), this);
   ac->addAction("save_message", mSaveMessageAction);
-  connect(mSaveMessageAction, SIGNAL(triggered(bool) ), SLOT(slotSaveMessage()));
+  connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
   mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   //
@@ -1489,26 +1489,26 @@ void ViewerPrivate::createActions()
   mScrollUpAction = new KAction( i18n("Scroll Message Up"), this );
   mScrollUpAction->setShortcut( QKeySequence( Qt::Key_Up ) );
   ac->addAction( "scroll_up", mScrollUpAction );
-  connect( mScrollUpAction, SIGNAL( triggered( bool ) ),
-           q, SLOT( slotScrollUp() ) );
+  connect( mScrollUpAction, SIGNAL(triggered(bool)),
+           q, SLOT(slotScrollUp()) );
 
   mScrollDownAction = new KAction( i18n("Scroll Message Down"), this );
   mScrollDownAction->setShortcut( QKeySequence( Qt::Key_Down ) );
   ac->addAction( "scroll_down", mScrollDownAction );
-  connect( mScrollDownAction, SIGNAL( triggered( bool ) ),
-           q, SLOT( slotScrollDown() ) );
+  connect( mScrollDownAction, SIGNAL(triggered(bool)),
+           q, SLOT(slotScrollDown()) );
 
   mScrollUpMoreAction = new KAction( i18n("Scroll Message Up (More)"), this );
   mScrollUpMoreAction->setShortcut( QKeySequence( Qt::Key_PageUp ) );
   ac->addAction( "scroll_up_more", mScrollUpMoreAction );
-  connect( mScrollUpMoreAction, SIGNAL( triggered( bool ) ),
-           q, SLOT( slotScrollPrior() ) );
+  connect( mScrollUpMoreAction, SIGNAL(triggered(bool)),
+           q, SLOT(slotScrollPrior()) );
 
   mScrollDownMoreAction = new KAction( i18n("Scroll Message Down (More)"), this );
   mScrollDownMoreAction->setShortcut( QKeySequence( Qt::Key_PageDown ) );
   ac->addAction( "scroll_down_more", mScrollDownMoreAction );
-  connect( mScrollDownMoreAction, SIGNAL( triggered( bool ) ),
-           q, SLOT( slotScrollNext() ) );
+  connect( mScrollDownMoreAction, SIGNAL(triggered(bool)),
+           q, SLOT(slotScrollNext()) );
 
   //
   // Actions not in menu
@@ -1517,8 +1517,8 @@ void ViewerPrivate::createActions()
   // Toggle HTML display mode.
   mToggleDisplayModeAction = new KToggleAction( i18n( "Toggle HTML Display Mode" ), this );
   ac->addAction( "toggle_html_display_mode", mToggleDisplayModeAction );
-  connect( mToggleDisplayModeAction, SIGNAL( triggered( bool ) ),
-           SLOT( slotToggleHtmlMode() ) );
+  connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
+           SLOT(slotToggleHtmlMode()) );
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
 }
 
@@ -1534,40 +1534,40 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 
   if ( !isRoot ) {
     popup.addAction( SmallIcon( "document-save-as" ), i18n( "Save &As..." ),
-                     this, SLOT( slotAttachmentSaveAs() ) );
+                     this, SLOT(slotAttachmentSaveAs()) );
 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
-                       this, SLOT( slotAttachmentOpen() ) );
-      popup.addAction( i18n( "Open With..." ), this, SLOT( slotAttachmentOpenWith() ) );
-      popup.addAction( i18nc( "to view something", "View" ), this, SLOT( slotAttachmentView() ) );
+                       this, SLOT(slotAttachmentOpen()) );
+      popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
+      popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );
     }
   }
 
   /*
    * FIXME make optional?
   popup.addAction( i18n( "Save as &Encoded..." ), this,
-                   SLOT( slotSaveAsEncoded() ) );
+                   SLOT(slotSaveAsEncoded()) );
   */
 
   popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT( slotAttachmentSaveAll() ) );
+                   SLOT(slotAttachmentSaveAll()) );
 
   // edit + delete only for attachments
   if ( !isRoot ) {
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
-                       this, SLOT( slotAttachmentCopy() ) );
+                       this, SLOT(slotAttachmentCopy()) );
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
-                         this, SLOT( slotAttachmentDelete() ) );
+                         this, SLOT(slotAttachmentDelete()) );
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
-                         this, SLOT( slotAttachmentEdit() ) );
+                         this, SLOT(slotAttachmentEdit()) );
     }
 
     if ( !content->isTopLevel() )
-      popup.addAction( i18n( "Properties" ), this, SLOT( slotAttachmentProperties() ) );
+      popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
 #ifndef QT_NO_TREEVIEW
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
@@ -2096,7 +2096,7 @@ void ViewerPrivate::slotDelayedResize()
 
 void ViewerPrivate::slotPrintMsg()
 {
-  disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   if ( !mMessage ) return;
 
 // wince does not support printing
@@ -2156,7 +2156,7 @@ QString ViewerPrivate::attachmentInjectionHtml() const
 
 void ViewerPrivate::injectAttachments()
 {
-  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(injectAttachments()) );
   // inject attachments in header view
   // we have to do that after the otp has run so we also see encrypted parts
 
@@ -2629,8 +2629,8 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
   }
 
   mJob = job;
-  connect( job, SIGNAL( result( const GpgME::Error&, const QVariant&) ),
-           this, SLOT( slotAtmDecryptWithChiasmusResult( const GpgME::Error&, const QVariant& ) ) );
+  connect( job, SIGNAL(result(GpgME::Error,QVariant)),
+           this, SLOT(slotAtmDecryptWithChiasmusResult(GpgME::Error,QVariant)) );
 }
 
 

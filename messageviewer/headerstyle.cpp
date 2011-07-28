@@ -491,8 +491,8 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
       photoMemento = new ContactPhotoMemento( email );
       nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
-      QObject::connect( photoMemento, SIGNAL( update( MessageViewer::Viewer::UpdateMode ) ),
-                        sourceObject(), SLOT( update( MessageViewer::Viewer::UpdateMode ) ) );
+      QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                        sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
     }
 
     if ( photoMemento->finished() ) {

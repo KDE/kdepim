@@ -53,9 +53,9 @@ AttachmentDialog::AttachmentDialog( QWidget *parent, const QString &filenameText
   dialog->setButtonText( KDialog::User1, i18n("&Open With...") );
   dialog->setDefaultButton( KDialog::User3 );
 
-  connect( dialog, SIGNAL( user3Clicked() ), this, SLOT( saveClicked() ) );
-  connect( dialog, SIGNAL( user2Clicked() ), this, SLOT( openClicked() ) );
-  connect( dialog, SIGNAL( user1Clicked() ), this, SLOT( openWithClicked() ) );
+  connect( dialog, SIGNAL(user3Clicked()), this, SLOT(saveClicked()) );
+  connect( dialog, SIGNAL(user2Clicked()), this, SLOT(openClicked()) );
+  connect( dialog, SIGNAL(user1Clicked()), this, SLOT(openWithClicked()) );
 }
 
 //---------------------------------------------------------------------

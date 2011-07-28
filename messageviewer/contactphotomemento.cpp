@@ -29,8 +29,8 @@ ContactPhotoMemento::ContactPhotoMemento( const QString &emailAddress )
 {
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
-  connect( searchJob, SIGNAL( result( KJob* ) ),
-           this, SLOT( slotSearchJobFinished( KJob* ) ) );
+  connect( searchJob, SIGNAL(result(KJob*)),
+           this, SLOT(slotSearchJobFinished(KJob*)) );
 }
 
 void ContactPhotoMemento::slotSearchJobFinished( KJob *job )

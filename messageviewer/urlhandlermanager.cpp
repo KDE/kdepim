@@ -917,7 +917,7 @@ namespace {
          ( url.protocol() == "news" ) )
     {
       KPIM::BroadcastStatus::instance()->setTransientStatusMsg( i18n("Opening URL..."));
-      QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT( reset() ) );
+      QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT(reset()) );
 
       KMimeType::Ptr mime = KMimeType::findByUrl( url );
       if (mime->name() == "application/x-desktop" ||

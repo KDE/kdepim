@@ -96,8 +96,8 @@ bool DecryptVerifyBodyPartMemento::start() {
     m_dr = DecryptionResult( err );
     return false;
   }
-  connect( m_job, SIGNAL(result(const GpgME::DecryptionResult&,const GpgME::VerificationResult&,const QByteArray&)),
-           this, SLOT(slotResult(const GpgME::DecryptionResult&,const GpgME::VerificationResult&,const QByteArray&)) );
+  connect( m_job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
+           this, SLOT(slotResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
   setRunning( true );
   return true;
 }
@@ -161,8 +161,8 @@ bool VerifyDetachedBodyPartMemento::start() {
 #ifdef DEBUG_SIGNATURE
   kDebug() << "tokoe: VerifyDetachedBodyPartMemento started";
 #endif
-  connect( m_job, SIGNAL(result(const GpgME::VerificationResult&)),
-           this, SLOT(slotResult(const GpgME::VerificationResult&)) );
+  connect( m_job, SIGNAL(result(GpgME::VerificationResult)),
+           this, SLOT(slotResult(GpgME::VerificationResult)) );
   if ( const Error err = m_job->start( m_signature, m_plainText ) ) {
     m_vr = VerificationResult( err );
 #ifdef DEBUG_SIGNATURE
@@ -248,8 +248,8 @@ bool VerifyDetachedBodyPartMemento::startKeyListJob()
   if ( const GpgME::Error err = m_keylistjob->start( keyListPattern() ) )
     return false;
   connect( m_keylistjob, SIGNAL(done()), this, SLOT(slotKeyListJobDone()) );
-  connect( m_keylistjob, SIGNAL(nextKey(const GpgME::Key&)),
-           this, SLOT(slotNextKey(const GpgME::Key&)) );
+  connect( m_keylistjob, SIGNAL(nextKey(GpgME::Key)),
+           this, SLOT(slotNextKey(GpgME::Key)) );
   return true;
 }
 
@@ -301,8 +301,8 @@ bool VerifyOpaqueBodyPartMemento::start() {
 #endif
     return false;
   }
-  connect( m_job, SIGNAL(result(const GpgME::VerificationResult&,const QByteArray&)),
-           this, SLOT(slotResult(const GpgME::VerificationResult&,const QByteArray&)) );
+  connect( m_job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+           this, SLOT(slotResult(GpgME::VerificationResult,QByteArray)) );
   setRunning( true );
   return true;
 }
@@ -385,8 +385,8 @@ bool VerifyOpaqueBodyPartMemento::startKeyListJob()
   if ( const GpgME::Error err = m_keylistjob->start( keyListPattern() ) )
     return false;
   connect( m_keylistjob, SIGNAL(done()), this, SLOT(slotKeyListJobDone()) );
-  connect( m_keylistjob, SIGNAL(nextKey(const GpgME::Key&)),
-           this, SLOT(slotNextKey(const GpgME::Key&)) );
+  connect( m_keylistjob, SIGNAL(nextKey(GpgME::Key)),
+           this, SLOT(slotNextKey(GpgME::Key)) );
   return true;
 }
 

@@ -84,15 +84,15 @@ FindBar::FindBar( MailWebView * view, QWidget * parent )
   optionsBtn->setMenu( optionsMenu );
   lay->addWidget( optionsBtn );
 
-  connect( closeBtn, SIGNAL( clicked() ), this, SLOT( closeBar() ) );
-  connect( m_findNextBtn, SIGNAL( clicked() ), this, SLOT( findNext() ) );
-  connect( m_findPrevBtn, SIGNAL( clicked() ), this, SLOT( findPrev() ) );
-  connect( m_caseSensitiveAct, SIGNAL( toggled( bool ) ), this, SLOT( caseSensitivityChanged() ) );
+  connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
+  connect( m_findNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
+  connect( m_findPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
+  connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged()) );
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
+  connect( m_highlightAll, SIGNAL(toggled(bool)), this, SLOT(highlightAllChanged()) );
 #endif
-  connect( m_search, SIGNAL( textEdited( QString ) ), this, SLOT( autoSearch( QString ) ) );
-  connect( m_search, SIGNAL( clearButtonClicked() ), this, SLOT( slotClearSearch() ) );
+  connect( m_search, SIGNAL(textEdited(QString)), this, SLOT(autoSearch(QString)) );
+  connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
   hide();
 }
 
@@ -122,7 +122,7 @@ void FindBar::autoSearch( const QString& str )
   m_findPrevBtn->setEnabled( !str.isEmpty() );
   m_findNextBtn->setEnabled( !str.isEmpty() );
   if ( !str.isEmpty() )
-    QTimer::singleShot( 0, this, SLOT( searchText() ) );
+    QTimer::singleShot( 0, this, SLOT(searchText()) );
   else
     clearSelections();
 }
