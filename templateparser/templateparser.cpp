@@ -1520,11 +1520,17 @@ QString TemplateParser::plainToHtml( const QString &body )//Any better name for 
 
 QString TemplateParser::makeValidHtml(QString& body) const
 {
-  if( !body.isEmpty() && !body.contains( QRegExp( "<html.*>") ) ) {
-    if( !body.contains( QRegExp( "<body.*>" ) ) ) {
+  QRegExp regEx;
+  regEx.setMinimal( true );
+  regEx.setPattern( "<html.*>" );
+
+  if( !body.isEmpty() && !body.contains( regEx ) ) {
+    regEx.setPattern( "<body.*>" );
+    if( !body.contains( regEx ) ) {
       body = "<body>" + body + "</body>";
     }
-    if( !body.contains( QRegExp("<head.*>") ) ) {
+    regEx.setPattern( "<head.*>" );
+    if( !body.contains( regEx ) ) {
       body = "<head>" + mHeadElement +"</head>" + body;
     }
     body = "<html>" + body + "</html>";
