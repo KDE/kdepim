@@ -57,15 +57,15 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
     i18nc("@action:button","Save List..."), this );
   topLayout->addWidget( mDistributionListButton );
   mDistributionListButton->hide();
-  connect( mDistributionListButton, SIGNAL( clicked() ),
-    SIGNAL( saveDistributionList() ) );
+  connect( mDistributionListButton, SIGNAL(clicked()),
+    SIGNAL(saveDistributionList()) );
   mDistributionListButton->setToolTip(
     i18nc( "@info:tooltip", "Save recipients as distribution list") );
 
   mSelectButton = new QPushButton(
     i18nc( "@action:button Open recipient selection dialog.", "Se&lect..."), this );
   topLayout->addWidget( mSelectButton );
-  connect( mSelectButton, SIGNAL( clicked() ), SLOT( pickRecipient() ) );
+  connect( mSelectButton, SIGNAL(clicked()), SLOT(pickRecipient()) );
   mSelectButton->setToolTip( i18nc("@info:tooltip","Select recipients from address book") );
   updateTotalToolTip();
 }
@@ -81,8 +81,8 @@ RecipientsPicker* RecipientsEditorSideWidget::picker() const
     // hacks to allow picker() to be const in the presence of lazy loading
     RecipientsEditorSideWidget *non_const_this = const_cast<RecipientsEditorSideWidget*>( this );
     mRecipientPicker = new RecipientsPicker( non_const_this );
-    connect( mRecipientPicker, SIGNAL( pickedRecipient( const Recipient & ) ),
-             non_const_this, SIGNAL( pickedRecipient( const Recipient & ) ) );
+    connect( mRecipientPicker, SIGNAL(pickedRecipient(Recipient)),
+             non_const_this, SIGNAL(pickedRecipient(Recipient)) );
     mPickerPositioner = new KWindowPositioner( mSelectButton, mRecipientPicker );
   }
   return mRecipientPicker;

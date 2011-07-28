@@ -451,7 +451,7 @@ void AttachmentControllerBase::compressAttachment( AttachmentPart::Ptr part, boo
     kDebug() << "Compressing part.";
 
     AttachmentCompressJob *ajob = new AttachmentCompressJob( part, this );
-    connect( ajob, SIGNAL(result(KJob*)), this, SLOT( compressJobResult(KJob*)) );
+    connect( ajob, SIGNAL(result(KJob*)), this, SLOT(compressJobResult(KJob*)) );
     ajob->start();
   } else {
     kDebug() << "Uncompressing part.";
@@ -509,8 +509,8 @@ void AttachmentControllerBase::viewAttachment( AttachmentPart::Ptr part )
   Message::Composer *composer = new Message::Composer;
   composer->globalPart()->setFallbackCharsetEnabled( true );
   Message::AttachmentJob *attachmentJob = new Message::AttachmentJob( part, composer );
-  connect( attachmentJob, SIGNAL( result( KJob*) ),
-           this, SLOT( slotAttachmentContentCreated( KJob* ) ) );
+  connect( attachmentJob, SIGNAL(result(KJob*)),
+           this, SLOT(slotAttachmentContentCreated(KJob*)) );
   attachmentJob->start();
 }
 
@@ -585,7 +585,7 @@ void AttachmentControllerBase::saveAttachmentAs( AttachmentPart::Ptr part )
 void AttachmentControllerBase::byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite)
 {
   KIO::StoredTransferJob *job = KIO::storedPut( aData, aURL, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags );
-  connect( job, SIGNAL(result(KJob *)), SLOT(slotPutResult(KJob *)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotPutResult(KJob*)) );
 }
 
 void AttachmentControllerBase::slotPutResult(KJob *job)

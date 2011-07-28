@@ -67,13 +67,13 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
   topLayout->addWidget( mView );
   topLayout->setStretchFactor( mView, 1 );
 
-  connect( mView->view()->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( slotSelectionChanged() ) );
-  connect( mView->view(), SIGNAL( doubleClicked( const QModelIndex& ) ),
-           SLOT( slotPicked() ) );
+  connect( mView->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(slotSelectionChanged()) );
+  connect( mView->view(), SIGNAL(doubleClicked(QModelIndex)),
+           SLOT(slotPicked()) );
 
   mSearchLDAPButton = new QPushButton( i18n("Search &Directory Service"), mainWidget() );
-  connect( mSearchLDAPButton, SIGNAL( clicked() ), SLOT( slotSearchLDAP() ) );
+  connect( mSearchLDAPButton, SIGNAL(clicked()), SLOT(slotSearchLDAP()) );
   topLayout->addWidget( mSearchLDAPButton );
 
   KConfig config( QLatin1String("kabldaprc") );
@@ -90,19 +90,19 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
 
   mToButton = new QPushButton( i18n("Add as &To"), mainWidget() );
   buttonLayout->addWidget( mToButton );
-  connect( mToButton, SIGNAL( clicked() ), SLOT( slotToClicked() ) );
+  connect( mToButton, SIGNAL(clicked()), SLOT(slotToClicked()) );
 
   mCcButton = new QPushButton( i18n("Add as CC"), mainWidget() );
   buttonLayout->addWidget( mCcButton );
-  connect( mCcButton, SIGNAL( clicked() ), SLOT( slotCcClicked() ) );
+  connect( mCcButton, SIGNAL(clicked()), SLOT(slotCcClicked()) );
 
   mBccButton = new QPushButton( i18n("Add as &BCC"), mainWidget() );
   buttonLayout->addWidget( mBccButton );
-  connect( mBccButton, SIGNAL( clicked() ), SLOT( slotBccClicked() ) );
+  connect( mBccButton, SIGNAL(clicked()), SLOT(slotBccClicked()) );
 
   QPushButton *closeButton = new QPushButton( i18n("&Cancel"), mainWidget() );
   buttonLayout->addWidget( closeButton );
-  connect( closeButton, SIGNAL( clicked() ), SLOT( close() ) );
+  connect( closeButton, SIGNAL(clicked()), SLOT(close()) );
 
   mView->searchLineEdit()->setFocus();
 
@@ -217,8 +217,8 @@ void RecipientsPicker::slotSearchLDAP()
 {
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new KLDAP::LdapSearchDialog( this );
-    connect( mLdapSearchDialog, SIGNAL( contactsAdded() ),
-             SLOT(ldapSearchResult() ) );
+    connect( mLdapSearchDialog, SIGNAL(contactsAdded()),
+             SLOT(ldapSearchResult()) );
   }
 
   mLdapSearchDialog->setSearchText( mView->searchLineEdit()->text() );

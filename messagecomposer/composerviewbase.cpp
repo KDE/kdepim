@@ -316,7 +316,7 @@ void Message::ComposerViewBase::readyForSending()
   job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
   job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
   job->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotEmailAddressResolved( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotEmailAddressResolved(KJob*)) );
   job->start();
 }
 
@@ -387,7 +387,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
     composer->addAttachmentParts( m_attachmentModel->attachments() );
 
-    connect( composer, SIGNAL( result( KJob*) ), this, SLOT( slotSendComposeResult( KJob* ) ) );
+    connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotSendComposeResult(KJob*)) );
     composer->start();
     kDebug() << "Started a composer for sending!";
 
@@ -706,7 +706,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   }
   message->assemble();
   
-  connect( qjob, SIGNAL( result(KJob*) ), this, SLOT( slotQueueResult( KJob* ) ) );
+  connect( qjob, SIGNAL(result(KJob*)), this, SLOT(slotQueueResult(KJob*)) );
   m_pendingQueueJobs++;
   qjob->start();
 
@@ -787,8 +787,8 @@ void Message::ComposerViewBase::updateAutoSave()
   } else {
     if ( !m_autoSaveTimer ) {
       m_autoSaveTimer = new QTimer( this );
-      connect( m_autoSaveTimer, SIGNAL( timeout() ),
-               this, SLOT( autoSaveMessage() ) );
+      connect( m_autoSaveTimer, SIGNAL(timeout()),
+               this, SLOT(autoSaveMessage()) );
     }
     m_autoSaveTimer->start( m_autoSaveInterval );
   }
@@ -942,7 +942,7 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
     }
     Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( target, Akonadi::CollectionFetchJob::Base );
     saveMessageJob->setProperty( "Akonadi::Item" , QVariant::fromValue( item )  );
-    QObject::connect( saveMessageJob, SIGNAL( result( KJob * ) ), this, SLOT( slotSaveMessage( KJob* ) ) );
+    QObject::connect( saveMessageJob, SIGNAL(result(KJob*)), this, SLOT(slotSaveMessage(KJob*)) );
   } else {
     // preinitialize with the default collections
     if ( saveIn == MessageSender::SaveInTemplates ) {
@@ -951,7 +951,7 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
       target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
     }
     Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
-    connect( create, SIGNAL( result( KJob* ) ), this, SLOT( slotCreateItemResult( KJob* ) ) );
+    connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
     m_pendingQueueJobs++;
   }
 }
@@ -971,7 +971,7 @@ void Message::ComposerViewBase::slotSaveMessage( KJob* job )
     target = fetchJob->collections().first();
   }
   Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
-  connect( create, SIGNAL( result( KJob* ) ), this, SLOT( slotCreateItemResult( KJob* ) ) );
+  connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
   m_pendingQueueJobs++;
 }
 
@@ -1240,8 +1240,8 @@ void Message::ComposerViewBase::setFcc ( const Akonadi::Collection& fccCollectio
   }
   Akonadi::CollectionFetchJob * const checkFccCollectionJob =
     new Akonadi::CollectionFetchJob( fccCollection, Akonadi::CollectionFetchJob::Base );
-  connect( checkFccCollectionJob, SIGNAL( result( KJob* ) ),
-           SLOT( slotFccCollectionCheckResult( KJob* ) ) );
+  connect( checkFccCollectionJob, SIGNAL(result(KJob*)),
+           SLOT(slotFccCollectionCheckResult(KJob*)) );
 }
 
 void Message::ComposerViewBase::slotFccCollectionCheckResult( KJob* job )
