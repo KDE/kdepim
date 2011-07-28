@@ -140,7 +140,7 @@ public:
    *
    * @param msgs List of messages to be composed into a digest
    */
-  QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( QList<KMime::Message::Ptr> msgs );
+  QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( const QList<KMime::Message::Ptr>& msgs );
 
   /**
    * Set the identity manager to be used when creating messages.
@@ -207,7 +207,7 @@ public:
    * When creating MDNs, the user needs to be asked for confirmation in specific
    *  cases according to RFC 2298.
    */
-  static bool MDNRequested( KMime::Message::Ptr msg );
+  static bool MDNRequested( const KMime::Message::Ptr& msg );
 
   /**
    * If sending an MDN requires confirmation due to multiple addresses.
@@ -216,7 +216,7 @@ public:
    * MDN sent) ] if there is more than one distinct address in the
    * Disposition-Notification-To header.
    */
-  static bool MDNConfirmMultipleRecipients( KMime::Message::Ptr msg );
+  static bool MDNConfirmMultipleRecipients( const KMime::Message::Ptr& msg );
 
   /**
   *
@@ -229,13 +229,13 @@ public:
   * SHOULD be obtained (or no MDN sent) if there is no Return-Path
   * header in the message [...]
   */
-  static bool MDNReturnPathEmpty( KMime::Message::Ptr msg );
-  static bool MDNReturnPathNotInRecieptTo( KMime::Message::Ptr msg );
+  static bool MDNReturnPathEmpty( const KMime::Message::Ptr& msg );
+  static bool MDNReturnPathNotInRecieptTo( const KMime::Message::Ptr& msg );
 
   /**
   * If the MDN headers contain options that KMail can't parse
   */
-  static bool MDNMDNUnknownOption( KMime::Message::Ptr msg );
+  static bool MDNMDNUnknownOption( const KMime::Message::Ptr& msg );
 
 private:
     /** @return the UOID of the identity for this message.

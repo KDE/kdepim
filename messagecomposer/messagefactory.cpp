@@ -676,7 +676,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   return receipt;
 }
 
-QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( QList< KMime::Message::Ptr > msgs )
+QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( const QList< KMime::Message::Ptr >& msgs )
 {
   KMime::Message::Ptr msg( new KMime::Message );
   KMime::Content* digest = new KMime::Content( msg.get() );
@@ -773,7 +773,7 @@ void MessageFactory::putRepliesInSameFolder( Akonadi::Entity::Id parentColId )
   m_parentFolderId = parentColId;
 }
 
-bool MessageFactory::MDNRequested(KMime::Message::Ptr msg)
+bool MessageFactory::MDNRequested(const KMime::Message::Ptr& msg)
 {
   // extract where to send to:
   QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
@@ -783,7 +783,7 @@ bool MessageFactory::MDNRequested(KMime::Message::Ptr msg)
 }
 
 
-bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
+bool MessageFactory::MDNConfirmMultipleRecipients( const KMime::Message::Ptr& msg )
 {
   // extract where to send to:
   QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
@@ -799,7 +799,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
   return KPIMUtils::splitAddressList(receiptTo).count() > 1;
 }
 
-bool MessageFactory::MDNReturnPathEmpty( KMime::Message::Ptr msg )
+bool MessageFactory::MDNReturnPathEmpty( const KMime::Message::Ptr& msg )
 {
   // extract where to send to:
   QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
@@ -818,7 +818,7 @@ bool MessageFactory::MDNReturnPathEmpty( KMime::Message::Ptr msg )
   return returnPath.isEmpty();
 }
 
-bool MessageFactory::MDNReturnPathNotInRecieptTo( KMime::Message::Ptr msg )
+bool MessageFactory::MDNReturnPathNotInRecieptTo( const  KMime::Message::Ptr& msg )
 {
   // extract where to send to:
   QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
@@ -837,7 +837,7 @@ bool MessageFactory::MDNReturnPathNotInRecieptTo( KMime::Message::Ptr msg )
   return !receiptTo.contains( returnPath, Qt::CaseSensitive );
 }
 
-bool MessageFactory::MDNMDNUnknownOption( KMime::Message::Ptr msg )
+bool MessageFactory::MDNMDNUnknownOption( const KMime::Message::Ptr& msg )
 {
 
   // RFC 2298: An importance of "required" indicates that
