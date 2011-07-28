@@ -115,9 +115,9 @@ AclEntryDialog::AclEntryDialog( QWidget *parent )
   layout->addWidget( label, 2, 0, 1, 3 );
   layout->setRowStretch( 2, 10 );
 
-  connect( d->mUserIdLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
-  connect( button, SIGNAL( clicked() ), SLOT( slotSelectAddresses() ) );
-  connect( d->mButtonGroup, SIGNAL( buttonClicked( int ) ), SLOT( slotChanged() ) );
+  connect( d->mUserIdLineEdit, SIGNAL(textChanged(QString)), SLOT(slotChanged()) );
+  connect( button, SIGNAL(clicked()), SLOT(slotSelectAddresses()) );
+  connect( d->mButtonGroup, SIGNAL(buttonClicked(int)), SLOT(slotChanged()) );
   enableButtonOk( false );
 
   d->mUserIdLineEdit->setFocus();

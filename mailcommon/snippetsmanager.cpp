@@ -326,7 +326,7 @@ void SnippetsManager::Private::updateActionCollection( const QString &oldName, c
     const QString actionName = i18nc( "@action", "Snippet %1", newName );
     const QString normalizedName = QString( actionName ).replace( ' ', '_' );
 
-    KAction *action = mActionCollection->addAction( normalizedName, q, SLOT( insertActionSnippet() ) );
+    KAction *action = mActionCollection->addAction( normalizedName, q, SLOT(insertActionSnippet()) );
     action->setProperty( "snippetText", text );
     action->setText( actionName );
     action->setShortcut( keySequence );
@@ -499,18 +499,18 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *
 
   d->mInsertSnippetAction = new QAction( i18n( "Insert Snippet" ), this );
 
-  connect( d->mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( selectionChanged() ) );
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(selectionChanged()) );
 
-  connect( d->mAddSnippetAction, SIGNAL( triggered( bool ) ), SLOT( addSnippet() ) );
-  connect( d->mEditSnippetAction, SIGNAL( triggered( bool ) ), SLOT( editSnippet() ) );
-  connect( d->mDeleteSnippetAction, SIGNAL( triggered( bool ) ), SLOT( deleteSnippet() ) );
+  connect( d->mAddSnippetAction, SIGNAL(triggered(bool)), SLOT(addSnippet()) );
+  connect( d->mEditSnippetAction, SIGNAL(triggered(bool)), SLOT(editSnippet()) );
+  connect( d->mDeleteSnippetAction, SIGNAL(triggered(bool)), SLOT(deleteSnippet()) );
 
-  connect( d->mAddSnippetGroupAction, SIGNAL( triggered( bool ) ), SLOT( addSnippetGroup() ) );
-  connect( d->mEditSnippetGroupAction, SIGNAL( triggered( bool ) ), SLOT( editSnippetGroup() ) );
-  connect( d->mDeleteSnippetGroupAction, SIGNAL( triggered( bool ) ), SLOT( deleteSnippetGroup() ) );
+  connect( d->mAddSnippetGroupAction, SIGNAL(triggered(bool)), SLOT(addSnippetGroup()) );
+  connect( d->mEditSnippetGroupAction, SIGNAL(triggered(bool)), SLOT(editSnippetGroup()) );
+  connect( d->mDeleteSnippetGroupAction, SIGNAL(triggered(bool)), SLOT(deleteSnippetGroup()) );
 
-  connect( d->mInsertSnippetAction, SIGNAL( triggered( bool ) ), SLOT( insertSelectedSnippet() ) );
+  connect( d->mInsertSnippetAction, SIGNAL(triggered(bool)), SLOT(insertSelectedSnippet()) );
 
   d->selectionChanged();
 
@@ -532,7 +532,7 @@ void SnippetsManager::setEditor( QObject *editor, const char *insertSnippetMetho
   if ( dropSignal ) {
     const int index = editor->metaObject()->indexOfSignal( QMetaObject::normalizedSignature( dropSignal + 1 ).data() ); // skip the leading '2'
     if ( index != -1 )
-      connect( editor, dropSignal, this, SLOT( insertSelectedSnippet() ) );
+      connect( editor, dropSignal, this, SLOT(insertSelectedSnippet()) );
   }
 }
 

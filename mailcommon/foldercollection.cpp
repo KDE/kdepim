@@ -74,8 +74,8 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
   mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
 
   readConfig();
-  connect( KernelIf->identityManager(), SIGNAL( changed() ),
-           this, SLOT( slotIdentitiesChanged() ) );
+  connect( KernelIf->identityManager(), SIGNAL(changed()),
+           this, SLOT(slotIdentitiesChanged()) );
 }
 
 FolderCollection::~FolderCollection()
@@ -402,7 +402,7 @@ void FolderCollection::daysToExpire(int& unreadDays, int& readDays) {
 void FolderCollection::removeCollection()
 {
   Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( mCollection );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotDeletionCollectionResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeletionCollectionResult(KJob*)) );
 }
 
 void FolderCollection::slotDeletionCollectionResult( KJob * job )

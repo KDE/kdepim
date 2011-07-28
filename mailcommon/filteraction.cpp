@@ -218,7 +218,7 @@ QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
   lineEdit->setClearButtonShown( true );
   lineEdit->setText( mParameter );
 
-  connect( lineEdit, SIGNAL( textChanged( QString ) ), this, SIGNAL( filterActionModified() ) );
+  connect( lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
   return lineEdit;
 }
@@ -271,8 +271,8 @@ QWidget* FilterActionWithStringList::createParamWidget( QWidget *parent ) const
   comboBox->addItems( mParameterList );
   setParamWidgetValue( comboBox );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
@@ -327,8 +327,8 @@ QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
   requester->setShowOutbox( false );
   setParamWidgetValue( requester );
 
-  connect( requester, SIGNAL( folderChanged( Akonadi::Collection )),
-           this, SIGNAL( filterActionModified()) );
+  connect( requester, SIGNAL(folderChanged(Akonadi::Collection)),
+           this, SIGNAL(filterActionModified()) );
 
   return requester;
 }
@@ -413,7 +413,7 @@ QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
   MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
   requester->setText( mParameter );
 
-  connect( requester, SIGNAL( textChanged() ), this, SIGNAL( filterActionModified() ) );
+  connect( requester, SIGNAL(textChanged()), this, SIGNAL(filterActionModified()) );
 
   return requester;
 }
@@ -836,7 +836,7 @@ QWidget* FilterActionIdentity::createParamWidget( QWidget *parent ) const
   KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
   comboBox->setCurrentIdentity( mParameter );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
@@ -1228,8 +1228,8 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
@@ -1354,10 +1354,10 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
 
   setParamWidgetValue( widget );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( lineEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( lineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
 
   return widget;
 }
@@ -1541,12 +1541,12 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 
   setParamWidgetValue( widget );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( regExpLineEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( lineEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( regExpLineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
+  connect( lineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
 
   return widget;
 }
@@ -1818,10 +1818,10 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   templateCombo->setToolTip( i18n( "The template used when forwarding" ) );
   templateCombo->setWhatsThis( i18n( "Set the forwarding template that will be used with this filter." ) );
 
-  connect( templateCombo, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( addressRequester, SIGNAL( textChanged() ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( templateCombo, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( addressRequester, SIGNAL(textChanged()),
+           this, SIGNAL(filterActionModified()) );
 
   return addressAndTemplate;
 }
@@ -2050,8 +2050,8 @@ QWidget* FilterActionWithTest::createParamWidget( QWidget *parent ) const
   SoundTestWidget *soundWidget = new SoundTestWidget( parent );
   soundWidget->setUrl( mParameter );
 
-  connect( soundWidget, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( soundWidget, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
 
   return soundWidget;
 }
@@ -2143,7 +2143,7 @@ QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
   KUrlRequester *requester = new KUrlRequester( parent );
   requester->setUrl( KUrl( mParameter ) );
 
-  connect( requester, SIGNAL( textChanged( QString ) ), this, SIGNAL( filterActionModified() ) );
+  connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
   return requester;
 }
@@ -2294,10 +2294,10 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
         "If it is not accessible, the filter will fallback to the default address book.</p>" ) );
   layout->addWidget( collectionComboBox, 1, 2 );
 
-  connect( categoryEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( headerCombo, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( categoryEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
+  connect( headerCombo, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
   
   setParamWidgetValue( widget );
 
@@ -2344,8 +2344,8 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
   // we use the previously 'stored' value from the 'collectionId' property
   if ( collection.isValid() ) {
     mCollectionId = collection.id();
-    connect( collectionComboBox, SIGNAL( currentIndexChanged( int ) ),
-             this, SIGNAL( filterActionModified() ) );
+    connect( collectionComboBox, SIGNAL(currentIndexChanged(int)),
+             this, SIGNAL(filterActionModified()) );
   } else {
     const QVariant value = collectionComboBox->property( "collectionId" );
     if ( value.isValid() )

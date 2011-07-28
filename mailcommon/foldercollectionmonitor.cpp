@@ -93,12 +93,12 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
 {
   if ( col.isValid() ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( col );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotExpungeJob( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)) );
     if ( sync ) {
-      connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotExpungeJobSync( KJob* ) ) );
+      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJobSync(KJob*)) );
       job->exec();
     } else {
-      connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotExpungeJob( KJob* ) ) );
+      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)) );
     }
     
   } else {
@@ -119,7 +119,7 @@ void FolderCollectionMonitor::slotExpungeJob( KJob *job )
   if ( lstItem.isEmpty() )
     return;
   Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem,this );
-  connect( jobDelete, SIGNAL( result( KJob* ) ), this, SLOT( slotDeleteJob( KJob* ) ) );
+  connect( jobDelete, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
 }
 
 void FolderCollectionMonitor::slotExpungeJobSync( KJob *job )
@@ -135,7 +135,7 @@ void FolderCollectionMonitor::slotExpungeJobSync( KJob *job )
   if ( lstItem.isEmpty() )
     return;
   Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem,this );
-  connect( jobDelete, SIGNAL( result( KJob* ) ), this, SLOT( slotDeleteJob( KJob* ) ) );
+  connect( jobDelete, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
   jobDelete->exec();
 }
 
