@@ -597,13 +597,12 @@ void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
 
 void ViewerPrivate::attachmentOpen( KMime::Content *node )
 {
-  KService::Ptr offer(0);
-  offer = getServiceOffer( node );
+  KService::Ptr offer = getServiceOffer( node );
   if ( !offer ) {
     kDebug() << "got no offer";
     return;
   }
-  QString name = mNodeHelper->writeNodeToTempFile( node );
+  const QString name = mNodeHelper->writeNodeToTempFile( node );
   KUrl::List lst;
   KUrl url;
   bool autoDelete = true;
@@ -1087,7 +1086,7 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
       mSelectEncodingAction->setCurrentItem( 0 );
     }
     else {
-      QStringList encodings = mSelectEncodingAction->items();
+      const QStringList encodings = mSelectEncodingAction->items();
       int i = 0;
       for ( QStringList::const_iterator it = encodings.constBegin(), end = encodings.constEnd(); it != end; ++it, ++i ) {
         if ( NodeHelper::encodingForName( *it ) == encoding ) {
@@ -1162,7 +1161,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item, Viewer::UpdateMod
   setMessageInternal( mMessageItem.payload<KMime::Message::Ptr>(), updateMode );
 }
 
-void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode updateMode )
+void ViewerPrivate::setMessage( const KMime::Message::Ptr& aMsg, Viewer::UpdateMode updateMode )
 {
   resetStateForNewMessage();
 
@@ -1776,7 +1775,9 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
   // to get the URL before WebKit managed to mangle it.
   KUrl url( mViewer->linkOrImageUrlAt( QCursor::pos() ) );
-  if ( url.protocol() == "kmail" || url.protocol() == "x-kmail" || url.protocol() == "attachment" ||
+  if ( url.protocol() == QLatin1String( "kmail" ) ||
+       url.protocol() == QLatin1String( "x-kmail" ) ||
+       url.protocol() == QLatin1String( "attachment" ) ||
        ( url.protocol().isEmpty() && url.path().isEmpty() ) ) {
     mViewer->setAcceptDrops( false );
   } else {
@@ -1813,7 +1814,7 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
   if ( !mActionCollection )
     return;
 
-  if ( url.protocol() == "mailto" ) {
+  if ( url.protocol() == QLatin1String( "mailto" ) ) {
     mCopyURLAction->setText( i18n( "Copy Email Address" ) );
   } else {
     mCopyURLAction->setText( i18n( "Copy Link Address" ) );
@@ -2418,7 +2419,7 @@ void ViewerPrivate::slotUrlCopy()
 {
 #ifndef QT_NO_CLIPBOARD
   QClipboard* clip = QApplication::clipboard();
-  if ( mClickedUrl.protocol() == "mailto" ) {
+  if ( mClickedUrl.protocol() == QLatin1String( "mailto" ) ) {
     // put the url into the mouse selection and the clipboard
     QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
     clip->setText( address, QClipboard::Clipboard );
