@@ -408,6 +408,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           htmlBody.append( htmlQuote );
         }
 
+      } else if ( cmd.startsWith( QLatin1String("FORCEPLAIN") ) ) {
+//TODO implementt FORCEPLAIN
+      } else if ( cmd.startsWith( QLatin1String("FORCEHTML") ) ) {
+//TODO implement FORCEHTML
       } else if ( cmd.startsWith( QLatin1String("QHEADERS") ) ) {
         kDebug() << "Command: QHEADERS";
         i += strlen( "QHEADERS" );
@@ -1449,6 +1453,10 @@ QString TemplateParser::plainMessageText( bool aStripSignature, AllowSelection i
 
 QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed )
 {
+  if( !mSelection.isEmpty() && ( isSelectionAllowed == SelectionAllowed ) ) { //TODO implement mSelection for HTML
+    return mSelection;
+  }
+
   QString htmlElement = mOtp->htmlContent();
 
   if ( htmlElement.isEmpty() ) { //HTML-only mails
