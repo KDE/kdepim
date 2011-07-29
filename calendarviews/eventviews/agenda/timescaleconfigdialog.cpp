@@ -66,13 +66,13 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   upButton->setIcon( KIcon( "go-up" ) );
   downButton->setIcon( KIcon( "go-down" ) );
 
-  connect( addButton, SIGNAL( clicked() ), SLOT( add() ) );
-  connect( removeButton, SIGNAL( clicked() ), SLOT( remove() ) );
-  connect( upButton, SIGNAL( clicked() ), SLOT( up() ) );
-  connect( downButton, SIGNAL( clicked() ), SLOT( down() ) );
+  connect( addButton, SIGNAL(clicked()), SLOT(add()) );
+  connect( removeButton, SIGNAL(clicked()), SLOT(remove()) );
+  connect( upButton, SIGNAL(clicked()), SLOT(up()) );
+  connect( downButton, SIGNAL(clicked()), SLOT(down()) );
 
-  connect( this, SIGNAL( okClicked() ), SLOT( okClicked() ) );
-  connect( this, SIGNAL( cancelClicked() ), SLOT( reject() ) );
+  connect( this, SIGNAL(okClicked()), SLOT(okClicked()) );
+  connect( this, SIGNAL(cancelClicked()), SLOT(reject()) );
 
   listWidget->addItems( d->mPreferences->timeScaleTimezones() );
 }

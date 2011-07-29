@@ -170,8 +170,8 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemUi.itemView->setXmlGuiClient( xmlGuiWindow );
   itemUi.itemView->setModel( itemFilter );
   itemUi.itemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
-  connect( itemUi.itemView, SIGNAL( activated( QModelIndex ) ), SLOT(itemActivated( QModelIndex ) ) );
-  connect( itemUi.itemView, SIGNAL( clicked( QModelIndex ) ), SLOT(itemActivated( QModelIndex ) ) );
+  connect( itemUi.itemView, SIGNAL(activated(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
+  connect( itemUi.itemView, SIGNAL(clicked(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
   splitter3->addWidget( itemViewParent );
   itemViewParent->layout()->setMargin( 0 );
 
@@ -234,7 +234,7 @@ void BrowserWidget::itemActivated(const QModelIndex & index)
   ItemFetchJob *job = new ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().fetchAllAttributes();
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchDone( KJob* ) ), Qt::QueuedConnection );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)), Qt::QueuedConnection );
 }
 
 void BrowserWidget::itemFetchDone(KJob * job)

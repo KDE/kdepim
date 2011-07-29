@@ -469,7 +469,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
       for ( KUrl::List::ConstIterator it = urls.constBegin();
             it != urls.constEnd(); ++it ) {
         KIO::Job *job = KIO::storedGet( *it );
-        connect( job, SIGNAL(result(KJob *)), SLOT(downloadComplete(KJob *)) );
+        connect( job, SIGNAL(result(KJob*)), SLOT(downloadComplete(KJob*)) );
       }
     } else { // we take anything
       addDataAttachment( data, mimeType, label );

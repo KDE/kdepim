@@ -45,7 +45,7 @@ AttachmentLoadJob::~AttachmentLoadJob()
 
 void AttachmentLoadJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT( doStart() ) );
+  QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
 AttachmentPart::Ptr AttachmentLoadJob::attachmentPart() const

@@ -83,11 +83,11 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     if ( interface ) {
         KAction *actWordWrap = new KAction( i18n( "Dynamic Word Wrap" ), view );
         actWordWrap->setCheckable( true );
-        connect( actWordWrap, SIGNAL( triggered( bool ) ), this, SLOT( toggleWordWrap() ) );
+        connect( actWordWrap, SIGNAL(triggered(bool)), this, SLOT(toggleWordWrap()) );
 
         KAction *actLineNumber = new KAction( i18n("Show line numbers"), view );
         actLineNumber->setCheckable( true );
-        connect( actLineNumber, SIGNAL( triggered( bool ) ), this, SLOT( toggleLineNumber() ) );
+        connect( actLineNumber, SIGNAL(triggered(bool)), this, SLOT(toggleLineNumber()) );
 
         QMenu *options = new QMenu( i18n( "Options" ), qobject_cast< QWidget* >( view ) );
         options->addAction( actWordWrap );

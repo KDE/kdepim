@@ -58,14 +58,14 @@ void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
   if ( !process )
     return;
   mProcess = process;
-  connect( mProcess, SIGNAL(finished (int, QProcess::ExitStatus)),
-	   SLOT(slotProcessExited(int, QProcess::ExitStatus)) );
+  connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+	   SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(readyReadStandardOutput()),
 	   SLOT(slotStdout()) );
   connect( mProcess, SIGNAL(readyReadStandardError()),
 	   SLOT(slotStderr()) );
-  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
+  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
+	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
 }
 
 static QStringList split( const QString & newLine, QString & old ) {

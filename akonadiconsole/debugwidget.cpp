@@ -63,26 +63,26 @@ DebugWidget::DebugWidget( QWidget *parent )
   page->showAllConnections( true );
   mConnectionPages->addTab( page, "All" );
 
-  connect( mConnectionPages, SIGNAL( tabCloseRequested( int ) ), SLOT( tabCloseRequested( int ) ) );
+  connect( mConnectionPages, SIGNAL(tabCloseRequested(int)), SLOT(tabCloseRequested(int)) );
 
   org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
 
-  connect( iface, SIGNAL( connectionStarted( const QString&, const QString& ) ),
-           this, SLOT( connectionStarted( const QString&, const QString& ) ) );
-  connect( iface, SIGNAL( connectionEnded( const QString&, const QString& ) ),
-           this, SLOT( connectionEnded( const QString&, const QString& ) ) );
-  connect( iface, SIGNAL( signalEmitted( const QString&, const QString& ) ),
-           this, SLOT( signalEmitted( const QString&, const QString& ) ) );
-  connect( iface, SIGNAL( warningEmitted( const QString&, const QString& ) ),
-           this, SLOT( warningEmitted( const QString&, const QString& ) ) );
-  connect( iface, SIGNAL( errorEmitted( const QString&, const QString& ) ),
-           this, SLOT( errorEmitted( const QString&, const QString& ) ) );
+  connect( iface, SIGNAL(connectionStarted(QString,QString)),
+           this, SLOT(connectionStarted(QString,QString)) );
+  connect( iface, SIGNAL(connectionEnded(QString,QString)),
+           this, SLOT(connectionEnded(QString,QString)) );
+  connect( iface, SIGNAL(signalEmitted(QString,QString)),
+           this, SLOT(signalEmitted(QString,QString)) );
+  connect( iface, SIGNAL(warningEmitted(QString,QString)),
+           this, SLOT(warningEmitted(QString,QString)) );
+  connect( iface, SIGNAL(errorEmitted(QString,QString)),
+           this, SLOT(errorEmitted(QString,QString)) );
 
   // in case we started listening when the connection is already ongoing
-  connect( iface, SIGNAL( connectionDataInput( const QString&, const QString& ) ),
-           this, SLOT( connectionStarted( const QString&, const QString& ) ) );
-  connect( iface, SIGNAL( connectionDataOutput( const QString&, const QString& ) ),
-           this, SLOT( connectionStarted( const QString&, const QString& ) ) );
+  connect( iface, SIGNAL(connectionDataInput(QString,QString)),
+           this, SLOT(connectionStarted(QString,QString)) );
+  connect( iface, SIGNAL(connectionDataOutput(QString,QString)),
+           this, SLOT(connectionStarted(QString,QString)) );
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   layout->addLayout( buttonLayout );
@@ -97,10 +97,10 @@ DebugWidget::DebugWidget( QWidget *parent )
   buttonLayout->addWidget( clearGeneralButton );
   buttonLayout->addWidget( saveRichtextButton );
 
-  connect( clearAllButton, SIGNAL( clicked() ), this, SLOT( clearAllTabs() ) );
-  connect( clearCurrentButton, SIGNAL( clicked() ), this, SLOT( clearCurrentTab() ) );
-  connect( clearGeneralButton, SIGNAL( clicked() ), mGeneralView, SLOT( clear() ) );
-  connect( saveRichtextButton, SIGNAL( clicked() ), this, SLOT( saveRichText() ) );
+  connect( clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllTabs()) );
+  connect( clearCurrentButton, SIGNAL(clicked()), this, SLOT(clearCurrentTab()) );
+  connect( clearGeneralButton, SIGNAL(clicked()), mGeneralView, SLOT(clear()) );
+  connect( saveRichtextButton, SIGNAL(clicked()), this, SLOT(saveRichText()) );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }

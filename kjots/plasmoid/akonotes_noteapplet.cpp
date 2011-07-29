@@ -129,7 +129,7 @@ void AkonotesNoteApplet::init()
     m_monitor->setItemMonitored( Item( itemId ), true );
     job->fetchScope().fetchFullPayload( true );
     connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsFetched(Akonadi::Item::List)) );
-    connect( job, SIGNAL(result(KJob *)), SLOT(itemFetchDone(KJob *)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)) );
   }
 }
 
@@ -248,7 +248,7 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
   item.setPayload( msg );
 
   ItemCreateJob *itemCreateJob = new ItemCreateJob(item, targetCollection);
-  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateJobFinished( KJob *)));
+  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateJobFinished(KJob*)));
 }
 
 

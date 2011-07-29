@@ -506,9 +506,9 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
-           SIGNAL(endTimeChanged(QTime) ) );
+           SIGNAL(endTimeChanged(QTime)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
-           SIGNAL(endDateChanged(QDate) ) );
+           SIGNAL(endDateChanged(QDate)) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
@@ -646,9 +646,9 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SIGNAL(endDateTimeToggled(bool)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL(endDateChanged(QDate)) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL(endTimeChanged(QTime)) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)), SIGNAL(endTimeChanged(QTime)) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();

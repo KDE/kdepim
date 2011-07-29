@@ -46,8 +46,8 @@ KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
     QHBoxLayout *lay = new QHBoxLayout( this );
     miscPage = new confPageMisc( 0 );
     lay->addWidget( miscPage );
-    connect( miscPage->autoSaveInterval, SIGNAL(valueChanged(int)), this, SLOT( modified() ) );
-    connect( miscPage->autoSave, SIGNAL(stateChanged(int)), this, SLOT( modified() ) );
+    connect( miscPage->autoSaveInterval, SIGNAL(valueChanged(int)), this, SLOT(modified()) );
+    connect( miscPage->autoSave, SIGNAL(stateChanged(int)), this, SLOT(modified()) );
     load();
 }
 

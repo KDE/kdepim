@@ -28,7 +28,7 @@ using namespace KCalCore;
 AkonadiCalendar::Private::Private( AkonadiCalendar *qq ) : q( qq )
 {
   IncidenceFetchJob *job = new IncidenceFetchJob();
-  connect( job, SIGNAL(result( KJob*)),
+  connect( job, SIGNAL(result(KJob*)),
            SLOT(slotSearchJobFinished(KJob*)) );
 }
 

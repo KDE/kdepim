@@ -70,34 +70,34 @@ Toolbox::Toolbox( QWidget *parent )
 //     reloadBlogList();
     optionsDate->setDate( QDateTime::currentDateTime().date() );
     optionsTime->setTime( QDateTime::currentDateTime().time() );
-//     connect( btnBlogAdd, SIGNAL( clicked() ), this, SLOT( slotAddBlog() ) );
-//     connect( btnBlogEdit, SIGNAL( clicked() ), this, SLOT( slotEditBlog() ) );
-//     connect( btnBlogRemove, SIGNAL( clicked() ), this, SLOT( slotRemoveBlog() ) );
+//     connect( btnBlogAdd, SIGNAL(clicked()), this, SLOT(slotAddBlog()) );
+//     connect( btnBlogEdit, SIGNAL(clicked()), this, SLOT(slotEditBlog()) );
+//     connect( btnBlogRemove, SIGNAL(clicked()), this, SLOT(slotRemoveBlog()) );
 
-    connect( btnCatReload, SIGNAL( clicked() ), this, SLOT( slotReloadCategoryList() ) );
-    connect( btnEntriesUpdate, SIGNAL( clicked() ), this, SLOT( slotUpdateEntries() ) );
-    connect( btnEntriesClear, SIGNAL( clicked(bool) ), this, SLOT( clearEntries()) );
+    connect( btnCatReload, SIGNAL(clicked()), this, SLOT(slotReloadCategoryList()) );
+    connect( btnEntriesUpdate, SIGNAL(clicked()), this, SLOT(slotUpdateEntries()) );
+    connect( btnEntriesClear, SIGNAL(clicked(bool)), this, SLOT(clearEntries()) );
 
-//     connect( this, SIGNAL( sigCurrentBlogChanged( int ) ), this, SLOT( slotCurrentBlogChanged( int ) ) );
-//     connect( &listBlogRadioButtons, SIGNAL( buttonClicked( int ) ), this, SLOT( slotSetCurrentBlog() ) );
+//     connect( this, SIGNAL(sigCurrentBlogChanged(int)), this, SLOT(slotCurrentBlogChanged(int)) );
+//     connect( &listBlogRadioButtons, SIGNAL(buttonClicked(int)), this, SLOT(slotSetCurrentBlog()) );
 
-    connect( lstEntriesList, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ),
-             this, SLOT( slotEntrySelected( QListWidgetItem* ) ) );
-//     connect( btnEntriesCopyUrl, SIGNAL( clicked( bool ) ), this, SLOT( slotEntriesCopyUrl() ) );
-    connect( btnEntriesRemove, SIGNAL( clicked(bool) ), this, SLOT( slotRemoveSelectedEntryFromServer() ) );
+    connect( lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+             this, SLOT(slotEntrySelected(QListWidgetItem*)) );
+//     connect( btnEntriesCopyUrl, SIGNAL(clicked(bool)), this, SLOT(slotEntriesCopyUrl()) );
+    connect( btnEntriesRemove, SIGNAL(clicked(bool)), this, SLOT(slotRemoveSelectedEntryFromServer()) );
 
-    connect( btnOptionsNow, SIGNAL( clicked(bool)), this, SLOT( setDateTimeNow() ) );
-    connect( localEntriesTable, SIGNAL( cellDoubleClicked(int,int) ),
+    connect( btnOptionsNow, SIGNAL(clicked(bool)), this, SLOT(setDateTimeNow()) );
+    connect( localEntriesTable, SIGNAL(cellDoubleClicked(int,int)),
              this, SLOT(slotLocalEntrySelected(int,int)) );
-    connect( btnLocalRemove, SIGNAL( clicked( bool ) ) , this, SLOT( slotRemoveLocalEntry() ) );
+    connect( btnLocalRemove, SIGNAL(clicked(bool)) , this, SLOT(slotRemoveLocalEntry()) );
 
     lblOptionsTrackBack->setVisible( false );
     txtOptionsTrackback->setVisible( false );
     btnCatAdd->setVisible( false );
 
     lstEntriesList->setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( lstEntriesList, SIGNAL( customContextMenuRequested( const QPoint & ) ),
-             this, SLOT( requestEntriesListContextMenu( const QPoint & ) ) );
+    connect( lstEntriesList, SIGNAL(customContextMenuRequested(QPoint)),
+             this, SLOT(requestEntriesListContextMenu(QPoint)) );
 
     QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
 }
@@ -130,8 +130,8 @@ you have to select a blog from the Blogs page before asking for the list of cate
     }
 
     Backend *b = new Backend( d->mCurrentBlogId );
-    connect( b, SIGNAL( sigCategoryListFetched( int ) ), this, SLOT( slotLoadCategoryListFromDB( int ) ) );
-    connect( b, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
+    connect( b, SIGNAL(sigCategoryListFetched(int)), this, SLOT(slotLoadCategoryListFromDB(int)) );
+    connect( b, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
     b->getCategoryListFromServer();
@@ -160,8 +160,8 @@ you have to select a blog from the Blogs page before asking for the list of entr
     }
     Backend *entryB = new Backend( d->mCurrentBlogId, this);
     entryB->getEntriesListFromServer( count );
-    connect( entryB, SIGNAL( sigEntriesListFetched( int ) ), this, SLOT( slotLoadEntriesFromDB( int ) ) );
-    connect( entryB, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
+    connect( entryB, SIGNAL(sigEntriesListFetched(int)), this, SLOT(slotLoadEntriesFromDB(int)) );
+    connect( entryB, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     this->setCursor( Qt::BusyCursor );
     emit sigBusy( true );
@@ -227,8 +227,8 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
         BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
                                                                      data(32).toInt() ) );
         Backend *b = new Backend( d->mCurrentBlogId, this);
-        connect(b, SIGNAL(sigPostRemoved(int,const BilboPost&)), this, SLOT(slotPostRemoved(int,const BilboPost&)) );
-        connect(b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)));
+        connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this, SLOT(slotPostRemoved(int,BilboPost)) );
+        connect(b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
         b->removePost(post);
         d->statusbar->showMessage( i18n( "Removing post..." ) );
     }
@@ -544,13 +544,13 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
     KMenu *entriesContextMenu = new KMenu( this );
     KAction *actEntriesOpenInBrowser = new KAction( KIcon("applications-internet"),
                                                     i18n("Open in browser"), entriesContextMenu );
-    connect( actEntriesOpenInBrowser, SIGNAL( triggered() ), this, SLOT( openPostInBrowser() ) );
+    connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
     KAction *actEntriesCopyUrl = new KAction( KIcon("edit-copy"),
                                               i18n("Copy URL"), entriesContextMenu );
-    connect( actEntriesCopyUrl, SIGNAL( triggered(bool) ), this, SLOT( slotEntriesCopyUrl() ) );
+    connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
     KAction *actEntriesCopyTitle = new KAction( KIcon("edit-copy"),
                                                 i18n("Copy title"), entriesContextMenu );
-    connect( actEntriesCopyTitle, SIGNAL( triggered(bool) ), this, SLOT( copyPostTitle() ) );
+    connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
     entriesContextMenu->addAction( actEntriesOpenInBrowser );
     entriesContextMenu->addAction( actEntriesCopyUrl );
     entriesContextMenu->addAction( actEntriesCopyTitle );

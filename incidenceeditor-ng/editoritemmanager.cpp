@@ -195,8 +195,8 @@ void ItemEditorPrivate::setupMonitor()
     mItemMonitor->setItemMonitored( mItem );
   }
 
-//   q->connect( mItemMonitor, SIGNAL(itemChanged(const Akonadi::Item&,const QSet<QByteArray>&)),
-//               SLOT(itemChanged(const Akonadi::Item&,const QSet<QByteArray>&)) );
+//   q->connect( mItemMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+//               SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
 }
 
 void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,

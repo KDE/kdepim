@@ -47,18 +47,18 @@ AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, Message
   mSignAction = new QAction( this );
   mSignAction->setText( i18n( "Sign" ) );
   mSignAction->setCheckable( true );
-  connect( mSignAction, SIGNAL( triggered( bool ) ), SLOT( signAttachment( bool ) ) );
+  connect( mSignAction, SIGNAL(triggered(bool)), SLOT(signAttachment(bool)) );
 
   mEncryptAction = new QAction( this );
   mEncryptAction->setText( i18n( "Encrypt" ) );
   mEncryptAction->setCheckable( true );
-  connect( mEncryptAction, SIGNAL( triggered( bool ) ), SLOT( encryptAttachment( bool ) ) );
+  connect( mEncryptAction, SIGNAL(triggered(bool)), SLOT(encryptAttachment(bool)) );
 
   actionCollection->addAction( "toggle_attachment_signed", mSignAction );
   actionCollection->addAction( "toggle_attachment_encrypted", mEncryptAction );
 
-  connect( mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( selectionChanged() ) );
+  connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(selectionChanged()) );
 
   selectionChanged();
 }

@@ -145,8 +145,8 @@ Config::Config( QWidget *parent, bool encrypt )
 			       << i18n("Do not use any encryption tool") );
   label->setBuddy( toolCombo );
   hbox->setStretchFactor( toolCombo, 1 );
-  connect( toolCombo, SIGNAL( activated( int ) ),
-           this, SIGNAL( changed( void ) ) );
+  connect( toolCombo, SIGNAL(activated(int)),
+           this, SIGNAL(changed()) );
   // This is the place to add a KUrlRequester to be used for asking
   // the user for the path to the executable...
   topLayout->addWidget( group );
@@ -157,8 +157,8 @@ Config::Config( QWidget *parent, bool encrypt )
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
   lay->addWidget( storePass );
-  connect( storePass, SIGNAL( toggled( bool ) ),
-           this, SIGNAL( changed( void ) ) );
+  connect( storePass, SIGNAL(toggled(bool)),
+           this, SIGNAL(changed()) );
   msg = i18n( "<qt><p>When this option is enabled, the passphrase of your "
 	      "private key will be remembered by the application as long "
 	      "as the application is running. Thus you will only have to "
@@ -174,8 +174,8 @@ Config::Config( QWidget *parent, bool encrypt )
   if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
                                mpOptionsGroupBox );
-   connect( encToSelf, SIGNAL( toggled( bool ) ),
-           this, SIGNAL( changed( void ) ) );
+   connect( encToSelf, SIGNAL(toggled(bool)),
+           this, SIGNAL(changed()) );
 
     msg = i18n( "<qt><p>When this option is enabled, the message/file "
 		"will not only be encrypted with the receiver's public key, "
@@ -189,8 +189,8 @@ Config::Config( QWidget *parent, bool encrypt )
   showCipherText = new QCheckBox( i18n("&Show signed/encrypted text after "
                                        "composing"));
   lay->addWidget( showCipherText );
-  connect( showCipherText, SIGNAL( toggled( bool ) ),
-           this, SIGNAL( changed( void ) ) );
+  connect( showCipherText, SIGNAL(toggled(bool)),
+           this, SIGNAL(changed()) );
 
   msg = i18n( "<qt><p>When this option is enabled, the signed/encrypted text "
 	      "will be shown in a separate window, enabling you to know how "
@@ -201,8 +201,8 @@ Config::Config( QWidget *parent, bool encrypt )
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
                                              "keys &for approval"));
     lay->addWidget( showKeyApprovalDlg );
-    connect( showKeyApprovalDlg, SIGNAL( toggled( bool ) ),
-           this, SIGNAL( changed( void ) ) );
+    connect( showKeyApprovalDlg, SIGNAL(toggled(bool)),
+           this, SIGNAL(changed()) );
     msg = i18n( "<qt><p>When this option is enabled, the application will "
 		"always show you a list of public keys from which you can "
 		"choose the one it will use for encryption. If it is off, "
@@ -343,8 +343,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   hlay->addWidget( le, 1 );
   le->setFocus();
 
-  connect( le, SIGNAL(textChanged(const QString&)),
-	   this, SLOT(slotSearch(const QString&)) );
+  connect( le, SIGNAL(textChanged(QString)),
+	   this, SLOT(slotSearch(QString)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
   mListView = new QTreeWidget( page );
@@ -389,26 +389,26 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     mListView->scrollToItem( lvi );
 
   if( extendedSelection ) {
-    connect( mCheckSelectionTimer, SIGNAL( timeout() ),
-             this,                 SLOT( slotCheckSelection() ) );
-    connect( mListView, SIGNAL( itemSelectionChanged() ),
-             this,      SLOT( slotSelectionChanged() ) );
+    connect( mCheckSelectionTimer, SIGNAL(timeout()),
+             this,                 SLOT(slotCheckSelection()) );
+    connect( mListView, SIGNAL(itemSelectionChanged()),
+             this,      SLOT(slotSelectionChanged()) );
   }
   else {
     connect( mListView, SIGNAL(itemSelectionChanged()),
              this,      SLOT(slotSelectionChanged()) );
   }
-  connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int) ), this, SLOT(accept()) );
+  connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(accept()) );
 
   mListView->setContextMenuPolicy( Qt::CustomContextMenu );
-  connect( mListView, SIGNAL( customContextMenuRequested(const QPoint&) ),
-           this,      SLOT( slotRMB(const QPoint&) ) );
+  connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
+           this,      SLOT(slotRMB(QPoint)) );
 
   setButtonGuiItem( KDialog::Default, KGuiItem(i18n("&Reread Keys")) );
-  connect( this, SIGNAL( defaultClicked() ),
-           this, SLOT( slotRereadKeys() ) );
-  connect(this, SIGNAL( okClicked()),SLOT(slotOk()));
-  connect(this,SIGNAL( cancelClicked()),SLOT(slotCancel()));
+  connect( this, SIGNAL(defaultClicked()),
+           this, SLOT(slotRereadKeys()) );
+  connect(this, SIGNAL(okClicked()),SLOT(slotOk()));
+  connect(this,SIGNAL(cancelClicked()),SLOT(slotCancel()));
 }
 
 
@@ -844,14 +844,14 @@ void KeySelectionDialog::slotRereadKeys()
   // save the current position of the contents
   int offsetY = mListView->verticalScrollBar()->value();
 
-  disconnect( mListView, SIGNAL( itemSelectionChanged() ),
-              this,      SLOT( slotSelectionChanged() ) );
+  disconnect( mListView, SIGNAL(itemSelectionChanged()),
+              this,      SLOT(slotSelectionChanged()) );
 
   initKeylist( keys, KeyIDList( mKeyIds ) );
   slotFilter();
 
-  connect( mListView, SIGNAL( itemSelectionChanged() ),
-           this,      SLOT( slotSelectionChanged() ) );
+  connect( mListView, SIGNAL(itemSelectionChanged()),
+           this,      SLOT(slotSelectionChanged()) );
   slotSelectionChanged();
 
   // restore the saved position of the contents
@@ -895,8 +895,8 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 
     // As we might change the selection, we have to disconnect the slot
     // to prevent recursion
-    disconnect( mListView, SIGNAL( itemSelectionChanged() ),
-                this,      SLOT( slotSelectionChanged() ) );
+    disconnect( mListView, SIGNAL(itemSelectionChanged()),
+                this,      SLOT(slotSelectionChanged()) );
 
     KeyIDList newKeyIdList;
     QList<QTreeWidgetItem*> keysToBeChecked;
@@ -994,8 +994,8 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
     }
     enableButton( Ok, keysAllowed );
 
-    connect( mListView, SIGNAL( selectionChanged() ),
-             this,      SLOT( slotSelectionChanged() ) );
+    connect( mListView, SIGNAL(selectionChanged()),
+             this,      SLOT(slotSelectionChanged()) );
   }
 }
 
@@ -1043,7 +1043,7 @@ void KeySelectionDialog::slotRMB( const QPoint& pos )
   mCurrentContextMenuItem = lvi;
 
   QMenu menu(this);
-  menu.addAction( i18n( "Recheck Key" ), this, SLOT( slotRecheckKey() ) );
+  menu.addAction( i18n( "Recheck Key" ), this, SLOT(slotRecheckKey()) );
   menu.exec( mListView->viewport()->mapToGlobal( pos ) );
 }
 

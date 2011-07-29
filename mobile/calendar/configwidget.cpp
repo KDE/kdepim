@@ -91,10 +91,10 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   mUi->kcfg_DailyEndingHour->installEventFilter( this );
   mUi->kcfg_DefaultAppointmentTime->installEventFilter( this );
 
-  connect( this, SIGNAL( dayBeginsFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
-  connect( this, SIGNAL( dailyStartingHourFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
-  connect( this, SIGNAL( dailyEndingHourFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
-  connect( this, SIGNAL( defaultAppointmentTimeFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
+  connect( this, SIGNAL(dayBeginsFocus(QObject*)), SLOT(showClock(QObject*)) );
+  connect( this, SIGNAL(dailyStartingHourFocus(QObject*)), SLOT(showClock(QObject*)) );
+  connect( this, SIGNAL(dailyEndingHourFocus(QObject*)), SLOT(showClock(QObject*)) );
+  connect( this, SIGNAL(defaultAppointmentTimeFocus(QObject*)), SLOT(showClock(QObject*)) );
 
   // UI workarounds for Maemo5
 #ifdef Q_WS_MAEMO_5
@@ -275,8 +275,8 @@ bool ConfigWidget::eventFilter( QObject *object, QEvent *event )
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
   : DeclarativeWidgetBase< ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
 {
-  connect( this, SIGNAL( configChanged() ), widget(), SIGNAL( configChanged() ) );
-  connect( widget(), SIGNAL( showClockWidget( int, int ) ), this, SIGNAL( showClockWidget( int, int ) ) );
+  connect( this, SIGNAL(configChanged()), widget(), SIGNAL(configChanged()) );
+  connect( widget(), SIGNAL(showClockWidget(int,int)), this, SIGNAL(showClockWidget(int,int)) );
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()

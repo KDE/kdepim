@@ -51,12 +51,12 @@ void TasksActionManager::setCalendar( Calendar *calendar )
 void TasksActionManager::setItemSelectionModel( QItemSelectionModel *itemSelectionModel )
 {
   if ( mItemSelectionModel )
-    disconnect( mItemSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ) );
+    disconnect( mItemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)) );
 
   mItemSelectionModel = itemSelectionModel;
   if ( mItemSelectionModel ) {
-    connect( mItemSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
-             SLOT( updateActions() ) );
+    connect( mItemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+             SLOT(updateActions()) );
   }
 
   updateActions();

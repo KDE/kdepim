@@ -28,7 +28,7 @@ MemoryCalendarMemento::MemoryCalendarMemento()
   : QObject( 0 ), mFinished( false )
 {
   CalendarSupport::IncidenceFetchJob *job = new CalendarSupport::IncidenceFetchJob();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotSearchJobFinished( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotSearchJobFinished(KJob*)) );
 }
 
 void MemoryCalendarMemento::slotSearchJobFinished( KJob *job )

@@ -42,8 +42,8 @@ class CollectionFetchWatcher::Private
         return;
 
       if ( mIndex.data( Akonadi::EntityTreeModel::FetchStateRole ).toInt() == Akonadi::EntityTreeModel::IdleState ) {
-        q->disconnect( mModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-                       q, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+        q->disconnect( mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                       q, SLOT(dataChanged(QModelIndex,QModelIndex)) );
 
         emit q->collectionFetched( mIndex );
 
@@ -87,8 +87,8 @@ void CollectionFetchWatcher::start()
   }
 
   // start our work
-  connect( d->mModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+  connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
 }
 
 #include "collectionfetchwatcher.moc"

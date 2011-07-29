@@ -427,8 +427,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   hlay->addWidget( le, 1 );
   le->setFocus();
 
-  connect( le, SIGNAL(textChanged(const QString&)),
-	   this, SLOT(slotSearch(const QString&)) );
+  connect( le, SIGNAL(textChanged(QString)),
+	   this, SLOT(slotSearch(QString)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
   mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page );
@@ -461,8 +461,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,int)),
 	   SLOT(slotTryOk()) );
   connect( mKeyListView,
-	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
-           SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
+	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,QPoint)),
+           SLOT(slotRMB(Kleo::KeyListViewItem*,QPoint)) );
 
   setButtonText( KDialog::Default, i18n("&Reread Keys") );
   setButtonText( KDialog::Help, i18n("&Start Certificate Manager") );
@@ -618,14 +618,14 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::P
   if ( !job )
     return;
 
-  connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-	   SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+  connect( job, SIGNAL(result(GpgME::KeyListResult)),
+	   SLOT(slotKeyListResult(GpgME::KeyListResult)) );
   if ( validate )
-    connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-             mKeyListView, SLOT(slotRefreshKey(const GpgME::Key&)) );
+    connect( job, SIGNAL(nextKey(GpgME::Key)),
+             mKeyListView, SLOT(slotRefreshKey(GpgME::Key)) );
   else
-    connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-             mKeyListView, SLOT(slotAddKey(const GpgME::Key&)) );
+    connect( job, SIGNAL(nextKey(GpgME::Key)),
+             mKeyListView, SLOT(slotAddKey(GpgME::Key)) );
 
   QStringList fprs;
   std::transform( keys.begin(), keys.end(), std::back_inserter( fprs ), ExtractFingerprint() );

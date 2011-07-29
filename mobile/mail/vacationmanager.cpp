@@ -37,12 +37,12 @@ VacationManager::VacationManager( KActionCollection *actionCollection, QObject *
     mEditAction( 0 )
 {
   if ( KSieveUi::Util::checkOutOfOfficeOnStartup() )
-    QTimer::singleShot( 0, this, SLOT( checkVacation() ) );
+    QTimer::singleShot( 0, this, SLOT(checkVacation()) );
 
   if ( KSieveUi::Util::allowOutOfOfficeSettings() ) {
     mEditAction = new KAction( i18n( "Edit \"Out of Office\" Replies" ), this );
     actionCollection->addAction( "tools_edit_vacation", mEditAction );
-    connect( mEditAction, SIGNAL( triggered( bool ) ), SLOT( editVacation() ) );
+    connect( mEditAction, SIGNAL(triggered(bool)), SLOT(editVacation()) );
   }
 }
 
@@ -69,8 +69,8 @@ void VacationManager::checkVacation()
     return;
   
   KSieveUi::Vacation *vacation = new KSieveUi::Vacation( this, true /* check only */ );
-  connect( vacation, SIGNAL( scriptActive( bool ) ), SLOT( updateVacationScriptActivity( bool ) ) );
-  connect( vacation, SIGNAL( requestEditVacation() ), SLOT( editVacation() ) );
+  connect( vacation, SIGNAL(scriptActive(bool)), SLOT(updateVacationScriptActivity(bool)) );
+  connect( vacation, SIGNAL(requestEditVacation()), SLOT(editVacation()) );
 }
 
 void VacationManager::editVacation()
@@ -82,10 +82,10 @@ void VacationManager::editVacation()
     return;
 
   mVacation = new KSieveUi::Vacation( this );
-  connect( mVacation, SIGNAL( scriptActive( bool ) ), SLOT( updateVacationScriptActivity( bool ) ) );
-  connect( mVacation, SIGNAL( requestEditVacation() ), SLOT( editVacation() ) );
+  connect( mVacation, SIGNAL(scriptActive(bool)), SLOT(updateVacationScriptActivity(bool)) );
+  connect( mVacation, SIGNAL(requestEditVacation()), SLOT(editVacation()) );
   if ( mVacation->isUsable() ) {
-    connect( mVacation, SIGNAL( result( bool ) ), mVacation, SLOT( deleteLater() ) );
+    connect( mVacation, SIGNAL(result(bool)), mVacation, SLOT(deleteLater()) );
   } else {
     QString msg = i18n( "KMail Mobile's Out of Office Reply functionality relies on "
                         "server-side filtering. You have not yet configured an "

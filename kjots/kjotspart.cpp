@@ -86,8 +86,8 @@ bool KJotsPart::openFile()
 
 void KJotsPart::delayedInitialization()
 {
-    connect(component, SIGNAL(activeAnchorChanged(const QString &, const QString &)),
-            SLOT(activeAnchorChanged(const QString &, const QString &)));
+    connect(component, SIGNAL(activeAnchorChanged(QString,QString)),
+            SLOT(activeAnchorChanged(QString,QString)));
 }
 
 void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &anchorText)

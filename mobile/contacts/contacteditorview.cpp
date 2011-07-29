@@ -219,10 +219,10 @@ void ContactEditorView::doDelayedInit()
   qmlRegisterType<DeclarativeEditorCrypto>( "org.kde.contacteditors", 4, 5, "ContactEditorCrypto" );
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction ) ),
-           SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, QString ) ) );
+  connect( d->mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           SLOT(saveFinished()) );
+  connect( d->mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
+           SLOT(saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)) );
 }
 
 ContactEditorView::~ContactEditorView()
@@ -241,12 +241,12 @@ void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
     if ( d->mCollection.isValid() ) {
       d->mEditorGeneral->setDefaultCollection( d->mCollection );
     }
-    connect( d->mEditorGeneral, SIGNAL( saveClicked() ), SLOT( save() ) );
-    connect( d->mEditorGeneral, SIGNAL( cancelClicked() ), SLOT( cancel() ) );
-    connect( d->mEditorGeneral, SIGNAL( collectionChanged( Akonadi::Collection ) ),
-             SLOT( collectionChanged( Akonadi::Collection ) ) );
-    connect( d->mEditorGeneral, SIGNAL( requestLaunchAccountWizard() ),
-             this, SIGNAL( requestLaunchAccountWizard() ) );
+    connect( d->mEditorGeneral, SIGNAL(saveClicked()), SLOT(save()) );
+    connect( d->mEditorGeneral, SIGNAL(cancelClicked()), SLOT(cancel()) );
+    connect( d->mEditorGeneral, SIGNAL(collectionChanged(Akonadi::Collection)),
+             SLOT(collectionChanged(Akonadi::Collection)) );
+    connect( d->mEditorGeneral, SIGNAL(requestLaunchAccountWizard()),
+             this, SIGNAL(requestLaunchAccountWizard()) );
   }
 }
 
@@ -272,16 +272,16 @@ void ContactEditorView::setEditorMore( EditorMore *editor )
   d->mEditorMore = editor;
 
   if ( d->mEditorBusiness ) {
-    connect( d->mEditorBusiness, SIGNAL( organizationChanged( const QString& ) ),
-             d->mEditorMore, SLOT( updateOrganization( const QString& ) ) );
+    connect( d->mEditorBusiness, SIGNAL(organizationChanged(QString)),
+             d->mEditorMore, SLOT(updateOrganization(QString)) );
   } else {
     qWarning( "No business editor set!" );
   }
 
-  connect( d->mEditorGeneral, SIGNAL( nameChanged( const KABC::Addressee& ) ),
-           d->mEditorMore, SLOT( updateName( const KABC::Addressee& ) ) );
-  connect( d->mEditorMore, SIGNAL( nameChanged( const KABC::Addressee& ) ),
-           d->mEditorGeneral, SLOT( updateName( const KABC::Addressee& ) ) );
+  connect( d->mEditorGeneral, SIGNAL(nameChanged(KABC::Addressee)),
+           d->mEditorMore, SLOT(updateName(KABC::Addressee)) );
+  connect( d->mEditorMore, SIGNAL(nameChanged(KABC::Addressee)),
+           d->mEditorGeneral, SLOT(updateName(KABC::Addressee)) );
 }
 
 void ContactEditorView::setDefaultCollection( const Akonadi::Collection &collection )

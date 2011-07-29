@@ -34,11 +34,11 @@ AgentStatusMonitor::AgentStatusMonitor( QObject* parent )
   : QObject( parent ), m_status( Offline )
 {
   qRegisterMetaType<AgentStatusMonitor::AgentStatus>();
-  connect( AgentManager::self(), SIGNAL( instanceAdded( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
-  connect( AgentManager::self(), SIGNAL( instanceRemoved( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
-  connect( AgentManager::self(), SIGNAL( instanceOnline( Akonadi::AgentInstance, bool ) ), SLOT( updateStatus() ) );
-  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
-  connect( Solid::Networking::notifier(), SIGNAL( statusChanged( Solid::Networking::Status ) ), SLOT( updateStatus() ) );
+  connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(updateStatus()) );
+  connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(updateStatus()) );
+  connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)), SLOT(updateStatus()) );
+  connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)), SLOT(updateStatus()) );
+  connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(updateStatus()) );
   updateStatus();
 }
 

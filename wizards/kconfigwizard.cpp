@@ -67,11 +67,11 @@ void KConfigWizard::init()
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
 
-  connect( this, SIGNAL( currentPageChanged(KPageWidgetItem *, KPageWidgetItem * )),
-           SLOT( slotAboutToShowPage(KPageWidgetItem *, KPageWidgetItem *) ) );
+  connect( this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
+           SLOT(slotAboutToShowPage(KPageWidgetItem*,KPageWidgetItem*)) );
   connect( this, SIGNAL(okClicked()),
-           SLOT( slotOk()));
-  QTimer::singleShot( 0, this, SLOT( readConfig() ) );
+           SLOT(slotOk()));
+  QTimer::singleShot( 0, this, SLOT(readConfig()) );
 }
 
 void KConfigWizard::setPropagator( KConfigPropagator *p )

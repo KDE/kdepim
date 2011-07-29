@@ -129,12 +129,12 @@ FavoritesController::FavoritesController( const KSharedConfig::Ptr &config, QObj
   d->mMoveUpAction = new QAction( i18n( "Move Up" ), this );
   d->mMoveDownAction = new QAction( i18n( "Move Down" ), this );
 
-  connect( d->mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( selectionChanged() ) );
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(selectionChanged()) );
 
-  connect( d->mRemoveAction, SIGNAL( triggered( bool ) ), SLOT( removeFavorite() ) );
-  connect( d->mMoveUpAction, SIGNAL( triggered( bool ) ), SLOT( moveUpFavorite() ) );
-  connect( d->mMoveDownAction, SIGNAL( triggered( bool ) ), SLOT( moveDownFavorite() ) );
+  connect( d->mRemoveAction, SIGNAL(triggered(bool)), SLOT(removeFavorite()) );
+  connect( d->mMoveUpAction, SIGNAL(triggered(bool)), SLOT(moveUpFavorite()) );
+  connect( d->mMoveDownAction, SIGNAL(triggered(bool)), SLOT(moveDownFavorite()) );
 
   d->selectionChanged();
 }

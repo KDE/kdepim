@@ -35,8 +35,8 @@ class EditorBusiness::Private
       mUi.setupUi( parent );
       mUi.logoButton->setType( ImageWidget::Logo );
 
-      q->connect( mUi.organizationLineEdit, SIGNAL( textChanged( const QString& ) ),
-                  q, SIGNAL( organizationChanged( const QString& ) ) );
+      q->connect( mUi.organizationLineEdit, SIGNAL(textChanged(QString)),
+                  q, SIGNAL(organizationChanged(QString)) );
     }
 
   public:

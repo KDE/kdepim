@@ -88,33 +88,33 @@ class EditorMore::Private
       mUi.pageWidget->insertWidget( 3, customFieldsPage );
       mUi.pageWidget->insertWidget( 4, categoriesPage );
 
-      connect( mUi.namePageButton, SIGNAL( clicked() ),
-               mMapper, SLOT( map() ) );
-      connect( mUi.internetPageButton, SIGNAL( clicked() ),
-               mMapper, SLOT( map() ) );
-      connect( mUi.personalPageButton, SIGNAL( clicked() ),
-               mMapper, SLOT( map() ) );
-      connect( mUi.customFieldsPageButton, SIGNAL( clicked() ),
-               mMapper, SLOT( map() ) );
-      connect( mUi.categoriesPageButton, SIGNAL( clicked() ),
-               mMapper, SLOT( map() ) );
-      connect( mMapper, SIGNAL( mapped( int ) ),
-               mUi.pageWidget, SLOT( setCurrentIndex( int ) ) );
+      connect( mUi.namePageButton, SIGNAL(clicked()),
+               mMapper, SLOT(map()) );
+      connect( mUi.internetPageButton, SIGNAL(clicked()),
+               mMapper, SLOT(map()) );
+      connect( mUi.personalPageButton, SIGNAL(clicked()),
+               mMapper, SLOT(map()) );
+      connect( mUi.customFieldsPageButton, SIGNAL(clicked()),
+               mMapper, SLOT(map()) );
+      connect( mUi.categoriesPageButton, SIGNAL(clicked()),
+               mMapper, SLOT(map()) );
+      connect( mMapper, SIGNAL(mapped(int)),
+               mUi.pageWidget, SLOT(setCurrentIndex(int)) );
 
       mUi.pageWidget->setCurrentIndex( 0 );
 
-      connect( mNamePage.namePartsWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
-               mNamePage.displayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
-      connect( mNamePage.namePartsWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
-               q, SIGNAL( nameChanged( const KABC::Addressee& ) ) );
-      connect( mNamePage.pronunciationLabel, SIGNAL( linkActivated( const QString& ) ),
-               q, SLOT( playPronunciation() ) );
+      connect( mNamePage.namePartsWidget, SIGNAL(nameChanged(KABC::Addressee)),
+               mNamePage.displayNameWidget, SLOT(changeName(KABC::Addressee)) );
+      connect( mNamePage.namePartsWidget, SIGNAL(nameChanged(KABC::Addressee)),
+               q, SIGNAL(nameChanged(KABC::Addressee)) );
+      connect( mNamePage.pronunciationLabel, SIGNAL(linkActivated(QString)),
+               q, SLOT(playPronunciation()) );
 
-      connect( mCustomFieldsPage.addCustomFieldButton, SIGNAL( clicked() ),
-               q, SLOT( addCustomField() ) );
+      connect( mCustomFieldsPage.addCustomFieldButton, SIGNAL(clicked()),
+               q, SLOT(addCustomField()) );
 
-      connect( mCategoriesPage.categoriesButton, SIGNAL( clicked() ),
-               q, SLOT( configureCategories() ) );
+      connect( mCategoriesPage.categoriesButton, SIGNAL(clicked()),
+               q, SLOT(configureCategories()) );
 
       mPersonalPage.birthdayDateEdit->setDate( QDate() );
       mPersonalPage.anniversaryDateEdit->setDate( QDate() );
@@ -145,7 +145,7 @@ class EditorMore::Private
       soundData->setData( mContact.sound().data() );
       player->setCurrentSource( soundData );
       player->setParent( q );
-      connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
+      connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
       player->play();
 #endif
     }

@@ -144,14 +144,14 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
 void MailActionManager::setItemSelectionModel( QItemSelectionModel *selectionModel )
 {
   m_itemSelectionModel = selectionModel;
-  connect( m_itemSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SLOT( updateActions() ) );
+  connect( m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateActions()) );
   updateActions();
 }
 
 void MailActionManager::setItemActionSelectionModel( QItemSelectionModel *selectionModel )
 {
   m_itemActionSelectionModel = selectionModel;
-  connect( m_itemActionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SLOT( updateActions() ) );
+  connect( m_itemActionSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateActions()) );
   updateActions();
 }
 

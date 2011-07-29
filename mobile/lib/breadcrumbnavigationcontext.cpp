@@ -138,7 +138,7 @@ void KBreadcrumbNavigationFactory::createBreadcrumbContext( QAbstractItemModel *
   Q_D(KBreadcrumbNavigationFactory);
 
   d->m_selectionModel = new QItemSelectionModel( model, parent );
-  connect( d->m_selectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SIGNAL( collectionSelectionChanged() ) );
+  connect( d->m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(collectionSelectionChanged()) );
 
   KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel( d->m_selectionModel, parent );
   currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
@@ -184,7 +184,7 @@ void KBreadcrumbNavigationFactory::createBreadcrumbContext( QAbstractItemModel *
   d->m_qmlSelectedItemSelectionModel = new QMLListSelectionModel( d->m_selectionModel, parent );
   d->m_qmlChildSelectionModel = new QMLListSelectionModel( d->m_childItemsSelectionModel, parent );
 
-  connect( d->m_selectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SIGNAL( selectedDisplayTextChanged() ) );
+  connect( d->m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(selectedDisplayTextChanged()) );
 }
 
 QItemSelectionModel* KBreadcrumbNavigationFactory::selectionModel() const

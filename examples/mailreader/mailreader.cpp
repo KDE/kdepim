@@ -145,10 +145,10 @@ void mailreader::setupActions()
 
     m_previousMessage = new KAction(i18n("Previous Message"), this);
     actionCollection()->addAction("previous_message", m_previousMessage);
-    connect(m_previousMessage, SIGNAL(triggered( bool )), SLOT(slotPreviousMessage()));
+    connect(m_previousMessage, SIGNAL(triggered(bool)), SLOT(slotPreviousMessage()));
     m_nextMessage = new KAction(i18n("Next Message"), this);
     actionCollection()->addAction("next_message", m_nextMessage);
-    connect(m_nextMessage, SIGNAL(triggered( bool )), SLOT(slotNextMessage()));
+    connect(m_nextMessage, SIGNAL(triggered(bool)), SLOT(slotNextMessage()));
 }
 
 void mailreader::slotMessageSelected( const Akonadi::Item &item )
@@ -159,7 +159,7 @@ void mailreader::slotMessageSelected( const Akonadi::Item &item )
   itemFetchJob->fetchScope().fetchFullPayload( true );
 
   connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsReceived(Akonadi::Item::List)) );
-  connect( itemFetchJob, SIGNAL(result(KJob *)), SLOT(itemFetchDone(KJob *)) );
+  connect( itemFetchJob, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)) );
 
   m_view->showItem( item );
 }

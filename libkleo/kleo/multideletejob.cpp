@@ -98,7 +98,7 @@ GpgME::Error Kleo::MultiDeleteJob::startAJob() {
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
 		  // but I don't like the dependency on gpg-error :/
 
-  connect( mJob, SIGNAL(result(const GpgME::Error&)), SLOT(slotResult(const GpgME::Error&)) );
+  connect( mJob, SIGNAL(result(GpgME::Error)), SLOT(slotResult(GpgME::Error)) );
 
   return mJob->start( *mIt, mAllowSecretKeyDeletion );
 }

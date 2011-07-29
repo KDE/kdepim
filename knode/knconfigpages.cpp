@@ -36,7 +36,7 @@ KNode::KCMTabContainer::KCMTabContainer( const KComponentData &inst, QWidget * p
 
 void KNode::KCMTabContainer::addTab( KCModule* tab, const QString & title ) {
   mTabWidget->addTab( tab, title );
-  connect( tab, SIGNAL(changed( bool )), this, SIGNAL(changed( bool )) );
+  connect( tab, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)) );
 }
 
 void KNode::KCMTabContainer::load() {

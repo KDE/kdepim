@@ -31,8 +31,8 @@ mailreaderView::mailreaderView(QWidget *parent)
     setLayout(layout);
     setAutoFillBackground(true);
     displayAboutPage();
-    connect( m_readerWin, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl& ) ), this,
-        SLOT(urlClicked( const Akonadi::Item &, const KUrl& )));
+    connect( m_readerWin, SIGNAL(urlClicked(Akonadi::Item,KUrl)), this,
+        SLOT(urlClicked(Akonadi::Item,KUrl)));
 }
 
 mailreaderView::~mailreaderView()
@@ -103,7 +103,7 @@ void mailreaderView::slotConfigure()
                   i18n("Message List"),
                   "kmail");
 
-  connect( dialog, SIGNAL(settingsChanged(const QString& )),
+  connect( dialog, SIGNAL(settingsChanged(QString)),
          widget, SLOT(slotSettingsChanged()) );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();

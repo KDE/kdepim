@@ -75,8 +75,8 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 
   connect( mAttendeeEditor, SIGNAL(countChanged(int)),
            SIGNAL(attendeeCountChanged(int)) );
-  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine *)),
-           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine *)) );
+  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
+           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine*)) );
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -115,8 +115,8 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 
   slotUpdateConflictLabel( 0 ); //initialize label
 
-  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine *)),
-           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine *)) );
+  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
+           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine*)) );
   connect( mAttendeeEditor, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
            SLOT(slotAttendeeChanged(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)) );
 }
@@ -304,7 +304,7 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
   job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->name() );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( groupSearchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(groupSearchResult(KJob*)) );
 
   mMightBeGroupLines.insert( job, QWeakPointer<KPIM::MultiplyingLine>( line ) );
 }
@@ -340,7 +340,7 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
   }
 
   Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
-  connect( expandJob, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+  connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(expandResult(KJob*)) );
   expandJob->start();
 }
 
@@ -366,7 +366,7 @@ void IncidenceAttendee::slotSelectAddresses()
           Akonadi::ContactGroupExpandJob *job =
             new Akonadi::ContactGroupExpandJob(
               selection.item().payload<KABC::ContactGroup>(), this );
-          connect( job, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+          connect( job, SIGNAL(result(KJob*)), this, SLOT(expandResult(KJob*)) );
           job->start();
         } else {
           KABC::Addressee contact;

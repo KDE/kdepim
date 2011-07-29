@@ -45,10 +45,10 @@ XXPortManager::XXPortManager( QWidget *parent )
   mImportMapper = new QSignalMapper( this );
   mExportMapper = new QSignalMapper( this );
 
-  connect( mImportMapper, SIGNAL( mapped( const QString& ) ),
-           this, SLOT( slotImport( const QString& ) ) );
-  connect( mExportMapper, SIGNAL( mapped( const QString& ) ),
-           this, SLOT( slotExport( const QString& ) ) );
+  connect( mImportMapper, SIGNAL(mapped(QString)),
+           this, SLOT(slotImport(QString)) );
+  connect( mExportMapper, SIGNAL(mapped(QString)),
+           this, SLOT(slotExport(QString)) );
 }
 
 XXPortManager::~XXPortManager()
@@ -58,13 +58,13 @@ XXPortManager::~XXPortManager()
 void XXPortManager::addImportAction( QAction *action, const QString &identifier )
 {
   mImportMapper->setMapping( action, identifier );
-  connect( action, SIGNAL( triggered( bool ) ), mImportMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), mImportMapper, SLOT(map()) );
 }
 
 void XXPortManager::addExportAction( QAction *action, const QString &identifier )
 {
   mExportMapper->setMapping( action, identifier );
-  connect( action, SIGNAL( triggered( bool ) ), mExportMapper, SLOT( map() ) );
+  connect( action, SIGNAL(triggered(bool)), mExportMapper, SLOT(map()) );
 }
 
 void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
@@ -124,7 +124,7 @@ void XXPortManager::slotImport( const QString &identifier )
     item.setMimeType( KABC::Addressee::mimeType() );
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotImportJobDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)) );
   }
 }
 

@@ -68,9 +68,9 @@ KNHeaderView::KNHeaderView( QWidget *parent ) :
   setColumnAlignment( mPaintInfo.scoreCol, Qt::AlignRight );
 
   // due to our own column text squeezing we need to repaint on column resizing
-  disconnect( header(), SIGNAL(sizeChange(int, int, int)) );
-  connect( header(), SIGNAL(sizeChange(int, int, int)),
-           SLOT(slotSizeChanged(int, int, int)) );
+  disconnect( header(), SIGNAL(sizeChange(int,int,int)) );
+  connect( header(), SIGNAL(sizeChange(int,int,int)),
+           SLOT(slotSizeChanged(int,int,int)) );
 
   // column selection RMB menu
   mPopup = new KMenu( this );

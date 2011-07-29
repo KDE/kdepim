@@ -178,7 +178,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleItemSaveFinish(IncidenceEditorNG::EditorItemManager::SaveAction)));
   q->connect( mItemManager,
               SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
-              SLOT(handleItemSaveFail(IncidenceEditorNG::EditorItemManager::SaveAction, QString)));
+              SLOT(handleItemSaveFail(IncidenceEditorNG::EditorItemManager::SaveAction,QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
   q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorNG::RecurrenceType)),
@@ -283,12 +283,12 @@ void EventOrTodoDialogPrivate::manageTemplates()
   QPointer<IncidenceEditorNG::TemplateManagementDialog> dialog(
       new IncidenceEditorNG::TemplateManagementDialog( q, templates,
                                                        KCalUtils::Stringify::incidenceType( mEditor->type() ) ) );
-  q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
-              SLOT( loadTemplate( const QString& ) ) );
-  q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
-              SLOT( storeTemplatesInConfig( const QStringList& ) ) );
-  q->connect( dialog, SIGNAL( saveTemplate( const QString& ) ),
-              SLOT( saveTemplate( const QString& ) ) );
+  q->connect( dialog, SIGNAL(loadTemplate(QString)),
+              SLOT(loadTemplate(QString)) );
+  q->connect( dialog, SIGNAL(templatesChanged(QStringList)),
+              SLOT(storeTemplatesInConfig(QStringList)) );
+  q->connect( dialog, SIGNAL(saveTemplate(QString)),
+              SLOT(saveTemplate(QString)) );
   dialog->exec();
   delete dialog;
 }

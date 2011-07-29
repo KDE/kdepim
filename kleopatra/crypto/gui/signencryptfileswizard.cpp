@@ -149,7 +149,7 @@ private:
 SignEncryptFilesWizard::Private::Private( SignEncryptFilesWizard * qq )
   : q( qq )
 {
-    q->connect( q, SIGNAL( signersResolved() ), q, SLOT( operationSelected() ) );
+    q->connect( q, SIGNAL(signersResolved()), q, SLOT(operationSelected()) );
     std::vector<int> pageOrder;
     q->setSignerResolvePageValidator( boost::shared_ptr<SignerResolveValidator>( new SignerResolveValidator( q->signerResolvePage() ) ) );
     pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );

@@ -59,10 +59,10 @@ AgentWidget::AgentWidget( QWidget *parent )
   currentChanged( ui.instanceWidget->currentAgentInstance() );
 
   ui.addButton->setGuiItem( KStandardGuiItem::add() );
-  connect( ui.addButton, SIGNAL( clicked() ), this, SLOT( addAgent() ) );
+  connect( ui.addButton, SIGNAL(clicked()), this, SLOT(addAgent()) );
 
   ui.removeButton->setGuiItem( KStandardGuiItem::remove() );
-  connect( ui.removeButton, SIGNAL( clicked() ), this, SLOT( removeAgent() ) );
+  connect( ui.removeButton, SIGNAL(clicked()), this, SLOT(removeAgent()) );
 
   mConfigMenu = new QMenu( i18n("Configure"), this );
   mConfigMenu->addAction( i18n("Configure Natively..."), this, SLOT(configureAgent()) );
@@ -70,7 +70,7 @@ AgentWidget::AgentWidget( QWidget *parent )
   mConfigMenu->setIcon( KStandardGuiItem::configure().icon() );
   ui.configButton->setGuiItem( KStandardGuiItem::configure() );
   ui.configButton->setMenu( mConfigMenu );
-  connect( ui.configButton, SIGNAL( clicked() ), this, SLOT( configureAgent() ) );
+  connect( ui.configButton, SIGNAL(clicked()), this, SLOT(configureAgent()) );
 
   mSyncMenu = new QMenu( i18n("Synchronize"), this );
   mSyncMenu->addAction( i18n("Synchronize All"), this, SLOT(synchronizeAgent()) );
@@ -78,7 +78,7 @@ AgentWidget::AgentWidget( QWidget *parent )
   mSyncMenu->setIcon( KIcon("view-refresh" ) );
   ui.syncButton->setMenu( mSyncMenu );
   ui.syncButton->setIcon( KIcon( "view-refresh" ) );
-  connect( ui.syncButton, SIGNAL( clicked() ), this, SLOT( synchronizeAgent() ) );
+  connect( ui.syncButton, SIGNAL(clicked()), this, SLOT(synchronizeAgent()) );
 
   ui.abortButton->setIcon( KIcon("dialog-cancel") );
   connect( ui.abortButton, SIGNAL(clicked()), this, SLOT(abortAgent()) );

@@ -51,14 +51,14 @@ class EditorGeneral::Private
     {
       mUi.setupUi( parent );
 
-      QObject::connect( mUi.email1, SIGNAL( clearClicked() ), q, SLOT( clearEmailClicked() ) );
-      QObject::connect( mUi.email2, SIGNAL( clearClicked() ), q, SLOT( clearEmailClicked() ) );
+      QObject::connect( mUi.email1, SIGNAL(clearClicked()), q, SLOT(clearEmailClicked()) );
+      QObject::connect( mUi.email2, SIGNAL(clearClicked()), q, SLOT(clearEmailClicked()) );
       mEmailInputs << mUi.email1;
       mEmailInputs << mUi.email2;
       mLastEmailRow = 2; // third row
 
-      QObject::connect( mUi.phone1, SIGNAL( clearClicked() ), q, SLOT( clearPhoneClicked() ) );
-      QObject::connect( mUi.phone2, SIGNAL( clearClicked() ), q, SLOT( clearPhoneClicked() ) );
+      QObject::connect( mUi.phone1, SIGNAL(clearClicked()), q, SLOT(clearPhoneClicked()) );
+      QObject::connect( mUi.phone2, SIGNAL(clearClicked()), q, SLOT(clearPhoneClicked()) );
       mPhoneWidgets << new PhoneWidgets( mUi.phone1, mUi.phone1Type );
       mUi.phone1Type->setType( KABC::PhoneNumber::Pref );
       mPhoneWidgets << new PhoneWidgets( mUi.phone2, mUi.phone2Type );
@@ -71,7 +71,7 @@ class EditorGeneral::Private
       mUi.gridLayout->addWidget( mUi.pictureButton, 0, 3, 3, 1, Qt::AlignTop );
       mUi.pictureButton->setType( ImageWidget::Photo );
 
-      QObject::connect( mUi.launchAccountWizardButton, SIGNAL( clicked() ), q, SIGNAL( requestLaunchAccountWizard() ) );
+      QObject::connect( mUi.launchAccountWizardButton, SIGNAL(clicked()), q, SIGNAL(requestLaunchAccountWizard()) );
 
       availableCollectionsChanged();
     }
@@ -173,7 +173,7 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   for ( ; mEmailInputs.count() < newRowCount; ++row, ++mLastEmailRow, ++mLastPhoneRow ) {
     MobileLineEdit *lineEdit = new MobileLineEdit( q );
     mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
-    QObject::connect( lineEdit, SIGNAL( clearClicked() ), q, SLOT( clearEmailClicked() ) );
+    QObject::connect( lineEdit, SIGNAL(clearClicked()), q, SLOT(clearEmailClicked()) );
     mEmailInputs << lineEdit;
   }
 
@@ -277,7 +277,7 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
     PhoneTypeCombo *combo = new PhoneTypeCombo( q );
     mUi.gridLayout->addWidget( combo, row, 2, 1, 1 );
 
-    QObject::connect( lineEdit, SIGNAL( clearClicked() ), q, SLOT( clearPhoneClicked() ) );
+    QObject::connect( lineEdit, SIGNAL(clearClicked()), q, SLOT(clearPhoneClicked()) );
     mPhoneWidgets << new PhoneWidgets( lineEdit, combo );
   }
 
@@ -340,22 +340,22 @@ void EditorGeneral::Private::clearPhoneClicked()
 EditorGeneral::EditorGeneral( QWidget *parent )
   : EditorBase( parent ), d( new Private( this ) )
 {
-  connect( d->mUi.fullName, SIGNAL( textChanged( QString ) ), SLOT( nameTextChanged( QString ) ) );
+  connect( d->mUi.fullName, SIGNAL(textChanged(QString)), SLOT(nameTextChanged(QString)) );
 
-  connect( d->mUi.addEmailButton, SIGNAL( clicked() ), SLOT( addEmailClicked() ) );
+  connect( d->mUi.addEmailButton, SIGNAL(clicked()), SLOT(addEmailClicked()) );
 
-  connect( d->mUi.addPhoneButton, SIGNAL( clicked() ), SLOT( addPhoneClicked() ) );
+  connect( d->mUi.addPhoneButton, SIGNAL(clicked()), SLOT(addPhoneClicked()) );
 
-  connect( d->mUi.saveButton, SIGNAL( clicked() ), SLOT( disableSaveButton() ) ); // prevent double clicks
-  connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
-  connect( d->mUi.cancelButton, SIGNAL( clicked() ), SIGNAL( cancelClicked() ) );
-  connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
-           SIGNAL( collectionChanged( Akonadi::Collection ) ) );
+  connect( d->mUi.saveButton, SIGNAL(clicked()), SLOT(disableSaveButton()) ); // prevent double clicks
+  connect( d->mUi.saveButton, SIGNAL(clicked()), SIGNAL(saveClicked()) );
+  connect( d->mUi.cancelButton, SIGNAL(clicked()), SIGNAL(cancelClicked()) );
+  connect( d->mUi.collectionSelector, SIGNAL(currentChanged(Akonadi::Collection)),
+           SIGNAL(collectionChanged(Akonadi::Collection)) );
 
-  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           SLOT( availableCollectionsChanged() ) );
-  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-           SLOT( availableCollectionsChanged() ) );
+  connect( d->mUi.collectionSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(availableCollectionsChanged()) );
+  connect( d->mUi.collectionSelector->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           SLOT(availableCollectionsChanged()) );
 
   d->mUi.saveButton->setIcon( SmallIcon( "document-save", 64 ) );
   d->mUi.cancelButton->setIcon( SmallIcon( "dialog-cancel", 64 ) );

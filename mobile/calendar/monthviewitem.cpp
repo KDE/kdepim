@@ -43,8 +43,8 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
            mView, SLOT(moveFwdMonth()) );
   connect( mView, SIGNAL(newEventSignal()),
            SLOT(emitDateClicked()));
-  connect( mView, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
-           SLOT(emitItemSelected(Akonadi::Item, QDate)) );
+  connect( mView, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+           SLOT(emitItemSelected(Akonadi::Item,QDate)) );
 
   setPreferences( MainView::preferences() );
 }

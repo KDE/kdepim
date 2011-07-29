@@ -73,10 +73,10 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                         item->attachment()->size(), 0 ) ) );
   }
 
-  connect( mUi->mURLRequester, SIGNAL(urlSelected(const KUrl &)),
-           SLOT(urlChanged(const KUrl &)) );
-  connect( mUi->mURLRequester, SIGNAL( textChanged( const QString& ) ),
-           SLOT( urlChanged( const QString& ) ) );
+  connect( mUi->mURLRequester, SIGNAL(urlSelected(KUrl)),
+           SLOT(urlChanged(KUrl)) );
+  connect( mUi->mURLRequester, SIGNAL(textChanged(QString)),
+           SLOT(urlChanged(QString)) );
 }
 
 AttachmentEditDialog::~AttachmentEditDialog()

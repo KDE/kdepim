@@ -34,11 +34,11 @@ BlogSettings::BlogSettings( QWidget *parent )
     kDebug();
     setupUi( this );
 
-    connect( btnAdd, SIGNAL( clicked() ), this, SLOT(addBlog()) );
-    connect( btnEdit, SIGNAL( clicked() ), this, SLOT(editBlog()) );
-    connect( btnRemove, SIGNAL( clicked() ), this, SLOT(removeBlog()) );
-    connect( blogsTable, SIGNAL( currentItemChanged( QTableWidgetItem *, QTableWidgetItem * ) ),
-             this, SLOT( blogsTablestateChanged() ) );
+    connect( btnAdd, SIGNAL(clicked()), this, SLOT(addBlog()) );
+    connect( btnEdit, SIGNAL(clicked()), this, SLOT(editBlog()) );
+    connect( btnRemove, SIGNAL(clicked()), this, SLOT(removeBlog()) );
+    connect( blogsTable, SIGNAL(currentItemChanged(QTableWidgetItem*,QTableWidgetItem*)),
+             this, SLOT(blogsTablestateChanged()) );
 
     btnAdd->setIcon( KIcon( "list-add" ) );
     btnEdit->setIcon( KIcon( "edit-rename" ) );
@@ -57,10 +57,10 @@ void BlogSettings::addBlog()
     AddEditBlog *addEditBlogWindow = new AddEditBlog( -1, this );
     addEditBlogWindow->setWindowModality( Qt::ApplicationModal );
     addEditBlogWindow->setAttribute( Qt::WA_DeleteOnClose );
-    connect( addEditBlogWindow, SIGNAL( sigBlogAdded( const BilboBlog& ) ),
-             this, SLOT( slotBlogAdded( const BilboBlog& ) ) );
-    connect( addEditBlogWindow, SIGNAL(sigBlogAdded(const BilboBlog&)),
-             this, SIGNAL(blogAdded(const BilboBlog&)));
+    connect( addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
+             this, SLOT(slotBlogAdded(BilboBlog)) );
+    connect( addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
+             this, SIGNAL(blogAdded(BilboBlog)));
     addEditBlogWindow->show();
 }
 
@@ -79,10 +79,10 @@ void BlogSettings::editBlog()
     AddEditBlog *addEditBlogWindow = new AddEditBlog( blog_id, this );
     addEditBlogWindow->setAttribute( Qt::WA_DeleteOnClose );
     addEditBlogWindow->setWindowModality( Qt::ApplicationModal );
-    connect( addEditBlogWindow, SIGNAL( sigBlogEdited( const BilboBlog& ) ),
-             this, SLOT( slotBlogEdited( const BilboBlog& ) ) );
-    connect( addEditBlogWindow, SIGNAL(sigBlogEdited(const BilboBlog&)),
-             this, SIGNAL(blogEdited(const BilboBlog&)));
+    connect( addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
+             this, SLOT(slotBlogEdited(BilboBlog)) );
+    connect( addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
+             this, SIGNAL(blogEdited(BilboBlog)));
     addEditBlogWindow->show();
 }
 

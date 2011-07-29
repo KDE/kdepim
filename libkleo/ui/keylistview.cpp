@@ -74,7 +74,7 @@ static const struct {
   { SIGNAL(itemSelectionChanged()),
     SLOT(slotEmitSelectionChanged()) },
   { SIGNAL(customContextMenuRequested(QPoint)),
-    SLOT(slotEmitContextMenu(const QPoint&)) },
+    SLOT(slotEmitContextMenu(QPoint)) },
 };
 static const int numSignalReplacements = sizeof signalReplacements / sizeof *signalReplacements;
 

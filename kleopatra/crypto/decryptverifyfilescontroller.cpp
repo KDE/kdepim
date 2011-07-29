@@ -188,7 +188,7 @@ void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
         coll->setTasks( m_runnableTasks );
         m_wizard->setTaskCollection( coll );
 
-        QTimer::singleShot( 0, q, SLOT( schedule() ) );
+        QTimer::singleShot( 0, q, SLOT(schedule()) );
 
     } catch ( const Kleo::Exception & e ) {
         reportError( e.error().encodedError(), e.message() );

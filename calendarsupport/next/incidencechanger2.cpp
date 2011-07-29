@@ -507,8 +507,8 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
   }
 
   // QueuedConnection because of possible sync exec calls.
-  connect( deleteJob, SIGNAL(result(KJob *)),
-           d, SLOT(handleDeleteJobResult(KJob *)), Qt::QueuedConnection );
+  connect( deleteJob, SIGNAL(result(KJob*)),
+           d, SLOT(handleDeleteJobResult(KJob*)), Qt::QueuedConnection );
 
   return change.changeId;
 }
@@ -613,8 +613,8 @@ void IncidenceChanger2::Private::performModification( Change change )
 
     mModificationsInProgress[change.newItem.id()] = change;
     // QueuedConnection because of possible sync exec calls.
-    connect( modifyJob, SIGNAL(result(KJob *)),
-             SLOT(handleModifyJobResult(KJob *)), Qt::QueuedConnection );
+    connect( modifyJob, SIGNAL(result(KJob*)),
+             SLOT(handleModifyJobResult(KJob*)), Qt::QueuedConnection );
   }
 }
 

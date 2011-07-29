@@ -56,14 +56,14 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 
   mManager = new KConfigDialogManager( this, Settings::self() );
 
-  connect( ui.configureCompletionOrderButton, SIGNAL( clicked() ),
-           this, SLOT( configureCompletionOrder() ) );
-  connect( ui.editRecentAddressesButton, SIGNAL( clicked() ),
-           this, SLOT( editRecentAddresses() ) );
+  connect( ui.configureCompletionOrderButton, SIGNAL(clicked()),
+           this, SLOT(configureCompletionOrder()) );
+  connect( ui.editRecentAddressesButton, SIGNAL(clicked()),
+           this, SLOT(editRecentAddresses()) );
 
   ui.howDoesThisWorkLabel->setText( i18n( "<a href=\"help\">How does this work?</a>" ) );
-  connect( ui.howDoesThisWorkLabel, SIGNAL( linkActivated( const QString& ) ),
-           this, SIGNAL( showTemplatesHelp() ) );
+  connect( ui.howDoesThisWorkLabel, SIGNAL(linkActivated(QString)),
+           this, SIGNAL(showTemplatesHelp()) );
 
   ui.helpLabel->setVisible( false );
 }
@@ -204,7 +204,7 @@ void ConfigWidget::saveToExternalSettings()
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
   : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
 {
-  connect( this, SIGNAL( configChanged() ), widget(), SIGNAL( configChanged() ) );
+  connect( this, SIGNAL(configChanged()), widget(), SIGNAL(configChanged()) );
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()

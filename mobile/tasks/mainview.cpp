@@ -86,8 +86,8 @@ MainView::MainView( QWidget *parent )
   qobject_cast<TaskListProxy*>( itemModel() )->setPreferences( mCalendarPrefs );
 
   // re-sort the list when config options have changed
-  connect( Settings::self(), SIGNAL( configChanged() ),
-           qobject_cast<TaskListProxy*>( itemModel() ), SLOT( invalidate() ) );
+  connect( Settings::self(), SIGNAL(configChanged()),
+           qobject_cast<TaskListProxy*>( itemModel() ), SLOT(invalidate()) );
 }
 
 MainView::~MainView()
@@ -119,37 +119,37 @@ void MainView::doDelayedInit()
 
   mCalendarUtils = new CalendarSupport::CalendarUtils( mCalendar, this );
   mCalendar->setParent( mCalendarUtils );
-  connect( mCalendarUtils, SIGNAL( actionFinished( Akonadi::Item ) ),
-          SLOT( processActionFinish( Akonadi::Item ) ) );
-  connect( mCalendarUtils, SIGNAL( actionFailed( Akonadi::Item, QString ) ),
-          SLOT( processActionFail( Akonadi::Item, QString ) ) );
+  connect( mCalendarUtils, SIGNAL(actionFinished(Akonadi::Item)),
+          SLOT(processActionFinish(Akonadi::Item)) );
+  connect( mCalendarUtils, SIGNAL(actionFailed(Akonadi::Item,QString)),
+          SLOT(processActionFail(Akonadi::Item,QString)) );
 
   mTasksActionManager = new TasksActionManager( actionCollection(), this );
   mTasksActionManager->setCalendar( mCalendar );
   mTasksActionManager->setItemSelectionModel( itemSelectionModel() );
 
-  connect( entityTreeModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
-           mTasksActionManager, SLOT( updateActions() ) );
+  connect( entityTreeModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           mTasksActionManager, SLOT(updateActions()) );
 
   connect( actionCollection()->action( QLatin1String( "import_tasks" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+           SIGNAL(triggered(bool)), SLOT(importItems()) );
   connect( actionCollection()->action( QLatin1String( "export_account_tasks" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+           SIGNAL(triggered(bool)), SLOT(exportItems()) );
   connect( actionCollection()->action( QLatin1String( "export_selected_tasks" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+           SIGNAL(triggered(bool)), SLOT(exportItems()) );
   connect( actionCollection()->action( QLatin1String( "make_subtask_independent" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( makeTaskIndependent() ) );
+           SIGNAL(triggered(bool)), SLOT(makeTaskIndependent()) );
   connect( actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( makeAllSubtasksIndependent() ) );
+           SIGNAL(triggered(bool)), SLOT(makeAllSubtasksIndependent()) );
   connect( actionCollection()->action( QLatin1String( "purge_completed_tasks" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( purgeCompletedTasks() ) );
+           SIGNAL(triggered(bool)), SLOT(purgeCompletedTasks()) );
   connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
+           SIGNAL(triggered(bool)), SLOT(saveAllAttachments()) );
   connect( actionCollection()->action( QLatin1String( "archive_old_entries" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( archiveOldEntries() ) );
+           SIGNAL(triggered(bool)), SLOT(archiveOldEntries()) );
 
   KAction *action = new KAction( i18n( "Configure Categories" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
   KPIM::ReminderClient::startDaemon();
@@ -290,7 +290,7 @@ void MainView::editIncidence( const Akonadi::Item &item )
   editor->load( item, QDate() );
 
   mOpenItemEditors.insert(  editor, item.id() );
-  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
+  connect( editor, SIGNAL(destroyed(QObject*)), SLOT(finishEdit(QObject*)) );
 
   editor->show();
 }
@@ -303,8 +303,8 @@ QAbstractItemModel* MainView::createItemModelContext( QDeclarativeContext *conte
   grouperModel->setSourceModel( model );
 
   // trigger a resort whenever the task status has changed
-  connect( model, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-           grouperModel, SLOT( invalidate() ) );
+  connect( model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           grouperModel, SLOT(invalidate()) );
 
   return KDeclarativeMainView::createItemModelContext( context, grouperModel );
 }
@@ -323,14 +323,14 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
 
   connect( mStandardActionManager->action( Akonadi::StandardActionManager::CreateResource ),
-           SIGNAL( triggered( bool ) ), SLOT( launchAccountWizard() ) );
+           SIGNAL(triggered(bool)), SLOT(launchAccountWizard()) );
   connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo ),
-           SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
+           SIGNAL(triggered(bool)), SLOT(newTask()) );
   connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo ),
-           SIGNAL( triggered( bool ) ), SLOT( newSubTask() ) );
+           SIGNAL(triggered(bool)), SLOT(newSubTask()) );
   connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ),
-           SIGNAL( triggered( bool ) ), SLOT( editIncidence() ) );
-  connect( mStandardActionManager, SIGNAL( actionStateUpdated() ), SLOT( updateActionTexts() ) );
+           SIGNAL(triggered(bool)), SLOT(editIncidence()) );
+  connect( mStandardActionManager, SIGNAL(actionStateUpdated()), SLOT(updateActionTexts()) );
 
   ActionHelper::adaptStandardActionTexts( mStandardActionManager );
 
@@ -391,8 +391,8 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
-  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
@@ -454,7 +454,7 @@ void MainView::saveAllAttachments()
   Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForSaveAllAttachmentsDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)) );
 }
 
 void MainView::fetchForSaveAllAttachmentsDone( KJob* job )

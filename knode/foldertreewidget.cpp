@@ -234,10 +234,10 @@ FolderTreeWidget::FolderTreeWidget( QWidget *parent , const char *name )
   header()->setClickable( true );
   //setSelectionMode( Extended );
 
-  connect( this, SIGNAL( itemExpanded( QTreeWidgetItem * ) ),
-           SLOT( updateExpandedState( QTreeWidgetItem * ) ) );
-  connect( this, SIGNAL( itemCollapsed( QTreeWidgetItem * ) ),
-           SLOT( updateExpandedState( QTreeWidgetItem * ) ) );
+  connect( this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
+           SLOT(updateExpandedState(QTreeWidgetItem*)) );
+  connect( this, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
+           SLOT(updateExpandedState(QTreeWidgetItem*)) );
 
 }
 

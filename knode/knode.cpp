@@ -49,12 +49,12 @@ KNMainWindow::KNMainWindow( QWidget* parent )
   KStandardAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
   m_mainWidget = new KNMainWidget( this, this );
-  connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
-           SLOT( setCaption(const QString&)) );
+  connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(QString)),
+           SLOT(setCaption(QString)) );
   setCentralWidget( m_mainWidget );
   setupStatusBar();
-  connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(const QString&)),
-    this, SLOT(slotShowStatusMsg(const QString& )) );
+  connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(QString)),
+    this, SLOT(slotShowStatusMsg(QString)) );
   createGUI( "knodeui.rc" );
   knGlobals.setComponentData( KComponentData() );
 
@@ -76,7 +76,7 @@ void KNMainWindow::slotConfToolbar()
   saveMainWindowSettings(knGlobals.config()->group( "mainWindow_options") );
   KEditToolBar dlg( actionCollection() );
   dlg.setResourceFile( "knodeui.rc" );
-  connect(&dlg,SIGNAL( newToolBarConfig() ), this, SLOT( slotNewToolbarConfig() ));
+  connect(&dlg,SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()));
   dlg.exec();
 }
 

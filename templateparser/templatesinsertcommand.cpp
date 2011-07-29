@@ -134,7 +134,7 @@ static void fillMenuFromActionMap( const QMap< QString, TemplatesInsertCommand::
 
   while ( it != end ) {
     KAction *action = new KAction( it.key(), menu );
-    QObject::connect( action, SIGNAL( triggered( bool ) ), mapper, SLOT( map() ) );
+    QObject::connect( action, SIGNAL(triggered(bool)), mapper, SLOT(map()) );
     mapper->setMapping( action, it.value() );
     menu->addAction( action );
     ++it;
@@ -151,8 +151,8 @@ TemplatesInsertCommand::TemplatesInsertCommand( QWidget *parent, const char *nam
   QMap< QString, Command > commandMap;
 
   QSignalMapper *mapper = new QSignalMapper( this );
-  connect( mapper, SIGNAL( mapped(int) ),
-           this, SLOT( slotMapped(int) ) );
+  connect( mapper, SIGNAL(mapped(int)),
+           this, SLOT(slotMapped(int)) );
 
   mMenu = new KActionMenu( i18n( "Insert Command" ), this );
 

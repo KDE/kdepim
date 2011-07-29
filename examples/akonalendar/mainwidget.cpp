@@ -79,8 +79,8 @@ MainWidget::MainWidget( MainWindow* parent )
     /*
      * React to user orders
      */
-    connect( mCollectionList, SIGNAL(clicked(const Akonadi::Collection&)),
-             SLOT(collectionClicked(const Akonadi::Collection&)) );
+    connect( mCollectionList, SIGNAL(clicked(Akonadi::Collection)),
+             SLOT(collectionClicked(Akonadi::Collection)) );
     connect( mIncidenceList, SIGNAL(clicked(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
 }
 

@@ -111,9 +111,9 @@ void Groupware::finishHandlingInvitation()
   QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
   NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
 
-  connect( calendar.data(), SIGNAL(addFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
-  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
-  connect( calendar.data(), SIGNAL(changeFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(addFinished(bool,QString)),SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString)),SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(changeFinished(bool,QString)),SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
 
   Invitation *invitation = d->mInvitationByCalendar.value( calendar );
 

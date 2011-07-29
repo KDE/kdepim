@@ -204,7 +204,7 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::I
   topLayout->addWidget(mDeleteCb);
   connect( mDeleteCb, SIGNAL(toggled(bool)), mArchiveFile, SLOT(setDisabled(bool)) );
   connect( mDeleteCb, SIGNAL(toggled(bool)), this, SLOT(slotEnableUser1()) );
-  connect( mArchiveFile->lineEdit(), SIGNAL(textChanged(const QString &)),
+  connect( mArchiveFile->lineEdit(), SIGNAL(textChanged(QString)),
            this, SLOT(slotEnableUser1()) );
 
   // Load settings from KCalPrefs

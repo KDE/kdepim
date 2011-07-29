@@ -41,8 +41,8 @@ GroupwareWizard::GroupwareWizard( QWidget *parent)
 
   layout->addWidget( mOverViewPage );
 
-  connect( mOverViewPage, SIGNAL( cancel() ),
-           qApp, SLOT( quit() ) );
+  connect( mOverViewPage, SIGNAL(cancel()),
+           qApp, SLOT(quit()) );
 
   resize( 400, 200 );
 }

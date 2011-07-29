@@ -176,10 +176,10 @@ void AttachmentFromUrlJob::doStart()
 #ifndef KDEPIM_MOBILE_UI
   KIO::TransferJob *job = KIO::get( d->mUrl, KIO::NoReload,
       ( uiDelegate() ? KIO::DefaultFlags : KIO::HideProgressInfo ) );
-  QObject::connect( job, SIGNAL( result( KJob* ) ),
-                    this, SLOT( transferJobResult( KJob* ) ) );
-  QObject::connect( job, SIGNAL( data( KIO::Job*, QByteArray ) ),
-                    this, SLOT( transferJobData( KIO::Job*, QByteArray ) ) );
+  QObject::connect( job, SIGNAL(result(KJob*)),
+                    this, SLOT(transferJobResult(KJob*)) );
+  QObject::connect( job, SIGNAL(data(KIO::Job*,QByteArray)),
+                    this, SLOT(transferJobData(KIO::Job*,QByteArray)) );
 #else
   d->transferJobResult( 0 );
 #endif

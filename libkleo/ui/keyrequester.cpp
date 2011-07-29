@@ -264,10 +264,10 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
                                "Check your installation."),
                           i18n("Key Listing Failed") );
     } else {
-      connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-               SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
-      connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-               SLOT(slotNextKey(const GpgME::Key&)) );
+      connect( job, SIGNAL(result(GpgME::KeyListResult)),
+               SLOT(slotKeyListResult(GpgME::KeyListResult)) );
+      connect( job, SIGNAL(nextKey(GpgME::Key)),
+               SLOT(slotNextKey(GpgME::Key)) );
 
       const GpgME::Error err = job->start( fingerprints,
         mKeyUsage & Kleo::KeySelectionDialog::SecretKeys &&
@@ -288,10 +288,10 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
                                "Check your installation."),
                           i18n("Key Listing Failed") );
     } else {
-      connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-               SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
-      connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-               SLOT(slotNextKey(const GpgME::Key&)) );
+      connect( job, SIGNAL(result(GpgME::KeyListResult)),
+               SLOT(slotKeyListResult(GpgME::KeyListResult)) );
+      connect( job, SIGNAL(nextKey(GpgME::Key)),
+               SLOT(slotNextKey(GpgME::Key)) );
 
       const GpgME::Error err = job->start( fingerprints,
         mKeyUsage & Kleo::KeySelectionDialog::SecretKeys &&

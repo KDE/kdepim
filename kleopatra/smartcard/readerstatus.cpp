@@ -663,8 +663,8 @@ public:
         watcher.addPath( Kleo::gnupgHomeDirectory() );
         watcher.setDelay( 100 );
 
-        connect( this, SIGNAL(cardStatusChanged(unsigned int,Kleo::SmartCard::ReaderStatus::Status)),
-                 q, SIGNAL(cardStatusChanged(unsigned int,Kleo::SmartCard::ReaderStatus::Status)) );
+        connect( this, SIGNAL(cardStatusChanged(uint,Kleo::SmartCard::ReaderStatus::Status)),
+                 q, SIGNAL(cardStatusChanged(uint,Kleo::SmartCard::ReaderStatus::Status)) );
         connect( this, SIGNAL(anyCardHasNullPinChanged(bool)),
                  q, SIGNAL(anyCardHasNullPinChanged(bool)) );
         connect( this, SIGNAL(anyCardCanLearnKeysChanged(bool)),

@@ -29,7 +29,7 @@ AttachmentProxyModel::AttachmentProxyModel( QObject* parent )
   : QSortFilterProxyModel( parent ),
     m_nodeHelper( new MessageViewer::NodeHelper )
 {
-  connect( this, SIGNAL( modelReset() ), SLOT( slotModelReset() ) );
+  connect( this, SIGNAL(modelReset()), SLOT(slotModelReset()) );
 }
 
 AttachmentProxyModel::~AttachmentProxyModel()

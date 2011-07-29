@@ -184,12 +184,12 @@ void TreeWidget::setManualColumnHidingEnabled( bool enable )
   if( enable )
   {
      header()->setContextMenuPolicy( Qt::CustomContextMenu ); // make sure it's true
-     QObject::connect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
-                       this, SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
+     QObject::connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
+                       this, SLOT(slotHeaderContextMenuRequested(QPoint)) );
   } else {
      if ( mEnableManualColumnHiding )
-         QObject::disconnect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
-                              this, SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
+         QObject::disconnect( header(), SIGNAL(customContextMenuRequested(QPoint)),
+                              this, SLOT(slotHeaderContextMenuRequested(QPoint)) );
   }
 
   mEnableManualColumnHiding = enable;
@@ -234,8 +234,8 @@ bool TreeWidget::fillHeaderContextMenu( KMenu * menu, const QPoint & )
     act->setData( QVariant( i ) );
 
     connect(
-        act, SIGNAL( triggered( bool ) ),
-        this, SLOT( slotToggleColumnActionTriggered( bool ) ) );
+        act, SIGNAL(triggered(bool)),
+        this, SLOT(slotToggleColumnActionTriggered(bool)) );
   }
 
   return true;

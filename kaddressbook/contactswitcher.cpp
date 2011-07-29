@@ -41,8 +41,8 @@ ContactSwitcher::ContactSwitcher( QWidget *parent )
   layout->addStretch( 1 );
   layout->addWidget( mStatusLabel );
 
-  connect( mPreviousButton, SIGNAL( clicked() ), SLOT( previousClicked() ) );
-  connect( mNextButton, SIGNAL( clicked() ), SLOT( nextClicked() ) );
+  connect( mPreviousButton, SIGNAL(clicked()), SLOT(previousClicked()) );
+  connect( mNextButton, SIGNAL(clicked()), SLOT(nextClicked()) );
 }
 
 void ContactSwitcher::setView( QAbstractItemView *view )
@@ -51,9 +51,9 @@ void ContactSwitcher::setView( QAbstractItemView *view )
 
   Q_ASSERT_X( mView->model(), "ContactSwitcher::setView", "The view has no model set!" );
 
-  connect( mView->model(), SIGNAL( layoutChanged() ), SLOT( updateStatus() ) );
-  connect( mView->model(), SIGNAL( rowsInserted(const QModelIndex&, int, int) ), SLOT( updateStatus() ) );
-  connect( mView->model(), SIGNAL( rowsRemoved(const QModelIndex&, int, int) ), SLOT( updateStatus() ) );
+  connect( mView->model(), SIGNAL(layoutChanged()), SLOT(updateStatus()) );
+  connect( mView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateStatus()) );
+  connect( mView->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateStatus()) );
 
   updateStatus();
 }

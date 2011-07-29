@@ -178,9 +178,9 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   selProxy->setSourceModel( treeview->model() );
 
   // TODO: Write a QAbstractItemView subclass to render kjots selection.
-  connect( selProxy, SIGNAL( dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()) );
-  connect( selProxy, SIGNAL( rowsInserted(const QModelIndex &, int, int)), SLOT(renderSelection()) );
-  connect( selProxy, SIGNAL( rowsRemoved(const QModelIndex &, int, int)), SLOT(renderSelection()) );
+  connect( selProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()) );
+  connect( selProxy, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(renderSelection()) );
+  connect( selProxy, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(renderSelection()) );
 
 
   stackedWidget = new QStackedWidget( m_splitter );
@@ -354,10 +354,10 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   Q_ASSERT(bm_action);
   bm_action->setShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_B );
 
-  KStandardAction::find( this, SLOT( onShowSearch() ), actionCollection );
-  action = KStandardAction::findNext( this, SLOT( onRepeatSearch() ), actionCollection );
+  KStandardAction::find( this, SLOT(onShowSearch()), actionCollection );
+  action = KStandardAction::findNext( this, SLOT(onRepeatSearch()), actionCollection );
   action->setEnabled(false);
-  KStandardAction::replace( this, SLOT( onShowReplace() ), actionCollection );
+  KStandardAction::replace( this, SLOT(onShowReplace()), actionCollection );
 
   action = actionCollection->addAction( "save_to" );
   action->setText( i18n( "Rename..." ) );
@@ -514,11 +514,11 @@ void KJotsWidget::delayedInitialization()
   browser->delayedInitialization();
 
 
-  connect( treeview->itemDelegate(), SIGNAL(closeEditor(QWidget *,QAbstractItemDelegate::EndEditHint) ),
-      SLOT(bookshelfEditItemFinished(QWidget *,QAbstractItemDelegate::EndEditHint)) );
+  connect( treeview->itemDelegate(), SIGNAL(closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)),
+      SLOT(bookshelfEditItemFinished(QWidget*,QAbstractItemDelegate::EndEditHint)) );
 
-  connect( editor, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
-      SLOT(currentCharFormatChanged(const QTextCharFormat &)) );
+  connect( editor, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
+      SLOT(currentCharFormatChanged(QTextCharFormat)) );
   updateMenu();
 }
 
@@ -1520,7 +1520,7 @@ void KJotsWidget::onStartReplace()
   replaceStartPage = treeview->selectionModel()->selectedRows().first();
 
   //allow KReplaceDialog to exit so the user can see.
-  QTimer::singleShot( 0, this, SLOT( onRepeatReplace() ) );
+  QTimer::singleShot( 0, this, SLOT(onRepeatReplace()) );
 }
 
 /*!

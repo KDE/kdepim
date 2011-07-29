@@ -90,8 +90,8 @@ KIconCanvas::KIconCanvas(QWidget *parent)
     setIconSize(QSize(60, 60));
     d->mpTimer = new QTimer(this);
     connect(d->mpTimer, SIGNAL(timeout()), this, SLOT(_k_slotLoadFiles()));
-    connect(this, SIGNAL( currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-            this, SLOT(_k_slotCurrentChanged(QListWidgetItem *)));
+    connect(this, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+            this, SLOT(_k_slotCurrentChanged(QListWidgetItem*)));
     setGridSize(QSize(80,80));
 }
 
@@ -349,7 +349,7 @@ void KIconDialog::KIconDialogPrivate::init()
 
 
     mpCanvas = new KIconCanvas(main);
-    connect(mpCanvas, SIGNAL(itemActivated(QListWidgetItem *)), q, SLOT(_k_slotAcceptIcons()));
+    connect(mpCanvas, SIGNAL(itemActivated(QListWidgetItem*)), q, SLOT(_k_slotAcceptIcons()));
     mpCanvas->setMinimumSize(400, 125);
     top->addWidget(mpCanvas);
     searchLine->setListWidget(mpCanvas);
@@ -742,7 +742,7 @@ void KIconButton::setIcon(const QString& icon)
 
     if (!d->mpDialog) {
         d->mpDialog = new KIconDialog(d->mpLoader, this);
-        connect(d->mpDialog, SIGNAL(newIconName(const QString&)), this, SLOT(_k_newIconName(const QString&)));
+        connect(d->mpDialog, SIGNAL(newIconName(QString)), this, SLOT(_k_newIconName(QString)));
     }
 
     if (d->mbUser) {
@@ -771,7 +771,7 @@ void KIconButton::KIconButtonPrivate::_k_slotChangeIcon()
     if (!mpDialog)
     {
         mpDialog = new KIconDialog(mpLoader, q);
-        connect(mpDialog, SIGNAL(newIconName(const QString&)), q, SLOT(_k_newIconName(const QString&)));
+        connect(mpDialog, SIGNAL(newIconName(QString)), q, SLOT(_k_newIconName(QString)));
     }
 
     mpDialog->setup(mGroup, mContext, m_bStrictIconSize, iconSize, mbUser);

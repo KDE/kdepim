@@ -184,8 +184,8 @@ MainView::~MainView()
 void MainView::setConfigWidget( ConfigWidget *configWidget )
 {
   Q_ASSERT( configWidget );
-  connect( configWidget, SIGNAL( configChanged() ), this, SLOT( updateConfig() ) );
-  connect( configWidget, SIGNAL( showTemplatesHelp() ), this, SLOT( showTemplatesHelp() ) );
+  connect( configWidget, SIGNAL(configChanged()), this, SLOT(updateConfig()) );
+  connect( configWidget, SIGNAL(showTemplatesHelp()), this, SLOT(showTemplatesHelp()) );
 }
 
 bool MainView::collectionIsSentMail() const
@@ -302,8 +302,8 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   context->setContextProperty("_threadMailSelector", qmlThreadMailSelector );
 
-  connect( this, SIGNAL( collectionSelectionChanged() ),
-           this, SLOT( slotCollectionSelectionChanged() ) );
+  connect( this, SIGNAL(collectionSelectionChanged()),
+           this, SLOT(slotCollectionSelectionChanged()) );
 
 #if 0
   {
@@ -365,8 +365,8 @@ void MainView::doDelayedInit()
   actionCollection()->addAction( "messagelist_change_settings", mMessageListSettingsController->editAction() );
   actionCollection()->action( "messagelist_change_settings" )->setText( i18n( "Messagelist Display Format" ) );
   rootContext()->setContextProperty( "messageListSettings", mMessageListSettingsController );
-  connect( mMessageListSettingsController, SIGNAL( settingsChanged( const MessageListSettings& ) ),
-           this, SLOT( messageListSettingsChanged( const MessageListSettings& ) ) );
+  connect( mMessageListSettingsController, SIGNAL(settingsChanged(MessageListSettings)),
+           this, SLOT(messageListSettingsChanged(MessageListSettings)) );
 
   QTime time;
   if ( debugTiming ) {
@@ -390,71 +390,71 @@ void MainView::doDelayedInit()
   mailActionManager->setItemSelectionModel( itemSelectionModel() );
   mailActionManager->setItemActionSelectionModel( itemActionModel() );
 
-  connect( actionCollection()->action( "mark_message_important" ), SIGNAL( triggered( bool ) ), SLOT( markImportant( bool ) ) );
-  connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL( triggered( bool ) ), SLOT( markMailTask( bool ) ) );
-  connect( actionCollection()->action( "send_queued_emails" ), SIGNAL( triggered( bool ) ), SLOT( sendQueued() ) );
-  connect( actionCollection()->action( "send_queued_emails_via" ), SIGNAL( triggered( bool ) ), SLOT( sendQueuedVia() ) );
-  connect( actionCollection()->action( "message_reply" ), SIGNAL( triggered( bool ) ), SLOT( replyToMessage() ) );
-  connect( actionCollection()->action( "message_reply_to_all" ), SIGNAL( triggered( bool ) ), SLOT( replyToAll() ) );
-  connect( actionCollection()->action( "message_reply_to_author" ), SIGNAL( triggered( bool ) ), SLOT( replyToAuthor() ) );
-  connect( actionCollection()->action( "message_reply_to_list" ), SIGNAL( triggered( bool ) ), SLOT( replyToMailingList() ) );
-  connect( actionCollection()->action( "message_reply_without_quoting" ), SIGNAL( triggered( bool ) ), SLOT( replyWithoutQuoting() ) );
-  connect( actionCollection()->action( "message_forward" ), SIGNAL( triggered( bool ) ), SLOT( forwardMessage() ) );
-  connect( actionCollection()->action( "message_forward_as_attachment" ), SIGNAL( triggered( bool ) ), SLOT( forwardAsAttachment() ) );
-  connect( actionCollection()->action( "message_redirect" ), SIGNAL( triggered( bool ) ), SLOT( redirect() ) );
-  connect( actionCollection()->action( "message_send_again" ), SIGNAL( triggered( bool ) ), SLOT( sendAgain() ) );
-  connect( actionCollection()->action( "message_edit" ), SIGNAL( triggered( bool ) ), SLOT( sendAgain() ) ); //do the same under a different name
-  connect( actionCollection()->action( "message_find_in" ), SIGNAL( triggered( bool ) ), SLOT( findInMessage() ) );
-  connect( actionCollection()->action( "message_save_as" ), SIGNAL( triggered( bool ) ), SLOT( saveMessage() ) );
-  connect( actionCollection()->action( "message_fixed_font" ), SIGNAL( triggered( bool ) ), SLOT( useFixedFont() ) );
-  connect( actionCollection()->action( "save_favorite" ), SIGNAL( triggered( bool ) ), SLOT( saveFavorite() ) );
-  connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL( triggered( bool ) ), SLOT( preferHTML( bool ) ) );
-  connect( actionCollection()->action( "prefer_html_to_plain_viewer" ), SIGNAL( triggered( bool ) ), SLOT( preferHtmlViewer( bool ) ) );
-  connect( actionCollection()->action( "load_external_ref" ), SIGNAL( triggered( bool ) ), SLOT( loadExternalReferences( bool ) ) );
-  connect( actionCollection()->action( "show_expire_properties" ), SIGNAL( triggered( bool ) ), SLOT( showExpireProperties() ) );
-  connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL( triggered( bool ) ), SLOT( moveToOrEmptyTrash() ) );
-  connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL( triggered( bool ) ), SLOT( createToDo() ) );
-  connect( actionCollection()->action( "create_event" ), SIGNAL( triggered( bool ) ), SLOT( createEvent() ) );
-  connect( actionCollection()->action( "apply_filters" ), SIGNAL( triggered( bool ) ), SLOT( applyFilters() ) );
-  connect( actionCollection()->action( "apply_filters_bulk_action" ), SIGNAL( triggered( bool ) ), SLOT( applyFiltersBulkAction() ) );
+  connect( actionCollection()->action( "mark_message_important" ), SIGNAL(triggered(bool)), SLOT(markImportant(bool)) );
+  connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)) );
+  connect( actionCollection()->action( "send_queued_emails" ), SIGNAL(triggered(bool)), SLOT(sendQueued()) );
+  connect( actionCollection()->action( "send_queued_emails_via" ), SIGNAL(triggered(bool)), SLOT(sendQueuedVia()) );
+  connect( actionCollection()->action( "message_reply" ), SIGNAL(triggered(bool)), SLOT(replyToMessage()) );
+  connect( actionCollection()->action( "message_reply_to_all" ), SIGNAL(triggered(bool)), SLOT(replyToAll()) );
+  connect( actionCollection()->action( "message_reply_to_author" ), SIGNAL(triggered(bool)), SLOT(replyToAuthor()) );
+  connect( actionCollection()->action( "message_reply_to_list" ), SIGNAL(triggered(bool)), SLOT(replyToMailingList()) );
+  connect( actionCollection()->action( "message_reply_without_quoting" ), SIGNAL(triggered(bool)), SLOT(replyWithoutQuoting()) );
+  connect( actionCollection()->action( "message_forward" ), SIGNAL(triggered(bool)), SLOT(forwardMessage()) );
+  connect( actionCollection()->action( "message_forward_as_attachment" ), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()) );
+  connect( actionCollection()->action( "message_redirect" ), SIGNAL(triggered(bool)), SLOT(redirect()) );
+  connect( actionCollection()->action( "message_send_again" ), SIGNAL(triggered(bool)), SLOT(sendAgain()) );
+  connect( actionCollection()->action( "message_edit" ), SIGNAL(triggered(bool)), SLOT(sendAgain()) ); //do the same under a different name
+  connect( actionCollection()->action( "message_find_in" ), SIGNAL(triggered(bool)), SLOT(findInMessage()) );
+  connect( actionCollection()->action( "message_save_as" ), SIGNAL(triggered(bool)), SLOT(saveMessage()) );
+  connect( actionCollection()->action( "message_fixed_font" ), SIGNAL(triggered(bool)), SLOT(useFixedFont()) );
+  connect( actionCollection()->action( "save_favorite" ), SIGNAL(triggered(bool)), SLOT(saveFavorite()) );
+  connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)) );
+  connect( actionCollection()->action( "prefer_html_to_plain_viewer" ), SIGNAL(triggered(bool)), SLOT(preferHtmlViewer(bool)) );
+  connect( actionCollection()->action( "load_external_ref" ), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)) );
+  connect( actionCollection()->action( "show_expire_properties" ), SIGNAL(triggered(bool)), SLOT(showExpireProperties()) );
+  connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()) );
+  connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL(triggered(bool)), SLOT(createToDo()) );
+  connect( actionCollection()->action( "create_event" ), SIGNAL(triggered(bool)), SLOT(createEvent()) );
+  connect( actionCollection()->action( "apply_filters" ), SIGNAL(triggered(bool)), SLOT(applyFilters()) );
+  connect( actionCollection()->action( "apply_filters_bulk_action" ), SIGNAL(triggered(bool)), SLOT(applyFiltersBulkAction()) );
 
-  connect( itemSelectionModel()->model(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( dataChanged() ) );
+  connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
   KAction *action = new KAction( i18n( "Identities" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureIdentity() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(configureIdentity()) );
   actionCollection()->addAction( "kmail_mobile_identities", action );
 
   action = new KAction( i18n( "New Email" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( startComposer() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( "add_new_mail", action );
 
   action = new KAction( i18n( "Import Emails" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_emails" ), action );
 
   action = new KAction( i18n( "Export Emails From This Account" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_emails" ), action );
 
   action = new KAction( i18n( "Export Displayed Emails" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_emails" ), action );
 
   action = new KAction( i18n( "Show Source" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( showMessageSource() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(showMessageSource()) );
   actionCollection()->addAction( QLatin1String( "show_message_source" ), action );
 
   action = new KAction( i18n( "Email Encoding" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( selectOverrideEncoding() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(selectOverrideEncoding()) );
   actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
 
   action = new KAction( i18n( "Show All Recipients" ), this );
   action->setCheckable( true );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleShowExtendedHeaders( bool ) ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(toggleShowExtendedHeaders(bool)) );
   actionCollection()->addAction( QLatin1String( "show_extended_headers" ), action );
 
   // lazy load of the default single folders
-  QTimer::singleShot( 3000, this, SLOT( initDefaultFolders() ) );
+  QTimer::singleShot( 3000, this, SLOT(initDefaultFolders()) );
 
   // Is there messages to recover? Do it if needed.
   recoverAutoSavedMessages();
@@ -463,8 +463,8 @@ void MainView::doDelayedInit()
     kWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
   }
 
-  connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
-           this, SLOT( qmlInitialized( QDeclarativeView::Status ) ) );
+  connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)),
+           this, SLOT(qmlInitialized(QDeclarativeView::Status)) );
 
   if ( !workOffline() ) {
     const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
@@ -495,8 +495,8 @@ void MainView::qmlInitialized(QDeclarativeView::Status status)
     actionCollection()->action( "show_extended_headers" )->setChecked( true );
     toggleShowExtendedHeaders( true );
 
-    connect( item->viewer(), SIGNAL( deleteMessage( const Akonadi::Item& ) ),
-             this, SLOT( slotDeleteMessage( const Akonadi::Item& ) ) );
+    connect( item->viewer(), SIGNAL(deleteMessage(Akonadi::Item)),
+             this, SLOT(slotDeleteMessage(Akonadi::Item)) );
   }
 }
 
@@ -585,7 +585,7 @@ void MainView::restoreDraft( quint64 id )
   ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( composeFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(composeFetchResult(KJob*)) );
 }
 
 void MainView::composeFetchResult( KJob *job )
@@ -621,7 +621,7 @@ void MainView::composeFetchResult( KJob *job )
   // delete from the drafts folder
   // ###: do we need an option for this?)
   ItemDeleteJob *deleteJob = new ItemDeleteJob( item );
-  connect( deleteJob, SIGNAL( result( KJob* ) ), this, SLOT( deleteItemResult( KJob* ) ) );
+  connect( deleteJob, SIGNAL(result(KJob*)), this, SLOT(deleteItemResult(KJob*)) );
 
   // create the composer and fill it with the retrieved message
   ComposerView *composer = new ComposerView;
@@ -637,7 +637,7 @@ void MainView::sendAgain()
 
   ItemFetchJob *job = new ItemFetchJob( Item( item.id() ), this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( sendAgainFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(sendAgainFetchResult(KJob*)) );
 }
 
 void MainView::sendAgainFetchResult( KJob *job )
@@ -730,14 +730,14 @@ void MainView::sendQueuedVia()
     QPushButton *button = new QPushButton( transport );
     layout->addWidget( button );
     mapper->setMapping( button, transport );
-    connect( button, SIGNAL( clicked() ), mapper, SLOT( map() ) );
+    connect( button, SIGNAL(clicked()), mapper, SLOT(map()) );
   }
 
-  connect( mapper, SIGNAL( mapped( QString ) ), this, SLOT( sendQueuedVia( QString ) ));
+  connect( mapper, SIGNAL(mapped(QString)), this, SLOT(sendQueuedVia(QString)));
 
   QPushButton *button = new QPushButton( i18n( "Discard" ) );
   layout->addWidget( button );
-  connect( button, SIGNAL( clicked( bool ) ), mTransportDialog, SLOT( close() ) );
+  connect( button, SIGNAL(clicked(bool)), mTransportDialog, SLOT(close()) );
 
   mTransportDialog->show();
 }
@@ -773,7 +773,7 @@ void MainView::reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, 
   job->fetchScope().fetchFullPayload();
   job->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
   job->setProperty( "quoteOriginal", QVariant::fromValue( quoteOriginal ) );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( replyFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(replyFetchResult(KJob*)) );
 }
 
 void MainView::replyFetchResult( KJob *job )
@@ -804,7 +804,7 @@ void MainView::forward( quint64 id, ForwardMode mode )
   ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
   job->fetchScope().fetchFullPayload();
   job->setProperty( "forwardMode", QVariant::fromValue( mode ) );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( forwardFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(forwardFetchResult(KJob*)) );
 }
 
 void MainView::forwardFetchResult( KJob* job )
@@ -891,7 +891,7 @@ void MainView::markImportant( bool checked )
 
   ItemModifyJob *job = new ItemModifyJob( item );
   job->setIgnorePayload( true );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
 }
 
 void MainView::markMailTask( bool checked )
@@ -914,7 +914,7 @@ void MainView::markMailTask( bool checked )
 
   ItemModifyJob *job = new ItemModifyJob( item );
   job->setIgnorePayload( true );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
 }
 
 void MainView::replyToMessage()
@@ -1023,7 +1023,7 @@ void MainView::configureIdentity()
   dialog.setMainWidget( page );
   dialog.setButtons( KDialog::Ok | KDialog::Cancel );
   dialog.setWindowState( Qt::WindowFullScreen );
-  connect( &dialog, SIGNAL( okClicked() ), page, SLOT( save() ) );
+  connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
   dialog.exec();
 #else
   KCMultiDialog dlg;
@@ -1115,8 +1115,8 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
     SpecialMailCollectionsRequestJob *job =
         new SpecialMailCollectionsRequestJob( this );
 
-    connect( job, SIGNAL( result( KJob* ) ),
-             this, SLOT( createDefaultCollectionDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(createDefaultCollectionDone(KJob*)) );
     job->requestDefaultCollection( type );
     job->setProperty("TYPE", (int) type );
   }
@@ -1145,8 +1145,8 @@ void MainView::createDefaultCollectionDone( KJob *job )
   if ( !( collection.rights() & Collection::AllRights ) )
     kDebug() << "You do not have read/write permission to your inbox folder.";
 
-  connect( SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
-           this, SLOT( initDefaultFolders() ), Qt::UniqueConnection );
+  connect( SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
+           this, SLOT(initDefaultFolders()), Qt::UniqueConnection );
 
   folderChanged(); //call here, as e.g trash folders cannot be detected before the special collections are set up
 }
@@ -1249,8 +1249,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   mMailActionManager->interceptAction( StandardActionManager::CreateResource );
 
-  connect( mMailActionManager->action( StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( mMailActionManager->action( StandardActionManager::CreateResource ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   const QStringList pages = QStringList() << QLatin1String( "MailCommon::CollectionGeneralPage" )
                                           << QLatin1String( "Akonadi::CachePolicyPage" );
@@ -1278,11 +1278,11 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mMailActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Folder To" ) );
   mMailActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Folder To" ) );
 
-  connect(mMailActionManager, SIGNAL( actionStateUpdated() ), this, SLOT( mailActionStateUpdated() ) );
+  connect(mMailActionManager, SIGNAL(actionStateUpdated()), this, SLOT(mailActionStateUpdated()) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 
-  connect( collectionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( folderChanged() ) );
+  connect( collectionSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(folderChanged()) );
 }
 
 void MainView::mailActionStateUpdated()
@@ -1345,8 +1345,8 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->interceptAction( AgentActionManager::CreateAgentInstance );
 
-  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
@@ -1498,9 +1498,9 @@ void MainView::preferHTML(bool useHtml)
 
   // update the viewer specific state according to the folder wide state
   QAction *action = actionCollection()->action( "prefer_html_to_plain_viewer" );
-  disconnect( action, SIGNAL( triggered( bool ) ), this, SLOT( preferHtmlViewer( bool ) ) );
+  disconnect( action, SIGNAL(triggered(bool)), this, SLOT(preferHtmlViewer(bool)) );
   action->setChecked( useHtml );
-  connect( action, SIGNAL( triggered( bool ) ), this, SLOT( preferHtmlViewer( bool ) ) );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(preferHtmlViewer(bool)) );
 }
 
 void MainView::preferHtmlViewer( bool useHtml )
@@ -1657,7 +1657,7 @@ void MainView::restoreTemplate( quint64 id )
   ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(templateFetchResult(KJob*)) );
 }
 
 void MainView::newMessageFromTemplate( int index )
@@ -1665,7 +1665,7 @@ void MainView::newMessageFromTemplate( int index )
   Akonadi::Item item = mEmailTemplateModel->index( index, 0 ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload( true );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(templateFetchResult(KJob*)) );
 }
 
 void MainView::templateFetchResult( KJob* job)
@@ -1808,7 +1808,7 @@ void MainView::selectNextUnreadMessage()
   if ( next.isValid() ) {
     regularSelectionModel()->setCurrentIndex( next, QItemSelectionModel::ClearAndSelect );
     AkonadiFuture::CollectionFetchWatcher *watcher = new AkonadiFuture::CollectionFetchWatcher( next, model, this );
-    connect( watcher, SIGNAL( collectionFetched( const QModelIndex& ) ), SLOT( selectNextUnreadMessageInCurrentFolder() ) );
+    connect( watcher, SIGNAL(collectionFetched(QModelIndex)), SLOT(selectNextUnreadMessageInCurrentFolder()) );
     watcher->start();
   }
 }

@@ -309,12 +309,12 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
     d->keyTreeView = view;
     d->tryToConnectSearchBarToKeyTreeView();
 
-    connect( v->model(), SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-             SIGNAL( certificatesAvailabilityChanged() ) );
-    connect( v->model(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
-             SIGNAL( certificatesAvailabilityChanged() ) );
-    connect( v->model(), SIGNAL( modelReset() ),
-             SIGNAL( certificatesAvailabilityChanged() ) );
+    connect( v->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+             SIGNAL(certificatesAvailabilityChanged()) );
+    connect( v->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
+             SIGNAL(certificatesAvailabilityChanged()) );
+    connect( v->model(), SIGNAL(modelReset()),
+             SIGNAL(certificatesAvailabilityChanged()) );
 
     emit certificatesAvailabilityChanged();
 }

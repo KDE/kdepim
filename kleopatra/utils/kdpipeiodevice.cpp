@@ -659,7 +659,7 @@ void KDPipeIODevice::Private::stopThreads()
         assert( q->bytesToWrite() == 0 );
     }
     if ( Reader * & r = reader ) {
-        disconnect( r, SIGNAL( readyRead() ), this, SLOT( emitReadyRead() ) ); 
+        disconnect( r, SIGNAL(readyRead()), this, SLOT(emitReadyRead()) ); 
         synchronized( r ) {
             // tell thread to cancel:
             r->cancel = true;

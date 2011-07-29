@@ -37,12 +37,12 @@ class AutoCheckTreeWidget::Private
 AutoCheckTreeWidget::AutoCheckTreeWidget( QWidget *parent )
   : QTreeWidget( parent ), d( new Private() )
 {
-  connect( model(), SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),
-           this, SLOT( slotRowsInserted( const QModelIndex &, int, int ) ) );
+  connect( model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(slotRowsInserted(QModelIndex,int,int)) );
   connect( model(),
-           SIGNAL( dataChanged( const QModelIndex &, const QModelIndex & ) ),
+           SIGNAL(dataChanged(QModelIndex,QModelIndex)),
            this,
-           SLOT( slotDataChanged( const QModelIndex &, const QModelIndex & ) ) );
+           SLOT(slotDataChanged(QModelIndex,QModelIndex)) );
 
   setColumnCount( 2 );
 }

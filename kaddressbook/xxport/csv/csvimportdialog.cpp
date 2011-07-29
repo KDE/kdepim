@@ -179,26 +179,26 @@ CSVImportDialog::CSVImportDialog( QWidget *parent )
 
   reloadCodecs();
 
-  connect( mUrlRequester, SIGNAL( returnPressed( const QString& ) ),
-           this, SLOT( setFile( const QString& ) ) );
-  connect( mUrlRequester, SIGNAL( urlSelected( const KUrl& ) ),
-           this, SLOT( setFile( const KUrl& ) ) );
-  connect( mUrlRequester->lineEdit(), SIGNAL( textChanged ( const QString& ) ),
-           this, SLOT( urlChanged( const QString& ) ) );
-  connect( mDelimiterGroup, SIGNAL( buttonClicked( int ) ),
-           this, SLOT( delimiterClicked( int ) ) );
-  connect( mDelimiterEdit, SIGNAL( returnPressed() ),
-           this, SLOT( customDelimiterChanged() ) );
-  connect( mDelimiterEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( customDelimiterChanged( const QString& ) ) );
-  connect( mComboQuote, SIGNAL( activated( const QString& ) ),
-           this, SLOT( textQuoteChanged( const QString& ) ) );
-  connect( mCodecCombo, SIGNAL( activated( const QString& ) ),
-           this, SLOT( codecChanged() ) );
-  connect( mSkipFirstRow, SIGNAL( toggled( bool ) ),
-           this, SLOT( skipFirstRowChanged( bool ) ) );
+  connect( mUrlRequester, SIGNAL(returnPressed(QString)),
+           this, SLOT(setFile(QString)) );
+  connect( mUrlRequester, SIGNAL(urlSelected(KUrl)),
+           this, SLOT(setFile(KUrl)) );
+  connect( mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)),
+           this, SLOT(urlChanged(QString)) );
+  connect( mDelimiterGroup, SIGNAL(buttonClicked(int)),
+           this, SLOT(delimiterClicked(int)) );
+  connect( mDelimiterEdit, SIGNAL(returnPressed()),
+           this, SLOT(customDelimiterChanged()) );
+  connect( mDelimiterEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(customDelimiterChanged(QString)) );
+  connect( mComboQuote, SIGNAL(activated(QString)),
+           this, SLOT(textQuoteChanged(QString)) );
+  connect( mCodecCombo, SIGNAL(activated(QString)),
+           this, SLOT(codecChanged()) );
+  connect( mSkipFirstRow, SIGNAL(toggled(bool)),
+           this, SLOT(skipFirstRowChanged(bool)) );
 
-  connect( mModel, SIGNAL( finishedLoading() ), this, SLOT( modelFinishedLoading() ) );
+  connect( mModel, SIGNAL(finishedLoading()), this, SLOT(modelFinishedLoading()) );
 
   delimiterClicked( 0 );
   textQuoteChanged( "\"" );
@@ -531,7 +531,7 @@ void CSVImportDialog::applyTemplate()
     mModel->load( mDevice );
 
   setProperty( "TemplateFileName", templateFileName );
-  connect( mModel, SIGNAL( finishedLoading() ), this, SLOT( finalizeApplyTemplate() ) );
+  connect( mModel, SIGNAL(finishedLoading()), this, SLOT(finalizeApplyTemplate()) );
 }
 
 void CSVImportDialog::finalizeApplyTemplate()

@@ -38,23 +38,23 @@ IncidenceSearcher::IncidenceSearcher( const QString &uid )
   IncidenceSearchJob *job1 = new IncidenceSearchJob();
   job1->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
                   IncidenceSearchJob::ExactMatch );
-  connect( job1, SIGNAL( result( KJob* ) ), this, SLOT( finished( KJob* ) ) );
+  connect( job1, SIGNAL(result(KJob*)), this, SLOT(finished(KJob*)) );
 
   // StartsWithMatch
   IncidenceSearchJob *job2 = new IncidenceSearchJob();
   job2->setQuery( IncidenceSearchJob::IncidenceUid, uid,
                  IncidenceSearchJob::StartsWithMatch );
-  connect( job2, SIGNAL( result( KJob* ) ), this, SLOT( finished( KJob* ) ) );
+  connect( job2, SIGNAL(result(KJob*)), this, SLOT(finished(KJob*)) );
 
   // ContainsMatch
   IncidenceSearchJob *job3 = new IncidenceSearchJob();
   job3->setQuery( IncidenceSearchJob::IncidenceUid, uid,
                   IncidenceSearchJob::ContainsMatch );
-  connect( job3, SIGNAL( result( KJob* ) ), this, SLOT( finished( KJob* ) ) );
+  connect( job3, SIGNAL(result(KJob*)), this, SLOT(finished(KJob*)) );
 
   // No query
   IncidenceSearchJob *job4 = new IncidenceSearchJob();
-  connect( job4, SIGNAL( result( KJob* ) ), this, SLOT( finished( KJob* ) ) );
+  connect( job4, SIGNAL(result(KJob*)), this, SLOT(finished(KJob*)) );
 
   mJobs << job1 << job2 << job3 << job4;
 }

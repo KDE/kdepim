@@ -63,7 +63,7 @@ void PhoneTypeCombo::Private::selected( int pos )
 
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent ) : QComboBox( parent ), d( new Private( this ) )
 {
-  connect( this, SIGNAL( activated( int ) ), SLOT( selected( int ) ) );
+  connect( this, SIGNAL(activated(int)), SLOT(selected(int)) );
 }
 
 PhoneTypeCombo::~PhoneTypeCombo()

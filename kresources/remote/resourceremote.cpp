@@ -196,11 +196,11 @@ bool ResourceRemote::doLoad( bool syncCache )
     kDebug() << "Download from:" << mDownloadUrl;
 
     mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, KIO::Overwrite | (mUseProgressManager ? KIO::HideProgressInfo : KIO::DefaultFlags) );
-    connect( mDownloadJob, SIGNAL( result( KJob * ) ),
-             SLOT( slotLoadJobResult( KJob * ) ) );
+    connect( mDownloadJob, SIGNAL(result(KJob*)),
+             SLOT(slotLoadJobResult(KJob*)) );
     if ( mUseProgressManager ) {
-      connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
-               SLOT( slotPercent( KJob *, unsigned long ) ) );
+      connect( mDownloadJob, SIGNAL(percent(KJob*,ulong)),
+               SLOT(slotPercent(KJob*,ulong)) );
       mProgress = KPIM::ProgressManager::createProgressItem(
         KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
 
@@ -268,8 +268,8 @@ bool ResourceRemote::doSave( bool syncCache )
   saveToCache();
 
   mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUploadUrl, -1, KIO::Overwrite );
-  connect( mUploadJob, SIGNAL( result( KJob * ) ),
-           SLOT( slotSaveJobResult( KJob * ) ) );
+  connect( mUploadJob, SIGNAL(result(KJob*)),
+           SLOT(slotSaveJobResult(KJob*)) );
 
   return true;
 }

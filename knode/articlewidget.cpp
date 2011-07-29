@@ -115,10 +115,10 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   mViewer->setMetaRefreshEnabled( false );
   mViewer->setOnlyLocalReferences( true );
   mViewer->view()->setFocusPolicy( Qt::WheelFocus );
-  connect( mViewer->browserExtension(), SIGNAL(openUrlRequestDelayed(const KUrl&, const KParts::OpenUrlArguments&, const KParts::BrowserArguments&)),
-           SLOT(slotURLClicked(const KUrl&)) );
-  connect( mViewer, SIGNAL(popupMenu(const QString&, const QPoint&)),
-           SLOT(slotURLPopup(const QString&, const QPoint&)) );
+  connect( mViewer->browserExtension(), SIGNAL(openUrlRequestDelayed(KUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)),
+           SLOT(slotURLClicked(KUrl)) );
+  connect( mViewer, SIGNAL(popupMenu(QString,QPoint)),
+           SLOT(slotURLPopup(QString,QPoint)) );
 
   mTimer = new QTimer( this );
   mTimer->setSingleShot( true );
@@ -156,7 +156,7 @@ void ArticleWidget::initActions()
   mFindAction->setText( i18n("F&ind in Article...") );
   mViewSourceAction = mActionCollection->addAction("article_viewSource");
   mViewSourceAction->setText(i18n("&View Source"));
-  connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotViewSource()));
+  connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotViewSource()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
   mReplyAction = mActionCollection->addAction("article_postReply");
   mReplyAction->setIcon(KIcon("mail-reply-all"));
@@ -178,19 +178,19 @@ void ArticleWidget::initActions()
   connect(mCancelAction, SIGNAL(triggered(bool)), SLOT(slotCancel()));
   mSupersedeAction = mActionCollection->addAction("article_supersede");
   mSupersedeAction->setText(i18n("S&upersede Article"));
-  connect(mSupersedeAction, SIGNAL(triggered(bool) ), SLOT(slotSupersede()));
+  connect(mSupersedeAction, SIGNAL(triggered(bool)), SLOT(slotSupersede()));
   mFixedFontToggle = mActionCollection->add<KToggleAction>("view_useFixedFont");
   mFixedFontToggle->setText(i18n("U&se Fixed Font"));
-  connect(mFixedFontToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFixedFont()));
+  connect(mFixedFontToggle, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()));
   mFixedFontToggle->setShortcut(QKeySequence(Qt::Key_X));
   mFancyToggle = mActionCollection->add<KToggleAction>("view_fancyFormating");
   mFancyToggle->setText(i18n("Fancy Formatting"));
-  connect(mFancyToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFancyFormating()));
+  connect(mFancyToggle, SIGNAL(triggered(bool)), SLOT(slotToggleFancyFormating()));
   mFancyToggle->setShortcut(QKeySequence(Qt::Key_Y));
   mRot13Toggle = mActionCollection->add<KToggleAction>("view_rot13");
   mRot13Toggle->setIcon(KIcon("document-decrypt"));
   mRot13Toggle->setText(i18n("&Unscramble (Rot 13)"));
-  connect(mRot13Toggle, SIGNAL(triggered(bool) ), SLOT(slotToggleRot13()));
+  connect(mRot13Toggle, SIGNAL(triggered(bool)), SLOT(slotToggleRot13()));
   mRot13Toggle->setChecked( false );
 
   QActionGroup *ag = new QActionGroup( this );
@@ -199,17 +199,17 @@ void ArticleWidget::initActions()
   mHeaderStyleMenu->setText(i18n("&Headers"));
   ra = mActionCollection->add<KToggleAction>("view_headers_fancy");
   ra->setText(i18n("&Fancy Headers"));
-  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotFancyHeaders()));
+  connect(ra, SIGNAL(triggered(bool)), SLOT(slotFancyHeaders()));
   ag->addAction ( ra );
   mHeaderStyleMenu->addAction( ra );
   ra = mActionCollection->add<KToggleAction>("view_headers_standard");
   ra->setText(i18n("&Standard Headers"));
-  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotStandardHeaders()));
+  connect(ra, SIGNAL(triggered(bool)), SLOT(slotStandardHeaders()));
   ag->addAction( ra );
   mHeaderStyleMenu->addAction( ra );
   ra = mActionCollection->add<KToggleAction>("view_headers_all");
   ra->setText(i18n("&All Headers"));
-  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotAllHeaders()));
+  connect(ra, SIGNAL(triggered(bool)), SLOT(slotAllHeaders()));
   ag->addAction( ra );
   mHeaderStyleMenu->addAction( ra );
 
@@ -218,17 +218,17 @@ void ArticleWidget::initActions()
   mAttachmentStyleMenu->setText(i18n("&Attachments"));
   ra = mActionCollection->add<KToggleAction>("view_attachments_icon");
   ra->setText(i18n("&As Icon"));
-  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotIconAttachments()));
+  connect(ra, SIGNAL(triggered(bool)), SLOT(slotIconAttachments()));
   ag->addAction( ra );
   mAttachmentStyleMenu->addAction( ra );
   ra = mActionCollection->add<KToggleAction>("view_attachments_inline");
   ra->setText(i18n("&Inline"));
-  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotInlineAttachments()));
+  connect(ra, SIGNAL(triggered(bool)), SLOT(slotInlineAttachments()));
   ag->addAction( ra );
   mAttachmentStyleMenu->addAction( ra );
   ra = mActionCollection->add<KToggleAction>("view_attachments_hide");
   ra->setText(i18n("&Hide"));
-  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotHideAttachments()));
+  connect(ra, SIGNAL(triggered(bool)), SLOT(slotHideAttachments()));
   ag->addAction( ra );
   mAttachmentStyleMenu->addAction( ra );
 
@@ -239,10 +239,10 @@ void ArticleWidget::initActions()
   cs.prepend( i18nc( "@item default character set", "Default") );
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );
-  connect( mCharsetSelect, SIGNAL(triggered(const QString&)),SLOT(slotSetCharset(const QString&)) );
+  connect( mCharsetSelect, SIGNAL(triggered(QString)),SLOT(slotSetCharset(QString)) );
   mCharsetSelectKeyb = mActionCollection->addAction("set_charset_keyboard");
   mCharsetSelectKeyb->setText( i18n( "Set charset" ) );
-  connect(mCharsetSelectKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
+  connect(mCharsetSelectKeyb, SIGNAL(triggered(bool)), SLOT(slotSetCharsetKeyboard()));
   mCharsetSelectKeyb->setShortcut(QKeySequence(Qt::Key_C));
 
   QAction *action = mActionCollection->addAction("open_url");
@@ -252,17 +252,17 @@ void ArticleWidget::initActions()
   action = mActionCollection->addAction("copy_url");
   action->setIcon(KIcon("edit-copy"));
   action->setText(i18n("&Copy Link Address"));
-  connect(action, SIGNAL(triggered(bool)), SLOT( slotCopyURL()));
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotCopyURL()));
   action = mActionCollection->addAction("add_bookmark");
   action->setIcon(KIcon("bookmark-new"));
   action->setText(i18n("&Bookmark This Link"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotAddBookmark()));
   action = mActionCollection->addAction("add_addr_book");
   action->setText(i18n("&Add to Address Book"));
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotAddToAddressBook()));
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotAddToAddressBook()));
   action = mActionCollection->addAction("openin_addr_book");
   action->setText(i18n("&Open in Address Book"));
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotOpenInAddressBook()));
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotOpenInAddressBook()));
   action = mActionCollection->addAction("open_attachment");
   action->setIcon(KIcon("document-open"));
   action->setText(i18n("&Open Attachment"));

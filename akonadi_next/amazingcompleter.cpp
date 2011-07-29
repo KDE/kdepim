@@ -131,8 +131,8 @@ void AmazingCompleter::setModel(QAbstractItemModel* model)
   d->m_selectionProxyModel->setSourceModel(d->m_model);
 
 
-  connect(d->m_model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-          SLOT(sourceRowsInserted(const QModelIndex &, int, int)));
+  connect(d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+          SLOT(sourceRowsInserted(QModelIndex,int,int)));
 
 
 }

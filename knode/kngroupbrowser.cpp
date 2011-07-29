@@ -129,8 +129,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   arrL->addWidget( arrowBtn2, Qt::AlignCenter );
 
   //connect
-  connect(filterEdit, SIGNAL(textChanged(const QString&)),
-          SLOT(slotFilterTextChanged(const QString&)));
+  connect(filterEdit, SIGNAL(textChanged(QString)),
+          SLOT(slotFilterTextChanged(QString)));
   connect(groupView, SIGNAL(expanded(Q3ListViewItem*)),
           SLOT(slotItemExpand(Q3ListViewItem*)));
 

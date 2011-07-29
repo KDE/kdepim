@@ -56,14 +56,14 @@ View::View( KNComposer *composer )
   mGroupsEdit->setView( this );
   mGroupsEdit->enableCompletion( false );
   mEdtList.append( mGroupsEdit );
-  connect( mGroupsEdit, SIGNAL( editingFinished() ),
-           this, SLOT( slotGroupsChanged() ) );
+  connect( mGroupsEdit, SIGNAL(editingFinished()),
+           this, SLOT(slotGroupsChanged()) );
   connect( mGroupsButton, SIGNAL(clicked()),
            parent(), SLOT(slotGroupsBtnClicked()) );
 
   //Followup-to
-  connect( mFollowuptoEdit, SIGNAL( focused() ),
-           this, SLOT( hideFollowuptoHint() ) );
+  connect( mFollowuptoEdit, SIGNAL(focused()),
+           this, SLOT(hideFollowuptoHint()) );
 
   //subject
   mSubjectEdit->setView( this );
@@ -402,13 +402,13 @@ void View::showAttachmentView()
     connect( mAttachmentsList, SIGNAL(itemSelectionChanged()),
              this, SLOT(slotAttachmentSelectionChanged()) );
 
-    connect( mAttachmentsList, SIGNAL( contextMenuRequested( const QPoint & ) ),
-             parent(), SLOT( slotAttachmentPopup( const QPoint & ) ) );
+    connect( mAttachmentsList, SIGNAL(contextMenuRequested(QPoint)),
+             parent(), SLOT(slotAttachmentPopup(QPoint)) );
 
     connect( mAttachmentsList, SIGNAL(deletePressed()),
              this, SLOT(removeCurrentAttachment()) );
-    connect( mAttachmentsList, SIGNAL( attachmentRemoved( KNAttachment::Ptr, bool ) ),
-             parent(), SLOT( slotAttachmentRemoved( KNAttachment::Ptr, bool ) ) );
+    connect( mAttachmentsList, SIGNAL(attachmentRemoved(KNAttachment::Ptr,bool)),
+             parent(), SLOT(slotAttachmentRemoved(KNAttachment::Ptr,bool)) );
 
     connect( mAttachmentsList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
              mAttachmentsList, SLOT(editCurrentAttachment()) );

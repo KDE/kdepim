@@ -48,11 +48,11 @@ BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 
     createUi( parent );
 
-    connect( mWebView, SIGNAL( loadProgress( int ) ),
-            browserProgress, SLOT( setValue( int ) ) );
-    connect( mWebView, SIGNAL( loadFinished(bool) ) , this, SLOT( slotCompleted(bool) ) );
-    connect( mWebView, SIGNAL( statusBarMessage(QString)), this,
-            SLOT( slotSetStatusBarText( const QString& ) ) );
+    connect( mWebView, SIGNAL(loadProgress(int)),
+            browserProgress, SLOT(setValue(int)) );
+    connect( mWebView, SIGNAL(loadFinished(bool)) , this, SLOT(slotCompleted(bool)) );
+    connect( mWebView, SIGNAL(statusBarMessage(QString)), this,
+            SLOT(slotSetStatusBarText(QString)) );
 }
 
 BilboBrowser::~BilboBrowser()
@@ -64,11 +64,11 @@ void BilboBrowser::createUi( QWidget *parent )
 {
     btnGetStyle = new KPushButton( this );
     btnGetStyle->setText( i18n( "Get blog style" ) );
-    connect( btnGetStyle, SIGNAL( clicked( bool ) ), this, SLOT( slotGetBlogStyle() ) );
+    connect( btnGetStyle, SIGNAL(clicked(bool)), this, SLOT(slotGetBlogStyle()) );
 
     viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
-    connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT(
+    connect( viewInBlogStyle, SIGNAL(toggled(bool)), this, SLOT(
             slotViewModeChanged() ) );
 
     QSpacerItem *horizontalSpacer = new QSpacerItem( 40, 20,
@@ -137,9 +137,9 @@ void BilboBrowser::slotGetBlogStyle()
     browserProgress->reset();
 
     StyleGetter *styleGetter = new StyleGetter( __currentBlogId, this );
-    connect( styleGetter, SIGNAL( sigGetStyleProgress( int ) ), browserProgress,
-            SLOT( setValue( int ) ) );
-    connect( styleGetter, SIGNAL( sigStyleFetched() ), this, SLOT( slotSetBlogStyle() ) );
+    connect( styleGetter, SIGNAL(sigGetStyleProgress(int)), browserProgress,
+            SLOT(setValue(int)) );
+    connect( styleGetter, SIGNAL(sigStyleFetched()), this, SLOT(slotSetBlogStyle()) );
 }
 
 void BilboBrowser::slotSetBlogStyle()
@@ -154,7 +154,7 @@ void BilboBrowser::slotSetBlogStyle()
 
 void BilboBrowser::slotCompleted(bool ok)
 {
-    QTimer::singleShot( 1500, browserProgress, SLOT( hide() ) );
+    QTimer::singleShot( 1500, browserProgress, SLOT(hide()) );
     if(!ok){
         browserStatus->showMessage( i18n( "An error occurred in the latest transaction." ), 5000 );
     }

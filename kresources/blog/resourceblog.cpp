@@ -423,8 +423,8 @@ bool ResourceBlog::doSave( bool syncCache )
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
         mPostMap->insert( post->journalId(),post );
-        connect ( mBlog, SIGNAL( createdPost( KBlog::BlogPost * ) ),
-                  this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
+        connect ( mBlog, SIGNAL(createdPost(KBlog::BlogPost*)),
+                  this, SLOT(slotSavedPost(KBlog::BlogPost*)) );
         connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPost * ) ),
                   this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
@@ -443,8 +443,8 @@ bool ResourceBlog::doSave( bool syncCache )
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
         mPostMap->insert( post->journalId(), post );
-        connect ( mBlog, SIGNAL( modifiedPost( KBlog::BlogPost * ) ),
-                  this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
+        connect ( mBlog, SIGNAL(modifiedPost(KBlog::BlogPost*)),
+                  this, SLOT(slotSavedPost(KBlog::BlogPost*)) );
         connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPost * ) ),
                   this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
@@ -463,8 +463,8 @@ bool ResourceBlog::doSave( bool syncCache )
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
         mPostMap->insert( post->journalId(), post );
-        connect ( mBlog, SIGNAL( removedPost( KBlog::BlogPost * ) ),
-                  this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
+        connect ( mBlog, SIGNAL(removedPost(KBlog::BlogPost*)),
+                  this, SLOT(slotSavedPost(KBlog::BlogPost*)) );
         connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPost * ) ),
                   this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
@@ -534,7 +534,7 @@ bool ResourceBlog::listBlogs() {
   KBlog::Blogger1* blogger = qobject_cast<KBlog::Blogger1*>( mBlog );
   if ( blogger ) {
     connect ( blogger,
-              SIGNAL( listedBlogs( const QList<QMap<QString,QString> > & ) ),
+              SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
               this, SLOT( slotBlogInfoRetrieved(
                           const QList<QMap<QString,QString> > & ) ) );
     connect ( blogger, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
@@ -547,7 +547,7 @@ bool ResourceBlog::listBlogs() {
   KBlog::GData* gdata = qobject_cast<KBlog::GData*>( mBlog );
   if ( gdata ) {
     connect ( gdata,
-              SIGNAL( listedBlogs( const QList<QMap<QString,QString> > & ) ),
+              SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
               this, SLOT( slotBlogInfoRetrieved(
                           const QList<QMap<QString,QString> > & ) ) );
     connect ( gdata, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,

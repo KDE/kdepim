@@ -95,9 +95,9 @@ void IncidenceView::doDelayedInit()
   qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
 
   connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
-           SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
-  connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString)),
-           SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString) ) );
+           SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)) );
+  connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
+           SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)) );
 }
 
 IncidenceView::~IncidenceView()
@@ -143,10 +143,10 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
   Q_ASSERT( mEditorDateTime == 0 );
   mEditorDateTime = new IncidenceEditorNG::IncidenceDateTime( editorWidget->mUi );
   mEditorDateTime->setActiveDate( mActiveDate );
-  connect( mEditorDateTime, SIGNAL( startDateFocus(QObject*) ), this, SLOT( showCalendar(QObject*) ) );
-  connect( mEditorDateTime, SIGNAL( endDateFocus(QObject*) ), this, SLOT( showCalendar(QObject*) ) );
-  connect( mEditorDateTime, SIGNAL( startTimeFocus(QObject*) ), this, SLOT( showClock(QObject*) ) );
-  connect( mEditorDateTime, SIGNAL( endTimeFocus(QObject*) ), this, SLOT( showClock(QObject*) ) );
+  connect( mEditorDateTime, SIGNAL(startDateFocus(QObject*)), this, SLOT(showCalendar(QObject*)) );
+  connect( mEditorDateTime, SIGNAL(endDateFocus(QObject*)), this, SLOT(showCalendar(QObject*)) );
+  connect( mEditorDateTime, SIGNAL(startTimeFocus(QObject*)), this, SLOT(showClock(QObject*)) );
+  connect( mEditorDateTime, SIGNAL(endTimeFocus(QObject*)), this, SLOT(showClock(QObject*)) );
   mEditor->combine( mEditorDateTime );
 
   editor = new IncidenceEditorNG::IncidenceCompletionPriority( editorWidget->mUi );
@@ -168,16 +168,16 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
   if ( mIncidenceMore != 0 ) { // IncidenceMore was set *before* general.
     initIncidenceMore();
 
-    connect( editorWidget->mUi->mAcceptInvitationButton, SIGNAL( clicked() ),
-             mIncidenceAttendee, SLOT( acceptForMe() ), Qt::UniqueConnection );
-    connect( editorWidget->mUi->mDeclineInvitationButton, SIGNAL( clicked() ),
-             mIncidenceAttendee, SLOT( declineForMe() ), Qt::UniqueConnection  );
+    connect( editorWidget->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+             mIncidenceAttendee, SLOT(acceptForMe()), Qt::UniqueConnection );
+    connect( editorWidget->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+             mIncidenceAttendee, SLOT(declineForMe()), Qt::UniqueConnection  );
   }
 
-  connect( editorWidget->mUi->mAcceptInvitationButton, SIGNAL( clicked() ),
-           editorWidget->mUi->mInvitationBar, SLOT( hide() ) );
-  connect( editorWidget->mUi->mDeclineInvitationButton, SIGNAL( clicked() ),
-           editorWidget->mUi->mInvitationBar, SLOT( hide() ) );
+  connect( editorWidget->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+           editorWidget->mUi->mInvitationBar, SLOT(hide()) );
+  connect( editorWidget->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+           editorWidget->mUi->mInvitationBar, SLOT(hide()) );
 }
 
 void IncidenceView::showCalendar( QObject *obj )
@@ -260,10 +260,10 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
     initIncidenceMore();
 
   if ( mIncidenceGeneral ) {
-    connect( mIncidenceGeneral->mUi->mAcceptInvitationButton, SIGNAL( clicked() ),
-             mIncidenceAttendee, SLOT( acceptForMe() ), Qt::UniqueConnection );
-    connect( mIncidenceGeneral->mUi->mDeclineInvitationButton, SIGNAL( clicked() ),
-             mIncidenceAttendee, SLOT( declineForMe() ), Qt::UniqueConnection  );
+    connect( mIncidenceGeneral->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+             mIncidenceAttendee, SLOT(acceptForMe()), Qt::UniqueConnection );
+    connect( mIncidenceGeneral->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+             mIncidenceAttendee, SLOT(declineForMe()), Qt::UniqueConnection  );
   }
 }
 

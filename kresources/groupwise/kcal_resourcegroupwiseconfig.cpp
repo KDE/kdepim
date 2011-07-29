@@ -75,7 +75,7 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
   mainLayout->addWidget( mSaveConfig, 5, 2, 1, 2 );
 
   settingsButton->hide();
-  // connect( settingsButton, SIGNAL( clicked() ), SLOT( slotViewUserSettings() ) );
+  // connect( settingsButton, SIGNAL(clicked()), SLOT(slotViewUserSettings()) );
 
 }
 

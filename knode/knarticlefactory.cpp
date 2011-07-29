@@ -1044,7 +1044,7 @@ KNSendErrorDialog::KNSendErrorDialog()
   mError = new QLabel( QString(), page );
   mError->setWordWrap( true );
 
-  connect( mErrorList, SIGNAL( currentRowChanged( int ) ), SLOT( slotHighlighted( int ) ) );
+  connect( mErrorList, SIGNAL(currentRowChanged(int)), SLOT(slotHighlighted(int)) );
 
   KNHelper::restoreWindowSize("sendDlg", this, QSize(320,250));
 }

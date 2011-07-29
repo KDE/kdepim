@@ -139,10 +139,10 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   engine()->addImageProvider( QLatin1String( "action_images" ), provider );
 
   d->mSearchManager = new SearchManager( this );
-  connect( d->mSearchManager, SIGNAL( searchStarted( const Akonadi::Collection& ) ),
-           d, SLOT( searchStarted( const Akonadi::Collection& ) ) );
-  connect( d->mSearchManager, SIGNAL( searchStopped() ),
-           d, SLOT( searchStopped() ) );
+  connect( d->mSearchManager, SIGNAL(searchStarted(Akonadi::Collection)),
+           d, SLOT(searchStarted(Akonadi::Collection)) );
+  connect( d->mSearchManager, SIGNAL(searchStopped()),
+           d, SLOT(searchStopped()) );
 }
 
 void KDeclarativeMainView::doDelayedInitInternal()
@@ -190,7 +190,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory( this );
   d->mBnf->createBreadcrumbContext( mainModel, this );
 
-  connect( d->mBnf, SIGNAL( collectionSelectionChanged() ), SIGNAL( collectionSelectionChanged() ) );
+  connect( d->mBnf, SIGNAL(collectionSelectionChanged()), SIGNAL(collectionSelectionChanged()) );
 
   if ( debugTiming ) {
     kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
@@ -219,7 +219,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   // The global screen manager
   d->mGuiStateManager = createGuiStateManager();
   context->setContextProperty( "guiStateManager", QVariant::fromValue( static_cast<QObject*>( d->mGuiStateManager ) ) );
-  connect( d->mGuiStateManager, SIGNAL( guiStateChanged( int, int ) ), d, SLOT( guiStateChanged( int, int ) ) );
+  connect( d->mGuiStateManager, SIGNAL(guiStateChanged(int,int)), d, SLOT(guiStateChanged(int,int)) );
 
   // A list of available favorites
   d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KGlobal::config(), this );
@@ -239,33 +239,33 @@ void KDeclarativeMainView::doDelayedInitInternal()
 
   setupAgentActionManager( d->mAgentInstanceSelectionModel );
 
-  KAction *action = KStandardAction::quit( qApp, SLOT( quit() ), this );
+  KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
 
   action = new KAction( i18n( "Synchronize all" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(synchronizeAllItems()) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
 
   action = new KAction( i18n( "Report Bug Or Request Feature" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( reportBug() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(reportBug()) );
   actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 
   action = new KAction( i18n( "Manual" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( openManual() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(openManual()) );
   actionCollection()->addAction( QLatin1String( "open_manual" ), action );
 
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
-  connect( qApp, SIGNAL( aboutToQuit() ), d, SLOT( saveState() ) );
+  connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
-  connect( d->mBnf->selectedItemModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SIGNAL( isLoadingSelectedChanged() ) );
-  connect( d->mBnf->selectedItemModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SIGNAL( isLoadingSelectedChanged() ) );
-  connect( d->mBnf->selectedItemModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SIGNAL( isLoadingSelectedChanged() ) );
+  connect( d->mBnf->selectedItemModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SIGNAL(isLoadingSelectedChanged()) );
+  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()) );
+  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()) );
 
-  connect( d->mBnf->qmlBreadcrumbsModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
-  connect( d->mBnf->qmlBreadcrumbsModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
-  connect( d->mBnf->qmlSelectedItemModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
-  connect( d->mBnf->qmlSelectedItemModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
+  connect( d->mBnf->qmlBreadcrumbsModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(breadcrumbsSelectionChanged()) );
+  connect( d->mBnf->qmlBreadcrumbsModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(breadcrumbsSelectionChanged()) );
+  connect( d->mBnf->qmlSelectedItemModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(breadcrumbsSelectionChanged()) );
+  connect( d->mBnf->qmlSelectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(breadcrumbsSelectionChanged()) );
 
   if ( debugTiming ) {
     kWarning() << "Restoring state" << time.elapsed() << &time;
@@ -277,7 +277,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
     kWarning() << "restore state done" << time.elapsed() << &time;
   }
 
-  connect( d->mBnf->selectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SIGNAL( numSelectedAccountsChanged() ) );
+  connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()) );
 
   if ( debugTiming ) {
     time.start();
@@ -289,7 +289,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mAgentStatusMonitor->setMimeTypeFilter( d->mChangeRecorder->mimeTypesMonitored() );
   context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( d->mAgentStatusMonitor ) );
 
-  connect( itemSelectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SLOT( itemSelectionChanged() ) );
+  connect( itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()) );
 }
 
 void KDeclarativeMainView::itemSelectionChanged()
@@ -389,7 +389,7 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext( QDeclarativeCo
   builder->setNavigationModel( d->mBnf->selectionModel() );
   d->mStateMachine = builder->getMachine( this );
   Q_ASSERT( d->mStateMachine );
-  connect( d->mStateMachine, SIGNAL( stateChanged() ), SIGNAL( stateChanged() ) );
+  connect( d->mStateMachine, SIGNAL(stateChanged()), SIGNAL(stateChanged()) );
   d->mStateMachine->start();
   delete builder;
 
@@ -951,10 +951,10 @@ void KDeclarativeMainView::setFilterLineEdit( KLineEdit *lineEdit )
   d->mFilterLineEdit = lineEdit;
   d->mFilterLineEdit->setFixedHeight( 0 );
   d->mFilterLineEdit->setClearButtonShown( true );
-  connect( d->mFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( filterLineEditChanged( const QString& ) ) );
-  connect( d->mFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
-           d->mItemFilterModel, SLOT( setFilterString( const QString& ) ) );
+  connect( d->mFilterLineEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(filterLineEditChanged(QString)) );
+  connect( d->mFilterLineEdit, SIGNAL(textChanged(QString)),
+           d->mItemFilterModel, SLOT(setFilterString(QString)) );
 }
 
 void KDeclarativeMainView::setBulkActionFilterLineEdit( KLineEdit *lineEdit )
@@ -964,10 +964,10 @@ void KDeclarativeMainView::setBulkActionFilterLineEdit( KLineEdit *lineEdit )
   d->mBulkActionFilterLineEdit = lineEdit;
   d->mBulkActionFilterLineEdit->setFixedHeight( 0 );
   d->mBulkActionFilterLineEdit->setClearButtonShown( true );
-  connect( d->mBulkActionFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( bulkActionFilterLineEditChanged( const QString& ) ) );
-  connect( d->mBulkActionFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
-           d->mItemFilterModel, SLOT( setFilterString( const QString& ) ) );
+  connect( d->mBulkActionFilterLineEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(bulkActionFilterLineEditChanged(QString)) );
+  connect( d->mBulkActionFilterLineEdit, SIGNAL(textChanged(QString)),
+           d->mItemFilterModel, SLOT(setFilterString(QString)) );
 }
 
 void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )

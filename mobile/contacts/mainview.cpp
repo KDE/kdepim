@@ -89,38 +89,38 @@ void MainView::doDelayedInit()
   itemFetchScope().fetchFullPayload();
 
   KAction *action = new KAction( i18n( "Import Contacts" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_vcards" ), action );
 
   action = new KAction( i18n( "Export Contacts From This Account" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_vcards" ), action );
 
   action = new KAction( i18n( "Export Displayed Contacts" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_vcards" ), action );
 
   action = new KAction( i18n( "Export Contact" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportSingleItem() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportSingleItem()) );
   actionCollection()->addAction( QLatin1String( "export_single_contact_vcard" ), action );
 
   action = new KAction( i18n( "Send mail to" ), this );
   action->setEnabled( false );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendMailTo() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(sendMailTo()) );
   actionCollection()->addAction( QLatin1String( "send_mail_to" ), action );
 
   action = new KAction( i18n( "Search in LDAP directory" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( searchLdap() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(searchLdap()) );
   actionCollection()->addAction( QLatin1String( "search_ldap" ), action );
 
   action = new KAction( i18n( "Configure Categories" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
-  connect( itemSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( itemSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
-  connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
-           this, SLOT( bulkActionSelectionChanged() ) );
+  connect( itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(itemSelectionChanged(QItemSelection,QItemSelection)) );
+  connect( itemActionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(bulkActionSelectionChanged()) );
 }
 
 void MainView::itemSelectionChanged( const QItemSelection &selected, const QItemSelection& )
@@ -189,7 +189,7 @@ void MainView::sendMailTo()
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.kmailmobile.composer", QDBusConnection::sessionBus(),
                                                             QDBusServiceWatcher::WatchForRegistration, this );
     QEventLoop loop;
-    connect( watcher, SIGNAL( serviceRegistered( const QString& ) ), &loop, SLOT( quit() ) );
+    connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
     QProcess::startDetached( "kmail-mobile" );
     loop.exec();
 
@@ -211,7 +211,7 @@ void MainView::finishEdit( QObject *editor )
 void MainView::newContact()
 {
   ContactEditorView *editor = new ContactEditorView;
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  connect( editor, SIGNAL(requestLaunchAccountWizard()), SLOT(launchAccountWizard()) );
 
   if ( regularSelectionModel()->hasSelection() ) {
     const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
@@ -226,7 +226,7 @@ void MainView::newContact()
 void MainView::newContactGroup()
 {
   ContactGroupEditorView *editor = new ContactGroupEditorView;
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  connect( editor, SIGNAL(requestLaunchAccountWizard()), SLOT(launchAccountWizard()) );
 
   if ( regularSelectionModel()->hasSelection() ) {
     const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
@@ -261,8 +261,8 @@ void MainView::editContact( const Akonadi::Item &item )
   editor->loadContact( item );
 
   mOpenItemEditors.insert(  editor, item.id() );
-  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  connect( editor, SIGNAL(destroyed(QObject*)), SLOT(finishEdit(QObject*)) );
+  connect( editor, SIGNAL(requestLaunchAccountWizard()), SLOT(launchAccountWizard()) );
 
   editor->show();
 }
@@ -276,8 +276,8 @@ void MainView::editContactGroup( const Akonadi::Item &item )
   editor->loadContactGroup( item );
 
   mOpenItemEditors.insert(  editor, item.id() );
-  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  connect( editor, SIGNAL(destroyed(QObject*)), SLOT(finishEdit(QObject*)) );
+  connect( editor, SIGNAL(requestLaunchAccountWizard()), SLOT(launchAccountWizard()) );
 
   editor->show();
 }
@@ -295,15 +295,15 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->interceptAction( Akonadi::StandardContactActionManager::EditItem );
   mActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
 
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
-           this, SLOT( newContact() ) );
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
-           this, SLOT( newContactGroup() ) );
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SIGNAL( triggered( bool ) ),
-           this, SLOT( editItem() ) );
-  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
-  connect( mActionManager, SIGNAL( actionStateUpdated() ), SLOT( updateActionTexts() ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL(triggered(bool)),
+           this, SLOT(newContact()) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL(triggered(bool)),
+           this, SLOT(newContactGroup()) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SIGNAL(triggered(bool)),
+           this, SLOT(editItem()) );
+  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
+  connect( mActionManager, SIGNAL(actionStateUpdated()), SLOT(updateActionTexts()) );
 
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
@@ -361,8 +361,8 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
-  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
@@ -401,7 +401,7 @@ void MainView::searchLdap()
 {
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new KLDAP::LdapSearchDialog( this );
-    connect( mLdapSearchDialog, SIGNAL( contactsAdded() ), SLOT( importFromLdap() ) );
+    connect( mLdapSearchDialog, SIGNAL(contactsAdded()), SLOT(importFromLdap()) );
   }
   mLdapSearchDialog->show();
 }

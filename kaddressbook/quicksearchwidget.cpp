@@ -44,8 +44,8 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
 
   mTimer = new QTimer( this );
 
-  connect( mEdit, SIGNAL( textChanged( const QString& ) ), SLOT( resetTimer() ) );
-  connect( mTimer, SIGNAL( timeout() ), SLOT( delayedTextChanged() ) );
+  connect( mEdit, SIGNAL(textChanged(QString)), SLOT(resetTimer()) );
+  connect( mTimer, SIGNAL(timeout()), SLOT(delayedTextChanged()) );
 }
 
 

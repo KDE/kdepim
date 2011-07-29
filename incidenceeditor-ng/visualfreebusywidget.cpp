@@ -185,7 +185,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
   mScaleCombo->addItem( i18nc( "@item:inlistbox range is computed automatically", "Automatic" ),
                         QVariant::fromValue<int>( KDGantt::DateTimeGrid::ScaleAuto ) );
   mScaleCombo->setCurrentIndex( 0 ); // start with "hour"
-  connect( mScaleCombo, SIGNAL( activated( int ) ), SLOT( slotScaleChanged( int ) ) );
+  connect( mScaleCombo, SIGNAL(activated(int)), SLOT(slotScaleChanged(int)) );
   controlLayout->addWidget( mScaleCombo );
 
   QPushButton *button = new QPushButton( i18nc( "@action:button", "Center on Start" ), this );
@@ -196,7 +196,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
     i18nc( "@info:whatsthis",
            "Click this button to center the Gantt chart on the start "
            "time and day of this event." ) );
-  connect( button, SIGNAL( clicked() ), SLOT( slotCenterOnStart() ) );
+  connect( button, SIGNAL(clicked()), SLOT(slotCenterOnStart()) );
   controlLayout->addWidget( button );
 
   controlLayout->addStretch( 1 );
@@ -211,7 +211,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
            "Click this button to move the event to a date "
            "and time when all the attendees have time "
            "available in their Free/Busy lists." ) );
-  connect( button, SIGNAL( clicked() ), SLOT( slotPickDate() ) );
+  connect( button, SIGNAL(clicked()), SLOT(slotPickDate()) );
   controlLayout->addWidget( button );
 
   controlLayout->addStretch( 1 );
@@ -225,10 +225,10 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
            "Pressing this button will cause the Free/Busy data for all "
            "attendees to be reloaded from their corresponding servers." ) );
   controlLayout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SIGNAL( manualReload() ) );
+  connect( button, SIGNAL(clicked()), SIGNAL(manualReload()) );
 
   QSplitter *splitter = new QSplitter( Qt::Horizontal, this );
-  connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( splitterMoved() ) );
+  connect( splitter, SIGNAL(splitterMoved(int,int)), SLOT(splitterMoved()) );
   mLeftView = new QTreeView( this );
   mLeftView->setModel( model );
   mLeftView->setHeader( new GanttHeaderView );
@@ -278,12 +278,12 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
   QDateTime horizonEnd = QDateTime::currentDateTime().addDays( 15 );
   mGanttGrid->setStartDateTime( horizonStart );
 
-//connect( mGanttGraphicsView, SIGNAL(timeIntervalSelected(const KDateTime &,const KDateTime &)),
-//         mGanttGraphicsView, SLOT(zoomToSelection(const KDateTime &,const  KDateTime &)) );
-//connect( mGanttGraphicsView, SIGNAL(doubleClicked( QModelIndex)),
+//connect( mGanttGraphicsView, SIGNAL(timeIntervalSelected(KDateTime,KDateTime)),
+//         mGanttGraphicsView, SLOT(zoomToSelection(KDateTime,KDateTime)) );
+//connect( mGanttGraphicsView, SIGNAL(doubleClicked(QModelIndex)),
 //         SLOT(editFreeBusyUrl(QModelIndex)) );
-//connect(mGanttGraphicsView,SIGNAL(intervalColorRectangleMoved(const KDateTime&,const KDateTime&)),
-//        this, SLOT(slotIntervalColorRectangleMoved(const KDateTime &,const KDateTime &)) );
+//connect(mGanttGraphicsView,SIGNAL(intervalColorRectangleMoved(KDateTime,KDateTime)),
+//        this, SLOT(slotIntervalColorRectangleMoved(KDateTime,KDateTime)) );
 
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );

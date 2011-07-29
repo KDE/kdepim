@@ -138,8 +138,8 @@ GpgME::Error Kleo::HierarchicalKeyListJob::startAJob() {
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
 		  // but I don't like the dependency on gpg-error :/
 
-  connect( mJob, SIGNAL(nextKey(const GpgME::Key&)), SLOT(slotNextKey(const GpgME::Key&)) );
-  connect( mJob, SIGNAL(result(const GpgME::KeyListResult&)), SLOT(slotResult(const GpgME::KeyListResult&)) );
+  connect( mJob, SIGNAL(nextKey(GpgME::Key)), SLOT(slotNextKey(GpgME::Key)) );
+  connect( mJob, SIGNAL(result(GpgME::KeyListResult)), SLOT(slotResult(GpgME::KeyListResult)) );
 
   QStringList patterns;
   for ( std::set<QString>::const_iterator it = mNextSet.begin() ; it != mNextSet.end() ; ++it )

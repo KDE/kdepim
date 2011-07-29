@@ -74,8 +74,8 @@ void LocalResourceCreator::createInstance()
   Akonadi::AgentType notesType = Akonadi::AgentManager::self()->type( akonadi_notes_instance_name );
 
   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( notesType );
-  connect( job, SIGNAL( result( KJob * ) ),
-      this, SLOT( instanceCreated(KJob*)) );
+  connect( job, SIGNAL(result(KJob*)),
+      this, SLOT(instanceCreated(KJob*)) );
 
   job->start();
 }
@@ -125,7 +125,7 @@ void LocalResourceCreator::syncDone(KJob* job)
   kWarning() << "Instance synchronized";
 
   Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
-  connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT( rootFetchFinished(KJob*)) );
+  connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(rootFetchFinished(KJob*)) );
 }
 
 void LocalResourceCreator::rootFetchFinished(KJob* job)
@@ -158,7 +158,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
     {
       Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::FirstLevel, this );
       collectionFetchJob->setProperty("FetchedCollection", col.id());
-      connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT( topLevelFetchFinished(KJob*)) );
+      connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(topLevelFetchFinished(KJob*)) );
       return;
     }
   }
@@ -202,7 +202,7 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
   collection.addAttribute(eda);
 
   Akonadi::CollectionCreateJob *createJob = new Akonadi::CollectionCreateJob( collection, this );
-  connect( createJob, SIGNAL( result( KJob* ) ), this, SLOT( createFinished( KJob* ) ) );
+  connect( createJob, SIGNAL(result(KJob*)), this, SLOT(createFinished(KJob*)) );
 
 }
 
@@ -245,7 +245,7 @@ void LocalResourceCreator::createFinished(KJob* job)
   item.addAttribute(eda);
 
   Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob( item,  collectionCreateJob->collection(), this);
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemCreateFinished( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
 }
 
 void LocalResourceCreator::itemCreateFinished(KJob* job)

@@ -82,15 +82,15 @@ void MainView::doDelayedInit()
   actionCollection()->addAction( QLatin1String( "add_new_note" ), action );
 
   action = new KAction( i18n( "Import Notes" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_notes" ), action );
 
   action = new KAction( i18n( "Export Notes From This Account" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_notes" ), action );
 
   action = new KAction( i18n( "Export Displayed Notes" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_notes" ), action );
 }
 
@@ -326,8 +326,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->createAllActions();
   manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
 
-  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   ActionHelper::adaptStandardActionTexts( manager );
 
@@ -357,8 +357,8 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
-  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );

@@ -110,16 +110,16 @@ class EditorLocation::Private
       mMapper->addMapping( mUi.editLabelLineEdit, 7 );
       mMapper->toFirst();
 
-      q->connect( mUi.addressSelectionCombo, SIGNAL( activated( int ) ),
-                  mMapper, SLOT( setCurrentIndex( int ) ) );
-      q->connect( mUi.addAddressButton, SIGNAL( clicked() ),
-                  SLOT( addAddress() ) );
-      q->connect( mUi.deleteAddressButton, SIGNAL( clicked() ),
-                  SLOT( removeAddress() ) );
-      q->connect( mModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-                  SLOT( addressCountChanged() ) );
-      q->connect( mModel, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-                  SLOT( addressCountChanged() ) );
+      q->connect( mUi.addressSelectionCombo, SIGNAL(activated(int)),
+                  mMapper, SLOT(setCurrentIndex(int)) );
+      q->connect( mUi.addAddressButton, SIGNAL(clicked()),
+                  SLOT(addAddress()) );
+      q->connect( mUi.deleteAddressButton, SIGNAL(clicked()),
+                  SLOT(removeAddress()) );
+      q->connect( mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                  SLOT(addressCountChanged()) );
+      q->connect( mModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+                  SLOT(addressCountChanged()) );
 
       addressCountChanged();
     }

@@ -32,7 +32,7 @@ MainWindow::MainWindow( QWidget* parent )
     : QMainWindow( parent )
 {
     QToolBar *toolBar = new QToolBar( QLatin1String( "Main toolbar" ), this );
-    toolBar->addAction( "Configure ...", this, SLOT( configure() ) );
+    toolBar->addAction( "Configure ...", this, SLOT(configure()) );
     addToolBar( toolBar );
 
     setCentralWidget( new MainWidget( this ) );

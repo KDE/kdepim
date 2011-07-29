@@ -210,71 +210,71 @@ void MainView::doDelayedInit()
   QDBusConnection::sessionBus().registerService( "org.kde.korganizer" ); //register also as the real korganizer, so kmail can communicate with it
 
   KAction *action = new KAction( i18n( "Import Events" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_events" ), action );
 
   action = new KAction( i18n( "Export Events From This Account" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_events" ), action );
 
   action = new KAction( i18n( "Export Displayed Events" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_events" ), action );
 
   action = new KAction( i18n( "Archive Old Events" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( archiveOldEntries() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(archiveOldEntries()) );
   actionCollection()->addAction( QLatin1String( "archive_old_entries" ), action );
 
   action = new KAction( i18n( "Publish Item Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(publishItemInformation()) );
   actionCollection()->addAction( QLatin1String( "publish_item_information" ), action );
 
   action = new KAction( i18n( "Send Invitations To Attendees" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendInvitation() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(sendInvitation()) );
   actionCollection()->addAction( QLatin1String( "send_invitations_to_attendees" ), action );
 
   action = new KAction( i18n( "Send Status Update" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendStatusUpdate() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(sendStatusUpdate()) );
   actionCollection()->addAction( QLatin1String( "send_status_update" ), action );
 
   action = new KAction( i18n( "Send Cancellation To Attendees" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendCancellation() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(sendCancellation()) );
   actionCollection()->addAction( QLatin1String( "send_cancellation_to_attendees" ), action );
 
   action = new KAction( i18n( "Request Update" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestUpdate() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(requestUpdate()) );
   actionCollection()->addAction( QLatin1String( "request_update" ), action );
 
   action = new KAction( i18n( "Request Change" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestChange() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(requestChange()) );
   actionCollection()->addAction( QLatin1String( "request_change" ), action );
 
   action = new KAction( i18n( "Send As ICalendar" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(sendAsICalendar()) );
   actionCollection()->addAction( QLatin1String( "send_as_icalendar" ), action );
 
   action = new KAction( i18n( "Mail Free Busy Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( mailFreeBusy() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(mailFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "mail_freebusy" ), action );
 
   action = new KAction( i18n( "Upload Free Busy Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(uploadFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
 
   action = new KAction( i18n( "Save All" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(saveAllAttachments()) );
   actionCollection()->addAction( QLatin1String( "save_all_attachments" ), action );
 
   action = new KAction( i18n( "Set Color Of Calendar" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( changeCalendarColor()) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(changeCalendarColor()) );
   actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
 
   action = new KAction( i18n( "Configure Categories" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
-  connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
-           this, SLOT( qmlLoadingStateChanged( QDeclarativeView::Status ) ) );
+  connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)),
+           this, SLOT(qmlLoadingStateChanged(QDeclarativeView::Status)) );
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
@@ -289,10 +289,10 @@ void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
   if ( status != Ready ) // We wait until the QML is completely loaded
     return;
 
-  connect( m_calendarIface, SIGNAL( showDateSignal( QVariant ) ),
-           rootObject(), SLOT( showDate( QVariant ) ) );
-  connect( m_calendarIface, SIGNAL( openIncidenceEditorSignal( QString, QString, QStringList, QStringList, QStringList, bool, KCalCore::Incidence::IncidenceType ) ),
-           this, SLOT( openIncidenceEditor( QString, QString, QStringList, QStringList, QStringList, bool, KCalCore::Incidence::IncidenceType ) ) );
+  connect( m_calendarIface, SIGNAL(showDateSignal(QVariant)),
+           rootObject(), SLOT(showDate(QVariant)) );
+  connect( m_calendarIface, SIGNAL(openIncidenceEditorSignal(QString,QString,QStringList,QStringList,QStringList,bool,KCalCore::Incidence::IncidenceType)),
+           this, SLOT(openIncidenceEditor(QString,QString,QStringList,QStringList,QStringList,bool,KCalCore::Incidence::IncidenceType)) );
 
   // setup the shared settings object
   EventViews::AgendaViewItem *agendaViewItem = rootObject()->findChild<EventViews::AgendaViewItem*>();
@@ -464,7 +464,7 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->load( item, date );
 
   m_openItemEditors.insert( editor, item.id() );
-  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
+  connect( editor, SIGNAL(destroyed(QObject*)), SLOT(finishEdit(QObject*)) );
 
   editor->show();
 }
@@ -498,17 +498,17 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
   mActionManager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
 
-  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
-  connect( mActionManager->action( Akonadi::StandardActionManager::DeleteItems ), SIGNAL( triggered( bool ) ),
-           this, SLOT( deleteIncidence() ) );
-  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::CreateEvent ), SIGNAL( triggered( bool ) ),
-           this, SLOT( newEvent() ) );
-  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo ), SIGNAL( triggered( bool ) ),
-           this, SLOT( newTodo() ) );
-  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ), SIGNAL( triggered( bool ) ),
-           this, SLOT( editIncidence() ) );
-  connect( mActionManager, SIGNAL( actionStateUpdated() ), SLOT( updateActionTexts() ) );
+  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
+  connect( mActionManager->action( Akonadi::StandardActionManager::DeleteItems ), SIGNAL(triggered(bool)),
+           this, SLOT(deleteIncidence()) );
+  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::CreateEvent ), SIGNAL(triggered(bool)),
+           this, SLOT(newEvent()) );
+  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo ), SIGNAL(triggered(bool)),
+           this, SLOT(newTodo()) );
+  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ), SIGNAL(triggered(bool)),
+           this, SLOT(editIncidence()) );
+  connect( mActionManager, SIGNAL(actionStateUpdated()), SLOT(updateActionTexts()) );
 
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
@@ -571,8 +571,8 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
-  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
@@ -640,7 +640,7 @@ void MainView::sendAsICalendar()
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForSendICalDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchForSendICalDone(KJob*)) );
 }
 
 void MainView::fetchForSendICalDone( KJob *job )
@@ -669,7 +669,7 @@ void MainView::publishItemInformation()
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForPublishItemDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchForPublishItemDone(KJob*)) );
 }
 
 void MainView::fetchForPublishItemDone( KJob *job )
@@ -724,7 +724,7 @@ void MainView::scheduleiTIPMethod( KCalCore::iTIPMethod method )
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
   job->setProperty( "iTIPmethod", QVariant::fromValue<KCalCore::iTIPMethod>( method ) );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForiTIPMethodDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchForiTIPMethodDone(KJob*)) );
 }
 
 void MainView::fetchForiTIPMethodDone( KJob *job )
@@ -754,7 +754,7 @@ void MainView::saveAllAttachments()
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForSaveAllAttachmentsDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)) );
 }
 
 void MainView::fetchForSaveAllAttachmentsDone( KJob *job )

@@ -78,14 +78,14 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
 
   mWidgets->mCategories->setFocus();
 
-  connect( mWidgets->mCategories, SIGNAL(currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)),
-           SLOT(editItem(QTreeWidgetItem *)) );
+  connect( mWidgets->mCategories, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+           SLOT(editItem(QTreeWidgetItem*)) );
   connect( mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
            SLOT(slotSelectionChanged()) );
-  connect( mWidgets->mCategories, SIGNAL(itemCollapsed(QTreeWidgetItem *)),
-           SLOT(expandIfToplevel(QTreeWidgetItem *)) );
-  connect( mWidgets->mEdit, SIGNAL(textChanged(const QString &)),
-           this, SLOT(slotTextChanged(const QString &)) );
+  connect( mWidgets->mCategories, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
+           SLOT(expandIfToplevel(QTreeWidgetItem*)) );
+  connect( mWidgets->mEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotTextChanged(QString)) );
   connect( mWidgets->mButtonAdd, SIGNAL(clicked()),
            this, SLOT(add()) );
   connect( mWidgets->mButtonAddSubcategory, SIGNAL(clicked()),

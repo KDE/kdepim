@@ -143,8 +143,8 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
     if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
       ItemFetchJob *job = new ItemFetchJob( item );
       job->setFetchScope( scope );
-      connect( job, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
-               SLOT( notificationItemsReceived( Akonadi::Item::List ) ) );
+      connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+               SLOT(notificationItemsReceived(Akonadi::Item::List)) );
     }
   }
 }
@@ -164,8 +164,8 @@ void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< 
     if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
       ItemFetchJob *job = new ItemFetchJob( item );
       job->setFetchScope( scope );
-      connect( job, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
-               SLOT( notificationItemsReceived( Akonadi::Item::List ) ) );
+      connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+               SLOT(notificationItemsReceived(Akonadi::Item::List)) );
     }
   }
 }

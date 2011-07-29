@@ -430,10 +430,10 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
 
   mIt = mContacts.begin();
 
-  connect( this, SIGNAL( yesClicked() ), this, SLOT( slotYes() ) );
-  connect( this, SIGNAL( noClicked() ), this, SLOT( slotNo() ) );
-  connect( this, SIGNAL( applyClicked() ), this, SLOT( slotApply() ) );
-  connect( this, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
+  connect( this, SIGNAL(yesClicked()), this, SLOT(slotYes()) );
+  connect( this, SIGNAL(noClicked()), this, SLOT(slotNo()) );
+  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
+  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
 
   updateView();
 }

@@ -71,7 +71,7 @@ void WebView::startEditing()
     this -> setFocus();
     QMouseEvent mouseEventPress ( QEvent::MouseButtonPress, QPoint ( 10,10 ), Qt::LeftButton, Qt::NoButton, Qt::NoModifier );
     QApplication::sendEvent ( this, &mouseEventPress );
-    QTimer::singleShot ( 50, this, SLOT ( sendMouseReleaseEvent() ) );
+    QTimer::singleShot ( 50, this, SLOT (sendMouseReleaseEvent()) );
 }
 
 void WebView::sendMouseReleaseEvent()
@@ -213,10 +213,10 @@ TextEditor::TextEditor ( QWidget *parent )
     else
         webView -> setContent ( file.readAll());//, "application/xhtml+xml" );
 
-    connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SLOT ( adjustActions() ) );
-    connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SIGNAL ( selectionChanged() ) );
-    connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SLOT ( somethingEdittedSlot() ) );
-    connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SIGNAL ( textChanged() ) );
+    connect ( webView->page(), SIGNAL (selectionChanged()), this, SLOT (adjustActions()) );
+    connect ( webView->page(), SIGNAL (selectionChanged()), this, SIGNAL (selectionChanged()) );
+    connect ( webView->page(), SIGNAL (contentsChanged()), this, SLOT (somethingEdittedSlot()) );
+    connect ( webView->page(), SIGNAL (contentsChanged()), this, SIGNAL (textChanged()) );
 
     createLayout();
     createActions();
@@ -273,8 +273,8 @@ void TextEditor::createActions()
     actCheckSpelling = new KAction( KIcon( "tools-check-spelling" ),
                                     i18n( "Enable Spell Checking"), this );
     actCheckSpelling->setCheckable( true );
-    connect( actCheckSpelling, SIGNAL( triggered( bool ) ), this,
-             SLOT( slotToggleSpellChecking(bool) ) );
+    connect( actCheckSpelling, SIGNAL(triggered(bool)), this,
+             SLOT(slotToggleSpellChecking(bool)) );
 //     barVisual->addAction( actCheckSpelling ); FIXME: Missing functionality
 
     barVisual->addSeparator();
@@ -313,7 +313,7 @@ void TextEditor::createActions()
     actCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
                            "Code" ), this );
 //     actCode->setCheckable( true );
-    connect( actCode, SIGNAL( triggered( bool ) ), this, SLOT( slotToggleCode(bool) ) );
+    connect( actCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
     barVisual->addAction( actCode ); 
 
     barVisual->addSeparator();
@@ -332,21 +332,21 @@ void TextEditor::createActions()
     actFormatType->setItems( formatTypes );
 //     actFormatType->setMaxComboViewCount( 3 );
     actFormatType->setCurrentAction( i18n( "Paragraph" ) );
-    connect( actFormatType, SIGNAL( triggered( const QString& ) ),
+    connect( actFormatType, SIGNAL(triggered(QString)),
              this, SLOT(slotChangeFormatType(QString)) );
     barVisual->addAction( actFormatType );
 
     actFontIncrease = new KAction( KIcon( "format-font-size-more" ), i18n( "Increase font size" ), this );
-    connect( actFontIncrease, SIGNAL( triggered( bool ) ), this, SLOT( slotIncreaseFontSize()) );
+    connect( actFontIncrease, SIGNAL(triggered(bool)), this, SLOT(slotIncreaseFontSize()) );
     barVisual->addAction( actFontIncrease );
 
     actFontDecrease = new KAction( KIcon( "format-font-size-less" ), i18n( "Decrease font size" ), this );
-    connect( actFontDecrease, SIGNAL( triggered( bool ) ), this, SLOT( slotDecreaseFontSize()) );
+    connect( actFontDecrease, SIGNAL(triggered(bool)), this, SLOT(slotDecreaseFontSize()) );
     barVisual->addAction( actFontDecrease );
 
     actColorSelect = new KAction( KIcon( "format-text-color" ),
                                   i18nc( "verb, to select text color", "Select Color" ), this );
-    connect( actColorSelect, SIGNAL( triggered( bool ) ), this, SLOT(formatTextColor()) );
+    connect( actColorSelect, SIGNAL(triggered(bool)), this, SLOT(formatTextColor()) );
     barVisual->addAction( actColorSelect );
 
     actRemoveFormatting = new KAction( KIcon( "draw-eraser" ), i18n( "Remove formatting" ), this );
@@ -355,7 +355,7 @@ void TextEditor::createActions()
 
     actBlockQuote = new KAction( KIcon( "format-text-blockquote" ), i18n( "Blockquote" ), this );
     actBlockQuote->setCheckable( true );
-    connect( actBlockQuote, SIGNAL( triggered( bool ) ), this, SLOT(slotToggleBlockQuote(bool)) );
+    connect( actBlockQuote, SIGNAL(triggered(bool)), this, SLOT(slotToggleBlockQuote(bool)) );
     barVisual->addAction( actBlockQuote );
 
     barVisual->addSeparator();
@@ -363,18 +363,18 @@ void TextEditor::createActions()
     actAddLink = new KAction( KIcon( "insert-link" ), i18nc(
                              "verb, to add a new link or edit an existing one",
                              "Add Hyperlink" ), this );
-    connect( actAddLink, SIGNAL( triggered( bool ) ), this, SLOT(slotAddLink()));
+    connect( actAddLink, SIGNAL(triggered(bool)), this, SLOT(slotAddLink()));
     barVisual->addAction( actAddLink );
 
     actRemoveLink = new KAction( KIcon( "remove-link" ), i18nc(
                                 "verb, to remove an existing link",
                                 "Remove Hyperlink" ), this );
-    connect( actRemoveLink, SIGNAL( triggered( bool ) ), this, SLOT(slotRemoveLink()));
+    connect( actRemoveLink, SIGNAL(triggered(bool)), this, SLOT(slotRemoveLink()));
     barVisual->addAction( actRemoveLink );
 
     actAddImage = new KAction( KIcon( "insert-image" ), i18nc( "verb, to insert an image",
                                "Add Image" ), this );
-    connect( actAddImage, SIGNAL( triggered( bool ) ), this, SLOT(slotAddImage()));
+    connect( actAddImage, SIGNAL(triggered(bool)), this, SLOT(slotAddImage()));
     barVisual->addAction( actAddImage );
 
     barVisual->addSeparator();
@@ -407,7 +407,7 @@ void TextEditor::createActions()
                                  "Sets text direction as right to left",
                                  "Right to Left" ), this );
     actRightToLeft->setCheckable( true );
-    connect( actRightToLeft, SIGNAL( toggled(bool) ), this, SLOT(slotChangeLayoutDirection(bool)) );
+    connect( actRightToLeft, SIGNAL(toggled(bool)), this, SLOT(slotChangeLayoutDirection(bool)) );
     barVisual->addAction( actRightToLeft );
 
     barVisual->addSeparator();
@@ -421,7 +421,7 @@ void TextEditor::createActions()
     barVisual->addAction( actUnorderedList );
 
     actSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
-    connect( actSplitPost, SIGNAL( triggered( bool ) ), this, SLOT(slotAddPostSplitter()) );
+    connect( actSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
     barVisual->addAction( actSplitPost );
 }
 

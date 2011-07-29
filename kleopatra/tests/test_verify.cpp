@@ -83,8 +83,8 @@ class VerifyTest : public QObject
       // Start a key list job
       Kleo::KeyListJob *job = mBackend->keyListJob();
       mParallelKeyListJobs.append( job );
-      connect( job, SIGNAL( done() ),
-               this, SLOT( slotParallelKeyListJobFinished() ) );
+      connect( job, SIGNAL(done()),
+               this, SLOT(slotParallelKeyListJobFinished()) );
       QVERIFY( !job->start( QStringList() ) );
     }
 
@@ -117,15 +117,15 @@ class VerifyTest : public QObject
         job = klj;
       }
       mRunningJobs.append( job );
-      connect( job, SIGNAL( done() ), this, SLOT( someJobDone() ) );
+      connect( job, SIGNAL(done()), this, SLOT(someJobDone()) );
 
       // Quit after 2500 jobs, that should be enough
       mJobsStarted++;
       if ( mJobsStarted >= 2500 ) {
-        QTimer::singleShot( 1000, &mEventLoop, SLOT( quit() ) );
+        QTimer::singleShot( 1000, &mEventLoop, SLOT(quit()) );
       }
       else {
-        QTimer::singleShot( 0, this, SLOT( startAnotherJob() ) );
+        QTimer::singleShot( 0, this, SLOT(startAnotherJob()) );
       }
     }
 
@@ -174,8 +174,8 @@ class VerifyTest : public QObject
         Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
         mParallelVerifyJobs.append( job );
         QVERIFY( !job->start( mSignature, mSignedData ) );
-        connect( job, SIGNAL( result( GpgME::VerificationResult ) ),
-                 this, SLOT( slotParallelVerifyJobFinished( GpgME::VerificationResult ) ) );
+        connect( job, SIGNAL(result(GpgME::VerificationResult)),
+                 this, SLOT(slotParallelVerifyJobFinished(GpgME::VerificationResult)) );
       }
 
       mEventLoop.exec();
@@ -184,7 +184,7 @@ class VerifyTest : public QObject
     void testMixedParallelJobs()
     {
       mJobsStarted = 0;
-      QTimer::singleShot( 0, this, SLOT( startAnotherJob() ) );
+      QTimer::singleShot( 0, this, SLOT(startAnotherJob()) );
       mEventLoop.exec();
     }
 };

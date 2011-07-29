@@ -131,10 +131,10 @@ void UploadMediaDialog::slotButtonClicked(int button)
             media->setBlogId( mCurrentBlog->id() );
             media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
             Backend *b = new Backend( mCurrentBlog->id(), this);
-            connect( b, SIGNAL( sigMediaUploaded(BilboMedia*) ),
+            connect( b, SIGNAL(sigMediaUploaded(BilboMedia*)),
                     this, SLOT(slotMediaObjectUploaded(BilboMedia*)) );
-            connect( b, SIGNAL( sigError(QString)), this, SLOT(slotError(QString)));
-            connect( b, SIGNAL( sigMediaError(QString,BilboMedia*) ), this, SLOT(slotError(QString)) );
+            connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
+            connect( b, SIGNAL(sigMediaError(QString,BilboMedia*)), this, SLOT(slotError(QString)) );
             b->uploadMedia( media );
             this->hide();
             emit sigBusy(true);
@@ -151,7 +151,7 @@ void UploadMediaDialog::slotButtonClicked(int button)
                     dest.addPath( ui.kcfg_Name->text().isEmpty() ? src.fileName() :
                                                                   ui.kcfg_Name->text() );
                     KIO::FileCopyJob *job = KIO::file_copy(src, dest);
-                    connect(job, SIGNAL(result(KJob *)), this, SLOT(slotMediaObjectUploaded(KJob *)));
+                    connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMediaObjectUploaded(KJob*)));
                     job->start();
                     this->hide();
                     return;

@@ -52,23 +52,23 @@ KNode::NntpAccountListWidget::NntpAccountListWidget( const KComponentData &inst,
   setupUi( this );
 
   // account listbox
-  connect( mAccountList, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
-  connect( mAccountList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
+  connect( mAccountList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(slotEditBtnClicked()) );
+  connect( mAccountList, SIGNAL(itemSelectionChanged()), SLOT(slotSelectionChanged()) );
 
   // buttons
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( slotAddBtnClicked() ) );
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( slotEditBtnClicked() ) );
-  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( slotDelBtnClicked() ) );
-  connect( mSubscribeButton, SIGNAL( clicked() ), SLOT( slotSubBtnClicked() ) );
+  connect( mAddButton, SIGNAL(clicked()), SLOT(slotAddBtnClicked()) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(slotEditBtnClicked()) );
+  connect( mDeleteButton, SIGNAL(clicked()), SLOT(slotDelBtnClicked()) );
+  connect( mSubscribeButton, SIGNAL(clicked()), SLOT(slotSubBtnClicked()) );
 
   load();
 
   // the settings dialog is non-modal, so we have to react to changes
   // made outside of the dialog
   KNAccountManager *am = knGlobals.accountManager();
-  connect( am, SIGNAL( accountAdded( KNNntpAccount::Ptr ) ), SLOT( slotAddItem( KNNntpAccount::Ptr ) ) );
-  connect( am, SIGNAL( accountRemoved( KNNntpAccount::Ptr ) ), SLOT( slotRemoveItem( KNNntpAccount::Ptr ) ) );
-  connect( am, SIGNAL( accountModified( KNNntpAccount::Ptr ) ), SLOT( slotUpdateItem( KNNntpAccount::Ptr ) ) );
+  connect( am, SIGNAL(accountAdded(KNNntpAccount::Ptr)), SLOT(slotAddItem(KNNntpAccount::Ptr)) );
+  connect( am, SIGNAL(accountRemoved(KNNntpAccount::Ptr)), SLOT(slotRemoveItem(KNNntpAccount::Ptr)) );
+  connect( am, SIGNAL(accountModified(KNNntpAccount::Ptr)), SLOT(slotUpdateItem(KNNntpAccount::Ptr)) );
 
   slotSelectionChanged();     // disable Delete & Edit initially
 }
@@ -210,10 +210,10 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
 #endif
   mFetchDesc->setChecked( a->fetchDescriptions() );
 
-  connect( mServer, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotServerTextEdited() ) );
-  connect( mServer, SIGNAL( editingFinished() ),
-           this, SLOT( slotEditingFinished() ) );
+  connect( mServer, SIGNAL(textChanged(QString)),
+           this, SLOT(slotServerTextEdited()) );
+  connect( mServer, SIGNAL(editingFinished()),
+           this, SLOT(slotEditingFinished()) );
 
   mLogin->setChecked( a->needsLogon() );
   mUser->setText( a->user() );
@@ -236,12 +236,12 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
       mEncTLS->setChecked( true );
       break;
   }
-  connect( mEncNone, SIGNAL( toggled( bool ) ),
-           this, SLOT( encryptionChanged( bool ) ) );
-  connect( mEncSSL, SIGNAL( toggled( bool ) ),
-           this, SLOT( encryptionChanged( bool ) ) );
-  connect( mEncTLS, SIGNAL( toggled( bool ) ),
-           this, SLOT( encryptionChanged( bool ) ) );
+  connect( mEncNone, SIGNAL(toggled(bool)),
+           this, SLOT(encryptionChanged(bool)) );
+  connect( mEncSSL, SIGNAL(toggled(bool)),
+           this, SLOT(encryptionChanged(bool)) );
+  connect( mEncTLS, SIGNAL(toggled(bool)),
+           this, SLOT(encryptionChanged(bool)) );
 
 
   mIntervalChecking->setChecked( a->intervalChecking() );
@@ -399,8 +399,8 @@ KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *
   //color-list
   mColorList = new QListWidget( this );
   topL->addWidget( mColorList, 1, 0, 3, 2 );
-  connect( mColorList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotColItemActivated( QListWidgetItem* ) ) );
-  connect( mColorList, SIGNAL( itemSelectionChanged() ), SLOT( slotColSelectionChanged() ) );
+  connect( mColorList, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotColItemActivated(QListWidgetItem*)) );
+  connect( mColorList, SIGNAL(itemSelectionChanged()), SLOT(slotColSelectionChanged()) );
 
   c_olorCB = new QCheckBox(i18n("&Use custom colors"),this);
   c_olorCB->setObjectName( "kcfg_useCustomColors" );
@@ -414,8 +414,8 @@ KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *
   //font-list
   mFontList = new QListWidget( this );
   topL->addWidget( mFontList, 5, 0, 3, 2 );
-  connect( mFontList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotFontItemActivated( QListWidgetItem* ) ) );
-  connect( mFontList, SIGNAL( itemSelectionChanged() ), SLOT( slotFontSelectionChanged() ) );
+  connect( mFontList, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotFontItemActivated(QListWidgetItem*)) );
+  connect( mFontList, SIGNAL(itemSelectionChanged()), SLOT(slotFontSelectionChanged()) );
 
   f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
   f_ontCB->setObjectName( "kcfg_useCustomFonts" );
@@ -666,8 +666,8 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, cons
 
   //listbox
   mHeaderList = new QListWidget( this );
-  connect( mHeaderList, SIGNAL( itemActivated(QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
-  connect( mHeaderList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
+  connect( mHeaderList, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotEditBtnClicked()) );
+  connect( mHeaderList, SIGNAL(itemSelectionChanged()), SLOT(slotSelectionChanged()) );
   topL->addWidget( mHeaderList, 0, 0, 7, 1);
 
   // buttons
@@ -918,7 +918,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   setFixedHeight(sizeHint().height());
   KNHelper::restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
 
-  connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
+  connect(n_ameE, SIGNAL(textChanged(QString)), SLOT(slotNameChanged(QString)));
 
   setHelp("anc-knode-headers");
   slotNameChanged( n_ameE->text() );
@@ -1014,8 +1014,8 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   label->setBuddy(mFilterList);
   topL->addWidget( label, 0, 0 );
 
-  connect( mFilterList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedFilter() ) );
-  connect( mFilterList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
+  connect( mFilterList, SIGNAL(itemSelectionChanged()), SLOT(slotSelectionChangedFilter()) );
+  connect( mFilterList, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotEditBtnClicked()) );
   topL->addWidget( mFilterList, 1, 0, 5, 1);
 
   a_ddBtn = new QPushButton( i18nc("@action:button Add a new filter", "&Add..." ), this );
@@ -1041,7 +1041,7 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   label->setBuddy(mMenuList);
   topL->addWidget( label, 6, 0 );
 
-  connect( mMenuList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedMenu() ) );
+  connect( mMenuList, SIGNAL(itemSelectionChanged()), SLOT(slotSelectionChangedMenu()) );
   topL->addWidget( mMenuList, 7, 0, 5, 1);
 
   u_pBtn = new QPushButton( i18nc( "@action:button move something up in a list", "&Up"), this );
@@ -1281,12 +1281,12 @@ KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( const KComponentData &i
   mEncoding->addItem( i18n("Allow 8-bit") );
   mEncoding->addItem( i18n("7-bit (Quoted-Printable)") );
 
-  connect( mHeaderList, SIGNAL( itemActivated(QListWidgetItem*) ), SLOT( slotEditBtnClicked() ) );
-  connect( mHeaderList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
+  connect( mHeaderList, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotEditBtnClicked()) );
+  connect( mHeaderList, SIGNAL(itemSelectionChanged()), SLOT(slotSelectionChanged()) );
 
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( slotAddBtnClicked() ) );
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( slotEditBtnClicked() ) );
-  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( slotDelBtnClicked() ) );
+  connect( mAddButton, SIGNAL(clicked()), SLOT(slotAddBtnClicked()) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(slotEditBtnClicked()) );
+  connect( mDeleteButton, SIGNAL(clicked()), SLOT(slotDelBtnClicked()) );
 
   addConfig( knGlobals.settings(), this );
   load();
