@@ -3381,7 +3381,7 @@ QString ObjectTreeParser::convertedTextContent() const
   }
 }
 
-QString ObjectTreeParser::convertedHtmlContent()
+QString ObjectTreeParser::convertedHtmlContent() const
 {
   if ( mHtmlContent.isEmpty() ) {
     QString convertedHtml = Qt::escape( mPlainTextContent );

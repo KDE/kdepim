@@ -353,7 +353,7 @@ public:
   /** Returns a HTML version of the plain text mail. If the HTML content is already available, it
    * returns the HTML content as it is.
    */
-  QString convertedHtmlContent();
+  QString convertedHtmlContent() const;
 
   /**
    * The original charset of MIME part the plain text was extracted from.

@@ -183,7 +183,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * and @p htmlBody.
      * Attachments of the original message are also added back to the new message.
      */
-    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody );
+    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody ) const;
 
     /**
      * Determines whether the signature should be stripped when getting the text of the original
@@ -278,12 +278,12 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Does the necessary conversions like escaping charecters, changing "\n" to breakline tag before
      * appending text to htmlBody
      */
-    QString plainToHtml( const QString &body );//any better name for the function?
+    QString plainToHtml( const QString &body ) const;
 
     /**
      * Make a HTML content valid by adding missing html/head/body tag
      */
-    QString makeValidHtml( QString &body ) const;
+    QString makeValidHtml( QString &body );
 
 };
 
