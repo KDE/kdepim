@@ -111,22 +111,22 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   d->mNewTabButton->adjustSize();
   d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
   setCornerWidget( d->mNewTabButton, Qt::TopLeftCorner );
-  connect( d->mNewTabButton, SIGNAL( clicked() ),
-           SLOT( onNewTabClicked() ) );
+  connect( d->mNewTabButton, SIGNAL(clicked()),
+           SLOT(onNewTabClicked()) );
 
   d->mCloseTabButton = new QToolButton( this );
   d->mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   d->mCloseTabButton->adjustSize();
   d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
   setCornerWidget( d->mCloseTabButton, Qt::TopRightCorner );
-  connect( d->mCloseTabButton, SIGNAL( clicked() ),
-           SLOT( onCloseTabClicked() ) );
+  connect( d->mCloseTabButton, SIGNAL(clicked()),
+           SLOT(onCloseTabClicked()) );
 
   createNewTab();
   setMovable( true );
 
-  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-           this, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
   connect( this, SIGNAL(currentChanged(int)),
            this, SLOT(onCurrentTabChanged()) );
 
@@ -137,8 +137,8 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   connect( Core::Settings::self(), SIGNAL(configChanged()),
            this, SLOT(updateTabControls()) );
 
-  connect( this, SIGNAL(mouseMiddleClick( QWidget * )),
-           this, SLOT(closeTab( QWidget * )) );
+  connect( this, SIGNAL(mouseMiddleClick(QWidget*)),
+           this, SLOT(closeTab(QWidget*)) );
   tabBar()->installEventFilter( this );
 }
 
@@ -169,7 +169,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     KAction *action = new KAction( i18n("Create new tab"), this );
     action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
-    connect( action, SIGNAL( triggered( bool ) ), SLOT( onNewTabClicked() ) );
+    connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
   }
 }
@@ -399,14 +399,14 @@ void Pane::Private::onCurrentTabChanged()
   Widget *w = static_cast<Widget*>( q->currentWidget() );
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
-  disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-              q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
+  disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+              q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
 
   mSelectionModel->select( mapSelectionFromSource( s->selection() ),
                            QItemSelectionModel::ClearAndSelect );
 
-  connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-           q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
+  connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
 }
 
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
@@ -489,13 +489,13 @@ void Pane::createNewTab()
            this, SIGNAL(messageActivated(Akonadi::Item)) );
   connect( w, SIGNAL(selectionChanged()),
            this, SIGNAL(selectionChanged()) );
-  connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)),
-           this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)) );
+  connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item,Akonadi::MessageStatus,Akonadi::MessageStatus)),
+           this, SIGNAL(messageStatusChangeRequest(Akonadi::Item,Akonadi::MessageStatus,Akonadi::MessageStatus)) );
 
   connect( w, SIGNAL(statusMessage(QString)),
            this, SIGNAL(statusMessage(QString)) );
 
-  connect( w, SIGNAL( fullSearchRequest() ), this, SIGNAL( fullSearchRequest() ) );
+  connect( w, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
   d->updateTabControls();
   setCurrentWidget( w );
 }

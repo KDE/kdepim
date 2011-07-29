@@ -119,8 +119,8 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   connect( d->mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),
            SLOT(statementChanged(Soprano::Statement)) );
 
-  connect( d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-           this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
+  connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)) );
 
   connect( d->mModel, SIGNAL(layoutAboutToBeChanged()),
            this, SIGNAL(layoutAboutToBeChanged()) );
@@ -132,16 +132,16 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
            this, SIGNAL(modelReset()) );
 
   //Here we assume we'll always get QModelIndex() in the parameters
-  connect( d->mModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
-           this, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)) );
-  connect( d->mModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-           this, SIGNAL(rowsInserted(QModelIndex, int, int)) );
-  connect( d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-           this, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)) );
-  connect( d->mModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-           this, SIGNAL(rowsRemoved(QModelIndex, int, int)) );
+  connect( d->mModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+           this, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)) );
+  connect( d->mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SIGNAL(rowsInserted(QModelIndex,int,int)) );
+  connect( d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+           this, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+  connect( d->mModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           this, SIGNAL(rowsRemoved(QModelIndex,int,int)) );
 
-  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(onSelectionChanged()) );
 
   d->loadSettings();

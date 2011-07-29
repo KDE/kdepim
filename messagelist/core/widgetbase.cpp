@@ -124,9 +124,9 @@ Widget::Widget( QWidget *pParent )
 {
   Manager::registerWidget( this );
   connect( Manager::instance(), SIGNAL(aggregationsChanged()),
-           this, SLOT(aggregationsChanged() ) );
+           this, SLOT(aggregationsChanged()) );
   connect( Manager::instance(), SIGNAL(themesChanged()),
-           this, SLOT(themesChanged() ) );
+           this, SLOT(themesChanged()) );
 
   setAutoFillBackground( true );
   setObjectName( QLatin1String( "messagelistwidget" ) );
@@ -141,11 +141,11 @@ Widget::Widget( QWidget *pParent )
   d->mSearchEdit->setClearButtonShown( true );
   d->mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
-  connect( d->mSearchEdit, SIGNAL( textEdited( const QString & ) ),
-           SLOT( searchEditTextEdited( const QString & ) ) );
+  connect( d->mSearchEdit, SIGNAL(textEdited(QString)),
+           SLOT(searchEditTextEdited(QString)) );
 
-  connect( d->mSearchEdit, SIGNAL( clearButtonClicked() ),
-           SLOT( searchEditClearButtonClicked() ) );
+  connect( d->mSearchEdit, SIGNAL(clearButtonClicked()),
+           SLOT(searchEditClearButtonClicked()) );
 
   g->addWidget( d->mSearchEdit, 0, 0 );
 
@@ -162,8 +162,8 @@ Widget::Widget( QWidget *pParent )
   d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
   g->addWidget( d->mOpenFullSearchButton, 0, 2 );
 
-  connect( d->mOpenFullSearchButton, SIGNAL( clicked() ),
-           this, SIGNAL( fullSearchRequest() ) );
+  connect( d->mOpenFullSearchButton, SIGNAL(clicked()),
+           this, SIGNAL(fullSearchRequest()) );
 
 
   d->mView = new View( this );
@@ -171,8 +171,8 @@ Widget::Widget( QWidget *pParent )
   d->mView->setObjectName( QLatin1String( "messagealistview" ) );
   g->addWidget( d->mView, 1, 0, 1, 6 );
 
-  connect( d->mView->header(), SIGNAL( sectionClicked( int ) ),
-           SLOT( slotViewHeaderSectionClicked( int ) ) );
+  connect( d->mView->header(), SIGNAL(sectionClicked(int)),
+           SLOT(slotViewHeaderSectionClicked(int)) );
 
   g->setRowStretch( 1, 1 );
   g->setColumnStretch( 0, 1 );
@@ -280,10 +280,10 @@ void Widget::populateStatusFilterCombo()
   d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
 
-  disconnect( d->mStatusFilterCombo, SIGNAL( currentIndexChanged( int ) ),
-             this, SLOT( statusSelected( int ) ) );
-  connect( d->mStatusFilterCombo, SIGNAL( currentIndexChanged( int ) ),
-           this, SLOT( statusSelected( int ) ) );
+  disconnect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
+             this, SLOT(statusSelected(int)) );
+  connect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(statusSelected(int)) );
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -476,15 +476,15 @@ void Widget::themeMenuAboutToShow()
     grp->addAction( act );
     act->setChecked( d->mLastThemeId == ( *it )->id() );
     act->setData( QVariant( ( *it )->id() ) );
-    connect( act, SIGNAL( triggered( bool ) ),
-             SLOT( themeSelected( bool ) ) );
+    connect( act, SIGNAL(triggered(bool)),
+             SLOT(themeSelected(bool)) );
   }
 
   menu->addSeparator();
 
   act = menu->addAction( i18n( "Configure..." ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( configureThemes() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(configureThemes()) );
 }
 
 void Widget::setPrivateSortOrderForStorage()
@@ -580,16 +580,16 @@ void Widget::aggregationMenuAboutToShow()
     grp->addAction( act );
     act->setChecked( d->mLastAggregationId == ( *it )->id() );
     act->setData( QVariant( ( *it )->id() ) );
-    connect( act, SIGNAL( triggered( bool ) ),
-             SLOT( aggregationSelected( bool ) ) );
+    connect( act, SIGNAL(triggered(bool)),
+             SLOT(aggregationSelected(bool)) );
   }
 
   menu->addSeparator();
 
   act = menu->addAction( i18n( "Configure..." ) );
   act->setData( QVariant( QString() ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( aggregationSelected( bool ) ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(aggregationSelected(bool)) );
 }
 
 void Widget::aggregationSelected( bool )
@@ -662,8 +662,8 @@ void Widget::sortOrderMenuAboutToShow()
     act->setData( QVariant( ( *it ).second ) );
   }
 
-  connect( grp, SIGNAL( triggered( QAction * ) ),
-           SLOT( messageSortingSelected( QAction * ) ) );
+  connect( grp, SIGNAL(triggered(QAction*)),
+           SLOT(messageSortingSelected(QAction*)) );
 
   options = SortOrder::enumerateMessageSortDirectionOptions( d->mSortOrder.messageSorting() );
 
@@ -682,8 +682,8 @@ void Widget::sortOrderMenuAboutToShow()
       act->setData( QVariant( ( *it ).second ) );
     }
 
-    connect( grp, SIGNAL( triggered( QAction * ) ),
-             SLOT( messageSortDirectionSelected( QAction * ) ) );
+    connect( grp, SIGNAL(triggered(QAction*)),
+             SLOT(messageSortDirectionSelected(QAction*)) );
   }
 
   options = SortOrder::enumerateGroupSortingOptions( d->mAggregation->grouping() );
@@ -703,8 +703,8 @@ void Widget::sortOrderMenuAboutToShow()
       act->setData( QVariant( ( *it ).second ) );
     }
 
-    connect( grp, SIGNAL( triggered( QAction * ) ),
-             SLOT( groupSortingSelected( QAction * ) ) );
+    connect( grp, SIGNAL(triggered(QAction*)),
+             SLOT(groupSortingSelected(QAction*)) );
   }
 
   options = SortOrder::enumerateGroupSortDirectionOptions( d->mAggregation->grouping(),
@@ -725,16 +725,16 @@ void Widget::sortOrderMenuAboutToShow()
       act->setData( QVariant( ( *it ).second ) );
     }
 
-    connect( grp, SIGNAL( triggered( QAction * ) ),
-             SLOT( groupSortDirectionSelected( QAction * ) ) );
+    connect( grp, SIGNAL(triggered(QAction*)),
+             SLOT(groupSortDirectionSelected(QAction*)) );
   }
 
   menu->addSeparator();
   act = menu->addAction( i18n( "Folder Always Uses This Sort Order" ) );
   act->setCheckable( true );
   act->setChecked( d->mStorageUsesPrivateSortOrder );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( setPrivateSortOrderForStorage() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(setPrivateSortOrderForStorage()) );
 }
 
 void Widget::Private::switchMessageSorting( SortOrder::MessageSorting messageSorting,
@@ -1059,8 +1059,8 @@ void Widget::searchEditTextEdited( const QString & )
   if ( !d->mSearchTimer )
   {
     d->mSearchTimer = new QTimer( this );
-    connect( d->mSearchTimer, SIGNAL( timeout() ),
-             SLOT( searchTimerFired() ) );
+    connect( d->mSearchTimer, SIGNAL(timeout()),
+             SLOT(searchTimerFired()) );
   } else {
     d->mSearchTimer->stop(); // eventually
   }

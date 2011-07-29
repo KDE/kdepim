@@ -106,8 +106,8 @@ ThemeColumnPropertiesDialog::ThemeColumnPropertiesDialog( QWidget * parent, Them
   g->setColumnStretch( 1, 1 );
   g->setRowStretch( 10, 1 );
 
-  connect( this, SIGNAL( okClicked() ),
-           SLOT( slotOkButtonClicked() ) );
+  connect( this, SIGNAL(okClicked()),
+           SLOT(slotOkButtonClicked()) );
 
   // Display the current settings
   mNameEdit->setText( mColumn->label() );
@@ -262,8 +262,8 @@ ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
   viewport()->setAcceptDrops( true );
 
   header()->setContextMenuPolicy( Qt::CustomContextMenu ); // make sure it's true
-  connect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
-           SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
+  connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
+           SLOT(slotHeaderContextMenuRequested(QPoint)) );
 
   mGroupHeaderSampleItem = new QTreeWidgetItem( this );
   mGroupHeaderSampleItem->setText( 0, QString() );
@@ -858,8 +858,8 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act = menu.addAction( i18nc( "@action:inmenu soften the text color", "Soften" ) );
         act->setCheckable( true );
         act->setChecked( mSelectedThemeContentItem->softenByBlending() );
-        connect( act, SIGNAL( triggered( bool ) ),
-                 SLOT( slotSoftenActionTriggered( bool ) ) );
+        connect( act, SIGNAL(triggered(bool)),
+                 SLOT(slotSoftenActionTriggered(bool)) );
 
         KMenu * childmenu = new KMenu( &menu );
 
@@ -880,8 +880,8 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
         grp->setExclusive( false );
 
-        connect( childmenu, SIGNAL( triggered( QAction * ) ),
-                 SLOT( slotFontMenuTriggered( QAction * ) ) );
+        connect( childmenu, SIGNAL(triggered(QAction*)),
+                 SLOT(slotFontMenuTriggered(QAction*)) );
 
         menu.addMenu( childmenu )->setText( i18n( "Font" ) );
       }
@@ -908,8 +908,8 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
         grp->setExclusive( false );
 
-        connect( childmenu, SIGNAL( triggered( QAction * ) ),
-                 SLOT( slotForegroundColorMenuTriggered( QAction * ) ) );
+        connect( childmenu, SIGNAL(triggered(QAction*)),
+                 SLOT(slotForegroundColorMenuTriggered(QAction*)) );
 
         menu.addMenu( childmenu )->setText( i18n( "Foreground Color" ) );
       }
@@ -938,8 +938,8 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setChecked( mSelectedThemeContentItem->softenByBlendingWhenDisabled() );
         grp->addAction( act );
 
-        connect( childmenu, SIGNAL( triggered( QAction * ) ),
-                 SLOT( slotDisabledFlagsMenuTriggered( QAction * ) ) );
+        connect( childmenu, SIGNAL(triggered(QAction*)),
+                 SLOT(slotDisabledFlagsMenuTriggered(QAction*)) );
 
         menu.addMenu( childmenu )->setText( i18n( "When Disabled" ) );
       }
@@ -978,8 +978,8 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
         grp->setExclusive( false );
 
-        connect( childmenu, SIGNAL( triggered( QAction * ) ),
-                 SLOT( slotGroupHeaderBackgroundModeMenuTriggered( QAction * ) ) );
+        connect( childmenu, SIGNAL(triggered(QAction*)),
+                 SLOT(slotGroupHeaderBackgroundModeMenuTriggered(QAction*)) );
 
         menu.addMenu( childmenu )->setText( i18n( "Background Color" ) );
 
@@ -999,8 +999,8 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
           grp->addAction( act );
         }
 
-        connect( childmenu, SIGNAL( triggered( QAction * ) ),
-                 SLOT( slotGroupHeaderBackgroundStyleMenuTriggered( QAction * ) ) );
+        connect( childmenu, SIGNAL(triggered(QAction*)),
+                 SLOT(slotGroupHeaderBackgroundStyleMenuTriggered(QAction*)) );
 
         act = menu.addMenu( childmenu );
         act->setText( i18n( "Background Style" ) );
@@ -1194,16 +1194,16 @@ void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
   QAction * act;
 
   act = menu.addAction( i18n( "Column Properties" ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotColumnProperties() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotColumnProperties()) );
 
   act = menu.addAction( i18n( "Add Column..." ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotAddColumn() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotAddColumn()) );
 
   act = menu.addAction( i18n( "Delete Column" ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotDeleteColumn() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotDeleteColumn()) );
   act->setEnabled( col > 0 );
 
   menu.exec( header()->mapToGlobal( pos ) );
@@ -1475,8 +1475,8 @@ ThemeEditor::ThemeEditor( QWidget *parent )
   mIconSizeSpinBox->setSuffix( ki18ncp( "suffix in a spinbox", " pixel", " pixels" ) );
 
   QObject::connect(
-      mIconSizeSpinBox, SIGNAL( valueChanged( int ) ),
-      this, SLOT( slotIconSizeSpinBoxValueChanged( int ) )
+      mIconSizeSpinBox, SIGNAL(valueChanged(int)),
+      this, SLOT(slotIconSizeSpinBoxValueChanged(int))
     );
 
   tabg->addWidget( mIconSizeSpinBox, 1, 1 );
