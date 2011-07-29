@@ -81,7 +81,7 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
   mIntervalSpin = new KIntSpinBox( 1, 356, 1, defDayInterval, frame );
   mIntervalSpin->setObjectName( "mIntervalSpin" );
   mIntervalSpin->setSuffix( i18np(" day", " days", defDayInterval) );
-  connect(mIntervalSpin, SIGNAL( valueChanged( int )), SLOT( slotIntervalSpinChanged( int ) ) );
+  connect(mIntervalSpin, SIGNAL(valueChanged(int)), SLOT(slotIntervalSpinChanged(int)) );
   QLabel *label = new QLabel( i18n("&Resend notification only after:"), frame );
   label->setBuddy( mIntervalSpin );
   glay->addWidget( label, row, 0 );

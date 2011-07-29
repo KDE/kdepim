@@ -52,11 +52,11 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   mListView->setAlternatingRowColors( true );
   mListView->setSelectionMode( QAbstractItemView::SingleSelection );
 #ifndef QT_NO_CONTEXTMENU
-  connect( mListView, SIGNAL( contextMenuRequested( QTreeWidgetItem*, QPoint ) ),
-           this, SLOT( slotContextMenuRequested( QTreeWidgetItem*, QPoint ) ) );
+  connect( mListView, SIGNAL(contextMenuRequested(QTreeWidgetItem*,QPoint)),
+           this, SLOT(slotContextMenuRequested(QTreeWidgetItem*,QPoint)) );
 #endif
-  connect( mListView, SIGNAL( itemDoubleClicked ( QTreeWidgetItem *, int ) ),
-           this, SLOT( slotDoubleClicked( QTreeWidgetItem* ) ) );
+  connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+           this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
   vlay->addWidget( mListView );
 
   resize( 2 * sizeHint().width(), sizeHint().height() );
@@ -100,10 +100,10 @@ void ManageSieveScriptsDialog::slotRefresh()
       mListView->expandItem( last );
     } else {
       KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
-      connect( job, SIGNAL(item(KManageSieve::SieveJob*,const QString&,bool)),
-               this, SLOT(slotItem(KManageSieve::SieveJob*,const QString&,bool)) );
-      connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
-               this, SLOT(slotResult(KManageSieve::SieveJob*,bool,const QString&,bool)) );
+      connect( job, SIGNAL(item(KManageSieve::SieveJob*,QString,bool)),
+               this, SLOT(slotItem(KManageSieve::SieveJob*,QString,bool)) );
+      connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+               this, SLOT(slotResult(KManageSieve::SieveJob*,bool,QString,bool)) );
       mJobs.insert( job, last );
       mUrls.insert( last, u );
     }
@@ -210,7 +210,7 @@ void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool 
     job = KManageSieve::SieveJob::activate( u );
   else
     job = KManageSieve::SieveJob::deactivate( u );
-  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
            this, SLOT(slotRefresh()) );
 }
 
@@ -224,8 +224,8 @@ void ManageSieveScriptsDialog::addRadioButton( QTreeWidgetItem *item, const QStr
   radioButton->setAutoExclusive( false );
   radioButton->setText( text );
   mListView->setItemWidget( item, 0, radioButton );
-  connect( radioButton, SIGNAL( toggled ( bool ) ),
-           this, SLOT( slotSelectionChanged() ) );
+  connect( radioButton, SIGNAL(toggled(bool)),
+           this, SLOT(slotSelectionChanged()) );
 
   // Add the radio button to the button group
   QTreeWidgetItem *parent = item->parent();
@@ -320,7 +320,7 @@ void ManageSieveScriptsDialog::slotDeleteScript()
        != KMessageBox::Continue )
     return;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::del( u );
-  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
            this, SLOT(slotRefresh()) );
 }
 
@@ -337,8 +337,8 @@ void ManageSieveScriptsDialog::slotEditScript()
   url.setFileName( itemText( mContextMenuItem ) );
   mCurrentURL = url;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
-  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
-           this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,const QString&,bool)) );
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+           this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
 void ManageSieveScriptsDialog::slotNewScript()
@@ -392,7 +392,7 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   mTextEdit->setAcceptRichText( false );
   mTextEdit->setWordWrapMode ( QTextOption::NoWrap );
   mTextEdit->setFont( KGlobalSettings::fixedFont() );
-  connect( mTextEdit, SIGNAL( textChanged () ), SLOT( slotTextChanged() ) );
+  connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
   resize( 3 * sizeHint() );
 }
 
@@ -426,7 +426,7 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
   if ( !mSieveEditor )
     return;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
-  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
            this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
 }
 
