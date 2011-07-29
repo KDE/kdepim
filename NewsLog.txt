@@ -1,4 +1,14 @@
 
+Friday 29 July 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4720: Translation problem: Remove a old invitation from the calendar. Wrong warning.
+* kolab/issue4763: Archive/delete-past-events-and-todos-dialog needs warning and new options (rt#10014)
+
+
+
 Monday 18 July 2011
 
 Problems addressed
