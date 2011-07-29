@@ -59,7 +59,6 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QTextCodec>
-#include <qdom.h>
 
 namespace TemplateParser {
 
@@ -1566,28 +1565,20 @@ QString TemplateParser::plainToHtml( const QString &body ) const
 
 QString TemplateParser::makeValidHtml( QString& body )
 {
-  if( !body.isEmpty() ) {
-    QDomDocument doc;
+  QRegExp regEx;
+  regEx.setMinimal( true );
+  regEx.setPattern( "<html.*>" );
 
-    QDomElement htmlElement = doc.createElement("html");
-    doc.appendChild( htmlElement );
-
-    if( !mHeadElement.isEmpty() ) {
-      mHeadElement = "<head>" + mHeadElement + "</head>";
-    } else {
-      mHeadElement = "<head></head>";
+  if( !body.isEmpty() && !body.contains( regEx ) ) {
+    regEx.setPattern( "<body.*>" );
+    if( !body.contains( regEx ) ) {
+      body = "<body>" + body + "</body>";
     }
-
-    QDomDocument headDoc;
-    headDoc.setContent( mHeadElement );
-    htmlElement.appendChild( headDoc );
-    body = "<body>" + body + "<body>";
-
-    QDomDocument bodyDoc;
-    bodyDoc.setContent( body );
-    htmlElement.insertAfter( bodyDoc, headDoc );
-
-    return doc.toString();
+    regEx.setPattern( "<head.*>" );
+    if( !body.contains( regEx ) ) {
+      body = "<head>" + mHeadElement +"</head>" + body;
+    }
+    body = "<html>" + body + "</html>";
   }
   return body;
 }
