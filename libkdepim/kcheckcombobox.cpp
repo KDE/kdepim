@@ -143,10 +143,10 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
   , d( new KCheckComboBox::Private( this ) )
 {
   connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState()) );
-  connect( model(), SIGNAL(rowsInserted (const QModelIndex &, int, int)),
-           SLOT(makeInsertedItemsCheckable(const QModelIndex &, int, int)) );
-  connect( model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-           this, SLOT(updateCheckedItems(const QModelIndex &, const QModelIndex &)) );
+  connect( model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(makeInsertedItemsCheckable(QModelIndex,int,int)) );
+  connect( model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(updateCheckedItems(QModelIndex,QModelIndex)) );
 
   // read-only contents
   setEditable( true );

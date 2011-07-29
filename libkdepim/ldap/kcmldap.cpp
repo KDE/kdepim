@@ -101,15 +101,15 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
 
   initGUI();
 
-  connect( mHostListView, SIGNAL( currentItemChanged( QListWidgetItem*, QListWidgetItem* ) ),
-           this, SLOT( slotSelectionChanged( QListWidgetItem* ) ) );
-  connect( mHostListView, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ),
-           this, SLOT( slotEditHost() ) );
-  connect( mHostListView, SIGNAL( itemClicked( QListWidgetItem* ) ),
-           this, SLOT( slotItemClicked( QListWidgetItem* ) ) );
+  connect( mHostListView, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+           this, SLOT(slotSelectionChanged(QListWidgetItem*)) );
+  connect( mHostListView, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+           this, SLOT(slotEditHost()) );
+  connect( mHostListView, SIGNAL(itemClicked(QListWidgetItem*)),
+           this, SLOT(slotItemClicked(QListWidgetItem*)) );
 
-  connect( mUpButton, SIGNAL( clicked() ), this, SLOT( slotMoveUp() ) );
-  connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
+  connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
+  connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
 }
 
 KCMLdap::~KCMLdap()
@@ -347,12 +347,12 @@ void KCMLdap::initGUI()
 
   KDialogButtonBox *buttons = new KDialogButtonBox( this );
   buttons->addButton( i18n( "&Add Host..." ),
-                      QDialogButtonBox::ActionRole, this, SLOT( slotAddHost() ) );
+                      QDialogButtonBox::ActionRole, this, SLOT(slotAddHost()) );
   mEditButton = buttons->addButton( i18n( "&Edit Host..." ),
-                                    QDialogButtonBox::ActionRole, this, SLOT( slotEditHost() ) );
+                                    QDialogButtonBox::ActionRole, this, SLOT(slotEditHost()) );
   mEditButton->setEnabled( false );
   mRemoveButton = buttons->addButton( i18n( "&Remove Host" ),
-                                      QDialogButtonBox::ActionRole, this, SLOT( slotRemoveHost() ) );
+                                      QDialogButtonBox::ActionRole, this, SLOT(slotRemoveHost()) );
   mRemoveButton->setEnabled( false );
   buttons->layout();
 

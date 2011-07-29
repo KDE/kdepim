@@ -285,10 +285,10 @@ KDateEdit::KDateEdit( QWidget *parent )
   setCurrentIndex( 0 );
   setSizeAdjustPolicy( AdjustToContents );
 
-  connect( lineEdit(), SIGNAL( returnPressed() ),
-           this, SLOT( lineEnterPressed() ) );
-  connect( this, SIGNAL( editTextChanged( const QString& ) ),
-           SLOT( slotTextChanged( const QString& ) ) );
+  connect( lineEdit(), SIGNAL(returnPressed()),
+           this, SLOT(lineEnterPressed()) );
+  connect( this, SIGNAL(editTextChanged(QString)),
+           SLOT(slotTextChanged(QString)) );
 
 #ifndef KDEPIM_MOBILE_UI
   d->mPopup = new KDatePickerPopup( KDatePickerPopup::DatePicker | KDatePickerPopup::Words,
@@ -301,8 +301,8 @@ KDateEdit::KDateEdit( QWidget *parent )
   d->mPopup->hide();
   d->mPopup->installEventFilter( this );
 
-  connect( d->mPopup, SIGNAL( dateChanged( const QDate& ) ),
-           SLOT( dateSelected( const QDate& ) ) );
+  connect( d->mPopup, SIGNAL(dateChanged(QDate)),
+           SLOT(dateSelected(QDate)) );
 
   // handle keyword entry
   d->setupKeywords();

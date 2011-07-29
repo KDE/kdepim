@@ -64,7 +64,7 @@ class OpenEmailAddressJob::Private
       }
 
       AddEmailAddressJob *createJob = new AddEmailAddressJob( mCompleteAddress, mParentWidget, q );
-      q->connect( createJob, SIGNAL( result( KJob* ) ), SLOT( slotAddContactDone( KJob* ) ) );
+      q->connect( createJob, SIGNAL(result(KJob*)), SLOT(slotAddContactDone(KJob*)) );
       createJob->start();
     }
 
@@ -111,7 +111,7 @@ void OpenEmailAddressJob::start()
   searchJob->setLimit( 1 );
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
                        Akonadi::ContactSearchJob::ExactMatch );
-  connect( searchJob, SIGNAL( result( KJob* ) ), SLOT( slotSearchDone( KJob* ) ) );
+  connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
 
 #include "openemailaddressjob.moc"

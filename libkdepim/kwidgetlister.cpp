@@ -115,12 +115,12 @@ KWidgetLister::KWidgetLister( int minWidgets, int maxWidgets, QWidget *parent )
   d->mButtonBox->setStretchFactor( d->mBtnClear, 0 );
 
   //---------- connect everything
-  connect( d->mBtnMore, SIGNAL( clicked() ),
-           this, SLOT( slotMore() ) );
-  connect( d->mBtnFewer, SIGNAL( clicked() ),
-           this, SLOT( slotFewer() ) );
-  connect( d->mBtnClear, SIGNAL( clicked() ),
-           this, SLOT( slotClear() ) );
+  connect( d->mBtnMore, SIGNAL(clicked()),
+           this, SLOT(slotMore()) );
+  connect( d->mBtnFewer, SIGNAL(clicked()),
+           this, SLOT(slotFewer()) );
+  connect( d->mBtnClear, SIGNAL(clicked()),
+           this, SLOT(slotClear()) );
 
   d->enableControls();
 }

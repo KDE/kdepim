@@ -96,17 +96,17 @@ void KDatePickerPopup::Private::buildMenu()
   }
 
   if ( mModes & Words ) {
-    q->addAction( i18nc( "@option today", "&Today" ), q, SLOT( slotToday() ) );
-    q->addAction( i18nc( "@option tomorrow", "To&morrow" ), q, SLOT( slotTomorrow() ) );
-    q->addAction( i18nc( "@option next week", "Next &Week" ), q, SLOT( slotNextWeek() ) );
-    q->addAction( i18nc( "@option next month", "Next M&onth" ), q, SLOT( slotNextMonth() ) );
+    q->addAction( i18nc( "@option today", "&Today" ), q, SLOT(slotToday()) );
+    q->addAction( i18nc( "@option tomorrow", "To&morrow" ), q, SLOT(slotTomorrow()) );
+    q->addAction( i18nc( "@option next week", "Next &Week" ), q, SLOT(slotNextWeek()) );
+    q->addAction( i18nc( "@option next month", "Next M&onth" ), q, SLOT(slotNextMonth()) );
 
     if ( mModes & NoDate )
       q->addSeparator();
   }
 
   if ( mModes & NoDate )
-    q->addAction( i18nc( "@option do not specify a date", "No Date" ), q, SLOT( slotNoDate() ) );
+    q->addAction( i18nc( "@option do not specify a date", "No Date" ), q, SLOT(slotNoDate()) );
 }
 
 void KDatePickerPopup::Private::slotDateChanged( const QDate &date )
@@ -149,10 +149,10 @@ KDatePickerPopup::KDatePickerPopup( Modes modes, const QDate &date, QWidget *par
   d->mDatePicker = new KDatePicker( this );
   d->mDatePicker->setCloseButton( false );
 
-  connect( d->mDatePicker, SIGNAL( dateEntered( const QDate& ) ),
-           SLOT( slotDateChanged( const QDate& ) ) );
-  connect( d->mDatePicker, SIGNAL( dateSelected( const QDate& ) ),
-           SLOT( slotDateChanged( const QDate& ) ) );
+  connect( d->mDatePicker, SIGNAL(dateEntered(QDate)),
+           SLOT(slotDateChanged(QDate)) );
+  connect( d->mDatePicker, SIGNAL(dateSelected(QDate)),
+           SLOT(slotDateChanged(QDate)) );
 
   d->mDatePicker->setDate( date );
 

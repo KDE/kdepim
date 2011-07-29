@@ -42,8 +42,8 @@ DateEdit::DateEdit( QWidget *parent )
   KDateEdit *edit = new KDateEdit( this );
   layout->addWidget( edit );
 
-  connect( edit, SIGNAL( dateChanged( const QDate& ) ),
-           this, SLOT( dateChanged( const QDate& ) ) );
+  connect( edit, SIGNAL(dateChanged(QDate)),
+           this, SLOT(dateChanged(QDate)) );
 }
 
 void DateEdit::dateChanged( const QDate &date )

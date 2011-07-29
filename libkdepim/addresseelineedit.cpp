@@ -216,20 +216,20 @@ void AddresseeLineEdit::Private::init()
 
     if ( !m_completionInitialized ) {
       q->setCompletionObject( s_static->completion, false );
-      q->connect( q, SIGNAL(completion(const QString &)),
+      q->connect( q, SIGNAL(completion(QString)),
                   q, SLOT(slotCompletion()) );
-      q->connect( q, SIGNAL(returnPressed(const QString &)),
-                  q, SLOT(slotReturnPressed(const QString &)) );
+      q->connect( q, SIGNAL(returnPressed(QString)),
+                  q, SLOT(slotReturnPressed(QString)) );
 
       KCompletionBox *box = q->completionBox();
-      q->connect( box, SIGNAL(activated(const QString &)),
-                  q, SLOT(slotPopupCompletion(const QString &)) );
-      q->connect( box, SIGNAL(userCancelled(const QString &)),
-                  q, SLOT(slotUserCancelled(const QString &)) );
+      q->connect( box, SIGNAL(activated(QString)),
+                  q, SLOT(slotPopupCompletion(QString)) );
+      q->connect( box, SIGNAL(userCancelled(QString)),
+                  q, SLOT(slotUserCancelled(QString)) );
 
       q->connect( s_static->ldapTimer, SIGNAL(timeout()), SLOT(slotStartLDAPLookup()) );
-      q->connect( s_static->ldapSearch, SIGNAL(searchData(const KLDAP::LdapResult::List &)),
-                  SLOT(slotLDAPSearchData(const KLDAP::LdapResult::List &)) );
+      q->connect( s_static->ldapSearch, SIGNAL(searchData(KLDAP::LdapResult::List)),
+                  SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)) );
 
       m_completionInitialized = true;
     }
@@ -488,10 +488,10 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
   //        StartsWith for now
                       //Akonadi::ContactGroupSearchJob::ContainsMatch );
-  q->connect( contactJob, SIGNAL(result(KJob *)),
-              q, SLOT(slotAkonadiSearchResult(KJob *)) );
-  q->connect( groupJob, SIGNAL(result(KJob *)),
-              q, SLOT(slotAkonadiSearchResult(KJob *)) );
+  q->connect( contactJob, SIGNAL(result(KJob*)),
+              q, SLOT(slotAkonadiSearchResult(KJob*)) );
+  q->connect( groupJob, SIGNAL(result(KJob*)),
+              q, SLOT(slotAkonadiSearchResult(KJob*)) );
   akonadiHandlePending();
 }
 
@@ -765,8 +765,8 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
       Akonadi::CollectionFetchJob *collectionJob =
         new Akonadi::CollectionFetchJob( item.parentCollection(),
                                          Akonadi::CollectionFetchJob::Base, q );
-      connect( collectionJob, SIGNAL(collectionsReceived(const Akonadi::Collection::List &)),
-               q, SLOT(slotAkonadiCollectionsReceived(const Akonadi::Collection::List &)) );
+      connect( collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+               q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)) );
       /* we don't want to start multiple fetch jobs for the same collection,
          so insert the collection with an index value of -2 */
       s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );

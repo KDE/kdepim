@@ -40,14 +40,14 @@ MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, Q
 
   mView = new MultiplyingLineView( mMultiplyingLineFactory, this );
   topLayout->addWidget( mView );
-  connect( mView, SIGNAL( focusUp() ), SIGNAL( focusUp() ) );
-  connect( mView, SIGNAL( focusDown() ), SIGNAL( focusDown() ) );
-  connect( mView, SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ),
-    SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ) );
-  connect( mView, SIGNAL( lineDeleted( int ) ), SIGNAL( lineDeleted( int ) ) );
-  connect( mView, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ) );
-  connect( mView, SIGNAL( sizeHintChanged() ),
-           SIGNAL( sizeHintChanged() ) );
+  connect( mView, SIGNAL(focusUp()), SIGNAL(focusUp()) );
+  connect( mView, SIGNAL(focusDown()), SIGNAL(focusDown()) );
+  connect( mView, SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+    SIGNAL(completionModeChanged(KGlobalSettings::Completion)) );
+  connect( mView, SIGNAL(lineDeleted(int)), SIGNAL(lineDeleted(int)) );
+  connect( mView, SIGNAL(lineAdded(KPIM::MultiplyingLine*)), SIGNAL(lineAdded(KPIM::MultiplyingLine*)) );
+  connect( mView, SIGNAL(sizeHintChanged()),
+           SIGNAL(sizeHintChanged()) );
 }
 
 MultiplyingLineEditor::~MultiplyingLineEditor()

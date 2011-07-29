@@ -579,15 +579,15 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   d->mModel = new ContactListModel( d->mResultView );
   d->mResultView->setModel( d->mModel );
   d->mResultView->verticalHeader()->hide();
-  connect( d->mResultView, SIGNAL( clicked( const QModelIndex& ) ),
-           SLOT( slotSelectionChanged() ) );
+  connect( d->mResultView, SIGNAL(clicked(QModelIndex)),
+           SLOT(slotSelectionChanged()) );
   topLayout->addWidget( d->mResultView );
 
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
   buttons->addButton( i18n( "Select All" ),
-                      QDialogButtonBox::ActionRole, this, SLOT( slotSelectAll() ) );
+                      QDialogButtonBox::ActionRole, this, SLOT(slotSelectAll()) );
   buttons->addButton( i18n( "Unselect All" ),
-                      QDialogButtonBox::ActionRole, this, SLOT( slotUnselectAll() ) );
+                      QDialogButtonBox::ActionRole, this, SLOT(slotUnselectAll()) );
 
   topLayout->addWidget( buttons );
 
@@ -598,18 +598,18 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   setButtonText( User2, i18n( "Configure LDAP Servers..." ) );
 #endif
 
-  connect( d->mRecursiveCheckbox, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotSetScope( bool ) ) );
-  connect( d->mSearchButton, SIGNAL( clicked() ),
-           this, SLOT( slotStartSearch() ) );
+  connect( d->mRecursiveCheckbox, SIGNAL(toggled(bool)),
+           this, SLOT(slotSetScope(bool)) );
+  connect( d->mSearchButton, SIGNAL(clicked()),
+           this, SLOT(slotStartSearch()) );
 
   setTabOrder( d->mSearchEdit, d->mFilterCombo );
   setTabOrder( d->mFilterCombo, d->mSearchButton );
   d->mSearchEdit->setFocus();
 
-  connect( this, SIGNAL( user1Clicked() ), this, SLOT( slotUser1() ) );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
 #ifndef _WIN32_WCE
-  connect( this, SIGNAL( user2Clicked() ), this, SLOT( slotUser2() ) );
+  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
 #endif
   d->slotSelectionChanged();
   d->restoreSettings();
@@ -672,12 +672,12 @@ void LdapSearchDialog::Private::restoreSettings()
 
       ldapClient->setAttributes( attrs );
 
-      q->connect( ldapClient, SIGNAL( result( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ),
-                  q, SLOT( slotAddResult( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ) );
-      q->connect( ldapClient, SIGNAL( done() ),
-                  q, SLOT( slotSearchDone() ) );
-      q->connect( ldapClient, SIGNAL( error( const QString& ) ),
-                  q, SLOT( slotError( const QString& ) ) );
+      q->connect( ldapClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
+                  q, SLOT(slotAddResult(KLDAP::LdapClient,KLDAP::LdapObject)) );
+      q->connect( ldapClient, SIGNAL(done()),
+                  q, SLOT(slotSearchDone()) );
+      q->connect( ldapClient, SIGNAL(error(QString)),
+                  q, SLOT(slotError(QString)) );
 
       mLdapClientList.append( ldapClient );
     }
@@ -733,10 +733,10 @@ void LdapSearchDialog::Private::slotStartSearch()
 #endif
   mSearchButton->setText( i18n( "Stop" ) );
 
-  q->disconnect( mSearchButton, SIGNAL( clicked() ),
-                 q, SLOT( slotStartSearch() ) );
-  q->connect( mSearchButton, SIGNAL( clicked() ),
-              q, SLOT( slotStopSearch() ) );
+  q->disconnect( mSearchButton, SIGNAL(clicked()),
+                 q, SLOT(slotStartSearch()) );
+  q->connect( mSearchButton, SIGNAL(clicked()),
+              q, SLOT(slotStopSearch()) );
 
   const bool startsWith = (mSearchType->currentIndex() == 1);
 
@@ -767,10 +767,10 @@ void LdapSearchDialog::Private::slotSearchDone()
     }
   }
 
-  q->disconnect( mSearchButton, SIGNAL( clicked() ),
-                 q, SLOT( slotStopSearch() ) );
-  q->connect( mSearchButton, SIGNAL( clicked() ),
-              q, SLOT( slotStartSearch() ) );
+  q->disconnect( mSearchButton, SIGNAL(clicked()),
+                 q, SLOT(slotStopSearch()) );
+  q->connect( mSearchButton, SIGNAL(clicked()),
+              q, SLOT(slotStartSearch()) );
 
   mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
 #ifndef QT_NO_CURSOR

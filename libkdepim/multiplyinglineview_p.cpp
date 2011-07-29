@@ -73,17 +73,17 @@ MultiplyingLine* MultiplyingLineView::addLine()
   mTopLayout->addWidget( line );
   line->setCompletionMode( mCompletionMode );
   line->show();
-  connect( line, SIGNAL( returnPressed( KPIM::MultiplyingLine * ) ),
-    SLOT( slotReturnPressed( KPIM::MultiplyingLine * ) ) );
-  connect( line, SIGNAL( upPressed( KPIM::MultiplyingLine * ) ),
-    SLOT( slotUpPressed( KPIM::MultiplyingLine * ) ) );
-  connect( line, SIGNAL( downPressed( KPIM::MultiplyingLine * ) ),
-    SLOT( slotDownPressed( KPIM::MultiplyingLine * ) ) );
-  connect( line, SIGNAL( rightPressed() ), SIGNAL( focusRight() ) );
-  connect( line, SIGNAL( deleteLine( KPIM::MultiplyingLine * ) ),
-    SLOT( slotDecideLineDeletion( KPIM::MultiplyingLine * ) ) );
-  connect( line, SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ),
-    SLOT( setCompletionMode( KGlobalSettings::Completion ) ) );
+  connect( line, SIGNAL(returnPressed(KPIM::MultiplyingLine*)),
+    SLOT(slotReturnPressed(KPIM::MultiplyingLine*)) );
+  connect( line, SIGNAL(upPressed(KPIM::MultiplyingLine*)),
+    SLOT(slotUpPressed(KPIM::MultiplyingLine*)) );
+  connect( line, SIGNAL(downPressed(KPIM::MultiplyingLine*)),
+    SLOT(slotDownPressed(KPIM::MultiplyingLine*)) );
+  connect( line, SIGNAL(rightPressed()), SIGNAL(focusRight()) );
+  connect( line, SIGNAL(deleteLine(KPIM::MultiplyingLine*)),
+    SLOT(slotDecideLineDeletion(KPIM::MultiplyingLine*)) );
+  connect( line, SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+    SLOT(setCompletionMode(KGlobalSettings::Completion)) );
 
   if( !mLines.isEmpty() ) {
     line->fixTabOrder( mLines.last()->tabOut() );
@@ -211,7 +211,7 @@ void MultiplyingLineView::resizeView()
 
   parentWidget()->layout()->activate();
   emit sizeHintChanged();
-  QTimer::singleShot( 0, this, SLOT( moveCompletionPopup() ) );
+  QTimer::singleShot( 0, this, SLOT(moveCompletionPopup()) );
 }
 
 void MultiplyingLineView::activateLine( MultiplyingLine *line )
