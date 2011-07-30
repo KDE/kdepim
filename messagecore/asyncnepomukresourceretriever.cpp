@@ -50,7 +50,7 @@ class NepomukResourceRetrieverRunnable : public QRunnable
 class AsyncNepomukResourceRetrieverPrivate
 {
   public:
-    AsyncNepomukResourceRetrieverPrivate( AsyncNepomukResourceRetriever *parent ) : m_parent( parent )
+    AsyncNepomukResourceRetrieverPrivate( AsyncNepomukResourceRetriever *parent ) : m_parent( parent ), m_running( false )
     {
       m_nepomukPool.setMaxThreadCount( 1 );
       qRegisterMetaType<Nepomuk::Resource>();
@@ -59,7 +59,8 @@ class AsyncNepomukResourceRetrieverPrivate
     void createRunnable()
     {
       Q_ASSERT( !m_pendingRequests.isEmpty() );
-      kDebug() << "retrieving: " << m_pendingRequests.last();
+      Q_ASSERT( !m_running );
+      m_running = true;
       m_nepomukPool.start( new NepomukResourceRetrieverRunnable( m_pendingRequests.last(), m_parent ) );
     }
 
@@ -73,7 +74,7 @@ class AsyncNepomukResourceRetrieverPrivate
     void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &res )
     {
       QMutexLocker locker( &m_mutex );
-      kDebug() << "retrieval done: " << url;
+      m_running = false;
       removeRequest( url );
       if ( !m_pendingRequests.isEmpty() )
         createRunnable();
@@ -85,6 +86,7 @@ class AsyncNepomukResourceRetrieverPrivate
     QThreadPool m_nepomukPool;
     QVector<QUrl> m_pendingRequests;
     QMutex m_mutex;
+    bool m_running;
 };
 
 }
@@ -101,7 +103,7 @@ void AsyncNepomukResourceRetriever::requestResource(const QUrl& url)
   if ( d->m_pendingRequests.contains( url ) )
     return;
   d->m_pendingRequests.push_back( url );
-  if ( d->m_nepomukPool.activeThreadCount() < d->m_nepomukPool.maxThreadCount() )
+  if ( !d->m_running )
     d->createRunnable();
 }
 
