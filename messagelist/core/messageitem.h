@@ -30,6 +30,10 @@
 
 #include <messagelist/messagelist_export.h>
 
+namespace Nepomuk {
+class Resource;
+}
+
 namespace Akonadi {
 class Item;
 }
