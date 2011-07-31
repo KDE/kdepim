@@ -2437,20 +2437,7 @@ void ViewerPrivate::slotSaveMessage()
 {
   if( !mMessageItem.isValid() )
     return;
-
-  QString fileName =MessageViewer::NodeHelper::cleanSubject (  mMessageItem.payload<KMime::Message::Ptr>().get() );
-
-  if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
-    fileName += ".mbox";
-
-  
-  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, mMainWindow );
-
-  if ( url.isEmpty() )
-    return;
-
-  Util::saveMessageInMbox( url, QList<Akonadi::Item>()<<mMessageItem );  
+  Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
 }
 
 void ViewerPrivate::saveRelativePosition()

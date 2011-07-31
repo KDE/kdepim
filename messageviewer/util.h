@@ -117,7 +117,7 @@ namespace Util {
     QString MESSAGEVIEWER_EXPORT fileNameForMimetype( const QString &mimeType, int iconSize,
                                  const QString &fallbackFileName1 = QString(),
                                  const QString &fallbackFileName2 = QString() );
-    bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const KUrl& url, const QList<Akonadi::Item>& retrievedMsgs);
+    bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget*parent);
 
 
 }
