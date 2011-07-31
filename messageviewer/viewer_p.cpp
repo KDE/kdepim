@@ -2142,7 +2142,7 @@ QString ViewerPrivate::attachmentInjectionHtml() const
   if ( html.isEmpty() )
     return QString();
 
-  QString link("");
+  QString link;
   if ( headerStyle() == HeaderStyle::fancy() ) {
     link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
@@ -2210,7 +2210,7 @@ void ViewerPrivate::slotAttachmentOpen()
 
 void ViewerPrivate::slotAttachmentSaveAs()
 {
-  KMime::Content::List contents = selectedContents();
+  const KMime::Content::List contents = selectedContents();
 
   if ( contents.isEmpty() ) {
     KMessageBox::information( mMainWindow, i18n("Found no attachments to save.") );
@@ -2222,7 +2222,7 @@ void ViewerPrivate::slotAttachmentSaveAs()
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
-  KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
   if ( contents.isEmpty() ) {
     KMessageBox::information( mMainWindow, i18n( "Found no attachments to save." ) );
