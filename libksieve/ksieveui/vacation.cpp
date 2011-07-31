@@ -431,8 +431,8 @@ Vacation::Vacation( QObject * parent, bool checkOnly, const char * name )
   if (checkOnly) {
     mSieveJob->setInteractive( false );
   }
-  connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,const QString&,bool)),
-     SLOT(slotGetResult(KManageSieve::SieveJob*,bool,const QString&,bool)) );
+  connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+     SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
 Vacation::~Vacation() {
@@ -666,10 +666,10 @@ void Vacation::slotDialogOk() {
   // and commit the dialog's settings to the server:
   mSieveJob = KManageSieve::SieveJob::put( mUrl, script, active, mWasActive );
   if ( active )
-    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,const QString&,bool)),
+    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
              SLOT(slotPutActiveResult(KManageSieve::SieveJob*,bool)) );
   else
-    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,const QString&,bool)),
+    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
              SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
 
   // destroy the dialog:

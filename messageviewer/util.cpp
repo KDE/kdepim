@@ -46,6 +46,11 @@
 #include "messagecore/nodehelper.h"
 #include "messagecore/stringutil.h"
 
+#include <akonadi/item.h>
+
+
+#include <kmbox/mbox.h>
+
 #include <KMime/Message>
 
 #include <kcharsets.h>
@@ -418,3 +423,44 @@ int Util::getWritePermissions()
 }
 
 
+bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
+{
+  
+  QString fileName;
+  if ( retrievedMsgs.isEmpty() )
+    return true;
+  const Akonadi::Item msgBase = retrievedMsgs.first();
+
+  fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject (  msgBase.payload<KMime::Message::Ptr>().get() ).trimmed() );
+
+  if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
+    fileName += ".mbox";
+
+  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent );
+
+  if ( url.isEmpty() )
+    return true;
+
+  const QString localFileName = url.toLocalFile();
+  if ( localFileName.isEmpty() )
+    return true;
+
+  KMBox::MBox mbox;
+  if ( !mbox.load( localFileName ) ) {
+    //TODO: error
+    return false;
+  }
+
+  foreach ( const Akonadi::Item &item, retrievedMsgs ) {
+    if ( item.hasPayload<KMime::Message::Ptr>() ) {
+      mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
+    }
+  }
+
+  if ( !mbox.save() ) {
+    //TODO: error
+    return false;
+  }
+  return true;
+}

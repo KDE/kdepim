@@ -724,8 +724,8 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
   connect( agenda, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
                    SIGNAL(deleteIncidenceSignal(Akonadi::Item)) );
 
-  connect( agenda, SIGNAL(startMultiModify(const QString &)),
-                   SIGNAL(startMultiModify(const QString &)) );
+  connect( agenda, SIGNAL(startMultiModify(QString)),
+                   SIGNAL(startMultiModify(QString)) );
   connect( agenda, SIGNAL(endMultiModify()),
                    SIGNAL(endMultiModify()) );
 
@@ -734,10 +734,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
            SLOT(startDrag(Akonadi::Item)) );
 
   // synchronize selections
-  connect( agenda, SIGNAL(incidenceSelected(const Akonadi::Item &, const QDate &)),
+  connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            otherAgenda, SLOT(deselectItem()) );
-  connect( agenda, SIGNAL(incidenceSelected(const Akonadi::Item &, const QDate &)),
-           SIGNAL(incidenceSelected(const Akonadi::Item &, const QDate &)) );
+  connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+           SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
   // rescheduling of todos by d'n'd
   connect( agenda, SIGNAL(droppedToDos(KCalCore::Todo::List,QPoint,bool)),

@@ -31,7 +31,7 @@ MainWindow::MainWindow( QWidget *parent )
 {
     /*
         QToolBar *toolBar = new QToolBar( QLatin1String( "Main toolbar" ), this );
-        toolBar->addAction( "New", this, SIGNAL( threadCollection() ) );
+        toolBar->addAction( "New", this, SIGNAL(threadCollection()) );
         addToolBar( toolBar );
     */
 

@@ -96,8 +96,8 @@ int main( int argc, char * argv[] ) {
 
     Relay relay;
     Kleo::VerifyDetachedJob *job = backend->verifyDetachedJob();
-    QObject::connect( job, SIGNAL(result(GpgME::VerificationResult, std::vector<GpgME::Key>)),
-             &relay, SLOT(slotVerifyDetachedResult(GpgME::VerificationResult, std::vector<GpgME::Key>)) );
+    QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,std::vector<GpgME::Key>)),
+             &relay, SLOT(slotVerifyDetachedResult(GpgME::VerificationResult,std::vector<GpgME::Key>)) );
 
     QFile sigFile( sigFileName );
     if ( !sigFile.open(QFile::ReadOnly ) ) return -1;

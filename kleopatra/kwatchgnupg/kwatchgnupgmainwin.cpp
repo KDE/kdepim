@@ -77,11 +77,11 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   setCentralWidget( mCentralWidget );
 
   mWatcher = new KProcess;
-  connect( mWatcher, SIGNAL(finished(int, QProcess::ExitStatus)),
-           this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
+  connect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
+           this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
 
-  connect( mWatcher, SIGNAL(readyReadStandardOutput() ),
-           this, SLOT( slotReadStdout() ) );
+  connect( mWatcher, SIGNAL(readyReadStandardOutput()),
+           this, SLOT(slotReadStdout()) );
 
   slotReadConfig();
   mSysTray = new KWatchGnuPGTray( this );
@@ -108,7 +108,7 @@ void KWatchGnuPGMainWindow::createActions()
   KAction *action = actionCollection()->addAction( "clear_log" );
   action->setIcon( KIcon("edit-clear-history") );
   action->setText( i18n("C&lear History") );
-  connect(action, SIGNAL(triggered()), SLOT( slotClear() ));
+  connect(action, SIGNAL(triggered()), SLOT(slotClear()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
   (void)KStandardAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );
   (void)KStandardAction::close( this, SLOT(close()), actionCollection() );
@@ -131,8 +131,8 @@ void KWatchGnuPGMainWindow::slotConfigureToolbars()
 
 void KWatchGnuPGMainWindow::startWatcher()
 {
-  disconnect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus)),
-              this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
+  disconnect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
+              this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
   if( mWatcher->state()== QProcess::Running ) {
 	mWatcher->kill();
 	while( mWatcher->state()== QProcess::Running ) {
@@ -157,8 +157,8 @@ void KWatchGnuPGMainWindow::startWatcher()
   } else {
 	mCentralWidget->message( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
-  connect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus) ),
-           this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
+  connect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
+           this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
 }
 
 void KWatchGnuPGMainWindow::setGnuPGConfig()
@@ -252,8 +252,8 @@ void KWatchGnuPGMainWindow::slotSaveAs()
 
 void KWatchGnuPGMainWindow::slotQuit()
 {
-  disconnect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus) ),
-              this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
+  disconnect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
+              this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
   mWatcher->kill();
   kapp->quit();
 }
@@ -263,8 +263,8 @@ void KWatchGnuPGMainWindow::slotConfigure()
   if( !mConfig ) {
       mConfig = new KWatchGnuPGConfig( this );
       mConfig->setObjectName( "config dialog" );
-      connect( mConfig, SIGNAL( reconfigure() ),
-               this, SLOT( slotReadConfig() ) );
+      connect( mConfig, SIGNAL(reconfigure()),
+               this, SLOT(slotReadConfig()) );
   }
   mConfig->loadConfig();
   mConfig->exec();

@@ -99,8 +99,8 @@ bool EditorWatcher::start()
   QStringList params = KRun::processDesktopExec( *offer, list, false );
   mEditor = new KProcess( this );
   mEditor->setProgram( params );
-  connect( mEditor, SIGNAL( finished( int, QProcess::ExitStatus ) ),
-           SLOT( editorExited() ) );
+  connect( mEditor, SIGNAL(finished(int,QProcess::ExitStatus)),
+           SLOT(editorExited()) );
   mEditor->start();
   if ( !mEditor->waitForStarted() )
     return false;

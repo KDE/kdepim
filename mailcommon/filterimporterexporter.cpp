@@ -71,8 +71,8 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
   unselectAllButton = new KPushButton( i18n( "Unselect All" ) );
   buttonLayout->addWidget( unselectAllButton );
 
-  connect( selectAllButton, SIGNAL( clicked() ), this, SLOT( slotSelectAllButton() ) );
-  connect( unselectAllButton, SIGNAL( clicked() ), this, SLOT( slotUnselectAllButton() ) );
+  connect( selectAllButton, SIGNAL(clicked()), this, SLOT(slotSelectAllButton()) );
+  connect( unselectAllButton, SIGNAL(clicked()), this, SLOT(slotUnselectAllButton()) );
 
   resize( 300, 350 );
 }

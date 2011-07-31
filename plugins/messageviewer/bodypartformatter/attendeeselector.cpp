@@ -40,8 +40,8 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   connect( ui.removeButton, SIGNAL(clicked()), SLOT(removeClicked()) );
 
   ui.attendeeEdit->setClickMessage( i18n("Click to add a new attendee") );
-  connect( ui.attendeeEdit, SIGNAL(textChanged(const QString&)), SLOT(textChanged(const QString&)) );
-  connect( ui.attendeeEdit, SIGNAL(returnPressed(const QString&)), SLOT(addClicked()) );
+  connect( ui.attendeeEdit, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)) );
+  connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
 
   connect( ui.attendeeList, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()) );
 }

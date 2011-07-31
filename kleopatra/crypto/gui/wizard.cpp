@@ -135,22 +135,22 @@ Wizard::Private::Private( Wizard * qq )
     QDialogButtonBox * const box = new QDialogButtonBox;
     
     cancelButton = box->addButton( QDialogButtonBox::Cancel );
-    q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
+    q->connect( cancelButton, SIGNAL(clicked()), q, SLOT(reject()) );
 
     backButton = new QPushButton;
     backButton->setText( i18n( "Back" ) );
-    q->connect( backButton, SIGNAL( clicked() ), q, SLOT( back() ) );
+    q->connect( backButton, SIGNAL(clicked()), q, SLOT(back()) );
     box->addButton( backButton, QDialogButtonBox::ActionRole );
 
     nextButton = new KPushButton;
     nextButton->setGuiItem( nextItem );
-    q->connect( nextButton, SIGNAL( clicked() ), q, SLOT( next() ) );
+    q->connect( nextButton, SIGNAL(clicked()), q, SLOT(next()) );
     box->addButton( nextButton, QDialogButtonBox::ActionRole );
     buttonLayout->addWidget( box );
     
     top->addWidget( buttonWidget );
     
-    q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) ); 
+    q->connect( q, SIGNAL(rejected()), q, SIGNAL(canceled()) ); 
 }
 
 Wizard::Private::~Private() { kDebug(); }
@@ -213,12 +213,12 @@ void Wizard::setPage( int id, WizardPage* widget )
     kleo_assert( d->idToPage.find( id ) == d->idToPage.end() );
     d->idToPage[id] = widget;
     d->stack->addWidget( widget );
-    connect( widget, SIGNAL( completeChanged() ), this, SLOT( updateButtonStates() ) );
-    connect( widget, SIGNAL( titleChanged() ), this, SLOT( updateHeader() ) );
-    connect( widget, SIGNAL( subTitleChanged() ), this, SLOT( updateHeader() ) );
-    connect( widget, SIGNAL( explanationChanged() ), this, SLOT( updateHeader() ) );
-    connect( widget, SIGNAL( autoAdvanceChanged() ), this, SLOT( updateButtonStates() ) );
-    connect( widget, SIGNAL( windowTitleChanged(QString) ), this, SLOT( setWindowTitle(QString) ) );
+    connect( widget, SIGNAL(completeChanged()), this, SLOT(updateButtonStates()) );
+    connect( widget, SIGNAL(titleChanged()), this, SLOT(updateHeader()) );
+    connect( widget, SIGNAL(subTitleChanged()), this, SLOT(updateHeader()) );
+    connect( widget, SIGNAL(explanationChanged()), this, SLOT(updateHeader()) );
+    connect( widget, SIGNAL(autoAdvanceChanged()), this, SLOT(updateButtonStates()) );
+    connect( widget, SIGNAL(windowTitleChanged(QString)), this, SLOT(setWindowTitle(QString)) );
 }
 
 void Wizard::setPageOrder( const std::vector<int>& pageOrder )

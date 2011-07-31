@@ -60,7 +60,7 @@ MainWindow::MainWindow( const QStringList &viewNames )
   mUi.setupUi( this );
   mUi.tabWidget->clear();
 
-  connect( mUi.addViewMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( addViewTriggered( QAction* ) ) );
+  connect( mUi.addViewMenu, SIGNAL(triggered(QAction*)), this, SLOT(addViewTriggered(QAction*)) );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 

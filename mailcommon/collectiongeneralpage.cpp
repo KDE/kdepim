@@ -294,8 +294,8 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
   ++row;
   mUseDefaultIdentityCheckBox = new QCheckBox( i18n( "Use &default identity" ), this );
   gl->addWidget( mUseDefaultIdentityCheckBox );
-  connect( mUseDefaultIdentityCheckBox, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotIdentityCheckboxChanged() ) );
+  connect( mUseDefaultIdentityCheckBox, SIGNAL(stateChanged(int)),
+           this, SLOT(slotIdentityCheckboxChanged()) );
   ++row;
   label = new QLabel( i18n( "&Sender identity:" ), this );
   gl->addWidget( label, row, 0 );
@@ -337,8 +337,8 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
 
     mContentsComboBox->setCurrentIndex( contentsType );
 
-    connect( mContentsComboBox, SIGNAL ( activated( int ) ),
-             this, SLOT( slotFolderContentsSelectionChanged( int ) ) );
+    connect( mContentsComboBox, SIGNAL (activated(int)),
+             this, SLOT(slotFolderContentsSelectionChanged(int)) );
 
     if ( mFolderCollection->isReadOnly() || mIsResourceFolder )
       mContentsComboBox->setEnabled( false );

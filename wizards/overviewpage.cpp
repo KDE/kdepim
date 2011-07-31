@@ -61,11 +61,11 @@ OverViewPage::OverViewPage( QWidget *parent )
 
 /*  QPushButton* button = new QPushButton( i18n("Kolab"), this );
   layout->addWidget( button, 4, 0, 1, 4 );
-  connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );*/
+  connect( button, SIGNAL(clicked()), SLOT(showWizardKolab()) );*/
 
   QPushButton *button = new QPushButton( i18n("Novell GroupWise"), this );
   layout->addWidget( button, 6, 0, 1, 4 );
-  connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
+  connect( button, SIGNAL(clicked()), SLOT(showWizardGroupwise()) );
 
 
   QFrame *frame = new QFrame( this );
@@ -75,7 +75,7 @@ OverViewPage::OverViewPage( QWidget *parent )
   QPushButton *cancelButton = new KPushButton( KStandardGuiItem::close(), this );
   layout->addWidget( cancelButton, 9, 3 );
 
-  connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );
+  connect( cancelButton, SIGNAL(clicked()), this, SIGNAL(cancel()) );
 
   layout->setRowStretch( 8, 1 );
 

@@ -297,7 +297,7 @@ bool CalendarAdaptor::deleteIncidence( const Akonadi::Item &aitem, bool deleteCa
     return false;
   }
   Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aitem );
-  connect( job, SIGNAL(result(KJob *)), this, SLOT(deleteIncidenceFinished(KJob *)) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(deleteIncidenceFinished(KJob*)) );
   return true;
 }
 

@@ -47,8 +47,8 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
 
   layout->addStretch();
 
-  connect( mListBox, SIGNAL( itemDoubleClicked( QListWidgetItem * ) ), this, SLOT( accept() ) );
-  connect( mListBox, SIGNAL( itemSelectionChanged() ), this, SLOT( slotItemSelectionChanged() ) );
+  connect( mListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(accept()) );
+  connect( mListBox, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()) );
 
   slotItemSelectionChanged();
   mListBox->setFocus();

@@ -78,8 +78,8 @@ class IncidenceViewer::Private
     {
       mAttachmentHandler = new AttachmentHandler( parent );
       mBrowser = new TextBrowser;
-      parent->connect( mBrowser, SIGNAL( attachmentUrlClicked( const QString& ) ),
-                       parent, SLOT( slotAttachmentUrlClicked( const QString& ) ) );
+      parent->connect( mBrowser, SIGNAL(attachmentUrlClicked(QString)),
+                       parent, SLOT(slotAttachmentUrlClicked(QString)) );
     }
 
     void updateView()
@@ -215,8 +215,8 @@ void IncidenceViewer::itemChanged( const Akonadi::Item &item )
   }
 
   if ( d->mParentCollectionFetchJob ) {
-    disconnect( d->mParentCollectionFetchJob, SIGNAL(result(KJob *)),
-                this, SLOT(slotParentCollectionFetched(KJob *)) );
+    disconnect( d->mParentCollectionFetchJob, SIGNAL(result(KJob*)),
+                this, SLOT(slotParentCollectionFetched(KJob*)) );
     delete d->mParentCollectionFetchJob;
   }
 
@@ -224,8 +224,8 @@ void IncidenceViewer::itemChanged( const Akonadi::Item &item )
     new Akonadi::CollectionFetchJob( d->mCurrentItem.parentCollection(),
                                      Akonadi::CollectionFetchJob::Base, this );
 
-  connect( d->mParentCollectionFetchJob, SIGNAL(result(KJob *)),
-           this, SLOT(slotParentCollectionFetched(KJob *)) );
+  connect( d->mParentCollectionFetchJob, SIGNAL(result(KJob*)),
+           this, SLOT(slotParentCollectionFetched(KJob*)) );
 }
 
 void IncidenceViewer::itemRemoved()

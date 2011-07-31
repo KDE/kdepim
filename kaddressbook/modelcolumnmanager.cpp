@@ -157,7 +157,7 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
           columns << Akonadi::ContactsTreeModel::Note;
 
         mModel->setColumns( columns );
-        QTimer::singleShot( 0, this, SLOT( adaptHeaderView() ) );
+        QTimer::singleShot( 0, this, SLOT(adaptHeaderView()) );
       }
 
       return true;

@@ -58,10 +58,10 @@ SendSMSDialog::SendSMSDialog( const QString &recipientName, QWidget *parent )
 
   setButtonText( Ok, i18n( "Send" ) );
 
-  connect( mText, SIGNAL( textChanged() ),
-           this, SLOT( updateMessageLength() ) );
-  connect( mText, SIGNAL( textChanged() ),
-           this, SLOT( updateButtons() ) );
+  connect( mText, SIGNAL(textChanged()),
+           this, SLOT(updateMessageLength()) );
+  connect( mText, SIGNAL(textChanged()),
+           this, SLOT(updateButtons()) );
 
   updateButtons();
 

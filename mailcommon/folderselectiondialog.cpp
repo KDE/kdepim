@@ -96,16 +96,16 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   enableButton( KDialog::Ok, false );
   if ( !d->mNotAllowToCreateNewFolder ) {
     enableButton( KDialog::User1, false );
-    connect( this, SIGNAL( user1Clicked() ), this, SLOT( slotAddChildFolder() ) );
+    connect( this, SIGNAL(user1Clicked()), this, SLOT(slotAddChildFolder()) );
   }
 
   connect( d->folderTreeWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(slotSelectionChanged()) );
-  connect( d->folderTreeWidget->readableCollectionProxyModel(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
+  connect( d->folderTreeWidget->readableCollectionProxyModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(rowsInserted(QModelIndex,int,int)) );
 
-  connect( d->folderTreeWidget->folderTreeView(), SIGNAL( doubleClicked(const QModelIndex&) ),
-           this, SLOT( accept() ) );
+  connect( d->folderTreeWidget->folderTreeView(), SIGNAL(doubleClicked(QModelIndex)),
+           this, SLOT(accept()) );
   d->mUseGlobalSettings = !( options & NotUseGlobalSettings );
   readConfig();
 

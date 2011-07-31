@@ -278,7 +278,7 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
     layout->setSpacing( KDialog::spacingHint() );
 
     signEncryptGroup = new QButtonGroup( q );
-    q->connect( signEncryptGroup, SIGNAL( buttonClicked( int ) ), q, SLOT( operationButtonClicked( int ) ) );
+    q->connect( signEncryptGroup, SIGNAL(buttonClicked(int)), q, SLOT(operationButtonClicked(int)) );
 
     signAndEncryptRB = new QRadioButton;
     signAndEncryptRB->setText( i18n( "Sign and encrypt (OpenPGP only)" ) );
@@ -332,8 +332,8 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
     selectCertificatesButton->setText( i18n( "Change Signing Certificates..." ) );
     selectCertificatesButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     signerLayout->addWidget( selectCertificatesButton, 4, 0, 1, -1, Qt::AlignLeft );
-    q->connect( selectCertificatesButton, SIGNAL( clicked() ),
-                q, SLOT( selectCertificates() ) );
+    q->connect( selectCertificatesButton, SIGNAL(clicked()),
+                q, SLOT(selectCertificates()) );
     layout->addWidget( signingCertificateBox );
     layout->addStretch();
 }

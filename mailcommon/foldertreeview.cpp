@@ -77,8 +77,8 @@ void FolderTreeView::init( bool showUnreadCount )
   mToolTipDisplayPolicy = FolderTreeWidget::DisplayAlways;
 
   header()->setContextMenuPolicy( Qt::CustomContextMenu );
-  connect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
-           SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
+  connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
+           SLOT(slotHeaderContextMenuRequested(QPoint)) );
   readConfig();
 
   mCollectionStatisticsDelegate = new Akonadi::CollectionStatisticsDelegate( this );
@@ -132,8 +132,8 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
     act->setData( QVariant( i ) );
     if ( i == 0)
        act->setEnabled( false );
-    connect( act,  SIGNAL( triggered( bool ) ),
-             SLOT( slotHeaderContextMenuChangeHeader( bool ) ) );
+    connect( act,  SIGNAL(triggered(bool)),
+             SLOT(slotHeaderContextMenuChangeHeader(bool)) );
   }
 
 
@@ -152,8 +152,8 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
       act->setChecked( true );
     act->setData( QVariant( icon_sizes[ i ] ) );
 
-    connect( act, SIGNAL( triggered( bool ) ),
-             SLOT( slotHeaderContextMenuChangeIconSize( bool ) ) );
+    connect( act, SIGNAL(triggered(bool)),
+             SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
   }
   menu.addTitle( i18n( "Display Tooltips" ) );
 
@@ -164,8 +164,8 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
   grp->addAction( act );
   act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayAlways );
   act->setData( QVariant( (int)FolderTreeWidget::DisplayAlways ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotHeaderContextMenuChangeToolTipDisplayPolicy( bool ) ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
   act = menu.addAction( i18nc("@action:inmenu", "When Text Obscured") );
   act->setCheckable( true );
 
@@ -174,16 +174,16 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
   grp->addAction( act );
   act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayWhenTextElided );
   act->setData( QVariant( (int)FolderTreeWidget::DisplayWhenTextElided ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotHeaderContextMenuChangeToolTipDisplayPolicy( bool ) ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
 
   act = menu.addAction( i18nc("@action:inmenu Never display tooltips.", "Never") );
   act->setCheckable( true );
   grp->addAction( act );
   act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayNever );
   act->setData( QVariant( (int)FolderTreeWidget::DisplayNever ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotHeaderContextMenuChangeToolTipDisplayPolicy( bool ) ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
 
   menu.addTitle( i18nc("@action:inmenu", "Sort Items" ) );
 
@@ -194,16 +194,16 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
   grp->addAction( act );
   act->setChecked( mSortingPolicy == FolderTreeWidget::SortByCurrentColumn );
   act->setData( QVariant( (int)FolderTreeWidget::SortByCurrentColumn ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotHeaderContextMenuChangeSortingPolicy( bool ) ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)) );
 
   act = menu.addAction( i18nc("@action:inmenu", "Manually, by Drag And Drop") );
   act->setCheckable( true );
   grp->addAction( act );
   act->setChecked( mSortingPolicy == FolderTreeWidget::SortByDragAndDropKey );
   act->setData( QVariant( (int)FolderTreeWidget::SortByDragAndDropKey ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( slotHeaderContextMenuChangeSortingPolicy( bool ) ) );
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)) );
 
   menu.exec( header()->mapToGlobal( pnt ) );
 }

@@ -186,7 +186,7 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
 
   list->setCurrentRow( initialValue );
   list->setFocus();
-  QObject::connect( list, SIGNAL( itemActivated( QListWidgetItem* ) ), dlg, SLOT( accept() ) );
+  QObject::connect( list, SIGNAL(itemActivated(QListWidgetItem*)), dlg, SLOT(accept()) );
   restoreWindowSize("selectBox", dlg, QSize(247,174));
 
   int ret;

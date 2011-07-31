@@ -40,7 +40,7 @@ ContactViewItem::ContactViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
 {
   m_viewer = new ExtendedContactViewer( 0 );
-  connect( m_viewer, SIGNAL( contactRemoved() ), SIGNAL( contactRemoved() ) );
+  connect( m_viewer, SIGNAL(contactRemoved()), SIGNAL(contactRemoved()) );
 
   ContactDefaultActions *actions = new ContactDefaultActions( this );
   actions->connectToView( m_viewer );

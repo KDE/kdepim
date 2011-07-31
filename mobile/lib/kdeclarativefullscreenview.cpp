@@ -152,7 +152,7 @@ void KDeclarativeFullScreenView::delayedInit()
   mActionCollection->addAction( QLatin1String( "close" ), action );
 
   action = new KAction( i18n( "Full Shutdown" ), this );
-  connect( action, SIGNAL( triggered() ), SLOT( closeAkonadi() ) );
+  connect( action, SIGNAL(triggered()), SLOT(closeAkonadi()) );
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 
   action = new KAction( i18n( "Minimize Window" ), this );

@@ -92,7 +92,7 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
   KNHelper::restoreWindowSize("filterDLG", this, sizeHint());
 
   setHelp("anc-using-filters");
-  connect( fname,  SIGNAL( textChanged ( const QString & )), this, SLOT( slotTextChanged( const QString & )));
+  connect( fname,  SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
   connect( this, SIGNAL(okClicked()),this,SLOT(slotOk()));
   slotTextChanged( fname->text() );
 }

@@ -147,8 +147,8 @@ void Kernel::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type 
   }
   else {
     Akonadi::SpecialMailCollectionsRequestJob *job = new Akonadi::SpecialMailCollectionsRequestJob( this );
-    connect( job, SIGNAL( result( KJob* ) ),
-             this, SLOT( createDefaultCollectionDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(createDefaultCollectionDone(KJob*)) );
     job->requestDefaultCollection( type );
   }
 }
@@ -165,8 +165,8 @@ void Kernel::createDefaultCollectionDone( KJob * job)
   if ( !( col.rights() & Akonadi::Collection::AllRights ) )
     emergencyExit( i18n("You do not have read/write permission to your inbox folder.") );
 
-  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
-           this, SLOT( slotDefaultCollectionsChanged () ), Qt::UniqueConnection  );
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
+           this, SLOT(slotDefaultCollectionsChanged()), Qt::UniqueConnection  );
 }
 
 void Kernel::slotDefaultCollectionsChanged()

@@ -103,7 +103,7 @@ class KeyCache::Private {
     KeyCache * const q;
 public:
     explicit Private( KeyCache * qq ) : q( qq ) {
-        connect( &m_autoKeyListingTimer, SIGNAL( timeout() ), q, SLOT( startKeyListing() ) );
+        connect( &m_autoKeyListingTimer, SIGNAL(timeout()), q, SLOT(startKeyListing()) );
         updateAutoKeyListingTimer();
     }
 
@@ -240,10 +240,10 @@ void KeyCache::addFileSystemWatcher( const shared_ptr<FileSystemWatcher>& watche
     if ( !watcher )
         return;
     d->m_fsWatchers.push_back( watcher );
-    connect( watcher.get(), SIGNAL( directoryChanged( QString ) ),
-             this, SLOT( startKeyListing() ) );
-    connect( watcher.get(), SIGNAL( fileChanged( QString ) ),
-             this, SLOT( startKeyListing() ) );
+    connect( watcher.get(), SIGNAL(directoryChanged(QString)),
+             this, SLOT(startKeyListing()) );
+    connect( watcher.get(), SIGNAL(fileChanged(QString)),
+             this, SLOT(startKeyListing()) );
 
     watcher->setEnabled( d->m_refreshJob == 0 );
 }
@@ -907,7 +907,7 @@ KeyCache::RefreshKeysJob::~RefreshKeysJob() {}
 
 void KeyCache::RefreshKeysJob::start()
 {
-    QTimer::singleShot( 0, this, SLOT( doStart() ) );
+    QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
 void KeyCache::RefreshKeysJob::cancel()

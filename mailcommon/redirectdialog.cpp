@@ -138,16 +138,16 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
                                  "where you can select recipients out "
                                  "of all available addresses." ) );
 
-  connect( d->mBtnTo, SIGNAL( clicked() ), SLOT( slotAddressSelection() ) );
+  connect( d->mBtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
 
-  connect( d->mEditTo, SIGNAL( textChanged ( const QString& ) ), SLOT( slotAddressChanged( const QString& ) ) );
+  connect( d->mEditTo, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged(QString)) );
   d->mLabelTo->setBuddy( d->mBtnTo );
   d->mEditTo->setFocus();
 
   setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), "mail-send" ) );
   setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), "mail-queue" ) );
-  connect( this, SIGNAL( user1Clicked() ), this, SLOT( slotUser1() ) );
-  connect( this, SIGNAL( user2Clicked() ), this, SLOT( slotUser2() ) );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
+  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
   enableButton( User1, false );
   enableButton( User2, false );
 }

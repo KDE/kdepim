@@ -131,10 +131,10 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
                                   );
   mRecipientsList->setRootIsDecorated( false );
   topLayout->addWidget( mRecipientsList );
-  connect( this, SIGNAL( user1Clicked() ),
-           this, SLOT( slotUser1() ) );
-  connect( mTitleEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotTitleChanged( const QString& ) ) );
+  connect( this, SIGNAL(user1Clicked()),
+           this, SLOT(slotUser1()) );
+  connect( mTitleEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotTitleChanged(QString)) );
 }
 
 void DistributionListDialog::setRecipients( const Recipient::List &recipients )
@@ -152,7 +152,7 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
         job->setQuery( Akonadi::ContactSearchJob::Email, email, Akonadi::ContactSearchJob::ExactMatch );
         job->setProperty( "name", name );
         job->setProperty( "email", email );
-        connect( job, SIGNAL( result( KJob* ) ), SLOT( slotDelayedSetRecipients( KJob* ) ) );
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedSetRecipients(KJob*)) );
       }
     }
   }
@@ -228,7 +228,7 @@ void DistributionListDialog::slotUser1()
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
   job->setQuery( Akonadi::ContactGroupSearchJob::Name, name );
   job->setProperty( "name", name );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotDelayedUser1( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedUser1(KJob*)) );
 }
 
 void DistributionListDialog::slotDelayedUser1( KJob *job )
@@ -276,7 +276,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
   groupItem.setPayload<KABC::ContactGroup>( group );
 
   Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, targetCollection );
-  connect( createJob, SIGNAL( result( KJob* ) ), this, SLOT( slotContactGroupCreateJobResult( KJob* ) ) );
+  connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotContactGroupCreateJobResult(KJob*)) );
 }
 
 void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )

@@ -31,8 +31,8 @@ CustomFieldEditWidget::CustomFieldEditWidget( QWidget *parent )
   deleteButton->setText( i18n( "Delete" ) );
   mLayout->addWidget( deleteButton, 0, 3 );
 
-  connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  connect( deleteButton, SIGNAL( clicked() ), SLOT( remove() ) );
+  connect( editButton, SIGNAL(clicked()), SLOT(edit()) );
+  connect( deleteButton, SIGNAL(clicked()), SLOT(remove()) );
 }
 
 void CustomFieldEditWidget::setCustomField( const CustomField &field )

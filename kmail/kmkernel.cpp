@@ -183,7 +183,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
 
   mFolderCollectionMonitor = new FolderCollectionMonitor( this );
 
-  connect( mFolderCollectionMonitor->monitor(), SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection &) ), SLOT( slotCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
+  connect( mFolderCollectionMonitor->monitor(), SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), SLOT(slotCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
 
 
   Akonadi::Session *session = new Akonadi::Session( "KMail Kernel ETM", this );
@@ -207,13 +207,13 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
            SLOT(transportRenamed(int,QString,QString)) );
 
   QDBusConnection::sessionBus().connect(QString(), QLatin1String( "/MailDispatcherAgent" ), "org.freedesktop.Akonadi.MailDispatcherAgent", "itemDispatchStarted",this, SLOT(itemDispatchStarted()) );
-  connect( Akonadi::AgentManager::self(), SIGNAL( instanceStatusChanged( Akonadi::AgentInstance ) ),
-           this, SLOT( instanceStatusChanged( Akonadi::AgentInstance ) ) );
+  connect( Akonadi::AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
+           this, SLOT(instanceStatusChanged(Akonadi::AgentInstance)) );
 
-  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCompleted( KPIM::ProgressItem * ) ),
-           this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
-  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
+  connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
+           this, SLOT(slotProgressItemCompletedOrCanceled(KPIM::ProgressItem*)) );
+  connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+           this, SLOT(slotProgressItemCompletedOrCanceled(KPIM::ProgressItem*)) );
 
   CommonKernel->registerKernelIf( this );
   CommonKernel->registerSettingsIf( this );
@@ -1144,7 +1144,7 @@ void KMKernel::init()
 
   mBackgroundTasksTimer = new QTimer( this );
   mBackgroundTasksTimer->setSingleShot( true );
-  connect( mBackgroundTasksTimer, SIGNAL( timeout() ), this, SLOT( slotRunBackgroundTasks() ) );
+  connect( mBackgroundTasksTimer, SIGNAL(timeout()), this, SLOT(slotRunBackgroundTasks()) );
 #ifdef DEBUG_SCHEDULER // for debugging, see jobscheduler.h
   mBackgroundTasksTimer->start( 10000 ); // 10s, singleshot
 #else
@@ -1158,8 +1158,8 @@ void KMKernel::init()
     CommonKernel->initFolders();
   }
 
-  connect( Akonadi::ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ), this, SLOT( akonadiStateChanged( Akonadi::ServerManager::State ) ) );
-  connect( folderCollectionMonitor(), SIGNAL( itemRemoved( const Akonadi::Item &) ), the_undoStack, SLOT( msgDestroyed( const Akonadi::Item& ) ) );
+  connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), this, SLOT(akonadiStateChanged(Akonadi::ServerManager::State)) );
+  connect( folderCollectionMonitor(), SIGNAL(itemRemoved(Akonadi::Item)), the_undoStack, SLOT(msgDestroyed(Akonadi::Item)) );
 
 
 }
@@ -1331,8 +1331,8 @@ void KMKernel::slotShowConfigurationDialog()
   if( !mConfigureDialog ) {
     mConfigureDialog = new ConfigureDialog( 0, false );
     mConfigureDialog->setObjectName( "configure" );
-    connect( mConfigureDialog, SIGNAL( configChanged() ),
-             this, SLOT( slotConfigChanged() ) );
+    connect( mConfigureDialog, SIGNAL(configChanged()),
+             this, SLOT(slotConfigChanged()) );
   }
 
   // Save all current settings.
@@ -1775,7 +1775,7 @@ void KMKernel::createFilter(const QByteArray& field, const QString& value)
 }
 
 
-void KMKernel::checkTrashFolderFromResources( const Akonadi::Collection::Id& collectionId )
+void KMKernel::checkFolderFromResources( const Akonadi::Collection::Id& collectionId )
 {
   const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
   foreach( const Akonadi::AgentInstance& type, lst ) {
@@ -1793,6 +1793,19 @@ void KMKernel::checkTrashFolderFromResources( const Akonadi::Collection::Id& col
       }
       delete iface;
     }
+    else if ( type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiPOP3SettingsInterface *iface = MailCommon::Util::createPop3SettingsInterface( type.identifier() );
+      if ( iface->isValid() ) {
+        if ( iface->targetCollection() == collectionId ) {
+          //Use default inbox
+          iface->setTargetCollection( CommonKernel->inboxCollectionFolder().id() );
+	  iface->writeConfig();
+        }
+        
+      }
+      delete iface;
+    }
   }
 }
+
 #include "kmkernel.moc"

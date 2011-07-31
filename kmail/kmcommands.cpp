@@ -61,7 +61,6 @@
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
 
-#include <kmbox/mbox.h>
 #include <kmime/kmime_message.h>
 
 #include <kpimidentities/identitymanager.h>
@@ -229,8 +228,8 @@ int KMCommand::mCountJobs = 0;
 
 void KMCommand::start()
 {
-  connect( this, SIGNAL( messagesTransfered( KMCommand::Result ) ),
-           this, SLOT( slotPostTransfer( KMCommand::Result ) ) );
+  connect( this, SIGNAL(messagesTransfered(KMCommand::Result)),
+           this, SLOT(slotPostTransfer(KMCommand::Result)) );
 
   if ( mMsgList.isEmpty() ) {
       emit messagesTransfered( OK );
@@ -259,8 +258,8 @@ void KMCommand::start()
 
 void KMCommand::slotPostTransfer( KMCommand::Result result )
 {
-  disconnect( this, SIGNAL( messagesTransfered( KMCommand::Result ) ),
-              this, SLOT( slotPostTransfer( KMCommand::Result ) ) );
+  disconnect( this, SIGNAL(messagesTransfered(KMCommand::Result)),
+              this, SLOT(slotPostTransfer(KMCommand::Result)) );
   if ( result == OK ) {
     result = execute();
   }
@@ -566,7 +565,7 @@ KMCommand::Result KMEditMsgCommand::execute()
     return Failed;
   if ( mDeleteFromSource ) {
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotDeleteItem( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeleteItem(KJob*)) );
   }
   KMail::Composer *win = KMail::makeComposer();
   win->setMsg( msg, false, true );
@@ -623,26 +622,12 @@ KMCommand::Result KMUseTemplateCommand::execute()
   return OK;
 }
 
-static KUrl subjectToUrl( const QString &subject )
-{
-  QString fileName = MessageCore::StringUtil::cleanFileName( subject.trimmed() );
-
-  // avoid stripping off the last part of the subject after a "."
-  // by KFileDialog, which thinks it's an extension
-  if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
-    fileName += ".mbox";
-
-  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  return KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter );
-}
-
 KMSaveMsgCommand::KMSaveMsgCommand( QWidget *parent, const Akonadi::Item& msg )
   : KMCommand( parent )
 {
   if ( !msg.isValid() )
     return;
 
-  mUrl = subjectToUrl( MessageViewer::NodeHelper::cleanSubject( msg.payload<KMime::Message::Ptr>().get() ) );
   fetchScope().fetchFullPayload( true ); // ### unless we call the corresponding KMCommand ctor, this has no effect
 }
 
@@ -652,39 +637,13 @@ KMSaveMsgCommand::KMSaveMsgCommand( QWidget *parent, const QList<Akonadi::Item> 
   if ( msgList.empty() )
     return;
 
-  const Akonadi::Item msgBase = msgList.first();
-  mUrl = subjectToUrl( MessageViewer::NodeHelper::cleanSubject( msgBase.payload<KMime::Message::Ptr>().get() ) );
   fetchScope().fetchFullPayload( true ); // ### unless we call the corresponding KMCommand ctor, this has no effect
-}
-
-KUrl KMSaveMsgCommand::url() const
-{
-  return mUrl;
 }
 
 KMCommand::Result KMSaveMsgCommand::execute()
 {
-  const QString fileName = mUrl.toLocalFile();
-  if ( fileName.isEmpty() )
-    return OK;
-
-  KMBox::MBox mbox;
-  if ( !mbox.load( fileName ) ) {
-    //TODO: error
+  if ( !MessageViewer::Util::saveMessageInMbox( retrievedMsgs(), parentWidget()) )
     return Failed;
-  }
-
-  foreach ( const Akonadi::Item &item, retrievedMsgs() ) {
-    if ( item.hasPayload<KMime::Message::Ptr>() ) {
-      mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
-    }
-  }
-
-  if ( !mbox.save() ) {
-    //TODO: error
-    return Failed;
-  }
-
   return OK;
 }
 
@@ -711,10 +670,10 @@ KMCommand::Result KMOpenMsgCommand::execute()
     return Canceled;
   }
   mJob = KIO::get( mUrl, KIO::NoReload, KIO::HideProgressInfo );
-  connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           this, SLOT( slotDataArrived( KIO::Job*, const QByteArray & ) ) );
-  connect( mJob, SIGNAL( result( KJob * ) ),
-           SLOT( slotResult( KJob * ) ) );
+  connect( mJob, SIGNAL(data(KIO::Job*,QByteArray)),
+           this, SLOT(slotDataArrived(KIO::Job*,QByteArray)) );
+  connect( mJob, SIGNAL(result(KJob*)),
+           SLOT(slotResult(KJob*)) );
   setEmitsCompletedItself( true );
   return OK;
 }
@@ -1404,7 +1363,7 @@ KMCommand::Result KMSetStatusCommand::execute()
   } else {
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( itemsToModify, this );
     modifyJob->setIgnorePayload( true );
-    connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
+    connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
   }
   return OK;
 }
@@ -1632,7 +1591,7 @@ KMCommand::Result KMMoveCommand::execute()
   }
   else {
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( retrievedMsgs(), this );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMoveResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );
   }
 
 #if 0 //TODO port to akonadi
@@ -1641,8 +1600,8 @@ KMCommand::Result KMMoveCommand::execute()
   mProgressItem =
     ProgressManager::createProgressItem ("move"+ProgressManager::getUniqueID(),
          mDestFolder ? i18n( "Moving messages" ) : i18n( "Deleting messages" ) );
-  connect( mProgressItem, SIGNAL( progressItemCanceled( KPIM::ProgressItem* ) ),
-           this, SLOT( slotMoveCanceled() ) );
+  connect( mProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+           this, SLOT(slotMoveCanceled()) );
 #else
   kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif

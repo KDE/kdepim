@@ -89,7 +89,7 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
 #endif
 */
 
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(searchResult(KJob*)) );
 }
 
 NepomukCalendar::~NepomukCalendar()
@@ -250,7 +250,7 @@ bool NepomukCalendar::deleteIncidence( const KCalCore::Incidence::Ptr &incidence
   if ( incidence ) {
     Akonadi::Item item = d->itemForIncidenceUid( incidence->uid() );
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
-    connect( job, SIGNAL(result(KJob *)), this, SLOT(deleteIncidenceFinished(KJob *)) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(deleteIncidenceFinished(KJob*)) );
     d->mJobsInProgress++;
   }
 

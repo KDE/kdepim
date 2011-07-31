@@ -51,7 +51,7 @@ ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
 {
   mItemView = parent;
   mTheme = 0;
-  connect( KGlobalSettings::self(), SIGNAL( kdisplayFontChanged() ), this,  SLOT( slotGeneralFontChanged() ) );
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
 }
 
 QString ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();

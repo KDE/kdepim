@@ -250,20 +250,20 @@ void View::setLeftView( QAbstractItemView* aiv )
     d->splitter.insertWidget( 0, d->leftWidget );
 
     if( qobject_cast<QTreeView*>(d->leftWidget) ) {
-      connect( d->leftWidget,  SIGNAL( collapsed( const QModelIndex& ) ),
-	       this, SLOT( slotCollapsed( const QModelIndex& ) ) );
-      connect( d->leftWidget,  SIGNAL( expanded( const QModelIndex& ) ),
-	       this, SLOT( slotExpanded( const QModelIndex& ) ) );
+      connect( d->leftWidget,  SIGNAL(collapsed(QModelIndex)),
+	       this, SLOT(slotCollapsed(QModelIndex)) );
+      connect( d->leftWidget,  SIGNAL(expanded(QModelIndex)),
+	       this, SLOT(slotExpanded(QModelIndex)) );
     }
 
-    connect( d->gfxview.verticalScrollBar(), SIGNAL( valueChanged( int ) ),
-             d->leftWidget->verticalScrollBar(), SLOT( setValue( int ) ) );
-    connect( d->leftWidget->verticalScrollBar(), SIGNAL( valueChanged( int ) ),
-             d->gfxview.verticalScrollBar(), SLOT( setValue( int ) ) );
-    connect( d->leftWidget->verticalScrollBar(), SIGNAL( rangeChanged( int, int ) ),
-             this, SLOT( slotLeftWidgetVerticalRangeChanged( int, int ) ) );
-    connect( d->gfxview.verticalScrollBar(), SIGNAL( rangeChanged( int, int ) ),
-             this, SLOT( slotGfxViewVerticalRangeChanged( int, int ) ) );
+    connect( d->gfxview.verticalScrollBar(), SIGNAL(valueChanged(int)),
+             d->leftWidget->verticalScrollBar(), SLOT(setValue(int)) );
+    connect( d->leftWidget->verticalScrollBar(), SIGNAL(valueChanged(int)),
+             d->gfxview.verticalScrollBar(), SLOT(setValue(int)) );
+    connect( d->leftWidget->verticalScrollBar(), SIGNAL(rangeChanged(int,int)),
+             this, SLOT(slotLeftWidgetVerticalRangeChanged(int,int)) );
+    connect( d->gfxview.verticalScrollBar(), SIGNAL(rangeChanged(int,int)),
+             this, SLOT(slotGfxViewVerticalRangeChanged(int,int)) );
 }
 
 /*! Sets \a ctrl to be the rowcontroller used by this View.
@@ -545,7 +545,7 @@ namespace {
 KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, View, "test" ) {
     View view( 0 );
 #if 0 // GUI tests do not work well on the server
-    QTimer::singleShot( 1000, qApp, SLOT( quit() ) );
+    QTimer::singleShot( 1000, qApp, SLOT(quit()) );
     view.show();
 
     qApp->exec();
@@ -555,7 +555,7 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, View, "test" ) {
     view.setLeftView( tv );
     view.setRowController( new TreeViewRowController(tv,view.ganttProxyModel()) );
 
-    QTimer::singleShot( 1000, qApp, SLOT( quit() ) );
+    QTimer::singleShot( 1000, qApp, SLOT(quit()) );
 
     qApp->exec();
     QPixmap screenshot2 = QPixmap::grabWidget( &view );
@@ -566,7 +566,7 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, View, "test" ) {
     view.setLeftView(lv);
     view.setRowController( new ListViewRowController(lv,view.ganttProxyModel()));
     view.show();
-    QTimer::singleShot( 1000, qApp, SLOT( quit() ) );
+    QTimer::singleShot( 1000, qApp, SLOT(quit()) );
     qApp->exec();
 #endif
 }

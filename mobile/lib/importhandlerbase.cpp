@@ -98,7 +98,7 @@ void ImportHandlerBase::exec()
 
   foreach ( const Akonadi::Item &item, items ) {
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotImportJobDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)) );
   }
 }
 

@@ -74,7 +74,7 @@ MainWindow::MainWindow()
     tabPosts->setTabsClosable( true );
     tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
     tabPosts->setDocumentMode(true);
-    connect( tabPosts, SIGNAL( tabCloseRequested( int ) ), this, SLOT( slotRemovePostEntry( int ) ) );
+    connect( tabPosts, SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)) );
     setCentralWidget( tabPosts );
 //     this->setDockOptions( QMainWindow::ForceTabbedDocks);
 
@@ -91,7 +91,7 @@ MainWindow::MainWindow()
     //btnRemovePost->setIcon( KIcon( "tab-close" ) );
     //btnRemovePost->setToolTip( i18n( "Close tab" ) );
     //tabPosts->setCornerWidget( btnRemovePost, Qt::TopRightCorner );
-    //connect( btnRemovePost, SIGNAL( clicked( bool ) ), this, SLOT( slotRemovePostEntry() ) );
+    //connect( btnRemovePost, SIGNAL(clicked(bool)), this, SLOT(slotRemovePostEntry()) );
 
     // then, setup our actions
     setupActions();
@@ -112,11 +112,11 @@ MainWindow::MainWindow()
 
     setupSystemTray();
 
-    connect( tabPosts, SIGNAL( currentChanged( int ) ), this, SLOT( slotActivePostChanged( int ) ) );
-    connect( toolbox, SIGNAL( sigEntrySelected( BilboPost &, int ) ), this, SLOT( slotNewPostOpened( BilboPost&, int ) ) );
-//     connect( toolbox, SIGNAL( sigCurrentBlogChanged( int ) ), this, SLOT( slotCurrentBlogChanged( int ) ) );
-    connect( toolbox, SIGNAL( sigError( const QString& ) ), this, SLOT( slotError( const QString& ) ) );
-    connect( toolbox, SIGNAL( sigBusy(bool) ), this, SLOT( slotBusy(bool) ));
+    connect( tabPosts, SIGNAL(currentChanged(int)), this, SLOT(slotActivePostChanged(int)) );
+    connect( toolbox, SIGNAL(sigEntrySelected(BilboPost&,int)), this, SLOT(slotNewPostOpened(BilboPost&,int)) );
+//     connect( toolbox, SIGNAL(sigCurrentBlogChanged(int)), this, SLOT(slotCurrentBlogChanged(int)) );
+    connect( toolbox, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
+    connect( toolbox, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)));
 
     QList<BilboBlog*> blogList = DBMan::self()->blogList().values();
     int count = blogList.count();
@@ -126,8 +126,8 @@ MainWindow::MainWindow()
         act->setData( blogList[i]->id() );
         blogs->addAction( act );
     }
-    connect( blogs, SIGNAL(triggered( QAction* )), this, SLOT(currentBlogChanged(QAction*)) );
-    QTimer::singleShot( 0, this, SLOT( loadTempPosts() ) );
+    connect( blogs, SIGNAL(triggered(QAction*)), this, SLOT(currentBlogChanged(QAction*)) );
+    QTimer::singleShot( 0, this, SLOT(loadTempPosts()) );
 }
 
 MainWindow::~MainWindow()
@@ -154,40 +154,40 @@ bool MainWindow::queryExit()
 
 void MainWindow::setupActions()
 {
-    KStandardAction::quit( qApp, SLOT( quit() ), actionCollection() );
+    KStandardAction::quit( qApp, SLOT(quit()), actionCollection() );
 
-    KStandardAction::preferences( this, SLOT( optionsPreferences() ), actionCollection() );
+    KStandardAction::preferences( this, SLOT(optionsPreferences()), actionCollection() );
 
     // custom menu and menu item
     KAction *actNewPost = new KAction( KIcon( "document-new" ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
     actNewPost->setShortcut( Qt::CTRL + Qt::Key_N );
-    connect( actNewPost, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateNewPost() ) );
+    connect( actNewPost, SIGNAL(triggered(bool)), this, SLOT(slotCreateNewPost()) );
 
     KAction *actAddBlog = new KAction( KIcon( "list-add" ), i18n( "Add Blog..." ), this );
     actionCollection()->addAction( QLatin1String( "add_blog" ), actAddBlog );
-    connect( actAddBlog, SIGNAL( triggered( bool ) ), this, SLOT( addBlog() ) );
+    connect( actAddBlog, SIGNAL(triggered(bool)), this, SLOT(addBlog()) );
 
     KAction *actPublish = new KAction( KIcon( "arrow-up" ), i18n( "Submit..." ), this );
     actionCollection()->addAction( QLatin1String( "publish_post" ), actPublish );
-    connect( actPublish, SIGNAL( triggered( bool ) ), this, SLOT( slotPublishPost() ) );
+    connect( actPublish, SIGNAL(triggered(bool)), this, SLOT(slotPublishPost()) );
 
     KAction *actUpload = new KAction( KIcon( "upload-media" ), i18n( "Upload Media..." ), this );
     actionCollection()->addAction( QLatin1String( "upload_media" ), actUpload );
-    connect( actUpload, SIGNAL( triggered( bool ) ), this, SLOT( uploadMediaObject() ) );
+    connect( actUpload, SIGNAL(triggered(bool)), this, SLOT(uploadMediaObject()) );
 
     KAction *actSaveLocally = new KAction( KIcon( "document-save" ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
     actSaveLocally->setShortcut( Qt::CTRL + Qt::Key_S );
-    connect( actSaveLocally, SIGNAL( triggered( bool ) ), this, SLOT( slotSavePostLocally() ) );
+    connect( actSaveLocally, SIGNAL(triggered(bool)), this, SLOT(slotSavePostLocally()) );
 
     KToggleAction *actToggleToolboxVisible = new KToggleAction( i18n( "Show Toolbox" ), this );
     actionCollection()->addAction( QLatin1String( "toggle_toolbox" ), actToggleToolboxVisible );
     actToggleToolboxVisible->setShortcut( Qt::CTRL + Qt::Key_T );
-    connect( actToggleToolboxVisible, SIGNAL( toggled( bool ) ),
-             this, SLOT( slotToggleToolboxVisible( bool ) ) );
+    connect( actToggleToolboxVisible, SIGNAL(toggled(bool)),
+             this, SLOT(slotToggleToolboxVisible(bool)) );
     connect( toolboxDock, SIGNAL(visibilityChanged(bool)),
-             this, SLOT( slotToolboxVisibilityChanged(bool) ) );
+             this, SLOT(slotToolboxVisibilityChanged(bool)) );
 
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
@@ -293,10 +293,10 @@ void MainWindow::optionsPreferences()
     ui_prefs_base.setupUi( generalSettingsDlg );
     BlogSettings *blogSettingsDlg = new BlogSettings;
     blogSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    connect( blogSettingsDlg, SIGNAL(blogAdded(const BilboBlog &)),
-             this, SLOT(slotBlogAdded(const BilboBlog &)) );
-    connect( blogSettingsDlg, SIGNAL(blogEdited(const BilboBlog &)),
-             this, SLOT(slotBlogEdited(const BilboBlog &)) );
+    connect( blogSettingsDlg, SIGNAL(blogAdded(BilboBlog)),
+             this, SLOT(slotBlogAdded(BilboBlog)) );
+    connect( blogSettingsDlg, SIGNAL(blogEdited(BilboBlog)),
+             this, SLOT(slotBlogEdited(BilboBlog)) );
     connect( blogSettingsDlg, SIGNAL(blogRemoved(int)), this, SLOT(slotBlogRemoved(int)) );
     QWidget *editorSettingsDlg = new QWidget;
     editorSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
@@ -312,8 +312,8 @@ void MainWindow::optionsPreferences()
     dialog->addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), "document-properties");
     dialog->addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), "accessories-text-editor" );
     dialog->addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), "applications-utilities");
-    connect( dialog, SIGNAL( settingsChanged( const QString& ) ), this, SIGNAL( settingsChanged() ) );
-    connect( dialog, SIGNAL(settingsChanged(const QString& )), this, SLOT(slotSettingsChanged()) );
+    connect( dialog, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
+    connect( dialog, SIGNAL(settingsChanged(QString)), this, SLOT(slotSettingsChanged()) );
     connect( dialog, SIGNAL(destroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     dialog->resize( Settings::configWindowSize() );
@@ -339,8 +339,8 @@ void MainWindow::addBlog()
     AddEditBlog *addEditBlogWindow = new AddEditBlog( -1, this );
     addEditBlogWindow->setWindowModality( Qt::ApplicationModal );
     addEditBlogWindow->setAttribute( Qt::WA_DeleteOnClose );
-    connect( addEditBlogWindow, SIGNAL( sigBlogAdded( const BilboBlog& ) ),
-             this, SLOT( slotBlogAdded( const BilboBlog& ) ) );
+    connect( addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
+             this, SLOT(slotBlogAdded(BilboBlog)) );
     addEditBlogWindow->show();
 }
 
@@ -620,15 +620,15 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
     temp->setCurrentPost(post);
     temp->setCurrentPostBlogId( blog_id );
 
-    connect( temp, SIGNAL( postTitleChanged( const QString& ) ),
-             this, SLOT( slotPostTitleChanged( const QString& ) ) );
-    connect( temp, SIGNAL( postPublishingDone( bool, const QString& ) ),
-            this, SLOT( postManipulationDone( bool, const QString& ) ) );
-    connect( this, SIGNAL( settingsChanged() ), temp, SLOT( settingsChanged() ));
-    connect( temp, SIGNAL( showStatusMessage(QString,bool)),
+    connect( temp, SIGNAL(postTitleChanged(QString)),
+             this, SLOT(slotPostTitleChanged(QString)) );
+    connect( temp, SIGNAL(postPublishingDone(bool,QString)),
+            this, SLOT(postManipulationDone(bool,QString)) );
+    connect( this, SIGNAL(settingsChanged()), temp, SLOT(settingsChanged()));
+    connect( temp, SIGNAL(showStatusMessage(QString,bool)),
              this, SLOT(slotShowStatusMessage(QString,bool)));
 
-    connect( temp, SIGNAL( sigBusy( bool ) ), this, SLOT( slotBusy( bool ) ) );
+    connect( temp, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)) );
 
     tabPosts->addTab( temp, post.title() );
 //     if(tabPosts->count() == 1)

@@ -81,7 +81,7 @@ FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& p
       m_paths( paths )
 {
     m_timer.setSingleShot( true );
-    connect( &m_timer, SIGNAL( timeout() ), q, SLOT( onTimeout() ) );
+    connect( &m_timer, SIGNAL(timeout()), q, SLOT(onTimeout()) );
 }
 
 static bool is_matching( const QString & file, const QStringList & list ) {

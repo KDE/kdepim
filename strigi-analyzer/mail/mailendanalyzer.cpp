@@ -111,7 +111,7 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   MessageAnalyzer analyzer( message, this );
 
   QEventLoop loop;
-  QObject::connect( &analyzer, SIGNAL( finished() ), &loop, SLOT( quit() ), Qt::QueuedConnection );
+  QObject::connect( &analyzer, SIGNAL(finished()), &loop, SLOT(quit()), Qt::QueuedConnection );
   analyzer.analyze();
   loop.exec();
 

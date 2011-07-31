@@ -32,10 +32,10 @@ SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupM
   mUi->keyWidget->setCheckActionCollections( QList<KActionCollection*>() << actionCollection );
   enableButton( Ok, false );
 
-  connect( mUi->nameEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotTextChanged( const QString& ) ) );
-  connect( mUi->nameEdit, SIGNAL( returnPressed() ),
-           this, SLOT( slotReturnPressed() ) );
+  connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotTextChanged(QString)) );
+  connect( mUi->nameEdit, SIGNAL(returnPressed()),
+           this, SLOT(slotReturnPressed()) );
 
   mUi->snippetText->setMinimumSize( 500, 300 );
 

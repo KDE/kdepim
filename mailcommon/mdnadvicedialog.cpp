@@ -125,7 +125,7 @@ MessageComposer::MDNAdvice MDNAdviceHelper::questionIgnoreSend( const QString &t
   return rc;
 }
 
-QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( const Akonadi::Item& item, KMime::MDN::DispositionType d )
+QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( const Akonadi::Item& item, KMime::MDN::DispositionType d, bool forceSend )
 {
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
 
@@ -135,7 +135,7 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( cons
   // issued on behalf of that recipient, even if another disposition
   // is performed on the message.
   if( item.hasAttribute< MessageCore::MDNStateAttribute >() &&
-       item.attribute< MessageCore::MDNStateAttribute >()->mdnState() != MessageCore::MDNStateAttribute::MDNStateUnknown ) {
+      item.attribute< MessageCore::MDNStateAttribute >()->mdnState() != MessageCore::MDNStateAttribute::MDNStateUnknown ) {
     // if already dealt with, don't do it again.
     return QPair< bool, KMime::MDN::SendingMode >( false, KMime::MDN::SentAutomatically );
   }
@@ -145,45 +145,49 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( cons
   bool doSend = false;
   // default:
   int mode = MessageViewer::GlobalSettings::self()->defaultPolicy();
-  if ( !mode || mode < 0 || mode > 3 ) {
-    // early out for ignore:
-    mdnStateAttr->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
-    s = KMime::MDN::SentManually;
-  } else {
-
-    if( MessageFactory::MDNMDNUnknownOption( msg ) ) {
-      mode = requestAdviceOnMDN( "mdnUnknownOption" );
+  if( forceSend )  //We must send it
+    mode = 3;
+  else
+  {
+    if ( !mode || mode < 0 || mode > 3 ) {
+      // early out for ignore:
+      mdnStateAttr->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
       s = KMime::MDN::SentManually;
-      // TODO set type to Failed as well
-      //      and clear modifiers
-    }
+    } else {
 
-    if( MessageFactory::MDNConfirmMultipleRecipients( msg ) ) {
-      mode = requestAdviceOnMDN( "mdnMultipleAddressesInReceiptTo" );
-      s = KMime::MDN::SentManually;
-    }
-
-    if( MessageFactory::MDNReturnPathEmpty( msg ) ) {
-      mode = requestAdviceOnMDN( "mdnReturnPathEmpty" );
-      s = KMime::MDN::SentManually;
-    }
-
-    if( MessageFactory::MDNReturnPathNotInRecieptTo( msg ) ) {
-      mode = requestAdviceOnMDN( "mdnReturnPathNotInReceiptTo" );
-      s = KMime::MDN::SentManually;
-    }
-
-    if( MessageFactory::MDNRequested( msg ) ) {;
-      if( s != KMime::MDN::SentManually ) { // don't ask again if user has already been asked. use the users' decision
-        mode = requestAdviceOnMDN( "mdnNormalAsk" );
-        s = KMime::MDN::SentManually; // asked user
+      if( MessageFactory::MDNMDNUnknownOption( msg ) ) {
+        mode = requestAdviceOnMDN( "mdnUnknownOption" );
+        s = KMime::MDN::SentManually;
+        // TODO set type to Failed as well
+        //      and clear modifiers
       }
-    } else { // if message doesn't have a disposition header, never send anything.
-      mode = 0;
+
+      if( MessageFactory::MDNConfirmMultipleRecipients( msg ) ) {
+        mode = requestAdviceOnMDN( "mdnMultipleAddressesInReceiptTo" );
+        s = KMime::MDN::SentManually;
+      }
+
+      if( MessageFactory::MDNReturnPathEmpty( msg ) ) {
+        mode = requestAdviceOnMDN( "mdnReturnPathEmpty" );
+        s = KMime::MDN::SentManually;
+      }
+
+      if( MessageFactory::MDNReturnPathNotInRecieptTo( msg ) ) {
+        mode = requestAdviceOnMDN( "mdnReturnPathNotInReceiptTo" );
+        s = KMime::MDN::SentManually;
+      }
+
+      if( MessageFactory::MDNRequested( msg ) ) {
+        if( s != KMime::MDN::SentManually ) { // don't ask again if user has already been asked. use the users' decision
+          mode = requestAdviceOnMDN( "mdnNormalAsk" );
+          s = KMime::MDN::SentManually; // asked user
+        }
+      } else { // if message doesn't have a disposition header, never send anything.
+        mode = 0;
+      }
+
     }
-
-   }
-
+  }
 
   // RFC 2298: An MDN MUST NOT be generated in response to an MDN.
   if ( MessageViewer::ObjectTreeParser::findType( msg.get(), "message", "disposition-notification", true, true ) ) {
