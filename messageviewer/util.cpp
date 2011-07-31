@@ -423,14 +423,31 @@ int Util::getWritePermissions()
 }
 
 
-bool Util::saveMessageInMbox( const KUrl& url, const QList<Akonadi::Item>& retrievedMsgs)
+bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
 {
-  const QString fileName = url.toLocalFile();
-  if ( fileName.isEmpty() )
+  
+  QString fileName;
+  if ( retrievedMsgs.isEmpty() )
+    return true;
+  const Akonadi::Item msgBase = retrievedMsgs.first();
+
+  fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject (  msgBase.payload<KMime::Message::Ptr>().get() ).trimmed() );
+
+  if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
+    fileName += ".mbox";
+
+  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent );
+
+  if ( url.isEmpty() )
+    return true;
+
+  const QString localFileName = url.toLocalFile();
+  if ( localFileName.isEmpty() )
     return true;
 
   KMBox::MBox mbox;
-  if ( !mbox.load( fileName ) ) {
+  if ( !mbox.load( localFileName ) ) {
     //TODO: error
     return false;
   }
