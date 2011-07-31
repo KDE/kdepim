@@ -131,8 +131,6 @@
 
 #include <kio/jobuidelegate.h>
 
-#include <kmbox/mbox.h>
-
 #include <gpgme++/error.h>
 #include <messagecore/nodehelper.h>
 #include "messagecore/globalsettings.h"
@@ -2452,22 +2450,7 @@ void ViewerPrivate::slotSaveMessage()
   if ( url.isEmpty() )
     return;
 
-  fileName = url.toLocalFile();
-  KMBox::MBox mbox;
-  if ( !mbox.load( fileName ) ) {
-    //TODO: error
-    return;
-  }
-
-  if ( mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
-    mbox.appendMessage( mMessageItem.payload<KMime::Message::Ptr>() );
-  }
-
-  if ( !mbox.save() ) {
-    //TODO: error
-    return;
-  }
-  
+  Util::saveMessageInMbox( url, QList<Akonadi::Item>()<<mMessageItem );  
 }
 
 void ViewerPrivate::saveRelativePosition()

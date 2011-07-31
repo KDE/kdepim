@@ -46,6 +46,11 @@
 #include "messagecore/nodehelper.h"
 #include "messagecore/stringutil.h"
 
+#include <akonadi/item.h>
+
+
+#include <kmbox/mbox.h>
+
 #include <KMime/Message>
 
 #include <kcharsets.h>
@@ -418,3 +423,27 @@ int Util::getWritePermissions()
 }
 
 
+bool Util::saveMessageInMbox( const KUrl& url, const QList<Akonadi::Item>& retrievedMsgs)
+{
+  const QString fileName = url.toLocalFile();
+  if ( fileName.isEmpty() )
+    return true;
+
+  KMBox::MBox mbox;
+  if ( !mbox.load( fileName ) ) {
+    //TODO: error
+    return false;
+  }
+
+  foreach ( const Akonadi::Item &item, retrievedMsgs ) {
+    if ( item.hasPayload<KMime::Message::Ptr>() ) {
+      mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
+    }
+  }
+
+  if ( !mbox.save() ) {
+    //TODO: error
+    return false;
+  }
+  return true;
+}
