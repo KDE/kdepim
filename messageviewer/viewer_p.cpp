@@ -131,6 +131,8 @@
 
 #include <kio/jobuidelegate.h>
 
+#include <kmbox/mbox.h>
+
 #include <gpgme++/error.h>
 #include <messagecore/nodehelper.h>
 #include "messagecore/globalsettings.h"
@@ -2210,8 +2212,7 @@ void ViewerPrivate::slotAttachmentOpen()
 
 void ViewerPrivate::slotAttachmentSaveAs()
 {
-  KMime::Content::List contents = selectedContents();
-
+  const KMime::Content::List contents = selectedContents();
   if ( contents.isEmpty() ) {
     KMessageBox::information( mMainWindow, i18n("Found no attachments to save.") );
     return;
@@ -2436,17 +2437,37 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessage )
+  if( !mMessageItem.isValid() )
     return;
 
-  const QString initialFileName = MessageCore::StringUtil::cleanFileName(
-                                           mMessage->subject()->asUnicodeString().trimmed() );
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( initialFileName ), "*.mbox", mMainWindow );
+  QString fileName =MessageViewer::NodeHelper::cleanSubject (  mMessageItem.payload<KMime::Message::Ptr>().get() );
+
+  if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
+    fileName += ".mbox";
+
+  
+  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, mMainWindow );
 
   if ( url.isEmpty() )
     return;
 
-  Util::saveContent( mMainWindow, mMessage.get(), url );
+  fileName = url.toLocalFile();
+  KMBox::MBox mbox;
+  if ( !mbox.load( fileName ) ) {
+    //TODO: error
+    return;
+  }
+
+  if ( mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+    mbox.appendMessage( mMessageItem.payload<KMime::Message::Ptr>() );
+  }
+
+  if ( !mbox.save() ) {
+    //TODO: error
+    return;
+  }
+  
 }
 
 void ViewerPrivate::saveRelativePosition()
