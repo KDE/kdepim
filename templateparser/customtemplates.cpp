@@ -63,30 +63,30 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
 
   mUi->mEditFrame->setEnabled( false );
 
-  connect( mUi->mEdit, SIGNAL( textChanged() ),
-          this, SLOT( slotTextChanged( void ) ) );
-  connect( mUi->mToEdit, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged() ) );
-  connect( mUi->mCCEdit, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged() ) );
+  connect( mUi->mEdit, SIGNAL(textChanged()),
+          this, SLOT(slotTextChanged()) );
+  connect( mUi->mToEdit, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
+  connect( mUi->mCCEdit, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
 
-  connect( mUi->mName, SIGNAL( textChanged( const QString & ) ),
-           this, SLOT( slotNameChanged( const QString & ) ) );
+  connect( mUi->mName, SIGNAL(textChanged(QString)),
+           this, SLOT(slotNameChanged(QString)) );
 
-  connect( mUi->mInsertCommand, SIGNAL( insertCommand(const QString&, int) ),
-          this, SLOT( slotInsertCommand(const QString&, int) ) );
+  connect( mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)),
+          this, SLOT(slotInsertCommand(QString,int)) );
 
-  connect( mUi->mAdd, SIGNAL( clicked() ),
-          this, SLOT( slotAddClicked() ) );
-  connect( mUi->mRemove, SIGNAL( clicked() ),
-          this, SLOT( slotRemoveClicked() ) );
-  connect(mUi->mList, SIGNAL( itemSelectionChanged() ),
-          this, SLOT( slotListSelectionChanged() ) );
-  connect( mUi->mType, SIGNAL( activated( int ) ),
-          this, SLOT( slotTypeActivated( int ) ) );
+  connect( mUi->mAdd, SIGNAL(clicked()),
+          this, SLOT(slotAddClicked()) );
+  connect( mUi->mRemove, SIGNAL(clicked()),
+          this, SLOT(slotRemoveClicked()) );
+  connect(mUi->mList, SIGNAL(itemSelectionChanged()),
+          this, SLOT(slotListSelectionChanged()) );
+  connect( mUi->mType, SIGNAL(activated(int)),
+          this, SLOT(slotTypeActivated(int)) );
 
-  connect( mUi->mKeySequenceWidget, SIGNAL( keySequenceChanged( const QKeySequence& ) ),
-          this, SLOT( slotShortcutChanged( const QKeySequence& ) ) );
+  connect( mUi->mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
+          this, SLOT(slotShortcutChanged(QKeySequence)) );
 
 // TODO(leo) still check with kmail? kmail can do the checking
  // mKeySequenceWidget->setCheckActionCollections( kmkernel->getKMMainWidget()->actionCollections() );
@@ -102,8 +102,8 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   mUi->mType->addItem( mForwardPix, i18nc( "Message->", "Forward" ) );
 
   mUi->mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
-  connect( mUi->mHelp, SIGNAL( linkActivated ( const QString& ) ),
-          SLOT( slotHelpLinkClicked( const QString& ) ) );
+  connect( mUi->mHelp, SIGNAL(linkActivated(QString)),
+          SLOT(slotHelpLinkClicked(QString)) );
 
   const QString toToolTip = i18n( "Additional recipients of the message" );
   const QString ccToolTip = i18n( "Additional recipients who get a copy of the message" );

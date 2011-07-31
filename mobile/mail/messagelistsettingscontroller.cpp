@@ -35,7 +35,7 @@ MessageListSettingsController::MessageListSettingsController( QObject *parent )
   mEditAction->setText( i18n( "Change Sorting/Grouping..." ) );
   mEditAction->setEnabled( false );
 
-  connect( mEditAction, SIGNAL( triggered( bool ) ), SLOT( editSettings() ) );
+  connect( mEditAction, SIGNAL(triggered(bool)), SLOT(editSettings()) );
 }
 
 QString MessageListSettingsController::groupingRole() const

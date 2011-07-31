@@ -160,7 +160,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
             QString error;
             if( KABC::ContactGroupTool::convertFromXml( &dataStream, group, &error ) ) {
               Akonadi::ContactGroupExpandJob* expandJob = new Akonadi::ContactGroupExpandJob( group );
-              connect( expandJob, SIGNAL( result( KJob* ) ), this, SLOT( groupDropExpandResult( KJob* ) ) );
+              connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(groupDropExpandResult(KJob*)) );
               expandJob->start();
             }
           }
@@ -207,7 +207,7 @@ void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
   if ( popup ) { // can be 0 on platforms with only a touch interface
     popup->addSeparator();
     QAction* act = popup->addAction( i18n( "Edit Recent Addresses..." ));
-    connect(act,SIGNAL(triggered(bool)), SLOT( editRecentAddresses() ) );
+    connect(act,SIGNAL(triggered(bool)), SLOT(editRecentAddresses()) );
     popup->exec( e->globalPos() );
     delete popup;
   }

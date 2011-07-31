@@ -230,17 +230,17 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   }
 
   /*
-  connect( d->calendarSearch->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)),
-           this, SLOT(rowsInserted(const QModelIndex &,int,int)) );
-  connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(const QModelIndex &,int,int)),
-           this, SLOT( rowsAboutToBeRemoved(const QModelIndex &,int,int)) );
-  connect( d->calendarSearch->model(), SIGNAL(dataChanged(const QModelIndex &,const QModelIndex &)),
-           this, SLOT( dataChanged(const QModelIndex &,const QModelIndex &)) );
+  connect( d->calendarSearch->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(rowsInserted(QModelIndex,int,int)) );
+  connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+           this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+  connect( d->calendarSearch->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
   connect( d->calendarSearch->model(), SIGNAL(modelReset()), this, SLOT(calendarReset()) );
   */
 
-  connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
-           SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)) );
+  connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
+           SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
 
   connect( d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );

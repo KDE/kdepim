@@ -108,7 +108,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
     d->mComboBox->addItem( (*it)->label );
 
     // Register the FilterAction modification signal
-    connect( action, SIGNAL( filterActionModified() ), this, SIGNAL( filterModified() ) );
+    connect( action, SIGNAL(filterActionModified()), this, SIGNAL(filterModified()) );
   }
 
   // widget for the case where no action is selected.
@@ -131,11 +131,11 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   setFocusProxy( d->mComboBox );
 
   // now connect the combo box and the widget stack
-  connect( d->mComboBox, SIGNAL( activated( int ) ),
-           this, SLOT( slotFilterTypeChanged( int ) ) );
+  connect( d->mComboBox, SIGNAL(activated(int)),
+           this, SLOT(slotFilterTypeChanged(int)) );
 
-  connect( d->mComboBox, SIGNAL( activated( int ) ),
-           this, SIGNAL( filterModified() ) );
+  connect( d->mComboBox, SIGNAL(activated(int)),
+           this, SIGNAL(filterModified()) );
   d->setFilterAction();
 }
 
@@ -276,7 +276,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
         ( aIt != d->mActionList->constEnd() && wIt != widgetList.constEnd() );
         ++aIt, ++wIt ) {
     qobject_cast<FilterActionWidget*>( *wIt )->setAction( ( *aIt ) );
-    connect( qobject_cast<FilterActionWidget*>( *wIt ), SIGNAL( filterModified() ), this, SIGNAL( filterModified() ) );
+    connect( qobject_cast<FilterActionWidget*>( *wIt ), SIGNAL(filterModified()), this, SIGNAL(filterModified()) );
   }
 }
 

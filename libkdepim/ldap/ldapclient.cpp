@@ -158,19 +158,19 @@ void LdapClient::startQuery( const QString &filter )
   d->mActive = true;
 #ifndef KDEPIM_INPROCESS_LDAP
   d->mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( d->mJob, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
-           this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
+  connect( d->mJob, SIGNAL(data(KIO::Job*,QByteArray)),
+           this, SLOT(slotData(KIO::Job*,QByteArray)) );
 #else
   if ( !d->mSession )
     return;
   d->mJob = d->mSession->get( url );
-  connect( d->mJob, SIGNAL( data( const QByteArray& ) ),
-           this, SLOT( slotData( const QByteArray& ) ) );
+  connect( d->mJob, SIGNAL(data(QByteArray)),
+           this, SLOT(slotData(QByteArray)) );
 #endif
-  connect( d->mJob, SIGNAL( infoMessage( KJob*, const QString&, const QString& ) ),
-           this, SLOT( slotInfoMessage( KJob*, const QString&, const QString& ) ) );
-  connect( d->mJob, SIGNAL( result( KJob* ) ),
-           this, SLOT( slotDone() ) );
+  connect( d->mJob, SIGNAL(infoMessage(KJob*,QString,QString)),
+           this, SLOT(slotInfoMessage(KJob*,QString,QString)) );
+  connect( d->mJob, SIGNAL(result(KJob*)),
+           this, SLOT(slotDone()) );
 }
 
 void LdapClient::cancelQuery()
@@ -481,8 +481,8 @@ LdapClientSearch::LdapClientSearch( QObject *parent )
 #endif
 
   d->readConfig();
-  connect( KDirWatch::self(), SIGNAL( dirty( const QString& ) ), this,
-           SLOT( slotFileChanged( const QString& ) ) );
+  connect( KDirWatch::self(), SIGNAL(dirty(QString)), this,
+           SLOT(slotFileChanged(QString)) );
 }
 
 LdapClientSearch::~LdapClientSearch()
@@ -539,17 +539,17 @@ void LdapClientSearch::Private::readConfig()
       attrs << "cn" << "mail" << "givenname" << "sn";
       ldapClient->setAttributes( attrs );
 
-      q->connect( ldapClient, SIGNAL( result( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ),
-                  q, SLOT( slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ) );
-      q->connect( ldapClient, SIGNAL( done() ),
-                  q, SLOT( slotLDAPDone() ) );
-      q->connect( ldapClient, SIGNAL( error( const QString& ) ),
-                  q, SLOT( slotLDAPError( const QString& ) ) );
+      q->connect( ldapClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
+                  q, SLOT(slotLDAPResult(KLDAP::LdapClient,KLDAP::LdapObject)) );
+      q->connect( ldapClient, SIGNAL(done()),
+                  q, SLOT(slotLDAPDone()) );
+      q->connect( ldapClient, SIGNAL(error(QString)),
+                  q, SLOT(slotLDAPError(QString)) );
 
       mClients.append( ldapClient );
     }
 
-    q->connect( &mDataTimer, SIGNAL( timeout() ), SLOT( slotDataTimer() ) );
+    q->connect( &mDataTimer, SIGNAL(timeout()), SLOT(slotDataTimer()) );
   }
   mConfigFile = KStandardDirs::locateLocal( "config", "kabldaprc" );
   KDirWatch::self()->addFile( mConfigFile );

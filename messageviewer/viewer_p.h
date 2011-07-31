@@ -336,7 +336,7 @@ public:
   * @param msg - the message to be shown. If 0, an empty page is displayed.
   * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
   */
-  void setMessage( KMime::Message::Ptr msg, Viewer::UpdateMode updateMode = Viewer::Delayed );
+  void setMessage( const KMime::Message::Ptr& msg, Viewer::UpdateMode updateMode = Viewer::Delayed );
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */

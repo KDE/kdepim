@@ -114,17 +114,17 @@ void TestLDAPClient::testIntevation()
   QString filter = "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
                    "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))";
 
-  connect( mClient, SIGNAL( result( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ),
-           this, SLOT( slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ) );
-  connect( mClient, SIGNAL( done() ),
-           this, SLOT( slotLDAPDone() ) );
-  connect( mClient, SIGNAL( error( const QString& ) ),
-           this, SLOT( slotLDAPError( const QString& ) ) );
+  connect( mClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
+           this, SLOT(slotLDAPResult(KLDAP::LdapClient,KLDAP::LdapObject)) );
+  connect( mClient, SIGNAL(done()),
+           this, SLOT(slotLDAPDone()) );
+  connect( mClient, SIGNAL(error(QString)),
+           this, SLOT(slotLDAPError(QString)) );
   mClient->startQuery( filter );
 
   QEventLoop eventLoop;
-  connect( this, SIGNAL( leaveModality() ),
-           &eventLoop, SLOT( quit() ) );
+  connect( this, SIGNAL(leaveModality()),
+           &eventLoop, SLOT(quit()) );
   eventLoop.exec( QEventLoop::ExcludeUserInputEvents );
 
   delete mClient;

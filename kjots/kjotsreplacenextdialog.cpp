@@ -39,9 +39,9 @@ KJotsReplaceNextDialog::KJotsReplaceNextDialog(QWidget *parent) :
     m_mainLabel = new QLabel( this );
     setMainWidget( m_mainLabel );
 
-    connect( this, SIGNAL( user1Clicked() ), SLOT( onHandleAll() ) );
-    connect( this, SIGNAL( user2Clicked() ), SLOT( onHandleSkip() ) );
-    connect( this, SIGNAL( user3Clicked() ), SLOT( onHandleReplace() ) );
+    connect( this, SIGNAL(user1Clicked()), SLOT(onHandleAll()) );
+    connect( this, SIGNAL(user2Clicked()), SLOT(onHandleSkip()) );
+    connect( this, SIGNAL(user3Clicked()), SLOT(onHandleReplace()) );
 }
 
 void KJotsReplaceNextDialog::setLabel( const QString& pattern, const QString& replacement )

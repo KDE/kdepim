@@ -73,17 +73,17 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WFlags flags )
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = 0;
 
-    connect( d->ui.txtId, SIGNAL( textChanged( const QString& ) ), this, SLOT( enableOkButton( const QString& ) ) );
-    connect( d->ui.txtUrl, SIGNAL( textChanged( const QString & ) ), this, SLOT( enableAutoConfBtn() ) );
-    connect( d->ui.txtUser, SIGNAL( textChanged( const QString & ) ), this, SLOT( enableAutoConfBtn() ) );
-    connect( d->ui.txtPass, SIGNAL( textChanged( const QString & ) ), this, SLOT( enableAutoConfBtn() ) );
-    connect( d->ui.btnAutoConf, SIGNAL( clicked() ), this, SLOT( autoConfigure() ) );
-    connect( d->ui.btnFetch, SIGNAL( clicked() ), this, SLOT( fetchBlogId() ) );
-    connect( d->ui.comboApi, SIGNAL( currentIndexChanged(int) ), this, SLOT( slotComboApiChanged(int) ) );
-    connect( d->ui.txtUrl, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
-    connect( d->ui.txtUser, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
-    connect( d->ui.txtPass, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
-    connect( d->ui.txtId, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
+    connect( d->ui.txtId, SIGNAL(textChanged(QString)), this, SLOT(enableOkButton(QString)) );
+    connect( d->ui.txtUrl, SIGNAL(textChanged(QString)), this, SLOT(enableAutoConfBtn()) );
+    connect( d->ui.txtUser, SIGNAL(textChanged(QString)), this, SLOT(enableAutoConfBtn()) );
+    connect( d->ui.txtPass, SIGNAL(textChanged(QString)), this, SLOT(enableAutoConfBtn()) );
+    connect( d->ui.btnAutoConf, SIGNAL(clicked()), this, SLOT(autoConfigure()) );
+    connect( d->ui.btnFetch, SIGNAL(clicked()), this, SLOT(fetchBlogId()) );
+    connect( d->ui.comboApi, SIGNAL(currentIndexChanged(int)), this, SLOT(slotComboApiChanged(int)) );
+    connect( d->ui.txtUrl, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
+    connect( d->ui.txtUser, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
+    connect( d->ui.txtPass, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
+    connect( d->ui.txtId, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
 
     if ( blog_id > -1 ) {
         this->setWindowTitle( i18n( "Edit blog settings" ) );
@@ -165,10 +165,10 @@ void AddEditBlog::autoConfigure()
     }
     kDebug() << "Trying to guess API type by Homepage contents";
     KIO::StoredTransferJob *httpGetJob = KIO::storedGet( d->ui.txtUrl->text() , KIO::NoReload, KIO::HideProgressInfo );
-    connect( httpGetJob, SIGNAL( result( KJob* ) ), this, SLOT( gotHtml( KJob* ) ) );
+    connect( httpGetJob, SIGNAL(result(KJob*)), this, SLOT(gotHtml(KJob*)) );
     d->mFetchAPITimer = new QTimer( this );
     d->mFetchAPITimer->setSingleShot( true );
-    connect( d->mFetchAPITimer, SIGNAL( timeout() ), this, SLOT( handleFetchAPITimeout() ) );
+    connect( d->mFetchAPITimer, SIGNAL(timeout()), this, SLOT(handleFetchAPITimeout()) );
     d->mFetchAPITimer->start( TIMEOUT );
 }
 
@@ -231,7 +231,7 @@ void AddEditBlog::gotHtml( KJob *job )
     KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( QString(textUrl + QLatin1String("/xmlrpc.php")),
                                                             KIO::NoReload, KIO::HideProgressInfo );
 
-    connect( testXmlRpcJob, SIGNAL( result( KJob* ) ), this, SLOT( gotXmlRpcTest( KJob* ) ) );
+    connect( testXmlRpcJob, SIGNAL(result(KJob*)), this, SLOT(gotXmlRpcTest(KJob*)) );
 }
 
 void AddEditBlog::gotXmlRpcTest( KJob *job )
@@ -269,11 +269,11 @@ void AddEditBlog::fetchBlogId()
             d->mBlog = new KBlog::Blogger1( KUrl( d->ui.txtUrl->text() ), this );
             dynamic_cast<KBlog::Blogger1*>( d->mBlog )->setUsername( d->ui.txtUser->text() );
             dynamic_cast<KBlog::Blogger1*>( d->mBlog )->setPassword( d->ui.txtPass->text() );
-            connect( dynamic_cast<KBlog::Blogger1*>( d->mBlog ) , SIGNAL( listedBlogs( const QList<QMap<QString, QString> >& ) ),
-                     this, SLOT( fetchedBlogId( const QList<QMap<QString, QString> >& ) ) );
+            connect( dynamic_cast<KBlog::Blogger1*>( d->mBlog ) , SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+                     this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
             d->mFetchBlogIdTimer = new QTimer( this );
             d->mFetchBlogIdTimer->setSingleShot( true );
-            connect( d->mFetchBlogIdTimer, SIGNAL( timeout() ), this, SLOT( handleFetchIDTimeout() ) );
+            connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
             d->mFetchBlogIdTimer->start( TIMEOUT );
             dynamic_cast<KBlog::Blogger1*>( d->mBlog )->listBlogs();
             break;
@@ -282,12 +282,12 @@ void AddEditBlog::fetchBlogId()
             d->mBlog = new KBlog::GData( d->ui.txtUrl->text() , this );
             dynamic_cast<KBlog::GData*>( d->mBlog )->setUsername( d->ui.txtUser->text() );
             dynamic_cast<KBlog::GData*>( d->mBlog )->setPassword( d->ui.txtPass->text() );
-            connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL( fetchedProfileId( const QString& ) ),
-                     this, SLOT( fetchedProfileId( const QString& ) ) );
+            connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL(fetchedProfileId(QString)),
+                     this, SLOT(fetchedProfileId(QString)) );
             dynamic_cast<KBlog::GData*>( d->mBlog )->fetchProfileId();
             d->mFetchProfileIdTimer = new QTimer( this );
             d->mFetchProfileIdTimer->setSingleShot( true );
-            connect( d->mFetchProfileIdTimer, SIGNAL( timeout() ), this, SLOT( handleFetchIDTimeout() ) );
+            connect( d->mFetchProfileIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
             d->mFetchProfileIdTimer->start( TIMEOUT );
             break;
         default:
@@ -295,8 +295,8 @@ void AddEditBlog::fetchBlogId()
             return;
             break;
     };
-    connect( d->mBlog, SIGNAL( error( KBlog::Blog::ErrorType, const QString& ) ),
-             this, SLOT( handleFetchError( KBlog::Blog::ErrorType, const QString& ) ) );
+    connect( d->mBlog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
+             this, SLOT(handleFetchError(KBlog::Blog::ErrorType,QString)) );
     d->ui.txtId->setText( i18n( "Please wait..." ) );
     d->ui.txtId->setEnabled( false );
     showWaitWidget( i18n( "Fetching Blog Id..." ) );
@@ -427,13 +427,13 @@ void AddEditBlog::fetchedProfileId( const QString &id )
     Q_UNUSED(id);
     d->mFetchProfileIdTimer->deleteLater();
     d->mFetchProfileIdTimer = 0;
-    connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL( listedBlogs( const QList<QMap<QString, QString> >& ) ),
-             this, SLOT( fetchedBlogId( const QList<QMap<QString, QString> >& ) ) );
-    connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL( error( KBlog::Blog::ErrorType, const QString& ) ),
-             this, SLOT( handleFetchError( KBlog::Blog::ErrorType, const QString& ) ) );
+    connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+             this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
+    connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL(error(KBlog::Blog::ErrorType,QString)),
+             this, SLOT(handleFetchError(KBlog::Blog::ErrorType,QString)) );
     d->mFetchBlogIdTimer = new QTimer( this );
     d->mFetchBlogIdTimer->setSingleShot( true );
-    connect( d->mFetchBlogIdTimer, SIGNAL( timeout() ), this, SLOT( handleFetchIDTimeout() ) );
+    connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
     d->mFetchBlogIdTimer->start( TIMEOUT );
     dynamic_cast<KBlog::GData*>( d->mBlog )->listBlogs();
 }

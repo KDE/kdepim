@@ -70,12 +70,12 @@ public:
 JobTrackerModel::JobTrackerModel( const char *name, QObject* parent )
 :QAbstractItemModel( parent ), d( new Private( name, this ) )
 {
-  connect( &d->tracker, SIGNAL( reset() ),
-           this, SIGNAL( modelReset() ) );
-  connect( &d->tracker, SIGNAL( added( QList< QPair< int, int> > ) ),
-           this, SLOT( jobsAdded( QList< QPair< int, int> > ) ) );
-    connect( &d->tracker, SIGNAL( updated( QList< QPair< int, int> > ) ),
-           this, SLOT( jobsUpdated( QList< QPair< int, int> > ) ) );
+  connect( &d->tracker, SIGNAL(reset()),
+           this, SIGNAL(modelReset()) );
+  connect( &d->tracker, SIGNAL(added(QList<QPair<int,int> >)),
+           this, SLOT(jobsAdded(QList<QPair<int,int> >)) );
+    connect( &d->tracker, SIGNAL(updated(QList<QPair<int,int> >)),
+           this, SLOT(jobsUpdated(QList<QPair<int,int> >)) );
 }
 
 JobTrackerModel::~JobTrackerModel()

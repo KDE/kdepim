@@ -40,7 +40,7 @@ class Recipient
     Recipient( MobileLineEdit *input, QObject *receiver )
       : mInput( input )
     {
-      QObject::connect( mInput, SIGNAL( clearClicked() ), receiver, SLOT( clearRecipientClicked() ) );
+      QObject::connect( mInput, SIGNAL(clearClicked()), receiver, SLOT(clearRecipientClicked()) );
     }
 
   public:
@@ -70,8 +70,8 @@ class EditorContactGroup::Private
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
       mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
 
-      QObject::connect( mUi.launchAccountWizardButton, SIGNAL( clicked() ), q, SIGNAL( requestLaunchAccountWizard() ) );
-      QObject::connect( mUi.groupName, SIGNAL( textChanged( const QString& ) ), q, SLOT( nameTextChanged( const QString& ) ) );
+      QObject::connect( mUi.launchAccountWizardButton, SIGNAL(clicked()), q, SIGNAL(requestLaunchAccountWizard()) );
+      QObject::connect( mUi.groupName, SIGNAL(textChanged(QString)), q, SLOT(nameTextChanged(QString)) );
 
       availableCollectionsChanged();
     }
@@ -229,18 +229,18 @@ void EditorContactGroup::Private::addRows( int newRowCount )
 EditorContactGroup::EditorContactGroup( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
-  connect( d->mUi.addRecipientButton, SIGNAL( clicked() ), SLOT( addRecipientClicked() ) );
+  connect( d->mUi.addRecipientButton, SIGNAL(clicked()), SLOT(addRecipientClicked()) );
 
-  connect( d->mUi.cancelButton, SIGNAL( clicked() ), SIGNAL( cancelClicked() ) );
-  connect( d->mUi.saveButton, SIGNAL( clicked() ), SLOT( disableSaveButton() ) ); // prevent double clicks
-  connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
-  connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
-           SIGNAL( collectionChanged( Akonadi::Collection ) ) );
+  connect( d->mUi.cancelButton, SIGNAL(clicked()), SIGNAL(cancelClicked()) );
+  connect( d->mUi.saveButton, SIGNAL(clicked()), SLOT(disableSaveButton()) ); // prevent double clicks
+  connect( d->mUi.saveButton, SIGNAL(clicked()), SIGNAL(saveClicked()) );
+  connect( d->mUi.collectionSelector, SIGNAL(currentChanged(Akonadi::Collection)),
+           SIGNAL(collectionChanged(Akonadi::Collection)) );
 
-  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           SLOT( availableCollectionsChanged() ) );
-  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-           SLOT( availableCollectionsChanged() ) );
+  connect( d->mUi.collectionSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(availableCollectionsChanged()) );
+  connect( d->mUi.collectionSelector->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           SLOT(availableCollectionsChanged()) );
 }
 
 EditorContactGroup::~EditorContactGroup()
@@ -283,7 +283,7 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( (*inputIt)->mItem );
     job->fetchScope().fetchFullPayload( true );
     job->setProperty( "RecipientIndex", count );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
   }
 }
 

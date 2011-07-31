@@ -108,7 +108,7 @@ void NoteCreatorAndSelector::doCreateNote()
   newItem.addAttribute(eda);
 
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT(noteCreationFinished(KJob*)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(noteCreationFinished(KJob*)) );
 
 }
 

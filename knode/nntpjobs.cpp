@@ -42,9 +42,9 @@ void KNode::GroupListJob::execute()
         .arg( target->fetchSince.day(), 2, 10, QChar( '0' ) );
   destination.setQuery( query.join( "&" ) );
   KIO::ListJob* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
-  connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
-           SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
-  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
+  connect( job, SIGNAL(entries(KIO::Job*,KIO::UDSEntryList)),
+           SLOT(slotEntries(KIO::Job*,KIO::UDSEntryList)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
   setupKIOJob( job );
 }
 
@@ -154,9 +154,9 @@ void KNode::ArticleListJob::execute()
     query << "max=" + QString::number( target->maxFetch() );
   destination.setQuery( query.join( "&" ) );
   KIO::ListJob* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
-  connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
-           SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
-  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
+  connect( job, SIGNAL(entries(KIO::Job*,KIO::UDSEntryList)),
+           SLOT(slotEntries(KIO::Job*,KIO::UDSEntryList)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
   setupKIOJob( job );
 }
 
@@ -224,7 +224,7 @@ void KNode::ArticleFetchJob::execute()
   }
 
   KIO::Job* job = KIO::storedGet( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
   setupKIOJob( job );
 }
 
@@ -259,7 +259,7 @@ void KNode::ArticlePostJob::execute( )
   KUrl url = baseUrl();
 
   KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, KIO::Overwrite | KIO::HideProgressInfo );
-  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
   setupKIOJob( job );
 }
 

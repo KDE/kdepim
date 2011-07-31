@@ -31,8 +31,8 @@ ComposerAutoResizer::ComposerAutoResizer( QWidget *parent )
   Q_ASSERT( mComposer );
 
   // detect when the text changes
-  connect( parent, SIGNAL( textChanged() ), this, SLOT( textEditChanged() ) );
-  connect( parent, SIGNAL( cursorPositionChanged() ), this, SLOT( textEditChanged() ) );
+  connect( parent, SIGNAL(textChanged()), this, SLOT(textEditChanged()) );
+  connect( parent, SIGNAL(cursorPositionChanged()), this, SLOT(textEditChanged()) );
 
   // get the original minimum size of the widget
   mMinimumHeight = mEdit->size().height();

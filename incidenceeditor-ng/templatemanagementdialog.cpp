@@ -72,7 +72,7 @@ TemplateManagementDialog::TemplateManagementDialog(
 
   connect( m_base.m_listBox, SIGNAL(itemSelectionChanged()),
            SLOT(slotItemSelected()) );
-  connect( m_base.m_listBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
+  connect( m_base.m_listBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            SLOT(slotApplyTemplate()) );
   connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
 

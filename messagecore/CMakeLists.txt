@@ -12,6 +12,7 @@ include_directories( ${Boost_INCLUDE_DIR}
 
 set(messagecore_LIB_SRCS
 
+   asyncnepomukresourceretriever.cpp
    attachmentcollector.cpp
    attachmentcompressjob.cpp
    attachmentfrommimecontentjob.cpp

@@ -121,7 +121,7 @@ ImageWidget::ImageWidget( QWidget *parent )
   setIconSize( QSize( 100, 130 ) );
   setFixedSize( QSize( 120, 160 ) );
 
-  connect( this, SIGNAL( clicked() ), SLOT( changeImage() ) );
+  connect( this, SIGNAL(clicked()), SLOT(changeImage()) );
 
   updateView();
 }
@@ -137,7 +137,7 @@ ImageWidget::ImageWidget( Type type, QWidget *parent )
   setIconSize( QSize( 100, 130 ) );
   setFixedSize( QSize( 120, 160 ) );
 
-  connect( this, SIGNAL( clicked() ), SLOT( changeImage() ) );
+  connect( this, SIGNAL(clicked()), SLOT(changeImage()) );
 
   setType( type );
 
@@ -260,23 +260,23 @@ void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
 
   if ( mType == Photo ) {
     if ( !mReadOnly )
-      menu.addAction( i18n( "Change photo..." ), this, SLOT( changeImage() ) );
+      menu.addAction( i18n( "Change photo..." ), this, SLOT(changeImage()) );
 
     if ( mHasImage ) {
-      menu.addAction( i18n( "Save photo..." ), this, SLOT( saveImage() ) );
+      menu.addAction( i18n( "Save photo..." ), this, SLOT(saveImage()) );
 
       if ( !mReadOnly )
-        menu.addAction( i18n( "Remove photo" ), this, SLOT( deleteImage() ) );
+        menu.addAction( i18n( "Remove photo" ), this, SLOT(deleteImage()) );
     }
   } else {
     if ( !mReadOnly )
-      menu.addAction( i18n( "Change logo..." ), this, SLOT( changeImage() ) );
+      menu.addAction( i18n( "Change logo..." ), this, SLOT(changeImage()) );
 
     if ( mHasImage ) {
-      menu.addAction( i18n( "Save logo..." ), this, SLOT( saveImage() ) );
+      menu.addAction( i18n( "Save logo..." ), this, SLOT(saveImage()) );
 
       if ( !mReadOnly )
-        menu.addAction( i18n( "Remove logo" ), this, SLOT( deleteImage() ) );
+        menu.addAction( i18n( "Remove logo" ), this, SLOT(deleteImage()) );
     }
   }
 

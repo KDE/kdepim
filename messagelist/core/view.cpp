@@ -86,10 +86,10 @@ View::View( Widget *pParent )
   : QTreeView( pParent ), d( new Private( this, pParent ) )
 {
   d->mSaveThemeColumnStateTimer = new QTimer();
-  connect( d->mSaveThemeColumnStateTimer, SIGNAL( timeout() ), this, SLOT( saveThemeColumnState() ) );
+  connect( d->mSaveThemeColumnStateTimer, SIGNAL(timeout()), this, SLOT(saveThemeColumnState()) );
 
   d->mApplyThemeColumnsTimer = new QTimer();
-  connect( d->mApplyThemeColumnsTimer, SIGNAL( timeout() ), this, SLOT( applyThemeColumns() ) );
+  connect( d->mApplyThemeColumnsTimer, SIGNAL(timeout()), this, SLOT(applyThemeColumns()) );
 
   setItemDelegate( d->mDelegate );
   setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
@@ -100,10 +100,10 @@ View::View( Widget *pParent )
   viewport()->setAcceptDrops( true );
 
   header()->setContextMenuPolicy( Qt::CustomContextMenu );
-  connect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
-           SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
-  connect( header(), SIGNAL( sectionResized( int, int, int ) ),
-           SLOT( slotHeaderSectionResized( int, int ,int ) ) );
+  connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
+           SLOT(slotHeaderContextMenuRequested(QPoint)) );
+  connect( header(), SIGNAL(sectionResized(int,int,int)),
+           SLOT(slotHeaderSectionResized(int,int,int)) );
 
   header()->setClickable( true );
   header()->setResizeMode( QHeaderView::Interactive );
@@ -113,17 +113,17 @@ View::View( Widget *pParent )
   d->mModel = new Model( this );
   setModel( d->mModel );
 
-  connect( d->mModel, SIGNAL( statusMessage( const QString & ) ),
-           pParent, SIGNAL( statusMessage( const QString & ) ) );
+  connect( d->mModel, SIGNAL(statusMessage(QString)),
+           pParent, SIGNAL(statusMessage(QString)) );
 
-  //connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex &, const QModelIndex & ) ),
-  //         this, SLOT( slotCurrentIndexChanged( const QModelIndex &, const QModelIndex & ) ) );
-  connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-           this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ),
+  //connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+  //         this, SLOT(slotCurrentIndexChanged(QModelIndex,QModelIndex)) );
+  connect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
            Qt::UniqueConnection );
 
   // as in KDE3, when a root-item of a message thread is expanded, expand all children
-  connect( this, SIGNAL( expanded ( const QModelIndex & ) ), this, SLOT( expandFullThread( const QModelIndex & ) ) );
+  connect( this, SIGNAL(expanded(QModelIndex)), this, SLOT(expandFullThread(QModelIndex)) );
 }
 
 View::~View()
@@ -158,12 +158,12 @@ void View::ignoreCurrentChanges( bool ignore )
 {
   if ( ignore )
   {
-    disconnect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-                this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+    disconnect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
     viewport()->setUpdatesEnabled( false );
   } else {
-    connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-             this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ),
+    connect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+             this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
              Qt::UniqueConnection );
     viewport()->setUpdatesEnabled( true );
   }
@@ -731,8 +731,8 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
   act->setData( QVariant( static_cast< int >( gHeaderContextMenuDisplayToolTipsId ) ) );
 
   QObject::connect(
-      &menu, SIGNAL( triggered( QAction * ) ),
-      this, SLOT( slotHeaderContextMenuTriggered( QAction *  ) )
+      &menu, SIGNAL(triggered(QAction*)),
+      this, SLOT(slotHeaderContextMenuTriggered(QAction*))
     );
 
   menu.addSeparator();
@@ -1566,20 +1566,20 @@ void View::fillViewMenu( KMenu * menu )
   KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
   sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
   menu->addMenu( sortingMenu );
-  connect( sortingMenu, SIGNAL( aboutToShow() ),
-           d->mWidget, SLOT( sortOrderMenuAboutToShow() ) );
+  connect( sortingMenu, SIGNAL(aboutToShow()),
+           d->mWidget, SLOT(sortOrderMenuAboutToShow()) );
 
   KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
   aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
   menu->addMenu( aggregationMenu );
-  connect( aggregationMenu, SIGNAL( aboutToShow() ),
-           d->mWidget, SLOT( aggregationMenuAboutToShow() ) );
+  connect( aggregationMenu, SIGNAL(aboutToShow()),
+           d->mWidget, SLOT(aggregationMenuAboutToShow()) );
 
   KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
   themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
   menu->addMenu( themeMenu );
-  connect( themeMenu, SIGNAL( aboutToShow() ),
-           d->mWidget, SLOT( themeMenuAboutToShow() ) );
+  connect( themeMenu, SIGNAL(aboutToShow()),
+           d->mWidget, SLOT(themeMenuAboutToShow()) );
 }
 
 bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )

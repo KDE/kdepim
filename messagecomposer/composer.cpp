@@ -224,7 +224,7 @@ void ComposerPrivate::contentJobPreInlineFinished( KJob *job )
     seJob->setSigningKeys( signers );
     seJob->setRecipients( recipients.first );
 
-    QObject::connect( seJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+    QObject::connect( seJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
 
     q->addSubjob( seJob );
     seJob->start();
@@ -251,9 +251,9 @@ void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
     sJob->setSigningKeys( signers );
 
     if( encrypt ) {
-      QObject::connect( sJob, SIGNAL( finished( KJob* ) ), q, SLOT( signBeforeEncryptJobFinished( KJob* ) ) );
+      QObject::connect( sJob, SIGNAL(finished(KJob*)), q, SLOT(signBeforeEncryptJobFinished(KJob*)) );
     } else {
-      QObject::connect( sJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+      QObject::connect( sJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
     }
     q->addSubjob( sJob );
     sJob->start();
@@ -306,7 +306,7 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
     eJob->setEncryptionKeys( recipients.second );
     eJob->setRecipients( recipients.first );
     
-    QObject::connect( eJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+    QObject::connect( eJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
 
     q->addSubjob( eJob );
     eJob->start();
@@ -432,7 +432,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
     }
   }
 
-  QObject::connect( multiJob, SIGNAL( finished( KJob* ) ), q, SLOT( attachmentsFinished( KJob* ) ) );
+  QObject::connect( multiJob, SIGNAL(finished(KJob*)), q, SLOT(attachmentsFinished(KJob*)) );
 
   q->addSubjob( multiJob );
   multiJob->start();

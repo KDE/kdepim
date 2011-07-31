@@ -52,21 +52,21 @@ KNCollectionView::KNCollectionView( QWidget *parent ) :
 
   // connect to the account manager
   KNAccountManager* am = knGlobals.accountManager();
-  connect( am, SIGNAL( accountAdded( KNNntpAccount::Ptr ) ), SLOT( addAccount( KNNntpAccount::Ptr ) ) );
-  connect( am, SIGNAL( accountRemoved( KNNntpAccount::Ptr ) ), SLOT( removeAccount( KNNntpAccount::Ptr ) ) );
-  connect( am, SIGNAL( accountModified( KNNntpAccount::Ptr ) ), SLOT( updateAccount( KNNntpAccount::Ptr ) ) );
+  connect( am, SIGNAL(accountAdded(KNNntpAccount::Ptr)), SLOT(addAccount(KNNntpAccount::Ptr)) );
+  connect( am, SIGNAL(accountRemoved(KNNntpAccount::Ptr)), SLOT(removeAccount(KNNntpAccount::Ptr)) );
+  connect( am, SIGNAL(accountModified(KNNntpAccount::Ptr)), SLOT(updateAccount(KNNntpAccount::Ptr)) );
 
   // connect to the group manager
   KNGroupManager* gm = knGlobals.groupManager();
-  connect( gm, SIGNAL( groupAdded( KNGroup::Ptr ) ), SLOT( addGroup( KNGroup::Ptr ) ) );
-  connect( gm, SIGNAL( groupRemoved( KNGroup::Ptr ) ), SLOT( removeGroup( KNGroup::Ptr ) ) );
-  connect( gm, SIGNAL( groupUpdated( KNGroup::Ptr ) ), SLOT( updateGroup( KNGroup::Ptr ) ) );
+  connect( gm, SIGNAL(groupAdded(KNGroup::Ptr)), SLOT(addGroup(KNGroup::Ptr)) );
+  connect( gm, SIGNAL(groupRemoved(KNGroup::Ptr)), SLOT(removeGroup(KNGroup::Ptr)) );
+  connect( gm, SIGNAL(groupUpdated(KNGroup::Ptr)), SLOT(updateGroup(KNGroup::Ptr)) );
 
   // connect to the folder manager
   KNFolderManager* fm = knGlobals.folderManager();
-  connect( fm, SIGNAL( folderAdded( KNFolder::Ptr ) ), SLOT( addPendingFolders() ) );
-  connect( fm, SIGNAL( folderRemoved( KNFolder::Ptr ) ), SLOT( removeFolder( KNFolder::Ptr ) ) );
-  connect( fm, SIGNAL( folderActivated( KNFolder::Ptr ) ), SLOT( activateFolder( KNFolder::Ptr ) ) );
+  connect( fm, SIGNAL(folderAdded(KNFolder::Ptr)), SLOT(addPendingFolders()) );
+  connect( fm, SIGNAL(folderRemoved(KNFolder::Ptr)), SLOT(removeFolder(KNFolder::Ptr)) );
+  connect( fm, SIGNAL(folderActivated(KNFolder::Ptr)), SLOT(activateFolder(KNFolder::Ptr)) );
 
   // Edition of label
   setEditTriggers( QAbstractItemView::NoEditTriggers );

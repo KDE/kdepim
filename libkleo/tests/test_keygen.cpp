@@ -125,8 +125,8 @@ void KeyGenerator::slotStartKeyGeneration() {
   Kleo::KeyGenerationJob * job = proto->keyGenerationJob();
   assert( job );
 
-  connect( job, SIGNAL(result(const GpgME::KeyGenerationResult&,const QByteArray&)),
-	   SLOT(slotResult(const GpgME::KeyGenerationResult&,const QByteArray&)) );
+  connect( job, SIGNAL(result(GpgME::KeyGenerationResult,QByteArray)),
+	   SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray)) );
 
   const GpgME::Error err = job->start( params );
   if ( err )

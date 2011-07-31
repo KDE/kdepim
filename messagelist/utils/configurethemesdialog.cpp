@@ -100,24 +100,24 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   d->mThemeList->setSortingEnabled( true );
   g->addWidget( d->mThemeList, 0, 0, 5, 1 );
 
-  connect( d->mThemeList, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
-           SLOT( themeListCurrentItemChanged( QListWidgetItem *, QListWidgetItem * ) ) );
+  connect( d->mThemeList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+           SLOT(themeListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
 
   d->mNewThemeButton = new QPushButton( i18n( "New Theme" ), base );
   d->mNewThemeButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
   d->mNewThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mNewThemeButton, 0, 1 );
 
-  connect( d->mNewThemeButton, SIGNAL( clicked() ),
-           SLOT( newThemeButtonClicked() ) );
+  connect( d->mNewThemeButton, SIGNAL(clicked()),
+           SLOT(newThemeButtonClicked()) );
 
   d->mCloneThemeButton = new QPushButton( i18n( "Clone Theme" ), base );
   d->mCloneThemeButton->setIcon( KIcon( QLatin1String( "edit-copy" ) ) );
   d->mCloneThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mCloneThemeButton, 1, 1 );
 
-  connect( d->mCloneThemeButton, SIGNAL( clicked() ),
-           SLOT( cloneThemeButtonClicked() ) );
+  connect( d->mCloneThemeButton, SIGNAL(clicked()),
+           SLOT(cloneThemeButtonClicked()) );
 
   QFrame * f = new QFrame( base );
   f->setFrameStyle( QFrame::Sunken | QFrame::HLine );
@@ -129,20 +129,20 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   d->mDeleteThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mDeleteThemeButton, 3, 1 );
 
-  connect( d->mDeleteThemeButton, SIGNAL( clicked() ),
-           SLOT( deleteThemeButtonClicked() ) );
+  connect( d->mDeleteThemeButton, SIGNAL(clicked()),
+           SLOT(deleteThemeButtonClicked()) );
 
   d->mEditor = new ThemeEditor( base );
   g->addWidget( d->mEditor, 5, 0, 1, 2 );
 
-  connect( d->mEditor, SIGNAL( themeNameChanged() ),
-           SLOT( editedThemeNameChanged() ) );
+  connect( d->mEditor, SIGNAL(themeNameChanged()),
+           SLOT(editedThemeNameChanged()) );
 
   g->setColumnStretch( 0, 1 );
   g->setRowStretch( 4, 1 );
 
-  connect( this, SIGNAL( okClicked() ),
-           SLOT( okButtonClicked() ) );
+  connect( this, SIGNAL(okClicked()),
+           SLOT(okButtonClicked()) );
 
   d->fillThemeList();
 }

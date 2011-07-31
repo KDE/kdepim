@@ -29,8 +29,8 @@ using namespace MailCommon;
 FilterModel::FilterModel( QObject *parent )
   : QAbstractListModel( parent )
 {
-  connect( FilterIf->filterManager(), SIGNAL( filterListUpdated() ),
-           this, SLOT( filterListUpdated() ) );
+  connect( FilterIf->filterManager(), SIGNAL(filterListUpdated()),
+           this, SLOT(filterListUpdated()) );
 }
 
 QVariant FilterModel::data( const QModelIndex &index, int role ) const

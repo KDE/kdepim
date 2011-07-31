@@ -38,7 +38,7 @@ void ExtendedIncidenceViewer::itemRemoved()
 KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : DeclarativeAkonadiItem(parent)
 {
   m_viewer = new ExtendedIncidenceViewer( 0 );
-  connect( m_viewer, SIGNAL( incidenceRemoved() ), SIGNAL( incidenceRemoved() ) );
+  connect( m_viewer, SIGNAL(incidenceRemoved()), SIGNAL(incidenceRemoved()) );
 
   setWidget( m_viewer );
 }

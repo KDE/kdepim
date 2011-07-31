@@ -74,8 +74,8 @@ namespace MailCommon {
     setFocusProxy( mLineEdit );
     hlay->addWidget( mLineEdit );
 
-    connect( mLineEdit, SIGNAL( textChanged( const QString & ) ),
-             this, SIGNAL( textChanged( const QString & ) ) );
+    connect( mLineEdit, SIGNAL(textChanged(QString)),
+             this, SIGNAL(textChanged(QString)) );
 
     if( !KServiceTypeTrader::self()->query("KRegExpEditor/KRegExpEditor").isEmpty() ) {
       mRegExpEditButton = new QPushButton( i18n("Edit..."), this );
@@ -84,8 +84,8 @@ namespace MailCommon {
                                         QSizePolicy::Fixed );
       hlay->addWidget( mRegExpEditButton );
 
-      connect( mRegExpEditButton, SIGNAL( clicked() ),
-               this, SLOT( slotEditRegExp() ) );
+      connect( mRegExpEditButton, SIGNAL(clicked()),
+               this, SLOT(slotEditRegExp()) );
     }
   }
 

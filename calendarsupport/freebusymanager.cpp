@@ -476,7 +476,7 @@ void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
 
   FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail,
                                                       mParentWidgetForRetrieval );
-  q->connect( job, SIGNAL(result(KJob *)), SLOT(processFreeBusyDownloadResult(KJob *)) );
+  q->connect( job, SIGNAL(result(KJob*)), SLOT(processFreeBusyDownloadResult(KJob*)) );
   job->start();
 }
 
@@ -549,8 +549,8 @@ void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &provider
   foreach ( const QString &provider, providers ) {
     FreeBusyProviderRequest request( provider );
 
-    connect( request.mInterface.data(), SIGNAL( handlesFreeBusy( const QString&, bool ) ),
-             this, SLOT( onHandlesFreeBusy( const QString&, bool ) ) );
+    connect( request.mInterface.data(), SIGNAL(handlesFreeBusy(QString,bool)),
+             this, SLOT(onHandlesFreeBusy(QString,bool)) );
 
     request.mInterface->call( "canHandleFreeBusy", email );
     request.mRequestStatus = FreeBusyProviderRequest::HandlingRequested;
@@ -589,8 +589,8 @@ void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handle
   if ( requestIndex == -1 )
     return;
 
-  disconnect( iface, SIGNAL( handlesFreeBusy( const QString&, bool ) ),
-           this, SLOT( onHandlesFreeBusy( const QString&, bool ) ) );
+  disconnect( iface, SIGNAL(handlesFreeBusy(QString,bool)),
+           this, SLOT(onHandlesFreeBusy(QString,bool)) );
 
   if ( !handles ) {
     queue->mRequests.removeAt( requestIndex );
@@ -603,8 +603,8 @@ void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handle
   }
   else {
     ++queue->mHandlersCount;
-    connect( iface, SIGNAL( freeBusyRetrieved( const QString&, const QString&, bool, const QString& ) ),
-             this, SLOT( onFreeBusyRetrieved( const QString&, const QString&, bool, const QString& ) ) );
+    connect( iface, SIGNAL(freeBusyRetrieved(QString,QString,bool,QString)),
+             this, SLOT(onFreeBusyRetrieved(QString,QString,bool,QString)) );
     iface->call( "retrieveFreeBusy", email, queue->mStartTime, queue->mEndTime );
     queue->mRequests[requestIndex].mRequestStatus = FreeBusyProviderRequest::FreeBusyRequested;
   }
@@ -633,8 +633,8 @@ void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email, const QS
   if ( requestIndex == -1 )
     return;
 
-  disconnect( iface, SIGNAL( freeBusyRetrieved( const QString&, const QString&, bool, const QString& ) ),
-              this, SLOT( onFreeBusyRetrieved( const QString&, const QString&, bool, const QString& ) ) );
+  disconnect( iface, SIGNAL(freeBusyRetrieved(QString,QString,bool,QString)),
+              this, SLOT(onFreeBusyRetrieved(QString,QString,bool,QString)) );
 
   queue->mRequests.removeAt( requestIndex );
 
@@ -829,7 +829,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
     job->ui()->setWindow( parentWidget );
 
-    connect( job, SIGNAL(result(KJob *)), SLOT(slotUploadFreeBusyResult(KJob *)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotUploadFreeBusyResult(KJob*)) );
   }
 }
 

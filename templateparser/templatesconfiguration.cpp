@@ -48,19 +48,19 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
   sizeHint();
 
-  connect( textEdit_new, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged( void ) ) );
-  connect( textEdit_reply, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged( void ) ) );
-  connect( textEdit_reply_all, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged( void ) ) );
-  connect( textEdit_forward, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged( void ) ) );
-  connect( lineEdit_quote, SIGNAL( textChanged( const QString & ) ),
-           this, SLOT( slotTextChanged( void ) ) );
+  connect( textEdit_new, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
+  connect( textEdit_reply, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
+  connect( textEdit_reply_all, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
+  connect( textEdit_forward, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
+  connect( lineEdit_quote, SIGNAL(textChanged(QString)),
+           this, SLOT(slotTextChanged()) );
 
-  connect( mInsertCommand, SIGNAL( insertCommand(const QString&, int) ),
-           this, SLOT( slotInsertCommand(const QString &, int) ) );
+  connect( mInsertCommand, SIGNAL(insertCommand(QString,int)),
+           this, SLOT(slotInsertCommand(QString,int)) );
 
   mHelpString =
     i18n( "<p>Here you can create and manage templates to use when "
@@ -86,8 +86,8 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
   }
 
   mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
-  connect( mHelp, SIGNAL( linkActivated ( const QString& ) ),
-           this, SLOT( slotHelpLinkClicked( const QString& ) ) );
+  connect( mHelp, SIGNAL(linkActivated(QString)),
+           this, SLOT(slotHelpLinkClicked(QString)) );
 }
 
 

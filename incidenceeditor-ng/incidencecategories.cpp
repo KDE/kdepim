@@ -163,3 +163,4 @@ void IncidenceCategories::checkForUnknownCategories( const QStringList &categori
   Q_UNUSED( categoriesToCheck )
 #endif
 }
+

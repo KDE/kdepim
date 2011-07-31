@@ -117,8 +117,8 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
       mBlogs->addItem( blog.second, blog.first );
       mBlogs->setEnabled( true );
     }
-    connect ( mAPI, SIGNAL( currentIndexChanged( int ) ),
-        this, SLOT( slotBlogAPIChanged( int ) ) );
+    connect ( mAPI, SIGNAL(currentIndexChanged(int)),
+        this, SLOT(slotBlogAPIChanged(int)) );
     mReloadConfig->loadSettings( resource );
     mSaveConfig->loadSettings( resource );
     kDebug( 5650 ) << "ResourceBlogConfig::loadSettings(): reloaded";

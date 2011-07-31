@@ -92,8 +92,8 @@ FreeBusyItemModel::FreeBusyItemModel( QObject *parent )
   qRegisterMetaType<KCalCore::Period>( "KCalCore::Period" );
 
   CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
-  connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,const QString &)),
-           SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,const QString &)) );
+  connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
+           SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
 
   connect( &mReloadTimer, SIGNAL(timeout()), SLOT(autoReload()) );
   mReloadTimer.setSingleShot( true );

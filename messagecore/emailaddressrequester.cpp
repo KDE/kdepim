@@ -85,9 +85,9 @@ EmailAddressRequester::EmailAddressRequester( QWidget *parent )
   d->mButton->setToolTip( i18n( "Open Address Book" ) );
   layout->addWidget( d->mButton );
 
-  connect( d->mButton, SIGNAL( clicked() ), this, SLOT( slotAddressBook() ) );
-  connect( d->mLineEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SIGNAL( textChanged() ) );
+  connect( d->mButton, SIGNAL(clicked()), this, SLOT(slotAddressBook()) );
+  connect( d->mLineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(textChanged()) );
 }
 
 EmailAddressRequester::~EmailAddressRequester()

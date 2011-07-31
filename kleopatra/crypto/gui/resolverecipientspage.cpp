@@ -81,7 +81,7 @@ ResolveRecipientsPage::ListWidget::ListWidget( QWidget* parent, Qt::WindowFlags 
     m_listWidget->setSelectionMode( QAbstractItemView::MultiSelection );
     QVBoxLayout * const layout = new QVBoxLayout( this );
     layout->addWidget( m_listWidget );
-    connect( m_listWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( onSelectionChange() ) );
+    connect( m_listWidget, SIGNAL(itemSelectionChanged()), this, SLOT(onSelectionChange()) );
 }
 
 ResolveRecipientsPage::ListWidget::~ListWidget()
@@ -114,7 +114,7 @@ void ResolveRecipientsPage::ListWidget::addEntry( const QString& id, const QStri
     QListWidgetItem* item = new QListWidgetItem;
     item->setData( IdRole, id );
     ItemWidget* wid = new ItemWidget( id, name, mbox, this );
-    connect( wid, SIGNAL( changed() ), this, SIGNAL( completeChanged() ) );
+    connect( wid, SIGNAL(changed()), this, SIGNAL(completeChanged()) );
     wid->setProtocol( m_protocol );
     item->setSizeHint( wid->sizeHint() );
     m_listWidget->addItem( item );
@@ -203,13 +203,13 @@ ResolveRecipientsPage::ItemWidget::ItemWidget( const QString& id, const QString&
     m_certLabel->setText( i18n( "<i>No certificate selected</i>" ) );
     layout->addWidget( m_certLabel );
     m_certCombo = new QComboBox;
-    connect( m_certCombo, SIGNAL( currentIndexChanged( int ) ),
-             this, SIGNAL( changed() ) );
+    connect( m_certCombo, SIGNAL(currentIndexChanged(int)),
+             this, SIGNAL(changed()) );
     layout->addWidget( m_certCombo );
     m_selectButton = new QToolButton;
     m_selectButton->setText( i18n( "..." ) );
-    connect( m_selectButton, SIGNAL( clicked() ),
-             this, SLOT( showSelectionDialog() ) );
+    connect( m_selectButton, SIGNAL(clicked()),
+             this, SLOT(showSelectionDialog()) );
     layout->addWidget( m_selectButton );
     layout->addSpacing( 15 );
     setCertificates( std::vector<Key>(), std::vector<Key>() );
@@ -416,8 +416,8 @@ ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
     q->setTitle( i18n( "<b>Recipients</b>" ) );
     QVBoxLayout* const layout = new QVBoxLayout( q );
     m_listWidget = new ListWidget;
-    connect( m_listWidget, SIGNAL( selectionChanged() ), q, SLOT( selectionChanged() ) );
-    connect( m_listWidget, SIGNAL( completeChanged() ), q, SIGNAL( completeChanged() ) );
+    connect( m_listWidget, SIGNAL(selectionChanged()), q, SLOT(selectionChanged()) );
+    connect( m_listWidget, SIGNAL(completeChanged()), q, SIGNAL(completeChanged()) );
     layout->addWidget( m_listWidget );
     m_additionalRecipientsLabel = new QLabel;
     m_additionalRecipientsLabel->setWordWrap( true );
@@ -427,21 +427,21 @@ ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
     QHBoxLayout* buttonLayout = new QHBoxLayout( buttonWidget );
     buttonLayout->setMargin( 0 );
     m_addButton = new QPushButton;
-    connect( m_addButton, SIGNAL( clicked() ), q, SLOT( addRecipient() ) );
+    connect( m_addButton, SIGNAL(clicked()), q, SLOT(addRecipient()) );
     m_addButton->setText( i18n( "Add Recipient..." ) );
     buttonLayout->addWidget( m_addButton );
     m_removeButton = new QPushButton;
     m_removeButton->setEnabled( false );
     m_removeButton->setText( i18n( "Remove Selected" ) );
-    connect( m_removeButton, SIGNAL( clicked() ),
-             q, SLOT( removeSelectedEntries() ) );
+    connect( m_removeButton, SIGNAL(clicked()),
+             q, SLOT(removeSelectedEntries()) );
     buttonLayout->addWidget( m_removeButton );
     buttonLayout->addStretch();
     layout->addWidget( buttonWidget );
     QWidget* protocolWidget = new QWidget;
     QHBoxLayout* protocolLayout = new QHBoxLayout( protocolWidget );
     QButtonGroup* protocolGroup = new QButtonGroup( q );
-    connect( protocolGroup, SIGNAL( buttonClicked( int ) ), q, SLOT( protocolSelected( int ) ) );
+    connect( protocolGroup, SIGNAL(buttonClicked(int)), q, SLOT(protocolSelected(int)) );
     m_pgpRB = new QRadioButton;
     m_pgpRB->setText( i18n( "OpenPGP" ) );
     protocolGroup->addButton( m_pgpRB, OpenPGP );

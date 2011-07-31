@@ -71,13 +71,13 @@ ExportCertificatesDialog::Private::Private( ExportCertificatesDialog * qq )
     pgpLabel->setText( i18n(" OpenPGP export file:" ) );
     grid->addWidget( pgpLabel, 0, 0 );     
     pgpRequester = new FileNameRequester;
-    connect( pgpRequester, SIGNAL( fileNameChanged( QString ) ), q, SLOT( fileNamesChanged() ) );
+    connect( pgpRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
     grid->addWidget( pgpRequester, 0, 1 );
     QLabel* const cmsLabel = new QLabel;
     cmsLabel->setText( i18n( "S/MIME export file:" ) );
     grid->addWidget( cmsLabel, 1, 0 );
     cmsRequester = new FileNameRequester;
-    connect( cmsRequester, SIGNAL( fileNameChanged( QString ) ), q, SLOT( fileNamesChanged() ) );
+    connect( cmsRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
     grid->addWidget( cmsRequester, 1, 1 );
     q->setMainWidget( main );
     fileNamesChanged();

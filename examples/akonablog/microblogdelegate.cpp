@@ -40,7 +40,7 @@ QList<QWidget*> MicroblogDelegate::createItemWidgets() const
 
     QWebView * infoLabel = new QWebView();
     infoLabel->setBackgroundRole( QPalette::NoRole );
-    connect( infoLabel, SIGNAL( linkClicked( const QUrl & ) ), SLOT( slotLinkClicked( const QUrl & ) ) );
+    connect( infoLabel, SIGNAL(linkClicked(QUrl)), SLOT(slotLinkClicked(QUrl)) );
     list << infoLabel;
     return list;
 }

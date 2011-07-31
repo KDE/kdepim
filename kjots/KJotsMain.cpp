@@ -63,8 +63,8 @@ KJotsMain::KJotsMain()
     statusBar()->insertItem(QString(), 0, 1);
     statusBar()->setItemAlignment(0, Qt::AlignLeft | Qt::AlignVCenter);
 
-    connect(component, SIGNAL(activeAnchorChanged(const QString &, const QString &)),
-            SLOT(activeAnchorChanged(const QString &, const QString &)));
+    connect(component, SIGNAL(activeAnchorChanged(QString,QString)),
+            SLOT(activeAnchorChanged(QString,QString)));
 
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));

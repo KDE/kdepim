@@ -84,8 +84,8 @@ KJotsEdit::~KJotsEdit()
 void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
 {
     QMenu *popup = createStandardContextMenu();
-    connect( popup, SIGNAL( triggered ( QAction* ) ),
-             this, SLOT( menuActivated( QAction* ) ) );
+    connect( popup, SIGNAL(triggered(QAction*)),
+             this, SLOT(menuActivated(QAction*)) );
 
     popup->addSeparator();
     QAction * act = actionCollection->action("copyIntoTitle");
@@ -251,11 +251,11 @@ void KJotsEdit::onAutoDecimal( void )
 {
     if (allowAutoDecimal == true ) {
         allowAutoDecimal = false;
-        disconnect(this, SIGNAL(textChanged()), this, SLOT(DecimalList(void)));
+        disconnect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
         actionCollection->action("auto_decimal")->setChecked( false );
     } else {
         allowAutoDecimal = true;
-        connect(this, SIGNAL(textChanged()), this, SLOT(DecimalList(void)));
+        connect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
         actionCollection->action("auto_decimal")->setChecked( true );
     }
 }

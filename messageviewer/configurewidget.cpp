@@ -55,12 +55,12 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
   mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
       GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis() );
 
-  connect( mSettingsUi->kcfg_ShowExpandQuotesMark, SIGNAL( toggled( bool ) ),
-           mSettingsUi->kcfg_CollapseQuoteLevelSpin, SLOT( setEnabled( bool ) ) );
-  connect( mSettingsUi->fallbackCharacterEncoding, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( settingsChanged() ) );
-  connect( mSettingsUi->overrideCharacterEncoding, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( settingsChanged() ) );
+  connect( mSettingsUi->kcfg_ShowExpandQuotesMark, SIGNAL(toggled(bool)),
+           mSettingsUi->kcfg_CollapseQuoteLevelSpin, SLOT(setEnabled(bool)) );
+  connect( mSettingsUi->fallbackCharacterEncoding, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(settingsChanged()) );
+  connect( mSettingsUi->overrideCharacterEncoding, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(settingsChanged()) );
 }
 
 ConfigureWidget::~ConfigureWidget()

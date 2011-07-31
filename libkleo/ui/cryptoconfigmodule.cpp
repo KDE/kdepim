@@ -453,7 +453,7 @@ Kleo::CryptoConfigEntryGUI::CryptoConfigEntryGUI(
   const QString& entryName )
   : QObject( module ), mEntry( entry ), mName( entryName ), mChanged( false )
 {
-  connect( this, SIGNAL( changed() ), module, SIGNAL( changed() ) );
+  connect( this, SIGNAL(changed()), module, SIGNAL(changed()) );
 }
 
 QString Kleo::CryptoConfigEntryGUI::description() const
@@ -496,7 +496,7 @@ Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
     label->setEnabled( false );
     mLineEdit->setEnabled( false );
   } else {
-    connect( mLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+    connect( mLineEdit, SIGNAL(textChanged(QString)), SLOT(slotChanged()) );
   }
 }
 
@@ -778,7 +778,7 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   } else {
     if ( mKind == UInt || mKind == ListOfNone )
       mNumInput->setMinimum( 0 );
-    connect( mNumInput, SIGNAL( valueChanged(int) ), SLOT( slotChanged() ) );
+    connect( mNumInput, SIGNAL(valueChanged(int)), SLOT(slotChanged()) );
   }
 }
 
@@ -830,7 +830,7 @@ Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
   if ( entry->isReadOnly() ) {
     mCheckBox->setEnabled( false );
   } else {
-    connect( mCheckBox, SIGNAL( toggled(bool) ), SLOT( slotChanged() ) );
+    connect( mCheckBox, SIGNAL(toggled(bool)), SLOT(slotChanged()) );
   }
 }
 
@@ -868,7 +868,7 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
 
   if ( entry->isReadOnly() )
     mLabel->setEnabled( false );
-  connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+  connect( mPushButton, SIGNAL(clicked()), SLOT(slotOpenDialog()) );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
@@ -939,7 +939,7 @@ Kleo::CryptoConfigEntryKeyserver::CryptoConfigEntryKeyserver(
     mLabel->setEnabled( false );
     mPushButton->hide();
   } else {
-    connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+    connect( mPushButton, SIGNAL(clicked()), SLOT(slotOpenDialog()) );
   }
 }
 

@@ -106,24 +106,24 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   d->mAggregationList->setSortingEnabled( true );
   g->addWidget( d->mAggregationList, 0, 0, 5, 1 );
 
-  connect( d->mAggregationList, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
-           SLOT( aggregationListCurrentItemChanged( QListWidgetItem *, QListWidgetItem * ) ) );
+  connect( d->mAggregationList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+           SLOT(aggregationListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
 
   d->mNewAggregationButton = new QPushButton( i18n( "New Aggregation" ), base );
   d->mNewAggregationButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
   d->mNewAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mNewAggregationButton, 0, 1 );
 
-  connect( d->mNewAggregationButton, SIGNAL( clicked() ),
-           SLOT( newAggregationButtonClicked() ) );
+  connect( d->mNewAggregationButton, SIGNAL(clicked()),
+           SLOT(newAggregationButtonClicked()) );
 
   d->mCloneAggregationButton = new QPushButton( i18n( "Clone Aggregation" ), base );
   d->mCloneAggregationButton->setIcon( KIcon( QLatin1String( "edit-copy" ) ) );
   d->mCloneAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mCloneAggregationButton, 1, 1 );
 
-  connect( d->mCloneAggregationButton, SIGNAL( clicked() ),
-           SLOT( cloneAggregationButtonClicked() ) );
+  connect( d->mCloneAggregationButton, SIGNAL(clicked()),
+           SLOT(cloneAggregationButtonClicked()) );
 
   QFrame * f = new QFrame( base );
   f->setFrameStyle( QFrame::Sunken | QFrame::HLine );
@@ -135,20 +135,20 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   d->mDeleteAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mDeleteAggregationButton, 3, 1 );
 
-  connect( d->mDeleteAggregationButton, SIGNAL( clicked() ),
-           SLOT( deleteAggregationButtonClicked() ) );
+  connect( d->mDeleteAggregationButton, SIGNAL(clicked()),
+           SLOT(deleteAggregationButtonClicked()) );
 
   d->mEditor = new AggregationEditor( base );
   g->addWidget( d->mEditor, 5, 0, 1, 2 );
 
-  connect( d->mEditor, SIGNAL( aggregationNameChanged() ),
-           SLOT( editedAggregationNameChanged() ) );
+  connect( d->mEditor, SIGNAL(aggregationNameChanged()),
+           SLOT(editedAggregationNameChanged()) );
 
   g->setColumnStretch( 0, 1 );
   g->setRowStretch( 4, 1 );
 
-  connect( this, SIGNAL( okClicked() ),
-           SLOT( okButtonClicked() ) );
+  connect( this, SIGNAL(okClicked()),
+           SLOT(okButtonClicked()) );
 
   d->fillAggregationList();
 }

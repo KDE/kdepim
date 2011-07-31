@@ -44,12 +44,12 @@ SoundTestWidget::SoundTestWidget( QWidget *parent )
   m_urlRequester = new KUrlRequester( this );
   layout->addWidget( m_urlRequester );
 
-  connect( m_playButton, SIGNAL( clicked() ),
-           SLOT( playSound() ) );
-  connect( m_urlRequester, SIGNAL( openFileDialog( KUrlRequester* ) ),
-           SLOT( openSoundDialog( KUrlRequester* ) ) );
-  connect( m_urlRequester->lineEdit(), SIGNAL( textChanged( const QString& ) ),
-           SLOT( slotUrlChanged( const QString& ) ) );
+  connect( m_playButton, SIGNAL(clicked()),
+           SLOT(playSound()) );
+  connect( m_urlRequester, SIGNAL(openFileDialog(KUrlRequester*)),
+           SLOT(openSoundDialog(KUrlRequester*)) );
+  connect( m_urlRequester->lineEdit(), SIGNAL(textChanged(QString)),
+           SLOT(slotUrlChanged(QString)) );
 
   slotUrlChanged( m_urlRequester->lineEdit()->text() );
 }
@@ -110,7 +110,7 @@ void SoundTestWidget::playSound()
 
   Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory, play );
   player->play();
-  connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
+  connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
 }
 
 QString SoundTestWidget::url() const

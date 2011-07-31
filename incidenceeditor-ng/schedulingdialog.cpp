@@ -67,16 +67,16 @@ SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTi
   connect( mWeekdayCombo, SIGNAL(checkedItemsChanged(QStringList)),
            SLOT(slotMandatoryRolesChanged()) );
 
-  connect( mResolver, SIGNAL(freeSlotsAvailable(const KCalCore::Period::List &)),
-           mPeriodModel, SLOT(slotNewFreePeriods(const KCalCore::Period::List &)) );
-  connect( mMoveBeginTimeEdit, SIGNAL(timeEdited(const QTime &)),
-           this, SLOT(slotSetEndTimeLabel(const QTime &)) );
+  connect( mResolver, SIGNAL(freeSlotsAvailable(KCalCore::Period::List)),
+           mPeriodModel, SLOT(slotNewFreePeriods(KCalCore::Period::List)) );
+  connect( mMoveBeginTimeEdit, SIGNAL(timeEdited(QTime)),
+           this, SLOT(slotSetEndTimeLabel(QTime)) );
 
   mTableView->setModel( mPeriodModel );
   connect( mTableView->selectionModel(),
-           SIGNAL(currentRowChanged(const QModelIndex &,const QModelIndex &)),
+           SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
            this,
-           SLOT( slotRowSelectionChanged(const QModelIndex &,const QModelIndex &)) );
+           SLOT(slotRowSelectionChanged(QModelIndex,QModelIndex)) );
 
   mStartDate->setDate( startDate );
   mEndDate->setDate( mStartDate->date().addDays( 7 ) );

@@ -167,7 +167,7 @@ DecryptVerifyOperationWidget * DecryptVerifyFilesWizard::operationWidget( unsign
 void DecryptVerifyFilesWizard::onNext( int id )
 {
     if ( id == OperationsPage )
-        QTimer::singleShot( 0, this, SIGNAL( operationPrepared() ) );
+        QTimer::singleShot( 0, this, SIGNAL(operationPrepared()) );
     Wizard::onNext( id );
 }
 

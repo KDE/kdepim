@@ -258,8 +258,8 @@ bool ResourceGroupwise::asyncLoad()
   {
     mProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18nc( "label for addressbook load progress", "Loading GroupWise resource %1", resourceName() ), QString::null, true /*CanBeCancelled*/, mPrefs->url().startsWith("https" ) );
-    connect( mProgress, SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-               SLOT( cancelLoad() ) );
+    connect( mProgress, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+               SLOT(cancelLoad()) );
   }
 
   if ( addressBooks().isEmpty() ) {
@@ -318,18 +318,18 @@ void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
 
   mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   kDebug() << "  Job address: " << mJob;
-  connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotReadJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mJob, SIGNAL( percent( KJob *, unsigned long ) ),
-           SLOT( slotJobPercent( KJob *, unsigned long ) ) );
-  connect( mJob, SIGNAL( finished( KJob * ) ),
-           SLOT( slotJobFinished( KJob * ) ) );
+  connect( mJob, SIGNAL(data(KIO::Job*,QByteArray)),
+           SLOT(slotReadJobData(KIO::Job*,QByteArray)) );
+  connect( mJob, SIGNAL(percent(KJob*,ulong)),
+           SLOT(slotJobPercent(KJob*,ulong)) );
+  connect( mJob, SIGNAL(finished(KJob*)),
+           SLOT(slotJobFinished(KJob*)) );
 
 
   if ( bookType == System )
   {
-    connect( mJob, SIGNAL( result( KJob * ) ),
-           SLOT( fetchSABResult( KJob * ) ) );
+    connect( mJob, SIGNAL(result(KJob*)),
+           SLOT(fetchSABResult(KJob*)) );
     mSABProgress = KPIM::ProgressManager::instance()->createProgressItem(
         mProgress, KPIM::ProgressManager::getUniqueID(),
         i18n( "Fetching System Address Book" ), QString::null,
@@ -338,8 +338,8 @@ void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
   }
   else
   {
-    connect( mJob, SIGNAL( result( KJob * ) ),
-           SLOT( fetchUABResult( KJob * ) ) );
+    connect( mJob, SIGNAL(result(KJob*)),
+           SLOT(fetchUABResult(KJob*)) );
     mUABProgress = KPIM::ProgressManager::instance()->createProgressItem(
         mProgress, KPIM::ProgressManager::getUniqueID(),
         i18n( "Fetching User Address Books" ), QString::null,
@@ -457,20 +457,20 @@ void ResourceGroupwise::updateSystemAddressBook()
       mPrefs->url().startsWith("https" ) );
  
   mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( mJob, SIGNAL( result( KJob * ) ),
-           SLOT( updateSABResult( KJob * ) ) );
-  connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotUpdateJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mJob, SIGNAL( percent( KJob *, unsigned long ) ),
-           SLOT( slotJobPercent( KJob *, unsigned long ) ) );
-  connect( mJob, SIGNAL( finished( KJob * ) ),
-           SLOT( slotJobFinished( KJob * ) ) );
+  connect( mJob, SIGNAL(result(KJob*)),
+           SLOT(updateSABResult(KJob*)) );
+  connect( mJob, SIGNAL(data(KIO::Job*,QByteArray)),
+           SLOT(slotUpdateJobData(KIO::Job*,QByteArray)) );
+  connect( mJob, SIGNAL(percent(KJob*,ulong)),
+           SLOT(slotJobPercent(KJob*,ulong)) );
+  connect( mJob, SIGNAL(finished(KJob*)),
+           SLOT(slotJobFinished(KJob*)) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Updating System Address Book") );
   connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           SLOT( cancelLoad() ) );
+           SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+           SLOT(cancelLoad()) );
 
   return;
 }

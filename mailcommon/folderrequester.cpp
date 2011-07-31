@@ -119,8 +119,8 @@ void FolderRequester::setFolder( const Akonadi::Collection&col )
     setCollectionFullPath( mCollection );
     mFolderId = QString::number( mCollection.id() );
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
-    connect( job, SIGNAL( result( KJob* ) ),
-             this, SLOT( slotCollectionsReceived( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(slotCollectionsReceived(KJob*)) );
   }
   else if ( !mMustBeReadWrite ) // the Local Folders root node was selected
     edit->setText( i18n("Local Folders") );
