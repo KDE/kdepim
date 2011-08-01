@@ -51,7 +51,7 @@ class MESSAGECORE_EXPORT AsyncNepomukResourceRetriever : public QObject
   private:
     AsyncNepomukResourceRetrieverPrivate* const d;
     friend class AsyncNepomukResourceRetrieverPrivate;
-    Q_PRIVATE_SLOT( d, void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &resource ) );
+    Q_PRIVATE_SLOT( d, void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &resource ) )
 };
 
 }
