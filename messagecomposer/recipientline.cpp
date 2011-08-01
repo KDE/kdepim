@@ -240,6 +240,7 @@ Recipient::Type RecipientLineNG::recipientType() const
 void RecipientLineNG::setRecipientType( Recipient::Type type )
 {
   mCombo->setCurrentIndex( Recipient::typeToId( type ) );
+  slotTypeModified();
 }
 
 void RecipientLineNG::setRecentAddressConfig( KConfig* config )
