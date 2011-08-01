@@ -141,24 +141,22 @@ QList<KMime::Content*> Util::allContents( const KMime::Content *message )
 
 QList<KMime::Content*> Util::extractAttachments( const KMime::Message *message )
 {
-  KMime::Content::List contents = allContents( message );
-  for ( KMime::Content::List::iterator it = contents.begin();
-        it != contents.end(); ) {
-    // only body parts which have a filename or a name parameter (except for
-    // the root node for which name is set to the message's subject) are
-    // considered attachments
+  const KMime::Content::List contents = allContents( message );
+  KMime::Content::List result;
+  for ( KMime::Content::List::const_iterator it = contents.constBegin();
+        it != contents.constEnd(); ) {
     KMime::Content* content = *it;
     if ( content->contentDisposition()->filename().trimmed().isEmpty() &&
           ( content->contentType()->name().trimmed().isEmpty() ||
             content == message ) ) {
-      KMime::Content::List::iterator delIt = it;
       ++it;
-      contents.erase( delIt );
     } else {
+      result <<( *it );
       ++it;
     }
   }
-  return contents;
+
+  return result;
 }
 
 bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents )
