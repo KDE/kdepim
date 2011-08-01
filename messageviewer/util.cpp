@@ -422,6 +422,15 @@ int Util::getWritePermissions()
   }
 }
 
+bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *parent )
+{
+  if ( contents.isEmpty() ) {
+    KMessageBox::information( parent, i18n( "Found no attachments to save." ) );
+    return false;
+  }
+
+  return Util::saveContents( parent, contents );
+}
 
 bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
 {

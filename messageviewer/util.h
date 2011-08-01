@@ -39,7 +39,7 @@
 #define MAILVIEWERUTIL_H
 
 #include "messageviewer_export.h"
-
+#include "kmime/kmime_content.h"
 #include <QString>
 
 class KUrl;
@@ -119,6 +119,7 @@ namespace Util {
                                  const QString &fallbackFileName2 = QString() );
     bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget*parent);
 
+    bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent ); 
 
 }
 
