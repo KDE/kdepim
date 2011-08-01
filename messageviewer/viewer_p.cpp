@@ -2211,24 +2211,13 @@ void ViewerPrivate::slotAttachmentOpen()
 void ViewerPrivate::slotAttachmentSaveAs()
 {
   const KMime::Content::List contents = selectedContents();
-  if ( contents.isEmpty() ) {
-    KMessageBox::information( mMainWindow, i18n("Found no attachments to save.") );
-    return;
-  }
-
-  Util::saveContents( mMainWindow, contents );
+  Util::saveAttachments( contents, mMainWindow );
 }
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
-  KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
-
-  if ( contents.isEmpty() ) {
-    KMessageBox::information( mMainWindow, i18n( "Found no attachments to save." ) );
-    return;
-  }
-
-  Util::saveContents( mMainWindow, contents );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
+  Util::saveAttachments( contents, mMainWindow );
 }
 
 void ViewerPrivate::slotAttachmentView()
