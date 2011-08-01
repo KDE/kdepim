@@ -504,6 +504,22 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     termGroup.addSubTerm( replyToTerm );
   }
 
+  if ( field().toLower() == "list-id" ) {
+    //TODO
+  }
+  if ( field().toLower() == "resent-from" ) {
+    //TODO
+  }
+  if ( field().toLower() == "x-loop" ) {
+    //TODO
+  }
+  if ( field().toLower() == "x-mailing-list" ) {
+    //TODO
+  }
+  if ( field().toLower() == "x-spam-flag" ) {
+    //TODO
+  }
+  
   // TODO complete for other headers, generic headers
 
   if ( field().toLower() == "organization"  ) {
@@ -511,11 +527,6 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     termGroup.addSubTerm( headerTerm );
   //TODO
   }
-  //"List-Id");
-  //"Resent-From");
-  //"X-Loop");
-  //"X-Mailing-List");
-  //"X-Spam-Flag");
 
 
   if ( field() == "<tag>" ) {
@@ -529,11 +540,9 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   if ( field() == "<body>" || field() == "<message>" ) {
     const Nepomuk::Query::ComparisonTerm bodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( bodyTerm );
-#if 0
     const Nepomuk::Query::ComparisonTerm attachmentBodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     const Nepomuk::Query::ComparisonTerm attachmentTerm( Vocabulary::NIE::isPartOf(), attachmentBodyTerm, Nepomuk::Query::ComparisonTerm::Equal );
     termGroup.addSubTerm( attachmentTerm );
-#endif    
   }
 
   if ( !termGroup.subTerms().isEmpty() )
