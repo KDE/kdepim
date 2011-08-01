@@ -130,7 +130,7 @@ SearchRule::Ptr SearchRule::createInstance( const QByteArray & field,
                                                 const QString & contents )
 {
   SearchRule::Ptr ret;
-  if (field == "<status>")
+  if (field == "<status>" )
     ret = SearchRule::Ptr( new SearchRuleStatus( field, func, contents ) );
   else if ( field == "<age in days>" || field == "<size>" )
     ret = SearchRule::Ptr( new SearchRuleNumerical( field, func, contents ) );
@@ -499,8 +499,24 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
   }
+  if ( field().toLower() == "reply-to" ) {
+    const Nepomuk::Query::ComparisonTerm replyToTerm( Vocabulary::NMO::messageReplyTo(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    termGroup.addSubTerm( replyToTerm );
+  }
 
   // TODO complete for other headers, generic headers
+
+  if ( field().toLower() == "organization"  ) {
+      const Nepomuk::Query::ComparisonTerm headerTerm( Vocabulary::NMO::headerName(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    termGroup.addSubTerm( headerTerm );
+  //TODO
+  }
+  //"List-Id");
+  //"Resent-From");
+  //"X-Loop");
+  //"X-Mailing-List");
+  //"X-Spam-Flag");
+
 
   if ( field() == "<tag>" ) {
     const Nepomuk::Tag tag( contents() );
@@ -513,10 +529,11 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   if ( field() == "<body>" || field() == "<message>" ) {
     const Nepomuk::Query::ComparisonTerm bodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( bodyTerm );
-
+#if 0
     const Nepomuk::Query::ComparisonTerm attachmentBodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     const Nepomuk::Query::ComparisonTerm attachmentTerm( Vocabulary::NIE::isPartOf(), attachmentBodyTerm, Nepomuk::Query::ComparisonTerm::Equal );
     termGroup.addSubTerm( attachmentTerm );
+#endif    
   }
 
   if ( !termGroup.subTerms().isEmpty() )
@@ -643,12 +660,12 @@ void SearchRuleString::addXesamClause( QXmlStreamWriter& stream ) const
 
   stream.writeStartElement( func );
 
-  if ( field().toLower() == "subject" ||
-       field().toLower() == "to" ||
-       field().toLower() == "cc" ||
-       field().toLower() == "bcc" ||
-       field().toLower() == "from" ||
-       field().toLower() == "sender" ) {
+  if ( field().toLower() == "subject"  ||
+       field().toLower() == "to"  ||
+       field().toLower() == "cc"  ||
+       field().toLower() == "bcc"  ||
+       field().toLower() == "from"  ||
+       field().toLower() == "sender"  ) {
     stream.writeStartElement( QLatin1String("field") );
     stream.writeAttribute( QLatin1String("name"), field().toLower() );
   } else {
@@ -793,7 +810,7 @@ void SearchRuleNumerical::addXesamClause( QXmlStreamWriter & stream ) const
 //==================================================
 QString englishNameForStatus( const Akonadi::MessageStatus &status )
 {
-  for ( int i=0; i< numStatusNames; i++ ) {
+  for ( int i=0; i< numStatusNames; ++i ) {
     if ( statusNames[i].status == status ) {
       return statusNames[i].name;
     }
@@ -818,7 +835,7 @@ SearchRuleStatus::SearchRuleStatus( Akonadi::MessageStatus status, Function func
 
 Akonadi::MessageStatus SearchRuleStatus::statusFromEnglishName( const QString &aStatusString )
 {
-  for ( int i=0; i< numStatusNames; i++ ) {
+  for ( int i=0; i< numStatusNames; ++i ) {
     if ( !aStatusString.compare( statusNames[i].name ) ) {
       return statusNames[i].status;
     }
