@@ -71,7 +71,9 @@ static const InsertCommand originalCommands[] = {
       "Subject" ), TemplatesInsertCommand::COFullSubject },
   { I18N_NOOP( "Quoted Headers" ), TemplatesInsertCommand::CQHeaders },
   { I18N_NOOP( "Headers as Is" ), TemplatesInsertCommand::CHeaders },
-  { I18N_NOOP( "Header Content" ), TemplatesInsertCommand::COHeader }
+  { I18N_NOOP( "Header Content" ), TemplatesInsertCommand::COHeader },
+  { I18N_NOOP( "Reply as Quoted Plain Text" ), TemplatesInsertCommand::CQuotePlain },
+  { I18N_NOOP( "Reply as Quoted HTML Text" ), TemplatesInsertCommand::CQuoteHtml }
 };
 static const int originalCommandsCount =
   sizeof( originalCommands ) / sizeof( *originalCommands );
@@ -272,6 +274,8 @@ void TemplatesInsertCommand::slotMapped( int cmd )
   case TemplatesInsertCommand::CClear: emit insertCommand("%CLEAR"); break;
   case TemplatesInsertCommand::CDebug: emit insertCommand("%DEBUG"); break;
   case TemplatesInsertCommand::CDebugOff: emit insertCommand("%DEBUGOFF"); break;
+  case TemplatesInsertCommand::CQuotePlain: emit insertCommand("%FORCEDPLAIN"); break;
+  case TemplatesInsertCommand::CQuoteHtml: emit insertCommand("%FORCEDHTML"); break;
   default:
     kDebug() << "Unknown template command index:" << cmd;
       break;

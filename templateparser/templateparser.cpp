@@ -1563,7 +1563,7 @@ QString TemplateParser::plainToHtml( const QString &body ) const
   return str;
 }
 
-QString TemplateParser::makeValidHtml( QString& body )
+QString TemplateParser::makeValidHtml( QString& body )//TODO implement this function using a DOM tree parser
 {
   QRegExp regEx;
   regEx.setMinimal( true );

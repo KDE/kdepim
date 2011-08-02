@@ -35,7 +35,7 @@ class TemplatesInsertCommand : public QPushButton
     ~TemplatesInsertCommand();
 
   public:
-    enum Command {CDnl = 1, CRem, CInsert, CSystem, CQuotePipe, CQuote, CQHeaders, CHeaders, 
+    enum Command {CDnl = 1, CRem, CInsert, CSystem, CQuotePipe, CQuote, CQHeaders, CHeaders,
                   CTextPipe, CMsgPipe, CBodyPipe, CClearPipe, CText, 
                   CToAddr, CToName, CFromAddr, CFromName, CFullSubject, CMsgId, 
                   COHeader, CHeader, COToAddr, COToName, COFromAddr, COFromName, COFullSubject, 
@@ -44,7 +44,7 @@ class TemplatesInsertCommand : public QPushButton
                   CBlank, CNop, CClear, CDebug, CDebugOff, CToFName, CToLName, CFromFName, CFromLName, 
                   COToFName, COToLName, COFromFName, COFromLName, CCursor, 
                   CCCAddr, CCCName, CCCFName, CCCLName, COCCAddr, COCCName, COCCFName, COCCLName,
-                  COAddresseesAddr, CSignature };
+                  COAddresseesAddr, CSignature, CQuotePlain, CQuoteHtml };
 
   signals:
     void insertCommand( TemplatesInsertCommand::Command cmd );
