@@ -485,16 +485,19 @@ void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const
 void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   Nepomuk::Query::OrTerm termGroup;
+  if ( field().toLower() != "<message>" ) { //Temporary workaround for message
   if ( field().toLower() == "to" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
     addPersonTerm( termGroup, Vocabulary::NMO::to() );
+
   if ( field().toLower() == "cc" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
     addPersonTerm( termGroup, Vocabulary::NMO::cc() );
   if ( field().toLower() == "bcc" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
     addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
-
   if ( field().toLower() == "from" || field() == "<any header>" || field() == "<message>" )
     addPersonTerm( termGroup, Vocabulary::NMO::from() );
 
+  }
+  
   if ( field().toLower() == "subject" || field() == "<any header>" || field() == "<message>" ) {
     const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
