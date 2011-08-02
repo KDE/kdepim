@@ -485,18 +485,34 @@ void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const
 void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   Nepomuk::Query::OrTerm termGroup;
-  if ( field().toLower() != "<message>" ) { //Temporary workaround for message
-  if ( field().toLower() == "to" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
-    addPersonTerm( termGroup, Vocabulary::NMO::to() );
-
-  if ( field().toLower() == "cc" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
-    addPersonTerm( termGroup, Vocabulary::NMO::cc() );
-  if ( field().toLower() == "bcc" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
-    addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
-  if ( field().toLower() == "from" || field() == "<any header>" || field() == "<message>" )
-    addPersonTerm( termGroup, Vocabulary::NMO::from() );
-
+  if ( field().toLower() == "<message>" || field().toLower() == "<recipients>" ) {
+    const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTerm( Vocabulary::NMO::to(), addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTermTo( Vocabulary::NMO::cc(), personTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTermCC( Vocabulary::NMO::bcc(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
+    termGroup.addSubTerm( personTermCC );
   }
+
+  if ( field().toLower() == "<any header>" ) {
+    const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTerm( Vocabulary::NMO::to(), addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTermTo( Vocabulary::NMO::cc(), personTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTermCC( Vocabulary::NMO::bcc(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm personTermBCC( Vocabulary::NMO::from(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
+    termGroup.addSubTerm( personTermBCC );
+    
+  }
+  
+  if ( field().toLower() == "to" )
+    addPersonTerm( termGroup, Vocabulary::NMO::to() );
+  if ( field().toLower() == "cc" )
+    addPersonTerm( termGroup, Vocabulary::NMO::cc() );
+  if ( field().toLower() == "bcc" )
+    addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
+  if ( field().toLower() == "from" )
+    addPersonTerm( termGroup, Vocabulary::NMO::from() );
   
   if ( field().toLower() == "subject" || field() == "<any header>" || field() == "<message>" ) {
     const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
