@@ -72,9 +72,9 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     showButton(User2, false);
     showButton(User3, false);
   }
-  connect( this, SIGNAL( user1Clicked() ), SLOT( slotUser1() ) );
-  connect( this, SIGNAL( user2Clicked() ), SLOT( slotUser2() ) );
-  connect( this, SIGNAL( user3Clicked() ), SLOT( slotUser3() ) );
+  connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
+  connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+  connect( this, SIGNAL(user3Clicked()), SLOT(slotUser3()) );
 
   resize(300,400);
 }

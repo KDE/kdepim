@@ -110,7 +110,7 @@ AttachmentCompressJob::~AttachmentCompressJob()
 
 void AttachmentCompressJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT( doStart() ) );
+  QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
 const AttachmentPart::Ptr AttachmentCompressJob::originalPart() const

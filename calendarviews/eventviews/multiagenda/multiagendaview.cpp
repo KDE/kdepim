@@ -314,7 +314,7 @@ void MultiAgendaView::Private::setupViews()
                 q, SIGNAL(pasteIncidenceSignal()) );
     q->connect( agenda, SIGNAL(toggleAlarmSignal(Akonadi::Item)),
                 q, SIGNAL(toggleAlarmSignal(Akonadi::Item)) );
-    q->connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate) ),
+    q->connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
                 q, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
     q->connect( agenda, SIGNAL(newTodoSignal(QDate)),

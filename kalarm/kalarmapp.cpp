@@ -134,17 +134,17 @@ KAlarmApp::KAlarmApp()
         Preferences::setAutoStart(true);
         Preferences::self()->writeConfig();
     }
-    Preferences::connect(SIGNAL(startOfDayChanged(const QTime&)), this, SLOT(changeStartOfDay()));
-    Preferences::connect(SIGNAL(workTimeChanged(const QTime&, const QTime&, const QBitArray&)), this, SLOT(slotWorkTimeChanged(const QTime&, const QTime&, const QBitArray&)));
-    Preferences::connect(SIGNAL(holidaysChanged(const KHolidays::HolidayRegion&)), this, SLOT(slotHolidaysChanged(const KHolidays::HolidayRegion&)));
+    Preferences::connect(SIGNAL(startOfDayChanged(QTime)), this, SLOT(changeStartOfDay()));
+    Preferences::connect(SIGNAL(workTimeChanged(QTime,QTime,QBitArray)), this, SLOT(slotWorkTimeChanged(QTime,QTime,QBitArray)));
+    Preferences::connect(SIGNAL(holidaysChanged(KHolidays::HolidayRegion)), this, SLOT(slotHolidaysChanged(KHolidays::HolidayRegion)));
     Preferences::connect(SIGNAL(feb29TypeChanged(Feb29Type)), this, SLOT(slotFeb29TypeChanged(Feb29Type)));
     Preferences::connect(SIGNAL(showInSystemTrayChanged(bool)), this, SLOT(slotShowInSystemTrayChanged()));
     Preferences::connect(SIGNAL(archivedKeepDaysChanged(int)), this, SLOT(setArchivePurgeDays()));
-    Preferences::connect(SIGNAL(messageFontChanged(const QFont&)), this, SLOT(slotMessageFontChanged(const QFont&)));
+    Preferences::connect(SIGNAL(messageFontChanged(QFont)), this, SLOT(slotMessageFontChanged(QFont)));
     slotFeb29TypeChanged(Preferences::defaultFeb29Type());
 
-    connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceUnregistered(const QString&)),
-            SLOT(slotDBusServiceUnregistered(const QString&)));
+    connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceUnregistered(QString)),
+            SLOT(slotDBusServiceUnregistered(QString)));
     KAEvent::setStartOfDay(Preferences::startOfDay());
     KAEvent::setWorkTime(Preferences::workDays(), Preferences::workDayStart(), Preferences::workDayEnd());
     KAEvent::setHolidays(Preferences::holidays());
@@ -153,7 +153,7 @@ KAlarmApp::KAlarmApp()
     {
         connect(AlarmCalendar::resources(), SIGNAL(earliestAlarmChanged()), SLOT(checkNextDueAlarm()));
 #ifdef USE_AKONADI
-        connect(AlarmCalendar::resources(), SIGNAL(atLoginEventAdded(const KAEvent&)), SLOT(atLoginEventAdded(const KAEvent&)));
+        connect(AlarmCalendar::resources(), SIGNAL(atLoginEventAdded(KAEvent)), SLOT(atLoginEventAdded(KAEvent)));
 #endif
 
         KConfigGroup config(KGlobal::config(), "General");
@@ -530,6 +530,7 @@ bool KAlarmApp::quitIf(int exitCode, bool force)
         // Quit regardless, except for message windows
         mQuitting = true;
         MainWindow::closeAll();
+        mQuitting = false;
         displayTrayIcon(false);
         if (MessageWin::instanceCount(true))    // ignore always-hidden windows (e.g. audio alarms)
             return false;
@@ -540,13 +541,14 @@ bool KAlarmApp::quitIf(int exitCode, bool force)
     {
         // Quit only if there are no more "instances" running
         mPendingQuit = false;
-        if (mActiveCount > 0  ||  MessageWin::instanceCount())
+        if (mActiveCount > 0  ||  MessageWin::instanceCount(true))  // ignore always-hidden windows (e.g. audio alarms)
             return false;
         int mwcount = MainWindow::count();
         MainWindow* mw = mwcount ? MainWindow::firstWindow() : 0;
         if (mwcount > 1  ||  (mwcount && (!mw->isHidden() || !mw->isTrayParent())))
             return false;
-        // There are no windows left except perhaps a main window which is a hidden tray icon parent
+        // There are no windows left except perhaps a main window which is a hidden
+        // tray icon parent, or an always-hidden message window.
         if (mTrayWindow)
         {
             // There is a system tray icon.
@@ -1078,9 +1080,10 @@ void KAlarmApp::setAlarmsEnabled(bool enabled)
     {
         mAlarmsEnabled = enabled;
         emit alarmEnabledToggled(enabled);
-        if (enabled  &&  !mProcessingQueue)
+        if (!enabled)
+            KAlarm::cancelRtcWake(0);
+        else if (!mProcessingQueue)
             checkNextDueAlarm();
-
     }
 }
 

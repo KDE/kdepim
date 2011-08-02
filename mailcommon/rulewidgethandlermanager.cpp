@@ -447,8 +447,8 @@ namespace {
       funcCombo->addItem( i18n( TextFunctions[i].displayName ) );
     }
     funcCombo->adjustSize();
-    QObject::connect( funcCombo, SIGNAL( activated( int ) ),
-                      receiver, SLOT( slotFunctionChanged() ) );
+    QObject::connect( funcCombo, SIGNAL(activated(int)),
+                      receiver, SLOT(slotFunctionChanged()) );
     return funcCombo;
   }
 
@@ -462,8 +462,8 @@ namespace {
       RegExpLineEdit *lineEdit =
         new RegExpLineEdit( valueStack );
       lineEdit->setObjectName( "regExpLineEdit" );
-      QObject::connect( lineEdit, SIGNAL( textChanged( const QString & ) ),
-                        receiver, SLOT( slotValueChanged() ) );
+      QObject::connect( lineEdit, SIGNAL(textChanged(QString)),
+                        receiver, SLOT(slotValueChanged()) );
       return lineEdit;
     }
 
@@ -487,8 +487,8 @@ namespace {
         else
           combo->addItem( KIcon( tag.genericIcon() ), tag.label(), tag.resourceUri() );
       }
-      QObject::connect( combo, SIGNAL( activated( int ) ),
-                        receiver, SLOT( slotValueChanged() ) );
+      QObject::connect( combo, SIGNAL(activated(int)),
+                        receiver, SLOT(slotValueChanged()) );
       return combo;
     }
 #endif
@@ -773,8 +773,8 @@ namespace {
       funcCombo->addItem( i18n( MessageFunctions[i].displayName ) );
     }
     funcCombo->adjustSize();
-    QObject::connect( funcCombo, SIGNAL( activated( int ) ),
-                      receiver, SLOT( slotFunctionChanged() ) );
+    QObject::connect( funcCombo, SIGNAL(activated(int)),
+                      receiver, SLOT(slotFunctionChanged()) );
     return funcCombo;
   }
 
@@ -788,8 +788,8 @@ namespace {
       RegExpLineEdit *lineEdit =
         new RegExpLineEdit( valueStack );
       lineEdit->setObjectName( "regExpLineEdit" );
-      QObject::connect( lineEdit, SIGNAL( textChanged( const QString & ) ),
-                        receiver, SLOT( slotValueChanged() ) );
+      QObject::connect( lineEdit, SIGNAL(textChanged(QString)),
+                        receiver, SLOT(slotValueChanged()) );
       return lineEdit;
     }
 
@@ -1036,8 +1036,8 @@ namespace {
       funcCombo->addItem( i18n( StatusFunctions[i].displayName ) );
     }
     funcCombo->adjustSize();
-    QObject::connect( funcCombo, SIGNAL( activated( int ) ),
-                      receiver, SLOT( slotFunctionChanged() ) );
+    QObject::connect( funcCombo, SIGNAL(activated(int)),
+                      receiver, SLOT(slotFunctionChanged()) );
     return funcCombo;
   }
 
@@ -1060,8 +1060,8 @@ namespace {
         statusCombo->addItem( i18nc("message status",  MailCommon::StatusValues[ i ].text ) );
     }
     statusCombo->adjustSize();
-    QObject::connect( statusCombo, SIGNAL( activated( int ) ),
-                      receiver, SLOT( slotValueChanged() ) );
+    QObject::connect( statusCombo, SIGNAL(activated(int)),
+                      receiver, SLOT(slotValueChanged()) );
     return statusCombo;
   }
 
@@ -1282,8 +1282,8 @@ namespace {
       funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
     }
     funcCombo->adjustSize();
-    QObject::connect( funcCombo, SIGNAL( activated( int ) ),
-                      receiver, SLOT( slotFunctionChanged() ) );
+    QObject::connect( funcCombo, SIGNAL(activated(int)),
+                      receiver, SLOT(slotFunctionChanged()) );
     return funcCombo;
   }
 
@@ -1296,8 +1296,8 @@ namespace {
     if ( number == 0 ) {
       RegExpLineEdit *lineEdit = new RegExpLineEdit( valueStack );
       lineEdit->setObjectName( "tagRuleRegExpLineEdit" );
-      QObject::connect( lineEdit, SIGNAL( textChanged( const QString & ) ),
-                        receiver, SLOT( slotValueChanged() ) );
+      QObject::connect( lineEdit, SIGNAL(textChanged(QString)),
+                        receiver, SLOT(slotValueChanged()) );
       return lineEdit;
     }
 
@@ -1315,8 +1315,8 @@ namespace {
                              tag.label(), tag.resourceUri() );
       }
       valueCombo->adjustSize();
-      QObject::connect( valueCombo, SIGNAL( activated( int ) ),
-                        receiver, SLOT( slotValueChanged() ) );
+      QObject::connect( valueCombo, SIGNAL(activated(int)),
+                        receiver, SLOT(slotValueChanged()) );
       return valueCombo;
     }
 
@@ -1553,8 +1553,8 @@ namespace {
       funcCombo->addItem( i18n( NumericFunctions[i].displayName ) );
     }
     funcCombo->adjustSize();
-    QObject::connect( funcCombo, SIGNAL( activated( int ) ),
-                      receiver, SLOT( slotFunctionChanged() ) );
+    QObject::connect( funcCombo, SIGNAL(activated(int)),
+                      receiver, SLOT(slotFunctionChanged()) );
     return funcCombo;
   }
 
@@ -1570,8 +1570,8 @@ namespace {
     KIntNumInput *numInput = new KIntNumInput( valueStack );
     numInput->setSliderEnabled( false );
     numInput->setObjectName( "KIntNumInput" );
-    QObject::connect( numInput, SIGNAL( valueChanged( int ) ),
-                      receiver, SLOT( slotValueChanged() ) );
+    QObject::connect( numInput, SIGNAL(valueChanged(int)),
+                      receiver, SLOT(slotValueChanged()) );
     return numInput;
   }
 

@@ -281,8 +281,8 @@ private slots:
 private:
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
   void updateFontSelector();
+  virtual void doResetToDefaultsOther();
 
 private:
   QCheckBox    *mCustomFontCheck;
@@ -347,7 +347,7 @@ public:
   void save();
 
 private: // methods
-  //virtual void doLoadFromGlobalSettings();
+  virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
   // virtual void doResetToDefaultsOther();
   void setDateDisplay( int id, const QString & format );
@@ -603,6 +603,7 @@ public:
 
 private:
   virtual void doLoadFromGlobalSettings();
+  virtual void doResetToDefaultsOther();
 
 private:
   SimpleStringListEditor *mReplyListEditor;
@@ -750,7 +751,7 @@ public:
   void save();
 
 private:
-  //virtual void doLoadFromGlobalSettings();
+  virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
@@ -773,7 +774,7 @@ private Q_SLOTS:
   void slotConfigureChiasmus();
 
 private:
-  //virtual void doLoadFromGlobalSettings();
+  virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
@@ -853,6 +854,7 @@ class MiscPageInviteTab : public ConfigModuleTab  {
 public:
   MiscPageInviteTab( QWidget * parent=0 );
   void save();
+  virtual void doResetToDefaultsOther();
 
 private:
   virtual void doLoadFromGlobalSettings();

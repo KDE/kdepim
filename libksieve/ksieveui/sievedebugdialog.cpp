@@ -186,7 +186,7 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
     setInitialSize( QSize( 640, 480 ) );
 
     if ( !mResourceIdentifier.isEmpty() )
-        QTimer::singleShot( 0, this, SLOT( slotDiagNextAccount() ) );
+        QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
 }
 
 SieveDebugDialog::~SieveDebugDialog()
@@ -218,8 +218,8 @@ void SieveDebugDialog::slotDiagNextAccount()
 
         mSieveJob = KManageSieve::SieveJob::list( mUrl );
 
-        connect( mSieveJob, SIGNAL( gotList( KManageSieve::SieveJob *, bool, const QStringList &, const QString & ) ),
-            SLOT( slotGetScriptList( KManageSieve::SieveJob *, bool, const QStringList &, const QString & ) ) );
+        connect( mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+            SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
 
         // Bypass the singleShot timer -- it's fired when we get our data
         return;
@@ -227,7 +227,7 @@ void SieveDebugDialog::slotDiagNextAccount()
 
     // Handle next account async
     mResourceIdentifier.pop_front();
-    QTimer::singleShot( 0, this, SLOT( slotDiagNextAccount() ) );
+    QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
 }
 
 void SieveDebugDialog::slotDiagNextScript()
@@ -237,7 +237,7 @@ void SieveDebugDialog::slotDiagNextScript()
         // Continue handling accounts instead
         mScriptList.clear();
         mResourceIdentifier.pop_front();
-        QTimer::singleShot( 0, this, SLOT( slotDiagNextAccount() ) );
+        QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
         return;
     }
 
@@ -252,8 +252,8 @@ void SieveDebugDialog::slotDiagNextScript()
 
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
 
-    connect( mSieveJob, SIGNAL( gotScript( KManageSieve::SieveJob *, bool, const QString &, bool ) ),
-        SLOT( slotGetScript( KManageSieve::SieveJob *, bool, const QString &, bool ) ) );
+    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+        SLOT(slotGetScript(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
 void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool success,
@@ -278,7 +278,7 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
     }
 
     // Fetch next script
-    QTimer::singleShot( 0, this, SLOT( slotDiagNextScript() ) );
+    QTimer::singleShot( 0, this, SLOT(slotDiagNextScript()) );
 }
 
 void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool success,
@@ -317,7 +317,7 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
     }
 
     // Handle next job: dump scripts for this server
-    QTimer::singleShot( 0, this, SLOT( slotDiagNextScript() ) );
+    QTimer::singleShot( 0, this, SLOT(slotDiagNextScript()) );
 }
 
 void SieveDebugDialog::slotDialogOk()

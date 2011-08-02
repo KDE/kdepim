@@ -404,8 +404,8 @@ MessageWin::~MessageWin()
     {
         if (!mNoPostAction  &&  !mEvent.postAction().isEmpty())
             theApp()->alarmCompleted(mEvent);
-        if (!mWindowList.count())
-            theApp()->quitIf();
+        if (!instanceCount(true))
+            theApp()->quitIf();   // no visible windows remain - check whether to quit
     }
 }
 
@@ -1159,7 +1159,7 @@ void MessageWin::redisplayAlarms()
                 MessageWin* win = new MessageWin(&event, alarm, flags);
 #ifdef USE_AKONADI
                 win->mCollection = collection;
-                bool rw = CollectionControlModel::isWritable(collection, event.category());
+                bool rw = CollectionControlModel::isWritableEnabled(collection, event.category());
 #else
                 win->mResource = resource;
                 bool rw = resource  &&  resource->writable();
@@ -1229,14 +1229,12 @@ bool MessageWin::reinstateFromDisplaying(const Event* kcalEvent, KAEvent& event,
     Akonadi::Collection::Id collectionId;
     event.reinstateFromDisplaying(kcalEvent, collectionId, showEdit, showDefer);
     collection = AkonadiModel::instance()->collectionById(collectionId);
-    event.clearCollectionId();
 #else
     QString resourceID;
     event.reinstateFromDisplaying(kcalEvent, resourceID, showEdit, showDefer);
     resource = AlarmResources::instance()->resourceWithId(resourceID);
     if (resource  &&  !resource->isOpen())
         resource = 0;
-    event.clearResourceId();
 #endif
     kDebug() << event.id() << ": success";
     return true;
@@ -1596,7 +1594,7 @@ void AudioThread::run()
             mPath.insertEffect(fader);
         }
     }
-    connect(mAudioObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), SLOT(playStateChanged(Phonon::State)), Qt::DirectConnection);
+    connect(mAudioObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), SLOT(playStateChanged(Phonon::State)), Qt::DirectConnection);
     connect(mAudioObject, SIGNAL(finished()), SLOT(checkAudioPlay()), Qt::DirectConnection);
     mPlayedOnce = false;
     mMutex.unlock();

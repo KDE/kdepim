@@ -130,7 +130,7 @@ if(WINCE)
 find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif(WINCE)
 
-find_package(KDE4 REQUIRED)
+find_package(KDE4 4.6.2 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)

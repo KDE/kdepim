@@ -328,6 +328,8 @@ public:
 
   bool isImapFolder( const Akonadi::Collection& ) const;
 
+  void setAccountOnline();
+
   const KComponentData &xmlGuiInstance() { return mXmlGuiInstance; }
   void setXmlGuiInstance( const KComponentData &instance ) { mXmlGuiInstance = instance; }
 
@@ -404,7 +406,7 @@ public:
 
   /*reimp*/ QStringList customTemplates();
 
-  void checkTrashFolderFromResources( const Akonadi::Collection::Id& collectionId );
+  void checkFolderFromResources( const Akonadi::Collection::Id& collectionId );
 
 public slots:
 

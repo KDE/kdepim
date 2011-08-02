@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarlvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -196,7 +196,7 @@ void AttachmentHandler::view( const QString &attachmentName, const QString &uid 
   IncidenceSearchJob *job = new IncidenceSearchJob();
   job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
                  IncidenceSearchJob::ExactMatch );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFinishView( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
   ReceivedInfo info;
   info.attachmentName = attachmentName;
   info.uid = uid;
@@ -258,7 +258,7 @@ void AttachmentHandler::saveAs( const QString &attachmentName, const QString &ui
   IncidenceSearchJob *job = new IncidenceSearchJob();
   job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
                  IncidenceSearchJob::ExactMatch );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFinishView( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
 
   ReceivedInfo info;
   info.attachmentName = attachmentName;

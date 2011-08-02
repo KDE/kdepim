@@ -72,7 +72,7 @@ void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
    QMenu *popup = KLineEdit::createStandardContextMenu();
    popup->addSeparator();
    popup->addAction( i18n( "Edit Recent Addresses..." ),
-		   this, SLOT( editRecentAddresses() ) );
+		   this, SLOT(editRecentAddresses()) );
    popup->exec( e->globalPos() );
    delete popup;
 }
@@ -239,7 +239,7 @@ KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QStrin
 
   action = actionCollection()->addAction("paste_quoted");
   action->setText(i18n("Paste as &Quotation"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotPasteAsQuotation()));
+  connect(action, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotPasteAsQuotation()));
 
   KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
@@ -255,11 +255,11 @@ KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QStrin
 
   action = actionCollection()->addAction("insert_file");
   action->setText(i18n("&Insert File..."));
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotInsertFile()));
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotInsertFile()));
 
   action = actionCollection()->addAction("insert_file_boxed");
   action->setText(i18n("Insert File (in a &box)..."));
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotInsertFileBoxed()));
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotInsertFileBoxed()));
 
   action = actionCollection()->addAction("attach_file");
   action->setIcon(KIcon("mail-attachment"));
@@ -272,7 +272,7 @@ KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QStrin
 
   a_ctRemoveAttachment = actionCollection()->addAction("remove_attachment");
   a_ctRemoveAttachment->setText(i18n("&Remove"));
-  connect( a_ctRemoveAttachment, SIGNAL(triggered(bool) ), v_iew, SLOT(removeCurrentAttachment()) );
+  connect( a_ctRemoveAttachment, SIGNAL(triggered(bool)), v_iew, SLOT(removeCurrentAttachment()) );
 
   a_ctAttachmentProperties = actionCollection()->addAction("attachment_properties");
   a_ctAttachmentProperties->setText(i18n("&Properties"));
@@ -283,37 +283,37 @@ KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QStrin
   a_ctDoPost = actionCollection()->add<KToggleAction>("send_news");
   a_ctDoPost->setIcon(KIcon("document-new"));
   a_ctDoPost->setText(i18n("Send &News Article"));
-  connect(a_ctDoPost, SIGNAL(triggered(bool) ), SLOT(slotToggleDoPost()));
+  connect(a_ctDoPost, SIGNAL(triggered(bool)), SLOT(slotToggleDoPost()));
 
   a_ctDoMail = actionCollection()->add<KToggleAction>("send_mail");
   a_ctDoMail->setIcon(KIcon("mail-send"));
   a_ctDoMail->setText(i18n("Send E&mail"));
   a_ctDoMail->setEnabled(allowMail);
-  connect(a_ctDoMail, SIGNAL(triggered(bool) ), SLOT(slotToggleDoMail()));
+  connect(a_ctDoMail, SIGNAL(triggered(bool)), SLOT(slotToggleDoMail()));
 
   a_ctSetCharset = actionCollection()->add<KSelectAction>("set_charset");
   a_ctSetCharset->setText(i18n("Set &Charset"));
   a_ctSetCharset->setItems( Locale::encodings() );
   a_ctSetCharset->setShortcutConfigurable(false);
-  connect(a_ctSetCharset, SIGNAL(triggered(const QString&)),
-  this, SLOT(slotSetCharset(const QString&)));
+  connect(a_ctSetCharset, SIGNAL(triggered(QString)),
+  this, SLOT(slotSetCharset(QString)));
 
   a_ctSetCharsetKeyb = actionCollection()->addAction("set_charset_keyboard");
   a_ctSetCharsetKeyb->setText(i18n("Set Charset"));
-  connect(a_ctSetCharsetKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
+  connect(a_ctSetCharsetKeyb, SIGNAL(triggered(bool)), SLOT(slotSetCharsetKeyboard()));
   addAction( a_ctSetCharsetKeyb );
 
 
   a_ctWordWrap = actionCollection()->add<KToggleAction>("toggle_wordwrap");
   a_ctWordWrap->setText(i18n("&Word Wrap"));
-  connect(a_ctWordWrap, SIGNAL(triggered(bool) ), SLOT(slotToggleWordWrap()));
+  connect(a_ctWordWrap, SIGNAL(triggered(bool)), SLOT(slotToggleWordWrap()));
 
   a_ctAutoSpellChecking = new KToggleAction( KIcon( "tools-check-spelling" ), i18n("&Automatic Spellchecking"), this );
   actionCollection()->addAction( "options_auto_spellchecking", a_ctAutoSpellChecking );
   a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
   slotUpdateCheckSpellChecking( knGlobals.settings()->autoSpellChecking() );
   slotAutoSpellCheckingToggled();
-  connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool) ), SLOT(slotAutoSpellCheckingToggled()));
+  connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool)), SLOT(slotAutoSpellCheckingToggled()));
   connect( v_iew->editor(), SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
 
 
@@ -321,23 +321,23 @@ KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QStrin
 
   action = actionCollection()->addAction("tools_quote");
   action->setText(i18n("Add &Quote Characters"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotAddQuotes()));
+  connect(action, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotAddQuotes()));
 
   action = actionCollection()->addAction("tools_unquote");
   action->setText(i18n("&Remove Quote Characters"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotRemoveQuotes()));
+  connect(action, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotRemoveQuotes()));
 
   action = actionCollection()->addAction("tools_box");
   action->setText(i18n("Add &Box"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotAddBox()));
+  connect(action, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotAddBox()));
 
   action = actionCollection()->addAction("tools_unbox");
   action->setText(i18n("Re&move Box"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotRemoveBox()));
+  connect(action, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotRemoveBox()));
 
   QAction *undoRewrap = actionCollection()->addAction("tools_undoRewrap");
   undoRewrap->setText(i18n("Get &Original Text (not re-wrapped)"));
-  connect(undoRewrap, SIGNAL(triggered(bool) ), SLOT(slotUndoRewrap()));
+  connect(undoRewrap, SIGNAL(triggered(bool)), SLOT(slotUndoRewrap()));
   undoRewrap->setEnabled(!u_nwraped.isNull());
 
   QAction *rot13 = actionCollection()->addAction("tools_rot13");
@@ -1326,7 +1326,7 @@ void KNComposer::slotExternalEditor()
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->fileName();
 
-  connect(e_xternalEditor, SIGNAL( finished ( int, QProcess::ExitStatus)),this, SLOT(slotEditorFinished( int, QProcess::ExitStatus)));
+  connect(e_xternalEditor, SIGNAL(finished(int,QProcess::ExitStatus)),this, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
   e_xternalEditor->start();
   if(!e_xternalEditor->waitForStarted()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
@@ -1383,7 +1383,7 @@ void KNComposer::slotConfToolbar()
 {
   saveMainWindowSettings(knGlobals.config()->group( "composerWindow_options") );
   KEditToolBar dlg(guiFactory(),this);
-  connect(&dlg,SIGNAL( newToolBarConfig() ), this, SLOT( slotNewToolbarConfig() ));
+  connect(&dlg,SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()));
   dlg.exec();
 }
 
@@ -1602,8 +1602,8 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment::Ptr 
   topL->addWidget(mimeGB);
 
   //connections
-  connect(m_imeType, SIGNAL(textChanged(const QString&)),
-    this, SLOT(slotMimeTypeTextChanged(const QString&)));
+  connect(m_imeType, SIGNAL(textChanged(QString)),
+    this, SLOT(slotMimeTypeTextChanged(QString)));
 
   //finish GUI
   setFixedHeight(sizeHint().height());

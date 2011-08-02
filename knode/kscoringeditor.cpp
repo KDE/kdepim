@@ -84,7 +84,7 @@ SingleConditionWidget::SingleConditionWidget( KScoringManager *m, QWidget *p, co
   matches->addItems( KScoringExpression::conditionNames() );
   matches->setToolTip( i18n( "Select the type of match" ) );
   firstRow->addWidget( matches, 1 );
-  connect( matches, SIGNAL( activated( int ) ), SLOT( toggleRegExpButton( int ) ) );
+  connect( matches, SIGNAL(activated(int)), SLOT(toggleRegExpButton(int)) );
   QHBoxLayout *secondRow = new QHBoxLayout();
   secondRow->setSpacing( 1 );
   topL->addItem( secondRow );
@@ -96,7 +96,7 @@ SingleConditionWidget::SingleConditionWidget( KScoringManager *m, QWidget *p, co
   secondRow->addWidget( expr );
   regExpButton = new QPushButton( i18n( "Edit..." ), this );
   secondRow->addWidget( regExpButton );
-  connect( regExpButton, SIGNAL( clicked() ), SLOT( showRegExpDialog() ) );
+  connect( regExpButton, SIGNAL(clicked()), SLOT(showRegExpDialog()) );
 
   regExpButton->setEnabled(!KServiceTypeTrader::self()->query( "KRegExpEditor/KRegExpEditor" ).isEmpty());
 
@@ -681,12 +681,12 @@ RuleListWidget::RuleListWidget( KScoringManager *m, bool standalone, QWidget *p,
   mRuleUp->setIcon( KIcon( "go-up" ) );
   mRuleUp->setToolTip( i18n( "Move rule up" ) );
   btnL->addWidget( mRuleUp );
-  connect( mRuleUp, SIGNAL( clicked() ), SLOT( slotRuleUp() ) );
+  connect( mRuleUp, SIGNAL(clicked()), SLOT(slotRuleUp()) );
   mRuleDown = new QPushButton( this );
   mRuleDown->setIcon( KIcon( "go-down" ) );
   mRuleDown->setToolTip( i18n( "Move rule down" ) );
   btnL->addWidget( mRuleDown );
-  connect( mRuleDown, SIGNAL( clicked() ), SLOT( slotRuleDown() ) );
+  connect( mRuleDown, SIGNAL(clicked()), SLOT(slotRuleDown()) );
 
   btnL = new QHBoxLayout();
   btnL->setSpacing( KDialog::spacingHint() );
@@ -728,8 +728,8 @@ RuleListWidget::RuleListWidget( KScoringManager *m, bool standalone, QWidget *p,
   filterBox->addItem( i18n( "<placeholder>all groups</placeholder>" ) );
   filterBox->addItems( l );
   filterBox->setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed ) );
-  connect( filterBox, SIGNAL(activated(const QString&)),
-           this, SLOT(slotGroupFilter(const QString&)) );
+  connect( filterBox, SIGNAL(activated(QString)),
+           this, SLOT(slotGroupFilter(QString)) );
   slotGroupFilter( i18n( "<placeholder>all groups</placeholder>" ) );
   QLabel *lab = new QLabel( i18n( "Sho&w only rules for group:" ), this );
   lab->setBuddy( filterBox );
@@ -738,8 +738,8 @@ RuleListWidget::RuleListWidget( KScoringManager *m, bool standalone, QWidget *p,
   filterL->addWidget( filterBox );
 
   connect( manager, SIGNAL(changedRules()), this, SLOT(updateRuleList()) );
-  connect( manager, SIGNAL(changedRuleName(const QString&,const QString&)),
-           this, SLOT(slotRuleNameChanged(const QString&,const QString&)) );
+  connect( manager, SIGNAL(changedRuleName(QString,QString)),
+           this, SLOT(slotRuleNameChanged(QString,QString)) );
 
   updateRuleList();
   updateButton();
@@ -971,8 +971,8 @@ KScoringEditor::KScoringEditor( KScoringManager *m, QWidget *parent )
   hbl->addWidget( ruleLister );
   ruleEditor = new RuleEditWidget( manager, w );
   hbl->addWidget( ruleEditor );
-  connect( ruleLister, SIGNAL(ruleSelected(const QString&)),
-           ruleEditor, SLOT(slotEditRule(const QString&)) );
+  connect( ruleLister, SIGNAL(ruleSelected(QString)),
+           ruleEditor, SLOT(slotEditRule(QString)) );
   connect( ruleLister, SIGNAL(leavingRule()), ruleEditor, SLOT(updateRule()) );
   connect( ruleEditor, SIGNAL(shrink()), SLOT(slotShrink()) );
   connect( this, SIGNAL(finished()), SLOT(slotFinished()) );
@@ -1116,8 +1116,8 @@ KScoringEditorWidget::KScoringEditorWidget( KScoringManager *m, QWidget *p, cons
   QBoxLayout *topL = new QVBoxLayout( this );
   ruleLister = new RuleListWidget( manager, true, this );
   topL->addWidget( ruleLister );
-  connect( ruleLister, SIGNAL(ruleEdited(const QString&)),
-           this, SLOT(slotRuleEdited(const QString &)) );
+  connect( ruleLister, SIGNAL(ruleEdited(QString)),
+           this, SLOT(slotRuleEdited(QString)) );
 }
 
 KScoringEditorWidget::~KScoringEditorWidget()

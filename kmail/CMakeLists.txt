@@ -258,7 +258,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   install(PROGRAMS KMail2.desktop kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
   install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg
-    custommimeheader.kcfg
     DESTINATION ${KCFG_INSTALL_DIR}
   )
   install(FILES kmail.antispamrc kmail.antivirusrc  DESTINATION ${CONFIG_INSTALL_DIR})

@@ -38,8 +38,8 @@ class ThemeManager::Private
       setThemesPath( themesPath );
 
       mDirWatch = new KDirWatch( q );
-      q->connect( mDirWatch, SIGNAL( dirty( const QString& ) ),
-                  SLOT( directoryChanged() ) );
+      q->connect( mDirWatch, SIGNAL(dirty(QString)),
+                  SLOT(directoryChanged()) );
     }
 
     ~Private()

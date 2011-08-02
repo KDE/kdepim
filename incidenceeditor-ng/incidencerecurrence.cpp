@@ -92,7 +92,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   fillCombos();
 
   connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
-           SLOT( handleDateTimeToggle() ) );
+           SLOT(handleDateTimeToggle()) );
 
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
            SLOT(handleStartDateChange(QDate)) );

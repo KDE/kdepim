@@ -19,7 +19,7 @@ class KWidgetLister::Private
       if ( !widget )
         return;
 
-      q->connect( widget, SIGNAL( remove( QWidget* ) ), q, SLOT( removeWidget( QWidget* ) ) );
+      q->connect( widget, SIGNAL(remove(QWidget*)), q, SLOT(removeWidget(QWidget*)) );
       mWidgets.append( widget );
       mLayout->addWidget( widget );
     }

@@ -49,6 +49,7 @@
 #include <KDE/KXMLGUIFactory>
 
 #include <Nepomuk/Tag>
+#include "core/groupheaderitem.h"
 
 namespace MessageList
 {
@@ -81,7 +82,7 @@ Widget::Widget( QWidget *parent )
 {
   populateStatusFilterCombo();
   d->mTagListMonitor = new MessageCore::TagListMonitor( this );
-  connect( d->mTagListMonitor, SIGNAL( tagsChanged() ), this, SLOT( populateStatusFilterCombo() ) );
+  connect( d->mTagListMonitor, SIGNAL(tagsChanged()), this, SLOT(populateStatusFilterCombo()) );
 }
 
 Widget::~Widget()
@@ -99,7 +100,7 @@ void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
 
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
-    connect( showHideQuicksearch, SIGNAL( triggered( bool ) ), this, SLOT( changeQuicksearchVisibility() ) );
+    connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility()) );
   }
 }
 
@@ -307,15 +308,28 @@ void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderI
 
   QAction *act;
 
+  QModelIndex index = view()->model()->index( ghi, 0 );
+  view()->setCurrentIndex(index);
+
+  if ( view()->isExpanded( view()->model()->index( ghi, 0 ) ) ) {
+    act = menu.addAction( i18n ( "Collapse Group" ) );
+    connect( act, SIGNAL(triggered(bool)),
+             view(), SLOT(slotCollapseCurrentItem()) );
+  } else {
+    act = menu.addAction( i18n ( "Expand Group" ) );
+    connect( act, SIGNAL(triggered(bool)),
+             view(), SLOT(slotExpandCurrentItem()) );
+  }
+  
   menu.addSeparator();
 
   act = menu.addAction( i18n( "Expand All Groups" ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           view(), SLOT( slotExpandAllGroups() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           view(), SLOT(slotExpandAllGroups()) );
 
   act = menu.addAction( i18n( "Collapse All Groups" ) );
-  connect( act, SIGNAL( triggered( bool ) ),
-           view(), SLOT( slotCollapseAllGroups() ) );
+  connect( act, SIGNAL(triggered(bool)),
+           view(), SLOT(slotCollapseAllGroups()) );
 
   menu.exec( globalPos );
 }

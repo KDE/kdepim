@@ -114,10 +114,10 @@ void CertListView::slotStart() {
   kDebug(5150) <<"CertListView::slotStart()";
   Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
-  QObject::connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-		    this, SLOT(slotAddKey(const GpgME::Key&)) );
-  QObject::connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-		    this, SLOT(slotResult(const GpgME::KeyListResult&)) );
+  QObject::connect( job, SIGNAL(nextKey(GpgME::Key)),
+		    this, SLOT(slotAddKey(GpgME::Key)) );
+  QObject::connect( job, SIGNAL(result(GpgME::KeyListResult)),
+		    this, SLOT(slotResult(GpgME::KeyListResult)) );
 #if 0
   QStringList l;
   l << "Marc";

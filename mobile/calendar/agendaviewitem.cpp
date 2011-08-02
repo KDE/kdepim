@@ -41,8 +41,8 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   m_view->setPalette( pal );
   m_view->setDateRangeSelectionEnabled( false );
 
-  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
-           SIGNAL(itemSelected(Akonadi::Item, QDate)) );
+  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+           SIGNAL(itemSelected(Akonadi::Item,QDate)) );
   connect( this, SIGNAL(nextItemRequest()), SLOT(gotoNext()) );
   connect( this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()) );
 

@@ -76,7 +76,8 @@ void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &
     item.data()->setStatus( agent.statusMessage() );
     switch ( agent.status() ) {
       case AgentInstance::Idle:
-        item.data()->setComplete();
+        if( item.data() )	      
+          item.data()->setComplete();
         break;
       case AgentInstance::Running:
         break;

@@ -35,8 +35,8 @@
 MailerService::MailerService()
                 : mSuccess( false ), mEventLoop( 0 )
 {
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
-           SLOT( serviceOwnerChanged( QString, QString, QString ) ) );
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           SLOT(serviceOwnerChanged(QString,QString,QString)) );
   start();
 }
 

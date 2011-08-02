@@ -115,8 +115,8 @@ void Scheduler::startJob( KNJobData * job )
 {
   job->prepareForExecution();
   if ( job->success() ) {
-    connect( job, SIGNAL( finished(KNJobData*) ),
-             SLOT( slotJobFinished(KNJobData*) ) );
+    connect( job, SIGNAL(finished(KNJobData*)),
+             SLOT(slotJobFinished(KNJobData*)) );
     job->execute();
   } else
     slotJobFinished( job );

@@ -54,7 +54,6 @@ void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::Ident
 #error forgot to include kdepim-version.h
 #endif
 
-  // using kdepim revision string instead of KMAIL_VERSION, as we no longer depend on kmail itself
   message->userAgent()->fromUnicodeString( KProtocolManager::userAgentForApplication( QString::fromLocal8Bit("KMail"), QString::fromLocal8Bit(KDEPIM_GIT_REVISION_STRING), extraInfo ), QLatin1String("utf-8").latin1() );
   // This will allow to change Content-Type:
   message->contentType()->setMimeType( "text/plain" );

@@ -127,18 +127,18 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 #ifdef __GNUC__
 #warning Only want to monitor collection properties, not content, when this becomes possible
 #endif
-    connect(monitor, SIGNAL(collectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&)), SLOT(slotCollectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&)));
-    connect(monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)), SLOT(slotCollectionRemoved(const Akonadi::Collection&)));
-    connect(CalendarMigrator::instance(), SIGNAL(creating(const QString&, bool)), SLOT(slotCollectionBeingCreated(const QString&, bool)));
+    connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
+    connect(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), SLOT(slotCollectionRemoved(Akonadi::Collection)));
+    connect(CalendarMigrator::instance(), SIGNAL(creating(QString,bool)), SLOT(slotCollectionBeingCreated(QString,bool)));
     MinuteTimer::connect(this, SLOT(slotUpdateTimeTo()));
-    Preferences::connect(SIGNAL(archivedColourChanged(const QColor&)), this, SLOT(slotUpdateArchivedColour(const QColor&)));
-    Preferences::connect(SIGNAL(disabledColourChanged(const QColor&)), this, SLOT(slotUpdateDisabledColour(const QColor&)));
-    Preferences::connect(SIGNAL(holidaysChanged(const KHolidays::HolidayRegion&)), this, SLOT(slotUpdateHolidays()));
-    Preferences::connect(SIGNAL(workTimeChanged(const QTime&, const QTime&, const QBitArray&)), this, SLOT(slotUpdateWorkingHours()));
+    Preferences::connect(SIGNAL(archivedColourChanged(QColor)), this, SLOT(slotUpdateArchivedColour(QColor)));
+    Preferences::connect(SIGNAL(disabledColourChanged(QColor)), this, SLOT(slotUpdateDisabledColour(QColor)));
+    Preferences::connect(SIGNAL(holidaysChanged(KHolidays::HolidayRegion)), this, SLOT(slotUpdateHolidays()));
+    Preferences::connect(SIGNAL(workTimeChanged(QTime,QTime,QBitArray)), this, SLOT(slotUpdateWorkingHours()));
 
-    connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SLOT(slotRowsInserted(const QModelIndex&, int, int)));
-    connect(this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int, int)), SLOT(slotRowsAboutToBeRemoved(const QModelIndex&, int, int)));
-    connect(monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)), SLOT(slotMonitoredItemChanged(const Akonadi::Item&, const QSet<QByteArray>&)));
+    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(slotRowsInserted(QModelIndex,int,int)));
+    connect(this, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(slotRowsAboutToBeRemoved(QModelIndex,int,int)));
+    connect(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotMonitoredItemChanged(Akonadi::Item,QSet<QByteArray>)));
 
     // Check whether there are any KAlarm resources configured
     bool found = false;
@@ -423,7 +423,7 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                         case SortRole:
                             return AlarmText::summary(event, 1);
                         case Qt::ToolTipRole:
-                            return AlarmText::summary(event);
+                            return AlarmText::summary(event, 10);
                         default:
                             break;
                     }
@@ -946,9 +946,9 @@ QString AkonadiModel::tooltip(const Collection& collection, KAlarm::CalEvent::Ty
     QString locn = url.pathOrUrl();
     bool inactive = !collection.hasAttribute<CollectionAttribute>()
                  || !(collection.attribute<CollectionAttribute>()->enabled() & types);
-    bool writable = (collection.rights() & writableRights) == writableRights;
     QString disabled = i18nc("@info/plain", "Disabled");
-    QString readonly = i18nc("@info/plain", "Read-only");
+    QString readonly = readOnlyTooltip(collection);
+    bool writable = readonly.isEmpty();
 //if (!collection.hasAttribute<CollectionAttribute>()) { kDebug()<<"Tooltip: no collection attribute"; } else { kDebug()<<"Tooltip: enabled="<<collection.attribute<CollectionAttribute>()->enabled(); } //disabled="<<inactive;
     if (inactive  &&  !writable)
         return i18nc("@info:tooltip",
@@ -966,6 +966,20 @@ QString AkonadiModel::tooltip(const Collection& collection, KAlarm::CalEvent::Ty
                  "%1"
                  "<nl/>%2: <filename>%3</filename>",
                  name, type, locn);
+}
+
+/******************************************************************************
+* Return the read-only status tooltip for a collection.
+* A null string is returned if the collection is fully writable.
+*/
+QString AkonadiModel::readOnlyTooltip(const Collection& collection)
+{
+    KAlarm::Calendar::Compat compat;
+    return AkonadiModel::isWritable(collection, compat)
+         ? QString()
+         : (compat == KAlarm::Calendar::Current)      ? i18nc("@info/plain", "Read-only")
+         : (compat == KAlarm::Calendar::Incompatible) ? i18nc("@info/plain", "Read-only (other format)")
+         :                                              i18nc("@info/plain", "Read-only (old format)");
 }
 
 /******************************************************************************
@@ -1791,6 +1805,35 @@ bool AkonadiModel::isCompatible(const Collection& collection)
 {
     return collection.hasAttribute<CompatibilityAttribute>()
        &&  collection.attribute<CompatibilityAttribute>()->compatibility() == KAlarm::Calendar::Current;
+}
+
+/******************************************************************************
+* Return whether a collection is fully writable.
+*/
+bool AkonadiModel::isWritable(const Akonadi::Collection& collection)
+{
+    KAlarm::Calendar::Compat format;
+    return isWritable(collection, format);
+}
+
+bool AkonadiModel::isWritable(const Akonadi::Collection& collection, KAlarm::Calendar::Compat& format)
+{
+    format = KAlarm::Calendar::Current;
+    if (!collection.isValid())
+        return false;
+    Collection col = collection;
+    instance()->refresh(col);    // update with latest data
+    if ((col.rights() & writableRights) != writableRights)
+        return false;
+    if (!col.hasAttribute<CompatibilityAttribute>())
+    {
+        format = KAlarm::Calendar::Incompatible;
+        return false;
+    }
+    format = col.attribute<CompatibilityAttribute>()->compatibility();
+    if (format != KAlarm::Calendar::Current)
+        return false;
+    return true;
 }
 
 KAlarm::CalEvent::Types AkonadiModel::types(const Collection& collection)

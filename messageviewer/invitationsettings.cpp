@@ -167,3 +167,33 @@ QString InvitationSettings::helpAnchor() const
   return QString::fromLatin1( "configure-misc-invites" );
 }
 
+void InvitationSettings::doResetToDefaultsOther()
+{
+  const bool bUseDefaults = GlobalSettings::self()->useDefaults( true );
+
+  mInvitationUi->mLegacyMangleFromTo->setChecked(
+    GlobalSettings::self()->legacyMangleFromToHeaders() );
+
+  mInvitationUi->mExchangeCompatibleInvitations->setChecked(
+    GlobalSettings::self()->exchangeCompatibleInvitations() );
+
+  mInvitationUi->mLegacyBodyInvites->blockSignals( true );
+  mInvitationUi->mLegacyBodyInvites->setChecked( GlobalSettings::self()->legacyBodyInvites() );
+  mInvitationUi->mLegacyBodyInvites->blockSignals( false );
+
+  mInvitationUi->mOutlookCompatibleInvitationComments->setChecked(
+    GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
+
+  mInvitationUi->mOutlookCompatibleInvitationComparisons->setChecked(
+    GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
+
+  mInvitationUi->mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
+  mInvitationUi->mAutomaticSending->setEnabled( !mInvitationUi->mLegacyBodyInvites->isChecked() );
+
+  mInvitationUi->mDeleteInvitations->setChecked(
+    GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+
+  GlobalSettings::self()->useDefaults( bUseDefaults );
+  
+  
+}

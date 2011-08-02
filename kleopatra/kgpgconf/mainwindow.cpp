@@ -55,22 +55,22 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     QWidget* mainWidget = new QWidget( this );
     m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
-    connect( m_ui.treeWidget, SIGNAL( itemSelectionChanged() ), 
-             SLOT( treeWidgetItemSelectionChanged() ) );
-    connect( m_ui.treeWidget, SIGNAL( itemChanged( QTreeWidgetItem*, int ) ),
-             SLOT( treeWidgetItemChanged( QTreeWidgetItem*, int ) ) );
-    connect( m_ui.readOnlyBox, SIGNAL( stateChanged( int ) ), SLOT( readOnlyStateChanged( int ) ) );
-    connect( m_ui.valueLE, SIGNAL( textChanged( QString ) ), SLOT( optionValueChanged() ) );
-    connect( m_ui.useCustomRB, SIGNAL( toggled( bool ) ), m_ui.valueLE, SLOT( setEnabled( bool ) ) );
-    connect( m_ui.useDefaultRB, SIGNAL( toggled( bool ) ), SLOT( useDefaultToggled( bool ) ) );
+    connect( m_ui.treeWidget, SIGNAL(itemSelectionChanged()), 
+             SLOT(treeWidgetItemSelectionChanged()) );
+    connect( m_ui.treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+             SLOT(treeWidgetItemChanged(QTreeWidgetItem*,int)) );
+    connect( m_ui.readOnlyBox, SIGNAL(stateChanged(int)), SLOT(readOnlyStateChanged(int)) );
+    connect( m_ui.valueLE, SIGNAL(textChanged(QString)), SLOT(optionValueChanged()) );
+    connect( m_ui.useCustomRB, SIGNAL(toggled(bool)), m_ui.valueLE, SLOT(setEnabled(bool)) );
+    connect( m_ui.useDefaultRB, SIGNAL(toggled(bool)), SLOT(useDefaultToggled(bool)) );
 
     QMenu* const fileMenu = menuBar()->addMenu( i18n( "&File" ) );
-    fileMenu->addAction( i18n( "Save As..." ), this, SLOT( saveAs() ) );
+    fileMenu->addAction( i18n( "Save As..." ), this, SLOT(saveAs()) );
     fileMenu->addSeparator();
-    QAction* const quit = fileMenu->addAction( i18n( "Quit" ), qApp, SLOT( quit() ) );
+    QAction* const quit = fileMenu->addAction( i18n( "Quit" ), qApp, SLOT(quit()) );
     quit->setShortcut( Qt::CTRL + Qt::Key_Q );
     resize( 640, 480 );
-    QTimer::singleShot( 0, this, SLOT( delayedInit() ) );
+    QTimer::singleShot( 0, this, SLOT(delayedInit()) );
 }
 
 void MainWindow::delayedInit()

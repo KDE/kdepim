@@ -51,7 +51,7 @@ void KNode::MailSendJob::execute()
   }
   job->setTo( to );
 
-  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
   setupKJob( job );
   TransportManager::self()->schedule( job );
 }

@@ -27,8 +27,8 @@
 GroupWiseSettingsWidget::GroupWiseSettingsWidget()
 : QObject( 0 ), Ui_GroupWiseSettingsWidgetBase()
 {
-  connect( m_settingsList, SIGNAL( itemRenamed( Q3ListViewItem *, int ) ),
-          this, SLOT( slotItemRenamed( Q3ListViewItem *, int ) ) );
+  connect( m_settingsList, SIGNAL(itemRenamed(Q3ListViewItem*,int)),
+          this, SLOT(slotItemRenamed(Q3ListViewItem*,int)) );
 }
 
 void GroupWiseSettingsWidget::slotItemRenamed( Q3ListViewItem * item, int )

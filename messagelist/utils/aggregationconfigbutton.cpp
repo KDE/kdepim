@@ -45,13 +45,13 @@ AggregationConfigButton::AggregationConfigButton( QWidget * parent, const Aggreg
 : KPushButton( i18n( "Configure..." ), parent ), d( new AggregationConfigButtonPrivate( this ) )
 {
   d->mAggregationComboBox = aggregationComboBox;
-  connect( this, SIGNAL( pressed() ),
-           this, SLOT( slotConfigureAggregations() ) );
+  connect( this, SIGNAL(pressed()),
+           this, SLOT(slotConfigureAggregations()) );
 
   // Keep aggregation combo up-to-date with any changes made in the configure dialog.
   if ( d->mAggregationComboBox != 0 )
-    connect( this, SIGNAL( configureDialogCompleted() ),
-             d->mAggregationComboBox, SLOT( slotLoadAggregations() ) );
+    connect( this, SIGNAL(configureDialogCompleted()),
+             d->mAggregationComboBox, SLOT(slotLoadAggregations()) );
 }
 
 AggregationConfigButton::~AggregationConfigButton()
@@ -69,8 +69,8 @@ void AggregationConfigButtonPrivate::slotConfigureAggregations()
   ConfigureAggregationsDialog *dialog = new ConfigureAggregationsDialog( q->window() );
   dialog->selectAggregation( currentAggregationID );
 
-  QObject::connect( dialog, SIGNAL( okClicked() ),
-                    q, SIGNAL( configureDialogCompleted() ) );
+  QObject::connect( dialog, SIGNAL(okClicked()),
+                    q, SIGNAL(configureDialogCompleted()) );
 
   dialog->show();
 }

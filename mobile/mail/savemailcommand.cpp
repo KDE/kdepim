@@ -145,7 +145,7 @@ void SaveMailCommand::execute()
     Akonadi::Collection sourceFolder = mMessages.first().parentCollection();
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mMessages, this );
     job->fetchScope().fetchFullPayload(true);
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone( KJob*)));
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)));
 }
 
 void SaveMailCommand::slotFetchDone(KJob *job)
@@ -176,7 +176,7 @@ void SaveMailCommand::slotFetchDone(KJob *job)
     mJob = KIO::put( mUrl, -1 /*TODO: See MessageViewer::Util::getWritePermissions() */ );
     mJob->setTotalSize( mTotalSize );
     mJob->setAsyncDataEnabled( true );
-    connect(mJob, SIGNAL(dataReq(KIO::Job*, QByteArray &)),
+    connect(mJob, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
       SLOT(slotSaveDataReq()));
     connect(mJob, SIGNAL(result(KJob*)),
       SLOT(slotSaveResult(KJob*)));
@@ -277,7 +277,7 @@ void SaveMailCommand::slotSaveResult(KJob *job)
         mJob = KIO::put( mUrl, -1 /*See MessageViewer::Util::getWritePermissions()*/, KIO::Overwrite );
         mJob->setTotalSize( mTotalSize );
         mJob->setAsyncDataEnabled( true );
-        connect(mJob, SIGNAL(dataReq(KIO::Job*, QByteArray &)),
+        connect(mJob, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
             SLOT(slotSaveDataReq()));
         connect(mJob, SIGNAL(result(KJob*)),
             SLOT(slotSaveResult(KJob*)));

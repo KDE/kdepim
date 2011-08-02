@@ -117,9 +117,9 @@ ResourceSelector::ResourceSelector(AlarmResources* calendar, QWidget* parent)
     mListView = new ResourceView(this);
     mListView->setModel(filterModel);
 #endif
-    connect(mListView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,const QItemSelection&)), SLOT(selectionChanged()));
+    connect(mListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
     mListView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(mListView, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(contextMenuRequested(const QPoint&)));
+    connect(mListView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenuRequested(QPoint)));
     mListView->setWhatsThis(i18nc("@info:whatsthis",
                                   "List of available calendars of the selected type. The checked state shows whether a calendar "
                                  "is enabled (checked) or disabled (unchecked). The default calendar is shown in bold."));
@@ -147,10 +147,10 @@ ResourceSelector::ResourceSelector(AlarmResources* calendar, QWidget* parent)
     connect(mDeleteButton, SIGNAL(clicked()), SLOT(removeResource()));
 
 #ifdef USE_AKONADI
-    connect(AkonadiModel::instance(), SIGNAL(collectionAdded(const Akonadi::Collection&)),
-                                      SLOT(slotCollectionAdded(const Akonadi::Collection&)));
+    connect(AkonadiModel::instance(), SIGNAL(collectionAdded(Akonadi::Collection)),
+                                      SLOT(slotCollectionAdded(Akonadi::Collection)));
 #else
-    connect(mCalendar, SIGNAL(resourceStatusChanged(AlarmResource*, AlarmResources::Change)), SLOT(slotStatusChanged(AlarmResource*, AlarmResources::Change)));
+    connect(mCalendar, SIGNAL(resourceStatusChanged(AlarmResource*,AlarmResources::Change)), SLOT(slotStatusChanged(AlarmResource*,AlarmResources::Change)));
 #endif
 
     connect(mAlarmType, SIGNAL(activated(int)), SLOT(alarmTypeSelected()));
@@ -195,6 +195,10 @@ void ResourceSelector::alarmTypeSelected()
     mAddButton->setToolTip(addTip);
     // WORKAROUND: Switch scroll bars back on after allowing geometry to update ...
     QTimer::singleShot(0, this, SLOT(reinstateAlarmTypeScrollBars()));
+
+#ifdef USE_AKONADI
+    selectionChanged();   // enable/disable buttons
+#endif
 }
 
 /******************************************************************************
@@ -223,8 +227,8 @@ void ResourceSelector::addResource()
 {
 #ifdef USE_AKONADI
     AkonadiResourceCreator* creator = new AkonadiResourceCreator(mCurrentAlarmType, this);
-    connect(creator, SIGNAL(finished(AkonadiResourceCreator*, bool)), 
-                     SLOT(resourceAdded(AkonadiResourceCreator*, bool)));
+    connect(creator, SIGNAL(finished(AkonadiResourceCreator*,bool)), 
+                     SLOT(resourceAdded(AkonadiResourceCreator*,bool)));
     creator->createResource();
 #else
     AlarmResourceManager* manager = mCalendar->resourceManager();
@@ -438,11 +442,11 @@ void ResourceSelector::removeResource()
         if (allTypes != currentType)
         {
             // It also contains alarm types other than the currently displayed type
-            QString stdTypes = typeListForDisplay(standardTypes);
+            QString stdTypes = CollectionControlModel::typeListForDisplay(standardTypes);
             QString otherTypes;
             KAlarm::CalEvent::Types nonStandardTypes(allTypes & ~standardTypes);
             if (nonStandardTypes != currentType)
-                otherTypes = i18nc("@info", "<para>It also contains:%1</para>", typeListForDisplay(nonStandardTypes));
+                otherTypes = i18nc("@info", "<para>It also contains:%1</para>", CollectionControlModel::typeListForDisplay(nonStandardTypes));
             text = i18nc("@info", "<para><resource>%1</resource> is the default calendar for:%2</para>%3"
                                   "<para>Do you really want to remove it from all calendar lists?</para>", name, stdTypes, otherTypes);
         }
@@ -451,7 +455,7 @@ void ResourceSelector::removeResource()
     }
     else if (allTypes != currentType)
         text = i18nc("@info", "<para><resource>%1</resource> contains:%2</para><para>Do you really want to remove it from all calendar lists?</para>",
-                     name, typeListForDisplay(allTypes));
+                     name, CollectionControlModel::typeListForDisplay(allTypes));
     else
         text = i18nc("@info", "Do you really want to remove the calendar <resource>%1</resource> from the list?", name);
 #else
@@ -476,25 +480,6 @@ void ResourceSelector::removeResource()
     manager->writeConfig();
 #endif
 }
-
-#ifdef USE_AKONADI
-/******************************************************************************
-* Create a bulleted list of alarm types.
-*/
-QString ResourceSelector::typeListForDisplay(KAlarm::CalEvent::Types alarmTypes)
-{
-    QString list;
-    if (alarmTypes & KAlarm::CalEvent::ACTIVE)
-        list += QLatin1String("<item>") + i18nc("@info/plain", "Active Alarms") + QLatin1String("</item>");
-    if (alarmTypes & KAlarm::CalEvent::ARCHIVED)
-        list += QLatin1String("<item>") + i18nc("@info/plain", "Archived Alarms") + QLatin1String("</item>");
-    if (alarmTypes & KAlarm::CalEvent::TEMPLATE)
-        list += QLatin1String("<item>") + i18nc("@info/plain", "Alarm Templates") + QLatin1String("</item>");
-    if (!list.isEmpty())
-        list = QLatin1String("<list>") + list + QLatin1String("</list>");
-    return list;
-}
-#endif
 
 /******************************************************************************
 * Called when the current selection changes, to enable/disable the
@@ -596,7 +581,7 @@ void ResourceSelector::contextMenuRequested(const QPoint& viewportPos)
         // Note: the CollectionControlModel functions call AkonadiModel::refresh(collection)
         active   = CollectionControlModel::isEnabled(collection, type);
         KAlarm::Calendar::Compat compatibility;
-        writable = CollectionControlModel::isWritable(collection, type, compatibility);
+        writable = CollectionControlModel::isWritableEnabled(collection, type, compatibility);
         if (!writable
         &&  (compatibility & ~KAlarm::Calendar::Converted)
         &&  !(compatibility & ~(KAlarm::Calendar::Convertible | KAlarm::Calendar::Converted)))
@@ -866,11 +851,9 @@ void ResourceSelector::showInfo()
             alarmTypes << i18nc("@info/plain", "Alarm templates");
         QString alarmTypeString = alarmTypes.join(i18nc("@info/plain List separator", ", "));
         KAlarm::Calendar::Compat compat;
-        QString perms = CollectionControlModel::isWritable(collection, alarmType, compat, true)
-                    ? i18nc("@info/plain", "Read-write")
-                    : (compat == KAlarm::Calendar::Current) ? i18nc("@info/plain", "Read-only")
-                    : (compat == KAlarm::Calendar::Incompatible) ? i18nc("@info/plain", "Read-only (other format)")
-                    : i18nc("@info/plain", "Read-only (old format)");
+        QString perms = AkonadiModel::readOnlyTooltip(collection);
+        if (perms.isEmpty())
+            perms = i18nc("@info/plain", "Read-write");
         QString enabled = CollectionControlModel::isEnabled(collection, alarmType)
                     ? i18nc("@info/plain", "Enabled")
                     : i18nc("@info/plain", "Disabled");

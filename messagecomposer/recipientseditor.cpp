@@ -55,16 +55,16 @@ RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( ne
 
   layout()->addWidget( mSideWidget );
 
-  connect( mSideWidget, SIGNAL( pickedRecipient( const Recipient & ) ),
-    SLOT( slotPickedRecipient( const Recipient & ) ) );
-  connect( mSideWidget, SIGNAL( saveDistributionList() ),
-    SLOT( saveDistributionList() ) );
+  connect( mSideWidget, SIGNAL(pickedRecipient(Recipient)),
+    SLOT(slotPickedRecipient(Recipient)) );
+  connect( mSideWidget, SIGNAL(saveDistributionList()),
+    SLOT(saveDistributionList()) );
 
-//   connect( mView, SIGNAL( focusRight() ),
-//     mSideWidget, SLOT( setFocus() ) );
+//   connect( mView, SIGNAL(focusRight()),
+//     mSideWidget, SLOT(setFocus()) );
 
-  connect( this, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SLOT( slotLineAdded( KPIM::MultiplyingLine* ) ) );
-  connect( this, SIGNAL( lineDeleted( int ) ), SLOT( slotLineDeleted( int ) ) );
+  connect( this, SIGNAL(lineAdded(KPIM::MultiplyingLine*)), SLOT(slotLineAdded(KPIM::MultiplyingLine*)) );
+  connect( this, SIGNAL(lineDeleted(int)), SLOT(slotLineDeleted(int)) );
   
   addData(); // one defaut line
 }
@@ -222,9 +222,9 @@ void RecipientsEditor::slotLineAdded( MultiplyingLine* line )
     }
     line->fixTabOrder( lines().last()->tabOut() );
   }
-  connect( rec, SIGNAL( countChanged() ), SLOT( slotCalculateTotal() ) );
-//   connect( rec->mEdit, SIGNAL( textChanged ( const QString & ) ),
-//            SLOT( slotCalculateTotal() ) );
+  connect( rec, SIGNAL(countChanged()), SLOT(slotCalculateTotal()) );
+//   connect( rec->mEdit, SIGNAL(textChanged(QString)),
+//            SLOT(slotCalculateTotal()) );
 }
 
 void RecipientsEditor::slotLineDeleted( int pos )

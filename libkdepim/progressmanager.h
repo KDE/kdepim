@@ -40,7 +40,7 @@ namespace KPIM {
 
 class ProgressItem;
 class ProgressManager;
-typedef QMap<QPointer<ProgressItem >, bool> ProgressItemMap;
+typedef QMap<ProgressItem *, bool> ProgressItemMap;
 
 class KDEPIM_EXPORT ProgressItem : public QObject
 {
@@ -250,6 +250,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     bool mCanceled;
     bool mUsesCrypto;
     bool mUsesBusyIndicator;
+    bool mCompletedCalled;
 };
 
 struct ProgressManagerPrivate;

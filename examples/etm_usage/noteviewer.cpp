@@ -72,7 +72,7 @@ NoteViewer::NoteViewer(QWidget* parent, Qt::WindowFlags f)
 //   newItem.setPayload( newPage );
 //
 //   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, noteResource, this );
-//   connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
+//   connect( job, SIGNAL(result(KJob*)), SLOT(newPageResult(KJob*)) );
 
 }
 

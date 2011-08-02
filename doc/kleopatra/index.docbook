@@ -288,26 +288,26 @@ hierarchical chain of trust.</para>
 for the certificate. The fields to fill out are:
 <itemizedlist>
 <listitem>
-<para><guilabel>Common Name (CN): </guilabel>Your name;</para>
+<para><guilabel>Common Name (CN):</guilabel> Your name;</para>
 </listitem>
 <listitem>
-<para><guilabel>Email address (EMAIL): </guilabel>Your email address; be sure
+<para><guilabel>Email address (EMAIL):</guilabel> Your email address; be sure
 to type this in correctly&mdash;this will be the address people will be
 sending mail to when they use your certificate.</para>
 </listitem>
 <listitem>
-<para><guilabel>Location (L): </guilabel>The town or city in which you live;</para>
+<para><guilabel>Location (L):</guilabel> The town or city in which you live;</para>
 </listitem>
 <listitem>
-<para><guilabel>Organizational unit (OU): </guilabel>The organizational unit you are
+<para><guilabel>Organizational unit (OU):</guilabel> The organizational unit you are
 in (for example, "Logistics");</para> 
 </listitem>
 <listitem>
-<para><guilabel>Organization (O): </guilabel>The organization you represent
+<para><guilabel>Organization (O):</guilabel> The organization you represent
 (for example, the company you work for);</para>
 </listitem>
 <listitem>
-<para><guilabel>Country code (C): </guilabel>The two letter code for the
+<para><guilabel>Country code (C):</guilabel> The two letter code for the
 country in which you are living (for example, "US");</para>
 </listitem>
 </itemizedlist>
@@ -474,7 +474,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
         <varlistentry id="file-export-secret-key">
           <term>
             <menuchoice>
-              <guimenu>File</guimenu><guimenuitem>Export Secret Certificate...</guimenuitem>
+              <guimenu>File</guimenu><guimenuitem>Export Secret Keys...</guimenuitem>
             </menuchoice>
           </term>
           <listitem>
@@ -602,7 +602,10 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
 -->
           </listitem>
         </varlistentry>
-
+<!--
+Create Checksum Files...
+Verify Checksum Files...
+  missing-->
         <varlistentry>
           <term>
             <menuchoice>
@@ -980,7 +983,7 @@ uncommon).</para>
         <varlistentry>
           <term>
             <menuchoice>
-              <guimenu>Certificates</guimenu><guimenuitem>Change Expire Date...</guimenuitem>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Expiry Date...</guimenuitem>
             </menuchoice>
           </term>
           <listitem>
@@ -2098,6 +2101,8 @@ button.</para>
     </sect1>
 
     <sect1 id="configuration-smime-validation">
+    <!-- keep in sync with section configure-security-smime-validation from kmail configure.docbook
+    both apps have the same page in settings-->
       <title>Configuring aspects of S/MIME Validation</title>
 
       <para>
@@ -2439,6 +2444,8 @@ button.</para>
     </sect1>
 
     <sect1 id="configuration-gnupg-system">
+    <!-- kleopatra + kmail have the this page in settings-->
+
       <title>Configuring the GnuPG System</title>
 
       <para>

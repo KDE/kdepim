@@ -24,6 +24,7 @@
 #include "messagetag.h"
 #include "ontologies/email.h"
 #include "messagecore/annotationdialog.h"
+#include "core/callbacknepomukresourceretriever.h"
 
 #include <akonadi/item.h>
 
@@ -34,6 +35,8 @@
 #include <KIconLoader>
 
 using namespace MessageList::Core;
+
+K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriever );
 
 class MessageItem::Tag::Private
 {
@@ -143,6 +146,7 @@ MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
 
 MessageItemPrivate::~MessageItemPrivate()
 {
+  s_nepomukRetriever->cancelCallbackRequest( mAkonadiItem.url() );
   invalidateTagCache();
 }
 
@@ -170,7 +174,7 @@ const MessageItem::Tag* MessageItemPrivate::bestTag() const
   return best;
 }
 
-void MessageItemPrivate::fillTagList() const
+void MessageItemPrivate::fillTagList( const Nepomuk::Resource &resource ) const
 {
   Q_ASSERT( !mTagList );
   mTagList = new QList<MessageItem::Tag*>;
@@ -178,7 +182,6 @@ void MessageItemPrivate::fillTagList() const
   // TODO: The tag pointers here could be shared between all items, there really is no point in
   //       creating them for each item that has tags
 
-  const Nepomuk::Resource resource( mAkonadiItem.url() );
   const QList< Nepomuk::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
     foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
@@ -217,8 +220,10 @@ void MessageItemPrivate::fillTagList() const
 
 QList<MessageItem::Tag*> MessageItemPrivate::getTagList() const
 {
-  if ( !mTagList )
-    fillTagList();
+  if ( !mTagList ) {
+    s_nepomukRetriever->requestResource( const_cast<MessageItemPrivate*>(this), mAkonadiItem.url() );
+    return QList<MessageItem::Tag*>();
+  }
 
   return *mTagList;
 }
@@ -227,6 +232,21 @@ bool MessageItemPrivate::tagListInitialized() const
 {
   return mTagList != 0;
 }
+
+void MessageItemPrivate::resourceReceived(const Nepomuk::Resource& resource)
+{
+  if ( !mTagList )
+    fillTagList( resource );
+
+  if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
+    mHasAnnotation = !resource.description().isEmpty();
+  } else {
+    mHasAnnotation = false;
+  }
+
+  mAnnotationStateChecked = true;
+}
+
 
 MessageItem::MessageItem()
   : Item( Message, new MessageItemPrivate( this ) ), ModelInvariantIndex()
@@ -254,21 +274,15 @@ bool MessageItem::hasAnnotation() const
   if ( d->mAnnotationStateChecked )
     return d->mHasAnnotation;
 
-  Nepomuk::Resource resource( d->mAkonadiItem.url() );
-  if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
-    d->mHasAnnotation = !resource.description().isEmpty();
-  } else {
-    d->mHasAnnotation = false;
-  }
-
-  d->mAnnotationStateChecked = true;
-  return d->mHasAnnotation;
+  s_nepomukRetriever->requestResource( const_cast<MessageItemPrivate*>(d), d->mAkonadiItem.url() );
+  return false;
 }
 
 QString MessageItem::annotation() const
 {
   Q_D( const MessageItem );
   if ( hasAnnotation() ) {
+    kDebug();
     Nepomuk::Resource resource( d->mAkonadiItem.url() );
     return resource.description();
   }

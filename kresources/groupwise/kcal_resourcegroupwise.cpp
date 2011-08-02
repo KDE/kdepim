@@ -156,16 +156,16 @@ bool ResourceGroupwise::doLoad( bool )
   mJobData.clear();
 
   mDownloadJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
-           SLOT( slotJobResult( KJob * ) ) );
-  connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+  connect( mDownloadJob, SIGNAL(result(KJob*)),
+           SLOT(slotJobResult(KJob*)) );
+  connect( mDownloadJob, SIGNAL(data(KIO::Job*,QByteArray)),
+           SLOT(slotJobData(KIO::Job*,QByteArray)) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
   connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           SLOT( cancelLoad() ) );
+           SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+           SLOT(cancelLoad()) );
 
   return true;
 }

@@ -210,22 +210,22 @@ void ThreadGrouperModel::setSourceModel( QAbstractItemModel *sourceModel )
   Q_D( ThreadGrouperModel );
   d->populateThreadGrouperModel();
 
-  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-           this, SLOT( populateThreadGrouperModel() ) );
-  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-           this, SLOT( resort() ) );
+  connect( sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(populateThreadGrouperModel()) );
+  connect( sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(resort()) );
 
-  connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
-           this, SLOT( populateThreadGrouperModel() ) );
+  connect( sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           this, SLOT(populateThreadGrouperModel()) );
 
-  connect( sourceModel, SIGNAL( layoutChanged() ),
-           this, SLOT( populateThreadGrouperModel() ) );
+  connect( sourceModel, SIGNAL(layoutChanged()),
+           this, SLOT(populateThreadGrouperModel()) );
 
   QSortFilterProxyModel::setSourceModel( sourceModel );
 
   if ( d->m_dynamicModelRepopulation )
-    connect( sourceModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-             this, SLOT( populateThreadGrouperModel() ) );
+    connect( sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+             this, SLOT(populateThreadGrouperModel()) );
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( GrouperRole, "grouperString" );

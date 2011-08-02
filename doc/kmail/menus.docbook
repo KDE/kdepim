@@ -44,7 +44,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>File</guimenu>
+  <guimenu>File</guimenu><!-- New -> New Message, New Message from Template, Add Folder, New Window  lueck 31.05.2011-->
 <guimenuitem>New Window</guimenuitem>
 </menuchoice>
 </term>
@@ -134,7 +134,7 @@ each folder's <link linkend="folders-properties-window">Properties dialog</link>
 </listitem>
 </varlistentry>
 
-<varlistentry>
+ <varlistentry><!-- Only with IMAP?-->
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
@@ -159,6 +159,8 @@ all trash folders that you might have on &imap; servers.</para>
 </listitem>
 </varlistentry>
 
+<!-- missing: Work Offline -->
+ 
 <varlistentry>
 <term>
 <menuchoice>
@@ -187,6 +189,24 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycap>F5</keycap></shortcut>
+<guimenu>Folder</guimenu>
+<guimenuitem>Update Folders</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Checks whether new mail arrived in the currently selected folder.
+This is only available for &imap; folders.</para>
+</listitem>
+</varlistentry>
+
+
+<!-- missing
+Update folder and its subfolders CTRL+F5
+  -->
+<varlistentry>
+<term>
+<menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Send Queued Messages</guimenuitem>
 </menuchoice></term>
@@ -194,7 +214,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <para>Sends the messages that are in your outbox.</para>
 </listitem>
 </varlistentry>
-
+<!-- Send Queued Messages via -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -245,7 +265,12 @@ in the trash.</para>
 <para>Copies selected text to the clipboard.</para>
 </listitem>
 </varlistentry>
-
+<!--
+Copy Folder Ctrl+Shift+C
+Cut Folder Ctrl+X
+Copy Email Ctrl+Alt+C
+Cut EmailCtrl+Alt+X
+  -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -274,6 +299,26 @@ once they are deleted with this command.</para>
 </listitem>
 </varlistentry>
 -->
+<!-- missing
+Move Thread to Trash
+  -->
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>S</keycap></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find Messages...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up a search window that lets you search for messages with
+certain characteristics, &eg; a certain subject. Start the search by entering
+some values and press <guibutton>Search</guibutton>. Click on one of the
+resulting messages and it will appear in the <guilabel>Message
+pane</guilabel>.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -322,7 +367,19 @@ once they are deleted with this command.</para>
 <title><guimenu>View</guimenu> Menu</title>
 
 <variablelist>
-
+<!--
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Message List</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para></para>
+</listitem>
+</varlistentry>
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -396,8 +453,7 @@ of messages per folder.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>If <menuchoice><guimenu>Folder</guimenu><guimenuitem>Thread Messages</guimenuitem>
-</menuchoice> is activated, this will display the thread of the current message, &ie;
+<para>This will display the thread of the current message, &ie;
 all messages that are replies to the current message.</para>
 </listitem>
 </varlistentry>
@@ -411,8 +467,7 @@ all messages that are replies to the current message.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>If <menuchoice><guimenu>Folder</guimenu><guimenuitem>Thread Messages</guimenuitem>
-</menuchoice> is activated, this will hide the thread of the current message, &ie;
+<para>This will hide the thread of the current message, &ie;
 it will hide all messages that are replies to the current message.</para>
 </listitem>
 </varlistentry>
@@ -463,6 +518,19 @@ at the <literal>Received:</literal> lines in the header.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Show Message Structure</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para> Display the structure viewer, which is a part of the main window that
+lets you access all parts of a message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
 <shortcut><keycap>X</keycap></shortcut>
 <guimenu>View</guimenu>
 <guimenuitem>Use Fixed Font</guimenuitem>
@@ -498,7 +566,20 @@ Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</
 <title><guimenu>Go</guimenu> Menu</title>
 
 <variablelist>
-
+<!--
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>J</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Jump to Folder...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para></para>
+</listitem>
+</varlistentry>
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -612,7 +693,7 @@ jumps to the next unread message.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>New Folder...</guimenuitem>
+<guimenuitem>Add Folder...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -638,7 +719,7 @@ dialog that lets you create a new folder.</para>
 <menuchoice>
 <shortcut><keycap>F5</keycap></shortcut>
 <guimenu>Folder</guimenu>
-<guimenuitem>Check Mail in This Folder</guimenuitem>
+<guimenuitem>Update Folders</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -646,6 +727,8 @@ dialog that lets you create a new folder.</para>
 This is only available for &imap; folders.</para>
 </listitem>
 </varlistentry>
+
+<!--Update Folders and its subfolders Ctrl+F5 -->
 
 <varlistentry>
 <term>
@@ -691,6 +774,24 @@ expire a folder manually...</para>
 </listitem>
 </varlistentry>
 -->
+<!-- missing 
+Archive Folder
+  -->
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Delete Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Removes the selected folder and all its contents, including subfolders.</para>
+<warning><para>Note that there is no way to access the contents
+of a folder after it has been removed.</para></warning>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -718,20 +819,6 @@ currently selected folder is a trash folder.</para>
 </listitem>
 </varlistentry>
 -->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Delete Folder</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Removes the selected folder and all its contents, including subfolders.</para>
-<warning><para>Note that there is no way to access the contents
-of a folder after it has been removed.</para></warning>
-</listitem>
-</varlistentry>
-
 <varlistentry>
 <term>
 <menuchoice>
@@ -777,7 +864,8 @@ to disable this option.
 </listitem>
 </varlistentry>
 -->
-<varlistentry>
+<!--not in 2.0.96  lueck 31.05.2011
+varlistentry>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
@@ -788,8 +876,14 @@ to disable this option.
 <para>Opens up the <link linkend="folders-properties-window">Properties dialog</link> which lets you
 change the settings for the selected folder.</para>
 </listitem>
-</varlistentry>
+</varlistentry-->
 
+<!-- 
+Load External References
+Mailing List Management
+Assign Shortcut
+missing
+  -->
 </variablelist>
 
 </sect2>
@@ -816,6 +910,7 @@ write a new message.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>N</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>New Message to Mailing-List...</guimenuitem>
 </menuchoice>
@@ -924,7 +1019,10 @@ sent to.</para>
 of the currently selected message is not quoted.</para>
 </listitem>
 </varlistentry>
-
+<!-- missing
+Reply With Custom Template
+Reply to All With Custom Template
+  -->
 <varlistentry>
 <term><menuchoice>
 <guimenu>Message</guimenu>
@@ -972,12 +1070,12 @@ precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
 <guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
 </listitem>
 </varlistentry>
-
+<!-- Mailing List missing-->
 <varlistentry>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guisubmenu>Copy To</guisubmenu>
+<guisubmenu>Copy Message To</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -989,7 +1087,7 @@ precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guisubmenu>Move To</guisubmenu>
+<guisubmenu>Move Message To</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -1007,7 +1105,18 @@ precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
 <listitem>
 <para>Allows you to change the status of the selected message to one of the
 following states:</para>
-<!-- TODO: I think it is worth adding inline images here, at some point. LW. -->
+<!-- TODO: I think it is worth adding inline images here, at some point. LW. 
+has to be adapted for 2.1.96 lueck
+Mark Mail as Read/Unread
+Mark Mail as Important / Remove Important Mark
+Mark Mail as Action Item / Remove Action Item Mark
+
+Mark Thread as Read/Unread
+Mark Thread as Important / Remove Important Thread Mark
+Mark Thread as Action Item / Remove Action Item Thread Mark
+Watch Thread
+Ignore Thread
+-->
 <informaltable>
 <tgroup cols="2">
 <thead>
@@ -1135,30 +1244,21 @@ sub menu item you select.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Apply Filters</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Applies your filters to the selected messages.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
 <guimenu>Message</guimenu>
 <guimenuitem>Apply Filter</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Allows you to apply an individual filter to the selected messages. Only
+<para>Allows you to apply an individual filter or all filters to the selected messages. Only
 filters for which you enabled the <guilabel>Add this filter to the Apply
 Filter menu</guilabel> option will be available.</para>
 </listitem>
 </varlistentry>
 
+<!-- missing
+Create To-do/Reminder
+Add Note
+  -->
 </variablelist>
 
 </sect2>
@@ -1249,7 +1349,7 @@ the &kde; address book.</para>
 </note>
 </listitem>
 </varlistentry>
-
+<!-- Debug Sieve missing  lueck 31.05.2011-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1264,7 +1364,7 @@ information about what filter rules were used, what was the result of the evalua
 of those rules, and which filter actions were applied to a message.</para>
 </listitem>
 </varlistentry>
-
+<!-- Account Wizard missing  lueck 31.05.2011-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1313,12 +1413,13 @@ you to set up scanning messages for viruses.</para>
 to compose a new message &etc;).</para>
 </listitem>
 </varlistentry>
-<!-- not in 440
+
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>H</keycap></keycombo></shortcut>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Quick Search</guimenuitem>
+<guimenuitem>Show Quick Search bar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1326,7 +1427,7 @@ to compose a new message &etc;).</para>
 for messages matching a search text is visible.</para>
 </listitem>
 </varlistentry>
--->
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -1339,17 +1440,7 @@ for messages matching a search text is visible.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure POP Filters...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="popfilters">Configure Pop Filters</link> window.</para>
-</listitem>
-</varlistentry>
+<!-- Manage Sieve Scripts missing  lueck 31.05.2011-->
 
 <varlistentry>
 <term>
@@ -1496,7 +1587,7 @@ the messages in the outbox using <menuchoice><guimenu>File</guimenu><guimenuitem
 Queued Messages</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
-
+<!-- missing Send Mail Via -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1511,12 +1602,12 @@ Queued Messages</guimenuitem></menuchoice>.
 </para>
 </listitem>
 </varlistentry>
-
+<!-- missing Send Later Via -->
 <varlistentry>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guimenuitem>Save in Drafts Folder</guimenuitem>
+<guimenuitem>Save as Draft</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1524,12 +1615,12 @@ Queued Messages</guimenuitem></menuchoice>.
 later edit and send it.</para>
 </listitem>
 </varlistentry>
-
+<!-- missing: Save as Template -->
 <varlistentry>
 <term>
 <menuchoice>
 <guimenu>Messages</guimenu>
-<guimenuitem>Insert File...</guimenuitem>
+<guimenuitem>Insert Text File...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1537,7 +1628,7 @@ later edit and send it.</para>
 position.</para>
 </listitem>
 </varlistentry>
-
+<!-- missing: Insert Recent Text File -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1574,6 +1665,18 @@ position.</para>
 
 <variablelist>
 
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Paste as Quotation</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Pastes the text from the clipboard marked as quotation.</para>
+</listitem>
+</varlistentry>
+<!-- missing: Paste as Attachment-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1642,18 +1745,6 @@ position to copy it.</para>
 <listitem>
 <para>Pasting works the same as with most editors: the text from the
 clipboard is pasted at the current cursor position.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Edit</guimenu>
-<guimenuitem>Paste as Quotation</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Pastes the text from the clipboard marked as quotation.</para>
 </listitem>
 </varlistentry>
 
@@ -1781,15 +1872,6 @@ options in this composer window.</para>
 <para><guimenuitem>Reply To</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem>To</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>CC</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>BCC</guimenuitem></para>
-</listitem>
-<listitem>
 <para><guimenuitem>Subject</guimenuitem></para>
 </listitem>
 </itemizedlist>
@@ -1812,6 +1894,7 @@ edited message. The font to be used can be configured in the
 dialog.</para>
 </listitem>
 </varlistentry>
+<!-- Snippets missing  lueck 31.05.2011-->
 </variablelist>
 
 </sect2>
@@ -1887,7 +1970,7 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
       <term>
         <menuchoice>
           <guimenu>Options</guimenu>
-          <guisubmenu>Select Cryptographic Message Format</guisubmenu>
+          <guisubmenu>Cryptographic Message Format</guisubmenu>
         </menuchoice>
       </term>
       <listitem>
@@ -1916,7 +1999,7 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>
-<guisubmenu>Set Encoding</guisubmenu>
+<guisubmenu>Encoding</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -1975,7 +2058,7 @@ to paste long lines that should not wrap.</para>
 <!-- fixme: nothing to do with crypto stuff --></para>
 </listitem>
 </varlistentry>
-
+<!-- Prepend Signature + Insert Signature At Cursor Position missing  lueck 31.05.2011-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1984,7 +2067,7 @@ to paste long lines that should not wrap.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Attaches the corresponding <application>PGP</application>/<application>GnuPG</application>
+<para>Attaches the corresponding <application>GnuPG</application>
 key to your message.</para>
 </listitem>
 </varlistentry>
@@ -1997,7 +2080,7 @@ key to your message.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Attaches your <application>PGP</application>/<application>GnuPG</application>
+<para>Attaches your <application>GnuPG</application>
 public key to your message.</para>
 </listitem>
 </varlistentry>
@@ -2077,7 +2160,7 @@ you have to configure &sonnet; with <menuchoice><guimenu>Settings</guimenu>
 first time.</para>
 </listitem>
 </varlistentry>
-
+<!-- Select Recipients missing lueck 31.05.2011-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -2089,7 +2172,7 @@ first time.</para>
 <para>Opens up <ulink url="/kaddressbook/">&kaddressbook;</ulink>.</para>
 </listitem>
 </varlistentry>
-
+<!-- Save Distribution List missing lueck 31.05.2011-->
 </variablelist>
 
 </sect2>

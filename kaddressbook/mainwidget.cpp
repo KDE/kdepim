@@ -189,8 +189,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
-  connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
-           mXXPortManager, SLOT( setDefaultAddressBook( const Akonadi::Collection& ) ) );
+  connect( mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
+           mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)) );
 
   KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( mCollectionSelectionModel,
                                                                         this );
@@ -204,12 +204,12 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   mContactsFilterModel = new Akonadi::ContactsFilterProxyModel( this );
   mContactsFilterModel->setSourceModel( mItemTree );
-  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
-           mContactsFilterModel, SLOT( setFilterString( const QString& ) ) );
-  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
-           this, SLOT( selectFirstItem() ) );
-  connect( mQuickSearchWidget, SIGNAL( arrowDownKeyPressed() ),
-           mItemView, SLOT( setFocus() ) );
+  connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
+           mContactsFilterModel, SLOT(setFilterString(QString)) );
+  connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
+           this, SLOT(selectFirstItem()) );
+  connect( mQuickSearchWidget, SIGNAL(arrowDownKeyPressed()),
+           mItemView, SLOT(setFocus()) );
 
   mItemView->setModel( mContactsFilterModel );
   mItemView->setXmlGuiClient( guiClient );
@@ -224,12 +224,12 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
   mActionManager->createAllActions();
 
-  connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
-           this, SLOT( itemSelected( const Akonadi::Item& ) ) );
-  connect( mItemView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
-           mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SLOT( trigger() ) );
-  connect( mItemView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( itemSelectionChanged( const QModelIndex&, const QModelIndex& ) ) );
+  connect( mItemView, SIGNAL(currentChanged(Akonadi::Item)),
+           this, SLOT(itemSelected(Akonadi::Item)) );
+  connect( mItemView, SIGNAL(doubleClicked(Akonadi::Item)),
+           mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SLOT(trigger()) );
+  connect( mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)) );
 
   // show the contact details view as default
   mDetailsViewStack->setCurrentWidget( mContactDetails );
@@ -259,9 +259,9 @@ void MainWidget::delayedInit()
 
   mXmlGuiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
 
-  connect( GlobalContactModel::instance()->model(), SIGNAL( modelAboutToBeReset() ), SLOT( saveState() ) );
-  connect( GlobalContactModel::instance()->model(), SIGNAL( modelReset() ), SLOT( restoreState() ) );
-  connect( kapp, SIGNAL( aboutToQuit() ), SLOT( saveState() ) );
+  connect( GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()), SLOT(saveState()) );
+  connect( GlobalContactModel::instance()->model(), SIGNAL(modelReset()), SLOT(restoreState()) );
+  connect( kapp, SIGNAL(aboutToQuit()), SLOT(saveState()) );
 
   restoreState();
 }
@@ -434,7 +434,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   KAction *action = 0;
   KToggleAction *toggleAction = 0;
 
-  action = KStandardAction::print( this, SLOT( print() ), collection );
+  action = KStandardAction::print( this, SLOT(print()), collection );
   action->setWhatsThis( i18n( "Print the complete address book or a selected number of contacts." ) );
 
   action = collection->addAction( "quick_search" );
@@ -445,12 +445,12 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Select All" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
-  connect( action, SIGNAL( triggered( bool ) ), mItemView, SLOT( selectAll() ) );
+  connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
 
   toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
   toggleAction->setText( i18n( "Show Simple View" ) );
   action->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
-  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setSimpleGuiMode( bool ) ) );
+  connect( toggleAction, SIGNAL(toggled(bool)), SLOT(setSimpleGuiMode(bool)) );
 
   // import actions
   action = collection->addAction( "file_import_vcard" );

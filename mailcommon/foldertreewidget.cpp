@@ -81,7 +81,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );
 
-  connect( d->folderTreeView, SIGNAL( manualSortingChanged( bool ) ), this, SLOT( slotManualSortingChanged( bool ) ) );
+  connect( d->folderTreeView, SIGNAL(manualSortingChanged(bool)), this, SLOT(slotManualSortingChanged(bool)) );
 
   QVBoxLayout *lay = new QVBoxLayout( this );
   lay->setMargin( 0 );
@@ -110,8 +110,8 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->readableproxy->setSourceModel( d->quotaModel );
 
 
-  connect( d->folderTreeView, SIGNAL(changeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy ) ),
-           this, SLOT( slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy ) ) );
+  connect( d->folderTreeView, SIGNAL(changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)),
+           this, SLOT(slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)) );
 
   d->folderTreeView->setSelectionMode( QAbstractItemView::SingleSelection );
   d->folderTreeView->setEditTriggers( QAbstractItemView::NoEditTriggers );
@@ -140,8 +140,8 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->dontKeyFilter = ( options & DontKeyFilter );
 
   if ( ( options & UseLineEditForFiltering ) ) {
-    connect( d->filterFolderLineEdit, SIGNAL( textChanged(QString) ),
-             d->filterTreeViewModel, SLOT( setFilterFixedString(QString) ) );
+    connect( d->filterFolderLineEdit, SIGNAL(textChanged(QString)),
+             d->filterTreeViewModel, SLOT(setFilterFixedString(QString)) );
     d->label->hide();
   } else {
     d->filterFolderLineEdit->hide();

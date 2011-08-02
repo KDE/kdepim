@@ -70,7 +70,7 @@ class AddEmailAddressJob::Private
 
       Akonadi::CollectionFetchJob * const addressBookJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive );
       addressBookJob->fetchScope().setContentMimeTypes( mimeTypes );
-      q->connect( addressBookJob, SIGNAL( result( KJob* ) ), SLOT( slotCollectionsFetched( KJob* ) ) );
+      q->connect( addressBookJob, SIGNAL(result(KJob*)), SLOT(slotCollectionsFetched(KJob*)) );
     }
 
     void slotCollectionsFetched( KJob *job )
@@ -138,7 +138,7 @@ class AddEmailAddressJob::Private
 
       // save the new item in akonadi storage
       Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob( item, addressBook, q );
-      q->connect( createJob, SIGNAL( result( KJob* ) ), SLOT( slotAddContactDone( KJob* ) ) );
+      q->connect( createJob, SIGNAL(result(KJob*)), SLOT(slotAddContactDone(KJob*)) );
     }
 
     void slotAddContactDone( KJob *job )
@@ -186,7 +186,7 @@ void AddEmailAddressJob::start()
   searchJob->setLimit( 1 );
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
                        Akonadi::ContactSearchJob::ExactMatch );
-  connect( searchJob, SIGNAL( result( KJob* ) ), SLOT( slotSearchDone( KJob* ) ) );
+  connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
 
 Akonadi::Item AddEmailAddressJob::contact() const

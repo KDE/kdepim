@@ -88,7 +88,7 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
                                              this );
   mSymCryptRun->setObjectName( "symcryptrun" );
   QTimer::singleShot( timeoutEntry->uintValue() * 1000, this,
-                      SLOT( slotTimeout() ) );
+                      SLOT(slotTimeout()) );
   return GpgME::Error();
 }
 
@@ -108,7 +108,7 @@ GpgME::Error Kleo::ChiasmusJob::start() {
   if ( const GpgME::Error err = setup() )
     return mError = err;
 
-  connect( mSymCryptRun, SIGNAL(finished(int, QProcess::ExitStatus)),
+  connect( mSymCryptRun, SIGNAL(finished(int,QProcess::ExitStatus)),
            this, SLOT(finished()) );
 
   if ( !mSymCryptRun->launch( mInput ) )

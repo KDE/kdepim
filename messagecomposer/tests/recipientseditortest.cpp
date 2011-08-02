@@ -66,7 +66,7 @@ Composer::Composer( QWidget *parent )
 
   QPushButton *button = new QPushButton( QLatin1String("&Close"), this );
   topLayout->addWidget( button, 3, 0, 1, 2 );
-  connect( button, SIGNAL( clicked() ), SLOT( slotClose() ) );
+  connect( button, SIGNAL(clicked()), SLOT(slotClose()) );
 }
 
 void Composer::slotClose()
@@ -98,7 +98,7 @@ int main( int argc, char **argv )
 
   KApplication app;
 
-  QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+  QObject::connect( &app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()) );
 
   QWidget *wid = new Composer( 0 );
 

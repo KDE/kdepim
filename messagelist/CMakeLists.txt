@@ -17,6 +17,7 @@ include_directories(
 
 set(libmessagelist_SRCS
     core/aggregation.cpp
+    core/callbacknepomukresourceretriever.cpp
     core/delegate.cpp
     core/filter.cpp
     core/item.cpp

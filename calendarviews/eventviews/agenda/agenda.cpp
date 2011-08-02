@@ -1752,7 +1752,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
            SLOT(removeAgendaItem(AgendaItem::QPtr)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
-           SLOT(showAgendaItem(AgendaItem::QPtr )) );
+           SLOT(showAgendaItem(AgendaItem::QPtr)) );
 
   if ( YBottom <= YTop ) {
     kDebug() << "Text:" << agendaItem->text() << " YSize<0";
@@ -1797,10 +1797,10 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
 
   AgendaItem::QPtr agendaItem =
     new AgendaItem( d->mAgendaView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr )),
-           SLOT(removeAgendaItem(AgendaItem::QPtr )) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr )),
-           SLOT(showAgendaItem(AgendaItem::QPtr )) );
+  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
+           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
+  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
+           SLOT(showAgendaItem(AgendaItem::QPtr)) );
 
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );

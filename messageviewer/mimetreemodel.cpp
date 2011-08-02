@@ -114,7 +114,7 @@ MimeTreeModel::MimeTreeModel(QObject * parent) :
 {
 }
 
-MimeTreeModel::~ MimeTreeModel()
+MimeTreeModel::~MimeTreeModel()
 {
   delete d;
 }

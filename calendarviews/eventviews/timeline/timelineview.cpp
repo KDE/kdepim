@@ -184,8 +184,8 @@ TimelineView::TimelineView( QWidget *parent )
   d->mGantt = new KDGantt::GraphicsView();
   splitter->addWidget( d->mLeftView );
   splitter->addWidget( d->mGantt );
-  connect( splitter, SIGNAL( splitterMoved(int,int) ),
-           d, SLOT( splitterMoved() ) );
+  connect( splitter, SIGNAL(splitterMoved(int,int)),
+           d, SLOT(splitterMoved()) );
   QStandardItemModel *model = new QStandardItemModel( this );
 
   d->mRowController = new RowController;
@@ -241,8 +241,8 @@ TimelineView::TimelineView( QWidget *parent )
            d, SLOT(contextMenuRequested(QPoint)) );
 
 #if 0
-  connect( d->mGantt, SIGNAL(dateTimeDoubleClicked(const QDateTime &)),
-           d, SLOT(newEventWithHint(const QDateTime &)) );
+  connect( d->mGantt, SIGNAL(dateTimeDoubleClicked(QDateTime)),
+           d, SLOT(newEventWithHint(QDateTime)) );
 #else
   kDebug() << "Disabled code, port to KDGantt2";
 #endif
