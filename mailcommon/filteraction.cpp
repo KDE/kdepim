@@ -591,8 +591,10 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
   // KProcess doesn't support a QProcess::launch() equivalent, so
   // we must use a temp file :-(
   KTemporaryFile * inFile = new KTemporaryFile;
-  if ( !inFile->open() )
+  if ( !inFile->open() ) {
+    delete inFile;
     return ErrorButGoOn;
+  }
 
   QList<KTemporaryFile*> atmList;
   atmList.append( inFile );
