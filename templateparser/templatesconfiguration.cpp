@@ -32,6 +32,7 @@
 #include <QWhatsThis>
 #include <qtoolbox.h>
 #include <qfont.h>
+#include <KMessageBox>
 
 TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
   : QWidget( parent )

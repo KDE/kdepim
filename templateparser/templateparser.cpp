@@ -292,6 +292,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
   mOtp->parseObjectTree( mOrigMsg.get() );
 
   QString plainBody, htmlBody;
+  bool isForcedPlain = false;
 
   int tmpl_len = tmpl.length();
   bool dnl = false;
@@ -408,10 +409,32 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           htmlBody.append( htmlQuote );
         }
 
-      } else if ( cmd.startsWith( QLatin1String("FORCEPLAIN") ) ) {
-//TODO implementt FORCEPLAIN
-      } else if ( cmd.startsWith( QLatin1String("FORCEHTML") ) ) {
-//TODO implement FORCEHTML
+      } else if ( cmd.startsWith( QLatin1String("FORCEDPLAIN") ) ) {
+        isForcedPlain = true;
+        kDebug() << "Command: FORCEDPLAIN";
+        i += strlen( "FORCEDPLAIN" );
+        if ( mOrigMsg ) {
+          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
+          if ( plainQuote.endsWith( '\n' ) ) {
+            plainQuote.chop( 1 );
+          }
+          plainBody.append( plainQuote );
+        }
+
+      } else if ( cmd.startsWith( QLatin1String("FORCEDHTML") ) ) {
+        kDebug() << "Command: FORCEDHTML";
+        i += strlen( "FORCEDHTML" );
+        if ( mOrigMsg ) {
+          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
+          if ( plainQuote.endsWith( '\n' ) ) {
+            plainQuote.chop( 1 );
+          }
+          plainBody.append( plainQuote );
+
+          const QString htmlQuote = quotedHtmlText( htmlMessageText( shouldStripSignature(), SelectionAllowed ) );
+          htmlBody.append( htmlQuote );
+        }
+
       } else if ( cmd.startsWith( QLatin1String("QHEADERS") ) ) {
         kDebug() << "Command: QHEADERS";
         i += strlen( "QHEADERS" );
@@ -1103,7 +1126,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       htmlBody.append( c );
     }
   }
-  htmlBody = makeValidHtml( htmlBody );
+  if ( isForcedPlain ) {
+    htmlBody.clear();
+  } else {
+    htmlBody = makeValidHtml( htmlBody );
+  }
   addProcessedBodyToMessage( plainBody, htmlBody );
 }
 
