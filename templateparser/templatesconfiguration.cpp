@@ -323,11 +323,22 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   }
 
   // kDebug() << "Insert command:" << cmd;
-  QTextCursor cursor = edit->textCursor();
-  cursor.insertText( cmd );
-  cursor.setPosition( cursor.position() + adjustCursor );
-  edit->setTextCursor( cursor );
-  edit->setFocus();
+  if ( ( edit->toPlainText().contains( "%QUOTE" ) && ( ( cmd == "%FORCEDPLAIN" ) || ( cmd == "%FORCEDHTML" ) ) ) ||
+       ( edit->toPlainText().contains( "%FORCEDPLAIN" ) && ( ( cmd == "%QUOTE" ) || ( cmd == "%FORCEDHTML" ) ) ) ||
+       ( edit->toPlainText().contains( "%FORCEDHTML" ) && ( ( cmd == "%QUOTE" ) || ( cmd == "%FORCEDPLAIN" ) ) ) ) {
+    KMessageBox::error( this, i18n( "Use of following commands \"Quoted Message Text\","
+                                    " \"Reply using plain text\" and \"Reply using HTML text\" in pairs"
+                                    " is not correct. Use only one of the aforementioned commands as per your need\n"
+                                    "(a)Quoted Message Text for quotes being in the same format as the orginal mail"
+                                    " was received\n(b)Reply using plain text for quotes to be strictly in plain text\n"
+                                    "(c)Reply using HTML text for quotes being in HTML format if present") );
+  } else {
+    QTextCursor cursor = edit->textCursor();
+    cursor.insertText( cmd );
+    cursor.setPosition( cursor.position() + adjustCursor );
+    edit->setTextCursor( cursor );
+    edit->setFocus();
+  }
 }
 
 QString TemplatesConfiguration::strOrBlank( const QString &str ) {
