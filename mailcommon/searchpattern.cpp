@@ -485,24 +485,19 @@ void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const
 void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   Nepomuk::Query::OrTerm termGroup;
-  if ( field().toLower() == "<message>" || field().toLower() == "<recipients>" ) {
+  if ( field().toLower() == "<message>" || field().toLower() == "<recipients>"  || field().toLower() == "<any header>" ) {
     const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTerm( Vocabulary::NMO::to(), addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTermTo( Vocabulary::NMO::cc(), personTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTermCC( Vocabulary::NMO::bcc(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
-    termGroup.addSubTerm( personTermCC );
-  }
 
-  if ( field().toLower() == "<any header>" ) {
-    const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
-    const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
-    const Nepomuk::Query::ComparisonTerm personTerm( Vocabulary::NMO::to(), addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
-    const Nepomuk::Query::ComparisonTerm personTermTo( Vocabulary::NMO::cc(), personTerm, Nepomuk::Query::ComparisonTerm::Equal );
-    const Nepomuk::Query::ComparisonTerm personTermCC( Vocabulary::NMO::bcc(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
-    const Nepomuk::Query::ComparisonTerm personTermBCC( Vocabulary::NMO::from(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
-    termGroup.addSubTerm( personTermBCC );
-    
+    if ( field().toLower() == "<any header>" ) {
+      const Nepomuk::Query::ComparisonTerm personTermBCC( Vocabulary::NMO::from(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
+      termGroup.addSubTerm( personTermBCC );
+    }
+    else
+      termGroup.addSubTerm( personTermCC );
   }
   
   if ( field().toLower() == "to" )
