@@ -123,7 +123,8 @@ static const InsertCommand miscCommands[] = {
   { I18N_NOOP( "Clear Generated Message" ), TemplatesInsertCommand::CClear },
   { I18N_NOOP( "Turn Debug On" ), TemplatesInsertCommand::CDebug },
   { I18N_NOOP( "Turn Debug Off" ), TemplatesInsertCommand::CDebugOff },
-  { I18N_NOOP( "Cursor position"), TemplatesInsertCommand::CCursor }
+  { I18N_NOOP( "Cursor position"), TemplatesInsertCommand::CCursor }, 
+  { I18N_NOOP( "Blank text"), TemplatesInsertCommand::CBlank }
 };
 static const int miscCommandsCount =
   sizeof( miscCommands ) / sizeof( *miscCommands );
@@ -273,6 +274,7 @@ void TemplatesInsertCommand::slotMapped( int cmd )
   case TemplatesInsertCommand::CClear: emit insertCommand("%CLEAR"); break;
   case TemplatesInsertCommand::CDebug: emit insertCommand("%DEBUG"); break;
   case TemplatesInsertCommand::CDebugOff: emit insertCommand("%DEBUGOFF"); break;
+  case TemplatesInsertCommand::CBlank: emit insertCommand("%DBLANK"); break;
   default:
     kDebug() << "Unknown template command index:" << cmd;
       break;
