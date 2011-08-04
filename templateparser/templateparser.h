@@ -200,7 +200,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString getPlainSignature() const;
 
     /**
-     * Return the text signature used the by current identity.
+     * Return the HTML signature used the by current identity.
      */
     QString getHtmlSignature() const;
 
