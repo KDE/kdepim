@@ -398,7 +398,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String("QUOTE") ) ) {
         kDebug() << "Command: QUOTE";
         i += strlen( "QUOTE" );
-        if ( mOrigMsg ) {
+        kDebug()<< "replyUsingHtml settings" << GlobalSettings::self()->replyUsingHtml();
+        if( mOrigMsg && GlobalSettings::self()->replyUsingHtml() ) {
           QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
@@ -407,6 +408,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
 
           const QString htmlQuote = quotedHtmlText( htmlMessageText( shouldStripSignature(), SelectionAllowed ) );
           htmlBody.append( htmlQuote );
+        }
+        else if( mOrigMsg && !(GlobalSettings::self()->replyUsingHtml()) ) {
+          isForcedPlain = true;
+          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
+          if ( plainQuote.endsWith( '\n' ) ) {
+            plainQuote.chop( 1 );
+          }
+          plainBody.append( plainQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("FORCEDPLAIN") ) ) {

@@ -39,11 +39,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>false</default>
     </entry>
 
-    <entry name="ReplyUsingHtml" type="Bool" key="replySameFormat">
-      <label>Reply using HTML if present</label>
-      <default>true</default>
-    </entry>
-
     <entry name="QuoteSelectionOnly" type="Bool">
       <label>Only quote selected text when replying</label>
       <default>true</default>
