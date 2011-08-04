@@ -127,7 +127,7 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
 
 void CustomTemplates::slotHelpLinkClicked( const QString& )
 {
-  QString help =
+  const QString help =
       i18n( "<qt>"
       "<p>Here you can add, edit, and delete custom message "
       "templates to use when you compose a reply or forwarding message. "
@@ -197,7 +197,7 @@ void CustomTemplates::slotTextChanged()
 
 void CustomTemplates::load()
 {
-  QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
+  const QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
   for ( QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it ) {
     CTemplates t(*it);
     // QString typeStr = indexToType( t.type() );

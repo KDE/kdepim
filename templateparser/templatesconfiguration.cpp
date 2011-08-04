@@ -338,7 +338,7 @@ QString TemplatesConfiguration::strOrBlank( const QString &str ) {
 
 QString TemplatesConfiguration::configIdString( uint id )
 {
-  return QString( "IDENTITY_%1" ).arg( id );
+  return QString::fromLatin1( "IDENTITY_%1" ).arg( id );
 }
 
 #include "templatesconfiguration.moc"
