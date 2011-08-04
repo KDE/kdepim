@@ -274,7 +274,7 @@ void TemplatesInsertCommand::slotMapped( int cmd )
   case TemplatesInsertCommand::CClear: emit insertCommand("%CLEAR"); break;
   case TemplatesInsertCommand::CDebug: emit insertCommand("%DEBUG"); break;
   case TemplatesInsertCommand::CDebugOff: emit insertCommand("%DEBUGOFF"); break;
-  case TemplatesInsertCommand::CBlank: emit insertCommand("%DBLANK"); break;
+  case TemplatesInsertCommand::CBlank: emit insertCommand("%BLANK"); break;
   default:
     kDebug() << "Unknown template command index:" << cmd;
       break;
