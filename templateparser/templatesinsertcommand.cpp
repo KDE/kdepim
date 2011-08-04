@@ -122,7 +122,8 @@ static const InsertCommand miscCommands[] = {
   { I18N_NOOP( "No Operation" ), TemplatesInsertCommand::CNop },
   { I18N_NOOP( "Clear Generated Message" ), TemplatesInsertCommand::CClear },
   { I18N_NOOP( "Turn Debug On" ), TemplatesInsertCommand::CDebug },
-  { I18N_NOOP( "Turn Debug Off" ), TemplatesInsertCommand::CDebugOff }
+  { I18N_NOOP( "Turn Debug Off" ), TemplatesInsertCommand::CDebugOff },
+  { I18N_NOOP( "Cursor position"), TemplatesInsertCommand::CCursor }
 };
 static const int miscCommandsCount =
   sizeof( miscCommands ) / sizeof( *miscCommands );
