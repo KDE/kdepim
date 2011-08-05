@@ -204,7 +204,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
   // that the pattern is purified.
   mPattern.readConfig(config);
 
-  QStringList sets = config.readEntry("apply-on", QStringList() );
+  const QStringList sets = config.readEntry("apply-on", QStringList() );
   if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
     bApplyBeforeOutbound = false;
     bApplyOnOutbound = false;
