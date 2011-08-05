@@ -211,6 +211,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
     const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob*>( job );
     if( movejob ) {
 	  kError() << "Error while moving items. "<< job->error() << job->errorString()<<" to distinationCollection.id() :"<< movejob->destinationCollection().id();
+          
     } else {
           kError() << "Error while moving items. " << job->error() << job->errorString();
     }
@@ -478,8 +479,9 @@ void FilterManager::appendFilters( const QList<MailFilter*> &filters,
   beginUpdate();
   if ( replaceIfNameExists ) {
     foreach ( const MailFilter *newFilter, filters ) {
-      for ( int i = 0; i < d->mFilters.count(); ++i ) {
-        MailFilter *filter = d->mFilters[ i ];
+      const int numberOfFilters = d->mFilters.count();
+      for ( int i = 0; i < numberOfFilters; ++i ) {
+        MailFilter *filter = d->mFilters.at( i );
         if ( newFilter->name() == filter->name() ) {
           d->mFilters.removeAll( filter );
           i = 0;
