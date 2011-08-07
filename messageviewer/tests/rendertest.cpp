@@ -56,6 +56,7 @@ class RenderTest : public QObject
       QFETCH( QString, mailFileName );
       QFETCH( QString, referenceFileName );
       QFETCH( QString, outFileName );
+
       const QString htmlFileName = outFileName + ".html";
 
       // load input mail
@@ -113,6 +114,12 @@ class RenderTest : public QObject
       proc.setProcessChannelMode( QProcess::ForwardedChannels );
       proc.start( "diff", args );
       QVERIFY( proc.waitForFinished() );
+
+      QEXPECT_FAIL( "forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
+      QEXPECT_FAIL( "openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
+      QEXPECT_FAIL( "signed-forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
+      QEXPECT_FAIL( "smime-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
+
       QCOMPARE( proc.exitCode(), 0 );
     }
 };
