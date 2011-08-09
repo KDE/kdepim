@@ -28,15 +28,20 @@ class TemplateParserTester : public QObject
   Q_OBJECT
 
   private slots:
-    void test_htmlMessageText();
-    void test_quotedPlainText();
-    void test_quotedHtmlText();
-    void test_plainToHtml();
-    void test_makeValidHtml();
-    void test_createMultipartAlternative();
-    void test_createPlainPart();
-    void test_addProcessedBodyToMessage();
-    void test_processWithTemplate();
+    /**
+     * checks whether text/plain only mails are converted to a valid HTML
+     */
+    void test_validHtml();
+
+    /**
+     * checks whether body element is properly extracted from a valid HTML
+     */
+    void test_bodyFromHtml();
+
+    /**
+     * Tests whether templates are returning required body or not
+     */
+    void test_processWithTemplates();
 };
 
 #endif
