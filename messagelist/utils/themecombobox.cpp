@@ -33,7 +33,10 @@ using namespace MessageList::Utils;
 ThemeComboBox::ThemeComboBox( QWidget * parent )
 : KComboBox( parent ), d( new ThemeComboBoxPrivate( this ) )
 {
-  d->slotLoadThemes();
+  if( Manager::instance() )
+     d->slotLoadThemes();
+  else 
+     setEnabled(false);
 }
 
 ThemeComboBox::~ThemeComboBox()
