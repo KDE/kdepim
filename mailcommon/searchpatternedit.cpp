@@ -345,7 +345,7 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
   if ( !widgets().isEmpty() ) // move this below next 'if'?
     widgets().first()->blockSignals(true);
 
-  if ( aList->count() == 0 ) {
+  if ( aList->isEmpty() ) {
     slotClear();
     widgets().first()->blockSignals(false);
     return;
