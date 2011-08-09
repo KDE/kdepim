@@ -68,7 +68,6 @@ public:
 //IFilter methods:
     virtual void createFilter(const QByteArray& field, const QString& value);
     virtual MailCommon::FilterActionDict* filterActionDict() const;
-    virtual MailCommon::FilterManager* filterManager() const;
     virtual void openFilterDialog( bool createDummyFilter = true );
 
     /*reimp*/ ~MobileKernel();
@@ -82,7 +81,6 @@ private:
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
     AkonadiSender *mMessageSender;
     KSharedConfig::Ptr mConfig;
-    MailCommon::FilterManager *mFilterManager;
     MailCommon::FilterActionDict *mFilterActionDict;
 };
 

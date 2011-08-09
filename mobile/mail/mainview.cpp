@@ -96,7 +96,6 @@
 #include <kstandarddirs.h>
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/filteraction.h>
-#include <mailcommon/filtermanager.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
 #include <mailcommon/mailkernel.h>
@@ -1743,7 +1742,7 @@ void MainView::applyFilters()
     }
   }
 
-  FilterIf->filterManager()->applyFilters( items );
+  //tokoe FilterIf->filterManager()->applyFilters( items );
 }
 
 void MainView::applyFiltersBulkAction()
@@ -1756,7 +1755,7 @@ void MainView::applyFiltersBulkAction()
       items << item;
   }
 
-  FilterIf->filterManager()->applyFilters( items );
+  //tokoe FilterIf->filterManager()->applyFilters( items );
 }
 
 bool MainView::selectNextUnreadMessageInCurrentFolder()

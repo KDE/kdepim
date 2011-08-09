@@ -2,7 +2,6 @@
 #include "filteractionwidget.h"
 #include "filteraction.h"
 
-#include "filtermanager.h"
 #include "folderrequester.h"
 #include "mailutil.h"
 #include "mailkernel.h"
@@ -655,7 +654,7 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
       KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
 
-      new Akonadi::ItemModifyJob( item, FilterIf->filterManager() ); //TODO: check for errors
+      new Akonadi::ItemModifyJob( item, 0 ); //TODO: check for errors
     } else {
       qDeleteAll( atmList );
       atmList.clear();
@@ -751,7 +750,7 @@ FilterAction::ReturnCode FilterActionTransport::process( const Akonadi::Item &it
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  new Akonadi::ItemModifyJob( item, 0 );
 
   return GoOn;
 }
@@ -787,7 +786,7 @@ FilterAction::ReturnCode FilterActionReplyTo::process( const Akonadi::Item &item
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  new Akonadi::ItemModifyJob( item, 0 );
 
   return GoOn;
 }
@@ -828,7 +827,7 @@ FilterAction::ReturnCode FilterActionIdentity::process( const Akonadi::Item &ite
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  new Akonadi::ItemModifyJob( item, 0 );
 
   return GoOn;
 }
@@ -947,7 +946,7 @@ FilterAction::ReturnCode FilterActionSetStatus::process( const Akonadi::Item &it
   Akonadi::Item newItem( item.id() );
   newItem.setRevision( item.revision() );
   newItem.setFlags( status.statusFlags() );
-  new Akonadi::ItemModifyJob( newItem, FilterIf->filterManager() ); // TODO handle error
+  new Akonadi::ItemModifyJob( newItem, 0 ); // TODO handle error
 
   return GoOn;
 }
@@ -1247,7 +1246,7 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process( const Akonadi::Item 
 
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  new Akonadi::ItemModifyJob( item, 0 );
 
   return GoOn;
 }
@@ -1327,7 +1326,7 @@ FilterAction::ReturnCode FilterActionAddHeader::process( const Akonadi::Item &it
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  new Akonadi::ItemModifyJob( item, 0 );
 
   return GoOn;
 }
@@ -1506,7 +1505,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( const Akonadi::Item
   header->fromUnicodeString( newValue, "utf-8" );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  new Akonadi::ItemModifyJob( item, 0 );
 
   return GoOn;
 }
@@ -1712,7 +1711,7 @@ FilterActionCopy::FilterActionCopy( QObject *parent )
 FilterAction::ReturnCode FilterActionCopy::process( const Akonadi::Item &item ) const
 {
   // copy the message 1:1
-  new Akonadi::ItemCopyJob( item, mFolder, FilterIf->filterManager() ); // TODO handle error
+  new Akonadi::ItemCopyJob( item, mFolder, 0 ); // TODO handle error
 
   return GoOn;
 }

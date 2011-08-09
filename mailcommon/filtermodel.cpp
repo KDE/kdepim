@@ -20,7 +20,6 @@
 
 #include "filtermodel_p.h"
 
-#include "filtermanager.h"
 #include "mailfilter.h"
 #include "mailkernel.h"
 
@@ -29,14 +28,14 @@ using namespace MailCommon;
 FilterModel::FilterModel( QObject *parent )
   : QAbstractListModel( parent )
 {
-  connect( FilterIf->filterManager(), SIGNAL(filterListUpdated()),
-           this, SLOT(filterListUpdated()) );
+  //tokoe connect( FilterIf->filterManager(), SIGNAL(filterListUpdated()),
+  //         this, SLOT(filterListUpdated()) );
 }
 
 QVariant FilterModel::data( const QModelIndex &index, int role ) const
 {
   if ( role == Qt::DisplayRole ) {
-    return FilterIf->filterManager()->filters().at( index.row() )->name();
+    return QString(); //tokoe FilterIf->filterManager()->filters().at( index.row() )->name();
   }
 
   return QVariant();
@@ -44,7 +43,7 @@ QVariant FilterModel::data( const QModelIndex &index, int role ) const
 
 int FilterModel::rowCount( const QModelIndex& ) const
 {
-  return FilterIf->filterManager()->filters().size();
+  return 0; //tokoe FilterIf->filterManager()->filters().size();
 }
 
 void FilterModel::moveRow( int sourceRow, int destinationRow )
@@ -68,6 +67,7 @@ void FilterModel::moveRow( int sourceRow, int destinationRow )
 
   QList<MailFilter*> filters;
 
+/* tokoe
   FilterManager *manager = FilterIf->filterManager();
 
   foreach ( MailFilter *filter, manager->filters() ) {
@@ -76,6 +76,7 @@ void FilterModel::moveRow( int sourceRow, int destinationRow )
 
   filters.move( sourceRow, destinationRow );
   manager->setFilters( filters );
+*/
 
   //endMoveRows();
 
@@ -84,18 +85,21 @@ void FilterModel::moveRow( int sourceRow, int destinationRow )
 
 bool FilterModel::insertRows( int row, int count, const QModelIndex &parent )
 {
+/* tokoe
   beginInsertRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i ) {
     MailFilter *filter = new MailFilter();
     FilterIf->filterManager()->appendFilters( QList<MailFilter*> () << filter );
   }
   endInsertRows();
+*/
 
   return true;
 }
 
 bool FilterModel::removeRows( int row, int count, const QModelIndex &parent )
 {
+/* tokoe
   const QList<MailFilter*> filters = FilterIf->filterManager()->filters();
 
   beginRemoveRows( parent, row, row + count - 1 );
@@ -105,7 +109,7 @@ bool FilterModel::removeRows( int row, int count, const QModelIndex &parent )
     delete filter;
   }
   endRemoveRows();
-
+*/
   return true;
 }
 

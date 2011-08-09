@@ -17,19 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
-#ifndef MAILCOMMON_FILTERMANAGER_H
-#define MAILCOMMON_FILTERMANAGER_H
-
-#include "mailcommon_export.h"
+#ifndef FILTERMANAGER_H
+#define FILTERMANAGER_H
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
 namespace MailCommon {
-
 class MailFilter;
+}
 
-class MAILCOMMON_EXPORT FilterManager: public QObject
+class FilterManager: public QObject
 {
   Q_OBJECT
 
@@ -95,7 +93,7 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
      * Removes the given @p filter from the list.
      * The filter object is not deleted.
      */
-    void removeFilter( MailFilter *filter );
+    void removeFilter( MailCommon::MailFilter *filter );
 
     /**
      * Checks for existing filters with the @p name and extend the
@@ -108,18 +106,18 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
      * write everything back into the configuration. The filter manager
      * takes ownership of the filters in the list.
      */
-    void appendFilters( const QList<MailFilter*> &filters, bool replaceIfNameExists = false );
+    void appendFilters( const QList<MailCommon::MailFilter*> &filters, bool replaceIfNameExists = false );
 
     /**
      * Replace the list of filters of the filter manager with the given list of @p filters.
      * The manager takes ownership of the filters.
      */
-    void setFilters( const QList<MailFilter*> &filters );
+    void setFilters( const QList<MailCommon::MailFilter*> &filters );
 
     /**
      * Returns the filter list of the manager.
      */
-    QList<MailFilter*> filters() const;
+    QList<MailCommon::MailFilter*> filters() const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -145,7 +143,7 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
      * Applies @p filter to message @p item.
      * Return codes are as with the above method.
      */
-    int process( const Akonadi::Item &item, const MailFilter *filter );
+    int process( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
 
     /**
      * Applies the filters on the given @p messages.
@@ -161,6 +159,11 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
      * Should be called at the end of an filter list update.
      */
     void endUpdate();
+
+    /**
+     * Returns whether the configured filters need the full mail content.
+     */
+    bool requiresFullMailBody() const;
 
 #ifndef NDEBUG
     /**
@@ -185,19 +188,10 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void itemAddedFetchResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void moveJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotItemsFetchedForFilter( const Akonadi::Item::List& ) )
-    Q_PRIVATE_SLOT( d, void slotInitialCollectionsFetched( const Akonadi::Collection::List& ) )
-    Q_PRIVATE_SLOT( d, void slotInitialItemsFetched( const Akonadi::Item::List& ) )
-    Q_PRIVATE_SLOT( d, void tryToMonitorCollection() )
-    Q_PRIVATE_SLOT( d, void tryToFilterInboxOnStartup() )
-    Q_PRIVATE_SLOT( d, void slotFolderRemoved( const Akonadi::Collection& ) )
     //@endcond
 };
-
-}
 
 #endif

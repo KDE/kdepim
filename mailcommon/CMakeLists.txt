@@ -23,7 +23,6 @@ set(libmailcommon_SRCS
   filtereditdialog.cpp
   filterimporterexporter.cpp
   filterlog.cpp
-  filtermanager.cpp
   filtermodel.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp

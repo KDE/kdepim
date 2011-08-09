@@ -20,7 +20,6 @@
 #include "filtereditdialog_p.h"
 
 #include "filteractionwidget.h"
-#include "filtermanager.h"
 #include "mailfilter.h"
 #include "mailkernel.h"
 #include "searchpatternedit.h"
@@ -47,7 +46,7 @@ FilterEditDialog::~FilterEditDialog()
 
 void FilterEditDialog::load( int index )
 {
-  mFilter = FilterIf->filterManager()->filters().at( index );
+  //tokoe mFilter = FilterIf->filterManager()->filters().at( index );
 
   if ( !mFilter )
     return;
@@ -72,9 +71,9 @@ void FilterEditDialog::save()
   mPatternEdit->updateSearchPattern();
   mActionLister->updateActionList();
 
-  FilterIf->filterManager()->beginUpdate();
+  //tokoe FilterIf->filterManager()->beginUpdate();
   mFilter->pattern()->setName( mUi->filterName->text() );
-  FilterIf->filterManager()->endUpdate();
+  //tokoe FilterIf->filterManager()->endUpdate();
 
   mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
   mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
@@ -82,7 +81,7 @@ void FilterEditDialog::save()
   mFilter->setApplyOnExplicit( mUi->applyManuallyCB->isChecked() );
   mFilter->setStopProcessingHere( mUi->stopIfMatchesCB->isChecked() );
 
-  FilterIf->filterManager()->writeConfig();
+  //tokoe FilterIf->filterManager()->writeConfig();
 }
 
 #include "filtereditdialog_p.moc"
