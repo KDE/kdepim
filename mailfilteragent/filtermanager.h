@@ -75,21 +75,6 @@ class FilterManager: public QObject
     void writeConfig( bool withSync = true ) const;
 
     /**
-     * Opens an edit dialog.
-     * 
-     * If @p checkForEmptyFilterList is @c true, an empty filter
-     * is created to improve the visibility of the dialog in case no filter
-     * has been defined so far.
-     */
-    void openDialog( bool checkForEmptyFilterList = true );
-
-    /**
-     * Opens an edit dialog, creates a new filter and preset the first
-     * rule with "@p field equals @p value".
-     */
-    void createFilter( const QByteArray &field, const QString &value );
-
-    /**
      * Removes the given @p filter from the list.
      * The filter object is not deleted.
      */

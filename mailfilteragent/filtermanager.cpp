@@ -333,17 +333,6 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   return 1;
 }
 
-void FilterManager::openDialog( bool checkForEmptyFilterList )
-{
-  //tokoe FilterIf->openFilterDialog( checkForEmptyFilterList );
-}
-
-void FilterManager::createFilter( const QByteArray &field, const QString &value )
-{
-  openDialog( false );
-  //tokoe FilterIf->createFilter( field, value );
-}
-
 QString FilterManager::createUniqueName( const QString &name ) const
 {
   QString uniqueName = name;
