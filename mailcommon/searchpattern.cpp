@@ -816,7 +816,7 @@ void SearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) co
     addAndNegateTerm( sizeTerm, groupTerm );
   } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
     QDate date = QDate::currentDate();
-    date.addDays( contents().toInt() );
+    date = date.addDays( contents().toInt() );
     const Nepomuk::Query::ComparisonTerm dateTerm( Vocabulary::NMO::sentDate(),Nepomuk::Query::LiteralTerm(date ),nepomukComparator() );
     addAndNegateTerm( dateTerm, groupTerm );
   }
