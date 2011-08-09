@@ -18,23 +18,55 @@
 */
 
 #include "templateparsertest.h"
-#include "templateparser.h"
+#include "templateparser/templateparser.h"
+#include "messageviewer/objecttreeparser.h"
+#include "messageviewer/objecttreeemptysource.h"
 #include "qtest_kde.h"
+#include "kdebug.h"
 
 using namespace TemplateParser;
+using namespace MessageViewer;
 
 QTEST_KDEMAIN( TemplateParserTester, GUI )
 
-void TemplateParserTester::test_plainMessageText()
+void TemplateParserTester::test_htmlMessageText()
+{
+  //check whether plain messages are converted to valid html
+  KMime::Message::Ptr mOrigMsg( new KMime::Message() );
+  QByteArray content(
+      "From: Sudhendu Kumar <dontspamme@yoohoo.com>\n"
+      "Subject: Plain Message Test\n"
+      "Date: Sun, 7 Aug 2011 11:30:27 +0530\n"
+      "MIME-Version: 1.0\n"
+      "Content-Type: text/plain;\n"
+      "  charset=\"iso-8859-15\"\n"
+      "\n"
+      "This is the message text from Sudhendu Kumar<dontspamme@yoohoo.com>.\n"
+      "\n-- \n"
+      "Thanks & Regards\n"
+      "Sudhendu Kumar" );
+
+  EmptySource emptySource;
+  mOrigMsg->setContent( content );
+  mOrigMsg->parse();
+
+  QCOMPARE( mOrigMsg->subject()->as7BitString( false ).constData(), "Plain Message Test" );
+  QCOMPARE( mOrigMsg->contents().size(), 0 );
+
+  ObjectTreeParser otp( &emptySource );
+  otp.parseObjectTree( mOrigMsg.get() );
+
+  QVERIFY( otp.htmlContent().isEmpty() );
+  QString result( "<html><head></head><body>This is the message text from Sudhendu Kumar"
+                  "&lt;dontspamme@yoohoo.com&gt;.<br /><br />-- <br />"
+                  "Thanks &amp; Regards<br />Sudhendu Kumar</body></html>");
+  QCOMPARE( otp.convertedHtmlContent(), result );
+}
+
+void TemplateParserTester::test_quotedPlainText()
 {}
 
-void TemplateParserTester::test_plainMessageText()
-{}
-
-void TemplateParserTester::test_quotedPlainPart()
-{}
-
-void TemplateParserTester::test_quotedHtmlPart()
+void TemplateParserTester::test_quotedHtmlText()
 {}
 
 void TemplateParserTester::test_createPlainPart()

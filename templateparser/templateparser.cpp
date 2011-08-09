@@ -1495,7 +1495,7 @@ QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection is
 
   QString htmlElement = mOtp->htmlContent();
 
-  if ( htmlElement.isEmpty() ) { //HTML-only mails
+  if ( htmlElement.isEmpty() ) { //plain mails only
     htmlElement = mOtp->convertedHtmlContent();
   }
 

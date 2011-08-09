@@ -21,13 +21,13 @@
 
 
 #include <QObject>
+#include <KMime/Message>
 
 class TemplateParserTester : public QObject
 {
   Q_OBJECT
 
   private slots:
-    void test_plainMessageText();
     void test_htmlMessageText();
     void test_quotedPlainText();
     void test_quotedHtmlText();
