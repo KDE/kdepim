@@ -40,7 +40,7 @@ class JobTrackerWidget::Private
     JobTrackerModel* model;
 };
 
-JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent )
+JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent, const QString& checkboxText )
   : QWidget( parent ),
   d( new Private )
 {
@@ -49,7 +49,7 @@ JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   QCheckBox* enableCB = new QCheckBox( this );
-  enableCB->setText("Enable job tracker");
+  enableCB->setText(checkboxText);
   connect( enableCB, SIGNAL(toggled(bool)), d->model, SLOT(setEnabled(bool)) );
   layout->addWidget(enableCB);
 
