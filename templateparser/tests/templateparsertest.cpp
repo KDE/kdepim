@@ -57,10 +57,13 @@ void TemplateParserTester::test_htmlMessageText()
   otp.parseObjectTree( mOrigMsg.get() );
 
   QVERIFY( otp.htmlContent().isEmpty() );
-  QString result( "<html><head></head><body>This is the message text from Sudhendu Kumar"
+  QVERIFY( !otp.plainTextContent().isEmpty() );
+  const QString convertedHtmlContent = otp.convertedHtmlContent();
+  QVERIFY( !convertedHtmlContent.isEmpty() );
+  const QString result( "<html><head></head><body>This is the message text from Sudhendu Kumar"
                   "&lt;dontspamme@yoohoo.com&gt;.<br /><br />-- <br />"
                   "Thanks &amp; Regards<br />Sudhendu Kumar</body></html>");
-  QCOMPARE( otp.convertedHtmlContent(), result );
+  QCOMPARE( convertedHtmlContent, result );
 }
 
 void TemplateParserTester::test_quotedPlainText()
