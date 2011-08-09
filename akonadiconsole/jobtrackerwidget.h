@@ -29,7 +29,7 @@ class JobTrackerWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit JobTrackerWidget( const char *name, QWidget *parent = 0 );
+    explicit JobTrackerWidget( const char *name, QWidget *parent, const QString& checkboxText );
     ~JobTrackerWidget();
   private slots:
     void contextMenu(const QPoint& pos);
