@@ -11,12 +11,12 @@ online-reader but could work together with a newsserver like
 <application>leafnode</application> as an offline-reader.</para>
 
 <para>As of version 0.4 &knode; complies with all the requirements of
-the <glossterm>GNKSA</glossterm>.</para>
+the <ulink url="http://www.gnksa.org/"><glossterm>GNKSA</glossterm></ulink>.</para>
 
 <para>If you have problems or questions about this program, please
-contact the mailing list for &kde; users (for subscription, see<ulink
-url="http://www.kde.org/contact.html">Homepage of the &kde; mailing
-lists</ulink> ) or one of the &kde; newsgroups:</para>
+contact the mailing list for &kde; users (for subscription, see <ulink
+url="http://www.kde.org/support/mailinglists/">Homepage of the &kde; mailing
+lists</ulink>) or one of the &kde; newsgroups:</para>
 
 <simplelist>
 <member>comp.windows.x.kde</member>
