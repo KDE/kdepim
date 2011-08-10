@@ -31,6 +31,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <imapsettings.h>
+#include <pop3settings.h>
 
 namespace MailCommon {
 
@@ -146,8 +147,8 @@ void Kernel::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type 
   }
   else {
     Akonadi::SpecialMailCollectionsRequestJob *job = new Akonadi::SpecialMailCollectionsRequestJob( this );
-    connect( job, SIGNAL( result( KJob* ) ),
-             this, SLOT( createDefaultCollectionDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(createDefaultCollectionDone(KJob*)) );
     job->requestDefaultCollection( type );
   }
 }
@@ -164,8 +165,8 @@ void Kernel::createDefaultCollectionDone( KJob * job)
   if ( !( col.rights() & Akonadi::Collection::AllRights ) )
     emergencyExit( i18n("You do not have read/write permission to your inbox folder.") );
 
-  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
-           this, SLOT( slotDefaultCollectionsChanged () ), Qt::UniqueConnection  );
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
+           this, SLOT(slotDefaultCollectionsChanged()), Qt::UniqueConnection  );
 }
 
 void Kernel::slotDefaultCollectionsChanged()
@@ -176,7 +177,7 @@ void Kernel::slotDefaultCollectionsChanged()
 void Kernel::emergencyExit( const QString& reason )
 {
   QString mesg;
-  if ( reason.length() == 0 ) {
+  if ( reason.isEmpty() ) {
     mesg = i18n("KMail encountered a fatal error and will terminate now");
   }
   else {
@@ -292,8 +293,25 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
 
 bool Kernel::folderIsInbox( const Akonadi::Collection& collection )
 {
-  if ( collection.remoteId().toLower() == "inbox" || collection.remoteId().toLower() == "/inbox" )
+  if ( collection.remoteId().toLower() == QLatin1String("inbox") ||
+       collection.remoteId().toLower() == QLatin1String("/inbox") ||
+       collection.remoteId().toLower() == QLatin1String(".inbox") )
     return true;
+  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+  foreach ( const Akonadi::AgentInstance& type, lst ) {
+    if ( type.status() == Akonadi::AgentInstance::Broken )
+      continue;
+    if ( type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiPOP3SettingsInterface *iface = MailCommon::Util::createPop3SettingsInterface( type.identifier() );
+      if ( iface->isValid() ) {
+        if ( iface->targetCollection() == collection.id() ) {
+          delete iface;
+          return true;
+        }
+      }
+      delete iface;
+    }
+  }
 
   return false;
 }

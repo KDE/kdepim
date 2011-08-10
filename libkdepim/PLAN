@@ -19,9 +19,6 @@ progressmanager
 ssllabel
 statusbarprogresswidget
 
-# Move to kdeui/itemviews/ when stable and finished
-kdescendantsproxymodel
-
 # Move to kdeui/widgets after api review
 kdateedit
 kdatepickerpopup

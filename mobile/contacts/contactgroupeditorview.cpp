@@ -164,17 +164,17 @@ ContactGroupEditorView::ContactGroupEditorView( QWidget *parent )
     d( new Private( this ) )
 {
   setAttribute(Qt::WA_DeleteOnClose);
-  setWindowTitle( i18n( "KDE Contacts" ) );
+  setWindowTitle( i18n( "Kontact Touch Contacts" ) );
 }
 
 void ContactGroupEditorView::doDelayedInit()
 {
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction ) ),
-           SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, QString ) ) );
+  connect( d->mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           SLOT(saveFinished()) );
+  connect( d->mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
+           SLOT(saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)) );
 }
 
 ContactGroupEditorView::~ContactGroupEditorView()
@@ -193,12 +193,12 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
     if ( d->mCollection.isValid() ) {
       d->mEditor->setDefaultCollection( d->mCollection );
     }
-    connect( d->mEditor, SIGNAL( cancelClicked() ) , SLOT( close() ) );
-    connect( d->mEditor, SIGNAL( saveClicked() ), SLOT( save() ) );
-    connect( d->mEditor, SIGNAL( collectionChanged( Akonadi::Collection ) ),
-             SLOT( collectionChanged( Akonadi::Collection ) ) );
-    connect( d->mEditor, SIGNAL( requestLaunchAccountWizard() ),
-             this, SIGNAL( requestLaunchAccountWizard() ) );
+    connect( d->mEditor, SIGNAL(cancelClicked()) , SLOT(close()) );
+    connect( d->mEditor, SIGNAL(saveClicked()), SLOT(save()) );
+    connect( d->mEditor, SIGNAL(collectionChanged(Akonadi::Collection)),
+             SLOT(collectionChanged(Akonadi::Collection)) );
+    connect( d->mEditor, SIGNAL(requestLaunchAccountWizard()),
+             this, SIGNAL(requestLaunchAccountWizard()) );
   }
 }
 

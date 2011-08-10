@@ -179,7 +179,6 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
       mFont(event->font()),
       mBgColour(event->bgColour()),
       mFgColour(event->fgColour()),
-      mDateTime((alarm.type() & KAAlarm::REMINDER_ALARM) ? event->mainDateTime(true) : alarm.dateTime(true)),
 #ifdef USE_AKONADI
       mEventItemId(event->itemId()),
 #endif
@@ -237,6 +236,19 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
     setAttribute(static_cast<Qt::WidgetAttribute>(WidgetFlags));
     setWindowModality(Qt::WindowModal);
     setObjectName("MessageWin");    // used by LikeBack
+    if (alarm.type() & KAAlarm::REMINDER_ALARM)
+    {
+        if (event->reminderMinutes() < 0)
+        {
+            event->previousOccurrence(alarm.dateTime(false).effectiveKDateTime(), mDateTime, false);
+            if (!mDateTime.isValid()  &&  event->repeatAtLogin())
+                mDateTime = alarm.dateTime().addSecs(event->reminderMinutes() * 60);
+        }
+        else
+            mDateTime = event->mainDateTime(true);
+    }
+    else
+        mDateTime = alarm.dateTime(true);
     if (!(flags & (NO_INIT_VIEW | ALWAYS_HIDE)))
     {
 #ifdef USE_AKONADI
@@ -392,8 +404,8 @@ MessageWin::~MessageWin()
     {
         if (!mNoPostAction  &&  !mEvent.postAction().isEmpty())
             theApp()->alarmCompleted(mEvent);
-        if (!mWindowList.count())
-            theApp()->quitIf();
+        if (!instanceCount(true))
+            theApp()->quitIf();   // no visible windows remain - check whether to quit
     }
 }
 
@@ -414,7 +426,7 @@ void MessageWin::initView()
     QPalette labelPalette = palette();
     labelPalette.setColor(backgroundRole(), labelPalette.color(QPalette::Window));
 
-    // Show the alarm date/time, together with an advance reminder text where appropriate
+    // Show the alarm date/time, together with a reminder text where appropriate.
     // Alarm date/time: display time zone if not local time zone.
     mTimeLabel = new QLabel(topWidget);
     mTimeLabel->setText(dateTimeToDisplay());
@@ -573,9 +585,9 @@ void MessageWin::initView()
                 break;
         }
 
-        if (reminder)
+        if (reminder  &&  mEvent.reminderMinutes() > 0)
         {
-            // Reminder: show remaining time until the actual alarm
+            // Advance reminder: show remaining time until the actual alarm
             mRemainingText = new QLabel(topWidget);
             mRemainingText->setFrameStyle(QFrame::Box | QFrame::Raised);
             mRemainingText->setMargin(leading);
@@ -1147,7 +1159,7 @@ void MessageWin::redisplayAlarms()
                 MessageWin* win = new MessageWin(&event, alarm, flags);
 #ifdef USE_AKONADI
                 win->mCollection = collection;
-                bool rw = CollectionControlModel::isWritable(collection, event.category());
+                bool rw = CollectionControlModel::isWritableEnabled(collection, event.category());
 #else
                 win->mResource = resource;
                 bool rw = resource  &&  resource->writable();
@@ -1217,14 +1229,12 @@ bool MessageWin::reinstateFromDisplaying(const Event* kcalEvent, KAEvent& event,
     Akonadi::Collection::Id collectionId;
     event.reinstateFromDisplaying(kcalEvent, collectionId, showEdit, showDefer);
     collection = AkonadiModel::instance()->collectionById(collectionId);
-    event.clearCollectionId();
 #else
     QString resourceID;
     event.reinstateFromDisplaying(kcalEvent, resourceID, showEdit, showDefer);
     resource = AlarmResources::instance()->resourceWithId(resourceID);
     if (resource  &&  !resource->isOpen())
         resource = 0;
-    event.clearResourceId();
 #endif
     kDebug() << event.id() << ": success";
     return true;
@@ -1584,7 +1594,7 @@ void AudioThread::run()
             mPath.insertEffect(fader);
         }
     }
-    connect(mAudioObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), SLOT(playStateChanged(Phonon::State)), Qt::DirectConnection);
+    connect(mAudioObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), SLOT(playStateChanged(Phonon::State)), Qt::DirectConnection);
     connect(mAudioObject, SIGNAL(finished()), SLOT(checkAudioPlay()), Qt::DirectConnection);
     mPlayedOnce = false;
     mMutex.unlock();
@@ -2102,7 +2112,7 @@ void MessageWin::setButtonsReadOnly(bool ro)
 */
 void MessageWin::setDeferralLimit(const KAEvent& event)
 {
-    mDeferLimit = event.deferralLimit().effectiveDateTime();
+    mDeferLimit = event.deferralLimit().effectiveKDateTime().toLocalZone().dateTime();
     MidnightTimer::connect(this, SLOT(checkDeferralLimit()));   // check every day
     mDisableDeferral = false;
     checkDeferralLimit();

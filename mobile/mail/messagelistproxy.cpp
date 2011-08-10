@@ -134,7 +134,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           if ( yearNameHash.contains( dDate.year() ) ) {
             yearName = yearNameHash.value( dDate.year() );
           } else {
-            yearName = calendar->yearString( dDate );
+            yearName = calendar->formatDate( dDate, KLocale::Year, KLocale::LongNumber );
             yearNameHash.insert( dDate.year(), yearName );
           }
           return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), yearName );

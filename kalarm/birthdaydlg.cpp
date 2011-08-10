@@ -1,7 +1,7 @@
 /*
  *  birthdaydlg.cpp  -  dialog to pick birthdays from address book
  *  Program:  kalarm
- *  Copyright © 2002-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,11 +44,7 @@
 #include <kmessagebox.h>
 #include <kstandardaction.h>
 #include <kactioncollection.h>
-#if KDE_IS_VERSION(4,5,60)
 #include <kdescendantsproxymodel.h>
-#else
-#include <libkdepim/kdescendantsproxymodel_p.h>
-#endif
 #include <khbox.h>
 #include <kdebug.h>
 
@@ -124,7 +120,7 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     Akonadi::Control::start();
 
     BirthdayModel* model = BirthdayModel::instance();
-    connect(model, SIGNAL(dataChanged(const QModelIndex&,const QModelIndex&)), SLOT(resizeViewColumns()));
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(resizeViewColumns()));
 
     KDescendantsProxyModel* descendantsModel = new KDescendantsProxyModel(this);
     descendantsModel->setSourceModel(model);
@@ -149,7 +145,7 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     mListView->setTextElideMode(Qt::ElideRight);
     mListView->header()->setResizeMode(BirthdayModel::NameColumn, QHeaderView::Stretch);
     mListView->header()->setResizeMode(BirthdayModel::DateColumn, QHeaderView::ResizeToContents);
-    connect(mListView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,const QItemSelection&)), SLOT(slotSelectionChanged()));
+    connect(mListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotSelectionChanged()));
     mListView->setWhatsThis(i18nc("@info:whatsthis",
           "<para>Select birthdays to set alarms for.<nl/>"
           "This list shows all birthdays in <application>KAddressBook</application> except those for which alarms already exist.</para>"
@@ -177,12 +173,13 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     mFontColourButton = new FontColourButton(group);
     mFontColourButton->setMaximumHeight(mFontColourButton->sizeHint().height() * 3/2);
     hlayout->addWidget(mFontColourButton);
-    connect(mFontColourButton, SIGNAL(selected(const QColor&, const QColor&)), SLOT(setColours(const QColor&, const QColor&)));
+    connect(mFontColourButton, SIGNAL(selected(QColor,QColor)), SLOT(setColours(QColor,QColor)));
 
     // How much advance warning to give
-    mReminder = new Reminder(i18nc("@info:whatsthis", "Check to display a reminder in advance of the birthday."),
-                             i18nc("@info:whatsthis", "Enter the number of days before each birthday to display a reminder. "
+    mReminder = new Reminder(i18nc("@info:whatsthis", "Check to display a reminder in advance of or after the birthday."),
+                             i18nc("@info:whatsthis", "Enter the number of days before or after each birthday to display a reminder. "
                                   "This is in addition to the alarm which is displayed on the birthday."),
+                             i18nc("@info:whatsthis", "Select whether the reminder should be triggered before or after the birthday."),
                              false, false, group);
     mReminder->setFixedSize(mReminder->sizeHint());
     mReminder->setMaximum(0, 364);

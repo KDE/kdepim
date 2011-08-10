@@ -84,26 +84,26 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
   mPrefixCombo->lineEdit()->setFocus();
 #endif
 
-  connect( mSuffixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
-  connect( mSuffixCombo, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mPrefixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
-  connect( mPrefixCombo, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
+  connect( mSuffixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
+  connect( mSuffixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mPrefixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
+  connect( mPrefixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mFamilyNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mGivenNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mAdditionalNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
 }
 
 void NamePartsEditWidget::loadContact( const KABC::Addressee &contact )
 {
   mContact = contact;
 
-  disconnect( mSuffixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
-  disconnect( mSuffixCombo, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  disconnect( mPrefixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
-  disconnect( mPrefixCombo, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  disconnect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  disconnect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  disconnect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
+  disconnect( mSuffixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
+  disconnect( mSuffixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );
+  disconnect( mPrefixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
+  disconnect( mPrefixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );
+  disconnect( mFamilyNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
+  disconnect( mGivenNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
+  disconnect( mAdditionalNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
 
   mPrefixCombo->setItemText( mPrefixCombo->currentIndex(), mContact.prefix() );
   mGivenNameEdit->setText( mContact.givenName() );
@@ -111,13 +111,13 @@ void NamePartsEditWidget::loadContact( const KABC::Addressee &contact )
   mFamilyNameEdit->setText( mContact.familyName() );
   mSuffixCombo->setItemText( mSuffixCombo->currentIndex(), mContact.suffix() );
 
-  connect( mSuffixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
-  connect( mSuffixCombo, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mPrefixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
-  connect( mPrefixCombo, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
-  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
+  connect( mSuffixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
+  connect( mSuffixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mPrefixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
+  connect( mPrefixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mFamilyNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mGivenNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
+  connect( mAdditionalNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
 }
 
 void NamePartsEditWidget::storeContact( KABC::Addressee &contact ) const

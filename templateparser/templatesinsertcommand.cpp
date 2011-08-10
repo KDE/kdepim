@@ -122,7 +122,9 @@ static const InsertCommand miscCommands[] = {
   { I18N_NOOP( "No Operation" ), TemplatesInsertCommand::CNop },
   { I18N_NOOP( "Clear Generated Message" ), TemplatesInsertCommand::CClear },
   { I18N_NOOP( "Turn Debug On" ), TemplatesInsertCommand::CDebug },
-  { I18N_NOOP( "Turn Debug Off" ), TemplatesInsertCommand::CDebugOff }
+  { I18N_NOOP( "Turn Debug Off" ), TemplatesInsertCommand::CDebugOff },
+  { I18N_NOOP( "Cursor position"), TemplatesInsertCommand::CCursor }, 
+  { I18N_NOOP( "Blank text"), TemplatesInsertCommand::CBlank }
 };
 static const int miscCommandsCount =
   sizeof( miscCommands ) / sizeof( *miscCommands );
@@ -134,7 +136,7 @@ static void fillMenuFromActionMap( const QMap< QString, TemplatesInsertCommand::
 
   while ( it != end ) {
     KAction *action = new KAction( it.key(), menu );
-    QObject::connect( action, SIGNAL( triggered( bool ) ), mapper, SLOT( map() ) );
+    QObject::connect( action, SIGNAL(triggered(bool)), mapper, SLOT(map()) );
     mapper->setMapping( action, it.value() );
     menu->addAction( action );
     ++it;
@@ -151,8 +153,8 @@ TemplatesInsertCommand::TemplatesInsertCommand( QWidget *parent, const char *nam
   QMap< QString, Command > commandMap;
 
   QSignalMapper *mapper = new QSignalMapper( this );
-  connect( mapper, SIGNAL( mapped(int) ),
-           this, SLOT( slotMapped(int) ) );
+  connect( mapper, SIGNAL(mapped(int)),
+           this, SLOT(slotMapped(int)) );
 
   mMenu = new KActionMenu( i18n( "Insert Command" ), this );
 
@@ -272,6 +274,7 @@ void TemplatesInsertCommand::slotMapped( int cmd )
   case TemplatesInsertCommand::CClear: emit insertCommand("%CLEAR"); break;
   case TemplatesInsertCommand::CDebug: emit insertCommand("%DEBUG"); break;
   case TemplatesInsertCommand::CDebugOff: emit insertCommand("%DEBUGOFF"); break;
+  case TemplatesInsertCommand::CBlank: emit insertCommand("%BLANK"); break;
   default:
     kDebug() << "Unknown template command index:" << cmd;
       break;

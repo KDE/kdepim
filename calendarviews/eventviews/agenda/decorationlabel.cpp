@@ -40,16 +40,16 @@ DecorationLabel::DecorationLabel( CalendarDecoration::Element *e,
   mUrl = e->url();
   setUrl( e->url() );
 
-  connect( e, SIGNAL( gotNewExtensiveText( const QString & ) ),
-           this, SLOT( setExtensiveText( const QString & ) ) );
-  connect( e, SIGNAL( gotNewLongText( const QString & ) ),
-           this, SLOT( setLongText( const QString & ) ) );
-  connect( e, SIGNAL( gotNewPixmap( const QPixmap & ) ),
-           this, SLOT( setPixmap( const QPixmap & ) ) );
-  connect( e, SIGNAL( gotNewShortText( const QString & ) ),
-           this, SLOT( setShortText( const QString & ) ) );
-  connect( e, SIGNAL( gotNewUrl( const KUrl & ) ),
-           this, SLOT( setUrl( const KUrl & ) ) );
+  connect( e, SIGNAL(gotNewExtensiveText(QString)),
+           this, SLOT(setExtensiveText(QString)) );
+  connect( e, SIGNAL(gotNewLongText(QString)),
+           this, SLOT(setLongText(QString)) );
+  connect( e, SIGNAL(gotNewPixmap(QPixmap)),
+           this, SLOT(setPixmap(QPixmap)) );
+  connect( e, SIGNAL(gotNewShortText(QString)),
+           this, SLOT(setShortText(QString)) );
+  connect( e, SIGNAL(gotNewUrl(KUrl)),
+           this, SLOT(setUrl(KUrl)) );
   squeezeContentsToLabel();
 }
 

@@ -45,7 +45,7 @@ CollectionMonitoredWidget::CollectionMonitoredWidget(QWidget* parent, Qt::Window
   connect( m_etw->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   m_oneCollectionChangeRecorder = new Akonadi::ChangeRecorder(this);
-//   m_oneCollectionChangeRecorder->collectionFetchScope().setAncestorRetrieval(true);
+
 
   Akonadi::EntityTreeModel *oneCollectionEtm = new Akonadi::EntityTreeModel(m_oneCollectionChangeRecorder, this);
 

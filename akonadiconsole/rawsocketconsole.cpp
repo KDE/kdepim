@@ -102,7 +102,7 @@ void RawSocketConsole::connectClicked()
     mSocket->connectToServer( namedPipe );
 #else
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-    const QString path = conSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
+    const QString path = conSettings.value( QLatin1String( "Data/UnixPath" ), QString( defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ) ).toString();
     mSocket->connectToServer( path );
 #endif
   }

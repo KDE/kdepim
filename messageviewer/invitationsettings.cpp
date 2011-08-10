@@ -95,7 +95,7 @@ InvitationSettings::~InvitationSettings()
 void InvitationSettings::slotLegacyBodyInvitesToggled( bool on )
 {
   if ( on ) {
-    QString txt = i18n( "<qt>Invitations are normally sent as attachments to "
+    const QString txt = i18n( "<qt>Invitations are normally sent as attachments to "
                         "a mail. This switch changes the invitation mails to "
                         "be sent in the text of the mail instead; this is "
                         "necessary to send invitations and replies to "
@@ -167,3 +167,33 @@ QString InvitationSettings::helpAnchor() const
   return QString::fromLatin1( "configure-misc-invites" );
 }
 
+void InvitationSettings::doResetToDefaultsOther()
+{
+  const bool bUseDefaults = GlobalSettings::self()->useDefaults( true );
+
+  mInvitationUi->mLegacyMangleFromTo->setChecked(
+    GlobalSettings::self()->legacyMangleFromToHeaders() );
+
+  mInvitationUi->mExchangeCompatibleInvitations->setChecked(
+    GlobalSettings::self()->exchangeCompatibleInvitations() );
+
+  mInvitationUi->mLegacyBodyInvites->blockSignals( true );
+  mInvitationUi->mLegacyBodyInvites->setChecked( GlobalSettings::self()->legacyBodyInvites() );
+  mInvitationUi->mLegacyBodyInvites->blockSignals( false );
+
+  mInvitationUi->mOutlookCompatibleInvitationComments->setChecked(
+    GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
+
+  mInvitationUi->mOutlookCompatibleInvitationComparisons->setChecked(
+    GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
+
+  mInvitationUi->mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
+  mInvitationUi->mAutomaticSending->setEnabled( !mInvitationUi->mLegacyBodyInvites->isChecked() );
+
+  mInvitationUi->mDeleteInvitations->setChecked(
+    GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+
+  GlobalSettings::self()->useDefaults( bUseDefaults );
+  
+  
+}

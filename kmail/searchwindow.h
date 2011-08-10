@@ -41,11 +41,12 @@ class KJob;
 class KLineEdit;
 class KMMainWidget;
 class KStatusBar;
+class KMSearchMessageModel;
 
 namespace Akonadi {
 class EntityTreeView;
 class ItemModel;
-class StandardActionManager;
+class StandardMailActionManager;
 }
 
 namespace KMime {
@@ -122,6 +123,8 @@ class SearchWindow: public KDialog, virtual public KXMLGUIClient
     /** Reimplemented to stop searching when the window is closed */
     virtual void closeEvent( QCloseEvent* );
 
+    void createSearchModel();
+  
   private Q_SLOTS:
     virtual void updateStatusLine();
 
@@ -172,7 +175,7 @@ class SearchWindow: public KDialog, virtual public KXMLGUIClient
     QRadioButton *mChkbxSpecificFolders;
     MailCommon::FolderRequester *mCbxFolders;
     QCheckBox *mChkSubFolders;
-    Akonadi::ItemModel *mResultModel;
+    KMSearchMessageModel *mResultModel;
     Akonadi::EntityTreeView *mLbxMatches;
     QLabel *mSearchFolderLbl;
     KLineEdit *mSearchFolderEdt;
@@ -191,7 +194,7 @@ class SearchWindow: public KDialog, virtual public KXMLGUIClient
     MailCommon::SearchPatternEdit *mPatternEdit;
     MailCommon::SearchPattern mSearchPattern;
 
-    Akonadi::StandardActionManager *mAkonadiStandardAction;
+    Akonadi::StandardMailActionManager *mAkonadiStandardAction;
 
     static const int MSGID_COLUMN;
 };

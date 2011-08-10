@@ -28,7 +28,6 @@ set(kdepim_LIB_SRCS
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
-   kdescendantsproxymodel.cpp
    kcheckcombobox.cpp
    kweekdaycheckcombo.cpp
    ldap/ldapclient.cpp

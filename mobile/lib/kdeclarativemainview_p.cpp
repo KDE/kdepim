@@ -43,8 +43,8 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
 void KDeclarativeMainViewPrivate::initializeStateSaver()
 {
   restoreState();
-  connect( mEtm, SIGNAL( modelAboutToBeReset() ), this, SLOT( saveState() ) );
-  connect( mEtm, SIGNAL( modelReset() ), this, SLOT( restoreState() ) );
+  connect( mEtm, SIGNAL(modelAboutToBeReset()), this, SLOT(saveState()) );
+  connect( mEtm, SIGNAL(modelReset()), this, SLOT(restoreState()) );
 }
 
 void KDeclarativeMainViewPrivate::restoreState()

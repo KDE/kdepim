@@ -33,6 +33,7 @@
 #include <kstringhandler.h>
 
 #include <QtCore/QSet>
+#include <QtCore/QRegExp>
 
 using namespace Akonadi;
 
@@ -129,7 +130,7 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
   }
 
   if ( !formattedAddress.isEmpty() ) {
-    formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br/>" ) );
+    formattedAddress = formattedAddress.replace( QRegExp( "\n+" ), QLatin1String( "<br/>" ) );
 
     const QString url = QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).arg( counter).arg( formattedAddress );
     addressObject.insert( "formattedAddressLink", url );

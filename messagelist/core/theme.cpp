@@ -167,6 +167,7 @@ bool Theme::ContentItem::applicableToGroupHeaderItems( Type type )
 void Theme::ContentItem::setFont( const QFont &font )
 {
   mFont = font;
+  mFontKey = font.key();
 }
 
 void Theme::ContentItem::save( QDataStream &stream ) const

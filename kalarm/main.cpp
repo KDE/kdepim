@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
     options.add("cancelEvent <eventID>", ki18n("Cancel alarm with the specified event ID"));
     options.add("d");
     options.add("disable", ki18n("Disable the alarm"));
+    options.add("disable-all", ki18n("Disable monitoring of all alarms"));
     options.add("e");
     options.add("!exec <commandline>", ki18n("Execute a shell command line"));
     options.add("E");
@@ -92,8 +93,8 @@ int main(int argc, char *argv[])
     options.add("play-repeat <url>", ki18n("Audio file to play repeatedly"));
     options.add("recurrence <spec>", ki18n("Specify alarm recurrence using iCalendar syntax"));
     options.add("R");
-    options.add("reminder <period>", ki18n("Display reminder in advance of alarm"));
-    options.add("reminder-once <period>", ki18n("Display reminder once, before first alarm recurrence"));
+    options.add("reminder <period>", ki18n("Display reminder before or after alarm"));
+    options.add("reminder-once <period>", ki18n("Display reminder once, before or after first alarm recurrence"));
     options.add("r");
     options.add("repeat <count>", ki18n("Number of times to repeat alarm (including initial occasion)"));
     options.add("s");

@@ -1,7 +1,7 @@
 /*
  *  itemlistmodel.cpp  -  Akonadi item models
  *  Program:  kalarm
- *  Copyright © 2007-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2007-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -53,8 +53,10 @@ ItemListModel::ItemListModel(KAlarm::CalEvent::Types allowed, QObject* parent)
     setHeaderGroup(EntityTreeModel::ItemListHeaders);
     setSortRole(AkonadiModel::SortRole);
     setDynamicSortFilter(true);
-    connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SLOT(slotRowsInserted()));
-    connect(this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int, int)), SLOT(slotRowsToBeRemoved()));
+    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(slotRowsInserted()));
+    connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(slotRowsRemoved()));
+    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)),
+                                      SLOT(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)));
 }
 
 int ItemListModel::columnCount(const QModelIndex& /*parent*/) const
@@ -77,13 +79,38 @@ void ItemListModel::slotRowsInserted()
 /******************************************************************************
 * Called when rows have been deleted from the model.
 */
-void ItemListModel::slotRowsToBeRemoved()
+void ItemListModel::slotRowsRemoved()
 {
     if (mHaveEvents  &&  !rowCount())
     {
         mHaveEvents = false;
         emit haveEventsStatus(false);
     }
+}
+
+/******************************************************************************
+* Called when a collection parameter or status has changed.
+* If the collection's enabled status has changed, re-filter the list to add or
+* remove its alarms.
+*/
+void ItemListModel::collectionStatusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant&, bool inserted)
+{
+    Q_UNUSED(inserted);
+    if (!collection.isValid())
+        return;
+    if (change == AkonadiModel::Enabled)
+        invalidateFilter();
+}
+
+bool ItemListModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
+{
+    if (!EntityMimeTypeFilterModel::filterAcceptsRow(sourceRow, sourceParent))
+        return false;
+    // Get the alarm type of the item
+    QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+    KAlarm::CalEvent::Type type = static_cast<KAlarm::CalEvent::Type>(sourceModel()->data(sourceIndex, AkonadiModel::StatusRole).toInt());
+    Collection parent = sourceIndex.data(AkonadiModel::ParentCollectionRole).value<Collection>();
+    return CollectionControlModel::isEnabled(parent, type);
 }
 
 #if 0
@@ -152,8 +179,8 @@ bool ItemListModel::haveEvents() const
 
 /*=============================================================================
 = Class: AlarmListModel
-= Filter proxy model containing all alarms of specified mime types in enabled
-= collections.
+= Filter proxy model containing all alarms (not templates) of specified mime
+= types in enabled collections.
 Equivalent to AlarmListFilterModel
 =============================================================================*/
 AlarmListModel* AlarmListModel::mAllInstance = 0;

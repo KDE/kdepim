@@ -62,8 +62,8 @@ void AttachmentCompressJobTest::testCompress()
   //kDebug() << zipPart->data();
   QVERIFY( zipPart->isAutoEncoding() );
   QVERIFY( zipPart->isCompressed() );
-  QCOMPARE( zipPart->name(), name + QString::fromLatin1( ".zip" ) );
-  QCOMPARE( zipPart->fileName(), fileName + QString::fromLatin1( ".zip" ) );
+  QCOMPARE( zipPart->name(), QString( name + QString::fromLatin1( ".zip" ) ) );
+  QCOMPARE( zipPart->fileName(), QString( fileName + QString::fromLatin1( ".zip" ) ) );
   QCOMPARE( zipPart->description(), description );
   QCOMPARE( zipPart->mimeType(), QByteArray( "application/zip" ) );
 

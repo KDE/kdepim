@@ -21,6 +21,9 @@
 #include "incidenceeditor-ng.h"
 
 #include <KDebug>
+#include <kglobal.h>
+
+static const KCatalogLoader loader("libincidenceeditors");
 
 using namespace IncidenceEditorNG;
 

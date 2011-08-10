@@ -141,7 +141,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string extracomment="Image aspect ratio">Keep Ratio</string>
+      <string comment="Image aspect ratio">Keep Ratio</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -154,7 +154,7 @@
    <item row="1" column="0">
     <widget class="QLabel" name="labelTitle_2">
      <property name="text">
-      <string extracomment="Image Alignment">Alignment:</string>
+      <string comment="Image Alignment">Alignment:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -171,17 +171,17 @@
      </property>
      <item>
       <property name="text">
-       <string extracomment="Alignment">Not Set</string>
+       <string comment="Alignment">Not Set</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string extracomment="Alignment">Right</string>
+       <string comment="Alignment">Right</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string extracomment="Alignment">Left</string>
+       <string comment="Alignment">Left</string>
       </property>
      </item>
     </widget>

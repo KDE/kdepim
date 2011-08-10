@@ -49,7 +49,7 @@ int main( int argc, char **argv )
   SetCursor( LoadCursor( NULL, IDC_WAIT ) );
 #endif
   const QByteArray& ba = QByteArray( "tasks-mobile" );
-  const KLocalizedString name = ki18n( "Tasks Mobile" );
+  const KLocalizedString name = ki18n( "Kontact Touch Tasks" );
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 

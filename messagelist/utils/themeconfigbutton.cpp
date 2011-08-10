@@ -46,13 +46,13 @@ ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * th
 : KPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
 {
   d->mThemeComboBox = themeComboBox;
-  connect( this, SIGNAL( pressed() ),
-           this, SLOT( slotConfigureThemes() ) );
+  connect( this, SIGNAL(pressed()),
+           this, SLOT(slotConfigureThemes()) );
 
   //Keep theme combo up-to-date with any changes made in the configure dialog.
   if ( d->mThemeComboBox != 0 )
-    connect( this, SIGNAL( configureDialogCompleted() ),
-             d->mThemeComboBox, SLOT( slotLoadThemes() ) );
+    connect( this, SIGNAL(configureDialogCompleted()),
+             d->mThemeComboBox, SLOT(slotLoadThemes()) );
 }
 
 ThemeConfigButton::~ThemeConfigButton()
@@ -69,8 +69,8 @@ void ThemeConfigButtonPrivate::slotConfigureThemes()
   ConfigureThemesDialog *dialog = new ConfigureThemesDialog( q->window() );
   dialog->selectTheme( currentThemeID );
 
-  QObject::connect( dialog, SIGNAL( okClicked() ),
-                    q, SIGNAL( configureDialogCompleted() ) );
+  QObject::connect( dialog, SIGNAL(okClicked()),
+                    q, SIGNAL(configureDialogCompleted()) );
 
   dialog->show();
 }

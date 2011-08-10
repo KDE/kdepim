@@ -23,11 +23,16 @@
 
 #include "blockalarmsattribute.h"
 
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
+#include <KCalCore/Journal>
+
 #include <akonadi/collection.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <KIconButton>
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QHBoxLayout>
@@ -50,7 +55,6 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   QHBoxLayout *hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
-  hbox->setMargin( KDialog::marginHint() );
 
   QLabel *label = new QLabel( i18nc( "@label:textbox Name of the folder.", "&Name:" ), this );
   hbox->addWidget( label );
@@ -63,11 +67,22 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
-  hbox->setMargin( KDialog::marginHint() );
 
   mBlockAlarmsCheckBox = new QCheckBox( i18n( "Block alarms locally" ), this );
   hbox->addWidget( mBlockAlarmsCheckBox );
   hbox->addStretch( 1 );
+
+#ifndef KDEPIM_MOBILE_UI
+  hbox = new QHBoxLayout();
+  topLayout->addItem( hbox );
+  hbox->setSpacing( KDialog::spacingHint() );
+  mIconCheckBox = new QCheckBox( i18n( "&Use custom icon:" ), this );
+  mIconButton = new KIconButton( this );
+  mIconButton->setIconSize( 16 );
+  hbox->addWidget( mIconCheckBox );
+  hbox->addWidget( mIconButton );
+  hbox->addStretch();
+#endif
 
   topLayout->addStretch( 100 ); // eat all superfluous space
 }
@@ -84,8 +99,32 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
                                   collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
 
   mNameEdit->setText( displayName );
-
   mBlockAlarmsCheckBox->setChecked( collection.hasAttribute<BlockAlarmsAttribute>() );
+
+  QString iconName;
+  if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
+    iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
+  }
+
+#ifndef KDEPIM_MOBILE_UI
+  if ( iconName.isEmpty() ) {
+    const QStringList mimeTypes = collection.contentMimeTypes();
+    if ( collection.contentMimeTypes().count() > 1 ||
+         collection.contentMimeTypes().contains( KCalCore::Event::eventMimeType() ) )
+      mIconButton->setIcon( "view-pim-calendar" );
+    else if ( collection.contentMimeTypes().contains( KCalCore::Todo::todoMimeType() ) )
+      mIconButton->setIcon( "view-pim-tasks" );
+    else if ( collection.contentMimeTypes().contains( KCalCore::Journal::journalMimeType() ) )
+      mIconButton->setIcon( "view-pim-journal" );
+    else if ( mimeTypes.isEmpty() )
+      mIconButton->setIcon( "folder-grey" );
+    else
+      mIconButton->setIcon( "folder" );
+  } else {
+    mIconButton->setIcon( iconName );
+  }
+  mIconCheckBox->setChecked( !iconName.isEmpty() );
+#endif
 }
 
 void CollectionGeneralPage::save( Collection &collection )
@@ -102,6 +141,14 @@ void CollectionGeneralPage::save( Collection &collection )
   } else {
     collection.removeAttribute<BlockAlarmsAttribute>();
   }
+
+#ifndef KDEPIM_MOBILE_UI
+  if ( mIconCheckBox->isChecked() )
+    collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( mIconButton->icon() );
+  else if ( collection.hasAttribute<EntityDisplayAttribute>() )
+    collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
+#endif
+
 }
 
 #include "collectiongeneralpage.moc"

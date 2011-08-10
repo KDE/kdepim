@@ -57,10 +57,7 @@ namespace CalendarSupport {
   class KCalPrefs;
 }
 
-namespace Future {
-  class KCheckableProxyModel;
-}
-
+class KCheckableProxyModel;
 class KConfigGroup;
 
 namespace EventViews {
@@ -91,6 +88,20 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 {
   Q_OBJECT
   public:
+
+    enum ItemIcon {
+      CalendarCustomIcon = 0,
+      TaskIcon,
+      JournalIcon,
+      RecurringIcon,
+      ReminderIcon,
+      ReadOnlyIcon,
+      ReplyIcon,
+      AttendingIcon,
+      TentativeIcon,
+      OrganizerIcon,
+      IconCount = 10 // Always keep at the end
+    };
 
     enum Change {
       NothingChanged = 0,
@@ -225,9 +236,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     Akonadi::Collection::Id collectionId() const;
 
     //----------------------------------------------------------------------------
-    Future::KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
-    Future::KCheckableProxyModel *customCollectionSelectionProxyModel() const;
-    void setCustomCollectionSelectionProxyModel( Future::KCheckableProxyModel *model );
+    KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
+    KCheckableProxyModel *customCollectionSelectionProxyModel() const;
+    void setCustomCollectionSelectionProxyModel( KCheckableProxyModel *model );
 
     CalendarSupport::CollectionSelection *customCollectionSelection() const;
 
@@ -291,6 +302,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * of an agenda or month item.
      */
     static QColor itemFrameColor( const QColor &color, bool selected );
+
+    static QString iconForItem( const Akonadi::Item &);
 
   public Q_SLOTS:
     /**

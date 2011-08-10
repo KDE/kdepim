@@ -36,6 +36,9 @@ class LdapQueryJob : public KJob
 
     void start();
 
+  public Q_SLOTS:
+    void triggerStart();
+
   signals:
     void data( const QByteArray &data );
 

@@ -62,8 +62,9 @@ EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject* paren
   : EntityOrderProxyModel( parent ), d( new EntityCollectionOrderProxyModelPrivate() )
 {
   setDynamicSortFilter(true);
-  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
-           this, SLOT( slotDefaultCollectionsChanged () ) );
+  setSortCaseSensitivity(Qt::CaseInsensitive);
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
+           this, SLOT(slotDefaultCollectionsChanged()) );
 
 }
 

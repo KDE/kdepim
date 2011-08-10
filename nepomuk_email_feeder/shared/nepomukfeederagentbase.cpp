@@ -49,6 +49,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KIdleTime>
+#include <KNotification>
 
 #include <Soprano/Vocabulary/NAO>
 
@@ -142,8 +143,8 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
     if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
       ItemFetchJob *job = new ItemFetchJob( item );
       job->setFetchScope( scope );
-      connect( job, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
-               SLOT( notificationItemsReceived( Akonadi::Item::List ) ) );
+      connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+               SLOT(notificationItemsReceived(Akonadi::Item::List)) );
     }
   }
 }
@@ -163,8 +164,8 @@ void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< 
     if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
       ItemFetchJob *job = new ItemFetchJob( item );
       job->setFetchScope( scope );
-      connect( job, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
-               SLOT( notificationItemsReceived( Akonadi::Item::List ) ) );
+      connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+               SLOT(notificationItemsReceived(Akonadi::Item::List)) );
     }
   }
 }
@@ -413,7 +414,7 @@ void NepomukFeederAgentBase::selfTest()
   emit status( Broken, i18n( "Nepomuk not operational" ) );
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.pim.nepomukfeeder.selftestreport" ) ) )
     return;
-  KMessageBox::error( 0, message, i18n( "Nepomuk Indexing Disabled" ), KMessageBox::Notify | KMessageBox::AllowLink );
+  KNotification::event( KNotification::Warning, i18n( "Nepomuk Indexing Disabled" ), message );
   QDBusConnection::sessionBus().unregisterService( QLatin1String( "org.kde.pim.nepomukfeeder.selftestreport" ) );
 }
 

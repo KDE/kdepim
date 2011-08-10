@@ -100,6 +100,8 @@ class KNODE_EXPORT KNGlobals
     /** forwarded to top->setStatusMsg() if available */
     void setStatusMsg(const QString& text = QString(), int id = SB_MAIN);
 
+    void reset();
+
   private:
     /** Create a new KNGlobals object, should only be called by the friend class KNGlobalsPrivate. */
     KNGlobals();

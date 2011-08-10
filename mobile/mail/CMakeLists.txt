@@ -51,6 +51,10 @@ set(kmail_mobile_srcs
   vacationmanager.cpp
 )
 
+if (WIN32)
+   set(kmail_mobile_srcs ${kmail_mobile_srcs} kmail-mobile.rc)
+endif (WIN32)
+
 qt4_wrap_ui(kmail_mobile_srcs configwidget.ui messagelistsettingseditor.ui searchwidget.ui)
 
 if(KDEPIM_ENTERPRISE_BUILD)

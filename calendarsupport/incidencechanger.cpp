@@ -182,7 +182,7 @@ bool IncidenceChanger::Private::performChange( Change *change )
 
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( newItem );
   // TODO_SERGIO: Remove this Qt::QueuedConnection after removing all job.exec()'s inside mailclient.cpp
-  connect( job, SIGNAL(result( KJob *)), this, SLOT(changeIncidenceFinished(KJob *)), Qt::QueuedConnection );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(changeIncidenceFinished(KJob*)), Qt::QueuedConnection );
   return true;
 }
 
@@ -365,7 +365,7 @@ bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem,
   emit incidenceToBeDeleted( aitem );
   d->cancelChanges( aitem.id() ); //abort changes to this incidence cause we will just delete it
   Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aitem );
-  connect( job, SIGNAL(result(KJob *)), this, SLOT(deleteIncidenceFinished(KJob *)) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(deleteIncidenceFinished(KJob*)) );
   return true;
 }
 

@@ -19,7 +19,7 @@
 */
 #include "memorycalendarmemento.h"
 
-#include <calendarsupport/next/incidencesearchjob.h>
+#include <calendarsupport/next/incidencefetchjob.h>
 #include <KSystemTimeZones>
 
 using namespace MessageViewer;
@@ -27,21 +27,24 @@ using namespace MessageViewer;
 MemoryCalendarMemento::MemoryCalendarMemento()
   : QObject( 0 ), mFinished( false )
 {
-  CalendarSupport::IncidenceSearchJob *job = new CalendarSupport::IncidenceSearchJob();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotSearchJobFinished( KJob* ) ) );
+  CalendarSupport::IncidenceFetchJob *job = new CalendarSupport::IncidenceFetchJob();
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotSearchJobFinished(KJob*)) );
 }
 
 void MemoryCalendarMemento::slotSearchJobFinished( KJob *job )
 {
   kDebug();
   mFinished = true;
-  CalendarSupport::IncidenceSearchJob *searchJob = static_cast<CalendarSupport::IncidenceSearchJob*>( job );
+  CalendarSupport::IncidenceFetchJob *searchJob = static_cast<CalendarSupport::IncidenceFetchJob*>( job );
   if ( searchJob->error() ) {
     kWarning() << "Unable to fetch incidences:" << searchJob->errorText();
   } else {
     mCalendar = KCalCore::MemoryCalendar::Ptr( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
-    foreach( const KCalCore::Incidence::Ptr &incidence, searchJob->incidences() ) {
-      mCalendar->addIncidence( incidence );
+    foreach( const Akonadi::Item &item, searchJob->items() ) {
+      if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+        const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+        mCalendar->addIncidence( incidence );
+      }
     }
 
     emit update( Viewer::Delayed );

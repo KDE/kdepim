@@ -84,8 +84,7 @@ void SendMdnHandler::Private::handleMessages()
 
     const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, KMime::MDN::Displayed );
     if ( mdnSend.first ) {
-      const KConfigGroup group( mKernel->config(), "MDN" );
-      const int quote = group.readEntry<int>( "quote-message", 0 );
+      const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
 
       MessageComposer::MessageFactory factory( message, Akonadi::Item().id() );
       factory.setIdentityManager( mKernel->identityManager() );
@@ -106,7 +105,7 @@ SendMdnHandler::SendMdnHandler( IKernel *kernel, QObject *parent )
   : QObject( parent ), d( new Private( this, kernel ) )
 {
   d->mTimer.setSingleShot( true );
-  connect( &d->mTimer, SIGNAL( timeout() ), this, SLOT( handleMessages() ) );
+  connect( &d->mTimer, SIGNAL(timeout()), this, SLOT(handleMessages()) );
 }
 
 SendMdnHandler::~SendMdnHandler()

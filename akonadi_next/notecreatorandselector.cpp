@@ -92,6 +92,8 @@ void NoteCreatorAndSelector::doCreateNote()
 
   newPage->subject( true )->fromUnicodeString( title, encoding );
   newPage->contentType( true )->setMimeType( "text/plain" );
+  newPage->contentType()->setCharset("utf-8");
+  newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
   newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
   newPage->from( true )->fromUnicodeString( QString::fromLatin1( "Kjots@kde4" ), encoding );
   // Need a non-empty body part so that the serializer regards this as a valid message.
@@ -106,7 +108,7 @@ void NoteCreatorAndSelector::doCreateNote()
   newItem.addAttribute(eda);
 
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT(noteCreationFinished(KJob*)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(noteCreationFinished(KJob*)) );
 
 }
 

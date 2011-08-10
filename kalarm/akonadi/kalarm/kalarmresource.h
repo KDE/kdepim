@@ -27,6 +27,7 @@
 
 class KJob;
 class KAEvent;
+class AlarmTypeRadioWidget;
 
 class KAlarmResource : public ICalResourceBase
 {
@@ -43,15 +44,21 @@ class KAlarmResource : public ICalResourceBase
         /**
          * Customize the configuration dialog before it is displayed.
          */
-        virtual void customizeConfigDialog( Akonadi::SingleFileResourceConfigDialog<Akonadi_KAlarm_Resource::Settings>* dlg );
+        virtual void customizeConfigDialog(Akonadi::SingleFileResourceConfigDialog<Akonadi_KAlarm_Resource::Settings>*);
+        virtual void configDialogAcceptedActions(Akonadi::SingleFileResourceConfigDialog<Akonadi_KAlarm_Resource::Settings>*);
 
         virtual bool readFromFile(const QString& fileName);
         virtual bool writeToFile(const QString& fileName);
         virtual void itemAdded(const Akonadi::Item&, const Akonadi::Collection&);
         virtual void itemChanged(const Akonadi::Item&, const QSet<QByteArray>& parts);
 
+    private Q_SLOTS:
+        void settingsChanged();
+
     private:
+        AlarmTypeRadioWidget*    mTypeSelector;
         KAlarm::Calendar::Compat mCompatibility;
+        int                      mVersion;   // calendar format version
 };
 
 #endif

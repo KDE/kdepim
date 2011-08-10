@@ -25,6 +25,10 @@ add_subdirectory(about)
 add_subdirectory(tests)
 add_subdirectory(pics)
 
+if(DEBUG_SIGNATURE)
+   add_definitions(-DDEBUG_SIGNATURE)
+endif(DEBUG_SIGNATURE)
+
 if(KDEPIM_NO_WEBKIT)
   set(_mailwebview_cpp mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )
@@ -93,6 +97,7 @@ kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KMBOX_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}

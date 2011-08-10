@@ -39,7 +39,7 @@ ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
 {
   m_viewer = new ExtendedContactGroupViewer( 0 );
-  connect( m_viewer, SIGNAL( contactGroupRemoved() ), SIGNAL( contactGroupRemoved() ) );
+  connect( m_viewer, SIGNAL(contactGroupRemoved()), SIGNAL(contactGroupRemoved()) );
 
   setWidget( m_viewer );
 }

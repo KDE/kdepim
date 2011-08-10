@@ -79,7 +79,7 @@ public:
 
   QTextEdit* activeEditor();
 
-  bool queryClose();
+  Q_SCRIPTABLE bool queryClose();
 
 public slots:
   void prevPage();

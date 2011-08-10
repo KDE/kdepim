@@ -25,6 +25,7 @@
 using namespace MessageCore;
 
 QTEST_KDEMAIN( StringUtilTest, GUI )
+#define lineLength 40
 
 void StringUtilTest::test_SmartQuote()
 {
@@ -32,7 +33,12 @@ void StringUtilTest::test_SmartQuote()
   QFETCH( QString, quotedString );
 
   QEXPECT_FAIL( "hard linebreak", "Currently no way to differentiate between hard and soft line breaks", Continue );
-  QCOMPARE( StringUtil::smartQuote( originalString, 40 ), quotedString );
+  //QEXPECT_FAIL( "Two non-wrapping lines", "The trailing new line on line one carries to line two and thus making it longer then expected", Continue );
+  const QStringList quotedStrings = quotedString.split('\n');
+  foreach(QString line, quotedStrings) {
+    qDebug() << line << ":" << line.length();
+  }
+  QCOMPARE( StringUtil::smartQuote( originalString, lineLength ), quotedString );
 }
 
 void StringUtilTest::test_SmartQuote_data()
@@ -40,112 +46,128 @@ void StringUtilTest::test_SmartQuote_data()
   QTest::addColumn<QString>( "originalString" );
   QTest::addColumn<QString>( "quotedString" );
 
-  QTest::newRow( "" ) << "Some short text"
-                      << "Some short text";
+  QTest::newRow( "1" ) << "Some short text"
+                       << "Some short text";
 
-  //                                                              40
-  //                                                              ↓
-  QTest::newRow( "" ) << "Some much longer text that exceeds our limit by far."
-                      << "Some much longer text that exceeds our\nlimit by far.";
+  //                                                               40
+  //                                                               ↓
+  QTest::newRow( "2" ) << "Some much longer text that exceeds our limit by far."
+                       << "Some much longer text that exceeds our\nlimit by far.";
 
-  QTest::newRow( "" ) << " Space at start."
-                      << " Space at start.";
+  QTest::newRow( "3" ) << " Space at start."
+                       << " Space at start.";
 
-  QTest::newRow( "" ) << " Space at start, but also two lines in this long sentennce."
-                      << " Space at start, but also two lines in\nthis long sentennce.";
+  //                                                               40
+  //                                                               ↓
+  QTest::newRow( "4" ) << " Space at start, but also two lines in this long sentennce."
+                       << " Space at start, but also two lines in\nthis long sentennce.";
 
-  QTest::newRow( "" ) << " Space at start and end. "
-                      << " Space at start and end.";
+  QTest::newRow( "5" ) << " Space at start and end. "
+                       << " Space at start and end.";
 
-  QTest::newRow( "" ) << "Space at end of pre-broken line. \n"
-                         "Yet another line of text."
-                      << "Space at end of pre-broken line.\n"
-                         "Yet another line of text.";
+  QTest::newRow( "6" ) << "Space at end of pre-broken line. \n"
+                          "Yet another line of text."
+                       << "Space at end of pre-broken line.\n"
+                          "Yet another line of text.";
 
-  //                                                              40
-  //                                                              ↓
-  QTest::newRow( "" ) << "Long long line, followed by another line starting with a space.\n"
-                         " Starts with a space."
-                      << "Long long line, followed by another\n"
-                         "line starting with a space. Starts\n"
-                         "with a space.";
+  //                                                               40
+  //                                                               ↓
+  QTest::newRow( "7" ) << "Long long line, followed by another line starting with a space.\n"
+                          " Starts with a space."
+                       << "Long long line, followed by another line\n"
+                          "starting with a space. Starts with a\n"
+                          "space.";
 
-  QTest::newRow( "" ) << "Two lines that don't need to be\nchanged in any way."
-                      << "Two lines that don't need to be\nchanged in any way.";
+  //                                                               40
+  //                                                               ↓
+  QTest::newRow( "8" ) << "Two lines that don't need to be\nchanged in any way."
+                       << "Two lines that don't need to be\nchanged in any way.";
 
-  QTest::newRow( "" ) << "Many lines.\n"
-                         "Only one needs to be broken.\n"
-                         "This is the very much too long line that needs to be broken.\n"
-                         "This line is ok again."
-                      << "Many lines.\n"
-                         "Only one needs to be broken.\n"
-                         "This is the very much too long line\n"
-                         "that needs to be broken. This line is\n"
-                         "ok again.";
+  //                                                               40
+  //                                                               ↓
+  QTest::newRow( "9" ) << "Many lines.\n"
+                          "Only one needs to be broken.\n"
+                          "This is the very much too long line that needs to be broken.\n"
+                          "This line is ok again."
+                       << "Many lines.\n"
+                          "Only one needs to be broken.\n"
+                          "This is the very much too long line that\n"
+                          "needs to be broken. This line is ok\n"
+                          "again.";
 
-  //                                                              40
-  //                                                              ↓
-  QTest::newRow( "" ) << "> >Very long quoted line, that is very very long"
-                      << "> >Very long quoted line, that is very\n"
-                         "> >very long";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "10" ) << "> >Very long quoted line, that is very very long"
+                        << "> >Very long quoted line, that is very\n"
+                           "> >very long";
 
-  QTest::newRow( "" ) << "> > Very long quoted line, that is very very long"
-                      << "> > Very long quoted line, that is very\n"
-                         "> > very long";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "11" ) << "> > Very long quoted line, that is very very long"
+                        << "> > Very long quoted line, that is very\n"
+                           "> > very long";
 
-  QTest::newRow( "" ) << "> > Very long quoted line, that is very very long. \n"
-                         "> > Another line here."
-                      << "> > Very long quoted line, that is very\n"
-                         "> > very long. Another line here.";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "12" ) << "> > Very long quoted line, that is very very long. \n"
+                           "> > Another line here."
+                        << "> > Very long quoted line, that is very\n"
+                           "> > very long. Another line here.";
 
-  QTest::newRow( "" ) << "> > Very long quoted line, that is very very long. \n"
-                         "Unquoted line, for a change.\n"
-                         "> > Another line here."
-                      << "> > Very long quoted line, that is very\n"
-                         "> > very long.\n"
-                         "\n"
-                         "Unquoted line, for a change.\n"
-                         "\n"
-                         "> > Another line here.";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "13" ) << "> > Very long quoted line, that is very very long. \n"
+                           "Unquoted line, for a change.\n"
+                           "> > Another line here."
+                        << "> > Very long quoted line, that is very\n"
+                           "> > very long.\n"
+                           "\n"
+                           "Unquoted line, for a change.\n"
+                           "\n"
+                           "> > Another line here.";
 
-  //                                                              40
-  //                                                              ↓
-  QTest::newRow( "" ) << "> Quote level 1 with long long long long text, that is long.\n"
-                         "> Quote level 1 still.\n"
-                         "> > Quote level 2 now, also with a long long long long text.\n"
-                         "> > Quote level 2 still.\n"
-                         "No quotes."
-                      << "> Quote level 1 with long long long\n"
-                         "> long text, that is long. Quote level\n"
-                         "> 1 still.\n"
-                         "> \n"
-                         "> > Quote level 2 now, also with a long\n"
-                         "> > long long long text. Quote level 2\n"
-                         "> > still.\n"
-                         "\n"
-                         "No quotes.";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "14" ) << "> Quote level 1 with long long long long text, that is long.\n"
+                           "> Quote level 1 still.\n"
+                           "> > Quote level 2 now, also with a long long long long text.\n"
+                           "> > Quote level 2 still.\n"
+                           "No quotes."
+                        << "> Quote level 1 with long long long long\n"
+                           "> text, that is long. Quote level 1\n"
+                           "> still.\n"
+                           "> \n"
+                           "> > Quote level 2 now, also with a long\n"
+                           "> > long long long text. Quote level 2\n"
+                           "> > still.\n"
+                           "\n"
+                           "No quotes.";
 
-  QTest::newRow( "" ) << "Some much longer text that exceeds our limit by far.\n"
-                         "\n"
-                         "Line after an empty one."
-                      << "Some much longer text that exceeds our\n"
-                         "limit by far.\n"
-                         "\n"
-                         "Line after an empty one.";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "15" ) << "Some much longer text that exceeds our limit by far.\n"
+                           "\n"
+                           "Line after an empty one."
+                        << "Some much longer text that exceeds our\n"
+                           "limit by far.\n"
+                           "\n"
+                           "Line after an empty one.";
 
   // Make sure the "You wrote:" line is not broken, that would look strange
-  //                                                              40
-  //                                                              ↓
-  QTest::newRow( "" ) << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
-                         "> Bla Bla Bla Bla..."
-                      << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
-                         "> Bla Bla Bla Bla...";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "16" ) << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                           "> Bla Bla Bla Bla..."
+                        << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                           "> Bla Bla Bla Bla...";
 
-  QTest::newRow( "" ) << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
-                         "\n"
-                         "> Bla Bla Bla Bla..."
-                      << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
-                         "> Bla Bla Bla Bla...";
+  //                                                                40
+  //                                                                ↓
+  QTest::newRow( "17" ) << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                           "\n"
+                           "> Bla Bla Bla Bla..."
+                        << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                           "> Bla Bla Bla Bla...";
 
   // This test shows a fundamental flaw when breaking lines: The table header gets broken,
   // which is ok. However, the following line is appended to the table header, which leads
@@ -161,11 +183,13 @@ void StringUtilTest::test_SmartQuote_data()
   //
   // The solution would be to let the caller remove soft linebreaks manually (as only the caller
   // can now), and let smartQuote() treat all linebreaks as hard linebreaks, which would fix this.
+  //                                                                           40
+  //                                                                            ↓
   QTest::newRow( "hard linebreak" ) << "==== Date ======== Amount ======= Type ======\n"
-                         "   12.12.09          5            Car        \n"
-                      << "==== Date ======== Amount ======= Type\n"
-                         "======\n"
-                         "   12.12.09          5            Car        \n";
+                                       "   12.12.09          5            Car        \n"
+                                    << "==== Date ======== Amount ======= Type\n"
+                                       "======\n"
+                                       "   12.12.09          5            Car        \n";
 }
 
 void StringUtilTest::test_signatureStripping()

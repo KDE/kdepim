@@ -152,8 +152,13 @@ ActionManagerImpl::~ActionManagerImpl()
     d = 0;
 }
 
-void ActionManagerImpl::initTrayIcon(TrayIcon* trayIcon)
+void ActionManagerImpl::setTrayIcon(TrayIcon* trayIcon)
 {
+    if (trayIcon == 0)
+    {
+        d->trayIcon = 0;
+        return;
+    }
     if (d->trayIcon)
         return;
     else d->trayIcon = trayIcon;
@@ -283,7 +288,7 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     // Settings menu
     KToggleAction *sqf = coll->add<KToggleAction>("show_quick_filter");
     sqf->setText(i18n("Show Quick Filter"));
-    connect(sqf, SIGNAL(triggered(bool) ), d->mainWidget, SLOT(slotToggleShowQuickFilter()));
+    connect(sqf, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotToggleShowQuickFilter()));
     sqf->setChecked( Settings::showQuickFilter() );
 
     action = coll->addAction("article_open" );
@@ -579,12 +584,12 @@ void ActionManagerImpl::initFrameManager(FrameManager* frameManager)
     KAction *action = d->actionCollection->addAction("browser_reload");
     action->setIcon(KIcon("view-refresh"));
     action->setText(i18nc("Reload current page", "Reload"));
-    connect(action, SIGNAL(triggered(bool) ), frameManager, SLOT(slotBrowserReload()));
+    connect(action, SIGNAL(triggered(bool)), frameManager, SLOT(slotBrowserReload()));
 
     action = d->actionCollection->addAction("browser_stop");
     action->setIcon(KIcon("process-stop"));
     action->setText(i18n("Stop"));
-    connect(action, SIGNAL(triggered(bool) ), frameManager, SLOT(slotBrowserStop()));
+    connect(action, SIGNAL(triggered(bool)), frameManager, SLOT(slotBrowserStop()));
 }
 
 QWidget* ActionManagerImpl::container(const char* name)

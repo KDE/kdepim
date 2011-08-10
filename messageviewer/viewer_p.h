@@ -336,7 +336,7 @@ public:
   * @param msg - the message to be shown. If 0, an empty page is displayed.
   * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
   */
-  void setMessage( KMime::Message::Ptr msg, Viewer::UpdateMode updateMode = Viewer::Delayed );
+  void setMessage( const KMime::Message::Ptr& msg, Viewer::UpdateMode updateMode = Viewer::Delayed );
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
@@ -465,7 +465,7 @@ public slots:
   void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
 
   /** The user presses the right mouse button on an URL. */
-  void slotUrlPopup(const QString &, const QPoint& mousePos);
+  void slotUrlPopup(const QUrl &, const QPoint& mousePos);
 
   /** The user selected "Find" from the menu. */
   void slotFind();

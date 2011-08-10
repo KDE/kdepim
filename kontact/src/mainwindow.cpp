@@ -28,6 +28,8 @@
 #include "iconsidepane.h"
 using namespace Kontact;
 
+#include <unistd.h>
+
 #include <libkdepim/broadcaststatus.h>
 #include <libkdepim/progressdialog.h>
 #include <libkdepim/statusbarprogresswidget.h>
@@ -63,6 +65,7 @@ using namespace Kontact;
 #include <KParts/PartManager>
 #include <KSettings/Dispatcher>
 #include <KSettings/Dialog>
+#include <KSycoca>
 
 #include <QDBusConnection>
 #include <QSplitter>
@@ -70,6 +73,9 @@ using namespace Kontact;
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWebSettings>
+
+//Define the maximum time Kontact waits for KSycoca to become available
+#define KSYCOCA_WAIT_TIMEOUT 10
 
 // This class extends the normal KDBusServiceStarter.
 //
@@ -181,8 +187,31 @@ void MainWindow::initGUI()
   navigatorToolBar->setMinimumWidth( navigatorToolBar->sizeHint().width() );
 }
 
+void MainWindow::waitForKSycoca()
+{
+  int i = 0;
+  while ( i < KSYCOCA_WAIT_TIMEOUT ) {
+    if ( KSycoca::isAvailable() )
+      return;
+    // When KSycoca is not availabe that usually means Kontact
+    // was started before kded is done with it's first run
+    // we want to block Kontact execution to
+    // give Kded time to initalize and create the
+    // System Configuration database neccessary for further
+    // Kontact startup
+    kDebug() << "Waiting for KSycoca";
+    sleep(1);
+    i++;
+  }
+  // This should only happen if the distribution is broken
+  kFatal() << "KSycoca unavailable. Kontact will be unable to find plugins.";
+}
+
 void MainWindow::initObject()
 {
+  if ( !KSycoca::isAvailable() ) {
+      waitForKSycoca();
+  }
   KService::List offers = KServiceTypeTrader::self()->query(
     QString::fromLatin1( "Kontact/Plugin" ),
     QString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
@@ -196,8 +225,8 @@ void MainWindow::initObject()
 
   // prepare the part manager
   mPartManager = new KParts::PartManager( this );
-  connect( mPartManager, SIGNAL(activePartChanged(KParts::Part *)),
-           this, SLOT(slotActivePartChanged(KParts::Part *)) );
+  connect( mPartManager, SIGNAL(activePartChanged(KParts::Part*)),
+           this, SLOT(slotActivePartChanged(KParts::Part*)) );
 
   loadPlugins();
 
@@ -211,13 +240,13 @@ void MainWindow::initObject()
 
   statusBar()->show();
 
-  QTimer::singleShot( 200, this, SLOT( slotShowTipOnStart() ) );
+  QTimer::singleShot( 200, this, SLOT(slotShowTipOnStart()) );
 
   // done initializing
   slotShowStatusMsg( QString::null );	//krazy:exclude=nullstrassign for old broken gcc
 
-  connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(const QString &)),
-           this, SLOT(slotShowStatusMsg(const QString &)) );
+  connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(QString)),
+           this, SLOT(slotShowStatusMsg(QString)) );
 
   // launch commandline specified module if any
   activateInitialPluginModule();
@@ -313,8 +342,8 @@ void MainWindow::initWidgets()
   sizes << 0;
   mSplitter->setSizes(sizes);
 */
-  connect( mSidePane, SIGNAL(pluginSelected(KontactInterface::Plugin *)),
-           SLOT(selectPlugin(KontactInterface::Plugin *)) );
+  connect( mSidePane, SIGNAL(pluginSelected(KontactInterface::Plugin*)),
+           SLOT(selectPlugin(KontactInterface::Plugin*)) );
 
   mPartsStack = new QStackedWidget( mSplitter );
   mPartsStack->layout()->setSpacing( 0 );
@@ -379,8 +408,8 @@ void MainWindow::initAboutScreen()
   mIntroPart->settings()->setAttribute( QWebSettings::JavaEnabled, false );
   mIntroPart->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 
-  connect( mIntroPart->page(), SIGNAL( linkClicked( const QUrl & ) ), this,
-           SLOT( slotOpenUrl( const QUrl & ) ), Qt::QueuedConnection);
+  connect( mIntroPart->page(), SIGNAL(linkClicked(QUrl)), this,
+           SLOT(slotOpenUrl(QUrl)), Qt::QueuedConnection);
 }
 
 void MainWindow::setupActions()

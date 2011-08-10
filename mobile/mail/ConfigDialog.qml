@@ -34,28 +34,19 @@ QML.Rectangle {
     configWidget.load();
   }
 
-  KPIM.DecoratedFlickable {
-    id: configWidgetBox
-    anchors.fill: parent
+  Mail.ConfigWidget {
+    id: configWidget
+    anchors.top: parent.top
     anchors.topMargin: 25
-    contentHeight: configWidget.height;
-
-    content.children: [
-      QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
-        anchors.fill: parent 
-        Mail.ConfigWidget {
-          id: configWidget
-          width: parent.width - okButton.width
-        }
-      }
-    ]
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: okButton.top
   }
 
   KPIM.Button2 {
     id: okButton
-    anchors.top: parent.top
-    anchors.topMargin: 20
-    anchors.right: parent.right
+    anchors.right: cancelButton.left
+    anchors.bottom: parent.bottom
     width: 150
     buttonText: KDE.i18n( "Ok" )
     onClicked: {
@@ -66,8 +57,8 @@ QML.Rectangle {
 
   KPIM.Button2 {
     id: cancelButton
-    anchors.top: okButton.bottom
     anchors.right: parent.right
+    anchors.bottom: parent.bottom
     width: 150
     buttonText: KDE.i18n( "Cancel" )
     onClicked: {

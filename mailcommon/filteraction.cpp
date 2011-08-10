@@ -39,6 +39,8 @@
 #include <messagecore/stringutil.h>
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
+#include <messageviewer/globalsettings.h>
+
 #ifndef KDEPIM_NO_NEPOMUK
 #include <nepomuk/tag.h>
 #endif
@@ -122,11 +124,9 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
   if ( !msg )
     return;
 
-  const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type );
+  const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type, true );
   if ( mdnSend.first ) {
-    const KConfigGroup mdnConfig( KernelIf->config(), "MDN" );
-    const int quote = mdnConfig.readEntry<int>( "quote-message", 0 );
-
+    const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
     MessageFactory factory( msg, Akonadi::Item().id() );
     factory.setIdentityManager( KernelIf->identityManager() );
 
@@ -218,7 +218,7 @@ QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
   lineEdit->setClearButtonShown( true );
   lineEdit->setText( mParameter );
 
-  connect( lineEdit, SIGNAL( textChanged( QString ) ), this, SIGNAL( filterActionModified() ) );
+  connect( lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
   return lineEdit;
 }
@@ -271,8 +271,8 @@ QWidget* FilterActionWithStringList::createParamWidget( QWidget *parent ) const
   comboBox->addItems( mParameterList );
   setParamWidgetValue( comboBox );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
@@ -327,8 +327,8 @@ QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
   requester->setShowOutbox( false );
   setParamWidgetValue( requester );
 
-  connect( requester, SIGNAL( folderChanged( Akonadi::Collection )),
-           this, SIGNAL( filterActionModified()) );
+  connect( requester, SIGNAL(folderChanged(Akonadi::Collection)),
+           this, SIGNAL(filterActionModified()) );
 
   return requester;
 }
@@ -413,7 +413,7 @@ QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
   MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
   requester->setText( mParameter );
 
-  connect( requester, SIGNAL( textChanged() ), this, SIGNAL( filterActionModified() ) );
+  connect( requester, SIGNAL(textChanged()), this, SIGNAL(filterActionModified()) );
 
   return requester;
 }
@@ -591,8 +591,10 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
   // KProcess doesn't support a QProcess::launch() equivalent, so
   // we must use a temp file :-(
   KTemporaryFile * inFile = new KTemporaryFile;
-  if ( !inFile->open() )
+  if ( !inFile->open() ) {
+    delete inFile;
     return ErrorButGoOn;
+  }
 
   QList<KTemporaryFile*> atmList;
   atmList.append( inFile );
@@ -652,6 +654,8 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
 
       KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
+
+      new Akonadi::ItemModifyJob( item, FilterIf->filterManager() ); //TODO: check for errors
     } else {
       qDeleteAll( atmList );
       atmList.clear();
@@ -834,7 +838,7 @@ QWidget* FilterActionIdentity::createParamWidget( QWidget *parent ) const
   KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
   comboBox->setCurrentIdentity( mParameter );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
@@ -1226,8 +1230,8 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
@@ -1352,10 +1356,10 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
 
   setParamWidgetValue( widget );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( lineEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( lineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
 
   return widget;
 }
@@ -1539,12 +1543,12 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 
   setParamWidgetValue( widget );
 
-  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( regExpLineEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( lineEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( regExpLineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
+  connect( lineEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
 
   return widget;
 }
@@ -1816,10 +1820,10 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   templateCombo->setToolTip( i18n( "The template used when forwarding" ) );
   templateCombo->setWhatsThis( i18n( "Set the forwarding template that will be used with this filter." ) );
 
-  connect( templateCombo, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( addressRequester, SIGNAL( textChanged() ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( templateCombo, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( addressRequester, SIGNAL(textChanged()),
+           this, SIGNAL(filterActionModified()) );
 
   return addressAndTemplate;
 }
@@ -2048,8 +2052,8 @@ QWidget* FilterActionWithTest::createParamWidget( QWidget *parent ) const
   SoundTestWidget *soundWidget = new SoundTestWidget( parent );
   soundWidget->setUrl( mParameter );
 
-  connect( soundWidget, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( soundWidget, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
 
   return soundWidget;
 }
@@ -2141,7 +2145,7 @@ QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
   KUrlRequester *requester = new KUrlRequester( parent );
   requester->setUrl( KUrl( mParameter ) );
 
-  connect( requester, SIGNAL( textChanged( QString ) ), this, SIGNAL( filterActionModified() ) );
+  connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
   return requester;
 }
@@ -2292,10 +2296,10 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
         "If it is not accessible, the filter will fallback to the default address book.</p>" ) );
   layout->addWidget( collectionComboBox, 1, 2 );
 
-  connect( categoryEdit, SIGNAL( textChanged( QString ) ),
-           this, SIGNAL( filterActionModified() ) );
-  connect( headerCombo, SIGNAL( currentIndexChanged( int ) ),
-           this, SIGNAL( filterActionModified() ) );
+  connect( categoryEdit, SIGNAL(textChanged(QString)),
+           this, SIGNAL(filterActionModified()) );
+  connect( headerCombo, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
   
   setParamWidgetValue( widget );
 
@@ -2342,8 +2346,8 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
   // we use the previously 'stored' value from the 'collectionId' property
   if ( collection.isValid() ) {
     mCollectionId = collection.id();
-    connect( collectionComboBox, SIGNAL( currentIndexChanged( int ) ),
-             this, SIGNAL( filterActionModified() ) );
+    connect( collectionComboBox, SIGNAL(currentIndexChanged(int)),
+             this, SIGNAL(filterActionModified()) );
   } else {
     const QVariant value = collectionComboBox->property( "collectionId" );
     if ( value.isValid() )

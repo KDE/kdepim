@@ -12,7 +12,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS
-  akonadicalendar.cpp
   archivedialog.cpp
   attachmenthandler.cpp
   attributeregistrar.cpp
@@ -32,10 +31,9 @@ set(calendarsupport_LIB_SRCS
   freebusymanager.cpp
   groupware.cpp
   identitymanager.cpp
+  incidenceattachmentmodel.cpp
   incidencechanger.cpp
-  incidencefetchjob.cpp
   incidencefilterproxymodel.cpp
-  incidenceviewer.cpp
   kcalmodel.cpp
   kcalprefs.cpp
   mailclient.cpp
@@ -44,9 +42,12 @@ set(calendarsupport_LIB_SRCS
   publishdialog.cpp
   utils.cpp
 
+  next/akonadicalendar.cpp
   next/history.cpp
   next/incidencechanger2.cpp
+  next/incidencefetchjob.cpp
   next/incidencesearchjob.cpp
+  next/incidenceviewer.cpp
   next/invitationhandler.cpp
   next/mailscheduler2.cpp
   next/scheduler.cpp
@@ -68,7 +69,6 @@ kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc )
 kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 
 target_link_libraries(calendarsupport
-  akonadi_next
   kdepimdbusinterfaces
   kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}

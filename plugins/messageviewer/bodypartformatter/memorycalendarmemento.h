@@ -32,7 +32,7 @@
 class KJob;
 
 namespace CalendarSupport {
-  class IncidenceSearchJob;
+  class IncidenceFetchJob;
 }
 
 namespace MessageViewer {

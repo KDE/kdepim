@@ -48,7 +48,7 @@ void KNComposerEditor::changeHighlighterColors(KPIMTextEdit::EMailQuoteHighlight
   QColor col2 = config.readEntry( "quote3Color", defaultColor3 );
   QColor col3 = config.readEntry( "quote2Color", defaultColor2 );
   QColor col4 = config.readEntry( "quote1Color", defaultColor1 );
-  QColor c = QColor("red");
+
   highlighter->setQuoteColor(col1, col2, col3, col4);
 }
 

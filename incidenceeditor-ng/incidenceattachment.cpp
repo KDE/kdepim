@@ -401,7 +401,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
     KABC::VCardDrag::fromMimeData( mimeData, addressees );
     for ( KABC::Addressee::List::ConstIterator it = addressees.constBegin();
           it != addressees.constEnd(); ++it ) {
-      urls.append( QLatin1String( "uid:" ) + ( *it ).uid() );
+      urls.append( QString(QLatin1String( "uid:" ) + ( *it ).uid() ));
       // there is some weirdness about realName(), hence fromUtf8
       labels.append( QString::fromUtf8( ( *it ).realName().toLatin1() ) );
     }
@@ -469,7 +469,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
       for ( KUrl::List::ConstIterator it = urls.constBegin();
             it != urls.constEnd(); ++it ) {
         KIO::Job *job = KIO::storedGet( *it );
-        connect( job, SIGNAL(result(KJob *)), SLOT(downloadComplete(KJob *)) );
+        connect( job, SIGNAL(result(KJob*)), SLOT(downloadComplete(KJob*)) );
       }
     } else { // we take anything
       addDataAttachment( data, mimeType, label );

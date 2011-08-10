@@ -193,7 +193,7 @@ public:
    * Stores in the unique id of the last selected message for the specified StorageModel.
    * The uniqueIdOfMessage may be 0 (which means that no selection shall be stored in the configuration).
    */
-  void savePreSelectedMessageForStorageModel( const StorageModel * storageModel, unsigned long uniqueIdOfMessage );
+  void savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage );
 
   // aggregation sets management
   const Aggregation * aggregationForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateAggregation );

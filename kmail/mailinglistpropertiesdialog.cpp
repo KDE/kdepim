@@ -37,11 +37,7 @@
 
 #include <kcombobox.h>
 #include <klocale.h>
-#if KDE_IS_VERSION( 4, 5, 74 )
 #include <keditlistwidget.h>
-#else
-#include <keditlistbox.h>
-#endif
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kmcommands.h>
@@ -65,7 +61,7 @@ MailingListFolderPropertiesDialog::MailingListFolderPropertiesDialog( QWidget* p
   QLabel* label;
   mLastItem = 0;
 
-  connect( this, SIGNAL( okClicked() ), SLOT( slotOk() ) );
+  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( mainWidget() );
   topLayout->setObjectName( "topLayout" );
@@ -144,11 +140,7 @@ MailingListFolderPropertiesDialog::MailingListFolderPropertiesDialog( QWidget* p
   }
   groupLayout->addWidget( handleButton, 6, 2 );
 
-#if KDE_IS_VERSION( 4, 5, 74 )
   mEditList = new KEditListWidget( mlGroup );
-#else
-  mEditList = new KEditListBox( mlGroup );
-#endif
   mEditList->setEnabled( false );
   groupLayout->addWidget( mEditList, 7, 0, 1, 4 );
 
@@ -234,7 +226,7 @@ void MailingListFolderPropertiesDialog::slotDetectMailingList()
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolder->collection(), this );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->fetchScope().fetchFullPayload();
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
   }
   else {
     mMLId->setText( (mMailingList.id().isEmpty() ? i18n("Not available.") : mMailingList.id() ) );

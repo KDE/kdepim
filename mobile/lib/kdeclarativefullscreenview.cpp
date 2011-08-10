@@ -64,6 +64,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   m_qmlFileName( qmlFileName )
 {
 #ifdef Q_OS_WINCE
+  closeAllFrontends( qmlFileName );
   RotateTo270Degrees();
 #endif
 #ifndef Q_OS_WIN
@@ -151,7 +152,7 @@ void KDeclarativeFullScreenView::delayedInit()
   mActionCollection->addAction( QLatin1String( "close" ), action );
 
   action = new KAction( i18n( "Full Shutdown" ), this );
-  connect( action, SIGNAL( triggered() ), SLOT( closeAkonadi() ) );
+  connect( action, SIGNAL(triggered()), SLOT(closeAkonadi()) );
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 
   action = new KAction( i18n( "Minimize Window" ), this );
@@ -201,6 +202,27 @@ void KDeclarativeFullScreenView::closeAkonadi()
 
   Akonadi::ServerManager::self()->stop();
   close();
+}
+
+void KDeclarativeFullScreenView::closeAllFrontends(const QString &qmlFileName)
+{
+  QStringList applications;
+  applications << QLatin1String( "notes-mobile" )
+               << QLatin1String( "tasks-mobile" )
+               << QLatin1String( "kmail-mobile" )
+               << QLatin1String( "kaddressbook-mobile" )
+               << QLatin1String( "korganizer-mobile" );
+  if ( !applications.contains( qmlFileName + QLatin1String( "-mobile" ) ) &&
+       !applications.contains( qmlFileName ) ){
+    return;
+  }
+  foreach( const QString &app, applications ) {
+    if ( app.startsWith( qmlFileName ) )
+      continue;
+    QDBusConnection::sessionBus().call( QDBusMessage::createMethodCall(
+          QLatin1String( "org.kde." ) + app, QLatin1String( "/MainApplication" ),
+          QLatin1String( "org.kde.KApplication" ), QLatin1String( "quit" ) ), QDBus::NoBlock );
+  }
 }
 
 #ifdef Q_OS_WINCE

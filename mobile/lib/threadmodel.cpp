@@ -237,17 +237,17 @@ void ThreadModelPrivate::populateThreadModel()
 ThreadModel::ThreadModel( QAbstractItemModel *emailModel, QObject *parent )
   : QAbstractListModel( parent ), d_ptr( new ThreadModelPrivate( emailModel, this ) )
 {
-  connect( emailModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-           this, SLOT( slotRowsInserted( QModelIndex, int, int ) ) );
+  connect( emailModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(slotRowsInserted(QModelIndex,int,int)) );
 
-  connect( emailModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
-           this, SLOT( slotRowsRemoved( QModelIndex, int, int ) ) );
+  connect( emailModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           this, SLOT(slotRowsRemoved(QModelIndex,int,int)) );
 
-  connect( emailModel, SIGNAL( layoutChanged() ),
-           this, SLOT( slotResetModel() ) );
+  connect( emailModel, SIGNAL(layoutChanged()),
+           this, SLOT(slotResetModel()) );
 
-  connect( emailModel, SIGNAL( modelReset() ),
-           this, SLOT( slotResetModel() ) );
+  connect( emailModel, SIGNAL(modelReset()),
+           this, SLOT(slotResetModel()) );
 
   QHash<int, QByteArray> roleNames = emailModel->roleNames();
   roleNames.insert( ThreadSizeRole, "threadSize" );
@@ -306,7 +306,7 @@ QVariant ThreadModel::data( const QModelIndex &index, int role ) const
 
     if ( role == Qt::DisplayRole ) {
       const QString displayString = firstMailIndex.data( role ).toString();
-      return "(" + QString::number( rangeSize ) + ")" + displayString;
+      return QString("(" + QString::number( rangeSize ) + ")" + displayString);
     }
 
     return firstMailIndex.data( role );

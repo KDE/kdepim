@@ -362,14 +362,6 @@ not. And additionally as an edit of current, or as a new post.</para>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Clear Cached Images</guimenuitem>
-</menuchoice></term>
-<listitem><para>Clear current image cache.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>
 </shortcut>

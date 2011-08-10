@@ -86,10 +86,10 @@ View::View( Widget *pParent )
   : QTreeView( pParent ), d( new Private( this, pParent ) )
 {
   d->mSaveThemeColumnStateTimer = new QTimer();
-  connect( d->mSaveThemeColumnStateTimer, SIGNAL( timeout() ), this, SLOT( saveThemeColumnState() ) );
+  connect( d->mSaveThemeColumnStateTimer, SIGNAL(timeout()), this, SLOT(saveThemeColumnState()) );
 
   d->mApplyThemeColumnsTimer = new QTimer();
-  connect( d->mApplyThemeColumnsTimer, SIGNAL( timeout() ), this, SLOT( applyThemeColumns() ) );
+  connect( d->mApplyThemeColumnsTimer, SIGNAL(timeout()), this, SLOT(applyThemeColumns()) );
 
   setItemDelegate( d->mDelegate );
   setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
@@ -100,10 +100,10 @@ View::View( Widget *pParent )
   viewport()->setAcceptDrops( true );
 
   header()->setContextMenuPolicy( Qt::CustomContextMenu );
-  connect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
-           SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
-  connect( header(), SIGNAL( sectionResized( int, int, int ) ),
-           SLOT( slotHeaderSectionResized( int, int ,int ) ) );
+  connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
+           SLOT(slotHeaderContextMenuRequested(QPoint)) );
+  connect( header(), SIGNAL(sectionResized(int,int,int)),
+           SLOT(slotHeaderSectionResized(int,int,int)) );
 
   header()->setClickable( true );
   header()->setResizeMode( QHeaderView::Interactive );
@@ -113,17 +113,17 @@ View::View( Widget *pParent )
   d->mModel = new Model( this );
   setModel( d->mModel );
 
-  connect( d->mModel, SIGNAL( statusMessage( const QString & ) ),
-           pParent, SIGNAL( statusMessage( const QString & ) ) );
+  connect( d->mModel, SIGNAL(statusMessage(QString)),
+           pParent, SIGNAL(statusMessage(QString)) );
 
-  //connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex &, const QModelIndex & ) ),
-  //         this, SLOT( slotCurrentIndexChanged( const QModelIndex &, const QModelIndex & ) ) );
-  connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-           this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ),
+  //connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+  //         this, SLOT(slotCurrentIndexChanged(QModelIndex,QModelIndex)) );
+  connect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
            Qt::UniqueConnection );
 
   // as in KDE3, when a root-item of a message thread is expanded, expand all children
-  connect( this, SIGNAL( expanded ( const QModelIndex & ) ), this, SLOT( expandFullThread( const QModelIndex & ) ) );
+  connect( this, SIGNAL(expanded(QModelIndex)), this, SLOT(expandFullThread(QModelIndex)) );
 }
 
 View::~View()
@@ -158,12 +158,12 @@ void View::ignoreCurrentChanges( bool ignore )
 {
   if ( ignore )
   {
-    disconnect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-                this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+    disconnect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
     viewport()->setUpdatesEnabled( false );
   } else {
-    connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-             this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ),
+    connect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+             this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
              Qt::UniqueConnection );
     viewport()->setUpdatesEnabled( true );
   }
@@ -731,8 +731,8 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
   act->setData( QVariant( static_cast< int >( gHeaderContextMenuDisplayToolTipsId ) ) );
 
   QObject::connect(
-      &menu, SIGNAL( triggered( QAction * ) ),
-      this, SLOT( slotHeaderContextMenuTriggered( QAction *  ) )
+      &menu, SIGNAL(triggered(QAction*)),
+      this, SLOT(slotHeaderContextMenuTriggered(QAction*))
     );
 
   menu.addSeparator();
@@ -800,22 +800,28 @@ void View::slotHeaderContextMenuTriggered( QAction * act )
   applyThemeColumns();
 }
 
-MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
+Item* View::currentItem() const
 {
   QModelIndex idx = currentIndex();
   if ( !idx.isValid() )
     return 0;
   Item * it = static_cast< Item * >( idx.internalPointer() );
   Q_ASSERT( it );
-  if ( it->type() != Item::Message )
+  return it;
+}
+
+MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
+{
+  Item *it = currentItem();
+  if ( !it || ( it->type() != Item::Message ) )
     return 0;
 
   if ( selectIfNeeded )
   {
     // Keep things coherent, if the user didn't select it, but acted on it via
     // a shortcut, do select it now.
-    if ( !selectionModel()->isSelected( idx ) )
-      selectionModel()->select( idx, QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
+    if ( !selectionModel()->isSelected( currentIndex() ) )
+      selectionModel()->select( currentIndex(), QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
   }
 
   return static_cast< MessageItem * >( it );
@@ -949,24 +955,32 @@ void View::Private::expandFullThread( const QModelIndex & index )
 
 void View::setCurrentThreadExpanded( bool expand )
 {
-  MessageItem * message = currentMessageItem();
-  if ( !message )
+  Item *it = currentItem();
+  if (!it)
     return;
 
-  while ( message->parent() )
-  {
-    if ( message->parent()->type() != Item::Message )
-      break;
-    message = static_cast< MessageItem * >( message->parent() );
-  }
+  if ( it->type() == Item::GroupHeader ) {
+    setExpanded( currentIndex(), expand );
+  } else if ( it->type() == Item::Message ) {
+    MessageItem * message = static_cast< MessageItem *>( it );
+    if ( !message )
+      return;
 
-  if ( expand )
-  {
-    setExpanded( d->mModel->index( message, 0 ), true );
-    setChildrenExpanded( message, true );
-  } else {
-    setChildrenExpanded( message, false );
-    setExpanded( d->mModel->index( message, 0 ), false );
+    while ( message->parent() )
+    {
+      if ( message->parent()->type() != Item::Message )
+        break;
+      message = static_cast< MessageItem * >( message->parent() );
+    }
+
+    if ( expand )
+    {
+      setExpanded( d->mModel->index( message, 0 ), true );
+      setChildrenExpanded( message, true );
+    } else {
+      setChildrenExpanded( message, false );
+      setExpanded( d->mModel->index( message, 0 ), false );
+    }
   }
 }
 
@@ -1552,20 +1566,20 @@ void View::fillViewMenu( KMenu * menu )
   KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
   sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
   menu->addMenu( sortingMenu );
-  connect( sortingMenu, SIGNAL( aboutToShow() ),
-           d->mWidget, SLOT( sortOrderMenuAboutToShow() ) );
+  connect( sortingMenu, SIGNAL(aboutToShow()),
+           d->mWidget, SLOT(sortOrderMenuAboutToShow()) );
 
   KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
   aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
   menu->addMenu( aggregationMenu );
-  connect( aggregationMenu, SIGNAL( aboutToShow() ),
-           d->mWidget, SLOT( aggregationMenuAboutToShow() ) );
+  connect( aggregationMenu, SIGNAL(aboutToShow()),
+           d->mWidget, SLOT(aggregationMenuAboutToShow()) );
 
   KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
   themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
   menu->addMenu( themeMenu );
-  connect( themeMenu, SIGNAL( aboutToShow() ),
-           d->mWidget, SLOT( themeMenuAboutToShow() ) );
+  connect( themeMenu, SIGNAL(aboutToShow()),
+           d->mWidget, SLOT(themeMenuAboutToShow()) );
 }
 
 bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )
@@ -2107,15 +2121,22 @@ void View::mousePressEvent( QMouseEvent * e )
       switch ( e->button() )
       {
         case Qt::LeftButton:
-          if ( !d->mDelegate->hitContentItem() )
-            return;
-
-          if ( d->mDelegate->hitContentItem()->type() == Theme::ContentItem::ExpandedStateIcon )
           {
-            if ( groupHeaderItem->childItemCount() > 0 )
+            QModelIndex index = d->mModel->index( groupHeaderItem, 0 );
+
+            if ( index.isValid() )
+              setCurrentIndex( index );
+
+            if ( !d->mDelegate->hitContentItem() )
+              return;
+
+            if ( d->mDelegate->hitContentItem()->type() == Theme::ContentItem::ExpandedStateIcon )
             {
-              // toggle expanded state
-              setExpanded( d->mDelegate->hitIndex(), !isExpanded( d->mDelegate->hitIndex() ) );
+              if ( groupHeaderItem->childItemCount() > 0 )
+              {
+                // toggle expanded state
+                setExpanded( d->mDelegate->hitIndex(), !isExpanded( d->mDelegate->hitIndex() ) );
+              }
             }
           }
         break;
@@ -2151,6 +2172,33 @@ void View::mouseMoveEvent( QMouseEvent * e )
     return;
 
   d->mWidget->viewStartDragRequest();
+}
+
+void View::contextMenuEvent( QContextMenuEvent * e )
+{
+  QModelIndex index = currentIndex();
+  if ( index.isValid() ) {
+    QRect indexRect = this->visualRect( index );
+    QPoint pos;
+
+    if ( ( indexRect.isValid() ) && ( indexRect.bottom() > 0 ) ) {
+      if ( indexRect.bottom() > viewport()->height() ) {
+        if ( indexRect.top() <= viewport()->height() ) {
+          pos = indexRect.topLeft();
+        }
+      } else {
+        pos = indexRect.bottomLeft();
+      }
+    }
+
+    Item *item = static_cast< Item * >( index.internalPointer() );
+    if ( item ) {
+      if ( item->type() == Item::GroupHeader )
+        d->mWidget->viewGroupHeaderContextPopupRequest( static_cast< GroupHeaderItem * >( item ), viewport()->mapToGlobal( pos ) );
+      else if ( !selectionEmpty() )
+        d->mWidget->viewMessageListContextPopupRequest( selectionAsMessageItemList(), viewport()->mapToGlobal( pos ) );
+    }
+  }
 }
 
 void View::dragEnterEvent( QDragEnterEvent * e )
@@ -2575,6 +2623,16 @@ void View::slotCollapseAllGroups()
 void View::slotExpandAllGroups()
 {
   setAllGroupsExpanded( true );
+}
+
+void View::slotCollapseCurrentItem()
+{
+  setCurrentThreadExpanded( false );
+}
+
+void View::slotExpandCurrentItem()
+{
+  setCurrentThreadExpanded( true );
 }
 
 void View::focusQuickSearch()

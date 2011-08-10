@@ -114,7 +114,7 @@ MimeTreeModel::MimeTreeModel(QObject * parent) :
 {
 }
 
-MimeTreeModel::~ MimeTreeModel()
+MimeTreeModel::~MimeTreeModel()
 {
   delete d;
 }
@@ -217,6 +217,12 @@ QVariant MimeTreeModel::data(const QModelIndex & index, int role) const
     if ( !topLevelMsg )
       return false;
     return topLevelMsg->mainBodyPart() == content;
+  }
+  if ( role == AlternativeBodyPartRole ) {
+    KMime::Message* topLevelMsg = dynamic_cast<KMime::Message*>( d->root );
+    if ( !topLevelMsg )
+      return false;
+    return topLevelMsg->mainBodyPart( content->contentType()->mimeType() ) == content;
   }
   return QVariant();
 }

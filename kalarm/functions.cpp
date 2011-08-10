@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -68,6 +68,7 @@ using namespace KCal;
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kauth.h>
 #include <ksystemtimezone.h>
 #include <kstandardguiitem.h>
 #include <kstandardshortcut.h>
@@ -91,6 +92,7 @@ using namespace KCal;
 #include <QRegExp>
 #include <QDesktopWidget>
 #include <QtDBus/QtDBus>
+#include <QTimer>
 #include <qglobal.h>
 
 #ifdef USE_AKONADI
@@ -153,14 +155,9 @@ MainWindow* displayMainWindowSelected(const QString& eventId)
     else
     {
         // There is already a main window, so make it the active window
-        bool visible = win->isVisible();
-        if (visible)
-            win->hide();        // in case it's on a different desktop
-        if (!visible  ||  win->isMinimized())
-        {
-            win->setWindowState(win->windowState() & ~Qt::WindowMinimized);
-            win->show();
-        }
+        win->hide();        // in case it's on a different desktop
+        win->setWindowState(win->windowState() & ~Qt::WindowMinimized);
+        win->show();
         win->raise();
         win->activateWindow();
     }
@@ -209,22 +206,6 @@ KToggleAction* createSpreadWindowsAction(QObject* parent)
     QObject::connect(action, SIGNAL(triggered(bool)), theApp(), SLOT(spreadWindows(bool)));
     // The following line ensures that all instances are kept in the same state
     QObject::connect(theApp(), SIGNAL(spreadWindowsToggled(bool)), action, SLOT(setChecked(bool)));
-    return action;
-}
-
-/******************************************************************************
-* Create a New From Template action.
-*/
-TemplateMenuAction* createNewFromTemplateAction(const QString& label, KActionCollection* actions, const QString& name)
-{
-    TemplateMenuAction* action = new TemplateMenuAction(KIcon(QLatin1String("document-new-from-template")), label, actions, name);
-#ifdef USE_AKONADI
-    QObject::connect(TemplateListModel::all(), SIGNAL(haveEventsStatus(bool)), action, SLOT(setEnabled(bool)));
-    action->setEnabled(TemplateListModel::all()->haveEvents());
-#else
-    QObject::connect(EventListModel::templates(), SIGNAL(haveEventsStatus(bool)), action, SLOT(setEnabled(bool)));
-    action->setEnabled(EventListModel::templates()->haveEvents());
-#endif
     return action;
 }
 
@@ -548,7 +529,7 @@ UpdateStatus modifyEvent(KAEvent& oldEvent, KAEvent& newEvent, QWidget* msgParen
 
 #ifndef USE_AKONADI
                 // Update the window lists
-                EventListModel::alarms()->addEvent(&newEvent);
+                EventListModel::alarms()->addEvent(newev);
 #endif
             }
         }
@@ -652,6 +633,8 @@ UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParen
     int warnKOrg = 0;
     UpdateStatus status = UPDATE_OK;
     AlarmCalendar* cal = AlarmCalendar::resources();
+    bool deleteWakeFromSuspendAlarm = false;
+    QString wakeFromSuspendId = checkRtcWakeConfig().value(0);
     for (int i = 0, end = events.count();  i < end;  ++i)
     {
         // Save the event details in the calendar file, and get the new event ID
@@ -700,6 +683,9 @@ UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParen
             ++warnErr;
         }
 
+        if (id == wakeFromSuspendId)
+            deleteWakeFromSuspendAlarm = true;
+
         // Remove "Don't show error messages again" for this alarm
         setDontShowErrors(id);
     }
@@ -713,6 +699,11 @@ UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParen
     }
     if (status != UPDATE_OK  &&  msgParent)
         displayUpdateError(msgParent, status, ERR_DELETE, warnErr, warnKOrg, showKOrgErr);
+
+    // Remove any wake-from-suspend scheduled for a deleted alarm
+    if (deleteWakeFromSuspendAlarm  &&  !wakeFromSuspendId.isEmpty())
+        cancelRtcWake(msgParent, wakeFromSuspendId);
+
     return status;
 }
 
@@ -949,6 +940,8 @@ UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent
         return UPDATE_OK;
     UpdateStatus status = UPDATE_OK;
     AlarmCalendar* cal = AlarmCalendar::resources();
+    bool deleteWakeFromSuspendAlarm = false;
+    QString wakeFromSuspendId = checkRtcWakeConfig().value(0);
     for (int i = 0, end = events.count();  i < end;  ++i)
     {
 #ifdef USE_AKONADI
@@ -960,6 +953,9 @@ UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent
         &&  enable != event->enabled())
         {
             event->setEnabled(enable);
+
+            if (!enable  &&  event->id() == wakeFromSuspendId)
+                deleteWakeFromSuspendAlarm = true;
 
             // Update the event in the calendar file
             KAEvent* newev = cal->updateEvent(event);
@@ -988,6 +984,11 @@ UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent
         status = SAVE_FAILED;
     if (status != UPDATE_OK  &&  msgParent)
         displayUpdateError(msgParent, status, ERR_ADD, events.count(), 0);
+
+    // Remove any wake-from-suspend scheduled for a disabled alarm
+    if (deleteWakeFromSuspendAlarm  &&  !wakeFromSuspendId.isEmpty())
+        cancelRtcWake(msgParent, wakeFromSuspendId);
+
     return status;
 }
 
@@ -1108,11 +1109,7 @@ void displayKOrgUpdateError(QWidget* parent, UpdateError code, UpdateStatus korg
 */
 void editNewAlarm(EditAlarmDlg::Type type, QWidget* parent)
 {
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<EditAlarmDlg> editDlg = EditAlarmDlg::create(false, type, parent);
-    execNewAlarmDlg(editDlg);
+    execNewAlarmDlg(EditAlarmDlg::create(false, type, parent));
 }
 
 /******************************************************************************
@@ -1141,10 +1138,7 @@ void editNewAlarm(KAEvent::Action action, QWidget* parent, const AlarmText* text
         default:
             return;
     }
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<EditAlarmDlg> editDlg = EditAlarmDlg::create(false, type, parent);
+    EditAlarmDlg* editDlg = EditAlarmDlg::create(false, type, parent);
     if (setAction  ||  text)
         editDlg->setAction(action, *text);
     execNewAlarmDlg(editDlg);
@@ -1156,50 +1150,71 @@ void editNewAlarm(KAEvent::Action action, QWidget* parent, const AlarmText* text
 */
 void editNewAlarm(const KAEvent* preset, QWidget* parent)
 {
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<EditAlarmDlg> editDlg = EditAlarmDlg::create(false, preset, true, parent);
-    execNewAlarmDlg(editDlg);
+    execNewAlarmDlg(EditAlarmDlg::create(false, preset, true, parent));
 }
 
 /******************************************************************************
 * Common code for editNewAlarm() variants.
 */
-void execNewAlarmDlg(EditAlarmDlg* editDlg, bool alreadyExecuted)
+void execNewAlarmDlg(EditAlarmDlg* editDlg)
 {
-    if (alreadyExecuted  ||  editDlg->exec() == QDialog::Accepted)
+    // Create a PrivateNewAlarmDlg parented by editDlg.
+    // It will be deleted when editDlg is closed.
+    new PrivateNewAlarmDlg(editDlg);
+    editDlg->show();
+    editDlg->raise();
+    editDlg->activateWindow();
+}
+
+PrivateNewAlarmDlg::PrivateNewAlarmDlg(EditAlarmDlg* dlg)
+    : QObject(dlg)
+{
+    connect(dlg, SIGNAL(accepted()), SLOT(okClicked()));
+}
+
+/******************************************************************************
+* Called when the dialogue is accepted (e.g. by clicking the OK button).
+* Creates the event specified in the instance's dialogue.
+*/
+void PrivateNewAlarmDlg::okClicked()
+{
+    accept(static_cast<EditAlarmDlg*>(parent()));
+}
+
+/******************************************************************************
+* Creates the event specified in a given dialogue.
+*/
+void PrivateNewAlarmDlg::accept(EditAlarmDlg* editDlg)
+{
+    KAEvent event;
+#ifdef USE_AKONADI
+    Collection calendar;
+#else
+    AlarmResource* calendar;
+#endif
+    editDlg->getEvent(event, calendar);
+
+    // Add the alarm to the displayed lists and to the calendar file
+#ifdef USE_AKONADI
+    UpdateStatus status = addEvent(event, &calendar, editDlg);
+#else
+    UpdateStatus status = addEvent(event, calendar, editDlg);
+#endif
+    switch (status)
     {
-        KAEvent event;
-#ifdef USE_AKONADI
-        Collection calendar;
-#else
-        AlarmResource* calendar;
-#endif
-        editDlg->getEvent(event, calendar);
-
-        // Add the alarm to the displayed lists and to the calendar file
-#ifdef USE_AKONADI
-        UpdateStatus status = addEvent(event, &calendar, editDlg);
-#else
-        UpdateStatus status = addEvent(event, calendar, editDlg);
-#endif
-        switch (status)
-        {
-            case UPDATE_FAILED:
-                return;
-            case UPDATE_KORG_ERR:
-            case UPDATE_KORG_ERRSTART:
-            case UPDATE_KORG_FUNCERR:
-                displayKOrgUpdateError(editDlg, ERR_ADD, status, 1);
-                break;
-            default:
-                break;
-        }
-        Undo::saveAdd(event, calendar);
-
-        outputAlarmWarnings(editDlg, &event);
+        case UPDATE_FAILED:
+            return;
+        case UPDATE_KORG_ERR:
+        case UPDATE_KORG_ERRSTART:
+        case UPDATE_KORG_FUNCERR:
+            displayKOrgUpdateError(editDlg, ERR_ADD, status, 1);
+            break;
+        default:
+            break;
     }
+    Undo::saveAdd(event, calendar);
+
+    outputAlarmWarnings(editDlg, &event);
 }
 
 /******************************************************************************
@@ -1234,6 +1249,115 @@ void editNewTemplate(EditAlarmDlg::Type type, QWidget* parent)
 void editNewTemplate(const KAEvent* preset, QWidget* parent)
 {
     ::editNewTemplate(EditAlarmDlg::Type(0), preset, parent);
+}
+
+/******************************************************************************
+* Check the config as to whether there is a wake-on-suspend alarm pending, and
+* if so, delete it from the config if it has expired.
+* If 'checkExists' is true, the config entry will only be returned if the
+* event exists.
+* Reply = config entry: [0] = event ID, [1] = trigger time (time_t).
+*       = empty list if none or expired.
+*/
+QStringList checkRtcWakeConfig(bool checkEventExists)
+{
+    KConfigGroup config(KGlobal::config(), "General");
+    QStringList params = config.readEntry("RtcWake", QStringList());
+    if (params.count() == 2  &&  params[1].toUInt() > KDateTime::currentUtcDateTime().toTime_t())
+    {
+        if (checkEventExists  &&  !AlarmCalendar::getEvent(params[0]))
+            return QStringList();
+        return params;                   // config entry is valid
+    }
+    if (!params.isEmpty())
+    {
+        config.deleteEntry("RtcWake");   // delete the expired config entry
+        config.sync();
+    }
+    return QStringList();
+}
+
+/******************************************************************************
+* Delete any wake-on-suspend alarm from the config.
+*/
+void deleteRtcWakeConfig()
+{
+    KConfigGroup config(KGlobal::config(), "General");
+    config.deleteEntry("RtcWake");
+    config.sync();
+}
+
+/******************************************************************************
+* Delete any wake-on-suspend alarm, optionally only for a specified event.
+*/
+void cancelRtcWake(QWidget* msgParent, const QString& eventId)
+{
+    QStringList wakeup = checkRtcWakeConfig();
+    if (!wakeup.isEmpty()  &&  (eventId.isEmpty() || wakeup[0] == eventId))
+    {
+        Private::instance()->mMsgParent = msgParent ? msgParent : MainWindow::mainMainWindow();
+        QTimer::singleShot(0, Private::instance(), SLOT(cancelRtcWake()));
+    }
+}
+
+/******************************************************************************
+* Delete any wake-on-suspend alarm.
+*/
+void Private::cancelRtcWake()
+{
+    // setRtcWakeTime will only work with a parent window specified
+    setRtcWakeTime(0, mMsgParent);
+    deleteRtcWakeConfig();
+    KMessageBox::information(mMsgParent, i18nc("info", "The scheduled Wake from Suspend has been cancelled."));
+}
+
+/******************************************************************************
+* Set the wakeup time for the system.
+* Set 'triggerTime' to zero to cancel the wakeup.
+* Reply = true if successful.
+*/
+bool setRtcWakeTime(unsigned triggerTime, QWidget* parent)
+{
+    QVariantMap args;
+    args["time"] = triggerTime;
+    KAuth::Action action("org.kde.kalarmrtcwake.settimer");
+    action.setHelperID("org.kde.kalarmrtcwake");
+    action.setParentWidget(parent);
+    action.setArguments(args);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+    {
+        QString errmsg = reply.errorDescription();
+        kDebug() << "Error code=" << reply.errorCode() << errmsg;
+        if (errmsg.isEmpty())
+        {
+            int errcode = reply.errorCode();
+            switch (reply.type())
+            {
+                case KAuth::ActionReply::KAuthError:
+                    kDebug() << "Authorisation error:" << errcode;
+                    switch (errcode)
+                    {
+                        case KAuth::ActionReply::AuthorizationDenied:
+                        case KAuth::ActionReply::UserCancelled:
+                            return false;   // the user should already know about this
+                        default:
+                            break;
+                    }
+                    break;
+                case KAuth::ActionReply::HelperError:
+                    kDebug() << "Helper error:" << errcode;
+                    errcode += 100;    // make code distinguishable from KAuthError type
+                    break;
+                default:
+                    break;
+            }
+            errmsg = i18nc("@info", "Error obtaining authorization (%1)", errcode);
+        }
+        KMessageBox::information(parent, errmsg);
+        return false;
+    }
+    return true;
 }
 
 } // namespace KAlarm
@@ -1314,7 +1438,7 @@ void editAlarm(KAEvent* event, QWidget* parent)
         {
             // Event has been deleted while the user was editing the alarm,
             // so treat it as a new alarm.
-            execNewAlarmDlg(editDlg, true);
+            PrivateNewAlarmDlg().accept(editDlg);
             return;
         }
         KAEvent newEvent;

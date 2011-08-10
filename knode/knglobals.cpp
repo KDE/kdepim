@@ -29,6 +29,7 @@
 
 #include <kconfig.h>
 #include <kglobal.h>
+#include <KDebug>
 #include <kiconloader.h>
 #include <KPIMIdentities/IdentityManager>
 
@@ -185,4 +186,47 @@ KNode::Settings * KNGlobals::settings( )
     mSettings->readConfig();
   }
   return mSettings;
+}
+
+void KNGlobals::reset()
+{
+  delete mMemManager;
+  mMemManager = 0;
+  kDebug() << "Memory Manager deleted";
+
+  delete mScoreManager;
+  mScoreManager = 0;
+  kDebug() << "Score manager deleted";
+
+  delete mFolManager;
+  mFolManager = 0;
+  kDebug() << "Folder Manager deleted";
+
+  delete mFilManager;
+  mFilManager = 0;
+  kDebug() << "Filter Manager deleted";
+
+  delete mArtManager;
+  mArtManager = 0;
+  kDebug() << "Article Manager deleted";
+
+  delete mGrpManager;
+  mGrpManager = 0;
+  kDebug() << "Group Manager deleted";
+
+  delete mAccManager;
+  mAccManager = 0;
+  kDebug() << "Account Manager deleted";
+
+  delete mCfgManager;
+  mCfgManager = 0;
+  kDebug() << "Config deleted";
+
+  delete mScheduler;
+  mScheduler = 0;
+  kDebug() << "Scheduler deleted";
+
+  delete mArticleFactory;
+  mArticleFactory = 0;
+  kDebug() <<" Article Factory deleted";
 }

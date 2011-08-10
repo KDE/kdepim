@@ -43,7 +43,7 @@ int main( int argc, char **argv )
   SetCursor( LoadCursor( NULL, IDC_WAIT ) );
 #endif
   const QByteArray& ba = QByteArray( "kaddressbook-mobile" );
-  const KLocalizedString name = ki18n( "KAddressBook Mobile" );
+  const KLocalizedString name = ki18n( "Kontact Touch Contacts" );
 
   IncidenceEditorNG::EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig ); //FIXME: use our own config for contacts
 

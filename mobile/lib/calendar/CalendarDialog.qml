@@ -169,7 +169,7 @@ Dialog {
           KPIM.Button2 {
             id: calendarkWidgetCancel
             buttonText: KDE.i18n( "Cancel" );
-            width: 100
+            width: 130
             onClicked: {
               calendarWidget.collapse()
               //### + reset widget
@@ -178,7 +178,7 @@ Dialog {
           KPIM.Button2 {
             id: calendarWidgetOk
             buttonText: KDE.i18n( "Ok" );
-            width: 100
+            width: 130
             onClicked: {
               calendarWidget.collapse()
               dateChanged( myCalendar.day, myCalendar.month, myCalendar.year )

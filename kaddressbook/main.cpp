@@ -44,6 +44,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "kabc" );
   KGlobal::locale()->insertCatalog( "libakonadi" );
   KGlobal::locale()->insertCatalog( "kabcakonadi" );
+  KGlobal::locale()->insertCatalog( "akonadicontact" );
 
   MainWindow *window = new MainWindow;
   window->show();

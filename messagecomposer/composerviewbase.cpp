@@ -52,7 +52,6 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
 
-#include <kdeversion.h>
 #include <KSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -66,6 +65,7 @@
 #include <recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
+
 
 static QStringList encodeIdn( const QStringList &emails )
 {
@@ -154,18 +154,18 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
 
   // If we are loading from a draft, load unexpanded aliases as well
   if( m_msg->hasHeader( "X-KMail-UnExpanded-To" ) ) {
-      QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-To" )->asUnicodeString().split( QLatin1String( "," ) );
-      foreach( QString addr, spl )
+      const QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-To" )->asUnicodeString().split( QLatin1String( "," ) );
+      foreach( const QString& addr, spl )
         m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::To );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-CC" ) ) {
-      QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-CC" )->asUnicodeString().split( QLatin1String( "," ) );
-      foreach( QString addr, spl )
+      const QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-CC" )->asUnicodeString().split( QLatin1String( "," ) );
+      foreach( const QString& addr, spl )
         m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Cc );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-BCC" ) ) {
-      QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-BCC" )->asUnicodeString().split( QLatin1String( "," ) );
-      foreach( QString addr, spl )
+      const QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-BCC" )->asUnicodeString().split( QLatin1String( "," ) );
+      foreach( const QString& addr, spl )
         m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Bcc );
   }
 
@@ -291,6 +291,11 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   readyForSending();
 }
 
+void Message::ComposerViewBase::setCustomHeader( const QMap<QByteArray, QString>&customHeader )
+{
+  m_customHeader = customHeader;
+}
+
 void Message::ComposerViewBase::readyForSending()
 {
   kDebug() << "Entering readyForSending";
@@ -311,7 +316,7 @@ void Message::ComposerViewBase::readyForSending()
   job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
   job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
   job->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotEmailAddressResolved( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotEmailAddressResolved(KJob*)) );
   job->start();
 }
 
@@ -340,15 +345,15 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
       }
     }
     QStringList unExpandedTo, unExpandedCc, unExpandedBcc;
-    foreach( QString exp, resolveJob->expandedTo() ) {
+    foreach( const QString &exp, resolveJob->expandedTo() ) {
       if( !mExpandedTo.contains( exp ) ) // this address was expanded, so save it explicitly
         unExpandedTo << exp;
     }
-    foreach( QString exp, resolveJob->expandedCc() ) {
+    foreach( const QString& exp, resolveJob->expandedCc() ) {
         if( !mExpandedCc.contains( exp ) )
         unExpandedCc << exp;
     }
-    foreach( QString exp, resolveJob->expandedBcc() ) {
+    foreach( const QString& exp, resolveJob->expandedBcc() ) {
       if( !mExpandedBcc.contains( exp ) ) // this address was expanded, so save it explicitly
         unExpandedBcc << exp;
     }
@@ -382,7 +387,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
     composer->addAttachmentParts( m_attachmentModel->attachments() );
 
-    connect( composer, SIGNAL( result( KJob*) ), this, SLOT( slotSendComposeResult( KJob* ) ) );
+    connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotSendComposeResult(KJob*)) );
     composer->start();
     kDebug() << "Started a composer for sending!";
 
@@ -606,7 +611,8 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-Link-Message" );
   if( m_msg->headerByType( "X-KMail-Link-Type" ) )
     extras << m_msg->headerByType( "X-KMail-Link-Type" );
-
+  if( m_msg->headerByType( "X-Face" ) )
+    extras << m_msg->headerByType( "X-Face" );
   infoPart->setExtraHeaders( extras );
 }
 
@@ -649,11 +655,11 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
 
 void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
 {
-  foreach( QByteArray address, msg->to()->addresses() )
+  foreach( const QByteArray& address, msg->to()->addresses() )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
-  foreach( QByteArray address, msg->cc()->addresses() )
+  foreach( const QByteArray& address, msg->cc()->addresses() )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
-  foreach( QByteArray address, msg->bcc()->addresses() )
+  foreach( const QByteArray& address, msg->bcc()->addresses() )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
 }
 
@@ -692,9 +698,15 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   fillQueueJobHeaders( qjob, message, infoPart );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );
-  message->assemble();
 
-  connect( qjob, SIGNAL( result(KJob*) ), this, SLOT( slotQueueResult( KJob* ) ) );
+  QMapIterator<QByteArray, QString> customHeader(m_customHeader);
+  while (customHeader.hasNext()) {
+     customHeader.next();
+     message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
+  }
+  message->assemble();
+  
+  connect( qjob, SIGNAL(result(KJob*)), this, SLOT(slotQueueResult(KJob*)) );
   m_pendingQueueJobs++;
   qjob->start();
 
@@ -775,8 +787,8 @@ void Message::ComposerViewBase::updateAutoSave()
   } else {
     if ( !m_autoSaveTimer ) {
       m_autoSaveTimer = new QTimer( this );
-      connect( m_autoSaveTimer, SIGNAL( timeout() ),
-               this, SLOT( autoSaveMessage() ) );
+      connect( m_autoSaveTimer, SIGNAL(timeout()),
+               this, SLOT(autoSaveMessage()) );
     }
     m_autoSaveTimer->start( m_autoSaveInterval );
   }
@@ -862,7 +874,7 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
   }
 }
 
-void Message::ComposerViewBase::writeAutoSaveToDisk( KMime::Message::Ptr message )
+void Message::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
 {
   const QString filename = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave/" ) +
     m_autoSaveUUID;
@@ -911,16 +923,13 @@ void Message::ComposerViewBase::writeAutoSaveToDisk( KMime::Message::Ptr message
 void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn )
 {
   Akonadi::Collection target;
-
-  // preinitialize with the default collections
-  if ( saveIn == MessageSender::SaveInTemplates ) {
-    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
-  } else {
-    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
-  }
-
-  // overwrite with identity specific collections if available
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->assemble();
+
+  Akonadi::Item item;
+  item.setMimeType( QLatin1String( "message/rfc822" ) );
+  item.setPayload( message );
   if ( !identity.isNull() ) { // we have a valid identity
     if ( saveIn == MessageSender::SaveInTemplates ) {
       if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
@@ -931,24 +940,38 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
         target = Akonadi::Collection( identity.drafts().toLongLong() );
       }
     }
+    Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( target, Akonadi::CollectionFetchJob::Base );
+    saveMessageJob->setProperty( "Akonadi::Item" , QVariant::fromValue( item )  );
+    QObject::connect( saveMessageJob, SIGNAL(result(KJob*)), this, SLOT(slotSaveMessage(KJob*)) );
+  } else {
+    // preinitialize with the default collections
+    if ( saveIn == MessageSender::SaveInTemplates ) {
+      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
+    } else {
+      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+    }
+    Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
+    connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
+    m_pendingQueueJobs++;
   }
+}
 
-  if ( !target.isValid() ) {
-    kWarning() << "No default collection for" << saveIn;
-    emit failed( i18n( "No default collection for %1", saveIn ) );
-//     setEnabled( true );
-    return;
+void Message::ComposerViewBase::slotSaveMessage( KJob* job )
+{
+  Akonadi::Collection target;
+  Akonadi::Item item = job->property( "Akonadi::Item" ).value<Akonadi::Item>();
+  if( job->error() ) {
+    if ( mSaveIn == MessageSender::SaveInTemplates ) {
+      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
+    } else {
+      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+    }
+  } else {
+    const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+    target = fetchJob->collections().first();
   }
-
-  // Store when the draft or template got saved.
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
-  message->assemble();
-
-  Akonadi::Item item;
-  item.setMimeType( QLatin1String( "message/rfc822" ) );
-  item.setPayload( message );
   Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
-  connect( create, SIGNAL( result( KJob* ) ), this, SLOT( slotCreateItemResult(KJob*) ) );
+  connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
   m_pendingQueueJobs++;
 }
 
@@ -1171,9 +1194,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
 
   m_editor->setRichTextSupport( KRichTextWidget::FullTextFormattingSupport |
                                KRichTextWidget::FullListSupport |
-#if KDE_IS_VERSION(4, 5, 60)
                                KRichTextWidget::SupportDirection |
-#endif
                                KRichTextWidget::SupportAlignment |
                                KRichTextWidget::SupportRuleLine |
                                KRichTextWidget::SupportHyperlinks );
@@ -1219,8 +1240,8 @@ void Message::ComposerViewBase::setFcc ( const Akonadi::Collection& fccCollectio
   }
   Akonadi::CollectionFetchJob * const checkFccCollectionJob =
     new Akonadi::CollectionFetchJob( fccCollection, Akonadi::CollectionFetchJob::Base );
-  connect( checkFccCollectionJob, SIGNAL( result( KJob* ) ),
-           SLOT( slotFccCollectionCheckResult( KJob* ) ) );
+  connect( checkFccCollectionJob, SIGNAL(result(KJob*)),
+           SLOT(slotFccCollectionCheckResult(KJob*)) );
 }
 
 void Message::ComposerViewBase::slotFccCollectionCheckResult( KJob* job )
@@ -1340,14 +1361,13 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
 
 bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords ) 
 {
+  if ( attachmentKeywords.isEmpty() )
+    return false;	  
   if ( m_attachmentModel->rowCount() > 0 ) {
     return false;
   }
 
   QStringList attachWordsList = attachmentKeywords;
-  if ( attachWordsList.isEmpty() ) {
-    return false;
-  }
 
   QRegExp rx ( QString::fromLatin1("\\b") +
                attachWordsList.join( QString::fromLatin1("\\b|\\b") ) +
@@ -1367,7 +1387,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
     QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
     QTextDocument *doc = m_editor->document();
     for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
-      QString line = it.text();
+      const QString line = it.text();
       gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
                  ( rx.indexIn( line ) >= 0 );
       if ( gotMatch ) {

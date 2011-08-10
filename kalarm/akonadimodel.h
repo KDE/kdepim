@@ -32,18 +32,20 @@
 #include <QQueue>
 
 namespace Akonadi {
+    class AgentInstance;
     class AgentInstanceCreateJob;
 }
 class QPixmap;
 class KJob;
 class DateTime;
+class CalendarMigrator;
 
 
 class AkonadiModel : public Akonadi::EntityTreeModel
 {
         Q_OBJECT
     public:
-        enum Change { Added, Deleted, Invalidated, Enabled, ReadOnly, WrongType, Location, Colour };
+        enum Change { Added, Deleted, Invalidated, Enabled, ReadOnly, AlarmTypes, WrongType, Location, Colour };
         enum {   // data columns
             // Item columns
             TimeColumn = 0, TimeToColumn, RepeatColumn, ColourColumn, TypeColumn, TextColumn,
@@ -51,13 +53,14 @@ class AkonadiModel : public Akonadi::EntityTreeModel
             ColumnCount
         };
         enum {   // additional data roles
-            // Collection and Item roles
-            EnabledRole = UserRole,    // true for enabled alarm, false for disabled
             // Collection roles
+            EnabledTypesRole = UserRole, // alarm types which are enabled for the collection
             BaseColourRole,            // background colour ignoring collection colour
             AlarmTypeRole,             // OR of event types which collection contains
             IsStandardRole,            // OR of event types which collection is standard for
+            KeepFormatRole,            // user has chosen not to update collection's calendar storage format
             // Item roles
+            EnabledRole,               // true for enabled alarm, false for disabled
             StatusRole,                // KAEvent::ACTIVE/ARCHIVED/TEMPLATE
             AlarmActionsRole,          // KAEvent::Actions
             AlarmActionRole,           // KAEvent::Action
@@ -88,6 +91,9 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         /** Get the tooltip for a collection. The collection's enabled status is
          *  evaluated for specified alarm types. */
         QString tooltip(const Akonadi::Collection&, KAlarm::CalEvent::Types) const;
+        /** Return the read-only status tooltip for a collection.
+          * A null string is returned if the collection is fully writable. */
+        static QString readOnlyTooltip(const Akonadi::Collection&);
 
         /** To be called when the command error status of an alarm has changed,
          *  to set in the Akonadi database and update the visual command error indications.
@@ -108,12 +114,6 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         Akonadi::Collection collectionById(Akonadi::Collection::Id) const;
         Akonadi::Collection collectionForItem(Akonadi::Item::Id) const;
         Akonadi::Collection collection(const KAEvent& e) const   { return collectionForItem(e.itemId()); }
-
-        /** Create a new collection after prompting the user for its configuration.
-         *  The signal collectionAdded() will be emitted once the collection is created.
-         *  @return creation job which was started, or null if error.
-         */
-        Akonadi::AgentInstanceCreateJob* addCollection(KAlarm::CalEvent::Type, QWidget* parent = 0);
 
         /** Remove a collection from Akonadi. The calendar file is not removed.
          *  @return true if a removal job has been scheduled.
@@ -155,27 +155,41 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         bool  deleteEvent(const KAEvent& event);
         bool  deleteEvent(Akonadi::Item::Id itemId);
 
-        static KAlarm::CalEvent::Types types(const Akonadi::Collection&);
+        /** Check whether a collection is stored in the current KAlarm calendar format. */
+        static bool isCompatible(const Akonadi::Collection&);
 
-        /** Check whether the alarm types in a local calendar correspond with a
-         *  Collection's mime types.
-         *  @return true if at least one alarm is the right type.
+        /** Return whether a collection is fully writable, i.e. with
+         *  create/delete/change rights and compatible with the current KAlarm
+         *  calendar format.
          */
-        static bool checkAlarmTypes(const Akonadi::Collection&, KCalCore::Calendar::Ptr&);
+        static bool isWritable(const Akonadi::Collection&);
+
+        /** Return whether a collection is fully writable, i.e. with
+         *  create/delete/change rights and compatible with the current KAlarm
+         *  calendar format.
+         *
+         *  @param format  If the reply is false, and the calendar is not read-only
+         *                 but its backend calendar storage format is not the
+         *                 current KAlarm format, @p format is set to the calendar
+         *                 format used by the backend. If the calendar is
+         *                 non-writable for any other reason, @p format is set
+         *                 to KAlarm::Calendar::Current.
+         */
+        static bool isWritable(const Akonadi::Collection&, KAlarm::Calendar::Compat& format);
+
+        static KAlarm::CalEvent::Types types(const Akonadi::Collection&);
 
         static QSize iconSize()  { return mIconSize; }
 
     signals:
-        /** Signal emitted when a collection creation job has completed.
-         *  Note that it may not yet have been added to the model.
-         */
-        void collectionAdded(Akonadi::AgentInstanceCreateJob*, bool success);
-
         /** Signal emitted when a collection has been added to the model. */
         void collectionAdded(const Akonadi::Collection&);
 
-        /** Signal emitted when a collection's enabled or read-only status has changed. */
-        void collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant& newValue);
+        /** Signal emitted when a collection's enabled or read-only status has changed.
+         *  @param inserted  true if the reason for the change is that the collection
+         *                   has been inserted into the model
+         */
+        void collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant& newValue, bool inserted);
 
         /** Signal emitted when events have been added to the model. */
         void eventsAdded(const AkonadiModel::EventList&);
@@ -210,8 +224,10 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         virtual int entityColumnCount(HeaderGroup) const;
 
     private slots:
-        void slotCollectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&);
+        void slotCollectionChanged(const Akonadi::Collection& c, const QSet<QByteArray>& attrNames)
+                       { setCollectionChanged(c, attrNames, false); }
         void slotCollectionRemoved(const Akonadi::Collection&);
+        void slotCollectionBeingCreated(const QString& path, bool finished);
         void slotUpdateTimeTo();
         void slotUpdateArchivedColour(const QColor&);
         void slotUpdateDisabledColour(const QColor&);
@@ -221,7 +237,6 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         void slotRowsAboutToBeRemoved(const QModelIndex& parent, int start, int end);
         void slotMonitoredItemChanged(const Akonadi::Item&, const QSet<QByteArray>&);
         void slotEmitEventChanged();
-        void addCollectionJobDone(KJob*);
         void modifyCollectionJobDone(KJob*);
         void itemJobDone(KJob*);
 
@@ -252,6 +267,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         QString   alarmTimeText(const DateTime&) const;
         QString   timeToAlarmText(const DateTime&) const;
         void      signalDataChanged(bool (*checkFunc)(const Akonadi::Item&), int startColumn, int endColumn, const QModelIndex& parent);
+        void      setCollectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&, bool rowInserted);
         void      queueItemModifyJob(const Akonadi::Item&);
         void      checkQueuedItemModifyJob(const Akonadi::Item&);
 #if 0
@@ -264,7 +280,6 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         QPixmap*  eventIcon(const KAEvent&) const;
         QString   whatsThisText(int column) const;
         EventList eventList(const QModelIndex& parent, int start, int end);
-        bool      setItemPayload(Akonadi::Item&, KAEvent&, const Akonadi::Collection&);
 
         static AkonadiModel*  mInstance;
         static QPixmap* mTextIcon;
@@ -276,14 +291,17 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         static int      mTimeHourPos;   // position of hour within time string, or -1 if leading zeroes included
 
         Akonadi::ChangeRecorder* mMonitor;
+        QMap<Akonadi::Collection::Id, KAlarm::CalEvent::Types> mCollectionAlarmTypes;  // last content mime types of each collection
         QMap<Akonadi::Collection::Id, Akonadi::Collection::Rights> mCollectionRights;  // last writable status of each collection
         QMap<Akonadi::Collection::Id, KAlarm::CalEvent::Types> mCollectionEnabled;  // last enabled mime types of each collection
         QMap<KJob*, CollJobData> mPendingCollectionJobs;  // pending collection creation/deletion jobs, with collection ID & name
         QMap<KJob*, CollTypeData> mPendingColCreateJobs;  // default alarm type for pending collection creation jobs
         QMap<KJob*, Akonadi::Item::Id> mPendingItemJobs;  // pending item creation/deletion jobs, with event ID
         QMap<Akonadi::Item::Id, Akonadi::Item> mItemModifyJobQueue;  // pending item modification jobs, invalid item = queue empty but job active
+        QList<QString>     mCollectionsBeingCreated;  // path names of new collections being created
         QList<Akonadi::Item::Id> mItemsBeingCreated;  // new items not fully initialised yet
         QList<Akonadi::Collection::Id> mCollectionsDeleting;  // collections currently being removed
+        QList<Akonadi::Collection::Id> mCollectionsDeleted;   // collections recently removed
         QQueue<Event>   mPendingEventChanges;   // changed events with changedEvent() signal pending
 };
 

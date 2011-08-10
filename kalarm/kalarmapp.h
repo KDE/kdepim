@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.h  -  the KAlarm application object
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -94,6 +94,9 @@ class KAlarmApp : public KUniqueApplication
     public slots:
         void               processQueue();
         void               setAlarmsEnabled(bool);
+#ifdef USE_AKONADI
+        void               atLoginEventAdded(const KAEvent&);
+#endif
         void               stopAudio();
         void               spreadWindows(bool);
         void               emailSent(KAMail::JobData&, const QStringList& errmsgs, bool copyerr = false);
@@ -172,6 +175,7 @@ class KAlarmApp : public KUniqueApplication
         bool               handleEvent(const QString& eventID, EventFunc);
         bool               rescheduleAlarm(KAEvent&, const KAAlarm&, bool updateCalAndDisplay, const KDateTime& nextDt = KDateTime());
         bool               cancelAlarm(KAEvent&, KAAlarm::Type, bool updateCalAndDisplay);
+        bool               cancelReminderAndDeferral(KAEvent&);
         ShellProcess*      doShellCommand(const QString& command, const KAEvent&, const KAAlarm*, int flags = 0, const QObject* receiver = 0, const char* slot = 0);
         QString            composeXTermCommand(const QString& command, const KAEvent&, const KAAlarm*, int flags, QString& tempScriptFile) const;
         QString            createTempScriptFile(const QString& command, bool insertShell, const KAEvent&, const KAAlarm&) const;

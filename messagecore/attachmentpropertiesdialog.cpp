@@ -81,8 +81,8 @@ void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part,
 void AttachmentPropertiesDialog::Private::polishUi()
 {
   // Update the icon when the selected mime type changes.
-  connect( ui.mimeType, SIGNAL( currentIndexChanged ( const QString& ) ),
-           q, SLOT( mimeTypeChanged( const QString& ) ) );
+  connect( ui.mimeType, SIGNAL(currentIndexChanged(QString)),
+           q, SLOT(mimeTypeChanged(QString)) );
 
   // Tweak the dialog, depending on whether it is read-only or not.
   if ( mReadOnly ) {
@@ -278,7 +278,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *co
   AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
   job->exec();
   if ( job->error() ) {
-    kError() << "AttachmentFromMimeContentJob failed.";
+    kError() << "AttachmentFromMimeContentJob failed."<<job->errorString();
   }
 
   const AttachmentPart::Ptr part = job->attachmentPart();

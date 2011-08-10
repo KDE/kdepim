@@ -197,7 +197,7 @@ KPrefsWidColor::KPrefsWidColor( KConfigSkeleton::ItemColor *item, QWidget *paren
   : mItem( item )
 {
   mButton = new KColorButton( parent );
-  connect( mButton, SIGNAL(changed(const QColor&)), SIGNAL(changed()) );
+  connect( mButton, SIGNAL(changed(QColor)), SIGNAL(changed()) );
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
   mLabel->setBuddy( mButton );
   QString toolTip = mItem->toolTip();
@@ -304,7 +304,7 @@ KPrefsWidTime::KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
   mTimeEdit = new KTimeEdit( parent );
   mLabel->setBuddy( mTimeEdit );
-  connect( mTimeEdit, SIGNAL(timeEdited(const QTime&)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeEdited(QTime)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
@@ -353,7 +353,7 @@ KPrefsWidDuration::KPrefsWidDuration( KConfigSkeleton::ItemDateTime *item,
   }
   mTimeEdit->setMinimumTime( QTime( 0, 1 ) ); // [1 min]
   mTimeEdit->setMaximumTime( QTime( 24, 0 ) ); // [24 hr]
-  connect( mTimeEdit, SIGNAL(timeEdited(const QTime&)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeEdited(QTime)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
@@ -392,7 +392,7 @@ KPrefsWidDate::KPrefsWidDate( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
   mDateEdit = new KDateEdit( parent );
   mLabel->setBuddy( mDateEdit );
-  connect( mDateEdit, SIGNAL(dateEdited(const QDate&)), SIGNAL(changed()) );
+  connect( mDateEdit, SIGNAL(dateEdited(QDate)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mDateEdit->setToolTip( toolTip );
@@ -525,7 +525,7 @@ KPrefsWidString::KPrefsWidString( KConfigSkeleton::ItemString *item, QWidget *pa
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
   mEdit = new KLineEdit( parent );
   mLabel->setBuddy( mEdit );
-  connect( mEdit, SIGNAL(textChanged(const QString&)), SIGNAL(changed()) );
+  connect( mEdit, SIGNAL(textChanged(QString)), SIGNAL(changed()) );
   mEdit->setEchoMode( echomode );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
@@ -578,7 +578,7 @@ KPrefsWidPath::KPrefsWidPath( KConfigSkeleton::ItemPath *item, QWidget *parent,
   mLabel->setBuddy( mURLRequester );
   mURLRequester->setMode( mode );
   mURLRequester->setFilter( filter );
-  connect( mURLRequester, SIGNAL(textChanged(const QString&)), SIGNAL(changed()) );
+  connect( mURLRequester, SIGNAL(textChanged(QString)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mURLRequester->setToolTip( toolTip );

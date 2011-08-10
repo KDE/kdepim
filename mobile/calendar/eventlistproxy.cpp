@@ -60,13 +60,13 @@ QVariant EventListProxy::data(const QModelIndex& index, int role) const
 void EventListProxy::setSourceModel( QAbstractItemModel *model )
 {
   if ( sourceModel() )
-    disconnect( sourceModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-                this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+    disconnect( sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
 
   ListProxy::setSourceModel( model );
 
-  connect( sourceModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+  connect( sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( Akonadi::EntityTreeModel::ItemIdRole, "itemId" );

@@ -48,8 +48,8 @@ AddMediaDialog::AddMediaDialog( QWidget *parent ) : KDialog( parent )
     this->resize( dialog->width(), dialog->height() );
     this->setWindowTitle( i18n("Attach media") );
 
-    connect( ui.radiobtnLocalUrl, SIGNAL( toggled( bool ) ),
-             ui.urlReqBrowse, SLOT( setEnabled(bool)) );
+    connect( ui.radiobtnLocalUrl, SIGNAL(toggled(bool)),
+             ui.urlReqBrowse, SLOT(setEnabled(bool)) );
     connect( ui.urlReqBrowse, SIGNAL(clicked(bool)), SLOT(slotSelectLocalFile()) );
     ui.urlReqLineEdit->setFocus();
     ui.urlReqLineEdit->setToolTip( i18n( "Type media path here." ) );
@@ -92,8 +92,8 @@ void AddMediaDialog::slotButtonClicked(int button)
 
                     KIO::MimetypeJob* typeJob = KIO::mimetype( mediaUrl, KIO::HideProgressInfo );
 
-                    connect( typeJob, SIGNAL( mimetype( KIO::Job *, const QString & ) ),
-                            this,  SLOT( slotRemoteFileTypeFound( KIO::Job *, const QString & ) ) );
+                    connect( typeJob, SIGNAL(mimetype(KIO::Job*,QString)),
+                            this,  SLOT(slotRemoteFileTypeFound(KIO::Job*,QString)) );
 
 //                     addOtherMediaAttributes();
 

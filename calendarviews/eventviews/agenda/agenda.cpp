@@ -1752,7 +1752,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
            SLOT(removeAgendaItem(AgendaItem::QPtr)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
-           SLOT(showAgendaItem(AgendaItem::QPtr )) );
+           SLOT(showAgendaItem(AgendaItem::QPtr)) );
 
   if ( YBottom <= YTop ) {
     kDebug() << "Text:" << agendaItem->text() << " YSize<0";
@@ -1797,10 +1797,10 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
 
   AgendaItem::QPtr agendaItem =
     new AgendaItem( d->mAgendaView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr )),
-           SLOT(removeAgendaItem(AgendaItem::QPtr )) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr )),
-           SLOT(showAgendaItem(AgendaItem::QPtr )) );
+  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
+           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
+  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
+           SLOT(showAgendaItem(AgendaItem::QPtr)) );
 
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
@@ -2068,22 +2068,27 @@ int Agenda::minimumHeight() const
 
 void Agenda::updateConfig()
 {
-  double oldGridSpacingY = d->mGridSpacingY;
+  const double oldGridSpacingY = d->mGridSpacingY;
 
-  d->mDesiredGridSpacingY = d->preferences()->hourSize();
-  if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
-    d->mDesiredGridSpacingY = 10;
-  }
+  if ( !d->mAllDayMode ) {
+    d->mDesiredGridSpacingY = d->preferences()->hourSize();
+    if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
+      d->mDesiredGridSpacingY = 10;
+    }
 
-  // make sure that there are not more than 24 per day
-  d->mGridSpacingY = static_cast<double>( height() ) / d->mRows;
-  if ( d->mGridSpacingY < d->mDesiredGridSpacingY ) {
-    d->mGridSpacingY = d->mDesiredGridSpacingY;
-  }
+    /*
+    // make sure that there are not more than 24 per day
+    d->mGridSpacingY = static_cast<double>( height() ) / d->mRows;
+    if ( d->mGridSpacingY < d->mDesiredGridSpacingY  || true) {
+      d->mGridSpacingY = d->mDesiredGridSpacingY;
+    }
+    */
 
-  //can be two doubles equal?, it's better to compare them with an epsilon
-  if ( fabs( oldGridSpacingY - d->mGridSpacingY ) > 0.1 ) {
-//    resizeContents( int( mGridSpacingX * mColumns ), int( mGridSpacingY * mRows ) );
+    //can be two doubles equal?, it's better to compare them with an epsilon
+    if ( fabs( oldGridSpacingY - d->mDesiredGridSpacingY ) > 0.1 ) {
+      d->mGridSpacingY = d->mDesiredGridSpacingY;
+      updateGeometry();
+    }
   }
 
   calculateWorkingHours();

@@ -79,6 +79,20 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     void setDefaultText( const QString &text );
 
     /**
+     * Returns whether the default text is always shown, even if there are
+     * no checked items.
+     */
+    bool alwaysShowDefaultText() const;
+
+    /**
+     * Sets if the default text should always be shown even if there are
+     * no checked items.
+     *
+     * Default is false.
+     */
+    void setAlwaysShowDefaultText( bool always );
+
+    /**
      * Returns wether or not the text will be squeezed to fit in the combo's line
      * edit. This property is false by default.
      *

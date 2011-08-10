@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2011 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -210,7 +210,7 @@ private:
     *
     * Otherwise use the format "mutt" calls "alias", i.e.
     * "alias key<tab>Name <emailaddress>" where 'key' depend on option
-    * #m_altKeyFormat
+    * #m_altKeyFormat, #m_preferNickNameKey and #m_alsoNickNameKey
     *
     * Example: "alias kkrammer<tab>Kevin Krammer <kevin.krammer@gmx.at>"
     */
@@ -229,8 +229,33 @@ private:
     * family name
     *
     * Example: "KevKra"
+    * 
+    * @see #m_preferNickNameKey, #m_alsoNickNameKey
     */
     bool m_altKeyFormat;
+
+
+    /**
+     * When @c true prefer an existing nickname over the normal alias key.
+     *
+     * Example: "alias krake Kevin Krammer <kevin.krammer@gmx.at>"
+     * instead of "alias KevKra Kevin Krammer <kevin.krammer@gmx.at>" or
+     * "alias kkrammer Kevin Krammer <kevin.krammer@gmx.at>" depending on
+     * value of #m_altKeyFormat
+     * 
+     * @see #m_alsoNickNameKey
+     */
+    bool m_preferNickNameKey;
+
+    /**
+     * When @c true add one additional output per address with nickname as the alias key.
+     *
+     * Example: "alias KevKra Kevin Krammer <kevin.krammer@gmx.at>"
+     * and      "alias krake Kevin Krammer <kevin.krammer@gmx.at>"
+     * 
+     * @see #m_preferNickNameKey
+     */
+    bool m_alsoNickNameKey;
 
     /**
     * The codec to use for converting QString's UTF encoding to output text
@@ -251,6 +276,18 @@ private:
     * @return the 'key' string
     */
     QString key(const KABC::Addressee& addressee) const;
+
+   /**
+    * @brief Helper method for creating the "key" part of nick names
+    *
+    * Create "key" part for the output in format "alias" using the
+    * nick name, if one exists
+    *
+    * @param addressee the contact to get the name from
+    *
+    * @return the 'key' string, or 0 if there's no nick name
+    */
+    QString nickNameKey(const KABC::Addressee& addressee) const;
 };
 
 /**

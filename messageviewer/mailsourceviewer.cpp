@@ -155,7 +155,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   mTabWidget = new KTabWidget;
   layout->addWidget( mTabWidget );
 
-  connect( this, SIGNAL(closeClicked()), SLOT( close() ) );
+  connect( this, SIGNAL(closeClicked()), SLOT(close()) );
 
   mRawBrowser = new KTextBrowser();
   mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
@@ -177,11 +177,11 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   // combining the shortcuts in one qkeysequence() did not work...
   QShortcut* shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_Escape );
-  connect( shortcut, SIGNAL( activated() ), SLOT( close() ) );
+  connect( shortcut, SIGNAL(activated()), SLOT(close()) );
 
   shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_W+Qt::CTRL );
-  connect( shortcut, SIGNAL( activated() ), SLOT( close() ) );
+  connect( shortcut, SIGNAL(activated()), SLOT(close()) );
   KWindowSystem::setIcons( winId(),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
                   IconSize( KIconLoader::Desktop ) ),

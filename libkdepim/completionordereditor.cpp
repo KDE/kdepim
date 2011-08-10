@@ -31,7 +31,7 @@
 
 #include "completionordereditor.h"
 #include "completionordereditor_p.h"
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include "ldap/ldapclient.h"
 
 #include <akonadi/changerecorder.h>
@@ -227,10 +227,12 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
   QWidget* spacer = new QWidget( upDownBox );
   upDownBox->setStretchFactor( spacer, 100 );
 
-  connect( mListView, SIGNAL( itemSelectionChanged () ),
-           SLOT( slotSelectionChanged() ) );
-  connect( mUpButton, SIGNAL( clicked() ), this, SLOT( slotMoveUp() ) );
-  connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
+  connect( mListView, SIGNAL(itemSelectionChanged()),
+           SLOT(slotSelectionChanged()) );
+  connect( mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+           SLOT(slotSelectionChanged()) );
+  connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
+  connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 
   loadCompletionItems();
@@ -279,8 +281,8 @@ void CompletionOrderEditor::loadCompletionItems()
 
   mCollectionModel = mimeTypeProxy;
 
-  connect( mimeTypeProxy, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
+  connect( mimeTypeProxy, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(rowsInserted(QModelIndex,int,int)) );
 
   for ( int row = 0; row < mCollectionModel->rowCount(); ++row )
     addCompletionItemForIndex( mCollectionModel->index( row, 0 ) );

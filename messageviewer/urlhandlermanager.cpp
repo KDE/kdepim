@@ -427,77 +427,77 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 
 namespace {
   bool KMailProtocolURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-    if ( url.protocol() == "kmail" ) {
+    if ( url.protocol() == QLatin1String( "kmail" ) ) {
       if ( !w )
         return false;
 
-      if ( url.path() == "showHTML" ) {
+      if ( url.path() == QLatin1String( "showHTML" ) ) {
         w->setHtmlOverride( !w->htmlOverride() );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "loadExternal" ) {
+      if ( url.path() == QLatin1String( "loadExternal" ) ) {
         w->setHtmlLoadExtOverride( !w->htmlLoadExtOverride() );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "decryptMessage" ) {
+      if ( url.path() == QLatin1String( "decryptMessage" ) ) {
         w->setDecryptMessageOverwrite( true );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "showSignatureDetails" ) {
+      if ( url.path() == QLatin1String( "showSignatureDetails" ) ) {
         w->setShowSignatureDetails( true );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "hideSignatureDetails" ) {
+      if ( url.path() == QLatin1String( "hideSignatureDetails" ) ) {
         w->setShowSignatureDetails( false );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "showAttachmentQuicklist" ) {
+      if ( url.path() == QLatin1String( "showAttachmentQuicklist" ) ) {
         w->setShowAttachmentQuicklist( true );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "hideAttachmentQuicklist" ) {
+      if ( url.path() == QLatin1String( "hideAttachmentQuicklist" ) ) {
         w->setShowAttachmentQuicklist( false );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "showFullToAddressList" ) {
+      if ( url.path() == QLatin1String( "showFullToAddressList" ) ) {
         w->setShowFullToAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "hideFullToAddressList" ) {
+      if ( url.path() == QLatin1String( "hideFullToAddressList" ) ) {
         w->setShowFullToAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "showFullCcAddressList" ) {
+      if ( url.path() == QLatin1String( "showFullCcAddressList" ) ) {
         w->setShowFullCcAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "hideFullCcAddressList" ) {
+      if ( url.path() == QLatin1String( "hideFullCcAddressList" ) ) {
         w->setShowFullCcAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
 
-      if ( url.path() == "showRawToltecMail" ) {
+      if ( url.path() == QLatin1String( "showRawToltecMail" ) ) {
         w->setShowRawToltecMail( true );
         w->update( Viewer::Force );
         return true;
@@ -917,7 +917,7 @@ namespace {
          ( url.protocol() == "news" ) )
     {
       KPIM::BroadcastStatus::instance()->setTransientStatusMsg( i18n("Opening URL..."));
-      QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT( reset() ) );
+      QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT(reset()) );
 
       KMimeType::Ptr mime = KMimeType::findByUrl( url );
       if (mime->name() == "application/x-desktop" ||
@@ -929,7 +929,7 @@ namespace {
             url.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
           return true;
       }
-      if ( !MessageViewer::Util::handleUrlOnMac( url.pathOrUrl() ) ) {
+      if ( !MessageViewer::Util::handleUrlWithQDesktopServices( url.pathOrUrl() ) ) {
         KRun *runner = new KRun( url, w->viewer() ); // will delete itself
         runner->setRunExecutables( false );
       }

@@ -121,7 +121,7 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
            "change the ruleset to tag the messages differently.</p></qt>" );
 
 // The anchor of the filter dialog's help.
-const char * KMFilterDlgHelpAnchor =  "filters-id" ;
+const char * KMFilterDlgHelpAnchor =  "filters" ;
 
 //=============================================================================
 //
@@ -139,13 +139,13 @@ KMFilterDlg::KMFilterDlg(QWidget* parent, bool createDummyFilter )
   setModal( false );
   setButtonFocus( Ok );
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-  setHelp( KMFilterDlgHelpAnchor );
+  setHelp( KMFilterDlgHelpAnchor, "kmail" );
   setButtonText( User1, i18n("Import...") );
   setButtonText( User2, i18n("Export...") );
   connect( this, SIGNAL(user1Clicked()),
-           this, SLOT( slotImportFilters()) );
+           this, SLOT(slotImportFilters()) );
   connect( this, SIGNAL(user2Clicked()),
-           this, SLOT( slotExportFilters()) );
+           this, SLOT(slotExportFilters()) );
   enableButtonApply( false );
   
   QWidget *w = new QWidget( this );
@@ -308,8 +308,8 @@ KMFilterDlg::KMFilterDlg(QWidget* parent, bool createDummyFilter )
            this, SLOT(slotApplicabilityChanged()) );
   connect( mApplyOnCtrlJ, SIGNAL(clicked()),
            this, SLOT(slotApplicabilityChanged()) );
-  connect( mAccountList, SIGNAL( itemChanged(QTreeWidgetItem *,int) ),
-           this, SLOT( slotApplicableAccountsChanged() ) );
+  connect( mAccountList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+           this, SLOT(slotApplicableAccountsChanged()) );
 
   // transfer changes from the 'stop processing here'
   // check box to the filter
@@ -319,55 +319,55 @@ KMFilterDlg::KMFilterDlg(QWidget* parent, bool createDummyFilter )
   connect( mConfigureShortcut, SIGNAL(toggled(bool)),
            this, SLOT(slotConfigureShortcutButtonToggled(bool)) );
 
-  connect( mKeySeqWidget, SIGNAL( keySequenceChanged( const QKeySequence& ) ),
-           this, SLOT( slotShortcutChanged( const QKeySequence& ) ) );
+  connect( mKeySeqWidget, SIGNAL(keySequenceChanged(QKeySequence)),
+           this, SLOT(slotShortcutChanged(QKeySequence)) );
 
   connect( mConfigureToolbar, SIGNAL(toggled(bool)),
            this, SLOT(slotConfigureToolbarButtonToggled(bool)) );
 
-  connect( mFilterActionIconButton, SIGNAL( iconChanged( const QString& ) ),
-           this, SLOT( slotFilterActionIconChanged( const QString& ) ) );
+  connect( mFilterActionIconButton, SIGNAL(iconChanged(QString)),
+           this, SLOT(slotFilterActionIconChanged(QString)) );
 
   // reset all widgets here
   connect( mFilterList, SIGNAL(resetWidgets()),
            this, SLOT(slotReset()) );
 
-  connect( mFilterList, SIGNAL( applyWidgets() ),
-           this, SLOT( slotUpdateFilter() ) );
+  connect( mFilterList, SIGNAL(applyWidgets()),
+           this, SLOT(slotUpdateFilter()) );
 
   // support auto-naming the filter
   connect( mPatternEdit, SIGNAL(maybeNameChanged()),
            mFilterList, SLOT(slotUpdateFilterName()) );
 
   // save filters on 'Apply' or 'OK'
-  connect( this, SIGNAL( buttonClicked( KDialog::ButtonCode ) ),
-           mFilterList, SLOT( slotApplyFilterChanges( KDialog::ButtonCode ) ) );
-  connect( button( KDialog::Apply ), SIGNAL( clicked( bool ) ), this, SLOT( slotApply() ) );
+  connect( this, SIGNAL(buttonClicked(KDialog::ButtonCode)),
+           mFilterList, SLOT(slotApplyFilterChanges(KDialog::ButtonCode)) );
+  connect( button( KDialog::Apply ), SIGNAL(clicked(bool)), this, SLOT(slotApply()) );
   
   // save dialog size on 'OK'
   connect( this, SIGNAL(okClicked()),
            this, SLOT(slotSaveSize()) );
 
   // destruct the dialog on close and Cancel
-  connect( this, SIGNAL( closeClicked() ),
-           this, SLOT( slotFinished() ) );
-  connect( this, SIGNAL( cancelClicked() ),
-           this, SLOT( slotFinished() ) );
+  connect( this, SIGNAL(closeClicked()),
+           this, SLOT(slotFinished()) );
+  connect( this, SIGNAL(cancelClicked()),
+           this, SLOT(slotFinished()) );
 
   // disable closing when user wants to continue editing
-  connect( mFilterList, SIGNAL( abortClosing() ),
-           this, SLOT( slotDisableAccept() ) );
+  connect( mFilterList, SIGNAL(abortClosing()),
+           this, SLOT(slotDisableAccept()) );
 
-  connect( mFilterList, SIGNAL( filterCreated() ), this, SLOT( slotDialogUpdated() ) );
-  connect( mFilterList, SIGNAL( filterRemoved( MailCommon::MailFilter* ) ),
-           this, SLOT( slotDialogUpdated() ) );
-  connect( mFilterList, SIGNAL( filterUpdated( MailCommon::MailFilter* ) ),
-           this, SLOT( slotDialogUpdated() ) );
-  connect( mFilterList, SIGNAL( filterOrderAltered() ), this, SLOT( slotDialogUpdated() ) );
-  connect( mPatternEdit, SIGNAL( patternChanged() ), this, SLOT( slotDialogUpdated() ) );
-  connect( mActionLister, SIGNAL( widgetAdded( QWidget* ) ), this, SLOT( slotDialogUpdated() ) );
-  connect( mActionLister, SIGNAL( widgetRemoved() ), this, SLOT( slotDialogUpdated() ) );
-  connect( mActionLister, SIGNAL( filterModified() ), this, SLOT( slotDialogUpdated() ) );
+  connect( mFilterList, SIGNAL(filterCreated()), this, SLOT(slotDialogUpdated()) );
+  connect( mFilterList, SIGNAL(filterRemoved(MailCommon::MailFilter*)),
+           this, SLOT(slotDialogUpdated()) );
+  connect( mFilterList, SIGNAL(filterUpdated(MailCommon::MailFilter*)),
+           this, SLOT(slotDialogUpdated()) );
+  connect( mFilterList, SIGNAL(filterOrderAltered()), this, SLOT(slotDialogUpdated()) );
+  connect( mPatternEdit, SIGNAL(patternChanged()), this, SLOT(slotDialogUpdated()) );
+  connect( mActionLister, SIGNAL(widgetAdded(QWidget*)), this, SLOT(slotDialogUpdated()) );
+  connect( mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()) );
+  connect( mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()) );
   
   if ( GlobalSettings::self()->filterDialogSize() != QSize()  )
     resize( GlobalSettings::self()->filterDialogSize() );
@@ -586,7 +586,7 @@ void KMFilterDlg::slotUpdateAccountList()
   const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
   const int nbAccount = lst.count();
   for ( int i = 0; i <nbAccount; ++i ) {
-    if( lst.at( i ).type().identifier() == "akonadi_nepomuktag_resource" )
+    if( lst.at( i ).type().identifier() == QLatin1String( "akonadi_nepomuktag_resource" ) )
       continue;
     QTreeWidgetItem *listItem = new QTreeWidgetItem( mAccountList, top );
     listItem->setText( 0, lst.at( i ).name() );
@@ -685,8 +685,8 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   //----------- now connect everything
   connect( mListWidget, SIGNAL(currentRowChanged(int)),
 	   this, SLOT(slotSelected(int)) );
-  connect( mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
-           this, SLOT( slotRename()) );
+  connect( mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+           this, SLOT(slotRename()) );
   connect( mBtnUp, SIGNAL(clicked()),
 	   this, SLOT(slotUp()) );
   connect( mBtnDown, SIGNAL(clicked()),
@@ -980,7 +980,7 @@ void KMFilterListBox::slotRename()
      i18n("Rename filter \"%1\" to:\n(leave the field empty for automatic naming)",
           filter->pattern()->name() ) /*label*/,
      filter->pattern()->name() /* initial value */,
-     &okPressed, topLevelWidget(), validator
+     &okPressed, window(), validator
      );
   delete validator;
 

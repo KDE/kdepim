@@ -37,7 +37,7 @@ ProgressItem::ProgressItem( ProgressItem *parent, const QString &id,
   : mId( id ), mLabel( label ), mStatus( status ), mParent( parent ),
     mCanBeCanceled( canBeCanceled ), mProgress( 0 ), mTotal( 0 ),
     mCompleted( 0 ), mWaitingForKids( false ), mCanceled( false ),
-    mUsesCrypto( usesCrypto ), mUsesBusyIndicator( false )
+    mUsesCrypto( usesCrypto ), mUsesBusyIndicator( false ), mCompletedCalled( false )
 {
 }
 
@@ -48,16 +48,17 @@ ProgressItem::~ProgressItem()
 void ProgressItem::setComplete()
 {
 //   kDebug() << label();
-
   if ( mChildren.isEmpty() ) {
+    if ( mCompletedCalled ) 
+       return;
     if ( !mCanceled ) {
       setProgress( 100 );
     }
-    emit progressItemCompleted( this );
+    mCompletedCalled = true;
     if ( parent() ) {
       parent()->removeChild( this );
     }
-    deleteLater();
+    emit progressItemCompleted( this );
   } else {
     mWaitingForKids = true;
   }
@@ -74,7 +75,6 @@ void ProgressItem::removeChild( ProgressItem *kiddo )
   // in case we were waiting for the last kid to go away, now is the time
   if ( mChildren.count() == 0 && mWaitingForKids ) {
     emit progressItemCompleted( this );
-    deleteLater();
   }
 }
 
@@ -87,9 +87,9 @@ void ProgressItem::cancel()
   kDebug() << label();
   mCanceled = true;
   // Cancel all children.
-  QList<ProgressItem*> kids = mChildren.keys();
-  QList<ProgressItem*>::Iterator it( kids.begin() );
-  QList<ProgressItem*>::Iterator end( kids.end() );
+  QList<ProgressItem* > kids = mChildren.keys();
+  QList<ProgressItem* >::Iterator it( kids.begin() );
+  QList<ProgressItem* >::Iterator end( kids.end() );
   for ( ; it != end; it++ ) {
     ProgressItem *kid = *it;
     if ( kid->canBeCanceled() ) {
@@ -170,22 +170,22 @@ ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
       }
     }
     // connect all signals
-    connect ( t, SIGNAL( progressItemCompleted(KPIM::ProgressItem*) ),
-              this, SLOT( slotTransactionCompleted(KPIM::ProgressItem*) ) );
-    connect ( t, SIGNAL( progressItemProgress(KPIM::ProgressItem*, unsigned int) ),
-              this, SIGNAL( progressItemProgress(KPIM::ProgressItem*, unsigned int) ) );
-    connect ( t, SIGNAL( progressItemAdded(KPIM::ProgressItem*) ),
-              this, SIGNAL( progressItemAdded(KPIM::ProgressItem*) ) );
-    connect ( t, SIGNAL( progressItemCanceled(KPIM::ProgressItem*) ),
-              this, SIGNAL( progressItemCanceled(KPIM::ProgressItem*) ) );
-    connect ( t, SIGNAL( progressItemStatus(KPIM::ProgressItem*, const QString&) ),
-              this, SIGNAL( progressItemStatus(KPIM::ProgressItem*, const QString&) ) );
-    connect ( t, SIGNAL( progressItemLabel(KPIM::ProgressItem*, const QString&) ),
-              this, SIGNAL( progressItemLabel(KPIM::ProgressItem*, const QString&) ) );
-    connect ( t, SIGNAL( progressItemUsesCrypto(KPIM::ProgressItem*, bool) ),
-              this, SIGNAL( progressItemUsesCrypto(KPIM::ProgressItem*, bool) ) );
-     connect ( t, SIGNAL( progressItemUsesBusyIndicator(KPIM::ProgressItem*, bool) ),
-               this, SIGNAL( progressItemUsesBusyIndicator(KPIM::ProgressItem*, bool) ) );
+    connect ( t, SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
+              this, SLOT(slotTransactionCompleted(KPIM::ProgressItem*)) );
+    connect ( t, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
+              this, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)) );
+    connect ( t, SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
+              this, SIGNAL(progressItemAdded(KPIM::ProgressItem*)) );
+    connect ( t, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+              this, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)) );
+    connect ( t, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)),
+              this, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)) );
+    connect ( t, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
+              this, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)) );
+    connect ( t, SIGNAL(progressItemUsesCrypto(KPIM::ProgressItem*,bool)),
+              this, SIGNAL(progressItemUsesCrypto(KPIM::ProgressItem*,bool)) );
+     connect ( t, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
+               this, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)) );
 
     emit progressItemAdded( t );
   } else {

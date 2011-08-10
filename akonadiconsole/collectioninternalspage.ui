@@ -35,7 +35,7 @@ color:#ff0000;</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="0" column="2">
        <widget class="QLabel" name="idLabel">
         <property name="text">
          <string/>
@@ -52,22 +52,35 @@ color:#ff0000;</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="1" column="2">
        <widget class="KLineEdit" name="ridEdit"/>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Owner:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="2">
        <widget class="QLabel" name="resourceLabel">
         <property name="text">
          <string/>
         </property>
        </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Remote Revision:</string>
+        </property>
+        <property name="buddy">
+         <cstring>rrevEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="KLineEdit" name="rrevEdit"/>
       </item>
      </layout>
     </widget>
@@ -108,14 +121,14 @@ color:#ff0000;</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KEditListWidget</class>
    <extends>QWidget</extends>
    <header>keditlistwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

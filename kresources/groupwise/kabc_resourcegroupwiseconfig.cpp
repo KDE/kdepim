@@ -107,7 +107,7 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
   mainLayout->addWidget( label, 6, 0 );
   mainLayout->addWidget( mAddressBookBox, 6, 1 );
 
-  connect( updateButton, SIGNAL( clicked() ), SLOT( updateAddressBookList() ) );
+  connect( updateButton, SIGNAL(clicked()), SLOT(updateAddressBookList()) );
 }
 
 void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )

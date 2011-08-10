@@ -19,12 +19,22 @@
 #include "util.h"
 
 #include <QFile>
+#include <QDebug>
 
 KMime::Message::Ptr readAndParseMail( const QString &mailFile )
 {
   QFile file( QString( MAIL_DATA_DIR ) + '/' + mailFile );
-  Q_ASSERT( file.open( QIODevice::ReadOnly ) );
-  const QByteArray data = KMime::CRLFtoLF( file.readAll() );
+  bool ok = file.open( QIODevice::ReadOnly );
+  Q_ASSERT( ok );
+  QByteArray rawData;
+  while( !file.atEnd() ) {
+    char buf[1024];
+    qint64 lineLength = file.readLine(buf, sizeof(buf));
+    if(lineLength != -1) {
+      rawData.append( buf );
+    }
+  }
+  const QByteArray data = KMime::CRLFtoLF( rawData );
   Q_ASSERT( !data.isEmpty() );
   KMime::Message::Ptr msg( new KMime::Message );
   msg->setContent( data );

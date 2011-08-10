@@ -11,7 +11,6 @@ include_directories(
   ${QT_INCLUDES}
   ${PROJECT_BINARY_DIR}
   ${PROJECT_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/libmailreader
   ${Boost_INCLUDE_DIRS}
 
 )

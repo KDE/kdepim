@@ -36,6 +36,7 @@
 
 #include "objecttreeparser_p.h"
 
+#include <kdebug.h>
 #include <kleo/decryptverifyjob.h>
 #include <kleo/verifydetachedjob.h>
 #include <kleo/verifyopaquejob.h>
@@ -95,8 +96,8 @@ bool DecryptVerifyBodyPartMemento::start() {
     m_dr = DecryptionResult( err );
     return false;
   }
-  connect( m_job, SIGNAL(result(const GpgME::DecryptionResult&,const GpgME::VerificationResult&,const QByteArray&)),
-           this, SLOT(slotResult(const GpgME::DecryptionResult&,const GpgME::VerificationResult&,const QByteArray&)) );
+  connect( m_job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
+           this, SLOT(slotResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
   setRunning( true );
   return true;
 }
@@ -157,12 +158,18 @@ VerifyDetachedBodyPartMemento::~VerifyDetachedBodyPartMemento() {
 
 bool VerifyDetachedBodyPartMemento::start() {
   assert( m_job );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento started";
+#endif
+  connect( m_job, SIGNAL(result(GpgME::VerificationResult)),
+           this, SLOT(slotResult(GpgME::VerificationResult)) );
   if ( const Error err = m_job->start( m_signature, m_plainText ) ) {
     m_vr = VerificationResult( err );
+#ifdef DEBUG_SIGNATURE
+    kDebug() << "tokoe: VerifyDetachedBodyPartMemento stopped with error";
+#endif
     return false;
   }
-  connect( m_job, SIGNAL(result(const GpgME::VerificationResult&)),
-           this, SLOT(slotResult(const GpgME::VerificationResult&)) );
   setRunning( true );
   return true;
 }
@@ -170,9 +177,15 @@ bool VerifyDetachedBodyPartMemento::start() {
 void VerifyDetachedBodyPartMemento::exec() {
   assert( m_job );
   setRunning( true );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento execed";
+#endif
   saveResult( m_job->exec( m_signature, m_plainText ) );
   m_job->deleteLater(); // exec'ed jobs don't delete themselves
   m_job = 0;
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento after execed";
+#endif
   if ( canStartKeyListJob() ) {
     std::vector<GpgME::Key> keys;
     m_keylistjob->exec( keyListPattern(), /*secretOnly=*/false, keys );
@@ -202,16 +215,26 @@ QStringList VerifyDetachedBodyPartMemento::keyListPattern() const
 void VerifyDetachedBodyPartMemento::saveResult( const VerificationResult & vr )
 {
   assert( m_job );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento::saveResult called";
+#endif
   m_vr = vr;
   setAuditLog( m_job->auditLogError(), m_job->auditLogAsHtml() );
 }
 
 void VerifyDetachedBodyPartMemento::slotResult( const VerificationResult & vr )
 {
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento::slotResult called";
+#endif
   saveResult( vr );
   m_job = 0;
-  if ( canStartKeyListJob() && startKeyListJob() )
+  if ( canStartKeyListJob() && startKeyListJob() ) {
+#ifdef DEBUG_SIGNATURE
+    kDebug() << "tokoe: VerifyDetachedBodyPartMemento: canStartKeyListJob && startKeyListJob";
+#endif
     return;
+  }
   if ( m_keylistjob )
     m_keylistjob->deleteLater();
   m_keylistjob = 0;
@@ -225,18 +248,24 @@ bool VerifyDetachedBodyPartMemento::startKeyListJob()
   if ( const GpgME::Error err = m_keylistjob->start( keyListPattern() ) )
     return false;
   connect( m_keylistjob, SIGNAL(done()), this, SLOT(slotKeyListJobDone()) );
-  connect( m_keylistjob, SIGNAL(nextKey(const GpgME::Key&)),
-           this, SLOT(slotNextKey(const GpgME::Key&)) );
+  connect( m_keylistjob, SIGNAL(nextKey(GpgME::Key)),
+           this, SLOT(slotNextKey(GpgME::Key)) );
   return true;
 }
 
 void VerifyDetachedBodyPartMemento::slotNextKey( const GpgME::Key & key )
 {
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento::slotNextKey called";
+#endif
   m_key = key;
 }
 
 void VerifyDetachedBodyPartMemento::slotKeyListJobDone()
 {
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyDetachedBodyPartMemento::slotKeyListJobDone called";
+#endif
   m_keylistjob = 0;
   setRunning( false );
   notify();
@@ -262,12 +291,18 @@ VerifyOpaqueBodyPartMemento::~VerifyOpaqueBodyPartMemento() {
 
 bool VerifyOpaqueBodyPartMemento::start() {
   assert( m_job );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento started";
+#endif
   if ( const Error err = m_job->start( m_signature ) ) {
     m_vr = VerificationResult( err );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento stopped with error";
+#endif
     return false;
   }
-  connect( m_job, SIGNAL(result(const GpgME::VerificationResult&,const QByteArray&)),
-           this, SLOT(slotResult(const GpgME::VerificationResult&,const QByteArray&)) );
+  connect( m_job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+           this, SLOT(slotResult(GpgME::VerificationResult,QByteArray)) );
   setRunning( true );
   return true;
 }
@@ -276,7 +311,13 @@ void VerifyOpaqueBodyPartMemento::exec() {
   assert( m_job );
   setRunning( true );
   QByteArray plainText;
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento execed";
+#endif
   saveResult( m_job->exec( m_signature, plainText ), plainText );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento after execed";
+#endif
   m_job->deleteLater(); // exec'ed jobs don't delete themselves
   m_job = 0;
   if ( canStartKeyListJob() ) {
@@ -309,6 +350,9 @@ void VerifyOpaqueBodyPartMemento::saveResult( const VerificationResult & vr,
                                               const QByteArray & plainText )
 {
   assert( m_job );
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento::saveResult called";
+#endif
   m_vr = vr;
   m_plainText = plainText;
   setAuditLog( m_job->auditLogError(), m_job->auditLogAsHtml() );
@@ -317,10 +361,17 @@ void VerifyOpaqueBodyPartMemento::saveResult( const VerificationResult & vr,
 void VerifyOpaqueBodyPartMemento::slotResult( const VerificationResult & vr,
                                               const QByteArray & plainText )
 {
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento::slotResult called";
+#endif
   saveResult( vr, plainText );
   m_job = 0;
-  if ( canStartKeyListJob() && startKeyListJob() )
+  if ( canStartKeyListJob() && startKeyListJob() ) {
+#ifdef DEBUG_SIGNATURE
+    kDebug() << "tokoe: VerifyOpaqueBodyPartMemento: canStartKeyListJob && startKeyListJob";
+#endif
     return;
+  }
   if ( m_keylistjob )
     m_keylistjob->deleteLater();
   m_keylistjob = 0;
@@ -334,18 +385,24 @@ bool VerifyOpaqueBodyPartMemento::startKeyListJob()
   if ( const GpgME::Error err = m_keylistjob->start( keyListPattern() ) )
     return false;
   connect( m_keylistjob, SIGNAL(done()), this, SLOT(slotKeyListJobDone()) );
-  connect( m_keylistjob, SIGNAL(nextKey(const GpgME::Key&)),
-           this, SLOT(slotNextKey(const GpgME::Key&)) );
+  connect( m_keylistjob, SIGNAL(nextKey(GpgME::Key)),
+           this, SLOT(slotNextKey(GpgME::Key)) );
   return true;
 }
 
 void VerifyOpaqueBodyPartMemento::slotNextKey( const GpgME::Key & key )
 {
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento::slotNextKey called";
+#endif
   m_key = key;
 }
 
 void VerifyOpaqueBodyPartMemento::slotKeyListJobDone()
 {
+#ifdef DEBUG_SIGNATURE
+  kDebug() << "tokoe: VerifyOpaqueBodyPartMemento::slotKeyListJobDone called";
+#endif
   m_keylistjob = 0;
   setRunning( false );
   notify();

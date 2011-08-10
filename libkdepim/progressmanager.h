@@ -30,7 +30,8 @@
 #include <QString>
 #include <QMap>
 #include <QHash>
-
+#include <QWeakPointer>
+#include <QPointer>
 namespace Akonadi {
   class AgentInstance;
 }
@@ -57,7 +58,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     /**
      * @return The parent item of this one, if there is one.
      */
-    ProgressItem *parent() const { return mParent; }
+    ProgressItem *parent() const { return mParent.data(); }
 
     /**
      * @return The user visible string to be used to represent this item.
@@ -239,7 +240,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     QString mId;
     QString mLabel;
     QString mStatus;
-    ProgressItem *mParent;
+    QWeakPointer<ProgressItem>mParent;
     bool mCanBeCanceled;
     unsigned int mProgress;
     ProgressItemMap mChildren;
@@ -249,6 +250,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     bool mCanceled;
     bool mUsesCrypto;
     bool mUsesBusyIndicator;
+    bool mCompletedCalled;
 };
 
 struct ProgressManagerPrivate;

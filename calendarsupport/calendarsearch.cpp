@@ -189,7 +189,7 @@ void CalendarSearch::Private::searchCreated( const QVariantMap &result )
   Collection col;
   col.setId( id );
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( col );
-  connect( job, SIGNAL(finished(KJob *)), q, SLOT(collectionFetched(KJob *)) );
+  connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionFetched(KJob*)) );
 }
 
 void CalendarSearch::Private::collectionFetched( KJob *j )

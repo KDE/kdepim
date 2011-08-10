@@ -5,3 +5,4 @@
 #define STRIGI_ENDANALYZER_RETVAL char
 #endif
 
+#cmakedefine HAVE_KMPSEARCHER_H 1

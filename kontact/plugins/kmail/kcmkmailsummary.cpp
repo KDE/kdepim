@@ -34,7 +34,7 @@
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/ChangeRecorder>
 #include <akonadi/etmviewstatesaver.h>
-#include <akonadi_next/kcheckableproxymodel.h>
+#include <kcheckableproxymodel.h>
 
 #include <kmime/kmime_message.h>
 
@@ -56,7 +56,7 @@ KCMKMailSummary::KCMKMailSummary( const KComponentData &inst, QWidget *parent )
 {
   initGUI();
 
-  connect( mFolderView, SIGNAL(clicked(const QModelIndex &)),
+  connect( mFolderView, SIGNAL(clicked(QModelIndex)),
            SLOT(modified()) );
   connect( mFullPath, SIGNAL(toggled(bool)), SLOT(modified()) );
 
@@ -113,7 +113,7 @@ void KCMKMailSummary::initFolders()
 
   // Create the Check proxy model.
   mSelectionModel = new QItemSelectionModel( mModel );
-  mCheckProxy = new Future::KCheckableProxyModel( this );
+  mCheckProxy = new KCheckableProxyModel( this );
   mCheckProxy->setSelectionModel( mSelectionModel );
   mCheckProxy->setSourceModel( mModel );
 
@@ -121,7 +121,7 @@ void KCMKMailSummary::initFolders()
 
   KSharedConfigPtr _config = KSharedConfig::openConfig("kcmkmailsummaryrc");
 
-  mModelState = new Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config->group( "CheckState" ), this );
+  mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config->group( "CheckState" ), this );
   mModelState->setSelectionModel( mSelectionModel );
 }
 

@@ -52,8 +52,8 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   expireReadMailCB = new QCheckBox;
   expireReadMailCB->setObjectName( "expireReadMailCB" );
   expireReadMailCB->setText( i18n( "Expire read messages after" ) );
-  connect( expireReadMailCB, SIGNAL( toggled( bool )),
-           this, SLOT( slotUpdateControls() ) );
+  connect( expireReadMailCB, SIGNAL(toggled(bool)),
+           this, SLOT(slotUpdateControls()) );
   daysBox->addWidget( expireReadMailCB, 0, 0, Qt::AlignLeft );
 
   expireReadMailSB = new KIntSpinBox;
@@ -66,8 +66,8 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   expireUnreadMailCB = new QCheckBox;
   expireUnreadMailCB->setObjectName( "expireUnreadMailCB" );
   expireUnreadMailCB->setText( i18n( "Expire unread messages after" ) );
-  connect( expireUnreadMailCB, SIGNAL( toggled( bool )),
-           this, SLOT( slotUpdateControls() ) );
+  connect( expireUnreadMailCB, SIGNAL(toggled(bool)),
+           this, SLOT(slotUpdateControls()) );
   daysBox->addWidget( expireUnreadMailCB, 1, 0, Qt::AlignLeft );
 
   expireUnreadMailSB = new KIntSpinBox;
@@ -92,7 +92,7 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   moveToRB = new QRadioButton( actionsGroup );
   moveToRB->setObjectName( "moveToRB" );
   moveToRB->setText( i18n( "Move expired messages to:" ) );
-  connect( moveToRB, SIGNAL( toggled( bool ) ), this, SLOT( slotUpdateControls() ) );
+  connect( moveToRB, SIGNAL(toggled(bool)), this, SLOT(slotUpdateControls()) );
   moveToHBox->addWidget( moveToRB );
 
   folderSelector = new FolderRequester( privateLayoutWidget );

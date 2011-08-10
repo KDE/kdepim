@@ -247,14 +247,10 @@ class KMAIL_EXPORT KMSaveMsgCommand : public KMCommand
 
 public:
   KMSaveMsgCommand( QWidget *parent, const QList<Akonadi::Item> &msgList );
-  KMSaveMsgCommand( QWidget *parent, const Akonadi::Item & msg );
-  KUrl url() const;
 
 private:
   virtual Result execute();
 
-private:
-  KUrl mUrl;
 };
 
 class KMAIL_EXPORT KMOpenMsgCommand : public KMCommand
@@ -502,17 +498,15 @@ class KMAIL_EXPORT KMSetStatusCommand : public KMCommand
 public:
   // Serial numbers
   KMSetStatusCommand( const MessageStatus& status, const Akonadi::Item::List &items,
-                      bool toggle=false );
+                      bool invert=false );
 
 protected slots:
   void slotModifyItemDone( KJob * job );
 
 private:
   virtual Result execute();
-
   MessageStatus mStatus;
-  int messageStatusChanged;
-  bool mToggle;
+  bool mInvertMark;
 };
 
 /** This command is used to set or toggle a tag for a list of messages. If toggle is

@@ -22,7 +22,7 @@
 #include <messagelist/core/enums.h>
 #include <messagelist/core/view.h>
 #include <QtCore/QHash>
-#include <QtGui/QTabWidget>
+#include <KTabWidget>
 
 #include <kmime/kmime_message.h>
 #include <akonadi/collection.h>
@@ -62,7 +62,7 @@ class StorageModel;
  * used if available.
  *
  */
-class MESSAGELIST_EXPORT Pane : public QTabWidget
+class MESSAGELIST_EXPORT Pane : public KTabWidget
 {
   Q_OBJECT
 
@@ -421,9 +421,12 @@ private:
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))
   Q_PRIVATE_SLOT(d, void onNewTabClicked())
   Q_PRIVATE_SLOT(d, void onCloseTabClicked())
+  Q_PRIVATE_SLOT(d, void closeTab( QWidget * ))
   Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
   Q_PRIVATE_SLOT(d, void onTabContextMenuRequest( const QPoint& ))
   Q_PRIVATE_SLOT(d, void updateTabControls())
+
+  bool eventFilter( QObject *obj, QEvent *event );
 
   class Private;
   Private * const d;

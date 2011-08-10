@@ -43,6 +43,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
     */
     void setAttachments( const QStringList &attachments,
                          const QStringList &attachmentMimetypes = QStringList(),
+                         const QStringList &attachmentLabels = QStringList(),
                          bool inlineAttachment = false );
 
     /**

@@ -199,8 +199,8 @@ TemplateSelectionDialog::TemplateSelectionDialog( QWidget *parent )
   mView->setItemDelegate( new TemplateSelectionDelegate( this ) );
 
   button( Ok )->setEnabled( false );
-  connect( mView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( updateButtons() ) );
+  connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(updateButtons()) );
 }
 
 bool TemplateSelectionDialog::templatesAvailable() const

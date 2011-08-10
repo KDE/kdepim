@@ -1,5 +1,6 @@
 //
-//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2011 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2011 Fernando Schapachnik <fernando@schapachnik.com.ar>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -40,11 +41,11 @@ using namespace KABC;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-static const char* fromUnicode(QTextCodec* codec, const QString& text)
+QByteArray fromUnicode(QTextCodec* codec, const QString& text)
 {
-    if (codec == 0) return "";
+    if (codec == 0) return QByteArray();
 
-    return codec->fromUnicode(text).data();
+    return codec->fromUnicode(text);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,7 +80,7 @@ bool UIDOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& s
 {
     if (stream.bad()) return false;
 
-    stream << fromUnicode(m_codec, addressee.uid());
+    stream << fromUnicode(m_codec, addressee.uid()).constData();
 
     return !stream.bad();
 }
@@ -199,8 +200,14 @@ bool VCardOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
             break;
     }
 
-    QString vcard = m_converter->createVCard(addressee, version);
-    stream << fromUnicode(m_codec, vcard);
+    QByteArray vcard = m_converter->createVCard(addressee, version);
+
+    // vcard is in UTF-8, only need conversion if output codec is different
+    if (m_codec == QTextCodec::codecForName("UTF-8")) {
+      vcard = fromUnicode(m_codec, QString::fromUtf8(vcard));
+    }
+
+    stream << vcard.constData();
 
     return !stream.bad();
 }
@@ -230,8 +237,14 @@ bool VCardOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
             break;
     }
 
-    QString vcards = m_converter->createVCards(addresseeList, version);
-    stream << fromUnicode(m_codec, vcards);
+    QByteArray vcards = m_converter->createVCards(addresseeList, version);
+
+    // vcards is in UTF-8, only need conversion if output codec is different
+    if (m_codec == QTextCodec::codecForName("UTF-8")) {
+      vcards = fromUnicode(m_codec, QString::fromUtf8(vcards));
+    }
+
+    stream << vcards.constData();
 
     return !stream.bad();
 }
@@ -318,7 +331,7 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
         {
             if (!(*it).isEmpty())
             {
-                stream << fromUnicode(m_codec, decorateEmail(addressee, *it));
+                stream << fromUnicode(m_codec, decorateEmail(addressee, *it)).constData();
                 if (stream.bad()) return false;
             }
 
@@ -327,7 +340,7 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
                 if ((*it).isEmpty()) continue;
 
                 stream << std::endl
-                       << fromUnicode(m_codec, decorateEmail(addressee, *it));
+                       << fromUnicode(m_codec, decorateEmail(addressee, *it)).constData();
 
                 if (stream.bad()) return false;
             }
@@ -337,7 +350,7 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
     {
         if (!addressee.preferredEmail().isEmpty())
         {
-            stream << fromUnicode(m_codec, decorateEmail(addressee, addressee.preferredEmail()));
+            stream << fromUnicode(m_codec, decorateEmail(addressee, addressee.preferredEmail())).constData();
         }
     }
 
@@ -378,7 +391,9 @@ QString EmailOutput::decorateEmail(const KABC::Addressee& addressee, const QStri
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-MuttOutput::MuttOutput() : m_allEmails(false), m_queryFormat(false), m_altKeyFormat(false)
+MuttOutput::MuttOutput()
+    : m_allEmails(false), m_queryFormat(false), m_altKeyFormat(false),
+      m_preferNickNameKey(false), m_alsoNickNameKey(false)
 {
 }
 
@@ -407,8 +422,18 @@ bool MuttOutput::setOptions(const QByteArray& options)
             m_queryFormat = false;
         else if ((*it) == "altkeys")
             m_altKeyFormat = true;
+        else if ((*it) == "prefernick")
+            m_preferNickNameKey = true;
+        else if ((*it) == "alsonick")
+            m_alsoNickNameKey = true;
         else
             return false;
+    }
+
+    if (m_alsoNickNameKey && m_preferNickNameKey)
+    {
+        kDebug() << "Both 'prefernick' and 'alsonick' specified, using only 'alsonick'";
+        m_preferNickNameKey = false;
     }
 
     return true;
@@ -419,7 +444,8 @@ bool MuttOutput::setOptions(const QByteArray& options)
 QString MuttOutput::optionUsage() const
 {
     QString usage =
-        i18n("Comma separated list of: allemails, query, alias, altkeys. Default is alias");
+        i18n("Comma separated list of: allemails, query, alias, altkeys, prefernick, alsonick. "
+             "Default is alias");
 
     usage += '\n';
 
@@ -446,6 +472,19 @@ QString MuttOutput::optionUsage() const
     usage += i18n("Use alternative keys with alias format, e.g.\n\t\t"
                   "alias jdoe[tab]John Doe &lt;jdoe@foo.com&gt;");
 
+    usage += '\n';
+
+    usage += "prefernick\t";
+    usage += i18n("If a nick name exists use it instead of the key, e.g.\n\t\t"
+                  "alias johnny[tab]John Doe &lt;jdoe@foo.com&gt;");
+
+    usage += '\n';
+
+    usage += "alsonick\t";
+    usage += i18n("Generate additional aliases with the nick name as the key, e.g.\n\t\t"
+                  "alias johnny[tab]John Doe &lt;jdoe@foo.com&gt;\n\t\t"
+                  "Deactivates 'prefernick' to avoid duplicates");
+
     return usage;
 }
 
@@ -466,6 +505,13 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
 {
     if (stream.bad()) return false;
 
+    const QString nickKeyString = nickNameKey(addressee);
+
+    // if we have a key based on nick name and we prefer it over normal key use it
+    // other wise use normal key
+    const QString keyString =
+        (m_preferNickNameKey && !nickKeyString.isEmpty()) ? nickKeyString : key(addressee);
+    
     if (m_allEmails)
     {
         QStringList emails = addressee.emails();
@@ -475,22 +521,30 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
 
         if (it != endIt)
         {
-            const QString keyString = key(addressee);
-
             if (!(*it).isEmpty())
             {
                 if (m_queryFormat)
                 {
-                    stream << fromUnicode(m_codec, *it) << "\t"
-                           << fromUnicode(m_codec, addressee.givenName()) << " "
-                           << fromUnicode(m_codec, addressee.familyName());
+                    stream << fromUnicode(m_codec, *it).constData() << "\t"
+                           << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData();
                 }
                 else
                 {
-                    stream << "alias " << fromUnicode(m_codec, keyString) << "\t";
-                    stream << fromUnicode(m_codec, addressee.givenName()) << " "
-                           << fromUnicode(m_codec, addressee.familyName())<< " <"
-                           << fromUnicode(m_codec, *it)                   << ">";
+                    stream << "alias " << fromUnicode(m_codec, keyString).constData() << "\t";
+                    stream << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData()<< " <"
+                           << fromUnicode(m_codec, *it).constData()                   << ">";
+                           
+                    if (m_alsoNickNameKey && !nickKeyString.isEmpty())
+                    {
+                        stream << std::endl;
+                        stream << "alias "
+                               << fromUnicode(m_codec, nickKeyString).constData()         << "\t";
+                        stream << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                               << fromUnicode(m_codec, addressee.familyName()).constData()<< " <"
+                               << fromUnicode(m_codec, *it).constData()                   << ">";
+                    }
                 }
 
                 if (stream.bad()) return false;
@@ -503,24 +557,34 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
 
                 if (m_queryFormat && count == 1)
                 {
-                    stream << "\t" << fromUnicode(m_codec, i18n("preferred"));
+                    stream << "\t" << fromUnicode(m_codec, i18n("preferred")).constData();
                 }
 
                 stream << std::endl;
                 if (m_queryFormat)
                 {
-                    stream << fromUnicode(m_codec, *it) << "\t"
-                           << fromUnicode(m_codec,  addressee.givenName()) << " "
-                           << fromUnicode(m_codec, addressee.familyName()) << "\t"
+                    stream << fromUnicode(m_codec, *it).constData() << "\t"
+                           << fromUnicode(m_codec,  addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData() << "\t"
                            << "#" << count;
                 }
                 else
                 {
-                    stream << "alias " << fromUnicode(m_codec, keyString)
+                    stream << "alias " << fromUnicode(m_codec, keyString).constData()
                            << count << "\t";
-                    stream << fromUnicode(m_codec, addressee.givenName())  << " "
-                           << fromUnicode(m_codec, addressee.familyName()) << " <"
-                           << fromUnicode(m_codec, *it)                    << ">";
+                    stream << fromUnicode(m_codec, addressee.givenName()).constData()  << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData() << " <"
+                           << fromUnicode(m_codec, *it).constData()                    << ">";
+                           
+                    if (m_alsoNickNameKey && !nickKeyString.isEmpty())
+                    {
+                        stream << std::endl;
+                        stream << "alias "
+                               << fromUnicode(m_codec, nickKeyString).constData()         << "\t";
+                        stream << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                               << fromUnicode(m_codec, addressee.familyName()).constData()<< " <"
+                               << fromUnicode(m_codec, *it).constData()                   << ">";
+                    }
                 }
 
                 if (stream.bad()) return false;
@@ -529,20 +593,31 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
     }
     else
     {
-        if (!addressee.preferredEmail().isEmpty())
+        const QString preferredEmail = addressee.preferredEmail();
+        if (!preferredEmail.isEmpty())
         {
             if (m_queryFormat)
             {
-                stream << fromUnicode(m_codec, addressee.preferredEmail()) << "\t"
-                       << fromUnicode(m_codec, addressee.givenName())      << " "
-                       << fromUnicode(m_codec, addressee.familyName());
+                stream << fromUnicode(m_codec, preferredEmail).constData()        << "\t"
+                       << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                       << fromUnicode(m_codec, addressee.familyName()).constData();
             }
             else
             {
-                stream << "alias " << fromUnicode(m_codec, key(addressee)) << "\t";
-                stream << fromUnicode(m_codec, addressee.givenName())      << " "
-                       << fromUnicode(m_codec, addressee.familyName())     << " <"
-                       << fromUnicode(m_codec, addressee.preferredEmail()) << ">";
+                stream << "alias " << fromUnicode(m_codec, keyString).constData()  << "\t";
+                stream << fromUnicode(m_codec, addressee.givenName()).constData()  << " "
+                       << fromUnicode(m_codec, addressee.familyName()).constData() << " <"
+                       << fromUnicode(m_codec, preferredEmail).constData()         << ">";
+
+                if (m_alsoNickNameKey && !nickKeyString.isEmpty())
+                {
+                    stream << std::endl;
+                    stream << "alias "
+                           << fromUnicode(m_codec, nickKeyString).constData()         << "\t";
+                    stream << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData()<< " <"
+                           << fromUnicode(m_codec, preferredEmail).constData()        << ">";
+                }
             }
         }
     }
@@ -588,6 +663,18 @@ QString MuttOutput::key(const KABC::Addressee& addressee) const
     }
     else
         return addressee.givenName().left(3) + addressee.familyName().left(3);
+}
+
+QString MuttOutput::nickNameKey(const KABC::Addressee& addressee) const
+{
+    if (!addressee.nickName().isEmpty())
+    {
+        const QChar space = ' ';
+        const QChar underscore = '_';
+        return addressee.nickName().toLower().replace(space, underscore);
+    }
+    else
+        return QString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -681,7 +768,7 @@ bool CSVOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& s
         columns.append(m_template->quote() + text + m_template->quote());
     }
 
-    stream << fromUnicode(m_codec, columns.join(m_template->delimiter()));
+    stream << fromUnicode(m_codec, columns.join(m_template->delimiter())).constData();
 
     return !stream.bad();
 }

@@ -95,13 +95,13 @@ PostEntry::PostEntry( QWidget *parent )
 {
     kDebug();
     createUi();
-    connect( d->wysiwygEditor, SIGNAL( textChanged() ), this, SIGNAL( textChanged() ) );
-    connect( d->htmlEditor->document(), SIGNAL( textChanged( KTextEditor::Document * ) ),
-             this, SIGNAL( textChanged() ) );
+    connect( d->wysiwygEditor, SIGNAL(textChanged()), this, SIGNAL(textChanged()) );
+    connect( d->htmlEditor->document(), SIGNAL(textChanged(KTextEditor::Document*)),
+             this, SIGNAL(textChanged()) );
     layout()->addWidget( d->tabWidget );
     d->mTimer = new QTimer(this);
     d->mTimer->start(Settings::autosaveInterval() * MINUTE);
-    connect( d->mTimer, SIGNAL(timeout()), this, SLOT( saveTemporary() ) );
+    connect( d->mTimer, SIGNAL(timeout()), this, SLOT(saveTemporary()) );
     d->progress = 0L;
     d->mCurrentPostBlogId = -1;
     d->mNumOfFilesToBeUploaded = 0;
@@ -129,7 +129,7 @@ void PostEntry::createUi()
     d->tabWidget->addTab( d->tabVisual, i18nc( "Software", "Visual Editor" ) );
     d->tabWidget->addTab( d->tabHtml, i18nc( "Software", "Html Editor" ) );
     d->tabWidget->addTab( d->tabPreview, i18nc( "preview of the edited post", "Post Preview" ) );
-    connect( d->tabWidget, SIGNAL( currentChanged( int ) ), this, SLOT( slotSyncEditors( int ) ) );
+    connect( d->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(slotSyncEditors(int)) );
     d->prev_index = 0;
 
     /// WYSIWYG Editor:
@@ -147,7 +147,7 @@ void PostEntry::createUi()
     QGridLayout *gLayout = new QGridLayout( d->tabPreview );
     gLayout->addWidget( d->previewer );
 
-    connect( d->previewer, SIGNAL( sigSetBlogStyle() ), this, SLOT(
+    connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(
             slotSetPostPreview() ) );
 
 
@@ -166,8 +166,8 @@ void PostEntry::createUi()
     d->txtTitle = new TitleLineEdit( this );
     d->horizontalLayout->addWidget( d->txtTitle );
     d->labelTitle->setBuddy( d->txtTitle );
-    connect( d->txtTitle, SIGNAL( textChanged( const QString& ) ), this,
-             SLOT( slotTitleChanged( const QString& ) ) );
+    connect( d->txtTitle, SIGNAL(textChanged(QString)), this,
+             SLOT(slotTitleChanged(QString)) );
     connect( d->txtTitle, SIGNAL(downKeyPressed()), SLOT(slotFocusEditor()) );
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
@@ -431,12 +431,12 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 
         emit showStatusMessage(statusMsg, true);
         Backend *b = new Backend(d->mCurrentPostBlogId, this);
-        connect( b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)) );
+        connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
         if ( uploadMediaFiles(b) ) {
             kDebug()<<"Uploading";
             showProgressBar();
-            connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ),
-                     this, SLOT( slotPostPublished( int, BilboPost* ) ) );
+            connect( b, SIGNAL(sigPostPublished(int,BilboPost*)),
+                     this, SLOT(slotPostPublished(int,BilboPost*)) );
             if(d->isNewPost)
                 b->publishPost( &d->mCurrentPost );
             else

@@ -40,13 +40,14 @@ class FilterManager::Private
   public:
     Private( FilterManager *qq )
       : q( qq ),
-        mRequiresBody( false )
+        mRequiresBody( false ), mInboundFiltersExist( false )
     {
     }
 
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void itemAddedFetchResult( KJob *job );
     void itemsFetchJobForFilterDone( KJob *job );
+    void moveJobResult( KJob* );
     void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
     void slotInitialCollectionsFetched( const Akonadi::Collection::List &collections );
     void slotInitialItemsFetched( const Akonadi::Item::List &items );
@@ -65,15 +66,16 @@ class FilterManager::Private
     QList<MailFilter *> mFilters;
     Akonadi::ChangeRecorder *mChangeRecorder;
     bool mRequiresBody;
+    bool mInboundFiltersExist;
 };
 
 void FilterManager::Private::tryToFilterInboxOnStartup()
 {
-  if ( mFilters.isEmpty() )
+  if ( mFilters.isEmpty() || !mInboundFiltersExist )
     return;
 
   if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
-    QTimer::singleShot( 10000, q, SLOT( tryToFilterInboxOnStartup() ) );
+    QTimer::singleShot( 1000, q, SLOT(tryToFilterInboxOnStartup()) );
     return;
   }
 
@@ -84,17 +86,17 @@ void FilterManager::Private::tryToFilterInboxOnStartup()
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, q );
   job->fetchScope().setContentMimeTypes( QStringList() << KMime::Message::mimeType() );
   job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
-  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-              q, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& ) ) );
+  q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+              q, SLOT(slotInitialCollectionsFetched(Akonadi::Collection::List)) );
 }
 
 void FilterManager::Private::tryToMonitorCollection()
 {
   if ( KernelIf->folderCollectionMonitor() ) {
-    q->connect( KernelIf->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-                q, SLOT( slotFolderRemoved( const Akonadi::Collection & ) ) );
+    q->connect( KernelIf->folderCollectionMonitor(), SIGNAL(collectionRemoved(Akonadi::Collection)),
+                q, SLOT(slotFolderRemoved(Akonadi::Collection)) );
   } else {
-    QTimer::singleShot( 10000, q, SLOT( tryToMonitorCollection() ) );
+    QTimer::singleShot( 10000, q, SLOT(tryToMonitorCollection()) );
   }
 }
 
@@ -104,8 +106,8 @@ void FilterManager::Private::slotInitialCollectionsFetched( const Akonadi::Colle
     if ( CommonKernel->folderIsInbox( collection ) ) {
       Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, q );
       job->fetchScope().fetchAllAttributes();
-      q->connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-                  q, SLOT( slotInitialItemsFetched( const Akonadi::Item::List& ) ) );
+      q->connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+                  q, SLOT(slotInitialItemsFetched(Akonadi::Item::List)) );
     }
   }
 }
@@ -121,7 +123,7 @@ void FilterManager::Private::slotInitialItemsFetched( const Akonadi::Item::List 
      unreadItems << item;
   }
 
-  q->applyFilters( unreadItems );
+  q->applyFilters( unreadItems, FilterManager::Inbound );
 }
 
 void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
@@ -133,6 +135,8 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
     progressItem = 0;
     kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
   }
+
+  const FilterManager::FilterSet filterSet = static_cast<FilterManager::FilterSet>(q->sender()->property( "filterSet" ).toInt());
 
   foreach ( const Akonadi::Item &item, items ) {
     if ( progressItem ) {
@@ -150,7 +154,7 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
       }
     }
 
-    const int filterResult = q->process( item, FilterManager::Explicit );
+    const int filterResult = q->process( item, filterSet );
     if ( filterResult == 2 ) {
       // something went horribly wrong (out of space?)
       CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
@@ -166,7 +170,7 @@ void FilterManager::Private::itemAdded( const Akonadi::Item &item, const Akonadi
       job->fetchScope().fetchFullPayload( true );
       job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
       job->setProperty( "resource", collection.resource() );
-      q->connect( job, SIGNAL( result( KJob* ) ), SLOT( itemAddedFetchResult( KJob* ) ) );
+      q->connect( job, SIGNAL(result(KJob*)), SLOT(itemAddedFetchResult(KJob*)) );
     } else {
       // the monitor has fetched all headers for this message already
       q->process( item, Inbound, true, collection.resource() );
@@ -193,12 +197,26 @@ void FilterManager::Private::itemAddedFetchResult( KJob *job )
 void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << job->errorString();
+    kError() << "Error while fetching items. " << job->error() << job->errorString();
   }
   KPIM::BroadcastStatus::instance()->setStatusMsg( QString() );
 
   KPIM::ProgressItem *progressItem = qobject_cast<KPIM::ProgressItem*>( job->property( "progressItem" ).value<QObject*>() );
   progressItem->setComplete();
+}
+
+void FilterManager::Private::moveJobResult( KJob *job )
+{
+  if ( job->error() ) {
+    const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob*>( job );
+    if( movejob ) {
+	  kError() << "Error while moving items. "<< job->error() << job->errorString()<<" to distinationCollection.id() :"<< movejob->destinationCollection().id();
+          
+    } else {
+          kError() << "Error while moving items. " << job->error() << job->errorString();
+    }
+    // TODO: kmail should tell the user that this failed
+  }
 }
 
 bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailFilter *filter )
@@ -292,10 +310,10 @@ FilterManager::FilterManager( QObject *parent )
   d->mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   d->mChangeRecorder->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
 
-  connect( d->mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  connect( d->mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
 
-  d->tryToFilterInboxOnStartup();
+  connect( this, SIGNAL(filterListUpdated()), SLOT(tryToFilterInboxOnStartup()) );
 }
 
 FilterManager::~FilterManager()
@@ -340,8 +358,10 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter 
   bool stopIt = false;
   int result = 1;
 
-  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() )
+  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() ) {
+    kError() << "Filter is null or item doesn't have correct payload.";
     return 1;
+  }
 
   if ( d->isMatching( item, filter ) ) {
     // do the actual filtering stuff
@@ -356,7 +376,8 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter 
     const Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
     d->endFiltering( item );
     if ( targetFolder.isValid() ) {
-      new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
+      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
+      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
       result = 0;
     }
   } else {
@@ -408,7 +429,8 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   d->endFiltering( item );
 
   if ( targetFolder.isValid() ) {
-    new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
+    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
+    connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
     return 0;
   }
 
@@ -457,8 +479,9 @@ void FilterManager::appendFilters( const QList<MailFilter*> &filters,
   beginUpdate();
   if ( replaceIfNameExists ) {
     foreach ( const MailFilter *newFilter, filters ) {
-      for ( int i = 0; i < d->mFilters.count(); ++i ) {
-        MailFilter *filter = d->mFilters[ i ];
+      const int numberOfFilters = d->mFilters.count();
+      for ( int i = 0; i < numberOfFilters; ++i ) {
+        MailFilter *filter = d->mFilters.at( i );
         if ( newFilter->name() == filter->name() ) {
           d->mFilters.removeAll( filter );
           i = 0;
@@ -504,6 +527,9 @@ void FilterManager::endUpdate()
   // check if at least one filter requires the message body
   d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
                                    boost::bind( &MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
+  // check if at least one filter is to be applied on inbound mail
+  d->mInboundFiltersExist = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
+                                          boost::bind( &MailFilter::applyOnInbound, _1 ) ) != d->mFilters.constEnd();
 
   emit filterListUpdated();
 }
@@ -517,7 +543,7 @@ void FilterManager::dump() const
 }
 #endif
 
-void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages )
+void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, FilterSet filterSet )
 {
   const int msgCountToFilter = selectedMessages.size();
 
@@ -535,11 +561,12 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages )
     itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
   itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
+  itemFetchJob->setProperty( "filterSet", QVariant::fromValue( static_cast<int>( filterSet ) ) );
 
-  connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-           this, SLOT( slotItemsFetchedForFilter( const Akonadi::Item::List& ) ) );
-  connect( itemFetchJob, SIGNAL( result( KJob* ) ),
-           SLOT( itemsFetchJobForFilterDone( KJob* ) ) );
+  connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+           this, SLOT(slotItemsFetchedForFilter(Akonadi::Item::List)) );
+  connect( itemFetchJob, SIGNAL(result(KJob*)),
+           SLOT(itemsFetchJobForFilterDone(KJob*)) );
 }
 
 #include "filtermanager.moc"

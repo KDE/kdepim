@@ -47,7 +47,7 @@ class QuotaColorProxyModel::Private
 };
 
 QuotaColorProxyModel::QuotaColorProxyModel( QObject *parent )
-  : Future::KIdentityProxyModel( parent ),
+  : KIdentityProxyModel( parent ),
     d( new Private( this ) )
 {
 }
@@ -97,7 +97,7 @@ QVariant QuotaColorProxyModel::data( const QModelIndex & index, int role) const
     }
   }
 
-  return Future::KIdentityProxyModel::data( index, role );
+  return KIdentityProxyModel::data( index, role );
 }
 
 void QuotaColorProxyModel::setSourceModel( QAbstractItemModel *sourceModel )

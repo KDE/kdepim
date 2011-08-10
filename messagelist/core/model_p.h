@@ -207,19 +207,19 @@ public:
    * Threading cache.
    * MessageIdMD5 -> MessageItem, pointers are shallow copies
    */
-  QHash< QString, MessageItem * > mThreadingCacheMessageIdMD5ToMessageItem;
+  QHash< QByteArray, MessageItem * > mThreadingCacheMessageIdMD5ToMessageItem;
 
   /**
    * Threading cache.
    * MessageInReplyToIdMD5 -> MessageItem, pointers are shallow copies
    */
-  QMultiHash< QString, MessageItem * > mThreadingCacheMessageInReplyToIdMD5ToMessageItem;
+  QMultiHash< QByteArray, MessageItem * > mThreadingCacheMessageInReplyToIdMD5ToMessageItem;
 
   /**
    * Threading cache.
    * SubjectMD5 -> MessageItem, pointers are shallow copies
    */
-  QHash< QString, QList< MessageItem * > * > mThreadingCacheMessageSubjectMD5ToMessageItem;
+  QHash< QByteArray, QList< MessageItem * > * > mThreadingCacheMessageSubjectMD5ToMessageItem;
 
   /**
    * List of group headers that either need to be re-sorted or must be removed because empty

@@ -57,8 +57,8 @@ MobileLineEdit::MobileLineEdit( QWidget *parent )
   d->mButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
   box->addWidget( d->mButton );
 
-  connect( d->mButton, SIGNAL( clicked() ), SLOT( clear() ) );
-  connect( d->mButton, SIGNAL( clicked() ), SIGNAL( clearClicked() ) );
+  connect( d->mButton, SIGNAL(clicked()), SLOT(clear()) );
+  connect( d->mButton, SIGNAL(clicked()), SIGNAL(clearClicked()) );
 }
 
 MobileLineEdit::~MobileLineEdit()

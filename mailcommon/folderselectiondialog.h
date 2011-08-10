@@ -69,10 +69,12 @@ private slots:
   void rowsInserted( const QModelIndex& col, int, int );
 
 protected:
+  void focusTreeView();
   void readConfig();
   void writeConfig();
   bool canCreateCollection( Akonadi::Collection & parentCol );
   /*reimp*/ void hideEvent( QHideEvent* );
+  /*reimp*/ void showEvent( QShowEvent* );
 
 private:
   class FolderSelectionDialogPrivate;

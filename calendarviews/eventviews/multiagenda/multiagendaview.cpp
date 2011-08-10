@@ -30,9 +30,9 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
+#include <kcheckableproxymodel.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 #include <KCalCore/Event>
 
@@ -314,7 +314,7 @@ void MultiAgendaView::Private::setupViews()
                 q, SIGNAL(pasteIncidenceSignal()) );
     q->connect( agenda, SIGNAL(toggleAlarmSignal(Akonadi::Item)),
                 q, SIGNAL(toggleAlarmSignal(Akonadi::Item)) );
-    q->connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate) ),
+    q->connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
                 q, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
     q->connect( agenda, SIGNAL(newTodoSignal(QDate)),

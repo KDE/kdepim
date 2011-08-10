@@ -46,6 +46,11 @@
 #include "messagecore/nodehelper.h"
 #include "messagecore/stringutil.h"
 
+#include <akonadi/item.h>
+
+
+#include <kmbox/mbox.h>
+
 #include <KMime/Message>
 
 #include <kcharsets.h>
@@ -102,13 +107,13 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
   return IconNameCache::instance()->iconPath( fileName, iconSize );
 }
 
-#ifdef Q_WS_MACX
+#if defined Q_WS_WIN || defined Q_WS_MACX
 #include <QDesktopServices>
 #endif
 
-bool Util::handleUrlOnMac( const KUrl& url )
+bool Util::handleUrlWithQDesktopServices( const KUrl& url )
 {
-#ifdef Q_WS_MACX
+#if defined Q_WS_WIN || defined Q_WS_MACX
   QDesktopServices::openUrl( url );
   return true;
 #else
@@ -136,24 +141,22 @@ QList<KMime::Content*> Util::allContents( const KMime::Content *message )
 
 QList<KMime::Content*> Util::extractAttachments( const KMime::Message *message )
 {
-  KMime::Content::List contents = allContents( message );
-  for ( KMime::Content::List::iterator it = contents.begin();
-        it != contents.end(); ) {
-    // only body parts which have a filename or a name parameter (except for
-    // the root node for which name is set to the message's subject) are
-    // considered attachments
+  const KMime::Content::List contents = allContents( message );
+  KMime::Content::List result;
+  for ( KMime::Content::List::const_iterator it = contents.constBegin();
+        it != contents.constEnd(); ) {
     KMime::Content* content = *it;
     if ( content->contentDisposition()->filename().trimmed().isEmpty() &&
           ( content->contentType()->name().trimmed().isEmpty() ||
             content == message ) ) {
-      KMime::Content::List::iterator delIt = it;
       ++it;
-      contents.erase( delIt );
     } else {
+      result <<( *it );
       ++it;
     }
   }
-  return contents;
+
+  return result;
 }
 
 bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents )
@@ -417,4 +420,54 @@ int Util::getWritePermissions()
   }
 }
 
+bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *parent )
+{
+  if ( contents.isEmpty() ) {
+    KMessageBox::information( parent, i18n( "Found no attachments to save." ) );
+    return false;
+  }
 
+  return Util::saveContents( parent, contents );
+}
+
+bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
+{
+  
+  QString fileName;
+  if ( retrievedMsgs.isEmpty() )
+    return true;
+  const Akonadi::Item msgBase = retrievedMsgs.first();
+
+  fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject (  msgBase.payload<KMime::Message::Ptr>().get() ).trimmed() );
+
+  if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
+    fileName += ".mbox";
+
+  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent );
+
+  if ( url.isEmpty() )
+    return true;
+
+  const QString localFileName = url.toLocalFile();
+  if ( localFileName.isEmpty() )
+    return true;
+
+  KMBox::MBox mbox;
+  if ( !mbox.load( localFileName ) ) {
+    //TODO: error
+    return false;
+  }
+
+  foreach ( const Akonadi::Item &item, retrievedMsgs ) {
+    if ( item.hasPayload<KMime::Message::Ptr>() ) {
+      mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
+    }
+  }
+
+  if ( !mbox.save() ) {
+    //TODO: error
+    return false;
+  }
+  return true;
+}

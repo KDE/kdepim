@@ -30,7 +30,7 @@ AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWid
   : KDialog( parent ),  mUi( new Ui::AlarmDialog ), mIncidenceType( incidenceType ),
     mAllowBeginReminders( true ), mAllowEndReminders( true )
 {
-  setWindowTitle( i18n( "Create a new alarm" ) );
+  setWindowTitle( i18n( "Create a new reminder" ) );
   mUi->setupUi( mainWidget() );
 
   const int defaultReminderTime = IncidenceEditorNG::EditorConfig::instance()->reminderTime();
@@ -61,7 +61,7 @@ void AlarmDialog::load( const KCalCore::Alarm::Ptr &alarm )
     return;
   }
 
-  setWindowTitle( i18n( "Edit existing alarm" ) );
+  setWindowTitle( i18n( "Edit existing reminder" ) );
 
   // Offsets
   int offset;

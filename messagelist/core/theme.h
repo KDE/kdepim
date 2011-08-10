@@ -242,6 +242,7 @@ public:
      unsigned int mFlags;             ///< The flags of the item
 
      QFont mFont;                     ///< The font to use with this content item, meaningful only if displaysText() returns true.
+     QString mFontKey;                ///< The font key to speedup theme positioning. QFont.key() is called too many times otherwise.
      QColor mCustomColor;             ///< The color to use with this content item, meaningful only if canUseCustomColor() return true.
 
   public:
@@ -418,6 +419,16 @@ public:
      */
     const QFont & font() const
       { return mFont; };
+
+    /**
+     * Returns the font key used by this item. It may be a custom font key set by setFont()
+     * or the default application font (returned by KGlobalSettings::generalFont()).
+     * This setting is valid as long as you have called updateFontMetrics()
+     * with the appropriate paint device.
+     * It is primary used to avoid to calculate the key every time an item is displayed.
+     */
+    const QString & fontKey() const
+      { return mFontKey; };
 
     /**
      * Returns the custom color set for this item.

@@ -35,8 +35,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-07-13</date>
-<releaseinfo>1.7</releaseinfo>
+<date>2011-07-16</date>
+<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
 </chapterinfo>
 
 <title>Configure &kmail;</title>
@@ -65,11 +65,6 @@ will be described in detail.</para>
 <term><guibutton>Defaults</guibutton></term>
 <listitem><para>This will reset the configuration options on the current
 page back to the default values.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guibutton>Load Profile...</guibutton></term>
-<listitem><para>This will open a dialog which offers several configuration
-profiles. You can use these as starting points for your own configuration.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guibutton>Reset</guibutton></term>
@@ -141,7 +136,7 @@ standard values.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Use Control Center settings</guilabel></term>
+<term><guilabel>Use System Settings values</guilabel></term>
 <listitem>
 <para>Uses the values from <menuchoice><guimenu>Account Details</guimenu>
 <guimenuitem>Password &amp; User Account</guimenuitem></menuchoice> in the
@@ -154,7 +149,7 @@ standard values.</para>
 <listitem>
 <para>Copies all fields from an existing identity. You can
 choose which identity to copy from by selecting the corresponding
-entry in the <guilabel>Existing identities</guilabel> popup.</para>
+entry in the <guilabel>Existing identities</guilabel> drop down box.</para>
 </listitem>
 </varlistentry>
 
@@ -187,9 +182,6 @@ the correct value here.</para>
 <listitem>
 <para>Enter your email address here, &ie; something like
 <userinput>joe@example.com</userinput>.</para>
-</listitem>
-</varlistentry>
-</variablelist>
 <example>
 <title>Example</title>
 <para>So if your address is <replaceable>Joe User
@@ -197,6 +189,23 @@ the correct value here.</para>
 User</userinput> into the <guilabel>Your name</guilabel> field and
 <userinput>joe@example.com</userinput> into the <guilabel>Email
 address</guilabel> field.</para></example>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Email aliases</guilabel></term>
+<listitem>
+<para>This field contains alias addresses that should also be 
+considered as belonging to this identity (as opposed to representing 
+a different identity).</para>
+<example>
+<title>Example</title>
+<para>Primary address: first.last@example.org</para>
+<para>Aliases: first@example.org and last@example.org</para>
+</example>
+</listitem>
+</varlistentry>
+</variablelist>
+
 </sect2>
 
     <sect2 id="configure-identity-cryptography">
@@ -324,7 +333,7 @@ address</guilabel> field.</para></example>
 
 	<varlistentry id="configure-identity-cryptography-preferred-format">
 	  <term>
-	    <guilabel>Preferred crypto message format</guilabel>
+	    <guilabel>Crypto</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -377,17 +386,18 @@ rare cases.</para></note>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>BCC address</guilabel></term>
+<term><guilabel>BCC addresses</guilabel></term>
 <listitem>
-<para>Optionally enter an address to which blind copies of your messages
-should be sent to. Note that a BCC is only send to this address, when
-<menuchoice><guimenu>View</guimenu><guimenuitem>BCC</guimenuitem></menuchoice>
-is activated while composing a message. If you want to send a BCC regardless
+<para>Optionally enter addresses separated by comma to which blind copies of your messages
+should be sent to. When you compose a message with this identity, the <guilabel>BCC</guilabel>
+field is filled with these addresses. If you want to send a BCC regardless
 of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <guilabel>Composer</guilabel> page.</para>
 </listitem>
 </varlistentry>
 
+<!-- Dictionary missing-->
+ 
 <varlistentry>
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
@@ -416,6 +426,8 @@ on their drafts at a different location.</para>
 </listitem>
 </varlistentry>
 
+<!-- Templates folder missing-->
+ 
 <varlistentry>
 <term><guilabel>Special transport</guilabel></term>
 <listitem>
@@ -431,6 +443,17 @@ tab</link> of the <link linkend="configure-accounts">
 </varlistentry>
 
 </variablelist>
+</sect2>
+
+<sect2 id="configure-identity-templates">
+<title>Templates</title>
+<para>Here you can create and manage templates to use when composing new 
+messages, replies or forwarded messages.</para>
+<para>The message templates support substitution commands, either simply 
+type them or select them from the <guimenu>Insert Command</guimenu> menu.</para>
+<para>Templates specified here are identity-specific. They override global 
+templates, but can be overridden by per-folder templates if they are 
+specified.</para>
 </sect2>
 
 <sect2 id="configure-identity-signature">
@@ -451,7 +474,7 @@ completely different things.</para></note>
 <para>Check the <guilabel>Enable signature</guilabel> option if you
 want to be able to append the signature when using this identity. To
 <emphasis>automatically</emphasis> append it to every new message
-you also have to select <guilabel>Automatically append
+you also have to select <guilabel>Automatically insert 
 signature</guilabel> in the <guilabel>Composer</guilabel> configuration page.</para>
 
 <para>&kmail; can obtain the signature text from various sources. The
@@ -461,7 +484,7 @@ be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 
 <para>To read the text from a text file you select
-<guilabel>Obtain signature text from file</guilabel>. Enter the
+obtain signature text from <guilabel>File</guilabel>. Enter the
 filename in the <guilabel>Specify file</guilabel> edit field or hit
 the button to the right of it to browse your filesystem. If you want
 to edit the file, hit the <guilabel>Edit File</guilabel>
@@ -475,13 +498,13 @@ every message. Everything the program prints onto
 text.</para>
 
 <para>To read the text from the output of a command you select
-<guilabel>Obtain signature text from Output of
+<guilabel>Output of
 Command</guilabel>. Enter the command (preferably with full path) in
 the <guilabel>Specify command</guilabel> edit field.</para>
 
 <para>As a third option, you can enter the signature text directly in
-&kmail;'s configuration dialog. To do this, select <guilabel>Obtain
-signature text from input field below</guilabel> and enter the text
+&kmail;'s configuration dialog. To do this, select <guilabel>Input 
+Field Below</guilabel> and enter the text
 into the appearing text box.</para>
 
 <note><para>On the Internet, signatures are by convention separated
@@ -496,6 +519,63 @@ text yourself.</para>
 
 </sect2>
 
+<sect2 id="configure-identity-pictures">
+<title>Pictures</title>
+<para>&kmail; can send a small (48x48 pixels), low-quality, monochrome picture 
+with every message. For example, this could be a picture of you or a glyph. 
+It is shown in the recipient's mail client (if supported).</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Send picture with every message</guilabel></term>
+<listitem>
+<para>Check this box if you want KMail to add a so-called X-Face header to 
+messages written with this identity. An X-Face is a small (48x48 pixels) 
+black and white image that some mail clients are able to display.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>External Source</guilabel></term>
+<listitem>
+  
+<variablelist>  
+<varlistentry>
+<term><guilabel>Select File</guilabel></term>
+<listitem>
+<para>Use this to select an image file to create the picture from. The image 
+should be of high contrast and nearly quadratic shape. A light background 
+helps improve the result.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Set From Address Book</guilabel></term>
+<listitem>
+<para>You can use a scaled-down version of the picture you have set in your 
+address book entry.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>  
+
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Input Field Below</guilabel></term>
+<listitem>
+<para>Use this field to enter an arbitrary X-Face string.
+Examples are available at <ulink url="http://www.xs4all.nl/~ace/X-Faces/"
+>http://www.xs4all.nl/~ace/X-Faces/</ulink>
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+ 
 </sect1>
 
 <sect1 id="configure-accounts">
@@ -525,8 +605,8 @@ outgoing mail servers and set some common options.</para>
 linkend="sending-mail">Setting up your Account: Sending</link>.</para>
 
 <para>When you click <guibutton>Add...</guibutton> or
-<guibutton>Modify...</guibutton> the <guilabel>Add
-transport</guilabel> or <guilabel>Modify transport</guilabel> dialogs
+<guibutton>Modify...</guibutton> the <guilabel>Create Outgoing 
+Account</guilabel> or <guilabel>Configure account</guilabel> dialogs
 will open respectively. For sending via <application>sendmail</application>
 or similar programs
 you can specify a name and the location of the
@@ -534,11 +614,10 @@ you can specify a name and the location of the
 can specify <guilabel>Name</guilabel>, <guilabel>Outgoing mail server</guilabel>, and
 <guilabel>Port</guilabel> of the server.  <guilabel>Server requires
 authentication</guilabel> will enable the <guilabel>Login</guilabel>
-and <guilabel>Password</guilabel> fields and the
-<guilabel>Authentication method</guilabel> buttons on the
-<guilabel>Advanced</guilabel> tab. If you are not sure about the
+and <guilabel>Password</guilabel> fields. If you are not sure about the
 security settings you can make &kmail; test for the best settings by
-using <guibutton>Check What the Server Supports</guibutton>.</para>
+using <guibutton>Auto Detect</guibutton> on the
+<guilabel>Advanced</guilabel> tab.</para>
 
 <para><guilabel>Confirm before send</guilabel> will pop up a
 confirmation box every time you send a message.</para>
@@ -592,8 +671,11 @@ then messages you send to <replaceable>johndoe</replaceable> will be sent to
 <para>For basic information, see <link
 linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
 
-<para><guilabel>Check mail on startup</guilabel> lets you specify whether
-KMail should check for new mail immediately after it has been started.</para>
+<para>Using the <guilabel>Retrieval Options</guilabel> popup menu for each resource,  
+lets you specify whether &kmail; should check for new mail immediately after it has 
+been started. You can also select <guilabel>Include in Manual Mail Check</guilabel> 
+and <guilabel>Switch offline on &kmail; Shutdown</guilabel>.
+</para>
 
 <para>With <guilabel>New Mail Notification</guilabel> you can set
 how &kmail; will notify you if new messages have arrived:
@@ -618,15 +700,15 @@ are available via the <guibutton>Other Actions</guibutton> button.</para>
 display fonts. <guilabel>Message Body</guilabel> sets the font for
 the reader pane, <guilabel>Composer</guilabel> sets the font for
 writing messages in the composer window.<!-- fixme in kmail: better wording? -->
-There is a separate entry for <guilabel>Message List - Date Field</guilabel>
-so you can choose a monospaced font for the date field for better readability.</para>
+</para>
 
 </sect2>
 
 <sect2 id="configure-appearance-colors">
 <title>Colors</title>
 
-<para>This section allows you to change the color of the text.
+<para>This section allows you to change the color of the text by double clicking 
+on an item in the listbox.
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
 quoted more than three times will appear in color. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in
@@ -639,6 +721,156 @@ can be configured along with the other custom colors.<!-- TODO --></para>
 
 <sect2 id="configure-appearance-layout">
 <title>Layout</title>
+<para>This tab lets you configure the layout of the main window.</para>
+<para>In the <guilabel>Folder List</guilabel> section you can choose between the 
+<guilabel>Long folder list</guilabel> using the full height of the window and 
+the <guilabel>Short folder list</guilabel> with the message preview pane using the 
+bottom part of the window.</para>
+<para>If you want to have your favorite folders and a quick search field for folders at
+the bottom left of the main window select the next two options.</para>
+<!--Favorite folder view + Show folder quick search field-->
+
+<!--Folder Tooltips display additional information like the total number of messages, 
+unread messages and storage size when hoovering a folder with the mouse pointer 
+-->
+<para>You can choose where you want the
+<guilabel>Message Preview Pane</guilabel> or choose not to have
+it at all.</para>
+
+<!--this setting is apparently only available via the context menu in the message preview pane?
+para>The <guilabel>Message Structure Viewer</guilabel> option lets you choose when
+the structure viewer will be shown: the structure viewer is a part of the main window that
+lets you access all parts of a message. <guilabel>Show never</guilabel> will
+disable the structure viewer (note that you can still access attachments as icons),
+<guilabel>Show always</guilabel> will show the structure viewer even if there is only
+one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will
+display the structure viewer only if it makes sense, &ie; if the current message
+has attachments or has &html; parts.</para
+not in 2.1.0 lueck-->
+
+</sect2>
+
+<sect2 id="configure-appearance-message-list">
+<title>Message List</title>
+<para>In the <guilabel>General</guilabel> section you can alter the appearance of the Message List pane.</para>
+<para>Choose to <guilabel>Display tooltips for messages and group headers</guilabel>. 
+Check <guilabel>Hide tab bar when only one tab is open</guilabel> to have more space for 
+the messages in the list.</para>
+
+<para>The next options are the settings for <guilabel>Default Aggregation</guilabel> and 
+<guilabel>Default Theme</guilabel> which can be overridden using the <guilabel>Folder 
+Properties</guilabel> dialog for each folder individually.</para>
+<para>Using the <guibutton>Configure</guibutton> button opens a window to customize the default
+aggregation or theme to your needs and allows you to add your own.</para>
+<para>A brief overview of the predefined aggregations and themes:</para>
+<variablelist>
+<varlistentry>
+<term>Aggregation</term>
+<listitem>
+
+<variablelist>
+<varlistentry>
+<term>Senders/Receivers, Flat</term>
+<listitem><para>
+This view groups the messages by senders or receivers (depending on the folder type). 
+Messages are not threaded.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Activity by Date, Flat</term>
+<listitem><para>This view uses day-by-day groups. Messages are not threaded. So for example, 
+in <quote>Today</quote> you will simply find all the messages arrived today.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Activity by Date, Threaded</term>
+<listitem><para>This view uses day-by-day groups. Messages are threaded. So for example, in 
+<quote>Today</quote> you will find all the messages arrived today and all the threads.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Current Activity, Flat</term>
+<listitem><para>This view uses smart date range groups. Messages are not threaded. So for 
+example, in <quote>Today</quote> you will simply find all the messages arrived today.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Current Activity, Threaded </term>
+<listitem><para>This view uses smart date range groups. Messages are threaded. So for 
+example, in <quote>Today</quote> you will find all the messages arrived today and all 
+the threads that have been active today.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Thread Starters</term>
+<listitem><para>This view groups the messages in threads and then groups the threads by the 
+starting user.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Flat Date View</term>
+<listitem><para>This is a plain and old list of messages sorted by date: no groups and no 
+threading.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Standard Mailing List</term>
+<listitem><para>This is a plain and old mailing list view: no groups and heavy threading.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist>
+<varlistentry>
+<term>Theme</term>
+<listitem>
+
+<variablelist>
+<varlistentry>
+<term>Fancy</term>
+<listitem><para>A fancy multiline and multi item theme
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Fancy with Clickable Status</term>
+<listitem><para>A fancy multiline and multi item theme with a clickable status column
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Classic</term>
+<listitem><para>A simple, backward compatible, single row theme
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>In the <guilabel>Date Display</guilabel> section you can choose between several
+date formats. The <guilabel>Localized Format</guilabel> is the one you can
+specify under <guilabel>Country/Region &amp; Language</guilabel> in the &systemsettings;.
+For the <guilabel>Custom</guilabel> format you can get
+a description of the possible values by clicking on <guilabel>Custom format 
+information</guilabel> option.</para>
+</sect2>
+
+<sect2 id="configure-appearance-message-window">
+<title>Message Window</title>
 
 <para>If the <guilabel>Close message window after replying or forwarding</guilabel> option is
 activated, KMail will close the message window after replying to or forwarding the message that
@@ -651,22 +883,31 @@ pane that tells you if a message is &html; or not. This is important because
 you should be aware of the fact that you are reading a &html; message. The &html;
 status bar itself cannot be influenced by the &html; code of the message.</para>
 
-<para>The <guilabel>Window Layout</guilabel> section lets you choose the
-layout of the main window. You can choose where you want the
-<guilabel>Message Preview Pane</guilabel> or choose not to have
-it at all.</para>
+ <!-- Show spam status in fancy headers missing -->
+ 
+<para>Enable <guilabel>Replace smileys by emoticons</guilabel> if you want smileys 
+like <userinput>:-)</userinput> appearing in the message text to be 
+replaced by emoticons (small pictures).</para>
 
-<para>The <guilabel>Message Structure Viewer</guilabel> option lets you choose when
-the structure viewer will be shown: the structure viewer is a part of the main window that
-lets you access all parts of a message. <guilabel>Show never</guilabel> will
-disable the structure viewer (note that you can still access attachments as icons),
-<guilabel>Show always</guilabel> will show the structure viewer even if there is only
-one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will
-display the structure viewer only if it makes sense, &ie; if the current message
-has attachments or has &html; parts.</para>
+<para>Enable <guilabel>Reduce font size for quoted text</guilabel> to show quoted 
+text with a smaller font.</para>
 
+<para>Enable <guilabel>Show expand/collapse quote marks</guilabel> to show 
+different levels of quoted text. Disable to hide 
+the levels of quoted text.</para>
+
+<para><guilabel>Fallback character encoding</guilabel>: 
+Some emails, especially those generated automatically, do not specify the 
+character encoding which needs to be used to properly display them. In such 
+cases a fallback character encoding will be used, which you can configure 
+here. Set it to the character encoding most commonly used in your part of 
+the world. As a default the encoding configured for the whole system is used.</para>
+
+<para><guilabel>Override character encoding</guilabel>: 
+Changing this from its default <guilabel>Auto</guilabel> will force the use of the specified 
+encoding for all emails, regardless of what they specify themselves.</para>
 </sect2>
-
+<!-- completely changed lueck 31.05.2011
 <sect2 id="configure-appearance-headers">
 <title>Headers</title>
 
@@ -690,16 +931,8 @@ whether threads should appear expanded (<guilabel>open</guilabel>) by
 default or whether they should be collapsed (<guilabel>closed</guilabel>).
 You can of course still open/close threads using the  <guilabel>+</guilabel>/<guilabel>-</guilabel>
 buttons.</para>
-
-<para>With <guilabel>Date Display</guilabel> you can choose between several
-date formats. The <guilabel>Localized Format</guilabel> is the one you can
-specify under <guilabel>Country/Region &amp; Language</guilabel> in the &systemsettings;.
-For the <guilabel>Custom</guilabel> format you can get
-a description of the possible values by pressing
-<keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>
-and then clicking on <guilabel>Custom</guilabel> option.</para>
-
 </sect2>
+-->
 
 <sect2 id="configure-appearance-systemtray">
 <title>System Tray</title>
@@ -724,9 +957,8 @@ folder will be selected in &kmail;'s main window.
 
 </sect2>
 
-<!-- fixme?: date + less than/greater than broken in kmail? -->
-<!-- fixme?: "group" wording in program -->
-
+ <!-- Message Tags tab missing for 2.1.96 -->
+ 
 </sect1>
 
   <sect1 id="configure-composer">
@@ -742,7 +974,7 @@ folder will be selected in &kmail;'s main window.
       <variablelist>
 	<varlistentry id="configure-composer-general-append-signature">
 	  <term>
-	    <guilabel>Automatically append signature</guilabel>
+	    <guilabel>Automatically insert signature</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -753,6 +985,7 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<!-- Insert signature above quoted text + Prepend separator to signature missing -->
 	<varlistentry id="configure-composer-general-smart-quoting">
 	  <term>
 	    <guilabel>Use smart quoting</guilabel>
@@ -807,6 +1040,7 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<!-- Use recent addresses for autocompletion missing -->
 	<varlistentry id="configure-composer-general-word-wrap">
 	  <term>
 	    <guilabel>Word wrap at column</guilabel>
@@ -820,7 +1054,7 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
-    <varlistentry id="configure-composer-general-too-many-recipients">
+    <!-- not in kmail 2.0.96 varlistentry id="configure-composer-general-too-many-recipients">
       <term>
         <guilabel>Warn if the number of recipients is larger than</guilabel>
       </term>
@@ -832,7 +1066,7 @@ folder will be selected in &kmail;'s main window.
           This warning can be turned off.
         </para>
       </listitem>
-    </varlistentry>
+    </varlistentry-->
 	<varlistentry id="configure-composer-general-autosave-interval">
 	  <term>
 	    <guilabel>Autosave interval</guilabel>
@@ -846,7 +1080,7 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
-    <varlistentry id="configure-composer-general-forwading-type">
+    <!-- not in kmail 2.0.96 varlistentry id="configure-composer-general-forwading-type">
 	  <term>
 	    <guilabel>Default Forwarding Type</guilabel>
 	  </term>
@@ -857,7 +1091,8 @@ folder will be selected in &kmail;'s main window.
            when you activate the shortcut for forwarding.
 	    </para>
 	  </listitem>
-	</varlistentry>
+	</varlistentry-->
+	<!--missing: Configure Completion Order + Edit Recent Addresses -->
 	<varlistentry id="configure-composer-general-external-editor">
 	  <term>
 	    <guilabel>External Editor</guilabel>
@@ -884,7 +1119,32 @@ folder will be selected in &kmail;'s main window.
 
     </sect2>
 
+<sect2 id="configure-composer-standard-templates">
+<title>Standard Templates</title>
+<para>Here you can add, edit, and delete custom message templates to use 
+when you compose a reply or forwarding message.</para>
+<para>Message templates support substitution commands, by simply typing them 
+or selecting them from the <guimenu>Insert Command</guimenu> menu.</para>
+<para>These are global (default) templates. They can be overridden by 
+per-identity templates or per-folder templates if they are specified.</para>
+</sect2>
 
+<sect2 id="configure-composer-custom-templates">
+<title>Custom Templates</title>
+<para>Here you can add, edit, and delete custom message templates to use 
+when you compose a reply or forwarding message. Create the custom template 
+by typing the name into the input box and press the <guiicon>+</guiicon> button.
+You can bind a keyboard combination to the template for faster operations.</para>
+<!-- To and CC field-->
+<para>Message templates support substitution commands, by simply typing them 
+or selecting them from the <guimenu>Insert Command</guimenu> menu.</para>
+<para>There are four types of custom templates: used to <guilabel>Reply</guilabel>, 
+<guilabel>Reply to All</guilabel>, <guilabel>Forward</guilabel>, and 
+<guilabel>Universal</guilabel> which can be used for all kinds of operations. 
+You cannot bind a keyboard shortcut to <guilabel>Universal</guilabel>
+templates.</para>
+</sect2>
+ <!-- replaced by Standard Templates / Custom Templates tabs, remove it lueck 31.05.2011
 <sect2 id="configure-composer-phrases">
 <title>Phrases</title>
 
@@ -898,9 +1158,8 @@ your default &kde; language using the <guibutton>Add...</guibutton> button.
 You can then choose between different languages with the
 <guilabel>Language</guilabel> drop down box.
 This will only work for languages whose i18n package you have installed.</para>
-
 </sect2>
-
+-->
 <sect2 id="configure-composer-subject">
 <title>Subject</title>
 
@@ -1025,7 +1284,7 @@ of key words can be modified.</para>
 	    </para>
 	  </listitem>
 	</varlistentry>
-
+	<!-- missing Attempt decryption of encrypted messages when viewing-->
 	<varlistentry id="configure-security-reading-mdns">
 	  <term>
 	    <guilabel>Message Disposition Notifications</guilabel>
@@ -1253,7 +1512,7 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-security-composing-encrypt-to-self">
 	  <term>
-	    <guilabel>Always encrypt to self</guilabel>
+	    <guilabel>When encrypting emails, always also encrypt to the certificate of my own identity</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -1370,7 +1629,7 @@ of key words can be modified.</para>
 
     <sect2 id="configure-security-warnings">
       <title>
-	Warnings
+	Miscellaneous
       </title>
 
       <para>
@@ -1458,7 +1717,10 @@ of key words can be modified.</para>
 	    </para>
 	  </listitem>
 	</varlistentry>
-
+	<!-- 
+	GnuPG Settings
+	Chiasmus Settings
+	-->
 	<varlistentry id="configure-security-warnings-reenable-all-warnings">
 	  <term>
 	    <guilabel>Re-Enable All &quot;Don&apos;t Ask Again&quot; Warnings</guilabel>
@@ -1488,14 +1750,16 @@ of key words can be modified.</para>
     </sect2>
 
     <sect2 id="configure-security-smime-validation">
+      <!-- copy of section configuration-smime-validation from kleopatra docbook
+      keep in sync, both apps have the same page in settings-->
       <title>
 	&smime; Validation
       </title>
 
       <para>
-	This tab contains selected entries from &gpgsm;'s <link
+	This tab contains selected entries from &gpgsm;'s <!--link
 	linkend="configure-security-crypto-backends-configure">dynamic
-	backend configuration dialog</link>. Please refer
+	backend configuration dialog</link-->. Please refer
 	to the &gpgsm; manual for a description of these options.
       </para>
 
@@ -1721,7 +1985,9 @@ of key words can be modified.</para>
       </variablelist>
     </sect2>
 
-    <sect2 id="configure-security-crypto-backends">
+    <!-- no Crypto Backends in kmail 2.0.97 lueck 31.05.2011
+    This is now available via GnuPG Settings + Ciasmus Settings buttons on the Miscellaneous tab
+    sect2 id="configure-security-crypto-backends">
       <title>
 	Crypto Backends
       </title>
@@ -1773,7 +2039,7 @@ of key words can be modified.</para>
 	in &kmail;.
       </para>
 
-    </sect2>
+    </sect2 -->
 
   </sect1> <!-- configure-security -->
 
@@ -1837,14 +2103,14 @@ Correspondingly, if you ask &kmail; to go to the previous unread message.
 <listitem>
 <para>This option controls what happens if you open a folder.
 <itemizedlist>
-<listitem>
+<!-- not in kmail 2.0.96 listitem>
 <para>If <guilabel>Jump to First New Message</guilabel> is selected then &kmail; will select the
 first message it finds that is marked as new.
 </para>
-</listitem>
+</listitem-->
 <listitem>
-<para>If <guilabel>Jump to First Unread or New Message</guilabel> is selected then &kmail; will
-select the first message it finds that is marked either as new or as unread.
+<para>If <guilabel>Jump to First Unread Message</guilabel> is selected then &kmail; will
+select the first message it finds that is marked as unread.
 </para>
 </listitem>
 <listitem>
@@ -1888,13 +2154,13 @@ the message will be moved immediately, without a popup.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
+<!-- not in kmail 2.0.96 varlistentry>
 <term><guilabel>By default, message folders on disk are...</guilabel></term>
 <listitem>
 <para>Here you can set the default <link linkend="folders-format">folder format</link>
 that is used when you create a new folder.</para>
 </listitem>
-</varlistentry>
+</varlistentry-->
 
 <varlistentry>
 <term><guilabel>Open this folder on startup</guilabel></term>
@@ -1919,7 +2185,10 @@ option is selected.</para>
 
 </sect2>
 
-<sect2 id="configure-misc-groupware">
+ <!-- not in kmail 2.0.96 or does this appear only with an imap account? 
+no strings in the translation templates, so this is apparently obsolete lueck
+Revision 1039026 Remove the no longer needed IMAP groupware interface config
+sect2 id="configure-misc-groupware">
 <title>Groupware</title>
 
 <variablelist>
@@ -1964,7 +2233,7 @@ option is selected.</para>
 </varlistentry>
 </variablelist>
 </sect2>
-
+-->
 <sect2 id="configure-misc-invitation">
 <title>Invitations</title>
 
@@ -2235,7 +2504,8 @@ this option is enabled, you will be ask how to proceed every time otherwise.
 <listitem>
 <para>
 Starting in version 1.9, &kmail; can show the User-Agent or X-Mailer value
-from the message header when using Fancy Headers (see View->Headers menu).
+from the message header when using Fancy Headers (see <menuchoice><guimenu>View</guimenu>
+<guisubmenu>Headers</guisubmenu></menuchoice> menu).
 
 To enable this feature, add a line reading (under [Reader] section):
 </para>

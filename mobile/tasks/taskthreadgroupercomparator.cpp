@@ -118,4 +118,3 @@ bool TaskThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
   return leftItem.id() < rightItem.id(); // default
 }
 
-#include "taskthreadgroupercomparator.moc"

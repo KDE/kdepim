@@ -57,7 +57,7 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile(const QString &dialogTitle)
 {
-  url = KFileDialog::getSaveUrl(lastPath + s_aveName, QString(), p_arent, dialogTitle);
+  url = KFileDialog::getSaveUrl(QString(lastPath + s_aveName), QString(), p_arent, dialogTitle);
 
   if (url.isEmpty())
     return 0;
@@ -186,7 +186,7 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
 
   list->setCurrentRow( initialValue );
   list->setFocus();
-  QObject::connect( list, SIGNAL( itemActivated( QListWidgetItem* ) ), dlg, SLOT( accept() ) );
+  QObject::connect( list, SIGNAL(itemActivated(QListWidgetItem*)), dlg, SLOT(accept()) );
   restoreWindowSize("selectBox", dlg, QSize(247,174));
 
   int ret;

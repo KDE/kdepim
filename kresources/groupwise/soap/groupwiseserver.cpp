@@ -115,8 +115,8 @@ int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
   }
 
   m_sock = new KTcpSocket();
-  connect( m_sock, SIGNAL(error(KTcpSocket::Error)), this, SLOT( slotSocketError(  KTcpSocket::Error ) ) );
-  connect( m_sock, SIGNAL( sslErrors(const QList<KSslError> &) ), SLOT( slotSslErrors(const QList<KSslError> &) ) );
+  connect( m_sock, SIGNAL(error(KTcpSocket::Error)), this, SLOT(slotSocketError(KTcpSocket::Error)) );
+  connect( m_sock, SIGNAL(sslErrors(QList<KSslError>)), SLOT(slotSslErrors(QList<KSslError>)) );
   mErrors.clear();
 
   m_sock->reset();
@@ -1440,11 +1440,11 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 void GroupwiseServer::slotSslErrors(const QList<KSslError> & errors)
 {
 
-  bool untrusted = false;
+  // bool untrusted = false;
   foreach( const KSslError& err, errors ) {
     // ignore untrusted certs for now, we can't handle it async
     if ( err.error() == KSslError::UntrustedCertificate ) {
-      untrusted = true;
+      //untrusted = true;
       mErrors.clear();
       m_sock->ignoreSslErrors();
       break;

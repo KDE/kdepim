@@ -253,7 +253,7 @@ QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) 
       if ( yearNameHash.contains( dDate.year() ) ) {
         yearName = yearNameHash.value( dDate.year() );
       } else {
-        yearName = calendar->yearString( dDate );
+        yearName = calendar->formatDate( dDate, KLocale::Year, KLocale::LongNumber );
         yearNameHash.insert( dDate.year(), yearName );
       }
       return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), yearName );
@@ -378,4 +378,3 @@ KMime::Message::Ptr MailThreadGrouperComparator::messageForItem( const Akonadi::
   return message;
 }
 
-#include "mailthreadgroupercomparator.moc"

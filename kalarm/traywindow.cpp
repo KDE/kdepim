@@ -23,12 +23,6 @@
 
 #include "alarmcalendar.h"
 #include "alarmlistview.h"
-#ifdef USE_AKONADI
-#include "akonadimodel.h"
-#include "collectionmodel.h"
-#else
-#include "alarmresources.h"
-#endif
 #include "alarmtext.h"
 #include "functions.h"
 #include "kalarmapp.h"
@@ -103,10 +97,7 @@ TrayWindow::TrayWindow(MainWindow* parent)
     actions->addAction(QLatin1String("tNew"), mActionNew);
     contextMenu()->addAction(mActionNew);
     connect(mActionNew, SIGNAL(selected(EditAlarmDlg::Type)), SLOT(slotNewAlarm(EditAlarmDlg::Type)));
-
-    mActionNewFromTemplate = KAlarm::createNewFromTemplateAction(i18nc("@action", "New Alarm From &Template"), actions, QLatin1String("tNewFromTempl"));
-    contextMenu()->addAction(mActionNewFromTemplate);
-    connect(mActionNewFromTemplate, SIGNAL(selected(const KAEvent*)), SLOT(slotNewFromTemplate(const KAEvent*)));
+    connect(mActionNew->fromTemplateAlarmAction(), SIGNAL(selected(const KAEvent*)), SLOT(slotNewFromTemplate(const KAEvent*)));
     contextMenu()->addSeparator();
 
     KAction* a = KAlarm::createStopPlayAction(this);
@@ -131,15 +122,9 @@ TrayWindow::TrayWindow(MainWindow* parent)
     // Set icon to correspond with the alarms enabled menu status
     setEnabledStatus(theApp()->alarmsEnabled());
 
-#ifdef USE_AKONADI
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)), SLOT(slotCalendarStatusChanged()));
-#else
-    connect(AlarmResources::instance(), SIGNAL(resourceStatusChanged(AlarmResource*, AlarmResources::Change)), SLOT(slotCalendarStatusChanged()));
-#endif
     connect(AlarmCalendar::resources(), SIGNAL(haveDisabledAlarmsChanged(bool)), SLOT(slotHaveDisabledAlarms(bool)));
-    connect(this, SIGNAL(activateRequested(bool, const QPoint&)), SLOT(slotActivateRequested()));
-    connect(this, SIGNAL(secondaryActivateRequested(const QPoint&)), SLOT(slotSecondaryActivateRequested()));
-    slotCalendarStatusChanged();   // initialise action states
+    connect(this, SIGNAL(activateRequested(bool,QPoint)), SLOT(slotActivateRequested()));
+    connect(this, SIGNAL(secondaryActivateRequested(QPoint)), SLOT(slotSecondaryActivateRequested()));
     slotHaveDisabledAlarms(AlarmCalendar::resources()->haveDisabledAlarms());
 
     // Hack: KSNI does not let us know when it is about to show the tooltip,
@@ -156,24 +141,24 @@ TrayWindow::TrayWindow(MainWindow* parent)
 
     // Update when alarms are modified
 #ifdef USE_AKONADI
-    connect(AlarmListModel::all(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+    connect(AlarmListModel::all(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             mToolTipUpdateTimer, SLOT(start()));
-    connect(AlarmListModel::all(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+    connect(AlarmListModel::all(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             mToolTipUpdateTimer, SLOT(start()));
-    connect(AlarmListModel::all(), SIGNAL(rowsMoved(const QModelIndex&, int, int, const QModelIndex&, int)),
+    connect(AlarmListModel::all(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
             mToolTipUpdateTimer, SLOT(start()));
-    connect(AlarmListModel::all(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+    connect(AlarmListModel::all(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
             mToolTipUpdateTimer, SLOT(start()));
     connect(AlarmListModel::all(), SIGNAL(modelReset()),
             mToolTipUpdateTimer, SLOT(start()));
 #else
-    connect(EventListModel::alarms(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+    connect(EventListModel::alarms(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+    connect(EventListModel::alarms(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(rowsMoved(const QModelIndex&, int, int, const QModelIndex&, int)),
+    connect(EventListModel::alarms(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
             mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+    connect(EventListModel::alarms(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
             mToolTipUpdateTimer, SLOT(start()));
     connect(EventListModel::alarms(), SIGNAL(modelReset()),
             mToolTipUpdateTimer, SLOT(start()));
@@ -188,23 +173,6 @@ TrayWindow::~TrayWindow()
     kDebug();
     theApp()->removeWindow(this);
     emit deleted();
-}
-
-/******************************************************************************
-* Called when the status of a calendar has changed.
-* Enable or disable actions appropriately.
-*/
-void TrayWindow::slotCalendarStatusChanged()
-{
-    // Find whether there are any writable active alarm calendars
-#ifdef USE_AKONADI
-    bool active = !CollectionControlModel::enabledCollections(KAlarm::CalEvent::ACTIVE, true).isEmpty();
-    mActionNewFromTemplate->setEnabled(active && TemplateListModel::all()->haveEvents());
-#else
-    bool active = AlarmResources::instance()->activeCount(KAlarm::CalEvent::ACTIVE, true);
-    mActionNewFromTemplate->setEnabled(active && EventListModel::templates()->haveEvents());
-#endif
-    mActionNew->setEnabled(active);
 }
 
 /******************************************************************************

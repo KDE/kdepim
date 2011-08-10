@@ -42,7 +42,7 @@ int main( int argc, char **argv )
   SetCursor( LoadCursor( NULL, IDC_WAIT ) );
 #endif
  const QByteArray& ba = QByteArray( "notes-mobile" );
-  const KLocalizedString name = ki18n( "Notes Mobile" );
+  const KLocalizedString name = ki18n( "Kontact Touch Notes" );
 
   KAboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KJots Mobile" ); //has to match the bugzilla product name

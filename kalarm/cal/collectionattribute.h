@@ -34,8 +34,7 @@ namespace KAlarm
 
 /*=============================================================================
 = Class: CollectionAttribute
-= User-specific attributes of a KAlarm collection, including the compatibility
-= status of collections or items.
+= User-specific attributes of a KAlarm collection.
 =============================================================================*/
 
 class KALARM_CAL_EXPORT CollectionAttribute : public Akonadi::Attribute
@@ -44,7 +43,7 @@ class KALARM_CAL_EXPORT CollectionAttribute : public Akonadi::Attribute
         CollectionAttribute()
                 : mEnabled(KAlarm::CalEvent::EMPTY),
                   mStandard(KAlarm::CalEvent::EMPTY),
-                  mCompatibility(KAlarm::Calendar::Incompatible)  { }
+                  mKeepFormat(false)  {}
 
         bool isEnabled(KAlarm::CalEvent::Type type) const   { return mEnabled & type; }
 
@@ -83,13 +82,15 @@ class KALARM_CAL_EXPORT CollectionAttribute : public Akonadi::Attribute
         QColor backgroundColor() const     { return mBackgroundColour; }
 
         /** Set the background color for this collection and its alarms. */
-        void   setBackgroundColor(const QColor& c)  { mBackgroundColour = c; }
+        void setBackgroundColor(const QColor& c)  { mBackgroundColour = c; }
 
-        /** Return the compatibility status for the entity. */
-        KAlarm::Calendar::Compat compatibility() const  { return mCompatibility; }
+        /** Return whether the user has chosen to keep the old calendar storage
+         *  format, i.e. not update to current KAlarm format.
+         */
+        bool keepFormat() const            { return mKeepFormat; }
 
-        /** Set the compatibility status for the entity. */
-        void setCompatibility(KAlarm::Calendar::Compat c)  { mCompatibility = c; }
+        /** Set whether to keep the old calendar storage format unchanged. */
+        void setKeepFormat(bool keep)      { mKeepFormat = keep; }
 
         virtual QByteArray type() const    { return name(); }
         virtual CollectionAttribute* clone() const;
@@ -103,7 +104,7 @@ class KALARM_CAL_EXPORT CollectionAttribute : public Akonadi::Attribute
         QColor                   mBackgroundColour; // background color for collection and its alarms
         KAlarm::CalEvent::Types  mEnabled;          // which alarm types the collection is enabled for
         KAlarm::CalEvent::Types  mStandard;         // whether the collection is a standard collection
-        KAlarm::Calendar::Compat mCompatibility;    // calendar compatibility with current KAlarm format
+        bool                     mKeepFormat;       // whether user has chosen to keep old calendar storage format
 };
 
 } // namespace KAlarm

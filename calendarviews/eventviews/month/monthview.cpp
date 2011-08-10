@@ -28,7 +28,7 @@
 #include "monthscene.h"
 #include "prefs.h"
 
-#include <akonadi_next/kcheckableproxymodel.h>
+#include <kcheckableproxymodel.h>
 
 //#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
@@ -230,17 +230,17 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   }
 
   /*
-  connect( d->calendarSearch->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)),
-           this, SLOT(rowsInserted(const QModelIndex &,int,int)) );
-  connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(const QModelIndex &,int,int)),
-           this, SLOT( rowsAboutToBeRemoved(const QModelIndex &,int,int)) );
-  connect( d->calendarSearch->model(), SIGNAL(dataChanged(const QModelIndex &,const QModelIndex &)),
-           this, SLOT( dataChanged(const QModelIndex &,const QModelIndex &)) );
+  connect( d->calendarSearch->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(rowsInserted(QModelIndex,int,int)) );
+  connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+           this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+  connect( d->calendarSearch->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
   connect( d->calendarSearch->model(), SIGNAL(modelReset()), this, SLOT(calendarReset()) );
   */
 
-  connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
-           SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)) );
+  connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
+           SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
 
   connect( d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
@@ -500,6 +500,7 @@ void MonthView::reloadIncidences()
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   const Akonadi::Item::List incidences = calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
 
+  const bool colorMonthBusyDays = preferences()->colorMonthBusyDays();
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
     const bool isTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
@@ -543,7 +544,7 @@ void MonthView::reloadIncidences()
 
     }
     KCalCore::DateTimeList::const_iterator t;
-    const bool busyDay = makesWholeDayBusy( incidence ) && preferences()->colorMonthBusyDays();
+    const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( incidence );
     for ( t = dateTimeList.constBegin(); t != dateTimeList.constEnd(); ++t ) {
       if ( busyDay ) {
         QStringList &list = d->mBusyDays[t->date()];

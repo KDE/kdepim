@@ -38,11 +38,16 @@ KAddressBookPlugin::KAddressBookPlugin( KontactInterface::Core *core, const QVar
 {
   setComponentData( KontactPluginFactory::componentData() );
 
+  KGlobal::locale()->insertCatalog( "libkdepim" );
+  KGlobal::locale()->insertCatalog( "kabc" );
+  KGlobal::locale()->insertCatalog( "libakonadi" );
+  KGlobal::locale()->insertCatalog( "kabcakonadi" );
+
   KAction *action =
     new KAction( KIcon( "contact-new" ),
                  i18nc( "@action:inmenu", "New Contact..." ), this );
   actionCollection()->addAction( "new_contact", action );
-  connect( action, SIGNAL( triggered( bool) ), SLOT( slotNewContact() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(slotNewContact()) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_C ) );
   action->setHelpText(
     i18nc( "@info:status", "Create a new contact" ) );
@@ -55,7 +60,7 @@ KAddressBookPlugin::KAddressBookPlugin( KontactInterface::Core *core, const QVar
     new KAction( KIcon( "user-group-new" ),
                  i18nc( "@action:inmenu", "New Contact Group..." ), this );
   actionCollection()->addAction( "new_contactgroup", action );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( slotNewContactGroup() ) );
+  connect( action, SIGNAL(triggered(bool)), SLOT(slotNewContactGroup()) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_G ) );
   action->setHelpText(
     i18nc( "@info:status", "Create a new contact group" ) );

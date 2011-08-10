@@ -13,3 +13,4 @@ if (DBLATEX_EXECUTABLE)
 endif (DBLATEX_EXECUTABLE)
 
 install(FILES licenses.pdf DESTINATION ${DATA_INSTALL_DIR}/kontact-touch/)
+install(FILES licenses.html DESTINATION ${DATA_INSTALL_DIR}/kontact-touch/)

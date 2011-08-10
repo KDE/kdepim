@@ -52,8 +52,8 @@ KMailCVT::KMailCVT(QWidget *parent)
         // Disable the 'next button to begin with.
         setValid( currentPage(), false );
 
-        connect( selfilterpage->mCollectionRequestor, SIGNAL( collectionChanged(Akonadi::Collection) ),
-                 this, SLOT( collectionChanged(Akonadi::Collection) ) );
+        connect( selfilterpage->mCollectionRequestor, SIGNAL(collectionChanged(Akonadi::Collection)),
+                 this, SLOT(collectionChanged(Akonadi::Collection)) );
 	Akonadi::Control::widgetNeedsAkonadi(this);
 }
 

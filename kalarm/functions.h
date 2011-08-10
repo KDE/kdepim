@@ -1,7 +1,7 @@
 /*
  *  functions.h  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2004-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2004-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -116,9 +116,8 @@ void                viewAlarm(const KAEvent*, QWidget* parent = 0);
 void                editNewTemplate(EditAlarmDlg::Type, QWidget* parent = 0);
 void                editNewTemplate(const KAEvent* preset, QWidget* parent = 0);
 void                editTemplate(KAEvent*, QWidget* parent = 0);
-void                execNewAlarmDlg(EditAlarmDlg*, bool alreadyExecuted = false);
+void                execNewAlarmDlg(EditAlarmDlg*);
 /** Create a "New From Template" QAction */
-TemplateMenuAction* createNewFromTemplateAction(const QString& label, KActionCollection*, const QString& name);
 KToggleAction*      createAlarmEnableAction(QObject* parent);
 KAction*            createStopPlayAction(QObject* parent);
 KToggleAction*      createSpreadWindowsAction(QObject* parent);
@@ -183,6 +182,10 @@ UpdateStatus        enableEvents(KAEvent::List&, bool enable, QWidget* msgParent
 void                purgeArchive(int purgeDays);    // must only be called from KAlarmApp::processQueue()
 void                displayUpdateError(QWidget* parent, UpdateStatus, UpdateError, int nAlarms, int nKOrgAlarms = 1, bool showKOrgError = true);
 void                displayKOrgUpdateError(QWidget* parent, UpdateError, UpdateStatus korgError, int nAlarms);
+QStringList         checkRtcWakeConfig(bool checkEventExists = false);
+void                deleteRtcWakeConfig();
+void                cancelRtcWake(QWidget* msgParent, const QString& eventId = QString());
+bool                setRtcWakeTime(unsigned triggerTime, QWidget* parent);
 
 bool                convertTimeString(const QByteArray& timeString, KDateTime& dateTime, const KDateTime& defaultDt = KDateTime(), bool allowTZ = true);
 KDateTime           applyTimeZone(const QString& tzstring, const QDate& date, const QTime& time,

@@ -295,14 +295,14 @@ void Groupwise::getAddressbook( const KUrl &url )
 
     GroupwiseServer server( u, user, pass, /*Hack*/ KDateTime::Spec::LocalZone(), 0 );
 
-    connect( &server, SIGNAL( readAddressBookTotalSize( int ) ),
-      SLOT( slotReadAddressBookTotalSize( int ) ) );
-    connect( &server, SIGNAL( readAddressBookProcessedSize( int ) ),
-      SLOT( slotReadAddressBookProcessedSize( int ) ) );
-    connect( &server, SIGNAL( errorMessage( const QString &, bool ) ),
-      SLOT( slotServerErrorMessage( const QString &, bool ) ) );
-    connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
-      SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
+    connect( &server, SIGNAL(readAddressBookTotalSize(int)),
+      SLOT(slotReadAddressBookTotalSize(int)) );
+    connect( &server, SIGNAL(readAddressBookProcessedSize(int)),
+      SLOT(slotReadAddressBookProcessedSize(int)) );
+    connect( &server, SIGNAL(errorMessage(QString,bool)),
+      SLOT(slotServerErrorMessage(QString,bool)) );
+    connect( &server, SIGNAL(gotAddressees(KABC::Addressee::List)),
+      SLOT(slotReadReceiveAddressees(KABC::Addressee::List)) );
 
     kDebug() <<"Login";
     if ( !server.login() ) {
@@ -369,10 +369,10 @@ void Groupwise::updateAddressbook( const KUrl &url )
     debugMessage( "update IDs: " + ids.join( "," ) );
 
     GroupwiseServer server( u, user, pass, /*Hack*/ KDateTime::Spec::LocalZone(), 0 );
-    connect( &server, SIGNAL( errorMessage( const QString &, bool ) ),
-      SLOT( slotServerErrorMessage( const QString &, bool ) ) );
-    connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
-      SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
+    connect( &server, SIGNAL(errorMessage(QString,bool)),
+      SLOT(slotServerErrorMessage(QString,bool)) );
+    connect( &server, SIGNAL(gotAddressees(KABC::Addressee::List)),
+      SLOT(slotReadReceiveAddressees(KABC::Addressee::List)) );
 
     kDebug() << "  Login";
     if ( !server.login() ) {

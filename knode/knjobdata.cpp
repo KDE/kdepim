@@ -125,10 +125,10 @@ void KNJobData::setupKJob(KJob * job)
 {
   mJob = job;
   if ( job ) {
-    connect( job, SIGNAL( percent(KJob*, unsigned long) ),
-             SLOT( slotJobPercent(KJob*, unsigned long) ) );
-    connect( job, SIGNAL( infoMessage(KJob*, const QString&) ),
-             SLOT( slotJobInfoMessage(KJob*, const QString&) ) );
+    connect( job, SIGNAL(percent(KJob*,ulong)),
+             SLOT(slotJobPercent(KJob*,ulong)) );
+    connect( job, SIGNAL(infoMessage(KJob*,QString)),
+             SLOT(slotJobInfoMessage(KJob*,QString)) );
   }
 }
 
@@ -141,9 +141,9 @@ void KNJobData::setupKIOJob( KIO::Job *job )
       else
         job->addMetaData( "tls", "off" );
     }
-  }
   job->setUiDelegate(0);
   setupKJob( job );
+  }
 }
 
 void KNJobData::createProgressItem()

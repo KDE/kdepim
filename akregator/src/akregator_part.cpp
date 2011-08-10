@@ -44,7 +44,9 @@
 #include "dummystorage/storagefactorydummyimpl.h"
 
 #include <libkdepim/broadcaststatus.h>
+#include "kdepim-version.h"
 
+#include <KActionCollection>
 #include <knotifyconfigwidget.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -124,10 +126,15 @@ namespace {
         dot.setAttribute("xmlUrl","http://www.kde.org/dotkdeorg.rdf");
         mainFolder.appendChild(dot);
 
-        QDomElement plan = doc.createElement( "outline" );
-        plan.setAttribute("text",i18n("Planet KDE"));
-        plan.setAttribute("xmlUrl","http://planetkde.org/rss20.xml");
-        mainFolder.appendChild(plan);
+        QDomElement planetkde = doc.createElement( "outline" );
+        planetkde.setAttribute("text",i18n("Planet KDE"));
+        planetkde.setAttribute("xmlUrl","http://planetkde.org/rss20.xml");
+        mainFolder.appendChild(planetkde);
+
+        QDomElement planetkdepim = doc.createElement( "outline" );
+        planetkdepim.setAttribute("text",i18n("Planet KDE PIM"));
+        planetkdepim.setAttribute("xmlUrl","http://pim.planetkde.org/rss20.xml");
+        mainFolder.appendChild(planetkdepim);
 
         QDomElement apps = doc.createElement( "outline" );
         apps.setAttribute("text",i18n("KDE Apps"));
@@ -221,32 +228,35 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     m_mainWidget = new Akregator::MainWidget(this, parentWidget, m_actionManager, "akregator_view");
     m_extension = new BrowserExtension(this, "ak_extension");
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalCaptionChanged(const QString&)), this, SIGNAL(setWindowCaption(const QString&)));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalStatusText(const QString&)), this, SLOT(slotSetStatusText(const QString&)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalCaptionChanged(QString)), this, SIGNAL(setWindowCaption(QString)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalStatusText(QString)), this, SLOT(slotSetStatusText(QString)));
     connect(Kernel::self()->frameManager(), SIGNAL(signalLoadingProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalCanceled(const QString&)), this, SIGNAL(canceled(const QString&)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalCanceled(QString)), this, SIGNAL(canceled(QString)));
     connect(Kernel::self()->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
     connect(Kernel::self()->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
 
     // notify the part that this is our internal widget
     setWidget(m_mainWidget);
 
-    TrayIcon* trayIcon = new TrayIcon( m_mainWidget->window() );
-    TrayIcon::setInstance(trayIcon);
-    m_actionManager->initTrayIcon(trayIcon);
+    if ( Settings::showTrayIcon() && !TrayIcon::getInstance() )
+    {
+        TrayIcon* trayIcon = new TrayIcon( m_mainWidget->window() );
+        TrayIcon::setInstance(trayIcon);
+        m_actionManager->setTrayIcon(trayIcon);
 
-    if ( isTrayIconEnabled() )
-        trayIcon->show();
+        if ( isTrayIconEnabled() )
+            trayIcon->setStatus( KStatusNotifierItem::Active );
 
-    QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
-    NotificationManager::self()->setWidget(notificationParent, componentData());
+        QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
+        NotificationManager::self()->setWidget(notificationParent, componentData());
 
-    connect( trayIcon, SIGNAL(quitSelected()),
-            kapp, SLOT(quit())) ;
+        QAction* action = TrayIcon::getInstance()->actionCollection()->action(KStandardAction::name(KStandardAction::Quit));
+        connect(action, SIGNAL(triggered(bool)), kapp, SLOT(quit()));
 
-    connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
-    connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
-             this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
+        connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
+        connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
+                this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
+    }
 
     connect(kapp, SIGNAL(aboutToQuit()), this, SLOT(slotOnShutdown()));
 
@@ -254,7 +264,7 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     connect(m_autosaveTimer, SIGNAL(timeout()), this, SLOT(slotSaveFeedList()));
     m_autosaveTimer->start(5*60*1000); // 5 minutes
 
-    QString useragent = QString( "Akregator/%1; syndication" ).arg( AKREGATOR_VERSION );
+    QString useragent = QString( "Akregator/%1; syndication" ).arg( KDEPIM_VERSION );
 
     if( !Settings::customUserAgent().isEmpty() )
         useragent = Settings::customUserAgent();
@@ -304,6 +314,33 @@ void Part::slotOnShutdown()
 void Part::slotSettingsChanged()
 {
     NotificationManager::self()->setWidget(isTrayIconEnabled() ? m_mainWidget->window() : 0, componentData());
+
+    if ( Settings::showTrayIcon() && !TrayIcon::getInstance() )
+    {
+        TrayIcon* trayIcon = new TrayIcon( m_mainWidget->window() );
+        TrayIcon::setInstance(trayIcon);
+        m_actionManager->setTrayIcon(trayIcon);
+
+        if ( isTrayIconEnabled() )
+            trayIcon->setStatus( KStatusNotifierItem::Active );
+
+        QAction *action;
+        action = TrayIcon::getInstance()->actionCollection()->action(KStandardAction::name(KStandardAction::Quit));
+        connect(action, SIGNAL(triggered(bool)), kapp, SLOT(quit()));
+
+        connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
+        connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
+                this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
+
+        m_mainWidget->slotSetTotalUnread();
+    }
+    if ( !Settings::showTrayIcon() )
+    {
+        TrayIcon::getInstance()->disconnect();
+        delete TrayIcon::getInstance();
+        TrayIcon::setInstance(0);
+        m_actionManager->setTrayIcon(0);
+    }
 
     Syndication::FileRetriever::setUseCache(Settings::useHTMLCache());
 
@@ -579,9 +616,9 @@ void Part::showOptions()
     if ( !m_dialog ) {
         m_dialog = new KCMultiDialog( m_mainWidget );
         connect( m_dialog, SIGNAL(configCommitted()),
-                 this, SLOT(slotSettingsChanged()) );
+                this, SLOT(slotSettingsChanged()) );
         connect( m_dialog, SIGNAL(configCommitted()),
-                 TrayIcon::getInstance(), SLOT(settingsChanged()) );
+                TrayIcon::getInstance(), SLOT(settingsChanged()) );
 
         // query for akregator's kcm modules
         const QString constraint = "[X-KDE-ParentApp] == 'akregator'";

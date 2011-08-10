@@ -32,7 +32,6 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
-#include <KDE/KCodecs>
 #include <KDE/KLocale>
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Statement>
@@ -47,6 +46,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtGui/QItemSelectionModel>
 #include <QtCore/QMimeData>
+#include <QtCore/QCryptographicHash>
 
 namespace MessageList
 {
@@ -119,8 +119,8 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   connect( d->mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),
            SLOT(statementChanged(Soprano::Statement)) );
 
-  connect( d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-           this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
+  connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)) );
 
   connect( d->mModel, SIGNAL(layoutAboutToBeChanged()),
            this, SIGNAL(layoutAboutToBeChanged()) );
@@ -132,16 +132,16 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
            this, SIGNAL(modelReset()) );
 
   //Here we assume we'll always get QModelIndex() in the parameters
-  connect( d->mModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
-           this, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)) );
-  connect( d->mModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-           this, SIGNAL(rowsInserted(QModelIndex, int, int)) );
-  connect( d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-           this, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)) );
-  connect( d->mModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-           this, SIGNAL(rowsRemoved(QModelIndex, int, int)) );
+  connect( d->mModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+           this, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)) );
+  connect( d->mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SIGNAL(rowsInserted(QModelIndex,int,int)) );
+  connect( d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+           this, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+  connect( d->mModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           this, SIGNAL(rowsRemoved(QModelIndex,int,int)) );
 
-  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(onSelectionChanged()) );
 
   d->loadSettings();
@@ -249,7 +249,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
   mi->initialSetup( mail->date()->dateTime().toTime_t(),
                     item.size(),
                     sender, receiver,
-                    bUseReceiver ? receiver : sender );
+                    bUseReceiver );
 
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {
@@ -263,13 +263,13 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
   return true;
 }
 
-static QString md5Encode( const QString &str )
+static QByteArray md5Encode( const QByteArray &str )
 {
-  if ( str.trimmed().isEmpty() ) return QString();
+  if ( str.trimmed().isEmpty() ) return QByteArray();
 
-  KMD5 md5( str.trimmed().toUtf8() );
-  static const int Base64EncodedMD5Len = 22;
-  return md5.base64Digest().left( Base64EncodedMD5Len );
+  QCryptographicHash c( QCryptographicHash::Md5 );
+  c.addData( str.trimmed() );
+  return c.result();
 }
 
 void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
@@ -283,7 +283,7 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   {
     const QString subject = mail->subject()->asUnicodeString();
     const QString strippedSubject = MessageCore::StringUtil::stripOffPrefixes( subject );
-    mi->setStrippedSubjectMD5( md5Encode( strippedSubject ) );
+    mi->setStrippedSubjectMD5( md5Encode( strippedSubject.toUtf8() ) );
     mi->setSubjectIsPrefixed( subject != strippedSubject );
     // fall through
   }

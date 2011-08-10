@@ -491,8 +491,8 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
       photoMemento = new ContactPhotoMemento( email );
       nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
-      QObject::connect( photoMemento, SIGNAL( update( MessageViewer::Viewer::UpdateMode ) ),
-                        sourceObject(), SLOT( update( MessageViewer::Viewer::UpdateMode ) ) );
+      QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                        sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
     }
 
     if ( photoMemento->finished() ) {
@@ -779,7 +779,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   }
 
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
-  imgpath.prepend( "file://" );
+  imgpath.prepend( "file:///" );
   imgpath.append("enterprise_");
   const QString borderSettings( " padding-top: 0px; padding-bottom: 0px; border-width: 0px " );
   QString headerStr;
@@ -977,7 +977,7 @@ static QString formatMobileHeader( KMime::Message *message, bool extendedFormat,
   const QString ccPart = StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor );
 
   // Background image
-  const QString imagePath( QLatin1String( "file://" ) + KStandardDirs::locate( "data", "libmessageviewer/pics/" ) );
+  const QString imagePath( QLatin1String( "file:///" ) + KStandardDirs::locate( "data", "libmessageviewer/pics/" ) );
   const QString mobileImagePath( imagePath + QLatin1String( "mobile_" ) );
   const QString mobileExtendedImagePath( imagePath + QLatin1String( "mobileextended_" ) );
 
@@ -1084,11 +1084,11 @@ HeaderStyle * HeaderStyle::create( Type type ) {
 
 HeaderStyle * HeaderStyle::create( const QString & type ) {
   const QString lowerType = type.toLower();
-  if ( lowerType == "brief" ) return brief();
-  if ( lowerType == "plain" )  return plain();
-  if ( lowerType == "enterprise" )  return enterprise();
-  if ( lowerType ==  "mobile" )  return mobile();
-  if ( lowerType ==  "mobileExtended" )  return mobileExtended();
+  if ( lowerType == QLatin1String("brief") ) return brief();
+  if ( lowerType == QLatin1String("plain") )  return plain();
+  if ( lowerType == QLatin1String("enterprise") )  return enterprise();
+  if ( lowerType == QLatin1String("mobile") )  return mobile();
+  if ( lowerType == QLatin1String( "mobileExtended") )  return mobileExtended();
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:

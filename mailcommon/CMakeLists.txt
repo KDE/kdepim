@@ -71,6 +71,7 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
 endmacro(add_resource_iface)
 
 add_resource_iface( imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings )
+add_resource_iface( settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings )
 
 qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml

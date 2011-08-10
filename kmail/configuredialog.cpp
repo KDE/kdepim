@@ -46,6 +46,8 @@
 
 #include "foldertreewidget.h"
 
+#include "kmknotify.h"
+
 #include "recentaddresses.h"
 using KPIM::RecentAddresses;
 #include "completionordereditor.h"
@@ -274,8 +276,8 @@ AccountsPage::AccountsPage( const KComponentData &instance, QWidget *parent )
   //
   mReceivingTab = new ReceivingTab();
   addTab( mReceivingTab, i18nc( "@title:tab Tab page where the user configures accounts to receive mail", "Receiving" ) );
-  connect( mReceivingTab, SIGNAL(accountListChanged(const QStringList &)),
-           this, SIGNAL(accountListChanged(const QStringList &)) );
+  connect( mReceivingTab, SIGNAL(accountListChanged(QStringList)),
+           this, SIGNAL(accountListChanged(QStringList)) );
 
   //
   // "Sending" tab:
@@ -324,8 +326,8 @@ AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent )
   // "confirm before send" check box:
   mConfirmSendCheck = new QCheckBox( i18n("Confirm &before send"), group );
   glay->addWidget( mConfirmSendCheck, 0, 0, 1, 2 );
-  connect( mConfirmSendCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mConfirmSendCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // "send on check" combo:
   mSendOnCheckCombo = new KComboBox( group );
@@ -335,8 +337,8 @@ AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent )
                                       << i18n("On Manual Mail Checks")
                                       << i18n("On All Mail Checks") );
   glay->addWidget( mSendOnCheckCombo, 1, 1 );
-  connect( mSendOnCheckCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSendOnCheckCombo, SIGNAL(activated(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // "default send method" combo:
   mSendMethodCombo = new KComboBox( group );
@@ -345,14 +347,14 @@ AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent )
                                       << i18n("Send Now")
                                       << i18n("Send Later") );
   glay->addWidget( mSendMethodCombo, 2, 1 );
-  connect( mSendMethodCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSendMethodCombo, SIGNAL(activated(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // "default domain" input field:
   mDefaultDomainEdit = new KLineEdit( group );
   glay->addWidget( mDefaultDomainEdit, 3, 1 );
-  connect( mDefaultDomainEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mDefaultDomainEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotEmitChanged()) );
 
   // labels:
   QLabel *l =  new QLabel( i18n("Send &messages in outbox folder:"), group );
@@ -424,10 +426,10 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
 
   ConfigAgentDelegate *configDelegate = new ConfigAgentDelegate( mAccountsReceiving.mAccountList->view() );
   mAccountsReceiving.mAccountList->view()->setItemDelegate( configDelegate );
-  connect( configDelegate, SIGNAL( optionsClicked( const QString &, const QPoint & ) ), this, SLOT( slotShowMailCheckMenu( const QString &, const QPoint & ) ) );
+  connect( configDelegate, SIGNAL(optionsClicked(QString,QPoint)), this, SLOT(slotShowMailCheckMenu(QString,QPoint)) );
 
-  connect( mAccountsReceiving.mAccountList, SIGNAL( currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& ) ),
-           SLOT( slotAccountSelected( const Akonadi::AgentInstance& ) ) );
+  connect( mAccountsReceiving.mAccountList, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
+           SLOT(slotAccountSelected(Akonadi::AgentInstance)) );
   connect( mAccountsReceiving.mAccountList, SIGNAL(doubleClicked(Akonadi::AgentInstance)),
            this, SLOT(slotModifySelectedAccount()) );
 
@@ -445,13 +447,13 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
   mAccountsReceiving.group->layout()->setMargin( KDialog::marginHint() );
   mAccountsReceiving.group->layout()->setSpacing( KDialog::spacingHint() );
 
-  connect( mAccountsReceiving.mBeepNewMailCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAccountsReceiving.mBeepNewMailCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mAccountsReceiving.mVerboseNotificationCheck->setWhatsThis(
   GlobalSettings::self()->verboseNewMailNotificationItem()->whatsThis() );
-  connect( mAccountsReceiving.mVerboseNotificationCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mAccountsReceiving.mVerboseNotificationCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   connect( mAccountsReceiving.mOtherNewMailActionsButton, SIGNAL(clicked()),
            this, SLOT(slotEditNotifications()) );
@@ -498,7 +500,7 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
     manualMailCheck->setChecked( IncludeInManualChecks );
     manualMailCheck->setData( ident );
     menu->addAction( manualMailCheck );
-    connect( manualMailCheck, SIGNAL( toggled( bool ) ), this, SLOT( slotIncludeInCheckChanged( bool ) ) );
+    connect( manualMailCheck, SIGNAL(toggled(bool)), this, SLOT(slotIncludeInCheckChanged(bool)) );
   }
 
   QAction *switchOffline = new QAction( i18nc( "Label to a checkbox, so is either checked/unchecked", "Switch offline on KMail Shutdown" ), menu );
@@ -513,8 +515,8 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
   checkOnStartup->setData( ident );
   menu->addAction( checkOnStartup );
 
-  connect( switchOffline, SIGNAL( toggled( bool ) ), this, SLOT( slotOfflineOnShutdownChanged( bool ) ) );
-  connect( checkOnStartup, SIGNAL( toggled( bool ) ), this, SLOT( slotCheckOnStatupChanged( bool ) ) );
+  connect( switchOffline, SIGNAL(toggled(bool)), this, SLOT(slotOfflineOnShutdownChanged(bool)) );
+  connect( checkOnStartup, SIGNAL(toggled(bool)), this, SLOT(slotCheckOnStatupChanged(bool)) );
 
   menu->exec(  mAccountsReceiving.mAccountList->view()->mapToGlobal( pos ) );
   delete menu;
@@ -603,8 +605,8 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount()
   const Akonadi::AgentInstance instance =  mAccountsReceiving.mAccountList->currentAgentInstance();
 
   int rc = KMessageBox::questionYesNo( this,
-                                       i18n("Do you want to remove account: %1", instance.name()),
-                                       i18n("Remove account"));
+                                       i18n("Do you want to remove account '%1'?", instance.name()),
+                                       i18n("Remove account?"));
   if ( rc == KMessageBox::No ) {
     return;
   }
@@ -620,10 +622,8 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount()
 
 void AccountsPage::ReceivingTab::slotEditNotifications()
 {
-  if(kmkernel->xmlGuiInstance().isValid())
-    KNotifyConfigWidget::configure(this,  kmkernel->xmlGuiInstance().componentName());
-  else
-    KNotifyConfigWidget::configure(this);
+  KMKnotify notifyDlg( this );
+  notifyDlg.exec();
 }
 
 void AccountsPage::ReceivingTab::doLoadFromGlobalSettings()
@@ -758,8 +758,8 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
   mCustomFontCheck = new QCheckBox( i18n("&Use custom fonts"), this );
   vlay->addWidget( mCustomFontCheck );
   vlay->addWidget( new KSeparator( Qt::Horizontal, this ) );
-  connect ( mCustomFontCheck, SIGNAL( stateChanged( int ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  connect ( mCustomFontCheck, SIGNAL(stateChanged(int)),
+            this, SLOT(slotEmitChanged()) );
 
   // "font location" combo box and label:
   hlay = new QHBoxLayout(); // inherites spacing
@@ -786,8 +786,8 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
   mFontChooser->setObjectName( "font" );
   mFontChooser->setEnabled( false ); // since !mCustomFontCheck->isChecked()
   vlay->addWidget( mFontChooser );
-  connect ( mFontChooser, SIGNAL( fontSelected( const QFont& ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  connect ( mFontChooser, SIGNAL(fontSelected(QFont)),
+            this, SLOT(slotEmitChanged()) );
 
 
   // {en,dis}able widgets depending on the state of mCustomFontCheck:
@@ -798,7 +798,7 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
   connect( mCustomFontCheck, SIGNAL(toggled(bool)),
            mFontChooser, SLOT(setEnabled(bool)) );
   // load the right font settings into mFontChooser:
-  connect( mFontLocationCombo, SIGNAL(activated(int) ),
+  connect( mFontLocationCombo, SIGNAL(activated(int)),
            this, SLOT(slotFontSelectorChanged(int)) );
 }
 
@@ -826,14 +826,14 @@ void AppearancePage::FontsTab::slotFontSelectorChanged( int index )
   mActiveFontIndex = index;
 
   // Disonnect so the "Apply" button is not activated by the change
-  disconnect ( mFontChooser, SIGNAL( fontSelected( const QFont& ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  disconnect ( mFontChooser, SIGNAL(fontSelected(QFont)),
+            this, SLOT(slotEmitChanged()) );
 
   // Display the new setting:
   mFontChooser->setFont( mFont[index], fontNames[index].onlyFixed );
 
-  connect ( mFontChooser, SIGNAL( fontSelected( const QFont& ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  connect ( mFontChooser, SIGNAL(fontSelected(QFont)),
+            this, SLOT(slotEmitChanged()) );
 
   // Disable Family and Size list if we have selected a quote font:
   mFontChooser->enableColumn( KFontChooser::FamilyList|KFontChooser::SizeList,
@@ -900,11 +900,16 @@ void AppearancePage::FontsTab::save()
   }
 }
 
+void AppearancePage::FontsTab::doResetToDefaultsOther()
+{
+  mCustomFontCheck->setChecked( false );
+}
+
+
 QString AppearancePage::ColorsTab::helpAnchor() const
 {
   return QString::fromLatin1("configure-appearance-colors");
 }
-
 
 static const struct {
   const char * configName;
@@ -946,8 +951,8 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
   vlay->setMargin( KDialog::marginHint() );
   mCustomColorCheck = new QCheckBox( i18n("&Use custom colors"), this );
   vlay->addWidget( mCustomColorCheck );
-  connect( mCustomColorCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCustomColorCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // color list box:
   mColorList = new ColorListBox( this );
@@ -961,8 +966,8 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
     new QCheckBox( i18n("Recycle colors on deep &quoting"), this );
   mRecycleColorCheck->setEnabled( false );
   vlay->addWidget( mRecycleColorCheck );
-  connect( mRecycleColorCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mRecycleColorCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // close to quota threshold
   QHBoxLayout *hbox = new QHBoxLayout();
@@ -973,8 +978,8 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
   mCloseToQuotaThreshold = new QSpinBox( this );
   mCloseToQuotaThreshold->setRange( 0, 100 );
   mCloseToQuotaThreshold->setSingleStep( 1 );
-  connect( mCloseToQuotaThreshold, SIGNAL( valueChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCloseToQuotaThreshold, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   mCloseToQuotaThreshold->setEnabled( false );
   mCloseToQuotaThreshold->setSuffix( i18n("%"));
   hbox->addWidget( mCloseToQuotaThreshold );
@@ -990,21 +995,27 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
   connect( mCustomColorCheck, SIGNAL(toggled(bool)),
            mCloseToQuotaThreshold, SLOT(setEnabled(bool)) );
 
-  connect( mCustomColorCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mColorList, SIGNAL( changed( ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCustomColorCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mColorList, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
 }
 
 void AppearancePage::ColorsTab::doLoadOther()
 {
-  KConfigGroup reader( KMKernel::self()->config(), "Reader" );
-  KConfigGroup messageListView( KMKernel::self()->config(), "MessageListView::Colors" );
-
   mCustomColorCheck->setChecked( !MessageCore::GlobalSettings::self()->useDefaultColors() );
   mRecycleColorCheck->setChecked( MessageViewer::GlobalSettings::self()->recycleQuoteColors() );
   mCloseToQuotaThreshold->setValue( GlobalSettings::self()->closeToQuotaThreshold() );
+  loadColor( true );
+}
+
+void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
+{
   KColorScheme scheme( QPalette::Active, KColorScheme::View );
+
+  KConfigGroup reader( KMKernel::self()->config(), "Reader" );
+
+  KConfigGroup messageListView( KMKernel::self()->config(), "MessageListView::Colors" );
 
   static const QColor defaultColor[ numColorNames ] = {
     QColor( 0x00, 0x80, 0x00 ), // quoted l1
@@ -1031,16 +1042,28 @@ void AppearancePage::ColorsTab::doLoadOther()
   };
 
   for ( int i = 0 ; i < numColorNames ; i++ ) {
-    QString configName = colorNames[i].configName;
-    if ( configName == "NewMessageColor" ||
-         configName == "UnreadMessageColor" ||
-         configName == "ImportantMessageColor" ||
-         configName == "TodoMessageColor" ) {
-      mColorList->setColorSilently( i, messageListView.readEntry( configName, defaultColor[i] ) );
-    }
-    else
-      mColorList->setColorSilently( i, reader.readEntry( configName, defaultColor[i] ) );
+    if ( loadFromConfig ) {
+      const QString configName = colorNames[i].configName;
+      if ( configName == QLatin1String( "NewMessageColor" ) ||
+           configName == QLatin1String( "UnreadMessageColor" ) ||
+           configName == QLatin1String( "ImportantMessageColor" ) ||
+           configName == QLatin1String( "TodoMessageColor" ) ) {
+        mColorList->setColorSilently( i, messageListView.readEntry( configName, defaultColor[i] ) );
+        }
+      else
+        mColorList->setColorSilently( i, reader.readEntry( configName, defaultColor[i] ) );
+    } else {
+      mColorList->setColorSilently( i, defaultColor[i] );
+    }        
   }
+}
+
+void AppearancePage::ColorsTab::doResetToDefaultsOther()
+{
+  mCustomColorCheck->setChecked( false );
+  mRecycleColorCheck->setChecked( false );
+  mCloseToQuotaThreshold->setValue( 80 );
+  loadColor( false ); 
 }
 
 void AppearancePage::ColorsTab::save()
@@ -1090,8 +1113,8 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
                        mFolderListGroup = new QButtonGroup( this ),
                        Qt::Horizontal, GlobalSettings::self()->folderListItem() );
   vlay->addWidget( mFolderListGroupBox );
-  connect( mFolderListGroup, SIGNAL ( buttonClicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mFolderListGroup, SIGNAL (buttonClicked(int)),
+           this, SLOT(slotEmitChanged()) );
 
   QHBoxLayout* folderCBHLayout = new QHBoxLayout();
   mFavoriteFolderViewCB = new QCheckBox( i18n("Show favorite folder view"), this );
@@ -1109,8 +1132,8 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
   mFolderToolTipsGroupBox->setLayout( new QHBoxLayout() );
   mFolderToolTipsGroupBox->layout()->setSpacing( KDialog::spacingHint() );
   mFolderToolTipsGroup = new QButtonGroup( this );
-  connect( mFolderToolTipsGroup, SIGNAL( buttonClicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mFolderToolTipsGroup, SIGNAL(buttonClicked(int)),
+           this, SLOT(slotEmitChanged()) );
 
   QRadioButton* folderToolTipsAlwaysRadio = new QRadioButton( i18n( "Always" ), mFolderToolTipsGroupBox );
   mFolderToolTipsGroup->addButton( folderToolTipsAlwaysRadio, static_cast< int >( FolderTreeWidget::DisplayAlways ) );
@@ -1132,8 +1155,8 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
                        mReaderWindowModeGroup = new QButtonGroup( this ),
                        Qt::Vertical, GlobalSettings::self()->readerWindowModeItem() );
   vlay->addWidget( mReaderWindowModeGroupBox );
-  connect( mReaderWindowModeGroup, SIGNAL ( buttonClicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mReaderWindowModeGroup, SIGNAL (buttonClicked(int)),
+           this, SLOT(slotEmitChanged()) );
 
   vlay->addStretch( 10 ); // spacer
 }
@@ -1201,15 +1224,15 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
                  MessageList::Core::Settings::self()->messageToolTipEnabledItem()->label(), group );
   gvlay->addWidget( mDisplayMessageToolTips );
 
-  connect( mDisplayMessageToolTips, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mDisplayMessageToolTips, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mHideTabBarWithSingleTab = new QCheckBox(
                  MessageList::Core::Settings::self()->autoHideTabBarWithSingleTabItem()->label(), group );
   gvlay->addWidget( mHideTabBarWithSingleTab );
 
-  connect( mHideTabBarWithSingleTab, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mHideTabBarWithSingleTab, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // "Aggregation"
   using MessageList::Utils::AggregationComboBox;
@@ -1227,10 +1250,10 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
   aggregationLayout->addWidget( aggregationConfigButton, 0 );
   gvlay->addLayout( aggregationLayout );
 
-  connect( aggregationConfigButton, SIGNAL( configureDialogCompleted() ),
-           this, SLOT( slotSelectDefaultAggregation() ) );
-  connect( mAggregationComboBox, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( aggregationConfigButton, SIGNAL(configureDialogCompleted()),
+           this, SLOT(slotSelectDefaultAggregation()) );
+  connect( mAggregationComboBox, SIGNAL(activated(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // "Theme"
   using MessageList::Utils::ThemeComboBox;
@@ -1248,10 +1271,10 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
   themeLayout->addWidget( themeConfigButton, 0 );
   gvlay->addLayout( themeLayout );
 
-  connect( themeConfigButton, SIGNAL( configureDialogCompleted() ),
-           this, SLOT( slotSelectDefaultTheme() ) );
-  connect( mThemeComboBox, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( themeConfigButton, SIGNAL(configureDialogCompleted()),
+           this, SLOT(slotSelectDefaultTheme()) );
+  connect( mThemeComboBox, SIGNAL(activated(int)),
+           this, SLOT(slotEmitChanged()) );
 
   vlay->addWidget( group );
 
@@ -1281,13 +1304,13 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
 
       connect( radio, SIGNAL(toggled(bool)),
                mCustomDateFormatEdit, SLOT(setEnabled(bool)) );
-      connect( mCustomDateFormatEdit, SIGNAL(textChanged(const QString&)),
-               this, SLOT(slotEmitChanged(void)) );
+      connect( mCustomDateFormatEdit, SIGNAL(textChanged(QString)),
+               this, SLOT(slotEmitChanged()) );
 
       QLabel *formatHelp = new QLabel(
         i18n( "<qt><a href=\"whatsthis1\">Custom format information...</a></qt>"), hbox );
-      connect( formatHelp, SIGNAL(linkActivated(const QString &)),
-               SLOT(slotLinkClicked(const QString &)) );
+      connect( formatHelp, SIGNAL(linkActivated(QString)),
+               SLOT(slotLinkClicked(QString)) );
 
       mCustomDateWhatsThis =
         i18n("<qt><p><strong>These expressions may be used for the date:"
@@ -1328,8 +1351,8 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
   } // end for loop populating mDateDisplay
 
   vlay->addWidget( mDateDisplay );
-  connect( mDateDisplay, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mDateDisplay, SIGNAL(clicked(int)),
+           this, SLOT(slotEmitChanged()) );
 
 
   vlay->addStretch( 10 ); // spacer
@@ -1369,6 +1392,21 @@ void AppearancePage::HeadersTab::doLoadOther()
   setDateDisplay( MessageCore::GlobalSettings::self()->dateFormat(),
                   MessageCore::GlobalSettings::self()->customDateFormat() );
 }
+
+void AppearancePage::HeadersTab::doLoadFromGlobalSettings()
+{
+  mDisplayMessageToolTips->setChecked( MessageList::Core::Settings::self()->messageToolTipEnabled() );
+  mHideTabBarWithSingleTab->setChecked( MessageList::Core::Settings::self()->autoHideTabBarWithSingleTab() );
+  // "Aggregation":
+  slotSelectDefaultAggregation();
+
+  // "Theme":
+  slotSelectDefaultTheme();
+
+  setDateDisplay( MessageCore::GlobalSettings::self()->dateFormat(),
+                  MessageCore::GlobalSettings::self()->customDateFormat() );
+}
+
 
 void AppearancePage::HeadersTab::setDateDisplay( int num, const QString & format )
 {
@@ -1431,12 +1469,12 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent )
   mCloseAfterReplyOrForwardCheck->setToolTip(
       i18n( "Close the standalone message window after replying or forwarding the message" ) );
   vlay->addWidget( mCloseAfterReplyOrForwardCheck );
-  connect( mCloseAfterReplyOrForwardCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mCloseAfterReplyOrForwardCheck, SIGNAL (stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mViewerSettings = new MessageViewer::ConfigureWidget( this );
-  connect( mViewerSettings, SIGNAL( settingsChanged() ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mViewerSettings, SIGNAL(settingsChanged()),
+           this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mViewerSettings );
 
   vlay->addStretch( 100 ); // spacer
@@ -1470,8 +1508,8 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
   // "Enable system tray applet" check box
   mSystemTrayCheck = new QCheckBox( i18n("Enable system tray icon"), this );
   vlay->addWidget( mSystemTrayCheck );
-  connect( mSystemTrayCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSystemTrayCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // System tray modes
   mSystemTrayGroup = new KButtonGroup( this );
@@ -1479,10 +1517,10 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
   QVBoxLayout *gvlay = new QVBoxLayout( mSystemTrayGroup );
   gvlay->setSpacing( KDialog::spacingHint() );
 
-  connect( mSystemTrayGroup, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mSystemTrayCheck, SIGNAL( toggled( bool ) ),
-           mSystemTrayGroup, SLOT( setEnabled( bool ) ) );
+  connect( mSystemTrayGroup, SIGNAL(clicked(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mSystemTrayCheck, SIGNAL(toggled(bool)),
+           mSystemTrayGroup, SLOT(setEnabled(bool)) );
 
   gvlay->addWidget( new QRadioButton( i18n("Always show KMail in system tray"), mSystemTrayGroup ) );
   gvlay->addWidget( new QRadioButton( i18n("Only show KMail in system tray if there are unread messages"), mSystemTrayGroup ) );
@@ -1599,8 +1637,8 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   namelabel->setBuddy( mTagNameLineEdit );
   settings->addWidget( namelabel, 1, 0 );
 
-  connect( mTagNameLineEdit, SIGNAL( textChanged( const QString& ) ),
-            this, SLOT( slotEmitChangeCheck( void ) ) );
+  connect( mTagNameLineEdit, SIGNAL(textChanged(QString)),
+            this, SLOT(slotEmitChangeCheck()) );
 
   //Second row for text color
   mTextColorCheck = new QCheckBox( i18n("Change te&xt color:"),
@@ -1610,12 +1648,12 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   mTextColorCombo = new KColorCombo( mTagSettingGroupBox );
   settings->addWidget( mTextColorCombo, 2, 1 );
 
-  connect( mTextColorCheck, SIGNAL( toggled( bool ) ),
-          mTextColorCombo, SLOT( setEnabled( bool ) ) );
-  connect( mTextColorCheck, SIGNAL( stateChanged( int ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
-  connect( mTextColorCombo, SIGNAL( activated( int ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
+  connect( mTextColorCheck, SIGNAL(toggled(bool)),
+          mTextColorCombo, SLOT(setEnabled(bool)) );
+  connect( mTextColorCheck, SIGNAL(stateChanged(int)),
+          this, SLOT(slotEmitChangeCheck()) );
+  connect( mTextColorCombo, SIGNAL(activated(int)),
+          this, SLOT(slotEmitChangeCheck()) );
 
   //Third row for text background color
   mBackgroundColorCheck = new QCheckBox( i18n("Change &background color:"),
@@ -1625,12 +1663,12 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   mBackgroundColorCombo = new KColorCombo( mTagSettingGroupBox );
   settings->addWidget( mBackgroundColorCombo, 3, 1 );
 
-  connect( mBackgroundColorCheck, SIGNAL( toggled( bool ) ),
-          mBackgroundColorCombo, SLOT( setEnabled( bool ) ) );
-  connect( mBackgroundColorCheck, SIGNAL( stateChanged( int ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
-  connect( mBackgroundColorCombo, SIGNAL( activated( int ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
+  connect( mBackgroundColorCheck, SIGNAL(toggled(bool)),
+          mBackgroundColorCombo, SLOT(setEnabled(bool)) );
+  connect( mBackgroundColorCheck, SIGNAL(stateChanged(int)),
+          this, SLOT(slotEmitChangeCheck()) );
+  connect( mBackgroundColorCombo, SIGNAL(activated(int)),
+          this, SLOT(slotEmitChangeCheck()) );
 
   //Fourth for font selection
   mTextFontCheck = new QCheckBox( i18n("Change fo&nt:"), mTagSettingGroupBox );
@@ -1639,12 +1677,12 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   mFontRequester = new KFontRequester( mTagSettingGroupBox );
   settings->addWidget( mFontRequester, 4, 1 );
 
-  connect( mTextFontCheck, SIGNAL( toggled( bool ) ),
-          mFontRequester, SLOT( setEnabled( bool ) ) );
-  connect( mTextFontCheck, SIGNAL( stateChanged( int ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
-  connect( mFontRequester, SIGNAL( fontSelected( const QFont& ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
+  connect( mTextFontCheck, SIGNAL(toggled(bool)),
+          mFontRequester, SLOT(setEnabled(bool)) );
+  connect( mTextFontCheck, SIGNAL(stateChanged(int)),
+          this, SLOT(slotEmitChangeCheck()) );
+  connect( mFontRequester, SIGNAL(fontSelected(QFont)),
+          this, SLOT(slotEmitChangeCheck()) );
 
   //Fifth for toolbar icon
   mIconButton = new KIconButton( mTagSettingGroupBox );
@@ -1661,8 +1699,8 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
 
   //We do not connect the checkbox to icon selector since icons are used in the
   //menus as well
-  connect( mIconButton, SIGNAL( iconChanged( QString ) ),
-          this, SLOT( slotEmitChangeCheck( void ) ) );
+  connect( mIconButton, SIGNAL(iconChanged(QString)),
+          this, SLOT(slotEmitChangeCheck()) );
 
   //Sixth for shortcut
   mKeySequenceWidget = new KKeySequenceWidget( mTagSettingGroupBox );
@@ -1673,15 +1711,15 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   mKeySequenceWidget->setCheckActionCollections(
       kmkernel->getKMMainWidget()->actionCollections() );
 
-  connect( mKeySequenceWidget, SIGNAL( keySequenceChanged( const QKeySequence & ) ),
-           this, SLOT( slotEmitChangeCheck() ) );
+  connect( mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
+           this, SLOT(slotEmitChangeCheck()) );
 
   //Seventh for Toolbar checkbox
   mInToolbarCheck = new QCheckBox( i18n("Enable &toolbar button"),
                                     mTagSettingGroupBox );
   settings->addWidget( mInToolbarCheck, 7, 0 );
-  connect( mInToolbarCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChangeCheck( void ) ) );
+  connect( mInToolbarCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChangeCheck()) );
 
   tagsettinggrid->addStretch( 10 );
 
@@ -1692,27 +1730,27 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   //Other Connections
 
   //For enabling the add button in case box is non-empty
-  connect( mTagAddLineEdit, SIGNAL( textChanged( const QString& ) ),
-          this, SLOT( slotAddLineTextChanged( const QString& ) ) );
+  connect( mTagAddLineEdit, SIGNAL(textChanged(QString)),
+          this, SLOT(slotAddLineTextChanged(QString)) );
 
   //For on-the-fly updating of tag name in editbox
-  connect( mTagNameLineEdit, SIGNAL( textChanged( const QString& ) ),
-          this, SLOT( slotNameLineTextChanged( const QString& ) ) );
+  connect( mTagNameLineEdit, SIGNAL(textChanged(QString)),
+          this, SLOT(slotNameLineTextChanged(QString)) );
 
-  connect( mTagAddButton, SIGNAL( clicked( void ) ),
-          this, SLOT( slotAddNewTag( void ) ) );
+  connect( mTagAddButton, SIGNAL(clicked()),
+          this, SLOT(slotAddNewTag()) );
 
-  connect( mTagRemoveButton, SIGNAL( clicked( void ) ),
-          this, SLOT( slotRemoveTag( void ) ) );
+  connect( mTagRemoveButton, SIGNAL(clicked()),
+          this, SLOT(slotRemoveTag()) );
 
-  connect( mTagUpButton, SIGNAL( clicked( void ) ),
-          this, SLOT( slotMoveTagUp( void ) ) );
+  connect( mTagUpButton, SIGNAL(clicked()),
+          this, SLOT(slotMoveTagUp()) );
 
-  connect( mTagDownButton, SIGNAL( clicked( void ) ),
-          this, SLOT( slotMoveTagDown( void ) ) );
+  connect( mTagDownButton, SIGNAL(clicked()),
+          this, SLOT(slotMoveTagDown()) );
 
-  connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-          this, SLOT( slotSelectionChanged() ) );
+  connect( mTagListBox, SIGNAL(itemSelectionChanged()),
+          this, SLOT(slotSelectionChanged()) );
 }
 
 AppearancePageMessageTagTab::~AppearancePageMessageTagTab()
@@ -1763,15 +1801,15 @@ void AppearancePage::MessageTagTab::swapTagsInListBox( const int first,
   mMsgTagList.replace( first, mMsgTagList.at( second ) );
   mMsgTagList.replace( second, tmp_ptr );
 
-  disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-              this, SLOT( slotSelectionChanged() ) );
+  disconnect( mTagListBox, SIGNAL(itemSelectionChanged()),
+              this, SLOT(slotSelectionChanged()) );
   mTagListBox->item( first )->setText( mTagListBox->item( second )->text() );
   mTagListBox->item( first )->setIcon( mTagListBox->item( second )->icon() );
   mTagListBox->item( second )->setText( tmp_label );
   mTagListBox->item( second )->setIcon( tmp_icon );
   mTagListBox->setCurrentItem( mTagListBox->item( second ) );
-  connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-           this, SLOT( slotSelectionChanged() ) );
+  connect( mTagListBox, SIGNAL(itemSelectionChanged()),
+           this, SLOT(slotSelectionChanged()) );
 
   mPreviousTag = second;
 
@@ -1889,11 +1927,11 @@ void AppearancePage::MessageTagTab::slotRemoveTag()
     //Before deleting the current item, make sure the selectionChanged signal
     //is disconnected, so that the widgets will not get updated while the
     //deletion takes place.
-    disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-                this, SLOT( slotSelectionChanged() ) );
+    disconnect( mTagListBox, SIGNAL(itemSelectionChanged()),
+                this, SLOT(slotSelectionChanged()) );
     delete mTagListBox->takeItem( tmp_index );
-    connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-                this, SLOT( slotSelectionChanged() ) );
+    connect( mTagListBox, SIGNAL(itemSelectionChanged()),
+                this, SLOT(slotSelectionChanged()) );
 
     slotSelectionChanged();
     slotEmitChangeCheck();
@@ -1910,11 +1948,11 @@ void AppearancePage::MessageTagTab::slotNameLineTextChanged( const QString
 
   //Disconnect so the tag information is not saved and reloaded with every
   //letter
-  disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-              this, SLOT( slotSelectionChanged() ) );
+  disconnect( mTagListBox, SIGNAL(itemSelectionChanged()),
+              this, SLOT(slotSelectionChanged()) );
   mTagListBox->currentItem()->setText( aText );
-  connect( mTagListBox, SIGNAL( itemSelectionChanged () ),
-           this, SLOT( slotSelectionChanged() ) );
+  connect( mTagListBox, SIGNAL(itemSelectionChanged()),
+           this, SLOT(slotSelectionChanged()) );
 }
 
 void AppearancePage::MessageTagTab::slotIconNameChanged( const QString &iconName )
@@ -1961,26 +1999,45 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
 
   qSort( mMsgTagList.begin(), mMsgTagList.end(), KMail::Tag::compare );
 
-  foreach( const KMail::Tag::Ptr tag, mMsgTagList ) {
+  foreach( const KMail::Tag::Ptr& tag, mMsgTagList ) {
     new QListWidgetItem( KIcon( tag->iconName ), tag->tagName, mTagListBox );
     if ( tag->priority == -1 )
       tag->priority = mTagListBox->count() - 1;
   }
 
   //Disconnect so that insertItem's do not trigger an update procedure
-  disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-              this, SLOT( slotSelectionChanged() ) );
+  disconnect( mTagListBox, SIGNAL(itemSelectionChanged()),
+              this, SLOT(slotSelectionChanged()) );
 
-  connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-           this, SLOT( slotSelectionChanged() ) );
+  connect( mTagListBox, SIGNAL(itemSelectionChanged()),
+           this, SLOT(slotSelectionChanged()) );
   slotUpdateTagSettingWidgets( -1 );
   //Needed since the previous function doesn't affect add button
   mTagAddButton->setEnabled( false );
+
+  // Save the original list
+  mOriginalMsgTagList.clear();
+  foreach( const KMail::TagPtr &tag, mMsgTagList ) {
+    mOriginalMsgTagList.append( KMail::TagPtr( new KMail::Tag( *tag ) ) );
+  }
 }
 
 void AppearancePage::MessageTagTab::save()
 {
   slotRecordTagSettings( mTagListBox->currentRow() );
+
+  if ( mOriginalMsgTagList.count() == mMsgTagList.count() ) {
+    bool nothingChanged = true;
+    for ( int i=0; i<mMsgTagList.count(); ++i ) {
+      if ( *(mMsgTagList[i]) != *(mOriginalMsgTagList[i]) ) {
+        nothingChanged = false;
+        break;
+      }
+    }
+    if ( nothingChanged ) {
+      return;
+    }
+  }
 
   foreach( const KMail::Tag::Ptr &tag, mMsgTagList ) {
 
@@ -2085,25 +2142,25 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
            MessageComposer::MessageComposerSettings::self()->autoTextSignatureItem()->label(),
            this );
   vlay->addWidget( mAutoAppSignFileCheck );
-  connect( mAutoAppSignFileCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutoAppSignFileCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mTopQuoteCheck = new QCheckBox(
                 MessageComposer::MessageComposerSettings::self()->prependSignatureItem()->label(), this );
   mTopQuoteCheck->setEnabled( false );
   vlay->addWidget( mTopQuoteCheck);
-  connect( mTopQuoteCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged(void) ) );
-  connect( mAutoAppSignFileCheck, SIGNAL( toggled(bool) ),
-           mTopQuoteCheck, SLOT( setEnabled(bool) ) );
+  connect( mTopQuoteCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mAutoAppSignFileCheck, SIGNAL(toggled(bool)),
+           mTopQuoteCheck, SLOT(setEnabled(bool)) );
   mDashDashCheck = new QCheckBox(
                MessageComposer::MessageComposerSettings::self()->dashDashSignatureItem()->label(), this );
   mDashDashCheck->setEnabled( false );
   vlay->addWidget( mDashDashCheck);
-  connect( mDashDashCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged(void) ) );
-  connect( mAutoAppSignFileCheck, SIGNAL( toggled(bool) ),
-           mDashDashCheck, SLOT( setEnabled(bool)) );
+  connect( mDashDashCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mAutoAppSignFileCheck, SIGNAL(toggled(bool)),
+           mDashDashCheck, SLOT(setEnabled(bool)) );
 
   mSmartQuoteCheck = new QCheckBox(
            TemplateParser::GlobalSettings::self()->smartQuoteItem()->label(), this );
@@ -2112,8 +2169,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
                        "even when the line was created by adding an additional linebreak while\n"
                        "word-wrapping the text." ) );
   vlay->addWidget( mSmartQuoteCheck );
-  connect( mSmartQuoteCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSmartQuoteCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mQuoteSelectionOnlyCheck = new QCheckBox( MessageComposer::MessageComposerSettings::self()->quoteSelectionOnlyItem()->label(),
                                             this );
@@ -2121,28 +2178,28 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
                  i18n( "When replying, only quote the selected text instead of the complete message "
                        "when there is text selected in the message window." ) );
   vlay->addWidget( mQuoteSelectionOnlyCheck );
-  connect( mQuoteSelectionOnlyCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged(void) ) );
+  connect( mQuoteSelectionOnlyCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mStripSignatureCheck = new QCheckBox( TemplateParser::GlobalSettings::self()->stripSignatureItem()->label(),
                                         this );
   vlay->addWidget( mStripSignatureCheck );
-  connect( mStripSignatureCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mStripSignatureCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mAutoRequestMDNCheck = new QCheckBox(
            GlobalSettings::self()->requestMDNItem()->label(), this);
   mAutoRequestMDNCheck->setObjectName( "requestMDN" );
   vlay->addWidget( mAutoRequestMDNCheck );
-  connect( mAutoRequestMDNCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutoRequestMDNCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mShowRecentAddressesInComposer = new QCheckBox(
            MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposerItem()->label(),
            this);
   vlay->addWidget( mShowRecentAddressesInComposer );
-  connect( mShowRecentAddressesInComposer, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mShowRecentAddressesInComposer, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // a checkbox for "word wrap" and a spinbox for the column in
   // which to wrap:
@@ -2152,14 +2209,14 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
            MessageComposer::MessageComposerSettings::self()->wordWrapItem()->label(), this);
   mWordWrapCheck->setObjectName( "wordWrap" );
   hlay->addWidget( mWordWrapCheck );
-  connect( mWordWrapCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWordWrapCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   mWrapColumnSpin = new KIntSpinBox( 30/*min*/, 78/*max*/, 1/*step*/,
            78/*init*/, this );
   mWrapColumnSpin->setEnabled( false ); // since !mWordWrapCheck->isChecked()
-  connect( mWrapColumnSpin, SIGNAL( valueChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWrapColumnSpin, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   hlay->addWidget( mWrapColumnSpin );
   hlay->addStretch( 1 );
@@ -2175,8 +2232,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
            GlobalSettings::self()->tooManyRecipientsItem()->label(), this);
   mRecipientCheck->setObjectName( "kcfg_TooManyRecipients" );
   hlay->addWidget( mRecipientCheck );
-  connect( mRecipientCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mRecipientCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   QString recipientCheckWhatsthis =
       i18n( GlobalSettings::self()->tooManyRecipientsItem()->whatsThis().toUtf8() );
@@ -2187,8 +2244,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
                                     5/*init*/, this );
   mRecipientSpin->setObjectName( "kcfg_RecipientThreshold" );
   mRecipientSpin->setEnabled( false );
-  connect( mRecipientSpin, SIGNAL( valueChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mRecipientSpin, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   QString recipientWhatsthis =
       i18n( GlobalSettings::self()->recipientThresholdItem()->whatsThis().toUtf8() );
@@ -2214,8 +2271,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   mAutoSave->setSpecialValueText( i18n("No autosave") );
   mAutoSave->setSuffix( i18n(" min") );
   hlay->addStretch( 1 );
-  connect( mAutoSave, SIGNAL( valueChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutoSave, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
 #ifdef KDEPIM_ENTERPRISE_BUILD
   hlay = new QHBoxLayout(); // inherits spacing
@@ -2230,15 +2287,15 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   hlay->addWidget( label );
   hlay->addWidget( mForwardTypeCombo );
   hlay->addStretch( 1 );
-  connect( mForwardTypeCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mForwardTypeCombo, SIGNAL(activated(int)),
+           this, SLOT(slotEmitChanged()) );
 #endif
 
   hlay = new QHBoxLayout(); // inherits spacing
   vlay->addLayout( hlay );
   QPushButton *completionOrderBtn = new QPushButton( i18n( "Configure Completion Order..." ), this );
-  connect( completionOrderBtn, SIGNAL( clicked() ),
-           this, SLOT( slotConfigureCompletionOrder() ) );
+  connect( completionOrderBtn, SIGNAL(clicked()),
+           this, SLOT(slotConfigureCompletionOrder()) );
   hlay->addWidget( completionOrderBtn );
   hlay->addItem( new QSpacerItem(0, 0) );
 
@@ -2246,8 +2303,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   hlay = new QHBoxLayout(); // inherits spacing
   vlay->addLayout( hlay );
   QPushButton *recentAddressesBtn = new QPushButton( i18n( "Edit Recent Addresses..." ), this );
-  connect( recentAddressesBtn, SIGNAL( clicked() ),
-           this, SLOT( slotConfigureRecentAddresses() ) );
+  connect( recentAddressesBtn, SIGNAL(clicked()),
+           this, SLOT(slotConfigureRecentAddresses()) );
   hlay->addWidget( recentAddressesBtn );
   hlay->addItem( new QSpacerItem(0, 0) );
 
@@ -2259,18 +2316,18 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   mExternalEditorCheck = new QCheckBox(
            GlobalSettings::self()->useExternalEditorItem()->label(), group);
   mExternalEditorCheck->setObjectName( "kcfg_UseExternalEditor" );
-  connect( mExternalEditorCheck, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
+           this, SLOT(slotEmitChanged()) );
 
   hbox = new KHBox( group );
   label = new QLabel( GlobalSettings::self()->externalEditorItem()->label(),
                    hbox );
   mEditorRequester = new KUrlRequester( hbox );
   mEditorRequester->setObjectName( "kcfg_ExternalEditor" );
-  connect( mEditorRequester, SIGNAL( urlSelected(const KUrl&) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mEditorRequester, SIGNAL( textChanged(const QString&) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mEditorRequester, SIGNAL(urlSelected(KUrl)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mEditorRequester, SIGNAL(textChanged(QString)),
+           this, SLOT(slotEmitChanged()) );
 
   hbox->setStretchFactor( mEditorRequester, 1 );
   label->setBuddy( mEditorRequester );
@@ -2392,8 +2449,8 @@ ComposerPageTemplatesTab::ComposerPageTemplatesTab( QWidget * parent )
   mWidget = new TemplatesConfiguration( this );
   vlay->addWidget( mWidget );
 
-  connect( mWidget, SIGNAL( changed() ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWidget, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
 }
 
 void ComposerPage::TemplatesTab::doLoadFromGlobalSettings()
@@ -2426,9 +2483,9 @@ ComposerPageCustomTemplatesTab::ComposerPageCustomTemplatesTab( QWidget * parent
   mWidget = new CustomTemplates( this );
   vlay->addWidget( mWidget );
 
-  connect( mWidget, SIGNAL( changed() ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mWidget, SIGNAL( templatesUpdated() ), KMKernel::self(), SLOT( updatedTemplates() ) );
+  connect( mWidget, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
+  connect( mWidget, SIGNAL(templatesUpdated()), KMKernel::self(), SLOT(updatedTemplates()) );
 }
 
 void ComposerPage::CustomTemplatesTab::doLoadFromGlobalSettings()
@@ -2477,15 +2534,15 @@ ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent )
                                 i18n("A&dd..."), i18n("Re&move"),
                                 i18n("Mod&ify..."),
                                 i18n("Enter new reply prefix:") );
-  connect( mReplyListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mReplyListEditor, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
 
   // row 2: "replace [...]" check box:
   mReplaceReplyPrefixCheck = new QCheckBox(
      MessageComposer::MessageComposerSettings::self()->replaceReplyPrefixItem()->label(),
      group);
-  connect( mReplaceReplyPrefixCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mReplaceReplyPrefixCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   layout->addWidget( label );
   layout->addWidget( mReplyListEditor );
   layout->addWidget( mReplaceReplyPrefixCheck );
@@ -2510,15 +2567,15 @@ ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent )
                                 i18n("Remo&ve"),
                                 i18n("Modify..."),
                                 i18n("Enter new forward prefix:") );
-  connect( mForwardListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mForwardListEditor, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
 
   // row 3: "replace [...]" check box:
   mReplaceForwardPrefixCheck = new QCheckBox(
        MessageComposer::MessageComposerSettings::self()->replaceForwardPrefixItem()->label(),
        group);
-  connect( mReplaceForwardPrefixCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mReplaceForwardPrefixCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   layout->addWidget( label );
   layout->addWidget( mForwardListEditor );
   layout->addWidget( mReplaceForwardPrefixCheck );
@@ -2538,6 +2595,23 @@ void ComposerPage::SubjectTab::save()
   MessageComposer::MessageComposerSettings::self()->setReplyPrefixes( mReplyListEditor->stringList() );
   MessageComposer::MessageComposerSettings::self()->setForwardPrefixes( mForwardListEditor->stringList() );
 }
+
+void ComposerPage::SubjectTab::doResetToDefaultsOther()
+{
+    const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults( true );
+  const QStringList messageReplyPrefixes = MessageComposer::MessageComposerSettings::replyPrefixes();
+  const bool useMessageReplyPrefixes = MessageComposer::MessageComposerSettings::replaceReplyPrefix();
+
+  const QStringList messageForwardPrefixes = MessageComposer::MessageComposerSettings::forwardPrefixes();
+  const bool useMessageForwardPrefixes = MessageComposer::MessageComposerSettings::replaceForwardPrefix();
+  
+  MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
+  mReplyListEditor->setStringList( messageReplyPrefixes );
+  mReplaceReplyPrefixCheck->setChecked( useMessageReplyPrefixes );
+  mForwardListEditor->setStringList( messageForwardPrefixes );
+  mReplaceForwardPrefixCheck->setChecked( useMessageForwardPrefixes );
+}
+
 
 QString ComposerPage::CharsetTab::helpAnchor() const
 {
@@ -2565,16 +2639,16 @@ ComposerPageCharsetTab::ComposerPageCharsetTab( QWidget * parent )
     new SimpleStringListEditor( this, SimpleStringListEditor::All,
                                 i18n("A&dd..."), i18n("Remo&ve"),
                                 i18n("&Modify..."), i18n("Enter charset:") );
-  connect( mCharsetListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCharsetListEditor, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
 
   vlay->addWidget( mCharsetListEditor, 1 );
 
   mKeepReplyCharsetCheck = new QCheckBox( i18n("&Keep original charset when "
                                                 "replying or forwarding (if "
                                                 "possible)"), this );
-  connect( mKeepReplyCharsetCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mKeepReplyCharsetCheck, SIGNAL (stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mKeepReplyCharsetCheck );
 
   connect( mCharsetListEditor, SIGNAL(aboutToAdd(QString&)),
@@ -2673,8 +2747,8 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
   // "Use custom Message-Id suffix" checkbox:
   mCreateOwnMessageIdCheck =
     new QCheckBox( i18n("&Use custom message-id suffix"), this );
-  connect( mCreateOwnMessageIdCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCreateOwnMessageIdCheck, SIGNAL (stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mCreateOwnMessageIdCheck );
 
   // "Message-Id suffix" line edit and label:
@@ -2692,12 +2766,12 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
   mMessageIdSuffixEdit->setEnabled( false );
   hlay->addWidget( label );
   hlay->addWidget( mMessageIdSuffixEdit, 1 );
-  connect( mCreateOwnMessageIdCheck, SIGNAL(toggled(bool) ),
+  connect( mCreateOwnMessageIdCheck, SIGNAL(toggled(bool)),
            label, SLOT(setEnabled(bool)) );
-  connect( mCreateOwnMessageIdCheck, SIGNAL(toggled(bool) ),
+  connect( mCreateOwnMessageIdCheck, SIGNAL(toggled(bool)),
            mMessageIdSuffixEdit, SLOT(setEnabled(bool)) );
-  connect( mMessageIdSuffixEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMessageIdSuffixEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotEmitChanged()) );
 
   // horizontal rule and "custom header fields" label:
   vlay->addWidget( new KSeparator( Qt::Horizontal, this ) );
@@ -2736,8 +2810,8 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
   mTagNameLabel->setEnabled( false );
   glay->addWidget( mTagNameLabel, 3, 0 );
   glay->addWidget( mTagNameEdit, 3, 1 );
-  connect( mTagNameEdit, SIGNAL(textChanged(const QString&)),
-           this, SLOT(slotMimeHeaderNameChanged(const QString&)) );
+  connect( mTagNameEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotMimeHeaderNameChanged(QString)) );
 
   mTagValueEdit = new KLineEdit( this );
   mTagValueEdit->setEnabled( false );
@@ -2746,8 +2820,8 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
   mTagValueLabel->setEnabled( false );
   glay->addWidget( mTagValueLabel, 4, 0 );
   glay->addWidget( mTagValueEdit, 4, 1 );
-  connect( mTagValueEdit, SIGNAL(textChanged(const QString&)),
-           this, SLOT(slotMimeHeaderValueChanged(const QString&)) );
+  connect( mTagValueEdit, SIGNAL(textChanged(QString)),
+           this, SLOT(slotMimeHeaderValueChanged(QString)) );
 }
 
 void ComposerPage::HeadersTab::slotMimeHeaderSelectionChanged()
@@ -2922,10 +2996,10 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent )
   mOutlookCompatibleCheck->setToolTip( i18n(
     "Turn this option on to make Outlook(tm) understand attachment names "
     "containing non-English characters" ) );
-  connect( mOutlookCompatibleCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mOutlookCompatibleCheck, SIGNAL( clicked() ),
-           this, SLOT( slotOutlookCompatibleClicked() ) );
+  connect( mOutlookCompatibleCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mOutlookCompatibleCheck, SIGNAL(clicked()),
+           this, SLOT(slotOutlookCompatibleClicked()) );
   vlay->addWidget( mOutlookCompatibleCheck );
   vlay->addSpacing( 5 );
 
@@ -2933,8 +3007,8 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent )
   mMissingAttachmentDetectionCheck =
     new QCheckBox( i18n("E&nable detection of missing attachments"), this );
   mMissingAttachmentDetectionCheck->setChecked( true );
-  connect( mMissingAttachmentDetectionCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMissingAttachmentDetectionCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mMissingAttachmentDetectionCheck );
 
   // "Attachment key words" label and string list editor
@@ -2952,13 +3026,13 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent )
                                 i18n("A&dd..."), i18n("Re&move"),
                                 i18n("Mod&ify..."),
                                 i18n("Enter new key word:") );
-  connect( mAttachWordsListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAttachWordsListEditor, SIGNAL(changed()),
+           this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mAttachWordsListEditor );
 
-  connect( mMissingAttachmentDetectionCheck, SIGNAL(toggled(bool) ),
+  connect( mMissingAttachmentDetectionCheck, SIGNAL(toggled(bool)),
            label, SLOT(setEnabled(bool)) );
-  connect( mMissingAttachmentDetectionCheck, SIGNAL(toggled(bool) ),
+  connect( mMissingAttachmentDetectionCheck, SIGNAL(toggled(bool)),
            mAttachWordsListEditor, SLOT(setEnabled(bool)) );
 }
 
@@ -3048,20 +3122,20 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent )
 {
   mSGTab.setupUi( this );
 
-  connect( mSGTab.mHtmlMailCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mSGTab.mExternalReferences, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect(mSGTab.labelWarnHTML, SIGNAL(linkActivated ( const QString& )),
-          SLOT(slotLinkClicked( const QString& )));
+  connect( mSGTab.mHtmlMailCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mSGTab.mExternalReferences, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect(mSGTab.labelWarnHTML, SIGNAL(linkActivated(QString)),
+          SLOT(slotLinkClicked(QString)));
 
-  connect( mSGTab.mAlwaysDecrypt, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mSGTab.mAlwaysDecrypt, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
   // "ignore", "ask", "deny", "always send" radiobutton line:
   mMDNGroup = new QButtonGroup( mSGTab.groupMessageDisp );
-  connect( mMDNGroup, SIGNAL( buttonClicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMDNGroup, SIGNAL(buttonClicked(int)),
+           this, SLOT(slotEmitChanged()) );
   mMDNGroup->addButton( mSGTab.radioIgnore, 0 );
   mMDNGroup->addButton( mSGTab.radioAsk, 1 );
   mMDNGroup->addButton( mSGTab.radioDeny, 2 );
@@ -3069,15 +3143,15 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent )
 
   // "Original Message quote" radiobutton line:
   mOrigQuoteGroup = new QButtonGroup( mSGTab.groupMessageDisp );
-  connect( mOrigQuoteGroup, SIGNAL( buttonClicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mOrigQuoteGroup, SIGNAL(buttonClicked(int)),
+           this, SLOT(slotEmitChanged()) );
   mOrigQuoteGroup->addButton( mSGTab.radioNothing, 0 );
   mOrigQuoteGroup->addButton( mSGTab.radioFull, 1 );
   mOrigQuoteGroup->addButton( mSGTab.radioHeaders, 2 );
 
   connect( mSGTab.mNoMDNsWhenEncryptedCheck, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
-  connect( mSGTab.labelWarning, SIGNAL(linkActivated ( const QString& ) ),
-           SLOT(slotLinkClicked( const QString& )) );
+  connect( mSGTab.labelWarning, SIGNAL(linkActivated(QString)),
+           SLOT(slotLinkClicked(QString)) );
 
   connect( mSGTab.mAutomaticallyImportAttachedKeysCheck, SIGNAL(toggled(bool)),
            SLOT(slotEmitChanged()) );
@@ -3113,7 +3187,7 @@ void SecurityPage::GeneralTab::doLoadOther()
 
 void SecurityPage::GeneralTab::save()
 {
-  KConfigGroup reader( KMKernel::self()->config(), "Reader" );
+  //KConfigGroup reader( KMKernel::self()->config(), "Reader" );
 
   if ( MessageViewer::GlobalSettings::self()->htmlMail() != mSGTab.mHtmlMailCheck->isChecked())
   {
@@ -3155,13 +3229,13 @@ SecurityPageComposerCryptoTab::SecurityPageComposerCryptoTab( QWidget * parent )
   vlay->setMargin( 0 );
 
   mWidget = new ComposerCryptoConfiguration( this );
-  connect( mWidget->mAutoSignature, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mEncToSelf, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mShowEncryptionResult, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mShowKeyApprovalDlg, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mAutoEncrypt, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mNeverEncryptWhenSavingInDrafts, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mStoreEncrypted, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
+  connect( mWidget->mAutoSignature, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->mEncToSelf, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->mShowEncryptionResult, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->mShowKeyApprovalDlg, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->mAutoEncrypt, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->mNeverEncryptWhenSavingInDrafts, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->mStoreEncrypted, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mWidget );
 }
 
@@ -3197,6 +3271,22 @@ void SecurityPage::ComposerCryptoTab::save()
   GlobalSettings::self()->setCryptoStoreEncrypted( mWidget->mStoreEncrypted->isChecked() );
 }
 
+void SecurityPage::ComposerCryptoTab::doLoadFromGlobalSettings()
+{
+  mWidget->mAutoSignature->setChecked( GlobalSettings::self()->pgpAutoSign() );
+
+  mWidget->mEncToSelf->setChecked( GlobalSettings::self()->cryptoEncryptToSelf() );
+  mWidget->mShowEncryptionResult->setChecked( GlobalSettings::self()->cryptoShowEncryptionResult() );
+  mWidget->mShowKeyApprovalDlg->setChecked(GlobalSettings::self()->cryptoShowKeysForApproval() );
+
+  mWidget->mAutoEncrypt->setChecked(GlobalSettings::self()->pgpAutoEncrypt() );
+  mWidget->mNeverEncryptWhenSavingInDrafts->setChecked( GlobalSettings::self()->neverEncryptDrafts() );
+
+  mWidget->mStoreEncrypted->setChecked(GlobalSettings::self()->cryptoStoreEncrypted() );
+  
+}
+
+
 QString SecurityPage::WarningTab::helpAnchor() const
 {
   return QString::fromLatin1("configure-security-warnings");
@@ -3221,6 +3311,34 @@ SecurityPageWarningTab::SecurityPageWarningTab( QWidget * parent )
   connect( mWidget->gnupgButton, SIGNAL(clicked()), SLOT(slotConfigureGnupg()) );
   connect( mWidget->chiasmusButton, SIGNAL(clicked()), SLOT(slotConfigureChiasmus()) );
   connect( mWidget->enableAllWarningsPB, SIGNAL(clicked()), SLOT(slotReenableAllWarningsClicked()) );
+}
+
+void SecurityPage::WarningTab::doLoadFromGlobalSettings()
+{
+  mWidget->warnUnencryptedCB->setChecked(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencrypted() );
+  mWidget->mWarnUnsigned->setChecked(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsigned() );
+  mWidget->warnReceiverNotInCertificateCB->setChecked(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnRecvNotInCert() );
+
+  // The "-int" part of the key name is because there used to be a separate boolean
+  // config entry for enabling/disabling. This is done with the single bool value now.
+  mWidget->warnGroupBox->setChecked(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() );
+  mWidget->mWarnSignKeyExpiresSB->setValue(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays() );
+  mWidget->mWarnSignChainCertExpiresSB->setValue(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays() );
+  mWidget->mWarnSignRootCertExpiresSB->setValue(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays() );
+
+  mWidget->mWarnEncrKeyExpiresSB->setValue(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays() );
+  mWidget->mWarnEncrChainCertExpiresSB->setValue(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays() );
+  mWidget->mWarnEncrRootCertExpiresSB->setValue(
+      MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays() );
 }
 
 void SecurityPage::WarningTab::doLoadOther()
@@ -3355,28 +3473,28 @@ SecurityPageSMimeTab::SecurityPageSMimeTab( QWidget * parent )
 
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
 
-  connect( mWidget->CRLRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->OCSPRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->OCSPResponderURL, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->OCSPResponderSignature, SIGNAL( changed() ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->doNotCheckCertPolicyCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->neverConsultCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->fetchMissingCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
+  connect( mWidget->CRLRB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->OCSPRB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->OCSPResponderURL, SIGNAL(textChanged(QString)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->OCSPResponderSignature, SIGNAL(changed()), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->doNotCheckCertPolicyCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->neverConsultCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->fetchMissingCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
 
-  connect( mWidget->ignoreServiceURLCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->ignoreHTTPDPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->disableHTTPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->honorHTTPProxyRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->useCustomHTTPProxyRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->customHTTPProxy, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->ignoreLDAPDPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->disableLDAPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->customLDAPProxy, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotEmitChanged() ) );
+  connect( mWidget->ignoreServiceURLCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->ignoreHTTPDPCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->disableHTTPCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->honorHTTPProxyRB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->useCustomHTTPProxyRB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->customHTTPProxy, SIGNAL(textChanged(QString)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->ignoreLDAPDPCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->disableLDAPCB, SIGNAL(toggled(bool)), this, SLOT(slotEmitChanged()) );
+  connect( mWidget->customLDAPProxy, SIGNAL(textChanged(QString)), this, SLOT(slotEmitChanged()) );
 
-  connect( mWidget->disableHTTPCB, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotUpdateHTTPActions() ) );
-  connect( mWidget->ignoreHTTPDPCB, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotUpdateHTTPActions() ) );
+  connect( mWidget->disableHTTPCB, SIGNAL(toggled(bool)),
+           this, SLOT(slotUpdateHTTPActions()) );
+  connect( mWidget->ignoreHTTPDPCB, SIGNAL(toggled(bool)),
+           this, SLOT(slotUpdateHTTPActions()) );
 
   // Button-group for exclusive radiobuttons
   QButtonGroup* bgHTTPProxy = new QButtonGroup( mWidget );
@@ -3661,26 +3779,26 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent )
   mMMTab.mExcludeImportantFromExpiry->setWhatsThis(
       i18n( GlobalSettings::self()->excludeImportantMailFromExpiryItem()->whatsThis().toUtf8() ) );
 
-  connect( mMMTab.mEmptyFolderConfirmCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mMMTab.mExcludeImportantFromExpiry, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mMMTab.mLoopOnGotoUnread, SIGNAL( activated( int ) ),
-          this, SLOT( slotEmitChanged( void ) ) );
-  connect( mMMTab.mActionEnterFolder, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mMMTab.mDelayedMarkTime, SIGNAL( valueChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMMTab.mEmptyFolderConfirmCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mMMTab.mExcludeImportantFromExpiry, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mMMTab.mLoopOnGotoUnread, SIGNAL(activated(int)),
+          this, SLOT(slotEmitChanged()) );
+  connect( mMMTab.mActionEnterFolder, SIGNAL(activated(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mMMTab.mDelayedMarkTime, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );
   connect( mMMTab.mDelayedMarkAsRead, SIGNAL(toggled(bool)),
            mMMTab.mDelayedMarkTime, SLOT(setEnabled(bool)));
   connect( mMMTab.mDelayedMarkAsRead, SIGNAL(toggled(bool)),
-           this , SLOT(slotEmitChanged( void )) );
-  connect( mMMTab.mShowPopupAfterDnD, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mOnStartupOpenFolder, SIGNAL( folderChanged( const Akonadi::Collection& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mMMTab.mEmptyTrashCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+           this , SLOT(slotEmitChanged()) );
+  connect( mMMTab.mShowPopupAfterDnD, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mOnStartupOpenFolder, SIGNAL(folderChanged(Akonadi::Collection)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mMMTab.mEmptyTrashCheck, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
 
 }
 
@@ -3693,6 +3811,7 @@ void MiscPage::FolderTab::doLoadFromGlobalSettings()
   mMMTab.mDelayedMarkAsRead->setChecked( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() );
   mMMTab.mDelayedMarkTime->setValue( MessageViewer::GlobalSettings::self()->delayedMarkTime() );
   mMMTab.mShowPopupAfterDnD->setChecked( GlobalSettings::self()->showPopupAfterDnD() );
+  doLoadOther();
 }
 
 void MiscPage::FolderTab::doLoadOther()
@@ -3726,7 +3845,7 @@ MiscPageInviteTab::MiscPageInviteTab( QWidget* parent )
   QHBoxLayout *l = new QHBoxLayout( this );
   l->setContentsMargins( 0 , 0, 0, 0 );
   l->addWidget( mInvitationUi );
-  connect( mInvitationUi, SIGNAL( changed() ), this, SLOT( slotEmitChanged() ) );
+  connect( mInvitationUi, SIGNAL(changed()), this, SLOT(slotEmitChanged()) );
 }
 
 void MiscPage::InviteTab::doLoadFromGlobalSettings()
@@ -3739,6 +3858,10 @@ void MiscPage::InviteTab::save()
   mInvitationUi->save();
 }
 
+void MiscPage::InviteTab::doResetToDefaultsOther()
+{
+  mInvitationUi->doResetToDefaultsOther();
+}
 
 //----------------------------
 #include "configuredialog.moc"

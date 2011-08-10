@@ -1,19 +1,16 @@
 ########### files copied from kdepim-runtime module ###############
 set(AKONADI_SINGLEFILERESOURCE_SHARED_SOURCES
     ${AKONADI_SHARED_RESOURCES}/singlefileresourcebase.cpp
-    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigwidget.cpp
     ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigdialogbase.cpp
 )
 
 if (KDEPIM_MOBILE_UI)
 set(AKONADI_SINGLEFILERESOURCE_SHARED_UI
-    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigwidget_mobile.ui
-    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigdialog.ui
+    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigdialog_mobile.ui
 )
 else (KDEPIM_MOBILE_UI)
 set(AKONADI_SINGLEFILERESOURCE_SHARED_UI
-    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigwidget_desktop.ui
-    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigdialog.ui
+    ${AKONADI_SHARED_RESOURCES}/singlefileresourceconfigdialog_desktop.ui
 )
 endif (KDEPIM_MOBILE_UI)
 ########### end files copied from kdepim-runtime module ###############
@@ -38,15 +35,17 @@ set(kalarmresource_SRCS
     ${AKONADI_ICAL_RESOURCE}/icalresourcebase.cpp
     kalarmresource.cpp
     ../common/kalarmresourcecommon.cpp
+    ../common/alarmtyperadiowidget.cpp
 )
 
-install(FILES kalarmresource.desktop kalarmresource_active.desktop kalarmresource_archived.desktop kalarmresource_template.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(FILES kalarmresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 
-kde4_add_ui_files(kalarmresource_SRCS ${AKONADI_SINGLEFILERESOURCE_SHARED_UI})
+kde4_add_ui_files(kalarmresource_SRCS ../common/alarmtyperadiowidget.ui ${AKONADI_SINGLEFILERESOURCE_SHARED_UI})
 kde4_add_kcfg_files(kalarmresource_SRCS settings.kcfgc)
 kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/kalarmresource.kcfg org.kde.Akonadi.KAlarm.Settings)
 qt4_add_dbus_adaptor(kalarmresource_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.KAlarm.Settings.xml settings.h Akonadi_KAlarm_Resource::Settings icalsettingsadaptor ICalSettingsAdaptor
+add_custom_target(kalarm_resource_xml ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.KAlarm.Settings.xml)
 )
 
 if (NOT WINCE)

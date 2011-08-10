@@ -110,6 +110,8 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      addressvalidationjob.cpp
      identitypage.cpp
      newidentitydialog.cpp
+     kmsearchmessagemodel.cpp
+     kmknotify.cpp
   )
 
   soprano_add_ontology(kmailprivate_LIB_SRCS
@@ -118,20 +120,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     "Vocabulary"
     "trig"
   )
-
-  macro(add_resource_iface _kcfgFile _ifaceName _className)
-    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
-    string(TOLOWER ${_className} _codeFile)
-    set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-    qt4_add_dbus_interface(kmailprivate_LIB_SRCS
-      ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
-    )
-  endmacro(add_resource_iface)
-
-  # add_resource_iface( imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings )
-  # Pop3
-  add_resource_iface( settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings )
-
 
   # TODO PORT
   # qt4_generate_dbus_interface(kmcomposewin.h org.kde.kmail.mailcomposer.xml OPTIONS -a)
@@ -272,7 +260,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   install(PROGRAMS KMail2.desktop kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
   install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg
-    custommimeheader.kcfg
     DESTINATION ${KCFG_INSTALL_DIR}
   )
   install(FILES kmail.antispamrc kmail.antivirusrc  DESTINATION ${CONFIG_INSTALL_DIR})

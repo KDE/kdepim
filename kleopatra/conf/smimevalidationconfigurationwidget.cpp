@@ -148,8 +148,8 @@ struct SMIMECryptoConfigEntries {
           mDoNotCheckCertPolicyConfigEntry( configEntry( "gpgsm", "Security", "disable-policy-checks", CryptoConfigEntry::ArgType_None, false ) ),
           mNeverConsultConfigEntry( configEntry( "gpgsm", "Security", "disable-crl-checks", CryptoConfigEntry::ArgType_None, false ) ),
           mAllowMarkTrustedConfigEntry( configEntry( "gpg-agent", "Security", "allow-mark-trusted", CryptoConfigEntry::ArgType_None, false ) ),
-          mNoAllowMarkTrustedConfigEntry( configEntry( "gpg-agent", "Security", "no-allow-mark-trusted", CryptoConfigEntry::ArgType_None, false ) ),
           mFetchMissingConfigEntry( configEntry( "gpgsm", "Security", "auto-issuer-key-retrieve", CryptoConfigEntry::ArgType_None, false ) ),
+          mNoAllowMarkTrustedConfigEntry( configEntry( "gpg-agent", "Security", "no-allow-mark-trusted", CryptoConfigEntry::ArgType_None, false ) ),
           // dirmngr-0.9.0 options
           mIgnoreServiceURLEntry( configEntry( "dirmngr", "OCSP", "ignore-ocsp-service-url", CryptoConfigEntry::ArgType_None, false ) ),
           mIgnoreHTTPDPEntry( configEntry( "dirmngr", "HTTP", "ignore-http-dp", CryptoConfigEntry::ArgType_None, false ) ),

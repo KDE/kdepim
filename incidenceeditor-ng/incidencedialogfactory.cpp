@@ -57,6 +57,7 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
                                                             const QStringList &attachments,
                                                             const QStringList &attendees,
                                                             const QStringList &attachmentMimetypes,
+                                                            const QStringList &attachmentLabels,
                                                             bool inlineAttachment,
                                                             Akonadi::Collection defaultCollection,
                                                             bool cleanupAttachmentTemporaryFiles,
@@ -65,7 +66,7 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
   IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTemporaryFiles );
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
-  defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
+  defaults.setAttachments( attachments, attachmentMimetypes, attachmentLabels, inlineAttachment );
   defaults.setAttendees( attendees );
 
   Todo::Ptr todo( new Todo );
@@ -95,6 +96,7 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
                                                              const QStringList &attachments,
                                                              const QStringList &attendees,
                                                              const QStringList &attachmentMimetypes,
+                                                             const QStringList &attachmentLabels,
                                                              bool inlineAttachment,
                                                              Akonadi::Collection defaultCollection,
                                                              bool cleanupAttachmentTemporaryFiles,
@@ -104,7 +106,7 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
 
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
-  defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
+  defaults.setAttachments( attachments, attachmentMimetypes, attachmentLabels, inlineAttachment );
   defaults.setAttendees( attendees );
 
   Event::Ptr event( new Event );

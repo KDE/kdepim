@@ -50,8 +50,8 @@ void AkonadiTabBar::Private::slotCurrentChanged( int index )
 AkonadiTabBar::AkonadiTabBar( QWidget* parent )
         :  KTabBar( parent ), d( new Private( this ) )
 {
-    connect( this, SIGNAL( currentChanged( int ) ),
-             SLOT( slotCurrentChanged( int ) ) );
+    connect( this, SIGNAL(currentChanged(int)),
+             SLOT(slotCurrentChanged(int)) );
 }
 
 AkonadiTabBar::~AkonadiTabBar()

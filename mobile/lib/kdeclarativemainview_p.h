@@ -31,7 +31,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/etmviewstatesaver.h>
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
 #include <klineedit.h>
 
 #include <QtGui/QItemSelectionModel>
@@ -61,7 +61,7 @@ public: /// members
   QItemSelectionModel                *mItemNavigationSelectionModel;
   QItemSelectionModel                *mItemActionSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
-  Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
+  KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
   QPointer<KLineEdit>                mFilterLineEdit;
   QPointer<KLineEdit>                mBulkActionFilterLineEdit;
   AgentStatusMonitor                 *mAgentStatusMonitor;

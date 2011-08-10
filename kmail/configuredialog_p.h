@@ -281,8 +281,8 @@ private slots:
 private:
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
   void updateFontSelector();
+  virtual void doResetToDefaultsOther();
 
 private:
   QCheckBox    *mCustomFontCheck;
@@ -303,7 +303,8 @@ public:
 private:
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
+  virtual void doResetToDefaultsOther();
+  void loadColor( bool loadFromConfig );
 
 private:
   QCheckBox    *mCustomColorCheck;
@@ -346,7 +347,7 @@ public:
   void save();
 
 private: // methods
-  //virtual void doLoadFromGlobalSettings();
+  virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
   // virtual void doResetToDefaultsOther();
   void setDateDisplay( int id, const QString & format );
@@ -484,6 +485,9 @@ private: // data
   // List of all Tags currently in the list
   QList<KMail::TagPtr> mMsgTagList;
 
+  // So we can compare to mMsgTagList and see if the user changed tags
+  QList<KMail::TagPtr> mOriginalMsgTagList;
+
   /*Used to safely call slotRecordTagSettings when the selection in
     list box changes*/
   int mPreviousTag;
@@ -599,6 +603,7 @@ public:
 
 private:
   virtual void doLoadFromGlobalSettings();
+  virtual void doResetToDefaultsOther();
 
 private:
   SimpleStringListEditor *mReplyListEditor;
@@ -746,7 +751,7 @@ public:
   void save();
 
 private:
-  //virtual void doLoadFromGlobalSettings();
+  virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
@@ -769,7 +774,7 @@ private Q_SLOTS:
   void slotConfigureChiasmus();
 
 private:
-  //virtual void doLoadFromGlobalSettings();
+  virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
@@ -849,6 +854,7 @@ class MiscPageInviteTab : public ConfigModuleTab  {
 public:
   MiscPageInviteTab( QWidget * parent=0 );
   void save();
+  virtual void doResetToDefaultsOther();
 
 private:
   virtual void doLoadFromGlobalSettings();

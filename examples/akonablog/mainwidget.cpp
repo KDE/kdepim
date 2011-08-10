@@ -53,8 +53,8 @@ MainWidget::MainWidget( MainWindow * parent ) :
     Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel( this );
     m_resourcesView = new QListView( splitter );
     m_resourcesView->setModel( model );
-    connect( m_resourcesView, SIGNAL( clicked( const QModelIndex& ) ),
-             SLOT( slotCurrentResourceChanged( const QModelIndex& ) ) );
+    connect( m_resourcesView, SIGNAL(clicked(QModelIndex)),
+             SLOT(slotCurrentResourceChanged(QModelIndex)) );
     splitter->addWidget( m_resourcesView );
     
     // Filter the collection to only show the blogs
@@ -68,8 +68,8 @@ MainWidget::MainWidget( MainWindow * parent ) :
 
     // Folders
     m_tabBar = new AkonadiTabBar( box );
-    connect( m_tabBar, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
-             SLOT( slotCurrentTabChanged( const Akonadi::Collection& ) ) );
+    connect( m_tabBar, SIGNAL(currentChanged(Akonadi::Collection)),
+             SLOT(slotCurrentTabChanged(Akonadi::Collection)) );
 
     mMessageList = new QTreeView( box );
     mMessageList->setRootIsDecorated( false );

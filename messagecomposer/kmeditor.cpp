@@ -516,7 +516,7 @@ void KMeditor::ensureCursorVisible()
   //
   //       Delay the actual call to ensureCursorVisible() a bit to work around
   //       the problem.
-  QTimer::singleShot( 500, this, SLOT( ensureCursorVisibleDelayed() ) );
+  QTimer::singleShot( 500, this, SLOT(ensureCursorVisibleDelayed()) );
 }
 
 void KMeditorPrivate::cleanWhitespaceHelper( const QRegExp &regExp,

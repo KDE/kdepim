@@ -82,6 +82,7 @@ protected:
    * Creates an Item. Only derived classes and MessageList::Model should access this.
    */
   Item( Type type );
+  Item( Type type, ItemPrivate *dd );
 
 public:
   /**
@@ -278,9 +279,9 @@ public:
 
   /**
    * A string with a text rappresentation of size(). This is computed on-the-fly
-   * and cached until the size() changes.
+   * and not cached.
    */
-  const QString & formattedSize();
+  QString formattedSize() const;
 
   /**
    * Returns the date of this item
@@ -294,9 +295,9 @@ public:
 
   /**
    * A string with a text rappresentation of date() obtained via Manager. This is computed on-the-fly
-   * and cached until the size() changes.
+   * and not cached.
    */
-  const QString & formattedDate();
+  QString formattedDate() const;
 
   /**
    * Returns the maximum date in the subtree originating from this item.
@@ -311,9 +312,9 @@ public:
 
   /**
    * A string with a text rappresentation of maxDate() obtained via Manager. This is computed on-the-fly
-   * and cached until the size() changes.
+   * and not cached.
    */
-  const QString & formattedMaxDate();
+  QString formattedMaxDate() const;
 
   /**
    * Recompute the maximum date from the current children list.
@@ -347,9 +348,9 @@ public:
   const QString & senderOrReceiver() const;
 
   /**
-   * Sets the sender or the receiver: this should depend on the underlying StorageModel settings.
+   * Returns whether sender or receiver is supposed to be displayed.
    */
-  void setSenderOrReceiver( const QString &senderOrReceiver );
+  bool useReceiver() const;
 
   /**
    * Returns the subject associated to this Item.
@@ -369,7 +370,7 @@ public:
   void initialSetup( time_t date, size_t size,
                      const QString &sender,
                      const QString &receiver,
-                     const QString &senderOrReceiver );
+                     bool useReceiver );
 
   /**
    * This is meant to be called right after the constructor for MessageItem objects.
@@ -402,8 +403,10 @@ public:
    * It should be used only when MessageList::Model is reset() afterwards.
    */
   void killAllChildItems();
-private:
-  ItemPrivate * const d;
+
+protected:
+  ItemPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE( Item )
 };
 
 } // namespace Core

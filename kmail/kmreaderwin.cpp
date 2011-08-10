@@ -23,17 +23,15 @@
 #include "kmreaderwin.h"
 
 #include "globalsettings.h"
-#include "kmversion.h"
 #include "kmmainwidget.h"
 #include "kmreadermainwin.h"
 #include "mailkernel.h"
 
+#include "kdepim-version.h"
 #include <kpimutils/email.h>
-#include <kpimutils/kfileio.h>
 #include <libkdepim/addemailaddressjob.h>
 #include <libkdepim/openemailaddressjob.h>
 #include "kmcommands.h"
-#include "mailcommon/mdnadvicedialog.h"
 #include "mailcommon/sendmdnhandler.h"
 #include <QByteArray>
 #include <QVBoxLayout>
@@ -46,8 +44,6 @@
 #include "messageviewer/csshelper.h"
 using MessageViewer::CSSHelper;
 #include "util.h"
-#include <kicon.h>
-#include "messageviewer/attachmentdialog.h"
 #include "stringutil.h"
 
 #include <kmime/kmime_mdn.h>
@@ -69,25 +65,12 @@ using MessageComposer::MessageFactory;
 
 
 #include <kde_file.h>
-#include <kactionmenu.h>
-// for the click on attachment stuff (dnaber):
-#include <kcharsets.h>
-#include <kmenu.h>
 #include <kdebug.h>
-#include <kfiledialog.h>
 #include <klocale.h>
-#include <kmessagebox.h>
-#include <kmimetypetrader.h>
-#include <kglobalsettings.h>
-#include <krun.h>
-#include <ktemporaryfile.h>
-#include <kdialog.h>
 #include <kaction.h>
-#include <kfontaction.h>
+#include <kicon.h>
 #include <kiconloader.h>
 #include <kcodecs.h>
-#include <kascii.h>
-#include <kselectaction.h>
 #include <kstandardaction.h>
 #include <ktoggleaction.h>
 #include <kconfiggroup.h>
@@ -130,17 +113,17 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   vlay->setMargin( 0 );
   mViewer = new Viewer( this, mainWindow, mActionCollection );
   mViewer->setAppName( "KMail" );
-  connect( mViewer, SIGNAL(urlClicked( const Akonadi::Item &, const KUrl & ) ),
-           this, SLOT( slotUrlClicked( const Akonadi::Item &, const KUrl& ) ) );
-  connect( mViewer, SIGNAL( requestConfigSync() ), kmkernel, SLOT( slotRequestConfigSync() ), Qt::QueuedConnection ); // happens anyway on shutdown, so we can skip it there with using a queued connection
-  connect( mViewer, SIGNAL( showReader( KMime::Content* , bool, const QString& ) ),
-           this, SLOT( slotShowReader( KMime::Content* , bool, const QString& ) ) );
-  connect( mViewer, SIGNAL( showMessage(KMime::Message::Ptr, const QString&) ),
-           this, SLOT( slotShowMessage(KMime::Message::Ptr, const QString& ) ) );
-  connect( mViewer, SIGNAL( showStatusBarMessage( const QString & ) ),
-           this, SIGNAL( showStatusBarMessage( const QString & ) ) );
-  connect( mViewer, SIGNAL( deleteMessage( Akonadi::Item ) ),
-           this, SLOT( slotDeleteMessage( Akonadi::Item ) ) );
+  connect( mViewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
+           this, SLOT(slotUrlClicked(Akonadi::Item,KUrl)) );
+  connect( mViewer, SIGNAL(requestConfigSync()), kmkernel, SLOT(slotRequestConfigSync()), Qt::QueuedConnection ); // happens anyway on shutdown, so we can skip it there with using a queued connection
+  connect( mViewer, SIGNAL(showReader(KMime::Content*,bool,QString)),
+           this, SLOT(slotShowReader(KMime::Content*,bool,QString)) );
+  connect( mViewer, SIGNAL(showMessage(KMime::Message::Ptr,QString)),
+           this, SLOT(slotShowMessage(KMime::Message::Ptr,QString)) );
+  connect( mViewer, SIGNAL(showStatusBarMessage(QString)),
+           this, SIGNAL(showStatusBarMessage(QString)) );
+  connect( mViewer, SIGNAL(deleteMessage(Akonadi::Item)),
+           this, SLOT(slotDeleteMessage(Akonadi::Item)) );
 
   mViewer->addMessageLoadedHandler( new MessageViewer::MarkMessageReadHandler( this ) );
   mViewer->addMessageLoadedHandler( new MailCommon::SendMdnHandler( kmkernel, this ) );
@@ -256,8 +239,8 @@ void KMReaderWin::clearCache()
 
 // enter items for the "Important changes" list here:
 static const char * const kmailChanges[] = {
-  "KMail is now based on the Akonadi Personal Information Management framework, which brings many "
-  "changes all around."
+  I18N_NOOP( "KMail is now based on the Akonadi Personal Information Management framework, which brings many "
+  "changes all around.")
 };
 static const int numKMailChanges =
   sizeof kmailChanges / sizeof *kmailChanges;
@@ -267,12 +250,12 @@ static const int numKMailChanges =
 // the translators). Note that the <li>...</li> tags are added
 // automatically below:
 static const char * const kmailNewFeatures[] = {
-  "Push email (IMAP IDLE)",
-  "Improved virtual folders",
-  "Improved searches",
-  "Support for adding notes (annotations) to mails",
-  "Tag folders",
-  "Less GUI freezes, mail checks happen in the background"
+  I18N_NOOP( "Push email (IMAP IDLE)" ),
+  I18N_NOOP( "Improved virtual folders" ),
+  I18N_NOOP( "Improved searches" ),
+  I18N_NOOP( "Support for adding notes (annotations) to mails" ),
+  I18N_NOOP( "Tag folders" ),
+  I18N_NOOP( "Less GUI freezes, mail checks happen in the background" )
 };
 static const int numKMailNewFeatures =
   sizeof kmailNewFeatures / sizeof *kmailNewFeatures;
@@ -336,7 +319,7 @@ void KMReaderWin::displayAboutPage()
          "<p>We hope that you will enjoy KMail.</p>\n"
          "<p>Thank you,</p>\n"
          "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The KMail Team</p>")
-           .subs( KMAIL_VERSION )
+           .subs( KDEPIM_VERSION )
            .subs( "help:/kmail/index.html" );
 
   if ( ( numKMailNewFeatures > 1 ) || ( numKMailNewFeatures == 1 && strlen(kmailNewFeatures[0]) > 0 ) ) {
@@ -424,7 +407,7 @@ void KMReaderWin::setHtmlLoadExtOverride( bool override )
 }
 
 //-----------------------------------------------------------------------------
-bool KMReaderWin::htmlMail()
+bool KMReaderWin::htmlMail() const
 {
   return mViewer->htmlMail();
 }

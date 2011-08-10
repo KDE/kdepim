@@ -107,7 +107,7 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 
   bool ok = true;
   if ( list.count() == 1 ) {
-    url = KFileDialog::getSaveUrl( list[ 0 ].givenName() + '_' + list[ 0 ].familyName() + ".vcf" );
+    url = KFileDialog::getSaveUrl( QString(list[ 0 ].givenName() + QLatin1Char('_') + list[ 0 ].familyName() + QLatin1String(".vcf") ) );
     if ( url.isEmpty() ) // user canceled export
       return true;
 
@@ -430,10 +430,10 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
 
   mIt = mContacts.begin();
 
-  connect( this, SIGNAL( yesClicked() ), this, SLOT( slotYes() ) );
-  connect( this, SIGNAL( noClicked() ), this, SLOT( slotNo() ) );
-  connect( this, SIGNAL( applyClicked() ), this, SLOT( slotApply() ) );
-  connect( this, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
+  connect( this, SIGNAL(yesClicked()), this, SLOT(slotYes()) );
+  connect( this, SIGNAL(noClicked()), this, SLOT(slotNo()) );
+  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
+  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
 
   updateView();
 }

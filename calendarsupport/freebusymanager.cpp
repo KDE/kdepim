@@ -2,7 +2,7 @@
   Requires the Qt and KDE widget libraries, available at no cost at
   http://www.trolltech.com and http://www.kde.org respectively
 
-  Copyright (c) 2002-2004 Klar�vdalens Datakonsult AB
+  Copyright (c) 2002-2004 Klarävdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
@@ -24,7 +24,7 @@
   In addition, as a special exception, the copyright holders give
   permission to link the code of this program with any edition of
   the Qt library by Trolltech AS, Norway (or with modified versions
-  of Qt that use the same license as Qt), and distribute liinitialCheckForChangesnked
+  of Qt that use the same license as Qt), and distribute linked
   combinations including the two.  You must obey the GNU General
   Public License in all respects for all of the code used other than
   Qt.  If you modify this file, you may extend this exception to
@@ -34,17 +34,19 @@
 */
 
 #include "freebusymanager.h"
+#include "freebusymanager_p.h"
 #include "calendar.h"
 #include "freebusydownloadjob.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
 #include "publishdialog.h"
 
+#include <Akonadi/AgentInstance>
+#include <Akonadi/AgentManager>
 #include <Akonadi/Contact/ContactSearchJob>
 
 #include <KCalCore/Event>
 #include <KCalCore/FreeBusy>
-#include <KCalCore/ICalFormat>
 #include <KCalCore/Person>
 
 #include <KDebug>
@@ -58,7 +60,6 @@
 
 #include <QDir>
 #include <QFile>
-#include <QPointer>
 #include <QRegExp>
 #include <QTextStream>
 #include <QTimer>
@@ -107,56 +108,70 @@ bool fbExists( const KUrl &url )
   return false;
 }
 
-/// FreeBusyManagerPrivate
+/// FreeBusyManagerPrivate::FreeBusyProviderRequest
 
-namespace CalendarSupport {
-
-class FreeBusyManagerPrivate
+FreeBusyManagerPrivate::FreeBusyProviderRequest::FreeBusyProviderRequest( const QString &provider )
+  : mRequestStatus( NotStarted ), mInterface( 0 )
 {
-  FreeBusyManager *const q_ptr;
-  Q_DECLARE_PUBLIC( FreeBusyManager )
-
-  public: /// Members
-    CalendarSupport::Calendar *mCalendar;
-    KCalCore::ICalFormat mFormat;
-
-    QStringList mRetrieveQueue;
-    QMap<KUrl, QString> mFreeBusyUrlEmailMap;
-
-    // Free/Busy uploading
-    QDateTime mNextUploadTime;
-    int mTimerID;
-    bool mUploadingFreeBusy;
-    bool mBrokenUrl;
-
-    // the parentWidget to use while doing our "recursive" retrieval
-    QPointer<QWidget>  mParentWidgetForRetrieval;
-
-  public: /// Functions
-    FreeBusyManagerPrivate( FreeBusyManager *q );
-    void checkFreeBusyUrl();
-    QString freeBusyDir() const;
-    KUrl freeBusyUrl( const QString &email ) const;
-    QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
-    KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
-    KCalCore::FreeBusy::Ptr ownerFreeBusy();
-    QString ownerFreeBusyAsString();
-    void processFreeBusyDownloadResult( KJob *_job );
-    void processFreeBusyUploadResult( KJob *_job );
-    bool processRetrieveQueue();
-    void uploadFreeBusy();
-};
-
+  mInterface = QSharedPointer<QDBusInterface>(
+                  new QDBusInterface( "org.freedesktop.Akonadi.Resource." + provider,
+                                      "/FreeBusyProvider",
+                                      "org.freedesktop.Akonadi.Resource.FreeBusyProvider"
+                                    )
+                  );
 }
 
+/// FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue
+
+FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue( const QString &start, const QString &end )
+  : mHandlersCount( 0 ), mResultingFreeBusy( 0 )
+{
+  KDateTime startDate, endDate;
+
+  if ( !start.isEmpty() ) {
+    mStartTime = start;
+    startDate = KDateTime::fromString( start );
+  }
+  else {
+    // Set the start of the period to today 00:00:00
+    startDate = KDateTime( KDateTime::currentLocalDate() );
+    mStartTime = startDate.toString();
+  }
+
+  if ( !end.isEmpty() ) {
+    mEndTime = end;
+    endDate = KDateTime::fromString( end );
+  }
+  else {
+    // Set the end of the period to today + 14 days.
+    endDate = KDateTime( KDateTime::currentLocalDate() ).addDays( 14 );
+    mEndTime = endDate.toString();
+  }
+
+  mResultingFreeBusy = KCalCore::FreeBusy::Ptr( new KCalCore::FreeBusy( startDate, endDate ) );
+}
+
+FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue( const KDateTime &start, const KDateTime &end )
+  : mHandlersCount( 0 ), mResultingFreeBusy( 0 )
+ {
+   mStartTime = start.toString();
+   mEndTime = end.toString();
+   mResultingFreeBusy = KCalCore::FreeBusy::Ptr( new KCalCore::FreeBusy( start, end ) );
+ }
+
+/// FreeBusyManagerPrivate
+
 FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
-  : q_ptr( q ),
+  : QObject(),
+    q_ptr( q ),
     mCalendar( 0 ),
     mTimerID( 0 ),
     mUploadingFreeBusy( false ),
     mBrokenUrl( false ),
     mParentWidgetForRetrieval( 0 )
 {
+  connect( this, SIGNAL(freeBusyUrlRetrieved(QString,KUrl)),
+           SLOT(finishProcessRetrieveQueue(QString,KUrl)) );
 }
 
 void FreeBusyManagerPrivate::checkFreeBusyUrl()
@@ -170,7 +185,7 @@ QString FreeBusyManagerPrivate::freeBusyDir() const
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
-KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
+void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
 {
   // First check if there is a specific FB url for this email
   QString configFile = KStandardDirs::locateLocal( "data",
@@ -185,41 +200,65 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
       cachedUrl.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
       cachedUrl.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
     }
-    return replaceVariablesUrl( cachedUrl, email );
+    emit freeBusyUrlRetrieved( email, replaceVariablesUrl( cachedUrl, email ) );
+    return;
   }
   // Try with the url configurated by preferred email in kcontactmanager
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::Email, email );
-  if ( !job->exec() ) {
-    return KUrl();
+  job->setProperty( "contactEmail", QVariant::fromValue( email ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(contactSearchJobFinished(KJob*)) );
+  job->start();
+}
+
+void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
+{
+  const QString email = _job->property( "contactEmail" ).toString();
+
+  if ( _job->error() ) {
+    kError() << "Error while searching for contact: "
+             << _job->errorString() << " ;email = " << email;
+    emit freeBusyUrlRetrieved( email, KUrl() );
+    return;
   }
+
+  Akonadi::ContactSearchJob *job = qobject_cast<Akonadi::ContactSearchJob*>( _job );
+  QString configFile = KStandardDirs::locateLocal( "data",
+                                                   QLatin1String( "korganizer/freebusyurls" ) );
+  KConfig cfg( configFile );
+  KConfigGroup group = cfg.group( email );
+  QString url = group.readEntry( QLatin1String( "url" ) );
 
   QString pref;
   const KABC::Addressee::List contacts = job->contacts();
   foreach ( const KABC::Addressee &contact, contacts ) {
     pref = contact.preferredEmail();
     if ( !pref.isEmpty() && pref != email ) {
-      kDebug() << "Preferred email of" << email << "is" << pref;
       group = cfg.group( pref );
       url = group.readEntry ( "url" );
+      kDebug() << "Preferred email of" << email << "is" << pref;
       if ( !url.isEmpty() ) {
         kDebug() << "Taken url from preferred email:" << url;
-        return replaceVariablesUrl( KUrl( url ), email );
+        emit freeBusyUrlRetrieved( email, replaceVariablesUrl( KUrl( url ), email ) );
+        return;
       }
     }
   }
   // None found. Check if we do automatic FB retrieving then
   if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
     // No, so no FB list here
-    return KUrl();
+    kDebug() << "No automatic retrieving";
+    emit freeBusyUrlRetrieved( email, KUrl() );
+    return;
   }
 
   // Sanity check: Don't download if it's not a correct email
   // address (this also avoids downloading for "(empty email)").
   int emailpos = email.indexOf( QLatin1Char( '@' ) );
   if( emailpos == -1 ) {
-     kDebug() << "No '@' found in" << email;
-     return KUrl();
+    kWarning() << "No '@' found in" << email;
+    emit freeBusyUrlRetrieved( email, KUrl() );
+    return;
   }
 
   const QString emailHost = email.mid( emailpos + 1 );
@@ -234,7 +273,8 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
          !emailHost.endsWith( QLatin1Char( '.' ) + hostDomain ) ) {
       // Host names do not match
       kDebug() << "Host '" << hostDomain << "' doesn't match email '" << email << '\'';
-      return KUrl();
+      emit freeBusyUrlRetrieved( email, KUrl() );
+      return;
     }
   }
 
@@ -250,35 +290,39 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
 
     // no need to cache this URL as this is pretty fast to get from the config value.
     // return the fullpath URL
-    return fullpathURL;
- }
+    kDebug() << "Found url. email=" << email << "; url=" << fullpathURL;
+    emit freeBusyUrlRetrieved( email, fullpathURL );
+    return;
+  }
 
- // else we search for a fb file in the specified URL with known possible extensions
+  // else we search for a fb file in the specified URL with known possible extensions
+  const QStringList extensions = QStringList() << "xfb" << "ifb" << "vfb";
+  QStringList::ConstIterator ext;
+  for ( ext = extensions.constBegin(); ext != extensions.constEnd(); ++ext ) {
+    // build a url for this extension
+    const KUrl sourceUrl = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
+    KUrl dirURL = replaceVariablesUrl( sourceUrl, email );
+    if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
+      dirURL.addPath( email + '.' + (*ext) );
+    } else {
+      // Cut off everything left of the @ sign to get the user name.
+      const QString emailName = email.left( emailpos );
+      dirURL.addPath( emailName + '.' + (*ext ) );
+    }
+    dirURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
+    dirURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
+    if ( fbExists( dirURL ) ) {
+      // write the URL to the cache
+      KConfigGroup group = cfg.group( email );
+      group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
+      kDebug() << "Found url email=" << email << "; url=" << dirURL;
+      emit freeBusyUrlRetrieved( email, dirURL );
+      return;
+    }
+  }
 
- const QStringList extensions = QStringList() << "xfb" << "ifb" << "vfb";
- QStringList::ConstIterator ext;
- for ( ext = extensions.constBegin(); ext != extensions.constEnd(); ++ext ) {
-   // build a url for this extension
-   const KUrl sourceUrl = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
-   KUrl dirURL = replaceVariablesUrl( sourceUrl, email );
-   if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
-     dirURL.addPath( email + '.' + (*ext) );
-   } else {
-     // Cut off everything left of the @ sign to get the user name.
-     const QString emailName = email.left( emailpos );
-     dirURL.addPath( emailName + '.' + (*ext ) );
-   }
-   dirURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
-   dirURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
-   if ( fbExists( dirURL ) ) {
-     // write the URL to the cache
-     KConfigGroup group = cfg.group( email );
-     group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
-     return dirURL;
-   }
- }
-
- return KUrl();
+  kDebug() << "Returning invalid url";
+  emit freeBusyUrlRetrieved( email, KUrl() );
 }
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( const KCalCore::FreeBusy::Ptr &freebusy )
@@ -325,11 +369,12 @@ QString FreeBusyManagerPrivate::ownerFreeBusyAsString()
 
 void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
 {
-  Q_ASSERT( dynamic_cast<FreeBusyDownloadJob *>( _job ) );
   Q_Q( FreeBusyManager );
 
-  FreeBusyDownloadJob *job = static_cast<FreeBusyDownloadJob *>( _job );
+  FreeBusyDownloadJob *job = qobject_cast<FreeBusyDownloadJob *>( _job );
+  Q_ASSERT( job );
   if ( job->error() ) {
+    kError() << "Error downloading freebusy" << _job->errorString();
     KMessageBox::sorry(
       mParentWidgetForRetrieval,
       i18n( "Failed to download free/busy data from: %1\nReason: %2",
@@ -350,9 +395,10 @@ void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
       KCalCore::Person::Ptr p = fb->organizer();
       p->setEmail( email );
       q->saveFreeBusy( fb, p );
-
+      kDebug() << "Freebusy retrieved for " << email;
       emit q->freeBusyRetrieved( fb, email );
     } else {
+      kError() << "Error downloading freebusy, invalid fb.";
       KMessageBox::sorry(
         mParentWidgetForRetrieval,
         i18n( "Failed to parse free/busy information that was retrieved from: %1",
@@ -389,34 +435,49 @@ void FreeBusyManagerPrivate::processFreeBusyUploadResult( KJob *_job )
   mUploadingFreeBusy = false;
 }
 
-bool FreeBusyManagerPrivate::processRetrieveQueue()
+void FreeBusyManagerPrivate::processRetrieveQueue()
 {
-  Q_Q( FreeBusyManager );
-
   if ( mRetrieveQueue.isEmpty() ) {
-    return true;
+    return;
   }
 
   QString email = mRetrieveQueue.takeFirst();
-  KUrl freeBusyUrlForEmail = freeBusyUrl( email );
+
+  // First, try to find all agents that are free-busy providers
+  QStringList providers = getFreeBusyProviders();
+  kDebug() << "Got the following FreeBusy providers: " << providers;
+
+  // If some free-busy providers were found let's query them first and ask them
+  // if they manage the free-busy information for the email address we have.
+  if ( !providers.isEmpty() )
+    queryFreeBusyProviders( providers, email );
+  else
+    fetchFreeBusyUrl( email );
+
+  return;
+}
+
+void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
+                                                         const KUrl &freeBusyUrlForEmail )
+{
+  Q_Q( FreeBusyManager );
 
   if ( !freeBusyUrlForEmail.isValid() ) {
     kDebug() << "Invalid FreeBusy URL" << freeBusyUrlForEmail.prettyUrl() << email;
-    return false;
+    return;
   }
 
   if ( mFreeBusyUrlEmailMap.contains( freeBusyUrlForEmail ) ) {
-    return true; // Already in progress.
+    kDebug() << "Download already in progress for " << freeBusyUrlForEmail;
+    return;
   }
 
   mFreeBusyUrlEmailMap.insert( freeBusyUrlForEmail, email );
 
   FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail,
                                                       mParentWidgetForRetrieval );
-  q->connect( job, SIGNAL(result(KJob *)), SLOT(processFreeBusyDownloadResult(KJob *)) );
+  q->connect( job, SIGNAL(result(KJob*)), SLOT(processFreeBusyDownloadResult(KJob*)) );
   job->start();
-
-  return true;
 }
 
 void FreeBusyManagerPrivate::uploadFreeBusy()
@@ -466,6 +527,132 @@ void FreeBusyManagerPrivate::uploadFreeBusy()
   if ( mTimerID == 0 ) {
     // startTimer failed - better do the upload
     q->publishFreeBusy();
+  }
+}
+
+QStringList FreeBusyManagerPrivate::getFreeBusyProviders() const
+{
+  QStringList providers;
+  Akonadi::AgentInstance::List agents = Akonadi::AgentManager::self()->instances();
+  foreach ( const Akonadi::AgentInstance &agent, agents ) {
+    if ( agent.type().capabilities().contains( QLatin1String( "FreeBusyProvider" ) ) )
+      providers << agent.identifier();
+  }
+  return providers;
+}
+
+void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &providers, const QString &email )
+{
+  if ( !mProvidersRequestsByEmail.contains( email ) )
+    mProvidersRequestsByEmail[email] = FreeBusyProvidersRequestsQueue();
+
+  foreach ( const QString &provider, providers ) {
+    FreeBusyProviderRequest request( provider );
+
+    connect( request.mInterface.data(), SIGNAL(handlesFreeBusy(QString,bool)),
+             this, SLOT(onHandlesFreeBusy(QString,bool)) );
+
+    request.mInterface->call( "canHandleFreeBusy", email );
+    request.mRequestStatus = FreeBusyProviderRequest::HandlingRequested;
+    mProvidersRequestsByEmail[email].mRequests << request;
+  }
+}
+
+void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &providers, const QString &email,
+                                                     const KDateTime &start, const KDateTime &end )
+{
+  if ( !mProvidersRequestsByEmail.contains( email ) )
+    mProvidersRequestsByEmail[email] = FreeBusyProvidersRequestsQueue( start, end );
+
+  queryFreeBusyProviders( providers, email );
+}
+
+void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handles )
+{
+  if ( !mProvidersRequestsByEmail.contains( email ) )
+    return;
+
+  QDBusInterface *iface = dynamic_cast<QDBusInterface*>( sender() );
+  if ( !iface )
+    return;
+
+  FreeBusyProvidersRequestsQueue *queue = &mProvidersRequestsByEmail[email];
+  QString respondingService = iface->service();
+  kDebug() << respondingService << "responded to our FreeBusy request:" << handles;
+  int requestIndex = -1;
+
+  for ( int i = 0; i < queue->mRequests.size(); ++i ) {
+    if ( queue->mRequests.at( i ).mInterface->service() == respondingService )
+      requestIndex = i;
+  }
+
+  if ( requestIndex == -1 )
+    return;
+
+  disconnect( iface, SIGNAL(handlesFreeBusy(QString,bool)),
+           this, SLOT(onHandlesFreeBusy(QString,bool)) );
+
+  if ( !handles ) {
+    queue->mRequests.removeAt( requestIndex );
+    // If no more requests are left and no handler responded
+    // then fall back to the URL mechanism
+    if ( queue->mRequests.isEmpty() && queue->mHandlersCount == 0 ) {
+      mProvidersRequestsByEmail.remove( email );
+      fetchFreeBusyUrl( email );
+    }
+  }
+  else {
+    ++queue->mHandlersCount;
+    connect( iface, SIGNAL(freeBusyRetrieved(QString,QString,bool,QString)),
+             this, SLOT(onFreeBusyRetrieved(QString,QString,bool,QString)) );
+    iface->call( "retrieveFreeBusy", email, queue->mStartTime, queue->mEndTime );
+    queue->mRequests[requestIndex].mRequestStatus = FreeBusyProviderRequest::FreeBusyRequested;
+  }
+}
+
+void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText )
+{
+  Q_Q( FreeBusyManager );
+
+  if ( !mProvidersRequestsByEmail.contains( email ) )
+    return;
+
+  QDBusInterface *iface = dynamic_cast<QDBusInterface*>( sender() );
+  if ( !iface )
+    return;
+
+  FreeBusyProvidersRequestsQueue *queue = &mProvidersRequestsByEmail[email];
+  QString respondingService = iface->service();
+  int requestIndex = -1;
+
+  for ( int i = 0; i < queue->mRequests.size(); ++i ) {
+    if ( queue->mRequests.at( i ).mInterface->service() == respondingService )
+      requestIndex = i;
+  }
+
+  if ( requestIndex == -1 )
+    return;
+
+  disconnect( iface, SIGNAL(freeBusyRetrieved(QString,QString,bool,QString)),
+              this, SLOT(onFreeBusyRetrieved(QString,QString,bool,QString)) );
+
+  queue->mRequests.removeAt( requestIndex );
+
+  if ( success ) {
+    KCalCore::FreeBusy::Ptr fb = iCalToFreeBusy( freeBusy.toUtf8() );
+    if ( !fb )
+      --queue->mHandlersCount;
+    else
+      queue->mResultingFreeBusy->merge( fb );
+  }
+
+  if ( queue->mRequests.isEmpty() ) {
+    if ( queue->mHandlersCount == 0 )
+      fetchFreeBusyUrl( email );
+    else
+      emit q->freeBusyRetrieved( queue->mResultingFreeBusy, email );
+
+    mProvidersRequestsByEmail.remove( email );
   }
 }
 
@@ -642,7 +829,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
     job->ui()->setWindow( parentWidget );
 
-    connect( job, SIGNAL(result(KJob *)), SLOT(slotUploadFreeBusyResult(KJob *)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotUploadFreeBusyResult(KJob*)) );
   }
 }
 
@@ -653,7 +840,7 @@ void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget* parentWidget)
   if ( !d->mCalendar ) {
     return;
   }
-  
+
   KDateTime start = KDateTime::currentUtcDateTime().toTimeSpec( d->mCalendar->timeSpec() );
   KDateTime end = start.addDays( daysToPublish );
 
@@ -694,6 +881,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   kDebug() << email;
   if ( email.isEmpty() ) {
+    kDebug() << "Email is empty";
     return false;
   }
 
@@ -701,7 +889,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   if ( KCalPrefs::instance()->thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
-    kDebug() << "freebusy of owner";
+    kDebug() << "freebusy of owner, not downloading";
     emit freeBusyRetrieved( d->ownerFreeBusy(), email );
     return true;
   }
@@ -709,22 +897,29 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
   // Check for cached copy of free/busy list
   KCalCore::FreeBusy::Ptr fb = loadFreeBusy( email );
   if ( fb ) {
+    kDebug() << "Found a cached copy for " << email;
     emit freeBusyRetrieved( fb, email );
     return true;
   }
 
   // Don't download free/busy if the user does not want it.
   if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto && !forceDownload ) {
+    kDebug() << "Not downloading freebusy";
     return false;
   }
 
   d->mRetrieveQueue.append( email );
 
   if ( d->mRetrieveQueue.count() > 1 ) {
+    // TODO: true should always emit
+    kWarning() << "Returning true without emit, is this correct?";
     return true;
   }
 
-  return d->processRetrieveQueue();
+  // queued, because "true" means the download was initiated. So lets
+  // return before starting stuff
+  QMetaObject::invokeMethod( d, "processRetrieveQueue", Qt::QueuedConnection );
+  return true;
 }
 
 void FreeBusyManager::cancelRetrieval()
@@ -805,3 +1000,4 @@ void FreeBusyManager::timerEvent( QTimerEvent * )
 }
 
 #include "freebusymanager.moc"
+#include "freebusymanager_p.moc"

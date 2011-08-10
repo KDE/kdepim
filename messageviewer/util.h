@@ -39,7 +39,7 @@
 #define MAILVIEWERUTIL_H
 
 #include "messageviewer_export.h"
-
+#include "kmime/kmime_content.h"
 #include <QString>
 
 class KUrl;
@@ -49,6 +49,10 @@ class QStringList;
 namespace KMime {
   class Content;
   class Message;
+}
+
+namespace Akonadi {
+  class Item;
 }
 
 namespace MessageViewer {
@@ -74,10 +78,11 @@ namespace Util {
     bool MESSAGEVIEWER_EXPORT checkOverwrite( const KUrl &url, QWidget *w );
 
     /**
-     * Delegates opening a URL to the Max OSX mechanisms for that.
-     * Returns false if it did nothing (such as on other platforms.
+     * Delegates opening a URL to the QDesktopServices mechanisms for that
+     * on Windows and MacOSX.
+     * Returns false if it did nothing (such as on other platforms).
      */
-    bool MESSAGEVIEWER_EXPORT handleUrlOnMac( const KUrl& url );
+    bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices( const KUrl& url );
 
     /**
      * evaluates GlobalSettings->disregardUmask()
@@ -112,6 +117,9 @@ namespace Util {
     QString MESSAGEVIEWER_EXPORT fileNameForMimetype( const QString &mimeType, int iconSize,
                                  const QString &fallbackFileName1 = QString(),
                                  const QString &fallbackFileName2 = QString() );
+    bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget*parent);
+
+    bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent ); 
 
 }
 

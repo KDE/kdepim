@@ -37,6 +37,8 @@
 #include <QPointer>
 #include <QScrollArea>
 
+static const KCatalogLoader loader("timezones4");
+
 using namespace EventViews;
 
 TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
@@ -63,7 +65,7 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
   mAgenda = 0;
 
   if ( mSpec.isValid() ) {
-    setToolTip( i18n( "Timezone:" ) + mSpec.timeZone().name() );
+    setToolTip( i18n( "Timezone:" ) + i18n( mSpec.timeZone().name().toUtf8() ) );
   }
 
   setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
@@ -301,7 +303,7 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     popup.addAction( KIcon( "document-properties" ), i18n( "&Add Timezones..." ) );
   QAction *removeTimeZone =
     popup.addAction( KIcon( "edit-delete" ),
-                     i18n( "&Remove Timezone %1", mSpec.timeZone().name() ) );
+                     i18n( "&Remove Timezone %1", i18n( mSpec.timeZone().name().toUtf8() ) ) );
   if ( !mSpec.isValid() ||
        !mTimeLabelsZone->preferences()->timeScaleTimezones().count() ||
        mSpec == mTimeLabelsZone->preferences()->timeSpec() ) {
@@ -332,7 +334,7 @@ KDateTime::Spec TimeLabels::timeSpec()
 
 QString TimeLabels::header() const
 {
-  return mSpec.timeZone().name();
+  return i18n( mSpec.timeZone().name().toUtf8() );
 }
 
 QString TimeLabels::headerToolTip() const
@@ -341,7 +343,7 @@ QString TimeLabels::headerToolTip() const
 
   QString toolTip;
   toolTip += "<qt>";
-  toolTip += i18n( "Timezone: %1", tz.name() );
+  toolTip += i18n( "Timezone: %1", i18n( tz.name().toUtf8() ) );
   if ( !tz.countryCode().isEmpty() ) {
     toolTip += "<br/>";
     toolTip += i18n( "Country Code: %1", tz.countryCode() );
