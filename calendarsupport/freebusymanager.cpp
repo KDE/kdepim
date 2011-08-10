@@ -610,7 +610,10 @@ void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handle
   }
 }
 
-void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText )
+void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
+                                                  const QString &freeBusy,
+                                                  bool success,
+                                                  const QString &errorText )
 {
   Q_Q( FreeBusyManager );
 
