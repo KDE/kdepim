@@ -3366,29 +3366,29 @@ KMime::Content* ObjectTreeParser::findTypeNot( KMime::Content * content, const Q
 
 QString ObjectTreeParser::convertedTextContent() const
 {
-  if ( mPlainTextContent.isEmpty() ) {
+  QString plainTextContent = mPlainTextContent;
+  if( plainTextContent.isEmpty() ) {
 #ifdef KDEPIM_NO_WEBKIT
       QTextDocument doc;
       doc.setHtml( mHtmlContent );
-      return doc.toPlainText();
+      plainTextContent = doc.toPlainText();
 #else
       QWebPage doc;
       doc.mainFrame()->setHtml( mHtmlContent );
-      return doc.mainFrame()->toPlainText();
+      plainTextContent = doc.mainFrame()->toPlainText();
 #endif
-  } else {
-    return mPlainTextContent;
   }
+  return plainTextContent.append('\n');
 }
 
 QString ObjectTreeParser::convertedHtmlContent() const
 {
-  if ( mHtmlContent.isEmpty() ) {
+  QString htmlContent = mHtmlContent;
+  if( htmlContent.isEmpty() ) {
     QString convertedHtml = Qt::escape( mPlainTextContent );
     convertedHtml.append("</body></html>");
     convertedHtml.prepend("<html><head></head><body>");
-    return convertedHtml.replace( QRegExp( "\n" ), "<br />" );
-  } else {
-    return mHtmlContent;
+    htmlContent = convertedHtml.replace( QRegExp( "\n" ), "<br />" );
   }
+  return htmlContent.append('\n');
 }

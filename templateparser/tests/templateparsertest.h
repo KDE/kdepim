@@ -32,6 +32,7 @@ class TemplateParserTester : public QObject
      * checks whether text/plain only mails are converted to a valid HTML
      */
     void test_validHtml();
+    void test_validHtml_data();
 
     /**
      * checks whether body element is properly extracted from a valid HTML
@@ -41,7 +42,7 @@ class TemplateParserTester : public QObject
     /**
      * Tests whether templates are returning required body or not
      */
-    void test_processWithTemplates();
+    //void test_processWithTemplates();
 };
 
 #endif

@@ -29,43 +29,52 @@
 using namespace TemplateParser;
 using namespace MessageViewer;
 
-QTEST_KDEMAIN( TemplateParserTester, GUI )
+void TemplateParserTester::test_validHtml_data()
+{
+  QTest::addColumn<QString>( "mailFileName" );
+  QTest::addColumn<QString>( "referenceFileName" );
+
+  QDir dir( MAIL_DATA_DIR );
+  foreach ( const QString &file, dir.entryList( QStringList("*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
+    QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << QString(dir.path() + '/' + file + ".html");
+  }
+}
 
 void TemplateParserTester::test_validHtml()
 {
-  //check whether plain messages are converted to valid html
-  KMime::Message::Ptr mOrigMsg( new KMime::Message() );
-  QByteArray content(
-      "From: Sudhendu Kumar <dontspamme@yoohoo.com>\n"
-      "Subject: Plain Message Test\n"
-      "Date: Sun, 7 Aug 2011 11:30:27 +0530\n"
-      "MIME-Version: 1.0\n"
-      "Content-Type: text/plain;\n"
-      "  charset=\"iso-8859-15\"\n"
-      "\n"
-      "This is the message text from Sudhendu Kumar<dontspamme@yoohoo.com>.\n"
-      "\n-- \n"
-      "Thanks & Regards\n"
-      "Sudhendu Kumar" );
+  QFETCH( QString, mailFileName );
+  QFETCH( QString, referenceFileName );
+
+  // load input mail
+  QFile mailFile( mailFileName );
+  QVERIFY( mailFile.open( QIODevice::ReadOnly ) );
+  const QByteArray mailData = KMime::CRLFtoLF( mailFile.readAll() );
+  QVERIFY( !mailData.isEmpty() );
+  KMime::Message::Ptr msg( new KMime::Message );
+  msg->setContent( mailData );
+  msg->parse();
+
+  // load expected result
+  QFile referenceFile( referenceFileName );
+  QVERIFY( referenceFile.open( QIODevice::ReadOnly ) );
+  const QByteArray referenceRawData = KMime::CRLFtoLF( referenceFile.readAll() );
+  const QString referenceData = QString( referenceRawData );
+  QVERIFY( !referenceData.isEmpty() );
 
   EmptySource emptySource;
-  mOrigMsg->setContent( content );
-  mOrigMsg->parse();
 
-  QCOMPARE( mOrigMsg->subject()->as7BitString( false ).constData(), "Plain Message Test" );
-  QCOMPARE( mOrigMsg->contents().size(), 0 );
+  QCOMPARE( msg->subject()->as7BitString( false ).constData(), "Plain Message Test" );
+  QCOMPARE( msg->contents().size(), 0 );
 
   ObjectTreeParser otp( &emptySource );
-  otp.parseObjectTree( mOrigMsg.get() );
+  otp.parseObjectTree( msg.get() );
 
   QVERIFY( otp.htmlContent().isEmpty() );
   QVERIFY( !otp.plainTextContent().isEmpty() );
   const QString convertedHtmlContent = otp.convertedHtmlContent();
   QVERIFY( !convertedHtmlContent.isEmpty() );
-  const QString result( "<html><head></head><body>This is the message text from Sudhendu "
-                        "Kumar&lt;dontspamme@yoohoo.com&gt;.<br /><br />-- <br />"
-                        "Thanks &amp; Regards<br />Sudhendu Kumar</body></html>");
-  QCOMPARE( convertedHtmlContent, result );
+
+  QCOMPARE( convertedHtmlContent, referenceData );
 }
 
 void TemplateParserTester::test_bodyFromHtml()
@@ -105,3 +114,7 @@ void TemplateParserTester::test_bodyFromHtml()
 
   QCOMPARE( headElement, expectedHead );
 }
+
+QTEST_KDEMAIN( TemplateParserTester, GUI )
+
+#include "templateparsertest.moc"
