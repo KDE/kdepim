@@ -616,6 +616,7 @@ void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
                                                   const QString &errorText )
 {
   Q_Q( FreeBusyManager );
+  Q_UNUSED( errorText );
 
   if ( !mProvidersRequestsByEmail.contains( email ) )
     return;
