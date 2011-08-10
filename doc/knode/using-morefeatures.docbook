@@ -204,20 +204,20 @@ zero</quote> (<guilabel>&lt;=</guilabel>); then click the
 
 <step>
 <para>Open an article whose author should be killed and just type
-<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>(or
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> (or
 select, from the <guimenu>Scoring</guimenu> menu, <guimenuitem>Lower Score
 for Author</guimenuitem>).  This opens the Rule Editor (a part of
 scoring).  You can optionally give the rule a name that matches the 
 author (<userinput>Kook</userinput>, for example.) and then, if this is
-to be permanent, uncheck the <guilabel>expire automatically</guilabel>
+to be permanent, uncheck the <guilabel>Expire rule automatically</guilabel>
 box; you'll see that this rule will change the author's score to minus
 ten (or the score you entered); finally, click <guibutton>OK</guibutton>.</para>
 </step>
 
 <step>
 <para>Go to the menu item
-<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>killfile on.</guimenuitem>
-</menuchoice></para>
+<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>killfile on</guimenuitem>
+</menuchoice>.</para>
 </step>
 </procedure>
 
@@ -272,7 +272,7 @@ when dealing with articles cross-posted across in multiple newsgroups:
 you should take care that the replies are only posted in one single newsgroup.</para> 
 
 <para>You can activate this by filling the text box
-<guilabel>Followups - To:</guilabel>; here you can enter the suitable
+<guilabel>Followup-To:</guilabel>; here you can enter the suitable
 group.  If there are multiple newsgroups in the 
 <guilabel>Groups:</guilabel> field, they are shown in the drop-down
 list.</para> 
@@ -393,7 +393,7 @@ Articles...</guimenuitem></menuchoice> or the by pressing
 <para>The Search Dialog Box has four tabs which allow several search
 criteria: the first tab contains the settings for the
 <guilabel>Subject</guilabel> and <guilabel>From</guilabel> criteria; the second
-tab contains the settings for the <guilabel>message-IDs</guilabel> of
+tab contains the settings for the <guilabel>Message-IDs</guilabel> of
 an article and its references; the third tab contains the settings for
 the <guilabel>Status</guilabel> of an
 article; the fourth tab, <guilabel>Additional</guilabel>, contains the remaining
@@ -412,7 +412,7 @@ the search results are deleted, and the old view of the newsgroup
 appears again.</para> 
 
 <sect3> 
-<title><guilabel>Start Search</guilabel></title> 
+<title><guilabel>Search</guilabel></title> 
 
 <para>With this button you start the Search with the search criteria
 you defined; all articles in the selected newsgroup, fulfiling these
@@ -421,7 +421,7 @@ criteria, appear in the article view.</para>
 </sect3> 
 
 <sect3> 
-<title><guilabel>New Search</guilabel></title> 
+<title><guilabel>Clear</guilabel></title> 
 
 <para>This button resets all search criteria.</para>
  
@@ -474,8 +474,8 @@ subject you will find something like:</para>
 <para>This strange letters between the brackets are the Message-ID of
 the article you want to cancel.  This message tells the newsserver to
 delete your article: if you look at complete header of this message,
-by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Show all
-headers</guimenuitem></menuchoice>, you will notice a line with the
+by selecting <menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu><guimenuitem>All
+Headers</guimenuitem></menuchoice>, you will notice a line with the
 name <emphasis>control</emphasis> and the content <emphasis>cancel
 &lt;xxxxx@ddddd.dd&gt;</emphasis> &mdash; this line tells the server that
 this message is a control message and, in our case, tells the server to
@@ -538,8 +538,8 @@ supersede the older article.  Select
 Later</guimenuitem></menuchoice> for now, because we want to look at
 the article's header in the <guilabel>Outbox</guilabel>.</para>
 
-<para>Activate <menuchoice><guimenu>View</guimenu><guimenuitem>Show
-all headers</guimenuitem></menuchoice>, because we want to see all the
+<para>Activate <menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu><guimenuitem>All
+Headers</guimenuitem></menuchoice>, because we want to see all the
 headers the newsserver receives. You will notice a line like:</para> 
 
 <para>Supersedes: &lt;oggcm8.4n5.ln@konqi.org&gt;</para> 
@@ -790,7 +790,7 @@ in a long list of subscribed groups.</para>
 <para>In order to add an new account, open the preferences
 dialog via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KNode...</guimenuitem><guilabel>Accounts</guilabel><guilabel>News</guilabel>
+KNode...</guimenuitem><guilabel>Accounts</guilabel><guilabel>Newsgroup Servers</guilabel>
 </menuchoice>.  The <guibutton>New</guibutton> button creates a new
 account; you then have to enter the same data as for your first
 account, typically a name for the account, the host name, and a user name
@@ -835,11 +835,12 @@ and after that the article will be signed.</para>
 email address and is identical to the sender of the message
 (<quote>From</quote>-header).</para>
 </caution>
-
+<!-- not in 4.7
 <para> To verify
 a <glossterm>PGP-signature</glossterm> you have to choose the menu
 item <menuchoice><guimenu>View</guimenu><guimenuitem>Verify
 PGP-signature</guimenuitem></menuchoice>.</para> 
+-->
 </sect2>
 
 </sect1> 

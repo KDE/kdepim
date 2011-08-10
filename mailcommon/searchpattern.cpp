@@ -47,6 +47,7 @@ using MailCommon::FilterLog;
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <kascii.h>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_util.h>
@@ -409,16 +410,16 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
   // Overwrite the value for complete messages and all headers!
   bool logContents = true;
 
-  if( field() == "<message>" ) {
+  if( kasciistricmp( field(), "<message>" ) == 0 ) {
     msgContents = msg->encodedContent();
     logContents = false;
-  } else if ( field() == "<body>" ) {
+  } else if ( kasciistricmp( field(), "<body>" ) == 0 ) {
     msgContents = msg->body();
     logContents = false;
-  } else if ( field() == "<any header>" ) {
+  } else if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
     msgContents = msg->head();
     logContents = false;
-  } else if ( field() == "<recipients>" ) {
+  } else if ( kasciistricmp( field(), "<recipients>" ) == 0 ) {
     // (mmutz 2001-11-05) hack to fix "<recipients> !contains foo" to
     // meet user's expectations. See FAQ entry in KDE 2.2.2's KMail
     // handbook
@@ -432,7 +433,7 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     msgContents = msg->to()->asUnicodeString();
     msgContents += ", " + msg->cc()->asUnicodeString();
     msgContents += ", " + msg->bcc()->asUnicodeString();
-  } else if ( field() == "<tag>" ) {
+  } else if ( kasciistricmp( field(), "<tag>" ) == 0) {
 #ifndef KDEPIM_NO_NEPOMUK    
     const Nepomuk::Resource res( item.url() );
     foreach ( const Nepomuk::Tag &tag, res.tags() )
@@ -485,14 +486,14 @@ void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const
 void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   Nepomuk::Query::OrTerm termGroup;
-  if ( field().toLower() == "<message>" || field().toLower() == "<recipients>"  || field().toLower() == "<any header>" ) {
+  if ( kasciistricmp( field(), "<message>" ) == 0 || kasciistricmp( field(), "<recipients>" ) ==0  || kasciistricmp( field(), "<any header>" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTerm( Vocabulary::NMO::to(), addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTermTo( Vocabulary::NMO::cc(), personTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTermCC( Vocabulary::NMO::bcc(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
 
-    if ( field().toLower() == "<any header>" ) {
+    if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
       const Nepomuk::Query::ComparisonTerm personTermBCC( Vocabulary::NMO::from(), personTermTo, Nepomuk::Query::ComparisonTerm::Equal );
       termGroup.addSubTerm( personTermBCC );
     }
@@ -500,50 +501,50 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
       termGroup.addSubTerm( personTermCC );
   }
   
-  if ( field().toLower() == "to" )
+  if ( kasciistricmp( field(), "to" ) == 0 )
     addPersonTerm( termGroup, Vocabulary::NMO::to() );
-  if ( field().toLower() == "cc" )
+  else if ( kasciistricmp( field(), "cc" ) == 0 )
     addPersonTerm( termGroup, Vocabulary::NMO::cc() );
-  if ( field().toLower() == "bcc" )
+  else if ( kasciistricmp( field(), "bcc" ) == 0 )
     addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
-  if ( field().toLower() == "from" )
+  else if ( kasciistricmp( field(), "from" ) == 0 )
     addPersonTerm( termGroup, Vocabulary::NMO::from() );
   
-  if ( field().toLower() == "subject" || field() == "<any header>" || field() == "<message>" ) {
+  if ( kasciistricmp( field(), "subject" ) == 0 || kasciistricmp( field(), "<any header>" ) == 0 || kasciistricmp( field(), "<message>" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
   }
-  if ( field().toLower() == "reply-to" ) {
+  if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm replyToTerm( Vocabulary::NMO::messageReplyTo(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( replyToTerm );
   }
 
-  if ( field().toLower() == "list-id" ) {
+  if ( kasciistricmp( field(), "list-id" ) == 0 ) {
     //TODO
   }
-  if ( field().toLower() == "resent-from" ) {
+  else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
     //TODO
   }
-  if ( field().toLower() == "x-loop" ) {
+  else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
     //TODO
   }
-  if ( field().toLower() == "x-mailing-list" ) {
+  else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
     //TODO
   }
-  if ( field().toLower() == "x-spam-flag" ) {
+  else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
     //TODO
   }
   
   // TODO complete for other headers, generic headers
 
-  if ( field().toLower() == "organization"  ) {
+  if ( kasciistricmp( field(), "organization" )  == 0 ) {
       const Nepomuk::Query::ComparisonTerm headerTerm( Vocabulary::NMO::headerName(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( headerTerm );
   //TODO
   }
 
 
-  if ( field() == "<tag>" ) {
+  if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
     const Nepomuk::Tag tag( contents() );
     addAndNegateTerm( Nepomuk::Query::ComparisonTerm( Soprano::Vocabulary::NAO::hasTag(),
                                                       Nepomuk::Query::ResourceTerm( tag ),
@@ -730,11 +731,11 @@ bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
   qint64 numericalMsgContents = 0;
   qint64 numericalValue = 0;
 
-  if ( field() == "<size>" ) {
+  if ( kasciistricmp( field(), "<size>" ) == 0 ) {
     numericalMsgContents = item.size();
     numericalValue = contents().toLongLong();
     msgContents.setNum( numericalMsgContents );
-  } else if ( field() == "<age in days>" ) {
+  } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
     QDateTime msgDateTime = msg->date()->dateTime().dateTime();
     numericalMsgContents = msgDateTime.daysTo( QDateTime::currentDateTime() );
     numericalValue = contents().toInt();
@@ -808,14 +809,16 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 
 void SearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
-  if ( field() == "<size>" ) {
+  if ( kasciistricmp( field() , "<size>" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm sizeTerm( Vocabulary::NIE::byteSize(),
                                                    Nepomuk::Query::LiteralTerm( contents().toInt() ),
                                                    nepomukComparator() );
     addAndNegateTerm( sizeTerm, groupTerm );
-  } else if ( field() == "<age in days>" ) {
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-    // TODO
+  } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
+    QDate date = QDate::currentDate();
+    date = date.addDays( contents().toInt() );
+    const Nepomuk::Query::ComparisonTerm dateTerm( Vocabulary::NMO::sentDate(),Nepomuk::Query::LiteralTerm(date ),nepomukComparator() );
+    addAndNegateTerm( dateTerm, groupTerm );
   }
 }
 #endif

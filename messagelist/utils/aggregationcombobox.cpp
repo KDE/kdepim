@@ -32,7 +32,10 @@ using namespace MessageList::Utils;
 AggregationComboBox::AggregationComboBox( QWidget * parent )
 : KComboBox( parent ), d( new AggregationComboBoxPrivate( this ) )
 {
-  d->slotLoadAggregations();
+  if( Manager::instance() ) 
+    d->slotLoadAggregations();
+  else
+    setEnabled(false);
 }
 
 AggregationComboBox::~AggregationComboBox()
