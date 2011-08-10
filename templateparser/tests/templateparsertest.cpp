@@ -29,18 +29,18 @@
 using namespace TemplateParser;
 using namespace MessageViewer;
 
-void TemplateParserTester::test_validHtml_data()
+void TemplateParserTester::test_convertedHtml_data()
 {
   QTest::addColumn<QString>( "mailFileName" );
   QTest::addColumn<QString>( "referenceFileName" );
 
   QDir dir( MAIL_DATA_DIR );
-  foreach ( const QString &file, dir.entryList( QStringList("*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
+  foreach ( const QString &file, dir.entryList( QStringList("plain*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
     QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << QString(dir.path() + '/' + file + ".html");
   }
 }
 
-void TemplateParserTester::test_validHtml()
+void TemplateParserTester::test_convertedHtml()
 {
   QFETCH( QString, mailFileName );
   QFETCH( QString, referenceFileName );
