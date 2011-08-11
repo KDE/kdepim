@@ -210,7 +210,7 @@
                 <string>&amp;Use colors</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>The timetable view supports colors. If you want to make use of colors you should check this option. The category colors will be used.</string>
+                <string>Enable this option if you want to print in color. The items will be printed using their category color. The category colors will be used.</string>
             </property>
         </widget>
         <widget class="QButtonGroup" row="1" column="0">

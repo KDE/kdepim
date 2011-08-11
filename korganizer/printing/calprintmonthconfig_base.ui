@@ -10,35 +10,21 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>463</width>
-            <height>161</height>
+            <width>558</width>
+            <height>216</height>
         </rect>
     </property>
-    <grid>
+    <property name="caption">
+        <string>CalPrintMonth_Base</string>
+    </property>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
             <number>0</number>
         </property>
-        <spacer row="5" column="0">
-            <property name="name">
-                <cstring>spacer2</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>21</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QGroupBox" row="0" column="0">
+        <widget class="QGroupBox">
             <property name="name">
                 <cstring>mDateRangeGroup</cstring>
             </property>
@@ -140,7 +126,49 @@
                 </spacer>
             </hbox>
         </widget>
-        <widget class="QCheckBox" row="4" column="0">
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>mWeekNumbers</cstring>
+            </property>
+            <property name="text">
+                <string>Print week &amp;numbers</string>
+            </property>
+            <property name="accel">
+                <string>Alt+N</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Enable this to print week numbers at the left of each row.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>mRecurDaily</cstring>
+            </property>
+            <property name="text">
+                <string>Print daily re&amp;curring to-dos and events</string>
+            </property>
+            <property name="accel">
+                <string>Alt+C</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>With this option it is possible to leave out the daily recurring to-dos and events in the print. They take a lot of space and make the month view needlessly complicated.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>mRecurWeekly</cstring>
+            </property>
+            <property name="text">
+                <string>Print weekl&amp;y recurring to-dos and events</string>
+            </property>
+            <property name="accel">
+                <string>Alt+Y</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Similar to "Print daily recurring to-dos and events". Weekly to-dos and events will be omitted when making a print of the selected month.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
             <property name="name">
                 <cstring>mIncludeTodos</cstring>
             </property>
@@ -150,47 +178,46 @@
             <property name="text">
                 <string>Include to-&amp;dos that are due on the printed day(s)</string>
             </property>
+            <property name="accel">
+                <string>Alt+D</string>
+            </property>
             <property name="whatsThis" stdset="0">
                 <string>Check this option if you want to have to-dos on the print, placed by their due date.</string>
             </property>
         </widget>
-        <widget class="QCheckBox" row="1" column="0">
+        <widget class="QCheckBox">
             <property name="name">
-                <cstring>mWeekNumbers</cstring>
+                <cstring>mColors</cstring>
             </property>
             <property name="text">
-                <string>Print week &amp;numbers</string>
+                <string>&amp;Use Colors</string>
+            </property>
+            <property name="accel">
+                <string>Alt+U</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>Enable this to print week numbers at the left of each row.</string>
+                <string>Enable this option if you want to print in color. The items will be printed using their category color.</string>
             </property>
         </widget>
-        <widget class="QCheckBox" row="2" column="0">
+        <spacer>
             <property name="name">
-                <cstring>mRecurDaily</cstring>
+                <cstring>spacer2</cstring>
             </property>
-            <property name="text">
-                <string>Print daily re&amp;curring to-dos and events</string>
+            <property name="orientation">
+                <enum>Vertical</enum>
             </property>
-            <property name="whatsThis" stdset="0">
-                <string>With this option it is possible to leave out the daily recurring to-dos and events in the print. They take a lot of space and make the month view needlessly complicated.</string>
+            <property name="sizeType">
+                <enum>Expanding</enum>
             </property>
-        </widget>
-        <widget class="QCheckBox" row="3" column="0">
-            <property name="name">
-                <cstring>mRecurWeekly</cstring>
+            <property name="sizeHint">
+                <size>
+                    <width>21</width>
+                    <height>70</height>
+                </size>
             </property>
-            <property name="text">
-                <string>Print weekl&amp;y recurring to-dos and events</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Similar to "Print daily recurring to-dos and events". Weekly to-dos and events will be omitted when making a print of the selected month.</string>
-            </property>
-        </widget>
-    </grid>
+        </spacer>
+    </vbox>
 </widget>
-<customwidgets>
-</customwidgets>
 <tabstops>
     <tabstop>mWeekNumbers</tabstop>
     <tabstop>mRecurDaily</tabstop>

@@ -1037,7 +1037,7 @@ void CalPrintMonth::readSettingsWidget()
     mRecurDaily = cfg->mRecurDaily->isChecked();
     mRecurWeekly = cfg->mRecurWeekly->isChecked();
     mIncludeTodos = cfg->mIncludeTodos->isChecked();
-//    mUseColors = cfg->mColors->isChecked();
+    mUseColors = cfg->mColors->isChecked();
   }
 }
 
@@ -1051,7 +1051,7 @@ void CalPrintMonth::setSettingsWidget()
     cfg->mRecurDaily->setChecked( mRecurDaily );
     cfg->mRecurWeekly->setChecked( mRecurWeekly );
     cfg->mIncludeTodos->setChecked( mIncludeTodos );
-//    cfg->mColors->setChecked( mUseColors );
+    cfg->mColors->setChecked( mUseColors );
   }
 }
 
@@ -1268,7 +1268,7 @@ void CalPrintTodos::print( QPainter &p, int width, int height )
   int posdue = width - 65;
   int poscomplete = posdue - 70; //Complete column is to right of the Due column
   int lineSpacing = 15;
-  int fontHeight = 10;
+  //int fontHeight = 10;
 
   QRect headerBox( 0, 0, width, headerHeight() );
   QRect footerBox( 0, height - footerHeight(), width, footerHeight() );
@@ -1315,7 +1315,7 @@ void CalPrintTodos::print( QPainter &p, int width, int height )
   }
 
   p.setFont( QFont( "sans-serif", 10 ) );
-  fontHeight = p.fontMetrics().height();
+  //fontHeight = p.fontMetrics().height();
 
   Todo::List todoList;
   Todo::List tempList;

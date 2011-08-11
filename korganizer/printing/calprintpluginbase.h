@@ -412,8 +412,8 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param qd Arbitrary date within the week to be printed.
       \param box coordinates of the week box.
     */
-    void drawWeek( QPainter &p, const QDate &qd,
-                   const QRect &box );
+    void drawWeek( QPainter &p, const QDate &qd, const QRect &box );
+
     /**
       Draw the timetable view of the given time range from fromDate to toDate.
       On the left side the time scale is printed (using drawTimeLine), then each
@@ -447,8 +447,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param box coordinates of the month.
     */
     void drawMonthTable( QPainter &p, const QDate &qd, bool weeknumbers,
-                    bool recurDaily, bool recurWeekly,
-                    const QRect &box );
+                    bool recurDaily, bool recurWeekly, const QRect &box );
     /**
       Draw a vertical representation of the month containing the date dt. Each
       day gets one line.
@@ -522,7 +521,8 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
 
   protected:
     void drawIncidence( QPainter &p, const QRect &dayBox, const QString &time,
-                        const QString &summary, int &textY );
+                        const QString &summary, const QString &description,
+                        int &textY );
     int calculateIncidenceHeight( QPainter &p, const QRect &dayBox, const QString &time,
                                   const QString &summary, int _textY ) const;
 
