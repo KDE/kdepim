@@ -104,6 +104,11 @@ MailFilter::~MailFilter()
   qDeleteAll( mActions );
 }
 
+QString MailFilter::name() const
+{
+  return mPattern.name();
+}
+
 MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool& stopIt ) const
 {
   ReturnCode status = NoResult;
@@ -145,6 +150,76 @@ MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool&
   stopIt = stopProcessingHere();
 
   return status;
+}
+
+QList<FilterAction*>* MailFilter::actions()
+{
+  return &mActions;
+}
+
+const QList<FilterAction*>* MailFilter::actions() const
+{
+  return &mActions;
+}
+
+SearchPattern* MailFilter::pattern()
+{
+  return &mPattern;
+}
+
+const SearchPattern* MailFilter::pattern() const
+{
+  return &mPattern;
+}
+
+void MailFilter::setApplyOnOutbound( bool aApply )
+{
+  bApplyOnOutbound = aApply;
+}
+
+void MailFilter::setApplyBeforeOutbound( bool aApply )
+{
+  bApplyBeforeOutbound = aApply;
+}
+
+bool MailFilter::applyOnOutbound() const
+{
+  return bApplyOnOutbound;
+}
+
+bool MailFilter::applyBeforeOutbound() const
+{
+  return bApplyBeforeOutbound;
+}
+
+void MailFilter::setApplyOnInbound( bool aApply )
+{
+  bApplyOnInbound = aApply;
+}
+
+bool MailFilter::applyOnInbound() const
+{
+  return bApplyOnInbound;
+}
+
+void MailFilter::setApplyOnExplicit( bool aApply )
+{
+  bApplyOnExplicit = aApply;
+}
+
+bool MailFilter::applyOnExplicit() const
+{
+  return bApplyOnExplicit;
+}
+
+void MailFilter::setApplicability( AccountType aApply )
+{
+  mApplicability = aApply;
+}
+
+MailFilter::AccountType MailFilter::applicability() const
+{
+  return mApplicability;
 }
 
 bool MailFilter::requiresBody()
@@ -197,6 +272,71 @@ bool MailFilter::applyOnAccount( const QString& id ) const
   return false;
 }
 
+void MailFilter::setStopProcessingHere( bool aStop )
+{
+  bStopProcessingHere = aStop;
+}
+
+bool MailFilter::stopProcessingHere() const
+{
+  return bStopProcessingHere;
+}
+
+void MailFilter::setConfigureShortcut( bool aShort )
+{
+  bConfigureShortcut = aShort;
+  bConfigureToolbar = (bConfigureToolbar && bConfigureShortcut);
+}
+
+bool MailFilter::configureShortcut() const
+{
+  return bConfigureShortcut;
+}
+
+void MailFilter::setConfigureToolbar( bool aTool )
+{
+  bConfigureToolbar = (aTool && bConfigureShortcut);
+}
+
+bool MailFilter::configureToolbar() const
+{
+  return bConfigureToolbar;
+}
+
+void MailFilter::setToolbarName( const QString &toolbarName )
+{
+  mToolbarName = toolbarName;
+}
+
+void MailFilter::setShortcut( const KShortcut &shortcut )
+{
+  mShortcut = shortcut;
+}
+
+const KShortcut& MailFilter::shortcut() const
+{
+  return mShortcut;
+}
+
+void MailFilter::setIcon( const QString &icon )
+{
+  mIcon = icon;
+}
+
+QString MailFilter::icon() const
+{
+  return mIcon;
+}
+
+void MailFilter::setAutoNaming( bool useAutomaticNames )
+{
+  bAutoNaming = useAutomaticNames;
+}
+
+bool MailFilter::isAutoNaming() const
+{
+  return bAutoNaming;
+}
 
 //-----------------------------------------------------------------------------
 void MailFilter::readConfig(const KConfigGroup & config)
@@ -399,3 +539,99 @@ const QString MailFilter::asString() const
   return result;
 }
 #endif
+
+QDataStream& MailCommon::operator<<( QDataStream &stream, const MailCommon::MailFilter &filter )
+{
+  stream << filter.mPattern.serialize();
+
+  stream << filter.mActions.count();
+  QListIterator<FilterAction*> it( filter.mActions );
+  while ( it.hasNext() ) {
+    const FilterAction *action = it.next();
+    stream << action->name();
+    stream << action->argsAsString();
+  }
+
+  stream << filter.mAccounts;
+  stream << filter.mIcon;
+  stream << filter.mToolbarName;
+  stream << filter.mShortcut.primary() << filter.mShortcut.alternate();
+  stream << filter.bApplyOnInbound;
+  stream << filter.bApplyBeforeOutbound;
+  stream << filter.bApplyOnOutbound;
+  stream << filter.bApplyOnExplicit;
+  stream << filter.bStopProcessingHere;
+  stream << filter.bConfigureShortcut;
+  stream << filter.bConfigureToolbar;
+  stream << filter.bAutoNaming;
+  stream << filter.mApplicability;
+
+  return stream;
+}
+
+QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter &filter )
+{
+  QByteArray pattern;
+  int numberOfActions;
+  QKeySequence primary, alternate;
+  bool bApplyOnInbound;
+  bool bApplyBeforeOutbound;
+  bool bApplyOnOutbound;
+  bool bApplyOnExplicit;
+  bool bStopProcessingHere;
+  bool bConfigureShortcut;
+  bool bConfigureToolbar;
+  bool bAutoNaming;
+  int applicability;
+
+  stream >> pattern;
+
+  stream >> numberOfActions;
+  qDeleteAll(filter.mActions);
+  filter.mActions.clear();
+
+  for (int i = 0; i < numberOfActions; ++i) {
+    QString actionName;
+    QString actionArguments;
+
+    stream >> actionName;
+    stream >> actionArguments;
+
+    FilterActionDesc *description = FilterIf->filterActionDict()->value( actionName );
+    if ( description ) {
+      FilterAction *filterAction = description->create();
+      if ( filterAction ) {
+        filterAction->argsFromString( actionArguments );
+        filter.mActions.append( filterAction );
+      }
+    }
+  }
+
+  stream >> filter.mAccounts;
+  stream >> filter.mIcon;
+  stream >> filter.mToolbarName;
+  stream >> primary >> alternate;
+  stream >> bApplyOnInbound;
+  stream >> bApplyBeforeOutbound;
+  stream >> bApplyOnOutbound;
+  stream >> bApplyOnExplicit;
+  stream >> bStopProcessingHere;
+  stream >> bConfigureShortcut;
+  stream >> bConfigureToolbar;
+  stream >> bAutoNaming;
+  stream >> applicability;
+
+  filter.mPattern.deserialize(pattern);
+  filter.mShortcut = KShortcut( primary, alternate );
+  filter.bApplyOnInbound = bApplyOnInbound;
+  filter.bApplyBeforeOutbound = bApplyBeforeOutbound;
+  filter.bApplyOnOutbound = bApplyOnOutbound;
+  filter.bApplyOnExplicit = bApplyOnExplicit;
+  filter.bStopProcessingHere = bStopProcessingHere;
+  filter.bConfigureShortcut = bConfigureShortcut;
+  filter.bConfigureToolbar = bConfigureToolbar;
+  filter.bAutoNaming = bAutoNaming;
+  filter.mApplicability = static_cast<MailCommon::MailFilter::AccountType>( applicability );
+
+  return stream;
+}
