@@ -31,16 +31,40 @@
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KStandardDirs>
 #include <KStandardGuiItem>
 
+#include <QtCore/QFile>
 #include <QtGui/QGridLayout>
 #include <QtGui/QMenu>
 #include <QtGui/QPushButton>
+#include <QtGui/QTextEdit>
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QResizeEvent>
+
+class TextDialog : public KDialog
+{
+  public:
+    TextDialog( QWidget *parent = 0 )
+      : KDialog( parent )
+    {
+      setButtons( Ok );
+
+      mText = new QTextEdit;
+      setMainWidget( mText );
+    }
+
+    void setText( const QString &text )
+    {
+      mText->setPlainText( text );
+    }
+
+  private:
+    QTextEdit *mText;
+};
 
 using namespace Akonadi;
 
@@ -165,6 +189,110 @@ void AgentWidget::toggleOnline()
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.setIsOnline( !agent.isOnline() );
+}
+
+void AgentWidget::showChangeNotifications()
+{
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( !agent.isValid() )
+    return;
+
+  const QString fileName = QString::fromLatin1( "%1/akonadi/agent_config_%2_changes.dat" ).arg( KGlobal::dirs()->localxdgconfdir() ).arg( agent.identifier() );
+  QFile file( fileName );
+  if ( !file.open( QIODevice::ReadOnly ) )
+    return;
+
+  QDataStream stream( &file );
+  stream.setVersion( QDataStream::Qt_4_6 );
+
+  qulonglong size;
+  QByteArray sessionId, resource;
+  int type, operation;
+  qlonglong uid, parentCollection, parentDestCollection;
+  QString remoteId, mimeType;
+  QSet<QByteArray> itemParts;
+
+  QStringList list;
+
+  stream >> size;
+  for ( qulonglong i = 0; i < size; ++i ) {
+    stream >> sessionId;
+    stream >> type;
+    stream >> operation;
+    stream >> uid;
+    stream >> remoteId;
+    stream >> resource;
+    stream >> parentCollection;
+    stream >> parentDestCollection;
+    stream >> mimeType;
+    stream >> itemParts;
+
+
+    QString typeString;
+    switch ( type ) {
+      case 1:
+        typeString = QLatin1String( "Collection" );
+        break;
+      case 2:
+        typeString = QLatin1String( "Item" );
+        break;
+      case 0:
+      default:
+        typeString = QLatin1String( "Item" );
+        break;
+    };
+
+    QString operationString;
+    switch ( operation ) {
+      case 1:
+        operationString = QLatin1String( "Add" );
+        break;
+      case 2:
+        operationString = QLatin1String( "Modify" );
+        break;
+      case 3:
+        operationString = QLatin1String( "Move" );
+        break;
+      case 4:
+        operationString = QLatin1String( "Remove" );
+        break;
+      case 5:
+        operationString = QLatin1String( "Link" );
+        break;
+      case 6:
+        operationString = QLatin1String( "Unlink" );
+        break;
+      case 7:
+        operationString = QLatin1String( "Subscribe" );
+        break;
+      case 8:
+        operationString = QLatin1String( "Unsubscribe" );
+        break;
+      case 0:
+      default:
+        operationString = QLatin1String( "InvalidOp" );
+        break;
+    };
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
+                                             .arg( QString::fromLatin1( sessionId ) )
+                                             .arg( typeString )
+                                             .arg( operationString )
+                                             .arg( uid )
+                                             .arg( remoteId )
+                                             .arg( QString::fromLatin1( resource ) )
+                                             .arg( parentCollection )
+                                             .arg( parentDestCollection )
+                                             .arg( mimeType )
+                                             .arg( QLatin1String("foobar") );
+
+    list << entry;
+  }
+
+  TextDialog dlg( this );
+  dlg.setCaption( QLatin1String( "Change Notification Log" ) );
+  dlg.setText( list.join( QLatin1String( "\n" ) ) );
+
+  dlg.exec();
 }
 
 void AgentWidget::synchronizeTree()
@@ -299,6 +427,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
   menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
+  menu.addAction( KIcon(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
   menu.addMenu( mConfigMenu );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
   menu.exec( mapToGlobal( pos ) );

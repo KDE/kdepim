@@ -50,6 +50,7 @@ protected:
     void synchronizeAgent();
     void synchronizeTree();
     void toggleOnline();
+    void showChangeNotifications();
     void abortAgent();
     void restartAgent();
     void cloneAgent();
