@@ -37,6 +37,7 @@ using MailCommon::FilterLog;
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <krandom.h>
 
 // other headers
 #include <assert.h>
@@ -45,6 +46,7 @@ using namespace MailCommon;
 
 MailFilter::MailFilter()
 {
+  mIdentifier = KRandom::randomString( 16 );
   bApplyOnInbound = true;
   bApplyBeforeOutbound = false;
   bApplyOnOutbound = false;
@@ -65,6 +67,7 @@ MailFilter::MailFilter( const KConfigGroup & aConfig )
 
 MailFilter::MailFilter( const MailFilter & aFilter )
 {
+  mIdentifier = aFilter.mIdentifier;
   mPattern = aFilter.mPattern;
 
   bApplyOnInbound = aFilter.applyOnInbound();
@@ -102,6 +105,11 @@ MailFilter::MailFilter( const MailFilter & aFilter )
 MailFilter::~MailFilter()
 {
   qDeleteAll( mActions );
+}
+
+QString MailFilter::identifier() const
+{
+  return mIdentifier;
 }
 
 QString MailFilter::name() const
@@ -344,6 +352,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
   // MKSearchPattern::readConfig ensures
   // that the pattern is purified.
   mPattern.readConfig(config);
+  mIdentifier = config.readEntry( "identifier", KRandom::randomString( 16 ) );
 
   const QStringList sets = config.readEntry("apply-on", QStringList() );
   if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
@@ -418,6 +427,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
 void MailFilter::writeConfig(KConfigGroup & config) const
 {
   mPattern.writeConfig(config);
+  config.writeEntry( "identifier", mIdentifier );
 
   QStringList sets;
   if ( bApplyOnInbound )
@@ -494,7 +504,7 @@ const QString MailFilter::asString() const
 {
   QString result;
 
-  result += "Filter name: " + name() + '\n';
+  result += "Filter name: " + name() + " (" + mIdentifier  + ")\n";
   result += mPattern.asString() + '\n';
 
   QList<FilterAction*>::const_iterator it( mActions.begin() );
@@ -542,6 +552,7 @@ const QString MailFilter::asString() const
 
 QDataStream& MailCommon::operator<<( QDataStream &stream, const MailCommon::MailFilter &filter )
 {
+  stream << filter.mIdentifier;
   stream << filter.mPattern.serialize();
 
   stream << filter.mActions.count();
@@ -584,6 +595,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
   bool bAutoNaming;
   int applicability;
 
+  stream >> filter.mIdentifier;
   stream >> pattern;
 
   stream >> numberOfActions;

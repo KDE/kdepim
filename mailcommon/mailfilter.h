@@ -85,6 +85,11 @@ public:
   /** Cleanup. */
   ~MailFilter();
 
+  /**
+   * Returns the unique identifier of this filter.
+   */
+  QString identifier() const;
+
   /** Equivalent to @pattern()->name(). @return name of the filter */
   QString name() const;
 
@@ -302,6 +307,7 @@ public:
   bool isAutoNaming() const;
 
 private:
+  QString mIdentifier;
   SearchPattern mPattern;
   QList<FilterAction*> mActions;
   QStringList mAccounts;
