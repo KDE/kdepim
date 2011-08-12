@@ -24,6 +24,7 @@ macro( add_templateparser_unittest _source )
     ${KDE4_KIO_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   )
 endmacro ()
 

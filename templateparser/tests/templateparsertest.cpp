@@ -21,12 +21,13 @@
 #include "templateparser/templateparser.h"
 #include "messageviewer/objecttreeparser.h"
 #include "messageviewer/objecttreeemptysource.h"
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
 #include "qwebpage.h"
 #include "qwebframe.h"
 #include "qtest_kde.h"
 #include "kdebug.h"
 
-using namespace TemplateParser;
 using namespace MessageViewer;
 
 void TemplateParserTester::test_convertedHtml_data()
@@ -113,6 +114,37 @@ void TemplateParserTester::test_bodyFromHtml()
   const QString expectedHead( "<title>Plain mail with signature</title>" );
 
   QCOMPARE( headElement, expectedHead );
+}
+
+void TemplateParserTester::test_processWithTemplates_data()
+{
+  QTest::addColumn<QString>( "command" );
+  QTest::addColumn<QString>( "text" );
+  QTest::addColumn<QString>( "expected" );
+  QTest::addColumn<QString>( "selection" );
+
+  QTest::newRow( "%OTEXT") << "%OTEXT" << "Original text.\nLine two." << "Original text.\nLine two." << "";
+  QTest::newRow( "%QUOTE") << "%QUOTE" << "Quoted text.\nLine two." << "> Quoted text.\n> Line two." << "";
+}
+
+void TemplateParserTester::test_processWithTemplates()
+{
+  QFETCH( QString, command );
+  QFETCH( QString, text );
+  QFETCH( QString, expected );
+  QFETCH( QString, selection );
+
+  KMime::Message::Ptr msg( new KMime::Message() );
+  msg->setBody( text.toLocal8Bit() );
+  TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Reply );
+  parser.setSelection( selection );
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  parser.setIdentityManager( identMan );
+  parser.setAllowDecryption( false );
+  parser.processWithTemplate( command );
+
+  identMan->deleteLater();
+  QCOMPARE( QString( msg->encodedBody() ), expected );
 }
 
 QTEST_KDEMAIN( TemplateParserTester, GUI )

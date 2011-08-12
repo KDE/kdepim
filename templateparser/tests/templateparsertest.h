@@ -42,7 +42,8 @@ class TemplateParserTester : public QObject
     /**
      * Tests whether templates are returning required body or not
      */
-    //void test_processWithTemplates();
+    void test_processWithTemplates();
+    void test_processWithTemplates_data();
 };
 
 #endif

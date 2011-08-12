@@ -289,6 +289,9 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
 
 void TemplateParser::processWithTemplate( const QString &tmpl )
 {
+  if(!mOrigMsg) {
+    mOrigMsg=mMsg;
+  }
   mOtp->parseObjectTree( mOrigMsg.get() );
 
   QString plainBody, htmlBody;
@@ -1203,7 +1206,6 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   if ( ac.attachments().empty() || mMode != Forward ) {
     KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
-
     mainTextPart->assemble();
     mMsg->setBody( mainTextPart->encodedBody() );
     mMsg->setHeader( mainTextPart->contentType() );
@@ -1220,7 +1222,6 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
 
     KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
-
     mMsg->addContent( mainTextPart );
 
     int attachmentNumber = 1;
