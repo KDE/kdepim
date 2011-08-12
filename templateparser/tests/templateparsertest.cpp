@@ -116,7 +116,7 @@ void TemplateParserTester::test_bodyFromHtml()
   QCOMPARE( headElement, expectedHead );
 }
 
-void TemplateParserTester::test_processWithTemplates_data()
+void TemplateParserTester::test_processWithTemplatesForBody_data()
 {
   QTest::addColumn<QString>( "command" );
   QTest::addColumn<QString>( "text" );
@@ -127,7 +127,7 @@ void TemplateParserTester::test_processWithTemplates_data()
   QTest::newRow( "%QUOTE") << "%QUOTE" << "Quoted text.\nLine two." << "> Quoted text.\n> Line two." << "";
 }
 
-void TemplateParserTester::test_processWithTemplates()
+void TemplateParserTester::test_processWithTemplatesForBody()
 {
   QFETCH( QString, command );
   QFETCH( QString, text );
@@ -138,6 +138,48 @@ void TemplateParserTester::test_processWithTemplates()
   msg->setBody( text.toLocal8Bit() );
   TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Reply );
   parser.setSelection( selection );
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  parser.setIdentityManager( identMan );
+  parser.setAllowDecryption( false );
+  parser.processWithTemplate( command );
+
+  identMan->deleteLater();
+  QCOMPARE( QString( msg->encodedBody() ), expected );
+}
+
+void TemplateParserTester::test_processWithTemplatesForContent_data()
+{
+  QTest::addColumn<QString>( "command" );
+  QTest::addColumn<QString>( "mailFileName" );
+  QTest::addColumn<QString>( "expected" );
+
+  QDir dir( MAIL_DATA_DIR );
+  foreach ( const QString &file, dir.entryList( QStringList("plain*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
+    QTest::newRow( file.toLatin1() ) << "%OTIME" << QString(dir.path() + '/' +  file) << "11:30";
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONG" << QString(dir.path() + '/' +  file) << "11:30:27";
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONGEN" << QString(dir.path() + '/' +  file) << "11:30:27";
+    QTest::newRow( file.toLatin1() ) << "%DOW" << QString(dir.path() + '/' +  file) << "Friday";
+    QTest::newRow( file.toLatin1() ) << "%ODATE" << QString(dir.path() + '/' +  file) << "Sunday 07 August 2011";
+    QTest::newRow( file.toLatin1() ) << "%ODATESHORT" << QString(dir.path() + '/' +  file) << "2011-08-07";
+    QTest::newRow( file.toLatin1() ) << "%ODATEEN" << QString(dir.path() + '/' +  file) << "Sunday 07 August 2011";
+  }
+}
+
+void TemplateParserTester::test_processWithTemplatesForContent()
+{
+  QFETCH( QString, command );
+  QFETCH( QString, mailFileName );
+  QFETCH( QString, expected );
+
+  QFile mailFile( mailFileName );
+  QVERIFY( mailFile.open( QIODevice::ReadOnly ) );
+  const QByteArray mailData = KMime::CRLFtoLF( mailFile.readAll() );
+  QVERIFY( !mailData.isEmpty() );
+  KMime::Message::Ptr msg( new KMime::Message );
+  msg->setContent( mailData );
+  msg->parse();
+
+  TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Reply );
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
   parser.setIdentityManager( identMan );
   parser.setAllowDecryption( false );
