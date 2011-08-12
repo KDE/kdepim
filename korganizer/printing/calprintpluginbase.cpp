@@ -870,16 +870,11 @@ void CalPrintPluginBase::drawAgendaDayBox( QPainter &p, Event::List &events,
     KOrg::CellItem::placeItem( cells, placeItem );
   }
 
-//   p.setFont( QFont( "sans-serif", 10 ) );
-
   for( it1.toFirst(); it1.current(); ++it1 ) {
     PrintCellItem *placeItem = static_cast<PrintCellItem *>( it1.current() );
     drawAgendaItem( placeItem, p, startPrintDate, endPrintDate, minlen, box );
   }
-//   p.setFont( oldFont );
 }
-
-
 
 void CalPrintPluginBase::drawAgendaItem( PrintCellItem *item, QPainter &p,
                                    const QDateTime &startPrintDate,
@@ -917,7 +912,22 @@ void CalPrintPluginBase::drawAgendaItem( PrintCellItem *item, QPainter &p,
             arg( cleanStr( event->summary() ) ).
             arg( cleanStr( event->location() ) );
     }
+    QFont oldFont( p.font() );
+    if ( eventBox.height() < 24 ) {
+      if ( eventBox.height() < 12 ) {
+        if ( eventBox.height() < 8 ) {
+          p.setFont( QFont( "sans-serif", 4 ) );
+        } else {
+          p.setFont( QFont( "sans-serif", 6 ) );
+        }
+      } else {
+        p.setFont( QFont( "sans-serif", 8 ) );
+      }
+    } else {
+      p.setFont( QFont( "sans-serif", 10 ) );
+    }
     showEventBox( p, EVENT_BORDER_WIDTH, eventBox, event, str );
+    p.setFont( oldFont );
   }
 }
 
