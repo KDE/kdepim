@@ -158,10 +158,15 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::newRow( file.toLatin1() ) << "%OTIME" << QString(dir.path() + '/' +  file) << "11:30";
     QTest::newRow( file.toLatin1() ) << "%OTIMELONG" << QString(dir.path() + '/' +  file) << "11:30:27";
     QTest::newRow( file.toLatin1() ) << "%OTIMELONGEN" << QString(dir.path() + '/' +  file) << "11:30:27";
-    QTest::newRow( file.toLatin1() ) << "%DOW" << QString(dir.path() + '/' +  file) << "Friday";
     QTest::newRow( file.toLatin1() ) << "%ODATE" << QString(dir.path() + '/' +  file) << "Sunday 07 August 2011";
     QTest::newRow( file.toLatin1() ) << "%ODATESHORT" << QString(dir.path() + '/' +  file) << "2011-08-07";
     QTest::newRow( file.toLatin1() ) << "%ODATEEN" << QString(dir.path() + '/' +  file) << "Sunday 07 August 2011";
+    QTest::newRow( file.toLatin1() ) << "%OFULLSUBJ" << QString(dir.path() + '/' +  file) << "Plain Message Test";
+    QTest::newRow( file.toLatin1() ) << "%OFULLSUBJECT" << QString(dir.path() + '/' +  file) << "Plain Message Test";
+    QTest::newRow( file.toLatin1() ) << "%OFROMFNAME" << QString(dir.path() + '/' +  file) << "Sudhendu";
+    QTest::newRow( file.toLatin1() ) << "%OFROMLNAME" << QString(dir.path() + '/' +  file) << "Kumar";
+    QTest::newRow( file.toLatin1() ) << "%OFROMNAME" << QString(dir.path() + '/' +  file) << "Sudhendu Kumar";
+    QTest::newRow( file.toLatin1() ) << "%OFROMADDR" << QString(dir.path() + '/' +  file) << "Sudhendu Kumar <dontspamme@yoohoo.com>";
   }
 }
 
