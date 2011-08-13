@@ -162,8 +162,7 @@ Each one of those column headers needs to be clicked on, and your new custom fon
 
 <!-- fixme: how to use old kmail mail data: copy files from
 ~/Mail (incl. hidden ones) to the new ~/Mail folder -->
-<qandaentry><question>
-<anchor id="transfer-mail-and-settings"/>
+<qandaentry id="transfer-mail-and-settings"><question>
 <para>How to transfer mail and settings to another computer (or another user account on the same machine)?</para>
 </question>
 <answer>
