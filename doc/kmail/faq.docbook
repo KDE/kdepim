@@ -162,7 +162,10 @@ Each one of those column headers needs to be clicked on, and your new custom fon
 
 <!-- fixme: how to use old kmail mail data: copy files from
 ~/Mail (incl. hidden ones) to the new ~/Mail folder -->
-<qandaentry><question><para>How to transfer mail and settings to another computer (or another user account on the same machine)?</para></question>
+<qandaentry><question>
+<anchor id="transfer-mail-and-settings"/>
+<para>How to transfer mail and settings to another computer (or another user account on the same machine)?</para>
+</question>
 <answer>
 <para>The messages are typically in <filename class="directory">~/.kde/share/apps/kmail/</filename>. For very old installations of &kmail;, the messages can also be in <filename class="directory">~/Mail</filename>. Note that &kmail; uses hidden sub-directories inside that directory, so you need to make sure to copy hidden directories as well.</para>
 <para>For settings you will need to copy the following files:</para>
