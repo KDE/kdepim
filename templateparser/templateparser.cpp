@@ -289,9 +289,6 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
 
 void TemplateParser::processWithTemplate( const QString &tmpl )
 {
-  if(!mOrigMsg) {
-    mOrigMsg=mMsg;
-  }
   mOtp->parseObjectTree( mOrigMsg.get() );
 
   QString plainBody, htmlBody;
