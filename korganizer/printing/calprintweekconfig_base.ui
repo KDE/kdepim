@@ -10,38 +10,21 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>386</width>
-            <height>262</height>
+            <width>399</width>
+            <height>305</height>
         </rect>
     </property>
     <property name="caption">
         <string>CalPrintWeek_Base</string>
     </property>
-    <grid>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
             <number>0</number>
         </property>
-        <spacer row="4" column="0">
-            <property name="name">
-                <cstring>spacer3</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>21</width>
-                    <height>27</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QGroupBox" row="0" column="0">
+        <widget class="QGroupBox">
             <property name="name">
                 <cstring>mDateRangeGroup</cstring>
             </property>
@@ -202,18 +185,7 @@
                 </widget>
             </grid>
         </widget>
-        <widget class="QCheckBox" row="3" column="0">
-            <property name="name">
-                <cstring>mColors</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Use colors</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Enable this option if you want to print in color. The items will be printed using their category color. The category colors will be used.</string>
-            </property>
-        </widget>
-        <widget class="QButtonGroup" row="1" column="0">
+        <widget class="QButtonGroup">
             <property name="name">
                 <cstring>mPrintType</cstring>
             </property>
@@ -262,7 +234,7 @@
                 </widget>
             </grid>
         </widget>
-        <widget class="QCheckBox" row="2" column="0">
+        <widget class="QCheckBox">
             <property name="name">
                 <cstring>mIncludeTodos</cstring>
             </property>
@@ -276,10 +248,53 @@
                 <string>Check this option if you want to have to-dos on the print, placed by their due date.</string>
             </property>
         </widget>
-    </grid>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>mSingleLineLimit</cstring>
+            </property>
+            <property name="text">
+                <string>Limit events in each day to a &amp;single line</string>
+            </property>
+            <property name="accel">
+                <string>Alt+S</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option to limit events to a single line.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>mColors</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Use colors</string>
+            </property>
+            <property name="accel">
+                <string>Alt+U</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Enable this option if you want to print in color. The items will be printed using their category color. The category colors will be used.</string>
+            </property>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer3</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>21</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+    </vbox>
 </widget>
-<customwidgets>
-</customwidgets>
 <tabstops>
     <tabstop>mFromDate</tabstop>
     <tabstop>mFromTime</tabstop>

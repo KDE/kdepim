@@ -837,6 +837,7 @@ void CalPrintWeek::readSettingsWidget()
     mStartTime = cfg->mFromTime->time();
     mEndTime = cfg->mToTime->time();
 
+    mSingleLineLimit = cfg->mSingleLineLimit->isChecked();
     mIncludeTodos = cfg->mIncludeTodos->isChecked();
     mUseColors = cfg->mColors->isChecked();
   }
@@ -855,6 +856,7 @@ void CalPrintWeek::setSettingsWidget()
     cfg->mFromTime->setTime( mStartTime );
     cfg->mToTime->setTime( mEndTime );
 
+    cfg->mSingleLineLimit->setChecked( mSingleLineLimit );
     cfg->mIncludeTodos->setChecked( mIncludeTodos );
     cfg->mColors->setChecked( mUseColors );
   }
@@ -869,6 +871,7 @@ void CalPrintWeek::loadConfig()
     QDateTime endTm( dt, tm1.addSecs( 43200 ) );
     mStartTime = mConfig->readDateTimeEntry( "Start time", &startTm ).time();
     mEndTime = mConfig->readDateTimeEntry( "End time", &endTm ).time();
+    mSingleLineLimit = mConfig->readBoolEntry( "Single line limit", false );
     mIncludeTodos = mConfig->readBoolEntry( "Include todos", false );
     mWeekPrintType =(eWeekPrintType)( mConfig->readNumEntry( "Print type", (int)Filofax ) );
   }
@@ -881,6 +884,7 @@ void CalPrintWeek::saveConfig()
   if ( mConfig ) {
     mConfig->writeEntry( "Start time", QDateTime( QDate(), mStartTime ) );
     mConfig->writeEntry( "End time", QDateTime( QDate(), mEndTime ) );
+    mConfig->writeEntry( "Single line limit", mSingleLineLimit );
     mConfig->writeEntry( "Include todos", mIncludeTodos );
     mConfig->writeEntry( "Print type", int( mWeekPrintType ) );
   }
@@ -939,7 +943,7 @@ void CalPrintWeek::print( QPainter &p, int width, int height )
         title = title.arg( line1 ).arg( line2 );
         drawHeader( p, title, curWeek.addDays( -6 ), QDate(), headerBox );
 
-        drawWeek( p, curWeek, weekBox );
+        drawWeek( p, curWeek, weekBox, mSingleLineLimit );
 
         drawFooter( p, footerBox );
 
@@ -1036,6 +1040,7 @@ void CalPrintMonth::readSettingsWidget()
     mWeekNumbers =  cfg->mWeekNumbers->isChecked();
     mRecurDaily = cfg->mRecurDaily->isChecked();
     mRecurWeekly = cfg->mRecurWeekly->isChecked();
+    mSingleLineLimit = cfg->mSingleLineLimit->isChecked();
     mIncludeTodos = cfg->mIncludeTodos->isChecked();
     mUseColors = cfg->mColors->isChecked();
   }
@@ -1050,6 +1055,7 @@ void CalPrintMonth::setSettingsWidget()
     cfg->mWeekNumbers->setChecked( mWeekNumbers );
     cfg->mRecurDaily->setChecked( mRecurDaily );
     cfg->mRecurWeekly->setChecked( mRecurWeekly );
+    cfg->mSingleLineLimit->setChecked( mSingleLineLimit );
     cfg->mIncludeTodos->setChecked( mIncludeTodos );
     cfg->mColors->setChecked( mUseColors );
   }
@@ -1061,6 +1067,7 @@ void CalPrintMonth::loadConfig()
     mWeekNumbers = mConfig->readBoolEntry( "Print week numbers", true );
     mRecurDaily = mConfig->readBoolEntry( "Print daily incidences", true );
     mRecurWeekly = mConfig->readBoolEntry( "Print weekly incidences", true );
+    mSingleLineLimit = mConfig->readBoolEntry( "Single line limit", false );
     mIncludeTodos = mConfig->readBoolEntry( "Include todos", false );
   }
   setSettingsWidget();
@@ -1073,6 +1080,7 @@ void CalPrintMonth::saveConfig()
     mConfig->writeEntry( "Print week numbers", mWeekNumbers );
     mConfig->writeEntry( "Print daily incidences", mRecurDaily );
     mConfig->writeEntry( "Print weekly incidences", mRecurWeekly );
+    mConfig->writeEntry( "Single line limit", mSingleLineLimit );
     mConfig->writeEntry( "Include todos", mIncludeTodos );
   }
 }
@@ -1129,7 +1137,8 @@ void CalPrintMonth::print( QPainter &p, int width, int height )
 
     drawHeader( p, title, curMonth.addMonths( -1 ), curMonth.addMonths( 1 ),
                 headerBox );
-    drawMonthTable( p, curMonth, mWeekNumbers, mRecurDaily, mRecurWeekly, monthBox );
+    drawMonthTable( p, curMonth, mWeekNumbers, mRecurDaily, mRecurWeekly,
+                    mSingleLineLimit, monthBox );
 
     drawFooter( p, footerBox );
 

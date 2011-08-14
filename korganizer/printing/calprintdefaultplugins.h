@@ -77,9 +77,9 @@ class CalPrintIncidence : public CalPrintPluginBase
     virtual void loadConfig();
     virtual void saveConfig();
   protected:
-    int printCaptionAndText( QPainter &p, const QRect &box, const QString &caption, 
+    int printCaptionAndText( QPainter &p, const QRect &box, const QString &caption,
                              const QString &text, QFont captionFont, QFont textFont );
-  
+
 
   protected:
     bool mShowOptions;
@@ -165,6 +165,7 @@ class CalPrintWeek : public CalPrintPluginBase
   protected:
     enum eWeekPrintType { Filofax=0, Timetable, SplitWeek } mWeekPrintType;
     QTime mStartTime, mEndTime;
+    bool mSingleLineLimit;
     bool mIncludeTodos;
 };
 
@@ -209,6 +210,7 @@ class CalPrintMonth : public CalPrintPluginBase
     bool mRecurDaily;
     bool mRecurWeekly;
     bool mIncludeTodos;
+    bool mSingleLineLimit;
 };
 
 class CalPrintTodos : public CalPrintPluginBase

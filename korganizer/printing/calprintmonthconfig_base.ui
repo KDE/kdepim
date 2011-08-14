@@ -10,8 +10,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>558</width>
-            <height>216</height>
+            <width>557</width>
+            <height>245</height>
         </rect>
     </property>
     <property name="caption">
@@ -187,6 +187,20 @@
         </widget>
         <widget class="QCheckBox">
             <property name="name">
+                <cstring>mSingleLineLimit</cstring>
+            </property>
+            <property name="text">
+                <string>Limit events in each day to a &amp;single line</string>
+            </property>
+            <property name="accel">
+                <string>Alt+S</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option to limit events to a single line.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
                 <cstring>mColors</cstring>
             </property>
             <property name="text">
@@ -212,7 +226,7 @@
             <property name="sizeHint">
                 <size>
                     <width>21</width>
-                    <height>70</height>
+                    <height>30</height>
                 </size>
             </property>
         </spacer>

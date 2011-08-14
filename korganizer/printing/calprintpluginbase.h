@@ -398,11 +398,13 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
                       date string or just a short.
       \param printRecurDaily Whether daily recurring incidences should be printed.
       \param printRecurWeekly Whether weekly recurring incidences should be printed.
+      \param singleLineLimit Whether Incidence text wraps or truncates.
     */
     void drawDayBox( QPainter &p, const QDate &qd,
                      const QRect &box,
                      bool fullDate = false, bool printRecurDaily = true,
-                     bool printRecurWeekly = true );
+                     bool printRecurWeekly = true,
+                     bool singleLineLimit = true );
     /**
       Draw the week (filofax) table of the week containing the date qd. The first
       three days of the week will be shown in the first column (using drawDayBox),
@@ -411,8 +413,10 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param p QPainter of the printout
       \param qd Arbitrary date within the week to be printed.
       \param box coordinates of the week box.
+      \param singleLineLimit Whether Incidence text wraps or truncates.
     */
-    void drawWeek( QPainter &p, const QDate &qd, const QRect &box );
+    void drawWeek( QPainter &p, const QDate &qd,
+                   const QRect &box, bool singleLineLimit );
 
     /**
       Draw the timetable view of the given time range from fromDate to toDate.
@@ -444,10 +448,12 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param recurDaily Whether daily recurring incidences should be printed.
       \param recurWeekly Whether weekly recurring incidences should be printed.
       \param weeknumbers Whether the week numbers are printed left of each row of the matrix
+      \param singleLineLimit Whether Incidence text wraps or truncates.
       \param box coordinates of the month.
     */
     void drawMonthTable( QPainter &p, const QDate &qd, bool weeknumbers,
-                    bool recurDaily, bool recurWeekly, const QRect &box );
+                         bool recurDaily, bool recurWeekly, bool singleLineLimit,
+                         const QRect &box );
     /**
       Draw a vertical representation of the month containing the date dt. Each
       day gets one line.
@@ -522,7 +528,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
   protected:
     void drawIncidence( QPainter &p, const QRect &dayBox, const QString &time,
                         const QString &summary, const QString &description,
-                        int &textY );
+                        int &textY, bool singleLineLimit );
     int calculateIncidenceHeight( QPainter &p, const QRect &dayBox, const QString &time,
                                   const QString &summary, int _textY ) const;
 
