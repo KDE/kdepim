@@ -971,8 +971,8 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
                                              EventSortStartDate,
                                              SortDirectionAscending );
   QString timeText;
-  p.setFont( QFont( "sans-serif", 8 ) );
-  const int maxHeight = box.height() - 12; // 12 => 1.5x of the font height
+  p.setFont( QFont( "sans-serif", 7 ) );
+  const int maxHeight = box.height() - 11; // 11 => 1.5x of the font height
 
   int textY=mSubHeaderHeight; // gives the relative y-coord of the next printed entry
   unsigned int visibleEventsCounter = 0;
