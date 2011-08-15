@@ -190,7 +190,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <term>
 <menuchoice>
 <shortcut><keycap>F5</keycap></shortcut>
-<guimenu>Folder</guimenu>
+<guimenu>File</guimenu>
 <guimenuitem>Update Folders</guimenuitem>
 </menuchoice>
 </term>

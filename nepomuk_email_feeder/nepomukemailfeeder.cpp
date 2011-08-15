@@ -42,6 +42,7 @@ using namespace Akonadi;
 Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   NepomukFeederAgent<NepomukFast::Mailbox>( id )
 {
+  changeRecorder()->itemFetchScope().setCacheOnly( true );
   addSupportedMimeType( "message/rfc822" );
   addSupportedMimeType( "message/news" );
   setIndexCompatibilityLevel( INDEX_COMPAT_LEVEL );

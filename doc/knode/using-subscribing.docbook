@@ -91,7 +91,7 @@ feature.</para>
 </sect3> 
 
 <sect3> 
-<title><guilabel>disable tree view</guilabel></title> 
+<title><guilabel>Disable tree view</guilabel></title> 
 
 <para>Normally &knode; shows all the groups in a tree; if this option
 is activated, all newsgroups are listed amongst one another.</para> 
@@ -100,9 +100,9 @@ is activated, all newsgroups are listed amongst one another.</para>
 
 <sect3> 
 <title> 
-<guilabel>subscribed only</guilabel></title> 
+<guilabel>Subscribed only</guilabel></title> 
 
-<para>If <guilabel>subscribed only</guilabel> is checked the
+<para>If <guilabel>Subscribed only</guilabel> is checked the
 tree-view <guilabel>Groups on</guilabel> shows only the groups you are
 already subscribed to; this is very convenient if you want to
 unsubscribe from some groups: you then won't have to search the whole tree
@@ -111,9 +111,9 @@ for these groups.</para>
 </sect3> 
 
 <sect3> 
-<title><guilabel>new only</guilabel></title> 
+<title><guilabel>New only</guilabel></title> 
 
-<para>If <guilabel>new only</guilabel> is checked the tree-view
+<para>If <guilabel>New only</guilabel> is checked the tree-view
 <guilabel>Groups on</guilabel> shows only the groups which are new
 since you last fetched the group list; for this to be functional, you
 first have to fetch a new group list with <guibutton>New
@@ -128,8 +128,8 @@ possibility to show all the new groups since a specific date.</para>
 <title><guilabel>Groups on</guilabel></title> 
 
 <para>This list shows all newsgroups on this server; if you check one
-of the checkboxes, <guilabel>subscribed only</guilabel> or
-<guilabel>new only</guilabel>, you get the corresponding
+of the checkboxes, <guilabel>Subscribed only</guilabel> or
+<guilabel>New only</guilabel>, you get the corresponding
 selection.</para> 
 
 </sect3> 
@@ -140,11 +140,11 @@ selection.</para>
 <para>The <guilabel>Current changes</guilabel> window shows all
 changes you have made since you opened the dialog.</para> 
 
-<para>The <guilabel>subscribe to</guilabel> list shows the newsgroups
+<para>The <guilabel>Subscribe To</guilabel> list shows the newsgroups
 you have chosen to subscribe to.</para> 
 
-<para>Below you can see the <guilabel>unsubscribe
-from</guilabel> list, which shows all newsgroups from which you have chosen to
+<para>Below you can see the <guilabel>Unsubscribe
+From</guilabel> list, which shows all newsgroups from which you have chosen to
 unsubscribe. You cannot unsubscribe from groups you are not
 subscribed to.</para> 
 
@@ -198,7 +198,7 @@ linkend="multiple-news-accounts"/> .</para>
 
 <para>We now want to subscribe to the &kde; group: mark the box
 beside the name; you can now see the group in the list labelled
-<guilabel>subscribe to</guilabel>. Another possibility is to use the
+<guilabel>Subscribe To</guilabel>. Another possibility is to use the
 arrows between the two windows.</para> 
 
 <para>If you picked the wrong newsgroup by mistake you can undo your
@@ -208,8 +208,8 @@ arrow (you probably noticed the arrow changing direction.)</para>
 
 <para>If you want to unsubscribe from a newsgroup it is as easy as
 subscribing to it: you just uncheck the box next to its name. The groups
-you wish to unsubscribe from are shown in the <guilabel>unsubscribe
-from</guilabel> list. Again, the arrow is another way of doing things: to
+you wish to unsubscribe from are shown in the <guilabel>Unsubscribe
+From</guilabel> list. Again, the arrow is another way of doing things: to
 correct your actions you can use the arrow again; this works as
 long as the dialog is not closed by clicking
 <guibutton>OK</guibutton>.</para>
@@ -514,8 +514,9 @@ Already-read articles are labeled with this symbol.</para>
 Articles labeled with this symbol are read and the body was fetched
 from the server.</para> 
 </listitem> 
+<!-- not in 4.7
 <listitem> 
-<para> 
+<para>
 <inlinemediaobject> 
 <imageobject> 
 <imagedata fileref="redball.png" format="PNG"/> </imageobject> 
@@ -530,8 +531,9 @@ been fetched.</para>
 <imagedata fileref="redballchk.png" format="PNG"/> </imageobject> 
 </inlinemediaobject> 
 Articles labeled with this symbol are unread but the body has already
-been already fetched.</para> 
+been fetched.</para> 
 </listitem> 
+-->
 <listitem> 
 <para> 
 <inlinemediaobject> 
@@ -582,9 +584,7 @@ close threads with your mouse or keyboard.</para>
 article view gets colored; at the same time the header and body of
 this article appear in in the article window. If you want to read
 another article you can use the mouse to select it, or you can use
-the cursor keys.  If you use the cursor keys you can move the
-dashed frame to the article you want to read and then press
-<keycap>Enter</keycap> to mark and display the article.</para>
+the left and right cursor keys.</para>
 
 <para>There are many key commands to provide comfortable navigation
 within a news group and to switching between newsgroups.  Here the most
@@ -634,7 +634,7 @@ browse through all subscribed newsgroups like this.</para>
 </varlistentry>
 <varlistentry>
 <term>Next unread article <keycombo
-action="simul">&Alt;<keycap>Space</keycap></keycombo>
+action="simul">&Alt;&Shift;<keycap>Space</keycap></keycombo>
 </term> 
 <listitem> 
 <para>This key binding jumps to the next unread article. The sequence
@@ -644,7 +644,7 @@ if necessary.</para>
 </varlistentry> 
 <varlistentry>
 <term>Next unread thread <keycombo
-action="simul">&Ctrl;<keycap>Space</keycap></keycombo> 
+action="simul">&Shift;<keycap>Space</keycap></keycombo> 
 </term> 
 <listitem> 
 <para>This command jumps to the next thread containing unread
@@ -662,7 +662,7 @@ ignored.</para>
 </listitem> 
 </varlistentry> 
 <varlistentry> 
-<term>Previous article <keycap>B</keycap></term> 
+<term>Previous article <keycap>P</keycap></term> 
 <listitem> 
 <para>This command jumps to the previous article in the group; the
 sequence follows the order of articles in the article view. Replies in
@@ -774,11 +774,21 @@ You can choose this filter by selecting
 
 <para>This filter only shows something if have you selected one or more
 threads to watch; you can achieve this by selecting 
-<menuchoice><guimenu>Article</guimenu><guisubmenu>Thread</guisubmenu><guimenuitem>Watch</guimenuitem></menuchoice>: 
+<guimenuitem>Watch Thread</guimenuitem> from the context menu of a thread: 
 next to the subject a symbol will appear, showing a pair of eyes.</para>
-
 </listitem> 
 </varlistentry> 
+
+<varlistentry> 
+<term>Own articles</term> 
+<listitem> 
+<para>This filter only articles you have published; you can choose
+this filter by selecting
+<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>Own
+Articles</guimenuitem></menuchoice></para> 
+</listitem> 
+</varlistentry> 
+
 <varlistentry> 
 <term>Threads With Unread</term> 
 <listitem> 
@@ -796,16 +806,6 @@ can choose this filter by selecting
 can choose this filter by selecting
 <menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>Threads
 With New</guimenuitem></menuchoice></para> 
-</listitem> 
-</varlistentry> 
-<varlistentry> 
-<term>Own articles</term> 
-<listitem> 
-<para>This filter only articles you have published; you can choose
-this filter by selecting
-<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>Own
-Articles</guimenuitem></menuchoice></para> 
-
 </listitem> 
 </varlistentry> 
 <varlistentry> 
@@ -856,7 +856,7 @@ you; this enables you to reply to the author directly from their
 article.</para> 
 
 <para>The appearance and content of the header shown by default
-can be configured by choosing <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuring
+can be configured by choosing <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guilabel>Reading
 News</guilabel><guilabel>Headers</guilabel></menuchoice>; you can
 find a more-detailed view on this in <link
@@ -864,8 +864,8 @@ linkend="anc-knode-headers">Configuring the Shown
 Headers</link>.</para> 
 
 <para>By selecting
-<menuchoice><guimenu>View</guimenu><guimenuitem>Show all
-headers</guimenuitem></menuchoice> you force &knode; to show the whole
+<menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu><guimenuitem>All
+Headers</guimenuitem></menuchoice> you force &knode; to show the whole
 header as is produced by the newsreader and newsservers; normally
 you do not need this view: it needs a lot of space in the article
 window.</para>
@@ -940,8 +940,7 @@ documentation.
 </tip> 
 
 <para>In <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KNode...</guimenuitem><guilabel>Reading
-News</guilabel><guilabel>Appearance</guilabel></menuchoice> you can
+KNode...</guimenuitem><guilabel>Appearance</guilabel></menuchoice> you can
 choose how the articles are shown. In particular, &knode; provides the
 smart coloring of different reply levels; you can read more about this
 in the chapter <link linkend="knode-appearance">Configuring the
@@ -955,7 +954,7 @@ characters at
 KNode...</guimenuitem><guilabel>Reading
 News</guilabel><guilabel>Viewer</guilabel></menuchoice>.</para>
 </caution> 
-
+<!-- seems to be wrong in 4.7 ??-->
 <para>When the body of an article contains links to internet addresses
 you can invoke an internet browser to display the web page it links to
 by clicking on the link; details about configuring this feature can be
@@ -971,7 +970,7 @@ settings</link>.</para>
 author, provided you did not disable signatures in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guilabel>Reading
-News</guilabel><guilabel>General</guilabel></menuchoice>.  The
+News</guilabel><guilabel>Viewer</guilabel></menuchoice>.  The
 signature is divided from the text by thin horizontal line.</para> 
 </sect4> 
 
@@ -1072,7 +1071,8 @@ fetch</guilabel> back to normal (1000).</para>
 passively so far, so let's publish a test
 article now. Select the new subscribed test group in the folder
 view; then, with <menuchoice><guimenu>Article</guimenu><guimenuitem>Post to
-newsgroup...</guimenuitem></menuchoice>or the key <keycap>P</keycap>,
+newsgroup...</guimenuitem></menuchoice> or the shortcut <keycombo
+action="simul">&Ctrl;<keycap>N</keycap></keycombo>,
 the Editor will be opened.</para> 
 
 <para>You can use the &knode; Editor like a normal Texteditor; there
@@ -1171,7 +1171,7 @@ language-specific characters like the German umlauts; if they are not
 readable you have to change the coding at
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guilabel>Posting
-News</guilabel><guilabel>Technical</guilabel></menuchoice>to
+News</guilabel><guilabel>Technical</guilabel></menuchoice> to
 <guilabel>Allow 8-bit</guilabel>. Change this and repeat your
 test.</para> 
 
@@ -1350,7 +1350,7 @@ as for posting an article in a newsgroup.</para>
 <important>
 <para>The Mail Reply only works if you have used the correct settings in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KNode...</guimenuitem><guilabel>Accounts</guilabel><guilabel>Mail</guilabel></menuchoice>.</para>
+KNode...</guimenuitem><guilabel>Accounts</guilabel><guilabel>Mail Server (SMTP)</guilabel></menuchoice>.</para>
  
 <para>Depending on the configuration of your computer, you will find
 the reply in your mailbox; you might have to connect to your
