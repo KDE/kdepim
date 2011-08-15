@@ -62,8 +62,8 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new RawSocketConsole( tabWidget ), "Raw Socket" );
   tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
   tabWidget->addTab( new DbConsole( tabWidget ), "DB Console" );
-  tabWidget->addTab( new JobTrackerWidget( "jobtracker", tabWidget ), "Job Tracker" );
-  tabWidget->addTab( new JobTrackerWidget( "resourcesJobtracker", tabWidget ), "Resources Schedulers" );
+  tabWidget->addTab( new JobTrackerWidget( "jobtracker", tabWidget, "Enable job tracker" ), "Job Tracker" );
+  tabWidget->addTab( new JobTrackerWidget( "resourcesJobtracker", tabWidget, "Enable tracking of Resource Schedulers" ), "Resources Schedulers" );
   tabWidget->addTab( new NotificationMonitor( tabWidget ), "Notification Monitor" );
   tabWidget->addTab( new SearchWidget( tabWidget ), "Item Search" );
 

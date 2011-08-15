@@ -222,8 +222,8 @@ folders whose name starts with a dot are also displayed.</para>
 leave your messages on the server after you downloaded them.</para>
 
 <para>Select <guilabel>Include in Manual Mail Check</guilabel> if you
-do want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check
-Mail</guimenuitem></menuchoice>.  You can still check for new messages on this account
+want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check
+Mail</guimenuitem></menuchoice>.  If you unselect this option you can still check for new messages on this account
 with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
 In</guimenuitem></menuchoice>.</para>
 

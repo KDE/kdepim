@@ -1573,8 +1573,7 @@ you.</para></listitem>
 <term><guilabel>Categories</guilabel></term>
 <listitem><para>You can assign several
 <link linkend="categories-view">categories</link> to a calendar item. Click the
-drop down box to open the
-<guilabel>Select Categories</guilabel> dialog. Check the category boxes to
+drop down box to display all available categories. Check the category boxes to
 assign suitable categories to the event.</para> 
 <para>You can also add a new category, modify a category or delete a category in the 
 <guilabel>Edit Categories</guilabel> dialog. Open this dialog with <menuchoice>
@@ -2360,9 +2359,7 @@ send the invitations choosing the <menuchoice><guimenu>Schedule</guimenu>
 <guimenuitem>Send Invitation to Attendees</guimenuitem></menuchoice> menu
 item.</para></step>
 
-<step><para>Review the event
-setup by clicking on the <guilabel>General</guilabel> and 
-<guilabel>Attendees</guilabel> tabs.
+<step><para>Review the event setup by clicking on the tabs.
 If you are satisfied, click <guibutton>OK</guibutton>.</para></step>
 </procedure>
 
