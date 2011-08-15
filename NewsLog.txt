@@ -1,4 +1,13 @@
 
+Monday 15 August 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4768: Print calendar: add 'use colors' option for month view (rt#10017)
+
+
+
 Friday 29 July 2011
 
 Problems addressed
