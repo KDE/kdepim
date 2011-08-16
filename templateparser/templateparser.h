@@ -83,6 +83,12 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       NoSelectionAllowed
     };
 
+    enum Quotes {
+      ReplyAsOriginalMessage,
+      ReplyAsPlain,
+      ReplyAsHtml
+    };
+
   public:
     TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
     ~TemplateParser();
@@ -169,6 +175,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     MessageViewer::ObjectTreeParser *mOtp;
     MessageViewer::EmptySource *mEmptySource;
     QString mHeadElement;
+    Quotes mQuotes;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to

@@ -292,7 +292,6 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
   mOtp->parseObjectTree( mOrigMsg.get() );
 
   QString plainBody, htmlBody;
-  bool isForcedPlain = false;
 
   int tmpl_len = tmpl.length();
   bool dnl = false;
@@ -400,6 +399,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "QUOTE" );
         kDebug()<< "replyUsingHtml settings" << GlobalSettings::self()->replyUsingHtml();
         if( mOrigMsg && GlobalSettings::self()->replyUsingHtml() ) {
+          mQuotes = ReplyAsOriginalMessage;
           QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
@@ -410,7 +410,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           htmlBody.append( htmlQuote );
         }
         else if( mOrigMsg && !(GlobalSettings::self()->replyUsingHtml()) ) {
-          isForcedPlain = true;
+          mQuotes = ReplyAsPlain;
           QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
@@ -419,30 +419,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         }
 
       } else if ( cmd.startsWith( QLatin1String("FORCEDPLAIN") ) ) {
-        isForcedPlain = true;
         kDebug() << "Command: FORCEDPLAIN";
+        mQuotes = ReplyAsPlain;
         i += strlen( "FORCEDPLAIN" );
-        if ( mOrigMsg ) {
-          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
-          if ( plainQuote.endsWith( '\n' ) ) {
-            plainQuote.chop( 1 );
-          }
-          plainBody.append( plainQuote );
-        }
 
       } else if ( cmd.startsWith( QLatin1String("FORCEDHTML") ) ) {
         kDebug() << "Command: FORCEDHTML";
+        mQuotes = ReplyAsHtml;
         i += strlen( "FORCEDHTML" );
-        if ( mOrigMsg ) {
-          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
-          if ( plainQuote.endsWith( '\n' ) ) {
-            plainQuote.chop( 1 );
-          }
-          plainBody.append( plainQuote );
-
-          const QString htmlQuote = quotedHtmlText( htmlMessageText( shouldStripSignature(), SelectionAllowed ) );
-          htmlBody.append( htmlQuote );
-        }
 
       } else if ( cmd.startsWith( QLatin1String("QHEADERS") ) ) {
         kDebug() << "Command: QHEADERS";
@@ -1135,7 +1119,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       htmlBody.append( c );
     }
   }
-  if ( isForcedPlain ) {
+  if ( mQuotes == ReplyAsPlain ) {
     htmlBody.clear();
   } else {
     htmlBody = makeValidHtml( htmlBody );
@@ -1201,7 +1185,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have no attachment, simply create a text/plain part or multipart/alternative
   //and set the processed template text as the body
   if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() ) ?
+    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() && mQuotes != ReplyAsHtml ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
     mainTextPart->assemble();
     mMsg->setBody( mainTextPart->encodedBody() );
@@ -1217,7 +1201,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() ) ?
+    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() && mQuotes != ReplyAsHtml ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
     mMsg->addContent( mainTextPart );
 
