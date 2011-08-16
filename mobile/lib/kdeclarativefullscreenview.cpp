@@ -186,7 +186,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
     kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
   qDebug() << "trying to load \"" +  source << "\"";
-  setSource( source );
+  setSource( QUrl::fromLocalFile(source) );
   if ( debugTiming ) {
     kWarning() << "setSourceDone" << t.elapsed() << &t;
   }
