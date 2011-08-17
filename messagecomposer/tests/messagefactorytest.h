@@ -42,7 +42,6 @@ class MessageFactoryTest : public QObject
   private:
     KMime::Message::Ptr createPlainTestMessage();
     KMime::Message::Ptr loadMessageFromFile( QString filename );
-    
 };
 
 #endif

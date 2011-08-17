@@ -48,6 +48,8 @@
 #include <qtest_kde.h>
 #include <QDateTime>
 #include <KCharsets>
+#include <QtCore/QDir>
+
 using namespace Message;
 using namespace MessageComposer;
 
@@ -129,7 +131,6 @@ void MessageFactoryTest::testCreateReply()
   
 }
 
-
 void MessageFactoryTest::testCreateReplyHtml()
 {
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("html_utf8_encoded.mbox") );
@@ -208,7 +209,6 @@ void MessageFactoryTest::testCreateReplyKeepCharsetEncoding()
 
 }
 
-
 void MessageFactoryTest::testCreateForward()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
@@ -256,7 +256,6 @@ void MessageFactoryTest::testCreateForward()
   QCOMPARE( fw->subject()->asUnicodeString(), QLatin1String( "Fwd: Test Email Subject" ) );
   QCOMPARE_OR_DIFF( fw->encodedContent(), fwdMsg.toLatin1() );
 }
-
 
 void MessageFactoryTest::testCreateRedirect()
 {
@@ -369,7 +368,6 @@ void MessageFactoryTest::testCreateResend()
   QCOMPARE_OR_DIFF( rdir->encodedContent(), baseline.toLatin1() );
 }
 
-
 void MessageFactoryTest::testCreateMDN()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
@@ -407,7 +405,6 @@ void MessageFactoryTest::testCreateMDN()
                     mdnContent.toLatin1() );
 }
 
-
 KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
 {
   Composer *composer = new Composer;
@@ -439,7 +436,6 @@ KMime::Message::Ptr MessageFactoryTest::loadMessageFromFile(QString filename)
   msg->setContent( data );
   msg->parse();
   return msg;
-
 }
 
 #include "messagefactorytest.moc"

@@ -1,0 +1,24 @@
+From: Sudhendu Kumar <dontspamme@yoohoo.com>
+To: I Dont Know<idontknow@yoohoo.com>
+Cc: Yes I Know<yesiknow@yoohoo.com>
+Subject: Plain Message Test
+Date: Tue, 16 Aug 2011 17:03:52 +0530
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="nextPart7970347.4U2bZv7Mgu"
+Content-Transfer-Encoding: 7Bit
+
+--nextPart7970347.4U2bZv7Mgu
+Content-Type: text/plain; charset=ISO-8859-1
+
+This *is* the *message* text *from* Sudhendu Kumar<dontspamme@yoohoo.com>
+
+--
+Thanks & Regards
+Sudhendu Kumar
+
+--nextPart7970347.4U2bZv7Mgu
+Content-Type: text/html; charset=ISO-8859-1
+
+This <i>is</i> the <b>message</b> text <u>from</u> Sudhendu Kumar&lt;dontspamme@yoohoo.com&gt;<br><br>-- <br>Thanks &amp; Regards<br>Sudhendu Kumar<br>
+
+--nextPart7970347.4U2bZv7Mgu--

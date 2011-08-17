@@ -82,7 +82,7 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList( const KMime:
 
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection& col )
   : m_identityManager( 0 )
-  , m_origMsg( KMime::Message::Ptr() )
+  , m_origMsg( origMsg )
   , m_origId( 0 )
   , m_parentFolderId( 0 )
   , m_collection( col )
@@ -91,7 +91,7 @@ MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Ite
   , m_allowDecryption( true )
   , m_id ( id )
 {
-  m_origMsg = origMsg;
+
 }
 
 MessageFactory::~MessageFactory()
