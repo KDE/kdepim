@@ -397,9 +397,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String("QUOTE") ) ) {
         kDebug() << "Command: QUOTE";
         i += strlen( "QUOTE" );
-        kDebug()<< "replyUsingHtml settings" << GlobalSettings::self()->replyUsingHtml();
-        if( mOrigMsg && GlobalSettings::self()->replyUsingHtml() ) {
-          mQuotes = ReplyAsOriginalMessage;
+        if( mOrigMsg ) {
           QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
@@ -408,14 +406,6 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
 
           const QString htmlQuote = quotedHtmlText( htmlMessageText( shouldStripSignature(), SelectionAllowed ) );
           htmlBody.append( htmlQuote );
-        }
-        else if( mOrigMsg && !(GlobalSettings::self()->replyUsingHtml()) ) {
-          mQuotes = ReplyAsPlain;
-          QString plainQuote = quotedPlainText( plainMessageText( shouldStripSignature(), SelectionAllowed ) );
-          if ( plainQuote.endsWith( '\n' ) ) {
-            plainQuote.chop( 1 );
-          }
-          plainBody.append( plainQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("FORCEDPLAIN") ) ) {
@@ -1119,7 +1109,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       htmlBody.append( c );
     }
   }
-  if ( mQuotes == ReplyAsPlain ) {
+  //Clear the HTML body if FORCEDPLAIN has set ReplyAsPlain, OR if, there is no use of FORCED command
+  //but KMail configure setting has ReplyUsingHtml as disabled
+  if( mQuotes == ReplyAsPlain || ( mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml() ) ) {
     htmlBody.clear();
   } else {
     htmlBody = makeValidHtml( htmlBody );
@@ -1185,7 +1177,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have no attachment, simply create a text/plain part or multipart/alternative
   //and set the processed template text as the body
   if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() && mQuotes != ReplyAsHtml ) ?
+    KMime::Content* const mainTextPart = ( ( mOtp->htmlContent().isEmpty() || htmlBody.isEmpty() ) && !isHtmlSignature() ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
     mainTextPart->assemble();
     mMsg->setBody( mainTextPart->encodedBody() );
@@ -1201,7 +1193,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = ( mOtp->htmlContent().isEmpty() && !isHtmlSignature() && mQuotes != ReplyAsHtml ) ?
+    KMime::Content* const mainTextPart = ( ( mOtp->htmlContent().isEmpty() || htmlBody.isEmpty() ) && !isHtmlSignature() ) ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
     mMsg->addContent( mainTextPart );
 
