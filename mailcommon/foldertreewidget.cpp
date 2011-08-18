@@ -37,6 +37,7 @@
 #include <akonadi/statisticsproxymodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadi/recursivecollectionfilterproxymodel.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <krecursivefilterproxymodel.h>
 
 #include <QKeyEvent>
@@ -57,10 +58,14 @@ public:
      readableproxy( 0 ),
      filterTreeViewModel( 0 ),
      entityOrderProxy( 0 ),
+     filterFolderLineEdit( 0 ),
+     saver( 0 ),
+     label( 0 ), 
      dontKeyFilter( false )
   {
   }
   QString filter;
+  QString oldFilterStr;
   Akonadi::StatisticsProxyModel *filterModel;
   FolderTreeView *folderTreeView;
   Akonadi::QuotaColorProxyModel *quotaModel;
@@ -68,6 +73,7 @@ public:
   KRecursiveFilterProxyModel *filterTreeViewModel;
   EntityCollectionOrderProxyModel *entityOrderProxy;
   KLineEdit *filterFolderLineEdit;
+  QPointer<Akonadi::ETMViewStateSaver> saver;
   QLabel *label;
   bool dontKeyFilter;
 };
@@ -141,7 +147,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
 
   if ( ( options & UseLineEditForFiltering ) ) {
     connect( d->filterFolderLineEdit, SIGNAL(textChanged(QString)),
-             d->filterTreeViewModel, SLOT(setFilterFixedString(QString)) );
+             this, SLOT(slotFilterFixedString(QString)) );
     d->label->hide();
   } else {
     d->filterFolderLineEdit->hide();
@@ -155,6 +161,30 @@ FolderTreeWidget::~FolderTreeWidget()
   delete d;
 }
 
+void FolderTreeWidget::slotFilterFixedString( const QString& text )
+{
+  delete d->saver;
+  if ( d->oldFilterStr.isEmpty() ) {
+    //Save it.
+    KConfigGroup group(KernelIf->config(), "CollectionFolderView");
+    Akonadi::ETMViewStateSaver saver;
+    saver.setView( folderTreeView() );
+    saver.saveState( group );
+    group.deleteEntry( "Selection" );
+    group.sync();
+  } else if ( text.isEmpty() ) {
+    d->saver = new Akonadi::ETMViewStateSaver;
+    d->saver->setView( folderTreeView() );
+    const KConfigGroup cfg( KernelIf->config(), "CollectionFolderView" );
+    d->saver->restoreState( cfg );
+  } else {
+    d->folderTreeView->expandAll();
+
+  }
+  d->oldFilterStr = text;
+  d->filterTreeViewModel->setFilterFixedString( text );
+}
+  
 void FolderTreeWidget::disableContextMenuAndExtraColumn()
 {
   d->folderTreeView->disableContextMenuAndExtraColumn();
