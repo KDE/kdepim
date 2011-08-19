@@ -1177,8 +1177,8 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have no attachment, simply create a text/plain part or multipart/alternative
   //and set the processed template text as the body
   if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = ( ( mOtp->htmlContent().isEmpty() || htmlBody.isEmpty() ) && !isHtmlSignature() ) ?
-      createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
+    KMime::Content* const mainTextPart = ( htmlBody.isEmpty() ) ? createPlainPartContent( plainBody )
+                          : createMultipartAlternativeContent( plainBody, htmlBody );
     mainTextPart->assemble();
     mMsg->setBody( mainTextPart->encodedBody() );
     mMsg->setHeader( mainTextPart->contentType() );
@@ -1193,8 +1193,8 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = ( ( mOtp->htmlContent().isEmpty() || htmlBody.isEmpty() ) && !isHtmlSignature() ) ?
-      createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
+    KMime::Content* const mainTextPart = ( htmlBody.isEmpty() ) ? createPlainPartContent( plainBody )
+                          : createMultipartAlternativeContent( plainBody, htmlBody );
     mMsg->addContent( mainTextPart );
 
     int attachmentNumber = 1;
