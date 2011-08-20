@@ -424,7 +424,6 @@ Akonadi::Item::List CalendarSupport::itemsFromModel( const QAbstractItemModel * 
         items << itemsFromModel( model, i );
       }
     }
-
     ++row;
     i = i.sibling( row, 0 );
   }
