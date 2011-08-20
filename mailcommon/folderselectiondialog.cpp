@@ -221,7 +221,7 @@ void FolderSelectionDialog::readConfig()
   KConfigGroup group( KernelIf->config(), myConfigGroupName );
 
   QSize size = group.readEntry( "Size", QSize() );
-  if ( !size.isEmpty() )
+  if ( size.isValid() )
     resize( size );
   else
     resize( 500, 300 );
