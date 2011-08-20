@@ -74,6 +74,7 @@ public:
   EntityCollectionOrderProxyModel *entityOrderProxy;
   KLineEdit *filterFolderLineEdit;
   QPointer<Akonadi::ETMViewStateSaver> saver;
+  QStringList expandedItems;
   QLabel *label;
   bool dontKeyFilter;
 };
@@ -166,17 +167,13 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
   delete d->saver;
   if ( d->oldFilterStr.isEmpty() ) {
     //Save it.
-    KConfigGroup group(KernelIf->config(), "CollectionFolderView");
     Akonadi::ETMViewStateSaver saver;
     saver.setView( folderTreeView() );
-    saver.saveState( group );
-    group.deleteEntry( "Selection" );
-    group.sync();
+    d->expandedItems = saver.expansionKeys();
   } else if ( text.isEmpty() ) {
     d->saver = new Akonadi::ETMViewStateSaver;
     d->saver->setView( folderTreeView() );
-    const KConfigGroup cfg( KernelIf->config(), "CollectionFolderView" );
-    d->saver->restoreState( cfg );
+    d->saver->restoreExpanded( d->expandedItems );
   } else {
     d->folderTreeView->expandAll();
 
