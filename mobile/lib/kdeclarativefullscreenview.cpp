@@ -31,6 +31,7 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
+#include <KWindowSystem>
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
@@ -263,7 +264,7 @@ void KDeclarativeFullScreenView::triggerTaskSwitcher()
     ::SetForegroundWindow(hWnd);
   }
 #else
-  kDebug() << "not implemented for this platform";
+  KWindowSystem::minimizeWindow( effectiveWinId() );
 #endif
 }
 
