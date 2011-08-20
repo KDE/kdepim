@@ -502,7 +502,7 @@ void KDeclarativeMainView::launchAccountWizard()
     if ( loader.load() ) {
       QObject *instance = loader.instance();
       // TODO error handling
-      QMetaObject::invokeMethod( instance, "run", Qt::DirectConnection, Q_ARG( QStringList, d->mChangeRecorder->mimeTypesMonitored() ) );
+      QMetaObject::invokeMethod( instance, "run", Qt::DirectConnection, Q_ARG( QStringList, d->mChangeRecorder->mimeTypesMonitored() ), Q_ARG( QWidget*, this ) );
       loader.unload();
       return;
     } else {
