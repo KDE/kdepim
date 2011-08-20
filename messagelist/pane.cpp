@@ -110,6 +110,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   d->mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
   d->mNewTabButton->adjustSize();
   d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
+  d->mNewTabButton->setAccessibleName( i18n( "New tab" ) );
   setCornerWidget( d->mNewTabButton, Qt::TopLeftCorner );
   connect( d->mNewTabButton, SIGNAL(clicked()),
            SLOT(onNewTabClicked()) );
@@ -118,6 +119,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   d->mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   d->mCloseTabButton->adjustSize();
   d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
+  d->mCloseTabButton->setAccessibleName( i18n( "Close tab" ) );
   setCornerWidget( d->mCloseTabButton, Qt::TopRightCorner );
   connect( d->mCloseTabButton, SIGNAL(clicked()),
            SLOT(onCloseTabClicked()) );
