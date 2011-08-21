@@ -535,6 +535,18 @@ void Viewer::slotZoomOut()
   d->slotZoomOut();
 }
 
+void Viewer::setZoomTextOnly( bool textOnly )
+{
+  Q_D( Viewer );
+  d->setZoomTextOnly( textOnly );
+}
+
+bool Viewer::zoomTextOnly() const
+{
+  Q_D(const Viewer);
+  return d->mZoomTextOnly;
+}
+  
 }
 
 #include "viewer.moc"

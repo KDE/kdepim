@@ -270,6 +270,8 @@ public:
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
+  void setZoomTextOnly( bool textOnly );
+
 private:
   /** HTML initialization. */
   void initHtmlWidget();
@@ -527,6 +529,8 @@ public slots:
 
   /** Toggle display mode between HTML and plain text. */
   void slotToggleHtmlMode();
+  void slotZoomTextOnly();
+
 
   /**
    * Does an action for the current attachment.
@@ -614,6 +618,7 @@ public:
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+  KToggleAction *mZoomTextOnlyAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
@@ -631,6 +636,7 @@ public:
   bool mShowAttachmentQuicklist;
   bool mShowRawToltecMail;
   bool mExternalWindow;
+  bool mZoomTextOnly;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;

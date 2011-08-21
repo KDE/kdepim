@@ -180,6 +180,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
+    mZoomTextOnlyAction( 0 ), 
     mToggleMimePartTreeAction( 0 ),
     mCanStartDrag( false ),
     mHtmlWriter( 0 ),
@@ -203,7 +204,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
-
+  mZoomTextOnly = false;
+  
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
@@ -1009,6 +1011,9 @@ void ViewerPrivate::readConfig()
   mHtmlMail = GlobalSettings::self()->htmlMail();
   mHtmlLoadExternal = GlobalSettings::self()->htmlLoadExternal();
 
+  mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
+  setZoomTextOnly( mZoomTextOnly );
+  
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1050,6 +1055,7 @@ void ViewerPrivate::writeConfig( bool sync )
     GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
   if ( attachmentStrategy() )
     GlobalSettings::self()->setAttachmentStrategy( attachmentStrategy()->name() );
+  GlobalSettings::self()->setZoomTextOnly( mZoomTextOnly );
 
   saveSplitterSizes();
   if ( sync )
@@ -1472,6 +1478,14 @@ void ViewerPrivate::createActions()
   connect( mToggleFixFontAction, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()) );
   mToggleFixFontAction->setShortcut( QKeySequence( Qt::Key_X ) );
 
+
+  mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
+  ac->addAction( "toggle_zoomtextonly", mZoomTextOnlyAction );
+  connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
+  //mZoomTextOnlyAction->setShortcut( QKeySequence( Qt::Key_X ) );
+
+
+  
   // Show message structure viewer
   mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
   ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
@@ -2818,5 +2832,23 @@ void ViewerPrivate::slotZoomOut()
   mViewer->setZoomFactor( mZoomFactor/100.0 );
 #endif
 }
+
+void ViewerPrivate::setZoomTextOnly( bool textOnly )
+{
+  mZoomTextOnly = textOnly;
+  if ( mZoomTextOnlyAction )
+  {
+    mZoomTextOnlyAction->setChecked( mZoomTextOnly );
+  }
+#ifndef KDEPIM_NO_WEBKIT    
+  mViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
+#endif  
+}
+
+void ViewerPrivate::slotZoomTextOnly()
+{
+  setZoomTextOnly( !mZoomTextOnly );
+}
+
 
 #include "viewer_p.moc"
