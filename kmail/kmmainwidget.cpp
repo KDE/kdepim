@@ -71,8 +71,9 @@
 #include "messageviewer/attachmentstrategy.h"
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
+#ifndef QT_NO_CURSOR
 #include "messageviewer/kcursorsaver.h"
-
+#endif
 
 #include "messagecomposer/messagesender.h"
 #include "messagecomposer/messagehelper.h"
@@ -489,8 +490,9 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
   }
 
   mGoToFirstUnreadMessageInSelectedFolder = false;
-
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
 
   if (mMsgView)
     mMsgView->clear(true);
@@ -1513,7 +1515,9 @@ void KMMainWidget::slotEmptyFolder()
     if (KMessageBox::warningContinueCancel(this, text, title, KGuiItem( title, "user-trash"))
       != KMessageBox::Continue) return;
   }
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif  
   slotMarkAll();
   if (isTrash) {
     /* Don't ask for confirmation again when deleting, the user has already
@@ -2259,7 +2263,9 @@ void KMMainWidget::slotApplyFilters()
 
 void KMMainWidget::applyFilters( const QList<Akonadi::Item>& selectedMessages )
 {
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif  
   FilterIf->filterManager()->applyFilters( selectedMessages );
 }
 
@@ -3301,6 +3307,23 @@ void KMMainWidget::setupActions()
     connect(action, SIGNAL(triggered(bool)), SLOT(slotCollapseAllThreads()));
   }
 
+
+  mZoomInAction = new KAction( KIcon("zoom-in"), i18n("&Zoom In"), this);
+  actionCollection()->addAction("zoom_in", mZoomInAction);
+  connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
+  mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
+
+  mZoomOutAction = new KAction( KIcon("zoom-out"), i18n("Zoom &Out"), this);
+  actionCollection()->addAction("zoom_out", mZoomOutAction);
+  connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
+  mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
+
+  mZoomResetAction = new KAction( i18n("Reset"), this);
+  actionCollection()->addAction("zoom_reset", mZoomResetAction);
+  connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
+  mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
+
+  
   mViewSourceAction = new KAction(i18n("&View Source"), this);
   actionCollection()->addAction("view_source", mViewSourceAction );
   connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMsgSrc()));
@@ -3522,14 +3545,18 @@ void KMMainWidget::slotCollapseThread()
 void KMMainWidget::slotExpandAllThreads()
 {
   // TODO: Make this asynchronous ? (if there is enough demand)
+#ifndef QT_NO_CURSOR	
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif  
   mMessagePane->setAllThreadsExpanded( true );
 }
 
 void KMMainWidget::slotCollapseAllThreads()
 {
   // TODO: Make this asynchronous ? (if there is enough demand)
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif  
   mMessagePane->setAllThreadsExpanded( false );
 }
 
@@ -3541,6 +3568,30 @@ void KMMainWidget::slotShowMsgSrc()
   }
 }
 
+void KMMainWidget::slotZoomReset()
+{
+  if ( mMsgView ) {
+    mMsgView->viewer()->slotZoomReset();
+  }
+}
+
+void KMMainWidget::slotZoomIn()
+{
+  if ( mMsgView ) {
+    mMsgView->viewer()->slotZoomIn();
+  }
+}
+
+void KMMainWidget::slotZoomOut()
+{
+  if ( mMsgView ) {
+    mMsgView->viewer()->slotZoomOut();
+  }
+}
+
+void KMMainWidget::slotZoomOnlyText()
+{
+}
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::updateMessageMenu()

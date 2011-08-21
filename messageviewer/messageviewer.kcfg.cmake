@@ -127,6 +127,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Allow messages to load external references from the Internet</label>
       <default>false</default>
     </entry>
+    <entry name="zoomTextOnly" type="Bool">
+      <label>Zoom only text</label>
+      <default>false</default>
+    </entry>
     <entry name="attachmentStrategy" type="String" key="attachment-strategy">
       <label>How attachments are shown</label>
       <default>Smart</default>

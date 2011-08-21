@@ -270,6 +270,8 @@ public:
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
+  void setZoomTextOnly( bool textOnly );
+
 private:
   /** HTML initialization. */
   void initHtmlWidget();
@@ -435,6 +437,9 @@ public:
   /** Show/Hide the field with id "field" */
   void toggleFullAddressList(const QString& field);
 
+  void setZoomFactor( qreal zoomFactor );
+
+  
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
@@ -524,6 +529,8 @@ public slots:
 
   /** Toggle display mode between HTML and plain text. */
   void slotToggleHtmlMode();
+  void slotZoomTextOnly();
+
 
   /**
    * Does an action for the current attachment.
@@ -550,6 +557,9 @@ public slots:
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
+  void slotZoomIn();
+  void slotZoomOut();
+
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -559,7 +569,7 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
-
+  
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;
@@ -608,6 +618,7 @@ public:
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+  KToggleAction *mZoomTextOnlyAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
@@ -625,6 +636,7 @@ public:
   bool mShowAttachmentQuicklist;
   bool mShowRawToltecMail;
   bool mExternalWindow;
+  bool mZoomTextOnly;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
@@ -638,6 +650,10 @@ public:
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
   Akonadi::Item::Id mPreviouslyViewedItem;
+
+  // zoom Factor
+  static const qreal zoomBy;
+  qreal mZoomFactor;
 };
 
 }
