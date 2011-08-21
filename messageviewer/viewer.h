@@ -362,7 +362,7 @@ public slots:
   void slotShowMessageSource();
   void slotZoomIn();
   void slotZoomOut();
-  
+  void slotZoomReset();
 protected:
   /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);

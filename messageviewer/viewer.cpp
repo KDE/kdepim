@@ -517,6 +517,12 @@ void Viewer::setZoomFactor( qreal zoomFactor )
   d->setZoomFactor(zoomFactor);
 }
 
+void Viewer::slotZoomReset()
+{
+  Q_D( Viewer );
+  d->setZoomFactor(1.0 );
+}
+
 void Viewer::slotZoomIn()
 {
   Q_D( Viewer );
