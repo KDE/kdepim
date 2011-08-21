@@ -247,6 +247,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void clearSelection();
   void copySelectionToClipboard();
 
+  void setZoomFactor( qreal zoomFactor );
+
+  
   KToggleAction *toggleFixFontAction();
 
   KToggleAction *toggleMimePartTreeAction();

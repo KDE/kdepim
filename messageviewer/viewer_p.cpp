@@ -2783,4 +2783,12 @@ void ViewerPrivate::slotMessageRendered()
     handler->setItem( mMessageItem );
 }
 
+void ViewerPrivate::setZoomFactor( qreal zoomFactor )
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  mViewer->setZoomFactor ( zoomFactor );
+#endif  
+}
+
+
 #include "viewer_p.moc"

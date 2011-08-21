@@ -511,7 +511,12 @@ void Viewer::copySelectionToClipboard()
   d->slotCopySelectedText();
 }
 
-
+void Viewer::setZoomFactor( qreal zoomFactor )
+{
+  Q_D( Viewer );
+  d->setZoomFactor(zoomFactor);
+}
+  
 }
 
 #include "viewer.moc"

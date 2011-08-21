@@ -435,6 +435,9 @@ public:
   /** Show/Hide the field with id "field" */
   void toggleFullAddressList(const QString& field);
 
+  void setZoomFactor( qreal zoomFactor );
+
+  
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
