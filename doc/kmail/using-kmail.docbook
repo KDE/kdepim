@@ -1546,7 +1546,7 @@ filter</guisubmenu><guimenuitem>Filter on
 Mailing-List...</guimenuitem></menuchoice> can identify the mailing
 list (the name of the list should then appear in the menu item); in
 this case, this works and I am presented a filter that has
-<quote>List-Id<guilabel>contains</guilabel>
+<quote>List-Id <guilabel>contains</guilabel>
 &lt;kde.kde.org&gt;</quote> preset. You select the
 desired destination folder from the folder pull-down menu in the
 <guilabel>Filter Action</guilabel> group and that is it.</para>
