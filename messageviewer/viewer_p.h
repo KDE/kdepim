@@ -67,7 +67,7 @@ namespace MessageViewer {
   class ObjectTreeParser;
   class HeaderStrategy;
   class HeaderStyle;
-  class FindBar;
+  class FindBarMailWebView;
   class MimeTreeModel;
   class ConfigureWidget;
   class WebKitPartHtmlWriter;
@@ -80,7 +80,7 @@ namespace MessageViewer {
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
 
-This class creates all subwidgets, like the MailWebView, the HtmlStatusBar and the FindBar.
+This class creates all subwidgets, like the MailWebView, the HtmlStatusBar and the FindBarMailWebView.
 
 Also, ViewerPrivate creates and exposes all actions.
 
@@ -588,7 +588,7 @@ public:
 #endif
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
-  FindBar *mFindBar;
+  FindBarMailWebView *mFindBar;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
