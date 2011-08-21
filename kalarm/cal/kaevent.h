@@ -341,7 +341,6 @@ class KALARM_CAL_EXPORT KAEvent
         OccurType          setNextOccurrence(const KDateTime& preDateTime)  { return d->setNextOccurrence(preDateTime); }
         void               setFirstRecurrence()                    { d->setFirstRecurrence(); }
         void               setCategory(KAlarm::CalEvent::Type s)   { d->setCategory(s); }
-        void               setUid(KAlarm::CalEvent::Type s)        { d->mEventID = KAlarm::CalEvent::uid(d->mEventID, s); }
         void               setEventId(const QString& id)           { d->mEventID = id; }
 #ifdef USE_AKONADI
         void               setItemId(Akonadi::Item::Id id)         { d->mItemId = id; }
