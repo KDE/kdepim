@@ -360,7 +360,9 @@ public slots:
   void slotAttachmentSaveAs();
   void slotAttachmentSaveAll();
   void slotShowMessageSource();
-
+  void slotZoomIn();
+  void slotZoomOut();
+  
 protected:
   /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);

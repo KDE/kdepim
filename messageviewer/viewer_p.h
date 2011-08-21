@@ -553,6 +553,9 @@ public slots:
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
+  void slotZoomIn();
+  void slotZoomOut();
+
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -562,7 +565,7 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
-
+  
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;
@@ -641,6 +644,10 @@ public:
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
   Akonadi::Item::Id mPreviouslyViewedItem;
+
+  // zoom Factor
+  static const qreal zoomBy;
+  qreal mZoomFactor;
 };
 
 }

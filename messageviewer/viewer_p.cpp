@@ -3,6 +3,7 @@
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
   Copyright (c) 2010 Torgny Nyblom <nyblom@kde.org>
+  Copyright (c) 2011 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -148,6 +149,8 @@ using namespace MessageViewer;
 using namespace MessageCore;
 
 const int ViewerPrivate::delay = 150;
+const qreal ViewerPrivate::zoomBy = 20;
+
 
 ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
@@ -191,7 +194,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     q( aParent ),
     mShowFullToAddressList( true ),
     mShowFullCcAddressList( true ),
-    mPreviouslyViewedItem( -1 )
+    mPreviouslyViewedItem( -1 ),
+    mZoomFactor( 100 )
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -2790,5 +2794,29 @@ void ViewerPrivate::setZoomFactor( qreal zoomFactor )
 #endif  
 }
 
+
+void ViewerPrivate::slotZoomIn()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  if( mZoomFactor >= 300 )
+    return;
+  mZoomFactor += zoomBy;
+  if( mZoomFactor > 300 )
+    mZoomFactor = 300;
+  mViewer->setZoomFactor( mZoomFactor/100.0 );
+#endif  
+}
+
+void ViewerPrivate::slotZoomOut()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  if ( mZoomFactor <= 100 )
+    return;
+  mZoomFactor -= zoomBy;
+  if( mZoomFactor < 100 )
+    mZoomFactor = 100;
+  mViewer->setZoomFactor( mZoomFactor/100.0 );
+#endif
+}
 
 #include "viewer_p.moc"
