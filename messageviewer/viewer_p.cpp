@@ -1482,8 +1482,6 @@ void ViewerPrivate::createActions()
   mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
   ac->addAction( "toggle_zoomtextonly", mZoomTextOnlyAction );
   connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
-  //mZoomTextOnlyAction->setShortcut( QKeySequence( Qt::Key_X ) );
-
 
   
   // Show message structure viewer
