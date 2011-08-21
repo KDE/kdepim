@@ -30,7 +30,6 @@
 #include "csshelper.h"
 #include "globalsettings.h"
 #include "mailwebview.h"
-#include "findbar/findbar.h"
 #include "mimetreemodel.h"
 
 #include <akonadi/kmime/messageparts.h>

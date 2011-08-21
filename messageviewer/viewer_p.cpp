@@ -122,7 +122,7 @@
 #include "util.h"
 #include "vcardviewer.h"
 #include "mailwebview.h"
-#include "findbar/findbar.h"
+#include "findbar/findbarmailwebview.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -1303,7 +1303,7 @@ void ViewerPrivate::createWidgets() {
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
 
-  mFindBar = new FindBar( mViewer, readerBox );
+  mFindBar = new FindBarMailWebView( mViewer, readerBox );
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif

@@ -41,7 +41,8 @@ class QWidget;
 class QShowEvent;
 
 namespace MessageViewer {
-
+class FindBarSourceView;
+  
 /**
  * A tiny little class to use for displaying raw messages, textual
  * attachments etc.
@@ -105,11 +106,13 @@ public:
 
   void setRawSource( const QString &source );
   void setDisplayedSource( const QString &source );
-
+protected slots:
+  void slotFind();
 private:
   KTabWidget *mTabWidget;
   bool mShowHTMLBrowser;
   KTextBrowser *mRawBrowser;
+  FindBarSourceView *mFindBar;
 #ifndef NDEBUG
   KTextBrowser *mHtmlBrowser;
   HTMLSourceHighlighter *mHtmlSourceHighLighter;
