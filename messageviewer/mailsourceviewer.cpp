@@ -192,7 +192,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 
   shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_F+Qt::CTRL );
-  connect( shortcut, SIGNAL( activated() ), SLOT( slotFind() ) );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
   
   KWindowSystem::setIcons( winId(),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
