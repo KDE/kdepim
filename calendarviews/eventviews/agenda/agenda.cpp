@@ -354,6 +354,8 @@ Akonadi::Item::Id Agenda::lastSelectedItemId() const
 
 void Agenda::init()
 {
+  setAttribute( Qt::WA_OpaquePaintEvent );
+
   d->mGridSpacingX = static_cast<double>( d->mScrollArea->width() ) / d->mColumns;
   d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
