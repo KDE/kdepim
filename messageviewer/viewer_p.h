@@ -559,7 +559,7 @@ public slots:
 
   void slotZoomIn();
   void slotZoomOut();
-
+  void slotResetZoom();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();

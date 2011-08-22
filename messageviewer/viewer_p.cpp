@@ -2866,5 +2866,13 @@ void ViewerPrivate::slotZoomTextOnly()
   setZoomTextOnly( !mZoomTextOnly );
 }
 
+void ViewerPrivate::slotResetZoom()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  mViewer->setZoomFactor( 1.0 );
+#endif
+}
+
+
 
 #include "viewer_p.moc"
