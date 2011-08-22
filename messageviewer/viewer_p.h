@@ -618,7 +618,7 @@ public:
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
-  KToggleAction *mZoomTextOnlyAction;
+  KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
