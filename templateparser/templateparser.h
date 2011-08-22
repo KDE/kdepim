@@ -45,14 +45,19 @@ class QObject;
 namespace TemplateParser {
 
 /**
- * The TemplateParser transforms a message with a given template.
+ * \brief The TemplateParser transforms a message with a given template.
  *
+ * \par Introduction
+ * The TemplateParser transforms a message with a given template.
  * A template contains text and commands, such as %QUOTE or %ODATE, which will be
  * replaced with the real values in process().
  *
- * The message given in the constructor is the message that is being transformed.
- * The message text will be replaced by the processed text of the template, but other
- * properties, such as the attachments or the subject, are preserved.
+ * \par Basics
+ * The message given in the templateparser constructor amsg, is the message that
+ * is being transformed.
+ * aorig_msg is the original message to which actions are performed.
+ * The message text in amsg will be replaced by the processed text of the template,
+ * but other properties, such as the attachments or the subject, are preserved.
  *
  * There are two different kind of commands: Those that work on the message that is
  * to be transformed and those that work on an 'original message'.
@@ -62,6 +67,74 @@ namespace TemplateParser {
  * This means that the %DATE command will take the date of the message passed in the
  * constructor, the message which is to be transformed, whereas the %ODATE command will
  * take the date of the message that is being passed in process(), the original message.
+ *
+ * \par The process()
+ * The process() function takes aorig_msg as parameter. This aorig_msg is the original
+ * message from which various commands in templates with prefix 'O' extract the data and adds
+ * to the processed message.
+ * This function finds the template and passes them to processWithTemplate(), where templates
+ * are processed and its value is added to the processed message.
+ *
+ * \par Reply To/Forward Plain Text Mails
+ * Plain Text mails are the mails with only text part and no html part. While creating
+ * reply/forward to mails, processWithTemplate() processes all the commands and then
+ * appends its values to plainBody and htmlBody. This function then on the
+ * basis of whether the user wants to use plain mails or HTML mails, clears the htmlBody,
+ * or just passes both the plainBody and htmlBody unaltered.
+ *
+ * \par Reply To/Forward HTML Mails
+ * By HTML mails here, we mean multipart/alternative mails. As mentioned above, all
+ * commands in the TemplateParser appends text, i.e. plain text to plainBody
+ * and html text to htmlBody in the function processWithTemplate().
+ * This function also takes a decision of clearing the htmlBody on the basis of fact
+ * whether the user wants to reply/forward using plain mails or multipart/alternative
+ * mails.
+ *
+ * \par When "TO" and when "NOT TO" make multipart/alternative Mails
+ * User is the master to decide when to and when not to make multipart/alternative mails.
+ * <b>For user who <u>don't prefer</u> using HTML mails</b>
+ * There is a GlobalSettings::self()->replyUsingHtml() (in GUI as Settings->Configure KMail->
+ * Composer->General->"Reply using HTML if present"), which when not true (checkbox disabled
+ * in UI), will clear the htmlBody.
+ * An another option within the standard templates, %FORCEDPLAIN command raises the flag,
+ * ReplyAsPlain. This flag when raised in processWithTemplate() takes care that the
+ * processed message will contain text/plain part by clearing the htmlBody.
+ *
+ * Once the htmlBody is cleared, plainBody and an empty htmlBody is passed to
+ * addProcessedBodyToMessage(). Here since the htmlBody is empty, text/plain messages are
+ * assembled and thus user is not dealing with any kind of HTML part.
+ *
+ * <b>For user who <u>do prefer</u> using HTML mails</b>
+ * The setting discussed above as "Reply using HTML if present" (when checked to true),
+ * passes the htmlBody to addProcessedBodyToMessage() without doing any changes.
+ * An another option %FORCEDHTML within standard templates command raises the flag ReplyAsHtml.
+ * This flag when raised in processWithTemplate() takes care that the htmlBody is passed to
+ * addProcessedBodyToMessage() unaltered.
+ *
+ * Since htmlBody received by addProcessedBodyToMessage() is not empty, multipart/alternative
+ * messages are assembled.
+ *
+ * @NOTE Resolving conflict between GlobalSettings "replyUsingHtml" and FORCEDXXXX command.
+ * The conflict is resolved by simply giving preference to the commands over GlobalSettings.
+ *
+ * \par Make plain part
+ * mMsg is the reply message in which the message text will be replaced by the
+ * processed value from templates.
+ * In case of no attachments, the message will be a single-part message. A KMime::Content
+ * containing the plainBody from processWithTemplate() is created. Then the encodedBody(),
+ * contentType (text/plain) of this KMime::Content is set in the body and the header of mMsg. addContent()
+ * method can be used for adding sub-content to content object in case of attachments.
+ * addContent() method is not used for adding content of the above mentioned single-part, as
+ * addContent() will convert single-part to multipart-mixed before adding it to mMsg.
+ *
+ * \par Make multipart/alternative mails
+ * First of all a KMime::Content (content) is created with a content-type of multipart/alternative.
+ * Then in the same way as plain-part is created in above paragraph, a KMime::Content (sub-content)
+ * containing the plainBody is created and added as child to the content.
+ * Then a new KMime::Content (sub-content) with htmlBody as the body is created. The content-type
+ * is set as text/html. This new sub-content is then added to the parent content.
+ * Now, since the parent content (multipart/alternative) has two sub-content (text/plain and text/html)
+ * to it, it is added to the reply message (mMsg).
  *
  * TODO: What is the usecase of the commands that work on the message to be transformed?
  *       In general you only use the commands that work on the original message...
