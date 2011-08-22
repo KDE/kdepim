@@ -3,6 +3,7 @@
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
   Copyright (c) 2010 Torgny Nyblom <nyblom@kde.org>
+  Copyright (c) 2011 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -123,7 +124,7 @@
 #include "util.h"
 #include "vcardviewer.h"
 #include "mailwebview.h"
-#include "findbar/findbar.h"
+#include "findbar/findbarmailwebview.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -148,6 +149,8 @@ using namespace MessageViewer;
 using namespace MessageCore;
 
 const int ViewerPrivate::delay = 150;
+const qreal ViewerPrivate::zoomBy = 20;
+
 
 ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
@@ -177,6 +180,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
+    mZoomTextOnlyAction( 0 ),
+    mZoomInAction( 0 ),
+    mZoomOutAction( 0 ),
+    mZoomResetAction( 0 ), 
     mToggleMimePartTreeAction( 0 ),
     mCanStartDrag( false ),
     mHtmlWriter( 0 ),
@@ -191,7 +198,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     q( aParent ),
     mShowFullToAddressList( true ),
     mShowFullCcAddressList( true ),
-    mPreviouslyViewedItem( -1 )
+    mPreviouslyViewedItem( -1 ),
+    mZoomFactor( 100 )
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -199,7 +207,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
-
+  mZoomTextOnly = false;
+  
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
@@ -1005,6 +1014,9 @@ void ViewerPrivate::readConfig()
   mHtmlMail = GlobalSettings::self()->htmlMail();
   mHtmlLoadExternal = GlobalSettings::self()->htmlLoadExternal();
 
+  mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
+  setZoomTextOnly( mZoomTextOnly );
+  
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1046,6 +1058,7 @@ void ViewerPrivate::writeConfig( bool sync )
     GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
   if ( attachmentStrategy() )
     GlobalSettings::self()->setAttachmentStrategy( attachmentStrategy()->name() );
+  GlobalSettings::self()->setZoomTextOnly( mZoomTextOnly );
 
   saveSplitterSizes();
   if ( sync )
@@ -1303,7 +1316,7 @@ void ViewerPrivate::createWidgets() {
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
 
-  mFindBar = new FindBar( mViewer, readerBox );
+  mFindBar = new FindBarMailWebView( mViewer, readerBox );
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif
@@ -1468,6 +1481,27 @@ void ViewerPrivate::createActions()
   connect( mToggleFixFontAction, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()) );
   mToggleFixFontAction->setShortcut( QKeySequence( Qt::Key_X ) );
 
+
+  // Zoom actions
+  mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
+  ac->addAction( "toggle_zoomtextonly", mZoomTextOnlyAction );
+  connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
+  mZoomInAction = new KAction( KIcon("zoom-in"), i18n("&Zoom In"), this);
+  ac->addAction("zoom_in", mZoomInAction);
+  connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
+  mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
+
+  mZoomOutAction = new KAction( KIcon("zoom-out"), i18n("Zoom &Out"), this);
+  ac->addAction("zoom_out", mZoomOutAction);
+  connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
+  mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
+
+  mZoomResetAction = new KAction( i18n("Reset"), this);
+  ac->addAction("zoom_reset", mZoomResetAction);
+  connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
+  mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
+
+  
   // Show message structure viewer
   mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
   ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
@@ -2782,5 +2816,63 @@ void ViewerPrivate::slotMessageRendered()
   foreach ( AbstractMessageLoadedHandler *handler, mMessageLoadedHandlers )
     handler->setItem( mMessageItem );
 }
+
+void ViewerPrivate::setZoomFactor( qreal zoomFactor )
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  mViewer->setZoomFactor ( zoomFactor );
+#endif  
+}
+
+
+void ViewerPrivate::slotZoomIn()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  if( mZoomFactor >= 300 )
+    return;
+  mZoomFactor += zoomBy;
+  if( mZoomFactor > 300 )
+    mZoomFactor = 300;
+  mViewer->setZoomFactor( mZoomFactor/100.0 );
+#endif  
+}
+
+void ViewerPrivate::slotZoomOut()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  if ( mZoomFactor <= 100 )
+    return;
+  mZoomFactor -= zoomBy;
+  if( mZoomFactor < 100 )
+    mZoomFactor = 100;
+  mViewer->setZoomFactor( mZoomFactor/100.0 );
+#endif
+}
+
+void ViewerPrivate::setZoomTextOnly( bool textOnly )
+{
+  mZoomTextOnly = textOnly;
+  if ( mZoomTextOnlyAction )
+  {
+    mZoomTextOnlyAction->setChecked( mZoomTextOnly );
+  }
+#ifndef KDEPIM_NO_WEBKIT    
+  mViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
+#endif  
+}
+
+void ViewerPrivate::slotZoomTextOnly()
+{
+  setZoomTextOnly( !mZoomTextOnly );
+}
+
+void ViewerPrivate::slotResetZoom()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  mViewer->setZoomFactor( 1.0 );
+#endif
+}
+
+
 
 #include "viewer_p.moc"

@@ -214,6 +214,15 @@ void Groupware::finishHandlingInvitation()
 
   if ( existingIncidence ) {
     KCalCore::Incidence::Ptr changedIncidence = calendar->incidence( existingIncidence->uid() );
+
+    if ( !changedIncidence ) {
+      const QString errorMsg = "Couldnt find incidence in calendar"; // no i18n, this shouldn't happen
+      kError() << "Couldnt find incidence in calendar. Uid is " <<  existingIncidence->uid();
+      Q_ASSERT( false );
+      emit handleInvitationFinished( /*success=*/false, errorMsg );
+      return;
+    }
+
     if ( !changedIncidence->dirtyFields().isEmpty() ) {
       calendar->changeIncidence( changedIncidence );
     }

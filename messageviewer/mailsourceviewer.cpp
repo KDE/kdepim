@@ -32,7 +32,7 @@
 #include <config-messageviewer.h>
 
 #include "mailsourceviewer.h"
-
+#include "findbar/findbarsourceview.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <kstandardguiitem.h>
@@ -157,8 +157,15 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 
   connect( this, SIGNAL(closeClicked()), SLOT(close()) );
 
+
+  QWidget *widget = new QWidget;
+  QVBoxLayout *lay = new QVBoxLayout;
+  widget->setLayout( lay );  
   mRawBrowser = new KTextBrowser();
-  mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
+  lay->addWidget( mRawBrowser );
+  mFindBar = new FindBarSourceView( mRawBrowser, widget );
+  lay->addWidget( mFindBar );
+  mTabWidget->addTab( /*mRawBrowser*/widget, i18nc( "Unchanged mail message", "Raw Source" ) );
   mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
   mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
@@ -166,7 +173,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 #ifndef NDEBUG
   mHtmlBrowser = new KTextBrowser();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
-  mTabWidget->setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
+  mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
   mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
   mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
@@ -182,6 +189,11 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_W+Qt::CTRL );
   connect( shortcut, SIGNAL(activated()), SLOT(close()) );
+
+  shortcut = new QShortcut( this );
+  shortcut->setKey( Qt::Key_F+Qt::CTRL );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+  
   KWindowSystem::setIcons( winId(),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
                   IconSize( KIconLoader::Desktop ) ),
@@ -208,5 +220,11 @@ void MailSourceViewer::setDisplayedSource( const QString &source )
 #endif
 }
 
+void MailSourceViewer::slotFind()
+{
+  mFindBar->show();
+  mFindBar->focusAndSetCursor();  
+}
+  
 #include "mailsourceviewer.moc"
 }

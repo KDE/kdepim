@@ -122,21 +122,21 @@ void MarcusBains::updateLocation()
 
 void MarcusBains::updateLocationRecalc( bool recalculate )
 {
-  bool showSeconds = d->mEventView->preferences()->marcusBainsShowSeconds();
-  QColor color = d->mEventView->preferences()->agendaMarcusBainsLineLineColor();
+  const bool showSeconds = d->mEventView->preferences()->marcusBainsShowSeconds();
+  const QColor color = d->mEventView->preferences()->agendaMarcusBainsLineLineColor();
 
-  QTime tim = QTime::currentTime();
-  if ( ( tim.hour() == 0 ) && ( d->mOldTime.hour() == 23 ) ) {
+  const QTime time = QTime::currentTime();
+  if ( ( time.hour() == 0 ) && ( d->mOldTime.hour() == 23 ) ) {
     // We are on a new day
     recalculate = true;
   }
-  int todayCol = recalculate ? d->todayColumn() : d->mOldTodayCol;
+  const int todayCol = recalculate ? d->todayColumn() : d->mOldTodayCol;
 
   // Number of minutes since beginning of the day
-  int minutes = tim.hour() * 60 + tim.minute();
-  int minutesPerCell = 24 * 60 / d->mAgenda->rows();
+  const int minutes = time.hour() * 60 + time.minute();
+  const int minutesPerCell = 24 * 60 / d->mAgenda->rows();
 
-  d->mOldTime = tim;
+  d->mOldTime = time;
   d->mOldTodayCol = todayCol;
 
   int y = int( minutes  *  d->mAgenda->gridSpacingY() / minutesPerCell );
@@ -156,7 +156,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
 
   /* Line */
   // It seems logical to adjust the line width with the label's font weight
-  int fw = d->mEventView->preferences()->agendaMarcusBainsLineFont().weight();
+  const int fw = d->mEventView->preferences()->agendaMarcusBainsLineFont().weight();
   setLineWidth( 1 + abs( fw - QFont::Normal ) / QFont::Light );
   setFrameStyle( QFrame::HLine | QFrame::Plain );
   QPalette pal = palette();
@@ -174,7 +174,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   QPalette pal1 = d->mTimeBox->palette();
   pal1.setColor( QPalette::WindowText, color );
   d->mTimeBox->setPalette( pal1 );
-  d->mTimeBox->setText( KGlobal::locale()->formatTime( tim, showSeconds ) );
+  d->mTimeBox->setText( KGlobal::locale()->formatTime( time, showSeconds ) );
   d->mTimeBox->adjustSize();
   if ( y - d->mTimeBox->height() >= 0 ) {
     y -= d->mTimeBox->height();
@@ -192,7 +192,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   if ( showSeconds || recalculate ) {
     d->mTimer->start( 1000 );
   } else {
-    d->mTimer->start( 1000 * ( 60 - tim.second() ) );
+    d->mTimer->start( 1000 * ( 60 - time.second() ) );
   }
 }
 
@@ -354,6 +354,8 @@ Akonadi::Item::Id Agenda::lastSelectedItemId() const
 
 void Agenda::init()
 {
+  setAttribute( Qt::WA_OpaquePaintEvent );
+
   d->mGridSpacingX = static_cast<double>( d->mScrollArea->width() ) / d->mColumns;
   d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {

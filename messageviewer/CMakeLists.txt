@@ -52,7 +52,9 @@ set(libmessageviewer_SRCS
   csshelperbase.cpp
   editorwatcher.cpp
   filehtmlwriter.cpp
-  findbar/findbar.cpp
+  findbar/findbarbase.cpp
+  findbar/findbarmailwebview.cpp
+  findbar/findbarsourceview.cpp
   globalsettings.cpp
   headerstrategy.cpp
   headerstyle.cpp

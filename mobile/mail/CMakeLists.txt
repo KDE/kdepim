@@ -125,8 +125,6 @@ install(FILES
   kmail-mobile-background.png
   kmail-mobile.notifyrc
   next-unread-mail.png
-  dividing-line.png
-  dividing-line-horizontal.png
   SnippetsEditor.qml
   SnippetsList.qml
   VacationScriptIndicator.qml

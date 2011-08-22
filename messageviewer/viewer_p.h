@@ -67,7 +67,7 @@ namespace MessageViewer {
   class ObjectTreeParser;
   class HeaderStrategy;
   class HeaderStyle;
-  class FindBar;
+  class FindBarMailWebView;
   class MimeTreeModel;
   class ConfigureWidget;
   class WebKitPartHtmlWriter;
@@ -80,7 +80,7 @@ namespace MessageViewer {
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
 
-This class creates all subwidgets, like the MailWebView, the HtmlStatusBar and the FindBar.
+This class creates all subwidgets, like the MailWebView, the HtmlStatusBar and the FindBarMailWebView.
 
 Also, ViewerPrivate creates and exposes all actions.
 
@@ -270,6 +270,8 @@ public:
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
+  void setZoomTextOnly( bool textOnly );
+
 private:
   /** HTML initialization. */
   void initHtmlWidget();
@@ -435,6 +437,9 @@ public:
   /** Show/Hide the field with id "field" */
   void toggleFullAddressList(const QString& field);
 
+  void setZoomFactor( qreal zoomFactor );
+
+  
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
@@ -524,6 +529,8 @@ public slots:
 
   /** Toggle display mode between HTML and plain text. */
   void slotToggleHtmlMode();
+  void slotZoomTextOnly();
+
 
   /**
    * Does an action for the current attachment.
@@ -550,6 +557,9 @@ public slots:
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
+  void slotZoomIn();
+  void slotZoomOut();
+  void slotResetZoom();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -559,7 +569,7 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
-
+  
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;
@@ -578,7 +588,7 @@ public:
 #endif
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
-  FindBar *mFindBar;
+  FindBarMailWebView *mFindBar;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
@@ -608,6 +618,7 @@ public:
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+  KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
@@ -625,6 +636,7 @@ public:
   bool mShowAttachmentQuicklist;
   bool mShowRawToltecMail;
   bool mExternalWindow;
+  bool mZoomTextOnly;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
@@ -638,6 +650,10 @@ public:
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
   Akonadi::Item::Id mPreviouslyViewedItem;
+
+  // zoom Factor
+  static const qreal zoomBy;
+  qreal mZoomFactor;
 };
 
 }

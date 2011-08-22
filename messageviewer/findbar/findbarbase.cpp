@@ -1,5 +1,5 @@
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,8 +19,7 @@
 
 #include <config-messageviewer.h>
 
-#include "findbar.h"
-#include "mailwebview.h"
+#include "findbarbase.h"
 
 // qt/kde includes
 #include <QtCore/QTimer>
@@ -39,8 +38,8 @@
 
 using namespace MessageViewer;
 
-FindBar::FindBar( MailWebView * view, QWidget * parent )
-  : QWidget( parent ), m_view( view )
+FindBarBase::FindBarBase( QWidget * parent )
+  : QWidget( parent )
 {
   QHBoxLayout * lay = new QHBoxLayout( this );
   lay->setMargin( 2 );
@@ -49,6 +48,11 @@ FindBar::FindBar( MailWebView * view, QWidget * parent )
   closeBtn->setIcon( KIcon( "dialog-close" ) );
   closeBtn->setIconSize( QSize( 24, 24 ) );
   closeBtn->setToolTip( i18n( "Close" ) );
+
+#ifndef QT_NO_ACCESSIBILITY
+  closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+
   closeBtn->setAutoRaise( true );
   lay->addWidget( closeBtn );
 
@@ -74,81 +78,65 @@ FindBar::FindBar( MailWebView * view, QWidget * parent )
   QPushButton * optionsBtn = new QPushButton( this );
   optionsBtn->setText( i18n( "Options" ) );
   optionsBtn->setToolTip( i18n( "Modify search behavior" ) );
-  QMenu * optionsMenu = new QMenu( optionsBtn );
-  m_caseSensitiveAct = optionsMenu->addAction( i18n( "Case sensitive" ) );
+  m_optionsMenu = new QMenu( optionsBtn );
+  m_caseSensitiveAct = m_optionsMenu->addAction( i18n( "Case sensitive" ) );
   m_caseSensitiveAct->setCheckable( true );
-#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  m_highlightAll = optionsMenu->addAction( i18n( "Highlight all matches" ) );
-  m_highlightAll->setCheckable( true );
-#endif
-  optionsBtn->setMenu( optionsMenu );
+
+  optionsBtn->setMenu( m_optionsMenu );
   lay->addWidget( optionsBtn );
 
   connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
   connect( m_findNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
   connect( m_findPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
   connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged()) );
-#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  connect( m_highlightAll, SIGNAL(toggled(bool)), this, SLOT(highlightAllChanged()) );
-#endif
-  connect( m_search, SIGNAL(textEdited(QString)), this, SLOT(autoSearch(QString)) );
+  connect( m_search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
   connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
   hide();
 }
 
-FindBar::~FindBar()
+FindBarBase::~FindBarBase()
 {
 }
 
-QString FindBar::text() const
+QMenu* FindBarBase::optionsMenu()
+{
+  return m_optionsMenu;
+}
+
+QString FindBarBase::text() const
 {
   return m_search->text();
 }
 
-void FindBar::focusAndSetCursor()
+void FindBarBase::focusAndSetCursor()
 {
   setFocus();
   m_search->selectAll();
   m_search->setFocus();
 }
 
-void FindBar::slotClearSearch()
+void FindBarBase::slotClearSearch()
 {
   clearSelections();
 }
 
-void FindBar::autoSearch( const QString& str )
+void FindBarBase::autoSearch( const QString& str )
 {
   m_findPrevBtn->setEnabled( !str.isEmpty() );
   m_findNextBtn->setEnabled( !str.isEmpty() );
   if ( !str.isEmpty() )
-    QTimer::singleShot( 0, this, SLOT(searchText()) );
+    QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
   else
     clearSelections();
 }
 
-void FindBar::searchText( bool backward, bool isAutoSearch )
+void FindBarBase::slotSearchText( bool backward, bool isAutoSearch )
 {
-  MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
+  searchText( backward, isAutoSearch );  
+}
 
-  if ( backward )
-    searchOptions |= MailWebView::FindBackward;
-  if ( m_caseSensitiveAct->isChecked() )
-    searchOptions |= MailWebView::FindCaseSensitively;
-#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  if ( m_highlightAll->isChecked() )
-    searchOptions |= MailWebView::HighlightAllOccurrences;
-#endif
-
-  if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ) )
-  {
-    clearSelections();
-  }
-  mLastSearchStr = m_search->text();
-  bool found = m_view->findText( mLastSearchStr, searchOptions );
-
-  setFoundMatch( found );
-
+void FindBarBase::messageInfo( bool backward, bool isAutoSearch, bool found )
+{
   if ( !found && !isAutoSearch ) {
     if ( backward ) {
       KMessageBox::information( this, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) ); 
@@ -158,7 +146,8 @@ void FindBar::searchText( bool backward, bool isAutoSearch )
   }
 }
 
-void FindBar::setFoundMatch( bool match )
+
+void FindBarBase::setFoundMatch( bool match )
 {
   QString styleSheet;
 
@@ -182,33 +171,39 @@ void FindBar::setFoundMatch( bool match )
 
 }
 
-void FindBar::findNext()
+void FindBarBase::searchText( bool backward, bool isAutoSearch )
+{
+  Q_UNUSED( backward );
+  Q_UNUSED( isAutoSearch );
+}
+
+
+void FindBarBase::findNext()
 {
   searchText( false, false );
 }
 
-void FindBar::findPrev()
+void FindBarBase::findPrev()
 {
   searchText( true, false );
 }
 
-void FindBar::caseSensitivityChanged()
+void FindBarBase::caseSensitivityChanged()
 {
   clearSelections();
 }
 
-void FindBar::highlightAllChanged()
+void FindBarBase::highlightAllChanged()
 {
   clearSelections();
 }
 
-void FindBar::clearSelections()
+void FindBarBase::clearSelections()
 {
-  m_view->clearFindSelection();
   setFoundMatch( false );
 }
 
-void FindBar::closeBar()
+void FindBarBase::closeBar()
 {
   // Make sure that all old searches are cleared
   m_search->setText( QString() );
@@ -216,7 +211,7 @@ void FindBar::closeBar()
   hide();
 }
 
-bool FindBar::event(QEvent* e)
+bool FindBarBase::event(QEvent* e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
@@ -239,4 +234,4 @@ bool FindBar::event(QEvent* e)
     return QWidget::event(e);
 }
 
-#include "findbar.moc"
+#include "findbarbase.moc"

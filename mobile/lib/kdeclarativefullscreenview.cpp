@@ -31,11 +31,13 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
+#include <KWindowSystem>
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
+#include <QtGui/QResizeEvent>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDeclarative/QDeclarativeContext>
@@ -61,7 +63,8 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #ifndef Q_OS_WIN
   m_glWidget( 0 ),
 #endif
-  m_qmlFileName( qmlFileName )
+  m_qmlFileName( qmlFileName ),
+  m_splashScreen( 0 )
 {
 #ifdef Q_OS_WINCE
   closeAllFrontends( qmlFileName );
@@ -186,7 +189,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
     kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
   qDebug() << "trying to load \"" +  source << "\"";
-  setSource( source );
+  setSource( QUrl::fromLocalFile(source) );
   if ( debugTiming ) {
     kWarning() << "setSourceDone" << t.elapsed() << &t;
   }
@@ -263,7 +266,7 @@ void KDeclarativeFullScreenView::triggerTaskSwitcher()
     ::SetForegroundWindow(hWnd);
   }
 #else
-  kDebug() << "not implemented for this platform";
+  KWindowSystem::minimizeWindow( effectiveWinId() );
 #endif
 }
 
@@ -278,7 +281,10 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
 
   if ( status == QDeclarativeView::Ready ) {
 #ifndef _WIN32_WCE
-    m_splashScreen->deleteLater();
+    if ( m_splashScreen ) {
+      m_splashScreen->deleteLater();
+      m_splashScreen = 0;
+    }
 #else
     show();
     HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
@@ -333,4 +339,14 @@ void KDeclarativeFullScreenView::bringToFront()
   raise();
 #endif
 }
+
+void KDeclarativeFullScreenView::resizeEvent(QResizeEvent* event)
+{
+  QDeclarativeView::resizeEvent(event);
+  if ( m_splashScreen ) {
+    m_splashScreen->move( (event->size().width() - m_splashScreen->sizeHint().width())/2,
+                          (event->size().height() - m_splashScreen->sizeHint().height())/2 );
+  }
+}
+
 #include "kdeclarativefullscreenview.moc"

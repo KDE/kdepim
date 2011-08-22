@@ -819,6 +819,12 @@ class UrlHandler : public Interface::BodyPartURLHandler
           } else {
             queryStr = i18n( "Do you still want to forward this invitation?" );
           }
+        } else if ( path == "cancel" ) {
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you still want to cancel this task?" );
+          } else {
+            queryStr = i18n( "Do you still want to cancel this invitation?" );
+          }
         } else if ( path == "check_calendar" ) {
           queryStr = i18n( "Do you still want to check your calendar?" );
         } else if ( path == "record" ) {

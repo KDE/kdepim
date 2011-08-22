@@ -129,7 +129,7 @@ protected:
 protected slots:
   void slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
   void slotManualSortingChanged( bool );
-
+  void slotFilterFixedString( const QString& );
 private:
   virtual bool eventFilter( QObject*o, QEvent *e );
   class FolderTreeWidgetPrivate;
