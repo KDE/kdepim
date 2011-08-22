@@ -48,7 +48,11 @@ FindBarBase::FindBarBase( QWidget * parent )
   closeBtn->setIcon( KIcon( "dialog-close" ) );
   closeBtn->setIconSize( QSize( 24, 24 ) );
   closeBtn->setToolTip( i18n( "Close" ) );
+
+#ifndef QT_NO_ACCESSIBILITY
   closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+
   closeBtn->setAutoRaise( true );
   lay->addWidget( closeBtn );
 
