@@ -89,7 +89,7 @@ FindBarBase::FindBarBase( QWidget * parent )
   connect( m_findNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
   connect( m_findPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
   connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged()) );
-  connect( m_search, SIGNAL(textEdited(QString)), this, SLOT(autoSearch(QString)) );
+  connect( m_search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
   connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
   hide();
 }
