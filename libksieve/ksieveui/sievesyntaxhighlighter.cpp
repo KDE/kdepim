@@ -88,6 +88,29 @@ void SieveSyntaxHighlighter::init()
     m_rules.append( Rule( regex, controlFormat ) );
   }
 
+  //Action commands:
+  QTextCharFormat actionFormat;
+  actionFormat.setForeground( Qt::blue );
+  actionFormat.setFontWeight( QFont::Bold );
+  QStringList actionType;
+  actionType << QLatin1String( "\\bkeep\\b" )<<QLatin1String( "\\breject\\b" )<<QLatin1String( "\\bdiscard\\b" )<<QLatin1String( "\\bredirect\\b" )<<QLatin1String( "\\bfileinto\\b" );
+  Q_FOREACH( const QString & s, actionType ) {
+    const QRegExp regex( s, Qt::CaseInsensitive );
+    m_rules.append( Rule( regex, actionFormat ) );
+  }
+
+  //Test commands:
+  QTextCharFormat testFormat;
+  testFormat.setForeground( Qt::gray );
+  testFormat.setFontWeight( QFont::Bold );
+  QStringList testType;
+  testType << QLatin1String( "\\baddress\\b" )<<QLatin1String( "\\ballof\\b" )<<QLatin1String( "\\banyof\\b" )<<QLatin1String( "\\bexists\\b" )<<QLatin1String( "\\bfalse\\b" )<<QLatin1String( "\\bheader\\b" )<<QLatin1String("\\bnot\\b" )<<QLatin1String( "\\bsize\\b" )<<QLatin1String( "\\btrue\\b" );
+  Q_FOREACH( const QString & s, testType ) {
+    const QRegExp regex( s, Qt::CaseInsensitive );
+    m_rules.append( Rule( regex, testFormat ) );
+  }
+
+  
   
 }
 
