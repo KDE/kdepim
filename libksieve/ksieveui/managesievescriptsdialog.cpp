@@ -1,7 +1,7 @@
 
 #include "managesievescriptsdialog.h"
 #include "managesievescriptsdialog_p.h"
-#include "sievesyntaxhighlighter.h"
+#include "sievetextedit.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -387,14 +387,8 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   QVBoxLayout * vlay = new QVBoxLayout( frame );
   vlay->setSpacing( spacingHint() );
   vlay->setMargin( 0 );
-  mTextEdit = new KTextEdit( frame);
-  mTextEdit->setFocus();
+  mTextEdit = new SieveTextEdit( frame);
   vlay->addWidget( mTextEdit );
-  mTextEdit->setAcceptRichText( false );
-  mTextEdit->setCheckSpellingEnabled( false );
-  mTextEdit->setWordWrapMode ( QTextOption::NoWrap );
-  mTextEdit->setFont( KGlobalSettings::fixedFont() );
-  (void) new SieveSyntaxHighlighter( mTextEdit->document() );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
   resize( 3 * sizeHint() );
 }

@@ -9,6 +9,7 @@ set(ksieveui_LIB_SRCS
     vacation.cpp
     vacationdialog.cpp
     sievesyntaxhighlighter.cpp
+    sievetextedit.cpp
    )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

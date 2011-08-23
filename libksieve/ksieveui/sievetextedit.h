@@ -1,5 +1,6 @@
-#ifndef SIEVESYNTAXHIGHLIGHTER_H
-#define SIEVESYNTAXHIGHLIGHTER_H
+#ifndef SIEVETEXTEDIT_H
+#define SIEVETEXTEDIT_H
+
 
 /* Copyright (C) 2011 Laurent Montel <montel@kde.org>
  *
@@ -21,36 +22,29 @@
 
 #include "ksieveui_export.h"
 
-#include <QSyntaxHighlighter>
-#include <QRegExp>
-#include <QList>
-class QTextDocument;
+#include <KTextEdit>
+class QCompleter;
 
 namespace KSieveUi {
 
-class KSIEVEUI_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
+class KSIEVEUI_EXPORT SieveTextEdit : public KTextEdit
 {
   Q_OBJECT
 public:
-  explicit SieveSyntaxHighlighter( QTextDocument* doc );
-  virtual ~SieveSyntaxHighlighter();
-  
-  virtual void highlightBlock(const QString& text);
+  explicit SieveTextEdit( QWidget *parent );
+  virtual ~SieveTextEdit();
+
+
+protected slots:
+  void slotInsertCompletion( const QString& );
+  QString wordUnderCursor();
+protected:
+  void initCompleter();
+  void keyPressEvent(QKeyEvent* e);  
 private:
-  void init();
-
-  struct Rule {
-    QRegExp pattern;
-    QTextCharFormat format;
-
-    Rule( const QRegExp & r, const QTextCharFormat & f )
-      : pattern(r), format(f) {}
-  };
-  QList<Rule> m_rules;
-
+  QCompleter *m_completer;
 };
 
 }
-
-#endif /* SIEVESYNTAXHIGHLIGHTER_H */
+#endif /* SIEVETEXTEDIT_H */
 
