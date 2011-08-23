@@ -210,7 +210,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
   if ( job->error() ) {
     const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob*>( job );
     if( movejob ) {
-	  kError() << "Error while moving items. "<< job->error() << job->errorString()<<" to distinationCollection.id() :"<< movejob->destinationCollection().id();
+	  kError() << "Error while moving items. "<< job->error() << job->errorString()<<" to destinationCollection.id() :"<< movejob->destinationCollection().id();
           
     } else {
           kError() << "Error while moving items. " << job->error() << job->errorString();
