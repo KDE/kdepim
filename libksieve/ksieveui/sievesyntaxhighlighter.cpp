@@ -60,7 +60,7 @@ void SieveSyntaxHighlighter::init()
   keywordFormat.setForeground( Qt::darkMagenta );
   keywordFormat.setFontWeight( QFont::Bold );
   QStringList keywords;
-  keywords << QLatin1String( "\\brequire\\b" )<<QLatin1String( "\\bstop\\" );
+  keywords << QLatin1String( "\\brequire\\b" )<<QLatin1String( "\\bstop\\b" );
   Q_FOREACH( const QString & s, keywords ) {
     const QRegExp regex( s, Qt::CaseInsensitive );
     m_rules.append( Rule( regex, keywordFormat ) );
@@ -71,12 +71,22 @@ void SieveSyntaxHighlighter::init()
   QTextCharFormat matchFormat;
   matchFormat.setForeground( Qt::red );
   QStringList matchType;
-  matchType << QLatin1String( "\\b:contains\\b" )<<QLatin1String( "\\b:matches\\" )<<QLatin1String( "\\b:is\\b" );
+  matchType << QLatin1String( "\\b:contains\\b" )<<QLatin1String( "\\b:matches\\b" )<<QLatin1String( "\\b:is\\b" );
   Q_FOREACH( const QString & s, matchType ) {
     const QRegExp regex( s, Qt::CaseInsensitive );
     m_rules.append( Rule( regex, matchFormat ) );
   }
 
+  // Control structure
+  QTextCharFormat controlFormat;
+  controlFormat.setForeground( Qt::green );
+  controlFormat.setFontWeight( QFont::Bold );
+  QStringList controlType;
+  controlType << QLatin1String( "\\bif\\b" )<<QLatin1String( "\\belsif\\b" )<<QLatin1String( "\\belse\\b" );
+  Q_FOREACH( const QString & s, controlType ) {
+    const QRegExp regex( s, Qt::CaseInsensitive );
+    m_rules.append( Rule( regex, controlFormat ) );
+  }
 
   
 }
