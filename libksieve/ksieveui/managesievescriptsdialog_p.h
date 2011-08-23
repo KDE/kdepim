@@ -2,8 +2,7 @@
 #define KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_P_H
 
 #include <kdialog.h>
-#include <ktextedit.h>
-
+#include "sievetextedit.h"
 #include <QContextMenuEvent>
 #include <QRadioButton>
 #include <QTreeWidget>
@@ -22,7 +21,7 @@ public:
 private slots:
   void slotTextChanged();
 private:
-  KTextEdit * mTextEdit;
+  SieveTextEdit * mTextEdit;
 };
 
 /**
