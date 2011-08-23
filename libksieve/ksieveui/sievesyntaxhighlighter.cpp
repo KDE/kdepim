@@ -50,6 +50,35 @@ void SieveSyntaxHighlighter::init()
   commentFormat.setForeground( Qt::darkYellow );
   QRegExp commentRegex( QLatin1String( "^#.*$" ) );
   m_rules.append( Rule( commentRegex, commentFormat ) );
+
+  commentRegex = QRegExp( QLatin1String( "^/*.*$*/" ) );
+  m_rules.append( Rule( commentRegex, commentFormat ) );
+
+  
+  // Keywords
+  QTextCharFormat keywordFormat;
+  keywordFormat.setForeground( Qt::darkMagenta );
+  keywordFormat.setFontWeight( QFont::Bold );
+  QStringList keywords;
+  keywords << QLatin1String( "\\brequire\\b" )<<QLatin1String( "\\bstop\\" );
+  Q_FOREACH( const QString & s, keywords ) {
+    const QRegExp regex( s, Qt::CaseInsensitive );
+    m_rules.append( Rule( regex, keywordFormat ) );
+  }
+
+
+  // Match Type
+  QTextCharFormat matchFormat;
+  matchFormat.setForeground( Qt::red );
+  QStringList matchType;
+  matchType << QLatin1String( "\\b:contains\\b" )<<QLatin1String( "\\b:matches\\" )<<QLatin1String( "\\b:is\\b" );
+  Q_FOREACH( const QString & s, matchType ) {
+    const QRegExp regex( s, Qt::CaseInsensitive );
+    m_rules.append( Rule( regex, matchFormat ) );
+  }
+
+
+  
 }
 
 #include "sievesyntaxhighlighter.moc"
