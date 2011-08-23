@@ -110,6 +110,12 @@ void SieveSyntaxHighlighter::init()
     m_rules.append( Rule( regex, testFormat ) );
   }
 
+  // Literals
+  QTextCharFormat literalFormat;
+  literalFormat.setForeground( Qt::darkRed );
+  QRegExp literalRegex( QLatin1String( "(\"[^\"]*\")" ) );
+  m_rules.append( Rule( literalRegex, literalFormat ) );
+
   
   
 }
