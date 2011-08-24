@@ -252,3 +252,11 @@ QStringList Message::Util::AttachmentKeywords()
     "attachment,attached" ).split( QLatin1Char( ',' ) );
 }
 
+QString Message::Util::cleanedUpHeaderString( const QString &s )
+{
+  // remove invalid characters from the header strings
+  QString res( s );
+  res.remove( QChar::fromLatin1( '\r' ) );
+  res.replace( QChar::fromLatin1( '\n' ), QString::fromLatin1( " " ) );
+  return res.trimmed();
+}
