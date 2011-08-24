@@ -457,9 +457,9 @@ void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool s
     mSieveEditor->setDebugScript( i18n( "No error found." ) );
   } else {
     if ( errorMsg.isEmpty() )
-      mSieveEditor->setDebugScript( i18n( "Error unknown." ) );
+      addFailedMessage( i18n( "Error unknown." ) );
     else
-      mSieveEditor->setDebugScript( errorMsg );
+      addFailedMessage( errorMsg );
   }
 }
 
@@ -474,6 +474,25 @@ void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool suc
     mSieveEditor->show();
   }
 }
+
+void ManageSieveScriptsDialog::addFailedMessage( const QString & err )
+{
+    addMessageEntry( err,QColor( Qt::darkRed ) );
+}
+
+void ManageSieveScriptsDialog::addOkMessage( const QString & err )
+{
+    addMessageEntry( err, QColor( Qt::darkGreen ) );
+}
+
+void ManageSieveScriptsDialog::addMessageEntry( const QString & errorMsg, const QColor& color )
+{
+  mSieveEditor->setDebugColor( color );
+  mSieveEditor->setDebugScript( errorMsg );
+  //mTextEdit->repaint();
+}
+
+
 
 #include "managesievescriptsdialog.moc"
 #include "managesievescriptsdialog_p.moc"

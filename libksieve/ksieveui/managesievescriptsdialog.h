@@ -84,6 +84,11 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
      */
     void clear();
 
+    void addFailedMessage( const QString & logEntry );
+    void addOkMessage( const QString & logEntry );
+    void addMessageEntry( const QString & errorMsg, const QColor& color );
+
+  
   private:
     TreeWidgetWithContextMenu* mListView;
     QTreeWidgetItem *mContextMenuItem;
