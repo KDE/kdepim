@@ -454,7 +454,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg)
 {
   if ( success ) {
-    mSieveEditor->setDebugScript( i18n( "No error found." ) );
+    addOkMessage( i18n( "No error found." ) );
   } else {
     if ( errorMsg.isEmpty() )
       addFailedMessage( i18n( "Error unknown." ) );
