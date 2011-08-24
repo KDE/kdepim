@@ -1582,7 +1582,7 @@ QString TemplateParser::makeValidHtml( QString& body )//TODO implement this func
   if( !body.isEmpty() && !body.contains( regEx ) ) {
     regEx.setPattern( "<body.*>" );
     if( !body.contains( regEx ) ) {
-      body = "<body>" + body + "</body>";
+      body = "<body>" + body + "<br/></body>";
     }
     regEx.setPattern( "<head.*>" );
     if( !body.contains( regEx ) ) {
