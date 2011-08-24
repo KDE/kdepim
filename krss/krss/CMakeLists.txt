@@ -148,6 +148,7 @@ set(krss_LIB_HDRS
    subscriptionsmodel.h
    tagjobs.h
    tagprovider.h
+   rssitem.h #TODO review if rssitem.h should be private
 )
 
 set(krss_UI_LIB_HDRS
@@ -159,7 +160,6 @@ set(krss_UI_LIB_HDRS
 )
 
 set(krss_PRIVATE_LIB_HDRS
-    rssitem.h
     rssitemserializer.h
 )
 
