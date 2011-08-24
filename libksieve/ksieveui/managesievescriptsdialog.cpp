@@ -20,6 +20,7 @@
 #include <QMenu>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <QSplitter>
 
 #include <cassert>
 
@@ -383,18 +384,19 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   setObjectName( name );
   setDefaultButton( Ok );
   setModal( true );
-  QFrame *frame = new QFrame( this );
-  setMainWidget( frame );
-  QVBoxLayout * vlay = new QVBoxLayout( frame );
-  vlay->setSpacing( spacingHint() );
-  vlay->setMargin( 0 );
-  mTextEdit = new SieveTextEdit( frame);
-  vlay->addWidget( mTextEdit );
-  mDebugTextEdit = new QTextEdit( frame );
+  QSplitter *splitter = new QSplitter(this);
+  splitter->setOrientation( Qt::Vertical );
+  setMainWidget( splitter );
+  QList<int> size;
+  size << 400 << 100;
+  mTextEdit = new SieveTextEdit( splitter );
+  mDebugTextEdit = new QTextEdit;
   mDebugTextEdit->setReadOnly( true );
-  vlay->addWidget( mDebugTextEdit );
+  splitter->addWidget( mTextEdit );
+  splitter->addWidget( mDebugTextEdit );
+  splitter->setSizes( size );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-  resize( 3 * sizeHint() );
+  resize( 2 * sizeHint() );
 }
 
 SieveEditor::~SieveEditor()
