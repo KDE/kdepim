@@ -489,7 +489,6 @@ void ManageSieveScriptsDialog::addMessageEntry( const QString & errorMsg, const 
 {
   mSieveEditor->setDebugColor( color );
   mSieveEditor->setDebugScript( errorMsg );
-  //mTextEdit->repaint();
 }
 
 
