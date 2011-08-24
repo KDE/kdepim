@@ -440,7 +440,7 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
   if ( !mSieveEditor )
     return;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
-  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool,QString)),
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
            this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
 }
 
