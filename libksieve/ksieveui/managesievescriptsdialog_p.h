@@ -18,10 +18,13 @@ public:
 
   QString script() const { return mTextEdit->toPlainText(); }
   void setScript( const QString & script ) { mTextEdit->setText( script ); }
+  void setDebugScript( const QString& debug ) { mDebugTextEdit->setText( debug ); }
+
 private slots:
   void slotTextChanged();
 private:
   SieveTextEdit * mTextEdit;
+  QTextEdit *mDebugTextEdit;
 };
 
 /**

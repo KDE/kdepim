@@ -378,7 +378,8 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   : KDialog( parent )
 {
   setCaption( i18n( "Edit Sieve Script" ) );
-  setButtons( Ok|Cancel );
+  setButtons( Ok|Cancel|User1 );
+  setButtonText( User1, i18n( "Check Syntax" ) );
   setObjectName( name );
   setDefaultButton( Ok );
   setModal( true );
@@ -389,6 +390,9 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   vlay->setMargin( 0 );
   mTextEdit = new SieveTextEdit( frame);
   vlay->addWidget( mTextEdit );
+  mDebugTextEdit = new QTextEdit( frame );
+  mDebugTextEdit->setReadOnly( true );
+  vlay->addWidget( mDebugTextEdit );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
   resize( 3 * sizeHint() );
 }
@@ -414,8 +418,19 @@ void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool suc
   mSieveEditor->setScript( script );
   connect( mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()) );
   connect( mSieveEditor, SIGNAL(cancelClicked()), this, SLOT(slotSieveEditorCancelClicked()) );
+  connect( mSieveEditor, SIGNAL(user1Clicked()), this, SLOT(slotSieveEditorCheckSyntaxClicked()) );
   mSieveEditor->show();
   mWasActive = isActive;
+}
+
+void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
+{
+  if ( !mSieveEditor )
+    return;
+  KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
+  job->setInteractive( false );
+  connect( job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)),
+           this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)) );
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
@@ -423,7 +438,7 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
   if ( !mSieveEditor )
     return;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
-  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool,QString)),
            this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
 }
 
@@ -432,6 +447,18 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
   mSieveEditor->deleteLater(); mSieveEditor = 0;
   mCurrentURL = KUrl();
   slotRefresh();
+}
+
+void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg)
+{
+  if ( success ) {
+    mSieveEditor->setDebugScript( i18n( "No error found." ) );
+  } else {
+    if ( errorMsg.isEmpty() )
+      mSieveEditor->setDebugScript( i18n( "Error unknown." ) );
+    else
+      mSieveEditor->setDebugScript( errorMsg );
+  }
 }
 
 void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool success )

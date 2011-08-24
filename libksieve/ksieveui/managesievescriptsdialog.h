@@ -42,8 +42,12 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     void slotDeactivateScript();
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotPutResult( KManageSieve::SieveJob *, bool );
+    void slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg);
+
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
+    void slotSieveEditorCheckSyntaxClicked();
+
   private:
     void killAllJobs();
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
