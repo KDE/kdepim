@@ -86,7 +86,6 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   buttonLayout->addWidget( mClose );
   
   resize( sizeHint().width(), sizeHint().height() );
-
   slotRefresh();
 }
 
@@ -460,7 +459,7 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   splitter->addWidget( mDebugTextEdit );
   splitter->setSizes( size );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-  resize( 2 * sizeHint() );
+  resize( 640,480);
 }
 
 SieveEditor::~SieveEditor()
