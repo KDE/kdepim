@@ -109,6 +109,7 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
   connect( &mNepomukStartupTimeout, SIGNAL(timeout()), SLOT(selfTest()) );
   connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()), SLOT(selfTest()) );
   connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()), SLOT(selfTest()) );
+  connect( this, SIGNAL(reloadConfiguration()), SLOT(selfTest()) );
   connect( this, SIGNAL(fullyIndexed()), this, SLOT(slotFullyIndexed()) );
 
   connect( KIdleTime::instance(), SIGNAL(timeoutReached(int)), SLOT(systemIdle()) );
