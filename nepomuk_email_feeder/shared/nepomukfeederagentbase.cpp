@@ -338,6 +338,17 @@ void NepomukFeederAgentBase::selfTest()
   QStringList errorMessages;
   mSelfTestPassed = false;
 
+  // check if we have been disabled explicitly
+  {
+    KConfig config( "akonadi_nepomuk_feederrc" );
+    KConfigGroup cfgGrp( &config, identifier() );
+    if ( !cfgGrp.readEntry( "Enabled", true ) ) {
+      checkOnline();
+      emit status( Broken, i18n( "Indexing has been disabled by you." ) );
+      return;
+    }
+  }
+
   // if Nepomuk is not running, try to start it
   if ( !mNepomukStartupAttempted && !Nepomuk::ResourceManager::instance()->initialized() ) {
     KProcess process;
