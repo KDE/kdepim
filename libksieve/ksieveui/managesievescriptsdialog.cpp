@@ -418,21 +418,23 @@ void ManageSieveScriptsDialog::slotNewScript()
 
   u.setFileName( name );
 
-  QMapIterator<QTreeWidgetItem*,QButtonGroup*> index( mButtonGroups );
-  while (index.hasNext()) {
-    index.next();
-    QList<QAbstractButton *> group = index.value()->buttons();
+
+  QButtonGroup *buttonGroup = mButtonGroups.value( currentItem );
+
+  if ( buttonGroup )
+  {
+    QList<QAbstractButton *> group = buttonGroup->buttons();
     for ( int i = 0; i < group.count(); ++i )
     {
       if ( group.at( i )->text().replace( "&","" ) == name ) {
         KMessageBox::error( this, i18n( "Script name already used \"%1\".", name ), i18n( "New Script" ) );
-      return;
+        return;
       }
     }
   }
   
   QTreeWidgetItem *newItem =
-      new QTreeWidgetItem( currentItem );
+    new QTreeWidgetItem( currentItem );
   addRadioButton( newItem, name );
   mCurrentURL = u;
   slotGetResult( 0, true, QString(), false );
