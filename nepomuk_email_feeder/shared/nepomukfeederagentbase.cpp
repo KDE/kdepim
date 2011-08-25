@@ -479,15 +479,20 @@ void NepomukFeederAgentBase::indexData(const KUrl& url, const QByteArray& data, 
   KProcess proc;
   proc.setOutputChannelMode( KProcess::ForwardedChannels );
   proc.setProgram( mStrigiIndexer );
-  proc << "--url" << url.url().toLocal8Bit();
+  proc << "--uri" << url.url().toLocal8Bit();
   proc << "--mtime" << QString::number( mtime.toTime_t() );
   proc.start();
   if ( proc.waitForStarted() ) {
     proc.write( data );
     proc.waitForBytesWritten();
-    proc.close();
+    proc.closeWriteChannel();
+  } else {
+    kDebug() << "Failed to launch nepomukindexer: " << proc.errorString();
   }
   proc.waitForFinished();
+  if ( !proc.exitStatus() == QProcess::NormalExit ) {
+    kDebug() << proc.exitCode() << proc.errorString();
+  }
 }
 
 ItemFetchScope NepomukFeederAgentBase::fetchScopeForCollection(const Akonadi::Collection& collection)
