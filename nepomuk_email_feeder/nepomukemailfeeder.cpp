@@ -47,15 +47,7 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   addSupportedMimeType( "message/news" );
   setIndexCompatibilityLevel( INDEX_COMPAT_LEVEL );
 
-#if !(KDE_IS_VERSION( 4, 5, 50 ))
   setNeedsStrigi( true );
-#else
-#ifdef _MSC_VER
-#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
-#else
-#warning Fix attachment indexing once Nepomuk adds the necessary interface again
-#endif
-#endif
 
 #ifdef Q_OS_WIN
   // Idle detection does not work on Windows see BUG 270135
