@@ -8,6 +8,7 @@
 #include <kwindowsystem.h>
 #include <kinputdialog.h>
 #include <kglobalsettings.h>
+#include <kpushbutton.h>
 #include <kmessagebox.h>
 
 
@@ -29,25 +30,23 @@ using namespace KSieveUi;
 bool ItemRadioButton::mTreeWidgetIsBeingCleared = false;
 
 ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
-  : KDialog( parent ),
-    mContextMenuItem( 0 ),
+  : QDialog( parent ),
     mSieveEditor( 0 ),
     mWasActive( false )
 {
-  setCaption( i18n( "Manage Sieve Scripts" ) );
-  setButtons( Close );
+  setWindowTitle( i18n( "Manage Sieve Scripts" ) );
   setObjectName( name );
-  setDefaultButton(  Close );
   setModal( false );
   setAttribute( Qt::WA_GroupLeader );
   setAttribute( Qt::WA_DeleteOnClose );
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-  QFrame *frame =new QFrame( this );
-  setMainWidget( frame );
+  QVBoxLayout *mainLayout = new QVBoxLayout(this);
+  QFrame *frame =new QFrame;
+  mainLayout->addWidget( frame );
   QVBoxLayout * vlay = new QVBoxLayout( frame );
   vlay->setSpacing( 0 );
   vlay->setMargin( 0 );
-
+  
   mListView = new TreeWidgetWithContextMenu( frame);
   mListView->setHeaderLabel( i18n( "Available Scripts" ) );
   mListView->setRootIsDecorated( true );
@@ -59,11 +58,37 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
 #endif
   connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
+  connect( mListView, SIGNAL( itemSelectionChanged () ),
+           this, SLOT( slotUpdateButtons() ) );
   vlay->addWidget( mListView );
 
-  resize( 2 * sizeHint().width(), sizeHint().height() );
+  QHBoxLayout *buttonLayout = new QHBoxLayout;
+  vlay->addLayout( buttonLayout );
+
+  mNewScript = new KPushButton( i18n( "New..." ) );
+  connect( mNewScript, SIGNAL( clicked() ), SLOT( slotNewScript() ) );
+  buttonLayout->addWidget( mNewScript );
+  
+  mEditScript = new KPushButton( i18n( "Edit..." ) );
+  connect( mEditScript, SIGNAL( clicked() ), SLOT( slotEditScript() ) );
+  buttonLayout->addWidget( mEditScript );
+  
+  mDeleteScript = new KPushButton( i18n( "Delete" ) );
+  connect( mDeleteScript, SIGNAL( clicked() ), SLOT( slotDeleteScript() ) );
+  buttonLayout->addWidget( mDeleteScript );
+
+  mDeactivateScript = new KPushButton( i18n( "Deactivate" ) );
+  connect( mDeactivateScript, SIGNAL( clicked() ), SLOT( slotDeactivateScript() ) );
+  buttonLayout->addWidget( mDeactivateScript );
+  
+  KPushButton *mClose = new KPushButton( KStandardGuiItem::close() );
+  connect( mClose, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  buttonLayout->addWidget( mClose );
+  
+  resize( sizeHint().width(), sizeHint().height() );
 
   slotRefresh();
+  slotUpdateButtons();
 }
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
@@ -77,6 +102,17 @@ void ManageSieveScriptsDialog::killAllJobs()
         end = mJobs.constEnd() ; it != end ; ++it )
     it.key()->kill();
   mJobs.clear();
+}
+
+void ManageSieveScriptsDialog::slotUpdateButtons()
+{
+
+  QTreeWidgetItem * item = mListView->currentItem();
+  mNewScript->setEnabled( item && item->parent());
+  const bool enabled = item && isFileNameItem( item );
+  mEditScript->setEnabled( enabled );
+  mDeleteScript->setEnabled( enabled );
+  mDeactivateScript->setEnabled( enabled );
 }
 
 
@@ -151,7 +187,6 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, 
   if ( !item->parent() && !mUrls.count( item ))
     return;
   QMenu menu;
-  mContextMenuItem = item;
   if ( isFileNameItem( item ) ) {
     // script items:
     menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
@@ -164,7 +199,6 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, 
   }
   if ( !menu.actions().isEmpty() )
     menu.exec( p );
-  mContextMenuItem = 0;
 }
 
 void ManageSieveScriptsDialog::slotDeactivateScript()
@@ -293,17 +327,16 @@ void ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item )
   if ( !isFileNameItem( item ) )
     return;
 
-  mContextMenuItem = item;
   slotEditScript();
-  mContextMenuItem = 0;
 }
 
 void ManageSieveScriptsDialog::slotDeleteScript()
 {
-  if ( !isFileNameItem( mContextMenuItem ) )
+  QTreeWidgetItem * currentItem =  mListView->currentItem();
+  if ( !isFileNameItem( currentItem ) )
     return;
 
-  QTreeWidgetItem *parent = mContextMenuItem->parent();
+  QTreeWidgetItem *parent = currentItem->parent();
   if ( !parent )
     return;
 
@@ -314,7 +347,7 @@ void ManageSieveScriptsDialog::slotDeleteScript()
   if ( u.isEmpty() )
     return;
 
-  u.setFileName( itemText( mContextMenuItem ) );
+  u.setFileName( itemText( currentItem ) );
 
   if ( KMessageBox::warningContinueCancel( this, i18n( "Really delete script \"%1\" from the server?", u.fileName() ),
                                    i18n( "Delete Sieve Script Confirmation" ),
@@ -328,15 +361,16 @@ void ManageSieveScriptsDialog::slotDeleteScript()
 
 void ManageSieveScriptsDialog::slotEditScript()
 {
-  if ( !isFileNameItem( mContextMenuItem ) )
+  QTreeWidgetItem *currentItem = mListView->currentItem();
+  if ( !isFileNameItem( currentItem ) )
     return;
-  QTreeWidgetItem* parent = mContextMenuItem->parent();
+  QTreeWidgetItem* parent = currentItem->parent();
   if ( !mUrls.count( parent ) )
     return;
   KUrl url = mUrls[parent];
   if ( url.isEmpty() )
     return;
-  url.setFileName( itemText( mContextMenuItem ) );
+  url.setFileName( itemText( currentItem ) );
   mCurrentURL = url;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
   connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
@@ -345,17 +379,18 @@ void ManageSieveScriptsDialog::slotEditScript()
 
 void ManageSieveScriptsDialog::slotNewScript()
 {
-  if ( !mContextMenuItem )
+  QTreeWidgetItem *currentItem = mListView->currentItem();
+  if ( !currentItem )
     return;
-  if ( mContextMenuItem->parent() )
-    mContextMenuItem = mContextMenuItem->parent();
-  if ( !mContextMenuItem )
-    return;
-
-  if ( !mUrls.count( mContextMenuItem ) )
+  if ( currentItem->parent() )
+    currentItem = currentItem->parent();
+  if ( !currentItem )
     return;
 
-  KUrl u = mUrls[mContextMenuItem];
+  if ( !mUrls.count( currentItem ) )
+    return;
+
+  KUrl u = mUrls[currentItem];
   if ( u.isEmpty() )
     return;
 
@@ -369,7 +404,7 @@ void ManageSieveScriptsDialog::slotNewScript()
   u.setFileName( name );
 
   QTreeWidgetItem *newItem =
-      new QTreeWidgetItem( mContextMenuItem );
+      new QTreeWidgetItem( currentItem );
   addRadioButton( newItem, name );
   mCurrentURL = u;
   slotGetResult( 0, true, QString(), false );
