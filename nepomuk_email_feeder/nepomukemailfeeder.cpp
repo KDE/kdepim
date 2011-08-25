@@ -78,6 +78,7 @@ void NepomukEMailFeeder::configure(WId windowId)
   ConfigDialog* dlg = new ConfigDialog( windowId );
   dlg->setAttribute( Qt::WA_DeleteOnClose );
   dlg->show();
+  QMetaObject::invokeMethod( this, "selfTest" );
 }
 
 void NepomukEMailFeeder::addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection)
