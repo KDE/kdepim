@@ -491,6 +491,18 @@ QVariant Model::data( const QModelIndex & index, int role ) const
       else
         return QVariant();
       break;
+    case Qt::AccessibleTextRole:
+      if( item->type() == MessageList::Core::Item::Message ) {
+        MessageItem* mItem = static_cast<MessageItem*>( item );
+        return mItem->accessibleText( d->mTheme , index.column() );
+      } else if ( item->type() == MessageList::Core::Item::GroupHeader ) {
+        if ( index.column() > 0)
+          return QString();
+        GroupHeaderItem* hItem = static_cast<GroupHeaderItem*>( item );
+        return hItem->label();
+      }
+      return QString();
+      break;
     default:
       return QVariant();
   }

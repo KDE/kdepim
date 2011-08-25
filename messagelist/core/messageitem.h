@@ -29,6 +29,7 @@
 #include <QColor>
 
 #include <messagelist/messagelist_export.h>
+#include "theme.h"
 
 namespace Nepomuk {
 class Resource;
@@ -183,6 +184,8 @@ public:
 
   MessageItem * topmostMessage();
 
+  QString accessibleText( const MessageList::Core::Theme* theme, int columnIndex );
+
   /**
    * Appends the whole subtree originating at this item
    * to the specified list. This item is included!
@@ -208,6 +211,9 @@ public:
 protected:
   MessageItem( MessageItemPrivate* dd );
 private:
+
+  QString accessibleTextForField( Theme::ContentItem::Type field );
+
   Q_DECLARE_PRIVATE( MessageItem )
 };
 
