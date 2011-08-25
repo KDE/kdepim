@@ -12,6 +12,7 @@
 #include "globalsettings.h"
 #include "broadcaststatus.h"
 using KPIM::BroadcastStatus;
+#include "kcharsets.h"
 #include "kmstartup.h"
 #include "index.h"
 #include "kmmainwin.h"
@@ -1584,11 +1585,21 @@ void KMKernel::init()
   mBackgroundTasksTimer->start( 5 * 60000, true ); // 5 minutes, singleshot
 #endif
 
-  QTextCodec *codec;
-  for ( int i = 0; ( codec = QTextCodec::codecForIndex ( i ) ); i++ ) {
-    const QString asciiString( "azAZ19,.-#+!?=()&" );
-    const QCString encodedString = codec->fromUnicode( asciiString );
-    if ( QString::fromAscii( encodedString ) != asciiString ) {
+  QStringList names = KGlobal::charsets()->availableEncodingNames();
+  // add some extra encodings we sometimes encounter that are not
+  // in the hard-coded list of available encodings in KCharsets.
+  names << "IBM037";
+  QStringList::Iterator it( names.begin() );
+  for( ; it != names.end() ; ++it ) {
+    bool ok;
+    QTextCodec *codec = KGlobal::charsets()->codecForName( *it, ok );
+    if ( ok ) {
+      const QString asciiString( "azAZ19,.-#+!?=()&" );
+      const QCString encodedString = codec->fromUnicode( asciiString );
+      if ( QString::fromAscii( encodedString ) != asciiString ) {
+        mNonAsciiCompatibleCodecs.append( codec );
+      }
+    } else if ( codec ) {
       mNonAsciiCompatibleCodecs.append( codec );
     }
   }
