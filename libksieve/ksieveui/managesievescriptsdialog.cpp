@@ -88,7 +88,6 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   resize( sizeHint().width(), sizeHint().height() );
 
   slotRefresh();
-  slotUpdateButtons();
 }
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
@@ -108,11 +107,27 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
 {
 
   QTreeWidgetItem * item = mListView->currentItem();
-  mNewScript->setEnabled( item && item->parent());
-  const bool enabled = item && isFileNameItem( item );
-  mEditScript->setEnabled( enabled );
-  mDeleteScript->setEnabled( enabled );
-  mDeactivateScript->setEnabled( enabled );
+
+  bool enabled = true;
+  if ( !item )
+    enabled = false;
+  else if ( !item->parent() && !mUrls.count( item ))
+    enabled = false;
+  if ( !enabled )
+  {
+    mNewScript->setEnabled( false );
+    mEditScript->setEnabled( false );
+    mDeleteScript->setEnabled( false );
+    mDeactivateScript->setEnabled( false );
+  }
+  else
+  {  
+    mNewScript->setEnabled( item && mUrls.count( item ) );
+    enabled = item && isFileNameItem( item );
+    mEditScript->setEnabled( enabled );
+    mDeleteScript->setEnabled( enabled );
+    mDeactivateScript->setEnabled( enabled );
+  }
 }
 
 
@@ -146,6 +161,7 @@ void ManageSieveScriptsDialog::slotRefresh()
       mUrls.insert( last, u );
     }
   }
+  slotUpdateButtons();
 }
 
 void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool success, const QString &, bool )
