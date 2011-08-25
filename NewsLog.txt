@@ -1,4 +1,13 @@
 
+Thursday 25 August 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4774: Kontact doubles emails after sync (rt#10019)
+
+
+
 Monday 15 August 2011
 
 Problems addressed
