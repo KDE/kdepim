@@ -1207,9 +1207,9 @@ void KMMainWidget::removeFolder(KMFolder *folder)
   if ( folder->isSystemFolder() ) return;
   if ( folder->isReadOnly() ) return;
   if ( folder->mailCheckInProgress() ) {
-    KMessageBox::sorry( this, i18n( "It is not possible to delete folder <b>%1</b> right now because it "
+    KMessageBox::sorry( this, i18n( "<qt>It is not possible to delete folder <b>%1</b> right now because it "
                                     "is being syncronized. Please wait until the syncronization of "
-                                    "this folder is complete and then try again." ).arg( folder->label() ),
+                                    "this folder is complete and then try again.</qt>" ).arg( folder->label() ),
                               i18n( "Unable to delete folder" ) );
     return;
   }
@@ -1284,9 +1284,9 @@ void KMMainWidget::removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folde
     }
 
     if ( folder->mailCheckInProgress() ) {
-      KMessageBox::sorry( this, i18n( "It is not possible to delete folder <b>%1</b> right now because it "
+      KMessageBox::sorry( this, i18n( "<qt>It is not possible to delete folder <b>%1</b> right now because it "
                                       "is being syncronized. Please wait until the syncronization of "
-                                      "this folder is complete and then try again." ).arg( folder->label() ),
+                                      "this folder is complete and then try again.</qt>" ).arg( folder->label() ),
                                 i18n( "Unable to delete folder" ) );
       continue;
     }
