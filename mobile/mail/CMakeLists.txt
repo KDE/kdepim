@@ -70,6 +70,8 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
+kde4_add_app_icon(kmail_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
+
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 if (WINCE)
   SET_TARGET_PROPERTIES(kmail-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")

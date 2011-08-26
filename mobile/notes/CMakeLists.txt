@@ -28,6 +28,8 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
+kde4_add_app_icon(notes_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-notes-mobile.png")
+
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
 if (WINCE)
   SET_TARGET_PROPERTIES(notes-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")

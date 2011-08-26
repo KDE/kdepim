@@ -43,6 +43,8 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
+kde4_add_app_icon(korganizer_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
+
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 if (WINCE)
   SET_TARGET_PROPERTIES(korganizer-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
