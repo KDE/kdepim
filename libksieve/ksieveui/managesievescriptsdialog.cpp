@@ -125,7 +125,7 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
     enabled = item && isFileNameItem( item );
     mEditScript->setEnabled( enabled );
     mDeleteScript->setEnabled( enabled );
-    mDeactivateScript->setEnabled( enabled );
+    mDeactivateScript->setEnabled( enabled && isRadioButtonChecked( item ));
   }
 }
 
