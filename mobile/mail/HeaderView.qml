@@ -36,7 +36,7 @@ KPIM.ItemListView {
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
       navigationModel : _top.navigationModel
-      height : (_top.collapsedSections.indexOf(model.grouperString) >= 0) ? 0 : (itemListView.height / 7)
+      height : (_top.collapsedSections.indexOf(model.grouperString) >= 0) ? 0 : (_top.itemHeight)
       clip: true
       summaryContent : [
         QML.Text {
@@ -213,7 +213,7 @@ KPIM.ItemListView {
   section.delegate: QML.Item {
     id: sectionDelegate
     width: _top.width
-    height: itemListView.height / 7
+    height: _top.itemHeight
     QML.Rectangle {
       anchors.fill: parent
       color: "lightgray"
