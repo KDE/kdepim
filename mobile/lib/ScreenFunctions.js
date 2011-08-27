@@ -28,6 +28,6 @@
 function partition( totalSize, minPartitions )
 {
   // at least 15mm for touch interaction
-  var optimalPartitionCount = totalSize / KDE.mm2px( 15 );
+  var optimalPartitionCount = Math.floor(totalSize / KDE.mm2px( 15 ));
   return totalSize / Math.max(minPartitions, optimalPartitionCount);
 }
