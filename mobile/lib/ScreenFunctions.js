@@ -23,11 +23,11 @@
  * without having unused/partial areas left.
  * @param totalSize Total amount of available pixel space
  * @param minPartitions Minimum number of partitions requried
- * @param minPartitionSizeMM Minimum size of a partition in mm
  * @returns Pixel-size of a partition.
  */
-function partition( totalSize, minPartitions, minPartitionSizeMM )
+function partition( totalSize, minPartitions )
 {
-  var optimalPartitionCount = totalSize / KDE.mm2px( minPartitionSizeMM );
+  // at least 15mm for touch interaction
+  var optimalPartitionCount = totalSize / KDE.mm2px( 15 );
   return totalSize / Math.max(minPartitions, optimalPartitionCount);
 }

@@ -28,7 +28,7 @@ ActionMenuContainer {
 
   menuStyle : true
 
-  actionItemHeight: Screen.partition( height, 6, 15 ) - actionItemSpacing
+  actionItemHeight: Screen.partition( height, 6 ) - actionItemSpacing
   actionItemWidth : 200
   actionItemSpacing : 2
 
