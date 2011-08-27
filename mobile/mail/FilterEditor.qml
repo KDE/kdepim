@@ -24,12 +24,13 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ReorderList {
+  id: root
 
   delegate: QML.Item {
     id: filterDelegate
     clip: true
     width: parent.width
-    height: 70
+    height: root.actionItemHeight 
 
     QML.Rectangle {
       id: background

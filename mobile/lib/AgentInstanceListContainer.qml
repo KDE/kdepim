@@ -70,11 +70,4 @@ QML.Rectangle {
     ]
   }
 
-  onActionItemSpacingChanged : {
-    myColumn.refresh();
-  }
-
-  onActionItemHeightChanged : {
-    myColumn.refresh();
-  }
 }
