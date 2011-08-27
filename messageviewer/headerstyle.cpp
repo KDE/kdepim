@@ -298,7 +298,7 @@ QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) con
   KMime::Headers::Base *header = KMime::HeaderParsing::extractFirstHeader( head );
   QString result;
   while ( header ) {
-    result += strToHtml( header->asUnicodeString() );
+    result += strToHtml( QLatin1String(header->type()) + QLatin1String(": ") + header->asUnicodeString() );
     result += QLatin1String( "<br />\n" );
     delete header;
     header = KMime::HeaderParsing::extractFirstHeader( head );
