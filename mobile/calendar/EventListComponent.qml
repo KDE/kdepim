@@ -22,6 +22,7 @@ import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
+import "../mobileui/ScreenFunctions.js" as Screen
 
 QML.Rectangle {
   id: eventListView
@@ -62,6 +63,7 @@ QML.Rectangle {
     anchors.right : parent.right
     anchors.topMargin: 30
     anchors.leftMargin: 40
+    itemHeight: Screen.partition( height, 7 )
 
     navigationModel : _itemNavigationModel
   }
