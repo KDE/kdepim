@@ -512,6 +512,7 @@ KPIM.MainView {
     onLoaded: {
       item.backgroundImage = backgroundImage.source
       item.model = itemModel
+      item.itemHeight = Screen.partition( item.height, 7 )
     }
   }
 
