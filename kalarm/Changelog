@@ -1,8 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.7.4 --- 20 August 2011 ===
+=== Version 2.7.4 --- 28 August 2011 ===
 - Fix crash when last recurrence of late-cancel alarm triggers too late.
 - Fix conversion of pre-version 1.4.14 subsidiary alarms.
+- Fix new alarm not being scheduled after editing alarm from alarm window.
 - Don't do search if invalid regular expression is entered in Find dialogue.
 - Don't prevent interaction with alarm windows when a prompt or warning message
   window is displayed [using KDE 4.7.1 or later].
