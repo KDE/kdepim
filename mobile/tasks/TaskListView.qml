@@ -36,6 +36,7 @@ KPIM.ItemListView {
       navigationModel : itemList.navigationModel
       height : itemList.itemHeight
       color: model.backgroundColor
+      clip: true
       summaryContent: [
         QML.Text {
           id : summaryLabel
@@ -58,7 +59,7 @@ KPIM.ItemListView {
           anchors.right: parent.right
           anchors.rightMargin: completionSlider.width
           height : 30;
-          text: KDE.i18n( "Details: %1", model.description )
+          text: model.hasDescription ? KDE.i18n( "Details: %1", model.singleLineDescription ) : ""
           color: "#3B3B3B"
           font.pixelSize: 18
           elide: "ElideRight"
