@@ -380,6 +380,7 @@ KPIM.MainView {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
+      itemHeight: Screen.partition( height, 7 )
     }
 
     resultText: KDE.i18np( "One task found", "%1 tasks found", searchTaskListView.count )

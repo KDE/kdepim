@@ -400,6 +400,7 @@ KPIM.MainView {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
+      itemHeight: Screen.partition( height, 7 )
     }
 
     resultText: KDE.i18np( "One contact found", "%1 contacts found", searchContactListView.count )
