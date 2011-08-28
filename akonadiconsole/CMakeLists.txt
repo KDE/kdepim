@@ -81,7 +81,7 @@ endif(KDE_IS_AT_LEAST_4_5_74)
 
 kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)
 
-kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-akonadiconsole.png")
+kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")
 
 kde4_add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})
 set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)
