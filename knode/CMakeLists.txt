@@ -159,7 +159,7 @@ install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(knode_SRCS knode.cpp knapplication.cpp main.cpp )
 
-kde4_add_app_icon(knode_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-knode.png")
+kde4_add_app_icon(knode_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-knode.png")
 
 kde4_add_executable(knode ${knode_SRCS})
 
