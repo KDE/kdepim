@@ -342,6 +342,7 @@ KPIM.MainView {
           anchors.top : backButton.bottom
           anchors.bottom : parent.bottom
           anchors.right : parent.right
+          itemHeight: threadView.itemHeight
 
           model : _threadContents
           navigationModel : _threadMailSelector
