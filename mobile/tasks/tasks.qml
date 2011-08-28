@@ -24,6 +24,7 @@ import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kcal 4.5 as KCal
 import org.kde.akonadi.tasks 4.5 as Tasks
+import "../mobileui/ScreenFunctions.js" as Screen
 
 KPIM.MainView {
   id: tasksMobile
@@ -125,6 +126,7 @@ KPIM.MainView {
       anchors.bottom : selectButton.top
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
+      itemHeight: Screen.partition( height, 7 )
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
@@ -223,6 +225,7 @@ KPIM.MainView {
         anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _itemNavigationModel
+        itemHeight: Screen.partition( height, 7 )
       }
 
       Akonadi.FilterLineEdit {
@@ -357,7 +360,10 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: { item.backgroundImage = backgroundImage.source }
+    onLoaded: {
+      item.backgroundImage = backgroundImage.source
+      item.itemHeight = Screen.partition( item.height, 7 )
+    }
   }
 
   KPIM.SearchResultScreen {

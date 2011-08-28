@@ -37,6 +37,7 @@ KPIM.BulkActionScreen {
     checkModel : _itemActionModel
     anchors.fill : parent
     showCompletionSlider: false
+    itemHeight: bulkActionScreen.itemHeight
   }
 }
 

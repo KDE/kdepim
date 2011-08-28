@@ -33,7 +33,7 @@ KPIM.ItemListView {
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
       navigationModel : _top.navigationModel
-      height : itemListView.height / 7
+      height : _top.itemHeight
       summaryContent : [
         QML.Text {
           id: titleLabel

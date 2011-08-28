@@ -34,7 +34,7 @@ KPIM.ItemListView {
       showCheckBox : itemList.showCheckBox
       checkModel : itemList.checkModel
       navigationModel : itemList.navigationModel
-      height : itemListView.height / 7
+      height : itemList.itemHeight
       color: model.backgroundColor
       summaryContent: [
         QML.Text {
