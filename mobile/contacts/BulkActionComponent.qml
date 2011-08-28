@@ -36,6 +36,7 @@ KPIM.BulkActionScreen {
     model: itemModel
     checkModel : _itemActionModel
     anchors.fill : parent
+    itemHeight: bulkActionScreen.itemHeight
   }
 
   QML.Component.onCompleted: {
