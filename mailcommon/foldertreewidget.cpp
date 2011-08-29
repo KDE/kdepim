@@ -171,9 +171,12 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
     saver.setView( folderTreeView() );
     d->expandedItems = saver.expansionKeys();
   } else if ( text.isEmpty() ) {
+    
     d->saver = new Akonadi::ETMViewStateSaver;
+    const QString currentIndex = d->saver->currentIndexKey();
     d->saver->setView( folderTreeView() );
-    d->saver->restoreExpanded( d->expandedItems );
+    d->saver->restoreExpanded( d->expandedItems<<currentIndex );
+    d->saver->restoreCurrentItem( currentIndex );
   } else {
     d->folderTreeView->expandAll();
 
