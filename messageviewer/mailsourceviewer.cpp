@@ -60,7 +60,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
   QMenu *popup = createStandardContextMenu(event->pos());
   if (popup) {
     popup->addSeparator();
-    popup->addAction( i18n( "Find" ),this,SIGNAL( findText() ) );
+    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL( findText() ) , Qt::Key_F+Qt::CTRL);
     //Code from KTextBrowser
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
