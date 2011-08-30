@@ -165,7 +165,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   lay->addWidget( mRawBrowser );
   mFindBar = new FindBarSourceView( mRawBrowser, widget );
   lay->addWidget( mFindBar );
-  mTabWidget->addTab( /*mRawBrowser*/widget, i18nc( "Unchanged mail message", "Raw Source" ) );
+  mTabWidget->addTab( widget, i18nc( "Unchanged mail message", "Raw Source" ) );
   mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
   mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
