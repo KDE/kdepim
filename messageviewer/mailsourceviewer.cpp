@@ -45,9 +45,33 @@
 #include <QtGui/QShortcut>
 #include <QtGui/QTabBar>
 #include <QtGui/QVBoxLayout>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 namespace MessageViewer {
 
+MailSourceViewTextBrowser::MailSourceViewTextBrowser( QWidget *parent )
+  :KTextBrowser( parent )
+{
+}
+
+void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
+{
+  QMenu *popup = createStandardContextMenu(event->pos());
+  if (popup) {
+    popup->addSeparator();
+    popup->addAction( i18n( "Find" ),this,SIGNAL( findText() ) );
+    //Code from KTextBrowser
+    KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                          : KIconTheme::TextEditor,
+                                          popup->actions() );
+
+    popup->exec( event->globalPos() );
+    delete popup;
+  }
+}
+
+  
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :
   const QRegExp regexp( "^([\\x21-9;-\\x7E]+:\\s)" );
@@ -161,7 +185,8 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   QWidget *widget = new QWidget;
   QVBoxLayout *lay = new QVBoxLayout;
   widget->setLayout( lay );  
-  mRawBrowser = new KTextBrowser();
+  mRawBrowser = new MailSourceViewTextBrowser();
+  connect( mRawBrowser, SIGNAL( findText() ), SLOT( slotFind() ) );
   lay->addWidget( mRawBrowser );
   mFindBar = new FindBarSourceView( mRawBrowser, widget );
   lay->addWidget( mFindBar );
