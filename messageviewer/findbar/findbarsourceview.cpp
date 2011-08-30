@@ -56,7 +56,10 @@ void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
 
 void FindBarSourceView::clearSelections()
 {
-  //m_view->clearFindSelection();
+  QTextCursor textCursor = m_view->textCursor();
+  textCursor.clearSelection();
+  m_view->setTextCursor( textCursor );
+                          
   FindBarBase::clearSelections();
 }
 
