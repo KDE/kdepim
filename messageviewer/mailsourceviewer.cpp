@@ -50,6 +50,45 @@
 
 namespace MessageViewer {
 
+
+MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *parent )
+  :QWidget( parent )
+{
+  QVBoxLayout *lay = new QVBoxLayout;
+  setLayout( lay );  
+  mTextBrowser = new MailSourceViewTextBrowser();
+  mTextBrowser->setLineWrapMode( QTextEdit::NoWrap );
+  mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
+  connect( mTextBrowser, SIGNAL( findText() ), SLOT( slotFind() ) );
+  lay->addWidget( mTextBrowser );
+  mFindBar = new FindBarSourceView( mTextBrowser, this );
+  lay->addWidget( mFindBar );
+  QShortcut *shortcut = new QShortcut( this );
+  shortcut->setKey( Qt::Key_F+Qt::CTRL );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+}
+
+void MailSourceViewTextBrowserWidget::slotFind()
+{
+  mFindBar->show();
+  mFindBar->focusAndSetCursor();  
+}
+
+void MailSourceViewTextBrowserWidget::setText( const QString& text )
+{
+  mTextBrowser->setText( text );
+}
+
+void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
+{
+  mTextBrowser->setPlainText( text );
+}
+
+MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textBrowser() const
+{
+  return mTextBrowser;
+}
+  
 MailSourceViewTextBrowser::MailSourceViewTextBrowser( QWidget *parent )
   :KTextBrowser( parent )
 {
@@ -181,27 +220,15 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 
   connect( this, SIGNAL(closeClicked()), SLOT(close()) );
 
-
-  QWidget *widget = new QWidget;
-  QVBoxLayout *lay = new QVBoxLayout;
-  widget->setLayout( lay );  
-  mRawBrowser = new MailSourceViewTextBrowser();
-  connect( mRawBrowser, SIGNAL( findText() ), SLOT( slotFind() ) );
-  lay->addWidget( mRawBrowser );
-  mFindBar = new FindBarSourceView( mRawBrowser, widget );
-  lay->addWidget( mFindBar );
-  mTabWidget->addTab( widget, i18nc( "Unchanged mail message", "Raw Source" ) );
+  mRawBrowser = new MailSourceViewTextBrowserWidget();
+  mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
   mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
-  mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
 #ifndef NDEBUG
-  mHtmlBrowser = new KTextBrowser();
+  mHtmlBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
   mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
-  mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
+  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser->textBrowser() );
 #endif
 
   mTabWidget->setCurrentIndex( 0 );
@@ -214,17 +241,13 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_W+Qt::CTRL );
   connect( shortcut, SIGNAL(activated()), SLOT(close()) );
-
-  shortcut = new QShortcut( this );
-  shortcut->setKey( Qt::Key_F+Qt::CTRL );
-  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
   
   KWindowSystem::setIcons( winId(),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
                   IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
-  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser );
+  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser->textBrowser() );
 }
 
 MailSourceViewer::~MailSourceViewer()
@@ -243,12 +266,6 @@ void MailSourceViewer::setDisplayedSource( const QString &source )
 #else
   Q_UNUSED( source );
 #endif
-}
-
-void MailSourceViewer::slotFind()
-{
-  mFindBar->show();
-  mFindBar->focusAndSetCursor();  
 }
   
 #include "mailsourceviewer.moc"
