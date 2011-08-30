@@ -71,6 +71,17 @@ protected:
   virtual void highlightBlock ( const QString & text );
 };
 
+class MailSourceViewTextBrowser: public KTextBrowser
+{
+  Q_OBJECT
+public:
+  explicit MailSourceViewTextBrowser( QWidget *parent = 0 );
+protected:
+  virtual void contextMenuEvent( QContextMenuEvent *event );
+signals:
+  void findText();
+};
+  
 namespace HTMLPrettyFormatter
 {
   // Best to be really verbose about this one...
@@ -110,7 +121,7 @@ protected slots:
   void slotFind();
 private:
   KTabWidget *mTabWidget;
-  KTextBrowser *mRawBrowser;
+  MailSourceViewTextBrowser *mRawBrowser;
   FindBarSourceView *mFindBar;
 #ifndef NDEBUG
   KTextBrowser *mHtmlBrowser;
