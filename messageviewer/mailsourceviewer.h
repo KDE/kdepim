@@ -110,7 +110,6 @@ protected slots:
   void slotFind();
 private:
   KTabWidget *mTabWidget;
-  bool mShowHTMLBrowser;
   KTextBrowser *mRawBrowser;
   FindBarSourceView *mFindBar;
 #ifndef NDEBUG
