@@ -51,6 +51,7 @@ class FindBarSourceView;
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
+class MailSourceViewTextBrowser;
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:
@@ -71,6 +72,22 @@ protected:
   virtual void highlightBlock ( const QString & text );
 };
 
+class MailSourceViewTextBrowserWidget : public QWidget
+{
+  Q_OBJECT
+public:
+  explicit MailSourceViewTextBrowserWidget( QWidget *parent = 0 );
+
+  void setText( const QString& text );
+  void setPlainText( const QString& text );
+  MessageViewer::MailSourceViewTextBrowser *textBrowser() const;
+private slots:
+  void slotFind();
+private:
+  MailSourceViewTextBrowser *mTextBrowser;
+  FindBarSourceView *mFindBar;
+};
+  
 class MailSourceViewTextBrowser: public KTextBrowser
 {
   Q_OBJECT
@@ -117,14 +134,12 @@ public:
 
   void setRawSource( const QString &source );
   void setDisplayedSource( const QString &source );
-protected slots:
-  void slotFind();
 private:
   KTabWidget *mTabWidget;
-  MailSourceViewTextBrowser *mRawBrowser;
+  MailSourceViewTextBrowserWidget *mRawBrowser;
   FindBarSourceView *mFindBar;
 #ifndef NDEBUG
-  KTextBrowser *mHtmlBrowser;
+  MailSourceViewTextBrowserWidget *mHtmlBrowser;
   HTMLSourceHighlighter *mHtmlSourceHighLighter;
 #endif
   MailSourceHighlighter *mRawSourceHighLighter;
