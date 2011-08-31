@@ -51,6 +51,7 @@ public:
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
   void onCloseTabClicked();
+  void activateTab();
   void closeTab( QWidget * );
   void onCurrentTabChanged();
   void onTabContextMenuRequest( const QPoint &pos );
@@ -184,6 +185,14 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     connect( action, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
     d->mActionMenu->addAction( action );
 
+    QString actionname;
+    for (int i=1;i<10;i++) {
+      actionname.sprintf("activate_tab_%02d", i);
+      KAction *action = new KAction( i18n("Activate Tab %1", i),this );
+      action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
+      d->mXmlGuiClient->actionCollection()->addAction( actionname, action );
+      connect( action, SIGNAL(triggered(bool)), SLOT(activateTab()) );
+    }
   }
 }
 
@@ -372,6 +381,11 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
   q->setTabToolTip( index, toolTip);
+}
+
+void Pane::Private::activateTab()
+{
+  q->tabBar()->setCurrentIndex( q->sender()->objectName().right( 2 ).toInt() -1 );
 }
 
 void Pane::Private::onNewTabClicked()
@@ -731,5 +745,6 @@ void Pane::setPreferEmptyTab( bool emptyTab )
 {
   d->mPreferEmptyTab = emptyTab;
 }
+
 
 #include "pane.moc"

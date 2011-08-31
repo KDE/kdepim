@@ -421,6 +421,7 @@ private:
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))
   Q_PRIVATE_SLOT(d, void onNewTabClicked())
   Q_PRIVATE_SLOT(d, void onCloseTabClicked())
+  Q_PRIVATE_SLOT(d, void activateTab())
   Q_PRIVATE_SLOT(d, void closeTab( QWidget * ))
   Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
   Q_PRIVATE_SLOT(d, void onTabContextMenuRequest( const QPoint& ))
