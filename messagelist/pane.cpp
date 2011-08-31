@@ -177,6 +177,13 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
+
+    action = new KAction( i18n("Close tab"), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), action );
+    connect( action, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
+    d->mActionMenu->addAction( action );
+
   }
 }
 
