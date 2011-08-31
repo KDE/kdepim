@@ -46,7 +46,13 @@ class Pane::Private
 {
 public:
   Private( Pane *owner )
-    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ), mPreferEmptyTab( false ) { }
+    : q( owner ),
+      mXmlGuiClient( 0 ),
+      mActionMenu( 0 ),
+      mCloseTabAction( 0 ),
+      mActivateNextTabAction( 0 ), 
+      mActivatePreviousTabAction( 0 ), 
+      mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
@@ -55,7 +61,8 @@ public:
   void closeTab( QWidget * );
   void onCurrentTabChanged();
   void onTabContextMenuRequest( const QPoint &pos );
-
+  void activateNextTab();
+  void activatePreviousTab();
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
@@ -73,6 +80,9 @@ public:
 
   QToolButton *mNewTabButton;
   QToolButton *mCloseTabButton;
+  KAction *mCloseTabAction;
+  KAction *mActivateNextTabAction;
+  KAction *mActivatePreviousTabAction;
   bool mPreferEmptyTab;
 };
 
@@ -179,20 +189,31 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
 
-    action = new KAction( i18n("Close tab"), this );
-    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
-    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
-    d->mActionMenu->addAction( action );
+    d->mCloseTabAction = new KAction( i18n("Close tab"), this );
+    d->mCloseTabAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
+    connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
+    d->mActionMenu->addAction( d->mCloseTabAction );
+    d->mCloseTabAction->setEnabled( false );
 
     QString actionname;
     for (int i=1;i<10;i++) {
       actionname.sprintf("activate_tab_%02d", i);
-      KAction *action = new KAction( i18n("Activate Tab %1", i),this );
+      action = new KAction( i18n("Activate Tab %1", i),this );
       action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
       d->mXmlGuiClient->actionCollection()->addAction( actionname, action );
       connect( action, SIGNAL(triggered(bool)), SLOT(activateTab()) );
     }
+
+    d->mActivateNextTabAction = new KAction( i18n("Activate Next Tab"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_next_tab" ), d->mActivateNextTabAction );
+    d->mActivateNextTabAction->setEnabled( false );
+    connect( d->mActivateNextTabAction, SIGNAL(triggered(bool)), SLOT(activateNextTab()) );
+
+    d->mActivatePreviousTabAction = new KAction( i18n("Activate Previous Tab"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_previous_tab" ), d->mActivatePreviousTabAction );
+    d->mActivatePreviousTabAction->setEnabled( false );
+    connect( d->mActivatePreviousTabAction, SIGNAL(triggered(bool)), SLOT(activatePreviousTab()) );
   }
 }
 
@@ -388,6 +409,34 @@ void Pane::Private::activateTab()
   q->tabBar()->setCurrentIndex( q->sender()->objectName().right( 2 ).toInt() -1 );
 }
 
+void Pane::Private::activateNextTab()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+
+  int indexTab = ( q->tabBar()->currentIndex() + 1 );
+
+  if( indexTab == numberOfTab )
+    indexTab = 0;
+  
+  q->tabBar()->setCurrentIndex( indexTab );  
+}
+
+void Pane::Private::activatePreviousTab()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+
+  int indexTab = ( q->tabBar()->currentIndex() - 1 );
+
+  if( indexTab == -1 )
+    indexTab = numberOfTab - 1;
+
+  q->tabBar()->setCurrentIndex( indexTab );
+}
+
 void Pane::Private::onNewTabClicked()
 {
   q->createNewTab();
@@ -554,10 +603,17 @@ QItemSelection Pane::Private::mapSelectionFromSource( const QItemSelection &sele
 
 void Pane::Private::updateTabControls()
 {
-  mCloseTabButton->setEnabled( q->count()>1 );
+  const bool enableAction = ( q->count()>1 );
+  mCloseTabButton->setEnabled( enableAction );
+  if ( mCloseTabAction )
+    mCloseTabAction->setEnabled( enableAction );
+  if ( mActivatePreviousTabAction )
+    mActivatePreviousTabAction->setEnabled( enableAction );
+  if ( mActivateNextTabAction )
+    mActivateNextTabAction->setEnabled( enableAction );
 
   if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
-    q->tabBar()->setVisible( q->count()>1 );
+    q->tabBar()->setVisible( enableAction );
   } else {
     q->tabBar()->setVisible( true );
   }
