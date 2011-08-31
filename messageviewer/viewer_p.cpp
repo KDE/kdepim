@@ -970,12 +970,10 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       mLastClickPosition = me->pos();
     }
   }
-
-  if ( e->type() ==  QEvent::MouseButtonRelease ) {
+  else if ( e->type() ==  QEvent::MouseButtonRelease ) {
     mCanStartDrag = false;
   }
-
-  if ( e->type() == QEvent::MouseMove ) {
+  else if ( e->type() == QEvent::MouseMove ) {
 
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
 
@@ -994,6 +992,20 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       }
 
       // Don't tell WebKit about this mouse move event, or it might start its own drag!
+      return true;
+    }
+  }
+  //Don't tell to Webkit to get zoom > 300 and < 100
+  else if ( e->type() == QEvent::Wheel ) {
+    QWheelEvent* me = static_cast<QWheelEvent*>( e );
+    if ( QApplication::keyboardModifiers() & Qt::ControlModifier ) {
+      const int numDegrees = me->delta() / 8;
+      const int numSteps = numDegrees / 15;
+      const qreal factor = mZoomFactor + numSteps * 10;
+      if ( factor >= 100 && factor <= 300 ) {
+        mZoomFactor = factor;
+        setZoomFactor( factor/100.0 );
+      }
       return true;
     }
   }
