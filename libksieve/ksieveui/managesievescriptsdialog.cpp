@@ -470,7 +470,9 @@ SieveEditor::~SieveEditor()
 
 void SieveEditor::slotTextChanged()
 {
-  enableButtonOk( !script().isEmpty() );
+  const bool enabled = !script().isEmpty();
+  enableButton( User1, enabled );
+  enableButtonOk( enabled );
 }
 
 void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool success, const QString & script, bool isActive )
