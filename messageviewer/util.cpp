@@ -91,6 +91,7 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
   if ( mime ) {
     fileName = mime->iconName();
   } else {
+    fileName = QLatin1String( "unknown" );
     kWarning() << "unknown mimetype" << mimeType;
   }
 
