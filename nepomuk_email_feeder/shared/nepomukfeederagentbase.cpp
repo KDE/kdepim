@@ -53,14 +53,6 @@
 
 #include <Soprano/Vocabulary/NAO>
 
-#include <strigi/analyzerconfiguration.h>
-#include <strigi/analysisresult.h>
-#include <strigi/indexpluginloader.h>
-#include <strigi/indexmanager.h>
-#include <strigi/indexwriter.h>
-#include <strigi/streamanalyzer.h>
-#include <strigi/stringstream.h>
-
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
@@ -88,7 +80,6 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
   mProcessedAmount( 0 ),
   mPendingJobs( 0 ),
   mNrlModel( 0 ),
-  mStrigiIndexManager( 0 ),
   mIndexCompatLevel( 1 ),
   mNepomukStartupAttempted( false ),
   mInitialUpdateDone( false ),
@@ -109,6 +100,7 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
   connect( &mNepomukStartupTimeout, SIGNAL(timeout()), SLOT(selfTest()) );
   connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()), SLOT(selfTest()) );
   connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()), SLOT(selfTest()) );
+  connect( this, SIGNAL(reloadConfiguration()), SLOT(selfTest()) );
   connect( this, SIGNAL(fullyIndexed()), this, SLOT(slotFullyIndexed()) );
 
   connect( KIdleTime::instance(), SIGNAL(timeoutReached(int)), SLOT(systemIdle()) );
@@ -126,8 +118,6 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
 NepomukFeederAgentBase::~NepomukFeederAgentBase()
 {
   delete mNrlModel;
-  if ( mStrigiIndexManager )
-    Strigi::IndexPluginLoader::deleteIndexManager( mStrigiIndexManager );
 }
 
 void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection)
@@ -338,6 +328,17 @@ void NepomukFeederAgentBase::selfTest()
   QStringList errorMessages;
   mSelfTestPassed = false;
 
+  // check if we have been disabled explicitly
+  {
+    KConfig config( "akonadi_nepomuk_feederrc" );
+    KConfigGroup cfgGrp( &config, identifier() );
+    if ( !cfgGrp.readEntry( "Enabled", true ) ) {
+      checkOnline();
+      emit status( Broken, i18n( "Indexing has been disabled by you." ) );
+      return;
+    }
+  }
+
   // if Nepomuk is not running, try to start it
   if ( !mNepomukStartupAttempted && !Nepomuk::ResourceManager::instance()->initialized() ) {
     KProcess process;
@@ -377,13 +378,10 @@ void NepomukFeederAgentBase::selfTest()
   }
 
   // try to obtain a Strigi index manager with a Soprano backend
-  if ( !mStrigiIndexManager && mNeedsStrigi ) {
-    mStrigiIndexManager = Strigi::IndexPluginLoader::createIndexManager( "nepomukbackend", 0 );
-    if ( !mStrigiIndexManager ) {
-      errorMessages.append( i18n( "Nepomuk backend for Strigi is not available." ) );
-      foreach ( const std::string &plugin, Strigi::IndexPluginLoader::indexNames() )
-        kWarning() << "Available plugins are: " << plugin.c_str();
-    }
+  if ( mStrigiIndexer.isEmpty() && mNeedsStrigi ) {
+    mStrigiIndexer = KStandardDirs::findExe( "nepomukindexer" );
+    if ( mStrigiIndexer.isEmpty() )
+      errorMessages.append( i18n( "\"nepomukindexer\" not found." ) );
   }
 
   if ( errorMessages.isEmpty() ) {
@@ -473,18 +471,28 @@ void NepomukFeederAgentBase::setNeedsStrigi(bool enableStrigi)
 void NepomukFeederAgentBase::indexData(const KUrl& url, const QByteArray& data, const QDateTime& mtime)
 {
   Q_ASSERT( mNeedsStrigi );
-  if ( !mStrigiIndexManager ) {
-    emit status( Broken, i18n( "Strigi is not available for indexing." ) );
+  if ( mStrigiIndexer.isEmpty() ) {
+    emit status( Broken, i18n( "\"nepomukindexer\" is not available for indexing." ) );
     return;
   }
 
-  Strigi::IndexWriter* writer = mStrigiIndexManager->indexWriter();
-  Strigi::AnalyzerConfiguration ic;
-  Strigi::StreamAnalyzer streamindexer( ic );
-  streamindexer.setIndexWriter( *writer );
-  Strigi::StringInputStream sr( data.constData(), data.size(), false );
-  Strigi::AnalysisResult idx( url.url().toLatin1().constData(), mtime.toTime_t(), *writer, streamindexer );
-  idx.index( &sr );
+  KProcess proc;
+  proc.setOutputChannelMode( KProcess::ForwardedChannels );
+  proc.setProgram( mStrigiIndexer );
+  proc << "--uri" << url.url().toLocal8Bit();
+  proc << "--mtime" << QString::number( mtime.toTime_t() );
+  proc.start();
+  if ( proc.waitForStarted() ) {
+    proc.write( data );
+    proc.waitForBytesWritten();
+    proc.closeWriteChannel();
+  } else {
+    kDebug() << "Failed to launch nepomukindexer: " << proc.errorString();
+  }
+  proc.waitForFinished();
+  if ( !proc.exitStatus() == QProcess::NormalExit ) {
+    kDebug() << proc.exitCode() << proc.errorString();
+  }
 }
 
 ItemFetchScope NepomukFeederAgentBase::fetchScopeForCollection(const Akonadi::Collection& collection)

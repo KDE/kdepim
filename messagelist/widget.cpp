@@ -666,3 +666,5 @@ Akonadi::Collection Widget::currentCollection() const
     return Akonadi::Collection(); // no folder here or too many (in case we can't decide where the drop will end)
   return collections.first();
 }
+
+#include "widget.moc"

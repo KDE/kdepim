@@ -63,11 +63,6 @@ namespace Soprano
   class NRLModel;
 }
 
-namespace Strigi
-{
-  class IndexManager;
-}
-
 class KJob;
 
 /** Shared base class for all Nepomuk feeders. */
@@ -210,7 +205,7 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     QTimer mNepomukStartupTimeout;
     QTimer mProcessPipelineTimer;
     Soprano::NRLModel *mNrlModel;
-    Strigi::IndexManager *mStrigiIndexManager;
+    QString mStrigiIndexer;
     int mIndexCompatLevel;
     bool mNepomukStartupAttempted;
     bool mInitialUpdateDone;

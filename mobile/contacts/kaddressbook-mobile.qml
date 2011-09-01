@@ -23,6 +23,7 @@ import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.contacts 4.5 as Contacts
+import "../mobileui/ScreenFunctions.js" as Screen
 
 KPIM.MainView {
   id: kaddressbookMobile
@@ -156,6 +157,7 @@ KPIM.MainView {
       anchors.bottom : selectButton.top
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
+      itemHeight: Screen.partition( height, 7 )
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
@@ -263,6 +265,7 @@ KPIM.MainView {
         anchors.right : parent.right
         model: itemModel
         checkModel : _itemActionModel
+        itemHeight: Screen.partition( height, 7 )
 
         navigationModel : _itemNavigationModel
       }
@@ -377,7 +380,10 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: { item.backgroundImage = backgroundImage.source }
+    onLoaded: {
+      item.backgroundImage = backgroundImage.source
+      item.itemHeight = Screen.partition( height, 7 )
+    }
   }
 
   KPIM.SearchResultScreen {
@@ -394,6 +400,7 @@ KPIM.MainView {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
+      itemHeight: Screen.partition( height, 7 )
     }
 
     resultText: KDE.i18np( "One contact found", "%1 contacts found", searchContactListView.count )

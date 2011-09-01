@@ -103,6 +103,7 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
   const Command lastCmd = mCommands.top();
   Session* session = sessionForUrl( mUrl );
 
+  QString errMsg;
   // handle non-action responses
   if ( response.type() != Response::Action ) {
     switch ( lastCmd ) {
@@ -127,13 +128,15 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
       }
       case Put:
         if ( response.type() == Response::KeyValuePair ) {
+          errMsg = QString::fromUtf8( response.key() );
           session->setErrorMessage( i18n("The script did not upload successfully.\n"
                                          "This is probably due to errors in the script.\n"
-                                         "The server responded:\n%1", QString::fromUtf8( response.key() ) ) );
+                                         "The server responded:\n%1", errMsg ) );
         } else if ( response.type() == Response::Quantity ) {
+          errMsg = QString::fromUtf8( data );
           session->setErrorMessage( i18n("The script did not upload successfully.\n"
                                          "This is probably due to errors in the script.\n"
-                                         "The server responded:\n%1", QString::fromUtf8( data ) ) );
+                                         "The server responded:\n%1", errMsg ) );
         } else {
           session->setErrorMessage( i18n("The script did not upload successfully.\nThe script may contain errors.") );
         }
@@ -162,7 +165,6 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
 
   // prepare for next round:
   mCommands.pop();
-
   // check for errors:
   if ( !response.operationSuccessful() ) {
     if ( mInteractive ) {
@@ -171,8 +173,8 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
       else
         KMessageBox::error( 0, session->errorMessage(), i18n( "Sieve Error" ) );
     }
-
-    emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
+    emit q->errorMessage( q, false, errMsg );
+    emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName));
 
     if ( lastCmd == List )
       emit q->gotList( q, false, mAvailableScripts, mActiveScriptName );
@@ -193,6 +195,7 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
   }
 
   if ( mCommands.empty() ) {
+    emit q->errorMessage( q, true, QString());
     // was last command; report success and delete this object:
     emit q->result( q, true, mScript, (mUrl.fileName() == mActiveScriptName) );
     if ( lastCmd == List )

@@ -24,6 +24,7 @@
 #include <gpgme++/context.h>
 
 #include <KConfigDialogManager>
+#include <KConfigGroup>
 #include <kwindowsystem.h>
 
 ConfigDialog::ConfigDialog( WId windowId, QWidget * parent ) : KDialog( parent )
@@ -40,6 +41,10 @@ ConfigDialog::ConfigDialog( WId windowId, QWidget * parent ) : KDialog( parent )
 
   m_manager = new KConfigDialogManager( this, Settings::self() );
   m_manager->updateWidgets();
+
+  KConfig config( "akonadi_nepomuk_feederrc" );
+  KConfigGroup cfgGrp( &config, "akonadi_nepomuk_email_feeder" );
+  ui.enableIndexing->setChecked( cfgGrp.readEntry( "Enabled", true ) );
 }
 
 
@@ -49,6 +54,11 @@ void ConfigDialog::save()
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
     Settings::self()->setIndexEncryptedContent( Settings::NoIndexing );
   Settings::self()->writeConfig();
+
+  KConfig config( "akonadi_nepomuk_feederrc" );
+  KConfigGroup cfgGrp( &config, "akonadi_nepomuk_email_feeder" );
+  cfgGrp.writeEntry( "Enabled", ui.enableIndexing->isChecked() );
+  cfgGrp.sync();
 }
 
 #include "configdialog.moc"

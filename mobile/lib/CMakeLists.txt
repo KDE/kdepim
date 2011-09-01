@@ -125,6 +125,7 @@ install(FILES
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
+  ScreenFunctions.js
   DESTINATION ${DATA_INSTALL_DIR}/mobileui)
 
 add_subdirectory( tests )

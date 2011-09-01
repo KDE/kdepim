@@ -12,6 +12,16 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
+    <widget class="QCheckBox" name="enableIndexing">
+     <property name="text">
+      <string>Enable email full text indexing</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="KButtonGroup" name="kcfg_IndexAggressiveness">
      <property name="title">
       <string>Initial Index Aggressiveness</string>
@@ -101,5 +111,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>enableIndexing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_IndexAggressiveness</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>24</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>29</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableIndexing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_IndexEncryptedContent</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>157</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

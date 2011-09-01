@@ -26,6 +26,7 @@ import org.kde.akonadi 4.5 as Akonadi
 import org.kde.messageviewer 4.5 as MessageViewer
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.mail 4.5 as Mail
+import "../mobileui/ScreenFunctions.js" as Screen
 
 KPIM.MainView {
   id: kmailMobile
@@ -174,6 +175,7 @@ KPIM.MainView {
       showUnread : true
       anchors.bottom : selectButton.top
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
+      itemHeight: Screen.partition( height, 7 )
       anchors.left: parent.left
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
@@ -289,6 +291,7 @@ KPIM.MainView {
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
         showSections : messageListSettings.groupingRole != ""
+        itemHeight: Screen.partition( height, 7 )
       }
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -339,6 +342,7 @@ KPIM.MainView {
           anchors.top : backButton.bottom
           anchors.bottom : parent.bottom
           anchors.right : parent.right
+          itemHeight: threadView.itemHeight
 
           model : _threadContents
           navigationModel : _threadMailSelector
@@ -509,6 +513,7 @@ KPIM.MainView {
     onLoaded: {
       item.backgroundImage = backgroundImage.source
       item.model = itemModel
+      item.itemHeight = Screen.partition( item.height, 7 )
     }
   }
 
@@ -526,6 +531,7 @@ KPIM.MainView {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
+      itemHeight: Screen.partition( height, 7 )
     }
     QML.Connections {
       target : _itemNavigationModel

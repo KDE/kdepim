@@ -36,7 +36,7 @@ FindBarSourceView::~FindBarSourceView()
 
 void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
 {
-  QTextDocument::FindFlags searchOptions;
+  QTextDocument::FindFlags searchOptions = 0;
   if ( backward )
     searchOptions |= QTextDocument::FindBackward;
   if ( m_caseSensitiveAct->isChecked() )
@@ -56,7 +56,10 @@ void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
 
 void FindBarSourceView::clearSelections()
 {
-  //m_view->clearFindSelection();
+  QTextCursor textCursor = m_view->textCursor();
+  textCursor.clearSelection();
+  m_view->setTextCursor( textCursor );
+                          
   FindBarBase::clearSelections();
 }
 

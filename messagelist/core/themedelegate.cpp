@@ -1704,3 +1704,5 @@ void ThemeDelegate::slotGeneralFontChanged()
   ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
 }
 
+
+#include "themedelegate.moc"

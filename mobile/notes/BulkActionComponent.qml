@@ -40,5 +40,6 @@ KPIM.BulkActionScreen {
     checkModel : _itemActionModel
     anchors.fill : parent
     showDeleteButton: false
+    itemHeight: bulkActionScreen.itemHeight
   }
 }

@@ -47,11 +47,7 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   addSupportedMimeType( "message/news" );
   setIndexCompatibilityLevel( INDEX_COMPAT_LEVEL );
 
-#ifdef _MSC_VER
-#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
-#else
-#warning Fix attachment indexing once Nepomuk adds the necessary interface again
-#endif
+  setNeedsStrigi( true );
 
 #ifdef Q_OS_WIN
   // Idle detection does not work on Windows see BUG 270135
@@ -82,6 +78,7 @@ void NepomukEMailFeeder::configure(WId windowId)
   ConfigDialog* dlg = new ConfigDialog( windowId );
   dlg->setAttribute( Qt::WA_DeleteOnClose );
   dlg->show();
+  QMetaObject::invokeMethod( this, "selfTest" );
 }
 
 void NepomukEMailFeeder::addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection)

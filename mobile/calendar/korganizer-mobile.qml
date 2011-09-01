@@ -27,6 +27,7 @@ import org.kde.kcal 4.5 as KCal
 import org.kde.calendarviews 4.5 as CalendarViews
 import org.kde.akonadi.events 4.5 as Events
 import org.kde.akonadi.calendar 4.5 as Calendar
+import "../mobileui/ScreenFunctions.js" as Screen
 
 KPIM.MainView {
   id: korganizerMobile
@@ -213,6 +214,7 @@ KPIM.MainView {
       anchors.bottom : selectButton.top
       anchors.left: parent.left
       anchors.right: parent.right
+      itemHeight: Screen.partition( height, 7 )
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
@@ -524,7 +526,10 @@ KPIM.MainView {
   Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: { item.backgroundImage = backgroundImage.source }
+    onLoaded: {
+      item.backgroundImage = backgroundImage.source
+      item.itemHeight = Screen.partition( item.height, 7 )
+    }
   }
 
   KPIM.SearchResultScreen {
@@ -541,6 +546,7 @@ KPIM.MainView {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
+      itemHeight: Screen.partition( height, 7 )
     }
 
     resultText: KDE.i18np( "One event found", "%1 events found", searchEventListView.count )

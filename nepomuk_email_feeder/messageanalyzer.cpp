@@ -183,11 +183,7 @@ void MessageAnalyzer::processPart(KMime::Content* content)
   // non plain text main body part, let strigi figure out what to do about that
   else if ( !m_mainBodyPart ) {
     m_mainBodyPart = content;
-#ifdef _MSC_VER
-#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
-#else
-#warning Fix attachment indexing once Nepomuk adds the necessary interface again
-#endif
+    m_parent->indexData( m_email.uri(), content->decodedContent(), m_item.modificationTime() );
   }
 
   // attachment -> delegate to strigi
@@ -206,11 +202,7 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     if ( content->contentDescription( false ) && !content->contentDescription()->asUnicodeString().isEmpty() )
       attachment.addProperty( Vocabulary::NIE::description(), Soprano::LiteralValue( content->contentDescription()->asUnicodeString() ) );
     m_email.addAttachment( attachment );
-#ifdef _MSC_VER
-#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
-#else
-#warning Fix attachment indexing once Nepomuk adds the necessary interface again
-#endif
+    m_parent->indexData( attachmentUrl, content->decodedContent(), m_item.modificationTime() );
   }
 
   if ( shouldResetModel ) {

@@ -139,8 +139,10 @@ class KMANAGESIEVE_EXPORT SieveJob : public QObject
      * @param active Whether the script is active on the server.
      */
     void result( KManageSieve::SieveJob *job, bool success,
-                 const QString &script, bool active );
+                 const QString &script, bool active);
 
+    void errorMessage( KManageSieve::SieveJob *job, bool success,
+                     const QString& errMsg );
     /**
      * This signal is emitted for each result entry of a list job.
      *

@@ -51,10 +51,6 @@ set(kmail_mobile_srcs
   vacationmanager.cpp
 )
 
-if (WIN32)
-   set(kmail_mobile_srcs ${kmail_mobile_srcs} kmail-mobile.rc)
-endif (WIN32)
-
 qt4_wrap_ui(kmail_mobile_srcs configwidget.ui messagelistsettingseditor.ui searchwidget.ui)
 
 if(KDEPIM_ENTERPRISE_BUILD)
@@ -69,6 +65,8 @@ kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
+
+kde4_add_app_icon(kmail_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 if (WINCE)

@@ -72,6 +72,7 @@ namespace Util {
                                                     const QString &text );
 
     MESSAGECOMPOSER_EXPORT QStringList AttachmentKeywords();
+    MESSAGECOMPOSER_EXPORT QString cleanedUpHeaderString( const QString &s );
 }
 
 }

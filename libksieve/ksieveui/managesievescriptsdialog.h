@@ -4,14 +4,14 @@
 
 #include "ksieveui_export.h"
 
-#include <kdialog.h>
+#include <qdialog.h>
 #include <kurl.h>
 
 #include <QMap>
 
 class QButtonGroup;
 class QTreeWidgetItem;
-
+class KPushButton;
 namespace KManageSieve {
 class SieveJob;
 }
@@ -21,7 +21,7 @@ namespace KSieveUi {
 class SieveEditor;
 class TreeWidgetWithContextMenu;
 
-class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
+class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
   Q_OBJECT
 
@@ -42,8 +42,13 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     void slotDeactivateScript();
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotPutResult( KManageSieve::SieveJob *, bool );
+    void slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg);
+
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
+    void slotSieveEditorCheckSyntaxClicked();
+    void slotUpdateButtons();
+
   private:
     void killAllJobs();
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
@@ -80,9 +85,13 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
      */
     void clear();
 
+    void addFailedMessage( const QString & logEntry );
+    void addOkMessage( const QString & logEntry );
+    void addMessageEntry( const QString & errorMsg, const QColor& color );
+    void updateButtons();
+  
   private:
     TreeWidgetWithContextMenu* mListView;
-    QTreeWidgetItem *mContextMenuItem;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
     QMap<QTreeWidgetItem*,KUrl> mUrls;
@@ -93,8 +102,15 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     // Maps the top-level tree widget items (the accounts) to a button group.
     // The button group is used for the radio buttons of the child items.
     QMap<QTreeWidgetItem*,QButtonGroup*> mButtonGroups;
-
+  
     KUrl mCurrentURL;
+
+    KPushButton *mNewScript;
+    KPushButton *mEditScript; 
+    KPushButton *mDeleteScript;
+    KPushButton *mDeactivateScript;
+
+  
     bool mWasActive : 1;
 };
 

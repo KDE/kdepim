@@ -30,6 +30,7 @@
 #include "kleo_util.h"
 #include "infopart.h"
 #include "composer.h"
+#include "util.h"
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
@@ -1018,46 +1019,36 @@ Message::Composer* Message::ComposerViewBase::createSimpleComposer() {
 }
 
 //-----------------------------------------------------------------------------
-static QString cleanedUpHeaderString( const QString &s )
-{
-  // remove invalid characters from the header strings
-  QString res( s );
-  res.remove( QChar::fromLatin1( '\r' ) );
-  res.replace( QChar::fromLatin1( '\n' ), QString::fromLatin1( " " ) );
-  return res.trimmed();
-}
-
-//-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::to() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::To ) );
+  return Message::Util::cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::To ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::cc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Cc ) );
+  return Message::Util::cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Cc ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::bcc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Bcc ) );
+  return Message::Util::cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Bcc ) );
 }
 
 QString Message::ComposerViewBase::from() const
 {
-  return cleanedUpHeaderString( m_from );
+  return Message::Util::cleanedUpHeaderString( m_from );
 }
 
 QString Message::ComposerViewBase::replyTo() const
 {
-  return cleanedUpHeaderString( m_replyTo );
+  return Message::Util::cleanedUpHeaderString( m_replyTo );
 }
 
 QString Message::ComposerViewBase::subject() const
 {
-  return cleanedUpHeaderString( m_subject );
+  return Message::Util::cleanedUpHeaderString( m_subject );
 }
 
 void Message::ComposerViewBase::setParentWidgetForGui ( QWidget* w )

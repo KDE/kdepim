@@ -51,7 +51,7 @@ QML.Rectangle {
       id: snippetDelegate
       clip: true
       width: parent.width
-      height: 70
+      height: _topLevel.actionItemHeight
 
       QML.Rectangle {
         id: background

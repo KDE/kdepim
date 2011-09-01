@@ -1554,3 +1554,5 @@ void ThemeEditor::slotIconSizeSpinBoxValueChanged( int val )
   mPreviewWidget->setTheme( mCurrentTheme ); // will trigger a cache reset and a view update
 }
 
+
+#include "themeeditor.moc"

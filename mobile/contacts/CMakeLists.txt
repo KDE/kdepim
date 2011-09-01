@@ -64,13 +64,11 @@ kde4_add_ui_files(kab_mobile_srcs
 qt4_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
-if (WIN32)
-   set(kab_mobile_srcs ${kab_mobile_srcs} kaddressbook-mobile.rc)
-endif (WIN32)
-
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
+
+kde4_add_app_icon(kab_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kaddressbook-mobile.png")
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 if (WINCE)
