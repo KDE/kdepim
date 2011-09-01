@@ -1170,3 +1170,5 @@ bool Widget::selectionEmpty() const
   return d->mView->selectionEmpty();
 }
 
+
+#include "widgetbase.moc"

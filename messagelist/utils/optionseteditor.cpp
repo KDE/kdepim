@@ -65,3 +65,5 @@ OptionSetEditor::~OptionSetEditor()
 {
 }
 
+
+#include "optionseteditor.moc"
