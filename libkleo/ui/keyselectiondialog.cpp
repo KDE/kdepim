@@ -317,7 +317,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mCurrentContextMenuItem( 0 )
 {
   setCaption( title );
-  setButtons( Default|Ok|Cancel|Help );
+  setButtons( User1|User2|Ok|Cancel );
   setDefaultButton( Ok );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, QString() );
@@ -343,7 +343,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mCurrentContextMenuItem( 0 )
 {
   setCaption( title );
-  setButtons( Default|Ok|Cancel|Help );
+  setButtons( User1|User2|Ok|Cancel );
   setDefaultButton( Ok );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -367,7 +367,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mCurrentContextMenuItem( 0 )
 {
   setCaption( title );
-  setButtons( Default|Ok|Cancel|Help );
+  setButtons( User1|User2|Ok|Cancel );
   setDefaultButton( Ok );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -464,10 +464,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
            SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
 
-  setButtonText( KDialog::Default, i18n("&Reread Keys") );
-  setButtonText( KDialog::Help, i18n("&Start Certificate Manager") );
-  connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
-  connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
+  setButtonText( KDialog::User1, i18n("&Reread Keys") );
+  setButtonText( KDialog::User2, i18n("&Start Certificate Manager") );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotRereadKeys()) );
+  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotStartCertificateManager()) );
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
   connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   slotRereadKeys();
@@ -866,7 +866,7 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID( const QString & str ) {
 
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
-
+  
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
     item->setHidden( !item->text( 0 ).toUpper().startsWith( str ) && !anyUIDMatches( item, rx ) );
 
