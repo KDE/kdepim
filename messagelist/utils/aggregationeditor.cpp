@@ -235,5 +235,3 @@ void AggregationEditor::fillFillViewStrategyCombo()
     );
 }
 
-
-#include "aggregationeditor.moc"

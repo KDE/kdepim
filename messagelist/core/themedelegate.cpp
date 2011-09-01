@@ -51,10 +51,7 @@ ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
 {
   mItemView = parent;
   mTheme = 0;
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
 }
-
-QString ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
 
 ThemeDelegate::~ThemeDelegate()
 {
@@ -90,7 +87,6 @@ void ThemeDelegate::setTheme( const Theme * theme )
     break;
   }
   mItemView->reset();
-
 }
 
 // FIXME: gcc will refuse to inline these functions loudly complaining
@@ -121,18 +117,6 @@ static int cachedFontHeight( const QFont &font )
 
   return fontHeightCache[ fontKey ];
 }
-
-static int cachedFontHeightKey( const QFont &font, const QString &fontKey )
-{
-  static QHash<QString, int> fontHeightCache;
-
-  if ( !fontHeightCache.contains( fontKey ) ) {
-    fontHeightCache.insert( fontKey, cachedFontMetrics( font ).height() );
-  }
-
-  return fontHeightCache[ fontKey ];
-}
-
 
 static inline void paint_right_aligned_elided_text( const QString &text, Theme::ContentItem * ci, QPainter * painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font )
 {
@@ -517,8 +501,7 @@ static inline void compute_size_hint_for_item( Theme::ContentItem * ci,
   if ( ci->displaysText() )
   {
     const QFont font = ThemeDelegate::itemFont( ci, item );
-    const QString fontKey = ThemeDelegate::itemFontKey( ci, item );
-    const int fontHeight = cachedFontHeightKey( font, fontKey );
+    const int fontHeight = cachedFontHeight( font );
     if ( fontHeight > maxh )
       maxh = fontHeight;
     totalw += ci->displaysLongText() ? 128 : 64;
@@ -1685,22 +1668,5 @@ QFont ThemeDelegate::itemFont( const Theme::ContentItem *ci, const Item *item )
     return static_cast< const MessageItem * >( item )->font();
 
   return KGlobalSettings::generalFont();
-}
-
-QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *item )
-{
-  if ( ci && ci->useCustomFont() )
-    return ci->fontKey();
-
-  if ( item && ( item->type() == Item::Message ) )
-    return static_cast< const MessageItem * >( item )->fontKey();
-
-  return mGeneralFontKey;
-}
-
-// Store the new fontKey when the generalFont changes.
-void ThemeDelegate::slotGeneralFontChanged()
-{
-  ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
 }
 

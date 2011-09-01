@@ -1063,5 +1063,3 @@ void Manager::saveConfiguration()
   Settings::self()->config()->sync();
 }
 
-
-#include "manager.moc"

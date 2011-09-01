@@ -36,5 +36,3 @@ int StorageModel::initialUnreadRowCountGuess() const
   return rowCount( QModelIndex() );
 }
 
-
-#include "storagemodelbase.moc"
