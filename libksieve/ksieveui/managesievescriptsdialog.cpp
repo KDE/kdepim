@@ -10,7 +10,7 @@
 #include <kglobalsettings.h>
 #include <kpushbutton.h>
 #include <kmessagebox.h>
-
+#include <kfiledialog.h>
 
 #include <akonadi/agentinstance.h>
 #include <kmanagesieve/sievejob.h>
@@ -22,8 +22,11 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QSplitter>
+#include <QPointer>
+#include <QFile>
+#include <QTextStream>
 
-#include <cassert>
+#include <errno.h>
 
 using namespace KSieveUi;
 
@@ -440,13 +443,14 @@ void ManageSieveScriptsDialog::slotNewScript()
   slotGetResult( 0, true, QString(), false );
 }
 
-SieveEditor::SieveEditor( QWidget * parent, const char * name )
+SieveEditor::SieveEditor( QWidget * parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Edit Sieve Script" ) );
-  setButtons( Ok|Cancel|User1 );
+  setButtons( Ok|Cancel|User1|User2|User3 );
   setButtonText( User1, i18n( "Check Syntax" ) );
-  setObjectName( name );
+  setButtonGuiItem( User2, KStandardGuiItem::saveAs() );
+  setButtonText( User3, i18n( "Import..." ) );
   setDefaultButton( Ok );
   setModal( true );
   QSplitter *splitter = new QSplitter(this);
@@ -461,11 +465,96 @@ SieveEditor::SieveEditor( QWidget * parent, const char * name )
   splitter->addWidget( mDebugTextEdit );
   splitter->setSizes( size );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
+  connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
+  connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
+
   resize( 640,480);
 }
 
 SieveEditor::~SieveEditor()
 {
+}
+
+void SieveEditor::slotSaveAs()
+{
+  KUrl url;
+  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+
+  fdlg->setMode( KFile::File );
+  fdlg->setOperationMode( KFileDialog::Saving );
+  if ( fdlg->exec() == QDialog::Accepted && fdlg )
+  {
+    const QString fileName = fdlg->selectedFile();
+    if ( !saveToFile( fileName ) )
+    {
+      KMessageBox::error( this,
+                          i18n( "Could not write the file %1:\n"
+                                "\"%2\" is the detailed error description.",
+                                fileName,
+                                QString::fromLocal8Bit( strerror( errno ) ) ),
+                          i18n( "Sieve Editor Error" ) );
+    }
+  }
+  delete fdlg;
+ 
+}
+
+bool SieveEditor::saveToFile( const QString&filename )
+{
+  QFile file( filename );
+  if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
+    return false;
+  QTextStream out(&file);
+  out << mTextEdit->toPlainText();
+  return true;
+}
+
+void SieveEditor::slotImport()
+{
+  if ( !mTextEdit->toPlainText().isEmpty() )
+  {
+    if ( KMessageBox::warningYesNo(this, i18n( "You will overwrite script. Do you want to continue?" ), i18n( "Import Script" ) ) == KMessageBox::No )
+      return;
+  }
+  KUrl url;
+  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+
+  fdlg->setMode( KFile::File );
+  fdlg->setOperationMode( KFileDialog::Opening );
+  if ( fdlg->exec() == QDialog::Accepted && fdlg )
+  {
+    const QString fileName = fdlg->selectedFile();
+    if ( !loadFromFile( fileName ) )
+    {
+      KMessageBox::error( this,
+                          i18n( "Could not load the file %1:\n"
+                                "\"%2\" is the detailed error description.",
+                                fileName,
+                                QString::fromLocal8Bit( strerror( errno ) ) ),
+                          i18n( "Sieve Editor Error" ) );
+    }
+  }
+  delete fdlg;
+}
+
+bool SieveEditor::loadFromFile( const QString& filename )
+{
+  QFile file( filename );
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return false;
+
+  QTextStream in(&file);
+  QString line = in.readLine();
+  QString scriptText;
+  while (!line.isNull()) {
+    if ( scriptText.isEmpty() )
+      scriptText = line;
+    else
+      scriptText += QLatin1String( "\n" ) + line;
+    line = in.readLine();
+  }
+  mTextEdit->setPlainText( scriptText );
+  return true;
 }
 
 void SieveEditor::slotTextChanged()

@@ -13,7 +13,7 @@ class SieveEditor : public KDialog {
   Q_OBJECT
   Q_PROPERTY( QString script READ script WRITE setScript )
 public:
-  explicit SieveEditor( QWidget * parent=0, const char * name=0 );
+  explicit SieveEditor( QWidget * parent=0 );
   ~SieveEditor();
 
   QString script() const { return mTextEdit->toPlainText(); }
@@ -23,7 +23,11 @@ public:
 
 private slots:
   void slotTextChanged();
+  void slotImport();
+  void slotSaveAs();
 private:
+  bool saveToFile( const QString&filename );
+  bool loadFromFile( const QString& filename );
   SieveTextEdit * mTextEdit;
   QTextEdit *mDebugTextEdit;
 };
