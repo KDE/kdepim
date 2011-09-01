@@ -1,36 +1,11 @@
 #ifndef KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_P_H
 #define KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_P_H
 
-#include <kdialog.h>
-#include "sievetextedit.h"
 #include <QContextMenuEvent>
 #include <QRadioButton>
 #include <QTreeWidget>
 
 namespace KSieveUi {
-
-class SieveEditor : public KDialog {
-  Q_OBJECT
-  Q_PROPERTY( QString script READ script WRITE setScript )
-public:
-  explicit SieveEditor( QWidget * parent=0 );
-  ~SieveEditor();
-
-  QString script() const { return mTextEdit->toPlainText(); }
-  void setScript( const QString & script ) { mTextEdit->append( script ); }
-  void setDebugColor( const QColor& col ) { mDebugTextEdit->setTextColor( col ); }
-  void setDebugScript( const QString& debug ) { mDebugTextEdit->setText( debug ); }
-
-private slots:
-  void slotTextChanged();
-  void slotImport();
-  void slotSaveAs();
-private:
-  bool saveToFile( const QString&filename );
-  bool loadFromFile( const QString& filename );
-  SieveTextEdit * mTextEdit;
-  QTextEdit *mDebugTextEdit;
-};
 
 /**
  * A tree widget with an additional signal contextMenuRequested.

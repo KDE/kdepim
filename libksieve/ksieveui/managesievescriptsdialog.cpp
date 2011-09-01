@@ -2,6 +2,7 @@
 #include "managesievescriptsdialog.h"
 #include "managesievescriptsdialog_p.h"
 #include "sievetextedit.h"
+#include "sieveeditor.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -10,7 +11,6 @@
 #include <kglobalsettings.h>
 #include <kpushbutton.h>
 #include <kmessagebox.h>
-#include <kfiledialog.h>
 
 #include <akonadi/agentinstance.h>
 #include <kmanagesieve/sievejob.h>
@@ -21,10 +21,6 @@
 #include <QMenu>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-#include <QSplitter>
-#include <QPointer>
-#include <QFile>
-#include <QTextStream>
 
 #include <errno.h>
 
@@ -441,127 +437,6 @@ void ManageSieveScriptsDialog::slotNewScript()
   addRadioButton( newItem, name );
   mCurrentURL = u;
   slotGetResult( 0, true, QString(), false );
-}
-
-SieveEditor::SieveEditor( QWidget * parent )
-  : KDialog( parent )
-{
-  setCaption( i18n( "Edit Sieve Script" ) );
-  setButtons( Ok|Cancel|User1|User2|User3 );
-  setButtonText( User1, i18n( "Check Syntax" ) );
-  setButtonGuiItem( User2, KStandardGuiItem::saveAs() );
-  setButtonText( User3, i18n( "Import..." ) );
-  setDefaultButton( Ok );
-  setModal( true );
-  QSplitter *splitter = new QSplitter(this);
-  splitter->setOrientation( Qt::Vertical );
-  setMainWidget( splitter );
-  QList<int> size;
-  size << 400 << 100;
-  mTextEdit = new SieveTextEdit( splitter );
-  mDebugTextEdit = new QTextEdit;
-  mDebugTextEdit->setReadOnly( true );
-  splitter->addWidget( mTextEdit );
-  splitter->addWidget( mDebugTextEdit );
-  splitter->setSizes( size );
-  connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-  connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
-  connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
-
-  resize( 640,480);
-}
-
-SieveEditor::~SieveEditor()
-{
-}
-
-void SieveEditor::slotSaveAs()
-{
-  KUrl url;
-  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
-
-  fdlg->setMode( KFile::File );
-  fdlg->setOperationMode( KFileDialog::Saving );
-  if ( fdlg->exec() == QDialog::Accepted && fdlg )
-  {
-    const QString fileName = fdlg->selectedFile();
-    if ( !saveToFile( fileName ) )
-    {
-      KMessageBox::error( this,
-                          i18n( "Could not write the file %1:\n"
-                                "\"%2\" is the detailed error description.",
-                                fileName,
-                                QString::fromLocal8Bit( strerror( errno ) ) ),
-                          i18n( "Sieve Editor Error" ) );
-    }
-  }
-  delete fdlg;
- 
-}
-
-bool SieveEditor::saveToFile( const QString&filename )
-{
-  QFile file( filename );
-  if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
-    return false;
-  QTextStream out(&file);
-  out << mTextEdit->toPlainText();
-  return true;
-}
-
-void SieveEditor::slotImport()
-{
-  if ( !mTextEdit->toPlainText().isEmpty() )
-  {
-    if ( KMessageBox::warningYesNo(this, i18n( "You will overwrite script. Do you want to continue?" ), i18n( "Import Script" ) ) == KMessageBox::No )
-      return;
-  }
-  KUrl url;
-  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
-
-  fdlg->setMode( KFile::File );
-  fdlg->setOperationMode( KFileDialog::Opening );
-  if ( fdlg->exec() == QDialog::Accepted && fdlg )
-  {
-    const QString fileName = fdlg->selectedFile();
-    if ( !loadFromFile( fileName ) )
-    {
-      KMessageBox::error( this,
-                          i18n( "Could not load the file %1:\n"
-                                "\"%2\" is the detailed error description.",
-                                fileName,
-                                QString::fromLocal8Bit( strerror( errno ) ) ),
-                          i18n( "Sieve Editor Error" ) );
-    }
-  }
-  delete fdlg;
-}
-
-bool SieveEditor::loadFromFile( const QString& filename )
-{
-  QFile file( filename );
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    return false;
-
-  QTextStream in(&file);
-  QString line = in.readLine();
-  QString scriptText;
-  while (!line.isNull()) {
-    if ( scriptText.isEmpty() )
-      scriptText = line;
-    else
-      scriptText += QLatin1String( "\n" ) + line;
-    line = in.readLine();
-  }
-  mTextEdit->setPlainText( scriptText );
-  return true;
-}
-
-void SieveEditor::slotTextChanged()
-{
-  const bool enabled = !script().isEmpty();
-  enableButton( User1, enabled );
-  enableButtonOk( enabled );
 }
 
 void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool success, const QString & script, bool isActive )
