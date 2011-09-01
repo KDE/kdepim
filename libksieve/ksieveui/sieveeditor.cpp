@@ -26,6 +26,9 @@
 #include <QSplitter>
 #include <QTextStream>
 #include <QPointer>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
 
 using namespace KSieveUi;
 
@@ -39,9 +42,21 @@ SieveEditor::SieveEditor( QWidget * parent )
   setButtonText( User3, i18n( "Import..." ) );
   setDefaultButton( Ok );
   setModal( true );
-  QSplitter *splitter = new QSplitter(this);
+
+  QWidget *mainWidget = new QWidget;
+  QVBoxLayout *lay = new QVBoxLayout;
+  mainWidget->setLayout( lay );
+  QHBoxLayout *nameLayout = new QHBoxLayout;
+  QLabel * label = new QLabel( i18n( "Script name:" ) );
+  nameLayout->addWidget( label );
+  mScriptName = new QLineEdit;
+  mScriptName->setReadOnly( true );
+  nameLayout->addWidget( mScriptName );
+  lay->addLayout( nameLayout );
+  
+  QSplitter *splitter = new QSplitter;
   splitter->setOrientation( Qt::Vertical );
-  setMainWidget( splitter );
+  lay->addWidget( splitter );
   QList<int> size;
   size << 400 << 100;
   mTextEdit = new SieveTextEdit( splitter );
@@ -54,6 +69,7 @@ SieveEditor::SieveEditor( QWidget * parent )
   connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
   connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
+  setMainWidget( mainWidget );
   resize( 640,480);
 }
 
@@ -150,6 +166,30 @@ void SieveEditor::slotTextChanged()
   enableButtonOk( enabled );
 }
 
+QString SieveEditor::script() const
+{
+  return mTextEdit->toPlainText();
+}
+
+void SieveEditor::setScript( const QString & script )
+{
+  mTextEdit->append( script );
+}
+
+void SieveEditor::setDebugColor( const QColor& col )
+{
+  mDebugTextEdit->setTextColor( col );
+}
+
+void SieveEditor::setDebugScript( const QString& debug )
+{
+  mDebugTextEdit->setText( debug );
+}
+
+void SieveEditor::setScriptName( const QString&name )
+{
+  mScriptName->setText( name );
+}  
 
 #include "sieveeditor.moc"
 

@@ -24,6 +24,7 @@
 
 #include <kdialog.h>
 
+class QLineEdit;
 
 namespace KSieveUi {
 
@@ -34,10 +35,11 @@ public:
   explicit SieveEditor( QWidget * parent=0 );
   ~SieveEditor();
 
-  QString script() const { return mTextEdit->toPlainText(); }
-  void setScript( const QString & script ) { mTextEdit->append( script ); }
-  void setDebugColor( const QColor& col ) { mDebugTextEdit->setTextColor( col ); }
-  void setDebugScript( const QString& debug ) { mDebugTextEdit->setText( debug ); }
+  QString script() const;
+  void setScript( const QString & script );
+  void setDebugColor( const QColor& col );
+  void setDebugScript( const QString& debug );
+  void setScriptName( const QString&name );
 
 private slots:
   void slotTextChanged();
@@ -48,6 +50,7 @@ private:
   bool loadFromFile( const QString& filename );
   SieveTextEdit * mTextEdit;
   QTextEdit *mDebugTextEdit;
+  QLineEdit *mScriptName;
 };
 }
 
