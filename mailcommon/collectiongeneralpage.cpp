@@ -500,9 +500,8 @@ void CollectionGeneralPage::save( Collection &collection )
     mFolderCollection->setIgnoreNewMail( !mNotifyOnNewMailCheckBox->isChecked() );
     mFolderCollection->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
     mFolderCollection->setHideInSelectionDialog( mHideInSelectionDialogCheckBox->isChecked() );
+    mFolderCollection->writeConfig();
   }
-
-  mFolderCollection->writeConfig();
 }
 
 void CollectionGeneralPage::slotIdentityCheckboxChanged()
