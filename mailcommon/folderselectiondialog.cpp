@@ -183,7 +183,8 @@ void FolderSelectionDialog::slotSelectionChanged()
     Akonadi::Collection parent;
     enableButton(KDialog::User1, canCreateCollection( parent ) );
     if ( parent.isValid() ) {
-      enableButton( KDialog::Ok, FolderCollection::forCollection( parent )->canCreateMessages() );
+      const QSharedPointer<FolderCollection> fd(FolderCollection::forCollection( parent, false ) );
+      enableButton( KDialog::Ok, fd->canCreateMessages() );
     }
   }
 }

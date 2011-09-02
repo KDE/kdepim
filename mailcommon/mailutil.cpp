@@ -379,8 +379,8 @@ uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
 {
   uint id = 0;
   if( item.isValid() && item.parentCollection().isValid() ) {
-        QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );
-        id = fd->identity();
+    const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection(),false );
+    id = fd->identity();
   }
   return id;
 }
@@ -471,7 +471,7 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
         if ( ignoreCollectionCallback && ignoreCollectionCallback( collection ) )
           continue;
 
-        QSharedPointer<FolderCollection> fCollection = FolderCollection::forCollection( collection );
+        const QSharedPointer<FolderCollection> fCollection = FolderCollection::forCollection( collection, false );
         if ( !fCollection->ignoreNewMail() )
           return index; // we found the next unread collection
       }
