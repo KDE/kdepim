@@ -38,7 +38,7 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
   Q_OBJECT
 public:
-  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll );
+  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll, bool writeConfig = true );
 
   ~FolderCollection();
 
@@ -53,6 +53,10 @@ public:
 
 
   QString configGroupName() const;
+
+
+  bool isWriteConfig() const;
+  void setWriteConfig( bool writeConfig );
 
   void writeConfig() const;
   void readConfig();
