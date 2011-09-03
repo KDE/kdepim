@@ -18,6 +18,11 @@
 */
 
 /**
+ * Contains the minimum size necessary for usable finger interaction elements
+ */
+var fingerSize = KDE.mm2px( 12 );
+
+/**
  * Returns size of a screen partition.
  * This is supposed to be used when dividing a bit of screen space into equaly sized sub-spaces
  * without having unused/partial areas left.
@@ -28,6 +33,6 @@
 function partition( totalSize, minPartitions )
 {
   // at least 15mm for touch interaction
-  var optimalPartitionCount = Math.floor(totalSize / KDE.mm2px( 15 ));
+  var optimalPartitionCount = Math.floor(totalSize / fingerSize);
   return totalSize / Math.max(minPartitions, optimalPartitionCount);
 }
