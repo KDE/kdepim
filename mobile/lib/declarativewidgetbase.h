@@ -34,6 +34,12 @@ class QWidget;
 */
 class MOBILEUI_EXPORT DeclarativeWidgetBaseHelper : public QGraphicsProxyWidget
 {
+  Q_OBJECT
+  Q_PROPERTY( QString styleSheet READ styleSheet WRITE setStyleSheet )
+public:
+  QString styleSheet() const;
+  void setStyleSheet( const QString &styleSheet );
+
 protected:
     typedef boost::function<void(QGraphicsView*,QWidget*)> RegisterFunction;
     DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem *parent, const RegisterFunction & registerFunc );
