@@ -39,7 +39,7 @@ class MESSAGECORE_EXPORT AsyncNepomukResourceRetriever : public QObject
   public:
     explicit AsyncNepomukResourceRetriever(QObject* parent = 0);
 
-    void requestResource( const QUrl &url );
+    void requestResource( const QUrl &url, const QVector<QUrl> &properties );
     void cancelRequest( const QUrl &url );
 
   Q_SIGNALS:
