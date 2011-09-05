@@ -294,8 +294,10 @@ uint FolderCollection::identity() const
     OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
-      if( useDefault.isValid() && useDefault.value() )
+      if( useDefault.isValid() && useDefault.value() ) {
+	delete imapSettingsInterface;
         return mIdentity;
+      }
 
        QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
       if ( remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0 ) {
