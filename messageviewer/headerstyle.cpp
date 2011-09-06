@@ -804,9 +804,8 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     "   <tr> \n"
     "   <td style=\"min-width: 6px; max-width: 6px; background: url("+imgpath+"left.png); \"></td> \n"
     "   <td style=\"\"> \n";
-
   headerStr +=
-      "<div class=\"noprint\" style=\"z-index: 1; float:right; position: relative; top: -35px; right: 20px ;\">\n"
+      "<div class=\"noprint\" style=\"z-index: 1; float:right; position: relative; top: -35px; right: 20px ; max-height: 65px\">\n"
       "<img src=\"" + imgpath + "icon.png\">\n"
       "</div>\n";
   headerStr +=
@@ -843,7 +842,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if ( strategy->showHeader( "to" ) ) {
     headerStr +=
       "     <tr> "
-      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
+      "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
       StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
@@ -854,7 +853,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
     headerStr +=
       "     <tr> "
-      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
+      "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
       StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
@@ -865,7 +864,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
     headerStr +=
       "     <tr> "
-      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
+      "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
       StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
