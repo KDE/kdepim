@@ -28,12 +28,15 @@
 
 #ifndef KMSUBJECTLINEEDIT_H
 #define KMSUBJECTLINEEDIT_H
+#include "messagecomposer_export.h"
 
 #include <KTextEdit>
+
 class QContextMenuEvent;
 class QMimeData;
+namespace Message {
 
-class KMSubjectLineEdit : public KTextEdit
+class MESSAGECOMPOSER_EXPORT KMSubjectLineEdit : public KTextEdit
 {
   Q_OBJECT
 
@@ -70,6 +73,6 @@ private:
   Private *const d;
 
 };
-
+}
 #endif /* KMSUBJECTLINEEDIT_H */
 
