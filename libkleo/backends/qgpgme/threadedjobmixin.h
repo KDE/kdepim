@@ -143,7 +143,7 @@ namespace _detail {
 
     void lateInitialization() {
       assert( m_ctx );
-      connect( &m_thread, SIGNAL(finished()), this, SLOT(slotFinished()) );
+      QObject::connect( &m_thread, SIGNAL(finished()), this, SLOT(slotFinished()) );
       m_ctx->setProgressProvider( this );
     }
 
