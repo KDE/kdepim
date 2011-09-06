@@ -116,6 +116,7 @@ set(krss_LIB_SRCS
 endif(Nepomuk_FOUND)
 
 set(krss_LIB_HDRS
+   feedcollection.h # needed for krsslocal
    krss_export.h
    item.h
    enclosure.h
