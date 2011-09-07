@@ -1055,6 +1055,11 @@ void ViewerPrivate::readConfig()
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
 
+#ifndef KDEPIM_NO_WEBKIT
+  mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
+  mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
+#endif
+  
   if ( mMessage )
     update();
   mColorBar->update();
