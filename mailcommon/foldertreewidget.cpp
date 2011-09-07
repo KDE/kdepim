@@ -75,6 +75,7 @@ public:
   KLineEdit *filterFolderLineEdit;
   QPointer<Akonadi::ETMViewStateSaver> saver;
   QStringList expandedItems;
+  QString currentItem;
   QLabel *label;
   bool dontKeyFilter;
 };
@@ -170,12 +171,17 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
     Akonadi::ETMViewStateSaver saver;
     saver.setView( folderTreeView() );
     d->expandedItems = saver.expansionKeys();
+    d->currentItem = saver.currentIndexKey();
   } else if ( text.isEmpty() ) {
     
     d->saver = new Akonadi::ETMViewStateSaver;
-    const QString currentIndex = d->saver->currentIndexKey();
     d->saver->setView( folderTreeView() );
-    d->saver->restoreExpanded( d->expandedItems<<currentIndex );
+    QString currentIndex = d->saver->currentIndexKey();
+    if( d->saver->selectionKeys().isEmpty() )
+	currentIndex = d->currentItem;
+    else if( !currentIndex.isEmpty() ) 
+        d->expandedItems<<currentIndex;
+    d->saver->restoreExpanded( d->expandedItems );
     d->saver->restoreCurrentItem( currentIndex );
   } else {
     d->folderTreeView->expandAll();
