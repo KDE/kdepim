@@ -56,6 +56,7 @@ KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent, const QString& configFile)
   
   enableFindReplace(false);
   setAcceptRichText(false);
+  setTabChangesFocus( true );
   // widget may not be resized vertically
   setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
   setLineWrapMode(NoWrap);
