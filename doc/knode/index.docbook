@@ -83,8 +83,8 @@
 <holder>&Thomas.Schuetz;</holder>
 </copyright>
 <legalnotice>&FDLNotice;</legalnotice>
-<date>2002-04-13</date>
-<releaseinfo>0.07.00</releaseinfo>
+<date>2011-08-01</date>
+<releaseinfo>4.7.0 (&kde; 4.7)</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -100,29 +100,29 @@
 </keywordset>
 </bookinfo>
 
-&introduction;
+&introduction; <!-- up to 4.7-->
 
 <!-- Using chapter is too big to put in one of its own, so breaking down to sect1 level -->
 
 <chapter id="using-knode"> 
 <title>Working with &knode;</title> 
 
-&using-firststart;
-&using-subscribing;
-&using-morefeatures;
+&using-firststart; <!-- up to 4.7-->
+&using-subscribing; <!-- up to 4.7-->
+&using-morefeatures; <!-- up to 4.7-->
 </chapter>
 
-&commands;
+&commands; <!-- up to 4.7-->
 
-&faq;
+&faq; <!-- up to 4.7-->
 
-&journey;
+&journey; <!-- up to 4.7-->
 
-&more;
+&more; <!-- up to 4.7-->
 
-&credits;
+&credits; <!-- up to 4.7-->
 
-&install;
+&install; <!-- up to 4.7-->
 
 &glossary;
 

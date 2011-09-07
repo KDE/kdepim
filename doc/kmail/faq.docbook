@@ -143,7 +143,7 @@ Each one of those column headers needs to be clicked on, and your new custom fon
 <answer>
   <para><emphasis>Symptom:</emphasis> You are using &kmail; on a netbook, and find that the <emphasis>tooltips</emphasis> over folders hide too many folder names</para>
   <para><emphasis>Solution:</emphasis> Right-clicking on the header of the <guilabel>Folder List</guilabel> and unselect <guilabel>Display Tooltips</guilabel>.
-  In the settings dialog you can also select <guilabel>When Text Obscured</guilabel> and <guilabel>Never</guilabel>. <guilabel>When Text Obscured</guilabel> is handy for folders that have long names, so that only part of the name is displayed. Folders where you can see the full name won't pop up the tooltip.</para>
+  In the settings dialog you can also select <guilabel>When Text Obscured</guilabel>. <guilabel>When Text Obscured</guilabel> is handy for folders that have long names, so that only part of the name is displayed. Folders where you can see the full name won't pop up the tooltip.</para>
 </answer>
 </qandaentry>
 
@@ -162,7 +162,9 @@ Each one of those column headers needs to be clicked on, and your new custom fon
 
 <!-- fixme: how to use old kmail mail data: copy files from
 ~/Mail (incl. hidden ones) to the new ~/Mail folder -->
-<qandaentry><question><para>How to transfer mail and settings to another computer (or another user account on the same machine)?</para></question>
+<qandaentry id="transfer-mail-and-settings"><question>
+<para>How to transfer mail and settings to another computer (or another user account on the same machine)?</para>
+</question>
 <answer>
 <para>The messages are typically in <filename class="directory">~/.kde/share/apps/kmail/</filename>. For very old installations of &kmail;, the messages can also be in <filename class="directory">~/Mail</filename>. Note that &kmail; uses hidden sub-directories inside that directory, so you need to make sure to copy hidden directories as well.</para>
 <para>For settings you will need to copy the following files:</para>
@@ -450,7 +452,7 @@ mailing list post</ulink>.</para></answer>
 <question><para>Are there any known bugs in &kmail;?</para></question>
 <answer>
 <para>A list of submitted bugs can be obtained by the query from the <ulink
-url="https://bugs.kde.org/buglist.cgi?quicksearch=kmail">Bugzilla page</ulink>. Note that not all
+url="https://bugs.kde.org/buglist.cgi?quicksearch=kmail2">Bugzilla page</ulink>. Note that not all
 these bugs are valid. All in all we think that &kmail; is a very robust piece
 of software.</para>
 <para><warning><para>However, you should not run &kmail; while another email client is already

@@ -38,7 +38,8 @@ be done by using <link linkend="keyboard-shortcuts">Keyboard Shortcuts</link>.</
 <listitem>
 <para>Although &kmail; can be considered reliable you should keep 
 backups of your messages, &ie; just copy the files and folders 
-listed on <ulink url=" http://userbase.kde.org/KMail/FAQs_Hints_and_Tips#Transfer_mail_and_settings_to_another_computer_.28or_another_user_account_on_the_same_machine.29  ">KMail/FAQs</ulink> to a safe place.</para>
+listed in the <link
+linkend="transfer-mail-and-settings">FAQ</link> to a safe place.</para>
 </listitem>
 <!-- TODO: add other tips for "invisible" features here -->
 

@@ -7,11 +7,11 @@
 <qandaset>
 <qandaentry>
 <question>
-<para>I have installed &kde; 3, but &knode; does not exist in the
+<para>I have installed &kde; 4, but &knode; does not exist in the
 <guimenu>K</guimenu> Menu.</para>
  </question> 
 <answer> 
-<para>Does the <guisubmenu>Internet</guisubmenu>entry exist? If not,
+<para>Does the <guisubmenu>Internet</guisubmenu> entry exist? If not,
 maybe the kdenetwork package isn't installed (perhaps because your
 distribution possibly doesn't do this for you); if the entry is there,
 but you do not have a <guimenuitem>KNode</guimenuitem> item
@@ -53,8 +53,8 @@ more; where can I find this article?</para>
 <answer> 
 <para>You can find some extensive usenet archives at
 <ulink
-url="http://groups.google.com/usenet/">groups.google.com</ulink> or
-<ulink url="http://av.com">AltaVista</ulink>; they even contain
+url="http://groups.google.com/">groups.google.com</ulink> or
+<ulink url="http://news.search.yahoo.com/">Yahoo! Search</ulink>; they even contain
 articles that are several years old.</para> 
 </answer> 
 </qandaentry> 
@@ -112,7 +112,7 @@ header lines.</para>
 </question> 
 <answer> 
 <para>This happens when somebody posted an article in another news
-group and checked the option <guilabel>Followup To</guilabel>; the
+group and checked the option <guilabel>Followup-To</guilabel>; the
 article in question is then sent to your news group, but the referring
 article is absent. In many cases the poster tells the reason for his
 choice to set a followup.</para>
@@ -128,7 +128,7 @@ editor is correctly set.</para>
 <answer> 
 <para>Have a look whether you entered the place-holder for a filename
 after the editor command; if not, enter it.  If you want, for example, to
-use &kedit; enter <userinput><command>kedit</command><token>
+use &kwrite; enter <userinput><command>kwrite</command><token>
 %f</token></userinput></para>
 <para>If the <token>%f</token> is absent, your editor cannot be
 run.</para>
