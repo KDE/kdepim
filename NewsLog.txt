@@ -1,4 +1,13 @@
 
+Friday 09 September 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4054: Umlauts and sending contacts problem (rt#10028)
+
+
+
 Thursday 25 August 2011
 
 Problems addressed
