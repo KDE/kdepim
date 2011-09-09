@@ -2221,6 +2221,18 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   connect( mWordWrapCheck, SIGNAL(toggled(bool)),
            mWrapColumnSpin, SLOT(setEnabled(bool)) );
 
+  hlay = new QHBoxLayout();
+  vlay->addLayout( hlay );
+
+  label = new QLabel( MessageComposer::MessageComposerSettings::self()->maximumRecipientsItem()->label(), this );
+  hlay->addWidget( label );
+  
+  mMaximumRecipients = new KIntSpinBox( 0, 500, 1, 1, this );
+  hlay->addWidget( mMaximumRecipients );
+  hlay->addStretch( 1 );
+  connect( mMaximumRecipients, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );  
+  
 #ifdef KDEPIM_ENTERPRISE_BUILD
   // a checkbox for "too many recipient warning" and a spinbox for the recipient threshold
   hlay = new QHBoxLayout(); // inherits spacing
@@ -2367,6 +2379,7 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
   mAutoRequestMDNCheck->setChecked( GlobalSettings::self()->requestMDN() );
   mWordWrapCheck->setChecked( MessageComposer::MessageComposerSettings::self()->wordWrap() );
   mWrapColumnSpin->setValue( MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
+  mMaximumRecipients->setValue( MessageComposer::MessageComposerSettings::self()->maximumRecipients() );
   mAutoSave->setValue( GlobalSettings::self()->autosaveInterval() );
   mShowRecentAddressesInComposer->setChecked( MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposer() );
 
@@ -2395,6 +2408,7 @@ void ComposerPage::GeneralTab::save() {
   GlobalSettings::self()->setRequestMDN( mAutoRequestMDNCheck->isChecked() );
   MessageComposer::MessageComposerSettings::self()->setWordWrap( mWordWrapCheck->isChecked() );
   MessageComposer::MessageComposerSettings::self()->setLineWrapWidth( mWrapColumnSpin->value() );
+  MessageComposer::MessageComposerSettings::self()->setMaximumRecipients( mMaximumRecipients->value() );
   GlobalSettings::self()->setAutosaveInterval( mAutoSave->value() );
   MessageComposer::MessageComposerSettings::self()->setShowRecentAddressesInComposer( mShowRecentAddressesInComposer->isChecked() );
 
