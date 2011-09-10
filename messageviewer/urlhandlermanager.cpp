@@ -729,6 +729,8 @@ namespace {
       }
 #endif
     }
+    delete menu;
+    
     return true;
   }
 
