@@ -32,9 +32,6 @@ ComposerAutoResizer::ComposerAutoResizer( QTextEdit* parent )
   // detect when the text changes
   connect( parent, SIGNAL(textChanged()), this, SLOT(textEditChanged()) );
   connect( parent, SIGNAL(cursorPositionChanged()), this, SLOT(textEditChanged()) );
-
-  // get the original minimum size of the widget
-  mMinimumHeight = mComposer->size().height();
 }
 
 QDeclarativeItem *ComposerAutoResizer::findFlickable( QGraphicsItem *parent ) const
@@ -66,8 +63,9 @@ void ComposerAutoResizer::textEditChanged()
   const QRect contentsRect = mComposer->contentsRect();
 
   // sets the size of the widget dynamically
-  mComposer->setMinimumHeight( qMax( mMinimumHeight, size.height() + (frameRect.height() - contentsRect.height()) ) );
-  mComposer->setMaximumHeight( qMax( mMinimumHeight, size.height() + (frameRect.height() - contentsRect.height()) ) );
+  int minHeight = mComposer->property( "availableScreenHeight" ).toInt();
+  mComposer->setMinimumHeight( qMax( minHeight, size.height() + (frameRect.height() - contentsRect.height()) ) );
+  mComposer->setMaximumHeight( qMax( minHeight, size.height() + (frameRect.height() - contentsRect.height()) ) );
 
   const QGraphicsProxyWidget *proxy = mComposer->graphicsProxyWidget();
   QGraphicsItem *proxyItem = proxy->parentItem();
@@ -78,7 +76,7 @@ void ComposerAutoResizer::textEditChanged()
   // make sure the cursor is visible so the user doesn't loose track of the kb focus
   if ( mFlickable || (mFlickable = findFlickable( proxyItem )) ) {
     const int dy = cursor.center().y();
-    const int y = pos.y() + dy - mMinimumHeight;
+    const int y = pos.y() + dy - minHeight;
     if ( y >= 0 ) {
       mFlickable->setProperty( "contentY", y );
     } else {

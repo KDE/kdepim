@@ -25,7 +25,9 @@ import org.kde.messagecomposer 4.5 as MessageComposer
 import "../mobileui/ScreenFunctions.js" as Screen
 
 Item {
+  id: root
   property int contentHeight: subject.height + messageContent.height + bottomContainer.height + 20;
+  property int screenHeight: 480
   anchors.topMargin: 12
   anchors.leftMargin: 48
   anchors.rightMargin: 2
@@ -104,7 +106,7 @@ Item {
 
   MessageComposer.Editor {
     id: messageContent
-    height: 424 - Screen.fingerSize
+    availableScreenHeight: root.screenHeight - bottomContainer.height - subject.height - cryptoIndicator.height - cryptoIndicator.anchors.topMargin - root.anchors.topMargin - 2
     anchors {
       top: cryptoIndicator.bottom
       left: parent.left

@@ -38,7 +38,6 @@ class ComposerAutoResizer : public QObject
 
   private:
     QTextEdit *mComposer;
-    int mMinimumHeight;
     QDeclarativeItem *mFlickable;
 };
 

@@ -23,6 +23,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.messagecomposer 4.5 as MessageComposer
 
 KPIM.MainView {
+  id: root
 
   KPIM.DecoratedFlickable {
     id: flick
@@ -34,6 +35,7 @@ KPIM.MainView {
         id: editorView
         enabled: !window.busy
         anchors.fill: parent
+        screenHeight: root.height
       }
     ]
   }
