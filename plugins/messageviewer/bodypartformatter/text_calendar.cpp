@@ -1143,6 +1143,12 @@ class UrlHandler : public Interface::BodyPartURLHandler
                       Interface::BodyPart *part,
                       const QString &path ) const
     {
+      // filter out known paths that don't belong to this type of urlmanager.
+      // kolab/issue4054 msg27201
+      if ( path.contains( "addToAddressBook:" ) ) {
+        return false;
+      }
+
       if ( !hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
