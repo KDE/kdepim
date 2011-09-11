@@ -67,6 +67,9 @@ using namespace EventViews;
 enum {
   SPACING = 2
 };
+enum {
+  SHRINKDOWN = 2  // points less for the timezone font
+};
 
 class EventIndicator::Private
 {
@@ -1187,16 +1190,22 @@ void AgendaView::createTimeBarHeaders()
   qDeleteAll( d->mTimeBarHeaders );
   d->mTimeBarHeaders.clear();
 
+  const QFont oldFont( font() );
+  QFont labelFont = d->mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
+  labelFont.setPointSize( labelFont.pointSize() - SHRINKDOWN );
+
   foreach ( QScrollArea *area, d->mTimeLabelsZone->timeLabels() ) {
     TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
     QLabel *label = new QLabel( timeLabel->header().replace( '/', "/ " ),
                                 d->mTimeBarHeaderFrame );
-    label->setAlignment( Qt::AlignBottom | Qt::AlignLeft );
-    label->setMargin( 2 );
+    label->setFont( labelFont );
+    label->setAlignment( Qt::AlignBottom | Qt::AlignRight );
+    label->setMargin( 0 );
     label->setWordWrap( true );
     label->setToolTip( timeLabel->headerToolTip() );
     d->mTimeBarHeaders.append( label );
   }
+  setFont( oldFont );
 }
 
 void AgendaView::updateTimeBarWidth()
@@ -1207,7 +1216,10 @@ void AgendaView::updateTimeBarWidth()
 
   createTimeBarHeaders();
 
-  QFontMetrics fm( font() );
+  const QFont oldFont( font() );
+  QFont labelFont = d->mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
+  labelFont.setPointSize( labelFont.pointSize() - SHRINKDOWN );
+  QFontMetrics fm( labelFont );
 
   int width = d->mTimeLabelsZone->preferedTimeLabelsWidth();
   foreach ( QLabel *l, d->mTimeBarHeaders ) {
@@ -1215,6 +1227,7 @@ void AgendaView::updateTimeBarWidth()
       width = qMax( width, fm.width( word ) );
     }
   }
+  setFont( oldFont );
 
   width = width + fm.width( QLatin1Char( '/' ) );
 
