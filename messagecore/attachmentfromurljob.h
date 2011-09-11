@@ -22,9 +22,8 @@
 
 #include "messagecore_export.h"
 
-#include "attachmentloadjob.h"
+#include "attachmentfromurlbasejob.h"
 
-#include <KDE/KUrl>
 
 namespace MessageCore {
 
@@ -33,7 +32,7 @@ namespace MessageCore {
  *
  * @author Constantin Berzan <exit3219@gmail.com>
  */
-class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentLoadJob
+class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentFromUrlBaseJob
 {
   Q_OBJECT
 
@@ -51,25 +50,6 @@ class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentLoadJob
      */
     virtual ~AttachmentFromUrlJob();
 
-    /**
-     * Sets the @p url that will be loaded as attachment.
-     */
-    void setUrl( const KUrl &url );
-
-    /**
-     * Returns the url that will be loaded as attachment.
-     */
-    KUrl url() const;
-
-    /**
-     * Sets the maximum @p size the attachment is allowed to have.
-     */
-    void setMaximumAllowedSize( qint64 size );
-
-    /**
-     * Returns the maximum size the attachment is allowed to have.
-     */
-    qint64 maximumAllowedSize() const;
 
   protected Q_SLOTS:
     virtual void doStart();

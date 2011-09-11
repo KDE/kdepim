@@ -54,6 +54,7 @@
 #include <libkleo/ui/keyselectiondialog.h>
 
 #include <messagecore/attachmentcompressjob.h>
+#include <messagecore/attachmentfromfolderjob.h>
 #include <messagecore/attachmentfrommimecontentjob.h>
 #include <messagecore/attachmentfromurljob.h>
 #include <messagecore/attachmentpropertiesdialog.h>
@@ -212,8 +213,8 @@ void AttachmentControllerBase::Private::loadJobResult( KJob *job )
     return;
   }
 
-  Q_ASSERT( dynamic_cast<AttachmentFromUrlJob*>( job ) );
-  AttachmentFromUrlJob *ajob = static_cast<AttachmentFromUrlJob*>( job );
+  Q_ASSERT( dynamic_cast<AttachmentLoadJob*>( job ) );
+  AttachmentLoadJob *ajob = static_cast<AttachmentLoadJob*>( job );
   AttachmentPart::Ptr part = ajob->attachmentPart();
   q->addAttachment( part );
 }
@@ -662,7 +663,15 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::addAttachment( const KUrl &url )
 {
-  AttachmentFromUrlJob *ajob = new AttachmentFromUrlJob( url, this );
+  AttachmentFromUrlBaseJob *ajob = 0;
+  if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
+    kDebug() << "Creating attachment from folder";
+     ajob = new AttachmentFromFolderJob ( url, this );
+  }
+  else{
+    ajob = new AttachmentFromUrlJob( url, this );
+    kDebug() << "Creating attachment from file";
+  }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
     ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
   }

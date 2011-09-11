@@ -37,11 +37,26 @@
 
 #include <KLocale>
 
-KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent)
-  :KTextEdit( parent )
+using namespace Message;
+
+class KMSubjectLineEdit::Private
 {
+public:
+  Private( )
+    {
+    }
+  QString configFile;
+};
+
+KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent, const QString& configFile)
+  :KTextEdit( parent ),
+   d( new Private )
+{
+  d->configFile = configFile;
+  
   enableFindReplace(false);
   setAcceptRichText(false);
+  setTabChangesFocus( true );
   // widget may not be resized vertically
   setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
   setLineWrapMode(NoWrap);
@@ -55,11 +70,12 @@ KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent)
 
 KMSubjectLineEdit::~KMSubjectLineEdit()
 {
+  delete d;
 }
 
 void KMSubjectLineEdit::createHighlighter()
 {
-  Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, "kmail2rc");
+  Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
   highlighter->setAutomatic( false );
   
   KTextEdit::setHighlighter(highlighter);
@@ -119,22 +135,22 @@ void KMSubjectLineEdit::insertFromMimeData(const QMimeData * source)
     if(!pasteText.isEmpty())
     {
         // replace \r with \n to make xterm pastes happy
-        pasteText.replace('\r','\n');
+        pasteText.replace(QLatin1Char( '\r' ),QLatin1Char( '\n' ));
         // remove blank lines
-        while(pasteText.contains("\n\n"))
-            pasteText.replace("\n\n","\n");
+        while(pasteText.contains(QLatin1String( "\n\n" )))
+            pasteText.replace(QLatin1String( "\n\n" ),QLatin1String( "\n" ));
 
-        QRegExp reTopSpace("^ *\n");
+        QRegExp reTopSpace(QLatin1String( "^ *\n" ));
         while(pasteText.contains(reTopSpace))
             pasteText.remove(reTopSpace);
 
-        QRegExp reBottomSpace("\n *$");
+        QRegExp reBottomSpace(QLatin1String( "\n *$" ));
         while(pasteText.contains(reBottomSpace))
             pasteText.remove(reBottomSpace);
 
         // does the text contain at least one newline character?
-        if(pasteText.contains('\n'))
-          pasteText.remove('\n');
+        if(pasteText.contains(QLatin1Char( '\n' )))
+          pasteText.remove(QLatin1Char( '\n' ));
         
         insertPlainText(pasteText);
         ensureCursorVisible();

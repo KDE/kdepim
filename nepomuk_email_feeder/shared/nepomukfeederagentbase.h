@@ -32,6 +32,7 @@
 
 #include <nepomuk/query.h>
 #include <nepomuk/resourceterm.h>
+#include <nepomuk/comparisonterm.h>
 #include <nepomuk/resourcemanager.h>
 
 #include <Soprano/Model>

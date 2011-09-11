@@ -1055,6 +1055,11 @@ void ViewerPrivate::readConfig()
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
 
+#ifndef KDEPIM_NO_WEBKIT
+  mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
+  mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
+#endif
+  
   if ( mMessage )
     update();
   mColorBar->update();
@@ -1233,15 +1238,20 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
 void ViewerPrivate::showHideMimeTree( )
 {
 #ifndef QT_NO_TREEVIEW
+  bool showMimeTree = false;
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
+  {
     mMimePartTree->show();
+    showMimeTree = true;
+  }
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
     saveSplitterSizes();
     mMimePartTree->hide();
+    showMimeTree = false;
   }
-  if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != mMimePartTree->isVisible() ) )
-    mToggleMimePartTreeAction->setChecked( mMimePartTree->isVisible() );
+  if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != showMimeTree ) )
+    mToggleMimePartTreeAction->setChecked( showMimeTree );
 #endif
 }
 

@@ -43,13 +43,11 @@ class MessageCore::AttachmentFromUrlJob::Private
 
     AttachmentFromUrlJob *const q;
     KUrl mUrl;
-    qint64 mMaxSize;
     QByteArray mData;
 };
 
 AttachmentFromUrlJob::Private::Private( AttachmentFromUrlJob *qq )
-  : q( qq ),
-    mMaxSize( -1 )
+  : q( qq )
 {
 }
 
@@ -120,7 +118,7 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
 
 
 AttachmentFromUrlJob::AttachmentFromUrlJob( const KUrl &url, QObject *parent )
-  : AttachmentLoadJob( parent ),
+  : AttachmentFromUrlBaseJob( url, parent ),
     d( new Private( this ) )
 {
   d->mUrl = url;
@@ -129,26 +127,6 @@ AttachmentFromUrlJob::AttachmentFromUrlJob( const KUrl &url, QObject *parent )
 AttachmentFromUrlJob::~AttachmentFromUrlJob()
 {
   delete d;
-}
-
-KUrl AttachmentFromUrlJob::url() const
-{
-  return d->mUrl;
-}
-
-void AttachmentFromUrlJob::setUrl( const KUrl &url )
-{
-  d->mUrl = url;
-}
-
-qint64 AttachmentFromUrlJob::maximumAllowedSize() const
-{
-  return d->mMaxSize;
-}
-
-void AttachmentFromUrlJob::setMaximumAllowedSize( qint64 size )
-{
-  d->mMaxSize = size;
 }
 
 void AttachmentFromUrlJob::doStart()
@@ -160,12 +138,12 @@ void AttachmentFromUrlJob::doStart()
     return;
   }
 
-  if ( d->mMaxSize != -1 && d->mUrl.isLocalFile() ) {
+  if ( maximumAllowedSize() != -1 && d->mUrl.isLocalFile() ) {
     const qint64 size = QFileInfo( d->mUrl.toLocalFile() ).size();
-    if ( size > d->mMaxSize ) {
+    if ( size > maximumAllowedSize() ) {
       setError( KJob::UserDefinedError );
       setErrorText( i18n( "You may not attach files bigger than %1.",
-                          KGlobal::locale()->formatByteSize( d->mMaxSize ) ) );
+                          KGlobal::locale()->formatByteSize( maximumAllowedSize() ) ) );
       emitResult();
       return;
     }

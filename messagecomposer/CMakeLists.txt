@@ -59,6 +59,7 @@ set( messagecomposer_src
      emailaddressresolvejob.cpp
 
      keyresolver.cpp
+     kmsubjectlineedit.cpp
 )
 
 if (NOT WINCE)
