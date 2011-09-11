@@ -343,22 +343,24 @@ QString TimeLabels::headerToolTip() const
 
   QString toolTip;
   toolTip += "<qt>";
-  toolTip += i18n( "Timezone: %1", i18n( tz.name().toUtf8() ) );
+  toolTip += i18n( "<b>%1</b>", i18n( tz.name().toUtf8() ) );
+  toolTip += "<hr>";
   if ( !tz.countryCode().isEmpty() ) {
+    toolTip += i18n( "<i>Country Code:</i> %1", tz.countryCode() );
     toolTip += "<br/>";
-    toolTip += i18n( "Country Code: %1", tz.countryCode() );
   }
   if ( !tz.abbreviations().isEmpty() ) {
-    toolTip += "<br/>";
-    toolTip += i18n( "Abbreviations:" );
+    toolTip += i18n( "<i>Abbreviations:</i>" ) + "</i>";
+    toolTip += "&nbsp;";
     foreach ( const QByteArray &a, tz.abbreviations() ) {
-      toolTip += "<br/>";
-      toolTip += "&nbsp;" + QString::fromLocal8Bit( a );
+      toolTip += QString::fromLocal8Bit( a );
+      toolTip += ",&nbsp;";
     }
+    toolTip.chop( 7 );
+    toolTip += "<br/>";
   }
   if ( !tz.comment().isEmpty() ) {
-    toolTip += "<br/>";
-    toolTip += i18n( "Comment:<br/>%1", tz.comment() );
+    toolTip += i18n( "<i>Comment:</i> %1", tz.comment() );
   }
   toolTip += "</qt>";
 
