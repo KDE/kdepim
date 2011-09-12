@@ -1125,6 +1125,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mSavedRelativePosition = 0;
   setShowSignatureDetails( false );
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
+  mFindBar->closeBar();
   if ( mPrinting )
     mLevelQuote = -1;
 }
