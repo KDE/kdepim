@@ -42,12 +42,18 @@ void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
   if ( m_caseSensitiveAct->isChecked() )
     searchOptions |= QTextDocument::FindCaseSensitively;
 
-  if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ) )
+  if ( isAutoSearch )
+  {
+    QTextCursor cursor = m_view->textCursor();
+    cursor.setPosition( cursor.selectionStart() );
+    m_view->setTextCursor( cursor );
+  }
+  else if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ))
   {
     clearSelections();
   }
   mLastSearchStr = m_search->text();
-  bool found = m_view->find( mLastSearchStr, searchOptions );
+  const bool found = m_view->find( mLastSearchStr, searchOptions );
 
   setFoundMatch( found );
   FindBarBase::messageInfo( backward, isAutoSearch, found );  
@@ -58,6 +64,7 @@ void FindBarSourceView::clearSelections()
 {
   QTextCursor textCursor = m_view->textCursor();
   textCursor.clearSelection();
+  textCursor.setPosition( 0 );
   m_view->setTextCursor( textCursor );
                           
   FindBarBase::clearSelections();
