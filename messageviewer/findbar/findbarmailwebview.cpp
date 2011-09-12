@@ -54,12 +54,13 @@ void FindBarMailWebView::searchText( bool backward, bool isAutoSearch )
   if ( m_highlightAll->isChecked() )
     searchOptions |= MailWebView::HighlightAllOccurrences;
 #endif
-
-  if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ) )
+  const QString searchWord( m_search->text() );
+  if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
   {
     clearSelections();
   }
-  mLastSearchStr = m_search->text();
+ 
+  mLastSearchStr = searchWord;
   const bool found = m_view->findText( mLastSearchStr, searchOptions );
 
   setFoundMatch( found );
