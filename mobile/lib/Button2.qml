@@ -50,6 +50,9 @@ QML.Rectangle {
       left: (buttonText == "" ? undefined : parent.left);
       horizontalCenter: (buttonText == "" ? parent.horizontalCenter : undefined)
     }
+    fillMode: QML.Image.PreserveAspectFit
+    height: (root.height > sourceSize.height) ? sourceSize.height : (root.height - anchors.margins)
+    smooth: true
   }
 
   QML.Text {

@@ -89,7 +89,7 @@ void SendSMSDialog::updateMessageLength()
 
 void SendSMSDialog::updateButtons()
 {
-  enableButton( Ok, mText->toPlainText().length() > 0 );
+  enableButton( Ok, !mText->toPlainText().isEmpty() );
 }
 
 #include "sendsmsdialog.moc"

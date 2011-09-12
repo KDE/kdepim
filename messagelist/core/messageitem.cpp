@@ -36,7 +36,7 @@
 
 using namespace MessageList::Core;
 
-K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriever );
+K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriever )
 
 class MessageItem::Tag::Private
 {

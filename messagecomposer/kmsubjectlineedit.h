@@ -28,17 +28,28 @@
 
 #ifndef KMSUBJECTLINEEDIT_H
 #define KMSUBJECTLINEEDIT_H
+#include "messagecomposer_export.h"
 
 #include <KTextEdit>
+
 class QContextMenuEvent;
 class QMimeData;
+namespace Message {
 
-class KMSubjectLineEdit : public KTextEdit
+class MESSAGECOMPOSER_EXPORT KMSubjectLineEdit : public KTextEdit
 {
   Q_OBJECT
 
 public:
-  explicit KMSubjectLineEdit(QWidget* parent);
+  /**
+   * Constructs a KMSubjectLineEdit object.
+   * @param parent of widget
+   * @param configFile config file name for spell checking
+   */
+  explicit KMSubjectLineEdit(QWidget* parent, const QString& configFile);
+  /**
+   * Destructor
+   */
   ~KMSubjectLineEdit();
   
 protected:
@@ -49,11 +60,19 @@ protected:
   virtual void keyPressEvent(QKeyEvent*);
   virtual void insertFromMimeData ( const QMimeData * source );
 
-signals:
+Q_SIGNALS:
+  /**
+   * Emitted when the user uses the up arrow in the first line. The application
+   * should then put the focus on the widget above the text edit.
+   */
   void focusUp();
-  void focusDown();
   
-};
+  void focusDown();
+private:
+  class Private;
+  Private *const d;
 
+};
+}
 #endif /* KMSUBJECTLINEEDIT_H */
 

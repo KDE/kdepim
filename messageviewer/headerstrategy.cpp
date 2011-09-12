@@ -259,12 +259,12 @@ const HeaderStrategy * HeaderStrategy::create( Type type ) {
 }
 
 const HeaderStrategy * HeaderStrategy::create( const QString & type ) {
-  QString lowerType = type.toLower();
-  if ( lowerType == "all" )  return all();
-  if ( lowerType == "rich" )   return HeaderStrategy::rich();
+  const QString lowerType = type.toLower();
+  if ( lowerType == QLatin1String( "all" ) )  return all();
+  if ( lowerType == QLatin1String( "rich" ) )   return HeaderStrategy::rich();
   //if ( lowerType == "standard" ) return standard(); // not needed, see below
-  if ( lowerType == "brief" ) return brief();
-  if ( lowerType == "custom" )  return custom();
+  if ( lowerType == QLatin1String( "brief" ) ) return brief();
+  if ( lowerType == QLatin1String( "custom" ) )  return custom();
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
   return standard();

@@ -43,9 +43,13 @@
 
 using namespace MessageComposer;
 
+namespace KMime {
+namespace Types {
 static bool operator==( const KMime::Types::Mailbox &left, const KMime::Types::Mailbox &right )
 {
   return (left.addrSpec().asString() == right.addrSpec().asString());
+}
+}
 }
 
 /**

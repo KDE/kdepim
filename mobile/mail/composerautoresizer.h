@@ -29,7 +29,7 @@ class ComposerAutoResizer : public QObject
   Q_OBJECT
 
   public:
-    ComposerAutoResizer( QWidget *parent );
+    ComposerAutoResizer( QTextEdit *parent );
 
     QDeclarativeItem *findFlickable( QGraphicsItem *parent ) const;
 
@@ -38,8 +38,6 @@ class ComposerAutoResizer : public QObject
 
   private:
     QTextEdit *mComposer;
-    QFrame *mEdit;
-    int mMinimumHeight;
     QDeclarativeItem *mFlickable;
 };
 

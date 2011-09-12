@@ -22,9 +22,12 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kpimidentities 4.5 as KPIMIdentities
 import org.kde.messagecomposer 4.5 as MessageComposer
+import "../mobileui/ScreenFunctions.js" as Screen
 
 Item {
+  id: root
   property int contentHeight: subject.height + messageContent.height + bottomContainer.height + 20;
+  property int screenHeight: 480
   anchors.topMargin: 12
   anchors.leftMargin: 48
   anchors.rightMargin: 2
@@ -103,7 +106,7 @@ Item {
 
   MessageComposer.Editor {
     id: messageContent
-    height: 344;
+    availableScreenHeight: root.screenHeight - bottomContainer.height - subject.height - cryptoIndicator.height - cryptoIndicator.anchors.topMargin - root.anchors.topMargin - 2
     anchors {
       top: cryptoIndicator.bottom
       left: parent.left
@@ -114,7 +117,7 @@ Item {
 
   Item {
     id: bottomContainer;
-    height: 80
+    height: Screen.fingerSize
     anchors {
         left: parent.left
         right: parent.right
@@ -126,10 +129,10 @@ Item {
       anchors {
         left: parent.left
         bottom: parent.bottom
-          top: parent.top
+        top: parent.top
       }
       text: KDE.i18n( "Identity:" );
-      verticalAlignment: "AlignVCenter"
+      verticalAlignment: Text.AlignVCenter
     }
 
     KPIMIdentities.IdentityComboBox {
@@ -140,6 +143,10 @@ Item {
         bottom: parent.bottom
         right: cancelButton.left
       }
+      // HACK: the style sheet currently enforces a way to big minimum height on < 200 dpi
+      // not trivial to remove there unfortunately, so work around that in places where the layout
+      // is already DPI-aware
+      styleSheet: styleSheet + " QComboBox { min-height: 0px }"
     }
 
     KPIM.Button2 {

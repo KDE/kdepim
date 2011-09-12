@@ -85,7 +85,7 @@ void ExpireJob::execute()
   mMaxUnreadTime = 0;
   mMaxReadTime = 0;
   mCurrentIndex = 0;
-  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
+  const QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, false ) );
   int unreadDays, readDays;
   fd->daysToExpire( unreadDays, readDays );
   if (unreadDays > 0) {
@@ -113,7 +113,7 @@ void ExpireJob::slotDoWork()
   kDebug() << "ExpireJob: checking messages" << mCurrentIndex << "to" << stopIndex;
 #endif
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mSrcFolder, this );
-  job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+  job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
 }
 
@@ -151,7 +151,7 @@ void ExpireJob::done()
 {
   QString str;
   bool moving = false;
-  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
+  const QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, false ) );
 
   if ( !mRemovedMsgs.isEmpty() ) {
     int count = mRemovedMsgs.count();
@@ -206,7 +206,7 @@ void ExpireJob::slotMessagesMoved( KJob* job )
     kError() << job->error() << job->errorString();
   }
   QString msg;
-  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
+  const QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, false ) );
   if ( fd ) {
     int error = job->error();
     switch (error ) {

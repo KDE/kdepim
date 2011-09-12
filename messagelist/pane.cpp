@@ -51,7 +51,9 @@ public:
       mActionMenu( 0 ),
       mCloseTabAction( 0 ),
       mActivateNextTabAction( 0 ), 
-      mActivatePreviousTabAction( 0 ), 
+      mActivatePreviousTabAction( 0 ),
+      mMoveTabLeftAction( 0 ),
+      mMoveTabRightAction( 0 ), 
       mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
@@ -63,6 +65,10 @@ public:
   void onTabContextMenuRequest( const QPoint &pos );
   void activateNextTab();
   void activatePreviousTab();
+  void moveTabLeft();
+  void moveTabRight();
+  void moveTabBackward();
+  void moveTabForward();
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
@@ -83,6 +89,8 @@ public:
   KAction *mCloseTabAction;
   KAction *mActivateNextTabAction;
   KAction *mActivatePreviousTabAction;
+  KAction *mMoveTabLeftAction;
+  KAction *mMoveTabRightAction;
   bool mPreferEmptyTab;
 };
 
@@ -214,6 +222,20 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_previous_tab" ), d->mActivatePreviousTabAction );
     d->mActivatePreviousTabAction->setEnabled( false );
     connect( d->mActivatePreviousTabAction, SIGNAL(triggered(bool)), SLOT(activatePreviousTab()) );
+
+
+    d->mMoveTabLeftAction = new KAction( i18n("Move Tab Left"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_left" ), d->mMoveTabLeftAction );
+    d->mMoveTabLeftAction->setEnabled( false );
+    connect( d->mMoveTabLeftAction, SIGNAL(triggered(bool)), SLOT(moveTabLeft()) );
+
+    d->mMoveTabRightAction = new KAction( i18n("Move Tab Right"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_right" ), d->mMoveTabRightAction );
+    d->mMoveTabRightAction->setEnabled( false );
+    connect( d->mMoveTabRightAction, SIGNAL(triggered(bool)), SLOT(moveTabRight()) );
+
+
+
   }
 }
 
@@ -407,6 +429,46 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
 void Pane::Private::activateTab()
 {
   q->tabBar()->setCurrentIndex( q->sender()->objectName().right( 2 ).toInt() -1 );
+}
+
+void Pane::Private::moveTabRight()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+  if ( QApplication::isRightToLeft() )
+    moveTabForward();
+  else
+    moveTabBackward();
+
+}
+
+void Pane::Private::moveTabLeft()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+  if ( QApplication::isRightToLeft() )
+    moveTabBackward();
+  else
+    moveTabForward();
+
+}
+
+void Pane::Private::moveTabForward()
+{
+  const int currentIndex = q->tabBar()->currentIndex();
+  if ( currentIndex == q->tabBar()->count()-1 )
+    return;
+  q->tabBar()->moveTab( currentIndex, currentIndex+1 );  
+}
+
+void Pane::Private::moveTabBackward()
+{
+  const int currentIndex = q->tabBar()->currentIndex();  
+  if ( currentIndex == 0 )
+    return;
+  q->tabBar()->moveTab( currentIndex, currentIndex-1 );
 }
 
 void Pane::Private::activateNextTab()
@@ -611,7 +673,11 @@ void Pane::Private::updateTabControls()
     mActivatePreviousTabAction->setEnabled( enableAction );
   if ( mActivateNextTabAction )
     mActivateNextTabAction->setEnabled( enableAction );
-
+  if ( mMoveTabRightAction )
+    mMoveTabRightAction->setEnabled( enableAction );
+  if ( mMoveTabLeftAction )
+    mMoveTabLeftAction->setEnabled( enableAction );
+      
   if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
     q->tabBar()->setVisible( enableAction );
   } else {

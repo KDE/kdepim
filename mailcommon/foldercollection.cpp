@@ -43,16 +43,20 @@ static QMutex mapMutex;
 static QMap<Collection::Id,QWeakPointer<FolderCollection> > fcMap;
 
 
-QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll )
+QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll, bool writeConfig )
 {
   QMutexLocker lock( &mapMutex );
 
   QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() ).toStrongRef();
 
   if ( !sptr ) {
-    sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, true ) );
+    sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
     fcMap.insert( coll.id(), sptr );
+  } else {
+    if ( !sptr->isWriteConfig() && writeConfig )
+      sptr->setWriteConfig( true );
   }
+  
   return sptr;
 }
 
@@ -80,11 +84,21 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
 
 FolderCollection::~FolderCollection()
 {
-//   kDebug()<<" FolderCollection::~FolderCollection";
+  //kDebug()<<" FolderCollection::~FolderCollection"<<this;
   if ( mWriteConfig )
     writeConfig();
 }
 
+bool FolderCollection::isWriteConfig() const
+{
+  return mWriteConfig;
+}
+
+void FolderCollection::setWriteConfig( bool writeConfig )
+{
+  mWriteConfig = writeConfig;
+}
+  
 QString FolderCollection::name() const
 {
   return mCollection.name();
@@ -280,8 +294,10 @@ uint FolderCollection::identity() const
     OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
-      if( useDefault.isValid() && useDefault.value() )
+      if( useDefault.isValid() && useDefault.value() ) {
+	delete imapSettingsInterface;
         return mIdentity;
+      }
 
        QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
       if ( remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0 ) {

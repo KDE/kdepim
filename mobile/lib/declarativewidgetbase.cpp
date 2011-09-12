@@ -71,3 +71,14 @@ QVariant DeclarativeWidgetBaseHelper::itemChange( GraphicsItemChange change, con
                     m_registerFunc( v, m_widget );
     return QGraphicsProxyWidget::itemChange ( change, value );
 }
+
+QString DeclarativeWidgetBaseHelper::styleSheet() const
+{
+  return m_widget->styleSheet();
+}
+
+void DeclarativeWidgetBaseHelper::setStyleSheet(const QString& styleSheet)
+{
+  m_widget->setStyleSheet( styleSheet );
+}
+

@@ -9,7 +9,7 @@
 #include <qscrollbar.h>
 #include <QCoreApplication>
 
-#include <math.h>
+#include <qmath.h>
 
 static double sDirectionThreshHold = 8.5; /// Threshold in pixels
 
@@ -51,7 +51,7 @@ DeclarativeAkonadiItemPrivate::DeclarativeAkonadiItemPrivate()
 
 DeclarativeAkonadiItemPrivate::Direction DeclarativeAkonadiItemPrivate::direction() const
 {
-  const double length = sqrt( ( mDx ^ 2 )  + ( mDy ^ 2 ) );
+  const double length = qSqrt( ( mDx ^ 2 )  + ( mDy ^ 2 ) );
   if (length < sDirectionThreshHold )
     return Unknown;
 

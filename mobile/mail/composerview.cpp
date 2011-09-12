@@ -71,7 +71,15 @@
 #include <mailtransport/transportmanagementwidget.h>
 #endif
 
-typedef DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor> DeclarativeEditor;
+class DeclarativeEditor : public DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor>
+{
+   Q_OBJECT
+   Q_PROPERTY( int availableScreenHeight READ availableScreenHeight WRITE setAvailableScreenHeight )
+  public:
+    int availableScreenHeight() { return widget()->property( "availableScreenHeight" ).toInt(); }
+    void setAvailableScreenHeight( int height ) { widget()->setProperty( "availableScreenHeight", height ); }
+};
+
 typedef DeclarativeWidgetBase<MessageComposer::RecipientsEditor, ComposerView, &ComposerView::setRecipientsEditor> DeclarativeRecipientsEditor;
 
 QML_DECLARE_TYPE( DeclarativeEditor )
@@ -680,3 +688,5 @@ void ComposerView::setAutoSaveFileName(const QString &fileName)
 
 
 #include "composerview.moc"
+#include "moc_composerview.cpp"
+

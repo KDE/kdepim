@@ -24,26 +24,34 @@
 #include <QtCore/QThreadPool>
 
 #include <KDebug>
+#include <Nepomuk/Resource>
+#include <Nepomuk/Variant>
 
 using namespace MessageCore;
-
-Q_DECLARE_METATYPE( Nepomuk::Resource );
 
 namespace MessageCore {
 
 class NepomukResourceRetrieverRunnable : public QRunnable
 {
   public:
-    NepomukResourceRetrieverRunnable( const QUrl& url, QObject *retriever ) : m_url( url ), m_retriever( retriever ) {}
+    NepomukResourceRetrieverRunnable( const QUrl& url, const QVector<QUrl> &props, QObject *retriever ) :
+      m_url( url ),
+      m_props( props ),
+      m_retriever( retriever )
+    {}
+
     void run()
     {
       Nepomuk::Resource resource( m_url );
+      foreach ( const QUrl &prop, m_props )
+        resource.property( prop ); // loads and caches this property
       QMetaObject::invokeMethod( m_retriever, "resourceRetrievalDone", Qt::QueuedConnection,
                                  Q_ARG(QUrl, m_url), Q_ARG(Nepomuk::Resource, resource) );
     }
 
   private:
     QUrl m_url;
+    QVector<QUrl> m_props;
     QObject* m_retriever;
 };
 
@@ -61,7 +69,8 @@ class AsyncNepomukResourceRetrieverPrivate
       Q_ASSERT( !m_pendingRequests.isEmpty() );
       Q_ASSERT( !m_running );
       m_running = true;
-      m_nepomukPool.start( new NepomukResourceRetrieverRunnable( m_pendingRequests.last(), m_parent ) );
+      const QUrl url = m_pendingRequests.last();
+      m_nepomukPool.start( new NepomukResourceRetrieverRunnable( url, m_requestedProperties.value( url ), m_parent ) );
     }
 
     void removeRequest( const QUrl &url )
@@ -69,6 +78,7 @@ class AsyncNepomukResourceRetrieverPrivate
       const int index = m_pendingRequests.lastIndexOf( url );
       if ( index >= 0 )
         m_pendingRequests.remove( index );
+      m_requestedProperties.remove( url );
     }
 
     void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &res )
@@ -85,6 +95,7 @@ class AsyncNepomukResourceRetrieverPrivate
     AsyncNepomukResourceRetriever *m_parent;
     QThreadPool m_nepomukPool;
     QVector<QUrl> m_pendingRequests;
+    QHash<QUrl, QVector<QUrl> > m_requestedProperties;
     QMutex m_mutex;
     bool m_running;
 };
@@ -97,12 +108,13 @@ AsyncNepomukResourceRetriever::AsyncNepomukResourceRetriever(QObject* parent) :
 {
 }
 
-void AsyncNepomukResourceRetriever::requestResource(const QUrl& url)
+void AsyncNepomukResourceRetriever::requestResource(const QUrl& url, const QVector<QUrl> &properties)
 {
   QMutexLocker locker( &d->m_mutex );
   if ( d->m_pendingRequests.contains( url ) )
     return;
   d->m_pendingRequests.push_back( url );
+  d->m_requestedProperties.insert( url, properties );
   if ( !d->m_running )
     d->createRunnable();
 }

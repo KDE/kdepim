@@ -31,9 +31,6 @@
    <string>Viewer settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
-    <number>0</number>
-   </property>
    <item row="0" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_showColorBar">
      <property name="text">
@@ -121,7 +118,7 @@
      </property>
     </spacer>
    </item>
-   <item row="6" column="0" colspan="4">
+   <item row="6" column="0" colspan="3">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label_2">
@@ -177,7 +174,28 @@
      </item>
     </layout>
    </item>
-   <item row="7" column="0">
+   <item row="7" column="0" colspan="3">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Minimum font size:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KIntSpinBox" name="kcfg_MinimumFontSize">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>30</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="8" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -194,14 +212,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
