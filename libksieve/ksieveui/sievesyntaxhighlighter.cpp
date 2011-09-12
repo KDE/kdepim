@@ -71,7 +71,7 @@ void SieveSyntaxHighlighter::init()
   QTextCharFormat matchFormat;
   matchFormat.setForeground( Qt::red );
   QStringList matchType;
-  matchType << QLatin1String( "\\s:contains\\b" )<<QLatin1String( "\\s:matches\\b" )<<QLatin1String( "\\s:is\\b" )<<QLatin1String( "\\s:over\\b" )<<QLatin1String( "\\s:under\\b" );
+  matchType << QLatin1String( "\\s:contains\\b" )<<QLatin1String( "\\s:matches\\b" )<<QLatin1String( "\\s:is\\b" )<<QLatin1String( "\\s:over\\b" )<<QLatin1String( "\\s:under\\b" )<<QLatin1String( "\\s:localpart\\b" )<<QLatin1String( "\\s:domain\\b" )<<QLatin1String( "\\s:all\\b" );
   Q_FOREACH( const QString & s, matchType ) {
     const QRegExp regex( s, Qt::CaseInsensitive );
     m_rules.append( Rule( regex, matchFormat ) );
