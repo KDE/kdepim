@@ -60,7 +60,7 @@ void FindBarMailWebView::searchText( bool backward, bool isAutoSearch )
     clearSelections();
   }
   mLastSearchStr = m_search->text();
-  bool found = m_view->findText( mLastSearchStr, searchOptions );
+  const bool found = m_view->findText( mLastSearchStr, searchOptions );
 
   setFoundMatch( found );
   FindBarBase::messageInfo( backward, isAutoSearch, found );  
