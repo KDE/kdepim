@@ -113,7 +113,7 @@ void ExpireJob::slotDoWork()
   kDebug() << "ExpireJob: checking messages" << mCurrentIndex << "to" << stopIndex;
 #endif
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mSrcFolder, this );
-  job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+  job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
 }
 
