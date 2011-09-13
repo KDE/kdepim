@@ -358,7 +358,8 @@ public:
 
   void setPreferEmptyTab( bool emptyTab );
 
-
+  void updateTabIconText( const Akonadi::Collection &fld );
+  
 public slots:
   /**
    * Selects all the items in the current folder.
