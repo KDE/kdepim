@@ -254,7 +254,7 @@ class MessageCore::MailingList::Private : public QSharedData
       mHelpUrls = other.mHelpUrls;
       mArchiveUrls = other.mArchiveUrls;
       mOwnerUrls = other.mOwnerUrls;
-      mArchivedAtUrls = other.mArchivedAtUrls;
+      mArchivedAtUrl = other.mArchivedAtUrl;
       mId = other.mId;
     }
 
@@ -266,7 +266,7 @@ class MessageCore::MailingList::Private : public QSharedData
     KUrl::List mHelpUrls;
     KUrl::List mArchiveUrls;
     KUrl::List mOwnerUrls;
-    KUrl::List mArchivedAtUrls;
+    KUrl mArchivedAtUrl;
     QString mId;
 };
 
@@ -292,9 +292,8 @@ MailingList MailingList::detect( const KMime::Message::Ptr &message )
   if ( message->headerByType( "List-Owner" ) )
     mailingList.setOwnerUrls( headerToAddress( message->headerByType( "List-Owner" )->asUnicodeString() ) );
 
-  if ( message->headerByType( "Archived-At" ) ) {
-    mailingList.setArchivedAtUrls( headerToAddress( message->headerByType( "Archived-At" )->asUnicodeString() ) );
-  }
+  if ( message->headerByType( "Archived-At" ) )
+    mailingList.setArchivedAtUrl( KUrl( message->headerByType( "Archived-At" )->asUnicodeString() ) );
 
   if ( message->headerByType( "List-Id" ) )
     mailingList.setId( message->headerByType( "List-Id" )->asUnicodeString() );
@@ -454,20 +453,20 @@ KUrl::List MailingList::ownerUrls() const
   return d->mOwnerUrls;
 }
 
-void MailingList::setArchivedAtUrls( const KUrl::List &urls )
+void MailingList::setArchivedAtUrl( const KUrl &url )
 {
   d->mFeatures |= ArchivedAt;
 
-  if ( urls.isEmpty() ) {
+  if ( !url.isValid() ) {
     d->mFeatures ^= ArchivedAt;
   }
 
-  d->mArchivedAtUrls = urls;
+  d->mArchivedAtUrl = url;
 }
 
-KUrl::List MailingList::archivedAtUrls() const
+KUrl MailingList::archivedAtUrl() const
 {
-  return d->mArchivedAtUrls;
+  return d->mArchivedAtUrl;
 }
 
 void MailingList::setId( const QString &id )
