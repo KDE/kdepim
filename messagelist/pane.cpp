@@ -37,6 +37,8 @@
 #include "core/settings.h"
 #include "core/manager.h"
 #include <akonadi/kmime/messagestatus.h>
+#include <akonadi/collectionstatistics.h>
+#include <akonadi/entitydisplayattribute.h>
 #include "core/model.h"
 
 namespace MessageList
@@ -467,6 +469,33 @@ void Pane::setCurrentFolder( const Akonadi::Collection &, bool, Core::PreSelecti
     if ( !overrideLabel.isEmpty() ) {
        int index = indexOf( w );
        setTabText( index, overrideLabel );
+    }
+  }
+}
+
+void Pane::updateTabIconText( const Akonadi::Collection &collection )
+{
+  for ( int i=0; i<count(); ++i ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    if ( w->currentCollection() == collection )
+    {
+      if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() )
+      {
+        const QString label = collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() ? collection.name() :collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName();
+        QIcon icon = KIcon( QLatin1String( "folder" ) );
+
+        if ( !collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName().isEmpty() ) {
+          if ( !collection.attribute<Akonadi::EntityDisplayAttribute>()->activeIconName().isEmpty() && collection.statistics().unreadCount()> 0) {
+            icon = KIcon( collection.attribute<Akonadi::EntityDisplayAttribute>()->activeIconName() );
+          }
+          else
+            icon = KIcon( collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName() );
+        }
+          
+        const int index = indexOf( w );
+        setTabText( index, label );
+        setTabIcon( index, icon );
+      }
     }
   }
 }
