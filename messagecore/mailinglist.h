@@ -162,12 +162,12 @@ class MESSAGECORE_EXPORT MailingList
     /**
      * Sets the Archived-At @p url.
      */
-    void setArchivedAtUrl( const KUrl &url );
+    void setArchivedAtUrls( const KUrl::List &url );
 
     /**
      * Returns the Archived-At @p url.
      */
-    KUrl archivedAtUrl() const;
+    KUrl::List archivedAtUrls() const;
 
     /**
      * Sets the @p id of the mailing list.
