@@ -128,11 +128,10 @@ void FilterManager::Private::slotInitialItemsFetched( const Akonadi::Item::List 
 
 void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
 {
-  KPIM::ProgressItem* progressItem;
+  KPIM::ProgressItem* progressItem = 0;
   if ( q->sender()->property( "progressItem" ).value< QObject*>() ) {
     progressItem = qobject_cast<KPIM::ProgressItem*>( q->sender()->property( "progressItem" ).value<QObject*>() );
   } else {
-    progressItem = 0;
     kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
   }
 
