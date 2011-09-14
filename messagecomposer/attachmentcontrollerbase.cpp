@@ -631,7 +631,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
       i18n( "Attach File" ), KFileDialog::Other, d->wParent );
 
   dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
-  dialog->setMode( KFile::Files );
+  dialog->setMode( KFile::Files|KFile::Directory );
   if( dialog->exec() == KDialog::Accepted && dialog ) {
     const KUrl::List files = dialog->selectedUrls();
     foreach( const KUrl &url, files ) {
