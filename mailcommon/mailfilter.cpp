@@ -76,6 +76,7 @@ MailFilter::MailFilter( const MailFilter & aFilter )
   bConfigureToolbar = aFilter.configureToolbar();
   mToolbarName = aFilter.toolbarName();
   mApplicability = aFilter.applicability();
+  bAutoNaming = aFilter.isAutoNaming();
   mIcon = aFilter.icon();
   mShortcut = aFilter.shortcut();
 
