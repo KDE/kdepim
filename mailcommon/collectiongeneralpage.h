@@ -72,6 +72,7 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
   private Q_SLOTS:
     void slotIdentityCheckboxChanged();
     void slotFolderContentsSelectionChanged( int );
+    void slotNameChanged( const QString& name );
 
   private:
     KComboBox *mContentsComboBox;
