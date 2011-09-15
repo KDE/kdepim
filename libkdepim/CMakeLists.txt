@@ -49,6 +49,7 @@ set(kdepim_LIB_SRCS
    multiplyinglineeditor.cpp
    multiplyinglineview_p.cpp
    uistatesaver.cpp
+   nepomukwarning.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)
