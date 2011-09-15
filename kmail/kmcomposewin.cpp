@@ -189,7 +189,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mCodecAction( 0 ),
     mCryptoModuleAction( 0 ),
     mEncryptChiasmusAction( 0 ),
-    mEncryptWithChiasmus( false ),
     mDummyComposer( 0 ),
     mLabelWidth( 0 ),
     mComposerBase( 0 ),
@@ -3026,8 +3025,6 @@ class KToggleActionResetter {
 
 void KMComposeWin::slotEncryptChiasmusToggled( bool on )
 {
-  mEncryptWithChiasmus = false;
-
   if ( !on ) {
     return;
   }
@@ -3092,7 +3089,6 @@ void KMComposeWin::slotEncryptChiasmusToggled( bool on )
   GlobalSettings::setChiasmusOptions( selectorDlg.options() );
   GlobalSettings::setChiasmusKey( selectorDlg.key() );
   assert( !GlobalSettings::chiasmusKey().isEmpty() );
-  mEncryptWithChiasmus = true;
   resetter.disable();
 }
 
