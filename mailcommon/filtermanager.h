@@ -20,6 +20,12 @@
 #ifndef MAILCOMMON_FILTERMANAGER_H
 #define MAILCOMMON_FILTERMANAGER_H
 
+#include "mailcommon_export.h"
+
+#include "mailfilteragentinterface.h"
+
+#include <akonadi/item.h>
+
 #include <QtCore/QObject>
 
 namespace MailCommon {
@@ -29,7 +35,7 @@ namespace MailCommon {
  *
  * This class communicates with the mailfilter agent via DBus.
  */
-class FilterManager : public QObject
+class MAILCOMMON_EXPORT FilterManager : public QObject
 {
   public:
     /**
@@ -46,11 +52,9 @@ class FilterManager : public QObject
     };
 
     /**
-     * Creates a new filter manager.
-     *
-     * @param parent The parent object.
+     * Returns the global filter manager object.
      */
-    FilterManager(QObject *parent = 0);
+    static FilterManager* instance();
 
     /**
      * Returns whether the filter manager is in a usable state.
@@ -91,6 +95,13 @@ class FilterManager : public QObject
      * @param set Select the filter set to use.
      */
     void filter( const Akonadi::Item::List &messages, FilterSet set = Explicit ) const;
+
+  private:
+    FilterManager();
+
+    static FilterManager *mInstance;
+
+    org::freedesktop::Akonadi::MailFilterAgent *mMailFilterAgentInterface;
 };
 
 }

@@ -23,6 +23,7 @@ set(libmailcommon_SRCS
   filtereditdialog.cpp
   filterimporterexporter.cpp
   filterlog.cpp
+  filtermanager.cpp
   filtermodel.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
@@ -50,6 +51,12 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
+)
+
+set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
+
+qt4_add_dbus_interfaces(libmailcommon_SRCS
+  ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
 kde4_add_ui_files(libmailcommon_SRCS filterconfigwidget.ui snippetdialog.ui)
