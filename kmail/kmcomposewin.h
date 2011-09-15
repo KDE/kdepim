@@ -610,8 +610,6 @@ class KMComposeWin : public KMail::Composer
 
     KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
 
-    QStringList mFolderNames;
-
   //bool mAlwaysSend;
   
   private:
