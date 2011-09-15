@@ -30,7 +30,6 @@
 // Qt includes
 #include <QFont>
 #include <QList>
-#include <QPalette>
 
 // KDE includes
 #include <kglobalsettings.h>
@@ -611,10 +610,10 @@ class KMComposeWin : public KMail::Composer
 
     KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
 
-    bool mAlwaysSend;
-
     QStringList mFolderNames;
 
+  //bool mAlwaysSend;
+  
   private:
 
     /**
@@ -701,7 +700,6 @@ class KMComposeWin : public KMail::Composer
 
 
     SnippetWidget *mSnippetWidget;
-    QList<KTempDir*> mTempDirs;
 
     QLabel *mSignatureStateIndicator;
     QLabel *mEncryptionStateIndicator;

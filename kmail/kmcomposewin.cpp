@@ -465,9 +465,6 @@ KMComposeWin::~KMComposeWin()
     //        out of the destructor for this
   }
 
-  foreach ( KTempDir *const dir, mTempDirs ) {
-    delete dir;
-  }
   delete mComposerBase;
 }
 
@@ -2977,7 +2974,8 @@ void KMComposeWin::slotFolderRemoved( const Akonadi::Collection & col )
 
 void KMComposeWin::slotSetAlwaysSend( bool bAlways )
 {
-  mAlwaysSend = bAlways;
+  //Never implemented in kmail 4.x or 4.8... => comment it for the moment it's a virtual function in composer.
+  //mAlwaysSend = bAlways;
 }
 
 void KMComposeWin::slotFormatReset()
