@@ -693,8 +693,6 @@ class KMComposeWin : public KMail::Composer
     bool mEncryptWithChiasmus;
 
     Message::Composer *mDummyComposer;
-    int mPendingQueueJobs;
-    int mPendingCreateItemJobs;
     // used for auto saving, printing, etc. Not for sending, which happens in ComposerViewBase
     QList< Message::Composer* > mMiscComposers;
 
