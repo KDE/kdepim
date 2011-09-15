@@ -589,7 +589,6 @@ class KMComposeWin : public KMail::Composer
                                 // mail body.
     int mNumHeaders;
     QFont mBodyFont, mFixedFont;
-    QPalette mPalette;
     uint mId;
     TemplateContext mContext;
 
