@@ -11,6 +11,8 @@ set(akonadi_mailfilter_agent_SRCS
   mailfilteragent.cpp
 )
 
+qt4_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)
+
 #kde4_add_kcfg_files(akonadi_mailfilter_agent_SRCS settings.kcfgc)
 #kde4_add_ui_files(akonadi_mailfilter_agent_SRCS configdialog.ui)
 

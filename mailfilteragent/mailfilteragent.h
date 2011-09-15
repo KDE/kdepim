@@ -38,6 +38,10 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
+    QString createUniqueName(const QString &nameTemplate );
+    void process( const QVector<qlonglong> &items );
+    int process( qlonglong item, const QString &filterIdentifier );
+
   private Q_SLOTS:
     void initializeCollections();
     void initialCollectionFetchingDone( KJob* );

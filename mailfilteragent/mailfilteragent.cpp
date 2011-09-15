@@ -18,11 +18,14 @@
 */
 
 #include "mailfilteragent.h"
+
 #include "filtermanager.h"
+#include "mailfilteragentadaptor.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
+#include <akonadi/dbusconnectionpool.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/session.h>
@@ -60,6 +63,11 @@ MailFilterAgent::MailFilterAgent( const QString &id )
            this, SLOT( mailCollectionChanged( Akonadi::Collection ) ) );
 
   QTimer::singleShot( 0, this, SLOT( initializeCollections() ) );
+
+  new MailFilterAgentAdaptor(this);
+
+  Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
+  Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
 }
 
 void MailFilterAgent::initializeCollections()
@@ -113,6 +121,26 @@ void MailFilterAgent::mailCollectionAdded( const Akonadi::Collection &collection
 void MailFilterAgent::mailCollectionChanged( const Akonadi::Collection &collection )
 {
   changeRecorder()->setCollectionMonitored( collection, isFilterableCollection( collection ) );
+}
+
+QString MailFilterAgent::createUniqueName( const QString &nameTemplate )
+{
+  return m_filterManager->createUniqueName( nameTemplate );
+}
+
+void MailFilterAgent::process( const QVector<qlonglong> &itemIds )
+{
+  QList<Akonadi::Item> items;
+  foreach ( qlonglong id, itemIds ) {
+    items << Akonadi::Item( id );
+  }
+
+  m_filterManager->applyFilters( items );
+}
+
+int MailFilterAgent::process( qlonglong item, const QString &filterIdentifier )
+{
+  return 0;
 }
 
 AKONADI_AGENT_MAIN( MailFilterAgent )
