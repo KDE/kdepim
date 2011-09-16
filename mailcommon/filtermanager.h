@@ -22,11 +22,11 @@
 
 #include "mailcommon_export.h"
 
-#include "mailfilteragentinterface.h"
-
 #include <akonadi/item.h>
 
 #include <QtCore/QObject>
+
+class OrgFreedesktopAkonadiMailFilterAgentInterface;
 
 namespace MailCommon {
 
@@ -101,7 +101,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
 
     static FilterManager *mInstance;
 
-    org::freedesktop::Akonadi::MailFilterAgent *mMailFilterAgentInterface;
+    OrgFreedesktopAkonadiMailFilterAgentInterface *mMailFilterAgentInterface;
 };
 
 }

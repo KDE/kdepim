@@ -19,6 +19,8 @@
 
 #include "filtermanager.h"
 
+#include "mailfilteragentinterface.h"
+
 using namespace MailCommon;
 
 FilterManager* FilterManager::mInstance = 0;
@@ -55,7 +57,7 @@ void FilterManager::filter( const Akonadi::Item &item, const QString &identifier
 
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
 {
-  mMailFilterAgentInterface->filter( item.id(), static_cast<int>(set), resourceId );
+  mMailFilterAgentInterface->filter( item.id(), static_cast<int>(set), account ? resourceId : QString() );
 }
 
 void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set ) const
