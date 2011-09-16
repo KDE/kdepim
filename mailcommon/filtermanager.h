@@ -32,6 +32,8 @@ class OrgFreedesktopAkonadiMailFilterAgentInterface;
 
 namespace MailCommon {
 
+class FilterActionDict;
+
 /**
  * @short A wrapper class that allows easy access to the mail filters
  *
@@ -70,6 +72,11 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * "name" to "name (i)" until no match is found for i=1..n
      */
     QString createUniqueFilterName( const QString &name ) const;
+
+    /**
+     * Returns the global filter action dictionary.
+     */
+    static FilterActionDict* filterActionDict();
 
     /// Apply filters interface
 
@@ -149,7 +156,6 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
 
     class Private;
     Private* const d;
-
 };
 
 }

@@ -23,9 +23,9 @@
 
 // other kmail headers
 #include "filteraction.h"
+#include "filtermanager.h"
 #include "mailutil.h"
 #include "filterlog.h"
-#include "mailkernel.h"
 using MailCommon::FilterLog;
 
 // KDEPIMLIBS headers
@@ -86,7 +86,7 @@ MailFilter::MailFilter( const MailFilter & aFilter )
   QListIterator<FilterAction*> it( aFilter.mActions );
   while ( it.hasNext() ) {
     FilterAction *action = it.next();
-    FilterActionDesc *desc = FilterIf->filterActionDict()->value( action->name() );
+    FilterActionDesc *desc = FilterManager::filterActionDict()->value( action->name() );
     if ( desc ) {
       FilterAction *f = desc->create();
       if ( f ) {
@@ -397,7 +397,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
     actName.sprintf("action-name-%d", i);
     argsName.sprintf("action-args-%d", i);
     // get the action description...
-    FilterActionDesc *desc = FilterIf->filterActionDict()->value(
+    FilterActionDesc *desc = FilterManager::filterActionDict()->value(
           config.readEntry( actName, QString() ) );
     if ( desc ) {
       //...create an instance...
@@ -609,7 +609,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
     stream >> actionName;
     stream >> actionArguments;
 
-    FilterActionDesc *description = FilterIf->filterActionDict()->value( actionName );
+    FilterActionDesc *description = FilterManager::filterActionDict()->value( actionName );
     if ( description ) {
       FilterAction *filterAction = description->create();
       if ( filterAction ) {

@@ -19,6 +19,7 @@
 
 #include "filtermanager.h"
 
+#include "filteraction.h"
 #include "filterimporterexporter.h"
 #include "mailfilteragentinterface.h"
 
@@ -42,6 +43,7 @@ class FilterManager::Private
     void clear();
 
     static FilterManager *mInstance;
+    static FilterActionDict *mFilterActionDict;
 
     FilterManager *q;
     OrgFreedesktopAkonadiMailFilterAgentInterface *mMailFilterAgentInterface;
@@ -79,6 +81,7 @@ void FilterManager::Private::clear()
 using namespace MailCommon;
 
 FilterManager* FilterManager::Private::mInstance = 0;
+FilterActionDict* FilterManager::Private::mFilterActionDict = 0;
 
 FilterManager* FilterManager::instance()
 {
@@ -86,6 +89,14 @@ FilterManager* FilterManager::instance()
     FilterManager::Private::mInstance = new FilterManager;
 
   return FilterManager::Private::mInstance;
+}
+
+FilterActionDict* FilterManager::filterActionDict()
+{
+  if ( !FilterManager::Private::mFilterActionDict )
+      FilterManager::Private::mFilterActionDict = new FilterActionDict;
+
+  return FilterManager::Private::mFilterActionDict;
 }
 
 FilterManager::FilterManager()
