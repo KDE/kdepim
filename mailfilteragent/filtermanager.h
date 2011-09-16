@@ -130,6 +130,9 @@ class FilterManager: public QObject
      */
     int process( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
 
+    void filter( qlonglong itemId, FilterSet set, const QString &accountId );
+    void filter( qlonglong itemId, const QString &filterId );
+
     /**
      * Applies the filters on the given @p messages.
      */
@@ -174,6 +177,7 @@ class FilterManager: public QObject
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void itemFetchJobForFilterDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void moveJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotItemsFetchedForFilter( const Akonadi::Item::List& ) )
     //@endcond

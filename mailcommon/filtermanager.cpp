@@ -50,12 +50,20 @@ QString FilterManager::createUniqueFilterName( const QString &name ) const
 
 void FilterManager::filter( const Akonadi::Item &item, const QString &identifier ) const
 {
+  mMailFilterAgentInterface->filter( item.id(), identifier );
 }
 
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
 {
+  mMailFilterAgentInterface->filter( item.id(), static_cast<int>(set), resourceId );
 }
 
 void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set ) const
 {
+  QVector<qlonglong> itemIds;
+
+  foreach ( const Akonadi::Item &item, messages )
+    itemIds << item.id();
+
+  mMailFilterAgentInterface->filter( itemIds, static_cast<int>(set) );
 }

@@ -5,13 +5,18 @@
       <arg name="nameTemplate" type="s" direction="in"/>
       <arg name="name" type="s" direction="out"/>
     </method>
-    <method name="process">
-      <arg name="result" type="i" direction="out"/>
+    <method name="filter">
       <arg name="item" type="x" direction="in"/>
       <arg name="filterIdentifier" type="s" direction="in"/>
     </method>
-    <method name="process">
+    <method name="filter">
+      <arg name="item" type="x" direction="in"/>
+      <arg name="filterSet" type="i" direction="in"/>
+      <arg name="resourceId" type="s" direction="in"/>
+    </method>
+    <method name="filter">
       <arg name="items" type="ax" direction="in"/>
+      <arg name="filterSet" type="i" direction="in"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="const QVector&lt;qlonglong&gt; &amp;"/>
     </method>
   </interface>

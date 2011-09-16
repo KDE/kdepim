@@ -128,19 +128,24 @@ QString MailFilterAgent::createUniqueName( const QString &nameTemplate )
   return m_filterManager->createUniqueName( nameTemplate );
 }
 
-void MailFilterAgent::process( const QVector<qlonglong> &itemIds )
+void MailFilterAgent::filter( const QVector<qlonglong> &itemIds, int filterSet )
 {
   QList<Akonadi::Item> items;
   foreach ( qlonglong id, itemIds ) {
     items << Akonadi::Item( id );
   }
 
-  m_filterManager->applyFilters( items );
+  m_filterManager->applyFilters( items, static_cast<FilterManager::FilterSet>(filterSet) );
 }
 
-int MailFilterAgent::process( qlonglong item, const QString &filterIdentifier )
+void MailFilterAgent::filter( qlonglong item, int filterSet, const QString &resourceId )
 {
-  return 0;
+  m_filterManager->filter( item, static_cast<FilterManager::FilterSet>( filterSet ), resourceId );
+}
+
+void MailFilterAgent::filter( qlonglong item, const QString &filterIdentifier )
+{
+  m_filterManager->filter( item, filterIdentifier );
 }
 
 AKONADI_AGENT_MAIN( MailFilterAgent )

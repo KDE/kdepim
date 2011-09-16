@@ -44,6 +44,7 @@ class FilterManager::Private
     }
 
     void itemsFetchJobForFilterDone( KJob *job );
+    void itemFetchJobForFilterDone( KJob *job );
     void moveJobResult( KJob* );
     void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
 
@@ -105,6 +106,47 @@ void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
 
   KPIM::ProgressItem *progressItem = qobject_cast<KPIM::ProgressItem*>( job->property( "progressItem" ).value<QObject*>() );
   progressItem->setComplete();
+}
+
+void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << "Error while fetching item. " << job->error() << job->errorString();
+    return;
+  }
+
+  const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+
+  const Akonadi::Item::List items = fetchJob->items();
+  if ( items.isEmpty() ) {
+    kError() << "Error while fetching item: item not found";
+    return;
+  }
+
+  if ( job->property( "filterId" ).isValid() ) {
+    const QString filterId = job->property( "filterId" ).toString();
+
+    // find correct filter object
+    MailCommon::MailFilter *wantedFilter = 0;
+    foreach ( MailCommon::MailFilter *filter, mFilters ) {
+      if ( filter->identifier() == filterId ) {
+        wantedFilter = filter;
+        break;
+      }
+    }
+
+    if ( !wantedFilter ) {
+      kError() << "Can not find filter object with id" << filterId;
+      return;
+    }
+
+    q->process( items.first(), wantedFilter );
+  } else {
+    const FilterManager::FilterSet set = static_cast<FilterManager::FilterSet>( job->property( "filterSet" ).toInt() );
+    const QString accountId = job->property( "accountId" ).toString();
+
+    q->process( items.first(), set, !accountId.isEmpty(), accountId );
+  }
 }
 
 void FilterManager::Private::moveJobResult( KJob *job )
@@ -246,6 +288,33 @@ void FilterManager::writeConfig( bool withSync ) const
   if ( withSync ) {
     group.sync();
   }
+}
+
+void FilterManager::filter( qlonglong itemId, FilterSet set, const QString &accountId )
+{
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ), this );
+  job->setProperty( "filterSet", static_cast<int>(set) );
+  job->setProperty( "accountId", accountId );
+  if ( d->mRequiresBody )
+    job->fetchScope().fetchFullPayload( true );
+  else
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchJobForFilterDone( KJob* ) ) );
+}
+
+void FilterManager::filter( qlonglong itemId, const QString &filterId )
+{
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ), this );
+  job->setProperty( "filterId", filterId );
+  if ( d->mRequiresBody )
+    job->fetchScope().fetchFullPayload( true );
+  else
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchJobForFilterDone( KJob* ) ) );
 }
 
 int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFilter *filter )
