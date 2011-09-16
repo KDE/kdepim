@@ -19,6 +19,7 @@
 
 #include "mailfilteragent.h"
 
+#include "dbusoperators.h"
 #include "dummykernel.h"
 #include "filtermanager.h"
 #include "mailfilteragentadaptor.h"
@@ -34,6 +35,7 @@
 #include <KLocalizedString>
 #include <KMime/Message>
 
+#include <QtCore/QVector>
 #include <QtCore/QTimer>
 
 static bool isFilterableCollection( const Akonadi::Collection &collection )
@@ -64,6 +66,8 @@ MailFilterAgent::MailFilterAgent( const QString &id )
            this, SLOT( mailCollectionChanged( Akonadi::Collection ) ) );
 
   QTimer::singleShot( 0, this, SLOT( initializeCollections() ) );
+
+  qDBusRegisterMetaType<QVector<qlonglong> >();
 
   new MailFilterAgentAdaptor( this );
 
@@ -109,8 +113,6 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  qDebug() << "MailFilterAgent: filter item" << item.id() << "in collection" << collection.name();
-
   m_filterManager->process( item, FilterManager::Inbound, true, collection.resource() );
 }
 
@@ -130,7 +132,7 @@ QString MailFilterAgent::createUniqueName( const QString &nameTemplate )
   return m_filterManager->createUniqueName( nameTemplate );
 }
 
-void MailFilterAgent::filter( const QVector<qlonglong> &itemIds, int filterSet )
+void MailFilterAgent::filterItems( const QVector<qlonglong> &itemIds, int filterSet )
 {
   QList<Akonadi::Item> items;
   foreach ( qlonglong id, itemIds ) {
@@ -140,7 +142,7 @@ void MailFilterAgent::filter( const QVector<qlonglong> &itemIds, int filterSet )
   m_filterManager->applyFilters( items, static_cast<FilterManager::FilterSet>(filterSet) );
 }
 
-void MailFilterAgent::filter( qlonglong item, int filterSet, const QString &resourceId )
+void MailFilterAgent::filterItem( qlonglong item, int filterSet, const QString &resourceId )
 {
   m_filterManager->filter( item, static_cast<FilterManager::FilterSet>( filterSet ), resourceId );
 }

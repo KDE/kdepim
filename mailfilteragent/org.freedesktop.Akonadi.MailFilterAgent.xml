@@ -9,12 +9,12 @@
       <arg name="item" type="x" direction="in"/>
       <arg name="filterIdentifier" type="s" direction="in"/>
     </method>
-    <method name="filter">
+    <method name="filterItem">
       <arg name="item" type="x" direction="in"/>
       <arg name="filterSet" type="i" direction="in"/>
       <arg name="resourceId" type="s" direction="in"/>
     </method>
-    <method name="filter">
+    <method name="filterItems">
       <arg name="items" type="ax" direction="in"/>
       <arg name="filterSet" type="i" direction="in"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="const QVector&lt;qlonglong&gt; &amp;"/>

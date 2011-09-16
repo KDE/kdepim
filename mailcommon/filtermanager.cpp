@@ -102,6 +102,8 @@ FilterActionDict* FilterManager::filterActionDict()
 FilterManager::FilterManager()
   : d( new Private( this ) )
 {
+  qDBusRegisterMetaType<QVector<qlonglong> >();
+
   d->readConfig();
 }
 
@@ -122,7 +124,7 @@ void FilterManager::filter( const Akonadi::Item &item, const QString &identifier
 
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
 {
-  d->mMailFilterAgentInterface->filter( item.id(), static_cast<int>(set), account ? resourceId : QString() );
+  d->mMailFilterAgentInterface->filterItem( item.id(), static_cast<int>(set), account ? resourceId : QString() );
 }
 
 void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set ) const
@@ -132,7 +134,7 @@ void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set )
   foreach ( const Akonadi::Item &item, messages )
     itemIds << item.id();
 
-  d->mMailFilterAgentInterface->filter( itemIds, static_cast<int>(set) );
+  d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
 }
 
 void FilterManager::setFilters( const QList<MailCommon::MailFilter*> &filters )
