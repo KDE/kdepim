@@ -703,7 +703,7 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( const Akonadi::Item &
 
   MessageFactory factory( msg, item.id() );
   factory.setFolderIdentity( Util::folderIdentity( item ) );
-  //tokoe_port: factory.setIdentityManager( KernelIf->identityManager() );
+  factory.setIdentityManager( KernelIf->identityManager() );
 
   const KMime::Message::Ptr receipt = factory.createDeliveryReceipt();
   if ( !receipt )
@@ -711,7 +711,7 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( const Akonadi::Item &
 
   // Queue message. This is a) so that the user can check
   // the receipt before sending and b) for speed reasons.
-  //tokoe_port: KernelIf->msgSender()->send( receipt, MessageSender::SendLater );
+  KernelIf->msgSender()->send( receipt, MessageSender::SendLater );
 
   return GoOn;
 }
@@ -817,7 +817,7 @@ FilterAction* FilterActionIdentity::newAction()
 FilterActionIdentity::FilterActionIdentity( QObject *parent )
   : FilterActionWithUOID( "set identity", i18n( "Set Identity To" ), parent )
 {
-  //tokoe_port: mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
+  mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
 
 FilterAction::ReturnCode FilterActionIdentity::process( const Akonadi::Item &item ) const
