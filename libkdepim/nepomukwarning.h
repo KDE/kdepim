@@ -36,6 +36,11 @@ class KDEPIM_EXPORT NepomukWarning : public KMessageWidget
   public:
     explicit NepomukWarning( QWidget *parent = 0 );
 
+    /**
+     * Sets a list of features that wont work.
+     */
+    void setMissingFeatures( const QStringList &features );
+
   private slots:
     void configure();
 };

@@ -46,3 +46,13 @@ void KPIM::NepomukWarning::configure()
 {
   QProcess::startDetached( KStandardDirs::findExe(QLatin1String("kcmshell4")), QStringList(QLatin1String("kcm_nepomuk")) );
 }
+
+void KPIM::NepomukWarning::setMissingFeatures(const QStringList& features)
+{
+  if ( !features.isEmpty() ) {
+    setText( i18n( "You do not have the semantic desktop system enabled. The following features will not work correctly:<ul><li>%1</li></ul>",
+      features.join( QLatin1String( "</li><li>" ) )
+    ) );
+  }
+}
+
