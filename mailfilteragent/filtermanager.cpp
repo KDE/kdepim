@@ -269,6 +269,7 @@ void FilterManager::clear()
 void FilterManager::readConfig()
 {
   KSharedConfig::Ptr config = KGlobal::config(); // use akonadi_mailfilter_agentrc
+  config->reparseConfiguration();
   clear();
 
   d->mFilters = FilterImporterExporter::readFiltersFromConfig( config );
