@@ -38,6 +38,7 @@
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectiongeneralpage.h"
+#include "mailcommon/filtermanager.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
@@ -1742,7 +1743,7 @@ void MainView::applyFilters()
     }
   }
 
-  //tokoe FilterIf->filterManager()->applyFilters( items );
+  MailCommon::FilterManager::instance()->filter( items );
 }
 
 void MainView::applyFiltersBulkAction()
@@ -1755,7 +1756,7 @@ void MainView::applyFiltersBulkAction()
       items << item;
   }
 
-  //tokoe FilterIf->filterManager()->applyFilters( items );
+  MailCommon::FilterManager::instance()->filter( items );
 }
 
 bool MainView::selectNextUnreadMessageInCurrentFolder()
