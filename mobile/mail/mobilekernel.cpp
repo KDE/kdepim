@@ -39,7 +39,6 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
   mMessageSender = new AkonadiSender;
   CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
 
-  mFilterActionDict = new FilterActionDict();
   CommonKernel->registerFilterIf( this );
 
   CommonKernel->registerSettingsIf( this );
@@ -120,11 +119,6 @@ bool MobileKernel::showPopupAfterDnD()
 QStringList MobileKernel::customTemplates()
 {
   return QStringList(); //TODO: implement
-}
-
-FilterActionDict* MobileKernel::filterActionDict() const
-{
-  return mFilterActionDict;
 }
 
 void MobileKernel::openFilterDialog( bool createDummyFilter )
