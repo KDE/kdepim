@@ -1,5 +1,7 @@
 project(akonadi_mailfilter_agent)
 
+add_subdirectory( kconf_update )
+
 include_directories(
   ${Boost_INCLUDE_DIR}
 )
