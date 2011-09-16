@@ -183,10 +183,12 @@ QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientati
           switch ( section ) {
             case FeedTitleColumn:
                 return i18n("Title");
+#if 0
             case UnreadCountColumn:
                 return i18n("Unread");
             case TotalCountColumn:
                 return i18n("Total");
+#endif
             default:
                 break;
             }
