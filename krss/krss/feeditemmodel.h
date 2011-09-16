@@ -50,8 +50,8 @@ public:
         FeedColumnCount
     };
 
-    enum Role {
-        ItemRole =EntityTreeModel::UserRole,
+    enum ItemRoles {
+        ItemRole=EntityTreeModel::UserRole,
         SortRole,
         IsNewRole,
         IsUnreadRole,
