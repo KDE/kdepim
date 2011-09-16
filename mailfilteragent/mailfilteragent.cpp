@@ -19,6 +19,7 @@
 
 #include "mailfilteragent.h"
 
+#include "dummykernel.h"
 #include "filtermanager.h"
 #include "mailfilteragentadaptor.h"
 
@@ -43,9 +44,13 @@ static bool isFilterableCollection( const Akonadi::Collection &collection )
 }
 
 MailFilterAgent::MailFilterAgent( const QString &id )
-  : Akonadi::AgentBase( id ),
-    m_filterManager( new FilterManager( this ) )
+  : Akonadi::AgentBase( id )
 {
+  DummyKernel *kernel = new DummyKernel( this );
+  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+
+  m_filterManager = new FilterManager( this );
+
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );
   m_collectionMonitor->setCollectionMonitored( Akonadi::Collection::root() );
@@ -60,10 +65,11 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   QTimer::singleShot( 0, this, SLOT( initializeCollections() ) );
 
-  new MailFilterAgentAdaptor(this);
+  new MailFilterAgentAdaptor( this );
 
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
+
 }
 
 void MailFilterAgent::initializeCollections()

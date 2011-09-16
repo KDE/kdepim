@@ -7,6 +7,7 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(akonadi_mailfilter_agent_SRCS
+  dummykernel.cpp
   filtermanager.cpp
   mailfilteragent.cpp
 )
@@ -28,6 +29,7 @@ endif (Q_WS_MAC)
 target_link_libraries(akonadi_mailfilter_agent
   mailcommon
   messagecore
+  messagecomposer
   kdepim
   ${KDE4_KDEUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
