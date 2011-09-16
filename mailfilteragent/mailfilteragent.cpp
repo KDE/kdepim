@@ -29,6 +29,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/session.h>
+#include <mailcommon/mailkernel.h>
 #include <KLocalizedString>
 #include <KMime/Message>
 
@@ -36,14 +37,9 @@
 
 static bool isFilterableCollection( const Akonadi::Collection &collection )
 {
-  if ( collection.remoteId().toLower() == QLatin1String( "inbox" ) ||
-       collection.remoteId().toLower() == QLatin1String( "/inbox" ) ||
-       collection.remoteId().toLower() == QLatin1String( ".inbox" ) )
-    return true;
+  return MailCommon::Kernel::folderIsInbox( collection );
 
   //TODO: check got filter attribute here
-
-  return false;
 }
 
 MailFilterAgent::MailFilterAgent( const QString &id )

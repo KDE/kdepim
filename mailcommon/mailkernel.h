@@ -125,7 +125,7 @@ public:
    */
   bool folderIsSentMailFolder( const Akonadi::Collection& );
   
-  bool folderIsInbox( const Akonadi::Collection& );
+  static bool folderIsInbox( const Akonadi::Collection& );
 
   void initFolders();
 
