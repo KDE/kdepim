@@ -475,13 +475,17 @@ void MailFilter::purify()
     if ( action->isEmpty() )
       mActions.removeAll ( action );
   }
-  // Remove invalid accounts from mAccounts - just to be tidy
-  QStringList::Iterator it2 = mAccounts.begin();
-  while ( it2 != mAccounts.end() ) {
-    if ( !Akonadi::AgentManager::self()->instance( *it2 ).isValid() )
-       it2 = mAccounts.erase( it2 );
-    else
-       ++it2;
+
+  if ( !Akonadi::AgentManager::self()->instances().isEmpty() ) { // safety test to ensure that Akonadi system is ready
+
+    // Remove invalid accounts from mAccounts - just to be tidy
+    QStringList::Iterator it2 = mAccounts.begin();
+    while ( it2 != mAccounts.end() ) {
+      if ( !Akonadi::AgentManager::self()->instance( *it2 ).isValid() )
+         it2 = mAccounts.erase( it2 );
+      else
+         ++it2;
+    }
   }
 }
 
