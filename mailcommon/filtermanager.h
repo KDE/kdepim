@@ -22,6 +22,8 @@
 
 #include "mailcommon_export.h"
 
+#include "mailfilter.h"
+
 #include <akonadi/item.h>
 
 #include <QtCore/QObject>
@@ -37,6 +39,8 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT FilterManager : public QObject
 {
+  Q_OBJECT
+
   public:
     /**
      * Describes the list of filters.
@@ -67,6 +71,8 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     QString createUniqueFilterName( const QString &name ) const;
 
+    /// Apply filters interface
+
     /**
      * Applies filter with the given @p identifier on the message @p item.
      * @return @c true on success, @c false otherwise.
@@ -96,12 +102,54 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void filter( const Akonadi::Item::List &messages, FilterSet set = Explicit ) const;
 
+    /// Manage filters interface
+
+    /**
+     * Appends the list of @p filters to the current list of filters and
+     * write everything back into the configuration. The filter manager
+     * takes ownership of the filters in the list.
+     */
+    void appendFilters( const QList<MailCommon::MailFilter*> &filters, bool replaceIfNameExists = false );
+
+    /**
+     * Removes the given @p filter from the list.
+     * The filter object is not deleted.
+     */
+    void removeFilter( MailCommon::MailFilter *filter );
+
+    /**
+     * Replace the list of filters of the filter manager with the given list of @p filters.
+     * The manager takes ownership of the filters.
+     */
+    void setFilters( const QList<MailCommon::MailFilter*> &filters );
+
+    /**
+     * Returns the filter list of the manager.
+     */
+    QList<MailCommon::MailFilter*> filters() const;
+
+    /**
+     * Should be called at the beginning of an filter list update.
+     */
+    void beginUpdate();
+
+    /**
+     * Should be called at the end of an filter list update.
+     */
+    void endUpdate();
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the filter list has been updated.
+     */
+    void filtersChanged();
+
   private:
     FilterManager();
 
-    static FilterManager *mInstance;
+    class Private;
+    Private* const d;
 
-    OrgFreedesktopAkonadiMailFilterAgentInterface *mMailFilterAgentInterface;
 };
 
 }

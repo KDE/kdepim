@@ -20,8 +20,8 @@
 #include "filtereditdialog_p.h"
 
 #include "filteractionwidget.h"
+#include "filtermanager.h"
 #include "mailfilter.h"
-#include "mailkernel.h"
 #include "searchpatternedit.h"
 #include "ui_filterconfigwidget.h"
 
@@ -46,7 +46,7 @@ FilterEditDialog::~FilterEditDialog()
 
 void FilterEditDialog::load( int index )
 {
-  //tokoe mFilter = FilterIf->filterManager()->filters().at( index );
+  mFilter = FilterManager::instance()->filters().at( index );
 
   if ( !mFilter )
     return;
@@ -71,17 +71,16 @@ void FilterEditDialog::save()
   mPatternEdit->updateSearchPattern();
   mActionLister->updateActionList();
 
-  //tokoe FilterIf->filterManager()->beginUpdate();
-  mFilter->pattern()->setName( mUi->filterName->text() );
-  //tokoe FilterIf->filterManager()->endUpdate();
+  FilterManager::instance()->beginUpdate();
 
+  mFilter->pattern()->setName( mUi->filterName->text() );
   mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
   mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
   mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );
   mFilter->setApplyOnExplicit( mUi->applyManuallyCB->isChecked() );
   mFilter->setStopProcessingHere( mUi->stopIfMatchesCB->isChecked() );
 
-  //tokoe FilterIf->filterManager()->writeConfig();
+  FilterManager::instance()->endUpdate();
 }
 
 #include "filtereditdialog_p.moc"

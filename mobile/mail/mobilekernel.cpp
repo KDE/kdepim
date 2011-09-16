@@ -42,9 +42,6 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
   mFilterActionDict = new FilterActionDict();
   CommonKernel->registerFilterIf( this );
 
-  //readConfig needs the registered FilterIf above
-  //tokoe mFilterManager->readConfig();
-
   CommonKernel->registerSettingsIf( this );
 }
 

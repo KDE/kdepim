@@ -249,11 +249,12 @@ FilterManager::FilterManager( QObject *parent )
 //  d->tryToMonitorCollection();
 
 //  connect( this, SIGNAL(filterListUpdated()), SLOT(tryToFilterInboxOnStartup()) );
+
+  readConfig();
 }
 
 FilterManager::~FilterManager()
 {
-  writeConfig( false );
   clear();
 
   delete d;
@@ -267,27 +268,19 @@ void FilterManager::clear()
 
 void FilterManager::readConfig()
 {
-  beginUpdate();
-  //tokoe KSharedConfig::Ptr config = KernelIf->config();
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config(); // use akonadi_mailfilter_agentrc
   clear();
 
   d->mFilters = FilterImporterExporter::readFiltersFromConfig( config );
-  endUpdate();
-}
 
-void FilterManager::writeConfig( bool withSync ) const
-{
-  //tokoe KSharedConfig::Ptr config = KernelIf->config();
-  KSharedConfig::Ptr config = KGlobal::config();
+  // check if at least one filter requires the message body
+  d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
+                                   boost::bind( &MailCommon::MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
+  // check if at least one filter is to be applied on inbound mail
+  d->mInboundFiltersExist = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
+                                          boost::bind( &MailCommon::MailFilter::applyOnInbound, _1 ) ) != d->mFilters.constEnd();
 
-  // Now, write out the new stuff:
-  FilterImporterExporter::writeFiltersToConfig( d->mFilters, config );
-  KConfigGroup group = config->group( "General" );
-
-  if ( withSync ) {
-    group.sync();
-  }
+  emit filterListUpdated();
 }
 
 void FilterManager::filter( qlonglong itemId, FilterSet set, const QString &accountId )
@@ -424,67 +417,6 @@ QString FilterManager::createUniqueName( const QString &name ) const
   }
 
   return uniqueName;
-}
-
-void FilterManager::appendFilters( const QList<MailCommon::MailFilter*> &filters,
-                                   bool replaceIfNameExists )
-{
-  beginUpdate();
-  if ( replaceIfNameExists ) {
-    foreach ( const MailCommon::MailFilter *newFilter, filters ) {
-      const int numberOfFilters = d->mFilters.count();
-      for ( int i = 0; i < numberOfFilters; ++i ) {
-        MailCommon::MailFilter *filter = d->mFilters.at( i );
-        if ( newFilter->name() == filter->name() ) {
-          d->mFilters.removeAll( filter );
-          i = 0;
-        }
-      }
-    }
-  }
-
-  d->mFilters += filters;
-
-  writeConfig( true );
-  endUpdate();
-}
-
-void FilterManager::setFilters( const QList<MailCommon::MailFilter*> &filters )
-{
-  beginUpdate();
-  clear();
-  d->mFilters = filters;
-  writeConfig( true );
-  endUpdate();
-}
-
-QList<MailCommon::MailFilter*> FilterManager::filters() const
-{
-  return d->mFilters;
-}
-
-void FilterManager::removeFilter( MailCommon::MailFilter *filter )
-{
-  beginUpdate();
-  d->mFilters.removeAll( filter );
-  writeConfig( true );
-  endUpdate();
-}
-
-void FilterManager::beginUpdate()
-{
-}
-
-void FilterManager::endUpdate()
-{
-  // check if at least one filter requires the message body
-  d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
-                                   boost::bind( &MailCommon::MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
-  // check if at least one filter is to be applied on inbound mail
-  d->mInboundFiltersExist = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
-                                          boost::bind( &MailCommon::MailFilter::applyOnInbound, _1 ) ) != d->mFilters.constEnd();
-
-  emit filterListUpdated();
 }
 
 bool FilterManager::requiresFullMailBody() const

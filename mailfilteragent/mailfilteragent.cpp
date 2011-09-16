@@ -148,6 +148,11 @@ void MailFilterAgent::filter( qlonglong item, const QString &filterIdentifier )
   m_filterManager->filter( item, filterIdentifier );
 }
 
+void MailFilterAgent::reload()
+{
+  m_filterManager->readConfig();
+}
+
 AKONADI_AGENT_MAIN( MailFilterAgent )
 
 #include "mailfilteragent.moc"

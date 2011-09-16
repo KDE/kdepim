@@ -20,22 +20,22 @@
 
 #include "filtermodel_p.h"
 
+#include "filtermanager.h"
 #include "mailfilter.h"
-#include "mailkernel.h"
 
 using namespace MailCommon;
 
 FilterModel::FilterModel( QObject *parent )
   : QAbstractListModel( parent )
 {
-  //tokoe connect( FilterIf->filterManager(), SIGNAL(filterListUpdated()),
-  //         this, SLOT(filterListUpdated()) );
+  connect( FilterManager::instance(), SIGNAL( filtersChanged() ),
+           this, SLOT(filterListUpdated()) );
 }
 
 QVariant FilterModel::data( const QModelIndex &index, int role ) const
 {
   if ( role == Qt::DisplayRole ) {
-    return QString(); //tokoe FilterIf->filterManager()->filters().at( index.row() )->name();
+    return FilterManager::instance()->filters().at( index.row() )->name();
   }
 
   return QVariant();
@@ -43,12 +43,11 @@ QVariant FilterModel::data( const QModelIndex &index, int role ) const
 
 int FilterModel::rowCount( const QModelIndex& ) const
 {
-  return 0; //tokoe FilterIf->filterManager()->filters().size();
+  return FilterManager::instance()->filters().size();
 }
 
 void FilterModel::moveRow( int sourceRow, int destinationRow )
 {
-  qDebug() << "FilterModel::moveRow(from=" << sourceRow << " to=" << destinationRow << ")";
   if ( sourceRow == destinationRow )
     return;
 
@@ -61,55 +60,42 @@ void FilterModel::moveRow( int sourceRow, int destinationRow )
   const int startRow = sourceRow;
   const int endRow = (sourceRow < destinationRow ? destinationRow + 1 : destinationRow - 1);
 
-  qDebug() << "beginMoveRows(from=" << startRow << " to=" << endRow << ")";
-  //if ( !beginMoveRows( QModelIndex(), startRow, startRow, QModelIndex(), endRow ) )
-  //  return;
-
   QList<MailFilter*> filters;
 
-/* tokoe
-  FilterManager *manager = FilterIf->filterManager();
-
-  foreach ( MailFilter *filter, manager->filters() ) {
+  foreach ( MailFilter *filter, FilterManager::instance()->filters() ) {
     filters.append( new MailFilter( *filter ) ); // deep copy
   }
 
   filters.move( sourceRow, destinationRow );
-  manager->setFilters( filters );
-*/
-
-  //endMoveRows();
+  FilterManager::instance()->setFilters( filters );
 
   reset();
 }
 
 bool FilterModel::insertRows( int row, int count, const QModelIndex &parent )
 {
-/* tokoe
   beginInsertRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i ) {
     MailFilter *filter = new MailFilter();
-    FilterIf->filterManager()->appendFilters( QList<MailFilter*> () << filter );
+    FilterManager::instance()->appendFilters( QList<MailFilter*> () << filter );
   }
   endInsertRows();
-*/
 
   return true;
 }
 
 bool FilterModel::removeRows( int row, int count, const QModelIndex &parent )
 {
-/* tokoe
-  const QList<MailFilter*> filters = FilterIf->filterManager()->filters();
+  const QList<MailFilter*> filters = FilterManager::instance()->filters();
 
   beginRemoveRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i ) {
     MailFilter *filter = filters.at( row );
-    FilterIf->filterManager()->removeFilter( filter );
+    FilterManager::instance()->removeFilter( filter );
     delete filter;
   }
   endRemoveRows();
-*/
+
   return true;
 }
 

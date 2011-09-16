@@ -68,41 +68,10 @@ class FilterManager: public QObject
     void readConfig();
 
     /**
-     * Stores the filter rules in config file.
-     *
-     * @param withSync If @c true the config file will be synced to disk.
-     */
-    void writeConfig( bool withSync = true ) const;
-
-    /**
-     * Removes the given @p filter from the list.
-     * The filter object is not deleted.
-     */
-    void removeFilter( MailCommon::MailFilter *filter );
-
-    /**
      * Checks for existing filters with the @p name and extend the
      * "name" to "name (i)" until no match is found for i=1..n
      */
     QString createUniqueName( const QString &name ) const;
-
-    /**
-     * Appends the list of @p filters to the current list of filters and
-     * write everything back into the configuration. The filter manager
-     * takes ownership of the filters in the list.
-     */
-    void appendFilters( const QList<MailCommon::MailFilter*> &filters, bool replaceIfNameExists = false );
-
-    /**
-     * Replace the list of filters of the filter manager with the given list of @p filters.
-     * The manager takes ownership of the filters.
-     */
-    void setFilters( const QList<MailCommon::MailFilter*> &filters );
-
-    /**
-     * Returns the filter list of the manager.
-     */
-    QList<MailCommon::MailFilter*> filters() const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -137,16 +106,6 @@ class FilterManager: public QObject
      * Applies the filters on the given @p messages.
      */
     void applyFilters( const QList<Akonadi::Item> &messages, FilterSet set = Explicit );
-
-    /**
-     * Should be called at the beginning of an filter list update.
-     */
-    void beginUpdate();
-
-    /**
-     * Should be called at the end of an filter list update.
-     */
-    void endUpdate();
 
     /**
      * Returns whether the configured filters need the full mail content.

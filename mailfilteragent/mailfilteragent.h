@@ -43,6 +43,8 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void filter( qlonglong item, int filterSet, const QString &resourceId );
     void filter( qlonglong item, const QString &filterIdentifier );
 
+    void reload();
+
   private Q_SLOTS:
     void initializeCollections();
     void initialCollectionFetchingDone( KJob* );
