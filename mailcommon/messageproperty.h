@@ -31,6 +31,8 @@
 #ifndef MAILCOMMON_MESSAGEPROPERTY_H
 #define MAILCOMMON_MESSAGEPROPERTY_H
 
+#include "mailcommon_export.h"
+
 #include "filteraction.h" // for KMFilterAction::ReturnCode
 
 #include <akonadi/collection.h>
@@ -54,7 +56,7 @@ namespace MailCommon {
    serialCache should only exist during the lifetime of a particular
    KMMsgBase based instance.
  */
-class MessageProperty : public QObject
+class MAILCOMMON_EXPORT MessageProperty : public QObject
 {
   Q_OBJECT
 

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=EMail Filter Agent
+Comment=Extension to filter emails
+Type=AkonadiAgent
+Exec=akonadi_mailfilter_agent
+Icon=kmail
+
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_mailfilter_agent

@@ -37,9 +37,7 @@ namespace KPIMIdentities {
 
 namespace MailCommon {
 
-class FilterActionDict;
 class FilterDialog;
-class FilterManager;
 class JobScheduler;
   
 /** Generic interface for mail kernels.*/
@@ -67,8 +65,6 @@ public:
 /** Filter related interface */
 class IFilter {
 public:
-  virtual FilterActionDict *filterActionDict() const = 0;
-  virtual FilterManager *filterManager() const = 0;
   virtual void openFilterDialog( bool createDummyFilter = true ) = 0;
   virtual void createFilter(  const QByteArray & field, const QString & value ) = 0;
   virtual ~IFilter() {};

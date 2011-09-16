@@ -20,7 +20,6 @@
 
 #include "mobilekernel.h"
 #include <mailcommon/filteraction.h>
-#include <mailcommon/filtermanager.h>
 #include <mailcommon/mailkernel.h>
 #include <mailcommon/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
@@ -40,12 +39,7 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
   mMessageSender = new AkonadiSender;
   CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
 
-  mFilterManager = new FilterManager();
-  mFilterActionDict = new FilterActionDict();
   CommonKernel->registerFilterIf( this );
-
-  //readConfig needs the registered FilterIf above
-  mFilterManager->readConfig();
 
   CommonKernel->registerSettingsIf( this );
 }
@@ -125,16 +119,6 @@ bool MobileKernel::showPopupAfterDnD()
 QStringList MobileKernel::customTemplates()
 {
   return QStringList(); //TODO: implement
-}
-
-FilterManager* MobileKernel::filterManager() const
-{
-  return mFilterManager;
-}
-
-FilterActionDict* MobileKernel::filterActionDict() const
-{
-  return mFilterActionDict;
 }
 
 void MobileKernel::openFilterDialog( bool createDummyFilter )
