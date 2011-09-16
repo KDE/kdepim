@@ -198,7 +198,7 @@ void FeedListView::Private::saveHeaderSettings()
 }
 
 FeedListView::FeedListView( QWidget *parent )
-    :  QTreeView( parent ), d( new Private( this ) )
+    :  Akonadi::EntityTreeView( parent ), d( new Private( this ) )
 {
     setSelectionMode( QAbstractItemView::SingleSelection );
     setSelectionBehavior( QAbstractItemView::SelectRows );
@@ -237,7 +237,7 @@ void FeedListView::setModel( QAbstractItemModel* m )
     if ( model() )
         d->headerState = header()->saveState();
 
-    QTreeView::setModel( m );
+    EntityTreeView::setModel( m );
 
     if ( m )
         header()->restoreState( d->headerState );

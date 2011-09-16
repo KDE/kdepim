@@ -35,11 +35,16 @@
 #include <krss/tagprovider.h>
 #include <krss/treenode.h>
 #include <krss/treenodevisitor.h>
+#include <krss/feedpropertiescollectionattribute.h>
+#include <krss/rssitem.h>
 
 #include <Akonadi/ChangeRecorder>
+#include <Akonadi/CollectionFetchScope>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/EntityTreeModel>
+#include <Akonadi/Item>
+#include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
 
@@ -78,7 +83,6 @@ static shared_ptr<KRss::TreeNode> subscriptionForIndex( const QModelIndex& index
 
 Akregator::SelectionController::SelectionController( QObject* parent )
     : AbstractSelectionController( parent ),
-    m_feedList(),
     m_feedSelector(),
     m_articleLister( 0 ),
     m_singleDisplay( 0 ),
@@ -86,65 +90,58 @@ Akregator::SelectionController::SelectionController( QObject* parent )
     m_itemModel( 0 ),
     m_selectedSubscription()
 {
-    Akonadi::ItemFetchScope scope;
-    scope.fetchFullPayload( true );
-    scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
+    Akonadi::ItemFetchScope iscope;
+    iscope.fetchFullPayload( true );
+    iscope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
+    Akonadi::CollectionFetchScope cscope;
+    cscope.setIncludeStatistics( true );
+    cscope.setContentMimeTypes( QStringList() << QLatin1String("application/rss+xml") );
     Akonadi::Session* session = new Akonadi::Session( QByteArray( "Akregator-" ) + QByteArray::number( qrand() ) );
     Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder;
     recorder->setSession( session );
     recorder->fetchCollection( true );
-    recorder->setItemFetchScope( scope );
+    recorder->setCollectionFetchScope( cscope );
+    recorder->setItemFetchScope( iscope );
     recorder->setCollectionMonitored( Akonadi::Collection::root() );
     recorder->setMimeTypeMonitored( QLatin1String( "application/rss+xml" ) );
-    m_itemModel = new FeedItemModel( recorder );
+    m_itemModel = new FeedItemModel( recorder, this );
 }
 
 
 void Akregator::SelectionController::setFeedSelector( QAbstractItemView* feedSelector )
 {
-    if ( m_feedSelector == feedSelector )
-        return;
-
-    if ( m_feedSelector ) {
-        m_feedSelector->disconnect( this );
-        m_feedSelector->selectionModel()->disconnect( this );
-    }
-
+    Q_ASSERT( !m_feedSelector );
     m_feedSelector = feedSelector;
-
     init();
 }
 
 void Akregator::SelectionController::setArticleLister( Akregator::ArticleLister* lister )
 {
-    if ( m_articleLister == lister )
-        return;
-
-    if ( m_articleLister )
-        m_articleLister->articleSelectionModel()->disconnect( this );
-    if ( m_articleLister && m_articleLister->itemView() )
-        m_articleLister->itemView()->disconnect( this );
-
+    Q_ASSERT( !m_articleLister );
     m_articleLister = lister;
     init();
 }
 
 void Akregator::SelectionController::init() {
-
-    if (  !m_feedSelector || !m_articleLister || !m_articleLister->itemView() )
+    if (  !m_feedSelector || !m_articleLister )
         return;
 
-    Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( m_feedSelector );
+    Q_ASSERT( m_articleLister->itemView() );
+    Q_ASSERT( !m_feedSelector->model() );
+
+    Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
+    filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
     filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
     filterProxy->setSourceModel( m_itemModel );
-
-    m_feedSelector->setModel( filterProxy );
+    filterProxy->setDynamicSortFilter( true );
 
     connect( m_feedSelector, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(subscriptionContextMenuRequested(QPoint)) );
     connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
              this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
+
+    m_feedSelector->setModel( filterProxy );
 
     KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedSelector->selectionModel() );
     selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
@@ -152,10 +149,13 @@ void Akregator::SelectionController::init() {
 
     Akonadi::EntityMimeTypeFilterModel* filterProxy2 = new Akonadi::EntityMimeTypeFilterModel;
     filterProxy2->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-    filterProxy2->setSourceModel( selectionProxy );
+    filterProxy2->addMimeTypeInclusionFilter( QLatin1String("application/rss+xml") );
     filterProxy2->setSortRole( FeedItemModel::SortRole );
+    filterProxy2->setDynamicSortFilter( true );
+    filterProxy2->setSourceModel( selectionProxy );
     m_articleLister->setItemModel( filterProxy2 );
-
+    connect( m_articleLister->articleSelectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+                this, SLOT(itemSelectionChanged()) );
     connect( m_articleLister->itemView(), SIGNAL(doubleClicked(QModelIndex)),
              this, SLOT(itemIndexDoubleClicked(QModelIndex))  );
 }
@@ -186,29 +186,28 @@ shared_ptr<KRss::TreeNode> Akregator::SelectionController::selectedSubscription(
 
 void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedList>& feedList )
 {
+#ifdef KRSS_PORT_DISABLED
+
     if ( m_feedList == feedList )
         return;
 
     m_feedList = feedList;
 
 
-#ifdef KRSS_PORT_DISABLED
     if ( m_folderExpansionHandler ) {
         m_folderExpansionHandler->setFeedList( m_feedList );
         m_folderExpansionHandler->setModel( m_subscriptionModel );
     }
-#endif
 
     if ( m_feedSelector ) {
         Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( m_feedSelector );
         filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
         filterProxy->setSourceModel( m_itemModel );
         m_feedSelector->setModel( filterProxy );
-        disconnect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                    this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
         connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
                  this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
     }
+#endif
 }
 
 void Akregator::SelectionController::setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler )
@@ -278,27 +277,33 @@ void Akregator::SelectionController::subscriptionContextMenuRequested( const QPo
 
 void Akregator::SelectionController::itemSelectionChanged()
 {
-    const KRss::Item item = currentItem();
+    const Akonadi::Item item = m_articleLister->articleSelectionModel()->currentIndex().data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    if ( !item.isValid() )
+        return;
     Akonadi::ItemFetchScope scope;
-    scope.fetchPayloadPart( KRss::Item::HeadersPart );
-    scope.fetchPayloadPart( KRss::Item::ContentPart );
-    KRss::ItemFetchJob* job = new KRss::ItemFetchJob( this );
+    scope.fetchFullPayload();
+    scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
+    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item );
     job->setFetchScope( scope );
-    job->setItem( item );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(fullItemFetched(KJob*)) );
     job->start();
 }
 
 void Akregator::SelectionController::fullItemFetched( KJob* j )
 {
-    KRss::ItemFetchJob* job = qobject_cast<KRss::ItemFetchJob*>( j );
+    Akonadi::ItemFetchJob* job = qobject_cast<Akonadi::ItemFetchJob*>( j );
     assert( job );
     if ( job->error() ) {
         //PENDING(frank) TODO handle error
+        return;
     }
 
-    const KRss::Item item = job->item();
+    Q_ASSERT( job->items().size() == 1 );
 
+    const Akonadi::Item aitem = job->items().first();
+    if ( !aitem.hasPayload<KRss::RssItem>() )
+        return;
+    const KRss::Item item( aitem );
     if ( m_singleDisplay )
         m_singleDisplay->showItem( item );
 

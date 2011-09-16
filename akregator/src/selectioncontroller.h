@@ -98,7 +98,6 @@ private:
     void init();
 
 private:
-    boost::shared_ptr<KRss::FeedList> m_feedList;
     QPointer<QAbstractItemView> m_feedSelector;
     Akregator::ArticleLister* m_articleLister;
     Akregator::SingleArticleDisplay* m_singleDisplay;

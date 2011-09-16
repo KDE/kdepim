@@ -28,6 +28,7 @@
 #include "akregator_export.h"
 #include "abstractselectioncontroller.h"
 
+#include <Akonadi/EntityTreeView>
 #include <QPointer>
 #include <QSortFilterProxyModel>
 #include <QTreeView>
@@ -83,7 +84,7 @@ private:
 };
 
 
-class AKREGATORPART_EXPORT ArticleListView : public QTreeView, public ArticleLister
+class AKREGATORPART_EXPORT ArticleListView : public Akonadi::EntityTreeView, public ArticleLister
 {
     Q_OBJECT
 

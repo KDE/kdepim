@@ -49,7 +49,7 @@ FeedItemModel::~FeedItemModel() {
 
 QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column, int role ) const {
     if ( !akonadiItem.hasPayload<RssItem>() )
-        return QVariant();
+        return EntityTreeModel::entityData( akonadiItem, column, role );
 
     const RssItem item = akonadiItem.payload<RssItem>();
     if ( role == SortRole && column == DateColumn )
@@ -73,8 +73,9 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
                     authors += person.name();
                 }
                 return authors;
+#else
+                return EntityTreeModel::entityData( akonadiItem, column, role );
 #endif
-                return QVariant();
             }
             case DateColumn:
                 if ( role == SortRole )
@@ -87,11 +88,11 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
                return d->m_feed->title();
 #endif
             default:
-                return QVariant();
+                return EntityTreeModel::entityData( akonadiItem, column, role );
         }
     }
 
-    if ( role == ItemRole ) {
+    if ( role == FeedItemModel::ItemRole ) {
         QVariant var;
         var.setValue( akonadiItem );
         return var;
@@ -117,44 +118,52 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
 
     //PENDING(frank) TODO: use configurable colors
     if ( role == Qt::ForegroundRole ) {
-        if ( RssItem::isNew( akonadiItem ) )
-            return Qt::red;
         if ( RssItem::isUnread( akonadiItem ) )
             return Qt::blue;
     }
 
-    if ( role == Qt::DecorationRole && column == ItemTitleColumn )
-        return RssItem::isImportant( akonadiItem ) ? d->importantIcon : QVariant();
-    return QVariant();
+    if ( role == Qt::DecorationRole && column == ItemTitleColumn && RssItem::isImportant( akonadiItem ) )
+        return d->importantIcon;
+
+    return EntityTreeModel::entityData( akonadiItem, column, role );
 }
 
 QVariant FeedItemModel::entityData( const Collection &collection, int column, int role ) const {
-    if ( role == Qt::DisplayRole && column == FeedTitleColumn ) {
-        const QString title = FeedCollection( collection ).title();
-        if ( !title.isEmpty() )
-            return title;
+    if ( role == Qt::DisplayRole || role == SortRole ) {
+        switch ( column ) {
+        case FeedTitleColumn:
+        {
+            const QString title = FeedCollection( collection ).title();
+            if ( !title.isEmpty() )
+                return title;
+            break;
+        }
+        default:
+            break;
+        }
     }
     return EntityTreeModel::entityData( collection, column, role );
 }
 
 int FeedItemModel::entityColumnCount( EntityTreeModel::HeaderGroup headerSet ) const {
-    if ( headerSet == ItemListHeaders )
+    switch ( headerSet ) {
+    case ItemListHeaders:
         return ItemColumnCount;
-    else
+    case CollectionTreeHeaders:
         return FeedColumnCount;
+    default:
+        break;
+    }
+    return EntityTreeModel::entityColumnCount( headerSet );
 }
 
 QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientation, int role, EntityTreeModel::HeaderGroup headerSet ) const {
     Q_ASSERT( section >= 0 );
-    if ( orientation != Qt::Horizontal )
-        return QVariant();
-    if ( role != Qt::DisplayRole )
-        return QVariant();
+    if ( orientation != Qt::Horizontal || role != Qt::DisplayRole )
+        return EntityTreeModel::entityHeaderData( section, orientation, role, headerSet );
     switch ( headerSet ) {
         case ItemListHeaders:
         {
-            if ( section >= ItemColumnCount )
-                return QVariant();
             switch ( section ) {
             case ItemTitleColumn:
                 return i18n("Title");
@@ -164,23 +173,27 @@ QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientati
                 return i18n("Date");
             case FeedTitleForItemColumn:
                 return i18n("Feed");
+            default:
+                break;
             }
         }
 
         case CollectionTreeHeaders:
         {
-            if ( section >= FeedColumnCount )
-                return QVariant();
-            switch ( section ) {
+          switch ( section ) {
             case FeedTitleColumn:
                 return i18n("Title");
             case UnreadCountColumn:
                 return i18n("Unread");
             case TotalCountColumn:
                 return i18n("Total");
+            default:
+                break;
             }
         }
+        default:
+            break;
     }
-    return QVariant();
+    return EntityTreeModel::entityHeaderData( section, orientation, role, headerSet );
 }
 

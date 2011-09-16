@@ -28,7 +28,7 @@
 
 #include <utils/filtercolumnsproxymodel.h>
 
-#include <krss/itemmodel.h>
+#include <krss/feeditemmodel.h>
 
 #include <KIcon>
 #include <KLocale>
@@ -49,7 +49,7 @@
 
 using namespace boost;
 using namespace Akregator;
-using KRss::ItemModel;
+using KRss::FeedItemModel;
 
 FilterDeletedProxyModel::FilterDeletedProxyModel( QObject* parent ) : QSortFilterProxyModel( parent )
 {
@@ -58,7 +58,7 @@ FilterDeletedProxyModel::FilterDeletedProxyModel( QObject* parent ) : QSortFilte
 
 bool FilterDeletedProxyModel::filterAcceptsRow( int source_row, const QModelIndex& source_parent ) const
 {
-    return !sourceModel()->index( source_row, 0, source_parent ).data( ItemModel::IsDeletedRole ).toBool();
+    return !sourceModel()->index( source_row, 0, source_parent ).data( FeedItemModel::IsDeletedRole ).toBool();
 }
 
 SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), m_keepFlagIcon( KIcon( "mail-mark-important" ) )
@@ -67,10 +67,10 @@ SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterP
 
 bool SortColorizeProxyModel::filterAcceptsRow ( int source_row, const QModelIndex& source_parent ) const
 {
+#ifdef KRSS_PORT_DISABLED
     if ( source_parent.isValid() )
         return false;
 
-#ifdef KRSS_PORT_DISABLED
     for ( uint i = 0; i < m_matchers.size(); ++i )
     {
         if ( !static_cast<ItemModel*>( sourceModel() )->rowMatches( source_row, m_matchers[i] ) )
@@ -99,10 +99,7 @@ QVariant SortColorizeProxyModel::data( const QModelIndex& idx, int role ) const
     {
         case Qt::ForegroundRole:
         {
-            if ( sourceIdx.data( ItemModel::IsNewRole ).toBool() )
-                return Settings::useCustomColors() ?
-                    Settings::colorNewArticles() : Qt::red;
-            if ( sourceIdx.data( ItemModel::IsUnreadRole ).toBool() )
+            if ( sourceIdx.data( FeedItemModel::IsUnreadRole ).toBool() )
                 return Settings::useCustomColors() ?
                     Settings::colorUnreadArticles() : Qt::blue;
 
@@ -112,9 +109,9 @@ QVariant SortColorizeProxyModel::data( const QModelIndex& idx, int role ) const
         break;
         case Qt::DecorationRole:
         {
-            if ( sourceIdx.column() == ItemModel::ItemTitleColumn )
+            if ( sourceIdx.column() == FeedItemModel::ItemTitleColumn )
             {
-                return sourceIdx.data( ItemModel::IsImportantRole ).toBool() ? m_keepFlagIcon : QVariant();
+                return sourceIdx.data( FeedItemModel::IsImportantRole ).toBool() ? m_keepFlagIcon : QVariant();
             }
         }
         break;
@@ -122,42 +119,46 @@ QVariant SortColorizeProxyModel::data( const QModelIndex& idx, int role ) const
     return sourceIdx.data( role );
 }
 
-namespace {
+static bool isRead( const QModelIndex& idx )
+{
 
-    static bool isRead( const QModelIndex& idx )
-    {
-        if ( !idx.isValid() )
-            return false;
-        return idx.data( ItemModel::IsReadRole ).toBool();
-    }
+    return idx.isValid()
+            ? idx.data( FeedItemModel::IsReadRole ).toBool()
+            : false;
 }
 
 void ArticleListView::setItemModel( QAbstractItemModel* model )
 {
+    setModel( model );
+#if 0
     if ( !model ) {
         setModel( model );
         return;
     }
 
+    delete m_proxy;
     m_proxy = new SortColorizeProxyModel( model );
     m_proxy->setSourceModel( model );
-    m_proxy->setSortRole( ItemModel::SortRole );
+    m_proxy->setSortRole( FeedItemModel::SortRole );
     m_proxy->setFilters( m_matchers );
+#if 0
     FilterDeletedProxyModel* const proxy2 = new FilterDeletedProxyModel( model );
-    proxy2->setSortRole( ItemModel::SortRole );
+    proxy2->setSortRole( FeedItemModel::SortRole );
     proxy2->setSourceModel( m_proxy );
+#endif
 
     FilterColumnsProxyModel* const columnsProxy = new FilterColumnsProxyModel( model );
-    columnsProxy->setSortRole( ItemModel::SortRole );
-    columnsProxy->setSourceModel( proxy2 );
+    columnsProxy->setSortRole( FeedItemModel::SortRole );
+    columnsProxy->setSourceModel( m_proxy );
 
-    columnsProxy->setColumnEnabled( ItemModel::ItemTitleColumn );
-    columnsProxy->setColumnEnabled( ItemModel::FeedTitleColumn );
-    columnsProxy->setColumnEnabled( ItemModel::DateColumn );
-    columnsProxy->setColumnEnabled( ItemModel::AuthorsColumn );
+    columnsProxy->setColumnEnabled( FeedItemModel::ItemTitleColumn );
+    columnsProxy->setColumnEnabled( FeedItemModel::FeedTitleColumn );
+    columnsProxy->setColumnEnabled( FeedItemModel::DateColumn );
+    columnsProxy->setColumnEnabled( FeedItemModel::AuthorsColumn );
 
     setModel( columnsProxy );
     header()->setContextMenuPolicy( Qt::CustomContextMenu );
+#endif
 }
 
 void ArticleListView::showHeaderMenu(const QPoint& pos)
@@ -298,7 +299,7 @@ void ArticleListView::setIsAggregation( bool aggregation )
 }
 
 ArticleListView::ArticleListView( QWidget* parent )
-    : QTreeView(parent),
+    : Akonadi::EntityTreeView(parent),
     m_columnMode( FeedMode )
 {
     setSortingEnabled( true );
@@ -324,11 +325,11 @@ ArticleListView::ArticleListView( QWidget* parent )
 void ArticleListView::mousePressEvent( QMouseEvent *ev )
 {
     // let's push the event, so we can use currentIndex() to get the newly selected article..
-    QTreeView::mousePressEvent( ev );
+    EntityTreeView::mousePressEvent( ev );
 
     if( ev->button() == Qt::MidButton ) {
         QModelIndex idx( currentIndex() );
-        const KUrl url = currentIndex().data( ItemModel::LinkRole ).value<KUrl>();
+        const KUrl url = currentIndex().data( FeedItemModel::LinkRole ).value<KUrl>();
 
         emit signalMouseButtonPressed( ev->button(), url );
     }
@@ -365,7 +366,7 @@ void ArticleListView::contextMenuEvent( QContextMenuEvent* event )
 
 void ArticleListView::paintEvent( QPaintEvent* e )
 {
-    QTreeView::paintEvent( e );
+    EntityTreeView::paintEvent( e );
 
 #ifdef __GNUC__
 #warning The distinction between empty node and 0 items after filtering is hard to port to interview
@@ -416,7 +417,7 @@ void ArticleListView::setModel( QAbstractItemModel* m )
             m_feedHeaderState = state;
     }
 
-    QTreeView::setModel( m );
+    EntityTreeView::setModel( m );
 
     if ( m )
     {
@@ -425,7 +426,7 @@ void ArticleListView::setModel( QAbstractItemModel* m )
 
         // Ensure at least one column is visible
         if ( header()->hiddenSectionCount() == header()->count() ) {
-            header()->showSection( ItemModel::ItemTitleColumn );
+            header()->showSection( FeedItemModel::ItemTitleColumn );
         }
     }
 }

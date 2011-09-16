@@ -21,6 +21,8 @@
 
 #include "krss/krss_export.h"
 
+#include <Akonadi/EntityTreeView>
+
 #include <QtGui/QTreeView>
 #include <boost/shared_ptr.hpp>
 
@@ -31,7 +33,7 @@ namespace KRss {
 class Tag;
 class TreeNode;
 
-class KRSS_EXPORT FeedListView : public QTreeView
+class KRSS_EXPORT FeedListView : public Akonadi::EntityTreeView
 {
     Q_OBJECT
 

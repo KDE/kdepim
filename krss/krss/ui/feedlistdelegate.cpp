@@ -24,7 +24,7 @@
 */
 
 #include "feedlistdelegate.h"
-#include "krss/feedlistmodel.h"
+#include <Akonadi/EntityTreeModel>
 
 #include <KDebug>
 #include <KGlobalSettings>
@@ -62,7 +62,7 @@ void FeedListDelegate::paint( QPainter *painter,
                               const QModelIndex &index ) const
 {
     QStyleOptionViewItem newOption = option;
-    if ( index.data( FeedListModel::HasUnreadRole ).toBool() )
+    if ( index.data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() > 0 )
     { // feed has unread articles
         newOption.font.setBold(true);
     }

@@ -49,6 +49,11 @@ Item::Item() : d( new Private )
 {
 }
 
+Item::Item( const Akonadi::Item& aitem ) : d( new Private )
+{
+    d->akonadiItem = aitem;
+}
+
 Item::Item( const Item& other ) : d( other.d )
 {
 }

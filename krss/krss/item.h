@@ -34,6 +34,10 @@ template <class T> class QList;
 template <class K, class T> class QHash;
 class QString;
 
+namespace Akonadi {
+    class Item;
+}
+
 namespace KRss {
 
 class Category;
@@ -62,6 +66,7 @@ public:
 
 public:
     Item();
+    explicit Item( const Akonadi::Item& aitem );
     Item( const Item& other );
     ~Item();
 
