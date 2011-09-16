@@ -211,10 +211,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     hl->addWidget( label );
 
     mNameEdit = new KLineEdit( this );
-    const bool isAllowTochanged( collection.rights() & Collection::CanChangeCollection );
-    mNameEdit->setEnabled( isAllowTochanged );
-    if ( isAllowTochanged )
-      connect(mNameEdit, SIGNAL(textChanged(QString) ), SLOT( slotNameChanged( QString ) ) );
+    connect(mNameEdit, SIGNAL(textChanged(QString) ), SLOT( slotNameChanged( QString ) ) );
     label->setBuddy( mNameEdit );
     hl->addWidget( mNameEdit );
   }
