@@ -74,7 +74,8 @@ static void extractSenderToCCAndBcc( const KMime::Message::Ptr &aMsg, QString &s
 
 
 
-AkonadiSender::AkonadiSender()
+AkonadiSender::AkonadiSender( QObject *parent )
+  : QObject( parent )
 {
 }
 
