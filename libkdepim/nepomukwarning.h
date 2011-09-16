@@ -29,12 +29,16 @@ namespace KPIM {
 /**
  * Inline warning message for windows/dialogs that semi-optionally depend on Nepomuk.
  * Just add this to the layout at the top, it'll automatically show itself when necessary.
+ * @since 4.8
  */
 class KDEPIM_EXPORT NepomukWarning : public KMessageWidget
 {
   Q_OBJECT
   public:
-    explicit NepomukWarning( QWidget *parent = 0 );
+    /**
+     * @param neverShowAgainKey Key used for storing/retrieving  the "never show again" state.
+     */
+    explicit NepomukWarning( const char *neverShowAgainKey, QWidget *parent = 0 );
 
     /**
      * Sets a list of features that wont work.
@@ -43,6 +47,10 @@ class KDEPIM_EXPORT NepomukWarning : public KMessageWidget
 
   private slots:
     void configure();
+    void explicitlyClosed();
+
+  private:
+    QString m_neverShowAgainKey;
 };
 
 }

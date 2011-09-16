@@ -22,24 +22,37 @@
 #include <Nepomuk/ResourceManager>
 
 #include <KAction>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KDebug>
 #include <KLocalizedString>
 #include <KStandardDirs>
 
 #include <QProcess>
 
-KPIM::NepomukWarning::NepomukWarning(QWidget* parent): KMessageWidget(parent)
+KPIM::NepomukWarning::NepomukWarning(const char* neverShowAgainKey, QWidget* parent):
+  KMessageWidget(parent),
+  m_neverShowAgainKey( QLatin1String( neverShowAgainKey ) )
 {
   setMessageType( Warning );
   setCloseButtonVisible( true );
   setWordWrap( true );
   setText( i18n( "You do not have the semantic desktop system enabled. Several features in here depend on this and will thus not work correctly." ) );
-  setVisible( !Nepomuk::ResourceManager::instance()->initialized() );
   connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()), SLOT(animatedHide()) );
   connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()), SLOT(animatedShow()) );
 
-  KAction *action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
+  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
+  const bool neverShowAgain = cfgGroup.readEntry( m_neverShowAgainKey, false );
+  setVisible( !Nepomuk::ResourceManager::instance()->initialized() && !neverShowAgain );
+
+  KAction *action = this->findChild<KAction*>(); // that should give us the close action...
+  if ( action )
+    connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+
+  action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
   addAction( action );
+
 }
 
 void KPIM::NepomukWarning::configure()
@@ -56,3 +69,8 @@ void KPIM::NepomukWarning::setMissingFeatures(const QStringList& features)
   }
 }
 
+void KPIM::NepomukWarning::explicitlyClosed()
+{
+  KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
+  cfgGroup.writeEntry( m_neverShowAgainKey, true );
+}
