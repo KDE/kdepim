@@ -45,8 +45,10 @@ public:
 
     enum FeedColumn {
         FeedTitleColumn=0,
+#if 0
         UnreadCountColumn,
         TotalCountColumn,
+#endif
         FeedColumnCount
     };
 
