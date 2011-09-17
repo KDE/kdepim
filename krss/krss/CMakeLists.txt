@@ -41,11 +41,9 @@ set(krss_LIB_SRCS
    feedlist.cpp
    dbushelper.cpp
    helper.cpp
-   itemmodel.cpp
    feeditemmodel.cpp
    treenode.cpp
    treenodevisitor.cpp
-   feedlistmodel.cpp
    exportopmljob.cpp
    importitemsjob.cpp
    importopmljob.cpp
@@ -55,7 +53,6 @@ set(krss_LIB_SRCS
    itemjobs.cpp
    statusmodifyjob.cpp
    netfeedcreatejob.cpp
-   standardactionmanager.cpp
    #subscriptionsmodel.cpp
    tagjobs.cpp
    tagprovider.cpp
@@ -136,15 +133,12 @@ set(krss_LIB_HDRS
    itemlisting.h
    itemlistjob.h
    feeditemmodel.h 
-   itemmodel.h
    importitemsjob.h
    importopmljob.h
-   feedlistmodel.h
    itemjobs.h
    feedjobs.h
    statusmodifyjob.h
    netfeedcreatejob.h
-   standardactionmanager.h
    subscriptionsmodel.h
    tagjobs.h
    tagprovider.h

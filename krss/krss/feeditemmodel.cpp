@@ -105,13 +105,11 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
     default:
         break;
     }
-#if 0
     //PENDING(frank) TODO: use configurable colors
     if ( role == Qt::ForegroundRole ) {
         if ( RssItem::isUnread( akonadiItem ) )
             return Qt::blue;
     }
-#endif
 
     if ( role == Qt::DecorationRole && column == ItemTitleColumn && RssItem::isImportant( akonadiItem ) )
         return d->importantIcon;
