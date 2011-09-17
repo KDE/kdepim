@@ -237,8 +237,8 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
     kWarning() << "Code temporarily disabled (Akonadi port)";
 #endif //KRSS_PORT_DISABLED
 
-    connect( m_selectionController, SIGNAL( currentSubscriptionChanged(boost::shared_ptr<KRss::TreeNode>) ),
-             this, SLOT( slotNodeSelected(boost::shared_ptr<KRss::TreeNode>) ) );
+    connect( m_selectionController, SIGNAL(currentCollectionChanged(Akonadi::Collection)),
+             this, SLOT(slotNodeSelected(Akonadi::Collection)) );
 
     connect( m_selectionController, SIGNAL(currentItemChanged(KRss::Item)),
              this, SLOT(slotItemSelected(KRss::Item)) );
@@ -452,8 +452,6 @@ void Akregator::MainWidget::setFeedList( const shared_ptr<KRss::FeedList>& list 
 #ifdef WITH_LIBKDEPIM
     ProgressManager::self()->setFeedList( m_feedList );
 #endif
-    m_selectionController->setFeedList( m_feedList );
-
     if ( oldList )
         oldList->disconnect( this );
 }
@@ -552,7 +550,7 @@ void Akregator::MainWidget::slotCombinedView()
 }
 
 
-void Akregator::MainWidget::slotNodeSelected(const boost::shared_ptr<KRss::TreeNode>& node)
+void Akregator::MainWidget::slotNodeSelected(const Akonadi::Collection& c)
 {
     m_markReadTimer->stop();
 
@@ -576,15 +574,14 @@ void Akregator::MainWidget::slotNodeSelected(const boost::shared_ptr<KRss::TreeN
     }
     else
     {
-#ifdef KRSS_PORT_DISABLED
-        m_articleViewer->slotShowSummary( m_feedList, node );
-#endif
+        m_articleViewer->slotShowSummary( c );
     }
 
-    if (node)
-       m_mainFrame->setWindowTitle( node->title( m_feedList ) );
-
-    m_actionManager->slotNodeSelected(node);
+    if ( c.isValid() ) {
+        KRss::FeedCollection fc( c );
+        m_mainFrame->setWindowTitle( fc.title() );
+    }
+    m_actionManager->slotNodeSelected(c);
 }
 
 

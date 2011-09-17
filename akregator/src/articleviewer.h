@@ -51,7 +51,6 @@ namespace Filters {
 
 class ArticleFormatter;
 class OpenUrlRequest;
-class TreeNode;
 
 class ArticleViewerPart;
 
@@ -188,9 +187,10 @@ class ArticleViewer : public QWidget
 
         void updateCss();
 
+#ifdef KRSS_PORT_DISABLED
         void connectToNode(TreeNode* node);
         void disconnectFromNode(TreeNode* node);
-
+#endif
         void setArticleActionsEnabled(bool enabled);
 
     private:

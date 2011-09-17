@@ -34,9 +34,10 @@
 #include "tabwidget.h"
 #include "trayicon.h"
 
+#include <Akonadi/Collection>
+
+#include <krss/feedcollection.h>
 #include <krss/ui/feedlistview.h>
-#include <krss/treenode.h>
-#include <krss/treenodevisitor.h>
 
 #include <kactionmenu.h>
 #include <ktoolbarpopupaction.h>
@@ -61,71 +62,10 @@ using namespace boost;
 using namespace KRss;
 using namespace Akregator;
 
-class ActionManagerImpl::NodeSelectVisitor : public KRss::TreeNodeVisitor
-{
-    public:
-    NodeSelectVisitor(ActionManagerImpl* manager) : m_manager(manager) {}
-
-    void visit( const shared_ptr<KRss::RootNode>& rootNode )
-    {
-    }
-
-    void visit( const shared_ptr<KRss::TagNode>& tagNode )
-    {
-        QAction* remove = m_manager->action("feed_remove");
-        if (remove)
-            remove->setEnabled( !tagNode->tag().isNull() );
-        QAction* hp = m_manager->action("feed_homepage");
-        if (hp)
-            hp->setEnabled(false);
-
-        m_manager->action("feed_fetch")->setText(i18n("&Fetch Feeds"));
-        if ( QAction* const a = m_manager->action("feed_remove") ) {
-            a->setText( i18n("&Delete Tag") );
-            a->setEnabled( tagNode->isDeletable() );
-        }
-        m_manager->action("feed_modify")->setText(i18n("&Modify Tag"));
-
-        if ( QAction* const a = m_manager->action("feed_remove_tag") ) {
-            a->setVisible( false );
-            a->setEnabled( false );
-        }
-        m_manager->action("feed_mark_feed_as_read")->setText(i18n("&Mark Feeds as Read"));
-    }
-
-    void visit( const shared_ptr<KRss::FeedNode>& feedNode )
-    {
-        QAction* remove = m_manager->action("feed_remove");
-        if (remove)
-            remove->setEnabled(true);
-#ifdef KRSS_PORT_DISABLED
-        if ( QAction* const a = m_manager->action("feed_homepage") ) {
-            a->setEnabled(!feed->htmlUrl().isEmpty());
-        }
-#endif //KRSS_PORT_DISABLED
-
-        if ( QAction* a = m_manager->action("feed_remove_tag") ) {
-            const shared_ptr<const TagNode> tag = feedNode->parent();
-            a->setText( i18n("&Remove Tag \"%1\"", tag->tag().label()) );
-            a->setVisible( true );
-            a->setEnabled( tag->taggedFeedsUserEditable() );
-        }
-
-        m_manager->action("feed_fetch")->setText(i18n("&Fetch Feed"));
-        m_manager->action("feed_remove")->setText(i18n("&Delete Feed"));
-        m_manager->action("feed_modify")->setText(i18n("&Edit Feed..."));
-        m_manager->action("feed_mark_feed_as_read")->setText(i18n("&Mark Feed as Read"));
-    }
-
-    private:
-    ActionManagerImpl* m_manager;
-};
-
 class ActionManagerImpl::ActionManagerImplPrivate
 {
 public:
 
-    NodeSelectVisitor* nodeSelectVisitor;
     ArticleListView* articleList;
     KRss::FeedListView* feedListView;
     MainWidget* mainWidget;
@@ -140,15 +80,60 @@ public:
 };
 
 
-void ActionManagerImpl::slotNodeSelected( const shared_ptr<KRss::TreeNode>& treeNode )
+void ActionManagerImpl::slotNodeSelected( const Akonadi::Collection& c )
 {
-    if ( treeNode )
-        treeNode->accept( d->nodeSelectVisitor );
+    if ( !c.isValid() )
+        return;
+
+    KRss::FeedCollection fc( c );
+    if (!fc.xmlUrl().isEmpty() ) {
+        QAction* remove = action("feed_remove");
+        if (remove)
+            remove->setEnabled(true);
+#ifdef KRSS_PORT_DISABLED
+        if ( QAction* const a = action("feed_homepage") ) {
+            a->setEnabled(!feed->htmlUrl().isEmpty());
+        }
+
+        if ( QAction* a = action("feed_remove_tag") ) {
+            const shared_ptr<const TagNode> tag = feedNode->parent();
+            a->setText( i18n("&Remove Tag \"%1\"", tag->tag().label()) );
+            a->setVisible( true );
+            a->setEnabled( tag->taggedFeedsUserEditable() );
+        }
+#endif //KRSS_PORT_DISABLED
+
+        action("feed_fetch")->setText(i18n("&Fetch Feed"));
+        action("feed_remove")->setText(i18n("&Delete Feed"));
+        action("feed_modify")->setText(i18n("&Edit Feed..."));
+        action("feed_mark_feed_as_read")->setText(i18n("&Mark Feed as Read"));
+    } else {
+#ifdef KRSS_PORT_DISABLED
+        QAction* remove = action("feed_remove");
+        if (remove)
+            remove->setEnabled( !tagNode->tag().isNull() );
+        QAction* hp = action("feed_homepage");
+        if (hp)
+            hp->setEnabled(false);
+
+        action("feed_fetch")->setText(i18n("&Fetch Feeds"));
+        if ( QAction* const a = action("feed_remove") ) {
+            a->setText( i18n("&Delete Tag") );
+            a->setEnabled( tagNode->isDeletable() );
+        }
+        action("feed_modify")->setText(i18n("&Modify Tag"));
+
+        if ( QAction* const a = action("feed_remove_tag") ) {
+            a->setVisible( false );
+            a->setEnabled( false );
+        }
+        action("feed_mark_feed_as_read")->setText(i18n("&Mark Feeds as Read"));
+#endif
+    }
 }
 
 ActionManagerImpl::ActionManagerImpl(Part* part, QObject* parent ) : ActionManager(parent), d(new ActionManagerImplPrivate)
 {
-    d->nodeSelectVisitor = new NodeSelectVisitor(this);
     d->part = part;
     d->feedListView = 0;
     d->articleList = 0;
@@ -165,7 +150,6 @@ ActionManagerImpl::ActionManagerImpl(Part* part, QObject* parent ) : ActionManag
 
 ActionManagerImpl::~ActionManagerImpl()
 {
-    delete d->nodeSelectVisitor;
     delete d;
     d = 0;
 }

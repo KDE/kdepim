@@ -30,8 +30,6 @@
 #include <QtCore/QPointer>
 #include <QtCore/QTime>
 
-#include <boost/weak_ptr.hpp>
-
 class QModelIndex;
 class QPoint;
 
@@ -44,7 +42,6 @@ namespace Akonadi {
 }
 
 namespace KRss {
-    class FeedList;
     class FeedItemModel;
 }
 
@@ -75,8 +72,6 @@ public:
     void setSingleArticleDisplay( Akregator::SingleArticleDisplay* display );
 
     Akonadi::Collection selectedCollection() const;
-    //impl
-    void setFeedList( const boost::shared_ptr<KRss::FeedList>& feedList );
 
     //impl
     void setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler );
@@ -107,8 +102,7 @@ private:
     Akregator::SingleArticleDisplay* m_singleDisplay;
     Akregator::FolderExpansionHandler* m_folderExpansionHandler;
     KRss::FeedItemModel* m_itemModel;
-    boost::shared_ptr<KRss::TreeNode> m_selectedSubscription;
-    QMap<boost::weak_ptr<const KRss::TreeNode>, QPoint> m_scrollBarPositions;
+    QMap<Akonadi::Collection, QPoint> m_scrollBarPositions;
     Akonadi::Session* m_session;
 };
 

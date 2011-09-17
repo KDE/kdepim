@@ -73,7 +73,6 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     m_singleDisplay( 0 ),
     m_folderExpansionHandler( 0 ),
     m_itemModel( 0 ),
-    m_selectedSubscription(),
     m_session( session )
 {
     Akonadi::ItemFetchScope iscope;
@@ -146,9 +145,7 @@ void Akregator::SelectionController::init() {
 }
 
 void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIndex& ) {
-#if 0
-    emit currentSubscriptionChanged( selectedSubscription() );
-#endif
+    emit currentCollectionChanged( selectedCollection() );
 }
 
 void Akregator::SelectionController::setSingleArticleDisplay( Akregator::SingleArticleDisplay* display )
@@ -171,9 +168,9 @@ Akonadi::Collection Akregator::SelectionController::selectedCollection() const
     return m_feedSelector->selectionModel()->currentIndex().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 }
 
+#ifdef KRSS_PORT_DISABLED
 void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedList>& feedList )
 {
-#ifdef KRSS_PORT_DISABLED
 
     if ( m_feedList == feedList )
         return;
@@ -194,8 +191,8 @@ void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedLis
         connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
                  this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
     }
-#endif
 }
+#endif
 
 void Akregator::SelectionController::setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler )
 {

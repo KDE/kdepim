@@ -36,9 +36,12 @@ namespace boost {
 template <typename T> class shared_ptr;
 }
 
+namespace Akonadi {
+    class Collection;
+}
+
 namespace KRss {
-class TreeNode;
-class FeedListView;
+    class FeedListView;
 }
 
 namespace Akregator {
@@ -48,9 +51,7 @@ class ArticleViewer;
 class FrameManager;
 class MainWidget;
 class Part;
-class SubscriptionListView;
 class TabWidget;
-class TreeNode;
 class TrayIcon;
 
 /**
@@ -79,7 +80,7 @@ class ActionManagerImpl : public ActionManager
 
     public slots:
 
-        void slotNodeSelected( const boost::shared_ptr<KRss::TreeNode>& treeNode);
+        void slotNodeSelected( const Akonadi::Collection& );
 
     protected:
 
@@ -88,9 +89,6 @@ class ActionManagerImpl : public ActionManager
     private:
 
         void initPart();
-
-        friend class NodeSelectVisitor;
-        class NodeSelectVisitor;
 
         class ActionManagerImplPrivate;
         ActionManagerImplPrivate* d;

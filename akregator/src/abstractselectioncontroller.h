@@ -35,9 +35,7 @@ class QItemSelectionModel;
 class QPoint;
 
 namespace KRss {
-    class FeedList;
     class Item;
-    class TreeNode;
 }
 
 namespace Akonadi {
@@ -45,12 +43,7 @@ namespace Akonadi {
 }
 namespace Akregator {
 
-class Article;
-class ArticleModel;
-class FeedList;
 class FolderExpansionHandler;
-class SubscriptionListModel;
-class TreeNode;
 
 namespace Filters {
     class AbstractMatcher;
@@ -89,15 +82,6 @@ public:
     virtual void showItem( const KRss::Item& article ) = 0;
 };
 
-class SubscriptionLister
-{
-public:
-    virtual ~SubscriptionLister() {}
-
-    virtual void setSubscriptionListModel( Akregator::SubscriptionListModel* model ) = 0;
-    virtual QItemSelectionModel* subscriptionSelectionModel() const = 0;
-};
-
 class AbstractSelectionController : public QObject
 {
     Q_OBJECT
@@ -105,8 +89,6 @@ class AbstractSelectionController : public QObject
 public:
     explicit AbstractSelectionController( QObject* parent = 0 );
     virtual ~AbstractSelectionController();
-
-    virtual void setFeedList( const boost::shared_ptr<KRss::FeedList>& list ) = 0;
 
     virtual void setFeedSelector( QAbstractItemView* feedSelector ) = 0;
 
@@ -128,7 +110,7 @@ public Q_SLOTS:
     virtual void forceFilterUpdate() = 0;
 
 Q_SIGNALS:
-    void currentSubscriptionChanged( const boost::shared_ptr<KRss::TreeNode>& node );
+    void currentCollectionChanged( const Akonadi::Collection& );
 
     void currentItemChanged( const KRss::Item& );
 

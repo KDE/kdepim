@@ -410,10 +410,10 @@ void ArticleViewer::slotPrint( )
 }
 
 
+#ifdef KRSS_PORT_DISABLED
 
 void ArticleViewer::connectToNode(TreeNode* node)
 {
-#ifdef KRSS_PORT_DISABLED
     if (node)
     {
         if (m_viewMode == CombinedView)
@@ -428,20 +428,14 @@ void ArticleViewer::connectToNode(TreeNode* node)
 
         connect( node, SIGNAL(signalDestroyed(Akregator::TreeNode*)), this, SLOT(slotClear() ) );
     }
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
 }
 
 void ArticleViewer::disconnectFromNode(TreeNode* node)
 {
-#ifdef KRSS_PORT_DISABLED
     if (node)
         node->disconnect( this );
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
 }
+#endif //KRSS_PORT_DISABLED
 
 void ArticleViewer::renderContent(const QString& text)
 {

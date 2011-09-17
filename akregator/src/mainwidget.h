@@ -139,7 +139,7 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         void slotOnShutdown();
 
         /** selected tree node has changed */
-        void slotNodeSelected( const boost::shared_ptr<KRss::TreeNode>& node );
+        void slotNodeSelected( const Akonadi::Collection& c );
 
         /** the item selection has changed */
         void slotItemSelected( const KRss::Item& item );

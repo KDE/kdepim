@@ -39,8 +39,6 @@ namespace Akonadi {
 namespace Akregator {
 
 class Folder;
-class SubscriptionListView;
-class TreeNode;
 
 class CreateFeedCommand : public Command
 {
