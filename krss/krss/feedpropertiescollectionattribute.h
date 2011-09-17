@@ -18,6 +18,8 @@
 #ifndef KRSS_FEEDPROPERTIESCOLLECTIONATTRIBUTE_H
 #define KRSS_FEEDPROPERTIESCOLLECTIONATTRIBUTE_H
 
+#include "krss_export.h"
+
 #include <akonadi/attribute.h>
 
 #include <QtCore/QString>
@@ -25,7 +27,7 @@
 
 namespace KRss {
 
-class FeedPropertiesCollectionAttribute : public Akonadi::Attribute
+class KRSS_EXPORT FeedPropertiesCollectionAttribute : public Akonadi::Attribute
 {
 public:
 

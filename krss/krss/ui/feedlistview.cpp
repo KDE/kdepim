@@ -18,8 +18,7 @@
 
 #include "feedlistview.h"
 #include "feedlistdelegate.h"
-#include "krss/feedlistmodel.h"
-#include "krss/treenode.h"
+#include "krss/feeditemmodel.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -57,7 +56,7 @@ static QModelIndex prevIndex( const QModelIndex&idx )
 static QModelIndex prevFeedIndex( const QModelIndex& idx, bool allowPassed = false )
 {
     QModelIndex prev = allowPassed ? idx : prevIndex( idx );
-    while ( prev.isValid() && prev.data( FeedListModel::IsTagRole ).toBool() ) {
+    while ( prev.isValid() && prev.data( FeedItemModel::IsTagRole ).toBool() ) {
         prev = prevIndex( prev );
     }
     return prev;
@@ -66,8 +65,8 @@ static QModelIndex prevFeedIndex( const QModelIndex& idx, bool allowPassed = fal
 static QModelIndex prevUnreadFeedIndex( const QModelIndex& idx, bool allowPassed = false )
 {
     QModelIndex prev = allowPassed ? idx : prevIndex( idx );
-    while ( prev.isValid() && ( prev.data( FeedListModel::IsTagRole ).toBool() ||
-            prev.sibling( prev.row(), FeedListModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
+    while ( prev.isValid() && ( prev.data( FeedItemModel::IsTagRole ).toBool() ||
+            prev.sibling( prev.row(), FeedItemModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
         prev = prevIndex( prev );
     }
     return prev;
@@ -107,7 +106,7 @@ static QModelIndex nextIndex( const QModelIndex& idx )
 static QModelIndex nextFeedIndex( const QModelIndex& idx )
 {
     QModelIndex next = nextIndex( idx );
-    while ( next.isValid() && next.data( FeedListModel::IsTagRole ).toBool() ) {
+    while ( next.isValid() && next.data( FeedItemModel::IsTagRole ).toBool() ) {
         next = nextIndex( next );
     }
     return next;
@@ -116,8 +115,8 @@ static QModelIndex nextFeedIndex( const QModelIndex& idx )
 static QModelIndex nextUnreadFeedIndex( const QModelIndex& idx )
 {
     QModelIndex next = nextIndex( idx );
-    while ( next.isValid() && ( next.data( FeedListModel::IsTagRole ).toBool() ||
-            next.sibling( next.row(), FeedListModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
+    while ( next.isValid() && ( next.data( FeedItemModel::IsTagRole ).toBool() ||
+            next.sibling( next.row(), FeedItemModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
         next = nextIndex( next );
     }
     return next;
@@ -151,12 +150,16 @@ FeedListView::Private::Private( FeedListView* qq ) : q( qq )
 
 void FeedListView::Private::slotClicked( const QModelIndex &index )
 {
-    emit q->clicked( q->model()->data( index, FeedListModel::TreeNodeRole ).value<shared_ptr<TreeNode> >() );
+#ifdef KRSS_PORT_REMOVED
+    emit q->clicked( q->model()->data( index, FeedItemModel::TreeNodeRole ).value<shared_ptr<TreeNode> >() );
+#endif
 }
 
 void FeedListView::Private::slotActivated( const QModelIndex &index )
 {
-    emit q->clicked( q->model()->data( index, FeedListModel::TreeNodeRole ).value<shared_ptr<TreeNode> >() );
+#ifdef KRSS_PORT_REMOVED
+    emit q->clicked( q->model()->data( index, FeedItemModel::TreeNodeRole ).value<shared_ptr<TreeNode> >() );
+#endif
 }
 
 void FeedListView::Private::showHeaderMenu( const QPoint& pos )

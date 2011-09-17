@@ -18,13 +18,14 @@
 #ifndef KRSS_SUBSCRIPTIONLABELSCOLLECTIONATTRIBUTE_H
 #define KRSS_SUBSCRIPTIONLABELSCOLLECTIONATTRIBUTE_H
 
+#include "krss_export.h"
 #include <akonadi/attribute.h>
 
 #include <QtCore/QStringList>
 
 namespace KRss {
 
-class SubscriptionLabelsCollectionAttribute : public Akonadi::Attribute
+class KRSS_EXPORT SubscriptionLabelsCollectionAttribute : public Akonadi::Attribute
 {
 public:
 

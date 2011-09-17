@@ -56,8 +56,7 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
         return item.dateUpdated().toTime_t();
 
     if ( role == IsDeletedRole )
-        return false;
-
+        return KRss::RssItem::isDeleted( akonadiItem );
 
     if ( role == Qt::DisplayRole || role == SortRole ) {
         switch ( column ) {
@@ -92,32 +91,27 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
         }
     }
 
-    if ( role == FeedItemModel::ItemRole ) {
-        QVariant var;
-        var.setValue( akonadiItem );
-        return var;
+    switch ( role ) {
+        case IsImportantRole:
+            return RssItem::isImportant( akonadiItem );
+        case IsUnreadRole:
+            return RssItem::isUnread( akonadiItem );
+        case IsReadRole:
+            return RssItem::isRead( akonadiItem );
+        case IsDeletedRole:
+            return RssItem::isDeleted( akonadiItem );
+        case LinkRole:
+            return item.link();
+    default:
+        break;
     }
-
-    if ( role == IsImportantRole )
-        return RssItem::isImportant( akonadiItem );
-
-    if ( role == IsUnreadRole )
-        return RssItem::isUnread( akonadiItem );
-
-    if ( role == IsReadRole )
-        return RssItem::isRead( akonadiItem );
-
-    if ( role == IsDeletedRole )
-        return RssItem::isDeleted( akonadiItem );
-
-    if ( role == LinkRole )
-        return item.link();
-
+#if 0
     //PENDING(frank) TODO: use configurable colors
     if ( role == Qt::ForegroundRole ) {
         if ( RssItem::isUnread( akonadiItem ) )
             return Qt::blue;
     }
+#endif
 
     if ( role == Qt::DecorationRole && column == ItemTitleColumn && RssItem::isImportant( akonadiItem ) )
         return d->importantIcon;
@@ -128,6 +122,8 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
 QVariant FeedItemModel::entityData( const Collection &collection, int column, int role ) const {
     if ( role == Qt::DisplayRole || role == SortRole ) {
         switch ( column ) {
+        case IsTagRole:
+            return false;
         case FeedTitleColumn:
         {
             const QString title = FeedCollection( collection ).title();
