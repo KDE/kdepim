@@ -117,6 +117,11 @@ QString FilterManager::createUniqueFilterName( const QString &name ) const
   return d->mMailFilterAgentInterface->createUniqueName( name );
 }
 
+void FilterManager::showFilterLogDialog()
+{
+  d->mMailFilterAgentInterface->showFilterLogDialog();
+}
+
 void FilterManager::filter( const Akonadi::Item &item, const QString &identifier ) const
 {
   d->mMailFilterAgentInterface->filter( item.id(), identifier );

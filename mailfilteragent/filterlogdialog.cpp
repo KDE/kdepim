@@ -1,5 +1,4 @@
 /*
-    This file is part of KMail.
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
 
     KMail is free software; you can redistribute it and/or modify it
@@ -27,10 +26,9 @@
     your version.
 */
 
-
-#include "filterlogdlg.h"
-#include "mailcommon/filterlog.h"
-#include "messageviewer/autoqpointer.h"
+#include "filterlogdialog.h"
+#include <mailcommon/filterlog.h>
+#include <messageviewer/autoqpointer.h>
 
 #include <kdebug.h>
 #include <kfiledialog.h>
@@ -48,12 +46,10 @@
 
 #include <errno.h>
 
-using namespace KMail;
 using namespace MailCommon;
 
-
 FilterLogDialog::FilterLogDialog( QWidget * parent )
-: KDialog( parent )
+  : KDialog( parent )
 {
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
@@ -271,5 +267,4 @@ void FilterLogDialog::slotUser2()
   }
 }
 
-
-#include "filterlogdlg.moc"
+#include "filterlogdialog.moc"

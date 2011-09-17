@@ -78,6 +78,13 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     static FilterActionDict* filterActionDict();
 
+    /**
+     * Shows the filter log dialog.
+     *
+     * This is used to debug problems with filters.
+     */
+    void showFilterLogDialog();
+
     /// Apply filters interface
 
     /**

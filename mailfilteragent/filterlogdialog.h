@@ -1,5 +1,4 @@
 /*
-    This file is part of KMail.
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
 
     KMail is free software; you can redistribute it and/or modify it
@@ -26,8 +25,8 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-#ifndef KMAIL_FILTERLOGDLG_H
-#define KMAIL_FILTERLOGDLG_H
+#ifndef FILTERLOGDIALOG_H
+#define FILTERLOGDIALOG_H
 
 #include <kdialog.h>
 
@@ -36,45 +35,41 @@ class QCheckBox;
 class QSpinBox;
 class QGroupBox;
 
-namespace KMail {
+/**
+  @short KMail Filter Log Collector.
+  @author Andreas Gungl <a.gungl@gmx.de>
 
-  /**
-    @short KMail Filter Log Collector.
-    @author Andreas Gungl <a.gungl@gmx.de>
+  The filter log dialog allows a continued observation of the
+  filter log of MailFilterAgent.
+*/
+class FilterLogDialog : public KDialog
+{
+  Q_OBJECT
 
-    The filter log dialog allows a continued observation of the 
-    filter log of KMail.
-  */
-  class FilterLogDialog : public KDialog
-  {
-    Q_OBJECT
-    
-    public:
-      /** constructor */
-      FilterLogDialog( QWidget * parent );
-    
-    protected slots:
-      void slotLogEntryAdded( const QString& logEntry );
-      void slotLogShrinked();
-      void slotLogStateChanged();
-      void slotChangeLogDetail();
-      void slotSwitchLogState();
-      void slotChangeLogMemLimit( int value );
-      
-      void slotUser1();
-      void slotUser2();
+  public:
+    /** constructor */
+    FilterLogDialog( QWidget * parent );
+
+  protected slots:
+    void slotLogEntryAdded( const QString& logEntry );
+    void slotLogShrinked();
+    void slotLogStateChanged();
+    void slotChangeLogDetail();
+    void slotSwitchLogState();
+    void slotChangeLogMemLimit( int value );
+
+    void slotUser1();
+    void slotUser2();
 
   protected:
-      KTextEdit * mTextEdit;
-      QCheckBox * mLogActiveBox;
-      QGroupBox * mLogDetailsBox;
-      QCheckBox * mLogPatternDescBox;
-      QCheckBox * mLogRuleEvaluationBox;
-      QCheckBox * mLogPatternResultBox;
-      QCheckBox * mLogFilterActionBox;
-      QSpinBox  * mLogMemLimitSpin;
-  };
+    KTextEdit * mTextEdit;
+    QCheckBox * mLogActiveBox;
+    QGroupBox * mLogDetailsBox;
+    QCheckBox * mLogPatternDescBox;
+    QCheckBox * mLogRuleEvaluationBox;
+    QCheckBox * mLogPatternResultBox;
+    QCheckBox * mLogFilterActionBox;
+    QSpinBox  * mLogMemLimitSpin;
+};
 
-} // namespace KMail
-
-#endif // KMAIL_FILTERLOGDLG_H
+#endif

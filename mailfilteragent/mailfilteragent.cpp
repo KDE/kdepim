@@ -21,6 +21,7 @@
 
 #include "dbusoperators.h"
 #include "dummykernel.h"
+#include "filterlogdialog.h"
 #include "filtermanager.h"
 #include "mailfilteragentadaptor.h"
 
@@ -46,7 +47,8 @@ static bool isFilterableCollection( const Akonadi::Collection &collection )
 }
 
 MailFilterAgent::MailFilterAgent( const QString &id )
-  : Akonadi::AgentBase( id )
+  : Akonadi::AgentBase( id ),
+    m_filterLogDialog( 0 )
 {
   DummyKernel *kernel = new DummyKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
@@ -55,7 +57,6 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );
-  m_collectionMonitor->setCollectionMonitored( Akonadi::Collection::root() );
   m_collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
   m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
   m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
@@ -155,6 +156,16 @@ void MailFilterAgent::filter( qlonglong item, const QString &filterIdentifier )
 void MailFilterAgent::reload()
 {
   m_filterManager->readConfig();
+}
+
+void MailFilterAgent::showFilterLogDialog()
+{
+  if ( !m_filterLogDialog )
+    m_filterLogDialog = new FilterLogDialog( 0 );
+
+  m_filterLogDialog->show();
+  m_filterLogDialog->raise();
+  m_filterLogDialog->activateWindow();
 }
 
 AKONADI_AGENT_MAIN( MailFilterAgent )

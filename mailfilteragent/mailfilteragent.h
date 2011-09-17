@@ -26,6 +26,7 @@ namespace Akonadi {
 class Monitor;
 }
 
+class FilterLogDialog;
 class FilterManager;
 class KJob;
 
@@ -45,6 +46,8 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     void reload();
 
+    void showFilterLogDialog();
+
   private Q_SLOTS:
     void initializeCollections();
     void initialCollectionFetchingDone( KJob* );
@@ -54,6 +57,8 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
   private:
     Akonadi::Monitor *m_collectionMonitor;
     FilterManager *m_filterManager;
+
+    FilterLogDialog *m_filterLogDialog;
 };
 
 #endif
