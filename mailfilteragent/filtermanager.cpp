@@ -9,6 +9,7 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
 #include <akonadi/kmime/messageparts.h>
 #include <kconfig.h>
@@ -46,6 +47,7 @@ class FilterManager::Private
     void itemsFetchJobForFilterDone( KJob *job );
     void itemFetchJobForFilterDone( KJob *job );
     void moveJobResult( KJob* );
+    void modifyJobResult( KJob* );
     void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
 
     bool isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
@@ -154,11 +156,19 @@ void FilterManager::Private::moveJobResult( KJob *job )
   if ( job->error() ) {
     const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob*>( job );
     if( movejob ) {
-	  kError() << "Error while moving items. "<< job->error() << job->errorString()<<" to destinationCollection.id() :"<< movejob->destinationCollection().id();
-          
+      kError() << "Error while moving items. "<< job->error() << job->errorString()
+               << " to destinationCollection.id() :" << movejob->destinationCollection().id();
     } else {
-          kError() << "Error while moving items. " << job->error() << job->errorString();
+      kError() << "Error while moving items. " << job->error() << job->errorString();
     }
+    // TODO: kmail should tell the user that this failed
+  }
+}
+
+void FilterManager::Private::modifyJobResult( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << "Error while modifying items. " << job->error() << job->errorString();
     // TODO: kmail should tell the user that this failed
   }
 }
@@ -327,14 +337,28 @@ int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFil
       return 1;
     }
 
-    if ( filter->execActions( item, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+    ItemContext context( item );
+
+    if ( filter->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
       return 2;
     }
 
-    const Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
     d->endFiltering( item );
-    if ( targetFolder.isValid() ) {
-      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
+
+    const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+    msg->assemble();
+
+    if ( context.needsPayloadStore() ) {
+      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+    } else if ( context.needsFlagStore() ) {
+      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+      modifyJob->setIgnorePayload( true );
+      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+    }
+
+    if ( context.moveTargetCollection().isValid() ) {
+      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
       connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
       result = 0;
     }
@@ -361,6 +385,8 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     return 1;
   }
 
+  ItemContext context( item );
+
   for ( QList<MailCommon::MailFilter*>::const_iterator it = d->mFilters.constBegin();
         !stopIt && it != d->mFilters.constEnd() ; ++it ) {
 
@@ -373,26 +399,34 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     if ( (inboundOk && accountOk) || outboundOk || beforeOutboundOk || explicitOk ) {
         // filter is applicable
 
-      if ( d->isMatching( item, *it ) ) {
+      if ( d->isMatching( context.item(), *it ) ) {
         // execute actions:
-        if ( (*it)->execActions( item, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+        if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
           return 2;
         }
       }
     }
   }
 
-  Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
-
   d->endFiltering( item );
 
-  if ( targetFolder.isValid() ) {
-    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
+  if ( context.needsPayloadStore() ) {
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+    connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+  } else if ( context.needsFlagStore() ) {
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+    modifyJob->setIgnorePayload( true );
+    connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+  }
+
+  if ( context.moveTargetCollection().isValid() ) {
+    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
     connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
     return 0;
   }
 
-  emit itemNotMoved( item );
+  emit itemNotMoved( context.item() );
+
   return 1;
 }
 

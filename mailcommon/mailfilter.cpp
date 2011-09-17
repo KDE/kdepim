@@ -117,7 +117,7 @@ QString MailFilter::name() const
   return mPattern.name();
 }
 
-MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool& stopIt ) const
+MailFilter::ReturnCode MailFilter::execActions( ItemContext &context, bool& stopIt ) const
 {
   ReturnCode status = NoResult;
 
@@ -130,7 +130,7 @@ MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool&
       FilterLog::instance()->add( logText, FilterLog::AppliedAction );
     }
 
-    FilterAction::ReturnCode result = (*it)->process( item );
+    FilterAction::ReturnCode result = (*it)->process( context );
 
     switch ( result ) {
     case FilterAction::CriticalError:

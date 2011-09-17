@@ -138,6 +138,7 @@ class FilterManager: public QObject
     Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemFetchJobForFilterDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void moveJobResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void modifyJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotItemsFetchedForFilter( const Akonadi::Item::List& ) )
     //@endcond
 };

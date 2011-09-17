@@ -22,6 +22,7 @@
 
 #include "mailcommon_export.h"
 
+#include "filteraction.h"
 #include "searchpattern.h"
 
 #include <kshortcut.h>
@@ -35,8 +36,6 @@ class QString;
 class KConfigGroup;
 
 namespace MailCommon {
-
-  class FilterAction;
 
 // maximum number of filter actions per filter
 const int FILTER_MAX_ACTIONS = 8;
@@ -99,12 +98,12 @@ public:
       @li 1 if the caller is still
       the owner of the message,
       @li 0 if processed successfully.
-      @param item The message to which the actions should be applied.
+      @param context The context that contains the item to which the actions should be applied.
       @param stopIt Contains
       true if the caller may apply other filters and false if he shall
       stop the filtering of this message.
   */
-  ReturnCode execActions( const Akonadi::Item &item, bool& stopIt ) const ;
+  ReturnCode execActions( ItemContext &context, bool& stopIt ) const ;
 
   /** Determines if the filter depends on the body of the message
   */
