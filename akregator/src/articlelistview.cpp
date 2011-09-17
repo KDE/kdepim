@@ -130,6 +130,7 @@ static bool isRead( const QModelIndex& idx )
 
 void ArticleListView::setItemModel( QAbstractItemModel* model )
 {
+#if 0
     if ( !model ) {
         setModel( model );
         return;
@@ -155,6 +156,8 @@ void ArticleListView::setItemModel( QAbstractItemModel* model )
     columnsProxy->setColumnEnabled( FeedItemModel::AuthorsColumn );
 
     setModel( columnsProxy );
+#endif
+    setModel( model );
     header()->setContextMenuPolicy( Qt::CustomContextMenu );
 }
 

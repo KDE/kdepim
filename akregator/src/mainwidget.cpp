@@ -447,7 +447,6 @@ void Akregator::MainWidget::setFeedList( const shared_ptr<KRss::FeedList>& list 
 
     slotSetTotalUnread();
 
-    m_articleViewer->setFeedList( m_feedList );
     Kernel::self()->setFeedList( m_feedList );
     NotificationManager::self()->setFeedList( m_feedList );
 #ifdef WITH_LIBKDEPIM
@@ -507,7 +506,7 @@ void Akregator::MainWidget::slotNormalView()
         if ( !item.isNull() )
             m_articleViewer->showItem( item );
         else
-            m_articleViewer->slotShowSummary( m_feedList, m_selectionController->selectedSubscription() );
+            m_articleViewer->slotShowSummary( m_selectionController->selectedCollection() );
     }
 
     m_articleSplitter->setOrientation(Qt::Vertical);
@@ -530,7 +529,7 @@ void Akregator::MainWidget::slotWidescreenView()
         if ( !item.isNull() )
             m_articleViewer->showItem( item );
         else
-            m_articleViewer->slotShowSummary( m_feedList, m_selectionController->selectedSubscription() );
+            m_articleViewer->slotShowSummary( m_selectionController->selectedCollection() );
     }
     m_articleSplitter->setOrientation(Qt::Horizontal);
     m_viewMode = WidescreenView;
@@ -543,7 +542,9 @@ void Akregator::MainWidget::slotCombinedView()
     if (m_viewMode == CombinedView)
         return;
 
+#ifdef KRSS_PORT_DISABLED
     m_articleListView->slotClear();
+#endif
     m_articleListView->hide();
     m_viewMode = CombinedView;
 
@@ -571,11 +572,13 @@ void Akregator::MainWidget::slotNodeSelected(const boost::shared_ptr<KRss::TreeN
 
     if (m_viewMode == CombinedView)
     {
-        m_articleViewer->showNode( m_feedList, node );
+        m_articleViewer->showNode( m_articleListView->model() );
     }
     else
     {
+#ifdef KRSS_PORT_DISABLED
         m_articleViewer->slotShowSummary( m_feedList, node );
+#endif
     }
 
     if (node)
@@ -633,7 +636,8 @@ void Akregator::MainWidget::slotFeedRemove()
 
 void Akregator::MainWidget::slotFeedModify()
 {
-    const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+#ifdef KRSS_PORT_DISABLED
     if ( !treeNode )
         return;
 
@@ -643,6 +647,7 @@ void Akregator::MainWidget::slotFeedModify()
     cmd->setFeedListView( m_feedListView );
     cmd->setNode( treeNode );
     d->setUpAndStart( cmd.release() );
+#endif
 }
 
 namespace {
@@ -679,6 +684,7 @@ void Akregator::MainWidget::slotFeedRemoveTag()
 
 void Akregator::MainWidget::slotNextUnreadArticle()
 {
+#ifdef KRSS_PORT_DISABLED
     if (m_viewMode == CombinedView)
     {
         m_feedListView->slotNextUnreadFeed();
@@ -689,10 +695,12 @@ void Akregator::MainWidget::slotNextUnreadArticle()
         m_articleListView->slotNextUnreadArticle();
     else
         m_feedListView->slotNextUnreadFeed();
+#endif
 }
 
 void Akregator::MainWidget::slotPrevUnreadArticle()
 {
+#ifdef KRSS_PORT_DISABLED
     if (m_viewMode == CombinedView)
     {
         m_feedListView->slotPrevUnreadFeed();
@@ -704,6 +712,7 @@ void Akregator::MainWidget::slotPrevUnreadArticle()
         m_articleListView->slotPreviousUnreadArticle();
     else
         m_feedListView->slotPrevUnreadFeed();
+#endif
 }
 
 void Akregator::MainWidget::slotMarkAllFeedsRead()
@@ -723,6 +732,7 @@ void Akregator::MainWidget::slotMarkAllFeedsRead()
 
 void Akregator::MainWidget::slotMarkFeedRead()
 {
+#ifdef KRSS_PORT_DISABLED
     const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
     if ( !treeNode )
         return;
@@ -736,6 +746,7 @@ void Akregator::MainWidget::slotMarkFeedRead()
     ProgressManager::self()->addJob( job );
 #endif
     job->start();
+#endif
 }
 
 void Akregator::MainWidget::slotSetTotalUnread()
@@ -1059,7 +1070,7 @@ void Akregator::MainWidget::slotTextToSpeechRequest()
         }
         else
         {
-            if (m_selectionController->selectedSubscription())
+            if (m_selectionController->selectedCollection().isValid())
             {
                 //TODO: read articles in current node, respecting quick filter!
             }

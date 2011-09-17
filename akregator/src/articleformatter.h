@@ -33,11 +33,12 @@ class QPaintDevice;
 class QString;
 
 namespace KRss {
-    class FeedList;
     class Item;
-    class TreeNode;
 }
 
+namespace Akonadi {
+    class Collection;
+}
 namespace Akregator {
 
 class ArticleFormatter
@@ -55,9 +56,9 @@ class ArticleFormatter
 
         void setPaintDevice(QPaintDevice* device);
 
-        virtual QString formatItem( const boost::shared_ptr<const KRss::FeedList>& fl, const KRss::Item& item, IconOption icon ) const = 0;
+        virtual QString formatItem( const KRss::Item& item, IconOption icon ) const = 0;
 
-        virtual QString formatSummary( const boost::shared_ptr<const KRss::FeedList>& fl, const boost::shared_ptr<KRss::TreeNode>& node ) const = 0;
+        virtual QString formatSummary( const Akonadi::Collection& collection ) const = 0;
 
         virtual QString getCss() const = 0;
 
@@ -78,9 +79,9 @@ class DefaultNormalViewFormatter : public ArticleFormatter
         explicit DefaultNormalViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
         ~DefaultNormalViewFormatter();
 
-        QString formatItem( const boost::shared_ptr<const KRss::FeedList>& fl, const KRss::Item& item, IconOption option ) const;
+        QString formatItem( const KRss::Item& item, IconOption option ) const;
 
-        /* reimp */ QString formatSummary( const boost::shared_ptr<const KRss::FeedList>& fl, const boost::shared_ptr<KRss::TreeNode>& node ) const;
+        /* reimp */ QString formatSummary( const Akonadi::Collection& collection ) const;
 
         QString getCss() const;
 
@@ -99,9 +100,9 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
 
         explicit DefaultCombinedViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
 
-        QString formatItem( const boost::shared_ptr<const KRss::FeedList>& fl, const KRss::Item& item, IconOption option ) const;
+        QString formatItem( const KRss::Item& item, IconOption option ) const;
 
-        /* reimp */ QString formatSummary( const boost::shared_ptr<const KRss::FeedList>& fl, const boost::shared_ptr<KRss::TreeNode>& node ) const;
+        /* reimp */ QString formatSummary( const Akonadi::Collection& ) const;
 
         QString getCss() const;
 

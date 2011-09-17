@@ -29,6 +29,8 @@
 
 #include <khtml_part.h>
 
+#include <Akonadi/Collection>
+
 #include <QPointer>
 #include <QWidget>
 
@@ -39,12 +41,7 @@
 
 class KJob;
 class KUrl;
-
-namespace KRss {
-    class FeedList;
-    class ItemListJob;
-    class TreeNode;
-}
+class QAbstractItemModel;
 
 namespace Akregator {
 
@@ -79,13 +76,11 @@ class ArticleViewer : public QWidget
 
         void showItem( const KRss::Item& item );
 
-        void setFeedList( const boost::weak_ptr<const KRss::FeedList>& feedList );
-
         /** Shows the articles of the tree node @c node (combined view).
          * Changes in the node will update the view automatically.
          *
          *  @param node The node to observe */
-        void showNode(const boost::shared_ptr<KRss::FeedList>& feedList, const boost::shared_ptr<const KRss::TreeNode>& node);
+        void showNode( QAbstractItemModel* );
 
     public slots:
 
@@ -111,7 +106,7 @@ class ArticleViewer : public QWidget
          */
         void slotClear();
 
-        void slotShowSummary( const boost::shared_ptr<KRss::FeedList>& fl, const boost::shared_ptr<KRss::TreeNode>& node );
+        void slotShowSummary( const Akonadi::Collection& );
 
         void slotPaletteOrFontChanged();
 
@@ -169,8 +164,6 @@ class ArticleViewer : public QWidget
 
         void slotSelectionChanged();
 
-        void slotArticlesListed(KJob* job);
-
 #ifdef KRSS_PORT_DISABLED
         void slotArticlesUpdated(Akregator::TreeNode* node, const QList<Akregator::Article>& list);
         void slotArticlesAdded(Akregator::TreeNode* node, const QList<Akregator::Article>& list);
@@ -207,16 +200,13 @@ class ArticleViewer : public QWidget
         QString m_htmlFooter;
         QString m_currentText;
         KUrl m_imageDir;
-        boost::shared_ptr<const KRss::TreeNode> m_node;
-        QPointer<KRss::ItemListJob> m_listJob;
-        KRss::Item m_item;
-        QList<KRss::Item> m_items;
-        boost::weak_ptr<const KRss::FeedList> m_feedList;
         KUrl m_link;
+        Akonadi::Collection::Id m_collectionId;
         std::vector<boost::shared_ptr<const Filters::AbstractMatcher> > m_filters;
         enum ViewMode { NormalView, CombinedView, SummaryView };
         ViewMode m_viewMode;
         ArticleViewerPart* m_part;
+        QAbstractItemModel* m_model;
         boost::shared_ptr<ArticleFormatter> m_normalViewFormatter;
         boost::shared_ptr<ArticleFormatter> m_combinedViewFormatter;
 };

@@ -36,14 +36,13 @@
 
 #include <kpimutils/kfileio.h>
 
-#include <krss/feedlist.h>
-#include <krss/feedvisitor.h>
 #include <krss/item.h>
-#include <krss/itemlistjob.h>
-#include <krss/netfeed.h>
-#include <krss/treenode.h>
-#include <krss/treenodevisitor.h>
+#include <krss/feeditemmodel.h>
 
+#include <QAbstractItemModel>
+
+
+#include <Akonadi/Collection>
 #include <Akonadi/ItemFetchScope>
 
 #include <kaction.h>
@@ -89,9 +88,10 @@ ArticleViewer::ArticleViewer(QWidget *parent)
       m_htmlFooter(),
       m_currentText(),
       m_imageDir( KUrl::fromPath( KGlobal::dirs()->saveLocation("cache", "akregator/Media/" ) ) ),
-      m_node(),
+      m_collectionId(0),
       m_viewMode(NormalView),
       m_part( new ArticleViewerPart( this ) ),
+      m_model( 0 ),
       m_normalViewFormatter( new DefaultNormalViewFormatter( m_imageDir, m_part->view() ) ),
       m_combinedViewFormatter( new DefaultCombinedViewFormatter( m_imageDir, m_part->view() ) )
 {
@@ -484,17 +484,17 @@ void ArticleViewer::endWriting()
 }
 
 
-void ArticleViewer::slotShowSummary(  const shared_ptr<KRss::FeedList>& fl, const shared_ptr<KRss::TreeNode>& node )
+void ArticleViewer::slotShowSummary( const Akonadi::Collection& c )
 {
     m_viewMode = SummaryView;
 
-    if (!node)
+    if ( !c.isValid() )
     {
         slotClear();
         return;
     }
 
-    if (node != m_node)
+    if ( c.id() == m_collectionId )
     {
     #ifdef KRSS_PORT_DISABLED
         disconnectFromNode(m_node);
@@ -502,41 +502,37 @@ void ArticleViewer::slotShowSummary(  const shared_ptr<KRss::FeedList>& fl, cons
     #else
         kWarning() << "Code temporarily disabled (Akonadi port)";
     #endif //KRSS_PORT_DISABLED
-        m_node = node;
+        m_collectionId = c.id();
     }
 
-    QString summary = m_normalViewFormatter->formatSummary( fl, node );
+    QString summary = m_normalViewFormatter->formatSummary( c );
     m_link.clear();
     renderContent(summary);
 
     setArticleActionsEnabled(false);
 }
 
-void ArticleViewer::setFeedList( const weak_ptr<const FeedList>& feedList ) {
-    m_feedList = feedList;
-}
+#ifdef KRSS_PORT_DISABLED
+class PreferredLinkVisitor : public ConstFeedVisitor {
+public:
 
-namespace {
-    class PreferredLinkVisitor : public ConstFeedVisitor {
-    public:
+    void visitNetFeed( const shared_ptr<const NetFeed>& f ) {
+        link = f->preferItemLinkForDisplay() ? KUrl( item.link() ) : KUrl();
+    }
 
-        void visitNetFeed( const shared_ptr<const NetFeed>& f ) {
-            link = f->preferItemLinkForDisplay() ? KUrl( item.link() ) : KUrl();
-        }
-
-        KUrl getPreferredLink( const shared_ptr<const Feed>& f, const Item& i ) {
-            item = i;
-            link.clear();
-            if ( !f )
-                return link;
-            f->accept( this );
+    KUrl getPreferredLink( const shared_ptr<const Feed>& f, const Item& i ) {
+        item = i;
+        link.clear();
+        if ( !f )
             return link;
-        }
+        f->accept( this );
+        return link;
+    }
 
-        Item item;
-        KUrl link;
-    };
-}
+    Item item;
+    KUrl link;
+};
+#endif
 
 void ArticleViewer::showItem( const KRss::Item& item )
 {
@@ -551,24 +547,27 @@ void ArticleViewer::showItem( const KRss::Item& item )
     disconnectFromNode(m_node);
 #endif // KRSS_PORT_DISABLED
 
-    m_item = item;
-    m_node.reset();
     m_link = KUrl( item.link() );
 
-    const shared_ptr<const FeedList> fl = m_feedList.lock();
+#ifdef KRSS_PORT_DISABLED
+
     const shared_ptr<const Feed> f = fl ? fl->constFeedById( item.sourceFeedId() ) : shared_ptr<const Feed>();
     PreferredLinkVisitor visitor;
     const KUrl url = visitor.getPreferredLink( f, item );
     if ( url.isValid() )
         openUrl( url );
     else
-        renderContent( m_normalViewFormatter->formatItem( fl, item, ArticleFormatter::ShowIcon ) );
+#endif // KRSS_PORT_DISABLED
+
+        renderContent( m_normalViewFormatter->formatItem( item, ArticleFormatter::ShowIcon ) );
 
     setArticleActionsEnabled(true);
 }
 
 bool ArticleViewer::openUrl(const KUrl& url)
 {
+#ifdef KRSS_PORT_DISABLED
+
     const shared_ptr<const FeedList> fl = m_feedList.lock();
     const shared_ptr<const Feed> f = fl ? fl->constFeedById( m_item.sourceFeedId() ) : shared_ptr<const Feed>();
     PreferredLinkVisitor visitor;
@@ -576,7 +575,7 @@ bool ArticleViewer::openUrl(const KUrl& url)
 
     if ( url2.isValid() )
         return m_part->openUrl(url);
-
+#endif
     reload();
     return true;
 }
@@ -596,22 +595,26 @@ void ArticleViewer::slotUpdateCombinedView()
     if (m_viewMode != CombinedView)
         return;
 
-    if (!m_node)
-        return slotClear();
-
-
-   QString text;
-
    int num = 0;
    QTime spent;
    spent.start();
+
+   QVector<KRss::Item> items;
+
+   const int rows = m_model->rowCount();
+   items.reserve( rows );
+   for ( int i = 0; i < rows; ++i ) {
+       KRss::Item item( m_model->index( i, 0 ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
+       items.append( item );
+   }
 
 #ifdef KRSS_PORT_DISABLED
    const std::vector< shared_ptr<const AbstractMatcher> >::const_iterator filterEnd = m_filters.end();
 #endif //KRSS_PORT_DISABLED
 
-   const shared_ptr<const FeedList> fl = m_feedList.lock();
-   Q_FOREACH( const Item& i, m_items )
+   QString text;
+
+   Q_FOREACH( const Item& i, items )
    {
        if ( i.isDeleted() )
            continue;
@@ -621,7 +624,7 @@ void ArticleViewer::slotUpdateCombinedView()
            continue;
 #endif // KRSS_PORT_DISABLED
 
-       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( fl, i, ArticleFormatter::NoIcon)+"</div><p>";
+       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, ArticleFormatter::NoIcon)+"</div><p>";
        ++num;
    }
 
@@ -667,45 +670,13 @@ void ArticleViewer::slotClear()
 #else
     kWarning() << "Code temporarily disabled (Akonadi port)";
 #endif //KRSS_PORT_DISABLED
-    m_node.reset();
-    m_item = KRss::Item();
-    m_items.clear();
 
     renderContent(QString());
 }
 
-void ArticleViewer::showNode( const shared_ptr<KRss::FeedList>& feedList, const shared_ptr<const KRss::TreeNode>& node )
+void ArticleViewer::showNode( QAbstractItemModel* m )
 {
     m_viewMode = CombinedView;
-
-#ifdef KRSS_PORT_DISABLED
-    if (node != m_node)
-        disconnectFromNode(m_node);
-
-    connectToNode(node);
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
-
-    m_items.clear();
-    m_item = KRss::Item();
-    m_node = node;
-
-    delete m_listJob;
-
-    Akonadi::ItemFetchScope scope;
-    scope.fetchPayloadPart( KRss::Item::HeadersPart );
-    scope.fetchPayloadPart( KRss::Item::ContentPart );
-    scope.fetchAllAttributes();
-    KRss::ItemListJob* const job = node->createItemListJob( feedList );
-    assert( job );
-    job->setFetchScope( scope );
-    connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotArticlesListed(KJob*)));
-    m_listJob = job;
-#ifdef WITH_LIBKDEPIM
-    ProgressManager::self()->addJob( job );
-#endif
-    job->start();
 
     slotUpdateCombinedView();
 }
@@ -715,6 +686,7 @@ static bool lessByDate( const KRss::Item& lhs, const KRss::Item& rhs ) {
     return lhs.dateUpdated() < rhs.dateUpdated();
 }
 
+#ifdef KRSS_PORT_DISABLED
 void ArticleViewer::slotArticlesListed( KJob* job ) {
     assert( job );
     assert( job == m_listJob );
@@ -735,6 +707,7 @@ void ArticleViewer::slotArticlesListed( KJob* job ) {
         m_link = KUrl();
     slotUpdateCombinedView();
 }
+#endif
 
 void ArticleViewer::keyPressEvent(QKeyEvent* e)
 {

@@ -27,11 +27,6 @@
 #include "progressmanager.h"
 
 #include <krss/feeditemmodel.h>
-#include <krss/itemlisting.h>
-#include <krss/itemlistjob.h>
-#include <krss/tagprovider.h>
-#include <krss/treenode.h>
-#include <krss/treenodevisitor.h>
 #include <krss/feedpropertiescollectionattribute.h>
 #include <krss/rssitem.h>
 
@@ -70,13 +65,6 @@ static QList<KRss::Item> itemsForIndexes( const QModelIndexList& indexes )
 
     return items;
 }
-static shared_ptr<KRss::TreeNode> subscriptionForIndex( const QModelIndex& index )
-{
-#ifdef KRSS_PORT_DISABLED
-    return index.data( FeedListModel::TreeNodeRole ).value<shared_ptr<KRss::TreeNode> >();
-#endif
-    return shared_ptr<KRss::TreeNode>();
-}
 
 Akregator::SelectionController::SelectionController( Akonadi::Session* session, QObject* parent )
     : AbstractSelectionController( parent ),
@@ -95,7 +83,7 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     cscope.setIncludeStatistics( true );
     cscope.setContentMimeTypes( QStringList() << KRss::Item::mimeType() );
     Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder( this );
-    recorder->setSession( session );
+    recorder->setSession( m_session );
     recorder->fetchCollection( true );
     recorder->setCollectionFetchScope( cscope );
     recorder->setItemFetchScope( iscope );
@@ -158,7 +146,9 @@ void Akregator::SelectionController::init() {
 }
 
 void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIndex& ) {
+#if 0
     emit currentSubscriptionChanged( selectedSubscription() );
+#endif
 }
 
 void Akregator::SelectionController::setSingleArticleDisplay( Akregator::SingleArticleDisplay* display )
@@ -174,11 +164,6 @@ KRss::Item Akregator::SelectionController::currentItem() const
 QList<KRss::Item> Akregator::SelectionController::selectedItems() const
 {
     return ::itemsForIndexes( m_articleLister->articleSelectionModel()->selectedRows() );
-}
-
-shared_ptr<KRss::TreeNode> Akregator::SelectionController::selectedSubscription() const
-{
-    return ::subscriptionForIndex( m_feedSelector->selectionModel()->currentIndex() );
 }
 
 Akonadi::Collection Akregator::SelectionController::selectedCollection() const

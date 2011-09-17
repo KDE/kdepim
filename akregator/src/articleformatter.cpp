@@ -26,14 +26,11 @@
 #include "articleformatter.h"
 #include "utils.h"
 
+#include <Akonadi/Collection>
+
+#include <krss/feedcollection.h>
 #include <krss/enclosure.h>
-#include <krss/feedvisitor.h>
-#include <krss/feedlist.h>
 #include <krss/item.h>
-#include <krss/netfeed.h>
-#include <krss/treenode.h>
-#include <krss/treenodevisitor.h>
-#include <krss/tag.h>
 
 #include <KDateTime>
 #include <KGlobal>
@@ -75,28 +72,16 @@ namespace {
         return list.join( QLatin1String("<br/>") );
     }
 
-    class ImageLinkVisitor : public ConstFeedVisitor {
-    public:
-        explicit ImageLinkVisitor( const KUrl& imgDir ) : imageDir( imgDir ) {}
 
-        void visitNetFeed( const shared_ptr<const NetFeed>& f ) {
-            const QString file = Utils::fileNameForUrl( f->xmlUrl() );
-            KUrl u( imageDir );
-            u.setFileName(file);
-            link = QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(f->htmlUrl(), u.url());
-        }
-
-        QString getImageLink( const shared_ptr<const Feed>& f ) {
-            link.clear();
-            if ( f )
-                f->accept( this );
-            return link;
-        }
-
-        QString link;
-        const KUrl imageDir;
-    };
 }
+static QString imageLink( const QString& imageDir, const Akonadi::Collection& c ) {
+    KRss::FeedCollection fc( c );
+    const QString file = Utils::fileNameForUrl( fc.xmlUrl() );
+    KUrl u( imageDir );
+    u.setFileName(file);
+    return QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(fc.htmlUrl(), u.url());
+}
+
 class ArticleFormatter::Private
 {
     public:
@@ -127,7 +112,7 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
 {
     return ( pointSize * d->device->logicalDpiY() + 36 ) / 72 ;
 }
-
+#ifdef KRSS_PORT_DISABLED
 class DefaultNormalViewFormatter::SummaryFeedVisitor : public KRss::ConstFeedVisitor {
 private:
     const DefaultNormalViewFormatter* const q;
@@ -227,8 +212,9 @@ class DefaultNormalViewFormatter::SummaryVisitor : public KRss::TreeNodeVisitor
         const DefaultNormalViewFormatter* const parent;
         shared_ptr<const KRss::FeedList> feedList;
 };
+#endif
 
-QString DefaultNormalViewFormatter::formatItem( const boost::shared_ptr<const KRss::FeedList>& fl, const KRss::Item& item, IconOption icon) const
+QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOption icon) const
 {
     QString text;
     text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
@@ -276,11 +262,13 @@ QString DefaultNormalViewFormatter::formatItem( const boost::shared_ptr<const KR
 
     text += "</div>\n"; // end headerbox
 
+#ifdef KRSS_PORT_DISABLED
     if (icon == ShowIcon && fl )
     {
         const shared_ptr<const Feed> f = fl->constFeedById( item.sourceFeedId() );
         text += ImageLinkVisitor( m_imageDir ).getImageLink( f );
     }
+#endif
 
     const QString content = item.content();
 
@@ -408,7 +396,7 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 {
 }
 
-QString DefaultCombinedViewFormatter::formatItem( const shared_ptr<const KRss::FeedList>& fl, const KRss::Item& item, IconOption icon ) const
+QString DefaultCombinedViewFormatter::formatItem( const KRss::Item& item, IconOption icon ) const
 {
     QString text;
     const QString enc = formatEnclosures( item.enclosures() );
@@ -455,11 +443,13 @@ QString DefaultCombinedViewFormatter::formatItem( const shared_ptr<const KRss::F
 
     text += "</div>\n"; // end headerbox
 
+#ifdef KRSS_PORT_DISABLED
     if (icon == ShowIcon && fl )
     {
         const shared_ptr<const Feed> f = fl->constFeedById( item.sourceFeedId() );
         text += ImageLinkVisitor( m_imageDir ).getImageLink( f );
     }
+#endif
 
     const QString content = item.content();
     if (!content.isEmpty())
@@ -573,13 +563,16 @@ QString DefaultCombinedViewFormatter::getCss() const
     return css;
 }
 
-QString DefaultNormalViewFormatter::formatSummary( const shared_ptr<const KRss::FeedList>& fl, const shared_ptr<KRss::TreeNode>& node ) const
+QString DefaultNormalViewFormatter::formatSummary( const Akonadi::Collection& ) const
 {
+#ifdef KRSS_PORT_DISABLED
     SummaryVisitor v( this );
     return v.formatSummary( fl, node );
+#endif
+    return QString();
 }
 
-QString DefaultCombinedViewFormatter::formatSummary( const shared_ptr<const KRss::FeedList>& fl, const shared_ptr<KRss::TreeNode>& node ) const
+QString DefaultCombinedViewFormatter::formatSummary( const Akonadi::Collection& ) const
 {
     return QString();
 }

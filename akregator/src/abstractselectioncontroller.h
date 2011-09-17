@@ -120,8 +120,6 @@ public:
 
     virtual QList<KRss::Item> selectedItems() const = 0;
 
-    virtual boost::shared_ptr<KRss::TreeNode> selectedSubscription() const = 0;
-
     virtual Akonadi::Collection selectedCollection() const = 0;
 public Q_SLOTS:
 

@@ -46,7 +46,6 @@ namespace Akonadi {
 namespace KRss {
     class FeedList;
     class FeedItemModel;
-    class TreeNode;
 }
 
 namespace Akregator
@@ -74,9 +73,6 @@ public:
 
     //impl
     void setSingleArticleDisplay( Akregator::SingleArticleDisplay* display );
-
-    //impl
-    boost::shared_ptr<KRss::TreeNode> selectedSubscription() const;
 
     Akonadi::Collection selectedCollection() const;
     //impl
