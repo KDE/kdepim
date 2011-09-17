@@ -56,18 +56,13 @@
 #include <Akonadi/ItemModifyJob>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDeleteJob>
+#include <Akonadi/Session>
 
-#include <krss/feedlist.h>
-#include <krss/feedlistmodel.h>
+#include <krss/feedcollection.h>
 #include <krss/item.h>
-#include <krss/itemjobs.h>
-#include <krss/netresource.h>
-#include <krss/resourcemanager.h>
-#include <krss/tagprovider.h>
 #include <krss/resourcemanager.h>
 #include <krss/treenode.h>
 #include <krss/treenodevisitor.h>
-#include <krss/netfeed.h>
 #include <krss/tagjobs.h>
 #include <krss/feedjobs.h>
 
@@ -157,12 +152,14 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
     m_horizontalSplitter->setOpaqueResize(true);
     lt->addWidget(m_horizontalSplitter);
 
+#ifdef KRSS_PORT_DISABLED
     const QString defaultResourceId = Settings::activeAkonadiResource();
     const shared_ptr<const KRss::NetResource> resource = KRss::ResourceManager::self()->resource( defaultResourceId );
     connect( resource.get(), SIGNAL( fetchQueueStarted(QString) ),
              this, SLOT( slotFetchQueueStarted() ) );
     connect( resource.get(), SIGNAL( fetchQueueFinished(QString) ),
              this, SLOT( slotFetchQueueFinished() ) );
+#endif
 
     m_feedListView = new KRss::FeedListView( m_horizontalSplitter );
     const KConfigGroup group( Settings::self()->config(), "General" );
@@ -221,7 +218,9 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
 
     m_articleListView = new ArticleListView( m_articleSplitter );
 
-    m_selectionController = new SelectionController( this );
+    m_session = new Akonadi::Session( QByteArray( "Akregator-" ) + QByteArray::number( qrand() ) );
+
+    m_selectionController = new SelectionController( m_session, this );
     m_selectionController->setArticleLister( m_articleListView );
     m_selectionController->setFeedSelector( m_feedListView );
 
@@ -593,23 +592,21 @@ void Akregator::MainWidget::slotFeedAdd()
 
 void Akregator::MainWidget::addFeed(const QString& url, bool autoExec)
 {
-    std::auto_ptr<CreateFeedCommand> cmd( new CreateFeedCommand( this ) );
+    std::auto_ptr<CreateFeedCommand> cmd( new CreateFeedCommand( m_session, this ) );
     cmd->setAutoExecute( autoExec );
     cmd->setUrl( url );
     cmd->setParentCollection( m_selectionController->selectedCollection() );
     // FIXME: keep a shared pointer to the default resource in MainWidget
-    const shared_ptr<KRss::NetResource> resource = KRss::ResourceManager::self()->resource(
-                                                                Settings::activeAkonadiResource() );
-    cmd->setFeedListView( m_feedListView );
-    cmd->setFeedList( weak_ptr<KRss::FeedList>( m_feedList ) );
     d->setUpAndStart( cmd.release() );
 }
 
 void Akregator::MainWidget::slotTagAdd()
 {
+#ifdef KRSS_PORT_DISABLED
     std::auto_ptr<CreateTagCommand> cmd( new CreateTagCommand( m_tagProvider, this ) );
     cmd->setFeedListView( m_feedListView );
     d->setUpAndStart( cmd.release() );
+#endif
 }
 
 void Akregator::MainWidget::slotFeedRemove()
@@ -630,7 +627,7 @@ void Akregator::MainWidget::slotFeedRemove()
                                      KStandardGuiItem::cancel() ) == KMessageBox::No )
         return;
 
-    Akonadi::CollectionDeleteJob* job = new Akonadi::CollectionDeleteJob( c );
+    Akonadi::CollectionDeleteJob* job = new Akonadi::CollectionDeleteJob( c, m_session );
     job->start();
 }
 
@@ -673,9 +670,11 @@ namespace {
 
 void Akregator::MainWidget::slotFeedRemoveTag()
 {
+#if 0
     const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
     RemoveTagFromFeedVisitor v( m_feedList );
     treeNode->accept( &v );
+#endif
 }
 
 void Akregator::MainWidget::slotNextUnreadArticle()
@@ -814,10 +813,9 @@ void Akregator::MainWidget::slotItemSelected( const KRss::Item& item )
     {
         KRss::Item modifiedItem = item;
         modifiedItem.setStatus( item.status() & ~KRss::Item::Unread );
-        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem() );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), m_session );
+        connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
         job->setIgnorePayload( true );
-        //PENDING(frank) connect to finished signal and report errors
-
         job->start();
     }
 }
@@ -851,27 +849,12 @@ void Akregator::MainWidget::slotMouseButtonPressed(int button, const KUrl& url)
 
 void Akregator::MainWidget::slotOpenHomepage()
 {
-    const shared_ptr<const KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
-    if ( !treeNode )
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+    if ( !c.isValid() )
         return;
-    else if ( treeNode->tier() == KRss::TreeNode::TagTier )
-        return;
+    const KRss::FeedCollection fc( c );
 
-    const shared_ptr<const KRss::FeedNode> feedNode = dynamic_pointer_cast<const KRss::FeedNode,
-                                                                           const KRss::TreeNode>( treeNode );
-    assert( feedNode );
-    const shared_ptr<const KRss::Feed> feed = m_feedList->constFeedById( feedNode->feedId() );
-    assert( feed );
-
-    // check whether it's a virtual search feed
-    if ( feed->isVirtual() )
-        return;
-
-    const shared_ptr<const KRss::NetFeed> netFeed = dynamic_pointer_cast<const KRss::NetFeed,
-                                                                         const KRss::Feed>( feed );
-    assert( netFeed );
-
-    KUrl url( netFeed->htmlUrl() );
+    KUrl url( fc.htmlUrl() );
     if (url.isValid()) {
         OpenUrlRequest req( url );
         req.setOptions(OpenUrlRequest::ExternalBrowser);
@@ -986,14 +969,13 @@ void Akregator::MainWidget::slotArticleDelete()
                                              "Disable delete article confirmation" ) != KMessageBox::Continue )
         return;
 
-    Q_FOREACH( const KRss::Item& i, items )
+    Q_FOREACH( const KRss::Item& i, m_selectionController->selectedItems() )
     {
         KRss::Item modifiedItem = i;
-        modifiedItem.setStatus( i.status() | KRss::Item::Deleted );
-        KRss::ItemModifyJob * const job = new KRss::ItemModifyJob();
-        job->setItem( modifiedItem );
+        modifiedItem.setStatus( ( i.status() | KRss::Item::Deleted ) & ~KRss::Item::Unread );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), m_session );
+        connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
         job->setIgnorePayload( true );
-
         job->start();
     }
 
@@ -1023,17 +1005,16 @@ void Akregator::MainWidget::slotArticleToggleKeepFlag( bool )
         else
             modifiedItem.setStatus( i.status() | KRss::Item::Important );
 
-        KRss::ItemModifyJob * const job = new KRss::ItemModifyJob();
-        job->setItem( modifiedItem );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), m_session );
+        connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
         job->setIgnorePayload( true );
-        //PENDING(frank) connect to finished signal and report errors
         job->start();
     }
 }
 
 namespace {
 
-static void setSelectedArticleStatus( const Akregator::AbstractSelectionController* controller, Akregator::ArticleStatus status )
+static void setSelectedArticleStatus( Akonadi::Session* session, QObject* rec, const Akregator::AbstractSelectionController* controller, Akregator::ArticleStatus status )
 {
     const QList<KRss::Item> items = controller->selectedItems();
 
@@ -1051,9 +1032,9 @@ static void setSelectedArticleStatus( const Akregator::AbstractSelectionControll
             modifiedItem.setStatus( i.status() | KRss::Item::Unread );
             break;
         }
-        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem() );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), session );
+        rec->connect( job, SIGNAL(finished(KJob*)), rec, SLOT(slotJobFinished(KJob*)) );
         job->setIgnorePayload( true );
-        //PENDING(frank) connect to finished signal and report errors
         job->start();
     }
 }
@@ -1062,7 +1043,7 @@ static void setSelectedArticleStatus( const Akregator::AbstractSelectionControll
 
 void Akregator::MainWidget::slotSetSelectedArticleRead()
 {
-    ::setSelectedArticleStatus( m_selectionController, Akregator::Read );
+    ::setSelectedArticleStatus( m_session, this, m_selectionController, Akregator::Read );
 }
 
 void Akregator::MainWidget::slotTextToSpeechRequest()
@@ -1092,7 +1073,7 @@ void Akregator::MainWidget::slotTextToSpeechRequest()
 
 void Akregator::MainWidget::slotSetSelectedArticleUnread()
 {
-    ::setSelectedArticleStatus( m_selectionController, Akregator::Unread );
+    ::setSelectedArticleStatus( m_session, this, m_selectionController, Akregator::Unread );
 }
 
 void Akregator::MainWidget::slotSetCurrentArticleReadDelayed()
@@ -1103,7 +1084,8 @@ void Akregator::MainWidget::slotSetCurrentArticleReadDelayed()
         return;
 
     item.setStatus( item.status() & ~KRss::Item::Unread );
-    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( item.akonadiItem() );
+    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( item.akonadiItem(), m_session );
+    connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
     job->setIgnorePayload( true );
     job->start();
 }

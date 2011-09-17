@@ -31,14 +31,9 @@ namespace boost {
     template <typename T> class weak_ptr;
 }
 
-namespace KRss {
-    class FeedListView;
-    class FeedList;
-    class NetResource;
-}
-
 namespace Akonadi {
     class Collection;
+    class Session;
 }
 
 namespace Akregator {
@@ -51,12 +46,10 @@ class CreateFeedCommand : public Command
 {
     Q_OBJECT
 public:
-    explicit CreateFeedCommand( QObject* parent = 0 );
+    explicit CreateFeedCommand( Akonadi::Session* session, QObject* parent = 0 );
     ~CreateFeedCommand();
 
-    void setFeedListView( KRss::FeedListView* view );
     void setUrl( const QString& url );
-    void setFeedList( const boost::weak_ptr<KRss::FeedList>& feedList );
     void setAutoExecute( bool autoexec );
     void setParentCollection( const Akonadi::Collection& collection );
 

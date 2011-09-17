@@ -35,9 +35,6 @@
 #include <Akonadi/Item>
 
 #include <krss/feedcollection.h>
-#include <krss/ui/feedlistview.h>
-#include <krss/feedlist.h>
-#include <krss/netresource.h>
 #include <krss/item.h>
 
 #include <KDebug>
@@ -63,22 +60,21 @@ class CreateFeedCommand::Private
 {
     CreateFeedCommand* const q;
 public:
-    explicit Private( CreateFeedCommand* qq );
+    explicit Private( Akonadi::Session* session, CreateFeedCommand* qq );
 
     void doCreate();
     void creationDone( KJob* );
     void modificationDone( KJob* );
 
-    QPointer<FeedListView> m_feedListView;
+    Akonadi::Session* m_session;
     QString m_url;
-    weak_ptr<FeedList> m_feedList;
     bool m_autoexec;
     Akonadi::Collection m_parentCollection;
 };
 
-CreateFeedCommand::Private::Private( CreateFeedCommand* qq )
+CreateFeedCommand::Private::Private( Akonadi::Session* session, CreateFeedCommand* qq )
   : q( qq ),
-    m_feedListView(),
+    m_session( session ),
     m_autoexec( false )
 {
 
@@ -178,12 +174,7 @@ void CreateFeedCommand::Private::creationDone( KJob* job )
         KMessageBox::error( q->parentWidget(), i18n("Could not add feed: %1", job->errorString()),
                             i18n("Feed Creation Failed") );
 
-    if ( m_feedList.expired() ) {
-        guard.emitResult();
-        return;
-    }
-
-    //const Akonadi::CollectionCreateJob* const cjob = qobject_cast<const Akonadi::CollectionCreateJob*>( job );
+    guard.emitResult();
 }
 
 void CreateFeedCommand::Private::modificationDone( KJob* j )
@@ -194,7 +185,7 @@ void CreateFeedCommand::Private::modificationDone( KJob* j )
     guard.emitResult();
 }
 
-CreateFeedCommand::CreateFeedCommand( QObject* parent ) : Command( parent ), d( new Private( this ) )
+CreateFeedCommand::CreateFeedCommand( Akonadi::Session* session, QObject* parent ) : Command( parent ), d( new Private( session, this ) )
 {
 
 }
@@ -204,20 +195,10 @@ CreateFeedCommand::~CreateFeedCommand()
     delete d;
 }
 
-void CreateFeedCommand::setFeedListView( FeedListView* view )
-{
-    d->m_feedListView = view;
-}
-
 
 void CreateFeedCommand::setUrl( const QString& url )
 {
     d->m_url = url;
-}
-
-void CreateFeedCommand::setFeedList( const weak_ptr<FeedList>& feedList )
-{
-    d->m_feedList = feedList;
 }
 
 void CreateFeedCommand::setAutoExecute( bool autoexec )

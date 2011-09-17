@@ -28,13 +28,19 @@
 
 #include <krss/resourcemanager.h>
 
+#include "krss/subscriptionlabelscollectionattribute.h"
+#include "krss/feedpropertiescollectionattribute.h"
+#include "krss/virtualfeedpropertiesattribute.h"
+
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentInstanceCreateJob>
 #include <Akonadi/AgentInstanceWidget>
 #include <Akonadi/AgentManager>
 #include <Akonadi/AgentType>
+#include <Akonadi/AttributeFactory>
 #include <Akonadi/Control>
 #include <Akonadi/AgentFilterProxyModel>
+
 
 #include <KDialog>
 #include <KLocalizedString>
@@ -66,7 +72,11 @@ public:
 SetUpAkonadiCommand::SetUpAkonadiCommand( QObject* parent ) : d( new Private( this ) ) {}
 
 void SetUpAkonadiCommand::doStart() {
-    QMetaObject::invokeMethod( this, "startSetup", Qt::QueuedConnection );
+    Akonadi::AttributeFactory::registerAttribute<KRss::SubscriptionLabelsCollectionAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<KRss::FeedPropertiesCollectionAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<KRss::VirtualFeedPropertiesAttribute>();
+    emitResult();
+    //QMetaObject::invokeMethod( this, "startSetup", Qt::QueuedConnection );
 }
 
 QWidget* SetUpAkonadiCommand::mainWidget() const {

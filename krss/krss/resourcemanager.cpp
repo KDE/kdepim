@@ -51,6 +51,7 @@ public:
 
 ResourceManager* ResourceManager::self()
 {
+    Q_ASSERT( false );
     static ResourceManager s_instance;
     return &s_instance;
 }

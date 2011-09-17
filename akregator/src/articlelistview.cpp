@@ -63,6 +63,7 @@ bool FilterDeletedProxyModel::filterAcceptsRow( int source_row, const QModelInde
 
 SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), m_keepFlagIcon( KIcon( "mail-mark-important" ) )
 {
+    setDynamicSortFilter( true );
 }
 
 bool SortColorizeProxyModel::filterAcceptsRow ( int source_row, const QModelIndex& source_parent ) const
@@ -129,8 +130,6 @@ static bool isRead( const QModelIndex& idx )
 
 void ArticleListView::setItemModel( QAbstractItemModel* model )
 {
-    setModel( model );
-#if 0
     if ( !model ) {
         setModel( model );
         return;
@@ -141,15 +140,14 @@ void ArticleListView::setItemModel( QAbstractItemModel* model )
     m_proxy->setSourceModel( model );
     m_proxy->setSortRole( FeedItemModel::SortRole );
     m_proxy->setFilters( m_matchers );
-#if 0
+
     FilterDeletedProxyModel* const proxy2 = new FilterDeletedProxyModel( model );
     proxy2->setSortRole( FeedItemModel::SortRole );
     proxy2->setSourceModel( m_proxy );
-#endif
 
     FilterColumnsProxyModel* const columnsProxy = new FilterColumnsProxyModel( model );
     columnsProxy->setSortRole( FeedItemModel::SortRole );
-    columnsProxy->setSourceModel( m_proxy );
+    columnsProxy->setSourceModel( proxy2 );
 
     columnsProxy->setColumnEnabled( FeedItemModel::ItemTitleColumn );
     columnsProxy->setColumnEnabled( FeedItemModel::FeedTitleColumn );
@@ -158,7 +156,6 @@ void ArticleListView::setItemModel( QAbstractItemModel* model )
 
     setModel( columnsProxy );
     header()->setContextMenuPolicy( Qt::CustomContextMenu );
-#endif
 }
 
 void ArticleListView::showHeaderMenu(const QPoint& pos)

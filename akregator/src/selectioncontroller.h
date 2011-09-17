@@ -40,6 +40,7 @@ class KJob;
 namespace Akonadi {
     class Collection;
     class Item;
+    class Session;
 }
 
 namespace KRss {
@@ -57,7 +58,7 @@ class SelectionController : public AbstractSelectionController
 
 public:
 
-    explicit SelectionController( QObject* parent = 0 );
+    explicit SelectionController( Akonadi::Session* session, QObject* parent = 0 );
 
     //impl
     void setFeedSelector( QAbstractItemView* feedSelector ) ;
@@ -112,6 +113,7 @@ private:
     KRss::FeedItemModel* m_itemModel;
     boost::shared_ptr<KRss::TreeNode> m_selectedSubscription;
     QMap<boost::weak_ptr<const KRss::TreeNode>, QPoint> m_scrollBarPositions;
+    Akonadi::Session* m_session;
 };
 
 } // namespace Akregator

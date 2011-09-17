@@ -53,6 +53,10 @@ namespace KRss {
     class Item;
 }
 
+namespace Akonadi {
+    class Session;
+}
+
 namespace Akregator {
 
 class AbstractSelectionController;
@@ -237,6 +241,7 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         KRss::FeedListView* m_feedListView;
         ArticleListView* m_articleListView;
+        Akonadi::Session* m_session;
 
         ArticleViewer *m_articleViewer;
         TabWidget* m_tabWidget;

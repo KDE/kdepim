@@ -27,11 +27,8 @@
 #include "progressmanager.h"
 
 #include <krss/feeditemmodel.h>
-#include <krss/feedlist.h>
-#include <krss/itemjobs.h>
 #include <krss/itemlisting.h>
 #include <krss/itemlistjob.h>
-#include <krss/itemmodel.h>
 #include <krss/tagprovider.h>
 #include <krss/treenode.h>
 #include <krss/treenodevisitor.h>
@@ -62,7 +59,7 @@ using namespace KRss;
 
 static KRss::Item itemForIndex( const QModelIndex& index )
 {
-    return KRss::Item( index.data( KRss::FeedItemModel::ItemRole ).value<Akonadi::Item>() );
+    return KRss::Item( index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
 }
 
 static QList<KRss::Item> itemsForIndexes( const QModelIndexList& indexes )
@@ -81,30 +78,29 @@ static shared_ptr<KRss::TreeNode> subscriptionForIndex( const QModelIndex& index
     return shared_ptr<KRss::TreeNode>();
 }
 
-Akregator::SelectionController::SelectionController( QObject* parent )
+Akregator::SelectionController::SelectionController( Akonadi::Session* session, QObject* parent )
     : AbstractSelectionController( parent ),
     m_feedSelector(),
     m_articleLister( 0 ),
     m_singleDisplay( 0 ),
     m_folderExpansionHandler( 0 ),
     m_itemModel( 0 ),
-    m_selectedSubscription()
+    m_selectedSubscription(),
+    m_session( session )
 {
     Akonadi::ItemFetchScope iscope;
     iscope.fetchFullPayload( true );
     iscope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
-
     Akonadi::CollectionFetchScope cscope;
     cscope.setIncludeStatistics( true );
-    cscope.setContentMimeTypes( QStringList() << QLatin1String("application/rss+xml") );
-    Akonadi::Session* session = new Akonadi::Session( QByteArray( "Akregator-" ) + QByteArray::number( qrand() ) );
-    Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder;
+    cscope.setContentMimeTypes( QStringList() << KRss::Item::mimeType() );
+    Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder( this );
     recorder->setSession( session );
     recorder->fetchCollection( true );
     recorder->setCollectionFetchScope( cscope );
     recorder->setItemFetchScope( iscope );
     recorder->setCollectionMonitored( Akonadi::Collection::root() );
-    recorder->setMimeTypeMonitored( QLatin1String( "application/rss+xml" ) );
+    recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
     m_itemModel = new FeedItemModel( recorder, this );
 }
 
@@ -145,6 +141,7 @@ void Akregator::SelectionController::init() {
 
     KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedSelector->selectionModel() );
     selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+
     selectionProxy->setSourceModel( m_itemModel );
 
     Akonadi::EntityMimeTypeFilterModel* filterProxy2 = new Akonadi::EntityMimeTypeFilterModel;
@@ -288,7 +285,7 @@ void Akregator::SelectionController::itemSelectionChanged()
     Akonadi::ItemFetchScope scope;
     scope.fetchFullPayload();
     scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
-    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item );
+    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item, m_session );
     job->setFetchScope( scope );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(fullItemFetched(KJob*)) );
     job->start();

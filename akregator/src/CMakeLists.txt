@@ -39,7 +39,7 @@ set(akregatorprivate_LIB_SRCS
 
 kde4_add_library(akregatorprivate SHARED ${akregatorprivate_LIB_SRCS})
 
-target_link_libraries(akregatorprivate kdepim  ${KDE4_KHTML_LIBS} ${KDEPIMLIBS_SYNDICATION_LIBS} akregatorinterfaces)
+target_link_libraries(akregatorprivate kdepim  ${KDE4_KHTML_LIBS} akregatorinterfaces)
 target_link_libraries(akregatorprivate LINK_INTERFACE_LIBRARIES ${KDE4_KHTML_LIBS} )
 
 set_target_properties(akregatorprivate
@@ -107,7 +107,7 @@ kde4_add_ui_files(akregatorpart_PART_SRCS
 kde4_add_plugin(akregatorpart ${akregatorpart_PART_SRCS})
 
 # add ${LIBKRSS_LIBRARIES} when moving libkrss into kdepimlibs
-target_link_libraries(akregatorpart  ${KDE4_KUTILS_LIBS} ${KDE4_KNOTIFYCONFIG_LIBS} ${KDE4_SOLID_LIBRARY} akregatorinterfaces akregatorprivate kdepim ${KDEPIMLIBS_SYNDICATION_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} krss ${KDE4_AKONADI_LIBS})
+target_link_libraries(akregatorpart  ${KDE4_KUTILS_LIBS} ${KDE4_KNOTIFYCONFIG_LIBS} ${KDE4_SOLID_LIBRARY} akregatorinterfaces akregatorprivate kdepim ${KDEPIMLIBS_KPIMUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} krss ${KDE4_AKONADI_LIBS})
 
 install(TARGETS akregatorpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 

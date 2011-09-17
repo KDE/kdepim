@@ -45,21 +45,19 @@ public:
 
     enum FeedColumn {
         FeedTitleColumn=0,
-#if 0
-        UnreadCountColumn,
-        TotalCountColumn,
-#endif
-        FeedColumnCount
+        UnreadCountColumn=1,
+        TotalCountColumn=2,
+        FeedColumnCount=1 //PENDING(frank) multiple columns crash KSelectionProxyModel, review
     };
 
     enum ItemRoles {
-        ItemRole=EntityTreeModel::UserRole,
-        SortRole,
+        SortRole=EntityTreeModel::UserRole,
         IsUnreadRole,
         IsReadRole,
         IsDeletedRole, //PENDING(frank) transitional Akregator compat, review
         IsImportantRole, //PENDING(frank) transitional Akregator compat, review
-        LinkRole  //PENDING(frank) transitional Akregator compat, review
+        LinkRole, //PENDING(frank) transitional Akregator compat, review
+        IsTagRole //PENDING(frank) old krss transitional
     };
 
 public:

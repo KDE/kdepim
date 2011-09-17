@@ -49,12 +49,12 @@ void FeedPropertiesCollectionAttribute::deserialize( const QByteArray &data )
 
 QString FeedPropertiesCollectionAttribute::name() const
 {
-    return m_properties.value( QString::fromLatin1("Name" ) );
+    return m_properties.value( QLatin1String("Name" ) );
 }
 
 void FeedPropertiesCollectionAttribute::setName( const QString &name )
 {
-    m_properties.insert( QString::fromLatin1("Name" ), name );
+    m_properties.insert( QLatin1String("Name" ), name );
 }
 
 bool FeedPropertiesCollectionAttribute::preferItemLinkForDisplay() const
@@ -64,45 +64,45 @@ bool FeedPropertiesCollectionAttribute::preferItemLinkForDisplay() const
 
 void FeedPropertiesCollectionAttribute::setPreferItemLinkForDisplay( bool b )
 {
-    m_properties.insert( QLatin1String("PreferItemLinkForDisplay"), b ? QString::fromLatin1("true") : QString() );
+    m_properties.insert( QLatin1String("PreferItemLinkForDisplay"), b ? QLatin1String("true") : QString() );
 }
 
 QString FeedPropertiesCollectionAttribute::xmlUrl() const
 {
-    return m_properties.value( QString::fromLatin1("XmlUrl" ) );
+    return m_properties.value( QLatin1String("XmlUrl" ) );
 }
 
 void FeedPropertiesCollectionAttribute::setXmlUrl( const QString &xmlUrl )
 {
-    m_properties.insert( QString::fromLatin1("XmlUrl" ), xmlUrl );
+    m_properties.insert( QLatin1String("XmlUrl" ), xmlUrl );
 }
 
 QString FeedPropertiesCollectionAttribute::htmlUrl() const
 {
-    return m_properties.value( QString::fromLatin1("HtmlUrl" ) );
+    return m_properties.value( QLatin1String("HtmlUrl" ) );
 }
 
 void FeedPropertiesCollectionAttribute::setHtmlUrl( const QString &htmlUrl )
 {
-    m_properties.insert( QString::fromLatin1("HtmlUrl" ), htmlUrl );
+    m_properties.insert( QLatin1String("HtmlUrl" ), htmlUrl );
 }
 
 QString FeedPropertiesCollectionAttribute::feedType() const
 {
-    return m_properties.value( QString::fromLatin1("FeedType" ) );
+    return m_properties.value( QLatin1String("FeedType" ) );
 }
 
 void FeedPropertiesCollectionAttribute::setFeedType( const QString &feedType )
 {
-    m_properties.insert( QString::fromLatin1("FeedType" ), feedType );
+    m_properties.insert( QLatin1String("FeedType" ), feedType );
 }
 
 QString FeedPropertiesCollectionAttribute::description() const
 {
-    return m_properties.value( QString::fromLatin1("Description" ) );
+    return m_properties.value( QLatin1String("Description" ) );
 }
 
 void FeedPropertiesCollectionAttribute::setDescription( const QString &description )
 {
-    m_properties.insert( QString::fromLatin1("Description" ), description );
+    m_properties.insert( QLatin1String("Description" ), description );
 }

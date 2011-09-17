@@ -41,8 +41,6 @@
 #include <krss/resourcemanager.h>
 #include <krss/tagprovider.h>
 
-#include <syndication/dataretriever.h>
-
 #include <libkdepim/broadcaststatus.h>
 
 #include <knotifyconfigwidget.h>
@@ -176,6 +174,7 @@ void Part::slotAkonadiSetUp( KJob* job ) {
         QApplication::quit();
         return;
     }
+#ifdef KRSS_PORT_DISABLED
     KRss::RetrieveFeedListJob * const fjob = new KRss::RetrieveFeedListJob( m_mainWidget );
     fjob->setResources( KRss::ResourceManager::self()->resources() );
     connect( fjob, SIGNAL( result( KJob* ) ), this, SLOT( slotFeedListRetrieved( KJob* ) ) );
@@ -184,6 +183,7 @@ void Part::slotAkonadiSetUp( KJob* job ) {
     KRss::TagProviderRetrieveJob * const tjob = new KRss::TagProviderRetrieveJob( m_mainWidget );
     connect( tjob, SIGNAL( result( KJob* ) ), this, SLOT( slotTagProviderRetrieved( KJob* ) ) );
     tjob->start();
+#endif
 }
 
 void Part::slotStarted()
@@ -209,8 +209,6 @@ void Part::addFeed() {
 void Part::slotSettingsChanged()
 {
     NotificationManager::self()->setWidget(isTrayIconEnabled() ? m_mainWidget->window() : 0, componentData());
-
-    Syndication::FileRetriever::setUseCache(Settings::useHTMLCache());
 
     QStringList fonts;
     fonts.append(Settings::standardFont());
