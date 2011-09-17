@@ -52,7 +52,9 @@
 #include "tabwidget.h"
 #include "types.h"
 
+#include <Akonadi/AgentManager>
 #include <Akonadi/Collection>
+#include <Akonadi/CollectionDeleteJob>
 
 #include <krss/feedlist.h>
 #include <krss/feedlistmodel.h>
@@ -611,28 +613,24 @@ void Akregator::MainWidget::slotTagAdd()
 
 void Akregator::MainWidget::slotFeedRemove()
 {
-    const shared_ptr<const KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
-    if ( !treeNode )
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+    if ( !c.isValid() )
         return;
 
-    if ( treeNode->tier() == KRss::TreeNode::TagTier ) {
-        const shared_ptr<const KRss::TagNode> tagNode = dynamic_pointer_cast<const KRss::TagNode,
-                                                                             const KRss::TreeNode>( treeNode );
-        assert( tagNode );
-        KRss::TagDeleteJob * const job = m_tagProvider->tagDeleteJob();
-        job->setTag( tagNode->tag() );
-        connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
-        job->start();
-    }
-    else { // FeedTier
-        const shared_ptr<const KRss::FeedNode> feedNode = dynamic_pointer_cast<const KRss::FeedNode,
-                                                                             const KRss::TreeNode>( treeNode );
-        assert( feedNode );
-        const shared_ptr<const KRss::Feed> feed = m_feedList->constFeedById( feedNode->feedId() );
-        KRss::FeedDeleteJob * const job = new KRss::FeedDeleteJob( feed , this );
-        connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
-        job->start();
-    }
+    if ( c.parentCollection() == Akonadi::Collection::root() )
+        return;
+
+    //PENDING(frank) make this a command and the message more sophisticated (feed vs. foldre etc.)
+
+    if ( KMessageBox::questionYesNo( this,
+                                     i18n("<qt>Are you sure you want to delete %1?", c.name() ),
+                                     i18n("Delete Feed"),
+                                     KStandardGuiItem::del(),
+                                     KStandardGuiItem::cancel() ) == KMessageBox::No )
+        return;
+
+    Akonadi::CollectionDeleteJob* job = new Akonadi::CollectionDeleteJob( c );
+    job->start();
 }
 
 void Akregator::MainWidget::slotFeedModify()
@@ -747,12 +745,11 @@ void Akregator::MainWidget::slotSetTotalUnread()
 
 void Akregator::MainWidget::slotFetchCurrentFeed()
 {
-    const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
-    if ( !treeNode )
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+    if ( !c.isValid() )
         return;
 
-    KRss::FetchVisitor visitor( m_feedList );
-    treeNode->accept( &visitor );
+    Akonadi::AgentManager::self()->synchronizeCollection( c );
 }
 
 void Akregator::MainWidget::slotFetchAllFeeds()
