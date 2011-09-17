@@ -6,7 +6,6 @@
 #include "mailutil.h"
 #include "mailkernel.h"
 #include "mdnadvicedialog.h"
-#include "messageproperty.h"
 #include "minimumcombobox.h"
 #include "regexplineedit.h"
 
@@ -54,7 +53,6 @@
 #include <assert.h>
 #include <string.h>
 
-using MailCommon::MessageProperty;
 using MailCommon::RegExpLineEdit;
 using MessageComposer::MessageFactory;
 

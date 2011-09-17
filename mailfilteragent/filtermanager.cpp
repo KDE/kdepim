@@ -23,7 +23,6 @@
 #include <mailcommon/filterimporterexporter.h>
 #include <mailcommon/filterlog.h>
 #include <mailcommon/mailfilter.h>
-#include <mailcommon/messageproperty.h>
 
 #include <QtCore/QTimer>
 
@@ -196,10 +195,6 @@ bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCo
 
 bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
 {
-  if ( MessageProperty::filtering( item ) )
-    return false;
-
-  MessageProperty::setFiltering( item, true );
   if ( FilterLog::instance()->isLogging() ) {
     FilterLog::instance()->addSeparator();
   }
@@ -209,7 +204,6 @@ bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
 
 void FilterManager::Private::endFiltering( const Akonadi::Item &item ) const
 {
-  MessageProperty::setFiltering( item, false );
 }
 
 bool FilterManager::Private::atLeastOneFilterAppliesTo( const QString &accountId ) const

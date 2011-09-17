@@ -38,7 +38,6 @@ set(libmailcommon_SRCS
   mailkernel.cpp
   mailutil.cpp
   mdnadvicedialog.cpp
-  messageproperty.cpp
   minimumcombobox.cpp 
   readablecollectionproxymodel.cpp
   redirectdialog.cpp
