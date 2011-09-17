@@ -46,7 +46,6 @@ class KRSS_EXPORT RssItem
 public:
     // return the corresponding Akonadi flags
     // for the status flags defined in item.h
-    static QByteArray flagNew();
     static QByteArray flagRead();
     static QByteArray flagImportant();
     static QByteArray flagDeleted();
@@ -66,7 +65,6 @@ public:
     static bool isImportant( const Akonadi::Item& );
     static bool isRead( const Akonadi::Item& );
     static bool isUnread( const Akonadi::Item& );
-    static bool isNew( const Akonadi::Item& );
     static bool isDeleted( const Akonadi::Item& );
 
     bool headersLoaded() const;

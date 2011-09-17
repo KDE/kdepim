@@ -53,6 +53,7 @@
 #include "types.h"
 
 #include <Akonadi/AgentManager>
+#include <Akonadi/ItemModifyJob>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDeleteJob>
 
@@ -713,7 +714,7 @@ void Akregator::MainWidget::slotMarkAllFeedsRead()
         job->addSubJob( feed->statusModifyJob() );
     }
 
-    job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread << KRss::Item::New );
+    job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
 #ifdef WITH_LIBKDEPIM
     ProgressManager::self()->addJob( job );
@@ -730,7 +731,7 @@ void Akregator::MainWidget::slotMarkFeedRead()
     KRss::CreateStatusModifyJobVisitor visitor( m_feedList );
     treeNode->accept( &visitor );
     KRss::StatusModifyJob * const job = visitor.statusModifyJob();
-    job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread << KRss::Item::New );
+    job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
 #ifdef WITH_LIBKDEPIM
     ProgressManager::self()->addJob( job );
@@ -812,9 +813,8 @@ void Akregator::MainWidget::slotItemSelected( const KRss::Item& item )
     else
     {
         KRss::Item modifiedItem = item;
-        modifiedItem.setStatus( item.status() & ~( KRss::Item::New | KRss::Item::Unread ) );
-        KRss::ItemModifyJob * const job = new KRss::ItemModifyJob();
-        job->setItem( modifiedItem );
+        modifiedItem.setStatus( item.status() & ~KRss::Item::Unread );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem() );
         job->setIgnorePayload( true );
         //PENDING(frank) connect to finished signal and report errors
 
@@ -1045,17 +1045,13 @@ static void setSelectedArticleStatus( const Akregator::AbstractSelectionControll
         KRss::Item modifiedItem = i;
         switch ( status ) {
         case Akregator::Read:
-            modifiedItem.setStatus( i.status() & ~( KRss::Item::New | KRss::Item::Unread ) );
+            modifiedItem.setStatus( i.status() & ~KRss::Item::Unread );
             break;
         case Akregator::Unread:
-            modifiedItem.setStatus( ( i.status() | KRss::Item::Unread ) & ~KRss::Item::New );
-            break;
-        case Akregator::New:
-            modifiedItem.setStatus( i.status() | KRss::Item::New | KRss::Item::Unread );
+            modifiedItem.setStatus( i.status() | KRss::Item::Unread );
             break;
         }
-        KRss::ItemModifyJob * const job = new KRss::ItemModifyJob();
-        job->setItem( modifiedItem );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem() );
         job->setIgnorePayload( true );
         //PENDING(frank) connect to finished signal and report errors
         job->start();
@@ -1099,11 +1095,6 @@ void Akregator::MainWidget::slotSetSelectedArticleUnread()
     ::setSelectedArticleStatus( m_selectionController, Akregator::Unread );
 }
 
-void Akregator::MainWidget::slotSetSelectedArticleNew()
-{
-    ::setSelectedArticleStatus( m_selectionController, Akregator::New );
-}
-
 void Akregator::MainWidget::slotSetCurrentArticleReadDelayed()
 {
     KRss::Item item =  m_selectionController->currentItem();
@@ -1111,10 +1102,8 @@ void Akregator::MainWidget::slotSetCurrentArticleReadDelayed()
     if ( item.isNull() )
         return;
 
-    item.setStatus( item.status() & ~( KRss::Item::New | KRss::Item::Unread ) );
-
-    KRss::ItemModifyJob * const job = new KRss::ItemModifyJob();
-    job->setItem( item );
+    item.setStatus( item.status() & ~KRss::Item::Unread );
+    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( item.akonadiItem() );
     job->setIgnorePayload( true );
     job->start();
 }

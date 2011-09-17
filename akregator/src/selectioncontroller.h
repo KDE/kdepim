@@ -39,6 +39,7 @@ class KJob;
 
 namespace Akonadi {
     class Collection;
+    class Item;
 }
 
 namespace KRss {

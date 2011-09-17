@@ -124,11 +124,6 @@ RssItem::Private::Private( const Private& other )
 {
 }
 
-QByteArray RssItem::flagNew()
-{
-    return "\\New";
-}
-
 QByteArray RssItem::flagRead()
 {
     return "\\Seen";
@@ -158,11 +153,6 @@ bool RssItem::isRead( const Akonadi::Item& item )
 bool RssItem::isUnread( const Akonadi::Item& item )
 {
     return !item.hasFlag( flagRead() );
-}
-
-bool RssItem::isNew( const Akonadi::Item& item )
-{
-    return item.hasFlag( flagNew() );
 }
 
 bool RssItem::isDeleted( const Akonadi::Item& item )

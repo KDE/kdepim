@@ -577,17 +577,6 @@ public:
     FeedCollectionFetchJob * const q;
 };
 
-bool FeedCollectionFetchJob::Private::clearNewFlag( Akonadi::Item& item )
-{
-    if ( item.hasFlag( KRss::RssItem::flagNew() ) ) {
-        kDebug() << "Clearing 'New' on" << item.remoteId();
-        item.clearFlag( KRss::RssItem::flagNew() );
-        return true;
-    }
-
-    return false;
-}
-
 void FeedCollectionFetchJob::Private::updatePercent()
 {
     const uint p = qBound( 0, qRound( std::accumulate( m_percentages.begin(), m_percentages.end(), 0u )
@@ -606,7 +595,9 @@ void FeedCollectionFetchJob::Private::doStart()
     else {
         BatchItemModifyJob * const job = new BatchItemModifyJob();
         job->setFeed( m_collection );
+#ifdef KRSS_PORT_DISABLED
         job->setModifier( boost::bind( &Private::clearNewFlag, this, _1 ) );
+#endif
         connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotOldItemsMarked( KJob* ) ) );
         job->start();
     }
@@ -626,22 +617,6 @@ void FeedCollectionFetchJob::Private::slotAkonadiCollectionRetrieved( KJob *job 
     Q_ASSERT( rjob );
     m_collection = rjob->feedCollection();
 
-    BatchItemModifyJob * const bjob = new BatchItemModifyJob();
-    bjob->setFeed( m_collection );
-    bjob->setModifier( boost::bind( &Private::clearNewFlag, this, _1 ) );
-    connect( bjob, SIGNAL( result( KJob* ) ), q, SLOT( slotOldItemsMarked( KJob* ) ) );
-    bjob->start();
-}
-
-void FeedCollectionFetchJob::Private::slotOldItemsMarked( KJob *job )
-{
-    if ( job->error() ) {
-        kWarning() << job->errorString();
-        q->setError( FeedCollectionFetchJob::CouldNotMarkOldItems );
-        q->setErrorText( job->errorString() );
-        q->emitResult();
-        return;
-    }
 
     m_percentages.insert( 0, 100 );
     updatePercent();
@@ -650,6 +625,7 @@ void FeedCollectionFetchJob::Private::slotOldItemsMarked( KJob *job )
     connect( m_backendJob, SIGNAL( result( KJob* ) ), q, SLOT( slotFeedFetched( KJob* ) ) );
     m_backendJob->start();
 }
+
 
 void FeedCollectionFetchJob::Private::slotFeedFetched( KJob *job )
 {

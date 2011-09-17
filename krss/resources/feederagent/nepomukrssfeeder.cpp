@@ -50,7 +50,6 @@ void NepomukRssFeeder::updateItem( const Akonadi::Item& item, const QUrl& graphU
     const KRss::RssItem payload = item.payload<KRss::RssItem>();
     rssChannelItem.setTitle( payload.title() );
     rssChannelItem.setPlainTextContent( payload.content().isEmpty() ? payload.description() : payload.content() );
-    rssChannelItem.setIsNew( item.hasFlag( KRss::RssItem::flagNew() ) );
     rssChannelItem.setIsRead( item.hasFlag( KRss::RssItem::flagRead() ) );
     rssChannelItem.setIsImportant( item.hasFlag( KRss::RssItem::flagImportant() ) );
     // TODO: virtuoso complains about the date properties

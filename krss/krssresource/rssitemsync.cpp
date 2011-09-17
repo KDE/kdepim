@@ -61,7 +61,6 @@ bool RssItemSync::updateItem( const Akonadi::Item &storedItem, Akonadi::Item &ne
         // dont overwrite the existing flags
         // and set 'New'
         newItem.setFlags( storedItem.flags() );
-        newItem.setFlag( KRss::RssItem::flagNew() );
         return true;
     }
 
@@ -79,7 +78,6 @@ bool RssItemSync::updateItem( const Akonadi::Item &storedItem, Akonadi::Item &ne
             // otherwise Akonadi::ItemModifyJob just ignores them,
             // see Akonadi::ItemModifyJob::doStart()
             newItem.setFlags( newItem.flags() );
-            newItem.clearFlag( KRss::RssItem::flagNew() );
             return true;
         }
     }

@@ -52,7 +52,6 @@ public:
         ItemRole = Qt::UserRole,
         ItemStatusRole,
         SortRole,
-        IsNewRole,
         IsUnreadRole,
         IsReadRole,
         IsDeletedRole, //PENDING(frank) transitional Akregator compat, review

@@ -750,9 +750,7 @@ void NewsgatorFeedFetchJob::slotFeedFetched( Syndication::Loader *loader, Syndic
             item.setMimeType( KRss::Item::mimeType() );
 
             // handle the item's flags
-            if ( rssItem.customProperty( QLatin1String("http://newsgator.com/schema/extensionsread") ) == QLatin1String("False") ) {
-                item.setFlag( KRss::RssItem::flagNew() );
-            } else {
+            if ( rssItem.customProperty( QLatin1String("http://newsgator.com/schema/extensionsread") ) != QLatin1String("False") ) {
                 item.setFlag( KRss::RssItem::flagRead() );
             }
 

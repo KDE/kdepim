@@ -487,30 +487,6 @@ void StandardActionManager::slotManageSubscriptions()
     delete dialog;
 }
 
-void StandardActionManager::slotMarkItemNew()
-{
-    QModelIndexList selectedIndexes;
-    if ( d->m_itemSelectionModel && d->m_itemSelectionModel->hasSelection() )
-        selectedIndexes = d->m_itemSelectionModel->selectedRows();
-    else
-        return;
-
-    Q_FOREACH( const QModelIndex &selectedIndex, selectedIndexes ) {
-        Item item = selectedIndex.data( ItemModel::ItemRole ).value<Item>();
-
-        if ( item.status().testFlag( KRss::Item::New ) )
-            continue;
-
-        // set 'New' and 'Unread'
-        item.setStatus( item.status() | KRss::Item::New | KRss::Item::Unread );
-        ItemModifyJob * const job = new ItemModifyJob();
-        job->setItem( item );
-        job->setIgnorePayload( true );
-        connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotItemModified( KJob* ) ) );
-        job->start();
-    }
-}
-
 void StandardActionManager::slotMarkItemRead()
 {
     QModelIndexList selectedIndexes;
@@ -526,7 +502,7 @@ void StandardActionManager::slotMarkItemRead()
             continue;
 
         // clear 'New' and 'Unread'
-        item.setStatus( item.status() & ~( KRss::Item::New | KRss::Item::Unread ) );
+        item.setStatus( item.status() & KRss::Item::Unread );
         ItemModifyJob * const job = new ItemModifyJob();
         job->setItem( item );
         job->setIgnorePayload( true );

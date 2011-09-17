@@ -359,14 +359,6 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotSetSelectedArticleRead()));
     statusMenu->addAction(action);
 
-    action = coll->addAction("article_set_status_new");
-    action->setText(i18nc("as in: mark as new", "&New"));
-    action->setIcon(KIcon("mail-mark-unread-new"));
-    action->setShortcuts(KShortcut( "Ctrl+N" ));
-    action->setToolTip(i18n("Mark selected article as new"));
-    connect(action, SIGNAL(triggered(bool)),  d->mainWidget, SLOT(slotSetSelectedArticleNew()));
-    statusMenu->addAction(action);
-
     action = coll->addAction("article_set_status_unread");
     action->setText(i18nc("as in: mark as unread", "&Unread"));
     action->setIcon(KIcon("mail-mark-unread"));

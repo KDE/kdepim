@@ -691,7 +691,6 @@ void OpmlFeedFetchJob::slotFeedFetched( Syndication::Loader *loader, Syndication
             item.setRemoteId( syndItem->id() );
             item.setMimeType( KRss::Item::mimeType() );
             item.setPayload<KRss::RssItem>( KRssResource::fromSyndicationItem( syndItem ) );
-            item.setFlag( KRss::RssItem::flagNew() );
             m_items.append( item );
         }
         emitResult();

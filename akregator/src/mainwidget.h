@@ -186,8 +186,6 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         void slotSetSelectedArticleRead();
         /** marks the currently selected article as unread */
         void slotSetSelectedArticleUnread();
-        /** marks the currently selected article as new */
-        void slotSetSelectedArticleNew();
         /** marks the currenctly selected article as read after a user-set delay */
         void slotSetCurrentArticleReadDelayed();
 

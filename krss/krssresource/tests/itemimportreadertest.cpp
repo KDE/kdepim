@@ -49,14 +49,12 @@ void ItemImportReaderTest::testCorrectness()
     QVERIFY( items.contains( QLatin1String("tag:blogger.com,1999:blog-6431293039768060590.post-962616740612527640") ) );
     const Akonadi::Item item1 = items.value( QLatin1String("tag:blogger.com,1999:blog-6431293039768060590.post-962616740612527640") );
     QVERIFY( item1.flags().count() == 2 );
-    QVERIFY( item1.hasFlag( KRss::RssItem::flagNew() ) );
     QVERIFY( !item1.hasFlag( KRss::RssItem::flagRead() ) );
 
     // new (implies unread) + important
     QVERIFY( items.contains( QLatin1String("http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090317-065020") ) );
     const Akonadi::Item item2 = items.value( QLatin1String("http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090317-065020") );
     QVERIFY( item2.flags().count() == 3 );
-    QVERIFY( item2.hasFlag( KRss::RssItem::flagNew() ) );
     QVERIFY( !item2.hasFlag( KRss::RssItem::flagRead() ) );
     QVERIFY( item2.hasFlag( KRss::RssItem::flagImportant() ) );
 

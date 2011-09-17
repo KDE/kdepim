@@ -96,7 +96,6 @@ SearchBar::SearchBar(QWidget* parent) : KHBox(parent), d(new SearchBar::SearchBa
 
     d->searchCombo->addItem(iconAll, i18n("All Articles"));
     d->searchCombo->addItem(iconUnread, i18nc("Unread articles filter", "Unread"));
-    d->searchCombo->addItem(iconNew, i18nc("New articles filter", "New"));
     d->searchCombo->addItem(iconKeep, i18nc("Important articles filter", "Important"));
 
     d->searchLine->setToolTip( i18n( "Enter space-separated terms to filter article list" ) );
@@ -193,19 +192,11 @@ void SearchBar::slotActivateSearch()
         {
             case 1: // Unread
             {
-                Criterion crit1( Criterion::Status, Criterion::Equals, New);
                 Criterion crit2( Criterion::Status, Criterion::Equals, Unread);
-                statusCriteria << crit1;
                 statusCriteria << crit2;
                 break;
             }
-            case 2: // New
-            {
-                Criterion crit( Criterion::Status, Criterion::Equals, New);
-                statusCriteria << crit;
-                break;
-            }
-            case 3: // Keep flag set
+            case 2: // Keep flag set
             {
                 Criterion crit( Criterion::KeepFlag, Criterion::Equals, true);
                 statusCriteria << crit;

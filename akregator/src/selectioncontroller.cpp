@@ -62,7 +62,7 @@ using namespace KRss;
 
 static KRss::Item itemForIndex( const QModelIndex& index )
 {
-    return index.data( KRss::ItemModel::ItemRole ).value<KRss::Item>();
+    return KRss::Item( index.data( KRss::FeedItemModel::ItemRole ).value<Akonadi::Item>() );
 }
 
 static QList<KRss::Item> itemsForIndexes( const QModelIndexList& indexes )

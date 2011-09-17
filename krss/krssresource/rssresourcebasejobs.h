@@ -184,7 +184,6 @@ private:
     Q_DISABLE_COPY( FeedCollectionFetchJob )
     Q_PRIVATE_SLOT( d, void doStart() )
     Q_PRIVATE_SLOT( d, void slotAkonadiCollectionRetrieved( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotOldItemsMarked( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotFeedFetched( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotItemsSynced( KJob *job ) )
 };

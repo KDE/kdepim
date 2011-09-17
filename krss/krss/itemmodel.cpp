@@ -160,9 +160,6 @@ QVariant ItemModel::data( const QModelIndex &index, int role ) const
     if ( role == IsImportantRole )
         return item.isImportant();
 
-    if ( role == IsNewRole )
-        return item.isNew();
-
     if ( role == IsUnreadRole )
         return item.isUnread();
 
@@ -177,8 +174,6 @@ QVariant ItemModel::data( const QModelIndex &index, int role ) const
 
     //PENDING(frank) TODO: use configurable colors
     if ( role == Qt::ForegroundRole ) {
-        if ( item.isNew() )
-            return Qt::red;
         if ( item.isUnread() )
             return Qt::blue;
     }
