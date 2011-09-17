@@ -28,11 +28,17 @@
 #include "editfeedcommand.h"
 #include "command_p.h"
 
-#include <krss/netfeed.h>
-#include <krss/netfeedcreatejob.h>
+#include <Akonadi/CachePolicy>
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionCreateJob>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/Item>
+
+#include <krss/feedcollection.h>
 #include <krss/ui/feedlistview.h>
 #include <krss/feedlist.h>
 #include <krss/netresource.h>
+#include <krss/item.h>
 
 #include <KDebug>
 #include <KInputDialog>
@@ -65,9 +71,9 @@ public:
 
     QPointer<FeedListView> m_feedListView;
     QString m_url;
-    weak_ptr<NetResource> m_resource;
     weak_ptr<FeedList> m_feedList;
     bool m_autoexec;
+    Akonadi::Collection m_parentCollection;
 };
 
 CreateFeedCommand::Private::Private( CreateFeedCommand* qq )
@@ -109,14 +115,25 @@ void CreateFeedCommand::Private::doCreate()
         delete afd;
     }
 
-    const shared_ptr<NetResource> resource = m_resource.lock();
-    if ( !resource ) {
+    if ( url.isEmpty() ) {
         q->emitResult();
         return;
     }
 
-    NetFeedCreateJob *job = resource->netFeedCreateJob( url );
-    job->setFeedList( m_feedList );
+    Akonadi::CachePolicy policy;
+    policy.setInheritFromParent( false );
+    policy.setSyncOnDemand( false );
+    policy.setLocalParts( QStringList() << KRss::Item::HeadersPart << KRss::Item::ContentPart << Akonadi::Item::FullPayload );
+
+    KRss::FeedCollection feed;
+    feed.setRemoteId( url );
+    feed.setXmlUrl( url );
+    feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
+    feed.setCachePolicy( policy );
+    feed.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setIconName( QLatin1String("application-rss+xml") );
+    feed.setParentCollection( m_parentCollection );
+    feed.setName( url );
+    Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob( feed );
     q->connect( job, SIGNAL(finished(KJob*)), q, SLOT(creationDone(KJob*)) );
     job->start();
 
@@ -166,22 +183,7 @@ void CreateFeedCommand::Private::creationDone( KJob* job )
         return;
     }
 
-    const shared_ptr<const FeedList> sharedFeedList = m_feedList.lock();
-    const NetFeedCreateJob* const cjob = qobject_cast<const NetFeedCreateJob*>( job );
-    Q_ASSERT( cjob );
-    const Feed::Id feedId = cjob->feedId();
-    const shared_ptr<Feed> feed = sharedFeedList->feedById( feedId );
-    if ( !feed ) {
-        guard.emitResult();
-        return;
-    }
-
-    EditFeedCommand* const ecmd = new EditFeedCommand( q );
-    ecmd->setParentWidget( q->parentWidget() );
-    ecmd->setFeed( feed );
-    ecmd->setFeedList( sharedFeedList );
-    connect( ecmd, SIGNAL(finished(KJob*)), q, SLOT(modificationDone(KJob*)) );
-    ecmd->start();
+    //const Akonadi::CollectionCreateJob* const cjob = qobject_cast<const Akonadi::CollectionCreateJob*>( job );
 }
 
 void CreateFeedCommand::Private::modificationDone( KJob* j )
@@ -207,10 +209,6 @@ void CreateFeedCommand::setFeedListView( FeedListView* view )
     d->m_feedListView = view;
 }
 
-void CreateFeedCommand::setResource( const weak_ptr<NetResource>& resource )
-{
-    d->m_resource = resource;
-}
 
 void CreateFeedCommand::setUrl( const QString& url )
 {
@@ -225,6 +223,11 @@ void CreateFeedCommand::setFeedList( const weak_ptr<FeedList>& feedList )
 void CreateFeedCommand::setAutoExecute( bool autoexec )
 {
     d->m_autoexec = autoexec;
+}
+
+void CreateFeedCommand::setParentCollection( const Akonadi::Collection& collection )
+{
+    d->m_parentCollection = collection;
 }
 
 void CreateFeedCommand::doStart()

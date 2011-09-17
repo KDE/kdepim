@@ -184,6 +184,11 @@ shared_ptr<KRss::TreeNode> Akregator::SelectionController::selectedSubscription(
     return ::subscriptionForIndex( m_feedSelector->selectionModel()->currentIndex() );
 }
 
+Akonadi::Collection Akregator::SelectionController::selectedCollection() const
+{
+    return m_feedSelector->selectionModel()->currentIndex().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+}
+
 void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedList>& feedList )
 {
 #ifdef KRSS_PORT_DISABLED

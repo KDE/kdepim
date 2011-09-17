@@ -40,6 +40,9 @@ namespace KRss {
     class TreeNode;
 }
 
+namespace Akonadi {
+    class Collection;
+}
 namespace Akregator {
 
 class Article;
@@ -119,6 +122,7 @@ public:
 
     virtual boost::shared_ptr<KRss::TreeNode> selectedSubscription() const = 0;
 
+    virtual Akonadi::Collection selectedCollection() const = 0;
 public Q_SLOTS:
 
     virtual void setFilters( const std::vector<boost::shared_ptr<const Akregator::Filters::AbstractMatcher> >& ) = 0;

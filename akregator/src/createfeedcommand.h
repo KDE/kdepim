@@ -37,6 +37,10 @@ namespace KRss {
     class NetResource;
 }
 
+namespace Akonadi {
+    class Collection;
+}
+
 namespace Akregator {
 
 class Folder;
@@ -50,11 +54,11 @@ public:
     explicit CreateFeedCommand( QObject* parent = 0 );
     ~CreateFeedCommand();
 
-    void setResource( const boost::weak_ptr<KRss::NetResource>& resource );
     void setFeedListView( KRss::FeedListView* view );
     void setUrl( const QString& url );
     void setFeedList( const boost::weak_ptr<KRss::FeedList>& feedList );
     void setAutoExecute( bool autoexec );
+    void setParentCollection( const Akonadi::Collection& collection );
 
 private:
     void doStart();

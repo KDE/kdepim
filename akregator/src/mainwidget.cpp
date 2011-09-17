@@ -52,6 +52,8 @@
 #include "tabwidget.h"
 #include "types.h"
 
+#include <Akonadi/Collection>
+
 #include <krss/feedlist.h>
 #include <krss/feedlistmodel.h>
 #include <krss/item.h>
@@ -591,10 +593,10 @@ void Akregator::MainWidget::addFeed(const QString& url, bool autoExec)
     std::auto_ptr<CreateFeedCommand> cmd( new CreateFeedCommand( this ) );
     cmd->setAutoExecute( autoExec );
     cmd->setUrl( url );
+    cmd->setParentCollection( m_selectionController->selectedCollection() );
     // FIXME: keep a shared pointer to the default resource in MainWidget
     const shared_ptr<KRss::NetResource> resource = KRss::ResourceManager::self()->resource(
                                                                 Settings::activeAkonadiResource() );
-    cmd->setResource( weak_ptr<KRss::NetResource>( resource ) );
     cmd->setFeedListView( m_feedListView );
     cmd->setFeedList( weak_ptr<KRss::FeedList>( m_feedList ) );
     d->setUpAndStart( cmd.release() );

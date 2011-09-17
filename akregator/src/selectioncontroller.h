@@ -37,6 +37,10 @@ class QPoint;
 
 class KJob;
 
+namespace Akonadi {
+    class Collection;
+}
+
 namespace KRss {
     class FeedList;
     class FeedItemModel;
@@ -72,11 +76,13 @@ public:
     //impl
     boost::shared_ptr<KRss::TreeNode> selectedSubscription() const;
 
+    Akonadi::Collection selectedCollection() const;
     //impl
     void setFeedList( const boost::shared_ptr<KRss::FeedList>& feedList );
 
     //impl
     void setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler );
+
 
 public Q_SLOTS:
 
