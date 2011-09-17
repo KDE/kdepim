@@ -101,9 +101,6 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
     if ( role == IsImportantRole )
         return RssItem::isImportant( akonadiItem );
 
-    if ( role == IsNewRole )
-        return RssItem::isNew( akonadiItem );
-
     if ( role == IsUnreadRole )
         return RssItem::isUnread( akonadiItem );
 

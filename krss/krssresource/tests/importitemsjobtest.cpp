@@ -75,7 +75,6 @@ void ImportItemsJobTest::testCorrectness()
         if ( item.remoteId() == QLatin1String("tag:blogger.com,1999:blog-6431293039768060590.post-962616740612527640") ) {
             // new + unread
             QVERIFY( item.flags().count() == 2 );
-            QVERIFY( item.hasFlag( KRss::RssItem::flagNew() ) );
             QVERIFY( !item.hasFlag( KRss::RssItem::flagRead() ) );
             QVERIFY( item.hasPayload<KRss::RssItem>() );
             const KRss::RssItem rssItem = item.payload<KRss::RssItem>();
@@ -116,7 +115,6 @@ void ImportItemsJobTest::testCorrectness()
         else if ( item.remoteId() == QLatin1String("http://hemswell.lincoln.ac.uk/~padams/index.php?entry=entry090317-065020") ) {
             // new (implies unread) + important
             QVERIFY( item.flags().count() == 3 );
-            QVERIFY( item.hasFlag( KRss::RssItem::flagNew() ) );
             QVERIFY( !item.hasFlag( KRss::RssItem::flagRead() ) );
             QVERIFY( item.hasFlag( KRss::RssItem::flagImportant() ) );
         }

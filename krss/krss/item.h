@@ -50,7 +50,6 @@ class KRSS_EXPORT Item
 {
 public:
     enum StatusFlag {
-        New         = 0x01,
         Unread      = 0x02,
         Important   = 0x04,
         Deleted     = 0x08
@@ -70,6 +69,8 @@ public:
     Item( const Item& other );
     ~Item();
 
+    Akonadi::Item akonadiItem() const;
+
     void swap( Item& other );
     Item& operator=( const Item& other );
     bool operator==( const Item& other ) const;
@@ -87,7 +88,6 @@ public:
     bool isImportant() const;
     bool isRead() const;
     bool isUnread() const;
-    bool isNew() const;
     bool isDeleted() const;
 
     int hash() const;

@@ -55,7 +55,6 @@ public:
     enum ItemRoles {
         ItemRole=EntityTreeModel::UserRole,
         SortRole,
-        IsNewRole,
         IsUnreadRole,
         IsReadRole,
         IsDeletedRole, //PENDING(frank) transitional Akregator compat, review

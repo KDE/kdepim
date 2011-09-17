@@ -79,7 +79,6 @@ void RssItemSyncTest::testSyncWithoutFlags()
     newItemNotChanged.setRemoteId( QLatin1String("remote-id-012345") );
     newItemNotChanged.setMimeType( QLatin1String("application/rss+xml") );
     newItemNotChanged.setPayload<KRss::RssItem>( originalArticle );
-    newItemNotChanged.setFlags( Akonadi::Item::Flags() << KRss::RssItem::flagNew() );
     QVERIFY( sync->updateItemExposed( storedItem, newItemNotChanged ) == false );
 
     // verify that itemsync detects updated articles
@@ -89,10 +88,8 @@ void RssItemSyncTest::testSyncWithoutFlags()
     newItemChanged.setRemoteId( QLatin1String("remote-id-012345") );
     newItemChanged.setMimeType( QLatin1String("application/rss+xml") );
     newItemChanged.setPayload<KRss::RssItem>( updatedArticle );
-    newItemChanged.setFlags( Akonadi::Item::Flags() << KRss::RssItem::flagNew() );
     QVERIFY( sync->updateItemExposed( storedItem, newItemChanged ) == true );
-    QCOMPARE( newItemChanged.flags(), Akonadi::Item::Flags() << KRss::RssItem::flagImportant() <<
-                                      KRss::RssItem::flagNew() );
+    QCOMPARE( newItemChanged.flags(), Akonadi::Item::Flags() << KRss::RssItem::flagImportant() );
 
     // verify that itemsync skips *updated* articles if their guid is hash
     originalArticle.setGuidIsHash( true );
@@ -102,7 +99,6 @@ void RssItemSyncTest::testSyncWithoutFlags()
     newItemChanged_Guid.setRemoteId( QLatin1String("remote-id-012345") );
     newItemChanged_Guid.setMimeType( QLatin1String("application/rss+xml") );
     newItemChanged_Guid.setPayload<KRss::RssItem>( updatedArticle );
-    newItemChanged_Guid.setFlags( Akonadi::Item::Flags() << KRss::RssItem::flagNew() );
     QVERIFY( sync->updateItemExposed( storedItem, newItemChanged_Guid ) == false );
 }
 

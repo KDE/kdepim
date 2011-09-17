@@ -87,7 +87,6 @@ private Q_SLOTS:
     void slotModifyTag();
     void slotDeleteTag();
     void slotManageSubscriptions();
-    void slotMarkItemNew();
     void slotMarkItemRead();
     void slotMarkItemUnread();
     void slotMarkItemImportant( bool checked );

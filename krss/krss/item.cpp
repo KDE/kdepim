@@ -62,6 +62,10 @@ Item::~Item()
 {
 }
 
+Akonadi::Item Item::akonadiItem() const {
+    return d->akonadiItem;
+}
+
 void Item::swap( Item& other )
 {
     std::swap( d, other.d );
@@ -333,9 +337,6 @@ Item::Status Item::status() const
 {
     //PENDING(frank) this looks like a candidate for caching
     Status stat;
-    if ( d->akonadiItem.hasFlag( RssItem::flagNew() ) )
-        stat |= Item::New;
-
     if ( !d->akonadiItem.hasFlag( RssItem::flagRead() ) )
         stat |= Item::Unread;
 
@@ -363,11 +364,6 @@ bool Item::isUnread() const
     return RssItem::isUnread( d->akonadiItem );
 }
 
-bool Item::isNew() const
-{
-    return RssItem::isNew( d->akonadiItem );
-}
-
 bool Item::isDeleted() const
 {
     return RssItem::isDeleted( d->akonadiItem );
@@ -376,9 +372,6 @@ bool Item::isDeleted() const
 void Item::setStatus( const Item::Status& stat )
 {
     Akonadi::Item::Flags flags;
-    if ( stat.testFlag( Item::New ) )
-        flags.insert( RssItem::flagNew() );
-
     if ( !stat.testFlag( Item::Unread ) )
         flags.insert( RssItem::flagRead() );
 
