@@ -25,10 +25,13 @@
 #include "articlelistview.h"
 #include "actionmanager.h"
 #include "akregatorconfig.h"
-
+#include "articlematcher.h"
 #include <utils/filtercolumnsproxymodel.h>
 
 #include <krss/feeditemmodel.h>
+
+#include <Akonadi/Item>
+#include <Akonadi/EntityTreeModel>
 
 #include <KIcon>
 #include <KLocale>
@@ -68,16 +71,15 @@ SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterP
 
 bool SortColorizeProxyModel::filterAcceptsRow ( int source_row, const QModelIndex& source_parent ) const
 {
-#ifdef KRSS_PORT_DISABLED
     if ( source_parent.isValid() )
         return false;
 
     for ( uint i = 0; i < m_matchers.size(); ++i )
     {
-        if ( !static_cast<ItemModel*>( sourceModel() )->rowMatches( source_row, m_matchers[i] ) )
+        const KRss::Item item = KRss::Item( sourceModel()->index( source_row, 0, source_parent ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
+        if ( !m_matchers[i]->matches( item ) )
             return false;
     }
-#endif //KRSS_PORT_DISABLED
     return true;
 }
 
@@ -332,27 +334,6 @@ void ArticleListView::mousePressEvent( QMouseEvent *ev )
         emit signalMouseButtonPressed( ev->button(), url );
     }
 }
-
-
-#if 0 // unused
-namespace {
-    static QString itemIdForIndex( const QModelIndex& index )
-    {
-        return index.isValid() ? index.data( ArticleModel::ItemIdRole ).toString() : QString();
-    }
-
-    static QStringList itemIdsForIndexes( const QModelIndexList& indexes )
-    {
-        QStringList articles;
-        Q_FOREACH ( const QModelIndex i, indexes )
-        {
-            articles.append( itemIdForIndex( i ) );
-        }
-
-        return articles;
-    }
-}
-#endif
 
 void ArticleListView::contextMenuEvent( QContextMenuEvent* event )
 {

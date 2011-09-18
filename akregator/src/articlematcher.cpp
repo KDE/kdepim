@@ -151,6 +151,13 @@ void Criterion::readConfig(KConfigGroup* config)
     }
 }
 
+static ArticleStatus convertStatus( Item::Status s ) {
+    if ( s & Item::Unread )
+        return Akregator::Unread;
+    else
+        return Akregator::Read;
+}
+
 bool Criterion::satisfiedBy( const Item& item ) const
 {
     QVariant concreteSubject;
@@ -167,7 +174,7 @@ bool Criterion::satisfiedBy( const Item& item ) const
             concreteSubject = QVariant(item.link());
             break;
         case Status:
-            concreteSubject = QVariant(item.status());
+            concreteSubject = QVariant(convertStatus(item.status()));
             break;
         case KeepFlag:
             concreteSubject = QVariant(item.isImportant());
