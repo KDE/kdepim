@@ -30,6 +30,8 @@
 #include <klocale.h>
 #include <kontactinterface/pimuniqueapplication.h>
 #include <QtDBus/QtDBus>
+
+#include <QDateTime>
 #include <QStringList>
 
 namespace Akregator {
@@ -89,6 +91,7 @@ int Application::newInstance()
 
 int main(int argc, char **argv)
 {
+    qsrand( QDateTime::currentDateTime().toTime_t() );
     Akregator::AboutData about;
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( Akregator::akregator_options() );

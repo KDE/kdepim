@@ -95,6 +95,7 @@ private Q_SLOTS:
     void itemIndexDoubleClicked( const QModelIndex& index );
     void subscriptionContextMenuRequested( const QPoint& point );
     void feedSelectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+
 private:
     void init();
 

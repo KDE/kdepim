@@ -38,9 +38,9 @@
 #include <Akonadi/Item>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+#include <akonadi/selectionproxymodel.h>
 #include <Akonadi/Session>
 
-#include <KSelectionProxyModel>
 #include <KDebug>
 
 #include <QAbstractItemView>
@@ -85,10 +85,12 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder( this );
     recorder->setSession( m_session );
     recorder->fetchCollection( true );
+    recorder->setAllMonitored();
     recorder->setCollectionFetchScope( cscope );
     recorder->setItemFetchScope( iscope );
     recorder->setCollectionMonitored( Akonadi::Collection::root() );
     recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
+
     m_itemModel = new FeedItemModel( recorder, this );
 }
 
@@ -132,7 +134,7 @@ void Akregator::SelectionController::init() {
              this, SLOT(feedSelectionChanged(QItemSelection,QItemSelection)) );
 
     m_feedSelectionResolved = new QItemSelectionModel( filterProxy, this );
-    KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedSelectionResolved );
+    Akonadi::SelectionProxyModel* selectionProxy = new Akonadi::SelectionProxyModel( m_feedSelectionResolved );
     selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxy->setSourceModel( m_itemModel );
 
@@ -195,32 +197,6 @@ Akonadi::Collection Akregator::SelectionController::selectedCollection() const
     return m_feedSelector->selectionModel()->currentIndex().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 }
 
-#ifdef KRSS_PORT_DISABLED
-void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedList>& feedList )
-{
-
-    if ( m_feedList == feedList )
-        return;
-
-    m_feedList = feedList;
-
-
-    if ( m_folderExpansionHandler ) {
-        m_folderExpansionHandler->setFeedList( m_feedList );
-        m_folderExpansionHandler->setModel( m_subscriptionModel );
-    }
-
-    if ( m_feedSelector ) {
-        Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( m_feedSelector );
-        filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-        filterProxy->setSourceModel( m_itemModel );
-        m_feedSelector->setModel( filterProxy );
-        connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                 this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
-    }
-}
-#endif
-
 void Akregator::SelectionController::setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler )
 {
 #ifdef KRSS_PORT_DISABLED
@@ -234,38 +210,6 @@ void Akregator::SelectionController::setFolderExpansionHandler( Akregator::Folde
 #endif
 }
 
-#ifdef KRSS_PORT_DISABLED
-void Akregator::SelectionController::articleHeadersAvailable( KJob* job )
-{
-    assert( job );
-    assert( job == m_listJob );
-
-
-    if ( job->error() ) {
-        kWarning() << job->errorText();
-        return;
-    }
-
-    kDebug() << "article listing took (ms):" << m_time.elapsed() << " for items:" << m_listJob->items().count();
-
-    m_itemListing.reset( new KRss::ItemListing( m_listJob->items(), m_listJob->fetchScope() ) );
-    KRss::ConnectToItemListingVisitor visitor ( m_feedList, m_itemListing );
-    selectedSubscription()->accept( &visitor );
-    KRss::ItemModel* const newModel = new KRss::ItemModel( m_itemListing, this );
-
-    m_articleLister->setIsAggregation( selectedSubscription()->tier() == KRss::TreeNode::TagTier );
-    m_articleLister->setItemModel( newModel );
-    delete m_itemModel; //order is important: do not delete the old model before the new model is set in the view
-    m_itemModel = newModel;
-
-    disconnect( m_articleLister->articleSelectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                this, SLOT(itemSelectionChanged()) );
-    connect( m_articleLister->articleSelectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-             this, SLOT(itemSelectionChanged()) );
-
-    m_articleLister->setScrollBarPositions( m_scrollBarPositions.value( m_selectedSubscription ) );
-}
-#endif //KRSS_PORT_DISABLED
 
 
 void Akregator::SelectionController::subscriptionContextMenuRequested( const QPoint& point )
