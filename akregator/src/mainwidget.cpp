@@ -34,6 +34,7 @@
 #include "browserframe.h"
 #include "createfeedcommand.h"
 #include "createtagcommand.h"
+#include "modifycommands.h"
 #include "deletesubscriptioncommand.h"
 #include "editsubscriptioncommand.h"
 #include "importfeedlistcommand.h"
@@ -729,6 +730,16 @@ void Akregator::MainWidget::slotMarkAllFeedsRead()
 
 void Akregator::MainWidget::slotMarkFeedRead()
 {
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+    if ( !c.isValid() )
+        return;
+    MarkAsReadCommand* cmd = new MarkAsReadCommand( this );
+
+    cmd->setCollection( c );
+    cmd->setSession( m_session );
+    connect( cmd, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
+    d->setUpAndStart( cmd );
+
 #ifdef KRSS_PORT_DISABLED
     const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
     if ( !treeNode )

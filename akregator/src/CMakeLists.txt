@@ -89,6 +89,7 @@ set(akregatorpart_PART_SRCS
    tabwidget.cpp
 #   progressmanager.cpp
    kernel.cpp
+   modifycommands.cpp
    akregator_part.cpp
    mainwidget.cpp
    notificationmanager.cpp
