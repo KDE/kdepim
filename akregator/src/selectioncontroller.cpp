@@ -73,6 +73,7 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     m_singleDisplay( 0 ),
     m_folderExpansionHandler( 0 ),
     m_itemModel( 0 ),
+    m_feedSelectionResolved( 0 ),
     m_session( session )
 {
     Akonadi::ItemFetchScope iscope;
@@ -107,6 +108,7 @@ void Akregator::SelectionController::setArticleLister( Akregator::ArticleLister*
 }
 
 void Akregator::SelectionController::init() {
+    Q_ASSERT( !m_feedSelectionResolved );
     if (  !m_feedSelector || !m_articleLister )
         return;
 
@@ -126,9 +128,12 @@ void Akregator::SelectionController::init() {
 
     m_feedSelector->setModel( filterProxy );
 
-    KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedSelector->selectionModel() );
-    selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+    connect( m_feedSelector->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+             this, SLOT(feedSelectionChanged(QItemSelection,QItemSelection)) );
 
+    m_feedSelectionResolved = new QItemSelectionModel( filterProxy, this );
+    KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedSelectionResolved );
+    selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxy->setSourceModel( m_itemModel );
 
     Akonadi::EntityMimeTypeFilterModel* filterProxy2 = new Akonadi::EntityMimeTypeFilterModel;
@@ -137,11 +142,33 @@ void Akregator::SelectionController::init() {
     filterProxy2->setSortRole( FeedItemModel::SortRole );
     filterProxy2->setDynamicSortFilter( true );
     filterProxy2->setSourceModel( selectionProxy );
+
     m_articleLister->setItemModel( filterProxy2 );
     connect( m_articleLister->articleSelectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
                 this, SLOT(itemSelectionChanged()) );
     connect( m_articleLister->itemView(), SIGNAL(doubleClicked(QModelIndex)),
              this, SLOT(itemIndexDoubleClicked(QModelIndex))  );
+}
+
+static QModelIndexList collectLeaves( const QModelIndex& idx ) {
+    const int cc = idx.model()->rowCount( idx );
+    if (  cc == 0 )
+        return QModelIndexList() << idx;
+    QModelIndexList l;
+    for ( int i = 0; i < cc; ++i )
+        l << collectLeaves( idx.child( i, 0 ) );
+    return l;
+}
+
+void Akregator::SelectionController::feedSelectionChanged ( const QItemSelection & selected, const QItemSelection & deselected )
+{
+    m_feedSelectionResolved->clear();
+    const QModelIndexList sel = selected.indexes();
+    if ( sel.isEmpty() )
+        return;
+    Q_FOREACH( const QModelIndex& i, sel )
+        Q_FOREACH( const QModelIndex& j, collectLeaves( i ) )
+            m_feedSelectionResolved->select( j, QItemSelectionModel::Select|QItemSelectionModel::Rows );
 }
 
 void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIndex& ) {

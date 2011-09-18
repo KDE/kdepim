@@ -32,6 +32,8 @@
 
 class QModelIndex;
 class QPoint;
+class QItemSelection;
+class QItemSelectionModel;
 
 class KJob;
 
@@ -92,7 +94,7 @@ private Q_SLOTS:
     void fullItemFetched( KJob* );
     void itemIndexDoubleClicked( const QModelIndex& index );
     void subscriptionContextMenuRequested( const QPoint& point );
-
+    void feedSelectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 private:
     void init();
 
@@ -102,6 +104,7 @@ private:
     Akregator::SingleArticleDisplay* m_singleDisplay;
     Akregator::FolderExpansionHandler* m_folderExpansionHandler;
     KRss::FeedItemModel* m_itemModel;
+    QItemSelectionModel* m_feedSelectionResolved;
     QMap<Akonadi::Collection, QPoint> m_scrollBarPositions;
     Akonadi::Session* m_session;
 };
