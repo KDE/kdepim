@@ -169,6 +169,14 @@ void FilterManager::Private::modifyJobResult( KJob *job )
   if ( job->error() ) {
     kError() << "Error while modifying items. " << job->error() << job->errorString();
     // TODO: kmail should tell the user that this failed
+  } else {
+    Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job );
+
+    const Akonadi::Collection collection = job->property( "moveTargetCollection" ).value<Akonadi::Collection>();
+    if ( collection.isValid() ) {
+      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( modifyJob->item(), collection, q );
+      q->connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+    }
   }
 }
 
@@ -406,16 +414,16 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
 
   if ( context.needsPayloadStore() ) {
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+    modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
   } else if ( context.needsFlagStore() ) {
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
     modifyJob->setIgnorePayload( true );
+    modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
   }
 
   if ( context.moveTargetCollection().isValid() ) {
-    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-    connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
     return 0;
   }
 
