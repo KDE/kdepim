@@ -82,7 +82,9 @@ public:
     QList<TagId> tags() const;
     void setTags( const QList<TagId>& tags );
 
+    static Item::Status status( const Akonadi::Item& aitem );
     Item::Status status() const;
+    static void setStatus( Akonadi::Item& aitem, const Item::Status& stat );
     void setStatus( const Item::Status& stat );
 
     bool isImportant() const;

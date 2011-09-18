@@ -333,20 +333,25 @@ void Item::setHash( int hash )
     d->akonadiItem.setPayload<RssItem>( payload );
 }
 
-Item::Status Item::status() const
+Item::Status Item::status( const Akonadi::Item& aitem )
 {
     //PENDING(frank) this looks like a candidate for caching
     Status stat;
-    if ( !d->akonadiItem.hasFlag( RssItem::flagRead() ) )
+    if ( !aitem.hasFlag( RssItem::flagRead() ) )
         stat |= Item::Unread;
 
-    if ( d->akonadiItem.hasFlag( RssItem::flagImportant() ) )
+    if ( aitem.hasFlag( RssItem::flagImportant() ) )
         stat |= Item::Important;
 
-    if ( d->akonadiItem.hasFlag( RssItem::flagDeleted() ) )
+    if ( aitem.hasFlag( RssItem::flagDeleted() ) )
         stat |= Item::Deleted;
 
     return stat;
+}
+
+Item::Status Item::status() const
+{
+    return status( d->akonadiItem );
 }
 
 bool Item::isImportant() const
@@ -369,7 +374,7 @@ bool Item::isDeleted() const
     return RssItem::isDeleted( d->akonadiItem );
 }
 
-void Item::setStatus( const Item::Status& stat )
+void Item::setStatus( Akonadi::Item& aitem, const Item::Status& stat )
 {
     Akonadi::Item::Flags flags;
     if ( !stat.testFlag( Item::Unread ) )
@@ -381,7 +386,12 @@ void Item::setStatus( const Item::Status& stat )
     if ( stat.testFlag( Item::Deleted ) )
         flags.insert( RssItem::flagDeleted() );
 
-    d->akonadiItem.setFlags( flags );
+    aitem.setFlags( flags );
+}
+
+void Item::setStatus( const Item::Status& stat )
+{
+    setStatus( d->akonadiItem, stat );
 }
 
 int Item::sourceFeedId() const
