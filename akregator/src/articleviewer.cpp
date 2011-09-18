@@ -179,6 +179,10 @@ ArticleViewer::ArticleViewer(QWidget *parent)
     connect(KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotPaletteOrFontChanged()) );
 
     m_htmlFooter = "</body></html>";
+
+    m_updateTimer.setInterval( 50 );
+    m_updateTimer.setSingleShot( true );
+    connect( &m_updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdateCombinedView()) );
 }
 
 ArticleViewer::~ArticleViewer()
@@ -574,24 +578,11 @@ bool ArticleViewer::openUrl(const KUrl& url)
     return true;
 }
 
-void ArticleViewer::setFilters(const std::vector< shared_ptr<const AbstractMatcher> >& filters )
-{
-    if ( filters == m_filters )
-        return;
-
-    m_filters = filters;
-
-    slotUpdateCombinedView();
-}
-
 void ArticleViewer::slotUpdateCombinedView()
 {
     if (m_viewMode != CombinedView)
         return;
 
-   int num = 0;
-   QTime spent;
-   spent.start();
 
    QVector<KRss::Item> items;
 
@@ -602,60 +593,13 @@ void ArticleViewer::slotUpdateCombinedView()
        items.append( item );
    }
 
-#ifdef KRSS_PORT_DISABLED
-   const std::vector< shared_ptr<const AbstractMatcher> >::const_iterator filterEnd = m_filters.end();
-#endif //KRSS_PORT_DISABLED
-
    QString text;
-
    Q_FOREACH( const Item& i, items )
-   {
-       if ( i.isDeleted() )
-           continue;
-
-#ifdef KRSS_PORT_DISABLED
-       if ( std::find_if( m_filters.begin(), m_filters.end(), !bind( &AbstractMatcher::matches, _1, i ) ) != filterEnd )
-           continue;
-#endif // KRSS_PORT_DISABLED
-
        text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, ArticleFormatter::NoIcon)+"</div><p>";
-       ++num;
-   }
 
-   kDebug() <<"Combined view rendering: (" << num <<" articles):" <<"generating HTML:" << spent.elapsed() <<"ms";
    renderContent(text);
-   kDebug() <<"HTML rendering:" << spent.elapsed() <<"ms";
 }
 
-#ifdef KRSS_PORT_DISABLED
-void ArticleViewer::slotArticlesUpdated(TreeNode* /*node*/, const QList<Article>& /*list*/)
-{
-    if (m_viewMode == CombinedView) {
-        //TODO
-        slotUpdateCombinedView();
-    }
-}
-
-void ArticleViewer::slotArticlesAdded(TreeNode* /*node*/, const QList<Article>& list)
-{
-    if (m_viewMode == CombinedView) {
-        //TODO sort list, then merge
-        m_articles << list;
-        std::sort( m_articles.begin(), m_articles.end() );
-        slotUpdateCombinedView();
-    }
-}
-
-void ArticleViewer::slotArticlesRemoved(TreeNode* /*node*/, const QList<Article>& list )
-{
-    Q_UNUSED(list)
-
-    if (m_viewMode == CombinedView) {
-        //TODO
-        slotUpdateCombinedView();
-    }
-}
-#endif //KRSS_PORT_DISABLED
 
 void ArticleViewer::slotClear()
 {
@@ -668,10 +612,35 @@ void ArticleViewer::slotClear()
     renderContent(QString());
 }
 
+void ArticleViewer::triggerUpdate() {
+    if ( !m_updateTimer.isActive() )
+        m_updateTimer.start();
+}
+
 void ArticleViewer::showNode( QAbstractItemModel* m )
 {
     m_viewMode = CombinedView;
 
+    if ( m_model == m )
+        return;
+
+    if ( m_model )
+        m_model->disconnect( this );
+
+    m_model = m;
+
+    connect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+             this, SLOT(triggerUpdate()) );
+    connect( m_model, SIGNAL(layoutChanged()),
+             this, SLOT(triggerUpdate()) );
+    connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+             this, SLOT(triggerUpdate()) );
+    connect( m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+             this, SLOT(triggerUpdate()) );
+    connect( m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+             this, SLOT(triggerUpdate()) );
+
+    //PENDING(frank): don't repaint synchronously for each signal fired
     slotUpdateCombinedView();
 }
 

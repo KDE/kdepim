@@ -88,8 +88,6 @@ public Q_SLOTS:
     void forceFilterUpdate();
 
 private Q_SLOTS:
-
-    void selectedSubscriptionChanged( const QModelIndex& );
     void itemSelectionChanged();
     void fullItemFetched( KJob* );
     void itemIndexDoubleClicked( const QModelIndex& index );

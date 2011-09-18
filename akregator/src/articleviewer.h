@@ -32,6 +32,7 @@
 #include <Akonadi/Collection>
 
 #include <QPointer>
+#include <QTimer>
 #include <QWidget>
 
 #include <boost/shared_ptr.hpp>
@@ -89,10 +90,6 @@ class ArticleViewer : public QWidget
         void slotZoomOut();
         void slotSetZoomFactor(int percent);
         void slotPrint();
-
-        /** Set filters which will be used if the viewer is in combined view mode
-         */
-        void setFilters( const std::vector< boost::shared_ptr<const Akregator::Filters::AbstractMatcher> >& filters );
 
         /** Update view if combined view mode is set. Has to be called when
          * the displayed node gets modified.
@@ -163,12 +160,7 @@ class ArticleViewer : public QWidget
 
         void slotSelectionChanged();
 
-#ifdef KRSS_PORT_DISABLED
-        void slotArticlesUpdated(Akregator::TreeNode* node, const QList<Akregator::Article>& list);
-        void slotArticlesAdded(Akregator::TreeNode* node, const QList<Akregator::Article>& list);
-        void slotArticlesRemoved(Akregator::TreeNode* node, const QList<Akregator::Article>& list);
-#endif //KRSS_PORT_DISABLED
-
+        void triggerUpdate();
     // from ArticleViewer
     private:
 
@@ -194,6 +186,7 @@ class ArticleViewer : public QWidget
         void setArticleActionsEnabled(bool enabled);
 
     private:
+        QTimer m_updateTimer;
         KUrl m_url;
         QString m_normalModeCSS;
         QString m_combinedModeCSS;
@@ -202,7 +195,6 @@ class ArticleViewer : public QWidget
         KUrl m_imageDir;
         KUrl m_link;
         Akonadi::Collection::Id m_collectionId;
-        std::vector<boost::shared_ptr<const Filters::AbstractMatcher> > m_filters;
         enum ViewMode { NormalView, CombinedView, SummaryView };
         ViewMode m_viewMode;
         ArticleViewerPart* m_part;

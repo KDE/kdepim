@@ -125,8 +125,6 @@ void Akregator::SelectionController::init() {
 
     connect( m_feedSelector, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(subscriptionContextMenuRequested(QPoint)) );
-    connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-             this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
 
     m_feedSelector->setModel( filterProxy );
 
@@ -166,16 +164,16 @@ void Akregator::SelectionController::feedSelectionChanged ( const QItemSelection
 {
     m_feedSelectionResolved->clear();
     const QModelIndexList sel = selected.indexes();
-    if ( sel.isEmpty() )
+    if ( sel.isEmpty() ) {
+        emit currentCollectionChanged( selectedCollection() );
         return;
+    }
     Q_FOREACH( const QModelIndex& i, sel )
         Q_FOREACH( const QModelIndex& j, collectLeaves( i ) )
             m_feedSelectionResolved->select( j, QItemSelectionModel::Select|QItemSelectionModel::Rows );
-}
-
-void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIndex& ) {
     emit currentCollectionChanged( selectedCollection() );
 }
+
 
 void Akregator::SelectionController::setSingleArticleDisplay( Akregator::SingleArticleDisplay* display )
 {
