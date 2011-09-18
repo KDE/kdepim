@@ -44,6 +44,11 @@ FeedCollection::FeedCollection( const Akonadi::Collection &collection )
 {
 }
 
+bool FeedCollection::isFolder() const
+{
+    return xmlUrl().isEmpty();
+}
+
 Feed::Id FeedCollection::feedId() const
 {
     return feedIdFromAkonadi( id() );

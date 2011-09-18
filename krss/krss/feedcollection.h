@@ -35,6 +35,8 @@ public:
     FeedCollection();
     FeedCollection( const Akonadi::Collection &collection );
 
+    bool isFolder() const;
+
     Feed::Id feedId() const;
     QString title() const;
     void setTitle( const QString &title );
