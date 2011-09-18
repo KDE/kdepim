@@ -95,7 +95,6 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
 
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
-  changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
   changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   changeRecorder()->itemFetchScope().setCacheOnly( true );
   if (m_filterManager->requiresFullMailBody()) {
@@ -114,6 +113,12 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
+  /* The monitor mimetype filter would override the collection filter, therefor we have to check
+   * for the mimetype of the item here.
+   */
+  if ( item.mimeType() != KMime::Message::mimeType() )
+    return;
+
   m_filterManager->process( item, FilterManager::Inbound, true, collection.resource() );
 }
 
