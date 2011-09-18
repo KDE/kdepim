@@ -52,8 +52,6 @@ public:
 
     /* reimp */ void start();
 
-    void waitForFinished();
-
     /**
      * whether the UI should display the job e.g. via progress items
      * defaults to @p true

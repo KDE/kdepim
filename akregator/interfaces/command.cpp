@@ -76,11 +76,5 @@ void Command::setUserVisible( bool visible ) {
     d->userVisible = visible;
 }
 
-void Command::waitForFinished()
-{
-    QEventLoop loop;
-    connect( this, SIGNAL( finished(KJob*) ), &loop, SLOT( quit() ) );
-    loop.exec();
-}
 
 #include "command.moc"
