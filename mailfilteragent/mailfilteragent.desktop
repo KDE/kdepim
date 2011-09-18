@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=EMail Filter Agent
+Name[lt]=El. pašto filtrų agentas
+Name[pt_BR]=Agente de filtros de e-mails
+Name[sv]=E-postfiltreringsmodul
+Name[uk]=Агент фільтрування пошти
+Name[x-test]=xxEMail Filter Agentxx
 Comment=Extension to filter emails
+Comment[lt]=Įskiepis el. laiškų filtravimui
+Comment[pt_BR]=Extensão para filtros de e-mails
+Comment[sv]=Utökning för att filtrera e-post
+Comment[uk]=Додаток для фільтрування поштових повідомлень
+Comment[x-test]=xxExtension to filter emailsxx
 Type=AkonadiAgent
 Exec=akonadi_mailfilter_agent
 Icon=view-filter
