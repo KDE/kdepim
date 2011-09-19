@@ -57,6 +57,7 @@
 #include <Akonadi/ItemModifyJob>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDeleteJob>
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/Session>
 
 #include <krss/feedcollection.h>
@@ -561,13 +562,13 @@ void Akregator::MainWidget::addFeed(const QString& url, bool autoExec)
     d->setUpAndStart( cmd.release() );
 }
 
-void Akregator::MainWidget::slotTagAdd()
+void Akregator::MainWidget::slotFolderAdd()
 {
-#ifdef KRSS_PORT_DISABLED
-    std::auto_ptr<CreateTagCommand> cmd( new CreateTagCommand( m_tagProvider, this ) );
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+    std::auto_ptr<CreateFolderCommand> cmd( new CreateFolderCommand( c, QString(), this ) );
+    cmd->setSession( m_session );
     cmd->setFeedListView( m_feedListView );
     d->setUpAndStart( cmd.release() );
-#endif
 }
 
 void Akregator::MainWidget::slotFeedRemove()
@@ -604,46 +605,34 @@ void Akregator::MainWidget::slotFeedModify()
     d->setUpAndStart( cmd.release() );
 }
 
-void Akregator::MainWidget::slotFeedRemoveTag()
-{
-#if 0
-    const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
-    RemoveTagFromFeedVisitor v( m_feedList );
-    treeNode->accept( &v );
-#endif
-}
-
 void Akregator::MainWidget::slotNextUnreadArticle()
 {
-#ifdef KRSS_PORT_DISABLED
     if (m_viewMode == CombinedView)
     {
         m_feedListView->slotNextUnreadFeed();
         return;
     }
-    const shared_ptr<KRss::TreeNode> sel = m_selectionController->selectedSubscription();
-    if (sel && sel->unreadCount( m_feedList ) > 0)
+    const QModelIndex c = m_selectionController->selectedCollectionIndex();
+
+    if ( c.data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() > 0 )
         m_articleListView->slotNextUnreadArticle();
     else
         m_feedListView->slotNextUnreadFeed();
-#endif
 }
 
 void Akregator::MainWidget::slotPrevUnreadArticle()
 {
-#ifdef KRSS_PORT_DISABLED
     if (m_viewMode == CombinedView)
     {
         m_feedListView->slotPrevUnreadFeed();
         return;
     }
-    const shared_ptr<KRss::TreeNode> sel = m_selectionController->selectedSubscription();
+    const QModelIndex c = m_selectionController->selectedCollectionIndex();
 
-    if (sel && sel->unreadCount( m_feedList ) > 0)
+    if ( c.data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() > 0 )
         m_articleListView->slotPreviousUnreadArticle();
     else
         m_feedListView->slotPrevUnreadFeed();
-#endif
 }
 
 void Akregator::MainWidget::slotMarkAllFeedsRead()
@@ -673,22 +662,6 @@ void Akregator::MainWidget::slotMarkFeedRead()
     cmd->setCollection( c );
     cmd->setSession( m_session );
     d->setUpAndStart( cmd );
-
-#ifdef KRSS_PORT_DISABLED
-    const shared_ptr<KRss::TreeNode> treeNode = m_selectionController->selectedSubscription();
-    if ( !treeNode )
-        return;
-
-    KRss::CreateStatusModifyJobVisitor visitor( m_feedList );
-    treeNode->accept( &visitor );
-    KRss::StatusModifyJob * const job = visitor.statusModifyJob();
-    job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
-#ifdef WITH_LIBKDEPIM
-    ProgressManager::self()->addJob( job );
-#endif
-    job->start();
-#endif
 }
 
 void Akregator::MainWidget::slotSetTotalUnread()

@@ -27,8 +27,10 @@
 
 #include "command.h"
 
-#include <boost/shared_ptr.hpp>
-
+namespace Akonadi {
+    class Collection;
+    class Session;
+}
 namespace KRss {
     class FeedListView;
     class TagProvider;
@@ -37,27 +39,25 @@ namespace KRss {
 namespace Akregator {
 
 class Folder;
-class SubscriptionListView;
-class TreeNode;
 
-class CreateTagCommand : public Command
+class CreateFolderCommand : public Command
 {
     Q_OBJECT
 public:
-    explicit CreateTagCommand( const boost::shared_ptr<const KRss::TagProvider>& tagProvider, QObject* parent = 0 );
-    ~CreateTagCommand();
+    explicit CreateFolderCommand( const Akonadi::Collection& parentCollection, const QString& name, QObject* parent = 0 );
+    ~CreateFolderCommand();
 
+    void setSession( Akonadi::Session* );
     void setFeedListView( KRss::FeedListView* view );
 
-private:
+protected:
     void doStart();
     void doAbort();
 
 private:
     class Private;
     Private* const d;
-    Q_PRIVATE_SLOT( d, void doCreate() )
-    Q_PRIVATE_SLOT( d, void tagCreateJobFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionCreated( KJob* ) )
 };
 
 }

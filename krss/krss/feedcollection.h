@@ -35,6 +35,8 @@ public:
     FeedCollection();
     FeedCollection( const Akonadi::Collection &collection );
 
+    static Akonadi::Collection findFolder( const Akonadi::Collection& c );
+
     bool isFolder() const;
 
     Feed::Id feedId() const;

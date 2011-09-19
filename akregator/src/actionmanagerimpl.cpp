@@ -72,7 +72,6 @@ public:
     ArticleViewer* articleViewer;
     Part* part;
     TrayIcon* trayIcon;
-    KActionMenu* tagMenu;
     KActionCollection* actionCollection;
     TabWidget* tabWidget;
     KAction* speakSelectedArticlesAction;
@@ -86,49 +85,33 @@ void ActionManagerImpl::slotNodeSelected( const Akonadi::Collection& c )
         return;
 
     KRss::FeedCollection fc( c );
-    if (!fc.xmlUrl().isEmpty() ) {
+    if ( !fc.isFolder() ) {
         QAction* remove = action("feed_remove");
         if (remove)
             remove->setEnabled(true);
-#ifdef KRSS_PORT_DISABLED
         if ( QAction* const a = action("feed_homepage") ) {
-            a->setEnabled(!feed->htmlUrl().isEmpty());
+            a->setEnabled(!fc.htmlUrl().isEmpty());
         }
-
-        if ( QAction* a = action("feed_remove_tag") ) {
-            const shared_ptr<const TagNode> tag = feedNode->parent();
-            a->setText( i18n("&Remove Tag \"%1\"", tag->tag().label()) );
-            a->setVisible( true );
-            a->setEnabled( tag->taggedFeedsUserEditable() );
-        }
-#endif //KRSS_PORT_DISABLED
 
         action("feed_fetch")->setText(i18n("&Fetch Feed"));
         action("feed_remove")->setText(i18n("&Delete Feed"));
         action("feed_modify")->setText(i18n("&Edit Feed..."));
         action("feed_mark_feed_as_read")->setText(i18n("&Mark Feed as Read"));
     } else {
-#ifdef KRSS_PORT_DISABLED
         QAction* remove = action("feed_remove");
         if (remove)
-            remove->setEnabled( !tagNode->tag().isNull() );
+            remove->setEnabled( true );
         QAction* hp = action("feed_homepage");
         if (hp)
             hp->setEnabled(false);
 
         action("feed_fetch")->setText(i18n("&Fetch Feeds"));
         if ( QAction* const a = action("feed_remove") ) {
-            a->setText( i18n("&Delete Tag") );
-            a->setEnabled( tagNode->isDeletable() );
+            a->setText( i18n("&Delete Folder") );
+            a->setEnabled( c.parentCollection().isValid() );
         }
-        action("feed_modify")->setText(i18n("&Modify Tag"));
-
-        if ( QAction* const a = action("feed_remove_tag") ) {
-            a->setVisible( false );
-            a->setEnabled( false );
-        }
+        action("feed_modify")->setText(i18n("&Modify Folder"));
         action("feed_mark_feed_as_read")->setText(i18n("&Mark Feeds as Read"));
-#endif
     }
 }
 
@@ -141,7 +124,6 @@ ActionManagerImpl::ActionManagerImpl(Part* part, QObject* parent ) : ActionManag
     d->articleViewer = 0;
     d->mainWidget = 0;
     d->tabWidget = 0;
-    d->tagMenu = 0;
     d->frameManager = 0;
     d->speakSelectedArticlesAction = 0;
     d->actionCollection = part->actionCollection();
@@ -204,9 +186,9 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotFeedAdd()));
     action->setShortcuts(KShortcut( "Insert" ));
 
-    action = coll->addAction("tag_add");
-    action->setText(i18n("Ne&w Tag..."));
-    connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotTagAdd()));
+    action = coll->addAction("folder_add");
+    action->setText(i18n("Ne&w Folder..."));
+    connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotFolderAdd()));
     action->setShortcuts(KShortcut( "Shift+Insert" ));
 
     action = coll->addAction("feed_remove");
@@ -214,10 +196,6 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     action->setText(i18n("&Delete Feed"));
     connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotFeedRemove()));
     action->setShortcuts(KShortcut( "Alt+Delete" ));
-
-    action = coll->addAction("feed_remove_tag");
-    action->setText(i18n("&Remove Tag..."));
-    connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotFeedRemoveTag()));
 
     action = coll->addAction("feed_modify");
     action->setIcon(KIcon("document-properties"));

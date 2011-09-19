@@ -32,6 +32,7 @@
 class QAbstractItemModel;
 class QAbstractItemView;
 class QItemSelectionModel;
+class QModelIndex;
 class QPoint;
 
 namespace KRss {
@@ -101,6 +102,8 @@ public:
     virtual KRss::Item currentItem() const = 0;
 
     virtual QList<KRss::Item> selectedItems() const = 0;
+
+    virtual QModelIndex selectedCollectionIndex() const = 0;
 
     virtual Akonadi::Collection selectedCollection() const = 0;
 public Q_SLOTS:

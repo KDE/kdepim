@@ -156,14 +156,12 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         /** adds a new feed to the feed tree */
         void slotFeedAdd();
-        /** adds a new tag to the feed tree */
-        void slotTagAdd();
+        /** adds a new folder to the feed tree */
+        void slotFolderAdd();
         /** removes the currently selected feed (ask for confirmation)*/
         void slotFeedRemove();
         /** calls the properties dialog for feeds, starts renaming for feed groups */
         void slotFeedModify();
-        /** removes the feed from the current tag */
-        void slotFeedRemoveTag();
         /** fetches the currently selected feed */
         void slotFetchCurrentFeed();
         /** starts fetching of all feeds in the tree */

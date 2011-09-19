@@ -73,6 +73,8 @@ public:
     //impl
     void setSingleArticleDisplay( Akregator::SingleArticleDisplay* display );
 
+    QModelIndex selectedCollectionIndex() const;
+
     Akonadi::Collection selectedCollection() const;
 
     //impl

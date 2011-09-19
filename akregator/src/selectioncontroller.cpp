@@ -189,6 +189,10 @@ QList<KRss::Item> Akregator::SelectionController::selectedItems() const
     return ::itemsForIndexes( m_articleLister->articleSelectionModel()->selectedRows() );
 }
 
+QModelIndex Akregator::SelectionController::selectedCollectionIndex() const {
+    return m_feedSelector->selectionModel()->currentIndex();
+}
+
 Akonadi::Collection Akregator::SelectionController::selectedCollection() const
 {
     return m_feedSelector->selectionModel()->currentIndex().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();

@@ -25,98 +25,105 @@
 #include "createtagcommand.h"
 #include "command_p.h"
 
-#include <krss/tag.h>
-#include <krss/tagjobs.h>
-#include <krss/tagprovider.h>
-#include <krss/ui/feedlistview.h>
-#include <krss/ui/tagpropertiesdialog.h>
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionCreateJob>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/Item>
+#include <Akonadi/Session>
 
-#include <KDebug>
-#include <KInputDialog>
+#include <krss/feedcollection.h>
+#include <krss/item.h>
+#include <krss/ui/feedlistview.h>
+
 #include <KLocalizedString>
-#include <KMessageBox>
 
 #include <QPointer>
-#include <QTimer>
 
-#include <cassert>
-
+using namespace Akonadi;
 using namespace Akregator;
-using namespace boost;
 using namespace KRss;
 
-class CreateTagCommand::Private
+class CreateFolderCommand::Private
 {
-    CreateTagCommand* const q;
+    CreateFolderCommand* const q;
 public:
-    explicit Private( const shared_ptr<const TagProvider>& tagProvider, CreateTagCommand* qq );
+    explicit Private( const Collection& c, const QString& title, CreateFolderCommand* qq );
 
-    void doCreate();
-    void tagCreateJobFinished( KJob* );
+    void collectionCreated( KJob* );
 
     QPointer<FeedListView> feedListView;
-    shared_ptr<const TagProvider> tagProvider;
+    Collection parentCollection;
+    QString title;
+    Session* session;
 };
 
-CreateTagCommand::Private::Private( const shared_ptr<const TagProvider>& tp, CreateTagCommand* qq )
-  : q( qq ),
-    feedListView(),
-    tagProvider( tp )
+CreateFolderCommand::Private::Private( const Collection& parent, const QString& t, CreateFolderCommand* qq )
+    : q( qq )
+    , parentCollection( parent )
+    , title( t )
+    , session( 0 )
+
 {
-    assert( tagProvider );
+    q->setUserVisible( false );
+    q->setShowErrorDialog( true );
 }
 
-void CreateTagCommand::Private::doCreate()
+void CreateFolderCommand::Private::collectionCreated( KJob* j )
 {
-    EmitResultGuard guard( q );
-    QPointer<KRss::TagPropertiesDialog> dialog( new KRss::TagPropertiesDialog( q->parentWidget() ) );
-    if ( dialog->exec() != KDialog::Accepted || !guard.exists() ) {
-        guard.emitResult();
+    if ( j->error() ) {
+        q->setError( KJob::UserDefinedError );
+        q->setErrorText( j->errorText() );
+        q->emitResult();
         return;
     }
-
-    KRss::Tag newTag;
-    newTag.setLabel( dialog->label() );
-    newTag.setDescription( dialog->description() );
-    delete dialog;
-
-    KRss::TagCreateJob * const job = tagProvider->tagCreateJob();
-    assert( job );
-    job->setTag( newTag );
-    connect( job, SIGNAL(finished(KJob*)), q, SLOT(tagCreateJobFinished(KJob*)) );
-    job->start();
-}
-
-void CreateTagCommand::Private::tagCreateJobFinished( KJob* j )
-{
-    EmitResultGuard guard( q );
-    if ( j->error() )
-        KMessageBox::error( q->parentWidget(), i18n("Could not create the tag: %1", j->errorString() ), i18n("Tag Creation Error") );
-    const KRss::TagCreateJob* const job = qobject_cast<const KRss::TagCreateJob*>( j );
-    assert( job );
+#ifdef KRSS_PORT_DISABLED
     if ( feedListView )
         feedListView->scrollToTag( job->tag() );
-    guard.emitResult();
+#endif
+    q->emitResult();
 }
 
-CreateTagCommand::CreateTagCommand( const shared_ptr<const TagProvider>& tagProvider, QObject* parent ) : Command( parent ), d( new Private( tagProvider, this ) )
+CreateFolderCommand::CreateFolderCommand( const Collection& pc, const QString& t, QObject* parent ) : Command( parent ), d( new Private( pc, t, this ) )
 {
-
 }
 
-CreateTagCommand::~CreateTagCommand()
+CreateFolderCommand::~CreateFolderCommand()
 {
     delete d;
 }
 
-void CreateTagCommand::setFeedListView( FeedListView* view )
+void CreateFolderCommand::setSession( Session* s ) {
+    d->session = s;
+}
+
+void CreateFolderCommand::setFeedListView( FeedListView* view )
 {
     d->feedListView = view;
 }
 
-void CreateTagCommand::doStart()
+void CreateFolderCommand::doStart()
 {
-    QTimer::singleShot( 0, this, SLOT( doCreate() ) );
+    Q_ASSERT( d->session );
+
+    d->parentCollection = FeedCollection::findFolder( d->parentCollection );
+    if ( !d->parentCollection.isValid() ) {
+        setError( KJob::UserDefinedError );
+        setErrorText( tr("Invalid parent collection. Cannot create folder") );
+        emitResult();
+        return;
+    }
+
+    const QString title = !d->title.isEmpty() ? d->title : i18n("New Folder");
+
+    Collection c;
+    c.setParentCollection( d->parentCollection );
+    c.setRemoteId( title );
+    c.setName( title );
+    c.setContentMimeTypes( QStringList( Collection::mimeType() ) );
+    c.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( title );
+    CollectionCreateJob * const job = new CollectionCreateJob( c, d->session );
+    connect( job, SIGNAL(finished(KJob*)), this, SLOT(collectionCreated(KJob*)) );
+    job->start();
 }
 
 #include "createtagcommand.moc"
