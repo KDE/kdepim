@@ -45,6 +45,7 @@ private:
     void doStart();
 
 private Q_SLOTS:
+    void collectionsFetched( KJob* );
     void itemsFetched( KJob* );
     void itemsModified( KJob* );
 
