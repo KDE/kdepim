@@ -23,6 +23,10 @@
 */
 
 #include "command.h"
+#include "command_p.h"
+
+#include <KLocalizedString>
+#include <KMessageBox>
 
 #include <QEventLoop>
 #include <QPointer>
@@ -30,21 +34,44 @@
 
 using namespace Akregator;
 
+ShowErrorJob::ShowErrorJob( const QString& errorText, QWidget* parent )
+    : KJob( parent )
+    , m_parentWidget( parent )
+    , m_errorText( errorText )
+{
+}
+
+void ShowErrorJob::start() {
+    QMetaObject::invokeMethod( this, "doStart", Qt::QueuedConnection );
+}
+
+void ShowErrorJob::doStart() {
+    QPointer<QObject> that( this );
+    KMessageBox::error( m_parentWidget, m_errorText, i18nc("msg box caption", "Error") );
+    if ( that )
+        emitResult();
+}
+
 class Command::Private
 {
 public:
     Private();
     QPointer<QWidget> parentWidget;
     bool userVisible;
+    bool showErrorDialog;
 };
 
-Command::Private::Private() : parentWidget(), userVisible( true )
+Command::Private::Private()
+    : parentWidget()
+    , userVisible( true )
+    , showErrorDialog( false )
 {
 }
 
 Command::Command( QObject* parent ) : KJob( parent ), d( new Private )
 {
-
+    connect( this, SIGNAL(finished(KJob*)),
+             this, SLOT(jobFinished()) );
 }
 
 Command::~Command()
@@ -64,6 +91,11 @@ void Command::setParentWidget( QWidget* parentWidget )
 
 void Command::start()
 {
+    QMetaObject::invokeMethod( this, "delayedStart", Qt::QueuedConnection );
+}
+
+void Command::delayedStart()
+{
     doStart();
     emit started();
 }
@@ -76,5 +108,16 @@ void Command::setUserVisible( bool visible ) {
     d->userVisible = visible;
 }
 
+void Command::setShowErrorDialog( bool s ) {
+    d->showErrorDialog = s;
+}
+
+void Command::jobFinished() {
+    if ( error() && d->showErrorDialog )
+        //don't show error dialog synchronously, to not disturb the
+        //finished signals with a local event loop
+        (new ShowErrorJob( errorText(), d->parentWidget ))->start();
+}
 
 #include "command.moc"
+#include "command_p.moc"

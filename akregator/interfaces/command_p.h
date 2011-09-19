@@ -1,7 +1,7 @@
 /*
     This file is part of Akregator.
 
-    Copyright (C) 2008 Frank Osterfeld <osterfeld@kde.org>
+    Copyright (C) 2011 Frank Osterfeld <osterfeld@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,59 +22,38 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef AKREGATOR_COMMAND_H
-#define AKREGATOR_COMMAND_H
+#ifndef AKREGATOR_COMMAND_P_H
+#define AKREGATOR_COMMAND_P_H
 
 #include "akregator_export.h"
 
 #include <KJob>
 
-#include <QtCore/QObject>
+#include <KJob>
+#include <QString>
+#include <QPointer>
 
 class QWidget;
 
 namespace Akregator {
 
-class EmitResultGuard;
-
-class AKREGATORINTERFACES_EXPORT Command : public KJob
+class AKREGATORINTERFACES_EXPORT ShowErrorJob : public KJob
 {
     Q_OBJECT
 
-    friend class ::Akregator::EmitResultGuard;
-
 public:
-    explicit Command( QObject* parent = 0 );
-    virtual ~Command();
-
-    QWidget* parentWidget() const;
-    void setParentWidget( QWidget* parentWidget );
+    explicit ShowErrorJob( const QString& errorText, QWidget* parent );
 
     /* reimp */ void start();
 
-    /**
-     * whether the UI should display the job e.g. via progress items
-     * defaults to @p true
-     */
-    bool isUserVisible() const;
-    void setUserVisible( bool visible );
-
-Q_SIGNALS:
-    void started();
-
-protected:
-    void setShowErrorDialog( bool );
-    virtual void doStart() = 0;
-
 private Q_SLOTS:
-    void jobFinished();
-    void delayedStart();
+    void doStart();
 
 private:
-    class Private;
-    Private* const d;
+    QPointer<QWidget> m_parentWidget;
+    QString m_errorText;
 };
 
 }
 
-#endif // AKREGATOR_COMMAND_H
+#endif // AKREGATOR_COMMAND_P_H

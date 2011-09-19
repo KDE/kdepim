@@ -51,6 +51,7 @@ MarkAsReadCommand::MarkAsReadCommand( QObject* parent )
     : Command( parent )
     , d( new Private )
 {
+    setShowErrorDialog( true );
 }
 
 void MarkAsReadCommand::setCollection( const Collection& c ) {
@@ -77,6 +78,7 @@ void MarkAsReadCommand::doStart() {
 
 void MarkAsReadCommand::itemsFetched( KJob* j ) {
     if ( j->error() ) {
+        setError( KJob::UserDefinedError );
         setErrorText( i18n("Could not fetch items for collection %1: %2", d->collection.title(), j->errorString() ) );
         emitResult();
         return;
@@ -102,6 +104,7 @@ void MarkAsReadCommand::itemsFetched( KJob* j ) {
 
 void MarkAsReadCommand::itemsModified( KJob* j ) {
     if ( j->error() ) {
+        setError( KJob::UserDefinedError );
         setErrorText( i18n("Could not mark items as read: %1", j->errorString() ) );
     }
 
