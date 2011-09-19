@@ -39,7 +39,6 @@ class KJob;
 
 namespace MailCommon {
 
-class Kernel;
 
 class ExpireJob : public ScheduledJob
 {

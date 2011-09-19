@@ -28,7 +28,6 @@
 
 #include <QtCore/QObject>
 
-class OrgFreedesktopAkonadiMailFilterAgentInterface;
 
 namespace MailCommon {
 

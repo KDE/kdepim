@@ -39,7 +39,6 @@ namespace MailCommon {
 
 class EntityCollectionOrderProxyModel;
 class FolderTreeView;
-class Kernel;
 
 /**
  * This is the widget that shows the main folder tree in KMail.

@@ -15,7 +15,6 @@ namespace MailCommon {
 
 class FolderRequester;
 class FolderCollection;
-class Kernel;
 
 class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
 {

@@ -25,7 +25,6 @@
 
 namespace MailCommon {
 
-class Kernel;
 
 class ReadableCollectionProxyModel : public Akonadi::EntityRightsFilterModel
 {
