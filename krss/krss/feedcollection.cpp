@@ -44,9 +44,16 @@ FeedCollection::FeedCollection( const Akonadi::Collection &collection )
 {
 }
 
+Akonadi::Collection FeedCollection::findFolder( const Akonadi::Collection& c ) {
+    if ( FeedCollection( c ).isFolder() )
+        return c;
+    else
+        return c.parentCollection();
+}
+
 bool FeedCollection::isFolder() const
 {
-    return xmlUrl().isEmpty();
+    return contentMimeTypes() == QStringList( Akonadi::Collection::mimeType() );
 }
 
 Feed::Id FeedCollection::feedId() const

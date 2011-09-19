@@ -324,8 +324,8 @@ void FeedListView::slotNextUnreadFeed()
         setCurrentIndex( next );
 }
 
-void FeedListView::scrollToTag( const Tag& tag, QAbstractItemView::ScrollHint hint ) {
-    Q_UNUSED( tag )
+void FeedListView::scrollToCollection( const Akonadi::Collection& c, QAbstractItemView::ScrollHint hint ) {
+    Q_UNUSED( c )
     Q_UNUSED( hint )
     //TODO
 }

@@ -24,14 +24,13 @@
 #include <Akonadi/EntityTreeView>
 
 #include <QtGui/QTreeView>
-#include <boost/shared_ptr.hpp>
 
 class KConfigGroup;
 
+namespace Akonadi {
+    class Collection;
+}
 namespace KRss {
-
-class Tag;
-class TreeNode;
 
 class KRSS_EXPORT FeedListView : public Akonadi::EntityTreeView
 {
@@ -47,7 +46,7 @@ public:
     KConfigGroup configGroup() const;
     void setConfigGroup( const KConfigGroup& group);
 
-    void scrollToTag( const Tag& tag, QAbstractItemView::ScrollHint hint=EnsureVisible );
+    void scrollToCollection( const Akonadi::Collection& c, QAbstractItemView::ScrollHint hint=EnsureVisible );
 
 public Q_SLOTS:
     void slotPrevFeed();
@@ -57,8 +56,8 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 
-    void clicked( const boost::shared_ptr<KRss::TreeNode>& node );
-    void activated( const boost::shared_ptr<KRss::TreeNode>& node );
+    void clicked( const Akonadi::Collection& );
+    void activated( const Akonadi::Collection& );
 
 private:
     class Private;
