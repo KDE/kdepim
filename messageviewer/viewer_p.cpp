@@ -1291,6 +1291,7 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
+  connect(mMimePartModel,SIGNAL(modelReset ()),mMimePartTree,SLOT(expandAll()));
 #endif
 
   mBox = new KHBox( mSplitter );
