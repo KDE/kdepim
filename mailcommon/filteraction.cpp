@@ -2058,7 +2058,7 @@ FilterAction::ReturnCode FilterActionExtFilter::process( ItemContext &context ) 
 class FilterActionExecSound : public FilterActionWithTest
 {
   public:
-    FilterActionExecSound( QObject *parent = 0 );
+    FilterActionExecSound(  );
     ~FilterActionExecSound();
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
@@ -2124,7 +2124,7 @@ QString FilterActionWithTest::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-FilterActionExecSound::FilterActionExecSound( QObject *parent )
+FilterActionExecSound::FilterActionExecSound( )
   : FilterActionWithTest( "play sound", i18n( "Play Sound" ) ),
     mPlayer( 0 )
 {
