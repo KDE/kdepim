@@ -36,7 +36,7 @@
 #include "createtagcommand.h"
 #include "modifycommands.h"
 #include "deletesubscriptioncommand.h"
-#include "editsubscriptioncommand.h"
+#include "editfeedcommand.h"
 #include "importfeedlistcommand.h"
 #include "exportfeedlistcommand.h"
 #include "framemanager.h"
@@ -595,17 +595,13 @@ void Akregator::MainWidget::slotFeedRemove()
 void Akregator::MainWidget::slotFeedModify()
 {
     const Akonadi::Collection c = m_selectionController->selectedCollection();
-#ifdef KRSS_PORT_DISABLED
-    if ( !treeNode )
+    if ( !c.isValid() )
         return;
 
-    std::auto_ptr<EditSubscriptionCommand> cmd( new EditSubscriptionCommand );
-    cmd->setTagProvider( m_tagProvider );
-    cmd->setFeedList( m_feedList );
-    cmd->setFeedListView( m_feedListView );
-    cmd->setNode( treeNode );
+    std::auto_ptr<EditFeedCommand> cmd( new EditFeedCommand );
+    cmd->setCollection( c );
+    cmd->setSession( m_session );
     d->setUpAndStart( cmd.release() );
-#endif
 }
 
 void Akregator::MainWidget::slotFeedRemoveTag()

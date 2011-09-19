@@ -27,13 +27,9 @@
 
 #include "command.h"
 
-namespace boost {
-    template <typename T> class shared_ptr;
-}
-
-namespace KRss {
-    class FeedList;
-    class Feed;
+namespace Akonadi {
+    class Collection;
+    class Session;
 }
 
 namespace Akregator {
@@ -45,11 +41,11 @@ public:
     explicit EditFeedCommand( QObject* parent = 0 );
     ~EditFeedCommand();
 
-    boost::shared_ptr<const KRss::FeedList> feedList() const;
-    void setFeedList( const boost::shared_ptr<const KRss::FeedList>& fl );
+    Akonadi::Collection collection() const;
+    void setCollection( const Akonadi::Collection& c );
 
-    void setFeed( const boost::shared_ptr<KRss::Feed>& feed );
-    boost::shared_ptr<KRss::Feed> feed() const;
+    Akonadi::Session* session() const;
+    void setSession( Akonadi::Session* s );
 
 private:
     void doStart();
@@ -57,8 +53,8 @@ private:
 private:
     class Private;
     Private* const d;
-    Q_PRIVATE_SLOT( d, void startEdit() )
-    Q_PRIVATE_SLOT( d, void feedModifyDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionFetched( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionModified( KJob* ) )
 };
 
 } // namespace Akregator

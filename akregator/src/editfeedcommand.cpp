@@ -25,11 +25,13 @@
 #include "editfeedcommand.h"
 #include "command_p.h"
 
-#include <krss/feedjobs.h>
-#include <krss/feedlist.h>
-#include <krss/feedvisitor.h>
-#include <krss/netfeed.h>
+#include <krss/feedcollection.h>
 #include <krss/ui/feedpropertiesdialog.h>
+
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionModifyJob>
+#include <Akonadi/Session>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -38,60 +40,77 @@
 #include <QTimer>
 
 #include <cassert>
-#include <boost/shared_ptr.hpp>
 
+using namespace Akonadi;
 using namespace Akregator;
-using namespace boost;
 using namespace KRss;
 
-class EditFeedCommand::Private : public FeedVisitor
+class EditFeedCommand::Private
 {
     EditFeedCommand* const q;
 public:
     explicit Private( EditFeedCommand* qq );
 
-    void visitNetFeed( const shared_ptr<NetFeed>& nf ) {
-        feedHandled = true;
-        EmitResultGuard guard( q );
-        QPointer<FeedPropertiesDialog> dlg( new FeedPropertiesDialog( q->parentWidget() ) );
-        dlg->setFeedTitle( nf->title() );
-        dlg->setUrl( nf->xmlUrl() );
-        dlg->setCustomFetchInterval( nf->fetchInterval() > 0 ); //PENDING(frank) correct?
-        dlg->setFetchInterval( nf->fetchInterval() );
+    void collectionFetched( KJob* j ) {
 
-        if ( dlg->exec() != QDialog::Accepted ) {
-            delete dlg;
+        EmitResultGuard guard( q );
+
+        if ( j->error() ) {
+            q->setError( KJob::UserDefinedError );
+            q->setErrorText( j->errorText() );
             guard.emitResult();
             return;
         }
-        nf->setTitle( dlg->feedTitle() );
-        nf->setXmlUrl( dlg->url() );
-        nf->setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : 0 );
-        delete dlg;
-        FeedModifyJob* job = new FeedModifyJob( nf );
-        connect( job, SIGNAL(finished(KJob*)), q, SLOT(feedModifyDone(KJob*)) );
-        job->start();
+
+        CollectionFetchJob* job = qobject_cast<CollectionFetchJob*>( j );
+        Q_ASSERT( job );
+        collection = job->collections().first();
+        FeedCollection fc( collection );
+        if ( fc.isFolder() ) {
+            //TODO
+        } else {
+            QPointer<FeedPropertiesDialog> dlg( new FeedPropertiesDialog( q->parentWidget() ) );
+            dlg->setFeedTitle( fc.title() );
+            dlg->setUrl( fc.xmlUrl() );
+            dlg->setCustomFetchInterval( fc.fetchInterval() > 0 ); //PENDING(frank) correct?
+            dlg->setFetchInterval( fc.fetchInterval() );
+
+            if ( dlg->exec() != QDialog::Accepted ) {
+                delete dlg;
+                guard.emitResult();
+                return;
+            }
+            fc.setTitle( dlg->feedTitle() );
+            fc.setXmlUrl( dlg->url() );
+            fc.setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : 0 );
+            delete dlg;
+            CollectionModifyJob* job = new CollectionModifyJob( fc, session );
+            connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionModified(KJob*)) );
+            job->start();
+
+        }
     }
 
-    void feedModifyDone( KJob* job ) {
-        EmitResultGuard guard( q );
-        if ( job->error() )
-            KMessageBox::error( q->parentWidget(),
-                                i18n("Could not save feed settings: %1", job->errorString() ) );
-        guard.emitResult();
+    void collectionModified( KJob* j ) {
+        if ( j->error() ) {
+            q->setError( KJob::UserDefinedError );
+            q->setErrorText( j->errorText() );
+        }
+
+        q->emitResult();
     }
 
-    void startEdit();
     void jobFinished();
 
-    bool feedHandled;
-    shared_ptr<Feed> feed;
-    shared_ptr<const FeedList> feedList;
+    Akonadi::Collection collection;
+    Akonadi::Session* session;
 };
 
 EditFeedCommand::Private::Private( EditFeedCommand* qq )
-    : q( qq ), feedHandled( false )
+    : q( qq ), session( 0 )
 {
+    q->setUserVisible( false );
+    q->setShowErrorDialog( true );
 }
 
 EditFeedCommand::EditFeedCommand( QObject* parent )
@@ -104,41 +123,34 @@ EditFeedCommand::~EditFeedCommand()
     delete d;
 }
 
-void EditFeedCommand::setFeed( const shared_ptr<Feed>& feed )
+void EditFeedCommand::setCollection( const Collection& c )
 {
-    d->feed = feed;
+    d->collection = c;
 }
 
-shared_ptr<Feed> EditFeedCommand::feed() const
+Collection EditFeedCommand::collection() const
 {
-    return d->feed;
+    return d->collection;
+}
+
+void EditFeedCommand::setSession( Session* s )
+{
+    d->session = s;
+}
+
+Session* EditFeedCommand::session() const
+{
+    return d->session;
 }
 
 void EditFeedCommand::doStart()
 {
-    QTimer::singleShot( 0, this, SLOT(startEdit()) );
+    Q_ASSERT( d->session );
+    CollectionFetchJob* job = new CollectionFetchJob( d->collection, CollectionFetchJob::Base, d->session );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetched(KJob*)) );
+    job->start();
 }
 
-void EditFeedCommand::Private::startEdit()
-{
-    EmitResultGuard guard( q );
-    if ( !feed ) {
-        guard.emitResult();
-        return;
-    }
-    feed->accept( this );
-    if ( !feedHandled )
-        guard.emitResult();
-}
 
-shared_ptr<const FeedList> EditFeedCommand::feedList() const
-{
-    return d->feedList;
-}
-
-void EditFeedCommand::setFeedList( const shared_ptr<const FeedList>& fl )
-{
-    d->feedList = fl;
-}
 
 #include "editfeedcommand.moc"
