@@ -412,6 +412,9 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
 
   d->endFiltering( item );
 
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+  msg->assemble();
+
   if ( context.needsPayloadStore() ) {
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
     modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
