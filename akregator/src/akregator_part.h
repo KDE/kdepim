@@ -134,8 +134,6 @@ class Part : public KParts::ReadOnlyPart
         void slotSettingsChanged();
         void slotSetStatusText( const QString &statusText );
 
-        void slotTagProviderRetrieved( KJob *job );
-        void slotFeedListRetrieved( KJob *job );
         void slotAkonadiSetUp( KJob* job );
 
     private: // methods

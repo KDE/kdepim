@@ -25,11 +25,6 @@
 #ifndef AKREGATOR_KERNEL_H
 #define AKREGATOR_KERNEL_H
 
-#include <boost/shared_ptr.hpp>
-
-namespace KRss {
-    class FeedList;
-}
 namespace Akregator {
 
 class FrameManager;
@@ -41,9 +36,6 @@ class Kernel
         static Kernel* self();
 
         ~Kernel();
-
-        boost::shared_ptr<KRss::FeedList> feedList() const;
-        void setFeedList(const boost::shared_ptr<KRss::FeedList>& feedList);
 
         FrameManager* frameManager();
 

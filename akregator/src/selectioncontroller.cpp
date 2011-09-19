@@ -27,7 +27,6 @@
 #include "progressmanager.h"
 
 #include <krss/feeditemmodel.h>
-#include <krss/feedpropertiescollectionattribute.h>
 #include <krss/rssitem.h>
 
 #include <Akonadi/ChangeRecorder>

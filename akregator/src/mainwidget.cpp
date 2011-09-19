@@ -61,15 +61,7 @@
 
 #include <krss/feedcollection.h>
 #include <krss/item.h>
-#include <krss/resourcemanager.h>
-#include <krss/treenode.h>
-#include <krss/treenodevisitor.h>
-#include <krss/tagjobs.h>
-#include <krss/feedjobs.h>
-
 #include <krss/ui/feedlistview.h>
-#include <krss/ui/tagpropertiesdialog.h>
-#include <krss/statusmodifyjob.h>
 
 #include <solid/networking.h>
 
@@ -134,7 +126,6 @@ Akregator::MainWidget::~MainWidget()
 Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImpl* actionManager)
      : QWidget(parent),
      d( new Private( this ) ),
-     m_feedList(),
      m_viewMode(NormalView),
      m_actionManager(actionManager)
 {
@@ -434,37 +425,6 @@ void MainWidget::slotMetakitImport()
     d->setUpAndStart( cmd.release() );
 }
 
-void Akregator::MainWidget::setFeedList( const shared_ptr<KRss::FeedList>& list )
-{
-    if ( list == m_feedList )
-        return;
-    const shared_ptr<KRss::FeedList> oldList = m_feedList;
-
-    m_feedList = list;
-    if ( m_feedList ) {
-        connect( m_feedList.get(), SIGNAL(unreadCountChanged(int) ),
-                 this, SLOT(slotSetTotalUnread()) );
-    }
-
-    slotSetTotalUnread();
-
-    Kernel::self()->setFeedList( m_feedList );
-    NotificationManager::self()->setFeedList( m_feedList );
-#ifdef WITH_LIBKDEPIM
-    ProgressManager::self()->setFeedList( m_feedList );
-#endif
-    if ( oldList )
-        oldList->disconnect( this );
-}
-
-void Akregator::MainWidget::setTagProvider( const boost::shared_ptr<const KRss::TagProvider>& tagProvider )
-{
-    if ( tagProvider == m_tagProvider )
-        return;
-
-    m_tagProvider = tagProvider;
-}
-
 void Akregator::MainWidget::addFeedToGroup(const QString& url, const QString& groupName)
 {
 #ifdef KRSS_PORT_DISABLED
@@ -648,29 +608,6 @@ void Akregator::MainWidget::slotFeedModify()
 #endif
 }
 
-namespace {
-    class RemoveTagFromFeedVisitor : public KRss::TreeNodeVisitor {
-    public:
-        explicit RemoveTagFromFeedVisitor( const shared_ptr<KRss::FeedList>& fl ) : feedList( fl ) {}
-
-        void visit( const shared_ptr<KRss::FeedNode>& fn ) {
-            if ( !feedList )
-                return;
-            const shared_ptr<KRss::Feed> f = feedList->feedById( fn->feedId() );
-            if ( !f )
-                return;
-            const KRss::TagId id = fn->parent()->tag().id();
-            f->removeTag( id );
-            KRss::FeedModifyJob* job = new KRss::FeedModifyJob( f );
-            job->start();
-        }
-        void visit( const shared_ptr<KRss::RootNode>& ) {}
-        void visit( const shared_ptr<KRss::TagNode>& ) {}
-
-        const shared_ptr<KRss::FeedList> feedList;
-    };
-}
-
 void Akregator::MainWidget::slotFeedRemoveTag()
 {
 #if 0
@@ -715,6 +652,7 @@ void Akregator::MainWidget::slotPrevUnreadArticle()
 
 void Akregator::MainWidget::slotMarkAllFeedsRead()
 {
+#ifdef KRSS_PORT_DISABLED
     KRss::CompositeStatusModifyJob * const job = new KRss::CompositeStatusModifyJob( this );
     Q_FOREACH( const shared_ptr<KRss::Feed>& feed, m_feedList->feeds() ) {
         job->addSubJob( feed->statusModifyJob() );
@@ -726,6 +664,7 @@ void Akregator::MainWidget::slotMarkAllFeedsRead()
     ProgressManager::self()->addJob( job );
 #endif
     job->start();
+#endif
 }
 
 void Akregator::MainWidget::slotMarkFeedRead()
@@ -758,7 +697,9 @@ void Akregator::MainWidget::slotMarkFeedRead()
 
 void Akregator::MainWidget::slotSetTotalUnread()
 {
+#ifdef KRSS_PORT_DISABLED
     emit signalUnreadCountChanged( m_feedList ? m_feedList->unreadCount() : 0 );
+#endif
 }
 
 void Akregator::MainWidget::slotFetchCurrentFeed()
@@ -772,18 +713,22 @@ void Akregator::MainWidget::slotFetchCurrentFeed()
 
 void Akregator::MainWidget::slotFetchAllFeeds()
 {
+#ifdef KRSS_PORT_DISABLED
     if ( !m_feedList )
         return;
     Q_FOREACH( const shared_ptr<const KRss::Feed>& feed, m_feedList->constFeeds() ) {
         feed->fetch();
     }
+#endif
 }
 
 void Akregator::MainWidget::slotAbortFetches() {
+#ifdef KRSS_PORT_DISABLED
     if ( !m_feedList )
         return;
     Q_FOREACH( const shared_ptr<const KRss::Feed>& feed, m_feedList->constFeeds() )
         feed->abortFetch();
+#endif
 }
 
 void Akregator::MainWidget::slotFetchQueueStarted()

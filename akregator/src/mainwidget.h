@@ -29,9 +29,7 @@
 
 #include "akregator_export.h"
 
-#include <krss/feedlist.h>
-#include <krss/tagprovider.h>
-#include <krss/ui/feedlistview.h>
+//#include <krss/ui/feedlistview.h>
 
 #include <kurl.h>
 
@@ -39,21 +37,21 @@
 #include <QPointer>
 #include <QWidget>
 
-#include <boost/shared_ptr.hpp>
-
 class KConfig;
 class KFileItem;
-class K3ListView;
 class KConfigGroup;
+class KJob;
 
 class QDomDocument;
 class QSplitter;
 
 namespace KRss {
+    class FeedListView;
     class Item;
 }
 
 namespace Akonadi {
+    class Collection;
     class Session;
 }
 
@@ -93,9 +91,6 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         /** saves settings. Make sure that the Settings singleton is not destroyed yet when saveSettings is called */
         void saveSettings();
-
-        void setFeedList( const boost::shared_ptr<KRss::FeedList>& feedList );
-        void setTagProvider( const boost::shared_ptr<const KRss::TagProvider>& tagProvider );
 
         /**
          * Add a feed to a group.
@@ -236,8 +231,6 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         void addFeed(const QString& url, bool autoExec );
 
         AbstractSelectionController* m_selectionController;
-        boost::shared_ptr<KRss::FeedList> m_feedList;
-        boost::shared_ptr<const KRss::TagProvider> m_tagProvider;
 
         KRss::FeedListView* m_feedListView;
         ArticleListView* m_articleListView;

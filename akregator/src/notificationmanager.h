@@ -34,10 +34,6 @@
 
 #include <boost/weak_ptr.hpp>
 
-namespace KRss {
-    class FeedList;
-}
-
 namespace Akregator
 {
 /** this class collects notification requests (new articles etc.) and processes them using KNotify.  */
@@ -52,7 +48,6 @@ class NotificationManager : public QObject
 
         /** the widget used for notification, normally either the mainwindow or the tray icon */
         void setWidget(QWidget* widget, const KComponentData &inst = KComponentData());
-        void setFeedList( const boost::weak_ptr<const KRss::FeedList>& feedList );
 
     public slots:
 
@@ -82,7 +77,6 @@ class NotificationManager : public QObject
         bool m_addedInLastInterval;
         QWidget* m_widget;
         KComponentData m_instance;
-        boost::weak_ptr<const KRss::FeedList> m_feedList;
         QList<KRss::Item> m_items;
 
         static NotificationManager* m_self;

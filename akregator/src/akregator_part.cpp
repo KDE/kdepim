@@ -37,10 +37,6 @@
 #include "setupakonadicommand.h"
 #include "trayicon.h"
 
-#include <krss/feedlist.h>
-#include <krss/resourcemanager.h>
-#include <krss/tagprovider.h>
-
 #include <libkdepim/broadcaststatus.h>
 
 #include <knotifyconfigwidget.h>
@@ -400,39 +396,6 @@ void Part::initFonts()
         Settings::setUnderlineLinks(underline);
     }
 
-}
-
-void Part::slotTagProviderRetrieved( KJob *job )
-{
-    const KRss::TagProviderRetrieveJob* const rjob = qobject_cast<const KRss::TagProviderRetrieveJob*>( job );
-    assert( rjob );
-
-    if ( rjob->error() ) {
-        KMessageBox::error( m_mainWidget, i18n( "Could not retrieve the tag provider. %1",
-                                                rjob->errorString() ) );
-        return;
-    }
-
-    m_mainWidget->setTagProvider( rjob->tagProvider() );
-}
-
-void Part::slotFeedListRetrieved( KJob *job )
-{
-    const KRss::RetrieveFeedListJob * const rjob = qobject_cast<const KRss::RetrieveFeedListJob*>( job );
-    assert( rjob );
-
-    if ( rjob->error() ) {
-        KMessageBox::error( m_mainWidget, i18n( "Could not retrieve the feed list. %1", rjob->errorString() ) );
-        return;
-    }
-
-    m_mainWidget->setFeedList( rjob->feedList() );
-
-    if( Settings::markAllFeedsReadOnStartup() )
-        m_mainWidget->slotMarkAllFeedsRead();
-
-    if (Settings::fetchOnStartup())
-        m_mainWidget->slotFetchAllFeeds();
 }
 
 } // namespace Akregator

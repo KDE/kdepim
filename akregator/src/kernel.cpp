@@ -25,14 +25,7 @@
 #include "kernel.h"
 #include "framemanager.h"
 
-#include <krss/feedlist.h>
-
 #include <k3staticdeleter.h>
-
-#include <QPointer>
-
-using namespace boost;
-using namespace KRss;
 
 namespace Akregator
 {
@@ -52,7 +45,6 @@ class Kernel::KernelPrivate
 {
     public:
 
-    shared_ptr<KRss::FeedList> feedList;
     FrameManager* frameManager;
 };
 
@@ -66,17 +58,6 @@ Kernel::~Kernel()
     delete d->frameManager;
     delete d;
     d = 0;
-}
-
-
-shared_ptr<FeedList> Kernel::feedList() const
-{
-    return d->feedList;
-}
-
-void Kernel::setFeedList(const shared_ptr<FeedList>& feedList)
-{
-    d->feedList = feedList;
 }
 
 FrameManager* Kernel::frameManager()

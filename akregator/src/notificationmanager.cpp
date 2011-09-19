@@ -24,10 +24,8 @@
 
 #include "notificationmanager.h"
 
-#include <krss/feed.h>
-#include <krss/feedlist.h>
 
-#include <klocale.h>
+#include <KLocale>
 #include <knotification.h>
 #include <k3staticdeleter.h>
 #include <kurl.h>
@@ -101,6 +99,7 @@ namespace {
 
 void NotificationManager::doNotify()
 {
+#ifdef KRSS_PORT_DISABLED
     const shared_ptr<const FeedList> fl = m_feedList.lock();
     if ( fl && !m_items.isEmpty() ) {
         std::sort( m_items.begin(), m_items.end(), lessThanByFeedId );
@@ -132,11 +131,9 @@ void NotificationManager::doNotify()
     m_running = false;
     m_intervalsLapsed = 0;
     m_addedInLastInterval = false;
+#endif
 }
 
-void NotificationManager::setFeedList( const weak_ptr<const FeedList>& fl ) {
-    m_feedList = fl;
-}
 
 void NotificationManager::slotIntervalCheck()
 {
