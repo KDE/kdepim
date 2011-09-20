@@ -92,7 +92,9 @@ void SetUpAkonadiCommand::setMainWidget( QWidget* widget ) {
 }
 
 void SetUpAkonadiCommand::Private::dialogAccepted() {
+#ifdef KRSS_PORT_DISABLED
     Settings::setActiveAkonadiResource( agentWidget->currentAgentInstance().identifier() );
+#endif
     q->emitResult();
 }
 
@@ -108,7 +110,9 @@ void SetUpAkonadiCommand::Private::resourceCreated( KJob* j ) {
         return;
     }
     assert( job->instance().isValid() );
+#ifdef KRSS_PORT_DISABLED
     Settings::setActiveAkonadiResource( job->instance().identifier() );
+#endif
     q->emitResult();
 }
 
@@ -127,13 +131,13 @@ void SetUpAkonadiCommand::Private::startSetup() {
     ResourceManager::self()->forceUpdate();
 
     const QStringList resources = KRss::ResourceManager::self()->identifiers();
-
+#ifdef KRSS_PORT_DISABLED
     const QString id = Settings::activeAkonadiResource();
     if ( resources.contains( id ) ) {
         guard.emitResult();
         return;
     }
-
+#endif
     if ( resources.isEmpty() ) {
        const QString typeId = QLatin1String( "akonadi_opml_rss_resource" );
        const AgentType type = AgentManager::self()->type( typeId );
@@ -151,7 +155,9 @@ void SetUpAkonadiCommand::Private::startSetup() {
     }
 
     if ( resources.size() == 1 ) {
+#ifdef KRSS_PORT_DISABLED
         Settings::setActiveAkonadiResource( resources.first() );
+#endif
         guard.emitResult();
         return;
     }

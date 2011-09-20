@@ -205,10 +205,6 @@
   </entry>
 </group>
 <group name="Advanced" >
-  <entry key="Active Akonadi Resource" type="String" >
-   <label>Active Akonadi Resource</label>
-   <whatsthis>The Akonadi resource currently used by the application</whatsthis>
-  </entry>
   <entry key="Delay Mark Read" name="UseMarkReadDelay" type="Bool" >
    <whatsthis>Whether to delay before marking an article as read upon selecting it.</whatsthis>
    <default>true</default>
