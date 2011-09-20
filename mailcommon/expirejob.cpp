@@ -66,7 +66,7 @@ namespace MailCommon {
 
 ExpireJob::ExpireJob( const Akonadi::Collection& folder, bool immediate )
  : ScheduledJob( folder, immediate ), mCurrentIndex( 0 ),
-   mFolderOpen( false ), mMoveToFolder( 0 )
+   mMoveToFolder( 0 )
 {
 }
 

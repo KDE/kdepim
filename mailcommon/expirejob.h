@@ -63,7 +63,6 @@ private:
   int mCurrentIndex;
   int mMaxUnreadTime;
   int mMaxReadTime;
-  bool mFolderOpen;
   Akonadi::Collection mMoveToFolder;
 };
 
