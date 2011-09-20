@@ -43,6 +43,7 @@
 
 using namespace boost;
 using namespace Akregator;
+using namespace Akonadi;
 using namespace KRss;
 
 namespace {
@@ -112,107 +113,80 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
 {
     return ( pointSize * d->device->logicalDpiY() + 36 ) / 72 ;
 }
+
+static QString formatFolderSummary( const Collection& c ) {
+    const FeedCollection fc( c );
+    const QString title = fc.title();
+    QString text = QString::fromLatin1("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
+    text += QString::fromLatin1("<div class=\"headertitle\" dir=\"%1\">%2").arg(Utils::directionOf(Utils::stripTags(title)), title);
 #ifdef KRSS_PORT_DISABLED
-class DefaultNormalViewFormatter::SummaryFeedVisitor : public KRss::ConstFeedVisitor {
-private:
-    const DefaultNormalViewFormatter* const q;
-
-public:
-    QString text;
-
-    explicit SummaryFeedVisitor( const DefaultNormalViewFormatter* qq ) : q( qq ) {}
-
-    void visitNetFeed( const shared_ptr<const NetFeed>& node ) {
-        text.clear();
-        text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
-
-        text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(node->title())));
-        text += node->title();
-        if(node->unread() == 0)
-            text += i18n(" (no unread articles)");
-        else
-            text += i18np(" (1 unread article)", " (%1 unread articles)", node->unread());
-        text += "</div>\n"; // headertitle
-        text += "</div>\n"; // /headerbox
-
-        if (!node->image().isNull()) // image
-        {
-            text += QString("<div class=\"body\">");
-            QString file = Utils::fileNameForUrl(node->xmlUrl());
-            KUrl u(q->m_imageDir);
-            u.setFileName(file);
-            text += QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(node->htmlUrl(), u.url());
-        }
-        else text += "<div class=\"body\">";
-
-
-        if( !node->description().isEmpty() )
-        {
-            text += QString("<div dir=\"%1\">").arg(Utils::stripTags(Utils::directionOf(node->description())));
-            text += i18n("<b>Description:</b> %1<br /><br />", node->description());
-            text += "</div>\n"; // /description
-        }
-
-        if ( !node->htmlUrl().isEmpty() )
-        {
-            text += QString("<div dir=\"%1\">").arg(Utils::directionOf(node->htmlUrl()));
-            text += i18n("<b>Homepage:</b> <a href=\"%1\">%2</a>", node->htmlUrl(), node->htmlUrl());
-            text += "</div>\n"; // / link
-        }
-
-    //text += i18n("<b>Unread articles:</b> %1").arg(node->unread());
-        text += "</div>"; // /body
-    }
-};
-
-class DefaultNormalViewFormatter::SummaryVisitor : public KRss::TreeNodeVisitor
-{
-    public:
-        explicit SummaryVisitor(const DefaultNormalViewFormatter* p) : parent(p), feedList() {}
-
-        /* reimp */ void visit( const shared_ptr<KRss::RootNode>& node ) {
-        }
-
-        /* reimp */ void visit( const shared_ptr<KRss::FeedNode>& feedNode ) {
-            if ( !feedList )
-                return;
-            const shared_ptr<const KRss::Feed> node = feedList->constFeedById( feedNode->feedId() );
-            if ( !node )
-                return;
-            SummaryFeedVisitor v( parent );
-            node->accept( &v );
-            text = v.text;
-        }
-
-        /* reimp */ void visit( const shared_ptr<KRss::TagNode>& node ) {
-            const KRss::Tag tag = node->tag();
-            text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
-            text += QString("<div class=\"headertitle\" dir=\"%1\">%2").arg(Utils::directionOf(Utils::stripTags(tag.label())), tag.label());
-#ifdef KRSS_PORT_DISABLED
-            if(node->unread() == 0)
-                text += i18n(" (no unread articles)");
-            else
-                text += i18np(" (1 unread article)", " (%1 unread articles)", node->unread());
+    if(node->unread() == 0)
+        text += i18n(" (no unread articles)");
+    else
+        text += i18np(" (1 unread article)", " (%1 unread articles)", node->unread());
 #else
-            kWarning() << "Code temporarily disabled (Akonadi port)";
+    kWarning() << "Code temporarily disabled (Akonadi port)";
 #endif //KRSS_PORT_DISABLED
-            text += QString("</div>\n");
-            text += "</div>\n"; // /headerbox
-        }
+    text += QString("</div>\n");
+    text += "</div>\n"; // /headerbox
+    return text;
+}
 
-        QString formatSummary( const shared_ptr<const KRss::FeedList>& fl, const shared_ptr<KRss::TreeNode>& node )
-        {
-            feedList = fl;
-            text.clear();
-            node->accept( this );
-            return text;
-        }
+static QString formatFeedSummary( const FeedCollection& feed, const KUrl& imageDir ) {
 
-        QString text;
-        const DefaultNormalViewFormatter* const parent;
-        shared_ptr<const KRss::FeedList> feedList;
-};
+    QString text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
+
+    text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(feed.title())));
+    text += feed.title();
+#ifdef KRSS_PORT_DISABLED
+    if(node->unread() == 0)
+        text += i18n(" (no unread articles)");
+    else
+        text += i18np(" (1 unread article)", " (%1 unread articles)", node->unread());
 #endif
+    text += "</div>\n"; // headertitle
+    text += "</div>\n"; // /headerbox
+
+    #ifdef KRSS_PORT_DISABLED
+    if (!node->image().isNull()) // image
+    {
+        text += QString("<div class=\"body\">");
+        QString file = Utils::fileNameForUrl(node->xmlUrl());
+        KUrl u(q->m_imageDir);
+        u.setFileName(file);
+        text += QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(node->htmlUrl(), u.url());
+    }
+    else
+#endif
+        text += "<div class=\"body\">";
+
+
+    if( !feed.description().isEmpty() )
+    {
+        text += QString("<div dir=\"%1\">").arg(Utils::stripTags(Utils::directionOf(feed.description())));
+        text += i18n("<b>Description:</b> %1<br /><br />", feed.description());
+        text += "</div>\n"; // /description
+    }
+
+    if ( !feed.htmlUrl().isEmpty() )
+    {
+        text += QString("<div dir=\"%1\">").arg(Utils::directionOf(feed.htmlUrl()));
+        text += i18n("<b>Homepage:</b> <a href=\"%1\">%2</a>", feed.htmlUrl(), feed.htmlUrl());
+        text += "</div>\n"; // / link
+    }
+
+//text += i18n("<b>Unread articles:</b> %1").arg(node->unread());
+    text += "</div>"; // /body
+    return text;
+}
+
+static QString formatCollectionSummary( const Collection& c, const KUrl& imageDir ) {
+    FeedCollection fc;
+    if ( fc.isFolder() )
+        return formatFolderSummary( c );
+    else
+        return formatFeedSummary( fc, imageDir );
+}
 
 QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOption icon) const
 {
@@ -563,13 +537,9 @@ QString DefaultCombinedViewFormatter::getCss() const
     return css;
 }
 
-QString DefaultNormalViewFormatter::formatSummary( const Akonadi::Collection& ) const
+QString DefaultNormalViewFormatter::formatSummary( const Akonadi::Collection& c ) const
 {
-#ifdef KRSS_PORT_DISABLED
-    SummaryVisitor v( this );
-    return v.formatSummary( fl, node );
-#endif
-    return QString();
+    return formatCollectionSummary( c, m_imageDir );
 }
 
 QString DefaultCombinedViewFormatter::formatSummary( const Akonadi::Collection& ) const
