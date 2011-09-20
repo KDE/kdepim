@@ -51,7 +51,7 @@ namespace MailCommon {
 
 FolderRequester::FolderRequester( QWidget* parent )
   : QWidget( parent ),
-    mMustBeReadWrite( true ), mShowOutbox( true ), mShowImapFolders( true ), mNotCreateNewFolder( false )
+    mMustBeReadWrite( true ), mShowOutbox( true ), mNotCreateNewFolder( false )
 {
   QHBoxLayout * hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
@@ -80,8 +80,6 @@ void FolderRequester::slotOpenDialog()
   options |= FolderSelectionDialog::NotUseGlobalSettings;
   if ( mNotCreateNewFolder )
     options |= FolderSelectionDialog::NotAllowToCreateNewFolder;
-  if ( !mShowImapFolders )
-    options |= FolderSelectionDialog::HideImapFolder;
   if ( !mShowOutbox )
     options |= FolderSelectionDialog::HideOutboxFolder;
 

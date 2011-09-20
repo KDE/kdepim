@@ -85,10 +85,6 @@ namespace MailCommon {
       void setShowOutbox( bool show )
       { mShowOutbox = show; }
 
-      /** Set if the imap folders should be shown */
-      void setShowImapFolders( bool show )
-      { mShowImapFolders = show; }
-
       void setNotAllowToCreateNewFolder( bool notCreateNewFolder )
       { mNotCreateNewFolder = notCreateNewFolder; }
     protected slots:
@@ -113,7 +109,6 @@ namespace MailCommon {
       QString mFolderId;
       bool mMustBeReadWrite;
       bool mShowOutbox;
-      bool mShowImapFolders;
       bool mNotCreateNewFolder;
   };
 
