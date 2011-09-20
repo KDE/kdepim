@@ -357,11 +357,14 @@ int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFil
       Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
       modifyJob->setIgnorePayload( true );
       connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+    } else {
+      if ( context.moveTargetCollection().isValid() ) {
+        Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
+        connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+      }
     }
 
     if ( context.moveTargetCollection().isValid() ) {
-      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
       result = 0;
     }
   } else {
@@ -424,6 +427,11 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     modifyJob->setIgnorePayload( true );
     modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+  } else {
+    if ( context.moveTargetCollection().isValid() ) {
+      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
+      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+    }
   }
 
   if ( context.moveTargetCollection().isValid() ) {
