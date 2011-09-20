@@ -407,6 +407,8 @@ void Akregator::MainWidget::sendArticle(bool attach)
 void MainWidget::slotImportFeedList()
 {
     std::auto_ptr<ImportFeedListCommand> cmd( new ImportFeedListCommand );
+    cmd->setSession( m_session );
+    cmd->setTargetCollection( m_selectionController->selectedCollection() );
     d->setUpAndStart( cmd.release() );
 }
 

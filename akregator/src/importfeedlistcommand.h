@@ -31,6 +31,10 @@ class QString;
 
 class KUrl;
 
+namespace Akonadi {
+    class Collection;
+    class Session;
+}
 namespace Akregator {
 
 class FeedList;
@@ -42,9 +46,9 @@ public:
     explicit ImportFeedListCommand( QObject* parent = 0 );
     ~ImportFeedListCommand();
 
-    void setResourceIdentifier( const QString& identifier );
-
+    void setTargetCollection( const Akonadi::Collection& c );
     void setSourceUrl( const KUrl& url );
+    void setSession( Akonadi::Session* );
 
 private:
     void doStart();
@@ -52,7 +56,6 @@ private:
 private:
     class Private;
     Private* const d;
-    Q_PRIVATE_SLOT( d, void doImport() )
     Q_PRIVATE_SLOT( d, void importFinished( KJob* ) )
 };
 

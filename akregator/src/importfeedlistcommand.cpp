@@ -25,9 +25,10 @@
 #include "importfeedlistcommand.h"
 #include "command_p.h"
 
+#include <Akonadi/Collection>
+#include <Akonadi/Session>
+
 #include <krss/importopmljob.h>
-#include <krss/netresource.h>
-#include <krss/resourcemanager.h>
 
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -40,6 +41,7 @@
 
 #include <cassert>
 
+using namespace Akonadi;
 using namespace Akregator;
 using namespace KRss;
 
@@ -51,32 +53,27 @@ public:
 
     void doImport();
     void importFinished( KJob* );
-    bool checkResource( const boost::shared_ptr<const NetResource>& r );
 
     KUrl url;
-    QString resourceIdentifier;
+    Collection targetCollection;
+    Session* session;
 };
 
 ImportFeedListCommand::Private::Private( ImportFeedListCommand* qq )
     : q( qq )
+    , session( 0 )
 {
 
-}
-
-bool ImportFeedListCommand::Private::checkResource( const boost::shared_ptr<const NetResource>& r ) {
-    if ( r )
-        return true;
-    EmitResultGuard guard( q );
-    KMessageBox::error( q->parentWidget(), i18n("Could not import feed list: Target resource %1 not found.", resourceIdentifier ), i18n("Import Error" ) );
-    guard.emitResult();
-    return false;
 }
 
 void ImportFeedListCommand::Private::doImport()
 {
-    //initial check for the resource
-    if ( !checkResource( ResourceManager::self()->resource( resourceIdentifier ) ) )
+    Q_ASSERT( session );
+    if ( !targetCollection.isValid() || !targetCollection.contentMimeTypes().contains( Collection::mimeType() ) ) {
+        //PENDING(frank) offer chooser dialog instead
+        q->setErrorAndEmitResult( i18n("Please select a folder to add the feeds to.") );
         return;
+    }
 
     EmitResultGuard guard( q );
     if ( !url.isValid() ) {
@@ -90,24 +87,22 @@ void ImportFeedListCommand::Private::doImport()
     }
 
     if ( !url.isValid() ) {
-        guard.emitResult();
+        guard.emitCanceled();
         return;
     }
-
-    //the resource might be gone while the dialog was open, so re-get it
-    const boost::shared_ptr<const NetResource> resource = ResourceManager::self()->resource( resourceIdentifier );
-    if ( !checkResource( resource ) )
-        return;
-
+#ifdef KRSS_PORT_DISABLED
     KRss::ImportOpmlJob* job = resource->createImportOpmlJob( url );
     connect( job, SIGNAL(finished(KJob*)), q, SLOT(importFinished(KJob*)) );
     job->start();
+#endif
 }
 
 void ImportFeedListCommand::Private::importFinished( KJob* job ) {
     EmitResultGuard guard( q );
-    if ( job->error() )
-        KMessageBox::error( q->parentWidget(), i18n("Could not import feed list: %1", job->errorString() ), i18n("Import Error" ) );
+    if ( job->error() ) {
+        q->setError( Command::SomeError );
+        q->setErrorText( i18n("Could not import feed list: %1", job->errorString() ) );
+    }
     else
         KMessageBox::information( q->parentWidget(), i18n("The feed list was successfully imported." ), i18n("Import Finished") );
     guard.emitResult();
@@ -122,20 +117,25 @@ ImportFeedListCommand::~ImportFeedListCommand()
     delete d;
 }
 
-
 void ImportFeedListCommand::setSourceUrl( const KUrl& url )
 {
     d->url = url;
 }
 
-void ImportFeedListCommand::setResourceIdentifier( const QString& identifier )
+void ImportFeedListCommand::setSession( Session* s )
 {
-    d->resourceIdentifier = identifier;
+    d->session = s;
+}
+
+
+void ImportFeedListCommand::setTargetCollection( const Collection& c )
+{
+    d->targetCollection = c;
 }
 
 void ImportFeedListCommand::doStart()
 {
-    QTimer::singleShot( 0, this, SLOT(doImport()) );
+    d->doImport();
 }
 
 #include "importfeedlistcommand.moc"
