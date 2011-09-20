@@ -25,6 +25,8 @@
 #include "command_p.h"
 #include "command.h"
 
+#include <KLocalizedString>
+
 #include <QPointer>
 #include <QSharedData>
 
@@ -38,6 +40,19 @@ public:
 
 EmitResultGuard::EmitResultGuard( Command* cmd ) : d( new Private( cmd ) ) {}
 EmitResultGuard::~EmitResultGuard() {}
+
+void EmitResultGuard::setErrorAndEmitResult( const QString& errorText, int error ) {
+    if ( !d->command )
+        return;
+    d->command->setErrorText( errorText );
+    d->command->setError( error );
+    d->command->emitResult();
+}
+
+void EmitResultGuard::emitCanceled() {
+    if ( d->command )
+        d->command->emitCanceled();
+}
 
 bool EmitResultGuard::exists() const {
     return d->command != 0;

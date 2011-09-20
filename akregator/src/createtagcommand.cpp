@@ -71,7 +71,7 @@ CreateFolderCommand::Private::Private( const Collection& parent, const QString& 
 void CreateFolderCommand::Private::collectionCreated( KJob* j )
 {
     if ( j->error() ) {
-        q->setError( KJob::UserDefinedError );
+        q->setError( Command::SomeError );
         q->setErrorText( j->errorText() );
         q->emitResult();
         return;
@@ -107,7 +107,7 @@ void CreateFolderCommand::doStart()
 
     d->parentCollection = FeedCollection::findFolder( d->parentCollection );
     if ( !d->parentCollection.isValid() ) {
-        setError( KJob::UserDefinedError );
+        setError( SomeError );
         setErrorText( tr("Invalid parent collection. Cannot create folder") );
         emitResult();
         return;

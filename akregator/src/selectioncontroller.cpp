@@ -73,7 +73,8 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     m_folderExpansionHandler( 0 ),
     m_itemModel( 0 ),
     m_feedSelectionResolved( 0 ),
-    m_session( session )
+    m_session( session ),
+    m_collectionFilterModel( 0 )
 {
     Akonadi::ItemFetchScope iscope;
     iscope.fetchFullPayload( true );
@@ -91,6 +92,14 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
 
     m_itemModel = new FeedItemModel( recorder, this );
+
+    Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
+    filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+    filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+    filterProxy->setSourceModel( m_itemModel );
+    filterProxy->setDynamicSortFilter( true );
+    m_collectionFilterModel = filterProxy;
+
 }
 
 
@@ -116,21 +125,16 @@ void Akregator::SelectionController::init() {
     Q_ASSERT( m_articleLister->itemView() );
     Q_ASSERT( !m_feedSelector->model() );
 
-    Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
-    filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-    filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-    filterProxy->setSourceModel( m_itemModel );
-    filterProxy->setDynamicSortFilter( true );
 
     connect( m_feedSelector, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(subscriptionContextMenuRequested(QPoint)) );
 
-    m_feedSelector->setModel( filterProxy );
+    m_feedSelector->setModel( m_collectionFilterModel );
 
     connect( m_feedSelector->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
              this, SLOT(feedSelectionChanged(QItemSelection,QItemSelection)) );
 
-    m_feedSelectionResolved = new QItemSelectionModel( filterProxy, this );
+    m_feedSelectionResolved = new QItemSelectionModel( m_collectionFilterModel, this );
     Akonadi::SelectionProxyModel* selectionProxy = new Akonadi::SelectionProxyModel( m_feedSelectionResolved );
     selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxy->setSourceModel( m_itemModel );
@@ -191,6 +195,16 @@ QList<KRss::Item> Akregator::SelectionController::selectedItems() const
 
 QModelIndex Akregator::SelectionController::selectedCollectionIndex() const {
     return m_feedSelector->selectionModel()->currentIndex();
+}
+
+Akonadi::Collection::List SelectionController::resourceRootCollections() const {
+    Akonadi::Collection::List l;
+    const int rows = m_collectionFilterModel->rowCount();
+    l.reserve( rows );
+    for ( int i = 0; i < rows; ++i )
+        l.push_back( m_collectionFilterModel->index( i, 0 ).data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>() );
+    //PENDING(frank) filter out search folders etc.
+    return l;
 }
 
 Akonadi::Collection Akregator::SelectionController::selectedCollection() const

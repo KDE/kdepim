@@ -44,6 +44,12 @@ class AKREGATORINTERFACES_EXPORT Command : public KJob
     friend class ::Akregator::EmitResultGuard;
 
 public:
+
+    enum Error {
+        UserCanceled = KJob::UserDefinedError,
+        SomeError,
+        UserDefinedCommandError
+    };
     explicit Command( QObject* parent = 0 );
     virtual ~Command();
 
@@ -65,6 +71,8 @@ Q_SIGNALS:
 protected:
     void setShowErrorDialog( bool );
     virtual void doStart() = 0;
+    void setErrorAndEmitResult( const QString& errorText, int error=SomeError );
+    void emitCanceled();
 
 private Q_SLOTS:
     void jobFinished();

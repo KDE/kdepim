@@ -25,6 +25,7 @@
 #define AKREGATOR_ABSTRACTSELECTIONCONTROLLER_H
 
 #include <QObject>
+#include <Akonadi/Collection>
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -106,6 +107,9 @@ public:
     virtual QModelIndex selectedCollectionIndex() const = 0;
 
     virtual Akonadi::Collection selectedCollection() const = 0;
+
+    virtual Akonadi::Collection::List resourceRootCollections() const = 0;
+
 public Q_SLOTS:
 
     virtual void setFilters( const std::vector<boost::shared_ptr<const Akregator::Filters::AbstractMatcher> >& ) = 0;

@@ -56,9 +56,7 @@ public:
         EmitResultGuard guard( q );
 
         if ( j->error() ) {
-            q->setError( KJob::UserDefinedError );
-            q->setErrorText( j->errorText() );
-            guard.emitResult();
+            guard.setErrorAndEmitResult( j->errorText(), Command::SomeError );
             return;
         }
 
@@ -77,7 +75,7 @@ public:
 
             if ( dlg->exec() != QDialog::Accepted ) {
                 delete dlg;
-                guard.emitResult();
+                guard.emitCanceled();
                 return;
             }
             fc.setTitle( dlg->feedTitle() );
@@ -92,15 +90,11 @@ public:
     }
 
     void collectionModified( KJob* j ) {
-        if ( j->error() ) {
-            q->setError( KJob::UserDefinedError );
-            q->setErrorText( j->errorText() );
-        }
-
-        q->emitResult();
+        if ( j->error() )
+            q->setErrorAndEmitResult( j->errorText() );
+        else
+            q->emitResult();
     }
-
-    void jobFinished();
 
     Akonadi::Collection collection;
     Akonadi::Session* session;

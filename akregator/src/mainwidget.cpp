@@ -407,14 +407,14 @@ void Akregator::MainWidget::sendArticle(bool attach)
 void MainWidget::slotImportFeedList()
 {
     std::auto_ptr<ImportFeedListCommand> cmd( new ImportFeedListCommand );
-    cmd->setResourceIdentifier( Settings::activeAkonadiResource() );
     d->setUpAndStart( cmd.release() );
 }
 
 void MainWidget::slotExportFeedList()
 {
     std::auto_ptr<ExportFeedListCommand> cmd( new ExportFeedListCommand );
-    cmd->setResourceIdentifier( Settings::activeAkonadiResource() );
+    cmd->setSession( m_session );
+    cmd->setRootCollections( m_selectionController->resourceRootCollections(), Akonadi::Collection() );
     d->setUpAndStart( cmd.release() );
 }
 
@@ -422,7 +422,6 @@ void MainWidget::slotMetakitImport()
 {
     std::auto_ptr<MigrateFeedsCommand> cmd( new MigrateFeedsCommand );
     cmd->setOpmlFile( KGlobal::dirs()->saveLocation("data", "akregator/data") + "/feeds.opml" );
-    cmd->setResource( Settings::activeAkonadiResource() );
     d->setUpAndStart( cmd.release() );
 }
 

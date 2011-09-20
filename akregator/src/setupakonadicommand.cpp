@@ -69,7 +69,11 @@ public:
     QPointer<QWidget> mainWidget;
 };
 
-SetUpAkonadiCommand::SetUpAkonadiCommand( QObject* parent ) : d( new Private( this ) ) {}
+SetUpAkonadiCommand::SetUpAkonadiCommand( QObject* parent ) : d( new Private( this ) )
+{
+    setUserVisible( false );
+    setShowErrorDialog( true );
+}
 
 void SetUpAkonadiCommand::doStart() {
     Akonadi::AttributeFactory::registerAttribute<KRss::SubscriptionLabelsCollectionAttribute>();
@@ -93,23 +97,19 @@ void SetUpAkonadiCommand::Private::dialogAccepted() {
 }
 
 void SetUpAkonadiCommand::Private::dialogRejected() {
-    q->setError( SetUpAkonadiCommand::SetupCanceled );
-    q->emitResult();
+    q->emitCanceled();
 }
 
 void SetUpAkonadiCommand::Private::resourceCreated( KJob* j ) {
-    EmitResultGuard guard( q );
     const AgentInstanceCreateJob* const job = qobject_cast<const AgentInstanceCreateJob*>( j );
-        assert( job );
+    assert( job );
     if ( job->error() ) {
-        KMessageBox::error( q->parentWidget(), i18n( "Could not create a news feed resource: %1. Please check your installation or contact your system administrator.", job->errorString() ) );
-        guard.setError( SetUpAkonadiCommand::SetupFailed );
-        guard.setErrorText( job->errorText() );
-    } else {
-        assert( job->instance().isValid() );
-        Settings::setActiveAkonadiResource( job->instance().identifier() );
+        q->setErrorAndEmitResult( i18n( "Could not create a news feed resource: %1. Please check your installation or contact your system administrator.", job->errorString() ), SetUpAkonadiCommand::SetupFailed );
+        return;
     }
-    guard.emitResult();
+    assert( job->instance().isValid() );
+    Settings::setActiveAkonadiResource( job->instance().identifier() );
+    q->emitResult();
 }
 
 void SetUpAkonadiCommand::Private::startSetup() {
@@ -120,8 +120,7 @@ void SetUpAkonadiCommand::Private::startSetup() {
     Control::widgetNeedsAkonadi( mainWidget );
 
     if ( !Control::start( q->parentWidget() ) || !guard.exists() ) {
-        guard.setError( SetUpAkonadiCommand::SetupFailed );
-        guard.emitResult();
+        guard.setErrorAndEmitResult( QString(), SetUpAkonadiCommand::SetupFailed );
         return;
     }
 
@@ -139,9 +138,7 @@ void SetUpAkonadiCommand::Private::startSetup() {
        const QString typeId = QLatin1String( "akonadi_opml_rss_resource" );
        const AgentType type = AgentManager::self()->type( typeId );
        if ( !type.isValid() ) {
-           KMessageBox::error( q->parentWidget(), i18n("Could not create a resource of type %1. Please check your installation or contact your system administrator.", typeId ) );
-           guard.setError( SetUpAkonadiCommand::SetupFailed );
-           guard.emitResult();
+           guard.setErrorAndEmitResult( i18n("Could not create a resource of type %1. Please check your installation or contact your system administrator.", typeId ), SetUpAkonadiCommand::SetupFailed );
            return;
        }
 

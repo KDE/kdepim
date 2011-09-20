@@ -35,8 +35,7 @@ public:
     explicit SetUpAkonadiCommand( QObject* parent=0 );
 
     enum Error {
-        SetupCanceled=UserDefinedError,
-        SetupFailed
+        SetupFailed=UserDefinedCommandError
     };
 
     QWidget* mainWidget() const;

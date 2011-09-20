@@ -77,7 +77,8 @@ CreateFeedCommand::Private::Private( Akonadi::Session* session, CreateFeedComman
     m_session( session ),
     m_autoexec( false )
 {
-
+    q->setUserVisible( false );
+    q->setShowErrorDialog( true );
 }
 
 void CreateFeedCommand::Private::doCreate()
@@ -169,20 +170,18 @@ void CreateFeedCommand::Private::doCreate()
 
 void CreateFeedCommand::Private::creationDone( KJob* job )
 {
-    EmitResultGuard guard( q );
     if ( job->error() )
-        KMessageBox::error( q->parentWidget(), i18n("Could not add feed: %1", job->errorString()),
-                            i18n("Feed Creation Failed") );
-
-    guard.emitResult();
+        q->setErrorAndEmitResult( i18n("Could not add feed: %1", job->errorString()) );
+    else
+        q->emitResult();
 }
 
 void CreateFeedCommand::Private::modificationDone( KJob* j )
 {
-    EmitResultGuard guard( q );
     if ( j->error() )
-        KMessageBox::error( q->parentWidget(), i18n("Could not edit the feed: %1", j->errorString() ), i18n("Editing Feed Failed") );
-    guard.emitResult();
+        q->setErrorAndEmitResult( i18n("Could not edit feed: %1", j->errorString()) );
+    else
+        q->emitResult();
 }
 
 CreateFeedCommand::CreateFeedCommand( Akonadi::Session* session, QObject* parent ) : Command( parent ), d( new Private( session, this ) )
@@ -194,7 +193,6 @@ CreateFeedCommand::~CreateFeedCommand()
 {
     delete d;
 }
-
 
 void CreateFeedCommand::setUrl( const QString& url )
 {
@@ -213,7 +211,7 @@ void CreateFeedCommand::setParentCollection( const Akonadi::Collection& collecti
 
 void CreateFeedCommand::doStart()
 {
-    QTimer::singleShot( 0, this, SLOT(doCreate()) );
+    d->doCreate();
 }
 
 #include "createfeedcommand.moc"

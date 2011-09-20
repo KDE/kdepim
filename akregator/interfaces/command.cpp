@@ -113,10 +113,20 @@ void Command::setShowErrorDialog( bool s ) {
 }
 
 void Command::jobFinished() {
-    if ( error() && d->showErrorDialog )
+    if ( error() && error() != UserCanceled && d->showErrorDialog )
         //don't show error dialog synchronously, to not disturb the
         //finished signals with a local event loop
         (new ShowErrorJob( errorText(), d->parentWidget ))->start();
+}
+
+void Command::setErrorAndEmitResult( const QString& errorText, int error ) {
+    setErrorText( errorText );
+    setError( error );
+    emitResult();
+}
+
+void Command::emitCanceled() {
+    setErrorAndEmitResult( i18n("User canceled"), Command::UserCanceled );
 }
 
 #include "command.moc"

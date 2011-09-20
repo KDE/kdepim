@@ -26,6 +26,8 @@
 
 #include "abstractselectioncontroller.h"
 
+#include <Akonadi/Collection>
+
 #include <QtCore/QMap>
 #include <QtCore/QPointer>
 #include <QtCore/QTime>
@@ -38,7 +40,6 @@ class QItemSelectionModel;
 class KJob;
 
 namespace Akonadi {
-    class Collection;
     class Item;
     class Session;
 }
@@ -77,8 +78,11 @@ public:
 
     Akonadi::Collection selectedCollection() const;
 
+    Akonadi::Collection::List resourceRootCollections() const;
+
     //impl
     void setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler );
+
 
 
 public Q_SLOTS:
@@ -108,6 +112,7 @@ private:
     QItemSelectionModel* m_feedSelectionResolved;
     QMap<Akonadi::Collection, QPoint> m_scrollBarPositions;
     Akonadi::Session* m_session;
+    QAbstractItemModel* m_collectionFilterModel;
 };
 
 } // namespace Akregator

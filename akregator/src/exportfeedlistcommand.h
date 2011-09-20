@@ -27,8 +27,14 @@
 
 #include "command.h"
 
+#include <Akonadi/Collection>
+
 class KUrl;
 
+namespace Akonadi {
+    class Session;
+    class Collection;
+}
 namespace Akregator {
 
 class ExportFeedListCommand : public Command
@@ -38,8 +44,8 @@ public:
     explicit ExportFeedListCommand( QObject* parent = 0 );
     ~ExportFeedListCommand();
 
-    void setResourceIdentifier( const QString& identifier );
-
+    void setRootCollections( const Akonadi::Collection::List& list, const Akonadi::Collection& preset );
+    void setSession( Akonadi::Session* session );
     void setTargetUrl( const KUrl& url );
 
 private:
@@ -48,7 +54,6 @@ private:
 private:
     class Private;
     Private* const d;
-    Q_PRIVATE_SLOT( d, void doExport() )
     Q_PRIVATE_SLOT( d, void exportFinished( KJob* ) )
 };
 

@@ -38,8 +38,9 @@ namespace Akregator {
 
         void setError( int code );
         void setErrorText( const QString& text );
-
+        void setErrorAndEmitResult( const QString& errorText, int error );
         void emitResult();
+        void emitCanceled();
         bool exists() const;
 
     private:
