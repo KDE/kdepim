@@ -19,9 +19,10 @@
 #define KRSS_FEEDITEMMODEL_H
 
 #include "krss_export.h"
-#include "item.h"
 
 #include <Akonadi/EntityTreeModel>
+
+#include "item.h"
 
 class KJob;
 

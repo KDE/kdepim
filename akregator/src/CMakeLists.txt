@@ -83,7 +83,7 @@ set(akregatorpart_PART_SRCS
    addfeeddialog.cpp
    exportfeedlistcommand.cpp
    importfeedlistcommand.cpp
-   importitemsjob.cpp
+#   importitemsjob.cpp
    tabwidget.cpp
 #   progressmanager.cpp
    kernel.cpp

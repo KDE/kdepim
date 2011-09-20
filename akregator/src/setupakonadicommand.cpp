@@ -26,11 +26,7 @@
 #include "akregatorconfig.h"
 #include "command_p.h"
 
-#include <krss/resourcemanager.h>
-
-#include "krss/subscriptionlabelscollectionattribute.h"
 #include "krss/feedpropertiescollectionattribute.h"
-#include "krss/virtualfeedpropertiesattribute.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentInstanceCreateJob>
@@ -76,9 +72,7 @@ SetUpAkonadiCommand::SetUpAkonadiCommand( QObject* parent ) : d( new Private( th
 }
 
 void SetUpAkonadiCommand::doStart() {
-    Akonadi::AttributeFactory::registerAttribute<KRss::SubscriptionLabelsCollectionAttribute>();
     Akonadi::AttributeFactory::registerAttribute<KRss::FeedPropertiesCollectionAttribute>();
-    Akonadi::AttributeFactory::registerAttribute<KRss::VirtualFeedPropertiesAttribute>();
     emitResult();
     //QMetaObject::invokeMethod( this, "startSetup", Qt::QueuedConnection );
 }
@@ -119,8 +113,6 @@ void SetUpAkonadiCommand::Private::resourceCreated( KJob* j ) {
 void SetUpAkonadiCommand::Private::startSetup() {
     EmitResultGuard guard( q );
 
-   ResourceManager::registerAttributes();
-
     Control::widgetNeedsAkonadi( mainWidget );
 
     if ( !Control::start( q->parentWidget() ) || !guard.exists() ) {
@@ -128,16 +120,15 @@ void SetUpAkonadiCommand::Private::startSetup() {
         return;
     }
 
-    ResourceManager::self()->forceUpdate();
 
-    const QStringList resources = KRss::ResourceManager::self()->identifiers();
 #ifdef KRSS_PORT_DISABLED
+    const QStringList resources = KRss::ResourceManager::self()->identifiers();
+
     const QString id = Settings::activeAkonadiResource();
     if ( resources.contains( id ) ) {
         guard.emitResult();
         return;
     }
-#endif
     if ( resources.isEmpty() ) {
        const QString typeId = QLatin1String( "akonadi_opml_rss_resource" );
        const AgentType type = AgentManager::self()->type( typeId );
@@ -155,12 +146,11 @@ void SetUpAkonadiCommand::Private::startSetup() {
     }
 
     if ( resources.size() == 1 ) {
-#ifdef KRSS_PORT_DISABLED
         Settings::setActiveAkonadiResource( resources.first() );
-#endif
         guard.emitResult();
         return;
     }
+#endif
 
     assert( !agentWidget );
     agentWidget = new AgentInstanceWidget;

@@ -23,7 +23,6 @@
 #include "importitemsjob.h"
 
 #include <krss/importitemsjob.h>
-#include <krss/netresource.h>
 
 #include <KDebug>
 #include <KLocalizedString>
