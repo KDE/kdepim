@@ -38,7 +38,7 @@ namespace Akregator {
         void setOpmlFile( const QString& path );
 
         enum Error {
-            ResourceNotFound=KJob::UserDefinedError
+            ResourceNotFound=Command::UserDefinedCommandError
         };
 
     private:

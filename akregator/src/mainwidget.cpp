@@ -41,7 +41,6 @@
 #include "exportfeedlistcommand.h"
 #include "framemanager.h"
 #include "kernel.h"
-#include "migratefeedscommand.h"
 #include "notificationmanager.h"
 #include "openurlrequest.h"
 #ifdef WITH_LIBKDEPIM
@@ -422,9 +421,11 @@ void MainWidget::slotExportFeedList()
 
 void MainWidget::slotMetakitImport()
 {
+#ifdef KRSS_PORT_DISABLED
     std::auto_ptr<MigrateFeedsCommand> cmd( new MigrateFeedsCommand );
     cmd->setOpmlFile( KGlobal::dirs()->saveLocation("data", "akregator/data") + "/feeds.opml" );
     d->setUpAndStart( cmd.release() );
+#endif
 }
 
 void Akregator::MainWidget::addFeedToGroup(const QString& url, const QString& groupName)
