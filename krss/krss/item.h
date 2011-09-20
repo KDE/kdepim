@@ -24,9 +24,9 @@
 #define KRSS_ITEM_H
 
 #include "krss_export.h"
-#include "tag.h"
 
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QMetaType>
 
 class KDateTime;
 
@@ -78,9 +78,6 @@ public:
     bool operator<( const Item& other ) const;
 
     ItemId id() const;
-
-    QList<TagId> tags() const;
-    void setTags( const QList<TagId>& tags );
 
     static Item::Status status( const Akonadi::Item& aitem );
     Item::Status status() const;

@@ -24,9 +24,11 @@
 #define KRSS_RSSITEM_H
 
 #include "krss_export.h"
+
 #include "item.h"
 
 #include <Akonadi/Item>
+
 #include <QtCore/QSharedDataPointer>
 
 class KDateTime;

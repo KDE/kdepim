@@ -26,8 +26,7 @@ include_directories( ${Boost_INCLUDE_DIR} ${QT_INCLUDES} ${krss_SOURCE_DIR} ${kr
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 add_subdirectory(krss)
-add_subdirectory(krssresource)
+#add_subdirectory(krssresource)
 add_subdirectory(plugin)
-add_subdirectory(resources)
-add_subdirectory(examples)
+#add_subdirectory(resources)
 add_subdirectory(cmake/modules)

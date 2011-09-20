@@ -17,23 +17,12 @@
 
 #include "feedcollection.h"
 #include "feedpropertiescollectionattribute.h"
-#include "tagidsattribute.h"
-#include "subscriptionlabelscollectionattribute.h"
-
+#
 #include <akonadi/cachepolicy.h>
 
 using Akonadi::Collection;
 using namespace KRss;
 
-Feed::Id FeedCollection::feedIdFromAkonadi( const Akonadi::Collection::Id& id )
-{
-    return id;
-}
-
-Akonadi::Collection::Id FeedCollection::feedIdToAkonadi( const Feed::Id& feedId )
-{
-    return feedId;
-}
 
 FeedCollection::FeedCollection()
 {
@@ -54,11 +43,6 @@ Akonadi::Collection FeedCollection::findFolder( const Akonadi::Collection& c ) {
 bool FeedCollection::isFolder() const
 {
     return contentMimeTypes() == QStringList( Akonadi::Collection::mimeType() );
-}
-
-Feed::Id FeedCollection::feedId() const
-{
-    return feedIdFromAkonadi( id() );
 }
 
 QString FeedCollection::title() const
@@ -143,54 +127,6 @@ bool FeedCollection::preferItemLinkForDisplay() const
 void FeedCollection::setPreferItemLinkForDisplay( bool b )
 {
     attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setPreferItemLinkForDisplay( b );
-}
-
-QList<TagId> FeedCollection::tags() const
-{
-    const TagIdsAttribute* const attr = attribute<TagIdsAttribute>();
-    if ( attr )
-        return attr->tagIds();
-
-    return QList<TagId>();
-}
-
-void FeedCollection::setTags( const QList<TagId> &tags )
-{
-    attribute<TagIdsAttribute>( AddIfMissing )->setTagIds( tags );
-}
-
-void FeedCollection::addTag( const TagId &tag )
-{
-    attribute<TagIdsAttribute>( AddIfMissing )->addTagId( tag );
-}
-
-void FeedCollection::removeTag( const TagId &tag )
-{
-    attribute<TagIdsAttribute>( AddIfMissing )->removeTagId( tag );
-}
-
-QStringList FeedCollection::subscriptionLabels() const
-{
-    SubscriptionLabelsCollectionAttribute *attr = attribute<SubscriptionLabelsCollectionAttribute>();
-    if ( attr )
-        return attr->subscriptionLabels();
-
-    return QStringList();
-}
-
-void FeedCollection::setSubscriptionLabels( const QStringList &subscriptionLabels )
-{
-    attribute<SubscriptionLabelsCollectionAttribute>( AddIfMissing )->setSubscriptionLabels( subscriptionLabels );
-}
-
-void FeedCollection::addSubscriptionLabel( const QString &subscriptionLabel )
-{
-    attribute<SubscriptionLabelsCollectionAttribute>( AddIfMissing )->addSubscriptionLabel( subscriptionLabel );
-}
-
-void FeedCollection::removeSubscriptionLabel( const QString &subscriptionLabel )
-{
-    attribute<SubscriptionLabelsCollectionAttribute>( AddIfMissing )->removeSubscriptionLabel( subscriptionLabel );
 }
 
 int FeedCollection::fetchInterval() const

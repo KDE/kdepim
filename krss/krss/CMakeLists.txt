@@ -1,7 +1,7 @@
 # needed to compile the code in subdirectories
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 # taken from dolphin
 macro_optional_find_package(Nepomuk)
@@ -22,47 +22,14 @@ set(krss_LIB_SRCS
    person.cpp
    category.cpp
    rssitem.cpp
-   tag.cpp
    feedpropertiescollectionattribute.cpp
-   subscriptionlabelscollectionattribute.cpp
-   virtualfeedpropertiesattribute.cpp
-   tagidsattribute.cpp
    feedcollection.cpp
-   virtualfeedcollection.cpp
-   resourcemanager.cpp
-   resource.cpp
-   netresource.cpp
-   #searchresource.cpp
-   retrieveresourcecollectionsjob.cpp
-   feed.cpp
-   feedvisitor.cpp
-   searchfeed.cpp
-   netfeed.cpp
-   feedlist.cpp
-   dbushelper.cpp
    helper.cpp
    feeditemmodel.cpp
-   treenode.cpp
-   treenodevisitor.cpp
-   exportopmljob.cpp
-   importitemsjob.cpp
-   importopmljob.cpp
-   itemlisting.cpp
-   itemlistjob.cpp
-   feedjobs.cpp
-   itemjobs.cpp
-   statusmodifyjob.cpp
-   netfeedcreatejob.cpp
-   #subscriptionsmodel.cpp
-   tagjobs.cpp
-   tagprovider.cpp
 # ui stuff
-   ui/itemview.cpp
    ui/feedlistview.cpp
    ui/feedlistdelegate.cpp
-   ui/netfeedcreatedialog.cpp
    ui/feedpropertiesdialog.cpp
-   ui/tagpropertiesdialog.cpp
 )
 
 if(KRSS_ENABLE_PROTOBUF_SERIALIZER)
@@ -97,59 +64,19 @@ endif(KRSS_ENABLE_JSON_SERIALIZER)
 endif(KRSS_ENABLE_QDATASTREAM_SERIALIZER)
 endif(KRSS_ENABLE_PROTOBUF_SERIALIZER)
 
-if(Nepomuk_FOUND)
-set(krss_LIB_SRCS
-   ${krss_LIB_SRCS}
-   nepomuktagprovider/nepomuktagprovider.cpp
-   nepomuktagprovider/nepomuktagjobimpls.cpp
-)
-else(Nepomuk_FOUND)
-set(krss_LIB_SRCS
-   ${krss_LIB_SRCS}
-   defaulttagprovider/tagpropertiesattribute.cpp
-   defaulttagprovider/defaulttagprovider.cpp
-   defaulttagprovider/defaulttagjobimpls.cpp
-)
-endif(Nepomuk_FOUND)
-
 set(krss_LIB_HDRS
    krss_export.h
    item.h
    enclosure.h
-   exportopmljob.h
    person.h
    category.h
-   tag.h
-   resourcemanager.h
-   resource.h
-   feed.h
-   feedvisitor.h
-   searchfeed.h
-   netfeed.h
-   netresource.h
-   treenode.h
-   treenodevisitor.h
-   feedlist.h
-   itemlisting.h
-   itemlistjob.h
    feeditemmodel.h 
-   importitemsjob.h
-   importopmljob.h
-   itemjobs.h
-   feedjobs.h
-   statusmodifyjob.h
-   netfeedcreatejob.h
-   subscriptionsmodel.h
-   tagjobs.h
-   tagprovider.h
 )
 
 set(krss_UI_LIB_HDRS
-   ui/itemview.h
    ui/feedlistview.h
    ui/netfeedcreatedialog.h
    ui/feedpropertiesdialog.h
-   ui/tagpropertiesdialog.h
 )
 
 set(krss_PRIVATE_LIB_HDRS
@@ -159,7 +86,7 @@ set(krss_PRIVATE_LIB_HDRS
 
 # WARNING: we depend on the dbus interface description from krss/krssresource
 qt4_add_dbus_interface(krss_LIB_SRCS ${krss_SOURCE_DIR}/krssresource/org.kde.krss.xml krssinterface)
-kde4_add_ui_files(krss_LIB_SRCS ui/netfeedcreatedialog.ui ui/feedpropertiesdialog.ui ui/tagpropertieswidget.ui)
+kde4_add_ui_files(krss_LIB_SRCS ui/netfeedcreatedialog.ui ui/feedpropertiesdialog.ui)
 
 kde4_add_library(krss SHARED ${krss_LIB_SRCS})
 

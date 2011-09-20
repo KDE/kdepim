@@ -22,11 +22,10 @@
 
 #include "item.h"
 #include "item_p.h"
-#include "rssitem.h"
-#include "tagidsattribute.h"
 #include "category.h"
 #include "enclosure.h"
 #include "person.h"
+#include "rssitem.h"
 
 #include <syndication/tools.h>
 
@@ -102,20 +101,6 @@ bool Item::isNull() const
 {
     //PENDING(frank) review
     return d->akonadiItem.id() == -1;
-}
-
-QList<TagId> Item::tags() const
-{
-    const TagIdsAttribute * const attr = d->akonadiItem.attribute<TagIdsAttribute>();
-    if ( attr )
-        return attr->tagIds();
-
-    return QList<TagId>();
-}
-
-void Item::setTags( const QList<TagId>& tags )
-{
-    d->akonadiItem.attribute<TagIdsAttribute>( Akonadi::Item::AddIfMissing )->setTagIds( tags );
 }
 
 QString Item::title() const

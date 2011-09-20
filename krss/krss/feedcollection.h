@@ -19,19 +19,14 @@
 #define KRSS_FEEDCOLLECTION_H
 
 #include "krss_export.h"
-#include "tag.h"
-#include "feed.h"
 
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
 
 namespace KRss {
 
 class KRSS_EXPORT FeedCollection : public Akonadi::Collection
 {
 public:
-    static Feed::Id feedIdFromAkonadi( const Akonadi::Collection::Id& id );
-    static Akonadi::Collection::Id feedIdToAkonadi( const Feed::Id& feedId );
-
     FeedCollection();
     FeedCollection( const Akonadi::Collection &collection );
 
@@ -39,7 +34,6 @@ public:
 
     bool isFolder() const;
 
-    Feed::Id feedId() const;
     QString title() const;
     void setTitle( const QString &title );
     QString xmlUrl() const;
@@ -50,14 +44,6 @@ public:
     void setDescription( const QString &description );
     QString feedType() const;
     void setFeedType( const QString &feedType );
-    QList<TagId> tags() const;
-    void setTags( const QList<TagId> &tags );
-    void addTag( const TagId &tag );
-    void removeTag( const TagId &tag );
-    QStringList subscriptionLabels() const;
-    void setSubscriptionLabels( const QStringList &subscriptionLabels );
-    void addSubscriptionLabel( const QString &subscriptionLabel );
-    void removeSubscriptionLabel( const QString &subscriptionLabel );
 
     int fetchInterval() const;
     void setFetchInterval( int interval );
