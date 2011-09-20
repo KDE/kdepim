@@ -32,7 +32,6 @@ using MessageCore::MailingList;
 
 namespace MailCommon {
 
-class Kernel;
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {

@@ -42,7 +42,6 @@ class KJob;
 
 namespace MailCommon {
 
-class Kernel;
 
 /**
    * A widget that contains a KLineEdit which shows the current folder
@@ -116,7 +115,6 @@ class Kernel;
       bool mShowOutbox;
       bool mShowImapFolders;
       bool mNotCreateNewFolder;
-      Kernel *mMailCommon;
   };
 
 }

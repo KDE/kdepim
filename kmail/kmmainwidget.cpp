@@ -174,6 +174,7 @@
 #include <QDBusMessage>
 #include <QDBusConnection>
 #include <QTextDocument>
+#include <QMenu>
 
 // System includes
 #include <assert.h>
@@ -826,11 +827,11 @@ void KMMainWidget::readConfig()
 {
   KSharedConfig::Ptr config = KMKernel::self()->config();
 
-  bool oldLongFolderList = mLongFolderList;
-  bool oldReaderWindowActive = mReaderWindowActive;
-  bool oldReaderWindowBelow = mReaderWindowBelow;
-  bool oldFavoriteFolderView = mEnableFavoriteFolderView;
-  bool oldFolderQuickSearch = mEnableFolderQuickSearch;
+  const bool oldLongFolderList = mLongFolderList;
+  const bool oldReaderWindowActive = mReaderWindowActive;
+  const bool oldReaderWindowBelow = mReaderWindowBelow;
+  const bool oldFavoriteFolderView = mEnableFavoriteFolderView;
+  const bool oldFolderQuickSearch = mEnableFolderQuickSearch;
 
   // on startup, the layout is always new and we need to relayout the widgets
   bool layoutChanged = !mStartupDone;
@@ -941,7 +942,7 @@ void KMMainWidget::writeConfig()
       if ( !mReaderWindowBelow )
         GlobalSettings::self()->setReaderWindowWidth( mMsgView->width() );
       mMsgView->viewer()->writeConfig();
-      GlobalSettings::self()->setReaderWindowHeight( mMsgView->width() );
+      GlobalSettings::self()->setReaderWindowHeight( mMsgView->height() );
     }
   }
 }
@@ -1211,10 +1212,8 @@ void KMMainWidget::slotCollectionChanged( const Akonadi::Collection&collection, 
     if ( idx.isValid() ) {
       text = idx.data().toString();
       icon = idx.data( Qt::DecorationRole ).value<QIcon>();
+      mMessagePane->updateTabIconText( collection, text,icon );
     }
-
-    
-    mMessagePane->updateTabIconText( collection, text,icon );
   }
 }
 
@@ -3983,7 +3982,7 @@ QList<KActionCollection*> KMMainWidget::actionCollections() const {
 void KMMainWidget::slotUpdateUndo()
 {
   if ( actionCollection()->action( "kmail_undo" ) ) {
-    actionCollection()->action( "kmail_undo" )->setEnabled( kmkernel->undoStack()->size() > 0 );
+    actionCollection()->action( "kmail_undo" )->setEnabled( kmkernel->undoStack()->size()>0 );
   }
 }
 
