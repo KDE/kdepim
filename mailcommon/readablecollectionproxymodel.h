@@ -36,8 +36,7 @@ public:
     None = 0,
     HideVirtualFolder = 1,
     HideSpecificFolder = 2,
-    HideOutboxFolder = 4,
-    HideImapFolder = 8
+    HideOutboxFolder = 4
   };
   Q_DECLARE_FLAGS( ReadableCollectionOptions, ReadableCollectionOption )
 
@@ -60,9 +59,6 @@ public:
 
   void setHideOutboxFolder( bool hide );
   bool hideOutboxFolder() const;
-
-  void setHideImapFolder( bool hide );
-  bool hideImapFolder() const;
 
 protected:
   virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;

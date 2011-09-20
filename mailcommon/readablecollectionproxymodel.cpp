@@ -39,15 +39,13 @@ public:
     : enableCheck( false ),
       hideVirtualFolder( false ),
       hideSpecificFolder( false ),
-      hideOutboxFolder( false ),
-      hideImapFolder( false )
+      hideOutboxFolder( false )
     {
     }
   bool enableCheck;
   bool hideVirtualFolder;
   bool hideSpecificFolder;
   bool hideOutboxFolder;
-  bool hideImapFolder;
 };
 
 ReadableCollectionProxyModel::ReadableCollectionProxyModel( QObject *parent, ReadableCollectionOptions option )
@@ -63,9 +61,6 @@ ReadableCollectionProxyModel::ReadableCollectionProxyModel( QObject *parent, Rea
   }
   if ( option & HideOutboxFolder ) {
     d->hideOutboxFolder = true;
-  }
-  if ( option & HideImapFolder ) {
-    d->hideImapFolder = true;
   }
 }
 
@@ -135,17 +130,6 @@ bool ReadableCollectionProxyModel::hideOutboxFolder() const
   return d->hideOutboxFolder;
 }
 
-void ReadableCollectionProxyModel::setHideImapFolder( bool hide )
-{
-  d->hideImapFolder = hide;
-  invalidate();
-}
-
-bool ReadableCollectionProxyModel::hideImapFolder() const
-{
-  return d->hideImapFolder;
-}
-
 bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &sourceParent) const
 {
   const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
@@ -163,10 +147,6 @@ bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &
 
   if ( d->hideOutboxFolder ) {
     if ( collection == Kernel::self()->outboxCollectionFolder() )
-      return false;
-  }
-  if ( d->hideImapFolder ) {
-    if ( collection.resource().startsWith( IMAP_RESOURCE_IDENTIFIER ) )
       return false;
   }
 
