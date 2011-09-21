@@ -160,12 +160,13 @@ void FilterManager::appendFilters( const QList<MailCommon::MailFilter*> &filters
   beginUpdate();
   if ( replaceIfNameExists ) {
     foreach ( const MailCommon::MailFilter *newFilter, filters ) {
-      const int numberOfFilters = d->mFilters.count();
+      int numberOfFilters = d->mFilters.count();
       for ( int i = 0; i < numberOfFilters; ++i ) {
         MailCommon::MailFilter *filter = d->mFilters.at( i );
         if ( newFilter->name() == filter->name() ) {
           d->mFilters.removeAll( filter );
           i = 0;
+	  numberOfFilters = d->mFilters.count();
         }
       }
     }
