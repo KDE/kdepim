@@ -34,6 +34,9 @@ public:
 
     bool isFolder() const;
 
+    QString title() const;
+    void setTitle( const QString& title );
+
     QString xmlUrl() const;
     void setXmlUrl( const QString &xmlUrl );
     QString htmlUrl() const;
