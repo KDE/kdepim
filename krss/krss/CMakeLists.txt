@@ -84,8 +84,6 @@ set(krss_PRIVATE_LIB_HDRS
     rssitemserializer.h
 )
 
-# WARNING: we depend on the dbus interface description from krss/krssresource
-qt4_add_dbus_interface(krss_LIB_SRCS ${krss_SOURCE_DIR}/krssresource/org.kde.krss.xml krssinterface)
 kde4_add_ui_files(krss_LIB_SRCS ui/netfeedcreatedialog.ui ui/feedpropertiesdialog.ui)
 
 kde4_add_library(krss SHARED ${krss_LIB_SRCS})
