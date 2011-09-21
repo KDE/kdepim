@@ -68,7 +68,7 @@ public:
             //TODO
         } else {
             QPointer<FeedPropertiesDialog> dlg( new FeedPropertiesDialog( q->parentWidget() ) );
-            dlg->setFeedTitle( fc.title() );
+            dlg->setFeedTitle( collection.name() );
             dlg->setUrl( fc.xmlUrl() );
             dlg->setCustomFetchInterval( fc.fetchInterval() > 0 ); //PENDING(frank) correct?
             dlg->setFetchInterval( fc.fetchInterval() );
@@ -78,7 +78,7 @@ public:
                 guard.emitCanceled();
                 return;
             }
-            fc.setTitle( dlg->feedTitle() );
+            fc.setName( dlg->feedTitle() );
             fc.setXmlUrl( dlg->url() );
             fc.setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : 0 );
             delete dlg;

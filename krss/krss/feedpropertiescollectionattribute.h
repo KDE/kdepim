@@ -37,8 +37,6 @@ public:
         QByteArray serialized() const;
         void deserialize( const QByteArray &data );
 
-        QString name() const;
-        void setName( const QString &name );
         QString xmlUrl() const;
         void setXmlUrl( const QString &xmlUrl );
         QString htmlUrl() const;

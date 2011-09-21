@@ -26,7 +26,6 @@
 #include "command_p.h"
 
 #include <krss/exportopmljob.h>
-#include <krss/feedcollection.h>
 
 #include <KFileDialog>
 #include <KInputDialog>
@@ -72,7 +71,7 @@ void ExportFeedListCommand::Private::doExport()
     QStringList titles;
     titles.reserve( rootCollections.size() );
     Q_FOREACH( const Collection& i, rootCollections ) {
-        const QString t = FeedCollection( i ).title();
+        const QString t = i.name();
         //not efficient, but who has trillions of resources anyway? Right? Right.
         if ( titles.contains( t ) ) {
             occs[t] += 1;

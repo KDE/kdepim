@@ -72,9 +72,8 @@ namespace {
             list.append( formatEnclosure( i ) );
         return list.join( QLatin1String("<br/>") );
     }
-
-
 }
+
 static QString imageLink( const QString& imageDir, const Akonadi::Collection& c ) {
     KRss::FeedCollection fc( c );
     const QString file = Utils::fileNameForUrl( fc.xmlUrl() );
@@ -115,8 +114,7 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
 }
 
 static QString formatFolderSummary( const Collection& c ) {
-    const FeedCollection fc( c );
-    const QString title = fc.title();
+    const QString title = c.name();
     QString text = QString::fromLatin1("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
     text += QString::fromLatin1("<div class=\"headertitle\" dir=\"%1\">%2").arg(Utils::directionOf(Utils::stripTags(title)), title);
 #ifdef KRSS_PORT_DISABLED
@@ -136,8 +134,8 @@ static QString formatFeedSummary( const FeedCollection& feed, const KUrl& imageD
 
     QString text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
 
-    text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(feed.title())));
-    text += feed.title();
+    text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(feed.name())));
+    text += feed.name();
 #ifdef KRSS_PORT_DISABLED
     if(node->unread() == 0)
         text += i18n(" (no unread articles)");

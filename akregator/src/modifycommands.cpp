@@ -84,7 +84,7 @@ void MarkAsReadCommand::doStart() {
 void MarkAsReadCommand::collectionsFetched( KJob* j ) {
     if ( j->error() ) {
         setError( KJob::UserDefinedError );
-        setErrorText( i18n("Could not fetch collection %1: %2", d->collection.title(), j->errorString() ) );
+        setErrorText( i18n("Could not fetch collection %1: %2", d->collection.name(), j->errorString() ) );
         emitResult();
         return;
     }
@@ -115,7 +115,7 @@ void MarkAsReadCommand::itemsFetched( KJob* j ) {
 
     if ( j->error() ) {
         setError( KJob::UserDefinedError );
-        setErrorText( i18n("Could not fetch items for collection %1: %2", d->collection.title(), j->errorString() ) );
+        setErrorText( i18n("Could not fetch items for collection %1: %2", d->collection.name(), j->errorString() ) );
     } else {
         const ItemFetchJob * const fjob = qobject_cast<const ItemFetchJob*>( j );
         Q_ASSERT( fjob );

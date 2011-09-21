@@ -47,16 +47,6 @@ void FeedPropertiesCollectionAttribute::deserialize( const QByteArray &data )
     m_properties = decodeProperties( data );
 }
 
-QString FeedPropertiesCollectionAttribute::name() const
-{
-    return m_properties.value( QLatin1String("Name" ) );
-}
-
-void FeedPropertiesCollectionAttribute::setName( const QString &name )
-{
-    m_properties.insert( QLatin1String("Name" ), name );
-}
-
 bool FeedPropertiesCollectionAttribute::preferItemLinkForDisplay() const
 {
     return m_properties.value( QLatin1String("PreferItemLinkForDisplay") ) == QLatin1String( "true" );
