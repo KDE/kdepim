@@ -191,6 +191,7 @@ void FilterManager::endUpdate()
 {
   d->writeConfig( true );
   d->mMailFilterAgentInterface->reload();
+  emit filtersChanged();
 }
 
 #include "filtermanager.moc"
