@@ -34,7 +34,7 @@
 #include <QFileInfo>
 #include <QTimer>
 
-using namespace KMail;
+using namespace MailCommon;
 
 BackupJob::BackupJob( QWidget *parent )
   : QObject( parent ),
