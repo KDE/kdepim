@@ -986,10 +986,8 @@ void ASWizInfoPage::addAvailableTool( const QString &visibleName )
 
 bool ASWizInfoPage::isProgramSelected( const QString &visibleName )
 {
-  QString listName = visibleName;
-
-  QList<QListWidgetItem*> foundItems = mToolsList->findItems( listName, Qt::MatchFixedString );
-  return (foundItems.size() > 0 && foundItems[0]->isSelected());
+  const QList<QListWidgetItem*> foundItems = mToolsList->findItems( visibleName, Qt::MatchFixedString );
+  return (!foundItems.isEmpty() && foundItems[0]->isSelected());
 }
 
 
@@ -1037,7 +1035,7 @@ ASWizSpamRulesPage::ASWizSpamRulesPage( QWidget * parent, const char * name)
   layout->addWidget( mMoveUnsureRules );
 
   mFolderReqForUnsureFolder = new FolderRequester( this );
-  mFolderReqForUnsureFolder->setFolder( "inbox" );
+  mFolderReqForUnsureFolder->setFolder( CommonKernel->inboxCollectionFolder() );
   mFolderReqForUnsureFolder->setMustBeReadWrite( true );
   mFolderReqForUnsureFolder->setShowOutbox( false );
   mFolderReqForUnsureFolder->setShowImapFolders( false );
