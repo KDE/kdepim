@@ -230,7 +230,7 @@ void JobScheduler::resume()
 ////
 
 ScheduledJob::ScheduledJob( const Akonadi::Collection& folder, bool immediate )
-  : FolderJob( folder ), mImmediate( immediate )
+  : mImmediate( immediate )
 {
   mCancellable = true;
   mSrcFolder = folder;
