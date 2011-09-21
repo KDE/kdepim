@@ -199,7 +199,7 @@ private:
   KActionCollection *mActionCollection;
 
   KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
-    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mSelectAllAction;
+    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction;
 
   MessageViewer::Viewer *mViewer;
 };
