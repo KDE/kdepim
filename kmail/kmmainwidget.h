@@ -563,8 +563,6 @@ private:
     KAction *mMarkThreadAsUnreadAction;
     KToggleAction *mToggleThreadImportantAction;
     KToggleAction *mToggleThreadToActAction;
-    KToggleAction *mToggleThreadFlagAction;
-    KToggleAction* mSizeColumnToggle;
 
     KToggleAction *mWatchThreadAction, *mIgnoreThreadAction;
 
@@ -574,8 +572,6 @@ private:
     KMReaderWin  *mMsgView;
     QSplitter    *mSplitter1, *mSplitter2, *mFolderViewSplitter;
     Akonadi::Collection mTemplateFolder;
-    KAction      *mlistFilterAction;
-    int           mMessageStatusId;
     KUrl          mUrlCurrent;
     QMenu        *mActMenu;
     QMenu        *mSendMenu;
