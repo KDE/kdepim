@@ -50,6 +50,7 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
+  backupjob.cpp
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")

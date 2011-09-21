@@ -21,6 +21,8 @@
 
 #include "progressmanager.h"
 
+#include "mailcommon_export.h"
+
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 #include <kurl.h>
@@ -37,7 +39,7 @@ namespace Akonadi {
   class ItemFetchJob;
 }
 
-namespace KMail
+namespace MailCommon
 {
 
 /**
@@ -47,7 +49,7 @@ namespace KMail
  *
  * The job deletes itself after it finished.
  */
-class BackupJob : public QObject
+class  MAILCOMMON_EXPORT BackupJob : public QObject
 {
   Q_OBJECT
 
