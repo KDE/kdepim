@@ -45,20 +45,6 @@ bool FeedCollection::isFolder() const
     return contentMimeTypes() == QStringList( Akonadi::Collection::mimeType() );
 }
 
-QString FeedCollection::title() const
-{
-    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
-    if ( attr )
-        return attr->name();
-
-    return QString();
-}
-
-void FeedCollection::setTitle( const QString &title )
-{
-    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setName( title );
-}
-
 QString FeedCollection::xmlUrl() const
 {
     FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
