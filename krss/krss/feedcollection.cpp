@@ -17,10 +17,10 @@
 
 #include "feedcollection.h"
 #include "feedpropertiescollectionattribute.h"
-#
+#include <Akonadi/EntityDisplayAttribute>
 #include <akonadi/cachepolicy.h>
 
-using Akonadi::Collection;
+using namespace Akonadi;
 using namespace KRss;
 
 
@@ -57,6 +57,18 @@ QString FeedCollection::xmlUrl() const
 void FeedCollection::setXmlUrl( const QString &xmlUrl )
 {
     attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setXmlUrl( xmlUrl );
+}
+
+QString FeedCollection::title() const {
+    EntityDisplayAttribute* attr = attribute<EntityDisplayAttribute>();
+    if ( attr )
+        return attr->displayName();
+    else
+        return name();
+}
+
+void FeedCollection::setTitle( const QString& t ) {
+    attribute<EntityDisplayAttribute>( AddIfMissing )->setDisplayName( t );
 }
 
 QString FeedCollection::htmlUrl() const

@@ -114,7 +114,7 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
 }
 
 static QString formatFolderSummary( const Collection& c ) {
-    const QString title = c.name();
+    const QString title = FeedCollection( c ).title();
     QString text = QString::fromLatin1("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
     text += QString::fromLatin1("<div class=\"headertitle\" dir=\"%1\">%2").arg(Utils::directionOf(Utils::stripTags(title)), title);
 #ifdef KRSS_PORT_DISABLED
@@ -134,8 +134,8 @@ static QString formatFeedSummary( const FeedCollection& feed, const KUrl& imageD
 
     QString text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
 
-    text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(feed.name())));
-    text += feed.name();
+    text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(feed.title())));
+    text += feed.title();
 #ifdef KRSS_PORT_DISABLED
     if(node->unread() == 0)
         text += i18n(" (no unread articles)");

@@ -124,7 +124,7 @@ QVariant FeedItemModel::entityData( const Collection &collection, int column, in
             return false;
         case FeedTitleColumn:
         {
-            const QString title = collection.name();
+            const QString title = FeedCollection( collection ).title();
             if ( !title.isEmpty() )
                 return title;
             break;

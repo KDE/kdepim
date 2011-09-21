@@ -542,7 +542,7 @@ void Akregator::MainWidget::slotNodeSelected(const Akonadi::Collection& c)
     }
 
     if ( c.isValid() )
-        m_mainFrame->setWindowTitle( c.name() );
+        m_mainFrame->setWindowTitle( KRss::FeedCollection( c ).title() );
 
     m_actionManager->slotNodeSelected(c);
 }

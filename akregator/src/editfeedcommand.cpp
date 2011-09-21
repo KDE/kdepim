@@ -68,7 +68,7 @@ public:
             //TODO
         } else {
             QPointer<FeedPropertiesDialog> dlg( new FeedPropertiesDialog( q->parentWidget() ) );
-            dlg->setFeedTitle( collection.name() );
+            dlg->setFeedTitle( fc.title() );
             dlg->setUrl( fc.xmlUrl() );
             dlg->setCustomFetchInterval( fc.fetchInterval() > 0 ); //PENDING(frank) correct?
             dlg->setFetchInterval( fc.fetchInterval() );
