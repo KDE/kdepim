@@ -24,6 +24,9 @@ configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-m
 add_subdirectory(about)
 add_subdirectory(tests)
 add_subdirectory(pics)
+if (NOT WINCE)
+  add_subdirectory(a11y)
+endif (NOT WINCE)
 
 if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
