@@ -179,7 +179,7 @@ void FolderCollection::readConfig()
   mUnreadExpireUnits = (ExpireUnits)
       configGroup.readEntry( "UnreadExpireUnits", (int)ExpireNever );
   mExpireAction = configGroup.readEntry( "ExpireAction", "Delete") == "Move" ? ExpireMove : ExpireDelete;
-  mExpireToFolderId = configGroup.readEntry( "ExpireToFolder" );
+  mExpireToFolderId = configGroup.readEntry( "ExpireToFolder", -1 );
 
   mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
   mMailingList.readConfig( configGroup );
@@ -375,7 +375,7 @@ void FolderCollection::setExpireAction( ExpireAction a )
   }
 }
 
-void FolderCollection::setExpireToFolderId( const QString& id )
+void FolderCollection::setExpireToFolderId( Akonadi::Collection::Id id )
 {
   if ( id != mExpireToFolderId ) {
     mExpireToFolderId = id;

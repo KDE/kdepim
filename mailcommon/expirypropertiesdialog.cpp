@@ -139,8 +139,8 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   else
     moveToRB->setChecked( true );
 
-  QString destFolderID = mFolder->expireToFolderId();
-  if ( !destFolderID.isEmpty() ) {
+  Akonadi::Collection::Id destFolderID = mFolder->expireToFolderId();
+  if ( destFolderID > 0 ) {
     Akonadi::Collection destFolder = Kernel::self()->collectionFromId( destFolderID );
     if ( destFolder.isValid() )
       folderSelector->setFolder( destFolder );
@@ -173,7 +173,7 @@ void ExpiryPropertiesDialog::accept()
       return;
     }
     else
-      mFolder->setExpireToFolderId( QString::number( expireToFolder.id() ) );
+      mFolder->setExpireToFolderId( expireToFolder.id() );
 
   }
 
