@@ -1,3 +1,4 @@
+
 /******************************************************************************
  *
  *  Copyright 2008 Szymon Tomasz Stefanek <pragma@kvirc.net>
@@ -22,7 +23,6 @@
 #include "messageitem_p.h"
 
 #include "messagetag.h"
-#include "ontologies/email.h"
 #include "messagecore/annotationdialog.h"
 #include "core/callbacknepomukresourceretriever.h"
 #include "theme.h"
@@ -32,6 +32,7 @@
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
 #include <Nepomuk/Variant>
+#include <nepomuk/nmo.h>
 
 #include <KIconLoader>
 
@@ -305,8 +306,7 @@ QString MessageItem::contentSummary() const
   Q_D( const MessageItem );
   Nepomuk::Resource mail( d->mAkonadiItem.url() );
   const QString content =
-      mail.property( NepomukFast::Message::plainTextMessageContentUri() ).toString();
-
+      mail.property( Nepomuk::Vocabulary::NMO::plainTextMessageContent() ).toString();
   // Extract the first 5 non-empty, non-quoted lines from the content and return it
   int numLines = 0;
   const int maxLines = 5;
