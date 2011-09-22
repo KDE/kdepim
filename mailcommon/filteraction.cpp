@@ -356,7 +356,7 @@ FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString 
 
 bool FilterActionWithFolder::isEmpty() const
 {
-  return (!mFolder.isValid() && mFolderName.isEmpty());
+  return !mFolder.isValid();
 }
 
 QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
@@ -374,15 +374,11 @@ QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
 void FilterActionWithFolder::applyParamWidgetValue( QWidget *paramWidget )
 {
   mFolder = static_cast<FolderRequester*>( paramWidget )->folderCollection();
-  mFolderName = static_cast<FolderRequester*>( paramWidget )->folderId();
 }
 
 void FilterActionWithFolder::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  if ( mFolder.isValid() )
-    static_cast<FolderRequester*>( paramWidget )->setFolder( mFolder );
-  else
-    static_cast<FolderRequester*>( paramWidget )->setFolder( mFolderName );
+  static_cast<FolderRequester*>( paramWidget )->setFolder( mFolder );
 }
 
 void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
@@ -396,9 +392,8 @@ void FilterActionWithFolder::argsFromString( const QString &argsStr )
   const Akonadi::Collection::Id id = argsStr.toLongLong( &ok );
   if ( ok ) {
     mFolder = Akonadi::Collection( id );
-    mFolderName= QString::number( mFolder.id() );
   } else {
-    mFolderName = argsStr;
+    mFolder = Akonadi::Collection();
   }
 }
 
@@ -407,8 +402,6 @@ QString FilterActionWithFolder::argsAsString() const
   QString result;
   if ( mFolder.isValid() )
     result = QString::number( mFolder.id() );
-  else
-    result = mFolderName;
 
   return result;
 }
@@ -416,10 +409,8 @@ QString FilterActionWithFolder::argsAsString() const
 QString FilterActionWithFolder::displayString() const
 {
   QString result;
-  if ( mFolder.isValid() && !mFolder.remoteId().isEmpty() )
+  if ( mFolder.isValid() )
     result = mFolder.remoteId();
-  else
-    result = mFolderName;
 
   return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
 }
@@ -428,8 +419,6 @@ bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder
 {
   if ( oldFolder == mFolder ) {
     mFolder = newFolder;
-    if ( newFolder.isValid() )
-      mFolderName = mFolder.id();
     return true;
   } else
     return false;
@@ -1703,7 +1692,7 @@ FilterActionMove::FilterActionMove( QObject *parent )
 FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
 {
   if ( !mFolder.isValid() ) {
-    const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolderName );
+    const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
     if ( !targetFolder.isValid() )
       return ErrorButGoOn;
 

@@ -537,7 +537,6 @@ class FilterActionWithFolder : public FilterAction
 
   protected:
     Akonadi::Collection mFolder;
-    QString mFolderName;
 };
 
 
