@@ -331,6 +331,9 @@ Item::Status Item::status( const Akonadi::Item& aitem )
     if ( aitem.hasFlag( RssItem::flagDeleted() ) )
         stat |= Item::Deleted;
 
+    if ( aitem.hasFlag( RssItem::flagDeleted() ) )
+        stat |= Item::Updated;
+    
     return stat;
 }
 
@@ -357,6 +360,11 @@ bool Item::isUnread() const
 bool Item::isDeleted() const
 {
     return RssItem::isDeleted( d->akonadiItem );
+}
+
+bool Item::isUpdated() const
+{
+    return RssItem::isUpdated( d->akonadiItem );
 }
 
 void Item::setStatus( Akonadi::Item& aitem, const Item::Status& stat )

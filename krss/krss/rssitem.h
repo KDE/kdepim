@@ -51,6 +51,7 @@ public:
     static QByteArray flagRead();
     static QByteArray flagImportant();
     static QByteArray flagDeleted();
+    static QByteArray flagUpdated();
 
     static ItemId itemIdFromAkonadi( const Akonadi::Item::Id& id );
     static Akonadi::Item::Id itemIdToAkonadi( const ItemId& itemId );
@@ -68,6 +69,7 @@ public:
     static bool isRead( const Akonadi::Item& );
     static bool isUnread( const Akonadi::Item& );
     static bool isDeleted( const Akonadi::Item& );
+    static bool isUpdated( const Akonadi::Item& );
 
     bool headersLoaded() const;
     void setHeadersLoaded( bool headersLoaded );
