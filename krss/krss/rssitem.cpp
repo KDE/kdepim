@@ -139,6 +139,10 @@ QByteArray RssItem::flagDeleted()
     return "\\Deleted";
 }
 
+QByteArray RssItem::flagUpdated()
+{
+    return "\\Updated";
+}
 
 bool RssItem::isImportant( const Akonadi::Item& item )
 {
@@ -158,6 +162,11 @@ bool RssItem::isUnread( const Akonadi::Item& item )
 bool RssItem::isDeleted( const Akonadi::Item& item )
 {
     return item.hasFlag( flagDeleted() );
+}
+
+bool RssItem::isUpdated( const Akonadi::Item& item )
+{
+    return item.hasFlag( flagUpdated() );
 }
 
 ItemId RssItem::itemIdFromAkonadi( const Akonadi::Item::Id& id )

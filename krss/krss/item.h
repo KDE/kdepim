@@ -52,7 +52,8 @@ public:
     enum StatusFlag {
         Unread      = 0x02,
         Important   = 0x04,
-        Deleted     = 0x08
+        Deleted     = 0x08,
+        Updated     = 0x16
     };
     Q_DECLARE_FLAGS( Status, StatusFlag )
 
@@ -88,6 +89,7 @@ public:
     bool isRead() const;
     bool isUnread() const;
     bool isDeleted() const;
+    bool isUpdated() const;
 
     int hash() const;
     void setHash( int hash );
