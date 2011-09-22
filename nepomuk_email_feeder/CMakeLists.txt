@@ -13,6 +13,8 @@ include_directories(
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+#This is an ugly hack to make the plugin compile becuase we don't have the plugin interface in kdepimlibs yet
+set( CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -Wl,--allow-shlib-undefined,--unresolved-symbols=ignore-all,--warn-unresolved-symbols,--warn-once,--no-fatal-warnings" )
 
 set(akonadi_nepomuk_email_feeder_SRCS
   nepomukmailfeeder.cpp
