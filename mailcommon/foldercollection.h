@@ -210,9 +210,6 @@ protected slots:
   void slotIdentitiesChanged();
   void slotDeletionCollectionResult( KJob *job );
 
-signals:
-  void viewConfigChanged();
-
 private:
 
   explicit FolderCollection( const Akonadi::Collection& col, bool writeconfig );
