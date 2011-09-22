@@ -43,11 +43,7 @@ class FolderJob : public QObject
   Q_OBJECT
 
 public:
-  /**
-   * Constructs a new job, operating on the message msg, of type
-   * @p jt and with a parent folder @p folder.
-   */
-  explicit FolderJob( const Akonadi::Collection &folder );
+  FolderJob();
 
   virtual ~FolderJob();
 
@@ -96,13 +92,6 @@ signals:
    */
   void result( FolderJob* job );
 
-  /**
-   * This progress signal contains the "done" and the "total" numbers so
-   * that the caller can either make a % out of it, or combine it into
-   * a higher-level progress info.
-   */
-  void progress( unsigned long bytesDownloaded, unsigned long bytesTotal );
-
 protected:
   /**
    * Has to be reimplemented. It's called by the start() method. Should
@@ -111,7 +100,6 @@ protected:
   virtual void execute()=0;
 
   Akonadi::Collection mSrcFolder;
-  Akonadi::Collection mDestFolder;
   int                 mErrorCode;
 
   bool                mStarted;

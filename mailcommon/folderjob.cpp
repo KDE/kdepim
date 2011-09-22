@@ -36,8 +36,7 @@
 namespace MailCommon {
 
 //----------------------------------------------------------------------------
-  FolderJob::FolderJob( const Akonadi::Collection& folder )
-    : mDestFolder( folder ),
+FolderJob::FolderJob() :
     mErrorCode( 0 ),
     mStarted( false ), mCancellable( false )
 {
