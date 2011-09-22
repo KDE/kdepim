@@ -11,8 +11,12 @@ kde4_add_unit_test(
 )
 
 target_link_libraries( accessiblemailwebviewtest
-  ${QT_LIBRARIES} ${KDE4_KDEUI_LIBS} messageviewer
-  ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KDEUI_LIBS}
+  ${KDE4_KDEWEBKIT_LIBRARY}
+  ${QT_LIBRARIES}
   ${QT_QTTEST_LIBRARY}
+  ${QT_QTWEBKIT_LIBRARY}
+  messageviewer
+  messagevieweraccessiblewidgetfactory
   )
 
