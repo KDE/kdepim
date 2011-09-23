@@ -125,7 +125,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
 void MailFilterAgent::mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection& )
 {
   if ( isFilterableCollection( collection ) )
-  changeRecorder()->setCollectionMonitored( collection, true );
+    changeRecorder()->setCollectionMonitored( collection, true );
 }
 
 void MailFilterAgent::mailCollectionChanged( const Akonadi::Collection &collection )
