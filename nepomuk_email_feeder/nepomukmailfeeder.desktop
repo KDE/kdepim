@@ -2,6 +2,6 @@
 MimeType=message/rfc822;message/news;
 Type=Service
 X-KDE-ServiceTypes=AkonadiNepomukFeeder
-X-KDE-Library=akonadi_nepomuk_mail_feeder
+X-KDE-Library=akonadi_nepomuk_email_feeder
 X-KDE-ClassName=Akonadi::NepomukMailFeeder
 Name=Nepomuk Mail Feeder

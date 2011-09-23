@@ -246,6 +246,6 @@ QList<QUrl> NepomukMailFeeder::extractContactsFromMailboxes(const KMime::Types::
 }
 
  K_PLUGIN_FACTORY(factory, registerPlugin<NepomukMailFeeder>();)
- K_EXPORT_PLUGIN(factory("akonadi_nepomuk_mail_feeder"))
+ K_EXPORT_PLUGIN(factory("akonadi_nepomuk_email_feeder"))
 
 }

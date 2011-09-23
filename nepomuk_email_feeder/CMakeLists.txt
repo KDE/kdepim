@@ -1,4 +1,4 @@
-project(akonadi_nepomuk_mail_feeder)
+project(akonadi_nepomuk_email_feeder)
 
 include_directories(
   ${CMAKE_BINARY_DIR}/ontologies
@@ -20,8 +20,8 @@ set(akonadi_nepomuk_email_feeder_SRCS
   nepomukmailfeeder.cpp
 )
 
-kde4_add_plugin( akonadi_nepomuk_mail_feeder ${akonadi_nepomuk_email_feeder_SRCS} )
-target_link_libraries(akonadi_nepomuk_mail_feeder
+kde4_add_plugin( akonadi_nepomuk_email_feeder ${akonadi_nepomuk_email_feeder_SRCS} )
+target_link_libraries(akonadi_nepomuk_email_feeder
   messagecore
   messageviewer
   ${SOPRANO_LIBRARIES}
@@ -49,6 +49,6 @@ install(
   DESTINATION ${SERVICES_INSTALL_DIR})
 
 install(
-  TARGETS akonadi_nepomuk_mail_feeder
+  TARGETS akonadi_nepomuk_email_feeder
   DESTINATION ${PLUGIN_INSTALL_DIR})
 
