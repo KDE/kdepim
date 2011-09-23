@@ -16,7 +16,7 @@
  */
 
 #include "accessiblemailwebview.h"
-#include <mailwebview.h>
+#include "messageviewer/mailwebview.h"
 
 #include <QWebFrame>
 
