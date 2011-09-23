@@ -67,6 +67,9 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   connect( m_collectionMonitor, SIGNAL( collectionChanged( Akonadi::Collection ) ),
            this, SLOT( mailCollectionChanged( Akonadi::Collection ) ) );
 
+  connect( m_collectionMonitor, SIGNAL( collectionRemoved( Akonadi::Collection ) ),
+           this, SLOT( mailCollectionRemoved( Akonadi::Collection ) ) );
+
   QTimer::singleShot( 0, this, SLOT( initializeCollections() ) );
 
   qDBusRegisterMetaType<QVector<qlonglong> >();
@@ -137,6 +140,11 @@ void MailFilterAgent::mailCollectionAdded( const Akonadi::Collection &collection
 void MailFilterAgent::mailCollectionChanged( const Akonadi::Collection &collection )
 {
   changeRecorder()->setCollectionMonitored( collection, isFilterableCollection( collection ) );
+}
+
+void MailFilterAgent::mailCollectionRemoved( const Akonadi::Collection& collection )
+{
+  changeRecorder()->setCollectionMonitored( collection, false );
 }
 
 QString MailFilterAgent::createUniqueName( const QString &nameTemplate )

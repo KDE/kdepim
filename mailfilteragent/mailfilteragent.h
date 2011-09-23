@@ -53,6 +53,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void initialCollectionFetchingDone( KJob* );
     void mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     void mailCollectionChanged( const Akonadi::Collection &collection );
+    void mailCollectionRemoved( const Akonadi::Collection& collection );
 
   private:
     Akonadi::Monitor *m_collectionMonitor;
