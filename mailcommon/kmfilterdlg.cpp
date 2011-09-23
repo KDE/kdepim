@@ -19,15 +19,15 @@
 */
 
 #include "kmfilterdlg.h"
-#include "globalsettings.h"
 
 
 // other KMail headers:
-#include "mailcommon/searchpatternedit.h"
-#include "mailcommon/filteractionwidget.h"
-#include "mailcommon/filterimporterexporter.h"
-#include "mailcommon/filtermanager.h"
-#include "mailcommon/mailutil.h"
+#include "searchpatternedit.h"
+#include "filteractionwidget.h"
+#include "filterimporterexporter.h"
+#include "filtermanager.h"
+#include "mailutil.h"
+#include "mailkernel.h"
 using MailCommon::FilterImporterExporter;
 
 // KDEPIMLIBS headers
@@ -66,7 +66,7 @@ using MailCommon::FilterImporterExporter;
 #include <assert.h>
 
 using namespace MailCommon;
-
+namespace MailCommon {
 // What's this help texts
 const char * _wt_filterlist =
 I18N_NOOP( "<qt><p>This is the list of defined filters. "
@@ -370,9 +370,10 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   connect( mActionLister, SIGNAL(widgetAdded(QWidget*)), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()) );
-  
-  if ( GlobalSettings::self()->filterDialogSize() != QSize()  )
-    resize( GlobalSettings::self()->filterDialogSize() );
+  KConfigGroup myGroup( KernelIf->config(), "Geometry" );
+  QSize size = myGroup.readEntry( "FilterDialogSize", QSize() );
+  if ( size != QSize()  )
+    resize( size );
   else
     adjustSize();
 
@@ -400,8 +401,10 @@ void KMFilterDlg::slotFinished() {
 	deleteLater();
 }
 
-void KMFilterDlg::slotSaveSize() {  
-  GlobalSettings::self()->setFilterDialogSize( size() );
+void KMFilterDlg::slotSaveSize() {
+  KConfigGroup myGroup( KernelIf->config(), "Geometry" );
+  myGroup.writeEntry( "FilterDialogSize",size() );
+  myGroup.sync();
 }
 
 void KMFilterDlg::slotFilterSelected( MailFilter* aFilter )
@@ -1143,6 +1146,6 @@ void KMFilterDlg::slotDialogUpdated()
     enableButtonApply( true );
   }
 }
-
+}
 
 #include "kmfilterdlg.moc"

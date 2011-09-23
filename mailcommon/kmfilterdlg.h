@@ -21,8 +21,9 @@
 #ifndef kmfilterdlg_h
 #define kmfilterdlg_h
 
-#include "mailcommon/mailfilter.h"
-#include "mailcommon/filteraction.h"
+#include "mailfilter.h"
+#include "filteraction.h"
+#include "mailcommon_export.h"
 
 #include <kdialog.h>
 
@@ -70,7 +71,8 @@ namespace MailCommon {
     @see MailCommon::MailFilter KMFilterDlg KMFilterActionEdit SearchPatternEdit
 
  */
-class KMFilterListBox : public QGroupBox
+namespace MailCommon {
+class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
 {
   Q_OBJECT
 public:
@@ -239,7 +241,7 @@ private:
 
  */
 
-class KMFilterDlg: public KDialog
+class MAILCOMMON_EXPORT KMFilterDlg: public KDialog
 {
   Q_OBJECT
 public:
@@ -335,7 +337,7 @@ protected:
   bool mDoNotClose;
   bool mIgnoreFilterUpdates;
 };
-
+}
 
 
 #endif /*kmfilterdlg_h*/
