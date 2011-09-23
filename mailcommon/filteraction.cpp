@@ -416,8 +416,8 @@ QString FilterActionWithFolder::argsAsString() const
 QString FilterActionWithFolder::displayString() const
 {
   QString result;
-  if ( mFolder.isValid() )
-    result = mFolder.url().path();
+  if ( mFolder.isValid() && !mFolder.remoteId().isEmpty() )
+    result = mFolder.remoteId();
   else
     result = mFolderName;
 

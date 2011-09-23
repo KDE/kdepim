@@ -352,9 +352,11 @@ int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFil
 
     if ( context.needsPayloadStore() ) {
       Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+      modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
       connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else if ( context.needsFlagStore() ) {
       Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+      modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
       modifyJob->setIgnorePayload( true );
       connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else {
