@@ -43,7 +43,11 @@ int AccessibleMailWebView::characterCount()
 
 int AccessibleMailWebView::selectionCount()
 {
+#if QT_VERSION >= 0x40800
   return m_widget->hasSelection() ? 1 : 0;
+#else
+  return 0;
+#endif
 }
 
 void AccessibleMailWebView::addSelection( int startOffset, int endOffset )
@@ -52,8 +56,10 @@ void AccessibleMailWebView::addSelection( int startOffset, int endOffset )
 
 void AccessibleMailWebView::removeSelection( int selectionIndex )
 {
+#if QT_VERSION >= 0x40800
   if ( selectionIndex == 0 )
     m_widget->clearSelection();
+#endif
 }
 
 void AccessibleMailWebView::setSelection( int selectionIndex, int startOffset, int endOffset )

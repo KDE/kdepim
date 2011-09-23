@@ -24,9 +24,6 @@ configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-m
 add_subdirectory(about)
 add_subdirectory(tests)
 add_subdirectory(pics)
-if (NOT WINCE)
-  add_subdirectory(a11y)
-endif (NOT WINCE)
 
 if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
@@ -39,6 +36,7 @@ else()
   set(_mailwebview_cpp mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+    add_subdirectory(a11y)
   endif(NOT WINCE)
 endif()
 
