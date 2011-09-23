@@ -9,7 +9,7 @@
 #include <QtCore/QDateTime>
 #include <Soprano/Vocabulary/RDF>
 
-#include <nepomuk/simpleresource.h>
+#include <dms-copy/simpleresource.h>
 
 #include "nmo/message.h"
 namespace Nepomuk {
