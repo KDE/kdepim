@@ -31,6 +31,7 @@
 #include <akonadi/dbusconnectionpool.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
+#include <akonadi/kmime/messagestatus.h>
 #include <akonadi/session.h>
 #include <mailcommon/mailkernel.h>
 #include <KLocalizedString>
@@ -117,6 +118,11 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
    * for the mimetype of the item here.
    */
   if ( item.mimeType() != KMime::Message::mimeType() )
+    return;
+
+  Akonadi::MessageStatus status;
+  status.setStatusFromFlags( item.flags() );
+  if ( status.isRead() || status.isSpam() || status.isIgnored() )
     return;
 
   m_filterManager->process( item, FilterManager::Inbound, true, collection.resource() );
