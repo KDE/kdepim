@@ -182,7 +182,6 @@ protected:
   QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnUp, *mBtnDown, *mBtnRename;
   /** The index of the currently selected item. */
   int mIdxSelItem;
-  bool mShowLater;
 private:
   void enableControls();
 
