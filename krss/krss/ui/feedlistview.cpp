@@ -56,7 +56,7 @@ static QModelIndex prevIndex( const QModelIndex&idx )
 static QModelIndex prevFeedIndex( const QModelIndex& idx, bool allowPassed = false )
 {
     QModelIndex prev = allowPassed ? idx : prevIndex( idx );
-    while ( prev.isValid() && prev.data( FeedItemModel::IsTagRole ).toBool() ) {
+    while ( prev.isValid() && prev.data( FeedItemModel::IsFolderRole ).toBool() ) {
         prev = prevIndex( prev );
     }
     return prev;
@@ -65,7 +65,7 @@ static QModelIndex prevFeedIndex( const QModelIndex& idx, bool allowPassed = fal
 static QModelIndex prevUnreadFeedIndex( const QModelIndex& idx, bool allowPassed = false )
 {
     QModelIndex prev = allowPassed ? idx : prevIndex( idx );
-    while ( prev.isValid() && ( prev.data( FeedItemModel::IsTagRole ).toBool() ||
+    while ( prev.isValid() && ( prev.data( FeedItemModel::IsFolderRole ).toBool() ||
             prev.sibling( prev.row(), FeedItemModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
         prev = prevIndex( prev );
     }
@@ -106,7 +106,7 @@ static QModelIndex nextIndex( const QModelIndex& idx )
 static QModelIndex nextFeedIndex( const QModelIndex& idx )
 {
     QModelIndex next = nextIndex( idx );
-    while ( next.isValid() && next.data( FeedItemModel::IsTagRole ).toBool() ) {
+    while ( next.isValid() && next.data( FeedItemModel::IsFolderRole ).toBool() ) {
         next = nextIndex( next );
     }
     return next;
@@ -115,7 +115,7 @@ static QModelIndex nextFeedIndex( const QModelIndex& idx )
 static QModelIndex nextUnreadFeedIndex( const QModelIndex& idx )
 {
     QModelIndex next = nextIndex( idx );
-    while ( next.isValid() && ( next.data( FeedItemModel::IsTagRole ).toBool() ||
+    while ( next.isValid() && ( next.data( FeedItemModel::IsFolderRole ).toBool() ||
             next.sibling( next.row(), FeedItemModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
         next = nextIndex( next );
     }

@@ -38,6 +38,8 @@ public:
     Person( const Person& other );
     ~Person();
 
+    QString condensedPlainText() const;
+
     QString name() const;
     void setName( const QString& name );
 
