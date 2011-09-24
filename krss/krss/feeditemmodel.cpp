@@ -64,17 +64,13 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
                 return item.titleAsPlainText();
             case AuthorsColumn:
             {
-#if 0 //TODO: we probably want to cache this
                 QString authors;
                 Q_FOREACH( const KRss::Person &person, item.authors() ) {
                     if ( !authors.isEmpty() )
                         authors.append( QLatin1Char(';') );
-                    authors += person.name();
+                    authors += person.condensedPlainText();
                 }
                 return authors;
-#else
-                return EntityTreeModel::entityData( akonadiItem, column, role );
-#endif
             }
             case DateColumn:
                 if ( role == SortRole )
@@ -120,8 +116,6 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
 QVariant FeedItemModel::entityData( const Collection &collection, int column, int role ) const {
     if ( role == Qt::DisplayRole || role == SortRole ) {
         switch ( column ) {
-        case IsTagRole:
-            return false;
         case FeedTitleColumn:
         {
             const QString title = FeedCollection( collection ).title();
@@ -129,6 +123,12 @@ QVariant FeedItemModel::entityData( const Collection &collection, int column, in
                 return title;
             break;
         }
+        case UnreadCountColumn:
+        {
+            return EntityTreeModel::entityData( collection, column, EntityTreeModel::UnreadCountRole );
+        }
+        case IsFolderRole:
+            return FeedCollection( collection ).isFolder();
         default:
             break;
         }
@@ -174,12 +174,10 @@ QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientati
           switch ( section ) {
             case FeedTitleColumn:
                 return i18n("Title");
-#if 0
             case UnreadCountColumn:
                 return i18n("Unread");
             case TotalCountColumn:
                 return i18n("Total");
-#endif
             default:
                 break;
             }

@@ -49,14 +49,31 @@ public:
     QString name;
     QString email;
     QString uri;
+    mutable QString condensed;
+    mutable bool condensedDirty : 1;
 };
 
 Person::Private::Private( const Private& other )
     : QSharedData( other ),
     name( other.name ),
     email( other.email ),
-    uri( other.uri )
+    uri( other.uri ),
+    condensedDirty( true )
 {
+}
+
+QString Person::condensedPlainText() const {
+    if ( d->condensedDirty ) {
+        if ( !d->name.isEmpty() )
+            d->condensed = d->name;
+        else if ( d->email.isEmpty() )
+            d->condensed = d->email;
+        else
+            d->condensed = d->uri;
+        d->condensedDirty = false;
+    }
+
+    return d->condensed;
 }
 
 QString Person::name() const
@@ -67,6 +84,7 @@ QString Person::name() const
 void Person::setName( const QString& name )
 {
     d->name = name;
+    d->condensedDirty = true;
 }
 
 QString Person::email() const
@@ -77,6 +95,7 @@ QString Person::email() const
 void Person::setEmail( const QString& email )
 {
     d->email = email;
+    d->condensedDirty = true;
 }
 
 QString Person::uri() const
@@ -87,6 +106,7 @@ QString Person::uri() const
 void Person::setUri( const QString& uri )
 {
     d->uri = uri;
+    d->condensedDirty = true;
 }
 
 Person::Person() : d( new Private )

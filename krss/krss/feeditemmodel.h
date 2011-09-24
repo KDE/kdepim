@@ -58,7 +58,7 @@ public:
         IsDeletedRole, //PENDING(frank) transitional Akregator compat, review
         IsImportantRole, //PENDING(frank) transitional Akregator compat, review
         LinkRole, //PENDING(frank) transitional Akregator compat, review
-        IsTagRole //PENDING(frank) old krss transitional
+        IsFolderRole //PENDING(frank) old krss transitional
     };
 
 public:

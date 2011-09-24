@@ -88,6 +88,7 @@ Akregator::SelectionController::SelectionController( Akonadi::Session* session, 
     recorder->setAllMonitored();
     recorder->setCollectionFetchScope( cscope );
     recorder->setItemFetchScope( iscope );
+    recorder->fetchCollectionStatistics( true );
     recorder->setCollectionMonitored( Akonadi::Collection::root() );
     recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
 
