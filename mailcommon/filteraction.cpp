@@ -373,17 +373,17 @@ QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
 
 void FilterActionWithFolder::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mFolder = static_cast<FolderRequester*>( paramWidget )->folderCollection();
+  mFolder = static_cast<FolderRequester*>( paramWidget )->collection();
 }
 
 void FilterActionWithFolder::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  static_cast<FolderRequester*>( paramWidget )->setFolder( mFolder );
+  static_cast<FolderRequester*>( paramWidget )->setCollection( mFolder );
 }
 
 void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<FolderRequester*>( paramWidget )->setFolder( CommonKernel->draftsCollectionFolder() );
+  static_cast<FolderRequester*>( paramWidget )->setCollection( CommonKernel->draftsCollectionFolder() );
 }
 
 void FilterActionWithFolder::argsFromString( const QString &argsStr )

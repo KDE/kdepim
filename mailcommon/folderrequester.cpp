@@ -90,7 +90,7 @@ void FolderRequester::slotOpenDialog()
   dlg->setSelectedCollection( mCollection );
 
   if ( dlg->exec() && dlg ) {
-    setFolder( dlg->selectedCollection() );
+    setCollection( dlg->selectedCollection() );
   }
 }
 
@@ -99,7 +99,7 @@ FolderRequester::~FolderRequester()
 {
 }
 
-Akonadi::Collection FolderRequester::folderCollection() const
+Akonadi::Collection FolderRequester::collection() const
 {
   return mCollection;
 }
@@ -110,12 +110,11 @@ void FolderRequester::setCollectionFullPath( const Akonadi::Collection&col )
 }
 
 //-----------------------------------------------------------------------------
-void FolderRequester::setFolder( const Akonadi::Collection&col )
+void FolderRequester::setCollection( const Akonadi::Collection& collection )
 {
-  mCollection = col;
-  if ( mCollection.isValid() ) {
+  mCollection = collection;
+  if ( mCollection.isValid() ) { // TODO: we don't need to fetch if the collection is already complete, e.g. when called from the collection dialog
     setCollectionFullPath( mCollection );
-    mFolderId = QString::number( mCollection.id() );
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
     connect( job, SIGNAL(result(KJob*)),
              this, SLOT(slotCollectionsReceived(KJob*)) );
@@ -150,20 +149,9 @@ void FolderRequester::slotCollectionsReceived( KJob *job )
   }
 }
 
-//-----------------------------------------------------------------------------
-void FolderRequester::setFolder( const QString &idString )
+bool FolderRequester::hasCollection() const
 {
-  Akonadi::Collection folder = Kernel::self()->collectionFromId( idString );
-  if ( folder.isValid() ) {
-    setFolder( folder );
-  } else {
-    if ( !idString.isEmpty() ) {
-      edit->setText( i18n( "Unknown folder '%1'", idString ) );
-    } else {
-      edit->setText( i18n( "Please select a folder" ) );
-    }
-  }
-  mFolderId = idString;
+  return mCollection.isValid();
 }
 
 //-----------------------------------------------------------------------------
