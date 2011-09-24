@@ -19,6 +19,7 @@
 #include "feedpropertiescollectionattribute.h"
 #include <Akonadi/EntityDisplayAttribute>
 #include <akonadi/cachepolicy.h>
+#include <Akonadi/AttributeFactory>
 
 using namespace Akonadi;
 using namespace KRss;
@@ -26,6 +27,10 @@ using namespace KRss;
 
 FeedCollection::FeedCollection()
 {
+}
+
+void FeedCollection::registerAttributes() {
+    Akonadi::AttributeFactory::registerAttribute<KRss::FeedPropertiesCollectionAttribute>();
 }
 
 FeedCollection::FeedCollection( const Akonadi::Collection &collection )
@@ -64,7 +69,7 @@ QString FeedCollection::title() const {
     if ( attr )
         return attr->displayName();
     else
-        return name();
+        return QString();
 }
 
 void FeedCollection::setTitle( const QString& t ) {

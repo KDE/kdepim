@@ -27,6 +27,8 @@ namespace KRss {
 class KRSS_EXPORT FeedCollection : public Akonadi::Collection
 {
 public:
+
+    static void registerAttributes();
     FeedCollection();
     FeedCollection( const Akonadi::Collection &collection );
 

@@ -69,6 +69,8 @@ using namespace Akonadi;
 using namespace Akregator;
 using namespace KRss;
 
+
+
 StartPage::StartPage( const QStringList& resources, QWidget* parent ) : QWizardPage( parent ), m_resourceBox( 0 ) {
     setTitle( i18n("Akonadi Data Migration" ) );
     QVBoxLayout* layout = new QVBoxLayout( this );
