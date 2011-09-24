@@ -72,15 +72,6 @@ Akonadi::Collection Kernel::collectionFromId(const Akonadi::Collection::Id& id) 
   return idx.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
 
-Akonadi::Collection Kernel::collectionFromId( const QString &idString ) const
-{
-  bool ok;
-  Akonadi::Collection::Id id = idString.toLongLong( &ok );
-  if ( !ok )
-    return Akonadi::Collection();
-  return collectionFromId( id );
-}
-
 Akonadi::Collection Kernel::trashCollectionFolder()
 {
   return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash );

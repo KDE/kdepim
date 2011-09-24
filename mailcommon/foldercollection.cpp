@@ -207,11 +207,6 @@ bool FolderCollection::isValid() const
   return mCollection.isValid();
 }
 
-QString FolderCollection::idString() const
-{
-  return QString::number( mCollection.id() );
-}
-
 void FolderCollection::writeConfig() const
 {
   KConfigGroup configGroup( KernelIf->config(), configGroupName() );

@@ -62,8 +62,6 @@ public:
 
   QString name() const;
 
-  QString idString() const;
-
   bool isReadOnly() const;
 
   bool isStructural() const;
