@@ -20,6 +20,9 @@
 #ifndef MAILCOMMON_MAILFILTER_H
 #define MAILCOMMON_MAILFILTER_H
 
+#include "mailcommon_export.h"
+
+#include "filteraction.h"
 #include "searchpattern.h"
 
 #include <kshortcut.h>
@@ -27,20 +30,21 @@
 
 #include <kmime/kmime_message.h>
 
-#include "mailcommon_export.h"
+#include <QtCore/QDataStream>
 
 class QString;
 class KConfigGroup;
 
 namespace MailCommon {
 
-  class FilterAction;
-
 // maximum number of filter actions per filter
 const int FILTER_MAX_ACTIONS = 8;
 
 class MAILCOMMON_EXPORT MailFilter
 {
+  friend MAILCOMMON_EXPORT QDataStream& operator<<( QDataStream &stream, const MailFilter &filter );
+  friend MAILCOMMON_EXPORT QDataStream& operator>>( QDataStream &stream, MailFilter &filter );
+
 public:
   /** Result codes returned by process. They mean:
 
@@ -80,10 +84,13 @@ public:
   /** Cleanup. */
   ~MailFilter();
 
+  /**
+   * Returns the unique identifier of this filter.
+   */
+  QString identifier() const;
+
   /** Equivalent to @pattern()->name(). @return name of the filter */
-  QString name() const {
-    return mPattern.name();
-  }
+  QString name() const;
 
   /** Execute the filter action(s) on the given message.
       Returns:
@@ -91,12 +98,12 @@ public:
       @li 1 if the caller is still
       the owner of the message,
       @li 0 if processed successfully.
-      @param item The message to which the actions should be applied.
+      @param context The context that contains the item to which the actions should be applied.
       @param stopIt Contains
       true if the caller may apply other filters and false if he shall
       stop the filtering of this message.
   */
-  ReturnCode execActions( const Akonadi::Item &item, bool& stopIt ) const ;
+  ReturnCode execActions( ItemContext &context, bool& stopIt ) const ;
 
   /** Determines if the filter depends on the body of the message
   */
@@ -117,68 +124,68 @@ public:
   /** Provides a reference to the internal action list. If your used
       the @p setAction() and @p action() functions before, please
       convert to using myFilter->actions()->at() and friends now. */
-  QList<FilterAction*>* actions() { return &mActions; }
+  QList<FilterAction*>* actions();
 
   /** Provides a reference to the internal action list. Const version. */
-  const QList<FilterAction*>* actions() const { return &mActions; }
+  const QList<FilterAction*>* actions() const;
 
   /** Provides a reference to the internal pattern. If you used the
       @p matches() function before, please convert to using
       myFilter->pattern()->matches() now. */
-  SearchPattern* pattern() { return &mPattern; }
+  SearchPattern* pattern();
 
   /** Provides a reference to the internal pattern. If you used the
       @p matches() function before, please convert to using
       myFilter->pattern()->matches() now. */
-  const SearchPattern* pattern() const { return &mPattern; }
+  const SearchPattern* pattern() const;
 
   /** Set whether this filter should be applied on
       outbound messages (@p aApply == true) or not.
       See applyOnOutbound applyOnInbound setApplyOnInbound
   */
-  void setApplyOnOutbound( bool aApply=true ) { bApplyOnOutbound = aApply; }
+  void setApplyOnOutbound( bool aApply = true );
 
   /** Set whether this filter should be applied on
       outbound messages before sending (@p aApply == TRUE) or not.
       See applyOnOutbound applyOnInbound setApplyOnInbound
   */
-  void setApplyBeforeOutbound( bool aApply=true ) { bApplyBeforeOutbound = aApply; }
+  void setApplyBeforeOutbound( bool aApply = true );
 
   /** @return true if this filter should be applied on
       outbound messages, false otherwise.
       @see setApplyOnOutbound applyOnInbound setApplyOnInbound
   */
-  bool applyOnOutbound() const { return bApplyOnOutbound; }
+  bool applyOnOutbound() const;
 
   /** @return TRUE if this filter should be applied on
       outbound messages before they are sent, FALSE otherwise.
       @see setApplyOnOutbound applyOnInbound setApplyOnInbound
   */
-  bool applyBeforeOutbound() const { return bApplyBeforeOutbound; }
+  bool applyBeforeOutbound() const;
 
   /** Set whether this filter should be applied on
       inbound messages (@p aApply == true) or not.
       @see setApplyOnOutbound applyOnInbound applyOnOutbound
   */
-  void setApplyOnInbound( bool aApply=true ) { bApplyOnInbound = aApply; }
+  void setApplyOnInbound( bool aApply = true );
 
   /** @return true if this filter should be applied on
       inbound messages, false otherwise.
       @see setApplyOnOutbound applyOnOutbound setApplyOnInbound
   */
-  bool applyOnInbound() const { return bApplyOnInbound; }
+  bool applyOnInbound() const;
 
   /** Set whether this filter should be applied on
       explicit (CTRL-J) filtering (@p aApply == true) or not.
       @see setApplyOnOutbound applyOnInbound applyOnOutbound
   */
-  void setApplyOnExplicit( bool aApply=true ) { bApplyOnExplicit = aApply; }
+  void setApplyOnExplicit( bool aApply = true );
 
   /** @return true if this filter should be applied on
       explicit (CTRL-J) filtering, false otherwise.
       @see setApplyOnOutbound applyOnOutbound setApplyOnInbound
   */
-  bool applyOnExplicit() const { return bApplyOnExplicit; }
+  bool applyOnExplicit() const;
 
   /** Set whether this filter should be applied on
       inbound messages for all accounts (@p aApply == All) or
@@ -187,7 +194,7 @@ public:
       Only applicable to filters that are applied on inbound messages.
       @see setApplyOnInbound setApplyOnAccount
   */
-  void setApplicability( AccountType aApply=All ) { mApplicability = aApply; }
+  void setApplicability( AccountType aApply = All );
 
   /** @return true if this filter should be applied on
       inbound messages for all accounts, or false if this filter
@@ -195,7 +202,7 @@ public:
       Only applicable to filters that are applied on inbound messages.
       @see setApplicability
   */
-  AccountType applicability() const { return mApplicability; }
+  AccountType applicability() const;
 
   /** Set whether this filter should be applied on
       inbound messages for the account with id (@p id).
@@ -203,7 +210,7 @@ public:
       set of accounts.
       @see setApplicability applyOnAccount
   */
-  void setApplyOnAccount( const QString& id, bool aApply=true );
+  void setApplyOnAccount( const QString& id, bool aApply = true );
 
   /** @return true if this filter should be applied on
       inbound messages from the account with id (@p id), false otherwise.
@@ -211,35 +218,30 @@ public:
   */
   bool applyOnAccount( const QString& id ) const;
 
-  void setStopProcessingHere( bool aStop ) { bStopProcessingHere = aStop; }
-  bool stopProcessingHere() const { return bStopProcessingHere; }
+  void setStopProcessingHere( bool aStop );
+  bool stopProcessingHere() const;
 
   /** Set whether this filter should be plugged into the filter menu.
   */
-  void setConfigureShortcut( bool aShort ) {
-    bConfigureShortcut = aShort;
-    bConfigureToolbar = bConfigureToolbar && bConfigureShortcut;
-  }
+  void setConfigureShortcut( bool aShort );
 
   /** @return true if this filter should be plugged into the filter menu,
       false otherwise.
       @see setConfigureShortcut
   */
-  bool configureShortcut() const { return bConfigureShortcut; }
+  bool configureShortcut() const;
 
   /** Set whether this filter should be plugged into the toolbar.
       This can be done only if a shortcut is defined.
       @see setConfigureShortcut
   */
-  void setConfigureToolbar( bool aTool ) {
-    bConfigureToolbar = aTool && bConfigureShortcut;
-  }
+  void setConfigureToolbar( bool aTool );
 
   /** @return true if this filter should be plugged into the toolbar,
       false otherwise.
       @see setConfigureToolbar
   */
-  bool configureToolbar() const { return bConfigureToolbar; }
+  bool configureToolbar() const;
 
   /** @return The toolbar name of this filter.
    *  @see setToolbarName
@@ -253,31 +255,29 @@ public:
    *  This is useful if the normal filter mame is too long for the toolbar.
    *  @see toolbarName, name
    */
-  void setToolbarName( QString toolbarName ) {
-    mToolbarName = toolbarName;
-  }
+  void setToolbarName( const QString &toolbarName );
 
   /** Set the shortcut to be used if plugged into the filter menu
       or toolbar. Default is no shortcut.
       @see setConfigureShortcut setConfigureToolbar
   */
-  void setShortcut( const KShortcut & shortcut ) { mShortcut = shortcut; }
+  void setShortcut( const KShortcut &shortcut );
 
   /** @return The shortcut assigned to the filter.
       @see setShortcut
   */
-  const KShortcut & shortcut() const { return mShortcut; }
+  const KShortcut & shortcut() const;
 
   /** Set the icon to be used if plugged into the filter menu
       or toolbar. Default is the gear icon.
       @see setConfigureShortcut setConfigureToolbar
   */
-  void setIcon( QString icon ) { mIcon = icon; }
+  void setIcon( const QString &icon );
 
   /** @return The name of the icon to be used.
       @see setIcon
   */
-  QString icon() const { return mIcon; }
+  QString icon() const;
 
   /**
    * Called from the filter manager when a folder is moved.
@@ -299,15 +299,14 @@ public:
       If the feature is enabled, the name is derived from the
       first filter rule.
   */
-  void setAutoNaming( bool useAutomaticNames ) {
-    bAutoNaming = useAutomaticNames;
-  }
+  void setAutoNaming( bool useAutomaticNames );
 
   /** @return Tells, if an automatic name is used for the filter
   */
-  bool isAutoNaming() const { return bAutoNaming; }
+  bool isAutoNaming() const;
 
 private:
+  QString mIdentifier;
   SearchPattern mPattern;
   QList<FilterAction*> mActions;
   QStringList mAccounts;
@@ -324,6 +323,9 @@ private:
   bool bAutoNaming : 1;
   AccountType mApplicability;
 };
+
+MAILCOMMON_EXPORT QDataStream& operator<<( QDataStream &stream, const MailFilter &filter );
+MAILCOMMON_EXPORT QDataStream& operator>>( QDataStream &stream, MailFilter &filter );
 
 }
 

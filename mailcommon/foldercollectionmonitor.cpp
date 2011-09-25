@@ -91,51 +91,15 @@ void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *mod
 void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool sync )
 {
   if ( col.isValid() ) {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( col );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)) );
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( col, this );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
     if ( sync ) {
-      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJobSync(KJob*)) );
       job->exec();
-    } else {
-      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)) );
     }
     
   } else {
     kDebug()<<" Try to expunge an invalid collection :"<<col;
   }
-}
-
-void FolderCollectionMonitor::slotExpungeJob( KJob *job )
-{
-  if ( job->error() ) {
-    Util::showJobErrorMessage( job );
-    return;
-  }
-  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-  if ( !fjob )
-    return;
-  const Akonadi::Item::List lstItem = fjob->items();
-  if ( lstItem.isEmpty() )
-    return;
-  Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem,this );
-  connect( jobDelete, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
-}
-
-void FolderCollectionMonitor::slotExpungeJobSync( KJob *job )
-{
-  if ( job->error() ) {
-    Util::showJobErrorMessage( job );
-    return;
-  }
-  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-  if ( !fjob )
-    return;
-  const Akonadi::Item::List lstItem = fjob->items();
-  if ( lstItem.isEmpty() )
-    return;
-  Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem,this );
-  connect( jobDelete, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
-  jobDelete->exec();
 }
 
 void FolderCollectionMonitor::slotDeleteJob( KJob *job )

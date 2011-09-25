@@ -609,6 +609,19 @@ void Pane::setCurrentFolder( const Akonadi::Collection &, bool, Core::PreSelecti
   }
 }
 
+void Pane::updateTabIconText( const Akonadi::Collection &collection, const QString&label, const QIcon& icon )
+{
+  for ( int i=0; i<count(); ++i ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    if ( w->currentCollection() == collection )
+    {
+        const int index = indexOf( w );
+        setTabText( index, label );
+        setTabIcon( index, icon );
+    }
+  }
+}
+
 void Pane::createNewTab()
 {
   Widget * w = new Widget( this );

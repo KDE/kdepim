@@ -1,0 +1,30 @@
+[Desktop Entry]
+Name=EMail Filter Agent
+Name[es]=Agente de filtro de correo
+Name[ia]=Agente de filtro de e-posta
+Name[lt]=El. pašto filtrų agentas
+Name[nl]=E-mail filteragent
+Name[pt]=Agente de Filtragem de E-mail
+Name[pt_BR]=Agente de filtros de e-mails
+Name[sv]=E-postfiltreringsmodul
+Name[uk]=Агент фільтрування пошти
+Name[x-test]=xxEMail Filter Agentxx
+Name[zh_TW]=郵件過濾代理程式
+Comment=Extension to filter emails
+Comment[es]=Extensión para filtrar correos
+Comment[ia]=Extension per filtrar messages de e-posta
+Comment[lt]=Įskiepis el. laiškų filtravimui
+Comment[nl]=Uitbreiding om e-mails te filteren
+Comment[pt]=Extensão para filtrar as mensagens de e-mail
+Comment[pt_BR]=Extensão para filtros de e-mails
+Comment[sv]=Utökning för att filtrera e-post
+Comment[uk]=Додаток для фільтрування поштових повідомлень
+Comment[x-test]=xxExtension to filter emailsxx
+Comment[zh_TW]=過濾電子郵件的延伸程式
+Type=AkonadiAgent
+Exec=akonadi_mailfilter_agent
+Icon=view-filter
+
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_mailfilter_agent

@@ -42,13 +42,19 @@ class KJob;
 
 namespace MailCommon {
 
-class Kernel;
 
 /**
    * A widget that contains a KLineEdit which shows the current folder
    * and a button that fires a FolderSelectionDialog
    * The dialog is set to disable readonly folders by default
    * Search folders are excluded
+   *
+   * @todo This should be cleaned up and go into libakonadi. This includes:
+   * - s/Folder/Collection/g
+   * - Use Akonadi::CollectionDialog instead of MailCommon::FolderSelectionDialog
+   *  - merge that into CollectionDialog
+   *  - or allow to replace the built-in dialog by your own
+   * - Allow to pass in an existing ETM, to remove the Kernel dependency
    */
   class MAILCOMMON_EXPORT FolderRequester: public QWidget
   {
@@ -59,20 +65,20 @@ class Kernel;
        * Constructor
        * @param parent the parent widget
        */
-      FolderRequester( QWidget* parent );
+      explicit FolderRequester( QWidget* parent = 0 );
       virtual ~FolderRequester();
 
-      Akonadi::Collection folderCollection() const;
-
-      /** Returns the folder id */
-      QString folderId() const { return mFolderId; }
+      /** Returns the selected collection. */
+      Akonadi::Collection collection() const;
 
       /** Returns current text */
       QString text() const { return edit->originalText(); }
 
-      /** Preset the folder */
-      void setFolder( const Akonadi::Collection & );
-      void setFolder( const QString& idString );
+      /** Preset the folder to @p collection. */
+      void setCollection( const Akonadi::Collection& collection );
+
+      /** Returns @c true if there's a valid collection set on this widget. */
+      bool hasCollection() const;
 
       /**
        * Set if readonly folders should be disabled
@@ -85,10 +91,6 @@ class Kernel;
       /** Set if the outbox should be shown */
       void setShowOutbox( bool show )
       { mShowOutbox = show; }
-
-      /** Set if the imap folders should be shown */
-      void setShowImapFolders( bool show )
-      { mShowImapFolders = show; }
 
       void setNotAllowToCreateNewFolder( bool notCreateNewFolder )
       { mNotCreateNewFolder = notCreateNewFolder; }
@@ -111,12 +113,9 @@ class Kernel;
     protected:
       Akonadi::Collection mCollection;
       KLineEdit* edit;
-      QString mFolderId;
       bool mMustBeReadWrite;
       bool mShowOutbox;
-      bool mShowImapFolders;
       bool mNotCreateNewFolder;
-      Kernel *mMailCommon;
   };
 
 }

@@ -28,8 +28,6 @@
 #include <khbox.h>
 #include <kwidgetlister.h>
 
-class KComboBox;
-class QGridLayout;
 
 namespace MailCommon {
 

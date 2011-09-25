@@ -144,40 +144,41 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
   bool result = true;
   QString dbusService;
 
-  #if defined (Q_OS_WINCE) || defined(Q_OS_WIN32)
-    //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
-    QDBusInterface *interface = new QDBusInterface( "org.kde.korganizer", "/MainApplication" );
-    if ( !interface->isValid() ) {
-      kDebug() << "Starting korganizer...";
-      delete interface;
+#if defined (Q_OS_WINCE) || defined(Q_OS_WIN32)
+  //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
+  QDBusInterface *interface = new QDBusInterface( "org.kde.korganizer", "/MainApplication" );
+  if ( !interface->isValid() ) {
+    kDebug() << "Starting korganizer...";
+    delete interface;
 
-      QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
-                                                              QDBusServiceWatcher::WatchForRegistration );
-      QEventLoop loop;
-      watcher->connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
-      result = QProcess::startDetached( "korganizer-mobile" );
-      if ( result ) {
-        kDebug() << "Starting loop";
-        loop.exec();
-        kDebug() << "Korganizer finished starting";
-      } else {
-        kWarning() << "Failed to start korganizer with QProcess";
-      }
-
-      delete watcher;
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
+                                                            QDBusServiceWatcher::WatchForRegistration );
+    QEventLoop loop;
+    watcher->connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
+    result = QProcess::startDetached( "korganizer-mobile" );
+    if ( result ) {
+      kDebug() << "Starting loop";
+      loop.exec();
+      kDebug() << "Korganizer finished starting";
+    } else {
+      kWarning() << "Failed to start korganizer with QProcess";
     }
-  #else
-    QString constraint;
 
-    #ifdef KDEPIM_MOBILE_UI
-      // start the mobile korg instead of the desktop one
-      constraint = "'mobile' in Keywords";
-    #endif
+    delete watcher;
+  }
+  delete interface;
+#else
+  QString constraint;
 
-     result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
-                                                           constraint,
-                                                           &error, &dbusService ) == 0;
-  #endif
+#ifdef KDEPIM_MOBILE_UI
+  // start the mobile korg instead of the desktop one
+  constraint = "'mobile' in Keywords";
+#endif
+
+  result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
+                                                        constraint,
+                                                        &error, &dbusService ) == 0;
+#endif
   if ( result ) {
     // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
     QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
@@ -187,7 +188,7 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
         iface.call( "newInstance" ); // activate korganizer window
       }
       QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
-                                "org.kde.KUniqueApplication" );
+                               "org.kde.KUniqueApplication" );
       QDBusReply<bool> r = pimIface.call( "load" );
       if ( !r.isValid() || !r.value() ) {
         kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();

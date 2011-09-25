@@ -43,34 +43,10 @@ class FolderJob : public QObject
   Q_OBJECT
 
 public:
-  enum JobType { tListMessages, tGetFolder, tCreateFolder, tExpungeFolder,
-		 tDeleteMessage, tGetMessage, tPutMessage, tAddSubfolders,
-		 tDeleteFolders, tCheckUidValidity, tRenameFolder,
-                 tCopyMessage, tMoveMessage, tOther /* used by subclasses */ };
-  /**
-   * Constructs a new job, operating on the message msg, of type
-   * @p jt and with a parent folder @p folder.
-   */
-  explicit FolderJob( KMime::Message *msg, JobType jt = tGetMessage,
-                      const Akonadi::Collection &folder = Akonadi::Collection(),
-                      const QString &partSpecifier = QString() );
+  FolderJob();
 
-  /**
-   * Constructs a new job, operating on a message list @p msgList,
-   * set @sets, JobType @p jt and with the parent folder @p folder.
-   *
-   */
-  FolderJob( const QList<KMime::Message*>& msgList, const QString& sets,
-	     JobType jt = tGetMessage, const Akonadi::Collection & = Akonadi::Collection() );
-  /**
-   * This one should ONLY be used in derived folders, when a job
-   * does something internal and needs to construct an empty parent
-   * FolderJob
-   */
-  FolderJob( JobType jt );
   virtual ~FolderJob();
 
-  QList<KMime::Message*> msgList() const;
   /**
    * Start the job
    */
@@ -102,41 +78,7 @@ public:
    */
   void setCancellable( bool b ) { mCancellable = b; }
 
-  void setPassiveDestructor( bool passive ) { mPassiveDestructor = passive; }
-  bool passiveDestructor() { return mPassiveDestructor; }
-
 signals:
-  /**
-   * Emitted whenever a KMime::Message has been completely
-   * retrieved from the server/folder.
-   */
-  void messageRetrieved( KMime::Message * );
-
-  /**
-   * Emitted whenever a KMime::Message was updated
-   */
-  void messageUpdated( KMime::Message *, const QString& );
-
-  /**
-   * Emitted whenever a message has been stored in
-   * the folder.
-   */
-  void messageStored( KMime::Message * );
-
-  /**
-   * Emitted when a list of messages has been
-   * copied to the specified location. QPtrList contains
-   * the list of the copied messages.
-   */
-  void messageCopied( QList<KMime::Message*> );
-
-  /**
-   * Overloaded signal to the one above. A lot of copying
-   * specifies only one message as the argument and this
-   * signal is easier to use when this happens.
-   */
-  void messageCopied( KMime::Message * );
-
   /**
    * Emitted when the job finishes all processing.
    */
@@ -150,16 +92,6 @@ signals:
    */
   void result( FolderJob* job );
 
-  /**
-   * This progress signal contains the "done" and the "total" numbers so
-   * that the caller can either make a % out of it, or combine it into
-   * a higher-level progress info.
-   */
-  void progress( unsigned long bytesDownloaded, unsigned long bytesTotal );
-
-private:
-  void init();
-
 protected:
   /**
    * Has to be reimplemented. It's called by the start() method. Should
@@ -167,16 +99,9 @@ protected:
    */
   virtual void execute()=0;
 
-  QList<KMime::Message*>   mMsgList;
-  JobType             mType;
-  QString             mSets;
   Akonadi::Collection mSrcFolder;
-  Akonadi::Collection mDestFolder;
-  QString             mPartSpecifier;
   int                 mErrorCode;
 
-  //finished() won't be emitted when this is set
-  bool                mPassiveDestructor;
   bool                mStarted;
   bool                mCancellable;
 };

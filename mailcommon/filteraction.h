@@ -24,6 +24,7 @@
 #include "mailcommon_export.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 #include <kmime/kmime_mdn.h>
 #include <kmime/kmime_message.h>
 
@@ -32,14 +33,69 @@
 #include <QtCore/QMultiHash>
 #include <QtCore/QStringList>
 
-namespace Akonadi {
-  class Item;
-}
-
 class KTemporaryFile;
 class QWidget;
 
 namespace MailCommon {
+
+/**
+ * @short A helper class for the filtering process
+ *
+ * The item context is used to pass the item together with meta data
+ * through the filter chain.
+ * This allows to 'record' all actions that shall be taken and execute them
+ * at the end of the filter chain.
+ */
+class MAILCOMMON_EXPORT ItemContext
+{
+  public:
+    /**
+     * Creates an item context for the given @p item.
+     */
+    ItemContext( const Akonadi::Item &item );
+
+    /**
+     * Returns the item of the context.
+     */
+    Akonadi::Item& item();
+
+    /**
+     * Sets the target collection the item should be moved to.
+     */
+    void setMoveTargetCollection( const Akonadi::Collection &collection );
+
+    /**
+     * Returns the target collection the item should be moved to, or an invalid
+     * collection if the item should not be moved at all.
+     */
+    Akonadi::Collection moveTargetCollection() const;
+
+    /**
+     * Marks that the item's payload has been changed and needs to be written back.
+     */
+    void setNeedsPayloadStore();
+
+    /**
+     * Returns whether the item's payload needs to be written back.
+     */
+    bool needsPayloadStore() const;
+
+    /**
+     * Marks that the item's flags has been changed and needs to be written back.
+     */
+    void setNeedsFlagStore();
+
+    /**
+     * Returns whether the item's flags needs to be written back.
+     */
+    bool needsFlagStore() const;
+
+  private:
+    Akonadi::Item mItem;
+    Akonadi::Collection mMoveTargetCollection;
+    bool mNeedsPayloadStore;
+    bool mNeedsFlagStore;
+};
 
 //=========================================================
 //
@@ -101,14 +157,15 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
     QString name() const;
 
     /**
-     * Execute action on given message. Returns @p CriticalError if a
+     * Execute action on given message (inside the item context).
+     * Returns @p CriticalError if a
      * critical error has occurred (eg. disk full), @p ErrorButGoOn if
      * there was a non-critical error (e.g. invalid address in
      * 'forward' action), @p ErrorNeedComplete if a complete message
      * is required, @p GoOn if the message shall be processed by
      * further filters and @p Ok otherwise.
      */
-    virtual ReturnCode process( const Akonadi::Item &item ) const = 0;
+    virtual ReturnCode process( ItemContext &context ) const = 0;
 
     /**
      * Determines if the action depends on the body of the message
@@ -480,7 +537,6 @@ class FilterActionWithFolder : public FilterAction
 
   protected:
     Akonadi::Collection mFolder;
-    QString mFolderName;
 };
 
 
@@ -647,7 +703,7 @@ class FilterActionWithCommand : public FilterActionWithUrl
      */
     virtual QString substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg, QList<KTemporaryFile*> &aTempFileList  ) const;
 
-    virtual ReturnCode genericProcess( const Akonadi::Item &item, bool filtering ) const;
+    virtual ReturnCode genericProcess( ItemContext &context, bool filtering ) const;
 };
 
 

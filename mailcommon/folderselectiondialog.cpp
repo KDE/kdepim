@@ -81,8 +81,6 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   optReadableProxy |= ReadableCollectionProxyModel::HideSpecificFolder;
   if ( options & FolderSelectionDialog::HideOutboxFolder )
     optReadableProxy |= ReadableCollectionProxyModel::HideOutboxFolder;
-  if ( options & FolderSelectionDialog::HideImapFolder )
-    optReadableProxy |= ReadableCollectionProxyModel::HideImapFolder;
 
   d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
   d->folderTreeWidget->disableContextMenuAndExtraColumn();

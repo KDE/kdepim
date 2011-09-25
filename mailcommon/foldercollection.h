@@ -32,7 +32,6 @@ using MessageCore::MailingList;
 
 namespace MailCommon {
 
-class Kernel;
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
@@ -62,8 +61,6 @@ public:
   void readConfig();
 
   QString name() const;
-
-  QString idString() const;
 
   bool isReadOnly() const;
 
@@ -155,8 +152,8 @@ public:
   /**
    * If expiry should move to folder, return the ID of that folder
    */
-  QString expireToFolderId() const { return mExpireToFolderId; }
-  void setExpireToFolderId( const QString& id );
+  Akonadi::Collection::Id expireToFolderId() const { return mExpireToFolderId; }
+  void setExpireToFolderId( Akonadi::Collection::Id id );
 
   /**
    * Units getUnreadExpireAge() is returned in.
@@ -211,9 +208,6 @@ protected slots:
   void slotIdentitiesChanged();
   void slotDeletionCollectionResult( KJob *job );
 
-signals:
-  void viewConfigChanged();
-
 private:
 
   explicit FolderCollection( const Akonadi::Collection& col, bool writeconfig );
@@ -225,7 +219,7 @@ private:
   ExpireUnits  mUnreadExpireUnits;
   ExpireUnits  mReadExpireUnits;
   ExpireAction mExpireAction;
-  QString      mExpireToFolderId;
+  Akonadi::Collection::Id mExpireToFolderId;
 
   /** Mailing list attributes */
   bool                mMailingListEnabled;

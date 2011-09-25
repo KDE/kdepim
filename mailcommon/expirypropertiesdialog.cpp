@@ -139,11 +139,11 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   else
     moveToRB->setChecked( true );
 
-  QString destFolderID = mFolder->expireToFolderId();
-  if ( !destFolderID.isEmpty() ) {
+  Akonadi::Collection::Id destFolderID = mFolder->expireToFolderId();
+  if ( destFolderID > 0 ) {
     Akonadi::Collection destFolder = Kernel::self()->collectionFromId( destFolderID );
     if ( destFolder.isValid() )
-      folderSelector->setFolder( destFolder );
+      folderSelector->setCollection( destFolder );
   }
   slotUpdateControls();
   setAttribute(Qt::WA_WState_Polished);
@@ -160,7 +160,7 @@ ExpiryPropertiesDialog::~ExpiryPropertiesDialog()
 void ExpiryPropertiesDialog::accept()
 {
   bool enableGlobally = expireReadMailCB->isChecked() || expireUnreadMailCB->isChecked();
-  Akonadi::Collection expireToFolder = folderSelector->folderCollection();
+  const Akonadi::Collection expireToFolder = folderSelector->collection();
   if ( enableGlobally && moveToRB->isChecked() && !expireToFolder.isValid() ) {
     KMessageBox::error( this, i18n("Please select a folder to expire messages into."),
                         i18n( "No Folder Selected" ) );
@@ -173,7 +173,7 @@ void ExpiryPropertiesDialog::accept()
       return;
     }
     else
-      mFolder->setExpireToFolderId( QString::number( expireToFolder.id() ) );
+      mFolder->setExpireToFolderId( expireToFolder.id() );
 
   }
 

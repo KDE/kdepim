@@ -36,6 +36,7 @@ else()
   set(_mailwebview_cpp mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+    add_subdirectory(a11y)
   endif(NOT WINCE)
 endif()
 

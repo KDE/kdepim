@@ -39,7 +39,6 @@ class KJob;
 
 namespace MailCommon {
 
-class Kernel;
 
 class ExpireJob : public ScheduledJob
 {
@@ -61,10 +60,8 @@ private:
 
 private:
   QList<Akonadi::Item> mRemovedMsgs;
-  int mCurrentIndex;
   int mMaxUnreadTime;
   int mMaxReadTime;
-  bool mFolderOpen;
   Akonadi::Collection mMoveToFolder;
 };
 

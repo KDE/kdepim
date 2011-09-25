@@ -94,12 +94,6 @@ public:
   */
   Akonadi::Collection collectionFromId( const Akonadi::Collection::Id& id ) const;
 
-  /**
-  * Converts @p idString into a number and returns the collection for it.
-  * @see collectionFromId( qint64 )
-  */
-  Akonadi::Collection collectionFromId( const QString &idString ) const;
-
   Akonadi::Collection inboxCollectionFolder();
   Akonadi::Collection outboxCollectionFolder();
   Akonadi::Collection sentCollectionFolder();
@@ -125,7 +119,7 @@ public:
    */
   bool folderIsSentMailFolder( const Akonadi::Collection& );
   
-  bool folderIsInbox( const Akonadi::Collection& );
+  static bool folderIsInbox( const Akonadi::Collection& );
 
   void initFolders();
 

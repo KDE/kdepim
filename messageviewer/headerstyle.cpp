@@ -445,7 +445,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   // of the application layout.
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  QString headerStr = QString("<div class=\"fancy header\" dir=\"%1\">\n").arg(dir);
+  QString headerStr = QString::fromLatin1("<div class=\"fancy header\" dir=\"%1\">\n").arg(dir);
 
   // However, the direction of the message subject within the header is
   // determined according to the contents of the subject itself. Since
@@ -566,7 +566,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   if( photoURL.isEmpty() && message->headerByType( "X-Face" ) && useOtherPhotoSources )
   {
     // no photo, look for a X-Face header
-    QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
+    const QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
     if ( !xfhead.isEmpty() )
     {
       MessageViewer::KXFace xf;
@@ -580,7 +580,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   if( !photoURL.isEmpty() )
   {
         //kDebug() << "Got a photo:" << photoURL;
-    userHTML = QString("<img src=\"%1\" width=\"%2\" height=\"%3\">")
+    userHTML = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\">")
         .arg( photoURL ).arg( photoWidth ).arg( photoHeight );
     userHTML = QString("<div class=\"senderpic\">") + userHTML + "</div>";
   }
@@ -591,7 +591,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 ( GlobalSettings::self()->showEmoticons() ?
                   LinkLocator::ReplaceSmileys : 0 );
 
-    headerStr += QString("<div dir=\"%1\">%2</div>\n")
+    headerStr += QString::fromLatin1("<div dir=\"%1\">%2</div>\n")
                       .arg(subjectDir)
                       .arg(!message->subject(false)?
                             i18n("No Subject") :

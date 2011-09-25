@@ -1,3 +1,4 @@
+
 /******************************************************************************
  *
  *  Copyright 2008 Szymon Tomasz Stefanek <pragma@kvirc.net>
@@ -22,15 +23,16 @@
 #include "messageitem_p.h"
 
 #include "messagetag.h"
-#include "ontologies/email.h"
 #include "messagecore/annotationdialog.h"
 #include "core/callbacknepomukresourceretriever.h"
+#include "theme.h"
 
 #include <akonadi/item.h>
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
 #include <Nepomuk/Variant>
+#include <nepomuk/nmo.h>
 
 #include <KIconLoader>
 
@@ -304,8 +306,7 @@ QString MessageItem::contentSummary() const
   Q_D( const MessageItem );
   Nepomuk::Resource mail( d->mAkonadiItem.url() );
   const QString content =
-      mail.property( NepomukFast::Message::plainTextMessageContentUri() ).toString();
-
+      mail.property( Nepomuk::Vocabulary::NMO::plainTextMessageContent() ).toString();
   // Extract the first 5 non-empty, non-quoted lines from the content and return it
   int numLines = 0;
   const int maxLines = 5;
@@ -587,6 +588,54 @@ MessageItem * MessageItem::topmostMessage()
   if ( parent()->type() == Item::Message )
     return static_cast< MessageItem * >( parent() )->topmostMessage();
   return this;
+}
+
+QString MessageItem::accessibleTextForField(Theme::ContentItem::Type field)
+{
+  switch (field) {
+  case Theme::ContentItem::Subject:
+    return d_ptr->mSubject;
+  case Theme::ContentItem::Sender:
+    return d_ptr->mSender;
+  case Theme::ContentItem::Receiver:
+    return d_ptr->mReceiver;
+  case Theme::ContentItem::SenderOrReceiver:
+    return senderOrReceiver();
+  case Theme::ContentItem::Date:
+    return formattedDate();
+  case Theme::ContentItem::Size:
+    return formattedSize();
+  case Theme::ContentItem::RepliedStateIcon:
+    return status().isReplied() ? i18nc( "Status of an item", "Replied" ) : QString();
+  case Theme::ContentItem::ReadStateIcon:
+    return status().isRead() ? i18nc( "Status of an item", "Read" ) : i18nc( "Status of an item", "Unread" );
+  case Theme::ContentItem::CombinedReadRepliedStateIcon:
+    return accessibleTextForField( Theme::ContentItem::ReadStateIcon ) + accessibleTextForField( Theme::ContentItem::RepliedStateIcon );
+  default:
+    return QString();
+  }
+}
+
+
+QString MessageItem::accessibleText( const Theme* theme, int columnIndex )
+{
+  QStringList rowsTexts;
+
+  Q_FOREACH( Theme::Row *row, theme->column(columnIndex)->messageRows() ) {
+    QStringList leftStrings;
+    QStringList rightStrings;
+    Q_FOREACH( Theme::ContentItem *contentItem, row->leftItems() ) {
+      leftStrings.append( accessibleTextForField( contentItem->type() ) );
+    }
+
+    Q_FOREACH( Theme::ContentItem *contentItem, row->rightItems() ) {
+      rightStrings.insert( rightStrings.begin(), accessibleTextForField( contentItem->type() ) );
+    }
+
+    rowsTexts.append( ( leftStrings + rightStrings ).join( QLatin1String( " " ) ) );
+  }
+
+  return rowsTexts.join( QLatin1String(" ") );
 }
 
 void MessageItem::subTreeToList( QList< MessageItem * > &list )

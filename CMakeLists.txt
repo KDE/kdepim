@@ -135,12 +135,12 @@ if(WINCE)
 find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif(WINCE)
 
-find_package(KDE4 4.6.2 REQUIRED)
+find_package(KDE4 4.7.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.6.41 REQUIRED)
+find_package(KdepimLibs 4.7.41 REQUIRED)
 
 ############### Load the CTest options ###############
 
@@ -334,7 +334,8 @@ endif (NOT WINCE)
     set(MESSAGEVIEWER_SUPPORTED TRUE)
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
-    add_subdirectory(mailcommon)
+    add_subdirectory(mailcommon) # TODO: does this make sense?!?
+    add_subdirectory(mailfilteragent)
     macro_optional_add_subdirectory(kmail)
     if (KDEPIM_BUILD_MOBILE)
       add_subdirectory(mobile)

@@ -21,8 +21,8 @@
 #include "filteractionwidget.h"
 
 #include "filteraction.h"
+#include "filtermanager.h"
 #include "mailfilter.h"
-#include "mailkernel.h"
 #include "minimumcombobox.h"
 
 #include <KLocalizedString>
@@ -95,7 +95,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   setSpacing( 4 );
 
   int index;
-  QList<FilterActionDesc*> list = FilterIf->filterActionDict()->list();
+  QList<FilterActionDesc*> list = MailCommon::FilterManager::filterActionDict()->list();
   QList<FilterActionDesc*>::const_iterator it;
   for ( index = 0, it = list.constBegin() ; it != list.constEnd() ; ++it, ++index ) {
     //create an instance:
@@ -180,7 +180,7 @@ FilterAction* FilterActionWidget::action() const
 {
   // look up the action description via the label
   // returned by KComboBox::currentText()...
-  FilterActionDesc *description = FilterIf->filterActionDict()->value( d->mComboBox->currentText() );
+  FilterActionDesc *description = MailCommon::FilterManager::filterActionDict()->value( d->mComboBox->currentText() );
   if ( description ) {
     // ...create an instance...
     FilterAction *action = description->create();

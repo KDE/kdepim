@@ -29,6 +29,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <KColorScheme>
 #include <kpimidentities/identitycombo.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailkernel.h>
@@ -210,7 +211,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     hl->addWidget( label );
 
     mNameEdit = new KLineEdit( this );
-    mNameEdit->setEnabled( collection.rights() & Collection::CanChangeCollection );
+    connect(mNameEdit, SIGNAL(textChanged(QString) ), SLOT( slotNameChanged( QString ) ) );
     label->setBuddy( mNameEdit );
     hl->addWidget( mNameEdit );
   }
@@ -524,6 +525,21 @@ void CollectionGeneralPage::slotFolderContentsSelectionChanged( int )
   const bool enable = (type == CollectionGeneralPage::ContentsTypeCalendar || type == CollectionGeneralPage::ContentsTypeTask);
   if ( mIncidencesForComboBox )
     mIncidencesForComboBox->setEnabled( enable );
+}
+
+void CollectionGeneralPage::slotNameChanged( const QString& name )
+{
+  QString styleSheet;
+  if ( name.contains( QLatin1Char('/' ) )|| name.isEmpty() ) {
+    const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
+    KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
+    styleSheet = QString("QLineEdit{ background-color:%1 }")
+                 .arg(bgBrush.brush(this).color().name());
+  }
+
+#ifndef QT_NO_STYLE_STYLESHEET
+  setStyleSheet(styleSheet);
+#endif
 }
 
 #include "collectiongeneralpage.moc"

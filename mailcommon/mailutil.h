@@ -42,7 +42,6 @@
 
 #include <akonadi/agentinstance.h>
 
-class KUrl;
 class KJob;
 
 class QAbstractItemModel;
@@ -62,7 +61,6 @@ namespace Akonadi {
 namespace MailCommon
 {
 
-  class Kernel;
 
     /**
      * The Util namespace contains a collection of helper functions use in

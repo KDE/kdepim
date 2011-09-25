@@ -35,7 +35,6 @@ using KPIM::BroadcastStatus;
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kconfiggroup.h>
 
 #include <akonadi/kmime/messagestatus.h>
 
@@ -44,10 +43,6 @@ using KPIM::BroadcastStatus;
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemdeletejob.h>
-// Look at this number of messages in each slotDoWork call
-#define EXPIREJOB_NRMESSAGES 100
-// And wait this number of milliseconds before calling it again
-#define EXPIREJOB_TIMERINTERVAL 100
 
 /*
  Testcases for folder expiry:
@@ -65,8 +60,8 @@ using KPIM::BroadcastStatus;
 namespace MailCommon {
 
 ExpireJob::ExpireJob( const Akonadi::Collection& folder, bool immediate )
- : ScheduledJob( folder, immediate ), mCurrentIndex( 0 ),
-   mFolderOpen( false ), mMoveToFolder( 0 )
+ : ScheduledJob( folder, immediate ),
+   mMoveToFolder( 0 )
 {
 }
 
@@ -84,7 +79,6 @@ void ExpireJob::execute()
 {
   mMaxUnreadTime = 0;
   mMaxReadTime = 0;
-  mCurrentIndex = 0;
   const QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, false ) );
   int unreadDays, readDays;
   fd->daysToExpire( unreadDays, readDays );
@@ -109,9 +103,6 @@ void ExpireJob::execute()
 
 void ExpireJob::slotDoWork()
 {
-#ifdef DEBUG_SCHEDULER
-  kDebug() << "ExpireJob: checking messages" << mCurrentIndex << "to" << stopIndex;
-#endif
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mSrcFolder, this );
   job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
@@ -192,9 +183,6 @@ void ExpireJob::done()
   }
   if ( !str.isEmpty() )
     BroadcastStatus::instance()->setStatusMsg( str );
-
-  KConfigGroup group( KernelIf->config(), fd->configGroupName() );
-  group.writeEntry( "Current", -1 ); // i.e. make it invalid, the serial number will be used
 
   if ( !moving )
     deleteLater();

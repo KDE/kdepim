@@ -1155,6 +1155,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mSavedRelativePosition = 0;
   setShowSignatureDetails( false );
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
+  mFindBar->closeBar();
   if ( mPrinting )
     mLevelQuote = -1;
 }
@@ -1320,6 +1321,7 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
+  connect(mMimePartModel,SIGNAL(modelReset ()),mMimePartTree,SLOT(expandAll()));
 #endif
 
   mBox = new KHBox( mSplitter );
@@ -2891,6 +2893,7 @@ void ViewerPrivate::slotZoomTextOnly()
 void ViewerPrivate::slotZoomReset()
 {
 #ifndef KDEPIM_NO_WEBKIT  
+  mZoomFactor = 100;
   mViewer->setZoomFactor( 1.0 );
 #endif
 }

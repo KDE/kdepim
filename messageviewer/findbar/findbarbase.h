@@ -57,10 +57,10 @@ class FindBarBase : public QWidget
     void findPrev();
     void autoSearch( const QString& str );
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
+    void closeBar();
   private slots:
     void caseSensitivityChanged();
     void highlightAllChanged();
-    void closeBar();
     void slotClearSearch();
 
   protected:

@@ -36,7 +36,7 @@ class MESSAGECOMPOSER_EXPORT AkonadiSender: public QObject, public MessageSender
   Q_OBJECT
 
 public:
-  explicit AkonadiSender();
+  explicit AkonadiSender( QObject *parent = 0 );
 
 protected:
   /**

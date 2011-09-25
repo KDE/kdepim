@@ -38,6 +38,7 @@
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectiongeneralpage.h"
+#include "mailcommon/filtermanager.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
@@ -96,7 +97,6 @@
 #include <kstandarddirs.h>
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/filteraction.h>
-#include <mailcommon/filtermanager.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
 #include <mailcommon/mailkernel.h>
@@ -1743,7 +1743,7 @@ void MainView::applyFilters()
     }
   }
 
-  FilterIf->filterManager()->applyFilters( items );
+  MailCommon::FilterManager::instance()->filter( items );
 }
 
 void MainView::applyFiltersBulkAction()
@@ -1756,7 +1756,7 @@ void MainView::applyFiltersBulkAction()
       items << item;
   }
 
-  FilterIf->filterManager()->applyFilters( items );
+  MailCommon::FilterManager::instance()->filter( items );
 }
 
 bool MainView::selectNextUnreadMessageInCurrentFolder()

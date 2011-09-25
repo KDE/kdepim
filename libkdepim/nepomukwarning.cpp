@@ -1,0 +1,76 @@
+/*
+  Copyright 2011 Volker Krause <vkrause@kde.org>
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+
+#include "nepomukwarning.h"
+
+#include <Nepomuk/ResourceManager>
+
+#include <KAction>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KDebug>
+#include <KLocalizedString>
+#include <KStandardDirs>
+
+#include <QProcess>
+
+KPIM::NepomukWarning::NepomukWarning(const char* neverShowAgainKey, QWidget* parent):
+  KMessageWidget(parent),
+  m_neverShowAgainKey( QLatin1String( neverShowAgainKey ) )
+{
+  setMessageType( Warning );
+  setCloseButtonVisible( true );
+  setWordWrap( true );
+  setText( i18n( "You do not have the semantic desktop system enabled. Several features in here depend on this and will thus not work correctly." ) );
+  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()), SLOT(animatedHide()) );
+  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()), SLOT(animatedShow()) );
+
+  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
+  const bool neverShowAgain = cfgGroup.readEntry( m_neverShowAgainKey, false );
+  setVisible( !Nepomuk::ResourceManager::instance()->initialized() && !neverShowAgain );
+
+  KAction *action = this->findChild<KAction*>(); // that should give us the close action...
+  if ( action )
+    connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+
+  action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
+  addAction( action );
+
+}
+
+void KPIM::NepomukWarning::configure()
+{
+  QProcess::startDetached( KStandardDirs::findExe(QLatin1String("kcmshell4")), QStringList(QLatin1String("kcm_nepomuk")) );
+}
+
+void KPIM::NepomukWarning::setMissingFeatures(const QStringList& features)
+{
+  if ( !features.isEmpty() ) {
+    setText( i18n( "You do not have the semantic desktop system enabled. The following features will not work correctly:<ul><li>%1</li></ul>",
+      features.join( QLatin1String( "</li><li>" ) )
+    ) );
+  }
+}
+
+void KPIM::NepomukWarning::explicitlyClosed()
+{
+  KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
+  cfgGroup.writeEntry( m_neverShowAgainKey, true );
+}

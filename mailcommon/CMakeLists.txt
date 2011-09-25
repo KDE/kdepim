@@ -38,7 +38,6 @@ set(libmailcommon_SRCS
   mailkernel.cpp
   mailutil.cpp
   mdnadvicedialog.cpp
-  messageproperty.cpp
   minimumcombobox.cpp 
   readablecollectionproxymodel.cpp
   redirectdialog.cpp
@@ -51,6 +50,14 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
+  backupjob.cpp
+  kmfilterdlg.cpp
+)
+
+set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
+
+qt4_add_dbus_interfaces(libmailcommon_SRCS
+  ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
 kde4_add_ui_files(libmailcommon_SRCS filterconfigwidget.ui snippetdialog.ui)

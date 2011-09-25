@@ -8,35 +8,20 @@ include_directories(
   ${CMAKE_BINARY_DIR}/messageviewer
   ${SOPRANO_INCLUDE_DIR}
   ${STRIGI_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/plugin
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/ontologies
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-add_definitions(-DNEPOMUK_RESOURCE_STATIC)
+#This is an ugly hack to make the plugin compile becuase we don't have the plugin interface in kdepimlibs yet
+set( CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -Wl,--allow-shlib-undefined,--warn-unresolved-symbols,--no-fatal-warnings" )
 
 set(akonadi_nepomuk_email_feeder_SRCS
-  nepomukemailfeeder.cpp
-  task.cpp
-  messageanalyzer.cpp
-  messagesearch.cpp
-  configdialog.cpp
-  shared/nepomukfeederagentbase.cpp
+  nepomukmailfeeder.cpp
 )
 
-kde4_add_app_icon(akonadi_nepomuk_email_feeder_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/nepomuk.png")
-kde4_add_kcfg_files(akonadi_nepomuk_email_feeder_SRCS settings.kcfgc)
-kde4_add_ui_files(akonadi_nepomuk_email_feeder_SRCS configdialog.ui)
-
-kde4_add_executable(akonadi_nepomuk_email_feeder ${akonadi_nepomuk_email_feeder_SRCS})
-
-if (Q_WS_MAC)
-  set_target_properties(akonadi_nepomuk_email_feeder PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.template)
-  set_target_properties(akonadi_nepomuk_email_feeder PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.emailfeeder")
-  set_target_properties(akonadi_nepomuk_email_feeder PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Nepomuk Email Feeder")
-endif (Q_WS_MAC)
-
-
+kde4_add_plugin( akonadi_nepomuk_email_feeder ${akonadi_nepomuk_email_feeder_SRCS} )
 target_link_libraries(akonadi_nepomuk_email_feeder
-  niefast_apps
   messagecore
   messageviewer
   ${SOPRANO_LIBRARIES}
@@ -57,6 +42,13 @@ target_link_libraries(akonadi_nepomuk_email_feeder
   ${KDE4_KIDLETIME_LIBRARY}
 )
 
-install(TARGETS akonadi_nepomuk_email_feeder ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES nepomukemailfeeder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+########### install files ###############
+
+install(
+  FILES nepomukmailfeeder.desktop
+  DESTINATION ${SERVICES_INSTALL_DIR})
+
+install(
+  TARGETS akonadi_nepomuk_email_feeder
+  DESTINATION ${PLUGIN_INSTALL_DIR})
 

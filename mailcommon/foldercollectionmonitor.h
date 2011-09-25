@@ -48,9 +48,7 @@ public:
   void expireAllFolders( bool immediate, QAbstractItemModel* collectionModel );
   void expunge( const Akonadi::Collection&, bool sync = false );
 private slots:
-  void slotExpungeJob( KJob *job );
   void slotDeleteJob( KJob *job );
-  void slotExpungeJobSync( KJob *job );
 
 protected:
   void expireAllCollection( const QAbstractItemModel *model, bool immediate, const QModelIndex& parentIndex = QModelIndex() );

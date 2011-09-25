@@ -103,10 +103,6 @@ public:
   /// The ownership of the task is transferred to the JobScheduler
   void registerTask( ScheduledTask* task );
 
-  /// Called by [implementations of] FolderStorage::open()
-  /// Interrupt any running job for this folder and re-schedule it for later
-  void notifyOpeningFolder( const Akonadi::Collection& folder );
-
   // D-Bus calls, called from KMKernel
   void pause();
   void resume();
@@ -144,11 +140,8 @@ public:
   ScheduledJob( const Akonadi::Collection & folder, bool immediate );
   ~ScheduledJob();
 
-  bool isOpeningFolder() const { return mOpeningFolder; }
-
 protected:
   bool mImmediate;
-  bool mOpeningFolder;
 };
 
 }
