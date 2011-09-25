@@ -1,3 +1,6 @@
+
+include_directories( ../ )
+
 set(messagevieweraccessiblewidgetfactory_SRCS
     messagevieweraccessiblewidgetfactory.cpp
     accessiblemailwebview.cpp

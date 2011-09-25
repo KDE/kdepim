@@ -21,6 +21,7 @@
 #define MESSAGEVIEWER_MAILWEBVIEW_H
 
 #include <qglobal.h> // make sure we have Q_OS_WINCE defined
+#include "globalsettings.h"
 
 #ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
@@ -38,12 +39,12 @@ namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
 #ifdef KDEPIM_NO_WEBKIT
-class MailWebView : public QTextBrowser // krazy:exclude=qclasses
+class MESSAGEVIEWER_EXPORT MailWebView : public QTextBrowser // krazy:exclude=qclasses
 #else
 # ifdef Q_OS_WINCE
-class MailWebView : public QWebView
+class MESSAGEVIEWER_EXPORT MailWebView : public QWebView
 # else
-class MailWebView : public KWebView
+class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
 # endif
 #endif
 {
