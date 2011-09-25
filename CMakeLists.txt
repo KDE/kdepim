@@ -360,9 +360,16 @@ endif (NOT WINCE)
 
     # disabled until Strigi dep is removed
     if (NOT WINCE AND NOT KDEPIM_NO_NEPOMUK)
-      if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
-        add_subdirectory( nepomuk_email_feeder )
-      endif (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
+      if (NOT WIN32)
+        # The nepomuk_email_feeder uses symbols from kde-runtime.
+        # On Windows you can not link a DLL with undefined
+        # Symbols so this has to be disabled
+        if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
+          add_subdirectory( nepomuk_email_feeder )
+        endif (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
+      else (NOT WIN32)
+        message(STATUS "The akonadi_nepomuk_email_feeder will not be built.")
+      endif(NOT WIN32)
     endif()
   endif(QGPGME_FOUND)
 
