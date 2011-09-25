@@ -360,7 +360,7 @@ endif (NOT WINCE)
 
     # disabled until Strigi dep is removed
     if (NOT WINCE AND NOT KDEPIM_NO_NEPOMUK)
-      if (NOT WIN32)
+      if (NOT WIN32 AND NOT APPLE)
         # The nepomuk_email_feeder uses symbols from kde-runtime.
         # On Windows you can not link a DLL with undefined
         # Symbols so this has to be disabled
