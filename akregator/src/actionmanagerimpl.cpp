@@ -419,38 +419,6 @@ void ActionManagerImpl::initFeedListView( KRss::FeedListView* feedListView )
     action->setText(i18n("Prev&ious Unread Feed"));
     connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotPrevUnreadFeed()));
     action->setShortcut( QKeySequence(Qt::ALT+Qt::Key_Minus) );
-
-#ifdef KRSS_PORT_DISABLED // those slots have never been implemented in Akregator
-    action = coll->addAction("feedstree_home");
-    action->setText(i18n("Go to Top of Tree"));
-    connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotItemBegin()));
-    action->setShortcuts(KShortcut( "Ctrl+Home" ));
-
-    action = coll->addAction("feedstree_end");
-    action->setText(i18n("Go to Bottom of Tree"));
-    connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotItemEnd()));
-    action->setShortcuts(KShortcut( "Ctrl+End" ));
-
-    action = coll->addAction("feedstree_left");
-    action->setText(i18n("Go Left in Tree"));
-    connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotItemLeft()));
-    action->setShortcuts(KShortcut( "Ctrl+Left" ));
-
-    action = coll->addAction("feedstree_right");
-    action->setText(i18n("Go Right in Tree"));
-    connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotItemRight()));
-    action->setShortcuts(KShortcut( "Ctrl+Right" ));
-
-    action = coll->addAction("feedstree_up");
-    action->setText(i18n("Go Up in Tree"));
-    connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotItemUp()));
-    action->setShortcuts(KShortcut( "Ctrl+Up" ));
-
-    action = coll->addAction("feedstree_down" );
-    action->setText(i18n("Go Down in Tree"));
-    connect(action, SIGNAL(triggered(bool)), feedListView, SLOT(slotItemDown()));
-    action->setShortcuts(KShortcut( "Ctrl+Down" ));
-#endif
 }
 
 void ActionManagerImpl::initTabWidget(TabWidget* tabWidget)

@@ -46,10 +46,6 @@ class QAbstractItemModel;
 
 namespace Akregator {
 
-namespace Filters {
-    class AbstractMatcher;
-}
-
 class ArticleFormatter;
 class OpenUrlRequest;
 

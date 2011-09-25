@@ -170,16 +170,6 @@ void Part::slotAkonadiSetUp( KJob* job ) {
         QApplication::quit();
         return;
     }
-#ifdef KRSS_PORT_DISABLED
-    KRss::RetrieveFeedListJob * const fjob = new KRss::RetrieveFeedListJob( m_mainWidget );
-    fjob->setResources( KRss::ResourceManager::self()->resources() );
-    connect( fjob, SIGNAL( result( KJob* ) ), this, SLOT( slotFeedListRetrieved( KJob* ) ) );
-    fjob->start();
-
-    KRss::TagProviderRetrieveJob * const tjob = new KRss::TagProviderRetrieveJob( m_mainWidget );
-    connect( tjob, SIGNAL( result( KJob* ) ), this, SLOT( slotTagProviderRetrieved( KJob* ) ) );
-    tjob->start();
-#endif
 }
 
 void Part::slotStarted()

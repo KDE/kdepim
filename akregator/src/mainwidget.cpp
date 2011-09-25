@@ -144,15 +144,6 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
     m_horizontalSplitter->setOpaqueResize(true);
     lt->addWidget(m_horizontalSplitter);
 
-#ifdef KRSS_PORT_DISABLED
-    const QString defaultResourceId = Settings::activeAkonadiResource();
-    const shared_ptr<const KRss::NetResource> resource = KRss::ResourceManager::self()->resource( defaultResourceId );
-    connect( resource.get(), SIGNAL( fetchQueueStarted(QString) ),
-             this, SLOT( slotFetchQueueStarted() ) );
-    connect( resource.get(), SIGNAL( fetchQueueFinished(QString) ),
-             this, SLOT( slotFetchQueueFinished() ) );
-#endif
-
     m_feedListView = new KRss::FeedListView( m_horizontalSplitter );
     const KConfigGroup group( Settings::self()->config(), "General" );
     m_feedListView->setConfigGroup( group );
