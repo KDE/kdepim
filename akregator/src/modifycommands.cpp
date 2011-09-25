@@ -45,7 +45,7 @@ class MarkAsReadCommand::Private {
 public:
 
     Private() : pendingFetches( 0 ), pendingModifies( 0 ) {}
-    KRss::FeedCollection collection;
+    Collection::List collections;
     QPointer<Akonadi::Session> session;
     int pendingFetches;
     int pendingModifies;
@@ -59,8 +59,8 @@ MarkAsReadCommand::MarkAsReadCommand( QObject* parent )
     setUserVisible( false );
 }
 
-void MarkAsReadCommand::setCollection( const Collection& c ) {
-    d->collection = c;
+void MarkAsReadCommand::setCollections( const Collection::List& c ) {
+    d->collections = c;
 }
 
 void MarkAsReadCommand::setSession( Session* s ) {
@@ -70,13 +70,14 @@ void MarkAsReadCommand::setSession( Session* s ) {
 void MarkAsReadCommand::doStart() {
     Q_ASSERT( d->session );
 
-    if ( !d->collection.isValid() ) {
-        setError( KJob::UserDefinedError );
-        setErrorText( i18n("Invalid collection.") );
-        emitResult();
-        return;
-    }
-    CollectionFetchJob* job = new CollectionFetchJob( d->collection, CollectionFetchJob::Recursive, d->session );
+    Q_FOREACH ( const Collection& i, d->collections )
+        if ( !i.isValid() ) {
+            setError( KJob::UserDefinedError );
+            setErrorText( i18n("Invalid collection.") );
+            emitResult();
+            return;
+        }
+    CollectionFetchJob* job = new CollectionFetchJob( d->collections, CollectionFetchJob::Recursive, d->session );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(collectionsFetched(KJob*)) );
     job->start();
 }
@@ -84,7 +85,7 @@ void MarkAsReadCommand::doStart() {
 void MarkAsReadCommand::collectionsFetched( KJob* j ) {
     if ( j->error() ) {
         setError( KJob::UserDefinedError );
-        setErrorText( i18n("Could not fetch collection %1: %2", KRss::FeedCollection( d->collection ).title(), j->errorString() ) );
+        setErrorText( i18n("Could not fetch collection for mark as read: %1", j->errorString() ) );
         emitResult();
         return;
     }
@@ -108,27 +109,28 @@ void MarkAsReadCommand::collectionsFetched( KJob* j ) {
     }
 }
 
-void MarkAsReadCommand::itemsFetched( KJob* j ) {
+#include <QDebug>
 
+void MarkAsReadCommand::itemsFetched( KJob* j ) {
     --d->pendingFetches;
     Q_ASSERT( d->pendingFetches >= 0 );
 
     if ( j->error() ) {
         setError( KJob::UserDefinedError );
-        setErrorText( i18n("Could not fetch items for collection %1: %2", KRss::FeedCollection( d->collection ).title(), j->errorString() ) );
+        setErrorText( i18n("Could not fetch items for collection: %1", j->errorString() ) );
     } else {
         const ItemFetchJob * const fjob = qobject_cast<const ItemFetchJob*>( j );
         Q_ASSERT( fjob );
-
         Akonadi::Item::List items = fjob->items();
-        Akonadi::Item::List::Iterator it = items.begin();
-        for ( ; it != items.end(); ++it )
-            KRss::Item::setStatus( *it, KRss::Item::status( *it ) & ~KRss::Item::Unread );
-
-        ItemModifyJob* mjob = new ItemModifyJob( items, d->session );
-        connect( mjob, SIGNAL(finished(KJob*)), this, SLOT(itemsModified(KJob*)) );
-        mjob->start();
-        ++d->pendingModifies;
+        if ( !items.isEmpty() ) {
+            Akonadi::Item::List::Iterator it = items.begin();
+            for ( ; it != items.end(); ++it )
+                KRss::Item::setStatus( *it, KRss::Item::status( *it ) & ~KRss::Item::Unread );
+            ItemModifyJob* mjob = new ItemModifyJob( items, d->session );
+            connect( mjob, SIGNAL(finished(KJob*)), this, SLOT(itemsModified(KJob*)) );
+            ++d->pendingModifies;
+            mjob->start();
+        }
     }
 
     if ( d->pendingFetches == 0 && d->pendingModifies == 0 )

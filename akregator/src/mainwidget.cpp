@@ -638,19 +638,14 @@ void Akregator::MainWidget::slotPrevUnreadArticle()
 
 void Akregator::MainWidget::slotMarkAllFeedsRead()
 {
-#ifdef KRSS_PORT_DISABLED
-    KRss::CompositeStatusModifyJob * const job = new KRss::CompositeStatusModifyJob( this );
-    Q_FOREACH( const shared_ptr<KRss::Feed>& feed, m_feedList->feeds() ) {
-        job->addSubJob( feed->statusModifyJob() );
-    }
+    const Akonadi::Collection::List l = m_selectionController->resourceRootCollections();
+    if ( l.isEmpty() )
+        return;
 
-    job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
-#ifdef WITH_LIBKDEPIM
-    ProgressManager::self()->addJob( job );
-#endif
-    job->start();
-#endif
+    MarkAsReadCommand* cmd = new MarkAsReadCommand( this );
+    cmd->setCollections( l );
+    cmd->setSession( m_session );
+    d->setUpAndStart( cmd );
 }
 
 void Akregator::MainWidget::slotMarkFeedRead()
@@ -660,7 +655,7 @@ void Akregator::MainWidget::slotMarkFeedRead()
         return;
 
     MarkAsReadCommand* cmd = new MarkAsReadCommand( this );
-    cmd->setCollection( c );
+    cmd->setCollections( Akonadi::Collection::List() << c );
     cmd->setSession( m_session );
     d->setUpAndStart( cmd );
 }
@@ -683,13 +678,12 @@ void Akregator::MainWidget::slotFetchCurrentFeed()
 
 void Akregator::MainWidget::slotFetchAllFeeds()
 {
-#ifdef KRSS_PORT_DISABLED
-    if ( !m_feedList )
+    const Akonadi::Collection::List l = m_selectionController->resourceRootCollections();
+    if ( l.isEmpty() )
         return;
-    Q_FOREACH( const shared_ptr<const KRss::Feed>& feed, m_feedList->constFeeds() ) {
-        feed->fetch();
-    }
-#endif
+    Q_FOREACH( const Akonadi::Collection& i, l )
+        Akonadi::AgentManager::self()->synchronizeCollection( i );
+
 }
 
 void Akregator::MainWidget::slotAbortFetches() {

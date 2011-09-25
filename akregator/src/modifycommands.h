@@ -27,6 +27,8 @@
 
 #include "command.h"
 
+#include <Akonadi/Collection>
+
 namespace Akonadi {
    class Collection;
    class Session;
@@ -38,7 +40,7 @@ class MarkAsReadCommand : public Command {
 public:
     explicit MarkAsReadCommand( QObject* parent=0 );
 
-    void setCollection( const Akonadi::Collection& c );
+    void setCollections( const Akonadi::Collection::List& c );
     void setSession( Akonadi::Session* s );
 
 private:
