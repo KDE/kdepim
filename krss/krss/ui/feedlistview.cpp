@@ -17,8 +17,9 @@
 */
 
 #include "feedlistview.h"
-#include "feedlistdelegate.h"
 #include "krss/feeditemmodel.h"
+
+#include <Akonadi/CollectionStatisticsDelegate>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -211,7 +212,10 @@ FeedListView::FeedListView( QWidget *parent )
     setDropIndicatorShown( true );
     setAcceptDrops( true );
     setUniformRowHeights( true );
-    setItemDelegate( new FeedListDelegate( this ) );
+    Akonadi::CollectionStatisticsDelegate* delegate = new Akonadi::CollectionStatisticsDelegate( this );
+    delegate->setProgressAnimationEnabled( true );
+    delegate->setUnreadCountShown( true );
+    setItemDelegate( delegate );
     connect( header(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showHeaderMenu(QPoint)) );
     connect( this, SIGNAL(clicked(QModelIndex)),
              this, SLOT(slotClicked(QModelIndex)) );
