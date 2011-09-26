@@ -285,7 +285,14 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
   if ( !items.isEmpty() &&
        !( items.count() == 1 && m_searchString == items.first() ) ) {
 
-    completionBox->setItems( items );
+    const int numberOfItems( items.count() );
+    for ( int i = 0; i< numberOfItems; ++i )
+    {
+      QListWidgetItem *item =new QListWidgetItem(items.at( i ), completionBox);
+      if ( !items.at( i ).startsWith( s_completionItemIndentString ) )
+        item->setFlags( item->flags()&~Qt::ItemIsSelectable );
+      completionBox->addItem( item );
+    }
 
     if ( !completionBox->isVisible() ) {
       if ( !m_searchString.isEmpty() ) {
