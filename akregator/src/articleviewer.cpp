@@ -32,7 +32,6 @@
 #include "articlematcher.h"
 #include "utils.h"
 #include "openurlrequest.h"
-#include "progressmanager.h"
 
 #include <kpimutils/kfileio.h>
 

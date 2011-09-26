@@ -25,7 +25,6 @@
 #include "exportfeedlistcommand.h"
 #include "command_p.h"
 
-#include <krss/exportopmljob.h>
 
 #include <KFileDialog>
 #include <KInputDialog>
@@ -37,7 +36,6 @@
 
 using namespace Akonadi;
 using namespace Akregator;
-using namespace KRss;
 
 class ExportFeedListCommand::Private
 {

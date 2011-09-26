@@ -24,7 +24,6 @@
 
 #include "selectioncontroller.h"
 #include "actionmanager.h"
-#include "progressmanager.h"
 
 #include <krss/feeditemmodel.h>
 #include <krss/rssitem.h>

@@ -25,7 +25,6 @@
 #ifndef AKREGATOR_PROGRESSMANAGER_H
 #define AKREGATOR_PROGRESSMANAGER_H
 
-#include <krss/feed.h>
 #include <QObject>
 
 namespace boost {

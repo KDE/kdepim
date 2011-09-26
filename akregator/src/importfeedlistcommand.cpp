@@ -28,8 +28,6 @@
 #include <Akonadi/Collection>
 #include <Akonadi/Session>
 
-#include <krss/importopmljob.h>
-
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -43,7 +41,6 @@
 
 using namespace Akonadi;
 using namespace Akregator;
-using namespace KRss;
 
 class ImportFeedListCommand::Private
 {
