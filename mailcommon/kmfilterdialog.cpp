@@ -370,7 +370,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   connect( mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()) );
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
-  QSize size = myGroup.readEntry( "FilterDialogSize", QSize() );
+  QSize size = myGroup.readEntry( "filterDialogSize", QSize() );
   if ( size != QSize()  )
     resize( size );
   else
@@ -402,7 +402,7 @@ void KMFilterDialog::slotFinished() {
 
 void KMFilterDialog::slotSaveSize() {
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
-  myGroup.writeEntry( "FilterDialogSize",size() );
+  myGroup.writeEntry( "filterDialogSize",size() );
   myGroup.sync();
 }
 
