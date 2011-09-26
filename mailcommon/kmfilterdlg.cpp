@@ -768,6 +768,8 @@ void KMFilterListBox::slotUpdateFilterName()
 
   if ( displayedName == shouldBeName ) return;
 
+  mFilterList.at( mIdxSelItem )->setToolbarName( shouldBeName );
+
   mListWidget->blockSignals(true);
   mListWidget->item( mIdxSelItem )->setText( shouldBeName );
   mListWidget->blockSignals(false);
