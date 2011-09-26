@@ -79,9 +79,7 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
                     return KGlobal::locale()->formatDateTime( item.dateUpdated(),
                                                               KLocale::FancyShortDate );
             case FeedTitleForItemColumn:
-#ifdef TEMPORARILY_REMOVED
-               return d->m_feed->title();
-#endif
+                return FeedCollection( akonadiItem.parentCollection() ).title();
             default:
                 return EntityTreeModel::entityData( akonadiItem, column, role );
         }
