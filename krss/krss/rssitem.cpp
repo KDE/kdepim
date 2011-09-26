@@ -126,7 +126,7 @@ RssItem::Private::Private( const Private& other )
 
 QByteArray RssItem::flagRead()
 {
-    return "\\Seen";
+    return "\\SEEN";
 }
 
 QByteArray RssItem::flagImportant()
