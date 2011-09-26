@@ -1407,22 +1407,20 @@ void Kleo::KeyResolver::addToAllSplitInfos( const std::vector<GpgME::Key> & keys
 void Kleo::KeyResolver::dump() const {
 #ifndef NDEBUG
   if ( d->mFormatInfoMap.empty() )
-    std::cerr << "Keyresolver: Format info empty" << std::endl;
+    kdDebug() << "Kleo::Keyresolver: Format info empty" << endl;
   for ( std::map<CryptoMessageFormat,FormatInfo>::const_iterator it = d->mFormatInfoMap.begin() ; it != d->mFormatInfoMap.end() ; ++it ) {
-    std::cerr << "Format info for " << Kleo::cryptoMessageFormatToString( it->first )
-	      << ":" << std::endl
-	      << "  Signing keys: ";
+    kdDebug() << "Kleo::Keyresolver: Format info for " << Kleo::cryptoMessageFormatToString( it->first )
+        << ":" << endl
+        << "  Signing keys: " << endl;
     for ( std::vector<GpgME::Key>::const_iterator sit = it->second.signKeys.begin() ; sit != it->second.signKeys.end() ; ++sit )
-      std::cerr << sit->shortKeyID() << " ";
-    std::cerr << std::endl;
+      kdDebug() << "  " << sit->shortKeyID() << endl;
     unsigned int i = 0;
     for ( std::vector<SplitInfo>::const_iterator sit = it->second.splitInfos.begin() ; sit != it->second.splitInfos.end() ; ++sit, ++i ) {
-      std::cerr << "  SplitInfo #" << i << " encryption keys: ";
+      kdDebug() << "  SplitInfo #" << i << " encryption keys: " << endl;
       for ( std::vector<GpgME::Key>::const_iterator kit = sit->keys.begin() ; kit != sit->keys.end() ; ++kit )
-	std::cerr << kit->shortKeyID() << " ";
-      std::cerr << std::endl
-		<< "  SplitInfo #" << i << " recipients: "
-		<< sit->recipients.join(", ").utf8() << std::endl;
+        kdDebug() << "  " << kit->shortKeyID() << " " << endl;
+      kdDebug() << "  SplitInfo #" << i << " recipients: "
+          << sit->recipients.join(", ").utf8() << endl;
     }
   }
 #endif
