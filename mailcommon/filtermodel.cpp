@@ -28,7 +28,7 @@ using namespace MailCommon;
 FilterModel::FilterModel( QObject *parent )
   : QAbstractListModel( parent )
 {
-  connect( FilterManager::instance(), SIGNAL( filtersChanged() ),
+  connect( FilterManager::instance(), SIGNAL(filtersChanged()),
            this, SLOT(filterListUpdated()) );
 }
 
