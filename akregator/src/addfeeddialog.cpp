@@ -23,7 +23,6 @@
 */
 
 #include "addfeeddialog.h"
-#include "kernel.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>

@@ -29,7 +29,6 @@
 #include "actionmanagerimpl.h"
 #include "feediconmanager.h"
 #include "framemanager.h"
-#include "kernel.h"
 #include "mainwidget.h"
 #include "notificationmanager.h"
 #include "plugin.h"
@@ -121,12 +120,12 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
 
     m_mainWidget = new MainWidget( this, m_parentWidget, m_actionManager );
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalCaptionChanged(const QString&)), this, SIGNAL(setWindowCaption(const QString&)));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalStatusText(const QString&)), this, SLOT(slotSetStatusText(const QString&)));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalLoadingProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalCanceled(const QString&)), this, SIGNAL(canceled(const QString&)));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalCaptionChanged(const QString&)), this, SIGNAL(setWindowCaption(const QString&)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalStatusText(const QString&)), this, SLOT(slotSetStatusText(const QString&)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalLoadingProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalCanceled(const QString&)), this, SIGNAL(canceled(const QString&)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
 
     // notify the part that this is our internal widget
     setWidget(m_mainWidget);

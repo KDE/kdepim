@@ -28,7 +28,6 @@
 #include "articlelistview.h"
 #include "articleviewer.h"
 #include "framemanager.h"
-#include "kernel.h"
 #include "mainwidget.h"
 #include "speechclient.h"
 #include "tabwidget.h"

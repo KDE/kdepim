@@ -40,7 +40,6 @@
 #include "importfeedlistcommand.h"
 #include "exportfeedlistcommand.h"
 #include "framemanager.h"
-#include "kernel.h"
 #include "notificationmanager.h"
 #include "openurlrequest.h"
 #ifdef WITH_LIBKDEPIM
@@ -123,14 +122,20 @@ Akregator::MainWidget::~MainWidget()
     delete d;
 }
 
+Akregator::FrameManager* Akregator::MainWidget::frameManager() const {
+    return m_frameManager;
+}
+
 Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImpl* actionManager)
      : QWidget(parent),
      d( new Private( this ) ),
      m_viewMode(NormalView),
-     m_actionManager(actionManager)
+     m_actionManager(actionManager),
+     m_frameManager( new FrameManager( this, this ) )
+
 {
     m_actionManager->initMainWidget(this);
-    m_actionManager->initFrameManager(Kernel::self()->frameManager());
+    m_actionManager->initFrameManager(m_frameManager);
     m_part = part;
     m_shuttingDown = false;
     m_displayingAboutPage = false;
@@ -161,24 +166,24 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
              m_tabWidget, SLOT(slotSettingsChanged()));
 
     connect( m_tabWidget, SIGNAL(signalCurrentFrameChanged(int)),
-             Kernel::self()->frameManager(), SLOT(slotChangeFrame(int)));
+             m_frameManager, SLOT(slotChangeFrame(int)));
 
     connect( m_tabWidget, SIGNAL(signalRemoveFrameRequest(int)),
-             Kernel::self()->frameManager(), SLOT(slotRemoveFrame(int)));
+             m_frameManager, SLOT(slotRemoveFrame(int)));
 
     connect( m_tabWidget, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)),
-             Kernel::self()->frameManager(), SLOT(slotOpenUrlRequest(Akregator::OpenUrlRequest&)));
+             m_frameManager, SLOT(slotOpenUrlRequest(Akregator::OpenUrlRequest&)));
 
-    connect( Kernel::self()->frameManager(), SIGNAL(signalFrameAdded(Akregator::Frame*)),
+    connect( m_frameManager, SIGNAL(signalFrameAdded(Akregator::Frame*)),
              m_tabWidget, SLOT(slotAddFrame(Akregator::Frame*)));
 
-    connect( Kernel::self()->frameManager(), SIGNAL(signalSelectFrame(int)),
+    connect( m_frameManager, SIGNAL(signalSelectFrame(int)),
              m_tabWidget, SLOT(slotSelectFrame(int)) );
 
-    connect( Kernel::self()->frameManager(), SIGNAL(signalFrameRemoved(int)),
+    connect( m_frameManager, SIGNAL(signalFrameRemoved(int)),
              m_tabWidget, SLOT(slotRemoveFrame(int)));
 
-    connect( Kernel::self()->frameManager(), SIGNAL(signalRequestNewFrame(int&)),
+    connect( m_frameManager, SIGNAL(signalRequestNewFrame(int&)),
              this, SLOT( slotRequestNewFrame(int&) ) );
 
     m_tabWidget->setWhatsThis( i18n("You can view multiple articles in several open tabs."));
@@ -244,7 +249,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
     m_articleListView->setFocusProxy(m_articleViewer);
 
     connect( m_articleViewer, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest& )),
-             Kernel::self()->frameManager(), SLOT(slotOpenUrlRequest( Akregator::OpenUrlRequest& )) );
+             m_frameManager, SLOT(slotOpenUrlRequest( Akregator::OpenUrlRequest& )) );
     connect( m_articleViewer->part()->browserExtension(), SIGNAL(mouseOverInfo( KFileItem )),
              this, SLOT(slotMouseOverInfo( KFileItem )) );
     connect( m_part, SIGNAL(signalSettingsChanged()),
@@ -258,7 +263,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
 
     m_mainFrame = new MainFrame( this, m_part, m_mainTab );
     m_mainFrame->slotSetTitle( i18n("Articles") );
-    Kernel::self()->frameManager()->slotAddFrame(m_mainFrame);
+    m_frameManager->slotAddFrame(m_mainFrame);
 
     const QList<int> sp1sizes = Settings::splitter1Sizes();
     if ( sp1sizes.count() >= m_horizontalSplitter->count() )
@@ -343,7 +348,7 @@ void Akregator::MainWidget::slotRequestNewFrame(int& frameId)
 
     connect( m_part, SIGNAL(signalSettingsChanged()), frame, SLOT(slotPaletteOrFontChanged()));
 
-    Kernel::self()->frameManager()->slotAddFrame(frame);
+    m_frameManager->slotAddFrame(frame);
 
     frameId = frame->id();
 }
@@ -353,7 +358,7 @@ void Akregator::MainWidget::sendArticle(bool attach)
     QByteArray text;
     QString title;
 
-    Frame* frame = Kernel::self()->frameManager()->currentFrame();
+    Frame* frame = m_frameManager->currentFrame();
 
     if (frame && frame->id() > 0) { // are we in some other tab than the articlelist?
         text = frame->url().prettyUrl().toLatin1();
@@ -762,7 +767,7 @@ void Akregator::MainWidget::slotMouseButtonPressed(int button, const KUrl& url)
             req.setOpenInBackground(false);
     }
 
-    Kernel::self()->frameManager()->slotOpenUrlRequest(req);
+    m_frameManager->slotOpenUrlRequest(req);
 }
 
 void Akregator::MainWidget::slotOpenHomepage()
@@ -776,7 +781,7 @@ void Akregator::MainWidget::slotOpenHomepage()
     if (url.isValid()) {
         OpenUrlRequest req( url );
         req.setOptions(OpenUrlRequest::ExternalBrowser);
-        Kernel::self()->frameManager()->slotOpenUrlRequest(req);
+        m_frameManager->slotOpenUrlRequest(req);
     }
 }
 
@@ -796,7 +801,7 @@ void Akregator::MainWidget::slotOpenItemInBrowser( const KRss::Item& item )
 
     OpenUrlRequest req( link );
     req.setOptions( OpenUrlRequest::ExternalBrowser );
-    Kernel::self()->frameManager()->slotOpenUrlRequest( req );
+    m_frameManager->slotOpenUrlRequest( req );
 }
 
 
@@ -815,7 +820,7 @@ void Akregator::MainWidget::slotOpenSelectedArticles()
         // TODO: (re-)add a setting for foreground/background
         // and use it here
         //req.setOpenInBackground( true );
-        Kernel::self()->frameManager()->slotOpenUrlRequest( req );
+        m_frameManager->slotOpenUrlRequest( req );
     }
 
 }
@@ -967,7 +972,7 @@ void Akregator::MainWidget::slotSetSelectedArticleRead()
 void Akregator::MainWidget::slotTextToSpeechRequest()
 {
 
-    if (Kernel::self()->frameManager()->currentFrame() == m_mainFrame)
+    if (m_frameManager->currentFrame() == m_mainFrame)
     {
         if (m_viewMode != CombinedView)
         {
@@ -1031,7 +1036,7 @@ void Akregator::MainWidget::readProperties(const KConfigGroup &config)
 
         connect( m_part, SIGNAL(signalSettingsChanged()), frame, SLOT(slotPaletteOrFontChanged()));
 
-        Kernel::self()->frameManager()->slotAddFrame(frame);
+        m_frameManager->slotAddFrame(frame);
 
     }
 }
@@ -1042,7 +1047,7 @@ void Akregator::MainWidget::saveProperties(KConfigGroup & config)
     config.writeEntry("searchLine", m_searchBar->text());
     config.writeEntry("searchCombo", m_searchBar->status());
 
-    Kernel::self()->frameManager()->saveProperties(config);
+    m_frameManager->saveProperties(config);
 }
 
 void Akregator::MainWidget::slotJobFinished( KJob *job )

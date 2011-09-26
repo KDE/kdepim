@@ -64,6 +64,7 @@ class ArticleViewer;
 class Folder;
 class FeedList;
 class Frame;
+class FrameManager;
 class Part;
 class SearchBar;
 class SubscriptionListView;
@@ -91,6 +92,8 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         /** saves settings. Make sure that the Settings singleton is not destroyed yet when saveSettings is called */
         void saveSettings();
+
+        FrameManager* frameManager() const;
 
         /**
          * Add a feed to a group.
@@ -254,6 +257,7 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         bool m_displayingAboutPage;
 
         ActionManagerImpl* m_actionManager;
+        FrameManager* m_frameManager;
 };
 
 } // namespace Akregator

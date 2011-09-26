@@ -86,7 +86,6 @@ set(akregatorpart_PART_SRCS
 #   importitemsjob.cpp
    tabwidget.cpp
 #   progressmanager.cpp
-   kernel.cpp
    modifycommands.cpp
    akregator_part.cpp
    mainwidget.cpp

@@ -54,7 +54,6 @@
 #include "akregatorconfig.h"
 #include "frame.h"
 #include "framemanager.h"
-#include "kernel.h"
 #include "openurlrequest.h"
 #include "utils/temporaryvalue.h"
 
