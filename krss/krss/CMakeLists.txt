@@ -28,7 +28,6 @@ set(krss_LIB_SRCS
    feeditemmodel.cpp
 # ui stuff
    ui/feedlistview.cpp
-   ui/feedlistdelegate.cpp
    ui/feedpropertiesdialog.cpp
 )
 
