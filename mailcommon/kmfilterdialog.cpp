@@ -42,7 +42,6 @@ using MailCommon::FilterImporterExporter;
 #include <kinputdialog.h>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
-#include <kconfig.h>
 #include <kicondialog.h>
 #include <kkeysequencewidget.h>
 #include <kpushbutton.h>
