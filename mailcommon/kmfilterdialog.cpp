@@ -18,7 +18,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "kmfilterdlg.h"
+#include "kmfilterdialog.h"
 
 
 // other KMail headers:
@@ -124,15 +124,15 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
            "change the ruleset to tag the messages differently.</p></qt>" );
 
 // The anchor of the filter dialog's help.
-const char * KMFilterDlgHelpAnchor =  "filters" ;
+const char * KMFilterDialogHelpAnchor =  "filters" ;
 
 //=============================================================================
 //
-// class KMFilterDlg (the filter dialog)
+// class KMFilterDialog (the filter dialog)
 //
 //=============================================================================
 
-KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWidget* parent, bool createDummyFilter )
+KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection, QWidget* parent, bool createDummyFilter )
   : KDialog( parent ),
   mDoNotClose( false ),
   mIgnoreFilterUpdates( true )
@@ -142,7 +142,7 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   setModal( false );
   setButtonFocus( Ok );
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-  setHelp( KMFilterDlgHelpAnchor, "kmail" );
+  setHelp( KMFilterDialogHelpAnchor, "kmail" );
   setButtonText( User1, i18n("Import...") );
   setButtonText( User2, i18n("Export...") );
   connect( this, SIGNAL(user1Clicked()),
@@ -382,7 +382,7 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   mIgnoreFilterUpdates = false;
 }
 
-void KMFilterDlg::accept()
+void KMFilterDialog::accept()
 {
   if ( mDoNotClose ) {
     mDoNotClose = false; // only abort current close attempt
@@ -392,22 +392,22 @@ void KMFilterDlg::accept()
   }
 }
 
-void KMFilterDlg::slotApply()
+void KMFilterDialog::slotApply()
 {
   enableButtonApply( false );
 }
 
-void KMFilterDlg::slotFinished() {
+void KMFilterDialog::slotFinished() {
 	deleteLater();
 }
 
-void KMFilterDlg::slotSaveSize() {
+void KMFilterDialog::slotSaveSize() {
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
   myGroup.writeEntry( "FilterDialogSize",size() );
   myGroup.sync();
 }
 
-void KMFilterDlg::slotFilterSelected( MailFilter* aFilter )
+void KMFilterDialog::slotFilterSelected( MailFilter* aFilter )
 {
   assert( aFilter );
   mIgnoreFilterUpdates = true;
@@ -459,7 +459,7 @@ void KMFilterDlg::slotFilterSelected( MailFilter* aFilter )
   mIgnoreFilterUpdates = false;
 }
 
-void KMFilterDlg::slotReset()
+void KMFilterDialog::slotReset()
 {
   mFilter = 0;
   mPatternEdit->reset();
@@ -469,13 +469,13 @@ void KMFilterDlg::slotReset()
   slotUpdateAccountList();
 }
 
-void KMFilterDlg::slotUpdateFilter()
+void KMFilterDialog::slotUpdateFilter()
 {
   mPatternEdit->updateSearchPattern();
   mActionLister->updateActionList();
 }
 
-void KMFilterDlg::slotApplicabilityChanged()
+void KMFilterDialog::slotApplicabilityChanged()
 {
   if ( mFilter ) {
     mFilter->setApplyOnInbound( mApplyOnIn->isChecked() );
@@ -514,7 +514,7 @@ void KMFilterDlg::slotApplicabilityChanged()
   }
 }
 
-void KMFilterDlg::slotApplicableAccountsChanged()
+void KMFilterDialog::slotApplicableAccountsChanged()
 {
   // Advanced tab functionality - Update list of accounts this filter applies to
   if ( mFilter && mApplyOnForChecked->isEnabled() && mApplyOnForChecked->isChecked() ) {
@@ -532,7 +532,7 @@ void KMFilterDlg::slotApplicableAccountsChanged()
   }
 }
 
-void KMFilterDlg::slotStopProcessingButtonToggled( bool aChecked )
+void KMFilterDialog::slotStopProcessingButtonToggled( bool aChecked )
 {
   if ( mFilter ) {
     mFilter->setStopProcessingHere( aChecked );
@@ -542,7 +542,7 @@ void KMFilterDlg::slotStopProcessingButtonToggled( bool aChecked )
   }
 }
 
-void KMFilterDlg::slotConfigureShortcutButtonToggled( bool aChecked )
+void KMFilterDialog::slotConfigureShortcutButtonToggled( bool aChecked )
 {
   if ( mFilter ) {
     mFilter->setConfigureShortcut( aChecked );
@@ -556,7 +556,7 @@ void KMFilterDlg::slotConfigureShortcutButtonToggled( bool aChecked )
   }
 }
 
-void KMFilterDlg::slotShortcutChanged( const QKeySequence &newSeq )
+void KMFilterDialog::slotShortcutChanged( const QKeySequence &newSeq )
 {
   if ( mFilter ) {
     mKeySeqWidget->applyStealShortcut();
@@ -567,7 +567,7 @@ void KMFilterDlg::slotShortcutChanged( const QKeySequence &newSeq )
   }
 }
 
-void KMFilterDlg::slotConfigureToolbarButtonToggled( bool aChecked )
+void KMFilterDialog::slotConfigureToolbarButtonToggled( bool aChecked )
 {
   if ( mFilter ) {
     mFilter->setConfigureToolbar( aChecked );
@@ -576,7 +576,7 @@ void KMFilterDlg::slotConfigureToolbarButtonToggled( bool aChecked )
   }
 }
 
-void KMFilterDlg::slotFilterActionIconChanged( const QString &icon )
+void KMFilterDialog::slotFilterActionIconChanged( const QString &icon )
 {
   if ( mFilter ) {
     mFilter->setIcon( icon );
@@ -585,7 +585,7 @@ void KMFilterDlg::slotFilterActionIconChanged( const QString &icon )
  }
 }
 
-void KMFilterDlg::slotUpdateAccountList()
+void KMFilterDialog::slotUpdateAccountList()
 {
   mAccountList->clear();
 
@@ -1111,7 +1111,7 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 }
 
 
-void KMFilterDlg::slotImportFilters()
+void KMFilterDialog::slotImportFilters()
 {
   FilterImporterExporter importer( this );
   QList<MailFilter *> filters = importer.importFilters();
@@ -1126,7 +1126,7 @@ void KMFilterDlg::slotImportFilters()
   }
 }
 
-void KMFilterDlg::slotExportFilters()
+void KMFilterDialog::slotExportFilters()
 {
   FilterImporterExporter exporter( this );
   QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
@@ -1136,12 +1136,12 @@ void KMFilterDlg::slotExportFilters()
     delete *it;
 }
 
-void KMFilterDlg::slotDisableAccept()
+void KMFilterDialog::slotDisableAccept()
 {
   mDoNotClose = true;
 }
 
-void KMFilterDlg::slotDialogUpdated()
+void KMFilterDialog::slotDialogUpdated()
 {
   kDebug() << "Detected a change in data bound to the dialog!";
   if ( !mIgnoreFilterUpdates ) {
@@ -1150,4 +1150,4 @@ void KMFilterDlg::slotDialogUpdated()
 }
 }
 
-#include "kmfilterdlg.moc"
+#include "kmfilterdialog.moc"

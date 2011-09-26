@@ -18,8 +18,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef kmfilterdlg_h
-#define kmfilterdlg_h
+#ifndef kmfilterdialog_h
+#define kmfilterdialog_h
 
 #include "mailfilter.h"
 #include "filteraction.h"
@@ -68,7 +68,7 @@ namespace MailCommon {
 
     @short A complex widget that allows managing a list of MailCommon::MailFilter's.
     @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>.
-    @see MailCommon::MailFilter KMFilterDlg KMFilterActionEdit SearchPatternEdit
+    @see MailCommon::MailFilter KMFilterDialog KMFilterActionEdit SearchPatternEdit
 
  */
 namespace MailCommon {
@@ -82,11 +82,11 @@ public:
   /** Destructor. */
   ~KMFilterListBox();
 
-  /** Called from KMFilterDlg. Creates a new filter and presets
+  /** Called from KMFilterDialog. Creates a new filter and presets
       the first rule with "field equals value". It's there mainly to
       support "rapid filter creation" from a context menu. You should
       instead call KMFilterMgr::createFilter.
-      @see KMFilterMgr::createFilter KMFilterDlg::createFilter
+      @see KMFilterMgr::createFilter KMFilterDialog::createFilter
   */
   void createFilter( const QByteArray & field, const QString & value );
 
@@ -144,7 +144,7 @@ public slots:
       listbox and (if necessary) auto-names the filter. */
   void slotUpdateFilterName();
   /** Called when the user clicks either 'Apply' or 'OK' in
-      KMFilterDlg. Updates the filter list in the KMFilterMgr. */
+      KMFilterDialog. Updates the filter list in the KMFilterMgr. */
   void slotApplyFilterChanges( KDialog::ButtonCode );
 
 protected slots:
@@ -226,13 +226,13 @@ private:
     list and the filters that use folders as parameters are not
     updated as you expect. I hope this will change sometime soon.
 
-    KMFilterDlg supports the creation of new filters through context
+    KMFilterDialog supports the creation of new filters through context
     menus, dubbed "rapid filters". Call KMFilterMgr::createFilter
     to use this. That call will be delivered to this dialog, which in
     turn delivers it to the KMFilterListBox.
 
     If you change the (DocBook) anchor for the filter dialog help,
-    make sure to change @p const @p QString @p KMFilterDlgHelpAnchor
+    make sure to change @p const @p QString @p KMFilterDialogHelpAnchor
     in kmfilterdlg.cpp accordingly.
 
     @short The filter dialog.
@@ -241,14 +241,14 @@ private:
 
  */
 
-class MAILCOMMON_EXPORT KMFilterDlg: public KDialog
+class MAILCOMMON_EXPORT KMFilterDialog: public KDialog
 {
   Q_OBJECT
 public:
   /** Create the filter dialog. The only class which should be able to
       do this is KMFilterMgr. This ensures that there is only a
       single filter dialog */
-  explicit KMFilterDlg( const QList<KActionCollection*>& actionCollection, QWidget* parent=0, bool createDummyFilter=true );
+  explicit KMFilterDialog( const QList<KActionCollection*>& actionCollection, QWidget* parent=0, bool createDummyFilter=true );
 
   /** Called from KMFilterMgr. Creates a new filter and presets
       the first rule with "field equals value". Internally forwarded
@@ -340,4 +340,4 @@ protected:
 }
 
 
-#endif /*kmfilterdlg_h*/
+#endif /*kmfilterdialog_h*/
