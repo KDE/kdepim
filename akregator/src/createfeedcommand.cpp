@@ -47,14 +47,8 @@
 #include <QTimer>
 #include <QClipboard>
 
-#include <cassert>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-
 using namespace Akregator;
 using namespace KRss;
-using boost::weak_ptr;
-using boost::shared_ptr;
 
 class CreateFeedCommand::Private
 {
@@ -90,7 +84,7 @@ void CreateFeedCommand::Private::doCreate()
 
         if( url.isEmpty() ) {
             const QClipboard* const clipboard = QApplication::clipboard();
-            assert( clipboard );
+            Q_ASSERT( clipboard );
             const QString clipboardText = clipboard->text();
             // Check for the hostname, since the isValid method is not strict enough
             if( !KUrl( clipboardText ).isEmpty() )
