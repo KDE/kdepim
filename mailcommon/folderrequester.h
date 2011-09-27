@@ -71,9 +71,6 @@ namespace MailCommon {
       /** Returns the selected collection. */
       Akonadi::Collection collection() const;
 
-      /** Returns current text */
-      QString text() const { return edit->originalText(); }
-
       /** Preset the folder to @p collection. */
       void setCollection( const Akonadi::Collection& collection );
 
