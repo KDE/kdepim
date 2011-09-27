@@ -88,7 +88,6 @@
 #include <libkdepim/recentaddresses.h>
 
 // KDEPIMLIBS includes
-#include <akonadi/collectioncombobox.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/entitymimetypefiltermodel.h>
