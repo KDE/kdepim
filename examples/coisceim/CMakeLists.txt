@@ -2,7 +2,7 @@ project(coisceim)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-include_directories( ${Boost_INCLUDE_DIRS} )
+include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/messageviewer )
 
 set (coisceim_widget_SRCS
   coisceimwidget.cpp
