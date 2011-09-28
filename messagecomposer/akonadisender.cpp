@@ -19,11 +19,8 @@
 
 #include "akonadisender.h"
 
-#include <KMessageBox>
 #include <KLocale>
 #include <KDebug>
-#include <KConfig>
-#include <KConfigGroup>
 
 #include "messagehelper.h"
 #include "messagecomposersettings.h"
@@ -131,9 +128,11 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   } else {
     transportId = message->headerByType( "X-KMail-Transport"  ) ? message->headerByType( "X-KMail-Transport" )->asUnicodeString().toInt() : -1;
   }
-
   const Transport *transport = TransportManager::self()->transportById( transportId );
-  Q_ASSERT( transport );
+  if( !transport ) { 
+      kDebug()<<" No transport defined. Need to create it";
+      return;
+  }
   kDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
   qjob->transportAttribute().setTransportId( transport->id() );
 
