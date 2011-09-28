@@ -18,10 +18,6 @@
 #include <kactioncollection.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <kmessagebox.h>
-
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
 
 SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent )
   : KDialog( parent ), mActionCollection( actionCollection )

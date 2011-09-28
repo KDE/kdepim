@@ -45,7 +45,6 @@ using MailCommon::FilterLog;
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kascii.h>
 
@@ -55,7 +54,6 @@ using MailCommon::FilterLog;
 #include <akonadi/contact/contactsearchjob.h>
 
 #include <QRegExp>
-#include <QByteArray>
 #include <QDataStream>
 #include <QXmlStreamWriter>
 

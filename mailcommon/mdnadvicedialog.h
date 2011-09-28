@@ -25,8 +25,6 @@
 #include <kmime/kmime_message.h>
 #include <messagecomposer/messagefactory.h>
 
-#include <QtCore/QString>
-
 namespace MailCommon {
 
 class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject

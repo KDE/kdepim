@@ -40,7 +40,6 @@
 #include <kmessagebox.h>
 #include <kvbox.h>
 
-#include <QtCore/QStringList>
 #include <QtGui/QFrame>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>

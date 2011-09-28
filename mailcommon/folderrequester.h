@@ -31,12 +31,12 @@
 
 #include "mailcommon_export.h"
 
-#include <klineedit.h>
-#include <ksharedconfig.h>
+#include <KLineEdit>
 #include <akonadi/collection.h>
 
-#include <QtGui/QKeyEvent>
 #include <QtGui/QWidget>
+
+class QKeyEvent; 
 
 class KJob;
 
