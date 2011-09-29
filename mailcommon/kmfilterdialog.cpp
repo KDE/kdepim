@@ -107,6 +107,22 @@ I18N_NOOP( "<qt><p>Click this button to move the currently-"
 	   "The topmost filter gets tried first.</p>"
 	   "<p>If you have clicked this button accidentally, you can undo this "
 	   "by clicking on the <em>Up</em> button.</p></qt>" );
+
+const char * _wt_filterlist_top =
+I18N_NOOP( "<qt><p>Click this button to move the currently-"
+	   "selected filter to top of list.</p>"
+	   "<p>This is useful since the order of the filters in the list "
+	   "determines the order in which they are tried on messages: "
+	   "The topmost filter gets tried first.</p>" );
+
+const char * _wt_filterlist_bottom =
+I18N_NOOP( "<qt><p>Click this button to move the currently-"
+	   "selected filter to bottom of list.</p>"
+	   "<p>This is useful since the order of the filters in the list "
+	   "determines the order in which they are tried on messages: "
+	   "The topmost filter gets tried first.</p>" );
+
+
 const char * _wt_filterlist_rename =
 I18N_NOOP( "<qt><p>Click this button to rename the currently-selected filter.</p>"
 	   "<p>Filters are named automatically, as long as they start with "
@@ -650,6 +666,13 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   //----------- the first row of buttons
   KHBox *hb = new KHBox(this);
   hb->setSpacing(4);
+
+  mBtnTop = new KPushButton( QString(), hb );
+  mBtnTop->setIcon( KIcon( "go-top" ) );
+  mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
+  
+  
   mBtnUp = new KPushButton( QString(), hb );
   mBtnUp->setAutoRepeat( true );
   mBtnUp->setIcon( KIcon( "go-up" ) );
@@ -660,10 +683,21 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mBtnDown->setIcon( KIcon( "go-down" ) );
   mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
+
+  mBtnBottom = new KPushButton( QString(), hb );
+  mBtnBottom->setIcon( KIcon( "go-bottom" ) );
+  mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
+
+  
   mBtnUp->setToolTip( i18nc("Move selected filter up.", "Up") );
   mBtnDown->setToolTip( i18nc("Move selected filter down.", "Down") );
+  mBtnTop->setToolTip( i18nc("Move selected filter top.", "Top") );
+  mBtnBottom->setToolTip( i18nc("Move selected filter top.", "Bottom") );
   mBtnUp->setWhatsThis( i18n(_wt_filterlist_up) );
   mBtnDown->setWhatsThis( i18n(_wt_filterlist_down) );
+  mBtnBottom->setWhatsThis( i18n(_wt_filterlist_bottom) );
+  mBtnTop->setWhatsThis( i18n(_wt_filterlist_top) );
 
   layout->addWidget( hb );
 
@@ -703,6 +737,11 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 	   this, SLOT(slotUp()) );
   connect( mBtnDown, SIGNAL(clicked()),
 	   this, SLOT(slotDown()) );
+  connect( mBtnTop, SIGNAL(clicked()),
+	   this, SLOT(slotTop()) );
+  connect( mBtnBottom, SIGNAL(clicked()),
+	   this, SLOT(slotBottom()) );
+
   connect( mBtnNew, SIGNAL(clicked()),
 	   this, SLOT(slotNew()) );
   connect( mBtnCopy, SIGNAL(clicked()),
@@ -947,6 +986,55 @@ void KMFilterListBox::slotDelete()
   emit filterRemoved( deletedFilter );
 }
 
+void KMFilterListBox::slotTop()
+{
+  if ( mIdxSelItem < 0 ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
+    return;
+  }
+  if ( mIdxSelItem == 0 ) {
+    kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+    return;
+  }
+  MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
+  mFilterList.insert( 0, filter );
+  QListWidgetItem *item = mListWidget->item( mIdxSelItem );
+  mListWidget->takeItem( mIdxSelItem );
+  mListWidget->insertItem( 0, item );
+
+  mIdxSelItem = 0;
+  mListWidget->setCurrentItem( mListWidget->item( 0 ) );
+  
+  enableControls();
+
+  emit filterOrderAltered();
+}
+
+void KMFilterListBox::slotBottom()
+{
+  if ( mIdxSelItem < 0 ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
+    return;
+  }
+  if ( mIdxSelItem == (int)mListWidget->count() - 1 ) {
+    kDebug() << "Called while the _last_ filter is selected, ignoring.";
+    return;
+  }
+
+  MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
+  mFilterList.insert( mFilterList.count() , filter );
+  QListWidgetItem *item = mListWidget->item( mIdxSelItem );
+  mListWidget->takeItem( mIdxSelItem );
+  mListWidget->insertItem( mListWidget->count(), item );
+
+  mIdxSelItem = ( mFilterList.count() -1 );
+  mListWidget->setCurrentItem( mListWidget->item( mIdxSelItem ) );
+  enableControls();
+
+  emit filterOrderAltered();
+}
+
+
 void KMFilterListBox::slotUp()
 {
   if ( mIdxSelItem < 0 ) {
@@ -1035,7 +1123,9 @@ void KMFilterListBox::enableControls()
   mBtnCopy->setEnabled( aFilterIsSelected );
   mBtnDelete->setEnabled( aFilterIsSelected );
   mBtnRename->setEnabled( aFilterIsSelected );
-
+  mBtnTop->setEnabled( aFilterIsSelected && !theFirst );
+  mBtnBottom->setEnabled( aFilterIsSelected && !theLast );
+  
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
 }

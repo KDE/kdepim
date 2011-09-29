@@ -171,14 +171,19 @@ protected slots:
       dialog prompting to enter the new name. */
   void slotRename();
   void slotRowsMoved( const QModelIndex &, int, int, const QModelIndex &, int );
-
+  /** Called when the user clicks the 'Top' button. Moves the current
+      filter to top. */
+  void slotTop();
+  /** Called when the user clicks the 'Bottom' button. Moves the current
+      filter to bottom. */
+  void slotBottom();
 protected:
   /** The deep copy of the filter list. */
   QList<MailCommon::MailFilter *> mFilterList;
   /** The listbox displaying the filter list. */
   QListWidget *mListWidget;
   /** The various action buttons. */
-  QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnUp, *mBtnDown, *mBtnRename;
+  QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnUp, *mBtnDown, *mBtnRename, *mBtnTop, *mBtnBottom;
   /** The index of the currently selected item. */
   int mIdxSelItem;
 private:
