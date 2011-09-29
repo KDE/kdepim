@@ -45,7 +45,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
   private:
-    void killAllJobs();
+    void killAllJobs( bool disconnect = false );
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
 
     /**
@@ -78,7 +78,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     /**
      * Remove everything from the tree widget and clear all caches.
      */
-    void clear();
+    void clear( bool disconnect = false );
 
   private:
     TreeWidgetWithContextMenu* mListView;
