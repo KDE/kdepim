@@ -27,6 +27,7 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/control.h>
+#include <akonadi/private/notificationmessage_p.h>
 
 #include <KDebug>
 #include <KLocale>
@@ -227,52 +228,54 @@ void AgentWidget::showChangeNotifications()
     stream >> mimeType;
     stream >> itemParts;
 
-
     QString typeString;
     switch ( type ) {
-      case 1:
+      case NotificationMessage::Collection:
         typeString = QLatin1String( "Collection" );
         break;
-      case 2:
+      case NotificationMessage::Item:
         typeString = QLatin1String( "Item" );
         break;
-      case 0:
       default:
-        typeString = QLatin1String( "Item" );
+        typeString = QLatin1String( "InvalidType" );
         break;
     };
 
     QString operationString;
     switch ( operation ) {
-      case 1:
+      case NotificationMessage::Add:
         operationString = QLatin1String( "Add" );
         break;
-      case 2:
+      case NotificationMessage::Modify:
         operationString = QLatin1String( "Modify" );
         break;
-      case 3:
+      case NotificationMessage::Move:
         operationString = QLatin1String( "Move" );
         break;
-      case 4:
+      case NotificationMessage::Remove:
         operationString = QLatin1String( "Remove" );
         break;
-      case 5:
+      case NotificationMessage::Link:
         operationString = QLatin1String( "Link" );
         break;
-      case 6:
+      case NotificationMessage::Unlink:
         operationString = QLatin1String( "Unlink" );
         break;
-      case 7:
+      case NotificationMessage::Subscribe:
         operationString = QLatin1String( "Subscribe" );
         break;
-      case 8:
+      case NotificationMessage::Unsubscribe:
         operationString = QLatin1String( "Unsubscribe" );
         break;
-      case 0:
       default:
         operationString = QLatin1String( "InvalidOp" );
         break;
     };
+
+    QStringList itemPartsList;
+    foreach( const QByteArray &b, itemParts )
+      itemPartsList.push_back( QString::fromLatin1(b) );
+
     const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
                                              .arg( QString::fromLatin1( sessionId ) )
                                              .arg( typeString )
@@ -283,7 +286,7 @@ void AgentWidget::showChangeNotifications()
                                              .arg( parentCollection )
                                              .arg( parentDestCollection )
                                              .arg( mimeType )
-                                             .arg( QLatin1String("foobar") );
+                                             .arg( itemPartsList.join(QLatin1String(", " )) );
 
     list << entry;
   }
