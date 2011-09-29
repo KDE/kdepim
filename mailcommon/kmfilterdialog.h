@@ -40,7 +40,7 @@ class KComboBox;
 class KIconButton;
 class KKeySequenceWidget;
 class KActionCollection;
-
+class QModelIndex;
 namespace MailCommon {
   class SearchPatternEdit;
   class FilterActionWidgetLister;
@@ -170,6 +170,7 @@ protected slots:
   /** Called when the user clicks the 'Rename' button. Pops up a
       dialog prompting to enter the new name. */
   void slotRename();
+  void slotRowsMoved( const QModelIndex &, int, int, const QModelIndex &, int );
 
 protected:
   /** The deep copy of the filter list. */

@@ -638,7 +638,8 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mListWidget->setMinimumWidth(150);
   mListWidget->setWhatsThis( i18n(_wt_filterlist) );
   mListWidget->setDragDropMode( QAbstractItemView::InternalMove );
-
+  connect( mListWidget->model(),SIGNAL( rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
+  
   KListWidgetSearchLine* mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
   mSearchListWidget->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
                                              "textbox, verb to search", "Search" ) );
@@ -722,6 +723,17 @@ KMFilterListBox::~KMFilterListBox()
   qDeleteAll( mFilterList );
 }
 
+void KMFilterListBox::slotRowsMoved( const QModelIndex &, int sourcestart, int sourceEnd , const QModelIndex &, int destinationRow)
+{
+  MailFilter* filter = mFilterList.takeAt( sourcestart );
+  mFilterList.insert( destinationRow-1, filter );
+
+  mIdxSelItem = destinationRow;
+
+  enableControls();
+
+  emit filterOrderAltered();
+}
 
 void KMFilterListBox::createFilter( const QByteArray & field,
                                     const QString & value )
