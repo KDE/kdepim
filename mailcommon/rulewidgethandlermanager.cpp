@@ -419,6 +419,11 @@ namespace {
     { SearchRule::FuncContainsNot,        I18N_NOOP( "does not contain" )   },
     { SearchRule::FuncEquals,             I18N_NOOP( "equals" )            },
     { SearchRule::FuncNotEqual,           I18N_NOOP( "does not equal" )     },
+    { SearchRule::FuncStartWith,          I18N_NOOP( "start with" )         },
+    { SearchRule::FuncNotStartWith,       I18N_NOOP( "does not start with" )},
+    { SearchRule::FuncEndWith,            I18N_NOOP( "end with" )           },
+    { SearchRule::FuncNotEndWith,         I18N_NOOP( "does not end with" )  },
+
     { SearchRule::FuncRegExp,             I18N_NOOP( "matches regular expr." ) },
     { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
     { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },

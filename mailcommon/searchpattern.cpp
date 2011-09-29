@@ -66,7 +66,8 @@ static const char* funcConfigNames[] =
   { "contains", "contains-not", "equals", "not-equal", "regexp",
     "not-regexp", "greater", "less-or-equal", "less", "greater-or-equal",
     "is-in-addressbook", "is-not-in-addressbook", "is-in-category", "is-not-in-category",
-    "has-attachment", "has-no-attachment"};
+    "has-attachment", "has-no-attachment", "start-with", "not-start-with", "end-with", "not-end-with"};
+
 static const int numFuncConfigNames = sizeof funcConfigNames / sizeof *funcConfigNames;
 
 struct _statusNames {
@@ -280,6 +281,10 @@ Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
     case SearchRule::FuncRegExp:
     case SearchRule::FuncNotRegExp:
       return Nepomuk::Query::ComparisonTerm::Regexp;
+    case SearchRule::FuncStartWith: //TODO
+    case SearchRule::FuncNotStartWith:
+    case SearchRule::FuncEndWith:
+    case SearchRule::FuncNotEndWith:
     default:
       kDebug() << "Unhandled function type: " << function();
   }
@@ -296,6 +301,8 @@ bool SearchRule::isNegated() const
     case SearchRule::FuncHasNoAttachment:
     case SearchRule::FuncIsNotInCategory:
     case SearchRule::FuncIsNotInAddressbook:
+    case SearchRule::FuncNotStartWith:
+    case SearchRule::FuncNotEndWith:
       negate = true;
     default:
       break;
@@ -336,6 +343,10 @@ QString SearchRule::xesamComparator() const
       // FIXME how to handle the below? full text?
     case SearchRule::FuncRegExp:
     case SearchRule::FuncNotRegExp:
+    case SearchRule::FuncStartWith:
+    case SearchRule::FuncNotStartWith:
+    case SearchRule::FuncEndWith:
+    case SearchRule::FuncNotEndWith:
     default:
       kDebug() << "Unhandled function type: " << function();
   }
@@ -593,6 +604,23 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
       return ( regexp.indexIn( msgContents ) < 0 );
     }
 
+  case SearchRule::FuncStartWith:
+    {
+      return msgContents.startsWith( contents() );
+    }
+  case SearchRule::FuncNotStartWith:
+    {
+      return !msgContents.startsWith( contents() );
+    }
+  case SearchRule::FuncEndWith:
+    {
+      return msgContents.endsWith( contents() );
+    }
+  case SearchRule::FuncNotEndWith:
+    {
+      return !msgContents.endsWith( contents() );
+    }
+    
   case FuncIsGreater:
       return ( QString::compare( msgContents.toLower(), contents().toLower() ) > 0 );
 
@@ -767,7 +795,7 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 
   case SearchRule::FuncContainsNot:
     return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
-
+    
   case SearchRule::FuncRegExp:
     {
       QRegExp regexp( contents(), Qt::CaseInsensitive );
