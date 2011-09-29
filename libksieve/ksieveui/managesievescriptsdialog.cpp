@@ -90,14 +90,19 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
-  clear();
+  clear( true );
 }
 
-void ManageSieveScriptsDialog::killAllJobs()
+void ManageSieveScriptsDialog::killAllJobs( bool disconnectSignal )
 {
-  for ( QMap<KManageSieve::SieveJob*,QTreeWidgetItem*>::const_iterator it = mJobs.constBegin(),
-        end = mJobs.constEnd() ; it != end ; ++it )
+  QMap<KManageSieve::SieveJob*,QTreeWidgetItem*>::const_iterator it = mJobs.constBegin();
+  while (it != mJobs.constEnd()) {
+    if ( disconnectSignal )
+      disconnect( it.key(), SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+                  this, SLOT(slotResult(KManageSieve::SieveJob*,bool,QString,bool)) );
     it.key()->kill();
+    ++it;
+  }
   mJobs.clear();
 }
 
@@ -324,9 +329,9 @@ bool ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) const
   return ( radioButton != 0 );
 }
 
-void ManageSieveScriptsDialog::clear()
+void ManageSieveScriptsDialog::clear( bool disconnect )
 {
-  killAllJobs();
+  killAllJobs(disconnect);
   mSelectedItems.clear();
   qDeleteAll( mButtonGroups );
   mButtonGroups.clear();

@@ -50,7 +50,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void slotUpdateButtons();
 
   private:
-    void killAllJobs();
+    void killAllJobs( bool disconnect = false );
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
 
     /**
@@ -83,7 +83,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     /**
      * Remove everything from the tree widget and clear all caches.
      */
-    void clear();
+    void clear( bool disconnect = false );
 
     void addFailedMessage( const QString & logEntry );
     void addOkMessage( const QString & logEntry );
