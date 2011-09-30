@@ -34,18 +34,17 @@ namespace Core
 class GroupHeaderItem : public Item
 {
 public:
-  GroupHeaderItem( const QString &label );
+  explicit GroupHeaderItem( const QString &label );
   virtual ~GroupHeaderItem();
 
-private:
-  QString mLabel;
-
-public:
   const QString & label() const
     { return mLabel; };
 
   void setLabel( const QString &label )
     { mLabel = label; };
+  
+private:
+  QString mLabel;
 
 
 };

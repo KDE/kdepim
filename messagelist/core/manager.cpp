@@ -177,7 +177,7 @@ unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *st
   // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
   qulonglong defValue = 0;
 
-  return conf.readEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ), defValue );
+  return conf.readEntry( QString::fromLatin1( "MessageUniqueIdForStorageModel%1" ).arg( storageModel->id() ), defValue );
 }
 
 void Manager::savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage )
@@ -191,9 +191,9 @@ void Manager::savePreSelectedMessageForStorageModelId( const QString &storageMod
     // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
     qulonglong val = uniqueIdOfMessage;
 
-    conf.writeEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModelId ), val );
+    conf.writeEntry( QString::fromLatin1( "MessageUniqueIdForStorageModel%1" ).arg( storageModelId ), val );
   } else
-    conf.deleteEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModelId ) );
+    conf.deleteEntry( QString::fromLatin1( "MessageUniqueIdForStorageModel%1" ).arg( storageModelId ) );
 }
 
 const Aggregation * Manager::aggregation( const QString &id )
@@ -210,7 +210,7 @@ const Aggregation * Manager::defaultAggregation()
   KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
-  QString aggregationId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
+  const QString aggregationId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
   Aggregation * opt = 0;
 
@@ -221,15 +221,14 @@ const Aggregation * Manager::defaultAggregation()
     return opt;
 
   // try just the first one
-  QHash< QString, Aggregation * >::Iterator it = mAggregations.begin();
-  if ( it != mAggregations.end() )
+  QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin();
+  if ( it != mAggregations.constEnd() )
     return *it;
 
   // aargh
   createDefaultAggregations();
 
-  it = mAggregations.begin();
-  return *it;
+  return *( mAggregations.constBegin() );
 }
 
 void Manager::saveAggregationForStorageModel( const Akonadi::Collection &col, const QString &id, bool storageUsesPrivateAggregation )
@@ -250,9 +249,9 @@ void Manager::saveAggregationForStorageModel( const QString &modelId, const QStr
                      "MessageListView::StorageModelAggregations" );
 
   if ( storageUsesPrivateAggregation )
-    conf.writeEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( modelId ), id );
+    conf.writeEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( modelId ), id );
   else
-    conf.deleteEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( modelId ) );
+    conf.deleteEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( modelId ) );
 
   if ( !storageUsesPrivateAggregation )
     conf.writeEntry( QLatin1String( "DefaultSet" ), id );
@@ -286,7 +285,7 @@ const Aggregation * Manager::aggregationForStorageModel( const QString &storageI
   KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
-  QString aggregationId = conf.readEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageId ), "" );
+  const QString aggregationId = conf.readEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( storageId ), "" );
 
   Aggregation * opt = 0;
 
@@ -459,7 +458,8 @@ void Manager::createDefaultAggregations()
 
 void Manager::removeAllAggregations()
 {
-  for( QHash< QString, Aggregation * >::Iterator it = mAggregations.begin(); it != mAggregations.end(); ++it )
+  QHash< QString, Aggregation * >::ConstIterator end( mAggregations.constEnd() );
+  for( QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin(); it != end; ++it )
     delete ( *it );
 
   mAggregations.clear();
@@ -511,7 +511,7 @@ const Theme * Manager::defaultTheme()
 {
   KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
 
-  QString themeId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
+  const QString themeId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
   Theme * opt = 0;
 
@@ -522,16 +522,16 @@ const Theme * Manager::defaultTheme()
     return opt;
 
   // try just the first one
-  QHash< QString, Theme * >::Iterator it = mThemes.begin();
-  if ( it != mThemes.end() )
+  QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin();
+  if ( it != mThemes.constEnd() )
     return *it;
 
   // aargh
   createDefaultThemes();
 
-  it = mThemes.begin();
+  it = mThemes.constBegin();
 
-  Q_ASSERT( it != mThemes.end() );
+  Q_ASSERT( it != mThemes.constEnd() );
 
   return *it;
 }
@@ -551,9 +551,9 @@ void Manager::saveThemeForStorageModel( const QString &storageModelIndex, const 
   KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
 
   if ( storageUsesPrivateTheme )
-    conf.writeEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModelIndex ), id );
+    conf.writeEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( storageModelIndex ), id );
   else
-    conf.deleteEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModelIndex ) );
+    conf.deleteEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( storageModelIndex ) );
 
   if ( !storageUsesPrivateTheme )
     conf.writeEntry( QLatin1String( "DefaultSet" ), id );
@@ -588,7 +588,7 @@ const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, b
 const Theme * Manager::themeForStorageModel( const QString &id, bool *storageUsesPrivateTheme )
 {
   KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
-  QString themeId = conf.readEntry( QString(QLatin1String(  "SetForStorageModel%1" )).arg( id ), "" );
+  const QString themeId = conf.readEntry( QString::fromLatin1(  "SetForStorageModel%1" ).arg( id ), "" );
 
   Theme * opt = 0;
 
@@ -889,7 +889,8 @@ void Manager::createDefaultThemes()
 
 void Manager::removeAllThemes()
 {
-  for( QHash< QString, Theme * >::Iterator it = mThemes.begin(); it != mThemes.end(); ++it )
+  QHash< QString, Theme * >::ConstIterator end( mThemes.constEnd() );
+  for( QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin(); it != end; ++it )
     delete ( *it );
 
   mThemes.clear();
@@ -897,7 +898,7 @@ void Manager::removeAllThemes()
 
 void Manager::themesConfigurationCompleted()
 {
-  if ( mThemes.count() < 1 )
+  if ( mThemes.isEmpty() )
     createDefaultThemes(); // panic
 
   saveConfiguration(); // just to be sure :)
@@ -908,7 +909,9 @@ void Manager::themesConfigurationCompleted()
 
 void Manager::reloadAllWidgets()
 {
-  for( QList< Widget * >::Iterator it = mWidgetList.begin(); it != mWidgetList.end(); ++it )
+
+  QList< Widget * >::ConstIterator end( mWidgetList.constEnd() );
+  for( QList< Widget * >::ConstIterator it = mWidgetList.constBegin(); it != end; ++it )
   {
     if ( !( *it )->view() )
       continue;
@@ -920,8 +923,8 @@ void Manager::reloadAllWidgets()
 void Manager::reloadGlobalConfiguration()
 {
   // This is called when configuration changes (probably edited by the options dialog)
-  int oldDateFormat = (int)mDateFormatter->format();
-  QString oldDateCustomFormat = mDateFormatter->customFormat();
+  const int oldDateFormat = (int)mDateFormatter->format();
+  const QString oldDateCustomFormat = mDateFormatter->customFormat();
 
   loadGlobalConfiguration();
 
@@ -953,12 +956,12 @@ void Manager::loadConfiguration()
 
     mAggregations.clear();
 
-    int cnt = conf.readEntry( "Count", (int)0 );
+    const int cnt = conf.readEntry( "Count", 0 );
 
     int idx = 0;
     while ( idx < cnt )
     {
-      QString data = conf.readEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), QString() );
+      const QString data = conf.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
       if ( !data.isEmpty() )
       {
         Aggregation * set = new Aggregation();
@@ -974,7 +977,7 @@ void Manager::loadConfiguration()
       idx++;
     }
 
-    if ( mAggregations.count() == 0 )
+    if ( mAggregations.isEmpty() )
     {
       // don't allow zero configuration, create some presets
       createDefaultAggregations();
@@ -988,12 +991,12 @@ void Manager::loadConfiguration()
 
     mThemes.clear();
 
-    int cnt = conf.readEntry( "Count", (int)0 );
+    const int cnt = conf.readEntry( "Count", 0 );
 
     int idx = 0;
     while ( idx < cnt )
     {
-      QString data = conf.readEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), QString() );
+      const QString data = conf.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
       if ( !data.isEmpty() )
       {
         Theme * set = new Theme();
@@ -1007,10 +1010,10 @@ void Manager::loadConfiguration()
           delete set; // b0rken
         }
       }
-      idx++;
+      ++idx;
     }
 
-    if ( mThemes.count() == 0 )
+    if ( mThemes.isEmpty() )
     {
       // don't allow zero configuration, create some presets
       createDefaultThemes();
@@ -1037,10 +1040,11 @@ void Manager::saveConfiguration()
     conf.writeEntry( "Count", mAggregations.count() );
 
     int idx = 0;
-    for( QHash< QString, Aggregation * >::Iterator it = mAggregations.begin(); it != mAggregations.end(); ++it )
+    QHash< QString, Aggregation * >::ConstIterator end( mAggregations.end() );
+    for( QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin(); it != end; ++it )
     {
-      conf.writeEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), ( *it )->saveToString() );
-      idx++;
+      conf.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), ( *it )->saveToString() );
+      ++idx;
     }
   }
 
@@ -1053,10 +1057,11 @@ void Manager::saveConfiguration()
     conf.writeEntry( "Count", mThemes.count() );
 
     int idx = 0;
-    for( QHash< QString, Theme * >::Iterator it = mThemes.begin(); it != mThemes.end(); ++it )
+    QHash< QString, Theme * >::ConstIterator end( mThemes.constEnd() );
+    for( QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin(); it != end; ++it )
     {
-      conf.writeEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), ( *it )->saveToString() );
-      idx++;
+      conf.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), ( *it )->saveToString() );
+      ++idx;
     }
   }
 
