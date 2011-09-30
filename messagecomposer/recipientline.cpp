@@ -74,7 +74,7 @@ RecipientLineNG::RecipientLineNG( QWidget* parent )
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
-  QStringList recipientTypes = Recipient::allTypeLabels();
+  const QStringList recipientTypes = Recipient::allTypeLabels();
 
   mCombo = new RecipientComboBox( this );
   mCombo->addItems( recipientTypes );
@@ -118,7 +118,7 @@ void RecipientLineNG::slotTypeModified()
 
 void RecipientLineNG::analyzeLine( const QString &text )
 {
-  QStringList r = KPIMUtils::splitAddressList( text );
+  const QStringList r = KPIMUtils::splitAddressList( text );
   if ( int( r.count() ) != mRecipientsCount ) {
     mRecipientsCount = r.count();
   }
