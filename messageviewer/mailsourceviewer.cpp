@@ -59,7 +59,7 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
   mTextBrowser = new MailSourceViewTextBrowser();
   mTextBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-  connect( mTextBrowser, SIGNAL( findText() ), SLOT( slotFind() ) );
+  connect( mTextBrowser, SIGNAL(findText()), SLOT(slotFind()) );
   lay->addWidget( mTextBrowser );
   mFindBar = new FindBarSourceView( mTextBrowser, this );
   lay->addWidget( mFindBar );
@@ -99,7 +99,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
   QMenu *popup = createStandardContextMenu(event->pos());
   if (popup) {
     popup->addSeparator();
-    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL( findText() ) , Qt::Key_F+Qt::CTRL);
+    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
     //Code from KTextBrowser
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
