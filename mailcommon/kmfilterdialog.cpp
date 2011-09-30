@@ -654,7 +654,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mListWidget->setMinimumWidth(150);
   mListWidget->setWhatsThis( i18n(_wt_filterlist) );
   mListWidget->setDragDropMode( QAbstractItemView::InternalMove );
-  connect( mListWidget->model(),SIGNAL( rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
+  connect( mListWidget->model(),SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
   
   KListWidgetSearchLine* mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
   mSearchListWidget->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "

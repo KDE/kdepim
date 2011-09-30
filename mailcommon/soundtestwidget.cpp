@@ -127,3 +127,5 @@ void SoundTestWidget::clear()
 {
   m_urlRequester->lineEdit()->clear();
 }
+
+#include "soundtestwidget.moc"

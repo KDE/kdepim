@@ -431,3 +431,5 @@ void FolderCollection::expireOldMessages( bool immediate )
 
 }
 
+
+#include "foldercollection.moc"
