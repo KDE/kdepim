@@ -838,7 +838,8 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
   Qt::LayoutDirection layoutDir = mItemView->layoutDirection();
 
-  for ( QList< Theme::Row * >::ConstIterator rowit = rows->begin(); rowit != rows->end(); ++rowit )
+  QList< Theme::Row * >::ConstIterator end( rows->constEnd() );
+  for ( QList< Theme::Row * >::ConstIterator rowit = rows->constBegin(); rowit != end; ++rowit )
   {
     QSize rowSizeHint = compute_size_hint_for_row( ( *rowit ), mTheme->iconSize(), item );
 
@@ -846,12 +847,11 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
     // paint right aligned stuff first
     const QList< Theme::ContentItem * > * items = &( ( *rowit )->rightItems() );
-    QList< Theme::ContentItem * >::ConstIterator itemit;
 
     int r = right;
     int l = left;
-
-    for ( itemit = items->begin(); itemit != items->end() ; ++itemit )
+    QList< Theme::ContentItem * >::ConstIterator endit( items->constEnd() );
+    for ( QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endit ; ++itemit )
     {
       Theme::ContentItem * ci = const_cast< Theme::ContentItem * >( *itemit );
 
@@ -1018,7 +1018,8 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
     // then paint left aligned stuff
     items = &( ( *rowit )->leftItems() );
 
-    for ( itemit = items->begin(); itemit != items->end() ; ++itemit )
+    QList< Theme::ContentItem * >::ConstIterator endItem( items->constEnd() );
+    for ( QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endItem ; ++itemit )
     {
       Theme::ContentItem * ci = const_cast< Theme::ContentItem * >( *itemit );
 
@@ -1261,7 +1262,8 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
 
   Qt::LayoutDirection layoutDir = mItemView->layoutDirection();
 
-  for ( QList< Theme::Row * >::ConstIterator rowit = rows->begin(); rowit != rows->end(); ++rowit )
+  QList< Theme::Row * >::ConstIterator end( rows->constEnd() );
+  for ( QList< Theme::Row * >::ConstIterator rowit = rows->constBegin(); rowit != end; ++rowit )
   {
     QSize rowSizeHint = compute_size_hint_for_row( ( *rowit ), mTheme->iconSize(), mHitItem );
 
@@ -1448,7 +1450,7 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
 
     mHitContentItemRight = false;
 
-    for ( itemit = items->begin(); itemit != items->end() ; ++itemit )
+    for ( itemit = items->constBegin(); itemit != items->constEnd() ; ++itemit )
     {
       Theme::ContentItem * ci = const_cast< Theme::ContentItem * >( *itemit );
 
@@ -1648,7 +1650,7 @@ QSize ThemeDelegate::sizeHintForItemTypeAndColumn( Item::Type type, int column, 
   int totalh = 0;
   int maxw = 0;
 
-  for ( QList< Theme::Row * >::ConstIterator rowit = rows->begin(), endRowIt = rows->end(); rowit != endRowIt; ++rowit )
+  for ( QList< Theme::Row * >::ConstIterator rowit = rows->constBegin(), endRowIt = rows->constEnd(); rowit != endRowIt; ++rowit )
   {
     QSize sh = compute_size_hint_for_row( ( *rowit ), mTheme->iconSize(), item );
     totalh += sh.height();
