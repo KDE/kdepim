@@ -5,6 +5,7 @@ X-KDE-ServiceTypes=AkonadiNepomukFeeder
 X-KDE-Library=akonadi_nepomuk_email_feeder
 X-KDE-ClassName=Akonadi::NepomukMailFeeder
 Name=Nepomuk Mail Feeder
+Name[ia]=Syndication de posta de Nepomuk
 Name[lt]=Nepomuk pašto tiektuvas
 Name[nl]=Nepumuk E-mail-feeder
 Name[pt]=Alimentação de E-Mail do Nepomuk
