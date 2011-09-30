@@ -48,7 +48,7 @@ class MESSAGELIST_EXPORT ModelInvariantIndex
   friend class RowShift;
 
 public:
-  ModelInvariantIndex();
+  explicit ModelInvariantIndex();
   virtual ~ModelInvariantIndex();
 
 public:

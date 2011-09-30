@@ -48,7 +48,8 @@ public:
 
   ~RowShift()
   {
-    for ( QHash< int, ModelInvariantIndex * >::Iterator it = mInvariantHash->begin(); it != mInvariantHash->end(); ++it )
+    QHash< int, ModelInvariantIndex * >::ConstIterator end( mInvariantHash->constEnd() );
+    for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = mInvariantHash->constBegin(); it != end; ++it )
       ( *it )->d->setRowMapper( 0 );
     delete mInvariantHash;
   }
@@ -81,7 +82,8 @@ ModelInvariantRowMapper::~ModelInvariantRowMapper()
     d->mUpdateTimer->stop();
 
   // FIXME: optimize this (it CAN be optimized)
-  for ( QHash< int, ModelInvariantIndex * >::Iterator it = d->mCurrentInvariantHash->begin(); it != d->mCurrentInvariantHash->end(); ++it )
+  QHash< int, ModelInvariantIndex * >::ConstIterator end( d->mCurrentInvariantHash->constEnd() );
+  for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it )
     ( *it )->d->setRowMapper( 0 );
   delete d->mCurrentInvariantHash;
 
@@ -105,7 +107,7 @@ void ModelInvariantRowMapperPrivate::killFirstRowShift()
   delete shift;
   mRowShiftList->removeAt( 0 );
   mRemovedShiftCount++;
-  if ( mRowShiftList->count() < 1 )
+  if ( mRowShiftList->isEmpty() )
   {
     delete mRowShiftList;
     mRowShiftList = 0;
