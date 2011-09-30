@@ -113,14 +113,14 @@ I18N_NOOP( "<qt><p>Click this button to move the currently-"
 	   "selected filter to top of list.</p>"
 	   "<p>This is useful since the order of the filters in the list "
 	   "determines the order in which they are tried on messages: "
-	   "The topmost filter gets tried first.</p>" );
+	   "The topmost filter gets tried first.</p></qt>" );
 
 const char * _wt_filterlist_bottom =
 I18N_NOOP( "<qt><p>Click this button to move the currently-"
 	   "selected filter to bottom of list.</p>"
 	   "<p>This is useful since the order of the filters in the list "
 	   "determines the order in which they are tried on messages: "
-	   "The topmost filter gets tried first.</p>" );
+	   "The topmost filter gets tried first.</p></qt>" );
 
 
 const char * _wt_filterlist_rename =
@@ -692,8 +692,8 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   
   mBtnUp->setToolTip( i18nc("Move selected filter up.", "Up") );
   mBtnDown->setToolTip( i18nc("Move selected filter down.", "Down") );
-  mBtnTop->setToolTip( i18nc("Move selected filter top.", "Top") );
-  mBtnBottom->setToolTip( i18nc("Move selected filter bottom.", "Bottom") );
+  mBtnTop->setToolTip( i18nc("Move selected filter to the top.", "Top") );
+  mBtnBottom->setToolTip( i18nc("Move selected filter to the bottom.", "Bottom") );
   mBtnUp->setWhatsThis( i18n(_wt_filterlist_up) );
   mBtnDown->setWhatsThis( i18n(_wt_filterlist_down) );
   mBtnBottom->setWhatsThis( i18n(_wt_filterlist_bottom) );
