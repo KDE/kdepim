@@ -36,7 +36,8 @@ MessageItemSetManager::~MessageItemSetManager()
 
 void MessageItemSetManager::clearAllSets()
 {
-  for ( QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::Iterator it = mSets->begin(); it != mSets->end(); ++it )
+  QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator end( mSets->constEnd() );
+  for ( QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator it = mSets->constBegin(); it != end; ++it )
     delete ( *it );
 
   mSets->clear();
@@ -58,7 +59,8 @@ QList< MessageItem * > MessageItemSetManager::messageItems( MessageItemSetRefere
   if ( !set )
     return ret;
 
-  for ( QHash< MessageItem *, MessageItem * >::Iterator it = set->begin(); it != set->end(); ++it )
+  QHash< MessageItem *, MessageItem * >::ConstIterator end( set->constEnd() );
+  for ( QHash< MessageItem *, MessageItem * >::ConstIterator it = set->constBegin(); it != end; ++it )
     ret.append( *it );
 
   return ret;
@@ -67,15 +69,17 @@ QList< MessageItem * > MessageItemSetManager::messageItems( MessageItemSetRefere
 void MessageItemSetManager::removeMessageItemFromAllSets( MessageItem * mi )
 {
   QList< MessageItemSetReference > setsToBeKilled;
+  QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator end( mSets->end());
 
-  for ( QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::Iterator it = mSets->begin(); it != mSets->end(); ++it )
+  for ( QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator it = mSets->constBegin(); it != end; ++it )
   {
     ( *it )->remove( mi );
-    if ( ( *it )->count() < 1 )
+    if ( ( *it )->isEmpty() )
       setsToBeKilled.append( it.key() );
   }
 
-  for ( QList< MessageItemSetReference >::Iterator it2 = setsToBeKilled.begin(); it2 != setsToBeKilled.end(); ++it2 )
+  QList< MessageItemSetReference >::ConstIterator endit2( setsToBeKilled.constEnd() );
+  for ( QList< MessageItemSetReference >::ConstIterator it2 = setsToBeKilled.constBegin(); it2 != endit2; ++it2 )
     removeSet( *it2 );
 }
 

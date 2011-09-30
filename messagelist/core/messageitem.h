@@ -53,7 +53,7 @@ public:
   class MESSAGELIST_EXPORT Tag
   {
   public:
-    Tag( const QPixmap &pix, const QString &tagName, const QString &tagId );
+    explicit Tag( const QPixmap &pix, const QString &tagName, const QString &tagId );
     ~Tag();
     QPixmap pixmap() const;
     QString name() const;
@@ -97,7 +97,7 @@ public:
     SignatureStateUnknown
   };
 
-  MessageItem();
+  explicit MessageItem();
   virtual ~MessageItem();
 
 public:
@@ -209,7 +209,7 @@ public:
   static void setToDoMessageFont( const QFont &font );
 
 protected:
-  MessageItem( MessageItemPrivate* dd );
+  explicit MessageItem( MessageItemPrivate* dd );
 private:
 
   QString accessibleTextForField( Theme::ContentItem::Type field );
@@ -225,7 +225,7 @@ class MESSAGELIST_EXPORT FakeItem : public MessageItem
 {
   public:
 
-    FakeItem();
+    explicit FakeItem();
     ~FakeItem();
 
     /// Reimplemented to return the fake tag list
