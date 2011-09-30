@@ -90,7 +90,7 @@ class SortOrder
       // Warning: Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
     };
 
-    SortOrder();
+    explicit SortOrder();
 
     /**
     * Returns the GroupSorting

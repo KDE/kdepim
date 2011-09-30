@@ -321,7 +321,7 @@ int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantI
 
   // For the reasoning above invariantShiftIndex is surely < than mRowShiftList.count()
 
-  uint count = static_cast< uint >( d->mRowShiftList->count() );
+  const uint count = static_cast< uint >( d->mRowShiftList->count() );
 
   Q_ASSERT( invariantShiftIndex < count );
 
@@ -373,7 +373,7 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelIndexRowRangeToMo
 
   QList< ModelInvariantIndex * > * invariantList = new QList< ModelInvariantIndex * >();
 
-  int end = startIndexRow + count;
+  const int end = startIndexRow + count;
   for ( int idx = startIndexRow; idx < end; idx++ )
   {
     ModelInvariantIndex * invariant = d->modelIndexRowToModelInvariantIndexInternal( idx, true );
@@ -503,7 +503,7 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
 
   QList< ModelInvariantIndex * > * deadInvariants = new QList< ModelInvariantIndex * >();
 
-  int end = modelIndexRowPosition + count;
+  const int end = modelIndexRowPosition + count;
   for ( int idx = modelIndexRowPosition; idx < end; idx++ )
   {
     // FIXME: One could optimize this by joining the retrieval and destruction functions
@@ -576,7 +576,9 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
 void ModelInvariantRowMapper::modelReset()
 {
   // FIXME: optimize this (it probably can be optimized by providing a more complex user interface)
-  for ( QHash< int, ModelInvariantIndex * >::Iterator it = d->mCurrentInvariantHash->begin(); it != d->mCurrentInvariantHash->end(); ++it )
+  QHash< int, ModelInvariantIndex * >::ConstIterator end( d->mCurrentInvariantHash->constEnd() );
+  
+  for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it )
     ( *it )->d->setRowMapper( 0 );
   d->mCurrentInvariantHash->clear();
 
@@ -632,7 +634,7 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
       // apply shifts
       int modelIndexRow = invariant->d->modelIndexRow();
 
-      for ( uint idx = 0; idx < count; idx++ )
+      for ( uint idx = 0; idx < count; ++idx )
       {
         RowShift * thatShift = mRowShiftList->at( idx );
         if ( modelIndexRow >= thatShift->mMinimumRowIndex )
