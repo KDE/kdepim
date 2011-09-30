@@ -284,7 +284,7 @@ void View::applyThemeColumns()
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   if ( !viewport()->isVisible() )
@@ -325,15 +325,16 @@ void View::applyThemeColumns()
 
   int totalVisibleWidthHint = 0;
   QList< int > lColumnSizeHints;
+  QList< Theme::Column * >::ConstIterator end( columns.end() );
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     if ( ( *it )->currentlyVisible() || ( idx == 0 ) )
     {
       //kDebug() << "Column " << idx << " will be visible";
       // Column visible
-      int savedWidth = ( *it )->currentWidth();
-      int hintWidth = d->mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
+      const int savedWidth = ( *it )->currentWidth();
+      const int hintWidth = d->mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
       totalVisibleWidthHint += savedWidth > 0 ? savedWidth : hintWidth;
       lColumnSizeHints.append( hintWidth );
       //kDebug() << "Column " << idx << " size hint is " << hintWidth;
@@ -353,8 +354,8 @@ void View::applyThemeColumns()
 
   QList< int > lColumnWidths;
   int totalVisibleWidth = 0;
-
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     int savedWidth = ( *it )->currentWidth();
     int hintWidth = savedWidth > 0 ? savedWidth : lColumnSizeHints[ idx ];
@@ -410,7 +411,8 @@ void View::applyThemeColumns()
       // also give more space to the first ones and less space to the last ones
       int available = viewport()->width() - totalVisibleWidth;
 
-      for ( it = columns.begin(); it != columns.end(); ++it )
+      end = columns.end();
+      for ( it = columns.begin(); it != end; ++it )
       {
         if ( ( ( *it )->currentlyVisible() || ( idx == 0 ) ) && ( *it )->containsTextItems() )
         {
@@ -479,7 +481,8 @@ void View::applyThemeColumns()
 
   //kDebug() << "Entering column show/hide loop";
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     bool visible = ( idx == 0 ) || ( *it )->currentlyVisible();
     //kDebug() << "Column " << idx << " visible " << visible;
@@ -495,7 +498,8 @@ void View::applyThemeColumns()
   idx = 0;
   totalVisibleWidth = 0;
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     if ( ( *it )->currentlyVisible() )
     {
@@ -514,7 +518,7 @@ void View::applyThemeColumns()
 
   bool bTriggeredQtBug = false;
 
-  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != columns.end(); ++it )
+  for ( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != columns.constEnd(); ++it )
   {
     if ( !header()->isSectionHidden( idx ) )
     {
@@ -566,13 +570,13 @@ void View::saveThemeColumnState()
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   int idx = 0;
 
 
-  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != columns.end(); ++it )
+  for ( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != columns.constEnd(); ++it )
   {
     if ( header()->isSectionHidden( idx ) )
     {
