@@ -57,31 +57,31 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
 #endif
   connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
-  connect( mListView, SIGNAL( itemSelectionChanged () ),
-           this, SLOT( slotUpdateButtons() ) );
+  connect( mListView, SIGNAL(itemSelectionChanged()),
+           this, SLOT(slotUpdateButtons()) );
   vlay->addWidget( mListView );
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   vlay->addLayout( buttonLayout );
 
   mNewScript = new KPushButton( i18n( "New..." ) );
-  connect( mNewScript, SIGNAL( clicked() ), SLOT( slotNewScript() ) );
+  connect( mNewScript, SIGNAL(clicked()), SLOT(slotNewScript()) );
   buttonLayout->addWidget( mNewScript );
   
   mEditScript = new KPushButton( i18n( "Edit..." ) );
-  connect( mEditScript, SIGNAL( clicked() ), SLOT( slotEditScript() ) );
+  connect( mEditScript, SIGNAL(clicked()), SLOT(slotEditScript()) );
   buttonLayout->addWidget( mEditScript );
   
   mDeleteScript = new KPushButton( i18n( "Delete" ) );
-  connect( mDeleteScript, SIGNAL( clicked() ), SLOT( slotDeleteScript() ) );
+  connect( mDeleteScript, SIGNAL(clicked()), SLOT(slotDeleteScript()) );
   buttonLayout->addWidget( mDeleteScript );
 
   mDeactivateScript = new KPushButton( i18n( "Deactivate" ) );
-  connect( mDeactivateScript, SIGNAL( clicked() ), SLOT( slotDeactivateScript() ) );
+  connect( mDeactivateScript, SIGNAL(clicked()), SLOT(slotDeactivateScript()) );
   buttonLayout->addWidget( mDeactivateScript );
   
   KPushButton *mClose = new KPushButton( KStandardGuiItem::close() );
-  connect( mClose, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  connect( mClose, SIGNAL(clicked()), this, SLOT(accept()) );
   buttonLayout->addWidget( mClose );
   
   resize( sizeHint().width(), sizeHint().height() );
