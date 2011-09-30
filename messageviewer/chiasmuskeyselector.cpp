@@ -1,6 +1,4 @@
 
-#include <config-messageviewer.h>
-
 #include "chiasmuskeyselector.h"
 
 #include <KLineEdit>
@@ -8,7 +6,6 @@
 #include <KLocale>
 #include <KPushButton>
 
-#include <QLayout>
 #include <QLabel>
 #include <QVBoxLayout>
 
@@ -56,16 +53,16 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
 
 void ChiasmusKeySelector::slotItemSelectionChanged()
 {
-  button( Ok )->setEnabled( mListBox->selectedItems().size() > 0 );
+  button( Ok )->setEnabled( !mListBox->selectedItems().isEmpty() );
 }
 
 QString ChiasmusKeySelector::key() const
 {
-  if (mListBox->selectedItems().size() > 0) {
-    return mListBox->currentItem()->text();
-  } else {
+  if (mListBox->selectedItems().isEmpty()) {
     return QString();
   }
+  else
+    return mListBox->currentItem()->text();
 }
 
 QString ChiasmusKeySelector::options() const

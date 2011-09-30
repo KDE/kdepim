@@ -22,10 +22,9 @@
 #include "messageviewer_export.h"
 #include <kurl.h>
 
-#include <qdatetime.h>
 #include <qobject.h>
 #include <qtimer.h>
-
+#include <QTime>
 class KProcess;
 
 namespace MessageViewer {

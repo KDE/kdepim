@@ -48,7 +48,6 @@ using KPIMUtils::LinkLocator;
 
 #include <akonadi/contact/contactsearchjob.h>
 #include <kdebug.h>
-#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kcodecs.h>

@@ -661,16 +661,18 @@ QString NodeHelper::persistentIndex( const KMime::Content * node ) const
   QString indexStr = node->index().toString();
   const KMime::Content * const topLevel = node->topLevel();
   //if the node is an extra node, prepend the index of the extra node to the url
-  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents )
-    for ( int i = 0; i < extraNodes.size(); ++i )
+  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents ) {
+    const int extraNodesSize( extraNodes.size() );
+    for ( int i = 0; i < extraNodesSize; ++i )
       if ( topLevel == extraNodes[i] )
-        return indexStr.prepend( QString("%1:").arg(i) );
+        return indexStr.prepend( QString::fromLatin1("%1:").arg(i) );
+  }
   return indexStr;
 }
 
 QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
 {
-  return QString( "attachment:%1?place=%2" ).arg( persistentIndex( node ), place );
+  return QString::fromLatin1( "attachment:%1?place=%2" ).arg( persistentIndex( node ), place );
 }
 
 QString NodeHelper::fixEncoding( const QString &encoding )
@@ -698,8 +700,9 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
   QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
   QStringList encodings;
   QMap<QString,bool> mimeNames;
-  for (QStringList::Iterator it = encodingNames.begin();
-    it != encodingNames.end(); ++it)
+  QStringList::ConstIterator constEnd( encodingNames.constEnd() );
+  for (QStringList::ConstIterator it = encodingNames.constBegin();
+    it != constEnd; ++it)
   {
     QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
     QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
@@ -727,7 +730,8 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
     }
 
     QStringList::ConstIterator it = charsets.constBegin();
-    for (; it != charsets.constEnd(); ++it)
+    QStringList::ConstIterator end = charsets.constEnd();
+    for (; it != end; ++it)
     {
        QByteArray encoding = (*it).toLatin1();
        if (encoding == "locale")
@@ -761,7 +765,7 @@ QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
 {
   bool all_ok =true;
   QString result = _str;
-  int len = result.length();
+  const int len = result.length();
   for (int i = 0; i < len; i++)
     if (result.at(i).unicode() >= 128) {
       result[i] = '?';
