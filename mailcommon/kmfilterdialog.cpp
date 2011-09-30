@@ -693,7 +693,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mBtnUp->setToolTip( i18nc("Move selected filter up.", "Up") );
   mBtnDown->setToolTip( i18nc("Move selected filter down.", "Down") );
   mBtnTop->setToolTip( i18nc("Move selected filter top.", "Top") );
-  mBtnBottom->setToolTip( i18nc("Move selected filter top.", "Bottom") );
+  mBtnBottom->setToolTip( i18nc("Move selected filter bottom.", "Bottom") );
   mBtnUp->setWhatsThis( i18n(_wt_filterlist_up) );
   mBtnDown->setWhatsThis( i18n(_wt_filterlist_down) );
   mBtnBottom->setWhatsThis( i18n(_wt_filterlist_bottom) );
