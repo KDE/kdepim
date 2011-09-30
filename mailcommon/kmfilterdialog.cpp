@@ -811,7 +811,7 @@ void KMFilterListBox::slotUpdateFilterName()
   if ( mFilterList.at(mIdxSelItem)->isAutoNaming() ) {
     // auto-naming of patterns
     if ( !p->isEmpty() && p->first() && !p->first()->field().trimmed().isEmpty() )
-      shouldBeName = QString( "<%1>: %2" ).arg( QString::fromLatin1( p->first()->field() ) ).arg( p->first()->contents() );
+      shouldBeName = QString::fromLatin1( "<%1>: %2" ).arg( QString::fromLatin1( p->first()->field() ) ).arg( p->first()->contents() );
     else
       shouldBeName = '<' + i18n("unnamed") + '>';
     p->setName( shouldBeName );
@@ -1222,8 +1222,9 @@ void KMFilterDialog::slotImportFilters()
   if ( filters.isEmpty() ) return;
 
   QList<MailFilter*>::ConstIterator it;
-
-  for ( it = filters.constBegin() ; it != filters.constEnd() ; ++it ) {
+  QList<MailFilter*>::ConstIterator end( filters.constEnd() );
+  
+  for ( it = filters.constBegin() ; it != end ; ++it ) {
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
   }
 }
@@ -1233,8 +1234,9 @@ void KMFilterDialog::slotExportFilters()
   FilterImporterExporter exporter( this );
   QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
   exporter.exportFilters( filters );
-  QList<MailFilter *>::ConstIterator it;
-  for ( it = filters.constBegin(); it != filters.constEnd(); ++it )
+  QList<MailFilter*>::ConstIterator it;
+  QList<MailFilter*>::ConstIterator end( filters.constEnd() );
+  for ( it = filters.constBegin(); it != end; ++it )
     delete *it;
 }
 
