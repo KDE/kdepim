@@ -3076,20 +3076,18 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
 
   while (beg<length)
   {
-    QString line;
-
     /* search next occurrence of '\n' */
     pos = s.indexOf('\n', beg, Qt::CaseInsensitive);
     if (pos == (unsigned int)(-1))
         pos = length;
 
-    line = s.mid(beg,pos-beg);
+    QString line( s.mid(beg,pos-beg) );
     beg = pos+1;
 
     /* calculate line's current quoting depth */
     int actQuoteLevel = -1;
-
-    for (int p=0; p<line.length(); p++) {
+    const int numberOfCaracters( line.length() );
+    for (int p=0; p<numberOfCaracters; ++p) {
       switch (line[p].toLatin1()) {
         case '>':
         case '|':
@@ -3100,7 +3098,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         case '\r':
           break;
         default:  // stop quoting depth calculation
-          p = line.length();
+          p = numberOfCaracters;
           break;
       }
     } /* for() */
