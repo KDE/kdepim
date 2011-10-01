@@ -47,7 +47,7 @@ class OptionSetEditor : public KTabWidget
   Q_OBJECT
 
 public:
-  OptionSetEditor( QWidget *parent );
+  explicit OptionSetEditor( QWidget *parent );
   ~OptionSetEditor();
 
 private:

@@ -291,7 +291,7 @@ void ThemePreviewWidget::applyThemeColumnWidths()
 
   const QList< Theme::Column * > & columns = mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
   {
     viewport()->update(); // trigger a repaint
     return;
@@ -306,8 +306,9 @@ void ThemePreviewWidget::applyThemeColumnWidths()
   // Gather size hints for all sections.
   int idx = 0;
   int totalVisibleWidthHint = 0;
+  QList< Theme::Column * >::ConstIterator end( columns.constEnd() );
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     totalVisibleWidthHint += mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
     idx++;
@@ -323,7 +324,8 @@ void ThemePreviewWidget::applyThemeColumnWidths()
   QList< int > realWidths;
   int totalVisibleWidth = 0;
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     int hintWidth = mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
     int realWidth;
@@ -408,8 +410,8 @@ void ThemePreviewWidget::setTheme( Theme * theme )
   setColumnCount( columns.count() );
 
   QStringList headerLabels;
-
-  for( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != columns.constEnd(); ++it )
+  QList< Theme::Column * >::ConstIterator end( columns.constEnd() );
+  for( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it )
   {
     QString label = ( *it )->label();
     if ( ( *it )->visibleByDefault() )
@@ -989,8 +991,9 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         grp = new QActionGroup( childmenu );
 
         QList< QPair< QString, int > > styles = Theme::enumerateGroupHeaderBackgroundStyles();
+        QList< QPair< QString, int > >::ConstIterator end( styles.constEnd() );
 
-        for ( QList< QPair< QString, int > >::ConstIterator it = styles.constBegin(); it != styles.constEnd(); ++it )
+        for ( QList< QPair< QString, int > >::ConstIterator it = styles.constBegin(); it != end; ++it )
         {
           act = childmenu->addAction( ( *it ).first );
           act->setData( QVariant( ( *it ).second ) );
@@ -1025,7 +1028,7 @@ void ThemePreviewWidget::slotDisabledFlagsMenuTriggered( QAction * act )
     return;
 
   bool ok;
-  int flags = act->data().toInt( &ok );
+  const int flags = act->data().toInt( &ok );
   if ( !ok )
     return;
 
@@ -1041,7 +1044,7 @@ void ThemePreviewWidget::slotForegroundColorMenuTriggered( QAction * act )
     return;
 
   bool ok;
-  int flag = act->data().toInt( &ok );
+  const int flag = act->data().toInt( &ok );
   if ( !ok )
     return;
 
@@ -1053,7 +1056,7 @@ void ThemePreviewWidget::slotForegroundColorMenuTriggered( QAction * act )
   }
 
   QColor clr;
-  int result = KColorDialog::getColor( clr, mSelectedThemeContentItem->customColor(), this );
+  const int result = KColorDialog::getColor( clr, mSelectedThemeContentItem->customColor(), this );
   if ( result != KColorDialog::Accepted )
     return;
 
@@ -1078,7 +1081,7 @@ void ThemePreviewWidget::slotFontMenuTriggered( QAction * act )
     return;
 
   bool ok;
-  int flag = act->data().toInt( &ok );
+  const int flag = act->data().toInt( &ok );
   if ( !ok )
     return;
 
@@ -1276,7 +1279,7 @@ void ThemePreviewWidget::slotDeleteColumn()
   if ( !mSelectedThemeColumn )
     return;
 
-  int idx = mTheme->columns().indexOf( mSelectedThemeColumn );
+  const int idx = mTheme->columns().indexOf( mSelectedThemeColumn );
   if ( idx < 1 ) // first column can't be deleted
     return;
 

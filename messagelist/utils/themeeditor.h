@@ -59,7 +59,7 @@ class ThemeColumnPropertiesDialog : public KDialog
 {
   Q_OBJECT
 public:
-  ThemeColumnPropertiesDialog( QWidget * parent, Core::Theme::Column * column, const QString &title );
+  explicit ThemeColumnPropertiesDialog( QWidget * parent, Core::Theme::Column * column, const QString &title );
 
 protected:
   Core::Theme::Column * mColumn;
@@ -76,7 +76,7 @@ class ThemePreviewDelegate : public Core::ThemeDelegate
 {
   Q_OBJECT
 public:
-  ThemePreviewDelegate( QAbstractItemView * parent );
+  explicit ThemePreviewDelegate( QAbstractItemView * parent );
   ~ThemePreviewDelegate();
 
 private:
@@ -91,7 +91,7 @@ class ThemePreviewWidget : public QTreeWidget
 {
   Q_OBJECT
 public:
-  ThemePreviewWidget( QWidget * parent );
+  explicit ThemePreviewWidget( QWidget * parent );
   ~ThemePreviewWidget();
 
 private:
@@ -196,7 +196,7 @@ class ThemeEditor : public OptionSetEditor
 {
   Q_OBJECT
 public:
-  ThemeEditor( QWidget *parent );
+  explicit ThemeEditor( QWidget *parent );
   ~ThemeEditor();
 
 private:

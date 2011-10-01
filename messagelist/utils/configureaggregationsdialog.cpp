@@ -161,9 +161,8 @@ ConfigureAggregationsDialog::~ConfigureAggregationsDialog()
 void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationId )
 {
   AggregationListWidgetItem *item = d->findAggregationItemById( aggregationId );
-  if ( !item )
-    return;
-  d->mAggregationList->setCurrentItem( item );
+  if ( item )
+    d->mAggregationList->setCurrentItem( item );
 }
 
 void ConfigureAggregationsDialog::Private::okButtonClicked()
@@ -172,7 +171,7 @@ void ConfigureAggregationsDialog::Private::okButtonClicked()
 
   Manager::instance()->removeAllAggregations();
 
-  int c = mAggregationList->count();
+  const int c = mAggregationList->count();
   int i = 0;
   while ( i < c )
   {
@@ -182,7 +181,7 @@ void ConfigureAggregationsDialog::Private::okButtonClicked()
       Manager::instance()->addAggregation( item->aggregation() );
       item->forgetAggregation();
     }
-    i++;
+    ++i;
   }
 
   Manager::instance()->aggregationsConfigurationCompleted();
@@ -201,7 +200,7 @@ void ConfigureAggregationsDialog::Private::commitEditor()
   AggregationListWidgetItem * editedItem = findAggregationItemByAggregation( editedAggregation );
   if ( editedItem )
     return;
-  QString goodName = uniqueNameForAggregation( editedAggregation->name(), editedAggregation );
+  const QString goodName = uniqueNameForAggregation( editedAggregation->name(), editedAggregation );
   editedAggregation->setName( goodName );
   editedItem->setText( goodName );
 }
@@ -216,7 +215,7 @@ void ConfigureAggregationsDialog::Private::editedAggregationNameChanged()
   if ( !it )
     return;
 
-  QString goodName = uniqueNameForAggregation( set->name(), set );
+  const QString goodName = uniqueNameForAggregation( set->name(), set );
 
   it->setText( goodName );
 }
@@ -224,7 +223,8 @@ void ConfigureAggregationsDialog::Private::editedAggregationNameChanged()
 void ConfigureAggregationsDialog::Private::fillAggregationList()
 {
   const QHash< QString, Aggregation * > & sets = Manager::instance()->aggregations();
-  for( QHash< QString, Aggregation * >::ConstIterator it = sets.begin(); it != sets.end(); ++it )
+  QHash< QString, Aggregation * >::ConstIterator end( sets.constEnd() );
+  for( QHash< QString, Aggregation * >::ConstIterator it = sets.constBegin(); it != end; ++it )
     (void)new AggregationListWidgetItem( mAggregationList, *( *it ) );
 }
 
@@ -242,7 +242,7 @@ void ConfigureAggregationsDialog::Private::aggregationListCurrentItemChanged( QL
 
 AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregationItemByName( const QString &name, Aggregation * skipAggregation )
 {
-  int c = mAggregationList->count();
+  const int c = mAggregationList->count();
   int i = 0;
   while ( i < c )
   {
@@ -262,7 +262,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
 
 AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregationItemById( const QString &aggregationId )
 {
-  int c = mAggregationList->count();
+  const int c = mAggregationList->count();
   int i = 0;
   while ( i < c )
   {
@@ -279,7 +279,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
 
 AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregationItemByAggregation( Aggregation * set )
 {
-  int c = mAggregationList->count();
+  const int c = mAggregationList->count();
   int i = 0;
   while ( i < c )
   {
