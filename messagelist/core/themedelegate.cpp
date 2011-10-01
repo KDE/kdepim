@@ -110,18 +110,6 @@ static QFontMetrics cachedFontMetrics( const QFont &font )
   return *fontMetricsCache[ fontKey ];
 }
 
-static int cachedFontHeight( const QFont &font )
-{
-  static QHash<QString, int> fontHeightCache;
-  const QString fontKey = font.key();
-
-  if ( !fontHeightCache.contains( fontKey ) ) {
-    fontHeightCache.insert( fontKey, cachedFontMetrics( font ).height() );
-  }
-
-  return fontHeightCache[ fontKey ];
-}
-
 static int cachedFontHeightKey( const QFont &font, const QString &fontKey )
 {
   static QHash<QString, int> fontHeightCache;
@@ -138,10 +126,10 @@ static inline void paint_right_aligned_elided_text( const QString &text, Theme::
 {
   painter->setFont( font );
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
-  int w = right - left;
-  QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
-  QRect fct = fontMetrics.boundingRect(elidedText);
-  QRect rct( left, top, w, fct.height() - fct.top() );
+  const int w = right - left;
+  const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
+  const QRect fct = fontMetrics.boundingRect(elidedText);
+  const QRect rct( left, top, w, fct.height() - fct.top() );
   QRect outRct;
 
   if ( ci->softenByBlending() )
@@ -162,11 +150,11 @@ static inline void paint_right_aligned_elided_text( const QString &text, Theme::
 static inline void compute_bounding_rect_for_right_aligned_elided_text( const QString &text, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font )
 {
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
-  int w = right - left;
-  QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
-  QRect fct = fontMetrics.boundingRect(elidedText);
-  QRect rct( left, top, w, fct.height() - fct.top() );
-  Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignRight : Qt::AlignLeft;
+  const int w = right - left;
+  const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
+  const QRect fct = fontMetrics.boundingRect(elidedText);
+  const QRect rct( left, top, w, fct.height() - fct.top() );
+  const Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignRight : Qt::AlignLeft;
   outRect = fontMetrics.boundingRect( rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText );
   if ( layoutDir == Qt::LeftToRight )
     right -= outRect.width() + gHorizontalItemSpacing;
@@ -179,10 +167,10 @@ static inline void paint_left_aligned_elided_text( const QString &text, Theme::C
 {
   painter->setFont( font );
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
-  int w = right - left;
-  QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  QRect fct = fontMetrics.boundingRect(elidedText);
-  QRect rct( left, top, w, fct.height() - fct.top() );
+  const int w = right - left;
+  const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
+  const QRect fct = fontMetrics.boundingRect(elidedText);
+  const QRect rct( left, top, w, fct.height() - fct.top() );
   QRect outRct;
   if ( ci->softenByBlending() )
   {
@@ -202,11 +190,11 @@ static inline void paint_left_aligned_elided_text( const QString &text, Theme::C
 static inline void compute_bounding_rect_for_left_aligned_elided_text( const QString &text, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font )
 {
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
-  int w = right - left;
-  QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  QRect fct = fontMetrics.boundingRect(elidedText);
-  QRect rct( left, top, w, fct.height() - fct.top() );
-  Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignLeft : Qt::AlignRight;
+  const int w = right - left;
+  const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
+  const QRect fct = fontMetrics.boundingRect(elidedText);
+  const QRect rct( left, top, w, fct.height() - fct.top() );
+  const Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignLeft : Qt::AlignRight;
   outRect = fontMetrics.boundingRect( rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText );
   if ( layoutDir == Qt::LeftToRight )
     left += outRect.width() + gHorizontalItemSpacing;
@@ -218,13 +206,13 @@ static inline const QPixmap * get_read_state_icon( Item * item )
 {
   if ( item->status().isQueued() )
     return Manager::instance()->pixmapMessageQueued();
-  if ( item->status().isSent() )
+  else if ( item->status().isSent() )
     return Manager::instance()->pixmapMessageSent();
-  if ( item->status().isRead() )
+  else if ( item->status().isRead() )
     return Manager::instance()->pixmapMessageRead();
-  if ( !item->status().isRead() )
+  else if ( !item->status().isRead() )
     return Manager::instance()->pixmapMessageUnread();
-  if ( item->status().isDeleted() )
+  else if ( item->status().isDeleted() )
     return Manager::instance()->pixmapMessageDeleted();
 
   // Uhm... should never happen.. but fallback to "read"...
