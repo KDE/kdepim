@@ -861,8 +861,8 @@ QList< MessageItem * > View::selectionAsMessageItemList( bool includeCollapsedCh
   QModelIndexList lSelected = selectionModel()->selectedRows();
   if ( lSelected.isEmpty() )
     return selectedMessages;
-
-  for ( QModelIndexList::Iterator it = lSelected.begin(); it != lSelected.end(); ++it )
+  QModelIndexList::ConstIterator end( lSelected.constEnd() );
+  for ( QModelIndexList::ConstIterator it = lSelected.constBegin(); it != end; ++it )
   {
     // The asserts below are theoretically valid but at the time
     // of writing they fail because of a bug in QItemSelectionModel::selectedRows()
@@ -922,7 +922,8 @@ void View::setChildrenExpanded( const Item * root, bool expand )
   QList< Item * > * childList = root->childItems();
   if ( !childList )
     return;
-  for ( QList< Item * >::Iterator it = childList->begin(); it != childList->end(); ++it )
+  QList< Item * >::ConstIterator end( childList->constEnd() );
+  for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
   {
     QModelIndex idx = d->mModel->index( *it, 0 );
     Q_ASSERT( idx.isValid() );
@@ -1038,7 +1039,8 @@ void View::setAllGroupsExpanded( bool expand )
 void View::selectMessageItems( const QList< MessageItem * > &list )
 {
   QItemSelection selection;
-  for ( QList< MessageItem * >::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it )
+  QList< MessageItem * >::ConstIterator end( list.constEnd() );
+  for ( QList< MessageItem * >::ConstIterator it = list.constBegin(); it != end; ++it )
   {
     Q_ASSERT( *it );
     QModelIndex idx = d->mModel->index( *it, 0 );
@@ -1197,7 +1199,7 @@ Item * View::nextMessageItem( MessageTypeFilter messageTypeFilter, bool loop )
 
 Item * View::deepestExpandedChild( Item * referenceItem ) const
 {
-  int children = referenceItem->childItemCount();
+  const int children = referenceItem->childItemCount();
   if ( children > 0 &&
        isExpanded( d->mModel->index( referenceItem, 0 ) ) ) {
     return deepestExpandedChild( referenceItem->childItem( children -1 ) );
@@ -1639,7 +1641,8 @@ void View::markMessageItemsAsAboutToBeRemoved( QList< MessageItem * > &items, bo
 {
   if ( !bMark )
   {
-    for ( QList< MessageItem * >::Iterator it = items.begin(); it != items.end(); ++it )
+    QList< MessageItem * >::ConstIterator end( items.constEnd() );
+    for ( QList< MessageItem * >::ConstIterator it = items.constBegin(); it != end; ++it )
     {
       if ( ( *it )->isValid() ) // hasn't been removed in the meantime
         ( *it )->setAboutToBeRemoved( false );
@@ -1779,7 +1782,8 @@ void View::markMessageItemsAsAboutToBeRemoved( QList< MessageItem * > &items, bo
 
   // Now mark messages as about to be removed.
 
-  for ( QList< MessageItem * >::Iterator it = items.begin(); it != items.end(); ++it )
+  QList< MessageItem * >::ConstIterator end( items.constEnd() );
+  for ( QList< MessageItem * >::ConstIterator it = items.constBegin(); it != end; ++it )
   {
     ( *it )->setAboutToBeRemoved( true );
     QModelIndex idx = d->mModel->index( *it, 0 );
