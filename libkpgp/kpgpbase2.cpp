@@ -23,8 +23,6 @@
 #include <assert.h>
 
 #include <QDateTime>
-//Added by qt3to4:
-#include <QByteArray>
 
 #include <klocale.h>
 #include <kshell.h>
@@ -89,9 +87,9 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       cmd += " 0x";
       cmd += Module::getKpgp()->user();
     }
-
-    for( KeyIDList::ConstIterator it = recipients.begin();
-         it != recipients.end(); ++it ) {
+    KeyIDList::ConstIterator end( recipients.end() ); 
+    for( KeyIDList::ConstIterator it = recipients.constBegin();
+         it != end; ++it ) {
       cmd += " 0x";
       cmd += (*it);
     }
@@ -530,9 +528,9 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
   else {
     typedef QMap<QByteArray, Key*> KeyMap;
     KeyMap map;
-
-    for ( QStringList::ConstIterator it = patterns.begin();
-          it != patterns.end(); ++it ) {
+    QStringList::ConstIterator end( patterns.constEnd() );
+    for ( QStringList::ConstIterator it = patterns.constBegin();
+          it != end; ++it ) {
       exitStatus = run( cmd + ' ' + KShell::quoteArg( *it ).toLocal8Bit(),
                         0, true );
 
@@ -554,7 +552,8 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
       }
     }
     // build list from the map
-    for ( KeyMap::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
+    KeyMap::ConstIterator endKeyMap( map.constEnd() );
+    for ( KeyMap::ConstIterator it = map.constBegin(); it != endKeyMap; ++it ) {
       publicKeys.append( it.value() );
     }
   }
@@ -594,13 +593,11 @@ Base2::signKey(const KeyID& keyID, const char *passphrase)
 
 QByteArray Base2::getAsciiPublicKey(const KeyID& keyID)
 {
-  int exitStatus = 0;
-
   if (keyID.isEmpty())
     return QByteArray();
 
   status = 0;
-  exitStatus = run( PGP2 " +batchmode +force +language=en -kxaf 0x" + keyID,
+  int exitStatus = run( PGP2 " +batchmode +force +language=en -kxaf 0x" + keyID,
                     0, true );
 
   if(exitStatus != 0) {
