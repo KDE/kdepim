@@ -57,7 +57,8 @@ void Item::childItemStats( ChildItemStats &stats ) const
   Q_ASSERT( d_ptr->mChildItems );
 
   stats.mTotalChildCount += d_ptr->mChildItems->count();
-  for( QList< Item * >::Iterator it = d_ptr->mChildItems->begin(); it != d_ptr->mChildItems->end(); ++it )
+  QList< Item * >::ConstIterator end( d_ptr->mChildItems->constEnd() );
+  for( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it )
   {
     if ( !( *it )->status().isRead() )
       stats.mUnreadChildCount++;
@@ -289,7 +290,8 @@ bool Item::recomputeMaxDate()
 
   if ( d_ptr->mChildItems )
   {
-    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != d_ptr->mChildItems->constEnd(); ++it )
+    QList< Item * >::ConstIterator end = d_ptr->mChildItems->constEnd();
+    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it )
     {
       if ( ( *it )->d_ptr->mMaxDate > newMaxDate )
         newMaxDate = ( *it )->d_ptr->mMaxDate;
