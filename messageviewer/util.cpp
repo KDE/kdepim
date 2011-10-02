@@ -41,6 +41,7 @@
 
 #include "iconnamecache.h"
 #include "nodehelper.h"
+#include "renamefiledialog.h"
 
 #include "messagecore/globalsettings.h"
 #include "messagecore/nodehelper.h"
@@ -244,24 +245,44 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
       if ( !overwriteAll && KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
         if ( contents.count() == 1 ) {
-          if ( KMessageBox::warningContinueCancel( parent,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
+          RenameFileDialog *dlg = new RenameFileDialog(curUrl,false, parent);
+          int result = dlg->exec();
+          if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
+          {
             continue;
           }
+          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+          {
+            curUrl = dlg->newName();
+          }
+          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITE )
+          {
+            //Nothing
+          }
+          delete dlg;
         }
         else {
-          int button = KMessageBox::warningYesNoCancel(
-                parent,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")),
-                KGuiItem(i18n("Overwrite &All")) );
-          if ( button == KMessageBox::Cancel )
+          RenameFileDialog *dlg = new RenameFileDialog(curUrl,true, parent);
+          int result = dlg->exec();
+
+          if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
+          {
             continue;
-          else if ( button == KMessageBox::No )
+          }
+          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+          {
+            curUrl = dlg->newName();
+          }
+          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITE )
+          {
+            //Nothing
+          }
+          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITEALL )
+          {
             overwriteAll = true;
+          }
+
+          delete dlg;
         }
       }
       // save
