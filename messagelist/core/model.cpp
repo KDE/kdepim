@@ -355,8 +355,8 @@ void Model::setFilter( const Filter *filter )
   QModelIndex idx; // invalid
 
   QApplication::setOverrideCursor( Qt::WaitCursor );
-
-  for ( QList< Item * >::Iterator it = childList->begin(); it != childList->end(); ++it )
+  QList< Item * >::ConstIterator end = childList->constEnd();
+  for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
     d->applyFilterToSubtree( *it, idx );
 
   QApplication::restoreOverrideCursor();
@@ -381,7 +381,8 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
 
   if ( childList )
   {
-    for ( QList< Item * >::Iterator it = childList->begin(); it != childList->end(); ++it )
+    QList< Item * >::ConstIterator end( childList->constEnd() );
+    for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
     {
       if ( applyFilterToSubtree( *it, thisIndex ) )
         childrenMatch = true;
@@ -999,7 +1000,7 @@ void ModelPrivate::clearUnassignedMessageLists()
   // when the model is destroyed.
   Q_ASSERT( ( mOldestItem == 0 ) && ( mNewestItem == 0 ) );
 
-  QList< MessageItem * >::Iterator it;
+  QList< MessageItem * >::ConstIterator it;
 
   if ( !mUnassignedMessageListForPass2.isEmpty() )
   {
@@ -1014,14 +1015,14 @@ void ModelPrivate::clearUnassignedMessageLists()
 
     QList< MessageItem * > parentless;
 
-    for ( it = mUnassignedMessageListForPass2.begin();
-          it != mUnassignedMessageListForPass2.end(); ++it )
+    for ( it = mUnassignedMessageListForPass2.constBegin();
+          it != mUnassignedMessageListForPass2.constEnd(); ++it )
     {
       if( !( *it )->parent() )
         parentless.append( *it );
     }
 
-    for ( it = parentless.begin(); it != parentless.end(); ++it )
+    for ( it = parentless.constBegin(); it != parentless.constEnd(); ++it )
       delete *it;
 
     mUnassignedMessageListForPass2.clear();
@@ -1047,19 +1048,19 @@ void ModelPrivate::clearUnassignedMessageLists()
 
       QHash< MessageItem *, MessageItem * > itemsToDelete;
 
-      for ( it = mUnassignedMessageListForPass3.begin(); it != mUnassignedMessageListForPass3.end(); ++it )
+      for ( it = mUnassignedMessageListForPass3.constBegin(); it != mUnassignedMessageListForPass3.constEnd(); ++it )
       {
         if( !( *it )->parent() )
           itemsToDelete.insert( *it, *it );
       }
 
-      for ( it = mUnassignedMessageListForPass4.begin(); it != mUnassignedMessageListForPass4.end(); ++it )
+      for ( it = mUnassignedMessageListForPass4.constBegin(); it != mUnassignedMessageListForPass4.constEnd(); ++it )
       {
         if( !( *it )->parent() )
           itemsToDelete.insert( *it, *it );
       }
 
-      for ( QHash< MessageItem *, MessageItem * >::Iterator it3 = itemsToDelete.begin(); it3 != itemsToDelete.end(); ++it3 )
+      for ( QHash< MessageItem *, MessageItem * >::ConstIterator it3 = itemsToDelete.constBegin(); it3 != itemsToDelete.constEnd(); ++it3 )
         delete ( *it3 );
 
       mUnassignedMessageListForPass3.clear();
@@ -1071,13 +1072,13 @@ void ModelPrivate::clearUnassignedMessageLists()
     // We have the same problem as in mUnassignedMessageListForPass2.
     QList< MessageItem * > parentless;
 
-    for ( it = mUnassignedMessageListForPass3.begin(); it != mUnassignedMessageListForPass3.end(); ++it )
+    for ( it = mUnassignedMessageListForPass3.constBegin(); it != mUnassignedMessageListForPass3.constEnd(); ++it )
     {
       if( !( *it )->parent() )
         parentless.append( *it );
     }
 
-    for ( it = parentless.begin(); it != parentless.end(); ++it )
+    for ( it = parentless.constBegin(); it != parentless.constEnd(); ++it )
       delete *it;
 
     mUnassignedMessageListForPass3.clear();
@@ -1092,13 +1093,13 @@ void ModelPrivate::clearUnassignedMessageLists()
     // We have the same problem as in mUnassignedMessageListForPass2.
     QList< MessageItem * > parentless;
 
-    for (  it = mUnassignedMessageListForPass4.begin(); it != mUnassignedMessageListForPass4.end(); ++it )
+    for (  it = mUnassignedMessageListForPass4.constBegin(); it != mUnassignedMessageListForPass4.constEnd(); ++it )
     {
       if( !( *it )->parent() )
         parentless.append( *it );
     }
 
-    for ( it = parentless.begin(); it != parentless.end(); ++it )
+    for ( it = parentless.constBegin(); it != parentless.constEnd(); ++it )
       delete *it;
 
     mUnassignedMessageListForPass4.clear();
@@ -1114,8 +1115,9 @@ void ModelPrivate::clearThreadingCacheMessageSubjectMD5ToMessageItem()
 
 void ModelPrivate::clearOrphanChildrenHash()
 {
-  for ( QHash< MessageItem *, MessageItem * >::Iterator it = mOrphanChildrenHash.begin();
-        it != mOrphanChildrenHash.end(); ++it )
+  QHash< MessageItem *, MessageItem * >::ConstIterator end( mOrphanChildrenHash.constEnd() );
+  for ( QHash< MessageItem *, MessageItem * >::ConstIterator it = mOrphanChildrenHash.constBegin();
+        it != end; ++it )
   {
     //Q_ASSERT( !( *it )->parent() ); <-- this assert can actually fail for items that get a temporary parent assigned (to preserve the selection).
     delete ( *it );
@@ -1134,8 +1136,9 @@ void ModelPrivate::clearJobList()
     mView->modelJobBatchTerminated();
   }
 
-  for( QList< ViewItemJob * >::Iterator it = mViewItemJobs.begin();
-       it != mViewItemJobs.end() ; ++it )
+  QList< ViewItemJob * >::ConstIterator end = mViewItemJobs.constEnd();
+  for( QList< ViewItemJob * >::ConstIterator it = mViewItemJobs.constBegin();
+       it != end; ++it )
     delete ( *it );
   mViewItemJobs.clear();
 
@@ -1228,8 +1231,8 @@ void ModelPrivate::saveExpandedStateOfSubtree( Item *root )
   QList< Item * > * children = root->childItems();
   if ( !children )
     return;
-
-  for( QList< Item * >::Iterator it = children->begin(); it != children->end(); ++it )
+  QList< Item * >::ConstIterator end( children->constEnd() );
+  for( QList< Item * >::ConstIterator it = children->constBegin(); it != end; ++it )
   {
     if (
          ( ( *it )->childItemCount() > 0 ) && // has children
@@ -1259,7 +1262,8 @@ void ModelPrivate::syncExpandedStateOfSubtree( Item *root )
   if ( !children )
     return;
 
-  for( QList< Item * >::Iterator it = children->begin(); it != children->end(); ++it )
+  QList< Item * >::ConstIterator end( children->constEnd() );
+  for( QList< Item * >::ConstIterator it = children->constBegin(); it != end; ++it )
   {
     if ( ( *it )->initialExpandStatus() == Item::ExpandNeeded )
     {
@@ -1694,8 +1698,9 @@ MessageItem * ModelPrivate::guessMessageParent( MessageItem * mi )
 
       // FIXME: This might be speed up with an initial binary search (?)
       // ANSWER: No. We can't rely on date order (as it can be updated on the fly...)
+      QList< MessageItem * >::ConstIterator end( messagesWithTheSameStrippedSubject->constEnd() );
 
-      for ( QList< MessageItem * >::Iterator it = messagesWithTheSameStrippedSubject->begin(); it != messagesWithTheSameStrippedSubject->end(); ++it )
+      for ( QList< MessageItem * >::ConstIterator it = messagesWithTheSameStrippedSubject->constBegin(); it != end; ++it )
       {
         int delta = mi->date() - ( *it )->date();
 
@@ -2340,8 +2345,9 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass5
   int curIndex = job->currentIndex();
 
   QHash< GroupHeaderItem *, GroupHeaderItem * >::Iterator it = mGroupHeadersThatNeedUpdate.begin();
+  QHash< GroupHeaderItem *, GroupHeaderItem * >::Iterator end = mGroupHeadersThatNeedUpdate.end();
 
-  while ( it != mGroupHeadersThatNeedUpdate.end() )
+  while ( it != end )
   {
     if ( ( *it )->childItemCount() == 0 )
     {
@@ -2801,7 +2807,8 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
         if ( !lImperfectlyThreaded.isEmpty() )
         {
           // must move all of the items in the perfect parent
-          for ( QList< MessageItem * >::Iterator it = lImperfectlyThreaded.begin(); it != lImperfectlyThreaded.end(); ++it )
+          QList< MessageItem * >::ConstIterator end( lImperfectlyThreaded.constEnd() );
+          for ( QList< MessageItem * >::ConstIterator it = lImperfectlyThreaded.constBegin(); it != end; ++it )
           {
             Q_ASSERT( ( *it )->parent() );
             Q_ASSERT( ( *it )->parent() != mi );
@@ -3184,10 +3191,11 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
   // list and get them ready for the standard Pass2.
 
   QHash< MessageItem *, MessageItem * >::Iterator it = mOrphanChildrenHash.begin();
+  QHash< MessageItem *, MessageItem * >::Iterator end = mOrphanChildrenHash.end();
 
   curIndex = 0;
 
-  while ( it != mOrphanChildrenHash.end() )
+  while ( it != end )
   {
     mUnassignedMessageListForPass2.append( *it );
 
@@ -3847,7 +3855,8 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
           QList< Item * > * rootChildItems = mRootItem->childItems();
           if ( rootChildItems )
           {
-            for ( QList< Item * >::Iterator it = rootChildItems->begin(); it != rootChildItems->end() ;++it )
+            QList< Item * >::ConstIterator end( rootChildItems->constEnd() );
+            for ( QList< Item * >::ConstIterator it = rootChildItems->constBegin(); it != end ;++it )
             {
               if ( ( *it )->initialExpandStatus() == Item::ExpandNeeded )
                 syncExpandedStateOfSubtree( *it );
@@ -4598,10 +4607,10 @@ MessageItemSetReference Model::createPersistentSet( const QList< MessageItem * >
 
 QList< MessageItem * > Model::persistentSetCurrentMessageItemList( MessageItemSetReference ref )
 {
-  if ( !d->mPersistentSetManager )
-    return QList< MessageItem * >();
+  if ( d->mPersistentSetManager )
+    return d->mPersistentSetManager->messageItems( ref );
+  return QList< MessageItem * >();
 
-  return d->mPersistentSetManager->messageItems( ref );
 }
 
 void Model::deletePersistentSet( MessageItemSetReference ref )
