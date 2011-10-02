@@ -712,24 +712,15 @@ short IncidenceRecurrence::monthWeekFromEnd() const
 
 QString IncidenceRecurrence::numberToString( int number ) const
 {
-  const QString result = QString::number( number );
-  if ( result.endsWith( '1' ) ) {
-    if ( result.endsWith( QLatin1String( "11" ) ) ) {
-      return result + "th";
-    } else {
-      return result + "st";
-    }
-  }
+  // The code in here was adapted from an article by Johnathan Wood, see:
+  // http://www.blackbeltcoder.com/Articles/strings/converting-numbers-to-ordinal-strings
 
-  if ( result.endsWith( '2' ) ) {
-    return result + "nd";
-  }
+  static QString _numSuffixes[] =
+    { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 
-  if ( result.endsWith( '3' ) ) {
-    return result + "rd";
-  } else {
-    return result + "th";
-  }
+  int i = (number % 100);
+  int j = (i > 10 && i < 20) ? 0 : (number % 10);
+  return  QString::number( number ) + _numSuffixes[j];
 }
 
 void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence,
