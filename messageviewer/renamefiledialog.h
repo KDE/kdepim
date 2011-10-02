@@ -47,9 +47,10 @@ public:
     enum RenameFileDialogResult
     {
         RENAMEFILE_IGNORE = 0,
-        RENAMEFILE_RENAME = 1,
-        RENAMEFILE_OVERWRITE = 2,
-        RENAMEFILE_OVERWRITEALL = 3
+        RENAMEFILE_IGNOREALL = 1,
+        RENAMEFILE_RENAME = 2,
+        RENAMEFILE_OVERWRITE = 3,
+        RENAMEFILE_OVERWRITEALL = 4
     };
 
 

@@ -49,7 +49,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     setWindowTitle(i18n( "File Already Exists" ));
     QVBoxLayout* pLayout = new QVBoxLayout(this);
 
-    QLabel *label = new QLabel(i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",url.fileName()),this);
+    QLabel *label = new QLabel(i18n( "A file named <filename>%1</filename>already exists.Do you want to overwrite it?",url.fileName()),this);
     pLayout->addWidget(label);
 
     QHBoxLayout* renameLayout = new QHBoxLayout();
@@ -96,7 +96,7 @@ RenameFileDialog::~RenameFileDialog()
 
 void RenameFileDialog::slotOverwritePressed()
 {
-    if(mApplyAll->isChecked()) {
+    if(mApplyAll && mApplyAll->isChecked()) {
         done(RENAMEFILE_OVERWRITEALL);
     } else {
         done(RENAMEFILE_OVERWRITE);
@@ -105,7 +105,11 @@ void RenameFileDialog::slotOverwritePressed()
 
 void RenameFileDialog::slotIgnorePressed()
 {
-    done(RENAMEFILE_IGNORE);
+    if(mApplyAll && mApplyAll->isChecked()) {
+        done(RENAMEFILE_IGNOREALL);
+    } else {
+        done(RENAMEFILE_IGNORE);
+    }
 }
 
 void RenameFileDialog::slotRenamePressed()

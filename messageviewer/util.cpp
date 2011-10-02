@@ -197,7 +197,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
   bool globalResult = true;
   int unnamedAtmCount = 0;
-  bool overwriteAll = false;
+  MessageViewer::RenameFileDialog::RenameFileDialogResult result = MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE;
   foreach( KMime::Content *content, contents ) {
     KUrl curUrl;
     if ( !dirUrl.isEmpty() ) {
@@ -243,52 +243,48 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
       }
 
 
-      if ( !overwriteAll && KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
-        if ( contents.count() == 1 ) {
-          RenameFileDialog *dlg = new RenameFileDialog(curUrl,false, parent);
-          int result = dlg->exec();
-          if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
-          {
-            continue;
-          }
-          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
-          {
-            curUrl = dlg->newName();
-          }
-          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITE )
-          {
-            //Nothing
-          }
-          delete dlg;
-        }
-        else {
-          RenameFileDialog *dlg = new RenameFileDialog(curUrl,true, parent);
-          int result = dlg->exec();
+      if( !(result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
+              result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ))
+      {
+          if ( KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
+              if ( contents.count() == 1 ) {
+                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,false, parent);
+                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
+                  {
+                      delete dlg;
+                      continue;
+                  }
+                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  {
+                      curUrl = dlg->newName();
+                  }
+                  delete dlg;
+              }
+              else {
+                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,true, parent);
+                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
 
-          if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
-          {
-            continue;
+                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE ||
+                       result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL )
+                  {
+                      delete dlg;
+                      continue;
+                  }
+                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  {
+                      curUrl = dlg->newName();
+                  }
+                  delete dlg;
+              }
           }
-          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
-          {
-            curUrl = dlg->newName();
-          }
-          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITE )
-          {
-            //Nothing
-          }
-          else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITEALL )
-          {
-            overwriteAll = true;
-          }
-
-          delete dlg;
-        }
       }
       // save
-      const bool result = saveContent( parent, content, curUrl );
-      if ( !result )
-        globalResult = result;
+      if( result != MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ) {
+          const bool result = saveContent( parent, content, curUrl );
+          if ( !result )
+              globalResult = result;
+      }
     }
   }
 
@@ -454,7 +450,7 @@ bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *paren
 
 bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
 {
-  
+
   QString fileName;
   if ( retrievedMsgs.isEmpty() )
     return true;
