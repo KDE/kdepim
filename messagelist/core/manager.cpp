@@ -162,7 +162,7 @@ void Manager::unregisterWidget( Widget *pWidget )
 
   mInstance->mWidgetList.removeAll( pWidget );
 
-  if ( mInstance->mWidgetList.count() < 1 )
+  if ( mInstance->mWidgetList.isEmpty() )
   {
     delete mInstance;
     mInstance = 0;
@@ -467,7 +467,7 @@ void Manager::removeAllAggregations()
 
 void Manager::aggregationsConfigurationCompleted()
 {
-  if ( mAggregations.count() < 1 )
+  if ( mAggregations.isEmpty() )
     createDefaultAggregations(); // panic
 
   saveConfiguration(); // just to be sure :)
@@ -913,9 +913,8 @@ void Manager::reloadAllWidgets()
   QList< Widget * >::ConstIterator end( mWidgetList.constEnd() );
   for( QList< Widget * >::ConstIterator it = mWidgetList.constBegin(); it != end; ++it )
   {
-    if ( !( *it )->view() )
-      continue;
-    ( *it )->view()->reload();
+    if ( ( *it )->view() )
+      ( *it )->view()->reload();
   }
 }
 
