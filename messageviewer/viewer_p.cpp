@@ -2736,7 +2736,7 @@ void ViewerPrivate::itemFetchResult( KJob* job )
   } else {
     Akonadi::ItemFetchJob* fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
     Q_ASSERT( fetch );
-    if ( fetch->items().size() < 1 ) {
+    if ( fetch->items().isEmpty() ) {
       displaySplashPage( i18n( "Message not found." ) );
     } else {
       setMessageItem( fetch->items().first() );
