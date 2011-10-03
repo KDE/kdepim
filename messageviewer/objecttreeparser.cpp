@@ -1749,7 +1749,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 
   const Kleo::CryptoBackend::Protocol* oldUseThisCryptPlug = cryptoProtocol();
   if (    node->parent()
-          && node->parent()->contentType()->mimeType() == "multipart/encrypted" ) {
+          && node->parent()->contentType()->mimeType() == "multipart/encrypted"  ) {
     mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
     if ( keepEncryptions() ) {
       const QByteArray cstr = node->decodedContent();
@@ -2209,7 +2209,7 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
           break;
           */
           default:
-              result = "";   // do *not* return a default text here !
+              result.clear();   // do *not* return a default text here !
               break;
           }
       }
@@ -2306,14 +2306,14 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
               frameColor = SIG_FRAME_COL_RED;
           }
           else
-              result = "";
+              result.clear();
 
           if( SIG_FRAME_COL_GREEN == frameColor ) {
               result = i18n("Good signature.");
           } else if( SIG_FRAME_COL_RED == frameColor ) {
               result = i18n("<b>Bad</b> signature.");
           } else
-              result = "";
+              result.clear();
 
           if( !result2.isEmpty() ) {
               if( !result.isEmpty() )
