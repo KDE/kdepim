@@ -72,5 +72,5 @@ class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJ
     Private *const d;
 };
 
-#endif // ATTACHMENTFROMFOLDER_H
 }
+#endif // ATTACHMENTFROMFOLDER_H
