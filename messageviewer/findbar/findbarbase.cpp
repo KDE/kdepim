@@ -122,9 +122,10 @@ void FindBarBase::slotClearSearch()
 
 void FindBarBase::autoSearch( const QString& str )
 {
-  m_findPrevBtn->setEnabled( !str.isEmpty() );
-  m_findNextBtn->setEnabled( !str.isEmpty() );
-  if ( !str.isEmpty() )
+  const bool isNotEmpty = ( !str.isEmpty() );
+  m_findPrevBtn->setEnabled( isNotEmpty );
+  m_findNextBtn->setEnabled( isNotEmpty );
+  if ( isNotEmpty )
     QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
   else
     clearSelections();

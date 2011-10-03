@@ -161,8 +161,9 @@ void NodeHelper::clear()
   std::for_each( mBodyPartMementoMap.begin(), mBodyPartMementoMap.end(),
                  &clearBodyPartMemento );
   mBodyPartMementoMap.clear();
+  QMap<KMime::Content*, QList<KMime::Content*> >::ConstIterator end( mExtraContents.constEnd() );
 
-  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+  for ( QMap<KMime::Content*, QList<KMime::Content*> >::ConstIterator it = mExtraContents.constBegin(); it != end; ++it) {
     Q_FOREACH( KMime::Content* c, it.value() ) {
       KMime::Content * p = c->parent();
       if ( p )
@@ -256,7 +257,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
   if (!node)
     return KUrl();
 
-  QString index = node->index().toString();
+  const QString index = node->index().toString();
 
   foreach ( const QString &path, mTempFiles ) {
     int right = path.lastIndexOf( '/' );
@@ -297,14 +298,16 @@ QString NodeHelper::createTempDir( const QString &param )
 
 void NodeHelper::removeTempFiles()
 {
-  for (QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end();
+  QStringList::ConstIterator end = mTempFiles.constEnd();
+  for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end;
     ++it)
   {
     QFile::remove(*it);
   }
   mTempFiles.clear();
-  for (QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end();
-    it++)
+  end = mTempDirs.constEnd();
+  for (QStringList::ConstIterator it = mTempDirs.constBegin(); it != end;
+    ++it)
   {
     QDir(*it).rmdir(*it);
   }

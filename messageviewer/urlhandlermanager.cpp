@@ -88,7 +88,7 @@ namespace {
 
     bool handleClick( const KUrl &, ViewerPrivate * ) const;
     bool handleContextMenuRequest( const KUrl & url, const QPoint &, ViewerPrivate * ) const {
-      return url.protocol() == "kmail";
+      return url.protocol() == QLatin1String( "kmail" );
     }
     QString statusBarMessage( const KUrl &, ViewerPrivate * ) const;
   };
@@ -507,33 +507,34 @@ namespace {
   }
 
   QString KMailProtocolURLHandler::statusBarMessage( const KUrl & url, ViewerPrivate * ) const {
-    if ( url.protocol() == "kmail" )
+    if ( url.protocol() == QLatin1String( "kmail" ) )
     {
-      if ( url.path() == "showHTML" )
+      const QString urlPath( url.path() );
+      if ( urlPath == QLatin1String( "showHTML" ) )
         return i18n("Turn on HTML rendering for this message.");
-      else if ( url.path() == "loadExternal" )
+      else if ( urlPath == QLatin1String( "loadExternal" ) )
         return i18n("Load external references from the Internet for this message.");
-      else if ( url.path() == "goOnline" )
+      else if ( urlPath == QLatin1String( "goOnline" ) )
         return i18n("Work online.");
-      else if ( url.path() == "decryptMessage" )
+      else if ( urlPath == QLatin1String( "decryptMessage" ) )
         return i18n("Decrypt message.");
-      else if ( url.path() == "showSignatureDetails" )
+      else if ( urlPath == QLatin1String( "showSignatureDetails" ) )
         return i18n("Show signature details.");
-      else if ( url.path() == "hideSignatureDetails" )
+      else if ( urlPath == QLatin1String( "hideSignatureDetails" ) )
         return i18n("Hide signature details.");
-      else if ( url.path() == "showAttachmentQuicklist" )
+      else if ( urlPath == QLatin1String( "showAttachmentQuicklist" ) )
         return i18n( "Show attachment list." );
-      else if ( url.path() == "hideAttachmentQuicklist" )
+      else if ( urlPath == QLatin1String( "hideAttachmentQuicklist" ) )
         return i18n( "Hide attachment list." );
-      else if ( url.path() == "showFullToAddressList" )
+      else if ( urlPath == QLatin1String( "showFullToAddressList" ) )
         return i18n( "Show full \"To\" list" );
-      else if ( url.path() == "hideFullToAddressList" )
+      else if ( urlPath == QLatin1String( "hideFullToAddressList" ) )
         return i18n( "Hide full \"To\" list" );
-      else if ( url.path() == "showFullCcAddressList" )
+      else if ( urlPath == QLatin1String( "showFullCcAddressList" ) )
         return i18n( "Show full \"Cc\" list" );
-      else if ( url.path() == "hideFullCcAddressList" )
+      else if ( urlPath == QLatin1String( "hideFullCcAddressList" ) )
         return i18n( "Hide full \"Cc\" list" );
-      else if ( url.path() == "showRawToltecMail" )
+      else if ( urlPath == QLatin1String( "showRawToltecMail" ) )
         return i18n( "Show Raw Message" );
       else return QString();
     }
@@ -548,11 +549,11 @@ namespace {
   {
     //  kmail:levelquote/?num      -> the level quote to collapse.
     //  kmail:levelquote/?-num      -> expand all levels quote.
-    if ( url.protocol() == "kmail" && url.path()=="levelquote" )
+    if ( url.protocol() == QLatin1String( "kmail" ) && url.path()==QLatin1String( "levelquote" ) )
     {
-      QString levelStr= url.query().mid( 1,url.query().length() );
-      bool isNumber;
-      int levelQuote= levelStr.toInt(&isNumber);
+      const QString levelStr= url.query().mid( 1,url.query().length() );
+      bool isNumber = false;
+      const int levelQuote= levelStr.toInt(&isNumber);
       if ( isNumber )
         w->slotLevelQuote( levelQuote );
       return true;
@@ -562,11 +563,11 @@ namespace {
   QString ExpandCollapseQuoteURLManager::statusBarMessage(
       const KUrl & url, ViewerPrivate * ) const
   {
-      if ( url.protocol() == "kmail" && url.path() == "levelquote" )
+      if ( url.protocol() == QLatin1String( "kmail" ) && url.path() == QLatin1String( "levelquote" ) )
       {
-        QString query= url.query();
+        const QString query= url.query();
         if ( query.length()>=2 ) {
-          if ( query[ 1 ] =='-'  ) {
+          if ( query[ 1 ] ==QLatin1Char( '-' )  ) {
             return i18n("Expand all quoted text.");
           }
           else {
@@ -585,9 +586,9 @@ bool foundSMIMEData( const QString &aUrl,
                      QString& keyId )
 {
   static QString showCertMan("showCertificate#");
-  displayName = "";
-  libName = "";
-  keyId = "";
+  displayName.clear();
+  libName.clear();
+  keyId.clear();
   int i1 = aUrl.indexOf( showCertMan );
   if( -1 < i1 ) {
     i1 += showCertMan.length();
@@ -662,9 +663,9 @@ namespace {
 
 namespace {
   QString MailToURLHandler::statusBarMessage( const KUrl & url, ViewerPrivate * ) const {
-    if ( url.protocol() != "mailto" )
-      return QString();
-    return KPIMUtils::decodeMailtoUrl( url );
+    if ( url.protocol() == QLatin1String( "mailto" ) )
+      return KPIMUtils::decodeMailtoUrl( url );
+    return QString();
   }
 }
 
@@ -692,18 +693,18 @@ namespace {
 
   bool ContactUidURLHandler::handleClick( const KUrl &url, ViewerPrivate * ) const
   {
-    if ( url.protocol() != "uid" ) {
-      return false;
-    } else {
+    if ( url.protocol() == QLatin1String( "uid" ) ) {
       runKAddressBook( url );
       return true;
+    } else {
+      return false;
     }
   }
 
   bool ContactUidURLHandler::handleContextMenuRequest( const KUrl &url, const QPoint &p,
                                                        ViewerPrivate * ) const
   {
-    if ( url.protocol() != "uid" || url.path().isEmpty() ) {
+    if ( url.protocol() != QLatin1String( "uid" ) || url.path().isEmpty() ) {
       return false;
     }
 
@@ -736,10 +737,10 @@ namespace {
 
   QString ContactUidURLHandler::statusBarMessage( const KUrl &url, ViewerPrivate * ) const
   {
-    if ( url.protocol() != "uid" ) {
-      return QString();
-    } else {
+    if ( url.protocol() == QLatin1String( "uid" ) ) {
       return i18n( "Lookup the contact in KAddressbook" );
+    } else {
+      return QString();
     }
   }
 }
@@ -749,11 +750,12 @@ namespace {
  {
    if ( !w || !w->mMessage )
      return 0;
-   if ( url.protocol() != "attachment" )
-     return 0;
-
-   KMime::Content * node = w->nodeFromUrl( url );
-   return node;
+   if ( url.protocol() == QLatin1String( "attachment" ) )
+   {
+     KMime::Content * node = w->nodeFromUrl( url );
+     return node;
+   }
+   return 0;
  }
 
  bool AttachmentURLHandler::attachmentIsInHeader( const KUrl &url ) const
@@ -761,7 +763,7 @@ namespace {
    bool inHeader = false;
    const QString place = url.queryItem( "place" ).toLower();
    if ( !place.isNull() ) {
-     inHeader = ( place == "header" );
+     inHeader = ( place == QLatin1String( "header" ) );
    }
    return inHeader;
  }
@@ -841,7 +843,7 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return QString();
-    QString name = NodeHelper::fileName( node );
+    const QString name = NodeHelper::fileName( node );
     if ( !name.isEmpty() )
       return i18n( "Attachment: %1", name );
     else if ( dynamic_cast<KMime::Message*>( node ) ) {
@@ -858,7 +860,8 @@ namespace {
 
 namespace {
   static QString extractAuditLog( const KUrl & url ) {
-    if ( url.protocol() != "kmail" || url.path() != "showAuditLog" )
+    if ( url.protocol() != QLatin1String( "kmail" )
+         || url.path() != QLatin1String( "showAuditLog" ) )
       return QString();
     assert( !url.queryItem( "log" ).isEmpty() );
     return url.queryItem( "log" );
@@ -900,7 +903,7 @@ namespace {
   bool InternalImageURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
   {
     Q_UNUSED( window );
-    if ( url.protocol() == "data" && url.path().startsWith( "image" ) )
+    if ( url.protocol() == QLatin1String( "data" ) && url.path().startsWith( "image" ) )
       return true;
 
     const QString imagePath = KStandardDirs::locate( "data", "libmessageviewer/pics/" );
@@ -911,12 +914,13 @@ namespace {
 namespace {
   bool KRunURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const
   {
-    if ( ( url.protocol() == "http" ) || ( url.protocol() == "https" ) ||
-         ( url.protocol() == "ftp" )  || ( url.protocol() == "file" )  ||
-         ( url.protocol() == "ftps" ) || ( url.protocol() == "sftp" ) ||
-         ( url.protocol() == "help" ) || ( url.protocol() == "vnc" )   ||
-         ( url.protocol() == "smb" )  || ( url.protocol() == "fish" )  ||
-         ( url.protocol() == "news" ) )
+    const QString protocol(url.protocol() );
+    if ( ( protocol == QLatin1String( "http" ) ) || ( protocol == QLatin1String( "https" ) ) ||
+         ( protocol == QLatin1String( "ftp" ) )  || ( protocol == QLatin1String( "file" ) )  ||
+         ( protocol == QLatin1String( "ftps" ) ) || ( protocol == QLatin1String( "sftp" ) ) ||
+         ( protocol == QLatin1String( "help" ) ) || ( protocol == QLatin1String( "vnc" ) )   ||
+         ( protocol == QLatin1String( "smb" ) )  || ( protocol == QLatin1String( "fish" ) )  ||
+         ( protocol == QLatin1String( "news" ) ) )
     {
       KPIM::BroadcastStatus::instance()->setTransientStatusMsg( i18n("Opening URL..."));
       QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT(reset()) );
