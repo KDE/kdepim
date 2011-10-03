@@ -104,3 +104,5 @@ void AnnotationEditDialog::slotButtonClicked( int button )
     }
   }
 }
+
+#include "annotationdialog.moc"

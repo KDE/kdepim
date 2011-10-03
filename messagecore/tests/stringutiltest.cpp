@@ -355,3 +355,5 @@ void StringUtilTest::test_stripOffMessagePrefix()
     StringUtil::stripOffPrefixes( subject );
   }
 }
+
+#include "stringutiltest.moc"
