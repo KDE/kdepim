@@ -273,6 +273,8 @@ public:
 private:
   /** HTML initialization. */
   void initHtmlWidget();
+  void saveMimePartTreeConfig();
+  void restoreMimePartTreeConfig();
 
 public:
   /** Event filter */
