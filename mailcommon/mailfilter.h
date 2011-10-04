@@ -32,7 +32,6 @@
 
 #include <QtCore/QDataStream>
 
-class QString;
 class KConfigGroup;
 
 namespace MailCommon {

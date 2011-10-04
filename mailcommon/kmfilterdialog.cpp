@@ -760,6 +760,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 KMFilterListBox::~KMFilterListBox()
 {
   qDeleteAll( mFilterList );
+  mFilterList.clear();
 }
 
 void KMFilterListBox::slotRowsMoved( const QModelIndex &, int sourcestart, int sourceEnd , const QModelIndex &, int destinationRow)
