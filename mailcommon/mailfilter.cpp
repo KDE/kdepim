@@ -515,7 +515,7 @@ const QString MailFilter::asString() const
   result += "Filter name: " + name() + " (" + mIdentifier  + ")\n";
   result += mPattern.asString() + '\n';
 
-  result += "Filter is " + bEnabled() ? "enabled" : "disabled\n";
+  result += "Filter is " + bEnabled ? "enabled" : "disabled\n";
   
   QList<FilterAction*>::const_iterator it( mActions.constBegin() );
   QList<FilterAction*>::const_iterator end( mActions.constEnd() );
