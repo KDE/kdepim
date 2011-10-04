@@ -308,7 +308,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   // load the filter parts into the edit widgets
   connect( mFilterList, SIGNAL(filterSelected(MailCommon::MailFilter*)),
            this, SLOT(slotFilterSelected(MailCommon::MailFilter*)) );
-
+                               
   // transfer changes from the 'Apply this filter on...'
   // combo box to the filter
   connect( mApplyOnIn, SIGNAL(clicked()),
@@ -733,6 +733,9 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 	   this, SLOT(slotSelected(int)) );
   connect( mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            this, SLOT(slotRename()) );
+  connect( mListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
+           this, SLOT(slotFilterEnabledChanged(QListWidgetItem*)));
+
   connect( mBtnUp, SIGNAL(clicked()),
 	   this, SLOT(slotUp()) );
   connect( mBtnDown, SIGNAL(clicked()),
@@ -762,6 +765,18 @@ KMFilterListBox::~KMFilterListBox()
   qDeleteAll( mFilterList );
   mFilterList.clear();
 }
+
+void KMFilterListBox::slotFilterEnabledChanged(QListWidgetItem*item)
+{
+  if ( mIdxSelItem < 0 ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
+    return;
+  }
+  MailFilter *filter = mFilterList.at( mIdxSelItem );
+  filter->setEnabled( ( item->checkState() == Qt::Checked ) );
+  emit filterUpdated( filter );
+}
+
 
 void KMFilterListBox::slotRowsMoved( const QModelIndex &, int sourcestart, int sourceEnd , const QModelIndex &, int destinationRow)
 {
@@ -1147,7 +1162,9 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
   const QList<MailFilter*> filters = MailCommon::FilterManager::instance()->filters();
   foreach ( MailFilter *filter, filters ) {
     mFilterList.append( new MailFilter( *filter ) ); // deep copy
-    mListWidget->addItem( filter->pattern()->name() );
+    QListWidgetItem *item = new QListWidgetItem( filter->pattern()->name(), mListWidget );
+    item->setCheckState(  filter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+    mListWidget->addItem( item );
   }
 
   blockSignals(false);
@@ -1190,7 +1207,10 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
 void KMFilterListBox::appendFilter( MailFilter* aFilter )
 {
   mFilterList.append( aFilter );
-  mListWidget->addItem( aFilter->pattern()->name() );
+
+  QListWidgetItem *item = new QListWidgetItem( aFilter->pattern()->name(), mListWidget );
+  item->setCheckState(  aFilter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+  mListWidget->addItem( item );
 
   emit filterCreated();
 }
@@ -1223,10 +1243,9 @@ void KMFilterDialog::slotImportFilters()
   // FIXME message box how many were imported?
   if ( filters.isEmpty() ) return;
 
-  QList<MailFilter*>::ConstIterator it;
   QList<MailFilter*>::ConstIterator end( filters.constEnd() );
   
-  for ( it = filters.constBegin() ; it != end ; ++it ) {
+  for ( QList<MailFilter*>::ConstIterator it = filters.constBegin() ; it != end ; ++it ) {
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
   }
 }
@@ -1236,9 +1255,8 @@ void KMFilterDialog::slotExportFilters()
   FilterImporterExporter exporter( this );
   QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
   exporter.exportFilters( filters );
-  QList<MailFilter*>::ConstIterator it;
   QList<MailFilter*>::ConstIterator end( filters.constEnd() );
-  for ( it = filters.constBegin(); it != end; ++it )
+  for ( QList<MailFilter*>::ConstIterator it = filters.constBegin(); it != end; ++it )
     delete *it;
 }
 

@@ -41,6 +41,7 @@ class KIconButton;
 class KKeySequenceWidget;
 class KActionCollection;
 class QModelIndex;
+class QListWidgetItem;
 namespace MailCommon {
   class SearchPatternEdit;
   class FilterActionWidgetLister;
@@ -177,6 +178,8 @@ protected slots:
   /** Called when the user clicks the 'Bottom' button. Moves the current
       filter to bottom. */
   void slotBottom();
+  void slotFilterEnabledChanged(QListWidgetItem*item);
+
 protected:
   /** The deep copy of the filter list. */
   QList<MailCommon::MailFilter *> mFilterList;
@@ -274,7 +277,7 @@ public slots:
   /** Override QDialog::accept to allow disabling close */
   virtual void accept();
 
-protected slots:
+protected slots: 
   void slotApplicabilityChanged();
   void slotApplicableAccountsChanged();
   void slotStopProcessingButtonToggled( bool aChecked );

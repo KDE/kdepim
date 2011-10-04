@@ -56,6 +56,7 @@ MailFilter::MailFilter()
   bConfigureToolbar = false;
   bAutoNaming = true;
   mApplicability = All;
+  bEnabled = true;
 }
 
 
@@ -80,6 +81,7 @@ MailFilter::MailFilter( const MailFilter & aFilter )
   mToolbarName = aFilter.toolbarName();
   mApplicability = aFilter.applicability();
   bAutoNaming = aFilter.isAutoNaming();
+  bEnabled = aFilter.isEnabled();
   mIcon = aFilter.icon();
   mShortcut = aFilter.shortcut();
 
@@ -353,7 +355,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
   // that the pattern is purified.
   mPattern.readConfig(config);
   mIdentifier = config.readEntry( "identifier", KRandom::randomString( 16 ) );
-
+  
   const QStringList sets = config.readEntry("apply-on", QStringList() );
   if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
     bApplyBeforeOutbound = false;
@@ -382,7 +384,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
   mToolbarName = config.readEntry( "ToolbarName", name() );
   mIcon = config.readEntry( "Icon", "system-run" );
   bAutoNaming = config.readEntry( "AutomaticName", false );
-
+  bEnabled = config.readEntry( "Enabled", true );
   QString actName, argsName;
 
   mActions.clear();
@@ -449,12 +451,14 @@ void MailFilter::writeConfig(KConfigGroup & config) const
   config.writeEntry( "Icon", mIcon );
   config.writeEntry( "AutomaticName", bAutoNaming );
   config.writeEntry( "Applicability", (int)mApplicability );
-
+  config.writeEntry( "Enabled", bEnabled );
   QString key;
   int i;
 
   QList<FilterAction*>::const_iterator it;
-  for ( i=0, it = mActions.constBegin() ; it != mActions.constEnd() ; ++it, ++i ) {
+  QList<FilterAction*>::const_iterator end( mActions.constEnd() );
+  
+  for ( i=0, it = mActions.constBegin() ; it != end ; ++it, ++i ) {
     config.writeEntry( key.sprintf("action-name-%d", i),
                         (*it)->name() );
     config.writeEntry( key.sprintf("action-args-%d", i),
@@ -511,8 +515,11 @@ const QString MailFilter::asString() const
   result += "Filter name: " + name() + " (" + mIdentifier  + ")\n";
   result += mPattern.asString() + '\n';
 
-  QList<FilterAction*>::const_iterator it( mActions.begin() );
-  for ( ; it != mActions.end() ; ++it ) {
+  result += "Filter is " + bEnabled() ? "enabled" : "disabled\n";
+  
+  QList<FilterAction*>::const_iterator it( mActions.constBegin() );
+  QList<FilterAction*>::const_iterator end( mActions.constEnd() );
+  for ( ; it != end ; ++it ) {
     result += "    action: ";
     result += (*it)->label();
     result += ' ';
@@ -580,6 +587,7 @@ QDataStream& MailCommon::operator<<( QDataStream &stream, const MailCommon::Mail
   stream << filter.bConfigureToolbar;
   stream << filter.bAutoNaming;
   stream << filter.mApplicability;
+  stream << filter.bEnabled;
 
   return stream;
 }
@@ -598,6 +606,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
   bool bConfigureToolbar;
   bool bAutoNaming;
   int applicability;
+  bool bEnabled;
 
   stream >> filter.mIdentifier;
   stream >> pattern;
@@ -636,7 +645,8 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
   stream >> bConfigureToolbar;
   stream >> bAutoNaming;
   stream >> applicability;
-
+  stream >> bEnabled;
+  
   filter.mPattern.deserialize(pattern);
   filter.mShortcut = KShortcut( primary, alternate );
   filter.bApplyOnInbound = bApplyOnInbound;
@@ -647,7 +657,19 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
   filter.bConfigureShortcut = bConfigureShortcut;
   filter.bConfigureToolbar = bConfigureToolbar;
   filter.bAutoNaming = bAutoNaming;
+  filter.bEnabled = bEnabled;
   filter.mApplicability = static_cast<MailCommon::MailFilter::AccountType>( applicability );
 
   return stream;
+}
+
+
+bool MailFilter::isEnabled() const
+{
+  return bEnabled;
+}
+
+void MailFilter::setEnabled( bool enabled )
+{
+  bEnabled = enabled;
 }
