@@ -149,6 +149,7 @@ void CustomTemplates::slotHelpLinkClicked( const QString& )
 CustomTemplates::~CustomTemplates()
 {
   qDeleteAll( mItemList ); // no auto-delete with QHash
+  mItemList.clear();
   delete mUi;
   mUi = 0;
 }
@@ -198,7 +199,8 @@ void CustomTemplates::slotTextChanged()
 void CustomTemplates::load()
 {
   const QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
-  for ( QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it ) {
+  QStringList::const_iterator end( list.constEnd() );
+  for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
     // QString typeStr = indexToType( t.type() );
     QString typeStr;

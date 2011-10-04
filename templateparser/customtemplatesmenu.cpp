@@ -97,11 +97,12 @@ void CustomTemplatesMenu::update()
 
   QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
   QStringList::iterator it = list.begin();
+  QStringList::iterator end = list.end();
   int idx = 0;
   int replyc = 0;
   int replyallc = 0;
   int forwardc = 0;
-  for ( ; it != list.end(); ++it ) {
+  for ( ; it != end; ++it ) {
     CTemplates t( *it );
     mCustomTemplates.append( *it );
 

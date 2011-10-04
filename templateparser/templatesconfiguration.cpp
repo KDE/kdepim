@@ -39,7 +39,7 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
   setupUi(this);
   setObjectName(name);
 
-  QFont f = KGlobalSettings::fixedFont();
+  const QFont f = KGlobalSettings::fixedFont();
   textEdit_new->setFont( f );
   textEdit_reply->setFont( f );
   textEdit_reply_all->setFont( f );
