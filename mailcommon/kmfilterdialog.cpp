@@ -386,7 +386,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   connect( mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()) );
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
-  QSize size = myGroup.readEntry( "filterDialogSize", QSize() );
+  const QSize size = myGroup.readEntry( "filterDialogSize", QSize() );
   if ( size != QSize()  )
     resize( size );
   else
