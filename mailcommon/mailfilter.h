@@ -29,7 +29,6 @@
 
 #include "mailcommon_export.h"
 
-class QString;
 class KConfigGroup;
 
 namespace MailCommon {
