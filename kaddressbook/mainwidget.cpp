@@ -22,7 +22,6 @@
 
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
-#include <kdescendantsproxymodel.h>
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"
@@ -33,6 +32,8 @@
 #include "grantleecontactformatter.h"
 #include "grantleecontactgroupformatter.h"
 #endif
+
+#include "libkdepim/uistatesaver.h"
 
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
@@ -52,12 +53,14 @@
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
 
-#include <kaction.h>
-#include <kactioncollection.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+
+#include <kaction.h>
+#include <kactioncollection.h>
 #include <kapplication.h>
 #include <kcheckableproxymodel.h>
+#include <kdescendantsproxymodel.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -67,7 +70,6 @@
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
-#include <libkdepim/uistatesaver.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>

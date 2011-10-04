@@ -26,22 +26,20 @@
 #define ARCHIVEDIALOG_H
 
 #include "calendarsupport_export.h"
+#include "incidencechanger.h"
 
-#include <calendarsupport/incidencechanger.h>
+#include <KDialog>
 
-#include <kdialog.h>
-
-class QRadioButton;
 class KComboBox;
+class KDateComboBox;
 class KIntNumInput;
 class KUrlRequester;
-class QCheckBox;
 
-namespace KPIM {
-class KDateEdit;
-}
+class QCheckBox;
+class QRadioButton;
+
 namespace KOrg {
-class IncidenceChanger;
+  class IncidenceChanger;
 }
 
 namespace CalendarSupport {
@@ -52,7 +50,8 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit ArchiveDialog( CalendarSupport::Calendar *calendar, CalendarSupport::IncidenceChanger* changer, QWidget *parent=0 );
+    explicit ArchiveDialog( CalendarSupport::Calendar *calendar,
+                            CalendarSupport::IncidenceChanger *changer, QWidget *parent=0 );
     virtual ~ArchiveDialog();
 
   signals:
@@ -68,7 +67,7 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
 
   private:
     KUrlRequester *mArchiveFile;
-    KPIM::KDateEdit *mDateEdit;
+    KDateComboBox *mDateEdit;
     QCheckBox *mDeleteCb;
     QRadioButton *mArchiveOnceRB;
     QRadioButton *mAutoArchiveRB;

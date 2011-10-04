@@ -236,7 +236,7 @@ void ConfigWidget::saveToExternalSettings()
 void ConfigWidget::showClock( QObject *object )
 {
   setFocus();
-  mFocusedTimeWidget = qobject_cast<KPIM::KTimeEdit*>( object );
+  mFocusedTimeWidget = qobject_cast<KTimeComboBox*>( object );
   if ( !mFocusedTimeWidget )
     return;
 

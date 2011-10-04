@@ -91,7 +91,7 @@
    <item row="2" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,1">
      <item>
-      <widget class="KPIM::KDateEdit" name="startDate">
+      <widget class="KDateComboBox" name="startDate">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -114,7 +114,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KDateEdit" name="endDate">
+      <widget class="KDateComboBox" name="endDate">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -182,9 +182,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KDateEdit</class>
+   <class>KDateComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/kdateedit.h</header>
+   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>

@@ -186,7 +186,7 @@ void IncidenceView::showCalendar( QObject *obj )
    the dialog doesn't reopen incorrectly */
   mIncidenceMore->setFocus();
 
-  mDateWidget = qobject_cast<KPIM::KDateEdit*>( obj );
+  mDateWidget = qobject_cast<KDateComboBox*>( obj );
   if ( !mDateWidget )
     return;
 
@@ -207,7 +207,7 @@ void IncidenceView::showClock( QObject *obj )
   /*### Workaround to force focus out, so
     the dialog doesn't reopen incorrectly */
   mIncidenceMore->setFocus();
-  mTimeWidget = qobject_cast<KPIM::KTimeEdit*>( obj );
+  mTimeWidget = qobject_cast<KTimeComboBox*>( obj );
   if ( !mTimeWidget )
     return;
 

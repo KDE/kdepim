@@ -1,6 +1,5 @@
 project(kaddressbook)
 include_directories(
-    ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
     ${QT_QTDBUS_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
@@ -101,7 +100,7 @@ kde4_add_app_icon(kaddressbook_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-
 
 kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
 
-target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim
+target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS}
                               ${KDE4_KIO_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_PHONON_LIBS})
 target_link_libraries(kaddressbook ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} kaddressbookprivate)
 

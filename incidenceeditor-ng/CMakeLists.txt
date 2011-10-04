@@ -6,6 +6,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
+  ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_BINARY_DIR}/incidenceeditor-ng
   ${Boost_INCLUDE_DIR}
 )

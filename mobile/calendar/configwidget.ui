@@ -79,7 +79,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="KPIM::KTimeEdit" name="kcfg_DayBegins"/>
+            <widget class="KTimeComboBox" name="kcfg_DayBegins"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="useHolidayRegionLabel">
@@ -157,7 +157,7 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="KPIM::KTimeEdit" name="kcfg_DailyStartingHour"/>
+            <widget class="KTimeComboBox" name="kcfg_DailyStartingHour"/>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="dailyStartingHourLabel">
@@ -174,7 +174,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="KPIM::KTimeEdit" name="kcfg_DailyEndingHour"/>
+            <widget class="KTimeComboBox" name="kcfg_DailyEndingHour"/>
            </item>
           </layout>
          </item>
@@ -228,7 +228,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="KPIM::KTimeEdit" name="kcfg_DefaultAppointmentTime"/>
+            <widget class="KTimeComboBox" name="kcfg_DefaultAppointmentTime"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="defaultDurationOfNewAppointmentLabel">
@@ -588,9 +588,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KTimeEdit</class>
+   <class>KTimeComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/ktimeedit.h</header>
+   <header>ktimecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>

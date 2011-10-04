@@ -22,10 +22,10 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="KPIM::KDateEdit" name="mStartDate"/>
+    <widget class="KDateComboBox" name="mStartDate"/>
    </item>
    <item row="0" column="2">
-    <widget class="KPIM::KTimeEdit" name="mStartTime"/>
+    <widget class="KTimeComboBox" name="mStartTime"/>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
@@ -38,10 +38,10 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="KPIM::KDateEdit" name="mEndDate"/>
+    <widget class="KDateComboBox" name="mEndDate"/>
    </item>
    <item row="1" column="2">
-    <widget class="KPIM::KTimeEdit" name="mEndTime"/>
+    <widget class="KTimeComboBox" name="mEndTime"/>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
@@ -167,7 +167,7 @@
          </widget>
         </item>
         <item>
-         <widget class="KPIM::KTimeEdit" name="mMoveBeginTimeEdit"/>
+         <widget class="KTimeComboBox" name="mMoveBeginTimeEdit"/>
         </item>
         <item>
          <widget class="QLabel" name="mMoveEndTimeLabel">
@@ -198,9 +198,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KTimeEdit</class>
+   <class>KTimeComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/ktimeedit.h</header>
+   <header>ktimecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KCheckComboBox</class>
@@ -208,9 +208,9 @@
    <header>libkdepim/kcheckcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KDateEdit</class>
+   <class>KDateComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/kdateedit.h</header>
+   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>
