@@ -1,36 +1,36 @@
-project (calendarviewsapp)
+project(calendarviewsapp)
 
 include_directories(
-    ${Boost_INCLUDE_DIR}
-    ${calendarView_SOURCE_DIR}/eventviews
-    ${calendarView_SOURCE_DIR}/eventviews/agenda
+  ${Boost_INCLUDE_DIR}
+  ${calendarView_SOURCE_DIR}/eventviews
+  ${calendarView_SOURCE_DIR}/eventviews/agenda
 )
 
 set(viewerapp_SRCS
-    main.cpp
-    mainwindow.cpp
+  main.cpp
+  mainwindow.cpp
 )
 
-kde4_add_kcfg_files(viewerapp_SRCS settings.kcfgc )
+kde4_add_kcfg_files(viewerapp_SRCS settings.kcfgc)
 
 kde4_add_ui_files(viewerapp_SRCS
-    mainwindow.ui
+  mainwindow.ui
 )
 
 kde4_add_executable(viewerapp ${viewerapp_SRCS})
 
 target_link_libraries(viewerapp
-    calendarsupport
-    eventviews
-    ${KDE4_KDECORE_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${QT_QTGUI_LIBS}
-    ${KDEPIMLIBS_KCALCORE_LIBS}
+  calendarsupport
+  eventviews
+  ${KDE4_KDECORE_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${QT_QTGUI_LIBS}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 ########### install files ###############
 
-#install(TARGETS viewerapp ${INSTALL_TARGETS_DEFAULT_ARGS} )
-#install( PROGRAMS viewerapp.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR} )
+#install(TARGETS viewerapp ${INSTALL_TARGETS_DEFAULT_ARGS})
+#install(PROGRAMS viewerapp.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
