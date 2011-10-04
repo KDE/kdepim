@@ -60,11 +60,11 @@ class MESSAGECOMPOSER_EXPORT SignEncryptJob : public ContentJobBase, public Abst
     void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
     void setSigningKeys( std::vector<GpgME::Key>& signers );
 
-    void setEncryptionKeys( std::vector<GpgME::Key> keys );
-    void setRecipients( QStringList rec );
+    void setEncryptionKeys( const std::vector<GpgME::Key>& keys );
+    void setRecipients( const QStringList& rec );
 
-    std::vector<GpgME::Key> encryptionKeys();
-    QStringList recipients();
+    std::vector<GpgME::Key> encryptionKeys() const;
+    QStringList recipients() const;
     
     KMime::Content* origContent();
 

@@ -112,27 +112,27 @@ void EncryptJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
   d->format = format;
 }
 
-void EncryptJob::setEncryptionKeys( std::vector<GpgME::Key> keys )
+void EncryptJob::setEncryptionKeys( const std::vector<GpgME::Key>& keys )
 {
   Q_D( EncryptJob );
 
   d->keys = keys;
 }
 
-void EncryptJob::setRecipients( QStringList recipients ) {
+void EncryptJob::setRecipients( const QStringList& recipients ) {
   Q_D( EncryptJob );
 
   d->recipients = recipients;
 }
 
-QStringList EncryptJob::recipients() {
-  Q_D( EncryptJob );
+QStringList EncryptJob::recipients() const {
+  Q_D( const EncryptJob );
 
   return d->recipients;
 }
 
-std::vector<GpgME::Key> EncryptJob::encryptionKeys() {
-  Q_D( EncryptJob );
+std::vector<GpgME::Key> EncryptJob::encryptionKeys() const {
+  Q_D( const EncryptJob );
 
   return d->keys;
 }

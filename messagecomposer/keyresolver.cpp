@@ -140,7 +140,8 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
     if ( !ValidOpenPGPEncryptionKey( key ) )
         return false;
   const std::vector<GpgME::UserID> uids = key.userIDs();
-  for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it ) {
+  std::vector<GpgME::UserID>::const_iterator end( uids.end() );
+  for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != end ; ++it ) {
     if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
       return true;
 #if 1
@@ -259,6 +260,7 @@ static std::vector<GpgME::UserID> matchingUIDs( const std::vector<GpgME::UserID>
 
     std::vector<GpgME::UserID> result;
     result.reserve( uids.size() );
+    
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin(), end = uids.end() ; it != end ; ++it )
         // PENDING(marc) check DN for an EMAIL, too, in case of X.509 certs... :/
         if ( const char * email = it->email() )
@@ -885,15 +887,16 @@ Kpgp::Result Kleo::KeyResolver::setEncryptToSelfKeys( const QStringList & finger
   }
 
   // check for near-expiry:
+  std::vector<GpgME::Key>::const_iterator end( d->mOpenPGPEncryptToSelfKeys.end() );
 
-  for ( std::vector<GpgME::Key>::const_iterator it = d->mOpenPGPEncryptToSelfKeys.begin() ; it != d->mOpenPGPEncryptToSelfKeys.end() ; ++it ) {
+  for ( std::vector<GpgME::Key>::const_iterator it = d->mOpenPGPEncryptToSelfKeys.begin() ; it != end ; ++it ) {
     const Kpgp::Result r = checkKeyNearExpiry( *it, "own encryption key expires soon warning",
 					       true, false );
     if ( r != Kpgp::Ok )
       return r;
   }
-
-  for ( std::vector<GpgME::Key>::const_iterator it = d->mSMIMEEncryptToSelfKeys.begin() ; it != d->mSMIMEEncryptToSelfKeys.end() ; ++it ) {
+  std::vector<GpgME::Key>::const_iterator end2( d->mSMIMEEncryptToSelfKeys.end() );
+  for ( std::vector<GpgME::Key>::const_iterator it = d->mSMIMEEncryptToSelfKeys.begin() ; it != end2 ; ++it ) {
     const Kpgp::Result r = checkKeyNearExpiry( *it, "own encryption key expires soon warning",
 					       true, false );
     if ( r != Kpgp::Ok )
@@ -958,7 +961,8 @@ void Kleo::KeyResolver::setSecondaryRecipients( const QStringList & addresses ) 
 std::vector<Kleo::KeyResolver::Item> Kleo::KeyResolver::getEncryptionItems( const QStringList & addresses ) {
   std::vector<Item> items;
   items.reserve( addresses.size() );
-  for ( QStringList::const_iterator it = addresses.begin() ; it != addresses.end() ; ++it ) {
+  QStringList::const_iterator end( addresses.constEnd() );
+  for ( QStringList::const_iterator it = addresses.constBegin() ; it != end ; ++it ) {
     QString addr = canonicalAddress( *it ).toLower();
     const ContactPreferences pref = lookupContactPreferences( addr );
 
