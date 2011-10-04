@@ -356,24 +356,11 @@ QDate IncidenceMonthItem::realStartDate() const
   if ( !mIncidence ) {
     return QDate();
   }
-  KDateTime dt;
-  if ( mIsEvent || mIsJournal ) {
-    dt = mIncidence->dtStart();
-  } else if ( mIsTodo ) {
-    dt = mIncidence.staticCast<Todo>()->dtDue();
-  }
 
-  QDate start;
-  if ( dt.isDateOnly() ) {
-    start = dt.date();
-  } else {
-    start = dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-  }
-
-  // TODO: uncomment when we depend on kdepimlibs 4.7: const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
-  //const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
-  //const QDate start = dt.isDateOnly() ? dt.date() :
-  //                                      dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+  const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
+  const QDate start = dt.isDateOnly() ?
+                        dt.date() :
+                        dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
 
   return start.addDays( mRecurDayOffset );
 }
@@ -384,8 +371,9 @@ QDate IncidenceMonthItem::realEndDate() const
   }
 
   const KDateTime dt = mIncidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
-  const QDate end = dt.isDateOnly() ? dt.date() :
-                                      dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+  const QDate end = dt.isDateOnly() ?
+                      dt.date() :
+                    dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
 
   return end.addDays( mRecurDayOffset );
 }
@@ -655,8 +643,7 @@ QColor IncidenceMonthItem::bgColor() const
     Q_ASSERT( todo );
     const QDate dueDate = todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
     const QDate today = KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-    if ( todo->isOverdue() && today >= startDate() )
-    {
+    if ( todo->isOverdue() && today >= startDate() ) {
       bgColor = prefs->todoOverdueColor();
     } else if ( dueDate == today && dueDate == startDate() ) {
       bgColor = prefs->todoDueTodayColor();
