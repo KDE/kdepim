@@ -22,6 +22,7 @@
 #include "readablecollectionproxymodel.h"
 #include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
+#include "foldertreewidgetproxymodel.h"
 
 #include "messageviewer/globalsettings.h"
 #include "messagecore/globalsettings.h"
@@ -70,7 +71,7 @@ public:
   FolderTreeView *folderTreeView;
   Akonadi::QuotaColorProxyModel *quotaModel;
   ReadableCollectionProxyModel *readableproxy;
-  KRecursiveFilterProxyModel *filterTreeViewModel;
+  FolderTreeWidgetProxyModel *filterTreeViewModel;
   EntityCollectionOrderProxyModel *entityOrderProxy;
   KLineEdit *filterFolderLineEdit;
   QPointer<Akonadi::ETMViewStateSaver> saver;
@@ -128,7 +129,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   // Use the model
 
   //Filter tree view.
-  d->filterTreeViewModel = new KRecursiveFilterProxyModel( this );
+  d->filterTreeViewModel = new FolderTreeWidgetProxyModel( this );
   d->filterTreeViewModel->setDynamicSortFilter( true );
   d->filterTreeViewModel->setSourceModel( d->readableproxy );
   d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
@@ -353,7 +354,7 @@ void FolderTreeWidget::applyFilter( const QString &filter )
 {
   d->label->setText( filter.isEmpty() ? i18n( "You can start typing to filter the list of folders." )
                                       : i18n( "Path: (%1)", filter ) );
-  d->filterTreeViewModel->setFilterWildcard( filter );
+  d->filterTreeViewModel->setFilterFolder( filter );
   d->folderTreeView->expandAll();
 }
 
