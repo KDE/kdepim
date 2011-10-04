@@ -129,6 +129,6 @@ namespace MailCommon {
     }
   }
 
-} // namespace KMail
+} // namespace MailCommon
 
 #include "regexplineedit.moc"
