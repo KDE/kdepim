@@ -1103,7 +1103,7 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
 void KMFilterListBox::appendFilter( MailFilter* aFilter )
 {
   mFilterList.append( aFilter );
-  mListWidget->addItems( QStringList( aFilter->pattern()->name() ) );
+  mListWidget->addItem( aFilter->pattern()->name() );
 
   emit filterCreated();
 }
