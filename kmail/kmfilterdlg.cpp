@@ -1069,10 +1069,11 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
   // create an empty filter when there's none, to avoid a completely
   // disabled dialog (usability tests indicated that the new-filter
   // button is too hard to find that way):
-  if ( !mListWidget->count() && createDummyFilter )
+  const int numberOfItem( mListWidget->count() );
+  if ( !numberOfItem && createDummyFilter )
     slotNew();
 
-  if ( mListWidget->count() > 0 )
+  if ( numberOfItem > 0 )
     mListWidget->setCurrentRow( 0 );
 
   enableControls();
