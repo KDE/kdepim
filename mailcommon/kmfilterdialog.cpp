@@ -512,7 +512,7 @@ void KMFilterDialog::slotApplicabilityChanged()
     // Advanced tab functionality - Update list of accounts this filter applies to
     QTreeWidgetItemIterator it( mAccountList );
     while( QTreeWidgetItem * item = *it ) {
-      QString id = item->text( 2 );
+      const QString id = item->text( 2 );
       item->setCheckState( 0, mFilter->applyOnAccount( id ) ? Qt::Checked :
                                                               Qt::Unchecked );
       ++it;
@@ -1130,9 +1130,9 @@ void KMFilterListBox::slotRename()
 
 void KMFilterListBox::enableControls()
 {
-  bool theFirst = ( mIdxSelItem == 0 );
-  bool theLast = ( mIdxSelItem >= (int)mFilterList.count() - 1 );
-  bool aFilterIsSelected = ( mIdxSelItem >= 0 );
+  const bool theFirst = ( mIdxSelItem == 0 );
+  const bool theLast = ( mIdxSelItem >= (int)mFilterList.count() - 1 );
+  const bool aFilterIsSelected = ( mIdxSelItem >= 0 );
 
   mBtnUp->setEnabled( aFilterIsSelected && !theFirst );
   mBtnDown->setEnabled( aFilterIsSelected && !theLast );
