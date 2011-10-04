@@ -33,8 +33,6 @@
 #include <KDebug>
 #include <KDialog>
 #include <KLocalizedString>
-#include <libkdepim/ktimeedit.h>
-#include <libkdepim/kdateedit.h>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 
