@@ -127,7 +127,8 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances()
   foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
     if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) &&
          instance.type().capabilities().contains( "Resource" ) &&
-         !instance.type().capabilities().contains( "Virtual" ) ) {
+         !instance.type().capabilities().contains( "Virtual" ) &&
+         !instance.type().capabilities().contains( "MailTransport" ) ) {
       relevantInstances << instance;
     }
   }
