@@ -320,7 +320,7 @@ void KMFolder::setNoChildren( bool aNoChildren )
 
 KMMessage* KMFolder::getMsg( int idx )
 {
-  return mStorage->getMsg( idx );
+  return mStorage ? mStorage->getMsg( idx ) : 0;
 }
 
 KMMsgInfo* KMFolder::unGetMsg( int idx )
