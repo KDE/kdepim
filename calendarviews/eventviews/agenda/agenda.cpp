@@ -88,7 +88,7 @@ int MarcusBains::Private::todayColumn() const
 
   int col = 0;
   const KCalCore::DateList dateList = mAgenda->dateList();
-  Q_FOREACH( const QDate &date, dateList ) {
+  foreach ( const QDate &date, dateList ) {
     if ( date == currentDate ) {
       return QApplication::isRightToLeft() ? mAgenda->columns() - 1 - col : col;
     }
@@ -1904,7 +1904,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
 QList<AgendaItem::QPtr> Agenda::agendaItems( const Akonadi::Item &aitem ) const
 {
   QList<AgendaItem::QPtr> agendaItems;
-  Q_FOREACH ( AgendaItem::QPtr const agendaItem, d->mItems ) {
+  foreach ( const AgendaItem::QPtr &agendaItem, d->mItems ) {
     if ( agendaItem &&
          agendaItem->incidence().id() == aitem.id() &&
          agendaItem->incidence().parentCollection().id() == aitem.parentCollection().id() ) {
@@ -1921,7 +1921,7 @@ void Agenda::removeIncidence( const Akonadi::Item &akonadiItem )
   // the current position in the iterator-loop and mess the logic up.
   const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( akonadiItem );
 
-  foreach ( AgendaItem::QPtr  const agendaItem, agendaItemsToRemove ) {
+  foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
     removeAgendaItem( agendaItem );
   }
 }
@@ -2023,16 +2023,15 @@ void Agenda::resizeEvent ( QResizeEvent *ev )
 void Agenda::resizeAllContents()
 {
   double subCellWidth;
-  AgendaItem::QPtr item;
   if ( d->mAllDayMode ) {
-    foreach ( item, d->mItems ) {
+    foreach ( const AgendaItem::QPtr &item, d->mItems ) {
       if ( item ) {
         subCellWidth = calcSubCellWidth( item );
         placeAgendaItem( item, subCellWidth );
       }
     }
   } else {
-    foreach ( item, d->mItems ) {
+    foreach ( const AgendaItem::QPtr &item, d->mItems ) {
       if ( item ) {
         subCellWidth = calcSubCellWidth( item );
         placeAgendaItem( item, subCellWidth );
