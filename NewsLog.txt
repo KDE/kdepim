@@ -1,4 +1,13 @@
 
+Wednesday 05 October 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4789: Move a folder to local folders(crash KMFolder::getMsg at kmfolder.cpp:323
+
+
+
 Friday 09 September 2011
 
 Problems addressed
