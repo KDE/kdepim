@@ -37,7 +37,7 @@
 #include <QPointer>
 #include <QScrollArea>
 
-static const KCatalogLoader loader("timezones4");
+static const KCatalogLoader loader( "timezones4" );
 
 using namespace EventViews;
 
@@ -185,9 +185,11 @@ void TimeLabels::paintEvent( QPaintEvent * )
   // We won't paint parts that aren't visible
   const int cy = -y();// y() returns a negative value.
 
-  const int beginning = !mSpec.isValid() ? 0 :
-                                           ( mSpec.timeZone().currentOffset() -
-                                             mTimeLabelsZone->preferences()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
+  const int beginning =
+    !mSpec.isValid() ?
+    0 :
+    ( mSpec.timeZone().currentOffset() -
+      mTimeLabelsZone->preferences()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
 
   // bug:  the parameters cx and cw are the areas that need to be
   //       redrawn, not the area of the widget.  unfortunately, this
@@ -312,7 +314,8 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
   if ( activatedAction == editTimeZones ) {
-    QPointer<TimeScaleConfigDialog> dialog = new TimeScaleConfigDialog( mTimeLabelsZone->preferences(), this );
+    QPointer<TimeScaleConfigDialog> dialog =
+      new TimeScaleConfigDialog( mTimeLabelsZone->preferences(), this );
     if ( dialog->exec() == QDialog::Accepted ) {
       mTimeLabelsZone->reset();
     }

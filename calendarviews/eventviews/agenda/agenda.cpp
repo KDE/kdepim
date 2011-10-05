@@ -310,7 +310,8 @@ class Agenda::Private
 */
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
                 int columns, int rows, int rowSize, bool isInteractive )
-  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
+  : QWidget( scrollArea ),
+    d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
 {
   setMouseTracking( true );
 
@@ -1170,8 +1171,8 @@ void Agenda::endItemAction()
     bool modify = false;
     if ( incidence->recurs() ) {
       atomicOperationId = d->mChanger->startAtomicOperation();
-      const int res = d->mAgendaView->showMoveRecurDialog( CalendarSupport::incidence( d->mActionItem->incidence() ),
-                                                           d->mActionItem->itemDate() );
+      const int res = d->mAgendaView->showMoveRecurDialog(
+        CalendarSupport::incidence( d->mActionItem->incidence() ), d->mActionItem->itemDate() );
       switch ( res ) {
       case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
@@ -1196,8 +1197,11 @@ void Agenda::endItemAction()
           d->mAgendaView->enableAgendaUpdate( false );
 
           d->mChanger->changeIncidence(
-            oldIncSaved, inc,
-            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this, atomicOperationId );
+            oldIncSaved,
+            inc,
+            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY,
+            this,
+            atomicOperationId );
 
           Akonadi::Item item;
           item.setPayload( newInc );
@@ -1241,9 +1245,11 @@ void Agenda::endItemAction()
           addIncidence = true;
 
           d->mAgendaView->enableAgendaUpdate( true );
-          d->mChanger->changeIncidence( oldIncSaved, inc,
-                                        CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE,
-                                        this );
+          d->mChanger->changeIncidence(
+            oldIncSaved,
+            inc,
+            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE,
+            this );
         } else {
           KMessageBox::sorry(
             this,
@@ -1274,8 +1280,9 @@ void Agenda::endItemAction()
       QList<AgendaItem::QPtr> oldconflictItems = placeItem->conflictItems();
       QList<AgendaItem::QPtr>::iterator it;
       for ( it = oldconflictItems.begin(); it != oldconflictItems.end(); ++it ) {
-        if ( *it )
+        if ( *it ) {
           placeSubCells( *it );
+        }
       }
       while ( placeItem ) {
         placeSubCells( placeItem );
@@ -1289,7 +1296,8 @@ void Agenda::endItemAction()
       // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
-      d->mAgendaView->updateEventDates( modif, atomicOperationId, addIncidence, inc.parentCollection().id() );
+      d->mAgendaView->updateEventDates( modif, atomicOperationId, addIncidence,
+                                        inc.parentCollection().id() );
 
       if ( addIncidence ) {
         // delete the one we dragged, there's a new one being added async, due to dissociation.
@@ -1298,7 +1306,8 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      d->mAgendaView->updateEventDates( placeItem, atomicOperationId, addIncidence, inc.parentCollection().id() );
+      d->mAgendaView->updateEventDates( placeItem, atomicOperationId, addIncidence,
+                                        inc.parentCollection().id() );
     }
   }
 
@@ -1314,23 +1323,23 @@ void Agenda::setActionCursor( int actionType, bool acting )
 {
 #ifndef QT_NO_CURSOR
   switch ( actionType ) {
-    case MOVE:
-      if ( acting ) {
-        setCursor( Qt::SizeAllCursor );
-      } else {
-        setCursor( Qt::ArrowCursor );
-      }
-      break;
-    case RESIZETOP:
-    case RESIZEBOTTOM:
-      setCursor( Qt::SizeVerCursor );
-      break;
-    case RESIZELEFT:
-    case RESIZERIGHT:
-      setCursor( Qt::SizeHorCursor );
-      break;
-    default:
+  case MOVE:
+    if ( acting ) {
+      setCursor( Qt::SizeAllCursor );
+    } else {
       setCursor( Qt::ArrowCursor );
+    }
+    break;
+  case RESIZETOP:
+  case RESIZEBOTTOM:
+    setCursor( Qt::SizeVerCursor );
+    break;
+  case RESIZELEFT:
+  case RESIZERIGHT:
+    setCursor( Qt::SizeHorCursor );
+    break;
+  default:
+    setCursor( Qt::ArrowCursor );
   }
 #endif
 }
@@ -1451,8 +1460,9 @@ void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
 
   QList<CellItem*> cells;
   foreach ( CellItem *item, d->mItems ) {
-    if( item )
+    if ( item ) {
       cells.append( item );
+    }
   }
 
   QList<CellItem*> items = CellItem::placeItem( cells, placeItem );
@@ -1462,7 +1472,7 @@ void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
   QList<CellItem*>::iterator it;
   for ( it = items.begin(); it != items.end(); ++it ) {
     if ( *it ) {
-      AgendaItem::QPtr item = static_cast<AgendaItem* >( *it );
+      AgendaItem::QPtr item = static_cast<AgendaItem *>( *it );
       placeAgendaItem( item, newSubCellWidth );
       item->addConflictItem( placeItem );
       placeItem->addConflictItem( item );
@@ -2156,7 +2166,7 @@ void Agenda::deselectItem()
 
 void Agenda::selectItem( AgendaItem::QPtr item )
 {
-  if ( (AgendaItem::QPtr )d->mSelectedItem == item ) {
+  if ( ( AgendaItem::QPtr )d->mSelectedItem == item ) {
     return;
   }
   deselectItem();

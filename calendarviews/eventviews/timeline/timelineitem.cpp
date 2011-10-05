@@ -3,7 +3,6 @@
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
-
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -35,22 +34,25 @@ using namespace KCalUtils;
 using namespace EventViews;
 
 TimelineItem::TimelineItem( CalendarSupport::Calendar *calendar, uint index,
-                            QStandardItemModel* model, QObject *parent )
+                            QStandardItemModel *model, QObject *parent )
   : QObject( parent ), mCalendar( calendar ), mModel( model ), mIndex( index )
 {
  mModel->removeRow( mIndex );
- QStandardItem * dummyItem = new QStandardItem;
+ QStandardItem *dummyItem = new QStandardItem;
  dummyItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
 
  mModel->insertRow( mIndex, dummyItem );
 }
 
 void TimelineItem::insertIncidence( const Akonadi::Item &aitem,
-                                    const KDateTime & _start, const KDateTime & _end )
+                                    const KDateTime &_start, const KDateTime &_end )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  KDateTime start = incidence->dtStart().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() );
-  KDateTime end = incidence->dateTime( Incidence::RoleEnd ).toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() );
+  KDateTime start =
+    incidence->dtStart().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() );
+  KDateTime end =
+    incidence->dateTime( Incidence::RoleEnd ).toTimeSpec(
+      CalendarSupport::KCalPrefs::instance()->timeSpec() );
 
   if ( _start.isValid() ) {
     start = _start;
@@ -65,8 +67,8 @@ void TimelineItem::insertIncidence( const Akonadi::Item &aitem,
   typedef QList<QStandardItem*> ItemList;
   ItemList list = mItemMap.value( aitem.id() );
   for ( ItemList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
-    if ( KDateTime( static_cast<TimelineSubItem* >(*it)->startTime() ) == start &&
-         KDateTime( static_cast<TimelineSubItem* >(*it)->endTime() ) == end ) {
+    if ( KDateTime( static_cast<TimelineSubItem *>(*it)->startTime() ) == start &&
+         KDateTime( static_cast<TimelineSubItem *>(*it)->endTime() ) == end ) {
       return;
     }
   }
@@ -98,23 +100,20 @@ void TimelineItem::moveItems( const Akonadi::Item &incidence, int delta, int dur
   typedef QList<QStandardItem*> ItemList;
   ItemList list = mItemMap.value( incidence.id() );
   for ( ItemList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
-    QDateTime start = static_cast<TimelineSubItem* >(*it)->originalStart().dateTime();
+    QDateTime start = static_cast<TimelineSubItem *>(*it)->originalStart().dateTime();
     start = start.addSecs( delta );
-    static_cast<TimelineSubItem* >(*it)->setStartTime( start );
-    static_cast<TimelineSubItem* >(*it)->setOriginalStart( KDateTime(start) );
-    static_cast<TimelineSubItem* >(*it)->setEndTime( start.addSecs( duration ) );
+    static_cast<TimelineSubItem *>(*it)->setStartTime( start );
+    static_cast<TimelineSubItem *>(*it)->setOriginalStart( KDateTime( start ) );
+    static_cast<TimelineSubItem *>(*it)->setEndTime( start.addSecs( duration ) );
   }
 }
 
-void TimelineItem::setColor(const QColor& color)
+void TimelineItem::setColor( const QColor &color )
 {
   mColor = color;
 }
 
-
-TimelineSubItem::TimelineSubItem( const Akonadi::Item &incidence,
-                                  TimelineItem *parent
-                                )
+TimelineSubItem::TimelineSubItem( const Akonadi::Item &incidence, TimelineItem *parent )
   : QStandardItem(), mIncidence( incidence ),
     mParent( parent ), mToolTipNeedsUpdate( true )
 {
@@ -128,7 +127,7 @@ TimelineSubItem::~TimelineSubItem()
 {
 }
 
-void TimelineSubItem::setStartTime(const QDateTime& dt)
+void TimelineSubItem::setStartTime( const QDateTime &dt )
 {
   setData( dt, KDGantt::StartTimeRole );
 }
@@ -138,7 +137,7 @@ QDateTime TimelineSubItem::startTime() const
   return data( KDGantt::StartTimeRole ).toDateTime();
 }
 
-void TimelineSubItem::setEndTime(const QDateTime& dt)
+void TimelineSubItem::setEndTime( const QDateTime &dt )
 {
   setData( dt, KDGantt::EndTimeRole );
 }
@@ -150,13 +149,14 @@ QDateTime TimelineSubItem::endTime() const
 
 void TimelineSubItem::updateToolTip()
 {
-  if ( !mToolTipNeedsUpdate )
+  if ( !mToolTipNeedsUpdate ) {
     return;
+  }
 
   mToolTipNeedsUpdate = false;
 
   setData( IncidenceFormatter::toolTipStr(
-                  CalendarSupport::displayName( mIncidence.parentCollection() ),
-                  CalendarSupport::incidence( mIncidence ), originalStart().date(),
-                  true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
+             CalendarSupport::displayName( mIncidence.parentCollection() ),
+             CalendarSupport::incidence( mIncidence ), originalStart().date(),
+             true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
 }

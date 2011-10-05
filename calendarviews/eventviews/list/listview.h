@@ -42,7 +42,6 @@ namespace CalendarSupport {
 
 typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
 
-
 /**
   This class provides a multi-column list view of events.  It can
   display events from one particular day or several days, it doesn't
@@ -63,7 +62,7 @@ class EVENTVIEWS_EXPORT ListView : public EventView
   Q_OBJECT
   public:
     explicit ListView( CalendarSupport::Calendar *calendar,
-                       QWidget *parent = 0,  bool nonInteractive = false );
+                       QWidget *parent = 0, bool nonInteractive = false );
     ~ListView();
 
     virtual int currentDateCount() const;
@@ -83,7 +82,10 @@ class EVENTVIEWS_EXPORT ListView : public EventView
 
   public slots:
     virtual void updateView();
-    virtual void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
+
+    virtual void showDates( const QDate &start, const QDate &end,
+                            const QDate &preferredMonth = QDate() );
+
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();

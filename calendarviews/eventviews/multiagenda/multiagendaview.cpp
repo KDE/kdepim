@@ -714,7 +714,7 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
   const QStringList titleList = d->mCustomColumnTitles.toList();
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
-  foreach( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
+  foreach ( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
     const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( idx );
     KConfigGroup group = configGroup.config()->group( groupName );
     ++idx;

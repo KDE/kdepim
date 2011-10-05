@@ -79,7 +79,6 @@ class ListView::Private
     ListView *const q;
 };
 
-
 enum {
   Summary_Column = 0,
   Reminder_Column,
@@ -100,10 +99,11 @@ class ListView::Private::ListItemVisitor : public KCalCore::Visitor
     ListItemVisitor( ListViewItem *item ) : mItem( item ) {}
     ~ListItemVisitor() {}
 
-    bool visit( Event::Ptr  );
-    bool visit( Todo::Ptr  );
-    bool visit( Journal::Ptr  );
-    bool visit( FreeBusy::Ptr  ) { // to inhibit hidden virtual compile warning
+    bool visit( Event::Ptr );
+    bool visit( Todo::Ptr );
+    bool visit( Journal::Ptr );
+    bool visit( FreeBusy::Ptr )
+    { // to inhibit hidden virtual compile warning
       return true;
     };
   private:
@@ -142,16 +142,20 @@ bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
   mItem->setIcon( Summary_Column, eventPxmp );
 
   mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                    e->dtStart(), e->allDay(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+                    e->dtStart(), e->allDay(), true,
+                    CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   mItem->setSortKey( StartDateTime_Column, e->dtStart().toTimeSpec(
-                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).toString( KDateTime::ISODate ) );
+                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).
+                         toString( KDateTime::ISODate ) );
 
   mItem->setText( EndDateTime_Column, IncidenceFormatter::dateTimeToString(
-                    e->dtEnd(), e->allDay(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+                    e->dtEnd(), e->allDay(), true,
+                    CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   mItem->setSortKey( EndDateTime_Column, e->dtEnd().toTimeSpec(
-                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).toString( KDateTime::ISODate ) );
+                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).
+                         toString( KDateTime::ISODate ) );
 
   mItem->setText( Categories_Column, e->categoriesStr() );
 
@@ -180,19 +184,23 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
 
   if ( t->hasStartDate() ) {
     mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                      t->dtStart(), t->allDay(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+                      t->dtStart(), t->allDay(), true,
+                      CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
     mItem->setSortKey( StartDateTime_Column, t->dtStart().toTimeSpec(
-                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).toString( KDateTime::ISODate ) );
+                         CalendarSupport::KCalPrefs::instance()->timeSpec() ).
+                           toString( KDateTime::ISODate ) );
   } else {
     mItem->setText( StartDateTime_Column, "---" );
   }
 
   if ( t->hasDueDate() ) {
     mItem->setText( EndDateTime_Column, IncidenceFormatter::dateTimeToString(
-                      t->dtDue(), t->allDay(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+                      t->dtDue(), t->allDay(), true,
+                      CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
     mItem->setSortKey( EndDateTime_Column, t->dtDue().toTimeSpec(
-                         CalendarSupport::KCalPrefs::instance()->timeSpec() ).toString( KDateTime::ISODate ) );
+                         CalendarSupport::KCalPrefs::instance()->timeSpec() ).
+                           toString( KDateTime::ISODate ) );
   } else {
     mItem->setText( EndDateTime_Column, "---" );
   }
@@ -211,7 +219,8 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
     mItem->setText( Summary_Column, j->summary() );
   }
   mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                  j->dtStart(), j->allDay(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+                  j->dtStart(), j->allDay(), true,
+                  CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   mItem->setSortKey( StartDateTime_Column, j->dtStart().toString( KDateTime::ISODate ) );
 
@@ -376,8 +385,10 @@ void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &d
 
   // set tooltips
   for ( int col = 0; col < Dummy_EOF_Column; ++col ) {
-    item->setToolTip( col, IncidenceFormatter::toolTipStr( CalendarSupport::displayName( aitem.parentCollection() ),
-                                                           CalendarSupport::incidence( aitem ) ) );
+    item->setToolTip( col,
+                      IncidenceFormatter::toolTipStr(
+                        CalendarSupport::displayName( aitem.parentCollection() ),
+                        CalendarSupport::incidence( aitem ) ) );
   }
 
   ListItemVisitor v( item );
@@ -388,18 +399,17 @@ void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &d
   item->setData( 0, Qt::UserRole, QVariant( aitem.id() ) );
 }
 
-void ListView::showIncidences( const Akonadi::Item::List &incidenceList,
-                               const QDate &date )
+void ListView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
   clear();
 
- d->addIncidences( incidenceList, date );
+  d->addIncidences( incidenceList, date );
 
   // After new creation of list view no events are selected.
   emit incidenceSelected( Akonadi::Item(), date );
 }
 
-void ListView::changeIncidenceDisplay( const Akonadi::Item & aitem, int action )
+void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   ListViewItem *item;

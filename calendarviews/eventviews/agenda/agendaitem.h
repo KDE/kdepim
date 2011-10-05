@@ -94,15 +94,38 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
                 QWidget *parent );
     ~AgendaItem();
 
-    int cellXLeft() const { return mCellXLeft; }
-    int cellXRight() const { return mCellXRight; }
-    int cellYTop() const { return mCellYTop; }
-    int cellYBottom() const { return mCellYBottom; }
+    int cellXLeft() const
+    {
+      return mCellXLeft;
+    }
+
+    int cellXRight() const
+    {
+      return mCellXRight;
+    }
+
+    int cellYTop() const
+    {
+      return mCellYTop;
+    }
+
+    int cellYBottom() const
+    {
+      return mCellYBottom;
+    }
+
     int cellHeight() const;
     int cellWidth() const;
 
-    int itemPos() const { return mItemPos; }
-    int itemCount() const { return mItemCount; }
+    int itemPos() const
+    {
+      return mItemPos;
+    }
+
+    int itemCount() const
+    {
+      return mItemCount;
+    }
 
     void setCellXY( int X, int YTop, int YBottom );
     void setCellY( int YTop, int YBottom );
@@ -137,46 +160,77 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     void expandRight( int dx );
 
     bool isMultiItem() const;
+
     AgendaItem::QPtr prevMoveItem() const
-    { return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0; }
+    {
+      return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0;
+    }
 
     AgendaItem::QPtr nextMoveItem() const
-    { return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0; }
+    {
+      return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0;
+    }
 
-    MultiItemInfo *moveInfo() const { return mStartMoveInfo; }
+    MultiItemInfo *moveInfo() const
+    {
+      return mStartMoveInfo;
+    }
 
     void setMultiItem( AgendaItem::QPtr first,AgendaItem::QPtr prev,
                        AgendaItem::QPtr next, AgendaItem::QPtr last );
 
-    AgendaItem::QPtr prependMoveItem( AgendaItem::QPtr  );
+    AgendaItem::QPtr prependMoveItem( AgendaItem::QPtr );
 
-    AgendaItem::QPtr appendMoveItem( AgendaItem::QPtr  );
+    AgendaItem::QPtr appendMoveItem( AgendaItem::QPtr );
 
-    AgendaItem::QPtr removeMoveItem( AgendaItem::QPtr  );
+    AgendaItem::QPtr removeMoveItem( AgendaItem::QPtr );
 
     AgendaItem::QPtr firstMultiItem() const
-    { return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0; }
+    {
+      return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0;
+    }
 
     AgendaItem::QPtr prevMultiItem() const
-    { return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0; }
+    {
+      return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0;
+    }
 
     AgendaItem::QPtr nextMultiItem() const
-    { return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0; }
+    {
+      return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0;
+    }
 
     AgendaItem::QPtr lastMultiItem() const
-    { return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0; }
+    {
+      return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0;
+    }
 
     bool dissociateFromMultiItem();
 
     void setIncidence( const Akonadi::Item &incidence );
-    const Akonadi::Item & incidence() const { return mIncidence; }
-    QDate itemDate() { return mDate; }
+
+    const Akonadi::Item & incidence() const
+    {
+      return mIncidence;
+    }
+
+    QDate itemDate()
+    {
+      return mDate;
+    }
 
     /** Update the date of this item's occurrence (not in the event) */
     void setItemDate( const QDate &qd );
 
-    void setText ( const QString &text ) { mLabelText = text; }
-    QString text () { return mLabelText; }
+    void setText ( const QString &text )
+    {
+      mLabelText = text;
+    }
+
+    QString text ()
+    {
+      return mLabelText;
+    }
 
     QList<AgendaItem::QPtr> &conflictItems();
     void setConflictItems( QList<AgendaItem::QPtr> );
@@ -187,12 +241,19 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     /** Tells whether this item overlaps item @p o */
     bool overlaps( CellItem *o ) const;
 
-    void setResourceColor( const QColor &color ) { mResourceColor = color; }
-    QColor resourceColor() { return mResourceColor; }
+    void setResourceColor( const QColor &color )
+    {
+      mResourceColor = color;
+    }
+
+    QColor resourceColor()
+    {
+      return mResourceColor;
+    }
 
   signals:
-    void removeAgendaItem( AgendaItem::QPtr  );
-    void showAgendaItem( AgendaItem::QPtr  );
+    void removeAgendaItem( AgendaItem::QPtr );
+    void showAgendaItem( AgendaItem::QPtr );
 
   public slots:
     void updateIcons();

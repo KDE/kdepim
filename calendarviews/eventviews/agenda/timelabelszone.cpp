@@ -104,7 +104,6 @@ void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
   TimeLabels *timeLabels = static_cast<TimeLabels*>( area->widget() );
   timeLabels->setAgenda( mAgenda );
 
-
   // timelabel's scroll is just a slave, this shouldn't be here
   // if ( mParent ) {
   //  connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),

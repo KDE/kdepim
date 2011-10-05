@@ -35,13 +35,14 @@ using namespace EventViews;
 QSet<EventViews::EventView::ItemIcon> iconArrayToSet( const QByteArray &array )
 {
   QSet<EventViews::EventView::ItemIcon> set;
-  for( int i=0; i<array.count(); ++i ) {
+  for ( int i=0; i<array.count(); ++i ) {
     if ( i >= EventViews::EventView::IconCount ) {
       kWarning() << "Icon array is too big: " << array.count();
       return set;
     }
-    if ( array[i] != 0 )
+    if ( array[i] != 0 ) {
       set.insert( static_cast<EventViews::EventView::ItemIcon>( i ) );
+    }
   }
   return set;
 }
@@ -49,7 +50,7 @@ QSet<EventViews::EventView::ItemIcon> iconArrayToSet( const QByteArray &array )
 QByteArray iconSetToArray( const QSet<EventViews::EventView::ItemIcon> &set )
 {
   QByteArray array;
-  for( int i=0; i<EventViews::EventView::IconCount; ++i ) {
+  for ( int i=0; i<EventViews::EventView::IconCount; ++i ) {
     const bool contains = set.contains( static_cast<EventViews::EventView::ItemIcon>( i ) );
     array.append( contains ? 1 : 0 ) ;
   }
@@ -198,8 +199,10 @@ void BaseConfig::usrReadConfig()
 
   KConfigGroup monthViewConfig( config(), "Month View" );
   KConfigGroup agendaViewConfig( config(), "Agenda View" );
-  const QByteArray agendaIconArray = agendaViewConfig.readEntry<QByteArray>( "agendaViewItemIcons", agendaViewIconDefaults() );
-  const QByteArray monthIconArray = monthViewConfig.readEntry<QByteArray>( "monthViewItemIcons", monthViewIconDefaults() );
+  const QByteArray agendaIconArray =
+    agendaViewConfig.readEntry<QByteArray>( "agendaViewItemIcons", agendaViewIconDefaults() );
+  const QByteArray monthIconArray =
+    monthViewConfig.readEntry<QByteArray>( "monthViewItemIcons", monthViewIconDefaults() );
 
   mAgendaViewIcons = iconArrayToSet( agendaIconArray );
   mMonthViewIcons = iconArrayToSet( monthIconArray );

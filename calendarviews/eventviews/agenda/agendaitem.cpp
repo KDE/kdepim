@@ -137,7 +137,9 @@ void AgendaItem::updateIcons()
       mIconGroupTent = false;
       mIconOrganizer = true;
     } else {
-      KCalCore::Attendee::Ptr me = incidence->attendeeByMails( mEventView->kcalPreferences()->allEmails() );
+      KCalCore::Attendee::Ptr me =
+        incidence->attendeeByMails( mEventView->kcalPreferences()->allEmails() );
+
       if ( me ) {
         if ( me->status() == KCalCore::Attendee::NeedsAction && me->RSVP() ) {
           mIconReply = true;
@@ -770,26 +772,33 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
     conditionalPaint( p, !mSpecialEvent, x, y, ft, SmallIcon( iconName ) );
   }
 
-  if ( icons.contains( EventView::RecurringIcon ) )
+  if ( icons.contains( EventView::RecurringIcon ) ) {
     conditionalPaint( p, mIconRecur && !mSpecialEvent, x, y, ft, *recurPxmp );
+  }
 
-  if ( icons.contains( EventView::ReminderIcon ) )
+  if ( icons.contains( EventView::ReminderIcon ) ) {
     conditionalPaint( p, mIconAlarm && !mSpecialEvent, x, y, ft, *alarmPxmp );
+  }
 
-  if ( icons.contains( EventView::ReadOnlyIcon ) )
+  if ( icons.contains( EventView::ReadOnlyIcon ) ) {
     conditionalPaint( p, mIconReadonly && !mSpecialEvent, x, y, ft, *readonlyPxmp );
+  }
 
-  if ( icons.contains( EventView::ReplyIcon ) )
+  if ( icons.contains( EventView::ReplyIcon ) ) {
     conditionalPaint( p, mIconReply, x, y, ft, *replyPxmp );
+  }
 
-  if ( icons.contains( EventView::AttendingIcon ) )
+  if ( icons.contains( EventView::AttendingIcon ) ) {
     conditionalPaint( p, mIconGroup, x, y, ft, *groupPxmp );
+  }
 
-  if ( icons.contains( EventView::TentativeIcon ) )
+  if ( icons.contains( EventView::TentativeIcon ) ) {
     conditionalPaint( p, mIconGroupTent, x, y, ft, *groupPxmpTent );
+  }
 
-  if ( icons.contains( EventView::OrganizerIcon ) )
+  if ( icons.contains( EventView::OrganizerIcon ) ) {
     conditionalPaint( p, mIconOrganizer, x, y, ft, *organizerPxmp );
+  }
 }
 
 void AgendaItem::paintEvent( QPaintEvent *ev )
@@ -835,8 +844,10 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
        !mEventView->preferences()->todosUseCategoryColors() ) {
     Todo::Ptr todo = CalendarSupport::todo( mIncidence );
     Q_ASSERT( todo );
-    const QDate dueDate = todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-    const QDate today = KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    const QDate dueDate =
+      todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    const QDate today =
+      KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
     if ( todo->isOverdue() && today >= mDate ) {
       bgColor = mEventView->preferences()->todoOverdueColor();
     } else if ( dueDate == today && dueDate == mDate ) {
@@ -924,13 +935,17 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString longH;
   if ( !isMultiItem() ) {
     // TODO: When we depend on kdepimlibs 4.7, replace with: shortH
-    // KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).toTimeSpec( mEventView->preferences()->timeSpec() ).time() )
+    // KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
+    //   toTimeSpec( mEventView->preferences()->timeSpec() ).time() )
     if ( incidence->type() == Incidence::TypeEvent ) {
-      shortH = KGlobal::locale()->formatTime( incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+      shortH = KGlobal::locale()->formatTime(
+        incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     } else if ( incidence->type() == Incidence::TypeTodo ) {
       Todo::Ptr todo = CalendarSupport::todo( mIncidence );
-      if ( todo )
-        shortH = KGlobal::locale()->formatTime( todo->dtDue().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+      if ( todo ) {
+        shortH = KGlobal::locale()->formatTime(
+          todo->dtDue().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+      }
     }
     if ( CalendarSupport::hasEvent( mIncidence ) ) {
       longH = i18n( "%1 - %2",

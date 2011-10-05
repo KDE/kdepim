@@ -62,7 +62,8 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     virtual QDateTime selectionEnd() const;
 
-    virtual void setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate() );
+    virtual void setDateRange( const KDateTime &start, const KDateTime &end,
+                               const QDate &preferredMonth = QDate() );
 
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
@@ -73,7 +74,10 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     bool usesFullWindow();
 
-    bool supportsDateRangeSelection() { return false; }
+    bool supportsDateRangeSelection()
+    {
+      return false;
+    }
 
     bool isBusyDay( const QDate &day ) const;
 
@@ -113,9 +117,8 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     ///* reimp */void incidencesAdded( const Akonadi::Item::List &incidences );
     ///* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
     ///* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
-    /* reimp */QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
-                                                           const KDateTime &end,
-                                                           const QDate &preferredMonth = QDate() ) const;
+    /* reimp */QPair<KDateTime,KDateTime> actualDateRange(
+      const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate() ) const;
 
     // Compute and update the whole view
     void reloadIncidences();

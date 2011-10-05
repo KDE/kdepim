@@ -519,7 +519,8 @@ void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const 
 QString IncidenceMonthItem::text( bool end ) const
 {
   QString ret = mIncidence->summary();
-  if ( !allDay() && monthScene()->monthView()->preferences()->showTimeInMonthView() ) { // Prepend the time str to the text
+  if ( !allDay() && monthScene()->monthView()->preferences()->showTimeInMonthView() ) {
+    // Prepend the time str to the text
     QString timeStr;
     if ( mIsTodo ) {
       KCalCore::Todo::Ptr todo = mIncidence.staticCast<Todo>();
@@ -566,7 +567,8 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
   bool specialEvent = false;
   Akonadi::Item item = akonadiItem();
 
-  const QSet<EventView::ItemIcon> icons = monthScene()->monthView()->preferences()->monthViewIcons();
+  const QSet<EventView::ItemIcon> icons =
+    monthScene()->monthView()->preferences()->monthViewIcons();
 
   if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
     const QString iconName = EventView::iconForItem( item );
@@ -595,13 +597,17 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
     // ret << monthScene()->eventPixmap();
 
-  } else if ( ( mIsTodo || mIsJournal ) && icons.contains( mIsTodo ? EventView::TaskIcon : EventView::JournalIcon ) ) {
+  } else if ( ( mIsTodo || mIsJournal ) && icons.contains( mIsTodo ?
+                                                             EventView::TaskIcon :
+                                                             EventView::JournalIcon ) ) {
     KDateTime occurrenceDateTime = mIncidence->dateTime( Incidence::RoleRecurrenceStart );
     occurrenceDateTime.setDate( realStartDate() );
     ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( occurrenceDateTime ) ) );
   }
 
-  if ( icons.contains( EventView::ReadOnlyIcon ) && !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {
+  if ( icons.contains( EventView::ReadOnlyIcon ) &&
+       !monthScene()->mMonthView->calendar()->hasChangeRights( item ) &&
+       !specialEvent ) {
     ret << monthScene()->readonlyPixmap();
   }
 
@@ -641,8 +647,10 @@ QColor IncidenceMonthItem::bgColor() const
   if ( mIsTodo && !prefs->todosUseCategoryColors() ) {
     Todo::Ptr todo = CalendarSupport::todo( akonadiItem() );
     Q_ASSERT( todo );
-    const QDate dueDate = todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-    const QDate today = KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    const QDate dueDate =
+      todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    const QDate today =
+      KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
     if ( todo->isOverdue() && today >= startDate() ) {
       bgColor = prefs->todoOverdueColor();
     } else if ( dueDate == today && dueDate == startDate() ) {
@@ -680,7 +688,8 @@ QColor IncidenceMonthItem::frameColor() const
   PrefsPtr prefs = monthScene()->monthView()->preferences();
   if ( prefs->monthViewColors() == PrefsBase::MonthItemResourceOnly ||
        prefs->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ||
-       ( mIncidence->categories().isEmpty() && prefs->monthViewColors() == PrefsBase::MonthItemResourceInsideCategoryOutside ) ) {
+       ( mIncidence->categories().isEmpty() && prefs->monthViewColors() ==
+         PrefsBase::MonthItemResourceInsideCategoryOutside ) ) {
     Q_ASSERT( mIncidence );
     const QString id = QString::number( akonadiItem().storageCollectionId() );
     if ( !id.isEmpty() ) {
@@ -696,8 +705,7 @@ QColor IncidenceMonthItem::frameColor() const
 Akonadi::Item IncidenceMonthItem::akonadiItem() const
 {
   if ( mIncidence ) {
-    Akonadi::Item item = monthScene()->mMonthView->calendar()->itemForIncidenceUid( mIncidence->uid() );
-    return item;
+    return monthScene()->mMonthView->calendar()->itemForIncidenceUid( mIncidence->uid() );
   } else {
     return Akonadi::Item();
   }
