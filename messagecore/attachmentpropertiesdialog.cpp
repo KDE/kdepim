@@ -94,7 +94,7 @@ void AttachmentPropertiesDialog::Private::polishUi()
     ui.encrypt->setEnabled( false );
     ui.sign->setEnabled( false );
 
-    q->setButtons( Ok | Help );
+    q->setButtons( Close | Help );
   } else {
     populateEncodings();
     populateMimeTypes();
