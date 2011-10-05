@@ -1143,7 +1143,9 @@ void KMComposeWin::setupActions( void )
 
   action = new KAction(KIcon("x-office-address-book"), i18n("&Address Book"), this);
   actionCollection()->addAction("addressbook", action );
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotAddrBook()));
+  if (KStandardDirs::findExe("kaddressbook").isEmpty())
+     action->setEnabled(false);
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotAddrBook()));
   action = new KAction(KIcon("mail-message-new"), i18n("&New Composer"), this);
   actionCollection()->addAction("new_composer", action );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotNewComposer()));
