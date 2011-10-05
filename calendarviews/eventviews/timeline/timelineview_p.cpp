@@ -24,9 +24,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "timelineview.h"
-#include "timelineitem.h"
 #include "timelineview_p.h"
+#include "timelineitem.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 

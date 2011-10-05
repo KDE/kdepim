@@ -25,7 +25,6 @@
 */
 
 #include "eventview_p.h"
-
 #include "prefs.h"
 
 #include <calendarsupport/collectionselection.h>

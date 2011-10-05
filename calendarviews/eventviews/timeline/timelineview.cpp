@@ -25,8 +25,8 @@
 */
 
 #include "timelineview.h"
-#include "timelineitem.h"
 #include "timelineview_p.h"
+#include "timelineitem.h"
 #include "helper.h"
 
 #include <kdgantt2/kdganttgraphicsitem.h>

@@ -25,7 +25,7 @@
 #ifndef EVENTVIEWS_TIMELINEVIEW_P_H
 #define EVENTVIEWS_TIMELINEVIEW_P_H
 
-#include "eventview.h"
+#include "timelineview.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
@@ -50,7 +50,7 @@ class RowController;
 
 class TimelineView::Private : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     explicit Private( TimelineView *parent = 0 );
     ~Private();
