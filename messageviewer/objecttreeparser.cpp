@@ -1541,11 +1541,11 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, Pro
   }
 
   const Kleo::CryptoBackend::Protocol *protocol = 0;
-  if ( protocolContentType == "application/pkcs7-signature" ||
-        protocolContentType == "application/x-pkcs7-signature" )
+  if ( protocolContentType == QLatin1String( "application/pkcs7-signature" ) ||
+        protocolContentType == QLatin1String( "application/x-pkcs7-signature" ) )
     protocol = Kleo::CryptoBackendFactory::instance()->smime();
-  else if ( protocolContentType == "application/pgp-signature" ||
-            protocolContentType == "application/x-pgp-signature" )
+  else if ( protocolContentType == QLatin1String( "application/pgp-signature" ) ||
+            protocolContentType == QLatin1String( "application/x-pgp-signature" ) )
     protocol = Kleo::CryptoBackendFactory::instance()->openpgp();
 
   if ( !protocol ) {
@@ -1760,7 +1760,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 
   const Kleo::CryptoBackend::Protocol* oldUseThisCryptPlug = cryptoProtocol();
   if (    node->parent()
-          && node->parent()->contentType()->mimeType() == "multipart/encrypted" ) {
+          && node->parent()->contentType()->mimeType() == "multipart/encrypted"  ) {
     mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
     if ( !mSource->decryptMessage() ) {
       writeDeferredDecryptionBlock();
@@ -1842,7 +1842,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 
   const QString smimeType = node->contentType()->parameter("smime-type").toLower();
 
-  if ( smimeType == "certs-only" ) {
+  if ( smimeType == QLatin1String( "certs-only" ) ) {
     result.setNeverDisplayInline( true );
     if ( !htmlWriter() )
       return false;
@@ -1861,8 +1861,8 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 
   CryptoProtocolSaver cpws( this, smimeCrypto );
 
-  bool isSigned      = smimeType == "signed-data";
-  bool isEncrypted   = smimeType == "enveloped-data";
+  bool isSigned      = ( smimeType == QLatin1String( "signed-data" ) );
+  bool isEncrypted   = ( smimeType == QLatin1String( "enveloped-data" ) );
 
   // Analyze "signTestNode" node to find/verify a signature.
   // If zero this verification was successfully done after
@@ -2144,7 +2144,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   } else {
     // show the filename next to the image
     iconName = mNodeHelper->iconName( msgPart );
-    if( iconName.right( 14 ) == "mime_empty.png" ) {
+    if( iconName.right( 14 ) == QLatin1String( "mime_empty.png" ) ) {
       mNodeHelper->magicSetType( msgPart );
       iconName = mNodeHelper->iconName( msgPart );
     }
@@ -2205,7 +2205,7 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
           break;
           */
           default:
-              result = "";   // do *not* return a default text here !
+              result.clear();   // do *not* return a default text here !
               break;
           }
       }
@@ -2302,14 +2302,14 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
               frameColor = SIG_FRAME_COL_RED;
           }
           else
-              result = "";
+              result.clear();
 
           if( SIG_FRAME_COL_GREEN == frameColor ) {
               result = i18n("Good signature.");
           } else if( SIG_FRAME_COL_RED == frameColor ) {
               result = i18n("<b>Bad</b> signature.");
           } else
-              result = "";
+              result.clear();
 
           if( !result2.isEmpty() ) {
               if( !result.isEmpty() )
@@ -2330,80 +2330,85 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
 
 static QString writeSimpleSigstatHeader( const PartMetaData &block )
 {
-QString html;
-html += "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td>";
+  QString html;
+  html += "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td>";
 
-if ( block.signClass == "signErr" ) {
-  html += i18n( "Invalid signature." );
-} else if ( block.signClass == "signOkKeyBad" || block.signClass == "signWarn" ) {
-  html += i18n( "Not enough information to check signature validity." );
-} else if ( block.signClass == "signOkKeyOk" ) {
-  QString addr;
-  if ( !block.signerMailAddresses.isEmpty() )
-    addr = block.signerMailAddresses.first();
-  QString name = addr;
-  if ( name.isEmpty() )
-    name = block.signer;
-  if ( addr.isEmpty() ) {
-    html += i18n( "Signature is valid." );
+  if ( block.signClass == QLatin1String( "signErr" ) ) {
+    html += i18n( "Invalid signature." );
+  } else if ( block.signClass == QLatin1String( "signOkKeyBad" )
+              || block.signClass == QLatin1String( "signWarn" ) ) {
+    html += i18n( "Not enough information to check signature validity." );
+  } else if ( block.signClass == QLatin1String( "signOkKeyOk" ) ) {
+
+    QString addr;
+    if ( !block.signerMailAddresses.isEmpty() )
+      addr = block.signerMailAddresses.first();
+    
+    QString name = addr;
+    if ( name.isEmpty() )
+      name = block.signer;
+    
+    if ( addr.isEmpty() ) {
+      html += i18n( "Signature is valid." );
+    } else {
+      html += i18n( "Signed by <a href=\"mailto:%1\">%2</a>.", addr, name );
+    }
+    
   } else {
-    html += i18n( "Signed by <a href=\"mailto:%1\">%2</a>.", addr, name );
+    // should not happen
+    html += i18n( "Unknown signature state" );
   }
-} else {
-  // should not happen
-  html += i18n( "Unknown signature state" );
-}
-html += "</td><td align=\"right\">";
-html += "<a href=\"kmail:showSignatureDetails\">";
-html += i18n( "Show Details" );
-html += "</a></td></tr></table>";
-return html;
+  html += "</td><td align=\"right\">";
+  html += "<a href=\"kmail:showSignatureDetails\">";
+  html += i18n( "Show Details" );
+  html += "</a></td></tr></table>";
+  return html;
 }
 
 static QString beginVerboseSigstatHeader()
 {
-return "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspan=\"2\">";
+  return "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspan=\"2\">";
 }
 
 static QString makeShowAuditLogLink( const GpgME::Error & err, const QString & auditLog ) {
-// more or less the same as
-// kleopatra/utils/auditlog.cpp:formatLink(), so any bug fixed here
-// equally applies there:
-if ( const unsigned int code = err.code() ) {
-  if ( code == GPG_ERR_NOT_IMPLEMENTED ) {
-    kDebug() << "not showing link (not implemented)";
-    return QString();
-  } else if ( code == GPG_ERR_NO_DATA ) {
-    kDebug() << "not showing link (not available)";
-    return i18n("No Audit Log available");
-  } else {
-    return i18n("Error Retrieving Audit Log: %1", QString::fromLocal8Bit( err.asString() ) );
+  // more or less the same as
+  // kleopatra/utils/auditlog.cpp:formatLink(), so any bug fixed here
+  // equally applies there:
+  if ( const unsigned int code = err.code() ) {
+    if ( code == GPG_ERR_NOT_IMPLEMENTED ) {
+      kDebug() << "not showing link (not implemented)";
+      return QString();
+    } else if ( code == GPG_ERR_NO_DATA ) {
+      kDebug() << "not showing link (not available)";
+      return i18n("No Audit Log available");
+    } else {
+      return i18n("Error Retrieving Audit Log: %1", QString::fromLocal8Bit( err.asString() ) );
+    }
   }
-}
 
-if ( !auditLog.isEmpty() ) {
-  KUrl url;
-  url.setProtocol( "kmail" );
-  url.setPath( "showAuditLog" );
-  url.addQueryItem( "log", auditLog );
+  if ( !auditLog.isEmpty() ) {
+    KUrl url;
+    url.setProtocol( "kmail" );
+    url.setPath( "showAuditLog" );
+    url.addQueryItem( "log", auditLog );
 
-  return "<a href=\"" + url.url() + "\">" + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + "</a>";
-}
+    return "<a href=\"" + url.url() + "\">" + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + "</a>";
+  }
 
-return QString();
+  return QString();
 }
 
 static QString endVerboseSigstatHeader( const PartMetaData & pmd )
 {
-QString html;
-html += "</td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\">";
-html += "<a href=\"kmail:hideSignatureDetails\">";
-html += i18n( "Hide Details" );
-html += "</a></td></tr>";
-html += "<tr><td align=\"right\" valign=\"bottom\" nowrap=\"nowrap\">";
-html += makeShowAuditLogLink( pmd.auditLogError, pmd.auditLog );
-html += "</td></tr></table>";
-return html;
+  QString html;
+  html += "</td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\">";
+  html += "<a href=\"kmail:hideSignatureDetails\">";
+  html += i18n( "Hide Details" );
+  html += "</a></td></tr>";
+  html += "<tr><td align=\"right\" valign=\"bottom\" nowrap=\"nowrap\">";
+  html += makeShowAuditLogLink( pmd.auditLogError, pmd.auditLog );
+  html += "</td></tr></table>";
+  return html;
 }
 
 QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
@@ -2415,7 +2420,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
   QString signer = block.signer;
 
   QString htmlStr, simpleHtmlStr;
-  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString cellPadding("cellpadding=\"1\"");
 
   if( block.isEncapsulatedRfc822Message )
@@ -2612,7 +2617,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
               else {
 
                   if (block.signer.isEmpty())
-                      signer = "";
+                      signer.clear();
                   else {
                       if( !blockAddrs.empty() ){
                           const KUrl address = KPIMUtils::encodeMailtoUrl( blockAddrs.first() );
@@ -2873,7 +2878,7 @@ void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec
   assert(pgp != 0);
   bool isPgpMessage = false; // true if the message contains at least one
                               // PGP MESSAGE or one PGP SIGNED MESSAGE block
-  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString headerStr = QString("<div dir=\"%1\">").arg(dir);
 
   inlineSignatureState  = KMMsgNotSigned;
@@ -3090,20 +3095,18 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
 
   while (beg<length)
   {
-    QString line;
-
     /* search next occurrence of '\n' */
     pos = s.indexOf('\n', beg, Qt::CaseInsensitive);
     if (pos == (unsigned int)(-1))
         pos = length;
 
-    line = s.mid(beg,pos-beg);
+    QString line( s.mid(beg,pos-beg) );
     beg = pos+1;
 
     /* calculate line's current quoting depth */
     int actQuoteLevel = -1;
-
-    for (int p=0; p<line.length(); p++) {
+    const int numberOfCaracters( line.length() );
+    for (int p=0; p<numberOfCaracters; ++p) {
       switch (line[p].toLatin1()) {
         case '>':
         case '|':
@@ -3114,7 +3117,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         case '\r':
           break;
         default:  // stop quoting depth calculation
-          p = line.length();
+          p = numberOfCaracters;
           break;
       }
     } /* for() */

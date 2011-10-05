@@ -25,8 +25,6 @@
 
 #include <QRegExp>
 #include <QDateTime>
-//Added by qt3to4:
-#include <QByteArray>
 
 #include <klocale.h>
 #include <kshell.h>
@@ -99,9 +97,10 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
       cmd += " -r 0x";
       cmd += Module::getKpgp()->user();
     }
+    KeyIDList::ConstIterator end( recipients.constEnd() );
 
-    for( KeyIDList::ConstIterator it = recipients.begin();
-         it != recipients.end(); ++it ) {
+    for( KeyIDList::ConstIterator it = recipients.constBegin();
+         it != end; ++it ) {
       cmd += " -r 0x";
       cmd += (*it);
     }
@@ -195,11 +194,9 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
 int
 Base5::decrypt( Block& block, const char *passphrase )
 {
-  int exitStatus = 0;
-
   clear();
   input = block.text();
-  exitStatus = run("pgpv -f +batchmode=1", passphrase);
+  int exitStatus = run("pgpv -f +batchmode=1", passphrase);
   if( !output.isEmpty() )
     block.setProcessedText( output );
   block.setError( error );
@@ -212,9 +209,7 @@ Base5::decrypt( Block& block, const char *passphrase )
   }
 
   // lets parse the returned information.
-  int index;
-
-  index = error.indexOf("Cannot decrypt message");
+  int index = error.indexOf("Cannot decrypt message");
   if(index != -1)
   {
     //kDebug( 5326 ) <<"message is encrypted";
@@ -323,10 +318,8 @@ Base5::decrypt( Block& block, const char *passphrase )
 Key*
 Base5::readPublicKey( const KeyID& keyId, const bool readTrust, Key* key )
 {
-  int exitStatus = 0;
-
   status = 0;
-  exitStatus = run( "pgpk -ll 0x" + keyId, 0, true );
+  int exitStatus = run( "pgpk -ll 0x" + keyId, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -362,8 +355,12 @@ Base5::publicKeys( const QStringList & patterns )
   int exitStatus = 0;
 
   QByteArray cmd = "pgpk -ll";
-  for ( QStringList::ConstIterator it = patterns.begin();
-        it != patterns.end(); ++it ) {
+
+  QStringList::ConstIterator end( patterns.end() );
+
+  
+  for ( QStringList::ConstIterator it = patterns.constBegin();
+        it != end; ++it ) {
     cmd += ' ';
     cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
@@ -388,17 +385,15 @@ Base5::publicKeys( const QStringList & patterns )
 KeyList
 Base5::secretKeys( const QStringList & patterns )
 {
-  int exitStatus = 0;
-
-  status = 0;
   QByteArray cmd = "pgpk -ll";
-  for ( QStringList::ConstIterator it = patterns.begin();
-        it != patterns.end(); ++it ) {
+  QStringList::ConstIterator end( patterns.constEnd() );
+  for ( QStringList::ConstIterator it = patterns.constBegin();
+        it != end; ++it ) {
     cmd += ' ';
     cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;
-  exitStatus = run( cmd, 0, true );
+  int exitStatus = run( cmd, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -417,13 +412,11 @@ Base5::secretKeys( const QStringList & patterns )
 
 QByteArray Base5::getAsciiPublicKey(const KeyID& keyID)
 {
-  int exitStatus = 0;
-
   if (keyID.isEmpty())
     return QByteArray();
 
   status = 0;
-  exitStatus = run( "pgpk -xa 0x" + keyID, 0, true );
+  int exitStatus = run( "pgpk -xa 0x" + keyID, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -437,17 +430,15 @@ QByteArray Base5::getAsciiPublicKey(const KeyID& keyID)
 int
 Base5::signKey(const KeyID& keyID, const char *passphrase)
 {
-  QByteArray cmd;
-  int exitStatus = 0;
-
   if(passphrase == 0) return false;
+  QByteArray cmd;
 
   cmd = "pgpk -s -f +batchmode=1 0x";
   cmd += keyID;
   cmd += addUserId();
 
   status = 0;
-  exitStatus = run(cmd.data(), passphrase);
+  int exitStatus = run(cmd.data(), passphrase);
 
   if (exitStatus != 0)
     status = ERROR;

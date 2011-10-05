@@ -32,7 +32,10 @@ void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair
   combo->clear();
   int valIdx = -1;
   int idx = 0;
-  for( QList< QPair< QString, int > >::ConstIterator it = optionDescriptors.begin(); it != optionDescriptors.end(); ++it )
+
+  QList< QPair< QString, int > >::ConstIterator end( optionDescriptors.end() );
+  
+  for( QList< QPair< QString, int > >::ConstIterator it = optionDescriptors.constBegin(); it != optionDescriptors.constEnd(); ++it )
   {
     if ( val == (*it).second )
       valIdx = idx;
@@ -58,13 +61,13 @@ void ComboBoxUtils::setIntegerOptionComboValue( KComboBox *combo, int value )
   if ( !combo->isEnabled() )
     return;
 
-  int c = combo->count();
+  const int c = combo->count();
   int i = 0;
   while( i < c )
   {
-    QVariant data = combo->itemData( i );
+    const QVariant data = combo->itemData( i );
     bool ok;
-    int val = data.toInt( &ok );
+    const int val = data.toInt( &ok );
     if ( ok )
     {
       if ( val == value )
@@ -81,13 +84,13 @@ void ComboBoxUtils::setIntegerOptionComboValue( KComboBox *combo, int value )
 
 int ComboBoxUtils::getIntegerOptionComboValue( KComboBox *combo, int defaultValue )
 {
-  int idx = combo->currentIndex();
+  const int idx = combo->currentIndex();
   if ( idx < 0 )
     return defaultValue;
 
   QVariant data = combo->itemData( idx );
   bool ok;
-  int val = data.toInt( &ok );
+  const int val = data.toInt( &ok );
   if ( !ok )
     return defaultValue;
   return val;

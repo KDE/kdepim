@@ -106,3 +106,5 @@ void KWeekdayCheckCombo::setDays( const QBitArray &days,  const QBitArray &disab
 }
 
 
+
+#include "kweekdaycheckcombo.moc"

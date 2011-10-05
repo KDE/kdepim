@@ -47,9 +47,9 @@ namespace Core
 class OptionSet
 {
 public:
-  OptionSet();
-  OptionSet( const OptionSet &src );
-  OptionSet( const QString &name, const QString &description );
+  explicit OptionSet();
+  explicit OptionSet( const OptionSet &src );
+  explicit OptionSet( const QString &name, const QString &description );
   virtual ~OptionSet();
 
 protected:

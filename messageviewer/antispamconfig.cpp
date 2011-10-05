@@ -41,7 +41,6 @@
 #include <kglobal.h>
 
 #include <QCoreApplication>
-#include <QStringList>
 
 namespace MessageViewer {
 
@@ -87,7 +86,7 @@ void AntiSpamConfig::readConfig()
   KConfigGroup general( &config, "General" );
   unsigned int totalTools = general.readEntry( "tools", 0 );
   for ( unsigned int i = 1; i <= totalTools; ++i ) {
-    KConfigGroup tool( &config, QString("Spamtool #%1").arg( i ) );
+    KConfigGroup tool( &config, QString::fromLatin1("Spamtool #%1").arg( i ) );
     if ( tool.hasKey( "ScoreHeader" ) ) {
       QString name        = tool.readEntry( "ScoreName" );
       QByteArray header   = tool.readEntry( "ScoreHeader" ).toLatin1();

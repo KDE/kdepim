@@ -22,7 +22,7 @@
 #ifndef KLDAP_LDAPCLIENT_H
 #define KLDAP_LDAPCLIENT_H
 
-#include "kdepim_export.h"
+#include "libkdepim/kdepim_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

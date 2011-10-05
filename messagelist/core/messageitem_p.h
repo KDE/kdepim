@@ -102,7 +102,7 @@ private:
 class FakeItemPrivate : public MessageItemPrivate
 {
   public:
-    FakeItemPrivate( FakeItem *qq );
+    explicit FakeItemPrivate( FakeItem *qq );
     QList<MessageItem::Tag*> mFakeTags;
 };
 

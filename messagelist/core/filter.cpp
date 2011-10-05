@@ -40,10 +40,11 @@ bool Filter::match( const MessageItem * item ) const
     bool searchMatches = false;
     if ( item->subject().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
       searchMatches = true;
-    if ( item->sender().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
+    else if ( item->sender().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
       searchMatches = true;
-    if ( item->receiver().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
+    else if ( item->receiver().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
       searchMatches = true;
+    
     if ( !searchMatches )
       return false;
   }

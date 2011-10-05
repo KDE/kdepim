@@ -41,6 +41,7 @@
 
 #include "iconnamecache.h"
 #include "nodehelper.h"
+#include "renamefiledialog.h"
 
 #include "messagecore/globalsettings.h"
 #include "messagecore/nodehelper.h"
@@ -196,7 +197,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
   bool globalResult = true;
   int unnamedAtmCount = 0;
-  bool overwriteAll = false;
+  MessageViewer::RenameFileDialog::RenameFileDialogResult result = MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE;
   foreach( KMime::Content *content, contents ) {
     KUrl curUrl;
     if ( !dirUrl.isEmpty() ) {
@@ -242,32 +243,48 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
       }
 
 
-      if ( !overwriteAll && KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
-        if ( contents.count() == 1 ) {
-          if ( KMessageBox::warningContinueCancel( parent,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
-            continue;
+      if( !(result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
+              result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ))
+      {
+          if ( KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
+              if ( contents.count() == 1 ) {
+                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,false, parent);
+                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
+                  {
+                      delete dlg;
+                      continue;
+                  }
+                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  {
+                      curUrl = dlg->newName();
+                  }
+                  delete dlg;
+              }
+              else {
+                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,true, parent);
+                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+
+                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE ||
+                       result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL )
+                  {
+                      delete dlg;
+                      continue;
+                  }
+                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  {
+                      curUrl = dlg->newName();
+                  }
+                  delete dlg;
+              }
           }
-        }
-        else {
-          int button = KMessageBox::warningYesNoCancel(
-                parent,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")),
-                KGuiItem(i18n("Overwrite &All")) );
-          if ( button == KMessageBox::Cancel )
-            continue;
-          else if ( button == KMessageBox::No )
-            overwriteAll = true;
-        }
       }
       // save
-      const bool result = saveContent( parent, content, curUrl );
-      if ( !result )
-        globalResult = result;
+      if( result != MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ) {
+          const bool result = saveContent( parent, content, curUrl );
+          if ( !result )
+              globalResult = result;
+      }
     }
   }
 
@@ -433,7 +450,7 @@ bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *paren
 
 bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
 {
-  
+
   QString fileName;
   if ( retrievedMsgs.isEmpty() )
     return true;

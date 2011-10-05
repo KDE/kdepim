@@ -3,7 +3,7 @@
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (C) 2005,2008 Allen Winter <winter@kde.org>
+  Copyright (C) 2005,2008,2011 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -38,6 +38,8 @@
 class KColorButton;
 class KComboBox;
 class KComponentData;
+class KDateComboBox;
+class KTimeComboBox;
 class KUrlRequester;
 
 class QCheckBox;
@@ -48,9 +50,6 @@ class QButtonGroup;
 class QGroupBox;
 
 namespace KPIM {
-
-class KDateEdit;
-class KTimeEdit;
 
 /**
   @short Base class for GUI control elements used by @ref KPrefsDialog.
@@ -184,10 +183,11 @@ class KDEPIM_EXPORT KPrefsWidTime : public KPrefsWid
       Return QLabel used by this widget.
     */
     QLabel *label();
+
     /**
-      Return QSpinBox used by this widget.
+      Return KTimeComboBox used by this widget.
     */
-    KTimeEdit *timeEdit();
+    KTimeComboBox *timeEdit();
 
     void readConfig();
     void writeConfig();
@@ -196,7 +196,7 @@ class KDEPIM_EXPORT KPrefsWidTime : public KPrefsWid
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
-    KTimeEdit *mTimeEdit;
+    KTimeComboBox *mTimeEdit;
 };
 
 /**
@@ -260,10 +260,11 @@ class KDEPIM_EXPORT KPrefsWidDate : public KPrefsWid
       Return QLabel used by this widget.
     */
     QLabel *label();
+
     /**
-      Return QSpinBox used by this widget.
+      Return KDateComboBox used by this widget.
     */
-    KDateEdit *dateEdit();
+    KDateComboBox *dateEdit();
 
     void readConfig();
     void writeConfig();
@@ -272,7 +273,7 @@ class KDEPIM_EXPORT KPrefsWidDate : public KPrefsWid
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
-    KDateEdit *mDateEdit;
+    KDateComboBox *mDateEdit;
 };
 
 /**

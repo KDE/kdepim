@@ -119,27 +119,27 @@ KMime::Content* SignEncryptJob::origContent()
 }
 
 
-void SignEncryptJob::setEncryptionKeys( std::vector<GpgME::Key> keys )
+void SignEncryptJob::setEncryptionKeys( const std::vector<GpgME::Key>& keys )
 {
   Q_D( SignEncryptJob );
 
   d->encKeys = keys;
 }
 
-void SignEncryptJob::setRecipients( QStringList recipients ) {
+void SignEncryptJob::setRecipients( const QStringList& recipients ) {
   Q_D( SignEncryptJob );
 
   d->recipients = recipients;
 }
 
-QStringList SignEncryptJob::recipients() {
-  Q_D( SignEncryptJob );
+QStringList SignEncryptJob::recipients() const {
+  Q_D( const SignEncryptJob );
 
   return d->recipients;
 }
 
-std::vector<GpgME::Key> SignEncryptJob::encryptionKeys() {
-  Q_D( SignEncryptJob );
+std::vector<GpgME::Key> SignEncryptJob::encryptionKeys() const {
+  Q_D( const SignEncryptJob );
 
   return d->encKeys;
 }

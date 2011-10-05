@@ -29,7 +29,9 @@
 
 #include "kdeclarativefullscreenview.h"
 
+class KDateComboBox;
 class KJob;
+class KTimeComboBox;
 class QTimeEdit;
 class QDateEdit;
 
@@ -41,11 +43,6 @@ namespace IncidenceEditorNG {
 class IncidenceAttendee;
 class IncidenceDateTime;
 class InvitationDispatcher;
-}
-
-namespace KPIM {
-class KTimeEdit;
-class KDateEdit;
 }
 
 class MobileIncidenceGeneral;
@@ -111,8 +108,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     MobileIncidenceMore *mIncidenceMore;
     MobileIncidenceGeneral *mIncidenceGeneral;
 
-    KPIM::KDateEdit *mDateWidget;
-    KPIM::KTimeEdit *mTimeWidget;
+    KDateComboBox *mDateWidget;
+    KTimeComboBox *mTimeWidget;
 
     IncidenceEditorNG::InvitationDispatcher *mInvitationDispatcher;
     IncidenceEditorNG::IncidenceAttendee *mIncidenceAttendee;

@@ -24,7 +24,7 @@
 #ifndef KLDAP_LDAPSEARCHDIALOG_H
 #define KLDAP_LDAPSEARCHDIALOG_H
 
-#include "kdepim_export.h"
+#include "libkdepim/kdepim_export.h"
 
 #include <kabc/addressee.h>
 #include <kdialog.h>

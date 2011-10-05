@@ -325,7 +325,8 @@ QDateTime MonthView::selectionEnd() const
   return selectionStart();
 }
 
-void MonthView::setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth )
+void MonthView::setDateRange( const KDateTime &start, const KDateTime &end,
+                              const QDate &preferredMonth )
 {
   EventView::setDateRange( start, end, preferredMonth );
   // d->calendarSearch->setStartDate( actualStartDateTime() );
@@ -498,14 +499,15 @@ void MonthView::reloadIncidences()
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const Akonadi::Item::List incidences = calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
+  const Akonadi::Item::List incidences =
+    calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
 
   const bool colorMonthBusyDays = preferences()->colorMonthBusyDays();
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
     const bool isTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
 
-    // Remove the two checks when filtering is done through a proxyModel, when calendar search is used.
+    // Remove the two checks when filtering is done through a proxyModel, when using calendar search
     if ( !preferences()->showTodosMonthView() && isTodo ) {
       continue;
     }

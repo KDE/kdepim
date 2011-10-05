@@ -111,3 +111,5 @@ void FolderCollectionMonitor::slotDeleteJob( KJob *job )
 
 }
 
+
+#include "foldercollectionmonitor.moc"

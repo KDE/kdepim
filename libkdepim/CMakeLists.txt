@@ -22,9 +22,7 @@ set(kdepim_LIB_SRCS
    addcontactjob.cpp
    completionordereditor.cpp
    openemailaddressjob.cpp
-   ktimeedit.cpp
    kprefsdialog.cpp
-   kdateedit.cpp
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp

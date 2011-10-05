@@ -31,12 +31,12 @@
 
 #include "mailcommon_export.h"
 
-#include <klineedit.h>
-#include <ksharedconfig.h>
+#include <KLineEdit>
 #include <akonadi/collection.h>
 
-#include <QtGui/QKeyEvent>
 #include <QtGui/QWidget>
+
+class QKeyEvent; 
 
 class KJob;
 
@@ -70,9 +70,6 @@ namespace MailCommon {
 
       /** Returns the selected collection. */
       Akonadi::Collection collection() const;
-
-      /** Returns current text */
-      QString text() const { return edit->originalText(); }
 
       /** Preset the folder to @p collection. */
       void setCollection( const Akonadi::Collection& collection );

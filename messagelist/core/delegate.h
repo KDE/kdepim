@@ -34,7 +34,7 @@ class View;
 class Delegate : public ThemeDelegate
 {
 public:
-  Delegate( View *pParent );
+  explicit Delegate( View *pParent );
   ~Delegate();
 
 protected:

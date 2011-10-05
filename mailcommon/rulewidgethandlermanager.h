@@ -96,6 +96,6 @@ class RuleWidgetHandler;
     QVector<const RuleWidgetHandler*> mHandlers;
   };
 
-} // namespace KMail
+} // namespace MailCommon
 
 #endif

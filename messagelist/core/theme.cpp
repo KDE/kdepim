@@ -238,9 +238,12 @@ Theme::Row::Row()
 
 Theme::Row::Row( const Row &src )
 {
-  for ( QList< ContentItem * >::ConstIterator it = src.mLeftItems.constBegin(); it != src.mLeftItems.constEnd() ; ++it )
+  QList< ContentItem * >::ConstIterator end( src.mLeftItems.constEnd() );
+  for ( QList< ContentItem * >::ConstIterator it = src.mLeftItems.constBegin(); it != end ; ++it )
     addLeftItem( new ContentItem( *( *it ) ) );
-  for ( QList< ContentItem * >::ConstIterator it = src.mRightItems.constBegin(); it != src.mRightItems.constEnd() ; ++it )
+
+  end=  src.mRightItems.constEnd();
+  for ( QList< ContentItem * >::ConstIterator it = src.mRightItems.constBegin(); it != end ; ++it )
     addRightItem( new ContentItem( *( *it ) ) );
 }
 
@@ -285,12 +288,14 @@ void Theme::Row::insertRightItem( int idx, ContentItem * item )
 
 bool Theme::Row::containsTextItems() const
 {
-  for ( QList< ContentItem * >::ConstIterator it = mLeftItems.constBegin(); it != mLeftItems.constEnd() ; ++it )
+  QList< ContentItem * >::ConstIterator end( mLeftItems.constEnd() );
+  for ( QList< ContentItem * >::ConstIterator it = mLeftItems.constBegin(); it != end ; ++it )
   {
     if ( ( *it )->displaysText() )
       return true;
   }
-  for ( QList< ContentItem * >::ConstIterator it = mRightItems.constBegin(); it != mRightItems.constEnd() ; ++it )
+  end = mRightItems.constEnd();
+  for ( QList< ContentItem * >::ConstIterator it = mRightItems.constBegin(); it != end ; ++it )
   {
     if ( ( *it )->displaysText() )
       return true;
@@ -469,10 +474,12 @@ Theme::Column::Column( const Column &src )
 
   mSharedRuntimeData = src.mSharedRuntimeData;
   mSharedRuntimeData->addReference();
-
-  for ( QList< Row * >::ConstIterator it = src.mMessageRows.constBegin(); it != src.mMessageRows.constEnd() ; ++it )
+  QList< Row * >::ConstIterator end( src.mMessageRows.constEnd() );
+  for ( QList< Row * >::ConstIterator it = src.mMessageRows.constBegin(); it != end ; ++it )
     addMessageRow( new Row( *( *it ) ) );
-  for ( QList< Row * >::ConstIterator it = src.mGroupHeaderRows.constBegin(); it != src.mGroupHeaderRows.constEnd() ; ++it )
+
+  end = src.mGroupHeaderRows.constEnd();
+  for ( QList< Row * >::ConstIterator it = src.mGroupHeaderRows.constBegin(); it != end ; ++it )
     addGroupHeaderRow( new Row( *( *it ) ) );
 }
 
@@ -529,12 +536,14 @@ void Theme::Column::insertGroupHeaderRow( int idx, Row * row )
 
 bool Theme::Column::containsTextItems() const
 {
-  for ( QList< Row * >::ConstIterator it = mMessageRows.constBegin(); it != mMessageRows.constEnd() ; ++it )
+  QList< Row * >::ConstIterator end( mMessageRows.constEnd() );
+  for ( QList< Row * >::ConstIterator it = mMessageRows.constBegin(); it != end ; ++it )
   {
     if ( ( *it )->containsTextItems() )
       return true;
   }
-  for ( QList< Row * >::ConstIterator it = mGroupHeaderRows.constBegin(); it != mGroupHeaderRows.constEnd() ; ++it )
+  end = mGroupHeaderRows.constEnd();
+  for ( QList< Row * >::ConstIterator it = mGroupHeaderRows.constBegin(); it != end ; ++it )
   {
     if ( ( *it )->containsTextItems() )
       return true;
@@ -697,8 +706,8 @@ Theme::Theme( const Theme &src )
   mGroupHeaderBackgroundStyle = src.mGroupHeaderBackgroundStyle;
   mViewHeaderPolicy = src.mViewHeaderPolicy;
   mIconSize = src.mIconSize;
-
-  for ( QList< Column * >::ConstIterator it = src.mColumns.constBegin(); it != src.mColumns.constEnd() ; ++it )
+  QList< Column * >::ConstIterator end( src.mColumns.constEnd() );
+  for ( QList< Column * >::ConstIterator it = src.mColumns.constBegin(); it != end ; ++it )
     addColumn( new Column( *( *it ) ) );
 }
 
@@ -709,13 +718,15 @@ Theme::~Theme()
 
 void Theme::detach()
 {
-  for ( QList< Column * >::Iterator it = mColumns.begin(); it != mColumns.end() ; ++it )
+  QList< Column * >::ConstIterator end( mColumns.constEnd() );
+  for ( QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end ; ++it )
     ( *it )->detach();
 }
 
 void Theme::resetColumnState()
 {
-  for ( QList< Column * >::Iterator it = mColumns.begin(); it != mColumns.end() ; ++it )
+  QList< Column * >::ConstIterator end( mColumns.constEnd() );
+  for ( QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end ; ++it )
   {
     ( *it )->setCurrentlyVisible( ( *it )->visibleByDefault() );
     ( *it )->setCurrentWidth( -1 );
@@ -724,7 +735,8 @@ void Theme::resetColumnState()
 
 void Theme::resetColumnSizes()
 {
-  for ( QList< Column * >::Iterator it = mColumns.begin(); it != mColumns.end() ; ++it )
+  QList< Column * >::ConstIterator end( mColumns.constEnd() );
+  for ( QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end; ++it )
     ( *it )->setCurrentWidth( -1 );
 }
 
@@ -896,7 +908,7 @@ void Theme::save( QDataStream &stream ) const
 
   stream << (int)mColumns.count();
 
-  int cnt = mColumns.count();
+  const int cnt = mColumns.count();
 
   for ( int i = 0; i < cnt ; i++ )
   {

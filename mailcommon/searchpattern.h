@@ -95,7 +95,11 @@ class MAILCOMMON_EXPORT SearchRule
       FuncIsInCategory,
       FuncIsNotInCategory,
       FuncHasAttachment,
-      FuncHasNoAttachment
+      FuncHasNoAttachment,
+      FuncStartWith,
+      FuncNotStartWith,
+      FuncEndWith,
+      FuncNotEndWith
     };
 
     /**

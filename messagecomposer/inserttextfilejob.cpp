@@ -82,3 +82,5 @@ void InsertTextFileJob::start()
            this, SLOT(slotFileData(KIO::Job*,QByteArray)) );
   job->start();
 }
+
+#include "inserttextfilejob.moc"

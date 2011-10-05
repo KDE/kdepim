@@ -250,6 +250,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
 
 ViewerPrivate::~ViewerPrivate()
 {
+  saveMimePartTreeConfig();
   GlobalSettings::self()->writeConfig();
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
@@ -257,6 +258,23 @@ ViewerPrivate::~ViewerPrivate()
   mNodeHelper->removeTempFiles();
   delete mNodeHelper;
 }
+
+void ViewerPrivate::saveMimePartTreeConfig()
+{
+#ifndef QT_NO_TREEVIEW
+  KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
+  grp.writeEntry( "State", mMimePartTree->header()->saveState() );
+#endif
+}
+
+void ViewerPrivate::restoreMimePartTreeConfig()
+{
+#ifndef QT_NO_TREEVIEW
+  KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
+  mMimePartTree->header()->restoreState( grp.readEntry( "State", QByteArray() ) );
+#endif
+}
+
 
 //-----------------------------------------------------------------------------
 KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
@@ -1321,7 +1339,8 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
-  connect(mMimePartModel,SIGNAL(modelReset ()),mMimePartTree,SLOT(expandAll()));
+  connect(mMimePartModel,SIGNAL(modelReset()),mMimePartTree,SLOT(expandAll()));
+  restoreMimePartTreeConfig();
 #endif
 
   mBox = new KHBox( mSplitter );
@@ -2789,7 +2808,7 @@ void ViewerPrivate::itemFetchResult( KJob* job )
   } else {
     Akonadi::ItemFetchJob* fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
     Q_ASSERT( fetch );
-    if ( fetch->items().size() < 1 ) {
+    if ( fetch->items().isEmpty() ) {
       displaySplashPage( i18n( "Message not found." ) );
     } else {
       setMessageItem( fetch->items().first() );

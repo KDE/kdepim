@@ -162,6 +162,6 @@ void FolderRequester::keyPressEvent( QKeyEvent * e )
   else
     e->ignore();
 }
-} // namespace KMail
+} // namespace MailCommon
 
 #include "folderrequester.moc"

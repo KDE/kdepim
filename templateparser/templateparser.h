@@ -39,9 +39,6 @@ namespace KPIMIdentities {
   class IdentityManager;
 }
 
-class QString;
-class QObject;
-
 namespace TemplateParser {
 
 /**
@@ -163,7 +160,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     };
 
   public:
-    TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
+    explicit TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
     ~TemplateParser();
 
     /**

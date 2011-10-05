@@ -8,8 +8,6 @@ add_subdirectory( kconf_update )
 
 include_directories(
   ${KDE4_INCLUDE_DIR}
-  ${CMAKE_BINARY_DIR}/libkdepim
-  ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/libkleo
   ${Boost_INCLUDE_DIR}
 )

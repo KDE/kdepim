@@ -76,7 +76,7 @@ QByteArray selectCharset( const QStringList &charsets, const QString &text )
     }
     if( codec->canEncode( text ) ) {
       // Special check for us-ascii (needed because us-ascii is not exactly latin1).
-      if( name == "us-ascii" && !KMime::isUsAscii( text ) ) {
+      if( name == QLatin1String( "us-ascii" ) && !KMime::isUsAscii( text ) ) {
         continue;
       }
       kDebug() << "Chosen charset" << name;
@@ -211,7 +211,8 @@ QString TemplateParser::getFName( const QString &str )
     }
   } else {
     int i;
-    for ( i = 0; i < str.length(); ++i ) {
+    const int strLength( str.length() );
+    for ( i = 0; i < strLength; ++i ) {
       QChar c = str[i];
       if ( c.isLetterOrNumber() ) {
         res.append( c );
@@ -242,9 +243,9 @@ QString TemplateParser::getLName( const QString &str )
     }
   } else {
     if ( ( sep_pos = str.indexOf( ' ' ) ) > 0 ) {
-      int i;
       bool begin = false;
-      for ( i = sep_pos; i < str.length(); ++i ) {
+      const int strLength( str.length() );
+      for ( int i = sep_pos; i < strLength; ++i ) {
         QChar c = str[i];
         if ( c.isLetterOrNumber() ) {
           begin = true;
@@ -276,7 +277,7 @@ void TemplateParser::process( const QString &tmplName, const KMime::Message::Ptr
 {
   mOrigMsg = aorig_msg;
   mFolder = afolder;
-  QString tmpl = findCustomTemplate( tmplName );
+  const QString tmpl = findCustomTemplate( tmplName );
   return processWithTemplate( tmpl );
 }
 
@@ -290,10 +291,9 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
 void TemplateParser::processWithTemplate( const QString &tmpl )
 {
   mOtp->parseObjectTree( mOrigMsg.get() );
-
+  const int tmpl_len = tmpl.length();
   QString plainBody, htmlBody;
 
-  int tmpl_len = tmpl.length();
   bool dnl = false;
   for ( int i = 0; i < tmpl_len; ++i ) {
     QChar c = tmpl[i];

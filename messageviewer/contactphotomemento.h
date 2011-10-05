@@ -27,7 +27,6 @@
 
 #include <KUrl>
 
-#include <QImage>
 #include <QObject>
 
 class KJob;

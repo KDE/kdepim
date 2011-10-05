@@ -200,7 +200,8 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
                Qt::AlignCenter,
                i18nc( "monthname year", "%1 %2",
                       calSys->monthName( mMonthView->averageDate() ),
-                      calSys->formatDate( mMonthView->averageDate(), KLocale::Year, KLocale::LongNumber ) ) );
+                      calSys->formatDate( mMonthView->averageDate(),
+                                          KLocale::Year, KLocale::LongNumber ) ) );
 
   font.setPixelSize( dayLabelsHeight - 10 );
   p->setFont( font );
@@ -234,7 +235,6 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
 
   const QList<QDate> workDays = CalendarSupport::workDays( mMonthView->actualStartDateTime().date(),
                                                            mMonthView->actualEndDateTime().date() );
-
 
   for ( QDate d = start; d <= end; d = d.addDays( 1 ) ) {
     if ( !mScene->mMonthCellMap.contains( d ) ) {

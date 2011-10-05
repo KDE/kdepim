@@ -138,9 +138,9 @@ private:
   FillViewStrategy mFillViewStrategy;
 
 public:
-  Aggregation();
-  Aggregation( const Aggregation &opt );
-  Aggregation(
+  explicit Aggregation();
+  explicit Aggregation( const Aggregation &opt );
+  explicit Aggregation(
       const QString &name,
       const QString &description,
       Grouping grouping,

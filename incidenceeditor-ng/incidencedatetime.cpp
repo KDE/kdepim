@@ -50,8 +50,8 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   mUi->mTimeZoneComboEnd->setVisible( false );
 
   // We don't want to see the combobox list / calendar in the mobile version
-  mUi->mStartDateEdit->setReadOnly(true);
-  mUi->mEndDateEdit->setReadOnly(true);
+  mUi->mStartDateEdit->setOptions( mUi->mStartDateEdit->options() & ~KDateComboBox::EditDate );
+  mUi->mEndDateEdit->setOptions( mUi->mEndDateEdit->options() & ~KDateComboBox::EditDate );
   mUi->mStartTimeEdit->clear();
   mUi->mEndTimeEdit->clear();
 

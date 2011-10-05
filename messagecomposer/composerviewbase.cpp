@@ -1367,3 +1367,5 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
   return false;
 }
 
+
+#include "composerviewbase.moc"

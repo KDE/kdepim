@@ -31,12 +31,9 @@
 
 class KComboBox;
 class KConfigDialogManager;
+class KTimeComboBox;
 class QCheckBox;
 class Ui_ConfigWidget;
-
-namespace KPIM {
-class KTimeEdit;
-}
 
 class ConfigWidget : public QWidget
 {
@@ -78,7 +75,7 @@ class ConfigWidget : public QWidget
     KComboBox *mHolidayCombo;
     QVector<QCheckBox*> mWorkDays;
     EventViews::PrefsPtr mViewPrefs;
-    KPIM::KTimeEdit *mFocusedTimeWidget;
+    KTimeComboBox *mFocusedTimeWidget;
 };
 
 class DeclarativeConfigWidget :

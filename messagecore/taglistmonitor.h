@@ -42,7 +42,7 @@ class MESSAGECORE_EXPORT TagListMonitor: public QObject
      *
      * @param parent The parent object.
      */
-    TagListMonitor( QObject *parent = 0 );
+    explicit TagListMonitor( QObject *parent = 0 );
 
     /**
      * Destroys the tag list monitor.

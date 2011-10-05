@@ -44,9 +44,9 @@
 #include <kxmlguifactory.h>
 #include <ksqueezedtextlabel.h>
 
-#include <libkdepim/uistatesaver.h>
-#include "broadcaststatus.h"
-#include "recentaddresses.h"
+#include "libkdepim/uistatesaver.h"
+#include "libkdepim/broadcaststatus.h"
+#include "libkdepim/recentaddresses.h"
 using KPIM::BroadcastStatus;
 using KPIM::RecentAddresses;
 

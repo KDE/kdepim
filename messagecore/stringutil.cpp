@@ -806,7 +806,8 @@ bool addressIsInAddressList( const QString &address,
 {
   const QString addrSpec = KPIMUtils::extractEmailAddress( address );
 
-  for( QStringList::ConstIterator it = addresses.begin(); it != addresses.end(); ++it ) {
+  QStringList::ConstIterator end( addresses.constEnd() );
+  for( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
     if ( kasciistricmp( addrSpec.toUtf8().data(),
          KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 )
       return true;
@@ -926,14 +927,15 @@ QString smartQuote( const QString &msg, int maxLineLength )
 
 bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName )
 {
-  return ( type.toLower() == "application" &&
-           ( subType.toLower() == "pgp-encrypted" ||
-             subType.toLower() == "pgp-signature" ||
-             subType.toLower() == "pkcs7-mime" ||
-             subType.toLower() == "pkcs7-signature" ||
-             subType.toLower() == "x-pkcs7-signature" ||
-             ( subType.toLower() == "octet-stream" &&
-               fileName.toLower() == "msg.asc" ) ) );
+  const QString subTypeLower( subType.toLower() );
+  return ( type.toLower() == QLatin1String( "application" ) &&
+           ( subTypeLower == QLatin1String( "pgp-encrypted" ) ||
+             subTypeLower == QLatin1String( "pgp-signature" ) ||
+             subTypeLower == QLatin1String( "pkcs7-mime" ) ||
+             subTypeLower == QLatin1String( "pkcs7-signature" ) ||
+             subTypeLower == QLatin1String( "x-pkcs7-signature" ) ||
+             ( subTypeLower == QLatin1String( "octet-stream" ) &&
+               fileName.toLower() == QLatin1String( "msg.asc" ) ) ) );
 }
 
 QString formatString( const QString &wildString, const QString &fromAddr )

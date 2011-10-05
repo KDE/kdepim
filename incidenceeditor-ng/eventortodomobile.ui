@@ -403,7 +403,7 @@
     </widget>
    </item>
    <item row="4" column="2">
-    <widget class="KPIM::KDateEdit" name="mStartDateEdit">
+    <widget class="KDateComboBox" name="mStartDateEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -434,7 +434,7 @@
     </widget>
    </item>
    <item row="4" column="3">
-    <widget class="KPIM::KTimeEdit" name="mStartTimeEdit">
+    <widget class="KTimeComboBox" name="mStartTimeEdit">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -465,7 +465,7 @@
     </widget>
    </item>
    <item row="6" column="2">
-    <widget class="KPIM::KDateEdit" name="mEndDateEdit">
+    <widget class="KDateComboBox" name="mEndDateEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -493,7 +493,7 @@
     </widget>
    </item>
    <item row="6" column="3">
-    <widget class="KPIM::KTimeEdit" name="mEndTimeEdit">
+    <widget class="KTimeComboBox" name="mEndTimeEdit">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -527,14 +527,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KTimeEdit</class>
+   <class>KTimeComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/ktimeedit.h</header>
+   <header>ktimecombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KDateEdit</class>
+   <class>KDateComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/kdateedit.h</header>
+   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>

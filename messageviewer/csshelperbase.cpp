@@ -29,17 +29,14 @@
     your version.
 */
 
-#include <config-messageviewer.h>
 #include <messagecore/globalsettings.h>
 #include "csshelperbase.h"
 
 #include <KColorScheme>
-#include <KConfig>
 #include <KDebug>
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <QString>
 #include <QApplication>
 #include <QPaintDevice>
 

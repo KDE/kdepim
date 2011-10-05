@@ -325,6 +325,9 @@ void FilterManager::filter( qlonglong itemId, const QString &filterId )
 
 int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFilter *filter )
 {
+  if ( !filter->isEnabled() ) {
+    return 1;
+  }
   bool stopIt = false;
   int result = 1;
 
@@ -393,23 +396,24 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   }
 
   ItemContext context( item );
-
+  QList<MailCommon::MailFilter*>::const_iterator end( d->mFilters.constEnd() );
   for ( QList<MailCommon::MailFilter*>::const_iterator it = d->mFilters.constBegin();
-        !stopIt && it != d->mFilters.constEnd() ; ++it ) {
+        !stopIt && it != end ; ++it ) {
+    if ( ( *it )->isEnabled() ) {
+      const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
+      const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
+      const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
+      const bool explicitOk = ((set & Explicit) && (*it)->applyOnExplicit());
+      const bool accountOk = (!account || (account && (*it)->applyOnAccount( accountId )));
 
-    const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
-    const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
-    const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
-    const bool explicitOk = ((set & Explicit) && (*it)->applyOnExplicit());
-    const bool accountOk = (!account || (account && (*it)->applyOnAccount( accountId )));
-
-    if ( (inboundOk && accountOk) || outboundOk || beforeOutboundOk || explicitOk ) {
+      if ( (inboundOk && accountOk) || outboundOk || beforeOutboundOk || explicitOk ) {
         // filter is applicable
 
-      if ( d->isMatching( context.item(), *it ) ) {
-        // execute actions:
-        if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
-          return 2;
+        if ( d->isMatching( context.item(), *it ) ) {
+          // execute actions:
+          if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+            return 2;
+          }
         }
       }
     }

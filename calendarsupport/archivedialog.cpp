@@ -29,8 +29,6 @@
 #include "eventarchiver.h"
 #include "kcalprefs.h"
 
-#include <libkdepim/kdateedit.h>
-
 #include <kdebug.h>
 #include <klocale.h>
 #include <knuminput.h>
@@ -41,6 +39,7 @@
 #include <klineedit.h>
 #include <kvbox.h>
 #include <KComboBox>
+#include <KDateComboBox>
 #include <KTextBrowser>
 
 #include <QLabel>
@@ -91,7 +90,7 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::I
     Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard );
   topLayout->addWidget( descLabel );
 #endif
-  
+
   QButtonGroup *radioBG = new QButtonGroup( this );
   connect( radioBG, SIGNAL(buttonClicked(int)), SLOT(slotActionChanged()) );
 
@@ -102,7 +101,7 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::I
                       topFrame );
   dateLayout->addWidget( mArchiveOnceRB );
   radioBG->addButton( mArchiveOnceRB );
-  mDateEdit = new KPIM::KDateEdit( topFrame );
+  mDateEdit = new KDateComboBox( topFrame );
   mDateEdit->setWhatsThis(
     i18nc( "@info:whatsthis",
            "The date before which items should be archived. All older events "
@@ -193,7 +192,7 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::I
   mEvents = new QCheckBox( i18nc( "@option:check", "Archive &Events" ) );
   typeLayout->addWidget( mEvents );
   mTodos = new QCheckBox( i18nc( "@option:check", "Archive &To-dos" ) );
-  typeLayout->addWidget( mTodos );  
+  typeLayout->addWidget( mTodos );
 #endif
 
   mDeleteCb = new QCheckBox( i18nc( "@option:check", "&Delete only, do not save" ), topFrame );

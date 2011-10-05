@@ -155,9 +155,8 @@ ConfigureThemesDialog::~ConfigureThemesDialog()
 void ConfigureThemesDialog::selectTheme( const QString &themeId )
 {
   ThemeListWidgetItem * item = d->findThemeItemById( themeId );
-  if ( !item )
-    return;
-  d->mThemeList->setCurrentItem( item );
+  if ( item )
+    d->mThemeList->setCurrentItem( item );
 }
 
 void ConfigureThemesDialog::Private::okButtonClicked()
@@ -166,7 +165,7 @@ void ConfigureThemesDialog::Private::okButtonClicked()
 
   Manager::instance()->removeAllThemes();
 
-  int c = mThemeList->count();
+  const int c = mThemeList->count();
   int i = 0;
   while ( i < c )
   {
@@ -223,7 +222,9 @@ void ConfigureThemesDialog::Private::editedThemeNameChanged()
 void ConfigureThemesDialog::Private::fillThemeList()
 {
   const QHash< QString, Theme * > & sets = Manager::instance()->themes();
-  for( QHash< QString, Theme * >::ConstIterator it = sets.begin(); it != sets.end(); ++it )
+
+  QHash< QString, Theme * >::ConstIterator end( sets.constEnd() );
+  for( QHash< QString, Theme * >::ConstIterator it = sets.constBegin(); it != end; ++it )
     (void)new ThemeListWidgetItem( mThemeList, *( *it ) );
 }
 
@@ -243,7 +244,7 @@ void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetIte
 
 ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemById( const QString &themeId )
 {
-  int c = mThemeList->count();
+  const int c = mThemeList->count();
   int i = 0;
   while ( i < c )
   {
@@ -261,7 +262,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemById( const Q
 
 ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByName( const QString &name, Theme * skipTheme )
 {
-  int c = mThemeList->count();
+  const int c = mThemeList->count();
   int i = 0;
   while ( i < c )
   {
@@ -281,7 +282,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByName( const
 
 ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByTheme( Theme * set )
 {
-  int c = mThemeList->count();
+  const int c = mThemeList->count();
   int i = 0;
   while ( i < c )
   {
@@ -309,7 +310,7 @@ QString ConfigureThemesDialog::Private::uniqueNameForTheme( QString baseName, Th
   while ( item )
   {
     idx++;
-    ret = QString(QLatin1String( "%1 %2" )).arg( baseName ).arg( idx );
+    ret = QString::fromLatin1( "%1 %2" ).arg( baseName ).arg( idx );
     item = findThemeItemByName( ret, skipTheme );
   }
   return ret;

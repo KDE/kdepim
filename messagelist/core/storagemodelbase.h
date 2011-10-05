@@ -47,7 +47,7 @@ class MESSAGELIST_EXPORT StorageModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  StorageModel( QObject * parent = 0 );
+  explicit StorageModel( QObject * parent = 0 );
   ~StorageModel();
 
   /**

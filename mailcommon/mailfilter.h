@@ -32,7 +32,6 @@
 
 #include <QtCore/QDataStream>
 
-class QString;
 class KConfigGroup;
 
 namespace MailCommon {
@@ -305,6 +304,12 @@ public:
   */
   bool isAutoNaming() const;
 
+  /** Return if filter is enabled or not
+   */
+  bool isEnabled() const;
+  void setEnabled( bool );
+
+  
 private:
   QString mIdentifier;
   SearchPattern mPattern;
@@ -321,6 +326,7 @@ private:
   bool bConfigureShortcut : 1;
   bool bConfigureToolbar : 1;
   bool bAutoNaming : 1;
+  bool bEnabled : 1;
   AccountType mApplicability;
 };
 

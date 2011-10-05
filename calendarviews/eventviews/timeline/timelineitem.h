@@ -31,7 +31,6 @@
 #include <QList>
 #include <QStandardItemModel>
 
-
 namespace CalendarSupport {
   class Calendar;
 }
@@ -44,7 +43,7 @@ class TimelineItem : public QObject
 {
   Q_OBJECT
   public:
-    TimelineItem( CalendarSupport::Calendar *calendar, uint index, QStandardItemModel* model,
+    TimelineItem( CalendarSupport::Calendar *calendar, uint index, QStandardItemModel *model,
                   QObject *parent );
 
     void insertIncidence( const Akonadi::Item &incidence,
@@ -54,7 +53,7 @@ class TimelineItem : public QObject
 
     void moveItems( const Akonadi::Item &incidence, int delta, int duration );
 
-    void setColor( const QColor& color );
+    void setColor( const QColor &color );
 
   private:
     CalendarSupport::Calendar *mCalendar;
@@ -67,21 +66,34 @@ class TimelineItem : public QObject
 class TimelineSubItem : public QStandardItem
 {
   public:
-    TimelineSubItem( const Akonadi::Item &incidence, TimelineItem* parent );
+    TimelineSubItem( const Akonadi::Item &incidence, TimelineItem *parent );
     ~TimelineSubItem();
 
-    Akonadi::Item  incidence() const { return mIncidence; }
+    Akonadi::Item  incidence() const
+    {
+      return mIncidence;
+    }
 
-    KDateTime originalStart() const { return mStart; }
-    void setOriginalStart( const KDateTime &dt ) { mStart = dt; }
+    KDateTime originalStart() const
+    {
+      return mStart;
+    }
 
-    void setStartTime( const QDateTime& dt );
+    void setOriginalStart( const KDateTime &dt )
+    {
+      mStart = dt;
+    }
+
+    void setStartTime( const QDateTime &dt );
     QDateTime startTime() const;
 
-    void setEndTime( const QDateTime& dt );
+    void setEndTime( const QDateTime &dt );
     QDateTime endTime() const;
 
-    TimelineItem *parent() { return mParent; }
+    TimelineItem *parent()
+    {
+      return mParent;
+    }
 
     void updateToolTip();
 

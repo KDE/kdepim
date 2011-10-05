@@ -74,3 +74,5 @@ void KPIM::NepomukWarning::explicitlyClosed()
   KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
   cfgGroup.writeEntry( m_neverShowAgainKey, true );
 }
+
+#include "nepomukwarning.moc"

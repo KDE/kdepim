@@ -293,26 +293,24 @@ MessageItem *Widget::currentMessageItem() const
 
 Akonadi::MessageStatus Widget::currentFilterStatus() const
 {
-  if ( !d->mFilter )
-    return Akonadi::MessageStatus();
-
-  return d->mFilter->status();
+  if ( d->mFilter )
+    return d->mFilter->status();
+  return Akonadi::MessageStatus();
 }
 
 QString Widget::currentFilterSearchString() const
 {
-  if ( !d->mFilter )
-    return QString();
-
-  return d->mFilter->searchString();
+  if ( d->mFilter )
+    return d->mFilter->searchString();
+  return QString();
 }
 
 QString Widget::currentFilterTagId() const
 {
-  if ( !d->mFilter )
-    return QString();
-
-  return d->mFilter->tagId();
+  if ( d->mFilter )
+    return d->mFilter->tagId();
+  
+  return QString();
 }
 
 void Widget::Private::setDefaultAggregationForStorageModel( const StorageModel * storageModel )
@@ -451,10 +449,11 @@ void Widget::themeMenuAboutToShow()
 
   QList< const Theme * > sortedThemes;
 
-  for ( QHash< QString, Theme * >::ConstIterator ci = themes.constBegin(); ci != themes.constEnd(); ++ci )
+  QHash< QString, Theme * >::ConstIterator end ( themes.constEnd() );
+  for ( QHash< QString, Theme * >::ConstIterator ci = themes.constBegin(); ci != end; ++ci )
   {
     int idx = 0;
-    int cnt = sortedThemes.count();
+    const int cnt = sortedThemes.count();
     while ( idx < cnt )
     {
       if ( sortedThemes.at( idx )->name() > ( *ci )->name() )
@@ -469,7 +468,8 @@ void Widget::themeMenuAboutToShow()
       sortedThemes.append( *ci );
   }
 
-  for ( QList< const Theme * >::ConstIterator it = sortedThemes.constBegin(); it != sortedThemes.constEnd(); ++it )
+  QList< const Theme * >::ConstIterator endTheme( sortedThemes.constEnd() );
+  for ( QList< const Theme * >::ConstIterator it = sortedThemes.constBegin(); it != endTheme; ++it )
   {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
@@ -558,7 +558,7 @@ void Widget::aggregationMenuAboutToShow()
   for ( QHash< QString, Aggregation * >::ConstIterator ci = aggregations.constBegin(); ci != aggregations.constEnd(); ++ci )
   {
     int idx = 0;
-    int cnt = sortedAggregations.count();
+    const int cnt = sortedAggregations.count();
     while ( idx < cnt )
     {
       if ( sortedAggregations.at( idx )->name() > ( *ci )->name() )
@@ -573,7 +573,9 @@ void Widget::aggregationMenuAboutToShow()
       sortedAggregations.append( *ci );
   }
 
-  for ( QList< const Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != sortedAggregations.constEnd(); ++it )
+  QList< const Aggregation * >::ConstIterator end( sortedAggregations.constEnd() );
+
+  for ( QList< const Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != end; ++it )
   {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
@@ -652,8 +654,8 @@ void Widget::sortOrderMenuAboutToShow()
   grp = new QActionGroup( menu );
 
   options = SortOrder::enumerateMessageSortingOptions( d->mAggregation->threading() );
-
-  for ( it = options.constBegin(); it != options.constEnd(); ++it )
+  QList< QPair< QString, int > >::ConstIterator end( options.constEnd() );
+  for ( it = options.constBegin(); it != end; ++it )
   {
     act = menu->addAction( ( *it ).first );
     act->setCheckable( true );
@@ -672,8 +674,8 @@ void Widget::sortOrderMenuAboutToShow()
     menu->addTitle( i18n( "Message Sort Direction" ) );
 
     grp = new QActionGroup( menu );
-
-    for ( it = options.constBegin(); it != options.constEnd(); ++it )
+    end = options.constEnd();
+    for ( it = options.constBegin(); it != end; ++it )
     {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
@@ -694,7 +696,8 @@ void Widget::sortOrderMenuAboutToShow()
 
     grp = new QActionGroup( menu );
 
-    for ( it = options.constBegin(); it != options.constEnd(); ++it )
+    end = options.constEnd();
+    for ( it = options.constBegin(); it != end; ++it )
     {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
@@ -715,8 +718,8 @@ void Widget::sortOrderMenuAboutToShow()
     menu->addTitle( i18n( "Group Sort Direction" ) );
 
     grp = new QActionGroup( menu );
-
-    for ( it = options.constBegin(); it != options.constEnd(); ++it )
+    end = options.constEnd();
+    for ( it = options.constBegin(); it != end; ++it )
     {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
@@ -1080,7 +1083,7 @@ void Widget::searchTimerFired()
   if ( !d->mFilter )
     d->mFilter = new Filter();
 
-  QString text = d->mSearchEdit->text();
+  const QString text = d->mSearchEdit->text();
 
   d->mFilter->setSearchString( text );
   if ( d->mFilter->isEmpty() ) {

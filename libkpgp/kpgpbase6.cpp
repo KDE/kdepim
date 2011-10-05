@@ -22,8 +22,6 @@
 #include <assert.h>
 
 #include <QDateTime>
-//Added by qt3to4:
-#include <QByteArray>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -47,11 +45,10 @@ int
 Base6::decrypt( Block& block, const char *passphrase )
 {
   int index, index2;
-  int exitStatus = 0;
 
   clear();
   input = block.text();
-  exitStatus = run( PGP6 " +batchmode +language=C -f", passphrase);
+  int exitStatus = run( PGP6 " +batchmode +language=C -f", passphrase);
   if( !output.isEmpty() )
     block.setProcessedText( output );
   block.setError( error );
@@ -188,10 +185,8 @@ Base6::readPublicKey( const KeyID& keyID,
                       const bool readTrust /* = false */,
                       Key* key /* = 0 */ )
 {
-  int exitStatus = 0;
-
   status = 0;
-  exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
+  int exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
                     "0x" + keyID, 0, true );
 
   if(exitStatus != 0) {
@@ -350,9 +345,7 @@ Base6::secretKeys( const QStringList & patterns )
 int
 Base6::isVersion6()
 {
-  int exitStatus = 0;
-
-  exitStatus = run( PGP6, 0, true );
+  int exitStatus = run( PGP6, 0, true );
 
   if(exitStatus == -1) {
     errMsg = i18n("error running PGP");

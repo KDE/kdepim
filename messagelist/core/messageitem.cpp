@@ -43,6 +43,11 @@ K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriev
 class MessageItem::Tag::Private
 {
 public:
+  Private()
+    :mPriority( 0 ) //Initialize it
+    {
+      
+    }
   QPixmap mPixmap;
   QString mName;
   QString mId;             ///< The unique id of this tag
@@ -288,7 +293,8 @@ QString MessageItem::annotation() const
     Nepomuk::Resource resource( d->mAkonadiItem.url() );
     return resource.description();
   }
-  else return QString();
+  else
+    return QString();
 }
 
 void MessageItem::editAnnotation()
@@ -389,7 +395,7 @@ QColor MessageItem::backgroundColor() const
 {
   Q_D( const MessageItem );
   const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 ) {
+  if ( bestTag ) {
     return bestTag->backgroundColor();
   } else {
     return QColor();
@@ -404,7 +410,7 @@ QFont MessageItem::font() const
   // and thus this method called for each item
   if ( d->tagListInitialized() ) {
     const Tag *bestTag = d->bestTag();
-    if ( bestTag != 0 && bestTag->font() != QFont() ) {
+    if ( bestTag && bestTag->font() != QFont() ) {
       return bestTag->font();
     }
   }
@@ -435,7 +441,7 @@ QString MessageItem::fontKey() const
   // and thus this method called for each item
   if ( d->tagListInitialized() ) {
     const Tag *bestTag = d->bestTag();
-    if ( bestTag != 0 && bestTag->font() != QFont() ) {
+    if ( bestTag  && bestTag->font() != QFont() ) {
       return bestTag->font().key();
     }
   }
@@ -644,7 +650,8 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
   QList< Item * > * childList = childItems();
   if ( !childList )
     return;
-  for ( QList< Item * >::Iterator it = childList->begin(); it != childList->end(); ++it )
+  QList< Item * >::ConstIterator end( childList->constEnd() );
+  for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
   {
     Q_ASSERT( ( *it )->type() == Item::Message );
     static_cast< MessageItem * >( *it )->subTreeToList( list );

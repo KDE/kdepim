@@ -60,7 +60,7 @@ using namespace EventViews;
 using namespace Akonadi;
 using namespace Future;
 
-static const KCatalogLoader loader("libeventviews");
+static const KCatalogLoader loader( "libeventviews" );
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
@@ -71,8 +71,8 @@ void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelecti
 }
 
 EventView::EventView( QWidget *parent )
-  : QWidget( parent )
-  , d_ptr( new EventViewPrivate( this ) )
+  : QWidget( parent ),
+    d_ptr( new EventViewPrivate( this ) )
 {
   QByteArray cname = metaObject()->className();
   cname.replace( ':', '_' );
@@ -277,7 +277,8 @@ bool EventView::hasConfigurationDialog() const
   return false;
 }
 
-void EventView::setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth )
+void EventView::setDateRange( const KDateTime &start, const KDateTime &end,
+                              const QDate &preferredMonth )
 {
   Q_D( EventView );
 
@@ -647,14 +648,14 @@ QColor EventView::itemFrameColor( const QColor &color, bool selected )
   }
 }
 
-void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QList< KDateTime > &list )
+void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QList<KDateTime> &list )
 {
   Q_ASSERT( todo );
 
   if ( todo->recurs() && calendar()->filter() &&
-        ( calendar()->filter()->criteria() & KCalCore::CalFilter::HideCompletedTodos ) ) {
+       ( calendar()->filter()->criteria() & KCalCore::CalFilter::HideCompletedTodos ) ) {
     QMutableListIterator<KDateTime> i( list );
-    while( i.hasNext() ) {
+    while ( i.hasNext() ) {
       if ( i.next() < todo->dtDue() ) {
         i.remove();
       }
@@ -667,8 +668,9 @@ QString EventView::iconForItem( const Akonadi::Item &item )
 {
   QString iconName;
   const Akonadi::Collection collection = item.parentCollection();
-  if ( collection.isValid() && collection.hasAttribute<Akonadi::EntityDisplayAttribute>() )
+  if ( collection.isValid() && collection.hasAttribute<Akonadi::EntityDisplayAttribute>() ) {
     iconName = collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName();
+  }
 
   return iconName;
 }

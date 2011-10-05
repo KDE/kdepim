@@ -18,7 +18,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "kmfilterdlg.h"
+#include "kmfilterdialog.h"
 
 
 // other KMail headers:
@@ -42,7 +42,6 @@ using MailCommon::FilterImporterExporter;
 #include <kinputdialog.h>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
-#include <kconfig.h>
 #include <kicondialog.h>
 #include <kkeysequencewidget.h>
 #include <kpushbutton.h>
@@ -108,6 +107,22 @@ I18N_NOOP( "<qt><p>Click this button to move the currently-"
 	   "The topmost filter gets tried first.</p>"
 	   "<p>If you have clicked this button accidentally, you can undo this "
 	   "by clicking on the <em>Up</em> button.</p></qt>" );
+
+const char * _wt_filterlist_top =
+I18N_NOOP( "<qt><p>Click this button to move the currently-"
+	   "selected filter to top of list.</p>"
+	   "<p>This is useful since the order of the filters in the list "
+	   "determines the order in which they are tried on messages: "
+	   "The topmost filter gets tried first.</p></qt>" );
+
+const char * _wt_filterlist_bottom =
+I18N_NOOP( "<qt><p>Click this button to move the currently-"
+	   "selected filter to bottom of list.</p>"
+	   "<p>This is useful since the order of the filters in the list "
+	   "determines the order in which they are tried on messages: "
+	   "The topmost filter gets tried first.</p></qt>" );
+
+
 const char * _wt_filterlist_rename =
 I18N_NOOP( "<qt><p>Click this button to rename the currently-selected filter.</p>"
 	   "<p>Filters are named automatically, as long as they start with "
@@ -124,15 +139,15 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
            "change the ruleset to tag the messages differently.</p></qt>" );
 
 // The anchor of the filter dialog's help.
-const char * KMFilterDlgHelpAnchor =  "filters" ;
+const char * KMFilterDialogHelpAnchor =  "filters" ;
 
 //=============================================================================
 //
-// class KMFilterDlg (the filter dialog)
+// class KMFilterDialog (the filter dialog)
 //
 //=============================================================================
 
-KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWidget* parent, bool createDummyFilter )
+KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection, QWidget* parent, bool createDummyFilter )
   : KDialog( parent ),
   mDoNotClose( false ),
   mIgnoreFilterUpdates( true )
@@ -142,7 +157,7 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   setModal( false );
   setButtonFocus( Ok );
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-  setHelp( KMFilterDlgHelpAnchor, "kmail" );
+  setHelp( KMFilterDialogHelpAnchor, "kmail" );
   setButtonText( User1, i18n("Import...") );
   setButtonText( User2, i18n("Export...") );
   connect( this, SIGNAL(user1Clicked()),
@@ -293,7 +308,7 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   // load the filter parts into the edit widgets
   connect( mFilterList, SIGNAL(filterSelected(MailCommon::MailFilter*)),
            this, SLOT(slotFilterSelected(MailCommon::MailFilter*)) );
-
+                               
   // transfer changes from the 'Apply this filter on...'
   // combo box to the filter
   connect( mApplyOnIn, SIGNAL(clicked()),
@@ -371,7 +386,7 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   connect( mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()) );
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
-  QSize size = myGroup.readEntry( "FilterDialogSize", QSize() );
+  const QSize size = myGroup.readEntry( "filterDialogSize", QSize() );
   if ( size != QSize()  )
     resize( size );
   else
@@ -382,7 +397,7 @@ KMFilterDlg::KMFilterDlg(const QList<KActionCollection*>& actionCollection, QWid
   mIgnoreFilterUpdates = false;
 }
 
-void KMFilterDlg::accept()
+void KMFilterDialog::accept()
 {
   if ( mDoNotClose ) {
     mDoNotClose = false; // only abort current close attempt
@@ -392,22 +407,22 @@ void KMFilterDlg::accept()
   }
 }
 
-void KMFilterDlg::slotApply()
+void KMFilterDialog::slotApply()
 {
   enableButtonApply( false );
 }
 
-void KMFilterDlg::slotFinished() {
+void KMFilterDialog::slotFinished() {
 	deleteLater();
 }
 
-void KMFilterDlg::slotSaveSize() {
+void KMFilterDialog::slotSaveSize() {
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
-  myGroup.writeEntry( "FilterDialogSize",size() );
+  myGroup.writeEntry( "filterDialogSize",size() );
   myGroup.sync();
 }
 
-void KMFilterDlg::slotFilterSelected( MailFilter* aFilter )
+void KMFilterDialog::slotFilterSelected( MailFilter* aFilter )
 {
   assert( aFilter );
   mIgnoreFilterUpdates = true;
@@ -459,7 +474,7 @@ void KMFilterDlg::slotFilterSelected( MailFilter* aFilter )
   mIgnoreFilterUpdates = false;
 }
 
-void KMFilterDlg::slotReset()
+void KMFilterDialog::slotReset()
 {
   mFilter = 0;
   mPatternEdit->reset();
@@ -469,13 +484,13 @@ void KMFilterDlg::slotReset()
   slotUpdateAccountList();
 }
 
-void KMFilterDlg::slotUpdateFilter()
+void KMFilterDialog::slotUpdateFilter()
 {
   mPatternEdit->updateSearchPattern();
   mActionLister->updateActionList();
 }
 
-void KMFilterDlg::slotApplicabilityChanged()
+void KMFilterDialog::slotApplicabilityChanged()
 {
   if ( mFilter ) {
     mFilter->setApplyOnInbound( mApplyOnIn->isChecked() );
@@ -497,7 +512,7 @@ void KMFilterDlg::slotApplicabilityChanged()
     // Advanced tab functionality - Update list of accounts this filter applies to
     QTreeWidgetItemIterator it( mAccountList );
     while( QTreeWidgetItem * item = *it ) {
-      QString id = item->text( 2 );
+      const QString id = item->text( 2 );
       item->setCheckState( 0, mFilter->applyOnAccount( id ) ? Qt::Checked :
                                                               Qt::Unchecked );
       ++it;
@@ -514,7 +529,7 @@ void KMFilterDlg::slotApplicabilityChanged()
   }
 }
 
-void KMFilterDlg::slotApplicableAccountsChanged()
+void KMFilterDialog::slotApplicableAccountsChanged()
 {
   // Advanced tab functionality - Update list of accounts this filter applies to
   if ( mFilter && mApplyOnForChecked->isEnabled() && mApplyOnForChecked->isChecked() ) {
@@ -532,7 +547,7 @@ void KMFilterDlg::slotApplicableAccountsChanged()
   }
 }
 
-void KMFilterDlg::slotStopProcessingButtonToggled( bool aChecked )
+void KMFilterDialog::slotStopProcessingButtonToggled( bool aChecked )
 {
   if ( mFilter ) {
     mFilter->setStopProcessingHere( aChecked );
@@ -542,7 +557,7 @@ void KMFilterDlg::slotStopProcessingButtonToggled( bool aChecked )
   }
 }
 
-void KMFilterDlg::slotConfigureShortcutButtonToggled( bool aChecked )
+void KMFilterDialog::slotConfigureShortcutButtonToggled( bool aChecked )
 {
   if ( mFilter ) {
     mFilter->setConfigureShortcut( aChecked );
@@ -556,7 +571,7 @@ void KMFilterDlg::slotConfigureShortcutButtonToggled( bool aChecked )
   }
 }
 
-void KMFilterDlg::slotShortcutChanged( const QKeySequence &newSeq )
+void KMFilterDialog::slotShortcutChanged( const QKeySequence &newSeq )
 {
   if ( mFilter ) {
     mKeySeqWidget->applyStealShortcut();
@@ -567,7 +582,7 @@ void KMFilterDlg::slotShortcutChanged( const QKeySequence &newSeq )
   }
 }
 
-void KMFilterDlg::slotConfigureToolbarButtonToggled( bool aChecked )
+void KMFilterDialog::slotConfigureToolbarButtonToggled( bool aChecked )
 {
   if ( mFilter ) {
     mFilter->setConfigureToolbar( aChecked );
@@ -576,7 +591,7 @@ void KMFilterDlg::slotConfigureToolbarButtonToggled( bool aChecked )
   }
 }
 
-void KMFilterDlg::slotFilterActionIconChanged( const QString &icon )
+void KMFilterDialog::slotFilterActionIconChanged( const QString &icon )
 {
   if ( mFilter ) {
     mFilter->setIcon( icon );
@@ -585,7 +600,7 @@ void KMFilterDlg::slotFilterActionIconChanged( const QString &icon )
  }
 }
 
-void KMFilterDlg::slotUpdateAccountList()
+void KMFilterDialog::slotUpdateAccountList()
 {
   mAccountList->clear();
 
@@ -638,7 +653,9 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mListWidget = new QListWidget(this);
   mListWidget->setMinimumWidth(150);
   mListWidget->setWhatsThis( i18n(_wt_filterlist) );
-
+  mListWidget->setDragDropMode( QAbstractItemView::InternalMove );
+  connect( mListWidget->model(),SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
+  
   KListWidgetSearchLine* mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
   mSearchListWidget->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
                                              "textbox, verb to search", "Search" ) );
@@ -649,6 +666,13 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   //----------- the first row of buttons
   KHBox *hb = new KHBox(this);
   hb->setSpacing(4);
+
+  mBtnTop = new KPushButton( QString(), hb );
+  mBtnTop->setIcon( KIcon( "go-top" ) );
+  mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
+  
+  
   mBtnUp = new KPushButton( QString(), hb );
   mBtnUp->setAutoRepeat( true );
   mBtnUp->setIcon( KIcon( "go-up" ) );
@@ -659,10 +683,21 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mBtnDown->setIcon( KIcon( "go-down" ) );
   mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
+
+  mBtnBottom = new KPushButton( QString(), hb );
+  mBtnBottom->setIcon( KIcon( "go-bottom" ) );
+  mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
+
+  
   mBtnUp->setToolTip( i18nc("Move selected filter up.", "Up") );
   mBtnDown->setToolTip( i18nc("Move selected filter down.", "Down") );
+  mBtnTop->setToolTip( i18nc("Move selected filter to the top.", "Top") );
+  mBtnBottom->setToolTip( i18nc("Move selected filter to the bottom.", "Bottom") );
   mBtnUp->setWhatsThis( i18n(_wt_filterlist_up) );
   mBtnDown->setWhatsThis( i18n(_wt_filterlist_down) );
+  mBtnBottom->setWhatsThis( i18n(_wt_filterlist_bottom) );
+  mBtnTop->setWhatsThis( i18n(_wt_filterlist_top) );
 
   layout->addWidget( hb );
 
@@ -698,10 +733,18 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 	   this, SLOT(slotSelected(int)) );
   connect( mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            this, SLOT(slotRename()) );
+  connect( mListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
+           this, SLOT(slotFilterEnabledChanged(QListWidgetItem*)));
+
   connect( mBtnUp, SIGNAL(clicked()),
 	   this, SLOT(slotUp()) );
   connect( mBtnDown, SIGNAL(clicked()),
 	   this, SLOT(slotDown()) );
+  connect( mBtnTop, SIGNAL(clicked()),
+	   this, SLOT(slotTop()) );
+  connect( mBtnBottom, SIGNAL(clicked()),
+	   this, SLOT(slotBottom()) );
+
   connect( mBtnNew, SIGNAL(clicked()),
 	   this, SLOT(slotNew()) );
   connect( mBtnCopy, SIGNAL(clicked()),
@@ -720,8 +763,32 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 KMFilterListBox::~KMFilterListBox()
 {
   qDeleteAll( mFilterList );
+  mFilterList.clear();
 }
 
+void KMFilterListBox::slotFilterEnabledChanged(QListWidgetItem*item)
+{
+  if ( mIdxSelItem < 0 ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
+    return;
+  }
+  MailFilter *filter = mFilterList.at( mIdxSelItem );
+  filter->setEnabled( ( item->checkState() == Qt::Checked ) );
+  emit filterUpdated( filter );
+}
+
+
+void KMFilterListBox::slotRowsMoved( const QModelIndex &, int sourcestart, int sourceEnd , const QModelIndex &, int destinationRow)
+{
+  MailFilter* filter = mFilterList.takeAt( sourcestart );
+  mFilterList.insert( destinationRow-1, filter );
+
+  mIdxSelItem = destinationRow;
+
+  enableControls();
+
+  emit filterOrderAltered();
+}
 
 void KMFilterListBox::createFilter( const QByteArray & field,
                                     const QString & value )
@@ -760,13 +827,15 @@ void KMFilterListBox::slotUpdateFilterName()
   if ( mFilterList.at(mIdxSelItem)->isAutoNaming() ) {
     // auto-naming of patterns
     if ( !p->isEmpty() && p->first() && !p->first()->field().trimmed().isEmpty() )
-      shouldBeName = QString( "<%1>: %2" ).arg( QString::fromLatin1( p->first()->field() ) ).arg( p->first()->contents() );
+      shouldBeName = QString::fromLatin1( "<%1>: %2" ).arg( QString::fromLatin1( p->first()->field() ) ).arg( p->first()->contents() );
     else
       shouldBeName = '<' + i18n("unnamed") + '>';
     p->setName( shouldBeName );
   }
 
   if ( displayedName == shouldBeName ) return;
+
+  mFilterList.at( mIdxSelItem )->setToolbarName( shouldBeName );
 
   mListWidget->blockSignals(true);
   mListWidget->item( mIdxSelItem )->setText( shouldBeName );
@@ -933,6 +1002,55 @@ void KMFilterListBox::slotDelete()
   emit filterRemoved( deletedFilter );
 }
 
+void KMFilterListBox::slotTop()
+{
+  if ( mIdxSelItem < 0 ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
+    return;
+  }
+  if ( mIdxSelItem == 0 ) {
+    kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+    return;
+  }
+  MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
+  mFilterList.insert( 0, filter );
+  QListWidgetItem *item = mListWidget->item( mIdxSelItem );
+  mListWidget->takeItem( mIdxSelItem );
+  mListWidget->insertItem( 0, item );
+
+  mIdxSelItem = 0;
+  mListWidget->setCurrentItem( mListWidget->item( 0 ) );
+  
+  enableControls();
+
+  emit filterOrderAltered();
+}
+
+void KMFilterListBox::slotBottom()
+{
+  if ( mIdxSelItem < 0 ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
+    return;
+  }
+  if ( mIdxSelItem == (int)mListWidget->count() - 1 ) {
+    kDebug() << "Called while the _last_ filter is selected, ignoring.";
+    return;
+  }
+
+  MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
+  mFilterList.insert( mFilterList.count() , filter );
+  QListWidgetItem *item = mListWidget->item( mIdxSelItem );
+  mListWidget->takeItem( mIdxSelItem );
+  mListWidget->insertItem( mListWidget->count(), item );
+
+  mIdxSelItem = ( mFilterList.count() -1 );
+  mListWidget->setCurrentItem( mListWidget->item( mIdxSelItem ) );
+  enableControls();
+
+  emit filterOrderAltered();
+}
+
+
 void KMFilterListBox::slotUp()
 {
   if ( mIdxSelItem < 0 ) {
@@ -1012,16 +1130,18 @@ void KMFilterListBox::slotRename()
 
 void KMFilterListBox::enableControls()
 {
-  bool theFirst = ( mIdxSelItem == 0 );
-  bool theLast = ( mIdxSelItem >= (int)mFilterList.count() - 1 );
-  bool aFilterIsSelected = ( mIdxSelItem >= 0 );
+  const bool theFirst = ( mIdxSelItem == 0 );
+  const bool theLast = ( mIdxSelItem >= (int)mFilterList.count() - 1 );
+  const bool aFilterIsSelected = ( mIdxSelItem >= 0 );
 
   mBtnUp->setEnabled( aFilterIsSelected && !theFirst );
   mBtnDown->setEnabled( aFilterIsSelected && !theLast );
   mBtnCopy->setEnabled( aFilterIsSelected );
   mBtnDelete->setEnabled( aFilterIsSelected );
   mBtnRename->setEnabled( aFilterIsSelected );
-
+  mBtnTop->setEnabled( aFilterIsSelected && !theFirst );
+  mBtnBottom->setEnabled( aFilterIsSelected && !theLast );
+  
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
 }
@@ -1042,7 +1162,9 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
   const QList<MailFilter*> filters = MailCommon::FilterManager::instance()->filters();
   foreach ( MailFilter *filter, filters ) {
     mFilterList.append( new MailFilter( *filter ) ); // deep copy
-    mListWidget->addItem( filter->pattern()->name() );
+    QListWidgetItem *item = new QListWidgetItem( filter->pattern()->name(), mListWidget );
+    item->setCheckState(  filter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+    mListWidget->addItem( item );
   }
 
   blockSignals(false);
@@ -1051,10 +1173,11 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
   // create an empty filter when there's none, to avoid a completely
   // disabled dialog (usability tests indicated that the new-filter
   // button is too hard to find that way):
-  if ( !mListWidget->count() && createDummyFilter )
+  const int numberOfItem( mListWidget->count() );
+  if ( !numberOfItem && createDummyFilter )
     slotNew();
 
-  if ( mListWidget->count() > 0 )
+  if ( numberOfItem > 0 )
     mListWidget->setCurrentRow( 0 );
 
   enableControls();
@@ -1084,7 +1207,10 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
 void KMFilterListBox::appendFilter( MailFilter* aFilter )
 {
   mFilterList.append( aFilter );
-  mListWidget->addItems( QStringList( aFilter->pattern()->name() ) );
+
+  QListWidgetItem *item = new QListWidgetItem( aFilter->pattern()->name(), mListWidget );
+  item->setCheckState(  aFilter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+  mListWidget->addItem( item );
 
   emit filterCreated();
 }
@@ -1109,7 +1235,7 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 }
 
 
-void KMFilterDlg::slotImportFilters()
+void KMFilterDialog::slotImportFilters()
 {
   FilterImporterExporter importer( this );
   QList<MailFilter *> filters = importer.importFilters();
@@ -1117,29 +1243,29 @@ void KMFilterDlg::slotImportFilters()
   // FIXME message box how many were imported?
   if ( filters.isEmpty() ) return;
 
-  QList<MailFilter*>::ConstIterator it;
-
-  for ( it = filters.constBegin() ; it != filters.constEnd() ; ++it ) {
+  QList<MailFilter*>::ConstIterator end( filters.constEnd() );
+  
+  for ( QList<MailFilter*>::ConstIterator it = filters.constBegin() ; it != end ; ++it ) {
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
   }
 }
 
-void KMFilterDlg::slotExportFilters()
+void KMFilterDialog::slotExportFilters()
 {
   FilterImporterExporter exporter( this );
   QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
   exporter.exportFilters( filters );
-  QList<MailFilter *>::ConstIterator it;
-  for ( it = filters.constBegin(); it != filters.constEnd(); ++it )
+  QList<MailFilter*>::ConstIterator end( filters.constEnd() );
+  for ( QList<MailFilter*>::ConstIterator it = filters.constBegin(); it != end; ++it )
     delete *it;
 }
 
-void KMFilterDlg::slotDisableAccept()
+void KMFilterDialog::slotDisableAccept()
 {
   mDoNotClose = true;
 }
 
-void KMFilterDlg::slotDialogUpdated()
+void KMFilterDialog::slotDialogUpdated()
 {
   kDebug() << "Detected a change in data bound to the dialog!";
   if ( !mIgnoreFilterUpdates ) {
@@ -1148,4 +1274,4 @@ void KMFilterDlg::slotDialogUpdated()
 }
 }
 
-#include "kmfilterdlg.moc"
+#include "kmfilterdialog.moc"

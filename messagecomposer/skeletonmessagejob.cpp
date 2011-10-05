@@ -161,7 +161,7 @@ void SkeletonMessageJobPrivate::doStart()
   // MDN
   {
     if( globalPart->MDNRequested() ) {
-      QString addr = infoPart->replyTo().isEmpty() ? infoPart->from() : infoPart->replyTo();
+      const QString addr = infoPart->replyTo().isEmpty() ? infoPart->from() : infoPart->replyTo();
       KMime::Headers::Generic* mdn = new KMime::Headers::Generic( "Disposition-Notification-To", message, addr, "utf-8" );
       message->setHeader( mdn );
     }

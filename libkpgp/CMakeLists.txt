@@ -1,8 +1,6 @@
 
 add_subdirectory( pics )
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkdepim )
-
 INCLUDE(CheckIncludeFiles)
 check_include_files(sys/poll.h HAVE_SYS_POLL_H)
 configure_file(config-libkpgp.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libkpgp.h)

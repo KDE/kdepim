@@ -14,7 +14,16 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 #This is an ugly hack to make the plugin compile becuase we don't have the plugin interface in kdepimlibs yet
-set( CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -Wl,--allow-shlib-undefined,--warn-unresolved-symbols,--no-fatal-warnings" )
+include(CheckCCompilerFlag)
+set( CMAKE_REQUIRED_FLAGS "-Wl,--warn-unresolved-symbols,--no-fatal-warnings" )
+check_c_compiler_flag("" HAVE_NO_FATAL_WARNINGS)
+#The option --no-fatal-warnings is not supported by all versions of ld so use --unresolved-symbols=ignore-all
+#if it is not available
+if( HAVE_NO_FATAL_WARNINGS )
+  set( CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -Wl,--allow-shlib-undefined,--warn-unresolved-symbols,--no-fatal-warnings" )
+else( HAVE_NO_FATAL_WARNINGS )
+  set( CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -Wl,--allow-shlib-undefined,--unresolved-symbols=ignore-all" )
+endif( HAVE_NO_FATAL_WARNINGS )
 
 set(akonadi_nepomuk_email_feeder_SRCS
   nepomukmailfeeder.cpp

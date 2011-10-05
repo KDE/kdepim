@@ -3,7 +3,7 @@
 
   Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (C) 2005,2008 Allen Winter <winter@kde.org>
+  Copyright (C) 2005,2008,2011 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -23,18 +23,18 @@
 //krazy:excludeall=tipsandthis
 
 #include "kprefsdialog.h"
-#include "ktimeedit.h"
-#include "kdateedit.h"
 
 #include <KColorButton>
 #include <KComboBox>
 #include <KConfigSkeleton>
+#include <KDateComboBox>
 #include <KDebug>
 #include <KFontDialog>
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
 #include <KPageWidget>
+#include <KTimeComboBox>
 #include <KUrlRequester>
 
 #include <QFont>
@@ -302,7 +302,7 @@ KPrefsWidTime::KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   : mItem( item )
 {
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
-  mTimeEdit = new KTimeEdit( parent );
+  mTimeEdit = new KTimeComboBox( parent );
   mLabel->setBuddy( mTimeEdit );
   connect( mTimeEdit, SIGNAL(timeEdited(QTime)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
@@ -334,7 +334,7 @@ QLabel *KPrefsWidTime::label()
   return mLabel;
 }
 
-KTimeEdit *KPrefsWidTime::timeEdit()
+KTimeComboBox *KPrefsWidTime::timeEdit()
 {
   return mTimeEdit;
 }
@@ -390,7 +390,7 @@ KPrefsWidDate::KPrefsWidDate( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   : mItem( item )
 {
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
-  mDateEdit = new KDateEdit( parent );
+  mDateEdit = new KDateComboBox( parent );
   mLabel->setBuddy( mDateEdit );
   connect( mDateEdit, SIGNAL(dateEdited(QDate)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
@@ -427,7 +427,7 @@ QLabel *KPrefsWidDate::label()
   return mLabel;
 }
 
-KDateEdit *KPrefsWidDate::dateEdit()
+KDateComboBox *KPrefsWidDate::dateEdit()
 {
   return mDateEdit;
 }

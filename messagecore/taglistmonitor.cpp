@@ -47,3 +47,5 @@ void TagListMonitor::triggerUpdate()
     emit instance->tagsChanged();
   }
 }
+
+#include "taglistmonitor.moc"

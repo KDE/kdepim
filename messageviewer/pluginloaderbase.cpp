@@ -38,7 +38,8 @@ PluginLoaderBase::~PluginLoaderBase() {}
 
 QStringList PluginLoaderBase::types() const {
   QStringList result;
-  for ( QMap< QString, PluginMetaData >::const_iterator it = mPluginMap.constBegin(); it != mPluginMap.constEnd() ; ++it )
+  QMap< QString, PluginMetaData >::const_iterator end( mPluginMap.constEnd() );
+  for ( QMap< QString, PluginMetaData >::const_iterator it = mPluginMap.constBegin(); it != end ; ++it )
     result.push_back( it.key() );
   return result;
 }

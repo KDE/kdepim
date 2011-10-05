@@ -40,7 +40,7 @@ class QStandardItem;
 class QTreeWidget;
 
 namespace KDGantt {
-class GraphicsView;
+  class GraphicsView;
 }
 
 namespace EventViews {
@@ -63,9 +63,9 @@ class TimelineView::Private : public QObject
   public Q_SLOTS:
     // void overscale( KDGantt::View::Scale scale );
     void itemSelected( const QModelIndex &index );
-    void itemDoubleClicked( const QModelIndex& index );
-    void itemChanged( QStandardItem* item );
-    void contextMenuRequested( const QPoint& point);
+    void itemDoubleClicked( const QModelIndex &index );
+    void itemChanged( QStandardItem *item );
+    void contextMenuRequested( const QPoint &point );
     void newEventWithHint( const QDateTime & );
     void splitterMoved();
 
@@ -77,9 +77,9 @@ class TimelineView::Private : public QObject
     QMap<Akonadi::Collection::Id, TimelineItem*> mCalendarItemMap;
     QDate mStartDate, mEndDate;
     QDateTime mHintDate;
-  private:
-    TimelineView * const q;
 
+  private:
+    TimelineView *const q;
 };
 
 } // namespace EventViews

@@ -62,7 +62,7 @@ class Manager : public QObject
 {
   Q_OBJECT
 protected:
-  Manager();
+  explicit Manager();
   ~Manager();
 
 private:

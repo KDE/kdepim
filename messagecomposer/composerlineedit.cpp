@@ -99,7 +99,7 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
   //multiple emails, let the user choose one
   KMenu menu( this );
   menu.setObjectName( QLatin1String("Addresschooser") );
-  for ( QStringList::const_iterator it = emails.begin(), end = emails.end() ; it != end; ++it )
+  for ( QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd() ; it != end; ++it )
     menu.addAction( *it );
   const QAction *result = menu.exec( QCursor::pos() );
   if ( !result )
@@ -118,8 +118,9 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     KABC::Addressee::List list;
     KABC::VCardDrag::fromMimeData( md, list );
 
-    KABC::Addressee::List::Iterator ait;
-    for ( ait = list.begin(); ait != list.end(); ++ait ){
+    KABC::Addressee::List::ConstIterator ait;
+    KABC::Addressee::List::ConstIterator end( list.constEnd() );
+    for ( ait = list.constBegin(); ait != end; ++ait ){
       insertEmails( (*ait).emails() );
     }
   }
@@ -241,8 +242,8 @@ void ComposerLineEdit::loadContacts()
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
     KConfigGroup group( config, "CompletionWeights" );
-    int weight = group.readEntry( "Recent Addresses", 10 );
-    int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
+    const int weight = group.readEntry( "Recent Addresses", 10 );
+    const int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
     for ( ; it != recent.end(); ++it ) {
       KABC::Addressee addr;
       KPIMUtils::extractEmailAddressAndName( *it, email, name );
