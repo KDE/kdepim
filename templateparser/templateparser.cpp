@@ -200,7 +200,8 @@ QString TemplateParser::getFName( const QString &str )
   } else if ( ( sep_pos = str.indexOf(',') ) > 0 ) {
     int i;
     bool begin = false;
-    for ( i = sep_pos; i < str.length(); ++i ) {
+    const int strLength( str.length() );
+    for ( i = sep_pos; i < strLength; ++i ) {
       QChar c = str[i];
       if ( c.isLetterOrNumber() ) {
         begin = true;
@@ -1293,12 +1294,12 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   Q_ASSERT( root );
   Q_ASSERT( otp->nodeHelper()->nodeProcessed( root ) );
 
-  QByteArray parsedString;
-  bool isHTML = false;
-  const QTextCodec * codec = 0;
 
   if ( !root )
     return QString();
+  QByteArray parsedString;
+  bool isHTML = false;
+  const QTextCodec * codec = 0;
 
   /*
    * FIXME

@@ -21,17 +21,10 @@
 #include "customtemplates.h"
 
 #include <qfont.h>
-#include <qcombobox.h>
-#include <qpushbutton.h>
-#include <qtextedit.h>
-#include <qlabel.h>
-#include <qlineedit.h>
 #include <QWhatsThis>
-#include <qtoolbox.h>
 
 #include <klocale.h>
 #include <kglobal.h>
-#include <kdebug.h>
 #include <kiconloader.h>
 #include <kpushbutton.h>
 #include <klineedit.h>
@@ -51,7 +44,7 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   mUi->setupUi( this );
   setObjectName(name);
 
-  QFont f = KGlobalSettings::fixedFont();
+  const QFont f = KGlobalSettings::fixedFont();
   mUi->mEdit->setFont( f );
 
   mUi->mAdd->setIcon( KIcon( "list-add" ) );
