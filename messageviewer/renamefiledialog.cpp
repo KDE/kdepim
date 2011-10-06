@@ -167,12 +167,12 @@ QString RenameFileDialog::suggestName(const KUrl& baseURL, const QString& oldNam
         basename.truncate(index);
     }
 
-    int pos = basename.lastIndexOf(spacer);
+    const int pos = basename.lastIndexOf(spacer);
 
     if (pos != -1) {
-        QString tmp = basename.mid(pos + 1);
+        const QString tmp = basename.mid(pos + 1);
         bool ok;
-        int number = tmp.toInt(&ok);
+        const int number = tmp.toInt(&ok);
 
         if (!ok) {  // ok there is no number
             suggestedName = basename + spacer + '1' + dotSuffix;
@@ -182,7 +182,7 @@ QString RenameFileDialog::suggestName(const KUrl& baseURL, const QString& oldNam
             suggestedName = basename + dotSuffix;
         }
     } else // no spacer yet
-        suggestedName = basename + spacer + "1" + dotSuffix ;
+        suggestedName = basename + spacer + '1' + dotSuffix ;
 
     // Check if suggested name already exists
     bool exists = false;
