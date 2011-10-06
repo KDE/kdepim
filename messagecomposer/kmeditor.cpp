@@ -130,7 +130,8 @@ void KMeditorPrivate::startExternalEditor()
     // construct command line...
   QStringList command = extEditorPath.split( QLatin1Char( ' ' ), QString::SkipEmptyParts );
   bool filenameAdded = false;
-  for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
+  QStringList::Iterator end = command.end();
+  for ( QStringList::Iterator it = command.begin(); it != end; ++it ) {
     if ( ( *it ).contains( QLatin1String( "%f" ) ) ) {
       ( *it ).replace( QRegExp( QLatin1String( "%f" ) ), mExtEditorTempFile->fileName() );
       filenameAdded = true;
@@ -477,7 +478,8 @@ int KMeditor::linePosition()
       }
 
       const int cursorBasePosition = cursor.position() - block.position();
-      for ( int i = 0; i < layout->lineCount(); i++ ) {
+      const int numberOfLine( layout->lineCount() );
+      for ( int i = 0; i < numberOfLine; ++i ) {
         QTextLine line = layout->lineAt( i );
         if ( cursorBasePosition >= line.textStart() &&
              cursorBasePosition < line.textStart() + line.textLength() ) {
@@ -605,8 +607,8 @@ KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) cons
     forever {
 
       // Find the next occurrence of the signature text
-      QString text = q->document()->toPlainText();
-      int currentMatch = text.indexOf( sigText, currentSearchPosition );
+      const QString text = q->document()->toPlainText();
+      const int currentMatch = text.indexOf( sigText, currentSearchPosition );
       currentSearchPosition = currentMatch + sigText.length();
       if ( currentMatch == -1 ) {
         break;
