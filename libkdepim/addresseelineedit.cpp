@@ -285,6 +285,7 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
   if ( !items.isEmpty() &&
        !( items.count() == 1 && m_searchString == items.first() ) ) {
 
+    completionBox->clear();
     const int numberOfItems( items.count() );
     for ( int i = 0; i< numberOfItems; ++i )
     {
@@ -293,7 +294,6 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
         item->setFlags( item->flags()&~Qt::ItemIsSelectable );
       completionBox->addItem( item );
     }
-
     if ( !completionBox->isVisible() ) {
       if ( !m_searchString.isEmpty() ) {
         completionBox->setCancelledText( m_searchString );
