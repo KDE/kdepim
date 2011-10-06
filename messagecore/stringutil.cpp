@@ -59,7 +59,7 @@ static void removeTrailingSpace( QString &line )
   line.truncate( i + 1 );
 }
 
-// Spilts the line off in two parts: The quote prefixes and the actual text of the line.
+// Splits the line off in two parts: The quote prefixes and the actual text of the line.
 // For example, for the string "> > > Hello", it would be split up in "> > > " as the quote
 // prefix, and "Hello" as the actual text.
 // The actual text is written back to the "line" parameter, and the quote prefix is returned.
@@ -72,7 +72,8 @@ static QString splitLine( QString &line )
   // TODO: Replace tabs with spaces first.
 
   // Loop through the chars in the line to find the place where the quote prefix stops
-  while ( i < line.length() ) {
+  const int lineLength( line.length() );
+  while ( i < lineLength ) {
     const QChar c = line[i];
     const bool isAllowedQuoteChar = (c == '>') || (c == ':') || (c == '|') ||
                                     (c == ' ') || (c == '\t');
