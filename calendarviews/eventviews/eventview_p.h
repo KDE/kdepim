@@ -31,6 +31,8 @@
 #include <KDateTime>
 #include <KRandom>
 
+class KCheckableProxyModel;
+
 namespace EventViews {
 
 class EventViewPrivate
