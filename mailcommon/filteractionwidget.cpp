@@ -96,8 +96,9 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
 
   int index;
   QList<FilterActionDesc*> list = MailCommon::FilterManager::filterActionDict()->list();
-  QList<FilterActionDesc*>::const_iterator it;
-  for ( index = 0, it = list.constBegin() ; it != list.constEnd() ; ++it, ++index ) {
+  QList<FilterActionDesc*>::const_iterator it;  
+  QList<FilterActionDesc*>::const_iterator end( list.constEnd() );
+  for ( index = 0, it = list.constBegin() ; it != end ; ++it, ++index ) {
     //create an instance:
     FilterAction *action = (*it)->create();
 
@@ -152,7 +153,7 @@ void FilterActionWidget::setAction( const FilterAction *action )
 
   // find the index of typeOf(action) in mComboBox
   // and clear the other widgets on the way.
-  for ( int i = 0; i < count ; i++ ) {
+  for ( int i = 0; i < count ; ++i ) {
     if ( action && d->mComboBox->itemText( i ) == label ) {
       d->setFilterAction( d->mActionList.at( i )->createParamWidget( this ) );
 
@@ -251,7 +252,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
   static_cast<QWidget*>( parent() )->setEnabled( true );
 
-  if ( list->count() == 0 ) {
+  if ( list->isEmpty() ) {
     slotClear();
     return;
   }
@@ -270,11 +271,10 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
   // load the actions into the widgets
   QList<QWidget*> widgetList = widgets();
-  QList<FilterAction*>::const_iterator aIt;
+  QList<FilterAction*>::const_iterator aEnd( d->mActionList->constEnd() );
   QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-  for ( aIt = d->mActionList->constBegin();
-        ( aIt != d->mActionList->constEnd() && wIt != widgetList.constEnd() );
-        ++aIt, ++wIt ) {
+  QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+  for ( QList<FilterAction*>::const_iterator aIt = d->mActionList->constBegin(); ( aIt != aEnd && wIt != wEnd );++aIt, ++wIt ) {
     qobject_cast<FilterActionWidget*>( *wIt )->setAction( ( *aIt ) );
     connect( qobject_cast<FilterActionWidget*>( *wIt ), SIGNAL(filterModified()), this, SIGNAL(filterModified()) );
   }
