@@ -385,7 +385,9 @@ bool URLHandlerManager::handleShiftClick( const KUrl &url, ViewerPrivate *window
 
 bool URLHandlerManager::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
 {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end(  mHandlers.constEnd() );
+  
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->willHandleDrag( url, window ) )
       return true;
   return false;
@@ -393,21 +395,25 @@ bool URLHandlerManager::willHandleDrag( const KUrl &url, ViewerPrivate *window )
 
 bool URLHandlerManager::handleDrag( const KUrl &url, ViewerPrivate *window ) const
 {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleDrag( url, window ) )
       return true;
   return false;
 }
 
 bool URLHandlerManager::handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w ) const {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleContextMenuRequest( url, p, w ) )
       return true;
   return false;
 }
 
 QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w ) const {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it ) {
     const QString msg = (*it)->statusBarMessage( url, w );
     if ( !msg.isEmpty() )
       return msg;
