@@ -1189,7 +1189,10 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
   assert( aFilter );
 
   // if mIdxSelItem < 0, QListBox::insertItem will append.
-  mListWidget->insertItem( mIdxSelItem, aFilter->pattern()->name() );
+  QListWidgetItem *item = new QListWidgetItem( aFilter->pattern()->name() );
+  item->setCheckState(  aFilter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+  mListWidget->insertItem( mIdxSelItem,item );
+
   if ( mIdxSelItem < 0 ) {
     // none selected -> append
     mFilterList.append( aFilter );
