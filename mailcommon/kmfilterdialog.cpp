@@ -138,9 +138,6 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
            "other large messages were waiting on the server, or if you wanted to "
            "change the ruleset to tag the messages differently.</p></qt>" );
 
-// The anchor of the filter dialog's help.
-const char * KMFilterDialogHelpAnchor =  "filters" ;
-
 //=============================================================================
 //
 // class KMFilterDialog (the filter dialog)
@@ -157,7 +154,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   setModal( false );
   setButtonFocus( Ok );
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-  setHelp( KMFilterDialogHelpAnchor, "kmail" );
+  setHelp( "filters", "kmail" );
   setButtonText( User1, i18n("Import...") );
   setButtonText( User2, i18n("Export...") );
   connect( this, SIGNAL(user1Clicked()),
