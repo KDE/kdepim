@@ -43,7 +43,6 @@
 
 #include <KDebug>
 
-#include <QString>
 #include <QTextCodec>
 
 using namespace MessageViewer;
@@ -58,7 +57,7 @@ PartNodeBodyPart::PartNodeBodyPart( KMime::Content *topLevelContent, KMime::Cont
 
 QString PartNodeBodyPart::makeLink( const QString & path ) const {
   // FIXME: use a PRNG for the first arg, instead of a serial number
-  return QString( "x-kmail:/bodypart/%1/%2/%3" )
+  return QString::fromLatin1( "x-kmail:/bodypart/%1/%2/%3" )
     .arg( serial++ ).arg( mContent->index().toString() )
     .arg( QString::fromLatin1( KUrl::toPercentEncoding( path, "/" ) ) );
 }

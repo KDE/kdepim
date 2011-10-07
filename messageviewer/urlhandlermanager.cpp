@@ -256,7 +256,7 @@ void URLHandlerManager::BodyPartURLHandlerManager::unregisterHandler( const Inte
 static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate * w, QString * path ) {
   assert( path );
 
-  if ( !w || url.protocol() != "x-kmail" )
+  if ( !w || url.protocol() != QLatin1String( "x-kmail" ) )
     return 0;
   const QString urlPath = url.path();
 
@@ -296,7 +296,8 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest( con
     return false;
 
   PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  BodyPartHandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleContextMenuRequest( &part, path, p ) )
       return true;
   return false;
@@ -309,7 +310,8 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage( const KU
     return QString();
 
   PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+  BodyPartHandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it ) {
     const QString msg = (*it)->statusBarMessage( &part, path );
     if ( !msg.isEmpty() )
       return msg;
@@ -365,7 +367,8 @@ void URLHandlerManager::unregisterHandler( const Interface::BodyPartURLHandler *
 }
 
 bool URLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleClick( url, w ) )
       return true;
   return false;
@@ -373,7 +376,8 @@ bool URLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const
 
 bool URLHandlerManager::handleShiftClick( const KUrl &url, ViewerPrivate *window ) const
 {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleShiftClick( url, window ) )
       return true;
   return false;
@@ -422,8 +426,6 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 
 #include <klocale.h>
 #include <kmessagebox.h>
-
-#include <QString>
 
 namespace {
   bool KMailProtocolURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
