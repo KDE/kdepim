@@ -693,7 +693,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
       return;
     }
 
-    targetDir = QFileInfo( targetFile ).absolutePath() + "/";
+    targetDir = QFileInfo( targetFile ).absolutePath() + '/';
   }
 
   Q_FOREACH( Attachment::Ptr attachment, attachments ) {
