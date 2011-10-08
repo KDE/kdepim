@@ -415,7 +415,7 @@ void History::Private::finishOperation( int changeId,
 
   if ( !mUndoAllInProgress ) {
     if ( resultCode == ResultCodeSuccess ) {
-      mLastErrorString = QString();
+      mLastErrorString.clear();
       destinationStack().push( mEntryInProgress );
     } else {
       mLastErrorString = errorString;
