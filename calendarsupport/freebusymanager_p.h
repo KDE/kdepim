@@ -29,8 +29,8 @@
   your version.
 */
 
-#ifndef FREEBUSYMANAGER_P_H
-#define FREEBUSYMANAGER_P_H
+#ifndef CALENDARSUPPORT_FREEBUSYMANAGER_P_H
+#define CALENDARSUPPORT_FREEBUSYMANAGER_P_H
 
 #include <KCalCore/FreeBusy>
 #include <KCalCore/ICalFormat>

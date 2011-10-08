@@ -20,16 +20,15 @@
 
 #include "incidenceattachmentmodel.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <Akonadi/Monitor>
-#include <Akonadi/ItemFetchScope>
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Monitor>
 
 using namespace CalendarSupport;
 using namespace Akonadi;
 
-namespace CalendarSupport
-{
+namespace CalendarSupport {
 
 class IncidenceAttachmentModelPrivate
 {

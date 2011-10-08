@@ -19,13 +19,15 @@
 */
 
 #include "incidencefetchjob.h"
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
+
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
-#include <kcalcore/event.h>
-#include <kcalcore/journal.h>
-#include <kcalcore/todo.h>
+
+#include <KCalCore/Event>
+#include <KCalCore/Journal>
+#include <KCalCore/Todo>
 
 using namespace Akonadi;
 

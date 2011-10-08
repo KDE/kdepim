@@ -23,17 +23,16 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef EVENTARCHIVER_H
-#define EVENTARCHIVER_H
+#ifndef CALENDARSUPPORT_EVENTARCHIVER_H
+#define CALENDARSUPPORT_EVENTARCHIVER_H
 
 #include "calendarsupport_export.h"
-
 #include "incidencechanger.h"
 
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
-
 #include <Akonadi/Item>
+
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 
 #include <QObject>
 
@@ -108,4 +107,4 @@ class CALENDARSUPPORT_EXPORT EventArchiver : public QObject
 
 }
 
-#endif /* EVENTARCHIVER_H */
+#endif // EVENTARCHIVER_H

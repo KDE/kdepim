@@ -28,13 +28,15 @@
 
 #include "publishdialog.h"
 
-#include <akonadi/contact/emailaddressselectiondialog.h>
-#include <kcalcore/attendee.h>
-#include <kcalcore/person.h>
-#include <kpimutils/email.h>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <klineedit.h>
-#include <klocale.h>
+#include <KCalCore/Attendee>
+#include <KCalCore/Person>
+
+#include <KPIMUtils/Email>
+
+#include <KLineEdit>
+#include <KLocale>
 
 #include <QTreeView>
 

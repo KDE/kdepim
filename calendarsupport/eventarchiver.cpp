@@ -31,19 +31,18 @@
 #include "kcalprefs.h"
 #include "utils.h"
 
-#include <kio/netaccess.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/filestorage.h>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/FileStorage>
+#include <KCalCore/MemoryCalendar>
 
-#include <kcalcore/memorycalendar.h>
+#include <KCalUtils/Stringify>
 
-#include <kcalutils/stringify.h>
-
-#include <kdebug.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <ktemporaryfile.h>
-#include <kmessagebox.h>
+#include <KDebug>
+#include <KGlobal>
+#include <KLocale>
+#include <KMessageBox>
+#include <KTemporaryFile>
+#include <KIO/NetAccess>
 
 using namespace KCalCore;
 using namespace KCalUtils;

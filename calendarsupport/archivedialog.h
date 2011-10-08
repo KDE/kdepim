@@ -22,8 +22,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef ARCHIVEDIALOG_H
-#define ARCHIVEDIALOG_H
+#ifndef CALENDARSUPPORT_ARCHIVEDIALOG_H
+#define CALENDARSUPPORT_ARCHIVEDIALOG_H
 
 #include "calendarsupport_export.h"
 #include "incidencechanger.h"

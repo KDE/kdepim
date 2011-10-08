@@ -19,24 +19,24 @@
 */
 
 #include "collectiongeneralpage.h"
-
 #include "blockalarmsattribute.h"
 
+#include <Akonadi/Collection>
+#include <Akonadi/EntityDisplayAttribute>
+
 #include <KCalCore/Event>
-#include <KCalCore/Todo>
 #include <KCalCore/Journal>
+#include <KCalCore/Todo>
 
-#include <akonadi/collection.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <kdialog.h>
-#include <klineedit.h>
-#include <klocale.h>
+#include <KDialog>
 #include <KIconButton>
+#include <KLineEdit>
+#include <KLocale>
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
+#include <QCheckBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
 
 using namespace Akonadi;
 using namespace CalendarSupport;

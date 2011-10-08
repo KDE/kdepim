@@ -20,15 +20,15 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef PUBLISHDIALOG_H
-#define PUBLISHDIALOG_H
+#ifndef CALENDARSUPPORT_PUBLISHDIALOG_H
+#define CALENDARSUPPORT_PUBLISHDIALOG_H
 
-#include <kcalcore/attendee.h>
-
-#include <kdialog.h>
 #include "ui_publishdialog_base.h"
 
+#include <KCalCore/Attendee>
 using namespace KCalCore;
+
+#include <KDialog>
 
 class PublishDialog_base;
 

@@ -21,8 +21,8 @@
 #ifndef CALENDARSUPPORT_PLUGIN_H
 #define CALENDARSUPPORT_PLUGIN_H
 
-#include <klocale.h>
-#include <kpluginfactory.h>
+#include <KLocale>
+#include <KPluginFactory>
 
 namespace CalendarSupport {
 

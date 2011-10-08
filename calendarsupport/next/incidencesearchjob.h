@@ -27,8 +27,8 @@
 
 #include "calendarsupport_export.h"
 
-#include <akonadi/item.h>
-#include <akonadi/itemsearchjob.h>
+#include <Akonadi/Item>
+#include <Akonadi/ItemSearchJob>
 
 #include <KCalCore/Incidence>
 

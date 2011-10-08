@@ -18,15 +18,17 @@
   02110-1301, USA.
 */
 
-#ifndef INCIDENCEATTACHMENTMODEL_H
-#define INCIDENCEATTACHMENTMODEL_H
-
-#include <QtCore/QAbstractListModel>
+#ifndef CALENDARSUPPORT_INCIDENCEATTACHMENTMODEL_H
+#define CALENDARSUPPORT_INCIDENCEATTACHMENTMODEL_H
 
 #include "calendarsupport_export.h"
-#include <akonadi/attribute.h>
-#include <kcalcore/incidence.h>
-#include <akonadi/item.h>
+
+#include <Akonadi/Attribute>
+#include <Akonadi/Item>
+
+#include <KCalCore/Incidence>
+
+#include <QtCore/QAbstractListModel>
 
 class QAbstractItemModel;
 

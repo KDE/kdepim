@@ -24,7 +24,7 @@
 
 #include "incidencesearchjob.h"
 
-#include <akonadi/itemfetchscope.h>
+#include <Akonadi/ItemFetchScope>
 
 using namespace CalendarSupport;
 using namespace Akonadi;
@@ -35,7 +35,7 @@ class IncidenceSearchJob::Private
     int mLimit;
 };
 
-IncidenceSearchJob::IncidenceSearchJob( QObject * parent )
+IncidenceSearchJob::IncidenceSearchJob( QObject *parent )
   : ItemSearchJob( QString(), parent ), d( new Private() )
 {
   fetchScope().fetchFullPayload();
