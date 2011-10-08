@@ -90,7 +90,6 @@ void CategoryConfig::setColors( const QHash<QString,QColor> &colors )
   }
 }
 
-
 CategoryConfig::CategoryConfig( KCoreConfigSkeleton *cfg, QObject *parent )
   : QObject( parent ), d( new Private( cfg ) )
 {
@@ -124,8 +123,6 @@ void CategoryConfig::setCustomCategories( const QStringList &categories )
   group.writeEntry( "Custom Categories", categories );
 }
 
-
 const QString CategoryConfig::categorySeparator( ":" );
-
 
 #include "categoryconfig.moc"

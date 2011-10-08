@@ -32,7 +32,6 @@ namespace KIO {
 
 namespace CalendarSupport {
 
-
 class CALENDARSUPPORT_EXPORT FreeBusyDownloadJob : public KJob
 {
   Q_OBJECT

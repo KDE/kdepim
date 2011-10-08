@@ -38,7 +38,7 @@ QByteArray BlockAlarmsAttribute::type() const
   return "BlockAlarmsAttribute";
 }
 
-BlockAlarmsAttribute* BlockAlarmsAttribute::clone() const
+BlockAlarmsAttribute *BlockAlarmsAttribute::clone() const
 {
   return new BlockAlarmsAttribute();
 }

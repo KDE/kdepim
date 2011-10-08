@@ -40,14 +40,20 @@ History::History( IncidenceChanger2 *changer ) : QObject(),
   d->mOperationTypeInProgress = TypeNone;
   d->mUndoAllInProgress = false;
 
-  connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-           d, SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( d->mChanger,
+           SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d,
+           SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-           d, SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( d->mChanger,
+           SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d,
+           SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-           d, SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( d->mChanger,
+           SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d,
+           SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 }
 
 History::~History()
@@ -108,7 +114,7 @@ void History::recordDeletions( const Akonadi::Item::List &items,
   entry.changeType = IncidenceChanger2::ChangeTypeDelete;
   entry.atomicOperationId = atomicOperationId;
 
-  foreach( const Akonadi::Item &item, items ) {
+  foreach ( const Akonadi::Item &item, items ) {
     Q_ASSERT_X( item.isValid() && item.hasPayload<Incidence::Ptr>(),
                 "recordDeletion()", "Item must be valid and have an Incidence payload." );
     //cleanup
@@ -122,7 +128,6 @@ void History::recordDeletions( const Akonadi::Item::List &items,
   //emit undoAvailable(); // nao gosto, se poder tirar.
   d->updateWidgets();
 }
-
 
 void History::registerRedoWidget( QWidget *w )
 {
@@ -213,13 +218,17 @@ void History::Private::updateWidgets()
   const bool undoAvailable = isUndoAvailable();
   const bool redoAvailable = isRedoAvailable();
 
-  foreach( QPointer<QWidget> w, mUndoWidgets )
-    if ( w )
+  foreach ( QPointer<QWidget> w, mUndoWidgets ) {
+    if ( w ) {
       w->setEnabled( undoAvailable );
+    }
+  }
 
-  foreach( QPointer<QWidget> w, mRedoWidgets )
-    if ( w )
+  foreach ( QPointer<QWidget> w, mRedoWidgets ) {
+    if ( w ) {
       w->setEnabled( redoAvailable );
+    }
+  }
 }
 
 void History::Private::updateIds( Item::Id oldId, Item::Id newId )
@@ -288,7 +297,7 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
 
   int changeId = -1;
   if ( e.changeType == IncidenceChanger2::ChangeTypeCreate ) {
-    foreach( const Item &item, e.newItems ) {
+    foreach ( const Item &item, e.newItems ) {
       Incidence::Ptr newPayload = CalendarSupport::incidence( item );
       // TODO: don't overwrite result
       const Akonadi::Collection collection = item.parentCollection();
@@ -347,7 +356,7 @@ void History::Private::deleteFinished( int changeId,
 
   // clean up hash
   if ( success ) {
-    foreach( Akonadi::Item::Id itemId, itemIdList ) {
+    foreach ( Akonadi::Item::Id itemId, itemIdList ) {
       mLatestRevisionByItemId.remove( itemId );
     }
   }
@@ -368,7 +377,7 @@ void History::Private::createFinished( int changeId,
 
   if ( success ) {
     // TODO: add comentary
-    updateIds( mItemIdByChangeId[changeId] /*old*/, item.id() /*new*/ );
+    updateIds( mItemIdByChangeId[changeId]/*old*/, item.id()/*new*/ );
     mItemIdByChangeId.remove( changeId );
     mLatestRevisionByItemId.insert( item.id(), item.revision() );
   }
@@ -413,7 +422,6 @@ void History::Private::finishOperation( int changeId,
       stack().push( mEntryInProgress );
     }
   }
-
 
   if ( mUndoAllInProgress ) {
     if ( mUndoStack.isEmpty() ) {

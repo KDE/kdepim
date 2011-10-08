@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2010 Klarlvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+    Author: Allen Winter <allen.winter@kdab.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -58,7 +59,7 @@ class AttachmentHandler::Private
     {
       mParent = parent;
     }
-    QMap<KJob*,ReceivedInfo> mJobToReceivedInfo;
+    QMap<KJob *,ReceivedInfo> mJobToReceivedInfo;
     QPointer<QWidget> mParent;
 };
 
@@ -110,7 +111,6 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   }
   return a;
 }
-
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
                                          const ScheduleMessage::Ptr &message )
@@ -305,7 +305,6 @@ void AttachmentHandler::slotFinishView( KJob *job )
   emit viewFinished( info.uid, info.attachmentName, success );
   d->mJobToReceivedInfo.remove( job );
 }
-
 
 } // namespace CalendarSupport
 

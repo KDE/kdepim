@@ -1,9 +1,5 @@
 /*
-  Requires the Qt and KDE widget libraries, available at no cost at
-  http://www.trolltech.com and http://www.kde.org respectively
-
-  Copyright (c) 2002-2004 Klarälvdalens Datakonsult AB
-        <info@klaralvdalens-datakonsult.se>
+  Copyright (c) 2002-2004 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -105,7 +101,6 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
                           SendICalMessageDialogAnswers &dialogAnswers,
                           MailScheduler &scheduler,
                           bool reuseDialogAnswers = false );
-
 
     // DoNotNotify is a flag indicating that the user does not want
     // updates sent back to the organizer.

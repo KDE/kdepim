@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2009, 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Copyright (C) 2009 KDAB (author: Frank Osterfeld <osterfeld@kde.org>)
-  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
+    Author: Frank Osterfeld <osterfeld@kde.org>
+    Author: Andras Mantia <andras@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -367,7 +367,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
     collection = dlg->selectedCollection();
 
     if ( !collection.isValid() ) {
-      kWarning() <<"An invalid collection was selected!";
+      kWarning() << "An invalid collection was selected!";
     }
   }
   delete dlg;
@@ -506,7 +506,9 @@ QStringList CalendarSupport::holiday( const QDate &date )
   return hdays;
 }
 
-void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities::IdentityManager* identityManager, QWidget* parentWidget)
+void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
+                                       KPIMIdentities::IdentityManager *identityManager,
+                                       QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -523,8 +525,9 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
   if ( publishdlg->exec() == QDialog::Accepted ) {
     const QString recipients = publishdlg->addresses();
     if ( incidence->organizer()->isEmpty() ) {
-      incidence->setOrganizer( Person::Ptr( new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
+      incidence->setOrganizer( Person::Ptr(
+                                 new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                             CalendarSupport::KCalPrefs::instance()->email() ) ) );
     }
 
     ICalFormat format;
@@ -535,7 +538,8 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
     if ( mailer.mailTo(
            incidence,
            identityManager->identityForAddress( from ),
-           from, bccMe, recipients, messageText, MailTransport::TransportManager::self()->defaultTransportName() ) ) {
+           from, bccMe, recipients, messageText,
+           MailTransport::TransportManager::self()->defaultTransportName() ) ) {
       KMessageBox::information(
         parentWidget,
         i18n( "The item information was successfully sent." ),
@@ -551,7 +555,8 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
   delete publishdlg;
 }
 
-void  CalendarSupport::publishItemInformation(const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget)
+void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calendar *calendar,
+                                               QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -593,7 +598,10 @@ void  CalendarSupport::publishItemInformation(const Akonadi::Item& item, Calenda
   delete publishdlg;
 }
 
-void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method, const Akonadi::Item& item, CalendarSupport::Calendar* calendar, QWidget* parentWidget )
+void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
+                                           const Akonadi::Item &item,
+                                           CalendarSupport::Calendar *calendar,
+                                           QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -639,7 +647,7 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method, const Ak
   }
 }
 
-void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parentWidget)
+void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -653,8 +661,9 @@ void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parent
 
   Attachment::List attachments = incidence->attachments();
 
-  if ( attachments.empty() )
+  if ( attachments.empty() ) {
     return;
+  }
 
   QString targetFile, targetDir;
   if ( attachments.count() > 1 ) {
@@ -667,10 +676,10 @@ void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parent
     }
 
     // we may not get a slash-terminated url out of KFileDialog
-    if ( !targetDir.endsWith('/') )
-      targetDir.append('/');
-  }
-  else {
+    if ( !targetDir.endsWith( '/' ) ) {
+      targetDir.append( '/' );
+    }
+  } else {
     // only one item, get the desired filename
     QString fileName = attachments.first()->label();
     if ( fileName.isEmpty() ) {

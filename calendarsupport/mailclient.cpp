@@ -129,7 +129,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
     subject = i18n( "Free Busy Object" );
   }
 
-  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body =
+    KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
   return send( identity, from, to, cc, subject, body, false,
                bccMe, attachment, mailTransport );
@@ -173,7 +174,8 @@ bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
   } else {
     subject = i18n( "Free Busy Message" );
   }
-  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body =
+    KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
   return send( identity, from, recipients, QString(), subject, body, false,
                bccMe, attachment, mailTransport );
@@ -214,10 +216,10 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   }
 
   if ( !transport ) {
-    // TODO: we need better error handling. Currently korganizer just says "Error sending invitation".
+    // TODO: we need better error handling. Currently korganizer says "Error sending invitation".
     // Using a boolean for errors isn't granular enough.
     kError() << "Error fetching transport; mailTransport"
-               << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
+             << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
     return false;
   }
 
@@ -298,7 +300,8 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
       attachMessage->contentType()->setMimeType( "text/calendar" );
       attachMessage->contentType()->setCharset( "utf-8" );
       attachMessage->contentType()->setName( QLatin1String( "cal.ics" ), "utf-8" );
-      attachMessage->contentType()->setParameter( QLatin1String( "method" ), QLatin1String( "request" ) );
+      attachMessage->contentType()->setParameter( QLatin1String( "method" ),
+                                                  QLatin1String( "request" ) );
       attachMessage->setHeader( attachDisposition );
       attachMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
       attachMessage->setBody( KMime::CRLFtoLF( attachment.toUtf8() ) );

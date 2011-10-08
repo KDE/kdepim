@@ -21,7 +21,6 @@
 
 #include <akonadi/attributefactory.h>
 
-
 #ifndef KDELIBS_STATIC_LIBS
 namespace {
 

@@ -54,7 +54,8 @@ namespace CalendarSupport {
     int changeId;
   };
 
-  class History::Private : public QObject {
+  class History::Private : public QObject
+  {
     Q_OBJECT
     public:
       Private( History *qq ) : q( qq ) {}

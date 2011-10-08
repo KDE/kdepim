@@ -41,12 +41,11 @@ namespace CalendarSupport {
 
   Q_SIGNALS:
     void loaded();
-  
+
   private:
     class Private;
     Private *const d;
   };
 }
-
 
 #endif

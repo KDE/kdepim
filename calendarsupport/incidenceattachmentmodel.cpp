@@ -1,22 +1,21 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Stephen Kelly <stephen@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Stephen Kelly <stephen@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidenceattachmentmodel.h"
@@ -29,16 +28,19 @@
 using namespace CalendarSupport;
 using namespace Akonadi;
 
-namespace CalendarSupport 
+namespace CalendarSupport
 {
 
 class IncidenceAttachmentModelPrivate
 {
-  IncidenceAttachmentModelPrivate( IncidenceAttachmentModel *qq, const QPersistentModelIndex &modelIndex, Akonadi::Item item = Akonadi::Item() )
+  IncidenceAttachmentModelPrivate( IncidenceAttachmentModel *qq,
+                                   const QPersistentModelIndex &modelIndex,
+                                   Akonadi::Item item = Akonadi::Item() )
     : q_ptr( qq ), m_modelIndex( modelIndex ), m_item( item ), m_monitor( 0 )
   {
     if ( modelIndex.isValid() ) {
-      QObject::connect( modelIndex.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), qq, SLOT(resetModel()) );
+      QObject::connect( modelIndex.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                        qq, SLOT(resetModel()) );
     } else if ( item.isValid() ) {
       createMonitor();
       resetInternalData();
@@ -68,26 +70,30 @@ class IncidenceAttachmentModelPrivate
 
   void createMonitor()
   {
-    if ( m_monitor )
+    if ( m_monitor ) {
       return;
+    }
 
     m_monitor = new Akonadi::Monitor( q_ptr );
     m_monitor->setItemMonitored( m_item );
     m_monitor->itemFetchScope().fetchFullPayload( true );
-    QObject::connect( m_monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), q_ptr, SLOT(resetModel()) );
-    QObject::connect( m_monitor, SIGNAL(itemRemoved(Akonadi::Item)), q_ptr, SLOT(resetModel()) );
+    QObject::connect( m_monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+                      q_ptr, SLOT(resetModel()) );
+    QObject::connect( m_monitor, SIGNAL(itemRemoved(Akonadi::Item)),
+                      q_ptr, SLOT(resetModel()) );
   }
 
   void resetInternalData()
   {
-    if ( m_incidence )
+    if ( m_incidence ) {
       m_incidence->clearTempFiles();
+    }
     Item item = m_item;
-    if ( m_modelIndex.isValid() )
+    if ( m_modelIndex.isValid() ) {
       item = m_modelIndex.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    }
 
-    if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() )
-    {
+    if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
       m_incidence = KCalCore::Incidence::Ptr();
       return;
     }
@@ -105,20 +111,24 @@ class IncidenceAttachmentModelPrivate
 
 }
 
-IncidenceAttachmentModel::IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex, QObject* parent )
-  : QAbstractListModel( parent ), d_ptr( new IncidenceAttachmentModelPrivate( this, modelIndex ) )
+IncidenceAttachmentModel::IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex,
+                                                    QObject *parent )
+  : QAbstractListModel( parent ),
+    d_ptr( new IncidenceAttachmentModelPrivate( this, modelIndex ) )
 {
 
 }
 
-IncidenceAttachmentModel::IncidenceAttachmentModel( const Akonadi::Item &item, QObject* parent )
-  : QAbstractListModel( parent ), d_ptr( new IncidenceAttachmentModelPrivate( this, QModelIndex(), item ) )
+IncidenceAttachmentModel::IncidenceAttachmentModel( const Akonadi::Item &item, QObject *parent )
+  : QAbstractListModel( parent ),
+    d_ptr( new IncidenceAttachmentModelPrivate( this, QModelIndex(), item ) )
 {
 
 }
 
-IncidenceAttachmentModel::IncidenceAttachmentModel( QObject* parent )
-  : QAbstractListModel( parent ), d_ptr( new IncidenceAttachmentModelPrivate( this, QModelIndex() ) )
+IncidenceAttachmentModel::IncidenceAttachmentModel( QObject *parent )
+  : QAbstractListModel( parent ),
+    d_ptr( new IncidenceAttachmentModelPrivate( this, QModelIndex() ) )
 {
 
 }
@@ -145,20 +155,20 @@ void IncidenceAttachmentModel::setIndex( const QPersistentModelIndex &modelIndex
   emit rowCountChanged();
 }
 
-void IncidenceAttachmentModel::setItem( const Akonadi::Item& item )
+void IncidenceAttachmentModel::setItem( const Akonadi::Item &item )
 {
   Q_D( IncidenceAttachmentModel );
-  if ( !item.hasPayload<KCalCore::Incidence::Ptr>() )
-  {
+  if ( !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
     ItemFetchJob *job = new ItemFetchJob( item );
     job->fetchScope().fetchFullPayload( true );
-    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemFetched(Akonadi::Item::List)) );
+    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+             SLOT(itemFetched(Akonadi::Item::List)) );
     return;
   }
   d->setItem( item );
 }
 
-void IncidenceAttachmentModelPrivate::setItem( const Akonadi::Item& item )
+void IncidenceAttachmentModelPrivate::setItem( const Akonadi::Item &item )
 {
   Q_Q( IncidenceAttachmentModel );
   q->beginResetModel();
@@ -173,35 +183,39 @@ void IncidenceAttachmentModelPrivate::setItem( const Akonadi::Item& item )
 int IncidenceAttachmentModel::rowCount( const QModelIndex & ) const
 {
   Q_D( const IncidenceAttachmentModel );
-  if ( !d->m_incidence )
+  if ( !d->m_incidence ) {
     return 0;
-  return d->m_incidence->attachments().size();
+  } else {
+    return d->m_incidence->attachments().size();
+  }
 }
 
-QVariant IncidenceAttachmentModel::data(const QModelIndex& index, int role) const
+QVariant IncidenceAttachmentModel::data( const QModelIndex &index, int role ) const
 {
   Q_D( const IncidenceAttachmentModel );
-  if ( !d->m_incidence )
+  if ( !d->m_incidence ) {
     return QVariant();
+  }
 
   KCalCore::Attachment::Ptr attachment = d->m_incidence->attachments().at( index.row() );
-  switch ( role )
-  {
-    case Qt::DisplayRole:
-      return attachment->label();
-    case AttachmentDataRole:
-      return attachment->decodedData();
-    case MimeTypeRole:
-      return attachment->mimeType();
-    case AttachmentUrl:
-      return d->m_incidence->writeAttachmentToTempFile( attachment );
+  switch ( role ) {
+  case Qt::DisplayRole:
+    return attachment->label();
+  case AttachmentDataRole:
+    return attachment->decodedData();
+  case MimeTypeRole:
+    return attachment->mimeType();
+  case AttachmentUrl:
+    return d->m_incidence->writeAttachmentToTempFile( attachment );
   }
   return QVariant();
 }
 
-QVariant IncidenceAttachmentModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant IncidenceAttachmentModel::headerData( int section,
+                                               Qt::Orientation orientation,
+                                               int role ) const
 {
-  return QAbstractItemModel::headerData(section, orientation, role);
+  return QAbstractItemModel::headerData( section, orientation, role );
 }
 
 #include "incidenceattachmentmodel.moc"

@@ -1,22 +1,21 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Tobias Koenig <tokoe@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Tobias Koenig <tokoe@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "collectiongeneralpage.h"
@@ -96,7 +95,8 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
   mNameEdit->setEnabled( collection.rights() & Collection::CanChangeCollection );
 
   const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ?
-                                  collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
+                                collection.attribute<EntityDisplayAttribute>()->displayName() :
+                                collection.name();
 
   mNameEdit->setText( displayName );
   mBlockAlarmsCheckBox->setChecked( collection.hasAttribute<BlockAlarmsAttribute>() );
@@ -110,16 +110,17 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
   if ( iconName.isEmpty() ) {
     const QStringList mimeTypes = collection.contentMimeTypes();
     if ( collection.contentMimeTypes().count() > 1 ||
-         collection.contentMimeTypes().contains( KCalCore::Event::eventMimeType() ) )
+         collection.contentMimeTypes().contains( KCalCore::Event::eventMimeType() ) ) {
       mIconButton->setIcon( "view-pim-calendar" );
-    else if ( collection.contentMimeTypes().contains( KCalCore::Todo::todoMimeType() ) )
+    } else if ( collection.contentMimeTypes().contains( KCalCore::Todo::todoMimeType() ) ) {
       mIconButton->setIcon( "view-pim-tasks" );
-    else if ( collection.contentMimeTypes().contains( KCalCore::Journal::journalMimeType() ) )
+    } else if ( collection.contentMimeTypes().contains( KCalCore::Journal::journalMimeType() ) ) {
       mIconButton->setIcon( "view-pim-journal" );
-    else if ( mimeTypes.isEmpty() )
+    } else if ( mimeTypes.isEmpty() ) {
       mIconButton->setIcon( "folder-grey" );
-    else
+    } else {
       mIconButton->setIcon( "folder" );
+    }
   } else {
     mIconButton->setIcon( iconName );
   }
@@ -130,23 +131,27 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
 void CollectionGeneralPage::save( Collection &collection )
 {
   if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-       !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+       !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
     collection.attribute<EntityDisplayAttribute>()->setDisplayName( mNameEdit->text() );
-  else
+  } else {
     collection.setName( mNameEdit->text() );
+  }
 
   if ( mBlockAlarmsCheckBox->isChecked() ) {
-    if ( !collection.hasAttribute<BlockAlarmsAttribute>() )
+    if ( !collection.hasAttribute<BlockAlarmsAttribute>() ) {
       collection.attribute<BlockAlarmsAttribute>( Collection::AddIfMissing );
+    }
   } else {
     collection.removeAttribute<BlockAlarmsAttribute>();
   }
 
 #ifndef KDEPIM_MOBILE_UI
-  if ( mIconCheckBox->isChecked() )
-    collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( mIconButton->icon() );
-  else if ( collection.hasAttribute<EntityDisplayAttribute>() )
+  if ( mIconCheckBox->isChecked() ) {
+    collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->
+      setIconName( mIconButton->icon() );
+  } else if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
     collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
+  }
 #endif
 
 }

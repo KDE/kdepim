@@ -72,9 +72,9 @@ class CalendarAdaptor::Private
     }
 
     ~Private()
-     {
-       delete mChanger;
-     }
+    {
+      delete mChanger;
+    }
 
     IncidenceChanger *mChanger;
     CalendarSupport::Calendar *mCalendar;
@@ -129,8 +129,8 @@ KCalCore::Event::List CalendarAdaptor::rawEvents( KCalCore::EventSortField sortF
                                                   KCalCore::SortDirection sortDirection ) const
 {
   return itemsToIncidences<KCalCore::Event>(
-    d->mCalendar->rawEvents( ( CalendarSupport::EventSortField ) sortField,
-                          ( CalendarSupport::SortDirection ) sortDirection ) );
+    d->mCalendar->rawEvents( ( CalendarSupport::EventSortField )sortField,
+                          ( CalendarSupport::SortDirection )sortDirection ) );
 }
 
 KCalCore::Event::List CalendarAdaptor::rawEventsForDate( const KDateTime &dt ) const
@@ -146,15 +146,14 @@ KCalCore::Event::List CalendarAdaptor::rawEvents( const QDate &start, const QDat
     d->mCalendar->rawEvents( start, end, timeSpec, inclusive ) );
 }
 
-KCalCore::Event::List CalendarAdaptor::rawEventsForDate( const QDate &date,
-                                                         const KDateTime::Spec &timeSpec,
-                                                         KCalCore::EventSortField sortField,
-                                                         KCalCore::SortDirection sortDirection ) const
+KCalCore::Event::List CalendarAdaptor::rawEventsForDate(
+  const QDate &date, const KDateTime::Spec &timeSpec,
+  KCalCore::EventSortField sortField, KCalCore::SortDirection sortDirection ) const
 {
   return itemsToIncidences<KCalCore::Event>( d->mCalendar->rawEventsForDate(
                                                date, timeSpec,
-                                               ( CalendarSupport::EventSortField ) sortField,
-                                               ( CalendarSupport::SortDirection ) sortDirection ) );
+                                               ( CalendarSupport::EventSortField )sortField,
+                                               ( CalendarSupport::SortDirection )sortDirection ) );
 }
 
 KCalCore::Event::Ptr CalendarAdaptor::event( const QString &uid,
@@ -184,8 +183,8 @@ KCalCore::Todo::List CalendarAdaptor::rawTodos( KCalCore::TodoSortField sortFiel
                                                 KCalCore::SortDirection sortDirection ) const
 {
   return itemsToIncidences<KCalCore::Todo>( d->mCalendar->rawTodos(
-                                              ( CalendarSupport::TodoSortField ) sortField,
-                                              ( CalendarSupport::SortDirection ) sortDirection ) );
+                                              ( CalendarSupport::TodoSortField )sortField,
+                                              ( CalendarSupport::SortDirection )sortDirection ) );
 }
 
 KCalCore::Todo::List CalendarAdaptor::rawTodosForDate( const QDate &date ) const
@@ -218,9 +217,10 @@ void CalendarAdaptor::deleteAllJournals()
 KCalCore::Journal::List CalendarAdaptor::rawJournals( KCalCore::JournalSortField sortField,
                                                       KCalCore::SortDirection sortDirection ) const
 {
-  return itemsToIncidences<KCalCore::Journal>( d->mCalendar->rawJournals(
-                                                 ( CalendarSupport::JournalSortField ) sortField,
-                                                 ( CalendarSupport::SortDirection ) sortDirection ) );
+  return itemsToIncidences<KCalCore::Journal>(
+    d->mCalendar->rawJournals(
+      ( CalendarSupport::JournalSortField )sortField,
+      ( CalendarSupport::SortDirection )sortDirection ) );
 }
 
 KCalCore::Journal::List CalendarAdaptor::rawJournalsForDate( const QDate &dt ) const

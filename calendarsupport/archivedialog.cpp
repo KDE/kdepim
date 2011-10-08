@@ -57,7 +57,9 @@
 
 using namespace CalendarSupport;
 
-ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::IncidenceChanger* changer, QWidget *parent )
+ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
+                              CalendarSupport::IncidenceChanger *changer,
+                              QWidget *parent )
   : KDialog (parent)
 {
   setCaption( i18nc( "@title:window", "Archive/Delete Past Events and To-dos" ) );

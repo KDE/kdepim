@@ -37,8 +37,10 @@ namespace KCalCore {
 }
 
 namespace CalendarSupport {
-  class Calendar;
-  class IncidenceChanger2;
+
+class Calendar;
+class IncidenceChanger2;
+
 /*
   This class implements the iTIP interface using the email interface specified
   as Mail.
@@ -69,11 +71,12 @@ class CALENDARSUPPORT_EXPORT MailScheduler2 : public Scheduler
   private Q_SLOTS:
 
     void modifyFinished( int changeId, const Akonadi::Item &item,
-                         IncidenceChanger2::ResultCode changerResultCode, const QString &errorMessage );
+                         IncidenceChanger2::ResultCode changerResultCode,
+                         const QString &errorMessage );
 
     void createFinished( int changeId, const Akonadi::Item &item,
-                         IncidenceChanger2::ResultCode changerResultCode, const QString &errorMessage );
-
+                         IncidenceChanger2::ResultCode changerResultCode,
+                         const QString &errorMessage );
 
     //@cond private
     class Private;

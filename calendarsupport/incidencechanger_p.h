@@ -94,7 +94,7 @@ class IncidenceChanger::Private : public QObject
     // Index my atomic operation id
     QHash<uint, InvitationHandler::SendResult> mOperationStatus;
 
-    QHash<KJob*,AddInfo> mAddInfoForJob;
+    QHash<KJob *,AddInfo> mAddInfoForJob;
 
   public slots:
     void performNextChange( Akonadi::Item::Id );
