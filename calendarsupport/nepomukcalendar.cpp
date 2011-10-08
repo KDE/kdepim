@@ -18,11 +18,11 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "nepomukcalendar.h"
 #include "utils.h"
 #include "kcalprefs.h"
 #include "groupware.h"
 #include "mailscheduler.h"
-#include "nepomukcalendar.h"
 #include "next/incidencesearchjob.h"
 #include "next/incidencefetchjob.h"
 
