@@ -235,7 +235,7 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
 
               if ( changeId >= 0 ) {
                 d->mCallIdByChangeId.insert( changeId, callId );
-                emitResult = false; // will be emited in the job result's slot.
+                emitResult = false; // will be emitted in the job result's slot.
               } else {
                 resultCode = ResultCodeErrorUpdatingIncidence;
                 errorMessage = QLatin1String( "Error while trying to update the incidence" );
@@ -370,7 +370,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 
             if ( changeId >= 0 ) {
               d->mCallIdByChangeId.insert( changeId, callId );
-              emitResult = false; // will be emited in the job result's slot.
+              emitResult = false; // will be emitted in the job result's slot.
             } else {
               resultCode = ResultCodeErrorUpdatingIncidence;
               errorMessage = QLatin1String( "Error while trying to update the incidence" );
@@ -516,7 +516,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
         if ( changeId >= 0 ) {
           d->mCallIdByChangeId.insert( changeId, callId );
           d->mDeletedIncidenceByChangeId.insert( changeId, i );
-          emitResult = false; // will be emited in the job result's slot.
+          emitResult = false; // will be emitted in the job result's slot.
         } else {
           resultCode = ResultCodeErrorDeletingIncidence;
           errorMessage = QLatin1String( "Error while trying to delete the incidence" );
