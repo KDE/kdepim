@@ -67,7 +67,7 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
 
-  mBlockAlarmsCheckBox = new QCheckBox( i18n( "Block alarms locally" ), this );
+  mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block alarms locally" ), this );
   hbox->addWidget( mBlockAlarmsCheckBox );
   hbox->addStretch( 1 );
 
@@ -75,7 +75,7 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
-  mIconCheckBox = new QCheckBox( i18n( "&Use custom icon:" ), this );
+  mIconCheckBox = new QCheckBox( i18nc( "@option:check", "&Use custom icon:" ), this );
   mIconButton = new KIconButton( this );
   mIconButton->setIconSize( 16 );
   hbox->addWidget( mIconCheckBox );
