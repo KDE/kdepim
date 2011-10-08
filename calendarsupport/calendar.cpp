@@ -169,7 +169,7 @@ void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent,
             collectionSelection.contains( destinationCollection.id() );
 
           if ( sourceCollectionIsSelected && destinationCollectionIsSelected ) {
-            foreach ( const Akonadi::Item item, movedItems ) {
+            foreach ( const Akonadi::Item &item, movedItems ) {
               if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
                 // Found old items (that think they belong to another collection) inside m_itemMap
                 if ( m_itemMap.contains( item.id() ) ) {
