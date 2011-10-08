@@ -48,8 +48,8 @@ class IncidenceChanger2;
 class CALENDARSUPPORT_EXPORT MailScheduler2 : public Scheduler
 {
   public:
-    MailScheduler2( CalendarSupport::IncidenceChanger2 *mChanger,
-                    const NepomukCalendar::Ptr &calendar = NepomukCalendar::Ptr() );
+    explicit MailScheduler2( CalendarSupport::IncidenceChanger2 *mChanger,
+                             const NepomukCalendar::Ptr &calendar = NepomukCalendar::Ptr() );
     ~MailScheduler2();
 
     CallId publish( const KCalCore::IncidenceBase::Ptr &incidence,
