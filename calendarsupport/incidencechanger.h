@@ -74,7 +74,7 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
       ASK_DESTINATION          // user is asked in which collection
     };
 
-    // TODO: Remove this from public api. If classes outside changes realy need
+    // TODO: Remove this from public api. If classes outside changes really need
     //       to send ICal message, they should use InvitationHandler.
     bool sendGroupwareMessage( const Akonadi::Item &incidence,
                                KCalCore::iTIPMethod method,
