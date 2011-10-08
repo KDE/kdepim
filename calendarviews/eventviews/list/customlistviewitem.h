@@ -19,8 +19,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALENDARVIEWS_CUSTOMLISTVIEWITEM_H
-#define CALENDARVIEWS_CUSTOMLISTVIEWITEM_H
+#ifndef EVENTVIEWS_CUSTOMLISTVIEWITEM_H
+#define EVENTVIEWS_CUSTOMLISTVIEWITEM_H
 
 #include <QMap>
 #include <QString>
