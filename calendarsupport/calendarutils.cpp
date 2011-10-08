@@ -282,7 +282,7 @@ void CalendarUtils::purgeCompletedTodos()
       0,
       i18nc( "@info",
              "Unable to purge to-dos with uncompleted children." ),
-      i18n( "Delete To-do" ),
+      i18nc( "@title:window", "Delete To-do" ),
       "UncompletedChildrenPurgeTodos" );
   }
 }
