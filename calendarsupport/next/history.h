@@ -132,7 +132,7 @@ class CALENDARSUPPORT_EXPORT History : public QObject
        Convenience method for disabling the undo/redo button when jobs are in progress,
        so callers don't have to write signal/slot/connect logic for this.
 
-       Each widget registed here will be disabled/enabled depending if there are jobs
+       Each widget registered here will be disabled/enabled depending if there are jobs
        running, or the undo/redo stack contains data.
 
        @param widget The widget pointer to register. Ownership is not taken.
