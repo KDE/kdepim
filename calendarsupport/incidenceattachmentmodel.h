@@ -53,9 +53,13 @@ class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListMode
       UserRole = Qt::UserRole + 100
     };
 
-    IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex, QObject *parent = 0 );
-    IncidenceAttachmentModel( const Akonadi::Item &item, QObject *parent = 0 );
+    explicit IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex,
+                                       QObject *parent = 0 );
+
+    explicit IncidenceAttachmentModel( const Akonadi::Item &item, QObject *parent = 0 );
+
     IncidenceAttachmentModel( QObject *parent = 0 );
+
     ~IncidenceAttachmentModel();
 
     KCalCore::Incidence::Ptr incidence() const;
