@@ -22,9 +22,9 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "mailclient.h"
+#include <config-enterprise.h>
 
-#include "config-enterprise.h"
+#include "mailclient.h"
 #include "kdepim-version.h"
 
 #include <Akonadi/Collection>
