@@ -36,6 +36,8 @@
 #include <klineedit.h>
 #include <klocale.h>
 
+#include <QTreeView>
+
 PublishDialog::PublishDialog( QWidget *parent )
   : KDialog( parent )
 {
@@ -154,24 +156,29 @@ void PublishDialog::removeItem()
 
 void PublishDialog::openAddressbook()
 {
-  Akonadi::EmailAddressSelectionDialog dlg( this );
-  if ( !dlg.exec() ) {
-    return;
-  }
+  QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog(
+    new Akonadi::EmailAddressSelectionDialog( this ) );
+  dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
-  const Akonadi::EmailAddressSelection::List selections = dlg.selectedAddresses();
-  if ( !selections.isEmpty() ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, selections ) {
-      mUI.mNameLineEdit->setEnabled( true );
-      mUI.mEmailLineEdit->setEnabled( true );
-      QListWidgetItem *item = new QListWidgetItem( mUI.mListWidget );
-      mUI.mListWidget->setItemSelected( item, true );
-      mUI.mNameLineEdit->setText( selection.name() );
-      mUI.mEmailLineEdit->setText( selection.email() );
-      mUI.mListWidget->addItem( item );
+  if ( dialog.data()->exec() == QDialog::Accepted ) {
+
+    Akonadi::EmailAddressSelectionDialog *dialogPtr = dialog.data();
+    if ( dialogPtr ) {
+      const Akonadi::EmailAddressSelection::List selections = dialogPtr->selectedAddresses();
+      if ( !selections.isEmpty() ) {
+        foreach ( const Akonadi::EmailAddressSelection &selection, selections ) {
+          mUI.mNameLineEdit->setEnabled( true );
+          mUI.mEmailLineEdit->setEnabled( true );
+          QListWidgetItem *item = new QListWidgetItem( mUI.mListWidget );
+          mUI.mListWidget->setItemSelected( item, true );
+          mUI.mNameLineEdit->setText( selection.name() );
+          mUI.mEmailLineEdit->setText( selection.email() );
+          mUI.mListWidget->addItem( item );
+        }
+
+        mUI.mRemove->setEnabled( true );
+      }
     }
-
-    mUI.mRemove->setEnabled( true );
   }
 }
 
