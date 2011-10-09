@@ -164,9 +164,9 @@ AttendeeLine::AttendeeLine( QWidget *parent )
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
   mResponseCombo->addItem( DesktopIcon( "meeting-participant-request-response", 48 ),
-                           i18n( "Request Response" ) );
+                           i18nc( "@item:inlistbox", "Request Response" ) );
   mResponseCombo->addItem( DesktopIcon( "meeting-participant-no-response", 48 ),
-                           i18n( "Request No Response" ) );
+                           i18nc( "@item:inlistbox", "Request No Response" ) );
 #else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
@@ -178,9 +178,9 @@ AttendeeLine::AttendeeLine( QWidget *parent )
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
   mResponseCombo->addItem( SmallIcon( "meeting-participant-request-response" ),
-                           i18n( "Request Response" ) );
+                           i18nc( "@item:inlistbox", "Request Response" ) );
   mResponseCombo->addItem( SmallIcon( "meeting-participant-no-response" ),
-                           i18n( "Request No Response" ) );
+                           i18nc( "@item:inlistbox", "Request No Response" ) );
 #endif
 
   mEdit->setToolTip( i18nc( "@info:tooltip",
