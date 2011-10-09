@@ -79,7 +79,7 @@ KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
   const QString invalidEmail = IncidenceDefaults::invalidEmailAddress();
 
   KCalCore::Person::Ptr organizer( new KCalCore::Person );
-  organizer->setName( i18n( "no (valid) identities found" ) );
+  organizer->setName( i18nc( "@label", "no (valid) identities found" ) );
   organizer->setEmail( invalidEmail );
 
   if ( mEmails.isEmpty() ) {
@@ -280,7 +280,8 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
             kError() << "Error opening " << *it;
           }
         } else {
-          kError() << "Error downloading uri " << *it << KIO::NetAccess::lastErrorString();
+          kError() << "Error downloading uri " << *it
+                   << KIO::NetAccess::lastErrorString(); //krazy:exclude=kdebug
         }
         // TODO, this method needs better error reporting.
         KIO::NetAccess::removeTempFile( tmpFile );
@@ -435,6 +436,7 @@ IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttac
 /** static */
 QString IncidenceDefaults::invalidEmailAddress()
 {
-  static const QString invalidEmail( i18n( "invalid@email.address" ) );
+  static const QString invalidEmail( i18nc( "@label invalid email address marker",
+                                            "invalid@email.address" ) );
   return invalidEmail;
 }
