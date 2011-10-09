@@ -18,9 +18,11 @@
 */
 
 #include "categoryhierarchyreader.h"
+
 #include <calendarsupport/categoryconfig.h>
 
-#include <QComboBox>
+#include <KComboBox>
+
 #include <QTreeWidget>
 
 using namespace IncidenceEditorNG;

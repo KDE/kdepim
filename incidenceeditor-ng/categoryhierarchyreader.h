@@ -23,7 +23,8 @@
 
 #include <QVariant>
 
-class QComboBox;
+class KComboBox;
+
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -47,7 +48,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
 class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
   public:
-    CategoryHierarchyReaderQComboBox( QComboBox *box ) : mBox( box ), mCurrentDepth( 0 ) {}
+    CategoryHierarchyReaderQComboBox( KComboBox *box ) : mBox( box ), mCurrentDepth( 0 ) {}
     virtual ~CategoryHierarchyReaderQComboBox() {}
 
   protected:
@@ -55,8 +56,9 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public Categ
     virtual void goUp();
     virtual void addChild( const QString &label, const QVariant &userData = QVariant() );
     virtual int depth() const;
+
   private:
-    QComboBox *mBox;
+    KComboBox *mBox;
     int mCurrentDepth;
 };
 
