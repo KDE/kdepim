@@ -2,8 +2,8 @@
   Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Sérgio Martins <sergio.martins@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Sérgio Martins <sergio.martins@kdab.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -21,8 +21,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef INCIDENCEEDITOR_CATEGORYSELECTDIALOG_H
-#define INCIDENCEEDITOR_CATEGORYSELECTDIALOG_H
+#ifndef INCIDENCEEDITOR_CATEGORYDIALOG_H
+#define INCIDENCEEDITOR_CATEGORYDIALOG_H
 
 #include "incidenceeditors-ng_export.h"
 
