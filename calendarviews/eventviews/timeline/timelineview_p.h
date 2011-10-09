@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarViews.
-
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Sérgio Martins <sergio.martins@kdab.com>
 
