@@ -21,7 +21,7 @@
 #include "editoritemmanager.h"
 
 #include <calendarsupport/next/invitationhandler.h>
-#include <utils.h>
+#include <calendarsupport/utils.h>
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
