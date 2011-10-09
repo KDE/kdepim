@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -34,7 +34,6 @@
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
-
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
@@ -321,7 +320,9 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
     return action;
   }
 
-  QString offsetUnit = i18nc( "The reminder is set to X minutes before/after the event", "minutes" );
+  QString offsetUnit =
+    i18nc( "The reminder is set to X minutes before/after the event", "minutes" );
+
   const int offset = alarm->hasStartOffset() ? alarm->startOffset().asSeconds() / 60 :
                      alarm->endOffset().asSeconds() / 60; // make minutes
 

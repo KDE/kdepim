@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -150,7 +150,8 @@ void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event 
   }
 
   const QTime defaultDurationTime = KCalPrefs::instance()->defaultDuration().time();
-  const int defaultDuration = defaultDurationTime.hour()*3600 + defaultDurationTime.minute()*60;
+  const int defaultDuration = defaultDurationTime.hour() * 3600 +
+                              defaultDurationTime.minute() * 60;
 
   const KDateTime endDT = mEndDt.isValid() ? mEndDt : startDT.addSecs( defaultDuration );
 
@@ -178,14 +179,14 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
   }
 
   if ( mEndDt.isValid() ) {
-    todo->setDtDue( mEndDt, true /** first */ );
+    todo->setDtDue( mEndDt, true/** first */ );
   } else if ( relatedTodo && relatedTodo->hasDueDate() ) {
-    todo->setDtDue( relatedTodo->dtDue( true ), true /** first */ );
+    todo->setDtDue( relatedTodo->dtDue( true ), true/** first */ );
     todo->setAllDay( relatedTodo->allDay() );
   } else if ( relatedTodo ) {
     todo->setHasDueDate( false );
   } else {
-    todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ), true /** first */ );
+    todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ), true/** first */ );
   }
 
   if ( mStartDt.isValid() ) {
@@ -268,9 +269,13 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
           if ( f.open( QIODevice::ReadOnly ) ) {
             const QByteArray data = f.readAll();
             f.close();
-            attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( data.toBase64(), mimeType ) );
-            if ( i < attachmentLabels.count() )
+
+            attachment =
+              KCalCore::Attachment::Ptr( new KCalCore::Attachment( data.toBase64(), mimeType ) );
+
+            if ( i < attachmentLabels.count() ) {
               attachment->setLabel( attachmentLabels[ i ] );
+            }
           } else {
             kError() << "Error opening " << *it;
           }
@@ -284,11 +289,11 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
           QFile file( *it );
           file.remove();
         }
-
       } else {
         attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *it, mimeType ) );
-        if ( i < attachmentLabels.count() )
+        if ( i < attachmentLabels.count() ) {
           attachment->setLabel( attachmentLabels[ i ] );
+        }
       }
 
       if ( attachment ) {
@@ -296,7 +301,8 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
           if ( attachment->isUri() ) {
             attachment->setLabel( attachment->uri() );
           } else {
-            attachment->setLabel( i18nc( "@label attachment contains binary data", "[Binary data]" ) );
+            attachment->setLabel(
+              i18nc( "@label attachment contains binary data", "[Binary data]" ) );
           }
         }
         d->mAttachments << attachment;
@@ -406,9 +412,9 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
 }
 
 /** static */
-IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttachmentTemporaryFiles )
+IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttachmentTempFiles )
 {
-  IncidenceDefaults defaults( cleanupAttachmentTemporaryFiles );
+  IncidenceDefaults defaults( cleanupAttachmentTempFiles );
 
   // Set the full emails manually here, to avoid that we get dependencies on
   // KCalPrefs all over the place.
@@ -419,8 +425,10 @@ IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttac
   //       groupware account. Which doesn't have to be the case necessarily.
   //       This method should somehow depend on the calendar selected to which
   //       the incidence is added.
-  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
-    defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
+    defaults.setGroupWareDomain(
+      KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+  }
   return defaults;
 }
 

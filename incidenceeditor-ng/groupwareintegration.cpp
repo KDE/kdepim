@@ -88,7 +88,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
       }
 
       IncidenceEditorNG::IncidenceDialog *dialog =
-        IncidenceEditorNG::IncidenceDialogFactory::create( false /*needs initial saving?*/,
+        IncidenceEditorNG::IncidenceDialogFactory::create( false/*needs initial saving?*/,
                                                            incidence->type() );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
@@ -102,7 +102,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 
 }
 
-CalendarSupport::GroupwareUiDelegate* GroupwareIntegration::sDelegate = 0;
+CalendarSupport::GroupwareUiDelegate *GroupwareIntegration::sDelegate = 0;
 
 bool GroupwareIntegration::sActivated = false;
 
@@ -113,8 +113,9 @@ bool GroupwareIntegration::isActive()
 
 void GroupwareIntegration::activate( CalendarSupport::Calendar *calendar )
 {
-  if ( !sDelegate )
+  if ( !sDelegate ) {
     sDelegate = new GroupwareUiDelegate;
+  }
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
   CalendarSupport::Groupware::create( sDelegate );

@@ -43,7 +43,9 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit CategoryEditDialog( CalendarSupport::CategoryConfig *categoryConfig, QWidget *parent = 0 );
+    explicit CategoryEditDialog( CalendarSupport::CategoryConfig *categoryConfig,
+                                 QWidget *parent = 0 );
+
     ~CategoryEditDialog();
 
   public Q_SLOTS:

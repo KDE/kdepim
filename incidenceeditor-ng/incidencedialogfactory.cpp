@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -43,7 +43,7 @@ IncidenceDialog *IncidenceDialogFactory::create( bool needsSaving,
     EventOrTodoDialog *dialog = new EventOrTodoDialog( parent, flags );
 
     // needs to be save to akonadi?, apply button should be turned on if so.
-    dialog->setInitiallyDirty( needsSaving /* mInitiallyDirty */ );
+    dialog->setInitiallyDirty( needsSaving/* mInitiallyDirty */ );
 
     return dialog;
   }
@@ -60,10 +60,12 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
                                                             const QStringList &attachmentLabels,
                                                             bool inlineAttachment,
                                                             Akonadi::Collection defaultCollection,
-                                                            bool cleanupAttachmentTemporaryFiles,
+                                                            bool cleanupAttachmentTempFiles,
                                                             QWidget *parent, Qt::WFlags flags )
 {
-  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTemporaryFiles );
+  IncidenceDefaults defaults =
+    IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTempFiles );
+
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
   defaults.setAttachments( attachments, attachmentMimetypes, attachmentLabels, inlineAttachment );
@@ -99,10 +101,11 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
                                                              const QStringList &attachmentLabels,
                                                              bool inlineAttachment,
                                                              Akonadi::Collection defaultCollection,
-                                                             bool cleanupAttachmentTemporaryFiles,
+                                                             bool cleanupAttachmentTempFiles,
                                                              QWidget *parent, Qt::WFlags flags )
 {
-  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTemporaryFiles );
+  IncidenceDefaults defaults =
+    IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTempFiles );
 
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
@@ -123,9 +126,11 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
     GroupwareIntegration::activate();
   }
 
-  IncidenceDialog *dialog = create( false, /* no need for saving, we're not editing an existing event */
-                                    KCalCore::Incidence::TypeEvent,
-                                    parent, flags );
+  IncidenceDialog *dialog =
+    create( false, // not needed for saving, as we're not editing an existing incidence
+            KCalCore::Incidence::TypeEvent,
+            parent, flags );
+
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
 

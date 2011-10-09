@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -401,7 +401,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
     KABC::VCardDrag::fromMimeData( mimeData, addressees );
     for ( KABC::Addressee::List::ConstIterator it = addressees.constBegin();
           it != addressees.constEnd(); ++it ) {
-      urls.append( QString(QLatin1String( "uid:" ) + ( *it ).uid() ));
+      urls.append( QString( QLatin1String( "uid:" ) + ( *it ).uid() ) );
       // there is some weirdness about realName(), hence fromUtf8
       labels.append( QString::fromUtf8( ( *it ).realName().toLatin1() ) );
     }
