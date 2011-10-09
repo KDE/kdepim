@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarSupport
-
   Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify

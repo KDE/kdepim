@@ -1,6 +1,4 @@
 /*
-  This file is part of the calendarsupport library.
-
   Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>

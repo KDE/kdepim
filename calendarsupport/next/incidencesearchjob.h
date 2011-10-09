@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarSupport.
-
   Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
   Copyright (c) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>

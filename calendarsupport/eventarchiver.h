@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2004 David Faure <faure@kde.org>
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
