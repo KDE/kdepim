@@ -1,2 +1,5 @@
 EXTRA defines,kdebug,null,qenums,tipsandthis
 STRICT super
+
+#the shared files shouldn't even be here
+SKIP /shared/
