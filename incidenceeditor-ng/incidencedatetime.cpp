@@ -819,11 +819,11 @@ bool IncidenceDateTime::isValid() const
 
 void IncidenceDateTime::setTimeZoneLabelEnabled( bool enable )
 {
-  #ifndef KDEPIM_MOBILE_UI
-    mUi->mTimeZoneLabel->setVisible( enable );
-  #else
-    Q_UNUSED( enable );
-  #endif
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mTimeZoneLabel->setVisible( enable );
+#else
+  Q_UNUSED( enable );
+#endif
 }
 
 #include "moc_incidencedatetime.cpp"
