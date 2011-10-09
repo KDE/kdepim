@@ -56,7 +56,7 @@ void IncidenceEditor::checkDirtyStatus()
 
 bool IncidenceEditor::isValid() const
 {
-  mLastErrorString = QString();
+  mLastErrorString.clear();
   return true;
 }
 

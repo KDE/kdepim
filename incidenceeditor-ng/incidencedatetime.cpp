@@ -812,7 +812,7 @@ bool IncidenceDateTime::isValid() const
     }
     return false;
   } else {
-    mLastErrorString = QString();
+    mLastErrorString.clear();
     return true;
   }
 }

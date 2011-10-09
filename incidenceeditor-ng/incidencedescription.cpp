@@ -82,7 +82,7 @@ void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
 
-  d->mRealOriginalDescriptionEditContents = QString();
+  d->mRealOriginalDescriptionEditContents.clear();
 
   if ( incidence ) {
     enableRichTextDescription( incidence->descriptionIsRich() );
