@@ -18,10 +18,10 @@
   02110-1301, USA.
 */
 
+#include <config-enterprise.h>
+
 #include "incidencedefaults.h"
 #include "alarmpresets.h"
-
-#include "config-enterprise.h"
 
 #include <calendarsupport/kcalprefs.h>
 
