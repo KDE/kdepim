@@ -163,10 +163,10 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   connect( d->mComboBox, SIGNAL(activated(int)),
            this, SIGNAL(filterModified()) );
 
-  connect( d->mAdd, SIGNAL( clicked() ),
-           this, SLOT( slotAddWidget() ) );
-  connect( d->mRemove, SIGNAL( clicked() ),
-           this, SLOT( slotRemoveWidget() ) );
+  connect( d->mAdd, SIGNAL(clicked()),
+           this, SLOT(slotAddWidget()) );
+  connect( d->mRemove, SIGNAL(clicked()),
+           this, SLOT(slotRemoveWidget()) );
   
   d->setFilterAction();  
   d->mLayout->addWidget( d->mAdd, 1, 3 );
@@ -386,8 +386,8 @@ void FilterActionWidgetLister::reset()
 
 void FilterActionWidgetLister::reconnectWidget( FilterActionWidget *w )
 {
-  connect( w, SIGNAL(addWidget( QWidget* )), this, SLOT(slotAddWidget( QWidget* )), Qt::UniqueConnection );
-  connect( w, SIGNAL(removeWidget( QWidget* )), this, SLOT(slotRemoveWidget( QWidget* )), Qt::UniqueConnection );
+  connect( w, SIGNAL(addWidget(QWidget*)), this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+  connect( w, SIGNAL(removeWidget(QWidget*)), this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
 }
 
 QWidget* FilterActionWidgetLister::createWidget( QWidget *parent )

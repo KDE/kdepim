@@ -172,10 +172,10 @@ void SearchRuleWidget::initWidget()
   connect( mRuleField, SIGNAL(editTextChanged(QString)),
            this, SIGNAL(fieldChanged(QString)) );
   
-  connect( mAdd, SIGNAL( clicked() ),
-           this, SLOT( slotAddWidget() ) );
-  connect( mRemove, SIGNAL( clicked() ),
-           this, SLOT( slotRemoveWidget() ) );
+  connect( mAdd, SIGNAL(clicked()),
+           this, SLOT(slotAddWidget()) );
+  connect( mRemove, SIGNAL(clicked()),
+           this, SLOT(slotRemoveWidget()) );
 }
 
 void SearchRuleWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
@@ -425,8 +425,8 @@ void SearchRuleWidgetLister::slotRemoveWidget( QWidget* w)
 
 void SearchRuleWidgetLister::reconnectWidget( SearchRuleWidget *w )
 {
-  connect( w, SIGNAL(addWidget( QWidget* )), this, SLOT(slotAddWidget( QWidget* )), Qt::UniqueConnection );
-  connect( w, SIGNAL(removeWidget( QWidget* )), this, SLOT(slotRemoveWidget( QWidget* )), Qt::UniqueConnection );
+  connect( w, SIGNAL(addWidget(QWidget*)), this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+  connect( w, SIGNAL(removeWidget(QWidget*)), this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
 }
 
 void SearchRuleWidgetLister::updateAddRemoveButton()
