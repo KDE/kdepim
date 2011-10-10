@@ -961,6 +961,12 @@ void KMFilterListBox::slotDelete()
     return;
   }
 
+  MailCommon::MailFilter *filter = mFilterList.at( mIdxSelItem );
+
+  const QString filterName = filter->pattern()->name();
+  
+  if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter %1 ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
+    return;
   int oIdxSelItem = mIdxSelItem;
   mIdxSelItem = -1;
   // unselect all
@@ -975,7 +981,7 @@ void KMFilterListBox::slotDelete()
   MailCommon::MailFilter *deletedFilter =  mFilterList.takeAt( oIdxSelItem );
 
 
-  int count = mListWidget->count();
+  const int count = mListWidget->count();
   // and set the new current item.
   if ( count > oIdxSelItem )
     // oIdxItem is still a valid index
