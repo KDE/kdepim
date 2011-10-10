@@ -472,7 +472,8 @@ void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates)
   mRuleLister->slotClear();
 
   if ( !mRuleLister->widgets().isEmpty() ) {
-    for (int i = 0; i < mRuleLister->widgets().count(); i++) {
+    const int numberOfWidget( mRuleLister->widgets().count() );
+    for (int i = 0; i < numberOfWidget; ++i) {
       SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( mRuleLister->widgets().at(i) );
       connect( srw, SIGNAL(fieldChanged(QString)),
                this, SLOT(slotAutoNameHack()) );
