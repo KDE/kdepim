@@ -284,15 +284,19 @@ FilterActionWidgetLister::~FilterActionWidgetLister()
 void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 {
   Q_ASSERT( list );
-  if ( d->mActionList )
+  if ( d->mActionList && d->mActionList!= list )
     d->regenerateActionListFromWidgets();
 
   d->mActionList = list;
 
   static_cast<QWidget*>( parent() )->setEnabled( true );
 
+  if ( !widgets().isEmpty() ) // move this below next 'if'?
+    widgets().first()->blockSignals(true);
+
   if ( list->isEmpty() ) {
     slotClear();
+    widgets().first()->blockSignals(false);
     return;
   }
 
@@ -319,6 +323,8 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
     connect( w, SIGNAL(filterModified()), this, SIGNAL(filterModified()), Qt::UniqueConnection );
     reconnectWidget( w );
   }
+  widgets().first()->blockSignals(false);
+
 }
 
 void FilterActionWidgetLister::slotAddWidget( QWidget* w)
