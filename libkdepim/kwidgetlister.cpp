@@ -255,9 +255,11 @@ void KWidgetLister::removeWidget(QWidget*widget)
 {
   // The layout will take care that the
   // widget is removed from screen, too.
-  const int index = d->mWidgetList.indexOf( widget );
-  if ( index == 0 )
+
+  if ( d->mWidgetList.count()  <= widgetsMinimum() )
     return;
+  
+  const int index = d->mWidgetList.indexOf( widget );  
   QWidget* w =  d->mWidgetList.takeAt(index);
   w->deleteLater();
   w = 0;
