@@ -614,7 +614,7 @@ void KMFilterDialog::slotUpdateAccountList()
     QTreeWidgetItem *listItem = new QTreeWidgetItem( mAccountList, top );
     listItem->setText( 0, lst.at( i ).name() );
     listItem->setText( 1, lst.at( i ).type().name() );
-    listItem->setText( 2, QString( "%1" ).arg( lst.at( i ).identifier() ) );
+    listItem->setText( 2, lst.at( i ).identifier() );
     if ( mFilter )
       listItem->setCheckState( 0, mFilter->applyOnAccount( lst.at( i ).identifier() ) ?
                                   Qt::Checked : Qt::Unchecked );
