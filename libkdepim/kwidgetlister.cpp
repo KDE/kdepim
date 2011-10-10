@@ -262,6 +262,7 @@ void KWidgetLister::removeWidget(QWidget*widget)
   w->deleteLater();
   w = 0;
   d->enableControls();
+  emit widgetRemoved( widget );
   emit widgetRemoved();
 
 }
