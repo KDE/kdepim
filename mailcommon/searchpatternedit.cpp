@@ -367,12 +367,14 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
   // load the actions into the widgets
   QList<QWidget*> widgetList = widgets();
   QList<SearchRule::Ptr>::const_iterator rIt;
+  QList<SearchRule::Ptr>::const_iterator rItEnd( mRuleList->constEnd() );
   QList<QWidget*>::const_iterator wIt = widgetList.constBegin();
+  QList<QWidget*>::const_iterator wItEnd = widgetList.constEnd();
   for ( rIt = mRuleList->constBegin();
-        rIt != mRuleList->constEnd() && wIt != widgetList.constEnd(); ++rIt, ++wIt ) {
+        rIt != rItEnd && wIt != wItEnd; ++rIt, ++wIt ) {
     qobject_cast<SearchRuleWidget*>( *wIt )->setRule( (*rIt) );
   }
-  for ( ; wIt != widgetList.constEnd() ; ++wIt )
+  for ( ; wIt != wItEnd ; ++wIt )
     qobject_cast<SearchRuleWidget*>( *wIt )->reset();
 
   assert( !widgets().isEmpty() );
