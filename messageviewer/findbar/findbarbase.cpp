@@ -86,6 +86,7 @@ FindBarBase::FindBarBase( QWidget * parent )
   connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged()) );
   connect( m_search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
   connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
+  setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   hide();
 }
 
