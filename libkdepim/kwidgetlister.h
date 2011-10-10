@@ -78,6 +78,8 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     explicit KWidgetLister( int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
 
+    explicit KWidgetLister( bool fewerMoreButton, int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
+
     /**
      * Destroys the widget lister.
      */
@@ -169,6 +171,13 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     int widgetsMaximum() const;
 
+    void init( bool fewerMoreButton = true );
+
+
+    virtual void removeWidget(QWidget*widget);
+    virtual void addWidgetAfterThisWidget(QWidget*widget, QWidget* currentWidget = 0);
+
+  
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a widget was added.
