@@ -111,8 +111,11 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   d->mLayout->addWidget( d->mComboBox, 1, 1 );
   d->mAdd = new KPushButton( widget );
   d->mAdd->setIcon( KIcon( "list-add" ) );
+  d->mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+
   d->mRemove = new KPushButton( widget );
   d->mRemove->setIcon( KIcon( "list-remove" ) );
+  d->mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   
   setSpacing( 4 );
 
