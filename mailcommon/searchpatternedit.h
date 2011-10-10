@@ -33,6 +33,7 @@ class KComboBox;
 class QAbstractButton;
 class QRadioButton;
 class QStackedWidget;
+class KPushButton;
 
 namespace MailCommon {
 
@@ -81,6 +82,7 @@ public:
       accordingly. */
   void reset();
   static int ruleFieldToId( const QString & i18nVal );
+  void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
 
 public slots:
   void slotFunctionChanged();
@@ -96,6 +98,9 @@ signals:
      contents/value of the rule. */
   void contentsChanged( const QString & );
 
+  void addWidget( QWidget * );
+  void removeWidget( QWidget* );
+
 protected:
   /** Used internally to translate i18n-ized pseudo-headers back to
       english. */
@@ -106,6 +111,8 @@ protected:
 
 protected slots:
   void slotRuleFieldChanged( const QString & );
+  void slotAddWidget();
+  void slotRemoveWidget();
 
 private:
   void initWidget();
@@ -115,6 +122,8 @@ private:
   KComboBox *mRuleField;
   QStackedWidget *mFunctionStack;
   QStackedWidget *mValueStack;
+  KPushButton *mAdd;
+  KPushButton *mRemove;
   bool mAbsoluteDates;
 };
 
@@ -135,12 +144,16 @@ public:
 
 public slots:
   void reset();
+  void slotAddWidget( QWidget* );
+  void slotRemoveWidget( QWidget* );
 
 protected:
   virtual void clearWidget( QWidget *aWidget );
   virtual QWidget* createWidget( QWidget *parent );
 
 private:
+  void reconnectWidget( SearchRuleWidget *w );
+  void updateAddRemoveButton();
   void regenerateRuleListFromWidgets();
   QList<MailCommon::SearchRule::Ptr> *mRuleList;
   bool mHeadersOnly;

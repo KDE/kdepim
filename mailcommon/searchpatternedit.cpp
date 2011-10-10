@@ -28,6 +28,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <klocale.h>
 #include <kdialog.h>
 #include <kdebug.h>
+#include <KPushButton>
 
 #include <QButtonGroup>
 #include <QByteArray>
@@ -146,6 +147,17 @@ void SearchRuleWidget::initWidget()
   hlay->addWidget( mValueStack );
   hlay->setStretchFactor( mValueStack, 10 );
 
+  mAdd = new KPushButton( this );
+  mAdd->setIcon( KIcon( "list-add" ) );
+  mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+  hlay->addWidget( mAdd );
+
+  mRemove = new KPushButton( this );
+  mRemove->setIcon( KIcon( "list-remove" ) );
+  mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+  hlay->addWidget( mRemove );
+
+  
   RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack,
                                                        mValueStack,
                                                        this );
@@ -159,8 +171,28 @@ void SearchRuleWidget::initWidget()
            this, SLOT(slotRuleFieldChanged(QString)) );
   connect( mRuleField, SIGNAL(editTextChanged(QString)),
            this, SIGNAL(fieldChanged(QString)) );
+  
+  connect( mAdd, SIGNAL( clicked() ),
+           this, SLOT( slotAddWidget() ) );
+  connect( mRemove, SIGNAL( clicked() ),
+           this, SLOT( slotRemoveWidget() ) );
 }
 
+void SearchRuleWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+{
+  mAdd->setEnabled( addButtonEnabled );
+  mRemove->setEnabled( removeButtonEnabled );
+}
+
+void SearchRuleWidget::slotAddWidget()
+{
+  emit addWidget( this );
+}
+
+void SearchRuleWidget::slotRemoveWidget()
+{
+  emit removeWidget( this );
+}
 
 void SearchRuleWidget::setRule( SearchRule::Ptr aRule )
 {
@@ -322,7 +354,7 @@ void SearchRuleWidget::slotRuleFieldChanged( const QString & field )
 //=============================================================================
 
 SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char*, bool headersOnly, bool absoluteDates )
-  : KWidgetLister( 2, FILTER_MAX_RULES, parent )
+  : KWidgetLister( false, 2, FILTER_MAX_RULES, parent )
 {
   mRuleList = 0;
   mHeadersOnly = headersOnly;
@@ -381,6 +413,53 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
   widgets().first()->blockSignals(false);
 }
 
+void SearchRuleWidgetLister::slotAddWidget( QWidget* w)
+{
+  addWidgetAfterThisWidget( w );
+  updateAddRemoveButton();
+}
+
+void SearchRuleWidgetLister::slotRemoveWidget( QWidget* w)
+{
+  removeWidget( w );
+  updateAddRemoveButton();
+}
+
+void SearchRuleWidgetLister::reconnectWidget( SearchRuleWidget *w )
+{
+  connect( w, SIGNAL(addWidget( QWidget* )), this, SLOT(slotAddWidget( QWidget* )), Qt::UniqueConnection );
+  connect( w, SIGNAL(removeWidget( QWidget* )), this, SLOT(slotRemoveWidget( QWidget* )), Qt::UniqueConnection );
+}
+
+void SearchRuleWidgetLister::updateAddRemoveButton()
+{
+  QList<QWidget*> widgetList = widgets();
+  const int numberOfWidget( widgetList.count() );
+  bool addButtonEnabled = false;
+  bool removeButtonEnabled = false;
+  if ( numberOfWidget <= widgetsMinimum() )
+  {
+    addButtonEnabled = true;
+    removeButtonEnabled = false;
+  }
+  else if ( numberOfWidget >= widgetsMaximum() )
+  {
+    addButtonEnabled = false;
+    removeButtonEnabled = true;
+  }
+  else
+  {
+    addButtonEnabled = true;
+    removeButtonEnabled = true;
+  }
+  QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
+  QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+  for ( ; wIt != wEnd ;++wIt ) {
+    SearchRuleWidget *w = qobject_cast<SearchRuleWidget*>( *wIt );
+    w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+  }
+}
+
 void SearchRuleWidgetLister::setHeadersOnly( bool headersOnly )
 {
   foreach ( QWidget *w, widgets() ) {
@@ -399,13 +478,18 @@ void SearchRuleWidgetLister::reset()
 
 QWidget* SearchRuleWidgetLister::createWidget( QWidget *parent )
 {
-  return new SearchRuleWidget(parent, SearchRule::Ptr(),  mHeadersOnly, mAbsoluteDates);
+  SearchRuleWidget *w = new SearchRuleWidget(parent, SearchRule::Ptr(),  mHeadersOnly, mAbsoluteDates);
+  reconnectWidget( w );
+  return w;
 }
 
 void SearchRuleWidgetLister::clearWidget( QWidget *aWidget )
 {
-  if ( aWidget )
-    ((SearchRuleWidget*)aWidget)->reset();
+  if ( aWidget ) {
+    SearchRuleWidget* w = static_cast<SearchRuleWidget*>( aWidget );
+    w->reset();
+    reconnectWidget( w );
+  }
 }
 
 void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
