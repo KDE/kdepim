@@ -207,7 +207,8 @@ bool Kernel::folderIsDrafts(const Akonadi::Collection & col)
 
   // search the identities if the folder matches the drafts-folder
   const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
-  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it )
+  KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it )
     if ( (*it).drafts() == idString ) return true;
   return false;
 }
@@ -222,7 +223,8 @@ bool Kernel::folderIsTemplates(const Akonadi::Collection &col)
 
   // search the identities if the folder matches the templates-folder
   const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
-  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it )
+  KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it )
     if ( (*it).templates() == idString ) return true;
   return false;
 }
@@ -277,7 +279,8 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
 
   // search the identities if the folder matches the sent-folder
   const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
-  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it )
+  KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it )
     if ( (*it).fcc() == idString ) return true;
   return false;
 }
