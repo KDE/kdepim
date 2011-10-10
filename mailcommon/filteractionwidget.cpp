@@ -165,7 +165,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   connect( d->mRemove, SIGNAL( clicked() ),
            this, SLOT( slotRemoveWidget() ) );
   
-  d->setFilterAction();
+  d->setFilterAction();  
   d->mLayout->addWidget( d->mAdd, 1, 3 );
   d->mLayout->addWidget( d->mRemove, 1, 4 );
   
@@ -313,7 +313,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
   for ( QList<FilterAction*>::const_iterator aIt = d->mActionList->constBegin(); ( aIt != aEnd && wIt != wEnd );++aIt, ++wIt ) {
     FilterActionWidget *w = qobject_cast<FilterActionWidget*>( *wIt );
     w->setAction( ( *aIt ) );
-    connect( w, SIGNAL(filterModified()), this, SIGNAL(filterModified()) );
+    connect( w, SIGNAL(filterModified()), this, SIGNAL(filterModified()), Qt::UniqueConnection );
     reconnectWidget( w );
   }
 }
