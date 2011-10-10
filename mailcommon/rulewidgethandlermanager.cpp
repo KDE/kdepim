@@ -679,7 +679,8 @@ namespace {
               valueStack->findChild<MinimumComboBox*>( "categoryCombo" );
 
       combo->blockSignals( true );
-      for ( i = 0; i < combo->count(); ++i )
+      const int numberOfElement( combo->count() );
+      for ( i = 0; i < numberOfElement; ++i )
         if ( rule->contents() == combo->itemText( i ) ) {
           combo->setCurrentIndex( i );
           break;
