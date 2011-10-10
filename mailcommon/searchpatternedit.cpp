@@ -391,8 +391,6 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
       mRuleList->removeLast();
   }
 
-  // HACK to workaround regression in Qt 3.1.3 and Qt 3.2.0 (fixes bug #63537)
-  setNumberOfShownWidgetsTo( qMax((int)mRuleList->count(), widgetsMinimum())+1 );
   // set the right number of widgets
   setNumberOfShownWidgetsTo( qMax((int)mRuleList->count(), widgetsMinimum()) );
 
