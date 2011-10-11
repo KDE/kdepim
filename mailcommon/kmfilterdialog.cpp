@@ -965,7 +965,7 @@ void KMFilterListBox::slotDelete()
 
   const QString filterName = filter->pattern()->name();
   
-  if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter %1 ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
+  if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
     return;
   int oIdxSelItem = mIdxSelItem;
   mIdxSelItem = -1;
