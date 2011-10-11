@@ -441,7 +441,8 @@ void ManageSieveScriptsDialog::slotNewScript()
   if ( buttonGroup )
   {
     QList<QAbstractButton *> group = buttonGroup->buttons();
-    for ( int i = 0; i < group.count(); ++i )
+    const int numberOfGroup( group.count() );
+    for ( int i = 0; i < numberOfGroup; ++i )
     {
       if ( group.at( i )->text().replace( "&","" ) == name ) {
         KMessageBox::error( this, i18n( "Script name already used \"%1\".", name ), i18n( "New Script" ) );
@@ -496,7 +497,8 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
 
 void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 {
-  mSieveEditor->deleteLater(); mSieveEditor = 0;
+  mSieveEditor->deleteLater();
+  mSieveEditor = 0;
   mCurrentURL = KUrl();
   slotRefresh();
 }
