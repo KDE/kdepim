@@ -73,7 +73,8 @@ QDataStream& operator>> ( QDataStream &s, MailSummary &d )
 QDataStream& operator<< ( QDataStream &s, const MailList &mailList )
 {
   MailList::const_iterator it;
-  for (it = mailList.begin(); it != mailList.end(); ++it) {
+  MailList::const_iterator end( mailList.constEnd() );
+  for (it = mailList.constBegin(); it!=end; ++it) {
     MailSummary mailDrag = *it;
     s << mailDrag;
   }
@@ -194,12 +195,13 @@ QByteArray MailList::serialsFromMimeData( const QMimeData *md )
 {
   MailList mailList = fromMimeData( md );
   if ( mailList.count() ) {
-    MailList::iterator it;
+    MailList::const_iterator it;
     QByteArray a;
     QBuffer buffer( &a );
     buffer.open( QIODevice::WriteOnly );
     QDataStream stream( &buffer );
-    for (it = mailList.begin(); it != mailList.end(); ++it) {
+    MailList::const_iterator end( mailList.constEnd() );
+    for (it = mailList.constBegin(); it != end; ++it) {
       MailSummary mailDrag = *it;
       stream << mailDrag.serialNumber();
     }
@@ -252,8 +254,8 @@ QVariant MailListMimeData::retrieveData( const QString & mimeType,
       int i = 0;
       dlg->progressBar()->setValue( i );
       dlg->show();
-
-      for ( MailList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
+      MailList::ConstIterator end( list.constEnd() );
+      for ( MailList::ConstIterator it = list.constBegin(); it != end; ++it ) {
 
         // Get the serial number from the mail summary and use the mail text source
         // to get the actual text of the mail.
