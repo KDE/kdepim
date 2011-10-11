@@ -960,6 +960,8 @@ void KMFilterListBox::slotDelete()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
 
   MailCommon::MailFilter *filter = mFilterList.at( mIdxSelItem );
 
@@ -1015,6 +1017,9 @@ void KMFilterListBox::slotTop()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
+
   MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
   mFilterList.insert( 0, filter );
   QListWidgetItem *item = mListWidget->item( mIdxSelItem );
@@ -1039,6 +1044,8 @@ void KMFilterListBox::slotBottom()
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
 
   MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
   mFilterList.insert( mFilterList.count() , filter );
@@ -1064,6 +1071,8 @@ void KMFilterListBox::slotUp()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
 
   swapNeighbouringFilters( mIdxSelItem, mIdxSelItem - 1 );
   enableControls();
@@ -1081,6 +1090,8 @@ void KMFilterListBox::slotDown()
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
 
   swapNeighbouringFilters( mIdxSelItem, mIdxSelItem + 1);
   enableControls();
