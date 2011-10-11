@@ -472,6 +472,7 @@ void SearchRuleWidgetLister::reset()
 
   mRuleList = 0;
   slotClear();
+  updateAddRemoveButton();
 }
 
 QWidget* SearchRuleWidgetLister::createWidget( QWidget *parent )
@@ -501,6 +502,7 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
     if ( r && !r->isEmpty() )
       mRuleList->append( r );
   }
+  updateAddRemoveButton();
 }
 
 

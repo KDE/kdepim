@@ -268,6 +268,7 @@ void FilterActionWidgetLister::Private::regenerateActionListFromWidgets()
     if ( action )
       mActionList->append( action );
   }
+  q->updateAddRemoveButton();
 }
 
 
@@ -324,6 +325,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
     reconnectWidget( w );
   }
   widgets().first()->blockSignals(false);
+  updateAddRemoveButton();
 
 }
 
