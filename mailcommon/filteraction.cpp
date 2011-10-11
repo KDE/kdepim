@@ -805,7 +805,7 @@ FilterAction* FilterActionReplyTo::newAction()
 FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
   : FilterActionWithString( "set Reply-To", i18n( "Set Reply-To To" ), parent )
 {
-  mParameter = "";
+  mParameter.clear();
 }
 
 FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
@@ -1453,7 +1453,7 @@ void FilterActionAddHeader::argsFromString( const QString &argsStr )
   QString result;
   if ( list.count() < 2 ) {
     result = list[ 0 ];
-    mValue = "";
+    mValue.clear();
   } else {
     result = list[ 0 ];
     mValue = list[ 1 ];
