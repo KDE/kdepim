@@ -278,6 +278,7 @@ void CompletionOrderEditor::loadCompletionItems()
   mimeTypeProxy->addMimeTypeFilters( QStringList() << KABC::Addressee::mimeType()
                                                    << KABC::ContactGroup::mimeType() );
   mimeTypeProxy->setSourceModel( descendantsProxy );
+  mimeTypeProxy->setExcludeVirtualCollections( true );
 
   mCollectionModel = mimeTypeProxy;
 
