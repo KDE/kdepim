@@ -529,7 +529,8 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
   // and use QString::arg to substitute filenames for the %n's.
   int lastSeen = -2;
   QString tempFileName;
-  for ( QList<int>::Iterator it = argList.begin() ; it != argList.end() ; ++it ) {
+  QList<int>::ConstIterator end( argList.constEnd() );
+  for ( QList<int>::ConstIterator it = argList.constBegin() ; it != end ; ++it ) {
     // setup temp files with check for duplicate %n's
     if ( (*it) != lastSeen ) {
       KTemporaryFile *tempFile = new KTemporaryFile();
