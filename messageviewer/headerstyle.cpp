@@ -101,7 +101,23 @@ static QString dateString( KMime::Message *message, bool printing, bool shortDat
   }
 }
 
-static QString subjectString( KMime::Message *message )
+static QString subjectString( KMime::Message *message, int flags = LinkLocator::PreserveSpaces )
+{
+  QString subject;
+  if ( message->subject(false) ) {
+    subject = message->subject()->asUnicodeString();
+    if ( subject.isEmpty() )
+      subject = i18n("No Subject");
+    else
+      subject = strToHtml( subject, flags );
+  } else {
+    subject = i18n("No Subject");
+  }
+
+  return subject;
+}
+
+static QString subjectDirectionString( KMime::Message *message )
 {
   QString subjectDir;
   if ( message->subject(false) )
@@ -153,16 +169,16 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir = subjectString( message );
+  QString subjectDir = subjectDirectionString( message );
 
   QString headerStr = "<div class=\"header\" dir=\"" + dir + "\">\n";
 
-  if ( strategy->showHeader( "subject" ) )
+  if ( strategy->showHeader( "subject" ) ) {
     headerStr += "<div dir=\"" + subjectDir + "\">\n"
-                  "<b style=\"font-size:130%\">" +
-                  strToHtml( message->subject()->asUnicodeString() ) +
-                  "</b></div>\n";
-
+                 "<b style=\"font-size:130%\">";
+  
+    headerStr += subjectString( message ) + "</b></div>\n";
+  }
   QStringList headerParts;
 
   if ( strategy->showHeader( "from" ) ) {
@@ -235,7 +251,7 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir = subjectString( message );
+  QString subjectDir = subjectDirectionString( message );
 ;
   QString headerStr;
 
@@ -253,7 +269,7 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
   //case HdrLong:
   if ( strategy->showHeader( "subject" ) )
     headerStr += QString("<div dir=\"%1\"><b style=\"font-size:130%\">" +
-                          strToHtml(message->subject()->asUnicodeString()) + "</b></div>\n")
+                         subjectString( message ) + "</b></div>\n")
                       .arg(subjectDir);
 
   if ( strategy->showHeader( "date" ) )
@@ -458,7 +474,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir = subjectString( message );
+  QString subjectDir = subjectDirectionString( message );
 
   // Spam header display.
   // If the spamSpamStatus config value is true then we look for headers
@@ -593,11 +609,10 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 ( GlobalSettings::self()->showEmoticons() ?
                   LinkLocator::ReplaceSmileys : 0 );
 
-    headerStr += QString("<div dir=\"%1\">%2</div>\n")
+    if ( message->subject(false) )
+    headerStr += QString::fromLatin1("<div dir=\"%1\">%2</div>\n")
                       .arg(subjectDir)
-                      .arg(!message->subject(false)?
-                            i18n("No Subject") :
-                            strToHtml( message->subject()->asUnicodeString(), flags ));
+                      .arg( subjectString( message, flags ) );
   }
   headerStr += "<table class=\"outer\"><tr><td width=\"100%\"><table>\n";
   //headerStr += "<table>\n";
@@ -760,7 +775,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir = subjectString( message );
+  QString subjectDir = subjectDirectionString( message );
 
   // colors depend on if it is encapsulated or not
   QColor fontColor( Qt::white );
@@ -814,7 +829,8 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     headerStr +=
       "     <tr> \n"
       "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\"></td> \n"
-      "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">"+message->subject()->asUnicodeString()+"</td> \n"
+      "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">";
+    headerStr += !message->subject(false)? i18n("No Subject") : message->subject()->asUnicodeString() + "</td> \n"
       "     </tr> \n";
   }
 
