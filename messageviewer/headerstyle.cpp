@@ -100,6 +100,17 @@ static QString dateString( KMime::Message *message, bool printing, bool shortDat
   }
 }
 
+static QString subjectString( KMime::Message *message )
+{
+  QString subjectDir;
+  if ( message->subject(false) )
+    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
+  else
+    subjectDir = directionOf( i18n("No Subject") );
+  return subjectDir;
+}
+  
+
 bool HeaderStyle::hasAttachmentQuickList() const
 {
   return false;
@@ -141,11 +152,7 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir;
-  if ( message->subject(false) )
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
+  QString subjectDir = subjectString( message );
 
   QString headerStr = "<div class=\"header\" dir=\"" + dir + "\">\n";
 
@@ -227,12 +234,8 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir;
-  if (message->subject(false))
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
-
+  QString subjectDir = subjectString( message );
+;
   QString headerStr;
 
   if ( strategy->headersToDisplay().isEmpty()
@@ -454,11 +457,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-  QString subjectDir;
-  if ( message->subject(false) )
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
+  QString subjectDir = subjectString( message );
 
   // Spam header display.
   // If the spamSpamStatus config value is true then we look for headers
@@ -469,7 +468,8 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
   if ( GlobalSettings::self()->showSpamStatus() ) {
     const SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
-    for ( SpamScores::const_iterator it = scores.begin(), end = scores.end() ; it != end ; ++it )
+    
+    for ( SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd() ; it != end ; ++it )
       spamHTML += (*it).agent() + ' ' +
                    drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
   }
@@ -620,7 +620,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       }
     }
 
-    headerStr += QString("<tr><th>%1</th>\n"
+    headerStr += QString::fromLatin1("<tr><th>%1</th>\n"
                           "<td>")
                           .arg(i18n("From: "))
                 + StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress )
@@ -641,7 +641,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   }
   // to line
   if ( strategy->showHeader( "to" ) )
-    headerStr.append(QString("<tr><th>%1</th>\n"
+    headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                   "<td>%2</td></tr>\n")
                           .arg( i18nc( "To-field of the mail header.","To: " ) )
                           .arg( StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
@@ -651,7 +651,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
   // cc line, if an
   if ( strategy->showHeader( "cc" ) && message->cc(false))
-    headerStr.append(QString("<tr><th>%1</th>\n"
+    headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                   "<td>%2</td></tr>\n")
                             .arg( i18n( "CC: " ) )
                             .arg( StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
@@ -661,13 +661,13 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
   // Bcc line, if any
   if ( strategy->showHeader( "bcc" ) && message->bcc(false))
-    headerStr.append(QString("<tr><th>%1</th>\n"
+    headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                   "<td>%2</td></tr>\n")
                             .arg( i18n( "BCC: " ) )
                             .arg( StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) ) );
 
   if ( strategy->showHeader( "date" ) )
-    headerStr.append(QString("<tr><th>%1</th>\n"
+    headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                   "<td dir=\"%2\">%3</td></tr>\n")
                           .arg(i18n("Date: "))
                   .arg( directionOf( dateStr( message->date()->dateTime() ) ) )
@@ -675,7 +675,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   if ( GlobalSettings::self()->showUserAgent() ) {
     if ( strategy->showHeader( "user-agent" ) ) {
       if ( message->headerByType("User-Agent") ) {
-        headerStr.append(QString("<tr><th>%1</th>\n"
+        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                   "<td>%2</td></tr>\n")
                           .arg(i18n("User-Agent: "))
                           .arg( strToHtml( message->headerByType("User-Agent")->as7BitString() ) ) );
@@ -684,7 +684,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
     if ( strategy->showHeader( "x-mailer" ) ) {
       if ( message->headerByType("X-Mailer") ) {
-        headerStr.append(QString("<tr><th>%1</th>\n"
+        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                   "<td>%2</td></tr>\n")
                           .arg(i18n("X-Mailer: "))
                           .arg( strToHtml( message->headerByType("X-Mailer")->as7BitString() ) ) );
@@ -693,10 +693,10 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   }
   headerStr.append( QString( "<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>" ) );
   headerStr.append(
-        QString( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );
+    QString::fromLatin1( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );
 
   if ( !spamHTML.isEmpty() )
-    headerStr.append( QString( "<div class=\"spamheader\" dir=\"%1\"><b>%2</b>&nbsp;<span style=\"padding-left: 20px;\">%3</span></div>\n")
+    headerStr.append( QString::fromLatin1( "<div class=\"spamheader\" dir=\"%1\"><b>%2</b>&nbsp;<span style=\"padding-left: 20px;\">%3</span></div>\n")
                       .arg( subjectDir, i18n("Spam Status:"), spamHTML ) );
 
   headerStr += "</div>\n\n";
@@ -759,12 +759,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   // considered left-to-right, they are ignored when determining its
   // direction.
 
-//TODO(Andras) this is duplicate code, try to factor out!
-  QString subjectDir;
-  if (message->subject(false))
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
+  QString subjectDir = subjectString( message );
 
   // colors depend on if it is encapsulated or not
   QColor fontColor( Qt::white );
