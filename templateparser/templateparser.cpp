@@ -70,13 +70,19 @@ namespace TemplateParser {
 
 static const int PipeTimeout = 15 * 1000;
 
-QByteArray selectCharset( const QStringList &charsets, const QString &text )
+QTextCodec* selectCharset( const QStringList &charsets, const QString &text )
 {
   foreach( const QString &name, charsets ) {
     // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
     // the former knows us-ascii is latin1.
-    QTextCodec *codec = KGlobal::charsets()->codecForName( name );
-    if( !codec ) {
+    bool ok = true;
+    QTextCodec *codec;
+    if ( name == "locale" ) {
+      codec = QTextCodec::codecForLocale();
+    } else {
+      codec = KGlobal::charsets()->codecForName( name, ok );
+    }
+    if( !ok || !codec ) {
       kWarning() << "Could not get text codec for charset" << name;
       continue;
     }
@@ -85,12 +91,12 @@ QByteArray selectCharset( const QStringList &charsets, const QString &text )
       if( name == "us-ascii" && !KMime::isUsAscii( text ) ) {
         continue;
       }
-      kDebug() << "Chosen charset" << name;
-      return name.toLatin1();
+      kDebug() << "Chosen charset" << name << codec->name();
+      return codec;
     }
   }
   kDebug() << "No appropriate charset found.";
-  return "utf-8";
+  return KGlobal::charsets()->codecForName( "utf-8" );
 }
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
@@ -1031,16 +1037,9 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   if ( ac.attachments().empty() || mMode != Forward ) {
     mMsg->contentType()->clear(); // to get rid of old boundary
     mMsg->contentType()->setMimeType( "text/plain" );
-    QByteArray charset = selectCharset( m_charsets, body );
-    QByteArray encodedBody;
-    QTextCodec* codec = KGlobal::charsets()->codecForName( charset );
-    if( codec ) {
-      encodedBody = codec->fromUnicode( body );
-    } else {
-      encodedBody = body.toUtf8();
-      charset = "utf-8";
-    }
-    mMsg->contentType()->setCharset( charset );
+    QTextCodec* codec = selectCharset( m_charsets, body );
+    const QByteArray encodedBody = codec->fromUnicode( body );
+    mMsg->contentType()->setCharset( codec->name() );
     mMsg->setBody( encodedBody );
     mMsg->assemble();
   }
