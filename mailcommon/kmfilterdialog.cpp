@@ -928,6 +928,9 @@ void KMFilterListBox::slotSelected( int aIdx )
 
 void KMFilterListBox::slotNew()
 {
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
+
   // just insert a new filter.
   insertFilter( new MailFilter() );
   enableControls();
@@ -939,6 +942,8 @@ void KMFilterListBox::slotCopy()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
 
   // make sure that all changes are written to the filter before we copy it
   emit applyWidgets();
@@ -1105,6 +1110,9 @@ void KMFilterListBox::slotRename()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
+
+  if ( mListWidget->currentItem()->isHidden() )
+    return;
 
   bool okPressed = false;
   MailFilter *filter = mFilterList.at( mIdxSelItem );
