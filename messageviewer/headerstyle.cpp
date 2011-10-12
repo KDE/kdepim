@@ -86,15 +86,17 @@ static QString strToHtml( const QString & str,
 
 // Prepare the date string (when printing always use the localized date)
 static QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
+  const KDateTime dateTime = message->date()->dateTime();
+  if ( !dateTime.isValid() )
+    return i18nc( "Unknown date", "Unknown" );
   if( printing ) {
-    KDateTime dateTime = message->date()->dateTime();
     KLocale * locale = KGlobal::locale();
     return locale->formatDateTime( dateTime );
   } else {
     if ( shortDate )
-      return MessageViewer::HeaderStyle::dateShortStr( message->date()->dateTime() );
+      return MessageViewer::HeaderStyle::dateShortStr( dateTime );
     else
-      return MessageViewer::HeaderStyle::dateStr( message->date()->dateTime() );
+      return MessageViewer::HeaderStyle::dateStr( dateTime );
   }
 }
 
