@@ -1120,6 +1120,8 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
 
 
 void ViewerPrivate::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
+  if ( mAttachmentStrategy == strategy )
+    return;
   mAttachmentStrategy = strategy ? strategy : AttachmentStrategy::smart();
   update( Viewer::Force );
 }
