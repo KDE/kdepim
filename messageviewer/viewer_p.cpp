@@ -2062,6 +2062,10 @@ void ViewerPrivate::slotCycleHeaderStyles() {
 
 void ViewerPrivate::slotBriefHeaders()
 {
+  if ( ( mHeaderStyle == HeaderStyle::brief() )
+       && mHeaderStrategy == HeaderStrategy::brief() )
+    return;
+
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
                              HeaderStrategy::brief() );
   if( !mExternalWindow )
@@ -2071,6 +2075,9 @@ void ViewerPrivate::slotBriefHeaders()
 
 void ViewerPrivate::slotFancyHeaders()
 {
+  if ( ( mHeaderStyle == HeaderStyle::fancy() )
+       && mHeaderStrategy == HeaderStrategy::rich() )
+    return;
   setHeaderStyleAndStrategy( HeaderStyle::fancy(),
                              HeaderStrategy::rich() );
   if( !mExternalWindow )
@@ -2080,6 +2087,10 @@ void ViewerPrivate::slotFancyHeaders()
 
 void ViewerPrivate::slotEnterpriseHeaders()
 {
+  if ( ( mHeaderStyle == HeaderStyle::enterprise() )
+       && mHeaderStrategy == HeaderStrategy::rich() )
+    return;
+
   setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
                              HeaderStrategy::rich() );
   if( !mExternalWindow )
@@ -2089,6 +2100,10 @@ void ViewerPrivate::slotEnterpriseHeaders()
 
 void ViewerPrivate::slotStandardHeaders()
 {
+  if ( ( mHeaderStyle == HeaderStyle::plain() )
+       && mHeaderStrategy == HeaderStrategy::standard() )
+    return;
+
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::standard());
   writeConfig();
@@ -2097,6 +2112,10 @@ void ViewerPrivate::slotStandardHeaders()
 
 void ViewerPrivate::slotLongHeaders()
 {
+  if ( ( mHeaderStyle == HeaderStyle::plain() )
+       && mHeaderStrategy == HeaderStrategy::rich() )
+    return;
+
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::rich() );
   if( !mExternalWindow )
@@ -2106,6 +2125,10 @@ void ViewerPrivate::slotLongHeaders()
 
 
 void ViewerPrivate::slotAllHeaders() {
+  if ( ( mHeaderStyle == HeaderStyle::plain() )
+       && mHeaderStrategy == HeaderStrategy::all() )
+    return;
+
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::all() );
   if( !mExternalWindow )
