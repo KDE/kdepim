@@ -917,7 +917,8 @@ void KMFilterListBox::slotDelete()
   emit resetWidgets();
 
   // remove the filter from both the listbox
-  mListWidget->takeItem( oIdxSelItem );
+  delete mListWidget->takeItem( oIdxSelItem );
+
   // and the filter list...
   MailCommon::MailFilter *deletedFilter =  mFilterList.takeAt( oIdxSelItem );
 
