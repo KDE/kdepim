@@ -392,7 +392,7 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
     meterBar.fill( meterWidth + 2 );
   else {
     meterBar.fill( meterWidth + 1 );
-    int max = qMin( meterWidth, static_cast<int>( percent ) / 5 );
+    const int max = qMin( meterWidth, static_cast<int>( percent ) / 5 );
     for ( int i = 0; i < max; ++i ) {
       meterBar.setColor( i+1, qRgb( gradient[i][0], gradient[i][1],
                                     gradient[i][2] ) );
