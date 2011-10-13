@@ -1229,7 +1229,8 @@ const SearchPattern & SearchPattern::operator=( const SearchPattern & other ) {
 
   clear(); // ###
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = other.constBegin() ; it != other.constEnd() ; ++it )
+  QList<SearchRule::Ptr>::const_iterator end(other.constEnd());
+  for ( it = other.constBegin() ; it != end ; ++it )
     append( SearchRule::createInstance( **it ) ); // deep copy
 
   return *this;
