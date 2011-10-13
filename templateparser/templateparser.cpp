@@ -77,7 +77,7 @@ QTextCodec* selectCharset( const QStringList &charsets, const QString &text )
     // the former knows us-ascii is latin1.
     bool ok = true;
     QTextCodec *codec;
-    if ( name == "locale" ) {
+    if ( name == QLatin1String( "locale" ) ) {
       codec = QTextCodec::codecForLocale();
     } else {
       codec = KGlobal::charsets()->codecForName( name, ok );
@@ -1137,7 +1137,7 @@ QString TemplateParser::findTemplate()
         break;
       default:
         kDebug() << "Unknown message mode:" << mMode;
-        return "";
+        return QString();
       }
       mQuoteString = fconf.quoteString();
       if ( !tmpl.isEmpty() ) {
@@ -1186,7 +1186,7 @@ QString TemplateParser::findTemplate()
       break;
     default:
       kDebug() << "Unknown message mode:" << mMode;
-      return "";
+      return QString();
     }
     mQuoteString = iconf.quoteString();
     if ( !tmpl.isEmpty() ) {
@@ -1210,7 +1210,7 @@ QString TemplateParser::findTemplate()
     break;
   default:
     kDebug() << "Unknown message mode:" << mMode;
-    return "";
+    return QString();
   }
 
   mQuoteString = DefaultTemplates::defaultQuoteString();
