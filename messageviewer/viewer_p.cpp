@@ -2053,7 +2053,8 @@ void ViewerPrivate::slotStandardHeaders()
 
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::standard());
-  writeConfig();
+  if( !mExternalWindow )
+    writeConfig();
 }
 
 
