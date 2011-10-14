@@ -100,7 +100,8 @@ MailFilter::MailFilter( const MailFilter & aFilter )
 
   mAccounts.clear();
   QStringList::ConstIterator it2;
-  for ( it2 = aFilter.mAccounts.constBegin() ; it2 != aFilter.mAccounts.constEnd() ; ++it2 )
+  QStringList::ConstIterator end2 = aFilter.mAccounts.constEnd();
+  for ( it2 = aFilter.mAccounts.constBegin() ; it2 != end2 ; ++it2 )
     mAccounts.append( *it2 );
 }
 
@@ -123,8 +124,9 @@ MailFilter::ReturnCode MailFilter::execActions( ItemContext &context, bool& stop
 {
   ReturnCode status = NoResult;
 
-  QList<FilterAction*>::const_iterator it( mActions.begin() );
-  for ( ; it != mActions.constEnd() ; ++it ) {
+  QList<FilterAction*>::const_iterator it( mActions.constBegin() );
+  QList<FilterAction*>::const_iterator end( mActions.constEnd() );
+  for ( ; it != end ; ++it ) {
 
     if ( FilterLog::instance()->isLogging() ) {
       const QString logText( i18n( "<b>Applying filter action:</b> %1",
