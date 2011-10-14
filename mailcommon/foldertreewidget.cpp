@@ -22,7 +22,6 @@
 #include "readablecollectionproxymodel.h"
 #include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
-#include "foldertreewidgetproxymodel.h"
 
 #include "messageviewer/globalsettings.h"
 #include "messagecore/globalsettings.h"
@@ -57,7 +56,7 @@ public:
      folderTreeView( 0 ),
      quotaModel( 0 ),
      readableproxy( 0 ),
-     filterTreeViewModel( 0 ),
+     //     filterTreeViewModel( 0 ),
      entityOrderProxy( 0 ),
      filterFolderLineEdit( 0 ),
      saver( 0 ),
@@ -71,7 +70,6 @@ public:
   FolderTreeView *folderTreeView;
   Akonadi::QuotaColorProxyModel *quotaModel;
   ReadableCollectionProxyModel *readableproxy;
-  FolderTreeWidgetProxyModel *filterTreeViewModel;
   EntityCollectionOrderProxyModel *entityOrderProxy;
   KLineEdit *filterFolderLineEdit;
   QPointer<Akonadi::ETMViewStateSaver> saver;
@@ -126,17 +124,10 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->folderTreeView->installEventFilter( this );
 
-  // Use the model
-
-  //Filter tree view.
-  d->filterTreeViewModel = new FolderTreeWidgetProxyModel( this );
-  d->filterTreeViewModel->setDynamicSortFilter( true );
-  d->filterTreeViewModel->setSourceModel( d->readableproxy );
-  d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
-
+  
   //Order proxy
   d->entityOrderProxy = new EntityCollectionOrderProxyModel( this );
-  d->entityOrderProxy->setSourceModel( d->filterTreeViewModel );
+  d->entityOrderProxy->setSourceModel( d->readableproxy );
   KConfigGroup grp( KernelIf->config(), "CollectionTreeOrder" );
   d->entityOrderProxy->setOrderConfig( grp );
   d->folderTreeView->setModel( d->entityOrderProxy );
@@ -189,7 +180,7 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
 
   }
   d->oldFilterStr = text;
-  d->filterTreeViewModel->setFilterFixedString( text );
+  d->readableproxy->setFilterFolder( text );
 }
   
 void FolderTreeWidget::disableContextMenuAndExtraColumn()
@@ -354,7 +345,7 @@ void FolderTreeWidget::applyFilter( const QString &filter )
 {
   d->label->setText( filter.isEmpty() ? i18n( "You can start typing to filter the list of folders." )
                                       : i18n( "Path: (%1)", filter ) );
-  d->filterTreeViewModel->setFilterFolder( filter );
+  d->readableproxy->setFilterFolder( filter );
   d->folderTreeView->expandAll();
 }
 
