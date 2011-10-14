@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, 2010 Laurent Montel <montel@kde.org>
+    Copyright (c) 2009, 2010, 2011 Laurent Montel <montel@kde.org>
 
 
     This library is free software; you can redistribute it and/or modify it
@@ -72,17 +72,8 @@ ReadableCollectionProxyModel::~ReadableCollectionProxyModel()
 
 Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) const
 {
-  // TODO: Should this always exit with a call to Akonadi::EntityRightsFilterModel::flags ?
   if ( d->enableCheck )
-  {
-    const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
-    const Akonadi::Collection collection = sourceModel()->data( sourceIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-
-    if ( ( !( collection.rights() & Akonadi::Collection::CanCreateItem ) ) || collection.contentMimeTypes().isEmpty()) {
-      return KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    }
     return Akonadi::EntityRightsFilterModel::flags( index );
-  }
 
   return QSortFilterProxyModel::flags( index );
 }
@@ -90,6 +81,9 @@ Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) c
 void ReadableCollectionProxyModel::setEnabledCheck( bool enable )
 {
   d->enableCheck = enable;
+  if ( enable ) {
+    setAccessRights( Akonadi::Collection::CanCreateItem );
+  }
 }
 
 bool ReadableCollectionProxyModel::enabledCheck() const
