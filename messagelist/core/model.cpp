@@ -1014,15 +1014,17 @@ void ModelPrivate::clearUnassignedMessageLists()
     // items and *then* delete them without accessing the parented ones.
 
     QList< MessageItem * > parentless;
+    QList< MessageItem * >::ConstIterator end( mUnassignedMessageListForPass2.constEnd() );
 
     for ( it = mUnassignedMessageListForPass2.constBegin();
-          it != mUnassignedMessageListForPass2.constEnd(); ++it )
+          it != end; ++it )
     {
       if( !( *it )->parent() )
         parentless.append( *it );
     }
 
-    for ( it = parentless.constBegin(); it != parentless.constEnd(); ++it )
+    end = parentless.constEnd();
+    for ( it = parentless.constBegin(); it != end; ++it )
       delete *it;
 
     mUnassignedMessageListForPass2.clear();
@@ -1047,20 +1049,21 @@ void ModelPrivate::clearUnassignedMessageLists()
       // We're actually in Pass3: the messiest one.
 
       QHash< MessageItem *, MessageItem * > itemsToDelete;
+      QList< MessageItem * >::ConstIterator end( mUnassignedMessageListForPass3.constEnd() );
 
-      for ( it = mUnassignedMessageListForPass3.constBegin(); it != mUnassignedMessageListForPass3.constEnd(); ++it )
+      for ( it = mUnassignedMessageListForPass3.constBegin(); it != end; ++it )
       {
         if( !( *it )->parent() )
           itemsToDelete.insert( *it, *it );
       }
-
-      for ( it = mUnassignedMessageListForPass4.constBegin(); it != mUnassignedMessageListForPass4.constEnd(); ++it )
+      end = mUnassignedMessageListForPass4.constEnd();
+      for ( it = mUnassignedMessageListForPass4.constBegin(); it != end; ++it )
       {
         if( !( *it )->parent() )
           itemsToDelete.insert( *it, *it );
       }
-
-      for ( QHash< MessageItem *, MessageItem * >::ConstIterator it3 = itemsToDelete.constBegin(); it3 != itemsToDelete.constEnd(); ++it3 )
+      QHash< MessageItem *, MessageItem * >::ConstIterator end3 = itemsToDelete.constEnd();
+      for ( QHash< MessageItem *, MessageItem * >::ConstIterator it3 = itemsToDelete.constBegin(); it3 != end3; ++it3 )
         delete ( *it3 );
 
       mUnassignedMessageListForPass3.clear();
@@ -1071,14 +1074,14 @@ void ModelPrivate::clearUnassignedMessageLists()
     // mUnassignedMessageListForPass4 is empty so we must be at the end of a very special kind of Pass2
     // We have the same problem as in mUnassignedMessageListForPass2.
     QList< MessageItem * > parentless;
-
-    for ( it = mUnassignedMessageListForPass3.constBegin(); it != mUnassignedMessageListForPass3.constEnd(); ++it )
+    QList< MessageItem * >::ConstIterator end = mUnassignedMessageListForPass3.constEnd();
+    for ( it = mUnassignedMessageListForPass3.constBegin(); it != end; ++it )
     {
       if( !( *it )->parent() )
         parentless.append( *it );
     }
-
-    for ( it = parentless.constBegin(); it != parentless.constEnd(); ++it )
+    end = parentless.constEnd();
+    for ( it = parentless.constBegin(); it != end; ++it )
       delete *it;
 
     mUnassignedMessageListForPass3.clear();
@@ -1092,14 +1095,14 @@ void ModelPrivate::clearUnassignedMessageLists()
 
     // We have the same problem as in mUnassignedMessageListForPass2.
     QList< MessageItem * > parentless;
-
-    for (  it = mUnassignedMessageListForPass4.constBegin(); it != mUnassignedMessageListForPass4.constEnd(); ++it )
+    QList< MessageItem * >::ConstIterator end = mUnassignedMessageListForPass4.constEnd();
+    for (  it = mUnassignedMessageListForPass4.constBegin(); it != end; ++it )
     {
       if( !( *it )->parent() )
         parentless.append( *it );
     }
-
-    for ( it = parentless.constBegin(); it != parentless.constEnd(); ++it )
+    end = parentless.constEnd();
+    for ( it = parentless.constBegin(); it != end; ++it )
       delete *it;
 
     mUnassignedMessageListForPass4.clear();
@@ -4599,7 +4602,8 @@ MessageItemSetReference Model::createPersistentSet( const QList< MessageItem * >
     d->mPersistentSetManager = new MessageItemSetManager();
 
   MessageItemSetReference ref = d->mPersistentSetManager->createSet();
-  for ( QList< MessageItem * >::ConstIterator it = items.constBegin(); it != items.constEnd(); ++it )
+  QList< MessageItem * >::ConstIterator end = items.constEnd();
+  for ( QList< MessageItem * >::ConstIterator it = items.constBegin(); it != end; ++it )
     d->mPersistentSetManager->addMessageItem( ref, *it );
 
   return ref;
