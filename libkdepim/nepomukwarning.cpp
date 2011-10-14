@@ -27,6 +27,7 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KStandardDirs>
+#include <KService>
 
 #include <QProcess>
 
@@ -57,7 +58,14 @@ KPIM::NepomukWarning::NepomukWarning(const char* neverShowAgainKey, QWidget* par
 
 void KPIM::NepomukWarning::configure()
 {
-  QProcess::startDetached( KStandardDirs::findExe(QLatin1String("kcmshell4")), QStringList(QLatin1String("kcm_nepomuk")) );
+  if( KService::serviceByStorageId("kcm_nepomuk.desktop") )
+    QProcess::startDetached( KStandardDirs::findExe(QLatin1String("kcmshell4")), QStringList(QLatin1String("kcm_nepomuk")) );
+  else {
+    KAction *action = qobject_cast< KAction* >( sender() );
+    action->setEnabled( false );
+    setText( i18n( "Module to configurate nepomuk was not found on your system. Make sure that Nepomuk was compiled." ) );
+  }
+    
 }
 
 void KPIM::NepomukWarning::setMissingFeatures(const QStringList& features)
