@@ -281,7 +281,9 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url
     return false;
 
   PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+  BodyPartHandlerList::const_iterator end( mHandlers.constEnd() );
+  
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it ) {
     if ( (*it)->handleClick( w->viewer(), &part, path ) )
       return true;
   }
@@ -438,74 +440,63 @@ namespace {
     if ( url.protocol() == QLatin1String( "kmail" ) ) {
       if ( !w )
         return false;
-
-      if ( url.path() == QLatin1String( "showHTML" ) ) {
+      const QString urlPath( url.path() );
+      if ( urlPath == QLatin1String( "showHTML" ) ) {
         w->setHtmlOverride( !w->htmlOverride() );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "loadExternal" ) ) {
+      else if ( urlPath == QLatin1String( "loadExternal" ) ) {
         w->setHtmlLoadExtOverride( !w->htmlLoadExtOverride() );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "decryptMessage" ) ) {
+      else if ( urlPath == QLatin1String( "decryptMessage" ) ) {
         w->setDecryptMessageOverwrite( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showSignatureDetails" ) ) {
+      else if ( urlPath == QLatin1String( "showSignatureDetails" ) ) {
         w->setShowSignatureDetails( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideSignatureDetails" ) ) {
+      else if ( urlPath == QLatin1String( "hideSignatureDetails" ) ) {
         w->setShowSignatureDetails( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showAttachmentQuicklist" ) ) {
+      else if ( urlPath == QLatin1String( "showAttachmentQuicklist" ) ) {
         w->setShowAttachmentQuicklist( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideAttachmentQuicklist" ) ) {
+      else if ( urlPath == QLatin1String( "hideAttachmentQuicklist" ) ) {
         w->setShowAttachmentQuicklist( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showFullToAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "showFullToAddressList" ) ) {
         w->setShowFullToAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideFullToAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "hideFullToAddressList" ) ) {
         w->setShowFullToAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showFullCcAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "showFullCcAddressList" ) ) {
         w->setShowFullCcAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideFullCcAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "hideFullCcAddressList" ) ) {
         w->setShowFullCcAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showRawToltecMail" ) ) {
+      else if ( urlPath == QLatin1String( "showRawToltecMail" ) ) {
         w->setShowRawToltecMail( true );
         w->update( Viewer::Force );
         return true;
