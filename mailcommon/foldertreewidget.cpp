@@ -56,7 +56,6 @@ public:
      folderTreeView( 0 ),
      quotaModel( 0 ),
      readableproxy( 0 ),
-     //     filterTreeViewModel( 0 ),
      entityOrderProxy( 0 ),
      filterFolderLineEdit( 0 ),
      saver( 0 ),
