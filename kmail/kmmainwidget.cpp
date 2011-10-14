@@ -933,6 +933,15 @@ void KMMainWidget::writeConfig()
   }
 }
 
+void KMMainWidget::writeReaderConfig()
+{
+  if ( mWasEverShown ) {
+    if ( mMsgView ) {
+      mMsgView->viewer()->writeConfig();
+    }
+  }
+}
+
 //-----------------------------------------------------------------------------
 void KMMainWidget::deleteWidgets()
 {
