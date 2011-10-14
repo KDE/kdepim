@@ -56,6 +56,9 @@ FolderTreeView::~FolderTreeView()
 
 void FolderTreeView::setTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy )
 {
+  if ( mToolTipDisplayPolicy == policy )
+    return;
+  
   mToolTipDisplayPolicy = policy;
   writeConfig();
 }
@@ -143,8 +146,8 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
   static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
   QActionGroup *grp = new QActionGroup( &menu );
-
-  for ( int i = 0; i < (int)( sizeof( icon_sizes ) / sizeof( int ) ); i++ )
+  const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
+  for ( int i = 0; i < nbElement; i++ )
   {
     act = menu.addAction( QString("%1x%2").arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ) );
     act->setCheckable( true );
@@ -228,6 +231,9 @@ void FolderTreeView::slotHeaderContextMenuChangeSortingPolicy( bool )
 
 void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
 {
+  if ( mSortingPolicy == policy )
+    return;
+  
   mSortingPolicy = policy;
   switch ( mSortingPolicy )
   {
@@ -313,7 +319,11 @@ void FolderTreeView::slotHeaderContextMenuChangeIconSize( bool )
   if ( !ok )
     return;
 
-  setIconSize( QSize( size, size ) );
+  const QSize newIconSize( QSize( size, size ) );
+  if ( newIconSize == iconSize() )
+    return;
+  setIconSize( newIconSize );
+  
   writeConfig();
 }
 
