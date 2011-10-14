@@ -73,6 +73,7 @@ void FolderTreeView::disableContextMenuAndExtraColumn()
 void FolderTreeView::init( bool showUnreadCount )
 {
   setIconSize( QSize( 22, 22 ) );
+  setUniformRowHeights( true );
   mSortingPolicy = FolderTreeWidget::SortByCurrentColumn;
   mToolTipDisplayPolicy = FolderTreeWidget::DisplayAlways;
 
