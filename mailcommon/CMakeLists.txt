@@ -51,7 +51,6 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
-  foldertreewidgetproxymodel.cpp
 )
 
 kde4_add_ui_files(libmailcommon_SRCS filterconfigwidget.ui snippetdialog.ui)

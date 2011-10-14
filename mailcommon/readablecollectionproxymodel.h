@@ -65,6 +65,8 @@ public:
   void setHideImapFolder( bool hide );
   bool hideImapFolder() const;
 
+  void setFilterFolder( const QString& filter );
+  
 protected:
   virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
 

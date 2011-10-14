@@ -43,6 +43,7 @@ public:
       hideImapFolder( false )
     {
     }
+  QString filterStr;
   bool enableCheck;
   bool hideVirtualFolder;
   bool hideSpecificFolder;
@@ -55,6 +56,8 @@ ReadableCollectionProxyModel::ReadableCollectionProxyModel( QObject *parent, Rea
     d( new Private )
 {
   setDynamicSortFilter( true );
+  setFilterCaseSensitivity( Qt::CaseInsensitive );
+  
   if ( option & HideVirtualFolder ) {
     d->hideVirtualFolder = true;
   }
@@ -77,6 +80,12 @@ ReadableCollectionProxyModel::~ReadableCollectionProxyModel()
 
 Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) const
 {
+  if ( !d->filterStr.isEmpty() )
+  {
+    if ( !index.data().toString().contains( d->filterStr, Qt::CaseInsensitive ) )
+      return KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+  }
+  
   if ( d->enableCheck )
     return Akonadi::EntityRightsFilterModel::flags( index );
 
@@ -85,6 +94,8 @@ Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) c
 
 void ReadableCollectionProxyModel::setEnabledCheck( bool enable )
 {
+  if ( d->enableCheck == enable )
+    return;
   d->enableCheck = enable;
   if ( enable ) {
     setAccessRights( Akonadi::Collection::CanCreateItem );
@@ -163,8 +174,15 @@ bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &
     if ( collection.resource().startsWith( IMAP_RESOURCE_IDENTIFIER ) )
       return false;
   }
+  if ( d->filterStr.isEmpty() )
+    return Akonadi::EntityRightsFilterModel::acceptRow( sourceRow, sourceParent );
+  return KRecursiveFilterProxyModel::acceptRow( sourceRow, sourceParent );
+}
 
-  return Akonadi::EntityRightsFilterModel::acceptRow( sourceRow, sourceParent );
+void ReadableCollectionProxyModel::setFilterFolder( const QString& filter )
+{
+  d->filterStr = filter;
+  setFilterWildcard( filter );
 }
 
 }
