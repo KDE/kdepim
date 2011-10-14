@@ -1102,7 +1102,11 @@ void ViewerPrivate::writeConfig( bool sync )
 
 
 void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                               const HeaderStrategy * strategy ) {
+                                               const HeaderStrategy * strategy , bool writeInConfigFile ) {
+
+  if ( mHeaderStyle == style && mHeaderStrategy == strategy )
+    return;
+  
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   if ( mHeaderOnlyAttachmentsAction ) {
@@ -1116,6 +1120,10 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
     }
   }
   update( Viewer::Force );
+  
+  if( !mExternalWindow && writeInConfigFile)
+    writeConfig();
+
 }
 
 
@@ -1605,6 +1613,7 @@ void ViewerPrivate::createActions()
 
 void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
 {
+#ifndef QT_NO_TREEVIEW
   if ( !content )
     return;
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
@@ -1649,7 +1658,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( !content->isTopLevel() )
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
-#ifndef QT_NO_TREEVIEW
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
 #endif
 
@@ -2064,78 +2072,44 @@ void ViewerPrivate::slotCycleHeaderStyles() {
 
 void ViewerPrivate::slotBriefHeaders()
 {
-  if ( ( mHeaderStyle == HeaderStyle::brief() )
-       && mHeaderStrategy == HeaderStrategy::brief() )
-    return;
-
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
-                             HeaderStrategy::brief() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::brief(),true );
 }
 
 
 void ViewerPrivate::slotFancyHeaders()
 {
-  if ( ( mHeaderStyle == HeaderStyle::fancy() )
-       && mHeaderStrategy == HeaderStrategy::rich() )
-    return;
+
   setHeaderStyleAndStrategy( HeaderStyle::fancy(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(), true );
 }
 
 
 void ViewerPrivate::slotEnterpriseHeaders()
 {
-  if ( ( mHeaderStyle == HeaderStyle::enterprise() )
-       && mHeaderStrategy == HeaderStrategy::rich() )
-    return;
-
   setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(),true );
 }
 
 
 void ViewerPrivate::slotStandardHeaders()
 {
-  if ( ( mHeaderStyle == HeaderStyle::plain() )
-       && mHeaderStrategy == HeaderStrategy::standard() )
-    return;
-
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::standard());
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::standard(), true);
 }
 
 
 void ViewerPrivate::slotLongHeaders()
 {
-  if ( ( mHeaderStyle == HeaderStyle::plain() )
-       && mHeaderStrategy == HeaderStrategy::rich() )
-    return;
-
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(),true );
 }
 
 
 
 void ViewerPrivate::slotAllHeaders() {
-  if ( ( mHeaderStyle == HeaderStyle::plain() )
-       && mHeaderStrategy == HeaderStrategy::all() )
-    return;
-
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::all() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::all(), true );
 }
 
 
@@ -2514,7 +2488,7 @@ void ViewerPrivate::slotUrlCopy()
   QClipboard* clip = QApplication::clipboard();
   if ( mClickedUrl.protocol() == QLatin1String( "mailto" ) ) {
     // put the url into the mouse selection and the clipboard
-    QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
+    const QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
     clip->setText( address, QClipboard::Clipboard );
     clip->setText( address, QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));
@@ -2816,7 +2790,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString &
 
 void ViewerPrivate::toggleFullAddressList( const QString &field )
 {
-  const bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
+  const bool doShow = ( field == QLatin1String( "To" ) && showFullToAddressList() ) || ( field == QLatin1String( "Cc" ) && showFullCcAddressList() );
   // First inject the correct icon
   if ( mViewer->replaceInnerHtml( "iconFull" + field + "AddressList",
                                   bind( &ViewerPrivate::recipientsQuickListLinkHtml, this, doShow, field ) ) )
