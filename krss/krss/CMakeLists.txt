@@ -1,7 +1,7 @@
 # needed to compile the code in subdirectories
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 # taken from dolphin
 macro_optional_find_package(Nepomuk)
