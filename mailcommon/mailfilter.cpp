@@ -60,9 +60,9 @@ MailFilter::MailFilter()
 }
 
 
-MailFilter::MailFilter( const KConfigGroup & aConfig )
+MailFilter::MailFilter( const KConfigGroup & aConfig, bool interactive )
 {
-  readConfig( aConfig );
+  readConfig( aConfig, interactive );
 }
 
 
@@ -351,7 +351,7 @@ bool MailFilter::isAutoNaming() const
 }
 
 //-----------------------------------------------------------------------------
-void MailFilter::readConfig(const KConfigGroup & config)
+void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
 {
   // MKSearchPattern::readConfig ensures
   // that the pattern is purified.
@@ -408,8 +408,12 @@ void MailFilter::readConfig(const KConfigGroup & config)
       FilterAction *fa = desc->create();
       if ( fa ) {
         //...load it with it's parameter...
-        fa->argsFromString( config.readEntry( argsName, QString() ) );
-        //...check if it's emoty and...
+        if ( interactive ) {
+          fa->argsFromStringInteractive( config.readEntry( argsName, QString() ), name() );
+        }
+        else
+          fa->argsFromString( config.readEntry( argsName, QString() ) );
+        //...check if it's empty and...
         if ( !fa->isEmpty() )
           //...append it if it's not and...
           mActions.append( fa );

@@ -141,7 +141,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
     const QString groupName = QString::fromLatin1( "Filter #%1" ).arg( i );
 
     const KConfigGroup group = config->group( groupName );
-    MailFilter *filter = new MailFilter( group );
+    MailFilter *filter = new MailFilter( group, true /*interactive*/ );
     filter->purify();
     if ( filter->isEmpty() ) {
 #ifndef NDEBUG

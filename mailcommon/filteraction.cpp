@@ -3,6 +3,7 @@
 #include "filteraction.h"
 
 #include "folderrequester.h"
+#include "filteractionmissingcollectiondialog.h"
 #include "mailutil.h"
 #include "mailkernel.h"
 #include "mdnadvicedialog.h"
@@ -149,6 +150,11 @@ void FilterAction::setParamWidgetValue( QWidget* ) const
 void FilterAction::clearParamWidget( QWidget* ) const
 {
 }
+
+void FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
+{
+}
+
 
 bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
 {
@@ -385,6 +391,18 @@ void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
 {
   static_cast<FolderRequester*>( paramWidget )->setCollection( CommonKernel->draftsCollectionFolder() );
 }
+
+void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr , const QString& name)
+{
+  argsFromString( argsStr );
+  if ( !mFolder.isValid() ) {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( name );
+    if ( dlg->exec() )
+      mFolder = dlg->selectedCollection();
+    delete dlg;
+  }
+}
+
 
 void FilterActionWithFolder::argsFromString( const QString &argsStr )
 {

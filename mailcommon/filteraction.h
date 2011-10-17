@@ -211,6 +211,11 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
     virtual void argsFromString( const QString &argsStr ) = 0;
 
     /**
+     * Read extra arguments from given string.
+     */
+    virtual void argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+
+    /**
      * Return extra arguments as string. Must not contain newlines.
      */
     virtual QString argsAsString() const = 0;
@@ -525,6 +530,8 @@ class FilterActionWithFolder : public FilterAction
      */
     virtual QString argsAsString() const;
 
+    virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+  
     /**
      * @copydoc FilterAction::displayString
      */
