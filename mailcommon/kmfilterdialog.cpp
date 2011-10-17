@@ -1263,14 +1263,20 @@ void KMFilterDialog::slotImportFilters()
   FilterImporterExporter importer( this );
   QList<MailFilter *> filters = importer.importFilters();
 
-  // FIXME message box how many were imported?
-  if ( filters.isEmpty() ) return;
+  if ( filters.isEmpty() ) {
+    KMessageBox::information( this, i18n( "No filter was imported." ) );
+    return;
+  }
 
+  QStringList listOfFilter;
   QList<MailFilter*>::ConstIterator end( filters.constEnd() );
   
   for ( QList<MailFilter*>::ConstIterator it = filters.constBegin() ; it != end ; ++it ) {
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
+    listOfFilter<<( *it )->name();
   }
+  KMessageBox::informationList( this, i18n( "Filters which was imported:" ),listOfFilter );
+
 }
 
 void KMFilterDialog::slotExportFilters()
