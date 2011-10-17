@@ -1275,7 +1275,7 @@ void KMFilterDialog::slotImportFilters()
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
     listOfFilter<<( *it )->name();
   }
-  KMessageBox::informationList( this, i18n( "Filters which was imported:" ),listOfFilter );
+  KMessageBox::informationList( this, i18n( "Filters which were imported:" ),listOfFilter );
 
 }
 
