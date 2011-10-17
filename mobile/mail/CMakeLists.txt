@@ -18,6 +18,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_BINARY_DIR}/messageviewer
   ${Boost_INCLUDE_DIR}
+  ${SOPRANO_INCLUDE_DIR}
 )
 
 set(kmail_mobile_srcs
