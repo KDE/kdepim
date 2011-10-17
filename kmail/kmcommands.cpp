@@ -1370,7 +1370,7 @@ KMCommand::Result KMSetStatusCommand::execute()
 
 void KMSetStatusCommand::slotModifyItemDone( KJob * job )
 {
-  if ( job->error() ) {
+  if ( job && job->error() ) {
     kWarning() << " Error trying to set item status:" << job->errorText();
   }
   deleteLater();
