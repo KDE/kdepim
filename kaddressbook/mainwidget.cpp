@@ -260,6 +260,9 @@ void MainWidget::delayedInit()
   }
 
   mXmlGuiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
+#if defined(HAVE_PRISON)
+  mXmlGuiClient->actionCollection()->action( "options_show_qrcodes" )->setChecked( showQRCodes() );
+#endif
 
   connect( GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()), SLOT(saveState()) );
   connect( GlobalContactModel::instance()->model(), SIGNAL(modelReset()), SLOT(restoreState()) );
@@ -451,8 +454,16 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
   toggleAction->setText( i18n( "Show Simple View" ) );
-  action->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
+  toggleAction->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   connect( toggleAction, SIGNAL(toggled(bool)), SLOT(setSimpleGuiMode(bool)) );
+
+#if defined(HAVE_PRISON)
+  KToggleAction *qrtoggleAction;
+  qrtoggleAction = collection->add<KToggleAction>( "options_show_qrcodes" );
+  qrtoggleAction->setText( i18n( "Show QR Codes" ) );
+  qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
+  connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
+#endif
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
@@ -581,10 +592,36 @@ void MainWidget::setSimpleGuiMode( bool on )
   mDetailsPane->setVisible( true );
   mContactSwitcher->setVisible( on );
 
-  if ( mItemView->model() )
+  if ( mItemView->model() ) {
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+  }
 
   Settings::self()->setUseSimpleMode( on );
+}
+
+bool MainWidget::showQRCodes()
+{
+#if defined(HAVE_PRISON)
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  return group.readEntry( "QRCodes", true );
+#else
+  return true;
+#endif
+}
+
+void MainWidget::setQRCodeShow( bool on )
+{
+#if defined(HAVE_PRISON)
+  // must write the configuration setting first before updating the view.
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  group.writeEntry( "QRCodes", on );
+
+  if ( mItemView->model() ) {
+    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+  }
+#endif
 }
 
 Akonadi::Collection MainWidget::currentAddressBook() const

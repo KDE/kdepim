@@ -8,6 +8,13 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+macro_optional_find_package(Prison QUIET)
+macro_log_feature(PRISON_FOUND "Prison" "Prison library" "http://projects.kde.org/prison" FALSE "" "Needed to show mobile barcodes of your contacts")
+if (PRISON_FOUND)
+  add_definitions(-DHAVE_PRISON)
+  include_directories(${PRISON_INCLUDE_DIR})
+endif (PRISON_FOUND)
+
 add_subdirectory(icons)
 add_subdirectory(printing)
 add_subdirectory(tests)
@@ -85,6 +92,10 @@ endif(QGPGME_FOUND)
 if (Grantlee_FOUND)
   target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
 endif (Grantlee_FOUND)
+
+if(PRISON_FOUND) 
+  target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
+endif(PRISON_FOUND)
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kaddressbookprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
