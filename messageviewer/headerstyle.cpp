@@ -824,13 +824,12 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     "    <table style=\"color: "+fontColor.name()+" ! important; margin: 1px; border-spacing: 0px;\" cellpadding=0> \n";
 
   // subject
-  //strToHtml( message->subject() )
   if ( strategy->showHeader( "subject" ) ) {
     headerStr +=
       "     <tr> \n"
       "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\"></td> \n"
-      "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">";
-    headerStr += !message->subject(false)? i18n("No Subject") : message->subject()->asUnicodeString() + "</td> \n"
+      "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">";    
+    headerStr += subjectString( message )+ "</td> \n"
       "     </tr> \n";
   }
 
