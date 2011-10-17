@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, 2010 Laurent Montel <montel@kde.org>
+    Copyright (c) 2009, 2010, 2011 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef MAILCOMMON_READABLECOLLECTIONPROXYMODEL_H
-#define MAILCOMMON_READABLECOLLECTIONPROXYMODEL_H
+#ifndef MAILCOMMON_FOLDERTREEWIDGETPROXYMODEL_H
+#define MAILCOMMON_FOLDERTREEWIDGETPROXYMODEL_H
 
 #include "akonadi/entityrightsfiltermodel.h"
 #include <akonadi/collection.h>
@@ -26,23 +26,23 @@
 namespace MailCommon {
 
 
-class ReadableCollectionProxyModel : public Akonadi::EntityRightsFilterModel
+class FolderTreeWidgetProxyModel : public Akonadi::EntityRightsFilterModel
 {
   Q_OBJECT
 
 public:
-  enum ReadableCollectionOption
+  enum FolderTreeWidgetProxyModelOption
   {
     None = 0,
     HideVirtualFolder = 1,
     HideSpecificFolder = 2,
     HideOutboxFolder = 4
   };
-  Q_DECLARE_FLAGS( ReadableCollectionOptions, ReadableCollectionOption )
+  Q_DECLARE_FLAGS( FolderTreeWidgetProxyModelOptions, FolderTreeWidgetProxyModelOption )
 
-  explicit ReadableCollectionProxyModel( QObject *parent = 0, ReadableCollectionOptions = ReadableCollectionProxyModel::None );
+  explicit FolderTreeWidgetProxyModel( QObject *parent = 0, FolderTreeWidgetProxyModelOptions = FolderTreeWidgetProxyModel::None );
 
-  virtual ~ReadableCollectionProxyModel();
+  virtual ~FolderTreeWidgetProxyModel();
 
   virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
 

@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "readablecollectionproxymodel.h"
+#include "foldertreewidgetproxymodel.h"
 #include "foldercollection.h"
 #include "mailutil.h"
 #include "mailkernel.h"
@@ -32,7 +32,7 @@
 
 namespace MailCommon {
 
-class ReadableCollectionProxyModel::Private
+class FolderTreeWidgetProxyModel::Private
 {
 public:
   Private()
@@ -49,7 +49,7 @@ public:
   bool hideOutboxFolder;
 };
 
-ReadableCollectionProxyModel::ReadableCollectionProxyModel( QObject *parent, ReadableCollectionOptions option )
+FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModel( QObject *parent, FolderTreeWidgetProxyModelOptions option )
   : Akonadi::EntityRightsFilterModel( parent ),
     d( new Private )
 {
@@ -67,13 +67,13 @@ ReadableCollectionProxyModel::ReadableCollectionProxyModel( QObject *parent, Rea
   }
 }
 
-ReadableCollectionProxyModel::~ReadableCollectionProxyModel()
+FolderTreeWidgetProxyModel::~FolderTreeWidgetProxyModel()
 {
   delete d;
 }
 
 
-Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) const
+Qt::ItemFlags FolderTreeWidgetProxyModel::flags( const QModelIndex & index ) const
 {
   if ( !d->filterStr.isEmpty() )
   {
@@ -87,7 +87,7 @@ Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) c
   return QSortFilterProxyModel::flags( index );
 }
 
-void ReadableCollectionProxyModel::setEnabledCheck( bool enable )
+void FolderTreeWidgetProxyModel::setEnabledCheck( bool enable )
 {
   if ( d->enableCheck == enable )
     return;
@@ -97,45 +97,45 @@ void ReadableCollectionProxyModel::setEnabledCheck( bool enable )
   }
 }
 
-bool ReadableCollectionProxyModel::enabledCheck() const
+bool FolderTreeWidgetProxyModel::enabledCheck() const
 {
   return d->enableCheck;
 }
 
-void ReadableCollectionProxyModel::setHideVirtualFolder( bool exclude )
+void FolderTreeWidgetProxyModel::setHideVirtualFolder( bool exclude )
 {
   d->hideVirtualFolder = exclude;
   invalidate();
 }
 
-bool ReadableCollectionProxyModel::hideVirtualFolder() const
+bool FolderTreeWidgetProxyModel::hideVirtualFolder() const
 {
   return d->hideVirtualFolder;
 }
 
-void ReadableCollectionProxyModel::setHideSpecificFolder( bool hide )
+void FolderTreeWidgetProxyModel::setHideSpecificFolder( bool hide )
 {
   d->hideSpecificFolder = hide;
   invalidate();
 }
 
-bool ReadableCollectionProxyModel::hideSpecificFolder() const
+bool FolderTreeWidgetProxyModel::hideSpecificFolder() const
 {
   return d->hideSpecificFolder;
 }
 
-void ReadableCollectionProxyModel::setHideOutboxFolder( bool hide )
+void FolderTreeWidgetProxyModel::setHideOutboxFolder( bool hide )
 {
   d->hideOutboxFolder = hide;
   invalidate();
 }
 
-bool ReadableCollectionProxyModel::hideOutboxFolder() const
+bool FolderTreeWidgetProxyModel::hideOutboxFolder() const
 {
   return d->hideOutboxFolder;
 }
 
-bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &sourceParent) const
+bool FolderTreeWidgetProxyModel::acceptRow( int sourceRow, const QModelIndex &sourceParent) const
 {
   const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
 
@@ -159,7 +159,7 @@ bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &
   return KRecursiveFilterProxyModel::acceptRow( sourceRow, sourceParent );
 }
 
-void ReadableCollectionProxyModel::setFilterFolder( const QString& filter )
+void FolderTreeWidgetProxyModel::setFilterFolder( const QString& filter )
 {
   d->filterStr = filter;
   setFilterWildcard( filter );
@@ -168,5 +168,5 @@ void ReadableCollectionProxyModel::setFilterFolder( const QString& filter )
 }
 
 
-#include "readablecollectionproxymodel.moc"
+#include "foldertreewidgetproxymodel.moc"
 

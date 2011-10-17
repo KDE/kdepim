@@ -21,7 +21,7 @@
 #include "foldertreewidget.h"
 #include "foldertreeview.h"
 #include "foldercollection.h"
-#include "readablecollectionproxymodel.h"
+#include "foldertreewidgetproxymodel.h"
 #include "mailkernel.h"
 
 #include <akonadi/collection.h>
@@ -74,17 +74,17 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
     opt |= FolderTreeWidget::ShowUnreadCount;
   opt |= FolderTreeWidget::UseDistinctSelectionModel;
 
-  ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None;
+  FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None;
 
   if ( options & FolderSelectionDialog::HideVirtualFolder )
-    optReadableProxy |= ReadableCollectionProxyModel::HideVirtualFolder;
-  optReadableProxy |= ReadableCollectionProxyModel::HideSpecificFolder;
+    optReadableProxy |= FolderTreeWidgetProxyModel::HideVirtualFolder;
+  optReadableProxy |= FolderTreeWidgetProxyModel::HideSpecificFolder;
   if ( options & FolderSelectionDialog::HideOutboxFolder )
-    optReadableProxy |= ReadableCollectionProxyModel::HideOutboxFolder;
+    optReadableProxy |= FolderTreeWidgetProxyModel::HideOutboxFolder;
 
   d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
-  d->folderTreeWidget->readableCollectionProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
+  d->folderTreeWidget->folderTreeWidgetProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
   d->folderTreeWidget->folderTreeView()->setTooltipsPolicy( FolderTreeWidget::DisplayNever );
 #ifndef QT_NO_DRAGANDDROP
   d->folderTreeWidget->folderTreeView()->setDragDropMode( QAbstractItemView::NoDragDrop );
@@ -99,7 +99,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
 
   connect( d->folderTreeWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(slotSelectionChanged()) );
-  connect( d->folderTreeWidget->readableCollectionProxyModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+  connect( d->folderTreeWidget->folderTreeWidgetProxyModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
            this, SLOT(rowsInserted(QModelIndex,int,int)) );
 
   connect( d->folderTreeWidget->folderTreeView(), SIGNAL(doubleClicked(QModelIndex)),

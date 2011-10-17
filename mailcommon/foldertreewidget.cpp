@@ -19,7 +19,7 @@
 #include "foldertreewidget.h"
 #include "foldertreeview.h"
 #include "imapaclattribute.h"
-#include "readablecollectionproxymodel.h"
+#include "foldertreewidgetproxymodel.h"
 #include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
 
@@ -68,7 +68,7 @@ public:
   Akonadi::StatisticsProxyModel *filterModel;
   FolderTreeView *folderTreeView;
   Akonadi::QuotaColorProxyModel *quotaModel;
-  ReadableCollectionProxyModel *readableproxy;
+  FolderTreeWidgetProxyModel *readableproxy;
   EntityCollectionOrderProxyModel *entityOrderProxy;
   KLineEdit *filterFolderLineEdit;
   QPointer<Akonadi::ETMViewStateSaver> saver;
@@ -79,7 +79,7 @@ public:
 };
 
 
-FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
+FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
   Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
@@ -112,7 +112,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
   d->quotaModel->setSourceModel( d->filterModel );
 
-  d->readableproxy = new ReadableCollectionProxyModel( this, optReadableProxy );
+  d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->quotaModel );
 
 
@@ -325,7 +325,7 @@ Akonadi::StatisticsProxyModel * FolderTreeWidget::statisticsProxyModel() const
   return d->filterModel;
 }
 
-ReadableCollectionProxyModel *FolderTreeWidget::readableCollectionProxyModel() const
+FolderTreeWidgetProxyModel *FolderTreeWidget::folderTreeWidgetProxyModel() const
 {
   return d->readableproxy;
 }

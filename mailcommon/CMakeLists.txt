@@ -41,7 +41,7 @@ set(libmailcommon_SRCS
   mailutil.cpp
   mdnadvicedialog.cpp
   minimumcombobox.cpp 
-  readablecollectionproxymodel.cpp
+  foldertreewidgetproxymodel.cpp 
   redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp
