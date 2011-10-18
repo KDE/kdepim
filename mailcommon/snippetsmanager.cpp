@@ -39,8 +39,8 @@ using namespace MailCommon;
 class SnippetsManager::Private
 {
   public:
-    Private( SnippetsManager *qq )
-      : q( qq ), mEditor( 0 )
+    Private( SnippetsManager *qq, QWidget * parent )
+      : q( qq ), mEditor( 0 ), mParent( parent )
     {
     }
 
@@ -82,6 +82,7 @@ class SnippetsManager::Private
     QAction *mEditSnippetGroupAction;
     QAction *mDeleteSnippetGroupAction;
     QAction *mInsertSnippetAction;
+    QWidget *mParent;
 };
 
 QModelIndex SnippetsManager::Private::currentGroupIndex() const
@@ -140,7 +141,7 @@ void SnippetsManager::Private::addSnippet()
     mSelectionModel->select( groupIndex, QItemSelectionModel::ClearAndSelect );
   }
 
-  SnippetDialog dlg( mActionCollection, false );
+  SnippetDialog dlg( mActionCollection, false, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Add Snippet" ) );
   dlg.setGroupModel( mModel );
   dlg.setGroupIndex( currentGroupIndex() );
@@ -171,7 +172,7 @@ void SnippetsManager::Private::editSnippet()
 
   const QString oldSnippetName = index.data( SnippetsModel::NameRole ).toString();
 
-  SnippetDialog dlg( mActionCollection, false );
+  SnippetDialog dlg( mActionCollection, false, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Edit Snippet" ) );
   dlg.setGroupModel( mModel );
   dlg.setGroupIndex( oldGroupIndex );
@@ -219,7 +220,7 @@ void SnippetsManager::Private::deleteSnippet()
 
 void SnippetsManager::Private::addSnippetGroup()
 {
-  SnippetDialog dlg( mActionCollection, true );
+  SnippetDialog dlg( mActionCollection, true,mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Add Group" ) );
 
   if ( !dlg.exec() )
@@ -240,7 +241,7 @@ void SnippetsManager::Private::editSnippetGroup()
   if ( !groupIndex.isValid() || !groupIndex.data( SnippetsModel::IsGroupRole ).toBool() )
     return;
 
-  SnippetDialog dlg( mActionCollection, true );
+  SnippetDialog dlg( mActionCollection, true, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Edit Group" ) );
   dlg.setName( groupIndex.data( SnippetsModel::NameRole ).toString() );
 
@@ -478,8 +479,8 @@ void SnippetsManager::Private::save()
 }
 
 
-SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *parent )
-  : QObject( parent ), d( new Private( this ) )
+SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QWidget *parent )
+  : QObject( parent ), d( new Private( this, parent ) )
 {
   d->mModel = new SnippetsModel( this );
   d->mSelectionModel = new QItemSelectionModel( d->mModel );
