@@ -74,7 +74,7 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      * Imports filters. Ask the user where to import them from
      * and which filters to import.
      */
-    QList<MailFilter*> importFilters();
+    QList<MailFilter*> importFilters( bool & canceled );
 
     /**
      * Writes the given list of @p filters to the given @p config file.

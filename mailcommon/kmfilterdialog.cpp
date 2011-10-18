@@ -1261,7 +1261,10 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 void KMFilterDialog::slotImportFilters()
 {
   FilterImporterExporter importer( this );
-  QList<MailFilter *> filters = importer.importFilters();
+  bool canceled = false;
+  QList<MailFilter *> filters = importer.importFilters( canceled );
+  if ( canceled )
+    return;
 
   if ( filters.isEmpty() ) {
     KMessageBox::information( this, i18n( "No filter was imported." ) );
