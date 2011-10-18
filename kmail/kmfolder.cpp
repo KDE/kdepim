@@ -444,12 +444,12 @@ int KMFolder::find( const KMMessage* msg ) const
 
 int KMFolder::count( bool cache ) const
 {
-  return mStorage->count( cache );
+  return mStorage ? mStorage->count( cache ) : 0;
 }
 
 int KMFolder::countUnread()
 {
-  return mStorage->countUnread();
+  return mStorage ? mStorage->countUnread() : 0;
 }
 
 int KMFolder::countUnreadRecursive()

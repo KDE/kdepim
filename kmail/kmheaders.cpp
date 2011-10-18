@@ -1115,7 +1115,7 @@ void KMHeaders::msgRemoved(int id, QString msgId )
 
   mItems.resize( mItems.size() - 1 );
 
-  if (isThreaded() && mFolder->count()) {
+  if (isThreaded() && mFolder && mFolder->count()) {
     if ( !msgId.isEmpty() && mSortCacheItems[msgId] ) {
       if (mSortCacheItems[msgId] == removedItem->sortCacheItem())
         mSortCacheItems.remove(msgId);
