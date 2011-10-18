@@ -58,7 +58,7 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
      * @param actionCollection The action collection where the manager will register the snippet shortcuts at.
      * @param parent The parent object.
      */
-    explicit SnippetsManager( KActionCollection *actionCollection, QObject *parent = 0 );
+    explicit SnippetsManager( KActionCollection *actionCollection, QWidget *parent = 0 );
 
     /**
      * Destroys the snippets manager.
