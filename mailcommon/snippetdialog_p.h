@@ -48,10 +48,13 @@ class SnippetDialog : public KDialog
     QModelIndex groupIndex() const;
 
   private Q_SLOTS:
-    void slotTextChanged( const QString& );
+    void slotTextChanged();
+    void slotGroupChanged();
     void slotReturnPressed();
 
   private:
+    bool snippetIsValid() const;
+
     KActionCollection *mActionCollection;
     Ui::SnippetDialog *mUi;
 };
