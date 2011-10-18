@@ -32,8 +32,8 @@ SnippetWidget::SnippetWidget( KMComposerEditor *editor, KActionCollection *actio
   setRootIsDecorated( true );
   setAlternatingRowColors( true );
 
-  mSnippetsManager = new MailCommon::SnippetsManager( actionCollection, this );
-  mSnippetsManager->setEditor( editor, "insertPlainText", SIGNAL( insertSnippet() ) );
+  mSnippetsManager = new MailCommon::SnippetsManager( actionCollection, this, this );
+  mSnippetsManager->setEditor( editor, "insertPlainText", SIGNAL(insertSnippet()) );
 
   setModel( mSnippetsManager->model() );
   setSelectionModel( mSnippetsManager->selectionModel() );
