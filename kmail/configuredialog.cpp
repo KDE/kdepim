@@ -722,7 +722,6 @@ static const struct {
 } fontNames[] = {
   { "body-font", I18N_NOOP("Message Body"), true, false },
   { "MessageListFont", I18N_NOOP("Message List"), true, false },
-  { "NewMessageFont", I18N_NOOP("Message List - New Messages"), true, false },
   { "UnreadMessageFont", I18N_NOOP("Message List - Unread Messages"), true, false },
   { "ImportantMessageFont", I18N_NOOP("Message List - Important Messages"), true, false },
   { "TodoMessageFont", I18N_NOOP("Message List - Action Item Messages"), true, false },
@@ -843,12 +842,11 @@ void AppearancePage::FontsTab::doLoadOther()
   QFont fixedFont = KGlobalSettings::fixedFont();
 
   for ( int i = 0 ; i < numFontNames ; i++ ) {
-    QString configName = fontNames[i].configName;
-    if ( configName == "MessageListFont" ||
-         configName == "NewMessageFont" ||
-         configName == "UnreadMessageFont" ||
-         configName == "ImportantMessageFont" ||
-         configName == "TodoMessageFont" ) {
+    const QString configName = fontNames[i].configName;
+    if ( configName == QLatin1String( "MessageListFont" ) ||
+         configName == QLatin1String( "UnreadMessageFont" ) ||
+         configName == QLatin1String( "ImportantMessageFont" ) ||
+         configName == QLatin1String( "TodoMessageFont" ) ) {
       mFont[i] = messagelistFont.readEntry( configName,
                                             (fontNames[i].onlyFixed) ? fixedFont : mFont[0] );
     } else {
@@ -874,12 +872,11 @@ void AppearancePage::FontsTab::save()
   MessageCore::GlobalSettings::self()->setUseDefaultFonts( !customFonts );
 
   for ( int i = 0 ; i < numFontNames ; i++ ) {
-    QString configName = fontNames[i].configName;
-    if ( configName == "MessageListFont" ||
-         configName == "NewMessageFont" ||
-         configName == "UnreadMessageFont" ||
-         configName == "ImportantMessageFont" ||
-         configName == "TodoMessageFont" ) {
+    const QString configName = fontNames[i].configName;
+    if ( configName == QLatin1String( "MessageListFont" ) ||
+         configName == QLatin1String( "UnreadMessageFont" ) ||
+         configName == QLatin1String( "ImportantMessageFont" ) ||
+         configName == QLatin1String( "TodoMessageFont" ) ) {
       if ( customFonts || messagelistFont.hasKey( configName ) ) {
         // Don't write font info when we use default fonts, but write
         // if it's already there:
@@ -915,7 +912,6 @@ static const struct {
   { "LinkColor", I18N_NOOP("Link") },
   { "FollowedColor", I18N_NOOP("Followed Link") },
   { "MisspelledColor", I18N_NOOP("Misspelled Words") },
-  { "NewMessageColor", I18N_NOOP("New Message") },
   { "UnreadMessageColor", I18N_NOOP("Unread Message") },
   { "ImportantMessageColor", I18N_NOOP("Important Message") },
   { "TodoMessageColor", I18N_NOOP("Action Item Message") },
@@ -1018,7 +1014,6 @@ void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
     scheme.foreground( KColorScheme::LinkText ).color(), // link
     scheme.foreground( KColorScheme::VisitedText ).color(),// visited link
     scheme.foreground( KColorScheme::NegativeText ).color(), // misspelled words
-    Qt::red, // new msg
     Qt::blue, // unread mgs
     QColor( 0x00, 0x7F, 0x00 ), // important msg
     scheme.foreground( KColorScheme::LinkText ).color(), // action item mgs
@@ -1038,8 +1033,7 @@ void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
   for ( int i = 0 ; i < numColorNames ; i++ ) {
     if ( loadFromConfig ) {
       const QString configName = colorNames[i].configName;
-      if ( configName == QLatin1String( "NewMessageColor" ) ||
-           configName == QLatin1String( "UnreadMessageColor" ) ||
+      if ( configName == QLatin1String( "UnreadMessageColor" ) ||
            configName == QLatin1String( "ImportantMessageColor" ) ||
            configName == QLatin1String( "TodoMessageColor" ) ) {
         mColorList->setColorSilently( i, messageListView.readEntry( configName, defaultColor[i] ) );
@@ -1070,11 +1064,10 @@ void AppearancePage::ColorsTab::save()
   for ( int i = 0 ; i < numColorNames ; i++ ) {
     // Don't write color info when we use default colors, but write
     // if it's already there:
-    QString configName = colorNames[i].configName;
-    if ( configName == "NewMessageColor" ||
-         configName == "UnreadMessageColor" ||
-         configName == "ImportantMessageColor" ||
-         configName == "TodoMessageColor" ) {
+    const QString configName = colorNames[i].configName;
+    if ( configName == QLatin1String( "UnreadMessageColor" ) ||
+         configName == QLatin1String( "ImportantMessageColor" ) ||
+         configName == QLatin1String( "TodoMessageColor" ) ) {
       if ( customColors || messageListView.hasKey( configName ) )
         messageListView.writeEntry( configName, mColorList->color(i) );
 

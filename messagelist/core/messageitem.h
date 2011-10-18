@@ -189,12 +189,10 @@ public:
   // one of these.
   // Call these setters only once when reading the colors from the config file.
   //
-  static void setNewMessageColor( const QColor &color );
   static void setUnreadMessageColor( const QColor &color );
   static void setImportantMessageColor( const QColor &color );
   static void setToDoMessageColor( const QColor &color );
   static void setGeneralFont( const QFont &font );
-  static void setNewMessageFont( const QFont &font );
   static void setUnreadMessageFont( const QFont &font );
   static void setImportantMessageFont( const QFont &font );
   static void setToDoMessageFont( const QFont &font );

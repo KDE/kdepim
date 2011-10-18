@@ -439,12 +439,10 @@ void StorageModel::Private::loadSettings()
   Core::Settings *settings = Core::Settings::self();
 
   if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-    Core::MessageItem::setNewMessageColor( QColor( "red" ) );
     Core::MessageItem::setUnreadMessageColor( QColor( "blue" ) );
     Core::MessageItem::setImportantMessageColor( QColor( 0x0, 0x7F, 0x0 ) );
     Core::MessageItem::setToDoMessageColor( QColor( 0x0, 0x98, 0x0 ) );
   } else {
-    Core::MessageItem::setNewMessageColor( settings->newMessageColor() );
     Core::MessageItem::setUnreadMessageColor( settings->unreadMessageColor() );
     Core::MessageItem::setImportantMessageColor( settings->importantMessageColor() );
     Core::MessageItem::setToDoMessageColor( settings->todoMessageColor() );
@@ -452,13 +450,11 @@ void StorageModel::Private::loadSettings()
 
   if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     Core::MessageItem::setGeneralFont( KGlobalSettings::generalFont() );
-    Core::MessageItem::setNewMessageFont( KGlobalSettings::generalFont() );
     Core::MessageItem::setUnreadMessageFont( KGlobalSettings::generalFont() );
     Core::MessageItem::setImportantMessageFont( KGlobalSettings::generalFont() );
     Core::MessageItem::setToDoMessageFont( KGlobalSettings::generalFont() );
   } else {
     Core::MessageItem::setGeneralFont( settings->messageListFont() );
-    Core::MessageItem::setNewMessageFont( settings->newMessageFont() );
     Core::MessageItem::setUnreadMessageFont( settings->unreadMessageFont() );
     Core::MessageItem::setImportantMessageFont( settings->importantMessageFont() );
     Core::MessageItem::setToDoMessageFont( settings->todoMessageFont() );

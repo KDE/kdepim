@@ -116,12 +116,10 @@ void MessageItem::Tag::setPriority( int priority )
 }
 
 
-QColor MessageItemPrivate::mColorNewMessage;
 QColor MessageItemPrivate::mColorUnreadMessage;
 QColor MessageItemPrivate::mColorImportantMessage;
 QColor MessageItemPrivate::mColorToDoMessage;
 QFont MessageItemPrivate::mFont;
-QFont MessageItemPrivate::mFontNewMessage;
 QFont MessageItemPrivate::mFontUnreadMessage;
 QFont MessageItemPrivate::mFontImportantMessage;
 QFont MessageItemPrivate::mFontToDoMessage;
@@ -553,12 +551,6 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
   }
 }
 
-void MessageItem::setNewMessageColor( const QColor &color )
-{
-  MessageItemPrivate::mColorNewMessage = color;
-}
-
-
 void MessageItem::setUnreadMessageColor( const QColor &color )
 {
   MessageItemPrivate::mColorUnreadMessage = color;
@@ -580,11 +572,6 @@ void MessageItem::setToDoMessageColor( const QColor &color )
 void MessageItem::setGeneralFont( const QFont &font )
 {
   MessageItemPrivate::mFont = font;
-}
-
-void MessageItem::setNewMessageFont( const QFont &font )
-{
-  MessageItemPrivate::mFontNewMessage = font;
 }
 
 void MessageItem::setUnreadMessageFont( const QFont &font )
