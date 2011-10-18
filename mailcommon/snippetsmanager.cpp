@@ -479,8 +479,8 @@ void SnippetsManager::Private::save()
 }
 
 
-SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QWidget *parent )
-  : QObject( parent ), d( new Private( this, parent ) )
+SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *parent, QWidget *widget )
+  : QObject( parent ), d( new Private( this, widget ) )
 {
   d->mModel = new SnippetsModel( this );
   d->mSelectionModel = new QItemSelectionModel( d->mModel );
