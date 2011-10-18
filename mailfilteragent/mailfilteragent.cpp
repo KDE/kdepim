@@ -123,6 +123,12 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   if ( item.mimeType() != KMime::Message::mimeType() )
     return;
 
+  /*
+   * happens when item no longer exists etc, and queue compression didn't happen yet
+   */
+  if ( !item.hasPayload() )
+    return;
+
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
   if ( status.isRead() || status.isSpam() || status.isIgnored() )
