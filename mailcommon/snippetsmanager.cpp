@@ -65,6 +65,7 @@ class SnippetsManager::Private
     QString replaceVariables( const QString &text );
 
     void load();
+    void loadFromOldFormat( const KConfigGroup& group );
     void save();
 
     SnippetsManager *q;
@@ -373,51 +374,120 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
   return result;
 }
 
+void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup& group )
+{
+  //Code from kmail1
+
+  //if entry doesn't get found, this will return -1 which we will need a bit later
+  int iCount = group.readEntry("snippetGroupCount", -1);
+  QMap< int, QModelIndex> listGroup;
+  for ( int i=0; i<iCount; i++) {  //read the group-list
+    const QString strNameVal = group.readEntry(QString::fromLatin1("snippetGroupName_%1").arg(i), QString());
+    const int iIdVal = group.readEntry(QString::fromLatin1("snippetGroupId_%1").arg(i), -1);
+    //kDebug() << "Read group "  << " " << iIdVal;
+
+    if ( !strNameVal.isEmpty() && iIdVal != -1 ) {
+      // create group
+      mModel->insertRow( mModel->rowCount(), QModelIndex() );
+      const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
+
+      mModel->setData( groupIndex, strNameVal, SnippetsModel::NameRole );
+      listGroup.insert( iIdVal, groupIndex );
+    }
+  }
+
+  /* Check if the snippetGroupCount property has been found
+     if iCount is -1 this means, that the user has his snippets
+     stored without groups.
+     Should only happen with an empty config file.
+  */
+
+  if (iCount != -1) {
+    iCount = group.readEntry("snippetCount", 0);
+    for ( int i=0; i<iCount; i++) {  //read the snippet-list
+        const QString snippetName = group.readEntry(QString::fromLatin1("snippetName_%1").arg(i), QString());
+        const QString snippetText = group.readEntry(QString::fromLatin1("snippetText_%1").arg(i), QString());
+        const int iParentVal = group.readEntry(QString::fromLatin1("snippetParent_%1").arg(i), -1);
+
+        if ( !snippetText.isEmpty() &&
+             !snippetName.isEmpty() &&
+             iParentVal != -1) {
+          const QString snippetKeySequence = group.readEntry( QString::fromLatin1("snippetShortcut_%1").arg(i), QString() );
+          QModelIndex groupIndex = listGroup.value( iParentVal );
+          mModel->insertRow( mModel->rowCount( groupIndex ), groupIndex );
+          const QModelIndex index = mModel->index( mModel->rowCount( groupIndex ) - 1, 0, groupIndex );
+
+          mModel->setData( index, snippetName, SnippetsModel::NameRole );
+          mModel->setData( index, snippetText, SnippetsModel::TextRole );
+          mModel->setData( index, snippetKeySequence, SnippetsModel::KeySequenceRole );
+          updateActionCollection( QString(), snippetName, QKeySequence::fromString( snippetKeySequence ), snippetText );
+
+          
+        }
+    }
+  } 
+  iCount = group.readEntry("snippetSavedCount", 0);
+
+  for ( int i=1; i<=iCount; i++) {  //read the saved-values and store in QMap
+    const QString variableKey = group.readEntry( QString::fromLatin1( "snippetSavedName_%1" ).arg( i ), QString() );
+    const QString variableValue = group.readEntry( QString::fromLatin1( "snippetSavedVal_%1" ).arg( i ), QString() );
+    mSavedVariables.insert( variableKey, variableValue );
+  }
+}
+
 void SnippetsManager::Private::load()
 {
   const KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
   const KConfigGroup group = config->group( "SnippetPart" );
 
-  const int groupCount = group.readEntry( "snippetGroupCount", 0 );
-
-  for ( int i = 0; i < groupCount; ++i ) {
-    const KConfigGroup group = config->group( QString::fromLatin1( "SnippetGroup_%1" ).arg ( i ) );
-    const QString groupName = group.readEntry( "Name" );
-
-    // create group
-    mModel->insertRow( mModel->rowCount(), QModelIndex() );
-    const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
-
-    mModel->setData( groupIndex, groupName, SnippetsModel::NameRole );
-
-    const int snippetCount = group.readEntry( "snippetCount", 0 );
-    for ( int j = 0; j < snippetCount; ++j ) {
-      const QString snippetName = group.readEntry( QString::fromLatin1( "snippetName_%1" ).arg( j ), QString() );
-      const QString snippetText = group.readEntry( QString::fromLatin1( "snippetText_%1" ).arg( j ), QString() );
-      const QString snippetKeySequence = group.readEntry( QString::fromLatin1( "snippetKeySequence_%1" ).arg( j ), QString() );
-
-      // create snippet
-      mModel->insertRow( mModel->rowCount( groupIndex ), groupIndex );
-      const QModelIndex index = mModel->index( mModel->rowCount( groupIndex ) - 1, 0, groupIndex );
-
-      mModel->setData( index, snippetName, SnippetsModel::NameRole );
-      mModel->setData( index, snippetText, SnippetsModel::TextRole );
-      mModel->setData( index, snippetKeySequence, SnippetsModel::KeySequenceRole );
-
-      updateActionCollection( QString(), snippetName, QKeySequence::fromString( snippetKeySequence ), snippetText );
-    }
-  }
-
+  //Old format has this entry not new format
+  if ( group.hasKey( "snippetCount" ) )
   {
-    mSavedVariables.clear();
-    const KConfigGroup group = config->group( "SavedVariablesPart" );
-    const int variablesCount = group.readEntry( "variablesCount", 0 );
+    loadFromOldFormat( group );
+  }
+  else
+  {
+    const int groupCount = group.readEntry( "snippetGroupCount", 0 );
 
-    for ( int i = 0; i < variablesCount; ++i ) {
-      const QString variableKey = group.readEntry( QString::fromLatin1( "variableName_%1" ).arg( i ), QString() );
-      const QString variableValue = group.readEntry( QString::fromLatin1( "variableValue_%1" ).arg( i ), QString() );
+    for ( int i = 0; i < groupCount; ++i ) {
+      const KConfigGroup group = config->group( QString::fromLatin1( "SnippetGroup_%1" ).arg ( i ) );
+      const QString groupName = group.readEntry( "Name" );
 
-      mSavedVariables.insert( variableKey, variableValue );
+      // create group
+      mModel->insertRow( mModel->rowCount(), QModelIndex() );
+      const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
+
+      mModel->setData( groupIndex, groupName, SnippetsModel::NameRole );
+
+      const int snippetCount = group.readEntry( "snippetCount", 0 );
+      for ( int j = 0; j < snippetCount; ++j ) {
+        const QString snippetName = group.readEntry( QString::fromLatin1( "snippetName_%1" ).arg( j ), QString() );
+        const QString snippetText = group.readEntry( QString::fromLatin1( "snippetText_%1" ).arg( j ), QString() );
+        const QString snippetKeySequence = group.readEntry( QString::fromLatin1( "snippetKeySequence_%1" ).arg( j ), QString() );
+
+        // create snippet
+        mModel->insertRow( mModel->rowCount( groupIndex ), groupIndex );
+        const QModelIndex index = mModel->index( mModel->rowCount( groupIndex ) - 1, 0, groupIndex );
+
+        mModel->setData( index, snippetName, SnippetsModel::NameRole );
+        mModel->setData( index, snippetText, SnippetsModel::TextRole );
+        mModel->setData( index, snippetKeySequence, SnippetsModel::KeySequenceRole );
+
+        updateActionCollection( QString(), snippetName, QKeySequence::fromString( snippetKeySequence ), snippetText );
+      }
+    }
+
+    {
+      mSavedVariables.clear();
+      const KConfigGroup group = config->group( "SavedVariablesPart" );
+      const int variablesCount = group.readEntry( "variablesCount", 0 );
+
+      for ( int i = 0; i < variablesCount; ++i ) {
+        const QString variableKey = group.readEntry( QString::fromLatin1( "variableName_%1" ).arg( i ), QString() );
+        const QString variableValue = group.readEntry( QString::fromLatin1( "variableValue_%1" ).arg( i ), QString() );
+
+        mSavedVariables.insert( variableKey, variableValue );
+      }
     }
   }
 }
