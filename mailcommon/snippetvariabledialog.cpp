@@ -34,7 +34,7 @@ SnippetVariableDialog::SnippetVariableDialog( const QString &variableName, QMap<
   : KDialog( parent ), mVariableName( variableName ), mVariables( variables )
 {
   setWindowTitle( i18n( "Enter Values for Variables" ) );
-  setButtons( Apply | Cancel );
+  setButtons( Ok | Cancel );
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
 
@@ -72,7 +72,7 @@ QString SnippetVariableDialog::variableValue() const
 
 void SnippetVariableDialog::slotButtonClicked( int button )
 {
-  if ( button == KDialog::Apply ) {
+  if ( button == KDialog::Ok ) {
     if ( mSaveVariable->isChecked() )
       mVariables->insert( mVariableName, mVariableValueText->toPlainText() );
     else
