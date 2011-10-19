@@ -40,7 +40,7 @@ class SnippetsManager::Private
 {
   public:
     Private( SnippetsManager *qq, QWidget * parent )
-      : q( qq ), mEditor( 0 ), mParent( parent )
+      : q( qq ), mEditor( 0 ), mParent( parent ), mDirty( false )
     {
     }
 
@@ -84,6 +84,7 @@ class SnippetsManager::Private
     QAction *mDeleteSnippetGroupAction;
     QAction *mInsertSnippetAction;
     QWidget *mParent;
+    bool mDirty;
 };
 
 QModelIndex SnippetsManager::Private::currentGroupIndex() const
@@ -161,6 +162,7 @@ void SnippetsManager::Private::addSnippet()
   mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 
   updateActionCollection( QString(), dlg.name(), dlg.keySequence(), dlg.text() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::editSnippet()
@@ -198,6 +200,7 @@ void SnippetsManager::Private::editSnippet()
   mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 
   updateActionCollection( oldSnippetName, dlg.name(), dlg.keySequence(), dlg.text() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::deleteSnippet()
@@ -217,6 +220,7 @@ void SnippetsManager::Private::deleteSnippet()
   mModel->removeRow( index.row(), currentGroupIndex() );
 
   updateActionCollection( snippetName, QString(), QKeySequence(), QString() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::addSnippetGroup()
@@ -234,6 +238,7 @@ void SnippetsManager::Private::addSnippetGroup()
 
   const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
   mModel->setData( groupIndex, dlg.name(), SnippetsModel::NameRole );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::editSnippetGroup()
@@ -250,6 +255,7 @@ void SnippetsManager::Private::editSnippetGroup()
     return;
 
   mModel->setData( groupIndex, dlg.name(), SnippetsModel::NameRole );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::deleteSnippetGroup()
@@ -278,6 +284,7 @@ void SnippetsManager::Private::deleteSnippetGroup()
   }
 
   mModel->removeRow( groupIndex.row(), QModelIndex() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::insertSelectedSnippet()
@@ -357,7 +364,9 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
           SnippetVariableDialog dlg( variableName, &mSavedVariables );
           if ( !dlg.exec() )
             return QString();
-
+          if ( dlg.saveVariableIsChecked() )
+            mDirty = true;
+          
           variableValue = dlg.variableValue();
         } else {
           variableValue = localVariables.value( variableName );
@@ -433,21 +442,23 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup& group )
     const QString variableValue = group.readEntry( QString::fromLatin1( "snippetSavedVal_%1" ).arg( i ), QString() );
     mSavedVariables.insert( variableKey, variableValue );
   }
+  mDirty = false;
+  save();
 }
 
 void SnippetsManager::Private::load()
 {
   const KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
-  const KConfigGroup group = config->group( "SnippetPart" );
+  const KConfigGroup snippetPartGroup = config->group( "SnippetPart" );
 
   //Old format has this entry not new format
-  if ( group.hasKey( "snippetCount" ) )
+  if ( snippetPartGroup.hasKey( "snippetCount" ) )
   {
-    loadFromOldFormat( group );
+    loadFromOldFormat( snippetPartGroup );
   }
   else
   {
-    const int groupCount = group.readEntry( "snippetGroupCount", 0 );
+    const int groupCount = snippetPartGroup.readEntry( "snippetGroupCount", 0 );
 
     for ( int i = 0; i < groupCount; ++i ) {
       const KConfigGroup group = config->group( QString::fromLatin1( "SnippetGroup_%1" ).arg ( i ) );
@@ -494,6 +505,8 @@ void SnippetsManager::Private::load()
 
 void SnippetsManager::Private::save()
 {
+  if ( !mDirty )
+    return;
   KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
 
   // clear everything
@@ -546,6 +559,7 @@ void SnippetsManager::Private::save()
   }
 
   config->sync();
+  mDirty = true;
 }
 
 

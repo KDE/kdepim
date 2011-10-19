@@ -70,6 +70,12 @@ QString SnippetVariableDialog::variableValue() const
   return mVariableValueText->toPlainText();
 }
 
+
+bool SnippetVariableDialog::saveVariableIsChecked() const
+{
+  return mSaveVariable->isChecked();
+}
+  
 void SnippetVariableDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
