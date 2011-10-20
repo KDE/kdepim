@@ -218,12 +218,11 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     return existingFileName.toLocalFile();
   }
 
-  QString fileName = NodeHelper::fileName( node );
-
   QString fname = createTempDir( node->index().toString() );
   if ( fname.isEmpty() )
     return QString();
 
+  QString fileName = NodeHelper::fileName( node );
   // strip off a leading path
   int slashPos = fileName.lastIndexOf( '/' );
   if( -1 != slashPos )
