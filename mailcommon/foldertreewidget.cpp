@@ -372,10 +372,13 @@ bool FolderTreeWidget::eventFilter( QObject* o, QEvent *e )
     switch( ke->key() )
     {
       case Qt::Key_Backspace:
-        if ( d->filter.length() > 0 )
-          d->filter.truncate( d->filter.length()-1 );
+        {
+        const int filterLength(d->filter.length() ); 
+        if ( filterLength > 0 )
+          d->filter.truncate( filterLength-1 );
         applyFilter( d->filter );
         return false;
+        }
         break;
       case Qt::Key_Delete:
         d->filter.clear();
