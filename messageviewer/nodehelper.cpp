@@ -264,7 +264,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
     if ( left != -1 )
         left += 7;
 
-    QString storedIndex = path.mid( left, right - left );
+    QStringRef storedIndex( &path, left, right - left );
     if ( left != -1 && storedIndex == index )
       return KUrl( path );
   }
