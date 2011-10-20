@@ -337,7 +337,12 @@ QMimeData* SnippetsModel::mimeData( const QModelIndexList &indexes ) const
     return 0;
 
   QMimeData *mimeData = new QMimeData();
-  mimeData->setData( QLatin1String( "text/x-kmail-textsnippet" ), item->text().toUtf8() );
+
+  QByteArray encodedData;
+  QDataStream stream(&encodedData, QIODevice::WriteOnly);
+  stream << index.parent().internalId()<<index.row() << index.column()<< item->name() << item->text() <<item->keySequence();
+    
+  mimeData->setData( QLatin1String( "text/x-kmail-textsnippet" ), encodedData );
   mimeData->setText( item->text() );
 
   return mimeData;
@@ -347,22 +352,40 @@ bool SnippetsModel::dropMimeData( const QMimeData *data, Qt::DropAction action, 
 {
   if ( action == Qt::IgnoreAction )
     return true;
-
-  if ( !data->hasFormat( QLatin1String( "text/x-kmail-textsnippet" ) ) &&
-       !data->hasText() )
+  if ( !parent.isValid() )
+    return false;
+  if ( !data->hasFormat( QLatin1String( "text/x-kmail-textsnippet" ) ) )
     return false;
 
   if ( column > 1 )
     return false;
 
-  const QModelIndex groupIndex = index( row, column, parent );
-  if ( !groupIndex.isValid() )
-    return false;
-
-  SnippetItem *item = static_cast<SnippetItem*>( groupIndex.internalPointer() );
+  SnippetItem *item = static_cast<SnippetItem*>( parent.internalPointer() );
+  
   if ( !item->isGroup() )
     return false;
 
-  //TODO: forward to manager
+  QByteArray encodedData = data->data(QLatin1String( "text/x-kmail-textsnippet" ) );
+  QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+  qint64 id;
+  int _row;
+  int _column;
+  QString name;
+  QString text;
+  QString keySequence;
+  stream >> id >> _row >> _column >> name >> text >> keySequence;
+
+  if ( parent.internalId() == id )
+    return false;
+  
+  insertRow( rowCount( parent ), parent );
+
+  const QModelIndex idx = index( rowCount( parent )-1, 0, parent );
+  
+  setData( idx, name, SnippetsModel::NameRole );
+  setData( idx, text, SnippetsModel::TextRole );
+  setData( idx, keySequence, SnippetsModel::KeySequenceRole );
+
   return true;
 }
