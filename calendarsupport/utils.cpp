@@ -481,7 +481,8 @@ QList<QDate> CalendarSupport::workDays( const QDate &startDate,
     //       creating one here.
     const HolidayRegion holidays( KCalPrefs::instance()->mHolidays );
     const Holiday::List list = holidays.holidays( startDate, endDate );
-    for ( int i = 0; i < list.count(); ++i ) {
+    const int listCount( list.count() );
+    for ( int i = 0; i < listCount; ++i ) {
       const Holiday &h = list.at( i );
       const QString dateString = h.date().toString();
       if ( h.dayType() == Holiday::NonWorkday ) {
@@ -499,8 +500,8 @@ QStringList CalendarSupport::holiday( const QDate &date )
 
   const HolidayRegion holidays( KCalPrefs::instance()->mHolidays );
   const Holiday::List list = holidays.holidays( date );
-
-  for ( int i = 0; i < list.count(); ++i ) {
+  const int listCount( list.count() );
+  for ( int i = 0; i < listCount; ++i ) {
     hdays.append( list.at( i ).text() );
   }
   return hdays;
@@ -572,7 +573,8 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calend
   if ( incidence->attendeeCount() > 0 ) {
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
-    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    Attendee::List::ConstIterator end( attendees.constEnd() );
+    for ( it = attendees.constBegin(); it != end; ++it ) {
       publishdlg->addAttendee( *it );
     }
   }

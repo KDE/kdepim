@@ -359,8 +359,8 @@ void CalendarSearch::Private::rowsInserted( const QModelIndex &parent, int start
       }
       continue;
     }
-
-    for ( int j = 0; j < preselectedCollections.size(); ++j ) {
+    const int preselectedCollectionsSize( preselectedCollections.size() );
+    for ( int j = 0; j < preselectedCollectionsSize; ++j ) {
       if ( preselectedCollections[j] == id ) {
         selectionModel->select( idx, QItemSelectionModel::Select );
       }

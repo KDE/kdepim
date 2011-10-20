@@ -100,11 +100,10 @@ void PublishDialog::addAttendee( const Attendee::Ptr &attendee )
 
 QString PublishDialog::addresses()
 {
-  QString to = "";
+  QString to;
   QListWidgetItem *item;
-  int i, count;
-  count = mUI.mListWidget->count();
-  for ( i=0; i<count; ++i ) {
+  const int count = mUI.mListWidget->count();
+  for ( int i=0; i<count; ++i ) {
     item = mUI.mListWidget->item( i );
     if( !item->text().isEmpty() ) {
       to += item->text();
