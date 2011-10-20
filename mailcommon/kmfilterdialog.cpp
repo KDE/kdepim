@@ -928,7 +928,8 @@ void KMFilterListBox::slotSelected( int aIdx )
 
 void KMFilterListBox::slotNew()
 {
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   // just insert a new filter.
@@ -942,7 +943,8 @@ void KMFilterListBox::slotCopy()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   // make sure that all changes are written to the filter before we copy it
@@ -965,7 +967,8 @@ void KMFilterListBox::slotDelete()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   MailCommon::MailFilter *filter = mFilterList.at( mIdxSelItem );
@@ -1023,7 +1026,8 @@ void KMFilterListBox::slotTop()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
@@ -1049,7 +1053,8 @@ void KMFilterListBox::slotBottom()
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
@@ -1075,7 +1080,8 @@ void KMFilterListBox::slotUp()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   swapNeighbouringFilters( mIdxSelItem, mIdxSelItem - 1 );
@@ -1094,7 +1100,8 @@ void KMFilterListBox::slotDown()
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   swapNeighbouringFilters( mIdxSelItem, mIdxSelItem + 1);
@@ -1110,7 +1117,8 @@ void KMFilterListBox::slotRename()
     return;
   }
 
-  if ( mListWidget->currentItem()->isHidden() )
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
     return;
 
   bool okPressed = false;
