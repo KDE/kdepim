@@ -113,7 +113,6 @@ static QString subjectString( KMime::Message *message, int flags = LinkLocator::
   } else {
     subject = i18n("No Subject");
   }
-
   return subject;
 }
 
@@ -609,7 +608,6 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 ( GlobalSettings::self()->showEmoticons() ?
                   LinkLocator::ReplaceSmileys : 0 );
 
-    if ( message->subject(false) )
     headerStr += QString::fromLatin1("<div dir=\"%1\">%2</div>\n")
                       .arg(subjectDir)
                       .arg( subjectString( message, flags ) );
