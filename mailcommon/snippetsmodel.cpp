@@ -69,6 +69,7 @@ SnippetItem::SnippetItem( bool isGroup, SnippetItem *parent )
 SnippetItem::~SnippetItem()
 {
   qDeleteAll( mChildItems );
+  mChildItems.clear();
 }
 
 bool SnippetItem::isGroup() const
