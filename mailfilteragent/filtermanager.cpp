@@ -17,6 +17,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 #include <kmime/kmime_message.h>
 #include <libkdepim/progressmanager.h>
 #include <libkdepim/broadcaststatus.h>
@@ -25,6 +26,7 @@
 #include <mailcommon/mailfilter.h>
 
 #include <QtCore/QTimer>
+#include <QtGui/QApplication>
 
 // other headers
 #include <algorithm>
@@ -160,7 +162,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
     } else {
       kError() << "Error while moving items. " << job->error() << job->errorString();
     }
-    // TODO: kmail should tell the user that this failed
+    KMessageBox::error(qApp->activeWindow(), job->errorString(), tr("Error applying mail filter move"));
   }
 }
 
@@ -168,7 +170,7 @@ void FilterManager::Private::modifyJobResult( KJob *job )
 {
   if ( job->error() ) {
     kError() << "Error while modifying items. " << job->error() << job->errorString();
-    // TODO: kmail should tell the user that this failed
+    KMessageBox::error(qApp->activeWindow(), job->errorString(), tr("Error applying mail filter modifications"));
   } else {
     Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job );
 
