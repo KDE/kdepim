@@ -375,7 +375,6 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   }
 
   if( m_composers.isEmpty() ) {
-    // TODO i18n after string freeze!
     emit failed( i18n( "It was not possible to create a message composer." ) );
     return;
   }
