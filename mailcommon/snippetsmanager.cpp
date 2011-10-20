@@ -363,7 +363,7 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
       if ( variableName != QLatin1String( "$$" ) ) {  // if not double-delimiter
         if ( !localVariables.contains( variableName ) ) {  // and not already in map
 
-          SnippetVariableDialog dlg( variableName, &mSavedVariables );
+          SnippetVariableDialog dlg( variableName, &mSavedVariables,mParent );
           if ( !dlg.exec() )
             return QString();
           if ( dlg.saveVariableIsChecked() )
