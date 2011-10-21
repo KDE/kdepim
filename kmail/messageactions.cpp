@@ -251,6 +251,7 @@ void MessageActions::setSelectedVisibleItems( const Akonadi::Item::List &items )
 
 void MessageActions::updateActions()
 {
+  const bool hasPayload = mCurrentItem.hasPayload<KMime::Message::Ptr>();
   bool singleMsg = mCurrentItem.isValid();
   Akonadi::Collection parent;
   if ( singleMsg ) //=> valid
@@ -263,13 +264,13 @@ void MessageActions::updateActions()
   const bool multiVisible = mVisibleItems.count() > 0 || mCurrentItem.isValid();
 
   mCreateTodoAction->setEnabled( singleMsg && mKorganizerIsOnSystem);
-  mReplyActionMenu->setEnabled( singleMsg );
-  mReplyAction->setEnabled( singleMsg );
-  mNoQuoteReplyAction->setEnabled( singleMsg );
-  mReplyAuthorAction->setEnabled( singleMsg );
-  mReplyAllAction->setEnabled( singleMsg );
-  mReplyListAction->setEnabled( singleMsg );
-  mNoQuoteReplyAction->setEnabled( singleMsg );
+  mReplyActionMenu->setEnabled( /*singleMsg*/hasPayload );
+  mReplyAction->setEnabled( hasPayload );
+  mNoQuoteReplyAction->setEnabled( hasPayload );
+  mReplyAuthorAction->setEnabled( hasPayload );
+  mReplyAllAction->setEnabled( hasPayload );
+  mReplyListAction->setEnabled( hasPayload );
+  mNoQuoteReplyAction->setEnabled( hasPayload );
 
   mAnnotateAction->setEnabled( singleMsg );
   updateAnnotateAction();
@@ -359,8 +360,8 @@ void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem 
 
 template<typename T> void MessageActions::replyCommand()
 {
-  if ( !mCurrentItem.isValid() )
-    return;
+  if ( !mCurrentItem.hasPayload<KMime::Message::Ptr>() ) return;
+
   const QString text = mMessageView ? mMessageView->copyText() : QString();
   KMCommand *command = new T( mParent, mCurrentItem, text );
   connect( command, SIGNAL( completed( KMCommand * ) ),
@@ -444,7 +445,7 @@ void MessageActions::slotReplyAllToMsg()
 
 void MessageActions::slotNoQuoteReplyToMsg()
 {
-  if ( !mCurrentItem.isValid() )
+  if ( !mCurrentItem.hasPayload<KMime::Message::Ptr>() )
     return;
   KMCommand *command = new KMNoQuoteReplyToCommand( mParent, mCurrentItem );
   command->start();
@@ -524,7 +525,7 @@ void MessageActions::addMailingListAction( const QString &item, const KUrl &url 
 
 void MessageActions::editCurrentMessage()
 {
-  if ( !mCurrentItem.isValid() )
+  if ( !mCurrentItem.hasPayload<KMime::Message::Ptr>() )
     return;
   KMCommand *command = 0;
   Akonadi::Collection col = mCurrentItem.parentCollection();

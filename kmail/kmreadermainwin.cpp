@@ -149,6 +149,11 @@ void KMReaderMainWin::showMessage( const QString & encoding, const Akonadi::Item
 
 void KMReaderMainWin::showMessage( const QString& encoding, KMime::Message::Ptr message )
 {
+  Akonadi::Item item( "message/rfc822" );
+  item.setPayload( message );
+  mMsg = item;
+  mMsgActions->setCurrentMessage( item );
+  
   mReaderWin->setOverrideEncoding( encoding );
   mReaderWin->setMessage( message );
   if ( message )
@@ -181,8 +186,7 @@ void KMReaderMainWin::slotTrashMsg()
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotForwardInlineMsg()
 {
-   if ( !mReaderWin->message().isValid() ) return;
-
+  if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
    KMCommand *command = 0;
    if ( mReaderWin->message().isValid() && mReaderWin->message().parentCollection().isValid() ) {
      QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( mReaderWin->message().parentCollection(), false );
@@ -202,7 +206,11 @@ void KMReaderMainWin::slotForwardInlineMsg()
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotForwardAttachedMsg()
 {
+<<<<<<< HEAD
    if ( !mReaderWin->message().isValid() ) return;
+=======
+  if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
+>>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
    KMCommand *command = 0;
    if ( mReaderWin->message().isValid() && mReaderWin->message().parentCollection().isValid() ) {
      QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( mReaderWin->message().parentCollection(), false );
@@ -222,8 +230,7 @@ void KMReaderMainWin::slotForwardAttachedMsg()
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotRedirectMsg()
 {
-  if( !mReaderWin->message().isValid() )
-      return;
+  if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
   KMCommand *command = new KMRedirectCommand( this, mReaderWin->message() );
   connect( command, SIGNAL( completed( KMCommand * ) ),
          this, SLOT( slotReplyOrForwardFinished() ) );
@@ -233,8 +240,13 @@ void KMReaderMainWin::slotRedirectMsg()
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotCustomReplyToMsg( const QString &tmpl )
 {
+<<<<<<< HEAD
   if( !mReaderWin->message().isValid() ) return;
   KMCommand *command = new KMCustomReplyToCommand( this,
+=======
+  if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
+  KMCommand *command = new KMCustomReplyCommand( this,
+>>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
                                                    mReaderWin->message(),
                                                    mReaderWin->copyText(),
                                                    tmpl );
@@ -246,8 +258,13 @@ void KMReaderMainWin::slotCustomReplyToMsg( const QString &tmpl )
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotCustomReplyAllToMsg( const QString &tmpl )
 {
+<<<<<<< HEAD
   if( !mReaderWin->message().isValid() ) return;
   KMCommand *command = new KMCustomReplyAllToCommand( this,
+=======
+  if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
+  KMCommand *command = new KMCustomReplyCommand( this,
+>>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
                                                       mReaderWin->message(),
                                                       mReaderWin->copyText(),
                                                       tmpl );
@@ -257,7 +274,11 @@ void KMReaderMainWin::slotCustomReplyAllToMsg( const QString &tmpl )
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotCustomForwardMsg( const QString &tmpl)
 {
+<<<<<<< HEAD
   if( !mReaderWin->message().isValid() ) return;
+=======
+  if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
+>>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
   KMCommand *command = new KMCustomForwardCommand( this,
                                                    mReaderWin->message(),
                                                    0, tmpl );

@@ -594,7 +594,7 @@ void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const 
 
 void KMReaderWin::slotShowMessage( KMime::Message::Ptr message, const QString& encoding )
 {
-  KMReaderMainWin *win = new KMReaderMainWin();
+  KMReaderMainWin *win = new KMReaderMainWin();  
   win->showMessage( encoding, message );
   win->show();
 }
