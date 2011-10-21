@@ -368,12 +368,12 @@ bool SnippetsModel::dropMimeData( const QMimeData *data, Qt::DropAction action, 
   QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
   qint64 id;
-  int _row;
-  int _column;
+  int oldRow;
+  int oldColumn;
   QString name;
   QString text;
   QString keySequence;
-  stream >> id >> _row >> _column >> name >> text >> keySequence;
+  stream >> id >> oldRow >> oldColumn >> name >> text >> keySequence;
 
   if ( parent.internalId() == id )
     return false;
@@ -385,6 +385,5 @@ bool SnippetsModel::dropMimeData( const QMimeData *data, Qt::DropAction action, 
   setData( idx, name, SnippetsModel::NameRole );
   setData( idx, text, SnippetsModel::TextRole );
   setData( idx, keySequence, SnippetsModel::KeySequenceRole );
-
   return true;
 }
