@@ -590,7 +590,7 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(selectionChanged()) );
-  connect( d->mModel, SIGNAL(dndDone()), SLOT( dndDone() ) );
+  connect( d->mModel, SIGNAL(dndDone()), SLOT(dndDone()) );
                               
   connect( d->mAddSnippetAction, SIGNAL(triggered(bool)), SLOT(addSnippet()) );
   connect( d->mEditSnippetAction, SIGNAL(triggered(bool)), SLOT(editSnippet()) );

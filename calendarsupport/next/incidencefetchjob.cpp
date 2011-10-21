@@ -51,7 +51,7 @@ void CalendarSupport::IncidenceFetchJob::doStart()
                                                        << KCalCore::Event::eventMimeType()
                                                        << KCalCore::Todo::todoMimeType()
                                                        << KCalCore::Journal::journalMimeType() );
-  connect( job, SIGNAL(result(KJob *)), SLOT(collectionFetchResult(KJob *)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
 }
 
 void CalendarSupport::IncidenceFetchJob::collectionFetchResult( KJob *job )
