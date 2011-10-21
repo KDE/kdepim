@@ -1,4 +1,14 @@
 
+Friday 21 October 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4793: Kontact crash on startup
+* kolab/issue4794: Kontact crash on delete mail
+
+
+
 Wednesday 05 October 2011
 
 Problems addressed
