@@ -2474,7 +2474,7 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessageItem.isValid() )
+  if( !mMessageItem.hasPayload<KMime::Message::Ptr>() )
     return;
   Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
 }
