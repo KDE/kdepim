@@ -206,11 +206,7 @@ void KMReaderMainWin::slotForwardInlineMsg()
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotForwardAttachedMsg()
 {
-<<<<<<< HEAD
-   if ( !mReaderWin->message().isValid() ) return;
-=======
   if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
->>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
    KMCommand *command = 0;
    if ( mReaderWin->message().isValid() && mReaderWin->message().parentCollection().isValid() ) {
      QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( mReaderWin->message().parentCollection(), false );
@@ -240,13 +236,8 @@ void KMReaderMainWin::slotRedirectMsg()
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotCustomReplyToMsg( const QString &tmpl )
 {
-<<<<<<< HEAD
-  if( !mReaderWin->message().isValid() ) return;
-  KMCommand *command = new KMCustomReplyToCommand( this,
-=======
   if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
-  KMCommand *command = new KMCustomReplyCommand( this,
->>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
+  KMCommand *command = new KMCustomReplyToCommand( this,
                                                    mReaderWin->message(),
                                                    mReaderWin->copyText(),
                                                    tmpl );
@@ -258,13 +249,8 @@ void KMReaderMainWin::slotCustomReplyToMsg( const QString &tmpl )
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotCustomReplyAllToMsg( const QString &tmpl )
 {
-<<<<<<< HEAD
-  if( !mReaderWin->message().isValid() ) return;
-  KMCommand *command = new KMCustomReplyAllToCommand( this,
-=======
   if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
-  KMCommand *command = new KMCustomReplyCommand( this,
->>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
+  KMCommand *command = new KMCustomReplyAllToCommand( this,
                                                       mReaderWin->message(),
                                                       mReaderWin->copyText(),
                                                       tmpl );
@@ -274,11 +260,7 @@ void KMReaderMainWin::slotCustomReplyAllToMsg( const QString &tmpl )
 //-----------------------------------------------------------------------------
 void KMReaderMainWin::slotCustomForwardMsg( const QString &tmpl)
 {
-<<<<<<< HEAD
-  if( !mReaderWin->message().isValid() ) return;
-=======
   if ( !mReaderWin->message().hasPayload<KMime::Message::Ptr>() ) return;
->>>>>>> 975a08a... Fix actions when message is encapsuled (when action doesn't need to access to server => trash/annotate is disable for encapsuled message)
   KMCommand *command = new KMCustomForwardCommand( this,
                                                    mReaderWin->message(),
                                                    0, tmpl );
