@@ -340,7 +340,7 @@ QMimeData* SnippetsModel::mimeData( const QModelIndexList &indexes ) const
 
   QByteArray encodedData;
   QDataStream stream(&encodedData, QIODevice::WriteOnly);
-  stream << index.parent().internalId()<<index.row() << index.column()<< item->name() << item->text() <<item->keySequence();
+  stream << index.parent().internalId()<< item->name() << item->text() <<item->keySequence();
     
   mimeData->setData( QLatin1String( "text/x-kmail-textsnippet" ), encodedData );
   mimeData->setText( item->text() );
@@ -369,12 +369,10 @@ bool SnippetsModel::dropMimeData( const QMimeData *data, Qt::DropAction action, 
   QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
   qint64 id;
-  int oldRow;
-  int oldColumn;
   QString name;
   QString text;
   QString keySequence;
-  stream >> id >> oldRow >> oldColumn >> name >> text >> keySequence;
+  stream >> id >> name >> text >> keySequence;
 
   if ( parent.internalId() == id )
     return false;
@@ -386,5 +384,12 @@ bool SnippetsModel::dropMimeData( const QMimeData *data, Qt::DropAction action, 
   setData( idx, name, SnippetsModel::NameRole );
   setData( idx, text, SnippetsModel::TextRole );
   setData( idx, keySequence, SnippetsModel::KeySequenceRole );
+  emit dndDone();
   return true;
 }
+
+Qt::DropActions SnippetsModel::supportedDropActions () const
+{
+  return Qt::CopyAction|Qt::MoveAction;
+}
+  

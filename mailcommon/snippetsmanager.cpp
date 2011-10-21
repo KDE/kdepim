@@ -47,7 +47,7 @@ class SnippetsManager::Private
     QModelIndex currentGroupIndex() const;
 
     void selectionChanged();
-
+    void dndDone();
     void addSnippet();
     void editSnippet();
     void deleteSnippet();
@@ -164,6 +164,11 @@ void SnippetsManager::Private::addSnippet()
   mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 
   updateActionCollection( QString(), dlg.name(), dlg.keySequence(), dlg.text() );
+  mDirty = true;
+}
+
+void SnippetsManager::Private::dndDone()
+{
   mDirty = true;
 }
 
@@ -585,7 +590,8 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(selectionChanged()) );
-
+  connect( d->mModel, SIGNAL(dndDone()), SLOT( dndDone() ) );
+                              
   connect( d->mAddSnippetAction, SIGNAL(triggered(bool)), SLOT(addSnippet()) );
   connect( d->mEditSnippetAction, SIGNAL(triggered(bool)), SLOT(editSnippet()) );
   connect( d->mDeleteSnippetAction, SIGNAL(triggered(bool)), SLOT(deleteSnippet()) );

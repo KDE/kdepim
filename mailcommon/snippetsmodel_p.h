@@ -30,6 +30,7 @@ class SnippetItem;
 
 class SnippetsModel : public QAbstractItemModel
 {
+  Q_OBJECT
   public:
     enum Role
     {
@@ -52,11 +53,13 @@ class SnippetsModel : public QAbstractItemModel
     virtual QStringList mimeTypes() const;
     virtual QMimeData* mimeData( const QModelIndexList &indexes ) const;
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    virtual Qt::DropActions supportedDropActions () const;
 
   protected:
     virtual bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
     virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
-
+  signals:
+    void dndDone();
   private:
     SnippetItem *mRootItem;
 };
