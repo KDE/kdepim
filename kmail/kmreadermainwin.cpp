@@ -433,11 +433,18 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
       delete menu;
       return;
     }
+    bool replyForwardMenu = false;
     if ( mMsg.parentCollection().isValid() ) {
       Akonadi::Collection col = mMsg.parentCollection();
       if ( ! ( CommonKernel->folderIsSentMailFolder( col ) ||
                CommonKernel->folderIsDrafts( col ) ||
                CommonKernel->folderIsTemplates( col ) ) ) {
+        replyForwardMenu = true;
+      }
+    } else if ( mMsg.hasPayload<KMime::Message::Ptr>() ) {
+      replyForwardMenu = true;
+    }
+    if ( replyForwardMenu ) {
         // add the reply and forward actions only if we are not in a sent-mail,
         // templates or drafts folder
         //
@@ -446,7 +453,6 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
         menu->addAction( mMsgActions->replyMenu() );
         menu->addAction( mMsgActions->forwardMenu() );
         menu->addSeparator();
-      }
     }
     const bool messageIsValid = mMsg.isValid();
     if ( messageIsValid ) 
