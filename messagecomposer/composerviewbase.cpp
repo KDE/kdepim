@@ -101,6 +101,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
   initAutoSave();
+  
 }
 
 Message::ComposerViewBase::~ComposerViewBase()
@@ -663,7 +664,6 @@ void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
 }
 
-
 void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Message::Composer* composer )
 {
   const Message::InfoPart *infoPart = composer->infoPart();
@@ -682,16 +682,16 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
     qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
   }
-
   QList<Akonadi::Item::Id> originalMessageId;
   QList<Akonadi::MessageStatus> linkStatus;
   if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
-    if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
-      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied,
-                                             QVariant( originalMessageId.first() ) );
-    } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
-      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded,
-                                             QVariant( originalMessageId.first() ) );
+    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
+    {
+      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+      }
     }
   }
 
