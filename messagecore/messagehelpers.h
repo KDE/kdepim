@@ -68,9 +68,8 @@ namespace Util {
    * @param status Will contain the status (replied or forwarded) that linked the message to the original message.
    * @returns Whether the mail contains valid link information or not.
    */
-  MESSAGECORE_EXPORT bool getLinkInformation( const KMime::Message::Ptr &message, Akonadi::Item::Id &id, Akonadi::MessageStatus &status );
+   MESSAGECORE_EXPORT bool getLinkInformation( const KMime::Message::Ptr &msg, QList<Akonadi::Item::Id> &id, QList<Akonadi::MessageStatus> &status );
 }
-
 }
 
 #endif

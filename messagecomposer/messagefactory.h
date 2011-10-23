@@ -93,7 +93,7 @@ public:
    * If no list is passed, use the original message passed in the MessageFactory
    *  constructor.
    */
-  QPair< KMime::Message::Ptr, QList< KMime::Content* > > createAttachedForward( QList<KMime::Message::Ptr> msgs = QList<KMime::Message::Ptr>() );
+  QPair< KMime::Message::Ptr, QList< KMime::Content* > > createAttachedForward( const QList<Akonadi::Item>& items = QList<Akonadi::Item>() );
 
   /** Create a new message that is a redirect to this message, filling all
     required header fields with the proper values. The returned message
@@ -254,6 +254,7 @@ private:
   void applyCharset( const KMime::Message::Ptr msg );
 
   QByteArray getRefStr( const KMime::Message::Ptr &msg );
+  KMime::Content *createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg);
 
   // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze
   KPIMIdentities::IdentityManager* m_identityManager;
