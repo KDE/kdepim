@@ -406,52 +406,37 @@ KMime::Message::Ptr MessageFactory::createForward()
   return msg;
 }
 
-QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAttachedForward(QList< KMime::Message::Ptr > msgs)
+QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAttachedForward(const QList< Akonadi::Item >& items)
 {
+  
   // create forwarded message with original message as attachment
   // remove headers that shouldn't be forwarded
   KMime::Message::Ptr msg( new KMime::Message );
   QList< KMime::Content* > attachments;
 
-  if( msgs.count() == 0 )
-    msgs << m_origMsg;
-  else if( msgs.count() >= 2 ) {
+  const int numberOfItems( items.count() ); 
+  if( numberOfItems >= 2 ) {
     // don't respect X-KMail-Identity headers because they might differ for
     // the selected mails
     MessageHelper::initHeader( msg, m_identityManager, m_origId );
-  } else if( msgs.count() == 1 ) {
-    const uint originalIdentity = identityUoid( msgs.first() );
-    MessageHelper::initFromMessage( msg, msgs.first(), m_identityManager, originalIdentity );
-    msg->subject()->fromUnicodeString( MessageHelper::forwardSubject( msgs.first() ),"utf-8" );
+  } else if( numberOfItems == 1 ) {
+    KMime::Message::Ptr firstMsg = MessageCore::Util::message( items.first() );
+    const uint originalIdentity = identityUoid( firstMsg );
+    MessageHelper::initFromMessage( msg, firstMsg, m_identityManager, originalIdentity );
+    msg->subject()->fromUnicodeString( MessageHelper::forwardSubject( firstMsg ),"utf-8" );
   }
 
   MessageHelper::setAutomaticFields( msg, true );
 #ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
-  // iterate through all the messages to be forwarded
-  foreach ( const KMime::Message::Ptr& fwdMsg, msgs ) {
-    // remove headers that shouldn't be forwarded
-    MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
-    fwdMsg->removeHeader("BCC");
-    // set the part
-    KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
-    msgPart->contentType()->setMimeType( "message/rfc822" );
-
-    msgPart->contentDisposition()->setParameter( QLatin1String( "filename" ), i18n( "forwarded message" ) );
-    msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
-    msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
-    msgPart->setBody( fwdMsg->encodedContent() );
-    msgPart->assemble();
-
-#if 0
-    // THIS HAS TO BE AFTER setCte()!!!!
-    msgPart->setCharset( "" );
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-    MessageCore::Util::addLinkInformation( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
-    attachments << msgPart;
+  if ( numberOfItems == 0 )
+    attachments << createForwardAttachmentMessage( m_origMsg );
+  else {
+    // iterate through all the messages to be forwarded
+    foreach ( const Akonadi::Item& item, items ) {
+      attachments << createForwardAttachmentMessage(MessageCore::Util::message( item ));
+    }
   }
 
   applyCharset( msg );
@@ -460,6 +445,32 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
   //msg->assemble();
   return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
+
+KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg)
+{
+  // remove headers that shouldn't be forwarded
+  MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
+  fwdMsg->removeHeader("BCC");
+  // set the part
+  KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
+  msgPart->contentType()->setMimeType( "message/rfc822" );
+  
+  msgPart->contentDisposition()->setParameter( QLatin1String( "filename" ), i18n( "forwarded message" ) );
+  msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
+  msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
+  msgPart->setBody( fwdMsg->encodedContent() );
+  msgPart->assemble();
+  
+#if 0
+  // THIS HAS TO BE AFTER setCte()!!!!
+  msgPart->setCharset( "" );
+#else
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
+  MessageCore::Util::addLinkInformation( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
+  return msgPart;
+}
+  
 
 
 KMime::Message::Ptr MessageFactory::createResend()

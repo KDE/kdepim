@@ -856,7 +856,7 @@ void MainView::forwardFetchResult( KJob* job )
         composer->setMessage( factory.createForward() );
         break;
       case AsAttachment: {
-        QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
+        QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< Akonadi::Item >() << item);
         //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
         QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
         foreach ( KMime::Content* attach, forwardMessage.second )

@@ -683,15 +683,15 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
   }
 
-  Akonadi::Item::Id originalMessageId;
-  Akonadi::MessageStatus linkStatus;
+  QList<Akonadi::Item::Id> originalMessageId;
+  QList<Akonadi::MessageStatus> linkStatus;
   if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
-    if ( linkStatus == Akonadi::MessageStatus::statusReplied() ) {
+    if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
       qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied,
-                                             QVariant( originalMessageId ) );
-    } else if ( linkStatus == Akonadi::MessageStatus::statusForwarded() ) {
+                                             QVariant( originalMessageId.first() ) );
+    } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
       qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded,
-                                             QVariant( originalMessageId ) );
+                                             QVariant( originalMessageId.first() ) );
     }
   }
 
