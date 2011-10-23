@@ -159,7 +159,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
   QStringList tmpSource;
   QString source( src );
   int pos = 0;
-  QString indent = "";
+  QString indent;
 
   //First make sure that each tag is surrounded by newlines
   while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
@@ -184,11 +184,13 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
   for( int i = 0; i != tmpSource.length(); i++ )  {
     if( htmlTagRegExp.indexIn( tmpSource[i] ) != -1 ) // A tag
     {
-      if( htmlTagRegExp.cap( 3 ) == "/" || htmlTagRegExp.cap( 2 ) == "img" || htmlTagRegExp.cap( 2 ) == "br" ) {
+      if( htmlTagRegExp.cap( 3 ) == QLatin1String( "/" ) ||
+          htmlTagRegExp.cap( 2 ) == QLatin1String( "img" ) ||
+          htmlTagRegExp.cap( 2 ) == QLatin1String( "br" ) ) {
         //Self closing tag or no closure needed
         continue;
       }
-      if( htmlTagRegExp.cap( 1 ) == "/" ) {
+      if( htmlTagRegExp.cap( 1 ) == QLatin1String( "/" ) ) {
         // End tag
         indent.chop( 2 );
         tmpSource[i].prepend( indent );
@@ -233,11 +235,10 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 
   mTabWidget->setCurrentIndex( 0 );
 
-  // combining the shortcuts in one qkeysequence() did not work...
+  // combining the shortcuts in one qkeysequence() did not work...  
   QShortcut* shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_Escape );
   connect( shortcut, SIGNAL(activated()), SLOT(close()) );
-
   shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_W+Qt::CTRL );
   connect( shortcut, SIGNAL(activated()), SLOT(close()) );
@@ -248,6 +249,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
   mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser->textBrowser() );
+  mRawBrowser->textBrowser()->setFocus();
 }
 
 MailSourceViewer::~MailSourceViewer()
