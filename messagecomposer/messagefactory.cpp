@@ -419,8 +419,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 
   if( msgs.count() == 0 )
     msgs << m_origMsg;
-
-  if( msgs.count() >= 2 ) {
+  else if( msgs.count() >= 2 ) {
     // don't respect X-KMail-Identity headers because they might differ for
     // the selected mails
     MessageHelper::initHeader( msg, m_identityManager, m_origId );
@@ -462,7 +461,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
   applyCharset( msg );
 
   MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
-//   msg->assemble();
+  //msg->assemble();
   return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
 
