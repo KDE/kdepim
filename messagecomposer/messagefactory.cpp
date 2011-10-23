@@ -430,18 +430,20 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 #ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
-  if ( numberOfItems == 0 )
+  if ( numberOfItems == 0 ) {
     attachments << createForwardAttachmentMessage( m_origMsg );
+    MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
+  }
   else {
     // iterate through all the messages to be forwarded
     foreach ( const Akonadi::Item& item, items ) {
       attachments << createForwardAttachmentMessage(MessageCore::Util::message( item ));
+      MessageCore::Util::addLinkInformation( msg, item.id(), Akonadi::MessageStatus::statusForwarded() );
     }
   }
 
   applyCharset( msg );
 
-  MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
   //msg->assemble();
   return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
