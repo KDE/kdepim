@@ -35,6 +35,7 @@
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecore/stringutil.h>
+#include <messagecore/messagehelpers.h>
 
 using namespace KMime;
 using namespace KMime::Types;
@@ -149,6 +150,20 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->addressAttribute().setCc( cc );
   qjob->addressAttribute().setBcc( bcc );
 
+  QList<Akonadi::Item::Id> originalMessageId;
+  QList<Akonadi::MessageStatus> linkStatus;
+  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
+    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
+    {
+      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+      }
+    }
+  }
+
+  
   MessageCore::StringUtil::removePrivateHeaderFields( message );
   message->assemble();
 
