@@ -56,20 +56,6 @@ static bool operator==( const KMime::Types::Mailbox &left, const KMime::Types::M
  * Strips all the user's addresses from an address list. This is used
  * when replying.
  */
-static QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager *manager )
-{
-  QStringList addresses( list );
-  for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
-    if ( manager->thatIsMe( KPIMUtils::extractEmailAddress( *it ) ) ) {
-      it = addresses.erase( it );
-    } else {
-      ++it;
-    }
-  }
-
-  return addresses;
-}
-
 static KMime::Types::Mailbox::List stripMyAddressesFromAddressList( const KMime::Types::Mailbox::List& list, const KPIMIdentities::IdentityManager *manager )
 {
   KMime::Types::Mailbox::List addresses( list );
