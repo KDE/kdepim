@@ -186,8 +186,9 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   // Load the attachments
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( msgContent );
+  std::vector<KMime::Content*>::const_iterator end( ac.attachments().end() );
   for ( std::vector<KMime::Content*>::const_iterator it = ac.attachments().begin();
-        it != ac.attachments().end() ; ++it ) {
+        it != end ; ++it ) {
     addAttachmentPart( *it );
   }
 
@@ -627,7 +628,8 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     Q_ASSERT( m_composers.contains( composer ) );
     // The messages were composed successfully.
     kDebug() << "NoError.";
-    for( int i = 0; i < composer->resultMessages().size(); ++i ) {
+    const int numberOfMessage( composer->resultMessages().size() );
+    for( int i = 0; i < numberOfMessage; ++i ) {
       if ( mSaveIn == MessageSender::SaveInNone ) {
         queueMessage( composer->resultMessages().at( i ), composer );
       } else {
