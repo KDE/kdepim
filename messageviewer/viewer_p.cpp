@@ -1781,13 +1781,14 @@ void ViewerPrivate::update( MessageViewer::Viewer::UpdateMode updateMode )
 void ViewerPrivate::slotUrlOpen( const QUrl& url )
 {
   KUrl aUrl(url);
-  mClickedUrl = aUrl;
+  if( !url.isEmpty() )
+    mClickedUrl = aUrl;
 
   // First, let's see if the URL handler manager can handle the URL. If not, try KRun for some
   // known URLs, otherwise fallback to emitting a signal.
   // That signal is caught by KMail, and in case of mailto URLs, a composer is shown.
 
-  if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
+  if ( URLHandlerManager::instance()->handleClick( mClickedUrl, this ) )
     return;
 
   emit urlClicked( mMessageItem, mClickedUrl );
