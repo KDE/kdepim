@@ -52,6 +52,7 @@
 #include <akonadi/collection.h>
 #include <Akonadi/Monitor>
 #include <mailutil.h>
+#include <nepomuk/resourcemanager.h>
 
 using namespace KMail;
 
@@ -272,7 +273,7 @@ void MessageActions::updateActions()
   mReplyListAction->setEnabled( hasPayload );
   mNoQuoteReplyAction->setEnabled( hasPayload );
 
-  mAnnotateAction->setEnabled( singleMsg );
+  mAnnotateAction->setEnabled( singleMsg && Nepomuk::ResourceManager::instance()->initialized() );
   updateAnnotateAction();
 
   mStatusMenu->setEnabled( multiVisible );
