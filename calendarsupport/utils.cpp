@@ -352,7 +352,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
 {
   QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
   dlg->setCaption( i18n( "Select Calendar" ) );
-  dlg->setDescription( i18n("Select Calendar where stores the attendees"));
+  dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   kDebug() << "selecting collections with mimeType in " << mimeTypes;
 
   dlg->setMimeTypeFilter( mimeTypes );
