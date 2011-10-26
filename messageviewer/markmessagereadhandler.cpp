@@ -73,13 +73,12 @@ MarkMessageReadHandler::~MarkMessageReadHandler()
 
 void MarkMessageReadHandler::setItem( const Akonadi::Item &item )
 {
-  if ( item.hasFlag( Akonadi::MessageFlags::Seen ) )
-    return;
-
   if ( d->mItemQueue == item )
     return;
-
   d->mTimer.stop();
+
+  if ( item.hasFlag( Akonadi::MessageFlags::Seen ) )
+    return;
 
   d->mItemQueue = item;
 
