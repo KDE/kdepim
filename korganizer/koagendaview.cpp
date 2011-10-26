@@ -1689,6 +1689,7 @@ void KOAgendaView::calendarIncidenceChanged(Incidence * incidence)
 {
   Q_UNUSED( incidence );
   mPendingChanges = true;
+  fillAgenda();
 }
 
 void KOAgendaView::calendarIncidenceDeleted(Incidence * incidence)
