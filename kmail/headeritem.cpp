@@ -97,15 +97,20 @@ void HeaderItem::irefresh()
     return;
   }
 
-  KMMsgBase *mMsgBase = headers->folder()->getMsgBase( mMsgId );
-  mSerNum = mMsgBase->getMsgSerNum();
-  if (mMsgBase->isNew() || mMsgBase->isUnread()
-      || mMsgBase->isImportant() || mMsgBase->isTodo() || mMsgBase->isWatched() ) {
-    setOpen(true);
-    HeaderItem * topOfThread = this;
-    while(topOfThread->parent())
-      topOfThread = (HeaderItem*)topOfThread->parent();
-    topOfThread->setOpenRecursive(true);
+  if ( headers->folder() ) {
+    KMMsgBase *mMsgBase = headers->folder()->getMsgBase( mMsgId );
+    if ( mMsgBase ) {
+      mSerNum = mMsgBase->getMsgSerNum();
+      if (mMsgBase->isNew() || mMsgBase->isUnread() ||
+          mMsgBase->isImportant() || mMsgBase->isTodo() || mMsgBase->isWatched() ) {
+        setOpen(true);
+        HeaderItem * topOfThread = this;
+        while(topOfThread->parent()) {
+          topOfThread = (HeaderItem*)topOfThread->parent();
+        }
+        topOfThread->setOpenRecursive(true);
+      }
+    }
   }
 }
 
