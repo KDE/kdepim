@@ -1175,9 +1175,10 @@ void KMMainWidget::createWidgets()
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( itemMoved( Akonadi::Item,Akonadi::Collection, Akonadi::Collection ) ),
            SLOT( slotItemMoved( Akonadi::Item, Akonadi::Collection, Akonadi::Collection ) ) );
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionChanged( const Akonadi::Collection &, const QSet<QByteArray> &) ), SLOT( slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
+#if 0  
   connect( FilterIf->filterManager(), SIGNAL( itemNotMoved( Akonadi::Item ) ),
            SLOT( slotItemNotMovedByFilters( Akonadi::Item ) ) );
-  
+#endif  
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics &) ), SLOT( slotCollectionStatisticsChanged( const Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
 }
