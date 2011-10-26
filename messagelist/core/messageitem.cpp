@@ -30,6 +30,7 @@
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
 #include <Nepomuk/Variant>
+#include <nepomuk/resourcemanager.h>
 
 #include <KIconLoader>
 
@@ -269,7 +270,10 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
+  if( !Nepomuk::ResourceManager::instance()->initialized() ) 
+      return;
   Q_D( MessageItem );
+  
   MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
