@@ -65,10 +65,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QProcess>
-#include <QScrollArea>
-#include <QWebElement>
-#include <QWebPage>
-#include <QWebFrame>
 
 #include <algorithm>
 
