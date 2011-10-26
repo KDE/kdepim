@@ -46,7 +46,7 @@ using namespace MailTransport;
 static QStringList addrSpecListToStringList( const AddrSpecList &l, bool allowEmpty = false )
 {
   QStringList result;
-  for ( AddrSpecList::const_iterator it = l.begin(), end = l.end() ; it != end ; ++it ) {
+  for ( AddrSpecList::const_iterator it = l.constBegin(), end = l.constEnd() ; it != end ; ++it ) {
     const QString s = (*it).asString();
     if ( allowEmpty || !s.isEmpty() )
       result.push_back( s );

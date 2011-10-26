@@ -1378,7 +1378,8 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
     // words
     QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
     QTextDocument *doc = m_editor->document();
-    for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
+    QTextBlock end( doc->end() );
+    for ( QTextBlock it = doc->begin(); it != end; it = it.next() ) {
       const QString line = it.text();
       gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
                  ( rx.indexIn( line ) >= 0 );
