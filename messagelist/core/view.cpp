@@ -2005,6 +2005,26 @@ void View::mouseDoubleClickEvent( QMouseEvent * e )
   }
 }
 
+void View::changeMessageStatusRead( MessageItem *it, bool read )
+{
+  Akonadi::MessageStatus set = it->status();
+  Akonadi::MessageStatus unset = it->status();
+  if ( read ) {
+    set.setRead( true );
+    unset.setRead( false );
+  } else {
+    set.setRead( false );
+    unset.setRead( true );
+  }
+  viewport()->update();
+
+  // This will actually request the widget to perform a status change on the storage.
+  // The request will be then processed by the Model and the message will be updated again.
+
+  d->mWidget->viewMessageStatusChangeRequest( it, set, unset );
+
+}
+
 void View::changeMessageStatus( MessageItem * it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset )
 {
   // We first change the status of MessageItem itself. This will make the change
@@ -2082,6 +2102,9 @@ void View::mousePressEvent( QMouseEvent * e )
                     it->status().isImportant() ? Akonadi::MessageStatus::statusImportant() : Akonadi::MessageStatus()
                   );
                 return; // don't select the item
+	      case Theme::ContentItem::ReadStateIcon:
+                changeMessageStatusRead( static_cast< MessageItem * >( it ), it->status().isRead() ? false : true );
+		return;
               break;
               case Theme::ContentItem::SpamHamStateIcon:
                 changeMessageStatus(
