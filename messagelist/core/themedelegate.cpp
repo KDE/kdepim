@@ -1284,8 +1284,9 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
 
     int r = right;
     int l = left;
+    QList< Theme::ContentItem * >::ConstIterator itemEnd( items->end() );
 
-    for ( itemit = items->begin(); itemit != items->end() ; ++itemit )
+    for ( itemit = items->begin(); itemit != itemEnd ; ++itemit )
     {
       Theme::ContentItem * ci = const_cast< Theme::ContentItem * >( *itemit );
 
