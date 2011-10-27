@@ -1869,6 +1869,7 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
     mTextColorCombo->setColor( tmp_color );
     mTextColorCheck->setChecked( true );
   } else {
+    mTextColorCombo->setColor( Qt::white );
     mTextColorCheck->setChecked( false );
   }
 
@@ -1878,6 +1879,7 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
     mBackgroundColorCombo->setColor( tmp_color );
     mBackgroundColorCheck->setChecked( true );
   } else {
+    mBackgroundColorCombo->setColor( Qt::white );
     mBackgroundColorCheck->setChecked( false );
   }
 
