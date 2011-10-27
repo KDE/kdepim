@@ -35,31 +35,36 @@ KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *pa
   : KMessageWidget( parent ),
     m_neverShowAgainKey( QLatin1String( neverShowAgainKey ) )
 {
-  setMessageType( Warning );
-  setCloseButtonVisible( true );
-  setWordWrap( true );
-  setText( i18n( "You do not have the semantic desktop system enabled. "
-                 "Many important features of this software depend on the "
-                 "semantic desktop system and will not work correctly without it." ) );
-
-  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
-           SLOT(animatedHide()) );
-  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
-           SLOT(animatedShow()) );
-
   const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String( "Missing Nepomuk Warning" ) );
   const bool neverShowAgain = cfgGroup.readEntry( m_neverShowAgainKey, false );
-  setVisible( !Nepomuk::ResourceManager::instance()->initialized() && !neverShowAgain );
 
-  KAction *action = this->findChild<KAction *>(); // should give us the close action...
-  if ( action ) {
-    connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+  if ( !neverShowAgain )
+  {
+    setMessageType( Warning );
+    setCloseButtonVisible( true );
+    setWordWrap( true );
+    setText( i18n( "You do not have the semantic desktop system enabled. "
+                   "Many important features of this software depend on the "
+                   "semantic desktop system and will not work correctly without it." ) );
+
+    connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
+             SLOT(animatedHide()) );
+    connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
+             SLOT(animatedShow()) );
+
+    setVisible( !Nepomuk::ResourceManager::instance()->initialized() );
+
+    KAction *action = this->findChild<KAction *>(); // should give us the close action...
+    if ( action ) {
+      connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+    }
+
+    action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
+    connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
+    addAction( action );
   }
-
-  action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
-  addAction( action );
-
+  else
+    setVisible(false);
 }
 
 void KPIM::NepomukWarning::configure()
