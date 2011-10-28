@@ -110,7 +110,7 @@ void FolderTreeView::readConfig()
   setIconSize( QSize( iIconSize, iIconSize ) );
   mToolTipDisplayPolicy = static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) );
   
-  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) mSortingPolicy ),false );
+  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) FolderTreeWidget::SortByCurrentColumn ),false );
 }
 
 void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
@@ -242,6 +242,7 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, b
   case FolderTreeWidget::SortByDragAndDropKey:
       header()->setClickable( false );
       header()->setSortIndicatorShown( false );
+      
 #if 0
       //
       // Qt 4.5 introduced a nasty bug here:
@@ -252,7 +253,7 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, b
       // performed by the view whenever it wants. We want to control sorting.
       //
       setSortingEnabled( true ); // hack for qutie bug: the param here should be false
-      sortByColumn( 0, Qt::AscendingOrder );
+      header()->setSortIndicator( 0, Qt::AscendingOrder );
 #endif
       setSortingEnabled( false ); // hack for qutie bug: this call shouldn't be here at all
       emit manualSortingChanged( true );
