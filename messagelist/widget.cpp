@@ -406,6 +406,8 @@ void Widget::viewDropEvent( QDropEvent *e )
       }
     }
   }
+  if ( action == DragCancel )
+    return;
 
   Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
   Collection target = collections.first();
