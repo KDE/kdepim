@@ -43,7 +43,7 @@ FolderTreeView::FolderTreeView( QWidget* parent, bool showUnreadCount )
 
 
 FolderTreeView::FolderTreeView( KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
-  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false )    
+  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false )
 {
   init(showUnreadCount);
 }
@@ -89,7 +89,6 @@ void FolderTreeView::init( bool showUnreadCount )
   mCollectionStatisticsDelegate->setProgressAnimationEnabled( true );
   setItemDelegate(mCollectionStatisticsDelegate);
   mCollectionStatisticsDelegate->setUnreadCountShown( showUnreadCount && !header()->isSectionHidden( 1 ) );
-
 }
 
 void FolderTreeView::showStatisticAnimation( bool anim )
@@ -98,7 +97,7 @@ void FolderTreeView::showStatisticAnimation( bool anim )
 }
 
 void FolderTreeView::writeConfig()
-{
+{  
   KConfigGroup myGroup( KernelIf->config(), "MainFolderView");
   myGroup.writeEntry( "IconSize", iconSize().width() );
   myGroup.writeEntry( "ToolTipDisplayPolicy", ( int ) mToolTipDisplayPolicy );
@@ -112,8 +111,9 @@ void FolderTreeView::readConfig()
   if ( iIconSize < 16 || iIconSize > 32 )
     iIconSize = 22;
   setIconSize( QSize( iIconSize, iIconSize ) );
-  setTooltipsPolicy( static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) ) );
-  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) mSortingPolicy ) );
+  mToolTipDisplayPolicy = static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) );
+  
+  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) mSortingPolicy ),false );
 }
 
 void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
@@ -225,15 +225,14 @@ void FolderTreeView::slotHeaderContextMenuChangeSortingPolicy( bool )
   if ( !ok )
     return;
 
-  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )policy );
+  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )policy, true );
 }
 
 
-void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
+void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, bool writeInConfig )
 {
   if ( mSortingPolicy == policy )
     return;
-  
   mSortingPolicy = policy;
   switch ( mSortingPolicy )
   {
@@ -266,7 +265,8 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
       // should never happen
     break;
   }
-  writeConfig();
+  if ( writeInConfig )
+    writeConfig();
 }
 
 void FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy( bool )
