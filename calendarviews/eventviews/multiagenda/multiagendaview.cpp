@@ -30,17 +30,18 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
-#include <kviewstatemaintainer.h>
-#include <kcheckableproxymodel.h>
+#include <Akonadi/ETMViewStateSaver>
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
+using namespace Future;
+
 #include <KCalCore/Event>
 
-#include <akonadi/etmviewstatesaver.h>
-
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KVBox>
+#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
@@ -54,7 +55,6 @@
 
 using namespace Akonadi;
 using namespace EventViews;
-using namespace Future;
 
 /**
    Function for debugging purposes:

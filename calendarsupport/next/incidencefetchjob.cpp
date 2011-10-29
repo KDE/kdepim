@@ -19,17 +19,20 @@
 */
 
 #include "incidencefetchjob.h"
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
+
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
-#include <kcalcore/event.h>
-#include <kcalcore/journal.h>
-#include <kcalcore/todo.h>
+
+#include <KCalCore/Event>
+#include <KCalCore/Journal>
+#include <KCalCore/Todo>
 
 using namespace Akonadi;
 
-CalendarSupport::IncidenceFetchJob::IncidenceFetchJob(QObject* parent): Job(parent), m_jobCount( 0 )
+CalendarSupport::IncidenceFetchJob::IncidenceFetchJob( QObject *parent )
+  : Job(parent), m_jobCount( 0 )
 {
   m_mimeTypeChecker.addWantedMimeType( "text/calendar" );
 }
@@ -41,7 +44,9 @@ Item::List CalendarSupport::IncidenceFetchJob::items() const
 
 void CalendarSupport::IncidenceFetchJob::doStart()
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+  CollectionFetchJob *job =
+    new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+
   job->fetchScope().setContentMimeTypes( QStringList() << QLatin1String( "text/calendar" )
                                                        << KCalCore::Event::eventMimeType()
                                                        << KCalCore::Todo::todoMimeType()
@@ -49,15 +54,18 @@ void CalendarSupport::IncidenceFetchJob::doStart()
   connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
 }
 
-void CalendarSupport::IncidenceFetchJob::collectionFetchResult(KJob* job)
+void CalendarSupport::IncidenceFetchJob::collectionFetchResult( KJob *job )
 {
-  if ( job->error() ) // handled in base class
+  if ( job->error() ) { // handled in base class
     return;
+  }
+
   CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
   Q_ASSERT( fetch );
   foreach ( const Collection &col, fetch->collections() ) {
-    if ( !m_mimeTypeChecker.isWantedCollection( col ) )
+    if ( !m_mimeTypeChecker.isWantedCollection( col ) ) {
       continue;
+    }
     ItemFetchJob *itemFetch = new ItemFetchJob( col, this );
     itemFetch->fetchScope().fetchFullPayload( true );
     connect( itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
@@ -65,20 +73,24 @@ void CalendarSupport::IncidenceFetchJob::collectionFetchResult(KJob* job)
   }
 }
 
-void CalendarSupport::IncidenceFetchJob::itemFetchResult(KJob* job)
+void CalendarSupport::IncidenceFetchJob::itemFetchResult( KJob *job )
 {
-  if ( job->error() ) // handled in base class
+  if ( job->error() ) { // handled in base class
     return;
+  }
+
   --m_jobCount;
   ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   foreach ( const Item &item, fetch->items() ) {
-    if ( !m_mimeTypeChecker.isWantedItem( item ) )
+    if ( !m_mimeTypeChecker.isWantedItem( item ) ) {
       continue;
+    }
     m_items.push_back( item );
   }
 
-  if ( m_jobCount <= 0 )
+  if ( m_jobCount <= 0 ) {
     emitResult();
+  }
 }
 
 #include "incidencefetchjob.moc"

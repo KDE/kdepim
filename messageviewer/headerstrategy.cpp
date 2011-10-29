@@ -206,15 +206,17 @@ CustomHeaderStrategy::CustomHeaderStrategy()
   KConfigGroup customHeader( GlobalSettings::self()->config(), "Custom Headers" );
   if ( customHeader.hasKey( "headers to display" ) ) {
     mHeadersToDisplay = customHeader.readEntry( "headers to display", QStringList() );
-    for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != mHeadersToDisplay.end() ; ++ it )
-*it = (*it).toLower();
+    QStringList::iterator end( mHeadersToDisplay.end() );
+    for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
+      *it = (*it).toLower();
   } else
     mHeadersToDisplay = stringList( standardHeaders, numStandardHeaders );
 
   if ( customHeader.hasKey( "headers to hide" ) ) {
     mHeadersToHide = customHeader.readEntry( "headers to hide", QStringList() );
-    for ( QStringList::iterator it = mHeadersToHide.begin() ; it != mHeadersToHide.end() ; ++ it )
-*it = (*it).toLower();
+    QStringList::iterator end( mHeadersToHide.end() );
+    for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
+      *it = (*it).toLower();
   }
 
   mDefaultPolicy = customHeader.readEntry( "default policy", "hide" ) == "display" ? Display : Hide ;

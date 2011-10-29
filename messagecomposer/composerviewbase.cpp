@@ -102,6 +102,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
   initAutoSave();
+  
 }
 
 Message::ComposerViewBase::~ComposerViewBase()
@@ -159,8 +160,9 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   // Load the attachments
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( msgContent );
+  std::vector<KMime::Content*>::const_iterator end( ac.attachments().end() );
   for ( std::vector<KMime::Content*>::const_iterator it = ac.attachments().begin();
-        it != ac.attachments().end() ; ++it ) {
+        it != end ; ++it ) {
     addAttachmentPart( *it );
   }
 
@@ -336,7 +338,6 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   }
 
   if( m_composers.isEmpty() ) {
-    // TODO i18n after string freeze!
     emit failed( i18n( "It was not possible to create a message composer." ) );
     return;
   }
@@ -588,7 +589,8 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     Q_ASSERT( m_composers.contains( composer ) );
     // The messages were composed successfully.
     kDebug() << "NoError.";
-    for( int i = 0; i < composer->resultMessages().size(); ++i ) {
+    const int numberOfMessage( composer->resultMessages().size() );
+    for( int i = 0; i < numberOfMessage; ++i ) {
       if ( mSaveIn == MessageSender::SaveInNone ) {
         queueMessage( composer->resultMessages().at( i ), composer );
       } else {
@@ -625,7 +627,6 @@ void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
 }
 
-
 void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Message::Composer* composer )
 {
   const Message::InfoPart *infoPart = composer->infoPart();
@@ -644,16 +645,16 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
     qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
   }
-
-  Akonadi::Item::Id originalMessageId;
-  Akonadi::MessageStatus linkStatus;
+  QList<Akonadi::Item::Id> originalMessageId;
+  QList<Akonadi::MessageStatus> linkStatus;
   if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
-    if ( linkStatus == Akonadi::MessageStatus::statusReplied() ) {
-      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied,
-                                             QVariant( originalMessageId ) );
-    } else if ( linkStatus == Akonadi::MessageStatus::statusForwarded() ) {
-      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded,
-                                             QVariant( originalMessageId ) );
+    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
+    {
+      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+      }
     }
   }
 
@@ -1338,7 +1339,8 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
     // words
     QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
     QTextDocument *doc = m_editor->document();
-    for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
+    QTextBlock end( doc->end() );
+    for ( QTextBlock it = doc->begin(); it != end; it = it.next() ) {
       const QString line = it.text();
       gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
                  ( rx.indexIn( line ) >= 0 );

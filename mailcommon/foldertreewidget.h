@@ -20,7 +20,7 @@
 #define MAILCOMMON_FOLDERTREEWIDGET_H
 
 #include "mailcommon_export.h"
-#include "readablecollectionproxymodel.h"
+#include "foldertreewidgetproxymodel.h"
 
 #include <QWidget>
 
@@ -63,7 +63,7 @@ public:
 
   FolderTreeWidget( QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
                     TreeViewOptions options = (TreeViewOptions) (ShowUnreadCount|ShowCollectionStatisticAnimation),
-                    ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None );
+                    FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None );
   ~FolderTreeWidget();
 
   /**
@@ -105,7 +105,7 @@ public:
 
   Akonadi::StatisticsProxyModel * statisticsProxyModel() const;
 
-  ReadableCollectionProxyModel *readableCollectionProxyModel() const;
+  FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
 
   EntityCollectionOrderProxyModel *entityOrderProxy() const;
 

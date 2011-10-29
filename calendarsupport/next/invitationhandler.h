@@ -106,7 +106,6 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
     SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
                                             const KCalCore::Incidence::Ptr &incidence );
 
-
     /**
        Checks if the incidence should really be modified.
 

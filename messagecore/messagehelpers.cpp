@@ -85,26 +85,28 @@ void MessageCore::Util::addLinkInformation( const KMime::Message::Ptr &msg, Akon
   msg->setHeader( header );
 }
 
-bool MessageCore::Util::getLinkInformation( const KMime::Message::Ptr &msg, Akonadi::Item::Id &id, Akonadi::MessageStatus &status )
+bool MessageCore::Util::getLinkInformation( const KMime::Message::Ptr &msg, QList<Akonadi::Item::Id> &id, QList<Akonadi::MessageStatus> &status )
 {
-  id = -1;
-  status = Akonadi::MessageStatus();
-
   if ( !msg->headerByType( "X-KMail-Link-Message" ) || !msg->headerByType( "X-KMail-Link-Type" ) )
     return false;
 
   const QStringList messages = msg->headerByType( "X-KMail-Link-Message" )->asUnicodeString().split( QLatin1Char( ',' ), QString::SkipEmptyParts );
   const QStringList types = msg->headerByType( "X-KMail-Link-Type" )->asUnicodeString().split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+
   if ( messages.isEmpty() || types.isEmpty() )
     return false;
 
-  id = messages.first().toLongLong();
+  Q_FOREACH( const QString&idStr, messages )
+  {
+    id << idStr.toLongLong();
+  }
 
-  const QString type = types.first();
-  if ( type == QLatin1String( "reply" ) )
-    status = Akonadi::MessageStatus::statusReplied();
-  else if ( type == QLatin1String( "forward" ) )
-    status = Akonadi::MessageStatus::statusForwarded();
-
+  Q_FOREACH( const QString&typeStr, types )
+  {
+    if ( typeStr == QLatin1String( "reply" ) )
+      status << Akonadi::MessageStatus::statusReplied();
+    else if ( typeStr == QLatin1String( "forward" ) )
+      status << Akonadi::MessageStatus::statusForwarded();
+  }
   return true;
 }

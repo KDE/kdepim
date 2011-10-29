@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -106,7 +106,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
      * TODO: See if this is always called when using IncidenceDefaults.
      * If yes, this should be done inside ctor.
      */
-    static IncidenceDefaults minimalIncidenceDefaults( bool cleanupAttachmentTemporaryFiles = false );
+    static IncidenceDefaults minimalIncidenceDefaults( bool cleanupAttachmentTempFiles = false );
 
     // Returns the e-mail address used for the organizer when we can't find anything useful
     // This is something like "invalid@invalid"

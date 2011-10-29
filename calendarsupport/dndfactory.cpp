@@ -172,7 +172,8 @@ bool DndFactory::cutIncidences( const Akonadi::Item::List &items )
 {
   if ( copyIncidences( items ) ) {
     Akonadi::Item::List::ConstIterator it;
-    for ( it = items.constBegin(); it != items.constEnd(); ++it ) {
+    Akonadi::Item::List::ConstIterator end( items.constEnd() );
+    for ( it = items.constBegin(); it != end; ++it ) {
       // Don't call the kcal's version, call deleteIncidence( Item, )
       // which creates a Akonadi::ItemDeleteJob.
       d->mCalendar->deleteIncidence( *it );

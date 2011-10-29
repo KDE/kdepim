@@ -138,9 +138,6 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
            "other large messages were waiting on the server, or if you wanted to "
            "change the ruleset to tag the messages differently.</p></qt>" );
 
-// The anchor of the filter dialog's help.
-const char * KMFilterDialogHelpAnchor =  "filters" ;
-
 //=============================================================================
 //
 // class KMFilterDialog (the filter dialog)
@@ -157,7 +154,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   setModal( false );
   setButtonFocus( Ok );
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-  setHelp( KMFilterDialogHelpAnchor, "kmail" );
+  setHelp( "filters", "kmail" );
   setButtonText( User1, i18n("Import...") );
   setButtonText( User2, i18n("Export...") );
   connect( this, SIGNAL(user1Clicked()),
@@ -413,7 +410,7 @@ void KMFilterDialog::slotApply()
 }
 
 void KMFilterDialog::slotFinished() {
-	deleteLater();
+  deleteLater();
 }
 
 void KMFilterDialog::slotSaveSize() {
@@ -617,7 +614,7 @@ void KMFilterDialog::slotUpdateAccountList()
     QTreeWidgetItem *listItem = new QTreeWidgetItem( mAccountList, top );
     listItem->setText( 0, lst.at( i ).name() );
     listItem->setText( 1, lst.at( i ).type().name() );
-    listItem->setText( 2, QString( "%1" ).arg( lst.at( i ).identifier() ) );
+    listItem->setText( 2, lst.at( i ).identifier() );
     if ( mFilter )
       listItem->setCheckState( 0, mFilter->applyOnAccount( lst.at( i ).identifier() ) ?
                                   Qt::Checked : Qt::Unchecked );
@@ -797,7 +794,7 @@ void KMFilterListBox::createFilter( const QByteArray & field,
 
   MailFilter *newFilter = new MailFilter();
   newFilter->pattern()->append( newRule );
-  newFilter->pattern()->setName( QString("<%1>:%2").arg( QString::fromLatin1( field ) ).arg( value) );
+  newFilter->pattern()->setName( QString::fromLatin1("<%1>:%2").arg( QString::fromLatin1( field ) ).arg( value) );
 
   FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( "transfer" );
   if ( desc )
@@ -931,6 +928,10 @@ void KMFilterListBox::slotSelected( int aIdx )
 
 void KMFilterListBox::slotNew()
 {
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
+
   // just insert a new filter.
   insertFilter( new MailFilter() );
   enableControls();
@@ -942,6 +943,9 @@ void KMFilterListBox::slotCopy()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
 
   // make sure that all changes are written to the filter before we copy it
   emit applyWidgets();
@@ -963,7 +967,16 @@ void KMFilterListBox::slotDelete()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
 
+  MailCommon::MailFilter *filter = mFilterList.at( mIdxSelItem );
+
+  const QString filterName = filter->pattern()->name();
+  
+  if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
+    return;
   int oIdxSelItem = mIdxSelItem;
   mIdxSelItem = -1;
   // unselect all
@@ -973,12 +986,13 @@ void KMFilterListBox::slotDelete()
   emit resetWidgets();
 
   // remove the filter from both the listbox
-  mListWidget->takeItem( oIdxSelItem );
+  QListWidgetItem *item = mListWidget->takeItem( oIdxSelItem );
+  delete item;
   // and the filter list...
   MailCommon::MailFilter *deletedFilter =  mFilterList.takeAt( oIdxSelItem );
 
 
-  int count = mListWidget->count();
+  const int count = mListWidget->count();
   // and set the new current item.
   if ( count > oIdxSelItem )
     // oIdxItem is still a valid index
@@ -1012,10 +1026,13 @@ void KMFilterListBox::slotTop()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
+
   MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
   mFilterList.insert( 0, filter );
-  QListWidgetItem *item = mListWidget->item( mIdxSelItem );
-  mListWidget->takeItem( mIdxSelItem );
+  QListWidgetItem *item =mListWidget->takeItem( mIdxSelItem );
   mListWidget->insertItem( 0, item );
 
   mIdxSelItem = 0;
@@ -1036,11 +1053,13 @@ void KMFilterListBox::slotBottom()
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
 
   MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
   mFilterList.insert( mFilterList.count() , filter );
-  QListWidgetItem *item = mListWidget->item( mIdxSelItem );
-  mListWidget->takeItem( mIdxSelItem );
+  QListWidgetItem *item = mListWidget->takeItem( mIdxSelItem );
   mListWidget->insertItem( mListWidget->count(), item );
 
   mIdxSelItem = ( mFilterList.count() -1 );
@@ -1061,6 +1080,9 @@ void KMFilterListBox::slotUp()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
 
   swapNeighbouringFilters( mIdxSelItem, mIdxSelItem - 1 );
   enableControls();
@@ -1078,6 +1100,9 @@ void KMFilterListBox::slotDown()
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
 
   swapNeighbouringFilters( mIdxSelItem, mIdxSelItem + 1);
   enableControls();
@@ -1091,6 +1116,10 @@ void KMFilterListBox::slotRename()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
+
+  if ( mListWidget->currentItem() &&
+       mListWidget->currentItem()->isHidden() )
+    return;
 
   bool okPressed = false;
   MailFilter *filter = mFilterList.at( mIdxSelItem );
@@ -1189,7 +1218,10 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
   assert( aFilter );
 
   // if mIdxSelItem < 0, QListBox::insertItem will append.
-  mListWidget->insertItem( mIdxSelItem, aFilter->pattern()->name() );
+  QListWidgetItem *item = new QListWidgetItem( aFilter->pattern()->name() );
+  item->setCheckState(  aFilter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+  mListWidget->insertItem( mIdxSelItem,item );
+
   if ( mIdxSelItem < 0 ) {
     // none selected -> append
     mFilterList.append( aFilter );
@@ -1222,8 +1254,7 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 
   // untouchedOne is at idx. to move it down(up),
   // remove item at idx+(-)1 w/o deleting it.
-  QListWidgetItem *item = mListWidget->item( movedOne );
-  mListWidget->takeItem( movedOne );
+  QListWidgetItem *item = mListWidget->takeItem( movedOne );
   // now selected item is at idx(idx-1), so
   // insert the other item at idx, ie. above(below).
   mListWidget->insertItem( untouchedOne, item );
@@ -1238,16 +1269,25 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 void KMFilterDialog::slotImportFilters()
 {
   FilterImporterExporter importer( this );
-  QList<MailFilter *> filters = importer.importFilters();
+  bool canceled = false;
+  QList<MailFilter *> filters = importer.importFilters( canceled );
+  if ( canceled )
+    return;
 
-  // FIXME message box how many were imported?
-  if ( filters.isEmpty() ) return;
+  if ( filters.isEmpty() ) {
+    KMessageBox::information( this, i18n( "No filter was imported." ) );
+    return;
+  }
 
+  QStringList listOfFilter;
   QList<MailFilter*>::ConstIterator end( filters.constEnd() );
   
   for ( QList<MailFilter*>::ConstIterator it = filters.constBegin() ; it != end ; ++it ) {
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
+    listOfFilter<<( *it )->name();
   }
+  KMessageBox::informationList( this, i18n( "Filters which were imported:" ),listOfFilter );
+
 }
 
 void KMFilterDialog::slotExportFilters()

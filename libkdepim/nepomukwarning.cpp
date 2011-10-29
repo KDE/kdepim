@@ -27,51 +27,73 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KStandardDirs>
+#include <KService>
 
 #include <QProcess>
 
-KPIM::NepomukWarning::NepomukWarning(const char* neverShowAgainKey, QWidget* parent):
-  KMessageWidget(parent),
-  m_neverShowAgainKey( QLatin1String( neverShowAgainKey ) )
+KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *parent )
+  : KMessageWidget( parent ),
+    m_neverShowAgainKey( QLatin1String( neverShowAgainKey ) )
 {
-  setMessageType( Warning );
-  setCloseButtonVisible( true );
-  setWordWrap( true );
-  setText( i18n( "You do not have the semantic desktop system enabled. Several features in here depend on this and will thus not work correctly." ) );
-  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()), SLOT(animatedHide()) );
-  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()), SLOT(animatedShow()) );
-
-  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
+  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String( "Missing Nepomuk Warning" ) );
   const bool neverShowAgain = cfgGroup.readEntry( m_neverShowAgainKey, false );
-  setVisible( !Nepomuk::ResourceManager::instance()->initialized() && !neverShowAgain );
 
-  KAction *action = this->findChild<KAction*>(); // that should give us the close action...
-  if ( action )
-    connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+  if ( !neverShowAgain )
+  {
+    setMessageType( Warning );
+    setCloseButtonVisible( true );
+    setWordWrap( true );
+    setText( i18n( "You do not have the semantic desktop system enabled. "
+                   "Many important features of this software depend on the "
+                   "semantic desktop system and will not work correctly without it." ) );
 
-  action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
-  addAction( action );
+    connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
+             SLOT(animatedHide()) );
+    connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
+             SLOT(animatedShow()) );
 
+    setVisible( !Nepomuk::ResourceManager::instance()->initialized() );
+
+    KAction *action = this->findChild<KAction *>(); // should give us the close action...
+    if ( action ) {
+      connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+    }
+
+    action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
+    connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
+    addAction( action );
+  }
+  else
+    setVisible(false);
 }
 
 void KPIM::NepomukWarning::configure()
 {
-  QProcess::startDetached( KStandardDirs::findExe(QLatin1String("kcmshell4")), QStringList(QLatin1String("kcm_nepomuk")) );
+  if ( KService::serviceByStorageId( "kcm_nepomuk.desktop" ) ) {
+    QProcess::startDetached( KStandardDirs::findExe( QLatin1String( "kcmshell4" ) ),
+                             QStringList( QLatin1String( "kcm_nepomuk" ) ) );
+  } else {
+    KAction *action = qobject_cast<KAction *>( sender() );
+    action->setEnabled( false );
+    setText( i18n( "The module to configure the semantic desktop system (Nepomuk) "
+                   "was not found on your system. Please make sure Nepomuk was "
+                   "properly installed." ) );
+  }
+
 }
 
-void KPIM::NepomukWarning::setMissingFeatures(const QStringList& features)
+void KPIM::NepomukWarning::setMissingFeatures( const QStringList &features )
 {
   if ( !features.isEmpty() ) {
-    setText( i18n( "You do not have the semantic desktop system enabled. The following features will not work correctly:<ul><li>%1</li></ul>",
-      features.join( QLatin1String( "</li><li>" ) )
-    ) );
+    setText( i18n( "You do not have the semantic desktop system enabled. "
+                   "The following features will not work correctly:<ul><li>%1</li></ul>",
+                   features.join( QLatin1String( "</li><li>" ) ) ) );
   }
 }
 
 void KPIM::NepomukWarning::explicitlyClosed()
 {
-  KConfigGroup cfgGroup( KGlobal::config(), QLatin1String("Missing Nepomuk Warning") );
+  KConfigGroup cfgGroup( KGlobal::config(), QLatin1String( "Missing Nepomuk Warning" ) );
   cfgGroup.writeEntry( m_neverShowAgainKey, true );
 }
 

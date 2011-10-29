@@ -43,7 +43,7 @@ FolderTreeView::FolderTreeView( QWidget* parent, bool showUnreadCount )
 
 
 FolderTreeView::FolderTreeView( KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
-  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false )    
+  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false )
 {
   init(showUnreadCount);
 }
@@ -56,6 +56,9 @@ FolderTreeView::~FolderTreeView()
 
 void FolderTreeView::setTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy )
 {
+  if ( mToolTipDisplayPolicy == policy )
+    return;
+  
   mToolTipDisplayPolicy = policy;
   writeConfig();
 }
@@ -73,6 +76,7 @@ void FolderTreeView::disableContextMenuAndExtraColumn()
 void FolderTreeView::init( bool showUnreadCount )
 {
   setIconSize( QSize( 22, 22 ) );
+  setUniformRowHeights( true );
   mSortingPolicy = FolderTreeWidget::SortByCurrentColumn;
   mToolTipDisplayPolicy = FolderTreeWidget::DisplayAlways;
 
@@ -85,7 +89,6 @@ void FolderTreeView::init( bool showUnreadCount )
   mCollectionStatisticsDelegate->setProgressAnimationEnabled( true );
   setItemDelegate(mCollectionStatisticsDelegate);
   mCollectionStatisticsDelegate->setUnreadCountShown( showUnreadCount && !header()->isSectionHidden( 1 ) );
-
 }
 
 void FolderTreeView::showStatisticAnimation( bool anim )
@@ -94,7 +97,7 @@ void FolderTreeView::showStatisticAnimation( bool anim )
 }
 
 void FolderTreeView::writeConfig()
-{
+{  
   KConfigGroup myGroup( KernelIf->config(), "MainFolderView");
   myGroup.writeEntry( "IconSize", iconSize().width() );
   myGroup.writeEntry( "ToolTipDisplayPolicy", ( int ) mToolTipDisplayPolicy );
@@ -108,8 +111,9 @@ void FolderTreeView::readConfig()
   if ( iIconSize < 16 || iIconSize > 32 )
     iIconSize = 22;
   setIconSize( QSize( iIconSize, iIconSize ) );
-  setTooltipsPolicy( static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) ) );
-  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) mSortingPolicy ) );
+  mToolTipDisplayPolicy = static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) );
+  
+  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) FolderTreeWidget::SortByCurrentColumn ),false );
 }
 
 void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
@@ -142,8 +146,8 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint&pnt )
   static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
   QActionGroup *grp = new QActionGroup( &menu );
-
-  for ( int i = 0; i < (int)( sizeof( icon_sizes ) / sizeof( int ) ); i++ )
+  const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
+  for ( int i = 0; i < nbElement; i++ )
   {
     act = menu.addAction( QString("%1x%2").arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ) );
     act->setCheckable( true );
@@ -221,12 +225,14 @@ void FolderTreeView::slotHeaderContextMenuChangeSortingPolicy( bool )
   if ( !ok )
     return;
 
-  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )policy );
+  setSortingPolicy( ( FolderTreeWidget::SortingPolicy )policy, true );
 }
 
 
-void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
+void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, bool writeInConfig )
 {
+  if ( mSortingPolicy == policy )
+    return;
   mSortingPolicy = policy;
   switch ( mSortingPolicy )
   {
@@ -239,6 +245,7 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
   case FolderTreeWidget::SortByDragAndDropKey:
       header()->setClickable( false );
       header()->setSortIndicatorShown( false );
+      
 #if 0
       //
       // Qt 4.5 introduced a nasty bug here:
@@ -249,7 +256,7 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
       // performed by the view whenever it wants. We want to control sorting.
       //
       setSortingEnabled( true ); // hack for qutie bug: the param here should be false
-      sortByColumn( 0, Qt::AscendingOrder );
+      header()->setSortIndicator( 0, Qt::AscendingOrder );
 #endif
       setSortingEnabled( false ); // hack for qutie bug: this call shouldn't be here at all
       emit manualSortingChanged( true );
@@ -259,7 +266,8 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy )
       // should never happen
     break;
   }
-  writeConfig();
+  if ( writeInConfig )
+    writeConfig();
 }
 
 void FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy( bool )
@@ -312,7 +320,11 @@ void FolderTreeView::slotHeaderContextMenuChangeIconSize( bool )
   if ( !ok )
     return;
 
-  setIconSize( QSize( size, size ) );
+  const QSize newIconSize( QSize( size, size ) );
+  if ( newIconSize == iconSize() )
+    return;
+  setIconSize( newIconSize );
+  
   writeConfig();
 }
 

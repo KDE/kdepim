@@ -111,6 +111,8 @@ bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QM
 
 void EntityCollectionOrderProxyModel::setManualSortingActive( bool active )
 {
+  if ( d->manualSortingActive == active )
+    return;
   d->manualSortingActive = active;
   if ( !active ) {
     clearTreeOrder();

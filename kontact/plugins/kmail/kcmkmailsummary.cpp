@@ -24,19 +24,19 @@
 
 #include "kcmkmailsummary.h"
 
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/ChangeRecorder>
+
+#include <KMime/KMimeMessage>
+
 #include <KAboutData>
 #include <KAcceleratorManager>
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 #include <KComponentData>
 #include <KDebug>
 #include <KDialog>
 #include <KLocale>
-
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ChangeRecorder>
-#include <akonadi/etmviewstatesaver.h>
-#include <kcheckableproxymodel.h>
-
-#include <kmime/kmime_message.h>
 
 #include <QCheckBox>
 #include <QTreeView>
@@ -87,7 +87,7 @@ void KCMKMailSummary::initGUI()
   layout->setMargin( 0 );
 
   mFolderView = new QTreeView( this );
-  mFolderView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  mFolderView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   mFullPath = new QCheckBox( i18n( "Show full path for folders" ), this );
   mFullPath->setToolTip(
     i18nc( "@info:tooltip", "Show full path for each folder" ) );
@@ -119,9 +119,10 @@ void KCMKMailSummary::initFolders()
 
   mFolderView->setModel( mCheckProxy );
 
-  KSharedConfigPtr _config = KSharedConfig::openConfig("kcmkmailsummaryrc");
+  KSharedConfigPtr _config = KSharedConfig::openConfig( "kcmkmailsummaryrc" );
 
-  mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config->group( "CheckState" ), this );
+  mModelState =
+    new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config->group( "CheckState" ), this );
   mModelState->setSelectionModel( mSelectionModel );
 }
 

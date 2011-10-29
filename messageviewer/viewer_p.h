@@ -296,7 +296,7 @@ public:
   /** Set the header style and strategy. We only want them to be set
       together. */
   void setHeaderStyleAndStrategy( HeaderStyle * style,
-                                  const HeaderStrategy * strategy );
+                                  const HeaderStrategy * strategy, bool writeInConfigFile = false );
 
   /** Get the message header strategy. */
   const HeaderStrategy * headerStrategy() const {

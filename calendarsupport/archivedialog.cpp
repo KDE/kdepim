@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -29,35 +27,34 @@
 #include "eventarchiver.h"
 #include "kcalprefs.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <knuminput.h>
-#include <kurlrequester.h>
-#include <kmessagebox.h>
-#include <kfiledialog.h>
-#include <kurl.h>
-#include <klineedit.h>
-#include <kvbox.h>
 #include <KComboBox>
 #include <KDateComboBox>
+#include <KFileDialog>
+#include <KLineEdit>
+#include <KLocale>
+#include <KMessageBox>
+#include <KNumInput>
 #include <KTextBrowser>
+#include <KUrl>
+#include <KUrlRequester>
+#include <KVBox>
 
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QDateTime>
+#include <QFrame>
+#include <QGroupBox>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
-#include <QDateTime>
-#include <QCheckBox>
-#include <QVBoxLayout>
-#include <QFrame>
-#include <QHBoxLayout>
-#include <QButtonGroup>
 #include <QRadioButton>
-#include <QGroupBox>
-
-#include "archivedialog.moc"
+#include <QVBoxLayout>
 
 using namespace CalendarSupport;
 
-ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::IncidenceChanger* changer, QWidget *parent )
+ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
+                              CalendarSupport::IncidenceChanger *changer,
+                              QWidget *parent )
   : KDialog (parent)
 {
   setCaption( i18nc( "@title:window", "Archive/Delete Past Events and To-dos" ) );
@@ -292,3 +289,5 @@ void ArchiveDialog::slotEventsDeleted()
     accept();
   }
 }
+
+#include "archivedialog.moc"

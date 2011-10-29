@@ -48,7 +48,8 @@ KIMAP::Acl::Rights AclUtils::permissionsForIndex( uint index )
 
 int AclUtils::indexForPermissions( KIMAP::Acl::Rights permissions )
 {
-  for ( uint i = 0; i < sizeof( standardPermissions ) / sizeof( *standardPermissions ); ++i ) {
+  const uint maxSize( sizeof( standardPermissions ) / sizeof( *standardPermissions ) );
+  for ( uint i = 0; i < maxSize; ++i ) {
     if ( KIMAP::Acl::normalizedRights( permissions ) == standardPermissions[i].permissions )
       return i;
   }
@@ -58,7 +59,8 @@ int AclUtils::indexForPermissions( KIMAP::Acl::Rights permissions )
 
 QString AclUtils::permissionsToUserString( KIMAP::Acl::Rights permissions )
 {
-  for ( uint i = 0; i < sizeof( standardPermissions ) / sizeof( *standardPermissions ); ++i ) {
+  const uint maxSize( sizeof( standardPermissions ) / sizeof( *standardPermissions ) );
+  for ( uint i = 0; i < maxSize; ++i ) {
     if ( KIMAP::Acl::normalizedRights( permissions ) == standardPermissions[i].permissions )
       return i18nc( "Permissions", standardPermissions[ i ].userString );
   }

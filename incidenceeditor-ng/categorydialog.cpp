@@ -3,7 +3,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Sérgio Martins <sergio.martins@kdab.com>
+    Author: Sérgio Martins <sergio.martins@kdab.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -53,7 +53,7 @@ CategoryWidget::CategoryWidget( CategoryConfig *cc, QWidget *parent )
 
   mWidgets->mButtonAdd->setIcon( KIcon( "list-add" ) );
   mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
-  mWidgets->mLineEdit->setClickMessage( i18n("Click to add a new category") );
+  mWidgets->mLineEdit->setClickMessage( i18n( "Click to add a new category" ) );
 
   connect( mWidgets->mLineEdit, SIGNAL(textChanged(QString)),
            SLOT(handleTextChanged(QString)) );

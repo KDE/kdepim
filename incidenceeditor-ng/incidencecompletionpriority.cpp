@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
-  Author: Kevin Krammer <krake@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Kevin Krammer <krake@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -73,13 +73,12 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
   d->mUi->mTaskSeparator->hide();
 #endif
 
-
-  #ifdef Q_WS_MAEMO_5
-    // The default looks really bad in the editor.
-    QPalette palette = d->mUi->mCompletionSlider->palette();
-    palette.setColor( QPalette::Window, Qt::white );
-    d->mUi->mCompletionSlider->setPalette( palette );
-  #endif
+#ifdef Q_WS_MAEMO_5
+  // The default looks really bad in the editor.
+  QPalette palette = d->mUi->mCompletionSlider->palette();
+  palette.setColor( QPalette::Window, Qt::white );
+  d->mUi->mCompletionSlider->setPalette( palette );
+#endif
 
   connect( d->mUi->mCompletionSlider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
   connect( d->mUi->mPriorityCombo, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );

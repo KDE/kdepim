@@ -67,7 +67,8 @@ void JobScheduler::registerTask( ScheduledTask* task )
   if ( typeId ) {
     const Akonadi::Collection folder = task->folder();
     // Search for an identical task already scheduled
-    for( TaskList::Iterator it = mTaskList.begin(); it != mTaskList.end(); ++it ) {
+    TaskList::Iterator end( mTaskList.end() );
+    for( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
       if ( (*it)->taskTypeId() == typeId && (*it)->folder() == folder ) {
 #ifdef DEBUG_SCHEDULER
         kDebug() << "JobScheduler: already having task type" << typeId << "for folder" << folder->label();
@@ -126,7 +127,8 @@ void JobScheduler::slotRunNextJob()
     Q_ASSERT( mCurrentTask == 0 );
     ScheduledTask* task = 0;
     // Find a task suitable for being run
-    for( TaskList::Iterator it = mTaskList.begin(); it != mTaskList.end(); ++it ) {
+    TaskList::Iterator end( mTaskList.end() );
+    for( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
       // Remove if folder died
       const Akonadi::Collection folder = (*it)->folder();
       if ( !folder.isValid() ) {

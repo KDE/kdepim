@@ -28,14 +28,13 @@
 #include "monthscene.h"
 #include "prefs.h"
 
-#include <kcheckableproxymodel.h>
-
 //#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 #include <KIcon>
 
 #include <QHBoxLayout>

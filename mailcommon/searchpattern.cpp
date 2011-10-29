@@ -635,7 +635,8 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
 
   case FuncIsInAddressbook: {
     const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
-    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != addressList.constEnd() ); ++it ) {
+    QStringList::ConstIterator end( addressList.constEnd() );
+    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setLimit( 1 );
       job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
@@ -649,7 +650,9 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
 
   case FuncIsNotInAddressbook: {
     const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
-    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != addressList.constEnd() ); ++it ) {
+    QStringList::ConstIterator end( addressList.constEnd() );
+    
+    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setLimit( 1 );
       job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
@@ -665,7 +668,8 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
     QString category = contents();
     const QStringList addressList =  KPIMUtils::splitAddressList( msgContents.toLower() );
 
-    for ( QStringList::ConstIterator it = addressList.constBegin(); it != addressList.constEnd(); ++it ) {
+    QStringList::ConstIterator end( addressList.constEnd() );
+    for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
       job->exec();
@@ -684,7 +688,8 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
     QString category = contents();
     const QStringList addressList =  KPIMUtils::splitAddressList( msgContents.toLower() );
 
-    for ( QStringList::ConstIterator it = addressList.constBegin(); it != addressList.constEnd(); ++it ) {
+    QStringList::ConstIterator end( addressList.constEnd() );
+    for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
       job->exec();
@@ -1005,15 +1010,16 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
     return false;
 
   QList<SearchRule::Ptr>::const_iterator it;
+  QList<SearchRule::Ptr>::const_iterator end( constEnd() );
   switch ( mOperator ) {
   case OpAnd: // all rules must match
-    for ( it = begin() ; it != end() ; ++it )
+    for ( it = constBegin() ; it != end ; ++it )
       if ( !((*it)->requiresBody() && ignoreBody) )
         if ( !(*it)->matches( item ) )
           return false;
     return true;
   case OpOr:  // at least one rule must match
-    for ( it = begin() ; it != end() ; ++it )
+    for ( it = constBegin() ; it != end ; ++it )
       if ( !((*it)->requiresBody() && ignoreBody) )
         if ( (*it)->matches( item ) )
           return true;
@@ -1025,7 +1031,7 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
 
 bool SearchPattern::requiresBody() const {
   QList<SearchRule::Ptr>::const_iterator it;
-    for ( it = begin() ; it != end() ; ++it )
+    for ( it = constBegin() ; it != constEnd() ; ++it )
       if ( (*it)->requiresBody() )
 	return true;
   return false;
@@ -1088,12 +1094,12 @@ void SearchPattern::importLegacyConfig( const KConfigGroup & config ) {
   }
   append( rule );
 
-  if ( sOperator == "or"  ) {
+  if ( sOperator == QLatin1String( "or" )  ) {
     mOperator = OpOr;
     return;
   }
   // This is the interesting case...
-  if ( sOperator == "unless" ) { // meaning "and not", ie we need to...
+  if ( sOperator == QLatin1String( "unless" ) ) { // meaning "and not", ie we need to...
     // ...invert the function (e.g. "equals" <-> "doesn't equal")
     // We simply toggle the last bit (xor with 0x1)... This assumes that
     // SearchRule::Function's come in adjacent pairs of pros and cons
@@ -1164,7 +1170,7 @@ QString SearchPattern::asSparqlQuery() const
   const Nepomuk::Query::Query::RequestProperty itemIdProperty( Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
 
   Nepomuk::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
-  for ( const_iterator it = begin(); it != end(); ++it )
+  for ( const_iterator it = constBegin(); it != constEnd(); ++it )
     (*it)->addQueryTerms( innerGroup );
 
   if ( innerGroup.subTerms().isEmpty() )
@@ -1223,7 +1229,8 @@ const SearchPattern & SearchPattern::operator=( const SearchPattern & other ) {
 
   clear(); // ###
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = other.begin() ; it != other.end() ; ++it )
+  QList<SearchRule::Ptr>::const_iterator end(other.constEnd());
+  for ( it = other.constBegin() ; it != end ; ++it )
     append( SearchRule::createInstance( **it ) ); // deep copy
 
   return *this;

@@ -50,6 +50,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void slotUpdateButtons();
 
   private:
+    bool serverHasError(QTreeWidgetItem *item) const;
     void killAllJobs( bool disconnect = false );
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
 
@@ -91,6 +92,11 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void updateButtons();
   
   private:
+    enum sieveServerStatus
+    {
+      SIEVE_SERVER_ERROR = Qt::UserRole +1
+    };
+      
     TreeWidgetWithContextMenu* mListView;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;

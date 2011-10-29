@@ -90,7 +90,8 @@ void RecentAddresses::load( KConfig *config )
   KConfigGroup cg( config, "General" );
   m_maxCount = cg.readEntry( "Maximum Recent Addresses", 40 );
   addresses = cg.readEntry( "Recent Addresses", QStringList() );
-  for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
+  QStringList::ConstIterator end( addresses.constEnd() );
+  for ( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
     KABC::Addressee::parseEmailAddress( *it, name, email );
     if ( !email.isEmpty() ) {
       KABC::Addressee addr;
@@ -113,7 +114,8 @@ void RecentAddresses::add( const QString &entry )
 {
   if ( !entry.isEmpty() && m_maxCount > 0 ) {
     const QStringList list = KPIMUtils::splitAddressList( entry );
-    for ( QStringList::const_iterator e_it = list.constBegin(); e_it != list.constEnd(); ++e_it ) {
+    QStringList::const_iterator e_itEnd( list.constEnd() );
+    for ( QStringList::const_iterator e_it = list.constBegin(); e_it != e_itEnd; ++e_it ) {
       KPIMUtils::EmailParseResult errorCode = KPIMUtils::isValidAddress( *e_it );
       if ( errorCode != KPIMUtils::AddressOk ) {
         continue;
@@ -124,8 +126,9 @@ void RecentAddresses::add( const QString &entry )
 
       KABC::Addressee::parseEmailAddress( *e_it, fullName, email );
 
+      KABC::Addressee::List::Iterator end( m_addresseeList.end() );
       for ( KABC::Addressee::List::Iterator it = m_addresseeList.begin();
-          it != m_addresseeList.end(); ++it ) {
+          it != end; ++it ) {
         if ( email == (*it).preferredEmail() ) {
           //already inside, remove it here and add it later at pos==1
           m_addresseeList.erase( it );
@@ -162,8 +165,9 @@ void RecentAddresses::clear()
 QStringList RecentAddresses::addresses() const
 {
   QStringList addresses;
+  KABC::Addressee::List::ConstIterator end = m_addresseeList.constEnd();
   for ( KABC::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
-        it != m_addresseeList.constEnd(); ++it ) {
+        it != end; ++it ) {
     addresses.append( (*it).fullEmail() );
   }
   return addresses;

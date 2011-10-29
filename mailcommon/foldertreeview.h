@@ -73,7 +73,7 @@ protected:
   void readConfig();
   void writeConfig();
 
-  void setSortingPolicy( FolderTreeWidget::SortingPolicy policy );
+  void setSortingPolicy( FolderTreeWidget::SortingPolicy policy, bool writeInConfig = false );
 
   virtual void mousePressEvent( QMouseEvent *e );
 

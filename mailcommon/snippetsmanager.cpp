@@ -39,15 +39,15 @@ using namespace MailCommon;
 class SnippetsManager::Private
 {
   public:
-    Private( SnippetsManager *qq )
-      : q( qq ), mEditor( 0 )
+    Private( SnippetsManager *qq, QWidget * parent )
+      : q( qq ), mEditor( 0 ), mParent( parent ), mDirty( false )
     {
     }
 
     QModelIndex currentGroupIndex() const;
 
     void selectionChanged();
-
+    void dndDone();
     void addSnippet();
     void editSnippet();
     void deleteSnippet();
@@ -63,8 +63,11 @@ class SnippetsManager::Private
                                  const QKeySequence &keySequence, const QString &text );
 
     QString replaceVariables( const QString &text );
+    QModelIndex createGroup( const QString& groupName );
+    void createSnippet( const QModelIndex& groupIndex, const QString& snippetName, const QString& snippetText, const QString& snippetKeySequence );
 
     void load();
+    void loadFromOldFormat( const KConfigGroup& group );
     void save();
 
     SnippetsManager *q;
@@ -82,6 +85,8 @@ class SnippetsManager::Private
     QAction *mEditSnippetGroupAction;
     QAction *mDeleteSnippetGroupAction;
     QAction *mInsertSnippetAction;
+    QWidget *mParent;
+    bool mDirty;
 };
 
 QModelIndex SnippetsManager::Private::currentGroupIndex() const
@@ -140,7 +145,7 @@ void SnippetsManager::Private::addSnippet()
     mSelectionModel->select( groupIndex, QItemSelectionModel::ClearAndSelect );
   }
 
-  SnippetDialog dlg( mActionCollection, false );
+  SnippetDialog dlg( mActionCollection, false, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Add Snippet" ) );
   dlg.setGroupModel( mModel );
   dlg.setGroupIndex( currentGroupIndex() );
@@ -159,6 +164,12 @@ void SnippetsManager::Private::addSnippet()
   mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 
   updateActionCollection( QString(), dlg.name(), dlg.keySequence(), dlg.text() );
+  mDirty = true;
+}
+
+void SnippetsManager::Private::dndDone()
+{
+  mDirty = true;
 }
 
 void SnippetsManager::Private::editSnippet()
@@ -171,7 +182,7 @@ void SnippetsManager::Private::editSnippet()
 
   const QString oldSnippetName = index.data( SnippetsModel::NameRole ).toString();
 
-  SnippetDialog dlg( mActionCollection, false );
+  SnippetDialog dlg( mActionCollection, false, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Edit Snippet" ) );
   dlg.setGroupModel( mModel );
   dlg.setGroupIndex( oldGroupIndex );
@@ -196,6 +207,7 @@ void SnippetsManager::Private::editSnippet()
   mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 
   updateActionCollection( oldSnippetName, dlg.name(), dlg.keySequence(), dlg.text() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::deleteSnippet()
@@ -215,11 +227,12 @@ void SnippetsManager::Private::deleteSnippet()
   mModel->removeRow( index.row(), currentGroupIndex() );
 
   updateActionCollection( snippetName, QString(), QKeySequence(), QString() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::addSnippetGroup()
 {
-  SnippetDialog dlg( mActionCollection, true );
+  SnippetDialog dlg( mActionCollection, true,mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Add Group" ) );
 
   if ( !dlg.exec() )
@@ -232,6 +245,7 @@ void SnippetsManager::Private::addSnippetGroup()
 
   const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
   mModel->setData( groupIndex, dlg.name(), SnippetsModel::NameRole );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::editSnippetGroup()
@@ -240,7 +254,7 @@ void SnippetsManager::Private::editSnippetGroup()
   if ( !groupIndex.isValid() || !groupIndex.data( SnippetsModel::IsGroupRole ).toBool() )
     return;
 
-  SnippetDialog dlg( mActionCollection, true );
+  SnippetDialog dlg( mActionCollection, true, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Edit Group" ) );
   dlg.setName( groupIndex.data( SnippetsModel::NameRole ).toString() );
 
@@ -248,6 +262,7 @@ void SnippetsManager::Private::editSnippetGroup()
     return;
 
   mModel->setData( groupIndex, dlg.name(), SnippetsModel::NameRole );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::deleteSnippetGroup()
@@ -276,6 +291,7 @@ void SnippetsManager::Private::deleteSnippetGroup()
   }
 
   mModel->removeRow( groupIndex.row(), QModelIndex() );
+  mDirty = true;
 }
 
 void SnippetsManager::Private::insertSelectedSnippet()
@@ -352,10 +368,12 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
       if ( variableName != QLatin1String( "$$" ) ) {  // if not double-delimiter
         if ( !localVariables.contains( variableName ) ) {  // and not already in map
 
-          SnippetVariableDialog dlg( variableName, &mSavedVariables );
+          SnippetVariableDialog dlg( variableName, &mSavedVariables,mParent );
           if ( !dlg.exec() )
             return QString();
-
+          if ( dlg.saveVariableIsChecked() )
+            mDirty = true;
+          
           variableValue = dlg.variableValue();
         } else {
           variableValue = localVariables.value( variableName );
@@ -372,57 +390,127 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
   return result;
 }
 
-void SnippetsManager::Private::load()
+QModelIndex SnippetsManager::Private::createGroup( const QString& groupName )
 {
-  const KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
-  const KConfigGroup group = config->group( "SnippetPart" );
+  mModel->insertRow( mModel->rowCount(), QModelIndex() );
+  const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
+  mModel->setData( groupIndex, groupName, SnippetsModel::NameRole );
+  return groupIndex;
+}
 
-  const int groupCount = group.readEntry( "snippetGroupCount", 0 );
+void SnippetsManager::Private::createSnippet( const QModelIndex& groupIndex, const QString& snippetName, const QString& snippetText, const QString& snippetKeySequence )
+{
+                       
+  mModel->insertRow( mModel->rowCount( groupIndex ), groupIndex );
+  const QModelIndex index = mModel->index( mModel->rowCount( groupIndex ) - 1, 0, groupIndex );
+  
+  mModel->setData( index, snippetName, SnippetsModel::NameRole );
+  mModel->setData( index, snippetText, SnippetsModel::TextRole );
+  mModel->setData( index, snippetKeySequence, SnippetsModel::KeySequenceRole );
+  
+  updateActionCollection( QString(), snippetName, QKeySequence::fromString( snippetKeySequence ), snippetText );
+}
 
-  for ( int i = 0; i < groupCount; ++i ) {
-    const KConfigGroup group = config->group( QString::fromLatin1( "SnippetGroup_%1" ).arg ( i ) );
-    const QString groupName = group.readEntry( "Name" );
+void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup& group )
+{
+  //Code from kmail1
 
-    // create group
-    mModel->insertRow( mModel->rowCount(), QModelIndex() );
-    const QModelIndex groupIndex = mModel->index( mModel->rowCount() - 1, 0, QModelIndex() );
+  //if entry doesn't get found, this will return -1 which we will need a bit later
+  int iCount = group.readEntry("snippetGroupCount", -1);
+  QMap< int, QModelIndex> listGroup;
+  for ( int i=0; i<iCount; i++) {  //read the group-list
+    const QString strNameVal = group.readEntry(QString::fromLatin1("snippetGroupName_%1").arg(i), QString());
+    const int iIdVal = group.readEntry(QString::fromLatin1("snippetGroupId_%1").arg(i), -1);
+    //kDebug() << "Read group "  << " " << iIdVal;
 
-    mModel->setData( groupIndex, groupName, SnippetsModel::NameRole );
-
-    const int snippetCount = group.readEntry( "snippetCount", 0 );
-    for ( int j = 0; j < snippetCount; ++j ) {
-      const QString snippetName = group.readEntry( QString::fromLatin1( "snippetName_%1" ).arg( j ), QString() );
-      const QString snippetText = group.readEntry( QString::fromLatin1( "snippetText_%1" ).arg( j ), QString() );
-      const QString snippetKeySequence = group.readEntry( QString::fromLatin1( "snippetKeySequence_%1" ).arg( j ), QString() );
-
-      // create snippet
-      mModel->insertRow( mModel->rowCount( groupIndex ), groupIndex );
-      const QModelIndex index = mModel->index( mModel->rowCount( groupIndex ) - 1, 0, groupIndex );
-
-      mModel->setData( index, snippetName, SnippetsModel::NameRole );
-      mModel->setData( index, snippetText, SnippetsModel::TextRole );
-      mModel->setData( index, snippetKeySequence, SnippetsModel::KeySequenceRole );
-
-      updateActionCollection( QString(), snippetName, QKeySequence::fromString( snippetKeySequence ), snippetText );
+    if ( !strNameVal.isEmpty() && iIdVal != -1 ) {
+      // create group
+      const QModelIndex groupIndex = createGroup( strNameVal );
+      listGroup.insert( iIdVal, groupIndex );
     }
   }
 
+  /* Check if the snippetGroupCount property has been found
+     if iCount is -1 this means, that the user has his snippets
+     stored without groups.
+     Should only happen with an empty config file.
+  */
+
+  if (iCount != -1) {
+    iCount = group.readEntry("snippetCount", 0);
+    for ( int i=0; i<iCount; i++) {  //read the snippet-list
+        const QString snippetName = group.readEntry(QString::fromLatin1("snippetName_%1").arg(i), QString());
+        const QString snippetText = group.readEntry(QString::fromLatin1("snippetText_%1").arg(i), QString());
+        const int iParentVal = group.readEntry(QString::fromLatin1("snippetParent_%1").arg(i), -1);
+
+        if ( !snippetText.isEmpty() &&
+             !snippetName.isEmpty() &&
+             iParentVal != -1) {
+          const QString snippetKeySequence = group.readEntry( QString::fromLatin1("snippetShortcut_%1").arg(i), QString() );
+          const QModelIndex groupIndex = listGroup.value( iParentVal );
+          createSnippet( groupIndex, snippetName, snippetText, snippetKeySequence );          
+        }
+    }
+  } 
+  iCount = group.readEntry("snippetSavedCount", 0);
+
+  for ( int i=1; i<=iCount; i++) {  //read the saved-values and store in QMap
+    const QString variableKey = group.readEntry( QString::fromLatin1( "snippetSavedName_%1" ).arg( i ), QString() );
+    const QString variableValue = group.readEntry( QString::fromLatin1( "snippetSavedVal_%1" ).arg( i ), QString() );
+    mSavedVariables.insert( variableKey, variableValue );
+  }
+  mDirty = true;
+}
+
+void SnippetsManager::Private::load()
+{
+  const KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
+  const KConfigGroup snippetPartGroup = config->group( "SnippetPart" );
+
+  //Old format has this entry not new format
+  if ( snippetPartGroup.hasKey( "snippetCount" ) )
   {
-    mSavedVariables.clear();
-    const KConfigGroup group = config->group( "SavedVariablesPart" );
-    const int variablesCount = group.readEntry( "variablesCount", 0 );
+    loadFromOldFormat( snippetPartGroup );
+  }
+  else
+  {
+    const int groupCount = snippetPartGroup.readEntry( "snippetGroupCount", 0 );
 
-    for ( int i = 0; i < variablesCount; ++i ) {
-      const QString variableKey = group.readEntry( QString::fromLatin1( "variableName_%1" ).arg( i ), QString() );
-      const QString variableValue = group.readEntry( QString::fromLatin1( "variableValue_%1" ).arg( i ), QString() );
+    for ( int i = 0; i < groupCount; ++i ) {
+      const KConfigGroup group = config->group( QString::fromLatin1( "SnippetGroup_%1" ).arg ( i ) );
+      const QString groupName = group.readEntry( "Name" );
 
-      mSavedVariables.insert( variableKey, variableValue );
+      // create group
+      QModelIndex groupIndex = createGroup( groupName );
+
+      const int snippetCount = group.readEntry( "snippetCount", 0 );
+      for ( int j = 0; j < snippetCount; ++j ) {
+        const QString snippetName = group.readEntry( QString::fromLatin1( "snippetName_%1" ).arg( j ), QString() );
+        const QString snippetText = group.readEntry( QString::fromLatin1( "snippetText_%1" ).arg( j ), QString() );
+        const QString snippetKeySequence = group.readEntry( QString::fromLatin1( "snippetKeySequence_%1" ).arg( j ), QString() );
+        createSnippet( groupIndex, snippetName, snippetText, snippetKeySequence );
+      }
+    }
+
+    {
+      mSavedVariables.clear();
+      const KConfigGroup group = config->group( "SavedVariablesPart" );
+      const int variablesCount = group.readEntry( "variablesCount", 0 );
+
+      for ( int i = 0; i < variablesCount; ++i ) {
+        const QString variableKey = group.readEntry( QString::fromLatin1( "variableName_%1" ).arg( i ), QString() );
+        const QString variableValue = group.readEntry( QString::fromLatin1( "variableValue_%1" ).arg( i ), QString() );
+
+        mSavedVariables.insert( variableKey, variableValue );
+      }
     }
   }
 }
 
 void SnippetsManager::Private::save()
 {
+  if ( !mDirty )
+    return;
   KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
 
   // clear everything
@@ -475,11 +563,12 @@ void SnippetsManager::Private::save()
   }
 
   config->sync();
+  mDirty = false;
 }
 
 
-SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *parent )
-  : QObject( parent ), d( new Private( this ) )
+SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *parent, QWidget *widget )
+  : QObject( parent ), d( new Private( this, widget ) )
 {
   d->mModel = new SnippetsModel( this );
   d->mSelectionModel = new QItemSelectionModel( d->mModel );
@@ -501,7 +590,8 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(selectionChanged()) );
-
+  connect( d->mModel, SIGNAL(dndDone()), SLOT(dndDone()) );
+                              
   connect( d->mAddSnippetAction, SIGNAL(triggered(bool)), SLOT(addSnippet()) );
   connect( d->mEditSnippetAction, SIGNAL(triggered(bool)), SLOT(editSnippet()) );
   connect( d->mDeleteSnippetAction, SIGNAL(triggered(bool)), SLOT(deleteSnippet()) );

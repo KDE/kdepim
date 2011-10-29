@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -167,7 +167,6 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
-
   mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
   mEditor->combine( mIeAttendee );
 
@@ -280,9 +279,11 @@ void EventOrTodoDialogPrivate::manageTemplates()
 
   QStringList &templates =
     IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() );
+
   QPointer<IncidenceEditorNG::TemplateManagementDialog> dialog(
-      new IncidenceEditorNG::TemplateManagementDialog( q, templates,
-                                                       KCalUtils::Stringify::incidenceType( mEditor->type() ) ) );
+      new IncidenceEditorNG::TemplateManagementDialog(
+        q, templates, KCalUtils::Stringify::incidenceType( mEditor->type() ) ) );
+
   q->connect( dialog, SIGNAL(loadTemplate(QString)),
               SLOT(loadTemplate(QString)) );
   q->connect( dialog, SIGNAL(templatesChanged(QStringList)),
@@ -410,7 +411,8 @@ bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) 
 bool EventOrTodoDialogPrivate::isDirty() const
 {
   if ( mItem.isValid() ) {
-    return mEditor->isDirty() || mCalSelector->currentCollection().id() != mItem.storageCollectionId();
+    return mEditor->isDirty() ||
+      mCalSelector->currentCollection().id() != mItem.storageCollectionId();
   } else {
     return mEditor->isDirty();
   }
@@ -515,8 +517,9 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
   newIncidence->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
 
   // Mark the incidence as changed
-  if ( mItem.isValid() )
+  if ( mItem.isValid() ) {
     newIncidence->setRevision( newIncidence->revision() + 1 );
+  }
 
   result.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
   return result;

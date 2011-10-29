@@ -62,15 +62,15 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
   m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 
-  connect( m_collectionMonitor, SIGNAL( collectionAdded( Akonadi::Collection, Akonadi::Collection ) ),
-           this, SLOT( mailCollectionAdded( Akonadi::Collection, Akonadi::Collection ) ) );
-  connect( m_collectionMonitor, SIGNAL( collectionChanged( Akonadi::Collection ) ),
-           this, SLOT( mailCollectionChanged( Akonadi::Collection ) ) );
+  connect( m_collectionMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+           this, SLOT(mailCollectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  connect( m_collectionMonitor, SIGNAL(collectionChanged(Akonadi::Collection)),
+           this, SLOT(mailCollectionChanged(Akonadi::Collection)) );
 
-  connect( m_collectionMonitor, SIGNAL( collectionRemoved( Akonadi::Collection ) ),
-           this, SLOT( mailCollectionRemoved( Akonadi::Collection ) ) );
+  connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+           this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
 
-  QTimer::singleShot( 0, this, SLOT( initializeCollections() ) );
+  QTimer::singleShot( 0, this, SLOT(initializeCollections()) );
 
   qDBusRegisterMetaType<QVector<qlonglong> >();
 
@@ -87,7 +87,7 @@ void MailFilterAgent::initializeCollections()
 
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
   job->fetchScope().setContentMimeTypes( QStringList() << KMime::Message::mimeType() );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( initialCollectionFetchingDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(initialCollectionFetchingDone(KJob*)) );
 }
 
 void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
@@ -121,6 +121,12 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
    * for the mimetype of the item here.
    */
   if ( item.mimeType() != KMime::Message::mimeType() )
+    return;
+
+  /*
+   * happens when item no longer exists etc, and queue compression didn't happen yet
+   */
+  if ( !item.hasPayload() )
     return;
 
   Akonadi::MessageStatus status;

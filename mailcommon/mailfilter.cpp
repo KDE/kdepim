@@ -60,9 +60,9 @@ MailFilter::MailFilter()
 }
 
 
-MailFilter::MailFilter( const KConfigGroup & aConfig )
+MailFilter::MailFilter( const KConfigGroup & aConfig, bool interactive )
 {
-  readConfig( aConfig );
+  readConfig( aConfig, interactive );
 }
 
 
@@ -100,7 +100,8 @@ MailFilter::MailFilter( const MailFilter & aFilter )
 
   mAccounts.clear();
   QStringList::ConstIterator it2;
-  for ( it2 = aFilter.mAccounts.constBegin() ; it2 != aFilter.mAccounts.constEnd() ; ++it2 )
+  QStringList::ConstIterator end2 = aFilter.mAccounts.constEnd();
+  for ( it2 = aFilter.mAccounts.constBegin() ; it2 != end2 ; ++it2 )
     mAccounts.append( *it2 );
 }
 
@@ -123,8 +124,9 @@ MailFilter::ReturnCode MailFilter::execActions( ItemContext &context, bool& stop
 {
   ReturnCode status = NoResult;
 
-  QList<FilterAction*>::const_iterator it( mActions.begin() );
-  for ( ; it != mActions.constEnd() ; ++it ) {
+  QList<FilterAction*>::const_iterator it( mActions.constBegin() );
+  QList<FilterAction*>::const_iterator end( mActions.constEnd() );
+  for ( ; it != end ; ++it ) {
 
     if ( FilterLog::instance()->isLogging() ) {
       const QString logText( i18n( "<b>Applying filter action:</b> %1",
@@ -137,7 +139,7 @@ MailFilter::ReturnCode MailFilter::execActions( ItemContext &context, bool& stop
     switch ( result ) {
     case FilterAction::CriticalError:
       if ( FilterLog::instance()->isLogging() ) {
-        const QString logText = QString( "<font color=#FF0000>%1</font>" )
+        const QString logText = QString::fromLatin1( "<font color=#FF0000>%1</font>" )
           .arg( i18n( "A critical error occurred. Processing stops here." ) );
         FilterLog::instance()->add( logText, FilterLog::AppliedAction );
       }
@@ -145,7 +147,7 @@ MailFilter::ReturnCode MailFilter::execActions( ItemContext &context, bool& stop
       return CriticalError;
     case FilterAction::ErrorButGoOn:
       if ( FilterLog::instance()->isLogging() ) {
-        const QString logText = QString( "<font color=#FF0000>%1</font>" )
+        const QString logText = QString::fromLatin1( "<font color=#FF0000>%1</font>" )
           .arg( i18n( "A problem was found while applying this action." ) );
         FilterLog::instance()->add( logText, FilterLog::AppliedAction );
       }
@@ -349,7 +351,7 @@ bool MailFilter::isAutoNaming() const
 }
 
 //-----------------------------------------------------------------------------
-void MailFilter::readConfig(const KConfigGroup & config)
+void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
 {
   // MKSearchPattern::readConfig ensures
   // that the pattern is purified.
@@ -406,8 +408,12 @@ void MailFilter::readConfig(const KConfigGroup & config)
       FilterAction *fa = desc->create();
       if ( fa ) {
         //...load it with it's parameter...
-        fa->argsFromString( config.readEntry( argsName, QString() ) );
-        //...check if it's emoty and...
+        if ( interactive ) {
+          fa->argsFromStringInteractive( config.readEntry( argsName, QString() ), name() );
+        }
+        else
+          fa->argsFromString( config.readEntry( argsName, QString() ) );
+        //...check if it's empty and...
         if ( !fa->isEmpty() )
           //...append it if it's not and...
           mActions.append( fa );

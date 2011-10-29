@@ -37,7 +37,6 @@ using namespace Akonadi;
 using namespace KCalCore;
 using namespace CalendarSupport;
 
-
 IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
 {
   mLatestChangeId = 0;
@@ -131,8 +130,9 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
     errorString = j->errorString();
     kError() << errorString;
     if ( mShowDialogsOnError ) {
-      KMessageBox::sorry( change.parent, i18n( "Error while trying to create calendar item. Error was: %1",
-                                               errorString ) );
+      KMessageBox::sorry( change.parent,
+                          i18n( "Error while trying to create calendar item. Error was: %1",
+                                errorString ) );
     }
     if ( change.atomicOperationId != 0 ) {
       rollbackAtomicOperation( change.atomicOperationId );
@@ -160,7 +160,7 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
   const Item::List items = j->deletedItems();
 
   QVector<Item::Id> itemIdList;
-  foreach( const Item &item, items ) {
+  foreach ( const Item &item, items ) {
     itemIdList.append( item.id() );
   }
 
@@ -169,11 +169,12 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
     errorString = j->errorString();
     kError() << errorString;
     if ( mShowDialogsOnError ) {
-      KMessageBox::sorry( change.parent, i18n( "Error while trying to delete calendar item. Error was: %1",
-                                               errorString ) );
+      KMessageBox::sorry( change.parent,
+                          i18n( "Error while trying to delete calendar item. Error was: %1",
+                                errorString ) );
     }
 
-    foreach( const Item &item, items ) {
+    foreach ( const Item &item, items ) {
       // Werent deleted due to error
       mDeletedItemIds.remove( item.id() );
     }
@@ -182,7 +183,7 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
       rollbackAtomicOperation( change.atomicOperationId );
     }
   } else { // success
-    foreach( const Item &item, items ) {
+    foreach ( const Item &item, items ) {
       mLatestRevisionByItemId.remove( item.id() );
       if ( change.recordToHistory ) {
         //TODO: check return value
@@ -218,8 +219,9 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
       kError() << errorString;
     }
     if ( mShowDialogsOnError ) {
-      KMessageBox::sorry( change.parent, i18n( "Error while trying to modify calendar item. Error was: %1",
-                                               errorString ) );
+      KMessageBox::sorry( change.parent,
+                          i18n( "Error while trying to modify calendar item. Error was: %1",
+                                errorString ) );
     }
 
     if ( change.atomicOperationId != 0 ) {
@@ -261,10 +263,10 @@ bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) con
 }
 
 // Does a queued emit, with QMetaObject::invokeMethod
-void IncidenceChanger2::Private::emitCreateFinished( int changeId,
-                                                     const Akonadi::Item &item,
-                                                     CalendarSupport::IncidenceChanger2::ResultCode resultCode,
-                                                     const QString &errorString )
+void IncidenceChanger2::Private::emitCreateFinished(
+  int changeId, const Akonadi::Item &item,
+  CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+  const QString &errorString )
 {
   QMetaObject::invokeMethod( q, "createFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
@@ -274,10 +276,10 @@ void IncidenceChanger2::Private::emitCreateFinished( int changeId,
 }
 
 // Does a queued emit, with QMetaObject::invokeMethod
-void IncidenceChanger2::Private::emitModifyFinished( int changeId,
-                                                     const Akonadi::Item &item,
-                                                     CalendarSupport::IncidenceChanger2::ResultCode resultCode,
-                                                     const QString &errorString )
+void IncidenceChanger2::Private::emitModifyFinished(
+  int changeId, const Akonadi::Item &item,
+  CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+  const QString &errorString )
 {
   QMetaObject::invokeMethod( q, "modifyFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
@@ -287,10 +289,10 @@ void IncidenceChanger2::Private::emitModifyFinished( int changeId,
 }
 
 // Does a queued emit, with QMetaObject::invokeMethod
-void IncidenceChanger2::Private::emitDeleteFinished( int changeId,
-                                                     const QVector<Akonadi::Item::Id> &itemIdList,
-                                                     CalendarSupport::IncidenceChanger2::ResultCode resultCode,
-                                                     const QString &errorString )
+void IncidenceChanger2::Private::emitDeleteFinished(
+  int changeId, const QVector<Akonadi::Item::Id> &itemIdList,
+  CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+  const QString &errorString )
 {
   QMetaObject::invokeMethod( q, "deleteFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
@@ -298,7 +300,6 @@ void IncidenceChanger2::Private::emitDeleteFinished( int changeId,
                              Q_ARG( CalendarSupport::IncidenceChanger2::ResultCode, resultCode ),
                              Q_ARG( QString, errorString ) );
 }
-
 
 void IncidenceChanger2::Private::rollbackAtomicOperation( uint atomicOperationId )
 {
@@ -364,7 +365,7 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
         int dialogCode;
         const QStringList mimeTypes( incidence->mimeType() );
         collectionToUse = CalendarSupport::selectCollection( parent,
-                                                             dialogCode /*by-ref*/,
+                                                             dialogCode/*by-ref*/,
                                                              mimeTypes,
                                                              d->mDefaultCollection );
         if ( dialogCode != QDialog::Accepted ) {
@@ -449,7 +450,7 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     return -1;
   }
 
-  foreach( const Item &item, items ) {
+  foreach ( const Item &item, items ) {
     if ( !item.isValid() ) {
       kWarning() << "Items must be valid!";
       return -1;
@@ -463,7 +464,7 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
 
   Item::List itemsToDelete;
 
-  foreach( const Item &item, items ) {
+  foreach ( const Item &item, items ) {
     if ( d->deleteAlreadyCalled( item.id() ) ) {
       // IncidenceChanger::deleteIncidence() called twice, ignore this one.
       kDebug() << "Item " << item.id() << " already deleted or being deleted, skipping";
@@ -480,7 +481,8 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     const QString errorMessage = "One change belonging to a group of changes failed."
                                  "Undoing in progress.";
 
-    d->emitDeleteFinished( change.changeId, QVector<Akonadi::Item::Id>(), ResultCodeRollback, errorMessage );
+    d->emitDeleteFinished( change.changeId, QVector<Akonadi::Item::Id>(),
+                           ResultCodeRollback, errorMessage );
     return change.changeId;
   }
 
@@ -490,7 +492,8 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     kDebug() << "Items already deleted or being deleted, skipping";
     // Queued emit because return must be executed first, otherwise caller won't know this workId
     d->emitDeleteFinished( change.changeId, itemIdList, ResultCodeAlreadyDeleted,
-                           i18n( "That calendar item was already deleted, or currently being deleted." ) );
+                           i18n( "That calendar item was already deleted, "
+                                 "or currently being deleted." ) );
 
     return change.changeId;
   }
@@ -502,7 +505,7 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     d->mAtomicOperations[atomicOperationId]->numChanges++;
   }
 
-  foreach( const Item &item, itemsToDelete ) {
+  foreach ( const Item &item, itemsToDelete ) {
     d->mDeletedItemIds.insert( item.id() );
   }
 
@@ -561,7 +564,8 @@ void IncidenceChanger2::Private::performModification( Change change )
 
     // Queued emit because return must be executed first, otherwise caller won't know this workId
     emitModifyFinished( change.changeId, change.newItem, ResultCodeAlreadyDeleted,
-                        i18n( "That calendar item was already deleted, or currently being deleted." ) );
+                        i18n( "That calendar item was already deleted, "
+                              "or currently being deleted." ) );
     return;
   }
 
@@ -575,7 +579,6 @@ void IncidenceChanger2::Private::performModification( Change change )
     emitModifyFinished( change.changeId, change.newItem, ResultCodeRollback, errorMessage );
     return;
   }
-
 
   if ( mLatestRevisionByItemId.contains( id ) &&
        mLatestRevisionByItemId[id] > change.newItem.revision() ) {
@@ -668,7 +671,8 @@ bool IncidenceChanger2::respectsCollectionRights() const
   return d->mRespectsCollectionRights;
 }
 
-void IncidenceChanger2::setDestinationPolicy( IncidenceChanger2::DestinationPolicy destinationPolicy )
+void IncidenceChanger2::setDestinationPolicy(
+  IncidenceChanger2::DestinationPolicy destinationPolicy )
 {
   d->mDestinationPolicy = destinationPolicy;
 }

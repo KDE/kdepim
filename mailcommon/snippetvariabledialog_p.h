@@ -36,7 +36,8 @@ class SnippetVariableDialog : public KDialog
   public:
     SnippetVariableDialog( const QString &variableName, QMap<QString, QString> *variables, QWidget *parent = 0 );
 
-    QString variableValue() const;
+  QString variableValue() const;
+  bool saveVariableIsChecked() const;
 
   protected:
     virtual void slotButtonClicked( int button );

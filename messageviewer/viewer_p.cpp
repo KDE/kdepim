@@ -1102,7 +1102,11 @@ void ViewerPrivate::writeConfig( bool sync )
 
 
 void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                               const HeaderStrategy * strategy ) {
+                                               const HeaderStrategy * strategy , bool writeInConfigFile ) {
+
+  if ( mHeaderStyle == style && mHeaderStrategy == strategy )
+    return;
+  
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   if ( mHeaderOnlyAttachmentsAction ) {
@@ -1116,10 +1120,16 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
     }
   }
   update( Viewer::Force );
+  
+  if( !mExternalWindow && writeInConfigFile)
+    writeConfig();
+
 }
 
 
 void ViewerPrivate::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
+  if ( mAttachmentStrategy == strategy )
+    return;
   mAttachmentStrategy = strategy ? strategy : AttachmentStrategy::smart();
   update( Viewer::Force );
 }
@@ -1603,6 +1613,7 @@ void ViewerPrivate::createActions()
 
 void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
 {
+#ifndef QT_NO_TREEVIEW
   if ( !content )
     return;
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
@@ -1647,7 +1658,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( !content->isTopLevel() )
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
-#ifndef QT_NO_TREEVIEW
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
 #endif
 
@@ -1832,13 +1842,14 @@ void ViewerPrivate::update( MessageViewer::Viewer::UpdateMode updateMode )
 void ViewerPrivate::slotUrlOpen( const QUrl& url )
 {
   KUrl aUrl(url);
-  mClickedUrl = aUrl;
+  if( !url.isEmpty() )
+    mClickedUrl = aUrl;
 
   // First, let's see if the URL handler manager can handle the URL. If not, try KRun for some
   // known URLs, otherwise fallback to emitting a signal.
   // That signal is caught by KMail, and in case of mailto URLs, a composer is shown.
 
-  if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
+  if ( URLHandlerManager::instance()->handleClick( mClickedUrl, this ) )
     return;
 
   emit urlClicked( mMessageItem, mClickedUrl );
@@ -2063,53 +2074,43 @@ void ViewerPrivate::slotCycleHeaderStyles() {
 void ViewerPrivate::slotBriefHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
-                             HeaderStrategy::brief() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::brief(),true );
 }
 
 
 void ViewerPrivate::slotFancyHeaders()
 {
+
   setHeaderStyleAndStrategy( HeaderStyle::fancy(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(), true );
 }
 
 
 void ViewerPrivate::slotEnterpriseHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(),true );
 }
 
 
 void ViewerPrivate::slotStandardHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::standard());
-  writeConfig();
+                             HeaderStrategy::standard(), true);
 }
 
 
 void ViewerPrivate::slotLongHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(),true );
 }
 
 
 
 void ViewerPrivate::slotAllHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::all() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::all(), true );
 }
 
 
@@ -2488,7 +2489,7 @@ void ViewerPrivate::slotUrlCopy()
   QClipboard* clip = QApplication::clipboard();
   if ( mClickedUrl.protocol() == QLatin1String( "mailto" ) ) {
     // put the url into the mouse selection and the clipboard
-    QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
+    const QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
     clip->setText( address, QClipboard::Clipboard );
     clip->setText( address, QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));
@@ -2503,7 +2504,7 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessageItem.isValid() )
+  if( !mMessageItem.hasPayload<KMime::Message::Ptr>() )
     return;
   Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
 }
@@ -2790,7 +2791,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString &
 
 void ViewerPrivate::toggleFullAddressList( const QString &field )
 {
-  const bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
+  const bool doShow = ( field == QLatin1String( "To" ) && showFullToAddressList() ) || ( field == QLatin1String( "Cc" ) && showFullCcAddressList() );
   // First inject the correct icon
   if ( mViewer->replaceInnerHtml( "iconFull" + field + "AddressList",
                                   bind( &ViewerPrivate::recipientsQuickListLinkHtml, this, doShow, field ) ) )

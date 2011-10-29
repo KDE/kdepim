@@ -142,7 +142,7 @@ public:
   }
 };
 
-ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser *topLevelParser,
+ObjectTreeParser::  ObjectTreeParser( const ObjectTreeParser *topLevelParser,
                                     bool showOnlyOneMimePart,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy )
@@ -933,7 +933,8 @@ void ObjectTreeParser::writeCertificateImportResult( const GpgME::ImportResult &
       return;
     }
     htmlWriter()->queue( "<b>" + i18n( "Certificate import details:" ) + "</b><br/>" );
-    for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != imports.end() ; ++it ) {
+    std::vector<GpgME::Import>::const_iterator end( imports.end() );
+    for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != end ; ++it ) {
       if ( (*it).error() ) {
         htmlWriter()->queue( i18nc( "Certificate import failed.", "Failed: %1 (%2)", (*it).fingerprint(),
                                 QString::fromLocal8Bit( (*it).error().asString() ) ) );
@@ -1337,10 +1338,23 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
   return true;
 }
 
+void ObjectTreeParser::extractNodeInfos( KMime::Content *curNode, bool isFirstTextPart )
+{
+  mRawDecryptedBody = curNode->decodedContent();
+  if ( isFirstTextPart ) {
+    mPlainTextContent += curNode->decodedText();
+    mPlainTextContentCharset += NodeHelper::charset( curNode );
+  }
+}
+  
+
 bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, ProcessResult & result )
 {
   const bool isFirstTextPart = ( curNode->topLevel()->textContent() == curNode );
-  mRawDecryptedBody = curNode->decodedContent();
+
+  if ( !htmlWriter() ) {
+    extractNodeInfos( curNode, isFirstTextPart );
+  }
 
   if ( !isFirstTextPart && attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
        !showOnlyOneMimePart() )
@@ -2807,7 +2821,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
 
 QString ObjectTreeParser::writeSigstatFooter( PartMetaData& block )
 {
-  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
 
   QString htmlStr;
 
@@ -2842,7 +2856,7 @@ void ObjectTreeParser::writeAttachmentMarkHeader( KMime::Content *node )
   if ( !htmlWriter() )
     return;
 
-  htmlWriter()->queue( QString( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() ) );
+  htmlWriter()->queue( QString::fromLatin1( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -2879,7 +2893,7 @@ void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec
   bool isPgpMessage = false; // true if the message contains at least one
                               // PGP MESSAGE or one PGP SIGNED MESSAGE block
   const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  QString headerStr = QString("<div dir=\"%1\">").arg(dir);
+  QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
 
   inlineSignatureState  = KMMsgNotSigned;
   inlineEncryptionState = KMMsgNotEncrypted;
@@ -3002,7 +3016,7 @@ void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec
                 htmlStr += quotedHTML( text, decorate );
               }
               else {
-                htmlStr += QString( "<div align=\"center\">%1</div>" )
+                htmlStr += QString::fromLatin1( "<div align=\"center\">%1</div>" )
                             .arg( i18n( "The message could not be decrypted.") );
               }
               htmlStr += writeSigstatFooter( messagePart );
@@ -3147,7 +3161,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
             if ( !curHidden ) {
               //Expand all quotes
               htmlStr += "<div class=\"quotelevelmark\" >" ;
-              htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
+              htmlStr += QString::fromLatin1( "<a href=\"kmail:levelquote?%1 \">"
                                   "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
                   .arg(-1)
                   .arg( mExpandIcon );
@@ -3156,7 +3170,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
             }
           } else {
             htmlStr += "<div class=\"quotelevelmark\" >" ;
-            htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
+            htmlStr += QString::fromLatin1( "<a href=\"kmail:levelquote?%1 \">"
                                 "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
                 .arg(actQuoteLevel)
                 .arg( mCollapseIcon);
@@ -3188,9 +3202,9 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       {
           if ( startNewPara )
             paraIsRTL = line.isRightToLeft();
-          htmlStr += QString( "<div dir=\"%1\">" ).arg( paraIsRTL ? "rtl" : "ltr" );
+          htmlStr += QString::fromLatin1( "<div dir=\"%1\">" ).arg( paraIsRTL ? "rtl" : "ltr" );
           htmlStr += LinkLocator::convertToHtml( line, convertFlags );
-          htmlStr += QString( "</div>" );
+          htmlStr += QLatin1String( "</div>" );
           startNewPara = looksLikeParaBreak( s, pos );
       }
       else

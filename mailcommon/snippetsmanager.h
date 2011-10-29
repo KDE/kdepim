@@ -58,7 +58,7 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
      * @param actionCollection The action collection where the manager will register the snippet shortcuts at.
      * @param parent The parent object.
      */
-    explicit SnippetsManager( KActionCollection *actionCollection, QObject *parent = 0 );
+    explicit SnippetsManager( KActionCollection *actionCollection, QObject *parent = 0, QWidget *widget = 0 );
 
     /**
      * Destroys the snippets manager.
@@ -157,6 +157,7 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
     Q_PRIVATE_SLOT( d, void deleteSnippetGroup() )
     Q_PRIVATE_SLOT( d, void insertSelectedSnippet() )
     Q_PRIVATE_SLOT( d, void insertActionSnippet() )
+    Q_PRIVATE_SLOT( d, void dndDone() )
     //@endcond
 };
 

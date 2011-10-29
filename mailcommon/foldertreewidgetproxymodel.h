@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2011 Laurent Montel <montel@kde.org>
-
+    Copyright (c) 2009, 2010, 2011 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,27 +17,58 @@
     02110-1301, USA.
 */
 
-#ifndef FOLDERTREEWIDGETPROXYMODEL_H
-#define FOLDERTREEWIDGETPROXYMODEL_H
+#ifndef MAILCOMMON_FOLDERTREEWIDGETPROXYMODEL_H
+#define MAILCOMMON_FOLDERTREEWIDGETPROXYMODEL_H
 
-#include <krecursivefilterproxymodel.h>
-
+#include "akonadi/entityrightsfiltermodel.h"
+#include <akonadi/collection.h>
 
 namespace MailCommon {
-class FolderTreeWidgetProxyModel : public KRecursiveFilterProxyModel
+
+
+class FolderTreeWidgetProxyModel : public Akonadi::EntityRightsFilterModel
 {
   Q_OBJECT
+
 public:
-  explicit FolderTreeWidgetProxyModel( QObject* parent );
-  ~FolderTreeWidgetProxyModel();
+  enum FolderTreeWidgetProxyModelOption
+  {
+    None = 0,
+    HideVirtualFolder = 1,
+    HideSpecificFolder = 2,
+    HideOutboxFolder = 4
+  };
+  Q_DECLARE_FLAGS( FolderTreeWidgetProxyModelOptions, FolderTreeWidgetProxyModelOption )
+
+  explicit FolderTreeWidgetProxyModel( QObject *parent = 0, FolderTreeWidgetProxyModelOptions = FolderTreeWidgetProxyModel::None );
+
+  virtual ~FolderTreeWidgetProxyModel();
+
   virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
 
+  void setEnabledCheck( bool enable );
+  bool enabledCheck() const;
+
+  void setHideVirtualFolder( bool exclude );
+  bool hideVirtualFolder() const;
+
+
+  void setHideSpecificFolder( bool hide );
+  bool hideSpecificFolder() const;
+
+
+  void setHideOutboxFolder( bool hide );
+  bool hideOutboxFolder() const;
   void setFilterFolder( const QString& filter );
+  
+protected:
+  virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
+
 private:
-  QString m_filterStr;
+  class Private;
+  Private* const d;
 };
+
 }
 
-
-#endif /* FOLDERTREEWIDGETPROXYMODEL_H */
-
+#endif

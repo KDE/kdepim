@@ -1,7 +1,7 @@
 /*
-  Copyright (c) 2009 KDAB
-  Author: Sebastian Sauer <sebsauer@kdab.net>
-          Frank Osterfeld <frank@kdab.net>
+  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Sebastian Sauer <sebsauer@kdab.com>
+    Author: Frank Osterfeld <frank@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -741,7 +741,9 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
 
     Akonadi::Item journal( Akonadi::Item::Id id ) const;
 
-    KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to, bool excludeBlockedAlarms = false );
+    KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to,
+                                  bool excludeBlockedAlarms = false );
+
     KCalCore::Alarm::List alarmsTo( const KDateTime &to );
 
     Akonadi::Item findParent( const Akonadi::Item &item ) const;

@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   Based on old attendeeeditor.cpp:
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
@@ -196,10 +196,11 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
     }
   }
 
-  if ( mUi->mOrganizerStack->currentIndex() == 0 )
+  if ( mUi->mOrganizerStack->currentIndex() == 0 ) {
     incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
-  else
+  } else {
     incidence->setOrganizer( mUi->mOrganizerLabel->text() );
+  }
 }
 
 bool IncidenceAttendee::isDirty() const
@@ -255,9 +256,9 @@ void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
   mAttendeeEditor->clear();
 
   foreach ( const AttendeeData::Ptr &attendee, attendees ) {
-    if ( config->thatIsMe( attendee->email() ) )
+    if ( config->thatIsMe( attendee->email() ) ) {
       attendee->setStatus( stat );
-
+    }
     mAttendeeEditor->addAttendee( attendee );
   }
 

@@ -405,6 +405,8 @@ public:
   void parseObjectTree( KMime::Content * node );
 
 private:
+  void extractNodeInfos( KMime::Content *curNode, bool isFirstTextPart );
+
   /**
    * Does the actual work for parseObjectTree. Unlike parseObjectTree(), this does not change the
    * top-level content.

@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -105,7 +105,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool isDirty( const KCalCore::Journal::Ptr &journal ) const;
 
   protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter( QObject *obj, QEvent *event );
 
   private:
     void load( const KCalCore::Event::Ptr &event );

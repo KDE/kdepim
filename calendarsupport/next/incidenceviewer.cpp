@@ -1,7 +1,6 @@
 /*
-  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company
-
-  Author: Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Tobias Koenig <tokoe@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -68,7 +67,6 @@ void TextBrowser::setSource( const QUrl &name )
   }
 }
 
-
 class IncidenceViewer::Private
 {
   public:
@@ -119,7 +117,8 @@ class IncidenceViewer::Private
 
     void slotAttachmentUrlClicked( const QString &uri )
     {
-      const QString attachmentName = QString::fromUtf8( QByteArray::fromBase64( uri.mid( 7 ).toUtf8() ) );
+      const QString attachmentName =
+        QString::fromUtf8( QByteArray::fromBase64( uri.mid( 7 ).toUtf8() ) );
       mAttachmentHandler->view( attachmentName, CalendarSupport::incidence( mCurrentItem ) );
     }
 

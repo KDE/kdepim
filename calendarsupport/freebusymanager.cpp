@@ -1,9 +1,5 @@
 /*
-  Requires the Qt and KDE widget libraries, available at no cost at
-  http://www.trolltech.com and http://www.kde.org respectively
-
-  Copyright (c) 2002-2004 Klarävdalens Datakonsult AB
-        <info@klaralvdalens-datakonsult.se>
+  Copyright (c) 2011 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -113,17 +109,17 @@ bool fbExists( const KUrl &url )
 FreeBusyManagerPrivate::FreeBusyProviderRequest::FreeBusyProviderRequest( const QString &provider )
   : mRequestStatus( NotStarted ), mInterface( 0 )
 {
-  mInterface = QSharedPointer<QDBusInterface>(
-                  new QDBusInterface( "org.freedesktop.Akonadi.Resource." + provider,
-                                      "/FreeBusyProvider",
-                                      "org.freedesktop.Akonadi.Resource.FreeBusyProvider"
-                                    )
-                  );
+  mInterface =
+    QSharedPointer<QDBusInterface>(
+      new QDBusInterface( "org.freedesktop.Akonadi.Resource." + provider,
+                          "/FreeBusyProvider",
+                          "org.freedesktop.Akonadi.Resource.FreeBusyProvider" ) );
 }
 
 /// FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue
 
-FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue( const QString &start, const QString &end )
+FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue(
+  const QString &start, const QString &end )
   : mHandlersCount( 0 ), mResultingFreeBusy( 0 )
 {
   KDateTime startDate, endDate;
@@ -131,8 +127,7 @@ FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequest
   if ( !start.isEmpty() ) {
     mStartTime = start;
     startDate = KDateTime::fromString( start );
-  }
-  else {
+  } else {
     // Set the start of the period to today 00:00:00
     startDate = KDateTime( KDateTime::currentLocalDate() );
     mStartTime = startDate.toString();
@@ -141,8 +136,7 @@ FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequest
   if ( !end.isEmpty() ) {
     mEndTime = end;
     endDate = KDateTime::fromString( end );
-  }
-  else {
+  } else {
     // Set the end of the period to today + 14 days.
     endDate = KDateTime( KDateTime::currentLocalDate() ).addDays( 14 );
     mEndTime = endDate.toString();
@@ -151,7 +145,8 @@ FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequest
   mResultingFreeBusy = KCalCore::FreeBusy::Ptr( new KCalCore::FreeBusy( startDate, endDate ) );
 }
 
-FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue( const KDateTime &start, const KDateTime &end )
+FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequestsQueue(
+  const KDateTime &start, const KDateTime &end )
   : mHandlersCount( 0 ), mResultingFreeBusy( 0 )
  {
    mStartTime = start.toString();
@@ -217,7 +212,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
 
   if ( _job->error() ) {
     kError() << "Error while searching for contact: "
-             << _job->errorString() << " ;email = " << email;
+             << _job->errorString() << " ,email = " << email;
     emit freeBusyUrlRetrieved( email, KUrl() );
     return;
   }
@@ -449,10 +444,11 @@ void FreeBusyManagerPrivate::processRetrieveQueue()
 
   // If some free-busy providers were found let's query them first and ask them
   // if they manage the free-busy information for the email address we have.
-  if ( !providers.isEmpty() )
+  if ( !providers.isEmpty() ) {
     queryFreeBusyProviders( providers, email );
-  else
+  } else {
     fetchFreeBusyUrl( email );
+  }
 
   return;
 }
@@ -535,16 +531,19 @@ QStringList FreeBusyManagerPrivate::getFreeBusyProviders() const
   QStringList providers;
   Akonadi::AgentInstance::List agents = Akonadi::AgentManager::self()->instances();
   foreach ( const Akonadi::AgentInstance &agent, agents ) {
-    if ( agent.type().capabilities().contains( QLatin1String( "FreeBusyProvider" ) ) )
+    if ( agent.type().capabilities().contains( QLatin1String( "FreeBusyProvider" ) ) ) {
       providers << agent.identifier();
+    }
   }
   return providers;
 }
 
-void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &providers, const QString &email )
+void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &providers,
+                                                     const QString &email )
 {
-  if ( !mProvidersRequestsByEmail.contains( email ) )
+  if ( !mProvidersRequestsByEmail.contains( email ) ) {
     mProvidersRequestsByEmail[email] = FreeBusyProvidersRequestsQueue();
+  }
 
   foreach ( const QString &provider, providers ) {
     FreeBusyProviderRequest request( provider );
@@ -558,23 +557,28 @@ void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &provider
   }
 }
 
-void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &providers, const QString &email,
-                                                     const KDateTime &start, const KDateTime &end )
+void FreeBusyManagerPrivate::queryFreeBusyProviders( const QStringList &providers,
+                                                     const QString &email,
+                                                     const KDateTime &start,
+                                                     const KDateTime &end )
 {
-  if ( !mProvidersRequestsByEmail.contains( email ) )
+  if ( !mProvidersRequestsByEmail.contains( email ) ) {
     mProvidersRequestsByEmail[email] = FreeBusyProvidersRequestsQueue( start, end );
+  }
 
   queryFreeBusyProviders( providers, email );
 }
 
-void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handles )
+void FreeBusyManagerPrivate::onHandlesFreeBusy( const QString &email, bool handles )
 {
-  if ( !mProvidersRequestsByEmail.contains( email ) )
+  if ( !mProvidersRequestsByEmail.contains( email ) ) {
     return;
+  }
 
   QDBusInterface *iface = dynamic_cast<QDBusInterface*>( sender() );
-  if ( !iface )
+  if ( !iface ) {
     return;
+  }
 
   FreeBusyProvidersRequestsQueue *queue = &mProvidersRequestsByEmail[email];
   QString respondingService = iface->service();
@@ -582,15 +586,17 @@ void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handle
   int requestIndex = -1;
 
   for ( int i = 0; i < queue->mRequests.size(); ++i ) {
-    if ( queue->mRequests.at( i ).mInterface->service() == respondingService )
+    if ( queue->mRequests.at( i ).mInterface->service() == respondingService ) {
       requestIndex = i;
+    }
   }
 
-  if ( requestIndex == -1 )
+  if ( requestIndex == -1 ) {
     return;
+  }
 
   disconnect( iface, SIGNAL(handlesFreeBusy(QString,bool)),
-           this, SLOT(onHandlesFreeBusy(QString,bool)) );
+              this, SLOT(onHandlesFreeBusy(QString,bool)) );
 
   if ( !handles ) {
     queue->mRequests.removeAt( requestIndex );
@@ -600,8 +606,7 @@ void FreeBusyManagerPrivate::onHandlesFreeBusy(const QString& email, bool handle
       mProvidersRequestsByEmail.remove( email );
       fetchFreeBusyUrl( email );
     }
-  }
-  else {
+  } else {
     ++queue->mHandlersCount;
     connect( iface, SIGNAL(freeBusyRetrieved(QString,QString,bool,QString)),
              this, SLOT(onFreeBusyRetrieved(QString,QString,bool,QString)) );
@@ -618,24 +623,28 @@ void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
   Q_Q( FreeBusyManager );
   Q_UNUSED( errorText );
 
-  if ( !mProvidersRequestsByEmail.contains( email ) )
+  if ( !mProvidersRequestsByEmail.contains( email ) ) {
     return;
+  }
 
   QDBusInterface *iface = dynamic_cast<QDBusInterface*>( sender() );
-  if ( !iface )
+  if ( !iface ) {
     return;
+  }
 
   FreeBusyProvidersRequestsQueue *queue = &mProvidersRequestsByEmail[email];
   QString respondingService = iface->service();
   int requestIndex = -1;
 
   for ( int i = 0; i < queue->mRequests.size(); ++i ) {
-    if ( queue->mRequests.at( i ).mInterface->service() == respondingService )
+    if ( queue->mRequests.at( i ).mInterface->service() == respondingService ) {
       requestIndex = i;
+    }
   }
 
-  if ( requestIndex == -1 )
+  if ( requestIndex == -1 ) {
     return;
+  }
 
   disconnect( iface, SIGNAL(freeBusyRetrieved(QString,QString,bool,QString)),
               this, SLOT(onFreeBusyRetrieved(QString,QString,bool,QString)) );
@@ -644,18 +653,19 @@ void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
 
   if ( success ) {
     KCalCore::FreeBusy::Ptr fb = iCalToFreeBusy( freeBusy.toUtf8() );
-    if ( !fb )
+    if ( !fb ) {
       --queue->mHandlersCount;
-    else
+    } else {
       queue->mResultingFreeBusy->merge( fb );
+    }
   }
 
   if ( queue->mRequests.isEmpty() ) {
-    if ( queue->mHandlersCount == 0 )
+    if ( queue->mHandlersCount == 0 ) {
       fetchFreeBusyUrl( email );
-    else
+    } else {
       emit q->freeBusyRetrieved( queue->mResultingFreeBusy, email );
-
+    }
     mProvidersRequestsByEmail.remove( email );
   }
 }
@@ -837,7 +847,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
   }
 }
 
-void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget* parentWidget)
+void FreeBusyManager::mailFreeBusy( int daysToPublish, QWidget *parentWidget )
 {
    Q_D( FreeBusyManager );
  // No calendar set yet?
@@ -850,13 +860,14 @@ void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget* parentWidget)
 
   Event::List events;
   Akonadi::Item::List items = d->mCalendar->rawEvents( start.date(), end.date() );
-  foreach(const Akonadi::Item &item, items) { //FIXME
+  foreach ( const Akonadi::Item &item, items ) { //FIXME
     events << item.payload<Event::Ptr>();
   }
 
   FreeBusy::Ptr freebusy( new FreeBusy( events, start, end ) );
-  freebusy->setOrganizer( Person::Ptr( new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                                   CalendarSupport::KCalPrefs::instance()->email() ) ) );
+  freebusy->setOrganizer( Person::Ptr(
+                            new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
 
   QPointer<PublishDialog> publishdlg = new PublishDialog();
   if ( publishdlg->exec() == QDialog::Accepted ) {
@@ -876,7 +887,6 @@ void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget* parentWidget)
   }
   delete publishdlg;
 }
-
 
 bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload,
                                         QWidget *parentWidget )

@@ -70,6 +70,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void selectFirstItem();
 
     void setSimpleGuiMode( bool on );
+    void setQRCodeShow( bool on );
 
     void restoreState();
     void saveState();
@@ -77,6 +78,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
   private:
     void setupGui();
     void setupActions( KActionCollection* );
+    bool showQRCodes();
 
     QAbstractItemModel* allContactsModel();
 

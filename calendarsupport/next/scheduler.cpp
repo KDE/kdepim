@@ -1,6 +1,4 @@
 /*
-  This file is part of the kcalutils library.
-
   Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
@@ -38,22 +36,24 @@ using namespace CalendarSupport;
 Scheduler::Private::Private( Scheduler *qq,
                              const CalendarSupport::NepomukCalendar::Ptr &calendar,
                              IncidenceChanger2 *changer )
-      : mFreeBusyCache( 0 ), mChanger( changer ), mCalendar( calendar ),
-        mFormat( new ICalFormat() ), mLatestCallId( 0 ), q( qq )
-    {
-      qRegisterMetaType<CalendarSupport::Scheduler::ResultCode>(
-        "CalendarSupport::Scheduler::ResultCode" );
+  : mFreeBusyCache( 0 ), mChanger( changer ), mCalendar( calendar ),
+    mFormat( new ICalFormat() ), mLatestCallId( 0 ), q( qq )
+{
+  qRegisterMetaType<CalendarSupport::Scheduler::ResultCode>(
+    "CalendarSupport::Scheduler::ResultCode" );
 
-      connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-               SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( mChanger,
+           SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-      connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-               SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( mChanger,
+           SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-      connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-               SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
-    }
-
+  connect( mChanger,
+           SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+}
 
 Scheduler::Private::~Private()
 {
@@ -117,7 +117,9 @@ void Scheduler::Private::operationFinished( int changeId,
 
   if ( mCallIdByChangeId.contains( changeId ) ) {
     const CallId callId = mCallIdByChangeId[changeId];
-    const ResultCode result = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess : errorCode;
+    const ResultCode result = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ?
+                                ResultCodeSuccess :
+                                errorCode;
 
     q->emitOperationFinished( callId, result, errorMessage );
     q->deleteTransaction( item.payload<Incidence::Ptr>()->uid() );
@@ -231,7 +233,7 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
 
               if ( changeId >= 0 ) {
                 d->mCallIdByChangeId.insert( changeId, callId );
-                emitResult = false; // will be emited in the job result's slot.
+                emitResult = false; // will be emitted in the job result's slot.
               } else {
                 resultCode = ResultCodeErrorUpdatingIncidence;
                 errorMessage = QLatin1String( "Error while trying to update the incidence" );
@@ -328,7 +330,8 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
         if( (*ait)->email() == email && (*ait)->status() == Attendee::NeedsAction ) {
           // This incidence wasn't created by me - it's probably in a shared folder
           // and meant for someone else, ignore it.
-          kDebug() << "ignoring " << existingIncidence->uid() << " since I'm still NeedsAction there";
+          kDebug() << "ignoring "
+                   << existingIncidence->uid() << " since I'm still NeedsAction there";
           isUpdate = false;
           break;
         }
@@ -338,7 +341,8 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
              existingIncidence->lastModified() > inc->lastModified() ) {
           // This isn't an update - the found incidence was modified more recently
           deleteTransaction( existingIncidence->uid() );
-          errorMessage = QLatin1String( "This isn't an update - the found incidence was modified more recently" );
+          errorMessage = QLatin1String( "This isn't an update - "
+                                        "the found incidence was modified more recently" );
           kDebug() << errorMessage;
           emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
 
@@ -364,7 +368,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 
             if ( changeId >= 0 ) {
               d->mCallIdByChangeId.insert( changeId, callId );
-              emitResult = false; // will be emited in the job result's slot.
+              emitResult = false; // will be emitted in the job result's slot.
             } else {
               resultCode = ResultCodeErrorUpdatingIncidence;
               errorMessage = QLatin1String( "Error while trying to update the incidence" );
@@ -386,7 +390,8 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 
       deleteTransaction( incidence->uid() );
 
-      errorMessage = QLatin1String( "This isn't an update - the found incidence has a bigger revision number" );
+      errorMessage = QLatin1String( "This isn't an update - "
+                                    "the found incidence has a bigger revision number" );
       kDebug() << errorMessage;
       emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
 
@@ -427,7 +432,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 }
 
 CallId Scheduler::acceptAdd( const IncidenceBase::Ptr &incidence,
-                             ScheduleMessage::Status /* status */ )
+                             ScheduleMessage::Status/* status */ )
 {
   deleteTransaction( incidence->uid() );
   return -1;
@@ -509,7 +514,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
         if ( changeId >= 0 ) {
           d->mCallIdByChangeId.insert( changeId, callId );
           d->mDeletedIncidenceByChangeId.insert( changeId, i );
-          emitResult = false; // will be emited in the job result's slot.
+          emitResult = false; // will be emitted in the job result's slot.
         } else {
           resultCode = ResultCodeErrorDeletingIncidence;
           errorMessage = QLatin1String( "Error while trying to delete the incidence" );
@@ -787,7 +792,6 @@ IncidenceChanger2 * Scheduler::changer() const
 {
   return d->mChanger;
 }
-
 
 // This signal is delayed because it can't be emitted before "return callId",
 // otherwise the caller would not know the callId that was being sent in the signal

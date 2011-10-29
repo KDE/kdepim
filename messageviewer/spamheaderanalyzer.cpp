@@ -66,7 +66,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
     if ( !header )
       continue;
 
-    QString mField = header->asUnicodeString();
+    const QString mField = header->asUnicodeString();
 
     if ( mField.isEmpty() )
       continue;

@@ -64,13 +64,19 @@ namespace TemplateParser {
 
 static const int PipeTimeout = 15 * 1000;
 
-QByteArray selectCharset( const QStringList &charsets, const QString &text )
+QTextCodec* selectCharset( const QStringList &charsets, const QString &text )
 {
   foreach( const QString &name, charsets ) {
     // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
     // the former knows us-ascii is latin1.
-    QTextCodec *codec = KGlobal::charsets()->codecForName( name );
-    if( !codec ) {
+    bool ok = true;
+    QTextCodec *codec;
+    if ( name == QLatin1String( "locale" ) ) {
+      codec = QTextCodec::codecForLocale();
+    } else {
+      codec = KGlobal::charsets()->codecForName( name, ok );
+    }
+    if( !ok || !codec ) {
       kWarning() << "Could not get text codec for charset" << name;
       continue;
     }
@@ -79,12 +85,12 @@ QByteArray selectCharset( const QStringList &charsets, const QString &text )
       if( name == QLatin1String( "us-ascii" ) && !KMime::isUsAscii( text ) ) {
         continue;
       }
-      kDebug() << "Chosen charset" << name;
-      return name.toLatin1();
+      kDebug() << "Chosen charset" << name << codec->name();
+      return codec;
     }
   }
   kDebug() << "No appropriate charset found.";
-  return "utf-8";
+  return KGlobal::charsets()->codecForName( "utf-8" );
 }
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
@@ -200,7 +206,8 @@ QString TemplateParser::getFName( const QString &str )
   } else if ( ( sep_pos = str.indexOf(',') ) > 0 ) {
     int i;
     bool begin = false;
-    for ( i = sep_pos; i < str.length(); ++i ) {
+    const int strLength( str.length() );
+    for ( i = sep_pos; i < strLength; ++i ) {
       QChar c = str[i];
       if ( c.isLetterOrNumber() ) {
         begin = true;
@@ -1219,8 +1226,8 @@ KMime::Content* TemplateParser::createPlainPartContent( const QString& plainBody
     KMime::Content *textPart = new KMime::Content( mMsg.get() );
     textPart->contentType()->setMimeType( "text/plain" );
     textPart->fromUnicodeString( plainBody );
-    QByteArray charset = selectCharset( m_charsets, plainBody );
-    textPart->contentType()->setCharset( charset );
+    QTextCodec* charset = selectCharset( m_charsets, plainBody );
+    textPart->contentType()->setCharset( charset->name() );
     textPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );//FIXME doesn't work
     return textPart;
 }
@@ -1237,8 +1244,8 @@ KMime::Content* TemplateParser::createMultipartAlternativeContent( const QString
 
   KMime::Content *htmlPart = new KMime::Content( mMsg.get() );
   htmlPart->contentType()->setMimeType( "text/html" );
-  QByteArray charset = selectCharset( m_charsets, htmlBody );
-  htmlPart->contentType()->setCharset( charset );
+  QTextCodec* charset = selectCharset( m_charsets, htmlBody );
+  htmlPart->contentType()->setCharset( charset->name() );
   htmlPart->fromUnicodeString( htmlBody );
   htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit ); //FIXME doesn't work
   multipartAlternative->addContent( htmlPart );
@@ -1306,7 +1313,7 @@ QString TemplateParser::findTemplate()
         break;
       default:
         kDebug() << "Unknown message mode:" << mMode;
-        return "";
+        return QString();
       }
       mQuoteString = fconf.quoteString();
       if ( !tmpl.isEmpty() ) {
@@ -1355,7 +1362,7 @@ QString TemplateParser::findTemplate()
       break;
     default:
       kDebug() << "Unknown message mode:" << mMode;
-      return "";
+      return QString();
     }
     mQuoteString = iconf.quoteString();
     if ( !tmpl.isEmpty() ) {
@@ -1379,7 +1386,7 @@ QString TemplateParser::findTemplate()
     break;
   default:
     kDebug() << "Unknown message mode:" << mMode;
-    return "";
+    return QString();
   }
 
   mQuoteString = DefaultTemplates::defaultQuoteString();

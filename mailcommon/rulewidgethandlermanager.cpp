@@ -46,7 +46,6 @@
 #include <kicon.h>
 
 #include <QStackedWidget>
-#include <QString>
 #include <QLineEdit>
 #include <QObject>
 
@@ -290,7 +289,10 @@ void MailCommon::RuleWidgetHandlerManager::createWidgets( QStackedWidget *functi
                                                      QStackedWidget *valueStack,
                                                      const QObject *receiver ) const
 {
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+
+
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     QWidget *w = 0;
     for ( int i = 0;
           ( w = (*it)->createFunctionWidget( i, functionStack, receiver ) );
@@ -322,7 +324,8 @@ void MailCommon::RuleWidgetHandlerManager::createWidgets( QStackedWidget *functi
 SearchRule::Function MailCommon::RuleWidgetHandlerManager::function( const QByteArray& field,
                                                                   const QStackedWidget *functionStack ) const
 {
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     const SearchRule::Function func = (*it)->function( field,
                                                          functionStack );
     if ( func != SearchRule::FuncNone )
@@ -335,7 +338,8 @@ QString MailCommon::RuleWidgetHandlerManager::value( const QByteArray& field,
                                                 const QStackedWidget *functionStack,
                                                 const QStackedWidget *valueStack ) const
 {
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     const QString val = (*it)->value( field, functionStack, valueStack );
     if ( !val.isEmpty() )
       return val;
@@ -347,7 +351,8 @@ QString MailCommon::RuleWidgetHandlerManager::prettyValue( const QByteArray& fie
                                                       const QStackedWidget *functionStack,
                                                       const QStackedWidget *valueStack ) const
 {
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     const QString val = (*it)->prettyValue( field, functionStack, valueStack );
     if ( !val.isEmpty() )
       return val;
@@ -358,7 +363,8 @@ QString MailCommon::RuleWidgetHandlerManager::prettyValue( const QByteArray& fie
 void MailCommon::RuleWidgetHandlerManager::reset( QStackedWidget *functionStack,
                                              QStackedWidget *valueStack ) const
 {
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     (*it)->reset( functionStack, valueStack );
   }
   update( "", functionStack, valueStack );
@@ -370,7 +376,8 @@ void MailCommon::RuleWidgetHandlerManager::setRule( QStackedWidget *functionStac
 {
   assert( rule );
   reset( functionStack, valueStack );
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     if ( (*it)->setRule( functionStack, valueStack, rule ) )
       return;
   }
@@ -380,7 +387,8 @@ void MailCommon::RuleWidgetHandlerManager::update( const QByteArray &field,
                                               QStackedWidget *functionStack,
                                               QStackedWidget *valueStack ) const
 {
-  for ( const_iterator it = mHandlers.begin(); it != mHandlers.end(); ++it ) {
+  const_iterator end( mHandlers.constEnd() );
+  for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
     if ( (*it)->update( field, functionStack, valueStack ) ) {
       return;
     }
@@ -671,7 +679,8 @@ namespace {
               valueStack->findChild<MinimumComboBox*>( "categoryCombo" );
 
       combo->blockSignals( true );
-      for ( i = 0; i < combo->count(); ++i )
+      const int numberOfElement( combo->count() );
+      for ( i = 0; i < numberOfElement; ++i )
         if ( rule->contents() == combo->itemText( i ) ) {
           combo->setCurrentIndex( i );
           break;

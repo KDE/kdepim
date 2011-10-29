@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -404,7 +404,7 @@ void VisualFreeBusyWidget::slotScaleChanged( int newScale )
 
   int value = var.value<int>();
 
-  mGanttGrid->setScale( (KDGantt::DateTimeGrid::Scale)value );
+  mGanttGrid->setScale( ( KDGantt::DateTimeGrid::Scale )value );
 }
 
 void VisualFreeBusyWidget::slotUpdateIncidenceStartEnd( const KDateTime &dtFrom,

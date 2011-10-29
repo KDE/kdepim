@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -104,7 +104,8 @@ QString proposalComment( const KCalCore::Incidence::Ptr &incidence )
 
 InvitationHandler::Private::Private( CalendarSupport::Calendar *cal )
   : mCalendar( cal ), mDefaultAction( InvitationHandler::ActionAsk ), mParent( 0 )
-{ }
+{
+}
 
 int InvitationHandler::Private::askUserIfNeeded( const QString &question,
                                                  bool ignoreDefaultAction,
@@ -113,8 +114,12 @@ int InvitationHandler::Private::askUserIfNeeded( const QString &question,
 {
   Q_ASSERT_X( !question.isEmpty(), "InvitationHandler::askUser", "ask what?" );
 
-  if ( ignoreDefaultAction || mDefaultAction == InvitationHandler::ActionAsk )
-    return KMessageBox::questionYesNo( mParent, question, i18n( "Group Scheduling Email" ), buttonYes, buttonNo );
+  if ( ignoreDefaultAction || mDefaultAction == InvitationHandler::ActionAsk ) {
+    return KMessageBox::questionYesNo( mParent,
+                                       question,
+                                       i18n( "Group Scheduling Email" ),
+                                       buttonYes, buttonNo );
+  }
 
   switch ( mDefaultAction ) {
   case InvitationHandler::ActionSendMessage:
@@ -182,8 +187,10 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence:
 {
   if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence."
-             << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+             << "; email= "
+             << incidence->organizer()->email()
+             << "; thatIsMe() = "
+             << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return false;
   }
@@ -308,8 +315,10 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
 
   if ( !d->weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence!"
-             << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+             << "; email= "
+             << incidence->organizer()->email()
+             << "; thatIsMe() = "
+             << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return InvitationHandler::ResultFailAbortUpdate;
   }
@@ -336,31 +345,33 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
   return d->sentInvitation( messageBoxReturnCode, incidence, method );
 }
 
-bool InvitationHandler::handleIncidenceAboutToBeModified( const KCalCore::Incidence::Ptr &incidence )
+bool InvitationHandler::handleIncidenceAboutToBeModified(
+  const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
   if ( !d->weAreOrganizerOf( incidence ) ) {
     switch( incidence->type() ) {
-      case KCalCore::Incidence::TypeEvent:
-      {
-        const QString question =
-          i18n( "You are not the organizer of this event. Editing it will "
-                "bring your calendar out of sync with the organizer's calendar. "
-                "Do you really want to edit it?" );
-        const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
-        return messageBoxReturnCode != KMessageBox::No;
-      }
-        break;
-      case KCalCore::Incidence::TypeJournal:
-      case KCalCore::Incidence::TypeTodo:
-        // Not sure why we handle to-dos differently regarding this
-        return true;
-        break;
-      default:
-        kError() << "Unknown incidence type: " << incidence->type() << incidence->typeStr();
-        Q_ASSERT_X( false, "InvitationHandler::handleIncidenceAboutToBeModified()",
-                           "Unknown incidence type" );
-        return false;
+    case KCalCore::Incidence::TypeEvent:
+    {
+      const QString question =
+        i18n( "You are not the organizer of this event. Editing it will "
+              "bring your calendar out of sync with the organizer's calendar. "
+              "Do you really want to edit it?" );
+      const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
+      return messageBoxReturnCode != KMessageBox::No;
+    }
+    break;
+
+    case KCalCore::Incidence::TypeJournal:
+    case KCalCore::Incidence::TypeTodo:
+      // Not sure why we handle to-dos differently regarding this
+      return true;
+      break;
+    default:
+      kError() << "Unknown incidence type: " << incidence->type() << incidence->typeStr();
+      Q_ASSERT_X( false, "InvitationHandler::handleIncidenceAboutToBeModified()",
+                  "Unknown incidence type" );
+      return false;
     }
   } else {
     return true;
@@ -379,7 +390,8 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
                                      "Do you want to email the attendees an update message?",
                                incidence->summary() );
 
-      const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+      const int messageBoxReturnCode = d->askUserIfNeeded( question, false,
+                                                           KGuiItem( i18n( "Send Update" ) ) );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
     } else {
@@ -395,7 +407,8 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
 
     const QString question = i18n( "Do you want to send a status update to the "
                                    "organizer of this task?" );
-    const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+    const int messageBoxReturnCode = d->askUserIfNeeded( question, false,
+                                                         KGuiItem( i18n( "Send Update" ) ) );
     return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
@@ -404,7 +417,8 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
       const QString question =
         i18n( "Your status as an attendee of this event changed. "
               "Do you want to send a status update to the event organizer?" );
-      const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+      const int messageBoxReturnCode = d->askUserIfNeeded( question, false,
+                                                           KGuiItem( i18n( "Send Update" ) ) );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       return d->sentInvitation( KMessageBox::Yes, incidence, method );
@@ -443,7 +457,7 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
       return ResultNoSendingNeeded;
     }
 
-  } else if ( incidence->type() != KCalCore::Incidence::TypeEvent  ) {
+  } else if ( incidence->type() != KCalCore::Incidence::TypeEvent ) {
 
     if ( method == KCalCore::iTIPRequest ) {
       // This is an update to be sent to the organizer
@@ -456,7 +470,9 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                                      i18n( "Do you want to send a status update to the "
                                            "organizer of this journal?" );
 
-    const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+    const int messageBoxReturnCode = d->askUserIfNeeded( question, false,
+                                                         KGuiItem( i18n( "Send Update" ) ) );
+
     return d->sentInvitation( messageBoxReturnCode, incidence, method );
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
 
@@ -476,7 +492,8 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
       QString question = i18n( "You had previously accepted an invitation to this event. "
                                "Do you want to send an updated response to the organizer "
                                "declining the invitation?" );
-      int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+      int messageBoxReturnCode = d->askUserIfNeeded( question, false,
+                                                     KGuiItem( i18n( "Send Update" ) ) );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       // We did not accept the event before and delete it from our calendar agian,

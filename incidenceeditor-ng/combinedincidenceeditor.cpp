@@ -100,8 +100,8 @@ void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
 
     if ( editor->isDirty() ) {
       // We are going to crash due to assert. Print some useful info before crashing.
-      kDebug() << "Faulty editor was " << editor->objectName();
-      kDebug() << "Incidence " << incidence;
+      kWarning() << "Faulty editor was " << editor->objectName();
+      kWarning() << "Incidence " << incidence;
 
       editor->printDebugInfo();
 

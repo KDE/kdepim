@@ -19,10 +19,9 @@
 #include "foldertreewidget.h"
 #include "foldertreeview.h"
 #include "imapaclattribute.h"
-#include "readablecollectionproxymodel.h"
+#include "foldertreewidgetproxymodel.h"
 #include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
-#include "foldertreewidgetproxymodel.h"
 
 #include "messageviewer/globalsettings.h"
 #include "messagecore/globalsettings.h"
@@ -57,7 +56,6 @@ public:
      folderTreeView( 0 ),
      quotaModel( 0 ),
      readableproxy( 0 ),
-     filterTreeViewModel( 0 ),
      entityOrderProxy( 0 ),
      filterFolderLineEdit( 0 ),
      saver( 0 ),
@@ -70,8 +68,7 @@ public:
   Akonadi::StatisticsProxyModel *filterModel;
   FolderTreeView *folderTreeView;
   Akonadi::QuotaColorProxyModel *quotaModel;
-  ReadableCollectionProxyModel *readableproxy;
-  FolderTreeWidgetProxyModel *filterTreeViewModel;
+  FolderTreeWidgetProxyModel *readableproxy;
   EntityCollectionOrderProxyModel *entityOrderProxy;
   KLineEdit *filterFolderLineEdit;
   QPointer<Akonadi::ETMViewStateSaver> saver;
@@ -82,7 +79,7 @@ public:
 };
 
 
-FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
+FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
   Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
@@ -115,7 +112,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
   d->quotaModel->setSourceModel( d->filterModel );
 
-  d->readableproxy = new ReadableCollectionProxyModel( this, optReadableProxy );
+  d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->quotaModel );
 
 
@@ -126,17 +123,10 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->folderTreeView->installEventFilter( this );
 
-  // Use the model
-
-  //Filter tree view.
-  d->filterTreeViewModel = new FolderTreeWidgetProxyModel( this );
-  d->filterTreeViewModel->setDynamicSortFilter( true );
-  d->filterTreeViewModel->setSourceModel( d->readableproxy );
-  d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
-
+  
   //Order proxy
   d->entityOrderProxy = new EntityCollectionOrderProxyModel( this );
-  d->entityOrderProxy->setSourceModel( d->filterTreeViewModel );
+  d->entityOrderProxy->setSourceModel( d->readableproxy );
   KConfigGroup grp( KernelIf->config(), "CollectionTreeOrder" );
   d->entityOrderProxy->setOrderConfig( grp );
   d->folderTreeView->setModel( d->entityOrderProxy );
@@ -189,7 +179,7 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
 
   }
   d->oldFilterStr = text;
-  d->filterTreeViewModel->setFilterFixedString( text );
+  d->readableproxy->setFilterFolder( text );
 }
   
 void FolderTreeWidget::disableContextMenuAndExtraColumn()
@@ -335,7 +325,7 @@ Akonadi::StatisticsProxyModel * FolderTreeWidget::statisticsProxyModel() const
   return d->filterModel;
 }
 
-ReadableCollectionProxyModel *FolderTreeWidget::readableCollectionProxyModel() const
+FolderTreeWidgetProxyModel *FolderTreeWidget::folderTreeWidgetProxyModel() const
 {
   return d->readableproxy;
 }
@@ -354,7 +344,7 @@ void FolderTreeWidget::applyFilter( const QString &filter )
 {
   d->label->setText( filter.isEmpty() ? i18n( "You can start typing to filter the list of folders." )
                                       : i18n( "Path: (%1)", filter ) );
-  d->filterTreeViewModel->setFilterFolder( filter );
+  d->readableproxy->setFilterFolder( filter );
   d->folderTreeView->expandAll();
 }
 
@@ -382,10 +372,13 @@ bool FolderTreeWidget::eventFilter( QObject* o, QEvent *e )
     switch( ke->key() )
     {
       case Qt::Key_Backspace:
-        if ( d->filter.length() > 0 )
-          d->filter.truncate( d->filter.length()-1 );
+        {
+        const int filterLength(d->filter.length() ); 
+        if ( filterLength > 0 )
+          d->filter.truncate( filterLength-1 );
         applyFilter( d->filter );
         return false;
+        }
         break;
       case Qt::Key_Delete:
         d->filter.clear();

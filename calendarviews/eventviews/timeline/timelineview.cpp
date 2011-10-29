@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarViews.
-
   Copyright (c) 2007 Till Adam <adam@kde.org>
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
@@ -25,8 +23,8 @@
 */
 
 #include "timelineview.h"
-#include "timelineitem.h"
 #include "timelineview_p.h"
+#include "timelineitem.h"
 #include "helper.h"
 
 #include <kdgantt2/kdganttgraphicsitem.h>

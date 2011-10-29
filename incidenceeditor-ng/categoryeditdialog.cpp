@@ -1,6 +1,4 @@
 /*
-  This file is part of libkdepim.
-
   Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>

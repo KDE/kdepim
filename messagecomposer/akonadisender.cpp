@@ -35,6 +35,7 @@
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecore/stringutil.h>
+#include <messagecore/messagehelpers.h>
 
 using namespace KMime;
 using namespace KMime::Types;
@@ -45,7 +46,7 @@ using namespace MailTransport;
 static QStringList addrSpecListToStringList( const AddrSpecList &l, bool allowEmpty = false )
 {
   QStringList result;
-  for ( AddrSpecList::const_iterator it = l.begin(), end = l.end() ; it != end ; ++it ) {
+  for ( AddrSpecList::const_iterator it = l.constBegin(), end = l.constEnd() ; it != end ; ++it ) {
     const QString s = (*it).asString();
     if ( allowEmpty || !s.isEmpty() )
       result.push_back( s );
@@ -150,6 +151,20 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->addressAttribute().setCc( cc );
   qjob->addressAttribute().setBcc( bcc );
 
+  QList<Akonadi::Item::Id> originalMessageId;
+  QList<Akonadi::MessageStatus> linkStatus;
+  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
+    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
+    {
+      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+      }
+    }
+  }
+
+  
   MessageCore::StringUtil::removePrivateHeaderFields( message );
   message->assemble();
 

@@ -25,7 +25,6 @@
 */
 
 #include "eventview_p.h"
-
 #include "prefs.h"
 
 #include <calendarsupport/calendar.h>
@@ -35,21 +34,23 @@
 #include <calendarsupport/utils.h>
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
+using namespace Future;
+
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/ETMViewStateSaver>
 
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
 
 #include <KCalUtils/RecurrenceActions>
-#include <Akonadi/EntityDisplayAttribute>
-
-#include <akonadi/etmviewstatesaver.h>
 
 #include <KHolidays/Holidays>
+
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 #include <KGuiItem>
 #include <KGlobal>
 #include <KLocale>
-#include <kcheckableproxymodel.h>
-#include <kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -58,7 +59,6 @@
 using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
-using namespace Future;
 
 static const KCatalogLoader loader( "libeventviews" );
 

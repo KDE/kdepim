@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -22,8 +20,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef ARCHIVEDIALOG_H
-#define ARCHIVEDIALOG_H
+#ifndef CALENDARSUPPORT_ARCHIVEDIALOG_H
+#define CALENDARSUPPORT_ARCHIVEDIALOG_H
 
 #include "calendarsupport_export.h"
 #include "incidencechanger.h"

@@ -33,6 +33,7 @@
 #include <Nepomuk/Tag>
 #include <Nepomuk/Variant>
 #include <nepomuk/nmo.h>
+#include <nepomuk/resourcemanager.h>
 
 #include <KIconLoader>
 
@@ -127,17 +128,14 @@ void MessageItem::Tag::setPriority( int priority )
 }
 
 
-QColor MessageItemPrivate::mColorNewMessage;
 QColor MessageItemPrivate::mColorUnreadMessage;
 QColor MessageItemPrivate::mColorImportantMessage;
 QColor MessageItemPrivate::mColorToDoMessage;
 QFont MessageItemPrivate::mFont;
-QFont MessageItemPrivate::mFontNewMessage;
 QFont MessageItemPrivate::mFontUnreadMessage;
 QFont MessageItemPrivate::mFontImportantMessage;
 QFont MessageItemPrivate::mFontToDoMessage;
 QString MessageItemPrivate::mFontKey;
-QString MessageItemPrivate::mFontNewMessageKey;
 QString MessageItemPrivate::mFontUnreadMessageKey;
 QString MessageItemPrivate::mFontImportantMessageKey;
 QString MessageItemPrivate::mFontToDoMessageKey;
@@ -299,7 +297,10 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
+  if( !Nepomuk::ResourceManager::instance()->initialized() ) 
+      return;
   Q_D( MessageItem );
+  
   MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
@@ -658,12 +659,6 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
   }
 }
 
-void MessageItem::setNewMessageColor( const QColor &color )
-{
-  MessageItemPrivate::mColorNewMessage = color;
-}
-
-
 void MessageItem::setUnreadMessageColor( const QColor &color )
 {
   MessageItemPrivate::mColorUnreadMessage = color;
@@ -686,12 +681,6 @@ void MessageItem::setGeneralFont( const QFont &font )
 {
   MessageItemPrivate::mFont = font;
   MessageItemPrivate::mFontKey = font.key();
-}
-
-void MessageItem::setNewMessageFont( const QFont &font )
-{
-  MessageItemPrivate::mFontNewMessage = font;
-  MessageItemPrivate::mFontNewMessageKey = font.key();
 }
 
 void MessageItem::setUnreadMessageFont( const QFont &font )

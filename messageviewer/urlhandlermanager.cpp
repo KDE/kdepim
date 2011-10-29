@@ -65,10 +65,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QProcess>
-#include <QScrollArea>
-#include <QWebElement>
-#include <QWebPage>
-#include <QWebFrame>
 
 #include <algorithm>
 
@@ -256,7 +252,7 @@ void URLHandlerManager::BodyPartURLHandlerManager::unregisterHandler( const Inte
 static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate * w, QString * path ) {
   assert( path );
 
-  if ( !w || url.protocol() != "x-kmail" )
+  if ( !w || url.protocol() != QLatin1String( "x-kmail" ) )
     return 0;
   const QString urlPath = url.path();
 
@@ -281,7 +277,9 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url
     return false;
 
   PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+  BodyPartHandlerList::const_iterator end( mHandlers.constEnd() );
+  
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it ) {
     if ( (*it)->handleClick( w->viewer(), &part, path ) )
       return true;
   }
@@ -296,7 +294,8 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest( con
     return false;
 
   PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  BodyPartHandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleContextMenuRequest( &part, path, p ) )
       return true;
   return false;
@@ -309,7 +308,8 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage( const KU
     return QString();
 
   PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+  BodyPartHandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it ) {
     const QString msg = (*it)->statusBarMessage( &part, path );
     if ( !msg.isEmpty() )
       return msg;
@@ -365,7 +365,8 @@ void URLHandlerManager::unregisterHandler( const Interface::BodyPartURLHandler *
 }
 
 bool URLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleClick( url, w ) )
       return true;
   return false;
@@ -373,7 +374,8 @@ bool URLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const
 
 bool URLHandlerManager::handleShiftClick( const KUrl &url, ViewerPrivate *window ) const
 {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleShiftClick( url, window ) )
       return true;
   return false;
@@ -381,7 +383,9 @@ bool URLHandlerManager::handleShiftClick( const KUrl &url, ViewerPrivate *window
 
 bool URLHandlerManager::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
 {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end(  mHandlers.constEnd() );
+  
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->willHandleDrag( url, window ) )
       return true;
   return false;
@@ -389,21 +393,25 @@ bool URLHandlerManager::willHandleDrag( const KUrl &url, ViewerPrivate *window )
 
 bool URLHandlerManager::handleDrag( const KUrl &url, ViewerPrivate *window ) const
 {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleDrag( url, window ) )
       return true;
   return false;
 }
 
 bool URLHandlerManager::handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w ) const {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it )
     if ( (*it)->handleContextMenuRequest( url, p, w ) )
       return true;
   return false;
 }
 
 QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w ) const {
-  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+  HandlerList::const_iterator end( mHandlers.constEnd() );
+  for ( HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it ) {
     const QString msg = (*it)->statusBarMessage( url, w );
     if ( !msg.isEmpty() )
       return msg;
@@ -423,81 +431,68 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <QString>
-
 namespace {
   bool KMailProtocolURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
     if ( url.protocol() == QLatin1String( "kmail" ) ) {
       if ( !w )
         return false;
-
-      if ( url.path() == QLatin1String( "showHTML" ) ) {
+      const QString urlPath( url.path() );
+      if ( urlPath == QLatin1String( "showHTML" ) ) {
         w->setHtmlOverride( !w->htmlOverride() );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "loadExternal" ) ) {
+      else if ( urlPath == QLatin1String( "loadExternal" ) ) {
         w->setHtmlLoadExtOverride( !w->htmlLoadExtOverride() );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "decryptMessage" ) ) {
+      else if ( urlPath == QLatin1String( "decryptMessage" ) ) {
         w->setDecryptMessageOverwrite( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showSignatureDetails" ) ) {
+      else if ( urlPath == QLatin1String( "showSignatureDetails" ) ) {
         w->setShowSignatureDetails( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideSignatureDetails" ) ) {
+      else if ( urlPath == QLatin1String( "hideSignatureDetails" ) ) {
         w->setShowSignatureDetails( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showAttachmentQuicklist" ) ) {
+      else if ( urlPath == QLatin1String( "showAttachmentQuicklist" ) ) {
         w->setShowAttachmentQuicklist( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideAttachmentQuicklist" ) ) {
+      else if ( urlPath == QLatin1String( "hideAttachmentQuicklist" ) ) {
         w->setShowAttachmentQuicklist( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showFullToAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "showFullToAddressList" ) ) {
         w->setShowFullToAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideFullToAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "hideFullToAddressList" ) ) {
         w->setShowFullToAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showFullCcAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "showFullCcAddressList" ) ) {
         w->setShowFullCcAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "hideFullCcAddressList" ) ) {
+      else if ( urlPath == QLatin1String( "hideFullCcAddressList" ) ) {
         w->setShowFullCcAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
-
-      if ( url.path() == QLatin1String( "showRawToltecMail" ) ) {
+      else if ( urlPath == QLatin1String( "showRawToltecMail" ) ) {
         w->setShowRawToltecMail( true );
         w->update( Viewer::Force );
         return true;

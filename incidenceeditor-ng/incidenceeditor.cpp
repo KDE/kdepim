@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,9 +21,9 @@
 #include "incidenceeditor-ng.h"
 
 #include <KDebug>
-#include <kglobal.h>
+#include <KGlobal>
 
-static const KCatalogLoader loader("libincidenceeditors");
+static const KCatalogLoader loader( "libincidenceeditors" );
 
 using namespace IncidenceEditorNG;
 
@@ -56,7 +56,7 @@ void IncidenceEditor::checkDirtyStatus()
 
 bool IncidenceEditor::isValid() const
 {
-  mLastErrorString = QString();
+  mLastErrorString.clear();
   return true;
 }
 

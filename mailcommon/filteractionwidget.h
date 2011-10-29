@@ -32,7 +32,7 @@
 namespace MailCommon {
 
 class FilterAction;
-
+class FilterActionWidget;
 /**
  * @short A widget to edit a single MailCommon::FilterAction.
  *
@@ -88,15 +88,20 @@ class FilterActionWidget : public KHBox
      */
     MailCommon::FilterAction *action() const;
 
+    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
   signals:
     void filterModified();
-
+    void addWidget( QWidget * );
+    void removeWidget( QWidget* );
+  
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void slotFilterTypeChanged( int ) )
+    Q_PRIVATE_SLOT( d, void slotAddWidget() )
+    Q_PRIVATE_SLOT( d, void slotRemoveWidget() )
     //@endcond
 };
 
@@ -133,11 +138,15 @@ class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
      */
     void updateActionList();
 
+    void reconnectWidget( FilterActionWidget *w );
+
   public Q_SLOTS:
     /**
      * Resets the action widgets.
      */
     void reset();
+    void slotAddWidget( QWidget* );
+    void slotRemoveWidget( QWidget* );
 
   signals:
     void filterModified();
@@ -152,6 +161,8 @@ class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
      * @copydoc KPIM::KWidgetLister::createWidget
      */
     virtual QWidget* createWidget( QWidget* );
+
+    void updateAddRemoveButton();
 
   private:
     //@cond PRIVATE

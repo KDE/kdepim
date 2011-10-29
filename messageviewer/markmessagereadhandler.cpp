@@ -26,7 +26,6 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
 
-#include <QtCore/QQueue>
 #include <QtCore/QTimer>
 
 using namespace MessageViewer;
@@ -42,21 +41,19 @@ class MarkMessageReadHandler::Private
     void handleMessages();
 
     MarkMessageReadHandler *q;
-    QQueue<Akonadi::Item> mItemQueue;
+    Akonadi::Item mItemQueue;
     QTimer mTimer;
 };
 
 void MarkMessageReadHandler::Private::handleMessages()
 {
-  while ( !mItemQueue.isEmpty() ) {
-    Akonadi::Item item = mItemQueue.dequeue();
+  Akonadi::Item item = mItemQueue;
 
-    // mark as read
-    item.setFlag( Akonadi::MessageFlags::Seen );
-
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
-    modifyJob->setIgnorePayload( true );
-  }
+  // mark as read
+  item.setFlag( Akonadi::MessageFlags::Seen );
+  
+  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
+  modifyJob->setIgnorePayload( true );
 }
 
 
@@ -69,27 +66,30 @@ MarkMessageReadHandler::MarkMessageReadHandler( QObject *parent )
 
 MarkMessageReadHandler::~MarkMessageReadHandler()
 {
+  if( d->mTimer.isActive() )
+      d->mTimer.stop();
   delete d;
 }
 
 void MarkMessageReadHandler::setItem( const Akonadi::Item &item )
 {
+  if ( d->mItemQueue == item )
+    return;
+  d->mTimer.stop();
+
   if ( item.hasFlag( Akonadi::MessageFlags::Seen ) )
     return;
 
-  if ( d->mItemQueue.contains( item ) )
-    return;
-
-  d->mTimer.stop();
-
-  d->mItemQueue.enqueue( item );
+  d->mItemQueue = item;
 
   if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() ) {
     const int delayedMarkTime = MessageViewer::GlobalSettings::self()->delayedMarkTime();
-    if ( delayedMarkTime != 0 )
+    if ( delayedMarkTime != 0 ) {
       d->mTimer.start( delayedMarkTime * 1000 );
-    else
+    }
+    else {
       d->handleMessages();
+    }
   }
 }
 

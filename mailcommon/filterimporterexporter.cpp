@@ -141,7 +141,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
     const QString groupName = QString::fromLatin1( "Filter #%1" ).arg( i );
 
     const KConfigGroup group = config->group( groupName );
-    MailFilter *filter = new MailFilter( group );
+    MailFilter *filter = new MailFilter( group, true /*interactive*/ );
     filter->purify();
     if ( filter->isEmpty() ) {
 #ifndef NDEBUG
@@ -203,21 +203,21 @@ FilterImporterExporter::~FilterImporterExporter()
   delete d;
 }
 
-QList<MailFilter *> FilterImporterExporter::importFilters()
+QList<MailFilter *> FilterImporterExporter::importFilters( bool & canceled )
 {
   const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
                                                          d->mParent, i18n( "Import Filters" ) );
-  if ( fileName.isEmpty() )
+  if ( fileName.isEmpty() ) {
+    canceled = true;
     return QList<MailFilter*>(); // cancel
-
-  {
-    QFile file( fileName );
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-      KMessageBox::error( d->mParent,
-                          i18n( "The selected file is not readable. "
-                                "Your file access permissions might be insufficient.") );
-      return QList<MailFilter*>();
-    }
+  }
+  
+  QFile file( fileName );
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    KMessageBox::error( d->mParent,
+                        i18n( "The selected file is not readable. "
+                              "Your file access permissions might be insufficient.") );
+    return QList<MailFilter*>();
   }
 
   const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );

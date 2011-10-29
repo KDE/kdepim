@@ -218,12 +218,11 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     return existingFileName.toLocalFile();
   }
 
-  QString fileName = NodeHelper::fileName( node );
-
   QString fname = createTempDir( node->index().toString() );
   if ( fname.isEmpty() )
     return QString();
 
+  QString fileName = NodeHelper::fileName( node );
   // strip off a leading path
   int slashPos = fileName.lastIndexOf( '/' );
   if( -1 != slashPos )
@@ -265,7 +264,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
     if ( left != -1 )
         left += 7;
 
-    QString storedIndex = path.mid( left, right - left );
+    QStringRef storedIndex( &path, left, right - left );
     if ( left != -1 && storedIndex == index )
       return KUrl( path );
   }

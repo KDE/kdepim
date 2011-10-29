@@ -285,6 +285,7 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
   if ( !items.isEmpty() &&
        !( items.count() == 1 && m_searchString == items.first() ) ) {
 
+    completionBox->clear();
     const int numberOfItems( items.count() );
     for ( int i = 0; i< numberOfItems; ++i )
     {
@@ -293,7 +294,6 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
         item->setFlags( item->flags()&~Qt::ItemIsSelectable );
       completionBox->addItem( item );
     }
-
     if ( !completionBox->isVisible() ) {
       if ( !m_searchString.isEmpty() ) {
         completionBox->setCancelledText( m_searchString );
@@ -940,7 +940,8 @@ void AddresseeLineEdit::insert( const QString &t )
 
   // remove newlines in the to-be-pasted string
   QStringList lines = newText.split( QRegExp( QLatin1String( "\r?\n" ) ), QString::SkipEmptyParts );
-  for ( QStringList::iterator it = lines.begin(); it != lines.end(); ++it ) {
+  QStringList::iterator end( lines.end() );
+  for ( QStringList::iterator it = lines.begin(); it != end; ++it ) {
     // remove trailing commas and whitespace
     (*it).remove( QRegExp( QLatin1String( ",?\\s*$" ) ) );
   }
@@ -1061,9 +1062,9 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
       }
     } else {
       // Let's see if this drop contains a comma separated list of emails
-      QString dropData = QString::fromUtf8( event->encodedData( "text/plain" ) );
-      QStringList addrs = KPIMUtils::splitAddressList( dropData );
-      if ( addrs.count() > 0 ) {
+      const QString dropData = QString::fromUtf8( event->encodedData( "text/plain" ) );
+      const QStringList addrs = KPIMUtils::splitAddressList( dropData );
+      if ( !addrs.isEmpty() ) {
         setText( KPIMUtils::normalizeAddressesAndDecodeIdn( dropData ) );
         setModified( true );
         return;
@@ -1113,7 +1114,8 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
   QStringList::ConstIterator it;
   const int prefEmailWeight = 1;     //increment weight by prefEmailWeight
   int isPrefEmail = prefEmailWeight; //first in list is preferredEmail
-  for ( it = emails.begin(); it != emails.end(); ++it ) {
+  QStringList::ConstIterator end( emails.constEnd() );
+  for ( it = emails.constBegin(); it != end; ++it ) {
     //TODO: highlight preferredEmail
     const QString email( (*it) );
     const QString givenName = addr.givenName();

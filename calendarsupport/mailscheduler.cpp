@@ -276,8 +276,10 @@ bool MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
     return false;
   }
 
-  Akonadi::Item exInc = (mCalendar ? mCalendar->itemForIncidenceUid( incidence->uid() )
-                                   : mNepomukCalendar->itemForIncidenceUid( incidence->uid() ));
+  Akonadi::Item exInc = ( mCalendar ?
+                            mCalendar->itemForIncidenceUid( incidence->uid() ) :
+                            mNepomukCalendar->itemForIncidenceUid( incidence->uid() ) );
+
   if ( ! exInc.isValid() && mCalendar ) {
     exInc = mCalendar->incidenceFromSchedulingID( incidence->uid() );
     //exInc = exIncItem.isValid() && exIncItem.hasPayload<KCalCore::Incidence::Ptr>() ?

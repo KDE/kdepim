@@ -106,6 +106,14 @@ void ManageSieveScriptsDialog::killAllJobs( bool disconnectSignal )
   mJobs.clear();
 }
 
+bool ManageSieveScriptsDialog::serverHasError(QTreeWidgetItem *item) const
+{
+  const QVariant variant = item->data( 0, SIEVE_SERVER_ERROR );
+  if ( variant.isValid() && variant.toBool()==true )
+    return true;
+  return false;
+}
+
 void ManageSieveScriptsDialog::slotUpdateButtons()
 {
 
@@ -124,8 +132,11 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
     mDeactivateScript->setEnabled( false );
   }
   else
-  {  
-    mNewScript->setEnabled( item && mUrls.count( item ) );
+  {
+    if ( serverHasError(item) )
+      mNewScript->setEnabled( false );
+    else
+      mNewScript->setEnabled( item && mUrls.count( item ) );
     enabled = item && isFileNameItem( item );
     mEditScript->setEnabled( enabled );
     mDeleteScript->setEnabled( enabled );
@@ -180,6 +191,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
   if ( success )
     return;
 
+  parent->setData( 0, SIEVE_SERVER_ERROR, true );
   QTreeWidgetItem * item =
       new QTreeWidgetItem( parent );
   item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
@@ -214,7 +226,8 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, 
       menu.addAction( i18n( "Deactivate Script" ), this, SLOT(slotDeactivateScript()) );
   } else if ( !item->parent() ) {
     // top-levels:
-    menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
+    if ( !serverHasError(item) )
+      menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
   }
   if ( !menu.actions().isEmpty() )
     menu.exec( p );
@@ -428,7 +441,8 @@ void ManageSieveScriptsDialog::slotNewScript()
   if ( buttonGroup )
   {
     QList<QAbstractButton *> group = buttonGroup->buttons();
-    for ( int i = 0; i < group.count(); ++i )
+    const int numberOfGroup( group.count() );
+    for ( int i = 0; i < numberOfGroup; ++i )
     {
       if ( group.at( i )->text().replace( "&","" ) == name ) {
         KMessageBox::error( this, i18n( "Script name already used \"%1\".", name ), i18n( "New Script" ) );
@@ -483,7 +497,8 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
 
 void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 {
-  mSieveEditor->deleteLater(); mSieveEditor = 0;
+  mSieveEditor->deleteLater();
+  mSieveEditor = 0;
   mCurrentURL = KUrl();
   slotRefresh();
 }

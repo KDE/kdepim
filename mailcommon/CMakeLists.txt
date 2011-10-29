@@ -4,6 +4,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
+  ${SOPRANO_INCLUDE_DIR}
  )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -40,7 +41,7 @@ set(libmailcommon_SRCS
   mailutil.cpp
   mdnadvicedialog.cpp
   minimumcombobox.cpp 
-  readablecollectionproxymodel.cpp
+  foldertreewidgetproxymodel.cpp 
   redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp
@@ -53,7 +54,7 @@ set(libmailcommon_SRCS
   snippetvariabledialog.cpp
   backupjob.cpp
   kmfilterdialog.cpp
-  foldertreewidgetproxymodel.cpp
+  filteractionmissingcollectiondialog.cpp
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")

@@ -26,11 +26,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 
-#include <qpushbutton.h>
-#include <qtextedit.h>
-#include <qlineedit.h>
 #include <QWhatsThis>
-#include <qtoolbox.h>
 #include <qfont.h>
 #include <KMessageBox>
 

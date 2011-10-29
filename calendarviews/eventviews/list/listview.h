@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1999 Preston Brown <pbrown@kde.org>
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -23,8 +21,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALENDARVIEWS_LISTVIEW_H
-#define CALENDARVIEWS_LISTVIEW_H
+#ifndef EVENTVIEWS_LISTVIEW_H
+#define EVENTVIEWS_LISTVIEW_H
 
 #include "eventview.h"
 #include "customlistviewitem.h"

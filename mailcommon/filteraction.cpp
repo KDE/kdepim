@@ -3,6 +3,7 @@
 #include "filteraction.h"
 
 #include "folderrequester.h"
+#include "filteractionmissingcollectiondialog.h"
 #include "mailutil.h"
 #include "mailkernel.h"
 #include "mdnadvicedialog.h"
@@ -149,6 +150,11 @@ void FilterAction::setParamWidgetValue( QWidget* ) const
 void FilterAction::clearParamWidget( QWidget* ) const
 {
 }
+
+void FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
+{
+}
+
 
 bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
 {
@@ -386,6 +392,18 @@ void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
   static_cast<FolderRequester*>( paramWidget )->setCollection( CommonKernel->draftsCollectionFolder() );
 }
 
+void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr , const QString& name)
+{
+  argsFromString( argsStr );
+  if ( !mFolder.isValid() ) {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( name );
+    if ( dlg->exec() )
+      mFolder = dlg->selectedCollection();
+    delete dlg;
+  }
+}
+
+
 void FilterActionWithFolder::argsFromString( const QString &argsStr )
 {
   bool ok = false;
@@ -529,7 +547,8 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
   // and use QString::arg to substitute filenames for the %n's.
   int lastSeen = -2;
   QString tempFileName;
-  for ( QList<int>::Iterator it = argList.begin() ; it != argList.end() ; ++it ) {
+  QList<int>::ConstIterator end( argList.constEnd() );
+  for ( QList<int>::ConstIterator it = argList.constBegin() ; it != end ; ++it ) {
     // setup temp files with check for duplicate %n's
     if ( (*it) != lastSeen ) {
       KTemporaryFile *tempFile = new KTemporaryFile();
@@ -804,7 +823,7 @@ FilterAction* FilterActionReplyTo::newAction()
 FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
   : FilterActionWithString( "set Reply-To", i18n( "Set Reply-To To" ), parent )
 {
-  mParameter = "";
+  mParameter.clear();
 }
 
 FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
@@ -1452,7 +1471,7 @@ void FilterActionAddHeader::argsFromString( const QString &argsStr )
   QString result;
   if ( list.count() < 2 ) {
     result = list[ 0 ];
-    mValue = "";
+    mValue.clear();
   } else {
     result = list[ 0 ];
     mValue = list[ 1 ];

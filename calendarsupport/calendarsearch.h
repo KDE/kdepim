@@ -1,6 +1,6 @@
 /*
-  Copyright (c) 2009 KDAB
-  Author: Frank Osterfeld <osterfeld@kde.org>
+  Copyright (c) 2011 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Frank Osterfeld <osterfeld@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -34,7 +34,6 @@ class QAbstractItemModel;
 class QItemSelectionModel;
 
 namespace CalendarSupport {
-
 
 class CALENDARSUPPORT_EXPORT CalendarSearch : public QObject
 {

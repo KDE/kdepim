@@ -153,7 +153,8 @@ bool IncidenceChanger::Private::performChange( Change *change )
       handler.setDialogParent( change->parent );
 
       if ( mOperationStatus.contains( change->atomicOperationId ) ) {
-        handler.setDefaultAction( actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
+        handler.setDefaultAction(
+          actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
       }
 
       const bool modify = handler.handleIncidenceAboutToBeModified( newinc );
@@ -181,8 +182,10 @@ bool IncidenceChanger::Private::performChange( Change *change )
   newItem.setRemoteRevision( QString() );
 
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( newItem );
-  // TODO_SERGIO: Remove this Qt::QueuedConnection after removing all job.exec()'s inside mailclient.cpp
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(changeIncidenceFinished(KJob*)), Qt::QueuedConnection );
+  // TODO_SERGIO:
+  // Remove this Qt::QueuedConnection after removing all job.exec()'s inside mailclient.cpp
+  connect( job, SIGNAL(result(KJob*)),
+           this, SLOT(changeIncidenceFinished(KJob*)), Qt::QueuedConnection );
   return true;
 }
 
@@ -225,12 +228,14 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob *j )
     handler.setDialogParent( change->parent );
 
     if ( mOperationStatus.contains( change->atomicOperationId ) ) {
-      handler.setDefaultAction( actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
+      handler.setDefaultAction(
+        actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
     }
     const bool attendeeStatusChanged = myAttendeeStatusChanged( oldInc, newInc );
-    InvitationHandler::SendResult result = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                              newInc,
-                                                              attendeeStatusChanged );
+    InvitationHandler::SendResult result =
+      handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                            newInc,
+                                            attendeeStatusChanged );
 
     if ( change->atomicOperationId ) {
       mOperationStatus.insert( change->atomicOperationId, result );
@@ -253,7 +258,8 @@ IncidenceChanger::IncidenceChanger( CalendarSupport::Calendar *cal,
                                     Akonadi::Entity::Id defaultCollectionId )
   : QObject( parent ), d( new Private( defaultCollectionId, cal ) )
 {
-  connect( d, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)),
+  connect( d,
+           SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)),
            SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)) );
 }
 
@@ -282,7 +288,8 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
     InvitationHandler handler( d->mCalendar );
     handler.setDialogParent( parent );
     if ( d->mOperationStatus.contains( atomicOperationId ) ) {
-      handler.setDefaultAction( actionFromStatus( d->mOperationStatus.value( atomicOperationId ) ) );
+      handler.setDefaultAction(
+        actionFromStatus( d->mOperationStatus.value( atomicOperationId ) ) );
     }
     InvitationHandler::SendResult status;
     switch ( action ) {
@@ -543,7 +550,8 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
   Q_UNUSED( parent );
 
   if ( !incidence || !collection.isValid() ) {
-    kError() << "Incidence or collection isn't valid. collection.isValid() == " << collection.isValid();
+    kError() << "Incidence or collection isn't valid. collection.isValid() == "
+             << collection.isValid();
     return false;
   }
 
@@ -594,7 +602,8 @@ void IncidenceChanger::addIncidenceFinished( KJob *j )
   if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
     Q_ASSERT( incidence );
     InvitationHandler handler( d->mCalendar );
-    //handler.setDialogParent( 0 ); // PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
+    //handler.setDialogParent( 0 ); // PENDING(AKONADI_PORT) set parent,
+                                    //ideally the one passed in addIncidence...
     const InvitationHandler::SendResult status =
         handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
 

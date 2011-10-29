@@ -307,7 +307,7 @@ void FilterManager::filter( qlonglong itemId, FilterSet set, const QString &acco
     job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchJobForFilterDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
 }
 
 void FilterManager::filter( qlonglong itemId, const QString &filterId )
@@ -320,7 +320,7 @@ void FilterManager::filter( qlonglong itemId, const QString &filterId )
     job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchJobForFilterDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
 }
 
 int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFilter *filter )

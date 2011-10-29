@@ -47,14 +47,15 @@
 
 using namespace CalendarSupport;
 
-class MailScheduler2::Private {
+class MailScheduler2::Private
+{
   public:
     Private()
     {
       mFormat = new KCalCore::ICalFormat();
     }
 
-   ~Private()
+    ~Private()
     {
       delete mFormat;
     }
@@ -62,7 +63,6 @@ class MailScheduler2::Private {
     QHash<int, CallId> mCallIdByChangeId;
     KCalCore::ICalFormat *mFormat;
 };
-
 
 MailScheduler2::MailScheduler2( IncidenceChanger2 *changer,
                                 const NepomukCalendar::Ptr &calendar )
@@ -76,10 +76,12 @@ MailScheduler2::MailScheduler2( IncidenceChanger2 *changer,
     d->mFormat->setTimeSpec( KSystemTimeZones::local() );
   }
 
-  connect( this->changer(), SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+  connect( this->changer(),
+           SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( this->changer(),SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+  connect( this->changer(),
+           SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 }
 
@@ -102,7 +104,8 @@ CallId MailScheduler2::publish( const KCalCore::IncidenceBase::Ptr &incidence,
   MailClient mailer;
   // TODO: Why doesn't MailClient return an error message too?, a bool is not enough.
   // TODO: Refactor MailClient, currently it execs()
-  const bool result = mailer.mailTo( incidence, CalendarSupport::identityManager()->identityForAddress( from ),
+  const bool result = mailer.mailTo( incidence,
+                                     CalendarSupport::identityManager()->identityForAddress( from ),
                                      from, bccMe, recipients, messageText,
                                      KCalPrefs::instance()->mailTransport() );
 
@@ -132,7 +135,8 @@ CallId MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &i
   MailClient mailer;
   // TODO: Why doesn't MailClient return an error message too?, a bool is not enough.
   // TODO: Refactor MailClient, currently it execs()
-  const bool result = mailer.mailTo( incidence, CalendarSupport::identityManager()->identityForAddress( from ),
+  const bool result = mailer.mailTo( incidence,
+                                     CalendarSupport::identityManager()->identityForAddress( from ),
                                      from, bccMe, recipients, messageText,
                                      KCalPrefs::instance()->mailTransport() );
 
@@ -205,7 +209,8 @@ CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &in
 
   Akonadi::Item exInc = calendar()->itemForIncidenceUid( incidence->uid() );
   if ( !exInc.isValid() ) {
-    KCalCore::Incidence::Ptr exIncidence = calendar()->incidenceFromSchedulingID( incidence->uid() );
+    KCalCore::Incidence::Ptr exIncidence =
+      calendar()->incidenceFromSchedulingID( incidence->uid() );
     if ( exIncidence ) {
       exInc = calendar()->itemForIncidenceUid( exIncidence->uid() );
     }
@@ -258,8 +263,9 @@ void MailScheduler2::modifyFinished( int changeId,
                                     const QString &errorMessage )
 {
   if ( d->mCallIdByChangeId.contains( changeId ) ) {
-    const ResultCode resultCode = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess :
-                                                                                                  ResultCodeErrorUpdatingIncidence;
+    const ResultCode resultCode = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ?
+                                    ResultCodeSuccess :
+                                    ResultCodeErrorUpdatingIncidence;
     emitOperationFinished( changeId, resultCode, errorMessage );
     d->mCallIdByChangeId.remove( changeId );
   }
@@ -273,8 +279,9 @@ void MailScheduler2::createFinished( int changeId,
                                      const QString &errorMessage )
 {
   if ( d->mCallIdByChangeId.contains( changeId ) ) {
-    const ResultCode resultCode = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess :
-                                                                                                  ResultCodeErrorCreatingIncidence;
+    const ResultCode resultCode = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ?
+                                    ResultCodeSuccess :
+                                    ResultCodeErrorCreatingIncidence;
     emitOperationFinished( changeId, resultCode, errorMessage );
     d->mCallIdByChangeId.remove( changeId );
   }

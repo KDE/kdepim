@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -82,7 +82,7 @@ void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
 
-  d->mRealOriginalDescriptionEditContents = QString();
+  d->mRealOriginalDescriptionEditContents.clear();
 
   if ( incidence ) {
     enableRichTextDescription( incidence->descriptionIsRich() );
@@ -205,14 +205,18 @@ void IncidenceDescription::printDebugInfo() const
     kDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
 
     if ( mLoadedIncidence->descriptionIsRich() ) {
-      kDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription() << "</desc>"
-               << "; widget has <desc>" << mUi->mDescriptionEdit->toHtml() << "</desc>"
-               << "; expression mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
+      kDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
+               << "</desc>; "
+               << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
+               << "</desc>; "
+               << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
                << ( mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() );
     } else {
-      kDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description() << "</desc>"
-               << "; widget has <desc>" << mUi->mDescriptionEdit->toPlainText() << "</desc>"
-               << "; expression mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
+      kDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
+               << "</desc>; "
+               << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
+               << "</desc>; "
+               << "expr mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
                <<  ( mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() );
     }
 
