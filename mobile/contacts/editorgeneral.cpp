@@ -333,7 +333,7 @@ void EditorGeneral::Private::clearPhoneClicked()
   } else {
     last->mInput->clear();
     last->mType->setType( KABC::PhoneNumber::Home );
-    last->mId = QString();
+    last->mId.clear();
   }
 }
 
