@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QTimer>
-
 #include "declarativeeditors.h"
 
 #include "ui_eventortodomobile.h"
 #include "ui_eventortodomoremobile.h"
+
+#include <QtCore/QTimer>
 
 DCollectionCombo::DCollectionCombo( QGraphicsItem *parent )
   : DeclarativeWidgetBase<Akonadi::CollectionComboBox,
