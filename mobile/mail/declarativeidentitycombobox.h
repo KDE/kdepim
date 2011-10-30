@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef DECLRARATIVEIDENTITYCOMBOBOX_H
-#define DECLRARATIVEIDENTITYCOMBOBOX_H
+#ifndef DECLARATIVEIDENTITYCOMBOBOX_H
+#define DECLARATIVEIDENTITYCOMBOBOX_H
 
 #include "declarativewidgetbase.h"
 #include "composerview.h"
