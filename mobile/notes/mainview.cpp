@@ -52,7 +52,6 @@
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
-#include <QtDeclarative/QDeclarativeContext>
 #endif
 
 using namespace Akonadi;

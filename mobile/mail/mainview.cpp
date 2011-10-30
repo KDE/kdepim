@@ -99,7 +99,6 @@
 #include <mailcommon/filteraction.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
-#include <mailcommon/mailkernel.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
@@ -1294,7 +1293,7 @@ void MainView::mailActionStateUpdated()
     bool allMarkedAsImportant = true;
     bool allMarkedAsRead = true;
     bool allMarkedAsActionItem = true;
-    
+
     foreach ( const Akonadi::Item &item, selectedItems ) {
       Akonadi::MessageStatus status;
       status.setStatusFromFlags( item.flags() );
