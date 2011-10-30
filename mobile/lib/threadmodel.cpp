@@ -133,7 +133,7 @@ void ThreadModelPrivate::slotRowsRemoved( const QModelIndex&, int start, int end
       m_rangeManager.decreaseRange( startRange, rowCount );
 
       const QModelIndex index = q_ptr->index( startRange, 0 );
-      emit q_ptr->dataChanged( index, index ); // the number of thread childs has changed -> trigger view update
+      emit q_ptr->dataChanged( index, index ); // the number of thread children has changed -> trigger view update
     }
   } else {
     // the rows to be removed are covered by two or more ranges
@@ -181,7 +181,7 @@ void ThreadModelPrivate::slotRowsRemoved( const QModelIndex&, int start, int end
       m_rangeManager.decreaseRange( startRange, affectedStartRows );
 
       const QModelIndex index = q_ptr->index( startRange, 0 );
-      emit q_ptr->dataChanged( index, index ); // the number of thread childs has changed -> trigger view update
+      emit q_ptr->dataChanged( index, index ); // the number of thread children has changed -> trigger view update
     }
 
     if ( updateEndRange ) {
@@ -190,7 +190,7 @@ void ThreadModelPrivate::slotRowsRemoved( const QModelIndex&, int start, int end
       m_rangeManager.decreaseRange( updatedEndRange, affectedEndRows );
 
       const QModelIndex index = q_ptr->index( updatedEndRange, 0 );
-      emit q_ptr->dataChanged( index, index ); // the number of thread childs has changed -> trigger view update
+      emit q_ptr->dataChanged( index, index ); // the number of thread children has changed -> trigger view update
     }
   }
 }

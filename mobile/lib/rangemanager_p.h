@@ -67,7 +67,7 @@ class RangeManager
     int rangeForPosition( int position ) const;
 
     /**
-     * Dumps the current range layout to console. Usefull for debugging.
+     * Dumps the current range layout to console. Useful for debugging.
      */
     void dump() const;
 

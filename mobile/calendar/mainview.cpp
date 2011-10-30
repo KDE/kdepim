@@ -772,7 +772,7 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
 #ifndef Q_OS_WINCE
   CalendarSupport::saveAttachments( item, this );
 #else
-  // CalendarSupport is not completly ported for Windows CE so we use the
+  // CalendarSupport is not completely ported for Windows CE so we use the
   // attachment handling code from KDeclarativeMainView
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
 

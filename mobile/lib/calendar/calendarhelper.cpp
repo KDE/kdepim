@@ -139,7 +139,7 @@ void CalendarHelper::setYear( const int year )
       return;
 
   QDate newDate( year, m_month, m_day );
-  // we dont accept years BC (so no negative years)
+  // we don't accept years BC (so no negative years)
   if ( !newDate.isValid() || year <= 0 )
     return;
 
