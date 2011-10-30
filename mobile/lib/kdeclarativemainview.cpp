@@ -783,7 +783,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
     }
   }
   QStringList patterns = KMimeType::findByUrl( url, 0, true, true, 0 )->patterns();
-  QString filter = QString();
+  QString filter;
   if ( !patterns.isEmpty() ) {
     filter += patterns.join( QLatin1String( "\n" ) );
     filter += i18n( "\n*|all files" );
