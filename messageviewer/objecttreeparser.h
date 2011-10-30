@@ -43,6 +43,7 @@
 #include <gpgme++/verificationresult.h>
 
 #include <QList>
+#include "objecttreeemptysource.h"
 
 class QString;
 
@@ -64,7 +65,6 @@ class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
 class NodeHelper;
-
 
 class ProcessResult {
 public:
@@ -126,7 +126,7 @@ KMime::Content.
 \par Basics
 
 The ObjectTreeParser basically has two modes: Generating the HTML code for the Viewer, or only
-extracting the textualContent() for situations where only the message text is needed, for example
+extracting the plainTextContent() for situations where only the message text is needed, for example
 when inline forwarding a message. The mode depends on the ObjectTreeSourceIf passed to the
 constructor: If ObjectTreeSourceIf::htmlWriter() is not 0, then the HTML code generation mode is
 used.
@@ -286,8 +286,12 @@ the Viewer to scroll to the attachment.
 */
 class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   class CryptoProtocolSaver;
-  /** Internal. Copies the context of @p other, but not it's rawReplyString() */
+  /**
+   * @internal
+   * Copies the context of @p other, but not it's rawDecryptedBody, plainTextContent or htmlContent.
+   */
   ObjectTreeParser( const ObjectTreeParser & other );
+
 public:
   explicit ObjectTreeParser( ObjectTreeSourceIf * source,
                              NodeHelper *nodeHelper = 0,
@@ -307,13 +311,58 @@ public:
 
   bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
 
-  QByteArray rawReplyString() const { return mRawReplyString; }
+  /**
+   * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during
+   * the centuries.
+   *
+   * Historicans believe that the intent of the function is to return the raw body of the mail,
+   * i.e. no charset decoding has been done yet. Sometimes CTE decoding has been done, sometimes
+   * not. For encrypted parts, this returns the content of the decrypted part. For a mail with
+   * multiple MIME parts, the results are conecated together. Not all parts are included in this.
+   *
+   * Although conecating multiple undecoded body parts with potentially different CTEs together might
+   * not seem to make any sense in these modern times, it is assumed that initally this function
+   * performed quite well, but the ancient scrolls got damaged with the ravages of time
+   * and were re-written multiple times.
+   *
+   * Do not use. Use plainTextContent() and htmlContent() instead.
+   */
+  QByteArray rawDecryptedBody() const { return mRawDecryptedBody; }
 
-  /*! @return the text of the message, ie. what would appear in the
-      composer's text editor if this was edited. */
-  QString textualContent() const { return mTextualContent; }
+  /**
+   * The text of the message, ie. what would appear in the
+   * composer's text editor if this was edited or replied to.
+   * This is usually the content of the first text/plain MIME part.
+   */  
+  QString plainTextContent() const { return mPlainTextContent; }
 
-  QByteArray textualContentCharset() const { return mTextualContentCharset; }
+  /**
+   * Similar to plainTextContent(), but returns the HTML source of the first text/html MIME part.
+   *
+   * Not to be consfused with the HTML code that the message viewer widget displays, that HTML
+   * is written out by htmlWriter() and a totally different pair of shoes.
+   */
+  QString htmlContent() const { return mHtmlContent; }
+
+  /**
+   * Returns a plain text version of the content, which is either plainTextContent() if that exists,
+   * or htmlContent() converted to plain text otherwise.
+   */
+  QString convertedTextContent() const;
+
+  /** Returns a HTML version of the plain text mail. If the HTML content is already available, it
+   * returns the HTML content as it is.
+   */
+  QString convertedHtmlContent() const;
+
+  /**
+   * The original charset of MIME part the plain text was extracted from.
+   *
+   * If there were more than one text/plain MIME parts in the mail, the this is the charset
+   * of the last MIME part processed.
+   */
+  QByteArray plainTextContentCharset() const { return mPlainTextContentCharset; }
+  QByteArray htmlContentCharset() const { return mHtmlContentCharset; }
 
   void setCryptoProtocol( const Kleo::CryptoBackend::Protocol * protocol ) {
     mCryptoProtocol = protocol;
@@ -527,12 +576,16 @@ private:
   void dumpToFile( const char *, const char *, size_t ) {}
 #endif
 
+  void copyContentFrom( const ObjectTreeParser *other );
+
 private:
   ObjectTreeSourceIf* mSource;
   NodeHelper* mNodeHelper;
-  QByteArray mRawReplyString;
-  QByteArray mTextualContentCharset;
-  QString mTextualContent;
+  QByteArray mRawDecryptedBody;
+  QByteArray mPlainTextContentCharset;
+  QByteArray mHtmlContentCharset;
+  QString mPlainTextContent;
+  QString mHtmlContent;
   KMime::Content *mTopLevelContent;
   const Kleo::CryptoBackend::Protocol * mCryptoProtocol;
 

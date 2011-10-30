@@ -70,7 +70,7 @@ void UnencryptedMessageTest::testSignedForwardedOpenPGPSignedEncrypted()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
-  QCOMPARE( otp.textualContent().toAscii().data(), "bla bla bla" ); // The textual content doesn't include the encrypted encapsulated message by design
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "bla bla bla" ); // The textual content doesn't include the encrypted encapsulated message by design
   QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgPartiallyEncrypted );
   QCOMPARE( nodeHelper.overallSignatureState( originalMessage.get() ), KMMsgFullySigned );
 
@@ -89,7 +89,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
-  QCOMPARE( otp.textualContent().toAscii().data(), "bla bla bla" ); // The textual content doesn't include the encrypted encapsulated message by design
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "bla bla bla" ); // The textual content doesn't include the encrypted encapsulated message by design
   QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgPartiallyEncrypted );
 
   // Signature state handling is broken. First, the state is apparently not calculated correctly,
@@ -123,7 +123,7 @@ void UnencryptedMessageTest::testSMIMESignedEncrypted()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
-  QCOMPARE( otp.textualContent().toAscii().data(), "encrypted message text" );
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "encrypted message text" );
   QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgFullyEncrypted );
 
   // Signature state handling is broken. First, the state is apparently not calculated correctly,
@@ -151,7 +151,7 @@ void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
-  QCOMPARE( otp.textualContent().toAscii().data(), "encrypted message text" );
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "encrypted message text" );
   QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgFullyEncrypted );
 
   // Signature state handling is broken. First, the state is apparently not calculated correctly,
@@ -179,7 +179,7 @@ void UnencryptedMessageTest::testOpenPGPEncrypted()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
-  QCOMPARE( otp.textualContent().toAscii().data(), "encrypted message text" );
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "encrypted message text" );
   QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgFullyEncrypted );
 
   // Now, test that the unencrypted message is generated correctly

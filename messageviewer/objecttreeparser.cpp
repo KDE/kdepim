@@ -95,6 +95,7 @@
 
 // Qt includes
 #include <QApplication>
+#include <QTextDocument>
 #include <QDir>
 #include <QFile>
 #include <QTextCodec>
@@ -103,6 +104,12 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPointer>
+#ifdef KDEPIM_NO_WEBKIT
+# include <QTextBrowser>
+#else
+# include <QtWebKit/QWebPage>
+# include <QtWebKit/QWebFrame>
+#endif
 
 // other includes
 #include <sstream>
@@ -111,6 +118,7 @@
 #include <unistd.h>
 #include <memory>
 #include <messagecore/nodehelper.h>
+#include <qtextdocument.h>
 
 using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
@@ -212,6 +220,19 @@ ObjectTreeParser::~ObjectTreeParser()
   }
 }
 
+void ObjectTreeParser::copyContentFrom( const ObjectTreeParser *other )
+{
+  mRawDecryptedBody += other->rawDecryptedBody();
+  mPlainTextContent += other->plainTextContent();
+  mHtmlContent += other->htmlContent();
+  if ( !other->plainTextContentCharset().isEmpty() ) {
+    mPlainTextContentCharset = other->plainTextContentCharset();
+  }
+  if ( !other->htmlContentCharset().isEmpty() ) {
+    mHtmlContentCharset = other->htmlContentCharset();
+  }
+}
+
 void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, const char* content, const char* cntDesc )
 {
 //  kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
@@ -233,10 +254,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
 
   ObjectTreeParser otp( this );
   otp.parseObjectTreeInternal( newNode );
-  mRawReplyString += otp.rawReplyString();
-  mTextualContent += otp.textualContent();
-  if ( !otp.textualContentCharset().isEmpty() )
-    mTextualContentCharset = otp.textualContentCharset();
+  copyContentFrom( &otp );
 }
 
 
@@ -807,10 +825,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     ObjectTreeParser otp( this, true );
     otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( data );
-    mRawReplyString += otp.rawReplyString();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    copyContentFrom( &otp );
 
     if ( htmlWriter() )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
@@ -839,7 +854,7 @@ void ObjectTreeParser::writeDeferredDecryptionBlock()
   messagePart.isDecryptable = true;
   messagePart.isEncrypted = true;
   messagePart.isSigned = false;
-  mRawReplyString += decryptedData.toUtf8();
+  mRawDecryptedBody += decryptedData.toUtf8();
 
   if ( htmlWriter() ) { //TODO: check if this check should be here or at the beginning of the method
     htmlWriter()->queue( writeSigstatHeader( messagePart,
@@ -1136,20 +1151,20 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str )
 bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & ) {
   const QByteArray partBody( curNode->decodedContent() );
 
-  mRawReplyString = partBody;
-  if ( curNode->topLevel()->textContent() == curNode ) {
-    mTextualContent += curNode->decodedText();
-    mTextualContentCharset = NodeHelper::charset( curNode );
-  }
+  const QString bodyHTML = codecFor( curNode )->toUnicode( partBody );
+  mHtmlContent += bodyHTML;
+  mHtmlContentCharset = NodeHelper::charset( curNode );
+  mRawDecryptedBody = partBody;
 
   if ( !htmlWriter() )
     return true;
 
   QString bodyText;
-  if ( mSource->htmlMail() )
-    bodyText = codecFor( curNode )->toUnicode( partBody );
-  else
+  if ( mSource->htmlMail() ) {
+    bodyText = bodyHTML;
+  } else {
     bodyText = StringUtil::convertAngleBracketsToHtml( partBody );
+  }
 
   if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
         showOnlyOneMimePart() )
@@ -1316,10 +1331,10 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
 
 void ObjectTreeParser::extractNodeInfos( KMime::Content *curNode, bool isFirstTextPart )
 {
-  mRawReplyString = curNode->decodedContent();
+  mRawDecryptedBody = curNode->decodedContent();
   if ( isFirstTextPart ) {
-    mTextualContent += curNode->decodedText();
-    mTextualContentCharset += NodeHelper::charset( curNode );
+    mPlainTextContent += curNode->decodedText();
+    mPlainTextContentCharset += NodeHelper::charset( curNode );
   }
 }
   
@@ -1371,12 +1386,21 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   // enable verification of the embedded messages' signatures
   if ( !isMailmanMessage( curNode ) ||
         !processMailmanMessage( curNode ) ) {
-      writeBodyString( mRawReplyString, NodeHelper::fromAsString( curNode ),
+      const QString oldPlainText = mPlainTextContent;
+      writeBodyString( mRawDecryptedBody, NodeHelper::fromAsString( curNode ),
                       codecFor( curNode ), result, !bDrawFrame );
+
+      // Revert changes to mPlainTextContent made by writeBodyString if this is not the first
+      // text part. The plain text content shall not contain any text/plain attachment, as it is content
+      // of the main text node.
+      if ( !isFirstTextPart ) {
+        mPlainTextContent = oldPlainText;
+      }
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
   }
-  if ( bDrawFrame )
+  if( bDrawFrame ) {
     htmlWriter()->queue( "</td></tr></table>" );
+  }
 
   return true;
 }
@@ -1388,10 +1412,7 @@ void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
   ObjectTreeParser otp( *this );
   otp.setShowOnlyOneMimePart( false );
   otp.parseObjectTreeInternal( child );
-  mRawReplyString += otp.rawReplyString();
-  mTextualContent += otp.textualContent();
-  if ( !otp.textualContentCharset().isEmpty() )
-    mTextualContentCharset = otp.textualContentCharset();
+  copyContentFrom( &otp );
 }
 
 QString ObjectTreeParser::defaultToltecReplacementText()
@@ -1434,6 +1455,8 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     return false;
 
   KMime::Content* dataHtml = findType( child, "text/html", false, true );
+  KMime::Content* dataPlain = findType( child, "text/plain", false, true );
+
   if ( !dataHtml ) {
     // If we didn't find the HTML part as the first child of the multipart/alternative, it might
     // be that this is a HTML message with images, and text/plain and multipart/related are the
@@ -1449,9 +1472,19 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     if ( !dataHtml && mSource->htmlMail() ) {
       dataHtml = findType( child, "multipart/mixed", false, true );
     }
-
   }
-  KMime::Content* dataPlain = findType( child, "text/plain", false, true );
+
+  // If there is no HTML writer, process both the HTML and the plain text nodes, as we're collecting
+  // the plainTextContent and the htmlContent
+  if ( !htmlWriter() ) {
+    if ( dataPlain ) {
+      stdChildHandling( dataPlain );
+    }
+    if ( dataHtml ) {
+      stdChildHandling( dataHtml );
+    }
+    return true;
+  }
 
   if ( ( mSource->htmlMail() && dataHtml) ||
         (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
@@ -1548,7 +1581,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
       writeBodyString( cstr, NodeHelper::fromAsString( node ),
                         codecFor( node ), result, false );
     }
-    mRawReplyString += cstr;
+    mRawDecryptedBody += cstr;
     return true;
   }
 
@@ -1599,11 +1632,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
 //     if( NodeHelper::nodeProcessed( data ) )
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( newNode );
-    mRawReplyString += otp.rawReplyString();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
-
+    copyContentFrom( &otp );
     messagePart = mNodeHelper->partMetaData( node );
   } else {
     QByteArray decryptedData;
@@ -1669,7 +1698,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
         createAndParseTempNode( node, decryptedData.constData(),"encrypted data" );
       }
     } else {
-      mRawReplyString += decryptedData;
+      mRawDecryptedBody += decryptedData;
       if ( htmlWriter() ) {
         // print the error message that was returned in decryptedData
         // (utf8-encoded)
@@ -1742,10 +1771,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
   if ( KMime::Content * child = mNodeHelper->decryptedNodeForContent( node ) ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
-    mRawReplyString += otp.rawReplyString();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    copyContentFrom( &otp );
     return true;
   }
 
@@ -1759,7 +1785,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
         writeBodyString( cstr, NodeHelper::fromAsString( node ),
                           codecFor( node ), result, false );
       }
-      mRawReplyString += cstr;
+      mRawDecryptedBody += cstr;
     } else if ( !mSource->decryptMessage() ) {
       writeDeferredDecryptionBlock();
     } else {
@@ -1804,7 +1830,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
         // fixing the missing attachments bug #1090-b
         createAndParseTempNode( node, decryptedData.constData(), "encrypted data" );
       } else {
-        mRawReplyString += decryptedData;
+        mRawDecryptedBody += decryptedData;
         if ( htmlWriter() ) {
           // print the error message that was returned in decryptedData
           // (utf8-encoded)
@@ -1827,10 +1853,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   if ( KMime::Content * child = mNodeHelper->decryptedNodeForContent( node ) ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
-    mRawReplyString += otp.rawReplyString();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    copyContentFrom( &otp );
     return true;
   }
 
@@ -2064,9 +2087,13 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * curNode, ProcessResult & result )
   {
   if ( !htmlWriter() ) {
-    mRawReplyString = curNode->decodedContent();
-    mTextualContent += curNode->decodedText();
-    mTextualContentCharset = NodeHelper::charset( curNode );
+    mRawDecryptedBody = curNode->decodedContent();
+
+    // ### Surely this is totally wrong? The decoded text of this node is just garbage, since it is
+    //     encrypted. This whole if statement should be removed, and the decrypted body
+    //     should be added to mPlainTextContent. Needs testing with Chiasmus though, which I don't have.
+    mPlainTextContent += curNode->decodedText();
+    mPlainTextContentCharset = NodeHelper::charset( curNode );
     return true;
   }
 
@@ -2905,12 +2932,15 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
       QList<Kpgp::Block>::iterator pbit =  pgpBlocks.begin();
       QListIterator<QByteArray> npbit( nonPgpBlocks );
       QString htmlStr;
+      QString plainTextStr;
       for( ; pbit != pgpBlocks.end(); ++pbit )
       {
           // insert the next Non-OpenPGP block
           QByteArray str( npbit.next() );
           if( !str.isEmpty() ) {
-            htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+            const QString text = aCodec->toUnicode( str );
+            plainTextStr += text;
+            htmlStr += quotedHTML( text, decorate );
             kDebug() << "Non-empty Non-OpenPGP block found: '" << str  << "'";
             // treat messages with empty lines before the first clearsigned
             // block as fully signed/encrypted
@@ -3000,7 +3030,9 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
               htmlStr += writeSigstatHeader( messagePart, 0, fromAddress );
 
               if ( couldDecrypt || !isEncrypted ) {
-                htmlStr += quotedHTML( aCodec->toUnicode( block.text() ), decorate );
+                const QString text = aCodec->toUnicode( block.text() );
+                plainTextStr += text;
+                htmlStr += quotedHTML( text, decorate );
               }
               else {
                 htmlStr += QString::fromLatin1( "<div align=\"center\">%1</div>" )
@@ -3008,15 +3040,19 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
               }
               htmlStr += writeSigstatFooter( messagePart );
           }
-          else // block is neither message block nor clearsigned block
-            htmlStr += quotedHTML( aCodec->toUnicode( block.text() ),
-                                    decorate );
+          else { // block is neither message block nor clearsigned block
+            const QString text = aCodec->toUnicode( block.text() );
+            plainTextStr += text;
+            htmlStr += quotedHTML( text, decorate );
+          }
       }
 
       // add the last Non-OpenPGP block
       QByteArray str( nonPgpBlocks.last() );
       if( !str.isEmpty() ) {
-        htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+        const QString text = aCodec->toUnicode( str );
+        plainTextStr += text;
+        htmlStr += quotedHTML( text, decorate );
         // Even if the trailing Non-OpenPGP block isn't empty we still
         // consider the message part fully signed/encrypted because else
         // all inline signed mailing list messages would only be partially
@@ -3029,10 +3065,19 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
         if( inlineEncryptionState == KMMsgPartiallyEncrypted )
           inlineEncryptionState = KMMsgFullyEncrypted;
       }
-      htmlWriter()->queue( htmlStr );
+      if ( htmlWriter() ) {
+        htmlWriter()->queue( htmlStr );
+      }
+      mPlainTextContent += plainTextStr;
   }
-  else
-    htmlWriter()->queue( quotedHTML( aCodec->toUnicode( aStr ), decorate ) );
+  else { // No inline PGP encryption
+    const QString plainText = aCodec->toUnicode( aStr );
+    mPlainTextContent += plainText;
+    if ( htmlWriter() ) {
+      htmlWriter()->queue( quotedHTML( plainText, decorate ) );
+    }
+  }
+  mPlainTextContentCharset = aCodec->name();
 }
 
 
@@ -3355,3 +3400,31 @@ KMime::Content* ObjectTreeParser::findTypeNot( KMime::Content * content, const Q
     return 0;
 }
 
+QString ObjectTreeParser::convertedTextContent() const
+{
+  QString plainTextContent = mPlainTextContent;
+  if( plainTextContent.isEmpty() ) {
+#ifdef KDEPIM_NO_WEBKIT
+      QTextDocument doc;
+      doc.setHtml( mHtmlContent );
+      plainTextContent = doc.toPlainText();
+#else
+      QWebPage doc;
+      doc.mainFrame()->setHtml( mHtmlContent );
+      plainTextContent = doc.mainFrame()->toPlainText();
+#endif
+  }
+  return plainTextContent.append('\n');
+}
+
+QString ObjectTreeParser::convertedHtmlContent() const
+{
+  QString htmlContent = mHtmlContent;
+  if( htmlContent.isEmpty() ) {
+    QString convertedHtml = Qt::escape( mPlainTextContent );
+    convertedHtml.append("</body></html>");
+    convertedHtml.prepend("<html><head></head><body>");
+    htmlContent = convertedHtml.replace( QRegExp( "\n" ), "<br />" );
+  }
+  return htmlContent.append('\n');
+}

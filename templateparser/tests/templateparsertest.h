@@ -1,4 +1,4 @@
-/* Copyright 2009 Thomas McGuire <mcguire@kde.org>
+/* Copyright 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,27 +16,37 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef OBJECTTREEPARSERTEST_H
-#define OBJECTTREEPARSERTEST_H
+#ifndef TEMPLATEPARSERTEST_H
+#define TEMPLATEPARSERTEST_H
 
-#include <KMime/Message>
 
 #include <QObject>
+#include <KMime/Message>
 
-class ObjectTreeParserTester : public QObject
+class TemplateParserTester : public QObject
 {
   Q_OBJECT
 
-  public slots:
-    void initTestCase();
-
   private slots:
-    void test_parseEncapsulatedMessage();
-    void test_parsePlainMessage();
-    void test_missingContentTypeHeader();
-    void test_inlinePGPDecryption();
-    void test_HTML();
-    void test_HTMLOnly();
+    /**
+     * checks whether text/plain only mails are converted to a valid HTML
+     */
+    void test_convertedHtml();
+    void test_convertedHtml_data();
+
+    /**
+     * checks whether body element is properly extracted from a valid HTML
+     */
+    void test_bodyFromHtml();
+
+    /**
+     * Tests whether templates are returning required body or not
+     */
+    void test_processWithTemplatesForBody();
+    void test_processWithTemplatesForBody_data();
+
+    void test_processWithTemplatesForContent();
+    void test_processWithTemplatesForContent_data();
 };
 
 #endif

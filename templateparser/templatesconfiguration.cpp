@@ -28,6 +28,7 @@
 
 #include <QWhatsThis>
 #include <qfont.h>
+#include <KMessageBox>
 
 TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
   : QWidget( parent )
@@ -318,11 +319,20 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   }
 
   // kDebug() << "Insert command:" << cmd;
-  QTextCursor cursor = edit->textCursor();
-  cursor.insertText( cmd );
-  cursor.setPosition( cursor.position() + adjustCursor );
-  edit->setTextCursor( cursor );
-  edit->setFocus();
+  if ( ( edit->toPlainText().contains( "%FORCEDPLAIN" ) && ( cmd == "%FORCEDHTML" ) ) ||
+       ( edit->toPlainText().contains( "%FORCEDHTML" ) && ( cmd == "%FORCEDPLAIN" ) ) ) {
+    KMessageBox::error( this, i18n( "Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"
+                                    " is not correct. Use only one of the aforementioned commands with \" Reply as"
+                                    " Quoted Message command\" as per your need\n"
+                                    "(a)Reply using plain text for quotes to be strictly in plain text\n"
+                                    "(b)Reply using HTML text for quotes being in HTML format if present") );
+  } else {
+    QTextCursor cursor = edit->textCursor();
+    cursor.insertText( cmd );
+    cursor.setPosition( cursor.position() + adjustCursor );
+    edit->setTextCursor( cursor );
+    edit->setFocus();
+  }
 }
 
 QString TemplatesConfiguration::strOrBlank( const QString &str ) {

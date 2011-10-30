@@ -324,8 +324,8 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
   QByteArray data;
   if( bSaveEncrypted || !bEncryptedParts) {
     KMime::Content *dataNode = content;
-    QByteArray rawReplyString;
-    bool gotRawReplyString = false;
+    QByteArray rawDecryptedBody;
+    bool gotRawDecryptedBody = false;
     if ( !bSaveWithSig ) {
       if ( topContent->contentType()->mimeType() == "multipart/signed" )  {
         // carefully look for the part that is *not* the signature part:
@@ -338,18 +338,18 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
         }
       } else {
         EmptySource emptySource;
-        ObjectTreeParser otp( &emptySource, 0, 0,false, false, false );
+        ObjectTreeParser otp( &emptySource, 0, 0, false, false );
 
         // process this node and all it's siblings and descendants
         mNodeHelper->setNodeUnprocessed( dataNode, true );
         otp.parseObjectTree( dataNode );
 
-        rawReplyString = otp.rawReplyString();
-        gotRawReplyString = true;
+        rawDecryptedBody = otp.rawDecryptedBody();
+        gotRawDecryptedBody = true;
       }
     }
-    QByteArray cstr = gotRawReplyString
-      ? rawReplyString
+    QByteArray cstr = gotRawDecryptedBody
+      ? rawDecryptedBody
       : dataNode->decodedContent();
     data = KMime::CRLFtoLF( cstr );
   }

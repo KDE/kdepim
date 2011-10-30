@@ -7,6 +7,7 @@ include_directories (
     ${CMAKE_BINARY_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/messagecore/tests
+    ${CMAKE_SOURCE_DIR}/templateparser
 )
 
 # Convenience macro to add messagecomposer unit tests.

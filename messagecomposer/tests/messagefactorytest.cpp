@@ -48,6 +48,10 @@
 #include <qtest_kde.h>
 #include <QDateTime>
 #include <KCharsets>
+#include <QtCore/QDir>
+#include "templateparser/globalsettings_base.h"
+#include "templateparser/templateparser_export.h"
+
 using namespace Message;
 using namespace MessageComposer;
 
@@ -129,7 +133,6 @@ void MessageFactoryTest::testCreateReply()
   
 }
 
-
 void MessageFactoryTest::testCreateReplyHtml()
 {
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("html_utf8_encoded.mbox") );
@@ -202,12 +205,11 @@ void MessageFactoryTest::testCreateReplyKeepCharsetEncoding()
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
   otp.parseObjectTree( reply.msg.get() );
   QVERIFY( otp.textualContent().contains( replyStr ) );*/
 
 }
-
 
 void MessageFactoryTest::testCreateForward()
 {
@@ -256,7 +258,6 @@ void MessageFactoryTest::testCreateForward()
   QCOMPARE( fw->subject()->asUnicodeString(), QLatin1String( "Fwd: Test Email Subject" ) );
   QCOMPARE_OR_DIFF( fw->encodedContent(), fwdMsg.toLatin1() );
 }
-
 
 void MessageFactoryTest::testCreateRedirect()
 {
@@ -369,7 +370,6 @@ void MessageFactoryTest::testCreateResend()
   QCOMPARE_OR_DIFF( rdir->encodedContent(), baseline.toLatin1() );
 }
 
-
 void MessageFactoryTest::testCreateMDN()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
@@ -389,7 +389,7 @@ void MessageFactoryTest::testCreateMDN()
   TestCSSHelper testCSSHelper;
   TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh ); */
 
 //   kDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();
@@ -406,7 +406,6 @@ void MessageFactoryTest::testCreateMDN()
   QCOMPARE_OR_DIFF( MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body(),
                     mdnContent.toLatin1() );
 }
-
 
 KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
 {
@@ -439,7 +438,62 @@ KMime::Message::Ptr MessageFactoryTest::loadMessageFromFile(QString filename)
   msg->setContent( data );
   msg->parse();
   return msg;
+}
 
+void MessageFactoryTest::test_multipartAlternative_data()
+{
+  QTest::addColumn<QString>( "mailFileName" );
+  QTest::addColumn<int>( "contentAt" );
+  QTest::addColumn<QString>( "selection" );
+  QTest::addColumn<QString>( "expected" );
+
+  QDir dir( QLatin1String( MAIL_DATA_DIR ) );
+  foreach ( const QString &file, dir.entryList( QStringList( QLatin1String("plain_message.mbox") ), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
+     QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << 0 << "" << "> This *is* the *message* text *from* Sudhendu Kumar<dontspamme@yoohoo.com>\n"
+     "> \n"
+     "> --\n"
+     "> Thanks & Regards\n"
+     "> Sudhendu Kumar";
+     QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << 1 << "" << "<html><head></head><body>"
+     "<blockquote>This <i>is</i> the <b>message</b> text <u>from</u> Sudhendu Kumar&lt;dontspamme@yoohoo.com&gt;<br>"
+     "<br>-- <br>Thanks &amp; Regards<br>Sudhendu Kumar<br></blockquote><br/></body></html>";
+   }
+}
+
+void MessageFactoryTest::test_multipartAlternative()
+{
+  QFETCH( QString, mailFileName );
+  QFETCH( int, contentAt );
+  QFETCH( QString, selection );
+  QFETCH( QString, expected );
+
+  QFile mailFile( mailFileName );
+  QVERIFY( mailFile.open( QIODevice::ReadOnly ) );
+  const QByteArray mailData = KMime::CRLFtoLF( mailFile.readAll() );
+  QVERIFY( !mailData.isEmpty() );
+  KMime::Message::Ptr origMsg( new KMime::Message );
+  origMsg->setContent( mailData );
+  origMsg->parse();
+
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+
+  MessageFactory factory( origMsg, 0 );
+  factory.setIdentityManager( identMan );
+  factory.setSelection( selection );
+  factory.setQuote( true );
+  factory.setReplyStrategy( ReplyAll );
+  TemplateParser::GlobalSettings::self()->setTemplateReplyAll( QLatin1String( "%QUOTE" ) );
+
+  QString str;
+  str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+  factory.setTemplate( str );
+
+  MessageFactory::MessageReply reply =  factory.createReply();
+  QVERIFY( reply.replyAll = true );
+  QVERIFY( reply.msg->contentType()->mimeType() == "multipart/alternative" );
+  QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: Plain Message Test" ) );
+  reply.msg->parse();
+  QCOMPARE( reply.msg->contents().at( contentAt )->encodedBody().data(), expected.toLatin1().data() );
 }
 
 #include "messagefactorytest.moc"

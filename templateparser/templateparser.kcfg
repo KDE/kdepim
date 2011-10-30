@@ -15,6 +15,11 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <label>Use smart &amp;quoting</label>
         <default>true</default>
       </entry>
+        <entry name="ReplyUsingHtml" type="Bool" key="replySameFormat">
+        <label>Reply using HTML if present</label>
+        <default>true</default>
+      </entry>
+
       <entry name="CustomTemplates" type="StringList" key="CustomTemplates" />
 
     <entry name="TemplateNewMessage" type="String" key="TemplateNewMessage">
