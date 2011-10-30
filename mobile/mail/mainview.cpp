@@ -851,17 +851,27 @@ void MainView::forwardFetchResult( KJob* job )
   } else {
     ComposerView *composer = new ComposerView;
     switch ( mode ) {
-      case InLine:
-        composer->setMessage( factory.createForward() );
-        break;
-      case AsAttachment: {
-        QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< Akonadi::Item >() << item);
-        //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
-        QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
-        foreach ( KMime::Content* attach, forwardMessage.second )
-          QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG( KMime::Content*, attach ) );
-        break;
+    case InLine:
+      composer->setMessage( factory.createForward() );
+      break;
+
+    case AsAttachment: {
+      QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage =
+        factory.createAttachedForward( QList< Akonadi::Item >() << item);
+
+      // the invokeMethods are there to be sure setMessage and addAttachment
+      // are called after composer->delayedInit
+      QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection,
+                                 Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
+      foreach ( KMime::Content* attach, forwardMessage.second ) {
+        QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection,
+                                   Q_ARG( KMime::Content*, attach ) );
       }
+      break;
+    }
+
+    case Redirect:
+      break; // to make compilers happy. the Redirect case is handled above.
     }
 
     composer->show();
