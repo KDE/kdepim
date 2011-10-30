@@ -26,7 +26,7 @@ Rectangle {
   signal clicked
 
   radius: 12
-  color: "#00000000" // Set a transparant color.
+  color: "#00000000" // Set a transparent color.
 
   Image {
     source: icon

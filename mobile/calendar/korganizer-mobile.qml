@@ -269,7 +269,7 @@ KPIM.MainView {
           width: 2/3 * parent.width
           anchors.horizontalCenter: parent.horizontalCenter
           buttonText: KDE.i18n( "New Appointment" )
-          // TODO: Make sure that the correct default calender is selected in
+          // TODO: Make sure that the correct default calendar is selected in
           //       the incidence editor.
           onClicked : { application.newEvent(); }
 
@@ -349,7 +349,7 @@ KPIM.MainView {
         width: 2/3 * parent.width
         anchors.horizontalCenter: parent.horizontalCenter
         buttonText: KDE.i18n( "New Appointment" )
-        // TODO: Make sure that the correct default calender is selected in
+        // TODO: Make sure that the correct default calendar is selected in
         //       the incidence editor.
         onClicked : { application.newEventWithDate( dateEdit.date ); }
 
