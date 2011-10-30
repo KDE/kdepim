@@ -293,15 +293,15 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   ObjectTreeParser( const ObjectTreeParser & other );
 
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf * source = 0,
+  explicit ObjectTreeParser( ObjectTreeSourceIf * source,
                              NodeHelper *nodeHelper = 0,
                              const Kleo::CryptoBackend::Protocol * protocol=0,
-                             bool showOneMimePart=false,
+                             bool showOneMimePart=false, bool keepEncryptions=false,
                              bool includeSignatures=true,
                              const AttachmentStrategy * attachmentStrategy=0 );
 
   explicit ObjectTreeParser( const ObjectTreeParser *topLevelParser,
-                             bool showOneMimePart=false,
+                             bool showOneMimePart=false, bool keepEncryptions=false,
                              bool includeSignatures=true,
                              const AttachmentStrategy * attachmentStrategy=0 );
   virtual ~ObjectTreeParser();
@@ -374,6 +374,11 @@ public:
   bool showOnlyOneMimePart() const { return mShowOnlyOneMimePart; }
   void setShowOnlyOneMimePart( bool show ) {
     mShowOnlyOneMimePart = show;
+  }
+
+  bool keepEncryptions() const { return mKeepEncryptions; }
+  void setKeepEncryptions( bool keep ) {
+    mKeepEncryptions = keep;
   }
 
   bool includeSignatures() const { return mIncludeSignatures; }
@@ -505,10 +510,10 @@ public:// (during refactoring)
   bool processApplicationChiasmusTextSubtype( KMime::Content * node, ProcessResult & result );
 
   bool decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText );
-  void writeBodyStringWrapper( const QByteArray & bodyString,
-                               const QString & fromAddress,
-                               const QTextCodec * codec,
-                               ProcessResult & result, bool decorate );
+  void writeBodyString( const QByteArray & bodyString,
+                        const QString & fromAddress,
+                        const QTextCodec * codec,
+                        ProcessResult & result, bool decorate );
 
   void writePartIcon( KMime::Content * msgPart, bool inlineImage = false );
 
@@ -529,22 +534,19 @@ public:// (during refactoring)
   void writeAttachmentMarkHeader( KMime::Content *node );
   void writeAttachmentMarkFooter();
 
-  void writeBodyString( const QByteArray & bodyString,
-                        const QTextCodec * aCodec,
-                        const QString & fromAddress,
-                        KMMsgSignatureState &  inlineSignatureState,
-                        KMMsgEncryptionState & inlineEncryptionState,
-                        bool decorate );
-
-  void writeBodyString( const QByteArray & bodyString,
-                        const QTextCodec * aCodec,
-                        const QString & fromAddress );
-
+  void writeBodyStr( const QByteArray & bodyString,
+                      const QTextCodec * aCodec,
+                      const QString & fromAddress,
+                      KMMsgSignatureState &  inlineSignatureState,
+                      KMMsgEncryptionState & inlineEncryptionState,
+                      bool decorate );
 
   bool isMailmanMessage( KMime::Content * curNode );
 
 public: // KMReaderWin still needs this...
-
+  void writeBodyStr( const QByteArray & bodyString,
+                      const QTextCodec * aCodec,
+                      const QString & fromAddress );
   static KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
 
   static KMime::Content* findType( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide );
@@ -599,6 +601,7 @@ private:
   /// the children can be completely displayed again.
   bool mShowOnlyOneMimePart;
 
+  bool mKeepEncryptions;
   bool mIncludeSignatures;
   bool mHasPendingAsyncJobs;
   bool mAllowAsync;
@@ -608,7 +611,7 @@ private:
   QString mCollapseIcon;
   QString mExpandIcon;
   bool mDeleteNodeHelper;
-  bool isInternalSource;
+
 };
 
 }

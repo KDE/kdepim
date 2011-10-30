@@ -142,8 +142,8 @@ public:
   }
 };
 
-ObjectTreeParser::  ObjectTreeParser( const ObjectTreeParser *topLevelParser,
-                                    bool showOnlyOneMimePart,
+ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser *topLevelParser,
+                                    bool showOnlyOneMimePart, bool keepEncryptions,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy )
   : mSource( topLevelParser->mSource ),
@@ -151,6 +151,7 @@ ObjectTreeParser::  ObjectTreeParser( const ObjectTreeParser *topLevelParser,
     mTopLevelContent( topLevelParser->mTopLevelContent ),
     mCryptoProtocol( topLevelParser->mCryptoProtocol ),
     mShowOnlyOneMimePart( showOnlyOneMimePart ),
+    mKeepEncryptions( keepEncryptions ),
     mIncludeSignatures( includeSignatures ),
     mHasPendingAsyncJobs( false ),
     mAllowAsync( topLevelParser->mAllowAsync ),
@@ -163,7 +164,7 @@ ObjectTreeParser::  ObjectTreeParser( const ObjectTreeParser *topLevelParser,
 ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
                                     MessageViewer::NodeHelper* nodeHelper,
                                     const Kleo::CryptoBackend::Protocol * protocol,
-                                    bool showOnlyOneMimePart,
+                                    bool showOnlyOneMimePart, bool keepEncryptions,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy )
   : mSource( source ),
@@ -171,17 +172,13 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
     mTopLevelContent( 0 ),
     mCryptoProtocol( protocol ),
     mShowOnlyOneMimePart( showOnlyOneMimePart ),
+    mKeepEncryptions( keepEncryptions ),
     mIncludeSignatures( includeSignatures ),
     mHasPendingAsyncJobs( false ),
     mAllowAsync( false ),
     mShowRawToltecMail( false ),
-    mAttachmentStrategy( strategy ),
-    isInternalSource( false )
+    mAttachmentStrategy( strategy )
 {
-  if( !mSource ) {
-    isInternalSource = true;
-    mSource = new EmptySource;
-  }
   init();
 }
 
@@ -205,12 +202,12 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
     mTopLevelContent( other.mTopLevelContent ),
     mCryptoProtocol( other.cryptoProtocol() ),
     mShowOnlyOneMimePart( other.showOnlyOneMimePart() ),
+    mKeepEncryptions( other.keepEncryptions() ),
     mIncludeSignatures( other.includeSignatures() ),
     mHasPendingAsyncJobs( other.hasPendingAsyncJobs() ),
     mAllowAsync( other.allowAsync() ),
     mAttachmentStrategy( other.attachmentStrategy() ),
-    mDeleteNodeHelper( false ), // TODO see above
-    isInternalSource( false )
+    mDeleteNodeHelper( false ) // TODO see above
 {
 
 }
@@ -220,10 +217,6 @@ ObjectTreeParser::~ObjectTreeParser()
   if ( mDeleteNodeHelper ) {
     delete mNodeHelper;
     mNodeHelper = 0;
-  }
-  if( isInternalSource ) {
-    delete mSource;
-    mSource = 0;
   }
 }
 
@@ -378,10 +371,14 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
 void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & result ) {
   // ### (mmutz) default handling should go into the respective
   // ### bodypartformatters.
+  if ( !htmlWriter() ) {
+    kWarning() << "no htmlWriter()";
+    return;
+  }
 
   // always show images in multipart/related when showing in html, not with an additional icon
-  if ( htmlWriter() && result.isImage() && node->parent() &&
-       node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
+  if ( result.isImage() && node->parent() &&
+        node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
     QString fileName = mNodeHelper->writeNodeToTempFile( node );
     QString href = "file:///" + fileName;
     QByteArray cid = node->contentID()->identifier();
@@ -403,10 +400,10 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     if ( as )
       asIcon = as->defaultDisplay( node ) == AttachmentStrategy::AsIcon;
 
-  // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
-  // in the message structure viewer manually, and therefore wants to see the full image
-  if ( result.isImage() && showOnlyOneMimePart() && !result.neverDisplayInline() )
-    asIcon = false;
+   // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
+   // in the message structure viewer manually, and therefore wants to see the full image
+   if ( result.isImage() && showOnlyOneMimePart() && !result.neverDisplayInline() )
+     asIcon = false;
 
   // neither image nor text -> show as icon
   if ( !result.isImage()
@@ -420,26 +417,22 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     */
 
   if ( asIcon ) {
-    if ( htmlWriter() ) {
-      if ( !( as && as->defaultDisplay( node ) == AttachmentStrategy::None ) ||
-          showOnlyOneMimePart() ) {
-        // Write the node as icon only
-        writePartIcon( node );
-      } else {
-        mNodeHelper->setNodeDisplayedHidden( node, true );
-      }
+    if ( !( as && as->defaultDisplay( node ) == AttachmentStrategy::None ) ||
+         showOnlyOneMimePart() ) {
+      // Write the node as icon only
+      writePartIcon( node );
+    } else {
+      mNodeHelper->setNodeDisplayedHidden( node, true );
     }
   } else if ( result.isImage() ) {
     // Embed the image
-    if ( htmlWriter() ) {
-      mNodeHelper->setNodeDisplayedEmbedded( node, true );
-      writePartIcon( node, true );
-    }
+    mNodeHelper->setNodeDisplayedEmbedded( node, true );
+    writePartIcon( node, true );
   } else {
     mNodeHelper->setNodeDisplayedEmbedded( node, true );
-    writeBodyStringWrapper( node->decodedContent(),
-                            NodeHelper::fromAsString( node ),
-                            codecFor( node ), result, false );
+    writeBodyString( node->decodedContent(),
+                     NodeHelper::fromAsString( node ),
+                     codecFor( node ), result, false );
   }
   // end of ###
 }
@@ -1155,11 +1148,9 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str )
   return false;
 }
 
-bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & )
-{
+bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & ) {
   const QByteArray partBody( curNode->decodedContent() );
 
-  QString bodyText;
   const QString bodyHTML = codecFor( curNode )->toUnicode( partBody );
   mHtmlContent += bodyHTML;
   mHtmlContentCharset = NodeHelper::charset( curNode );
@@ -1168,10 +1159,10 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
   if ( !htmlWriter() )
     return true;
 
+  QString bodyText;
   if ( mSource->htmlMail() ) {
     bodyText = bodyHTML;
-  }
-  else {
+  } else {
     bodyText = StringUtil::convertAngleBracketsToHtml( partBody );
   }
 
@@ -1354,11 +1345,14 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
 
   if ( !htmlWriter() ) {
     extractNodeInfos( curNode, isFirstTextPart );
+    return true;
   }
 
   if ( !isFirstTextPart && attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
        !showOnlyOneMimePart() )
     return false;
+
+  extractNodeInfos( curNode, isFirstTextPart );
 
   QString label = NodeHelper::fileName( curNode );
 
@@ -1386,19 +1380,17 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
       htmlStr += "<br/>" + comment;
     htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
 
-    if ( htmlWriter() ) {
-      htmlWriter()->queue( htmlStr );
-    }
+    htmlWriter()->queue( htmlStr );
   }
   // process old style not-multipart Mailman messages to
   // enable verification of the embedded messages' signatures
   if ( !isMailmanMessage( curNode ) ||
         !processMailmanMessage( curNode ) ) {
       const QString oldPlainText = mPlainTextContent;
-      writeBodyStringWrapper( mRawDecryptedBody, NodeHelper::fromAsString( curNode ),
-                              codecFor( curNode ), result, !bDrawFrame );
+      writeBodyString( mRawDecryptedBody, NodeHelper::fromAsString( curNode ),
+                      codecFor( curNode ), result, !bDrawFrame );
 
-      // Revert changes to mPlainTextContent made by writeBodyStringWrapper if this is not the first
+      // Revert changes to mPlainTextContent made by writeBodyString if this is not the first
       // text part. The plain text content shall not contain any text/plain attachment, as it is content
       // of the main text node.
       if ( !isFirstTextPart ) {
@@ -1406,7 +1398,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
       }
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
   }
-  if ( bDrawFrame && htmlWriter() ) {
+  if( bDrawFrame ) {
     htmlWriter()->queue( "</td></tr></table>" );
   }
 
@@ -1503,7 +1495,7 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     return true;
   }
 
-  if ( !mSource->htmlMail() && dataPlain ) {
+  if ( !htmlWriter() || (!mSource->htmlMail() && dataPlain) ) {
     mNodeHelper->setNodeProcessed( dataHtml, false );
     stdChildHandling( dataPlain );
     mSource->setHtmlMode( Util::MultipartPlain );
@@ -1581,6 +1573,17 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( !child )
     return false;
+
+  if ( keepEncryptions() ) {
+    mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
+    const QByteArray cstr = node->decodedContent();
+    if ( htmlWriter() ) {
+      writeBodyString( cstr, NodeHelper::fromAsString( node ),
+                        codecFor( node ), result, false );
+    }
+    mRawDecryptedBody += cstr;
+    return true;
+  }
 
   const Kleo::CryptoBackend::Protocol * useThisCryptProto = 0;
 
@@ -1776,7 +1779,14 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
   if (    node->parent()
           && node->parent()->contentType()->mimeType() == "multipart/encrypted"  ) {
     mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
-    if ( !mSource->decryptMessage() ) {
+    if ( keepEncryptions() ) {
+      const QByteArray cstr = node->decodedContent();
+      if ( htmlWriter() ) {
+        writeBodyString( cstr, NodeHelper::fromAsString( node ),
+                          codecFor( node ), result, false );
+      }
+      mRawDecryptedBody += cstr;
+    } else if ( !mSource->decryptMessage() ) {
       writeDeferredDecryptionBlock();
     } else {
       /*
@@ -2112,17 +2122,26 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   return true;
 }
 
-void ObjectTreeParser::writeBodyStringWrapper( const QByteArray & bodyString,
-                                               const QString & fromAddress,
-                                               const QTextCodec * codec,
-                                               ProcessResult & result,
-                                               bool decorate )
+void ObjectTreeParser::writeBodyString( const QByteArray & bodyString,
+                                        const QString & fromAddress,
+                                        const QTextCodec * codec,
+                                        ProcessResult & result,
+                                        bool decorate )
 {
+  // FIXME: This is wrong, it means that inline PGP messages will not be decrypted when there is no
+  //        HTML writer. Even if there would be a HTML writer, the decrypted inline PGP text is not
+  //        added to the textual content.
+  //        The solution would be to remove this if statement and make writeBodyStr() add the
+  //        decrypted string to the textual content as well, and removing any manual modifictions
+  //        of the textual content by callers of this method.
+  if ( !htmlWriter() )
+    return;
+
   assert( codec );
   KMMsgSignatureState inlineSignatureState = result.inlineSignatureState();
   KMMsgEncryptionState inlineEncryptionState = result.inlineEncryptionState();
-  writeBodyString( bodyString, codec, fromAddress,
-                   inlineSignatureState, inlineEncryptionState, decorate );
+  writeBodyStr( bodyString, codec, fromAddress,
+                inlineSignatureState, inlineEncryptionState, decorate );
   result.setInlineSignatureState( inlineSignatureState );
   result.setInlineEncryptionState( inlineEncryptionState );
 }
@@ -2872,20 +2891,20 @@ void ObjectTreeParser::writeAttachmentMarkFooter()
 
 
 //-----------------------------------------------------------------------------
-void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec *aCodec,
-                                        const QString& fromAddress )
+void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *aCodec,
+                              const QString& fromAddress )
 {
   KMMsgSignatureState dummy1;
   KMMsgEncryptionState dummy2;
-  writeBodyString( aStr, aCodec, fromAddress, dummy1, dummy2, false );
+  writeBodyStr( aStr, aCodec, fromAddress, dummy1, dummy2, false );
 }
 
 //-----------------------------------------------------------------------------
-void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec *aCodec,
-                                        const QString& fromAddress,
-                                        KMMsgSignatureState&  inlineSignatureState,
-                                        KMMsgEncryptionState& inlineEncryptionState,
-                                        bool decorate )
+void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *aCodec,
+                              const QString& fromAddress,
+                              KMMsgSignatureState&  inlineSignatureState,
+                              KMMsgEncryptionState& inlineEncryptionState,
+                              bool decorate )
 {
   bool goodSignature = false;
   Kpgp::Module* pgp = Kpgp::Module::getKpgp();
