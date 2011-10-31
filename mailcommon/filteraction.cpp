@@ -1110,7 +1110,7 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
     }
   }
 
-  if ( mParameterList.size() > 0 )
+  if ( !mParameterList.isEmpty() )
     mParameter = mParameterList.at( 0 );
 }
 
@@ -1718,7 +1718,6 @@ FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
     context.setMoveTargetCollection( targetFolder );
     return GoOn;
   }
-
   context.setMoveTargetCollection( mFolder );
   return GoOn;
 }
