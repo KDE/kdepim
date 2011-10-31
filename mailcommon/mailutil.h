@@ -108,6 +108,9 @@ namespace Util {
      */
     MAILCOMMON_EXPORT QModelIndex nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction,
                                                         bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) = 0 );
+
+    MAILCOMMON_EXPORT Akonadi::Collection parentCollectionFromItem(const Akonadi::Item& item);
+
 }
 
 }
