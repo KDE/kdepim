@@ -454,7 +454,7 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup& group )
   } 
   iCount = group.readEntry("snippetSavedCount", 0);
 
-  for ( int i=1; i<=iCount; i++) {  //read the saved-values and store in QMap
+  for ( int i=1; i<=iCount; ++i) {  //read the saved-values and store in QMap
     const QString variableKey = group.readEntry( QString::fromLatin1( "snippetSavedName_%1" ).arg( i ), QString() );
     const QString variableValue = group.readEntry( QString::fromLatin1( "snippetSavedVal_%1" ).arg( i ), QString() );
     mSavedVariables.insert( variableKey, variableValue );
@@ -492,17 +492,15 @@ void SnippetsManager::Private::load()
       }
     }
 
-    {
-      mSavedVariables.clear();
-      const KConfigGroup group = config->group( "SavedVariablesPart" );
-      const int variablesCount = group.readEntry( "variablesCount", 0 );
+    mSavedVariables.clear();
+    const KConfigGroup group = config->group( "SavedVariablesPart" );
+    const int variablesCount = group.readEntry( "variablesCount", 0 );
 
-      for ( int i = 0; i < variablesCount; ++i ) {
-        const QString variableKey = group.readEntry( QString::fromLatin1( "variableName_%1" ).arg( i ), QString() );
-        const QString variableValue = group.readEntry( QString::fromLatin1( "variableValue_%1" ).arg( i ), QString() );
+    for ( int i = 0; i < variablesCount; ++i ) {
+      const QString variableKey = group.readEntry( QString::fromLatin1( "variableName_%1" ).arg( i ), QString() );
+      const QString variableValue = group.readEntry( QString::fromLatin1( "variableValue_%1" ).arg( i ), QString() );
 
-        mSavedVariables.insert( variableKey, variableValue );
-      }
+      mSavedVariables.insert( variableKey, variableValue );
     }
   }
 }
