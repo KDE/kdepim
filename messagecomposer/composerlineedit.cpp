@@ -58,6 +58,10 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
   loadContacts();
 }
 
+ComposerLineEdit::~ComposerLineEdit()
+{
+}
+
 
 //-----------------------------------------------------------------------------
 void ComposerLineEdit::keyPressEvent(QKeyEvent *e)

@@ -62,6 +62,7 @@ public:
    * for properties.
    */
   explicit TreeWidget( QWidget *parent, const char *name = 0 );
+  virtual ~TreeWidget();
 
 public:
 
