@@ -488,3 +488,10 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
 
   return QModelIndex(); // no unread collection found
 }
+
+Akonadi::Collection MailCommon::Util::parentCollectionFromItem(const Akonadi::Item& item)
+{
+  const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), item.parentCollection() );
+  const Akonadi::Collection parentCollection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  return parentCollection;
+}
