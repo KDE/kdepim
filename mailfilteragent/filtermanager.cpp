@@ -162,7 +162,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
     } else {
       kError() << "Error while moving items. " << job->error() << job->errorString();
     }
-    KMessageBox::error(qApp->activeWindow(), job->errorString(), tr("Error applying mail filter move"));
+    KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
   }
 }
 
@@ -170,7 +170,7 @@ void FilterManager::Private::modifyJobResult( KJob *job )
 {
   if ( job->error() ) {
     kError() << "Error while modifying items. " << job->error() << job->errorString();
-    KMessageBox::error(qApp->activeWindow(), job->errorString(), tr("Error applying mail filter modifications"));
+    KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter modifications"));
   } else {
     Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job );
 
