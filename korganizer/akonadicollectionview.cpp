@@ -239,6 +239,9 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView* view, bool hasContex
   filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
   filterTreeViewModel->setObjectName( "Recursive filtering, for the search bar" );
   mCollectionview->setModel( filterTreeViewModel );
+  connect( mCollectionview->selectionModel(),
+           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateMenu()) );
 
   //connect( searchCol, SIGNAL( textChanged(QString) ), filterTreeViewModel, SLOT( setFilterFixedString(QString) ) );
 
@@ -353,7 +356,10 @@ void AkonadiCollectionView::setCollectionSelectionProxyModel( KCheckableProxyMod
   if ( !mSelectionProxyModel )
     return;
   mBaseModel->setSourceModel( mSelectionProxyModel );
-  connect( mSelectionProxyModel->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()) );
+
+  connect( mSelectionProxyModel->selectionModel(),
+           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateView()) );
 }
 
 KCheckableProxyModel *AkonadiCollectionView::collectionSelectionProxyModel() const
@@ -406,12 +412,6 @@ void AkonadiCollectionView::updateMenu()
     mDefaultCalendar->setEnabled( false );
     mAssignColor->setEnabled( false );
   }
-}
-
-void AkonadiCollectionView::selectionChanged()
-{
-  updateMenu();
-  updateView();
 }
 
 void AkonadiCollectionView::newCalendar()
