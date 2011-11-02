@@ -433,7 +433,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
   menu.addMenu( mConfigMenu );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
-  menu.exec( mapToGlobal( pos ) );
+  menu.exec( ui.instanceWidget->mapToGlobal( pos ) );
 }
 
 void AgentWidget::resizeEvent( QResizeEvent *event )
