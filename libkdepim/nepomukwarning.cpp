@@ -35,9 +35,7 @@ KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *pa
   : KMessageWidget( parent ),
     m_neverShowAgainKey( QLatin1String( neverShowAgainKey ) )
 {
-  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String( "Missing Nepomuk Warning" ) );
-  const bool neverShowAgain = cfgGroup.readEntry( m_neverShowAgainKey, false );
-
+  const bool neverShowAgain = missingNepomukWarning( neverShowAgainKey );
   if ( !neverShowAgain )
   {
     setMessageType( Warning );
@@ -65,6 +63,13 @@ KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *pa
   }
   else
     setVisible(false);
+}
+
+bool KPIM::NepomukWarning::missingNepomukWarning( const char *neverShowAgainKey )
+{
+  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String( "Missing Nepomuk Warning" ) );
+  const bool neverShowAgain = cfgGroup.readEntry( neverShowAgainKey, false );
+  return neverShowAgain;
 }
 
 void KPIM::NepomukWarning::configure()
