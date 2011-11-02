@@ -301,7 +301,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
   menu.addMenu( mConfigMenu );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
-  menu.exec( mapToGlobal( pos ) );
+  menu.exec( ui.instanceWidget->mapToGlobal( pos ) );
 }
 
 void AgentWidget::resizeEvent( QResizeEvent *event )
