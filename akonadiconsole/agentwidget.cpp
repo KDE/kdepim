@@ -79,7 +79,8 @@ AgentWidget::AgentWidget( QWidget *parent )
            SLOT(currentChanged(Akonadi::AgentInstance)) );
   connect( ui.instanceWidget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)) );
 
-  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()) );
+  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectionChanged()) );
 
   currentChanged( ui.instanceWidget->currentAgentInstance() );
 
@@ -127,14 +128,15 @@ void AgentWidget::addAgent()
   }
 }
 
-void AgentWidget::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void AgentWidget::selectionChanged()
 {
-  Q_UNUSED( selected );
-  Q_UNUSED( deselected );
-
   const bool multiSelection = ui.instanceWidget->view()->selectionModel()->selectedRows().size() > 1;
   // Only agent removal, sync and restart is possible when multiple items are selected.
   ui.configButton->setDisabled( multiSelection );
+
+  // Restarting an agent is not possible if it's in Running status... (see AgentProcessInstance::restartWhenIdle)
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  ui.restartButton->setEnabled( agent.isValid() && agent.status() != 1 );
 }
 
 

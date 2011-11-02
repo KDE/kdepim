@@ -59,7 +59,7 @@ protected:
     void currentChanged( const Akonadi::AgentInstance &instance );
     void showContextMenu( const QPoint &pos );
 
-    void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+    void selectionChanged();
 
   private:
     Ui::AgentWidget ui;
