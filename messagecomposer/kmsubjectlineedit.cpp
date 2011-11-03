@@ -79,6 +79,10 @@ void KMSubjectLineEdit::createHighlighter()
   highlighter->setAutomatic( false );
   
   KTextEdit::setHighlighter(highlighter);
+
+  if ( !spellCheckingLanguage().isEmpty() ) {
+    setSpellCheckingLanguage( spellCheckingLanguage() );
+  }
 }
 
 void KMSubjectLineEdit::keyPressEvent(QKeyEvent *e)
