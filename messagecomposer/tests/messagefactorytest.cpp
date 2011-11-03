@@ -449,12 +449,13 @@ void MessageFactoryTest::test_multipartAlternative_data()
 
   QDir dir( QLatin1String( MAIL_DATA_DIR ) );
   foreach ( const QString &file, dir.entryList( QStringList( QLatin1String("plain_message.mbox") ), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
-     QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << 0 << "" << "> This *is* the *message* text *from* Sudhendu Kumar<dontspamme@yoohoo.com>\n"
+     QTest::newRow( file.toLatin1() ) << QString( dir.path() + QLatin1Char( '/' ) + file ) << 0 << "" <<
+     "> This *is* the *message* text *from* Sudhendu Kumar<dontspamme@yoohoo.com>\n"
      "> \n"
      "> --\n"
      "> Thanks & Regards\n"
      "> Sudhendu Kumar";
-     QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << 1 << "" << "<html><head></head><body>"
+     QTest::newRow( file.toLatin1() ) << QString( dir.path() + QLatin1Char( '/' ) + file ) << 1 << "" << "<html><head></head><body>"
      "<blockquote>This <i>is</i> the <b>message</b> text <u>from</u> Sudhendu Kumar&lt;dontspamme@yoohoo.com&gt;<br>"
      "<br>-- <br>Thanks &amp; Regards<br>Sudhendu Kumar<br></blockquote><br/></body></html>";
    }
