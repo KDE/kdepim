@@ -405,6 +405,7 @@ class KMComposeWin : public KMail::Composer
     void slotSpellCheckingStatus( const QString & status );
 
     void slotDelayedApplyTemplate( KJob* );
+    void slotSpellCheckingLanguage(const QString& language);
 
   public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.

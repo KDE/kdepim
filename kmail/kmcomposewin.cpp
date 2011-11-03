@@ -366,13 +366,16 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
 
   mHeadersToEditorSplitter->addWidget( mSplitter );
   editor->setAcceptDrops( true );
-  connect( mDictionaryCombo, SIGNAL( dictionaryChanged( const QString & ) ),
-           editor, SLOT( setSpellCheckingLanguage( const QString & ) ) );
-  connect( editor, SIGNAL( languageChanged(const QString &) ),
-           this, SLOT( slotLanguageChanged(const QString&) ) );
-  connect( editor, SIGNAL( spellCheckStatus(const QString &)),
-           this, SLOT( slotSpellCheckingStatus(const QString &) ) );
-
+  connect( mDictionaryCombo, SIGNAL(dictionaryChanged(QString)),
+           this, SLOT(slotSpellCheckingLanguage(QString)) );
+  
+  connect( editor, SIGNAL(languageChanged(QString)),
+           this, SLOT(slotLanguageChanged(QString)) );
+  connect( editor, SIGNAL(spellCheckStatus(QString)),
+           this, SLOT(slotSpellCheckingStatus(QString)) );
+  connect( editor, SIGNAL(insertModeChanged()),
+           this, SLOT(slotOverwriteModeChanged()) );
+  
   mSnippetWidget = new SnippetWidget( editor, actionCollection(), mSnippetSplitter );
   mSnippetWidget->setVisible( GlobalSettings::self()->showSnippetManager() );
   mSnippetSplitter->addWidget( mSnippetWidget );
@@ -475,6 +478,13 @@ KMComposeWin::~KMComposeWin()
   delete mComposerBase;
 }
 
+
+void KMComposeWin::slotSpellCheckingLanguage(const QString& language)
+{
+  qDebug()<<" language :"<<language;
+  mComposerBase->editor()->setSpellCheckingLanguage(language );
+  mEdtSubject->setSpellCheckingLanguage(language );
+}
 
 QString KMComposeWin::dbusObjectPath() const
 {
@@ -2825,8 +2835,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   if ( !mBtnDictionary->isChecked() && !mIgnoreStickyFields ) {
     mDictionaryCombo->setCurrentByDictionaryName( ident.dictionary() );
   }
-  mComposerBase->editor()->setSpellCheckingLanguage( mDictionaryCombo->currentDictionary() );
-  mEdtSubject->setSpellCheckingLanguage( mDictionaryCombo->currentDictionary() );
+  slotSpellCheckingLanguage( mDictionaryCombo->currentDictionary() );
   if ( !mBtnFcc->isChecked() && !mPreventFccOverwrite ) {
     setFcc( ident.fcc() );
   }
