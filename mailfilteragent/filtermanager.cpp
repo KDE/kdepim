@@ -437,8 +437,15 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
   } else {
     if ( context.moveTargetCollection().isValid() ) {
-      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+      if( context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
+        Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
+        connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+      }
+      else {
+        emit itemNotMoved( context.item() );
+
+        return 1;
+      }
     }
   }
 
