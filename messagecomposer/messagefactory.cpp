@@ -678,7 +678,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   return receipt;
 }
 
-QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( const QList< KMime::Message::Ptr >& msgs )
+QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( const QList< Akonadi::Item >& items )
 {
   KMime::Message::Ptr msg( new KMime::Message );
   KMime::Content* digest = new KMime::Content( msg.get() );
@@ -688,13 +688,13 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
 
   digest->contentType()->setMimeType( "multipart/digest" );
   digest->contentType()->setBoundary( KMime::multiPartBoundary() );
-  digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( msgs.size() ), "utf8" );
+  digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( items.count() ), "utf8" );
   digest->contentDisposition()->setFilename( QLatin1String( "digest" ) );
   digest->fromUnicodeString( mainPartText );
 
   int id = 0;
-
-  foreach( const KMime::Message::Ptr& fMsg, msgs ) {
+  foreach ( const Akonadi::Item& item, items ) {
+    KMime::Message::Ptr fMsg = MessageCore::Util::message( item );
     if( id == 0 && fMsg->hasHeader( "X-KMail-Identity" ) )
       id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
 
@@ -710,8 +710,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
     part->contentDisposition()->setParameter( QLatin1String( "name" ), i18n( "forwarded message" ) );
     part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
     part->assemble();
-
-    MessageCore::Util::addLinkInformation( fMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
+    MessageCore::Util::addLinkInformation( msg, item.id(), Akonadi::MessageStatus::statusForwarded() );
     digest->addContent( part );
   }
   digest->assemble();
