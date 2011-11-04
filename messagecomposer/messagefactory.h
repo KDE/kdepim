@@ -140,7 +140,7 @@ public:
    *
    * @param msgs List of messages to be composed into a digest
    */
-  QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( QList<KMime::Message::Ptr> msgs );
+  QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( const QList< Akonadi::Item >& items );
 
   /**
    * Set the identity manager to be used when creating messages.
