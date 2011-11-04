@@ -1117,8 +1117,12 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
     }
   }
   //Clear the HTML body if FORCEDPLAIN has set ReplyAsPlain, OR if, there is no use of FORCED command
-  //but KMail configure setting has ReplyUsingHtml as disabled
-  if( mQuotes == ReplyAsPlain || ( mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml() ) ) {
+  //but KMail configure setting has ReplyUsingHtml as disabled, OR the original mail has no HTML part
+  const KMime::Content* content = mOrigMsg->mainBodyPart("text/html");
+  if( mQuotes == ReplyAsPlain
+      || ( mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml() )
+      || (!content || !content->hasContent())
+    ) {
     htmlBody.clear();
   } else {
     htmlBody = makeValidHtml( htmlBody );
