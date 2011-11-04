@@ -24,14 +24,17 @@
 
 #include "messagecomposer_export.h"
 #include "kleo/enum.h"
-
-#include <QtCore/QString>
+#include <KDE/KMime/Message>
 
 
 namespace KMime {
   class Content;
 }
- 
+
+namespace MailTransport {
+  class MessageQueueJob;
+}
+
 namespace Message {
 
 namespace Util {
@@ -73,6 +76,9 @@ namespace Util {
 
     MESSAGECOMPOSER_EXPORT QStringList AttachmentKeywords();
     MESSAGECOMPOSER_EXPORT QString cleanedUpHeaderString( const QString &s );
+
+    void addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob);
+
 }
 
 }

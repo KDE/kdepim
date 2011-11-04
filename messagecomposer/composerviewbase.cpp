@@ -66,7 +66,7 @@
 #include <recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
-
+#include "util.h"
 
 static QStringList encodeIdn( const QStringList &emails )
 {
@@ -645,19 +645,8 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
     qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
   }
-  QList<Akonadi::Item::Id> originalMessageId;
-  QList<Akonadi::MessageStatus> linkStatus;
-  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
-    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
-    {
-      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
-        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
-      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
-        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
-      }
-    }
-  }
-
+  Message::Util::addSendReplyForwardAction(message, qjob);
+  
   fillQueueJobHeaders( qjob, message, infoPart );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );

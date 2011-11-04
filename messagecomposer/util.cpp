@@ -32,6 +32,10 @@
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
+#include <mailtransport/messagequeuejob.h>
+#include <akonadi/item.h>
+#include <akonadi/kmime/messagestatus.h>
+#include <messagecore/messagehelpers.h>
 
 KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
@@ -259,4 +263,20 @@ QString Message::Util::cleanedUpHeaderString( const QString &s )
   res.remove( QChar::fromLatin1( '\r' ) );
   res.replace( QChar::fromLatin1( '\n' ), QString::fromLatin1( " " ) );
   return res.trimmed();
+}
+
+void Message::Util::addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob)
+{
+  QList<Akonadi::Item::Id> originalMessageId;
+  QList<Akonadi::MessageStatus> linkStatus;
+  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
+    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
+    {
+      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+      }
+    }
+  }
 }

@@ -24,6 +24,7 @@
 
 #include "messagehelper.h"
 #include "messagecomposersettings.h"
+#include "util.h"
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -151,19 +152,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->addressAttribute().setCc( cc );
   qjob->addressAttribute().setBcc( bcc );
 
-  QList<Akonadi::Item::Id> originalMessageId;
-  QList<Akonadi::MessageStatus> linkStatus;
-  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
-    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
-    {
-      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
-        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
-      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
-        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
-      }
-    }
-  }
-
+  Message::Util::addSendReplyForwardAction(message, qjob);
   
   MessageCore::StringUtil::removePrivateHeaderFields( message );
   message->assemble();
