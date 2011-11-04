@@ -260,10 +260,6 @@ bool FilterManager::Private::folderRemoved( const Akonadi::Collection &folder, c
 FilterManager::FilterManager( QObject *parent )
   : QObject( parent ), d( new Private( this ) )
 {
-//  d->tryToMonitorCollection();
-
-//  connect( this, SIGNAL(filterListUpdated()), SLOT(tryToFilterInboxOnStartup()) );
-
   readConfig();
 }
 
