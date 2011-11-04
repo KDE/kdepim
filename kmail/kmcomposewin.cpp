@@ -481,7 +481,6 @@ KMComposeWin::~KMComposeWin()
 
 void KMComposeWin::slotSpellCheckingLanguage(const QString& language)
 {
-  qDebug()<<" language :"<<language;
   mComposerBase->editor()->setSpellCheckingLanguage(language );
   mEdtSubject->setSpellCheckingLanguage(language );
 }
