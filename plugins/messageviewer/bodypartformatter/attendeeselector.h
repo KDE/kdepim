@@ -31,7 +31,6 @@ class AttendeeSelector : public KDialog
   Q_OBJECT
   public:
     AttendeeSelector( QWidget *parent = 0 );
-    virtual ~AttendeeSelector();
 
     QStringList attendees() const;
 

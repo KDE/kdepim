@@ -48,10 +48,6 @@ DelegateSelector::DelegateSelector(QWidget * parent)
   layout->addWidget( mRsvp );
 }
 
-DelegateSelector::~DelegateSelector()
-{
-}
-
 QString DelegateSelector::delegate() const
 {
   return mDelegate->text();

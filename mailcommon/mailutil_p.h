@@ -53,10 +53,6 @@ class AttachmentSelectionDialog : public KDialog
       setMainWidget( new QLabel( i18n( "How should the email be attached?" ) ) );
     }
 
-    virtual ~AttachmentSelectionDialog()
-    {
-    }
-
     Type attachmentType() const
     {
       switch ( mButtonCode ) {

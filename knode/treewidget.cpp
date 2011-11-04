@@ -54,10 +54,6 @@ TreeWidget::TreeWidget( QWidget * parent, const char * name )
   setAnimated( false );
 }
 
-TreeWidget::~TreeWidget()
-{
-}
-
 void TreeWidget::changeEvent( QEvent *e )
 {
   QTreeWidget::changeEvent( e );
