@@ -153,6 +153,7 @@ void FilterAction::clearParamWidget( QWidget* ) const
 
 void FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
 {
+  argsFromString(argsStr);
 }
 
 
