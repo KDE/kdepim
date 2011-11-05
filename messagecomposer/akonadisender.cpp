@@ -38,7 +38,6 @@
 #include <messagecore/stringutil.h>
 #include <messagecore/messagehelpers.h>
 
-using namespace KMime;
 using namespace KMime::Types;
 using namespace KPIM;
 using namespace MailTransport;
