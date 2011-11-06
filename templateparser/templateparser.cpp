@@ -1485,13 +1485,13 @@ QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection is
   }
 
   QWebPage page;
-  //TODO to be tested/verified if this is not an issue
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 
   page.currentFrame()->setHtml( htmlElement );
 
+  //TODO to be tested/verified if this is not an issue
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
   const QString bodyElement = page.currentFrame()->evaluateJavaScript(
     "document.getElementsByTagName('body')[0].innerHTML").toString();
