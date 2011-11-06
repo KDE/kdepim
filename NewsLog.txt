@@ -1,8 +1,18 @@
 
+Sunday 06 November 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4801: Long events in filofax week printouts get no linebreaks (rt#10105)
+
+
+
 Saturday 29 October 2011
 
 Problems addressed
 ------------------
+
 * kolab/issue3724: Appointments vanish, when having access to other participants calender folders (rt#10030)
 * kolab/issue4797: Kontact crash on empty trash
 
