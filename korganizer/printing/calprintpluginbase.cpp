@@ -1077,59 +1077,66 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox,
   int flags = Qt::AlignLeft | Qt::OpaqueMode;
   QFontMetrics fm = p.fontMetrics();
   const int borderWidth = p.pen().width() + 1;
-  QRect timeBound = p.boundingRect( dayBox.x() + borderWidth,
+  QRect timeBox = p.boundingRect( dayBox.x() + borderWidth,
                                     dayBox.y() + textY,
                                     dayBox.width(), fm.lineSpacing(),
                                     flags, time );
 
-  int summaryWidth = time.isEmpty() ? 0 : timeBound.width() + 3;
-  QRect summaryBound = QRect( dayBox.x() + borderWidth + summaryWidth,
-                              dayBox.y() + textY + 1,
-                              dayBox.width() - summaryWidth - ( borderWidth * 2 ),
-                              dayBox.height() - textY );
+  int timeBoxWidth = time.isEmpty() ? 0 : timeBox.width() + 3;
+  QRect summaryBox = QRect( dayBox.x() + borderWidth + timeBoxWidth,
+                            dayBox.y() + textY + 1,
+                            dayBox.width() - timeBoxWidth - ( borderWidth * 2 ),
+                            dayBox.height() - textY );
 
   QString summaryText = summary;
-  bool boxOverflow = false;
 
   if ( singleLineLimit ) {
     int totalHeight = fm.lineSpacing() + borderWidth;
     int textBoxHeight = ( totalHeight > ( dayBox.height() - textY ) ) ?
                         dayBox.height() - textY : totalHeight;
-    summaryBound.setHeight(textBoxHeight);
+    summaryBox.setHeight(textBoxHeight);
     QRect lineRect( dayBox.x() + borderWidth, dayBox.y() + textY,
                     dayBox.width() - ( borderWidth * 2 ), textBoxHeight );
     drawBox( p, 1, lineRect );
     if ( !time.isEmpty() ) {
-      p.drawText( timeBound, flags, time );
+      p.drawText( timeBox, flags, time );
     }
-    p.drawText( summaryBound, flags, summaryText );
+    p.drawText( summaryBox, flags, summaryText );
   } else {
-    int textBoxHeight = dayBox.height() - textY - borderWidth;
-    QRect clipBox( 0, 0, dayBox.width() - ( borderWidth * 2 ), textBoxHeight );
-    if ( !time.isEmpty() ) {
-      summaryText = time + summary;
-    }
-    KWordWrap *ww = KWordWrap::formatText( fm, clipBox, 0, summaryText, -1 );
-    QRect dayBound = QRect( dayBox.x() + borderWidth,
-                            dayBox.y() + textY + 1,
-                            dayBox.width() - ( borderWidth * 2 ),
-                            dayBox.height() - textY );
     p.save();
-    QRect backBox( dayBound.x(), dayBound.y(),
-                   dayBound.width(), ww->boundingRect().height() );
-    drawBox( p, 1, backBox );
-    ww->drawText( &p, dayBound.x(), dayBound.y(), flags );
-    summaryBound.setHeight( ww->boundingRect().height() );
+    p.setFont( p.font() );
+    KWordWrap *ww = KWordWrap::formatText( fm, summaryBox, 0, summaryText, -1 );
+    summaryBox.setHeight( ww->boundingRect().height() );
+    if ( summaryBox.bottom() > dayBox.bottom() ) {
+      summaryBox.setBottom( dayBox.bottom() );
+    }
+    p.translate( summaryBox.x(), summaryBox.y() - 6 );
     p.restore();
+
+    p.save();
+    QRect backBox( timeBox.x(), timeBox.y(),
+                   dayBox.width() - ( borderWidth * 2 ), summaryBox.height() );
+    drawBox( p, 1, backBox );
+    ww->drawText( &p, summaryBox.x(), summaryBox.y(), flags );
+
+    if ( !time.isEmpty() ) {
+      if ( timeBox.bottom() > dayBox.bottom() ) {
+        timeBox.setBottom( dayBox.bottom() );
+      }
+      p.drawText( timeBox, flags, time );
+    }
+    p.translate( summaryBox.x(), summaryBox.y() - 6 );
+    p.restore();
+
   }
-  if ( summaryBound.bottom() < dayBox.bottom() ) {
+  if ( summaryBox.bottom() < dayBox.bottom() ) {
     QPen oldPen( p.pen() );
     p.setPen( QPen() );
-    p.drawLine( dayBox.x(), summaryBound.bottom(),
-                dayBox.x() + dayBox.width(), summaryBound.bottom() );
+    p.drawLine( dayBox.x(), summaryBox.bottom(),
+                dayBox.x() + dayBox.width(), summaryBox.bottom() );
     p.setPen( oldPen );
   }
-  textY += summaryBound.height();
+  textY += summaryBox.height();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1160,7 +1167,7 @@ void CalPrintPluginBase::drawWeek(QPainter &p, const QDate &qd,
     int vpos = ((i<6)?i:(i-1)) % vcells;
     QRect dayBox( box.left()+cellWidth*hpos, box.top()+cellHeight*vpos + ((i==6)?(cellHeight/2):0),
         cellWidth, (i<5)?(cellHeight):(cellHeight/2) );
-    drawDayBox(p, weekDate, dayBox, true, singleLineLimit );
+    drawDayBox(p, weekDate, dayBox, true, true, true, singleLineLimit );
   } // for i through all weekdays
 }
 
