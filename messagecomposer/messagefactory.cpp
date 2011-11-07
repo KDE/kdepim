@@ -91,7 +91,7 @@ MessageFactory::~MessageFactory()
 MessageFactory::MessageReply MessageFactory::createReply()
 {
   KMime::Message::Ptr msg( new KMime::Message );
-  QString str, mailingListStr;
+  QString mailingListStr;
   QByteArray refStr, headerName;
   bool replyAll = true;
   KMime::Types::Mailbox::List toList;
