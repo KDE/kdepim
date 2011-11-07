@@ -149,7 +149,7 @@ void AgentWidget::removeAgent()
                                      i18np( "Do you really want to delete the selected agent instance?",
                                             "Do you really want to delete these %1 agent instances?",
                                             list.size() ),
-                                     i18n( "Multiple Agent Deletion" ),
+                                     list.size() == 1 ? i18n( "Agent Deletion" ) : i18n( "Multiple Agent Deletion" ),
                                      KStandardGuiItem::del(),
                                      KStandardGuiItem::cancel(),
                                      QString(),
