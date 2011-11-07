@@ -191,7 +191,6 @@ void FolderTreeWidget::disableContextMenuAndExtraColumn()
 void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection &collection )
 {
   const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( d->folderTreeView->model(), collection );
-
   d->folderTreeView->selectionModel()->select( index, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows );
   d->folderTreeView->setExpanded( index, true );
   d->folderTreeView->scrollTo( index );
@@ -221,11 +220,12 @@ QModelIndex FolderTreeWidget::currentIndex() const
 
 Akonadi::Collection FolderTreeWidget::selectedCollection() const
 {
-  if ( d->folderTreeView->selectionMode() == QAbstractItemView::SingleSelection ) {
-    const QModelIndex selectedIndex = d->folderTreeView->currentIndex();
-    QModelIndex index = selectedIndex.sibling( selectedIndex.row(), 0 );
-    if ( index.isValid() )
-      return index.model()->data( index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( d->folderTreeView->selectionMode() == QAbstractItemView::SingleSelection ){
+    Akonadi::Collection::List lstCollection = selectedCollections();
+    if ( lstCollection.isEmpty() )
+      return Akonadi::Collection();
+    else
+      return lstCollection.at( 0 );
   }
 
   return Akonadi::Collection();
