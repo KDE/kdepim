@@ -111,6 +111,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      identitypage.cpp
      newidentitydialog.cpp
      kmsearchmessagemodel.cpp
+     kmsearchfilterproxymodel.cpp
      kmknotify.cpp
   )
 
