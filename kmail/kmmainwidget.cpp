@@ -976,7 +976,9 @@ void KMMainWidget::createWidgets()
 
   connect( mFolderTreeWidget->folderTreeView(), SIGNAL( currentChanged( const Akonadi::Collection & ) ), this, SLOT( slotFolderChanged( const Akonadi::Collection& ) ) );
 
-  connect( mFolderTreeWidget->folderTreeView(), SIGNAL( prefereCreateNewTab( bool ) ), this, SLOT( slotCreateNewTab( bool ) ) );
+  connect( mFolderTreeWidget->folderTreeView()->selectionModel(), SIGNAL( selectionChanged(QItemSelection,QItemSelection)), this, SLOT(updateFolderMenu()) );
+
+  connect( mFolderTreeWidget->folderTreeView(), SIGNAL(prefereCreateNewTab(bool)), this, SLOT(slotCreateNewTab(bool)) );
 
   mFolderTreeWidget->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mMessagePane = new CollectionPane( KMKernel::self()->entityTreeModel(),
