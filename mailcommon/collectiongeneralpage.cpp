@@ -405,16 +405,18 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
   mFolderCollection = FolderCollection::forCollection( collection );
   init( collection );
 
-  QString displayName;
-  if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() ) {
-    displayName = collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName();
-  }
+  if ( mNameEdit ) {
+    QString displayName;
+    if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() ) {
+      displayName = collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName();
+    }
 
-  if ( !mIsLocalSystemFolder && !mIsResourceFolder ) {
-    if ( displayName.isEmpty() )
-      mNameEdit->setText( collection.name() );
-    else
-      mNameEdit->setText( displayName );
+    if ( !mIsLocalSystemFolder && !mIsResourceFolder ) {
+      if ( displayName.isEmpty() )
+        mNameEdit->setText( collection.name() );
+      else
+        mNameEdit->setText( displayName );
+    }
   }
 
   // folder identity
@@ -441,14 +443,15 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
 
 void CollectionGeneralPage::save( Collection &collection )
 {
-  if ( !mIsLocalSystemFolder && !mIsResourceFolder ) {
-    if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
-         !collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() )
-      collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName( mNameEdit->text() );
-    else if( !mNameEdit->text().isEmpty() )
-      collection.setName( mNameEdit->text() );
+  if ( mNameEdit ) {
+    if ( !mIsLocalSystemFolder && !mIsResourceFolder ) {
+      if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
+           !collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() )
+        collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName( mNameEdit->text() );
+      else if( !mNameEdit->text().isEmpty() )
+        collection.setName( mNameEdit->text() );
+    }
   }
-
   CollectionAnnotationsAttribute *annotationsAttribute = collection.attribute<CollectionAnnotationsAttribute>( Entity::AddIfMissing );
 
   QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
@@ -460,7 +463,7 @@ void CollectionGeneralPage::save( Collection &collection )
     annotations[ KOLAB_INCIDENCESFOR ] = incidencesForToString( static_cast<IncidencesFor>( mIncidencesForComboBox->currentIndex() ) ).toLatin1();
 
   if ( mContentsComboBox ) {
-      const CollectionGeneralPage::FolderContentsType type = contentsTypeFromString( mContentsComboBox->currentText() );
+    const CollectionGeneralPage::FolderContentsType type = contentsTypeFromString( mContentsComboBox->currentText() );
     const QByteArray kolabName = kolabNameFromType( type ) ;
     if ( !kolabName.isEmpty() ) {
       QString iconName;
