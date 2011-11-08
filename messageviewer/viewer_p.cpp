@@ -1168,9 +1168,12 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
 
 void ViewerPrivate::printMessage( const Akonadi::Item &message )
 {
+// wince does not support printing
+#ifndef Q_OS_WINCE
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   setMessageItem( message, Viewer::Force );
+#endif
 }
 
 void ViewerPrivate::resetStateForNewMessage()
