@@ -48,8 +48,8 @@ class FilterLogDialog : public KDialog
 
   public:
     /** constructor */
-    FilterLogDialog( QWidget * parent );
-
+    explicit FilterLogDialog( QWidget * parent );
+  
   protected slots:
     void slotLogEntryAdded( const QString& logEntry );
     void slotLogShrinked();
