@@ -790,6 +790,7 @@ KMNoQuoteReplyToCommand::KMNoQuoteReplyToCommand( QWidget *parent,
                                                   const Akonadi::Item &msg )
   : KMCommand( parent, msg )
 {
+    fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 }
 
 KMCommand::Result KMNoQuoteReplyToCommand::execute()
