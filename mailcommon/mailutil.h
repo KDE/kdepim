@@ -77,7 +77,7 @@ namespace Util {
 
     MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
 
-    MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances();
+    MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances( bool excludeMailTransport = true);
     MAILCOMMON_EXPORT void ensureKorganizerRunning( bool switchTo );
     MAILCOMMON_EXPORT bool createTodoFromMail( const Akonadi::Item &mailItem );
     MAILCOMMON_EXPORT bool createEventFromMail( const Akonadi::Item &mailItem );
