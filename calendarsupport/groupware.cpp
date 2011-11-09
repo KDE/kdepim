@@ -151,8 +151,13 @@ void Groupware::finishHandlingInvitation()
   KCalCore::Incidence::Ptr existingIncidence =
     calendar->incidenceFromSchedulingID( incidence->uid() );
   if ( existingIncidence ) {
-    kDebug() << "cloning";
     existingIncidence = KCalCore::Incidence::Ptr( existingIncidence->clone() );
+    const bool willCrash = ( calendar->incidence( existingIncidence->uid() ) == 0 );
+    kDebug() << "cloning. SchedulingId=" << incidence->uid()
+             << "; SchedulingId2="       << (existingIncidence ? existingIncidence->schedulingID() : QLatin1String("invalid"))
+             << "; new uid="             << (existingIncidence ? existingIncidence->uid() : QLatin1String("invalid"))
+             << "; willCrash="           << willCrash
+             << "; action="               << action;
   }
 
   MailScheduler scheduler( calendar );
@@ -220,6 +225,7 @@ void Groupware::finishHandlingInvitation()
       return;
     }
 
+    Q_ASSERT( changedIncidence );
     if ( !changedIncidence->dirtyFields().isEmpty() ) {
       calendar->changeIncidence( changedIncidence );
     }
