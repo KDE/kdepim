@@ -154,7 +154,8 @@ void Groupware::finishHandlingInvitation()
   KCalCore::Incidence::Ptr existingIncidence = calendar->incidenceFromSchedulingID( incidence->uid() );
   if ( existingIncidence ) {
     existingIncidence = KCalCore::Incidence::Ptr( existingIncidence->clone() );
-    const bool willCrash = ( calendar->incidence( existingIncidence->uid() ) == 0 );
+    const bool willCrash = existingIncidence ? ( calendar->incidence( existingIncidence->uid() ) == 0 ) : false;
+
     kDebug() << "cloning. SchedulingId=" << incidence->uid()
              << "; SchedulingId2="       << (existingIncidence ? existingIncidence->schedulingID() : QLatin1String("invalid"))
              << "; new uid="             << (existingIncidence ? existingIncidence->uid() : QLatin1String("invalid"))
