@@ -1208,7 +1208,7 @@ KMCommand::Result KMCustomForwardCommand::execute()
         if ( id == 0 )
           id = mIdentity;
         {
-          KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id );
+          KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id,QString(), mTemplate );
           win->show();
         }
 
