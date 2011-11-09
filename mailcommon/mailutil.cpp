@@ -121,16 +121,23 @@ void MailCommon::Util::showJobErrorMessage( KJob *job )
   }
 }
 
-Akonadi::AgentInstance::List MailCommon::Util::agentInstances()
+Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailDispacher )
 {
   Akonadi::AgentInstance::List relevantInstances;
   foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
     const QStringList capabilities( instance.type().capabilities() );
-    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) &&
-         capabilities.contains( "Resource" ) &&
-         !capabilities.contains( "Virtual" ) &&
-         !capabilities.contains( "MailTransport" ) ) {
-      relevantInstances << instance;
+    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) )
+    {
+      if ( capabilities.contains( "Resource" ) &&
+           !capabilities.contains( "Virtual" ) &&
+           !capabilities.contains( "MailTransport" ) )
+      {
+        relevantInstances << instance;
+      }
+      else if ( !excludeMailDispacher && instance.identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) )
+      {
+        relevantInstances << instance;
+      }
     }
   }
   return relevantInstances;

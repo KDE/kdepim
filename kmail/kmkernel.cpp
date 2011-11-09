@@ -912,18 +912,27 @@ void KMKernel::stopNetworkJobs()
   if ( GlobalSettings::self()->networkState() == GlobalSettings::EnumNetworkState::Offline )
     return;
 
-  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
-  foreach ( Akonadi::AgentInstance type, lst ) {
-    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ||
-         type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
-      type.setIsOnline( false );
-    }
-  }
-
+  setAccountStatus(false);
+  
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Offline );
   BroadcastStatus::instance()->setStatusMsg( i18n("KMail is set to be offline; all network jobs are suspended"));
   emit onlineStatusChanged( (GlobalSettings::EnumNetworkState::type)GlobalSettings::networkState() );
 
+}
+
+void KMKernel::setAccountStatus(bool goOnline)
+{
+  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances(false);
+  foreach ( Akonadi::AgentInstance type, lst ) {
+    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ||
+         type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ||
+         type.identifier().contains( MAILDISPATCHER_RESOURCE_IDENTIFIER ) ) {
+      type.setIsOnline( goOnline );
+    }
+  }
+  if ( goOnline &&  MessageComposer::MessageComposerSettings::self()->sendImmediate() ) {
+    kmkernel->msgSender()->sendQueued();
+  }
 }
 
 void KMKernel::resumeNetworkJobs()
@@ -931,21 +940,11 @@ void KMKernel::resumeNetworkJobs()
   if ( GlobalSettings::self()->networkState() == GlobalSettings::EnumNetworkState::Online )
     return;
 
-  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
-  foreach ( Akonadi::AgentInstance type, lst ) {
-    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ||
-         type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
-      type.setIsOnline( true );
-    }
-  }
+  setAccountStatus(true);
 
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Online );
   BroadcastStatus::instance()->setStatusMsg( i18n("KMail is set to be online; all network jobs resumed"));
   emit onlineStatusChanged( (GlobalSettings::EnumNetworkState::type)GlobalSettings::networkState() );
-
-  if ( MessageComposer::MessageComposerSettings::self()->sendImmediate() ) {
-    kmkernel->msgSender()->sendQueued();
-  }
 }
 
 bool KMKernel::isOffline()
