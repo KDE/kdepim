@@ -2,6 +2,11 @@
 Version=1.0
 Encoding=UTF-8
 Name=Tasks
+Name[ia]=Cargas
+Name[pt]=Tarefas
+Name[sv]=Uppgifter
+Name[uk]=Завдання
+Name[x-test]=xxTasksxx
 Exec=tasks-mobile
 
 Icon=tasks-mobile
