@@ -224,21 +224,22 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob *j )
                               job->errorString() ) );
     emit incidenceChangeFinished( oldItem, newItem, change->action, false );
   } else {
-    InvitationHandler handler( mCalendar );
-    handler.setDialogParent( change->parent );
+    if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
+      InvitationHandler handler( mCalendar );
+      handler.setDialogParent( change->parent );
 
-    if ( mOperationStatus.contains( change->atomicOperationId ) ) {
-      handler.setDefaultAction(
-        actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
-    }
-    const bool attendeeStatusChanged = myAttendeeStatusChanged( oldInc, newInc );
-    InvitationHandler::SendResult result =
-      handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                            newInc,
-                                            attendeeStatusChanged );
-
-    if ( change->atomicOperationId ) {
-      mOperationStatus.insert( change->atomicOperationId, result );
+      if ( mOperationStatus.contains( change->atomicOperationId ) ) {
+        handler.setDefaultAction(
+          actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
+      }
+      const bool attendeeStatusChanged = myAttendeeStatusChanged( oldInc, newInc );
+      InvitationHandler::SendResult result =
+        handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                              newInc,
+                                              attendeeStatusChanged );
+      if ( change->atomicOperationId ) {
+        mOperationStatus.insert( change->atomicOperationId, result );
+      }
     }
 
     emit incidenceChangeFinished( oldItem, newItem, change->action, true );
