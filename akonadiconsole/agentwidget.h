@@ -56,10 +56,11 @@ protected:
     void cloneAgent();
     void cloneAgent( KJob *job );
 
-    void currentChanged( const Akonadi::AgentInstance &instance );
+    void currentChanged();
     void showContextMenu( const QPoint &pos );
 
     void selectionChanged();
+    void slotDataChanged( const QModelIndex&, const QModelIndex& );
 
   private:
     Ui::AgentWidget ui;

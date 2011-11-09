@@ -75,14 +75,14 @@ AgentWidget::AgentWidget( QWidget *parent )
   ui.setupUi( this );
 
   connect( ui.instanceWidget, SIGNAL(doubleClicked(Akonadi::AgentInstance)), SLOT(configureAgent()) );
-  connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
-           SLOT(currentChanged(Akonadi::AgentInstance)) );
+  connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)), SLOT(currentChanged()) );
   connect( ui.instanceWidget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)) );
 
   connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()) );
   connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectionChanged()) );
+  connect( ui.instanceWidget->view()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(slotDataChanged(QModelIndex,QModelIndex)) );
 
-  currentChanged( ui.instanceWidget->currentAgentInstance() );
+  currentChanged();
 
   ui.addButton->setGuiItem( KStandardGuiItem::add() );
   connect( ui.addButton, SIGNAL(clicked()), this, SLOT(addAgent()) );
@@ -139,6 +139,23 @@ void AgentWidget::selectionChanged()
   ui.restartButton->setEnabled( agent.isValid() && agent.status() != 1 );
 }
 
+void AgentWidget::slotDataChanged( const QModelIndex& topLeft, const QModelIndex& /*bottomRight*/ )
+{
+  QList<QModelIndex> selectedRows = ui.instanceWidget->view()->selectionModel()->selectedRows();
+  if ( selectedRows.isEmpty() ) {
+    selectedRows.append( ui.instanceWidget->view()->selectionModel()->currentIndex() );
+  }
+  QList<int> rows;
+  Q_FOREACH( const QModelIndex& index, selectedRows ) {
+    rows.append( index.row() );
+  }
+  qSort( rows );
+  // Assume topLeft.row == bottomRight.row
+  if ( topLeft.row() >= rows.first() && topLeft.row() <= rows.last() ) {
+    selectionChanged(); // depends on status
+    currentChanged();
+  }
+}
 
 void AgentWidget::removeAgent()
 {
@@ -391,8 +408,9 @@ void AgentWidget::cloneAgent( KJob* job )
   cloneTarget.reconfigure();
 }
 
-void AgentWidget::currentChanged(const Akonadi::AgentInstance& instance)
+void AgentWidget::currentChanged()
 {
+  AgentInstance instance = ui.instanceWidget->currentAgentInstance();
   ui.removeButton->setEnabled( instance.isValid() );
   ui.configButton->setEnabled( instance.isValid() );
   ui.syncButton->setEnabled( instance.isValid() );
