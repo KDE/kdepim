@@ -7,6 +7,7 @@ Name[pt]=Tarefas
 Name[sv]=Uppgifter
 Name[uk]=Завдання
 Name[x-test]=xxTasksxx
+Name[zh_TW]=工作
 Exec=tasks-mobile
 
 Icon=tasks-mobile
