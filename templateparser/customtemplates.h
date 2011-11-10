@@ -102,7 +102,7 @@ struct CustomTemplateItem
                       const QString &content,
                       KShortcut &shortcut,
                       CustomTemplates::Type type,
-                      QString to, QString cc ) :
+                      const QString& to, const QString& cc ) :
     mName( name ), mContent( content ), mShortcut(shortcut), mType( type ),
     mTo( to ), mCC( cc ) {}
 
