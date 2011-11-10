@@ -195,16 +195,14 @@ void CustomTemplates::load()
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
-    // QString typeStr = indexToType( t.type() );
-    QString typeStr;
     KShortcut shortcut( t.shortcut() );
     CustomTemplateItem *vitem =
       new CustomTemplateItem( *it, t.content(),
         shortcut,
         static_cast<Type>( t.type() ), t.to(), t.cC() );
     mItemList.insert( *it, vitem );
+    
     QTreeWidgetItem *item = new QTreeWidgetItem( mUi->mList );
-    item->setText( 0, typeStr );
     item->setText( 1, *it );
     item->setText( 0, indexToType( t.type() ) );
     switch ( t.type() ) {
