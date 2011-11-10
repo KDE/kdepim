@@ -21,6 +21,7 @@
 #include "ui_templatesconfiguration_base.h"
 #include "templatesconfiguration_kfg.h"
 #include "globalsettings_base.h"
+#include "templatessyntaxhighlighter.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -41,6 +42,11 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
   textEdit_reply->setFont( f );
   textEdit_reply_all->setFont( f );
   textEdit_forward->setFont( f );
+
+  (void) new TemplateParser::TemplatesSyntaxHighlighter( textEdit_new->document() );
+  (void) new TemplateParser::TemplatesSyntaxHighlighter( textEdit_reply->document() );
+  (void) new TemplateParser::TemplatesSyntaxHighlighter( textEdit_reply_all->document() );
+  (void) new TemplateParser::TemplatesSyntaxHighlighter( textEdit_forward->document() );
 
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
   sizeHint();

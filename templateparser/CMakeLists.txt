@@ -14,6 +14,7 @@ if (NOT WINCE)
     customtemplatesmenu.cpp
     templatesconfiguration.cpp
     templatesinsertcommand.cpp
+    templatessyntaxhighlighter.cpp
   )
 endif (NOT WINCE)
 
