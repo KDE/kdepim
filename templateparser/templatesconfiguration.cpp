@@ -27,7 +27,6 @@
 #include <kglobal.h>
 
 #include <QWhatsThis>
-#include <qfont.h>
 #include <KMessageBox>
 
 TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
@@ -35,12 +34,6 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
 {
   setupUi(this);
   setObjectName(name);
-
-  const QFont f = KGlobalSettings::fixedFont();
-  textEdit_new->setFont( f );
-  textEdit_reply->setFont( f );
-  textEdit_reply_all->setFont( f );
-  textEdit_forward->setFont( f );
 
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
   sizeHint();

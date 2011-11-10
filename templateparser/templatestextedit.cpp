@@ -18,17 +18,22 @@
 
 #include "templatestextedit.h"
 #include "templatessyntaxhighlighter.h"
+#include "kglobalsettings.h"
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>
 #include <QAbstractItemView>
 #include <QScrollBar>
+
 using namespace TemplateParser;
 
 TemplatesTextEdit::TemplatesTextEdit( QWidget *parent )
   :KTextEdit( parent )
 {
   setFocus();
+  const QFont f = KGlobalSettings::fixedFont();
+  setFont( f );
+
   setWordWrapMode ( QTextOption::NoWrap );
   (void) new TemplatesSyntaxHighlighter( document() );
   initCompleter();

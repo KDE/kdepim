@@ -20,7 +20,6 @@
 
 #include "customtemplates.h"
 
-#include <qfont.h>
 #include <QWhatsThis>
 
 #include <klocale.h>
@@ -43,9 +42,6 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   mUi = new Ui_CustomTemplatesBase;
   mUi->setupUi( this );
   setObjectName(name);
-
-  const QFont f = KGlobalSettings::fixedFont();
-  mUi->mEdit->setFont( f );
 
   mUi->mAdd->setIcon( KIcon( "list-add" ) );
   mUi->mAdd->setEnabled( false );
