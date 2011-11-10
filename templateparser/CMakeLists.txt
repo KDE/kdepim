@@ -15,6 +15,7 @@ if (NOT WINCE)
     templatesconfiguration.cpp
     templatesinsertcommand.cpp
     templatessyntaxhighlighter.cpp
+    templatestextedit.cpp
   )
 endif (NOT WINCE)
 

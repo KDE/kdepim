@@ -154,7 +154,7 @@
         </layout>
        </item>
        <item>
-        <widget class="KTextEdit" name="mEdit">
+        <widget class="TemplateParser::TemplatesTextEdit" name="mEdit">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>3</horstretch>
@@ -272,9 +272,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KTextEdit</class>
+   <class>TemplateParser::TemplatesTextEdit</class>
    <extends>QTextEdit</extends>
-   <header>ktextedit.h</header>
+   <header>templatestextedit.h</header>
   </customwidget>
   <customwidget>
    <class>TemplatesInsertCommand</class>

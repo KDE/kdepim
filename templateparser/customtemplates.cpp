@@ -35,7 +35,6 @@
 #include "ui_customtemplates_base.h"
 #include "customtemplates_kfg.h"
 #include "globalsettings_base.h"
-#include "templatessyntaxhighlighter.h"
 
 CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   : QWidget( parent ),
@@ -47,8 +46,6 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
 
   const QFont f = KGlobalSettings::fixedFont();
   mUi->mEdit->setFont( f );
-  (void) new TemplateParser::TemplatesSyntaxHighlighter( mUi->mEdit->document() );
-
 
   mUi->mAdd->setIcon( KIcon( "list-add" ) );
   mUi->mAdd->setEnabled( false );

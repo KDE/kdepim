@@ -68,7 +68,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout" >
        <item row="0" column="0" >
-        <widget class="KTextEdit" name="textEdit_new" >
+        <widget class="TemplateParser::TemplatesTextEdit" name="textEdit_new" >
          <property name="font" >
           <font>
            <family>Monospace</family>
@@ -105,7 +105,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="KTextEdit" name="textEdit_reply" >
+        <widget class="TemplateParser::TemplatesTextEdit" name="textEdit_reply" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
            <horstretch>0</horstretch>
@@ -153,7 +153,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="KTextEdit" name="textEdit_reply_all" >
+        <widget class="TemplateParser::TemplatesTextEdit" name="textEdit_reply_all" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
            <horstretch>0</horstretch>
@@ -201,7 +201,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="KTextEdit" name="textEdit_forward" >
+        <widget class="TemplateParser::TemplatesTextEdit" name="textEdit_forward" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
            <horstretch>0</horstretch>
@@ -289,9 +289,9 @@
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KTextEdit</class>
+   <class>TemplateParser::TemplatesTextEdit</class>
    <extends>QTextEdit</extends>
-   <header>ktextedit.h</header>
+   <header>templatestextedit.h</header>
   </customwidget>
   <customwidget>
    <class>TemplatesInsertCommand</class>
