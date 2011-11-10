@@ -73,6 +73,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
@@ -254,9 +257,9 @@
    <header>kkeysequencewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -266,9 +269,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
