@@ -72,6 +72,8 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollect
           this, SLOT(slotRemoveClicked()) );
   connect(mUi->mList, SIGNAL(itemSelectionChanged()),
           this, SLOT(slotListSelectionChanged()) );
+  connect(mUi->mList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+          this, SLOT(slotItemChanged(QTreeWidgetItem*,int)) );
   connect( mUi->mType, SIGNAL(activated(int)),
           this, SLOT(slotTypeActivated(int)) );
 
@@ -227,9 +229,10 @@ void CustomTemplates::save()
   QTreeWidgetItemIterator lit( mUi->mList );
   while ( *lit ) {
     CustomTemplateItem * it = static_cast<CustomTemplateItem*>( *lit );
-    list.append( it->text( 1 ) );
+    const QString name = it->text( 1 );
+    list.append(name);
 
-    CTemplates t( it->name() );
+    CTemplates t(name);
     QString content = it->content();
     if ( content.trimmed().isEmpty() ) {
       content = "%BLANK";
@@ -374,6 +377,23 @@ void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
     emit changed();
 }
 
+void CustomTemplates::slotItemChanged(QTreeWidgetItem* item ,int column)
+{
+  if ( item ) {
+    CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
+    if ( column == 1 ) {
+      const QString newName = vitem->text( 1 );
+      const QString oldName = vitem->name();
+      if ( newName != oldName ) {
+        mItemsToDelete.append( oldName );
+        vitem->setName( newName );
+        if ( !mBlockChangeSignal )
+          emit changed();
+      }
+    }
+  }
+}
+
 CustomTemplateItemDelegate::CustomTemplateItemDelegate(QObject *parent )
   :QItemDelegate( parent )
 {
@@ -385,13 +405,11 @@ CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
 
 QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &index) const
 {
-#if 0  
   if (index.column() == 1) {
     QLineEdit *lineEdit = new QLineEdit(parent);
     lineEdit->setFrame(false);
     return lineEdit;
   }
-#endif  
   return 0;
 }
   

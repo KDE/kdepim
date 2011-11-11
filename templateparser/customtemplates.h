@@ -61,18 +61,11 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotListSelectionChanged();
     void slotTypeActivated( int index );
     void slotShortcutChanged( const QKeySequence &newSeq );
+    void slotItemChanged(QTreeWidgetItem* item ,int column);
 
   signals:
     void changed();
     void templatesUpdated();
-
-  protected:
-    /// These templates will be deleted when we're saving.
-    QStringList mItemsToDelete;
-
-    QPixmap mReplyPix;
-    QPixmap mReplyAllPix;
-    QPixmap mForwardPix;
 
   private slots:
 
@@ -80,6 +73,12 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotNameChanged( const QString & text );
 
   private:
+    /// These templates will be deleted when we're saving.
+    QStringList mItemsToDelete;
+
+    QPixmap mReplyPix;
+    QPixmap mReplyAllPix;
+    QPixmap mForwardPix;
 
     /// Whether or not to emit the changed() signal. This is useful to disable when loading
     /// templates, which changes the UI without user action
