@@ -58,12 +58,13 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
 	  "<p>The message templates support substitution commands, "
 	  "either simply type them or select them from "
 	  "the <i>Insert command</i> menu.</p>" );
-  if ( QString( name ) == "folder-templates" ) {
+  const QString templateConfigurationName( name );
+  if ( templateConfigurationName == QLatin1String( "folder-templates" ) ) {
     mHelpString +=
       i18n( "<p>Templates specified here are folder-specific. "
             "They override both global templates and per-identity "
             "templates.</p>" );
-  } else if ( QString( name ) == "identity-templates" ) {
+  } else if ( templateConfigurationName == QLatin1String( "identity-templates" ) ) {
     mHelpString +=
       i18n( "<p>Templates specified here are identity-specific. "
             "They override global templates, but can be overridden by "
@@ -312,8 +313,9 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   }
 
   // kDebug() << "Insert command:" << cmd;
-  if ( ( edit->toPlainText().contains( "%FORCEDPLAIN" ) && ( cmd == "%FORCEDHTML" ) ) ||
-       ( edit->toPlainText().contains( "%FORCEDHTML" ) && ( cmd == "%FORCEDPLAIN" ) ) ) {
+  const QString editText( edit->toPlainText() );
+  if ( ( editText.contains( "%FORCEDPLAIN" ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
+       ( editText.contains( "%FORCEDHTML" ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {
     KMessageBox::error( this, i18n( "Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"
                                     " is not correct. Use only one of the aforementioned commands with \" Reply as"
                                     " Quoted Message command\" as per your need\n"
@@ -330,7 +332,7 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
 
 QString TemplatesConfiguration::strOrBlank( const QString &str ) {
   if ( str.trimmed().isEmpty() ) {
-    return QString( "%BLANK" );
+    return QString::fromLatin1( "%BLANK" );
   }
   return str;
 }
