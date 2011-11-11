@@ -383,10 +383,10 @@ void CustomTemplates::slotItemChanged(QTreeWidgetItem* item ,int column)
     CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
     if ( column == 1 ) {
       const QString newName = vitem->text( 1 );
-      const QString oldName = vitem->name();
+      const QString oldName = vitem->oldName();
       if ( newName != oldName ) {
         mItemsToDelete.append( oldName );
-        vitem->setName( newName );
+        vitem->setOldName( newName );
         if ( !mBlockChangeSignal )
           emit changed();
       }
@@ -486,12 +486,12 @@ void CustomTemplateItem::setShortcut(const KShortcut& shortcut)
   mShortcut = shortcut;
 }
 
-QString CustomTemplateItem::name() const
+QString CustomTemplateItem::oldName() const
 {
   return mName;
 }
 
-void CustomTemplateItem::setName(const QString& name)
+void CustomTemplateItem::setOldName(const QString& name)
 {
   mName = name;
 }

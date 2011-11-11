@@ -113,8 +113,8 @@ public:
   KShortcut shortcut() const;
   void setShortcut(const KShortcut&);
 
-  QString name() const;
-  void setName(const QString&);
+  QString oldName() const;
+  void setOldName(const QString&);
   
 private:
   QString mName, mContent;
