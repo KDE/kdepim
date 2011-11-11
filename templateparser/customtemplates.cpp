@@ -190,12 +190,13 @@ void CustomTemplates::load()
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
-    KShortcut shortcut( t.shortcut() );    
-    CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),shortcut, static_cast<Type>( t.type() ), t.to(), t.cC() );    
+    KShortcut shortcut( t.shortcut() );
+    CustomTemplates::Type type = static_cast<Type>( t.type() );
+    CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),shortcut, type, t.to(), t.cC() );    
     item->setText( 1, *it );
-    item->setText( 0, indexToType( t.type() ) );
+    item->setText( 0, indexToType( type ) );
     
-    switch ( t.type() ) {
+    switch ( type ) {
     case TReply:
       item->setIcon( 0, mReplyPix );
       break;
