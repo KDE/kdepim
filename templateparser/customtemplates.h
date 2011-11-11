@@ -51,9 +51,11 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void load();
     void save();
 
-    QString indexToType( int index );
+  signals:
+    void changed();
+    void templatesUpdated();
 
-  public slots:
+  private slots:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
     void slotAddClicked();
@@ -62,17 +64,11 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotTypeActivated( int index );
     void slotShortcutChanged( const QKeySequence &newSeq );
     void slotItemChanged(QTreeWidgetItem* item ,int column);
-
-  signals:
-    void changed();
-    void templatesUpdated();
-
-  private slots:
-
     void slotHelpLinkClicked( const QString& );
     void slotNameChanged( const QString & text );
 
   private:
+    QString indexToType( int index );
     /// These templates will be deleted when we're saving.
     QStringList mItemsToDelete;
 
