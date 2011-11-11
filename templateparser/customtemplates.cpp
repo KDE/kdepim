@@ -234,10 +234,11 @@ void CustomTemplates::save()
 {
   // Before saving the new templates, delete the old ones. That needs to be done before
   // saving, since otherwise a new template with the new name wouldn't get saved.
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( "customtemplatesrc", KConfig::NoGlobals );
   foreach( const QString &item, mItemsToDelete ) {
     CTemplates t( item );
     const QString configGroup = t.currentGroup();
-    TemplateParser::GlobalSettings::self()->config()->deleteGroup( configGroup );
+    config->deleteGroup( configGroup );
   }
 
   QStringList list;
