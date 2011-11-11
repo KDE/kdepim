@@ -35,13 +35,12 @@
 #include "customtemplates_kfg.h"
 #include "globalsettings_base.h"
 
-CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
+CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollection, QWidget *parent )
   : QWidget( parent ),
     mBlockChangeSignal( false )
 {
   mUi = new Ui_CustomTemplatesBase;
   mUi->setupUi( this );
-  setObjectName(name);
 
   mUi->mAdd->setIcon( KIcon( "list-add" ) );
   mUi->mAdd->setEnabled( false );
@@ -49,6 +48,7 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
 
   mUi->mList->setColumnWidth( 0, 100 );
   mUi->mList->header()->setStretchLastSection( true );
+  mUi->mList->setItemDelegate(new CustomTemplateItemDelegate(this));
 
   mUi->mEditFrame->setEnabled( false );
 
@@ -77,8 +77,7 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   connect( mUi->mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
           this, SLOT(slotShortcutChanged(QKeySequence)) );
 
-// TODO(leo) still check with kmail? kmail can do the checking
- // mKeySequenceWidget->setCheckActionCollections( kmkernel->getKMMainWidget()->actionCollections() );
+  mUi->mKeySequenceWidget->setCheckActionCollections( actionCollection );
 
   mReplyPix = KIconLoader().loadIcon( "mail-reply-sender", KIconLoader::Small );
   mReplyAllPix = KIconLoader().loadIcon( "mail-reply-all", KIconLoader::Small );
@@ -201,6 +200,8 @@ void CustomTemplates::load()
     QTreeWidgetItem *item = new QTreeWidgetItem( mUi->mList );
     item->setText( 1, *it );
     item->setText( 0, indexToType( t.type() ) );
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
+    
     switch ( t.type() ) {
     case TReply:
       item->setIcon( 0, mReplyPix );
@@ -283,6 +284,7 @@ void CustomTemplates::slotAddClicked()
         new QTreeWidgetItem( mUi->mList );
       item->setText( 0, indexToType( TUniversal ) );
       item->setText( 1, str );
+      item->setFlags(item->flags() | Qt::ItemIsEditable);
       mUi->mList->setCurrentItem( item );
       mUi->mRemove->setEnabled( true );
       mUi->mName->clear();
@@ -389,5 +391,28 @@ void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
     if ( !mBlockChangeSignal )
       emit changed();
 }
+
+CustomTemplateItemDelegate::CustomTemplateItemDelegate(QObject *parent )
+  :QItemDelegate( parent )
+{
+}
+
+CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
+{
+}
+
+QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &index) const
+{
+#if 0  
+  if (index.column() == 1) {
+    QLineEdit *lineEdit = new QLineEdit(parent);
+    lineEdit->setFrame(false);
+    return lineEdit;
+  }
+#endif  
+  return 0;
+}
+  
+
 
 #include "customtemplates.moc"

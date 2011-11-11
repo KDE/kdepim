@@ -25,11 +25,12 @@
 #include <QHash>
 #include <QPixmap>
 #include <QWidget>
+#include <QItemDelegate>
 
 #include <KShortcut>
 
 #include "templateparser_export.h"
-
+class KActionCollection;
 struct CustomTemplateItem;
 typedef QHash<QString,CustomTemplateItem*> CustomTemplateItemList;
 
@@ -45,7 +46,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 
   public:
 
-    explicit CustomTemplates( QWidget *parent = 0, const char *name = 0 );
+    explicit CustomTemplates( const QList<KActionCollection*>& actionCollection, QWidget *parent = 0 );
     ~CustomTemplates();
 
     void load();
@@ -111,6 +112,18 @@ struct CustomTemplateItem
   KShortcut mShortcut;
   CustomTemplates::Type mType;
   QString mTo, mCC;
+};
+
+class CustomTemplateItemDelegate : public QItemDelegate
+{
+  Q_OBJECT
+  
+public:
+  explicit CustomTemplateItemDelegate(QObject *parent = 0);
+  ~CustomTemplateItemDelegate();
+  
+  QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                        const QModelIndex &index) const;
 };
 
 #endif // CUSTOMTEMPLATES_H
