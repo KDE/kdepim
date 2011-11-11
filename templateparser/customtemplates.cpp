@@ -1,6 +1,7 @@
 /*   -*- mode: C++; c-file-style: "gnu" -*-
 *   kmail: KDE mail client
 *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+*   Copyright (C) 2011 Laurent Montel <montel@kde.org>
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -136,8 +137,6 @@ void CustomTemplates::slotHelpLinkClicked( const QString& )
 
 CustomTemplates::~CustomTemplates()
 {
-  qDeleteAll( mItemList ); // no auto-delete with QHash
-  mItemList.clear();
   delete mUi;
   mUi = 0;
 }
@@ -169,14 +168,13 @@ QString CustomTemplates::indexToType( int index )
 
 void CustomTemplates::slotTextChanged()
 {
-  if ( mUi->mList->currentItem() ) {
-    CustomTemplateItem *vitem = mItemList[ mUi->mList->currentItem()->text( 1 ) ];
-    if ( vitem ) {
-      vitem->mContent = mUi->mEdit->toPlainText();
-      if ( !mBlockChangeSignal ) {
-        vitem->mTo = mUi->mToEdit->text();
-        vitem->mCC = mUi->mCCEdit->text();
-      }
+  QTreeWidgetItem *item = mUi->mList->currentItem();
+  if ( item ) {
+    CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
+    vitem->setContent( mUi->mEdit->toPlainText() );
+    if ( !mBlockChangeSignal ) {
+      vitem->setTo( mUi->mToEdit->text() );
+      vitem->setCc( mUi->mCCEdit->text() );
     }
   }
 
@@ -190,17 +188,10 @@ void CustomTemplates::load()
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
-    KShortcut shortcut( t.shortcut() );
-    CustomTemplateItem *vitem =
-      new CustomTemplateItem( *it, t.content(),
-        shortcut,
-        static_cast<Type>( t.type() ), t.to(), t.cC() );
-    mItemList.insert( *it, vitem );
-    
-    QTreeWidgetItem *item = new QTreeWidgetItem( mUi->mList );
+    KShortcut shortcut( t.shortcut() );    
+    CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),shortcut, static_cast<Type>( t.type() ), t.to(), t.cC() );    
     item->setText( 1, *it );
     item->setText( 0, indexToType( t.type() ) );
-    item->setFlags(item->flags() | Qt::ItemIsEditable);
     
     switch ( t.type() ) {
     case TReply:
@@ -234,23 +225,24 @@ void CustomTemplates::save()
   QStringList list;
   QTreeWidgetItemIterator lit( mUi->mList );
   while ( *lit ) {
-    list.append( (*lit)->text( 1 ) );
-    ++lit;
-  }
+    CustomTemplateItem * it = static_cast<CustomTemplateItem*>( *lit );
+    list.append( it->text( 1 ) );
 
-  foreach( const CustomTemplateItem *item, mItemList ) {
-    CTemplates t( item->mName );
-    QString content = item->mContent;
+    CTemplates t( it->name() );
+    QString content = it->content();
     if ( content.trimmed().isEmpty() ) {
       content = "%BLANK";
     }
+    
     t.setContent( content );
-    t.setShortcut( item->mShortcut.toString() );
-    t.setType( item->mType );
-    t.setTo( item->mTo );
-    t.setCC( item->mCC );
+    t.setShortcut( it->shortcut().toString() );
+    t.setType( it->customType() );
+    t.setTo( it->to() );
+    t.setCC( it->cc() );
     t.writeConfig();
+    ++lit;
   }
+
   TemplateParser::GlobalSettings::self()->setCustomTemplates( list );
   TemplateParser::GlobalSettings::self()->writeConfig();
 
@@ -268,43 +260,36 @@ void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
 
 void CustomTemplates::slotAddClicked()
 {
-  QString str = mUi->mName->text();
+  const QString str = mUi->mName->text();
   if ( !str.isEmpty() ) {
-    CustomTemplateItem *vitem = mItemList[ str ];
-    if ( !vitem ) {
-      // KShortcut::null() doesn't seem to be present, although documented
-      // at http://developer.kde.org/documentation/library/cvs-api/kdelibs-apidocs/kdecore/html/classKShortcut.html
-      // see slotShortcutChanged(). oh, and you should look up documentation on the english breakfast network!
-      // FIXME There must be a better way of doing this...
-      KShortcut nullShortcut;
-      vitem = new CustomTemplateItem( str, "", nullShortcut, TUniversal,
-                                      QString(), QString() );
-      mItemList.insert( str, vitem );
-      QTreeWidgetItem *item =
-        new QTreeWidgetItem( mUi->mList );
-      item->setText( 0, indexToType( TUniversal ) );
-      item->setText( 1, str );
-      item->setFlags(item->flags() | Qt::ItemIsEditable);
-      mUi->mList->setCurrentItem( item );
-      mUi->mRemove->setEnabled( true );
-      mUi->mName->clear();
-      mUi->mKeySequenceWidget->setEnabled( false );
-      if ( !mBlockChangeSignal )
-        emit changed();
-    }
+    // KShortcut::null() doesn't seem to be present, although documented
+    // at http://developer.kde.org/documentation/library/cvs-api/kdelibs-apidocs/kdecore/html/classKShortcut.html
+    // see slotShortcutChanged(). oh, and you should look up documentation on the english breakfast network!
+    // FIXME There must be a better way of doing this...
+    KShortcut nullShortcut;
+    CustomTemplateItem *item =
+      new CustomTemplateItem( mUi->mList, str, "", nullShortcut, TUniversal,
+                           QString(), QString());
+    item->setText( 0, indexToType( TUniversal ) );
+    item->setText( 1, str );
+    mUi->mList->setCurrentItem( item );
+    mUi->mRemove->setEnabled( true );
+    mUi->mName->clear();
+    mUi->mKeySequenceWidget->setEnabled( false );
+    if ( !mBlockChangeSignal )
+      emit changed();
   }
 }
 
 void CustomTemplates::slotRemoveClicked()
 {
-  if ( !mUi->mList->currentItem() )
+  QTreeWidgetItem * item = mUi->mList->currentItem();
+  if ( !item )
     return;
 
-  const QString templateName = mUi->mList->currentItem()->text( 1 );
+  const QString templateName = item->text( 1 );
   mItemsToDelete.append( templateName );
-  delete mItemList.take( templateName );
-  delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem (
-                                  mUi->mList->currentItem() ) );
+  delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
   mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
   if ( !mBlockChangeSignal )
     emit changed();
@@ -316,25 +301,22 @@ void CustomTemplates::slotListSelectionChanged()
   if ( item ) {
     mUi->mEditFrame->setEnabled( true );
     mUi->mRemove->setEnabled(true);
-    CustomTemplateItem *vitem = mItemList[ mUi->mList->currentItem()->text( 1 ) ];
-    if ( vitem ) {
+    CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
+    mBlockChangeSignal = true;
+    mUi->mEdit->setText( vitem->content() );
+    mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut().primary(),
+                                             KKeySequenceWidget::NoValidate );
+    mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( vitem->customType() ) ) );
+    mUi->mToEdit->setText( vitem->to() );
+    mUi->mCCEdit->setText( vitem->cc() );
+    mBlockChangeSignal = false;
 
-      mBlockChangeSignal = true;
-      mUi->mEdit->setText( vitem->mContent );
-      mUi->mKeySequenceWidget->setKeySequence( vitem->mShortcut.primary(),
-                                          KKeySequenceWidget::NoValidate );
-      mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( vitem->mType ) ) );
-      mUi->mToEdit->setText( vitem->mTo );
-      mUi->mCCEdit->setText( vitem->mCC );
-      mBlockChangeSignal = false;
-
-      // I think the logic (originally 'vitem->mType==TUniversal') was inverted here:
-      // a key shortcut is only allowed for a specific type of template and not for
-      // a universal, as otherwise we won't know what sort of action to do when the
-      // key sequence is activated!
-      // This agrees with KMMainWidget::updateCustomTemplateMenus() -- marten
-      mUi->mKeySequenceWidget->setEnabled( vitem->mType != TUniversal );
-    }
+    // I think the logic (originally 'vitem->mType==TUniversal') was inverted here:
+    // a key shortcut is only allowed for a specific type of template and not for
+    // a universal, as otherwise we won't know what sort of action to do when the
+    // key sequence is activated!
+    // This agrees with KMMainWidget::updateCustomTemplateMenus() -- marten
+    mUi->mKeySequenceWidget->setEnabled( vitem->customType() != TUniversal );
   } else {
     mUi->mEditFrame->setEnabled( false );
     mUi->mEdit->clear();
@@ -348,15 +330,14 @@ void CustomTemplates::slotListSelectionChanged()
 
 void CustomTemplates::slotTypeActivated( int index )
 {
-  if ( mUi->mList->currentItem() ) {
-    // mCurrentItem->setText( 0, indexToType( index ) );
-    CustomTemplateItem *vitem = mItemList[ mUi->mList->currentItem()->text( 1 ) ];
-    if ( !vitem )
-      return;
-
-    vitem->mType = static_cast<Type>(index);
-    mUi->mList->currentItem()->setText( 0, indexToType( vitem->mType ) );
-    switch ( vitem->mType ) {
+  QTreeWidgetItem *item = mUi->mList->currentItem();
+  if ( item ) {
+    CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
+    CustomTemplates::Type customtype = static_cast<Type>(index);
+    vitem->setCustomType( customtype );
+    mUi->mList->currentItem()->setText( 0, indexToType( customtype ) );
+    
+    switch ( customtype ) {
     case TReply:
       mUi->mList->currentItem()->setIcon( 0, mReplyPix );
       break;
@@ -372,7 +353,7 @@ void CustomTemplates::slotTypeActivated( int index )
     };
 
     // see slotListSelectionChanged() above
-    mUi->mKeySequenceWidget->setEnabled( vitem->mType != TUniversal );
+    mUi->mKeySequenceWidget->setEnabled( customtype != TUniversal );
 
     if ( !mBlockChangeSignal )
       emit changed();
@@ -381,15 +362,15 @@ void CustomTemplates::slotTypeActivated( int index )
 
 void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
 {
-    if ( mUi->mList->currentItem() )
-    {
-      mItemList[ mUi->mList->currentItem()->text( 1 ) ]->mShortcut =
-          KShortcut( newSeq );
-      mUi->mKeySequenceWidget->applyStealShortcut();
-    }
-
-    if ( !mBlockChangeSignal )
-      emit changed();
+  QTreeWidgetItem *item = mUi->mList->currentItem();
+  if ( item ) {
+    CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
+    vitem->setShortcut( KShortcut( newSeq ) );
+    mUi->mKeySequenceWidget->applyStealShortcut();
+  }
+  
+  if ( !mBlockChangeSignal )
+    emit changed();
 }
 
 CustomTemplateItemDelegate::CustomTemplateItemDelegate(QObject *parent )
@@ -414,5 +395,86 @@ QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleO
 }
   
 
+CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
+                                        const QString &name,
+                                        const QString &content,
+                                        KShortcut &shortcut,
+                                        CustomTemplates::Type type,
+                                        const QString& to,
+                                        const QString& cc )
+  :QTreeWidgetItem( parent ),
+   mName( name ),
+   mContent( content ),
+   mShortcut(shortcut),
+   mType( type ),
+   mTo( to ),
+   mCC( cc )
+{
+  setFlags(flags() | Qt::ItemIsEditable);
+}
+
+CustomTemplateItem::~CustomTemplateItem()
+{
+}
+
+void CustomTemplateItem::setCustomType( CustomTemplates::Type type )
+{
+  mType = type;
+}
+
+CustomTemplates::Type CustomTemplateItem::customType() const
+{
+  return mType;
+}
+
+QString CustomTemplateItem::to() const
+{
+  return mTo;
+}
+  
+QString CustomTemplateItem::cc() const
+{
+  return mCC;
+}
+
+QString CustomTemplateItem::content() const
+{
+  return mContent;
+}
+
+void CustomTemplateItem::setContent(const QString& content )
+{
+  mContent = content;
+}
+
+void CustomTemplateItem::setTo(const QString& to)
+{
+  mTo = to;
+}
+
+void CustomTemplateItem::setCc(const QString& cc)
+{
+  mCC = cc;
+}
+
+KShortcut CustomTemplateItem::shortcut() const
+{
+  return mShortcut;
+}
+
+void CustomTemplateItem::setShortcut(const KShortcut& shortcut)
+{
+  mShortcut = shortcut;
+}
+
+QString CustomTemplateItem::name() const
+{
+  return mName;
+}
+
+void CustomTemplateItem::setName(const QString& name)
+{
+  mName = name;
+}
 
 #include "customtemplates.moc"

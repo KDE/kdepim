@@ -1,6 +1,7 @@
 /*   -*- mode: C++; c-file-style: "gnu" -*-
  *   kmail: KDE mail client
  *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ *   Copyright (C) 2011 Laurent Montel <montel@kde.org>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,13 +27,11 @@
 #include <QPixmap>
 #include <QWidget>
 #include <QItemDelegate>
-
+#include <QTreeWidgetItem>
 #include <KShortcut>
 
 #include "templateparser_export.h"
 class KActionCollection;
-struct CustomTemplateItem;
-typedef QHash<QString,CustomTemplateItem*> CustomTemplateItemList;
 
 class Ui_CustomTemplatesBase;
 
@@ -55,11 +54,8 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     QString indexToType( int index );
 
   public slots:
-
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
-
     void slotTextChanged();
-
     void slotAddClicked();
     void slotRemoveClicked();
     void slotListSelectionChanged();
@@ -67,14 +63,10 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotShortcutChanged( const QKeySequence &newSeq );
 
   signals:
-
     void changed();
     void templatesUpdated();
 
   protected:
-
-    CustomTemplateItemList mItemList;
-
     /// These templates will be deleted when we're saving.
     QStringList mItemsToDelete;
 
@@ -96,17 +88,36 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     Ui_CustomTemplatesBase *mUi;
 };
 
-struct CustomTemplateItem
+class CustomTemplateItem : public QTreeWidgetItem
 {
-  CustomTemplateItem() {}
-  CustomTemplateItem( const QString &name,
-                      const QString &content,
-                      KShortcut &shortcut,
-                      CustomTemplates::Type type,
-                      const QString& to, const QString& cc ) :
-    mName( name ), mContent( content ), mShortcut(shortcut), mType( type ),
-    mTo( to ), mCC( cc ) {}
+public:
+  explicit CustomTemplateItem( QTreeWidget *parent,
+                               const QString &name,
+                               const QString &content,
+                               KShortcut &shortcut,
+                               CustomTemplates::Type type,
+                               const QString& to,
+                               const QString& cc );
+  ~CustomTemplateItem();
+  void setCustomType( CustomTemplates::Type type );
+  CustomTemplates::Type customType() const;
 
+  QString to() const;
+  QString cc() const;
+
+  void setTo(const QString&);
+  void setCc(const QString&);
+
+  QString content() const;
+  void setContent(const QString&);
+
+  KShortcut shortcut() const;
+  void setShortcut(const KShortcut&);
+
+  QString name() const;
+  void setName(const QString&);
+  
+private:
   QString mName, mContent;
   //QKeySequence might do the trick too, check the rest of your code. --ahartmetz
   KShortcut mShortcut;
