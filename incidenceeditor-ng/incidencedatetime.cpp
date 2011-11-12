@@ -728,6 +728,29 @@ void IncidenceDateTime::save( const KCalCore::Journal::Ptr &journal )
 
 void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &end )
 {
+  const KDateTime::Spec startSpec = start.timeSpec();
+  const KDateTime::Spec endSpec = end.timeSpec();
+
+  // Combo boxes only have system time zones
+  if ( startSpec.type() == KDateTime::TimeZone ) {
+    const KTimeZone systemTz = KSystemTimeZones::zone( startSpec.timeZone().name() );
+    if ( !systemTz.isValid() ) {
+      const KCalCore::ICalTimeZone icalTz( startSpec.timeZone() );
+      mTimeZones->add( icalTz );
+    }
+  }
+
+  if ( endSpec.type() == KDateTime::TimeZone ) {
+    const KTimeZone systemTz = KSystemTimeZones::zone( endSpec.timeZone().name() );
+    if ( !systemTz.isValid() ) {
+      const KCalCore::ICalTimeZone icalTz( endSpec.timeZone() );
+      mTimeZones->add( icalTz );
+    }
+  }
+
+  mUi->mTimeZoneComboStart->setAdditionalTimeZones( mTimeZones );
+  mUi->mTimeZoneComboEnd->setAdditionalTimeZones( mTimeZones );
+
   if ( start.isValid() ) {
     mUi->mStartDateEdit->setDate( start.date() );
     mUi->mStartTimeEdit->setTime( start.time() );
