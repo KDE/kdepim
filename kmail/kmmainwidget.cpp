@@ -389,7 +389,7 @@ void KMMainWidget::slotEndCheckMail()
     slotEndCheckFetchCollectionsDone(0);
     return;
   }
-  
+
   Akonadi::Collection::List collections;
   QMap<Akonadi::Collection::Id, int>::const_iterator it = mCheckMail.constBegin();
   while ( it != mCheckMail.constEnd() ) {
@@ -397,7 +397,7 @@ void KMMainWidget::slotEndCheckMail()
     collections << collection;
     ++it;
   }
-  
+
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( collections, Akonadi::CollectionFetchJob::Base );
   connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotEndCheckFetchCollectionsDone(KJob*) ) );
 }
@@ -1177,10 +1177,10 @@ void KMMainWidget::createWidgets()
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( itemMoved( Akonadi::Item,Akonadi::Collection, Akonadi::Collection ) ),
            SLOT( slotItemMoved( Akonadi::Item, Akonadi::Collection, Akonadi::Collection ) ) );
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionChanged( const Akonadi::Collection &, const QSet<QByteArray> &) ), SLOT( slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
-#if 0  
+#if 0
   connect( FilterIf->filterManager(), SIGNAL( itemNotMoved( Akonadi::Item ) ),
            SLOT( slotItemNotMovedByFilters( Akonadi::Item ) ) );
-#endif  
+#endif
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics &) ), SLOT( slotCollectionStatisticsChanged( const Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
 }
@@ -1188,7 +1188,7 @@ void KMMainWidget::createWidgets()
 void KMMainWidget::slotCollectionStatisticsChanged( const Akonadi::Collection::Id id, const Akonadi::CollectionStatistics& statistic )
 {
   if ( id == CommonKernel->outboxCollectionFolder().id() ) {
-    const qint64 nbMsgOutboxCollection = statistic.count();  
+    const qint64 nbMsgOutboxCollection = statistic.count();
     actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
     actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );
   }
@@ -1216,7 +1216,7 @@ void KMMainWidget::slotCollectionChanged( const Akonadi::Collection&collection, 
       icon = idx.data( Qt::DecorationRole ).value<QIcon>();
     }
 
-    
+
     mMessagePane->updateTabIconText( collection, text,icon );
   }
 }
@@ -1258,7 +1258,7 @@ void KMMainWidget::addInfoInNotification( const Akonadi::Collection &collection 
        CommonKernel->trashCollectionFolder() == collection ||
        CommonKernel->draftsCollectionFolder() == collection )
     return;
-  
+
   mCheckMail[ collection.id() ]++;
 }
 
@@ -1661,7 +1661,7 @@ void KMMainWidget::slotDelayedRemoveFolder( KJob *job )
   {
     const Akonadi::Collection::Id collectionId = mCurrentFolder->collection().id();
     kmkernel->checkFolderFromResources( collectionId );
-    
+
     mCurrentFolder->removeCollection();
   }
   mCurrentFolder.clear();
@@ -2476,7 +2476,9 @@ void KMMainWidget::slotSendQueued()
     return;
   }
 
-  kmkernel->msgSender()->sendQueued();
+  if ( kmkernel->msgSender() ) {
+    kmkernel->msgSender()->sendQueued();
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -2487,8 +2489,11 @@ void KMMainWidget::slotSendQueuedVia( QAction* item )
   }
 
   const QStringList availTransports= MailTransport::TransportManager::self()->transportNames();
-  if (availTransports.contains(item->text()))
-    kmkernel->msgSender()->sendQueued( item->text() );
+  if ( !availTransports.isEmpty() && availTransports.contains( item->text() ) ) {
+    if ( kmkernel->msgSender() ) {
+      kmkernel->msgSender()->sendQueued( item->text() );
+    }
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -2722,7 +2727,7 @@ void KMMainWidget::slotItemsFetchedForActivation( const Akonadi::Item::List &lis
   win->setUseFixedFont( useFixedFont );
 
 
-  const Akonadi::Collection parentCollection = MailCommon::Util::parentCollectionFromItem(msg);  
+  const Akonadi::Collection parentCollection = MailCommon::Util::parentCollectionFromItem(msg);
   win->showMessage( overrideEncoding(), msg, parentCollection );
   win->show();
 }
@@ -3094,7 +3099,7 @@ void KMMainWidget::setupActions()
   actionCollection()->addAction("find_in_messages", mFindInMessageAction );
   connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
   mFindInMessageAction->setShortcut(KStandardShortcut::find());
-                                   
+
   {
     KAction *action = new KAction(i18n("Select &All Messages"), this);
     actionCollection()->addAction("mark_all_messages", action );
@@ -3588,7 +3593,7 @@ void KMMainWidget::startUpdateMessageActionsTimer()
   // FIXME: This delay effectively CAN make the actions to be in an incoherent state
   //        Maybe we should mark actions as "dirty" here and check it in every action handler...
   updateMessageActions( true );
-  
+
   menutimer->stop();
   menutimer->start( 500 );
 }
@@ -3783,7 +3788,7 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
 {
   const bool multiFolder = mFolderTreeWidget->selectedCollections().count() > 1;
   if ( mCollectionProperties ) {
-    mCollectionProperties->setEnabled( mCurrentFolder && !multiFolder && 
+    mCollectionProperties->setEnabled( mCurrentFolder && !multiFolder &&
                                        !mCurrentFolder->isStructural() &&
                                        !MailCommon::Util::isVirtualCollection( mCurrentFolder->collection() ) );
     QList< QAction* > collectionProperties;
