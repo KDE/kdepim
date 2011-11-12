@@ -165,9 +165,11 @@ void BackupJob::finish()
   const QString archivingStr( i18n( "Archiving finished" ) );
   KPIM::BroadcastStatus::instance()->setStatusMsg( archivingStr );
 
-  mProgressItem->setStatus( archivingStr );
-  mProgressItem->setComplete();
-  mProgressItem = 0;
+  if ( mProgressItem ) {
+    mProgressItem->setStatus( archivingStr );
+    mProgressItem->setComplete();
+    mProgressItem = 0;
+  }
 
   QFileInfo archiveFileInfo( mMailArchivePath.path() );
   QString text = i18n( "Archiving folder '%1' successfully completed. "
@@ -316,10 +318,11 @@ void BackupJob::archiveNextFolder()
   mCurrentFolder = mPendingFolders.takeAt( 0 );
   kDebug() << "===> Archiving next folder: " << mCurrentFolder.name();
   const QString archivingStr( i18n( "Archiving folder %1", mCurrentFolder.name() ) );
-  if( mProgressItem )
-     mProgressItem->setStatus( archivingStr );
+  if ( mProgressItem ) {
+    mProgressItem->setStatus( archivingStr );
+  }
   KPIM::BroadcastStatus::instance()->setStatusMsg( archivingStr );
-  
+
   const QString folderName = mCurrentFolder.name();
   bool success = true;
   if ( hasChildren( mCurrentFolder ) ) {
