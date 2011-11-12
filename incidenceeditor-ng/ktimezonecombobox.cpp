@@ -44,8 +44,9 @@ class KTimeZoneComboBox::Private
 void KTimeZoneComboBox::Private::fillComboBox()
 {
   mParent->clear();
-  // Read all system time zones
+  mZones.clear();
 
+  // Read all system time zones
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
   for ( KTimeZones::ZoneMap::ConstIterator it=timezones.begin(); it != timezones.end(); ++it ) {
     mZones.append( it.key().toUtf8() );
@@ -124,13 +125,21 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
 KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec() const
 {
   KDateTime::Spec spec;
-  if ( currentIndex() == 0 ) { // Floating event
-    spec = KDateTime::Spec( KDateTime::ClockTime );
-  }
-  else if ( currentIndex() == 1 ) { // UTC
-    spec.setType( KDateTime::UTC );
-  } else {
-    spec.setType( KSystemTimeZones::zone( d->mZones[currentIndex()] ) );
+  if ( currentIndex() >= 0 ) {
+    if ( currentIndex() == 0 ) { // Floating event
+      spec = KDateTime::Spec( KDateTime::ClockTime );
+    } else if ( currentIndex() == 1 ) { // UTC
+      spec.setType( KDateTime::UTC );
+    } else {
+      const KTimeZone systemTz = KSystemTimeZones::zone( d->mZones[currentIndex()] );
+      // If it's not valid, then it's an additional Tz
+      if ( systemTz.isValid() ) {
+        spec.setType( systemTz );
+      } else {
+        const KCalCore::ICalTimeZone additionalTz = d->mAdditionalZones->zone( d->mZones[currentIndex()] );
+        spec.setType( additionalTz );
+      }
+    }
   }
 
   return spec;
