@@ -43,11 +43,11 @@ namespace MailCommon {
  */
 
 class MAILCOMMON_EXPORT Kernel : public QObject {
-  Q_OBJECT  
+  Q_OBJECT
 public:
 
   virtual ~Kernel();
-  
+
   static Kernel *self();
 
   /** Register the interface dealing with main mail functionality. This function
@@ -55,6 +55,10 @@ public:
    * method is used. The pointer ownership will not be transfered to Kernel. */
   void registerKernelIf( IKernel* kernelIf ) {
     mKernelIf = kernelIf;
+  }
+
+  bool kernelIsRegistered() const {
+    return mKernelIf != 0;
   }
 
   IKernel *kernelIf() const {
@@ -131,10 +135,10 @@ public:
 
   void emergencyExit( const QString& reason );
 
-private:  
+private:
   void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
 
-private Q_SLOTS:  
+private Q_SLOTS:
   void createDefaultCollectionDone( KJob * job);
   void slotDefaultCollectionsChanged();
 
@@ -145,7 +149,7 @@ Q_SIGNALS:
 private:
   Kernel( QObject* parent = 0 );
   friend class KernelPrivate;
-  
+
   IKernel* mKernelIf;
   IFilter* mFilterIf;
   ISettings* mSettingsIf;
