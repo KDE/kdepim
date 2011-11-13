@@ -139,20 +139,21 @@ QWidget* FilterAction::createParamWidget( QWidget *parent ) const
   return new QWidget( parent );
 }
 
-void FilterAction::applyParamWidgetValue( QWidget* )
+void FilterAction::applyParamWidgetValue( QWidget * )
 {
 }
 
-void FilterAction::setParamWidgetValue( QWidget* ) const
+void FilterAction::setParamWidgetValue( QWidget * ) const
 {
 }
 
-void FilterAction::clearParamWidget( QWidget* ) const
+void FilterAction::clearParamWidget( QWidget * ) const
 {
 }
 
 void FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
 {
+  Q_UNUSED( filterName );
   argsFromString(argsStr);
 }
 
@@ -2343,7 +2344,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
            this, SIGNAL(filterActionModified()) );
   connect( headerCombo, SIGNAL(currentIndexChanged(int)),
            this, SIGNAL(filterActionModified()) );
-  
+
   setParamWidgetValue( widget );
 
   return widget;

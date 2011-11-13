@@ -162,7 +162,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   connect( this, SIGNAL(user2Clicked()),
            this, SLOT(slotExportFilters()) );
   enableButtonApply( false );
-  
+
   QWidget *w = new QWidget( this );
   setMainWidget( w );
   QHBoxLayout *topLayout = new QHBoxLayout( w );
@@ -305,7 +305,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   // load the filter parts into the edit widgets
   connect( mFilterList, SIGNAL(filterSelected(MailCommon::MailFilter*)),
            this, SLOT(slotFilterSelected(MailCommon::MailFilter*)) );
-                               
+
   // transfer changes from the 'Apply this filter on...'
   // combo box to the filter
   connect( mApplyOnIn, SIGNAL(clicked()),
@@ -357,7 +357,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   connect( this, SIGNAL(buttonClicked(KDialog::ButtonCode)),
            mFilterList, SLOT(slotApplyFilterChanges(KDialog::ButtonCode)) );
   connect( button( KDialog::Apply ), SIGNAL(clicked(bool)), this, SLOT(slotApply()) );
-  
+
   // save dialog size on 'OK'
   connect( this, SIGNAL(okClicked()),
            this, SLOT(slotSaveSize()) );
@@ -652,7 +652,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mListWidget->setWhatsThis( i18n(_wt_filterlist) );
   mListWidget->setDragDropMode( QAbstractItemView::InternalMove );
   connect( mListWidget->model(),SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
-  
+
   KListWidgetSearchLine* mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
   mSearchListWidget->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
                                              "textbox, verb to search", "Search" ) );
@@ -668,8 +668,8 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mBtnTop->setIcon( KIcon( "go-top" ) );
   mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
-  
-  
+
+
   mBtnUp = new KPushButton( QString(), hb );
   mBtnUp->setAutoRepeat( true );
   mBtnUp->setIcon( KIcon( "go-up" ) );
@@ -686,7 +686,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
 
-  
+
   mBtnUp->setToolTip( i18nc("Move selected filter up.", "Up") );
   mBtnDown->setToolTip( i18nc("Move selected filter down.", "Down") );
   mBtnTop->setToolTip( i18nc("Move selected filter to the top.", "Top") );
@@ -763,7 +763,7 @@ KMFilterListBox::~KMFilterListBox()
   mFilterList.clear();
 }
 
-void KMFilterListBox::slotFilterEnabledChanged(QListWidgetItem*item)
+void KMFilterListBox::slotFilterEnabledChanged( QListWidgetItem *item )
 {
   if ( mIdxSelItem < 0 ) {
     kDebug() << "Called while no filter is selected, ignoring.";
@@ -775,10 +775,14 @@ void KMFilterListBox::slotFilterEnabledChanged(QListWidgetItem*item)
 }
 
 
-void KMFilterListBox::slotRowsMoved( const QModelIndex &, int sourcestart, int sourceEnd , const QModelIndex &, int destinationRow)
+void KMFilterListBox::slotRowsMoved( const QModelIndex &,
+                                     int sourcestart, int sourceEnd,
+                                     const QModelIndex &, int destinationRow )
 {
-  MailFilter* filter = mFilterList.takeAt( sourcestart );
-  mFilterList.insert( destinationRow-1, filter );
+  Q_UNUSED( sourceEnd );
+
+  MailFilter *filter = mFilterList.takeAt( sourcestart );
+  mFilterList.insert( destinationRow - 1, filter );
 
   mIdxSelItem = destinationRow;
 
@@ -787,8 +791,7 @@ void KMFilterListBox::slotRowsMoved( const QModelIndex &, int sourcestart, int s
   emit filterOrderAltered();
 }
 
-void KMFilterListBox::createFilter( const QByteArray & field,
-                                    const QString & value )
+void KMFilterListBox::createFilter( const QByteArray &field, const QString &value )
 {
   SearchRule::Ptr newRule = SearchRule::createInstance( field, SearchRule::FuncContains, value );
 
@@ -974,7 +977,7 @@ void KMFilterListBox::slotDelete()
   MailCommon::MailFilter *filter = mFilterList.at( mIdxSelItem );
 
   const QString filterName = filter->pattern()->name();
-  
+
   if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
     return;
   int oIdxSelItem = mIdxSelItem;
@@ -1037,7 +1040,7 @@ void KMFilterListBox::slotTop()
 
   mIdxSelItem = 0;
   mListWidget->setCurrentItem( mListWidget->item( 0 ) );
-  
+
   enableControls();
 
   emit filterOrderAltered();
@@ -1170,7 +1173,7 @@ void KMFilterListBox::enableControls()
   mBtnRename->setEnabled( aFilterIsSelected );
   mBtnTop->setEnabled( aFilterIsSelected && !theFirst );
   mBtnBottom->setEnabled( aFilterIsSelected && !theLast );
-  
+
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
 }
@@ -1281,7 +1284,7 @@ void KMFilterDialog::slotImportFilters()
 
   QStringList listOfFilter;
   QList<MailFilter*>::ConstIterator end( filters.constEnd() );
-  
+
   for ( QList<MailFilter*>::ConstIterator it = filters.constBegin() ; it != end ; ++it ) {
     mFilterList->appendFilter( *it ); // no need to deep copy, ownership passes to the list
     listOfFilter<<( *it )->name();
