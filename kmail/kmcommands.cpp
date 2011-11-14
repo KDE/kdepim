@@ -103,6 +103,7 @@ using KMail::SecondaryWindow;
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemdeletejob.h>
+#include <mailtransport/transportattribute.h>
 
 #include <messagelist/pane.h>
 
@@ -550,6 +551,7 @@ KMEditMsgCommand::KMEditMsgCommand( QWidget *parent, const Akonadi::Item&msg, bo
   , mDeleteFromSource( deleteFromSource )
 {
   fetchScope().fetchFullPayload( true );
+  fetchScope().fetchAllAttributes();
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   setDeletesItself( true );
 }
@@ -570,6 +572,11 @@ KMCommand::Result KMEditMsgCommand::execute()
   KMail::Composer *win = KMail::makeComposer();
   win->setMsg( msg, false, true );
   win->setFolder( item.parentCollection() );
+  const MailTransport::TransportAttribute *transportAttribute = item.attribute<MailTransport::TransportAttribute>();
+  if ( transportAttribute ) {
+    qDebug()<<" EDIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! :"<<item.hasAttribute<MailTransport::TransportAttribute>();
+    win->setCurrentTransport( transportAttribute->transportId() );
+  }
   win->show();
 
   return OK;
