@@ -286,25 +286,20 @@ void Message::Util::addSendReplyForwardAction(const KMime::Message::Ptr &message
 
 bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
 {
-  foreach ( Akonadi::AgentInstance instance, Akonadi::AgentManager::self()->instances() ) {
-    const QStringList capabilities( instance.type().capabilities() );
-    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) )
-    {
-      if ( instance.identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) )
-      {
-        if ( instance.isOnline() )
-          return true;
-        else {
-          int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, mails can not be send. Do you want to make it online ?"),
-                                              i18n("Mail dispatcher offline."));
-          if ( rc == KMessageBox::No )
-            return false;
-          instance.setIsOnline( true );
-          return true;
-        } 
-      }
-    }
+  Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
+  if( !instance.isValid() ) {
+    return false;
   }
+  if ( instance.isOnline() )
+    return true;
+  else {
+    int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, mails can not be send. Do you want to make it online ?"),
+                                        i18n("Mail dispatcher offline."));
+    if ( rc == KMessageBox::No )
+      return false;
+    instance.setIsOnline( true );
+    return true;
+  } 
   return false;
 }
   
