@@ -28,7 +28,7 @@
 #include <QWidget>
 #include <QItemDelegate>
 #include <QTreeWidgetItem>
-#include <KShortcut>
+#include <QKeySequence>
 
 #include "templateparser_export.h"
 class KActionCollection;
@@ -89,7 +89,7 @@ public:
   explicit CustomTemplateItem( QTreeWidget *parent,
                                const QString &name,
                                const QString &content,
-                               KShortcut &shortcut,
+                               const QKeySequence &shortcut,
                                CustomTemplates::Type type,
                                const QString& to,
                                const QString& cc );
@@ -106,16 +106,15 @@ public:
   QString content() const;
   void setContent(const QString&);
 
-  KShortcut shortcut() const;
-  void setShortcut(const KShortcut&);
+  QKeySequence shortcut() const;
+  void setShortcut(const QKeySequence&);
 
   QString oldName() const;
   void setOldName(const QString&);
   
 private:
   QString mName, mContent;
-  //QKeySequence might do the trick too, check the rest of your code. --ahartmetz
-  KShortcut mShortcut;
+  QKeySequence mShortcut;
   CustomTemplates::Type mType;
   QString mTo, mCC;
 };

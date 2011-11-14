@@ -28,7 +28,6 @@
 #include <kiconloader.h>
 #include <kpushbutton.h>
 #include <klineedit.h>
-#include <kshortcut.h>
 #include <kmessagebox.h>
 #include <kkeysequencewidget.h>
 
@@ -190,7 +189,7 @@ void CustomTemplates::load()
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
-    KShortcut shortcut( t.shortcut() );
+    QKeySequence shortcut( t.shortcut() );
     CustomTemplates::Type type = static_cast<Type>( t.type() );
     CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),shortcut, type, t.to(), t.cC() );    
     item->setText( 1, *it );
@@ -271,7 +270,7 @@ void CustomTemplates::slotAddClicked()
     // at http://developer.kde.org/documentation/library/cvs-api/kdelibs-apidocs/kdecore/html/classKShortcut.html
     // see slotShortcutChanged(). oh, and you should look up documentation on the english breakfast network!
     // FIXME There must be a better way of doing this...
-    KShortcut nullShortcut;
+    QKeySequence nullShortcut;
     CustomTemplateItem *item =
       new CustomTemplateItem( mUi->mList, str, "", nullShortcut, TUniversal,
                            QString(), QString());
@@ -309,7 +308,7 @@ void CustomTemplates::slotListSelectionChanged()
     CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
     mBlockChangeSignal = true;
     mUi->mEdit->setText( vitem->content() );
-    mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut().primary(),
+    mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut(),
                                              KKeySequenceWidget::NoValidate );
     mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( vitem->customType() ) ) );
     mUi->mToEdit->setText( vitem->to() );
@@ -370,7 +369,7 @@ void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
   QTreeWidgetItem *item = mUi->mList->currentItem();
   if ( item ) {
     CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
-    vitem->setShortcut( KShortcut( newSeq ) );
+    vitem->setShortcut( newSeq );
     mUi->mKeySequenceWidget->applyStealShortcut();
   }
   
@@ -418,7 +417,7 @@ QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleO
 CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
                                         const QString &name,
                                         const QString &content,
-                                        KShortcut &shortcut,
+                                        const QKeySequence &shortcut,
                                         CustomTemplates::Type type,
                                         const QString& to,
                                         const QString& cc )
@@ -477,12 +476,12 @@ void CustomTemplateItem::setCc(const QString& cc)
   mCC = cc;
 }
 
-KShortcut CustomTemplateItem::shortcut() const
+QKeySequence CustomTemplateItem::shortcut() const
 {
   return mShortcut;
 }
 
-void CustomTemplateItem::setShortcut(const KShortcut& shortcut)
+void CustomTemplateItem::setShortcut(const QKeySequence& shortcut)
 {
   mShortcut = shortcut;
 }
