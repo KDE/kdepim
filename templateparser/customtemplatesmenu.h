@@ -22,10 +22,9 @@
 
 #include "templateparser_export.h"
 
-#include <QVector>
 #include <QList>
 #include <QObject>
-
+#include <QStringList>
 class QSignalMapper;
 
 class KActionCollection;
@@ -62,7 +61,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
 
     KActionCollection *mOwnerActionCollection;
 
-    QVector<QString> mCustomTemplates;
+    QStringList mCustomTemplates;
     QList<KAction*> mCustomTemplateActions;
 
     // Custom template actions menu

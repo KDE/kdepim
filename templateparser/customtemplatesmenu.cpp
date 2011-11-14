@@ -185,17 +185,17 @@ void CustomTemplatesMenu::update()
 
 void CustomTemplatesMenu::slotReplySelected( int idx )
 {
-  emit replyTemplateSelected( mCustomTemplates[idx] );
+  emit replyTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
 void CustomTemplatesMenu::slotReplyAllSelected( int idx )
 {
-  emit replyAllTemplateSelected( mCustomTemplates[idx] );
+  emit replyAllTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
 void CustomTemplatesMenu::slotForwardSelected( int idx )
 {
-  emit forwardTemplateSelected( mCustomTemplates[idx] );
+  emit forwardTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
 #include "customtemplatesmenu.moc"
