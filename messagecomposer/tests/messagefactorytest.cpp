@@ -151,7 +151,7 @@ void MessageFactoryTest::testCreateReplyHtml()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
   QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> encoded?\n" );
-  QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
+  QVERIFY( reply.msg->contentType()->mimeType() == "multipart/alternative" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: reply to please" ) );
   QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
 
@@ -175,7 +175,7 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
   QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> quote me please.\n" );
-  QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
+  QVERIFY( reply.msg->contentType()->mimeType() == "multipart/alternative" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
   QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
 

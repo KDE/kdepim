@@ -39,6 +39,10 @@ namespace KPIMIdentities {
   class IdentityManager;
 }
 
+namespace MessageCore {
+  class AttachmentCollector;
+  class ImageCollector;
+}
 namespace TemplateParser {
 
 /**
@@ -344,7 +348,23 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Returns KMime content of the multipart/alternative part of the message after setting the
      * mime type, charset and CTE of its respective text/plain part and text/html part.
      */
-    KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
+    KMime::Content* createMultipartAlternativeContent( const QString& plainBody, const QString& htmlBody ) const;
+
+    /**
+     * @return a multipart/mixed KMime::Content that has textPart and all attachments as children.
+     * @param ac a reference to an MessageCore::AttachmentCollector that has collected all attachments.
+     * @param textPart a KMime::Content that is to be added as a child.
+     * @since 4.8
+     */
+    KMime::Content* createMultipartMixed( const MessageCore::AttachmentCollector &ac, KMime::Content* textPart ) const;
+
+    /**
+     * @return a multipart/related KMime::Content that has mainTextPart and all embedded images as children.
+     * @param ac a reference to an MessageCore::ImageCollector that has collected all attachments.
+     * @param mainTextPart a KMime::Content that is to be added as a child.
+     * @since 4.8
+     */
+    KMime::Content* createMultipartRelated( const MessageCore::ImageCollector &ic, KMime::Content* mainTextPart ) const;
 
     /**
      * Checks if the signature is HTML or not.
@@ -361,7 +381,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Make a HTML content valid by adding missing html/head/body tag
      */
     QString makeValidHtml( QString &body );
-
 };
 
 } // namespace TemplateParser

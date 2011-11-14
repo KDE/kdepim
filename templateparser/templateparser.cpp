@@ -30,6 +30,7 @@
 
 #include "messagecore/stringutil.h"
 #include "messagecore/attachmentcollector.h"
+#include "messagecore/imagecollector.h"
 #include "messageviewer/objecttreeparser.h"
 #include "messageviewer/objecttreeemptysource.h"
 #include "messageviewer/nodehelper.h"
@@ -1171,6 +1172,9 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( mOrigMsg.get() );
 
+  MessageCore::ImageCollector ic;
+  ic.collectImagesFrom( mOrigMsg.get() );
+
   // Now, delete the old content and set the new content, which
   // is either only the new text or the new text with some attachments.
   KMime::Content::List parts = mMsg->contents();
@@ -1185,44 +1189,72 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->cc()->fromUnicodeString( mMsg->cc()->asUnicodeString() + ',' + mCC, "utf-8" );
 
   mMsg->contentType()->clear(); // to get rid of old boundary
-  // If we have no attachment, simply create a text/plain part or multipart/alternative
-  //and set the processed template text as the body
-  if ( ac.attachments().empty() || mMode != Forward ) {
-    KMime::Content* const mainTextPart = ( htmlBody.isEmpty() ) ? createPlainPartContent( plainBody )
-                          : createMultipartAlternativeContent( plainBody, htmlBody );
-    mainTextPart->assemble();
-    mMsg->setBody( mainTextPart->encodedBody() );
-    mMsg->setHeader( mainTextPart->contentType() );
-    mMsg->setHeader( mainTextPart->contentTransferEncoding() );
+
+  const QByteArray boundary = KMime::multiPartBoundary();
+  KMime::Content* const mainTextPart = htmlBody.isEmpty() ? createPlainPartContent( plainBody )
+            : createMultipartAlternativeContent( plainBody, htmlBody );
+  mainTextPart->assemble();
+
+  KMime::Content* textPart = mainTextPart;
+  if( !ic.images().empty() ) {
+    textPart = createMultipartRelated( ic, mainTextPart);
+    textPart->assemble();
   }
 
   // If we have some attachments, create a multipart/mixed mail and
   // add the normal body as well as the attachments
-  else
-  {
-    const QByteArray boundary = KMime::multiPartBoundary();
-    mMsg->contentType()->setMimeType( "multipart/mixed" );
-    mMsg->contentType()->setBoundary( boundary );
-
-    KMime::Content* const mainTextPart = ( htmlBody.isEmpty() ) ? createPlainPartContent( plainBody )
-                          : createMultipartAlternativeContent( plainBody, htmlBody );
-    mMsg->addContent( mainTextPart );
-
-    int attachmentNumber = 1;
-    foreach( KMime::Content *attachment, ac.attachments() ) {
-      mMsg->addContent( attachment );
-      // If the content type has no name or filename parameter, add one, since otherwise the name
-      // would be empty in the attachment view of the composer, which looks confusing
-      if ( attachment->contentType( false ) ) {
-        if ( !attachment->contentType()->hasParameter( "name" ) &&
-              !attachment->contentType()->hasParameter( "filename" ) ) {
-          attachment->contentType()->setParameter( "name", i18n( "Attachment %1", attachmentNumber ) );
-        }
-      }
-      attachmentNumber++;
-    }
+  KMime::Content* mainPart = textPart;
+  if( !ac.attachments().empty() || mMode == Forward ) {
+    mainPart = createMultipartMixed( ac, textPart);
+    mainPart->assemble();
   }
+
+  mMsg->setBody( mainPart->encodedBody() );
+  mMsg->setHeader( mainPart->contentType() );
+  mMsg->setHeader( mainPart->contentTransferEncoding() );
+
   mMsg->assemble();
+  mMsg->parse();
+}
+
+KMime::Content* TemplateParser::createMultipartMixed( const MessageCore::AttachmentCollector &ac, KMime::Content* textPart ) const
+{
+  KMime::Content* mixedPart = new KMime::Content( mMsg.get() );
+  const QByteArray boundary = KMime::multiPartBoundary();
+  mixedPart->contentType()->setMimeType( "multipart/mixed" );
+  mixedPart->contentType()->setBoundary( boundary );
+  mixedPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+  mixedPart->addContent( textPart );
+
+  int attachmentNumber = 1;
+  foreach( KMime::Content *attachment, ac.attachments() ) {
+    mixedPart->addContent( attachment );
+    // If the content type has no name or filename parameter, add one, since otherwise the name
+    // would be empty in the attachment view of the composer, which looks confusing
+    if ( attachment->contentType( false ) ) {
+      if ( !attachment->contentType()->hasParameter( "name" ) &&
+        !attachment->contentType()->hasParameter( "filename" ) ) {
+          attachment->contentType()->setParameter( "name", i18n( "Attachment %1", attachmentNumber ) );
+      }
+    }
+  attachmentNumber++;
+  }
+  return mixedPart;
+}
+
+KMime::Content* TemplateParser::createMultipartRelated( const MessageCore::ImageCollector &ic, KMime::Content* mainTextPart ) const
+{
+    KMime::Content* relatedPart = new KMime::Content( mMsg.get() );
+    const QByteArray boundary = KMime::multiPartBoundary();
+    relatedPart->contentType()->setMimeType( "multipart/related" );
+    relatedPart->contentType()->setBoundary( boundary );
+    relatedPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+    relatedPart->addContent( mainTextPart );
+    foreach( KMime::Content *image, ic.images() ) {
+      kWarning() << "Adding" << image->contentID() << "as an embedded image";
+      relatedPart->addContent( image );
+    }
+    return relatedPart;
 }
 
 KMime::Content* TemplateParser::createPlainPartContent( const QString& plainBody ) const
