@@ -134,6 +134,9 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
       kDebug()<<" No transport defined. Need to create it";
       return;
   }
+  if ( !Message::Util::sendMailDispatcherIsOnline() )
+    return;
+  
   kDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
   qjob->transportAttribute().setTransportId( transport->id() );
 

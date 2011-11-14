@@ -289,6 +289,8 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
 
+  Message::Util::sendMailDispatcherIsOnline( m_parentWidget );
+  
   readyForSending();
 }
 

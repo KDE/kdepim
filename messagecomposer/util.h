@@ -73,6 +73,9 @@ namespace Util {
 
     MESSAGECOMPOSER_EXPORT QStringList AttachmentKeywords();
     MESSAGECOMPOSER_EXPORT QString cleanedUpHeaderString( const QString &s );
+
+    bool sendMailDispatcherIsOnline( QWidget *parent = 0);
+
 }
 
 }

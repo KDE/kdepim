@@ -28,10 +28,14 @@
 #include <KCharsets>
 #include <KDebug>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
+
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 
 KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
@@ -260,3 +264,28 @@ QString Message::Util::cleanedUpHeaderString( const QString &s )
   res.replace( QChar::fromLatin1( '\n' ), QString::fromLatin1( " " ) );
   return res.trimmed();
 }
+
+bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
+{
+  foreach ( Akonadi::AgentInstance instance, Akonadi::AgentManager::self()->instances() ) {
+    const QStringList capabilities( instance.type().capabilities() );
+    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) )
+    {
+      if ( instance.identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) )
+      {
+        if ( instance.isOnline() )
+          return true;
+        else {
+          int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, mails can not be send. Do you want to make it online ?"),
+                                              i18n("Mail dispatcher offline."));
+          if ( rc == KMessageBox::No )
+            return false;
+          instance.setIsOnline( true );
+          return true;
+        } 
+      }
+    }
+  }
+  return false;
+}
+  
