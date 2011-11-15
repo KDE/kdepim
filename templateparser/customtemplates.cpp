@@ -63,30 +63,30 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollect
 
   mUi->mEditFrame->setEnabled( false );
 
-  connect( mUi->mEdit, SIGNAL( textChanged() ),
-          this, SLOT( slotTextChanged( void ) ) );
-  connect( mUi->mToEdit, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged() ) );
-  connect( mUi->mCCEdit, SIGNAL( textChanged() ),
-           this, SLOT( slotTextChanged() ) );
+  connect( mUi->mEdit, SIGNAL(textChanged()),
+          this, SLOT(slotTextChanged()) );
+  connect( mUi->mToEdit, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
+  connect( mUi->mCCEdit, SIGNAL(textChanged()),
+           this, SLOT(slotTextChanged()) );
 
-  connect( mUi->mName, SIGNAL( textChanged( const QString & ) ),
-           this, SLOT( slotNameChanged( const QString & ) ) );
+  connect( mUi->mName, SIGNAL(textChanged(QString)),
+           this, SLOT(slotNameChanged(QString)) );
 
-  connect( mUi->mInsertCommand, SIGNAL( insertCommand(const QString&, int) ),
-          this, SLOT( slotInsertCommand(const QString&, int) ) );
+  connect( mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)),
+          this, SLOT(slotInsertCommand(QString,int)) );
 
-  connect( mUi->mAdd, SIGNAL( clicked() ),
-          this, SLOT( slotAddClicked() ) );
-  connect( mUi->mRemove, SIGNAL( clicked() ),
-          this, SLOT( slotRemoveClicked() ) );
-  connect(mUi->mList, SIGNAL( itemSelectionChanged() ),
-          this, SLOT( slotListSelectionChanged() ) );
-  connect( mUi->mType, SIGNAL( activated( int ) ),
-          this, SLOT( slotTypeActivated( int ) ) );
+  connect( mUi->mAdd, SIGNAL(clicked()),
+          this, SLOT(slotAddClicked()) );
+  connect( mUi->mRemove, SIGNAL(clicked()),
+          this, SLOT(slotRemoveClicked()) );
+  connect(mUi->mList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+          this, SLOT(slotListSelectionChanged()) );
+  connect( mUi->mType, SIGNAL(activated(int)),
+          this, SLOT(slotTypeActivated(int)) );
 
-  connect( mUi->mKeySequenceWidget, SIGNAL( keySequenceChanged( const QKeySequence& ) ),
-          this, SLOT( slotShortcutChanged( const QKeySequence& ) ) );
+  connect( mUi->mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
+          this, SLOT(slotShortcutChanged(QKeySequence)) );
 
   mUi->mKeySequenceWidget->setCheckActionCollections( actionCollection );
 
