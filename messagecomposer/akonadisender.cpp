@@ -24,6 +24,7 @@
 
 #include "messagehelper.h"
 #include "messagecomposersettings.h"
+#include "util.h"
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
