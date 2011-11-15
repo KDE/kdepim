@@ -731,7 +731,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 	      </para>
 	    </listitem>
 	    <listitem>
-	      <para><menuchoice><guimenu>List-Id</guimenu><guimenuitem>Contains</guimenuitem></menuchoice> <replaceable>listID</replaceable><footnote><para>replace <replaceable>listID</replaceable> with a specific mailing list id &eg; () or just a <quote>.</quote> to include outgoing mail to all mailing lists with <quote>.</quote> in their id (basically all).</para></footnote>
+	      <para><menuchoice><guimenu>List-Id</guimenu><guimenuitem>Contains</guimenuitem></menuchoice> <replaceable>listID</replaceable><footnote><para>replace <replaceable>listID</replaceable> with a specific mailing list id &eg; (&lt;kdepim-users.kde.org&gt;) or just a <quote>.</quote> to include outgoing mail to all mailing lists with <quote>.</quote> in their id (basically all).</para></footnote>
 	      </para>
 	    </listitem>
 	  </itemizedlist>
