@@ -383,12 +383,18 @@ void CustomTemplates::slotItemChanged(QTreeWidgetItem* item ,int column)
     CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
     if ( column == 1 ) {
       const QString newName = vitem->text( 1 );
-      const QString oldName = vitem->oldName();
-      if ( newName != oldName ) {
-        mItemsToDelete.append( oldName );
-        vitem->setOldName( newName );
-        if ( !mBlockChangeSignal )
-          emit changed();
+      if ( newName.isEmpty() ) {
+        //Restore old text.
+        vitem->setText( 1, vitem->oldName() );
+      }
+      else {        
+        const QString oldName = vitem->oldName();
+        if ( newName != oldName ) {
+          mItemsToDelete.append( oldName );
+          vitem->setOldName( newName );
+          if ( !mBlockChangeSignal )
+            emit changed();
+        }
       }
     }
   }
