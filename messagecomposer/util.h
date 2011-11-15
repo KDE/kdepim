@@ -26,7 +26,7 @@
 #include "kleo/enum.h"
 
 #include <QtCore/QString>
-
+#include <QWidget>
 
 namespace KMime {
   class Content;
