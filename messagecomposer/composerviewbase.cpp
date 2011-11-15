@@ -455,8 +455,9 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
       std::vector<Kleo::KeyResolver::SplitInfo> encData = keyResolver->encryptionItems( concreteEncryptFormat );
       std::vector<Kleo::KeyResolver::SplitInfo>::iterator it;
+      std::vector<Kleo::KeyResolver::SplitInfo>::iterator end( encData.end() );
       QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
-      for( it = encData.begin(); it != encData.end(); ++it ) {
+      for( it = encData.begin(); it != end; ++it ) {
         QPair<QStringList, std::vector<GpgME::Key> > p( it->recipients, it->keys );
         data.append( p );
         kDebug() << "got resolved keys for:" << it->recipients;
@@ -480,12 +481,12 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
 
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+      concreteSignFormat = concreteCryptoMessageFormats[i];
+      if ( keyResolver->encryptionItems( concreteSignFormat ).empty() )
         continue;
-      if ( !(concreteCryptoMessageFormats[i] & m_cryptoMessageFormat) )
+      if ( !(concreteSignFormat & m_cryptoMessageFormat) )
         continue;
 
-      concreteSignFormat = concreteCryptoMessageFormats[i];
       std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteSignFormat );
 
       Message::Composer* composer =  new Message::Composer;
@@ -714,6 +715,7 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
     qjob->addressAttribute().setBcc( cleanEmailList( encodeIdn( infoPart->bcc() ) ) );
   }
 }
+
 void Message::ComposerViewBase::initAutoSave()
 {
   kDebug() << "initalising autosave";
