@@ -69,7 +69,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollect
           this, SLOT(slotAddClicked()) );
   connect( mUi->mRemove, SIGNAL(clicked()),
           this, SLOT(slotRemoveClicked()) );
-  connect(mUi->mList, SIGNAL(itemSelectionChanged()),
+  connect(mUi->mList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
           this, SLOT(slotListSelectionChanged()) );
   connect(mUi->mList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
           this, SLOT(slotItemChanged(QTreeWidgetItem*,int)) );
