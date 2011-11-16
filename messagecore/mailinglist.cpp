@@ -29,7 +29,7 @@ static QString check_sender( const KMime::Message::Ptr &message,
   if ( header.left( 6 ) == QLatin1String("owner-") ) {
     headerName = "Sender";
     headerValue = header;
-    header = header.mid( 6, header.indexOf( '@' ) - 6 );
+    header = header.mid( 6, header.indexOf( QLatin1Char( '@' ) ) - 6 );
   } else {
     const int index = header.indexOf( QLatin1String( "-owner@ " ) );
     if ( index == -1 )
@@ -174,12 +174,13 @@ static QString check_x_loop( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  if (header.indexOf( QLatin1Char( '@' ) ) < 2 )
+  const int indexOfHeader( header.indexOf( QLatin1Char( '@' ) ) );
+  if (indexOfHeader < 2 )
     return QString();
 
   headerName = "X-Loop";
   headerValue = header;
-  header.truncate( header.indexOf( QLatin1Char( '@' ) ) );
+  header.truncate( indexOfHeader );
 
   return header;
 }
