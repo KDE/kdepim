@@ -108,6 +108,11 @@ AsyncNepomukResourceRetriever::AsyncNepomukResourceRetriever(QObject* parent) :
 {
 }
 
+AsyncNepomukResourceRetriever::~AsyncNepomukResourceRetriever()
+{
+  delete d;
+}
+
 void AsyncNepomukResourceRetriever::requestResource(const QUrl& url, const QVector<QUrl> &properties)
 {
   QMutexLocker locker( &d->m_mutex );
