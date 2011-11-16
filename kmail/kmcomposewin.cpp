@@ -373,9 +373,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
            this, SLOT(slotLanguageChanged(QString)) );
   connect( editor, SIGNAL(spellCheckStatus(QString)),
            this, SLOT(slotSpellCheckingStatus(QString)) );
-  connect( editor, SIGNAL(insertModeChanged()),
-           this, SLOT(slotOverwriteModeChanged()) );
-  
   mSnippetWidget = new SnippetWidget( editor, actionCollection(), mSnippetSplitter );
   mSnippetWidget->setVisible( GlobalSettings::self()->showSnippetManager() );
   mSnippetSplitter->addWidget( mSnippetWidget );
