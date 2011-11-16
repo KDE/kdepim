@@ -30,7 +30,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     ~ManageSieveScriptsDialog();
 
   private slots:
-    void slotRefresh();
+    void slotRefresh( bool disconnectSignal = false );
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
     void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotContextMenuRequested( QTreeWidgetItem*, QPoint position );

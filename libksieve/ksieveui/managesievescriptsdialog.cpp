@@ -84,9 +84,9 @@ void ManageSieveScriptsDialog::killAllJobs( bool disconnectSignal )
 }
 
 
-void ManageSieveScriptsDialog::slotRefresh()
+void ManageSieveScriptsDialog::slotRefresh(bool disconnectSignal)
 {
-  clear();
+  clear(disconnectSignal);
   QTreeWidgetItem *last = 0;
   Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
   foreach ( const Akonadi::AgentInstance& type, lst )
@@ -436,7 +436,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 {
   mSieveEditor->deleteLater(); mSieveEditor = 0;
   mCurrentURL = KUrl();
-  slotRefresh();
+  slotRefresh(true);
 }
 
 void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool success )
