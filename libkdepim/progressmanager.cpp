@@ -49,7 +49,7 @@ void ProgressItem::setComplete()
 {
 //   kDebug() << label();
   if ( mChildren.isEmpty() ) {
-    if ( mCompletedCalled ) 
+    if ( mCompletedCalled )
        return;
     if ( !mCanceled ) {
       setProgress( 100 );
@@ -71,7 +71,16 @@ void ProgressItem::addChild( ProgressItem *kiddo )
 
 void ProgressItem::removeChild( ProgressItem *kiddo )
 {
-  mChildren.remove( kiddo );
+  if ( mChildren.isEmpty() ) {
+    mWaitingForKids = false;
+    return;
+  }
+
+  if ( mChildren.remove( kiddo ) == 0 ) {
+     // do nothing if the specified item is not in the map
+    return;
+  }
+
   // in case we were waiting for the last kid to go away, now is the time
   if ( mChildren.count() == 0 && mWaitingForKids ) {
     emit progressItemCompleted( this );
