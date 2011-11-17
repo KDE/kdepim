@@ -116,7 +116,7 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION pre)
+set(KDEPIM_DEV_VERSION beta1)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
@@ -139,7 +139,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.7.41 REQUIRED)
+find_package(KdepimLibs 4.7.80 REQUIRED)
 
 ############### Load the CTest options ###############
 
