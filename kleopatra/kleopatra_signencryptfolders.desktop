@@ -51,10 +51,20 @@ Name[zh_TW]=Kleopatra 簽署/加密資料夾
 
 [Desktop Action kleosignencryptfolder]
 Name=Archive, Sign && Encrypt Folder
+Name[ia]=Archiva, signa && crypta Dossier
+Name[pt]=Arquivar, Assinar && Encriptar a Pasta
+Name[sv]=Arkivera, signera och kryptera katalog
+Name[uk]=Архівувати, підписати і зашифрувати теку
+Name[x-test]=xxArchive, Sign && Encrypt Folderxx
 Icon=kleopatra
 Exec=kleopatra --encrypt-sign %F
 
 [Desktop Action kleoencryptfolder]
 Name=Archive && Encrypt Folder
+Name[ia]=Archiva && crypta Dossier
+Name[pt]=Arquivar && Cifrar a Pasta
+Name[sv]=Arkivera och kryptera katalog
+Name[uk]=Зробити архів теки і зашифрувати
+Name[x-test]=xxArchive && Encrypt Folderxx
 Icon=kleopatra
 Exec=kleopatra --encrypt %F
