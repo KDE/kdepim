@@ -162,7 +162,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
     } else {
       kError() << "Error while moving items. " << job->error() << job->errorString();
     }
-    KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
+    //KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
   }
 }
 
