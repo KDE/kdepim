@@ -478,7 +478,7 @@ KMime::Message::Ptr MessageFactory::createResend()
   return msg;
 }
 
-KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
+KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int transportId, const QString& fcc )
 {
   if ( !m_origMsg )
     return KMime::Message::Ptr();
@@ -546,6 +546,18 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   msg->setHeader( header );
   header = new KMime::Headers::Generic( "X-KMail-Recipients", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
+
+
+  if ( transportId != -1 ) {
+    header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), QString::number( transportId ), "utf-8" );
+    msg->setHeader( header );
+  }
+
+  if ( !fcc.isEmpty() ) {
+    header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), fcc, "utf-8" );
+    msg->setHeader( header );    
+  }
+  
   msg->assemble();
 
   MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
