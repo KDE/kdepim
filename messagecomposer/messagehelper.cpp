@@ -74,7 +74,7 @@ void initFromMessage( const KMime::Message::Ptr &msg, const KMime::Message::Ptr 
 
   if ( origMsg->headerByType("X-KMail-Transport") ) {
     const QString transport = origMsg->headerByType("X-KMail-Transport")->asUnicodeString();
-    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(),
+    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(),
                                                                    transport, "utf-8" );
     msg->setHeader( header );
   }
