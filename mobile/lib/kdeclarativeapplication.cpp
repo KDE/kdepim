@@ -72,6 +72,8 @@ void KDeclarativeApplicationBase::postApplicationSetup()
   QFont f = font();
   f.setPointSize( 9 );
   setFont( f );
+#else
+  setFont(KGlobalSettings::generalFont());
 #endif
 
   // make it look more like on the actual device when testing on the desktop
