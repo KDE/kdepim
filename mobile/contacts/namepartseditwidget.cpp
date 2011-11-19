@@ -27,6 +27,7 @@
 #include <kcombobox.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <qplatformdefs.h>
 
 NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
   : QWidget( parent)
@@ -36,7 +37,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
 
   mPrefixCombo = new KComboBox( this );
   mPrefixCombo->setDuplicatesEnabled( false );
-#ifndef Q_WS_MAEMO_5
+#if !defined(Q_WS_MAEMO_5) && !defined(MEEGO_EDITION_HARMATTAN)
   mPrefixCombo->setEditable( true );
 #endif
 
@@ -48,7 +49,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
 
   mSuffixCombo = new KComboBox( this );
   mSuffixCombo->setDuplicatesEnabled( false );
-#ifndef Q_WS_MAEMO_5
+#if !defined(Q_WS_MAEMO_5) && !defined(MEEGO_EDITION_HARMATTAN)
   mSuffixCombo->setEditable( true );
 #endif
 
@@ -80,7 +81,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
   mPrefixCombo->addItems( prefixList );
   mSuffixCombo->addItems( suffixList );
 
-#ifndef Q_WS_MAEMO_5
+#if !defined(Q_WS_MAEMO_5) && !defined(MEEGO_EDITION_HARMATTAN)
   mPrefixCombo->lineEdit()->setFocus();
 #endif
 

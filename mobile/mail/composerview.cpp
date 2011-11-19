@@ -64,6 +64,7 @@
 #include <QtCore/QTimer>
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
+#include <qplatformdefs.h>
 
 #ifdef _WIN32_WCE
 #include <identitypage.h>
@@ -293,7 +294,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   toggleAutomaticWordWrap( actionCollection()->action( "options_wordwrap" )->isChecked() );
   toggleUseFixedFont( actionCollection()->action( "options_fixedfont" )->isChecked() );
 
-#ifdef Q_WS_MAEMO_5
+#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
 #endif
   m_composerBase->recipientsEditor()->setAutoResizeView( true );

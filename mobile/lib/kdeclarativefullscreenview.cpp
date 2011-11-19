@@ -43,6 +43,7 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeError>
+#include <qplatformdefs.h>
 
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -99,7 +100,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
+#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE) || defined(MEEGO_EDITION_HARMATTAN)
   setWindowState( Qt::WindowFullScreen );
 #ifndef Q_OS_WINCE
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
