@@ -528,21 +528,12 @@ void MonthView::reloadIncidences()
         removeFilteredOccurrences( todo, dateTimeList );
       }
     } else {
-      KDateTime dateToAdd;
+      const KDateTime dtStart = incidence->dateTime( KCalCore::Incidence::RoleDisplayStart );
+      const KDateTime dtEnd   = incidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
 
-      if ( KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem ) ) {
-        if ( todo->hasDueDate() ) {
-          dateToAdd = todo->dtDue();
-        }
-      } else {
-        dateToAdd = incidence->dtStart();
+      if ( dtEnd >= actualStartDateTime() && dtStart <= actualEndDateTime() ) {
+        dateTimeList += dtStart;
       }
-
-      if ( dateToAdd >= actualStartDateTime() &&
-           dateToAdd <= actualEndDateTime() ) {
-        dateTimeList += dateToAdd;
-      }
-
     }
     KCalCore::DateTimeList::const_iterator t;
     const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( incidence );
