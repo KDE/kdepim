@@ -176,7 +176,6 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( DateGroupRole, "dateGroup" );
   names.insert( SenderGroupRole, "senderGroup" );
   setRoleNames( names );
-  kDebug() << names << sourceModel->roleNames();
 }
 
 #include "messagelistproxy.moc"
