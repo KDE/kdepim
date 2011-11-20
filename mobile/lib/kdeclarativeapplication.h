@@ -54,6 +54,10 @@ class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
         KApplication constructor) if you don't use
         KDeclarativeApplication as your KApplication */
     static void postApplicationSetup();
+
+  private:
+    static void emulateMaemo5();
+    static void emulateMaemo6();
 };
 
 template <typename T>
