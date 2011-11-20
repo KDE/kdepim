@@ -1019,4 +1019,25 @@ void KDeclarativeMainView::checkAllBulkActionItems( bool check )
   }
 }
 
+AgentActionManager* KDeclarativeMainView::createAgentActionManager(QItemSelectionModel* agentSelectionModel)
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( agentSelectionModel );
+  manager->createAllActions();
+
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
+
+  manager->interceptAction( AgentActionManager::CreateAgentInstance );
+  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
+
+  manager->interceptAction( Akonadi::AgentActionManager::ConfigureAgentInstance );
+  connect( manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance ), SIGNAL(triggered()),
+           d, SLOT(configureAgentInstance()) );
+
+  return manager;
+}
+
 #include "kdeclarativemainview.moc"

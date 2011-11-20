@@ -32,6 +32,7 @@ class QAbstractItemModel;
 class QAbstractProxyModel;
 
 namespace Akonadi {
+class AgentActionManager;
 class ChangeRecorder;
 class EntityTreeModel;
 class Item;
@@ -325,6 +326,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
     void setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel );
+
+    /**
+     * Returns a newly created AgentActionMananger with standard setup.
+     * Use inside setupAgentActionManager();
+     */
+    Akonadi::AgentActionManager *createAgentActionManager( QItemSelectionModel* agentSelectionModel );
 
   private:
     void doDelayedInitInternal();

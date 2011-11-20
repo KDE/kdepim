@@ -1343,19 +1343,7 @@ void MainView::mailActionStateUpdated()
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 {
-  AgentActionManager *manager = new AgentActionManager( actionCollection(), this );
-  manager->setSelectionModel( selectionModel );
-
-  manager->createAllActions();
-
-  manager->action( AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
-  manager->action( AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
-  manager->action( AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
-
-  manager->interceptAction( AgentActionManager::CreateAgentInstance );
-
-  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
-           this, SLOT(launchAccountWizard()) );
+  AgentActionManager *manager = createAgentActionManager( selectionModel );
 
   manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
