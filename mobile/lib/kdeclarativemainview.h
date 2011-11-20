@@ -329,7 +329,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
   private:
     void doDelayedInitInternal();
     KDeclarativeMainViewPrivate * const d;
-    Q_DISABLE_COPY( KDeclarativeMainView )
 
     Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
     Q_PRIVATE_SLOT( d, void bulkActionFilterLineEditChanged( const QString& ) )
