@@ -22,6 +22,8 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
+#include <qplatformdefs.h>
+
 #ifndef Q_OS_WIN
 #include <QGLWidget>
 #endif
@@ -95,7 +97,11 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 #ifdef Q_OS_WINCE
     bool RotateTo270Degrees();
 #endif
-  
+#ifdef MEEGO_EDITION_HARMATTAN
+    /** Disable the swipe action for a part of the display
+    */
+    void blockSwipeRegion(const int x , const int y, const int w, const int h);
+#endif
     KActionCollection *mActionCollection;
 #ifndef Q_OS_WIN
     QGLWidget *m_glWidget;

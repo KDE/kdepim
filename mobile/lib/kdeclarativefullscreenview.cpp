@@ -58,6 +58,12 @@
 #include <QDeclarativeContext>
 #endif
 
+#ifdef MEEGO_EDITION_HARMATTAN
+#include <QX11Info>
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+#include <fixx11h.h>
+#endif
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
   QDeclarativeView( parent ),
@@ -71,6 +77,11 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   closeAllFrontends( qmlFileName );
   RotateTo270Degrees();
 #endif
+
+#ifdef MEEGO_EDITION_HARMATTAN
+  blockSwipeRegion( 0, 0, 100, height() );
+#endif
+
 #ifndef Q_OS_WIN
   bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
   if ( KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
@@ -349,5 +360,18 @@ void KDeclarativeFullScreenView::resizeEvent(QResizeEvent* event)
                           (event->size().height() - m_splashScreen->sizeHint().height())/2 );
   }
 }
+
+#ifdef MEEGO_EDITION_HARMATTAN
+void KDeclarativeFullScreenView::blockSwipeRegion( const int x, const int y, const int  w, const int h )
+{
+  Display *dpy = QX11Info::display();
+  Atom blockedRegionAtom = XInternAtom( dpy, "_MEEGOTOUCH_CUSTOM_REGION", False );
+  unsigned int blockedRegion[] = { x, y, w, h };
+
+  XChangeProperty( dpy, this->winId(), blockedRegionAtom,
+                XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<unsigned char*>( &blockedRegion[0] ), 4 );
+}
+#endif // MEEGO_EDITION_HARMATTAN
 
 #include "kdeclarativefullscreenview.moc"
