@@ -84,6 +84,7 @@ public slots:
   void searchStarted( const Akonadi::Collection& );
   void searchStopped();
   void guiStateChanged( int oldState, int newState );
+  void configureAgentInstance();
 };
 
 class DeclarativeBulkActionFilterLineEdit :

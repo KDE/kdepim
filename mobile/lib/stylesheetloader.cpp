@@ -61,3 +61,9 @@ void StyleSheetLoader::applyStyle(QApplication* app)
     app->setStyleSheet( s_styleSheetLoader->styleSheet );
 #endif
 }
+
+QString StyleSheetLoader::styleSheet()
+{
+  return s_styleSheetLoader->styleSheet;
+}
+

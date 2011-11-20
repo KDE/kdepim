@@ -38,6 +38,12 @@ namespace StyleSheetLoader
    * Only use on platforms that don't have a sensible native widget style, such as Maemo >= 6.
    */
   MOBILEUI_EXPORT void applyStyle( QApplication *app );
+
+  /**
+   * Returns the style sheet.
+   * @internal
+   */
+  QString styleSheet();
 }
 
 #endif

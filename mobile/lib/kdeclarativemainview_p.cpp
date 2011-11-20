@@ -17,16 +17,22 @@
     02110-1301, USA.
 */
 #include "kdeclarativemainview_p.h"
+#include "guistatemanager.h"
+#include "stylesheetloader.h"
 
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentinstancemodel.h>
+#include <akonadi/etmviewstatesaver.h>
+
+#include <KDE/KCmdLineArgs>
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobal>
 #include <KDE/KLineEdit>
 #include <KDE/KSharedConfig>
 #include <KDE/KProcess>
 
-#include <akonadi/etmviewstatesaver.h>
-
-#include "guistatemanager.h"
+#include <QtDBus/QDBusInterface>
+#include <qplatformdefs.h>
 
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *qq )
   : q( qq )
@@ -165,4 +171,25 @@ DeclarativeBulkActionFilterLineEdit::~DeclarativeBulkActionFilterLineEdit()
 void DeclarativeBulkActionFilterLineEdit::clear()
 {
   widget()->clear();
+}
+
+void KDeclarativeMainViewPrivate::configureAgentInstance()
+{
+  if (mAgentInstanceSelectionModel->selectedRows().isEmpty())
+    return;
+  Akonadi::AgentInstance instance = mAgentInstanceSelectionModel->selectedRows().first().data( Akonadi::AgentInstanceModel::InstanceRole ).value<Akonadi::AgentInstance>();
+
+  // propagate our style sheet
+#ifndef MEEGO_EDITION_HARMATTAN
+  const bool propageStyleSheet = KCmdLineArgs::parsedArgs()->isSet( "emulate-maemo6" );
+#else
+  const bool propageStyleSheet = true;
+#endif
+
+  if ( propageStyleSheet ) {
+    QDBusInterface iface( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + instance.identifier(), QLatin1String("/MainApplication"), QLatin1String("com.trolltech.Qt.QApplication") );
+    iface.setProperty( "styleSheet", StyleSheetLoader::styleSheet() );
+  }
+
+  instance.configure( q );
 }
