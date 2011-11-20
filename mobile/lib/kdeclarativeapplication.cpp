@@ -18,14 +18,14 @@
 */
 
 #include "kdeclarativeapplication.h"
+#include "stylesheetloader.h"
 
 #include <kglobalsettings.h>
 #include <KDebug>
 #include <QFont>
 #include <KCmdLineArgs>
-#ifdef _WIN32_WCE
 #include <QThread>
-#endif
+#include <qplatformdefs.h>
 
 #ifdef KDELIBS_STATIC_LIBS
 int staticInitKConfigGroupGui();
@@ -74,6 +74,11 @@ void KDeclarativeApplicationBase::postApplicationSetup()
   setFont( f );
 #else
   setFont(KGlobalSettings::generalFont());
+#endif
+
+#ifdef MEEGO_EDITION_HARMATTAN
+  // we don't have a native widget style on Maemo6, so our CSS is better than nothing
+  StyleSheetLoader::applyStyle( qApp );
 #endif
 
   // make it look more like on the actual device when testing on the desktop
