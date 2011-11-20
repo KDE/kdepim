@@ -66,7 +66,7 @@ endif (KDEQMLPLUGIN_STATIC)
 
 if (X11_FOUND)
   target_link_libraries(kdepimmobileui ${X11_LIBRARIES})
-endif(X11_Found)
+endif()
 
 #FIXME: Dont use fixed Paths here, we know that under wince it should be installed to /Programme/Kontact-Mobile
 # but would be nicer if it is flexible
