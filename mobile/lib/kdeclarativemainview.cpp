@@ -871,13 +871,6 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   standardActionManager->createAllActions();
 }
 
-void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
-{
-  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
-  manager->setSelectionModel( selectionModel );
-  manager->createAllActions();
-}
-
 QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
 {
   return d->mItemFilterModel;

@@ -239,7 +239,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      *
      * @param selectionModel The selection model for the agent instances.
      */
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel ) = 0;
 
     /**
      * Returns the a proxy model that will be used on top of the entity tree model.
