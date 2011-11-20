@@ -51,7 +51,7 @@ QToolButton
   border-bottom: 10px;
   border-left: 10px;
   border-right: 10px;
-  min-height: 48px;
+  min-height: 36px;
 }
 
 /* active button background */
@@ -166,8 +166,8 @@ QSpinBox::down-button,
 QSpinBox::up-button
 {
   subcontrol-origin: margin;
-  height: 48px;
-  width: 48px;
+  height: 36px;
+  width: 36px;
 }
 
 QDateTimeEdit::down-button,
@@ -226,7 +226,7 @@ QSpinBox::up-arrow:off
 /** Tool buttons */
 QToolButton
 {
-  min-width: 48px;
+  min-width: 36px;
   padding: 1px;
   qproperty-iconSize: 48px 48px;
 }
