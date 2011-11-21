@@ -195,7 +195,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mSignatureStateIndicator( 0 ), mEncryptionStateIndicator( 0 ),
     mPreventFccOverwrite( false ),
     mCheckForForgottenAttachments( true ), 
-    mIgnoreStickyFields( false )
+    mIgnoreStickyFields( false ),
+    mWasModified( false )
 {
 
   mComposerBase = new Message::ComposerViewBase( this, this );
@@ -1697,8 +1698,7 @@ void KMComposeWin::setFcc( const QString &idString )
   mFccFolder->setFolder( col );
 }
 
-//-----------------------------------------------------------------------------
-bool KMComposeWin::isModified() const
+bool KMComposeWin::isComposerModified() const
 {
   return ( mComposerBase->editor()->document()->isModified() ||
            mEdtFrom->isModified() ||
@@ -1709,7 +1709,20 @@ bool KMComposeWin::isModified() const
 }
 
 //-----------------------------------------------------------------------------
+bool KMComposeWin::isModified() const
+{
+  return mWasModified || isComposerModified();
+}
+
+//-----------------------------------------------------------------------------
 void KMComposeWin::setModified( bool modified )
+{
+  mWasModified = modified;
+  changeModifiedState( modified );
+}
+
+
+void KMComposeWin::changeModifiedState( bool modified )
 {
   mComposerBase->editor()->document()->setModified( modified );
   if ( !modified ) {
@@ -1783,9 +1796,11 @@ bool KMComposeWin::userForgotAttachment()
 
 void KMComposeWin::autoSaveMessage()
 {
-  if ( isModified() ) {
+  if ( isComposerModified() ) {
     applyComposerSetting( mComposerBase );
     mComposerBase->autoSaveMessage();
+    mWasModified = true;
+    changeModifiedState( false );
   } else {
     mComposerBase->updateAutoSave();
   }

@@ -242,6 +242,10 @@ class KMComposeWin : public KMail::Composer
      void setFocusToSubject();
 
   private:
+    bool isComposerModified() const;
+    void changeModifiedState( bool modified );
+
+  
     /**
      * determines whether inline signing/encryption is selected
      */
@@ -699,6 +703,7 @@ class KMComposeWin : public KMail::Composer
     bool mPreventFccOverwrite;
     bool mCheckForForgottenAttachments;
     bool mIgnoreStickyFields;
+  bool mWasModified;
 };
 
 #endif
