@@ -77,7 +77,7 @@ static QStringList encodeIdn( const QStringList &emails )
   return encoded;
 }
 
-Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
+Message::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *parentGui)
  : QObject ( parent )
  , m_msg( KMime::Message::Ptr( new KMime::Message ) )
  , m_attachmentController( 0 )
@@ -89,6 +89,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_editor( 0 )
  , m_transport( 0 )
  , m_fccCombo( 0 )
+ , m_parentWidget( parentGui )
  , m_sign( false )
  , m_encrypt( false )
  , m_neverEncrypt( false )
@@ -743,8 +744,13 @@ void Message::ComposerViewBase::updateAutoSave()
   } else {
     if ( !m_autoSaveTimer ) {
       m_autoSaveTimer = new QTimer( this );
-      connect( m_autoSaveTimer, SIGNAL(timeout()),
-               this, SLOT(autoSaveMessage()) );
+      if ( m_parentWidget )
+        connect( m_autoSaveTimer, SIGNAL(timeout()),
+                 m_parentWidget, SLOT(autoSaveMessage()) );
+      else
+        connect( m_autoSaveTimer, SIGNAL(timeout()),
+                 this, SLOT(autoSaveMessage()) );
+        
     }
     m_autoSaveTimer->start( m_autoSaveInterval );
   }

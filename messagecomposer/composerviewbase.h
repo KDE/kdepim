@@ -77,7 +77,7 @@ class MESSAGECOMPOSER_EXPORT ComposerViewBase : public QObject
 {
   Q_OBJECT
 public:
-  explicit ComposerViewBase ( QObject* parent = 0 );
+  explicit ComposerViewBase ( QObject* parent = 0, QWidget *parentGui = 0 );
   virtual ~ComposerViewBase();
 
   enum Confirmation { LetUserConfirm, NoConfirmationNeeded };
