@@ -183,7 +183,7 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
   Q_ASSERT( mScene );
   PrefsPtr prefs = mScene->monthView()->preferences();
   p->setFont( prefs->monthViewFont() );
-  p->fillRect( rect, Qt::white );
+  p->fillRect( rect, palette().color(QPalette::Base) );
 
   /*
     Headers
