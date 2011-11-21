@@ -1413,7 +1413,6 @@ void KMComposeWin::setupEditor( void )
 //-----------------------------------------------------------------------------
 QString KMComposeWin::subject() const
 {
-  qDebug()<<" mEdtSubject->toPlainText();"<<mEdtSubject->toPlainText();
   return Message::Util::cleanedUpHeaderString( mEdtSubject->toPlainText() );
 }
 
@@ -2529,8 +2528,6 @@ void KMComposeWin::applyComposerSetting( Message::ComposerViewBase* mComposerBas
   mComposerBase->setCharsets( charsets );
   mComposerBase->setUrgent( mUrgentAction->isChecked() );
   mComposerBase->setMDNRequested( mRequestMDNAction->isChecked() );
-  qDebug()<<" subject()********************* ;"<<subject();
-  qDebug()<<" from() :"<<from();
 }
 
 
