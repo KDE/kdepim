@@ -1800,7 +1800,7 @@ void KMComposeWin::autoSaveMessage(bool force)
   if ( isComposerModified() || force ) {
     applyComposerSetting( mComposerBase );
     mComposerBase->autoSaveMessage();
-    if ( force ) {
+    if ( !force ) {
       mWasModified = true;
       changeModifiedState( false );
     }
