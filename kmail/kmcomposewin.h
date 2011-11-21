@@ -265,6 +265,8 @@ class KMComposeWin : public KMail::Composer
     {
       mSigningAndEncryptionExplicitlyDisabled = v;
     }
+  public slots: // kmkernel, callback
+    void autoSaveMessage(bool force = false);
 
   private slots:
      /**
@@ -394,8 +396,6 @@ class KMComposeWin : public KMail::Composer
     void slotSpellcheckDoneClearStatus();
 
   public slots: // kmkernel
-    void autoSaveMessage();
-
     /**
      * Set whether the message should be treated as modified or not.
      */

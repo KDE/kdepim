@@ -1794,13 +1794,15 @@ bool KMComposeWin::userForgotAttachment()
   return missingAttachments;
 }
 
-void KMComposeWin::autoSaveMessage()
+void KMComposeWin::autoSaveMessage(bool force)
 {
-  if ( isComposerModified() ) {
+  if ( isComposerModified() || force ) {
     applyComposerSetting( mComposerBase );
     mComposerBase->autoSaveMessage();
-    mWasModified = true;
-    changeModifiedState( false );
+    if ( force ) {
+      mWasModified = true;
+      changeModifiedState( false );
+    }
   } else {
     mComposerBase->updateAutoSave();
   }
