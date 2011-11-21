@@ -1783,8 +1783,12 @@ bool KMComposeWin::userForgotAttachment()
 
 void KMComposeWin::autoSaveMessage()
 {
-  applyComposerSetting( mComposerBase );
-  mComposerBase->autoSaveMessage();
+  if ( isModified() ) {
+    applyComposerSetting( mComposerBase );
+    mComposerBase->autoSaveMessage();
+  } else {
+    mComposerBase->updateAutoSave();
+  }
 }
 
 
