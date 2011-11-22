@@ -351,7 +351,7 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
-                           i18n( "Could not create account: %1" ) );
+                           ki18n( "Could not create account: %1" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
                            i18n( "Account creation failed" ) );
 
