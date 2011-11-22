@@ -232,7 +232,7 @@ void MultiAgendaView::recreateViews()
       d->addView( d->mCollectionSelectionModels[i], d->mCustomColumnTitles[i] );
     }
   } else {
-    Q_FOREACH( const Akonadi::Collection &i, collectionSelection()->selectedCollections() ) {
+    Q_FOREACH ( const Akonadi::Collection &i, collectionSelection()->selectedCollections() ) {
       if ( i.contentMimeTypes().contains( KCalCore::Event::eventMimeType() ) ) {
         d->addView( i );
       }

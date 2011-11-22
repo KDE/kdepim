@@ -988,7 +988,7 @@ void AgendaView::createDayLabels( bool force )
                          loadDecorations( botStrDecos, botDecos ), false );
 #endif
 
-  Q_FOREACH( const QDate &date, d->mSelectedDates ) {
+  Q_FOREACH ( const QDate &date, d->mSelectedDates ) {
     KVBox *topDayLabelBox = new KVBox( d->mTopDayLabels );
     d->mLayoutTopDayLabels->addWidget( topDayLabelBox );
     KVBox *bottomDayLabelBox = new KVBox( d->mBottomDayLabels );
@@ -1014,7 +1014,7 @@ void AgendaView::createDayLabels( bool force )
     d->mDateDayLabels.append( dayLabel );
     // if a holiday region is selected, show the holiday name
     const QStringList texts = CalendarSupport::holiday( date );
-    Q_FOREACH( const QString &text, texts ) {
+    Q_FOREACH ( const QString &text, texts ) {
       // Compute a small version of the holiday string for AlternateLabel
       const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
       AlternateLabel *label =
@@ -1481,7 +1481,7 @@ void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QD
     CalendarSupport::incidence( incidences.first() )->dateTime(
       KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
   Akonadi::Item first = incidences.first();
-  Q_FOREACH( const Akonadi::Item &aitem, incidences ) {
+  Q_FOREACH ( const Akonadi::Item &aitem, incidences ) {
     if ( CalendarSupport::incidence( aitem )->dtStart().toTimeSpec( timeSpec ) < start ) {
       first = aitem;
     }
@@ -1597,7 +1597,8 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   }
 
   if ( incidence->recurs() ) {
-    // timed incidences occur in [dtStart(), dtEnd()[. All-day incidences occur in [dtStart(), dtEnd()]
+    // timed incidences occur in [dtStart(), dtEnd()[
+    // all-day incidences occur in [dtStart(), dtEnd()]
     // so we subtract 1 second in the timed case
     const int secsToAdd = incidence->allDay() ? 0 : -1;
     const int eventDuration = event ? incDtStart.daysTo( incDtEnd.addSecs( secsToAdd ) ) : 0;
@@ -1774,7 +1775,7 @@ void AgendaView::slotTodosDropped( const KCalCore::Todo::List &items,
   KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
-  Q_FOREACH( const KCalCore::Todo::Ptr &todo, items ) {
+  Q_FOREACH ( const KCalCore::Todo::Ptr &todo, items ) {
     Akonadi::Item item = calendar()->itemForIncidenceUid( todo->uid() );
     if ( item.isValid() && CalendarSupport::hasTodo( item ) ) {
       KCalCore::Todo::Ptr oldTodo( CalendarSupport::todo( item )->clone() );

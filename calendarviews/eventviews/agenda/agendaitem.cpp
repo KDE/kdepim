@@ -669,7 +669,7 @@ void AgendaItem::dropEvent( QDropEvent *e )
   KABC::Addressee::List list;
 
   if ( KABC::VCardDrag::fromMimeData( md, list ) ) {
-    Q_FOREACH( const KABC::Addressee &addressee, list ) {
+    Q_FOREACH ( const KABC::Addressee &addressee, list ) {
       QString em( addressee.fullEmail() );
       if ( em.isEmpty() ) {
         em = addressee.realName();
