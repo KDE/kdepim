@@ -537,6 +537,7 @@ protected slots:
 
 private:
   virtual void doLoadFromGlobalSettings();
+  virtual void doResetToDefaultsOther();
 
 private:
   QCheckBox     *mAutoAppSignFileCheck;
