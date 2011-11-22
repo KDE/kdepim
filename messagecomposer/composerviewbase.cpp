@@ -103,7 +103,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *parentGu
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
   initAutoSave();
-  
+
 }
 
 Message::ComposerViewBase::~ComposerViewBase()
@@ -181,7 +181,7 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     emit enableHtml();
     collectImages( m_msg.get() );
   }
-  
+
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
@@ -254,7 +254,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   }
 
   Message::Util::sendMailDispatcherIsOnline( m_parentWidget );
-  
+
   readyForSending();
 }
 
@@ -650,7 +650,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
   }
   Message::Util::addSendReplyForwardAction(message, qjob);
-  
+
   fillQueueJobHeaders( qjob, message, infoPart );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );
@@ -661,7 +661,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
      message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
   }
   message->assemble();
-  
+
   connect( qjob, SIGNAL(result(KJob*)), this, SLOT(slotQueueResult(KJob*)) );
   m_pendingQueueJobs++;
   qjob->start();
@@ -750,7 +750,7 @@ void Message::ComposerViewBase::updateAutoSave()
       else
         connect( m_autoSaveTimer, SIGNAL(timeout()),
                  this, SLOT(autoSaveMessage()) );
-        
+
     }
     m_autoSaveTimer->start( m_autoSaveInterval );
   }
@@ -817,23 +817,31 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
   using Message::Composer;
 
   Q_ASSERT( dynamic_cast< Composer* >( job ) );
-  Composer* composer = dynamic_cast< Composer* >( job );
-  Q_ASSERT( m_composers.contains( composer ) );
-  m_composers.removeAll( composer );
+  Composer* composer = static_cast< Composer* >( job );
 
   if( composer->error() == Composer::NoError ) {
+    Q_ASSERT( m_composers.contains( composer ) );
 
     // The messages were composed successfully. Only save the first message, there should
     // only be one anyway, since crypto is disabled.
+    kDebug() << "NoError.";
     writeAutoSaveToDisk( composer->resultMessages().first() );
     Q_ASSERT( composer->resultMessages().size() == 1 );
 
     if( m_autoSaveInterval > 0 ) {
       updateAutoSave();
     }
+  } else if( composer->error() == Message::Composer::UserCancelledError ) {
+    // The job warned the user about something, and the user chose to return
+    // to the message.  Nothing to do.
+    kDebug() << "UserCancelledError.";
+    emit failed( i18n( "Job cancelled by the user" ) );
   } else {
-    kWarning() << "Composer for autosaving failed:" << composer->errorString();
+    kDebug() << "other Error.";
+    emit failed( i18n( "Could not autosave message: %1", job->errorString() ) );
   }
+
+  m_composers.removeAll( composer );
 }
 
 void Message::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
@@ -957,6 +965,7 @@ void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
 
 void Message::ComposerViewBase::addAttachment ( const KUrl& url, const QString& comment )
 {
+  Q_UNUSED( comment );
   kDebug() << "adding attachment with url:" << url;
   m_attachmentController->addAttachment( url );
 }
@@ -1311,10 +1320,10 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
-bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords ) 
+bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
 {
   if ( attachmentKeywords.isEmpty() )
-    return false;	  
+    return false;
   if ( m_attachmentModel->rowCount() > 0 ) {
     return false;
   }
@@ -1351,7 +1360,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
 
   if ( !gotMatch )
     return false;
-  
+
   int rc = KMessageBox::warningYesNoCancel( m_editor,
                                             i18n("The message you have composed seems to refer to an "
                                                 "attached file but you have not attached anything.\n"
