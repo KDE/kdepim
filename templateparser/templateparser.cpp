@@ -194,7 +194,7 @@ QString TemplateParser::getFName( const QString &str )
   // last resort -- return 'name' from 'name@domain'
   int sep_pos;
   QString res;
-  if ( ( sep_pos = str.indexOf( '@' ) ) > 0 ) {
+  if ( ( sep_pos = str.indexOf( QLatin1Char( '@' ) ) ) > 0 ) {
     int i;
     for ( i = (sep_pos - 1); i >= 0; --i ) {
       QChar c = str[i];
@@ -204,7 +204,7 @@ QString TemplateParser::getFName( const QString &str )
         break;
       }
     }
-  } else if ( ( sep_pos = str.indexOf(',') ) > 0 ) {
+  } else if ( ( sep_pos = str.indexOf(QLatin1Char( ',' )) ) > 0 ) {
     int i;
     bool begin = false;
     const int strLength( str.length() );
@@ -239,7 +239,7 @@ QString TemplateParser::getLName( const QString &str )
   // else format is 'First Last'
   int sep_pos;
   QString res;
-  if ( ( sep_pos = str.indexOf(',') ) > 0 ) {
+  if ( ( sep_pos = str.indexOf(QLatin1Char( ',' )) ) > 0 ) {
     int i;
     for ( i = sep_pos; i >= 0; --i ) {
       QChar c = str[i];
@@ -250,7 +250,7 @@ QString TemplateParser::getLName( const QString &str )
       }
     }
   } else {
-    if ( ( sep_pos = str.indexOf( ' ' ) ) > 0 ) {
+    if ( ( sep_pos = str.indexOf( QLatin1Char( ' ' ) ) ) > 0 ) {
       bool begin = false;
       const int strLength( str.length() );
       for ( int i = sep_pos; i < strLength; ++i ) {
@@ -275,7 +275,7 @@ void TemplateParser::process( const KMime::Message::Ptr &aorig_msg, const Akonad
   }
   mOrigMsg = aorig_msg;
   mFolder = afolder;
-  QString tmpl = findTemplate();
+  const QString tmpl = findTemplate();
   if( tmpl.isEmpty()) return;
   return processWithTemplate( tmpl );
 }
@@ -309,7 +309,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
     if ( c == '%' ) {
       const QString cmd = tmpl.mid( i + 1 );
 
-      if ( cmd.startsWith( '-' ) ) {
+      if ( cmd.startsWith( QLatin1Char( '-' ) ) ) {
         // dnl
         kDebug() << "Command: -";
         dnl = true;
@@ -527,7 +527,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTEXTSIZE";
         i += strlen( "OTEXTSIZE" );
         if ( mOrigMsg ) {
-          const QString str = QString( "%1" ).arg( mOrigMsg->body().length() );
+          const QString str = QString::fromLatin1( "%1" ).arg( mOrigMsg->body().length() );
           plainBody.append( str );
           const QString body = plainToHtml( str );
           htmlBody.append( body );
@@ -1295,7 +1295,7 @@ QString TemplateParser::findCustomTemplate( const QString &tmplName )
   CTemplates t( tmplName );
   mTo = t.to();
   mCC = t.cC();
-  QString content = t.content();
+  const QString content = t.content();
   if ( !content.isEmpty() ) {
     return content;
   } else {

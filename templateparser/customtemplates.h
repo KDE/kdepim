@@ -23,7 +23,6 @@
 #ifndef CUSTOMTEMPLATES_H
 #define CUSTOMTEMPLATES_H
 
-#include <QHash>
 #include <QPixmap>
 #include <QWidget>
 #include <QItemDelegate>
