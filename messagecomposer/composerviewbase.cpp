@@ -1339,7 +1339,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
 
   // check whether the subject contains one of the attachment key words
   // unless the message is a reply or a forwarded message
-  QString subj = subject();
+  const QString subj = subject();
   gotMatch = ( MessageHelper::stripOffPrefixes( subj ) == subj ) && ( rx.indexIn( subj ) >= 0 );
 
   if ( !gotMatch ) {
