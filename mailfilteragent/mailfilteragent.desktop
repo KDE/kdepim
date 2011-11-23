@@ -2,6 +2,7 @@
 Name=EMail Filter Agent
 Name[de]=Agent zur E-Mail-Filterung
 Name[es]=Agente de filtro de correo
+Name[gl]=Axente de filtrado de correo
 Name[ia]=Agente de filtro de e-posta
 Name[lt]=El. pašto filtrų agentas
 Name[nb]=E-post filteragent
@@ -16,6 +17,7 @@ Name[zh_TW]=郵件過濾代理程式
 Comment=Extension to filter emails
 Comment[de]=Erweiterung zur Filterung von E-Mails
 Comment[es]=Extensión para filtrar correos
+Comment[gl]=Extensión para filtrar correos
 Comment[ia]=Extension per filtrar messages de e-posta
 Comment[lt]=Įskiepis el. laiškų filtravimui
 Comment[nb]=Utvidelse som filtrerer e-poster
