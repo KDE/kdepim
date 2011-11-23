@@ -609,14 +609,15 @@ void KMFilterDialog::slotUpdateAccountList()
   const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
   const int nbAccount = lst.count();
   for ( int i = 0; i <nbAccount; ++i ) {
-    if( lst.at( i ).type().identifier() == QLatin1String( "akonadi_nepomuktag_resource" ) )
+    const Akonadi::AgentInstance agent = lst.at( i );
+    if( agent.type().identifier() == QLatin1String( "akonadi_nepomuktag_resource" ) )
       continue;
     QTreeWidgetItem *listItem = new QTreeWidgetItem( mAccountList, top );
-    listItem->setText( 0, lst.at( i ).name() );
-    listItem->setText( 1, lst.at( i ).type().name() );
-    listItem->setText( 2, lst.at( i ).identifier() );
+    listItem->setText( 0, agent.name() );
+    listItem->setText( 1, agent.type().name() );
+    listItem->setText( 2, agent.identifier() );
     if ( mFilter )
-      listItem->setCheckState( 0, mFilter->applyOnAccount( lst.at( i ).identifier() ) ?
+      listItem->setCheckState( 0, mFilter->applyOnAccount( agent.identifier() ) ?
                                   Qt::Checked : Qt::Unchecked );
     top = listItem;
   }
