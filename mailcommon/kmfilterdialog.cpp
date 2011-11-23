@@ -610,8 +610,6 @@ void KMFilterDialog::slotUpdateAccountList()
   const int nbAccount = lst.count();
   for ( int i = 0; i <nbAccount; ++i ) {
     const Akonadi::AgentInstance agent = lst.at( i );
-    if( agent.type().identifier() == QLatin1String( "akonadi_nepomuktag_resource" ) )
-      continue;
     QTreeWidgetItem *listItem = new QTreeWidgetItem( mAccountList, top );
     listItem->setText( 0, agent.name() );
     listItem->setText( 1, agent.type().name() );
