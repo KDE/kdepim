@@ -1,5 +1,8 @@
 KAlarm Change Log
 
+=== Version 2.7.5 --- 23 November 2011 ===
+- Fix crash due to audio thread not being correctly deleted.
+
 === Version 2.7.4 (KDE 4.7.1) --- 28 August 2011 ===
 - Fix crash when last recurrence of late-cancel alarm triggers too late.
 - Fix conversion of pre-version 1.4.14 subsidiary alarms.
