@@ -28,6 +28,7 @@
 #include <kdialog.h>
 
 #include <QGroupBox>
+#include <QListWidgetItem>
 #include <QList>
 
 class QLabel;
@@ -41,7 +42,6 @@ class KIconButton;
 class KKeySequenceWidget;
 class KActionCollection;
 class QModelIndex;
-class QListWidgetItem;
 namespace MailCommon {
   class SearchPatternEdit;
   class FilterActionWidgetLister;
@@ -346,6 +346,19 @@ protected:
   bool mDoNotClose;
   bool mIgnoreFilterUpdates;
 };
+
+class QListWidgetFilterItem : public QListWidgetItem
+{
+public:
+  explicit QListWidgetFilterItem( const QString & text, QListWidget * parent = 0);
+  ~QListWidgetFilterItem();
+  
+  void setFilter( MailCommon::MailFilter *filter );
+  MailCommon::MailFilter *filter();
+private:
+  MailCommon::MailFilter *mFilter;  
+};
+
 }
 
 

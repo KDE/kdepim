@@ -3,6 +3,9 @@
   Author: Marc Mutz <Marc@Mutz.com>
   based upon work by Stefan Taferner <taferner@kde.org>
 
+  Copyright (c) 2011 Laurent Montel <montel@kde.org>
+
+  
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -66,6 +69,28 @@ using MailCommon::FilterImporterExporter;
 
 using namespace MailCommon;
 namespace MailCommon {
+
+QListWidgetFilterItem::QListWidgetFilterItem( const QString & text, QListWidget * parent )
+  : QListWidgetItem( text, parent ), mFilter( 0 )
+{
+}
+
+QListWidgetFilterItem::~QListWidgetFilterItem()
+{
+}
+  
+void QListWidgetFilterItem::setFilter( MailCommon::MailFilter *filter )
+{
+  //mFilter = filter;
+  setCheckState(  filter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+}
+
+MailCommon::MailFilter* QListWidgetFilterItem::filter()
+{
+  return mFilter;
+}
+
+
 // What's this help texts
 const char * _wt_filterlist =
 I18N_NOOP( "<qt><p>This is the list of defined filters. "
@@ -1193,8 +1218,8 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
   const QList<MailFilter*> filters = MailCommon::FilterManager::instance()->filters();
   foreach ( MailFilter *filter, filters ) {
     mFilterList.append( new MailFilter( *filter ) ); // deep copy
-    QListWidgetItem *item = new QListWidgetItem( filter->pattern()->name(), mListWidget );
-    item->setCheckState(  filter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+    QListWidgetFilterItem *item = new QListWidgetFilterItem( filter->pattern()->name(), mListWidget );
+    item->setFilter( filter );
     mListWidget->addItem( item );
   }
 
@@ -1220,8 +1245,8 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
   assert( aFilter );
 
   // if mIdxSelItem < 0, QListBox::insertItem will append.
-  QListWidgetItem *item = new QListWidgetItem( aFilter->pattern()->name() );
-  item->setCheckState(  aFilter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+  QListWidgetFilterItem *item = new QListWidgetFilterItem( aFilter->pattern()->name() );
+  item->setFilter(  aFilter );
   mListWidget->insertItem( mIdxSelItem,item );
 
   if ( mIdxSelItem < 0 ) {
@@ -1242,8 +1267,8 @@ void KMFilterListBox::appendFilter( MailFilter* aFilter )
 {
   mFilterList.append( aFilter );
 
-  QListWidgetItem *item = new QListWidgetItem( aFilter->pattern()->name(), mListWidget );
-  item->setCheckState(  aFilter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
+  QListWidgetFilterItem *item = new QListWidgetFilterItem( aFilter->pattern()->name(), mListWidget );
+  item->setFilter( aFilter );
   mListWidget->addItem( item );
 
   emit filterCreated();
