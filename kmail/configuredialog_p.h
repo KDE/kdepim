@@ -163,11 +163,12 @@ public:
   virtual void defaults();
 
 protected:
+  virtual void showEvent ( QShowEvent * event );
   void addTab( ConfigModuleTab* tab, const QString & title );
 
 private:
   KTabWidget *mTabWidget;
-
+  bool mWasInitialized;
 };
 
 
