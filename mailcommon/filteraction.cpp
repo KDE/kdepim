@@ -430,7 +430,7 @@ QString FilterActionWithFolder::displayString() const
 {
   QString result;
   if ( mFolder.isValid() )
-    result = mFolder.remoteId();
+    result = QString::number( mFolder.id() );
 
   return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
 }
