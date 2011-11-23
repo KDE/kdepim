@@ -72,8 +72,9 @@ configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ente
 ############### generate kdepim-version.h ###############
 # Support for the GIT revision number in kdepim-version.h
 if(EXISTS "${kdepim_SOURCE_DIR}/.git")
-  find_package(Git)
-  if(GIT_FOUND)
+  find_program(GIT_EXECUTABLE NAMES git)
+  if(GIT_EXECUTABLE)
+    message(STATUS "Found git: ${GIT_EXECUTABLE}")
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
                     WORKING_DIRECTORY ${kdepim_SOURCE_DIR}
                     OUTPUT_VARIABLE kdepim_git_revision)
