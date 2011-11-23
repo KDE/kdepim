@@ -1187,6 +1187,7 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
   resetStateForNewMessage();
 
   Akonadi::Item item;
+  item.setMimeType( KMime::Message::mimeType() );
   item.setPayload( aMsg );
   mMessageItem = item;
 
