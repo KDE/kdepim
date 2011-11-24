@@ -802,11 +802,8 @@ void KMFilterListBox::slotRowsMoved( const QModelIndex &,
                                      const QModelIndex &, int destinationRow )
 {
   Q_UNUSED( sourceEnd );
-#if 0
-  MailFilter *filter = mFilterList.takeAt( sourcestart );
-  mFilterList.insert( destinationRow - 1, filter );
-#endif
-
+  Q_UNUSED( sourcestart );
+  Q_UNUSED( destinationRow );
   enableControls();
 
   emit filterOrderAltered();
@@ -896,8 +893,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
   QStringList emptyFilters;
   const int numberOfFilter( mListWidget->count() );
   for ( int i = 0; i <numberOfFilter; ++i ) {
-    QListWidgetItem *item = mListWidget->item( i );
-    QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+    QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) );
     MailFilter *f = new MailFilter( *itemFilter->filter() ); // deep copy
     f->purify();
     if ( !f->isEmpty() )
@@ -942,8 +938,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
 void KMFilterListBox::slotSelected( int aIdx )
 {
   if ( aIdx >= 0 && aIdx < mListWidget->count() ) {
-    QListWidgetItem *item =  mListWidget->item(aIdx);
-    QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+    QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( mListWidget->item(aIdx) );
     MailFilter *f = itemFilter->filter();
     if ( f )
       emit filterSelected( f );
@@ -1051,14 +1046,15 @@ void KMFilterListBox::slotTop()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentRow() == 0 ) {
+  const int currentIndex = mListWidget->currentRow();
+  if ( currentIndex == 0 ) {
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
   
   if ( item->isHidden() )
     return;
-  item = mListWidget->takeItem( mListWidget->currentRow() );
+  item = mListWidget->takeItem( currentIndex );
   mListWidget->insertItem( 0, item );
 
   mListWidget->setCurrentItem( mListWidget->item( 0 ) );
@@ -1075,13 +1071,14 @@ void KMFilterListBox::slotBottom()
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentRow() == (int)mListWidget->count() - 1 ) {
+  const int currentIndex = mListWidget->currentRow();
+  if ( currentIndex == (int)mListWidget->count() - 1 ) {
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
   if ( item->isHidden() )
     return;
-  item = mListWidget->takeItem( mListWidget->currentRow() );
+  item = mListWidget->takeItem( currentIndex );
   mListWidget->insertItem( mListWidget->count(), item );
 
   mListWidget->setCurrentItem( mListWidget->item( mListWidget->count() -1 ) );
@@ -1192,7 +1189,7 @@ void KMFilterListBox::enableControls()
   mBtnRename->setEnabled( aFilterIsSelected );
   mBtnTop->setEnabled( aFilterIsSelected && !theFirst );
   mBtnBottom->setEnabled( aFilterIsSelected && !theLast );
-
+  
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
 }
