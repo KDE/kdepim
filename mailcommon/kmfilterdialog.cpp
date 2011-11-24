@@ -77,11 +77,12 @@ QListWidgetFilterItem::QListWidgetFilterItem( const QString & text, QListWidget 
 
 QListWidgetFilterItem::~QListWidgetFilterItem()
 {
+  delete mFilter;
 }
   
 void QListWidgetFilterItem::setFilter( MailCommon::MailFilter *filter )
 {
-  //mFilter = filter;
+  mFilter = filter;
   setCheckState(  filter->isEnabled() ? Qt::Checked :  Qt::Unchecked );
 }
 
@@ -668,8 +669,6 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout();
 
-  mIdxSelItem = -1;
-
   //----------- the list box
   mListWidget = new QListWidget(this);
   mListWidget->setMinimumWidth(150);
@@ -783,17 +782,16 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 
 KMFilterListBox::~KMFilterListBox()
 {
-  qDeleteAll( mFilterList );
-  mFilterList.clear();
 }
 
 void KMFilterListBox::slotFilterEnabledChanged( QListWidgetItem *item )
 {
-  if ( mIdxSelItem < 0 ) {
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  MailFilter *filter = mFilterList.at( mIdxSelItem );
+  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+  MailCommon::MailFilter *filter = itemFilter->filter();
   filter->setEnabled( ( item->checkState() == Qt::Checked ) );
   emit filterUpdated( filter );
 }
@@ -804,11 +802,10 @@ void KMFilterListBox::slotRowsMoved( const QModelIndex &,
                                      const QModelIndex &, int destinationRow )
 {
   Q_UNUSED( sourceEnd );
-
+#if 0
   MailFilter *filter = mFilterList.takeAt( sourcestart );
   mFilterList.insert( destinationRow - 1, filter );
-
-  mIdxSelItem = destinationRow;
+#endif
 
   enableControls();
 
@@ -833,22 +830,25 @@ void KMFilterListBox::createFilter( const QByteArray &field, const QString &valu
 
 void KMFilterListBox::slotUpdateFilterName()
 {
-  if ( mIdxSelItem < 0 ) {
-    kDebug() << "Called while no filter is selected, ignoring. idx=" << mIdxSelItem;
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( !item ) {
+    kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-
-  SearchPattern *p = mFilterList.at(mIdxSelItem)->pattern();
+  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+  MailCommon::MailFilter *filter = itemFilter->filter();
+  
+  SearchPattern *p = filter->pattern();
   if ( !p ) return;
 
   QString shouldBeName = p->name();
-  QString displayedName = mListWidget->item( mIdxSelItem )->text();
+  QString displayedName = itemFilter->text();
 
   if ( shouldBeName.trimmed().isEmpty() ) {
-    mFilterList.at(mIdxSelItem)->setAutoNaming( true );
+    filter->setAutoNaming( true );
   }
 
-  if ( mFilterList.at(mIdxSelItem)->isAutoNaming() ) {
+  if ( filter->isAutoNaming() ) {
     // auto-naming of patterns
     if ( !p->isEmpty() && p->first() && !p->first()->field().trimmed().isEmpty() )
       shouldBeName = QString::fromLatin1( "<%1>: %2" ).arg( QString::fromLatin1( p->first()->field() ) ).arg( p->first()->contents() );
@@ -859,10 +859,10 @@ void KMFilterListBox::slotUpdateFilterName()
 
   if ( displayedName == shouldBeName ) return;
 
-  mFilterList.at( mIdxSelItem )->setToolbarName( shouldBeName );
+  filter->setToolbarName( shouldBeName );
 
   mListWidget->blockSignals(true);
-  mListWidget->item( mIdxSelItem )->setText( shouldBeName );
+  itemFilter->setText( shouldBeName );
   mListWidget->blockSignals(false);
 }
 
@@ -876,7 +876,7 @@ void KMFilterListBox::slotApplyFilterChanges( KDialog::ButtonCode button )
   else
     return; // ignore close and cancel
 
-  if ( mIdxSelItem >= 0 ) {
+  if ( mListWidget->currentItem() ) {
     emit applyWidgets();
     slotSelected( mListWidget->currentRow() );
   }
@@ -894,8 +894,11 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
   const_cast<KMFilterListBox*>( this )->applyWidgets(); // signals aren't const
   QList<MailFilter *> filters;
   QStringList emptyFilters;
-  foreach ( MailFilter *const it, mFilterList ) {
-    MailFilter *f = new MailFilter( *it ); // deep copy
+  const int numberOfFilter( mListWidget->count() );
+  for ( int i = 0; i <numberOfFilter; ++i ) {
+    QListWidgetItem *item = mListWidget->item( i );
+    QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+    MailFilter *f = new MailFilter( *itemFilter->filter() ); // deep copy
     f->purify();
     if ( !f->isEmpty() )
       // the filter is valid:
@@ -938,11 +941,10 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
 
 void KMFilterListBox::slotSelected( int aIdx )
 {
-  kDebug() << "idx=" << aIdx;
-  mIdxSelItem = aIdx;
-
-  if ( mIdxSelItem >= 0 && mIdxSelItem < mFilterList.count() ) {
-    MailFilter *f = mFilterList.at(aIdx);
+  if ( aIdx >= 0 && aIdx < mListWidget->count() ) {
+    QListWidgetItem *item =  mListWidget->item(aIdx);
+    QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+    MailFilter *f = itemFilter->filter();
     if ( f )
       emit filterSelected( f );
     else
@@ -955,8 +957,9 @@ void KMFilterListBox::slotSelected( int aIdx )
 
 void KMFilterListBox::slotNew()
 {
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( item &&
+       item->isHidden() )
     return;
 
   // just insert a new filter.
@@ -966,18 +969,19 @@ void KMFilterListBox::slotNew()
 
 void KMFilterListBox::slotCopy()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem * item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  if ( item->isHidden() )
     return;
 
   // make sure that all changes are written to the filter before we copy it
   emit applyWidgets();
-
-  MailFilter *filter = mFilterList.at( mIdxSelItem );
+  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+  
+  MailFilter *filter = itemFilter->filter();
 
   // enableControls should make sure this method is
   // never called when no filter is selected.
@@ -990,22 +994,22 @@ void KMFilterListBox::slotCopy()
 
 void KMFilterListBox::slotDelete()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  if ( item->isHidden() )
     return;
-
-  MailCommon::MailFilter *filter = mFilterList.at( mIdxSelItem );
+  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+  
+  MailCommon::MailFilter *filter = itemFilter->filter();
 
   const QString filterName = filter->pattern()->name();
 
   if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
     return;
-  int oIdxSelItem = mIdxSelItem;
-  mIdxSelItem = -1;
+  int oIdxSelItem = mListWidget->currentRow();
   // unselect all
   // TODO remove this line: mListWidget->clearSelection();
   // broadcast that all widgets let go
@@ -1013,11 +1017,9 @@ void KMFilterListBox::slotDelete()
   emit resetWidgets();
 
   // remove the filter from both the listbox
-  QListWidgetItem *item = mListWidget->takeItem( oIdxSelItem );
-  delete item;
-  // and the filter list...
-  MailCommon::MailFilter *deletedFilter =  mFilterList.takeAt( oIdxSelItem );
-
+  QListWidgetItem *item2 = mListWidget->takeItem( oIdxSelItem );
+  delete item2;
+ 
 
   const int count = mListWidget->count();
   // and set the new current item.
@@ -1037,32 +1039,28 @@ void KMFilterListBox::slotDelete()
   if ( oIdxSelItem == 0 )
     slotSelected( 0 );
 
-  mIdxSelItem = mListWidget->currentRow();
   enableControls();
 
-  emit filterRemoved( deletedFilter );
+  emit filterRemoved( filter );
 }
 
 void KMFilterListBox::slotTop()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mIdxSelItem == 0 ) {
+  if ( mListWidget->currentRow() == 0 ) {
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  
+  if ( item->isHidden() )
     return;
-
-  MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
-  mFilterList.insert( 0, filter );
-  QListWidgetItem *item =mListWidget->takeItem( mIdxSelItem );
+  item = mListWidget->takeItem( mListWidget->currentRow() );
   mListWidget->insertItem( 0, item );
 
-  mIdxSelItem = 0;
   mListWidget->setCurrentItem( mListWidget->item( 0 ) );
 
   enableControls();
@@ -1072,25 +1070,21 @@ void KMFilterListBox::slotTop()
 
 void KMFilterListBox::slotBottom()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mIdxSelItem == (int)mListWidget->count() - 1 ) {
+  if ( mListWidget->currentRow() == (int)mListWidget->count() - 1 ) {
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  if ( item->isHidden() )
     return;
-
-  MailFilter* filter = mFilterList.takeAt( mIdxSelItem );
-  mFilterList.insert( mFilterList.count() , filter );
-  QListWidgetItem *item = mListWidget->takeItem( mIdxSelItem );
+  item = mListWidget->takeItem( mListWidget->currentRow() );
   mListWidget->insertItem( mListWidget->count(), item );
 
-  mIdxSelItem = ( mFilterList.count() -1 );
-  mListWidget->setCurrentItem( mListWidget->item( mIdxSelItem ) );
+  mListWidget->setCurrentItem( mListWidget->item( mListWidget->count() -1 ) );
   enableControls();
 
   emit filterOrderAltered();
@@ -1099,19 +1093,19 @@ void KMFilterListBox::slotBottom()
 
 void KMFilterListBox::slotUp()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mIdxSelItem == 0 ) {
+  const int currentIndex = mListWidget->currentRow( );
+  if ( currentIndex == 0 ) {
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  if ( item->isHidden() )
     return;
-
-  swapNeighbouringFilters( mIdxSelItem, mIdxSelItem - 1 );
+  swapNeighbouringFilters( currentIndex, currentIndex - 1 );
   enableControls();
 
   emit filterOrderAltered();
@@ -1119,19 +1113,19 @@ void KMFilterListBox::slotUp()
 
 void KMFilterListBox::slotDown()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem *item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-  if ( mIdxSelItem == (int)mListWidget->count() - 1 ) {
+  const int currentIndex = mListWidget->currentRow();
+  if ( currentIndex == (int)mListWidget->count() - 1 ) {
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  if ( item->isHidden() )
     return;
-
-  swapNeighbouringFilters( mIdxSelItem, mIdxSelItem + 1);
+  swapNeighbouringFilters( currentIndex, currentIndex + 1);
   enableControls();
 
   emit filterOrderAltered();
@@ -1139,17 +1133,17 @@ void KMFilterListBox::slotDown()
 
 void KMFilterListBox::slotRename()
 {
-  if ( mIdxSelItem < 0 ) {
+  QListWidgetItem * item = mListWidget->currentItem();
+  if ( !item ) {
     kDebug() << "Called while no filter is selected, ignoring.";
     return;
   }
-
-  if ( mListWidget->currentItem() &&
-       mListWidget->currentItem()->isHidden() )
+  if ( item->isHidden() )
     return;
-
+  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+  
   bool okPressed = false;
-  MailFilter *filter = mFilterList.at( mIdxSelItem );
+  MailFilter *filter = itemFilter->filter();
 
   // enableControls should make sure this method is
   // never called when no filter is selected.
@@ -1186,9 +1180,10 @@ void KMFilterListBox::slotRename()
 
 void KMFilterListBox::enableControls()
 {
-  const bool theFirst = ( mIdxSelItem == 0 );
-  const bool theLast = ( mIdxSelItem >= (int)mFilterList.count() - 1 );
-  const bool aFilterIsSelected = ( mIdxSelItem >= 0 );
+  const int currentIndex = mListWidget->currentRow();
+  const bool theFirst = ( currentIndex == 0 );
+  const bool theLast = ( currentIndex >= (int)mListWidget->count() - 1 );
+  const bool aFilterIsSelected = ( currentIndex >= 0 );
 
   mBtnUp->setEnabled( aFilterIsSelected && !theFirst );
   mBtnDown->setEnabled( aFilterIsSelected && !theLast );
@@ -1212,14 +1207,12 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
   blockSignals(true);
 
   // clear both lists
-  mFilterList.clear();
   mListWidget->clear();
 
   const QList<MailFilter*> filters = MailCommon::FilterManager::instance()->filters();
   foreach ( MailFilter *filter, filters ) {
-    mFilterList.append( new MailFilter( *filter ) ); // deep copy
     QListWidgetFilterItem *item = new QListWidgetFilterItem( filter->pattern()->name(), mListWidget );
-    item->setFilter( filter );
+    item->setFilter( new MailFilter( *filter ) );
     mListWidget->addItem( item );
   }
 
@@ -1243,20 +1236,16 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
 {
   // must be really a filter...
   assert( aFilter );
-
+  const int currentIndex = mListWidget->currentRow();
   // if mIdxSelItem < 0, QListBox::insertItem will append.
   QListWidgetFilterItem *item = new QListWidgetFilterItem( aFilter->pattern()->name() );
   item->setFilter(  aFilter );
-  mListWidget->insertItem( mIdxSelItem,item );
-
-  if ( mIdxSelItem < 0 ) {
-    // none selected -> append
-    mFilterList.append( aFilter );
+  mListWidget->insertItem( currentIndex,item );
+  if ( currentIndex < 0 ) {
     mListWidget->setCurrentRow( mListWidget->count() - 1 );
   } else {
     // insert just before selected
-    mFilterList.insert( mIdxSelItem, aFilter );
-    mListWidget->setCurrentRow( mIdxSelItem );
+    mListWidget->setCurrentRow( currentIndex );
   }
 
   emit filterCreated();
@@ -1265,8 +1254,6 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
 
 void KMFilterListBox::appendFilter( MailFilter* aFilter )
 {
-  mFilterList.append( aFilter );
-
   QListWidgetFilterItem *item = new QListWidgetFilterItem( aFilter->pattern()->name(), mListWidget );
   item->setFilter( aFilter );
   mListWidget->addItem( item );
@@ -1285,11 +1272,6 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
   // now selected item is at idx(idx-1), so
   // insert the other item at idx, ie. above(below).
   mListWidget->insertItem( untouchedOne, item );
-
-  MailFilter* filter = mFilterList.takeAt( movedOne );
-  mFilterList.insert( untouchedOne, filter );
-
-  mIdxSelItem += movedOne - untouchedOne;
 }
 
 
@@ -1305,7 +1287,6 @@ void KMFilterDialog::slotImportFilters()
     KMessageBox::information( this, i18n( "No filter was imported." ) );
     return;
   }
-
   QStringList listOfFilter;
   QList<MailFilter*>::ConstIterator end( filters.constEnd() );
 
@@ -1314,7 +1295,6 @@ void KMFilterDialog::slotImportFilters()
     listOfFilter<<( *it )->name();
   }
   KMessageBox::informationList( this, i18n( "Filters which were imported:" ),listOfFilter );
-
 }
 
 void KMFilterDialog::slotExportFilters()

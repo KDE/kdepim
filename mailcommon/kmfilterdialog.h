@@ -2,6 +2,7 @@
   Filter Dialog
   Author: Marc Mutz <Marc@Mutz.com>
   based upon work by Stefan Taferner <taferner@kde.org>
+  Copyright (c) 2011 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -181,14 +182,10 @@ protected slots:
   void slotFilterEnabledChanged(QListWidgetItem*item);
 
 protected:
-  /** The deep copy of the filter list. */
-  QList<MailCommon::MailFilter *> mFilterList;
   /** The listbox displaying the filter list. */
   QListWidget *mListWidget;
   /** The various action buttons. */
   QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnUp, *mBtnDown, *mBtnRename, *mBtnTop, *mBtnBottom;
-  /** The index of the currently selected item. */
-  int mIdxSelItem;
 private:
   void enableControls();
 
