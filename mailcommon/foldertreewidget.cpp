@@ -106,14 +106,15 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   recurfilter->setSourceModel( KernelIf->collectionModel() );
 
   // ... with statistics...
-  d->filterModel = new Akonadi::StatisticsProxyModel( this );
-  d->filterModel->setSourceModel( recurfilter );
-
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
-  d->quotaModel->setSourceModel( d->filterModel );
+  d->quotaModel->setSourceModel( recurfilter );
 
+  d->filterModel = new Akonadi::StatisticsProxyModel( this );
+  d->filterModel->setSourceModel( d->quotaModel );
+
+  
   d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
-  d->readableproxy->setSourceModel( d->quotaModel );
+  d->readableproxy->setSourceModel( d->filterModel );
 
 
   connect( d->folderTreeView, SIGNAL(changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)),
