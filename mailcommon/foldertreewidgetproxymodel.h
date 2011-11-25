@@ -46,6 +46,8 @@ public:
 
   virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
 
+  virtual QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+  
   void setEnabledCheck( bool enable );
   bool enabledCheck() const;
 

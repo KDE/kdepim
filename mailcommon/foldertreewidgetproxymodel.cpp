@@ -25,6 +25,8 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 #include <kdebug.h>
 
 #include <QtGui/QApplication>
@@ -163,6 +165,23 @@ void FolderTreeWidgetProxyModel::setFilterFolder( const QString& filter )
 {
   d->filterStr = filter;
   setFilterWildcard( filter );
+}
+
+QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) const
+{
+  if ( role == Qt::TextColorRole ) {
+    const QModelIndex sourceIndex = mapToSource( index );
+    const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
+    const Akonadi::Collection collection = sourceModel()->data( rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
+    //TODO configurate it in 4.9 (we are in string freeze now)
+    if ( !instance.isOnline() ) {
+      return Qt::red;
+    } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
+      return Qt::gray;
+    }
+  }
+  return  Akonadi::EntityRightsFilterModel::data( index, role );
 }
 
 }
