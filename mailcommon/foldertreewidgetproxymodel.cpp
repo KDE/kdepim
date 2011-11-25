@@ -173,12 +173,16 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
     const QModelIndex sourceIndex = mapToSource( index );
     const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
     const Akonadi::Collection collection = sourceModel()->data( rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
-    //TODO configurate it in 4.9 (we are in string freeze now)
-    if ( !instance.isOnline() ) {
-      return Qt::red;
-    } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
-      return Qt::gray;
+    if ( !MailCommon::Util::isVirtualCollection(collection) )
+    {
+
+      const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
+      //TODO configurate it in 4.9 (we are in string freeze now)
+      if ( !instance.isOnline() ) {
+        return Qt::red;
+      } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
+        return Qt::gray;
+      }
     }
   }
   return  Akonadi::EntityRightsFilterModel::data( index, role );
