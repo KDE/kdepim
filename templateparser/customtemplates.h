@@ -25,7 +25,7 @@
 
 #include <QPixmap>
 #include <QWidget>
-#include <QItemDelegate>
+#include <QStyledItemDelegate>
 #include <QTreeWidgetItem>
 #include <QKeySequence>
 
@@ -118,7 +118,7 @@ private:
   QString mTo, mCC;
 };
 
-class CustomTemplateItemDelegate : public QItemDelegate
+class CustomTemplateItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   

@@ -401,7 +401,7 @@ void CustomTemplates::slotItemChanged(QTreeWidgetItem* item ,int column)
 }
 
 CustomTemplateItemDelegate::CustomTemplateItemDelegate(QObject *parent )
-  :QItemDelegate( parent )
+  :QStyledItemDelegate( parent )
 {
 }
 
