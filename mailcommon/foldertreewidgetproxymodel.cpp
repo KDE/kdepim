@@ -194,6 +194,15 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
   return  Akonadi::EntityRightsFilterModel::data( index, role );
 }
 
+void FolderTreeWidgetProxyModel::updatePalette()
+{
+  KColorScheme scheme(QPalette::Active, KColorScheme::View);
+  d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
+  d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  invalidate();
+}
+
+
 }
 
 

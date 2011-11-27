@@ -146,7 +146,8 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   } else {
     d->filterFolderLineEdit->hide();
   }
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()));
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
   readConfig();
 }
 
@@ -260,7 +261,12 @@ void FolderTreeWidget::slotGeneralFontChanged()
     setFont( KGlobalSettings::generalFont() );
   }
 }
-  
+
+void FolderTreeWidget::slotGeneralPaletteChanged()
+{
+  d->readableproxy->updatePalette();
+}
+
 void FolderTreeWidget::readConfig()
 {
   // Custom/System font support

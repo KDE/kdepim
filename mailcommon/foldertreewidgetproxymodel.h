@@ -62,7 +62,10 @@ public:
   void setHideOutboxFolder( bool hide );
   bool hideOutboxFolder() const;
   void setFilterFolder( const QString& filter );
-  
+
+
+  void updatePalette();
+
 protected:
   virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
 

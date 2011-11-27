@@ -130,6 +130,7 @@ protected slots:
   void slotManualSortingChanged( bool );
   void slotFilterFixedString( const QString& );
   void slotGeneralFontChanged();
+  void slotGeneralPaletteChanged();
 
 private:
   virtual bool eventFilter( QObject*o, QEvent *e );
