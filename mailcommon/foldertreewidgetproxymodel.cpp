@@ -45,6 +45,8 @@ public:
       hideOutboxFolder( false )
     {
     }
+  QColor brokenAccountColor;
+  QColor offlineAccountColor;
   QString filterStr;
   bool enableCheck;
   bool hideVirtualFolder;
@@ -68,6 +70,9 @@ FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModel( QObject *parent, FolderT
   if ( option & HideOutboxFolder ) {
     d->hideOutboxFolder = true;
   }
+  KColorScheme scheme(QPalette::Active, KColorScheme::View);
+  d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
+  d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
 }
 
 FolderTreeWidgetProxyModel::~FolderTreeWidgetProxyModel()
@@ -180,11 +185,9 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
       const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
       //TODO configurate it in 4.9 (we are in string freeze now)
       if ( !instance.isOnline() ) {
-        KColorScheme scheme(QPalette::Active, KColorScheme::View);
-        return scheme.foreground(KColorScheme::NegativeText).color();
+        return d->offlineAccountColor;
       } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
-        KColorScheme scheme(QPalette::Active, KColorScheme::View);
-        return scheme.foreground(KColorScheme::InactiveText).color();
+        return d->brokenAccountColor;
       }
     }
   }
