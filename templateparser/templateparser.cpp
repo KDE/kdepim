@@ -1212,7 +1212,6 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   mMsg->setBody( mainPart->encodedBody() );
   mMsg->setHeader( mainPart->contentType() );
   mMsg->setHeader( mainPart->contentTransferEncoding() );
-
   mMsg->assemble();
   mMsg->parse();
 }
@@ -1261,10 +1260,10 @@ KMime::Content* TemplateParser::createPlainPartContent( const QString& plainBody
 {
     KMime::Content *textPart = new KMime::Content( mMsg.get() );
     textPart->contentType()->setMimeType( "text/plain" );
-    textPart->fromUnicodeString( plainBody );
     QTextCodec* charset = selectCharset( m_charsets, plainBody );
     textPart->contentType()->setCharset( charset->name() );
-    textPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );//FIXME doesn't work
+    textPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit );
+    textPart->fromUnicodeString( plainBody );
     return textPart;
 }
 
@@ -1282,8 +1281,8 @@ KMime::Content* TemplateParser::createMultipartAlternativeContent( const QString
   htmlPart->contentType()->setMimeType( "text/html" );
   QTextCodec* charset = selectCharset( m_charsets, htmlBody );
   htmlPart->contentType()->setCharset( charset->name() );
+  htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit ); 
   htmlPart->fromUnicodeString( htmlBody );
-  htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit ); //FIXME doesn't work
   multipartAlternative->addContent( htmlPart );
 
   return multipartAlternative;

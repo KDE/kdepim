@@ -24,7 +24,6 @@
 #include "mainwidget.h"
 #include <libkdepim/uistatesaver.h>
 
-#include <KAction>
 #include <KActionCollection>
 #include <KConfigGroup>
 #include <KLocale>

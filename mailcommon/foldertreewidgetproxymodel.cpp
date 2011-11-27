@@ -31,6 +31,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
+#include <KColorScheme>
 
 namespace MailCommon {
 
@@ -179,9 +180,11 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
       const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
       //TODO configurate it in 4.9 (we are in string freeze now)
       if ( !instance.isOnline() ) {
-        return Qt::red;
+        KColorScheme scheme(QPalette::Active, KColorScheme::View);
+        return scheme.foreground(KColorScheme::NegativeText).color();
       } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
-        return Qt::gray;
+        KColorScheme scheme(QPalette::Active, KColorScheme::View);
+        return scheme.foreground(KColorScheme::InactiveText).color();
       }
     }
   }

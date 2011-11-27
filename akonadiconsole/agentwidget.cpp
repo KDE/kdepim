@@ -42,6 +42,7 @@
 #include <QtGui/QTextEdit>
 #include <QDBusInterface>
 #include <QDBusMessage>
+#include <QDBusReply>
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QResizeEvent>
@@ -56,6 +57,7 @@ class TextDialog : public KDialog
 
       mText = new QTextEdit;
       setMainWidget( mText );
+      setInitialSize( QSize( 400, 600 ) );
     }
 
     void setText( const QString &text )
@@ -209,6 +211,29 @@ void AgentWidget::toggleOnline()
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.setIsOnline( !agent.isOnline() );
+}
+
+void AgentWidget::showTaskList()
+{
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( !agent.isValid() )
+    return;
+
+  QDBusInterface iface( QString::fromLatin1(  "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+                        "/Debug", QString() );
+
+  QDBusReply<QString> reply = iface.call("dumpToString");
+  QString txt;
+  if ( reply.isValid() )
+    txt = reply.value();
+  else {
+    txt = reply.error().message();
+  }
+
+  TextDialog dlg( this );
+  dlg.setCaption( QLatin1String( "Resource Task List" ) );
+  dlg.setText( txt );
+  dlg.exec();
 }
 
 void AgentWidget::showChangeNotifications()
@@ -450,6 +475,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
   menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
+  menu.addAction( KIcon(""), i18n("Show task list"), this, SLOT(showTaskList()) );
   menu.addAction( KIcon(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
   menu.addMenu( mConfigMenu );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );

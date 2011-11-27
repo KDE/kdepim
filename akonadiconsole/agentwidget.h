@@ -51,6 +51,7 @@ protected:
     void synchronizeTree();
     void toggleOnline();
     void showChangeNotifications();
+    void showTaskList();
     void abortAgent();
     void restartAgent();
     void cloneAgent();
