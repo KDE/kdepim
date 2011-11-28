@@ -29,12 +29,9 @@ using KABC::VCardConverter;
 using KABC::Addressee;
 
 #include <klocale.h>
-#include <kmessagebox.h>
 
 #include <libkdepim/addcontactjob.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QString>
 
 #ifndef KABC_ADDRESSEE_METATYPE_DEFINED
 Q_DECLARE_METATYPE( KABC::Addressee )

@@ -1869,10 +1869,11 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
   // to get the URL before WebKit managed to mangle it.
   KUrl url( mViewer->linkOrImageUrlAt( QCursor::pos() ) );
-  if ( url.protocol() == QLatin1String( "kmail" ) ||
-       url.protocol() == QLatin1String( "x-kmail" ) ||
-       url.protocol() == QLatin1String( "attachment" ) ||
-       ( url.protocol().isEmpty() && url.path().isEmpty() ) ) {
+  const QString protocol = url.protocol();
+  if ( protocol == QLatin1String( "kmail" ) ||
+       protocol == QLatin1String( "x-kmail" ) ||
+       protocol == QLatin1String( "attachment" ) ||
+       ( protocol.isEmpty() && url.path().isEmpty() ) ) {
     mViewer->setAcceptDrops( false );
   } else {
     mViewer->setAcceptDrops( true );
