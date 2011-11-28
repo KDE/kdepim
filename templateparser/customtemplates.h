@@ -128,6 +128,9 @@ public:
   
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                         const QModelIndex &index) const;
+  void setModelData(QWidget *editor, QAbstractItemModel *model,
+                        const QModelIndex &index) const;
+
 };
 
 #endif // CUSTOMTEMPLATES_H

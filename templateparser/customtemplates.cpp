@@ -383,11 +383,7 @@ void CustomTemplates::slotItemChanged(QTreeWidgetItem* item ,int column)
     CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
     if ( column == 1 ) {
       const QString newName = vitem->text( 1 );
-      if ( newName.isEmpty() ) {
-        //Restore old text.
-        vitem->setText( 1, vitem->oldName() );
-      }
-      else {        
+      if( !newName.isEmpty() ) {        
         const QString oldName = vitem->oldName();
         if ( newName != oldName ) {
           mItemsToDelete.append( oldName );
@@ -418,7 +414,16 @@ QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleO
   }
   return 0;
 }
-  
+
+void CustomTemplateItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+                                    const QModelIndex &index) const
+{
+  QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+  const QString text = lineEdit->text();
+  if( !text.isEmpty() )
+    model->setData(index, lineEdit->text(), Qt::EditRole);
+}
+
 
 CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
                                         const QString &name,
