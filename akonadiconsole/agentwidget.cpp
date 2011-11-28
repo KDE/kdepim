@@ -56,6 +56,7 @@ class TextDialog : public KDialog
       setButtons( Ok );
 
       mText = new QTextEdit;
+      mText->setReadOnly(true);
       setMainWidget( mText );
       setInitialSize( QSize( 400, 600 ) );
     }
