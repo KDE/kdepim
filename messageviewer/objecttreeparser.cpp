@@ -2909,8 +2909,6 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
   bool goodSignature = false;
   Kpgp::Module* pgp = Kpgp::Module::getKpgp();
   assert(pgp != 0);
-  bool isPgpMessage = false; // true if the message contains at least one
-                              // PGP MESSAGE or one PGP SIGNED MESSAGE block
   const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
 
@@ -2968,7 +2966,6 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
                 !kmkernel->contextMenuShown() */) ||
               ( block.type() == Kpgp::ClearsignedBlock ) )
           {
-              isPgpMessage = true;
               if( block.type() == Kpgp::PgpMessageBlock )
               {
                 // try to decrypt this OpenPGP block

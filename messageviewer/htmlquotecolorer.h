@@ -32,7 +32,7 @@ class HTMLQuoteColorer
 {
   public:
 
-    HTMLQuoteColorer();
+    explicit HTMLQuoteColorer();
 
     /**
      * Sets the quote color of the specific leve.
