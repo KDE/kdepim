@@ -1605,7 +1605,8 @@ void KMMainWidget::slotRemoveFolder()
 void KMMainWidget::slotDelayedRemoveFolder( KJob *job )
 {
   const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
-  const bool hasNotSubDirectory = fetchJob->collections().isEmpty();
+  Akonadi::Collection::List listOfCollection = fetchJob->collections();
+  const bool hasNotSubDirectory = listOfCollection.isEmpty();
 
   QDir dir;
   QString str;
@@ -1659,8 +1660,7 @@ void KMMainWidget::slotDelayedRemoveFolder( KJob *job )
                                            KMessageBox::Notify | KMessageBox::Dangerous )
       == KMessageBox::Continue )
   {
-    const Akonadi::Collection::Id collectionId = mCurrentFolder->collection().id();
-    kmkernel->checkFolderFromResources( collectionId );
+    kmkernel->checkFolderFromResources( listOfCollection<<mCurrentFolder->collection() );
 
     mCurrentFolder->removeCollection();
   }

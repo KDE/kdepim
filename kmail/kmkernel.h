@@ -408,7 +408,7 @@ public:
 
   /*reimp*/ QStringList customTemplates();
 
-  void checkFolderFromResources( const Akonadi::Collection::Id& collectionId );
+  void checkFolderFromResources( const Akonadi::Collection::List& collectionList );
 
   const QAbstractItemModel* treeviewModelSelection();
 
