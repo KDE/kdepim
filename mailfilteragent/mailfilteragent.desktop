@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=EMail Filter Agent
+Name[ca]=Agent de filtre de correu
 Name[de]=Agent zur E-Mail-Filterung
 Name[es]=Agente de filtro de correo
+Name[fr]=Agent de filtre de messages
 Name[gl]=Axente de filtrado de correo
 Name[ia]=Agente de filtro de e-posta
 Name[lt]=El. pašto filtrų agentas
@@ -15,8 +17,10 @@ Name[uk]=Агент фільтрування пошти
 Name[x-test]=xxEMail Filter Agentxx
 Name[zh_TW]=郵件過濾代理程式
 Comment=Extension to filter emails
+Comment[ca]=Extensió per a filtrar correus
 Comment[de]=Erweiterung zur Filterung von E-Mails
 Comment[es]=Extensión para filtrar correos
+Comment[fr]=Extension pour filtrer les courriels
 Comment[gl]=Extensión para filtrar correos
 Comment[ia]=Extension per filtrar messages de e-posta
 Comment[lt]=Įskiepis el. laiškų filtravimui

@@ -51,8 +51,10 @@ Name[zh_TW]=Kleopatra 簽署/加密資料夾
 
 [Desktop Action kleosignencryptfolder]
 Name=Archive, Sign && Encrypt Folder
+Name[ca]=Arxiva, signa i encripta la carpeta
 Name[cs]=Archivovat, podepsat a zašifrovat složku
 Name[es]=Archivar, firmar y cifrar carpeta
+Name[fr]=Archiver, signer et chiffrer le dossier
 Name[gl]=Arquivar, asinar e cifrar o cartafol
 Name[ia]=Archiva, signa && crypta Dossier
 Name[nl]=Map voor archiveren, ondertekenen & versleutelen
@@ -67,8 +69,10 @@ Exec=kleopatra --encrypt-sign %F
 
 [Desktop Action kleoencryptfolder]
 Name=Archive && Encrypt Folder
+Name[ca]=Arxiva i encripta la carpeta
 Name[cs]=Archivovat a zašifrovat složku
 Name[es]=Archivar y cifrar carpeta
+Name[fr]=Archiver et chiffrer le dossier
 Name[gl]=Arquivar e cifrar o cartafol
 Name[ia]=Archiva && crypta Dossier
 Name[nl]=Map voor archiveren && versleutelen

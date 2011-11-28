@@ -2,8 +2,10 @@
 Version=1.0
 Encoding=UTF-8
 Name=Tasks
+Name[ca]=Tasques
 Name[cs]=Úkoly
 Name[es]=Tareas
+Name[fr]=Tâches
 Name[gl]=Tarefas
 Name[ia]=Cargas
 Name[nl]=Taken
