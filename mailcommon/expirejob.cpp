@@ -193,7 +193,7 @@ void ExpireJob::done()
   if ( !str.isEmpty() )
     BroadcastStatus::instance()->setStatusMsg( str );
 
-  KConfigGroup group( KernelIf->config(), fd->configGroupName() );
+  KConfigGroup group( KernelIf->config(), fd->configGroupName( mMoveToFolder ) );
   group.writeEntry( "Current", -1 ); // i.e. make it invalid, the serial number will be used
 
   if ( !moving )
