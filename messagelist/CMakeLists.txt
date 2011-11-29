@@ -49,6 +49,7 @@ set(libmessagelist_SRCS
     pane.cpp
     storagemodel.cpp
     widget.cpp
+    messagelistutil.cpp
 )
 
 set(libmessagelist_core_HEADERS

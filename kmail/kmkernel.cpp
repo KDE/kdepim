@@ -42,6 +42,7 @@ using KMail::MailServiceImpl;
 
 #include "messagecore/globalsettings.h"
 #include "messagelist/core/settings.h"
+#include "messagelist/messagelistutil.h"
 #include "messageviewer/globalsettings.h"
 #include "messagecomposer/akonadisender.h"
 #include "messagecomposersettings.h"
@@ -1731,7 +1732,9 @@ void KMKernel::slotCollectionRemoved(const Akonadi::Collection& col)
   KConfigGroup group( KMKernel::config(), MailCommon::FolderCollection::configGroupName( col ) );
   group.deleteGroup();
   group.sync();
-  TemplateParser::Util::deleteTemplate( QString::number( col.id() ) );
+  const QString colStr = QString::number( col.id() );
+  TemplateParser::Util::deleteTemplate( colStr );
+  MessageList::Util::deleteConfig( colStr );
 }
 
 void KMKernel::slotDeleteIdentity( uint identity)
