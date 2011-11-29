@@ -27,7 +27,6 @@
 #include <kpimidentities/identity.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/collectiondeletejob.h>
 #include <kio/jobuidelegate.h>
 
 #include <QMutex>
@@ -164,14 +163,14 @@ void FolderCollection::slotIdentitiesChanged()
   }
 }
 
-QString FolderCollection::configGroupName() const
+QString FolderCollection::configGroupName(const Akonadi::Collection& col)
 {
-  return "Folder-"+ QString::number( mCollection.id() );
+  return "Folder-"+ QString::number( col.id() );
 }
 
 void FolderCollection::readConfig()
 {
-  const KConfigGroup configGroup( KernelIf->config(), configGroupName() );
+  const KConfigGroup configGroup( KernelIf->config(), configGroupName(mCollection) );
   mExpireMessages = configGroup.readEntry( "ExpireMessages", false );
   mReadExpireAge = configGroup.readEntry( "ReadExpireAge", 3 );
   mReadExpireUnits = (ExpireUnits)configGroup.readEntry( "ReadExpireUnits", (int)ExpireMonths );
@@ -214,7 +213,7 @@ QString FolderCollection::idString() const
 
 void FolderCollection::writeConfig() const
 {
-  KConfigGroup configGroup( KernelIf->config(), configGroupName() );
+  KConfigGroup configGroup( KernelIf->config(), configGroupName(mCollection) );
   configGroup.writeEntry("ExpireMessages", mExpireMessages);
   configGroup.writeEntry("ReadExpireAge", mReadExpireAge);
   configGroup.writeEntry("ReadExpireUnits", (int)mReadExpireUnits);
@@ -360,7 +359,9 @@ QString FolderCollection::mailingListPostAddress() const
     for( it = post.constBegin(); it != post.constEnd(); ++it ) {
       // We check for isEmpty because before 3.3 postAddress was just an
       // email@kde.org and that leaves protocol() field in the kurl class
-      if ( (*it).protocol() == "mailto" || (*it).protocol().isEmpty() )
+      const QString protocol = (*it).protocol();
+      if ( protocol == QLatin1String( "mailto" ) ||
+           protocol.isEmpty() )
         return (*it).path();
     }
   }
@@ -413,19 +414,6 @@ static int daysToExpire( int number, FolderCollection::ExpireUnits units )
 void FolderCollection::daysToExpire(int& unreadDays, int& readDays) {
   unreadDays = MailCommon::daysToExpire( getUnreadExpireAge(), getUnreadExpireUnits() );
   readDays = MailCommon::daysToExpire( getReadExpireAge(), getReadExpireUnits() );
-}
-
-void FolderCollection::removeCollection()
-{
-  Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( mCollection );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotDeletionCollectionResult( KJob* ) ) );
-}
-
-void FolderCollection::slotDeletionCollectionResult( KJob * job )
-{
-  if ( job->error() ) {
-    Util::showJobErrorMessage( job );
-  }
 }
 
 void FolderCollection::expireOldMessages( bool immediate )

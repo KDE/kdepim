@@ -117,6 +117,7 @@
 #include <akonadi/statisticsproxymodel.h>
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <akonadi/kmime/messageflags.h>
+#include <akonadi/collectiondeletejob.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
@@ -603,7 +604,7 @@ void KMMainWidget::readFolderConfig()
     return;
 
   KSharedConfig::Ptr config = KMKernel::self()->config();
-  KConfigGroup group( config, mCurrentFolder->configGroupName() );
+  KConfigGroup group( config, MailCommon::FolderCollection::configGroupName( mCurrentFolder->collection() ) );
   mFolderHtmlPref =
       group.readEntry( "htmlMailOverride", false );
   mFolderHtmlLoadExtPref =
@@ -614,13 +615,12 @@ void KMMainWidget::readFolderConfig()
 //-----------------------------------------------------------------------------
 void KMMainWidget::writeFolderConfig()
 {
-  if ( !mCurrentFolder || (mCurrentFolder && !mCurrentFolder->isValid()) )
-    return;
-
-  KSharedConfig::Ptr config = KMKernel::self()->config();
-  KConfigGroup group( config, mCurrentFolder->configGroupName() );
-  group.writeEntry( "htmlMailOverride", mFolderHtmlPref );
-  group.writeEntry( "htmlLoadExternalOverride", mFolderHtmlLoadExtPref );
+  if ( mCurrentFolder && mCurrentFolder->isValid() ) {
+    KSharedConfig::Ptr config = KMKernel::self()->config();
+    KConfigGroup group( config, MailCommon::FolderCollection::configGroupName( mCurrentFolder->collection() ) );
+    group.writeEntry( "htmlMailOverride", mFolderHtmlPref );
+    group.writeEntry( "htmlLoadExternalOverride", mFolderHtmlLoadExtPref );
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -1662,9 +1662,20 @@ void KMMainWidget::slotDelayedRemoveFolder( KJob *job )
   {
     kmkernel->checkFolderFromResources( listOfCollection<<mCurrentFolder->collection() );
 
-    mCurrentFolder->removeCollection();
+    Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( mCurrentFolder->collection() );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeletionCollectionResult(KJob*)) );
   }
   mCurrentFolder.clear();
+}
+
+void KMMainWidget::slotDeletionCollectionResult(KJob* job)
+{
+  if ( job ) {
+    if ( job->error() ) {
+      Util::showJobErrorMessage( job );
+      return;
+    }
+  }
 }
 
 //-----------------------------------------------------------------------------
