@@ -140,8 +140,7 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
     jobCreated( session, parent, QString(),"dummy job type" );
   }
   // check if it's a new session, if so, add it
-  if (!d->sessions.contains( session ) )
-  {
+  if ( d->sessions.isEmpty() || !d->sessions.contains( session ) ) {
     d->sessions.append( session );
     d->jobs.insert( session, QStringList() );
     d->unpublishedAdds << QPair<int, int>( d->sessions.count()-1, -1 );
@@ -272,7 +271,11 @@ QString JobTracker::sessionForId(int _id) const
 {
   const int id = (-_id)-2;
   assert( d->sessions.size() > id );
-  return d->sessions.at(id);
+  if ( !d->sessions.isEmpty() ) {
+    return d->sessions.at( id );
+  } else {
+    return QString();
+  }
 }
 
 int JobTracker::parentId( int id ) const

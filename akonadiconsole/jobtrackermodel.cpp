@@ -50,7 +50,10 @@ public:
       int row = -1;
       if ( grandparentid == -1 )
       {
-        row = tracker.sessions().indexOf( tracker.sessionForId( parentid ) );
+        const QString session = tracker.sessionForId( parentid );
+        if ( !session.isEmpty() ) {
+          row = tracker.sessions().indexOf( session );
+        }
       }
       else
       {
@@ -105,7 +108,11 @@ QModelIndex JobTrackerModel::parent(const QModelIndex & idx) const
   if ( parentid == -1 ) return QModelIndex(); // top level session
 
   const int row = d->rowForParentId( parentid );
-  return createIndex( row, 0, parentid );
+  if ( row >= 0 ) {
+    return createIndex( row, 0, parentid );
+  } else {
+    return QModelIndex();
+  }
 }
 
 int JobTrackerModel::rowCount(const QModelIndex & parent) const
@@ -223,8 +230,12 @@ void JobTrackerModel::jobsAdded( const QList< QPair< int, int > > & jobs )
     const int pos = job.first;
     const int parentId = job.second;
     QModelIndex parentIdx;
-    if ( parentId != -1 )
-      parentIdx = createIndex( d->rowForParentId( parentId ), 0, parentId );
+    if ( parentId != -1 ) {
+      const int row = d->rowForParentId( parentId );
+      if ( row >= 0 ) {
+        parentIdx = createIndex( row, 0, parentId );
+      }
+    }
     beginInsertRows( parentIdx, pos, pos );
     endInsertRows();
     const QModelIndex idx = index( pos, 0, parentIdx );
@@ -250,8 +261,12 @@ void JobTrackerModel::jobsUpdated( const QList< QPair< int, int > > & jobs )
     const int pos = job.first;
     const int parentId = job.second;
     QModelIndex parentIdx;
-    if ( parentId != -1 )
-      parentIdx = createIndex( d->rowForParentId( parentId), 0, parentId );
+    if ( parentId != -1 ) {
+      const int row = d->rowForParentId( parentId );
+      if ( row >= 0 ) {
+        parentIdx = createIndex( row, 0, parentId );
+      }
+    }
     dataChanged( index( pos, 0, parentIdx ), index( pos, 3, parentIdx )  );
   }
 #undef PAIR
