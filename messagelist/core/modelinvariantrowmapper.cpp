@@ -624,12 +624,13 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
 
     // and update the invariants that belong to it
     QHash< int, ModelInvariantIndex * >::Iterator it = shift->mInvariantHash->begin();
+    QHash< int, ModelInvariantIndex * >::Iterator end = shift->mInvariantHash->end();
 
-    while ( it != shift->mInvariantHash->end() )
+    while ( it != end )
     {
       ModelInvariantIndex * invariant = *it;
 
-      shift->mInvariantHash->erase( it );
+      it = shift->mInvariantHash->erase( it );
 
       // apply shifts
       int modelIndexRow = invariant->d->modelIndexRow();
@@ -658,8 +659,6 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
           return;
         }
       }
-
-      it = shift->mInvariantHash->begin();
 
       curIndex++;
     }
