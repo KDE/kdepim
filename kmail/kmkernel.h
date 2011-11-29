@@ -439,7 +439,6 @@ public slots:
   void slotRunBackgroundTasks();
 
   void slotConfigChanged();
-  void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
 
 signals:
   void configChanged();
@@ -463,6 +462,9 @@ private slots:
   void akonadiStateChanged( Akonadi::ServerManager::State );
   void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
   void instanceError(const Akonadi::AgentInstance& instance, const QString & message);
+  void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+  void slotCollectionRemoved(const Akonadi::Collection& col);
+
 private:
   void migrateFromKMail1();
   void openReader( bool onlyCheck );
