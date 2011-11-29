@@ -51,7 +51,7 @@ public:
   Akonadi::Collection collection() const;
 
 
-  QString configGroupName() const;
+  static QString configGroupName(const Akonadi::Collection& col);
 
 
   bool isWriteConfig() const;
@@ -201,12 +201,10 @@ public:
 
   QString mailingListPostAddress() const;
 
-  void removeCollection();
   void expireOldMessages( bool immediate );
 
 protected slots:
   void slotIdentitiesChanged();
-  void slotDeletionCollectionResult( KJob *job );
 
 private:
 
