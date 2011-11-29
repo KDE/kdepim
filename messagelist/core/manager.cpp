@@ -36,6 +36,8 @@
 
 #include "messagecore/globalsettings.h"
 
+#include "messagelistutil.h"
+
 #include <QPixmap>
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
@@ -172,18 +174,18 @@ void Manager::unregisterWidget( Widget *pWidget )
 unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *storageModel )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelSelectedMessages" );
+                     MessageList::Util::storageModelSelectedMessageGroup() );
 
   // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
   qulonglong defValue = 0;
 
-  return conf.readEntry( QString::fromLatin1( "MessageUniqueIdForStorageModel%1" ).arg( storageModel->id() ), defValue );
+  return conf.readEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModel->id() ), defValue );
 }
 
 void Manager::savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelSelectedMessages" );
+                     MessageList::Util::storageModelSelectedMessageGroup() );
 
 
   if ( uniqueIdOfMessage )
@@ -191,9 +193,9 @@ void Manager::savePreSelectedMessageForStorageModelId( const QString &storageMod
     // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
     qulonglong val = uniqueIdOfMessage;
 
-    conf.writeEntry( QString::fromLatin1( "MessageUniqueIdForStorageModel%1" ).arg( storageModelId ), val );
+    conf.writeEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), val );
   } else
-    conf.deleteEntry( QString::fromLatin1( "MessageUniqueIdForStorageModel%1" ).arg( storageModelId ) );
+    conf.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ) );
 }
 
 const Aggregation * Manager::aggregation( const QString &id )
@@ -208,7 +210,7 @@ const Aggregation * Manager::aggregation( const QString &id )
 const Aggregation * Manager::defaultAggregation()
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelAggregations" );
+                     MessageList::Util::storageModelAggregationsGroup() );
 
   const QString aggregationId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
@@ -246,12 +248,12 @@ void Manager::saveAggregationForStorageModel( const StorageModel *storageModel, 
 void Manager::saveAggregationForStorageModel( const QString &modelId, const QString &id, bool storageUsesPrivateAggregation )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelAggregations" );
+                     MessageList::Util::storageModelAggregationsGroup() );
 
   if ( storageUsesPrivateAggregation )
-    conf.writeEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( modelId ), id );
+    conf.writeEntry( MessageList::Util::setForStorageModelConfigName().arg( modelId ), id );
   else
-    conf.deleteEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( modelId ) );
+    conf.deleteEntry( MessageList::Util::setForStorageModelConfigName().arg( modelId ) );
 
   if ( !storageUsesPrivateAggregation )
     conf.writeEntry( QLatin1String( "DefaultSet" ), id );
@@ -283,9 +285,9 @@ const Aggregation * Manager::aggregationForStorageModel( const StorageModel *sto
 const Aggregation * Manager::aggregationForStorageModel( const QString &storageId, bool *storageUsesPrivateAggregation )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelAggregations" );
+                     MessageList::Util::storageModelAggregationsGroup() );
 
-  const QString aggregationId = conf.readEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( storageId ), "" );
+  const QString aggregationId = conf.readEntry( MessageList::Util::setForStorageModelConfigName().arg( storageId ), "" );
 
   Aggregation * opt = 0;
 
@@ -485,7 +487,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
   if ( !storageModel )
     return SortOrder();
 
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelSortOrderGroup() );
   SortOrder ret;
   ret.readConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
   return ret;
@@ -494,7 +496,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
 void Manager::saveSortOrderForStorageModel( const StorageModel *storageModel,
                                             const SortOrder& order, bool storageUsesPrivateSortOrder )
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelSortOrderGroup() );
   order.writeConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
 }
 
@@ -509,7 +511,7 @@ const Theme * Manager::theme( const QString &id )
 
 const Theme * Manager::defaultTheme()
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelThemesGroup() );
 
   const QString themeId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
@@ -548,12 +550,12 @@ void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const 
 
 void Manager::saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme )
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelThemesGroup() );
 
   if ( storageUsesPrivateTheme )
-    conf.writeEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( storageModelIndex ), id );
+    conf.writeEntry( MessageList::Util::setForStorageModelConfigName().arg( storageModelIndex ), id );
   else
-    conf.deleteEntry( QString::fromLatin1( "SetForStorageModel%1" ).arg( storageModelIndex ) );
+    conf.deleteEntry( MessageList::Util::setForStorageModelConfigName().arg( storageModelIndex ) );
 
   if ( !storageUsesPrivateTheme )
     conf.writeEntry( QLatin1String( "DefaultSet" ), id );
@@ -587,8 +589,8 @@ const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, b
 
 const Theme * Manager::themeForStorageModel( const QString &id, bool *storageUsesPrivateTheme )
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
-  const QString themeId = conf.readEntry( QString::fromLatin1(  "SetForStorageModel%1" ).arg( id ), "" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelThemesGroup() );
+  const QString themeId = conf.readEntry( MessageList::Util::setForStorageModelConfigName().arg( id ), "" );
 
   Theme * opt = 0;
 
