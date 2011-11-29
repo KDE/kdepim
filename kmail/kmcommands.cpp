@@ -966,7 +966,7 @@ KMCommand::Result KMForwardCommand::execute()
       MessageFactory factory( KMime::Message::Ptr( new KMime::Message ), firstItem.id(), firstItem.parentCollection() );
       factory.setIdentityManager( KMKernel::self()->identityManager() );
       factory.setFolderIdentity( MailCommon::Util::folderIdentity( firstItem ) );
-      
+
       QPair< KMime::Message::Ptr, KMime::Content* > fwdMsg = factory.createForwardDigestMIME(msgList );
       KMail::Composer * win = KMail::makeComposer( fwdMsg.first, KMail::Composer::Forward, mIdentity );
       win->addAttach( fwdMsg.second );
@@ -975,7 +975,7 @@ KMCommand::Result KMForwardCommand::execute()
     } else if ( answer == KMessageBox::No ) {// NO MIME DIGEST, Multiple forward
       QList<Akonadi::Item>::const_iterator it;
       QList<Akonadi::Item>::const_iterator end( msgList.constEnd() );
-      
+
       for ( it = msgList.constBegin(); it != end; ++it ) {
         KMime::Message::Ptr msg = MessageCore::Util::message( *it );
         if ( !msg )
@@ -1050,7 +1050,7 @@ KMCommand::Result KMForwardAttachedCommand::execute()
   MessageFactory factory( KMime::Message::Ptr( new KMime::Message ), firstItem.id(), firstItem.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( MailCommon::Util::folderIdentity( firstItem ) );
-    
+
   QPair< KMime::Message::Ptr, QList< KMime::Content* > > fwdMsg = factory.createAttachedForward( msgList );
   if ( !mWin ) {
     mWin = KMail::makeComposer( fwdMsg.first, KMail::Composer::Forward, mIdentity );
@@ -1115,7 +1115,7 @@ KMCommand::Result KMRedirectCommand::execute()
       fcc =  QString::number( sentAttribute->moveToCollection().id() );
   }
 
-  
+
   const KMime::Message::Ptr newMsg = factory.createRedirect( dlg->to(), transportId, fcc );
   if ( !newMsg )
     return Failed;
@@ -1383,10 +1383,10 @@ KMCommand::Result KMSetStatusCommand::execute()
       if ( !item.hasFlag( flag ) ) {
         item.setFlag( flag );
         itemsToModify.push_back( item );
-      } 
+      }
     }
   }
-  
+
   if ( itemsToModify.isEmpty() ) {
     slotModifyItemDone( 0 ); // pretend we did something
   } else {
@@ -1617,10 +1617,12 @@ KMCommand::Result KMMoveCommand::execute()
       }
       kmkernel->undoStack()->addMsgToAction( undoId, item );
     }
-  }
-  else {
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( retrievedMsgs(), this );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMoveResult( KJob* ) ) );
+  } else {
+    const QList<Akonadi::Item> retrievedList = retrievedMsgs();
+    if ( !retrievedList.isEmpty() ) {
+      Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( retrievedList, this );
+      connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMoveResult( KJob* ) ) );
+    }
   }
 
 #if 0 //TODO port to akonadi
