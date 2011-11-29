@@ -20,7 +20,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-void TemplateParser::Util::deleteTemplateFolder( const QString &id )
+void TemplateParser::Util::deleteTemplate( const QString &id )
 {
   KSharedConfig::Ptr config = KSharedConfig::openConfig( "templatesconfigurationrc", KConfig::NoGlobals );
   const QString key = QString::fromLatin1( "Templates #%1" ).arg( id );
