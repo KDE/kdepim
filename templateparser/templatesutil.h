@@ -25,7 +25,7 @@
 namespace TemplateParser
 {
 namespace Util {
-   TEMPLATEPARSER_EXPORT void deleteTemplateFolder( const QString &id );
+   TEMPLATEPARSER_EXPORT void deleteTemplate( const QString &id );
 }
 
 }
