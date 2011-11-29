@@ -50,6 +50,7 @@ using KMail::MailServiceImpl;
 
 #include "templateparser/templateparser.h"
 #include "templateparser/globalsettings_base.h"
+#include "templateparser/templatesutil.h"
 
 #include "foldercollection.h"
 
@@ -1729,6 +1730,7 @@ void KMKernel::slotCollectionRemoved(const Akonadi::Collection& col)
   KConfigGroup group( KMKernel::config(), MailCommon::FolderCollection::configGroupName( col ) );
   group.deleteGroup();
   group.sync();
+  TemplateParser::Util::deleteTemplateFolder( QString::number( col.id() ) );
 }
 
 void KMKernel::slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination )
