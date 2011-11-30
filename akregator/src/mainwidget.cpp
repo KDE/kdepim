@@ -678,7 +678,7 @@ void Akregator::MainWidget::slotFetchAllFeeds()
     if ( l.isEmpty() )
         return;
     Q_FOREACH( const Akonadi::Collection& i, l )
-        Akonadi::AgentManager::self()->synchronizeCollection( i );
+        Akonadi::AgentManager::self()->synchronizeCollection( i, true );
 
 }
 
