@@ -267,6 +267,7 @@ class KMComposeWin : public KMail::Composer
     }
   public slots: // kmkernel, callback
     void autoSaveMessage(bool force = false);
+  void slotFetchJob(KJob*);
 
   private slots:
      /**
