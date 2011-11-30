@@ -237,7 +237,8 @@ ProgressItem *ProgressManager::singleItem() const
 {
   ProgressItem *item = 0;
   QHash< QString, ProgressItem* >::const_iterator it = mTransactions.constBegin();
-  while ( it != mTransactions.constEnd() ) {
+  QHash< QString, ProgressItem* >::const_iterator end = mTransactions.constEnd();
+  while ( it != end ) {
 
     // No single item for progress possible, as one of them is a busy indicator one.
     if ( (*it)->usesBusyIndicator() )
