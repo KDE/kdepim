@@ -43,7 +43,7 @@ class AgentProgressMonitor::Private
     void instanceProgressChanged( const AgentInstance &instance );
     void instanceStatusChanged( const AgentInstance &instance );
     void instanceRemoved( const Akonadi::AgentInstance& instance );
-
+    void instanceNameChanged( const Akonadi::AgentInstance& instance );
     AgentProgressMonitor *const q;
     AgentInstance agent;
     QWeakPointer<ProgressItem> const item;
@@ -105,6 +105,14 @@ void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &
   }
 }
 
+void AgentProgressMonitor::Private::instanceNameChanged( const Akonadi::AgentInstance& instance )
+{
+  if ( !item.data() )
+    return;
+  if( item.data() )	      
+    item.data()->setLabel(instance.name());
+}
+
 
 
 AgentProgressMonitor::AgentProgressMonitor( const AgentInstance &agent,
@@ -118,6 +126,8 @@ AgentProgressMonitor::AgentProgressMonitor( const AgentInstance &agent,
       this, SLOT(instanceStatusChanged(Akonadi::AgentInstance)) );
   connect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
            this, SLOT(instanceRemoved(Akonadi::AgentInstance)) );
+  connect( Akonadi::AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)),
+           this, SLOT(instanceNameChanged(Akonadi::AgentInstance)) );
   // TODO connect to instanceError, instanceNameChanged, instanceWarning, instanceOnline,
   // instanceRemoved?  and do what?
 
