@@ -42,6 +42,7 @@ class AgentProgressMonitor::Private
     void abort();
     void instanceProgressChanged( const AgentInstance &instance );
     void instanceStatusChanged( const AgentInstance &instance );
+    void instanceRemoved( const Akonadi::AgentInstance& instance );
 
     AgentProgressMonitor *const q;
     AgentInstance agent;
@@ -51,6 +52,17 @@ class AgentProgressMonitor::Private
 void AgentProgressMonitor::Private::abort()
 {
   agent.abortCurrentTask();
+}
+
+
+void AgentProgressMonitor::Private::instanceRemoved( const Akonadi::AgentInstance& instance )
+{
+  if ( !item.data() )
+    return;
+  item.data()->disconnect( q ); // avoid abort call
+  item.data()->cancel();
+  if( item.data() )
+    item.data()->setComplete();
 }
 
 void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance &instance )
@@ -104,6 +116,8 @@ AgentProgressMonitor::AgentProgressMonitor( const AgentInstance &agent,
       this, SLOT(instanceProgressChanged(Akonadi::AgentInstance)) );
   connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
       this, SLOT(instanceStatusChanged(Akonadi::AgentInstance)) );
+  connect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
+           this, SLOT(instanceRemoved(Akonadi::AgentInstance)) );
   // TODO connect to instanceError, instanceNameChanged, instanceWarning, instanceOnline,
   // instanceRemoved?  and do what?
 

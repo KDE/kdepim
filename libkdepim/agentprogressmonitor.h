@@ -50,6 +50,7 @@ class AgentProgressMonitor : public QObject
     Q_PRIVATE_SLOT( d, void abort() )
     Q_PRIVATE_SLOT( d, void instanceProgressChanged( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void instanceStatusChanged( const Akonadi::AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void instanceRemoved( const Akonadi::AgentInstance& ) )
 };
 
 }
