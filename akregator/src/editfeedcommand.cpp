@@ -78,7 +78,7 @@ public:
                 guard.emitCanceled();
                 return;
             }
-            fc.setName( dlg->feedTitle() );
+            fc.setTitle( dlg->feedTitle() );
             fc.setXmlUrl( dlg->url() );
             fc.setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : 0 );
             delete dlg;
