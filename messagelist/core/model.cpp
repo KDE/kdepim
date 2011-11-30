@@ -2420,8 +2420,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass5
         attachGroup( *it ); // it will first detach and then re-attach in the proper place
     }
 
-    mGroupHeadersThatNeedUpdate.erase( it );
-    it = mGroupHeadersThatNeedUpdate.begin();
+    it = mGroupHeadersThatNeedUpdate.erase( it );
 
     curIndex++;
 
@@ -3202,9 +3201,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
   {
     mUnassignedMessageListForPass2.append( *it );
 
-    mOrphanChildrenHash.erase( it );
-
-    it = mOrphanChildrenHash.begin();
+    it = mOrphanChildrenHash.erase( it );
 
     // This is still interruptible
 
