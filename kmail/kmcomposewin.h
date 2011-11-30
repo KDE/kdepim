@@ -240,6 +240,8 @@ class KMComposeWin : public KMail::Composer
      * message to a known recipient.
      */
      void setFocusToSubject();
+  
+     void addImageAsAttachement(const QByteArray & imageData);
 
   private:
     bool isComposerModified() const;
