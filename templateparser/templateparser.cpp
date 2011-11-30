@@ -1114,7 +1114,17 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       dnl = false;
     } else {
       plainBody.append( c );
-      htmlBody.append( c );
+      if( c == '\n' || c == '\r' ) {
+        htmlBody.append( QLatin1String( "<br />" ) );
+        htmlBody.append( c );
+        if( tmpl.size() > i+1 && 
+            ( ( c == '\n' && tmpl[i + 1] == '\r' ) ||
+              ( c == '\r' && tmpl[i + 1] == '\n' ) ) ) {
+          htmlBody.append( tmpl[i + 1] );
+          plainBody.append( tmpl[i + 1] );
+          i += 1;
+        }
+      }
     }
   }
   //Clear the HTML body if FORCEDPLAIN has set ReplyAsPlain, OR if, there is no use of FORCED command
