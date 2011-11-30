@@ -89,5 +89,10 @@ void MessageList::Util::deleteConfig( const QString& collectionId )
   KConfigGroup storageModelTheme( Settings::self()->config(),
                                   MessageList::Util::storageModelThemesGroup() );
   storageModelTheme.deleteEntry( collectionId + setForStorageModelConfigName() );
-  
+
+
+  KConfigGroup storageModelAggregation( Settings::self()->config(),
+                                        MessageList::Util::storageModelAggregationsGroup() );
+  storageModelAggregation.deleteEntry( collectionId + setForStorageModelConfigName() );
+
 }
