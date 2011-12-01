@@ -109,8 +109,7 @@ void AgentProgressMonitor::Private::instanceNameChanged( const Akonadi::AgentIns
 {
   if ( !item.data() )
     return;
-  if( item.data() )	      
-    item.data()->setLabel(instance.name());
+  item.data()->setLabel(instance.name());
 }
 
 
