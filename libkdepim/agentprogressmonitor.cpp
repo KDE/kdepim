@@ -71,9 +71,11 @@ void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance
     return;
 
   if ( agent == instance ) {
+    //Why ? agent = instance if agent == instance.
     agent = instance;
-    if ( agent.progress() >= 0 ) {
-      item.data()->setProgress( agent.progress() );
+    const int progress = agent.progress();
+    if ( progress >= 0 ) {
+      item.data()->setProgress( progress );
     }
   }
 }
@@ -84,16 +86,17 @@ void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &
     return;
 
   if ( agent == instance ) {
+    //Why ? agent = instance if agent == instance.
     agent = instance;
     item.data()->setStatus( agent.statusMessage() );
     switch ( agent.status() ) {
       case AgentInstance::Idle:
-        if( item.data() )	      
+        if( item.data() )
           item.data()->setComplete();
         break;
       case AgentInstance::Running:
         break;
-      case AgentInstance::Broken: 
+      case AgentInstance::Broken:
         item.data()->disconnect( q ); // avoid abort call
         item.data()->cancel();
 	if( item.data() )
@@ -127,13 +130,11 @@ AgentProgressMonitor::AgentProgressMonitor( const AgentInstance &agent,
            this, SLOT(instanceRemoved(Akonadi::AgentInstance)) );
   connect( Akonadi::AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)),
            this, SLOT(instanceNameChanged(Akonadi::AgentInstance)) );
-  // TODO connect to instanceError, instanceNameChanged, instanceWarning, instanceOnline,
-  // instanceRemoved?  and do what?
+  // TODO connect to instanceError, instanceWarning, instanceOnline ?
+  // and do what?
 
   connect( item, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
       this, SLOT(abort()) );
-
-  // TODO what about usesCrypto?
 
   // TODO handle offline case
 }
