@@ -230,10 +230,18 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
 {
   const Item item = itemForRow( row );
   const KMime::Message::Ptr mail = messageForItem( item );
-  if ( !mail ) return false;
+  if ( !mail ) {
+    return false;
+  }
 
-  QString sender = mail->from()->asUnicodeString();
-  QString receiver = mail->to()->asUnicodeString();
+  QString sender;
+  if ( mail->from() ) {
+    sender = mail->from()->asUnicodeString();
+  }
+  QString receiver;
+  if ( mail->to() ) {
+    receiver = mail->to()->asUnicodeString();
+  }
 
   // Static for speed reasons
   static const QString noSubject = i18nc( "displayed as subject when the subject of a mail is empty", "No Subject" );
