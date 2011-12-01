@@ -73,6 +73,10 @@ public:
     mSettingsIf = settingsIf;
   }
 
+  bool settingsAreRegistered() const {
+    return mSettingsIf != 0;
+  }
+
   ISettings *settingsIf() const {
     Q_ASSERT( mSettingsIf );
     return mSettingsIf;

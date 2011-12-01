@@ -47,7 +47,7 @@
 #include <klocalizedstring.h>
 
 namespace MailCommon {
-  
+
 class FolderTreeWidget::FolderTreeWidgetPrivate
 {
 public:
@@ -59,7 +59,7 @@ public:
      entityOrderProxy( 0 ),
      filterFolderLineEdit( 0 ),
      saver( 0 ),
-     label( 0 ), 
+     label( 0 ),
      dontKeyFilter( false )
   {
   }
@@ -112,7 +112,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->filterModel = new Akonadi::StatisticsProxyModel( this );
   d->filterModel->setSourceModel( d->quotaModel );
 
-  
+
   d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->filterModel );
 
@@ -124,7 +124,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->folderTreeView->installEventFilter( this );
 
-  
+
   //Order proxy
   d->entityOrderProxy = new EntityCollectionOrderProxyModel( this );
   d->entityOrderProxy->setSourceModel( d->readableproxy );
@@ -166,13 +166,13 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
     d->expandedItems = saver.expansionKeys();
     d->currentItem = saver.currentIndexKey();
   } else if ( text.isEmpty() ) {
-    
+
     d->saver = new Akonadi::ETMViewStateSaver;
     d->saver->setView( folderTreeView() );
     QString currentIndex = d->saver->currentIndexKey();
     if( d->saver->selectionKeys().isEmpty() )
 	currentIndex = d->currentItem;
-    else if( !currentIndex.isEmpty() ) 
+    else if( !currentIndex.isEmpty() )
         d->expandedItems<<currentIndex;
     d->saver->restoreExpanded( d->expandedItems );
     d->saver->restoreCurrentItem( currentIndex );
@@ -183,7 +183,7 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
   d->oldFilterStr = text;
   d->readableproxy->setFilterFolder( text );
 }
-  
+
 void FolderTreeWidget::disableContextMenuAndExtraColumn()
 {
   d->folderTreeView->disableContextMenuAndExtraColumn();
@@ -281,7 +281,9 @@ void FolderTreeWidget::readConfig()
   const int checkedFolderToolTipsPolicy = mainFolderView.readEntry( "ToolTipDisplayPolicy", 0 );
   changeToolTipsPolicyConfig( ( ToolTipDisplayPolicy )checkedFolderToolTipsPolicy );
 
-  d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
+  if ( MailCommon::Kernel::self()->settingsAreRegistered() ) {
+    d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
+  }
   readQuotaConfig();
 }
 
@@ -322,7 +324,9 @@ void FolderTreeWidget::readQuotaConfig()
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KConfigGroup readerConfig( KernelIf->config(), "Reader" );
     quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor  );
-    threshold = SettingsIf->closeToQuotaThreshold();
+    if ( MailCommon::Kernel::self()->settingsAreRegistered() ) {
+      threshold = SettingsIf->closeToQuotaThreshold();
+    }
   }
   quotaWarningParameters( quotaColor, threshold );
 }
@@ -380,7 +384,7 @@ bool FolderTreeWidget::eventFilter( QObject* o, QEvent *e )
     {
       case Qt::Key_Backspace:
         {
-        const int filterLength(d->filter.length() ); 
+        const int filterLength(d->filter.length() );
         if ( filterLength > 0 )
           d->filter.truncate( filterLength-1 );
         applyFilter( d->filter );
