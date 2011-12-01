@@ -120,8 +120,7 @@ void ModelInvariantRowMapperPrivate::indexDead( ModelInvariantIndex * invariant 
 
   if ( invariant->d->rowMapperSerial() == mCurrentShiftSerial )
   {
-    int count = mCurrentInvariantHash->remove( invariant->d->modelIndexRow() );
-    Q_ASSERT( count > 0 );
+    mCurrentInvariantHash->remove( invariant->d->modelIndexRow() );
     return;
   }
 
@@ -137,9 +136,7 @@ void ModelInvariantRowMapperPrivate::indexDead( ModelInvariantIndex * invariant 
 
   Q_ASSERT( shift );
 
-  int removed = shift->mInvariantHash->remove( invariant->d->modelIndexRow() );
-
-  Q_ASSERT( removed > 0 );
+  shift->mInvariantHash->remove( invariant->d->modelIndexRow() );
 
   if ( ( shift->mInvariantHash->isEmpty() ) && ( invariantShiftIndex == 0 ) )
   {
@@ -577,7 +574,7 @@ void ModelInvariantRowMapper::modelReset()
 {
   // FIXME: optimize this (it probably can be optimized by providing a more complex user interface)
   QHash< int, ModelInvariantIndex * >::ConstIterator end( d->mCurrentInvariantHash->constEnd() );
-  
+
   for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it )
     ( *it )->d->setRowMapper( 0 );
   d->mCurrentInvariantHash->clear();
