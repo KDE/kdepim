@@ -402,8 +402,9 @@ void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
 {
   argsFromString( argsStr );
   if ( !mFolder.isValid() ) {
-    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr );
-    if ( lst.count() == 1 )
+    bool exactPath = false;
+    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr, exactPath );
+    if ( lst.count() == 1 && exactPath )
       mFolder = lst.at( 0 );
     else {
       FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name );

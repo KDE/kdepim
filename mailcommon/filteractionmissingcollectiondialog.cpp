@@ -84,14 +84,13 @@ void FilterActionMissingCollectionDialog::getPotentialFolders(  const QAbstractI
     const QModelIndex index = model->index( row, 0, parentIndex );
     if ( model->rowCount( index ) > 0 ) {
       getPotentialFolders( model, index, lastElement, list );
-    } else {
-      if ( model->data( index ).toString() == lastElement )
-        list << model->data( index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
     }
+    if ( model->data( index ).toString() == lastElement )
+      list << model->data( index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   }
 }
 
-Akonadi::Collection::List FilterActionMissingCollectionDialog::potentialCorrectFolders( const QString& path )
+Akonadi::Collection::List FilterActionMissingCollectionDialog::potentialCorrectFolders( const QString& path, bool & exactPath )
 {
   Akonadi::Collection::List lst;
   const QString realPath = MailCommon::Util::realFolderPath( path );
@@ -109,6 +108,7 @@ Akonadi::Collection::List FilterActionMissingCollectionDialog::potentialCorrectF
     const int numberOfItems( lst.count() );
     for ( int i = 0; i < numberOfItems; ++i ) {
       if ( MailCommon::Util::fullCollectionPath( lst.at( i ) ) == realPath ) {
+        exactPath = true;
         return  Akonadi::Collection::List()<< lst.at( i );
       }
     }

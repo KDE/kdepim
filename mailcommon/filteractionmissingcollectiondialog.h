@@ -38,7 +38,7 @@ public:
   ~FilterActionMissingCollectionDialog();
 
   Akonadi::Collection selectedCollection() const;
-  static Akonadi::Collection::List potentialCorrectFolders( const QString& path );
+  static Akonadi::Collection::List potentialCorrectFolders( const QString& path, bool & exactPath  );
 
 private Q_SLOTS:
   void slotCurrentItemChanged();
