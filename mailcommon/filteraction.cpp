@@ -157,6 +157,10 @@ void FilterAction::argsFromStringInteractive( const QString &argsStr, const QStr
   argsFromString(argsStr);
 }
 
+QString FilterAction::argsAsStringReal() const
+{
+  return argsAsString();
+}
 
 bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
 {
@@ -398,13 +402,25 @@ void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
 {
   argsFromString( argsStr );
   if ( !mFolder.isValid() ) {
-    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( name );
-    if ( dlg->exec() )
-      mFolder = dlg->selectedCollection();
-    delete dlg;
+    bool exactPath = false;
+    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr, exactPath );
+    if ( lst.count() == 1 && exactPath )
+      mFolder = lst.at( 0 );
+    else {
+      FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name );
+      if ( dlg->exec() )
+        mFolder = dlg->selectedCollection();
+      delete dlg;
+    }
   }
 }
 
+QString FilterActionWithFolder::argsAsStringReal() const
+{
+  if ( KernelIf->collectionModel() )
+    return MailCommon::Util::fullCollectionPath( mFolder );
+  return FilterActionWithFolder::argsAsString();
+}
 
 void FilterActionWithFolder::argsFromString( const QString &argsStr )
 {

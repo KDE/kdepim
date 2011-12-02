@@ -357,7 +357,7 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
   // that the pattern is purified.
   mPattern.readConfig(config);
   mIdentifier = config.readEntry( "identifier", KRandom::randomString( 16 ) );
-  
+
   const QStringList sets = config.readEntry("apply-on", QStringList() );
   if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
     bApplyBeforeOutbound = false;
@@ -432,7 +432,7 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
 }
 
 
-void MailFilter::writeConfig(KConfigGroup & config) const
+void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const
 {
   mPattern.writeConfig(config);
   config.writeEntry( "identifier", mIdentifier );
@@ -463,12 +463,12 @@ void MailFilter::writeConfig(KConfigGroup & config) const
 
   QList<FilterAction*>::const_iterator it;
   QList<FilterAction*>::const_iterator end( mActions.constEnd() );
-  
+
   for ( i=0, it = mActions.constBegin() ; it != end ; ++it, ++i ) {
     config.writeEntry( key.sprintf("action-name-%d", i),
                         (*it)->name() );
     config.writeEntry( key.sprintf("action-args-%d", i),
-                        (*it)->argsAsString() );
+                       exportFilter ? ( *it )->argsAsStringReal() :  (*it)->argsAsString() );
   }
   config.writeEntry( "actions", i );
   config.writeEntry( "accounts-set", mAccounts );
@@ -522,7 +522,7 @@ const QString MailFilter::asString() const
   result += mPattern.asString() + '\n';
 
   result += "Filter is " + bEnabled ? "enabled" : "disabled\n";
-  
+
   QList<FilterAction*>::const_iterator it( mActions.constBegin() );
   QList<FilterAction*>::const_iterator end( mActions.constEnd() );
   for ( ; it != end ; ++it ) {
@@ -652,7 +652,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
   stream >> bAutoNaming;
   stream >> applicability;
   stream >> bEnabled;
-  
+
   filter.mPattern.deserialize(pattern);
   filter.mShortcut = KShortcut( primary, alternate );
   filter.bApplyOnInbound = bApplyOnInbound;

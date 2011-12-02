@@ -79,7 +79,7 @@ class MAILCOMMON_EXPORT FilterImporterExporter
     /**
      * Writes the given list of @p filters to the given @p config file.
      */
-    static void writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config );
+    static void writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config, bool exportFilter = false );
 
     /**
      * Reads a list of filters from the given @p config file.

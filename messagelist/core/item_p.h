@@ -51,6 +51,7 @@ public:
       mUseReceiver( false )
   {
   }
+  virtual ~ItemPrivate() {}
 
   /**
    * Implements "in the middle" insertions of child items.

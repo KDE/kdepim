@@ -97,7 +97,10 @@ QTextCodec* selectCharset( const QStringList &charsets, const QString &text )
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
   mMode( amode ), mIdentity( 0 ),
   mAllowDecryption( true ),
-  mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
+  mDebug( false ), mQuoteString( "> " ), m_identityManager( 0 ),
+  mWrap( true ),
+  mColWrap( 80 ),
+  mQuotes( ReplyAsOriginalMessage )
 {
   mMsg = amsg;
 
@@ -1117,7 +1120,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       if( c == '\n' || c == '\r' ) {
         htmlBody.append( QLatin1String( "<br />" ) );
         htmlBody.append( c );
-        if( tmpl.size() > i+1 && 
+        if( tmpl.size() > i+1 &&
             ( ( c == '\n' && tmpl[i + 1] == '\r' ) ||
               ( c == '\r' && tmpl[i + 1] == '\n' ) ) ) {
           htmlBody.append( tmpl[i + 1] );
@@ -1291,7 +1294,7 @@ KMime::Content* TemplateParser::createMultipartAlternativeContent( const QString
   htmlPart->contentType()->setMimeType( "text/html" );
   QTextCodec* charset = selectCharset( m_charsets, htmlBody );
   htmlPart->contentType()->setCharset( charset->name() );
-  htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit ); 
+  htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit );
   htmlPart->fromUnicodeString( htmlBody );
   multipartAlternative->addContent( htmlPart );
 

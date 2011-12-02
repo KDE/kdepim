@@ -155,7 +155,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
   return filters;
 }
 
-void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config )
+void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config, bool exportFiler )
 {
   // first, delete all filter groups:
   const QStringList filterGroups =
@@ -170,7 +170,7 @@ void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &fil
       const QString groupName = QString::fromLatin1( "Filter #%1" ).arg( i );
 
       KConfigGroup group = config->group( groupName );
-      filter->writeConfig( group );
+      filter->writeConfig( group, exportFiler );
       ++i;
     }
   }
@@ -211,7 +211,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters( bool & canceled )
     canceled = true;
     return QList<MailFilter*>(); // cancel
   }
-  
+
   QFile file( fileName );
   if ( !file.open( QIODevice::ReadOnly ) ) {
     KMessageBox::error( d->mParent,
@@ -241,7 +241,7 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
   MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
   dlg->setFilters( filters );
   if ( dlg->exec() == QDialog::Accepted && dlg )
-    writeFiltersToConfig( dlg->selectedFilters(), config );
+    writeFiltersToConfig( dlg->selectedFilters(), config, true );
 }
 
 #include "filterimporterexporter_p.moc"
