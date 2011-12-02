@@ -97,8 +97,13 @@ Akonadi::Collection::List FilterActionMissingCollectionDialog::potentialCorrectF
   const QString realPath = MailCommon::Util::realFolderPath( path );
   if ( realPath.isEmpty() )
     return lst;
-  const QStringList splitPath = realPath.split( '/' );
-  const QString lastElement = splitPath.last();
+  const int lastSlash = realPath.lastIndexOf( QLatin1Char( '/' ) );
+  QString lastElement;
+  if ( lastSlash == -1 )
+    lastElement = realPath;
+  else
+    lastElement = realPath.right( realPath.length() - lastSlash - 1 );
+
   if ( KernelIf->collectionModel() ) {
     FilterActionMissingCollectionDialog::getPotentialFolders( KernelIf->collectionModel(),  QModelIndex(), lastElement,lst ) ;
     const int numberOfItems( lst.count() );
