@@ -502,3 +502,14 @@ Akonadi::Collection MailCommon::Util::parentCollectionFromItem(const Akonadi::It
   const Akonadi::Collection parentCollection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   return parentCollection;
 }
+
+
+QString MailCommon::Util::realFolderPath( const QString& path )
+{
+  QString realPath( path );
+  realPath.remove( ".directory" );
+  realPath.replace( "/.", "/" );
+  if ( !realPath.isEmpty() && ( realPath.at( 0 ) == '.' ) )
+    realPath.remove( 0, 1 ); //remove first "."
+  return realPath;
+}

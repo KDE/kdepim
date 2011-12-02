@@ -22,7 +22,11 @@
 #include <KDialog>
 #include <akonadi/collection.h>
 
-namespace MailCommon{
+class QAbstractItemModel;
+class QModelIndex;
+class QListWidget;
+
+namespace MailCommon {
   class FolderRequester;
 }
 
@@ -30,12 +34,26 @@ class FilterActionMissingCollectionDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit FilterActionMissingCollectionDialog( const QString & filtername, QWidget *parent = 0 );
+  explicit FilterActionMissingCollectionDialog( const Akonadi::Collection::List& list, const QString & filtername, QWidget *parent = 0 );
   ~FilterActionMissingCollectionDialog();
 
   Akonadi::Collection selectedCollection() const;
+  static Akonadi::Collection::List potentialCorrectFolders( const QString& path );
+
+private Q_SLOTS:
+  void slotCurrentItemChanged();
+
+
+private:
+  static void getPotentialFolders(  const QAbstractItemModel *model, const QModelIndex& parentIndex, const QString& realPath, Akonadi::Collection::List& list );
+  enum collectionEnum {
+    IdentifyCollection = Qt::UserRole +1
+  };
+
 private:
   MailCommon::FolderRequester *mFolderRequester;
+  QListWidget *mListwidget;
+
 };
 
 #endif /* FILTERACTIONMISSINGCOLLECTIONDIALOG_H */

@@ -108,7 +108,7 @@ namespace Util {
                                                         bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) = 0 );
 
     MAILCOMMON_EXPORT Akonadi::Collection parentCollectionFromItem(const Akonadi::Item& item);
-
+    MAILCOMMON_EXPORT QString realFolderPath( const QString& path );
 }
 
 }

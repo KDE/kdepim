@@ -402,19 +402,22 @@ void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
 {
   argsFromString( argsStr );
   if ( !mFolder.isValid() ) {
-    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( name );
-    if ( dlg->exec() )
-      mFolder = dlg->selectedCollection();
-    delete dlg;
+    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr );
+    if ( lst.count() == 1 )
+      mFolder = lst.at( 0 );
+    else {
+      FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name );
+      if ( dlg->exec() )
+        mFolder = dlg->selectedCollection();
+      delete dlg;
+    }
   }
 }
 
 QString FilterActionWithFolder::argsAsStringReal() const
 {
-#if 0	
   if ( KernelIf->collectionModel() )
     return MailCommon::Util::fullCollectionPath( mFolder );
-#endif  
   return FilterActionWithFolder::argsAsString();
 }
 
