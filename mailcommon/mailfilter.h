@@ -109,7 +109,7 @@ public:
   bool requiresBody();
 
   /** Write contents to given config group. */
-  void writeConfig( KConfigGroup& config ) const;
+  void writeConfig( KConfigGroup& config, bool exportFilter ) const;
 
   /** Initialize from given config group. */
   void readConfig( const KConfigGroup& config, bool interactive = false );
@@ -309,7 +309,7 @@ public:
   bool isEnabled() const;
   void setEnabled( bool );
 
-  
+
 private:
   QString mIdentifier;
   SearchPattern mPattern;

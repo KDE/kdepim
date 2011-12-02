@@ -157,6 +157,10 @@ void FilterAction::argsFromStringInteractive( const QString &argsStr, const QStr
   argsFromString(argsStr);
 }
 
+QString FilterAction::argsAsStringReal() const
+{
+  return argsAsString();
+}
 
 bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
 {
@@ -405,6 +409,14 @@ void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
   }
 }
 
+QString FilterActionWithFolder::argsAsStringReal() const
+{
+#if 0	
+  if ( KernelIf->collectionModel() )
+    return MailCommon::Util::fullCollectionPath( mFolder );
+#endif  
+  return FilterActionWithFolder::argsAsString();
+}
 
 void FilterActionWithFolder::argsFromString( const QString &argsStr )
 {
