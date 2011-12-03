@@ -3,7 +3,16 @@
 
 #include <mailcommon/mailinterfaces.h>
 
-class DummyKernel : public QObject, public MailCommon::IKernel
+namespace Akonadi {
+class EntityTreeModel;
+class EntityMimeTypeFilterModel;
+}
+
+namespace MailCommon {
+class FolderCollectionMonitor;
+}
+
+class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
   public:
     DummyKernel( QObject *parent = 0 );
@@ -18,9 +27,20 @@ class DummyKernel : public QObject, public MailCommon::IKernel
     virtual Akonadi::ChangeRecorder *folderCollectionMonitor() const;
     virtual void updateSystemTray();
 
+    virtual qreal closeToQuotaThreshold();
+    virtual bool excludeImportantMailFromExpiry();
+    virtual QStringList customTemplates();
+    virtual Akonadi::Entity::Id lastSelectedFolder();
+    virtual void setLastSelectedFolder(const Akonadi::Entity::Id& col);
+    virtual bool showPopupAfterDnD();
+    
+
   private:
     KPIMIdentities::IdentityManager *mIdentityManager;
     MessageSender *mMessageSender;
+    MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
+    Akonadi::EntityTreeModel *mEntityTreeModel;
+    Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
 };
 
 #endif

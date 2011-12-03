@@ -281,9 +281,8 @@ void FolderTreeWidget::readConfig()
   const int checkedFolderToolTipsPolicy = mainFolderView.readEntry( "ToolTipDisplayPolicy", 0 );
   changeToolTipsPolicyConfig( ( ToolTipDisplayPolicy )checkedFolderToolTipsPolicy );
 
-  if ( MailCommon::Kernel::self()->settingsAreRegistered() ) {
-    d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
-  }
+  d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
+
   readQuotaConfig();
 }
 
@@ -324,9 +323,7 @@ void FolderTreeWidget::readQuotaConfig()
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KConfigGroup readerConfig( KernelIf->config(), "Reader" );
     quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor  );
-    if ( MailCommon::Kernel::self()->settingsAreRegistered() ) {
-      threshold = SettingsIf->closeToQuotaThreshold();
-    }
+    threshold = SettingsIf->closeToQuotaThreshold();
   }
   quotaWarningParameters( quotaColor, threshold );
 }

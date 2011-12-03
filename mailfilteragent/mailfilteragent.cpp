@@ -53,6 +53,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 {
   DummyKernel *kernel = new DummyKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
   m_filterManager = new FilterManager( this );
 
