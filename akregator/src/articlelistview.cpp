@@ -328,9 +328,8 @@ void ArticleListView::mousePressEvent( QMouseEvent *ev )
     EntityTreeView::mousePressEvent( ev );
 
     if( ev->button() == Qt::MidButton ) {
-        QModelIndex idx( currentIndex() );
-        const KUrl url = currentIndex().data( FeedItemModel::LinkRole ).value<KUrl>();
-
+        const KUrl url = KUrl(currentIndex().data( FeedItemModel::LinkRole ).value<QString>()); // TODO should LinkRole be passed as KUrl?
+        
         emit signalMouseButtonPressed( ev->button(), url );
     }
 }
