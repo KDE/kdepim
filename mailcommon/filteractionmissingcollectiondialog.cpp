@@ -38,7 +38,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog( const 
   showButtonSeparator( true );
   QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
   if ( !list.isEmpty() ) {
-    QLabel *lab = new QLabel( i18n( "We found some folders which can used for this filter:" ) );
+    QLabel *lab = new QLabel( i18n( "We found some folders which can be used for this filter:" ) );
     lay->addWidget( lab );
     mListwidget = new QListWidget( this );
     lay->addWidget( mListwidget );
