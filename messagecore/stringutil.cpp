@@ -301,6 +301,7 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
         *d++ = '<';
         *d++ = 'b';
         *d++ = 'r';
+        *d++ = '/';
         *d++ = '>';
         ++s;
       }
