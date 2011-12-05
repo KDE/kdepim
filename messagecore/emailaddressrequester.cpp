@@ -76,7 +76,9 @@ EmailAddressRequester::EmailAddressRequester( QWidget *parent )
   layout->setMargin( 0 );
 
   d->mLineEdit = new KLineEdit( this );
+  d->mLineEdit->setTrapReturnKey(true);
   layout->addWidget( d->mLineEdit, 1 );
+  
 
   d->mButton = new QPushButton( this );
   d->mButton->setIcon( KIcon( "help-contents" ) );
