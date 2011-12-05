@@ -56,7 +56,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog( const 
   label->setText( i18n( "Folder is missing. Select a folder for filter \"%1\" please", filtername ) );
   lay->addWidget( label );
   mFolderRequester = new MailCommon::FolderRequester( this );
-  connect( mFolderRequester, SIGNAL( folderChanged(Akonadi::Collection) ), this, SLOT( slotFolderChanged( Akonadi::Collection ) ) );
+  connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(slotFolderChanged(Akonadi::Collection)) );
   lay->addWidget( mFolderRequester );
   enableButtonOk( false );
 }
