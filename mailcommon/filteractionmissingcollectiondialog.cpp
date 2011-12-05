@@ -28,7 +28,8 @@
 #include <QLabel>
 #include <QListWidget>
 
-FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog( const Akonadi::Collection::List& list, const QString& filtername, QWidget *parent )
+FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
+  const Akonadi::Collection::List &list, const QString &filtername, QWidget *parent )
   : KDialog( parent ), mListwidget( 0 )
 {
   setModal( true );
@@ -38,7 +39,8 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog( const 
   showButtonSeparator( true );
   QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
   if ( !list.isEmpty() ) {
-    QLabel *lab = new QLabel( i18n( "We found some folders which can be used for this filter:" ) );
+    QLabel *lab =
+      new QLabel( i18n( "The following folders can be used for this filter:" ) );
     lay->addWidget( lab );
     mListwidget = new QListWidget( this );
     lay->addWidget( mListwidget );
@@ -49,14 +51,18 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog( const 
       item->setData( FilterActionMissingCollectionDialog::IdentifyCollection, col.id() );
       mListwidget->addItem(  item );
     }
-    connect( mListwidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(slotCurrentItemChanged()));
+    connect( mListwidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+             SLOT(slotCurrentItemChanged()));
   }
 
   QLabel *label = new QLabel( this );
-  label->setText( i18n( "Folder is missing. Select a folder for filter \"%1\" please", filtername ) );
+  label->setText( i18n( "Filter folder is missing. "
+                        "Please select a folder to use with filter \"%1\"",
+                        filtername ) );
   lay->addWidget( label );
   mFolderRequester = new MailCommon::FolderRequester( this );
-  connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(slotFolderChanged(Akonadi::Collection)) );
+  connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
+           this, SLOT(slotFolderChanged(Akonadi::Collection)) );
   lay->addWidget( mFolderRequester );
   enableButtonOk( false );
 }
