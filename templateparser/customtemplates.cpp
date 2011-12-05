@@ -52,6 +52,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollect
 
   mUi->mEditFrame->setEnabled( false );
 
+  mUi->mName->setTrapReturnKey( true );
   connect( mUi->mEdit, SIGNAL(textChanged()),
           this, SLOT(slotTextChanged()) );
   connect( mUi->mToEdit, SIGNAL(textChanged()),
@@ -61,6 +62,9 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollect
 
   connect( mUi->mName, SIGNAL(textChanged(QString)),
            this, SLOT(slotNameChanged(QString)) );
+
+  connect( mUi->mName, SIGNAL(returnPressed()),
+           this, SLOT(slotAddClicked()) );
 
   connect( mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)),
           this, SLOT(slotInsertCommand(QString,int)) );
@@ -191,10 +195,10 @@ void CustomTemplates::load()
     CTemplates t(*it);
     QKeySequence shortcut( t.shortcut() );
     CustomTemplates::Type type = static_cast<Type>( t.type() );
-    CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),shortcut, type, t.to(), t.cC() );    
+    CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),shortcut, type, t.to(), t.cC() );
     item->setText( 1, *it );
     item->setText( 0, indexToType( type ) );
-    
+
     switch ( type ) {
     case TReply:
       item->setIcon( 0, mReplyPix );
@@ -237,7 +241,7 @@ void CustomTemplates::save()
     if ( content.trimmed().isEmpty() ) {
       content = "%BLANK";
     }
-    
+
     t.setContent( content );
     t.setShortcut( it->shortcut().toString() );
     t.setType( it->customType() );
@@ -340,7 +344,7 @@ void CustomTemplates::slotTypeActivated( int index )
     CustomTemplates::Type customtype = static_cast<Type>(index);
     vitem->setCustomType( customtype );
     mUi->mList->currentItem()->setText( 0, indexToType( customtype ) );
-    
+
     switch ( customtype ) {
     case TReply:
       mUi->mList->currentItem()->setIcon( 0, mReplyPix );
@@ -372,7 +376,7 @@ void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
     vitem->setShortcut( newSeq );
     mUi->mKeySequenceWidget->applyStealShortcut();
   }
-  
+
   if ( !mBlockChangeSignal )
     emit changed();
 }
@@ -383,7 +387,7 @@ void CustomTemplates::slotItemChanged(QTreeWidgetItem* item ,int column)
     CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
     if ( column == 1 ) {
       const QString newName = vitem->text( 1 );
-      if( !newName.isEmpty() ) {        
+      if( !newName.isEmpty() ) {
         const QString oldName = vitem->oldName();
         if ( newName != oldName ) {
           mItemsToDelete.append( oldName );
@@ -461,7 +465,7 @@ QString CustomTemplateItem::to() const
 {
   return mTo;
 }
-  
+
 QString CustomTemplateItem::cc() const
 {
   return mCC;
