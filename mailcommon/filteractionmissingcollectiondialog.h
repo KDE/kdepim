@@ -42,6 +42,7 @@ public:
 
 private Q_SLOTS:
   void slotCurrentItemChanged();
+  void slotFolderChanged( const Akonadi::Collection&col );
 
 
 private:
