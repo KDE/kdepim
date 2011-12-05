@@ -39,6 +39,11 @@ using namespace MessageList::Core;
 class MessageItem::Tag::Private
 {
 public:
+  Private()
+    :mPriority( 0 ) //Initialize it
+    {
+
+    }
   QPixmap mPixmap;
   QString mName;
   QString mId;             ///< The unique id of this tag
@@ -270,15 +275,16 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
-  if( !Nepomuk::ResourceManager::instance()->initialized() ) 
+  if( !Nepomuk::ResourceManager::instance()->initialized() )
       return;
   Q_D( MessageItem );
-  
-  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
-  dialog->setAttribute( Qt::WA_DeleteOnClose );
-  dialog->show();
-  // invalidate the cached mHasAnnotation value
-  d->mAnnotationStateChecked = false;
+  if ( d->mAnnotationDialog.data() )
+    return;
+  d->mAnnotationDialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
+  d->mAnnotationDialog.data()->setAttribute( Qt::WA_DeleteOnClose );
+  if ( d->mAnnotationDialog.data()->exec() )
+    // invalidate the cached mHasAnnotation value
+    d->mAnnotationStateChecked = false;
 }
 
 QString MessageItem::contentSummary() const
