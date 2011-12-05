@@ -33,12 +33,13 @@ void StringUtilTest::test_SmartQuote()
   QFETCH( QString, quotedString );
 
   QEXPECT_FAIL( "hard linebreak", "Currently no way to differentiate between hard and soft line breaks", Continue );
-  //QEXPECT_FAIL( "Two non-wrapping lines", "The trailing new line on line one carries to line two and thus making it longer then expected", Continue );
-  const QStringList quotedStrings = quotedString.split('\n');
-  foreach(QString line, quotedStrings) {
-    qDebug() << line << ":" << line.length();
-  }
-  QCOMPARE( StringUtil::smartQuote( originalString, lineLength ), quotedString );
+  const QString result = StringUtil::smartQuote( originalString, lineLength );
+  const QStringList resultList = result.split("\n");
+  const QStringList expectedList = quotedString.split("\n");
+  qDebug() << "result  :" << resultList;
+  qDebug() << "expected:" << expectedList;
+  QCOMPARE( resultList, expectedList );
+  //QCOMPARE( result, quotedString );
 }
 
 void StringUtilTest::test_SmartQuote_data()
@@ -121,7 +122,6 @@ void StringUtilTest::test_SmartQuote_data()
                            "> > Another line here."
                         << "> > Very long quoted line, that is very\n"
                            "> > very long.\n"
-                           "\n"
                            "Unquoted line, for a change.\n"
                            "\n"
                            "> > Another line here.";
