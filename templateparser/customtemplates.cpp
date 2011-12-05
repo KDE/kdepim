@@ -270,6 +270,16 @@ void CustomTemplates::slotAddClicked()
 {
   const QString str = mUi->mName->text();
   if ( !str.isEmpty() ) {
+    QTreeWidgetItemIterator lit( mUi->mList );
+    while ( *lit ) {
+      const QString name = ( *lit )->text( 1 );
+      if ( name == str ) {
+        KMessageBox::error( this, i18n( "A template with same name already exists." ), i18n( "Can not create template" ) );
+        return;
+      }
+      ++lit;
+    }
+
     // KShortcut::null() doesn't seem to be present, although documented
     // at http://developer.kde.org/documentation/library/cvs-api/kdelibs-apidocs/kdecore/html/classKShortcut.html
     // see slotShortcutChanged(). oh, and you should look up documentation on the english breakfast network!
