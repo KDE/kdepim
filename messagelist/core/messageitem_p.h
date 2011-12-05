@@ -23,8 +23,9 @@
 
 #include "messageitem.h"
 #include "item_p.h"
-
+#include "messagecore/annotationdialog.h"
 #include <Akonadi/Item>
+#include <QWeakPointer>
 
 namespace MessageList {
 namespace Core {
@@ -65,6 +66,7 @@ public:
   QByteArray mReferencesIdMD5;         ///< set only if we're doing threading
   QByteArray mStrippedSubjectMD5;      ///< set only if we're doing threading
   Akonadi::Item mAkonadiItem;
+  QWeakPointer<MessageCore::AnnotationEditDialog> mAnnotationDialog;
   MessageItem::ThreadingStatus mThreadingStatus : 4;
   MessageItem::EncryptionState mEncryptionState : 4;
   MessageItem::SignatureState mSignatureState : 4;
