@@ -677,6 +677,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   connect( mListWidget->model(),SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
 
   KListWidgetSearchLine* mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
+  mSearchListWidget->setTrapReturnKey(true);
   mSearchListWidget->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
                                              "textbox, verb to search", "Search" ) );
 
