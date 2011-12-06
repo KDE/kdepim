@@ -1739,8 +1739,8 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   connect( mTagDownButton, SIGNAL( clicked( void ) ),
           this, SLOT( slotMoveTagDown( void ) ) );
 
-  connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
-          this, SLOT( slotSelectionChanged() ) );
+  connect( mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+          this, SLOT(slotSelectionChanged()) );
 }
 
 AppearancePageMessageTagTab::~AppearancePageMessageTagTab()
