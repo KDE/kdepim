@@ -3665,7 +3665,7 @@ void KMMainWidget::updateMessageActionsDelayed()
   mToggleThreadImportantAction->setEnabled( thread_actions && flags_available );
   bool canDeleteMessages = mCurrentFolder && mCurrentFolder->isValid() && ( mCurrentFolder->rights() & Akonadi::Collection::CanDeleteItem );
 
-  mTrashThreadAction->setEnabled( thread_actions && !readOnly );
+  mTrashThreadAction->setEnabled( thread_actions && canDeleteMessages );
   mDeleteThreadAction->setEnabled( thread_actions && canDeleteMessages );
 
   if ( currentMessage.isValid() )
@@ -3686,7 +3686,8 @@ void KMMainWidget::updateMessageActionsDelayed()
   mMoveMsgToFolderAction->setEnabled( mass_actions && canDeleteMessages );
   //mCopyActionMenu->setEnabled( mass_actions );
 
-  mDeleteAction->setEnabled( mass_actions && !readOnly );
+  mDeleteAction->setEnabled( mass_actions && canDeleteMessages );
+
   mExpireConfigAction->setEnabled( canDeleteMessages );
 
   mFindInMessageAction->setEnabled( mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) && mMsgView);
