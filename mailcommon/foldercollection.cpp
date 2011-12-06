@@ -55,7 +55,7 @@ QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi:
     if ( !sptr->isWriteConfig() && writeConfig )
       sptr->setWriteConfig( true );
   }
-  
+
   return sptr;
 }
 
@@ -97,7 +97,7 @@ void FolderCollection::setWriteConfig( bool writeConfig )
 {
   mWriteConfig = writeConfig;
 }
-  
+
 QString FolderCollection::name() const
 {
   return mCollection.name();
@@ -165,7 +165,7 @@ void FolderCollection::slotIdentitiesChanged()
 
 QString FolderCollection::configGroupName(const Akonadi::Collection& col)
 {
-  return "Folder-"+ QString::number( col.id() );
+  return QString::fromLatin1( "Folder-%1" ).arg( QString::number( col.id() ) );
 }
 
 void FolderCollection::readConfig()
@@ -177,7 +177,7 @@ void FolderCollection::readConfig()
   mUnreadExpireAge = configGroup.readEntry( "UnreadExpireAge", 12 );
   mUnreadExpireUnits = (ExpireUnits)
       configGroup.readEntry( "UnreadExpireUnits", (int)ExpireNever );
-  mExpireAction = configGroup.readEntry( "ExpireAction", "Delete") == "Move" ? ExpireMove : ExpireDelete;
+  mExpireAction = configGroup.readEntry( "ExpireAction", "Delete") == QLatin1String( "Move" ) ? ExpireMove : ExpireDelete;
   mExpireToFolderId = configGroup.readEntry( "ExpireToFolder", -1 );
 
   mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
