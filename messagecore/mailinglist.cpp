@@ -494,13 +494,43 @@ void MailingList::writeConfig( KConfigGroup &group ) const
   group.writeEntry( "MailingListFeatures", static_cast<int>( d->mFeatures ) );
   group.writeEntry( "MailingListHandler", static_cast<int>( d->mHandler ) );
   group.writeEntry( "MailingListId", d->mId );
-  group.writeEntry( "MailingListPostingAddress", d->mPostUrls.toStringList() );
-  group.writeEntry( "MailingListSubscribeAddress", d->mSubscribeUrls.toStringList() );
-  group.writeEntry( "MailingListUnsubscribeAddress", d->mUnsubscribeUrls.toStringList() );
-  group.writeEntry( "MailingListArchiveAddress", d->mArchiveUrls.toStringList() );
-  group.writeEntry( "MailingListOwnerAddress", d->mOwnerUrls.toStringList() );
-  group.writeEntry( "MailingListHelpAddress", d->mHelpUrls.toStringList() );
-  /* Note: mArchivedAtUrl deliberately not saved here as it refers to a single 
+  QStringList lst = d->mPostUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListPostingAddress", lst );
+  else
+    group.deleteEntry( "MailingListPostingAddress" );
+
+  lst = d->mSubscribeUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListSubscribeAddress", lst );
+  else
+    group.deleteEntry( "MailingListSubscribeAddress" );
+
+  lst = d->mUnsubscribeUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListUnsubscribeAddress", lst );
+  else
+    group.deleteEntry( "MailingListUnsubscribeAddress" );
+
+  lst = d->mArchiveUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListArchiveAddress", lst );
+  else
+    group.deleteEntry( "MailingListArchiveAddress" );
+
+  lst = d->mOwnerUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListOwnerAddress", lst );
+  else
+    group.deleteEntry( "MailingListOwnerAddress" );
+
+  lst = d->mHelpUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListHelpAddress", lst );
+  else
+    group.deleteEntry( "MailingListHelpAddress" );
+
+  /* Note: mArchivedAtUrl deliberately not saved here as it refers to a single
    * instance of a message rather than an element of a general mailing list.
    * http://reviewboard.kde.org/r/1768/#review2783
    */
