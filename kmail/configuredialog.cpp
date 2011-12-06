@@ -1791,14 +1791,14 @@ void AppearancePage::MessageTagTab::swapTagsInListBox( const int first,
   mMsgTagList.replace( first, mMsgTagList.at( second ) );
   mMsgTagList.replace( second, tmp_ptr );
 
-  disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+  disconnect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
               this, SLOT( slotSelectionChanged() ) );
   mTagListBox->item( first )->setText( mTagListBox->item( second )->text() );
   mTagListBox->item( first )->setIcon( mTagListBox->item( second )->icon() );
   mTagListBox->item( second )->setText( tmp_label );
   mTagListBox->item( second )->setIcon( tmp_icon );
   mTagListBox->setCurrentItem( mTagListBox->item( second ) );
-  connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+  connect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
            this, SLOT( slotSelectionChanged() ) );
 
   mPreviousTag = second;
@@ -1919,10 +1919,10 @@ void AppearancePage::MessageTagTab::slotRemoveTag()
     //Before deleting the current item, make sure the selectionChanged signal
     //is disconnected, so that the widgets will not get updated while the
     //deletion takes place.
-    disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+    disconnect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
                 this, SLOT( slotSelectionChanged() ) );
     delete mTagListBox->takeItem( tmp_index );
-    connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+    connect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
                 this, SLOT( slotSelectionChanged() ) );
 
     slotSelectionChanged();
@@ -1940,10 +1940,10 @@ void AppearancePage::MessageTagTab::slotNameLineTextChanged( const QString
 
   //Disconnect so the tag information is not saved and reloaded with every
   //letter
-  disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+  disconnect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
               this, SLOT( slotSelectionChanged() ) );
   mTagListBox->currentItem()->setText( aText );
-  connect( mTagListBox, SIGNAL( itemSelectionChanged () ),
+  connect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
            this, SLOT( slotSelectionChanged() ) );
 }
 
@@ -1998,10 +1998,10 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
   }
 
   //Disconnect so that insertItem's do not trigger an update procedure
-  disconnect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+  disconnect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
               this, SLOT( slotSelectionChanged() ) );
 
-  connect( mTagListBox, SIGNAL( itemSelectionChanged() ),
+  connect( mTagListBox, SIGNAL( currentItemChanged(QListWidgetItem*,QListWidgetItem*) ),
            this, SLOT( slotSelectionChanged() ) );
   slotUpdateTagSettingWidgets( -1 );
   //Needed since the previous function doesn't affect add button
