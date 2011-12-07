@@ -454,7 +454,8 @@ void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const
     config.writeEntry( "Shortcut", mShortcut.toString() );
   config.writeEntry( "ConfigureToolbar", bConfigureToolbar );
   config.writeEntry( "ToolbarName", mToolbarName );
-  config.writeEntry( "Icon", mIcon );
+  if ( !mIcon.isEmpty() )
+    config.writeEntry( "Icon", mIcon );
   config.writeEntry( "AutomaticName", bAutoNaming );
   config.writeEntry( "Applicability", (int)mApplicability );
   config.writeEntry( "Enabled", bEnabled );
@@ -471,7 +472,8 @@ void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const
                        exportFilter ? ( *it )->argsAsStringReal() :  (*it)->argsAsString() );
   }
   config.writeEntry( "actions", i );
-  config.writeEntry( "accounts-set", mAccounts );
+  if ( !mAccounts.isEmpty() )
+    config.writeEntry( "accounts-set", mAccounts );
 }
 
 void MailFilter::purify()
