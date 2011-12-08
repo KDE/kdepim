@@ -25,13 +25,13 @@ libkdepim             ?
 libkleo               Marc Mutz <mutz@kde.org>
 libkpgp               DEPRECATED
 libksieve             Marc Mutz <mutz@kde.org>
-messagecomposer       ?
-messagecore           ?
-messagelibs           ?
-messageviewer         Torgny Nyblom <nyblom@kde.org>
-nepomuk_email_feeder  ?
+messagecomposer       <kmail maintainer>
+messagecore           <kmail maintainer>
+messagelibs           <kmail maintainer>
+messageviewer         <kmail maintainer>
+nepomuk_email_feeder  <kmail maintainer>
 ontologies            ?
 plugins               ?
 strigi-analyzer       ?
-templateparser        ?
+templateparser        <kmail maintainer>
 wizards               ?
