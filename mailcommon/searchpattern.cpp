@@ -445,12 +445,12 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     msgContents += ", " + msg->cc()->asUnicodeString();
     msgContents += ", " + msg->bcc()->asUnicodeString();
   } else if ( kasciistricmp( field(), "<tag>" ) == 0) {
-#ifndef KDEPIM_NO_NEPOMUK    
+#ifndef KDEPIM_NO_NEPOMUK
     const Nepomuk::Resource res( item.url() );
     foreach ( const Nepomuk::Tag &tag, res.tags() )
       msgContents += tag.label();
     logContents = false;
-#endif    
+#endif
   } else {
     // make sure to treat messages with multiple header lines for
     // the same header correctly
@@ -511,7 +511,7 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     else
       termGroup.addSubTerm( personTermCC );
   }
-  
+
   if ( kasciistricmp( field(), "to" ) == 0 )
     addPersonTerm( termGroup, Vocabulary::NMO::to() );
   else if ( kasciistricmp( field(), "cc" ) == 0 )
@@ -520,7 +520,7 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
   else if ( kasciistricmp( field(), "from" ) == 0 )
     addPersonTerm( termGroup, Vocabulary::NMO::from() );
-  
+
   if ( kasciistricmp( field(), "subject" ) == 0 || kasciistricmp( field(), "<any header>" ) == 0 || kasciistricmp( field(), "<message>" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
@@ -545,7 +545,7 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
     //TODO
   }
-  
+
   // TODO complete for other headers, generic headers
 
   if ( kasciistricmp( field(), "organization" )  == 0 ) {
@@ -620,7 +620,7 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
     {
       return !msgContents.endsWith( contents() );
     }
-    
+
   case FuncIsGreater:
       return ( QString::compare( msgContents.toLower(), contents().toLower() ) > 0 );
 
@@ -651,7 +651,7 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
   case FuncIsNotInAddressbook: {
     const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
     QStringList::ConstIterator end( addressList.constEnd() );
-    
+
     for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setLimit( 1 );
@@ -800,7 +800,7 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 
   case SearchRule::FuncContainsNot:
     return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
-    
+
   case SearchRule::FuncRegExp:
     {
       QRegExp regexp( contents(), Qt::CaseInsensitive );
@@ -1031,7 +1031,8 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
 
 bool SearchPattern::requiresBody() const {
   QList<SearchRule::Ptr>::const_iterator it;
-    for ( it = constBegin() ; it != constEnd() ; ++it )
+  QList<SearchRule::Ptr>::const_iterator end( constEnd() );
+    for ( it = constBegin() ; it != end ; ++it )
       if ( (*it)->requiresBody() )
 	return true;
   return false;
@@ -1182,7 +1183,7 @@ QString SearchPattern::asSparqlQuery() const
   return query.toSparqlQuery();
 #else
   return QString(); //TODO what to return in this case?
-#endif  
+#endif
 }
 
 QString MailCommon::SearchPattern::asXesamQuery() const
