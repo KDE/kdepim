@@ -473,6 +473,50 @@ class FilterActionWithStringList : public FilterActionWithString
 };
 
 
+class FilterActionTransport: public FilterAction
+{
+  public:
+    FilterActionTransport( QObject *parent = 0 );
+    virtual ReturnCode process( ItemContext &context ) const;
+    static FilterAction* newAction();
+    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    /**
+     * @copydoc FilterAction::applyParamWidgetValue
+     */
+    virtual void applyParamWidgetValue( QWidget *paramWidget );
+
+    /**
+     * @copydoc FilterAction::setParamWidgetValue
+     */
+    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+
+    /**
+     * @copydoc FilterAction::clearParamWidget
+     */
+    virtual void clearParamWidget( QWidget *paramWidget ) const;
+
+    /**
+     * @copydoc FilterAction::argsFromString
+     */
+    virtual void argsFromString( const QString &argsStr );
+    /**
+     * @copydoc FilterAction::isEmpty
+     */
+    virtual bool isEmpty() const;
+    /**
+     * @copydoc FilterAction::argsAsString
+     */
+    virtual QString argsAsString() const;
+
+    /**
+     * @copydoc FilterAction::displayString
+     */
+    virtual QString displayString() const;
+protected:
+    int mParameter;
+};
+
+
 /**
  * @short Abstract base class for filter actions with a mail folder as parameter.
  *
@@ -774,6 +818,9 @@ class FilterActionWithTest : public FilterAction
   protected:
     QString mParameter;
 };
+
+
+
 
 typedef FilterAction* (*FilterActionNewFunc)(void);
 

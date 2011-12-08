@@ -39,6 +39,7 @@
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
 #include <messageviewer/globalsettings.h>
+#include <mailtransport/transportcombobox.h>
 
 #ifndef KDEPIM_NO_NEPOMUK
 #include <nepomuk/tag.h>
@@ -787,31 +788,35 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
 // Specify mail transport (smtp server) to be used when replying to a message
 // TODO: use TransportComboBox so the user does not enter an invalid transport
 //=============================================================================
-class FilterActionTransport: public FilterActionWithString
-{
-  public:
-    FilterActionTransport( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
-};
 
 FilterAction* FilterActionTransport::newAction()
 {
   return new FilterActionTransport;
 }
 
+QWidget* FilterActionTransport::createParamWidget( QWidget *parent ) const
+{
+  MailTransport::TransportComboBox *transportCombobox = new MailTransport::TransportComboBox( parent );
+  setParamWidgetValue( transportCombobox );
+
+  connect( transportCombobox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+
+  return transportCombobox;
+}
+
 FilterActionTransport::FilterActionTransport( QObject *parent )
-  : FilterActionWithString( "set transport", i18n( "Set Transport To" ), parent )
+  : FilterAction( "set transport", i18n( "Set Transport To" ), parent ), mParameter( -1 )
 {
 }
 
 FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() )
+  if ( isEmpty() )
     return ErrorButGoOn;
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), mParameter, "utf-8" );
+  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), argsAsString(), "utf-8" );
   msg->setHeader( header );
   msg->assemble();
 
@@ -819,6 +824,53 @@ FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) 
 
   return GoOn;
 }
+
+
+void FilterActionTransport::applyParamWidgetValue( QWidget *paramWidget )
+{
+  const MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  Q_ASSERT( comboBox );
+
+  mParameter = comboBox->currentTransportId();
+}
+
+void FilterActionTransport::clearParamWidget( QWidget *paramWidget ) const
+{
+  MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  Q_ASSERT( comboBox );
+
+  comboBox->setCurrentIndex( 0 );
+}
+
+void FilterActionTransport::setParamWidgetValue( QWidget *paramWidget ) const
+{
+  MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  Q_ASSERT( comboBox );
+
+  comboBox->setCurrentTransport( mParameter );
+}
+
+
+bool FilterActionTransport::isEmpty() const
+{
+  return (mParameter == -1);
+}
+
+void FilterActionTransport::argsFromString( const QString &argsStr )
+{
+  mParameter = argsStr.trimmed().toInt();
+}
+
+QString FilterActionTransport::argsAsString() const
+{
+  return QString::number( mParameter );
+}
+
+QString FilterActionTransport::displayString() const
+{
+  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+}
+
 
 
 //=============================================================================
