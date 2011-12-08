@@ -454,7 +454,6 @@ class SearchRuleNumerical : public SearchRule
   static const MessageStatusInfo StatusValues[] = {
     { I18N_NOOP2( "message status", "Important" ),              "emblem-important"    },
     { I18N_NOOP2( "message status", "Action Item" ),            "mail-task"           },
-    { I18N_NOOP2( "message status", "New" ),                    "mail-unread-new"     },
     { I18N_NOOP2( "message status", "Unread" ),                 "mail-unread"         },
     { I18N_NOOP2( "message status", "Read" ),                   "mail-read"           },
     { I18N_NOOP2( "message status", "Deleted" ),                "mail-deleted"        },
@@ -472,19 +471,18 @@ class SearchRuleNumerical : public SearchRule
   enum StatusValueTypes {
     StatusImportant = 0,
     StatusToAct = 1,
-    StatusNew = 2,
-    StatusUnread = 3,
-    StatusRead = 4,
-    StatusDeleted = 5,
-    StatusReplied = 6,
-    StatusForwarded = 7,
-    StatusQueued = 8,
-    StatusSent = 9,
-    StatusWatched = 10,
-    StatusIgnored = 11,
-    StatusSpam = 12,
-    StatusHam = 13,
-    StatusHasAttachment = 14 //must be last
+    StatusUnread = 2,
+    StatusRead = 3,
+    StatusDeleted = 4,
+    StatusReplied = 5,
+    StatusForwarded = 6,
+    StatusQueued = 7,
+    StatusSent = 8,
+    StatusWatched = 9,
+    StatusIgnored = 10,
+    StatusSpam = 11,
+    StatusHam = 12,
+    StatusHasAttachment = 13 //must be last
   };
 
   static const int StatusValueCount =
