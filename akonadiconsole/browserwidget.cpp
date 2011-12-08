@@ -367,7 +367,9 @@ void BrowserWidget::modelChanged()
 
 void BrowserWidget::save()
 {
-  Q_ASSERT( mAttrModel );
+  if ( !mAttrModel ) {
+    return;
+  }
 
   const QByteArray data = contentUi.dataView->toPlainText().toUtf8();
   Item item = mCurrentItem;
