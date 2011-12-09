@@ -123,7 +123,7 @@ public:
    */
   bool folderIsSentMailFolder( const Akonadi::Collection& );
 
-  static bool folderIsInbox( const Akonadi::Collection& );
+  static bool folderIsInbox( const Akonadi::Collection&, bool withoutPop3InboxSetting = false );
 
   void initFolders();
 

@@ -38,11 +38,12 @@ public:
   int collectionRank( const Akonadi::Collection &collection ) {
 
     const Akonadi::Collection::Id id = collection.id();
-    if ( collectionRanks.contains( id ) )
+    if ( collectionRanks.contains( id ) ) {
       return collectionRanks[ id ];
-    
+    }
+
     int rank = 100;
-    if ( Kernel::folderIsInbox( collection ) ) {
+    if ( Kernel::folderIsInbox( collection, true ) ) {
       rank = 1;
     } else if ( Kernel::self()->folderIsDraftOrOutbox( collection ) ) {
         if ( Kernel::self()->folderIsDrafts( collection ) ) {
@@ -57,7 +58,6 @@ public:
     } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
       rank = 6;
     }
-
     collectionRanks.insert( id, rank );
     return rank;
   }
@@ -102,13 +102,13 @@ bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QM
     Akonadi::Collection rightData = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
     int rankLeft = d->collectionRank( leftData );
     int rankRight = d->collectionRank( rightData );
-    
+
     if ( rankLeft < rankRight ) {
       return true;
     } else if ( rankLeft > rankRight ) {
       return false;
     }
-    
+
     return QSortFilterProxyModel::lessThan( left, right );
   }
   return EntityOrderProxyModel::lessThan( left, right );

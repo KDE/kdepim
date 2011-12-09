@@ -40,7 +40,7 @@ class KernelPrivate {
     KernelPrivate() : kernel( new Kernel ) {}
     ~KernelPrivate() {
       kDebug();
-      delete kernel;      
+      delete kernel;
     }
     Kernel* kernel;
 };
@@ -285,28 +285,29 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
   return false;
 }
 
-bool Kernel::folderIsInbox( const Akonadi::Collection& collection )
+bool Kernel::folderIsInbox( const Akonadi::Collection& collection, bool withoutPop3InboxSetting )
 {
   if ( collection.remoteId().toLower() == QLatin1String("inbox") ||
        collection.remoteId().toLower() == QLatin1String("/inbox") ||
        collection.remoteId().toLower() == QLatin1String(".inbox") )
     return true;
-  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
-  foreach ( const Akonadi::AgentInstance& type, lst ) {
-    if ( type.status() == Akonadi::AgentInstance::Broken )
-      continue;
-    if ( type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiPOP3SettingsInterface *iface = MailCommon::Util::createPop3SettingsInterface( type.identifier() );
-      if ( iface->isValid() ) {
-        if ( iface->targetCollection() == collection.id() ) {
-          delete iface;
-          return true;
+  if ( !withoutPop3InboxSetting ) {
+    const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+    foreach ( const Akonadi::AgentInstance& type, lst ) {
+      if ( type.status() == Akonadi::AgentInstance::Broken )
+        continue;
+      if ( type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+        OrgKdeAkonadiPOP3SettingsInterface *iface = MailCommon::Util::createPop3SettingsInterface( type.identifier() );
+        if ( iface->isValid() ) {
+          if ( iface->targetCollection() == collection.id() ) {
+            delete iface;
+            return true;
+          }
         }
+        delete iface;
       }
-      delete iface;
     }
   }
-
   return false;
 }
 
