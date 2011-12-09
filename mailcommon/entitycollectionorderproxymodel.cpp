@@ -34,26 +34,36 @@ public:
     : manualSortingActive( false )
   {
   }
-  void createOrderSpecialCollection()
-  {
-    if ( Kernel::self()->inboxCollectionFolder().id()>0 &&
-         Kernel::self()->outboxCollectionFolder().id()>0&&
-         Kernel::self()->trashCollectionFolder().id()>0&&
-         Kernel::self()->draftsCollectionFolder().id()>0&&
-         Kernel::self()->templatesCollectionFolder().id()>0 &&
-         Kernel::self()->sentCollectionFolder().id()>0)
-      {
-        orderSpecialCollection<<
-          Kernel::self()->inboxCollectionFolder().id()<<
-          Kernel::self()->outboxCollectionFolder().id()<<
-          Kernel::self()->sentCollectionFolder().id()<<
-          Kernel::self()->trashCollectionFolder().id()<<
-          Kernel::self()->draftsCollectionFolder().id()<<
-          Kernel::self()->templatesCollectionFolder().id();
-      }
+
+  int collectionRank( const Akonadi::Collection &collection ) {
+
+    const Akonadi::Collection::Id id = collection.id();
+    if ( collectionRanks.contains( id ) )
+      return collectionRanks[ id ];
+    
+    int rank = 100;
+    if ( Kernel::folderIsInbox( collection ) ) {
+      rank = 1;
+    } else if ( Kernel::self()->folderIsDraftOrOutbox( collection ) ) {
+        if ( Kernel::self()->folderIsDrafts( collection ) ) {
+          rank = 5;
+        } else {
+          rank = 2;
+        }
+    } else if ( Kernel::self()->folderIsSentMailFolder( collection ) ) {
+      rank = 3;
+    } else if ( Kernel::self()->folderIsTrash( collection ) ) {
+      rank = 4;
+    } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
+      rank = 6;
+    }
+
+    collectionRanks.insert( id, rank );
+    return rank;
   }
+
   bool manualSortingActive;
-  QList<qlonglong> orderSpecialCollection;
+  QMap<Akonadi::Collection::Id, int> collectionRanks;
 };
 
 
@@ -78,32 +88,27 @@ EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()
 
 void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
 {
-  if ( !d->manualSortingActive )
+  if ( !d->manualSortingActive ) {
+    d->collectionRanks.clear();
     invalidate();
+  }
 }
 
 bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QModelIndex & right ) const
 {
   if ( !d->manualSortingActive ) {
-    if ( d->orderSpecialCollection.isEmpty() ) {
-      d->createOrderSpecialCollection();
-    }
 
-    if ( !d->orderSpecialCollection.isEmpty() ) {
-      Akonadi::Collection::Id leftData = left.data( Akonadi::EntityTreeModel::CollectionIdRole ).toLongLong();
-      Akonadi::Collection::Id rightData = right.data( Akonadi::EntityTreeModel::CollectionIdRole ).toLongLong();
-
-      const int leftPos = d->orderSpecialCollection.indexOf( leftData );
-      const int rightPos = d->orderSpecialCollection.indexOf( rightData );
-      if ( leftPos < 0 && rightPos < 0 )
-        return QSortFilterProxyModel::lessThan( left, right );
-      else if ( leftPos >= 0 && rightPos < 0)
-        return true;
-      else if ( leftPos >= 0 && rightPos >=0 )
-        return ( leftPos < rightPos );
-      else if ( leftPos < 0 && rightPos >= 0 )
-        return false;
+    Akonadi::Collection leftData = left.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    Akonadi::Collection rightData = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    int rankLeft = d->collectionRank( leftData );
+    int rankRight = d->collectionRank( rightData );
+    
+    if ( rankLeft < rankRight ) {
+      return true;
+    } else if ( rankLeft > rankRight ) {
+      return false;
     }
+    
     return QSortFilterProxyModel::lessThan( left, right );
   }
   return EntityOrderProxyModel::lessThan( left, right );
@@ -114,6 +119,7 @@ void EntityCollectionOrderProxyModel::setManualSortingActive( bool active )
   if ( d->manualSortingActive == active )
     return;
   d->manualSortingActive = active;
+  d->collectionRanks.clear();
   if ( !active ) {
     clearTreeOrder();
   } else {
