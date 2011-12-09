@@ -40,6 +40,8 @@
 #include <messagecomposer/messagesender.h>
 #include <messageviewer/globalsettings.h>
 #include <mailtransport/transportcombobox.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
 
 #ifndef KDEPIM_NO_NEPOMUK
 #include <nepomuk/tag.h>
@@ -813,6 +815,11 @@ FilterActionTransport::FilterActionTransport( QObject *parent )
 FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) const
 {
   if ( isEmpty() )
+    return ErrorButGoOn;
+
+  const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( mParameter );
+  //Error if we don't have transport here.
+  if ( !transport )
     return ErrorButGoOn;
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
