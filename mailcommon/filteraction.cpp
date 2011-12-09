@@ -877,7 +877,7 @@ QString FilterActionTransport::displayString() const
 // FilterActionReplyTo - set Reply-To to
 // Set the Reply-to header in a message
 //=============================================================================
-class FilterActionReplyTo: public FilterActionWithString
+class FilterActionReplyTo: public FilterActionWithAddress
 {
   public:
     FilterActionReplyTo( QObject *parent = 0 );
@@ -891,7 +891,7 @@ FilterAction* FilterActionReplyTo::newAction()
 }
 
 FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
-  : FilterActionWithString( "set Reply-To", i18n( "Set Reply-To To" ), parent )
+  : FilterActionWithAddress( "set Reply-To", i18n( "Set Reply-To To" ), parent )
 {
   mParameter.clear();
 }
