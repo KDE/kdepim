@@ -3,7 +3,7 @@
 #include "filteraction.h"
 
 #include "folderrequester.h"
-#include "filteractionmissingcollectiondialog.h"
+#include "filteractionmissingargumentdialog.h"
 #include "mailutil.h"
 #include "mailkernel.h"
 #include "mdnadvicedialog.h"

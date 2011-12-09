@@ -16,7 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filteractionmissingcollectiondialog.h"
+#include "filteractionmissingargumentdialog.h"
 #include "mailkernel.h"
 #include "mailutil.h"
 #include "folderrequester.h"
@@ -195,5 +195,5 @@ int FilterActionMissingTransportDialog::selectedTransport() const
 }
 
 
-#include "filteractionmissingcollectiondialog.moc"
+#include "filteractionmissingargumentdialog.moc"
 
