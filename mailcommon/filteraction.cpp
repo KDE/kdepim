@@ -946,6 +946,9 @@ FilterActionIdentity::FilterActionIdentity( QObject *parent )
 
 FilterAction::ReturnCode FilterActionIdentity::process( ItemContext &context ) const
 {
+  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+    return ErrorButGoOn;
+
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
   msg->setHeader( header );
