@@ -144,7 +144,7 @@ Toolbox.</para>
 <para>In the Composer section, you have a text field with the label
 <guilabel>Title</guilabel>, where you can write the title of the post. Below it,
 you have 3 tabs to edit your post in several ways. The first is a Visual Editor:
-it is a WYSWIG editor and you only need to use the icons to format your text.
+it is a WYSIWYG editor and you only need to use the icons to format your text.
 Next tab is a &HTML; editor, where you have a text editor to edit &HTML; code of
 your post, with a syntax highlighted editor. And on last tab, you can view your
 post with your blog style, before submitting it to the server.</para>
