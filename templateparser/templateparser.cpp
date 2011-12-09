@@ -280,7 +280,7 @@ void TemplateParser::process( const KMime::Message::Ptr &aorig_msg, const Akonad
   mFolder = afolder;
   const QString tmpl = findTemplate();
   if( tmpl.isEmpty()) return;
-  return processWithTemplate( tmpl );
+  processWithTemplate( tmpl );
 }
 
 void TemplateParser::process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
@@ -289,14 +289,14 @@ void TemplateParser::process( const QString &tmplName, const KMime::Message::Ptr
   mOrigMsg = aorig_msg;
   mFolder = afolder;
   const QString tmpl = findCustomTemplate( tmplName );
-  return processWithTemplate( tmpl );
+  processWithTemplate( tmpl );
 }
 
 void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
                                           const Akonadi::Collection &afolder)
 {
   mIdentity = uoid;
-  return process( aorig_msg, afolder );
+  process( aorig_msg, afolder );
 }
 
 void TemplateParser::processWithTemplate( const QString &tmpl )
