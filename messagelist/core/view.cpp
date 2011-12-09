@@ -517,8 +517,8 @@ void View::applyThemeColumns()
   idx = 0;
 
   bool bTriggeredQtBug = false;
-
-  for ( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != columns.constEnd(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     if ( !header()->isSectionHidden( idx ) )
     {
@@ -575,8 +575,8 @@ void View::saveThemeColumnState()
 
   int idx = 0;
 
-
-  for ( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != columns.constEnd(); ++it )
+  QList< Theme::Column * >::ConstIterator end(columns.constEnd());
+  for ( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it )
   {
     if ( header()->isSectionHidden( idx ) )
     {
