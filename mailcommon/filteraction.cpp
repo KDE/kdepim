@@ -788,7 +788,6 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
 //=============================================================================
 // FilterActionSetTransport - set transport to...
 // Specify mail transport (smtp server) to be used when replying to a message
-// TODO: use TransportComboBox so the user does not enter an invalid transport
 //=============================================================================
 
 FilterAction* FilterActionTransport::newAction()
@@ -815,7 +814,7 @@ FilterActionTransport::FilterActionTransport( QObject *parent )
 void FilterActionTransport::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
   argsFromString( argsStr );
-  if ( !MailTransport::TransportManager::self()->transportById( mParameter ) )
+  if ( !MailTransport::TransportManager::self()->transportById( mParameter,false ) )
   {
     FilterActionMissingTransportDialog *dlg = new FilterActionMissingTransportDialog( filterName );
     if ( dlg->exec() )
