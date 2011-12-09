@@ -25,6 +25,7 @@
 class QAbstractItemModel;
 class QModelIndex;
 class QListWidget;
+class KComboBox;
 
 namespace MailCommon {
   class FolderRequester;
@@ -85,6 +86,17 @@ public:
   int selectedTransport() const;
 private:
   MailTransport::TransportComboBox *mComboBoxTransport;
+};
+
+class FilterActionMissingTemplateDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit FilterActionMissingTemplateDialog( const QStringList&templateList, const QString & filtername, QWidget *parent = 0 );
+  ~FilterActionMissingTemplateDialog();
+  QString selectedTemplate() const;
+private:
+  KComboBox *mComboBoxTemplate;
 };
 
 

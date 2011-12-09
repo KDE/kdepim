@@ -1892,6 +1892,7 @@ class FilterActionForward: public FilterActionWithAddress
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
+    virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
     mutable QString mTemplate;
@@ -2047,6 +2048,31 @@ void FilterActionForward::argsFromString( const QString &argsStr )
     FilterActionWithAddress::argsFromString( addressee );
   }
 }
+
+void FilterActionForward::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+{
+  argsFromString( argsStr );
+  if ( !mTemplate.isEmpty() ) {
+    const QStringList templateNames = SettingsIf->customTemplates();
+    QStringList currentTemplateList;
+    currentTemplateList << i18n( "Default Template" );
+    foreach( const QString &templateName, templateNames ) {
+      CTemplates templat( templateName );
+      if ( templat.type() == CustomTemplates::TForward ||
+           templat.type() == CustomTemplates::TUniversal ) {
+        if ( templateName == mTemplate ) {
+          return;
+        }
+        currentTemplateList << templateName;
+      }
+    }
+    FilterActionMissingTemplateDialog *dlg = new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
+    if ( dlg->exec() )
+      mTemplate = dlg->selectedTemplate();
+    delete dlg;
+  }
+}
+
 
 QString FilterActionForward::argsAsString() const
 {

@@ -194,6 +194,37 @@ int FilterActionMissingTransportDialog::selectedTransport() const
   return mComboBoxTransport->currentTransportId();
 }
 
+FilterActionMissingTemplateDialog::FilterActionMissingTemplateDialog( const QStringList& templateList, const QString & filtername, QWidget *parent )
+  : KDialog( parent )
+{
+  setModal( true );
+  setCaption( i18n( "Select Template" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+  QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+  QLabel *label = new QLabel( this );
+  label->setText( i18n( "Filter template is missing. "
+                        "Please select a template to use with filter \"%1\"",
+                        filtername ) );
+  lay->addWidget( label );
+  mComboBoxTemplate = new KComboBox( this );
+  mComboBoxTemplate->addItems( templateList );
+  lay->addWidget( mComboBoxTemplate );
+}
+
+FilterActionMissingTemplateDialog::~FilterActionMissingTemplateDialog()
+{
+}
+
+QString FilterActionMissingTemplateDialog::selectedTemplate() const
+{
+  if ( mComboBoxTemplate->currentIndex() == 0 )
+    return QString();
+  else
+    return mComboBoxTemplate->currentText();
+}
+
 
 #include "filteractionmissingargumentdialog.moc"
 
