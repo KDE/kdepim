@@ -495,6 +495,8 @@ class FilterActionTransport: public FilterAction
      */
     virtual void clearParamWidget( QWidget *paramWidget ) const;
 
+    virtual void argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+
     /**
      * @copydoc FilterAction::argsFromString
      */

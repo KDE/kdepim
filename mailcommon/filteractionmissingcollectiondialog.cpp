@@ -19,8 +19,15 @@
 #include "filteractionmissingcollectiondialog.h"
 #include "mailkernel.h"
 #include "mailutil.h"
-#include <Akonadi/EntityMimeTypeFilterModel>
 #include "folderrequester.h"
+
+#include <Akonadi/EntityMimeTypeFilterModel>
+
+#include <mailtransport/transportcombobox.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
+
+#include <kpimidentities/identitycombo.h>
 
 #include <KLocale>
 
@@ -128,6 +135,65 @@ Akonadi::Collection::List FilterActionMissingCollectionDialog::potentialCorrectF
   }
   return lst;
 }
+
+
+FilterActionMissingIdentityDialog::FilterActionMissingIdentityDialog( const QString & filtername, QWidget *parent )
+  : KDialog( parent )
+{
+  setModal( true );
+  setCaption( i18n( "Select Identity" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+  QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+  QLabel *label = new QLabel( this );
+  label->setText( i18n( "Filter identity is missing. "
+                        "Please select an identity to use with filter \"%1\"",
+                        filtername ) );
+  lay->addWidget( label );
+  mComboBoxIdentity = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), this );
+  lay->addWidget( mComboBoxIdentity );
+
+}
+
+FilterActionMissingIdentityDialog::~FilterActionMissingIdentityDialog()
+{
+}
+
+int FilterActionMissingIdentityDialog::selectedIdentity() const
+{
+  return mComboBoxIdentity->currentIdentity();
+}
+
+
+FilterActionMissingTransportDialog::FilterActionMissingTransportDialog( const QString & filtername, QWidget *parent )
+  : KDialog( parent )
+{
+  setModal( true );
+  setCaption( i18n( "Select Transport" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+  QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+  QLabel *label = new QLabel( this );
+  label->setText( i18n( "Filter transport is missing. "
+                        "Please select a transport to use with filter \"%1\"",
+                        filtername ) );
+  lay->addWidget( label );
+  mComboBoxTransport = new MailTransport::TransportComboBox( this );
+  lay->addWidget( mComboBoxTransport );
+
+}
+
+FilterActionMissingTransportDialog::~FilterActionMissingTransportDialog()
+{
+}
+
+int FilterActionMissingTransportDialog::selectedTransport() const
+{
+  return mComboBoxTransport->currentTransportId();
+}
+
 
 #include "filteractionmissingcollectiondialog.moc"
 

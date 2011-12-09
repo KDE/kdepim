@@ -812,6 +812,21 @@ FilterActionTransport::FilterActionTransport( QObject *parent )
 {
 }
 
+void FilterActionTransport::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+{
+  argsFromString( argsStr );
+  if ( !MailTransport::TransportManager::self()->transportById( mParameter ) )
+  {
+    FilterActionMissingTransportDialog *dlg = new FilterActionMissingTransportDialog( filterName );
+    if ( dlg->exec() )
+      mParameter = dlg->selectedTransport();
+    else
+      mParameter = -1;
+    delete dlg;
+  }
+}
+
+
 FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) const
 {
   if ( isEmpty() )
@@ -925,6 +940,7 @@ class FilterActionIdentity: public FilterActionWithUOID
   public:
     FilterActionIdentity( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
+    virtual void argsFromStringInteractive( const QString &argsStr, const QString &filterName );
     static FilterAction* newAction();
 
     QWidget * createParamWidget( QWidget *parent ) const;
@@ -942,6 +958,20 @@ FilterActionIdentity::FilterActionIdentity( QObject *parent )
   : FilterActionWithUOID( "set identity", i18n( "Set Identity To" ), parent )
 {
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
+}
+
+void FilterActionIdentity::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+{
+  argsFromString( argsStr );
+  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+  {
+    FilterActionMissingIdentityDialog *dlg = new FilterActionMissingIdentityDialog( filterName );
+    if ( dlg->exec() )
+      mParameter = dlg->selectedIdentity();
+    else
+      mParameter = -1;
+    delete dlg;
+  }
 }
 
 FilterAction::ReturnCode FilterActionIdentity::process( ItemContext &context ) const

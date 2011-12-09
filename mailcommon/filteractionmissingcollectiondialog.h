@@ -30,6 +30,14 @@ namespace MailCommon {
   class FolderRequester;
 }
 
+namespace KPIMIdentities {
+  class IdentityCombo;
+}
+
+namespace MailTransport {
+  class TransportComboBox;
+}
+
 class FilterActionMissingCollectionDialog : public KDialog
 {
   Q_OBJECT
@@ -56,6 +64,29 @@ private:
   QListWidget *mListwidget;
 
 };
+
+class FilterActionMissingIdentityDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit FilterActionMissingIdentityDialog( const QString & filtername, QWidget *parent = 0 );
+  ~FilterActionMissingIdentityDialog();
+  int selectedIdentity() const;
+private:
+  KPIMIdentities::IdentityCombo *mComboBoxIdentity;
+};
+
+class FilterActionMissingTransportDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit FilterActionMissingTransportDialog( const QString & filtername, QWidget *parent = 0 );
+  ~FilterActionMissingTransportDialog();
+  int selectedTransport() const;
+private:
+  MailTransport::TransportComboBox *mComboBoxTransport;
+};
+
 
 #endif /* FILTERACTIONMISSINGCOLLECTIONDIALOG_H */
 
