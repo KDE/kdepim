@@ -200,7 +200,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
   topLayout->setMargin( 0 );
 
   // Musn't be able to edit details for a non-resource, system folder.
-  if ( ( !mIsLocalSystemFolder || mIsResourceFolder )
+  if ( ( !mIsLocalSystemFolder && !mIsResourceFolder )
        && !mFolderCollection->isReadOnly() ) {
 
     QHBoxLayout *hl = new QHBoxLayout();
@@ -411,7 +411,7 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
       displayName = collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName();
     }
 
-    if ( !mIsLocalSystemFolder || mIsResourceFolder ) {
+    if ( !mIsLocalSystemFolder && !mIsResourceFolder ) {
       if ( displayName.isEmpty() )
         mNameEdit->setText( collection.name() );
       else
@@ -444,7 +444,7 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
 void CollectionGeneralPage::save( Collection &collection )
 {
   if ( mNameEdit ) {
-    if ( !mIsLocalSystemFolder || mIsResourceFolder ) {
+    if ( !mIsLocalSystemFolder && !mIsResourceFolder ) {
       if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
            !collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() )
         collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName( mNameEdit->text() );
