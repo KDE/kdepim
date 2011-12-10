@@ -34,7 +34,7 @@
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/collection.h>
-#include <akonadi/statisticsproxymodel.h>
+#include <libkdepim/statisticsproxymodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadi/recursivecollectionfilterproxymodel.h>
 #include <akonadi/etmviewstatesaver.h>
@@ -65,7 +65,7 @@ public:
   }
   QString filter;
   QString oldFilterStr;
-  Akonadi::StatisticsProxyModel *filterModel;
+  KPIM::StatisticsProxyModel *filterModel;
   FolderTreeView *folderTreeView;
   Akonadi::QuotaColorProxyModel *quotaModel;
   FolderTreeWidgetProxyModel *readableproxy;
@@ -109,7 +109,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
   d->quotaModel->setSourceModel( recurfilter );
 
-  d->filterModel = new Akonadi::StatisticsProxyModel( this );
+  d->filterModel = new KPIM::StatisticsProxyModel( this );
   d->filterModel->setSourceModel( d->quotaModel );
 
 
@@ -328,7 +328,7 @@ void FolderTreeWidget::readQuotaConfig()
   quotaWarningParameters( quotaColor, threshold );
 }
 
-Akonadi::StatisticsProxyModel * FolderTreeWidget::statisticsProxyModel() const
+KPIM::StatisticsProxyModel * FolderTreeWidget::statisticsProxyModel() const
 {
   return d->filterModel;
 }

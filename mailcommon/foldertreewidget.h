@@ -31,7 +31,7 @@ class KXMLGUIClient;
 class QItemSelectionModel;
 class KLineEdit;
 
-namespace Akonadi {
+namespace KPIM {
   class StatisticsProxyModel;
 }
 
@@ -103,7 +103,7 @@ public:
 
   FolderTreeView *folderTreeView() const;
 
-  Akonadi::StatisticsProxyModel * statisticsProxyModel() const;
+  KPIM::StatisticsProxyModel * statisticsProxyModel() const;
 
   FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
 

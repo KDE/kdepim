@@ -48,6 +48,7 @@ set(kdepim_LIB_SRCS
    multiplyinglineview_p.cpp
    uistatesaver.cpp
    nepomukwarning.cpp
+   statisticsproxymodel.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)

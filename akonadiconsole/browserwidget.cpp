@@ -44,7 +44,7 @@
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <akonadi/statisticsproxymodel.h>
+#include <libkdepim/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
@@ -130,7 +130,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   collectionFilter->setDynamicSortFilter( true );
   collectionFilter->setSortCaseSensitivity( Qt::CaseInsensitive );
 
-  statisticsProxyModel = new StatisticsProxyModel( this );
+  statisticsProxyModel = new KPIM::StatisticsProxyModel( this );
   statisticsProxyModel->setToolTipEnabled( true );
   statisticsProxyModel->setSourceModel( collectionFilter );
 
