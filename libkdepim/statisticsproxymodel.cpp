@@ -20,8 +20,8 @@
 
 #include "statisticsproxymodel.h"
 
-#include "akonadi/entitytreemodel.h"
-#include "akonadi/collectionutils_p.h"
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/collectionutils_p.h>
 
 #include <akonadi/collectionquotaattribute.h>
 #include <akonadi/collectionstatistics.h>
