@@ -177,6 +177,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   QWidget *contentViewParent = new QWidget( this );
   contentUi.setupUi( contentViewParent );
+  contentUi.saveButton->setEnabled( false );
   connect( contentUi.saveButton, SIGNAL(clicked()), SLOT(save()) );
   splitter3->addWidget( contentViewParent );
 
@@ -367,9 +368,7 @@ void BrowserWidget::modelChanged()
 
 void BrowserWidget::save()
 {
-  if ( !mAttrModel ) {
-    return;
-  }
+  Q_ASSERT( mAttrModel );
 
   const QByteArray data = contentUi.dataView->toPlainText().toUtf8();
   Item item = mCurrentItem;
@@ -418,6 +417,7 @@ void BrowserWidget::addAttribute()
   Q_ASSERT( index.isValid() );
   mAttrModel->setData( index, contentUi.attrName->text() );
   contentUi.attrName->clear();
+  contentUi.saveButton->setEnabled( true );
 }
 
 void BrowserWidget::delAttribute()
@@ -428,6 +428,9 @@ void BrowserWidget::delAttribute()
   if ( selection.count() != 1 )
     return;
   mAttrModel->removeRow( selection.first().row() );
+  if ( mAttrModel->rowCount() == 0 ) {
+    contentUi.saveButton->setEnabled( false );
+  }
 }
 
 void BrowserWidget::dumpToXml()
