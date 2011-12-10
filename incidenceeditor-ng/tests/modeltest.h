@@ -29,9 +29,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStack>
 
-#include "incidenceeditors-ng_export.h"
-
-class INCIDENCEEDITORS_NG_EXPORT ModelTest : public QObject
+class ModelTest : public QObject
 {
   Q_OBJECT
 
