@@ -52,12 +52,15 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   setupUi( mainwidget );
   setMainWidget( mainwidget );
 
+  QStringList shownTimeZones( d->mPreferences->timeSpec().timeZone().name() );
+  shownTimeZones += d->mPreferences->timeScaleTimezones();
+  shownTimeZones.removeDuplicates();
+
   QStringList list;
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
   for ( KTimeZones::ZoneMap::ConstIterator it = timezones.begin();  it != timezones.end();  ++it ) {
-    // do not list timezones already displayed in the chooser
-    if ( !d->mPreferences->timeScaleTimezones().contains( it.key() ) &&
-         it.key() != d->mPreferences->timeSpec().timeZone().name() ) {
+    // do not list timezones already shown
+    if ( !shownTimeZones.contains( it.key() ) ) {
       list.append( i18n( it.key().toUtf8() ) );
     }
   }
@@ -78,7 +81,7 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   connect( this, SIGNAL(okClicked()), SLOT(okClicked()) );
   connect( this, SIGNAL(cancelClicked()), SLOT(reject()) );
 
-  listWidget->addItems( d->mPreferences->timeScaleTimezones() );
+  listWidget->addItems( shownTimeZones );
 }
 
 TimeScaleConfigDialog::~TimeScaleConfigDialog()
@@ -107,7 +110,7 @@ void TimeScaleConfigDialog::add()
 
 void TimeScaleConfigDialog::remove()
 {
-  zoneCombo->addItem( 0, listWidget->currentItem()->text() );
+  zoneCombo->insertItem( 0, listWidget->currentItem()->text() );
   delete listWidget->takeItem( listWidget->currentRow() );
 }
 

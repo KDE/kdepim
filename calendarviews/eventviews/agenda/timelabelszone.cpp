@@ -64,12 +64,17 @@ void TimeLabelsZone::reset()
 
 void TimeLabelsZone::init()
 {
+  QStringList seenTimeZones( mPrefs->timeSpec().timeZone().name() );
+
   addTimeLabels( mPrefs->timeSpec() );
 
   foreach ( const QString &zoneStr, mPrefs->timeScaleTimezones() ) {
-    KTimeZone zone = KSystemTimeZones::zone( zoneStr );
-    if ( zone.isValid() ) {
-      addTimeLabels( zone );
+    if ( !seenTimeZones.contains( zoneStr ) ) {
+      KTimeZone zone = KSystemTimeZones::zone( zoneStr );
+      if ( zone.isValid() ) {
+        addTimeLabels( zone );
+        seenTimeZones += zoneStr;
+      }
     }
   }
 }
