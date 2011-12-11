@@ -39,6 +39,48 @@ class TimeScaleConfigDialog::Private
     PrefsPtr mPreferences;
 };
 
+//TODO: move to KCalCore::Stringify
+static QString tzUTCOffsetStr( const KTimeZone &tz )
+{
+  qreal utcOffset = tz.currentOffset() / 3600.;
+  int utcOffsetHrs = tz.currentOffset() / 3600;  // in hours
+  int utcOffsetMins = tz.currentOffset() % 3600;  // in minutes
+  QString utcStr;
+  if ( utcOffsetMins > 0.0 ) {
+    int mins = 0;
+    if ( utcOffsetMins >= .75 ) {
+      mins = 45;
+    } else if ( utcOffsetMins >= 0.5 ) {
+      mins = 30;
+    } else if ( utcOffsetMins >= 0.25 ) {
+      mins = 15;
+    }
+    utcStr = utcOffsetHrs >= 0 ?
+               QString( "+%1:%2" ).arg( utcOffsetHrs ).arg( mins ) :
+               QString( "%1:%2" ).arg( utcOffsetHrs ).arg( mins );
+
+  } else {
+    utcStr = utcOffsetHrs >= 0 ?
+               QString( "+%1" ).arg( utcOffsetHrs ) :
+               QString( "%1" ).arg( utcOffsetHrs );
+  }
+  return utcStr;
+}
+
+//TODO: move to KCalCore::Stringify
+static QString tzWithUTC( KTimeZones::ZoneMap::ConstIterator it )
+{
+  return QString( "%1 (UTC%2)" ).
+      arg( i18n( it.key().toUtf8() ) ).
+    arg( tzUTCOffsetStr( it.value() ) );
+}
+
+//TODO: move to KCalCore::Stringify
+static QString tzWithOutUTC( const QString &tz )
+{
+  return tz.split( ' ' ).first();
+}
+
 TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent )
   : KDialog( parent ), d( new Private( this, preferences ) )
 {
@@ -56,16 +98,18 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   shownTimeZones += d->mPreferences->timeScaleTimezones();
   shownTimeZones.removeDuplicates();
 
-  QStringList list;
+  QStringList availList, selList;
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
   for ( KTimeZones::ZoneMap::ConstIterator it = timezones.begin();  it != timezones.end();  ++it ) {
     // do not list timezones already shown
     if ( !shownTimeZones.contains( it.key() ) ) {
-      list.append( i18n( it.key().toUtf8() ) );
+      availList.append( tzWithUTC( it ) );
+    } else {
+      selList.append( tzWithUTC( it ) );
     }
   }
-  list.sort();
-  zoneCombo->addItems( list );
+  availList.sort();
+  zoneCombo->addItems( availList );
   zoneCombo->setCurrentIndex( 0 );
 
   addButton->setIcon( KIcon( "list-add" ) );
@@ -81,7 +125,7 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   connect( this, SIGNAL(okClicked()), SLOT(okClicked()) );
   connect( this, SIGNAL(cancelClicked()), SLOT(reject()) );
 
-  listWidget->addItems( shownTimeZones );
+  listWidget->addItems( selList );
 }
 
 TimeScaleConfigDialog::~TimeScaleConfigDialog()
@@ -135,7 +179,7 @@ QStringList TimeScaleConfigDialog::zones()
 {
   QStringList list;
   for ( int i=0; i < listWidget->count(); i++ ) {
-    list << listWidget->item( i )->text();
+    list << tzWithOutUTC( listWidget->item( i )->text() );
   }
   return list;
 }
