@@ -349,6 +349,7 @@ QString TimeLabels::headerToolTip() const
   toolTip += "<qt>";
   toolTip += i18n( "<b>%1</b>", i18n( tz.name().toUtf8() ) );
   toolTip += "<hr>";
+  //TODO: Once string freeze is lifted, add UTC offset here
   if ( !tz.countryCode().isEmpty() ) {
     toolTip += i18n( "<i>Country Code:</i> %1", tz.countryCode() );
     toolTip += "<br/>";
