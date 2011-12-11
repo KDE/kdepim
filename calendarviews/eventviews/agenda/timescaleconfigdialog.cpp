@@ -55,7 +55,11 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   QStringList list;
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
   for ( KTimeZones::ZoneMap::ConstIterator it = timezones.begin();  it != timezones.end();  ++it ) {
-    list.append( i18n( it.key().toUtf8() ) );
+    // do not list timezones already displayed in the chooser
+    if ( !d->mPreferences->timeScaleTimezones().contains( it.key() ) &&
+         it.key() != d->mPreferences->timeSpec().timeZone().name() ) {
+      list.append( i18n( it.key().toUtf8() ) );
+    }
   }
   list.sort();
   zoneCombo->addItems( list );
@@ -98,10 +102,12 @@ void TimeScaleConfigDialog::add()
   }
 
   listWidget->addItem( zoneCombo->currentText() );
+  zoneCombo->removeItem( zoneCombo->currentIndex() );
 }
 
 void TimeScaleConfigDialog::remove()
 {
+  zoneCombo->addItem( 0, listWidget->currentItem()->text() );
   delete listWidget->takeItem( listWidget->currentRow() );
 }
 
