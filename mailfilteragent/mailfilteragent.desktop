@@ -11,6 +11,7 @@ Name[pt_BR]=Agente de filtros de e-mail
 Name[sv]=Postfiltreringsmodul
 Name[uk]=Агент фільтрування пошти
 Name[x-test]=xxMail Filter Agentxx
+Name[zh_TW]=郵件過濾代理程式
 Comment=Extension to filter emails
 Comment[ca]=Extensió per a filtrar correus
 Comment[de]=Erweiterung zur Filterung von E-Mails
