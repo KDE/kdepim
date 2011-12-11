@@ -92,6 +92,7 @@ TimeScaleConfigDialog::~TimeScaleConfigDialog()
 void TimeScaleConfigDialog::okClicked()
 {
   d->mPreferences->setTimeScaleTimezones( zones() );
+  d->mPreferences->writeConfig();
   accept();
 }
 

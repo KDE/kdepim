@@ -324,6 +324,7 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     QStringList list = mTimeLabelsZone->preferences()->timeScaleTimezones();
     list.removeAll( mSpec.timeZone().name() );
     mTimeLabelsZone->preferences()->setTimeScaleTimezones( list );
+    mTimeLabelsZone->preferences()->writeConfig();
     mTimeLabelsZone->reset();
     hide();
     deleteLater();
