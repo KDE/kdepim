@@ -79,7 +79,11 @@ class AccountList : public QTreeWidget
 {
 public:
   explicit AccountList( QWidget *parent);
+  ~AccountList();
+
   void updateAccountList(MailCommon::MailFilter *filter);
+  void applyOnAccount(MailCommon::MailFilter *filter);
+
 };
 
 class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox

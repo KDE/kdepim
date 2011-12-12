@@ -85,6 +85,10 @@ AccountList::AccountList( QWidget *parent )
     setRootIsDecorated( false );
 }
 
+AccountList::~AccountList()
+{
+}
+
 void AccountList::updateAccountList(MailCommon::MailFilter *filter)
 {
   clear();
@@ -118,7 +122,17 @@ void AccountList::updateAccountList(MailCommon::MailFilter *filter)
   if ( top ) {
     setCurrentItem( top );
   }
+}
 
+void AccountList::applyOnAccount(MailCommon::MailFilter *filter)
+{
+  QTreeWidgetItemIterator it( this );
+
+  while( QTreeWidgetItem *item = *it ) {
+    const QString id = item->text( 2 );
+    filter->setApplyOnAccount( id, item->checkState( 0 ) == Qt::Checked );
+    ++it;
+  }
 }
 
 QListWidgetFilterItem::QListWidgetFilterItem( const QString & text, QListWidget * parent )
@@ -575,13 +589,7 @@ void KMFilterDialog::slotApplicabilityChanged()
     mAccountList->setEnabled( mApplyOnForChecked->isEnabled() && mApplyOnForChecked->isChecked() );
 
     // Advanced tab functionality - Update list of accounts this filter applies to
-    QTreeWidgetItemIterator it( mAccountList );
-    while( QTreeWidgetItem * item = *it ) {
-      const QString id = item->text( 2 );
-      item->setCheckState( 0, mFilter->applyOnAccount( id ) ? Qt::Checked :
-                                                              Qt::Unchecked );
-      ++it;
-    }
+    mAccountList->applyOnAccount(mFilter);
 
     // Enable the apply button
     slotDialogUpdated();
