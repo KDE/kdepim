@@ -5,7 +5,7 @@
 
   Copyright (c) 2011 Laurent Montel <montel@kde.org>
 
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -70,6 +70,57 @@ using MailCommon::FilterImporterExporter;
 using namespace MailCommon;
 namespace MailCommon {
 
+
+AccountList::AccountList( QWidget *parent )
+  : QTreeWidget( parent )
+{
+    setObjectName( "accountList" );
+    setColumnCount( 2 );
+    QStringList headerNames;
+    headerNames << i18n("Account Name") << i18n("Type");
+    setHeaderItem( new QTreeWidgetItem( headerNames ) );
+    setAllColumnsShowFocus( true );
+    setFrameStyle( QFrame::WinPanel + QFrame::Sunken );
+    setSortingEnabled( false );
+    setRootIsDecorated( false );
+}
+
+void AccountList::updateAccountList(MailCommon::MailFilter *filter)
+{
+  clear();
+
+  QTreeWidgetItem *top = 0;
+  // Block the signals here, otherwise we end up calling
+  // slotApplicableAccountsChanged(), which will read the incomplete item
+  // state and write that back to the filter
+  blockSignals( true );
+  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+  const int nbAccount = lst.count();
+  for ( int i = 0; i <nbAccount; ++i ) {
+    const Akonadi::AgentInstance agent = lst.at( i );
+    QTreeWidgetItem *listItem = new QTreeWidgetItem( this, top );
+    listItem->setText( 0, agent.name() );
+    listItem->setText( 1, agent.type().name() );
+    listItem->setText( 2, agent.identifier() );
+    if ( filter )
+      listItem->setCheckState( 0, filter->applyOnAccount( agent.identifier() ) ?
+                                  Qt::Checked : Qt::Unchecked );
+    top = listItem;
+  }
+  blockSignals( false );
+
+  // make sure our hidden column is really hidden (Qt tends to re-show it)
+  hideColumn( 2 );
+  resizeColumnToContents( 0 );
+  resizeColumnToContents( 1 );
+
+  top = topLevelItem( 0 );
+  if ( top ) {
+    setCurrentItem( top );
+  }
+
+}
+
 QListWidgetFilterItem::QListWidgetFilterItem( const QString & text, QListWidget * parent )
   : QListWidgetItem( text, parent ), mFilter( 0 )
 {
@@ -79,7 +130,7 @@ QListWidgetFilterItem::~QListWidgetFilterItem()
 {
   delete mFilter;
 }
-  
+
 void QListWidgetFilterItem::setFilter( MailCommon::MailFilter *filter )
 {
   mFilter = filter;
@@ -265,16 +316,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
     vbl3->addWidget( mApplyOnForChecked );
     vbl3->addStretch( 2 );
 
-    mAccountList = new QTreeWidget( mAdvOptsGroup );
-    mAccountList->setObjectName( "accountList" );
-    mAccountList->setColumnCount( 2 );
-    QStringList headerNames;
-    headerNames << i18n("Account Name") << i18n("Type");
-    mAccountList->setHeaderItem( new QTreeWidgetItem( headerNames ) );
-    mAccountList->setAllColumnsShowFocus( true );
-    mAccountList->setFrameStyle( QFrame::WinPanel + QFrame::Sunken );
-    mAccountList->setSortingEnabled( false );
-    mAccountList->setRootIsDecorated( false );
+    mAccountList = new AccountList( mAdvOptsGroup );
     gl->addWidget( mAccountList, 0, 1, 4, 3 );
 
     mApplyBeforeOut = new QCheckBox( i18n("Apply this filter &before sending messages"), mAdvOptsGroup );
@@ -625,37 +667,7 @@ void KMFilterDialog::slotFilterActionIconChanged( const QString &icon )
 
 void KMFilterDialog::slotUpdateAccountList()
 {
-  mAccountList->clear();
-
-  QTreeWidgetItem *top = 0;
-  // Block the signals here, otherwise we end up calling
-  // slotApplicableAccountsChanged(), which will read the incomplete item
-  // state and write that back to the filter
-  mAccountList->blockSignals( true );
-  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
-  const int nbAccount = lst.count();
-  for ( int i = 0; i <nbAccount; ++i ) {
-    const Akonadi::AgentInstance agent = lst.at( i );
-    QTreeWidgetItem *listItem = new QTreeWidgetItem( mAccountList, top );
-    listItem->setText( 0, agent.name() );
-    listItem->setText( 1, agent.type().name() );
-    listItem->setText( 2, agent.identifier() );
-    if ( mFilter )
-      listItem->setCheckState( 0, mFilter->applyOnAccount( agent.identifier() ) ?
-                                  Qt::Checked : Qt::Unchecked );
-    top = listItem;
-  }
-  mAccountList->blockSignals( false );
-
-  // make sure our hidden column is really hidden (Qt tends to re-show it)
-  mAccountList->hideColumn( 2 );
-  mAccountList->resizeColumnToContents( 0 );
-  mAccountList->resizeColumnToContents( 1 );
-
-  top = mAccountList->topLevelItem( 0 );
-  if ( top ) {
-    mAccountList->setCurrentItem( top );
-  }
+  mAccountList->updateAccountList(mFilter);
 }
 
 //=============================================================================
@@ -835,7 +847,7 @@ void KMFilterListBox::slotUpdateFilterName()
   }
   QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
   MailCommon::MailFilter *filter = itemFilter->filter();
-  
+
   SearchPattern *p = filter->pattern();
   if ( !p ) return;
 
@@ -976,7 +988,7 @@ void KMFilterListBox::slotCopy()
   // make sure that all changes are written to the filter before we copy it
   emit applyWidgets();
   QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
-  
+
   MailFilter *filter = itemFilter->filter();
 
   // enableControls should make sure this method is
@@ -998,7 +1010,7 @@ void KMFilterListBox::slotDelete()
   if ( item->isHidden() )
     return;
   QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
-  
+
   MailCommon::MailFilter *filter = itemFilter->filter();
 
   const QString filterName = filter->pattern()->name();
@@ -1015,7 +1027,7 @@ void KMFilterListBox::slotDelete()
   // remove the filter from both the listbox
   QListWidgetItem *item2 = mListWidget->takeItem( oIdxSelItem );
   delete item2;
- 
+
 
   const int count = mListWidget->count();
   // and set the new current item.
@@ -1052,7 +1064,7 @@ void KMFilterListBox::slotTop()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
-  
+
   if ( item->isHidden() )
     return;
   item = mListWidget->takeItem( currentIndex );
@@ -1139,7 +1151,7 @@ void KMFilterListBox::slotRename()
   if ( item->isHidden() )
     return;
   QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
-  
+
   bool okPressed = false;
   MailFilter *filter = itemFilter->filter();
 
@@ -1190,7 +1202,7 @@ void KMFilterListBox::enableControls()
   mBtnRename->setEnabled( aFilterIsSelected );
   mBtnTop->setEnabled( aFilterIsSelected && !theFirst );
   mBtnBottom->setEnabled( aFilterIsSelected && !theLast );
-  
+
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
 }

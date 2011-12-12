@@ -31,7 +31,7 @@
 #include <QGroupBox>
 #include <QListWidgetItem>
 #include <QList>
-
+#include <QTreeWidget>
 class QLabel;
 class QListWidget;
 class QPushButton;
@@ -74,6 +74,14 @@ namespace MailCommon {
 
  */
 namespace MailCommon {
+
+class AccountList : public QTreeWidget 
+{
+public:
+  explicit AccountList( QWidget *parent);
+  void updateAccountList(MailCommon::MailFilter *filter);
+};
+
 class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
 {
   Q_OBJECT
@@ -327,7 +335,7 @@ protected:
       this filter to all accounts or to selected accounts only. */
   QRadioButton *mApplyOnForAll, *mApplyOnForTraditional, *mApplyOnForChecked;
   /** ListView that shows the accounts in the advanced tab */
-  QTreeWidget *mAccountList;
+  AccountList *mAccountList;
 
   QCheckBox *mStopProcessingHere;
   QCheckBox *mConfigureShortcut;
@@ -355,6 +363,7 @@ public:
 private:
   MailCommon::MailFilter *mFilter;  
 };
+
 
 }
 
