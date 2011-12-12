@@ -44,20 +44,12 @@ static QString tzUTCOffsetStr( const KTimeZone &tz )
 {
   qreal utcOffset = tz.currentOffset() / 3600.;
   int utcOffsetHrs = tz.currentOffset() / 3600;  // in hours
-  int utcOffsetMins = tz.currentOffset() % 3600;  // in minutes
+  int utcOffsetMins = ( tz.currentOffset() % 3600 ) / 60;  // in minutes
   QString utcStr;
-  if ( utcOffsetMins > 0.0 ) {
-    int mins = 0;
-    if ( utcOffsetMins >= .75 ) {
-      mins = 45;
-    } else if ( utcOffsetMins >= 0.5 ) {
-      mins = 30;
-    } else if ( utcOffsetMins >= 0.25 ) {
-      mins = 15;
-    }
+  if ( utcOffsetMins > 0 ) {
     utcStr = utcOffsetHrs >= 0 ?
-               QString( "+%1:%2" ).arg( utcOffsetHrs ).arg( mins ) :
-               QString( "%1:%2" ).arg( utcOffsetHrs ).arg( mins );
+               QString( "+%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins ) :
+               QString( "%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins );
 
   } else {
     utcStr = utcOffsetHrs >= 0 ?
