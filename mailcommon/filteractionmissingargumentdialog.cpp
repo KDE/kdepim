@@ -261,16 +261,19 @@ bool FilterActionMissingAccountDialog::allAccountExist( const QStringList & lst 
 
   const int numberOfAccount( lst.count() );
   const int numberOfAgent(  lstAgent.count() );
-  if ( lstAgent.count() != numberOfAccount )
-    return false;
 
   for ( int i = 0; i <numberOfAccount; ++i ) {
-    for ( int j=0; j < numberOfAccount;++j ) {
-      if ( lstAgent.at( j ).identifier() ==  lst.at( i ) )
-        continue;
+    bool found = false;
+    const QString accountName( lst.at( i ) );
+    for ( int j=0; j < numberOfAgent;++j ) {
+      if ( lstAgent.at( j ).identifier() ==  accountName ) {
+        found = true;
+        break;
       }
-      return false;
     }
+    if ( !found )
+      return false;
+  }
   return true;
 }
 
