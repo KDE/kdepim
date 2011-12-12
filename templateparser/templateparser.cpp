@@ -1217,7 +1217,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
   // If we have some attachments, create a multipart/mixed mail and
   // add the normal body as well as the attachments
   KMime::Content* mainPart = textPart;
-  if( !ac.attachments().empty() || mMode == Forward ) {
+  if( !ac.attachments().empty() && mMode == Forward ) {
     mainPart = createMultipartMixed( ac, textPart);
     mainPart->assemble();
   }
