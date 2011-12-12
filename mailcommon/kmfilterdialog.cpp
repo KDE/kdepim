@@ -135,6 +135,55 @@ void AccountList::applyOnAccount(MailCommon::MailFilter *filter)
   }
 }
 
+void AccountList::applyOnAccount(const QStringList & lstAccount)
+{
+  clear();
+
+  QTreeWidgetItem *top = 0;
+  // Block the signals here, otherwise we end up calling
+  // slotApplicableAccountsChanged(), which will read the incomplete item
+  // state and write that back to the filter
+  blockSignals( true );
+  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+  const int nbAccount = lst.count();
+  for ( int i = 0; i <nbAccount; ++i ) {
+    const Akonadi::AgentInstance agent = lst.at( i );
+    QTreeWidgetItem *listItem = new QTreeWidgetItem( this, top );
+    listItem->setText( 0, agent.name() );
+    listItem->setText( 1, agent.type().name() );
+    listItem->setText( 2, agent.identifier() );
+    listItem->setCheckState( 0, lstAccount.contains( agent.identifier() ) ?
+                             Qt::Checked : Qt::Unchecked );
+    top = listItem;
+  }
+  blockSignals( false );
+
+  // make sure our hidden column is really hidden (Qt tends to re-show it)
+  hideColumn( 2 );
+  resizeColumnToContents( 0 );
+  resizeColumnToContents( 1 );
+
+  top = topLevelItem( 0 );
+  if ( top ) {
+    setCurrentItem( top );
+  }
+}
+
+
+QStringList AccountList::selectedAccount()
+{
+  QStringList lstAccount;
+  QTreeWidgetItemIterator it( this );
+
+  while( QTreeWidgetItem *item = *it ) {
+    if ( item->checkState( 0 ) == Qt::Checked )
+      lstAccount<<item->text( 2 );
+    ++it;
+  }
+  return lstAccount;
+}
+
+
 QListWidgetFilterItem::QListWidgetFilterItem( const QString & text, QListWidget * parent )
   : QListWidgetItem( text, parent ), mFilter( 0 )
 {

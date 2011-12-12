@@ -83,6 +83,9 @@ public:
 
   void updateAccountList(MailCommon::MailFilter *filter);
   void applyOnAccount(MailCommon::MailFilter *filter);
+  void applyOnAccount(const QStringList & lst);
+
+  QStringList selectedAccount();
 
 };
 

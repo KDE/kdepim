@@ -29,6 +29,7 @@ class KComboBox;
 
 namespace MailCommon {
   class FolderRequester;
+  class AccountList;
 }
 
 namespace KPIMIdentities {
@@ -97,6 +98,18 @@ public:
   QString selectedTemplate() const;
 private:
   KComboBox *mComboBoxTemplate;
+};
+
+class FilterActionMissingAccountDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit FilterActionMissingAccountDialog(const QStringList &lstAccount, const QString& filtername, QWidget * parent = 0 );
+  ~FilterActionMissingAccountDialog();
+  QStringList selectedAccount() const;
+  static bool allAccountExist( const QStringList & lst );
+private:
+  MailCommon::AccountList *mAccountList;
 };
 
 

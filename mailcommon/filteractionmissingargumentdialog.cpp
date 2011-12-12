@@ -20,6 +20,7 @@
 #include "mailkernel.h"
 #include "mailutil.h"
 #include "folderrequester.h"
+#include "kmfilterdialog.h"
 
 #include <Akonadi/EntityMimeTypeFilterModel>
 
@@ -223,6 +224,54 @@ QString FilterActionMissingTemplateDialog::selectedTemplate() const
     return QString();
   else
     return mComboBoxTemplate->currentText();
+}
+
+
+FilterActionMissingAccountDialog::FilterActionMissingAccountDialog(const QStringList &lstAccount, const QString& filtername, QWidget * parent )
+  : KDialog( parent )
+{
+  setModal( true );
+  setCaption( i18n( "Select Account" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+  QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+  QLabel *label = new QLabel( this );
+  label->setText( i18n( "Filter account is missing. "
+                        "Please select account to use with filter \"%1\"",
+                        filtername ) );
+  lay->addWidget( label );
+  mAccountList = new MailCommon::AccountList( this );
+  mAccountList->applyOnAccount(lstAccount);
+  lay->addWidget( mAccountList );
+}
+
+FilterActionMissingAccountDialog::~FilterActionMissingAccountDialog()
+{
+}
+
+QStringList FilterActionMissingAccountDialog::selectedAccount() const
+{
+  return mAccountList->selectedAccount();
+}
+
+bool FilterActionMissingAccountDialog::allAccountExist( const QStringList & lst )
+{
+  const Akonadi::AgentInstance::List lstAgent = MailCommon::Util::agentInstances();
+
+  const int numberOfAccount( lst.count() );
+  const int numberOfAgent(  lstAgent.count() );
+  if ( lstAgent.count() != numberOfAccount )
+    return false;
+
+  for ( int i = 0; i <numberOfAccount; ++i ) {
+    for ( int j=0; j < numberOfAccount;++j ) {
+      if ( lstAgent.at( j ).identifier() ==  lst.at( i ) )
+        continue;
+      }
+      return false;
+    }
+  return true;
 }
 
 

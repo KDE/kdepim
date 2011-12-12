@@ -26,6 +26,7 @@
 #include "filtermanager.h"
 #include "mailutil.h"
 #include "filterlog.h"
+#include "filteractionmissingargumentdialog.h"
 using MailCommon::FilterLog;
 
 // KDEPIMLIBS headers
@@ -429,6 +430,15 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
   }
 
   mAccounts = config.readEntry( "accounts-set",QStringList() );
+  if ( !mAccounts.isEmpty() && interactive ) {
+    if ( !FilterActionMissingAccountDialog::allAccountExist( mAccounts ) ) {
+      FilterActionMissingAccountDialog *dlg = new FilterActionMissingAccountDialog(mAccounts, name());
+      if ( dlg->exec() ) {
+        mAccounts = dlg->selectedAccount();
+      }
+      delete dlg;
+    }
+  }
 }
 
 
