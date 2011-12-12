@@ -277,6 +277,37 @@ bool FilterActionMissingAccountDialog::allAccountExist( const QStringList & lst 
   return true;
 }
 
+FilterActionMissingTagDialog::FilterActionMissingTagDialog( const QStringList & tagList,  const QString& filtername, QWidget *parent )
+  : KDialog( parent )
+{
+  setModal( true );
+  setCaption( i18n( "Select Tag" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+  QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+  QLabel *label = new QLabel( this );
+  label->setText( i18n( "Filter tag is missing. "
+                        "Please select a transport to use with filter \"%1\"",
+                        filtername ) );
+  lay->addWidget( label );
+  mTagList = new QListWidget( this );
+  mTagList->addItems( tagList );
+  lay->addWidget( mTagList );
+
+}
+
+FilterActionMissingTagDialog::~FilterActionMissingTagDialog()
+{
+}
+
+QString FilterActionMissingTagDialog::selectedTag() const
+{
+  if ( mTagList->currentItem() )
+    return mTagList->currentItem()->text();
+  return QString();
+}
+
 
 #include "filteractionmissingargumentdialog.moc"
 

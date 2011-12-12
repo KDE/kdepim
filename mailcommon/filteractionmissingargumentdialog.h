@@ -112,6 +112,17 @@ private:
   MailCommon::AccountList *mAccountList;
 };
 
+class FilterActionMissingTagDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit FilterActionMissingTagDialog( const QStringList&templateList, const QString & filtername, QWidget *parent = 0 );
+  ~FilterActionMissingTagDialog();
+  QString selectedTag() const;
+private:
+  QListWidget *mTagList;
+};
+
 
 #endif /* FILTERACTIONMISSINGARGUMENTDIALOG_H */
 

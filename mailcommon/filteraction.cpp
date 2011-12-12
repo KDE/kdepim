@@ -1170,6 +1170,7 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
+    virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
     QStringList mLabelList;
@@ -1190,6 +1191,21 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
   }
 #endif
 }
+
+void FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+{
+  argsFromString( argsStr );
+#ifndef KDEPIM_NO_NEPOMUK
+  const int index = mParameterList.indexOf( mParameter );
+  if ( index == -1 ) {
+    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName );
+    if ( dlg->exec() )
+      mParameter = dlg->selectedTag();
+    delete dlg;
+  }
+#endif
+}
+
 
 FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
