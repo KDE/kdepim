@@ -90,7 +90,6 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
     QSharedPointer<MailCommon::FolderCollection> mFolderCollection;
     bool mIsLocalSystemFolder;
     bool mIsResourceFolder;
-    bool mIsImapFolder;
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionGeneralPageFactory, CollectionGeneralPage )

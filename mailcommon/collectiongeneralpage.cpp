@@ -189,8 +189,7 @@ static CollectionGeneralPage::FolderContentsType typeFromKolabName( const QByteA
 
 void CollectionGeneralPage::init( const Akonadi::Collection &collection )
 {
-  mIsLocalSystemFolder = CommonKernel->isSystemFolderCollection( collection );
-  mIsImapFolder = collection.resource().contains( IMAP_RESOURCE_IDENTIFIER );
+  mIsLocalSystemFolder = CommonKernel->isSystemFolderCollection( collection ) || Kernel::folderIsInbox( collection );
 
   mIsResourceFolder = (collection.parentCollection() == Akonadi::Collection::root());
   QLabel *label;
