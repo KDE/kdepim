@@ -1173,6 +1173,7 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
+    void initializeTagList();
     QStringList mLabelList;
 };
 
@@ -1183,6 +1184,11 @@ FilterAction* FilterActionAddTag::newAction()
 
 FilterActionAddTag::FilterActionAddTag( QObject *parent )
   : FilterActionWithStringList( "add tag", i18n( "Add Tag" ), parent )
+{
+  initializeTagList();
+}
+
+void FilterActionAddTag::initializeTagList()
 {
 #ifndef KDEPIM_NO_NEPOMUK
   foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
@@ -1195,6 +1201,8 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
 void FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {
   argsFromString( argsStr );
+  if( mParameterList.isEmpty() ) 
+    return;
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 ) {
