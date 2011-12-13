@@ -708,8 +708,8 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
 
   int idx = 0;
   QAction * act;
-
-  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != columns.end(); ++it )
+  QList< Theme::Column * >::ConstIterator end(columns.end());
+  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != end; ++it )
   {
     act = menu.addAction( ( *it )->label() );
     act->setCheckable( true );
@@ -2278,12 +2278,12 @@ bool View::event( QEvent *e )
   if( e->type() != QEvent::ToolTip )
     return QTreeView::event( e );
 
+  if ( !Settings::self()->messageToolTipEnabled() )
+    return true; // don't display tooltips
+
   QHelpEvent * he = dynamic_cast< QHelpEvent * >( e );
   if ( !he )
     return true; // eh ?
-
-  if ( !Settings::self()->messageToolTipEnabled() )
-    return true; // don't display tooltips
 
   QPoint pnt = viewport()->mapFromGlobal( mapToGlobal( he->pos() ) );
 
