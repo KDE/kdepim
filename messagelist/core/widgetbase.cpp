@@ -447,29 +447,18 @@ void Widget::themeMenuAboutToShow()
 
   QAction * act;
 
-  QList< const Theme * > sortedThemes;
+  QList<Theme * > sortedThemes;
 
   QHash< QString, Theme * >::ConstIterator end ( themes.constEnd() );
   for ( QHash< QString, Theme * >::ConstIterator ci = themes.constBegin(); ci != end; ++ci )
   {
-    int idx = 0;
-    const int cnt = sortedThemes.count();
-    while ( idx < cnt )
-    {
-      if ( sortedThemes.at( idx )->name() > ( *ci )->name() )
-      {
-        sortedThemes.insert( idx, *ci );
-        break;
-      }
-      idx++;
-    }
-
-    if ( idx == cnt )
       sortedThemes.append( *ci );
   }
 
-  QList< const Theme * >::ConstIterator endTheme( sortedThemes.constEnd() );
-  for ( QList< const Theme * >::ConstIterator it = sortedThemes.constBegin(); it != endTheme; ++it )
+  qSort(sortedThemes.begin(),sortedThemes.end(),MessageList::Core::Theme::compareName);
+
+  QList< Theme * >::ConstIterator endTheme( sortedThemes.constEnd() );
+  for ( QList< Theme * >::ConstIterator it = sortedThemes.constBegin(); it != endTheme; ++it )
   {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );

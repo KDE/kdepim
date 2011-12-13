@@ -458,7 +458,6 @@ public:
      * Handles content item loading (used by Theme::Row::load())
      */
     bool load( QDataStream &stream, int themeVersion );
-
   };
 
   /**
@@ -870,6 +869,11 @@ public:
    * Destroys this theme object.
    */
   ~Theme();
+
+  static bool compareName( Theme *theme1, Theme *theme2 )
+  {
+      return ( theme1->name() < theme2->name() );
+  }
 
 public:
   /**
