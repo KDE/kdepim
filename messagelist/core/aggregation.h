@@ -150,6 +150,10 @@ public:
       ThreadExpandPolicy threadExpandPolicy,
       FillViewStrategy fillViewStrategy
     );
+  static bool compareName( Aggregation *agg1, Aggregation *agg2 )
+  {
+      return ( agg1->name() < agg2->name() );
+  }
 
 public:
   /**

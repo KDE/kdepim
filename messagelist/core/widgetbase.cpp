@@ -542,29 +542,19 @@ void Widget::aggregationMenuAboutToShow()
 
   QAction * act;
 
-  QList< const Aggregation * > sortedAggregations;
+  QList< Aggregation * > sortedAggregations;
 
-  for ( QHash< QString, Aggregation * >::ConstIterator ci = aggregations.constBegin(); ci != aggregations.constEnd(); ++ci )
+  QHash< QString, Aggregation * >::ConstIterator end = aggregations.constEnd();
+  for ( QHash< QString, Aggregation * >::ConstIterator ci = aggregations.constBegin(); ci != end; ++ci )
   {
-    int idx = 0;
-    const int cnt = sortedAggregations.count();
-    while ( idx < cnt )
-    {
-      if ( sortedAggregations.at( idx )->name() > ( *ci )->name() )
-      {
-        sortedAggregations.insert( idx, *ci );
-        break;
-      }
-      idx++;
-    }
-
-    if ( idx == cnt )
-      sortedAggregations.append( *ci );
+      sortedAggregations.append(*ci );
   }
 
-  QList< const Aggregation * >::ConstIterator end( sortedAggregations.constEnd() );
+  qSort(sortedAggregations.begin(),sortedAggregations.end(), MessageList::Core::Aggregation::compareName);
 
-  for ( QList< const Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != end; ++it )
+  QList<Aggregation * >::ConstIterator endagg( sortedAggregations.constEnd() );
+
+  for ( QList< Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != endagg; ++it )
   {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
