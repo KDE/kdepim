@@ -415,7 +415,7 @@ void ThemePreviewWidget::setTheme( Theme * theme )
   {
     QString label = ( *it )->label();
     if ( ( *it )->visibleByDefault() )
-      label += QString( QLatin1String( " (%1)" )).arg( i18nc( "Indicates whether or not a header label is visible", "Visible") );
+      label += QString::fromLatin1( " (%1)" ).arg( i18nc( "Indicates whether or not a header label is visible", "Visible") );
 
     headerLabels.append( label );
   }

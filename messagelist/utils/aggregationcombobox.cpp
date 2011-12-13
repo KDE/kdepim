@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "aggregationcombobox.h"
-#include "messagelist/utils/aggregationcombobox.h"
-#include "messagelist/utils/aggregationcombobox_p.h"
+#include "aggregationcombobox_p.h"
 
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"

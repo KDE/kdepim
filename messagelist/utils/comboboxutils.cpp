@@ -35,7 +35,7 @@ void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair
 
   QList< QPair< QString, int > >::ConstIterator end( optionDescriptors.end() );
   
-  for( QList< QPair< QString, int > >::ConstIterator it = optionDescriptors.constBegin(); it != optionDescriptors.constEnd(); ++it )
+  for( QList< QPair< QString, int > >::ConstIterator it = optionDescriptors.constBegin(); it != end; ++it )
   {
     if ( val == (*it).second )
       valIdx = idx;
