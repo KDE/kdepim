@@ -1236,6 +1236,11 @@ bool FilterActionAddTag::requiresBody() const
 
 void FilterActionAddTag::argsFromString( const QString &argsStr )
 {
+  if( mParameterList.isEmpty() ) {
+    mParameter = argsStr;
+    return;
+  }
+
   foreach ( const QString& tag, mParameterList ) {
     if ( tag == argsStr ) {
       mParameter = tag;
