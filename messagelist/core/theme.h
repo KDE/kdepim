@@ -857,7 +857,7 @@ public:
   /**
    * Creates a theme object with the specified name and description.
    */
-  explicit Theme( const QString &name, const QString &description );
+  explicit Theme( const QString &name, const QString &description, bool readOnly = false );
 
   /**
    * Creates an exact copy of the theme sharing the same runtime data.

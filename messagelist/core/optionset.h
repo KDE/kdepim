@@ -49,13 +49,14 @@ class OptionSet
 public:
   explicit OptionSet();
   explicit OptionSet( const OptionSet &src );
-  explicit OptionSet( const QString &name, const QString &description );
+  explicit OptionSet( const QString &name, const QString &description, bool readOnly = false );
   virtual ~OptionSet();
 
 protected:
   QString mId;
   QString mName;
   QString mDescription;
+  bool mReadOnly;
 
 public:
   /**
@@ -113,6 +114,9 @@ public:
    * You shouldn't need to call it.
    */
   void generateUniqueId();
+  
+  bool readOnly() const { return mReadOnly; }
+  void setReadOnly( bool b) { mReadOnly = b; }
 
 protected:
   /**

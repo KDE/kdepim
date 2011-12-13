@@ -255,6 +255,7 @@ ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
   mSelectedThemeContentItem = 0;
   mSelectedThemeColumn = 0;
   mFirstShow = true;
+  mReadOnly = false;
 
   mDelegate = new ThemePreviewDelegate( this );
   setItemDelegate( mDelegate );
@@ -282,6 +283,11 @@ ThemePreviewWidget::~ThemePreviewWidget()
 QSize ThemePreviewWidget::sizeHint() const
 {
   return QSize( 350, 180 );
+}
+
+void ThemePreviewWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
 }
 
 void ThemePreviewWidget::applyThemeColumnWidths()
@@ -467,6 +473,9 @@ void ThemePreviewWidget::internalHandleDragMoveEvent( QDragMoveEvent * e )
 {
   e->ignore();
 
+  if ( mReadOnly )
+    return;
+
   if ( !e->mimeData() )
     return;
   if ( !e->mimeData()->hasFormat( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) ) )
@@ -487,6 +496,9 @@ void ThemePreviewWidget::internalHandleDragMoveEvent( QDragMoveEvent * e )
 
 void ThemePreviewWidget::dragMoveEvent( QDragMoveEvent * e )
 {
+  if ( mReadOnly )
+    return;
+
   internalHandleDragMoveEvent( e );
 
   mThemeSelectedContentItemRect = QRect();
@@ -500,6 +512,9 @@ void ThemePreviewWidget::dropEvent( QDropEvent * e )
   mDropIndicatorPoint1 = mDropIndicatorPoint2;
 
   e->ignore();
+
+  if ( mReadOnly )
+    return;
 
   if ( !e->mimeData() )
     return;
@@ -764,7 +779,7 @@ bool ThemePreviewWidget::computeContentItemInsertPosition( const QPoint &pos, Th
 
 void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
 {
-  if ( ! ( mSelectedThemeContentItem && ( e->buttons() & Qt::LeftButton ) ) )
+  if ( ! ( mSelectedThemeContentItem && ( e->buttons() & Qt::LeftButton ) ) || mReadOnly )
   {
     QTreeWidget::mouseMoveEvent( e );
     return;
@@ -831,6 +846,11 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
 
 void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 {
+  if ( mReadOnly ) {
+    QTreeWidget::mousePressEvent( e );
+    return;
+  }
+
   mMouseDownPoint = e->pos();
 
   if ( mDelegate->hitTest( mMouseDownPoint ) )
@@ -1174,6 +1194,9 @@ void ThemePreviewWidget::paintEvent( QPaintEvent * e )
 
 void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
 {
+  if ( mReadOnly )
+    return;
+
   QTreeWidgetItem * hitem = headerItem();
   if ( !hitem )
     return; // ooops
@@ -1503,7 +1526,6 @@ void ThemeEditor::editTheme( Theme *set )
     setEnabled( false );
     return;
   }
-
   setEnabled( true );
 
   nameEdit()->setText( set->name() );
@@ -1515,11 +1537,20 @@ void ThemeEditor::editTheme( Theme *set )
   ComboBoxUtils::setIntegerOptionComboValue( mViewHeaderPolicyCombo, (int)mCurrentTheme->viewHeaderPolicy() );
 
   mIconSizeSpinBox->setValue( set->iconSize() );
+  setReadOnly( mCurrentTheme->readOnly() );
+}
+
+void ThemeEditor::setReadOnly( bool readOnly )
+{
+  mPreviewWidget->setReadOnly( readOnly );
+  mViewHeaderPolicyCombo->setEnabled( !readOnly );
+  mIconSizeSpinBox->setEnabled( !readOnly );
+  OptionSetEditor::setReadOnly( readOnly );
 }
 
 void ThemeEditor::commit()
 {
-  if ( !mCurrentTheme )
+  if ( !mCurrentTheme || mCurrentTheme->readOnly() )
     return;
 
   mCurrentTheme->setName( nameEdit()->text() );

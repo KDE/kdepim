@@ -29,20 +29,23 @@ static const int gOptionSetFinalMarker = 0xbabe; // don't change
 
 static const int gOptionSetCurrentVersion = 0x1001; // increase if you add new fields of change the meaning of some
 
+static const int gOptionSetWithReadOnLyModeVersion = 0x1002;
+
 using namespace MessageList::Core;
 
 OptionSet::OptionSet()
+  : mReadOnly( false )
 {
   generateUniqueId();
 }
 
 OptionSet::OptionSet( const OptionSet &set )
-  : mId( set.mId ), mName( set.mName ), mDescription( set.mDescription )
+  : mId( set.mId ), mName( set.mName ), mDescription( set.mDescription ), mReadOnly( set.mReadOnly )
 {
 }
 
-OptionSet::OptionSet( const QString &name, const QString &description )
-  : mName( name ), mDescription( description )
+OptionSet::OptionSet( const QString &name, const QString &description, bool readOnly )
+  : mName( name ), mDescription( description ), mReadOnly( readOnly )
 {
   generateUniqueId();
 }
@@ -66,10 +69,11 @@ QString OptionSet::saveToString() const
     QDataStream s( &raw, QIODevice::WriteOnly );
 
     s << gOptionSetInitialMarker;
-    s << gOptionSetCurrentVersion;
+    s << gOptionSetWithReadOnLyModeVersion;
     s << mId;
     s << mName;
     s << mDescription;
+    s << mReadOnly;
 
     save( s );
 
@@ -92,10 +96,11 @@ bool OptionSet::loadFromString(const QString &data )
   if ( marker != gOptionSetInitialMarker )
     return false; // invalid configuration
 
-  int version;
+  int currentVersion;
 
-  s >> version;
-  if ( version != gOptionSetCurrentVersion)
+  s >> currentVersion;
+
+  if ( currentVersion > gOptionSetWithReadOnLyModeVersion)
     return false; // invalid configuration
 
   s >> mId;
@@ -109,6 +114,11 @@ bool OptionSet::loadFromString(const QString &data )
     return false; // invalid configuration
 
   s >> mDescription;
+
+  bool readOnly = false;
+  if ( currentVersion == gOptionSetWithReadOnLyModeVersion )
+    s >> readOnly;
+  mReadOnly = readOnly;
 
   if ( !load( s ) )
     return false; // invalid configuration

@@ -43,9 +43,6 @@ namespace Utils
 
 class ThemeListWidgetItem : public QListWidgetItem
 {
-private:
-  Core::Theme * mTheme;
-
 public:
   ThemeListWidgetItem( QListWidget * par, const Core::Theme &set )
     : QListWidgetItem( set.name(), par )
@@ -57,11 +54,16 @@ public:
     delete mTheme;
   }
 
-public:
   Core::Theme * theme() const
-    { return mTheme; };
+  {
+    return mTheme;
+  }
   void forgetTheme()
-    { mTheme = 0; };
+  {
+    mTheme = 0;
+  }
+private:
+  Core::Theme * mTheme;
 };
 
 class ThemeListWidget : public QListWidget
@@ -221,7 +223,7 @@ void ConfigureThemesDialog::Private::editedThemeNameChanged()
 
 void ConfigureThemesDialog::Private::fillThemeList()
 {
-  const QHash< QString, Theme * > & sets = Manager::instance()->themes();
+  const QHash< QString, Theme * >& sets = Manager::instance()->themes();
 
   QHash< QString, Theme * >::ConstIterator end( sets.constEnd() );
   for( QHash< QString, Theme * >::ConstIterator it = sets.constBegin(); it != end; ++it )
@@ -234,7 +236,7 @@ void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetIte
   commitEditor();
 
   ThemeListWidgetItem * item = cur ? dynamic_cast< ThemeListWidgetItem * >( cur ) : 0;
-  mDeleteThemeButton->setEnabled( item && ( mThemeList->count() > 1 ) );
+  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
   mCloneThemeButton->setEnabled( item );
   mEditor->editTheme( item ? item->theme() : 0 );
 
@@ -329,7 +331,7 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
   ThemeListWidgetItem * item = new ThemeListWidgetItem( mThemeList, emptyTheme );
 
   mThemeList->setCurrentItem( item );
-  mDeleteThemeButton->setEnabled( mThemeList->count() > 1 );
+  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
 
 }
 
@@ -340,13 +342,14 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
     return;
 
   Theme copyTheme( *( item->theme() ) );
+  copyTheme.setReadOnly( false );
   copyTheme.detach(); // detach shared data
   copyTheme.generateUniqueId(); // regenerate id so it becomes different
   copyTheme.setName( uniqueNameForTheme( item->theme()->name() ) );
   item = new ThemeListWidgetItem( mThemeList, copyTheme );
 
   mThemeList->setCurrentItem( item );
-  mDeleteThemeButton->setEnabled( mThemeList->count() > 1 );
+  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
 
 }
 
@@ -362,7 +365,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 
   delete item; // this will trigger themeListCurrentItemChanged()
 
-  mDeleteThemeButton->setEnabled( mThemeList->count() > 1 );
+  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
 }
 
 #include "configurethemesdialog.moc"

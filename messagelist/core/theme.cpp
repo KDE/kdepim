@@ -688,8 +688,8 @@ Theme::Theme()
   mIconSize = gThemeDefaultIconSize;
 }
 
-Theme::Theme( const QString &name, const QString &description )
-  : OptionSet( name, description )
+Theme::Theme( const QString &name, const QString &description, bool readOnly )
+  : OptionSet( name, description, readOnly )
 {
   mGroupHeaderBackgroundMode = AutoColor;
   mGroupHeaderBackgroundStyle = StyledJoinedRect;

@@ -693,7 +693,7 @@ void Manager::createDefaultThemes()
 
   s = new Theme(
       i18nc( "Default theme name", "Classic" ),
-      i18n( "A simple, backward compatible, single row theme" )
+      i18n( "A simple, backward compatible, single row theme" ), true /*readOnly*/
     );
 
     c = new Theme::Column();
@@ -761,7 +761,7 @@ void Manager::createDefaultThemes()
 
   s = new Theme(
       i18n( "Fancy" ),
-      i18n( "A fancy multiline and multi item theme" )
+      i18n( "A fancy multiline and multi item theme" ), true /*readOnly*/
     );
 
     c = new Theme::Column();
@@ -859,6 +859,7 @@ void Manager::createDefaultThemes()
 
   s->setName( i18n( "Fancy with Clickable Status" ) );
   s->setDescription( i18n( "A fancy multiline and multi item theme with a clickable status column" ) );
+  s->setReadOnly( true );
 
     c = new Theme::Column();
     c->setLabel( i18n( "Status" ) );

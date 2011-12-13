@@ -93,6 +93,7 @@ class ThemePreviewWidget : public QTreeWidget
 public:
   explicit ThemePreviewWidget( QWidget * parent );
   ~ThemePreviewWidget();
+  void setReadOnly( bool readOnly);
 
 private:
   // DnD insert position stuff
@@ -133,6 +134,7 @@ private:
   QPoint mDropIndicatorPoint1;
   QPoint mDropIndicatorPoint2;
   bool mFirstShow;
+  bool mReadOnly;
 public:
   QSize sizeHint() const;
   void setTheme( Core::Theme * theme );
@@ -199,15 +201,6 @@ public:
   explicit ThemeEditor( QWidget *parent );
   ~ThemeEditor();
 
-private:
-  Core::Theme * mCurrentTheme; // shallow, may be null!
-
-  // Appearance tab
-  ThemePreviewWidget * mPreviewWidget;
-
-  // Advanced tab
-  KComboBox * mViewHeaderPolicyCombo;
-  KIntSpinBox * mIconSizeSpinBox;
 public:
   /**
    * Sets the option set to be edited.
@@ -229,6 +222,18 @@ private:
 protected slots:
   void slotNameEditTextEdited( const QString &newName );
   void slotIconSizeSpinBoxValueChanged( int val );
+
+private:
+  void setReadOnly( bool readOnly );
+
+  Core::Theme * mCurrentTheme; // shallow, may be null!
+
+  // Appearance tab
+  ThemePreviewWidget * mPreviewWidget;
+
+  // Advanced tab
+  KComboBox * mViewHeaderPolicyCombo;
+  KIntSpinBox * mIconSizeSpinBox;
 };
 
 } // namespace Utils
