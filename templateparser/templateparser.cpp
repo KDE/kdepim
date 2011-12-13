@@ -1127,6 +1127,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           plainBody.append( tmpl[i + 1] );
           i += 1;
         }
+      } else {
+        htmlBody.append( c );
       }
     }
   }
