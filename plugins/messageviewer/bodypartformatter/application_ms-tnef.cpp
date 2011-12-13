@@ -56,9 +56,6 @@ namespace {
 
       if ( !writer ) return Ok;
 
-      if (  bodyPart->defaultDisplay() == MessageViewer::Interface::BodyPart::AsIcon )
-        return AsIcon;
-
       const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
       KTnef::KTNEFParser parser;
       if ( !parser.openFile( fileName ) || !parser.message()) {
@@ -69,7 +66,25 @@ namespace {
       QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
       if ( tnefatts.isEmpty() ) {
         kDebug() << "No attachments found in" << fileName;
-        return Failed;
+
+        QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
+        label = MessageCore::StringUtil::quoteHtmlChars( label, true );
+        const QString comment =
+          MessageCore::StringUtil::quoteHtmlChars(
+            bodyPart->content()->contentDescription()->asUnicodeString(), true );
+        const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
+
+        QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
+                          "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
+        htmlStr += label;
+        if ( !comment.isEmpty() ) {
+          htmlStr += "<br/>" + comment;
+        }
+        htmlStr += "&nbsp;&lt;" + i18nc( "TNEF attachment has no content", "empty" ) + "&gt;";
+        htmlStr += "</td></tr></table>";
+        writer->queue( htmlStr );
+
+        return NeedContent;
       }
 
   //    if ( !showOnlyOneMimePart() ) {
@@ -80,11 +95,7 @@ namespace {
 
         QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
                     "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
-        if ( !fileName.isEmpty() )
-        htmlStr += "<a href=\"" + bodyPart->nodeHelper()->asHREF( bodyPart->content(), "body" ) + "\">"
-                    + label + "</a>";
-        else
-          htmlStr += label;
+        htmlStr += label;
         if ( !comment.isEmpty() )
           htmlStr += "<br/>" + comment;
         htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
@@ -127,7 +138,13 @@ namespace {
       return idx == 0 ? "application" : 0 ;
     }
     const char * subtype( int idx ) const {
-      return idx == 0 ? "ms-tnef" : 0 ;
+      if ( idx == 0 ) {
+        return "ms-tnef";
+      } else if ( idx == 1 ) {
+        return "vnd.ms-tnef";
+      } else {
+        return 0;
+      }
     }
 
     const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }
