@@ -85,12 +85,14 @@ QList< QPair< QString, int > > SortOrder::enumerateGroupSortingOptions( Aggregat
     ret.append( QPair< QString, int >( i18n( "None (Storage Order)" ), SortOrder::NoGroupSorting ) );
     ret.append( QPair< QString, int >( i18n( "by Date/Time of Most Recent Message in Group" ), SortOrder::SortGroupsByDateTimeOfMostRecent ) );
   }
+
   if ( g == Aggregation::GroupBySenderOrReceiver )
     ret.append( QPair< QString, int >( i18n( "by Sender/Receiver" ), SortOrder::SortGroupsBySenderOrReceiver ) );
-  if ( g == Aggregation::GroupBySender )
+  else if ( g == Aggregation::GroupBySender )
     ret.append( QPair< QString, int >( i18n( "by Sender" ), SortOrder::SortGroupsBySender ) );
-  if ( g == Aggregation::GroupByReceiver )
+  else if ( g == Aggregation::GroupByReceiver )
     ret.append( QPair< QString, int >( i18n( "by Receiver" ), SortOrder::SortGroupsByReceiver ) );
+
   return ret;
 }
 
@@ -98,10 +100,9 @@ QList< QPair< QString, int > > SortOrder::enumerateGroupSortDirectionOptions( Ag
                                                                               GroupSorting gs )
 {
   QList< QPair< QString, int > > ret;
-  if ( g == Aggregation::NoGrouping )
+  if ( g == Aggregation::NoGrouping || gs == SortOrder::NoGroupSorting)
     return ret;
-  if ( gs == SortOrder::NoGroupSorting )
-    return ret;
+
   if ( gs == SortOrder::SortGroupsByDateTimeOfMostRecent )
   {
     ret.append( QPair< QString, int >( i18n( "Least Recent on Top" ), SortOrder::Ascending ) );

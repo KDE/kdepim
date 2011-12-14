@@ -398,7 +398,7 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
   if ( childrenMatch )
   {
     mView->setRowHidden( thisIndex.row(), parentIndex, false );
-#if 0
+
     // Expanding parents of matching items is an EXTREMELY desiderable feature... but...
     //
     // FIXME TrollTech: THIS IS PATHETICALLY SLOW
@@ -433,7 +433,6 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
 
     if ( !mView->isExpanded( thisIndex ) )
       mView->expand( thisIndex );
-#endif
     return true;
   }
 
