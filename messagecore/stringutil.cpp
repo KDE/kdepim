@@ -1060,15 +1060,15 @@ QString stripOffPrefixes( const QString &subject )
     regExp.setPattern( regExpPattern );
   }
 
-  if ( !regExp.isValid() ) {
-    kWarning() << "bigRegExp = \""
-               << bigRegExp << "\"\n"
-               << "prefix regexp is invalid!";
-  } else {
+  if( regExp.isValid() ) {
     QString tmp = subject;
     if ( regExp.indexIn( tmp ) == 0 ) {
-      return tmp.replace( 0, regExp.matchedLength(), QString() );
-    }
+      return tmp.remove( 0, regExp.matchedLength() );
+    } 
+  } else {
+   kWarning() << "bigRegExp = \""
+               << bigRegExp << "\"\n"
+               << "prefix regexp is invalid!";
   }
 
   return subject;
