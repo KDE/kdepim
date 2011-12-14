@@ -288,6 +288,7 @@ QSize ThemePreviewWidget::sizeHint() const
 void ThemePreviewWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
+  header()->setMovable(!readOnly);
 }
 
 void ThemePreviewWidget::applyThemeColumnWidths()
