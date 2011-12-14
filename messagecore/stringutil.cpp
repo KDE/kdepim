@@ -1054,6 +1054,7 @@ QString stripOffPrefixes( const QString &subject )
   static QString regExpPattern;
   static QRegExp regExp;
 
+  regExp.setCaseSensitivity( Qt::CaseInsensitive );
   if ( regExpPattern != bigRegExp ) {
     // the prefixes have changed, so update the regexp
     regExpPattern = bigRegExp;
