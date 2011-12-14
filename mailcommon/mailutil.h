@@ -109,6 +109,7 @@ namespace Util {
 
     MAILCOMMON_EXPORT Akonadi::Collection parentCollectionFromItem(const Akonadi::Item& item);
     MAILCOMMON_EXPORT QString realFolderPath( const QString& path );
+    MAILCOMMON_EXPORT QColor defaultQuotaColor();
 }
 
 }

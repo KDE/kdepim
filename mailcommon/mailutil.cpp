@@ -70,6 +70,7 @@
 #include <KJob>
 #include <kio/jobuidelegate.h>
 #include <KLocale>
+#include <KColorScheme>
 
 #include <stdlib.h>
 
@@ -512,4 +513,10 @@ QString MailCommon::Util::realFolderPath( const QString& path )
   if ( !realPath.isEmpty() && ( realPath.at( 0 ) == '.' ) )
     realPath.remove( 0, 1 ); //remove first "."
   return realPath;
+}
+
+QColor MailCommon::Util::defaultQuotaColor()
+{
+    KColorScheme scheme( QPalette::Active, KColorScheme::View );
+    return scheme.foreground( KColorScheme::NegativeText ).color();
 }

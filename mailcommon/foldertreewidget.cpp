@@ -22,6 +22,7 @@
 #include "foldertreewidgetproxymodel.h"
 #include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
+#include "mailutil.h"
 
 #include "messageviewer/globalsettings.h"
 #include "messagecore/globalsettings.h"
@@ -318,7 +319,7 @@ void FolderTreeWidget::quotaWarningParameters( const QColor &color, qreal thresh
 
 void FolderTreeWidget::readQuotaConfig()
 {
-  QColor quotaColor;
+  QColor quotaColor = MailCommon::Util::defaultQuotaColor();
   qreal threshold = 100;
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KConfigGroup readerConfig( KernelIf->config(), "Reader" );
