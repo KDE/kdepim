@@ -102,18 +102,13 @@ void ThemeComboBox::selectDefault()
   d->setCurrentTheme( defaultTheme );
 }
 
-static bool themeNameLessThan( const Theme * lhs, const Theme * rhs )
-{
-  return lhs->name() < rhs->name();
-}
-
 void ThemeComboBoxPrivate::slotLoadThemes()
 {
   q->clear();
 
   // Get all message list themes and sort them into alphabetical order.
   QList< Theme * > themes = Manager::instance()->themes().values();
-  qSort( themes.begin(), themes.end(), themeNameLessThan );
+  qSort( themes.begin(), themes.end(), MessageList::Core::Theme::compareName );
 
   foreach( const Theme * theme, themes )
   {
