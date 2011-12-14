@@ -443,17 +443,9 @@ void Widget::themeMenuAboutToShow()
 
   QActionGroup * grp = new QActionGroup( menu );
 
-  const QHash< QString, Theme * > & themes = Manager::instance()->themes();
+  QList< Theme * > sortedThemes = Manager::instance()->themes().values();
 
   QAction * act;
-
-  QList<Theme * > sortedThemes;
-
-  QHash< QString, Theme * >::ConstIterator end ( themes.constEnd() );
-  for ( QHash< QString, Theme * >::ConstIterator ci = themes.constBegin(); ci != end; ++ci )
-  {
-      sortedThemes.append( *ci );
-  }
 
   qSort(sortedThemes.begin(),sortedThemes.end(),MessageList::Core::Theme::compareName);
 
@@ -538,17 +530,9 @@ void Widget::aggregationMenuAboutToShow()
 
   QActionGroup * grp = new QActionGroup( menu );
 
-  const QHash< QString, Aggregation * > & aggregations = Manager::instance()->aggregations();
+  QList< Aggregation * > sortedAggregations = Manager::instance()->aggregations().values();
 
   QAction * act;
-
-  QList< Aggregation * > sortedAggregations;
-
-  QHash< QString, Aggregation * >::ConstIterator end = aggregations.constEnd();
-  for ( QHash< QString, Aggregation * >::ConstIterator ci = aggregations.constBegin(); ci != end; ++ci )
-  {
-      sortedAggregations.append(*ci );
-  }
 
   qSort(sortedAggregations.begin(),sortedAggregations.end(), MessageList::Core::Aggregation::compareName);
 

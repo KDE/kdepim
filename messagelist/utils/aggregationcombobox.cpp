@@ -103,18 +103,13 @@ void AggregationComboBox::selectDefault()
   d->setCurrentAggregation( defaultAggregation );
 }
 
-static bool aggregationNameLessThan( const Aggregation * lhs, const Aggregation * rhs )
-{
-  return lhs->name() < rhs->name();
-}
-
 void AggregationComboBoxPrivate::slotLoadAggregations()
 {
   q->clear();
 
   // Get all message list aggregations and sort them into alphabetical order.
   QList< Aggregation * > aggregations = Manager::instance()->aggregations().values();
-  qSort( aggregations.begin(), aggregations.end(), aggregationNameLessThan );
+  qSort( aggregations.begin(), aggregations.end(), MessageList::Core::Aggregation::compareName );
 
   foreach( const Aggregation * aggregation, aggregations )
   {
