@@ -21,6 +21,8 @@
 
 #include <messagelist/messagelist_export.h>
 #include <QString>
+#include <QColor>
+
 namespace MessageList
 {
 namespace Util {
@@ -35,6 +37,9 @@ namespace Util {
   MESSAGELIST_EXPORT QString setForStorageModelConfigName();
   MESSAGELIST_EXPORT QString storageModelSelectedMessageGroup();
   MESSAGELIST_EXPORT void deleteConfig( const QString& collectionId );
+  MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
+  MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
+  MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
 
 }
 }

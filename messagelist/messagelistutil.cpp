@@ -96,3 +96,18 @@ void MessageList::Util::deleteConfig( const QString& collectionId )
   storageModelAggregation.deleteEntry( collectionId + setForStorageModelConfigName() );
 
 }
+
+QColor MessageList::Util::unreadDefaultMessageColor()
+{
+    return QColor( "blue" );
+}
+
+QColor MessageList::Util::importantDefaultMessageColor()
+{
+    return QColor( 0x0, 0x7F, 0x0 );
+}
+
+QColor MessageList::Util::todoDefaultMessageColor()
+{
+    return QColor( 0x0, 0x98, 0x0 );
+}

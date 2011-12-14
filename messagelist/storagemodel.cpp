@@ -40,6 +40,7 @@
 
 #include "core/messageitem.h"
 #include "core/settings.h"
+#include "messagelistutil.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -447,9 +448,9 @@ void StorageModel::Private::loadSettings()
   Core::Settings *settings = Core::Settings::self();
 
   if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-    Core::MessageItem::setUnreadMessageColor( QColor( "blue" ) );
-    Core::MessageItem::setImportantMessageColor( QColor( 0x0, 0x7F, 0x0 ) );
-    Core::MessageItem::setToDoMessageColor( QColor( 0x0, 0x98, 0x0 ) );
+    Core::MessageItem::setUnreadMessageColor( MessageList::Util::unreadDefaultMessageColor() );
+    Core::MessageItem::setImportantMessageColor( MessageList::Util::importantDefaultMessageColor() );
+    Core::MessageItem::setToDoMessageColor( MessageList::Util::todoDefaultMessageColor() );
   } else {
     Core::MessageItem::setUnreadMessageColor( settings->unreadMessageColor() );
     Core::MessageItem::setImportantMessageColor( settings->importantMessageColor() );
