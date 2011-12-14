@@ -102,6 +102,7 @@ Comment[x-test]=xxConfiguration of S/MIME certificate validation optionsxx
 Comment[zh_CN]=配置 S/MIME 证书校验选项
 Comment[zh_TW]=設定 S/MIME 憑證確認選項
 X-KDE-Keywords=smime,validation,kleopatra,signing,encryption
+X-KDE-Keywords[de]=SMIME,Überprüfung,Kleopatra,signieren,verschlüsseln
 X-KDE-Keywords[es]=smime, validación, kleopatra, firmado, cifrado
 X-KDE-Keywords[hu]=smime,hitelesítés,kleopatra,aláírás,titkosítás
 X-KDE-Keywords[ia]=smime,validation,kleopatra,signante,cryptation
