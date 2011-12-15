@@ -23,10 +23,10 @@
 #include "mailcommon_export.h"
 namespace MailCommon {
 
-class MAILCOMMON_EXPORT ExpirationCollectionAttribute : public Akonadi::Attribute
+class MAILCOMMON_EXPORT ExpireCollectionAttribute : public Akonadi::Attribute
 {
 public:
-  ExpirationCollectionAttribute();
+  ExpireCollectionAttribute();
   /*
    * Define the possible units to use for measuring message expiry.
    * expireNever is used to switch off message expiry, and expireMaxUnits
@@ -40,9 +40,9 @@ public:
   virtual QByteArray serialized() const;
   virtual void deserialize( const QByteArray &data );
 
-  static int daysToExpire( int number, ExpirationCollectionAttribute::ExpireUnits units );
+  static int daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units );
 
-  static ExpirationCollectionAttribute *expirationCollectionAttribute( const Akonadi::Collection& collection, bool &mustDeleteExpirationAttribute );
+  static ExpireCollectionAttribute *expirationCollectionAttribute( const Akonadi::Collection& collection, bool &mustDeleteExpirationAttribute );
 
   void loadFromConfig( const Akonadi::Collection& collection );
   void daysToExpire(int& unreadDays, int& readDays);
@@ -123,9 +123,9 @@ private:
   bool         mExpireMessages;          // true if old messages are expired
   int          mUnreadExpireAge;         // Given in unreadExpireUnits
   int          mReadExpireAge;           // Given in readExpireUnits
-  ExpirationCollectionAttribute::ExpireUnits  mUnreadExpireUnits;
-  ExpirationCollectionAttribute::ExpireUnits  mReadExpireUnits;
-  ExpirationCollectionAttribute::ExpireAction mExpireAction;
+  ExpireCollectionAttribute::ExpireUnits  mUnreadExpireUnits;
+  ExpireCollectionAttribute::ExpireUnits  mReadExpireUnits;
+  ExpireCollectionAttribute::ExpireAction mExpireAction;
   Akonadi::Collection::Id mExpireToFolderId;
 };
 

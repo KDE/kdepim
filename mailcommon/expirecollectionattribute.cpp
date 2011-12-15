@@ -15,14 +15,14 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "expirationcollectionattribute.h"
+#include "expirecollectionattribute.h"
 #include "foldercollection.h"
 #include "mailkernel.h"
 #include <KConfigGroup>
 
 using namespace MailCommon;
 
-ExpirationCollectionAttribute::ExpirationCollectionAttribute()
+ExpireCollectionAttribute::ExpireCollectionAttribute()
   : mExpireMessages( false ),
     mUnreadExpireAge( 28 ),
     mReadExpireAge( 14 ),
@@ -33,14 +33,14 @@ ExpirationCollectionAttribute::ExpirationCollectionAttribute()
 {
 }
 
-QByteArray ExpirationCollectionAttribute::type() const
+QByteArray ExpireCollectionAttribute::type() const
 {
   return "expirationcollectionattribute";
 }
 
-Akonadi::Attribute *ExpirationCollectionAttribute::clone() const
+Akonadi::Attribute *ExpireCollectionAttribute::clone() const
 {
-  ExpirationCollectionAttribute *expireAttr = new ExpirationCollectionAttribute();
+  ExpireCollectionAttribute *expireAttr = new ExpireCollectionAttribute();
   expireAttr->setAutoExpire(mExpireMessages);
   expireAttr->setUnreadExpireAge( mUnreadExpireAge );
   expireAttr->setUnreadExpireUnits( mUnreadExpireUnits );
@@ -51,7 +51,7 @@ Akonadi::Attribute *ExpirationCollectionAttribute::clone() const
   return expireAttr;
 }
 
-void ExpirationCollectionAttribute::loadFromConfig( const Akonadi::Collection& collection )
+void ExpireCollectionAttribute::loadFromConfig( const Akonadi::Collection& collection )
 {
   KConfigGroup configGroup( KernelIf->config(), MailCommon::FolderCollection::configGroupName(collection) );
   if ( configGroup.hasKey( "ExpireMessages" ) ) {
@@ -67,96 +67,96 @@ void ExpirationCollectionAttribute::loadFromConfig( const Akonadi::Collection& c
 }
 
 
-void ExpirationCollectionAttribute::setAutoExpire( bool enabled )
+void ExpireCollectionAttribute::setAutoExpire( bool enabled )
 {
   mExpireMessages = enabled;
 }
-bool ExpirationCollectionAttribute::isAutoExpire() const
+bool ExpireCollectionAttribute::isAutoExpire() const
 {
   return mExpireMessages;
 }
 
 
-void ExpirationCollectionAttribute::setUnreadExpireAge( int age )
+void ExpireCollectionAttribute::setUnreadExpireAge( int age )
 {
   if( age >= 0 && age != mUnreadExpireAge ) {
     mUnreadExpireAge = age;
   }
 }
 
-int ExpirationCollectionAttribute::unreadExpireAge() const
+int ExpireCollectionAttribute::unreadExpireAge() const
 {
   return mUnreadExpireAge;
 }
 
 
-void ExpirationCollectionAttribute::setUnreadExpireUnits( ExpireUnits units )
+void ExpireCollectionAttribute::setUnreadExpireUnits( ExpireUnits units )
 {
   if (units >= ExpireNever && units < ExpireMaxUnits) {
     mUnreadExpireUnits = units;
   }
 }
 
-void ExpirationCollectionAttribute::setReadExpireAge( int age )
+void ExpireCollectionAttribute::setReadExpireAge( int age )
 {
   if( age >= 0 && age != mReadExpireAge ) {
     mReadExpireAge = age;
   }
 }
 
-int ExpirationCollectionAttribute::readExpireAge() const
+int ExpireCollectionAttribute::readExpireAge() const
 {
   return mReadExpireAge;
 }
 
 
-void ExpirationCollectionAttribute::setReadExpireUnits( ExpireUnits units )
+void ExpireCollectionAttribute::setReadExpireUnits( ExpireUnits units )
 {
   if (units >= ExpireNever && units <= ExpireMaxUnits) {
     mReadExpireUnits = units;
   }
 }
 
-void ExpirationCollectionAttribute::setExpireAction( ExpireAction a )
+void ExpireCollectionAttribute::setExpireAction( ExpireAction a )
 {
   mExpireAction = a;
 }
 
-ExpirationCollectionAttribute::ExpireAction ExpirationCollectionAttribute::expireAction() const
+ExpireCollectionAttribute::ExpireAction ExpireCollectionAttribute::expireAction() const
 {
   return mExpireAction;
 }
 
 
-void ExpirationCollectionAttribute::setExpireToFolderId( Akonadi::Collection::Id id )
+void ExpireCollectionAttribute::setExpireToFolderId( Akonadi::Collection::Id id )
 {
   mExpireToFolderId = id;
 }
 
-Akonadi::Collection::Id ExpirationCollectionAttribute::expireToFolderId() const
+Akonadi::Collection::Id ExpireCollectionAttribute::expireToFolderId() const
 {
   return mExpireToFolderId;
 }
 
 
-ExpirationCollectionAttribute::ExpireUnits ExpirationCollectionAttribute::unreadExpireUnits() const
+ExpireCollectionAttribute::ExpireUnits ExpireCollectionAttribute::unreadExpireUnits() const
 {
   return mUnreadExpireUnits;
 }
 
-ExpirationCollectionAttribute::ExpireUnits ExpirationCollectionAttribute::readExpireUnits() const
+ExpireCollectionAttribute::ExpireUnits ExpireCollectionAttribute::readExpireUnits() const
 {
   return mReadExpireUnits;
 }
 
-int ExpirationCollectionAttribute::daysToExpire( int number, ExpirationCollectionAttribute::ExpireUnits units )
+int ExpireCollectionAttribute::daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units )
 {
   switch (units) {
-  case ExpirationCollectionAttribute::ExpireDays: // Days
+  case ExpireCollectionAttribute::ExpireDays: // Days
     return number;
-  case ExpirationCollectionAttribute::ExpireWeeks: // Weeks
+  case ExpireCollectionAttribute::ExpireWeeks: // Weeks
     return number * 7;
-  case ExpirationCollectionAttribute::ExpireMonths: // Months - this could be better rather than assuming 31day months.
+  case ExpireCollectionAttribute::ExpireMonths: // Months - this could be better rather than assuming 31day months.
     return number * 31;
   default: // this avoids a compiler warning (not handled enumeration values)
     ;
@@ -164,19 +164,19 @@ int ExpirationCollectionAttribute::daysToExpire( int number, ExpirationCollectio
   return -1;
 }
 
-void ExpirationCollectionAttribute::daysToExpire(int& unreadDays, int& readDays) {
-  unreadDays = ExpirationCollectionAttribute::daysToExpire( unreadExpireAge(), unreadExpireUnits() );
-  readDays = ExpirationCollectionAttribute::daysToExpire( readExpireAge(), readExpireUnits() );
+void ExpireCollectionAttribute::daysToExpire(int& unreadDays, int& readDays) {
+  unreadDays = ExpireCollectionAttribute::daysToExpire( unreadExpireAge(), unreadExpireUnits() );
+  readDays = ExpireCollectionAttribute::daysToExpire( readExpireAge(), readExpireUnits() );
 }
 
-ExpirationCollectionAttribute* ExpirationCollectionAttribute::expirationCollectionAttribute( const Akonadi::Collection& collection, bool &mustDeleteExpirationAttribute )
+ExpireCollectionAttribute* ExpireCollectionAttribute::expirationCollectionAttribute( const Akonadi::Collection& collection, bool &mustDeleteExpirationAttribute )
 {
-  MailCommon::ExpirationCollectionAttribute *attr = 0;
-  if ( collection.hasAttribute<MailCommon::ExpirationCollectionAttribute>() ) {
-    attr = collection.attribute<MailCommon::ExpirationCollectionAttribute>();
+  MailCommon::ExpireCollectionAttribute *attr = 0;
+  if ( collection.hasAttribute<MailCommon::ExpireCollectionAttribute>() ) {
+    attr = collection.attribute<MailCommon::ExpireCollectionAttribute>();
     mustDeleteExpirationAttribute = false;
   } else {
-    attr = new MailCommon::ExpirationCollectionAttribute();
+    attr = new MailCommon::ExpireCollectionAttribute();
     attr->loadFromConfig( collection );
     mustDeleteExpirationAttribute = true;
   }
@@ -184,7 +184,7 @@ ExpirationCollectionAttribute* ExpirationCollectionAttribute::expirationCollecti
 }
 
 
-QByteArray ExpirationCollectionAttribute::serialized() const
+QByteArray ExpireCollectionAttribute::serialized() const
 {
   QByteArray result;
   QDataStream s( &result, QIODevice::WriteOnly );
@@ -200,20 +200,20 @@ QByteArray ExpirationCollectionAttribute::serialized() const
   return result;
 }
 
-void ExpirationCollectionAttribute::deserialize( const QByteArray &data )
+void ExpireCollectionAttribute::deserialize( const QByteArray &data )
 {
   QDataStream s( data );
   s >> mExpireToFolderId;
   int val;
   s >> val;
-  mExpireAction = ( ExpirationCollectionAttribute::ExpireAction )val;
+  mExpireAction = ( ExpireCollectionAttribute::ExpireAction )val;
   int valUnit;
   s >> valUnit;
-  mReadExpireUnits =  ( ExpirationCollectionAttribute::ExpireUnits )valUnit;
+  mReadExpireUnits =  ( ExpireCollectionAttribute::ExpireUnits )valUnit;
   s >> mReadExpireAge;
   int valUnitUread;
   s >> valUnitUread;
-  mUnreadExpireUnits =  ( ExpirationCollectionAttribute::ExpireUnits )valUnitUread;
+  mUnreadExpireUnits =  ( ExpireCollectionAttribute::ExpireUnits )valUnitUread;
   s >> mUnreadExpireAge;
   s >> mExpireMessages;
 }

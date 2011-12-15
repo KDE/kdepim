@@ -19,7 +19,7 @@
 #include "foldercollectionmonitor.h"
 #include "mailutil.h"
 #include "foldercollection.h"
-#include "expirationcollectionattribute.h"
+#include "expirecollectionattribute.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
@@ -78,7 +78,7 @@ void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *mod
     if ( !collection.isValid() || Util::isVirtualCollection( collection ) )
       continue;
     bool mustDeleteExpirationAttribute = false;
-    MailCommon::ExpirationCollectionAttribute *attr = MailCommon::ExpirationCollectionAttribute::expirationCollectionAttribute( collection, mustDeleteExpirationAttribute );
+    MailCommon::ExpireCollectionAttribute *attr = MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute( collection, mustDeleteExpirationAttribute );
     if ( attr->isAutoExpire() ) {
        MailCommon::Util::expireOldMessages( collection,immediate );
     }
