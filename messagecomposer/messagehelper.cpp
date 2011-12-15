@@ -201,20 +201,21 @@ QString replacePrefixes( const QString& str, const QStringList &prefixRegExps,
   QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
                       .arg( prefixRegExps.join(QString::fromLatin1(")|(?:")) );
   QRegExp rx( bigRegExp, Qt::CaseInsensitive );
-  if ( !rx.isValid() ) {
+  if ( rx.isValid() ) {
+      QString tmp = str;
+      if ( rx.indexIn( tmp ) == 0 ) {
+        recognized = true;
+        if ( replace )
+          return tmp.replace( 0, rx.matchedLength(), newPrefix + QString::fromLatin1( " " ) );
+      }
+  } else {
     kWarning() << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
     // try good ole Re/Fwd:
     recognized = str.startsWith( newPrefix );
-  } else { // valid rx
-    QString tmp = str;
-    if ( rx.indexIn( tmp ) == 0 ) {
-      recognized = true;
-      if ( replace )
-        return tmp.replace( 0, rx.matchedLength(), newPrefix + QString::fromLatin1( " " ) );
-    }
   }
+
   if ( !recognized )
     return newPrefix + QString::fromLatin1(" ") + str;
   else
