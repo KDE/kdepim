@@ -41,15 +41,8 @@ public:
 
   ~FolderCollection();
 
-  /*
-   * Define the possible units to use for measuring message expiry.
-   * expireNever is used to switch off message expiry, and expireMaxUnits
-   * must always be the last in the list (for bounds checking).
-   */
-  enum ExpireUnits { ExpireNever, ExpireDays, ExpireWeeks, ExpireMonths, ExpireMaxUnits };
-
   Akonadi::Collection collection() const;
-
+  void setCollection( const Akonadi::Collection& collection);
 
   static QString configGroupName(const Akonadi::Collection& col);
 
@@ -80,9 +73,6 @@ public:
 
   Akonadi::CollectionStatistics statistics() const;
 
-  enum ExpireAction { ExpireDelete, ExpireMove };
-
-
   const KShortcut &shortcut() const { return mShortcut; }
 
   void setShortcut( const KShortcut& );
@@ -95,79 +85,6 @@ public:
   void setIdentity(uint identity);
   uint identity() const;
 
-  /**
-   * Set whether this folder automatically expires messages.
-   */
-  void setAutoExpire(bool enabled);
-
-  /**
-   * Does this folder automatically expire old messages?
-   */
-  bool isAutoExpire() const { return mExpireMessages; }
-
-  /**
-   * Set the maximum age for unread messages in this folder.
-   * Age should not be negative. Units are set using
-   * setUnreadExpireUnits().
-   */
-  void setUnreadExpireAge(int age);
-
-  /**
-   * Set units to use for expiry of unread messages.
-   * Values are 1 = days, 2 = weeks, 3 = months.
-   */
-  void setUnreadExpireUnits(ExpireUnits units);
-
-  /**
-   * Set the maximum age for read messages in this folder.
-   * Age should not be negative. Units are set using
-   * setReadExpireUnits().
-   */
-  void setReadExpireAge(int age);
-
-  /**
-   * Set units to use for expiry of read messages.
-   * Values are 1 = days, 2 = weeks, 3 = months.
-   */
-  void setReadExpireUnits(ExpireUnits units);
-
-  /**
-   * Get the age at which unread messages are expired.
-   * Units are determined by getUnreadExpireUnits().
-   */
-  int getUnreadExpireAge() const { return mUnreadExpireAge; }
-
-  /**
-   * Get the age at which read messages are expired.
-   * Units are determined by getReadExpireUnits().
-   */
-  int getReadExpireAge() const { return mReadExpireAge; }
-
-  /**
-   * What should expiry do? Delete or move to another folder?
-   */
-  ExpireAction expireAction() const { return mExpireAction; }
-  void setExpireAction( ExpireAction a );
-
-  /**
-   * If expiry should move to folder, return the ID of that folder
-   */
-  Akonadi::Collection::Id expireToFolderId() const { return mExpireToFolderId; }
-  void setExpireToFolderId( Akonadi::Collection::Id id );
-
-  /**
-   * Units getUnreadExpireAge() is returned in.
-   * 1 = days, 2 = weeks, 3 = months.
-   */
-  ExpireUnits getUnreadExpireUnits() const { return mUnreadExpireUnits; }
-
-  /**
-   * Units getReadExpireAge() is returned in.
-   * 1 = days, 2 = weeks, 3 = months.
-   */
-  ExpireUnits getReadExpireUnits() const { return mReadExpireUnits; }
-
-
 
   /** Returns true if this folder is associated with a mailing-list. */
   void setMailingListEnabled( bool enabled );
@@ -177,7 +94,6 @@ public:
   MailingList mailingList() const
   { return mMailingList; }
 
-  void daysToExpire( int& unreadDays, int& readDays );
 
   /**
    * Returns true if the replies to mails from this folder should be
@@ -201,8 +117,6 @@ public:
 
   QString mailingListPostAddress() const;
 
-  void expireOldMessages( bool immediate );
-
 protected slots:
   void slotIdentitiesChanged();
 
@@ -211,13 +125,6 @@ private:
   explicit FolderCollection( const Akonadi::Collection& col, bool writeconfig );
 
   Akonadi::Collection mCollection;
-  bool         mExpireMessages;          // true if old messages are expired
-  int          mUnreadExpireAge;         // Given in unreadExpireUnits
-  int          mReadExpireAge;           // Given in readExpireUnits
-  ExpireUnits  mUnreadExpireUnits;
-  ExpireUnits  mReadExpireUnits;
-  ExpireAction mExpireAction;
-  Akonadi::Collection::Id mExpireToFolderId;
 
   /** Mailing list attributes */
   bool                mMailingListEnabled;

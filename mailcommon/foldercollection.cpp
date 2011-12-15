@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
   This file is part of KMail, the KDE mail client.
-  Copyright (c) 2009 Montel Laurent <montel@kde.org>
+  Copyright (c) 2009,2010,2011 Montel Laurent <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -61,12 +61,6 @@ QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi:
 
 FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writeconfig )
   : mCollection( col ),
-    mExpireMessages( false ),
-    mUnreadExpireAge( 28 ),
-    mReadExpireAge( 14 ),
-    mUnreadExpireUnits( ExpireNever ),
-    mReadExpireUnits( ExpireNever ),
-    mExpireAction( ExpireDelete ),
     mIgnoreNewMail( false ),
     mPutRepliesInSameFolder( false ),
     mHideInSelectionDialog( false ),
@@ -148,6 +142,12 @@ Akonadi::Collection FolderCollection::collection() const
   return mCollection;
 }
 
+void FolderCollection::setCollection( const Akonadi::Collection& collection)
+{
+  mCollection = collection;
+}
+
+
 void FolderCollection::slotIdentitiesChanged()
 {
   uint defaultIdentity =  KernelIf->identityManager()->defaultIdentity().uoid();
@@ -171,15 +171,6 @@ QString FolderCollection::configGroupName(const Akonadi::Collection& col)
 void FolderCollection::readConfig()
 {
   const KConfigGroup configGroup( KernelIf->config(), configGroupName(mCollection) );
-  mExpireMessages = configGroup.readEntry( "ExpireMessages", false );
-  mReadExpireAge = configGroup.readEntry( "ReadExpireAge", 3 );
-  mReadExpireUnits = (ExpireUnits)configGroup.readEntry( "ReadExpireUnits", (int)ExpireMonths );
-  mUnreadExpireAge = configGroup.readEntry( "UnreadExpireAge", 12 );
-  mUnreadExpireUnits = (ExpireUnits)
-      configGroup.readEntry( "UnreadExpireUnits", (int)ExpireNever );
-  mExpireAction = configGroup.readEntry( "ExpireAction", "Delete") == QLatin1String( "Move" ) ? ExpireMove : ExpireDelete;
-  mExpireToFolderId = configGroup.readEntry( "ExpireToFolder", -1 );
-
   mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
   mMailingList.readConfig( configGroup );
 
@@ -209,13 +200,6 @@ bool FolderCollection::isValid() const
 void FolderCollection::writeConfig() const
 {
   KConfigGroup configGroup( KernelIf->config(), configGroupName(mCollection) );
-  configGroup.writeEntry("ExpireMessages", mExpireMessages);
-  configGroup.writeEntry("ReadExpireAge", mReadExpireAge);
-  configGroup.writeEntry("ReadExpireUnits", (int)mReadExpireUnits);
-  configGroup.writeEntry("UnreadExpireAge", mUnreadExpireAge);
-  configGroup.writeEntry("UnreadExpireUnits", (int)mUnreadExpireUnits);
-  configGroup.writeEntry("ExpireAction", mExpireAction == ExpireDelete ? "Delete" : "Move");
-  configGroup.writeEntry("ExpireToFolder", mExpireToFolderId);
 
   configGroup.writeEntry("MailingListEnabled", mMailingListEnabled);
   mMailingList.writeConfig( configGroup );
@@ -306,46 +290,6 @@ uint FolderCollection::identity() const
 }
 
 
-void FolderCollection::setAutoExpire( bool enabled )
-{
-  if( enabled != mExpireMessages ) {
-    mExpireMessages = enabled;
-    writeConfig();
-  }
-}
-
-void FolderCollection::setUnreadExpireAge( int age )
-{
-  if( age >= 0 && age != mUnreadExpireAge ) {
-    mUnreadExpireAge = age;
-    writeConfig();
-  }
-}
-
-void FolderCollection::setUnreadExpireUnits( ExpireUnits units )
-{
-  if (units >= ExpireNever && units < ExpireMaxUnits) {
-    mUnreadExpireUnits = units;
-    writeConfig();
-  }
-}
-
-void FolderCollection::setReadExpireAge( int age )
-{
-  if( age >= 0 && age != mReadExpireAge ) {
-    mReadExpireAge = age;
-    writeConfig();
-  }
-}
-
-void FolderCollection::setReadExpireUnits( ExpireUnits units )
-{
-  if (units >= ExpireNever && units <= ExpireMaxUnits) {
-    mReadExpireUnits = units;
-    writeConfig();
-  }
-}
-
 QString FolderCollection::mailingListPostAddress() const
 {
   if ( mMailingList.features() & MailingList::Post ) {
@@ -363,22 +307,6 @@ QString FolderCollection::mailingListPostAddress() const
   return QString();
 }
 
-void FolderCollection::setExpireAction( ExpireAction a )
-{
-  if ( a != mExpireAction ) {
-    mExpireAction = a;
-    writeConfig();
-  }
-}
-
-void FolderCollection::setExpireToFolderId( Akonadi::Collection::Id id )
-{
-  if ( id != mExpireToFolderId ) {
-    mExpireToFolderId = id;
-    writeConfig();
-  }
-}
-
 void FolderCollection::setMailingListEnabled( bool enabled )
 {
   mMailingListEnabled = enabled;
@@ -389,32 +317,6 @@ void FolderCollection::setMailingList( const MailingList& mlist )
 {
   mMailingList = mlist;
   writeConfig();
-}
-
-static int daysToExpire( int number, FolderCollection::ExpireUnits units )
-{
-  switch (units) {
-  case FolderCollection::ExpireDays: // Days
-    return number;
-  case FolderCollection::ExpireWeeks: // Weeks
-    return number * 7;
-  case FolderCollection::ExpireMonths: // Months - this could be better rather than assuming 31day months.
-    return number * 31;
-  default: // this avoids a compiler warning (not handled enumeration values)
-    ;
-  }
-  return -1;
-}
-
-void FolderCollection::daysToExpire(int& unreadDays, int& readDays) {
-  unreadDays = MailCommon::daysToExpire( getUnreadExpireAge(), getUnreadExpireUnits() );
-  readDays = MailCommon::daysToExpire( getReadExpireAge(), getReadExpireUnits() );
-}
-
-void FolderCollection::expireOldMessages( bool immediate )
-{
-  ScheduledExpireTask* task = new ScheduledExpireTask(mCollection, immediate);
-  KernelIf->jobScheduler()->registerTask( task );
 }
 
 }

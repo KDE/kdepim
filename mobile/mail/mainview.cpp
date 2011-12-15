@@ -1589,7 +1589,7 @@ void MainView::showExpireProperties()
   const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
   Q_ASSERT( collection.isValid() );
 
-  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, MailCommon::FolderCollection::forCollection( collection ) );
+  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, collection );
   dlg->show();
 }
 

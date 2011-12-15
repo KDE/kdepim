@@ -1,5 +1,6 @@
 
 #include "expirypropertiesdialog.h"
+#include "expirationcollectionattribute.h"
 #include "folderrequester.h"
 #include "foldercollection.h"
 #include "mailutil.h"
@@ -17,6 +18,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <akonadi/collection.h>
+#include <akonadi/collectionmodifyjob.h>
 
 using namespace MailCommon;
 
@@ -27,7 +29,7 @@ using namespace MailCommon;
  */
 ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   QWidget *tree,
-  const QSharedPointer<FolderCollection> &folder )
+  const Akonadi::Collection &folder )
     : KDialog( tree ),
       mFolder( folder )
 {
@@ -115,31 +117,33 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   note->setWordWrap( true );
 
   globalVBox->addWidget( note );
+  bool mustDeleteExpirationAttribute = false;
+  MailCommon::ExpirationCollectionAttribute *attr = MailCommon::ExpirationCollectionAttribute::expirationCollectionAttribute( mFolder, mustDeleteExpirationAttribute );
 
   // Load the values from the folder
-  bool expiryGloballyOn = mFolder->isAutoExpire();
+  bool expiryGloballyOn = attr->isAutoExpire();
   int daysToExpireRead, daysToExpireUnread;
-  mFolder->daysToExpire( daysToExpireUnread, daysToExpireRead);
+  attr->daysToExpire( daysToExpireUnread, daysToExpireRead);
 
   if ( expiryGloballyOn
-       && mFolder->getReadExpireUnits() != FolderCollection::ExpireNever
+       && attr->readExpireUnits() != ExpirationCollectionAttribute::ExpireNever
        && daysToExpireRead >= 0 ) {
     expireReadMailCB->setChecked( true );
     expireReadMailSB->setValue( daysToExpireRead );
   }
   if ( expiryGloballyOn
-      && mFolder->getUnreadExpireUnits() != FolderCollection::ExpireNever
+      && attr->unreadExpireUnits() != ExpirationCollectionAttribute::ExpireNever
       && daysToExpireUnread >= 0 ) {
     expireUnreadMailCB->setChecked( true );
     expireUnreadMailSB->setValue( daysToExpireUnread );
   }
 
-  if ( mFolder->expireAction() == FolderCollection::ExpireDelete )
+  if ( attr->expireAction() == ExpirationCollectionAttribute::ExpireDelete )
     deletePermanentlyRB->setChecked( true );
   else
     moveToRB->setChecked( true );
 
-  Akonadi::Collection::Id destFolderID = mFolder->expireToFolderId();
+  Akonadi::Collection::Id destFolderID = attr->expireToFolderId();
   if ( destFolderID > 0 ) {
     Akonadi::Collection destFolder = Kernel::self()->collectionFromId( destFolderID );
     if ( destFolder.isValid() )
@@ -147,6 +151,8 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   }
   slotUpdateControls();
   setAttribute(Qt::WA_WState_Polished);
+  if ( mustDeleteExpirationAttribute )
+    delete attr;
 }
 
 /*
@@ -166,36 +172,52 @@ void ExpiryPropertiesDialog::accept()
                         i18n( "No Folder Selected" ) );
     return;
   }
+  MailCommon::ExpirationCollectionAttribute *attribute = 0;
   if ( expireToFolder.isValid() && moveToRB->isChecked() ) {
-    if ( expireToFolder.id() == mFolder->collection().id() ) {
+    if ( expireToFolder.id() == mFolder.id() ) {
       KMessageBox::error( this, i18n( "Please select a different folder than the current folder to expire message into." ),
                           i18n( "Wrong Folder Selected" ) );
       return;
     }
-    else
-      mFolder->setExpireToFolderId( expireToFolder.id() );
+    else {
+      attribute = mFolder.attribute<MailCommon::ExpirationCollectionAttribute>( Akonadi::Entity::AddIfMissing );
+      attribute->setExpireToFolderId( expireToFolder.id() );
+    }
 
   }
+  if ( !attribute )
+    attribute =  mFolder.attribute<MailCommon::ExpirationCollectionAttribute>( Akonadi::Entity::AddIfMissing );
 
-  mFolder->setAutoExpire( enableGlobally );
+  attribute->setAutoExpire( enableGlobally );
   // we always write out days now
-  mFolder->setReadExpireAge( expireReadMailSB->value() );
-  mFolder->setUnreadExpireAge( expireUnreadMailSB->value() );
-  mFolder->setReadExpireUnits( expireReadMailCB->isChecked() ? FolderCollection::ExpireDays :
-                                                              FolderCollection::ExpireNever );
-  mFolder->setUnreadExpireUnits( expireUnreadMailCB->isChecked() ? FolderCollection::ExpireDays :
-                                                                   FolderCollection::ExpireNever );
+  attribute->setReadExpireAge( expireReadMailSB->value() );
+  attribute->setUnreadExpireAge( expireUnreadMailSB->value() );
+  attribute->setReadExpireUnits( expireReadMailCB->isChecked() ? MailCommon::ExpirationCollectionAttribute::ExpireDays :
+                                 MailCommon::ExpirationCollectionAttribute::ExpireNever );
+  attribute->setUnreadExpireUnits( expireUnreadMailCB->isChecked() ? MailCommon::ExpirationCollectionAttribute::ExpireDays :
+                                   MailCommon::ExpirationCollectionAttribute::ExpireNever );
 
   if ( deletePermanentlyRB->isChecked() )
-    mFolder->setExpireAction( FolderCollection::ExpireDelete );
+    attribute->setExpireAction( ExpirationCollectionAttribute::ExpireDelete );
   else
-    mFolder->setExpireAction( FolderCollection::ExpireMove );
-  // trigger immediate expiry if there is something to do
-  if ( enableGlobally )
-    mFolder->expireOldMessages( true /*immediate*/);
-  KDialog::accept();
+    attribute->setExpireAction( ExpirationCollectionAttribute::ExpireMove );
+  Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( mFolder, this );
+  job->setProperty( "enableGlobally", enableGlobally );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
 }
 
+void ExpiryPropertiesDialog::slotCollectionModified(KJob* job)
+{
+  if ( job->error() ) {
+    kDebug()<<" Error when we modified collection";
+    return;
+  }
+  // trigger immediate expiry if there is something to do
+  if ( job->property( "enableGlobally" ).toBool() )
+    MailCommon::Util::expireOldMessages( mFolder, true /*immediate*/);
+  KDialog::accept();
+
+}
 
 void ExpiryPropertiesDialog::slotUpdateControls()
 {

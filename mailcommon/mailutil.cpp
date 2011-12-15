@@ -44,6 +44,7 @@
 #include "pop3settings.h"
 #include "mailkernel.h"
 #include "calendarinterface.h"
+#include "expirejob.h"
 
 #include "messagecore/stringutil.h"
 #include "messagecomposer/messagehelper.h"
@@ -519,4 +520,10 @@ QColor MailCommon::Util::defaultQuotaColor()
 {
     KColorScheme scheme( QPalette::Active, KColorScheme::View );
     return scheme.foreground( KColorScheme::NegativeText ).color();
+}
+
+void MailCommon::Util::expireOldMessages( const Akonadi::Collection& collection, bool immediate )
+{
+  ScheduledExpireTask* task = new ScheduledExpireTask(collection, immediate);
+  KernelIf->jobScheduler()->registerTask( task );
 }

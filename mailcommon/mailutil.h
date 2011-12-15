@@ -110,6 +110,8 @@ namespace Util {
     MAILCOMMON_EXPORT Akonadi::Collection parentCollectionFromItem(const Akonadi::Item& item);
     MAILCOMMON_EXPORT QString realFolderPath( const QString& path );
     MAILCOMMON_EXPORT QColor defaultQuotaColor();
+    MAILCOMMON_EXPORT void expireOldMessages( const Akonadi::Collection& collection, bool immediate );
+
 }
 
 }

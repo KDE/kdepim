@@ -1,6 +1,6 @@
 /*
   This file is part of KMail, the KDE mail client.
-  Copyright (c) 2009, 2010 Montel Laurent <montel@kde.org>
+  Copyright (c) 2009, 2010, 2011 Montel Laurent <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,6 +19,7 @@
 #include "foldercollectionmonitor.h"
 #include "mailutil.h"
 #include "foldercollection.h"
+#include "expirationcollectionattribute.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
@@ -76,15 +77,16 @@ void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *mod
 
     if ( !collection.isValid() || Util::isVirtualCollection( collection ) )
       continue;
-
-    QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
-    if ( col && col->isAutoExpire() ) {
-      col->expireOldMessages( immediate );
+    bool mustDeleteExpirationAttribute = false;
+    MailCommon::ExpirationCollectionAttribute *attr = MailCommon::ExpirationCollectionAttribute::expirationCollectionAttribute( collection, mustDeleteExpirationAttribute );
+    if ( attr->isAutoExpire() ) {
+       MailCommon::Util::expireOldMessages( collection,immediate );
     }
-
     if ( model->rowCount( index ) > 0 ) {
       expireAllCollection( model, immediate, index );
     }
+    if ( mustDeleteExpirationAttribute )
+      delete attr;
   }
 }
 
@@ -96,7 +98,7 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
     if ( sync ) {
       job->exec();
     }
-    
+
   } else {
     kDebug()<<" Try to expunge an invalid collection :"<<col;
   }
