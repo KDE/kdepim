@@ -103,7 +103,8 @@ void FilterTheBat::importDirContents( FilterInfo *info, const QString& dirName)
     QDir dir(dirName);
     QDir importDir (dirName);
     const QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
+    QStringList::ConstIterator end = files.constEnd();
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
         QString temp_mailfile = *mailFile;
         importFiles(info, (dirName + '/' + temp_mailfile));
         if(info->shouldTerminate()) return;

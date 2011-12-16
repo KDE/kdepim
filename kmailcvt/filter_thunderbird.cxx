@@ -53,8 +53,7 @@ void FilterThunderbird::import(FilterInfo *info)
         thunderDir = QDir::homePath();
     }
 
-    KFileDialog *kfd;
-    kfd = new KFileDialog( thunderDir, "", 0 );
+    KFileDialog *kfd = new KFileDialog( thunderDir, "", 0 );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir  = kfd->selectedFile();
