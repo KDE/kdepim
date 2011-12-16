@@ -32,7 +32,7 @@ int staticInitKConfigGroupGui();
 #endif
 
 static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
-  Q_UNUSED( opts );
+
 #ifdef _WIN32_WCE
   QThread::currentThread()->setPriority(QThread::HighPriority);
 #endif
@@ -40,7 +40,7 @@ static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
   //This is needed to get KConfig working with QColor
   staticInitKConfigGroupGui();
 #endif
-    KDeclarativeApplicationBase::preApplicationSetup();
+    KDeclarativeApplicationBase::preApplicationSetup(opts);
     return true; // <-- default value of KApplication(bool) ctor
 }
 

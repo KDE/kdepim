@@ -20,9 +20,9 @@
 */
 
 #include "mainview.h"
+#include "kmailmobileoptions.h"
 
 #include <kaboutdata.h>
-#include <kcmdlineargs.h>
 #include <kdeclarativeapplication.h>
 
 #ifdef Q_OS_WINCE
@@ -45,6 +45,31 @@ Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 extern bool ___MailTransport____INIT();
 #endif
 
+class KMailMobileApplication : public KDeclarativeApplication<MainView>
+{
+public:
+  KMailMobileApplication();
+  explicit KMailMobileApplication( const KCmdLineOptions &applicationOptions );
+  virtual int newInstance();
+};
+
+KMailMobileApplication::KMailMobileApplication(): KDeclarativeApplication<MainView>()
+{
+};
+
+KMailMobileApplication::KMailMobileApplication( const KCmdLineOptions &applicationOptions ): KDeclarativeApplication<MainView>( applicationOptions )
+{
+};
+
+int KMailMobileApplication::KMailMobileApplication::newInstance()
+{
+  KDeclarativeApplication<MainView>::newInstance();
+  if ( m_mainView ) {
+    m_mainView->handleCommandLine();
+  }
+  return 0;
+}
+
 int main( int argc, char **argv )
 {
   kWarning() << "Starting main function" << QDateTime::currentDateTime();
@@ -62,7 +87,11 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication<MainView> app;
+  KMailMobileApplication app( kmailMobileOptions() );
+
+  if ( !KMailMobileApplication::start() ) {
+     return 0;
+  }
 
   KGlobal::locale()->insertCatalog( "libakonadi-kmime" );
   KGlobal::locale()->insertCatalog( "libmessagecore" );
