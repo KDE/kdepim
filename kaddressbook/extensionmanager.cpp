@@ -197,6 +197,7 @@ void ExtensionManager::createExtensionWidgets()
 
   KAB::ExtensionWidget *wdg = 0;
 
+  if ( getenv( "ENABLE_ADDRESSEE_EDITOR_EXT" ) != 0 )
   {
     // add addressee editor as default
     wdg = new AddresseeEditorExtension( mCore, mDetailsStack );
