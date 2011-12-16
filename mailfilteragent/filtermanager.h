@@ -112,6 +112,8 @@ class FilterManager: public QObject
      */
     bool requiresFullMailBody() const;
 
+
+    void mailCollectionRemoved( const Akonadi::Collection& collection );
 #ifndef NDEBUG
     /**
      * Outputs all filter rules to console. Used for debugging.

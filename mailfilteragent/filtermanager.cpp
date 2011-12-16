@@ -294,6 +294,19 @@ void FilterManager::readConfig()
   emit filterListUpdated();
 }
 
+void FilterManager::mailCollectionRemoved( const Akonadi::Collection& collection )
+{
+    bool filterChanged = false;
+    QList<MailCommon::MailFilter*>::const_iterator end( d->mFilters.constEnd() );
+    for ( QList<MailCommon::MailFilter*>::const_iterator it = d->mFilters.constBegin();
+          it != end ; ++it ) {
+        if((*it)->folderRemoved( collection, Akonadi::Collection() ))
+            filterChanged = true;
+    }
+
+}
+
+
 void FilterManager::filter( qlonglong itemId, FilterSet set, const QString &accountId )
 {
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ), this );

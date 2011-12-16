@@ -79,7 +79,6 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
-
 }
 
 void MailFilterAgent::initializeCollections()
@@ -152,6 +151,7 @@ void MailFilterAgent::mailCollectionChanged( const Akonadi::Collection &collecti
 void MailFilterAgent::mailCollectionRemoved( const Akonadi::Collection& collection )
 {
   changeRecorder()->setCollectionMonitored( collection, false );
+  m_filterManager->mailCollectionRemoved(collection);
 }
 
 QString MailFilterAgent::createUniqueName( const QString &nameTemplate )
