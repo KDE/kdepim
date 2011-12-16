@@ -70,6 +70,15 @@ class MainView : public KDeclarativeMainView
                "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
                "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
                "    </method>\n"
+               "    <method name=\"openComposerAndAttach\">\n"
+               "      <arg direction=\"out\" type=\"i\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"to\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"cc\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"bcc\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
+               "      <arg direction=\"in\" type=\"as\" name=\"attachments\"/>\n"
+               "    </method>\n"
                "  </interface>\n"
                        "")
 
@@ -79,6 +88,8 @@ class MainView : public KDeclarativeMainView
     explicit MainView(QWidget* parent = 0);
 
     ~MainView();
+
+    void handleCommandLine();
 
     enum ForwardMode {
       InLine = 0,
@@ -120,6 +131,13 @@ class MainView : public KDeclarativeMainView
                                    const QString & bcc,
                                    const QString & subject,
                                    const QString & body );
+
+    Q_SCRIPTABLE int openComposerAndAttach( const QString & to,
+                                            const QString & cc,
+                                            const QString & bcc,
+                                            const QString & subject,
+                                            const QString & body,
+                                            const QStringList & attachments );
     void mailActionStateUpdated();
 
   Q_SIGNALS:
@@ -202,6 +220,7 @@ class MainView : public KDeclarativeMainView
     MessageViewer::MessageViewItem *messageViewerItem();
     uint currentFolderIdentity() const;
     QString itemStorageCollectionAsPath( const Akonadi::Item& ) const;
+    KMime::Content *createAttachment( const KUrl &url ) const;
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;

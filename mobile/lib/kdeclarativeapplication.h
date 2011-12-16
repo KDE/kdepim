@@ -86,7 +86,7 @@ class KDeclarativeApplication : public KDeclarativeApplicationBase
       return 0;
     }
 
-  private:
+  protected:
     T* m_mainView;
 };
 
