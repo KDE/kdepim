@@ -72,6 +72,7 @@ namespace Util {
     MAILCOMMON_EXPORT OrgKdeAkonadiPOP3SettingsInterface *createPop3SettingsInterface( const QString &ident );
 
     MAILCOMMON_EXPORT bool isVirtualCollection(const Akonadi::Collection & col);
+    MAILCOMMON_EXPORT bool isVirtualCollection(const QString& resource);
 
     MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection );
 

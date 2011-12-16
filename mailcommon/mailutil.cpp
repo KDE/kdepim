@@ -94,9 +94,14 @@ OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterfac
 
 bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection & collection)
 {
-  return ( collection.resource() == QLatin1String( "akonadi_nepomuktag_resource" ) || collection.resource() == QLatin1String( "akonadi_search_resource" ) );
-
+  return MailCommon::Util::isVirtualCollection(collection.resource());
 }
+
+bool MailCommon::Util::isVirtualCollection(const QString& resource)
+{
+  return ( resource == QLatin1String( "akonadi_nepomuktag_resource" ) || resource == QLatin1String( "akonadi_search_resource" ) );
+}
+
 
 QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collection )
 {
