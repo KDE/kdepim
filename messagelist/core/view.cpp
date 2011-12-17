@@ -1260,7 +1260,7 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
     // there was no current item, start from end
     above = d->mModel->rootItem()->deepestItem();
 
-    if ( !above || ( above == d->mModel->rootItem() ) )
+    if ( !above || !above->parent() || ( above == d->mModel->rootItem() ) )
       return 0; // folder empty
   }
 
