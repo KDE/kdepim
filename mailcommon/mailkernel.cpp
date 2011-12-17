@@ -233,8 +233,9 @@ Akonadi::Collection Kernel::trashCollectionFromResource( const Akonadi::Collecti
 {
   Akonadi::Collection trashCol;
   if ( col.isValid() ) {
-    if ( col.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiImapSettingsInterface *iface = MailCommon::Util::createImapSettingsInterface( col.resource() );
+    const QString collectionResourceName( col.resource() );
+    if ( collectionResourceName.contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiImapSettingsInterface *iface = MailCommon::Util::createImapSettingsInterface( collectionResourceName );
       if ( iface->isValid() ) {
 
         trashCol =  Akonadi::Collection( iface->trashCollection() );
