@@ -71,7 +71,10 @@ if(NOT WINCE)
   target_link_libraries(messageviewer_bodypartformatter_application_mstnef
     ${KDE4_KDECORE_LIBS}
     ${QT_QTGUI_LIBRARY}
+    ${KDEPIMLIBS_KCALCORE_LIBS}
+    ${KDEPIMLIBS_KCALUTILS_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_KPIMUTILS_LIBS}
     ${KDEPIMLIBS_KTNEF_LIBS}
     messagecore
     messageviewer

@@ -35,6 +35,16 @@
 #include <messagecore/stringutil.h>
 #include <messageviewer/util.h>
 
+#include <KPIMUtils/KFileIO>
+
+#include <KCalCore/Event>
+#include <KCalCore/Incidence>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
+
+#include <KCalUtils/IncidenceFormatter>
+
+#include <ktnef/formatter.h>
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
@@ -43,6 +53,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocale>
+#include <KSystemTimeZones>
 #include <KUrl>
 
 #include <QApplication>
@@ -56,6 +67,11 @@ namespace {
 
       if ( !writer ) return Ok;
 
+      const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+      QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">";
+      QString startRow = "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
+      QString endRow = "</td></tr>";
+
       const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
       KTnef::KTNEFParser parser;
       if ( !parser.openFile( fileName ) || !parser.message()) {
@@ -63,44 +79,68 @@ namespace {
         return Failed;
       }
 
+      // Look for an invitation
+      QString inviteStr;
+      QByteArray buf = KPIMUtils::kFileToByteArray( fileName, false, false );
+      if ( !buf.isEmpty() ) {
+        KCalCore::MemoryCalendar::Ptr cl(
+          new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
+        KCalUtils::InvitationFormatterHelper helper;
+        QString invite = KTnef::formatTNEFInvitation( buf, cl, &helper );
+        KCalCore::ICalFormat format;
+        KCalCore::Incidence::Ptr inc = format.fromString( invite );
+        KCalCore::Event::Ptr event = inc.dynamicCast<KCalCore::Event>();
+        if ( event && event->hasEndDate() ) {
+          // no enddate => not a valid invitation
+          inviteStr = KCalUtils::IncidenceFormatter::extensiveDisplayStr( cl, inc );
+        }
+      }
+
       QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
-      if ( tnefatts.isEmpty() ) {
-        kDebug() << "No attachments found in" << fileName;
+      if ( tnefatts.isEmpty() && inviteStr.isEmpty() ) {
+        kDebug() << "No attachments or invitation found in" << fileName;
 
         QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );
         const QString comment =
           MessageCore::StringUtil::quoteHtmlChars(
             bodyPart->content()->contentDescription()->asUnicodeString(), true );
-        const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
 
-        QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                          "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
+        htmlStr += startRow;
         htmlStr += label;
         if ( !comment.isEmpty() ) {
           htmlStr += "<br/>" + comment;
         }
         htmlStr += "&nbsp;&lt;" + i18nc( "TNEF attachment has no content", "empty" ) + "&gt;";
-        htmlStr += "</td></tr></table>";
+        htmlStr += endRow;
+        htmlStr += "</table>";
         writer->queue( htmlStr );
 
         return NeedContent;
       }
 
-  //    if ( !showOnlyOneMimePart() ) {
-        QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
-        label = MessageCore::StringUtil::quoteHtmlChars( label, true );
-        const QString comment = MessageCore::StringUtil::quoteHtmlChars( bodyPart->content()->contentDescription()->asUnicodeString(), true );
-        const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+      QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
+      label = MessageCore::StringUtil::quoteHtmlChars( label, true );
+      const QString comment =
+        MessageCore::StringUtil::quoteHtmlChars(
+          bodyPart->content()->contentDescription()->asUnicodeString(), true );
 
-        QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                    "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
-        htmlStr += label;
-        if ( !comment.isEmpty() )
-          htmlStr += "<br/>" + comment;
-        htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
-        writer->queue( htmlStr );
-  //    }
+      htmlStr += startRow;
+      htmlStr += label;
+      if ( !comment.isEmpty() ) {
+        htmlStr += "<br/>" + comment;
+      }
+      htmlStr += endRow;
+      if ( !inviteStr.isEmpty() ) {
+        htmlStr += startRow;
+        htmlStr += inviteStr;
+        htmlStr += endRow;
+      }
+
+      if ( tnefatts.count() > 0 ) {
+        htmlStr += startRow;
+      }
+      writer->queue( htmlStr );
 
       for ( int i = 0; i < tnefatts.count(); ++i ) {
         KTnef::KTNEFAttach *att = tnefatts.at( i );
@@ -122,8 +162,10 @@ namespace {
                               "</a></div><br/>" );
       }
 
-  //    if ( !showOnlyOneMimePart() )
-        writer->queue( "</td></tr></table>" );
+      if ( tnefatts.count() > 0 ) {
+        writer->queue( endRow );
+      }
+      writer->queue( "</table>" );
 
       return Ok;
     }
