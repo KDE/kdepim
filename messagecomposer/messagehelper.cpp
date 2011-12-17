@@ -236,20 +236,6 @@ void setAutomaticFields(const KMime::Message::Ptr &msg, bool aIsMulti)
   }
 }
 
-#ifndef _WIN32_WCE
-QList<Nepomuk::Tag> tagList(const Akonadi::Item &msg)
-{
-  const Nepomuk::Resource res( msg.url() );
-  return res.tags();
-}
-
-void setTagList( const Akonadi::Item& msg, const QList<Nepomuk::Tag> &tags )
-{
-  Nepomuk::Resource res( msg.url() );
-  res.setTags( tags );
-}
-#endif
-
 QString ccStrip( const KMime::Message::Ptr &msg )
 {
   return MessageCore::StringUtil::stripEmailAddr( msg->cc()->asUnicodeString() );
