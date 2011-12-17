@@ -22,9 +22,7 @@ class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit ExpiryPropertiesDialog(
-      QWidget *tree,
-      const Akonadi::Collection &folder);
+  explicit ExpiryPropertiesDialog(QWidget *parent, const Akonadi::Collection &collection);
     ~ExpiryPropertiesDialog();
 
 protected slots:
@@ -33,7 +31,7 @@ protected slots:
     void slotCollectionModified(KJob* job);
 
 private:
-    Akonadi::Collection mFolder;
+    Akonadi::Collection mCollection;
 
     QCheckBox *expireReadMailCB;
     KIntSpinBox *expireReadMailSB;
