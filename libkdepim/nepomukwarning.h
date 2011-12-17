@@ -45,7 +45,7 @@ class KDEPIM_EXPORT NepomukWarning : public KMessageWidget
      */
     void setMissingFeatures( const QStringList &features );
     static bool missingNepomukWarning( const char *neverShowAgainKey );
-
+    static QString nepomukWarningGroupName();
   private slots:
     void configure();
     void explicitlyClosed();

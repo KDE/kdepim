@@ -67,9 +67,14 @@ KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *pa
 
 bool KPIM::NepomukWarning::missingNepomukWarning( const char *neverShowAgainKey )
 {
-  const KConfigGroup cfgGroup( KGlobal::config(), QLatin1String( "Missing Nepomuk Warning" ) );
+  const KConfigGroup cfgGroup( KGlobal::config(), KPIM::NepomukWarning::nepomukWarningGroupName() );
   const bool neverShowAgain = cfgGroup.readEntry( neverShowAgainKey, false );
   return neverShowAgain;
+}
+
+QString KPIM::NepomukWarning::nepomukWarningGroupName()
+{
+  return QLatin1String( "Missing Nepomuk Warning" );
 }
 
 void KPIM::NepomukWarning::configure()
