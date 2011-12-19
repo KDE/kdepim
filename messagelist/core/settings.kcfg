@@ -22,13 +22,13 @@
 
   <group name="MessageListView::Colors">
     <entry name="UnreadMessageColor" type="Color">
-      <default>MessageList::Util::unreadDefaultMessageColor()</default>
+      <default>#0000FF</default>
     </entry>
     <entry name="ImportantMessageColor" type="Color">
-      <default>MessageList::Util::importantDefaultMessageColor()</default>
+      <default>#007F00</default>
     </entry>
     <entry name="TodoMessageColor" type="Color">
-      <default>MessageList::Util::todoDefaultMessageColor()</default>
+      <default>#009800</default>
     </entry>
   </group>
 
