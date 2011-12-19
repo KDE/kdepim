@@ -309,8 +309,10 @@ QString FolderCollection::mailingListPostAddress() const
 
 void FolderCollection::setMailingListEnabled( bool enabled )
 {
-  mMailingListEnabled = enabled;
-  writeConfig();
+  if ( mMailingListEnabled != enabled ) {
+    mMailingListEnabled = enabled;
+    writeConfig();
+  }
 }
 
 void FolderCollection::setMailingList( const MailingList& mlist )
