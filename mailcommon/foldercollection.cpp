@@ -253,16 +253,20 @@ void FolderCollection::setShortcut( const KShortcut &sc )
 
 void FolderCollection::setUseDefaultIdentity( bool useDefaultIdentity )
 {
-  mUseDefaultIdentity = useDefaultIdentity;
-  if ( mUseDefaultIdentity )
-    mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
-  KernelIf->syncConfig();
+  if ( mUseDefaultIdentity != useDefaultIdentity ) {
+    mUseDefaultIdentity = useDefaultIdentity;
+    if ( mUseDefaultIdentity )
+      mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+    KernelIf->syncConfig();
+  }
 }
 
 void FolderCollection::setIdentity( uint identity )
 {
-  mIdentity = identity;
-  KernelIf->syncConfig();
+  if ( mIdentity != identity ) {
+    mIdentity = identity;
+    KernelIf->syncConfig();
+  }
 }
 
 uint FolderCollection::identity() const
