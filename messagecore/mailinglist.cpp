@@ -342,6 +342,22 @@ MailingList& MailingList::operator=( const MailingList &other )
   return *this;
 }
 
+bool MailingList::operator==( const MailingList &other ) const
+{
+  return other.features() == d->mFeatures &&
+    other.handler() == d->mHandler &&
+    other.postUrls() == d->mPostUrls &&
+    other.subscribeUrls() == d->mSubscribeUrls &&
+    other.unsubscribeUrls() == d->mUnsubscribeUrls &&
+    other.helpUrls() == d->mHelpUrls &&
+    other.archiveUrls() == d->mArchiveUrls &&
+    other.ownerUrls() == d->mOwnerUrls &&
+    other.archivedAtUrls() == d->mArchivedAtUrls &&
+    other.id() == d->mId;
+
+}
+
+
 MailingList::~MailingList()
 {
 }

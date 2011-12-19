@@ -79,6 +79,7 @@ class MESSAGECORE_EXPORT MailingList
      */
     MailingList &operator=( const MailingList &other );
 
+    bool operator==( const MailingList &other ) const;
     /**
      * Destroys the mailing list.
      */
