@@ -45,8 +45,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
 
     QString _homeDir = QDir::homePath();
 
-    KFileDialog *kfd;
-    kfd = new KFileDialog( _homeDir, "", 0 );
+    KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
     kfd->setMode( KFile::Directory | KFile::LocalOnly );
     kfd->exec();
     mailDir = kfd->selectedFile();
@@ -67,7 +66,8 @@ void FilterKMail_maildir::import( FilterInfo *info )
         QDir dir(mailDir);
         const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
+	QStringList::ConstIterator end = rootSubDirs.constEnd();
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
             if(!(*filename == "." || *filename == "..")) {
                 info->setCurrent(0);
@@ -104,7 +104,8 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
 
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
+    QStringList::ConstIterator end = subDirs.constEnd();     
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         if(info->shouldTerminate()) return;
         if(!(*filename == "." || *filename == "..")) {
             importDirContents(info, subfolders.filePath(*filename));

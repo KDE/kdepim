@@ -74,7 +74,8 @@ void FilterThunderbird::import(FilterInfo *info)
         QDir dir(mailDir);
         const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
+	QStringList::ConstIterator end = rootSubDirs.constEnd();
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
             importDirContents(info, dir.filePath(*filename), *filename, *filename);
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
@@ -83,7 +84,8 @@ void FilterThunderbird::import(FilterInfo *info)
         /** import last but not least all archives from the root-dir */
         QDir importDir (mailDir);
         const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-        for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
+	QStringList::ConstIterator mailFileEnd = files.constEnd();
+        for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
             if(info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
             if (temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat"))) {}
@@ -119,7 +121,8 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
 
     QDir importDir (dirName);
     const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
+    QStringList::ConstIterator mailFileEnd = files.constEnd();
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
         if(info->shouldTerminate()) break;
         QString temp_mailfile = *mailFile;
         if (temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat"))) {}
@@ -132,7 +135,8 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
-    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
+    QStringList::ConstIterator end = subDirs.constEnd();
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         if(info->shouldTerminate()) break;
         QString kSubDir;
         if(!KMailSubDir.isNull()) {
