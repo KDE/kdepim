@@ -317,6 +317,9 @@ void FolderCollection::setMailingListEnabled( bool enabled )
 
 void FolderCollection::setMailingList( const MailingList& mlist )
 {
+  if ( mMailingList == mlist )
+    return;
+  
   mMailingList = mlist;
   writeConfig();
 }
