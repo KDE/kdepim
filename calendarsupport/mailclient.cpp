@@ -76,7 +76,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
 
   QStringList toList;
   QStringList ccList;
-  for ( int i=0; i<attendees.count(); ++i ) {
+  const int numberOfAttendees( attendees.count() );
+  for ( int i=0; i<numberOfAttendees; ++i ) {
     KCalCore::Attendee::Ptr a = attendees.at(i);
 
     const QString email = a->email();
@@ -189,6 +190,9 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
 {
   Q_UNUSED( identity );
   Q_UNUSED( hidden );
+
+  if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) )
+    return false;
 
   // We must have a recipients list for most MUAs. Thus, if the 'to' list
   // is empty simply use the 'from' address as the recipient.
@@ -317,7 +321,11 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->transportAttribute().setTransportId( transportId );
   qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
-  qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
+  if ( transport && transport->specifySenderOverwriteAddress() )
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
+  else
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
+  
   qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
   qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
   if( bccMe ) {
