@@ -51,17 +51,26 @@ void CalendarSupport::IncidenceFetchJob::doStart()
 
 void CalendarSupport::IncidenceFetchJob::collectionFetchResult(KJob* job)
 {
-  if ( job->error() ) // handled in base class
+  if ( job->error() ) { // handled in base class
+    kDebug()<<job->error();
+    emitResult();
     return;
+  }
   CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
   Q_ASSERT( fetch );
-  foreach ( const Collection &col, fetch->collections() ) {
-    if ( !m_mimeTypeChecker.isWantedCollection( col ) )
-      continue;
-    ItemFetchJob *itemFetch = new ItemFetchJob( col, this );
-    itemFetch->fetchScope().fetchFullPayload( true );
-    connect( itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
-    ++m_jobCount;
+  const Akonadi::Collection::List listCollection = fetch->collections();
+  if( listCollection.isEmpty()) {
+    emitResult();
+  } else {
+    foreach ( const Collection &col, fetch->collections() ) {
+      if ( !m_mimeTypeChecker.isWantedCollection( col ) ) {
+        continue;
+      }
+      ItemFetchJob *itemFetch = new ItemFetchJob( col, this );
+      itemFetch->fetchScope().fetchFullPayload( true );
+      connect( itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
+      ++m_jobCount;
+    }
   }
 }
 
