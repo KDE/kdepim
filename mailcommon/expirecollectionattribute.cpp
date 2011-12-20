@@ -204,12 +204,12 @@ void ExpireCollectionAttribute::deserialize( const QByteArray &data )
 {
   QDataStream s( data );
   s >> mExpireToFolderId;
-  int val;
-  s >> val;
-  mExpireAction = ( ExpireCollectionAttribute::ExpireAction )val;
-  int valUnit;
-  s >> valUnit;
-  mReadExpireUnits =  ( ExpireCollectionAttribute::ExpireUnits )valUnit;
+  int action;
+  s >> action;
+  mExpireAction = ( ExpireCollectionAttribute::ExpireAction )action;
+  int valUnitRead;
+  s >> valUnitRead;
+  mReadExpireUnits =  ( ExpireCollectionAttribute::ExpireUnits )valUnitRead;
   s >> mReadExpireAge;
   int valUnitUread;
   s >> valUnitUread;
