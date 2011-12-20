@@ -145,13 +145,15 @@ CalendarManager::CalendarManager()
   mCalendar->load();
   bool multipleKolabResources = false;
   CalendarResourceManager *mgr = mCalendar->resourceManager();
+  CalendarResourceManager::ActiveIterator end = mgr->activeEnd();
   for ( CalendarResourceManager::ActiveIterator it = mgr->activeBegin();
-        it != mgr->activeEnd(); ++it ) {
+        it != end; ++it ) {
     if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
       const QStringList subResources = (*it)->subresources();
       QSet<QString> prefixSet;
+      QStringList::ConstIterator subEnd = subResources.constEnd();
       for ( QStringList::ConstIterator subIt = subResources.constBegin();
-            subIt != subResources.constEnd(); ++subIt ) {
+            subIt != subEnd; ++subIt ) {
         if ( !(*subIt).contains( "/.INBOX.directory/" ) ) {
           // we don't care about shared folders
           continue;
@@ -322,7 +324,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
       Attendee::Ptr myself;
       // Find myself. There will always be all attendees listed, even if
       // only I need to answer it.
-      for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+      Attendee::List::ConstIterator end = attendees.constEnd();
+      for ( it = attendees.constBegin(); it != end; ++it ) {
         // match only the email part, not the name
         if( KPIMUtils::compareEmail( (*it)->email(), receiver, false ) ) {
           // We are the current one, and even the receiver, note
@@ -357,7 +360,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       Attendee::Role role = Attendee::OptParticipant;
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+      Attendee::List::ConstIterator end = attendees.constEnd();
+      
+      for ( it = attendees.constBegin(); it != end; ++it ) {
         if ( it == attendees.constBegin() ) {
           role = (*it)->role(); // use what the first one has
         } else {
@@ -380,7 +385,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       Attachment::Ptr attachment;
       if ( attachments.count() > 0 ) {
         Attachment::List::ConstIterator it;
-        for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
+        Attachment::List::ConstIterator end = attachments.constEnd();
+        
+        for ( it = attachments.constBegin(); it != end; ++it ) {
           if ( (*it)->label() == name ) {
             attachment = *it;
             break;
@@ -424,8 +431,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
         addrs = node->topLevel()->header<KMime::Headers::To>()->mailboxes();
       }
       int found = 0;
+      QList< KMime::Types::Mailbox >::const_iterator end = addrs.constEnd();
       for ( QList< KMime::Types::Mailbox >::const_iterator it = addrs.constBegin();
-            it != addrs.constEnd(); ++it ) {
+            it != end; ++it ) {
         if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
           // Ok, this could be us
           ++found;
