@@ -89,7 +89,8 @@ namespace {
       html += "<pre " + tableStyle + '>';
 
       const QStringList lines = diff.split( '\n' );
-      for ( QStringList::ConstIterator it = lines.begin(); it != lines.end(); ++it ) {
+      QStringList::ConstIterator end( lines.end() );
+      for ( QStringList::ConstIterator it = lines.begin(); it != end; ++it ) {
         const QString line( Qt::escape( *it ) );
         QString style;
         if ( !line.isEmpty() ) {

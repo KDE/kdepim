@@ -199,7 +199,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool saveAsVCard( const KABC::Addressee &a, const QString &vCard ) const
     {
-      QString fileName = a.givenName() + '_' + a.familyName() + ".vcf";
+      QString fileName = a.givenName() + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
 
       // get the saveas file name
       KUrl saveAsUrl =
