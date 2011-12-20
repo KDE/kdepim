@@ -317,8 +317,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->transportAttribute().setTransportId( transportId );
   qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
-  qjob->sentBehaviourAttribute().setMoveToCollection( Akonadi::Collection( -1 ) );
-  qjob->addressAttribute().setFrom( from );
+  qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
   qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
   qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
   if( bccMe ) {
