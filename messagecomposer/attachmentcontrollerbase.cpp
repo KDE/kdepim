@@ -634,9 +634,10 @@ void AttachmentControllerBase::showAddAttachmentDialog()
   dialog->setMode( KFile::Files|KFile::Directory );
   if( dialog->exec() == KDialog::Accepted && dialog ) {
     const KUrl::List files = dialog->selectedUrls();
+    const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
     foreach( const KUrl &url, files ) {
       KUrl urlWithEncoding = url;
-      urlWithEncoding.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() ) );
+      urlWithEncoding.setFileEncoding( encoding );
       addAttachment( urlWithEncoding );
     }
   }
