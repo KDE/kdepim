@@ -457,8 +457,7 @@ void ComposerPrivate::attachmentsFinished( KJob* job )
 
 void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content* content )
 {
-  //Laurent 19/12/2011 Fix bug 289268 - Header lines in forwarded mails are not wrapped
-  //content->assemble();
+  content->assemble();
 
   QByteArray allData = headers->head() + content->encodedContent();
   KMime::Message::Ptr resultMessage( new KMime::Message );
