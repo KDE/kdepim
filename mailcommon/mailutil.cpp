@@ -203,12 +203,14 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
       if ( switchTo ) {
         iface.call( "newInstance" ); // activate korganizer window
       }
+#if 0 //Not exist     
       QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
                                "org.kde.KUniqueApplication" );
       QDBusReply<bool> r = pimIface.call( "load" );
       if ( !r.isValid() || !r.value() ) {
         kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
       }
+#endif      
     } else {
       kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
     }
