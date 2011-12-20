@@ -342,7 +342,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
       bool rsvp = true; // better send superfluously than not at all
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+      Attendee::List::ConstIterator end( attendees.constEnd() );      
+      for ( it = attendees.constBegin(); it != end; ++it ) {
         if ( it == attendees.constBegin() ) {
           rsvp = (*it)->RSVP(); // use what the first one has
         } else {
@@ -445,8 +446,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( node->topLevel()->header<KMime::Headers::Cc>() ) {
         ccaddrs = node->topLevel()->header<KMime::Headers::Cc>()->mailboxes();
       }
+      end = ccaddrs.constEnd();
       for ( QList< KMime::Types::Mailbox >::const_iterator it = ccaddrs.constBegin();
-            it != ccaddrs.constEnd(); ++it ) {
+            it != end; ++it ) {
         if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
           // Ok, this could be us
           ++found;
@@ -792,56 +794,56 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       if ( !warnStr.isEmpty() ) {
         QString queryStr;
-        if ( path == "accept" ) {
+        if ( path == QLatin1String( "accept" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you still want to accept the task?" );
           } else {
             queryStr = i18n( "Do you still want to accept the invitation?" );
           }
-        } else if ( path == "accept_conditionally" ) {
+        } else if ( path == QLatin1String( "accept_conditionally" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr =
               i18n( "Do you still want to send conditional acceptance of the invitation?" );
           } else {
             queryStr = i18n( "Do you still want to send conditional acceptance of the task?" );
           }
-        } else if ( path == "accept_counter" ) {
+        } else if ( path == QLatin1String( "accept_counter" ) ) {
           queryStr = i18n( "Do you still want to accept the counter proposal?" );
-        } else if ( path == "counter" ) {
+        } else if ( path == QLatin1String( "counter" ) ) {
           queryStr = i18n( "Do you still want to send a counter proposal?" );
-        } else if ( path == "decline" ) {
+        } else if ( path == QLatin1String( "decline" ) ) {
           queryStr = i18n( "Do you still want to send a decline response?" );
-        } else if ( path == "decline_counter" ) {
+        } else if ( path == QLatin1String( "decline_counter" ) ) {
           queryStr = i18n( "Do you still want to decline the counter proposal?" );
-        } else if ( path == "reply" ) {
+        } else if ( path == QLatin1String( "reply" ) ) {
           queryStr = i18n( "Do you still want to record this response in your calendar?" );
-        } else if ( path == "delegate" ) {
+        } else if ( path == QLatin1String( "delegate" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you still want to delegate this task?" );
           } else {
             queryStr = i18n( "Do you still want to delegate this invitation?" );
           }
-        } else if ( path == "forward" ) {
+        } else if ( path == QLatin1String( "forward" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you still want to forward this task?" );
           } else {
             queryStr = i18n( "Do you still want to forward this invitation?" );
           }
-        } else if ( path == "cancel" ) {
+        } else if ( path == QLatin1String( "cancel" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you still want to cancel this task?" );
           } else {
             queryStr = i18n( "Do you still want to cancel this invitation?" );
           }
-        } else if ( path == "check_calendar" ) {
+        } else if ( path == QLatin1String( "check_calendar" ) ) {
           queryStr = i18n( "Do you still want to check your calendar?" );
-        } else if ( path == "record" ) {
+        } else if ( path == QLatin1String( "record" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you still want to record this task in your calendar?" );
           } else {
             queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
           }
-        } else if ( path == "cancel" ) {
+        } else if ( path == QLatin1String( "cancel" ) ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you really want to cancel this task?" );
           } else {
@@ -935,8 +937,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       QString delegator;
       if ( myself && !myself->delegator().isEmpty() ) {
         Attendee::List attendees = incidence->attendees();
+        Attendee::List::ConstIterator end = attendees.constEnd();
         for ( Attendee::List::ConstIterator it = attendees.constBegin();
-              it != attendees.constEnd(); ++it ) {
+              it != end; ++it ) {
           if( KPIMUtils::compareEmail( (*it)->fullName(), myself->delegator(), false ) &&
               (*it)->status() == Attendee::Delegated ) {
             delegator = (*it)->fullName();
@@ -999,11 +1002,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
         ICalFormat format;
         format.setTimeSpec( KSystemTimeZones::local() );
-        QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
+        const QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok =
-          mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
+        ok = mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
       return ok;
     }
@@ -1196,29 +1198,29 @@ class UrlHandler : public Interface::BodyPartURLHandler
         return result;
       }
 
-      if ( path == "accept" ) {
+      if ( path == QLatin1String( "accept" ) ) {
         result = handleInvitation( iCal, Attendee::Accepted, part, viewerInstance );
       }
-      if ( path == "accept_conditionally" ) {
+      else if ( path == QLatin1String( "accept_conditionally" ) ) {
         result = handleInvitation( iCal, Attendee::Tentative, part, viewerInstance );
       }
-      if ( path == "counter" ) {
+      else if ( path == QLatin1String( "counter" ) ) {
         result = counterProposal( iCal, part );
       }
-      if ( path == "ignore" ) {
+      else if ( path == QLatin1String( "ignore" ) ) {
         result = handleIgnore( viewerInstance );
       }
-      if ( path == "decline" ) {
+      else if ( path == QLatin1String( "decline" ) ) {
         result = handleInvitation( iCal, Attendee::Declined, part, viewerInstance );
       }
-      if ( path == "decline_counter" ) {
+      else if ( path == QLatin1String( "decline_counter" ) ) {
         result = handleDeclineCounter( iCal, part, viewerInstance );
       }
-      if ( path == "delegate" ) {
+      else if ( path == QLatin1String( "delegate" ) ) {
         result = handleInvitation( iCal, Attendee::Delegated, part, viewerInstance );
       }
 
-      if ( path == "forward" ) {
+      else if ( path == QLatin1String( "forward" ) ) {
         AttendeeSelector dlg;
         if ( dlg.exec() == QDialog::Rejected ) {
           return true;
@@ -1228,17 +1230,16 @@ class UrlHandler : public Interface::BodyPartURLHandler
           return true;
         }
         const QString receiver = findReceiver( part->content() );
-        result =
-          mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
+        result = mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
-      if ( path == "check_calendar" ) {
+      else if ( path == QLatin1String( "check_calendar" ) ) {
         incidence = stringToIncidence( iCal );
         showCalendar( incidence->dtStart().date() );
         return true;
       }
-      if ( path == "reply" || path == "cancel" || path == "accept_counter" ) {
+      else if ( path == QLatin1String( "reply" ) || path == QLatin1String( "cancel" ) || path == QLatin1String( "accept_counter" ) ) {
         // These should just be saved with their type as the dir
-        const QString p = ( path == "accept_counter" ? QString( "reply" ) : path );
+        const QString p = ( path == QLatin1String( "accept_counter" ) ? QString( "reply" ) : path );
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
           if ( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
             viewerInstance->deleteMessage();
@@ -1246,11 +1247,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
           result = true;
         }
       }
-
-      QString summary;
-      if ( path == "record" ) {
+      else if ( path == QLatin1String( "record" ) ) {
         incidence = stringToIncidence( iCal );
-
+        QString summary;
         int response =
           KMessageBox::questionYesNoCancel(
             0,
@@ -1285,8 +1284,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
           break;
         }
       }
-
-      if ( path == "delete" ) {
+      else if ( path == QLatin1String( "delete" ) ) {
         viewerInstance->deleteMessage();
         result = true;
       }
@@ -1348,49 +1346,49 @@ class UrlHandler : public Interface::BodyPartURLHandler
                               const QString &path ) const
     {
       if ( !path.isEmpty() ) {
-        if ( path == "accept" ) {
+        if ( path == QLatin1String( "accept" ) ) {
           return i18n( "Accept invitation" );
         }
-        if ( path == "accept_conditionally" ) {
+        else if ( path == QLatin1String( "accept_conditionally" ) ) {
           return i18n( "Accept invitation conditionally" );
         }
-        if ( path == "accept_counter" ) {
+        else if ( path == QLatin1String( "accept_counter" ) ) {
           return i18n( "Accept counter proposal" );
         }
-        if ( path == "counter" ) {
+        else if ( path == QLatin1String( "counter" ) ) {
           return i18n( "Create a counter proposal..." );
         }
-        if ( path == "ignore" ) {
+        else if ( path == QLatin1String("ignore" ) ) {
           return i18n( "Throw mail away" );
         }
-        if ( path == "decline" ) {
+        else if ( path == QLatin1String("decline" ) ) {
           return i18n( "Decline invitation" );
         }
-        if ( path == "decline_counter" ) {
+        else if ( path == QLatin1String("decline_counter" ) ) {
           return i18n( "Decline counter proposal" );
         }
-        if ( path == "check_calendar" ) {
+        else if ( path == QLatin1String("check_calendar" ) ) {
           return i18n( "Check my calendar..." );
         }
-        if ( path == "reply" ) {
+        else if ( path == QLatin1String("reply" ) ) {
           return i18n( "Record response into my calendar" );
         }
-        if ( path == "record" ) {
+        else if ( path == QLatin1String("record" ) ) {
           return i18n( "Record invitation into my calendar" );
         }
-        if ( path == "delete" ) {
+        else if ( path == QLatin1String("delete" ) ) {
           return i18n( "Move this invitation to my trash folder" );
         }
-        if ( path == "delegate" ) {
+        else if ( path == QLatin1String("delegate" ) ) {
           return i18n( "Delegate invitation" );
         }
-        if ( path == "forward" ) {
+        else if ( path == QLatin1String("forward" ) ) {
           return i18n( "Forward invitation" );
         }
-        if ( path == "cancel" ) {
+        else if ( path == QLatin1String("cancel" ) ) {
           return i18n( "Remove invitation from my calendar" );
         }
-        if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+        else if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
           const QString name = QString::fromUtf8( QByteArray::fromBase64( path.mid( 7 ).toUtf8() ) );
           return i18n( "Open attachment \"%1\"", name );
         }
