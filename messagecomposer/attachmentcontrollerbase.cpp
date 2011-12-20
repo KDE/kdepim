@@ -635,10 +635,24 @@ void AttachmentControllerBase::showAddAttachmentDialog()
   if( dialog->exec() == KDialog::Accepted && dialog ) {
     const KUrl::List files = dialog->selectedUrls();
     const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
-    foreach( const KUrl &url, files ) {
+    if ( files.count() == 1 ) {
+      const KUrl url = files.at( 0 );
       KUrl urlWithEncoding = url;
       urlWithEncoding.setFileEncoding( encoding );
-      addAttachment( urlWithEncoding );
+      if ( KMimeType::findByUrl( urlWithEncoding )->name() == QLatin1String( "inode/directory" ) ) {
+        int rc = KMessageBox::warningYesNo( d->wParent,i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile() ),i18n( "Attach directory" ) );
+        if ( rc == KMessageBox::Yes ) {
+          addAttachment( urlWithEncoding );
+        }
+      } else {
+        addAttachment( urlWithEncoding );
+      }
+    } else {
+      foreach( const KUrl &url, files ) {
+        KUrl urlWithEncoding = url;
+        urlWithEncoding.setFileEncoding( encoding );
+        addAttachment( urlWithEncoding );
+      }
     }
   }
   delete dialog;
