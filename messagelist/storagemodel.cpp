@@ -298,7 +298,7 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   }
   case PerfectThreadingPlusReferences:
     if ( !mail->references()->identifiers().isEmpty() ) {
-      mi->setReferencesIdMD5( md5Encode( mail->references()->identifiers().first() ) );
+      mi->setReferencesIdMD5( md5Encode( mail->references()->identifiers().last() ) );
     }
     // fall through
   case PerfectThreadingOnly:
