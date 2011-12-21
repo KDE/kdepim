@@ -25,6 +25,7 @@
 
 namespace MailCommon {
 class MailFilter;
+class ItemContext;
 }
 
 class FilterManager: public QObject
@@ -120,6 +121,8 @@ class FilterManager: public QObject
      */
     void dump() const;
 #endif
+protected:
+    bool processContextItem(MailCommon::ItemContext context, bool emitSignal, int &result );
 
   Q_SIGNALS:
     /**

@@ -339,14 +339,14 @@ int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFil
   if ( !filter->isEnabled() ) {
     return 1;
   }
-  bool stopIt = false;
-  int result = 1;
 
   if ( !filter || !item.hasPayload<KMime::Message::Ptr>() ) {
     kError() << "Filter is null or item doesn't have correct payload.";
     return 1;
   }
 
+  bool stopIt = false;
+  int result = 1;
   if ( d->isMatching( item, filter ) ) {
     // do the actual filtering stuff
     if ( !d->beginFiltering( item ) ) {
@@ -361,38 +361,51 @@ int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFil
 
     d->endFiltering( item );
 
-    const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-    msg->assemble();
-
-    if ( context.needsPayloadStore() ) {
-      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-      modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
-    } else if ( context.needsFlagStore() ) {
-      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-      modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-      modifyJob->setIgnorePayload( true );
-      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
-    } else {
-      if ( context.moveTargetCollection().isValid() ) {
-        if( context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
-          Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-          connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
-        }
-        else
-          return 1;
-      }
-    }
+    if( processContextItem( context, false/*don't emit signal*/, result ))
+        return result;
 
     if ( context.moveTargetCollection().isValid() ) {
-      result = 0;
-    }
+       result = 0;
+     }
   } else {
     result = 1;
   }
 
   return result;
 }
+
+bool FilterManager::processContextItem( ItemContext context, bool emitSignal, int &result )
+{
+    const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+    msg->assemble();
+
+    if ( context.needsPayloadStore() ) {
+        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+        modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
+        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+    } else if ( context.needsFlagStore() ) {
+        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+        modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
+        modifyJob->setIgnorePayload( true );
+        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+    } else {
+        if ( context.moveTargetCollection().isValid() ) {
+            if( context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
+                Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
+                connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+            }
+            else {
+                if( emitSignal )
+                    emit itemNotMoved( context.item() );
+                result = 1;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 
 int FilterManager::process( const Akonadi::Item &item, FilterSet set,
                             bool account, const QString &accountId )
@@ -435,32 +448,9 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   }
 
   d->endFiltering( item );
-
-  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  msg->assemble();
-
-  if ( context.needsPayloadStore() ) {
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-    modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-    connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
-  } else if ( context.needsFlagStore() ) {
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-    modifyJob->setIgnorePayload( true );
-    modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-    connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
-  } else {
-    if ( context.moveTargetCollection().isValid() ) {
-      if( context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
-        Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-        connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
-      }
-      else {
-        emit itemNotMoved( context.item() );
-
-        return 1;
-      }
-    }
-  }
+  int result = 1;
+  if( processContextItem( context, true /*emit signal*/, result ))
+      return result;
 
   if ( context.moveTargetCollection().isValid() ) {
     return 0;
