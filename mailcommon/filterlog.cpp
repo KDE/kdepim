@@ -216,7 +216,7 @@ bool FilterLog::saveToFile( const QString &fileName ) const
     const QString line = entry + QLatin1Char( '\n' );
     file.write( line.toLocal8Bit() );
   }
-
+  file.close();
   return true;
 }
 
