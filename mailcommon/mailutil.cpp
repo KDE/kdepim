@@ -169,7 +169,6 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
   QDBusInterface *interface = new QDBusInterface( "org.kde.korganizer", "/MainApplication" );
   if ( !interface->isValid() ) {
     kDebug() << "Starting korganizer...";
-    delete interface;
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
                                                             QDBusServiceWatcher::WatchForRegistration );
