@@ -69,8 +69,8 @@ Name[uz]=KMail
 Name[uz@cyrillic]=KMail
 Name[vi]=KMail
 Name[wa]=KMail
-Name[xh]=KMail
 Name[x-test]=xxKMailxx
+Name[xh]=KMail
 Name[zh_CN]=KMail
 Name[zh_TW]=郵件管理_KMail
 # ctxt: KMail plasma widget's comment, NOT translators' e-mail addresses.
@@ -83,6 +83,7 @@ Comment[es]=Sus direcciones de correo
 Comment[et]=Sinu e-kirjad
 Comment[fi]=Sähköpostiosoitteesi
 Comment[fr]=Vos adresses de courriel
+Comment[hu]=Az Ön e-mail címei
 Comment[ia]=Tu e-postas
 Comment[it]=La tua posta elettronica
 Comment[ja]=あなたのメール
