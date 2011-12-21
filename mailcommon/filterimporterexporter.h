@@ -51,6 +51,11 @@ class MailFilter;
 class MAILCOMMON_EXPORT FilterImporterExporter
 {
   public:
+    enum FilterType {
+        KMailFilter = 0,
+        ThunderBirdFilter = 1
+    };
+
     /**
      * Creates a new filter importer/exporter.
      *
@@ -74,7 +79,7 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      * Imports filters. Ask the user where to import them from
      * and which filters to import.
      */
-    QList<MailFilter*> importFilters( bool & canceled );
+    QList<MailFilter*> importFilters( bool & canceled, FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter );
 
     /**
      * Writes the given list of @p filters to the given @p config file.

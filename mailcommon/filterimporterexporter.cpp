@@ -203,30 +203,49 @@ FilterImporterExporter::~FilterImporterExporter()
   delete d;
 }
 
-QList<MailFilter *> FilterImporterExporter::importFilters( bool & canceled )
+QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, FilterImporterExporter::FilterType type)
 {
-  const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
-                                                         d->mParent, i18n( "Import Filters" ) );
-  if ( fileName.isEmpty() ) {
-    canceled = true;
-    return QList<MailFilter*>(); // cancel
-  }
+    QString title;
+    switch(type){
+    case KMailFilter:
+        title = i18n( "Import Filters" );
+        break;
+    case ThunderBirdFilter:
+        title = i18n( "Import Thunderbird Filters" );
+        break;
+    }
 
-  QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    KMessageBox::error( d->mParent,
-                        i18n( "The selected file is not readable. "
-                              "Your file access permissions might be insufficient.") );
-    return QList<MailFilter*>();
-  }
+    const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
+                                                           d->mParent, title );
+    if ( fileName.isEmpty() ) {
+        canceled = true;
+        return QList<MailFilter*>(); // cancel
+    }
 
-  const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
-  const QList<MailFilter*> imported = readFiltersFromConfig( config );
+    QFile file( fileName );
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+        KMessageBox::error( d->mParent,
+                            i18n( "The selected file is not readable. "
+                                  "Your file access permissions might be insufficient.") );
+        return QList<MailFilter*>();
+    }
+    QList<MailFilter*> imported;
+    switch(type){
+    case KMailFilter:
+    {
+        const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
+        imported = readFiltersFromConfig( config );
+        break;
+    }
+    case ThunderBirdFilter:
+        //TODO
+        break;
+    }
 
-  FilterSelectionDialog dlg( d->mParent );
-  dlg.setFilters( imported );
+    FilterSelectionDialog dlg( d->mParent );
+    dlg.setFilters( imported );
 
-  return (dlg.exec() == QDialog::Accepted ? dlg.selectedFilters() : QList<MailFilter*>());
+    return (dlg.exec() == QDialog::Accepted ? dlg.selectedFilters() : QList<MailFilter*>());
 }
 
 void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
