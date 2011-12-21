@@ -241,7 +241,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
         //TODO
         break;
     }
-
+    file.close();
     FilterSelectionDialog dlg( d->mParent );
     dlg.setFilters( imported );
 
