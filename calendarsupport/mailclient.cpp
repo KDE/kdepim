@@ -108,17 +108,17 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
       toList << tname;
     }
   }
-  if( toList.count() == 0 && ccList.count() == 0 ) {
+  if( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
     kWarning() << "There are really no attendees to e-mail";
     return false;
   }
   QString to;
-  if ( toList.count() > 0 ) {
+  if ( !toList.isEmpty() ) {
     to = toList.join( QLatin1String( ", " ) );
   }
   QString cc;
-  if ( ccList.count() > 0 ) {
+  if ( !ccList.isEmpty() ) {
     cc = ccList.join( QLatin1String( ", " ) );
   }
 
