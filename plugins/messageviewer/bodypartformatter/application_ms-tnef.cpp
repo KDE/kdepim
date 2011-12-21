@@ -86,7 +86,7 @@ namespace {
         KCalCore::MemoryCalendar::Ptr cl(
           new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
         KCalUtils::InvitationFormatterHelper helper;
-        QString invite = KTnef::formatTNEFInvitation( buf, cl, &helper );
+        const QString invite = KTnef::formatTNEFInvitation( buf, cl, &helper );
         KCalCore::ICalFormat format;
         KCalCore::Incidence::Ptr inc = format.fromString( invite );
         KCalCore::Event::Ptr event = inc.dynamicCast<KCalCore::Event>();
@@ -141,18 +141,18 @@ namespace {
         htmlStr += startRow;
       }
       writer->queue( htmlStr );
-
-      for ( int i = 0; i < tnefatts.count(); ++i ) {
+      const int numberOfTnef( tnefatts.count() );
+      for ( int i = 0; i < numberOfTnef; ++i ) {
         KTnef::KTNEFAttach *att = tnefatts.at( i );
         QString label = att->displayName();
         if( label.isEmpty() )
           label = att->name();
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );
 
-        QString dir = bodyPart->nodeHelper()->createTempDir( "ktnef-" + QString::number( i ) );
+        const QString dir = bodyPart->nodeHelper()->createTempDir( "ktnef-" + QString::number( i ) );
         parser.extractFileTo( att->name(), dir );
         bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
+        const QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
 
         const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
                                                             KIconLoader::Desktop, att->name() );
