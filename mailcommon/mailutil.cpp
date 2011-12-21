@@ -99,7 +99,11 @@ bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection & collectio
 
 bool MailCommon::Util::isVirtualCollection(const QString& resource)
 {
-  return ( resource == QLatin1String( "akonadi_nepomuktag_resource" ) || resource == QLatin1String( "akonadi_search_resource" ) );
+  return (
+#ifndef KDEPIM_NO_NEPOMUK
+              resource == QLatin1String( "akonadi_nepomuktag_resource" ) ||
+#endif
+              resource == QLatin1String( "akonadi_search_resource" ) );
 }
 
 
