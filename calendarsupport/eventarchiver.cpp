@@ -106,7 +106,9 @@ void EventArchiver::run( CalendarSupport::Calendar *calendar,
   if ( KCalPrefs::instance()->mArchiveTodos ) {
     Akonadi::Item::List t = calendar->rawTodos();
     Akonadi::Item::List::ConstIterator it;
-    for ( it = t.constBegin(); it != t.constEnd(); ++it ) {
+    Akonadi::Item::List::ConstIterator end( t.constEnd() );
+    
+    for ( it = t.constBegin(); it != end; ++it ) {
       const Todo::Ptr todo = CalendarSupport::todo( *it );
       Q_ASSERT( todo );
       if ( isSubTreeComplete( calendar, todo, limitDate ) ) {
@@ -146,7 +148,8 @@ void EventArchiver::deleteIncidences( CalendarSupport::IncidenceChanger *changer
 {
   QStringList incidenceStrs;
   Akonadi::Item::List::ConstIterator it;
-  for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+  Akonadi::Item::List::ConstIterator end( incidences.constEnd() );
+  for ( it = incidences.constBegin(); it != end; ++it ) {
     incidenceStrs.append( CalendarSupport::incidence( *it )->summary() );
   }
 

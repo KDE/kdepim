@@ -1474,8 +1474,10 @@ Akonadi::Item::List Calendar::incidencesFromSchedulingID( const QString &sid )
 Akonadi::Item Calendar::incidenceFromSchedulingID( const QString &UID )
 {
   const Akonadi::Item::List incidences = rawIncidences();
-  Akonadi::Item::List::const_iterator it = incidences.begin();
-  for ( ; it != incidences.end(); ++it ) {
+  Akonadi::Item::List::const_iterator it = incidences.constBegin();
+  Akonadi::Item::List::const_iterator end = incidences.constEnd();
+  
+  for ( ; it != end; ++it ) {
     if ( CalendarSupport::incidence(*it)->schedulingID() == UID ) {
       // Touchdown, and the crowd goes wild
       return *it;

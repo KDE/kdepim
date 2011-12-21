@@ -265,14 +265,17 @@ void CalendarUtils::purgeCompletedTodos()
   Akonadi::Item::List todos = calendar()->rawTodos();
   Akonadi::Item::List rootTodos;
   Akonadi::Item::List::ConstIterator it;
-  for ( it = todos.constBegin(); it != todos.constEnd(); ++it ) {
+  Akonadi::Item::List::ConstIterator end = todos.constEnd();
+  
+  for ( it = todos.constBegin(); it != end; ++it ) {
     Todo::Ptr aTodo = CalendarSupport::todo( *it );
     if ( aTodo && aTodo->relatedTo().isEmpty() ) { // top level todo //REVIEW(AKONADI_PORT)
       rootTodos.append( *it );
     }
   }
+  end = rootTodos.constEnd();
   // now that we have a list of all root todos, check them and their children
-  for ( it = rootTodos.constBegin(); it != rootTodos.constEnd(); ++it ) {
+  for ( it = rootTodos.constBegin(); it != end; ++it ) {
     d->purgeCompletedSubTodos( *it, allDeleted );
   }
 

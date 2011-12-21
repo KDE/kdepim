@@ -322,7 +322,8 @@ void CalendarAdaptor::deleteIncidenceFinished( KJob * j )
   if ( !KCalPrefs::instance()->thatIsMe( tmp->organizer()->email() ) ) {
     const QStringList myEmails = KCalPrefs::instance()->allEmails();
     bool notifyOrganizer = false;
-    for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+    QStringList::ConstIterator end = myEmails.constEnd();
+    for ( QStringList::ConstIterator it = myEmails.constBegin(); it != end; ++it ) {
       QString email = *it;
       KCalCore::Attendee::Ptr me = tmp->attendeeByMail( email );
       if ( me ) {
