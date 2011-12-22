@@ -34,14 +34,22 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
       if ( filter )
         mListMailFilter.append( filter );
       filter = new MailFilter();
+      line = cleanArgument(line, QLatin1String("name="));
+      filter->setToolbarName(line);
     } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
-
+        line = cleanArgument(line, QLatin1String("action="));
+        extractActions(line, filter);
+        //TODO look at value here.
     } else if ( line.startsWith( QLatin1String( "enabled=" ) ) ) {
-
+        line = cleanArgument(line, QLatin1String("enabled="));
+        if(line == QLatin1String("no"))
+            filter->setEnabled(false);
     } else if ( line.startsWith( QLatin1String( "condition=" ) ) ) {
-
+        line = cleanArgument(line, QLatin1String("condition="));
+        extractConditions(line, filter);
     } else if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
-
+        line = cleanArgument(line, QLatin1String("actionValue="));
+        extractValues(line, filter);
     }
   }
   if ( filter )
@@ -52,8 +60,49 @@ FilterImporterThunderbird::~FilterImporterThunderbird()
 {
 }
 
+void FilterImporterThunderbird::extractConditions(const QString& line, MailCommon::MailFilter* filter)
+{
+    if(line.startsWith(QLatin1String("AND"))) {
+        filter->pattern()->setOp(SearchPattern::OpAnd);
+    } else if( line.startsWith(QLatin1String("OR"))) {
+        filter->pattern()->setOp(SearchPattern::OpOr);
+    }
+}
+
+void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
+{
+    if(line == QLatin1String("Move to folder")) {
+
+    } else if( line == QLatin1String("Forward")) {
+
+    } else if( line == QLatin1String("Mark read")) {
+
+    } else if( line == QLatin1String("Copy to folder")) {
+
+    } else if( line == QLatin1String("AddTag")) {
+
+    } else if( line == QLatin1String("Delete")) {
+
+    } else {
+        qDebug()<<" missing convert method";
+    }
+}
+
+void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::MailFilter* filter)
+{
+}
+
+
+QString FilterImporterThunderbird::cleanArgument(const QString &line, const QString &removeStr)
+{
+    QString str = line;
+    str.remove(removeStr);
+    str.remove("\"");
+    str.remove(removeStr.length()-1,1); //remove last "
+    return str;
+}
+
 QList<MailFilter*> FilterImporterThunderbird::importFilter() const
 {
-  //TODO
-  return QList<MailFilter*>();
+  return mListMailFilter;
 }
