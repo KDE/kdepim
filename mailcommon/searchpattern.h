@@ -385,6 +385,8 @@ private:
      * @copydoc SearchRule::addPersonTerms()
      */
     void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
+    void addHeaderTerm (Nepomuk::Query::GroupTerm& groupTerm, const Nepomuk::Query::Term& field) const;
+
 #endif
 };
 
