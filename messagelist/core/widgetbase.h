@@ -256,6 +256,8 @@ protected slots:
    */
   void slotViewHeaderSectionClicked( int logicalIndex );
 
+  void slotLockSearchClicked(bool b);
+
 private:
   class Private;
   Private * const d;

@@ -105,7 +105,7 @@ public:
   QTimer *mSearchTimer;
   KComboBox *mStatusFilterCombo;
   QToolButton *mOpenFullSearchButton;
-
+  QToolButton *mLockSearch;
   StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
                                          ///  is owned by MessageList::Widget.
   Aggregation * mAggregation;            ///< The currently set aggregation mode, a deep copy
@@ -135,6 +135,17 @@ Widget::Widget( QWidget *pParent )
   g->setMargin( 2 ); // use a smaller default
   g->setSpacing( 2 );
 
+  d->mLockSearch = new QToolButton(this);
+  d->mLockSearch->setCheckable(true);
+  d->mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
+  d->mLockSearch->setText( i18n( "Lock search" ) );
+  d->mLockSearch->setToolTip( d->mLockSearch->text() );
+  d->mLockSearch->setVisible( Settings::self()->showQuickSearch() );
+  connect( d->mLockSearch, SIGNAL(toggled(bool)),
+           this, SLOT(slotLockSearchClicked(bool)) );
+  g->addWidget( d->mLockSearch, 0, 0 );
+
+
   d->mSearchEdit = new KLineEdit( this );
   d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
   d->mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
@@ -147,12 +158,12 @@ Widget::Widget( QWidget *pParent )
   connect( d->mSearchEdit, SIGNAL(clearButtonClicked()),
            SLOT(searchEditClearButtonClicked()) );
 
-  g->addWidget( d->mSearchEdit, 0, 0 );
+  g->addWidget( d->mSearchEdit, 0, 1 );
 
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
   d->mStatusFilterCombo = new KComboBox( this ) ;
   d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
-  g->addWidget( d->mStatusFilterCombo, 0, 1 );
+  g->addWidget( d->mStatusFilterCombo, 0, 2 );
 
   // The "Open Full Search" button
   d->mOpenFullSearchButton = new QToolButton( this );
@@ -160,7 +171,7 @@ Widget::Widget( QWidget *pParent )
   d->mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
   d->mOpenFullSearchButton->setToolTip( d->mOpenFullSearchButton->text() );
   d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
-  g->addWidget( d->mOpenFullSearchButton, 0, 2 );
+  g->addWidget( d->mOpenFullSearchButton, 0, 3 );
 
   connect( d->mOpenFullSearchButton, SIGNAL(clicked()),
            this, SIGNAL(fullSearchRequest()) );
@@ -387,19 +398,20 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   d->setDefaultThemeForStorageModel( storageModel );
   d->setDefaultSortOrderForStorageModel( storageModel );
 
-  if ( d->mSearchTimer )
-  {
-    d->mSearchTimer->stop();
-    delete d->mSearchTimer;
-    d->mSearchTimer = 0;
+  if(!d->mLockSearch->isChecked()) {
+      if ( d->mSearchTimer )
+      {
+          d->mSearchTimer->stop();
+          delete d->mSearchTimer;
+          d->mSearchTimer = 0;
+      }
+
+      d->mSearchEdit->setText( QString() );
+
+      if ( d->mFilter ) {
+          resetFilter();
+      }
   }
-
-  d->mSearchEdit->setText( QString() );
-
-  if ( d->mFilter ) {
-    resetFilter();
-  }
-
   StorageModel * oldModel = d->mStorageModel;
 
   d->mStorageModel = storageModel;
@@ -884,6 +896,12 @@ void Widget::resetFilter()
   d->mFilter = 0;
   d->mView->model()->setFilter( 0 );
   d->mStatusFilterCombo->setCurrentIndex( 0 );
+  d->mLockSearch->setChecked(false);
+}
+
+void Widget::slotLockSearchClicked(bool b)
+{
+    d->mLockSearch->setIcon( b ? KIcon( QLatin1String( "object-locked" ) ): KIcon( QLatin1String( "object-unlocked" ) ));
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
