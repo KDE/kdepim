@@ -1,8 +1,0 @@
-ClassName=GroupwisePrefs
-File=kresources_kabc_groupwise.kcfg
-GlobalEnums=true
-IncludeFiles=libkdepim/kresourceprefs.h
-Inherits=KPIM::KResourcePrefs
-Mutators=true
-NameSpace=KABC
-Singleton=false

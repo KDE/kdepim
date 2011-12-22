@@ -280,7 +280,7 @@ endmacro(kcfg_generate_dbus_interface)
 ############### Code used in several places ###############
 # TODO Remove from the top CMakeLists.
 
-# used in knotes, kontact/plugins/knotes, wizard
+# used in knotes, kontact/plugins/knotes
 set(libknotesresources_SRCS
   ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
   ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
@@ -326,10 +326,6 @@ endif()
   if(QGPGME_FOUND)
     if(Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
-    endif()
-
-    if(QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
-      macro_optional_add_subdirectory(wizards)
     endif()
 
     # The following components depend on QGpgME.

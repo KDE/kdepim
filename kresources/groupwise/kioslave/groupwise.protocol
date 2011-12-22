@@ -1,6 +1,0 @@
-[Protocol]
-exec=kio_groupwise
-input=none
-output=filesystem
-protocol=groupwise
-reading=true
