@@ -63,7 +63,7 @@ using MessageComposer::MessageFactory;
 using namespace MailCommon;
 
 ItemContext::ItemContext( const Akonadi::Item &item )
-  : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false )
+    : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false ),mDeleteItem(false)
 {
 }
 
@@ -102,6 +102,15 @@ bool ItemContext::needsFlagStore() const
   return mNeedsFlagStore;
 }
 
+void ItemContext::setDeleteItem()
+{
+  mDeleteItem = true;
+}
+
+bool ItemContext::deleteItem() const
+{
+  return mDeleteItem;
+}
 
 FilterAction::FilterAction( const char *name, const QString &label, QObject *parent )
   : QObject( parent ), mName( name ), mLabel( label )
@@ -2614,6 +2623,32 @@ void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
 
 
 //=============================================================================
+// FilterActionDelete - Delete action
+//=============================================================================
+class FilterActionDelete : public FilterActionWithNone
+{
+  public:
+    FilterActionDelete( QObject *parent = 0 );
+    virtual ReturnCode process( ItemContext &context ) const;
+    static FilterAction* newAction();
+};
+
+FilterAction* FilterActionDelete::newAction()
+{
+  return new FilterActionDelete;
+}
+
+FilterActionDelete::FilterActionDelete( QObject *parent )
+  : FilterActionWithNone( "delete", i18n( "Delete Message" ), parent )
+{
+}
+
+FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) const
+{
+  context.setDeleteItem();
+  return GoOn;
+}
+//=============================================================================
 //
 //   Filter  Action  Dictionary
 //
@@ -2645,6 +2680,7 @@ void FilterActionDict::init()
   insert( FilterActionExecSound::newAction );
 #endif
   insert( FilterActionAddToAddressBook::newAction );
+  insert( FilterActionDelete::newAction);
   // Register custom filter actions below this line.
 }
 

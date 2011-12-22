@@ -11,6 +11,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/kmime/messageparts.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -49,6 +50,7 @@ class FilterManager::Private
     void itemFetchJobForFilterDone( KJob *job );
     void moveJobResult( KJob* );
     void modifyJobResult( KJob* );
+    void deleteJobResult( KJob* );
     void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
 
     bool isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
@@ -163,6 +165,14 @@ void FilterManager::Private::moveJobResult( KJob *job )
       kError() << "Error while moving items. " << job->error() << job->errorString();
     }
     KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
+  }
+}
+
+void FilterManager::Private::deleteJobResult( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << "Error while delete items. " << job->error() << job->errorString();
+    KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter delete"));
   }
 }
 
@@ -379,7 +389,10 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     msg->assemble();
 
-    if ( context.needsPayloadStore() ) {
+    if ( context.deleteItem() ) {
+        Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( context.item(), this );
+        connect( deleteJob, SIGNAL(result(KJob*)), SLOT(deleteJobResult(KJob*)));	
+    } else if ( context.needsPayloadStore() ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
         modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
         connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));

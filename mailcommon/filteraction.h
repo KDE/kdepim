@@ -90,11 +90,15 @@ class MAILCOMMON_EXPORT ItemContext
      */
     bool needsFlagStore() const;
 
+    void setDeleteItem();
+    bool deleteItem() const;
+
   private:
     Akonadi::Item mItem;
     Akonadi::Collection mMoveTargetCollection;
     bool mNeedsPayloadStore;
     bool mNeedsFlagStore;
+    bool mDeleteItem;
 };
 
 //=========================================================
