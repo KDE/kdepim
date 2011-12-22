@@ -328,10 +328,6 @@ endif()
       macro_optional_add_subdirectory(kleopatra)
     endif()
 
-    if(QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
-      macro_optional_add_subdirectory(wizards)
-    endif()
-
     # The following components depend on QGpgME.
     set(MESSAGEVIEWER_SUPPORTED TRUE)
     add_subdirectory(messageviewer)
