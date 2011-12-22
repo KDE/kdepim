@@ -36,7 +36,7 @@ using MailCommon::FilterLog;
 #include <Nepomuk/Query/ResourceTerm>
 #include <Nepomuk/Query/NegationTerm>
 #include <Nepomuk/Query/ResourceTypeTerm>
-
+#include <nepomuk/pimo.h>
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDF>
 
@@ -494,6 +494,15 @@ void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const
   groupTerm.addSubTerm( personTerm );
 }
 
+void SearchRuleString::addHeaderTerm(Nepomuk::Query::GroupTerm& groupTerm, const Nepomuk::Query::Term& field) const
+{
+  const Nepomuk::Query::ComparisonTerm headerName(Vocabulary::NMO::headerName(), field, Nepomuk::Query::ComparisonTerm::Equal);
+  const Nepomuk::Query::ComparisonTerm headerTerm(Vocabulary::NMO::headerValue(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+  groupTerm.addSubTerm(headerName);
+  groupTerm.addSubTerm(headerTerm);  
+
+}
+
 void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   Nepomuk::Query::OrTerm termGroup;
@@ -531,27 +540,25 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   }
 
   if ( kasciistricmp( field(), "list-id" ) == 0 ) {
-    //TODO
+      addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm("List-Id"));
   }
   else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
     //TODO
   }
   else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
-    //TODO
+      addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm("X-Loop"));
   }
   else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
-    //TODO
+     addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm("X-Mailing-List"));
   }
   else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
-    //TODO
+     addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm("X-Spam-Flag"));
   }
 
   // TODO complete for other headers, generic headers
 
   if ( kasciistricmp( field(), "organization" )  == 0 ) {
-      const Nepomuk::Query::ComparisonTerm headerTerm( Vocabulary::NMO::headerName(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
-    termGroup.addSubTerm( headerTerm );
-  //TODO
+      addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm("Organization") );
   }
 
 
