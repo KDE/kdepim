@@ -69,8 +69,8 @@ Name[uz]=KMail
 Name[uz@cyrillic]=KMail
 Name[vi]=KMail
 Name[wa]=KMail
-Name[x-test]=xxKMailxx
 Name[xh]=KMail
+Name[x-test]=xxKMailxx
 Name[zh_CN]=KMail
 Name[zh_TW]=郵件管理_KMail
 # ctxt: KMail plasma widget's comment, NOT translators' e-mail addresses.
@@ -89,6 +89,7 @@ Comment[ia]=Tu e-postas
 Comment[it]=La tua posta elettronica
 Comment[ja]=あなたのメール
 Comment[kk]=Эл.поштаңыз
+Comment[km]=អ៊ីមែល​របស់​អ្នក
 Comment[lt]=liudas@akmc.lt
 Comment[nb]=Dine e-poster
 Comment[nds]=Dien Nettpost
