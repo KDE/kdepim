@@ -16,7 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filterimporterthunderbird.h"
+#include "filterimporterthunderbird_p.h"
 #include <QTextStream>
 #include <QDebug>
 #include "mailfilter.h"
