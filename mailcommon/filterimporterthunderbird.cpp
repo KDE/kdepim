@@ -66,26 +66,29 @@ void FilterImporterThunderbird::extractConditions(const QString& line, MailCommo
         filter->pattern()->setOp(SearchPattern::OpAnd);
     } else if( line.startsWith(QLatin1String("OR"))) {
         filter->pattern()->setOp(SearchPattern::OpOr);
+    } else {
+      qDebug()<<" missing extract condition";
     }
 }
 
 void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
 {
-    if(line == QLatin1String("Move to folder")) {
+  QString actionName;
+  if(line == QLatin1String("Move to folder")) {
+    actionName = QLatin1String( "transfer" );
+  } else if( line == QLatin1String("Forward")) {
+    actionName = QLatin1String( "forward" );
+  } else if( line == QLatin1String("Mark read")) {
 
-    } else if( line == QLatin1String("Forward")) {
-
-    } else if( line == QLatin1String("Mark read")) {
-
-    } else if( line == QLatin1String("Copy to folder")) {
-
-    } else if( line == QLatin1String("AddTag")) {
-
-    } else if( line == QLatin1String("Delete")) {
-
-    } else {
-        qDebug()<<" missing convert method";
-    }
+  } else if( line == QLatin1String("Copy to folder")) {
+    actionName = QLatin1String( "copy" );
+  } else if( line == QLatin1String("AddTag")) {
+    actionName = QLatin1String( "add tag" );
+  } else if( line == QLatin1String("Delete")) {
+    actionName = QLatin1String( "delete" );
+  } else {
+    qDebug()<<" missing convert method";
+  }
 }
 
 void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::MailFilter* filter)
