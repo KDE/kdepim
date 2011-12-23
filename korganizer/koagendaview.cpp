@@ -1492,6 +1492,14 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
     }
   } else if ( event ) {
     Event *existingEvent = calendar()->event( event->uid() );
+    
+    KCal::CalendarResources *calendarResource = dynamic_cast<KCal::CalendarResources*>( calendar() );
+
+    if ( calendarResource ) {
+      KCal::ResourceCalendar *resourceCalendar = calendarResource->resource( incidence );
+      existingEvent = resourceCalendar ? existingEvent : 0;
+    }
+
     if ( existingEvent ) {
       kdDebug(5850) << "Drop existing Event" << endl;
       Event *oldEvent = existingEvent->clone();
@@ -1515,7 +1523,7 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
       event->setFloats( allDay );
       event->setUid( CalFormat::createUniqueId() );
       event->setDtEnd( newTime.addSecs( duration ) );
-      if ( !mChanger->addIncidence( event, 0, QString(), this ) ) {
+      if ( !mChanger->addIncidence( event, resourceCalendar(), subResourceCalendar(), this ) ) {
         KODialogManager::errorSaveIncidence( this, event );
       }
     }
