@@ -448,12 +448,13 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
       if ( ICalDrag::canDecode( de ) || VCalDrag::canDecode( de ) ) {
 
         DndFactory factory( mCalendar );
-        Todo *todo = factory.createDropTodo( de );
-        if ( todo ) {
+        Incidence::List incidences = factory.createDropIncidences( de );
+        if ( !incidences.isEmpty() ) {
           de->accept();
-          delete todo;
+          incidences.setAutoDelete( true );
         } else {
           de->ignore();
+          return false;
         }
         return true;
       } else return false;
@@ -468,26 +469,32 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
         }
 
         DndFactory factory( mCalendar );
-        Todo *todo = factory.createDropTodo( de );
+        Incidence::List incidences = factory.createDropIncidences( de );
 
-        if ( todo ) {
-          de->acceptAction();
-          QPoint pos;
-          // FIXME: This is a bad hack, as the viewportToContents seems to be off by
-          // 2000 (which is the left upper corner of the viewport). It works correctly
-          // for agendaItems.
-          if ( object == this  ) {
-            pos = viewportPos + QPoint( contentsX(), contentsY() );
-          } else {
-            pos = viewportToContents( viewportPos );
+        if ( !incidences.isEmpty() ) {
+          Incidence *incidence = incidences.first();
+          for( uint i=1; i<incidences.count(); ++i ) {
+            delete incidences[i];
           }
-          QPoint gpos = contentsToGrid( pos );
-          emit droppedToDo( todo, gpos, mAllDayMode );
-          return true;
+          // Journals not supported yet.
+          if ( incidence->type() == "Event" || incidence->type() == "Todo" ) {
+            de->acceptAction();
+            QPoint pos;
+            // FIXME: This is a bad hack, as the viewportToContents seems to be off by
+            // 2000 (which is the left upper corner of the viewport). It works correctly
+            // for agendaItems.
+            if ( object == this  ) {
+              pos = viewportPos + QPoint( contentsX(), contentsY() );
+            } else {
+              pos = viewportToContents( viewportPos );
+            }
+            QPoint gpos = contentsToGrid( pos );
+            emit droppedIncidence( incidence, gpos, mAllDayMode );
+            return true;
+          }
         }
       }
       break;
-
     case QEvent::DragResponse:
     default:
       break;

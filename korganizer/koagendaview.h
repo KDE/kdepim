@@ -187,8 +187,8 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
 
     void finishTypeAhead();
 
-    /** reschedule the todo  to the given x- and y- coordinates. Third parameter determines all-day (no time specified) */
-    void slotTodoDropped( Todo *, const QPoint &, bool );
+    /** reschedule the incidence to the given x- and y- coordinates. Third parameter determines all-day (no time specified) */
+    void slotIncidenceDropped( Incidence *, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
     void setIncidenceChanger( KOrg::IncidenceChangerBase *changer );

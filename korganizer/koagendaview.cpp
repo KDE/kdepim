@@ -456,8 +456,8 @@ void KOAgendaView::connectAgenda( KOAgenda *agenda, QPopupMenu *popup,
            SIGNAL(incidenceSelected(Incidence *,const QDate &)) );
 
   // rescheduling of todos by d'n'd
-  connect( agenda, SIGNAL(droppedToDo(Todo *,const QPoint &,bool)),
-           SLOT(slotTodoDropped(Todo *,const QPoint &,bool)) );
+  connect( agenda, SIGNAL(droppedIncidence(Incidence *,const QPoint &,bool)),
+           SLOT(slotIncidenceDropped(Incidence *,const QPoint &,bool)) );
 
 }
 
@@ -1427,13 +1427,25 @@ void KOAgendaView::updateEventIndicatorBottom( int newY )
   mEventIndicatorBottom->update();
 }
 
-void KOAgendaView::slotTodoDropped( Todo *todo, const QPoint &gpos, bool allDay )
+void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpos, bool allDay )
 {
   if ( gpos.x()<0 || gpos.y()<0 ) return;
   QDate day = mSelectedDates[gpos.x()];
   QTime time = mAgenda->gyToTime( gpos.y() );
   QDateTime newTime( day, time );
 
+  Event *event = 0;
+  Todo *todo = 0;
+  
+  if ( incidence->type() == "Event" )
+    event = static_cast<Event*>( incidence );
+
+  if ( incidence->type() == "Todo" )
+    todo = static_cast<Todo*>( incidence );
+  
+  if ( !event && !todo )
+    return;
+  
   if ( todo ) {
     Todo *existingTodo = calendar()->todo( todo->uid() );
     if ( existingTodo ) {
@@ -1459,6 +1471,35 @@ void KOAgendaView::slotTodoDropped( Todo *todo, const QPoint &gpos, bool allDay 
       todo->setHasDueDate( true );
       if ( !mChanger->addIncidence( todo, 0, QString(), this ) ) {
         KODialogManager::errorSaveIncidence( this, todo );
+      }
+    }
+  } else if ( event ) {
+    Event *existingEvent = calendar()->event( event->uid() );
+    if ( existingEvent ) {
+      kdDebug(5850) << "Drop existing Event" << endl;
+      Event *oldEvent = existingEvent->clone();
+      if ( mChanger &&
+           mChanger->beginChange( existingEvent, resourceCalendar(), subResourceCalendar() ) ) {
+        existingEvent->setDtStart( newTime );
+        existingEvent->setFloats( allDay );
+        existingEvent->setDtEnd( newTime.addSecs( oldEvent->dtStart().secsTo( oldEvent->dtEnd() ) ) );
+        mChanger->changeIncidence( oldEvent, existingEvent,
+                                   KOGlobals::DATE_MODIFIED, this );
+        mChanger->endChange( existingEvent, resourceCalendar(), subResourceCalendar() );
+      } else {
+        KMessageBox::sorry( this, i18n("Unable to modify this event, "
+                            "because it cannot be locked.") );
+      }
+      delete oldEvent;
+    } else {
+      kdDebug(5850) << "Drop new Event" << endl;
+      const int duration = event->dtStart().secsTo( event->dtEnd() );
+      event->setDtStart( newTime );
+      event->setFloats( allDay );
+      event->setUid( CalFormat::createUniqueId() );
+      event->setDtEnd( newTime.addSecs( duration ) );
+      if ( !mChanger->addIncidence( event, 0, QString(), this ) ) {
+        KODialogManager::errorSaveIncidence( this, event );
       }
     }
   }

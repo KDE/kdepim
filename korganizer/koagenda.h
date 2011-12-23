@@ -197,7 +197,7 @@ class KOAgenda : public QScrollView
     void upperYChanged( int );
 
     void startDragSignal(Incidence *);
-    void droppedToDo( Todo*todo, const QPoint &gpos, bool allDay );
+    void droppedIncidence( Incidence *incidence, const QPoint &gpos, bool allDay );
 
     void zoomView( const int delta, const QPoint &pos, const Qt::Orientation );
 
