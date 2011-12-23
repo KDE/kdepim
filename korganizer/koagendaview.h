@@ -307,6 +307,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     // Other solution would be not initializing mSelectedDates in the ctor, but that requires
     // lots of changes in koagenda.cpp and koagendaview.cpp
     bool mAreDatesInitialized;
+    bool mProcessingDrop;
 };
 
 #endif

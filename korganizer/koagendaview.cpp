@@ -256,7 +256,8 @@ KOAgendaView::KOAgendaView( Calendar *cal,
   mUpdateItem( 0 ),
   mIsSideBySide( isSideBySide ),
   mPendingChanges( true ),
-  mAreDatesInitialized( false )
+  mAreDatesInitialized( false ),
+  mProcessingDrop( false )
 {
   mSelectedDates.append(QDate::currentDate());
 
@@ -1429,6 +1430,21 @@ void KOAgendaView::updateEventIndicatorBottom( int newY )
 
 void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpos, bool allDay )
 {
+  struct BoolChanger {
+    BoolChanger( bool &bb ) : b( bb )
+    {
+      b = true;
+    }
+    
+    ~BoolChanger()
+    {
+      b = false;
+    }
+    bool &b;
+  };
+  
+  BoolChanger boolChanger( mProcessingDrop );
+
   if ( gpos.x()<0 || gpos.y()<0 ) return;
   QDate day = mSelectedDates[gpos.x()];
   QTime time = mAgenda->gyToTime( gpos.y() );
@@ -1453,6 +1469,7 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
       Todo *oldTodo = existingTodo->clone();
       if ( mChanger &&
            mChanger->beginChange( existingTodo, resourceCalendar(), subResourceCalendar() ) ) {
+        
         existingTodo->setDtDue( newTime );
         existingTodo->setFloats( allDay );
         existingTodo->setHasDueDate( true );
@@ -1730,7 +1747,10 @@ void KOAgendaView::calendarIncidenceChanged(Incidence * incidence)
 {
   Q_UNUSED( incidence );
   mPendingChanges = true;
-  fillAgenda();
+  
+  // We shouldn't delete the agenda item while we're still processing
+  if ( !mProcessingDrop )
+    fillAgenda();
 }
 
 void KOAgendaView::calendarIncidenceDeleted(Incidence * incidence)
