@@ -99,6 +99,18 @@ void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   QString field = listOfCond.at( 0 );
   QString function = listOfCond.at( 1 );
   QString contents = listOfCond.at( 2 );
+  if ( field == QLatin1String( "" ) )
+  {
+  }
+
+  if ( function == QLatin1String( "contains" ) )
+  {
+  }
+
+  if ( contents == QLatin1String( "" ) )
+  {
+    //TODO
+  }
   qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
 
 }
@@ -129,6 +141,7 @@ void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::M
 
 void FilterImporterThunderbird::extractType(const QString& line, MailCommon::MailFilter* filter)
 {
+  //TODO
 }
 
 QString FilterImporterThunderbird::cleanArgument(const QString &line, const QString &removeStr)
