@@ -146,7 +146,10 @@ Incidence::List DndFactory::createDropIncidences(QDropEvent *de)
   Incidence::List incidences;
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
-    incidences = cal.incidences();
+    Incidence::List incidences2 = cal.incidences();
+    for( uint i=0; i<incidences2.count(); ++i ) {
+      incidences.append( incidences2[i]->clone() );
+    }
   }
 
   return incidences;
