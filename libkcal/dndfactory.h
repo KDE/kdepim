@@ -55,6 +55,11 @@ class LIBKCAL_EXPORT DndFactory
     /** Create Event object from drop event */
     Event *createDrop(QDropEvent *de);
 
+    /**
+     * Generic method that creates an incidence drop.
+     */
+    KCal::Incidence::List createDropIncidences(QDropEvent *de);
+
     /** cut incidence to clipboard */
     void cutIncidence( Incidence * );
     /** copy the incidence to clipboard */

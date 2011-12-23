@@ -137,6 +137,21 @@ Event *DndFactory::createDrop(QDropEvent *de)
   return 0;
 }
 
+Incidence::List DndFactory::createDropIncidences(QDropEvent *de)
+{
+  kdDebug(5800) << "DndFactory::createIncidenceDrop()" << endl;
+
+  CalendarLocal cal( mCalendar->timeZoneId() );
+
+  Incidence::List incidences;
+  if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
+    de->accept();
+    incidences = cal.incidences();
+  }
+
+  return incidences;
+}
+
 Todo *DndFactory::createDropTodo(QDropEvent *de)
 {
   kdDebug(5800) << "VCalFormat::createDropTodo()" << endl;
