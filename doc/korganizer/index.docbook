@@ -202,9 +202,9 @@ are covered here.</para>
 <title>Entering Events</title>
 
 <procedure>
-<step><para>Click the <guiicon><inlinemediaobject><imageobject>
+<step><para>Click the <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-agenda.png" format="PNG"/></imageobject>
-</inlinemediaobject></guiicon><guibutton>Agenda</guibutton> toolbar button
+</inlinemediaobject><guibutton>Agenda</guibutton> toolbar button
 or choose the <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Agenda</guimenuitem></menuchoice> menu item.
 This will bring up the <link linkend="agenda-view"><guilabel>Agenda View</guilabel>
@@ -251,9 +251,9 @@ to-do.</para></step>
 
 <procedure>
 
-<step><para>Select the <guiicon><inlinemediaobject><imageobject>
+<step><para>Select the <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-journal.png" format="PNG"/></imageobject>
-</inlinemediaobject></guiicon><menuchoice><guimenu>View</guimenu>
+</inlinemediaobject><menuchoice><guimenu>View</guimenu>
 <guimenuitem>Journal</guimenuitem></menuchoice> menu item to open the
 <link linkend="journal-view"><guilabel>Journal</guilabel> main
 view</link>.</para></step>
@@ -286,9 +286,9 @@ only shows days. Therefore the Month view is most suitable for long-time
 events like holidays.</para></step>
 
 <step><para>To display the week view select the agenda view, press the
-<guiicon><inlinemediaobject><imageobject>
+<inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-week.png" format="PNG"/></imageobject>
-</inlinemediaobject></guiicon><guibutton>Week</guibutton> view toolbar button,
+</inlinemediaobject><guibutton>Week</guibutton> view toolbar button,
 or choose the <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Week</guimenuitem></menuchoice> menu item.
 </para></step>
@@ -309,16 +309,16 @@ desired time directly.</para>
 
 <para>You should choose an appropriate <link
 linkend="reference-menus-view">view</link> before beginning this operation.
-Only the <link linkend="todo-view"><guiicon><inlinemediaobject><imageobject>
+Only the <link linkend="todo-view"><inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
-</inlinemediaobject></guiicon><guilabel>To-do List</guilabel> view
+</inlinemediaobject><guilabel>To-do List</guilabel> view
 </link> and <link linkend="description-view">the to-do view sidebar component
 </link> show to-dos which do not have a due date.</para>
 
 <para>To display the to-do list view, press the
-<guiicon><inlinemediaobject><imageobject>
+<inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
-</inlinemediaobject></guiicon><guibutton>To-do List</guibutton> view toolbar button,
+</inlinemediaobject><guibutton>To-do List</guibutton> view toolbar button,
 or choose the <menuchoice><guimenu>View</guimenu>
 <guimenuitem>To-do List</guimenuitem></menuchoice> menu item.
 </para>
@@ -605,27 +605,6 @@ date list can be obtained at the
 <ulink url="http://www.groupdav.org">GroupDav website</ulink>.
 </para></listitem>
 </varlistentry>
-
-<varlistentry>
-<term><guilabel>Novell Groupwise Server</guilabel></term>
-<listitem><para>
-If you have access to a
-<ulink url="http://www.novell.com/products/groupwise">Novell GroupWise Server</ulink>
-(version 6.5 or later), add this resource in order to be able to save (and load)
-events, free/busy information <!--,journals ?-->and to-dos to the server. To add the resource, you will
-need to know the server &URL;, your user name and your password. There is
-support for storage of contacts, so you may want to configure &kaddressbook;
-resource.</para>
-<para>The most practical way to configure the access to a GroupWise server is
-to use the <application>groupwisewizard</application> wizard. You can start it
-from the command line prompt:
-
-<screen><prompt>$</prompt><command>groupwisewizard</command></screen>
-
-The wizard will configure not only &korganizer; to use the
-GroupWise resources, but &kmail;, &kaddressbook; too.</para>
-</listitem>
-</varlistentry>
 <!-- no Groupware tab in kmail anymore, is this outdated? -->
 <varlistentry>
 <term><guilabel>Calendar on IMAP Server via &kmail;</guilabel></term>
@@ -670,7 +649,7 @@ website</ulink>.</para>
 <para>The most practical way to configure the access to a Kolab server is to use
 the <application>kolabwizard</application> wizard application. You can start it
 from the command line prompt:
-
+  <!-- no kolabwizard in > 4.4 anymore-->
 <screen><prompt>$</prompt><command>kolabwizard</command></screen>
 
 </para>
@@ -733,9 +712,9 @@ you can let other people (for instance, a secretary) view it.
 </screenshot>
 
 <para>You can configure the resource to be read only, keeping the remote file
-untouched. In this case, you won't need to supply a  <quote><guilabel>Upload
-to</guilabel></quote> location, just a <quote><guilabel>Download
-from</guilabel></quote> location for the remote file. If you plan to use a
+untouched. In this case, you won't need to supply a <guilabel>Upload
+to</guilabel> location, just a <guilabel>Download
+from</guilabel> location for the remote file. If you plan to use a
 writable remote resource, you will have to supply both locations. The reason
 to have separate  locations, is that some servers may have an upload queue,
 a place where you need to put the upload file, different from where it will be.
