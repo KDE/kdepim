@@ -38,6 +38,7 @@ private:
   void extractActions(const QString& line, MailCommon::MailFilter* filter);
   void extractValues(const QString& line, MailCommon::MailFilter* filter);
   void extractType(const QString& line, MailCommon::MailFilter* filter);
+  void splitConditions( const QString&cond, MailCommon::MailFilter* filter );
 
   QList<MailFilter*> mListMailFilter;
 };

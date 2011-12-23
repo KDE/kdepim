@@ -67,11 +67,40 @@ void FilterImporterThunderbird::extractConditions(const QString& line, MailCommo
 {
     if(line.startsWith(QLatin1String("AND"))) {
         filter->pattern()->setOp(SearchPattern::OpAnd);
+        const QStringList conditionsList = line.split( QLatin1String( "AND " ) );
+        const int numberOfCond( conditionsList.count() );
+        for ( int i = 0; i < numberOfCond; ++i )
+        {
+          splitConditions( conditionsList.at( i ), filter );
+        }
     } else if( line.startsWith(QLatin1String("OR"))) {
         filter->pattern()->setOp(SearchPattern::OpOr);
+        const QStringList conditionsList = line.split( QLatin1String( "OR " ) );
+        const int numberOfCond( conditionsList.count() );
+        for ( int i = 0; i < numberOfCond; ++i )
+        {
+          splitConditions( conditionsList.at( i ), filter );
+        }
     } else {
       qDebug()<<" missing extract condition";
     }
+}
+
+void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon::MailFilter* filter )
+{
+  QString str = cond.trimmed();
+  str.remove("(");
+  str.remove(str.length()-1,1); //remove last )
+  QStringList listOfCond = str.split( QLatin1Char( ',' ) );
+  if ( listOfCond.count() < 3 ) {
+    qDebug()<<"We have a pb in cond:"<<cond;
+    return;
+  }
+  QString field = listOfCond.at( 0 );
+  QString function = listOfCond.at( 1 );
+  QString contents = listOfCond.at( 2 );
+  qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
+
 }
 
 void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
@@ -107,7 +136,7 @@ QString FilterImporterThunderbird::cleanArgument(const QString &line, const QStr
     QString str = line;
     str.remove(removeStr);
     str.remove("\"");
-    str.remove(removeStr.length()-1,1); //remove last "
+    str.remove(str.length()-1,1); //remove last "
     return str;
 }
 
