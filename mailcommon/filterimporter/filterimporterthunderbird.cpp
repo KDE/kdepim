@@ -50,6 +50,9 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
     } else if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
         line = cleanArgument(line, QLatin1String("actionValue="));
         extractValues(line, filter);
+    } else if ( line.startsWith( QLatin1String( "type=" ) ) ) {
+        line = cleanArgument(line, QLatin1String("type="));
+        extractType(line, filter);
     }
   }
   if ( filter )
@@ -95,6 +98,9 @@ void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::M
 {
 }
 
+void FilterImporterThunderbird::extractType(const QString& line, MailCommon::MailFilter* filter)
+{
+}
 
 QString FilterImporterThunderbird::cleanArgument(const QString &line, const QString &removeStr)
 {
