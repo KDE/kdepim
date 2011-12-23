@@ -47,8 +47,8 @@ bool ICalDrag::decode( QMimeSource *de, Calendar *cal )
   bool success = false;
 
   QByteArray payload = de->encodedData( "text/calendar" );
-  if ( payload.size() ) {
-    QString txt = QString::fromUtf8( payload.data() );
+  if ( payload.size() ) {    
+    QString txt = QString::fromUtf8( payload.data(), payload.size() );
 
     ICalFormat icf;
     success = icf.fromString( cal, txt );
