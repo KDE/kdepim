@@ -99,12 +99,18 @@ void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   QString field = listOfCond.at( 0 );
   QString function = listOfCond.at( 1 );
   QString contents = listOfCond.at( 2 );
-  if ( field == QLatin1String( "" ) )
-  {
+  if ( field == QLatin1String( "subject" ) ) {
+
+  } else if ( field == QLatin1String( "date" ) ) {
+
+  } else if ( field == QLatin1String( "from" ) ) {
+
   }
 
-  if ( function == QLatin1String( "contains" ) )
-  {
+  if ( function == QLatin1String( "contains" ) ) {
+
+  } else if ( function == QLatin1String( "isn't" ) ) {
+
   }
 
   if ( contents == QLatin1String( "" ) )
