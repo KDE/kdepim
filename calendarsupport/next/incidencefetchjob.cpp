@@ -58,14 +58,14 @@ void CalendarSupport::IncidenceFetchJob::doStart()
 void CalendarSupport::IncidenceFetchJob::collectionFetchResult( KJob *job )
 {
   if ( job->error() ) { // handled in base class
-    kDebug()<<job->error();
+    kDebug() << job->error();
     emitResult();
     return;
   }
   CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
   Q_ASSERT( fetch );
   const Akonadi::Collection::List listCollection = fetch->collections();
-  if( listCollection.isEmpty()) {
+  if ( listCollection.isEmpty() ) {
     emitResult();
   } else {
     foreach ( const Collection &col, fetch->collections() ) {

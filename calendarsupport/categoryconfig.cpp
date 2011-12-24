@@ -70,7 +70,7 @@ QHash<QString,QColor> CategoryConfig::readColors() const
   QHash<QString,QColor> categoryColors;
   KConfigGroup colorsConfig( d->config->config(), "Category Colors2" );
   const QStringList cats = customCategories();
-  Q_FOREACH( const QString & category, cats ) {
+  Q_FOREACH ( const QString & category, cats ) {
     const QColor color = colorsConfig.readEntry( category, d->mDefaultCategoryColor );
     if ( color != d->mDefaultCategoryColor ) {
       categoryColors.insert( category, color );

@@ -86,7 +86,7 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   if ( !as.isEmpty() ) {
     Attachment::List::ConstIterator it;
     Attachment::List::ConstIterator end( as.constEnd() );
-    
+
     for ( it = as.constBegin(); it != end; ++it ) {
       if ( (*it)->label() == attachmentName ) {
         a = *it;

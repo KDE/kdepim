@@ -191,8 +191,10 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   Q_UNUSED( identity );
   Q_UNUSED( hidden );
 
-  if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) )
+  if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
+         0, MailTransport::TransportManager::IfNoTransportExists ) ) {
     return false;
+  }
 
   // We must have a recipients list for most MUAs. Thus, if the 'to' list
   // is empty simply use the 'from' address as the recipient.
@@ -321,18 +323,24 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->transportAttribute().setTransportId( transportId );
   qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
-  if ( transport && transport->specifySenderOverwriteAddress() )
-    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
-  else
-    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
-  
+
+  if ( transport && transport->specifySenderOverwriteAddress() ) {
+    qjob->addressAttribute().setFrom(
+      KPIMUtils::extractEmailAddress(
+        KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
+  } else {
+    qjob->addressAttribute().setFrom(
+      KPIMUtils::extractEmailAddress(
+        KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
+  }
+
   qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
   qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
-  if( bccMe ) {
+  if ( bccMe ) {
     qjob->addressAttribute().setBcc( KPIMUtils::splitAddressList( from ) );
   }
   qjob->setMessage( message );
-  if( ! qjob->exec() ) {
+  if ( !qjob->exec() ) {
     kWarning() << "Error queuing message in outbox:" << qjob->errorText();
     return false;
   }

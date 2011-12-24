@@ -297,14 +297,14 @@ void CalendarSearch::Private::collectionSelectionChanged( const QItemSelection &
 {
   QSet<QModelIndex> oldIndexes = oldSelection.indexes().toSet();
   QSet<QModelIndex> newIndexes = newSelection.indexes().toSet();
-  Q_FOREACH( const QModelIndex &i, oldIndexes - newIndexes ) {
+  Q_FOREACH ( const QModelIndex &i, oldIndexes - newIndexes ) {
     const QModelIndex idx = findIndex( calendarModel, QModelIndex(), collectionIdFromIndex( i ) );
     if ( idx.isValid() ) {
       selectionModel->select( idx, QItemSelectionModel::Deselect );
     }
   }
 
-  Q_FOREACH( const QModelIndex &i, newIndexes ) {
+  Q_FOREACH ( const QModelIndex &i, newIndexes ) {
     const Akonadi::Collection::Id id = collectionIdFromIndex( i );
     const QModelIndex idx = findIndex( calendarModel, QModelIndex(), id );
     if ( idx.isValid() ) {
@@ -377,7 +377,7 @@ void CalendarSearch::setSelectionModel( QItemSelectionModel *selectionModel )
   connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(collectionSelectionChanged(QItemSelection,QItemSelection)) );
 
-  Q_FOREACH( const QModelIndex &i, selectionModel->selectedIndexes() ) {
+  Q_FOREACH ( const QModelIndex &i, selectionModel->selectedIndexes() ) {
     const Akonadi::Collection::Id cid = collectionIdFromIndex( i );
     kDebug() << cid;
     const QModelIndex idx = findIndex( d->calendarModel, QModelIndex(), cid );

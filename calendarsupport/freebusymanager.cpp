@@ -212,7 +212,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
 
   if ( _job->error() ) {
     kError() << "Error while searching for contact: "
-             << _job->errorString() << " ,email = " << email;
+             << _job->errorString() << ", email = " << email;
     emit freeBusyUrlRetrieved( email, KUrl() );
     return;
   }

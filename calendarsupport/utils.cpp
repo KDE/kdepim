@@ -201,7 +201,7 @@ static QByteArray findMostCommonType( const Akonadi::Item::List &items )
     return "Incidence";
   }
 
-  Q_FOREACH( const Akonadi::Item &item, items ) {
+  Q_FOREACH ( const Akonadi::Item &item, items ) {
     if ( !CalendarSupport::hasIncidence( item ) ) {
       continue;
     }
@@ -303,7 +303,7 @@ bool CalendarSupport::canDecode( const QMimeData *md )
 QList<KUrl> CalendarSupport::incidenceItemUrls( const QMimeData *mimeData )
 {
   QList<KUrl> urls;
-  Q_FOREACH( const KUrl &i, mimeData->urls() ) {
+  Q_FOREACH ( const KUrl &i, mimeData->urls() ) {
     if ( isValidIncidenceItemUrl( i ) ) {
       urls.push_back( i );
     }
@@ -315,7 +315,7 @@ QList<KUrl> CalendarSupport::todoItemUrls( const QMimeData *mimeData )
 {
   QList<KUrl> urls;
 
-  Q_FOREACH( const KUrl &i, mimeData->urls() ) {
+  Q_FOREACH ( const KUrl &i, mimeData->urls() ) {
     if ( isValidIncidenceItemUrl( i, QStringList() << KCalCore::Todo::todoMimeType() ) ) {
       urls.push_back( i );
     }
@@ -336,7 +336,7 @@ KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
 #ifndef QT_NO_DRAGANDDROP
   KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );
   if ( cal ) {
-    Q_FOREACH( const KCalCore::Todo::Ptr &i, cal->todos() ) {
+    Q_FOREACH ( const KCalCore::Todo::Ptr &i, cal->todos() ) {
       todos.push_back( KCalCore::Todo::Ptr( i->clone() ) );
     }
   }
@@ -444,7 +444,7 @@ Akonadi::Collection::Id CalendarSupport::collectionIdFromIndex( const QModelInde
 Akonadi::Collection::List CalendarSupport::collectionsFromIndexes( const QModelIndexList &indexes )
 {
   Akonadi::Collection::List l;
-  Q_FOREACH( const QModelIndex &idx, indexes ) {
+  Q_FOREACH ( const QModelIndex &idx, indexes ) {
     l.push_back( collectionFromIndex( idx ) );
   }
   return l;
@@ -699,7 +699,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
     targetDir = QFileInfo( targetFile ).absolutePath() + '/';
   }
 
-  Q_FOREACH( Attachment::Ptr attachment, attachments ) {
+  Q_FOREACH ( Attachment::Ptr attachment, attachments ) {
     targetFile = targetDir + attachment->label();
     KUrl sourceUrl;
     if ( attachment->isUri() ) {

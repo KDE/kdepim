@@ -1020,7 +1020,7 @@ Akonadi::Item::List Calendar::findChildren( const KCalCore::Incidence::Ptr &inci
 Akonadi::Item::List Calendar::findChildren( const Akonadi::Item &parent ) const
 {
   Akonadi::Item::List l;
-  Q_FOREACH( const Akonadi::Item::Id &id, d->m_parentToChildren.value( parent.id() ) ) {
+  Q_FOREACH ( const Akonadi::Item::Id &id, d->m_parentToChildren.value( parent.id() ) ) {
     l.push_back( d->m_itemMap.value( id ) );
   }
   return l;
@@ -1183,7 +1183,7 @@ QStringList Calendar::categories( Calendar *cal )
   QStringList cats, thisCats;
   // @TODO: For now just iterate over all incidences. In the future,
   // the list of categories should be built when reading the file.
-  Q_FOREACH( const Akonadi::Item &i, rawInc ) {
+  Q_FOREACH ( const Akonadi::Item &i, rawInc ) {
     thisCats = CalendarSupport::incidence( i )->categories();
     for ( QStringList::ConstIterator si = thisCats.constBegin();
           si != thisCats.constEnd(); ++si ) {
@@ -1476,7 +1476,7 @@ Akonadi::Item Calendar::incidenceFromSchedulingID( const QString &UID )
   const Akonadi::Item::List incidences = rawIncidences();
   Akonadi::Item::List::const_iterator it = incidences.constBegin();
   Akonadi::Item::List::const_iterator end = incidences.constEnd();
-  
+
   for ( ; it != end; ++it ) {
     if ( CalendarSupport::incidence(*it)->schedulingID() == UID ) {
       // Touchdown, and the crowd goes wild

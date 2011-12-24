@@ -107,7 +107,7 @@ void EventArchiver::run( CalendarSupport::Calendar *calendar,
     Akonadi::Item::List t = calendar->rawTodos();
     Akonadi::Item::List::ConstIterator it;
     Akonadi::Item::List::ConstIterator end( t.constEnd() );
-    
+
     for ( it = t.constBegin(); it != end; ++it ) {
       const Todo::Ptr todo = CalendarSupport::todo( *it );
       Q_ASSERT( todo );

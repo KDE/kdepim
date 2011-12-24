@@ -266,7 +266,7 @@ void CalendarUtils::purgeCompletedTodos()
   Akonadi::Item::List rootTodos;
   Akonadi::Item::List::ConstIterator it;
   Akonadi::Item::List::ConstIterator end = todos.constEnd();
-  
+
   for ( it = todos.constBegin(); it != end; ++it ) {
     Todo::Ptr aTodo = CalendarSupport::todo( *it );
     if ( aTodo && aTodo->relatedTo().isEmpty() ) { // top level todo //REVIEW(AKONADI_PORT)
