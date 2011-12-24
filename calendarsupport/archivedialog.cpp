@@ -66,62 +66,64 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
   mCalendar = cal;
   mChanger = changer;
 
-  QFrame *topFrame = new QFrame( this );
-  setMainWidget( topFrame );
-  QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  topLayout->setSpacing( spacingHint() );
+  mTopFrame = new QFrame( this );
+  setMainWidget( mTopFrame );
+  mTopLayout = new QVBoxLayout( mTopFrame );
+  mTopLayout->setSpacing( spacingHint() );
 #ifndef KDEPIM_MOBILE_UI
-  KTextBrowser *descLabel = new KTextBrowser( topFrame );
-  descLabel->setText(
+  mDescLabel = new KTextBrowser( mTopFrame );
+  mDescLabel->setText(
     i18nc( "@info:whatsthis",
            "Archiving saves old items into the given file and "
            "then deletes them in the current calendar. If the archive file "
            "already exists they will be added. "
            "(<link url=\"whatsthis:In order to add an archive "
            "to your calendar, use the Merge Calendar function. "
-           "You can view an archive by opening it in KOrganizer like any "
+           "You can view an archive by opening it like you would any "
            "other calendar. It is not saved in a special format, but as "
            "vCalendar.\">How to restore</link>)" ) );
-  descLabel->setTextInteractionFlags(
+  mDescLabel->setTextInteractionFlags(
     Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard |
     Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard );
-  topLayout->addWidget( descLabel );
+  mTopLayout->addWidget( mDescLabel );
+#else
+  mDescLabel = 0;
 #endif
 
-  QButtonGroup *radioBG = new QButtonGroup( this );
-  connect( radioBG, SIGNAL(buttonClicked(int)), SLOT(slotActionChanged()) );
+  mRadioBG = new QButtonGroup( this );
+  connect( mRadioBG, SIGNAL(buttonClicked(int)), SLOT(slotActionChanged()) );
 
-  QHBoxLayout *dateLayout = new QHBoxLayout();
-  dateLayout->setMargin( 0 );
-  mArchiveOnceRB =
-    new QRadioButton( i18nc( "@option:radio", "Archive now items older than:" ),
-                      topFrame );
-  dateLayout->addWidget( mArchiveOnceRB );
-  radioBG->addButton( mArchiveOnceRB );
-  mDateEdit = new KDateComboBox( topFrame );
+  mDateLayout = new QHBoxLayout();
+  mDateLayout->setMargin( 0 );
+  mArchiveOnceRB = new QRadioButton( i18nc( "@option:radio",
+                                            "Archive now items older than:" ),
+                                     mTopFrame );
+  mDateLayout->addWidget( mArchiveOnceRB );
+  mRadioBG->addButton( mArchiveOnceRB );
+  mDateEdit = new KDateComboBox( mTopFrame );
   mDateEdit->setWhatsThis(
     i18nc( "@info:whatsthis",
            "The date before which items should be archived. All older events "
            "and to-dos will be saved and deleted, the newer (and events "
            "exactly on that date) will be kept." ) );
-  dateLayout->addWidget( mDateEdit );
-  topLayout->addLayout( dateLayout );
+  mDateLayout->addWidget( mDateEdit );
+  mTopLayout->addLayout( mDateLayout );
 
   // Checkbox, numinput and combo for auto-archiving (similar to kmail's
   // mExpireFolderCheckBox/mReadExpiryTimeNumInput in kmfolderdia.cpp)
-  KHBox *autoArchiveHBox = new KHBox( topFrame );
-  topLayout->addWidget( autoArchiveHBox );
-  mAutoArchiveRB =
-    new QRadioButton( i18nc( "@option:radio", "Automaticall&y archive items older than:" ),
-                      autoArchiveHBox );
-  radioBG->addButton( mAutoArchiveRB );
+  mAutoArchiveHBox = new KHBox( mTopFrame );
+  mTopLayout->addWidget( mAutoArchiveHBox );
+  mAutoArchiveRB = new QRadioButton( i18nc( "@option:radio",
+                                            "Automaticall&y archive items older than:" ),
+                                     mAutoArchiveHBox );
+  mRadioBG->addButton( mAutoArchiveRB );
   mAutoArchiveRB->setWhatsThis(
     i18nc( "@info:whatsthis",
-           "If this feature is enabled, KOrganizer will regularly check if "
+           "If this feature is enabled, the application will regularly check if "
            "events and to-dos have to be archived; this means you will not "
            "need to use this dialog box again, except to change the settings." ) );
 
-  mExpiryTimeNumInput = new KIntNumInput( autoArchiveHBox );
+  mExpiryTimeNumInput = new KIntNumInput( mAutoArchiveHBox );
   mExpiryTimeNumInput->setRange( 1, 500, 1 );
   mExpiryTimeNumInput->setSliderEnabled( false );
   mExpiryTimeNumInput->setEnabled( false );
@@ -131,7 +133,7 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
            "The age of the events and to-dos to archive. All older items "
            "will be saved and deleted, the newer will be kept." ) );
 
-  mExpiryUnitsComboBox = new KComboBox( autoArchiveHBox );
+  mExpiryUnitsComboBox = new KComboBox( mAutoArchiveHBox );
   // Those items must match the "Expiry Unit" enum in the kcfg file!
   mExpiryUnitsComboBox->addItem(
     i18nc( "@item:inlistbox expires in daily units", "Day(s)" ) );
@@ -141,12 +143,12 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
     i18nc( "@item:inlistbox expiration in monthly units", "Month(s)" ) );
   mExpiryUnitsComboBox->setEnabled( false );
 
-  QHBoxLayout *fileLayout = new QHBoxLayout();
-  fileLayout->setMargin( 0 );
-  fileLayout->setSpacing( spacingHint() );
-  QLabel *l = new QLabel( i18nc( "@label", "Archive &file:" ), topFrame );
-  fileLayout->addWidget(l);
-  mArchiveFile = new KUrlRequester( KCalPrefs::instance()->mArchiveFile, topFrame );
+  mFileLayout = new QHBoxLayout();
+  mFileLayout->setMargin( 0 );
+  mFileLayout->setSpacing( spacingHint() );
+  mFileLabel = new QLabel( i18nc( "@label", "Archive &file:" ), mTopFrame );
+  mFileLayout->addWidget( mFileLabel );
+  mArchiveFile = new KUrlRequester( KCalPrefs::instance()->mArchiveFile, mTopFrame );
   mArchiveFile->setMode( KFile::File );
   mArchiveFile->setFilter( i18nc( "@label filter for KUrlRequester", "*.ics|iCalendar Files" ) );
   mArchiveFile->setWhatsThis(
@@ -162,42 +164,43 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
   // There is no fileDialog instance availabe on WinCE systems.
   mArchiveFile->setOperationMode( KFileDialog::Saving );
 #endif
-  l->setBuddy( mArchiveFile->lineEdit() );
-  fileLayout->addWidget( mArchiveFile );
-  topLayout->addLayout( fileLayout );
+  mFileLabel->setBuddy( mArchiveFile->lineEdit() );
+  mFileLayout->addWidget( mArchiveFile );
+  mTopLayout->addLayout( mFileLayout );
 
 #ifndef KDEPIM_MOBILE_UI
-  QGroupBox *typeBox = new QGroupBox( i18nc( "@title:group", "Type of Items to Archive" ) );
-  topLayout->addWidget( typeBox );
+  mTypeBox = new QGroupBox( i18nc( "@title:group", "Type of Items to Archive" ) );
+  mTopLayout->addWidget( mTypeBox );
 
-  QBoxLayout *typeLayout = new QVBoxLayout( typeBox );
+  mTypeLayout = new QVBoxLayout( mTypeBox );
 
-  mEvents = new QCheckBox( i18nc( "@option:check", "&Events" ) );
-  typeLayout->addWidget( mEvents );
-  mTodos = new QCheckBox( i18nc( "@option:check", "&To-dos" ) );
-  typeLayout->addWidget( mTodos );
-  typeBox->setWhatsThis(
+  mEvents = new QCheckBox( i18nc( "@option:check", "Archive &Events" ) );
+  mTypeLayout->addWidget( mEvents );
+  mTodos = new QCheckBox( i18nc( "@option:check", "Archive &To-dos" ) );
+  mTypeLayout->addWidget( mTodos );
+  mTypeBox->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Here you can select which items "
            "should be archived. Events are archived if they "
            "ended before the date given above; to-dos are archived if "
            "they were finished before the date." ) );
 #else
-  QBoxLayout *typeLayout = new QHBoxLayout();
-  topLayout->addLayout( typeLayout );
+  mTypeBox = 0;
+  mTypeLayout = new QHBoxLayout();
+  mTopLayout->addLayout( mTypeLayout );
 
   mEvents = new QCheckBox( i18nc( "@option:check", "Archive &Events" ) );
-  typeLayout->addWidget( mEvents );
+  mTypeLayout->addWidget( mEvents );
   mTodos = new QCheckBox( i18nc( "@option:check", "Archive &To-dos" ) );
-  typeLayout->addWidget( mTodos );
+  mTypeLayout->addWidget( mTodos );
 #endif
 
-  mDeleteCb = new QCheckBox( i18nc( "@option:check", "&Delete only, do not save" ), topFrame );
+  mDeleteCb = new QCheckBox( i18nc( "@option:check", "&Delete only, do not save" ), mTopFrame );
   mDeleteCb->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Select this option to delete old events and to-dos without saving "
            "them. It is not possible to recover the events later." ) );
-  topLayout->addWidget(mDeleteCb);
+  mTopLayout->addWidget( mDeleteCb );
   connect( mDeleteCb, SIGNAL(toggled(bool)), mArchiveFile, SLOT(setDisabled(bool)) );
   connect( mDeleteCb, SIGNAL(toggled(bool)), this, SLOT(slotEnableUser1()) );
   connect( mArchiveFile->lineEdit(), SIGNAL(textChanged(QString)),
@@ -226,6 +229,25 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
 
 ArchiveDialog::~ArchiveDialog()
 {
+  delete mDeleteCb;
+  delete mTodos;
+  delete mEvents;
+  delete mTypeLayout;
+  delete mTypeBox;
+  delete mArchiveFile;
+  delete mFileLabel;
+  delete mFileLayout;
+  delete mExpiryUnitsComboBox;
+  delete mExpiryTimeNumInput;
+  delete mAutoArchiveRB;
+  delete mAutoArchiveHBox;
+  delete mDateEdit;
+  delete mArchiveOnceRB;
+  delete mDateLayout;
+  delete mRadioBG;
+  delete mDescLabel;
+  delete mTopLayout;
+  delete mTopFrame;
 }
 
 void ArchiveDialog::slotEnableUser1()

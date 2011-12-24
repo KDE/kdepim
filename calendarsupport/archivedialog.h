@@ -30,11 +30,19 @@
 
 class KComboBox;
 class KDateComboBox;
+class KHBox;
 class KIntNumInput;
+class KTextBrowser;
 class KUrlRequester;
 
+class QButtonGroup;
 class QCheckBox;
+class QFrame;
+class QGroupBox;
+class QHBoxLayout;
+class QLabel;
 class QRadioButton;
+class QVBoxLayout;
 
 namespace KOrg {
   class IncidenceChanger;
@@ -64,13 +72,27 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
     void slotActionChanged();
 
   private:
+    QFrame *mTopFrame;
+    QVBoxLayout *mTopLayout;
+    QGroupBox *mTypeBox;
+#if !defined(KDEPIM_MOBILE_UI)
+    QVBoxLayout *mTypeLayout;
+#else
+    QHBoxLayout *mTypeLayout;
+#endif
+    QLabel *mFileLabel;
+    QHBoxLayout *mDateLayout;
+    QHBoxLayout *mFileLayout;
+    KHBox *mAutoArchiveHBox;
     KUrlRequester *mArchiveFile;
     KDateComboBox *mDateEdit;
     QCheckBox *mDeleteCb;
+    QButtonGroup *mRadioBG;
     QRadioButton *mArchiveOnceRB;
     QRadioButton *mAutoArchiveRB;
     KIntNumInput *mExpiryTimeNumInput;
     KComboBox *mExpiryUnitsComboBox;
+    KTextBrowser *mDescLabel;
     QCheckBox *mEvents;
     QCheckBox *mTodos;
     CalendarSupport::IncidenceChanger *mChanger;
