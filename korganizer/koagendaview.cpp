@@ -1508,8 +1508,12 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
       if ( mChanger &&
            mChanger->beginChange( existingEvent, resourceCalendar(), subResourceCalendar() ) ) {
         existingEventInSameResource->setDtStart( newTime );
+      
+        const int duration = ( existingEventInSameResource->doesFloat() && !allDay ) ?
+                              3600 : oldEvent->dtStart().secsTo( oldEvent->dtEnd() );
+
         existingEventInSameResource->setFloats( allDay );
-        existingEventInSameResource->setDtEnd( newTime.addSecs( oldEvent->dtStart().secsTo( oldEvent->dtEnd() ) ) );
+        existingEventInSameResource->setDtEnd( newTime.addSecs( duration ) );
         mChanger->changeIncidence( oldEvent, existingEventInSameResource,
                                    KOGlobals::DATE_MODIFIED, this );
         mChanger->endChange( existingEventInSameResource, resourceCalendar(), subResourceCalendar() );
