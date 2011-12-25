@@ -213,8 +213,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void upperYChanged( int );
 
     void startDragSignal( const Akonadi::Item & );
-    void droppedToDos( const KCalCore::Todo::List &todo, const QPoint &gpos, bool allDay );
-    void droppedToDos( const QList<KUrl> &todo, const QPoint &gpos, bool allDay );
+    void droppedIncidences( const KCalCore::Incidence::List &, const QPoint &gpos, bool allDay );
+    void droppedIncidences( const QList<KUrl> &, const QPoint &gpos, bool allDay );
 
     void enableAgendaUpdate( bool enable );
     void zoomView( const int delta, const QPoint &pos, const Qt::Orientation );

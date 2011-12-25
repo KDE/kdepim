@@ -743,10 +743,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
   // rescheduling of todos by d'n'd
-  connect( agenda, SIGNAL(droppedToDos(KCalCore::Todo::List,QPoint,bool)),
-           SLOT(slotTodosDropped(KCalCore::Todo::List,QPoint,bool)) );
-  connect( agenda, SIGNAL(droppedToDos(QList<KUrl>,QPoint,bool)),
-           SLOT(slotTodosDropped(QList<KUrl>,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedIncidences(KCalCore::Incidence::List,QPoint,bool)),
+           SLOT(slotIncidencesDropped(KCalCore::Incidence::List,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedIncidences(QList<KUrl>,QPoint,bool)),
+           SLOT(slotIncidencesDropped(QList<KUrl>,QPoint,bool)) );
 
 }
 
@@ -1709,7 +1709,7 @@ void AgendaView::updateEventIndicatorBottom( int newY )
   d->mEventIndicatorBottom->update();
 }
 
-void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
+void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
 {
   Q_UNUSED( items );
   Q_UNUSED( gpos );
@@ -1763,8 +1763,8 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
 #endif
 }
 
-void AgendaView::slotTodosDropped( const KCalCore::Todo::List &items,
-                                   const QPoint &gpos, bool allDay )
+void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &incidences,
+                                        const QPoint &gpos, bool allDay )
 {
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
     return;
@@ -1775,32 +1775,40 @@ void AgendaView::slotTodosDropped( const KCalCore::Todo::List &items,
   KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
-  Q_FOREACH ( const KCalCore::Todo::Ptr &todo, items ) {
-    Akonadi::Item item = calendar()->itemForIncidenceUid( todo->uid() );
-    if ( item.isValid() && CalendarSupport::hasTodo( item ) ) {
-      KCalCore::Todo::Ptr oldTodo( CalendarSupport::todo( item )->clone() );
-      KCalCore::Todo::Ptr newTodo = CalendarSupport::todo( item );
+  Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    const Akonadi::Item existingItem = calendar()->itemForIncidenceUid( incidence->uid() );
+    const bool existsInSameCollection = existingItem.isValid() &&
+                                               existingItem.storageCollectionId() == collectionId();
 
-      newTodo->setDtDue( newTime );
-      newTodo->setAllDay( allDay );
-      newTodo->setHasDueDate( true );
+    if ( existingItem.isValid() && existsInSameCollection ) {
+      KCalCore::Incidence::Ptr newIncidence = existingItem.payload<KCalCore::Incidence::Ptr>();
+      KCalCore::Incidence::Ptr oldIncidence( newIncidence->clone() );
+      newIncidence->setAllDay( allDay );
+      newIncidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
 
-      // We know this incidence, just change it's date/time
-      changer()->changeIncidence( oldTodo, item,
+      changer()->changeIncidence( oldIncidence, existingItem,
                                   CalendarSupport::IncidenceChanger::DATE_MODIFIED, this );
-    } else {
-      // The drop came from another application create a new todo
-      todo->setDtDue( newTime );
-      todo->setAllDay( allDay );
-      todo->setHasDueDate( true );
-      todo->setUid( KCalCore::CalFormat::createUniqueId() );
-      Akonadi::Collection selectedCollection;
+    } else { // Create a new one
+      // The drop came from another application create a new incidence
+      incidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
+      incidence->setAllDay( allDay );
+      incidence->setUid( KCalCore::CalFormat::createUniqueId() );
+      Akonadi::Collection collection( collectionId() );
       int dialogCode = 0;
-      if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+      const bool added = collection.isValid() ?
+                                changer()->addIncidence( incidence, collection, this )            :
+                                changer()->addIncidence( incidence, this, collection, dialogCode );
+
+      if ( added ) {
+        // TODO: make async
+        if ( existingItem.isValid() ) { // Dragged from one agenda to another, delete origin
+          changer()->deleteIncidence( existingItem );
+        }
+      } else {
         if ( dialogCode != QDialog::Rejected ) {
           KMessageBox::sorry( this,
                               i18n( "Unable to save %1 \"%2\".",
-                              i18n( todo->typeStr() ), todo->summary() ) );
+                              i18n( incidence->typeStr() ), incidence->summary() ) );
         }
       }
     }

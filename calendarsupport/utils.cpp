@@ -328,6 +328,13 @@ bool CalendarSupport::mimeDataHasTodo( const QMimeData *mimeData )
   return !todoItemUrls( mimeData ).isEmpty() || !todos( mimeData, KDateTime::Spec() ).isEmpty();
 }
 
+bool CalendarSupport::mimeDataHasIncidence( const QMimeData *mimeData )
+{
+  return !incidenceItemUrls( mimeData ).isEmpty() ||
+         !incidences( mimeData, KDateTime::Spec() ).isEmpty();
+}
+
+
 KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
                                              const KDateTime::Spec &spec )
 {
@@ -343,6 +350,24 @@ KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
 #endif
 
   return todos;
+}
+
+KCalCore::Incidence::List CalendarSupport::incidences( const QMimeData *mimeData,
+                                                       const KDateTime::Spec &spec )
+{
+  KCalCore::Incidence::List incidences;
+
+#ifndef QT_NO_DRAGANDDROP
+  KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );
+  if ( cal ) {
+    KCalCore::Incidence::List calIncidences = cal->incidences();
+    Q_FOREACH ( const KCalCore::Incidence::Ptr &i, calIncidences ) {
+      incidences.push_back( KCalCore::Incidence::Ptr( i->clone() ) );
+    }
+  }
+#endif
+
+  return incidences;
 }
 
 Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,

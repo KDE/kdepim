@@ -543,13 +543,6 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
 bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
 {
 #ifndef QT_NO_DRAGANDDROP
-  // FIXME: Implement dropping of events!
-  QPoint viewportPos;
-  if ( object != this ) {
-    viewportPos = static_cast<QWidget *>( object )->mapToParent( de->pos() );
-  } else {
-    viewportPos = de->pos();
-  }
   const QMimeData *md = de->mimeData();
 
   switch ( de->type() ) {
@@ -559,7 +552,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
       return false;
     }
 
-    if ( CalendarSupport::mimeDataHasTodo( md ) ) {
+    if ( CalendarSupport::mimeDataHasIncidence( md ) ) {
       de->accept();
     } else {
       de->ignore();
@@ -575,26 +568,19 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
       return false;
     }
 
-    const QList<KUrl> todoUrls = CalendarSupport::todoItemUrls( md );
-    const KCalCore::Todo::List todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
+    const QList<KUrl> incidenceUrls = CalendarSupport::incidenceItemUrls( md );
+    const KCalCore::Incidence::List incidences
+                                      = CalendarSupport::incidences( md, d->mCalendar->timeSpec() );
 
-    Q_ASSERT( !todoUrls.isEmpty() || !todos.isEmpty() );
+    Q_ASSERT( !incidenceUrls.isEmpty() || !incidences.isEmpty() );
 
     de->setDropAction( Qt::MoveAction );
-    QPoint pos;
-    // FIXME: This is a bad hack, as the viewportToContents seems to be off by
-    // 2000 (which is the left upper corner of the viewport). It works correctly
-    // for agendaItems.
-    if ( object == this ) {
-      pos = viewportPos + QPoint( contentsX(), contentsY() );
+
+    const QPoint gridPosition = contentsToGrid( de->pos() );
+    if ( !incidenceUrls.isEmpty() ) {
+      emit droppedIncidences( incidenceUrls, gridPosition, d->mAllDayMode );
     } else {
-      pos = viewportPos;
-    }
-    QPoint gpos = contentsToGrid( pos );
-    if ( !todoUrls.isEmpty() ) {
-      emit droppedToDos( todoUrls, gpos, d->mAllDayMode );
-    } else {
-      emit droppedToDos( todos, gpos, d->mAllDayMode );
+      emit droppedIncidences( incidences, gridPosition, d->mAllDayMode );
     }
     return true;
   }
