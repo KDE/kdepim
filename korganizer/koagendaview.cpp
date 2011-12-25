@@ -1492,25 +1492,27 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
     }
   } else if ( event ) {
     Event *existingEvent = calendar()->event( event->uid() );
-    
-    KCal::CalendarResources *calendarResource = dynamic_cast<KCal::CalendarResources*>( calendar() );
-
-    if ( calendarResource ) {
-      KCal::ResourceCalendar *resourceCalendar = calendarResource->resource( incidence );
-      existingEvent = resourceCalendar ? existingEvent : 0;
-    }
+    Event *existingEventInSameResource = 0;
 
     if ( existingEvent ) {
+      // If it comes from another calendar, create a new.
+      // Otherwise reuse the same one
+      if ( resourceCalendar()->incidence( incidence->uid() ) ) {
+        existingEventInSameResource = existingEvent;
+      }
+    }
+
+    if ( existingEventInSameResource ) {
       kdDebug(5850) << "Drop existing Event" << endl;
-      Event *oldEvent = existingEvent->clone();
+      Event *oldEvent = existingEventInSameResource->clone();
       if ( mChanger &&
            mChanger->beginChange( existingEvent, resourceCalendar(), subResourceCalendar() ) ) {
-        existingEvent->setDtStart( newTime );
-        existingEvent->setFloats( allDay );
-        existingEvent->setDtEnd( newTime.addSecs( oldEvent->dtStart().secsTo( oldEvent->dtEnd() ) ) );
-        mChanger->changeIncidence( oldEvent, existingEvent,
+        existingEventInSameResource->setDtStart( newTime );
+        existingEventInSameResource->setFloats( allDay );
+        existingEventInSameResource->setDtEnd( newTime.addSecs( oldEvent->dtStart().secsTo( oldEvent->dtEnd() ) ) );
+        mChanger->changeIncidence( oldEvent, existingEventInSameResource,
                                    KOGlobals::DATE_MODIFIED, this );
-        mChanger->endChange( existingEvent, resourceCalendar(), subResourceCalendar() );
+        mChanger->endChange( existingEventInSameResource, resourceCalendar(), subResourceCalendar() );
       } else {
         KMessageBox::sorry( this, i18n("Unable to modify this event, "
                             "because it cannot be locked.") );
@@ -1523,7 +1525,12 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
       event->setFloats( allDay );
       event->setUid( CalFormat::createUniqueId() );
       event->setDtEnd( newTime.addSecs( duration ) );
-      if ( !mChanger->addIncidence( event, resourceCalendar(), subResourceCalendar(), this ) ) {
+      if ( mChanger->addIncidence( event, resourceCalendar(), subResourceCalendar(), this ) ) {
+        if ( existingEvent && !existingEventInSameResource ) {
+          // It's not a drag from another application, it's a drag from another agenda.
+          mChanger->deleteIncidence( existingEvent, this );
+        }
+      } else {
         KODialogManager::errorSaveIncidence( this, event );
       }
     }
