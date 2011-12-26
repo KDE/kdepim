@@ -135,11 +135,16 @@ Widget::Widget( QWidget *pParent )
   g->setMargin( 2 ); // use a smaller default
   g->setSpacing( 2 );
 
-  d->mLockSearch = new QToolButton(this);
-  d->mLockSearch->setCheckable(true);
-  d->mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
-  d->mLockSearch->setText( i18n( "Lock search" ) );
-  d->mLockSearch->setToolTip( d->mLockSearch->text() );
+  d->mLockSearch = new QToolButton( this );
+  d->mLockSearch->setCheckable( true );
+  d->mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
+  slotLockSearchClicked( false );
+  d->mLockSearch->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Toggle this button if you want to keep your quick search "
+           "locked when moving to other folders or when narrowing the search "
+           "by message status." ) );
+
   d->mLockSearch->setVisible( Settings::self()->showQuickSearch() );
   connect( d->mLockSearch, SIGNAL(toggled(bool)),
            this, SLOT(slotLockSearchClicked(bool)) );
@@ -320,7 +325,7 @@ QString Widget::currentFilterTagId() const
 {
   if ( d->mFilter )
     return d->mFilter->tagId();
-  
+
   return QString();
 }
 
@@ -899,9 +904,15 @@ void Widget::resetFilter()
   d->mLockSearch->setChecked(false);
 }
 
-void Widget::slotLockSearchClicked(bool b)
+void Widget::slotLockSearchClicked( bool locked )
 {
-    d->mLockSearch->setIcon( b ? KIcon( QLatin1String( "object-locked" ) ): KIcon( QLatin1String( "object-unlocked" ) ));
+  if ( locked ) {
+    d->mLockSearch->setIcon( KIcon( QLatin1String( "object-locked" ) ) );
+    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Unlock search" ) );
+  } else {
+    d->mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
+    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Lock search" ) );
+  }
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
