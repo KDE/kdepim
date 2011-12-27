@@ -309,7 +309,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     Nepomuk::Resource res( item.url() );
 
     contentUi.tagWidget->setTaggedResource( res );
-    contentUi.ratingWidget->setRating( res.rating() );
+    contentUi.ratingWidget->setRating( int( res.rating() ) );
 
     delete mNepomukModel;
     mNepomukModel = 0;
