@@ -33,7 +33,7 @@ class JobInfo
 public:
   JobInfo() :parent(-1)
   {}
-  bool operator==( const JobInfo& other )
+  bool operator==( const JobInfo& other ) const
   {
       return id == other.id
           && parent == other.parent
