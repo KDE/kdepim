@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __KMAIL_TEMPLATEPARSER_H__
-#define __KMAIL_TEMPLATEPARSER_H__
+#ifndef TEMPLATEPARSER_TEMPLATEPARSER_H
+#define TEMPLATEPARSER_TEMPLATEPARSER_H
 
 #include "templateparser_export.h"
 
@@ -193,7 +193,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      */
     void setWordWrap( bool wrap, int wrapColWidth = 80 );
 
-    
+
     /**
      * Set the identity manager to be used when creating the template.
      */

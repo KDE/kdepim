@@ -16,8 +16,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TEMPLATESTEXTEDIT_H
-#define TEMPLATESTEXTEDIT_H
+#ifndef TEMPLATEPARSER_TEMPLATESTEXTEDIT_H
+#define TEMPLATEPARSER_TEMPLATESTEXTEDIT_H
+
 #include "templateparser_export.h"
 
 #include <KTextEdit>
@@ -37,7 +38,7 @@ protected slots:
   QString wordUnderCursor();
 protected:
   void initCompleter();
-  void keyPressEvent(QKeyEvent* e);  
+  void keyPressEvent(QKeyEvent* e);
 private:
   QCompleter *m_completer;
 };

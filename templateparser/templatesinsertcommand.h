@@ -19,10 +19,10 @@
  */
 
 
-#ifndef TEMPLATESINSERTCOMMAND_H
-#define TEMPLATESINSERTCOMMAND_H
+#ifndef TEMPLATEPARSER_TEMPLATESINSERTCOMMAND_H
+#define TEMPLATEPARSER_TEMPLATESINSERTCOMMAND_H
 
-#include <qpushbutton.h>
+#include <QPushButton>
 
 class KActionMenu;
 
@@ -36,13 +36,13 @@ class TemplatesInsertCommand : public QPushButton
 
   public:
     enum Command {CDnl = 1, CRem, CInsert, CSystem, CQuotePipe, CQuote, CQHeaders, CHeaders,
-                  CTextPipe, CMsgPipe, CBodyPipe, CClearPipe, CText, 
-                  CToAddr, CToName, CFromAddr, CFromName, CFullSubject, CMsgId, 
-                  COHeader, CHeader, COToAddr, COToName, COFromAddr, COFromName, COFullSubject, 
-                  COMsgId, CDateEn, CDateShort, CDate, CDow, CTimeLongEn, CTimeLong, CTime, 
-                  CODateEn, CODateShort, CODate, CODow, COTimeLongEn, COTimeLong, COTime, 
-                  CBlank, CNop, CClear, CDebug, CDebugOff, CToFName, CToLName, CFromFName, CFromLName, 
-                  COToFName, COToLName, COFromFName, COFromLName, CCursor, 
+                  CTextPipe, CMsgPipe, CBodyPipe, CClearPipe, CText,
+                  CToAddr, CToName, CFromAddr, CFromName, CFullSubject, CMsgId,
+                  COHeader, CHeader, COToAddr, COToName, COFromAddr, COFromName, COFullSubject,
+                  COMsgId, CDateEn, CDateShort, CDate, CDow, CTimeLongEn, CTimeLong, CTime,
+                  CODateEn, CODateShort, CODate, CODow, COTimeLongEn, COTimeLong, COTime,
+                  CBlank, CNop, CClear, CDebug, CDebugOff, CToFName, CToLName, CFromFName, CFromLName,
+                  COToFName, COToLName, COFromFName, COFromLName, CCursor,
                   CCCAddr, CCCName, CCCFName, CCCLName, COCCAddr, COCCName, COCCFName, COCCLName,
                   COAddresseesAddr, CSignature, CQuotePlain, CQuoteHtml };
 

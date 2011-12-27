@@ -20,8 +20,8 @@
  */
 
 
-#ifndef CUSTOMTEMPLATES_H
-#define CUSTOMTEMPLATES_H
+#ifndef TEMPLATEPARSER_CUSTOMTEMPLATES_H
+#define TEMPLATEPARSER_CUSTOMTEMPLATES_H
 
 #include <QPixmap>
 #include <QWidget>
@@ -110,7 +110,7 @@ public:
 
   QString oldName() const;
   void setOldName(const QString&);
-  
+
 private:
   QString mName, mContent;
   QKeySequence mShortcut;
@@ -121,11 +121,11 @@ private:
 class CustomTemplateItemDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
-  
+
 public:
   explicit CustomTemplateItemDelegate(QObject *parent = 0);
   ~CustomTemplateItemDelegate();
-  
+
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                         const QModelIndex &index) const;
   void setModelData(QWidget *editor, QAbstractItemModel *model,

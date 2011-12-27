@@ -16,8 +16,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TEMPLATESHIGHLIGHTER_H
-#define TEMPLATESHIGHLIGHTER_H
+#ifndef TEMPLATEPARSER_TEMPLATESHIGHLIGHTER_H
+#define TEMPLATEPARSER_TEMPLATESHIGHLIGHTER_H
 
 #include <QSyntaxHighlighter>
 #include "templateparser_export.h"
@@ -34,7 +34,7 @@ class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public QSyntaxHighlight
 public:
   explicit TemplatesSyntaxHighlighter( QTextDocument* doc );
   virtual ~TemplatesSyntaxHighlighter();
-  
+
   virtual void highlightBlock(const QString& text);
 private:
   void init();

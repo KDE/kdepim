@@ -19,8 +19,8 @@
  */
 
 
-#ifndef TEMPLATESCONFIGURATION_H
-#define TEMPLATESCONFIGURATION_H
+#ifndef TEMPLATEPARSER_TEMPLATESCONFIGURATION_H
+#define TEMPLATEPARSER_TEMPLATESCONFIGURATION_H
 
 #include "templateparser_export.h"
 #include "ui_templatesconfiguration_base.h"
