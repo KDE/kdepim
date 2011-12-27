@@ -28,7 +28,7 @@
    <item row="0" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Model:</string>
+      <string comment="model name">Model:</string>
      </property>
      <property name="buddy">
       <cstring>modelBox</cstring>
@@ -36,7 +36,7 @@
     </widget>
    </item>
    <item row="0" column="2">
-    <widget class="QComboBox" name="modelBox"/>
+    <widget class="KComboBox" name="modelBox"/>
    </item>
    <item row="1" column="0" colspan="3">
     <widget class="Akonadi::EntityTreeView" name="itemView">
@@ -58,6 +58,11 @@
    <class>Akonadi::EntityTreeView</class>
    <extends>QTreeView</extends>
    <header location="global">akonadi/entitytreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
