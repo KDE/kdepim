@@ -422,7 +422,7 @@ CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
 QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &index) const
 {
   if (index.column() == 1) {
-    QLineEdit *lineEdit = new QLineEdit(parent);
+    KLineEdit *lineEdit = new KLineEdit(parent);
     lineEdit->setFrame(false);
     return lineEdit;
   }
@@ -432,7 +432,7 @@ QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleO
 void CustomTemplateItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                     const QModelIndex &index) const
 {
-  QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+  KLineEdit *lineEdit = static_cast<KLineEdit*>(editor);
   const QString text = lineEdit->text();
   if( !text.isEmpty() )
     model->setData(index, lineEdit->text(), Qt::EditRole);
