@@ -75,7 +75,7 @@ public:
   QHash<QString, int> idToSequence;
   QHash<int, QString> sequenceToId;
   QHash<QString, QStringList> jobs;
-  QHash<QString, JobInfo> infos;
+  QHash<QString, JobInfo> infoList;
   int lastId;
   QTimer timer;
   bool disabled;
@@ -107,21 +107,21 @@ JobTracker::JobTracker( const char *name, QObject* parent )
     JobInfo info;
     info.id = "eins";
     info.parent = -2;
-    d->infos.insert( "eins", info );
+    d->infoList.insert( "eins", info );
 
     d->jobs.insert( "sub-eins", QStringList() );
     d->idToSequence.insert( "sub-eins", 1 );
     d->sequenceToId.insert( 1, "sub-eins" );
     info.id = "sub-eins";
     info.parent = 0;
-    d->infos.insert( "sub-eins", info );
+    d->infoList.insert( "sub-eins", info );
 
     d->jobs.insert( "sub-zwei", QStringList() );
     d->idToSequence.insert( "sub-zwei", 2 );
     d->sequenceToId.insert( 2, "sub-zwei" );
     info.id = "sub-zwei";
     info.parent = 0;
-    d->infos.insert( "sub-zwei", info );
+    d->infoList.insert( "sub-zwei", info );
 #endif
 }
 
@@ -160,7 +160,7 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
   info.state = JobInfo::Initial;
   info.timestamp = QDateTime::currentDateTime();
   info.type = jobType;
-  d->infos.insert( job, info );
+  d->infoList.insert( job, info );
   const int id = d->lastId++;
   d->idToSequence.insert( job, id );
   d->sequenceToId.insert( id, job );
@@ -184,16 +184,16 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
 void JobTracker::jobEnded( const QString& job, const QString& error )
 {
   // this is called from dbus, so better be defensive
-  if ( d->disabled || !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
+  if ( d->disabled || !d->jobs.contains( job ) || !d->infoList.contains( job ) ) return;
 
-  JobInfo info = d->infos[job];
+  JobInfo info = d->infoList[job];
   if ( error.isEmpty() ) {
     info.state = JobInfo::Ended;
   } else {
     info.state = JobInfo::Failed;
     info.error = error;
   }
-  d->infos[job] = info;
+  d->infoList[job] = info;
 
   d->unpublishedUpdates << QPair<int, int>( d->jobs[jobForId(info.parent)].size()-1, info.parent );
   d->emitUpdated();
@@ -202,11 +202,11 @@ void JobTracker::jobEnded( const QString& job, const QString& error )
 void JobTracker::jobStarted( const QString & job )
 {
   // this is called from dbus, so better be defensive
-  if ( d->disabled || !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
+  if ( d->disabled || !d->jobs.contains( job ) || !d->infoList.contains( job ) ) return;
 
-  JobInfo info = d->infos[job];
+  JobInfo info = d->infoList[job];
   info.state = JobInfo::Running;
-  d->infos[job] = info;
+  d->infoList[job] = info;
 
   d->unpublishedUpdates << QPair<int, int>( d->jobs[jobForId(info.parent)].size()-1, info.parent );
   d->emitUpdated();
@@ -228,11 +228,11 @@ QList<JobInfo> JobTracker::jobs( const QString & parent ) const
 {
   assert( d->jobs.contains(parent) );
   const QStringList jobs = d->jobs.value(parent);
-  QList<JobInfo> infos;
+  QList<JobInfo> infoList;
   Q_FOREACH( const QString &job, jobs ) {
-    infos << d->infos.value(job);
+    infoList << d->infoList.value(job);
   }
-  return infos;
+  return infoList;
 }
 
 QStringList JobTracker::jobNames(int id) const
@@ -287,7 +287,7 @@ int JobTracker::parentId( int id ) const
   else
   {
     const QString job = d->sequenceToId.value(id);
-    return d->infos[job].parent;
+    return d->infoList[job].parent;
   }
 
 }
@@ -299,8 +299,8 @@ JobInfo JobTracker::info( int id) const
 
 JobInfo JobTracker::info(const QString & job) const
 {
-  assert( d->infos.contains(job) );
-  return d->infos.value(job);
+  assert( d->infoList.contains(job) );
+  return d->infoList.value(job);
 }
 
 void JobTracker::triggerReset()
@@ -309,7 +309,7 @@ void JobTracker::triggerReset()
   d->idToSequence.clear();
   d->sequenceToId.clear();
   d->jobs.clear();
-  d->infos.clear();
+  d->infoList.clear();
 
   emit reset();
 }
