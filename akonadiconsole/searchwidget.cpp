@@ -25,16 +25,17 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemsearchjob.h>
-#include <kmessagebox.h>
 
-#include <QtGui/QComboBox>
+#include <KComboBox>
+#include <KMessageBox>
+#include <KTextBrowser>
+#include <KTextEdit>
+
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
 #include <QtGui/QPushButton>
 #include <QtGui/QStringListModel>
-#include <QtGui/QTextBrowser>
-#include <QtGui/QTextEdit>
 
 #include <QtCore/QDebug>
 
@@ -44,10 +45,10 @@ SearchWidget::SearchWidget( QWidget *parent )
   Akonadi::Control::widgetNeedsAkonadi( this );
   QGridLayout *layout = new QGridLayout( this );
 
-  mQueryCombo = new QComboBox;
-  mQueryWidget = new QTextEdit;
+  mQueryCombo = new KComboBox;
+  mQueryWidget = new KTextEdit;
   mResultView = new QListView;
-  mItemView = new QTextBrowser;
+  mItemView = new KTextBrowser;
   QPushButton *button = new QPushButton( "Search" );
 
   layout->addWidget( new QLabel( "Query:" ), 0, 0 );

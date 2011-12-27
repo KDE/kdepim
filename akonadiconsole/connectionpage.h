@@ -24,7 +24,7 @@
 
 #include <QtGui/QWidget>
 
-class QTextEdit;
+class KTextEdit;
 
 class ConnectionPage : public QWidget
 {
@@ -45,7 +45,7 @@ class ConnectionPage : public QWidget
     void connectionDataOutput( const QString&, const QString& );
 
   private:
-    QTextEdit *mDataView;
+    KTextEdit *mDataView;
     QString mIdentifier;
     bool mShowAllConnections;
 };

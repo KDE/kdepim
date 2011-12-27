@@ -34,12 +34,12 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KStandardGuiItem>
+#include <KTextEdit>
 
 #include <QtCore/QFile>
 #include <QtGui/QGridLayout>
 #include <QtGui/QMenu>
 #include <QtGui/QPushButton>
-#include <QtGui/QTextEdit>
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusReply>
@@ -55,7 +55,7 @@ class TextDialog : public KDialog
     {
       setButtons( Ok );
 
-      mText = new QTextEdit;
+      mText = new KTextEdit;
       mText->setReadOnly(true);
       setMainWidget( mText );
       setInitialSize( QSize( 400, 600 ) );
@@ -67,7 +67,7 @@ class TextDialog : public KDialog
     }
 
   private:
-    QTextEdit *mText;
+    KTextEdit *mText;
 };
 
 using namespace Akonadi;

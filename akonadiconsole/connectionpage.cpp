@@ -22,8 +22,8 @@
 #include "connectionpage.h"
 
 #include <KGlobalSettings>
+#include <KTextEdit>
 
-#include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 
 #include "tracernotificationinterface.h"
@@ -33,7 +33,7 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mDataView = new QTextEdit( this );
+  mDataView = new KTextEdit( this );
   mDataView->setReadOnly( true );
   mDataView->setFont( KGlobalSettings::fixedFont() );
 
