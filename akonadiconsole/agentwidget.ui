@@ -237,7 +237,7 @@
    <item row="2" column="6">
     <widget class="KPushButton" name="restartButton">
      <property name="text">
-      <string>Restart</string>
+      <string comment="restart the agent">Restart</string>
      </property>
     </widget>
    </item>
