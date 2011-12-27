@@ -41,9 +41,9 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KCMultiDialog>
+#include <KTabWidget>
 #include <KXmlGuiWindow>
 
-#include <QtGui/QTabWidget>
 #include <QtGui/QVBoxLayout>
 
 MainWidget::MainWidget( KXmlGuiWindow *parent )
@@ -51,7 +51,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  QTabWidget *tabWidget = new QTabWidget( this );
+  KTabWidget *tabWidget = new KTabWidget( this );
   tabWidget->setObjectName( "mainTab" );
   layout->addWidget( tabWidget );
 
