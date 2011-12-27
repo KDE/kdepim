@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef AGENTWIDGET_H
-#define AGENTWIDGET_H
+#ifndef AKONADICONSOLE_AGENTWIDGET_H
+#define AKONADICONSOLE_AGENTWIDGET_H
 
 #include "ui_agentwidget.h"
 

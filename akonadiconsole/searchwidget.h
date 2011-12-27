@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef SEARCHWIDGET_H
-#define SEARCHWIDGET_H
+#ifndef AKONADICONSOLE_SEARCHWIDGET_H
+#define AKONADICONSOLE_SEARCHWIDGET_H
 
 #include <QtGui/QWidget>
 

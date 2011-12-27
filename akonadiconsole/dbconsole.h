@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef DBCONSOLE_H
-#define DBCONSOLE_H
+#ifndef AKONADICONSOLE_DBCONSOLE_H
+#define AKONADICONSOLE_DBCONSOLE_H
 
 #include "ui_dbconsole.h"
 

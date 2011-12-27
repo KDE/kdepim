@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef DEBUGWIDGET_H
-#define DEBUGWIDGET_H
+#ifndef AKONADICONSOLE_DEBUGWIDGET_H
+#define AKONADICONSOLE_DEBUGWIDGET_H
 
 #include <QtCore/QHash>
 #include <QtGui/QWidget>

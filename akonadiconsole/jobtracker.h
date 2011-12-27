@@ -20,8 +20,8 @@
  USA.
  */
 
-#ifndef JOBTRACKER_H_
-#define JOBTRACKER_H_
+#ifndef AKONADICONSOLE_JOBTRACKER_H
+#define AKONADICONSOLE_JOBTRACKER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QDateTime>

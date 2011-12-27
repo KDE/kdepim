@@ -19,8 +19,8 @@
  USA.
  */
 
-#ifndef JOBTRACKERMODEL_H_
-#define JOBTRACKERMODEL_H_
+#ifndef AKONADICONSOLE_JOBTRACKERMODEL_H
+#define AKONADICONSOLE_JOBTRACKERMODEL_H
 
 #include <QtCore/QAbstractItemModel>
 

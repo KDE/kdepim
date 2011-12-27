@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef DBACCESS_H
-#define DBACCESS_H
+#ifndef AKONADICONSOLE_DBACCESS_H
+#define AKONADICONSOLE_DBACCESS_H
 
 class QSqlDatabase;
 

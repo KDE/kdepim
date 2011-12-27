@@ -17,8 +17,8 @@
     USA.
 */
 
-#ifndef AGENTCONFIGDIALOG_H
-#define AGENTCONFIGDIALOG_H
+#ifndef AKONADICONSOLE_AGENTCONFIGDIALOG_H
+#define AKONADICONSOLE_AGENTCONFIGDIALOG_H
 
 #include "ui_agentconfigdialog.h"
 #include <Akonadi/AgentInstance>

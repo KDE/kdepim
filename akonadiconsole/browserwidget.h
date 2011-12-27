@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef BROWSERWIDGET_H
-#define BROWSERWIDGET_H
+#ifndef AKONADICONSOLE_BROWSERWIDGET_H
+#define AKONADICONSOLE_BROWSERWIDGET_H
 
 #include <ui_browserwidget_itemview.h>
 #include <ui_browserwidget_contentview.h>

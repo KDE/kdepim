@@ -17,8 +17,8 @@
     USA.
 */
 
-#ifndef NOTIFICATIONMODEL
-#define NOTIFICATIONMODEL
+#ifndef AKONADICONSOLE_NOTIFICATIONMODEL_H
+#define AKONADICONSOLE_NOTIFICATIONMODEL_H
 
 #include <akonadi/private/notificationmessage_p.h>
 
