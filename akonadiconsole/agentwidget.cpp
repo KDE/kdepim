@@ -37,6 +37,7 @@
 #include <KTextEdit>
 
 #include <QtCore/QFile>
+#include <QtCore/QPointer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QMenu>
 #include <QtGui/QPushButton>
@@ -119,9 +120,9 @@ AgentWidget::AgentWidget( QWidget *parent )
 
 void AgentWidget::addAgent()
 {
-  Akonadi::AgentTypeDialog dlg( this );
-  if ( dlg.exec() ) {
-    const AgentType agentType = dlg.agentType();
+  QPointer<Akonadi::AgentTypeDialog> dlg = new Akonadi::AgentTypeDialog( this );
+  if ( dlg->exec() ) {
+    const AgentType agentType = dlg->agentType();
 
     if ( agentType.isValid() ) {
       AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, this );
@@ -129,6 +130,7 @@ void AgentWidget::addAgent()
       job->start(); // TODO: check result
     }
   }
+  delete dlg;
 }
 
 void AgentWidget::selectionChanged()
@@ -193,9 +195,10 @@ void AgentWidget::configureAgentRemote()
 {
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() ) {
-    AgentConfigDialog dlg( this );
-    dlg.setAgentInstance( agent );
-    dlg.exec();
+    QPointer<AgentConfigDialog> dlg = new AgentConfigDialog( this );
+    dlg->setAgentInstance( agent );
+    dlg->exec();
+    delete dlg;
   }
 }
 
@@ -231,10 +234,11 @@ void AgentWidget::showTaskList()
     txt = reply.error().message();
   }
 
-  TextDialog dlg( this );
-  dlg.setCaption( QLatin1String( "Resource Task List" ) );
-  dlg.setText( txt );
-  dlg.exec();
+  QPointer<TextDialog> dlg = new TextDialog( this );
+  dlg->setCaption( QLatin1String( "Resource Task List" ) );
+  dlg->setText( txt );
+  dlg->exec();
+  delete dlg;
 }
 
 void AgentWidget::showChangeNotifications()
@@ -336,11 +340,12 @@ void AgentWidget::showChangeNotifications()
     list << entry;
   }
 
-  TextDialog dlg( this );
-  dlg.setCaption( QLatin1String( "Change Notification Log" ) );
-  dlg.setText( list.join( QLatin1String( "\n" ) ) );
+  QPointer<TextDialog> dlg = new TextDialog( this );
+  dlg->setCaption( QLatin1String( "Change Notification Log" ) );
+  dlg->setText( list.join( QLatin1String( "\n" ) ) );
 
-  dlg.exec();
+  dlg->exec();
+  delete dlg;
 }
 
 void AgentWidget::synchronizeTree()
