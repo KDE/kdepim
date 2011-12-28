@@ -1210,7 +1210,7 @@ void FilterActionAddTag::initializeTagList()
 void FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {
   argsFromString( argsStr );
-  if( mParameterList.isEmpty() ) 
+  if( mParameterList.isEmpty() )
     return;
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
@@ -2000,10 +2000,11 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
 
   const QStringList templateNames = SettingsIf->customTemplates();
   foreach( const QString &templateName, templateNames ) {
-    CTemplates templat( templateName );
-    if ( templat.type() == CustomTemplates::TForward ||
-         templat.type() == CustomTemplates::TUniversal )
+    TemplateParser::CTemplates templat( templateName );
+    if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
+         templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
       templateCombo->addItem( templateName );
+    }
   }
 
   templateCombo->setEnabled( templateCombo->count() > 1 );
@@ -2094,9 +2095,9 @@ void FilterActionForward::argsFromStringInteractive( const QString &argsStr, con
     QStringList currentTemplateList;
     currentTemplateList << i18n( "Default Template" );
     foreach( const QString &templateName, templateNames ) {
-      CTemplates templat( templateName );
-      if ( templat.type() == CustomTemplates::TForward ||
-           templat.type() == CustomTemplates::TUniversal ) {
+      TemplateParser::CTemplates templat( templateName );
+      if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
+           templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
         if ( templateName == mTemplate ) {
           return;
         }
