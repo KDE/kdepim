@@ -28,22 +28,23 @@ namespace TemplateParser {
 class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KTextEdit
 {
   Q_OBJECT
-public:
-  explicit TemplatesTextEdit( QWidget *parent );
-  virtual ~TemplatesTextEdit();
+  public:
+    explicit TemplatesTextEdit( QWidget *parent );
+    virtual ~TemplatesTextEdit();
 
+  protected slots:
+    void slotInsertCompletion( const QString& );
+    QString wordUnderCursor();
 
-protected slots:
-  void slotInsertCompletion( const QString& );
-  QString wordUnderCursor();
-protected:
-  void initCompleter();
-  void keyPressEvent(QKeyEvent* e);
-private:
-  QCompleter *m_completer;
+  protected:
+    void initCompleter();
+    void keyPressEvent(QKeyEvent* e);
+
+  private:
+    QCompleter *m_completer;
 };
 
 }
 
-#endif /* TEMPLATESTEXTEDIT_H */
+#endif
 

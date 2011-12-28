@@ -1,12 +1,11 @@
-/* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+/*
   Copyright (c) 2011 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This progam is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -26,10 +25,11 @@ class QString;
 namespace TemplateParser {
 
 namespace Util {
-  TEMPLATEPARSER_EXPORT void deleteTemplate( const QString &id );
-}
+
+TEMPLATEPARSER_EXPORT void deleteTemplate( const QString &id );
 
 }
 
-#endif /* TEMPLATESUTIL_H */
+}
 
+#endif

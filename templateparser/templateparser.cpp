@@ -1,22 +1,20 @@
-/*   -*- mode: C++; c-file-style: "gnu" -*-
- *   kmail: KDE mail client
- *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
- *   Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+/*
+ * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ * Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
  *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the Free Software Foundation, Inc.,
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "templateparser.h"
@@ -1122,8 +1120,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       }
     }
   }
-  //Clear the HTML body if FORCEDPLAIN has set ReplyAsPlain, OR if, there is no use of FORCED command
-  //but KMail configure setting has ReplyUsingHtml as disabled, OR the original mail has no HTML part
+  // Clear the HTML body if FORCEDPLAIN has set ReplyAsPlain, OR if,
+  // there is no use of FORCED command but a configure setting has ReplyUsingHtml disabled,
+  // OR the original mail has no HTML part.
   const KMime::Content* content = mOrigMsg->mainBodyPart("text/html");
   if( mQuotes == ReplyAsPlain
       || ( mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml() )

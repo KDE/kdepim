@@ -1,12 +1,11 @@
-/* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+/*
   Copyright (c) 2011 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -25,7 +24,9 @@ using namespace TemplateParser;
 
 void TemplateParser::Util::deleteTemplate( const QString &id )
 {
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "templatesconfigurationrc", KConfig::NoGlobals );
+  KSharedConfig::Ptr config =
+    KSharedConfig::openConfig( "templatesconfigurationrc", KConfig::NoGlobals );
+
   const QString key = QString::fromLatin1( "Templates #%1" ).arg( id );
   if ( config->hasGroup( key ) ) {
     KConfigGroup group = config->group( key );

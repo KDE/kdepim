@@ -28,28 +28,26 @@ namespace TemplateParser {
 class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public QSyntaxHighlighter
 {
   Q_OBJECT
-public:
-  explicit TemplatesSyntaxHighlighter( QTextDocument* doc );
-  virtual ~TemplatesSyntaxHighlighter();
+  public:
+    explicit TemplatesSyntaxHighlighter( QTextDocument *doc );
+    virtual ~TemplatesSyntaxHighlighter();
 
-  virtual void highlightBlock(const QString& text);
-private:
-  void init();
-  struct Rule {
-    QRegExp pattern;
-    QTextCharFormat format;
+    virtual void highlightBlock( const QString &text );
 
-    Rule( const QRegExp & r, const QTextCharFormat & f )
-      : pattern(r), format(f) {}
-  };
-  QList<Rule> m_rules;
+  private:
+    void init();
+    struct Rule {
+      QRegExp pattern;
+      QTextCharFormat format;
+
+      Rule( const QRegExp &r, const QTextCharFormat &f )
+        : pattern( r ), format( f ) {}
+    };
+    QList<Rule> m_rules;
 
 };
 
 }
 
-
-
-
-#endif /* TEMPLATESHIGHLIGHTER_H */
+#endif
 
