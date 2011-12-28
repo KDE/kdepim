@@ -23,12 +23,15 @@
 
 using namespace TemplateParser;
 
-QString DefaultTemplates::defaultNewMessage() {
-  return "%REM=\"" + i18n( "Default new message template" ) + "\"%-\n"
-         "%BLANK";
+QString DefaultTemplates::defaultNewMessage()
+{
+  return
+    "%REM=\"" + i18n( "Default new message template" ) + "\"%-\n"
+    "%BLANK";
 }
 
-QString DefaultTemplates::defaultReply() {
+QString DefaultTemplates::defaultReply()
+{
   return
     "%REM=\"" + i18n( "Default reply template" ) + "\"%-\n" +
     i18nc( "Default reply template."
@@ -39,7 +42,8 @@ QString DefaultTemplates::defaultReply() {
            "%4", "%ODATE", "%OTIMELONG", "%QUOTE", "%CURSOR" );
 }
 
-QString DefaultTemplates::defaultReplyAll() {
+QString DefaultTemplates::defaultReplyAll()
+{
   return
     "%REM=\"" + i18n( "Default reply all template" ) + "\"%-\n" +
     i18nc( "Default reply all template: %1: date, %2: time, %3: name of original sender, "
@@ -47,7 +51,7 @@ QString DefaultTemplates::defaultReplyAll() {
            "On %1 %2 %3 wrote:\n"
            "%4\n"
            "%5",
-           "%ODATE", "%OTIMELONG", "%OFROMNAME", "%QUOTE", "%CURSOR");
+           "%ODATE", "%OTIMELONG", "%OFROMNAME", "%QUOTE", "%CURSOR" );
 }
 
 QString DefaultTemplates::defaultForward()
@@ -72,6 +76,7 @@ QString DefaultTemplates::defaultForward()
            "%OFULLSUBJECT", "%ODATE", "%OTIMELONG", "%OFROMADDR", "%TEXT" );
 }
 
-QString DefaultTemplates::defaultQuoteString() {
+QString DefaultTemplates::defaultQuoteString()
+{
   return "> ";
 }

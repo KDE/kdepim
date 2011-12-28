@@ -33,12 +33,12 @@ class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KTextEdit
     virtual ~TemplatesTextEdit();
 
   protected slots:
-    void slotInsertCompletion( const QString& );
+    void slotInsertCompletion( const QString & );
     QString wordUnderCursor();
 
   protected:
     void initCompleter();
-    void keyPressEvent(QKeyEvent* e);
+    void keyPressEvent( QKeyEvent *e );
 
   private:
     QCompleter *m_completer;

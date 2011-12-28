@@ -16,7 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef TEMPLATEPARSER_TEMPLATESCONFIGURATION_H
 #define TEMPLATEPARSER_TEMPLATESCONFIGURATION_H
 
@@ -61,7 +60,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
     QString mHelpString;
 
   private slots:
-    void slotHelpLinkClicked( const QString& );
+    void slotHelpLinkClicked( const QString & );
 };
 
 }

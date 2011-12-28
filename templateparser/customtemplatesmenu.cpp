@@ -107,7 +107,7 @@ void CustomTemplatesMenu::update()
   for ( ; it != end; ++it ) {
     CTemplates t( *it );
     mCustomTemplates.append( *it );
-    QString nameAction( *it);
+    QString nameAction( *it );
     nameAction.replace( '&', "&&" );
     KAction *action;
     switch ( t.type() ) {

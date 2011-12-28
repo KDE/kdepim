@@ -121,21 +121,25 @@ namespace TemplateParser {
  * \par Make plain part
  * mMsg is the reply message in which the message text will be replaced by the
  * processed value from templates.
- * In case of no attachments, the message will be a single-part message. A KMime::Content
- * containing the plainBody from processWithTemplate() is created. Then the encodedBody(),
- * contentType (text/plain) of this KMime::Content is set in the body and the header of mMsg. addContent()
- * method can be used for adding sub-content to content object in case of attachments.
- * addContent() method is not used for adding content of the above mentioned single-part, as
- * addContent() will convert single-part to multipart-mixed before adding it to mMsg.
+ *
+ * In case of no attachments, the message will be a single-part message.
+ * A KMime::Content containing the plainBody from processWithTemplate() is
+ * created.  Then the encodedBody(), contentType (text/plain) of this
+ * KMime::Content is set in the body and the header of mMsg.  The addContent()
+ * method can be used for adding sub-content to content object in case of
+ * attachments.  The addContent() method is not used for adding content of the
+ * above mentioned single-part, as addContent() will convert single-part to
+ * multipart-mixed before adding it to mMsg.
  *
  * \par Make multipart/alternative mails
- * First of all a KMime::Content (content) is created with a content-type of multipart/alternative.
- * Then in the same way as plain-part is created in above paragraph, a KMime::Content (sub-content)
- * containing the plainBody is created and added as child to the content.
- * Then a new KMime::Content (sub-content) with htmlBody as the body is created. The content-type
- * is set as text/html. This new sub-content is then added to the parent content.
- * Now, since the parent content (multipart/alternative) has two sub-content (text/plain and text/html)
- * to it, it is added to the reply message (mMsg).
+ * First of all a KMime::Content (content) is created with a content-type of
+ * multipart/alternative.  Then in the same way as plain-part is created in above
+ * paragraph, a KMime::Content (sub-content) containing the plainBody is created
+ * and added as child to the content.  Then a new KMime::Content (sub-content)
+ * with htmlBody as the body is created.  The content-type is set as text/html.
+ * This new sub-content is then added to the parent content.  Now, since the
+ * parent content (multipart/alternative) has two sub-content (text/plain and
+ * text/html) to it, it is added to the reply message (mMsg).
  *
  * TODO: What is the usecase of the commands that work on the message to be transformed?
  *       In general you only use the commands that work on the original message...
@@ -168,49 +172,48 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     ~TemplateParser();
 
     /**
-     * Sets the selection. If this is set, only the selection will be added to commands such
-     * as %QUOTE. Otherwise, the whole message is quoted.
+     * Sets the selection. If this is set, only the selection will be added to
+     * commands such as %QUOTE. Otherwise, the whole message is quoted.
      * If this is not called at all, the whole message is quoted as well.
      * Call this before calling process().
      */
     void setSelection( const QString &selection );
 
     /**
-     * Sets whether the template parser is allowed to decrypt the original message when needing
-     * its message text, for example for the %QUOTE command.
-     * If true, it will tell the ObjectTreeParser it uses internally to decrypt the message,
-     * and that will possibly show a password request dialog to the user.
+     * Sets whether the template parser is allowed to decrypt the original
+     * message when needing its message text, for example for the %QUOTE command.
+     * If true, it will tell the ObjectTreeParser it uses internally to decrypt the
+     * message, and that will possibly show a password request dialog to the user.
      *
      * The default is false.
      */
     void setAllowDecryption( const bool allowDecryption );
 
     /**
-     * Tell template parser whether or not to wrap words, and
-     *  at what column to wrap at.
+     * Tell template parser whether or not to wrap words, and at what column
+     * to wrap at.
      *
      * Default is true, wrapping at 80chars.
      */
     void setWordWrap( bool wrap, int wrapColWidth = 80 );
 
-
     /**
      * Set the identity manager to be used when creating the template.
      */
-    void setIdentityManager( KPIMIdentities::IdentityManager* ident );
+    void setIdentityManager( KPIMIdentities::IdentityManager *ident );
 
     /**
-     * Sets the list of charsets to try to use to encode the resulting
-     *  text. They are tried in order until one matches, or utf-8 as a fallback.
+     * Sets the list of charsets to try to use to encode the resulting text.
+     * They are tried in order until one matches, or utf-8 as a fallback.
      */
-    void setCharsets( const QStringList& charsets );
+    void setCharsets( const QStringList &charsets );
 
     virtual void process( const KMime::Message::Ptr &aorig_msg,
-                          const Akonadi::Collection& afolder = Akonadi::Collection() );
+                          const Akonadi::Collection &afolder = Akonadi::Collection() );
     virtual void process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
-                         const Akonadi::Collection& afolder = Akonadi::Collection() );
+                         const Akonadi::Collection &afolder = Akonadi::Collection() );
     virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
-                                      const Akonadi::Collection& afolder = Akonadi::Collection() );
+                                      const Akonadi::Collection &afolder = Akonadi::Collection() );
 
     virtual void processWithTemplate( const QString &tmpl );
 
@@ -241,7 +244,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     bool mDebug;
     QString mQuoteString;
     QString mTo, mCC;
-    KPIMIdentities::IdentityManager* m_identityManager;
+    KPIMIdentities::IdentityManager *m_identityManager;
     bool mWrap;
     int mColWrap;
     QStringList m_charsets;
@@ -267,8 +270,8 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody ) const;
 
     /**
-     * Determines whether the signature should be stripped when getting the text of the original
-     * message, e.g. for commands such as %QUOTE
+     * Determines whether the signature should be stripped when getting the text
+     * of the original message, e.g. for commands such as %QUOTE
      */
     bool shouldStripSignature() const;
 
@@ -286,28 +289,28 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString getHtmlSignature() const;
 
     /**
-      * Returns message body indented by the
-      * given indentation string. This is suitable for including the message
-      * in another message of for replies, forwards.
-      *
-      * No attachments are handled if includeAttach is false.
-      * The signature is stripped if aStripSignature is true and
-      * smart quoting is turned on. Signed or encrypted texts
-      * get converted to plain text when allowDecryption is true.
-    */
+     * Returns message body indented by the
+     * given indentation string. This is suitable for including the message
+     * in another message of for replies, forwards.
+     *
+     * No attachments are handled if includeAttach is false.
+     * The signature is stripped if aStripSignature is true and
+     * smart quoting is turned on. Signed or encrypted texts
+     * get converted to plain text when allowDecryption is true.
+     */
     QString quotedPlainText( const QString & election=QString() ) const;
 
     /**
-      * Returns HTML message body.
-      * This is suitable for including the message
-      * in another message of for replies, forwards.
-      *
-      * No attachments are handled if includeAttach is false.
-      * The signature is stripped if aStripSignature is true and
-      * smart quoting is turned on. Signed or encrypted texts
-      * get converted to plain text when allowDecryption is true.
-    */
-    QString quotedHtmlText( const QString& selection /*.clear() */ ) const;
+     * Returns HTML message body.
+     * This is suitable for including the message
+     * in another message of for replies, forwards.
+     *
+     * No attachments are handled if includeAttach is false.
+     * The signature is stripped if aStripSignature is true and
+     * smart quoting is turned on. Signed or encrypted texts
+     * get converted to plain text when allowDecryption is true.
+     */
+    QString quotedHtmlText( const QString &selection ) const;
 
     /**
      * This function return the plain text part from the OTP.
@@ -327,44 +330,52 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed );
 
     /** @return the UOID of the identity for this message.
-      Searches the "x-kmail-identity" header and if that fails,
-      searches with KPIMIdentities::IdentityManager::identityForAddress()
-    **/
-    uint identityUoid(const KMime::Message::Ptr &msg ) const;
+     * Searches the "x-kmail-identity" header and if that fails,
+     * searches with KPIMIdentities::IdentityManager::identityForAddress()
+     */
+    uint identityUoid( const KMime::Message::Ptr &msg ) const;
 
     /**
-     * Returns KMime content of the plain text part of the message after setting its mime type,
-     * charset and CTE.
+     * Returns KMime content of the plain text part of the message after setting
+     * its mime type, charset and CTE.
      * This function is called by:-
-     * 1) TemplateParser::addProcessedBodyToMessage(), which uses this content to simply create
-     *    the text/plain message
+     * 1) TemplateParser::addProcessedBodyToMessage(), which uses this content
+     *    to simply create the text/plain message
      *
-     * 2) TemplateParser::createMultipartAlternativeContent() which adds this content to create
-     *    multipart/alternative message.
+     * 2) TemplateParser::createMultipartAlternativeContent() which adds this content
+     *    to create the multipart/alternative message.
      */
-    KMime::Content* createPlainPartContent( const QString &plainBody ) const;
+    KMime::Content *createPlainPartContent( const QString &plainBody ) const;
 
     /**
-     * Returns KMime content of the multipart/alternative part of the message after setting the
-     * mime type, charset and CTE of its respective text/plain part and text/html part.
+     * Returns KMime content of the multipart/alternative part of the message
+     * after setting the mime type, charset and CTE of its respective text/plain
+     * part and text/html part.
      */
-    KMime::Content* createMultipartAlternativeContent( const QString& plainBody, const QString& htmlBody ) const;
+    KMime::Content *createMultipartAlternativeContent( const QString &plainBody,
+                                                       const QString &htmlBody ) const;
 
     /**
-     * @return a multipart/mixed KMime::Content that has textPart and all attachments as children.
-     * @param ac a reference to an MessageCore::AttachmentCollector that has collected all attachments.
+     * Returns a multipart/mixed KMime::Content that has textPart and all
+     * attachments as children.
+     * @param ac a reference to an MessageCore::AttachmentCollector that has
+     *           collected all attachments.
      * @param textPart a KMime::Content that is to be added as a child.
      * @since 4.8
      */
-    KMime::Content* createMultipartMixed( const MessageCore::AttachmentCollector &ac, KMime::Content* textPart ) const;
+    KMime::Content *createMultipartMixed( const MessageCore::AttachmentCollector &ac,
+                                          KMime::Content *textPart ) const;
 
     /**
-     * @return a multipart/related KMime::Content that has mainTextPart and all embedded images as children.
-     * @param ac a reference to an MessageCore::ImageCollector that has collected all attachments.
+     * Returnsa multipart/related KMime::Content that has mainTextPart and all
+     * embedded images as children.
+     * @param ac a reference to an MessageCore::ImageCollector that has
+     *           collected all attachments.
      * @param mainTextPart a KMime::Content that is to be added as a child.
      * @since 4.8
      */
-    KMime::Content* createMultipartRelated( const MessageCore::ImageCollector &ic, KMime::Content* mainTextPart ) const;
+    KMime::Content *createMultipartRelated( const MessageCore::ImageCollector &ic,
+                                            KMime::Content *mainTextPart ) const;
 
     /**
      * Checks if the signature is HTML or not.
@@ -372,13 +383,13 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     bool isHtmlSignature() const;
 
     /**
-     * Does the necessary conversions like escaping charecters, changing "\n" to breakline tag before
-     * appending text to htmlBody
+     * Does the necessary conversions like escaping charecters, changing "\n" to
+     * breakline tag before appending text to htmlBody.
      */
     QString plainToHtml( const QString &body ) const;
 
     /**
-     * Make a HTML content valid by adding missing html/head/body tag
+     * Make a HTML content valid by adding missing html/head/body tag.
      */
     QString makeValidHtml( QString &body );
 };

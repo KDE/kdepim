@@ -1,21 +1,19 @@
-/* -*- mode: C++; c-file-style: "gnu" -*-
+/*
+ * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
  *
- *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the Free Software Foundation, Inc.,
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "templatesconfiguration.h"
@@ -31,8 +29,8 @@ using namespace TemplateParser;
 TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
   : QWidget( parent )
 {
-  setupUi(this);
-  setObjectName(name);
+  setupUi( this );
+  setObjectName( name );
 
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
   sizeHint();
@@ -53,10 +51,10 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
 
   mHelpString =
     i18n( "<p>Here you can create and manage templates to use when "
-	  "composing new messages, replies or forwarded messages.</p>"
-	  "<p>The message templates support substitution commands, "
-	  "either simply type them or select them from "
-	  "the <i>Insert command</i> menu.</p>" );
+          "composing new messages, replies or forwarded messages.</p>"
+          "<p>The message templates support substitution commands, "
+          "either simply type them or select them from "
+          "the <i>Insert command</i> menu.</p>" );
   const QString templateConfigurationName( name );
   if ( templateConfigurationName == QLatin1String( "folder-templates" ) ) {
     mHelpString +=
@@ -67,7 +65,7 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
     mHelpString +=
       i18n( "<p>Templates specified here are identity-specific. "
             "They override global templates, but can be overridden by "
-	    "per-folder templates if they are specified.</p>" );
+            "per-folder templates if they are specified.</p>" );
   } else {
     mHelpString +=
       i18n( "<p>These are global (default) templates. They can be overridden "
@@ -80,8 +78,7 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
            this, SLOT(slotHelpLinkClicked(QString)) );
 }
 
-
-void TemplatesConfiguration::slotHelpLinkClicked( const QString& )
+void TemplatesConfiguration::slotHelpLinkClicked( const QString & )
 {
   QWhatsThis::showText( QCursor::pos(), mHelpString );
 }
@@ -211,7 +208,7 @@ void TemplatesConfiguration::saveToIdentity( uint id )
 void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
 {
   Templates t( id );
-  Templates* tid = 0;
+  Templates *tid = 0;
 
   if ( identity ) {
     tid = new Templates( configIdString( identity ) );
@@ -296,7 +293,7 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
 
 void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
 {
-  KTextEdit* edit;
+  KTextEdit *edit;
 
   if( toolBox1->widget( toolBox1->currentIndex() ) == page_new ) {
     edit = textEdit_new;
@@ -315,11 +312,13 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   const QString editText( edit->toPlainText() );
   if ( ( editText.contains( "%FORCEDPLAIN" ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
        ( editText.contains( "%FORCEDHTML" ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {
-    KMessageBox::error( this, i18n( "Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"
-                                    " is not correct. Use only one of the aforementioned commands with \" Reply as"
-                                    " Quoted Message command\" as per your need\n"
-                                    "(a)Reply using plain text for quotes to be strictly in plain text\n"
-                                    "(b)Reply using HTML text for quotes being in HTML format if present") );
+    KMessageBox::error(
+      this,
+      i18n( "Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"
+            " is not correct. Use only one of the aforementioned commands with \" Reply as"
+            " Quoted Message command\" as per your need\n"
+            "(a)Reply using plain text for quotes to be strictly in plain text\n"
+            "(b)Reply using HTML text for quotes being in HTML format if present" ) );
   } else {
     QTextCursor cursor = edit->textCursor();
     cursor.insertText( cmd );
@@ -329,7 +328,8 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   }
 }
 
-QString TemplatesConfiguration::strOrBlank( const QString &str ) {
+QString TemplatesConfiguration::strOrBlank( const QString &str )
+{
   if ( str.trimmed().isEmpty() ) {
     return QString::fromLatin1( "%BLANK" );
   }
