@@ -18,12 +18,13 @@
 
 #include "templatestextedit.h"
 #include "templatessyntaxhighlighter.h"
-#include "kglobalsettings.h"
+
+#include <KGlobalSettings>
+
 #include <QCompleter>
-#include <QStringListModel>
 #include <QKeyEvent>
-#include <QAbstractItemView>
 #include <QScrollBar>
+#include <QStringListModel>
 
 using namespace TemplateParser;
 
@@ -79,22 +80,22 @@ void TemplatesTextEdit::initCompleter()
           <<QLatin1String("%NOP")<<QLatin1String("%CLEAR")
           <<QLatin1String("%DEBUGOFF")<<QLatin1String("%DEBUG")
           <<QLatin1String("%CURSOR")<<QLatin1String("%SIGNATURE");
-  
+
   listWord<<QLatin1String("%REM=\"\"%-")<<QLatin1String("%INSERT=\"\"")
           <<QLatin1String("%SYSTEM=\"\"")<<QLatin1String("%PUT=\"\"")
           <<QLatin1String("%QUOTEPIPE=\"\"")<<QLatin1String("%MSGPIPE=\"\"")
           <<QLatin1String("%BODYPIPE=\"\"")<<QLatin1String("%CLEARPIPE=\"\"")
           <<QLatin1String("%TEXTPIPE=\"\"")<<QLatin1String("%OHEADER=\"\"")
           <<QLatin1String("%HEADER=\".*\"");
-  
+
   m_completer = new QCompleter( this );
   m_completer->setModel( new QStringListModel( listWord, m_completer ) );
   m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
   m_completer->setCaseSensitivity( Qt::CaseInsensitive );
-  
+
   m_completer->setWidget( this );
   m_completer->setCompletionMode( QCompleter::PopupCompletion );
-  
+
   connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
 }
 

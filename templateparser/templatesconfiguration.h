@@ -26,7 +26,7 @@
 #include "ui_templatesconfiguration_base.h"
 #include "templatesinsertcommand.h"
 
-#include <QLabel>
+namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
 {
@@ -65,5 +65,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
   private slots:
     void slotHelpLinkClicked( const QString& );
 };
+
+}
 
 #endif // TEMPLATESCONFIGURATION_H

@@ -24,12 +24,12 @@
 
 #include "templateparser_export.h"
 
-#include <qobject.h>
-#include <akonadi/collection.h>
 #include <messageviewer/objecttreeemptysource.h>
 
-#include <kmime/kmime_message.h>
-#include <boost/shared_ptr.hpp>
+#include <Akonadi/Collection>
+#include <KMime/KMimeMessage>
+
+#include <QObject>
 
 namespace MessageViewer {
   class ObjectTreeParser;
@@ -43,6 +43,7 @@ namespace MessageCore {
   class AttachmentCollector;
   class ImageCollector;
 }
+
 namespace TemplateParser {
 
 /**
@@ -383,6 +384,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString makeValidHtml( QString &body );
 };
 
-} // namespace TemplateParser
+}
 
-#endif // __KMAIL_TEMPLATEPARSER_H__
+#endif

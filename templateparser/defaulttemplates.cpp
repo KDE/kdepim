@@ -22,6 +22,8 @@
 
 #include <KLocale>
 
+using namespace TemplateParser;
+
 QString DefaultTemplates::defaultNewMessage() {
   return "%REM=\"" + i18n( "Default new message template" ) + "\"%-\n"
          "%BLANK";

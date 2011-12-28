@@ -20,46 +20,36 @@
  */
 
 #include "templateparser.h"
+#include "globalsettings_base.h"
 #ifndef Q_OS_WINCE
 #include "customtemplates_kfg.h"
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"
 #endif
-#include "globalsettings_base.h"
 
+#include <messagecore/attachmentcollector.h>
+#include <messagecore/imagecollector.h>
+#include <messagecore/stringutil.h>
 
-#include "messagecore/stringutil.h"
-#include "messagecore/attachmentcollector.h"
-#include "messagecore/imagecollector.h"
-#include "messageviewer/objecttreeparser.h"
-#include "messageviewer/objecttreeemptysource.h"
-#include "messageviewer/nodehelper.h"
-#include "messagecomposer/messagehelper.h"
+#include <messageviewer/objecttreeparser.h>
 
-#include <akonadi/collection.h>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_content.h>
+#include <KCalendarSystem>
+#include <KCharsets>
+#include <KGlobal>
+#include <KLocale>
+#include <KMessageBox>
+#include <KProcess>
+#include <KShell>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
-
-#include <klocale.h>
-#include <kcalendarsystem.h>
-#include <kglobal.h>
-#include <kprocess.h>
-#include <kmessagebox.h>
-#include <kshell.h>
-#include <kcharsets.h>
-#include <QString>
-#include <QWebPage>
-#include <QWebFrame>
-#include <QDateTime>
-#include <QRegExp>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QDir>
 #include <QTextCodec>
+#include <QWebFrame>
+#include <QWebPage>
 
 namespace TemplateParser {
 
@@ -1649,6 +1639,6 @@ QString TemplateParser::makeValidHtml( QString& body )//TODO implement this func
   return body;
 }
 
-} // namespace TemplateParser
+}
 
 #include "templateparser.moc"

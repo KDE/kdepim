@@ -20,19 +20,20 @@
 
 #include "templatesinsertcommand.h"
 
-#include <kdebug.h>
-#include <kaction.h>
-#include <kmenu.h>
-#include <kactionmenu.h>
-#include <klocale.h>
+#include <KAction>
+#include <KActionMenu>
+#include <KDebug>
+#include <KLocale>
+#include <KMenu>
 
-#include <qsignalmapper.h>
-#include <qpushbutton.h>
+#include <QSignalMapper>
 
 #undef I18N_NOOP
 #define I18N_NOOP(t) 0, t
 #undef I18N_NOOP2
 #define I18N_NOOP2(c,t) c, t
+
+using namespace TemplateParser;
 
 struct InsertCommand
 {
@@ -125,7 +126,7 @@ static const InsertCommand miscCommands[] = {
   { I18N_NOOP( "Clear Generated Message" ), TemplatesInsertCommand::CClear },
   { I18N_NOOP( "Turn Debug On" ), TemplatesInsertCommand::CDebug },
   { I18N_NOOP( "Turn Debug Off" ), TemplatesInsertCommand::CDebugOff },
-  { I18N_NOOP( "Cursor position"), TemplatesInsertCommand::CCursor }, 
+  { I18N_NOOP( "Cursor position"), TemplatesInsertCommand::CCursor },
   { I18N_NOOP( "Blank text"), TemplatesInsertCommand::CBlank }
 };
 static const int miscCommandsCount =

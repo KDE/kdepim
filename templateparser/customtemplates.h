@@ -23,16 +23,17 @@
 #ifndef TEMPLATEPARSER_CUSTOMTEMPLATES_H
 #define TEMPLATEPARSER_CUSTOMTEMPLATES_H
 
-#include <QPixmap>
-#include <QWidget>
+#include "templateparser_export.h"
+
 #include <QStyledItemDelegate>
 #include <QTreeWidgetItem>
-#include <QKeySequence>
+#include <QWidget>
 
-#include "templateparser_export.h"
 class KActionCollection;
 
 class Ui_CustomTemplatesBase;
+
+namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 {
@@ -132,5 +133,7 @@ public:
                         const QModelIndex &index) const;
 
 };
+
+}
 
 #endif // CUSTOMTEMPLATES_H

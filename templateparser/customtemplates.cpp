@@ -20,20 +20,17 @@
 */
 
 #include "customtemplates.h"
+#include "customtemplates_kfg.h"
+#include "globalsettings_base.h"
+#include "ui_customtemplates_base.h"
+
+#include <KIconLoader>
+#include <KLocale>
+#include <KMessageBox>
 
 #include <QWhatsThis>
 
-#include <klocale.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-#include <kpushbutton.h>
-#include <klineedit.h>
-#include <kmessagebox.h>
-#include <kkeysequencewidget.h>
-
-#include "ui_customtemplates_base.h"
-#include "customtemplates_kfg.h"
-#include "globalsettings_base.h"
+using namespace TemplateParser;
 
 CustomTemplates::CustomTemplates( const QList<KActionCollection*>& actionCollection, QWidget *parent )
   : QWidget( parent ),
@@ -189,7 +186,7 @@ void CustomTemplates::slotTextChanged()
 
 void CustomTemplates::load()
 {
-  const QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
+  const QStringList list = GlobalSettings::self()->customTemplates();
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
@@ -251,8 +248,8 @@ void CustomTemplates::save()
     ++lit;
   }
 
-  TemplateParser::GlobalSettings::self()->setCustomTemplates( list );
-  TemplateParser::GlobalSettings::self()->writeConfig();
+  GlobalSettings::self()->setCustomTemplates( list );
+  GlobalSettings::self()->writeConfig();
 
   emit templatesUpdated();
 }

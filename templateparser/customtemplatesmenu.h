@@ -25,11 +25,14 @@
 #include <QList>
 #include <QObject>
 #include <QStringList>
+
 class QSignalMapper;
 
 class KActionCollection;
 class KAction;
 class KActionMenu;
+
+namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
 {
@@ -70,5 +73,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
     // Signal mappers for custom template actions
     QSignalMapper *mCustomReplyMapper, *mCustomReplyAllMapper, *mCustomForwardMapper;
 };
+
+}
 
 #endif // CUSTOMTEMPLATESMENU_H

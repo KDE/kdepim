@@ -1,5 +1,5 @@
-/*   -*- mode: C++; c-file-style: "gnu" -*-
- *   kmail: KDE mail client
+/* -*- mode: C++; c-file-style: "gnu" -*-
+ *
  *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -17,17 +17,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
-#include "templatesconfiguration.h"
-#include "ui_templatesconfiguration_base.h"
-#include "templatesconfiguration_kfg.h"
-#include "globalsettings_base.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kglobal.h>
+#include "templatesconfiguration.h"
+#include "globalsettings_base.h"
+#include "templatesconfiguration_kfg.h"
+
+#include <KMessageBox>
 
 #include <QWhatsThis>
-#include <KMessageBox>
+
+using namespace TemplateParser;
 
 TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
   : QWidget( parent )
@@ -104,31 +103,31 @@ void TemplatesConfiguration::resetToDefault()
 void TemplatesConfiguration::loadFromGlobal()
 {
   QString str;
-  str = TemplateParser::GlobalSettings::self()->templateNewMessage();
+  str = GlobalSettings::self()->templateNewMessage();
   if ( str.isEmpty() ) {
     textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
   } else {
     textEdit_new->setText(str);
   }
-  str = TemplateParser::GlobalSettings::self()->templateReply();
+  str = GlobalSettings::self()->templateReply();
   if ( str.isEmpty() ) {
     textEdit_reply->setText( DefaultTemplates::defaultReply() );
   } else {
     textEdit_reply->setText( str );
   }
-  str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+  str = GlobalSettings::self()->templateReplyAll();
   if ( str.isEmpty() ) {
     textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
   } else {
     textEdit_reply_all->setText( str );
   }
-  str = TemplateParser::GlobalSettings::self()->templateForward();
+  str = GlobalSettings::self()->templateForward();
   if ( str.isEmpty() ) {
     textEdit_forward->setText( DefaultTemplates::defaultForward() );
   } else {
     textEdit_forward->setText( str );
   }
-  str = TemplateParser::GlobalSettings::self()->quoteString();
+  str = GlobalSettings::self()->quoteString();
   if ( str.isEmpty() ) {
     lineEdit_quote->setText( DefaultTemplates::defaultQuoteString() );
   } else {
@@ -138,12 +137,12 @@ void TemplatesConfiguration::loadFromGlobal()
 
 void TemplatesConfiguration::saveToGlobal()
 {
-  TemplateParser::GlobalSettings::self()->setTemplateNewMessage( strOrBlank( textEdit_new->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setTemplateReply( strOrBlank( textEdit_reply->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setQuoteString( lineEdit_quote->text() );
-  TemplateParser::GlobalSettings::self()->writeConfig();
+  GlobalSettings::self()->setTemplateNewMessage( strOrBlank( textEdit_new->toPlainText() ) );
+  GlobalSettings::self()->setTemplateReply( strOrBlank( textEdit_reply->toPlainText() ) );
+  GlobalSettings::self()->setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
+  GlobalSettings::self()->setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
+  GlobalSettings::self()->setQuoteString( lineEdit_quote->text() );
+  GlobalSettings::self()->writeConfig();
 }
 
 void TemplatesConfiguration::loadFromIdentity( uint id )
@@ -154,7 +153,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateNewMessage();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateNewMessage();
+    str = GlobalSettings::self()->templateNewMessage();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultNewMessage();
@@ -163,7 +162,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateReply();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReply();
+    str = GlobalSettings::self()->templateReply();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReply();
@@ -172,7 +171,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateReplyAll();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+    str = GlobalSettings::self()->templateReplyAll();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReplyAll();
@@ -181,7 +180,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateForward();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateForward();
+    str = GlobalSettings::self()->templateForward();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultForward();
@@ -190,7 +189,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.quoteString();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->quoteString();
+    str = GlobalSettings::self()->quoteString();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultQuoteString();
@@ -225,7 +224,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateNewMessage();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateNewMessage();
+    str = GlobalSettings::self()->templateNewMessage();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultNewMessage();
@@ -237,7 +236,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateReply();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReply();
+    str = GlobalSettings::self()->templateReply();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReply();
@@ -249,7 +248,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateReplyAll();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+    str = GlobalSettings::self()->templateReplyAll();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReplyAll();
@@ -261,7 +260,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateForward();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateForward();
+    str = GlobalSettings::self()->templateForward();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultForward();
@@ -273,7 +272,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->quoteString();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->quoteString();
+    str = GlobalSettings::self()->quoteString();
   }
   if ( str.isEmpty() ) {
       str = DefaultTemplates::defaultQuoteString();

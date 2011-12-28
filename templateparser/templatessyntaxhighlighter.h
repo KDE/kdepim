@@ -16,15 +16,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TEMPLATEPARSER_TEMPLATESHIGHLIGHTER_H
-#define TEMPLATEPARSER_TEMPLATESHIGHLIGHTER_H
+#ifndef TEMPLATEPARSER_TEMPLATESSYNTAXHIGHLIGHTER_H
+#define TEMPLATEPARSER_TEMPLATESSYNTAXHIGHLIGHTER_H
+
+#include "templateparser_export.h"
 
 #include <QSyntaxHighlighter>
-#include "templateparser_export.h"
-#include <QRegExp>
-
-
-class QTextDocument;
 
 namespace TemplateParser {
 

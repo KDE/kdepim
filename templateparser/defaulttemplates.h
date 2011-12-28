@@ -23,14 +23,17 @@
 
 #include "templateparser_export.h"
 
+namespace TemplateParser {
+
 /** Default new/reply/forward templates. */
-namespace DefaultTemplates
-{
+namespace DefaultTemplates {
   TEMPLATEPARSER_EXPORT QString defaultNewMessage();
   TEMPLATEPARSER_EXPORT QString defaultReply();
   TEMPLATEPARSER_EXPORT QString defaultReplyAll();
   TEMPLATEPARSER_EXPORT QString defaultForward();
   TEMPLATEPARSER_EXPORT QString defaultQuoteString();
+}
+
 }
 
 #endif

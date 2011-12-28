@@ -240,7 +240,7 @@
           <widget class="KKeySequenceWidget" name="mKeySequenceWidget"/>
          </item>
          <item row="0" column="0">
-          <widget class="TemplatesInsertCommand" name="mInsertCommand" native="true"/>
+          <widget class="TemplateParser::TemplatesInsertCommand" name="mInsertCommand" native="true"/>
          </item>
         </layout>
        </item>
@@ -280,7 +280,7 @@
    <header>templatestextedit.h</header>
   </customwidget>
   <customwidget>
-   <class>TemplatesInsertCommand</class>
+   <class>TemplateParser::TemplatesInsertCommand</class>
    <extends>QWidget</extends>
    <header>templatesinsertcommand.h</header>
   </customwidget>

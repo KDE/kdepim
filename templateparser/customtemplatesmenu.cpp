@@ -22,12 +22,15 @@
 #include "customtemplates_kfg.h"
 #include "globalsettings_base.h"
 
-#include <klocale.h>
-#include <kactionmenu.h>
+#include <KActionCollection>
+#include <KActionMenu>
+#include <KIcon>
+#include <KLocale>
 #include <KMenu>
-#include <kactioncollection.h>
 
 #include <QSignalMapper>
+
+using namespace TemplateParser;
 
 CustomTemplatesMenu::CustomTemplatesMenu( QWidget *owner, KActionCollection *ac )
 {
@@ -95,7 +98,7 @@ void CustomTemplatesMenu::update()
 {
   clear();
 
-  const QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
+  const QStringList list = GlobalSettings::self()->customTemplates();
   QStringList::const_iterator it = list.constBegin();
   QStringList::const_iterator end = list.constEnd();
   int idx = 0;

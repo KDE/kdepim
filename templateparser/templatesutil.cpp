@@ -17,8 +17,11 @@
 */
 
 #include "templatesutil.h"
-#include <KSharedConfig>
+
 #include <KConfigGroup>
+#include <KSharedConfig>
+
+using namespace TemplateParser;
 
 void TemplateParser::Util::deleteTemplate( const QString &id )
 {

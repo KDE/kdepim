@@ -243,7 +243,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="TemplatesInsertCommand" native="1" name="mInsertCommand" />
+      <widget class="TemplateParser::TemplatesInsertCommand" native="1" name="mInsertCommand" />
      </item>
      <item>
       <widget class="QLabel" name="textLabel1" >
@@ -294,7 +294,7 @@
    <header>templatestextedit.h</header>
   </customwidget>
   <customwidget>
-   <class>TemplatesInsertCommand</class>
+   <class>TemplateParser::TemplatesInsertCommand</class>
    <extends>QWidget</extends>
    <header>templatesinsertcommand.h</header>
   </customwidget>

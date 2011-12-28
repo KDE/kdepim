@@ -26,6 +26,8 @@
 
 class KActionMenu;
 
+namespace TemplateParser {
+
 class TemplatesInsertCommand : public QPushButton
 {
   Q_OBJECT
@@ -56,5 +58,7 @@ class TemplatesInsertCommand : public QPushButton
   protected:
     KActionMenu *mMenu;
 };
+
+}
 
 #endif // TEMPLATESINSERTCOMMAND_H
