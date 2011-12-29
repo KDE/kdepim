@@ -88,19 +88,36 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
                                    const QString &fallbackFileName2 )
 {
   QString fileName;
-  KMimeType::Ptr mime = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+  QString tMimeType = mimeType;
+
+  // convert non-registered types to registered types
+  if ( mimeType == QLatin1String( "application/x-vnd.kolab.contact" ) ) {
+    tMimeType = QLatin1String( "text/x-vcard" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.event" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.calendar.event" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.task" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.calendar.todo" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.journal" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.calendar.journal" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.note" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.note" );
+  }
+
+  KMimeType::Ptr mime = KMimeType::mimeType( tMimeType, KMimeType::ResolveAliases );
   if ( mime ) {
     fileName = mime->iconName();
   } else {
     fileName = QLatin1String( "unknown" );
-    kWarning() << "unknown mimetype" << mimeType;
+    if ( !tMimeType.isEmpty() ) {
+      kWarning() << "unknown mimetype" << tMimeType;
+    }
   }
 
-  if ( fileName.isEmpty() )
-  {
+  if ( fileName.isEmpty() ) {
     fileName = fallbackFileName1;
-    if ( fileName.isEmpty() )
+    if ( fileName.isEmpty() ) {
       fileName = fallbackFileName2;
+    }
     if ( !fileName.isEmpty() ) {
       fileName = KMimeType::findByPath( "/tmp/" + fileName, 0, true )->iconName();
     }
