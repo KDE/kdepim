@@ -339,7 +339,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         } else if ( mDebug ) {
           KMessageBox::error(
             0,
-            i18nc( "@info:status",
+            i18nc( "@info",
                    "Cannot insert content from file %1: %2", path, file.errorString() ) );
         }
 
@@ -378,7 +378,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         } else if ( mDebug ) {
           KMessageBox::error(
             0,
-            i18nc( "@info:status",
+            i18nc( "@info",
                    "Cannot insert content from file %1: %2", path, file.errorString() ) );
         }
 
@@ -561,8 +561,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           const QString to = mOrigMsg->to()->asUnicodeString();
           const QString cc = mOrigMsg->cc()->asUnicodeString();
           if ( !to.isEmpty() ) {
-            plainBody.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
-            const QString body = plainToHtml( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+            QString toLine =  i18nc( "@item:intext email To", "To:" ) + QLatin1Char( ' ' ) + to;
+            plainBody.append( toLine );
+            const QString body = plainToHtml( toLine );
             htmlBody.append( body );
           }
           if ( !to.isEmpty() && !cc.isEmpty() ) {
@@ -571,8 +572,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
             htmlBody.append( str );
           }
           if ( !cc.isEmpty() ) {
-            plainBody.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
-            const QString str = plainToHtml( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+            QString ccLine = i18nc( "@item:intext email CC", "CC:" ) + QLatin1Char( ' ' ) +  cc;
+            plainBody.append( ccLine );
+            const QString str = plainToHtml( ccLine );
             htmlBody.append( str );
           }
         }
@@ -1299,8 +1301,8 @@ KMime::Content *TemplateParser::createMultipartMixed( const MessageCore::Attachm
     if ( attachment->contentType( false ) ) {
       if ( !attachment->contentType()->hasParameter( "name" ) &&
            !attachment->contentType()->hasParameter( "filename" ) ) {
-        attachment->contentType()->setParameter( "name",
-                                                 i18n( "Attachment %1", attachmentNumber ) );
+        attachment->contentType()->setParameter(
+          "name", i18nc( "@item:intext", "Attachment %1", attachmentNumber ) );
       }
     }
     attachmentNumber++;
