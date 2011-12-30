@@ -17,6 +17,7 @@
  */
 
 #include "templatessyntaxhighlighter.h"
+#include <QPalette>
 
 using namespace TemplateParser;
 
@@ -46,8 +47,8 @@ void TemplatesSyntaxHighlighter::highlightBlock( const QString &text )
 void TemplatesSyntaxHighlighter::init()
 {
   QTextCharFormat keywordFormat;
-  keywordFormat.setForeground( Qt::blue );
-  keywordFormat.setFontWeight( QFont::Bold );
+  QPalette palette;
+  keywordFormat.setForeground( palette.link() );
 
   QStringList keywords;
   keywords
@@ -122,8 +123,7 @@ void TemplatesSyntaxHighlighter::init()
   }
 
   QTextCharFormat keywordWithArgsFormat;
-  keywordWithArgsFormat.setForeground( Qt::blue );
-  keywordWithArgsFormat.setFontWeight( QFont::Bold );
+  keywordWithArgsFormat.setForeground( palette.link() );
   QStringList keywordsWithArgs;
   keywordsWithArgs
     << QLatin1String( "%REM=\".*\"%-" )
