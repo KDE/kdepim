@@ -385,7 +385,7 @@ endif()
 
   macro_optional_add_subdirectory(strigi-analyzer)
 
-  if(KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW AND KDEPIM_BUILD_DESKTOP)
+  if(KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(kalarm)
   endif()
 
