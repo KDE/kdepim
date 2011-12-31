@@ -757,7 +757,7 @@
             <string comment="@info:whatsthis">Opens your address book, allowing you to select new attendees from it.</string>
            </property>
            <property name="text">
-            <string comment="@action:button">Select Attendees…</string>
+            <string comment="@action:button">Select Attendees...</string>
            </property>
           </widget>
          </item>
