@@ -126,8 +126,6 @@ class CustomTemplateItemDelegate : public QStyledItemDelegate
     explicit CustomTemplateItemDelegate( QObject *parent = 0 );
     ~CustomTemplateItemDelegate();
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                           const QModelIndex &index ) const;
     void setModelData( QWidget *editor, QAbstractItemModel *model,
                        const QModelIndex &index ) const;
 

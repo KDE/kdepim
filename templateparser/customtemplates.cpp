@@ -95,27 +95,6 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   connect( mUi->mHelp, SIGNAL(linkActivated(QString)),
           SLOT(slotHelpLinkClicked(QString)) );
 
-  const QString toToolTip = i18n( "Additional recipients of the message" );
-  const QString ccToolTip = i18n( "Additional recipients who get a copy of the message" );
-  const QString toWhatsThis =
-    i18n( "When using this template, the default recipients are those you enter here. "
-          "This is a comma-separated list of mail addresses." );
-  const QString ccWhatsThis =
-    i18n( "When using this template, the recipients you enter here will by default "
-          "get a copy of this message. This is a comma-separated list of mail addresses." );
-
-  KLineEdit *ccLineEdit = mUi->mCCEdit->lineEdit();
-  KLineEdit *toLineEdit = mUi->mToEdit->lineEdit();
-
-  mUi->mCCLabel->setToolTip( ccToolTip );
-  ccLineEdit->setToolTip( ccToolTip );
-  mUi->mToLabel->setToolTip( toToolTip );
-  toLineEdit->setToolTip( toToolTip );
-  mUi->mCCLabel->setWhatsThis( ccWhatsThis );
-  ccLineEdit->setWhatsThis( ccWhatsThis );
-  mUi->mToLabel->setWhatsThis( toWhatsThis );
-  toLineEdit->setWhatsThis( toWhatsThis );
-
   slotNameChanged( mUi->mName->text() );
 }
 
@@ -318,11 +297,19 @@ void CustomTemplates::slotRemoveClicked()
   }
 
   const QString templateName = item->text( 1 );
-  mItemsToDelete.append( templateName );
-  delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
-  mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
-  if ( !mBlockChangeSignal ) {
-    emit changed();
+
+  if ( KMessageBox::warningContinueCancel(
+         this,
+         i18nc( "@info", "Do you really want to remove template \"%1\"?", templateName ),
+         i18nc( "@title:window", "Remove Template?" ),
+         KStandardGuiItem::remove(),
+         KStandardGuiItem::cancel() ) == KMessageBox::Continue ) {
+    mItemsToDelete.append( templateName );
+    delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
+    mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
+    if ( !mBlockChangeSignal ) {
+      emit changed();
+    }
   }
 }
 
@@ -433,18 +420,6 @@ CustomTemplateItemDelegate::CustomTemplateItemDelegate( QObject *parent )
 
 CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
 {
-}
-
-QWidget *CustomTemplateItemDelegate::createEditor( QWidget *parent,
-                                                   const QStyleOptionViewItem &/*option*/,
-                                                   const QModelIndex &index ) const
-{
-  if ( index.column() == 1 ) {
-    KLineEdit *lineEdit = new KLineEdit( parent );
-    lineEdit->setFrame( false );
-    return lineEdit;
-  }
-  return 0;
 }
 
 void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemModel *model,

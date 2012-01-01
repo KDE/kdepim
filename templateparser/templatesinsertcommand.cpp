@@ -330,7 +330,7 @@ static void fillMenuFromActionMap( const QMap< QString, TemplatesInsertCommand::
   QMap< QString, TemplatesInsertCommand::Command >::const_iterator end = map.constEnd();
 
   while ( it != end ) {
-    KAction *action = new KAction( it.key(), menu );
+    KAction *action = new KAction( it.key(), menu ); //krazy:exclude=tipsandthis
     QObject::connect( action, SIGNAL(triggered(bool)), mapper, SLOT(map()) );
     mapper->setMapping( action, it.value() );
     menu->addAction( action );
@@ -352,6 +352,14 @@ TemplatesInsertCommand::TemplatesInsertCommand( QWidget *parent, const char *nam
            this, SLOT(slotMapped(int)) );
 
   mMenu = new KActionMenu( i18n( "Insert Command" ), this );
+  setToolTip(
+    i18nc( "@info:tooltip",
+           "Select a command to insert into the template" ) );
+  setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Traverse this menu to find a command to insert into the current template "
+           "being edited.  The command will be inserted at the cursor location, "
+           "so you want to move your cursor to the desired insertion point first." ) );
 
   // ******************************************************
   menu = new KActionMenu( i18n( "Original Message" ), mMenu );
