@@ -40,7 +40,7 @@ class ThemeManager : public QObject
      * @param themesPath The path to the top-level directory of the theme directories.
      * @param parent The parent object.
      */
-    ThemeManager( const QString &themesPath = QString(), QObject *parent = 0 );
+    explicit ThemeManager( const QString &themesPath = QString(), QObject *parent = 0 );
 
     /**
      * Destroys the theme manager.

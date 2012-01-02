@@ -38,7 +38,7 @@ class ThemeComboBox : public KComboBox
      * @param themesPath The path to the top-level directory of the theme directories.
      * @param parent The parent object.
      */
-    ThemeComboBox( const QString &themesPath = QString(), QWidget *parent = 0 );
+    explicit ThemeComboBox( const QString &themesPath = QString(), QWidget *parent = 0 );
 
     /**
      * Destroys the theme combo box.

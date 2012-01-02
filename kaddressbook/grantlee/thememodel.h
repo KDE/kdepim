@@ -46,7 +46,7 @@ class ThemeModel : public QAbstractListModel
      * @param themesPath The path to the top-level directory of the theme directories.
      * @param parent The parent object.
      */
-    ThemeModel( const QString &themesPath = QString(), QObject *parent = 0 );
+    explicit ThemeModel( const QString &themesPath = QString(), QObject *parent = 0 );
 
     /**
      * Destroys the theme model.
