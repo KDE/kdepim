@@ -1,5 +1,6 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-add_definitions( -DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
+
+add_definitions(-DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"")
 
 include_directories(
   ${Boost_INCLUDE_DIRS}
@@ -9,11 +10,11 @@ include_directories(
 )
 
 # convenience macro to add qtest unit tests
-macro( add_templateparser_unittest _source )
-  set( _test ${_source} )
-  get_filename_component( _name ${_source} NAME_WE )
-  kde4_add_unit_test( ${_name} TESTNAME templateparser-${_name} ${_test} )
-  target_link_libraries( ${_name}
+macro(add_templateparser_unittest _source)
+  set(_test ${_source})
+  get_filename_component(_name ${_source} NAME_WE)
+  kde4_add_unit_test(${_name} TESTNAME templateparser-${_name} ${_test})
+  target_link_libraries(${_name}
     kleo
     templateparser
     messageviewer
@@ -26,6 +27,6 @@ macro( add_templateparser_unittest _source )
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   )
-endmacro ()
+endmacro()
 
-add_templateparser_unittest( templateparsertest.cpp )
+add_templateparser_unittest(templateparsertest.cpp)
