@@ -1,5 +1,5 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -61,17 +61,18 @@ Theme::Theme( const Theme &other )
 {
 }
 
-Theme& Theme::operator=( const Theme &other )
+Theme &Theme::operator=( const Theme &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
 
 bool Theme::operator==( const Theme &other ) const
 {
-  return (d->mIdentifier == other.d->mIdentifier);
+  return ( d->mIdentifier == other.d->mIdentifier );
 }
 
 bool Theme::isValid() const

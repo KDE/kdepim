@@ -1,5 +1,5 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -20,12 +20,11 @@
 #ifndef GRANTLEE_THEMEMANAGER_H
 #define GRANTLEE_THEMEMANAGER_H
 
-#include <QtCore/QObject>
-
 #include "theme.h"
 
-namespace Grantlee
-{
+#include <QtCore/QObject>
+
+namespace Grantlee {
 
 /**
  *
@@ -83,7 +82,7 @@ class ThemeManager : public QObject
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void directoryChanged() )
     //@endcond

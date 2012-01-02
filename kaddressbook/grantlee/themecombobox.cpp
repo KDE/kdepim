@@ -1,5 +1,5 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -18,7 +18,6 @@
 */
 
 #include "themecombobox.h"
-
 #include "thememodel.h"
 
 using namespace Grantlee;

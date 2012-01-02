@@ -1,5 +1,5 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -18,7 +18,6 @@
 */
 
 #include "thememodel.h"
-
 #include "thememanager.h"
 
 using namespace Grantlee;
@@ -67,26 +66,28 @@ QString ThemeModel::themesPath() const
 
 int ThemeModel::rowCount( const QModelIndex &parent ) const
 {
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     return 0;
-  else
+  } else {
     return d->mThemes.count();
+  }
 }
 
 QVariant ThemeModel::data( const QModelIndex &index, int role ) const
 {
   if ( index.row() < 0 || index.column() < 0 ||
-       index.row() >= d->mThemes.count() || index.column() > 1 )
+       index.row() >= d->mThemes.count() || index.column() > 1 ) {
     return QVariant();
+  }
 
   const Theme theme = d->mThemes.at( index.row() );
   switch ( role ) {
-    case Qt::DisplayRole:
-      return theme.name();
-    case IdentifierRole:
-      return theme.identifier();
-    case BasePathRole:
-      return theme.basePath();
+  case Qt::DisplayRole:
+    return theme.name();
+  case IdentifierRole:
+    return theme.identifier();
+  case BasePathRole:
+    return theme.basePath();
   }
 
   return QVariant();

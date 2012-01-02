@@ -1,5 +1,5 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -22,8 +22,7 @@
 
 #include <QtCore/QAbstractListModel>
 
-namespace Grantlee
-{
+namespace Grantlee {
 
 /**
  *
@@ -36,8 +35,7 @@ class ThemeModel : public QAbstractListModel
     /**
      * Describes the additional roles the theme model provides.
      */
-    enum Role
-    {
+    enum Role {
       IdentifierRole = Qt::UserRole + 1,
       BasePathRole
     };
@@ -78,7 +76,7 @@ class ThemeModel : public QAbstractListModel
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

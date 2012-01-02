@@ -1,5 +1,5 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -20,10 +20,9 @@
 #ifndef GRANTLEE_THEMECOMBOBOX_H
 #define GRANTLEE_THEMECOMBOBOX_H
 
-#include <kcombobox.h>
+#include <KComboBox>
 
-namespace Grantlee
-{
+namespace Grantlee {
 
 /**
  *
@@ -74,7 +73,7 @@ class ThemeComboBox : public KComboBox
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 
