@@ -1,20 +1,20 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "csvimportdialog.h"
@@ -22,6 +22,18 @@
 #include "dateparser.h"
 #include "qcsvmodel.h"
 #include "templateselectiondialog.h"
+
+#include <KApplication>
+#include <KComboBox>
+#include <KDebug>
+#include <KFileDialog>
+#include <KInputDialog>
+#include <KLineEdit>
+#include <KLocale>
+#include <KMessageBox>
+#include <KProgressDialog>
+#include <KStandardDirs>
+#include <KUrlRequester>
 
 #include <QtCore/QPointer>
 #include <QtCore/QTextCodec>
@@ -39,19 +51,13 @@
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTableView>
 
-#include <kapplication.h>
-#include <kcombobox.h>
-#include <kdebug.h>
-#include <kfiledialog.h>
-#include <kinputdialog.h>
-#include <klineedit.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kprogressdialog.h>
-#include <kstandarddirs.h>
-#include <kurlrequester.h>
-
-enum { Local = 0, Latin1 = 1, Uni = 2, MSBug = 3, Codec = 4 };
+enum {
+  Local = 0,
+  Latin1 = 1,
+  Uni = 2,
+  MSBug = 3,
+  Codec = 4
+};
 
 class ContactFieldComboBox : public KComboBox
 {
@@ -88,20 +94,22 @@ class ContactFieldComboBox : public KComboBox
 
     ContactFields::Field currentField() const
     {
-      return (ContactFields::Field)itemData( currentIndex() ).toUInt();
+      return ( ContactFields::Field )itemData( currentIndex() ).toUInt();
     }
 
   private:
     static void fillFieldMap()
     {
-      if ( !mFieldMap.isEmpty() )
+      if ( !mFieldMap.isEmpty() ) {
         return;
+      }
 
       ContactFields::Fields fields = ContactFields::allFields();
       fields.remove( ContactFields::Undefined );
 
-      for ( int i = 0; i < fields.count(); ++i )
+      for ( int i = 0; i < fields.count(); ++i ) {
         mFieldMap.insert( ContactFields::label( fields.at( i ) ), fields.at( i ) );
+      }
     }
 
     static QMap<QString, ContactFields::Field> mFieldMap;
@@ -117,12 +125,13 @@ class ContactFieldDelegate : public QStyledItemDelegate
     {
     }
 
-    QString displayText( const QVariant &value, const QLocale& ) const
+    QString displayText( const QVariant &value, const QLocale & ) const
     {
-      return ContactFields::label( (ContactFields::Field)value.toUInt() );
+      return ContactFields::label( ( ContactFields::Field )value.toUInt() );
     }
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem&, const QModelIndex& ) const
+    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &,
+                           const QModelIndex & ) const
     {
       ContactFieldComboBox *editor = new ContactFieldComboBox( parent );
 
@@ -134,7 +143,7 @@ class ContactFieldDelegate : public QStyledItemDelegate
       const unsigned int value = index.model()->data( index, Qt::EditRole ).toUInt();
 
       ContactFieldComboBox *fieldCombo = static_cast<ContactFieldComboBox*>( editor );
-      fieldCombo->setCurrentField( (ContactFields::Field)value );
+      fieldCombo->setCurrentField( ( ContactFields::Field )value );
     }
 
     void setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const
@@ -144,12 +153,14 @@ class ContactFieldDelegate : public QStyledItemDelegate
       model->setData( index, fieldCombo->currentField(), Qt::EditRole );
     }
 
-    void updateEditorGeometry( QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex& ) const
+    void updateEditorGeometry( QWidget *editor, const QStyleOptionViewItem &option,
+                               const QModelIndex & ) const
     {
       editor->setGeometry( option.rect );
     }
 
-    void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+    void paint( QPainter *painter, const QStyleOptionViewItem &option,
+                const QModelIndex &index ) const
     {
       if ( index.row() == 0 ) {
         QStyleOptionViewItem headerOption( option );
@@ -162,10 +173,8 @@ class ContactFieldDelegate : public QStyledItemDelegate
     }
 };
 
-
 CSVImportDialog::CSVImportDialog( QWidget *parent )
-  : KDialog( parent ),
-    mDevice( 0 )
+  : KDialog( parent ), mDevice( 0 )
 {
   setCaption( i18nc( "@title:window", "CSV Import Dialog" ) );
   setButtons( Ok | Cancel | User1 | User2 );
@@ -232,11 +241,13 @@ KABC::AddresseeList CSVImportDialog::contacts() const
       if ( !value.isEmpty() ) {
         emptyRow = false;
 
-        const ContactFields::Field field = (ContactFields::Field)mModel->data( mModel->index( 0, column ) ).toUInt();
+        const ContactFields::Field field =
+          ( ContactFields::Field )mModel->data( mModel->index( 0, column ) ).toUInt();
 
         // convert the custom date format to ISO format
-        if ( field == ContactFields::Birthday || field == ContactFields::Anniversary )
+        if ( field == ContactFields::Birthday || field == ContactFields::Anniversary ) {
           value = dateParser.parse( value ).toString( Qt::ISODate );
+        }
 
         value.replace( "\\n", "\n" );
 
@@ -246,13 +257,15 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
     kapp->processEvents();
 
-    if ( progressDialog.wasCancelled() )
+    if ( progressDialog.wasCancelled() ) {
       return KABC::AddresseeList();
+    }
 
     progressDialog.progressBar()->setValue( progressDialog.progressBar()->value() + 1 );
 
-    if ( !emptyRow && !contact.isEmpty() )
+    if ( !emptyRow && !contact.isEmpty() ) {
       contacts.append( contact );
+    }
   }
 
   return contacts;
@@ -287,7 +300,7 @@ void CSVImportDialog::initGUI()
   delimiterLayout->setSpacing( spacingHint() );
   group->setLayout( delimiterLayout );
   delimiterLayout->setAlignment( Qt::AlignTop );
-  layout->addWidget( group, 1, 0, 4, 1);
+  layout->addWidget( group, 1, 0, 4, 1 );
 
   mDelimiterGroup = new QButtonGroup( this );
   mDelimiterGroup->setExclusive( true );
@@ -383,26 +396,29 @@ void CSVImportDialog::reloadCodecs()
 
   mCodecs.clear();
 
-  Q_FOREACH( const QByteArray& name, QTextCodec::availableCodecs() ) {
+  Q_FOREACH ( const QByteArray &name, QTextCodec::availableCodecs() ) {
     mCodecs.append( QTextCodec::codecForName( name ) );
   }
 
-  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
+  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Local (%1)",
+                               QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
   mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Latin1" ), Latin1 );
   mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Unicode" ), Uni );
   mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Microsoft Unicode" ), MSBug );
 
-  for ( int i = 0; i < mCodecs.count(); ++i )
+  for ( int i = 0; i < mCodecs.count(); ++i ) {
     mCodecCombo->addItem( mCodecs.at( i )->name(), Codec + i );
+  }
 }
 
 void CSVImportDialog::customDelimiterChanged()
 {
-  if ( mDelimiterGroup->checkedId() == 4 )
+  if ( mDelimiterGroup->checkedId() == 4 ) {
     delimiterClicked( 4 );
+  }
 }
 
-void CSVImportDialog::customDelimiterChanged( const QString&, bool reload )
+void CSVImportDialog::customDelimiterChanged( const QString &, bool reload )
 {
   mDelimiterGroup->button( 4 )->setChecked ( true );
   delimiterClicked( 4, reload ); // other
@@ -411,54 +427,61 @@ void CSVImportDialog::customDelimiterChanged( const QString&, bool reload )
 void CSVImportDialog::delimiterClicked( int id, bool reload )
 {
   switch ( id ) {
-    case 0: // comma
-      mModel->setDelimiter( ',' );
-      break;
-    case 4: // other
-      mDelimiterEdit->setFocus( Qt::OtherFocusReason );
-      if ( !mDelimiterEdit->text().isEmpty() ) {
-        mModel->setDelimiter( mDelimiterEdit->text().at( 0 ) );
-      }
-      break;
-    case 2: // tab
-      mModel->setDelimiter( '\t' );
-      break;
-    case 3: // space
-      mModel->setDelimiter( ' ' );
-      break;
-    case 1: // semicolon
-      mModel->setDelimiter( ';' );
-      break;
+  case 0: // comma
+    mModel->setDelimiter( ',' );
+    break;
+  case 4: // other
+    mDelimiterEdit->setFocus( Qt::OtherFocusReason );
+    if ( !mDelimiterEdit->text().isEmpty() ) {
+      mModel->setDelimiter( mDelimiterEdit->text().at( 0 ) );
+    }
+    break;
+  case 2: // tab
+    mModel->setDelimiter( '\t' );
+    break;
+  case 3: // space
+    mModel->setDelimiter( ' ' );
+    break;
+  case 1: // semicolon
+    mModel->setDelimiter( ';' );
+    break;
   }
 
-  if ( mDevice && reload )
+  if ( mDevice && reload ) {
     mModel->load( mDevice );
+  }
 }
 
-void CSVImportDialog::textQuoteChanged( const QString& mark, bool reload )
+void CSVImportDialog::textQuoteChanged( const QString &mark, bool reload )
 {
-  if ( mComboQuote->currentIndex() == 2 )
+  if ( mComboQuote->currentIndex() == 2 ) {
     mModel->setTextQuote( QChar() );
-  else
+  } else {
     mModel->setTextQuote( mark.at( 0 ) );
+  }
 
-  if ( mDevice && reload )
+  if ( mDevice && reload ) {
     mModel->load( mDevice );
+  }
 }
 
 void CSVImportDialog::skipFirstRowChanged( bool checked, bool reload )
 {
   mFieldSelection.clear();
-  for ( int column = 0; column < mModel->columnCount(); ++column )
-    mFieldSelection.append( (ContactFields::Field)mModel->data( mModel->index( 0, column ) ).toInt() );
+  for ( int column = 0; column < mModel->columnCount(); ++column ) {
+    mFieldSelection.append(
+      ( ContactFields::Field )mModel->data( mModel->index( 0, column ) ).toInt() );
+  }
 
-  if ( checked )
+  if ( checked ) {
     mModel->setStartRow( 1 );
-  else
+  } else {
     mModel->setStartRow( 0 );
+  }
 
-  if ( mDevice && reload )
+  if ( mDevice && reload ) {
     mModel->load( mDevice );
+  }
 }
 
 void CSVImportDialog::slotButtonClicked( int button )
@@ -467,16 +490,20 @@ void CSVImportDialog::slotButtonClicked( int button )
     bool assigned = false;
 
     for ( int column = 0; column < mModel->columnCount(); ++column ) {
-      if ( mModel->data( mModel->index( 0, column ), Qt::DisplayRole ).toUInt() != ContactFields::Undefined ) {
+      if ( mModel->data( mModel->index( 0, column ),
+                         Qt::DisplayRole ).toUInt() != ContactFields::Undefined ) {
         assigned = true;
         break;
       }
     }
 
-    if ( !assigned )
-      KMessageBox::sorry( this, i18nc( "@info:status", "You have to assign at least one column." ) );
-    else
+    if ( !assigned ) {
+      KMessageBox::sorry(
+        this,
+        i18nc( "@info:status", "You must assign at least one column." ) );
+    } else {
       accept();
+    }
   } else if ( button == User1 ) {
     applyTemplate();
   } else if ( button == User2 ) {
@@ -490,7 +517,10 @@ void CSVImportDialog::applyTemplate()
 {
   QPointer<TemplateSelectionDialog> dlg = new TemplateSelectionDialog( this );
   if ( !dlg->templatesAvailable() ) {
-    KMessageBox::sorry( this, i18nc( "@label", "There are no templates available yet." ), i18nc( "@title:window", "No templates available" ) );
+    KMessageBox::sorry(
+      this,
+      i18nc( "@label", "There are no templates available yet." ),
+      i18nc( "@title:window", "No templates available" ) );
     delete dlg;
     return;
   }
@@ -527,8 +557,9 @@ void CSVImportDialog::applyTemplate()
 
   skipFirstRowChanged( skipFirstRow, false );
 
-  if ( mDevice )
+  if ( mDevice ) {
     mModel->load( mDevice );
+  }
 
   setProperty( "TemplateFileName", templateFileName );
   connect( mModel, SIGNAL(finishedLoading()), this, SLOT(finalizeApplyTemplate()) );
@@ -554,17 +585,20 @@ void CSVImportDialog::finalizeApplyTemplate()
 
 void CSVImportDialog::saveTemplate()
 {
-  const QString name = KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
-                                              i18nc( "@info", "Please enter a name for the template:" ) );
+  const QString name =
+    KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
+                           i18nc( "@info", "Please enter a name for the template:" ) );
 
-  if ( name.isEmpty() )
+  if ( name.isEmpty() ) {
     return;
+  }
 
-  const QString fileName = KStandardDirs::locateLocal( "data", QString("kaddressbook/csv-templates/"
-                                                       + QString(QUuid::createUuid())
-                                                       + ".desktop" ) );
+  const QString fileName =
+    KStandardDirs::locateLocal( "data", QString( "kaddressbook/csv-templates/" +
+                                                 QString( QUuid::createUuid() ) +
+                                                 ".desktop" ) );
 
-  KConfig config( fileName  );
+  KConfig config( fileName );
   KConfigGroup generalGroup( &config, "General" );
   generalGroup.writeEntry( "DatePattern", mDatePatternEdit->text() );
   generalGroup.writeEntry( "Columns", mModel->columnCount() );
@@ -579,7 +613,8 @@ void CSVImportDialog::saveTemplate()
   KConfigGroup columnMapGroup( &config, "csv column map" );
   for ( int column = 0; column < mModel->columnCount(); ++column ) {
     columnMapGroup.writeEntry( QString::number( column ),
-                               mModel->data( mModel->index( 0, column ), Qt::DisplayRole ).toUInt() );
+                               mModel->data( mModel->index( 0, column ),
+                                             Qt::DisplayRole ).toUInt() );
   }
 
   config.sync();
@@ -592,8 +627,9 @@ void CSVImportDialog::setFile( const KUrl &fileName )
 
 void CSVImportDialog::setFile( const QString &fileName )
 {
-  if ( fileName.isEmpty() )
+  if ( fileName.isEmpty() ) {
     return;
+  }
 
   QFile *file = new QFile( fileName );
   if ( !file->open( QIODevice::ReadOnly ) ) {
@@ -622,21 +658,23 @@ void CSVImportDialog::codecChanged( bool reload )
 {
   const int code = mCodecCombo->currentIndex();
 
-  if ( code == Local )
+  if ( code == Local ) {
     mModel->setTextCodec( QTextCodec::codecForLocale() );
-  else if ( code >= Codec )
+  } else if ( code >= Codec ) {
     mModel->setTextCodec( mCodecs.at( code - Codec ) );
-  else if ( code == Uni )
+  } else if ( code == Uni ) {
     mModel->setTextCodec( QTextCodec::codecForName( "UTF-16" ) );
-  else if ( code == MSBug )
+  } else if ( code == MSBug ) {
     mModel->setTextCodec( QTextCodec::codecForName( "UTF-16LE" ) );
-  else if ( code == Latin1 )
+  } else if ( code == Latin1 ) {
     mModel->setTextCodec( QTextCodec::codecForName( "ISO 8859-1" ) );
-  else
+  } else {
     mModel->setTextCodec( QTextCodec::codecForName( "UTF-8" ) );
+  }
 
-  if ( mDevice && reload )
+  if ( mDevice && reload ) {
     mModel->load( mDevice );
+  }
 }
 
 void CSVImportDialog::modelFinishedLoading()
@@ -645,11 +683,13 @@ void CSVImportDialog::modelFinishedLoading()
   int preferredWidth = box->sizeHint().width();
   delete box;
 
-  for ( int i = 0; i < mModel->columnCount(); ++i )
+  for ( int i = 0; i < mModel->columnCount(); ++i ) {
     mTable->setColumnWidth( i, preferredWidth );
+  }
 
-  for ( int column = 0; column < mFieldSelection.count(); ++column )
+  for ( int column = 0; column < mFieldSelection.count(); ++column ) {
     mModel->setData( mModel->index( 0, column ), mFieldSelection.at( column ), Qt::EditRole );
+  }
   mFieldSelection.clear();
 }
 

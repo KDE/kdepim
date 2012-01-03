@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "qcsvmodel.h"
@@ -82,14 +82,15 @@ void CsvParser::end()
   emit ended();
 }
 
-void CsvParser::error( const QString& )
+void CsvParser::error( const QString & )
 {
 }
 
 void CsvParser::run()
 {
-  if ( !mDevice->isOpen() )
+  if ( !mDevice->isOpen() ) {
     mDevice->open( QIODevice::ReadOnly );
+  }
 
   mDevice->reset();
   mReader->read( mDevice );
@@ -186,8 +187,9 @@ void QCsvModel::setTextQuote( const QChar &textQuote )
 
   d->mParser->reader()->setTextQuote( textQuote );
 
-  if ( isRunning )
+  if ( isRunning ) {
     load( d->mDevice );
+  }
 }
 
 QChar QCsvModel::textQuote() const
@@ -206,8 +208,9 @@ void QCsvModel::setDelimiter( const QChar &delimiter )
 
   d->mParser->reader()->setDelimiter( delimiter );
 
-  if ( isRunning )
+  if ( isRunning ) {
     load( d->mDevice );
+  }
 }
 
 QChar QCsvModel::delimiter() const
@@ -226,8 +229,9 @@ void QCsvModel::setStartRow( uint startRow )
 
   d->mParser->reader()->setStartRow( startRow );
 
-  if ( isRunning )
+  if ( isRunning ) {
     load( d->mDevice );
+  }
 }
 
 uint QCsvModel::startRow() const
@@ -246,8 +250,9 @@ void QCsvModel::setTextCodec( QTextCodec *textCodec )
 
   d->mParser->reader()->setTextCodec( textCodec );
 
-  if ( isRunning )
+  if ( isRunning ) {
     load( d->mDevice );
+  }
 }
 
 QTextCodec *QCsvModel::textCodec() const
@@ -257,50 +262,58 @@ QTextCodec *QCsvModel::textCodec() const
 
 int QCsvModel::columnCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return d->mColumnCount;
-  else
+  } else {
     return 0;
+  }
 }
 
 int QCsvModel::rowCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return d->mRowCount + 1; // +1 for the header row
-  else
+  } else {
     return 0;
+  }
 }
 
 QVariant QCsvModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
   if ( index.row() == 0 ) {
-    if ( index.column() >= d->mFieldIdentifiers.count() )
+    if ( index.column() >= d->mFieldIdentifiers.count() ) {
       return QVariant();
+    }
 
-    if ( role == Qt::DisplayRole || role == Qt::EditRole )
+    if ( role == Qt::DisplayRole || role == Qt::EditRole ) {
       return d->mFieldIdentifiers.at( index.column() );
+    }
 
     return QVariant();
   }
 
   const QPair<int, int> pair( index.row() - 1, index.column() );
-  if ( !d->mFields.contains( pair ) )
+  if ( !d->mFields.contains( pair ) ) {
     return QVariant();
+  }
 
   const QString data = d->mFields.value( pair );
 
-  if ( role == Qt::DisplayRole )
+  if ( role == Qt::DisplayRole ) {
     return data;
-  else
+  } else {
     return QVariant();
+  }
 }
 
 bool QCsvModel::setData( const QModelIndex &index, const QVariant &data, int role )
 {
-  if ( role == Qt::EditRole && index.row() == 0 && index.column() <= d->mFieldIdentifiers.count() ) {
+  if ( role == Qt::EditRole && index.row() == 0 &&
+       index.column() <= d->mFieldIdentifiers.count() ) {
     d->mFieldIdentifiers[ index.column() ] = data.toString();
 
     emit dataChanged( index, index );
@@ -313,8 +326,9 @@ bool QCsvModel::setData( const QModelIndex &index, const QVariant &data, int rol
 Qt::ItemFlags QCsvModel::flags( const QModelIndex &index ) const
 {
   Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-  if ( index.row() == 0 )
+  if ( index.row() == 0 ) {
     flags |= Qt::ItemIsEditable;
+  }
 
   return flags;
 }
