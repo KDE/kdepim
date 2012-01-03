@@ -1,25 +1,25 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
-                       Tobias Koenig <tokoe@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
+                     Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
 #include "stylepage.h"
@@ -35,12 +35,14 @@
 #include <KLocale>
 
 // helper method to sort contact fields by field label
-static bool contactFieldsNameLesser( const ContactFields::Field &field, const ContactFields::Field &otherField )
+static bool contactFieldsNameLesser( const ContactFields::Field &field,
+                                     const ContactFields::Field &otherField )
 {
-  return ( QString::localeAwareCompare( ContactFields::label( field ), ContactFields::label( otherField ) ) < 0 );
+  return ( QString::localeAwareCompare( ContactFields::label( field ),
+                                        ContactFields::label( otherField ) ) < 0 );
 }
 
-StylePage::StylePage( QWidget* parent,  const char* name )
+StylePage::StylePage( QWidget *parent, const char *name )
   : QWidget( parent )
 {
   setObjectName( name );
@@ -60,10 +62,11 @@ StylePage::~StylePage()
 
 void StylePage::setPreview( const QPixmap &pixmap )
 {
-  if ( pixmap.isNull() )
+  if ( pixmap.isNull() ) {
     mPreview->setText( i18n( "(No preview available.)" ) );
-  else
+  } else {
     mPreview->setPixmap( pixmap );
+  }
 }
 
 void StylePage::addStyleName( const QString &name )
@@ -83,16 +86,18 @@ void StylePage::setSortField( ContactFields::Field field )
 
 void StylePage::setSortOrder( Qt::SortOrder sortOrder )
 {
-  if ( sortOrder == Qt::AscendingOrder )
+  if ( sortOrder == Qt::AscendingOrder ) {
     mSortTypeCombo->setCurrentIndex( 0 );
-  else
+  } else {
     mSortTypeCombo->setCurrentIndex( 1 );
+  }
 }
 
 ContactFields::Field StylePage::sortField() const
 {
-  if ( mFieldCombo->currentIndex() == -1 )
+  if ( mFieldCombo->currentIndex() == -1 ) {
     return ContactFields::GivenName;
+  }
 
   return mFields[ mFieldCombo->currentIndex() ];
 }
@@ -112,8 +117,9 @@ void StylePage::initFieldCombo()
   qSort( mFields.begin(), mFields.end(), contactFieldsNameLesser );
 
   ContactFields::Fields::ConstIterator it;
-  for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it )
+  for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it ) {
     mFieldCombo->addItem( ContactFields::label( *it ) );
+  }
 }
 
 void StylePage::initGUI()
@@ -124,9 +130,11 @@ void StylePage::initGUI()
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );
 
-  QLabel *label = new QLabel( i18n( "What should the print look like?\n"
-                                    "KAddressBook has several printing styles, designed for different purposes.\n"
-                                    "Choose the style that suits your needs below." ), this );
+  QLabel *label =
+    new QLabel(
+      i18n( "What should the print look like?\n"
+            "KAddressBook has several printing styles, designed for different purposes.\n"
+            "Choose the style that suits your needs below." ), this );
   topLayout->addWidget( label, 0, 0, 1, 2 );
 
   QGroupBox *group = new QGroupBox( i18n( "Sorting" ), this );

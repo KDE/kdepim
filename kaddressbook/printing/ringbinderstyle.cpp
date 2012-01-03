@@ -1,52 +1,50 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2002 Jost Schenck <jost@schenck.de>
-                  2009 Tobias Koenig <tokoe@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 2002 Jost Schenck <jost@schenck.de>
+                2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
 #include "ringbinderstyle.h"
-
-#include <QtGui/QPrinter>
-#include <QtGui/QTextDocument>
-
-#include <kconfig.h>
-#include <kglobal.h>
-#include <klocale.h>
-
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "ui_rbs_appearance.h"
 
+#include <KConfig>
+#include <KGlobal>
+#include <KLocale>
+
+#include <QtGui/QPrinter>
+#include <QtGui/QTextDocument>
+
 using namespace KABPrinting;
 
-const char* RingBinderConfigSectionName = "RingBinderPrintStyle";
-const char* ShowPhoneNumbers = "ShowPhoneNumbers";
-const char* ShowEmailAddresses = "ShowEmailAddresses";
-const char* ShowStreetAddresses = "ShowStreetAddresses";
-const char* ShowOrganization = "ShowOrganization";
-const char* ShowBirthday = "ShowBirthday";
-const char* ShowNote = "ShowNote";
+const char *RingBinderConfigSectionName = "RingBinderPrintStyle";
+const char *ShowPhoneNumbers = "ShowPhoneNumbers";
+const char *ShowEmailAddresses = "ShowEmailAddresses";
+const char *ShowStreetAddresses = "ShowStreetAddresses";
+const char *ShowOrganization = "ShowOrganization";
+const char *ShowBirthday = "ShowBirthday";
+const char *ShowNote = "ShowNote";
 
-enum PrintField
-{
+enum PrintField {
   PhoneNumbers = 1,
   Emails = 2,
   Addresses = 4,
@@ -66,26 +64,30 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields
     QString nameString = contact.familyName() + ", " + contact.givenName();
 
     if ( fields & Organization ) {
-      if ( !contact.organization().isEmpty() )
+      if ( !contact.organization().isEmpty() ) {
         nameString += " (" + contact.organization() + ')';
+      }
     }
 
     if ( fields & Birthday ) {
       if ( contact.birthday().isValid() ) {
-        nameString += " *" + KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
+        nameString += " *" + KGlobal::locale()->formatDate( contact.birthday().date(),
+                                                            KLocale::ShortDate );
       }
     }
 
     QStringList leftBlock, rightBlock;
     if ( fields & PhoneNumbers ) {
       const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
-      foreach ( const KABC::PhoneNumber &number, numbers )
+      foreach ( const KABC::PhoneNumber &number, numbers ) {
         rightBlock.append( number.typeLabel() + ": " + number.number() );
+      }
     }
     if ( fields & Emails ) {
       const QStringList emails = contact.emails();
-      foreach ( const QString &email, emails )
+      foreach ( const QString &email, emails ) {
         rightBlock.append( email );
+      }
     }
     if ( fields & Note ) {
       if ( !contact.note().isEmpty() ) {
@@ -97,7 +99,8 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields
     if ( fields & Addresses ) {
       const KABC::Address::List addresses = contact.addresses();
       foreach ( const KABC::Address &address, addresses ) {
-        const QString data = address.formattedAddress().replace( "\n\n", "\n" ).replace( '\n', "<br/>" );
+        const QString data =
+          address.formattedAddress().replace( "\n\n", "\n" ).replace( '\n', "<br/>" );
         const QString subBlock= "<p style=\"margin-top: 0px; margin-left: 20px\">" + data + "</p>";
 
         leftBlock.append( subBlock );
@@ -132,7 +135,7 @@ class RingBinderStyleAppearanceForm : public QWidget, public Ui::RingBinderStyle
 
 }
 
-RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent )
+RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard *parent )
   : PrintStyle( parent ),
     mPageAppearance( new RingBinderStyleAppearanceForm( parent ) )
 {
@@ -177,23 +180,29 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
 
   int fields = 0;
 
-  if ( mPageAppearance->cbPhoneNumbers->isChecked() )
+  if ( mPageAppearance->cbPhoneNumbers->isChecked() ) {
     fields |= PhoneNumbers;
+  }
 
-  if ( mPageAppearance->cbEmails->isChecked() )
+  if ( mPageAppearance->cbEmails->isChecked() ) {
     fields |= Emails;
+  }
 
-  if ( mPageAppearance->cbStreetAddresses->isChecked() )
+  if ( mPageAppearance->cbStreetAddresses->isChecked() ) {
     fields |= Addresses;
+  }
 
-  if ( mPageAppearance->cbOrganization->isChecked() )
+  if ( mPageAppearance->cbOrganization->isChecked() ) {
     fields |= Organization;
+  }
 
-  if ( mPageAppearance->cbBirthday->isChecked() )
+  if ( mPageAppearance->cbBirthday->isChecked() ) {
     fields |= Birthday;
+  }
 
-  if ( mPageAppearance->cbNote->isChecked() )
+  if ( mPageAppearance->cbNote->isChecked() ) {
     fields |= Note;
+  }
 
   const QString html = contactsToHtml( contacts, fields );
 
@@ -206,7 +215,6 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
 
   progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
-
 
 RingBinderPrintStyleFactory::RingBinderPrintStyleFactory( PrintingWizard *parent )
   : PrintStyleFactory( parent )

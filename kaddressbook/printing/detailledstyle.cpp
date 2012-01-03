@@ -1,46 +1,46 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
-                       2009 Tobias Koenig <tokoe@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+                     2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
 #include "detailledstyle.h"
-
-#include <QtGui/QCheckBox>
-#include <QtGui/QPrinter>
-#include <QtGui/QTextDocument>
-
-#include <kapplication.h>
-#include <kcolorbutton.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kdialog.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kstandarddirs.h>
 
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
 #include "ui_ds_appearance.h"
+
+#include <KApplication>
+#include <KColorButton>
+#include <KConfig>
+#include <KDebug>
+#include <KDialog>
+#include <KGlobal>
+#include <KLocale>
+#include <KStandardDirs>
+
+#include <QtGui/QCheckBox>
+#include <QtGui/QPrinter>
+#include <QtGui/QTextDocument>
 
 using namespace KABPrinting;
 
@@ -80,14 +80,17 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
     QString name = contact.realName();
     if ( !contact.title().isEmpty() || !contact.role().isEmpty() ) {
       QStringList content;
-      if ( !contact.title().isEmpty() )
+      if ( !contact.title().isEmpty() ) {
         content << contact.title();
-      if ( !contact.role().isEmpty() )
+      }
+      if ( !contact.role().isEmpty() ) {
         content << contact.role();
+      }
       name += QString::fromLatin1( " (%1)" ).arg( content.join( QLatin1String( ", " ) ) );
     }
 
-    const QString birthday = KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
+    const QString birthday = KGlobal::locale()->formatDate( contact.birthday().date(),
+                                                            KLocale::ShortDate );
 
     ContactBlock::List blocks;
 
@@ -101,7 +104,9 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
 
     if ( !contact.emails().isEmpty() ) {
       ContactBlock block;
-      block.header = (contact.emails().count() == 1 ? i18n( "Email address:" ) : i18n( "Email addresses:" ));
+      block.header = ( contact.emails().count() == 1 ?
+                         i18n( "Email address:" ) :
+                         i18n( "Email addresses:" ) );
       block.entries = contact.emails();
 
       blocks.append( block );
@@ -111,7 +116,9 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
       const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
 
       ContactBlock block;
-      block.header = (numbers.count() == 1 ? i18n( "Telephone:" ) : i18n( "Telephones:" ));
+      block.header = ( numbers.count() == 1 ?
+                         i18n( "Telephone:" ) :
+                         i18n( "Telephones:" ) );
 
       foreach ( const KABC::PhoneNumber &number, numbers ) {
         const QString line = number.typeLabel() + ": " + number.number();
@@ -136,27 +143,27 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
         ContactBlock block;
 
         switch ( address.type() ) {
-          case KABC::Address::Dom:
-            block.header = i18n( "Domestic Address" );
-            break;
-          case KABC::Address::Intl:
-            block.header = i18n( "International Address" );
-            break;
-          case KABC::Address::Postal:
-            block.header = i18n( "Postal Address" );
-            break;
-          case KABC::Address::Parcel:
-            block.header = i18n( "Parcel Address" );
-            break;
-          case KABC::Address::Home:
-            block.header = i18n( "Home Address" );
-            break;
-          case KABC::Address::Work:
-            block.header = i18n( "Work Address" );
-            break;
-          case KABC::Address::Pref:
-          default:
-            block.header = i18n( "Preferred Address" );
+        case KABC::Address::Dom:
+          block.header = i18n( "Domestic Address" );
+          break;
+        case KABC::Address::Intl:
+          block.header = i18n( "International Address" );
+          break;
+        case KABC::Address::Postal:
+          block.header = i18n( "Postal Address" );
+          break;
+        case KABC::Address::Parcel:
+          block.header = i18n( "Parcel Address" );
+          break;
+        case KABC::Address::Home:
+          block.header = i18n( "Home Address" );
+          break;
+        case KABC::Address::Work:
+          block.header = i18n( "Work Address" );
+          break;
+        case KABC::Address::Pref:
+        default:
+          block.header = i18n( "Preferred Address" );
         }
         block.header += ':';
 
@@ -189,7 +196,9 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
 
       // add real block data
       const ContactBlock leftBlock = blocks.at( i );
-      const ContactBlock rightBlock = ((i + 1 < blocks.count()) ? blocks.at( i + 1 ) : ContactBlock());
+      const ContactBlock rightBlock = ( ( i + 1 < blocks.count() ) ?
+                                          blocks.at( i + 1 ) :
+                                          ContactBlock() );
 
       content += "   <tr>\n";
       content += "    <td>" + leftBlock.header + "</td>\n";
@@ -200,11 +209,13 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
       for ( int j = 0; j < maxLines; ++j ) {
         QString leftLine, rightLine;
 
-        if ( j < leftBlock.entries.count() )
+        if ( j < leftBlock.entries.count() ) {
           leftLine = leftBlock.entries.at( j );
+        }
 
-        if ( j < rightBlock.entries.count() )
+        if ( j < rightBlock.entries.count() ) {
           rightLine = rightBlock.entries.at( j );
+        }
 
         content += "   <tr>\n";
         content += "    <td class=\"indented\">" + leftLine + "</td>\n";
@@ -229,7 +240,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
 class KABPrinting::AppearancePage : public QWidget, public Ui::AppearancePage_Base
 {
   public:
-    AppearancePage( QWidget* parent )
+    AppearancePage( QWidget *parent )
       : QWidget( parent )
   {
     setupUi( this );
@@ -238,8 +249,7 @@ class KABPrinting::AppearancePage : public QWidget, public Ui::AppearancePage_Ba
 };
 
 DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
-  : PrintStyle( parent ),
-    mPageAppearance( new AppearancePage( parent ) )
+  : PrintStyle( parent ), mPageAppearance( new AppearancePage( parent ) )
 {
   setPreview( "detailed-style.png" );
   setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
@@ -248,10 +258,15 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
 
   KConfigGroup config( KGlobal::config(), ConfigSectionName );
 
-  mPageAppearance->kcbHeaderBGColor->setColor( config.readEntry( ContactHeaderBGColor, QColor( Qt::black ) ) );
-  mPageAppearance->kcbHeaderBGColor->setToolTip( i18n( "Click on the color button to change the header's background color." ) );
-  mPageAppearance->kcbHeaderTextColor->setColor( config.readEntry( ContactHeaderForeColor, QColor( Qt::white ) ) );
-  mPageAppearance->kcbHeaderTextColor->setToolTip( i18n( "Click on the color button to change the header's text color." ) );
+  mPageAppearance->kcbHeaderBGColor->
+    setColor( config.readEntry( ContactHeaderBGColor, QColor( Qt::black ) ) );
+  mPageAppearance->kcbHeaderBGColor->
+    setToolTip( i18n( "Click on the color button to change the header's background color." ) );
+
+  mPageAppearance->kcbHeaderTextColor->
+    setColor( config.readEntry( ContactHeaderForeColor, QColor( Qt::white ) ) );
+  mPageAppearance->kcbHeaderTextColor->
+    setToolTip( i18n( "Click on the color button to change the header's text color." ) );
 
   mPageAppearance->layout()->setMargin( KDialog::marginHint() );
   mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );
