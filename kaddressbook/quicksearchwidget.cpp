@@ -1,32 +1,32 @@
 /*
-    This file is part of KAddressBook.
+  This file is part of KAddressBook.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "quicksearchwidget.h"
 
+#include <KLineEdit>
+#include <KLocale>
+
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QVBoxLayout>
-
-#include <klineedit.h>
-#include <klocale.h>
 
 QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   : QWidget( parent )
@@ -47,7 +47,6 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   connect( mEdit, SIGNAL(textChanged(QString)), SLOT(resetTimer()) );
   connect( mTimer, SIGNAL(timeout()), SLOT(delayedTextChanged()) );
 }
-
 
 QuickSearchWidget::~QuickSearchWidget()
 {

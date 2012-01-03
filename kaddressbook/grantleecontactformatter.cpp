@@ -25,12 +25,14 @@
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
 
-#include <akonadi/item.h>
-#include <kabc/addressee.h>
-#include <kcolorscheme.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kstringhandler.h>
+#include <Akonadi/Item>
+
+#include <KABC/Addressee>
+
+#include <KColorScheme>
+#include <KGlobal>
+#include <KLocale>
+#include <KStringHandler>
 
 #include <QtCore/QSet>
 #include <QtCore/QRegExp>
@@ -44,18 +46,21 @@ class GrantleeContactFormatter::Private
     {
       mEngine = new Grantlee::Engine;
 
-      mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+      mTemplateLoader =
+        Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
       mTemplateLoader->setTemplateDirs( QStringList() << templatePath );
       mTemplateLoader->setTheme( QLatin1String( "default" ) );
 
       mEngine->addTemplateLoader( mTemplateLoader );
       mSelfcontainedTemplate = mEngine->loadByName( "contact.html" );
-      if ( mSelfcontainedTemplate->error() )
+      if ( mSelfcontainedTemplate->error() ) {
         mErrorMessage += mSelfcontainedTemplate->errorString();
+      }
 
       mEmbeddableTemplate = mEngine->loadByName( "contact_embedded.html" );
-      if ( mEmbeddableTemplate->error() )
+      if ( mEmbeddableTemplate->error() ) {
         mErrorMessage += mEmbeddableTemplate->errorString();
+      }
     }
 
     ~Private()
@@ -83,8 +88,9 @@ GrantleeContactFormatter::~GrantleeContactFormatter()
 
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
 {
-  if ( !value.isEmpty() )
+  if ( !value.isEmpty() ) {
     hash.insert( name, value );
+  }
 }
 
 static QVariantHash phoneNumberHash( const KABC::PhoneNumber &phoneNumber, int counter )
@@ -95,11 +101,15 @@ static QVariantHash phoneNumberHash( const KABC::PhoneNumber &phoneNumber, int c
   setHashField( numberObject, QLatin1String( "number" ), phoneNumber.number() );
 
   if ( !phoneNumber.isEmpty() ) {
-    const QString url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( phoneNumber.number() );
+    const QString url =
+      QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).
+        arg( counter ).
+        arg( phoneNumber.number() );
     numberObject.insert( QLatin1String( "numberLink" ), url );
 
     if ( phoneNumber.type() & KABC::PhoneNumber::Cell ) {
-      const QString url = QString::fromLatin1( "<a href=\"sms:?index=%1\">(SMS)</a>" ).arg( counter );
+      const QString url =
+        QString::fromLatin1( "<a href=\"sms:?index=%1\">(SMS)</a>" ).arg( counter );
       numberObject.insert( QLatin1String( "smsLink" ), url );
     }
   }
@@ -111,14 +121,23 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
 {
   QVariantHash addressObject;
 
-  setHashField( addressObject, QLatin1String( "type" ), KABC::Address::typeLabel( address.type() ) );
+  setHashField( addressObject, QLatin1String( "type" ),
+                KABC::Address::typeLabel( address.type() ) );
+
   setHashField( addressObject, QLatin1String( "street" ), address.street() );
+
   setHashField( addressObject, QLatin1String( "postOfficeBox" ), address.postOfficeBox() );
+
   setHashField( addressObject, QLatin1String( "locality" ), address.locality() );
+
   setHashField( addressObject, QLatin1String( "region" ), address.region() );
+
   setHashField( addressObject, QLatin1String( "postalCode" ), address.postalCode() );
+
   setHashField( addressObject, QLatin1String( "country" ), address.country() );
+
   setHashField( addressObject, QLatin1String( "label" ), address.label() );
+
   setHashField( addressObject, QLatin1String( "formattedAddress" ), address.formattedAddress() );
 
   QString formattedAddress;
@@ -132,7 +151,10 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
   if ( !formattedAddress.isEmpty() ) {
     formattedAddress = formattedAddress.replace( QRegExp( "\n+" ), QLatin1String( "<br/>" ) );
 
-    const QString url = QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).arg( counter).arg( formattedAddress );
+    const QString url =
+      QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).
+        arg( counter ).
+        arg( formattedAddress );
     addressObject.insert( "formattedAddressLink", url );
   }
 
@@ -141,18 +163,21 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
 
 QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 {
-  if ( !d->mErrorMessage.isEmpty() )
+  if ( !d->mErrorMessage.isEmpty() ) {
     return d->mErrorMessage;
+  }
 
   KABC::Addressee rawContact;
   const Akonadi::Item localItem = item();
-  if ( localItem.isValid() && localItem.hasPayload<KABC::Addressee>() )
+  if ( localItem.isValid() && localItem.hasPayload<KABC::Addressee>() ) {
     rawContact = localItem.payload<KABC::Addressee>();
-  else
+  } else {
     rawContact = contact();
+  }
 
-  if ( rawContact.isEmpty() )
+  if ( rawContact.isEmpty() ) {
     return QString();
+  }
 
   QVariantHash contactObject;
 
@@ -171,13 +196,16 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( birthday.isValid() ) {
     contactObject.insert( QLatin1String( "birthday" ), KGlobal::locale()->formatDate( birthday ) );
 
-    const int years = (birthday.daysTo( QDate::currentDate() ) / 365);
+    const int years = ( birthday.daysTo( QDate::currentDate() ) / 365 );
     contactObject.insert( QLatin1String( "age" ), QString::number( years ) );
   }
 
-  const QDate anniversary = QDate::fromString( rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
+  const QDate anniversary =
+    QDate::fromString( rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                          QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
   if ( anniversary.isValid() ) {
-    contactObject.insert( QLatin1String( "anniversary" ), KGlobal::locale()->formatDate( anniversary ) );
+    contactObject.insert( QLatin1String( "anniversary" ),
+                          KGlobal::locale()->formatDate( anniversary ) );
   }
 
   // Emails
@@ -196,21 +224,25 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   // Homepage
   if ( rawContact.url().isValid() ) {
     QString url = rawContact.url().url();
-    if ( !url.startsWith( QLatin1String( "http://" ) ) && !url.startsWith( QLatin1String( "https://" ) ) )
+    if ( !url.startsWith( QLatin1String( "http://" ) ) &&
+         !url.startsWith( QLatin1String( "https://" ) ) ) {
       url = QLatin1String( "http://" ) + url;
+    }
 
     url = KStringHandler::tagUrls( url );
     contactObject.insert( QLatin1String( "website" ), url );
   }
 
   // Blog Feed
-  const QString blog = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
+  const QString blog =
+    rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
   if ( !blog.isEmpty() ) {
     contactObject.insert( QLatin1String( "blogUrl" ), KStringHandler::tagUrls( blog ) );
   }
 
   // Address Book
-  const QString addressBookName = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
+  const QString addressBookName =
+    rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
   if ( !addressBookName.isEmpty() ) {
     contactObject.insert( QLatin1String( "addressBookName" ), addressBookName );
   }
@@ -226,17 +258,40 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   contactObject.insert( QLatin1String( "addresses" ), addresses );
 
   setHashField( contactObject, QLatin1String( "mailer" ), rawContact.mailer() );
+
   setHashField( contactObject, QLatin1String( "title" ), rawContact.title() );
+
   setHashField( contactObject, QLatin1String( "role" ), rawContact.role() );
+
   setHashField( contactObject, QLatin1String( "organization" ), rawContact.organization() );
+
   setHashField( contactObject, QLatin1String( "department" ), rawContact.department() );
+
   setHashField( contactObject, QLatin1String( "note" ), rawContact.note() );
-  setHashField( contactObject, QLatin1String( "profession" ), rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) ) );
-  setHashField( contactObject, QLatin1String( "office" ), rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ) ) );
-  setHashField( contactObject, QLatin1String( "manager" ), rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ) ) );
-  setHashField( contactObject, QLatin1String( "assistant" ), rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ) ) );
-  setHashField( contactObject, QLatin1String( "spouse" ), rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ) ) );
-  setHashField( contactObject, QLatin1String( "imAddress" ), rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) ) );
+
+  setHashField( contactObject, QLatin1String( "profession" ),
+                rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                   QLatin1String( "X-Profession" ) ) );
+
+  setHashField( contactObject, QLatin1String( "office" ),
+                rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                   QLatin1String( "X-Office" ) ) );
+
+  setHashField( contactObject, QLatin1String( "manager" ),
+                rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                   QLatin1String( "X-ManagersName" ) ) );
+
+  setHashField( contactObject, QLatin1String( "assistant" ),
+                rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                   QLatin1String( "X-AssistantsName" ) ) );
+
+  setHashField( contactObject, QLatin1String( "spouse" ),
+                rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                   QLatin1String( "X-SpousesName" ) ) );
+
+  setHashField( contactObject, QLatin1String( "imAddress" ),
+                rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                   QLatin1String( "X-IMAddress" ) ) );
 
   // Custom fields
 
@@ -271,25 +326,35 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
         QString key = custom.left( pos );
         QString value = custom.mid( pos + 1 );
 
-        if ( blacklistedKeys.contains( key ) )
+        if ( blacklistedKeys.contains( key ) ) {
           continue;
+        }
 
         // check whether it is a custom local field
         foreach ( const QVariantMap &description, customFieldDescriptions() ) {
           if ( description.value( QLatin1String( "key" ) ).toString() == key ) {
             key = description.value( QLatin1String( "title" ) ).toString();
-            if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "boolean" ) ) {
-              if ( value == QLatin1String( "true" ) )
+
+            if ( description.value( QLatin1String( "type" ) ) ==
+                 QLatin1String( "boolean" ) ) {
+              if ( value == QLatin1String( "true" ) ) {
                 value = i18nc( "Boolean value", "yes" );
-              else
+              } else {
                 value = i18nc( "Boolean value", "no" );
-            } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "date" ) ) {
+              }
+
+            } else if ( description.value( QLatin1String( "type" ) ) ==
+                        QLatin1String( "date" ) ) {
               const QDate date = QDate::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
-            } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "time" ) ) {
+
+            } else if ( description.value( QLatin1String( "type" ) ) ==
+                        QLatin1String( "time" ) ) {
               const QTime time = QTime::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatTime( time );
-            } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "datetime" ) ) {
+
+            } else if ( description.value( QLatin1String( "type" ) ) ==
+                        QLatin1String( "datetime" ) ) {
               const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
             }
@@ -309,9 +374,18 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   contactObject.insert( QLatin1String( "customFields" ), customFields );
 
   QVariantHash colorsObject;
-  colorsObject.insert( "linkColor", KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
-  colorsObject.insert( "textColor", KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
-  colorsObject.insert( "backgroundColor", KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
+
+  colorsObject.insert(
+    "linkColor",
+    KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
+
+  colorsObject.insert(
+    "textColor",
+    KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
+
+  colorsObject.insert(
+    "backgroundColor",
+    KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
 
   QVariantHash mapping;
   mapping.insert( "contact", contactObject );
@@ -319,10 +393,11 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
   Grantlee::Context context( mapping );
 
-  if ( form == SelfcontainedForm )
+  if ( form == SelfcontainedForm ) {
     return d->mSelfcontainedTemplate->render( &context );
-  else if ( form == EmbeddableForm )
+  } else if ( form == EmbeddableForm ) {
     return d->mEmbeddableTemplate->render( &context );
-  else
+  } else {
     return QString();
+  }
 }

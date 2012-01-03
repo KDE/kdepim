@@ -1,30 +1,31 @@
 /*
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "contactselectionwidget.h"
 
-#include <akonadi/collectioncombobox.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/recursiveitemfetchjob.h>
-#include <klocale.h>
+#include <Akonadi/CollectionComboBox>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/RecursiveItemFetchJob>
+
+#include <KLocale>
 
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
@@ -35,7 +36,8 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QVBoxLayout>
 
-ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionModel, QWidget *parent )
+ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionModel,
+                                                QWidget *parent )
   : QWidget( parent ), mSelectionModel( selectionModel )
 {
   initGui();
@@ -50,10 +52,11 @@ ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionMo
            mAddressBookSelectionRecursive, SLOT(setEnabled(bool)) );
 
   // apply default configuration
-  if ( mSelectionModel->hasSelection() )
+  if ( mSelectionModel->hasSelection() ) {
     mSelectedContactsButton->setChecked( true );
-  else
+  } else {
     mAllContactsButton->setChecked( true );
+  }
 }
 
 void ContactSelectionWidget::setMessageText( const QString &message )
@@ -68,12 +71,13 @@ void ContactSelectionWidget::setDefaultAddressBook( const Akonadi::Collection &a
 
 KABC::Addressee::List ContactSelectionWidget::selectedContacts() const
 {
-  if ( mAllContactsButton->isChecked() )
+  if ( mAllContactsButton->isChecked() ) {
     return collectAllContacts();
-  else if ( mSelectedContactsButton->isChecked() )
+  } else if ( mSelectedContactsButton->isChecked() ) {
     return collectSelectedContacts();
-  else if ( mAddressBookContactsButton->isChecked() )
+  } else if ( mAddressBookContactsButton->isChecked() ) {
     return collectAddressBookContacts();
+  }
 
   return KABC::Addressee::List();
 }
@@ -121,17 +125,20 @@ void ContactSelectionWidget::initGui()
 
 KABC::Addressee::List ContactSelectionWidget::collectAllContacts() const
 {
-  Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                                                            QStringList() << KABC::Addressee::mimeType() );
+  Akonadi::RecursiveItemFetchJob *job =
+    new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
+                                        QStringList() << KABC::Addressee::mimeType() );
   job->fetchScope().fetchFullPayload();
 
   KABC::Addressee::List contacts;
-  if ( !job->exec() )
+  if ( !job->exec() ) {
     return contacts;
+  }
 
   foreach ( const Akonadi::Item &item, job->items() ) {
-    if ( item.isValid() && item.hasPayload<KABC::Addressee>() )
+    if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
       contacts.append( item.payload<KABC::Addressee>() );
+    }
   }
 
   return contacts;
@@ -145,9 +152,11 @@ KABC::Addressee::List ContactSelectionWidget::collectSelectedContacts() const
   for ( int i = 0; i < indexes.count(); ++i ) {
     const QModelIndex index = indexes.at( i );
     if ( index.isValid() ) {
-      const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-      if ( item.isValid() && item.hasPayload<KABC::Addressee>() )
+      const Akonadi::Item item =
+        index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+      if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
         contacts.append( item.payload<KABC::Addressee>() );
+      }
     }
   }
 
@@ -164,12 +173,14 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
   }
 
   if ( mAddressBookSelectionRecursive->isChecked() ) {
-    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( collection,
-                                                                              QStringList() << KABC::Addressee::mimeType() );
+    Akonadi::RecursiveItemFetchJob *job =
+      new Akonadi::RecursiveItemFetchJob( collection,
+                                          QStringList() << KABC::Addressee::mimeType() );
     job->fetchScope().fetchFullPayload();
 
-    if ( !job->exec() )
+    if ( !job->exec() ) {
       return contacts;
+    }
 
     foreach ( const Akonadi::Item &item, job->items() ) {
       if ( item.hasPayload<KABC::Addressee>() ) {
@@ -180,8 +191,9 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
     job->fetchScope().fetchFullPayload();
 
-    if ( !job->exec() )
+    if ( !job->exec() ) {
       return contacts;
+    }
 
     foreach ( const Akonadi::Item &item, job->items() ) {
       if ( item.hasPayload<KABC::Addressee>() ) {

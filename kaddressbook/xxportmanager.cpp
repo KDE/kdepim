@@ -1,42 +1,41 @@
 /*
-    This file is part of KAddressBook.
+  This file is part of KAddressBook.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "xxportmanager.h"
-
 #include "contactselectiondialog.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/collectiondialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kprogressdialog.h>
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionDialog>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
+
+#include <KLocale>
+#include <KMessageBox>
+#include <KProgressDialog>
 
 #include <QtCore/QPointer>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QWidget>
-
 
 XXPortManager::XXPortManager( QWidget *parent )
   : QObject( parent ), mSelectionModel( 0 ),
@@ -79,16 +78,18 @@ void XXPortManager::setDefaultAddressBook( const Akonadi::Collection &addressBoo
 
 void XXPortManager::slotImport( const QString &identifier )
 {
-  const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
-  if( !xxport )
+  const XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
+  if( !xxport ) {
     return;
+  }
 
   const KABC::Addressee::List contacts = xxport->importContacts();
 
   delete xxport;
 
-  if ( contacts.isEmpty() ) // nothing to import
+  if ( contacts.isEmpty() ) { // nothing to import
     return;
+  }
 
   const QStringList mimeTypes( KABC::Addressee::mimeType() );
 
@@ -96,7 +97,8 @@ void XXPortManager::slotImport( const QString &identifier )
   dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   dlg->setCaption( i18n( "Select Address Book" ) );
-  dlg->setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
+  dlg->setDescription(
+    i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
   dlg->setDefaultCollection( mDefaultAddressBook );
 
   if ( !dlg->exec() || !dlg ) {
@@ -109,8 +111,9 @@ void XXPortManager::slotImport( const QString &identifier )
 
   if ( !mImportProgressDialog ) {
     mImportProgressDialog = new KProgressDialog( mParentWidget, i18n( "Import Contacts" ) );
-    mImportProgressDialog->setLabelText( i18np( "Importing one contact to %2", "Importing %1 contacts to %2",
-                                                contacts.count(), collection.name() ) );
+    mImportProgressDialog->setLabelText(
+      i18np( "Importing one contact to %2", "Importing %1 contacts to %2",
+             contacts.count(), collection.name() ) );
     mImportProgressDialog->setAllowCancel( false );
     mImportProgressDialog->setAutoClose( true );
     mImportProgressDialog->progressBar()->setRange( 1, contacts.count() );
@@ -128,10 +131,11 @@ void XXPortManager::slotImport( const QString &identifier )
   }
 }
 
-void XXPortManager::slotImportJobDone( KJob* )
+void XXPortManager::slotImportJobDone( KJob * )
 {
-  if ( !mImportProgressDialog )
+  if ( !mImportProgressDialog ) {
     return;
+  }
 
   QProgressBar *progressBar = mImportProgressDialog->progressBar();
 
@@ -146,10 +150,12 @@ void XXPortManager::slotImportJobDone( KJob* )
 
 void XXPortManager::slotExport( const QString &identifier )
 {
-  if ( !mSelectionModel )
+  if ( !mSelectionModel ) {
     return;
+  }
 
-  QPointer<ContactSelectionDialog> dlg = new ContactSelectionDialog( mSelectionModel, mParentWidget );
+  QPointer<ContactSelectionDialog> dlg =
+    new ContactSelectionDialog( mSelectionModel, mParentWidget );
   dlg->setMessageText( i18n( "Which contact do you want to export?" ) );
   dlg->setDefaultAddressBook( mDefaultAddressBook );
   if ( !dlg->exec() || !dlg ) {
@@ -165,9 +171,10 @@ void XXPortManager::slotExport( const QString &identifier )
     return;
   }
 
-  const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
-  if ( !xxport )
+  const XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
+  if ( !xxport ) {
     return;
+  }
 
   xxport->exportContacts( contacts );
 

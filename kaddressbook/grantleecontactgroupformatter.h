@@ -19,10 +19,10 @@
   02110-1301, USA.
 */
 
-#ifndef AKONADI_GRANTLEECONTACTGROUPFORMATTER_H
-#define AKONADI_GRANTLEECONTACTGROUPFORMATTER_H
+#ifndef GRANTLEECONTACTGROUPFORMATTER_H
+#define GRANTLEECONTACTGROUPFORMATTER_H
 
-#include <akonadi/contact/abstractcontactgroupformatter.h>
+#include <Akonadi/Contact/AbstractContactGroupFormatter>
 
 namespace Akonadi {
 
@@ -52,7 +52,7 @@ class GrantleeContactGroupFormatter : public AbstractContactGroupFormatter
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

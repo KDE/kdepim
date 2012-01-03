@@ -1,21 +1,21 @@
 /*
-    This file is part of KAddressBook.
+  This file is part of KAddressBook.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #ifndef MAINWIDGET_H
@@ -26,15 +26,15 @@
 #include <QtGui/QWidget>
 
 namespace Akonadi {
-class Collection;
-class ContactGroupViewer;
-class ContactViewer;
-class ContactsFilterProxyModel;
-class EntityMimeTypeFilterModel;
-class EntityTreeView;
-class Item;
-class ItemView;
-class StandardContactActionManager;
+  class Collection;
+  class ContactGroupViewer;
+  class ContactViewer;
+  class ContactsFilterProxyModel;
+  class EntityMimeTypeFilterModel;
+  class EntityTreeView;
+  class Item;
+  class ItemView;
+  class StandardContactActionManager;
 }
 
 class ContactSwitcher;
@@ -66,7 +66,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void delayedInit();
 
     void itemSelected( const Akonadi::Item &item );
-    void itemSelectionChanged( const QModelIndex&, const QModelIndex& );
+    void itemSelectionChanged( const QModelIndex &, const QModelIndex & );
     void selectFirstItem();
 
     void setSimpleGuiMode( bool on );
@@ -77,10 +77,10 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
   private:
     void setupGui();
-    void setupActions( KActionCollection* );
+    void setupActions( KActionCollection * );
     bool showQRCodes();
 
-    QAbstractItemModel* allContactsModel();
+    QAbstractItemModel *allContactsModel();
 
     /**
      * Returns the address book collection that is currently
