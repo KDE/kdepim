@@ -288,7 +288,7 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog( const QStringList & 
   QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
   QLabel *label = new QLabel( this );
   label->setText( i18n( "Filter tag is missing. "
-                        "Please select a transport to use with filter \"%1\"",
+                        "Please select a tag to use with filter \"%1\"",
                         filtername ) );
   lay->addWidget( label );
   mTagList = new QListWidget( this );
