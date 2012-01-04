@@ -340,20 +340,19 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     if ( i ) {
       bool ignoreThisUpdate = false;
 
-      if ( !mLastKnownRevisions.contains( uid ) ) {
-        mLastKnownRevisions[uid] = i->revision();
-      }
-
-      // update the last known revision
-      if ( mLastKnownRevisions[uid] < i->revision() ) {
-        mLastKnownRevisions[uid] = i->revision();
+      if ( mLastKnownRevisions.contains( uid ) ) {
+        if ( mLastKnownRevisions[uid] < i->revision() ) { // update the last known revision
+          mLastKnownRevisions[uid] = i->revision();
+        } else {
+          /*
+          * "ignoreThisUpdate = true;" will cause issue/kolab4698, because recording the
+          * attendee status in the calendar doesn't bump the SEQUENCE/revision.
+          **/
+          ignoreThisUpdate = !( i->dirtyFields().contains( Incidence::FieldAttendees ) ||
+                                i->dirtyFields().contains( Incidence::FieldUnknown ) ); // ( FieldUnknown is used when you assign for example ).
+        }
       } else {
-        /*
-         * "ignoreThisUpdate = true;" will cause issue/kolab4698, because recording the
-         * attendee status in the calendar doesn't bump the SEQUENCE/revision.
-         **/
-        ignoreThisUpdate = !( i->dirtyFields().contains( Incidence::FieldAttendees ) ||
-                              i->dirtyFields().contains( Incidence::FieldUnknown ) ); // ( FieldUnknown is used when you assign for example ).
+        mLastKnownRevisions[uid] = i->revision();
       }
 
       if ( ignoreThisUpdate ) {
