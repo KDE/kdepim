@@ -1488,7 +1488,7 @@ void KMComposeWin::setupActions(void)
 
   if ( Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) ) {
     KToggleAction * a = new KToggleAction( i18n( "Encrypt Message with Chiasmus..." ),
-                                           "chidecrypted", 0, actionCollection(),
+                                           "chiasmus_chi", 0, actionCollection(),
                                            "encrypt_message_chiasmus" );
     a->setCheckedState( KGuiItem( i18n( "Encrypt Message with Chiasmus..." ), "chiencrypted" ) );
     mEncryptChiasmusAction = a;
