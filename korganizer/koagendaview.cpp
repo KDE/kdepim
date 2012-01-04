@@ -1497,7 +1497,7 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
     if ( existingEvent ) {
       // If it comes from another calendar, create a new.
       // Otherwise reuse the same one
-      if ( resourceCalendar()->incidence( incidence->uid() ) ) {
+      if ( !resourceCalendar() || resourceCalendar()->incidence( incidence->uid() ) ) {
         existingEventInSameResource = existingEvent;
       }
     }
