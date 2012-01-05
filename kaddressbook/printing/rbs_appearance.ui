@@ -28,6 +28,12 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QCheckBox" name="cbPhoneNumbers">
+        <property name="toolTip">
+         <string>Print contact phone numbers</string>
+        </property>
+        <property name="whatsThis">
+         <string>Check this box if you want contact phone numbers to be printed.</string>
+        </property>
         <property name="text">
          <string>Phone numbers</string>
         </property>
@@ -38,6 +44,12 @@
       </item>
       <item>
        <widget class="QCheckBox" name="cbEmails">
+        <property name="toolTip">
+         <string>Print contact email addresses</string>
+        </property>
+        <property name="whatsThis">
+         <string>Check this box if you want contact email addresses to be printed.</string>
+        </property>
         <property name="text">
          <string>Email addresses</string>
         </property>
@@ -48,6 +60,12 @@
       </item>
       <item>
        <widget class="QCheckBox" name="cbStreetAddresses">
+        <property name="toolTip">
+         <string>Print contact street addresses</string>
+        </property>
+        <property name="whatsThis">
+         <string>Check this box if you want contact street addresses to be printed.</string>
+        </property>
         <property name="text">
          <string>Postal addresses</string>
         </property>
@@ -58,6 +76,12 @@
       </item>
       <item>
        <widget class="QCheckBox" name="cbOrganization">
+        <property name="toolTip">
+         <string>Print contact organizations</string>
+        </property>
+        <property name="whatsThis">
+         <string>Check this box if you want contact organizations to be printed.</string>
+        </property>
         <property name="text">
          <string>Organization</string>
         </property>
@@ -65,6 +89,12 @@
       </item>
       <item>
        <widget class="QCheckBox" name="cbBirthday">
+        <property name="toolTip">
+         <string>Print email birthdays</string>
+        </property>
+        <property name="whatsThis">
+         <string>Check this box if you want contact birthdays to be printed.</string>
+        </property>
         <property name="text">
          <string>Birthday</string>
         </property>
@@ -72,6 +102,12 @@
       </item>
       <item>
        <widget class="QCheckBox" name="cbNote">
+        <property name="toolTip">
+         <string>Print contact notes</string>
+        </property>
+        <property name="whatsThis">
+         <string>Check this box if you want contact notes to be printed.</string>
+        </property>
         <property name="text">
          <string>Note</string>
         </property>

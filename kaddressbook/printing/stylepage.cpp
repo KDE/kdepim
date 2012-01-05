@@ -50,8 +50,8 @@ StylePage::StylePage( QWidget *parent, const char *name )
 
   initFieldCombo();
 
-  mSortTypeCombo->addItem( i18nc( "Ascending sort order", "Ascending" ) );
-  mSortTypeCombo->addItem( i18nc( "Descending sort order", "Descending" ) );
+  mSortTypeCombo->addItem( i18nc( "@item:inlistbox Ascending sort order", "Ascending" ) );
+  mSortTypeCombo->addItem( i18nc( "@item:inlistbox Descending sort order", "Descending" ) );
 
   connect( mStyleCombo, SIGNAL(activated(int)), SIGNAL(styleChanged(int)) );
 }
@@ -63,7 +63,7 @@ StylePage::~StylePage()
 void StylePage::setPreview( const QPixmap &pixmap )
 {
   if ( pixmap.isNull() ) {
-    mPreview->setText( i18n( "(No preview available.)" ) );
+    mPreview->setText( i18nc( "@label", "(No preview available.)" ) );
   } else {
     mPreview->setPixmap( pixmap );
   }
@@ -124,7 +124,7 @@ void StylePage::initFieldCombo()
 
 void StylePage::initGUI()
 {
-  setWindowTitle( i18n( "Choose Printing Style" ) );
+  setWindowTitle( i18nc( "@title:window", "Choose Printing Style" ) );
 
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
@@ -132,39 +132,60 @@ void StylePage::initGUI()
 
   QLabel *label =
     new QLabel(
-      i18n( "What should the print look like?\n"
-            "KAddressBook has several printing styles, designed for different purposes.\n"
-            "Choose the style that suits your needs below." ), this );
+      i18nc( "@label:textbox",
+             "What should the print look like?\n"
+             "KAddressBook has several printing styles, designed for different purposes.\n"
+             "Choose the style that suits your needs below." ), this );
   topLayout->addWidget( label, 0, 0, 1, 2 );
 
-  QGroupBox *group = new QGroupBox( i18n( "Sorting" ), this );
+  QGroupBox *group = new QGroupBox( i18nc( "@title:group", "Sorting" ), this );
   QGridLayout *sortLayout = new QGridLayout();
   group->setLayout( sortLayout );
   sortLayout->setSpacing( KDialog::spacingHint() );
   sortLayout->setMargin( KDialog::marginHint() );
   sortLayout->setAlignment( Qt::AlignTop );
 
-  label = new QLabel( i18n( "Criterion:" ), group );
+  label = new QLabel( i18nc( "@label:listbox", "Criterion:" ), group );
   sortLayout->addWidget( label, 0, 0 );
 
   mFieldCombo = new KComboBox( false, group );
+  mFieldCombo->setToolTip(
+    i18nc( "@info:tooltip", "Select the primary sort field" ) );
+  mFieldCombo->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "From this list you can select the field on which your contacts are sorted "
+           "in the print output.  Use the sorting order option to determine if the "
+           "sort will be in ascending or descending order." ) );
   sortLayout->addWidget( mFieldCombo, 0, 1 );
 
-  label = new QLabel( i18n( "Order:" ), group );
+  label = new QLabel( i18nc( "@label:listbox", "Order:" ), group );
   sortLayout->addWidget( label, 1, 0 );
 
   mSortTypeCombo = new KComboBox( false, group );
+  mSortTypeCombo->setToolTip(
+    i18nc( "@info:tooltip", "Select the sorting order" ) );
+  mSortTypeCombo->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose if you want to sort your contacts in ascending or descending order. "
+           "Use the sorting criterion option to specify on which contact field the sorting "
+           "will be performed." ) );
   sortLayout->addWidget( mSortTypeCombo, 1, 1 );
 
   topLayout->addWidget( group, 1, 0 );
 
-  group = new QGroupBox( i18n( "Print Style" ), this );
+  group = new QGroupBox( i18nc( "@title:group", "Print Style" ), this );
   QVBoxLayout *styleLayout = new QVBoxLayout();
   group->setLayout( styleLayout );
   styleLayout->setSpacing( KDialog::spacingHint() );
   styleLayout->setMargin( KDialog::marginHint() );
 
   mStyleCombo = new KComboBox( false, group );
+  mStyleCombo->setToolTip(
+    i18nc( "@info:tooltip", "Select the print style" ) );
+  mStyleCombo->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose your desired printing style. See the preview image to help you decide." ) );
+
   styleLayout->addWidget( mStyleCombo );
 
   mPreview = new QLabel( group );
