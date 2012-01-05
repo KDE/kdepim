@@ -1487,8 +1487,10 @@ void KMComposeWin::setupActions(void)
                       actionCollection(), "setup_spellchecker");
 
   if ( Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) ) {
+    const QString iconName =
+      KGlobal::instance()->iconLoader()->iconPath( "chiasmus_chi", KIcon::Small );
     KToggleAction * a = new KToggleAction( i18n( "Encrypt Message with Chiasmus..." ),
-                                           "chiasmus_chi", 0, actionCollection(),
+                                           iconName, 0, actionCollection(),
                                            "encrypt_message_chiasmus" );
     a->setCheckedState( KGuiItem( i18n( "Encrypt Message with Chiasmus..." ), "chiencrypted" ) );
     mEncryptChiasmusAction = a;
