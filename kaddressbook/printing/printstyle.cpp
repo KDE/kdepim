@@ -57,16 +57,16 @@ bool PrintStyle::setPreview( const QString &fileName )
 {
   QPixmap preview;
 
-  const QString path = KStandardDirs::locate( "appdata", "printing/" + fileName );
+  const QString path = KStandardDirs::locate( "data", "kaddressbook/printing/" + fileName );
   if ( path.isEmpty() ) {
-    kDebug() << "preview not locatable.";
+    kDebug() << "cannot locate preview image " << fileName << " in appdata";
     return false;
   } else {
     if ( preview.load( path ) ) {
       setPreview( preview );
       return true;
     } else {
-      kDebug() <<"preview at '" << path <<"' cannot be loaded.";
+      kDebug() << "preview at '" << path <<"' cannot be loaded.";
       return false;
     }
   }
