@@ -120,7 +120,7 @@ bool Kernel::isMainFolderCollection( const Akonadi::Collection &col )
 //-----------------------------------------------------------------------------
 void Kernel::initFolders()
 {
-  kDebug() << "KMail is initialize and looking for default specialcollection folders.";
+  kDebug() << "KMail is initialized and looking for default specialcollection folders.";
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
