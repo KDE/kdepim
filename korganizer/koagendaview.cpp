@@ -1502,8 +1502,15 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
     if ( existingEvent ) {
       // If it comes from another calendar, create a new.
       // Otherwise reuse the same one
-      if ( !resourceCalendar() || resourceCalendar()->incidence( incidence->uid() ) ) {
+
+      if ( !resourceCalendar() ) {
+        // We are in merged agenda, we'll just use a changeIncidence(), no need to delete/create
         existingEventInSameResource = existingEvent;
+      } else if ( resourceCalendar()->incidence( incidence->uid() ) ) {
+        // Ok, it's in the same resource, but is it in the same subresource?
+        if ( subResourceCalendar() == resourceCalendar()->subresourceIdentifier( incidence ) ) {
+          existingEventInSameResource = existingEvent;
+        }
       }
     }
 
