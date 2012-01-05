@@ -75,6 +75,8 @@
 
 using namespace KOrg;
 
+bool KOAgendaView::sProcessingDrop = false;
+
 
 EventIndicator::EventIndicator(Location loc,QWidget *parent,const char *name)
   : QFrame(parent,name)
@@ -256,8 +258,7 @@ KOAgendaView::KOAgendaView( Calendar *cal,
   mUpdateItem( 0 ),
   mIsSideBySide( isSideBySide ),
   mPendingChanges( true ),
-  mAreDatesInitialized( false ),
-  mProcessingDrop( false )
+  mAreDatesInitialized( false )
 {
   mSelectedDates.append(QDate::currentDate());
 
@@ -1213,7 +1214,11 @@ void KOAgendaView::changeIncidenceDisplay( Incidence *incidence, int mode )
   // all-day agenda that are not easily solved, but clearing
   // and redrawing works ok.
   if ( incidence->doesFloat() ) {
-    updateView();
+    if ( sProcessingDrop ) {
+     QTimer::singleShot( 0, this, SLOT(updateView()) );
+    } else {
+     updateView();
+    }
   }
 }
 
@@ -1443,7 +1448,7 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
     bool &b;
   };
   
-  BoolChanger boolChanger( mProcessingDrop );
+  BoolChanger boolChanger( sProcessingDrop );
 
   if ( gpos.x()<0 || gpos.y()<0 ) return;
   QDate day = mSelectedDates[gpos.x()];
@@ -1766,9 +1771,9 @@ void KOAgendaView::calendarIncidenceChanged(Incidence * incidence)
 {
   Q_UNUSED( incidence );
   mPendingChanges = true;
-  
+
   // We shouldn't delete the agenda item while we're still processing
-  if ( !mProcessingDrop )
+  if ( !sProcessingDrop )
     fillAgenda();
 }
 
