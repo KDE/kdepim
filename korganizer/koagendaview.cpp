@@ -1556,11 +1556,13 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
 void KOAgendaView::startDrag( Incidence *incidence )
 {
 #ifndef KORG_NODND
+  sProcessingDrop = true;
   DndFactory factory( calendar() );
   ICalDrag *vd = factory.createDrag( incidence, this );
   if ( vd->drag() ) {
     kdDebug(5850) << "KOAgendaView::startDrag(): Delete drag source" << endl;
   }
+  sProcessingDrop = false;
 #endif
 }
 
