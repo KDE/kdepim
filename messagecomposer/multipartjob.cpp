@@ -68,6 +68,7 @@ void MultipartJob::process()
   d->resultContent->contentType( true )->setMimeType( "multipart/" + d->subtype );
   d->resultContent->contentType()->setBoundary( KMime::multiPartBoundary() );
   d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+  d->resultContent->setPreamble( "This is a multi-part message in MIME format.\n" );
   foreach( KMime::Content *c, d->subjobContents ) {
     d->resultContent->addContent( c );
     if( c->contentTransferEncoding()->encoding() == KMime::Headers::CE8Bit ) {
