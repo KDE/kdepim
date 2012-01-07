@@ -74,7 +74,8 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
 
     content += "  <table style=\"border-width: 0px; " + pageBreak + "\" width=\"100%\">\n";
     content += "   <tr>\n";
-    content += "    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" style=\"padding-left: 20px\" colspan=\"4\">" + name + "</th>\n";
+    content += "    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" "
+               "style=\"padding-left: 20px\" colspan=\"4\">" + name + "</th>\n";
     content += "   </tr>\n";
 
     for ( int i = 0; i < max; i ++ ) {

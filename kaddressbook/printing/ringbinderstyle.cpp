@@ -59,7 +59,8 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields
 
   content += "<html>\n";
   content += " <body>\n";
-  content += "  <table style=\"border-width: 1px; border-style: solid; border-color: gray;\" width=\"100%\" cellspacing=\"0\">\n";
+  content += "  <table style=\"border-width: 1px; border-style: solid; "
+             "border-color: gray;\" width=\"100%\" cellspacing=\"0\">\n";
   foreach ( const KABC::Addressee &contact, contacts ) {
     QString nameString = contact.familyName() + ", " + contact.givenName();
 
@@ -108,8 +109,12 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields
     }
 
     content += "   <tr>\n";
-    content += "    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;\">" + nameString + leftBlock.join( QString() ) + "</td>\n";
-    content += "    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;\">" + rightBlock.join( "<br/>" ) + "</td>\n";
+    content += "    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
+               "padding-bottom: 3px;\">" +
+               nameString + leftBlock.join( QString() ) + "</td>\n";
+    content += "    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
+               "padding-bottom: 3px;\">" +
+               rightBlock.join( "<br/>" ) + "</td>\n";
     content += "   </tr>\n";
   }
   content += "  </table>\n";

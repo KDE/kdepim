@@ -181,10 +181,17 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
     }
 
     // add header
-    content += "  <table style=\"border-width: 0px; border-spacing: 0px; page-break-inside: avoid\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
+    content += "  <table style=\"border-width: 0px; border-spacing: 0px; "
+               "page-break-inside: avoid\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
     content += "   <tr>\n";
-    content += "    <td style=\"color: " + settings.headerTextColor + ";\" bgcolor=\"" + settings.headerBackgroundColor + "\" style=\"padding-left: 20px\">" + name + "</td>\n";
-    content += "    <td style=\"color: " + settings.headerTextColor + ";\" align=\"right\" bgcolor=\"" + settings.headerBackgroundColor + "\" style=\"padding-right: 20px\">" + birthday + "</td>\n";
+    content += "    <td style=\"color: " + settings.headerTextColor +
+               ";\" bgcolor=\"" + settings.headerBackgroundColor +
+               "\" style=\"padding-left: 20px\">" +
+               name +  "</td>\n";
+    content += "    <td style=\"color: " + settings.headerTextColor +
+               ";\" align=\"right\" bgcolor=\"" + settings.headerBackgroundColor +
+               "\" style=\"padding-right: 20px\">" +
+               birthday + "</td>\n";
     content += "   </tr>\n";
 
     for ( int i = 0; i < blocks.count(); i += 2 ) {
