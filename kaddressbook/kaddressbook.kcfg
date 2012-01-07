@@ -8,12 +8,16 @@
   <group name="Window">
     <entry type="Bool" name="UseSimpleMode">
       <default>false</default>
+      <tooltip>Set the view to \"Simple Mode\"</tooltip>
+      <whatsthis>Set this option to true if you want to use the simple view mode instead of the normal view mode where a list of all your address books and contacts are shown on the display.</whatsthis>
     </entry>
   </group>
 
   <group name="Views">
     <entry type="IntList" name="ContactModelColumns">
       <default>0</default>
+      <tooltip>View columns</tooltip>
+      <whatsthis>Set the number of contact model view columns.</whatsthis>
     </entry>
   </group>
 

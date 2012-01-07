@@ -35,9 +35,15 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   layout->setMargin( 0 );
 
   mEdit = new KLineEdit;
-  mEdit->setClickMessage( i18nc( "Search contacts in list", "Search" ) );
+  mEdit->setClickMessage( i18nc( "@label Search contacts in list", "Search" ) );
   mEdit->setClearButtonShown( true );
-
+  mEdit->setToolTip(
+    i18nc( "@info:tooltip", "Search contacts in list" ) );
+  mEdit->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Start typing a search string in this box and the list of contacts "
+           "matching that string will be displayed.  This is a quick way of searching "
+           "for contacts of interest." ) );
   mEdit->installEventFilter( this );
 
   layout->addWidget( mEdit );

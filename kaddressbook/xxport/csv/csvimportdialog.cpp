@@ -289,6 +289,12 @@ void CSVImportDialog::initGUI()
   mUrlRequester = new KUrlRequester( page );
   mUrlRequester->setFilter( "*.csv" );
   mUrlRequester->lineEdit()->setTrapReturnKey( true );
+  mUrlRequester->setToolTip(
+    i18nc( "@info:tooltip", "Select a csv file to import" ) );
+  mUrlRequester->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Click this button to start a file chooser that will allow you to "
+           "select a csv file to import." ) );
   hbox->addWidget( mUrlRequester );
 
   layout->addLayout( hbox, 0, 0, 1, 5 );
@@ -306,27 +312,61 @@ void CSVImportDialog::initGUI()
   mDelimiterGroup->setExclusive( true );
 
   QRadioButton *button = new QRadioButton( i18nc( "@option:radio Field separator", "Comma" ) );
+  button->setToolTip(
+    i18nc( "@info:tooltip", "Set the field separator to a comma" ) );
+  button->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Select this option if your csv file uses the comma as a field separator." ) );
   button->setChecked( true );
   mDelimiterGroup->addButton( button, 0 );
   delimiterLayout->addWidget( button, 0, 0 );
 
   button = new QRadioButton( i18nc( "@option:radio Field separator", "Semicolon" ) );
+  button->setToolTip(
+    i18nc( "@info:tooltip", "Set the field separator to a semicolon" ) );
+  button->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Select this option if your csv file uses the semicolon as a field separator." ) );
   mDelimiterGroup->addButton( button, 1 );
   delimiterLayout->addWidget( button, 0, 1 );
 
   button = new QRadioButton( i18nc( "@option:radio Field separator", "Tabulator" ) );
+  button->setToolTip(
+    i18nc( "@info:tooltip", "Set the field separator to a tab character" ) );
+  button->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Select this option if your csv file uses the tab character as a field separator." ) );
   mDelimiterGroup->addButton( button, 2 );
   delimiterLayout->addWidget( button, 1, 0 );
 
   button = new QRadioButton( i18nc( "@option:radio Field separator", "Space" ) );
+  button->setToolTip(
+    i18nc( "@info:tooltip", "Set the field separator to a space character" ) );
+  button->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Select this option if your csv file uses the space character as a field separator." ) );
   mDelimiterGroup->addButton( button, 3 );
   delimiterLayout->addWidget( button, 1, 1 );
 
   button = new QRadioButton( i18nc( "@option:radio Custum field separator", "Other" ) );
+  button->setToolTip(
+    i18nc( "@info:tooltip", "Set the field separator to a custom character" ) );
+  button->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Select this option if to use some other character as the field delimiter "
+           "for the data in your csv file." ) );
   mDelimiterGroup->addButton( button, 4 );
   delimiterLayout->addWidget( button, 0, 2 );
 
   mDelimiterEdit = new KLineEdit( group );
+  mDelimiterEdit->setToolTip(
+    i18nc( "@info:tooltip",
+          "Set the custom delimiter character" ) );
+  mDelimiterEdit->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Enter a custom character to use as the delimiter character. "
+           "If you enter more than 1 character, only the first will be used and "
+           "the remaining characters will be ignored." ) );
   delimiterLayout->addWidget( mDelimiterEdit, 1, 2 );
 
   // text quote
@@ -334,6 +374,14 @@ void CSVImportDialog::initGUI()
   layout->addWidget( label, 1, 2 );
 
   mComboQuote = new KComboBox( page );
+  mComboQuote->setToolTip(
+    i18nc( "@info:tooltip", "Select the quote character" ) );
+  mComboQuote->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose the character that your csv data uses to \"quote\" the field delimiter "
+           "if that character happens to occur within the data.  For example, if the "
+           "comma is the field delimiter, then any comma occurring with the data "
+           "will be \"quoted\" by the character specified here." ) );
   mComboQuote->setEditable( false );
   mComboQuote->addItem( i18nc( "@item:inlistbox Qoute character option", "\"" ), 0 );
   mComboQuote->addItem( i18nc( "@item:inlistbox Quote character option", "'" ), 1 );
@@ -346,17 +394,33 @@ void CSVImportDialog::initGUI()
 
   mDatePatternEdit = new KLineEdit( page );
   mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 date format as default
-  mDatePatternEdit->setToolTip( i18nc( "@info:tooltip",
-                                         "<para><list><item>y: year with 2 digits</item>"
-                                         "<item>Y: year with 4 digits</item>"
-                                         "<item>m: month with 1 or 2 digits</item>"
-                                         "<item>M: month with 2 digits</item>"
-                                         "<item>d: day with 1 or 2 digits</item>"
-                                         "<item>D: day with 2 digits</item>"
-                                         "<item>H: hours with 2 digits</item>"
-                                         "<item>I: minutes with 2 digits</item>"
-                                         "<item>S: seconds with 2 digits</item>"
-                                         "</list></para>" ) );
+  mDatePatternEdit->setToolTip(
+    i18nc( "@info:tooltip",
+           "<para><list><item>y: year with 2 digits</item>"
+           "<item>Y: year with 4 digits</item>"
+           "<item>m: month with 1 or 2 digits</item>"
+           "<item>M: month with 2 digits</item>"
+           "<item>d: day with 1 or 2 digits</item>"
+           "<item>D: day with 2 digits</item>"
+           "<item>H: hours with 2 digits</item>"
+           "<item>I: minutes with 2 digits</item>"
+           "<item>S: seconds with 2 digits</item>"
+           "</list></para>" ) );
+  mDatePatternEdit->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "<para>Specify a format to use for dates included in your csv data. "
+           "Use the following sequences to help you define the format:</para>"
+           "<para><list><item>y: year with 2 digits</item>"
+           "<item>Y: year with 4 digits</item>"
+           "<item>m: month with 1 or 2 digits</item>"
+           "<item>M: month with 2 digits</item>"
+           "<item>d: day with 1 or 2 digits</item>"
+           "<item>D: day with 2 digits</item>"
+           "<item>H: hours with 2 digits</item>"
+           "<item>I: minutes with 2 digits</item>"
+           "<item>S: seconds with 2 digits</item>"
+           "</list></para>"
+           "<para>Example: \"Y-M-D\" corresponds to a date like \"2012-01-04\"</para>" ) );
   layout->addWidget( mDatePatternEdit, 2, 3 );
 
   // text codec
@@ -364,10 +428,22 @@ void CSVImportDialog::initGUI()
   layout->addWidget( label, 3, 2 );
 
   mCodecCombo = new KComboBox( page );
+  mCodecCombo->setToolTip(
+    i18nc( "@info:tooltip", "Select the text codec" ) );
+  mCodecCombo->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose the character encoding or the the data in your csv file." ) );
   layout->addWidget( mCodecCombo, 3, 3 );
 
   // skip first line
   mSkipFirstRow = new QCheckBox( i18nc( "@option:check", "Skip first row of file" ), page );
+  mSkipFirstRow->setToolTip(
+    i18nc( "@info:tooltip", "Skip first row of csv file when importing" ) );
+  mSkipFirstRow->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want the import to skip over the first row "
+           "of the csv data.  In many cases, the first line of a csv file will be a "
+           "comment line describing the order of the datafields include in the file." ) );
   layout->addWidget( mSkipFirstRow, 4, 2, 1, 2 );
 
   // csv view

@@ -31,8 +31,20 @@ ContactSwitcher::ContactSwitcher( QWidget *parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
 
-  mPreviousButton = new QPushButton( i18nc( "Previous contact", "Previous" ) );
-  mNextButton = new QPushButton( i18nc( "Next contact", "Next" ) );
+  mPreviousButton = new QPushButton( i18nc( "@action:button Previous contact", "Previous" ) );
+  mPreviousButton->setToolTip(
+    i18nc( "@info:tooltip", "Move to the previous contact in the list" ) );
+  mPreviousButton->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Press this button to move to the previous contact in the list." ) );
+
+  mNextButton = new QPushButton( i18nc( "@action:button Next contact", "Next" ) );
+  mNextButton->setToolTip(
+    i18nc( "@info:tooltip", "Move to the next contact in the list" ) );
+  mNextButton->setWhatsThis(
+    i18nc( "@info:whatsthis",
+            "Press this button to move to the next contact in the list." ) );
+
   mStatusLabel = new QLabel();
 
   layout->addWidget( mPreviousButton );
@@ -113,7 +125,8 @@ void ContactSwitcher::updateStatus()
   mPreviousButton->setEnabled( row != 0 );
   mNextButton->setEnabled( row != ( mView->model()->rowCount() - 1 ) );
 
-  mStatusLabel->setText( i18n( "%1 out of %2", row + 1, mView->model()->rowCount() ) );
+  mStatusLabel->setText( i18nc( "@info:status",
+                                "%1 out of %2", row + 1, mView->model()->rowCount() ) );
 }
 
 #include "contactswitcher.moc"

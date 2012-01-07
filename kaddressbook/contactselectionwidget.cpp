@@ -96,13 +96,43 @@ void ContactSelectionWidget::initGui()
   QGridLayout *boxLayout = new QGridLayout;
   groupBox->setLayout( boxLayout );
 
-  mAllContactsButton = new QRadioButton( i18n( "All contacts" ) );
-  mSelectedContactsButton = new QRadioButton( i18n( "Selected contacts" ) );
-  mAddressBookContactsButton = new QRadioButton( i18n( "All contacts from:" ) );
+  mAllContactsButton = new QRadioButton( i18nc( "@option:radio", "All contacts" ) );
+  mAllContactsButton->setToolTip(
+    i18nc( "@info:tooltip", "All contacts from all your address books" ) );
+  mAllContactsButton->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose this option you want to select all your contacts from "
+           "all your address books." ) );
+
+  mSelectedContactsButton = new QRadioButton( i18nc( "@option:radio","Selected contacts" ) );
+  mSelectedContactsButton->setToolTip(
+    i18nc( "@info:tooltip", "Only the contacts currently selected" ) );
+  mSelectedContactsButton->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose this option if you want only the contacts you have already "
+           "selected in the graphical interface." ) );
+
+  mAddressBookContactsButton = new QRadioButton( i18nc( "@option:radio", "All contacts from:" ) );
+  mAddressBookContactsButton->setToolTip(
+    i18nc( "@info:tooltip", "All contacts from a chosen address book" ) );
+  mAddressBookContactsButton->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Choose this option if you want to select all the contacts from only one "
+           "of your address books.  Once this option is clicked you will be provided "
+           "a drop down box listing all those address books and permitted to select "
+           "the one you want." ) );
+
   mAddressBookSelection = new Akonadi::CollectionComboBox;
   mAddressBookSelection->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
   mAddressBookSelection->setAccessRightsFilter( Akonadi::Collection::ReadOnly );
-  mAddressBookSelectionRecursive = new QCheckBox( i18n( "Include Subfolders" ) );
+  mAddressBookSelectionRecursive = new QCheckBox( i18nc( "@option:check", "Include Subfolders" ) );
+  mAddressBookSelectionRecursive->setToolTip(
+    i18nc( "@info:tooltip", "Select all subfolders including the top-level folder" ) );
+  mAddressBookSelectionRecursive->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to select all contacts from this folder, "
+           "including all subfolders.  If you only want the contacts from the "
+           "top-level folder then leave this box unchecked." ) );
 
   group->addButton( mAllContactsButton );
   group->addButton( mSelectedContactsButton );

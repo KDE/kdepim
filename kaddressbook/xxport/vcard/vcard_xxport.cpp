@@ -128,11 +128,12 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     const int answer =
       KMessageBox::questionYesNo(
         parentWidget(),
-        i18n( "You have selected a list of contacts, "
-              "shall they be exported to several files?" ),
+        i18nc( "@info",
+               "You have selected a list of contacts, "
+               "shall they be exported to several files?" ),
         QString(),
-        KGuiItem( i18n( "Export to Several Files" ) ),
-        KGuiItem( i18n( "Export to One File" ) ) );
+        KGuiItem( i18nc( "@action:button", "Export to Several Files" ) ),
+        KGuiItem( i18nc( "@action:button", "Export to One File" ) ) );
 
     switch( answer ) {
     case KMessageBox::Yes:
@@ -191,15 +192,19 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     if ( !option( "importUrl" ).isEmpty() ) {
       urls.append( KUrl( option( "importUrl" ) ) );
     } else {
-      urls = KFileDialog::getOpenUrls( KUrl(), "*.vcf|vCards", parentWidget(),
-                                       i18n( "Select vCard to Import" ) );
+      urls =
+        KFileDialog::getOpenUrls(
+          KUrl(),
+          "*.vcf|vCards",
+          parentWidget(),
+          i18nc( "@title:window", "Select vCard to Import" ) );
     }
 
     if ( urls.count() == 0 ) {
       return addrList;
     }
 
-    const QString caption( i18n( "vCard Import Failed" ) );
+    const QString caption( i18nc( "@title:window", "vCard Import Failed" ) );
     bool anyFailures = false;
 
     for ( int i = 0; i < urls.count(); ++i ) {
@@ -243,11 +248,11 @@ KABC::Addressee::List VCardXXPort::importContacts() const
         if ( anyFailures && urls.count() > 1 ) {
           KMessageBox::information(
             parentWidget(),
-            i18n( "No contacts were imported, due to errors with the vCards." ) );
+            i18nc( "@info", "No contacts were imported, due to errors with the vCards." ) );
         } else if ( !anyFailures ) {
           KMessageBox::information(
             parentWidget(),
-            i18n( "The vCard does not contain any contacts." ) );
+            i18nc( "@info", "The vCard does not contain any contacts." ) );
         }
       } else {
         QPointer<VCardViewerDialog> dlg = new VCardViewerDialog( addrList, parentWidget() );
@@ -276,7 +281,7 @@ bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
     int answer =
       KMessageBox::questionYesNo(
         parentWidget(),
-        i18n( "Do you want to overwrite file \"%1\"", url.toLocalFile() ) );
+        i18nc( "@info", "Do you want to overwrite file \"%1\"", url.toLocalFile() ) );
     if ( answer == KMessageBox::No ) {
       return false;
     }
@@ -451,7 +456,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   : KDialog( parent ),
     mContacts( list )
 {
-  setCaption( i18n( "Import vCard" ) );
+  setCaption( i18nc( "@title:window", "Import vCard" ) );
   setButtons( Yes | No | Apply | Cancel );
   setDefaultButton( Yes );
   setModal( true );
@@ -465,7 +470,8 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   layout->setMargin( marginHint() );
 
   QLabel *label =
-    new QLabel( i18n( "Do you want to import this contact into your address book?" ), page );
+    new QLabel(
+      i18nc( "@info", "Do you want to import this contact into your address book?" ), page );
   QFont font = label->font();
   font.setBold( true );
   label->setFont( font );
@@ -474,7 +480,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   mView = new Akonadi::ContactViewer( page );
   layout->addWidget( mView );
 
-  setButtonText( Apply, i18n( "Import All..." ) );
+  setButtonText( Apply, i18nc( "@action:button", "Import All..." ) );
 
   mIt = mContacts.begin();
 
@@ -538,7 +544,7 @@ void VCardViewerDialog::slotCancel()
 VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   : KDialog( parent )
 {
-  setCaption( i18n( "Select vCard Fields" ) );
+  setCaption( i18nc( "@title:window", "Select vCard Fields" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   setModal( true );
@@ -552,22 +558,53 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   layout->setMargin( marginHint() );
 
   QLabel *label =
-    new QLabel( i18n( "Select the fields which shall be exported in the vCard." ), page );
+    new QLabel(
+      i18nc( "@info", "Select the fields which shall be exported in the vCard." ), page );
   layout->addWidget( label, 0, 0, 1, 2 );
 
-  mPrivateBox = new QCheckBox( i18n( "Private fields" ), page );
+  mPrivateBox = new QCheckBox( i18nc( "@option:check", "Private fields" ), page );
+  mPrivateBox->setToolTip(
+    i18nc( "@info:tooltip", "Export private fields" ) );
+  mPrivateBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to export the contact's "
+           "private fields to the vcard output file." ) );
   layout->addWidget( mPrivateBox, 1, 0 );
 
-  mBusinessBox = new QCheckBox( i18n( "Business fields" ), page );
+  mBusinessBox = new QCheckBox( i18nc( "@option:check", "Business fields" ), page );
+  mBusinessBox->setToolTip(
+    i18nc( "@info:tooltip", "Export business fields" ) );
+  mBusinessBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to export the contact's "
+           "business fields to the vcard output file." ) );
   layout->addWidget( mBusinessBox, 2, 0 );
 
-  mOtherBox = new QCheckBox( i18n( "Other fields" ), page );
+  mOtherBox = new QCheckBox( i18nc( "@option:check", "Other fields" ), page );
+  mOtherBox->setToolTip(
+    i18nc( "@info:tooltip", "Export other fields" ) );
+  mOtherBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to export the contact's "
+           "other fields to the vcard output file." ) );
   layout->addWidget( mOtherBox, 3, 0 );
 
-  mEncryptionKeys = new QCheckBox( i18n( "Encryption keys" ), page );
+  mEncryptionKeys = new QCheckBox( i18nc( "@option:check", "Encryption keys" ), page );
+  mEncryptionKeys->setToolTip(
+    i18nc( "@info:tooltip", "Export encryption keys" ) );
+  mEncryptionKeys->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to export the contact's "
+           "encryption keys to the vcard output file." ) );
   layout->addWidget( mEncryptionKeys, 1, 1 );
 
-  mPictureBox = new QCheckBox( i18n( "Pictures" ), page );
+  mPictureBox = new QCheckBox( i18nc( "@option:check", "Pictures" ), page );
+  mPictureBox->setToolTip(
+    i18nc( "@info:tooltip", "Export pictures" ) );
+  mPictureBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to export the contact's "
+           "picture to the vcard output file." ) );
   layout->addWidget( mPictureBox, 2, 1 );
 
   KConfig config( "kaddressbookrc" );
