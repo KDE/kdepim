@@ -3,6 +3,7 @@ Version=1.0
 Encoding=UTF-8
 Name=Tasks
 Name[ca]=Tasques
+Name[ca@valencia]=Tasques
 Name[cs]=Úkoly
 Name[da]=Opgaver
 Name[de]=Aufgaben

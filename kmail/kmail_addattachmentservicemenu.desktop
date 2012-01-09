@@ -8,6 +8,7 @@ Actions=sendto;
 Icon=kmail
 Name=Send as Email Attachment
 Name[ca]=Envia com a adjunt a correu
+Name[ca@valencia]=Envia com a adjunt a correu
 Name[cs]=Odeslat jako přílohu emailu
 Name[da]=Send som bilag til e-mail
 Name[de]=Als E-Mail-Anhang versenden

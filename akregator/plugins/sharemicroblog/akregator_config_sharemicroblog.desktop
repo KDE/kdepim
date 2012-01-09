@@ -9,6 +9,7 @@ X-KDE-ParentApp=akregator
 X-KDE-ParentComponents=akregator,kontact_akregatorplugin
 X-KDE-CfgDlgHierarchy=Akregator
 X-KDE-Keywords=akregator, configure, settings, online readers
+X-KDE-Keywords[ca]=akregator, configuració, arranjament, lectors en línia
 X-KDE-Keywords[da]=akregator, indstil, indstillinger, online læsere
 X-KDE-Keywords[de]=Akregator,einstellen,konfigurieren,Konfiguration,Einrichtung,Einstellungen,online Reader
 X-KDE-Keywords[es]=akregator, configurar, preferencias lectores en línea
@@ -34,7 +35,7 @@ X-KDE-Weight=150
 
 Name=Share Services
 Name[ca]=Serveis de compartició
-Name[ca@valencia]=Serveix de compartició
+Name[ca@valencia]=Serveis de compartició
 Name[cs]=Sdílené služby
 Name[da]=Delingstjenester
 Name[de]=Veröffentlichungsdienste
