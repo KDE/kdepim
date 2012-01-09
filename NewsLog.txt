@@ -1,15 +1,21 @@
+Friday 06 January 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4254: Side-by-Side view: d'n'd between calendars should be possible(rt#6080)
+* kolab/issue4495: Missing Chiasmus icon in option menu of composer (rt#10071)
+
+
 
 Wednesday 04 January 2012
 
 Problems addressed
 ------------------
 
-* kolab/issue3724: Appointments vanish, when having access to other participants calender folders (rt#10030)
-* kolab/issue4254: Side-by-Side view: d'n'd between calendars should be possible(rt#6080)
-* kolab/issue4495: Missing Chiasmus icon in option menu of composer (rt#10071)
-* kolab/issue4804: Using the AddresseEditorExtension (Contact Editor view) can lead to data loss (ENABLE_ADDRESSEE_EDITOR_EXT environment variable workaround)
-* kolab/issue4809: Kontact crash after moving an event via Drag&Drop on date navigator (rt#10109)
+* kolab/issue4804 (partly): Using the AddresseEditorExtension (Contact Editor view) can lead to data loss (ENABLE_ADDRESSEE_EDITOR_EXT environment variable workaround)
 * kolab/issue4807: First start or ending time change not synced to the server
+
 
 
 Sunday 06 November 2011
