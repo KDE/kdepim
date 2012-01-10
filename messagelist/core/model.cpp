@@ -2856,10 +2856,22 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
 
         if( pParent ) // very likely
         {
-          if ( pParent == mi )
+          // Take care of self-referencing (which is always possible)
+          // and circular In-Reply-To reference loops which are possible
+          // in case this item was found to be a perfect parent for some
+          // imperfectly threaded message just above.
+          if (
+               ( mi == pParent ) ||              // self referencing message
+               (
+                 ( mi->childItemCount() > 0 ) && // mi already has children, this is fast to determine
+                 pParent->hasAncestor( mi )      // pParent is in the mi's children tree
+               )
+             )
           {
-            // Bad, bad message.. it has In-Reply-To equal to MessageId...
+            // Bad, bad message.. it has In-Reply-To equal to Message-Id
+            // or it's in a circular In-Reply-To reference loop.
             // Will wait for Pass2 with References-Id only
+            kWarning() << "Circular In-Reply-To reference loop detected in the message tree";
             mUnassignedMessageListForPass2.append( mi );
           } else {
             // wow, got a perfect parent for this message!
