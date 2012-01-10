@@ -41,9 +41,6 @@
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="mIdentitySelectorLabel">
-         <property name="accessibleName">
-          <string/>
-         </property>
          <property name="text">
           <string comment="@label:listbox">Identity:</string>
          </property>
@@ -67,9 +64,6 @@
        </item>
        <item row="3" column="2">
         <widget class="KPushButton" name="mToButton">
-         <property name="accessibleName">
-          <string/>
-         </property>
          <property name="text">
           <string comment="@action:button open a dialog to choose email recipients">Browse...</string>
          </property>
