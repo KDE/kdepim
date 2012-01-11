@@ -356,6 +356,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
       }
 
       if ( ignoreThisUpdate ) {
+        kdDebug(5650) << "Ignoring this update" << endl;
         return;
       }
     }
