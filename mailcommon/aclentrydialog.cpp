@@ -39,7 +39,7 @@ class AclEntryDialog::Private
 {
   public:
     Private( AclEntryDialog *qq )
-      : q( qq )
+      : q( qq ), mButtonLayout(0)
     {
     }
 
@@ -96,7 +96,7 @@ AclEntryDialog::AclEntryDialog( QWidget *parent )
   layout->addWidget( button, 0, 2 );
 
   QGroupBox *groupBox = new QGroupBox( i18n( "Permissions" ), page );
-  QVBoxLayout *vbox = new QVBoxLayout( groupBox );
+  d->mButtonLayout = new QVBoxLayout( groupBox );
 
   d->mButtonGroup = new QButtonGroup( groupBox );
 
@@ -104,11 +104,11 @@ AclEntryDialog::AclEntryDialog( QWidget *parent )
     const KIMAP::Acl::Rights permissions = AclUtils::permissionsForIndex( i );
 
     QRadioButton *radioButton = new QRadioButton( AclUtils::permissionsToUserString( permissions ), groupBox );
-    vbox->addWidget( radioButton );
+    d->mButtonLayout->addWidget( radioButton );
     d->mButtonGroup->addButton( radioButton, permissions );
   }
 
-  vbox->addStretch( 1 );
+  d->mButtonLayout->addStretch( 1 );
   layout->addWidget( groupBox, 1, 0, 1, 3 );
 
   label = new QLabel( i18n( "<b>Note: </b>Renaming requires write permissions on the parent folder." ), page );
