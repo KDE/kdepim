@@ -53,11 +53,9 @@ AddresseeEditorExtension::~AddresseeEditorExtension()
 void AddresseeEditorExtension::contactsSelectionChanged()
 {
   const KABC::Addressee::List selectedAddressees = selectedContacts();
-  KABC::Addressee::List modifiedAddress;
   if ( mAddresseeEditor->dirty() ) {
     mAddresseeEditor->save();
     addressees.append( mAddresseeEditor->addressee() );
-    modifiedAddress = addressees;
     QTimer::singleShot(0, this, SLOT(emitModifiedAddresses()));
   }
 
