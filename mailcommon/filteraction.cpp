@@ -29,6 +29,7 @@
 #include <kpimutils/email.h>
 #include <kprocess.h>
 #include <kshell.h>
+#include <KColorScheme>
 #include <ktemporaryfile.h>
 #include <kurlrequester.h>
 #include <libkdepim/addcontactjob.h>
@@ -2604,13 +2605,14 @@ QString FilterActionAddToAddressBook::argsAsString() const
 void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
 {
   const QStringList parts = argsStr.split( QLatin1Char( '\t' ), QString::KeepEmptyParts );
-  if ( parts[ 0 ] == QLatin1String( "From" ) )
+  const QString firstElement = parts[ 0 ];
+  if ( firstElement == QLatin1String( "From" ) )
     mHeaderType = FromHeader;
-  else if ( parts[ 0 ] == QLatin1String( "To" ) )
+  else if ( firstElement == QLatin1String( "To" ) )
     mHeaderType = ToHeader;
-  else if ( parts[ 0 ] == QLatin1String( "CC" ) )
+  else if ( firstElement == QLatin1String( "CC" ) )
     mHeaderType = CcHeader;
-  else if ( parts[ 0 ] == QLatin1String( "BCC" ) )
+  else if ( firstElement == QLatin1String( "BCC" ) )
     mHeaderType = BccHeader;
 
   if ( parts.count() >= 2 )
@@ -2632,6 +2634,7 @@ class FilterActionDelete : public FilterActionWithNone
     FilterActionDelete( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
+    QWidget* createParamWidget( QWidget *parent ) const;
 };
 
 FilterAction* FilterActionDelete::newAction()
@@ -2649,6 +2652,18 @@ FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) con
   context.setDeleteItem();
   return GoOn;
 }
+
+QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
+{
+    QLabel *lab = new QLabel(parent);
+    QPalette pal = lab->palette();
+    KColorScheme scheme(QPalette::Active, KColorScheme::View);
+    pal.setColor(QPalette::WindowText, scheme.foreground(KColorScheme::NegativeText).color());
+    lab->setPalette(pal);
+    lab->setText(i18n("Be careful mails will removed."));
+    return lab;
+}
+
 //=============================================================================
 //
 //   Filter  Action  Dictionary
