@@ -154,7 +154,7 @@ QString FilterImporterThunderbird::cleanArgument(const QString &line, const QStr
 {
     QString str = line;
     str.remove(removeStr);
-    str.remove("\"");
+    str.remove(QLatin1String("\""));
     str.remove(str.length()-1,1); //remove last "
     return str;
 }

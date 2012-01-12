@@ -29,6 +29,7 @@
 
 #include "filterimporterexporter.h"
 #include "filterimporterexporter_p.h"
+#include "filterimporter/filterimporterthunderbird_p.h"
 
 #include "filteraction.h"
 #include "mailfilter.h"
@@ -238,7 +239,8 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
         break;
     }
     case ThunderBirdFilter:
-        //TODO
+        MailCommon::FilterImporterThunderbird *thunderBirdFilter = new MailCommon::FilterImporterThunderbird(&file);
+        imported = thunderBirdFilter->importFilter();
         break;
     }
     file.close();
