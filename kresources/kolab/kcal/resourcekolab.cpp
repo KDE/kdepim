@@ -323,7 +323,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     return;
   }
 
-  if ( !mDisableOptimization ) { // start optimization
+  if ( !mDisableOptimization && false) { // Disabled for now. Has corner-cases.
+    // start optimization
     /**
        KOrganizer and libkcal like calling two Incidence::updated()
        for only one user change. That's because after a change,
