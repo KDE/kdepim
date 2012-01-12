@@ -889,8 +889,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMNAME";
         i += strlen( "OFROMNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           plainBody.append( str );
           const QString body = plainToHtml( str );
           htmlBody.append( body );
@@ -900,8 +900,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMFNAME";
         i += strlen( "OFROMFNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           plainBody.append( getFName( str ) );
           const QString body = plainToHtml( getFName( str ) );
           htmlBody.append( body );
@@ -911,8 +911,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMLNAME";
         i += strlen( "OFROMLNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           plainBody.append( getLName( str ) );
           const QString body = plainToHtml( getLName( str ) );
           htmlBody.append( body );
