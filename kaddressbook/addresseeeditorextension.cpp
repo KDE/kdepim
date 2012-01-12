@@ -65,6 +65,7 @@ void AddresseeEditorExtension::contactsSelectionChanged()
 void AddresseeEditorExtension::emitModifiedAddresses()
 {
   emit modified( addressees );
+  addressees.clear();
 }
 
 QString AddresseeEditorExtension::title() const
