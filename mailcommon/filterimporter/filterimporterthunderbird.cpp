@@ -20,6 +20,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include "mailfilter.h"
+#include "filtermanager.h"
 
 using namespace MailCommon;
 
@@ -247,6 +248,22 @@ void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::
   } else {
       qDebug()<<QString::fromLatin1(" missing convert method: %1").arg(line);
   }
+  QString argsName;
+  if ( !actionName.isEmpty() ) {
+    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
+    if ( desc ) {
+      FilterAction *fa = desc->create();
+      //...create an instance...
+      fa->argsFromStringInteractive( argsName, /*name()*/QString() );
+      //...check if it's empty and...
+      if ( !fa->isEmpty() )
+        //...append it if it's not and...
+        filter->actions()->append( fa );
+      else
+        //...delete is else.
+        delete fa;
+    }
+  }  
 }
 
 void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::MailFilter* filter)
