@@ -218,7 +218,14 @@ private:
   Kolab::ResourceMap mEventSubResources, mTodoSubResources, mJournalSubResources;
 
   bool mOpen; // If the resource is open, this is true
+
+  /**
+   * An incidence update by korganizer, will trigger kmail deleting and re-adding the object.
+   * When fromKMailAddIncidence() or fromKMailDelIncidence() incidence is called, we need to known
+   * if it's about an incidence we're updating.
+   */
   QDict<KCal::IncidenceBase> mPendingUpdates;
+
   QTimer mResourceChangedTimer;
   ICalFormat mFormat;
 
