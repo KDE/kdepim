@@ -658,12 +658,28 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 #else
       msg->assemble();
+      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( MailTransport::TransportManager::self()->defaultTransportName() );
+      
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
-      job->setMessage( msg );
-      job->addressAttribute().setTo( QStringList() << to );
+      
+      job->addressAttribute().setTo( QStringList() << KPIMUtils::extractEmailAddress(
+                                       KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
       job->transportAttribute().setTransportId(
         MailTransport::TransportManager::self()->defaultTransportId() );
+
+      if ( transport && transport->specifySenderOverwriteAddress() ) {
+        job->addressAttribute().setFrom(
+          KPIMUtils::extractEmailAddress(
+            KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
+      } else {
+        job->addressAttribute().setFrom(
+          KPIMUtils::extractEmailAddress(
+            KPIMUtils::normalizeAddressesAndEncodeIdn( msg->from()->asUnicodeString() ) ) );
+      }
+
+      job->setMessage( msg );
+      
       if( ! job->exec() ) {
         kWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
