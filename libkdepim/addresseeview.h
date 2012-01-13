@@ -101,6 +101,7 @@ class KDE_EXPORT AddresseeView : public KTextBrowser
       URLFields = 16,
       IMFields = 32,
       CustomFields = 64,
+      Categories = 128,
       DefaultFields = AddressFields | EmailFields | PhoneFields | URLFields
     };
 
@@ -190,6 +191,7 @@ class KDE_EXPORT AddresseeView : public KTextBrowser
     KToggleAction *mActionShowURLs;
     KToggleAction *mActionShowIMAddresses;
     KToggleAction *mActionShowCustomFields;
+    KToggleAction *mActionShowCategories;
 
     KABC::Addressee mAddressee;
     int mLinkMask;

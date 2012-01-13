@@ -87,6 +87,8 @@ AddresseeView::AddresseeView( QWidget *parent, const char *name,
   mActionShowIMAddresses->setCheckedState( i18n( "Hide Instant Messaging Addresses" ) );
   mActionShowCustomFields = new KToggleAction( i18n( "Show Custom Fields" ) );
   mActionShowCustomFields->setCheckedState( i18n( "Hide Custom Fields" ) );
+  mActionShowCategories = new KToggleAction( i18n( "Show Categories" ) );
+  mActionShowCategories->setCheckedState( i18n( "Hide Categories" ) );
 
   connect( mActionShowBirthday, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
   connect( mActionShowAddresses, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
@@ -95,6 +97,7 @@ AddresseeView::AddresseeView( QWidget *parent, const char *name,
   connect( mActionShowURLs, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
   connect( mActionShowIMAddresses, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
   connect( mActionShowCustomFields, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
+  connect( mActionShowCategories, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
 
   if ( !config ) {
     mConfig = new KConfig( "kaddressbookrc" );
@@ -125,6 +128,7 @@ AddresseeView::~AddresseeView()
   delete mActionShowURLs;
   delete mActionShowIMAddresses;
   delete mActionShowCustomFields;
+  delete mActionShowCategories;
 
   mKIMProxy = 0;
 }
@@ -416,6 +420,14 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
     }
   }
 
+
+  QString categoriesData;
+  if ( fieldMask & Categories ) {
+    QStringList categories = addr.categories();
+    categoriesData = rowFmtStr.arg( i18n( "Categories" ) ).arg(
+        QStyleSheet::escape( categories.join( ", " ) ) );
+  }
+
   // @STYLE@ - construct the string by parts, substituting in
   // the styles first. There are lots of appends, but we need to
   // do it this way to avoid cases where the substituted string
@@ -465,6 +477,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
   strAddr.append( dynamicPart );
   strAddr.append( notes );
   strAddr.append( customData );
+  strAddr.append( categoriesData );
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
 
   if ( addr.resource() ) {
@@ -522,6 +535,8 @@ void AddresseeView::updateView()
     fieldMask |= IMFields;
   if ( mActionShowCustomFields->isChecked() )
     fieldMask |= CustomFields;
+  if ( mActionShowCategories->isChecked() )
+    fieldMask |= Categories;
 
   QString strAddr = vCardAsHTML( mAddressee, mKIMProxy, (LinkMask)mLinkMask,
                                  true, (FieldMask)fieldMask );
@@ -659,6 +674,7 @@ QPopupMenu *AddresseeView::createPopupMenu( const QPoint& )
   mActionShowURLs->plug( menu );
   mActionShowIMAddresses->plug( menu );
   mActionShowCustomFields->plug( menu );
+  mActionShowCategories->plug( menu );
 
   return menu;
 }
@@ -761,6 +777,7 @@ void AddresseeView::load()
   mActionShowURLs->setChecked( mConfig->readBoolEntry( "ShowURLs", true ) );
   mActionShowIMAddresses->setChecked( mConfig->readBoolEntry( "ShowIMAddresses", false ) );
   mActionShowCustomFields->setChecked( mConfig->readBoolEntry( "ShowCustomFields", false ) );
+  mActionShowCategories->setChecked( mConfig->readBoolEntry( "ShowCategories", false ) );
 }
 
 void AddresseeView::save()
@@ -773,6 +790,7 @@ void AddresseeView::save()
   mConfig->writeEntry( "ShowURLs", mActionShowURLs->isChecked() );
   mConfig->writeEntry( "ShowIMAddresses", mActionShowIMAddresses->isChecked() );
   mConfig->writeEntry( "ShowCustomFields", mActionShowCustomFields->isChecked() );
+  mConfig->writeEntry( "ShowCategories", mActionShowCategories->isChecked() );
   mConfig->sync();
 }
 
