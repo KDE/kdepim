@@ -1,6 +1,6 @@
 /*
   This file is part of KMail, the KDE mail client.
-  Copyright (c) 2011 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011, 2012 Montel Laurent <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -255,7 +255,36 @@ void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::M
 
 void FilterImporterThunderbird::extractType(const QString& line, MailCommon::MailFilter* filter)
 {
-  //TODO
+  const int value = line.toInt();
+  if ( value == 1 )
+  {
+    filter->setApplyOnInbound( true );
+    //Checking mail
+  }
+  else if ( value == 16 )
+  {
+    filter->setApplyOnInbound( false );
+    filter->setApplyOnExplicit( true );
+    //Manual mail
+  }
+  else if ( value == 17 )
+  {
+    filter->setApplyOnInbound( true );
+    filter->setApplyOnExplicit( true );
+    //Checking mail or manual
+  }
+  else if ( value == 32 )
+  {
+    //checking mail after classification
+  }
+  else if ( value == 48 )
+  {
+    //checking mail after classification or manual check
+  }
+  else
+  {
+    qDebug()<<" type value is not valid :"<<value;
+  }
 }
 
 QString FilterImporterThunderbird::cleanArgument(const QString &line, const QString &removeStr)
