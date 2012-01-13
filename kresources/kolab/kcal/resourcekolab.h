@@ -281,6 +281,14 @@ private:
      of a pure virtual in KCal::CalendarObserver. */
   bool mDisableOptimization;
 
+  /**
+   * When there are two duplicate incidences, we keep one and discard the other one.
+   * To prevent data loss due to race between two kolab clients, that's implemented by one
+   * adition, and two removals ( issue4805 ).
+   *
+   * We only do the last removal after kmail ACKs the adition, hence this variable.
+   */
+  Kolab::UidMap mPendingDuplicateDeletions;
 };
 
 struct TemporarySilencer {

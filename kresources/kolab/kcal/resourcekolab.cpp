@@ -447,8 +447,31 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
   Incidence* result = 0;
   if ( local ) {
     if ( *local == *inc ) {
-      // real duplicate, remove the second one
-      result = local;
+      // real duplicate, we keep the second one. This will be done has one adition and two removals
+      // To avoid a race between kolab clients that can leed to data loss.
+      {
+        // This code block implements issue4805.
+        // We should refactor it when working on issue4808, by making it just a sub-case of
+        // "Take local"
+
+        // This update will trigger an add and a delete, when we hear back from the add, we can
+        // safely delete the duplicate.
+        if ( mUidMap.contains(origUid) ) {
+          //kdDebug() << "DEBUG Found duplicate with id " << local->uid() << origUid << " and scheduling id " << local->schedulingID() << endl;
+          mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
+          const bool silent = mSilent;
+          mSilent = false;
+          const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(), mUidMap[origUid].serialNumber() );
+          mSilent = silent;
+          //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource() << QString::number( mUidMap[origUid].serialNumber() ) << endl;
+          return;
+        } else {
+          // We will never end up in this "else" block.
+          // But I won't put my Q_ASSERT where my mouth is.
+
+          result = local; // Just fallback to "Take local"
+        }
+      }
     } else {
       // We have a conflict.
       //1. look in our rc file and see if this folder has a takeMode and askPolicy already
@@ -652,6 +675,8 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
   // behold, sernum is an in-parameter
+  kdDebug() << "kmailupdatea with " << subject << incidence->uid() << incidence->schedulingID()
+                << endl;
   const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders, attURLs, attMimeTypes, attNames, deletedAtts );
   // update the serial number
   if ( mUidMap.contains( incidencebase->uid() ) ) {
@@ -675,13 +700,18 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     return false;
   }
 
-  kdDebug() << "Resourcekolab, adding incidence "
+  kdDebug() << "DEBUG Resourcekolab, adding incidence "
             << incidence->summary()
             << "; subresource = " << _subresource
             << "; sernum = " << sernum
             << "; mBatchAddingInProgress = " << mBatchAddingInProgress
             << "; dtStart() = " << incidence->dtStart()
             << "; revision = " << incidence->revision()
+            << "; uid = " << incidence->uid()
+            << "; schedulingID = " << incidence->schedulingID()
+            << "; mSilent = " << mSilent
+            << endl
+            << "; mPendingDuplicateDeletions.count() = " << mPendingDuplicateDeletions.count()
             << endl;
 
   QString uid = incidence->uid();
@@ -796,6 +826,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
      * We know the new state, so lets just not do much at all. The old incidence
      * in the calendar remains valid, but the serial number changed, so we need to
      * update that */
+    //kdDebug() << "DEBUG addIncidence: ourOwnUpdate=" << ourOwnUpdate << "; mPendingDuplicateDeletions.contains()= " << mPendingDuplicateDeletions.contains( uid ) << endl;
     if ( ourOwnUpdate ) {
       mUidsPendingUpdate.remove( uid );
       mUidMap.remove( uid );
@@ -806,6 +837,15 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
        * unless the folder is read-only, in which case the user should not be
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
+      if ( mPendingDuplicateDeletions.contains( uid ) ) {
+        const bool silent = mSilent;
+        mSilent = false;
+        mUidsPendingDeletion.append( uid );
+        const bool success = kmailDeleteIncidence( subResource, sernum );
+        mSilent = silent;
+        mPendingDuplicateDeletions.remove( uid );
+      }
+
       if ( mUidMap.contains( uid ) ) {
         if ( mUidMap[ uid ].resource() == subResource ) {
           if ( (*map)[ subResource ].writable() ) {
@@ -1090,6 +1130,8 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     return false;
   }
 
+  //kdDebug() << "DEBUG fromKMailAddIncidence " << sernum << data << endl;
+
   if ( !subresourceActive( subResource ) ) {
     return true;
   }
@@ -1108,6 +1150,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
   } else {
     Incidence *inc = mFormat.fromString( data );
     if ( inc ) {
+      //kdDebug() << "DEBUG fromKMailAddIncidence: Received incidence with uid " << inc->uid() << endl;
       addIncidence( inc, subResource, sernum );
     } else {
       rc = false;
@@ -1125,6 +1168,8 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
     // Not ours
     return;
   if ( !subresourceActive( subResource ) ) return;
+
+  //kdDebug() << "DEBUG fromKMailDelIncidence " << uid << endl;
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.find( uid ) != mUidsPendingDeletion.end() ) {
