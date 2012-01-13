@@ -278,16 +278,16 @@ static QString directoryForStatus( Attendee::PartStat status )
   QString dir;
   switch ( status ) {
   case Attendee::Accepted:
-    dir = "accepted";
+    dir = QLatin1String( "accepted" );
     break;
   case Attendee::Tentative:
-    dir = "tentative";
+    dir = QLatin1String( "tentative" );
     break;
   case Attendee::Declined:
-    dir = "cancel";
+    dir = QLatin1String( "cancel" );
     break;
   case Attendee::Delegated:
-    dir = "delegated";
+    dir = QLatin1String( "delegated" );
     break;
   default:
     break;
