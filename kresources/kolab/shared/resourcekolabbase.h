@@ -181,6 +181,12 @@ protected:
   };
   ErrorCode mErrorCode;
 
+  /**
+   * If mSilent is true, we don't notify kmail about a change/add, because it was kmail who
+   * notified us, so already knows about it.
+   *
+   * Real adds/changes made by knotes/korganizer have mSilent=false.
+   */
   bool mSilent;
 
   /**
