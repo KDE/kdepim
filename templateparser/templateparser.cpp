@@ -480,8 +480,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QString q;
         int len = parseQuotes( "MSGPIPE=", cmd, q );
         i += len;
-        QString pipe_cmd = q;
         if ( mOrigMsg ) {
+          QString pipe_cmd = q;
           const QString str = pipe( pipe_cmd, mOrigMsg->encodedContent() );
           plainBody.append( str );
 
