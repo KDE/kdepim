@@ -351,7 +351,7 @@ sub outputStr {
 
 # create an initial issues list from the set of those currently in testing
 sub initTestingList {
-  my($url) = 'https://issues.kolab.org/issue?@columns=title,id,status&@action=export_csv&@sort=id&@pagesize=50&@startwith=0&status=6&assignedto=520,341&keyword=20';
+  my($url) = 'https://roundup.kolab.org/issue?@columns=title,id,status&@action=export_csv&@sort=id&@pagesize=50&@startwith=0&status=6&assignedto=520,341&keyword=20';
 
 
 #  $url = uri_escape($url);
@@ -379,11 +379,11 @@ sub issueString {
   my($force,$issue) = @_;
   my($str) = "";
 
-  my($url) = "https://issues.kolab.org/issue" . $issue;
+  my($url) = "https://roundup.kolab.org/issue" . $issue;
 
   my($req) = HTTP::Request->new(GET => $url);
-  $req->header(Accept => "If-SSL-Cert-Subject");
 
+  $Ua->ssl_opts( verify_hostname => 0 );
   my($res) = $Ua ->request($req);
 
   if ($res->is_success) {
