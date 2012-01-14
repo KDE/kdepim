@@ -24,7 +24,7 @@ qt4_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
 )
 
-kde4_add_ui_files(messageviewer_bodypartformatter_text_calendar_PART_SRCS ui_attendeeselector.ui)
+kde4_add_ui_files(messageviewer_bodypartformatter_text_calendar_PART_SRCS attendeeselector.ui)
 
 if(NOT WINCE)
   kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
