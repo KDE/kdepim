@@ -1081,7 +1081,7 @@ void SearchPattern::readConfig( const KConfigGroup & config ) {
 
   const int nRules = config.readEntry( "rules", 0 );
 
-  for ( int i = 0 ; i < nRules ; i++ ) {
+  for ( int i = 0 ; i < nRules ; ++i ) {
     SearchRule::Ptr r = SearchRule::createInstanceFromConfig( config, i );
     if ( !r->isEmpty() )
       append( r );
@@ -1145,7 +1145,9 @@ void SearchPattern::writeConfig( KConfigGroup & config ) const {
       
   int i = 0;
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = begin() ; it != end() && i < FILTER_MAX_RULES ; ++i, ++it )
+  QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
+  
+  for ( it = begin() ; it != endIt && i < FILTER_MAX_RULES ; ++i, ++it )
     // we could do this ourselves, but we want the rules to be extensible,
     // so we give the rule it's number and let it do the rest.
     (*it)->writeConfig( config, i );
