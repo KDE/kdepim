@@ -562,7 +562,7 @@ public:
       it's rules match, whereas a pattern with @p OpOr will match if
       any of it's rules matches.
   */
-  enum Operator { OpAnd, OpOr };
+  enum Operator { OpAnd, OpOr, OpAll };
 
   /** Constructor which provides a pattern with minimal, but
       sufficient initialization. Unmodified, such a pattern will fail

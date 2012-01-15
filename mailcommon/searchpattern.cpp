@@ -1031,6 +1031,8 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
         if ( (*it)->matches( item ) )
           return true;
     // fall through
+  case OpAll:
+    return true;
   default:
     return false;
   }
@@ -1069,7 +1071,13 @@ void SearchPattern::readConfig( const KConfigGroup & config ) {
     return;
   }
 
-  mOperator = config.readEntry("operator") == "or" ? OpOr : OpAnd;
+  const QString op = config.readEntry("operator");
+  if ( op == QLatin1String( "or" ) )
+    mOperator = OpOr;
+  else if ( op == QLatin1String( "and" ) )
+    mOperator = OpAnd;
+  else if ( op == QLatin1String( "all" ) )
+    mOperator = OpAll;
 
   const int nRules = config.readEntry( "rules", 0 );
 
@@ -1123,8 +1131,18 @@ void SearchPattern::importLegacyConfig( const KConfigGroup & config ) {
 
 void SearchPattern::writeConfig( KConfigGroup & config ) const {
   config.writeEntry("name", mName);
-  config.writeEntry("operator", (mOperator == SearchPattern::OpOr) ? "or" : "and" );
-
+  switch( mOperator ) {
+  case OpOr:
+    config.writeEntry("operator", "op" );
+    break;
+  case OpAnd:
+    config.writeEntry("operator", "and" );
+    break;
+  case OpAll:
+    config.writeEntry("operator", "all" );
+    break;    
+  }
+      
   int i = 0;
   QList<SearchRule::Ptr>::const_iterator it;
   for ( it = begin() ; it != end() && i < FILTER_MAX_RULES ; ++i, ++it )
@@ -1263,8 +1281,10 @@ QDataStream & SearchPattern::operator>>( QDataStream &s ) const
 {
   if ( op() == SearchPattern::OpAnd ) {
     s << QString::fromLatin1( "and" );
-  } else {
+  } else if ( op() == SearchPattern::OpOr ) {
     s << QString::fromLatin1( "or" );
+  } else if ( op() == SearchPattern::OpAll ) {
+    s << QString::fromLatin1( "all" );
   }
   Q_FOREACH( const SearchRule::Ptr rule, *this ) {
     *rule >> s;
@@ -1276,8 +1296,13 @@ QDataStream & SearchPattern::operator <<( QDataStream &s )
 {
   QString op;
   s >> op;
-  setOp( op == QLatin1String( "and" ) ? OpAnd : OpOr );
-
+  if ( op == QLatin1String( "and" ) ) {
+    setOp( OpAnd );
+  } else if ( op == QLatin1String( "or" ) ) {
+    setOp( OpOr );
+  } else if ( op == QLatin1String( "all" ) ) {
+    setOp( OpAll );
+  }
   while ( !s.atEnd() ) {
     SearchRule::Ptr rule = SearchRule::createInstance( s );
     append( rule );
