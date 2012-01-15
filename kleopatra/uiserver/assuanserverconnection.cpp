@@ -860,14 +860,14 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     assert( numFDs != -1 ); // == 1
 
     if ( !numFDs || fds[0] != fd ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fd, QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (intptr_t)fd, QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
 
     notifiers.reserve( notifiers.size() + numFDs );
     for ( int i = 0 ; i < numFDs ; ++i ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fds[i], QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (intptr_t)fds[i], QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
