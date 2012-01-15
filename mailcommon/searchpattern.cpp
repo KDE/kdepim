@@ -1150,7 +1150,8 @@ QString SearchPattern::asString() const {
     result = i18n("(match all of the following)");
 
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = begin() ; it != end() ; ++it )
+  QList<SearchRule::Ptr>::const_iterator endIt = end();
+  for ( it = begin() ; it != endIt ; ++it )
     result += "\n\t" + FilterLog::recode( (*it)->asString() );
 
   return result;

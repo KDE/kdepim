@@ -559,7 +559,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 public:
   /** Boolean operators that connect the return values of the
       individual rules. A pattern with @p OpAnd will match iff all
-      it's rules match, whereas a pattern with @p OpOr will match iff
+      it's rules match, whereas a pattern with @p OpOr will match if
       any of it's rules matches.
   */
   enum Operator { OpAnd, OpOr };
