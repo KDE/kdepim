@@ -1030,7 +1030,7 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
       if ( !((*it)->requiresBody() && ignoreBody) )
         if ( (*it)->matches( item ) )
           return true;
-    // fall through
+    return false;
   case OpAll:
     return true;
   default:
