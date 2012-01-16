@@ -157,7 +157,7 @@ void SearchRuleWidget::initWidget()
   mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   hlay->addWidget( mRemove );
 
-  
+
   RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack,
                                                        mValueStack,
                                                        this );
@@ -171,7 +171,7 @@ void SearchRuleWidget::initWidget()
            this, SLOT(slotRuleFieldChanged(QString)) );
   connect( mRuleField, SIGNAL(editTextChanged(QString)),
            this, SIGNAL(fieldChanged(QString)) );
-  
+
   connect( mAdd, SIGNAL(clicked()),
            this, SLOT(slotAddWidget()) );
   connect( mRemove, SIGNAL(clicked()),
@@ -325,9 +325,9 @@ void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
   mFilterFieldList.append( SpecialRuleFields[To].getLocalizedDisplayName()      );
   mFilterFieldList.append( SpecialRuleFields[CC].getLocalizedDisplayName()      );
   mFilterFieldList.append( SpecialRuleFields[Status].getLocalizedDisplayName()  );
-#ifndef KDEPIM_NO_NEPOMUK  
+#ifndef KDEPIM_NO_NEPOMUK
   mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName()     );
-#endif  
+#endif
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
 
@@ -514,12 +514,11 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 //
 //=============================================================================
 
-SearchPatternEdit::SearchPatternEdit( QWidget *parent, bool headersOnly,
-                                          bool absoluteDates, bool matchAllMessages )
+SearchPatternEdit::SearchPatternEdit( QWidget *parent,  SearchPatternEditOptions options )
   : QWidget( parent ), mAllMessageRBtn( 0 )
 {
   setObjectName( "SearchPatternEdit" );
-  initLayout( headersOnly, absoluteDates, matchAllMessages );
+  initLayout( options );
 }
 
 
@@ -527,10 +526,11 @@ SearchPatternEdit::~SearchPatternEdit()
 {
 }
 
-void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates, bool matchAllMessages)
+void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
+  const bool matchAllMessages = ( options & MailCommon::SearchPatternEdit::MatchAllMessages );
   //------------the radio buttons
   mAllRBtn = new QRadioButton( i18n("Match a&ll of the following"), this );
   mAnyRBtn = new QRadioButton( i18n("Match an&y of the following"), this );
@@ -555,13 +555,13 @@ void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates, bool ma
   bg->addButton( mAnyRBtn );
   if ( matchAllMessages )
     bg->addButton( mAllMessageRBtn );
-  
+
   //------------connect a few signals
   connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
 	   this, SLOT(slotRadioClicked(QAbstractButton*)) );
 
   //------------the list of SearchRuleWidget's
-  mRuleLister = new SearchRuleWidgetLister( this, "swl", headersOnly, absoluteDates );
+  mRuleLister = new SearchRuleWidgetLister( this, "swl", ( options & MailCommon::SearchPatternEdit::HeadersOnly ), ( options & MailCommon::SearchPatternEdit::AbsoluteDate ) );
   mRuleLister->slotClear();
 
   if ( !mRuleLister->widgets().isEmpty() ) {
@@ -579,7 +579,7 @@ void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates, bool ma
   connect( mRuleLister, SIGNAL(widgetAdded(QWidget*)),
            this, SLOT(slotRuleAdded(QWidget*)) );
   connect( mRuleLister, SIGNAL(widgetRemoved()), this, SIGNAL(patternChanged()) );
-  
+
   layout->addWidget( mRuleLister );
 }
 

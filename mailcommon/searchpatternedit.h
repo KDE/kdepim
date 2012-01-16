@@ -196,10 +196,17 @@ private:
 class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget {
   Q_OBJECT
 public:
+  enum SearchPatternEditOption {
+    None = 0,
+    HeadersOnly = 1,
+    AbsoluteDate = 2,
+    MatchAllMessages = 4
+  };
+  Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
+
   /** Constructor. The parent parameter is passed to the underlying
       QGroupBox, as usual. */
-  explicit SearchPatternEdit( QWidget *parent = 0, bool headersOnly = false,
-                                bool absoluteDates = false, bool matchAllMessages = false );
+  explicit SearchPatternEdit( QWidget *parent = 0,  SearchPatternEditOptions options = (SearchPatternEditOptions) (None) );
 
   ~SearchPatternEdit();
 
@@ -233,7 +240,7 @@ private slots:
   void slotAutoNameHack();
   void slotRuleAdded( QWidget *widget );
 private:
-  void initLayout( bool headersOnly, bool absoluteDates, bool matchAllMessages );
+  void initLayout( SearchPatternEditOptions options );
 
   MailCommon::SearchPattern *mPattern;
   QRadioButton    *mAllRBtn, *mAnyRBtn, *mAllMessageRBtn;

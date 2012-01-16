@@ -33,7 +33,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent )
   mUi = new Ui_FilterConfigWidget;
   mUi->setupUi( mainWidget() );
 
-  mPatternEdit = new SearchPatternEdit( this, false, false, true );
+  mPatternEdit = new SearchPatternEdit( this, MailCommon::SearchPatternEdit::MatchAllMessages );
   mUi->criteriaLayout->addWidget( mPatternEdit, 0, Qt::AlignTop );
   mActionLister = new FilterActionWidgetLister( this );
   mUi->actionsLayout->addWidget( mActionLister, 0, Qt::AlignTop );
