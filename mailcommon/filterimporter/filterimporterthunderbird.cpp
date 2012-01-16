@@ -83,7 +83,7 @@ void FilterImporterThunderbird::extractConditions(const QString& line, MailCommo
           splitConditions( conditionsList.at( i ), filter );
         }
     } else if ( line.startsWith( QLatin1String( "ALL ALL" ) ) ){
-      //TODO
+      filter->pattern()->setOp(SearchPattern::OpAll);
     } else {
       qDebug()<<" missing extract condition";
     }
