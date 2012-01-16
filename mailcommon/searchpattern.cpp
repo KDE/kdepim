@@ -1133,7 +1133,7 @@ void SearchPattern::writeConfig( KConfigGroup & config ) const {
   config.writeEntry("name", mName);
   switch( mOperator ) {
   case OpOr:
-    config.writeEntry("operator", "op" );
+    config.writeEntry("operator", "or" );
     break;
   case OpAnd:
     config.writeEntry("operator", "and" );
