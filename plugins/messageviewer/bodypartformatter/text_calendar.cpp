@@ -342,7 +342,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       bool rsvp = true; // better send superfluously than not at all
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      Attendee::List::ConstIterator end( attendees.constEnd() );      
+      Attendee::List::ConstIterator end( attendees.constEnd() );
       for ( it = attendees.constBegin(); it != end; ++it ) {
         if ( it == attendees.constBegin() ) {
           rsvp = (*it)->RSVP(); // use what the first one has
@@ -362,7 +362,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
       Attendee::List::ConstIterator end = attendees.constEnd();
-      
+
       for ( it = attendees.constBegin(); it != end; ++it ) {
         if ( it == attendees.constBegin() ) {
           role = (*it)->role(); // use what the first one has
@@ -387,7 +387,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( attachments.count() > 0 ) {
         Attachment::List::ConstIterator it;
         Attachment::List::ConstIterator end = attachments.constEnd();
-        
+
         for ( it = attachments.constBegin(); it != end; ++it ) {
           if ( (*it)->label() == name ) {
             attachment = *it;
@@ -659,10 +659,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
 #else
       msg->assemble();
       MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( MailTransport::TransportManager::self()->defaultTransportName() );
-      
+
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
-      
+
       job->addressAttribute().setTo( QStringList() << KPIMUtils::extractEmailAddress(
                                        KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
       job->transportAttribute().setTransportId(
@@ -679,7 +679,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       job->setMessage( msg );
-      
+
       if( ! job->exec() ) {
         kWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
@@ -906,7 +906,12 @@ class UrlHandler : public Interface::BodyPartURLHandler
         if ( !ok ) {
           return true;
         }
-        if ( !comment.isEmpty() ) {
+        if ( comment.isEmpty() ) {
+          KMessageBox::error(
+            0,
+            i18n( "You forgot to add proposal. Please add it. Thanks" ) );
+          return true;
+        } else {
           if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
@@ -1147,7 +1152,14 @@ class UrlHandler : public Interface::BodyPartURLHandler
         if ( !ok ) {
           return true;
         }
-        if ( !comment.isEmpty() ) {
+        if ( comment.isEmpty() ) {
+          KMessageBox::error(
+            0,
+            i18n( "You forgot to add proposal. Please add it. Thanks" ) );
+          return true;
+
+        }
+        else {
           if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
