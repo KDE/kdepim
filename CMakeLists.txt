@@ -10,7 +10,7 @@ option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
-option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
+option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkleo and kleopatra" FALSE)
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
@@ -41,24 +41,16 @@ if(WINCE)
     add_definitions(-DKDEPIM_STATIC_LIBS)
 endif()
 
-
-# Default
-set(KDEPIM_BUILD_EVERYTHING TRUE)
-
-# if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 if(KDEPIM_ENTERPRISE_BUILD)
-  set(KDEPIM_ONLY_KLEO FALSE)
-  set(KDEPIM_BUILD_EVERYTHING FALSE)
   message(STATUS "Enterprise build is enabled.")
-else()
-  # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
-  if(KDEPIM_ONLY_KLEO)
-    set(KDEPIM_BUILD_EVERYTHING FALSE)
-    set(KDEPIM_BUILD_MOBILE FALSE)
-    set(KDEPIM_MOBILE_UI FALSE)
-    set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
-    message(STATUS "Only libkleo and Kleopatra will be built.")
-  endif()
+endif()
+
+# if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
+if(KDEPIM_ONLY_KLEO)
+ set(KDEPIM_BUILD_MOBILE FALSE)
+ set(KDEPIM_MOBILE_UI FALSE)
+ set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
+ message(STATUS "Only libkleo and Kleopatra will be built.")
 endif()
 
 if(KDEPIM_MOBILE_UI)
@@ -359,7 +351,7 @@ endif()
 
   endif()
 
-  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
+  if(QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(knode)
   endif()
 
