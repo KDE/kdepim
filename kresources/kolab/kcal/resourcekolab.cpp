@@ -841,7 +841,8 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         const bool silent = mSilent;
         mSilent = false;
         mUidsPendingDeletion.append( uid );
-        const bool success = kmailDeleteIncidence( subResource, sernum );
+        StorageReference toDelete = mPendingDuplicateDeletions[uid];
+        const bool success = kmailDeleteIncidence( toDelete.resource(), toDelete.serialNumber() );
         mSilent = silent;
         mPendingDuplicateDeletions.remove( uid );
       }
