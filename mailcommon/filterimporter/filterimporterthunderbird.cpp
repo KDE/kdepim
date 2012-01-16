@@ -121,7 +121,9 @@ void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   QString str = cond.trimmed();
   str.remove("(");
   str.remove(str.length()-1,1); //remove last )
-  QStringList listOfCond = str.split( QLatin1Char( ',' ) );
+
+  
+  const QStringList listOfCond = str.split( QLatin1Char( ',' ) );
   if ( listOfCond.count() < 3 ) {
     qDebug()<<"We have a pb in cond:"<<cond;
     return;
