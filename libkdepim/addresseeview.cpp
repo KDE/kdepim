@@ -424,8 +424,9 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
   QString categoriesData;
   if ( fieldMask & Categories ) {
     QStringList categories = addr.categories();
-    categoriesData = rowFmtStr.arg( i18n( "Categories" ) ).arg(
-        QStyleSheet::escape( categories.join( ", " ) ) );
+    if ( !categories.isEmpty() )
+      categoriesData = rowFmtStr.arg( i18n( "Categories" ) ).arg(
+          QStyleSheet::escape( categories.join( ", " ) ) );
   }
 
   // @STYLE@ - construct the string by parts, substituting in
@@ -777,7 +778,7 @@ void AddresseeView::load()
   mActionShowURLs->setChecked( mConfig->readBoolEntry( "ShowURLs", true ) );
   mActionShowIMAddresses->setChecked( mConfig->readBoolEntry( "ShowIMAddresses", false ) );
   mActionShowCustomFields->setChecked( mConfig->readBoolEntry( "ShowCustomFields", false ) );
-  mActionShowCategories->setChecked( mConfig->readBoolEntry( "ShowCategories", false ) );
+  mActionShowCategories->setChecked( mConfig->readBoolEntry( "ShowCategories", true ) );
 }
 
 void AddresseeView::save()

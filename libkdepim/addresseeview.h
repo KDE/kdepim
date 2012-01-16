@@ -102,7 +102,7 @@ class KDE_EXPORT AddresseeView : public KTextBrowser
       IMFields = 32,
       CustomFields = 64,
       Categories = 128,
-      DefaultFields = AddressFields | EmailFields | PhoneFields | URLFields
+      DefaultFields = AddressFields | EmailFields | PhoneFields | URLFields | Categories
     };
 
     /**
