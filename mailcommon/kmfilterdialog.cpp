@@ -344,7 +344,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   QGroupBox *patternGroupBox = new QGroupBox( i18n("Filter Criteria"), page1 );
   QHBoxLayout *layout = new QHBoxLayout( patternGroupBox );
   layout->setContentsMargins( 0, 0, 0, 0 );
-  mPatternEdit = new MailCommon::SearchPatternEdit(patternGroupBox);
+  mPatternEdit = new MailCommon::SearchPatternEdit(patternGroupBox, false, false, true);
   layout->addWidget( mPatternEdit );
 
   vbl->addWidget( patternGroupBox, 0, Qt::AlignTop );

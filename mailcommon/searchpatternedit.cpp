@@ -515,11 +515,11 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 //=============================================================================
 
 SearchPatternEdit::SearchPatternEdit( QWidget *parent, bool headersOnly,
-                                          bool absoluteDates )
-  : QWidget( parent )
+                                          bool absoluteDates, bool matchAllMessages )
+  : QWidget( parent ), mAllMessageRBtn( 0 )
 {
   setObjectName( "SearchPatternEdit" );
-  initLayout( headersOnly, absoluteDates );
+  initLayout( headersOnly, absoluteDates, matchAllMessages );
 }
 
 
@@ -527,26 +527,35 @@ SearchPatternEdit::~SearchPatternEdit()
 {
 }
 
-void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates)
+void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates, bool matchAllMessages)
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   //------------the radio buttons
   mAllRBtn = new QRadioButton( i18n("Match a&ll of the following"), this );
   mAnyRBtn = new QRadioButton( i18n("Match an&y of the following"), this );
+  if ( matchAllMessages )
+    mAllMessageRBtn = new QRadioButton( i18n("Match all messages"), this );
 
   mAllRBtn->setObjectName( "mAllRBtn" );
   mAllRBtn->setChecked(true);
   mAnyRBtn->setObjectName( "mAnyRBtn" );
   mAnyRBtn->setChecked(false);
-
+  if ( matchAllMessages ) {
+    mAllMessageRBtn->setObjectName( "mAllMessageRBtn" );
+    mAllMessageRBtn->setChecked(false);
+  }
   layout->addWidget( mAllRBtn );
   layout->addWidget( mAnyRBtn );
+  if ( matchAllMessages )
+    layout->addWidget( mAllMessageRBtn );
 
   QButtonGroup *bg = new QButtonGroup( this );
   bg->addButton( mAllRBtn );
   bg->addButton( mAnyRBtn );
-
+  if ( matchAllMessages )
+    bg->addButton( mAllMessageRBtn );
+  
   //------------connect a few signals
   connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
 	   this, SLOT(slotRadioClicked(QAbstractButton*)) );
@@ -585,8 +594,11 @@ void SearchPatternEdit::setSearchPattern( SearchPattern *aPattern )
   blockSignals(true);
   if ( mPattern->op() == SearchPattern::OpOr )
     mAnyRBtn->setChecked(true);
-  else
+  else if ( mPattern->op() == SearchPattern::OpAnd )
     mAllRBtn->setChecked(true);
+  else if ( mAllMessageRBtn &&  ( mPattern->op() == SearchPattern::OpAll ) )
+    mAllMessageRBtn->setChecked( true );
+  mRuleLister->setEnabled( mPattern->op() != SearchPattern::OpAll );
   blockSignals(false);
 
   setEnabled( true );
@@ -616,9 +628,12 @@ void SearchPatternEdit::slotRadioClicked(QAbstractButton *aRBtn)
   if ( mPattern ) {
     if ( aRBtn == mAllRBtn )
       mPattern->setOp( SearchPattern::OpAnd );
-    else
+    else if ( aRBtn == mAnyRBtn )
       mPattern->setOp( SearchPattern::OpOr );
-
+    else if ( aRBtn == mAllMessageRBtn ) {
+      mPattern->setOp( SearchPattern::OpAll );
+    }
+    mRuleLister->setEnabled( mPattern->op() != SearchPattern::OpAll );
     emit patternChanged();
   }
 }

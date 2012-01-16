@@ -199,7 +199,7 @@ public:
   /** Constructor. The parent parameter is passed to the underlying
       QGroupBox, as usual. */
   explicit SearchPatternEdit( QWidget *parent = 0, bool headersOnly = false,
-                                bool absoluteDates = false );
+                                bool absoluteDates = false, bool matchAllMessages = false );
 
   ~SearchPatternEdit();
 
@@ -233,10 +233,10 @@ private slots:
   void slotAutoNameHack();
   void slotRuleAdded( QWidget *widget );
 private:
-  void initLayout( bool headersOnly, bool absoluteDates );
+  void initLayout( bool headersOnly, bool absoluteDates, bool matchAllMessages );
 
   MailCommon::SearchPattern *mPattern;
-  QRadioButton    *mAllRBtn, *mAnyRBtn;
+  QRadioButton    *mAllRBtn, *mAnyRBtn, *mAllMessageRBtn;
   SearchRuleWidgetLister *mRuleLister;
 };
 

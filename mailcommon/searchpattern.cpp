@@ -1166,9 +1166,11 @@ QString SearchPattern::asString() const {
   QString result;
   if ( mOperator == OpOr )
     result = i18n("(match any of the following)");
-  else
+  else if ( mOperator == OpAnd )
     result = i18n("(match all of the following)");
-
+  else if ( mOperator == OpAll )
+    result = i18n("(match all message)" );
+  
   QList<SearchRule::Ptr>::const_iterator it;
   QList<SearchRule::Ptr>::const_iterator endIt = end();
   for ( it = begin() ; it != endIt ; ++it )
