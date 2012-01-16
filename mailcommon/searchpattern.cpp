@@ -1164,12 +1164,17 @@ void SearchPattern::init() {
 
 QString SearchPattern::asString() const {
   QString result;
-  if ( mOperator == OpOr )
+  switch( mOperator ) {
+  case OpOr:
     result = i18n("(match any of the following)");
-  else if ( mOperator == OpAnd )
+    break;
+  case OpAnd:
     result = i18n("(match all of the following)");
-  else if ( mOperator == OpAll )
+    break;
+  case OpAll:
     result = i18n("(match all message)" );
+    break;
+  }
   
   QList<SearchRule::Ptr>::const_iterator it;
   QList<SearchRule::Ptr>::const_iterator endIt = end();
@@ -1283,13 +1288,18 @@ void SearchPattern::deserialize( const QByteArray &str )
 
 QDataStream & SearchPattern::operator>>( QDataStream &s ) const
 {
-  if ( op() == SearchPattern::OpAnd ) {
+  switch( op() ) {
+  case SearchPattern::OpAnd:
     s << QString::fromLatin1( "and" );
-  } else if ( op() == SearchPattern::OpOr ) {
+    break;
+  case SearchPattern::OpOr:
     s << QString::fromLatin1( "or" );
-  } else if ( op() == SearchPattern::OpAll ) {
+    break;
+  case SearchPattern::OpAll:
     s << QString::fromLatin1( "all" );
+    break;
   }
+
   Q_FOREACH( const SearchRule::Ptr rule, *this ) {
     *rule >> s;
   }
