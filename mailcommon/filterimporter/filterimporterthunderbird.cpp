@@ -17,7 +17,6 @@
 */
 
 #include "filterimporterthunderbird_p.h"
-#include <QTextStream>
 #include <QDebug>
 #include "mailfilter.h"
 #include "filtermanager.h"
@@ -31,30 +30,7 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
   while (!stream.atEnd()) {
     QString line = stream.readLine();
     qDebug()<<" line :"<<line;
-    if ( line.startsWith( QLatin1String( "name=" ) ) ) {
-      if ( filter )
-        mListMailFilter.append( filter );
-      filter = new MailFilter();
-      line = cleanArgument(line, QLatin1String("name="));
-      filter->setToolbarName(line);
-    } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
-        line = cleanArgument(line, QLatin1String("action="));
-        extractActions(line, filter);
-        //TODO look at value here.
-    } else if ( line.startsWith( QLatin1String( "enabled=" ) ) ) {
-        line = cleanArgument(line, QLatin1String("enabled="));
-        if(line == QLatin1String("no"))
-            filter->setEnabled(false);
-    } else if ( line.startsWith( QLatin1String( "condition=" ) ) ) {
-        line = cleanArgument(line, QLatin1String("condition="));
-        extractConditions(line, filter);
-    } else if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
-        line = cleanArgument(line, QLatin1String("actionValue="));
-        extractValues(line, filter);
-    } else if ( line.startsWith( QLatin1String( "type=" ) ) ) {
-        line = cleanArgument(line, QLatin1String("type="));
-        extractType(line, filter);
-    }
+    parseLine( stream, line, filter);
   }
   if ( filter )
     mListMailFilter.append( filter );
@@ -62,6 +38,39 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
 
 FilterImporterThunderbird::~FilterImporterThunderbird()
 {
+}
+
+void FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter )
+{
+    if ( line.startsWith( QLatin1String( "name=" ) ) ) {
+        if ( filter )
+            mListMailFilter.append( filter );
+        filter = new MailFilter();
+        line = cleanArgument(line, QLatin1String("name="));
+        filter->setToolbarName(line);
+    } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
+        line = cleanArgument(line, QLatin1String("action="));
+        extractActions(line, filter);
+        if(!stream.atEnd()) {
+            line = stream.readLine();
+            if( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
+                line = cleanArgument(line, QLatin1String("actionValue="));
+                extractValues(line, filter);
+            } else {
+                parseLine( stream, line, filter );
+            }
+        }
+    } else if ( line.startsWith( QLatin1String( "enabled=" ) ) ) {
+        line = cleanArgument(line, QLatin1String("enabled="));
+        if(line == QLatin1String("no"))
+            filter->setEnabled(false);
+    } else if ( line.startsWith( QLatin1String( "condition=" ) ) ) {
+        line = cleanArgument(line, QLatin1String("condition="));
+        extractConditions(line, filter);
+    } else if ( line.startsWith( QLatin1String( "type=" ) ) ) {
+        line = cleanArgument(line, QLatin1String("type="));
+        extractType(line, filter);
+    }
 }
 
 void FilterImporterThunderbird::extractConditions(const QString& line, MailCommon::MailFilter* filter)
@@ -85,11 +94,11 @@ void FilterImporterThunderbird::extractConditions(const QString& line, MailCommo
     } else if ( line.startsWith( QLatin1String( "ALL ALL" ) ) ){
       filter->pattern()->setOp(SearchPattern::OpAll);
     } else {
-      qDebug()<<" missing extract condition";
+      qDebug()<<" missing extract condition"<<line;
     }
 }
 
-void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon::MailFilter* filter )
+bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon::MailFilter* filter )
 {
     /*
      *    {nsMsgSearchAttrib::Subject,    "subject"},
@@ -126,7 +135,7 @@ void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   const QStringList listOfCond = str.split( QLatin1Char( ',' ) );
   if ( listOfCond.count() < 3 ) {
     qDebug()<<"We have a pb in cond:"<<cond;
-    return;
+    return false;
   }
   QString field = listOfCond.at( 0 );
   QString function = listOfCond.at( 1 );
@@ -196,7 +205,7 @@ void FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
     //TODO
   }
   qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
-
+    return true;
 }
 
 void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
@@ -244,6 +253,7 @@ void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::
   } else if( line == QLatin1String("Mark flagged")) {
   } else if( line == QLatin1String("Label")) {
   } else if( line == QLatin1String("Reply")) {
+  } else if( line == QLatin1String("Stop execution")) {
   } else if( line == QLatin1String("Delete from Pop3 server")) {
   } else if( line == QLatin1String("JunkScore")) {
   } else if( line == QLatin1String("Fetch body from Pop3Server")) {
@@ -300,7 +310,8 @@ void FilterImporterThunderbird::extractType(const QString& line, MailCommon::Mai
   }
   else if ( value == 48 )
   {
-    //checking mail after classification or manual check
+      filter->setApplyOnExplicit( true );
+      //checking mail after classification or manual check
   }
   else
   {

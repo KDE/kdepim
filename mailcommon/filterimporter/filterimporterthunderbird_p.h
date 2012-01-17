@@ -1,6 +1,6 @@
 /*
   This file is part of KMail, the KDE mail client.
-  Copyright (c) 2011 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011, 2012 Montel Laurent <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,7 +20,7 @@
 
 #include <QList>
 #include <QFile>
-
+#include <QTextStream>
 namespace MailCommon
 {
 class MailFilter;
@@ -38,7 +38,8 @@ private:
   void extractActions(const QString& line, MailCommon::MailFilter* filter);
   void extractValues(const QString& line, MailCommon::MailFilter* filter);
   void extractType(const QString& line, MailCommon::MailFilter* filter);
-  void splitConditions( const QString&cond, MailCommon::MailFilter* filter );
+  bool splitConditions( const QString&cond, MailCommon::MailFilter* filter );
+  void parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter );
 
   QList<MailFilter*> mListMailFilter;
 };
