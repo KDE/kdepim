@@ -543,7 +543,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
     Q_UNUSED( success );
     //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource()
     //         << QString::number( mUidMap[origUid].serialNumber() ) << endl;
-    //delete remoteIncidence;
+    delete remoteIncidence;
   } else { // Take Remote or Take Both
     addedIncidence = remoteIncidence;
     if ( chosenIncidence == remoteIncidence ) { // Take Remote
