@@ -388,7 +388,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 #endif
     subject.prepend( "vCard " ); // as per kolab1 spec
   }
-  bool rc = kmailUpdate( subResource, sernum, data, mimetype, subject,
+  bool rc = kmailUpdate( /**force=*/false, subResource, sernum, data, mimetype, subject,
                          CustomHeaderMap(),
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );

@@ -459,10 +459,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         if ( mUidMap.contains(origUid) ) {
           //kdDebug() << "DEBUG Found duplicate with id " << local->uid() << origUid << " and scheduling id " << local->schedulingID() << endl;
           mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
-          const bool silent = mSilent;
-          mSilent = false;
-          const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(), mUidMap[origUid].serialNumber() );
-          mSilent = silent;
+          const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(), mUidMap[origUid].serialNumber(), /*force=*/true );
           //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource() << QString::number( mUidMap[origUid].serialNumber() ) << endl;
           return;
         } else {
@@ -560,18 +557,19 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
     addedIncidence->setUid( CalFormat::createUniqueId() );
     localIncidence = local;
   }
-  const bool silent = mSilent;
-  mSilent = false;
+
   if ( !localIncidence ) {
+    const bool silent = mSilent;
+    mSilent = false;
     deleteIncidence( local ); // remove local from kmail
+    mSilent = silent;
   }
   mUidsPendingDeletion.append( origUid );
   if ( addedIncidence ) {
-    sendKMailUpdate( addedIncidence, subresource, sernum );
+    sendKMailUpdate( addedIncidence, subresource, sernum, /*force=*/true );
    } else {
-    kmailDeleteIncidence( subresource, sernum );// remove new from kmail
+    kmailDeleteIncidence( subresource, sernum, /*force=*/true );// remove new from kmail
   }
-  mSilent = silent;
 }
 
 void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
@@ -593,7 +591,7 @@ void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
 
 
 bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const QString& subresource,
-                                     Q_UINT32 sernum )
+                                     Q_UINT32 sernum, bool forceTellKMail )
 {
   const QString& type = incidencebase->type();
   const char* mimetype = 0;
@@ -677,7 +675,10 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   // behold, sernum is an in-parameter
   kdDebug() << "kmailupdatea with " << subject << incidence->uid() << incidence->schedulingID()
                 << endl;
-  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders, attURLs, attMimeTypes, attNames, deletedAtts );
+
+  const bool rc = kmailUpdate( forceTellKMail, subresource, sernum, data, mimetype, subject,
+                               customHeaders, attURLs, attMimeTypes, attNames, deletedAtts );
+
   // update the serial number
   if ( mUidMap.contains( incidencebase->uid() ) ) {
     mUidMap[ incidencebase->uid() ].setSerialNumber( sernum );
@@ -838,12 +839,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
       if ( mPendingDuplicateDeletions.contains( uid ) ) {
-        const bool silent = mSilent;
-        mSilent = false;
         mUidsPendingDeletion.append( uid );
         StorageReference toDelete = mPendingDuplicateDeletions[uid];
-        const bool success = kmailDeleteIncidence( toDelete.resource(), toDelete.serialNumber() );
-        mSilent = silent;
+        const bool success = kmailDeleteIncidence( toDelete.resource(), toDelete.serialNumber(),
+                                                   /*force=*/true );
         mPendingDuplicateDeletions.remove( uid );
       }
 

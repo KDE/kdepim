@@ -113,9 +113,13 @@ bool ResourceKolabBase::kmailListAttachments( QStringList &list,
 }
 
 bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
-                                              Q_UINT32 sernum )
+                                              Q_UINT32 sernum, bool force )
 {
-  return mSilent || mConnection->kmailDeleteIncidence( resource, sernum );
+  if ( force || !mSilent ) {
+    return mConnection->kmailDeleteIncidence( resource, sernum );
+  }
+
+  return true;
 }
 
 static QString plainTextBody()
@@ -135,7 +139,8 @@ static QString plainTextBody()
   return firstPartText;
 }
 
-bool ResourceKolabBase::kmailUpdate( const QString& resource,
+bool ResourceKolabBase::kmailUpdate( bool forceUpdate,
+                                     const QString& resource,
                                      Q_UINT32& sernum,
                                      const QString& xml,
                                      const QString& mimetype,
@@ -146,7 +151,7 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
                                      const QStringList& _attachmentNames,
                                      const QStringList& deletedAttachments )
 {
-  if ( mSilent )
+  if ( mSilent && !forceUpdate )
     return true;
 
   QString subj = subject;

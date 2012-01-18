@@ -144,15 +144,20 @@ public: // for Contact
 
 protected:
   /// Delete an incidence.
-  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
+  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum, bool force = false );
 
   KMailICalIface::StorageFormat kmailStorageFormat( const QString& folder ) const;
 
   typedef QMap<QCString, QString> CustomHeaderMap;
 
-  /// Update an incidence. The list of attachments are URLs.
-  /// The parameter sernum is updated with the right KMail serial number
-  bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
+  /**
+   * Update an incidence. The list of attachments are URLs.
+   *
+   * @param forceUpdate Ignores the mSilent member and updates anyway
+   * @param sernum is updated with the right KMail serial number
+   */
+  bool kmailUpdate( bool forceUpdate,
+                    const QString& resource, Q_UINT32& sernum,
                     const QString& xml,
                     const QString& mimetype,
                     const QString& subject,
