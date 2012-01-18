@@ -427,28 +427,30 @@ static KCal::Incidence *takeOneByMode( KIncidenceChooser::TakeMode takeMode,
   return result;
 }
 
-void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
+void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
+                                     const QString& subresource,
+                                     Q_UINT32 sernum )
 {
-  if ( !inc ) {
+  if ( !remoteIncidence ) {
     return;
   }
 
   if ( !mResolveConflict ) {
     // we should do no conflict resolution
-    delete inc;
+    delete remoteIncidence;
     return;
   }
 
   static bool conflictThisSession = false;
 
-  const QString origUid = inc->uid();
-  Incidence* local = mCalendar.incidence( origUid );
+  const QString origUid = remoteIncidence->uid();
+  Incidence* localIncidence = mCalendar.incidence( origUid );
   Incidence* addedIncidence = 0;
-  Incidence* result = 0;
-  if ( local ) {
-    if ( *local == *inc ) {
+  Incidence* chosenIncidence = 0;
+  if ( localIncidence ) {
+    if ( *localIncidence == *remoteIncidence ) {
       // real duplicate, we keep the second one.
-      result = local; // Just like a "Take Local"
+      chosenIncidence = localIncidence; // Just like a "Take Local"
     } else {
       // We have a conflict.
       //1. look in our rc file and see if this folder has a takeMode and askPolicy already
@@ -501,7 +503,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       if ( chooser ) {
         KIncidenceChooser *ch =
           new KIncidenceChooser( labelForSubresource( subresource ), askPolicy, folderOnly );
-        result = takeOneByChooser( ch, local, inc );
+        chosenIncidence = takeOneByChooser( ch, localIncidence, remoteIncidence );
 
         if ( ch->folderOnly() ) {
           // write settings for this folder only
@@ -516,39 +518,40 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         }
         delete ch;
       } else {
-        result = takeOneByMode( takeMode, local, inc );
+        chosenIncidence = takeOneByMode( takeMode, localIncidence, remoteIncidence );
       }
       conflictThisSession = true;
       conflictThisSync = true;
     }
   } else {
     // nothing there locally, just take the new one. Can't Happen (TM)
-    result = inc;
+    chosenIncidence = remoteIncidence;
   }
 
-  if ( result == local ) { // Take Local
+  if ( chosenIncidence == localIncidence ) { // Take Local
     // This code block implements issue4805 and issue4808:
     // To avoid a race between kolab clients that can leed to data loss, we delete both remote
     // and local, and create a new imap object with the same content of the local.
     // This update will trigger an add and a delete, when we hear back from the add, we can
     // safely delete the "Remote"
 
-    //kdDebug() << "DEBUG Local conflict with id " << local->uid() << origUid
-    //          << " and scheduling id " << local->schedulingID() << endl;
+    //kdDebug() << "DEBUG Local conflict with id " << localIncidence->uid() << origUid
+    //          << " and scheduling id " << localIncidence->schedulingID() << endl;
     mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
-    const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(),
+    const bool success = sendKMailUpdate( localIncidence, mUidMap[origUid].resource(),
                                           mUidMap[origUid].serialNumber(), /*force=*/true );
+    Q_UNUSED( success );
     //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource()
     //         << QString::number( mUidMap[origUid].serialNumber() ) << endl;
-    //delete inc;
+    //delete remoteIncidence;
   } else { // Take Remote or Take Both
-    addedIncidence = inc;
-    if ( result == inc ) { // Take Remote
+    addedIncidence = remoteIncidence;
+    if ( chosenIncidence == remoteIncidence ) { // Take Remote
       const bool silent = mSilent;
       mSilent = false;
-      deleteIncidence( local ); // remove local from kmail
+      deleteIncidence( localIncidence ); // remove local from kmail
       mSilent = silent;
-    } else if ( result == 0 ) { // Take Both
+    } else if ( chosenIncidence == 0 ) { // Take Both
       addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
       addedIncidence->setUid( CalFormat::createUniqueId() );
     }
