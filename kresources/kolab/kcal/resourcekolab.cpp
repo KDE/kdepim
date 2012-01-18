@@ -350,7 +350,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
           * attendee status in the calendar doesn't bump the SEQUENCE/revision.
           **/
           ignoreThisUpdate = !( i->dirtyFields().contains( Incidence::FieldAttendees ) ||
-                                i->dirtyFields().contains( Incidence::FieldUnknown ) ); // ( FieldUnknown is used when you assign for example ).
+                                // ( FieldUnknown is used when you assign for example ).
+                                i->dirtyFields().contains( Incidence::FieldUnknown ) );
         }
       } else {
         mLastKnownRevisions[uid] = i->revision();
@@ -457,10 +458,13 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         // This update will trigger an add and a delete, when we hear back from the add, we can
         // safely delete the duplicate.
         if ( mUidMap.contains(origUid) ) {
-          //kdDebug() << "DEBUG Found duplicate with id " << local->uid() << origUid << " and scheduling id " << local->schedulingID() << endl;
+          //kdDebug() << "DEBUG Found duplicate with id " << local->uid() << origUid
+          //          << " and scheduling id " << local->schedulingID() << endl;
           mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
-          const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(), mUidMap[origUid].serialNumber(), /*force=*/true );
-          //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource() << QString::number( mUidMap[origUid].serialNumber() ) << endl;
+          const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(),
+                                                mUidMap[origUid].serialNumber(), /*force=*/true );
+          //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource()
+          //         << QString::number( mUidMap[origUid].serialNumber() ) << endl;
           return;
         } else {
           // We will never end up in this "else" block.
@@ -673,8 +677,8 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
   // behold, sernum is an in-parameter
-  kdDebug() << "kmailupdatea with " << subject << incidence->uid() << incidence->schedulingID()
-                << endl;
+  //kdDebug() << "DEBUG with " << subject << incidence->uid() << incidence->schedulingID()
+  //          << endl;
 
   const bool rc = kmailUpdate( forceTellKMail, subresource, sernum, data, mimetype, subject,
                                customHeaders, attURLs, attMimeTypes, attNames, deletedAtts );
