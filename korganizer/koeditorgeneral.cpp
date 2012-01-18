@@ -403,9 +403,10 @@ void KOEditorGeneral::updateAlarmWidgets( Incidence *incidence )
     mAlarmIsSimple = true;
     mSimpleAlarmBox->show();
     bool on;
-    if ( mType == "Event" ) {
+    const bool creatingNewIncidence = ( incidence == 0 );
+    if ( mType == "Event" && creatingNewIncidence ) {
       on = KOPrefs::instance()->defaultEventReminders();
-    } else if ( mType == "Todo" ) {
+    } else if ( mType == "Todo" && creatingNewIncidence ) {
       on = KOPrefs::instance()->defaultTodoReminders();
     } else {
       on = false;
