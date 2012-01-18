@@ -443,36 +443,12 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
 
   const QString origUid = inc->uid();
   Incidence* local = mCalendar.incidence( origUid );
-  Incidence* localIncidence = 0;
   Incidence* addedIncidence = 0;
   Incidence* result = 0;
   if ( local ) {
     if ( *local == *inc ) {
-      // real duplicate, we keep the second one. This will be done has one adition and two removals
-      // To avoid a race between kolab clients that can leed to data loss.
-      {
-        // This code block implements issue4805.
-        // We should refactor it when working on issue4808, by making it just a sub-case of
-        // "Take local"
-
-        // This update will trigger an add and a delete, when we hear back from the add, we can
-        // safely delete the duplicate.
-        if ( mUidMap.contains(origUid) ) {
-          //kdDebug() << "DEBUG Found duplicate with id " << local->uid() << origUid
-          //          << " and scheduling id " << local->schedulingID() << endl;
-          mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
-          const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(),
-                                                mUidMap[origUid].serialNumber(), /*force=*/true );
-          //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource()
-          //         << QString::number( mUidMap[origUid].serialNumber() ) << endl;
-          return;
-        } else {
-          // We will never end up in this "else" block.
-          // But I won't put my Q_ASSERT where my mouth is.
-
-          result = local; // Just fallback to "Take local"
-        }
-      }
+      // real duplicate, we keep the second one.
+      result = local; // Just like a "Take Local"
     } else {
       // We have a conflict.
       //1. look in our rc file and see if this folder has a takeMode and askPolicy already
@@ -550,29 +526,35 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
     result = inc;
   }
 
-  if ( result == local ) {
-    delete inc;
-    localIncidence = local;
-  } else  if ( result == inc ) {
-    addedIncidence = inc;
-  } else if ( result == 0 ) { // take both
-    addedIncidence = inc;
-    addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
-    addedIncidence->setUid( CalFormat::createUniqueId() );
-    localIncidence = local;
-  }
+  if ( result == local ) { // Take Local
+    // This code block implements issue4805 and issue4808:
+    // To avoid a race between kolab clients that can leed to data loss, we delete both remote
+    // and local, and create a new imap object with the same content of the local.
+    // This update will trigger an add and a delete, when we hear back from the add, we can
+    // safely delete the "Remote"
 
-  if ( !localIncidence ) {
-    const bool silent = mSilent;
-    mSilent = false;
-    deleteIncidence( local ); // remove local from kmail
-    mSilent = silent;
-  }
-  mUidsPendingDeletion.append( origUid );
-  if ( addedIncidence ) {
+    //kdDebug() << "DEBUG Local conflict with id " << local->uid() << origUid
+    //          << " and scheduling id " << local->schedulingID() << endl;
+    mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
+    const bool success = sendKMailUpdate( local, mUidMap[origUid].resource(),
+                                          mUidMap[origUid].serialNumber(), /*force=*/true );
+    //kdDebug()<< "DEBUG Success was " << ( success )<< mUidMap[origUid].resource()
+    //         << QString::number( mUidMap[origUid].serialNumber() ) << endl;
+    //delete inc;
+  } else { // Take Remote or Take Both
+    addedIncidence = inc;
+    if ( result == inc ) { // Take Remote
+      const bool silent = mSilent;
+      mSilent = false;
+      deleteIncidence( local ); // remove local from kmail
+      mSilent = silent;
+    } else if ( result == 0 ) { // Take Both
+      addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
+      addedIncidence->setUid( CalFormat::createUniqueId() );
+    }
+
+    mUidsPendingDeletion.append( origUid );
     sendKMailUpdate( addedIncidence, subresource, sernum, /*force=*/true );
-   } else {
-    kmailDeleteIncidence( subresource, sernum, /*force=*/true );// remove new from kmail
   }
 }
 
