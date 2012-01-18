@@ -1440,14 +1440,14 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
     {
       b = true;
     }
-    
+
     ~BoolChanger()
     {
       b = false;
     }
     bool &b;
   };
-  
+
   BoolChanger boolChanger( sProcessingDrop );
 
   if ( gpos.x()<0 || gpos.y()<0 ) return;
@@ -1457,16 +1457,16 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
 
   Event *event = 0;
   Todo *todo = 0;
-  
+
   if ( incidence->type() == "Event" )
     event = static_cast<Event*>( incidence );
 
   if ( incidence->type() == "Todo" )
     todo = static_cast<Todo*>( incidence );
-  
+
   if ( !event && !todo )
     return;
-  
+
   if ( todo ) {
     Todo *existingTodo = calendar()->todo( todo->uid() );
     if ( existingTodo ) {
@@ -1474,7 +1474,7 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
       Todo *oldTodo = existingTodo->clone();
       if ( mChanger &&
            mChanger->beginChange( existingTodo, resourceCalendar(), subResourceCalendar() ) ) {
-        
+
         existingTodo->setDtDue( newTime );
         existingTodo->setFloats( allDay );
         existingTodo->setHasDueDate( true );
@@ -1520,7 +1520,7 @@ void KOAgendaView::slotIncidenceDropped( Incidence *incidence, const QPoint &gpo
       if ( mChanger &&
            mChanger->beginChange( existingEvent, resourceCalendar(), subResourceCalendar() ) ) {
         existingEventInSameResource->setDtStart( newTime );
-      
+
         const int duration = ( existingEventInSameResource->doesFloat() && !allDay ) ?
                               3600 : oldEvent->dtStart().secsTo( oldEvent->dtEnd() );
 
