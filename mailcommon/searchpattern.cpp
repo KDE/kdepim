@@ -485,6 +485,13 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
 }
 
 #ifndef KDEPIM_NO_NEPOMUK
+
+static QString quote(const QString &content)
+{
+   //Without "" nepomuk will search a message containing each individual word
+  return QString::fromLatin1("\'%1\'").arg( content );
+}
+
 void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const QUrl& field) const
 {
   // TODO split contents() into address/name and adapt the query accordingly
@@ -497,7 +504,7 @@ void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const
 void SearchRuleString::addHeaderTerm(Nepomuk::Query::GroupTerm& groupTerm, const Nepomuk::Query::Term& field) const
 {
   const Nepomuk::Query::ComparisonTerm headerName(Vocabulary::NMO::headerName(), field, Nepomuk::Query::ComparisonTerm::Equal);
-  const Nepomuk::Query::ComparisonTerm headerTerm(Vocabulary::NMO::headerValue(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+  const Nepomuk::Query::ComparisonTerm headerTerm(Vocabulary::NMO::headerValue(), Nepomuk::Query::LiteralTerm( quote( contents() ) ), nepomukComparator() );
   groupTerm.addSubTerm(headerName);
   groupTerm.addSubTerm(headerTerm);  
 
@@ -531,7 +538,7 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     addPersonTerm( termGroup, Vocabulary::NMO::from() );
 
   if ( kasciistricmp( field(), "subject" ) == 0 || kasciistricmp( field(), "<any header>" ) == 0 || kasciistricmp( field(), "<message>" ) == 0 ) {
-    const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( quote(contents()) ), nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
   }
   if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
@@ -571,9 +578,9 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   }
 
   if ( field() == "<body>" || field() == "<message>" ) {
-    const Nepomuk::Query::ComparisonTerm bodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm bodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( quote( contents() ) ), nepomukComparator() );
     termGroup.addSubTerm( bodyTerm );
-    const Nepomuk::Query::ComparisonTerm attachmentBodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm attachmentBodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( quote( contents() ) ), nepomukComparator() );
     const Nepomuk::Query::ComparisonTerm attachmentTerm( Vocabulary::NIE::isPartOf(), attachmentBodyTerm, Nepomuk::Query::ComparisonTerm::Equal );
     termGroup.addSubTerm( attachmentTerm );
   }
