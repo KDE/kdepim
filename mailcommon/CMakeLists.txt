@@ -57,6 +57,8 @@ set(libmailcommon_SRCS
   filteractionmissingargumentdialog.cpp
   expirecollectionattribute.cpp
   filterimporter/filterimporterthunderbird.cpp
+  filterimporter/filterimporterabstract.cpp
+  filterimporter/filterimporterevolution.cpp
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")

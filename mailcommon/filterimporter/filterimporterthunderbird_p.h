@@ -18,31 +18,30 @@
 #ifndef FILTERIMPORTERTHUNDERBIRD_H
 #define FILTERIMPORTERTHUNDERBIRD_H
 
-#include <QList>
-#include <QFile>
+#include "filterimporter/filterimporterabstract_p.h"
 #include <QTextStream>
+
+class QFile;
+
 namespace MailCommon
 {
 class MailFilter;
 
-class FilterImporterThunderbird
+class FilterImporterThunderbird : public FilterImporterAbstract
 {
 public:
   explicit FilterImporterThunderbird( QFile *file );
   ~FilterImporterThunderbird();
-  QList<MailFilter*> importFilter() const;
 
 private:
   QString cleanArgument(const QString &line, const QString &removeStr);
   void extractConditions(const QString& line, MailCommon::MailFilter* filter);
   QString extractActions(const QString& line, MailFilter *filter);
-  void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
   QString extractValues(const QString& line);
   void extractType(const QString& line, MailCommon::MailFilter* filter);
   bool splitConditions( const QString&cond, MailCommon::MailFilter* filter );
   MailFilter *parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter );
 
-  QList<MailFilter*> mListMailFilter;
 };
 
 }

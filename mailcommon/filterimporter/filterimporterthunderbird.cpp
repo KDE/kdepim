@@ -16,14 +16,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 #include "filterimporterthunderbird_p.h"
-#include <QDebug>
 #include "mailfilter.h"
-#include "filtermanager.h"
+
+#include <QFile>
+#include <QDebug>
 
 using namespace MailCommon;
 
 FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
+    :FilterImporterAbstract()
 {
   QTextStream stream(file);
   MailFilter *filter = 0;
@@ -38,25 +41,6 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
 
 FilterImporterThunderbird::~FilterImporterThunderbird()
 {
-}
-
-void FilterImporterThunderbird::createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value)
-{
-    if ( !actionName.isEmpty() ) {
-      FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
-      if ( desc ) {
-        FilterAction *fa = desc->create();
-        //...create an instance...
-        fa->argsFromStringInteractive( value, filter->name() );
-        //...check if it's empty and...
-        if ( !fa->isEmpty() )
-          //...append it if it's not and...
-          filter->actions()->append( fa );
-        else
-          //...delete is else.
-          delete fa;
-      }
-    }
 }
 
 MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter )
@@ -376,9 +360,4 @@ QString FilterImporterThunderbird::cleanArgument(const QString &line, const QStr
     str.remove(QLatin1String("\""));
     str.remove(str.length(),1); //remove last "
     return str;
-}
-
-QList<MailFilter*> FilterImporterThunderbird::importFilter() const
-{
-  return mListMailFilter;
 }
