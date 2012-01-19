@@ -25,7 +25,7 @@
 #include "mailfilter.h"
 #include "filteraction.h"
 #include "mailcommon_export.h"
-
+#include "filterimporterexporter.h"
 #include <kdialog.h>
 
 #include <QGroupBox>
@@ -195,7 +195,6 @@ protected slots:
       filter to bottom. */
   void slotBottom();
   void slotFilterEnabledChanged(QListWidgetItem*item);
-
 protected:
   /** The listbox displaying the filter list. */
   QListWidget *mListWidget;
@@ -309,7 +308,8 @@ protected slots:
   /** Called when a user clicks the import filters button. Pops up
    * a dialog asking the user which file to import from and which
    * of the filters in that file to import. */
-  void slotImportFilters();
+  void slotImportKMailFilters();
+  void slotImportThunderbirdFilters();
 
   /** Called when a user clicks the export filters button. Pops up
    * a dialog asking the user which filters to export and which
@@ -326,6 +326,9 @@ protected slots:
 
   /** Called wherenever the apply button is pressed */
   void slotApply();
+private:
+  void importFilters(MailCommon::FilterImporterExporter::FilterType type);
+
 protected:
   /** The widget that contains the ListBox showing the filters, and
       the controls to remove filters, add new ones and to change their

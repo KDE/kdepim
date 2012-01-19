@@ -29,8 +29,8 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
   MailFilter *filter = 0;
   while (!stream.atEnd()) {
     QString line = stream.readLine();
-    qDebug()<<" line :"<<line;
-    parseLine( stream, line, filter);
+    qDebug()<<" line :"<<line<<" filter "<<filter;
+    filter = parseLine( stream, line, filter);
   }
   if ( filter )
     mListMailFilter.append( filter );
@@ -59,7 +59,7 @@ void FilterImporterThunderbird::createFilterAction(MailCommon::MailFilter *filte
     }
 }
 
-void FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter )
+MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter )
 {
     if ( line.startsWith( QLatin1String( "name=" ) ) ) {
         if ( filter )
@@ -78,7 +78,7 @@ void FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, M
                 value = extractValues(line);
                 createFilterAction(filter,actionName,value);
             } else {
-                parseLine( stream, line, filter );
+                filter = parseLine( stream, line, filter );
             }
         } else {
             createFilterAction(filter,actionName,value);
@@ -94,6 +94,7 @@ void FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, M
         line = cleanArgument(line, QLatin1String("type="));
         extractType(line, filter);
     }
+    return filter;
 }
 
 void FilterImporterThunderbird::extractConditions(const QString& line, MailCommon::MailFilter* filter)
@@ -363,7 +364,7 @@ QString FilterImporterThunderbird::cleanArgument(const QString &line, const QStr
     QString str = line;
     str.remove(removeStr);
     str.remove(QLatin1String("\""));
-    str.remove(str.length()-1,1); //remove last "
+    str.remove(str.length(),1); //remove last "
     return str;
 }
 

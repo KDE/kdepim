@@ -62,6 +62,7 @@ using MailCommon::FilterImporterExporter;
 #include <QTreeWidget>
 #include <QRadioButton>
 #include <QApplication>
+#include <QMenu>
 
 
 // other headers:
@@ -297,8 +298,13 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   setHelp( "filters", "kmail" );
   setButtonText( User1, i18n("Import...") );
   setButtonText( User2, i18n("Export...") );
-  connect( this, SIGNAL(user1Clicked()),
-           this, SLOT(slotImportFilters()) );
+  /*connect( this, SIGNAL(user1Clicked()),
+           this, SLOT(slotImportFilters()) );*/
+  QMenu *menu = new QMenu();
+  menu->addAction( i18n("KMail filters"), this, SLOT(slotImportKMailFilters()) );
+  menu->addAction( i18n("Thunderbird filters"), this, SLOT(slotImportThunderbirdFilters()) );
+  button(KDialog::User1)->setMenu(menu);
+
   connect( this, SIGNAL(user2Clicked()),
            this, SLOT(slotExportFilters()) );
   enableButtonApply( false );
@@ -1341,12 +1347,21 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
   mListWidget->insertItem( untouchedOne, item );
 }
 
+void KMFilterDialog::slotImportKMailFilters()
+{
+    importFilters(FilterImporterExporter::KMailFilter);
+}
 
-void KMFilterDialog::slotImportFilters()
+void KMFilterDialog::slotImportThunderbirdFilters()
+{
+    importFilters(FilterImporterExporter::ThunderBirdFilter);
+}
+
+void KMFilterDialog::importFilters(MailCommon::FilterImporterExporter::FilterType type)
 {
   FilterImporterExporter importer( this );
   bool canceled = false;
-  QList<MailFilter *> filters = importer.importFilters( canceled );
+  QList<MailFilter *> filters = importer.importFilters( canceled, type );
   if ( canceled )
     return;
 

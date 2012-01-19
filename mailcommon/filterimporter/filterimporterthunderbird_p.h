@@ -40,7 +40,7 @@ private:
   QString extractValues(const QString& line);
   void extractType(const QString& line, MailCommon::MailFilter* filter);
   bool splitConditions( const QString&cond, MailCommon::MailFilter* filter );
-  void parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter );
+  MailFilter *parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter );
 
   QList<MailFilter*> mListMailFilter;
 };
