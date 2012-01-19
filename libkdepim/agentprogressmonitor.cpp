@@ -55,20 +55,26 @@ void AgentProgressMonitor::Private::abort()
 }
 
 
-void AgentProgressMonitor::Private::instanceRemoved( const Akonadi::AgentInstance& instance )
+void AgentProgressMonitor::Private::instanceRemoved( const Akonadi::AgentInstance &instance )
 {
-  if ( !item.data() )
+  Q_UNUSED( instance );
+
+  if ( !item.data() ) {
     return;
+  }
+
   item.data()->disconnect( q ); // avoid abort call
   item.data()->cancel();
-  if( item.data() )
+  if( item.data() ) {
     item.data()->setComplete();
+  }
 }
 
 void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance &instance )
 {
-  if ( !item.data() )
+  if ( !item.data() ) {
     return;
+  }
 
   if ( agent == instance ) {
     //Why ? agent = instance if agent == instance.
