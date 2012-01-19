@@ -40,6 +40,25 @@ FilterImporterThunderbird::~FilterImporterThunderbird()
 {
 }
 
+void FilterImporterThunderbird::createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value)
+{
+    if ( !actionName.isEmpty() ) {
+      FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
+      if ( desc ) {
+        FilterAction *fa = desc->create();
+        //...create an instance...
+        fa->argsFromStringInteractive( value, filter->name() );
+        //...check if it's empty and...
+        if ( !fa->isEmpty() )
+          //...append it if it's not and...
+          filter->actions()->append( fa );
+        else
+          //...delete is else.
+          delete fa;
+      }
+    }
+}
+
 void FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter )
 {
     if ( line.startsWith( QLatin1String( "name=" ) ) ) {
@@ -50,15 +69,19 @@ void FilterImporterThunderbird::parseLine( QTextStream & stream, QString line, M
         filter->setToolbarName(line);
     } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
         line = cleanArgument(line, QLatin1String("action="));
-        extractActions(line, filter);
+        const QString actionName = extractActions(line);
+        QString value;
         if(!stream.atEnd()) {
             line = stream.readLine();
             if( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
                 line = cleanArgument(line, QLatin1String("actionValue="));
-                extractValues(line, filter);
+                value = extractValues(line);
+                createFilterAction(filter,actionName,value);
             } else {
                 parseLine( stream, line, filter );
             }
+        } else {
+            createFilterAction(filter,actionName,value);
         }
     } else if ( line.startsWith( QLatin1String( "enabled=" ) ) ) {
         line = cleanArgument(line, QLatin1String("enabled="));
@@ -140,31 +163,31 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   const QString field = listOfCond.at( 0 );
   const QString function = listOfCond.at( 1 );
   const QString contents = listOfCond.at( 2 );
-  QString fieldName;
+  QByteArray fieldName;
   if ( field == QLatin1String( "subject" ) ) {
-    fieldName = QLatin1String( "subject" );
+    fieldName = "subject";
   } else if ( field == QLatin1String( "from" ) ) {
-    fieldName = QLatin1String( "from");
+    fieldName = "from";
   } else if ( field == QLatin1String( "body" ) ) {
-    fieldName = QLatin1String( "<body>");
+    fieldName = "<body>";
   } else if ( field == QLatin1String( "date" ) ) {
-    fieldName = QLatin1String( "<age in days>" );
+    fieldName = "<age in days>";
   } else if ( field == QLatin1String( "priority" ) ) {
   } else if ( field == QLatin1String( "status" ) ) {
-    fieldName = QLatin1String( "<status>" );
+    fieldName = "<status>";
   } else if ( field == QLatin1String( "to" ) ) {
-    fieldName = QLatin1String( "to" );
+    fieldName = "to";
   } else if ( field == QLatin1String( "cc" ) ) {
-    fieldName = QLatin1String( "cc" );
+    fieldName = "cc";
   } else if ( field == QLatin1String( "to or cc" ) ) {
-    fieldName = QLatin1String( "<recipients>" );
+    fieldName = "<recipients>";
   } else if ( field == QLatin1String( "all addresses" ) ) {
   } else if ( field == QLatin1String( "age in days" ) ) {
   } else if ( field == QLatin1String( "label" ) ) {
   } else if ( field == QLatin1String( "tag" ) ) {
-    fieldName = QLatin1String( "<tag>" );
+    fieldName = "<tag>";
   } else if ( field == QLatin1String( "size" ) ) {
-    fieldName = QLatin1String( "<size>" );
+    fieldName = "<size>";
   } else if ( field == QLatin1String( "from in ab" ) ) {
   } else if ( field == QLatin1String( "junk status" ) ) {
   } else if ( field == QLatin1String( "junk percent" ) ) {
@@ -191,15 +214,16 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   {nsMsgSearchOp::Matches, "matches"},
   {nsMsgSearchOp::DoesntMatch, "doesn't match"}
 */
-  QString functionName;
+  SearchRule::Function functionName = SearchRule::FuncNone;
+
   if ( function == QLatin1String( "contains" ) ) {
-    functionName = QLatin1String( "contains" );
+    functionName = SearchRule::FuncContains;
   } else if ( function == QLatin1String( "doesn't contain" ) ) {
-    functionName = QLatin1String( "contains-not" );
+    functionName = SearchRule::FuncContainsNot;
   } else if ( function == QLatin1String( "is" ) ) {
-    functionName = QLatin1String( "equals" );
+    functionName = SearchRule::FuncEquals;
   } else if ( function == QLatin1String( "isn't" ) ) {
-    functionName = QLatin1String( "not-equal" );
+    functionName = SearchRule::FuncNotEqual;
   } else if ( function == QLatin1String( "is empty" ) ) {
   } else if ( function == QLatin1String( "isn't empty" ) ) {
   } else if ( function == QLatin1String( "is before" ) ) {
@@ -207,26 +231,36 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else if ( function == QLatin1String( "is higher than" ) ) {
   } else if ( function == QLatin1String( "is lower than" ) ) {
   } else if ( function == QLatin1String( "begins with" ) ) {
-    functionName = QLatin1String( "start-with" );
+    functionName = SearchRule::FuncStartWith;
   } else if ( function == QLatin1String( "ends with" ) ) {
-    functionName = QLatin1String( "end-with" );
+    functionName = SearchRule::FuncEndWith;
   } else if ( function == QLatin1String( "is in ab" ) ) {
+    functionName = SearchRule::FuncIsInAddressbook;
   } else if ( function == QLatin1String( "isn't in ab" ) ) {
+    functionName = SearchRule::FuncIsNotInAddressbook;
   } else if ( function == QLatin1String( "is greater than" ) ) {
+    functionName = SearchRule::FuncIsGreater;
   } else if ( function == QLatin1String( "is less than" ) ) {
+    functionName = SearchRule::FuncIsLess;
   } else if ( function == QLatin1String( "matches" ) ) {
+      functionName = SearchRule::FuncEquals;
   } else if ( function == QLatin1String( "doesn't match" ) ) {
+      functionName = SearchRule::FuncNotEqual;
+  } else {
+      qDebug()<<" functionName not implemented: "<<function;
   }
 
   if ( contents == QLatin1String( "" ) )
   {
     //TODO
   }
+  SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName,contents );
+  filter->pattern()->append( rule );
   qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
   return true;
 }
 
-void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
+QString FilterImporterThunderbird::extractActions(const QString& line)
 {
     /*
   { nsMsgFilterAction::MoveToFolder,            "Move to folder"},
@@ -280,26 +314,13 @@ void FilterImporterThunderbird::extractActions(const QString& line, MailCommon::
   } else {
       qDebug()<<QString::fromLatin1(" missing convert method: %1").arg(line);
   }
-  QString argsName;
-  if ( !actionName.isEmpty() ) {
-    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
-    if ( desc ) {
-      FilterAction *fa = desc->create();
-      //...create an instance...
-      fa->argsFromStringInteractive( argsName, /*name()*/QString() );
-      //...check if it's empty and...
-      if ( !fa->isEmpty() )
-        //...append it if it's not and...
-        filter->actions()->append( fa );
-      else
-        //...delete is else.
-        delete fa;
-    }
-  }  
+  return actionName;
 }
 
-void FilterImporterThunderbird::extractValues(const QString& line, MailCommon::MailFilter* filter)
+QString FilterImporterThunderbird::extractValues(const QString& line)
 {
+    //TODO
+    return line;
 }
 
 void FilterImporterThunderbird::extractType(const QString& line, MailCommon::MailFilter* filter)

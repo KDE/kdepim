@@ -35,8 +35,9 @@ public:
 private:
   QString cleanArgument(const QString &line, const QString &removeStr);
   void extractConditions(const QString& line, MailCommon::MailFilter* filter);
-  void extractActions(const QString& line, MailCommon::MailFilter* filter);
-  void extractValues(const QString& line, MailCommon::MailFilter* filter);
+  QString extractActions(const QString& line);
+  void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
+  QString extractValues(const QString& line);
   void extractType(const QString& line, MailCommon::MailFilter* filter);
   bool splitConditions( const QString&cond, MailCommon::MailFilter* filter );
   void parseLine( QTextStream & stream, QString line, MailCommon::MailFilter* filter );
