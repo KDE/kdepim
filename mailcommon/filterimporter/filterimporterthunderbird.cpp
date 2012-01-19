@@ -66,10 +66,11 @@ MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stre
             mListMailFilter.append( filter );
         filter = new MailFilter();
         line = cleanArgument(line, QLatin1String("name="));
+        filter->pattern()->setName(line);
         filter->setToolbarName(line);
     } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
         line = cleanArgument(line, QLatin1String("action="));
-        const QString actionName = extractActions(line);
+        const QString actionName = extractActions(line,filter);
         QString value;
         if(!stream.atEnd()) {
             line = stream.readLine();
@@ -105,7 +106,8 @@ void FilterImporterThunderbird::extractConditions(const QString& line, MailCommo
         const int numberOfCond( conditionsList.count() );
         for ( int i = 0; i < numberOfCond; ++i )
         {
-          splitConditions( conditionsList.at( i ), filter );
+            if(!conditionsList.at( i ).trimmed().isEmpty())
+                splitConditions( conditionsList.at( i ), filter );
         }
     } else if( line.startsWith(QLatin1String("OR"))) {
         filter->pattern()->setOp(SearchPattern::OpOr);
@@ -113,12 +115,13 @@ void FilterImporterThunderbird::extractConditions(const QString& line, MailCommo
         const int numberOfCond( conditionsList.count() );
         for ( int i = 0; i < numberOfCond; ++i )
         {
-          splitConditions( conditionsList.at( i ), filter );
+            if(!conditionsList.at( i ).trimmed().isEmpty())
+                splitConditions( conditionsList.at( i ), filter );
         }
     } else if ( line.startsWith( QLatin1String( "ALL ALL" ) ) ){
       filter->pattern()->setOp(SearchPattern::OpAll);
     } else {
-      qDebug()<<" missing extract condition"<<line;
+      kDebug()<<" missing extract condition"<<line;
     }
 }
 
@@ -172,8 +175,9 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else if ( field == QLatin1String( "body" ) ) {
     fieldName = "<body>";
   } else if ( field == QLatin1String( "date" ) ) {
-    fieldName = "<age in days>";
+      //TODO
   } else if ( field == QLatin1String( "priority" ) ) {
+      //TODO
   } else if ( field == QLatin1String( "status" ) ) {
     fieldName = "<status>";
   } else if ( field == QLatin1String( "to" ) ) {
@@ -183,7 +187,9 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else if ( field == QLatin1String( "to or cc" ) ) {
     fieldName = "<recipients>";
   } else if ( field == QLatin1String( "all addresses" ) ) {
+      //TODO
   } else if ( field == QLatin1String( "age in days" ) ) {
+      fieldName = "<age in days>";
   } else if ( field == QLatin1String( "label" ) ) {
   } else if ( field == QLatin1String( "tag" ) ) {
     fieldName = "<tag>";
@@ -194,6 +200,8 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else if ( field == QLatin1String( "junk percent" ) ) {
   } else if ( field == QLatin1String( "junk score origin" ) ) {
   } else if ( field == QLatin1String( "has attachment status" ) ) {
+  } else {
+      qDebug()<<" Field not implemented: "<<field;
   }
 /*
   {nsMsgSearchOp::Contains, "contains"},
@@ -261,7 +269,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   return true;
 }
 
-QString FilterImporterThunderbird::extractActions(const QString& line)
+QString FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
 {
     /*
   { nsMsgFilterAction::MoveToFolder,            "Move to folder"},
@@ -307,6 +315,8 @@ QString FilterImporterThunderbird::extractActions(const QString& line)
   } else if( line == QLatin1String("Label")) {
   } else if( line == QLatin1String("Reply")) {
   } else if( line == QLatin1String("Stop execution")) {
+      filter->setStopProcessingHere(true);
+      return QString();
   } else if( line == QLatin1String("Delete from Pop3 server")) {
   } else if( line == QLatin1String("JunkScore")) {
   } else if( line == QLatin1String("Fetch body from Pop3Server")) {
