@@ -2103,9 +2103,9 @@ bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, con
     QStringList currentTemplateList;
     currentTemplateList << i18n( "Default Template" );
     foreach( const QString &templateName, templateNames ) {
-      TemplateParser::CTemplates templat( templateName );
-      if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
-           templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
+      CTemplates templat( templateName );
+      if ( templat.type() == CustomTemplates::TForward ||
+           templat.type() == CustomTemplates::TUniversal ) {
         if ( templateName == mTemplate ) {
           return false;
         }
