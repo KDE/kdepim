@@ -36,6 +36,8 @@ public:
     ~FilterImporterEvolution();
 private:
     void parseFilters(const QDomElement &e);
+    void parsePart(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
+    void parseAction(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
 };
 }
 
