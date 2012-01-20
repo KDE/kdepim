@@ -310,7 +310,7 @@ protected slots:
    * of the filters in that file to import. */
   void slotImportKMailFilters();
   void slotImportThunderbirdFilters();
-
+  void slotImportEvolutionFilters();
   /** Called when a user clicks the export filters button. Pops up
    * a dialog asking the user which filters to export and which
    * file to export to. */

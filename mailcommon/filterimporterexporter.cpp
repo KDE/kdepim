@@ -30,6 +30,7 @@
 #include "filterimporterexporter.h"
 #include "filterimporterexporter_p.h"
 #include "filterimporter/filterimporterthunderbird_p.h"
+#include "filterimporter/filterimporterevolution_p.h"
 
 #include "filteraction.h"
 #include "mailfilter.h"
@@ -226,6 +227,9 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     case ThunderBirdFilter:
         title = i18n( "Import Thunderbird Filters" );
         break;
+    case EvolutionFilter:
+        title = i18n( "Import Evolution Filters" );
+        break;
     }
 
     const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
@@ -251,9 +255,17 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
         break;
     }
     case ThunderBirdFilter:
+    {
         MailCommon::FilterImporterThunderbird *thunderBirdFilter = new MailCommon::FilterImporterThunderbird(&file);
         imported = thunderBirdFilter->importFilter();
         break;
+    }
+    case EvolutionFilter:
+    {
+        MailCommon::FilterImporterEvolution *filter = new MailCommon::FilterImporterEvolution(&file);
+        imported = filter->importFilter();
+        break;
+    }
     }
     file.close();
     FilterSelectionDialog dlg( d->mParent );
