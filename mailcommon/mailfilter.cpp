@@ -398,6 +398,7 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
     KMessageBox::information( 0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name() ) );
   }
 
+  bool needUpdate = false;
   for ( int i=0 ; i < numActions ; ++i ) {
     actName.sprintf("action-name-%d", i);
     argsName.sprintf("action-args-%d", i);
@@ -410,7 +411,9 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
       if ( fa ) {
         //...load it with it's parameter...
         if ( interactive ) {
-          fa->argsFromStringInteractive( config.readEntry( argsName, QString() ), name() );
+          const bool ret = fa->argsFromStringInteractive( config.readEntry( argsName, QString() ), name() );
+          if ( ret )
+            needUpdate = true;
         }
         else
           fa->argsFromString( config.readEntry( argsName, QString() ) );
@@ -435,9 +438,13 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
       FilterActionMissingAccountDialog *dlg = new FilterActionMissingAccountDialog(mAccounts, name());
       if ( dlg->exec() ) {
         mAccounts = dlg->selectedAccount();
+        needUpdate = true;
       }
       delete dlg;
     }
+  }
+  if ( needUpdate ) {
+    //TODO
   }
 }
 
