@@ -154,10 +154,11 @@ void FilterAction::clearParamWidget( QWidget * ) const
 {
 }
 
-void FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
+bool FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
 {
   Q_UNUSED( filterName );
   argsFromString(argsStr);
+  return false;
 }
 
 QString FilterAction::argsAsStringReal() const
@@ -401,8 +402,9 @@ void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
   static_cast<FolderRequester*>( paramWidget )->setCollection( CommonKernel->draftsCollectionFolder() );
 }
 
-void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr , const QString& name)
+bool FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr , const QString& name)
 {
+  bool needUpdate = false;
   argsFromString( argsStr );
   if ( !mFolder.isValid() ) {
     bool exactPath = false;
@@ -411,11 +413,14 @@ void FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
       mFolder = lst.at( 0 );
     else {
       FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name );
-      if ( dlg->exec() )
+      if ( dlg->exec() ) {
         mFolder = dlg->selectedCollection();
+        needUpdate = true;
+      }
       delete dlg;
     }
   }
+  return needUpdate;
 }
 
 QString FilterActionWithFolder::argsAsStringReal() const
@@ -811,18 +816,22 @@ FilterActionTransport::FilterActionTransport( QObject *parent )
 {
 }
 
-void FilterActionTransport::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+bool FilterActionTransport::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
+  bool needUpdate = false;
   argsFromString( argsStr );
   if ( !MailTransport::TransportManager::self()->transportById( mParameter,false ) )
   {
     FilterActionMissingTransportDialog *dlg = new FilterActionMissingTransportDialog( filterName );
-    if ( dlg->exec() )
+    if ( dlg->exec() ) {
       mParameter = dlg->selectedTransport();
+      needUpdate = true;
+    }
     else
       mParameter = -1;
     delete dlg;
   }
+  return needUpdate;
 }
 
 
@@ -939,7 +948,7 @@ class FilterActionIdentity: public FilterActionWithUOID
   public:
     FilterActionIdentity( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual void argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
     static FilterAction* newAction();
 
     QWidget * createParamWidget( QWidget *parent ) const;
@@ -959,18 +968,22 @@ FilterActionIdentity::FilterActionIdentity( QObject *parent )
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
 
-void FilterActionIdentity::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+bool FilterActionIdentity::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
+  bool needUpdate = false;
   argsFromString( argsStr );
   if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
   {
     FilterActionMissingIdentityDialog *dlg = new FilterActionMissingIdentityDialog( filterName );
-    if ( dlg->exec() )
+    if ( dlg->exec() ) {
       mParameter = dlg->selectedIdentity();
+      needUpdate = true;
+    }
     else
       mParameter = -1;
     delete dlg;
   }
+  return needUpdate;
 }
 
 FilterAction::ReturnCode FilterActionIdentity::process( ItemContext &context ) const
@@ -1170,7 +1183,7 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
-    virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
     void initializeTagList();
@@ -1198,20 +1211,24 @@ void FilterActionAddTag::initializeTagList()
 #endif
 }
 
-void FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {
+  bool needUpdate = false;
   argsFromString( argsStr );
-  if( mParameterList.isEmpty() ) 
-    return;
+  if( mParameterList.isEmpty() )
+    return false;
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 ) {
     FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName );
-    if ( dlg->exec() )
+    if ( dlg->exec() ) {
       mParameter = dlg->selectedTag();
+      needUpdate = true;
+    }
     delete dlg;
   }
 #endif
+  return needUpdate;
 }
 
 
@@ -1920,7 +1937,7 @@ class FilterActionForward: public FilterActionWithAddress
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
-    virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
     mutable QString mTemplate;
@@ -2077,28 +2094,32 @@ void FilterActionForward::argsFromString( const QString &argsStr )
   }
 }
 
-void FilterActionForward::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {
+  bool needUpdate = false;
   argsFromString( argsStr );
   if ( !mTemplate.isEmpty() ) {
     const QStringList templateNames = SettingsIf->customTemplates();
     QStringList currentTemplateList;
     currentTemplateList << i18n( "Default Template" );
     foreach( const QString &templateName, templateNames ) {
-      CTemplates templat( templateName );
-      if ( templat.type() == CustomTemplates::TForward ||
-           templat.type() == CustomTemplates::TUniversal ) {
+      TemplateParser::CTemplates templat( templateName );
+      if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
+           templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
         if ( templateName == mTemplate ) {
-          return;
+          return false;
         }
         currentTemplateList << templateName;
       }
     }
     FilterActionMissingTemplateDialog *dlg = new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
-    if ( dlg->exec() )
+    if ( dlg->exec() ) {
       mTemplate = dlg->selectedTemplate();
+      needUpdate = true;
+    }
     delete dlg;
   }
+  return needUpdate;
 }
 
 

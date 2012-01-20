@@ -212,8 +212,9 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
 
     /**
      * Read extra arguments from given string.
+     * Return true if we need to update config file
      */
-    virtual void argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
     virtual QString argsAsStringReal() const;
     /**
@@ -495,7 +496,7 @@ class FilterActionTransport: public FilterAction
      */
     virtual void clearParamWidget( QWidget *paramWidget ) const;
 
-    virtual void argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
     /**
      * @copydoc FilterAction::argsFromString
@@ -577,7 +578,7 @@ class FilterActionWithFolder : public FilterAction
      */
     virtual QString argsAsString() const;
 
-    virtual void argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
   
     virtual QString argsAsStringReal() const;
 
