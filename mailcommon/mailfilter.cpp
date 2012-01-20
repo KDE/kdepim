@@ -61,9 +61,9 @@ MailFilter::MailFilter()
 }
 
 
-MailFilter::MailFilter( const KConfigGroup & aConfig, bool interactive )
+MailFilter::MailFilter( const KConfigGroup & aConfig, bool interactive, bool & needUpdate )
 {
-  readConfig( aConfig, interactive );
+  needUpdate =  readConfig( aConfig, interactive );
 }
 
 
@@ -352,8 +352,9 @@ bool MailFilter::isAutoNaming() const
 }
 
 //-----------------------------------------------------------------------------
-void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
+bool MailFilter::readConfig(const KConfigGroup & config, bool interactive)
 {
+  bool needUpdate = false;
   // MKSearchPattern::readConfig ensures
   // that the pattern is purified.
   mPattern.readConfig(config);
@@ -398,7 +399,6 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
     KMessageBox::information( 0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name() ) );
   }
 
-  bool needUpdate = false;
   for ( int i=0 ; i < numActions ; ++i ) {
     actName.sprintf("action-name-%d", i);
     argsName.sprintf("action-args-%d", i);
@@ -443,9 +443,7 @@ void MailFilter::readConfig(const KConfigGroup & config, bool interactive)
       delete dlg;
     }
   }
-  if ( needUpdate ) {
-    //TODO
-  }
+  return needUpdate;
 }
 
 

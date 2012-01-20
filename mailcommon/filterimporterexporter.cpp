@@ -32,7 +32,7 @@
 
 #include "filteraction.h"
 #include "mailfilter.h"
-
+#include "filtermanager.h"
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kfiledialog.h>
@@ -136,13 +136,17 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
 
   const int numFilters = group.readEntry( "filters", 0 );
 
+  bool filterNeedUpdate = false;
   QList<MailFilter*> filters;
   for ( int i = 0; i < numFilters; ++i ) {
     const QString groupName = QString::fromLatin1( "Filter #%1" ).arg( i );
 
     const KConfigGroup group = config->group( groupName );
-    MailFilter *filter = new MailFilter( group, true /*interactive*/ );
+    bool update = false;
+    MailFilter *filter = new MailFilter( group, true /*interactive*/, update );
     filter->purify();
+    if( update )
+      filterNeedUpdate = true;
     if ( filter->isEmpty() ) {
 #ifndef NDEBUG
       kDebug() << "Filter" << filter->asString() << "is empty!";
@@ -150,6 +154,14 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
       delete filter;
     } else
       filters.append( filter );
+  }
+  if( filterNeedUpdate ) {
+     KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
+
+     // Now, write out the new stuff:
+     FilterImporterExporter::writeFiltersToConfig( filters, config );
+     KConfigGroup group = config->group( "General" );
+     group.sync();
   }
 
   return filters;
