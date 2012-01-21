@@ -12,6 +12,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5003 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
