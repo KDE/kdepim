@@ -294,6 +294,17 @@ bool KMailConnection::kmailUpdate( const QString& resource,
     return false;
 }
 
+KMailICalIface::Answer KMailConnection::kmailMessageReadyForUpdate( const QString &resource,
+                                                                    Q_UINT32 sernum )
+{
+  if ( connectToKMail() ) {
+    return mKMailIcalIfaceStub->messageReadyForUpdate( resource, sernum );
+  } else {
+    return KMailICalIface::Error;
+  }
+}
+
+
 bool KMailConnection::kmailAddSubresource( const QString& resource,
                                            const QString& parent,
                                            const QString& contentsType )

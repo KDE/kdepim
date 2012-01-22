@@ -66,6 +66,9 @@ k_dcop:
   /// This enum matches the one defined in kmail.kcfg
   enum StorageFormat { StorageIcalVcard, StorageXML };
 
+  // For the messageReadyForUpdate() return value
+  enum Answer { No, Yes, Error };
+
   /// This bitfield indicates which changes have been made in a folder, at syncing time.
   enum FolderChanges { NoChange = 0, Contents = 1, ACL = 2 };
 
@@ -94,6 +97,8 @@ k_dcop:
                            const QStringList& attachmentMimetypes,
                            const QStringList& attachmentNames,
                            const QStringList& deletedAttachments ) = 0;
+
+  virtual Answer messageReadyForUpdate( const QString &resource, Q_UINT32 sernum ) = 0;
 
   virtual bool deleteIncidenceKolab( const QString& resource,
                                      Q_UINT32 sernum ) = 0;
@@ -180,6 +185,21 @@ inline QDataStream& operator>>( QDataStream& str, KMailICalIface::StorageFormat&
   Q_UINT32 foo;
   str >> foo;
   format = ( KMailICalIface::StorageFormat )foo;
+  return str;
+}
+
+inline QDataStream& operator<<( QDataStream& str, const KMailICalIface::Answer& format  )
+{
+  Q_UINT32 foo = format;
+  str << foo;
+  return str;
+}
+
+inline QDataStream& operator>>( QDataStream& str, KMailICalIface::Answer& format  )
+{
+  Q_UINT32 foo;
+  str >> foo;
+  format = ( KMailICalIface::Answer )foo;
   return str;
 }
 

@@ -103,6 +103,8 @@ public:
                     const QStringList& attachmentNames,
                     const QStringList& deletedAttachments );
 
+  KMailICalIface::Answer kmailMessageReadyForUpdate( const QString &resource, Q_UINT32 sernum );
+
   bool kmailStorageFormat( KMailICalIface::StorageFormat& type, const QString& folder);
 
   bool kmailTriggerSync( const QString& contentsType );

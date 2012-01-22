@@ -2398,4 +2398,30 @@ void KMailICalIfaceImpl::syncFolder(KMFolder * folder) const
   dimapFolder->account()->processNewMailInFolder( folder );
 }
 
+KMailICalIface::Answer KMailICalIfaceImpl::messageReadyForUpdate( const QString &resource,
+                                                                  Q_UINT32 sernum )
+{
+  if ( sernum == 0 ) {
+    // Yes, will store a new one
+    return Yes;
+  }
+
+  KMFolder *folder = findResourceFolder( resource );
+  if( !folder ) {
+    kdError(5006) << "update(" << resource << ") : Not an IMAP resource folder" << endl;
+    return Error;
+  }
+
+  folder->open( "messageReadyForUpdate" );
+
+  const KMMessage *msg = findMessageBySerNum( sernum, folder );
+  folder->close( "messageReadyForUpdate" );
+
+  if ( !msg ) {
+    return Error;
+  }
+
+  return msg->transferInProgress() ? No : Yes;
+}
+
 #include "kmailicalifaceimpl.moc"

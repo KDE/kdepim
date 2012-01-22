@@ -109,6 +109,8 @@ public:
                    const QStringList& attachmentNames,
                    const QStringList& deletedAttachments );
 
+  Answer messageReadyForUpdate( const QString &resource, Q_UINT32 sernum );
+
   bool deleteIncidenceKolab( const QString& resource,
                              Q_UINT32 sernum );
   int incidencesKolabCount( const QString& mimetype,
