@@ -258,12 +258,14 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     {
         MailCommon::FilterImporterThunderbird *thunderBirdFilter = new MailCommon::FilterImporterThunderbird(&file);
         imported = thunderBirdFilter->importFilter();
+        delete thunderBirdFilter;
         break;
     }
     case EvolutionFilter:
     {
         MailCommon::FilterImporterEvolution *filter = new MailCommon::FilterImporterEvolution(&file);
         imported = filter->importFilter();
+        delete filter;
         break;
     }
     }

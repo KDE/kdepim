@@ -27,9 +27,9 @@ class MailFilter;
 class FilterImporterAbstract
 {
 public:
-    explicit FilterImporterAbstract();
-    ~FilterImporterAbstract();
-    QList<MailFilter*> importFilter() const;
+  explicit FilterImporterAbstract();
+  ~FilterImporterAbstract();
+  QList<MailFilter*> importFilter() const;
 protected:
     void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
 
