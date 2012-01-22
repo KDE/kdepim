@@ -53,6 +53,42 @@
 #include <klocale.h>
 #include <kdebug.h>
 
+/*
+static QString typeStr( FolderJob::JobType type )
+{
+  switch( type ) {
+    case FolderJob::tListMessages:
+      return "tListMessages";
+    case FolderJob::tGetFolder:
+      return "tGetFolder";
+    case FolderJob::tCreateFolder:
+      return "tCreateFolder";
+    case FolderJob::tExpungeFolder:
+      return "tExpungeFolder";
+    case FolderJob::tDeleteMessage:
+      return "tDeleteMessage";
+    case FolderJob::tGetMessage:
+      return "tGetMessage";
+    case FolderJob::tPutMessage:
+      return "tPutMessage";
+    case FolderJob::tAddSubfolders:
+      return "tAddSubfolders";
+    case FolderJob::tDeleteFolders:
+      return "tDeleteFolders";
+    case FolderJob::tCheckUidValidity:
+      return "tCheckUidValidity";
+    case FolderJob::tRenameFolder:
+      return "tRenameFolder";
+    case FolderJob::tCopyMessage:
+      return "tCopyMessage";
+    case FolderJob::tMoveMessage:
+      return "tMoveMessage";
+    case FolderJob::tOther:
+      return "tOther";
+  }
+} */
+
+//int KMail::CachedImapJob::sJobCount = 0;
 
 namespace KMail {
 
@@ -62,6 +98,15 @@ CachedImapJob::CachedImapJob( const QValueList<MsgForDownload>& msgs,
   : FolderJob( type ), mFolder( folder ), mMsgsForDownload( msgs ),
     mTotalBytes(0), mMsg(0), mParentFolder( 0 )
 {
+  /*
+  sJobCount++;
+  QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  //kdDebug(5006) <<prep<< "DEBUG CachedImapJob()0: " << this << " " << typestr(type) << msgs.count() << endl;
+  */
   QValueList<MsgForDownload>::ConstIterator it = msgs.begin();
   for ( ; it != msgs.end() ; ++it )
     mTotalBytes += (*it).size;
@@ -74,6 +119,15 @@ CachedImapJob::CachedImapJob( const QPtrList<KMMessage>& msgs, JobType type,
     mTotalBytes( msgs.count() ), // we abuse it as "total number of messages"
     mMsg( 0 ), mParentFolder( 0 )
 {
+  /*
+  sJobCount++;
+  QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  kdDebug(5006) <<prep<< "DEBUG CachedImapJob()1 "  << this << " "<< typeStr(type) << endl;
+  */
 }
 
 CachedImapJob::CachedImapJob( const QValueList<unsigned long>& msgs,
@@ -82,6 +136,15 @@ CachedImapJob::CachedImapJob( const QValueList<unsigned long>& msgs,
     mFolder( folder ), mSerNumMsgList( msgs ), mTotalBytes( msgs.count() ), mMsg( 0 ),
     mParentFolder ( 0 )
 {
+  /*
+  sJobCount++;
+  QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  kdDebug(5006) << prep << "DEBUG CachedImapJob()2 " << this <<" "<< typeStr(type) << endl;
+  */
 }
 
 // Add sub folders
@@ -90,6 +153,15 @@ CachedImapJob::CachedImapJob( const QValueList<KMFolderCachedImap*>& fList,
   : FolderJob( type ), mFolder( folder ), mFolderList( fList ), mMsg( 0 ),
     mParentFolder ( 0 )
 {
+  /*
+  sJobCount++;
+  QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  kdDebug(5006) <<prep<< "DEBUG CachedImapJob()3 " << this <<" "<< typeStr(type) << endl;
+  */
 }
 
 // Rename folder
@@ -98,6 +170,15 @@ CachedImapJob::CachedImapJob( const QString& string1, JobType type,
   : FolderJob( type ), mFolder(folder), mMsg( 0 ), mString( string1 ),
     mParentFolder ( 0 )
 {
+  /*
+  sJobCount++;
+   QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  kdDebug(5006) <<prep<< "DEBUG CachedImapJob()4 " << this <<" "<<typeStr(type) << endl;
+  */
   assert( folder );
   assert( type != tDeleteMessage ); // moved to another ctor
 }
@@ -108,6 +189,15 @@ CachedImapJob::CachedImapJob( const QStringList& foldersOrMsgs, JobType type,
   : FolderJob( type ), mFolder( folder ), mFoldersOrMessages( foldersOrMsgs ),
     mMsg( 0 ), mParentFolder( 0 )
 {
+  /*
+  sJobCount++;
+  QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  kdDebug(5006) <<prep<< "DEBUG CachedImapJob()5 " << this <<" "<< typeStr(type) << endl;
+  */
   assert( folder );
 }
 
@@ -115,12 +205,30 @@ CachedImapJob::CachedImapJob( const QStringList& foldersOrMsgs, JobType type,
 CachedImapJob::CachedImapJob( JobType type, KMFolderCachedImap* folder )
   : FolderJob( type ), mFolder( folder ), mMsg( 0 ), mParentFolder ( 0 )
 {
+  /*
+  sJobCount++;
+  QString prep = "";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "+";
+  }
+  kdDebug(5006) <<prep<< "DEBUG CachedImapJob()6" << this << " type=" << typeStr(type) << endl;
+  */
   assert( folder );
 }
 
 CachedImapJob::~CachedImapJob()
 {
+  /*
+  sJobCount--;
   mAccount->mJobList.remove(this);
+  QString prep = "~";
+  for ( int i = 0; i< sJobCount; i++ )
+  {
+    prep += "~";
+  }
+  kdDebug(5006) << prep << "DEBUG ~CachedImapJob:: of type " << typeStr( mType ) << "("<< this << ")"<<endl;
+  */
 }
 
 void CachedImapJob::execute()
@@ -309,6 +417,7 @@ void CachedImapJob::slotGetNextMessage(KIO::Job * job)
       mMsg->setTransferInProgress( false );
       int index = -1;
       mFolder->open( "KMFolderCachedImap::slotGetNextMessage" );
+      //kdDebug(5006) << "/DEBUG CachedImapJob: slotGetNextMessage: " << this << endl;
       mFolder->addMsgInternal( mMsg, true, &index );
 
       if ( kmkernel->iCalIface().isResourceFolder( mFolder->folder() ) ) {
@@ -419,6 +528,7 @@ void CachedImapJob::slotPutNextMessage()
   jd.msgList.append( mMsg );
 
   mMsg->setTransferInProgress(true);
+  //kdDebug(5006) << "DEBUG slotPutNextMessage() creating the simplejob " << endl;
   KIO::SimpleJob *simpleJob = KIO::put(url, 0, false, false, false);
   KIO::Scheduler::assignJobToSlave(mAccount->slave(), simpleJob);
   mAccount->insertJob(simpleJob, jd);
@@ -478,11 +588,13 @@ void CachedImapJob::slotPutMessageResult(KIO::Job *job)
 {
   KMAcctCachedImap::JobIterator it = mAccount->findJob(job);
   if ( it == mAccount->jobsEnd() ) { // Shouldn't happen
+    //kdDebug() << "DEBUG slotPutMessageResult() DOESNT HAPPEN2" << endl;
     delete this;
     return;
   }
 
   if ( job->error() ) {
+    //kdDebug() << "DEBUG slotPutMessageResult() DOESNT HAPPEN2" << endl;
     bool cont = mAccount->handlePutError( job, *it, mFolder->folder() );
     if ( !cont ) {
       delete this;
@@ -507,16 +619,17 @@ void CachedImapJob::slotPutMessageResult(KIO::Job *job)
       * it. Otherwise remove it, it will be redownloaded.
       */
      if ( mMsg->UID() == 0 ) {
+        //kdDebug() << "DEBUG DOESNT HAPPEN" << endl;
         mFolder->removeMsg(i);
      } else {
         // When removing+readding, no point in telling the imap resources about it
         bool b = kmkernel->iCalIface().isResourceQuiet();
+        //kdDebug(5006) << "DEBUG slotPutMessageResult() START. oldQuiet=" << b <<" "<< this << " sernum: " << mMsg->getMsgSerNum() <<  endl;
         kmkernel->iCalIface().setResourceQuiet( true );
 
         mFolder->takeTemporarily( i );
         mFolder->addMsgKeepUID( mMsg );
         mMsg->setTransferInProgress( false );
-
         kmkernel->iCalIface().setResourceQuiet( b );
      }
   }

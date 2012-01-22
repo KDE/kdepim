@@ -397,6 +397,7 @@ void FolderStorage::removeMsg(const QPtrList<KMMessage>& msgList, bool imapQuiet
 //-----------------------------------------------------------------------------
 void FolderStorage::removeMsg(int idx, bool)
 {
+  //kdDebug(5006) << "--DEBUG FolderStorage: removeMsg()" << endl;
   //assert(idx>=0);
   if(idx < 0)
   {
@@ -432,6 +433,7 @@ void FolderStorage::removeMsg(int idx, bool)
 
   mSize = -1;
   QString msgIdMD5 = mb->msgIdMD5();
+  //kdDebug(5006) << "---DEBUG FolderStorage: removeMsg() emitting signals" << endl;
   emit msgRemoved( idx, msgIdMD5 );
   emit msgRemoved( folder() );
 }

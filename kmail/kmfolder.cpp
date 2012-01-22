@@ -389,6 +389,7 @@ void KMFolder::take( QPtrList<KMMessage> msgList ) // TODO const ref
 
 int KMFolder::addMsg( KMMessage* msg, int* index_return )
 {
+  //kdDebug(5006) << "**DEBUG KMFolder::addMsg()" << endl;
   return mStorage->addMsg( msg, index_return );
 }
 

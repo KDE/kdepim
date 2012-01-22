@@ -353,7 +353,12 @@ KMFolderMaildir::doCreateJob( QPtrList<KMMessage>& msgList, const QString& sets,
 //-------------------------------------------------------------
 int KMFolderMaildir::addMsg(KMMessage* aMsg, int* index_return)
 {
-  if (!canAddMsgNow(aMsg, index_return)) return 0;
+  if (!canAddMsgNow(aMsg, index_return)) {
+    //kdDebug(5006) << "***DEBUG KMFolderMaildir:addMsg2() cant add now" << endl;
+    return 0;
+  }
+
+  //kdDebug(5006) << "***DEBUG KMFolderMaildir:addMsg() " << endl;
   return addMsgInternal( aMsg, index_return );
 }
 
@@ -361,6 +366,8 @@ int KMFolderMaildir::addMsg(KMMessage* aMsg, int* index_return)
 int KMFolderMaildir::addMsgInternal( KMMessage* aMsg, int* index_return,
                                      bool stripUid )
 {
+  //kdDebug(5006) << "****DEBUG KMFolderMaildir:addMsgInternal() " << endl;
+
 /*
 QFile fileD0( "testdat_xx-kmfoldermaildir-0" );
 if( fileD0.open( IO_WriteOnly ) ) {
@@ -951,6 +958,7 @@ KMMessage* KMFolderMaildir::take(int idx)
   if ( removeFile(msg->fileName()) ) {
     return msg;
   } else {
+    //kdDebug() << "DEBUG KMFolderMaildir::take error removing " << idx << endl;
     return 0;
   }
 }

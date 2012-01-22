@@ -204,6 +204,7 @@ public:
   /* internal version that doesn't remove the X-UID header */
   virtual int addMsgInternal(KMMessage* msg, bool, int* index_return = 0);
   virtual int addMsgKeepUID(KMMessage* msg, int* index_return = 0) {
+    //kdDebug(5006) << "*DEBUG KMFolderCachedImap::addMsgKeepUID()" << endl;
     return addMsgInternal(msg, false, index_return);
   }
 

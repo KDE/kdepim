@@ -911,8 +911,9 @@ Q_UINT32 KMailICalIfaceImpl::update( const QString& resource,
     newMsg->cleanupHeader();
 
     //debugBodyParts( "in update, after cleanup", *newMsg );
-
+    //kdDebug(5006) << "-DEBUG KMailICalIface:  will add now! isTransferInProgress() ? " << msg->transferInProgress() << endl;
     deleteMsg( msg );
+    //kdDebug(5006) << "*DEBUG KMailICalIface: will add now!" << endl;
     if ( f->addMsg( newMsg ) == 0 ) {
       // Message stored
       rc = newMsg->getMsgSerNum();
@@ -1084,8 +1085,11 @@ void KMailICalIfaceImpl::slotFolderRemoved( KMFolder* folder )
 void KMailICalIfaceImpl::slotIncidenceAdded( KMFolder* folder,
                                              Q_UINT32 sernum )
 {
-  if( mResourceQuiet || !mUseResourceIMAP )
+  if( mResourceQuiet || !mUseResourceIMAP ) {
+    //kdDebug(5006) << "*****DEBUG KMailICalIfaceImpl::slotIncidenceAdded(): SKIIIIPED ;sernum=" << sernum <<endl;
     return;
+  }
+  //kdDebug(5006) << "*****DEBUG KMailICalIfaceImpl::slotIncidenceAdded(): ;sernum=" << sernum <<endl;
 
 //  kdDebug(5006) << "KMailICalIfaceImpl::slotIncidenceAdded" << endl;
   QString type = folderContentsType( folder->storage()->contentsType() );
@@ -1154,8 +1158,11 @@ void KMailICalIfaceImpl::slotIncidenceAdded( KMFolder* folder,
 void KMailICalIfaceImpl::slotIncidenceDeleted( KMFolder* folder,
                                                Q_UINT32 sernum )
 {
-  if( mResourceQuiet || !mUseResourceIMAP )
+  if( mResourceQuiet || !mUseResourceIMAP ) {
+    //kdDebug(5006) << "DEBUG KMailICalIfaceImpl::slotIncidenceDeleted(): SKIIIIPED ;sernum=" << sernum <<endl;
     return;
+  }
+  //kdDebug(5006) << "DEBUG KMailICalIfaceImpl::slotIncidenceDeleted(): sernum=" << sernum<< endl;
 
   QString type = folderContentsType( folder->storage()->contentsType() );
   //kdDebug(5006) << folder << " " << type << " " << sernum << endl;
@@ -1397,7 +1404,7 @@ void KMailICalIfaceImpl::deleteMsg( KMMessage *msg )
     srcFolder->removeMsg(idx);
     delete msg;
   } else {
-    kdDebug(5006) << k_funcinfo << "Message cannot be deleted now because it is currently in use " << msg << endl;
+    kdDebug(5006) << k_funcinfo << "DEBUG Message cannot be deleted now because it is currently in use " << msg << endl;
     msg->deleteWhenUnused();
   }
   addFolderChange( srcFolder, Contents );
@@ -2306,6 +2313,7 @@ bool KMailICalIfaceImpl::folderIsAlarmRelevant( const KMFolder *folder )
 
 void KMailICalIfaceImpl::setResourceQuiet(bool q)
 {
+  //kdDebug(5006) << "DEBUG setResourceQuiet(). currently=" << mResourceQuiet << "; new=" << q << endl;
   mResourceQuiet = q;
 }
 

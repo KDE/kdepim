@@ -84,7 +84,36 @@ using namespace KMail;
 #include <globalsettings.h>
 
 #define UIDCACHE_VERSION 1
-
+/*
+static const char *syncStateStr[] = {
+    "SYNC_STATE_INITIAL",
+    "SYNC_STATE_TEST_ANNOTATIONS",
+    "SYNC_STATE_PUT_MESSAGES",
+    "SYNC_STATE_UPLOAD_FLAGS",
+    "SYNC_STATE_CREATE_SUBFOLDERS",
+    "SYNC_STATE_LIST_NAMESPACES",
+    "SYNC_STATE_LIST_SUBFOLDERS",
+    "SYNC_STATE_LIST_SUBFOLDERS2",
+    "SYNC_STATE_DELETE_SUBFOLDERS",
+    "SYNC_STATE_LIST_MESSAGES",
+    "SYNC_STATE_DELETE_MESSAGES",
+    "SYNC_STATE_EXPUNGE_MESSAGES",
+    "SYNC_STATE_GET_MESSAGES",
+    "SYNC_STATE_HANDLE_INBOX",
+    "SYNC_STATE_GET_USERRIGHTS",
+    "SYNC_STATE_GET_ANNOTATIONS",
+    "SYNC_STATE_SET_ANNOTATIONS",
+    "SYNC_STATE_GET_ACLS",
+    "SYNC_STATE_SET_ACLS",
+    "SYNC_STATE_GET_QUOTA",
+    "SYNC_STATE_FIND_SUBFOLDERS",
+    "SYNC_STATE_SYNC_SUBFOLDERS",
+    "SYNC_STATE_CHECK_UIDVALIDITY",
+    "SYNC_STATE_RENAME_FOLDER",
+    "SYNC_STATE_CLOSE",
+    "SYNC_STATE_GET_SUBFOLDER_QUOTA"
+  };
+*/
 static QString incidencesForToString( KMFolderCachedImap::IncidencesFor r ) {
   switch (r) {
   case KMFolderCachedImap::IncForNobody: return "nobody";
@@ -532,6 +561,7 @@ void KMFolderCachedImap::takeTemporarily( int idx )
 int KMFolderCachedImap::addMsgInternal( KMMessage* msg, bool newMail,
                                         int* index_return )
 {
+  //kdDebug(5006) << "**DEBUG KMFolderCachedImap::addMsgInternal() mSyncState=" << mSyncState << endl;
   // Possible optimization: Only dirty if not filtered below
   ulong uid = msg->UID();
   if( uid != 0 ) {
@@ -571,7 +601,11 @@ int KMFolderCachedImap::addMsgInternal( KMMessage* msg, bool newMail,
 /* Reimplemented from KMFolderMaildir */
 int KMFolderCachedImap::addMsg(KMMessage* msg, int* index_return)
 {
-  if ( !canAddMsgNow( msg, index_return ) ) return 0;
+  //kdDebug(5006) << "***DEBUG KMFolderCachedImap::addMsgInternal() mSyncState=" << mSyncState<< endl;
+  if ( !canAddMsgNow( msg, index_return ) ) {
+    //kdDebug(5006) << "***DEBUG KMFolderCachedImap::addMsg() DOESNT HAPPEN" << endl;
+    return 0;
+  }
   // Add it to storage
   int rc = KMFolderMaildir::addMsgInternal(msg, index_return, true /*stripUID*/);
   return rc;
@@ -889,6 +923,8 @@ void KMFolderCachedImap::serverSyncInternal()
     return;
   }
 
+  //kdDebug(5006) << "DEBUG KMFolderCachedImap::serverSyncInternal() syncState: " << syncStateStr[mSyncState] << endl;
+
   //kdDebug(5006) << label() << ": " << state2String( mSyncState ) << endl;
   switch( mSyncState ) {
   case SYNC_STATE_INITIAL:
@@ -1086,6 +1122,7 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_EXPUNGE_MESSAGES:
     mSyncState = SYNC_STATE_GET_MESSAGES;
+    //kdDebug(5006) << "DEBUG KMFolderCachedImap: Start expunge_messages, Yes? " <<(!mQuotaOnly && !noContent())<< endl;
     if( !mQuotaOnly && !noContent() ) {
       newState( mProgress, i18n("Expunging deleted messages"));
       CachedImapJob *job = new CachedImapJob( QString::null,

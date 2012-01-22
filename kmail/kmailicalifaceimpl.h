@@ -357,7 +357,6 @@ private:
   QMap<QString, QString> mPendingUpdates;
   QMap<QString, bool> mInTransit;
   static QMap<QString, QString> *mSubResourceUINamesMap;
-
 };
 
 #endif // KMAILICALIFACEIMPL_H
