@@ -69,6 +69,19 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
       if ( partFilter.hasAttribute( "name" ) ) {
         //TODO
       }
+      
+      for ( QDomElement valueFilter = partFilter.firstChildElement(); !valueFilter.isNull(); valueFilter = valueFilter.nextSiblingElement() ) {
+        const QString valueTag = valueFilter.tagName();
+        if ( valueTag == QLatin1String( "value" ) ) {
+          if ( valueFilter.hasAttribute( "name" ) ) {
+            
+          } else if ( valueFilter.hasAttribute( "type" ) ) {
+            
+          } else if ( valueFilter.hasAttribute( "value" ) ) {
+            
+          }
+        }
+      }
     }
   }
 }
