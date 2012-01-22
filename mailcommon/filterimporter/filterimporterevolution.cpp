@@ -66,6 +66,15 @@ void FilterImporterEvolution::parsePart(const QDomElement &ruleFilter, MailCommo
 }
 void FilterImporterEvolution::parseAction(const QDomElement &ruleFilter, MailCommon::MailFilter *filter)
 {
+  for ( QDomElement partFilter = ruleFilter.firstChildElement(); !partFilter.isNull(); partFilter = partFilter.nextSiblingElement() )
+  {
+    const QString nexttag = partFilter.tagName();
+    if ( nexttag == QLatin1String( "part" ) ) {
+      if ( partFilter.hasAttribute( "name" ) ) {
+        //TODO
+      }
+    }
+  }
 
 }
 
@@ -91,11 +100,11 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
     }
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
     {
-
         const QString nexttag = ruleFilter.tagName();
         qDebug()<<" nexttag "<<nexttag;
         if(nexttag == QLatin1String("title")){
-
+          filter->pattern()->setName(ruleFilter.text());
+          filter->setToolbarName(ruleFilter.text());
         } else if( nexttag == QLatin1String("partset")) {
             parsePart(ruleFilter, filter);
         } else if( nexttag == QLatin1String("actionset")) {
