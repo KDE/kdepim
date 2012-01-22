@@ -2415,13 +2415,21 @@ KMailICalIface::Answer KMailICalIfaceImpl::messageReadyForUpdate( const QString 
   folder->open( "messageReadyForUpdate" );
 
   const KMMessage *msg = findMessageBySerNum( sernum, folder );
-  folder->close( "messageReadyForUpdate" );
 
   if ( !msg ) {
     return Error;
   }
 
-  return msg->transferInProgress() ? No : Yes;
+  KMFolderCachedImap *dimapFolder = dynamic_cast<KMFolderCachedImap*>( folder->storage() );
+  Answer answer = Yes;
+  if ( dimapFolder ) {
+    if ( msg->transferInProgress() || !dimapFolder->isInInitialState() ) {
+      answer = No;
+    }
+  }
+
+  folder->close( "messageReadyForUpdate" );
+  return answer;
 }
 
 #include "kmailicalifaceimpl.moc"

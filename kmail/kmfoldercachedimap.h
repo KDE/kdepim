@@ -338,6 +338,8 @@ public:
 
   virtual bool mailCheckInProgress() const;
 
+  bool isInInitialState() const { return mSyncState == SYNC_STATE_INITIAL; }
+
 protected slots:
   void slotGetMessagesData(KIO::Job * job, const QByteArray & data);
   void getMessagesResult(KMail::FolderJob *, bool lastSet);
