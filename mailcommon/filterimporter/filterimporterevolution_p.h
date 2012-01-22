@@ -35,9 +35,12 @@ public:
     explicit FilterImporterEvolution(QFile *file);
     ~FilterImporterEvolution();
 private:
+  enum parseType {
+    PartType = 0,
+    ActionType = 1
+  };
     void parseFilters(const QDomElement &e);
-    void parsePart(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
-    void parseAction(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
+  void parsePartAction(const QDomElement &ruleFilter, MailCommon::MailFilter *filter, MailCommon::FilterImporterEvolution::parseType type );
 };
 }
 

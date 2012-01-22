@@ -60,11 +60,7 @@ FilterImporterEvolution::~FilterImporterEvolution()
 {
 }
 
-void FilterImporterEvolution::parsePart(const QDomElement &ruleFilter, MailCommon::MailFilter *filter)
-{
-
-}
-void FilterImporterEvolution::parseAction(const QDomElement &ruleFilter, MailCommon::MailFilter *filter)
+void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, MailCommon::MailFilter *filter, parseType type )
 {
   for ( QDomElement partFilter = ruleFilter.firstChildElement(); !partFilter.isNull(); partFilter = partFilter.nextSiblingElement() )
   {
@@ -75,7 +71,6 @@ void FilterImporterEvolution::parseAction(const QDomElement &ruleFilter, MailCom
       }
     }
   }
-
 }
 
 
@@ -106,9 +101,9 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
           filter->pattern()->setName(ruleFilter.text());
           filter->setToolbarName(ruleFilter.text());
         } else if( nexttag == QLatin1String("partset")) {
-            parsePart(ruleFilter, filter);
+            parsePartAction(ruleFilter, filter, PartType);
         } else if( nexttag == QLatin1String("actionset")) {
-            parseAction(ruleFilter, filter);
+            parsePartAction(ruleFilter, filter, ActionType);
         }
     }
 
