@@ -192,6 +192,16 @@ bool ResourceKolabBase::kmailUpdate( bool forceUpdate,
   }
 }
 
+KMailICalIface::Answer ResourceKolabBase::kmailMessageReadyForUpdate( const QString &resource,
+                                                                      Q_UINT32 sernum )
+{
+  if ( mSilent ) {
+    return KMailICalIface::Yes;
+  } else {
+    return mConnection->kmailMessageReadyForUpdate( resource, sernum );
+  }
+}
+
 QString ResourceKolabBase::configFile( const QString& type ) const
 {
   return locateLocal( "config",

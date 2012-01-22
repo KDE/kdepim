@@ -156,6 +156,9 @@ protected slots:
   void slotEmitResourceChanged();
   void writeConfig();
 
+private slots:
+  void dequeueUpdates();
+
 protected:
   /**
    * Return list of alarms which are relevant for the current user. These
@@ -164,6 +167,7 @@ protected:
   KCal::Alarm::List relevantAlarms( const KCal::Alarm::List &alarms );
 
 private:
+  void queueUpdate( IncidenceBase *incidence );
   void removeIncidences( const QCString& incidenceType );
   void resolveConflict( KCal::Incidence*, const QString& subresource, Q_UINT32 sernum );
   void addIncidence( const char* mimetype, const QString& xml,
@@ -289,6 +293,14 @@ private:
    * We only do the last removal after kmail ACKs the adition, hence this variable.
    */
   Kolab::UidMap mPendingDuplicateDeletions;
+
+  /**
+   * KMail might still be doing stuff related to a previous update.
+   * Some races will cause conflicts ( issue4811 ), so we queue updates until kmail is ready
+   * to receive them.
+   */
+  QValueList<KCal::IncidenceBase*> mQueuedIncidenceUpdates;
+  bool mDequeingScheduled;
 };
 
 struct TemporarySilencer {

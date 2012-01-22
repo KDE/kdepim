@@ -167,6 +167,8 @@ protected:
                     const QStringList& attachmentNames = QStringList(),
                     const QStringList& deletedAttachments = QStringList() );
 
+  KMailICalIface::Answer kmailMessageReadyForUpdate( const QString &resource, Q_UINT32 sernum );
+
   bool kmailAddSubresource( const QString& resource, const QString& parent,
                             const QString& contentsType );
   bool kmailRemoveSubresource( const QString& resource );

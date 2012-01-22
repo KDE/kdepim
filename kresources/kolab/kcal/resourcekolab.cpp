@@ -74,7 +74,8 @@ static bool conflictThisSync = false;
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
-        "mResourceChangedTimer" ), mBatchAddingInProgress( false ), mDisableOptimization( false )
+        "mResourceChangedTimer" ), mBatchAddingInProgress( false ), mDisableOptimization( false ),
+        mDequeingScheduled( false )
 {
   if ( !config ) {
     setResourceName( i18n( "Kolab Server" ) );
@@ -369,10 +370,16 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
   if ( mUidMap.contains( uid ) ) {
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
-    mUidsPendingUpdate.append( uid );
+    if ( kmailMessageReadyForUpdate( subResource, sernum ) == KMailICalIface::Yes ) {
+      mUidsPendingUpdate.append( uid );
+      sendKMailUpdate( incidencebase, subResource, sernum );
+    } else { // It's not ready yet, lets try later
+      queueUpdate( incidencebase );
+    }
+  } else {
+    // Why do we call sendKMailUpdate() with no resource? Doesn't look right.
+    sendKMailUpdate( incidencebase, subResource, sernum );
   }
-
-  sendKMailUpdate( incidencebase, subResource, sernum );
 }
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
@@ -832,6 +839,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         StorageReference toDelete = mPendingDuplicateDeletions[uid];
         const bool success = kmailDeleteIncidence( toDelete.resource(), toDelete.serialNumber(),
                                                    /*force=*/true );
+        Q_UNUSED( success );
         mPendingDuplicateDeletions.remove( uid );
       }
 
@@ -920,6 +928,13 @@ bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
   if ( incidence->isReadOnly() ) {
     return false;
+  }
+  const int count = mQueuedIncidenceUpdates.count();
+  for ( int i=0; i<count; ++i ) {
+    KCal::IncidenceBase *queuedIncidence = mQueuedIncidenceUpdates[i];
+    if ( queuedIncidence->uid() == incidence->uid() ) {
+      mQueuedIncidenceUpdates.remove( queuedIncidence );
+    }
   }
 
   const QString uid = incidence->uid();
@@ -1491,5 +1506,44 @@ void ResourceKolab::endAddingIncidences()
   mBatchAddingInProgress = false;
   mLastUsedResources.clear();
 }
+
+void ResourceKolab::queueUpdate( IncidenceBase *incidence )
+{
+  kdDebug() << "DEBUG ResourceKolab::queueUpdate()" << endl;
+  const int count = mQueuedIncidenceUpdates.count();
+  bool found = false;
+  for ( int i=0; i<count; ++i ) {
+    // Do some compression, we can discard older updates, they don't need to be sent to kmail
+    if ( mQueuedIncidenceUpdates[i]->uid() == incidence->uid() ) {
+      mQueuedIncidenceUpdates[i] = incidence;
+      found = true;
+      break;
+    }
+  }
+
+  if ( !found ) {
+    mQueuedIncidenceUpdates << incidence;
+  }
+
+  if ( !mDequeingScheduled ) {
+    mDequeingScheduled = true;
+    QTimer::singleShot( 1000, this, SLOT(dequeueUpdates()));
+  }
+}
+
+void ResourceKolab::dequeueUpdates()
+{
+  kdDebug() << "DEBUG ResourceKolab::dequeueUpdates()" << endl;
+  mDequeingScheduled = false;
+  const int count = mQueuedIncidenceUpdates.count();
+  // queueUpdate() will be called while we are still in the for loop below, so use a copy
+  const QValueList<IncidenceBase*> listCopy = mQueuedIncidenceUpdates;
+  mQueuedIncidenceUpdates.clear();
+
+  for ( int i=0; i<count; ++i ) {
+    incidenceUpdatedSilent( listCopy[i] );
+  }
+}
+
 
 #include "resourcekolab.moc"
