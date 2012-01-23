@@ -222,7 +222,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     QString title;
     switch(type){
     case KMailFilter:
-        title = i18n( "Import Filters" );
+        title = i18n( "Import KMail Filters" );
         break;
     case ThunderBirdFilter:
         title = i18n( "Import Thunderbird Filters" );

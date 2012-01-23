@@ -251,7 +251,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   }
   SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName,contents );
   filter->pattern()->append( rule );
-  qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
+  //qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
   return true;
 }
 
