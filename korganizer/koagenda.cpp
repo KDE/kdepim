@@ -449,7 +449,7 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
 
         DndFactory factory( mCalendar );
         Incidence::List incidences = factory.createDropIncidences( de );
-        if ( incidences.count() == 1 && incidences.first()->type() == "Todo" ) { // Dragging events is disabled for now
+        if ( !incidences.isEmpty() ) {
           de->accept();
           incidences.setAutoDelete( true );
         } else {
