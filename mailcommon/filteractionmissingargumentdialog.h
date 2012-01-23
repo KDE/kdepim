@@ -26,6 +26,7 @@ class QAbstractItemModel;
 class QModelIndex;
 class QListWidget;
 class KComboBox;
+class KUrlRequester;
 
 namespace MailCommon {
   class FolderRequester;
@@ -123,6 +124,17 @@ private:
   QListWidget *mTagList;
 };
 
+
+class FilterActionMissingSoundUrlDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit FilterActionMissingSoundUrlDialog( const QString & filtername, QWidget *parent = 0 );
+  ~FilterActionMissingSoundUrlDialog();
+  QString soundUrl() const;
+private:
+  KUrlRequester* mUrlWidget;
+};
 
 #endif /* FILTERACTIONMISSINGARGUMENTDIALOG_H */
 

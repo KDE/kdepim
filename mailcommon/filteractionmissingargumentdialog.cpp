@@ -31,6 +31,7 @@
 #include <kpimidentities/identitycombo.h>
 
 #include <KLocale>
+#include <KUrlRequester>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -306,6 +307,31 @@ QString FilterActionMissingTagDialog::selectedTag() const
   if ( mTagList->currentItem() )
     return mTagList->currentItem()->text();
   return QString();
+}
+
+FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString & filtername, QWidget *parent )
+    :KDialog(parent)
+{
+    setModal( true );
+    setButtons( Ok | Cancel );
+    setDefaultButton( Ok );
+    setCaption(i18n("Select sound"));
+    showButtonSeparator( true );
+    QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+    QLabel *label = new QLabel( this );
+    label->setText( i18n( "Sound file is missing. Please select a sound to use with filter \"%1\"", filtername ) );
+    lay->addWidget( label );
+    mUrlWidget = new KUrlRequester( this );
+    lay->addWidget( mUrlWidget );
+}
+
+FilterActionMissingSoundUrlDialog::~FilterActionMissingSoundUrlDialog()
+{
+}
+
+QString FilterActionMissingSoundUrlDialog::soundUrl() const
+{
+    return mUrlWidget->url().path();
 }
 
 
