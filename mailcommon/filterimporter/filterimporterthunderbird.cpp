@@ -79,6 +79,8 @@ MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stre
     } else if ( line.startsWith( QLatin1String( "type=" ) ) ) {
         line = cleanArgument(line, QLatin1String("type="));
         extractType(line, filter);
+    } else {
+        qDebug()<<" MailCommon::MailFilter* FilterImporterThunderbird::parseLine unknow tag : "<<line;
     }
     return filter;
 }
@@ -309,8 +311,8 @@ QString FilterImporterThunderbird::extractActions(const QString& line, MailCommo
   } else if( line == QLatin1String("JunkScore")) {
   } else if( line == QLatin1String("Fetch body from Pop3Server")) {
   } else if( line == QLatin1String("Custom")) {
-
-  } else {
+  }
+  if(actionName.isEmpty()) {
       qDebug()<<QString::fromLatin1(" missing convert method: %1").arg(line);
   }
   return actionName;

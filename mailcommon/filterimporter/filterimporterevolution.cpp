@@ -101,6 +101,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     } else if (  name == QLatin1String( "junk" ) ) {
                     } else if (  name == QLatin1String( "all" ) ) {
                         filter->pattern()->setOp(SearchPattern::OpAll);
+                        break;
                     } else {
                         qDebug()<<" parttype part : name : not implemented :"<<name;
                     }
@@ -122,15 +123,19 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     } else if ( name == QLatin1String( "score" ) ) {
                     } else if ( name == QLatin1String( "adj-score" ) ) {
                     } else if ( name == QLatin1String( "set-status" ) ) {
+                        actionName = QLatin1String("set status");
                     } else if ( name == QLatin1String( "unset-status" ) ) {
                     } else if ( name == QLatin1String( "beep" ) ) {
                     } else if ( name == QLatin1String( "play-sound" ) ) {
                         actionName = QLatin1String("play sound");
                     } else if ( name == QLatin1String( "shell" ) ) {
+                        actionName = QLatin1String("execute");
                     } else if ( name == QLatin1String( "pipe" ) ) {
+                        actionName = QLatin1String("filter app");
                     } else if ( name == QLatin1String( "forward" ) ) {
                         actionName = QLatin1String( "forward" );
-                    } else {
+                    }
+                    if( actionName.isEmpty() ){
                         qDebug()<<" actiontype part : name : not implemented :"<<name;
                     }
                     QString value;
