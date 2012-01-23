@@ -61,6 +61,7 @@
 #include "mailcommon/expirecollectionattribute.h"
 #include "mailcommon/filtermanager.h"
 #include "mailcommon/mailfilter.h"
+#include "mailcommon/favoritecollectionwidget.h"
 
 // Other PIM includes
 #include "kdepim-version.h"
@@ -1095,7 +1096,7 @@ void KMMainWidget::createWidgets()
 
   if ( mEnableFavoriteFolderView ) {
 
-    mFavoriteCollectionsView = new Akonadi::EntityListView( mGUIClient, this );
+    mFavoriteCollectionsView = new FavoriteCollectionWidget( mGUIClient, this );
     refreshFavoriteFoldersViewProperties();
 
     connect( mFavoriteCollectionsView, SIGNAL(currentChanged(Akonadi::Collection)), this, SLOT(slotFolderChanged(Akonadi::Collection)) );
