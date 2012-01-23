@@ -34,7 +34,6 @@ public:
   explicit FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
   ~FavoriteCollectionWidget();
 
-protected: 
   void readConfig();
 
 protected slots:
