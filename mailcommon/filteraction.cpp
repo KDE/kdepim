@@ -2266,6 +2266,7 @@ class FilterActionExecSound : public FilterActionWithTest
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
     static FilterAction* newAction();
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
   private:
     mutable Phonon::MediaObject* mPlayer;
@@ -2360,6 +2361,21 @@ FilterAction::ReturnCode FilterActionExecSound::process( ItemContext& ) const
 bool FilterActionExecSound::requiresBody() const
 {
   return false;
+}
+
+bool FilterActionExecSound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+{
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if(!QFile(mParameter).exists()){
+      FilterActionMissingSoundUrlDialog *dlg = new FilterActionMissingSoundUrlDialog( filterName );
+      if ( dlg->exec() ) {
+        mParameter = dlg->soundUrl();
+        needUpdate = true;
+      }
+      delete dlg;
+  }
+  return needUpdate;
 }
 
 #endif
