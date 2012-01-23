@@ -59,6 +59,7 @@ set(libmailcommon_SRCS
   filterimporter/filterimporterthunderbird.cpp
   filterimporter/filterimporterabstract.cpp
   filterimporter/filterimporterevolution.cpp
+  favoritecollectionwidget.cpp
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
