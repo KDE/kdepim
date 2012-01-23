@@ -219,9 +219,9 @@ CachedImapJob::CachedImapJob( JobType type, KMFolderCachedImap* folder )
 
 CachedImapJob::~CachedImapJob()
 {
+  mAccount->mJobList.remove(this);
   /*
   sJobCount--;
-  mAccount->mJobList.remove(this);
   QString prep = "~";
   for ( int i = 0; i< sJobCount; i++ )
   {
