@@ -293,7 +293,7 @@ bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
   if ( instance.isOnline() )
     return true;
   else {
-    int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, mails can not be send. Do you want to make it online ?"),
+    int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, so mails can not be sent. Do you want to make it online?"),
                                         i18n("Mail dispatcher offline."));
     if ( rc == KMessageBox::No )
       return false;
