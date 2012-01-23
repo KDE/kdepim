@@ -49,6 +49,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QGroupBox>
 
 class VCardViewerDialog : public KDialog
 {
@@ -84,6 +85,7 @@ class VCardExportSelectionDialog : public KDialog
     bool exportOtherFields() const;
     bool exportEncryptionKeys() const;
     bool exportPictureFields() const;
+    bool exportDisplayName() const;
 
   private:
     QCheckBox *mPrivateBox;
@@ -91,6 +93,7 @@ class VCardExportSelectionDialog : public KDialog
     QCheckBox *mOtherBox;
     QCheckBox *mEncryptionKeys;
     QCheckBox *mPictureBox;
+    QCheckBox *mDisplayNameBox;
 };
 
 VCardXXPort::VCardXXPort( QWidget *parent )
@@ -316,11 +319,30 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
 
     addr.setUid( (*it).uid() );
     addr.setFormattedName( (*it).formattedName() );
-    addr.setPrefix( (*it).prefix() );
-    addr.setGivenName( (*it).givenName() );
-    addr.setAdditionalName( (*it).additionalName() );
-    addr.setFamilyName( (*it).familyName() );
-    addr.setSuffix( (*it).suffix() );
+
+    bool addrDone = false;
+    if ( dlg->exportDisplayName() ) {		// output display name as N field
+      QString fmtName = (*it).formattedName();
+      QStringList splitNames = fmtName.split( ' ', QString::SkipEmptyParts );
+      if ( splitNames.count() >= 2 )
+      {
+        addr.setPrefix( QString() );
+        addr.setGivenName( splitNames.takeFirst() );
+        addr.setFamilyName( splitNames.takeLast() );
+        addr.setAdditionalName( splitNames.join( " " ) );
+        addr.setSuffix( QString() );
+        addrDone = true;
+      }
+    }
+
+    if ( !addrDone ) {				// not wanted, or could not be split
+      addr.setPrefix( (*it).prefix() );
+      addr.setGivenName( (*it).givenName() );
+      addr.setAdditionalName( (*it).additionalName() );
+      addr.setFamilyName( (*it).familyName() );
+      addr.setSuffix( (*it).suffix() );
+    }
+
     addr.setNickName( (*it).nickName() );
     addr.setMailer( (*it).mailer() );
     addr.setTimeZone( (*it).timeZone() );
@@ -557,10 +579,10 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
 
-  QLabel *label =
-    new QLabel(
-      i18nc( "@info", "Select the fields which shall be exported in the vCard." ), page );
-  layout->addWidget( label, 0, 0, 1, 2 );
+  QGroupBox *gbox = new QGroupBox(
+    i18nc( "@title:group", "Fields to be exported" ), page );
+  gbox->setFlat( true );
+  layout->addWidget( gbox, 0, 0, 1, 2 );
 
   mPrivateBox = new QCheckBox( i18nc( "@option:check", "Private fields" ), page );
   mPrivateBox->setToolTip(
@@ -568,7 +590,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mPrivateBox->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want to export the contact's "
-           "private fields to the vcard output file." ) );
+           "private fields to the vCard output file." ) );
   layout->addWidget( mPrivateBox, 1, 0 );
 
   mBusinessBox = new QCheckBox( i18nc( "@option:check", "Business fields" ), page );
@@ -577,7 +599,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mBusinessBox->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want to export the contact's "
-           "business fields to the vcard output file." ) );
+           "business fields to the vCard output file." ) );
   layout->addWidget( mBusinessBox, 2, 0 );
 
   mOtherBox = new QCheckBox( i18nc( "@option:check", "Other fields" ), page );
@@ -586,7 +608,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mOtherBox->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want to export the contact's "
-           "other fields to the vcard output file." ) );
+           "other fields to the vCard output file." ) );
   layout->addWidget( mOtherBox, 3, 0 );
 
   mEncryptionKeys = new QCheckBox( i18nc( "@option:check", "Encryption keys" ), page );
@@ -595,7 +617,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mEncryptionKeys->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want to export the contact's "
-           "encryption keys to the vcard output file." ) );
+           "encryption keys to the vCard output file." ) );
   layout->addWidget( mEncryptionKeys, 1, 1 );
 
   mPictureBox = new QCheckBox( i18nc( "@option:check", "Pictures" ), page );
@@ -604,8 +626,23 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mPictureBox->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want to export the contact's "
-           "picture to the vcard output file." ) );
+           "picture to the vCard output file." ) );
   layout->addWidget( mPictureBox, 2, 1 );
+
+  gbox = new QGroupBox(
+    i18nc( "@title:group", "Export options" ), page );
+  gbox->setFlat( true );
+  layout->addWidget( gbox, 4, 0, 1, 2 );
+
+  mDisplayNameBox = new QCheckBox( i18nc( "@option:check", "Display name as full name" ), page );
+  mDisplayNameBox->setToolTip(
+    i18nc( "@info:tooltip", "Output display name as full name" ) );
+  mDisplayNameBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to export the contact's display name "
+           "in the vCard's full name field.  This may be required to get the "
+           "name shown correctly in GMail or Android." ) );
+  layout->addWidget( mDisplayNameBox, 5, 0, 1, 2 );
 
   KConfig config( "kaddressbookrc" );
   const KConfigGroup group( &config, "XXPortVCard" );
@@ -615,6 +652,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mOtherBox->setChecked( group.readEntry( "ExportOtherFields", true ) );
   mEncryptionKeys->setChecked( group.readEntry( "ExportEncryptionKeys", true ) );
   mPictureBox->setChecked( group.readEntry( "ExportPictureFields", true ) );
+  mDisplayNameBox->setChecked( group.readEntry( "ExportDisplayName", false ) );
 }
 
 VCardExportSelectionDialog::~VCardExportSelectionDialog()
@@ -627,6 +665,7 @@ VCardExportSelectionDialog::~VCardExportSelectionDialog()
   group.writeEntry( "ExportOtherFields", mOtherBox->isChecked() );
   group.writeEntry( "ExportEncryptionKeys", mEncryptionKeys->isChecked() );
   group.writeEntry( "ExportPictureFields", mPictureBox->isChecked() );
+  group.writeEntry( "ExportDisplayName", mDisplayNameBox->isChecked() );
 }
 
 bool VCardExportSelectionDialog::exportPrivateFields() const
@@ -652,4 +691,9 @@ bool VCardExportSelectionDialog::exportEncryptionKeys() const
 bool VCardExportSelectionDialog::exportPictureFields() const
 {
   return mPictureBox->isChecked();
+}
+
+bool VCardExportSelectionDialog::exportDisplayName() const
+{
+  return mDisplayNameBox->isChecked();
 }
