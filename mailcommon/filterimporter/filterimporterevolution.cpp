@@ -90,6 +90,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     } else if (  name == QLatin1String( "size" ) ) {
                         fieldName = "<size>";
                     } else if (  name == QLatin1String( "status" ) ) {
+                        fieldName = "<status>";
                     } else if (  name == QLatin1String( "follow-up" ) ) {
                     } else if (  name == QLatin1String( "completed-on" ) ) {
                     } else if (  name == QLatin1String( "attachments" ) ) {
@@ -132,27 +133,28 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     } else {
                         qDebug()<<" actiontype part : name : not implemented :"<<name;
                     }
+                    QString value;
+                    for ( QDomElement valueFilter = partFilter.firstChildElement(); !valueFilter.isNull(); valueFilter = valueFilter.nextSiblingElement() ) {
+                        const QString valueTag = valueFilter.tagName();
+                        if ( valueTag == QLatin1String( "value" ) ) {
+                            if ( valueFilter.hasAttribute( "name" ) ) {
+                                const QString name = valueFilter.attribute( "name" );
+                                qDebug()<<" value filter name :"<<name;
+                            } else if ( valueFilter.hasAttribute( "type" ) ) {
+                                const QString name = valueFilter.attribute( "type" );
+                                qDebug()<<" value filter type :"<<name;
 
-                }
-            }
+                            } else if ( valueFilter.hasAttribute( "value" ) ) {
+                                const QString name = valueFilter.attribute( "value" );
+                                qDebug()<<" value filter value :"<<name;
 
-            for ( QDomElement valueFilter = partFilter.firstChildElement(); !valueFilter.isNull(); valueFilter = valueFilter.nextSiblingElement() ) {
-                const QString valueTag = valueFilter.tagName();
-                if ( valueTag == QLatin1String( "value" ) ) {
-                    if ( valueFilter.hasAttribute( "name" ) ) {
-                        const QString name = valueFilter.attribute( "name" );
-                        qDebug()<<" value filter name :"<<name;
-                    } else if ( valueFilter.hasAttribute( "type" ) ) {
-                        const QString name = valueFilter.attribute( "type" );
-                        qDebug()<<" value filter type :"<<name;
-
-                    } else if ( valueFilter.hasAttribute( "value" ) ) {
-                        const QString name = valueFilter.attribute( "value" );
-                        qDebug()<<" value filter value :"<<name;
-
+                            }
+                        }
                     }
+                    createFilterAction(filter, actionName, value);
                 }
             }
+
         }
 
     }
@@ -184,6 +186,7 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
           filter->setApplyOnInbound( true );
         } else if ( attr == QLatin1String( "outgoing" ) ) {
           filter->setApplyOnInbound( false );
+          filter->setApplyOnOutbound(true);
         }
     }
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
