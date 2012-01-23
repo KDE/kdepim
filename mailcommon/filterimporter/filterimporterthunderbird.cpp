@@ -54,8 +54,8 @@ MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stre
         filter->setToolbarName(line);
     } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
         line = cleanArgument(line, QLatin1String("action="));
-        const QString actionName = extractActions(line,filter);
         QString value;
+        const QString actionName = extractActions(line,filter, value);
         if(!stream.atEnd()) {
             line = stream.readLine();
             if( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
@@ -63,6 +63,7 @@ MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stre
                 value = extractValues(line);
                 createFilterAction(filter,actionName,value);
             } else {
+                createFilterAction(filter,actionName,value);
                 filter = parseLine( stream, line, filter );
             }
         } else {
@@ -255,7 +256,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   return true;
 }
 
-QString FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter)
+QString FilterImporterThunderbird::extractActions(const QString& line, MailCommon::MailFilter* filter, QString& value)
 {
     /*
   { nsMsgFilterAction::MoveToFolder,            "Move to folder"},
@@ -286,7 +287,8 @@ QString FilterImporterThunderbird::extractActions(const QString& line, MailCommo
   } else if( line == QLatin1String("Forward")) {
     actionName = QLatin1String( "forward" );
   } else if( line == QLatin1String("Mark read")) {
-
+    actionName = QLatin1String("set status");
+    value = QLatin1String("R");
   } else if( line == QLatin1String("Copy to folder")) {
     actionName = QLatin1String( "copy" );
   } else if( line == QLatin1String("AddTag")) {
