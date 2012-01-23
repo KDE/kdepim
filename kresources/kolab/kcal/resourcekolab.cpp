@@ -932,7 +932,7 @@ bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
   const int count = mQueuedIncidenceUpdates.count();
   for ( int i=0; i<count; ++i ) {
     KCal::IncidenceBase *queuedIncidence = mQueuedIncidenceUpdates[i];
-    if ( queuedIncidence->uid() == incidence->uid() ) {
+    if ( queuedIncidence && queuedIncidence->uid() == incidence->uid() ) {
       mQueuedIncidenceUpdates.remove( queuedIncidence );
     }
   }
@@ -1510,11 +1510,13 @@ void ResourceKolab::endAddingIncidences()
 void ResourceKolab::queueUpdate( IncidenceBase *incidence )
 {
   kdDebug() << "DEBUG ResourceKolab::queueUpdate()" << endl;
+  Q_ASSERT( incidence );
   const int count = mQueuedIncidenceUpdates.count();
   bool found = false;
   for ( int i=0; i<count; ++i ) {
     // Do some compression, we can discard older updates, they don't need to be sent to kmail
-    if ( mQueuedIncidenceUpdates[i]->uid() == incidence->uid() ) {
+    IncidenceBase *queuedIncidence = mQueuedIncidenceUpdates[i];
+    if ( queuedIncidence && queuedIncidence->uid() == incidence->uid() ) {
       mQueuedIncidenceUpdates[i] = incidence;
       found = true;
       break;
@@ -1541,7 +1543,9 @@ void ResourceKolab::dequeueUpdates()
   mQueuedIncidenceUpdates.clear();
 
   for ( int i=0; i<count; ++i ) {
-    incidenceUpdatedSilent( listCopy[i] );
+    if ( listCopy[i] && mUidMap.contains( listCopy[i]->uid() ) ) {
+     incidenceUpdatedSilent( listCopy[i] );
+    }
   }
 }
 
