@@ -67,18 +67,74 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
     const QString nexttag = partFilter.tagName();
     if ( nexttag == QLatin1String( "part" ) ) {
       if ( partFilter.hasAttribute( "name" ) ) {
-        //TODO
+        const QString name = partFilter.attribute( "name" );
+        qDebug()<<" parsePartAction name attribute :"<<name;
+        if ( type == FilterImporterEvolution::PartType ) {
+          if ( name == QLatin1String( "to" ) ) {
+          } else if (  name == QLatin1String( "cc" ) ) {
+          } else if (  name == QLatin1String( "bcc" ) ) {
+          } else if (  name == QLatin1String( "senderto" ) ) {
+          } else if (  name == QLatin1String( "subject" ) ) {
+          } else if (  name == QLatin1String( "header" ) ) {
+          } else if (  name == QLatin1String( "body" ) ) {
+          } else if (  name == QLatin1String( "sexp" ) ) {
+          } else if (  name == QLatin1String( "recv-date" ) ) {
+          } else if (  name == QLatin1String( "label" ) ) {
+          } else if (  name == QLatin1String( "score" ) ) {
+          } else if (  name == QLatin1String( "size" ) ) {
+          } else if (  name == QLatin1String( "status" ) ) {
+          } else if (  name == QLatin1String( "follow-up" ) ) {
+          } else if (  name == QLatin1String( "completed-on" ) ) {
+          } else if (  name == QLatin1String( "attachments" ) ) {
+          } else if (  name == QLatin1String( "mlist" ) ) {
+          } else if (  name == QLatin1String( "regex" ) ) {
+          } else if (  name == QLatin1String( "source" ) ) {
+          } else if (  name == QLatin1String( "pipe" ) ) {
+          } else if (  name == QLatin1String( "junk" ) ) {
+          } else if (  name == QLatin1String( "all" ) ) {
+            filter->pattern()->setOp(SearchPattern::OpAll);
+          } else {
+            qDebug()<<" parttype part : name : not implemented :"<<name;
+          }
+        } else if (  type == FilterImporterEvolution::ActionType ) {
+          QString actionName;
+          if ( name == QLatin1String( "stop" ) ) {
+            filter->setStopProcessingHere(true);
+          } else if ( name == QLatin1String( "move-to-folder" ) ) {
+          } else if ( name == QLatin1String( "copy-to-folder" ) ) {
+          } else if ( name == QLatin1String( "delete" ) ) {
+          } else if ( name == QLatin1String( "label" ) ) {
+          } else if ( name == QLatin1String( "colour" ) ) {
+          } else if ( name == QLatin1String( "score" ) ) {
+          } else if ( name == QLatin1String( "adj-score" ) ) {
+          } else if ( name == QLatin1String( "set-status" ) ) {
+          } else if ( name == QLatin1String( "unset-status" ) ) {
+          } else if ( name == QLatin1String( "beep" ) ) {
+          } else if ( name == QLatin1String( "play-sound" ) ) {
+          } else if ( name == QLatin1String( "shell" ) ) {
+          } else if ( name == QLatin1String( "pipe" ) ) {
+          } else if ( name == QLatin1String( "forward" ) ) {
+          } else {
+            qDebug()<<" actiontype part : name : not implemented :"<<name;
+          }
+
+        }
       }
-      
+
       for ( QDomElement valueFilter = partFilter.firstChildElement(); !valueFilter.isNull(); valueFilter = valueFilter.nextSiblingElement() ) {
         const QString valueTag = valueFilter.tagName();
         if ( valueTag == QLatin1String( "value" ) ) {
           if ( valueFilter.hasAttribute( "name" ) ) {
-            
+            const QString name = valueFilter.attribute( "name" );
+            qDebug()<<" value filter name :"<<name;
           } else if ( valueFilter.hasAttribute( "type" ) ) {
-            
+            const QString name = valueFilter.attribute( "type" );
+            qDebug()<<" value filter type :"<<name;
+
           } else if ( valueFilter.hasAttribute( "value" ) ) {
-            
+            const QString name = valueFilter.attribute( "value" );
+            qDebug()<<" value filter value :"<<name;
+
           }
         }
       }
@@ -99,12 +155,20 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
     if( e.hasAttribute("grouping"))
     {
         const QString attr = e.attribute("grouping");
-        //TODO
+        if ( attr == QLatin1String( "all" ) ) {
+          filter->pattern()->setOp(SearchPattern::OpAnd);
+        } else if ( attr == QLatin1String( "any" ) ) {
+          filter->pattern()->setOp(SearchPattern::OpOr);
+        }
     }
     if(e.hasAttribute("source"))
     {
         const QString attr = e.attribute("source");
-        //TODO
+        if ( attr == QLatin1String( "incoming" ) ) {
+          filter->setApplyOnInbound( true );
+        } else if ( attr == QLatin1String( "outgoing" ) ) {
+          filter->setApplyOnInbound( false );
+        }
     }
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
     {

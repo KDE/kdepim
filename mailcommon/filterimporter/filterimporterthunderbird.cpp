@@ -142,7 +142,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   str.remove("(");
   str.remove(str.length()-1,1); //remove last )
 
-  
+
   const QStringList listOfCond = str.split( QLatin1Char( ',' ) );
   if ( listOfCond.count() < 3 ) {
     qDebug()<<"We have a pb in cond:"<<cond;
@@ -184,7 +184,9 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else if ( field == QLatin1String( "junk percent" ) ) {
   } else if ( field == QLatin1String( "junk score origin" ) ) {
   } else if ( field == QLatin1String( "has attachment status" ) ) {
-  } else {
+  }
+
+  if ( fieldName.isEmpty() ) {
       qDebug()<<" Field not implemented: "<<field;
   }
 /*
