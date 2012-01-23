@@ -1,4 +1,15 @@
 
+Monday 23 January 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4804: Multiple changes to contacts in a short time can corrupt contact data
+* kolab/issue4811: Undesired conflict dialogs after drag'n'drop events very fast (rt#10111)
+* kolab/issue4814: Kontact Crash in AccountsPageReceivingTab::save
+
+
+
 Sunday 22 January 2012
 
 Problems addressed
