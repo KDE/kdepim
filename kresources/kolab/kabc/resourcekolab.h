@@ -171,6 +171,20 @@ protected:
   QString mCachedSubresource;
   bool mCachedSubresourceNotFound;
   bool mLocked;
+
+private:
+   /**
+   * KMail might still be doing stuff related to a previous update.
+   * Some races will cause conflicts and duplications ( issue4804 ),
+   * so we queue updates until kmail is ready to receive them.
+   */
+  QValueList<Addressee> mQueuedAddresseeUpdates;
+  bool mDequeingScheduled;
+  void queueUpdate( const Addressee& addressee);
+
+private slots:
+  void dequeueUpdates();
+
 };
 
 }

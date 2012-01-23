@@ -79,7 +79,8 @@ static const char* s_inlineMimeType = "text/x-vcard";
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
-    mCachedSubresource( QString::null ), mCachedSubresourceNotFound( false ), mLocked( false )
+    mCachedSubresource( QString::null ), mCachedSubresourceNotFound( false ), mLocked( false ),
+    mDequeingScheduled( false )
 {
   setType( "imap" );
   if ( !config ) {
@@ -362,6 +363,13 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
       return false;
     sernum = 0;
   }
+
+  // Check if Kmail is not updating already
+  if ( kmailMessageReadyForUpdate( subResource, sernum ) != KMailICalIface::Yes ) {
+      queueUpdate( addr );
+      return true; // Actually we are waiting
+  }
+
   QString data;
   QString mimetype;
   AttachmentList att;
@@ -691,4 +699,43 @@ void KABC::ResourceKolab::writeConfig()
   }
 }
 
+void KABC::ResourceKolab::queueUpdate( const Addressee& addressee )
+{
+  // This is partly duplicated code from kcal/resourcekolab.cpp
+  kdDebug(5006) << k_funcinfo << endl;
+  const int count = mQueuedAddresseeUpdates.count();
+  bool found = false;
+  for ( int i=0; i<count; ++i ) {
+    // Do some compression, we can discard older updates, they don't need to be sent to kmail
+    if ( mQueuedAddresseeUpdates[i].uid() == addressee.uid() ) {
+      mQueuedAddresseeUpdates[i] = addressee;
+      found = true;
+      break;
+    }
+  }
+
+  if ( !found ) {
+    mQueuedAddresseeUpdates << addressee;
+  }
+
+  if ( !mDequeingScheduled ) {
+    mDequeingScheduled = true;
+    QTimer::singleShot( 1000, this, SLOT(dequeueUpdates()));
+  }
+}
+
+void KABC::ResourceKolab::dequeueUpdates()
+{
+  // This is partly duplicated code from kcal/resourcekolab.cpp
+  kdDebug(5006) << k_funcinfo << endl;
+  mDequeingScheduled = false;
+  const int count = mQueuedAddresseeUpdates.count();
+  // queueUpdate() will be called while we are still in the for loop below, so use a copy
+  const QValueList<Addressee> listCopy = mQueuedAddresseeUpdates;
+  mQueuedAddresseeUpdates.clear();
+
+  for ( int i=0; i<count; ++i ) {
+    kmailUpdateAddressee( listCopy[i] );
+  }
+}
 #include "resourcekolab.moc"
