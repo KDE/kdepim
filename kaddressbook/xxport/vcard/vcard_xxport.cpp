@@ -324,8 +324,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     if ( dlg->exportDisplayName() ) {		// output display name as N field
       QString fmtName = (*it).formattedName();
       QStringList splitNames = fmtName.split( ' ', QString::SkipEmptyParts );
-      if ( splitNames.count() >= 2 )
-      {
+      if ( splitNames.count() >= 2 ) {
         addr.setPrefix( QString() );
         addr.setGivenName( splitNames.takeFirst() );
         addr.setFamilyName( splitNames.takeLast() );
@@ -636,7 +635,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
 
   mDisplayNameBox = new QCheckBox( i18nc( "@option:check", "Display name as full name" ), page );
   mDisplayNameBox->setToolTip(
-    i18nc( "@info:tooltip", "Output display name as full name" ) );
+    i18nc( "@info:tooltip", "Export display name as full name" ) );
   mDisplayNameBox->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want to export the contact's display name "
