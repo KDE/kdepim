@@ -196,7 +196,6 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
     {
 
       const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
-      //TODO configurate it in 4.9 (we are in string freeze now)
       if ( !instance.isOnline() ) {
         return d->offlineAccountColor;
       } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
