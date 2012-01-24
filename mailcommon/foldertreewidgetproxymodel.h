@@ -65,7 +65,7 @@ public:
 
 
   void updatePalette();
-
+  void readConfig();
 protected:
   virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
 

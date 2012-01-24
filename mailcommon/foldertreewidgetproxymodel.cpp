@@ -22,6 +22,8 @@
 #include "foldercollection.h"
 #include "mailutil.h"
 #include "mailkernel.h"
+#include "messagecore/globalsettings.h"
+
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
@@ -70,9 +72,7 @@ FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModel( QObject *parent, FolderT
   if ( option & HideOutboxFolder ) {
     d->hideOutboxFolder = true;
   }
-  KColorScheme scheme(QPalette::Active, KColorScheme::View);
-  d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
-  d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  readConfig();
 }
 
 FolderTreeWidgetProxyModel::~FolderTreeWidgetProxyModel()
@@ -80,6 +80,19 @@ FolderTreeWidgetProxyModel::~FolderTreeWidgetProxyModel()
   delete d;
 }
 
+void FolderTreeWidgetProxyModel::readConfig()
+{
+  KConfigGroup collectionFolderView( KernelIf->config(), "CollectionFolderView" );
+  KColorScheme scheme(QPalette::Active, KColorScheme::View);
+  if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+     d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
+     d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  } else {
+     d->offlineAccountColor = collectionFolderView.readEntry("OfflineAccountColor", scheme.foreground(KColorScheme::NegativeText).color());
+     d->brokenAccountColor = collectionFolderView.readEntry("BrokenAccountColor", scheme.foreground(KColorScheme::InactiveText).color());
+  }
+  invalidate(); 
+}
 
 Qt::ItemFlags FolderTreeWidgetProxyModel::flags( const QModelIndex & index ) const
 {
@@ -196,10 +209,12 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
 
 void FolderTreeWidgetProxyModel::updatePalette()
 {
-  KColorScheme scheme(QPalette::Active, KColorScheme::View);
-  d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
-  d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
-  invalidate();
+  if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+     KColorScheme scheme(QPalette::Active, KColorScheme::View);
+     d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
+     d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+     invalidate();
+  }
 }
 
 

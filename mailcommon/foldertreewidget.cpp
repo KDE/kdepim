@@ -283,7 +283,7 @@ void FolderTreeWidget::readConfig()
   changeToolTipsPolicyConfig( ( ToolTipDisplayPolicy )checkedFolderToolTipsPolicy );
 
   d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
-
+  d->readableproxy->readConfig();
   readQuotaConfig();
 }
 
