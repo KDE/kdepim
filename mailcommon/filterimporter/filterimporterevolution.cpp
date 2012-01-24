@@ -105,8 +105,40 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     } else {
                         qDebug()<<" parttype part : name : not implemented :"<<name;
                     }
-                    //SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName,contents );
-                    //filter->pattern()->append( rule );
+                    QString value;
+                    QString contents;
+                    SearchRule::Function functionName = SearchRule::FuncNone;
+
+                    for ( QDomElement valueFilter = partFilter.firstChildElement(); !valueFilter.isNull(); valueFilter = valueFilter.nextSiblingElement() ) {
+                        const QString valueTag = valueFilter.tagName();
+                        if ( valueTag == QLatin1String( "value" ) ) {
+                            if ( valueFilter.hasAttribute( "name" ) ) {
+                                const QString name = valueFilter.attribute( "name" );
+                                qDebug()<<" value filter name :"<<name;
+                            } else if ( valueFilter.hasAttribute( "type" ) ) {
+                                const QString name = valueFilter.attribute( "type" );
+                                qDebug()<<" value filter type :"<<name;
+                                if(name == QLatin1String("option")){
+                                    //Nothing we will look at value
+                                } else if( name == QLatin1String("string")) {
+                                    //TODO
+                                } else if( name == QLatin1String("folder")) {
+                                    //TODO
+                                }
+
+                            } else if ( valueFilter.hasAttribute( "value" ) ) {
+                                const QString name = valueFilter.attribute( "value" );
+                                qDebug()<<" value filter value :"<<name;
+                                if(value == QLatin1String("contains")) {
+                                    functionName = SearchRule::FuncContains;
+                                } else if(value == QLatin1String("starts with")) {
+                                    functionName = SearchRule::FuncStartWith;
+                                }
+                            }
+                        }
+                    }
+                    SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName,contents );
+                    filter->pattern()->append( rule );
 
                 } else if (  type == FilterImporterEvolution::ActionType ) {
                     QString actionName;
@@ -152,6 +184,9 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                             } else if ( valueFilter.hasAttribute( "value" ) ) {
                                 const QString name = valueFilter.attribute( "value" );
                                 qDebug()<<" value filter value :"<<name;
+                                if(value == QLatin1String("")) {
+
+                                }
 
                             }
                         }
