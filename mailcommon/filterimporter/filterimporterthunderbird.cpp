@@ -346,11 +346,15 @@ void FilterImporterThunderbird::extractType(const QString& line, MailCommon::Mai
   }
   else if ( value == 32 )
   {
+    filter->setApplyOnOutbound(true);
+    filter->setApplyOnInbound( false );
     //checking mail after classification
   }
   else if ( value == 48 )
   {
       filter->setApplyOnExplicit( true );
+      filter->setApplyOnOutbound(true);
+      filter->setApplyOnInbound( false );
       //checking mail after classification or manual check
   }
   else

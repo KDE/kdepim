@@ -144,6 +144,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     QString actionName;
                     if ( name == QLatin1String( "stop" ) ) {
                         filter->setStopProcessingHere(true);
+                        break;
                     } else if ( name == QLatin1String( "move-to-folder" ) ) {
                         actionName = QLatin1String( "transfer" );
                     } else if ( name == QLatin1String( "copy-to-folder" ) ) {
