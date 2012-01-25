@@ -194,7 +194,7 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
 void RecentAddressDialog::setAddresses( const QStringList &addrs )
 {
   mEditor->clear();
-  mEditor->insertStringList( addrs );
+  mEditor->setItems( addrs );
 }
 
 QStringList RecentAddressDialog::addresses() const
