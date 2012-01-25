@@ -35,6 +35,7 @@
 #include "filtermanager.h"
 #include <kconfig.h>
 #include <kdebug.h>
+#include <KListWidgetSearchLine>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
@@ -58,7 +59,13 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
   showButtonSeparator( true );
 
   QVBoxLayout* const top = new QVBoxLayout( mainWidget() );
+
   filtersListWidget = new QListWidget();
+  KListWidgetSearchLine *searchLine = new KListWidgetSearchLine(this, filtersListWidget);
+  searchLine->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
+                                      "textbox, verb to search", "Search" ) );
+
+  top->addWidget( searchLine );
   top->addWidget( filtersListWidget );
   filtersListWidget->setAlternatingRowColors( true );
   filtersListWidget->setSortingEnabled( false );
