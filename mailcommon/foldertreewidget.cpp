@@ -88,6 +88,7 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );
 
+
   connect( d->folderTreeView, SIGNAL(manualSortingChanged(bool)), this, SLOT(slotManualSortingChanged(bool)) );
 
   QVBoxLayout *lay = new QVBoxLayout( this );
@@ -278,10 +279,7 @@ void FolderTreeWidget::readConfig()
     setFont( KGlobalSettings::generalFont() );
   }
 
-  KConfigGroup mainFolderView( KernelIf->config(), "MainFolderView" );
-  const int checkedFolderToolTipsPolicy = mainFolderView.readEntry( "ToolTipDisplayPolicy", 0 );
-  changeToolTipsPolicyConfig( ( ToolTipDisplayPolicy )checkedFolderToolTipsPolicy );
-
+  d->folderTreeView->readConfig();
   d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
   d->readableproxy->readConfig();
   readQuotaConfig();

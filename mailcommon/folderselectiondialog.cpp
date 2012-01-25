@@ -85,6 +85,8 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
   d->folderTreeWidget->folderTreeWidgetProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
+  //Necessary otherwise we overwrite tooltip config for all application
+  d->folderTreeWidget->folderTreeView()->disableSaveConfig();
   d->folderTreeWidget->folderTreeView()->setTooltipsPolicy( FolderTreeWidget::DisplayNever );
 #ifndef QT_NO_DRAGANDDROP
   d->folderTreeWidget->folderTreeView()->setDragDropMode( QAbstractItemView::NoDragDrop );
@@ -224,7 +226,7 @@ void FolderSelectionDialog::readConfig()
     resize( size );
   else
     resize( 500, 300 );
-  
+
   if ( d->mUseGlobalSettings ) {
     const Akonadi::Collection::Id id = SettingsIf->lastSelectedFolder();
     if ( id > -1 ) {

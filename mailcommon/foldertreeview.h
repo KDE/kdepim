@@ -63,6 +63,9 @@ public:
 
   Akonadi::Collection currentFolder() const;
 
+  void disableSaveConfig();
+  void readConfig();
+
 protected:
   enum Move { Next = 0, Previous = 1};
   void init( bool showUnreadCount );
@@ -70,7 +73,6 @@ protected:
   void setCurrentModelIndex( const QModelIndex & );
   QModelIndex selectNextFolder( const QModelIndex & current );
   bool isUnreadFolder( const QModelIndex & current, QModelIndex &nextIndex,FolderTreeView::Move move, bool confirm);
-  void readConfig();
   void writeConfig();
 
   void setSortingPolicy( FolderTreeWidget::SortingPolicy policy, bool writeInConfig = false );
@@ -103,7 +105,7 @@ private:
   FolderTreeWidget::SortingPolicy mSortingPolicy;
   Akonadi::CollectionStatisticsDelegate *mCollectionStatisticsDelegate;
   bool mbDisableContextMenuAndExtraColumn;
-  bool mLastButtonPressedWasMiddle;
+  bool mbDisableSaveConfig;
 };
 
 }
