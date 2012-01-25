@@ -33,17 +33,20 @@
 #include <QMouseEvent>
 
 namespace MailCommon {
-  
+
 FolderTreeView::FolderTreeView( QWidget* parent, bool showUnreadCount )
   : Akonadi::EntityTreeView( parent ),
-    mbDisableContextMenuAndExtraColumn( false )
+    mbDisableContextMenuAndExtraColumn( false ),
+    mbDisableSaveConfig( false )
 {
   init(showUnreadCount);
 }
 
 
 FolderTreeView::FolderTreeView( KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
-  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false )
+  :Akonadi::EntityTreeView( xmlGuiClient, parent ),
+   mbDisableContextMenuAndExtraColumn( false ),
+   mbDisableSaveConfig( false )
 {
   init(showUnreadCount);
 }
@@ -54,12 +57,18 @@ FolderTreeView::~FolderTreeView()
 }
 
 
+void FolderTreeView::disableSaveConfig()
+{
+  mbDisableSaveConfig = true;
+}
+
 void FolderTreeView::setTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy )
 {
   if ( mToolTipDisplayPolicy == policy )
     return;
-  
+
   mToolTipDisplayPolicy = policy;
+  emit changeTooltipsPolicy( mToolTipDisplayPolicy );
   writeConfig();
 }
 
@@ -83,7 +92,6 @@ void FolderTreeView::init( bool showUnreadCount )
   header()->setContextMenuPolicy( Qt::CustomContextMenu );
   connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
            SLOT(slotHeaderContextMenuRequested(QPoint)) );
-  readConfig();
 
   mCollectionStatisticsDelegate = new Akonadi::CollectionStatisticsDelegate( this );
   mCollectionStatisticsDelegate->setProgressAnimationEnabled( true );
@@ -97,7 +105,10 @@ void FolderTreeView::showStatisticAnimation( bool anim )
 }
 
 void FolderTreeView::writeConfig()
-{  
+{
+  if ( mbDisableSaveConfig )
+    return;
+
   KConfigGroup myGroup( KernelIf->config(), "MainFolderView");
   myGroup.writeEntry( "IconSize", iconSize().width() );
   myGroup.writeEntry( "ToolTipDisplayPolicy", ( int ) mToolTipDisplayPolicy );
@@ -112,7 +123,7 @@ void FolderTreeView::readConfig()
     iIconSize = 22;
   setIconSize( QSize( iIconSize, iIconSize ) );
   mToolTipDisplayPolicy = static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) );
-  
+  emit changeTooltipsPolicy( mToolTipDisplayPolicy );
   setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) FolderTreeWidget::SortByCurrentColumn ),false );
 }
 
@@ -245,7 +256,7 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, b
   case FolderTreeWidget::SortByDragAndDropKey:
       header()->setClickable( false );
       header()->setSortIndicatorShown( false );
-      
+
 #if 0
       //
       // Qt 4.5 introduced a nasty bug here:
@@ -324,7 +335,7 @@ void FolderTreeView::slotHeaderContextMenuChangeIconSize( bool )
   if ( newIconSize == iconSize() )
     return;
   setIconSize( newIconSize );
-  
+
   writeConfig();
 }
 
