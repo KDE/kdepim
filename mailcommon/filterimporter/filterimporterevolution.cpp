@@ -124,6 +124,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                                     //TODO
                                 } else if( name == QLatin1String("folder")) {
                                     //TODO
+                                } else if( name == QLatin1String("address") ) {
+                                    //TODO
                                 }
 
                             } else if ( valueFilter.hasAttribute( "value" ) ) {
@@ -201,6 +203,16 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                             } else if ( valueFilter.hasAttribute( "type" ) ) {
                                 const QString name = valueFilter.attribute( "type" );
                                 qDebug()<<" value filter type :"<<name;
+                                qDebug()<<" value filter type :"<<name;
+                                if(name == QLatin1String("option")){
+                                    //Nothing we will look at value
+                                } else if( name == QLatin1String("string")) {
+                                    //TODO
+                                } else if( name == QLatin1String("folder")) {
+                                    //TODO
+                                } else if( name == QLatin1String("address") ) {
+                                    //TODO
+                                }
 
                             } else if ( valueFilter.hasAttribute( "value" ) ) {
                                 const QString name = valueFilter.attribute( "value" );
