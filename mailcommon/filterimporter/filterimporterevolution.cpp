@@ -131,6 +131,26 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                                 qDebug()<<" value filter value :"<<name;
                                 if(value == QLatin1String("contains")) {
                                     functionName = SearchRule::FuncContains;
+                                } else if(value == QLatin1String("not contains")) {
+                                    functionName = SearchRule::FuncContainsNot;
+                                } else if(value == QLatin1String("is not")) {
+                                    functionName = SearchRule::FuncNotEqual;
+                                } else if(value == QLatin1String("is")) {
+                                    functionName = SearchRule::FuncEquals;
+                                } else if(value == QLatin1String("exist")) {
+                                } else if(value == QLatin1String("not exist")) {
+                                } else if(value == QLatin1String("not starts with")) {
+                                    functionName = SearchRule::FuncNotStartWith;
+                                } else if(value == QLatin1String("ends with")) {
+                                    functionName = SearchRule::FuncEndWith;
+                                } else if(value == QLatin1String("not ends with")) {
+                                    functionName = SearchRule::FuncNotEndWith;
+                                } else if(value == QLatin1String("matches soundex")) {
+                                } else if(value == QLatin1String("not match soundex")) {
+                                } else if(value == QLatin1String("before")) {
+                                } else if(value == QLatin1String("after")) {
+                                } else if(value == QLatin1String("greater-than")) {
+                                } else if(value == QLatin1String("less-than")) {
                                 } else if(value == QLatin1String("starts with")) {
                                     functionName = SearchRule::FuncStartWith;
                                 }
