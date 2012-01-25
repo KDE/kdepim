@@ -1,6 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.8.0 --- 16 January 2012 ===
+=== Version 2.8.1 --- 26 January 2012 ===
+- [Akonadi] Don't give option to save new alarms in old format calendars.
+
+=== Version 2.8.0 (KDE 4.8.0) --- 16 January 2012 ===
 - Use Akonadi as the default calendar access method.
 - Allow user to stop playback after clicking Try in audio alarm edit dialogue.
 
