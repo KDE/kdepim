@@ -154,6 +154,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   const QString field = listOfCond.at( 0 );
   const QString function = listOfCond.at( 1 );
   const QString contents = listOfCond.at( 2 );
+
   QByteArray fieldName;
   if ( field == QLatin1String( "subject" ) ) {
     fieldName = "subject";
@@ -247,12 +248,24 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else {
       qDebug()<<" functionName not implemented: "<<function;
   }
-
-  if ( contents == QLatin1String( "" ) )
-  {
-    //TODO
+  QString contentsName;
+  if( fieldName == "<status>" ) {
+      if( contents == QLatin1String("read")) {
+          contentsName = QLatin1String("Read");
+      } else if( contents == QLatin1String("unread")) {
+          contentsName = QLatin1String("Unread");
+      } else if( contents == QLatin1String("new")) {
+          contentsName = QLatin1String("New");
+      } else if( contents == QLatin1String("forwarded")) {
+          contentsName = QLatin1String("Forwarded");
+      } else {
+          qDebug()<<" contents for status not implemented "<<contents;
+      }
+  } else {
+    contentsName = contents;
   }
-  SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName,contents );
+
+  SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
   filter->pattern()->append( rule );
   //qDebug()<<" field :"<<field<<" function :"<<function<<" contents :"<<contents<<" cond :"<<cond;
   return true;
