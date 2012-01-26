@@ -147,7 +147,7 @@ signals:
   void filterCreated();
 
   /** Emitted when a filter is deleted */
-  void filterRemoved( MailCommon::MailFilter *filter );
+  void filterRemoved( const QList<MailCommon::MailFilter *>& filter );
 
   /** Emitted when a filter is updated (e.g. renamed) */
   void filterUpdated( MailCommon::MailFilter *filter );
@@ -195,6 +195,7 @@ protected slots:
       filter to bottom. */
   void slotBottom();
   void slotFilterEnabledChanged(QListWidgetItem*item);
+  void slotSelectionChanged();
 protected:
   /** The listbox displaying the filter list. */
   QListWidget *mListWidget;

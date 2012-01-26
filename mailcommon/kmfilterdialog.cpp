@@ -511,7 +511,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
            this, SLOT(slotDisableAccept()) );
 
   connect( mFilterList, SIGNAL(filterCreated()), this, SLOT(slotDialogUpdated()) );
-  connect( mFilterList, SIGNAL(filterRemoved(MailCommon::MailFilter*)),
+  connect( mFilterList, SIGNAL(filterRemoved(QList<MailCommon::MailFilter*>)),
            this, SLOT(slotDialogUpdated()) );
   connect( mFilterList, SIGNAL(filterUpdated(MailCommon::MailFilter*)),
            this, SLOT(slotDialogUpdated()) );
@@ -750,6 +750,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
   mListWidget->setMinimumWidth(150);
   mListWidget->setWhatsThis( i18n(_wt_filterlist) );
   mListWidget->setDragDropMode( QAbstractItemView::InternalMove );
+  mListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
   connect( mListWidget->model(),SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
 
   KListWidgetSearchLine* mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
@@ -832,6 +833,9 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
            this, SLOT(slotRename()) );
   connect( mListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
            this, SLOT(slotFilterEnabledChanged(QListWidgetItem*)));
+
+  connect( mListWidget, SIGNAL(itemSelectionChanged()),
+           this, SLOT(slotSelectionChanged()));
 
   connect( mBtnUp, SIGNAL(clicked()),
 	   this, SLOT(slotUp()) );
@@ -1023,6 +1027,13 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
   return filters;
 }
 
+void KMFilterListBox::slotSelectionChanged()
+{
+    if( mListWidget->selectedItems().count() > 1)
+        resetWidgets();
+    enableControls();
+}
+
 void KMFilterListBox::slotSelected( int aIdx )
 {
   if ( aIdx >= 0 && aIdx < mListWidget->count() ) {
@@ -1072,39 +1083,49 @@ void KMFilterListBox::slotCopy()
 
 void KMFilterListBox::slotDelete()
 {
-  QListWidgetItem *item = mListWidget->currentItem();
-  if ( !itemIsValid(item) ) {
+  QListWidgetItem *itemFirst = mListWidget->currentItem();
+  if ( !itemIsValid(itemFirst) ) {
     return;
   }
-  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
+  const bool uniqFilterSelected = (mListWidget->selectedItems().count() == 1);
 
+  QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( itemFirst );
   MailCommon::MailFilter *filter = itemFilter->filter();
-
   const QString filterName = filter->pattern()->name();
+  if( uniqFilterSelected ) {
+      if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
+          return;
+  } else {
+      if( KMessageBox::questionYesNo(this, i18n( "Do you want to remove selected filters ?" ), i18n( "Remove Filters" )) == KMessageBox::No ) {
+          return;
+      }
+  }
 
-  if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
-    return;
-  int oIdxSelItem = mListWidget->currentRow();
-  // unselect all
-  // TODO remove this line: mListWidget->clearSelection();
-  // broadcast that all widgets let go
-  // of the filter
+  const int oIdxSelItem = mListWidget->currentRow();
+  QList<MailCommon::MailFilter*>lst;
+
   emit resetWidgets();
 
-  // remove the filter from both the listbox
-  QListWidgetItem *item2 = mListWidget->takeItem( oIdxSelItem );
-  delete item2;
+  Q_FOREACH( QListWidgetItem* item, mListWidget->selectedItems())
+  {
+      QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
 
+      MailCommon::MailFilter *filter = itemFilter->filter();
+      lst<<filter;
 
+      // remove the filter from both the listbox
+      QListWidgetItem *item2 = mListWidget->takeItem( mListWidget->row(item) );
+      delete item2;
+  }
   const int count = mListWidget->count();
   // and set the new current item.
   if ( count > oIdxSelItem )
-    // oIdxItem is still a valid index
-    mListWidget->setCurrentRow( oIdxSelItem );
+      // oIdxItem is still a valid index
+      mListWidget->setCurrentRow( oIdxSelItem );
   else if ( count )
-    // oIdxSelIdx is no longer valid, but the
-    // list box isn't empty
-    mListWidget->setCurrentRow( count - 1 );
+      // oIdxSelIdx is no longer valid, but the
+      // list box isn't empty
+      mListWidget->setCurrentRow( count - 1 );
 
   // work around a problem when deleting the first item in a QListWidget:
   // after takeItem, slotSelectionChanged is emitted with 1, but the row 0
@@ -1112,11 +1133,10 @@ void KMFilterListBox::slotDelete()
   // selectionChanged signal
   // (qt-copy as of 2006-12-22 / gungl)
   if ( oIdxSelItem == 0 )
-    slotSelected( 0 );
-
+      slotSelected( 0 );
   enableControls();
 
-  emit filterRemoved( filter );
+  emit filterRemoved( lst );
 }
 
 void KMFilterListBox::slotTop()
@@ -1255,13 +1275,14 @@ void KMFilterListBox::enableControls()
   const bool theLast = ( currentIndex >= (int)mListWidget->count() - 1 );
   const bool aFilterIsSelected = ( currentIndex >= 0 );
 
-  mBtnUp->setEnabled( aFilterIsSelected && !theFirst );
-  mBtnDown->setEnabled( aFilterIsSelected && !theLast );
-  mBtnCopy->setEnabled( aFilterIsSelected );
-  mBtnDelete->setEnabled( aFilterIsSelected );
-  mBtnRename->setEnabled( aFilterIsSelected );
-  mBtnTop->setEnabled( aFilterIsSelected && !theFirst );
-  mBtnBottom->setEnabled( aFilterIsSelected && !theLast );
+  const bool uniqFilterSelected = (mListWidget->selectedItems().count() == 1);
+  mBtnUp->setEnabled( aFilterIsSelected && !theFirst && uniqFilterSelected );
+  mBtnDown->setEnabled( aFilterIsSelected && !theLast&& uniqFilterSelected );
+  mBtnCopy->setEnabled( aFilterIsSelected && uniqFilterSelected);
+  mBtnDelete->setEnabled( aFilterIsSelected);
+  mBtnRename->setEnabled( aFilterIsSelected && uniqFilterSelected);
+  mBtnTop->setEnabled( aFilterIsSelected && !theFirst && uniqFilterSelected);
+  mBtnBottom->setEnabled( aFilterIsSelected && !theLast && uniqFilterSelected);
 
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
@@ -1311,6 +1332,7 @@ void KMFilterListBox::insertFilter( MailFilter* aFilter )
   QListWidgetFilterItem *item = new QListWidgetFilterItem( aFilter->pattern()->name() );
   item->setFilter(  aFilter );
   mListWidget->insertItem( currentIndex,item );
+  mListWidget->clearSelection();
   if ( currentIndex < 0 ) {
     mListWidget->setCurrentRow( mListWidget->count() - 1 );
   } else {
