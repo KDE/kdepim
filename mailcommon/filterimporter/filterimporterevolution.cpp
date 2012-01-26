@@ -276,6 +276,5 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
         }
     }
 
-
-    mListMailFilter.append( filter );
+    appendFilter(filter);
 }

@@ -31,9 +31,10 @@ public:
   ~FilterImporterAbstract();
   QList<MailFilter*> importFilter() const;
 protected:
-    void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
+  void appendFilter(MailCommon::MailFilter * filter);
+  void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
 
-    QList<MailFilter*> mListMailFilter;
+  QList<MailFilter*> mListMailFilter;
 };
 }
 #endif // FILTERIMPORTERABSTRACT_H

@@ -36,7 +36,7 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
     filter = parseLine( stream, line, filter);
   }
   if ( filter )
-    mListMailFilter.append( filter );
+      appendFilter(filter);
 }
 
 FilterImporterThunderbird::~FilterImporterThunderbird()
@@ -47,7 +47,7 @@ MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stre
 {
     if ( line.startsWith( QLatin1String( "name=" ) ) ) {
         if ( filter )
-            mListMailFilter.append( filter );
+            appendFilter(filter);
         filter = new MailFilter();
         line = cleanArgument(line, QLatin1String("name="));
         filter->pattern()->setName(line);
@@ -79,6 +79,19 @@ MailCommon::MailFilter* FilterImporterThunderbird::parseLine( QTextStream & stre
     } else if ( line.startsWith( QLatin1String( "type=" ) ) ) {
         line = cleanArgument(line, QLatin1String("type="));
         extractType(line, filter);
+    } else if( line.startsWith(QLatin1String("version="))) {
+        line = cleanArgument(line, QLatin1String("version="));
+        if(line.toInt() != 9)
+            qDebug()<<" thunderbird filter version different of 9 need to look at if it changed";
+    } else if( line.startsWith(QLatin1String("logging="))) {
+        line = cleanArgument(line, QLatin1String("logging="));
+        if( line == QLatin1String("no")) {
+            //TODO
+        } else if( line == QLatin1String("yes")) {
+            //TODO
+        } else {
+            qDebug()<<" Logging option not implemented "<<line;
+        }
     } else {
         qDebug()<<" MailCommon::MailFilter* FilterImporterThunderbird::parseLine unknow tag : "<<line;
     }

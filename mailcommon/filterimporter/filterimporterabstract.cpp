@@ -34,6 +34,17 @@ QList<MailFilter*> FilterImporterAbstract::importFilter() const
     return mListMailFilter;
 }
 
+void FilterImporterAbstract::appendFilter(MailCommon::MailFilter * filter)
+{
+    filter->purify();
+    if ( !filter->isEmpty() )
+      // the filter is valid:
+      mListMailFilter<<filter;
+    else {
+      // the filter is invalid:
+      delete filter;
+    }
+}
 
 void FilterImporterAbstract::createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value)
 {
