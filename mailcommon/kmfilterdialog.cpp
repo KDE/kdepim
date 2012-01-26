@@ -861,6 +861,17 @@ KMFilterListBox::~KMFilterListBox()
 {
 }
 
+bool KMFilterListBox::itemIsValid( QListWidgetItem * item ) const
+{
+    if ( !item ) {
+        kDebug() << "Called while no filter is selected, ignoring.";
+        return false;
+    }
+    if ( item->isHidden() )
+        return false;
+    return true;
+}
+
 void KMFilterListBox::slotFilterEnabledChanged( QListWidgetItem *item )
 {
   if ( !item ) {
@@ -1030,8 +1041,7 @@ void KMFilterListBox::slotSelected( int aIdx )
 void KMFilterListBox::slotNew()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( item &&
-       item->isHidden() )
+  if ( !itemIsValid(item) )
     return;
 
   // just insert a new filter.
@@ -1042,11 +1052,7 @@ void KMFilterListBox::slotNew()
 void KMFilterListBox::slotCopy()
 {
   QListWidgetItem * item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
-    return;
-  }
-  if ( item->isHidden() )
+  if(!itemIsValid(item))
     return;
 
   // make sure that all changes are written to the filter before we copy it
@@ -1067,12 +1073,9 @@ void KMFilterListBox::slotCopy()
 void KMFilterListBox::slotDelete()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
+  if ( !itemIsValid(item) ) {
     return;
   }
-  if ( item->isHidden() )
-    return;
   QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
 
   MailCommon::MailFilter *filter = itemFilter->filter();
@@ -1119,8 +1122,7 @@ void KMFilterListBox::slotDelete()
 void KMFilterListBox::slotTop()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
+  if ( !itemIsValid(item) ) {
     return;
   }
   const int currentIndex = mListWidget->currentRow();
@@ -1144,8 +1146,7 @@ void KMFilterListBox::slotTop()
 void KMFilterListBox::slotBottom()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
+  if ( !itemIsValid( item ) ) {
     return;
   }
   const int currentIndex = mListWidget->currentRow();
@@ -1168,8 +1169,7 @@ void KMFilterListBox::slotBottom()
 void KMFilterListBox::slotUp()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
+  if ( !itemIsValid(item) ) {
     return;
   }
   const int currentIndex = mListWidget->currentRow( );
@@ -1188,8 +1188,7 @@ void KMFilterListBox::slotUp()
 void KMFilterListBox::slotDown()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
+  if ( !itemIsValid(item) ) {
     return;
   }
   const int currentIndex = mListWidget->currentRow();
@@ -1208,12 +1207,9 @@ void KMFilterListBox::slotDown()
 void KMFilterListBox::slotRename()
 {
   QListWidgetItem * item = mListWidget->currentItem();
-  if ( !item ) {
-    kDebug() << "Called while no filter is selected, ignoring.";
+  if ( !itemIsValid(item) ) {
     return;
   }
-  if ( item->isHidden() )
-    return;
   QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
 
   bool okPressed = false;

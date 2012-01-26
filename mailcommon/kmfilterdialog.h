@@ -202,6 +202,7 @@ protected:
   QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnUp, *mBtnDown, *mBtnRename, *mBtnTop, *mBtnBottom;
 private:
   void enableControls();
+  bool itemIsValid(QListWidgetItem *item ) const;
 
   void swapNeighbouringFilters( int untouchedOne, int movedOne);
 };
