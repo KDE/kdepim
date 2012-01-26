@@ -23,6 +23,7 @@
 
 #include "calendarsupport_export.h"
 
+#include <Akonadi/Collection>
 #include <Akonadi/Item>
 
 #include <KCalCore/CustomProperties>
@@ -276,7 +277,7 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
     */
     Akonadi::Item incidence( Akonadi::Item::Id id ) const;
 
-    Akonadi::Collection collection( const Akonadi::Entity::Id &id ) const;
+    Akonadi::Collection collection( const Akonadi::Collection::Id &id ) const;
 
     /**
       Returns the KCalCore::Incidence associated with the given scheduling identifier.
