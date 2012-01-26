@@ -59,9 +59,7 @@ enum {
 
 static QString cleanSummary( const QString &summary, const KDateTime &next )
 {
-  Q_UNUSED( next ); //remove for KDE4.9
-  //static QString etc = i18nc( "@label an elipsis", "..." );
-  static QString etc = QString( "..." ); //remove and uncomment previous line for KDE4.9
+  static QString etc = i18nc( "@label an elipsis", "..." );
   int maxLen = 40;
 
   QString retStr = summary;
@@ -71,15 +69,14 @@ static QString cleanSummary( const QString &summary, const KDateTime &next )
     retStr = retStr.left( maxLen );
     retStr += etc;
   }
-  /* UNCOMMENT FOR KDE4.9
   if ( next.isValid() ) {
     const QString dateStr =
       KGlobal::locale()->formatDate(
         next.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
         KLocale::ShortDate );
-    retStr = i18n( "%1 (next: %2)", retStr, dateStr );
+    retStr = i18nc( "%1 is an item summary. %2 is the date when this item reoccurs",
+                    "%1 (next: %2)", retStr, dateStr );
   }
-  */
   return retStr;
 }
 
@@ -364,9 +361,8 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
       kEnd.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
       KLocale::ShortDate );
 
-//UNCOMMENT FOR KDE4.9
-//  d->mTreeWidget->headerItem()->setText( Summary_Column,
-//                                         i18n( "Summary [%1 - %2]", startStr, endStr ) );
+  d->mTreeWidget->headerItem()->setText( Summary_Column,
+                                         i18n( "Summary [%1 - %2]", startStr, endStr ) );
 
   QDate date = start;
   while ( date <= end ) {
