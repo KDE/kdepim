@@ -23,6 +23,7 @@
 */
 
 #include "utils.h"
+#include "calendar.h"
 #include "kcalprefs.h"
 #include "mailclient.h"
 #include "mailscheduler.h"
@@ -334,7 +335,6 @@ bool CalendarSupport::mimeDataHasIncidence( const QMimeData *mimeData )
          !incidences( mimeData, KDateTime::Spec() ).isEmpty();
 }
 
-
 KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
                                              const KDateTime::Spec &spec )
 {
@@ -479,6 +479,33 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
 {
   const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
+}
+
+QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collection &c )
+{
+  const QString cName = c.name();
+
+  if ( !c.resource().contains( "kolabproxy" ) ) {
+    // Not groupware so the collection is "mine"
+    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+    if ( attr && !attr->displayName().isEmpty() ) {
+      return i18n( "My %1", attr->displayName() );
+    } else {
+      return i18n( "My %1", cName );
+    }
+  } else {
+    const Akonadi::Collection p = c.parentCollection();
+    const QString oStr = calendar->collection( p.id() ).name();
+
+    if ( !oStr.isEmpty() ) {
+      if ( oStr.toUpper() != QString( "INBOX" ) ) {
+        return i18n( "%1's %2", oStr, cName );
+      } else {
+        return i18n( "My Shared %1", cName );
+      }
+    }
+  }
+  return cName;
 }
 
 QString CalendarSupport::subMimeTypeForIncidence( const KCalCore::Incidence::Ptr &incidence )

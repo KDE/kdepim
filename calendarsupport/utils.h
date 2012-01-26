@@ -228,6 +228,9 @@ namespace CalendarSupport
 
   CALENDARSUPPORT_EXPORT QString displayName( const Akonadi::Collection &coll );
 
+  CALENDARSUPPORT_EXPORT QString displayName( Calendar *calendar,
+                                              const Akonadi::Collection &coll );
+
   CALENDARSUPPORT_EXPORT QString subMimeTypeForIncidence(
     const KCalCore::Incidence::Ptr &incidence );
 
