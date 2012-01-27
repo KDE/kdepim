@@ -369,7 +369,8 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
                                  static_cast<QStandardItemModel*>( d->mGantt->model() ),
                                  d->mGantt );
         d->mLeftView->addTopLevelItem(
-          new QTreeWidgetItem( QStringList() << CalendarSupport::displayName( collection ) ) );
+          new QTreeWidgetItem(
+            QStringList() << CalendarSupport::displayName( calendar(), collection ) ) );
         const QColor resourceColor = EventViews::resourceColor( collection, preferences() );
         if ( resourceColor.isValid() ) {
           item->setColor( resourceColor );
@@ -407,8 +408,11 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
 }
 
 /*virtual*/
-void TimelineView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
+void TimelineView::showIncidences( CalendarSupport::Calendar *calendar,
+                                   const Akonadi::Item::List &incidenceList,
+                                   const QDate &date )
 {
+  Q_UNUSED( calendar );
   Q_UNUSED( incidenceList );
   Q_UNUSED( date );
 }

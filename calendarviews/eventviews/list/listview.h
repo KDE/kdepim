@@ -74,11 +74,14 @@ class EVENTVIEWS_EXPORT ListView : public EventView
     virtual void showDates( const QDate &start, const QDate &end,
                             const QDate &preferredMonth = QDate() );
 
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+    virtual void showIncidences( CalendarSupport::Calendar *calendar,
+                                 const Akonadi::Item::List &incidenceList,
+                                 const QDate &date );
 
     void clearSelection();
 
-    void changeIncidenceDisplay( const Akonadi::Item &, int );
+    void changeIncidenceDisplay( CalendarSupport::Calendar *calendar,
+                                 const Akonadi::Item &, int );
 
     void defaultItemAction( const QModelIndex & );
     void defaultItemAction( const Akonadi::Item::Id id );

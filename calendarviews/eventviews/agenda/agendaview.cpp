@@ -1450,7 +1450,9 @@ void AgendaView::showDates( const QDate &start, const QDate &end, const QDate &p
   fillAgenda();
 }
 
-void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QDate &date )
+void AgendaView::showIncidences( CalendarSupport::Calendar *,
+                                 const Akonadi::Item::List &incidences,
+                                 const QDate &date )
 {
   Q_UNUSED( date );
 

@@ -398,11 +398,12 @@ void MultiAgendaView::showDates( const QDate &start, const QDate &end, const QDa
   }
 }
 
-void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList,
+void MultiAgendaView::showIncidences( CalendarSupport::Calendar *calendar,
+                                      const Akonadi::Item::List &incidenceList,
                                       const QDate &date )
 {
   foreach ( AgendaView *agendaView, d->mAgendaViews ) {
-    agendaView->showIncidences( incidenceList, date );
+    agendaView->showIncidences( calendar, incidenceList, date );
   }
 }
 

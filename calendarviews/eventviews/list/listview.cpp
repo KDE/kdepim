@@ -134,8 +134,10 @@ class ListView::Private
     {
     }
 
-    void addIncidences( const Akonadi::Item::List &incidenceList, const QDate & );
-    void addIncidence( const Akonadi::Item &, const QDate &date );
+    void addIncidences( CalendarSupport::Calendar *calendar,
+                        const Akonadi::Item::List &incidenceList, const QDate &date );
+    void addIncidence( CalendarSupport::Calendar *calendar,
+                       const Akonadi::Item &, const QDate &date );
     ListViewItem *getItemForIncidence( const Akonadi::Item & );
 
     QTreeWidget *mTreeWidget;
@@ -366,7 +368,7 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
 
   QDate date = start;
   while ( date <= end ) {
-    d->addIncidences( calendar()->incidences( date ), date );
+    d->addIncidences( calendar(), calendar()->incidences( date ), date );
     d->mSelectedDates.append( date );
     date = date.addDays( 1 );
   }
@@ -379,18 +381,20 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
 void ListView::showAll()
 {
   const Akonadi::Item::List incidenceList = calendar()->incidences();
-  d->addIncidences( incidenceList, QDate() );
+  d->addIncidences( calendar(), incidenceList, QDate() );
 }
 
-void ListView::Private::addIncidences( const Akonadi::Item::List &incidenceList,
+void ListView::Private::addIncidences( CalendarSupport::Calendar *calendar,
+                                       const Akonadi::Item::List &incidenceList,
                                        const QDate &date )
 {
   Q_FOREACH ( const Akonadi::Item & i, incidenceList ) {
-    addIncidence( i, date );
+    addIncidence( calendar, i, date );
   }
 }
 
-void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &date )
+void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
+                                      const Akonadi::Item &aitem, const QDate &date )
 {
   if ( !CalendarSupport::hasIncidence( aitem ) || mItems.contains( aitem.id() ) ) {
     return;
@@ -418,7 +422,7 @@ void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &d
   for ( int col = 0; col < Dummy_EOF_Column; ++col ) {
     item->setToolTip( col,
                       IncidenceFormatter::toolTipStr(
-                        CalendarSupport::displayName( aitem.parentCollection() ),
+                        CalendarSupport::displayName( calendar, aitem.parentCollection() ),
                         CalendarSupport::incidence( aitem ) ) );
   }
 
@@ -430,11 +434,13 @@ void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &d
   item->setData( 0, Qt::UserRole, QVariant( aitem.id() ) );
 }
 
-void ListView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
+void ListView::showIncidences( CalendarSupport::Calendar *calendar,
+                               const Akonadi::Item::List &incidenceList,
+                               const QDate &date )
 {
   clear();
 
-  d->addIncidences( incidenceList, date );
+  d->addIncidences( calendar, incidenceList, date );
 
   updateView();
 
@@ -442,7 +448,8 @@ void ListView::showIncidences( const Akonadi::Item::List &incidenceList, const Q
   emit incidenceSelected( Akonadi::Item(), date );
 }
 
-void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
+void ListView::changeIncidenceDisplay( CalendarSupport::Calendar *calendar,
+                                       const Akonadi::Item &aitem, int action )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   ListViewItem *item;
@@ -462,7 +469,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
   case CalendarSupport::IncidenceChanger::INCIDENCEADDED:
   {
     if ( date >= f && date <= l ) {
-      d->addIncidence( aitem, date );
+      d->addIncidence( calendar, aitem, date );
     }
     break;
   }
@@ -475,7 +482,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
       d->mDateList.remove( aitem.id() );
     }
     if ( date >= f && date <= l ) {
-      d->addIncidence( aitem, date );
+      d->addIncidence( calendar, aitem, date );
     }
     break;
   }

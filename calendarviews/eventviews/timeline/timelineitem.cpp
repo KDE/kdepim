@@ -73,7 +73,7 @@ void TimelineItem::insertIncidence( const Akonadi::Item &aitem,
     }
   }
 
-  TimelineSubItem * item = new TimelineSubItem( aitem, this );
+  TimelineSubItem *item = new TimelineSubItem( mCalendar, aitem, this );
 
   item->setStartTime( start.dateTime() );
   item->setOriginalStart( start );
@@ -113,8 +113,9 @@ void TimelineItem::setColor( const QColor &color )
   mColor = color;
 }
 
-TimelineSubItem::TimelineSubItem( const Akonadi::Item &incidence, TimelineItem *parent )
-  : QStandardItem(), mIncidence( incidence ),
+TimelineSubItem::TimelineSubItem( CalendarSupport::Calendar *calendar,
+                                  const Akonadi::Item &incidence, TimelineItem *parent )
+  : QStandardItem(), mCalendar( calendar ), mIncidence( incidence ),
     mParent( parent ), mToolTipNeedsUpdate( true )
 {
   setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
@@ -156,7 +157,7 @@ void TimelineSubItem::updateToolTip()
   mToolTipNeedsUpdate = false;
 
   setData( IncidenceFormatter::toolTipStr(
-             CalendarSupport::displayName( mIncidence.parentCollection() ),
+             CalendarSupport::displayName( mCalendar, mIncidence.parentCollection() ),
              CalendarSupport::incidence( mIncidence ), originalStart().date(),
              true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
 }

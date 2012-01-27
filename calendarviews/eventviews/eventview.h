@@ -313,7 +313,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       @param incidenceList a list of incidences to show.
       @param date is the QDate on which the incidences are being shown.
     */
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList,
+    virtual void showIncidences( CalendarSupport::Calendar *calendar,
+                                 const Akonadi::Item::List &incidenceList,
                                  const QDate &date ) = 0;
 
     /**

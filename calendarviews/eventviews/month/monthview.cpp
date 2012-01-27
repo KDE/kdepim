@@ -346,8 +346,11 @@ bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
   return false;
 }
 
-void MonthView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
+void MonthView::showIncidences( CalendarSupport::Calendar *calendar,
+                                const Akonadi::Item::List &incidenceList,
+                                const QDate &date )
 {
+  Q_UNUSED( calendar );
   Q_UNUSED( incidenceList );
   Q_UNUSED( date );
 }
@@ -544,6 +547,7 @@ void MonthView::reloadIncidences()
       }
 
       MonthItem *manager = new IncidenceMonthItem( d->scene,
+                                                   calendar(),
                                                    aitem,
                                                    t->toTimeSpec( timeSpec ).date() );
       d->scene->mManagerList << manager;
