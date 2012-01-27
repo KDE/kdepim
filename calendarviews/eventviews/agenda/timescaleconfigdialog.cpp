@@ -42,7 +42,6 @@ class TimeScaleConfigDialog::Private
 //TODO: move to KCalCore::Stringify
 static QString tzUTCOffsetStr( const KTimeZone &tz )
 {
-  qreal utcOffset = tz.currentOffset() / 3600.;
   int utcOffsetHrs = tz.currentOffset() / 3600;  // in hours
   int utcOffsetMins = ( tz.currentOffset() % 3600 ) / 60;  // in minutes
   QString utcStr;
@@ -62,9 +61,10 @@ static QString tzUTCOffsetStr( const KTimeZone &tz )
 //TODO: move to KCalCore::Stringify
 static QString tzWithUTC( KTimeZones::ZoneMap::ConstIterator it )
 {
-  return QString( "%1 (UTC%2)" ).
+  return
+    QString( "%1 (UTC%2)" ).
       arg( i18n( it.key().toUtf8() ) ).
-    arg( tzUTCOffsetStr( it.value() ) );
+      arg( tzUTCOffsetStr( it.value() ) );
 }
 
 //TODO: move to KCalCore::Stringify
