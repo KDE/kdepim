@@ -76,7 +76,7 @@ namespace Util {
 
     MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection );
 
-    MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
+    MAILCOMMON_EXPORT bool showJobErrorMessage( KJob *job );
 
     MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances( bool excludeMailTransport = true);
     MAILCOMMON_EXPORT void ensureKorganizerRunning( bool switchTo );
