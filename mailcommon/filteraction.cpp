@@ -32,6 +32,7 @@
 #include <KColorScheme>
 #include <ktemporaryfile.h>
 #include <kurlrequester.h>
+#include <knotification.h>
 #include <libkdepim/addcontactjob.h>
 #include <messagecore/emailaddressrequester.h>
 #include <messagecore/mdnstateattribute.h>
@@ -2702,6 +2703,33 @@ QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
 }
 
 //=============================================================================
+// FilterActionBeep - Beep action
+//=============================================================================
+class FilterActionBeep : public FilterActionWithNone
+{
+  public:
+    FilterActionBeep( QObject *parent = 0 );
+    virtual ReturnCode process( ItemContext &context ) const;
+    static FilterAction* newAction();
+};
+
+FilterAction* FilterActionBeep::newAction()
+{
+  return new FilterActionBeep;
+}
+
+FilterActionBeep::FilterActionBeep( QObject *parent )
+  : FilterActionWithNone( "beep", i18n( "Beep" ), parent )
+{
+}
+
+FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/ ) const
+{
+  KNotification::beep();
+  return GoOn;
+}
+
+//=============================================================================
 //
 //   Filter  Action  Dictionary
 //
@@ -2734,6 +2762,7 @@ void FilterActionDict::init()
 #endif
   insert( FilterActionAddToAddressBook::newAction );
   insert( FilterActionDelete::newAction);
+  insert( FilterActionBeep::newAction);
   // Register custom filter actions below this line.
 }
 
