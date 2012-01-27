@@ -495,7 +495,10 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
     }
   } else {
     const Akonadi::Collection p = c.parentCollection();
-    const QString oStr = calendar->collection( p.id() ).name();
+    QString oStr;
+    if ( calendar ) {
+      oStr = calendar->collection( p.id() ).name();
+    }
 
     if ( !oStr.isEmpty() ) {
       if ( oStr.toUpper() != QString( "INBOX" ) ) {
