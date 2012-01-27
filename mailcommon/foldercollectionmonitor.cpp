@@ -106,9 +106,7 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
 
 void FolderCollectionMonitor::slotDeleteJob( KJob *job )
 {
-  if ( job->error() ) {
-    Util::showJobErrorMessage( job );
-  }
+  Util::showJobErrorMessage( job );
 }
 
 }

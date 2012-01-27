@@ -122,14 +122,16 @@ QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collect
   return fullPath;
 }
 
-void MailCommon::Util::showJobErrorMessage( KJob *job )
+bool MailCommon::Util::showJobErrorMessage( KJob *job )
 {
   if ( job->error() ) {
     if ( static_cast<KIO::Job*>( job )->ui() )
       static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
     else
       kDebug()<<" job->errorString() :"<<job->errorString();
+    return true;
   }
+  return false;
 }
 
 Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailDispacher )
