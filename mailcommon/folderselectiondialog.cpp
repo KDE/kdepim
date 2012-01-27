@@ -83,6 +83,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
     optReadableProxy |= FolderTreeWidgetProxyModel::HideOutboxFolder;
 
   d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
+  d->folderTreeWidget->readConfig();
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
   d->folderTreeWidget->folderTreeWidgetProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
   //Necessary otherwise we overwrite tooltip config for all application
