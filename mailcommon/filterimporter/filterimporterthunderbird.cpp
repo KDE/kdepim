@@ -188,7 +188,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
   } else if ( field == QLatin1String( "to or cc" ) ) {
     fieldName = "<recipients>";
   } else if ( field == QLatin1String( "all addresses" ) ) {
-      //TODO
+      fieldName = "<recipients>";
   } else if ( field == QLatin1String( "age in days" ) ) {
       fieldName = "<age in days>";
   } else if ( field == QLatin1String( "label" ) ) {
@@ -330,6 +330,7 @@ QString FilterImporterThunderbird::extractActions(const QString& line, MailCommo
   } else if( line == QLatin1String("Mark flagged")) {
   } else if( line == QLatin1String("Label")) {
   } else if( line == QLatin1String("Reply")) {
+      actionName = QLatin1String("set Reply-To");
   } else if( line == QLatin1String("Stop execution")) {
       filter->setStopProcessingHere(true);
       return QString();
