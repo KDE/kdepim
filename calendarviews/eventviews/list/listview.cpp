@@ -434,13 +434,11 @@ void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
   item->setData( 0, Qt::UserRole, QVariant( aitem.id() ) );
 }
 
-void ListView::showIncidences( CalendarSupport::Calendar *calendar,
-                               const Akonadi::Item::List &incidenceList,
-                               const QDate &date )
+void ListView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
   clear();
 
-  d->addIncidences( calendar, incidenceList, date );
+  d->addIncidences( calendar(), incidenceList, date );
 
   updateView();
 
@@ -448,8 +446,7 @@ void ListView::showIncidences( CalendarSupport::Calendar *calendar,
   emit incidenceSelected( Akonadi::Item(), date );
 }
 
-void ListView::changeIncidenceDisplay( CalendarSupport::Calendar *calendar,
-                                       const Akonadi::Item &aitem, int action )
+void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   ListViewItem *item;
@@ -469,7 +466,7 @@ void ListView::changeIncidenceDisplay( CalendarSupport::Calendar *calendar,
   case CalendarSupport::IncidenceChanger::INCIDENCEADDED:
   {
     if ( date >= f && date <= l ) {
-      d->addIncidence( calendar, aitem, date );
+      d->addIncidence( calendar(), aitem, date );
     }
     break;
   }
@@ -482,7 +479,7 @@ void ListView::changeIncidenceDisplay( CalendarSupport::Calendar *calendar,
       d->mDateList.remove( aitem.id() );
     }
     if ( date >= f && date <= l ) {
-      d->addIncidence( calendar, aitem, date );
+      d->addIncidence( calendar(), aitem, date );
     }
     break;
   }

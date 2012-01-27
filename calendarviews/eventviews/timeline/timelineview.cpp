@@ -408,11 +408,8 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
 }
 
 /*virtual*/
-void TimelineView::showIncidences( CalendarSupport::Calendar *calendar,
-                                   const Akonadi::Item::List &incidenceList,
-                                   const QDate &date )
+void TimelineView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
-  Q_UNUSED( calendar );
   Q_UNUSED( incidenceList );
   Q_UNUSED( date );
 }

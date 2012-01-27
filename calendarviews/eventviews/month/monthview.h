@@ -91,9 +91,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     // virtual slots
     virtual void updateConfig();
     virtual void updateView();
-    virtual void showIncidences( CalendarSupport::Calendar *calendar,
-                                 const Akonadi::Item::List &incidenceList,
-                                 const QDate &date );
+    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     // non-virtual slots
     void changeIncidenceDisplay( const Akonadi::Item &, int );

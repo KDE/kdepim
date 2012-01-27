@@ -54,9 +54,7 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     QDate startDate() const;
     QDate endDate() const;
 
-    virtual void showIncidences( CalendarSupport::Calendar *calendar,
-                                 const Akonadi::Item::List &incidenceList,
-                                 const QDate &date );
+    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     virtual void updateView();
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;

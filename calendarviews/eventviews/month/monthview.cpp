@@ -346,11 +346,8 @@ bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
   return false;
 }
 
-void MonthView::showIncidences( CalendarSupport::Calendar *calendar,
-                                const Akonadi::Item::List &incidenceList,
-                                const QDate &date )
+void MonthView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
-  Q_UNUSED( calendar );
   Q_UNUSED( incidenceList );
   Q_UNUSED( date );
 }
