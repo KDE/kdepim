@@ -162,7 +162,8 @@ void FilterManager::Private::moveJobResult( KJob *job )
     } else {
       kError() << "Error while moving items. " << job->error() << job->errorString();
     }
-    KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
+    //Laurent: not real info and when we have 200 errors it's very long to click all the time on ok.
+    //KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
   }
 }
 
