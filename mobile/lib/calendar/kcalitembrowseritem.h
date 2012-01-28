@@ -20,13 +20,15 @@
 #ifndef KCALITEMBROWSERITEM_H
 #define KCALITEMBROWSERITEM_H
 
-#include <QtCore/QAbstractItemModel>
+#include "declarativeakonadiitem.h"
 
-#include "calendarsupport/next/incidenceviewer.h"
-#include <mobile/lib/declarativeakonadiitem.h>
+#include <calendarsupport/next/incidenceviewer.h>
+
+#include <QtCore/QAbstractItemModel>
 
 namespace CalendarSupport {
 
+class Calendar;
 class Item;
 
 namespace KCal {
@@ -39,7 +41,7 @@ class ExtendedIncidenceViewer : public IncidenceViewer
   Q_OBJECT
 
   public:
-    ExtendedIncidenceViewer( QWidget *parent = 0 );
+    explicit ExtendedIncidenceViewer( Calendar *calendar, QWidget *parent = 0 );
 
   Q_SIGNALS:
     void incidenceRemoved();
