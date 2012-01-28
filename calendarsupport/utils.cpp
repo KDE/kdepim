@@ -494,21 +494,45 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
       return i18n( "My %1", cName );
     }
   } else {
-    const Akonadi::Collection p = c.parentCollection();
-    QString oStr;
+    QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
+    QString ownerStr;        // folder owner; "fred", "ethel", etc
+    QString nameStr;         // folder name: "Public", "Test", etc
     if ( calendar ) {
-      oStr = calendar->collection( p.id() ).name();
-    }
-
-    if ( !oStr.isEmpty() ) {
-      if ( oStr.toUpper() != QString( "INBOX" ) ) {
-        return i18n( "%1's %2", oStr, cName );
-      } else {
-        return i18n( "My Shared %1", cName );
+      Akonadi::Collection p = c.parentCollection();
+      while ( p != Akonadi::Collection::root() ) {
+        Akonadi::Collection tCol = calendar->collection( p.id() );
+        const QString tName = tCol.name();
+        if ( tName != i18n( "Calendar" ) &&
+             tName != i18n( "Tasks" ) &&
+             tName != i18n( "Journal" ) &&
+             tName != i18n( "Notes" ) ) {
+          ownerStr = tName;
+          break;
+        } else {
+          nameStr = typeStr;
+          typeStr = tName;
+        }
+        p = p.parentCollection();
       }
     }
+
+    if ( !ownerStr.isEmpty() ) {
+      if ( ownerStr.toUpper() != QString( "INBOX" ) ) {
+        if ( nameStr.isEmpty() ) {
+          return i18nc( "%1 is folder owner name, %2 is folder contents",
+                        "%1's %2", ownerStr, typeStr );
+        } else {
+          return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
+                        "%1's %2 %3", ownerStr, nameStr, typeStr );
+        }
+      } else {
+        return i18nc( "%1 is folder contents",
+                      "My Shared %1", typeStr );
+      }
+    } else {
+      return typeStr;
+    }
   }
-  return cName;
 }
 
 QString CalendarSupport::subMimeTypeForIncidence( const KCalCore::Incidence::Ptr &incidence )
