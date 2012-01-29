@@ -57,12 +57,6 @@
 </answer>
 </qandaentry>
 
-<qandaentry><question><para>Why KMail2 doesn't send mail?</para></question>
-<answer>
-  <para>Some users find that mail does not go out, and it appears that &SMTP; is missing, even though the <guimenuitem>Settings</guimenuitem> page looks correct. It has been reported that this is cured by opening <application>akonadiconsole</application> and adding <guilabel>Mail Dispatcher Agent</guilabel>.</para>
-</answer>
-</qandaentry>
-
 <qandaentry><question><para>How to store sent mails in a special folder?</para></question>
 <answer>
   <para><emphasis>Symptom:</emphasis> You want to store mails in a special folder. Maybe you are using an IMAP server and want to store your mails on the server, not in the client.</para>
