@@ -2698,7 +2698,7 @@ QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
     KColorScheme scheme(QPalette::Active, KColorScheme::View);
     pal.setColor(QPalette::WindowText, scheme.foreground(KColorScheme::NegativeText).color());
     lab->setPalette(pal);
-    lab->setText(i18n("Be careful mails will removed."));
+    lab->setText(i18n("Be careful, mails will be removed."));
     return lab;
 }
 

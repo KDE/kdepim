@@ -1093,10 +1093,10 @@ void KMFilterListBox::slotDelete()
   MailCommon::MailFilter *filter = itemFilter->filter();
   const QString filterName = filter->pattern()->name();
   if( uniqFilterSelected ) {
-      if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\" ?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
+      if ( KMessageBox::questionYesNo(this, i18n( "Do you want to remove the filter \"%1\"?",filterName ), i18n( "Remove Filter" )) == KMessageBox::No )
           return;
   } else {
-      if( KMessageBox::questionYesNo(this, i18n( "Do you want to remove selected filters ?" ), i18n( "Remove Filters" )) == KMessageBox::No ) {
+      if( KMessageBox::questionYesNo(this, i18n( "Do you want to remove selected filters?" ), i18n( "Remove Filters" )) == KMessageBox::No ) {
           return;
       }
   }

@@ -77,7 +77,7 @@
           </font>
          </property>
          <property name="toolTip">
-          <string comment="@info:tooltip">Create the  template for new messages</string>
+          <string comment="@info:tooltip">Create the template for new messages</string>
          </property>
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for new email messages.  For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
@@ -131,7 +131,7 @@
           </font>
          </property>
          <property name="toolTip">
-          <string comment="@info:tooltip">Create the  template for message replies</string>
+          <string comment="@info:tooltip">Create the template for message replies</string>
          </property>
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for messages replies. For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
@@ -185,7 +185,7 @@
           </font>
          </property>
          <property name="toolTip">
-          <string comment="@info:tooltip">Create the  template for replying to all recipients or to a mailing list</string>
+          <string comment="@info:tooltip">Create the template for replying to all recipients or to a mailing list</string>
          </property>
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for reply-to-all messages or replies to a mailing list.  For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
@@ -239,7 +239,7 @@
           </font>
          </property>
          <property name="toolTip">
-          <string comment="@info:tooltip">Create the  template for message forwards</string>
+          <string comment="@info:tooltip">Create the template for message forwards</string>
          </property>
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for message forwards.  For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
@@ -292,7 +292,7 @@
      <item>
       <widget class="KLineEdit" name="lineEdit_quote">
        <property name="toolTip">
-        <string comment="@info:tooltip">Set the  Prefix for quoted message lines</string>
+        <string comment="@info:tooltip">Set the Prefix for quoted message lines</string>
        </property>
        <property name="whatsThis">
         <string comment="@info:whatsthis">

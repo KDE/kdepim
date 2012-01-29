@@ -432,7 +432,7 @@ void CSVImportDialog::initGUI()
     i18nc( "@info:tooltip", "Select the text codec" ) );
   mCodecCombo->setWhatsThis(
     i18nc( "@info:whatsthis",
-           "Choose the character encoding or the the data in your csv file." ) );
+           "Choose the character encoding of the data in your csv file." ) );
   layout->addWidget( mCodecCombo, 3, 3 );
 
   // skip first line
