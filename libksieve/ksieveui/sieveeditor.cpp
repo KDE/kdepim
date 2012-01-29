@@ -80,7 +80,8 @@ SieveEditor::~SieveEditor()
 void SieveEditor::slotSaveAs()
 {
   KUrl url;
-  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+  const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+  QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
 
   fdlg->setMode( KFile::File );
   fdlg->setOperationMode( KFileDialog::Saving );
@@ -119,7 +120,8 @@ void SieveEditor::slotImport()
       return;
   }
   KUrl url;
-  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+  const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+  QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
 
   fdlg->setMode( KFile::File );
   fdlg->setOperationMode( KFileDialog::Opening );
