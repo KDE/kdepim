@@ -4,7 +4,7 @@
 <authorgroup>
 <author>
 <personname>
-      <firstname>This chapter was converted from the KDE UserBase <ulink url=" http://userbase.kde.org/KMail/FAQs Hints and Tips">KMail/FAQs Hints and Tips</ulink> page.</firstname>
+      <firstname>This chapter was converted from the KDE UserBase <ulink url="http://userbase.kde.org/KMail/FAQs Hints and Tips">KMail/FAQs Hints and Tips</ulink> page.</firstname>
 <surname></surname>
 </personname>
       </author>
@@ -85,7 +85,7 @@ Online=true</screen>
 </para>
 <para>In &kmail;: <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Accounts</guimenuitem></menuchoice> and use <guilabel>Add</guilabel>.
 </para>
-<para>If you use &imap;, add a new <guimenuitem>&imap; E-Mail server</guimenuitem>. If you want disconnected mode (so you can read the mails offline), enable it on the <guilabel>Advanced</guilabel> tab. Be sure to check that you are subsribed to all your important folders.
+<para>If you use &imap;, add a new <guimenuitem>&imap; E-Mail server</guimenuitem>. If you want disconnected mode (so you can read the mails offline), enable it on the <guilabel>Advanced</guilabel> tab. Be sure to check that you are subscribed to all your important folders.
 </para>
 <para>You might already see a <guilabel>Local folder</guilabel> resource. This points to a local maildir folder. You can either modify this to point to your existing maildir folders or you can add a new resource for local mails.
 </para>
