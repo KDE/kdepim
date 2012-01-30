@@ -219,7 +219,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                                 const QString name = valueFilter.attribute( "value" );
                                 qDebug()<<" value filter value :"<<name;
                                 if(value == QLatin1String("")) {
-
+                                  //TODO
                                 }
 
                             }
@@ -251,7 +251,10 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
           filter->pattern()->setOp(SearchPattern::OpAnd);
         } else if ( attr == QLatin1String( "any" ) ) {
           filter->pattern()->setOp(SearchPattern::OpOr);
+        } else {
+          qDebug()<<" grouping not defined: "<< attr;
         }
+          
     }
     if(e.hasAttribute("source"))
     {
@@ -261,6 +264,8 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
         } else if ( attr == QLatin1String( "outgoing" ) ) {
           filter->setApplyOnInbound( false );
           filter->setApplyOnOutbound(true);
+        } else {
+          qDebug()<<" source not implemented :"<<attr;
         }
     }
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
