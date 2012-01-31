@@ -1142,12 +1142,7 @@ void KMFilterListBox::slotDelete()
 
 void KMFilterListBox::slotTop()
 {
-  QList<QListWidgetItem*> listWidgetItem;
-  const int numberOfFilters = mListWidget->count();
-  for(int i = 0; i <numberOfFilters; ++i){
-      if(mListWidget->item(i)->isSelected()&& !mListWidget->item(i)->isHidden())
-          listWidgetItem<<mListWidget->item(i);
-  }
+  QList<QListWidgetItem*> listWidgetItem = selectedFilter();
   if(listWidgetItem.isEmpty())
       return;
 
@@ -1173,7 +1168,7 @@ void KMFilterListBox::slotTop()
   emit filterOrderAltered();
 }
 
-void KMFilterListBox::slotBottom()
+QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
 {
     QList<QListWidgetItem*> listWidgetItem;
     const int numberOfFilters = mListWidget->count();
@@ -1181,6 +1176,12 @@ void KMFilterListBox::slotBottom()
         if(mListWidget->item(i)->isSelected()&& !mListWidget->item(i)->isHidden())
             listWidgetItem<<mListWidget->item(i);
     }
+    return listWidgetItem;
+}
+
+void KMFilterListBox::slotBottom()
+{
+    QList<QListWidgetItem*> listWidgetItem = selectedFilter();
     if(listWidgetItem.isEmpty())
         return;
 

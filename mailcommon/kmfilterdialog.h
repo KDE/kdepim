@@ -204,6 +204,7 @@ protected:
 private:
   void enableControls();
   bool itemIsValid(QListWidgetItem *item ) const;
+  QList<QListWidgetItem*> selectedFilter();
 
   void swapNeighbouringFilters( int untouchedOne, int movedOne);
 };
