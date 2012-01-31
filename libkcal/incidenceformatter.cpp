@@ -62,6 +62,8 @@
 
 using namespace KCal;
 
+//#define KORG_DEBUG_SCHEDULING_IDS
+
 /*******************
  *  General helpers
  *******************/
@@ -4038,6 +4040,11 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
   QString tmp = "<qt>";
 
   // header
+
+#ifdef KORG_DEBUG_SCHEDULING_IDS
+  tmp += "<b>Uid: " + incidence->uid() + "<br>schedulingID: " + incidence->schedulingID() + "</b><br>";
+#endif
+
   tmp += "<b>" + incidence->summary().replace( "\n", "<br>" ) + "</b>";
   //NOTE: using <hr> seems to confuse Qt3 tooltips in some cases so use "-----"
   tmp += "<br>----------<br>";
