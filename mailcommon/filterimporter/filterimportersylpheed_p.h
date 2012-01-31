@@ -37,6 +37,7 @@ public:
 private:
     void parseFilters(const QDomElement &e);
     void parseConditions(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
+    void parseActions(const QDomElement &e, MailCommon::MailFilter *filter);
 
 };
 }

@@ -58,18 +58,78 @@ FilterImporterSylpheed::~FilterImporterSylpheed()
 {
 }
 
-void FilterImporterSylpheed::parseConditions(const QDomElement &ruleFilter, MailCommon::MailFilter *filter)
+void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::MailFilter *filter)
 {
-  if ( ruleFilter.hasAttribute( "bool" ) ) {
-    const QString attr = ruleFilter.attribute("bool");
+  if ( e.hasAttribute( "bool" ) ) {
+    const QString attr = e.attribute("bool");
     if ( attr == QLatin1String( "and" ) ) {
       filter->pattern()->setOp(SearchPattern::OpAnd);
-    } else if ( attr == QLatin1String( "any" ) ) {
+    } else if ( attr == QLatin1String( "or" ) ) {
       filter->pattern()->setOp(SearchPattern::OpOr);
     } else {
-      qDebug()<<" grouping not defined: "<< attr;
+      qDebug()<<" bool not defined: "<< attr;
     }
   }
+  for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
+  {
+      QString value;
+      QString contents;
+      SearchRule::Function functionName = SearchRule::FuncNone;
+
+      const QString nexttag = ruleFilter.tagName();
+      if(nexttag == QLatin1String("match-header")){
+          //TODO
+      } else if( nexttag == QLatin1String("match-any-header")) {
+      } else if( nexttag == QLatin1String("match-to-or-cc")) {
+      } else if( nexttag == QLatin1String("match-body-text")) {
+      } else if( nexttag == QLatin1String("command-test")) {
+      } else if( nexttag == QLatin1String("size")) {
+      } else if( nexttag == QLatin1String("age")) {
+      } else if( nexttag == QLatin1String("unread")) {
+      } else if( nexttag == QLatin1String("mark")) {
+      } else if( nexttag == QLatin1String("color-label")) {
+      } else if( nexttag == QLatin1String("mime")) {
+      } else if( nexttag == QLatin1String("account-id")) {
+      } else if( nexttag == QLatin1String("target-folder")) {
+
+      } else {
+          qDebug()<<" tag not recognize "<<nexttag;
+      }
+  }
+
+}
+
+void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::MailFilter *filter)
+{
+    for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
+    {
+        QString actionName;
+        QString value;
+        const QString nexttag = ruleFilter.tagName();
+        if(nexttag == QLatin1String("move")){
+            actionName = QLatin1String( "transfer" );
+        } else if( nexttag == QLatin1String("copy")) {
+            actionName = QLatin1String( "copy" );
+        } else if( nexttag == QLatin1String("not-receive")) {
+        } else if( nexttag == QLatin1String("delete")) {
+            actionName = QLatin1String( "delete" );
+        } else if( nexttag == QLatin1String("exec")) {
+        } else if( nexttag == QLatin1String("exec-async")) {
+        } else if( nexttag == QLatin1String("mark")) {
+        } else if( nexttag == QLatin1String("color-label")) {
+        } else if( nexttag == QLatin1String("mark-as-read")) {
+        } else if( nexttag == QLatin1String("forward")) {
+        } else if( nexttag == QLatin1String("forward-as-attachment")) {
+        } else if( nexttag == QLatin1String("redirect")) {
+        } else if( nexttag == QLatin1String("stop-eval")) {
+            filter->setStopProcessingHere(true);
+            break;
+        } else {
+            qDebug()<<" tag not recognize "<<nexttag;
+        }
+        createFilterAction(filter, actionName, value);
+    }
+
 }
 
 void FilterImporterSylpheed::parseFilters(const QDomElement &e)
@@ -90,10 +150,14 @@ void FilterImporterSylpheed::parseFilters(const QDomElement &e)
     if( e.hasAttribute("timing"))
     {
         const QString attr = e.attribute("timing");
-        if ( attr == QLatin1String( "all" ) ) {
-          filter->pattern()->setOp(SearchPattern::OpAnd);
-        } else if ( attr == QLatin1String( "any" ) ) {
-          filter->pattern()->setOp(SearchPattern::OpOr);
+        if ( attr == QLatin1String( "any" ) ) {
+            filter->setApplyOnInbound( true );
+            filter->setApplyOnExplicit( true );
+        } else if(attr == QLatin1String("receiver")) {
+            filter->setApplyOnInbound( true );
+        } else if(attr == QLatin1String("manual")) {
+            filter->setApplyOnInbound( false );
+            filter->setApplyOnExplicit( true );
         } else {
           qDebug()<<" timing not defined: "<< attr;
         }
@@ -106,7 +170,7 @@ void FilterImporterSylpheed::parseFilters(const QDomElement &e)
         if(nexttag == QLatin1String("condition-list")){
           parseConditions(ruleFilter, filter);
         } else if( nexttag == QLatin1String("action-list")) {
-          //TODO
+          parseActions(ruleFilter, filter);
         }
     }
 
