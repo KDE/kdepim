@@ -855,6 +855,8 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
           return true;
         } else {
           // duplicate uid in a different folder, do the internal-uid tango
+          kdDebug(5650 ) << "Doing internal-uid tango for incidence " << uid
+                         << "; resource=" << subResource << endl;
           incidence->setSchedulingID( uid );
 
           incidence->setUid( CalFormat::createUniqueId( ) );
