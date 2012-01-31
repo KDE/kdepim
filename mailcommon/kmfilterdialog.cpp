@@ -1175,24 +1175,36 @@ void KMFilterListBox::slotTop()
 
 void KMFilterListBox::slotBottom()
 {
-  QListWidgetItem *item = mListWidget->currentItem();
-  if ( !itemIsValid( item ) ) {
-    return;
-  }
-  const int currentIndex = mListWidget->currentRow();
-  if ( currentIndex == (int)mListWidget->count() - 1 ) {
-    kDebug() << "Called while the _last_ filter is selected, ignoring.";
-    return;
-  }
-  if ( item->isHidden() )
-    return;
-  item = mListWidget->takeItem( currentIndex );
-  mListWidget->insertItem( mListWidget->count(), item );
+    QList<QListWidgetItem*> listWidgetItem;
+    const int numberOfFilters = mListWidget->count();
+    for(int i = 0; i <numberOfFilters; ++i){
+        if(mListWidget->item(i)->isSelected()&& !mListWidget->item(i)->isHidden())
+            listWidgetItem<<mListWidget->item(i);
+    }
+    if(listWidgetItem.isEmpty())
+        return;
 
-  mListWidget->setCurrentItem( mListWidget->item( mListWidget->count() -1 ) );
-  enableControls();
+    const int numberOfItem(listWidgetItem.count());
+    if((numberOfItem == 1) && (mListWidget->currentRow() == (int)mListWidget->count() - 1)){
+        kDebug() << "Called while the _last_ filter is selected, ignoring.";
+        return;
+    }
 
-  emit filterOrderAltered();
+    QListWidgetItem *item = 0;
+    int j = 0;
+    for(int i = numberOfItem-1; i>= 0; --i,j++){
+        const int posItem = mListWidget->row(listWidgetItem.at(i));
+        if(posItem == i)
+            continue;
+        item = mListWidget->takeItem( mListWidget->row(listWidgetItem.at(i)) );
+        mListWidget->insertItem( mListWidget->count()-j, item );
+
+    }
+
+    mListWidget->setCurrentItem( mListWidget->item( mListWidget->count() -1 ) );
+    enableControls();
+
+    emit filterOrderAltered();
 }
 
 
@@ -1292,7 +1304,7 @@ void KMFilterListBox::enableControls()
   mBtnDelete->setEnabled( aFilterIsSelected);
   mBtnRename->setEnabled( aFilterIsSelected && uniqFilterSelected);
   mBtnTop->setEnabled( aFilterIsSelected && ((uniqFilterSelected && !theFirst)|| (!uniqFilterSelected)));
-  mBtnBottom->setEnabled( aFilterIsSelected && !theLast && uniqFilterSelected);
+  mBtnBottom->setEnabled( aFilterIsSelected && ((uniqFilterSelected &&!theLast) || (!uniqFilterSelected)));
 
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
