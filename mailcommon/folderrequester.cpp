@@ -104,9 +104,11 @@ Akonadi::Collection FolderRequester::collection() const
   return mCollection;
 }
 
-void FolderRequester::setCollectionFullPath( const Akonadi::Collection&col )
+void FolderRequester::setCollectionFullPath( const Akonadi::Collection &col )
 {
-  edit->setText( Util::fullCollectionPath( col ) );
+  if ( KernelIf->collectionModel() ) {
+    edit->setText( Util::fullCollectionPath( col ) );
+  }
 }
 
 //-----------------------------------------------------------------------------
