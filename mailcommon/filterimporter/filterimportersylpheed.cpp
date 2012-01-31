@@ -74,6 +74,7 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
   {
       QString value;
       QString contents;
+      QByteArray fieldName;
       SearchRule::Function functionName = SearchRule::FuncNone;
 
       const QString nexttag = ruleFilter.tagName();
@@ -81,10 +82,14 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
           //TODO
       } else if( nexttag == QLatin1String("match-any-header")) {
       } else if( nexttag == QLatin1String("match-to-or-cc")) {
+          fieldName = "<recipients>";
       } else if( nexttag == QLatin1String("match-body-text")) {
+          fieldName = "<body>";
       } else if( nexttag == QLatin1String("command-test")) {
       } else if( nexttag == QLatin1String("size")) {
+          fieldName = "<size>";
       } else if( nexttag == QLatin1String("age")) {
+          fieldName = "<age in days>";
       } else if( nexttag == QLatin1String("unread")) {
       } else if( nexttag == QLatin1String("mark")) {
       } else if( nexttag == QLatin1String("color-label")) {
