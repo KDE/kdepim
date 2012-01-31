@@ -58,6 +58,20 @@ FilterImporterSylpheed::~FilterImporterSylpheed()
 {
 }
 
+void FilterImporterSylpheed::parseConditions(const QDomElement &ruleFilter, MailCommon::MailFilter *filter)
+{
+  if ( ruleFilter.hasAttribute( "bool" ) ) {
+    const QString attr = ruleFilter.attribute("bool");
+    if ( attr == QLatin1String( "and" ) ) {
+      filter->pattern()->setOp(SearchPattern::OpAnd);
+    } else if ( attr == QLatin1String( "any" ) ) {
+      filter->pattern()->setOp(SearchPattern::OpOr);
+    } else {
+      qDebug()<<" grouping not defined: "<< attr;
+    }
+  }
+}
+
 void FilterImporterSylpheed::parseFilters(const QDomElement &e)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
@@ -90,7 +104,7 @@ void FilterImporterSylpheed::parseFilters(const QDomElement &e)
         const QString nexttag = ruleFilter.tagName();
         qDebug()<<" nexttag "<<nexttag;
         if(nexttag == QLatin1String("condition-list")){
-          //TODO
+          parseConditions(ruleFilter, filter);
         } else if( nexttag == QLatin1String("action-list")) {
           //TODO
         }

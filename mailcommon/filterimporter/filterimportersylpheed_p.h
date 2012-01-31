@@ -36,6 +36,8 @@ public:
     ~FilterImporterSylpheed();
 private:
     void parseFilters(const QDomElement &e);
+    void parseConditions(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
+
 };
 }
 
