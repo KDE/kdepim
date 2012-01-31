@@ -72,7 +72,7 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
   }
   for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
   {
-      QString value;
+      QString contentsName;
       QString contents;
       QByteArray fieldName;
       SearchRule::Function functionName = SearchRule::FuncNone;
@@ -100,6 +100,9 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
       } else {
           qDebug()<<" tag not recognize "<<nexttag;
       }
+      SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
+      filter->pattern()->append( rule );
+
   }
 
 }

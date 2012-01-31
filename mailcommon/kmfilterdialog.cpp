@@ -1142,20 +1142,29 @@ void KMFilterListBox::slotDelete()
 
 void KMFilterListBox::slotTop()
 {
-  QListWidgetItem *item = mListWidget->currentItem();
-  if ( !itemIsValid(item) ) {
-    return;
+  QList<QListWidgetItem*> listWidgetItem;
+  const int numberOfFilters = mListWidget->count();
+  for(int i = 0; i <numberOfFilters; ++i){
+      if(mListWidget->item(i)->isSelected()&& !mListWidget->item(i)->isHidden())
+          listWidgetItem<<mListWidget->item(i);
   }
-  const int currentIndex = mListWidget->currentRow();
-  if ( currentIndex == 0 ) {
-    kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
-    return;
+  if(listWidgetItem.isEmpty())
+      return;
+
+  const int numberOfItem(listWidgetItem.count());
+  if((numberOfItem == 1) && (mListWidget->currentRow() == 0)){
+      kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+      return;
   }
 
-  if ( item->isHidden() )
-    return;
-  item = mListWidget->takeItem( currentIndex );
-  mListWidget->insertItem( 0, item );
+  QListWidgetItem *item = 0;
+  for(int i = 0; i<numberOfItem; ++i){
+      const int posItem = mListWidget->row(listWidgetItem.at(i));
+      if(posItem == i)
+          continue;
+      item = mListWidget->takeItem( mListWidget->row(listWidgetItem.at(i)) );
+      mListWidget->insertItem( i, item );
+  }
 
   mListWidget->setCurrentItem( mListWidget->item( 0 ) );
 
@@ -1282,7 +1291,7 @@ void KMFilterListBox::enableControls()
   mBtnCopy->setEnabled( aFilterIsSelected && uniqFilterSelected);
   mBtnDelete->setEnabled( aFilterIsSelected);
   mBtnRename->setEnabled( aFilterIsSelected && uniqFilterSelected);
-  mBtnTop->setEnabled( aFilterIsSelected && !theFirst && uniqFilterSelected);
+  mBtnTop->setEnabled( aFilterIsSelected && ((uniqFilterSelected && !theFirst)|| (!uniqFilterSelected)));
   mBtnBottom->setEnabled( aFilterIsSelected && !theLast && uniqFilterSelected);
 
   if ( aFilterIsSelected )
