@@ -79,15 +79,32 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
 
       const QString nexttag = ruleFilter.tagName();
       if(nexttag == QLatin1String("match-header")){
-          //TODO
+          if(ruleFilter.hasAttribute("name")){
+              const QString attr = ruleFilter.attribute("name");
+              if(attr == QLatin1String("From")) {
+                  fieldName = "from";
+              } else if(attr == QLatin1String("Reply-To")) {
+                  fieldName = "reply-to";
+              } else if(attr == QLatin1String("Subject")) {
+                  fieldName = "subject";
+              } else if(attr == QLatin1String("List-Id")) {
+                  fieldName = "list-id";
+              } else {
+                  qDebug()<<" match-header not implemented "<<attr;
+              }
+          }
+          contents = ruleFilter.text();
       } else if( nexttag == QLatin1String("match-any-header")) {
       } else if( nexttag == QLatin1String("match-to-or-cc")) {
           fieldName = "<recipients>";
+          contents = ruleFilter.text();
       } else if( nexttag == QLatin1String("match-body-text")) {
           fieldName = "<body>";
+          contents = ruleFilter.text();
       } else if( nexttag == QLatin1String("command-test")) {
       } else if( nexttag == QLatin1String("size")) {
           fieldName = "<size>";
+          contents = ruleFilter.text();
       } else if( nexttag == QLatin1String("age")) {
           fieldName = "<age in days>";
       } else if( nexttag == QLatin1String("unread")) {
@@ -99,6 +116,26 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
 
       } else {
           qDebug()<<" tag not recognize "<<nexttag;
+      }
+      if(ruleFilter.hasAttribute("type")) {
+          const QString attr = ruleFilter.attribute("type");
+          if(attr == QLatin1String("not-contain")) {
+              functionName = SearchRule::FuncContainsNot;
+          } else if(attr == QLatin1String("contains")) {
+              functionName = SearchRule::FuncContains;
+          } else if(attr == QLatin1String("is-not")) {
+              functionName = SearchRule::FuncNotEqual;
+          } else if(attr == QLatin1String("is")) {
+              functionName = SearchRule::FuncEquals;
+          } else if(attr == QLatin1String("not-regex")) {
+          } else if(attr == QLatin1String("regex")) {
+          } else if(attr == QLatin1String("not-in-addressbook")) {
+              functionName = SearchRule::FuncIsNotInAddressbook;
+          } else if(attr == QLatin1String("in-addressbook")) {
+              functionName = SearchRule::FuncIsInAddressbook;
+          } else {
+              qDebug()<<" Attr type not implemented :"<<attr;
+          }
       }
       SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
       filter->pattern()->append( rule );
@@ -116,17 +153,23 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::Mail
         const QString nexttag = ruleFilter.tagName();
         if(nexttag == QLatin1String("move")){
             actionName = QLatin1String( "transfer" );
+            value = ruleFilter.text();
         } else if( nexttag == QLatin1String("copy")) {
             actionName = QLatin1String( "copy" );
+            value = ruleFilter.text();
         } else if( nexttag == QLatin1String("not-receive")) {
         } else if( nexttag == QLatin1String("delete")) {
             actionName = QLatin1String( "delete" );
         } else if( nexttag == QLatin1String("exec")) {
+            actionName = QLatin1String("execute");
         } else if( nexttag == QLatin1String("exec-async")) {
         } else if( nexttag == QLatin1String("mark")) {
         } else if( nexttag == QLatin1String("color-label")) {
         } else if( nexttag == QLatin1String("mark-as-read")) {
+            actionName = QLatin1String("set status");
+            value = QLatin1String("R");
         } else if( nexttag == QLatin1String("forward")) {
+            actionName = QLatin1String( "forward" );
         } else if( nexttag == QLatin1String("forward-as-attachment")) {
         } else if( nexttag == QLatin1String("redirect")) {
         } else if( nexttag == QLatin1String("stop-eval")) {
