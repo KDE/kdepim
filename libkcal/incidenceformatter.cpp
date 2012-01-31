@@ -62,7 +62,7 @@
 
 using namespace KCal;
 
-//#define KORG_DEBUG_SCHEDULING_IDS
+#define KORG_DEBUG_SCHEDULING_IDS
 
 /*******************
  *  General helpers
