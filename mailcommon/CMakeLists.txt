@@ -59,6 +59,7 @@ set(libmailcommon_SRCS
   filterimporter/filterimporterthunderbird.cpp
   filterimporter/filterimporterabstract.cpp
   filterimporter/filterimporterevolution.cpp
+  filterimporter/filterimportersylpheed.cpp
   favoritecollectionwidget.cpp
 )
 
