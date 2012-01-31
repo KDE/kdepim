@@ -31,6 +31,7 @@
 #include "filterimporterexporter_p.h"
 #include "filterimporter/filterimporterthunderbird_p.h"
 #include "filterimporter/filterimporterevolution_p.h"
+#include "filterimporter/filterimportersylpheed_p.h"
 
 #include "filteraction.h"
 #include "mailfilter.h"
@@ -237,6 +238,9 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     case EvolutionFilter:
         title = i18n( "Import Evolution Filters" );
         break;
+    case SylpheedFilter:
+        title = i18n( "Import Sylpheed Filters" );
+        break;
     }
 
     const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
@@ -271,6 +275,13 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     case EvolutionFilter:
     {
         MailCommon::FilterImporterEvolution *filter = new MailCommon::FilterImporterEvolution(&file);
+        imported = filter->importFilter();
+        delete filter;
+        break;
+    }
+    case SylpheedFilter:
+    {
+        MailCommon::FilterImporterSylpheed *filter = new MailCommon::FilterImporterSylpheed(&file);
         imported = filter->importFilter();
         delete filter;
         break;

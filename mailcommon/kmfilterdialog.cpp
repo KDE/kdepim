@@ -304,6 +304,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   menu->addAction( i18n("KMail filters"), this, SLOT(slotImportKMailFilters()) );
   menu->addAction( i18n("Thunderbird filters"), this, SLOT(slotImportThunderbirdFilters()) );
   menu->addAction( i18n("Evolution filters"), this, SLOT(slotImportEvolutionFilters()) );
+  menu->addAction( i18n("Sylpheed filters"), this, SLOT(slotImportSylpheedFilters()) );
   button(KDialog::User1)->setMenu(menu);
 
   connect( this, SIGNAL(user2Clicked()),
@@ -1381,6 +1382,10 @@ void KMFilterDialog::slotImportEvolutionFilters()
     importFilters(FilterImporterExporter::EvolutionFilter);
 }
 
+void KMFilterDialog::slotImportSylpheedFilters()
+{
+    importFilters(FilterImporterExporter::SylpheedFilter);
+}
 
 void KMFilterDialog::importFilters(MailCommon::FilterImporterExporter::FilterType type)
 {

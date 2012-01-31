@@ -313,6 +313,8 @@ protected slots:
   void slotImportKMailFilters();
   void slotImportThunderbirdFilters();
   void slotImportEvolutionFilters();
+  void slotImportSylpheedFilters();
+  
   /** Called when a user clicks the export filters button. Pops up
    * a dialog asking the user which filters to export and which
    * file to export to. */

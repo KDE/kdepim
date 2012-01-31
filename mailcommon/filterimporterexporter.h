@@ -54,7 +54,8 @@ class MAILCOMMON_EXPORT FilterImporterExporter
     enum FilterType {
         KMailFilter = 0,
         ThunderBirdFilter = 1,
-        EvolutionFilter = 2
+        EvolutionFilter = 2,
+        SylpheedFilter = 3
     };
 
     /**
