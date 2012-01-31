@@ -44,8 +44,6 @@ FilterImporterSylpheed::FilterImporterSylpheed(QFile *file)
         kDebug() << "No filters defined" << endl;
         return;
     }
-#if 0
-    filters = filters.firstChildElement("ruleset");
     for ( QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
         const QString tag = e.tagName();
         if ( tag == QLatin1String( "rule" ) ) {
@@ -54,10 +52,49 @@ FilterImporterSylpheed::FilterImporterSylpheed(QFile *file)
             qDebug()<<" unknown tag "<<tag;
         }
     }
-#endif
 }
 
 FilterImporterSylpheed::~FilterImporterSylpheed()
 {
 }
 
+void FilterImporterSylpheed::parseFilters(const QDomElement &e)
+{
+    MailCommon::MailFilter *filter = new MailCommon::MailFilter();
+    if( e.hasAttribute("enabled"))
+    {
+        const QString attr = e.attribute("enabled");
+        if( attr == QLatin1String("false"))
+            filter->setEnabled(false);
+    }
+    if( e.hasAttribute("name"))
+    {
+        const QString attr = e.attribute("name");
+        filter->pattern()->setName(attr);
+        filter->setToolbarName(attr);
+    }
+    if( e.hasAttribute("timing"))
+    {
+        const QString attr = e.attribute("timing");
+        if ( attr == QLatin1String( "all" ) ) {
+          filter->pattern()->setOp(SearchPattern::OpAnd);
+        } else if ( attr == QLatin1String( "any" ) ) {
+          filter->pattern()->setOp(SearchPattern::OpOr);
+        } else {
+          qDebug()<<" timing not defined: "<< attr;
+        }
+
+    }
+    for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
+    {
+        const QString nexttag = ruleFilter.tagName();
+        qDebug()<<" nexttag "<<nexttag;
+        if(nexttag == QLatin1String("condition-list")){
+          //TODO
+        } else if( nexttag == QLatin1String("action-list")) {
+          //TODO
+        }
+    }
+
+    appendFilter(filter);
+}

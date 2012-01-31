@@ -35,6 +35,7 @@ public:
     explicit FilterImporterSylpheed(QFile *file);
     ~FilterImporterSylpheed();
 private:
+    void parseFilters(const QDomElement &e);
 };
 }
 
