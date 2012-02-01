@@ -142,6 +142,11 @@ void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set )
   d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
 }
 
+void FilterManager::filter( const QVector<qlonglong> &itemIds, FilterSet set ) const
+{
+  d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
+}
+
 void FilterManager::setFilters( const QList<MailCommon::MailFilter*> &filters )
 {
   beginUpdate();

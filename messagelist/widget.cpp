@@ -549,6 +549,20 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedCh
   return lstMiPtr;
 }
 
+QVector<qlonglong> Widget::selectionAsMessageItemListId( bool includeCollapsedChildren ) const
+{
+  QVector<qlonglong> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList( includeCollapsedChildren );
+  if ( lstMi.isEmpty() ) {
+     return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->itemForRow( it->currentModelIndexRow() ).id() );
+  }
+  return lstMiPtr;
+}
+
+
 QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 {
   QList<Item> lstMiPtr;

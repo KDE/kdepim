@@ -738,6 +738,15 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChil
   return w->selectionAsMessageItemList( includeCollapsedChildren );
 }
 
+QVector<qlonglong> Pane::selectionAsMessageItemListId( bool includeCollapsedChildren ) const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QVector<qlonglong>();
+  }
+  return w->selectionAsMessageItemListId( includeCollapsedChildren );
+}
+
 
 QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
 {
