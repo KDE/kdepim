@@ -38,12 +38,13 @@ QList<MailFilter*> FilterImporterAbstract::importFilter() const
 void FilterImporterAbstract::appendFilter(MailCommon::MailFilter * filter)
 {
     filter->purify();
-    if ( !filter->isEmpty() )
+    if ( !filter->isEmpty() ) {
       // the filter is valid:
       mListMailFilter<<filter;
-    else {
-      // the filter is invalid:
-      delete filter;
+    } else {
+        qDebug()<<" delete filter "<<filter->name();
+        // the filter is invalid:
+        delete filter;
     }
 }
 

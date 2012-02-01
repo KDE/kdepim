@@ -83,11 +83,14 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
                   fieldName = "subject";
               } else if(attr == QLatin1String("List-Id")) {
                   fieldName = "list-id";
+              } else if(attr == QLatin1String("X-ML-Name")) {
+                  //TODO
               } else {
                   qDebug()<<" match-header not implemented "<<attr;
               }
           }
-          contents = ruleFilter.text();
+          contentsName = ruleFilter.text();
+          qDebug()<<" contents "<<contentsName;
       } else if( nexttag == QLatin1String("match-any-header")) {
       } else if( nexttag == QLatin1String("match-to-or-cc")) {
           fieldName = "<recipients>";
@@ -127,6 +130,8 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
               functionName = SearchRule::FuncIsNotInAddressbook;
           } else if(attr == QLatin1String("in-addressbook")) {
               functionName = SearchRule::FuncIsInAddressbook;
+          } else if(attr == QLatin1String("gt")) {
+              //TODO
           } else {
               qDebug()<<" Attr type not implemented :"<<attr;
           }
@@ -142,9 +147,11 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::Mail
 {
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
     {
+        qDebug()<<" parseActions ";
         QString actionName;
         QString value;
         const QString nexttag = ruleFilter.tagName();
+        qDebug()<<" nexttag"<<nexttag;
         if(nexttag == QLatin1String("move")){
             actionName = QLatin1String( "transfer" );
             value = ruleFilter.text();
@@ -192,6 +199,7 @@ void FilterImporterSylpheed::parseFilters(const QDomElement &e)
         const QString attr = e.attribute("name");
         filter->pattern()->setName(attr);
         filter->setToolbarName(attr);
+        qDebug()<<" attr name :"<<attr;
     }
     if( e.hasAttribute("timing"))
     {
