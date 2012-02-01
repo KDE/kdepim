@@ -236,10 +236,31 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     return true;
   }
 
-  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
   kdDebug(5800) << "Scheduler::acceptRequest status=" << ScheduleMessage::statusName( status )
                 << ": found " << existingIncidences.count() << " incidences with schedulingID "
                 << inc->schedulingID() << endl;
+
+
+  if ( existingIncidences.count() > 1 ) {
+    // We must process our own incidences first, so we do a little sort here.
+    // This situation basically means we're watching a shared calendar from an attendee that
+    // was also invited, so, kontact is showing two events, on each agenda, which are actually
+    // the same event.
+    kdDebug(5800) << "Scheduler::acceptRequest: found more than one existing incidence!" << endl;
+    Incidence::List existingIncidencesCopy;
+    Incidence::List::ConstIterator it = existingIncidences.begin();
+    for ( ; it != existingIncidences.end() ; ++it ) {
+      Incidence *i = *it;
+      if ( CalHelper::isMyCalendarIncidence( mCalendar, i ) ) {
+        existingIncidencesCopy.prepend( i );
+      } else {
+        existingIncidencesCopy.append( i );
+      }
+    }
+    existingIncidences = existingIncidencesCopy;
+  }
+
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
     Incidence* const i = *incit;
