@@ -110,6 +110,9 @@
        <property name="whatsThis">
         <string>This field contains the name of the recipient</string>
        </property>
+       <property name="showClearButton" stdset="0">
+        <bool>true</bool>
+       </property>
        <property name="ClearButtonShown" stdset="0">
         <bool>true</bool>
        </property>
@@ -139,6 +142,9 @@
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="showClearButton" stdset="0">
+        <bool>true</bool>
        </property>
        <property name="ClearButtonShown" stdset="0">
         <bool>true</bool>
