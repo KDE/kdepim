@@ -22,7 +22,6 @@
 
 #include <kdebug.h>
 
-#include <QDomDocument>
 #include <QFile>
 
 using namespace MailCommon;
@@ -31,13 +30,9 @@ FilterImporterEvolution::FilterImporterEvolution(QFile *file)
     :FilterImporterAbstract()
 {
     QDomDocument doc;
-    QString errorMsg;
-    int errorRow;
-    int errorCol;
-    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-        kDebug() << "Unable to load document.Parse error in line " << errorRow << ", col " << errorCol << ": " << errorMsg << endl;
+    if(!loadDomElement(doc,file))
         return;
-    }
+
     QDomElement filters = doc.documentElement();
 
     if ( filters.isNull() ) {

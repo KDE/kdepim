@@ -19,7 +19,9 @@
 #define FILTERIMPORTERABSTRACT_H
 
 #include <QList>
+#include <QDomDocument>
 
+class QFile;
 namespace MailCommon
 {
 class MailFilter;
@@ -33,6 +35,7 @@ public:
 protected:
   void appendFilter(MailCommon::MailFilter * filter);
   void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
+  bool loadDomElement(QDomDocument &doc, QFile *file);
 
   QList<MailFilter*> mListMailFilter;
 };

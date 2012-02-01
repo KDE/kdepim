@@ -18,6 +18,7 @@
 #include "filterimporterabstract_p.h"
 #include "mailfilter.h"
 #include "filtermanager.h"
+#include <QFile>
 
 using namespace MailCommon;
 
@@ -63,4 +64,16 @@ void FilterImporterAbstract::createFilterAction(MailCommon::MailFilter *filter, 
           delete fa;
       }
     }
+}
+
+bool FilterImporterAbstract::loadDomElement( QDomDocument & doc, QFile *file)
+{
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+        kDebug() << "Unable to load document.Parse error in line " << errorRow << ", col " << errorCol << ": " << errorMsg << endl;
+        return false;
+    }
+    return true;
 }
