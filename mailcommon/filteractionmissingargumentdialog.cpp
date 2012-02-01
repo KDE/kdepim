@@ -61,6 +61,9 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
     }
     connect( mListwidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
              SLOT(slotCurrentItemChanged()));
+    connect( mListwidget, SIGNAL(itemDoubleClicked ( QListWidgetItem*)),
+             SLOT(slotDoubleItemClicked(QListWidgetItem*)));
+
   }
 
   QLabel *label = new QLabel( this );
@@ -82,6 +85,16 @@ FilterActionMissingCollectionDialog::~FilterActionMissingCollectionDialog()
 void FilterActionMissingCollectionDialog::slotFolderChanged( const Akonadi::Collection&col )
 {
   enableButtonOk( col.isValid() );
+}
+
+
+void FilterActionMissingCollectionDialog::slotDoubleItemClicked(QListWidgetItem*item)
+{
+  if(!item)
+      return;
+  const Akonadi::Collection::Id id =  item->data( FilterActionMissingCollectionDialog::IdentifyCollection ).toLongLong();
+  mFolderRequester->setCollection(Akonadi::Collection( id ));
+  accept();
 }
 
 void FilterActionMissingCollectionDialog::slotCurrentItemChanged()
