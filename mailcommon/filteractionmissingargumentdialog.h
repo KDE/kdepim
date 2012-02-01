@@ -27,6 +27,7 @@ class QModelIndex;
 class QListWidget;
 class KComboBox;
 class KUrlRequester;
+class QListWidgetItem;
 
 namespace MailCommon {
   class FolderRequester;
@@ -54,6 +55,7 @@ public:
 private Q_SLOTS:
   void slotCurrentItemChanged();
   void slotFolderChanged( const Akonadi::Collection&col );
+  void slotDoubleItemClicked(QListWidgetItem*item);
 
 
 private:
