@@ -423,7 +423,7 @@ bool FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
     if ( lst.count() == 1 && exactPath )
       mFolder = lst.at( 0 );
     else {
-      FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name );
+      FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name, argsStr );
       if ( dlg->exec() ) {
         mFolder = dlg->selectedCollection();
         needUpdate = true;

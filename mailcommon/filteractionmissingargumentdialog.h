@@ -46,7 +46,7 @@ class FilterActionMissingCollectionDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit FilterActionMissingCollectionDialog( const Akonadi::Collection::List& list, const QString & filtername, QWidget *parent = 0 );
+  explicit FilterActionMissingCollectionDialog(const Akonadi::Collection::List& list, const QString & filtername, const QString &argStr, QWidget *parent = 0 );
   ~FilterActionMissingCollectionDialog();
 
   Akonadi::Collection selectedCollection() const;

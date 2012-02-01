@@ -38,7 +38,7 @@
 #include <QListWidget>
 
 FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
-  const Akonadi::Collection::List &list, const QString &filtername, QWidget *parent )
+  const Akonadi::Collection::List &list, const QString &filtername, const QString& argStr, QWidget *parent )
   : KDialog( parent ), mListwidget( 0 )
 {
   setModal( true );
@@ -47,8 +47,10 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
   setDefaultButton( Ok );
   showButtonSeparator( true );
   QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
+  QLabel * lab = new QLabel(i18n("Folder path was \"%1\".", argStr));
+  lay->addWidget( lab );
   if ( !list.isEmpty() ) {
-    QLabel *lab =
+    lab =
       new QLabel( i18n( "The following folders can be used for this filter:" ) );
     lay->addWidget( lab );
     mListwidget = new QListWidget( this );
