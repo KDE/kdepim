@@ -1414,8 +1414,9 @@ void KMFilterDialog::importFilters(MailCommon::FilterImporterExporter::FilterTyp
   FilterImporterExporter importer( this );
   bool canceled = false;
   QList<MailFilter *> filters = importer.importFilters( canceled, type );
-  if ( canceled )
-    return;
+  if ( canceled ) {
+      return;
+  }
 
   if ( filters.isEmpty() ) {
     KMessageBox::information( this, i18n( "No filter was imported." ) );
