@@ -77,6 +77,10 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
               const QString attr = ruleFilter.attribute("name");
               if(attr == QLatin1String("From")) {
                   fieldName = "from";
+              } else if(attr == QLatin1String("Cc")) {
+                  fieldName = "cc";
+              } else if(attr == QLatin1String("To")) {
+                  fieldName = "to";
               } else if(attr == QLatin1String("Reply-To")) {
                   fieldName = "reply-to";
               } else if(attr == QLatin1String("Subject")) {
@@ -125,13 +129,17 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
           } else if(attr == QLatin1String("is")) {
               functionName = SearchRule::FuncEquals;
           } else if(attr == QLatin1String("not-regex")) {
+              functionName = SearchRule::FuncNotRegExp;
           } else if(attr == QLatin1String("regex")) {
+              functionName = SearchRule::FuncRegExp;
           } else if(attr == QLatin1String("not-in-addressbook")) {
               functionName = SearchRule::FuncIsNotInAddressbook;
           } else if(attr == QLatin1String("in-addressbook")) {
               functionName = SearchRule::FuncIsInAddressbook;
           } else if(attr == QLatin1String("gt")) {
-              //TODO
+              functionName = SearchRule::FuncIsGreater;
+          } else if(attr == QLatin1String("lt")) {
+              functionName = SearchRule::FuncIsLess;
           } else {
               qDebug()<<" Attr type not implemented :"<<attr;
           }
@@ -152,9 +160,9 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::Mail
         QString value;
         const QString nexttag = ruleFilter.tagName();
         qDebug()<<" nexttag"<<nexttag;
+        value = ruleFilter.text();
         if(nexttag == QLatin1String("move")){
             actionName = QLatin1String( "transfer" );
-            value = ruleFilter.text();
         } else if( nexttag == QLatin1String("copy")) {
             actionName = QLatin1String( "copy" );
             value = ruleFilter.text();
@@ -174,10 +182,12 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::Mail
             actionName = QLatin1String( "forward" );
         } else if( nexttag == QLatin1String("forward-as-attachment")) {
         } else if( nexttag == QLatin1String("redirect")) {
+            actionName = QLatin1String("redirect");
         } else if( nexttag == QLatin1String("stop-eval")) {
             filter->setStopProcessingHere(true);
             break;
-        } else {
+        }
+        if(actionName.isEmpty()) {
             qDebug()<<" tag not recognize "<<nexttag;
         }
         createFilterAction(filter, actionName, value);
