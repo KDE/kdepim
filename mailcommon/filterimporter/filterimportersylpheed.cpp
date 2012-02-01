@@ -96,6 +96,8 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
           contentsName = ruleFilter.text();
           qDebug()<<" contents "<<contentsName;
       } else if( nexttag == QLatin1String("match-any-header")) {
+          fieldName = "<recipients>";
+          contents = ruleFilter.text();
       } else if( nexttag == QLatin1String("match-to-or-cc")) {
           fieldName = "<recipients>";
           contents = ruleFilter.text();
@@ -157,10 +159,9 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::Mail
     {
         qDebug()<<" parseActions ";
         QString actionName;
-        QString value;
         const QString nexttag = ruleFilter.tagName();
         qDebug()<<" nexttag"<<nexttag;
-        value = ruleFilter.text();
+        QString value = ruleFilter.text();
         if(nexttag == QLatin1String("move")){
             actionName = QLatin1String( "transfer" );
         } else if( nexttag == QLatin1String("copy")) {

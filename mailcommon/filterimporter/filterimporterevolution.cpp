@@ -110,20 +110,37 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                             if ( valueFilter.hasAttribute( "name" ) ) {
                                 const QString name = valueFilter.attribute( "name" );
                                 qDebug()<<" value filter name :"<<name;
-                            } else if ( valueFilter.hasAttribute( "type" ) ) {
+                            }
+                            if ( valueFilter.hasAttribute( "type" ) ) {
                                 const QString name = valueFilter.attribute( "type" );
-                                qDebug()<<" value filter type :"<<name;
                                 if(name == QLatin1String("option")){
                                     //Nothing we will look at value
                                 } else if( name == QLatin1String("string")) {
-                                    //TODO
+                                    QDomElement string = valueFilter.firstChildElement();
+                                    contents = string.text();
                                 } else if( name == QLatin1String("folder")) {
-                                    //TODO
+                                    QDomElement folder = valueFilter.firstChildElement();
+                                    if(folder.hasAttribute("uri")) {
+                                        contents = folder.attribute("uri");
+                                        if(!contents.isEmpty())
+                                            contents.remove(QLatin1String("folder://"));
+                                    }
                                 } else if( name == QLatin1String("address") ) {
-                                    //TODO
+                                    QDomElement address = valueFilter.firstChildElement();
+                                    contents = address.text();
+                                } else if( name == QLatin1String("integer") ) {
+                                    if(valueFilter.hasAttribute("integer")) {
+                                        contents = valueFilter.attribute("integer");
+                                        int val = contents.toInt();
+                                        val = val * 1000; //store in Ko
+                                        contents = QString::number(val);
+                                    }
+                                } else {
+                                    qDebug()<<" type not implemented "<<name;
                                 }
 
-                            } else if ( valueFilter.hasAttribute( "value" ) ) {
+                            }
+                            if ( valueFilter.hasAttribute( "value" ) ) {
                                 const QString name = valueFilter.attribute( "value" );
                                 qDebug()<<" value filter value :"<<name;
                                 if(value == QLatin1String("contains")) {
@@ -147,7 +164,9 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                                 } else if(value == QLatin1String("before")) {
                                 } else if(value == QLatin1String("after")) {
                                 } else if(value == QLatin1String("greater-than")) {
+                                    functionName = SearchRule::FuncIsGreater;
                                 } else if(value == QLatin1String("less-than")) {
+                                    functionName = SearchRule::FuncIsLess;
                                 } else if(value == QLatin1String("starts with")) {
                                     functionName = SearchRule::FuncStartWith;
                                 }
@@ -196,27 +215,34 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                             if ( valueFilter.hasAttribute( "name" ) ) {
                                 const QString name = valueFilter.attribute( "name" );
                                 qDebug()<<" value filter name :"<<name;
-                            } else if ( valueFilter.hasAttribute( "type" ) ) {
+                            }
+                            if ( valueFilter.hasAttribute( "type" ) ) {
                                 const QString name = valueFilter.attribute( "type" );
-                                qDebug()<<" value filter type :"<<name;
                                 qDebug()<<" value filter type :"<<name;
                                 if(name == QLatin1String("option")){
                                     //Nothing we will look at value
                                 } else if( name == QLatin1String("string")) {
                                     //TODO
                                 } else if( name == QLatin1String("folder")) {
-                                    //TODO
+                                    QDomElement folder = valueFilter.firstChildElement();
+
+                                    if(folder.hasAttribute("uri")) {
+                                        value = folder.attribute("uri");
+                                        if(!value.isEmpty())
+                                            value.remove(QLatin1String("folder://"));
+                                        qDebug()<<" contents folder :"<<value;
+                                    }
                                 } else if( name == QLatin1String("address") ) {
                                     //TODO
                                 }
 
-                            } else if ( valueFilter.hasAttribute( "value" ) ) {
+                            }
+                            if ( valueFilter.hasAttribute( "value" ) ) {
                                 const QString name = valueFilter.attribute( "value" );
                                 qDebug()<<" value filter value :"<<name;
-                                if(value == QLatin1String("")) {
+                                if(value == QLatin1String("contains")) {
                                   //TODO
                                 }
-
                             }
                         }
                     }
@@ -266,7 +292,6 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
     {
         const QString nexttag = ruleFilter.tagName();
-        qDebug()<<" nexttag "<<nexttag;
         if(nexttag == QLatin1String("title")){
           filter->pattern()->setName(ruleFilter.text());
           filter->setToolbarName(ruleFilter.text());
@@ -274,6 +299,8 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
             parsePartAction(ruleFilter, filter, PartType);
         } else if( nexttag == QLatin1String("actionset")) {
             parsePartAction(ruleFilter, filter, ActionType);
+        } else {
+            qDebug()<<" 1) tag not implemented : "<<nexttag;
         }
     }
 
