@@ -1103,7 +1103,7 @@ void KMComposeWin::rethinkFields(bool fromSlot)
                     mLblSubject, mEdtSubject);
   connectFocusMoving( mEdtSubject, mEditor );
 
-  assert(row<=mNumHeaders);
+  assert(row <= mNumHeaders + 1);
 
 
   if( !mAtmList.isEmpty() )
