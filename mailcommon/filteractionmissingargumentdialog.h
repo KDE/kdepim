@@ -119,7 +119,7 @@ class FilterActionMissingTagDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit FilterActionMissingTagDialog( const QStringList&templateList, const QString & filtername, QWidget *parent = 0 );
+  explicit FilterActionMissingTagDialog(const QStringList&templateList, const QString & filtername, const QString &argsStr, QWidget *parent = 0 );
   ~FilterActionMissingTagDialog();
   QString selectedTag() const;
 private:
@@ -131,7 +131,7 @@ class FilterActionMissingSoundUrlDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit FilterActionMissingSoundUrlDialog( const QString & filtername, QWidget *parent = 0 );
+  explicit FilterActionMissingSoundUrlDialog(const QString & filtername, const QString &argStr, QWidget *parent = 0 );
   ~FilterActionMissingSoundUrlDialog();
   QString soundUrl() const;
 private:

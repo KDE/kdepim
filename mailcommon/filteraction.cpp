@@ -1231,7 +1231,7 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 ) {
-    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName );
+    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
     if ( dlg->exec() ) {
       mParameter = dlg->selectedTag();
       needUpdate = true;
@@ -2369,7 +2369,7 @@ bool FilterActionExecSound::argsFromStringInteractive( const QString &argsStr, c
   bool needUpdate = false;
   argsFromString( argsStr );
   if(!QFile(mParameter).exists()){
-      FilterActionMissingSoundUrlDialog *dlg = new FilterActionMissingSoundUrlDialog( filterName );
+      FilterActionMissingSoundUrlDialog *dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
       if ( dlg->exec() ) {
         mParameter = dlg->soundUrl();
         needUpdate = true;

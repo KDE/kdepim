@@ -293,7 +293,7 @@ bool FilterActionMissingAccountDialog::allAccountExist( const QStringList & lst 
   return true;
 }
 
-FilterActionMissingTagDialog::FilterActionMissingTagDialog( const QStringList & tagList,  const QString& filtername, QWidget *parent )
+FilterActionMissingTagDialog::FilterActionMissingTagDialog( const QStringList & tagList,  const QString& filtername, const QString& argsStr, QWidget *parent )
   : KDialog( parent )
 {
   setModal( true );
@@ -302,7 +302,10 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog( const QStringList & 
   setDefaultButton( Ok );
   showButtonSeparator( true );
   QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
-  QLabel *label = new QLabel( this );
+  QLabel *label = new QLabel(i18n("Tag was \"%1\".", argsStr));
+  lay->addWidget( label );
+
+  label = new QLabel( this );
   label->setText( i18n( "Filter tag is missing. "
                         "Please select a tag to use with filter \"%1\"",
                         filtername ) );
@@ -324,7 +327,7 @@ QString FilterActionMissingTagDialog::selectedTag() const
   return QString();
 }
 
-FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString & filtername, QWidget *parent )
+FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString & filtername, const QString& argStr,QWidget *parent )
     :KDialog(parent)
 {
     setModal( true );
@@ -333,7 +336,10 @@ FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QStr
     setCaption(i18n("Select sound"));
     showButtonSeparator( true );
     QVBoxLayout* lay = new QVBoxLayout( mainWidget() );
-    QLabel *label = new QLabel( this );
+    QLabel *label = new QLabel( i18n("Sound file was \"%1\".", argStr ));
+    lay->addWidget( label );
+
+    label = new QLabel( this );
     label->setText( i18n( "Sound file is missing. Please select a sound to use with filter \"%1\"", filtername ) );
     lay->addWidget( label );
     mUrlWidget = new KUrlRequester( this );
