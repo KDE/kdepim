@@ -603,7 +603,7 @@ void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
   }
 
   QPointer<PublishDialog> publishdlg = new PublishDialog;
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     const QString recipients = publishdlg->addresses();
     if ( incidence->organizer()->isEmpty() ) {
       incidence->setOrganizer( Person::Ptr(
@@ -658,7 +658,7 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calend
       publishdlg->addAttendee( *it );
     }
   }
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
     inc->clearAttendees();
