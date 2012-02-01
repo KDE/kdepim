@@ -180,6 +180,7 @@ void PublishDialog::openAddressbook()
       }
     }
   }
+  delete dialog.data();
 }
 
 void PublishDialog::updateItem()
