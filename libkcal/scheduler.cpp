@@ -237,7 +237,9 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   }
 
   const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
-  kdDebug(5800) << "Scheduler::acceptRequest status=" << ScheduleMessage::statusName( status ) << ": found " << existingIncidences.count() << " incidences with schedulingID " << inc->schedulingID() << endl;
+  kdDebug(5800) << "Scheduler::acceptRequest status=" << ScheduleMessage::statusName( status )
+                << ": found " << existingIncidences.count() << " incidences with schedulingID "
+                << inc->schedulingID() << endl;
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
     Incidence* const i = *incit;
