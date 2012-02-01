@@ -114,6 +114,8 @@ QList<MailFilter*> FilterSelectionDialog::selectedFilters() const
     const QListWidgetItem *item = filtersListWidget->item( i );
     if ( item->checkState() == Qt::Checked )
       filters << originalFilters[ i ];
+    else
+      delete originalFilters[ i ];
   }
 
   return filters;
@@ -245,7 +247,11 @@ QList<MailFilter *> FilterImporterExporter::importFilters( bool & canceled )
   FilterSelectionDialog dlg( d->mParent );
   dlg.setFilters( imported );
 
-  return (dlg.exec() == QDialog::Accepted ? dlg.selectedFilters() : QList<MailFilter*>());
+  if(dlg.exec() == QDialog::Accepted)
+      return dlg.selectedFilters();
+
+  qDeleteAll(dlg.selectedFilters());
+  return QList<MailFilter*>();
 }
 
 void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
