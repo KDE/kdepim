@@ -89,12 +89,12 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
                   fieldName = "list-id";
               } else if(attr == QLatin1String("X-ML-Name")) {
                   //TODO
-              } else {
+              }
+              if(fieldName.isEmpty()) {
                   qDebug()<<" match-header not implemented "<<attr;
               }
           }
           contentsName = ruleFilter.text();
-          qDebug()<<" contents "<<contentsName;
       } else if( nexttag == QLatin1String("match-any-header")) {
           fieldName = "<recipients>";
           contents = ruleFilter.text();
@@ -148,19 +148,15 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
       }
       SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
       filter->pattern()->append( rule );
-
   }
-
 }
 
 void FilterImporterSylpheed::parseActions(const QDomElement &e, MailCommon::MailFilter *filter)
 {
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
     {
-        qDebug()<<" parseActions ";
         QString actionName;
         const QString nexttag = ruleFilter.tagName();
-        qDebug()<<" nexttag"<<nexttag;
         QString value = ruleFilter.text();
         if(nexttag == QLatin1String("move")){
             actionName = QLatin1String( "transfer" );
@@ -210,7 +206,6 @@ void FilterImporterSylpheed::parseFilters(const QDomElement &e)
         const QString attr = e.attribute("name");
         filter->pattern()->setName(attr);
         filter->setToolbarName(attr);
-        qDebug()<<" attr name :"<<attr;
     }
     if( e.hasAttribute("timing"))
     {
@@ -231,11 +226,12 @@ void FilterImporterSylpheed::parseFilters(const QDomElement &e)
     for ( QDomElement ruleFilter = e.firstChildElement(); !ruleFilter.isNull(); ruleFilter = ruleFilter.nextSiblingElement() )
     {
         const QString nexttag = ruleFilter.tagName();
-        qDebug()<<" nexttag "<<nexttag;
         if(nexttag == QLatin1String("condition-list")){
           parseConditions(ruleFilter, filter);
         } else if( nexttag == QLatin1String("action-list")) {
           parseActions(ruleFilter, filter);
+        } else {
+            qDebug()<<" next tag not implemented "<<nexttag;
         }
     }
 

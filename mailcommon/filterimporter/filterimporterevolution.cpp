@@ -76,6 +76,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter, Mai
                     } else if (  name == QLatin1String( "subject" ) ) {
                         fieldName = "subject";
                     } else if (  name == QLatin1String( "header" ) ) {
+                        fieldName = "<any header>";
                     } else if (  name == QLatin1String( "body" ) ) {
                         fieldName = "<body>";
                     } else if (  name == QLatin1String( "sexp" ) ) {
