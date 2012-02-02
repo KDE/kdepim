@@ -212,10 +212,22 @@ class FilterImporterExporter::Private
      : mParent( parent)
     {
     }
-
+    void warningInfoAboutInvalidFilter(const QStringList& emptyFilters) const;
     QWidget *mParent;
 };
 
+void FilterImporterExporter::Private::warningInfoAboutInvalidFilter(const QStringList& emptyFilters) const
+{
+    if( !emptyFilters.isEmpty() ) {
+        KMessageBox::informationList(
+                    mParent,
+                    i18n( "The following filters have not been saved because they were invalid "
+                          "(e.g. containing no actions or no search rules)." ),
+                    emptyFilters,
+                    QString(),
+                    "ShowInvalidFilterWarning" );
+    }
+}
 
 FilterImporterExporter::FilterImporterExporter( QWidget *parent )
   : d( new Private( parent ) )
@@ -271,6 +283,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     {
         MailCommon::FilterImporterThunderbird *thunderBirdFilter = new MailCommon::FilterImporterThunderbird(&file);
         imported = thunderBirdFilter->importFilter();
+        d->warningInfoAboutInvalidFilter(thunderBirdFilter->emptyFilter());
         delete thunderBirdFilter;
         break;
     }
@@ -278,6 +291,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     {
         MailCommon::FilterImporterEvolution *filter = new MailCommon::FilterImporterEvolution(&file);
         imported = filter->importFilter();
+        d->warningInfoAboutInvalidFilter(filter->emptyFilter());
         delete filter;
         break;
     }
@@ -285,6 +299,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     {
         MailCommon::FilterImporterSylpheed *filter = new MailCommon::FilterImporterSylpheed(&file);
         imported = filter->importFilter();
+        d->warningInfoAboutInvalidFilter(filter->emptyFilter());
         delete filter;
         break;
     }

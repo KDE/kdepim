@@ -20,6 +20,7 @@
 
 #include <QList>
 #include <QDomDocument>
+#include <QStringList>
 
 class QFile;
 namespace MailCommon
@@ -32,12 +33,15 @@ public:
   explicit FilterImporterAbstract();
   ~FilterImporterAbstract();
   QList<MailFilter*> importFilter() const;
+  QStringList emptyFilter() const;
+
 protected:
   void appendFilter(MailCommon::MailFilter * filter);
   void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
   bool loadDomElement(QDomDocument &doc, QFile *file);
 
   QList<MailFilter*> mListMailFilter;
+  QStringList mEmptyFilter;
 };
 }
 #endif // FILTERIMPORTERABSTRACT_H
