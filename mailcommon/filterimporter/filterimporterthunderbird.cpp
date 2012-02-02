@@ -274,6 +274,10 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
       } else {
           qDebug()<<" contents for status not implemented "<<contents;
       }
+  } else if( fieldName == "<size>") {
+      int value = contents.toInt();
+      value = value * 1000; //Ko
+      contentsName = QString::number(value);
   } else {
     contentsName = contents;
   }
