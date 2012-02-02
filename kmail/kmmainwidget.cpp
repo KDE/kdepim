@@ -1159,6 +1159,7 @@ void KMMainWidget::createWidgets()
               << StandardMailActionManager::RemoveDuplicates
               << StandardMailActionManager::EmptyAllTrash
               << StandardMailActionManager::MarkMailAsRead
+	      << StandardMailActionManager::MarkMailAsUnread
               << StandardMailActionManager::MarkMailAsImportant
               << StandardMailActionManager::MarkMailAsActionItem;
 
