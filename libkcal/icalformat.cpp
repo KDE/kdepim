@@ -512,21 +512,22 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
   icalcomponent *calendarComponent = mImpl->createCalendarComponent(cal);
 
-  Incidence *existingIncidence =
-    cal->incidenceFromSchedulingID(incidence->uid());
+  Incidence *existingIncidence = cal->incidenceFromSchedulingID(incidence->uid());
   if (existingIncidence) {
+    Incidence *existingIncidenceCopy = existingIncidence->clone();
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
     // TODO: Use a visitor for this!
-    if (existingIncidence->type() == "Todo") {
-      Todo *todo = static_cast<Todo *>(existingIncidence);
+    if (existingIncidenceCopy->type() == "Todo") {
+      Todo *todo = static_cast<Todo *>(existingIncidenceCopy);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeTodo(todo));
     }
-    if (existingIncidence->type() == "Event") {
-      Event *event = static_cast<Event *>(existingIncidence);
+    if (existingIncidenceCopy->type() == "Event") {
+      Event *event = static_cast<Event *>(existingIncidenceCopy);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeEvent(event));
     }
+    delete existingIncidenceCopy;
   } else {
     calendarComponent = 0;
   }
