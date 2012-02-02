@@ -41,7 +41,7 @@ DelegateSelector::DelegateSelector(QWidget * parent)
   KHBox *delegateBox = new KHBox( mainWidget() );
   new QLabel( i18n("Delegate:"), delegateBox );
   mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
-  connect( mDelegate, SIGNAL(textChanged( const QString &) ), SLOT( slotTextChanged( const QString& ) ) );
+  connect( mDelegate, SIGNAL(textChanged(QString)), SLOT(slotTextChanged(QString)) );
   mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), mainWidget() );
   mRsvp->setChecked( true );
 
