@@ -2248,7 +2248,7 @@ sect2 id="configure-misc-groupware">
 <varlistentry>
 <term><guilabel>Send invitations in the mail body</guilabel></term>
 <listitem>
-<para>Invitations use to be send as attachments to a mail. By enabling this option, you let the invitation mails to be sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para>
+<para>Invitations are usually sent as attachments to a mail. When this option is enabled, invitation are sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
