@@ -64,7 +64,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
     }
     connect( mListwidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
              SLOT(slotCurrentItemChanged()));
-    connect( mListwidget, SIGNAL(itemDoubleClicked ( QListWidgetItem*)),
+    connect( mListwidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
              SLOT(slotDoubleItemClicked(QListWidgetItem*)));
 
   }
