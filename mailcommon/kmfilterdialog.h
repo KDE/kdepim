@@ -311,10 +311,7 @@ protected slots:
   /** Called when a user clicks the import filters button. Pops up
    * a dialog asking the user which file to import from and which
    * of the filters in that file to import. */
-  void slotImportKMailFilters();
-  void slotImportThunderbirdFilters();
-  void slotImportEvolutionFilters();
-  void slotImportSylpheedFilters();
+  void slotImportFilter(QAction*);
   
   /** Called when a user clicks the export filters button. Pops up
    * a dialog asking the user which filters to export and which

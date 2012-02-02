@@ -301,10 +301,22 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   /*connect( this, SIGNAL(user1Clicked()),
            this, SLOT(slotImportFilters()) );*/
   QMenu *menu = new QMenu();
-  menu->addAction( i18n("KMail filters"), this, SLOT(slotImportKMailFilters()) );
-  menu->addAction( i18n("Thunderbird filters"), this, SLOT(slotImportThunderbirdFilters()) );
-  menu->addAction( i18n("Evolution filters"), this, SLOT(slotImportEvolutionFilters()) );
-  menu->addAction( i18n("Sylpheed filters"), this, SLOT(slotImportSylpheedFilters()) );
+
+  QAction *act = new QAction(i18n("KMail filters"),this);
+  act->setData((int)MailCommon::FilterImporterExporter::KMailFilter);
+  menu->addAction(act);
+  act = new QAction(i18n("Thunderbird filters"),this);
+  act->setData((int)MailCommon::FilterImporterExporter::ThunderBirdFilter);
+  menu->addAction(act);
+  act = new QAction(i18n("Evolution filters"),this);
+  act->setData((int)MailCommon::FilterImporterExporter::EvolutionFilter);
+  menu->addAction(act);
+
+  act = new QAction(i18n("Sylpheed filters"),this);
+  act->setData((int)MailCommon::FilterImporterExporter::SylpheedFilter);
+  menu->addAction(act);
+  connect(menu,SIGNAL(triggered(QAction*)),SLOT(slotImportFilter(QAction*)));
+
   button(KDialog::User1)->setMenu(menu);
 
   connect( this, SIGNAL(user2Clicked()),
@@ -1389,25 +1401,13 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
   mListWidget->insertItem( untouchedOne, item );
 }
 
-void KMFilterDialog::slotImportKMailFilters()
+void KMFilterDialog::slotImportFilter(QAction*act)
 {
-    importFilters(FilterImporterExporter::KMailFilter);
+    if(act){
+        importFilters((FilterImporterExporter::FilterType)act->data().toInt());
+    }
 }
 
-void KMFilterDialog::slotImportThunderbirdFilters()
-{
-    importFilters(FilterImporterExporter::ThunderBirdFilter);
-}
-
-void KMFilterDialog::slotImportEvolutionFilters()
-{
-    importFilters(FilterImporterExporter::EvolutionFilter);
-}
-
-void KMFilterDialog::slotImportSylpheedFilters()
-{
-    importFilters(FilterImporterExporter::SylpheedFilter);
-}
 
 void KMFilterDialog::importFilters(MailCommon::FilterImporterExporter::FilterType type)
 {
