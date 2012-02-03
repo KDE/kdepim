@@ -1,4 +1,14 @@
 
+Friday 03 February 2012
+
+Problems addressed
+------------------
+
+* kolab/issue3724: Appointments vanish, when having access to other participants calender folders (rt#10030)
+* kolab/issue4815: Kontact Crash in in KMComposeWin::rethinkFields
+
+
+
 Monday 23 January 2012
 
 Problems addressed
