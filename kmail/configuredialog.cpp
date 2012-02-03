@@ -2945,6 +2945,7 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
 
   // "name" and "value" line edits and labels:
   mTagNameEdit = new KLineEdit( this );
+  mTagNameEdit->setClearButtonShown(true);
   mTagNameEdit->setEnabled( false );
   mTagNameLabel = new QLabel( i18nc("@label:textbox Name of the mime header.","&Name:"), this );
   mTagNameLabel->setBuddy( mTagNameEdit );
@@ -2955,6 +2956,7 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
            this, SLOT(slotMimeHeaderNameChanged(QString)) );
 
   mTagValueEdit = new KLineEdit( this );
+  mTagValueEdit->setClearButtonShown(true);
   mTagValueEdit->setEnabled( false );
   mTagValueLabel = new QLabel( i18n("&Value:"), this );
   mTagValueLabel->setBuddy( mTagValueEdit );
