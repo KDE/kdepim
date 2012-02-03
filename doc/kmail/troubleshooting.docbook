@@ -99,7 +99,7 @@ Online=true</screen>
 </para>
 </listitem>
 <listitem>
-<para>Fix your filters, identities and favourite folders
+<para>Fix your filters, identities and favorite folders
 </para>
 <para>If you have client side filtering (common with POP3 mails), go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Filters</guimenuitem></menuchoice> and fix the destination folder for the filters, they most probably are wrong. Otherwise mails will end up in folders you don't expect.
 </para>
@@ -109,7 +109,7 @@ Online=true</screen>
 </para>
 <para>You also need to verify the identity settings and set the sent-mail, drafts and templates folders to point to the right folders. To do that go to <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Identities</guimenuitem></menuchoice>, modify the identity, go to the  <guilabel>Advanced</guilabel> tab and modify the above mentioned folder settings.
 </para>
-<para>Check also that your <guilabel>Favourite Folders</guilabel> are the ones you have chosen before.
+<para>Check also that your <guilabel>Favorite Folders</guilabel> are the ones you have chosen before.
 </para>
 </listitem>
 <listitem>
