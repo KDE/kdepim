@@ -24,6 +24,7 @@
 */
 
 #include "printingwizard.h"
+#include "settings.h"
 
 #include "contactselectionwidget.h"
 #include "contactsorter.h"
@@ -68,9 +69,14 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QItemSelectionModel *selectio
 
   registerStyles();
 
-  if ( mStyleFactories.count() > 0 ) {
-    slotStyleSelected( 0 );
+  if ( mStyleFactories.count() > Settings::self()->printingStyle() ) {
+    mStylePage->setPrintingStyle( Settings::self()->printingStyle() ); // should emit styleChanged
+    slotStyleSelected( Settings::self()->printingStyle() );
   }
+
+  mStylePage->setSortOrder( Settings::self()->sortOrder() == 0 ?
+                              Qt::AscendingOrder :
+                              Qt::DescendingOrder );
 }
 
 PrintingWizard::~PrintingWizard()
@@ -130,6 +136,16 @@ void PrintingWizard::slotStyleSelected( int index )
 QPrinter *PrintingWizard::printer()
 {
   return mPrinter;
+}
+
+int PrintingWizard::printingStyle() const
+{
+  return mStylePage->printingStyle();
+}
+
+int PrintingWizard::sortOrder() const
+{
+  return mStylePage->sortOrder();
 }
 
 void PrintingWizard::print()

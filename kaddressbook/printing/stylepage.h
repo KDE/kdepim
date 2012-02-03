@@ -78,6 +78,16 @@ class StylePage : public QWidget
      */
     Qt::SortOrder sortOrder() const;
 
+    /**
+     * Returns the sort order.
+     */
+    int printingStyle() const;
+
+    /**
+     * Returns the sort order.
+     */
+    void setPrintingStyle( int index );
+
   Q_SIGNALS:
     /**
      * This signal is emmited when the user selects a new style in the

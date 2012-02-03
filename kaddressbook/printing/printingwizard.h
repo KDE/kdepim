@@ -94,6 +94,16 @@ class PrintingWizard : public KAssistantDialog
      */
     QPrinter *printer();
 
+    /**
+     * Returns the index of the selected style
+     */
+    int printingStyle() const;
+
+    /**
+     * Returns the sort order of addressBook
+     */
+    int sortOrder() const;
+
   protected Q_SLOTS:
     /**
      * A print style has been selected. The argument is the index

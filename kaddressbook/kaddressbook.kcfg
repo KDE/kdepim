@@ -13,6 +13,30 @@
     </entry>
   </group>
 
+  <group name="Printing">
+    <entry type="String" name="DefaultFileName">
+      <default>addressbook.pdf</default>
+      <tooltip>Default print file name</tooltip>
+      <whatsthis>Set the name of the default print file.</whatsthis>
+    </entry>
+    <entry type="Int" name="PrintingStyle">
+      <label>Printing style</label>
+      <tooltip>Set the printing style</tooltip>
+      <whatsthis>KAddressbok can print the contacts in several styles. With this combobox you can choose one of this.</whatsthis>
+      <default>0</default>
+    </entry>
+    <entry type="Enum" name="SortOrder">
+      <choices>
+        <choice name="Ascending" />
+        <choice name="Descending" />
+      </choices>
+      <label>Default sort order</label>
+      <tooltip>Sort order</tooltip>
+      <whatsthis>Choose the sorting order for the printed contacts.</whatsthis>
+      <default>Ascending</default>
+    </entry>
+  </group>
+
   <group name="Views">
     <entry type="IntList" name="ContactModelColumns">
       <default>0</default>

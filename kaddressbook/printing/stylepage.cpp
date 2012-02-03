@@ -201,4 +201,14 @@ void StylePage::initGUI()
   topLayout->setRowStretch( 1, 1 );
 }
 
+int StylePage::printingStyle() const
+{
+  return mStyleCombo->currentIndex();
+}
+
+void StylePage::setPrintingStyle( int index )
+{
+  mStyleCombo->setCurrentIndex( index );
+}
+
 #include "stylepage.moc"

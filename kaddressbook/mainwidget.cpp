@@ -536,7 +536,7 @@ void MainWidget::print()
 {
   QPrinter printer;
   printer.setDocName( i18n( "Address Book" ) );
-  printer.setOutputFileName( "addressbook.pdf" );
+  printer.setOutputFileName( Settings::self()->defaultFileName() );
   printer.setOutputFormat( QPrinter::PdfFormat );
   printer.setCollateCopies( true );
 
@@ -549,7 +549,11 @@ void MainWidget::print()
   KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
   wizard.setDefaultAddressBook( currentAddressBook() );
 
-  wizard.exec();
+  wizard.exec(); //krazy:exclude=crashy
+
+  Settings::self()->setDefaultFileName( printer.outputFileName() );
+  Settings::self()->setPrintingStyle( wizard.printingStyle() );
+  Settings::self()->setSortOrder( wizard.sortOrder() );
 }
 
 void MainWidget::newContact()
