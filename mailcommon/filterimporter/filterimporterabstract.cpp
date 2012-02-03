@@ -78,7 +78,8 @@ bool FilterImporterAbstract::loadDomElement( QDomDocument & doc, QFile *file)
     int errorRow;
     int errorCol;
     if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-        kDebug() << "Unable to load document.Parse error in line " << errorRow << ", col " << errorCol << ": " << errorMsg << endl;
+        kDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
         return false;
     }
     return true;

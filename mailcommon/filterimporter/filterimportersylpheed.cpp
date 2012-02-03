@@ -35,7 +35,7 @@ FilterImporterSylpheed::FilterImporterSylpheed(QFile *file)
     QDomElement filters = doc.documentElement();
 
     if ( filters.isNull() ) {
-        kDebug() << "No filters defined" << endl;
+        kDebug() << "No filters defined";
         return;
     }
     for ( QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {

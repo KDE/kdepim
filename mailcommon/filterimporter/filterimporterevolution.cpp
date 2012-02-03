@@ -36,7 +36,7 @@ FilterImporterEvolution::FilterImporterEvolution(QFile *file)
     QDomElement filters = doc.documentElement();
 
     if ( filters.isNull() ) {
-        kDebug() << "No filters defined" << endl;
+        kDebug() << "No filters defined";
         return;
     }
     filters = filters.firstChildElement("ruleset");
@@ -276,7 +276,7 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
         } else {
           qDebug()<<" grouping not defined: "<< attr;
         }
-          
+
     }
     if(e.hasAttribute("source"))
     {
