@@ -42,7 +42,7 @@ the newsgroups.</para>
 <glossentry id="gloss-expire">
 <glossterm>Expire</glossterm> 
 <glossdef> 
-<para><glossterm>Articles</glossterm> can not be held for eternity
+<para><glossterm>Articles</glossterm> cannot be held for eternity
 because of harddisk limits. Because of this there is usually a program
 called <application>expire</application> on most computer
 systems; this program deletes all articles which are older than a

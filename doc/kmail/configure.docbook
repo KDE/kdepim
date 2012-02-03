@@ -2495,7 +2495,7 @@ To enable this feature, add a line reading (under [General] section):
 <varlistentry>
 <term><guilabel>AutoLostFoundMove</guilabel></term>
 <listitem><para>Activate this option to automate the handling of not yet uploaded messages in disconnected IMAP
-folders that can not be uploaded. This can happen if the folder was removed from the server or your access
+folders that cannot be uploaded. This can happen if the folder was removed from the server or your access
 rights have been restricted. Such messages will automatically moved to a newly created lost+found folder if
 this option is enabled, you will be ask how to proceed every time otherwise.
 </para>

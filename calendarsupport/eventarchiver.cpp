@@ -187,7 +187,7 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar,
   FileStorage storage( cal );
 
   QString tmpFileName;
-  // KSaveFile can not be called with an open File Handle on Windows.
+  // KSaveFile cannot be called with an open File Handle on Windows.
   // So we use KTemporaryFile only to generate a unique filename
   // and then close/delete the file again. This file must be deleted
   // here.

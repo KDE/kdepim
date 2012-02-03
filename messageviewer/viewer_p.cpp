@@ -345,7 +345,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
-    // consider the filename if mimetype can not be found by content-type
+    // consider the filename if mimetype cannot be found by content-type
     mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
 
   }
@@ -571,7 +571,7 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
   }
 
   if ( mimetype.isNull() ) {
-    // consider the filename if mimetype can not be found by content-type
+    // consider the filename if mimetype cannot be found by content-type
     mimetype = KMimeType::findByPath( fileName, 0, true /* no disk access */ );
   }
   if ( ( mimetype->name() == "application/octet-stream" )

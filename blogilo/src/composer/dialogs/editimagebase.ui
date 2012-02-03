@@ -92,7 +92,7 @@
    <item row="4" column="0">
     <widget class="QLabel" name="labelAltText">
      <property name="text">
-      <string comment="the alternative text which is displayed to the user, if the image can not be loaded.">Alternative text:</string>
+      <string comment="the alternative text which is displayed to the user, if the image cannot be loaded.">Alternative text:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

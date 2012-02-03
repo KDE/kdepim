@@ -41,7 +41,7 @@ namespace Util {
    * Returns whether the item represents a valid KMime::Message that is not
    * in the Akonadi store (yet). This happens when operating on messages
    * attached to other mails, for example. Such items are not "valid", in
-   * the akonadi sense, since jobs can not sensibly use them, but they do
+   * the akonadi sense, since jobs cannot sensibly use them, but they do
    * contain a valid message pointer.
    */
   MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item &item );
