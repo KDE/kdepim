@@ -1308,17 +1308,20 @@ void KMFilterListBox::enableControls()
 {
   const int currentIndex = mListWidget->currentRow();
   const bool theFirst = ( currentIndex == 0 );
-  const bool theLast = ( currentIndex >= (int)mListWidget->count() - 1 );
+  const int numberOfElement(mListWidget->count());
+  const bool theLast = ( currentIndex >= numberOfElement - 1 );
   const bool aFilterIsSelected = ( currentIndex >= 0 );
 
-  const bool uniqFilterSelected = (mListWidget->selectedItems().count() == 1);
+  const int numberOfSelectedItem(mListWidget->selectedItems().count());
+  const bool uniqFilterSelected = (numberOfSelectedItem == 1);
+  const bool allItemSelected = (numberOfSelectedItem == numberOfElement);
   mBtnUp->setEnabled( aFilterIsSelected && !theFirst && uniqFilterSelected );
   mBtnDown->setEnabled( aFilterIsSelected && !theLast&& uniqFilterSelected );
   mBtnCopy->setEnabled( aFilterIsSelected && uniqFilterSelected);
   mBtnDelete->setEnabled( aFilterIsSelected);
   mBtnRename->setEnabled( aFilterIsSelected && uniqFilterSelected);
-  mBtnTop->setEnabled( aFilterIsSelected && ((uniqFilterSelected && !theFirst)|| (!uniqFilterSelected)));
-  mBtnBottom->setEnabled( aFilterIsSelected && ((uniqFilterSelected &&!theLast) || (!uniqFilterSelected)));
+  mBtnTop->setEnabled( aFilterIsSelected && ((uniqFilterSelected && !theFirst)|| (!uniqFilterSelected)) && !allItemSelected);
+  mBtnBottom->setEnabled( aFilterIsSelected && ((uniqFilterSelected &&!theLast) || (!uniqFilterSelected)) && !allItemSelected);
 
   if ( aFilterIsSelected )
     mListWidget->scrollToItem( mListWidget->currentItem() );
