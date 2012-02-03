@@ -155,7 +155,7 @@ bool FilterImporterThunderbird::splitConditions( const QString&cond, MailCommon:
      */
 
   QString str = cond.trimmed();
-  str.remove("(");
+  str.remove( '(' );
   str.remove(str.length()-1,1); //remove last )
 
 
