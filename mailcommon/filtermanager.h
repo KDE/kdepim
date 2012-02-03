@@ -92,6 +92,8 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void filter( const Akonadi::Item &item, const QString &identifier ) const;
 
+    void filter( const qlonglong &id, const QString &identifier ) const;
+
     /**
      * Process given message item by applying the filter rules one by
      * one. You can select which set of filters (incoming or outgoing)

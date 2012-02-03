@@ -128,6 +128,11 @@ void FilterManager::filter( const Akonadi::Item &item, const QString &identifier
   d->mMailFilterAgentInterface->filter( item.id(), identifier );
 }
 
+void FilterManager::filter( const qlonglong &id, const QString &identifier ) const
+{
+  d->mMailFilterAgentInterface->filter( id, identifier );
+}
+
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
 {
   d->mMailFilterAgentInterface->filterItem( item.id(), static_cast<int>(set), account ? resourceId : QString() );
