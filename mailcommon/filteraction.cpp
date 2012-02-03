@@ -10,7 +10,7 @@
 #include "minimumcombobox.h"
 #include "regexplineedit.h"
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 #include "soundtestwidget.h"
 #endif
 
@@ -2254,7 +2254,7 @@ FilterAction::ReturnCode FilterActionExtFilter::process( ItemContext &context ) 
 }
 
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 //=============================================================================
 // FilterActionExecSound - execute command
 // Execute a sound
@@ -2757,7 +2757,7 @@ void FilterActionDict::init()
   insert( FilterActionRemoveHeader::newAction );
   insert( FilterActionAddHeader::newAction );
   insert( FilterActionRewriteHeader::newAction );
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
   insert( FilterActionExecSound::newAction );
 #endif
   insert( FilterActionAddToAddressBook::newAction );
