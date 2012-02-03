@@ -108,6 +108,8 @@ void FolderRequester::setCollectionFullPath( const Akonadi::Collection &col )
 {
   if ( KernelIf->collectionModel() ) {
     edit->setText( Util::fullCollectionPath( col ) );
+  } else {
+    edit->clear();
   }
 }
 
