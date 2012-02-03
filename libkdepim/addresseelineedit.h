@@ -56,6 +56,7 @@ namespace KPIM {
 
 namespace KPIM {
 
+
 class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 {
   Q_OBJECT
