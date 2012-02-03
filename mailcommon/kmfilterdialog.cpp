@@ -1197,8 +1197,9 @@ void KMFilterListBox::slotBottom()
     if(listWidgetItem.isEmpty())
         return;
 
+    const int numberOfElement(mListWidget->count());
     const int numberOfItem(listWidgetItem.count());
-    if((numberOfItem == 1) && (mListWidget->currentRow() == (int)mListWidget->count() - 1)){
+    if((numberOfItem == 1) && (mListWidget->currentRow() == numberOfElement - 1)){
         kDebug() << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
@@ -1210,11 +1211,11 @@ void KMFilterListBox::slotBottom()
         if(posItem == i)
             continue;
         item = mListWidget->takeItem( mListWidget->row(listWidgetItem.at(i)) );
-        mListWidget->insertItem( mListWidget->count()-j, item );
+        mListWidget->insertItem( numberOfElement-j, item );
 
     }
 
-    mListWidget->setCurrentItem( mListWidget->item( mListWidget->count() -1 ) );
+    mListWidget->setCurrentItem( mListWidget->item( numberOfElement -1 ) );
     enableControls();
 
     emit filterOrderAltered();
