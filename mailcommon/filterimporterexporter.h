@@ -35,6 +35,7 @@
 #include <KSharedConfig>
 
 #include <QtCore/QList>
+#include <QtCore/QStringList>
 
 class QWidget;
 
@@ -90,8 +91,9 @@ class MAILCOMMON_EXPORT FilterImporterExporter
 
     /**
      * Reads a list of filters from the given @p config file.
+     * Return list of empty filter
      */
-    static QList<MailFilter*> readFiltersFromConfig( const KSharedConfig::Ptr config );
+    static QList<MailFilter*> readFiltersFromConfig( const KSharedConfig::Ptr config, QStringList & emptyFilter );
 
   private:
     //@cond PRIVATE

@@ -293,7 +293,8 @@ void FilterManager::readConfig()
   config->reparseConfiguration();
   clear();
 
-  d->mFilters = FilterImporterExporter::readFiltersFromConfig( config );
+  QStringList emptyFilters;
+  d->mFilters = FilterImporterExporter::readFiltersFromConfig( config, emptyFilters );
 
   // check if at least one filter requires the message body
   d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),

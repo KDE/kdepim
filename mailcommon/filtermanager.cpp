@@ -54,7 +54,8 @@ void FilterManager::Private::readConfig()
 {
   KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
   clear();
-  mFilters = FilterImporterExporter::readFiltersFromConfig( config );
+  QStringList emptyFilters;
+  mFilters = FilterImporterExporter::readFiltersFromConfig( config, emptyFilters );
 }
 
 void FilterManager::Private::writeConfig( bool withSync ) const

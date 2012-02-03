@@ -142,7 +142,7 @@ void FilterSelectionDialog::slotSelectAllButton()
   }
 }
 
-QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedConfig::Ptr config )
+QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(const KSharedConfig::Ptr config , QStringList & emptyFilters)
 {
   const KConfigGroup group = config->group( "General" );
 
@@ -163,6 +163,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
 #ifndef NDEBUG
       kDebug() << "Filter" << filter->asString() << "is empty!";
 #endif
+      emptyFilters <<filter->name();
       delete filter;
     } else
       filters.append( filter );
@@ -175,7 +176,6 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
      KConfigGroup group = config->group( "General" );
      group.sync();
   }
-
   return filters;
 }
 
@@ -276,7 +276,9 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     case KMailFilter:
     {
         const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
-        imported = readFiltersFromConfig( config );
+        QStringList emptyFilter;
+        imported = readFiltersFromConfig( config, emptyFilter );
+        d->warningInfoAboutInvalidFilter(emptyFilter);
         break;
     }
     case ThunderBirdFilter:
