@@ -19,7 +19,7 @@
 
 #include "imapaclattribute.h"
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
 
 using namespace MailCommon;
 
@@ -54,7 +54,7 @@ QByteArray ImapAclAttribute::type() const
   return "imapacl";
 }
 
-Akonadi::Attribute* ImapAclAttribute::clone() const
+Akonadi::Attribute *ImapAclAttribute::clone() const
 {
   return new ImapAclAttribute( mRights, mOldRights );
 }
@@ -64,30 +64,32 @@ QByteArray ImapAclAttribute::serialized() const
   QByteArray result = "";
 
   bool added = false;
-  foreach ( const QByteArray &id, mRights.keys() ) {
-    result+= id;
-    result+= ' ';
-    result+= KIMAP::Acl::rightsToString( mRights[id] );
-    result+= " % "; // We use this separator as '%' is not allowed in keys or values
+  foreach ( const QByteArray &id, mRights.keys() ) { //krazy:exclude=foreach
+    result += id;
+    result += ' ';
+    result += KIMAP::Acl::rightsToString( mRights[id] );
+    result += " % "; // We use this separator as '%' is not allowed in keys or values
     added = true;
   }
 
-  if ( added )
+  if ( added ) {
     result.chop( 3 );
+  }
 
-  result+= " %% ";
+  result += " %% ";
 
   added = false;
-  foreach ( const QByteArray &id, mOldRights.keys() ) {
-    result+= id;
-    result+= ' ';
-    result+= KIMAP::Acl::rightsToString( mOldRights[id] );
-    result+= " % "; // We use this separator as '%' is not allowed in keys or values
+  foreach ( const QByteArray &id, mOldRights.keys() ) { //krazy:exclude=foreach
+    result += id;
+    result += ' ';
+    result += KIMAP::Acl::rightsToString( mOldRights[id] );
+    result += " % "; // We use this separator as '%' is not allowed in keys or values
     added = true;
   }
 
-  if ( added )
+  if ( added ) {
     result.chop( 3 );
+  }
 
   return result;
 }
@@ -97,8 +99,9 @@ void ImapAclAttribute::deserialize( const QByteArray &data )
   mRights.clear();
   mOldRights.clear();
   const int pos = data.indexOf( " %% " );
-  if ( pos == -1 )
+  if ( pos == -1 ) {
     return;
+  }
 
   const QByteArray leftPart = data.left( pos );
   const QByteArray rightPart = data.mid( pos + 4 );

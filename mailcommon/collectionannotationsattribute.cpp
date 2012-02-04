@@ -1,25 +1,25 @@
 /*
-    Copyright (C) 2008 Omat Holding B.V. <info@omat.nl>
+  Copyright (C) 2008 Omat Holding B.V. <info@omat.nl>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "collectionannotationsattribute.h"
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
 
 using namespace MailCommon;
 
@@ -27,12 +27,14 @@ CollectionAnnotationsAttribute::CollectionAnnotationsAttribute()
 {
 }
 
-CollectionAnnotationsAttribute::CollectionAnnotationsAttribute( const QMap<QByteArray, QByteArray> &annotations )
+CollectionAnnotationsAttribute::CollectionAnnotationsAttribute(
+  const QMap<QByteArray, QByteArray> &annotations )
   : mAnnotations( annotations )
 {
 }
 
-void CollectionAnnotationsAttribute::setAnnotations( const QMap<QByteArray, QByteArray> &annotations )
+void CollectionAnnotationsAttribute::setAnnotations(
+  const QMap<QByteArray, QByteArray> &annotations )
 {
   mAnnotations = annotations;
 }
@@ -47,7 +49,7 @@ QByteArray CollectionAnnotationsAttribute::type() const
   return "collectionannotations";
 }
 
-Akonadi::Attribute* CollectionAnnotationsAttribute::clone() const
+Akonadi::Attribute *CollectionAnnotationsAttribute::clone() const
 {
   return new CollectionAnnotationsAttribute( mAnnotations );
 }
@@ -56,11 +58,11 @@ QByteArray CollectionAnnotationsAttribute::serialized() const
 {
   QByteArray result = "";
 
-  foreach ( const QByteArray &key, mAnnotations.keys() ) {
-    result+= key;
-    result+= ' ';
-    result+= mAnnotations[key];
-    result+= " % "; // We use this separator as '%' is not allowed in keys or values
+  foreach ( const QByteArray &key, mAnnotations ) {
+    result += key;
+    result += ' ';
+    result += mAnnotations[key];
+    result += " % "; // We use this separator as '%' is not allowed in keys or values
   }
   result.chop( 3 );
 
@@ -74,12 +76,15 @@ void CollectionAnnotationsAttribute::deserialize( const QByteArray &data )
 
   for ( int i = 0; i < lines.size(); ++i ) {
     QByteArray line = lines[i];
-    if ( i != 0 && line.startsWith( ' ' ) )
+    if ( i != 0 && line.startsWith( ' ' ) ) {
       line = line.mid( 1 );
-    if ( i != lines.size() - 1 && line.endsWith( ' ' ) )
+    }
+    if ( i != lines.size() - 1 && line.endsWith( ' ' ) ) {
       line.chop( 1 );
-    if ( line.trimmed().isEmpty() )
+    }
+    if ( line.trimmed().isEmpty() ) {
       continue;
+    }
     int wsIndex = line.indexOf( ' ' );
     if ( wsIndex > 0 ) {
       const QByteArray key = line.mid( 0, wsIndex );
