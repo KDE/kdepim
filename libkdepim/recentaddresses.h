@@ -50,6 +50,8 @@ class KDEPIM_EXPORT RecentAddressDialog : public KDialog
     RecentAddressDialog( QWidget *parent );
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
+    void addAddresses(KConfig *config);
+
   private slots:
     void slotAddItem();
     void slotRemoveItem();

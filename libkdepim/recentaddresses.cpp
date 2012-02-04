@@ -324,3 +324,11 @@ bool RecentAddressDialog::eventFilter( QObject* o, QEvent* e )
 
     return false;
 }
+
+void RecentAddressDialog::addAddresses(KConfig *config)
+{
+    const int numberOfItem(mListView->count());
+    for(int i = 0; i < numberOfItem; ++i){
+        KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
+    }
+}
