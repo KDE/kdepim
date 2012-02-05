@@ -332,3 +332,4 @@ void RecentAddressDialog::addAddresses(KConfig *config)
         KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
     }
 }
+#include "recentaddresses.moc"
