@@ -1,4 +1,6 @@
-/* Copyright 2009 Klarälvdalens Datakonsult AB
+/*
+
+  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,20 +18,24 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "backupjob.h"
-#include <broadcaststatus.h>
+
+#include <libkdepim/broadcaststatus.h>
+
 #include <Akonadi/CollectionDeleteJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+
 #include <KMime/Message>
 
-#include <klocale.h>
-#include <kzip.h>
-#include <ktar.h>
-#include <kmessagebox.h>
-#include <kio/global.h>
+#include <KLocale>
+#include <KMessageBox>
+#include <KTar>
+#include <KZip>
+#include <kio/global.h> //krazy:exclude=camelcase as there is no such
 
 #include <QFileInfo>
 #include <QTimer>
@@ -65,7 +71,7 @@ void BackupJob::setRootFolder( const Akonadi::Collection &rootFolder )
   mRootFolder = rootFolder;
 }
 
-void BackupJob::setSaveLocation( const KUrl& savePath )
+void BackupJob::setSaveLocation( const KUrl &savePath )
 {
   mMailArchivePath = savePath;
 }
@@ -88,8 +94,7 @@ void BackupJob::setRecursive( bool recursive )
 bool BackupJob::queueFolders( const Akonadi::Collection &root )
 {
   mPendingFolders.append( root );
-  if ( mRecursive )
-  {
+  if ( mRecursive ) {
     // FIXME: Get rid of the exec()
     // We could do a recursive CollectionFetchJob, but we only fetch the first level
     // and then recurse manually. This is needed because a recursive fetch doesn't
@@ -97,8 +102,8 @@ bool BackupJob::queueFolders( const Akonadi::Collection &root )
     // in the mPendingFolders list before all second level children, so that the
     // directories for the first level are written before the directories in the
     // second level, in the archive file.
-    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( root,
-                                                                        Akonadi::CollectionFetchJob::FirstLevel );
+    Akonadi::CollectionFetchJob *job =
+      new Akonadi::CollectionFetchJob( root, Akonadi::CollectionFetchJob::FirstLevel );
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
     job->exec();
     if ( job->error() ) {
@@ -108,8 +113,9 @@ bool BackupJob::queueFolders( const Akonadi::Collection &root )
     }
 
     foreach ( const Akonadi::Collection &collection, job->collections() ) {
-      if ( !queueFolders( collection ) )
+      if ( !queueFolders( collection ) ) {
         return false;
+      }
     }
   }
   mAllFolders = mPendingFolders;
@@ -118,9 +124,10 @@ bool BackupJob::queueFolders( const Akonadi::Collection &root )
 
 bool BackupJob::hasChildren( const Akonadi::Collection &collection ) const
 {
-  foreach( const Akonadi::Collection &curCol, mAllFolders ) {
-    if ( collection == curCol.parentCollection() )
+  foreach ( const Akonadi::Collection &curCol, mAllFolders ) {
+    if ( collection == curCol.parentCollection() ) {
       return true;
+    }
   }
   return false;
 }
@@ -132,22 +139,26 @@ void BackupJob::cancelJob()
 
 void BackupJob::abort( const QString &errorMessage )
 {
-  // We could be called this twice, since killing the current job below will cause the job to fail,
-  // and that will call abort()
-  if ( mAborted )
+  // We could be called this twice, since killing the current job below will
+  // cause the job to fail, and that will call abort()
+  if ( mAborted ) {
     return;
+  }
 
   mAborted = true;
   if ( mCurrentFolder.isValid() ) {
     mCurrentFolder = Akonadi::Collection();
   }
+
   if ( mArchive && mArchive->isOpen() ) {
     mArchive->close();
   }
+
   if ( mCurrentJob ) {
     mCurrentJob->kill();
     mCurrentJob = 0;
   }
+
   if ( mProgressItem ) {
     mProgressItem->setComplete();
     mProgressItem = 0;
@@ -203,8 +214,9 @@ void BackupJob::finish()
 
 void BackupJob::archiveNextMessage()
 {
-  if ( mAborted )
+  if ( mAborted ) {
     return;
+  }
 
   if ( mPendingMessages.isEmpty() ) {
     kDebug() << "===> All messages done in folder " << mCurrentFolder.name();
@@ -224,8 +236,9 @@ void BackupJob::archiveNextMessage()
 
 void BackupJob::processMessage( const Akonadi::Item &item )
 {
-  if ( mAborted )
+  if ( mAborted ) {
     return;
+  }
 
   const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
   kDebug() << "Processing message with subject " << message->subject( false );
@@ -237,7 +250,8 @@ void BackupJob::processMessage( const Akonadi::Item &item )
   // PORT ME: user and group!
   kDebug() << "AKONDI PORT: disabled code here!";
   if ( !mArchive->writeFile( fileName, "user", "group", messageData, messageSize ) ) {
-    abort( i18n( "Failed to write a message into the archive folder '%1'.", mCurrentFolder.name() ) );
+    abort( i18n( "Failed to write a message into the archive folder '%1'.",
+                 mCurrentFolder.name() ) );
     return;
   }
 
@@ -251,8 +265,9 @@ void BackupJob::processMessage( const Akonadi::Item &item )
 
 void BackupJob::itemFetchJobResult( KJob *job )
 {
-  if ( mAborted )
+  if ( mAborted ) {
     return;
+  }
 
   Q_ASSERT( job == mCurrentJob );
   mCurrentJob = 0;
@@ -261,8 +276,7 @@ void BackupJob::itemFetchJobResult( KJob *job )
     Q_ASSERT( mCurrentFolder.isValid() );
     kWarning() << job->errorString();
     abort( i18n( "Downloading a message in folder '%1' failed.", mCurrentFolder.name() ) );
-  }
-  else {
+  } else {
     Akonadi::ItemFetchJob *fetchJob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
     Q_ASSERT( fetchJob );
     Q_ASSERT( fetchJob->items().size() == 1 );
@@ -280,8 +294,9 @@ bool BackupJob::writeDirHelper( const QString &directoryPath )
 QString BackupJob::collectionName( const Akonadi::Collection &collection ) const
 {
   foreach ( const Akonadi::Collection &curCol, mAllFolders ) {
-    if ( curCol == collection )
+    if ( curCol == collection ) {
       return curCol.name();
+    }
   }
   Q_ASSERT( false );
   return QString();
@@ -293,7 +308,7 @@ QString BackupJob::pathForCollection( const Akonadi::Collection &collection ) co
   Akonadi::Collection curCol = collection.parentCollection();
   if ( collection != mRootFolder ) {
     Q_ASSERT( curCol.isValid() );
-    while( curCol != mRootFolder ) {
+    while ( curCol != mRootFolder ) {
       fullPath.prepend( '.' + collectionName( curCol ) + ".directory" + '/' );
       curCol = curCol.parentCollection();
     }
@@ -315,8 +330,9 @@ QString BackupJob::subdirPathForCollection( const Akonadi::Collection &collectio
 
 void BackupJob::archiveNextFolder()
 {
-  if ( mAborted )
+  if ( mAborted ) {
     return;
+  }
 
   if ( mPendingFolders.isEmpty() ) {
     finish();
@@ -334,17 +350,26 @@ void BackupJob::archiveNextFolder()
   const QString folderName = mCurrentFolder.name();
   bool success = true;
   if ( hasChildren( mCurrentFolder ) ) {
-    if ( !writeDirHelper( subdirPathForCollection( mCurrentFolder ) ) )
+    if ( !writeDirHelper( subdirPathForCollection( mCurrentFolder ) ) ) {
       success = false;
+    }
   }
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) ) )
+  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) ) ) {
     success = false;
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/cur" ) )
+  }
+
+  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/cur" ) ) {
     success = false;
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/new" ) )
+  }
+
+  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/new" ) ) {
     success = false;
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/tmp" ) )
+  }
+
+  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/tmp" ) ) {
     success = false;
+  }
+
   if ( !success ) {
     abort( i18n( "Unable to create folder structure for folder '%1' within archive file.",
                  mCurrentFolder.name() ) );
@@ -360,7 +385,8 @@ void BackupJob::onArchiveNextFolderDone( KJob *job )
 {
   if ( job->error() ) {
     kWarning() << job->errorString();
-    abort( i18n( "Unable to get message list for folder %1.", job->property( "folderName" ).toString() ) );
+    abort( i18n( "Unable to get message list for folder %1.",
+                 job->property( "folderName" ).toString() ) );
     return;
   }
 
@@ -374,28 +400,33 @@ void BackupJob::start()
   Q_ASSERT( !mMailArchivePath.isEmpty() );
   Q_ASSERT( mRootFolder.isValid() );
 
-  if ( !queueFolders( mRootFolder ) )
+  if ( !queueFolders( mRootFolder ) ) {
     return;
+  }
 
   switch ( mArchiveType ) {
-    case Zip: {
-      KZip *zip = new KZip( mMailArchivePath.path() );
-      zip->setCompression( KZip::DeflateCompression );
-      mArchive = zip;
-      break;
-    }
-    case Tar: {
-      mArchive = new KTar( mMailArchivePath.path(), "application/x-tar" );
-      break;
-    }
-    case TarGz: {
-      mArchive = new KTar( mMailArchivePath.path(), "application/x-gzip" );
-      break;
-    }
-    case TarBz2: {
-      mArchive = new KTar( mMailArchivePath.path(), "application/x-bzip2" );
-      break;
-    }
+  case Zip:
+  {
+    KZip *zip = new KZip( mMailArchivePath.path() );
+    zip->setCompression( KZip::DeflateCompression );
+    mArchive = zip;
+    break;
+  }
+  case Tar:
+  {
+    mArchive = new KTar( mMailArchivePath.path(), "application/x-tar" );
+    break;
+  }
+  case TarGz:
+  {
+    mArchive = new KTar( mMailArchivePath.path(), "application/x-gzip" );
+    break;
+  }
+  case TarBz2:
+  {
+    mArchive = new KTar( mMailArchivePath.path(), "application/x-bzip2" );
+    break;
+  }
   }
 
   kDebug() << "Starting backup.";
@@ -415,8 +446,6 @@ void BackupJob::start()
 
   archiveNextFolder();
 }
-
-
 
 #include "backupjob.moc"
 

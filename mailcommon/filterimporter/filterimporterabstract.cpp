@@ -1,12 +1,11 @@
 /*
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -15,9 +14,11 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 #include "filterimporterabstract_p.h"
-#include "mailfilter.h"
 #include "filtermanager.h"
+#include "mailfilter.h"
+
 #include <QFile>
 
 using namespace MailCommon;
@@ -32,55 +33,58 @@ FilterImporterAbstract::~FilterImporterAbstract()
 
 QList<MailFilter*> FilterImporterAbstract::importFilter() const
 {
-    return mListMailFilter;
+  return mListMailFilter;
 }
 
 QStringList FilterImporterAbstract::emptyFilter() const
 {
-    return mEmptyFilter;
+  return mEmptyFilter;
 }
 
-void FilterImporterAbstract::appendFilter(MailCommon::MailFilter * filter)
+void FilterImporterAbstract::appendFilter( MailCommon::MailFilter *filter )
 {
-    filter->purify();
-    if ( !filter->isEmpty() ) {
-        // the filter is valid:
-        mListMailFilter<<filter;
-    } else {
-        mEmptyFilter << filter->name();
-        // the filter is invalid:
-        delete filter;
-    }
+  filter->purify();
+  if ( !filter->isEmpty() ) {
+    // the filter is valid:
+    mListMailFilter << filter;
+  } else {
+    mEmptyFilter << filter->name();
+    // the filter is invalid:
+    delete filter;
+  }
 }
 
-void FilterImporterAbstract::createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value)
+void FilterImporterAbstract::createFilterAction( MailCommon::MailFilter *filter,
+                                                 const QString &actionName,
+                                                 const QString &value )
 {
-    if ( !actionName.isEmpty() ) {
-      FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
-      if ( desc ) {
-        FilterAction *fa = desc->create();
-        //...create an instance...
-        fa->argsFromStringInteractive( value, filter->name() );
-        //...check if it's empty and...
-        if ( !fa->isEmpty() )
-          //...append it if it's not and...
-          filter->actions()->append( fa );
-        else
-          //...delete is else.
-          delete fa;
+  if ( !actionName.isEmpty() ) {
+    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
+    if ( desc ) {
+      FilterAction *fa = desc->create();
+      //...create an instance...
+      fa->argsFromStringInteractive( value, filter->name() );
+      //...check if it's empty and...
+      if ( !fa->isEmpty() ) {
+        //...append it if it's not and...
+        filter->actions()->append( fa );
+      } else {
+        //...delete is else.
+        delete fa;
       }
     }
+  }
 }
 
-bool FilterImporterAbstract::loadDomElement( QDomDocument & doc, QFile *file)
+bool FilterImporterAbstract::loadDomElement( QDomDocument &doc, QFile *file )
 {
-    QString errorMsg;
-    int errorRow;
-    int errorCol;
-    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-        kDebug() << "Unable to load document.Parse error in line " << errorRow
-                 << ", col " << errorCol << ": " << errorMsg;
-        return false;
-    }
-    return true;
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return false;
+  }
+  return true;
 }

@@ -1,25 +1,23 @@
 /*
-    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-    Copyright (c) 2010 Andras Mantia <andras@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #include "filtermodel_p.h"
-
 #include "filtermanager.h"
 #include "mailfilter.h"
 
@@ -41,24 +39,24 @@ QVariant FilterModel::data( const QModelIndex &index, int role ) const
   return QVariant();
 }
 
-int FilterModel::rowCount( const QModelIndex& ) const
+int FilterModel::rowCount( const QModelIndex & ) const
 {
   return FilterManager::instance()->filters().size();
 }
 
 void FilterModel::moveRow( int sourceRow, int destinationRow )
 {
-  if ( sourceRow == destinationRow )
+  if ( sourceRow == destinationRow ) {
     return;
+  }
 
-  if ( sourceRow < 0 || sourceRow >= rowCount() )
+  if ( sourceRow < 0 || sourceRow >= rowCount() ) {
     return;
+  }
 
-  if ( destinationRow < 0 || destinationRow >= rowCount() )
+  if ( destinationRow < 0 || destinationRow >= rowCount() ) {
     return;
-
-  const int startRow = sourceRow;
-  const int endRow = (sourceRow < destinationRow ? destinationRow + 1 : destinationRow - 1);
+  }
 
   QList<MailFilter*> filters;
 

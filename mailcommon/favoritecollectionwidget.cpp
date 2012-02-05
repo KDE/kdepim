@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -17,19 +17,20 @@
 */
 
 #include "favoritecollectionwidget.h"
-#include "messagecore/globalsettings.h"
 #include "mailkernel.h"
 
-#include <QDebug>
-#include <kxmlguiclient.h>
-#include <kglobalsettings.h>
+#include <messagecore/globalsettings.h>
+
+#include <KGlobalSettings>
+#include <KXMLGUIClient>
 
 using namespace MailCommon;
 
-FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent  )
+FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent )
   : Akonadi::EntityListView( xmlGuiClient, parent )
 {
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()));
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
+           this, SLOT(slotGeneralFontChanged()));
   readConfig();
 }
 
@@ -40,7 +41,7 @@ FavoriteCollectionWidget::~FavoriteCollectionWidget()
 void FavoriteCollectionWidget::slotGeneralFontChanged()
 {
   // Custom/System font support
-  if (MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
+  if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     setFont( KGlobalSettings::generalFont() );
   }
 }
@@ -50,7 +51,7 @@ void FavoriteCollectionWidget::readConfig()
   // Custom/System font support
   if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-    setFont( fontConfig.readEntry("folder-font", KGlobalSettings::generalFont() ) );
+    setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
   } else {
     setFont( KGlobalSettings::generalFont() );
   }

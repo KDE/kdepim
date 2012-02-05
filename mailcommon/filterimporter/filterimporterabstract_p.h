@@ -1,12 +1,11 @@
 /*
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -15,33 +14,38 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef FILTERIMPORTERABSTRACT_H
-#define FILTERIMPORTERABSTRACT_H
 
-#include <QList>
+#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERABSTRACT_P_H
+#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERABSTRACT_P_H
+
 #include <QDomDocument>
+#include <QList>
 #include <QStringList>
 
 class QFile;
-namespace MailCommon
-{
+
+namespace MailCommon {
+
 class MailFilter;
 
 class FilterImporterAbstract
 {
-public:
-  explicit FilterImporterAbstract();
-  ~FilterImporterAbstract();
-  QList<MailFilter*> importFilter() const;
-  QStringList emptyFilter() const;
+  public:
+    explicit FilterImporterAbstract();
+    ~FilterImporterAbstract();
+    QList<MailFilter*> importFilter() const;
+    QStringList emptyFilter() const;
 
-protected:
-  void appendFilter(MailCommon::MailFilter * filter);
-  void createFilterAction(MailCommon::MailFilter *filter, const QString& actionName, const QString& value);
-  bool loadDomElement(QDomDocument &doc, QFile *file);
+  protected:
+    void appendFilter( MailCommon::MailFilter *filter );
+    void createFilterAction( MailCommon::MailFilter *filter,
+                             const QString &actionName, const QString &value );
+    bool loadDomElement( QDomDocument &doc, QFile *file );
 
-  QList<MailFilter*> mListMailFilter;
-  QStringList mEmptyFilter;
+    QList<MailFilter*> mListMailFilter;
+    QStringList mEmptyFilter;
 };
+
 }
+
 #endif // FILTERIMPORTERABSTRACT_H

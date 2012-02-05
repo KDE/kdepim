@@ -1,5 +1,4 @@
 /*
- * kmail: KDE mail client
  * Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,17 +22,19 @@
 
 #include "mailcommon_export.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <kmime/kmime_mdn.h>
-#include <kmime/kmime_message.h>
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
 
+#include <KMime/MDN>
+#include <KMime/KMimeMessage>
+
+#include <QList>
+#include <QMultiHash>
 #include <QObject>
-#include <QtCore/QList>
-#include <QtCore/QMultiHash>
-#include <QtCore/QStringList>
+#include <QStringList>
 
 class KTemporaryFile;
+
 class QWidget;
 
 namespace MailCommon {
@@ -57,7 +58,7 @@ class MAILCOMMON_EXPORT ItemContext
     /**
      * Returns the item of the context.
      */
-    Akonadi::Item& item();
+    Akonadi::Item &item();
 
     /**
      * Sets the target collection the item should be moved to.
@@ -107,11 +108,10 @@ class MAILCOMMON_EXPORT ItemContext
 //
 //=========================================================
 
-
 /**
- * @short Abstract base class for KMail's filter actions.
+ * @short Abstract base class for mail filter actions.
  *
- * Abstract base class for KMail's filter actions. All it can do is
+ * Abstract base class for mail filter actions. All it can do is
  * hold a name (ie. type-string). There are several sub-classes that
  * inherit form this and are capable of providing parameter handling
  * (import/export as string, a widget to allow editing, etc.)
@@ -127,12 +127,14 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
     /**
      * Describes the possible return codes of filter processing:
      */
-    enum ReturnCode
-    {
+    enum ReturnCode {
       ErrorNeedComplete = 0x1, ///< Could not process because a complete message is needed.
       GoOn = 0x2,              ///< Go on with applying filter actions.
-      ErrorButGoOn = 0x4,      ///< There was a non-critical error (e.g. an invalid address in the 'forward' action), but the processing should continue.
-      CriticalError = 0x8      ///< A critical error has occurred during processing (e.g. "disk full").
+      ErrorButGoOn = 0x4,      ///< A non-critical error occurred
+                               ///  (e.g. an invalid address in the 'forward' action),
+                               ///   but processing should continue.
+      CriticalError = 0x8      ///< A critical error occurred during processing
+                               ///  (e.g. "disk full").
     };
 
     /**
@@ -188,7 +190,7 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
      * Creates a widget for setting the filter action parameter. Also
      * sets the value of the widget.
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * The filter action shall set it's parameter from the widget's
@@ -237,18 +239,21 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
      * folder @p aFolder is used and changes to @p aNewFolder in this
      * case. Returns true if a change was made.
      */
-    virtual bool folderRemoved( const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder );
+    virtual bool folderRemoved( const Akonadi::Collection &aFolder,
+                                const Akonadi::Collection &aNewFolder );
 
     /**
      * Static function that creates a filter action of this type.
      */
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
     /**
      * Automates the sending of MDNs from filter actions.
      */
-    static void sendMDN( const Akonadi::Item& item, KMime::MDN::DispositionType d,
-                         const QList<KMime::MDN::DispositionModifier> & m = QList<KMime::MDN::DispositionModifier>() );
+    static void sendMDN( const Akonadi::Item &item,
+                         KMime::MDN::DispositionType d,
+                         const QList<KMime::MDN::DispositionModifier> &m =
+                           QList<KMime::MDN::DispositionModifier>() );
 
   signals:
     /**
@@ -262,11 +267,10 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
     QString mLabel;
 };
 
-
 /**
  *  @short Abstract base class for filter actions with no parameter.
  *
- *  Abstract base class for KMail's filter actions that need no
+ *  Abstract base class for mail filter actions that need no
  *  parameter, e.g. "Confirm Delivery". Creates an (empty) QWidget as
  *  parameter widget. A subclass of this must provide at least
  *  implementations for the following methods:
@@ -289,7 +293,7 @@ class FilterActionWithNone : public FilterAction
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString& );
+    virtual void argsFromString( const QString & );
 
     /**
      * @copydoc FilterAction::argsAsString
@@ -302,11 +306,10 @@ class FilterActionWithNone : public FilterAction
     virtual QString displayString() const;
 };
 
-
 /**
  * @short Abstract base class for filter actions with a free-form string as parameter.
  *
- * Abstract base class for KMail's filter actions that need a
+ * Abstract base class for mail filter actions that need a
  * free-form parameter, e.g. 'set transport' or 'set reply to'.  Can
  * create a QLineEdit as parameter widget. A subclass of this
  * must provide at least implementations for the following methods:
@@ -334,7 +337,7 @@ class FilterActionWithString : public FilterAction
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -370,11 +373,10 @@ class FilterActionWithString : public FilterAction
     QString mParameter;
 };
 
-
 /**
  * @short Abstract base class for filter actions with a free-form string as parameter.
  *
- * Abstract base class for KMail's filter actions that need a
+ * Abstract base class for mail filter actions that need a
  * parameter that has a UOID, e.g. "set identity". A subclass of this
  * must provide at least implementations for the following methods:
  *
@@ -392,7 +394,7 @@ class FilterActionWithUOID : public FilterAction
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUOID( const char* name, const QString &label, QObject *parent = 0 );
+    FilterActionWithUOID( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -418,11 +420,10 @@ class FilterActionWithUOID : public FilterAction
     uint mParameter;
 };
 
-
 /**
  * @short Abstract base class for filter actions with a fixed set of string parameters.
  *
- * Abstract base class for KMail's filter actions that need a
+ * Abstract base class for mail filter actions that need a
  * parameter which can be chosen from a fixed set, e.g. 'set
  * identity'.  Can create a KComboBox as parameter widget. A
  * subclass of this must provide at least implementations for the
@@ -451,7 +452,7 @@ class FilterActionWithStringList : public FilterActionWithString
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -477,14 +478,13 @@ class FilterActionWithStringList : public FilterActionWithString
     QStringList mParameterList;
 };
 
-
 class FilterActionTransport: public FilterAction
 {
   public:
     FilterActionTransport( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    static FilterAction *newAction();
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
@@ -519,15 +519,15 @@ class FilterActionTransport: public FilterAction
      * @copydoc FilterAction::displayString
      */
     virtual QString displayString() const;
-protected:
+
+  protected:
     int mParameter;
 };
-
 
 /**
  * @short Abstract base class for filter actions with a mail folder as parameter.
  *
- * Abstract base class for KMail's filter actions that need a
+ * Abstract base class for mail filter actions that need a
  * mail folder as parameter, e.g. 'move into folder'. Can
  * create a KComboBox as parameter widget. A subclass of this
  * must provide at least implementations for the following methods:
@@ -555,7 +555,7 @@ class FilterActionWithFolder : public FilterAction
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -582,8 +582,8 @@ class FilterActionWithFolder : public FilterAction
      */
     virtual QString argsAsString() const;
 
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
-  
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+
     virtual QString argsAsStringReal() const;
 
     /**
@@ -594,17 +594,17 @@ class FilterActionWithFolder : public FilterAction
     /**
      * @copydoc FilterAction::folderRemoved
      */
-    virtual bool folderRemoved( const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder );
+    virtual bool folderRemoved( const Akonadi::Collection &aFolder,
+                                const Akonadi::Collection &aNewFolder );
 
   protected:
     Akonadi::Collection mFolder;
 };
 
-
 /**
  * @short Abstract base class for filter actions with a mail address as parameter.
  *
- * Abstract base class for KMail's filter actions that need a mail
+ * Abstract base class for mail filter actions that need a mail
  * address as parameter, e.g. 'forward to'. Can create a
  * KComboBox (capable of completion from the address book) as
  * parameter widget. A subclass of this must provide at least
@@ -628,7 +628,7 @@ class FilterActionWithAddress : public FilterActionWithString
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -646,11 +646,10 @@ class FilterActionWithAddress : public FilterActionWithString
     virtual void clearParamWidget( QWidget *paramWidget ) const;
 };
 
-
 /**
  * @short Abstract base class for filter actions with a command line as parameter.
  *
- * Abstract base class for KMail's filter actions that need a command
+ * Abstract base class for mail filter actions that need a command
  * line as parameter, e.g. 'forward to'. Can create a QLineEdit
  * (are there better widgets in the depths of the kdelibs?) as
  * parameter widget. A subclass of this must provide at least
@@ -689,7 +688,7 @@ class FilterActionWithUrl : public FilterAction
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -725,7 +724,6 @@ class FilterActionWithUrl : public FilterAction
     QString mParameter;
 };
 
-
 class FilterActionWithCommand : public FilterActionWithUrl
 {
   Q_OBJECT
@@ -738,7 +736,7 @@ class FilterActionWithCommand : public FilterActionWithUrl
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -762,11 +760,11 @@ class FilterActionWithCommand : public FilterActionWithUrl
      * the name of a tempfile holding the n'th message part, with n=0
      * meaning the body of the message.
      */
-    virtual QString substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg, QList<KTemporaryFile*> &aTempFileList  ) const;
+    virtual QString substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg,
+                                                  QList<KTemporaryFile*> &aTempFileList ) const;
 
     virtual ReturnCode genericProcess( ItemContext &context, bool filtering ) const;
 };
-
 
 class FilterActionWithTest : public FilterAction
 {
@@ -790,7 +788,7 @@ class FilterActionWithTest : public FilterAction
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
@@ -826,10 +824,7 @@ class FilterActionWithTest : public FilterAction
     QString mParameter;
 };
 
-
-
-
-typedef FilterAction* (*FilterActionNewFunc)(void);
+typedef FilterAction * (*FilterActionNewFunc)(void);
 
 /**
  * @short Auxiliary struct for FilterActionDict.

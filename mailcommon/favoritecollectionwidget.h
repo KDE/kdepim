@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -21,7 +21,7 @@
 
 #include "mailcommon_export.h"
 
-#include <akonadi/entitylistview.h>
+#include <Akonadi/EntityListView>
 
 class KXMLGUIClient;
 
@@ -30,15 +30,16 @@ namespace MailCommon {
 class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListView
 {
   Q_OBJECT
-public:
-  explicit FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
-  ~FavoriteCollectionWidget();
+  public:
+    explicit FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    ~FavoriteCollectionWidget();
 
-  void readConfig();
+    void readConfig();
 
-protected slots:
-  void slotGeneralFontChanged();
+  protected slots:
+    void slotGeneralFontChanged();
 };
+
 }
 
 #endif /* MAILCOMMON_FAVORITECOLLECTIONWIDGET_H */
