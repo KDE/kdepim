@@ -1,13 +1,12 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
  *
- *  This file is part of KMail, the KDE mail client.
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *
- *  KMail is free software; you can redistribute it and/or modify it
+ *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
- *  KMail is distributed in the hope that it will be useful, but
+ *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  General Public License for more details.
@@ -30,15 +29,14 @@
 
 #include "folderjob.h"
 
-#include <kdebug.h>
-#include <kio/global.h>
+#include <kio/global.h> //krazy:exclude=camelcase as there is no such
+
 
 namespace MailCommon {
 
 //----------------------------------------------------------------------------
 FolderJob::FolderJob() :
-    mErrorCode( 0 ),
-    mStarted( false ), mCancellable( false )
+  mErrorCode( 0 ), mStarted( false ), mCancellable( false )
 {
 }
 
@@ -52,8 +50,7 @@ FolderJob::~FolderJob()
 //----------------------------------------------------------------------------
 void FolderJob::start()
 {
-  if (!mStarted)
-  {
+  if ( !mStarted ) {
     mStarted = true;
     execute();
   }

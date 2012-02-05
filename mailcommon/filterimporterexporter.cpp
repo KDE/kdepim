@@ -1,53 +1,54 @@
 /*
-    This file is part of KMail.
-    Copyright (c) 2007 Till Adam <adam@kde.org>
+  Copyright (c) 2007 Till Adam <adam@kde.org>
 
-    KMail is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License, version 2, as
-    published by the Free Software Foundation.
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
 
-    KMail is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-    In addition, as a special exception, the copyright holders give
-    permission to link the code of this program with any edition of
-    the Qt library by Trolltech AS, Norway (or with modified versions
-    of Qt that use the same license as Qt), and distribute linked
-    combinations including the two.  You must obey the GNU General
-    Public License in all respects for all of the code used other than
-    Qt.  If you modify this file, you may extend this exception to
-    your version of the file, but you are not obligated to do so.  If
-    you do not wish to do so, delete this exception statement from
-    your version.
+  In addition, as a special exception, the copyright holders give
+  permission to link the code of this program with any edition of
+  the Qt library by Trolltech AS, Norway (or with modified versions
+  of Qt that use the same license as Qt), and distribute linked
+  combinations including the two.  You must obey the GNU General
+  Public License in all respects for all of the code used other than
+  Qt.  If you modify this file, you may extend this exception to
+  your version of the file, but you are not obligated to do so.  If
+  you do not wish to do so, delete this exception statement from
+  your version.
 */
 
 #include "filterimporterexporter.h"
 #include "filterimporterexporter_p.h"
+#include "filteraction.h"
+#include "filtermanager.h"
+#include "mailfilter.h"
+
 #include "filterimporter/filterimporterthunderbird_p.h"
 #include "filterimporter/filterimporterevolution_p.h"
 #include "filterimporter/filterimportersylpheed_p.h"
 
-#include "filteraction.h"
-#include "mailfilter.h"
-#include "filtermanager.h"
-#include <kconfig.h>
-#include <kdebug.h>
-#include <KListWidgetSearchLine>
-#include <kfiledialog.h>
-#include <kmessagebox.h>
-#include <kpushbutton.h>
 #include <messageviewer/autoqpointer.h>
 #include <messageviewer/util.h>
 
-#include <QtCore/QRegExp>
-#include <QtGui/QListWidget>
-#include <QtGui/QVBoxLayout>
+#include <KConfig>
+#include <KDebug>
+#include <KFileDialog>
+#include <KListWidgetSearchLine>
+#include <KMessageBox>
+#include <KPushButton>
+
+#include <QListWidget>
+#include <QRegExp>
+#include <QVBoxLayout>
 
 using namespace MailCommon;
 
@@ -61,12 +62,13 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
   setDefaultButton( Ok );
   showButtonSeparator( true );
 
-  QVBoxLayout* const top = new QVBoxLayout( mainWidget() );
+  QVBoxLayout *const top = new QVBoxLayout( mainWidget() );
 
   filtersListWidget = new QListWidget();
-  KListWidgetSearchLine *searchLine = new KListWidgetSearchLine(this, filtersListWidget);
-  searchLine->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
-                                      "textbox, verb to search", "Search" ) );
+  KListWidgetSearchLine *searchLine = new KListWidgetSearchLine( this, filtersListWidget );
+  searchLine->setClickMessage(
+    i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
+           "Search" ) );
 
   top->addWidget( searchLine );
   top->addWidget( filtersListWidget );
@@ -74,7 +76,7 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
   filtersListWidget->setSortingEnabled( false );
   filtersListWidget->setSelectionMode( QAbstractItemView::NoSelection );
 
-  QHBoxLayout* const buttonLayout = new QHBoxLayout();
+  QHBoxLayout *const buttonLayout = new QHBoxLayout();
   top->addLayout( buttonLayout );
   selectAllButton = new KPushButton( i18n( "Select All" ) );
   buttonLayout->addWidget( selectAllButton );
@@ -115,10 +117,11 @@ QList<MailFilter*> FilterSelectionDialog::selectedFilters() const
   const int filterCount = filtersListWidget->count();
   for ( int i = 0; i < filterCount; ++i ) {
     const QListWidgetItem *item = filtersListWidget->item( i );
-    if ( item->checkState() == Qt::Checked )
+    if ( item->checkState() == Qt::Checked ) {
       filters << originalFilters[ i ];
-    else
+    } else {
       delete originalFilters[ i ];
+    }
   }
 
   return filters;
@@ -142,7 +145,8 @@ void FilterSelectionDialog::slotSelectAllButton()
   }
 }
 
-QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(const KSharedConfig::Ptr config , QStringList & emptyFilters)
+QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(
+  const KSharedConfig::Ptr config, QStringList &emptyFilters )
 {
   const KConfigGroup group = config->group( "General" );
 
@@ -155,18 +159,20 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(const KSharedCo
 
     const KConfigGroup group = config->group( groupName );
     bool update = false;
-    MailFilter *filter = new MailFilter( group, true /*interactive*/, update );
+    MailFilter *filter = new MailFilter( group, true/*interactive*/, update );
     filter->purify();
-    if( update )
+    if ( update ) {
       filterNeedUpdate = true;
+    }
     if ( filter->isEmpty() ) {
 #ifndef NDEBUG
       kDebug() << "Filter" << filter->asString() << "is empty!";
 #endif
-      emptyFilters <<filter->name();
+      emptyFilters << filter->name();
       delete filter;
-    } else
+    } else {
       filters.append( filter );
+    }
   }
   if( filterNeedUpdate ) {
      KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
@@ -179,14 +185,17 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(const KSharedCo
   return filters;
 }
 
-void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config, bool exportFiler )
+void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters,
+                                                   KSharedConfig::Ptr config,
+                                                   bool exportFiler )
 {
   // first, delete all filter groups:
   const QStringList filterGroups =
     config->groupList().filter( QRegExp( "Filter #\\d+" ) );
 
-  foreach ( const QString &group, filterGroups )
+  foreach ( const QString &group, filterGroups ) {
     config->deleteGroup( group );
+  }
 
   int i = 0;
   foreach ( const MailFilter *filter, filters ) {
@@ -209,24 +218,25 @@ class FilterImporterExporter::Private
 {
   public:
     Private( QWidget *parent )
-     : mParent( parent)
+     : mParent( parent )
     {
     }
-    void warningInfoAboutInvalidFilter(const QStringList& emptyFilters) const;
+    void warningInfoAboutInvalidFilter( const QStringList &emptyFilters ) const;
     QWidget *mParent;
 };
 
-void FilterImporterExporter::Private::warningInfoAboutInvalidFilter(const QStringList& emptyFilters) const
+void FilterImporterExporter::Private::warningInfoAboutInvalidFilter(
+  const QStringList &emptyFilters ) const
 {
-    if( !emptyFilters.isEmpty() ) {
-        KMessageBox::informationList(
-                    mParent,
-                    i18n( "The following filters have not been saved because they were invalid "
-                          "(e.g. containing no actions or no search rules)." ),
-                    emptyFilters,
-                    QString(),
-                    "ShowInvalidFilterWarning" );
-    }
+  if ( !emptyFilters.isEmpty() ) {
+    KMessageBox::informationList(
+      mParent,
+      i18n( "The following filters have not been saved because they were invalid "
+            "(e.g. containing no actions or no search rules)." ),
+      emptyFilters,
+      QString(),
+      "ShowInvalidFilterWarning" );
+  }
 }
 
 FilterImporterExporter::FilterImporterExporter( QWidget *parent )
@@ -239,96 +249,111 @@ FilterImporterExporter::~FilterImporterExporter()
   delete d;
 }
 
-QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, FilterImporterExporter::FilterType type)
+QList<MailFilter *> FilterImporterExporter::importFilters(
+  bool &canceled, FilterImporterExporter::FilterType type )
 {
-    QString title;
-    switch(type){
-    case KMailFilter:
-        title = i18n( "Import KMail Filters" );
-        break;
-    case ThunderBirdFilter:
-        title = i18n( "Import Thunderbird Filters" );
-        break;
-    case EvolutionFilter:
-        title = i18n( "Import Evolution Filters" );
-        break;
-    case SylpheedFilter:
-        title = i18n( "Import Sylpheed Filters" );
-        break;
-    }
+  QString title;
+  switch(type){
+  case KMailFilter:
+    title = i18n( "Import KMail Filters" );
+    break;
+  case ThunderBirdFilter:
+    title = i18n( "Import Thunderbird Filters" );
+    break;
+  case EvolutionFilter:
+    title = i18n( "Import Evolution Filters" );
+    break;
+  case SylpheedFilter:
+    title = i18n( "Import Sylpheed Filters" );
+    break;
+  }
 
-    const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
-                                                           d->mParent, title );
-    if ( fileName.isEmpty() ) {
-        canceled = true;
-        return QList<MailFilter*>(); // cancel
-    }
+  const QString fileName = KFileDialog::getOpenFileName(
+    QDir::homePath(), QString(), d->mParent, title );
+  if ( fileName.isEmpty() ) {
+    canceled = true;
+    return QList<MailFilter*>(); // cancel
+  }
 
-    QFile file( fileName );
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-        KMessageBox::error( d->mParent,
-                            i18n( "The selected file is not readable. "
-                                  "Your file access permissions might be insufficient.") );
-        return QList<MailFilter*>();
-    }
-    QList<MailFilter*> imported;
-    QStringList emptyFilter;
-    switch(type){
-    case KMailFilter:
-    {
-        const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
-        imported = readFiltersFromConfig( config, emptyFilter );
-        break;
-    }
-    case ThunderBirdFilter:
-    {
-        MailCommon::FilterImporterThunderbird *thunderBirdFilter = new MailCommon::FilterImporterThunderbird(&file);
-        imported = thunderBirdFilter->importFilter();
-        emptyFilter = thunderBirdFilter->emptyFilter();
-        delete thunderBirdFilter;
-        break;
-    }
-    case EvolutionFilter:
-    {
-        MailCommon::FilterImporterEvolution *filter = new MailCommon::FilterImporterEvolution(&file);
-        imported = filter->importFilter();
-        emptyFilter = filter->emptyFilter();
-        delete filter;
-        break;
-    }
-    case SylpheedFilter:
-    {
-        MailCommon::FilterImporterSylpheed *filter = new MailCommon::FilterImporterSylpheed(&file);
-        imported = filter->importFilter();
-        emptyFilter = filter->emptyFilter();
-        delete filter;
-        break;
-    }
-    }
-    d->warningInfoAboutInvalidFilter(emptyFilter);
-    file.close();
-    FilterSelectionDialog dlg( d->mParent );
-    dlg.setFilters( imported );
-    if(dlg.exec() == QDialog::Accepted)
-        return dlg.selectedFilters();
-
-    qDeleteAll(dlg.selectedFilters());
+  QFile file( fileName );
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    KMessageBox::error(
+      d->mParent,
+      i18n( "The selected file is not readable. "
+            "Your file access permissions might be insufficient." ) );
     return QList<MailFilter*>();
+  }
+
+  QList<MailFilter*> imported;
+  QStringList emptyFilter;
+
+  switch(type){
+  case KMailFilter:
+  {
+    const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
+    imported = readFiltersFromConfig( config, emptyFilter );
+    break;
+  }
+  case ThunderBirdFilter:
+  {
+    MailCommon::FilterImporterThunderbird *thunderBirdFilter =
+      new MailCommon::FilterImporterThunderbird( &file );
+
+    imported = thunderBirdFilter->importFilter();
+    emptyFilter = thunderBirdFilter->emptyFilter();
+    delete thunderBirdFilter;
+    break;
+  }
+  case EvolutionFilter:
+  {
+    MailCommon::FilterImporterEvolution *filter =
+      new MailCommon::FilterImporterEvolution( &file );
+
+    imported = filter->importFilter();
+    emptyFilter = filter->emptyFilter();
+    delete filter;
+    break;
+  }
+  case SylpheedFilter:
+  {
+    MailCommon::FilterImporterSylpheed *filter =
+      new MailCommon::FilterImporterSylpheed( &file );
+
+    imported = filter->importFilter();
+    emptyFilter = filter->emptyFilter();
+    delete filter;
+    break;
+  }
+  }
+  d->warningInfoAboutInvalidFilter( emptyFilter );
+  file.close();
+
+  FilterSelectionDialog dlg( d->mParent );
+  dlg.setFilters( imported );
+  if ( dlg.exec() == QDialog::Accepted ) {
+    return dlg.selectedFilters();
+  }
+
+  qDeleteAll( dlg.selectedFilters() );
+  return QList<MailFilter*>();
 }
 
 void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
 {
-  const KUrl saveUrl = KFileDialog::getSaveUrl( QDir::homePath(), QString(),
-                                                d->mParent, i18n( "Export Filters" ) );
+  const KUrl saveUrl = KFileDialog::getSaveUrl(
+    QDir::homePath(), QString(), d->mParent, i18n( "Export Filters" ) );
 
-  if ( saveUrl.isEmpty() || !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) )
-      return;
+  if ( saveUrl.isEmpty() ||
+       !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) ) {
+    return;
+  }
 
   KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
   MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
   dlg->setFilters( filters );
-  if ( dlg->exec() == QDialog::Accepted && dlg )
+  if ( dlg->exec() == QDialog::Accepted && dlg ) {
     writeFiltersToConfig( dlg->selectedFilters(), config, true );
+  }
 }
 
 #include "filterimporterexporter_p.moc"

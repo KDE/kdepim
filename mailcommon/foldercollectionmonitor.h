@@ -1,12 +1,11 @@
 /*
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2009, 2010 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -21,12 +20,11 @@
 
 #include "mailcommon_export.h"
 
-#include <QObject>
-#include <kio/job.h>
-#include <kio/jobuidelegate.h>
-#include <ksharedconfig.h>
+#include <KSharedConfig>
+#include <KIO/Job>
 
 #include <QModelIndex>
+#include <QObject>
 
 class QAbstractItemModel;
 
@@ -40,21 +38,24 @@ namespace MailCommon {
 class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
 {
   Q_OBJECT
-public:
-  FolderCollectionMonitor( QObject *parent = 0 );
-  ~FolderCollectionMonitor();
 
-  Akonadi::ChangeRecorder * monitor() const;
-  void expireAllFolders( bool immediate, QAbstractItemModel* collectionModel );
-  void expunge( const Akonadi::Collection&, bool sync = false );
-private slots:
-  void slotDeleteJob( KJob *job );
+  public:
+    FolderCollectionMonitor( QObject *parent = 0 );
+    ~FolderCollectionMonitor();
 
-protected:
-  void expireAllCollection( const QAbstractItemModel *model, bool immediate, const QModelIndex& parentIndex = QModelIndex() );
+    Akonadi::ChangeRecorder * monitor() const;
+    void expireAllFolders( bool immediate, QAbstractItemModel *collectionModel );
+    void expunge( const Akonadi::Collection &, bool sync = false );
 
-private:
-  Akonadi::ChangeRecorder *mMonitor;
+  private slots:
+    void slotDeleteJob( KJob *job );
+
+  protected:
+    void expireAllCollection( const QAbstractItemModel *model, bool immediate,
+                              const QModelIndex &parentIndex = QModelIndex() );
+
+  private:
+    Akonadi::ChangeRecorder *mMonitor;
 };
 
 }
