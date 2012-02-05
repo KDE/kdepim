@@ -272,20 +272,19 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
         return QList<MailFilter*>();
     }
     QList<MailFilter*> imported;
+    QStringList emptyFilter;
     switch(type){
     case KMailFilter:
     {
         const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
-        QStringList emptyFilter;
         imported = readFiltersFromConfig( config, emptyFilter );
-        d->warningInfoAboutInvalidFilter(emptyFilter);
         break;
     }
     case ThunderBirdFilter:
     {
         MailCommon::FilterImporterThunderbird *thunderBirdFilter = new MailCommon::FilterImporterThunderbird(&file);
         imported = thunderBirdFilter->importFilter();
-        d->warningInfoAboutInvalidFilter(thunderBirdFilter->emptyFilter());
+        emptyFilter = thunderBirdFilter->emptyFilter();
         delete thunderBirdFilter;
         break;
     }
@@ -293,7 +292,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     {
         MailCommon::FilterImporterEvolution *filter = new MailCommon::FilterImporterEvolution(&file);
         imported = filter->importFilter();
-        d->warningInfoAboutInvalidFilter(filter->emptyFilter());
+        emptyFilter = filter->emptyFilter();
         delete filter;
         break;
     }
@@ -301,11 +300,12 @@ QList<MailFilter *> FilterImporterExporter::importFilters(bool & canceled, Filte
     {
         MailCommon::FilterImporterSylpheed *filter = new MailCommon::FilterImporterSylpheed(&file);
         imported = filter->importFilter();
-        d->warningInfoAboutInvalidFilter(filter->emptyFilter());
+        emptyFilter = filter->emptyFilter();
         delete filter;
         break;
     }
     }
+    d->warningInfoAboutInvalidFilter(emptyFilter);
     file.close();
     FilterSelectionDialog dlg( d->mParent );
     dlg.setFilters( imported );
