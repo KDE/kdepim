@@ -1,49 +1,51 @@
 /*
-    Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+  Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
 
-    KMail is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License, version 2, as
-    published by the Free Software Foundation.
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
 
-    KMail is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-    In addition, as a special exception, the copyright holders give
-    permission to link the code of this program with any edition of
-    the Qt library by Trolltech AS, Norway (or with modified versions
-    of Qt that use the same license as Qt), and distribute linked
-    combinations including the two.  You must obey the GNU General
-    Public License in all respects for all of the code used other than
-    Qt.  If you modify this file, you may extend this exception to
-    your version of the file, but you are not obligated to do so.  If
-    you do not wish to do so, delete this exception statement from
-    your version.
+  In addition, as a special exception, the copyright holders give
+  permission to link the code of this program with any edition of
+  the Qt library by Trolltech AS, Norway (or with modified versions
+  of Qt that use the same license as Qt), and distribute linked
+  combinations including the two.  You must obey the GNU General
+  Public License in all respects for all of the code used other than
+  Qt.  If you modify this file, you may extend this exception to
+  your version of the file, but you are not obligated to do so.  If
+  you do not wish to do so, delete this exception statement from
+  your version.
 */
 
 #include "redirectdialog.h"
-
 #include "mailkernel.h"
 
-#include <akonadi/contact/emailaddressselectiondialog.h>
-#include <kpimutils/email.h>
 #include <messagecomposer/composerlineedit.h>
+
 #include <messageviewer/autoqpointer.h>
 
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kvbox.h>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <QtGui/QFrame>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QTreeView>
+#include <KPIMUtils/Email>
+
+#include <KIconLoader>
+#include <KLocale>
+#include <KMessageBox>
+#include <KVBox>
+
+#include <QFrame>
+#include <QLabel>
+#include <QPushButton>
+#include <QTreeView>
 
 using namespace MailCommon;
 
@@ -58,7 +60,7 @@ class RedirectDialog::Private
     void slotUser1();
     void slotUser2();
     void slotAddressSelection();
-    void slotAddressChanged( const QString& );
+    void slotAddressChanged( const QString & );
 
     RedirectDialog *q;
     QLabel *mLabelTo;
@@ -83,18 +85,22 @@ void RedirectDialog::Private::slotUser2()
 
 void RedirectDialog::Private::slotAddressSelection()
 {
-  MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg( new Akonadi::EmailAddressSelectionDialog( q ) );
+  MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
+    new Akonadi::EmailAddressSelectionDialog( q ) );
+
   dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
   mResentTo = mEditTo->text();
 
   if ( dlg->exec() != KDialog::Rejected && dlg ) {
     QStringList addresses;
-    foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() )
+    foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
       addresses << selection.quotedEmail();
+    }
 
-    if ( !mResentTo.isEmpty() )
+    if ( !mResentTo.isEmpty() ) {
       addresses.prepend( mResentTo );
+    }
 
     mEditTo->setText( addresses.join( ", " ) );
     mEditTo->setModified( true );
@@ -106,7 +112,6 @@ void RedirectDialog::Private::slotAddressChanged( const QString &text )
   q->enableButton( KDialog::User1, !text.isEmpty() );
   q->enableButton( KDialog::User2, !text.isEmpty() );
 }
-
 
 RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   : KDialog( parent ), d( new Private( this, mode ) )
@@ -170,8 +175,10 @@ void RedirectDialog::accept()
 {
   d->mResentTo = d->mEditTo->text();
   if ( d->mResentTo.isEmpty() ) {
-    KMessageBox::sorry( this, i18n( "You cannot redirect the message without an address." ),
-                              i18n( "Empty Redirection Address" ) );
+    KMessageBox::sorry(
+      this,
+      i18n( "You cannot redirect the message without an address." ),
+      i18n( "Empty Redirection Address" ) );
   } else {
     done( Ok );
   }
