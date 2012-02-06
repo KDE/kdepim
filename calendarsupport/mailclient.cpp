@@ -182,6 +182,18 @@ bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
                bccMe, attachment, mailTransport );
 }
 
+QStringList extractEmailAndNormalize( const QString& email )
+{
+  const QStringList splittedEmail = KPIMUtils::splitAddressList( email );
+  QStringList normalizedEmail;
+  Q_FOREACH( const QString& email, splittedEmail )
+  {
+    const QString str = KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( email ) );
+    normalizedEmail << str;
+  }
+  return normalizedEmail;
+}
+
 bool MailClient::send( const KPIMIdentities::Identity &identity,
                        const QString &from, const QString &_to,
                        const QString &cc, const QString &subject,
@@ -334,10 +346,12 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
         KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
   }
 
-  qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
-  qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
+  if( !to.isEmpty() )
+    qjob->addressAttribute().setTo( extractEmailAndNormalize( to ) );
+  if( !cc.isEmpty() )
+    qjob->addressAttribute().setCc( extractEmailAndNormalize( cc ) );
   if ( bccMe ) {
-    qjob->addressAttribute().setBcc( KPIMUtils::splitAddressList( from ) );
+    qjob->addressAttribute().setBcc( extractEmailAndNormalize( from ) );
   }
   qjob->setMessage( message );
   if ( !qjob->exec() ) {
