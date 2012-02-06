@@ -322,14 +322,21 @@ void FilterManager::filter( qlonglong itemId, FilterSet set, const QString &acco
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
 }
 
-void FilterManager::filter( qlonglong itemId, const QString &filterId )
+void FilterManager::filter(qlonglong itemId, const QString &filterId , FilterRequires requires)
 {
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ), this );
   job->setProperty( "filterId", filterId );
-  if ( d->mRequiresBody )
-    job->fetchScope().fetchFullPayload( true );
-  else
-    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  if( requires == Unknown) {
+      if ( d->mRequiresBody )
+          job->fetchScope().fetchFullPayload( true );
+      else
+          job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  } else if( requires == FullMessage ) {
+      job->fetchScope().fetchFullPayload( true );
+  } else if( requires == HeaderMessage ) {
+      job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  }
+
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
