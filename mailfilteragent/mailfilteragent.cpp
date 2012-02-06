@@ -174,9 +174,9 @@ void MailFilterAgent::filterItem( qlonglong item, int filterSet, const QString &
   m_filterManager->filter( item, static_cast<FilterManager::FilterSet>( filterSet ), resourceId );
 }
 
-void MailFilterAgent::filter( qlonglong item, const QString &filterIdentifier )
+void MailFilterAgent::filter(qlonglong item, const QString &filterIdentifier , int requires)
 {
-  m_filterManager->filter( item, filterIdentifier );
+  m_filterManager->filter( item, filterIdentifier, static_cast<FilterManager::FilterRequires>(requires) );
 }
 
 void MailFilterAgent::reload()

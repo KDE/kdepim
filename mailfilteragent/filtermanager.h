@@ -46,6 +46,13 @@ class FilterManager: public QObject
       All = Inbound|BeforeOutbound|Outbound|Explicit
     };
 
+    enum FilterRequires
+    {
+        Unknown = 0,
+        HeaderMessage = 1,
+        FullMessage = 2
+    };
+
     /**
      * Creates a new filter manager.
      *
@@ -101,7 +108,7 @@ class FilterManager: public QObject
     int process( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
 
     void filter( qlonglong itemId, FilterSet set, const QString &accountId );
-    void filter( qlonglong itemId, const QString &filterId );
+    void filter( qlonglong itemId, const QString &filterId, FilterRequires requires );
 
     /**
      * Applies the filters on the given @p messages.

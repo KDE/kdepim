@@ -8,6 +8,7 @@
     <method name="filter">
       <arg name="item" type="x" direction="in"/>
       <arg name="filterIdentifier" type="s" direction="in"/>
+      <arg name="FilterRequires" type="i" direction="in"/>
     </method>
     <method name="filterItem">
       <arg name="item" type="x" direction="in"/>

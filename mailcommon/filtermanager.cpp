@@ -125,12 +125,12 @@ void FilterManager::showFilterLogDialog()
 
 void FilterManager::filter( const Akonadi::Item &item, const QString &identifier ) const
 {
-  d->mMailFilterAgentInterface->filter( item.id(), identifier );
+  d->mMailFilterAgentInterface->filter( item.id(), identifier, 0 /*FilterManager::FilterRequires::Unknown*/ );
 }
 
-void FilterManager::filter( const qlonglong &id, const QString &identifier ) const
+void FilterManager::filter(const qlonglong &id, const QString &identifier , FilterRequires requires) const
 {
-  d->mMailFilterAgentInterface->filter( id, identifier );
+  d->mMailFilterAgentInterface->filter( id, identifier, static_cast<int>(requires) );
 }
 
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const

@@ -56,6 +56,13 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
       All = Inbound|BeforeOutbound|Outbound|Explicit
     };
 
+    enum FilterRequires
+    {
+        Unknown = 0,
+        HeaderMessage = 1,
+        FullMessage = 2
+    };
+
     /**
      * Returns the global filter manager object.
      */
@@ -92,7 +99,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void filter( const Akonadi::Item &item, const QString &identifier ) const;
 
-    void filter( const qlonglong &id, const QString &identifier ) const;
+    void filter( const qlonglong &id, const QString &identifier, FilterRequires requires = Unknown ) const;
 
     /**
      * Process given message item by applying the filter rules one by
