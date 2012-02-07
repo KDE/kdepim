@@ -27,6 +27,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
+#include <akonadi/mimetypechecker.h>
 #include <kdebug.h>
 
 #include <QtGui/QApplication>
@@ -45,6 +46,10 @@ public:
       hideOutboxFolder( false )
     {
     }
+
+  QSet<QString> includedMimeTypes;
+  Akonadi::MimeTypeChecker checker;
+
   QColor brokenAccountColor;
   QColor offlineAccountColor;
   QString filterStr;
@@ -148,6 +153,9 @@ bool FolderTreeWidgetProxyModel::acceptRow( int sourceRow, const QModelIndex &so
   const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
 
   const Akonadi::Collection collection = sourceModel()->data( modelIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( !d->checker.isWantedCollection( collection ) )
+      return false;
+
   if ( d->hideVirtualFolder ) {
     if ( Util::isVirtualCollection( collection ) )
       return false;
@@ -202,6 +210,12 @@ void FolderTreeWidgetProxyModel::updatePalette()
   invalidate();
 }
 
+void FolderTreeWidgetProxyModel::addContentMimeTypeInclusionFilter(const QString& mimeType)
+{
+  d->includedMimeTypes << mimeType;
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
+  invalidateFilter();
+}
 
 }
 
