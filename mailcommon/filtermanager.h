@@ -125,6 +125,9 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     void filter( const Akonadi::Item::List &messages, FilterSet set = Explicit ) const;
 
     void filter( const QVector<qlonglong> &itemIds, FilterSet set = Explicit ) const;
+
+    void filter(const Akonadi::Item::List &messages, FilterRequires requires, const QStringList& listFilters) const;
+
     /// Manage filters interface
 
     /**

@@ -31,11 +31,14 @@
 #include "filtermanager.h"
 #include "mailutil.h"
 #include "mailkernel.h"
+#include "folderrequester.h"
 using MailCommon::FilterImporterExporter;
 
 // KDEPIMLIBS headers
 #include <Akonadi/AgentType>
 #include <Akonadi/AgentInstance>
+#include <akonadi/itemfetchjob.h>
+
 
 // other KDE headers:
 #include <kcombobox.h>
@@ -51,6 +54,7 @@ using MailCommon::FilterImporterExporter;
 #include <kconfiggroup.h>
 #include <ktabwidget.h>
 #include <klistwidgetsearchline.h>
+#include <KJob>
 
 // Qt headers:
 #include <QCheckBox>
@@ -325,8 +329,9 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
 
   QWidget *w = new QWidget( this );
   setMainWidget( w );
-  QHBoxLayout *topLayout = new QHBoxLayout( w );
-  topLayout->setObjectName( "topLayout" );
+  QVBoxLayout *topVLayout = new QVBoxLayout( w );
+  QHBoxLayout *topLayout = new QHBoxLayout;
+  topVLayout->addLayout(topLayout);
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
   QHBoxLayout *hbl = topLayout;
@@ -450,6 +455,15 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   }
   vbl2->addWidget( mAdvOptsGroup, 0, Qt::AlignTop );
 
+  QHBoxLayout *applySpecificFiltersLayout = new QHBoxLayout;
+  QLabel *lab = new QLabel(i18n("Run selected filter(s) on:"));
+  applySpecificFiltersLayout->addWidget(lab);
+  mFolderRequester = new MailCommon::FolderRequester;
+  applySpecificFiltersLayout->addWidget(mFolderRequester);
+  mRunNow = new KPushButton(i18n("Run Now"));
+  applySpecificFiltersLayout->addWidget(mRunNow);
+  connect(mRunNow,SIGNAL(clicked()),this,SLOT(slotRunFilters()));
+  topVLayout->addLayout(applySpecificFiltersLayout);
   // spacer:
   vbl->addStretch( 1 );
 
@@ -562,6 +576,49 @@ void KMFilterDialog::slotApply()
 
 void KMFilterDialog::slotFinished() {
   deleteLater();
+}
+
+void KMFilterDialog::slotRunFilters()
+{
+    if(!mFolderRequester->collection().isValid())
+    {
+        KMessageBox::information(this,i18n("A folder must be selected before to run."), i18n("Not folder selected."));
+        return;
+    }
+    bool requiresBody = false;
+    const QStringList selectedFiltersId = mFilterList->selectedFilterId(requiresBody);
+    if(selectedFiltersId.isEmpty())
+    {
+        KMessageBox::information(this,i18n("Some filters must be selected before to apply filter on folder."), i18n("Not filters selected."));
+        return;
+    }
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolderRequester->collection(), this );
+    job->setProperty( "requiresBody", QVariant::fromValue( requiresBody ) );
+    job->setProperty( "listFilters", QVariant::fromValue( selectedFiltersId ) );
+
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchItemsForFolderDone(KJob*)) );
+    mRunNow->setEnabled(false); //Disable it
+}
+
+
+void KMFilterDialog::slotFetchItemsForFolderDone(KJob*job)
+{
+    Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
+    Q_ASSERT( fjob );
+    QStringList filtersId;
+    if(fjob->property( "listFilters" ).isValid())
+        filtersId = fjob->property( "listFilters" ).toStringList();
+    MailCommon::FilterManager::FilterRequires requires = MailCommon::FilterManager::Unknown;
+    if(fjob->property("requiresBody").isValid()){
+        bool requiresBody = fjob->property( "requiresBody" ).toBool();
+        if(requiresBody)
+            requires = MailCommon::FilterManager::FullMessage;
+        else
+            requires = MailCommon::FilterManager::HeaderMessage;
+    }
+    Akonadi::Item::List items = fjob->items();
+    mRunNow->setEnabled(true);
+    MailCommon::FilterManager::instance()->filter(items, requires,filtersId);
 }
 
 void KMFilterDialog::slotSaveSize() {
@@ -1190,6 +1247,21 @@ QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
     }
     return listWidgetItem;
 }
+
+QStringList KMFilterListBox::selectedFilterId(bool &requiresBody) const
+{
+    QStringList listFilterId;
+    requiresBody = false;
+    const int numberOfFilters = mListWidget->count();
+    for(int i = 0; i <numberOfFilters; ++i){
+        if(mListWidget->item(i)->isSelected()&& !mListWidget->item(i)->isHidden()){
+            listFilterId<<static_cast<QListWidgetFilterItem*>(mListWidget->item(i))->filter()->identifier();
+            requiresBody = requiresBody && static_cast<QListWidgetFilterItem*>(mListWidget->item(i))->filter()->requiresBody();
+        }
+    }
+    return listFilterId;
+}
+
 
 void KMFilterListBox::slotBottom()
 {

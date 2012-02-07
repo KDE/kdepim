@@ -99,6 +99,11 @@ class FilterManager: public QObject
     int process( const Akonadi::Item &item, FilterSet set = Inbound,
                  bool account = false, const QString &accountId = QString() );
 
+    int process( const Akonadi::Item &item, const QList<MailCommon::MailFilter*>& mailFilters );
+
+    int process( const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item &item, FilterSet set = Inbound,
+                 bool account = false, const QString &accountId = QString() );
+
     /**
      * For ad-hoc filters.
      * 
@@ -109,6 +114,8 @@ class FilterManager: public QObject
 
     void filter( qlonglong itemId, FilterSet set, const QString &accountId );
     void filter( qlonglong itemId, const QString &filterId, FilterRequires requires );
+
+    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, FilterManager::FilterRequires requires, const QStringList& listFilters );
 
     /**
      * Applies the filters on the given @p messages.

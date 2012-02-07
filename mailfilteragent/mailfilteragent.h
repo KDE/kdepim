@@ -41,8 +41,10 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     QString createUniqueName( const QString &nameTemplate );
     void filterItems( const QVector<qlonglong> &items, int filterSet );
+
     void filterItem( qlonglong item, int filterSet, const QString &resourceId );
     void filter( qlonglong item, const QString &filterIdentifier, int requires );
+    void applySpecificFilters( const QVector<qlonglong> &itemIds, int requires, const QStringList& listFilters );
 
     void reload();
 

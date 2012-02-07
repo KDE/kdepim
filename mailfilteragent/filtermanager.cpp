@@ -76,7 +76,27 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
     kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
   }
 
-  const FilterManager::FilterSet filterSet = static_cast<FilterManager::FilterSet>(q->sender()->property( "filterSet" ).toInt());
+  FilterManager::FilterSet filterSet = FilterManager::Inbound;
+  if ( q->sender()->property( "filterSet" ).isValid() ) {
+      filterSet = static_cast<FilterManager::FilterSet>(q->sender()->property( "filterSet" ).toInt());
+  }
+
+  QList<MailFilter *> listMailFilters;
+  if ( q->sender()->property( "listFilters" ).isValid() ) {
+      const QStringList listFilters = q->sender()->property( "listFilters" ).toStringList();
+      //TODO improve it
+      foreach( const QString& filterId, listFilters) {
+          foreach ( MailCommon::MailFilter *filter, mFilters ) {
+              if ( filter->identifier() == filterId ) {
+                  listMailFilters<< filter;
+                  break;
+              }
+          }
+      }
+  }
+
+  if(listMailFilters.isEmpty())
+      listMailFilters = mFilters;
 
   foreach ( const Akonadi::Item &item, items ) {
     if ( progressItem ) {
@@ -94,7 +114,7 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
       }
     }
 
-    const int filterResult = q->process( item, filterSet );
+    const int filterResult = q->process( listMailFilters, item, filterSet );
     if ( filterResult == 2 ) {
       // something went horribly wrong (out of space?)
       //CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
@@ -214,7 +234,7 @@ bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCo
   return result;
 }
 
-bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
+bool FilterManager::Private::beginFiltering( const Akonadi::Item &/*item*/ ) const
 {
   if ( FilterLog::instance()->isLogging() ) {
     FilterLog::instance()->addSeparator();
@@ -223,7 +243,7 @@ bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
   return true;
 }
 
-void FilterManager::Private::endFiltering( const Akonadi::Item &item ) const
+void FilterManager::Private::endFiltering( const Akonadi::Item &/*item*/ ) const
 {
 }
 
@@ -429,58 +449,69 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
 }
 
 
-int FilterManager::process( const Akonadi::Item &item, FilterSet set,
-                            bool account, const QString &accountId )
+int FilterManager::process( const QList<MailFilter*>& mailFilters, const Akonadi::Item &item, FilterSet set, bool account, const QString &accountId )
 {
-  if ( set == NoSet ) {
-    kDebug() << "FilterManager: process() called with not filter set selected";
-    emit itemNotMoved( item );
-    return 1;
-  }
+    if ( set == NoSet ) {
+      kDebug() << "FilterManager: process() called with not filter set selected";
+      emit itemNotMoved( item );
+      return 1;
+    }
 
-  bool stopIt = false;
+    bool stopIt = false;
 
-  if ( !d->beginFiltering( item ) ) {
-    emit itemNotMoved( item );
-    return 1;
-  }
+    if ( !d->beginFiltering( item ) ) {
+      emit itemNotMoved( item );
+      return 1;
+    }
 
-  ItemContext context( item );
-  QList<MailCommon::MailFilter*>::const_iterator end( d->mFilters.constEnd() );
-  for ( QList<MailCommon::MailFilter*>::const_iterator it = d->mFilters.constBegin();
-        !stopIt && it != end ; ++it ) {
-    if ( ( *it )->isEnabled() ) {
-      const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
-      const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
-      const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
-      const bool explicitOk = ((set & Explicit) && (*it)->applyOnExplicit());
-      const bool accountOk = (!account || (account && (*it)->applyOnAccount( accountId )));
+    ItemContext context( item );
+    QList<MailCommon::MailFilter*>::const_iterator end( mailFilters.constEnd() );
+    for ( QList<MailCommon::MailFilter*>::const_iterator it = mailFilters.constBegin();
+          !stopIt && it != end ; ++it ) {
+      if ( ( *it )->isEnabled() ) {
+        const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
+        const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
+        const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
+        const bool explicitOk = ((set & Explicit) && (*it)->applyOnExplicit());
+        const bool accountOk = (!account || (account && (*it)->applyOnAccount( accountId )));
 
-      if ( (inboundOk && accountOk) || outboundOk || beforeOutboundOk || explicitOk ) {
-        // filter is applicable
+        if ( (inboundOk && accountOk) || outboundOk || beforeOutboundOk || explicitOk ) {
+          // filter is applicable
 
-        if ( d->isMatching( context.item(), *it ) ) {
-          // execute actions:
-          if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
-            return 2;
+          if ( d->isMatching( context.item(), *it ) ) {
+            // execute actions:
+            if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+              return 2;
+            }
           }
         }
       }
     }
-  }
 
-  d->endFiltering( item );
-  int result = 1;
-  if( processContextItem( context, true /*emit signal*/, result ))
-      return result;
+    d->endFiltering( item );
+    int result = 1;
+    if( processContextItem( context, true /*emit signal*/, result ))
+        return result;
 
-  if ( context.moveTargetCollection().isValid() ) {
-    return 0;
-  }
+    if ( context.moveTargetCollection().isValid() ) {
+      return 0;
+    }
 
-  emit itemNotMoved( context.item() );
+    emit itemNotMoved( context.item() );
 
-  return 1;
+    return 1;
+}
+
+
+int FilterManager::process( const Akonadi::Item &item, FilterSet set,
+                            bool account, const QString &accountId )
+{
+  return process( d->mFilters, item, set, account, accountId );
+}
+
+int FilterManager::process( const Akonadi::Item &item, const QList<MailFilter*>& mailFilters )
+{
+  return process( mailFilters, item );
 }
 
 QString FilterManager::createUniqueName( const QString &name ) const
@@ -520,6 +551,39 @@ void FilterManager::dump() const
   }
 }
 #endif
+
+void FilterManager::applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, FilterManager::FilterRequires requires, const QStringList& listFilters )
+{
+    const int msgCountToFilter = selectedMessages.size();
+
+    KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem(
+        "filter" + KPIM::ProgressManager::getUniqueID(),
+        i18n( "Filtering messages" )
+      );
+
+    progressItem->setTotalItems( msgCountToFilter );
+
+    Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
+    if( requires == Unknown) {
+        if ( d->mRequiresBody )
+            itemFetchJob->fetchScope().fetchFullPayload( true );
+        else
+            itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+    } else if( requires == FullMessage ) {
+        itemFetchJob->fetchScope().fetchFullPayload( true );
+    } else if( requires == HeaderMessage ) {
+        itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+    }
+
+    itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
+    itemFetchJob->setProperty( "listFilters", QVariant::fromValue( listFilters ) );
+
+    connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+             this, SLOT(slotItemsFetchedForFilter(Akonadi::Item::List)) );
+    connect( itemFetchJob, SIGNAL(result(KJob*)),
+             SLOT(itemsFetchJobForFilterDone(KJob*)) );
+}
 
 void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, FilterSet filterSet )
 {

@@ -169,6 +169,17 @@ void MailFilterAgent::filterItems( const QVector<qlonglong> &itemIds, int filter
   m_filterManager->applyFilters( items, static_cast<FilterManager::FilterSet>(filterSet) );
 }
 
+void MailFilterAgent::applySpecificFilters( const QVector<qlonglong> &itemIds, int requires, const QStringList& listFilters )
+{
+  QList<Akonadi::Item> items;
+  foreach ( qlonglong id, itemIds ) {
+    items << Akonadi::Item( id );
+  }
+
+  m_filterManager->applySpecificFilters( items, static_cast<FilterManager::FilterRequires>(requires),listFilters );
+}
+
+
 void MailFilterAgent::filterItem( qlonglong item, int filterSet, const QString &resourceId )
 {
   m_filterManager->filter( item, static_cast<FilterManager::FilterSet>( filterSet ), resourceId );

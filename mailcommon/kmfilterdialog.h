@@ -46,7 +46,9 @@ class QModelIndex;
 namespace MailCommon {
   class SearchPatternEdit;
   class FilterActionWidgetLister;
+  class FolderRequester;
 }
+class KJob;
 
 
 /** This is a complex widget that is used to manipulate KMail's filter
@@ -122,6 +124,8 @@ public:
    * @param closeAfterSaving If true user is given option to continue editing
    * after being warned about invalid filters. Otherwise, user is just warned. */
   QList<MailCommon::MailFilter *> filtersForSaving( bool closeAfterSaving ) const;
+
+  QStringList selectedFilterId(bool &requiresBody) const;
 
 signals:
   /** Emitted when a new filter has been selected by the user or if
@@ -328,6 +332,11 @@ protected slots:
 
   /** Called wherenever the apply button is pressed */
   void slotApply();
+
+  void slotRunFilters();
+
+  void slotFetchItemsForFolderDone(KJob*job);
+
 private:
   void importFilters(MailCommon::FilterImporterExporter::FilterType type);
 
@@ -360,6 +369,8 @@ protected:
   QCheckBox *mShowLaterBtn;
 
   MailCommon::MailFilter *mFilter;
+  MailCommon::FolderRequester *mFolderRequester;
+  KPushButton *mRunNow;
   bool mDoNotClose;
   bool mIgnoreFilterUpdates;
 };

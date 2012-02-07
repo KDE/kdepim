@@ -148,6 +148,17 @@ void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set )
   d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
 }
 
+
+void FilterManager::filter(const Akonadi::Item::List &messages, FilterRequires requires, const QStringList& listFilters) const
+{
+    QVector<qlonglong> itemIds;
+
+    foreach ( const Akonadi::Item &item, messages )
+      itemIds << item.id();
+    d->mMailFilterAgentInterface->applySpecificFilters( itemIds, static_cast<int>(requires), listFilters);
+}
+
+
 void FilterManager::filter( const QVector<qlonglong> &itemIds, FilterSet set ) const
 {
   d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
