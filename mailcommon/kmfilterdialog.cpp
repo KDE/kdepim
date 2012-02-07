@@ -460,7 +460,9 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection*>& actionCollection
   applySpecificFiltersLayout->addWidget(lab);
   mFolderRequester = new MailCommon::FolderRequester;
   applySpecificFiltersLayout->addWidget(mFolderRequester);
+  connect(mFolderRequester,SIGNAL(folderChanged(Akonadi::Collection)),this,SLOT(slotFolderChanged(Akonadi::Collection)));
   mRunNow = new KPushButton(i18n("Run Now"));
+  mRunNow->setEnabled(false);
   applySpecificFiltersLayout->addWidget(mRunNow);
   connect(mRunNow,SIGNAL(clicked()),this,SLOT(slotRunFilters()));
   topVLayout->addLayout(applySpecificFiltersLayout);
@@ -577,6 +579,12 @@ void KMFilterDialog::slotApply()
 void KMFilterDialog::slotFinished() {
   deleteLater();
 }
+
+void KMFilterDialog::slotFolderChanged(const Akonadi::Collection& collection)
+{
+    mRunNow->setEnabled(collection.isValid());
+}
+
 
 void KMFilterDialog::slotRunFilters()
 {

@@ -337,6 +337,7 @@ protected slots:
 
   void slotFetchItemsForFolderDone(KJob*job);
 
+  void slotFolderChanged(const Akonadi::Collection&);
 private:
   void importFilters(MailCommon::FilterImporterExporter::FilterType type);
 
