@@ -333,7 +333,8 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
   lay->addWidget( label );
   mTagList = new QListWidget( this );
   mTagList->addItems( tagList );
-  connect(mTagList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(accept()));
+  connect( mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+           this, SLOT(accept()) );
   lay->addWidget( mTagList );
 
 }

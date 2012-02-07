@@ -103,13 +103,14 @@ FolderTreeWidget::FolderTreeWidget(
 
   d->filterFolderLineEdit = new KLineEdit( this );
   d->filterFolderLineEdit->setClearButtonShown( true );
-  d->filterFolderLineEdit->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
-                                                   "textbox, verb to search", "Search" ) );
+  d->filterFolderLineEdit->setClickMessage(
+    i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
+           "Search" ) );
   lay->addWidget( d->filterFolderLineEdit );
 
   // ... with statistics...
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
-  d->quotaModel->setSourceModel( KernelIf->collectionModel());
+  d->quotaModel->setSourceModel( KernelIf->collectionModel() );
 
   d->filterModel = new KPIM::StatisticsProxyModel( this );
   d->filterModel->setSourceModel( d->quotaModel );
@@ -117,7 +118,6 @@ FolderTreeWidget::FolderTreeWidget(
   d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->filterModel );
   d->readableproxy->addContentMimeTypeInclusionFilter( KMime::Message::mimeType() );
-
 
   connect( d->folderTreeView, SIGNAL(changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)),
            this, SLOT(slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)) );
