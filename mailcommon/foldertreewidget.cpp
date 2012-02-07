@@ -40,7 +40,6 @@
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/ItemFetchScope>
-#include <Akonadi/RecursiveCollectionFilterProxyModel>
 #include <Akonadi/Session>
 
 #include <KLineEdit>
@@ -108,21 +107,17 @@ FolderTreeWidget::FolderTreeWidget(
                                                    "textbox, verb to search", "Search" ) );
   lay->addWidget( d->filterFolderLineEdit );
 
-  Akonadi::RecursiveCollectionFilterProxyModel *recurfilter =
-    new Akonadi::RecursiveCollectionFilterProxyModel( this );
-
-  recurfilter->addContentMimeTypeInclusionFilter( KMime::Message::mimeType() );
-  recurfilter->setSourceModel( KernelIf->collectionModel() );
-
   // ... with statistics...
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
-  d->quotaModel->setSourceModel( recurfilter );
+  d->quotaModel->setSourceModel( KernelIf->collectionModel());
 
   d->filterModel = new KPIM::StatisticsProxyModel( this );
   d->filterModel->setSourceModel( d->quotaModel );
 
   d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->filterModel );
+  d->readableproxy->addContentMimeTypeInclusionFilter( KMime::Message::mimeType() );
+
 
   connect( d->folderTreeView, SIGNAL(changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)),
            this, SLOT(slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)) );
