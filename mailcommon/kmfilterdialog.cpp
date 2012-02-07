@@ -1256,7 +1256,8 @@ QStringList KMFilterListBox::selectedFilterId(bool &requiresBody) const
     for(int i = 0; i <numberOfFilters; ++i){
         if(mListWidget->item(i)->isSelected()&& !mListWidget->item(i)->isHidden()){
             listFilterId<<static_cast<QListWidgetFilterItem*>(mListWidget->item(i))->filter()->identifier();
-            requiresBody = requiresBody && static_cast<QListWidgetFilterItem*>(mListWidget->item(i))->filter()->requiresBody();
+	    if( !requiresBody)
+               requiresBody = static_cast<QListWidgetFilterItem*>(mListWidget->item(i))->filter()->requiresBody();
         }
     }
     return listFilterId;
