@@ -90,7 +90,7 @@
       <item>
        <widget class="QCheckBox" name="cbBirthday">
         <property name="toolTip">
-         <string>Print email birthdays</string>
+         <string>Print contact birthdays</string>
         </property>
         <property name="whatsThis">
          <string>Check this box if you want contact birthdays to be printed.</string>
