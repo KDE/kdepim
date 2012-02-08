@@ -442,8 +442,8 @@ void CSVImportDialog::initGUI()
   mSkipFirstRow->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Check this box if you want the import to skip over the first row "
-           "of the csv data.  In many cases, the first line of a csv file will be a "
-           "comment line describing the order of the datafields include in the file." ) );
+           "of the csv data. In many cases, the first line of a csv file will be a "
+           "comment line describing the order of the data fields included in the file." ) );
   layout->addWidget( mSkipFirstRow, 4, 2, 1, 2 );
 
   // csv view
