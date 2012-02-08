@@ -399,38 +399,6 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
   {
     mView->setRowHidden( thisIndex.row(), parentIndex, false );
 
-    // Expanding parents of matching items is an EXTREMELY desiderable feature... but...
-    //
-    // FIXME TrollTech: THIS IS PATHETICALLY SLOW
-    //                  It can take ~20 minutes on a tree with ~11000 items.
-    //                  Without this call the same tree is scanned in a couple of seconds.
-    //                  The complexity growth is almost certainly (close to) exponential.
-    //
-    // It ends up in _very_ deep recursive stacks like these:
-    //
-    // #0  0x00002b37e1e03f03 in QTreeViewPrivate::viewIndex (this=0xbd9ff0, index=@0x7fffd327a420) at itemviews/qtreeview.cpp:3195
-    // #1  0x00002b37e1e07ea6 in QTreeViewPrivate::layout (this=0xbd9ff0, i=8239) at itemviews/qtreeview.cpp:3013
-    // #2  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8238) at itemviews/qtreeview.cpp:2994
-    // #3  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8237) at itemviews/qtreeview.cpp:2994
-    // #4  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8236) at itemviews/qtreeview.cpp:2994
-    // #5  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8235) at itemviews/qtreeview.cpp:2994
-    // #6  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8234) at itemviews/qtreeview.cpp:2994
-    // #7  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8233) at itemviews/qtreeview.cpp:2994
-    // #8  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8232) at itemviews/qtreeview.cpp:2994
-    // #9  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8231) at itemviews/qtreeview.cpp:2994
-    // #10 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8230) at itemviews/qtreeview.cpp:2994
-    // #11 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8229) at itemviews/qtreeview.cpp:2994
-    // #12 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8228) at itemviews/qtreeview.cpp:2994
-    // #13 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8227) at itemviews/qtreeview.cpp:2994
-    // #14 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8226) at itemviews/qtreeview.cpp:2994
-    // #15 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8225) at itemviews/qtreeview.cpp:2994
-    // #16 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8224) at itemviews/qtreeview.cpp:2994
-    // #17 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8223) at itemviews/qtreeview.cpp:2994
-    // ....
-    //
-    // UPDATE: Olivier Goffart seems to have fixed this: re-check and re-enable for qt 4.5.
-    //
-
     if ( !mView->isExpanded( thisIndex ) )
       mView->expand( thisIndex );
     return true;
@@ -525,13 +493,12 @@ QVariant Model::headerData(int section, Qt::Orientation, int role) const
     return QVariant( i18n( "Sender" ) );
   }
 
-  if ( ( role == Qt::DisplayRole ) && column->pixmapName().isEmpty() )
+  const bool columnPixmapEmpty(column->pixmapName().isEmpty());
+  if ( ( role == Qt::DisplayRole ) && columnPixmapEmpty )
     return QVariant( column->label() );
-
-  if ( ( role == Qt::ToolTipRole ) && !column->pixmapName().isEmpty() )
+  else if ( ( role == Qt::ToolTipRole ) && !columnPixmapEmpty )
     return QVariant( column->label() );
-
-  if ( ( role == Qt::DecorationRole ) && !column->pixmapName().isEmpty() )
+  else if ( ( role == Qt::DecorationRole ) && !columnPixmapEmpty )
     return QVariant( KIcon( column->pixmapName() ) );
 
   return QVariant();
@@ -681,11 +648,9 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   d->mViewItemJobStepChunkTimeout = 100;
   d->mViewItemJobStepIdleInterval = 10;
   d->mViewItemJobStepMessageCheckCount = 10;
-  if ( d->mPersistentSetManager )
-  {
-    delete d->mPersistentSetManager;
-    d->mPersistentSetManager = 0;
-  }
+  delete d->mPersistentSetManager;
+  d->mPersistentSetManager = 0;
+
   d->mTodayDate = QDate::currentDate();
 
   if ( d->mStorageModel )
