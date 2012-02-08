@@ -442,6 +442,7 @@ void Widget::viewStartDragRequest()
     if ( ( c.rights() & Collection::CanDeleteItem ) == 0 ) {
       // So the drag will be read-only
       readOnly = true;
+      break;
     }
   }
 
