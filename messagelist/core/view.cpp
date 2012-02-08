@@ -617,11 +617,11 @@ void View::resizeEvent( QResizeEvent * e )
   bool oldSave = d->mSaveThemeColumnStateOnSectionResize;
   d->mSaveThemeColumnStateOnSectionResize = false;
 
-  if ( ( header()->count() - header()->hiddenSectionCount() ) < 2 )
+  const int count = header()->count();
+  if ( ( count - header()->hiddenSectionCount() ) < 2 )
   {
     // a single column visible: resize it
     int visibleIndex;
-    int count = header()->count();
     for ( visibleIndex = 0; visibleIndex < count; visibleIndex++ )
     {
       if ( !header()->isSectionHidden( visibleIndex ) )
@@ -697,7 +697,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   // the menu for the columns
