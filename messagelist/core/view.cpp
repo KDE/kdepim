@@ -496,7 +496,7 @@ void View::applyThemeColumns()
   // But seems to work most of the times...
 
   idx = 0;
-  totalVisibleWidth = 0;
+  //totalVisibleWidth = 0;
 
   end = columns.constEnd();
   for ( it = columns.constBegin(); it != end; ++it )
@@ -506,7 +506,7 @@ void View::applyThemeColumns()
       //kDebug() << "Resize section " << idx << " to " << lColumnWidths[ idx ];
       ( *it )->setCurrentWidth( lColumnWidths[ idx ] );
       header()->resizeSection( idx, lColumnWidths[ idx ] );
-      totalVisibleWidth += lColumnWidths[ idx ];
+      //totalVisibleWidth += lColumnWidths[ idx ];
     } else {
       ( *it )->setCurrentWidth( -1 );
     }
@@ -526,7 +526,7 @@ void View::applyThemeColumns()
       {
         bTriggeredQtBug = true;
       }
-      totalVisibleWidth += header()->sectionSize( idx );
+      //totalVisibleWidth += header()->sectionSize( idx );
     }
     idx++;
   }
