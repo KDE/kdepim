@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CompactStyleForm_Base</class>
+ <widget class="QWidget" name="CompactStyleForm_Base">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>620</width>
+    <height>277</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Appearance</string>
+  </property>
+  <layout class="QGridLayout">
+   <property name="margin">
+    <number>9</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="gbFields">
+     <property name="title">
+      <string>Fields</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QCheckBox" name="cbWithHomeAddress">
+          <property name="toolTip">
+           <string>print the home address, with home phone number and mobil phone number</string>
+          </property>
+          <property name="whatsThis">
+           <string>print the home address, with home phone number and mobil phone number</string>
+          </property>
+          <property name="text">
+           <string>with home address</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbWithBusinessAddress">
+          <property name="toolTip">
+           <string>print the business address, with business phone number</string>
+          </property>
+          <property name="whatsThis">
+           <string>print the business address, with business phone number</string>
+          </property>
+          <property name="text">
+           <string>with business address</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbWithBirthday">
+          <property name="toolTip">
+           <string>print the birthday</string>
+          </property>
+          <property name="whatsThis">
+           <string>print the birthday</string>
+          </property>
+          <property name="text">
+           <string>with birthday</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbWithEMail">
+          <property name="toolTip">
+           <string>prints the e-mail and e-mail2 field</string>
+          </property>
+          <property name="whatsThis">
+           <string>prints the e-mail and e-mail2 field</string>
+          </property>
+          <property name="text">
+           <string>with e-mail</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="gbColors">
+     <property name="title">
+      <string>GroupBox</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="2" column="1">
+       <widget class="KColorButton" name="cbSecond"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="KColorButton" name="cbFirst"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbCbFirst">
+        <property name="toolTip">
+         <string>the first color, if alternating color is checked</string>
+        </property>
+        <property name="whatsThis">
+         <string>the first color, if alternating color is checked</string>
+        </property>
+        <property name="text">
+         <string>first color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbCbSecond">
+        <property name="toolTip">
+         <string>the second color, if alternating color is checked</string>
+        </property>
+        <property name="whatsThis">
+         <string>the second color, if alternating color is checked</string>
+        </property>
+        <property name="text">
+         <string>second color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cbAlternating">
+        <property name="toolTip">
+         <string>Change the background color of every row</string>
+        </property>
+        <property name="whatsThis">
+         <string>Change the background color of every row</string>
+        </property>
+        <property name="text">
+         <string>Alternating the background color</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

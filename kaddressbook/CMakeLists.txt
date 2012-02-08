@@ -30,12 +30,14 @@ set(kaddressbook_printing_SRCS
   printing/printprogress.cpp
   printing/printstyle.cpp
   printing/ringbinderstyle.cpp
+  printing/compactstyle.cpp
   printing/stylepage.cpp
 )
 
 kde4_add_ui_files(kaddressbook_printing_SRCS
   printing/rbs_appearance.ui
   printing/ds_appearance.ui
+  printing/compactstyle.ui
 )
 
 set(kaddressbook_xxport_SRCS

@@ -36,6 +36,7 @@
 #include "detailledstyle.h"
 #include "mikesstyle.h"
 #include "ringbinderstyle.h"
+#include "compactstyle.h"
 
 #include <KApplication>
 #include <KDebug>
@@ -99,6 +100,7 @@ void PrintingWizard::registerStyles()
   mStyleFactories.append( new DetailledPrintStyleFactory( this ) );
   mStyleFactories.append( new MikesStyleFactory( this ) );
   mStyleFactories.append( new RingBinderPrintStyleFactory( this ) );
+  mStyleFactories.append( new CompactStyleFactory( this ) );
 
   mStylePage->clearStyleNames();
   for ( int i = 0; i < mStyleFactories.count(); ++i ) {
