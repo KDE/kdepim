@@ -624,6 +624,14 @@ void KMFilterDialog::slotRunFilters()
     return;
   }
 
+  if(isButtonEnabled(KDialog::Apply))
+  {
+      KMessageBox::information(
+        this,
+        i18n( "Some filters were changed.Save them before to apply filters." ),
+        i18n( "Filters changed." ) );
+      return;
+  }
   bool requiresBody = false;
   const QStringList selectedFiltersId = mFilterList->selectedFilterId(requiresBody);
   if ( selectedFiltersId.isEmpty() ) {
