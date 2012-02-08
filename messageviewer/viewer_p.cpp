@@ -1178,6 +1178,7 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
 
 void ViewerPrivate::resetStateForNewMessage()
 {
+  mClickedUrl.clear();
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
