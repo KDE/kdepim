@@ -75,7 +75,7 @@ class KJob;
  * transfer the altered filter list back to KMFilterMgr.
  *
  * @short A complex widget that allows managing a list of MailCommon::MailFilter's.
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>.
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>.
  * @see MailCommon::MailFilter KMFilterDialog KMFilterActionEdit SearchPatternEdit
  */
 
@@ -333,7 +333,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
  * in kmfilterdlg.cpp accordingly.
  *
  * @short The filter dialog.
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>.
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>.
  * @see MailCommon::MailFilter KMFilterActionEdit SearchPatternEdit KMFilterListBox
  */
 class MAILCOMMON_EXPORT KMFilterDialog : public KDialog

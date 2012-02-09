@@ -52,12 +52,9 @@
 #include <templateparser/customtemplates_kfg.h>
 #include <templateparser/customtemplates.h>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextDocument>
-
-#include <assert.h>
-#include <string.h>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextDocument>
 
 using MailCommon::RegExpLineEdit;
 using MessageComposer::MessageFactory;

@@ -116,7 +116,7 @@ class MAILCOMMON_EXPORT ItemContext
  * inherit form this and are capable of providing parameter handling
  * (import/export as string, a widget to allow editing, etc.)
  *
- * @author Marc Mutz <Marc@Mutz.com>, based on work by Stefan Taferner <taferner@kde.org>.
+ * @author Marc Mutz <mutz@kde.org>, based on work by Stefan Taferner <taferner@kde.org>.
  * @see Filter FilterMgr
  */
 class MAILCOMMON_EXPORT FilterAction : public QObject
@@ -278,7 +278,7 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
  *  @li virtual FilterAction::ReturnCodes FilterAction::process
  *  @li static FilterAction::newAction
  *
- *  @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ *  @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  *  @see FilterAction Filter
  */
 class FilterActionWithNone : public FilterAction
@@ -317,7 +317,7 @@ class FilterActionWithNone : public FilterAction
  * @li virtual FilterAction::ReturnCodes FilterAction::process
  * @li static FilterAction::newAction
  *
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterAction Filter
  */
 class FilterActionWithString : public FilterAction
@@ -384,7 +384,7 @@ class FilterActionWithString : public FilterAction
  * @li static FilterAction::newAction
  * @li the *ParamWidget* methods.
  *
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterAction Filter
  */
 class FilterActionWithUOID : public FilterAction
@@ -437,7 +437,7 @@ class FilterActionWithUOID : public FilterAction
  * strings. The combobox will then contain be populated automatically
  * with those strings. The default string will be the first one.
  *
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterActionWithString FilterActionWithFolder FilterAction Filter
  */
 class FilterActionWithStringList : public FilterActionWithString
@@ -535,7 +535,7 @@ class FilterActionTransport: public FilterAction
  * @li virtual FilterAction::ReturnCodes FilterAction::process
  * @li static FilterAction::newAction
  *
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterActionWithStringList FilterAction Filter
  */
 class FilterActionWithFolder : public FilterAction
@@ -613,7 +613,7 @@ class FilterActionWithFolder : public FilterAction
  * @li virtual FilterAction::ReturnCodes FilterAction::process
  * @li static FilterAction::newAction
  *
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterActionWithString FilterAction Filter
  */
 class FilterActionWithAddress : public FilterActionWithString
@@ -663,7 +663,7 @@ class FilterActionWithAddress : public FilterActionWithString
  * modifications and stream the resulting command line into @p
  * mProcess. Then you can start the command with @p mProcess.start().
  *
- * @author Marc Mutz <Marc@Mutz.com>, based upon work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterActionWithString FilterAction Filter KProcess
  */
 class FilterActionWithUrl : public FilterAction
@@ -855,7 +855,7 @@ struct FilterActionDesc
  *
  * You can iterate over all known filter actions by using list.
  *
- * @author Marc Mutz <Marc@Mutz.com>, based on work by Stefan Taferner <taferner@kde.org>
+ * @author Marc Mutz <mutz@kde.org>, based on work by Stefan Taferner <taferner@kde.org>
  * @see FilterAction FilterActionDesc Filter
  */
 class FilterActionDict : public QMultiHash<QString, FilterActionDesc*>

@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Author: Marc Mutz <Marc@Mutz.com>
+  Author: Marc Mutz <mutz@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -556,7 +556,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
     reuse a rule in another pattern, make a deep copy of that rule.
 
     @short An abstraction of a search over messages.
-    @author Marc Mutz <Marc@Mutz.com>
+    @author Marc Mutz <mutz@kde.org>
 */
 class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 {

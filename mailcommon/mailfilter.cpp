@@ -40,9 +40,6 @@ using MailCommon::FilterLog;
 #include <kconfiggroup.h>
 #include <krandom.h>
 
-// other headers
-#include <assert.h>
-
 using namespace MailCommon;
 
 MailFilter::MailFilter()

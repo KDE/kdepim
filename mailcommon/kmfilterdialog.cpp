@@ -683,7 +683,7 @@ void KMFilterDialog::slotSaveSize() {
 
 void KMFilterDialog::slotFilterSelected( MailFilter *aFilter )
 {
-  assert( aFilter );
+  Q_ASSERT( aFilter );
   mIgnoreFilterUpdates = true;
   mActionLister->setActionList( aFilter->actions() );
 
@@ -1220,7 +1220,7 @@ void KMFilterListBox::slotCopy()
 
   // enableControls should make sure this method is
   // never called when no filter is selected.
-  assert( filter );
+  Q_ASSERT( filter );
 
   // inserts a copy of the current filter.
   insertFilter( new MailFilter( *filter ) );
@@ -1441,7 +1441,7 @@ void KMFilterListBox::slotRename()
 
   // enableControls should make sure this method is
   // never called when no filter is selected.
-  assert( filter );
+  Q_ASSERT( filter );
 
   // allow empty names - those will turn auto-naming on again
   QValidator *validator = new QRegExpValidator( QRegExp( ".*" ), 0 );
@@ -1505,7 +1505,7 @@ void KMFilterListBox::enableControls()
 
 void KMFilterListBox::loadFilterList( bool createDummyFilter )
 {
-  assert( mListWidget );
+  Q_ASSERT( mListWidget );
   setEnabled( false );
   emit resetWidgets();
   // we don't want the insertion to
@@ -1544,7 +1544,7 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
 void KMFilterListBox::insertFilter( MailFilter *aFilter )
 {
   // must be really a filter...
-  assert( aFilter );
+  Q_ASSERT( aFilter );
   const int currentIndex = mListWidget->currentRow();
   // if mIdxSelItem < 0, QListBox::insertItem will append.
   QListWidgetFilterItem *item = new QListWidgetFilterItem( aFilter->pattern()->name() );
@@ -1576,7 +1576,7 @@ void KMFilterListBox::appendFilter( MailFilter *aFilter )
 void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 {
   // must be neighbours...
-  assert( untouchedOne - movedOne == 1 || movedOne - untouchedOne == 1 );
+  Q_ASSERT( untouchedOne - movedOne == 1 || movedOne - untouchedOne == 1 );
 
   // untouchedOne is at idx. to move it down(up),
   // remove item at idx+(-)1 w/o deleting it.

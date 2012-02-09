@@ -445,7 +445,7 @@ void MailCommon::RuleWidgetHandlerManager::setRule( QStackedWidget *functionStac
                                                     QStackedWidget *valueStack,
                                                     const SearchRule::Ptr rule ) const
 {
-  assert( rule );
+  Q_ASSERT( rule );
   reset( functionStack, valueStack );
   const_iterator end( mHandlers.constEnd() );
   for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {

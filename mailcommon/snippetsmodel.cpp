@@ -20,7 +20,6 @@
 
 #include "snippetsmodel_p.h"
 
-#include <QDebug>
 #include <QMimeData>
 #include <QStringList>
 

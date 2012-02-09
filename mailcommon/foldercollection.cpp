@@ -66,7 +66,7 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
     mWriteConfig( writeconfig ),
     mOldIgnoreNewMail( false )
 {
-  assert( col.isValid() );
+  Q_ASSERT( col.isValid() );
   mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
 
   readConfig();

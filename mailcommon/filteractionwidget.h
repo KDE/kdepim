@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
-  Author: Marc Mutz <Marc@Mutz.com>
+  Author: Marc Mutz <mutz@kde.org>
   based upon work by Stefan Taferner <taferner@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class FilterActionWidget;
  * every MailCommon::FilterAction in KMFilterActionDict and asks each
  * one to create a parameter widget.
  *
- * @author Marc Mutz <Marc@Mutz.com>
+ * @author Marc Mutz <mutz@kde.org>
  * @see MailCommon::FilterAction MailCommon::MailFilter FilterActionWidgetLister
  */
 class FilterActionWidget : public KHBox
@@ -109,7 +109,7 @@ class FilterActionWidget : public KHBox
 /**
  * @short A container widget for a list of FilterActionWidgets.
  *
- * @author Marc Mutz <Marc@Mutz.com>
+ * @author Marc Mutz <mutz@kde.org>
  * @see MailCommon::FilterAction MailCommon::MailFilter FilterActionWidget
  */
 class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister

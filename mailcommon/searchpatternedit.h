@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Author: Marc Mutz <Marc@Mutz.com>
+  Author: Marc Mutz <mutz@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ class SearchPatternEdit;
  *  that something outside of it manages this.
  *
  * @short A widget to edit a single MailCommon::SearchRule.
- * @author Marc Mutz <Marc@Mutz.com>
+ * @author Marc Mutz <mutz@kde.org>
  */
 class SearchRuleWidget : public QWidget
 {
@@ -229,7 +229,7 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
  * "<$field>:$contents" iff the pattern begins with "<".
  *
  * @short A widget which allows editing a set of MailCommon::SearchRule's.
- * @author Marc Mutz <Marc@Mutz.com>
+ * @author Marc Mutz <mutz@kde.org>
  */
 
 class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
