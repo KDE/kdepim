@@ -88,6 +88,12 @@ FilterSelectionDialog::~FilterSelectionDialog()
 {
 }
 
+void FilterSelectionDialog::reject()
+{
+   qDeleteAll(originalFilters);
+   QDialog::reject();
+}
+
 void FilterSelectionDialog::setFilters( const QList<MailFilter *> &filters )
 {
   if ( filters.isEmpty() ) {
@@ -250,7 +256,6 @@ QList<MailFilter *> FilterImporterExporter::importFilters( bool & canceled )
   if(dlg.exec() == QDialog::Accepted)
       return dlg.selectedFilters();
 
-  qDeleteAll(dlg.selectedFilters());
   return QList<MailFilter*>();
 }
 
@@ -265,8 +270,11 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
   KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
   MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
   dlg->setFilters( filters );
-  if ( dlg->exec() == QDialog::Accepted && dlg )
-    writeFiltersToConfig( dlg->selectedFilters(), config, true );
+  if ( dlg->exec() == QDialog::Accepted && dlg ) {
+    QList<MailFilter*> lst = dlg->selectedFilters();
+    writeFiltersToConfig( lst, config, true );
+    qDeleteAll(lst);
+  } 
 }
 
 #include "filterimporterexporter_p.moc"

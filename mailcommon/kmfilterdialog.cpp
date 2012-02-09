@@ -1369,9 +1369,6 @@ void KMFilterDialog::slotExportFilters()
   FilterImporterExporter exporter( this );
   QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
   exporter.exportFilters( filters );
-  QList<MailFilter*>::ConstIterator end( filters.constEnd() );
-  for ( QList<MailFilter*>::ConstIterator it = filters.constBegin(); it != end; ++it )
-    delete *it;
 }
 
 void KMFilterDialog::slotDisableAccept()

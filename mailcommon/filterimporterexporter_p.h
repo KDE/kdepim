@@ -57,7 +57,7 @@ class FilterSelectionDialog : public KDialog
   public Q_SLOTS:
     void slotUnselectAllButton();
     void slotSelectAllButton();
-
+    void reject();
   private:
     QListWidget *filtersListWidget;
     QList<MailFilter*> originalFilters;
