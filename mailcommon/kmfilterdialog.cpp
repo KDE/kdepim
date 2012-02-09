@@ -628,7 +628,7 @@ void KMFilterDialog::slotRunFilters()
   {
       KMessageBox::information(
         this,
-        i18n( "Some filters were changed.Save them before to apply filters." ),
+        i18n( "Some filters were changed. Save them before to apply filters." ),
         i18n( "Filters changed." ) );
       return;
   }
