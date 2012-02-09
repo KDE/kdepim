@@ -1,22 +1,21 @@
 /*
-    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-    Copyright (c) 2010 Andras Mantia <andras@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-
 
 #include "filteractionwidget.h"
 
@@ -28,8 +27,8 @@
 #include <KLocalizedString>
 #include <KPushButton>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QLabel>
 
 using namespace MailCommon;
 
@@ -42,41 +41,43 @@ using namespace MailCommon;
 class FilterActionWidget::Private
 {
   public:
-  Private( FilterActionWidget *qq )
-    : q( qq )
+    Private( FilterActionWidget *qq )
+      : q( qq )
     {
     }
 
-  ~Private()
+    ~Private()
     {
       qDeleteAll( mActionList );
       mActionList.clear();
     }
 
-  void setFilterAction( QWidget *widget = 0 );
+    void setFilterAction( QWidget *widget = 0 );
 
-  void slotFilterTypeChanged( int index );
-  void slotAddWidget();
-  void slotRemoveWidget();
-  
-  FilterActionWidget *q;
-  QList<MailCommon::FilterAction*> mActionList;
-  KComboBox *mComboBox;
-  KPushButton *mAdd;
-  KPushButton *mRemove;
+    void slotFilterTypeChanged( int index );
+    void slotAddWidget();
+    void slotRemoveWidget();
 
-  QGridLayout *mLayout;
+    FilterActionWidget *q;
+    QList<MailCommon::FilterAction*> mActionList;
+    KComboBox *mComboBox;
+    KPushButton *mAdd;
+    KPushButton *mRemove;
+
+    QGridLayout *mLayout;
 };
 
 void FilterActionWidget::Private::setFilterAction( QWidget *widget )
 {
-  if ( mLayout->itemAtPosition( 1, 2 ) )
+  if ( mLayout->itemAtPosition( 1, 2 ) ) {
     delete mLayout->itemAtPosition( 1, 2 )->widget();
+  }
 
-  if ( widget )
+  if ( widget ) {
     mLayout->addWidget( widget, 1, 2 );
-  else
+  } else {
     mLayout->addWidget( new QLabel( i18n( "Please select an action." ), q ), 1, 2 );
+  }
 }
 
 void FilterActionWidget::Private::slotAddWidget()
@@ -93,9 +94,10 @@ void FilterActionWidget::Private::slotRemoveWidget()
 
 void FilterActionWidget::Private::slotFilterTypeChanged( int index )
 {
-  setFilterAction( index < mActionList.count() ? mActionList.at( index )->createParamWidget( q ) : 0 );
+  setFilterAction( index < mActionList.count() ?
+                     mActionList.at( index )->createParamWidget( q ) :
+                     0 );
 }
-
 
 FilterActionWidget::FilterActionWidget( QWidget *parent )
   : KHBox( parent ), d( new Private( this ) )
@@ -116,14 +118,14 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   d->mRemove = new KPushButton( widget );
   d->mRemove->setIcon( KIcon( "list-remove" ) );
   d->mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-  
+
   setSpacing( 4 );
 
   int index;
   QList<FilterActionDesc*> list = MailCommon::FilterManager::filterActionDict()->list();
-  QList<FilterActionDesc*>::const_iterator it;  
+  QList<FilterActionDesc*>::const_iterator it;
   QList<FilterActionDesc*>::const_iterator end( list.constEnd() );
-  for ( index = 0, it = list.constBegin() ; it != end ; ++it, ++index ) {
+  for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
     //create an instance:
     FilterAction *action = (*it)->create();
 
@@ -167,11 +169,11 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
            this, SLOT(slotAddWidget()) );
   connect( d->mRemove, SIGNAL(clicked()),
            this, SLOT(slotRemoveWidget()) );
-  
-  d->setFilterAction();  
+
+  d->setFilterAction();
   d->mLayout->addWidget( d->mAdd, 1, 3 );
   d->mLayout->addWidget( d->mRemove, 1, 4 );
-  
+
 }
 
 FilterActionWidget::~FilterActionWidget()
@@ -189,11 +191,11 @@ void FilterActionWidget::setAction( const FilterAction *action )
 {
   bool found = false;
   const int count = d->mComboBox->count() - 1 ; // last entry is the empty one
-  const QString label = (action ? action->label() : QString());
+  const QString label = action ? action->label() : QString();
 
   // find the index of typeOf(action) in mComboBox
   // and clear the other widgets on the way.
-  for ( int i = 0; i < count ; ++i ) {
+  for ( int i = 0; i < count; ++i ) {
     if ( action && d->mComboBox->itemText( i ) == label ) {
       d->setFilterAction( d->mActionList.at( i )->createParamWidget( this ) );
 
@@ -208,8 +210,9 @@ void FilterActionWidget::setAction( const FilterAction *action )
     }
   }
 
-  if ( found )
+  if ( found ) {
     return;
+  }
 
   // not found, so set the empty widget
   d->setFilterAction();
@@ -217,11 +220,13 @@ void FilterActionWidget::setAction( const FilterAction *action )
   d->mComboBox->setCurrentIndex( count ); // last item
 }
 
-FilterAction* FilterActionWidget::action() const
+FilterAction *FilterActionWidget::action() const
 {
   // look up the action description via the label
   // returned by KComboBox::currentText()...
-  FilterActionDesc *description = MailCommon::FilterManager::filterActionDict()->value( d->mComboBox->currentText() );
+  FilterActionDesc *description =
+    MailCommon::FilterManager::filterActionDict()->value( d->mComboBox->currentText() );
+
   if ( description ) {
     // ...create an instance...
     FilterAction *action = description->create();
@@ -234,7 +239,6 @@ FilterAction* FilterActionWidget::action() const
 
   return 0;
 }
-
 
 //=============================================================================
 //
@@ -258,19 +262,20 @@ class FilterActionWidgetLister::Private
 
 void FilterActionWidgetLister::Private::regenerateActionListFromWidgets()
 {
-  if ( !mActionList )
+  if ( !mActionList ) {
     return;
+  }
 
   mActionList->clear();
 
   foreach ( const QWidget *widget, q->widgets() ) {
     FilterAction *action = qobject_cast<const FilterActionWidget*>( widget )->action();
-    if ( action )
+    if ( action ) {
       mActionList->append( action );
+    }
   }
   q->updateAddRemoveButton();
 }
-
 
 FilterActionWidgetLister:: FilterActionWidgetLister( QWidget *parent )
   : KWidgetLister( false, 1, FILTER_MAX_ACTIONS, parent ), d( new Private( this ) )
@@ -285,15 +290,17 @@ FilterActionWidgetLister::~FilterActionWidgetLister()
 void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 {
   Q_ASSERT( list );
-  if ( d->mActionList && d->mActionList!= list )
+  if ( d->mActionList && d->mActionList != list ) {
     d->regenerateActionListFromWidgets();
+  }
 
   d->mActionList = list;
 
   static_cast<QWidget*>( parent() )->setEnabled( true );
 
-  if ( !widgets().isEmpty() ) // move this below next 'if'?
+  if ( !widgets().isEmpty() ) { // move this below next 'if'?
     widgets().first()->blockSignals(true);
+  }
 
   if ( list->isEmpty() ) {
     slotClear();
@@ -306,8 +313,9 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
     kDebug() << "FilterActionWidgetLister: Clipping action list to"
              << widgetsMaximum() << "items!";
 
-    for ( ; superfluousItems ; superfluousItems-- )
+    for ( ; superfluousItems ; superfluousItems-- ) {
       d->mActionList->removeLast();
+    }
   }
 
   // set the right number of widgets
@@ -318,10 +326,12 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
   QList<FilterAction*>::const_iterator aEnd( d->mActionList->constEnd() );
   QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
   QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-  for ( QList<FilterAction*>::const_iterator aIt = d->mActionList->constBegin(); ( aIt != aEnd && wIt != wEnd );++aIt, ++wIt ) {
+  for ( QList<FilterAction*>::const_iterator aIt = d->mActionList->constBegin();
+        ( aIt != aEnd && wIt != wEnd ); ++aIt, ++wIt ) {
     FilterActionWidget *w = qobject_cast<FilterActionWidget*>( *wIt );
     w->setAction( ( *aIt ) );
-    connect( w, SIGNAL(filterModified()), this, SIGNAL(filterModified()), Qt::UniqueConnection );
+    connect( w, SIGNAL(filterModified()),
+             this, SIGNAL(filterModified()), Qt::UniqueConnection );
     reconnectWidget( w );
   }
   widgets().first()->blockSignals(false);
@@ -329,13 +339,13 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
 }
 
-void FilterActionWidgetLister::slotAddWidget( QWidget* w)
+void FilterActionWidgetLister::slotAddWidget( QWidget *w )
 {
   addWidgetAfterThisWidget( w );
   updateAddRemoveButton();
 }
 
-void FilterActionWidgetLister::slotRemoveWidget( QWidget* w)
+void FilterActionWidgetLister::slotRemoveWidget( QWidget *w )
 {
   removeWidget( w );
   updateAddRemoveButton();
@@ -347,18 +357,13 @@ void FilterActionWidgetLister::updateAddRemoveButton()
   const int numberOfWidget( widgetList.count() );
   bool addButtonEnabled = false;
   bool removeButtonEnabled = false;
-  if ( numberOfWidget <= widgetsMinimum() )
-  {
+  if ( numberOfWidget <= widgetsMinimum() ) {
     addButtonEnabled = true;
     removeButtonEnabled = false;
-  }
-  else if ( numberOfWidget >= widgetsMaximum() )
-  {
+  } else if ( numberOfWidget >= widgetsMaximum() ) {
     addButtonEnabled = false;
     removeButtonEnabled = true;
-  }
-  else
-  {
+  } else {
     addButtonEnabled = true;
     removeButtonEnabled = true;
   }
@@ -377,8 +382,9 @@ void FilterActionWidgetLister::updateActionList()
 
 void FilterActionWidgetLister::reset()
 {
-  if ( d->mActionList )
+  if ( d->mActionList ) {
     d->regenerateActionListFromWidgets();
+  }
 
   d->mActionList = 0;
   slotClear();
@@ -388,11 +394,14 @@ void FilterActionWidgetLister::reset()
 
 void FilterActionWidgetLister::reconnectWidget( FilterActionWidget *w )
 {
-  connect( w, SIGNAL(addWidget(QWidget*)), this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-  connect( w, SIGNAL(removeWidget(QWidget*)), this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+  connect( w, SIGNAL(addWidget(QWidget*)),
+           this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+
+  connect( w, SIGNAL(removeWidget(QWidget*)),
+           this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
 }
 
-QWidget* FilterActionWidgetLister::createWidget( QWidget *parent )
+QWidget *FilterActionWidgetLister::createWidget( QWidget *parent )
 {
   FilterActionWidget *w = new FilterActionWidget( parent );
   reconnectWidget( w );

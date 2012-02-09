@@ -1,33 +1,31 @@
 /*
-    Copyright (C) 2011 Tobias Koenig <tokoe@kde.org>
+  Copyright (C) 2011 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #ifndef MAILCOMMON_FILTERMANAGER_H
 #define MAILCOMMON_FILTERMANAGER_H
 
 #include "mailcommon_export.h"
-
 #include "mailfilter.h"
 
-#include <akonadi/item.h>
+#include <Akonadi/Item>
 
-#include <QtCore/QObject>
-
+#include <QObject>
 
 namespace MailCommon {
 
@@ -46,8 +44,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     /**
      * Describes the list of filters.
      */
-    enum FilterSet
-    {
+    enum FilterSet {
       NoSet = 0x0,
       Inbound = 0x1,
       Outbound = 0x2,
@@ -56,17 +53,16 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
       All = Inbound|BeforeOutbound|Outbound|Explicit
     };
 
-    enum FilterRequires
-    {
-        Unknown = 0,
-        HeaderMessage = 1,
-        FullMessage = 2
+    enum FilterRequires {
+      Unknown = 0,
+      HeaderMessage = 1,
+      FullMessage = 2
     };
 
     /**
      * Returns the global filter manager object.
      */
-    static FilterManager* instance();
+    static FilterManager *instance();
 
     /**
      * Returns whether the filter manager is in a usable state.
@@ -82,7 +78,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     /**
      * Returns the global filter action dictionary.
      */
-    static FilterActionDict* filterActionDict();
+    static FilterActionDict *filterActionDict();
 
     /**
      * Shows the filter log dialog.
@@ -99,7 +95,8 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void filter( const Akonadi::Item &item, const QString &identifier ) const;
 
-    void filter( const qlonglong &id, const QString &identifier, FilterRequires requires = Unknown ) const;
+    void filter( const qlonglong &id, const QString &identifier,
+                 FilterRequires requires = Unknown ) const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -126,7 +123,8 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
 
     void filter( const QVector<qlonglong> &itemIds, FilterSet set = Explicit ) const;
 
-    void filter(const Akonadi::Item::List &messages, FilterRequires requires, const QStringList& listFilters) const;
+    void filter( const Akonadi::Item::List &messages, FilterRequires requires,
+                 const QStringList &listFilters ) const;
 
     /// Manage filters interface
 
@@ -135,7 +133,8 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * write everything back into the configuration. The filter manager
      * takes ownership of the filters in the list.
      */
-    void appendFilters( const QList<MailCommon::MailFilter*> &filters, bool replaceIfNameExists = false );
+    void appendFilters( const QList<MailCommon::MailFilter*> &filters,
+                        bool replaceIfNameExists = false );
 
     /**
      * Removes the given @p filter from the list.
@@ -174,7 +173,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     FilterManager();
 
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 }
