@@ -1194,11 +1194,6 @@ void KMFilterListBox::slotSelected( int aIdx )
 
 void KMFilterListBox::slotNew()
 {
-  QListWidgetItem *item = mListWidget->currentItem();
-  if ( !itemIsValid( item ) ) {
-    return;
-  }
-
   // just insert a new filter.
   insertFilter( new MailFilter() );
   enableControls();
