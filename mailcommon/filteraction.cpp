@@ -1,72 +1,75 @@
-// kmfilteraction.cpp
-#include "filteractionwidget.h"
+/* license and copyright */
 #include "filteraction.h"
-
-#include "folderrequester.h"
 #include "filteractionmissingargumentdialog.h"
-#include "mailutil.h"
+#include "folderrequester.h"
 #include "mailkernel.h"
+#include "mailutil.h"
 #include "mdnadvicedialog.h"
 #include "minimumcombobox.h"
 #include "regexplineedit.h"
-
+using MailCommon::RegExpLineEdit;
 #ifndef Q_OS_WINCE
 #include "soundtestwidget.h"
 #endif
 
-#include <akonadi/collectioncombobox.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/kmime/messagestatus.h>
-#include <kabc/addressee.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <kmime/kmime_message.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitycombo.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimutils/kfileio.h>
-#include <kpimutils/email.h>
-#include <kprocess.h>
-#include <kshell.h>
-#include <KColorScheme>
-#include <ktemporaryfile.h>
-#include <kurlrequester.h>
-#include <knotification.h>
 #include <libkdepim/addcontactjob.h>
+
+#include <messagecomposer/messagefactory.h>
+using MessageComposer::MessageFactory;
+#include <messagecomposer/messagesender.h>
+
 #include <messagecore/emailaddressrequester.h>
-#include <messagecore/mdnstateattribute.h>
 #include <messagecore/messagehelpers.h>
 #include <messagecore/stringutil.h>
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
-#include <messageviewer/globalsettings.h>
-#include <mailtransport/transportcombobox.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
 
-#ifndef KDEPIM_NO_NEPOMUK
-#include <nepomuk/tag.h>
-#endif
-#include <phonon/mediaobject.h>
+#include <messageviewer/globalsettings.h>
+
 #include <templateparser/customtemplates_kfg.h>
 #include <templateparser/customtemplates.h>
 
-#include <QHBoxLayout>
+#include <Akonadi/CollectionComboBox>
+#include <Akonadi/ItemCopyJob>
+
+#include <KABC/Addressee>
+
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/IdentityManager>
+
+#include <KPIMUtils/Email>
+#include <KPIMUtils/KFileIO>
+
+#include <Mailtransport/Transport>
+#include <Mailtransport/TransportComboBox>
+#include <Mailtransport/TransportManager>
+
+#include <KColorScheme>
+#include <KDebug>
+#include <KLineEdit>
+#include <KLocale>
+#include <KNotification>
+#include <KProcess>
+#include <KShell>
+#include <KTemporaryFile>
+#include <KUrlRequester>
+
+#ifndef KDEPIM_NO_NEPOMUK
+#include <Nepomuk/Tag>
+#endif
+
+#include <phonon/mediaobject.h>
+
 #include <QLabel>
 #include <QTextDocument>
-
-using MailCommon::RegExpLineEdit;
-using MessageComposer::MessageFactory;
 
 using namespace MailCommon;
 
 ItemContext::ItemContext( const Akonadi::Item &item )
-    : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false ),mDeleteItem(false)
+  : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false ), mDeleteItem( false )
 {
 }
 
-Akonadi::Item& ItemContext::item()
+Akonadi::Item &ItemContext::item()
 {
   return mItem;
 }
@@ -140,12 +143,12 @@ bool FilterAction::isEmpty() const
   return false;
 }
 
-FilterAction* FilterAction::newAction()
+FilterAction *FilterAction::newAction()
 {
   return 0;
 }
 
-QWidget* FilterAction::createParamWidget( QWidget *parent ) const
+QWidget *FilterAction::createParamWidget( QWidget *parent ) const
 {
   return new QWidget( parent );
 }
@@ -162,7 +165,7 @@ void FilterAction::clearParamWidget( QWidget * ) const
 {
 }
 
-bool FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
+bool FilterAction::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
   Q_UNUSED( filterName );
   argsFromString(argsStr);
@@ -174,7 +177,7 @@ QString FilterAction::argsAsStringReal() const
   return argsAsString();
 }
 
-bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
+bool FilterAction::folderRemoved( const Akonadi::Collection &, const Akonadi::Collection & )
 {
   return false;
 }
@@ -183,16 +186,21 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
                             const QList<KMime::MDN::DispositionModifier> &modifiers )
 {
   const KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
+  if ( !msg ) {
     return;
+  }
 
-  const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type, true );
+  const QPair<bool, KMime::MDN::SendingMode> mdnSend =
+    MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type, true );
+
   if ( mdnSend.first ) {
     const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
     MessageFactory factory( msg, Akonadi::Item().id() );
     factory.setIdentityManager( KernelIf->identityManager() );
 
-    const KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers );
+    const KMime::Message::Ptr mdn =
+      factory.createMDN( KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers );
+
     if ( mdn ) {
       if ( !KernelIf->msgSender()->send( mdn, MessageSender::SendLater ) ) {
         kDebug() << "Sending failed.";
@@ -207,7 +215,8 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
 //
 //=============================================================================
 
-FilterActionWithNone::FilterActionWithNone( const char *name, const QString &label, QObject *parent )
+FilterActionWithNone::FilterActionWithNone( const char *name, const QString &label,
+                                            QObject *parent )
   : FilterAction( name, label, parent )
 {
 }
@@ -217,7 +226,7 @@ QString FilterActionWithNone::displayString() const
   return label();
 }
 
-void FilterActionWithNone::argsFromString( const QString& )
+void FilterActionWithNone::argsFromString( const QString & )
 {
 }
 
@@ -232,14 +241,15 @@ QString FilterActionWithNone::argsAsString() const
 //
 //=============================================================================
 
-FilterActionWithUOID::FilterActionWithUOID( const char *name, const QString &label, QObject *parent )
+FilterActionWithUOID::FilterActionWithUOID( const char *name, const QString &label,
+                                            QObject *parent )
   : FilterAction( name, label, parent ), mParameter( 0 )
 {
 }
 
 bool FilterActionWithUOID::isEmpty() const
 {
-  return (mParameter == 0);
+  return ( mParameter == 0 );
 }
 
 void FilterActionWithUOID::argsFromString( const QString &argsStr )
@@ -257,14 +267,14 @@ QString FilterActionWithUOID::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-
 //=============================================================================
 //
 // FilterActionWithString
 //
 //=============================================================================
 
-FilterActionWithString::FilterActionWithString( const char *name, const QString &label, QObject *parent )
+FilterActionWithString::FilterActionWithString( const char *name, const QString &label,
+                                                QObject *parent )
   : FilterAction( name, label, parent )
 {
 }
@@ -274,7 +284,7 @@ bool FilterActionWithString::isEmpty() const
   return mParameter.trimmed().isEmpty();
 }
 
-QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithString::createParamWidget( QWidget *parent ) const
 {
   KLineEdit *lineEdit = new KLineEdit( parent );
   lineEdit->setClearButtonShown( true );
@@ -321,12 +331,13 @@ QString FilterActionWithString::displayString() const
 //
 //=============================================================================
 
-FilterActionWithStringList::FilterActionWithStringList( const char *name, const QString &label, QObject *parent )
+FilterActionWithStringList::FilterActionWithStringList( const char *name, const QString &label,
+                                                        QObject *parent )
   : FilterActionWithString( name, label, parent )
 {
 }
 
-QWidget* FilterActionWithStringList::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithStringList::createParamWidget( QWidget *parent ) const
 {
   MinimumComboBox *comboBox = new MinimumComboBox( parent );
   comboBox->setEditable( false );
@@ -366,14 +377,14 @@ void FilterActionWithStringList::argsFromString( const QString &argsStr )
   mParameter = mParameterList.at( index );
 }
 
-
 //=============================================================================
 //
 // class FilterActionWithFolder
 //
 //=============================================================================
 
-FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString &label, QObject *parent )
+FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString &label,
+                                                QObject *parent )
   : FilterAction( name, label, parent )
 {
 }
@@ -383,7 +394,7 @@ bool FilterActionWithFolder::isEmpty() const
   return !mFolder.isValid();
 }
 
-QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithFolder::createParamWidget( QWidget *parent ) const
 {
   FolderRequester *requester = new FolderRequester( parent );
   requester->setShowOutbox( false );
@@ -407,20 +418,25 @@ void FilterActionWithFolder::setParamWidgetValue( QWidget *paramWidget ) const
 
 void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<FolderRequester*>( paramWidget )->setCollection( CommonKernel->draftsCollectionFolder() );
+  static_cast<FolderRequester*>( paramWidget )->setCollection(
+    CommonKernel->draftsCollectionFolder() );
 }
 
-bool FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr , const QString& name)
+bool FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr,
+                                                        const QString &name )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
   if ( !mFolder.isValid() ) {
     bool exactPath = false;
-    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr, exactPath );
-    if ( lst.count() == 1 && exactPath )
+    Akonadi::Collection::List lst =
+      FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr, exactPath );
+    if ( lst.count() == 1 && exactPath ) {
       mFolder = lst.at( 0 );
-    else {
-      FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name, argsStr );
+    } else {
+      FilterActionMissingCollectionDialog *dlg =
+        new FilterActionMissingCollectionDialog( lst, name, argsStr );
+
       if ( dlg->exec() ) {
         mFolder = dlg->selectedCollection();
         needUpdate = true;
@@ -433,8 +449,9 @@ bool FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr ,
 
 QString FilterActionWithFolder::argsAsStringReal() const
 {
-  if ( KernelIf->collectionModel() )
+  if ( KernelIf->collectionModel() ) {
     return MailCommon::Util::fullCollectionPath( mFolder );
+  }
   return FilterActionWithFolder::argsAsString();
 }
 
@@ -452,8 +469,9 @@ void FilterActionWithFolder::argsFromString( const QString &argsStr )
 QString FilterActionWithFolder::argsAsString() const
 {
   QString result;
-  if ( mFolder.isValid() )
+  if ( mFolder.isValid() ) {
     result = QString::number( mFolder.id() );
+  }
 
   return result;
 }
@@ -461,19 +479,22 @@ QString FilterActionWithFolder::argsAsString() const
 QString FilterActionWithFolder::displayString() const
 {
   QString result;
-  if ( mFolder.isValid() )
+  if ( mFolder.isValid() ) {
     result = QString::number( mFolder.id() );
+  }
 
   return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
 }
 
-bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder, const Akonadi::Collection &newFolder )
+bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder,
+                                            const Akonadi::Collection &newFolder )
 {
   if ( oldFolder == mFolder ) {
     mFolder = newFolder;
     return true;
-  } else
+  } else {
     return false;
+  }
 }
 
 //=============================================================================
@@ -482,12 +503,13 @@ bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder
 //
 //=============================================================================
 
-FilterActionWithAddress::FilterActionWithAddress( const char *name, const QString &label, QObject *parent )
+FilterActionWithAddress::FilterActionWithAddress( const char *name, const QString &label,
+                                                  QObject *parent )
   : FilterActionWithString( name, label, parent )
 {
 }
 
-QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithAddress::createParamWidget( QWidget *parent ) const
 {
   MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
   requester->setText( mParameter );
@@ -518,12 +540,13 @@ void FilterActionWithAddress::clearParamWidget( QWidget *paramWidget ) const
 //
 //=============================================================================
 
-FilterActionWithCommand::FilterActionWithCommand( const char *name, const QString &label, QObject *parent )
+FilterActionWithCommand::FilterActionWithCommand( const char *name, const QString &label,
+                                                  QObject *parent )
   : FilterActionWithUrl( name, label, parent )
 {
 }
 
-QWidget* FilterActionWithCommand::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithCommand::createParamWidget( QWidget *parent ) const
 {
   return FilterActionWithUrl::createParamWidget( parent );
 }
@@ -543,21 +566,24 @@ void FilterActionWithCommand::clearParamWidget( QWidget *paramWidget ) const
   FilterActionWithUrl::clearParamWidget( paramWidget );
 }
 
-static KMime::Content* findMimeNodeForIndex( KMime::Content* node, int &index )
+static KMime::Content *findMimeNodeForIndex( KMime::Content *node, int &index )
 {
-  if ( index <= 0 )
+  if ( index <= 0 ) {
     return node;
+  }
 
-  foreach ( KMime::Content* child, node->contents() ) {
+  foreach ( KMime::Content *child, node->contents() ) {
     KMime::Content *result = findMimeNodeForIndex( child, --index );
-    if ( result )
+    if ( result ) {
       return result;
+    }
   }
 
   return 0;
 }
 
-QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg, QList<KTemporaryFile*> &aTempFileList ) const
+QString FilterActionWithCommand::substituteCommandLineArgsFor(
+  const KMime::Message::Ptr &aMsg, QList<KTemporaryFile*> &aTempFileList ) const
 {
   QString result = mParameter;
   QList<int> argList;
@@ -571,8 +597,9 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
     // and save the encountered 'n' in a list.
     bool ok = false;
     const int n = result.mid( start + 1, len - 1 ).toInt( &ok );
-    if ( ok )
+    if ( ok ) {
       argList.append( n );
+    }
   }
 
   // sort the list of n's
@@ -582,7 +609,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
   int lastSeen = -2;
   QString tempFileName;
   QList<int>::ConstIterator end( argList.constEnd() );
-  for ( QList<int>::ConstIterator it = argList.constBegin() ; it != end ; ++it ) {
+  for ( QList<int>::ConstIterator it = argList.constBegin(); it != end; ++it ) {
     // setup temp files with check for duplicate %n's
     if ( (*it) != lastSeen ) {
       KTemporaryFile *tempFile = new KTemporaryFile();
@@ -595,13 +622,13 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
       aTempFileList.append( tempFile );
       tempFileName = tempFile->fileName();
 
-      if ( (*it) == -1 )
+      if ( (*it) == -1 ) {
         KPIMUtils::kByteArrayToFile( aMsg->encodedContent(), tempFileName, //###
                                      false, false, false );
-      else if (aMsg->contents().size() == 0)
+      } else if ( aMsg->contents().size() == 0 ) {
         KPIMUtils::kByteArrayToFile( aMsg->decodedContent(), tempFileName,
                                      false, false, false );
-      else {
+      } else {
         int index = *it; // we pass by reference below, so this is not const
         KMime::Content *content = findMimeNodeForIndex( aMsg.get(), index );
         if ( content ) {
@@ -615,10 +642,11 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
     // QString( "%0 and %1 and %1" ).arg( 0 ).arg( 1 )
     // returns "0 and 1 and %1", so we must call .arg as
     // many times as there are %n's, regardless of their multiplicity.
-    if ( (*it) == -1 )
+    if ( (*it) == -1 ) {
       result.replace( "%-1", tempFileName );
-    else
+    } else {
       result = result.arg( tempFileName );
+    }
   }
 
   return result;
@@ -638,10 +666,11 @@ void substituteMessageHeaders( const KMime::Message::Ptr &aMsg, QString &result 
   QRegExp header_rx( "%\\{([a-z0-9-]+)\\}", Qt::CaseInsensitive );
   int idx = 0;
   while ( ( idx = header_rx.indexIn( result, idx ) ) != -1 ) {
-    const KMime::Headers::Base* header = aMsg->headerByType( header_rx.cap(1).toLatin1() );
+    const KMime::Headers::Base *header = aMsg->headerByType( header_rx.cap(1).toLatin1() );
     QString replacement;
-    if ( header )
+    if ( header ) {
       replacement = KShell::quoteArg( header->as7BitString() );
+    }
     result.replace( idx, header_rx.matchedLength(), replacement );
     idx += replacement.length();
   }
@@ -654,23 +683,28 @@ void substituteMessageHeaders( const KMime::Message::Ptr &aMsg, QString &result 
  */
 void substituteCommandLineArgsForItem( const Akonadi::Item &item, QString &commandLine )
 {
-  commandLine.replace( QLatin1String( "%{itemurl}" ), item.url( Akonadi::Item::UrlWithMimeType ).url() );
-  commandLine.replace( QLatin1String( "%{itemid}" ), QString::number( item.id() ) );
+  commandLine.replace( QLatin1String( "%{itemurl}" ),
+                       item.url( Akonadi::Item::UrlWithMimeType ).url() );
+
+  commandLine.replace( QLatin1String( "%{itemid}" ),
+                       QString::number( item.id() ) );
 }
 
 }
 
-FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &context, bool withOutput ) const
+FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &context,
+                                                                  bool withOutput ) const
 {
   const KMime::Message::Ptr aMsg = context.item().payload<KMime::Message::Ptr>();
   Q_ASSERT( aMsg );
 
-  if ( mParameter.isEmpty() )
+  if ( mParameter.isEmpty() ) {
     return ErrorButGoOn;
+  }
 
   // KProcess doesn't support a QProcess::launch() equivalent, so
   // we must use a temp file :-(
-  KTemporaryFile * inFile = new KTemporaryFile;
+  KTemporaryFile *inFile = new KTemporaryFile;
   if ( !inFile->open() ) {
     delete inFile;
     return ErrorButGoOn;
@@ -729,10 +763,12 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &c
        unfortunate, as we need to removed the original from the folder
        using that, and look it up in the message. When the (new) message
        is uploaded, the header is stripped anyhow. */
-      const QString uid = aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : "";
+      const QString uid =
+        aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : "";
       aMsg->setContent( msgText );
 
-      KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
+      KMime::Headers::Generic *header =
+        new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
 
       context.setNeedsPayloadStore();
@@ -749,7 +785,6 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &c
   return GoOn;
 }
 
-
 //=============================================================================
 //
 //   Specific  Filter  Actions
@@ -765,10 +800,10 @@ class FilterActionSendReceipt : public FilterActionWithNone
   public:
     FilterActionSendReceipt( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionSendReceipt::newAction()
+FilterAction *FilterActionSendReceipt::newAction()
 {
   return new FilterActionSendReceipt;
 }
@@ -787,8 +822,9 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
   factory.setIdentityManager( KernelIf->identityManager() );
 
   const KMime::Message::Ptr receipt = factory.createDeliveryReceipt();
-  if ( !receipt )
+  if ( !receipt ) {
     return ErrorButGoOn;
+  }
 
   // Queue message. This is a) so that the user can check
   // the receipt before sending and b) for speed reasons.
@@ -797,20 +833,21 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
   return GoOn;
 }
 
-
 //=============================================================================
 // FilterActionSetTransport - set transport to...
 // Specify mail transport (smtp server) to be used when replying to a message
 //=============================================================================
 
-FilterAction* FilterActionTransport::newAction()
+FilterAction *FilterActionTransport::newAction()
 {
   return new FilterActionTransport;
 }
 
-QWidget* FilterActionTransport::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionTransport::createParamWidget( QWidget *parent ) const
 {
-  MailTransport::TransportComboBox *transportCombobox = new MailTransport::TransportComboBox( parent );
+  MailTransport::TransportComboBox *transportCombobox =
+    new MailTransport::TransportComboBox( parent );
+
   setParamWidgetValue( transportCombobox );
 
   connect( transportCombobox, SIGNAL(currentIndexChanged(int)),
@@ -824,37 +861,41 @@ FilterActionTransport::FilterActionTransport( QObject *parent )
 {
 }
 
-bool FilterActionTransport::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+bool FilterActionTransport::argsFromStringInteractive( const QString &argsStr,
+                                                       const QString &filterName )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if ( !MailTransport::TransportManager::self()->transportById( mParameter,false ) )
-  {
+  if ( !MailTransport::TransportManager::self()->transportById( mParameter, false ) ) {
     FilterActionMissingTransportDialog *dlg = new FilterActionMissingTransportDialog( filterName );
     if ( dlg->exec() ) {
       mParameter = dlg->selectedTransport();
       needUpdate = true;
-    }
-    else
+    } else {
       mParameter = -1;
+    }
     delete dlg;
   }
   return needUpdate;
 }
 
-
 FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) const
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return ErrorButGoOn;
+  }
 
-  const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( mParameter );
-  //Error if we don't have transport here.
-  if ( !transport )
+  const MailTransport::Transport *transport =
+    MailTransport::TransportManager::self()->transportById( mParameter );
+
+  // Error if we don't have transport here.
+  if ( !transport ) {
     return ErrorButGoOn;
+  }
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), argsAsString(), "utf-8" );
+  KMime::Headers::Generic *header =
+    new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), argsAsString(), "utf-8" );
   msg->setHeader( header );
   msg->assemble();
 
@@ -863,10 +904,10 @@ FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) 
   return GoOn;
 }
 
-
 void FilterActionTransport::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  const MailTransport::TransportComboBox *comboBox =
+    dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
   Q_ASSERT( comboBox );
 
   mParameter = comboBox->currentTransportId();
@@ -874,7 +915,8 @@ void FilterActionTransport::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionTransport::clearParamWidget( QWidget *paramWidget ) const
 {
-  MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  MailTransport::TransportComboBox *comboBox =
+    dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
   Q_ASSERT( comboBox );
 
   comboBox->setCurrentIndex( 0 );
@@ -882,16 +924,16 @@ void FilterActionTransport::clearParamWidget( QWidget *paramWidget ) const
 
 void FilterActionTransport::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  MailTransport::TransportComboBox *comboBox =
+    dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
   Q_ASSERT( comboBox );
 
   comboBox->setCurrentTransport( mParameter );
 }
 
-
 bool FilterActionTransport::isEmpty() const
 {
-  return (mParameter == -1);
+  return ( mParameter == -1 );
 }
 
 void FilterActionTransport::argsFromString( const QString &argsStr )
@@ -909,8 +951,6 @@ QString FilterActionTransport::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-
-
 //=============================================================================
 // FilterActionReplyTo - set Reply-To to
 // Set the Reply-to header in a message
@@ -920,10 +960,10 @@ class FilterActionReplyTo: public FilterActionWithAddress
   public:
     FilterActionReplyTo( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionReplyTo::newAction()
+FilterAction *FilterActionReplyTo::newAction()
 {
   return new FilterActionReplyTo;
 }
@@ -937,7 +977,9 @@ FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
 FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
 {
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "Reply-To", msg.get(), mParameter, "utf-8" );
+  KMime::Headers::Generic *header =
+    new KMime::Headers::Generic( "Reply-To", msg.get(), mParameter, "utf-8" );
+
   msg->setHeader( header );
   msg->assemble();
 
@@ -945,7 +987,6 @@ FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) co
 
   return GoOn;
 }
-
 
 //=============================================================================
 // FilterActionIdentity - set identity to
@@ -957,15 +998,15 @@ class FilterActionIdentity: public FilterActionWithUOID
     FilterActionIdentity( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
-    QWidget * createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget( QWidget *parent ) const;
     void applyParamWidgetValue( QWidget *parent );
     void setParamWidgetValue( QWidget *parent ) const;
     void clearParamWidget( QWidget *param ) const;
 };
 
-FilterAction* FilterActionIdentity::newAction()
+FilterAction *FilterActionIdentity::newAction()
 {
   return new FilterActionIdentity;
 }
@@ -976,19 +1017,19 @@ FilterActionIdentity::FilterActionIdentity( QObject *parent )
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
 
-bool FilterActionIdentity::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+bool FilterActionIdentity::argsFromStringInteractive( const QString &argsStr,
+                                                      const QString &filterName )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
-  {
+  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() ) {
     FilterActionMissingIdentityDialog *dlg = new FilterActionMissingIdentityDialog( filterName );
     if ( dlg->exec() ) {
       mParameter = dlg->selectedIdentity();
       needUpdate = true;
-    }
-    else
+    } else {
       mParameter = -1;
+    }
     delete dlg;
   }
   return needUpdate;
@@ -996,11 +1037,14 @@ bool FilterActionIdentity::argsFromStringInteractive( const QString &argsStr, co
 
 FilterAction::ReturnCode FilterActionIdentity::process( ItemContext &context ) const
 {
-  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() ) {
     return ErrorButGoOn;
+  }
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
+  KMime::Headers::Generic *header =
+    new KMime::Headers::Generic( "X-KMail-Identity", msg.get(),
+                                 QString::number( mParameter ), "utf-8" );
   msg->setHeader( header );
   msg->assemble();
 
@@ -1009,19 +1053,26 @@ FilterAction::ReturnCode FilterActionIdentity::process( ItemContext &context ) c
   return GoOn;
 }
 
-QWidget* FilterActionIdentity::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionIdentity::createParamWidget( QWidget *parent ) const
 {
-  KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
+  KPIMIdentities::IdentityCombo *comboBox =
+    new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
+
+  Q_ASSERT( comboBox );
+
   comboBox->setCurrentIdentity( mParameter );
 
-  connect( comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()) );
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
 
   return comboBox;
 }
 
 void FilterActionIdentity::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+  const KPIMIdentities::IdentityCombo *comboBox =
+    dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+
   Q_ASSERT( comboBox );
 
   mParameter = comboBox->currentIdentity();
@@ -1029,7 +1080,9 @@ void FilterActionIdentity::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionIdentity::clearParamWidget( QWidget *paramWidget ) const
 {
-  KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+  KPIMIdentities::IdentityCombo *comboBox =
+    dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+
   Q_ASSERT( comboBox );
 
   comboBox->setCurrentIndex( 0 );
@@ -1037,12 +1090,13 @@ void FilterActionIdentity::clearParamWidget( QWidget *paramWidget ) const
 
 void FilterActionIdentity::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+  KPIMIdentities::IdentityCombo *comboBox =
+    dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+
   Q_ASSERT( comboBox );
 
   comboBox->setCurrentIdentity( mParameter );
 }
-
 
 //=============================================================================
 // FilterActionSetStatus - set status to
@@ -1055,9 +1109,12 @@ class FilterActionSetStatus: public FilterActionWithStringList
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
-    virtual bool isEmpty() const { return false; }
+    virtual bool isEmpty() const
+    {
+      return false;
+    }
 
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
@@ -1080,7 +1137,7 @@ static const Akonadi::MessageStatus stati[] =
 
 static const int StatiCount = sizeof( stati ) / sizeof( Akonadi::MessageStatus );
 
-FilterAction* FilterActionSetStatus::newAction()
+FilterAction *FilterActionSetStatus::newAction()
 {
   return new FilterActionSetStatus;
 }
@@ -1108,17 +1165,19 @@ FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
 FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) const
 {
   const int index = mParameterList.indexOf( mParameter );
-  if ( index < 1 )
+  if ( index < 1 ) {
     return ErrorButGoOn;
+  }
 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( context.item().flags() );
 
   const Akonadi::MessageStatus newStatus = stati[ index - 1 ];
-  if ( newStatus == Akonadi::MessageStatus::statusUnread() )
+  if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
     status.setRead( false );
-  else
+  } else {
     status.set( newStatus );
+  }
 
   context.item().setFlags( status.statusFlags() );
   context.setNeedsFlagStore();
@@ -1135,8 +1194,9 @@ static QString realStatusString( const QString &statusStr )
 {
   QString result( statusStr );
 
-  if ( result.size() == 2 )
+  if ( result.size() == 2 ) {
     result.remove( QLatin1Char( 'U' ) );
+  }
 
   return result;
 }
@@ -1146,7 +1206,7 @@ void FilterActionSetStatus::argsFromString( const QString &argsStr )
   if ( argsStr.length() == 1 ) {
     Akonadi::MessageStatus status;
 
-    for ( int i = 0 ; i < StatiCount ; ++i ) {
+    for ( int i = 0; i < StatiCount; ++i ) {
       status = stati[i];
       if ( realStatusString( status.statusStr() ) == argsStr.toLatin1() ) {
         mParameter = mParameterList.at( i + 1 );
@@ -1161,8 +1221,9 @@ void FilterActionSetStatus::argsFromString( const QString &argsStr )
 QString FilterActionSetStatus::argsAsString() const
 {
   const int index = mParameterList.indexOf( mParameter );
-  if ( index < 1 )
+  if ( index < 1 ) {
     return QString();
+  }
 
   return realStatusString( stati[index - 1].statusStr() );
 }
@@ -1171,7 +1232,6 @@ QString FilterActionSetStatus::displayString() const
 {
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
-
 
 //=============================================================================
 // FilterActionAddTag - append tag to message
@@ -1184,21 +1244,24 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
-    virtual bool isEmpty() const { return false; }
+    virtual bool isEmpty() const
+    {
+      return false;
+    }
 
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
   private:
     void initializeTagList();
     QStringList mLabelList;
 };
 
-FilterAction* FilterActionAddTag::newAction()
+FilterAction *FilterActionAddTag::newAction()
 {
   return new FilterActionAddTag;
 }
@@ -1212,23 +1275,27 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
 void FilterActionAddTag::initializeTagList()
 {
 #ifndef KDEPIM_NO_NEPOMUK
-  foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+  foreach ( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
     mParameterList.append( tag.label() );
     mLabelList.append( tag.resourceUri().toString() );
   }
 #endif
 }
 
-bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr,
+                                                    const QString &filterName )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if( mParameterList.isEmpty() )
+  if ( mParameterList.isEmpty() ) {
     return false;
+  }
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 ) {
-    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+    FilterActionMissingTagDialog *dlg =
+      new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+
     if ( dlg->exec() ) {
       mParameter = dlg->selectedTag();
       needUpdate = true;
@@ -1239,13 +1306,13 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
   return needUpdate;
 }
 
-
 FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 )
+  if ( index == -1 ) {
     return ErrorButGoOn;
+  }
 
   Nepomuk::Resource resource( context.item().url() );
   resource.addTag( mParameter );
@@ -1266,22 +1333,24 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
     return;
   }
 
-  foreach ( const QString& tag, mParameterList ) {
+  foreach ( const QString &tag, mParameterList ) {
     if ( tag == argsStr ) {
       mParameter = tag;
       return;
     }
   }
 
-  if ( !mParameterList.isEmpty() )
+  if ( !mParameterList.isEmpty() ) {
     mParameter = mParameterList.at( 0 );
+  }
 }
 
 QString FilterActionAddTag::argsAsString() const
 {
   const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 )
+  if ( index == -1 ) {
     return QString();
+  }
 
   return mParameterList.at( index );
 }
@@ -1290,7 +1359,6 @@ QString FilterActionAddTag::displayString() const
 {
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
-
 
 //=============================================================================
 // FilterActionFakeDisposition - send fake MDN
@@ -1301,18 +1369,20 @@ class FilterActionFakeDisposition: public FilterActionWithStringList
   public:
     FilterActionFakeDisposition( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction()
+    static FilterAction *newAction()
     {
       return new FilterActionFakeDisposition;
     }
 
-    virtual bool isEmpty() const { return false; }
+    virtual bool isEmpty() const
+    {
+      return false;
+    }
 
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
 };
-
 
 // if you change this list, also update
 // the count in argsFromString
@@ -1326,7 +1396,6 @@ static const KMime::MDN::DispositionType mdns[] =
   KMime::MDN::Failed,
 };
 static const int numMDNs = sizeof( mdns ) / sizeof( *mdns );
-
 
 FilterActionFakeDisposition::FilterActionFakeDisposition( QObject *parent )
   : FilterActionWithStringList( "fake mdn", i18n( "Send Fake MDN" ), parent )
@@ -1348,16 +1417,19 @@ FilterActionFakeDisposition::FilterActionFakeDisposition( QObject *parent )
 FilterAction::ReturnCode FilterActionFakeDisposition::process( ItemContext &context ) const
 {
   const int index = mParameterList.indexOf( mParameter );
-  if ( index < 1 )
+  if ( index < 1 ) {
     return ErrorButGoOn;
+  }
 
   if ( index == 1 ) { // ignore
     if ( context.item().hasAttribute<MessageCore::MDNStateAttribute>() ) {
-      context.item().attribute<MessageCore::MDNStateAttribute>()->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
+      context.item().attribute<MessageCore::MDNStateAttribute>()->setMDNState(
+        MessageCore::MDNStateAttribute::MDNIgnore );
       context.setNeedsFlagStore();
     }
-  } else // send
+  } else { // send
     sendMDN( context.item(), mdns[ index - 2 ] ); // skip first two entries: "" and "ignore"
+  }
 
   return GoOn;
 }
@@ -1370,7 +1442,7 @@ void FilterActionFakeDisposition::argsFromString( const QString &argsStr )
       return;
     }
 
-    for ( int i = 0 ; i < numMDNs ; i++ ) {
+    for ( int i = 0; i < numMDNs; i++ ) {
       if ( char( mdns[ i ] ) == argsStr[ 0 ] ) { // send
         mParameter = mParameterList.at( i + 2 );
         return;
@@ -1384,8 +1456,9 @@ void FilterActionFakeDisposition::argsFromString( const QString &argsStr )
 QString FilterActionFakeDisposition::argsAsString() const
 {
   const int index = mParameterList.indexOf( mParameter );
-  if ( index < 1 )
+  if ( index < 1 ) {
     return QString();
+  }
 
   return QString( QChar( index < 2 ? 'I' : char( mdns[ index - 2 ] ) ) );
 }
@@ -1394,7 +1467,6 @@ QString FilterActionFakeDisposition::displayString() const
 {
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
-
 
 //=============================================================================
 // FilterActionRemoveHeader - remove header
@@ -1405,13 +1477,13 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
   public:
     FilterActionRemoveHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionRemoveHeader::newAction()
+FilterAction *FilterActionRemoveHeader::newAction()
 {
   return new FilterActionRemoveHeader;
 }
@@ -1429,7 +1501,7 @@ FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
   mParameter = mParameterList.at( 0 );
 }
 
-QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
 {
   MinimumComboBox *comboBox = new MinimumComboBox( parent );
   comboBox->setEditable( true );
@@ -1444,12 +1516,14 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
 
 FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() )
+  if ( mParameter.isEmpty() ) {
     return ErrorButGoOn;
+  }
 
   KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  while ( msg->headerByType( mParameter.toLatin1() ) )
+  while ( msg->headerByType( mParameter.toLatin1() ) ) {
     msg->removeHeader( mParameter.toLatin1() );
+  }
 
   msg->assemble();
 
@@ -1460,7 +1534,7 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MinimumComboBox *comboBox = dynamic_cast<MinimumComboBox*>(paramWidget );
+  MinimumComboBox *comboBox = dynamic_cast<MinimumComboBox*>( paramWidget );
   Q_ASSERT( comboBox );
 
   const int index = mParameterList.indexOf( mParameter );
@@ -1474,7 +1548,6 @@ void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
   }
 }
 
-
 //=============================================================================
 // FilterActionAddHeader - add header
 // Add a header with the given value.
@@ -1484,7 +1557,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
   public:
     FilterActionAddHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void clearParamWidget( QWidget *paramWidget ) const;
@@ -1494,7 +1567,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
 
     virtual QString displayString() const;
 
-    static FilterAction* newAction()
+    static FilterAction *newAction()
     {
       return new FilterActionAddHeader;
     }
@@ -1518,8 +1591,9 @@ FilterActionAddHeader::FilterActionAddHeader( QObject *parent )
 
 FilterAction::ReturnCode FilterActionAddHeader::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() )
+  if ( mParameter.isEmpty() ) {
     return ErrorButGoOn;
+  }
 
   KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
@@ -1538,7 +1612,7 @@ FilterAction::ReturnCode FilterActionAddHeader::process( ItemContext &context ) 
   return GoOn;
 }
 
-QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionAddHeader::createParamWidget( QWidget *parent ) const
 {
   QWidget *widget = new QWidget( parent );
   QHBoxLayout *layout = new QHBoxLayout( widget );
@@ -1549,7 +1623,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   comboBox->setObjectName( "combo" );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
-  layout->addWidget( comboBox, 0 /* stretch */ );
+  layout->addWidget( comboBox, 0/* stretch */ );
 
   QLabel *label = new QLabel( i18n( "With value:" ), widget );
   label->setFixedWidth( label->sizeHint().width() );
@@ -1649,7 +1723,6 @@ void FilterActionAddHeader::argsFromString( const QString &argsStr )
   mParameter = mParameterList.at( index );
 }
 
-
 //=============================================================================
 // FilterActionRewriteHeader - rewrite header
 // Rewrite a header using a regexp.
@@ -1659,7 +1732,7 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
   public:
     FilterActionRewriteHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void clearParamWidget( QWidget *paramWidget ) const;
@@ -1669,7 +1742,7 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
 
     virtual QString displayString() const;
 
-    static FilterAction* newAction()
+    static FilterAction *newAction()
     {
       return new FilterActionRewriteHeader;
     }
@@ -1695,8 +1768,9 @@ FilterActionRewriteHeader::FilterActionRewriteHeader( QObject *parent )
 
 FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() || !mRegExp.isValid() )
+  if ( mParameter.isEmpty() || !mRegExp.isValid() ) {
     return ErrorButGoOn;
+  }
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
@@ -1717,7 +1791,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
   return GoOn;
 }
 
-QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 {
   QWidget *widget = new QWidget( parent );
   QHBoxLayout *layout = new QHBoxLayout( widget );
@@ -1728,7 +1802,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   comboBox->setEditable( true );
   comboBox->setObjectName( "combo" );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
-  layout->addWidget( comboBox, 0 /* stretch */ );
+  layout->addWidget( comboBox, 0/* stretch */ );
 
   QLabel *label = new QLabel( i18n( "Replace:" ), widget );
   label->setFixedWidth( label->sizeHint().width() );
@@ -1847,7 +1921,6 @@ void FilterActionRewriteHeader::argsFromString( const QString &argsStr )
   mParameter = mParameterList.at( index );
 }
 
-
 //=============================================================================
 // FilterActionMove - move into folder
 // File message into another mail folder
@@ -1858,10 +1931,10 @@ class FilterActionMove: public FilterActionWithFolder
     FilterActionMove( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionMove::newAction()
+FilterAction *FilterActionMove::newAction()
 {
   return new FilterActionMove;
 }
@@ -1875,8 +1948,9 @@ FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
 {
   if ( !mFolder.isValid() ) {
     const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
-    if ( !targetFolder.isValid() )
+    if ( !targetFolder.isValid() ) {
       return ErrorButGoOn;
+    }
 
     context.setMoveTargetCollection( targetFolder );
     return GoOn;
@@ -1890,7 +1964,6 @@ bool FilterActionMove::requiresBody() const
   return false;
 }
 
-
 //=============================================================================
 // FilterActionCopy - copy into folder
 // Copy message into another mail folder
@@ -1901,10 +1974,10 @@ class FilterActionCopy: public FilterActionWithFolder
     FilterActionCopy( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionCopy::newAction()
+FilterAction *FilterActionCopy::newAction()
 {
   return new FilterActionCopy;
 }
@@ -1927,7 +2000,6 @@ bool FilterActionCopy::requiresBody() const
   return false;
 }
 
-
 //=============================================================================
 // FilterActionForward - forward to
 // Forward message to another user, with a defined template
@@ -1936,16 +2008,16 @@ class FilterActionForward: public FilterActionWithAddress
 {
   public:
     FilterActionForward( QObject *parent = 0 );
-    static FilterAction* newAction();
+    static FilterAction *newAction();
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void clearParamWidget( QWidget *paramWidget ) const;
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
   private:
     mutable QString mTemplate;
@@ -1963,14 +2035,15 @@ FilterActionForward::FilterActionForward( QObject *parent )
 
 FilterAction::ReturnCode FilterActionForward::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() )
+  if ( mParameter.isEmpty() ) {
     return ErrorButGoOn;
+  }
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
   // avoid endless loops when this action is used in a filter
   // which applies to sent messages
-  if ( MessageCore::StringUtil::addressIsInAddressList( mParameter,
-                                                        QStringList( msg->to()->asUnicodeString() ) ) ) {
+  if ( MessageCore::StringUtil::addressIsInAddressList(
+         mParameter, QStringList( msg->to()->asUnicodeString() ) ) ) {
     kWarning() << "Attempt to forward to receipient of original message, ignoring.";
     return ErrorButGoOn;
   }
@@ -1981,18 +2054,21 @@ FilterAction::ReturnCode FilterActionForward::process( ItemContext &context ) co
   factory.setTemplate( mTemplate );
 
   KMime::Message::Ptr fwdMsg = factory.createForward();
-  fwdMsg->to()->fromUnicodeString( fwdMsg->to()->asUnicodeString() + QLatin1Char( ',' ) + mParameter, "utf-8" );
+  fwdMsg->to()->fromUnicodeString(
+    fwdMsg->to()->asUnicodeString() + QLatin1Char( ',' ) + mParameter, "utf-8" );
+
   if ( !KernelIf->msgSender()->send( fwdMsg, MessageSender::SendDefault ) ) {
     kWarning() << "FilterAction: could not forward message (sending failed)";
     return ErrorButGoOn; // error: couldn't send
-  } else
+  } else {
     sendMDN( context.item(), KMime::MDN::Dispatched );
+  }
 
   // (the msgSender takes ownership of the message, so don't delete it here)
   return GoOn;
 }
 
-QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionForward::createParamWidget( QWidget *parent ) const
 {
   QWidget *addressAndTemplate = new QWidget( parent );
   QHBoxLayout *layout = new QHBoxLayout( addressAndTemplate );
@@ -2002,11 +2078,16 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   addressEdit->setObjectName( "addressEdit" );
   layout->addWidget( addressEdit );
 
-  MessageCore::EmailAddressRequester *addressRequester = qobject_cast<MessageCore::EmailAddressRequester*>( addressEdit );
+  MessageCore::EmailAddressRequester *addressRequester =
+    qobject_cast<MessageCore::EmailAddressRequester*>( addressEdit );
   Q_ASSERT( addressRequester );
   KLineEdit *lineEdit = addressRequester->lineEdit();
-  lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
-  lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );
+  lineEdit->setToolTip(
+    i18nc( "@info:tooltip",
+           "The addressee to whom the message will be forwarded." ) );
+  lineEdit->setWhatsThis(
+    i18nc( "@info::whatsthis",
+           "The filter will forward the message to the addressee entered here." ) );
 
   MinimumComboBox *templateCombo = new MinimumComboBox( addressAndTemplate );
   templateCombo->setObjectName( "templateCombo" );
@@ -2015,7 +2096,7 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   templateCombo->addItem( i18n( "Default Template" ) );
 
   const QStringList templateNames = SettingsIf->customTemplates();
-  foreach( const QString &templateName, templateNames ) {
+  foreach ( const QString &templateName, templateNames ) {
     TemplateParser::CTemplates templat( templateName );
     if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
          templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
@@ -2024,8 +2105,12 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   }
 
   templateCombo->setEnabled( templateCombo->count() > 1 );
-  templateCombo->setToolTip( i18n( "The template used when forwarding" ) );
-  templateCombo->setWhatsThis( i18n( "Set the forwarding template that will be used with this filter." ) );
+  templateCombo->setToolTip(
+    i18nc( "@info:tooltip",
+           "The template used when forwarding" ) );
+  templateCombo->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Set the forwarding template that will be used with this filter." ) );
 
   connect( templateCombo, SIGNAL(currentIndexChanged(int)),
            this, SIGNAL(filterActionModified()) );
@@ -2041,7 +2126,8 @@ void FilterActionForward::applyParamWidgetValue( QWidget *paramWidget )
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::applyParamWidgetValue( addressEdit );
 
-  const MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
+  const MinimumComboBox *templateCombo =
+    paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   if ( templateCombo->currentIndex() == 0 ) {
@@ -2103,7 +2189,8 @@ void FilterActionForward::argsFromString( const QString &argsStr )
   }
 }
 
-bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+bool FilterActionForward::argsFromStringInteractive( const QString &argsStr,
+                                                     const QString &filterName )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
@@ -2111,7 +2198,7 @@ bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, con
     const QStringList templateNames = SettingsIf->customTemplates();
     QStringList currentTemplateList;
     currentTemplateList << i18n( "Default Template" );
-    foreach( const QString &templateName, templateNames ) {
+    foreach ( const QString &templateName, templateNames ) {
       TemplateParser::CTemplates templat( templateName );
       if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
            templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
@@ -2121,7 +2208,9 @@ bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, con
         currentTemplateList << templateName;
       }
     }
-    FilterActionMissingTemplateDialog *dlg = new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
+    FilterActionMissingTemplateDialog *dlg =
+      new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
+
     if ( dlg->exec() ) {
       mTemplate = dlg->selectedTemplate();
       needUpdate = true;
@@ -2131,7 +2220,6 @@ bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, con
   return needUpdate;
 }
 
-
 QString FilterActionForward::argsAsString() const
 {
   return FilterActionWithAddress::argsAsString() + forwardFilterArgsSeperator + mTemplate;
@@ -2139,12 +2227,12 @@ QString FilterActionForward::argsAsString() const
 
 QString FilterActionForward::displayString() const
 {
-  if ( mTemplate.isEmpty() )
+  if ( mTemplate.isEmpty() ) {
     return i18n( "Forward to %1 with default template", mParameter );
-  else
+  } else {
     return i18n( "Forward to %1 with template %2", mParameter, mTemplate );
+  }
 }
-
 
 //=============================================================================
 // FilterActionRedirect - redirect to
@@ -2155,10 +2243,10 @@ class FilterActionRedirect: public FilterActionWithAddress
   public:
     FilterActionRedirect( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionRedirect::newAction()
+FilterAction *FilterActionRedirect::newAction()
 {
   return new FilterActionRedirect;
 }
@@ -2170,8 +2258,9 @@ FilterActionRedirect::FilterActionRedirect( QObject *parent )
 
 FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() )
+  if ( mParameter.isEmpty() ) {
     return ErrorButGoOn;
+  }
 
   KMime::Message::Ptr msg = MessageCore::Util::message( context.item() );
 
@@ -2180,8 +2269,9 @@ FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) c
   factory.setIdentityManager( KernelIf->identityManager() );
 
   KMime::Message::Ptr rmsg = factory.createRedirect( mParameter );
-  if ( !rmsg )
+  if ( !rmsg ) {
     return ErrorButGoOn;
+  }
 
   sendMDN( context.item(), KMime::MDN::Dispatched );
 
@@ -2193,7 +2283,6 @@ FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) c
   return GoOn;
 }
 
-
 //=============================================================================
 // FilterActionExec - execute command
 // Execute a shell command
@@ -2203,10 +2292,10 @@ class FilterActionExec : public FilterActionWithCommand
   public:
     FilterActionExec( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionExec::newAction()
+FilterAction *FilterActionExec::newAction()
 {
   return new FilterActionExec();
 }
@@ -2221,7 +2310,6 @@ FilterAction::ReturnCode FilterActionExec::process( ItemContext &context ) const
   return FilterActionWithCommand::genericProcess( context, false ); // ignore output
 }
 
-
 //=============================================================================
 // FilterActionExtFilter - use external filter app
 // External message filter: executes a shell command with message
@@ -2232,10 +2320,10 @@ class FilterActionExtFilter: public FilterActionWithCommand
   public:
     FilterActionExtFilter( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionExtFilter::newAction()
+FilterAction *FilterActionExtFilter::newAction()
 {
   return new FilterActionExtFilter;
 }
@@ -2250,7 +2338,6 @@ FilterAction::ReturnCode FilterActionExtFilter::process( ItemContext &context ) 
   return FilterActionWithCommand::genericProcess( context, true ); // use output
 }
 
-
 #ifndef Q_OS_WINCE
 //=============================================================================
 // FilterActionExecSound - execute command
@@ -2259,18 +2346,19 @@ FilterAction::ReturnCode FilterActionExtFilter::process( ItemContext &context ) 
 class FilterActionExecSound : public FilterActionWithTest
 {
   public:
-    FilterActionExecSound(  );
+    FilterActionExecSound();
     ~FilterActionExecSound();
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
   private:
-    mutable Phonon::MediaObject* mPlayer;
+    mutable Phonon::MediaObject *mPlayer;
 };
 
-FilterActionWithTest::FilterActionWithTest( const char *name, const QString &label, QObject *parent )
+FilterActionWithTest::FilterActionWithTest( const char *name, const QString &label,
+                                            QObject *parent )
   : FilterAction( name, label, parent )
 {
 }
@@ -2284,7 +2372,7 @@ bool FilterActionWithTest::isEmpty() const
   return mParameter.trimmed().isEmpty();
 }
 
-QWidget* FilterActionWithTest::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithTest::createParamWidget( QWidget *parent ) const
 {
   SoundTestWidget *soundWidget = new SoundTestWidget( parent );
   soundWidget->setUrl( mParameter );
@@ -2294,7 +2382,6 @@ QWidget* FilterActionWithTest::createParamWidget( QWidget *parent ) const
 
   return soundWidget;
 }
-
 
 void FilterActionWithTest::applyParamWidgetValue( QWidget *paramWidget )
 {
@@ -2337,18 +2424,20 @@ FilterActionExecSound::~FilterActionExecSound()
   delete mPlayer;
 }
 
-FilterAction* FilterActionExecSound::newAction()
+FilterAction *FilterActionExecSound::newAction()
 {
   return new FilterActionExecSound();
 }
 
-FilterAction::ReturnCode FilterActionExecSound::process( ItemContext& ) const
+FilterAction::ReturnCode FilterActionExecSound::process( ItemContext & ) const
 {
-  if ( mParameter.isEmpty() )
+  if ( mParameter.isEmpty() ) {
     return ErrorButGoOn;
+  }
 
-  if ( !mPlayer )
+  if ( !mPlayer ) {
     mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
+  }
 
   mPlayer->setCurrentSource( mParameter );
   mPlayer->play();
@@ -2361,17 +2450,20 @@ bool FilterActionExecSound::requiresBody() const
   return false;
 }
 
-bool FilterActionExecSound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+bool FilterActionExecSound::argsFromStringInteractive( const QString &argsStr,
+                                                       const QString &filterName )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if(!QFile(mParameter).exists()){
-      FilterActionMissingSoundUrlDialog *dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
-      if ( dlg->exec() ) {
-        mParameter = dlg->soundUrl();
-        needUpdate = true;
-      }
-      delete dlg;
+  if ( !QFile( mParameter ).exists() ) {
+    FilterActionMissingSoundUrlDialog *dlg =
+      new FilterActionMissingSoundUrlDialog( filterName, argsStr );
+
+    if ( dlg->exec() ) {
+      mParameter = dlg->soundUrl();
+      needUpdate = true;
+    }
+    delete dlg;
   }
   return needUpdate;
 }
@@ -2392,7 +2484,7 @@ bool FilterActionWithUrl::isEmpty() const
   return mParameter.trimmed().isEmpty();
 }
 
-QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 {
   KUrlRequester *requester = new KUrlRequester( parent );
   requester->setUrl( KUrl( mParameter ) );
@@ -2402,12 +2494,11 @@ QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
   return requester;
 }
 
-
 void FilterActionWithUrl::applyParamWidgetValue( QWidget *paramWidget )
 {
   const KUrl url = static_cast<KUrlRequester*>( paramWidget )->url();
 
-  mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
+  mParameter = ( url.isLocalFile() ? url.toLocalFile() : url.path() );
 }
 
 void FilterActionWithUrl::setParamWidgetValue( QWidget *paramWidget ) const
@@ -2435,7 +2526,6 @@ QString FilterActionWithUrl::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-
 //=============================================================================
 // FilterActionAddToAddressBook
 // - add email address from header to address book
@@ -2445,11 +2535,14 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
   public:
     FilterActionAddToAddressBook( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
-    virtual bool isEmpty() const { return false; }
+    virtual bool isEmpty() const
+    {
+      return false;
+    }
 
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void clearParamWidget( QWidget *paramWidget ) const;
@@ -2458,8 +2551,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
     virtual void argsFromString( const QString &argsStr );
 
   private:
-    enum HeaderType
-    {
+    enum HeaderType {
       FromHeader,
       ToHeader,
       CcHeader,
@@ -2472,7 +2564,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
     QString mCategory;
 };
 
-FilterAction* FilterActionAddToAddressBook::newAction()
+FilterAction *FilterActionAddToAddressBook::newAction()
 {
   return new FilterActionAddToAddressBook;
 }
@@ -2495,32 +2587,42 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process( ItemContext &con
 
   QString headerLine;
   switch ( mHeaderType ) {
-    case FromHeader: headerLine = msg->from()->asUnicodeString(); break;
-    case ToHeader: headerLine = msg->to()->asUnicodeString(); break;
-    case CcHeader: headerLine = msg->cc()->asUnicodeString(); break;
-    case BccHeader: headerLine = msg->bcc()->asUnicodeString(); break;
+  case FromHeader:
+    headerLine = msg->from()->asUnicodeString();
+    break;
+  case ToHeader:
+    headerLine = msg->to()->asUnicodeString();
+    break;
+  case CcHeader:
+    headerLine = msg->cc()->asUnicodeString();
+    break;
+  case BccHeader:
+    headerLine = msg->bcc()->asUnicodeString();
+    break;
   }
 
   const QStringList emails = KPIMUtils::splitAddressList( headerLine );
 
-  foreach ( const QString& singleEmail, emails ) {
+  foreach ( const QString &singleEmail, emails ) {
     QString name, email;
     KABC::Addressee::parseEmailAddress( singleEmail, name, email );
 
     KABC::Addressee contact;
     contact.setNameFromString( name );
     contact.insertEmail( email, true );
-    if ( !mCategory.isEmpty() )
+    if ( !mCategory.isEmpty() ) {
       contact.insertCategory( mCategory );
+    }
 
-    KPIM::AddContactJob *job = new KPIM::AddContactJob( contact, Akonadi::Collection( mCollectionId ) );
+    KPIM::AddContactJob *job =
+      new KPIM::AddContactJob( contact, Akonadi::Collection( mCollectionId ) );
     job->start();
   }
 
   return GoOn;
 }
 
-QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) const
 {
   QWidget *widget = new QWidget( parent );
   QGridLayout *layout = new QGridLayout( widget );
@@ -2574,7 +2676,8 @@ void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) c
   Q_ASSERT( categoryEdit );
   categoryEdit->setText( mCategory );
 
-  Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox*>( "AddressBookComboBox" );
+  Akonadi::CollectionComboBox *collectionComboBox =
+    paramWidget->findChild<Akonadi::CollectionComboBox*>( "AddressBookComboBox" );
   Q_ASSERT( collectionComboBox );
   collectionComboBox->setDefaultCollection( Akonadi::Collection( mCollectionId ) );
   collectionComboBox->setProperty( "collectionId", mCollectionId );
@@ -2584,13 +2687,15 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
 {
   const MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
-  mHeaderType = static_cast<HeaderType>( headerCombo->itemData( headerCombo->currentIndex() ).toInt() );
+  mHeaderType =
+    static_cast<HeaderType>( headerCombo->itemData( headerCombo->currentIndex() ).toInt() );
 
   const KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( "CategoryEdit" );
   Q_ASSERT( categoryEdit );
   mCategory = categoryEdit->text();
 
-  const Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox*>( "AddressBookComboBox" );
+  const Akonadi::CollectionComboBox *collectionComboBox =
+    paramWidget->findChild<Akonadi::CollectionComboBox*>( "AddressBookComboBox" );
   Q_ASSERT( collectionComboBox );
   const Akonadi::Collection collection = collectionComboBox->currentCollection();
 
@@ -2602,8 +2707,9 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
              this, SIGNAL(filterActionModified()) );
   } else {
     const QVariant value = collectionComboBox->property( "collectionId" );
-    if ( value.isValid() )
+    if ( value.isValid() ) {
       mCollectionId = value.toLongLong();
+    }
   }
 }
 
@@ -2623,10 +2729,18 @@ QString FilterActionAddToAddressBook::argsAsString() const
   QString result;
 
   switch ( mHeaderType ) {
-    case FromHeader: result = QLatin1String( "From" ); break;
-    case ToHeader: result = QLatin1String( "To" ); break;
-    case CcHeader: result = QLatin1String( "CC" ); break;
-    case BccHeader: result = QLatin1String( "BCC" ); break;
+  case FromHeader:
+    result = QLatin1String( "From" );
+    break;
+  case ToHeader:
+    result = QLatin1String( "To" );
+    break;
+  case CcHeader:
+    result = QLatin1String( "CC" );
+    break;
+  case BccHeader:
+    result = QLatin1String( "BCC" );
+    break;
   }
 
   result += QLatin1Char( '\t' );
@@ -2641,24 +2755,26 @@ void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
 {
   const QStringList parts = argsStr.split( QLatin1Char( '\t' ), QString::KeepEmptyParts );
   const QString firstElement = parts[ 0 ];
-  if ( firstElement == QLatin1String( "From" ) )
+  if ( firstElement == QLatin1String( "From" ) ) {
     mHeaderType = FromHeader;
-  else if ( firstElement == QLatin1String( "To" ) )
+  } else if ( firstElement == QLatin1String( "To" ) ) {
     mHeaderType = ToHeader;
-  else if ( firstElement == QLatin1String( "CC" ) )
+  } else if ( firstElement == QLatin1String( "CC" ) ) {
     mHeaderType = CcHeader;
-  else if ( firstElement == QLatin1String( "BCC" ) )
+  } else if ( firstElement == QLatin1String( "BCC" ) ) {
     mHeaderType = BccHeader;
+  }
 
-  if ( parts.count() >= 2 )
+  if ( parts.count() >= 2 ) {
     mCollectionId = parts[ 1 ].toLongLong();
+  }
 
-  if ( parts.count() < 3 )
+  if ( parts.count() < 3 ) {
     mCategory.clear();
-  else
+  } else {
     mCategory = parts[ 2 ];
+  }
 }
-
 
 //=============================================================================
 // FilterActionDelete - Delete action
@@ -2668,11 +2784,11 @@ class FilterActionDelete : public FilterActionWithNone
   public:
     FilterActionDelete( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
-    QWidget* createParamWidget( QWidget *parent ) const;
+    static FilterAction *newAction();
+    QWidget *createParamWidget( QWidget *parent ) const;
 };
 
-FilterAction* FilterActionDelete::newAction()
+FilterAction *FilterActionDelete::newAction()
 {
   return new FilterActionDelete;
 }
@@ -2688,14 +2804,14 @@ FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) con
   return GoOn;
 }
 
-QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionDelete::createParamWidget( QWidget *parent ) const
 {
     QLabel *lab = new QLabel(parent);
     QPalette pal = lab->palette();
-    KColorScheme scheme(QPalette::Active, KColorScheme::View);
-    pal.setColor(QPalette::WindowText, scheme.foreground(KColorScheme::NegativeText).color());
-    lab->setPalette(pal);
-    lab->setText(i18n("Be careful, mails will be removed."));
+    KColorScheme scheme( QPalette::Active, KColorScheme::View );
+    pal.setColor( QPalette::WindowText, scheme.foreground( KColorScheme::NegativeText ).color() );
+    lab->setPalette( pal );
+    lab->setText( i18n( "Be careful, mails will be removed." ) );
     return lab;
 }
 
@@ -2707,10 +2823,10 @@ class FilterActionBeep : public FilterActionWithNone
   public:
     FilterActionBeep( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
-FilterAction* FilterActionBeep::newAction()
+FilterAction *FilterActionBeep::newAction()
 {
   return new FilterActionBeep;
 }
@@ -2720,7 +2836,7 @@ FilterActionBeep::FilterActionBeep( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/ ) const
+FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/) const
 {
   KNotification::beep();
   return GoOn;
@@ -2758,8 +2874,8 @@ void FilterActionDict::init()
   insert( FilterActionExecSound::newAction );
 #endif
   insert( FilterActionAddToAddressBook::newAction );
-  insert( FilterActionDelete::newAction);
-  insert( FilterActionBeep::newAction);
+  insert( FilterActionDelete::newAction );
+  insert( FilterActionBeep::newAction );
   // Register custom filter actions below this line.
 }
 
@@ -2774,7 +2890,7 @@ FilterActionDict::FilterActionDict()
 void FilterActionDict::insert( FilterActionNewFunc aNewFunc )
 {
   FilterAction *action = aNewFunc();
-  FilterActionDesc* desc = new FilterActionDesc;
+  FilterActionDesc *desc = new FilterActionDesc;
   desc->name = action->name();
   desc->label = action->label();
   desc->create = aNewFunc;
@@ -2790,6 +2906,5 @@ const QList<FilterActionDesc*>& FilterActionDict::list() const
 {
   return mList;
 }
-
 
 #include "filteraction.moc"

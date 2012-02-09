@@ -28,14 +28,7 @@
 #include <KMime/MDN>
 #include <KMime/KMimeMessage>
 
-#include <QList>
-#include <QMultiHash>
-#include <QObject>
-#include <QStringList>
-
 class KTemporaryFile;
-
-class QWidget;
 
 namespace MailCommon {
 

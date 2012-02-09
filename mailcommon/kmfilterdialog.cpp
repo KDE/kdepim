@@ -624,8 +624,7 @@ void KMFilterDialog::slotRunFilters()
     return;
   }
 
-  if(isButtonEnabled(KDialog::Apply))
-  {
+  if( isButtonEnabled( KDialog::Apply ) ) {
       KMessageBox::information(
         this,
         i18n( "Some filters were changed. Save them before to apply filters." ),
