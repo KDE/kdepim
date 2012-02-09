@@ -1260,7 +1260,7 @@ our case, we delete all parts except the question.</para>
 
 <para>With such a short text this is unnecessary, but this just an
 example: if you have to read a message 100 lines long again just to
-find an <citation>I agree</citation> at the end you will
+find an <quote>I agree</quote> at the end you will
 understand.... Aside from this, it makes articles smaller so they use
 less space on the server.</para> 
 
