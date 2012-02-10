@@ -1370,7 +1370,7 @@ void KMFilterListBox::slotBottom()
   int j = 0;
   for ( int i = numberOfItem-1; i>= 0; --i, j++ ) {
     const int posItem = mListWidget->row( listWidgetItem.at( i ) );
-    if ( posItem == i ) {
+    if ( posItem == ( numberOfElement-1 -j ) ) {
       continue;
     }
     item = mListWidget->takeItem( mListWidget->row( listWidgetItem.at( i ) ) );
@@ -1427,7 +1427,7 @@ void KMFilterListBox::slotDown()
   int j = 0;
   for ( int i = numberOfItem-1; i>= 0; --i, j++ ) {
     const int posItem = mListWidget->row( listWidgetItem.at( i ) );
-    if ( posItem == i ) {
+    if ( posItem == ( numberOfElement-1 -j ) ) {
       continue;
     }
     swapNeighbouringFilters( posItem, posItem + 1 );
