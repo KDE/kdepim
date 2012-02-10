@@ -1,12 +1,12 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either version
-  2 of the Licence, or (at your option) any later version.
+  2 of the License, or (at your option) any later version.
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,8 +23,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>
 
-namespace Grantlee
-{
+namespace Grantlee {
 
 /**
  *
@@ -55,7 +54,7 @@ class Theme
     /**
      * Assigns the theme from the @p other theme.
      */
-    Theme& operator=( const Theme &other );
+    Theme &operator=( const Theme &other );
 
     /**
      * Returns whether this theme equals the @p other theme.

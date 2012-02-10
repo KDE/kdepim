@@ -27,10 +27,6 @@
 #include "todoplugin.h"
 #include "korganizer/korganizerinterface.h"
 
-#include <KontactInterface/Core>
-
-#include <kcalutils/incidenceformatter.h>
-
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendaradaptor.h>
 #include <calendarsupport/calendarmodel.h>
@@ -43,6 +39,10 @@
 #include <Akonadi/Collection>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/EntityDisplayAttribute>
+
+#include <KCalUtils/IncidenceFormatter>
+
+#include <KontactInterface/Core>
 
 #include <KConfigGroup>
 #include <KIconLoader>
@@ -192,7 +192,8 @@ void TodoSummaryWidget::updateView()
       int daysTo = -1;
 
       // Optionally, show only my To-dos
-/*      if ( mShowMineOnly && !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, todo.get() ) ) {
+/*      if ( mShowMineOnly &&
+             !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, todo.get() ) ) {
         continue;
       }
 TODO: calhelper is deprecated, remove this?
@@ -281,8 +282,9 @@ TODO: calhelper is deprecated, remove this?
                this, SLOT(popupMenu(QString)) );
 
       // where did the toolTipStr signature that takes a calendar went?
-      QString tipText( IncidenceFormatter::toolTipStr( IncidenceFormatter::resourceString( mCalendarAdaptor, todo ),
-                                                       todo, currDate, true, KSystemTimeZones::local() ) );
+      QString tipText( IncidenceFormatter::toolTipStr(
+                         IncidenceFormatter::resourceString( mCalendarAdaptor, todo ),
+                         todo, currDate, true, KSystemTimeZones::local() ) );
       if ( !tipText.isEmpty() ) {
         urlLabel->setToolTip( tipText );
       }
@@ -308,7 +310,7 @@ TODO: calhelper is deprecated, remove this?
     mLabels.append( noTodos );
   }
 
-  Q_FOREACH( label, mLabels ) { //krazy:exclude=foreach as label is a pointer
+  Q_FOREACH ( label, mLabels ) { //krazy:exclude=foreach as label is a pointer
     label->show();
   }
 }

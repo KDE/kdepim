@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#ifndef DECLRARATIVEEDITOR_H
-#define DECLRARATIVEEDITOR_H
+#ifndef DECLARATIVEEDITORS_H
+#define DECLARATIVEEDITORS_H
 
-#include "incidenceview.h"
 #include "declarativewidgetbase.h"
+#include "incidenceview.h"
 
 #include <Akonadi/CollectionComboBox>
 

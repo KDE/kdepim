@@ -27,20 +27,49 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/control.h>
+#include <akonadi/private/notificationmessage_p.h>
 
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KStandardDirs>
 #include <KStandardGuiItem>
+#include <KTextEdit>
 
+#include <QtCore/QFile>
+#include <QtCore/QPointer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QMenu>
 #include <QtGui/QPushButton>
 #include <QDBusInterface>
 #include <QDBusMessage>
+#include <QDBusReply>
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QResizeEvent>
+
+class TextDialog : public KDialog
+{
+  public:
+    TextDialog( QWidget *parent = 0 )
+      : KDialog( parent )
+    {
+      setButtons( Ok );
+
+      mText = new KTextEdit;
+      mText->setReadOnly(true);
+      setMainWidget( mText );
+      setInitialSize( QSize( 400, 600 ) );
+    }
+
+    void setText( const QString &text )
+    {
+      mText->setPlainText( text );
+    }
+
+  private:
+    KTextEdit *mText;
+};
 
 using namespace Akonadi;
 
@@ -50,13 +79,14 @@ AgentWidget::AgentWidget( QWidget *parent )
   ui.setupUi( this );
 
   connect( ui.instanceWidget, SIGNAL(doubleClicked(Akonadi::AgentInstance)), SLOT(configureAgent()) );
-  connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
-           SLOT(currentChanged(Akonadi::AgentInstance)) );
+  connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)), SLOT(currentChanged()) );
   connect( ui.instanceWidget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)) );
 
-  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()) );
+  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectionChanged()) );
+  connect( ui.instanceWidget->view()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(slotDataChanged(QModelIndex,QModelIndex)) );
 
-  currentChanged( ui.instanceWidget->currentAgentInstance() );
+  currentChanged();
 
   ui.addButton->setGuiItem( KStandardGuiItem::add() );
   connect( ui.addButton, SIGNAL(clicked()), this, SLOT(addAgent()) );
@@ -90,9 +120,9 @@ AgentWidget::AgentWidget( QWidget *parent )
 
 void AgentWidget::addAgent()
 {
-  Akonadi::AgentTypeDialog dlg( this );
-  if ( dlg.exec() ) {
-    const AgentType agentType = dlg.agentType();
+  QPointer<Akonadi::AgentTypeDialog> dlg = new Akonadi::AgentTypeDialog( this );
+  if ( dlg->exec() ) {
+    const AgentType agentType = dlg->agentType();
 
     if ( agentType.isValid() ) {
       AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, this );
@@ -100,18 +130,37 @@ void AgentWidget::addAgent()
       job->start(); // TODO: check result
     }
   }
+  delete dlg;
 }
 
-void AgentWidget::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void AgentWidget::selectionChanged()
 {
-  Q_UNUSED( selected );
-  Q_UNUSED( deselected );
-
   const bool multiSelection = ui.instanceWidget->view()->selectionModel()->selectedRows().size() > 1;
   // Only agent removal, sync and restart is possible when multiple items are selected.
   ui.configButton->setDisabled( multiSelection );
+
+  // Restarting an agent is not possible if it's in Running status... (see AgentProcessInstance::restartWhenIdle)
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  ui.restartButton->setEnabled( agent.isValid() && agent.status() != 1 );
 }
 
+void AgentWidget::slotDataChanged( const QModelIndex& topLeft, const QModelIndex& /*bottomRight*/ )
+{
+  QList<QModelIndex> selectedRows = ui.instanceWidget->view()->selectionModel()->selectedRows();
+  if ( selectedRows.isEmpty() ) {
+    selectedRows.append( ui.instanceWidget->view()->selectionModel()->currentIndex() );
+  }
+  QList<int> rows;
+  Q_FOREACH( const QModelIndex& index, selectedRows ) {
+    rows.append( index.row() );
+  }
+  qSort( rows );
+  // Assume topLeft.row == bottomRight.row
+  if ( topLeft.row() >= rows.first() && topLeft.row() <= rows.last() ) {
+    selectionChanged(); // depends on status
+    currentChanged();
+  }
+}
 
 void AgentWidget::removeAgent()
 {
@@ -122,7 +171,7 @@ void AgentWidget::removeAgent()
                                      i18np( "Do you really want to delete the selected agent instance?",
                                             "Do you really want to delete these %1 agent instances?",
                                             list.size() ),
-                                     i18n( "Multiple Agent Deletion" ),
+                                     list.size() == 1 ? i18n( "Agent Deletion" ) : i18n( "Multiple Agent Deletion" ),
                                      KStandardGuiItem::del(),
                                      KStandardGuiItem::cancel(),
                                      QString(),
@@ -146,9 +195,10 @@ void AgentWidget::configureAgentRemote()
 {
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() ) {
-    AgentConfigDialog dlg( this );
-    dlg.setAgentInstance( agent );
-    dlg.exec();
+    QPointer<AgentConfigDialog> dlg = new AgentConfigDialog( this );
+    dlg->setAgentInstance( agent );
+    dlg->exec();
+    delete dlg;
   }
 }
 
@@ -165,6 +215,137 @@ void AgentWidget::toggleOnline()
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.setIsOnline( !agent.isOnline() );
+}
+
+void AgentWidget::showTaskList()
+{
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( !agent.isValid() )
+    return;
+
+  QDBusInterface iface( QString::fromLatin1(  "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+                        "/Debug", QString() );
+
+  QDBusReply<QString> reply = iface.call("dumpToString");
+  QString txt;
+  if ( reply.isValid() )
+    txt = reply.value();
+  else {
+    txt = reply.error().message();
+  }
+
+  QPointer<TextDialog> dlg = new TextDialog( this );
+  dlg->setCaption( QLatin1String( "Resource Task List" ) );
+  dlg->setText( txt );
+  dlg->exec();
+  delete dlg;
+}
+
+void AgentWidget::showChangeNotifications()
+{
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( !agent.isValid() )
+    return;
+
+  const QString fileName = QString::fromLatin1( "%1/akonadi/agent_config_%2_changes.dat" ).arg( KGlobal::dirs()->localxdgconfdir() ).arg( agent.identifier() );
+  QFile file( fileName );
+  if ( !file.open( QIODevice::ReadOnly ) )
+    return;
+
+  QDataStream stream( &file );
+  stream.setVersion( QDataStream::Qt_4_6 );
+
+  qulonglong size;
+  QByteArray sessionId, resource;
+  int type, operation;
+  qlonglong uid, parentCollection, parentDestCollection;
+  QString remoteId, mimeType;
+  QSet<QByteArray> itemParts;
+
+  QStringList list;
+
+  stream >> size;
+  for ( qulonglong i = 0; i < size; ++i ) {
+    stream >> sessionId;
+    stream >> type;
+    stream >> operation;
+    stream >> uid;
+    stream >> remoteId;
+    stream >> resource;
+    stream >> parentCollection;
+    stream >> parentDestCollection;
+    stream >> mimeType;
+    stream >> itemParts;
+
+    QString typeString;
+    switch ( type ) {
+      case NotificationMessage::Collection:
+        typeString = QLatin1String( "Collection" );
+        break;
+      case NotificationMessage::Item:
+        typeString = QLatin1String( "Item" );
+        break;
+      default:
+        typeString = QLatin1String( "InvalidType" );
+        break;
+    };
+
+    QString operationString;
+    switch ( operation ) {
+      case NotificationMessage::Add:
+        operationString = QLatin1String( "Add" );
+        break;
+      case NotificationMessage::Modify:
+        operationString = QLatin1String( "Modify" );
+        break;
+      case NotificationMessage::Move:
+        operationString = QLatin1String( "Move" );
+        break;
+      case NotificationMessage::Remove:
+        operationString = QLatin1String( "Remove" );
+        break;
+      case NotificationMessage::Link:
+        operationString = QLatin1String( "Link" );
+        break;
+      case NotificationMessage::Unlink:
+        operationString = QLatin1String( "Unlink" );
+        break;
+      case NotificationMessage::Subscribe:
+        operationString = QLatin1String( "Subscribe" );
+        break;
+      case NotificationMessage::Unsubscribe:
+        operationString = QLatin1String( "Unsubscribe" );
+        break;
+      default:
+        operationString = QLatin1String( "InvalidOp" );
+        break;
+    };
+
+    QStringList itemPartsList;
+    foreach( const QByteArray &b, itemParts )
+      itemPartsList.push_back( QString::fromLatin1(b) );
+
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
+                                             .arg( QString::fromLatin1( sessionId ) )
+                                             .arg( typeString )
+                                             .arg( operationString )
+                                             .arg( uid )
+                                             .arg( remoteId )
+                                             .arg( QString::fromLatin1( resource ) )
+                                             .arg( parentCollection )
+                                             .arg( parentDestCollection )
+                                             .arg( mimeType )
+                                             .arg( itemPartsList.join(QLatin1String(", " )) );
+
+    list << entry;
+  }
+
+  QPointer<TextDialog> dlg = new TextDialog( this );
+  dlg->setCaption( QLatin1String( "Change Notification Log" ) );
+  dlg->setText( list.join( QLatin1String( "\n" ) ) );
+
+  dlg->exec();
+  delete dlg;
 }
 
 void AgentWidget::synchronizeTree()
@@ -258,8 +439,9 @@ void AgentWidget::cloneAgent( KJob* job )
   cloneTarget.reconfigure();
 }
 
-void AgentWidget::currentChanged(const Akonadi::AgentInstance& instance)
+void AgentWidget::currentChanged()
 {
+  AgentInstance instance = ui.instanceWidget->currentAgentInstance();
   ui.removeButton->setEnabled( instance.isValid() );
   ui.configButton->setEnabled( instance.isValid() );
   ui.syncButton->setEnabled( instance.isValid() );
@@ -271,12 +453,19 @@ void AgentWidget::currentChanged(const Akonadi::AgentInstance& instance)
     QString onlineStatus = ( instance.isOnline() ? i18n( "Online" ) : i18n( "Offline" ) );
     QString agentStatus;
     switch( instance.status() ) {
-      case AgentInstance::Idle: agentStatus = i18n( "Idle" ); break;
-      case AgentInstance::Running: agentStatus = i18n( "Running (%1%)", instance.progress() ); break;
-      case AgentInstance::Broken: agentStatus = i18n( "Broken" ); break;
+    case AgentInstance::Idle: agentStatus =
+        i18nc( "agent is in an idle state", "Idle" );
+      break;
+    case AgentInstance::Running: agentStatus =
+        i18nc( "agent is running", "Running (%1%)", instance.progress() );
+      break;
+    case AgentInstance::Broken: agentStatus =
+        i18nc( "agent is broken somehow", "Broken" );
+      break;
     }
-    ui.statusLabel->setText( i18nc( "Two statuses, for example \"Online, Running (66%)\" or \"Offline, Broken\"",
-          "%1, %2", onlineStatus, agentStatus ) );
+    ui.statusLabel->setText(
+      i18nc( "Two statuses, for example \"Online, Running (66%)\" or \"Offline, Broken\"",
+             "%1, %2", onlineStatus, agentStatus ) );
     ui.statusMessageLabel->setText( instance.statusMessage() );
     ui.capabilitiesLabel->setText( instance.type().capabilities().join( ", " ) );
     ui.mimeTypeLabel->setText( instance.type().mimeTypes().join( ", " ) );
@@ -299,9 +488,11 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
   menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
+  menu.addAction( KIcon(""), i18n("Show task list"), this, SLOT(showTaskList()) );
+  menu.addAction( KIcon(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
   menu.addMenu( mConfigMenu );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
-  menu.exec( mapToGlobal( pos ) );
+  menu.exec( ui.instanceWidget->mapToGlobal( pos ) );
 }
 
 void AgentWidget::resizeEvent( QResizeEvent *event )

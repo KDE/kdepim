@@ -1,38 +1,39 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Stephen Kelly <stephen@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Stephen Kelly <stephen@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef INCIDENCEATTACHMENTMODEL_H
-#define INCIDENCEATTACHMENTMODEL_H
-
-#include <QtCore/QAbstractListModel>
+#ifndef CALENDARSUPPORT_INCIDENCEATTACHMENTMODEL_H
+#define CALENDARSUPPORT_INCIDENCEATTACHMENTMODEL_H
 
 #include "calendarsupport_export.h"
-#include <akonadi/attribute.h>
-#include <kcalcore/incidence.h>
-#include <akonadi/item.h>
+
+#include <Akonadi/Attribute>
+#include <Akonadi/Item>
+
+#include <KCalCore/Incidence>
+
+#include <QtCore/QAbstractListModel>
 
 class QAbstractItemModel;
 
 namespace Akonadi {
-class Item;
+  class Item;
 }
 
 namespace CalendarSupport
@@ -44,45 +45,49 @@ class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListMode
   Q_OBJECT
   Q_PROPERTY( int attachmentCount READ rowCount NOTIFY rowCountChanged )
 
-public:
-  enum Roles
-  {
-    AttachmentDataRole = Qt::UserRole,
-    MimeTypeRole,
-    AttachmentUrl,
-    AttachmentCountRole,
+  public:
+    enum Roles {
+      AttachmentDataRole = Qt::UserRole,
+      MimeTypeRole,
+      AttachmentUrl,
+      AttachmentCountRole,
 
-    UserRole = Qt::UserRole + 100
-  };
+      UserRole = Qt::UserRole + 100
+    };
 
-  IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex, QObject* parent = 0);
-  IncidenceAttachmentModel( const Akonadi::Item &item, QObject* parent = 0);
-  IncidenceAttachmentModel( QObject* parent = 0);
-  ~IncidenceAttachmentModel();
+    explicit IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex,
+                                       QObject *parent = 0 );
 
-  KCalCore::Incidence::Ptr incidence() const;
+    explicit IncidenceAttachmentModel( const Akonadi::Item &item, QObject *parent = 0 );
 
-  void setItem( const Akonadi::Item &item );
-  void setIndex( const QPersistentModelIndex &modelIndex );
+    IncidenceAttachmentModel( QObject *parent = 0 );
 
-  /** @reimp */
-  int rowCount( const QModelIndex& parent = QModelIndex() ) const;
+    ~IncidenceAttachmentModel();
 
-  /** @reimp */
-  QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    KCalCore::Incidence::Ptr incidence() const;
 
-  /** @reimp */
-  QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    void setItem( const Akonadi::Item &item );
+    void setIndex( const QPersistentModelIndex &modelIndex );
 
-signals:
-  void rowCountChanged();
+    /** @reimp */
+    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
-private:
-  Q_DECLARE_PRIVATE( IncidenceAttachmentModel )
-  IncidenceAttachmentModelPrivate * const d_ptr;
+    /** @reimp */
+    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
 
-  Q_PRIVATE_SLOT( d_func(), void resetModel() )
-  Q_PRIVATE_SLOT( d_func(), void itemFetched(Akonadi::Item::List) )
+    /** @reimp */
+    QVariant headerData( int section, Qt::Orientation orientation,
+                         int role = Qt::DisplayRole ) const;
+
+  signals:
+    void rowCountChanged();
+
+  private:
+    Q_DECLARE_PRIVATE( IncidenceAttachmentModel )
+    IncidenceAttachmentModelPrivate *const d_ptr;
+
+    Q_PRIVATE_SLOT( d_func(), void resetModel() )
+    Q_PRIVATE_SLOT( d_func(), void itemFetched(Akonadi::Item::List) )
 };
 
 }

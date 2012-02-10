@@ -32,6 +32,7 @@ QML.Rectangle {
   property alias count: itemListView.count
   property alias section: itemListView.section
   property variant navigationModel
+  property int itemHeight: height / 7
 
   KPIM.DecoratedListView {
     id: itemListView

@@ -1,7 +1,7 @@
 /*
  *  dbushandler.h  -  handler for D-Bus calls by other applications
  *  Program:  kalarm
- *  Copyright © 2001,2002,2004-2007,2009-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,9 @@
 #ifndef DBUSHANDLER_H
 #define DBUSHANDLER_H
 
-#include "datetime.h"
 #include "kalarmiface.h"
+
+#include <kalarmcal/kaevent.h>
 
 #ifdef USE_AKONADI
 #include <kcalcore/duration.h>
@@ -32,7 +33,8 @@
 
 #include <QWidget>
 class KUrl;
-class KARecurrence;
+
+using namespace KAlarmCal;
 
 
 class DBusHandler : public QObject, public KAlarmIface
@@ -124,7 +126,7 @@ class DBusHandler : public QObject, public KAlarmIface
                                   const KARecurrence&, const KCal::Duration& subRepeatDuration = KCal::Duration(0), int subRepeatCount = 0);
 #endif
         static KDateTime convertDateTime(const QString& dateTime, const KDateTime& = KDateTime());
-        static unsigned  convertStartFlags(const KDateTime& start, unsigned flags);
+        static KAEvent::Flags convertStartFlags(const KDateTime& start, unsigned flags);
         static QColor    convertBgColour(const QString& bgColor);
 #ifdef USE_AKONADI
         static bool      convertRecurrence(KDateTime& start, KARecurrence&, const QString& startDateTime, const QString& icalRecurrence, int subRepeatInterval, KCalCore::Duration& subRepeatDuration);

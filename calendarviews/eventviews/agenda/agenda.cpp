@@ -88,7 +88,7 @@ int MarcusBains::Private::todayColumn() const
 
   int col = 0;
   const KCalCore::DateList dateList = mAgenda->dateList();
-  Q_FOREACH( const QDate &date, dateList ) {
+  foreach ( const QDate &date, dateList ) {
     if ( date == currentDate ) {
       return QApplication::isRightToLeft() ? mAgenda->columns() - 1 - col : col;
     }
@@ -122,21 +122,21 @@ void MarcusBains::updateLocation()
 
 void MarcusBains::updateLocationRecalc( bool recalculate )
 {
-  bool showSeconds = d->mEventView->preferences()->marcusBainsShowSeconds();
-  QColor color = d->mEventView->preferences()->agendaMarcusBainsLineLineColor();
+  const bool showSeconds = d->mEventView->preferences()->marcusBainsShowSeconds();
+  const QColor color = d->mEventView->preferences()->agendaMarcusBainsLineLineColor();
 
-  QTime tim = QTime::currentTime();
-  if ( ( tim.hour() == 0 ) && ( d->mOldTime.hour() == 23 ) ) {
+  const QTime time = QTime::currentTime();
+  if ( ( time.hour() == 0 ) && ( d->mOldTime.hour() == 23 ) ) {
     // We are on a new day
     recalculate = true;
   }
-  int todayCol = recalculate ? d->todayColumn() : d->mOldTodayCol;
+  const int todayCol = recalculate ? d->todayColumn() : d->mOldTodayCol;
 
   // Number of minutes since beginning of the day
-  int minutes = tim.hour() * 60 + tim.minute();
-  int minutesPerCell = 24 * 60 / d->mAgenda->rows();
+  const int minutes = time.hour() * 60 + time.minute();
+  const int minutesPerCell = 24 * 60 / d->mAgenda->rows();
 
-  d->mOldTime = tim;
+  d->mOldTime = time;
   d->mOldTodayCol = todayCol;
 
   int y = int( minutes  *  d->mAgenda->gridSpacingY() / minutesPerCell );
@@ -156,7 +156,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
 
   /* Line */
   // It seems logical to adjust the line width with the label's font weight
-  int fw = d->mEventView->preferences()->agendaMarcusBainsLineFont().weight();
+  const int fw = d->mEventView->preferences()->agendaMarcusBainsLineFont().weight();
   setLineWidth( 1 + abs( fw - QFont::Normal ) / QFont::Light );
   setFrameStyle( QFrame::HLine | QFrame::Plain );
   QPalette pal = palette();
@@ -174,7 +174,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   QPalette pal1 = d->mTimeBox->palette();
   pal1.setColor( QPalette::WindowText, color );
   d->mTimeBox->setPalette( pal1 );
-  d->mTimeBox->setText( KGlobal::locale()->formatTime( tim, showSeconds ) );
+  d->mTimeBox->setText( KGlobal::locale()->formatTime( time, showSeconds ) );
   d->mTimeBox->adjustSize();
   if ( y - d->mTimeBox->height() >= 0 ) {
     y -= d->mTimeBox->height();
@@ -192,7 +192,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   if ( showSeconds || recalculate ) {
     d->mTimer->start( 1000 );
   } else {
-    d->mTimer->start( 1000 * ( 60 - tim.second() ) );
+    d->mTimer->start( 1000 * ( 60 - time.second() ) );
   }
 }
 
@@ -310,7 +310,8 @@ class Agenda::Private
 */
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
                 int columns, int rows, int rowSize, bool isInteractive )
-  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
+  : QWidget( scrollArea ),
+    d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
 {
   setMouseTracking( true );
 
@@ -354,6 +355,8 @@ Akonadi::Item::Id Agenda::lastSelectedItemId() const
 
 void Agenda::init()
 {
+  setAttribute( Qt::WA_OpaquePaintEvent );
+
   d->mGridSpacingX = static_cast<double>( d->mScrollArea->width() ) / d->mColumns;
   d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
@@ -537,16 +540,9 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
   }
 }
 
-bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
+bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
 {
 #ifndef QT_NO_DRAGANDDROP
-  // FIXME: Implement dropping of events!
-  QPoint viewportPos;
-  if ( object != this ) {
-    viewportPos = static_cast<QWidget *>( object )->mapToParent( de->pos() );
-  } else {
-    viewportPos = de->pos();
-  }
   const QMimeData *md = de->mimeData();
 
   switch ( de->type() ) {
@@ -556,7 +552,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
       return false;
     }
 
-    if ( CalendarSupport::mimeDataHasTodo( md ) ) {
+    if ( CalendarSupport::mimeDataHasIncidence( md ) ) {
       de->accept();
     } else {
       de->ignore();
@@ -572,26 +568,19 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
       return false;
     }
 
-    const QList<KUrl> todoUrls = CalendarSupport::todoItemUrls( md );
-    const KCalCore::Todo::List todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
+    const QList<KUrl> incidenceUrls = CalendarSupport::incidenceItemUrls( md );
+    const KCalCore::Incidence::List incidences =
+      CalendarSupport::incidences( md, d->mCalendar->timeSpec() );
 
-    Q_ASSERT( !todoUrls.isEmpty() || !todos.isEmpty() );
+    Q_ASSERT( !incidenceUrls.isEmpty() || !incidences.isEmpty() );
 
     de->setDropAction( Qt::MoveAction );
-    QPoint pos;
-    // FIXME: This is a bad hack, as the viewportToContents seems to be off by
-    // 2000 (which is the left upper corner of the viewport). It works correctly
-    // for agendaItems.
-    if ( object == this ) {
-      pos = viewportPos + QPoint( contentsX(), contentsY() );
+
+    const QPoint gridPosition = contentsToGrid( de->pos() );
+    if ( !incidenceUrls.isEmpty() ) {
+      emit droppedIncidences( incidenceUrls, gridPosition, d->mAllDayMode );
     } else {
-      pos = viewportPos;
-    }
-    QPoint gpos = contentsToGrid( pos );
-    if ( !todoUrls.isEmpty() ) {
-      emit droppedToDos( todoUrls, gpos, d->mAllDayMode );
-    } else {
-      emit droppedToDos( todos, gpos, d->mAllDayMode );
+      emit droppedIncidences( incidences, gridPosition, d->mAllDayMode );
     }
     return true;
   }
@@ -1168,8 +1157,8 @@ void Agenda::endItemAction()
     bool modify = false;
     if ( incidence->recurs() ) {
       atomicOperationId = d->mChanger->startAtomicOperation();
-      const int res = d->mAgendaView->showMoveRecurDialog( CalendarSupport::incidence( d->mActionItem->incidence() ),
-                                                           d->mActionItem->itemDate() );
+      const int res = d->mAgendaView->showMoveRecurDialog(
+        CalendarSupport::incidence( d->mActionItem->incidence() ), d->mActionItem->itemDate() );
       switch ( res ) {
       case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
@@ -1194,8 +1183,11 @@ void Agenda::endItemAction()
           d->mAgendaView->enableAgendaUpdate( false );
 
           d->mChanger->changeIncidence(
-            oldIncSaved, inc,
-            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this, atomicOperationId );
+            oldIncSaved,
+            inc,
+            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY,
+            this,
+            atomicOperationId );
 
           Akonadi::Item item;
           item.setPayload( newInc );
@@ -1239,9 +1231,11 @@ void Agenda::endItemAction()
           addIncidence = true;
 
           d->mAgendaView->enableAgendaUpdate( true );
-          d->mChanger->changeIncidence( oldIncSaved, inc,
-                                        CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE,
-                                        this );
+          d->mChanger->changeIncidence(
+            oldIncSaved,
+            inc,
+            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE,
+            this );
         } else {
           KMessageBox::sorry(
             this,
@@ -1272,8 +1266,9 @@ void Agenda::endItemAction()
       QList<AgendaItem::QPtr> oldconflictItems = placeItem->conflictItems();
       QList<AgendaItem::QPtr>::iterator it;
       for ( it = oldconflictItems.begin(); it != oldconflictItems.end(); ++it ) {
-        if ( *it )
+        if ( *it ) {
           placeSubCells( *it );
+        }
       }
       while ( placeItem ) {
         placeSubCells( placeItem );
@@ -1287,7 +1282,8 @@ void Agenda::endItemAction()
       // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
-      d->mAgendaView->updateEventDates( modif, atomicOperationId, addIncidence, inc.parentCollection().id() );
+      d->mAgendaView->updateEventDates( modif, atomicOperationId, addIncidence,
+                                        inc.parentCollection().id() );
 
       if ( addIncidence ) {
         // delete the one we dragged, there's a new one being added async, due to dissociation.
@@ -1296,7 +1292,8 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      d->mAgendaView->updateEventDates( placeItem, atomicOperationId, addIncidence, inc.parentCollection().id() );
+      d->mAgendaView->updateEventDates( placeItem, atomicOperationId, addIncidence,
+                                        inc.parentCollection().id() );
     }
   }
 
@@ -1312,23 +1309,23 @@ void Agenda::setActionCursor( int actionType, bool acting )
 {
 #ifndef QT_NO_CURSOR
   switch ( actionType ) {
-    case MOVE:
-      if ( acting ) {
-        setCursor( Qt::SizeAllCursor );
-      } else {
-        setCursor( Qt::ArrowCursor );
-      }
-      break;
-    case RESIZETOP:
-    case RESIZEBOTTOM:
-      setCursor( Qt::SizeVerCursor );
-      break;
-    case RESIZELEFT:
-    case RESIZERIGHT:
-      setCursor( Qt::SizeHorCursor );
-      break;
-    default:
+  case MOVE:
+    if ( acting ) {
+      setCursor( Qt::SizeAllCursor );
+    } else {
       setCursor( Qt::ArrowCursor );
+    }
+    break;
+  case RESIZETOP:
+  case RESIZEBOTTOM:
+    setCursor( Qt::SizeVerCursor );
+    break;
+  case RESIZELEFT:
+  case RESIZERIGHT:
+    setCursor( Qt::SizeHorCursor );
+    break;
+  default:
+    setCursor( Qt::ArrowCursor );
   }
 #endif
 }
@@ -1449,8 +1446,9 @@ void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
 
   QList<CellItem*> cells;
   foreach ( CellItem *item, d->mItems ) {
-    if( item )
+    if ( item ) {
       cells.append( item );
+    }
   }
 
   QList<CellItem*> items = CellItem::placeItem( cells, placeItem );
@@ -1460,7 +1458,7 @@ void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
   QList<CellItem*>::iterator it;
   for ( it = items.begin(); it != items.end(); ++it ) {
     if ( *it ) {
-      AgendaItem::QPtr item = static_cast<AgendaItem* >( *it );
+      AgendaItem::QPtr item = static_cast<AgendaItem *>( *it );
       placeAgendaItem( item, newSubCellWidth );
       item->addConflictItem( placeItem );
       placeItem->addConflictItem( item );
@@ -1892,7 +1890,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
 QList<AgendaItem::QPtr> Agenda::agendaItems( const Akonadi::Item &aitem ) const
 {
   QList<AgendaItem::QPtr> agendaItems;
-  Q_FOREACH ( AgendaItem::QPtr const agendaItem, d->mItems ) {
+  foreach ( const AgendaItem::QPtr &agendaItem, d->mItems ) {
     if ( agendaItem &&
          agendaItem->incidence().id() == aitem.id() &&
          agendaItem->incidence().parentCollection().id() == aitem.parentCollection().id() ) {
@@ -1909,7 +1907,7 @@ void Agenda::removeIncidence( const Akonadi::Item &akonadiItem )
   // the current position in the iterator-loop and mess the logic up.
   const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( akonadiItem );
 
-  foreach ( AgendaItem::QPtr  const agendaItem, agendaItemsToRemove ) {
+  foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
     removeAgendaItem( agendaItem );
   }
 }
@@ -2011,16 +2009,15 @@ void Agenda::resizeEvent ( QResizeEvent *ev )
 void Agenda::resizeAllContents()
 {
   double subCellWidth;
-  AgendaItem::QPtr item;
   if ( d->mAllDayMode ) {
-    foreach ( item, d->mItems ) {
+    foreach ( const AgendaItem::QPtr &item, d->mItems ) {
       if ( item ) {
         subCellWidth = calcSubCellWidth( item );
         placeAgendaItem( item, subCellWidth );
       }
     }
   } else {
-    foreach ( item, d->mItems ) {
+    foreach ( const AgendaItem::QPtr &item, d->mItems ) {
       if ( item ) {
         subCellWidth = calcSubCellWidth( item );
         placeAgendaItem( item, subCellWidth );
@@ -2154,7 +2151,7 @@ void Agenda::deselectItem()
 
 void Agenda::selectItem( AgendaItem::QPtr item )
 {
-  if ( (AgendaItem::QPtr )d->mSelectedItem == item ) {
+  if ( ( AgendaItem::QPtr )d->mSelectedItem == item ) {
     return;
   }
   deselectItem();

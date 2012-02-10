@@ -1,13 +1,12 @@
 /*
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -17,138 +16,155 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_KERNEL_H
-#define MAILCOMMON_KERNEL_H
+#ifndef MAILCOMMON_MAILKERNEL_H
+#define MAILCOMMON_MAILKERNEL_H
 
-#include "mailinterfaces.h"
 #include "mailcommon_export.h"
+#include "mailinterfaces.h"
+
+#include <Akonadi/Collection>
+#include <Akonadi/KMime/SpecialMailCollections>
+
+#include <KSharedConfig>
 
 #include <QObject>
 
-#include <ksharedconfig.h>
-
-#include "akonadi/collection.h"
-#include "akonadi/kmime/specialmailcollections.h"
-
-
-
 namespace MailCommon {
 
-
-/** Deals with common mail application related operations. The required interfaces
- *  MUST be registered before using it!
- *  Be careful when using in multi-threaded applications, as Kernel is a QObject
- *  singleton, created in the main thread, thus event handling for Kernel::self()
- *  will happen in the main thread.
+/**
+ * Deals with common mail application related operations. The required interfaces
+ * MUST be registered before using it!
+ * Be careful when using in multi-threaded applications, as Kernel is a QObject
+ * singleton, created in the main thread, thus event handling for Kernel::self()
+ * will happen in the main thread.
  */
 
-class MAILCOMMON_EXPORT Kernel : public QObject {
-  Q_OBJECT  
-public:
+class MAILCOMMON_EXPORT Kernel : public QObject
+{
+  Q_OBJECT
+  public:
 
-  virtual ~Kernel();
-  
-  static Kernel *self();
+    virtual ~Kernel();
 
-  /** Register the interface dealing with main mail functionality. This function
-   * MUST be called with a valid interface pointer, before any Kernel::self()
-   * method is used. The pointer ownership will not be transfered to Kernel. */
-  void registerKernelIf( IKernel* kernelIf ) {
-    mKernelIf = kernelIf;
-  }
+    static Kernel *self();
 
-  IKernel *kernelIf() const {
-    Q_ASSERT( mKernelIf );
-    return mKernelIf;
-  }
+    /**
+     * Registers the interface dealing with main mail functionality. This function
+     * MUST be called with a valid interface pointer, before any Kernel::self()
+     * method is used. The pointer ownership will not be transferred to Kernel.
+     */
+    void registerKernelIf( IKernel *kernelIf )
+    {
+      mKernelIf = kernelIf;
+    }
 
-  /** Register the interface dealing with mail settings. This function
-   * MUST be called with a valid interface pointer, before any Kernel::self()
-   * method is used. The pointer ownership will not be transfered to Kernel. */
-  void registerSettingsIf( ISettings* settingsIf ) {
-    mSettingsIf = settingsIf;
-  }
+    bool kernelIsRegistered() const
+    {
+      return mKernelIf != 0;
+    }
 
-  ISettings *settingsIf() const {
-    Q_ASSERT( mSettingsIf );
-    return mSettingsIf;
-  }
+    IKernel *kernelIf() const
+    {
+      Q_ASSERT( mKernelIf );
+      return mKernelIf;
+    }
 
-  /** Register the interface dealing with mail settings. This function
-   * MUST be called with a valid interface pointer, before any Kernel::self()
-   * method is used. The pointer ownership will not be transfered to Kernel. */
-  void registerFilterIf( IFilter* filterIf ) {
-    mFilterIf = filterIf;
-  }
+    /**
+     * Registers the interface dealing with mail settings. This function
+     * MUST be called with a valid interface pointer, before any Kernel::self()
+     * method is used. The pointer ownership will not be transferred to Kernel.
+     */
+    void registerSettingsIf( ISettings *settingsIf )
+    {
+      mSettingsIf = settingsIf;
+    }
 
-  IFilter *filterIf() const {
-    Q_ASSERT( mFilterIf );
-    return mFilterIf;
-  }
+    ISettings *settingsIf() const
+    {
+      Q_ASSERT( mSettingsIf );
+      return mSettingsIf;
+    }
 
-  /**
-  * Returns the collection associated with the given @p id, or an invalid collection if not found.
-  * The EntityTreeModel of the kernel is searched for the collection. Since the ETM is loaded
-  * async, this method will not find the collection right after startup, when the ETM is not yet
-  * fully loaded.
-  */
-  Akonadi::Collection collectionFromId( const Akonadi::Collection::Id& id ) const;
+    /**
+     * Registers the interface dealing with mail settings. This function
+     * MUST be called with a valid interface pointer, before any Kernel::self()
+     * method is used. The pointer ownership will not be transferred to Kernel.
+     */
+    void registerFilterIf( IFilter *filterIf )
+    {
+      mFilterIf = filterIf;
+    }
 
-  /**
-  * Converts @p idString into a number and returns the collection for it.
-  * @see collectionFromId( qint64 )
-  */
-  Akonadi::Collection collectionFromId( const QString &idString ) const;
+    IFilter *filterIf() const
+    {
+      Q_ASSERT( mFilterIf );
+      return mFilterIf;
+    }
 
-  Akonadi::Collection inboxCollectionFolder();
-  Akonadi::Collection outboxCollectionFolder();
-  Akonadi::Collection sentCollectionFolder();
-  Akonadi::Collection trashCollectionFolder();
-  Akonadi::Collection draftsCollectionFolder();
-  Akonadi::Collection templatesCollectionFolder();
+    /**
+     * Returns the collection associated with the given @p id, or an invalid
+     * collection if not found. The EntityTreeModel of the kernel is searched for
+     * the collection. Since the ETM is loaded async, this method will not find
+     * the collection right after startup, when the ETM is not yet fully loaded.
+     */
+    Akonadi::Collection collectionFromId( const Akonadi::Collection::Id &id ) const;
 
-  bool isSystemFolderCollection( const Akonadi::Collection &col );
+    Akonadi::Collection inboxCollectionFolder();
+    Akonadi::Collection outboxCollectionFolder();
+    Akonadi::Collection sentCollectionFolder();
+    Akonadi::Collection trashCollectionFolder();
+    Akonadi::Collection draftsCollectionFolder();
+    Akonadi::Collection templatesCollectionFolder();
 
-  /** Returns true if this folder is the inbox on the local disk */
-  bool isMainFolderCollection( const Akonadi::Collection &col );
+    bool isSystemFolderCollection( const Akonadi::Collection &col );
 
-  bool folderIsDraftOrOutbox(const Akonadi::Collection &collection);
-  bool folderIsDrafts(const Akonadi::Collection&);
+    /**
+     * Returns true if this folder is the inbox on the local disk
+     */
+    bool isMainFolderCollection( const Akonadi::Collection &col );
 
-  bool folderIsTemplates( const Akonadi::Collection &collection );
-  bool folderIsTrash( const Akonadi::Collection &collection );
+    /**
+     * Returns true if the folder is either the outbox or one of the drafts-folders.
+     */
+    bool folderIsDraftOrOutbox( const Akonadi::Collection &collection );
 
-  Akonadi::Collection trashCollectionFromResource( const Akonadi::Collection & col );
+    bool folderIsDrafts( const Akonadi::Collection & );
 
-  /**
-   * Returns true if the folder is one of the sent-mail folders.
-   */
-  bool folderIsSentMailFolder( const Akonadi::Collection& );
-  
-  bool folderIsInbox( const Akonadi::Collection& );
+    bool folderIsTemplates( const Akonadi::Collection &collection );
 
-  void initFolders();
+    bool folderIsTrash( const Akonadi::Collection &collection );
 
-  void emergencyExit( const QString& reason );
+    Akonadi::Collection trashCollectionFromResource( const Akonadi::Collection & col );
 
-private:  
-  void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
+    /**
+     * Returns true if the folder is one of the sent-mail folders.
+     */
+    bool folderIsSentMailFolder( const Akonadi::Collection & );
 
-private Q_SLOTS:  
-  void createDefaultCollectionDone( KJob * job);
-  void slotDefaultCollectionsChanged();
+    static bool folderIsInbox( const Akonadi::Collection &, bool withoutPop3InboxSetting = false );
 
-Q_SIGNALS:
-  void requestConfigSync();
-  void requestSystemTrayUpdate();
+    void initFolders();
 
-private:
-  Kernel( QObject* parent = 0 );
-  friend class KernelPrivate;
-  
-  IKernel* mKernelIf;
-  IFilter* mFilterIf;
-  ISettings* mSettingsIf;
+    void emergencyExit( const QString &reason );
+
+  private:
+    void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
+
+  private Q_SLOTS:
+    void createDefaultCollectionDone( KJob *job );
+    void slotDefaultCollectionsChanged();
+
+  Q_SIGNALS:
+    void requestConfigSync();
+    void requestSystemTrayUpdate();
+
+  private:
+    Kernel( QObject *parent = 0 );
+    friend class KernelPrivate;
+
+    IKernel *mKernelIf;
+    IFilter *mFilterIf;
+    ISettings *mSettingsIf;
 };
 
 }

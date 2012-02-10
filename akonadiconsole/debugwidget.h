@@ -19,15 +19,16 @@
     USA.
 */
 
-#ifndef DEBUGWIDGET_H
-#define DEBUGWIDGET_H
+#ifndef AKONADICONSOLE_DEBUGWIDGET_H
+#define AKONADICONSOLE_DEBUGWIDGET_H
+
+#include "debuginterface.h"
 
 #include <QtCore/QHash>
 #include <QtGui/QWidget>
-#include "debuginterface.h"
 
-class QTextEdit;
-class QTabWidget;
+class KTabWidget;
+class KTextEdit;
 
 class ConnectionPage;
 
@@ -53,8 +54,8 @@ class DebugWidget : public QWidget
     void saveRichText();
 
   private:
-    QTextEdit *mGeneralView;
-    QTabWidget *mConnectionPages;
+    KTextEdit *mGeneralView;
+    KTabWidget *mConnectionPages;
     QHash<QString, ConnectionPage*> mPageHash;
     org::freedesktop::Akonadi::DebugInterface *mDebugInterface;
 };

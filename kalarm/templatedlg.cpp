@@ -1,7 +1,7 @@
 /*
  *  templatedlg.cpp  -  dialog to create, edit and delete alarm templates
  *  Program:  kalarm
- *  Copyright © 2004-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2004-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include "templatelistfiltermodel.h"
 #endif
 #include "functions.h"
+#include "messagebox.h"
 #include "newalarmaction.h"
 #include "shellprocess.h"
 #include "templatelistview.h"
@@ -36,7 +37,6 @@
 
 #include <klocale.h>
 #include <kguiitem.h>
-#include <kmessagebox.h>
 #include <kdebug.h>
 #include <kstandardaction.h>
 #include <kactioncollection.h>
@@ -136,7 +136,7 @@ TemplateDlg::TemplateDlg(QWidget* parent)
 }
 
 /******************************************************************************
-*  Destructor.
+* Destructor.
 */
 TemplateDlg::~TemplateDlg()
 {
@@ -144,7 +144,7 @@ TemplateDlg::~TemplateDlg()
 }
 
 /******************************************************************************
-*  Create an instance, if none already exists.
+* Create an instance, if none already exists.
 */
 TemplateDlg* TemplateDlg::create(QWidget* parent)
 {
@@ -155,7 +155,7 @@ TemplateDlg* TemplateDlg::create(QWidget* parent)
 }
 
 /******************************************************************************
-*  Called when the New Template button is clicked to create a new template.
+* Called when the New Template button is clicked to create a new template.
 */
 void TemplateDlg::slotNew(EditAlarmDlg::Type type)
 {
@@ -163,8 +163,8 @@ void TemplateDlg::slotNew(EditAlarmDlg::Type type)
 }
 
 /******************************************************************************
-*  Called when the Copy button is clicked to edit a copy of an existing alarm,
-*  to add to the list.
+* Called when the Copy button is clicked to edit a copy of an existing alarm,
+* to add to the list.
 */
 void TemplateDlg::slotCopy()
 {
@@ -180,8 +180,8 @@ void TemplateDlg::slotCopy()
 }
 
 /******************************************************************************
-*  Called when the Modify button is clicked to edit the currently highlighted
-*  alarm in the list.
+* Called when the Modify button is clicked to edit the currently highlighted
+* alarm in the list.
 */
 void TemplateDlg::slotEdit()
 {
@@ -197,21 +197,21 @@ void TemplateDlg::slotEdit()
 }
 
 /******************************************************************************
-*  Called when the Delete button is clicked to delete the currently highlighted
-*  alarms in the list.
+* Called when the Delete button is clicked to delete the currently highlighted
+* alarms in the list.
 */
 void TemplateDlg::slotDelete()
 {
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> events = mListView->selectedEvents();
 #else
     KAEvent::List events = mListView->selectedEvents();
 #endif
     int n = events.count();
-    if (KMessageBox::warningContinueCancel(this, i18ncp("@info", "Do you really want to delete the selected alarm template?",
-                                                      "Do you really want to delete the %1 selected alarm templates?", n),
-                                           i18ncp("@title:window", "Delete Alarm Template", "Delete Alarm Templates", n),
-                                           KGuiItem(i18nc("@action:button", "&Delete"), "edit-delete"))
+    if (KAMessageBox::warningContinueCancel(this, i18ncp("@info", "Do you really want to delete the selected alarm template?",
+                                                         "Do you really want to delete the %1 selected alarm templates?", n),
+                                            i18ncp("@title:window", "Delete Alarm Template", "Delete Alarm Templates", n),
+                                            KGuiItem(i18nc("@action:button", "&Delete"), "edit-delete"))
             != KMessageBox::Continue)
         return;
 
@@ -248,7 +248,7 @@ void TemplateDlg::slotSelectionChanged()
 {
     AlarmCalendar* resources = AlarmCalendar::resources();
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> events = mListView->selectedEvents();
 #else
     KAEvent::List events = mListView->selectedEvents();
 #endif
@@ -274,8 +274,8 @@ void TemplateDlg::slotSelectionChanged()
 }
 
 /******************************************************************************
-*  Called when the dialog's size has changed.
-*  Records the new size in the config file.
+* Called when the dialog's size has changed.
+* Records the new size in the config file.
 */
 void TemplateDlg::resizeEvent(QResizeEvent* re)
 {

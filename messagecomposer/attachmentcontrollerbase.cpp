@@ -54,6 +54,7 @@
 #include <libkleo/ui/keyselectiondialog.h>
 
 #include <messagecore/attachmentcompressjob.h>
+#include <messagecore/attachmentfromfolderjob.h>
 #include <messagecore/attachmentfrommimecontentjob.h>
 #include <messagecore/attachmentfromurljob.h>
 #include <messagecore/attachmentpropertiesdialog.h>
@@ -212,8 +213,8 @@ void AttachmentControllerBase::Private::loadJobResult( KJob *job )
     return;
   }
 
-  Q_ASSERT( dynamic_cast<AttachmentFromUrlJob*>( job ) );
-  AttachmentFromUrlJob *ajob = static_cast<AttachmentFromUrlJob*>( job );
+  Q_ASSERT( dynamic_cast<AttachmentLoadJob*>( job ) );
+  AttachmentLoadJob *ajob = static_cast<AttachmentLoadJob*>( job );
   AttachmentPart::Ptr part = ajob->attachmentPart();
   q->addAttachment( part );
 }
@@ -630,13 +631,28 @@ void AttachmentControllerBase::showAddAttachmentDialog()
       i18n( "Attach File" ), KFileDialog::Other, d->wParent );
 
   dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
-  dialog->setMode( KFile::Files );
+  dialog->setMode( KFile::Files|KFile::Directory );
   if( dialog->exec() == KDialog::Accepted && dialog ) {
     const KUrl::List files = dialog->selectedUrls();
-    foreach( const KUrl &url, files ) {
+    const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
+    if ( files.count() == 1 ) {
+      const KUrl url = files.at( 0 );
       KUrl urlWithEncoding = url;
-      urlWithEncoding.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() ) );
-      addAttachment( urlWithEncoding );
+      urlWithEncoding.setFileEncoding( encoding );
+      if ( KMimeType::findByUrl( urlWithEncoding )->name() == QLatin1String( "inode/directory" ) ) {
+        int rc = KMessageBox::warningYesNo( d->wParent,i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile() ),i18n( "Attach directory" ) );
+        if ( rc == KMessageBox::Yes ) {
+          addAttachment( urlWithEncoding );
+        }
+      } else {
+        addAttachment( urlWithEncoding );
+      }
+    } else {
+      foreach( const KUrl &url, files ) {
+        KUrl urlWithEncoding = url;
+        urlWithEncoding.setFileEncoding( encoding );
+        addAttachment( urlWithEncoding );
+      }
     }
   }
   delete dialog;
@@ -662,7 +678,15 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::addAttachment( const KUrl &url )
 {
-  AttachmentFromUrlJob *ajob = new AttachmentFromUrlJob( url, this );
+  AttachmentFromUrlBaseJob *ajob = 0;
+  if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
+    kDebug() << "Creating attachment from folder";
+     ajob = new AttachmentFromFolderJob ( url, this );
+  }
+  else{
+    ajob = new AttachmentFromUrlJob( url, this );
+    kDebug() << "Creating attachment from file";
+  }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
     ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
   }

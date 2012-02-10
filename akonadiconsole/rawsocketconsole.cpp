@@ -92,7 +92,7 @@ void RawSocketConsole::connectClicked()
     const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
     if ( !QFile::exists( connectionConfigFile ) ) {
       kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
-      << "akonadi/akonadiconnectionrc can not be found in '"
+      << "akonadi/akonadiconnectionrc cannot be found in '"
       << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
       << XdgBaseDirs::systemPathList( "config" );
     }

@@ -1,22 +1,21 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Tobias Koenig <tokoe@kdab.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net,
+    Author Tobias Koenig <tokoe@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #ifndef MAILCOMMON_SENDMDNHANDLER_H
@@ -26,7 +25,7 @@
 
 #include <messageviewer/viewer.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace MailCommon {
 
@@ -35,7 +34,8 @@ class IKernel;
 /**
  * @short A viewer handler to send MDN for viewed messages.
  */
-class MAILCOMMON_EXPORT SendMdnHandler : public QObject, public MessageViewer::AbstractMessageLoadedHandler
+class MAILCOMMON_EXPORT SendMdnHandler : public QObject,
+                                         public MessageViewer::AbstractMessageLoadedHandler
 {
   Q_OBJECT
 
@@ -46,7 +46,7 @@ class MAILCOMMON_EXPORT SendMdnHandler : public QObject, public MessageViewer::A
      * @param kernel The mail kernel object that will be used.
      * @param parent The parent object.
      */
-    SendMdnHandler( IKernel *kernel, QObject *parent = 0 );
+    explicit SendMdnHandler( IKernel *kernel, QObject *parent = 0 );
 
     /**
      * Destroys the send mdn handler.
@@ -61,7 +61,7 @@ class MAILCOMMON_EXPORT SendMdnHandler : public QObject, public MessageViewer::A
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void handleMessages() )
     //@endcond

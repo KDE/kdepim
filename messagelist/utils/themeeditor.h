@@ -59,7 +59,7 @@ class ThemeColumnPropertiesDialog : public KDialog
 {
   Q_OBJECT
 public:
-  ThemeColumnPropertiesDialog( QWidget * parent, Core::Theme::Column * column, const QString &title );
+  explicit ThemeColumnPropertiesDialog( QWidget * parent, Core::Theme::Column * column, const QString &title );
 
 protected:
   Core::Theme::Column * mColumn;
@@ -76,7 +76,7 @@ class ThemePreviewDelegate : public Core::ThemeDelegate
 {
   Q_OBJECT
 public:
-  ThemePreviewDelegate( QAbstractItemView * parent );
+  explicit ThemePreviewDelegate( QAbstractItemView * parent );
   ~ThemePreviewDelegate();
 
 private:
@@ -91,8 +91,9 @@ class ThemePreviewWidget : public QTreeWidget
 {
   Q_OBJECT
 public:
-  ThemePreviewWidget( QWidget * parent );
+  explicit ThemePreviewWidget( QWidget * parent );
   ~ThemePreviewWidget();
+  void setReadOnly( bool readOnly);
 
 private:
   // DnD insert position stuff
@@ -133,6 +134,7 @@ private:
   QPoint mDropIndicatorPoint1;
   QPoint mDropIndicatorPoint2;
   bool mFirstShow;
+  bool mReadOnly;
 public:
   QSize sizeHint() const;
   void setTheme( Core::Theme * theme );
@@ -196,18 +198,9 @@ class ThemeEditor : public OptionSetEditor
 {
   Q_OBJECT
 public:
-  ThemeEditor( QWidget *parent );
+  explicit ThemeEditor( QWidget *parent );
   ~ThemeEditor();
 
-private:
-  Core::Theme * mCurrentTheme; // shallow, may be null!
-
-  // Appearance tab
-  ThemePreviewWidget * mPreviewWidget;
-
-  // Advanced tab
-  KComboBox * mViewHeaderPolicyCombo;
-  KIntSpinBox * mIconSizeSpinBox;
 public:
   /**
    * Sets the option set to be edited.
@@ -229,6 +222,18 @@ private:
 protected slots:
   void slotNameEditTextEdited( const QString &newName );
   void slotIconSizeSpinBoxValueChanged( int val );
+
+private:
+  void setReadOnly( bool readOnly );
+
+  Core::Theme * mCurrentTheme; // shallow, may be null!
+
+  // Appearance tab
+  ThemePreviewWidget * mPreviewWidget;
+
+  // Advanced tab
+  KComboBox * mViewHeaderPolicyCombo;
+  KIntSpinBox * mIconSizeSpinBox;
 };
 
 } // namespace Utils

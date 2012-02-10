@@ -64,6 +64,7 @@
 #include <QtCore/QTimer>
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
+#include <qplatformdefs.h>
 
 #ifdef _WIN32_WCE
 #include <identitypage.h>
@@ -71,7 +72,15 @@
 #include <mailtransport/transportmanagementwidget.h>
 #endif
 
-typedef DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor> DeclarativeEditor;
+class DeclarativeEditor : public DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor>
+{
+   Q_OBJECT
+   Q_PROPERTY( int availableScreenHeight READ availableScreenHeight WRITE setAvailableScreenHeight )
+  public:
+    int availableScreenHeight() { return widget()->property( "availableScreenHeight" ).toInt(); }
+    void setAvailableScreenHeight( int height ) { widget()->setProperty( "availableScreenHeight", height ); }
+};
+
 typedef DeclarativeWidgetBase<MessageComposer::RecipientsEditor, ComposerView, &ComposerView::setRecipientsEditor> DeclarativeRecipientsEditor;
 
 QML_DECLARE_TYPE( DeclarativeEditor )
@@ -285,7 +294,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   toggleAutomaticWordWrap( actionCollection()->action( "options_wordwrap" )->isChecked() );
   toggleUseFixedFont( actionCollection()->action( "options_fixedfont" )->isChecked() );
 
-#ifdef Q_WS_MAEMO_5
+#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
 #endif
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
@@ -680,3 +689,5 @@ void ComposerView::setAutoSaveFileName(const QString &fileName)
 
 
 #include "composerview.moc"
+#include "moc_composerview.cpp"
+

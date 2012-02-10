@@ -35,33 +35,19 @@
 **   your version.
 **
 *******************************************************************************/
-
-
 #include "util.h"
-#include "imapsettings.h"
 #include "kmkernel.h"
 
 #include "messagecore/stringutil.h"
 #include "messagecomposer/messagehelper.h"
 
-
-
 #include <kmime/kmime_message.h>
-#include <kpimutils/email.h>
-#include <kimap/loginjob.h>
-#include <mailtransport/transport.h>
-#include <Akonadi/AgentManager>
-#include <Akonadi/EntityTreeModel>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <kmessagebox.h>
+#include <KLocale>
 
 #include <KStandardDirs>
-#include <kascii.h>
-#include <KCharsets>
-#include <KJob>
-#include <kio/jobuidelegate.h>
 
-
-#include <stdlib.h>
+#include <QProcess>
 
 #include "foldercollection.h"
 
@@ -73,9 +59,8 @@ KMime::Types::Mailbox::List KMail::Util::mailingListsFromMessage( const Akonadi:
   KMime::Types::Mailbox::List addresses;
   // determine the mailing list posting address
   Akonadi::Collection parentCollection = item.parentCollection();
-  QSharedPointer<FolderCollection> fd;
   if ( parentCollection.isValid() ) {
-    fd = FolderCollection::forCollection( parentCollection );
+    const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( parentCollection, false );
     if ( fd->isMailingListEnabled() && !fd->mailingListPostAddress().isEmpty() ) {
       addresses << MessageCore::StringUtil::mailboxFromUnicodeString( fd->mailingListPostAddress() );
     }
@@ -87,9 +72,8 @@ KMime::Types::Mailbox::List KMail::Util::mailingListsFromMessage( const Akonadi:
 Akonadi::Item::Id KMail::Util::putRepliesInSameFolder( const Akonadi::Item& item )
 {
   Akonadi::Collection parentCollection = item.parentCollection();
-  QSharedPointer<FolderCollection> fd;
   if ( parentCollection.isValid() ) {
-    fd = FolderCollection::forCollection( parentCollection );
+    const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( parentCollection, false );
     if( fd->putRepliesInSameFolder() ) {
       return parentCollection.id();
     }
@@ -113,7 +97,7 @@ void KMail::Util::launchAccountWizard( QWidget *w )
 
 void KMail::Util::handleClickedURL( const KUrl &url, uint identity )
 {
-  if ( url.protocol() == "mailto" )
+  if ( url.protocol() == QLatin1String( "mailto" ) )
   {
     KMime::Message::Ptr msg ( new KMime::Message );
     MessageHelper::initHeader( msg, KMKernel::self()->identityManager(), identity );
@@ -135,5 +119,59 @@ void KMail::Util::handleClickedURL( const KUrl &url, uint identity )
   } else {
     kWarning() << "Can't handle URL:" << url;
   }
+}
+
+void KMail::Util::mailingListsHandleURL( const KUrl::List& lst,const QSharedPointer<MailCommon::FolderCollection> &folder )
+{
+  const QString handler = ( folder->mailingList().handler() == MailingList::KMail )
+    ? QLatin1String( "mailto" ) : QLatin1String( "https" );
+
+  KUrl urlToHandle;
+  KUrl::List::ConstIterator end( lst.constEnd() );
+  for ( KUrl::List::ConstIterator itr = lst.constBegin(); itr != end; ++itr ) {
+    if ( handler == (*itr).protocol() ) {
+      urlToHandle = *itr;
+      break;
+    }
+  }
+  if ( urlToHandle.isEmpty() && !lst.empty() ) {
+    urlToHandle = lst.first();
+  }
+
+  if ( !urlToHandle.isEmpty() ) {
+    KMail::Util::handleClickedURL( urlToHandle, folder->identity() );
+  } else {
+    kWarning()<< "Can't handle url";
+  }
+}
+
+void KMail::Util::mailingListPost( const QSharedPointer<MailCommon::FolderCollection> &fd )
+{
+  if ( fd )
+    KMail::Util::mailingListsHandleURL( fd->mailingList().postUrls(),fd );
+}
+
+void KMail::Util::mailingListSubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd )
+{
+  if ( fd )
+    KMail::Util::mailingListsHandleURL( fd->mailingList().subscribeUrls(),fd );
+}
+
+void KMail::Util::mailingListUnsubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd )
+{
+  if ( fd )
+    KMail::Util::mailingListsHandleURL( fd->mailingList().unsubscribeUrls(),fd );
+}
+
+void KMail::Util::mailingListArchives( const QSharedPointer<MailCommon::FolderCollection> &fd )
+{
+  if ( fd )
+    KMail::Util::mailingListsHandleURL( fd->mailingList().archiveUrls(),fd );
+}
+
+void KMail::Util::mailingListHelp( const QSharedPointer<MailCommon::FolderCollection> &fd )
+{
+  if ( fd )
+    KMail::Util::mailingListsHandleURL( fd->mailingList().helpUrls(),fd );
 }
 

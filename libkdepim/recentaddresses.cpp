@@ -36,10 +36,14 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KEditListWidget>
+#include <KLineEdit>
+#include <KPushButton>
 
 #include <QCoreApplication>
 #include <QLayout>
 #include <QVBoxLayout>
+#include <QListWidget>
+#include <QKeyEvent>
 
 using namespace KPIM;
 
@@ -90,7 +94,8 @@ void RecentAddresses::load( KConfig *config )
   KConfigGroup cg( config, "General" );
   m_maxCount = cg.readEntry( "Maximum Recent Addresses", 40 );
   addresses = cg.readEntry( "Recent Addresses", QStringList() );
-  for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
+  QStringList::ConstIterator end( addresses.constEnd() );
+  for ( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
     KABC::Addressee::parseEmailAddress( *it, name, email );
     if ( !email.isEmpty() ) {
       KABC::Addressee addr;
@@ -113,7 +118,8 @@ void RecentAddresses::add( const QString &entry )
 {
   if ( !entry.isEmpty() && m_maxCount > 0 ) {
     const QStringList list = KPIMUtils::splitAddressList( entry );
-    for ( QStringList::const_iterator e_it = list.constBegin(); e_it != list.constEnd(); ++e_it ) {
+    QStringList::const_iterator e_itEnd( list.constEnd() );
+    for ( QStringList::const_iterator e_it = list.constBegin(); e_it != e_itEnd; ++e_it ) {
       KPIMUtils::EmailParseResult errorCode = KPIMUtils::isValidAddress( *e_it );
       if ( errorCode != KPIMUtils::AddressOk ) {
         continue;
@@ -124,8 +130,9 @@ void RecentAddresses::add( const QString &entry )
 
       KABC::Addressee::parseEmailAddress( *e_it, fullName, email );
 
+      KABC::Addressee::List::Iterator end( m_addresseeList.end() );
       for ( KABC::Addressee::List::Iterator it = m_addresseeList.begin();
-          it != m_addresseeList.end(); ++it ) {
+          it != end; ++it ) {
         if ( email == (*it).preferredEmail() ) {
           //already inside, remove it here and add it later at pos==1
           m_addresseeList.erase( it );
@@ -162,8 +169,9 @@ void RecentAddresses::clear()
 QStringList RecentAddresses::addresses() const
 {
   QStringList addresses;
+  KABC::Addressee::List::ConstIterator end = m_addresseeList.constEnd();
   for ( KABC::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
-        it != m_addresseeList.constEnd(); ++it ) {
+        it != end; ++it ) {
     addresses.append( (*it).fullEmail() );
   }
   return addresses;
@@ -178,22 +186,150 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
   setModal( true );
   QWidget *page = new QWidget( this );
   setMainWidget( page );
+
   QVBoxLayout *layout = new QVBoxLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setMargin( 0 );
 
-  mEditor = new KEditListWidget( page );
-  mEditor->setButtons( KEditListWidget::Add | KEditListWidget::Remove );
-  layout->addWidget( mEditor );
+  mLineEdit = new KLineEdit(this);
+  layout->addWidget(mLineEdit);
+
+  mLineEdit->setTrapReturnKey(true);
+  mLineEdit->installEventFilter(this);
+
+  connect(mLineEdit,SIGNAL(textChanged(const QString&)),SLOT(slotTypedSomething(const QString&)));
+  connect(mLineEdit,SIGNAL(returnPressed()),SLOT(slotAddItem()));
+
+
+  QHBoxLayout* hboxLayout = new QHBoxLayout;
+
+  QVBoxLayout* btnsLayout = new QVBoxLayout;
+  btnsLayout->addStretch();
+  mNewButton = new KPushButton(KIcon("list-add"), i18n("&Add"), this);
+  connect(mNewButton, SIGNAL(clicked()), SLOT(slotAddItem()));
+  btnsLayout->insertWidget(0 ,mNewButton);
+
+  mRemoveButton = new KPushButton(KIcon("list-remove"), i18n("&Remove"), this);
+  mRemoveButton->setEnabled(false);
+  connect(mRemoveButton, SIGNAL(clicked()), SLOT(slotRemoveItem()));
+  btnsLayout->insertWidget(1, mRemoveButton);
+
+
+  mListView = new QListWidget(this);
+  mListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+  hboxLayout->addWidget(mListView);
+  hboxLayout->addLayout(btnsLayout);
+  layout->addLayout(hboxLayout);
+  connect(mListView, SIGNAL(itemSelectionChanged ()),
+          SLOT(slotSelectionChanged()));
+  // maybe supplied lineedit has some text already
+  slotTypedSomething( mLineEdit->text() );
+
+}
+
+void RecentAddressDialog::slotTypedSomething(const QString& text)
+{
+    if(mListView->currentItem()) {
+        if(mListView->currentItem()->text() != mLineEdit->text() && !mLineEdit->text().isEmpty())
+        {
+            // IMHO changeItem() shouldn't do anything with the value
+            // of currentItem() ... like changing it or emitting signals ...
+            // but TT disagree with me on this one (it's been that way since ages ... grrr)
+            bool block = mListView->signalsBlocked();
+            mListView->blockSignals( true );
+            QListWidgetItem *currentIndex = mListView->currentItem();
+            if ( currentIndex ){
+                currentIndex->setText(text);
+            }
+            mListView->blockSignals( block );
+        }
+    }
+}
+
+void RecentAddressDialog::slotAddItem()
+{
+    QStringList lst = addresses();
+    mListView->blockSignals(true);
+    QStringList newList;
+    newList << QString()<<lst;
+    setAddresses(newList);
+    mListView->blockSignals(false);
+    mListView->setCurrentRow(0);
+    mLineEdit->setFocus();
+    updateButtonState();
+}
+
+void RecentAddressDialog::slotRemoveItem()
+{
+    QList<QListWidgetItem *> selectedItems = mListView->selectedItems();
+    if(selectedItems.isEmpty())
+        return;
+    Q_FOREACH(QListWidgetItem *item, selectedItems) {
+        delete mListView->takeItem(mListView->row(item));
+    }
+    updateButtonState();
+}
+
+void RecentAddressDialog::updateButtonState()
+{
+    QList<QListWidgetItem *> selectedItems = mListView->selectedItems();
+    const int numberOfElementSelected(selectedItems.count());
+    mRemoveButton->setEnabled(numberOfElementSelected);
+    mNewButton->setEnabled(numberOfElementSelected <= 1);
+    mLineEdit->setEnabled(numberOfElementSelected <= 1);
+
+    if(numberOfElementSelected == 1)
+    {
+        const QString text = mListView->currentItem()->text();
+        if(text != mLineEdit->text())
+            mLineEdit->setText(text);
+    }
+    else
+    {
+        mLineEdit->clear();
+    }
+}
+
+void RecentAddressDialog::slotSelectionChanged()
+{
+    updateButtonState();
 }
 
 void RecentAddressDialog::setAddresses( const QStringList &addrs )
 {
-  mEditor->clear();
-  mEditor->insertStringList( addrs );
+  mListView->clear();
+  mListView->addItems( addrs );
 }
 
 QStringList RecentAddressDialog::addresses() const
 {
-  return mEditor->items();
+  QStringList lst;
+  const int numberOfItem(mListView->count());
+  for(int i = 0; i < numberOfItem; ++i){
+      lst<<mListView->item(i)->text();
+  }
+  return lst;
 }
+
+bool RecentAddressDialog::eventFilter( QObject* o, QEvent* e )
+{
+    if (o == mLineEdit && e->type() == QEvent::KeyPress ) {
+        QKeyEvent* keyEvent = (QKeyEvent*)e;
+        if (keyEvent->key() == Qt::Key_Down ||
+            keyEvent->key() == Qt::Key_Up) {
+            return ((QObject*)mListView)->event(e);
+        }
+    }
+
+    return false;
+}
+
+void RecentAddressDialog::addAddresses(KConfig *config)
+{
+    const int numberOfItem(mListView->count());
+    for(int i = 0; i < numberOfItem; ++i){
+        KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
+    }
+}
+#include "recentaddresses.moc"

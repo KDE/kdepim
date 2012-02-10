@@ -26,9 +26,9 @@
 #ifndef SDSUMMARYWIDGET_H
 #define SDSUMMARYWIDGET_H
 
-#include <KontactInterface/Summary>
+#include <KCalCore/Event>
 
-#include <kcalcore/event.h>
+#include <KontactInterface/Summary>
 
 namespace KHolidays {
   class HolidayRegion;
@@ -72,7 +72,7 @@ class SDSummaryWidget : public KontactInterface::Summary
     void popupMenu( const QString &url );
     void mailContact( const QString &url );
     void viewContact( const QString &url );
-    void slotBirthdayJobFinished( KJob* job );
+    void slotBirthdayJobFinished( KJob *job );
 
   private:
     int span( const KCalCore::Event::Ptr &event ) const;

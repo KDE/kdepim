@@ -22,10 +22,12 @@
 #include "kamail.h"
 
 #include "functions.h"
-#include "identities.h"
 #include "kalarmapp.h"
 #include "mainwindow.h"
+#include "messagebox.h"
 #include "preferences.h"
+
+#include <kalarmcal/identities.h>
 
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
@@ -43,7 +45,6 @@
 #include <kmime/kmime_message.h>
 
 #include <kstandarddirs.h>
-#include <kmessagebox.h>
 #include <klocale.h>
 #include <kaboutdata.h>
 #include <kfileitem.h>
@@ -213,7 +214,7 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
     mailjob->setMessage(message);
     mailjob->transportAttribute().setTransportId(transport->id());
     mailjob->addressAttribute().setFrom(jobdata.from);
-    mailjob->addressAttribute().setTo(static_cast<QStringList>(jobdata.event.emailAddresses()));
+    mailjob->addressAttribute().setTo(jobdata.event.emailAddresses());
     if (!jobdata.bcc.isEmpty())
         mailjob->addressAttribute().setBcc(QStringList(KPIMUtils::extractEmailAddress(jobdata.bcc)));
     MailTransport::SentBehaviourAttribute::SentBehaviour sentAction =
@@ -236,14 +237,12 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
 */
 void KAMail::slotEmailSent(KJob* job)
 {
-    bool fail = false;
     bool copyerr = false;
     QStringList errmsgs;
     if (job->error())
     {
         kError() << "Failed:" << job->errorString();
         errmsgs = errors(job->errorString(), SEND_ERROR);
-        fail = true;
     }
     JobData jobdata;
     if (mJobs.isEmpty()  ||  mJobData.isEmpty()  ||  job != mJobs.head())
@@ -287,7 +286,11 @@ void initHeaders(KMime::Message& message, KAMail::JobData& data)
     message.setHeader(from);
 
     KMime::Headers::To* to = new KMime::Headers::To;
-    EmailAddressList toList = data.event.emailAddresses();
+#ifdef USE_AKONADI
+    KCalCore::Person::List toList = data.event.emailAddressees();
+#else
+    QList<KCal::Person> toList = data.event.emailAddressees();
+#endif
     for (int i = 0, count = toList.count();  i < count;  ++i)
 #ifdef USE_AKONADI
         to->addAddress(toList[i]->email().toLatin1(), toList[i]->name());
@@ -396,7 +399,6 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
 
             QByteArray coded = KCodecs::base64Encode(contents, true);
             KMime::Content* content = new KMime::Content();
-            content = new KMime::Content();
             content->setBody(coded + "\n\n");
 
             // Set the content type
@@ -430,7 +432,11 @@ void KAMail::notifyQueued(const KAEvent& event)
     KMime::Types::Address addr;
     QString localhost = QLatin1String("localhost");
     QString hostname  = QHostInfo::localHostName();
-    const EmailAddressList& addresses = event.emailAddresses();
+#ifdef USE_AKONADI
+    KCalCore::Person::List addresses = event.emailAddressees();
+#else
+    QList<KCal::Person> addresses = event.emailAddressees();
+#endif
     for (int i = 0, end = addresses.count();  i < end;  ++i)
     {
 #ifdef USE_AKONADI
@@ -445,7 +451,7 @@ void KAMail::notifyQueued(const KAEvent& event)
             QString domain = addr.mailboxList.first().addrSpec().domain;
             if (!domain.isEmpty()  &&  domain != localhost  &&  domain != hostname)
             {
-                KMessageBox::information(0, i18nc("@info", "An email has been queued to be sent"), QString(), Preferences::EMAIL_QUEUED_NOTIFY);
+                KAMessageBox::information(MainWindow::mainMainWindow(), i18nc("@info", "An email has been queued to be sent"), QString(), Preferences::EMAIL_QUEUED_NOTIFY);
                 return;
             }
         }
@@ -453,7 +459,7 @@ void KAMail::notifyQueued(const KAEvent& event)
 }
 
 /******************************************************************************
-*  Fetch the user's email address configured in the KDE System Settings.
+* Fetch the user's email address configured in the KDE System Settings.
 */
 QString KAMail::controlCentreAddress()
 {
@@ -466,7 +472,11 @@ QString KAMail::controlCentreAddress()
 * entered by the user.
 * Reply = the invalid item if error, else empty string.
 */
-QString KAMail::convertAddresses(const QString& items, EmailAddressList& list)
+#ifdef USE_AKONADI
+QString KAMail::convertAddresses(const QString& items, KCalCore::Person::List& list)
+#else
+QString KAMail::convertAddresses(const QString& items, QList<KCal::Person>& list)
+#endif
 {
     list.clear();
     QString invalidItem;
@@ -486,10 +496,10 @@ QString KAMail::convertAddresses(const QString& items, EmailAddressList& list)
 }
 
 /******************************************************************************
-*  Check the validity of an email address.
-*  Because internal email addresses don't have to abide by the usual internet
-*  email address rules, only some basic checks are made.
-*  Reply = 1 if alright, 0 if empty, -1 if error.
+* Check the validity of an email address.
+* Because internal email addresses don't have to abide by the usual internet
+* email address rules, only some basic checks are made.
+* Reply = 1 if alright, 0 if empty, -1 if error.
 */
 int KAMail::checkAddress(QString& address)
 {
@@ -536,9 +546,9 @@ int KAMail::checkAddress(QString& address)
 }
 
 /******************************************************************************
-*  Convert a comma or semicolon delimited list of attachments into a
-*  QStringList. The items are checked for validity.
-*  Reply = the invalid item if error, else empty string.
+* Convert a comma or semicolon delimited list of attachments into a
+* QStringList. The items are checked for validity.
+* Reply = the invalid item if error, else empty string.
 */
 QString KAMail::convertAttachments(const QString& items, QStringList& list)
 {
@@ -570,11 +580,11 @@ QString KAMail::convertAttachments(const QString& items, QStringList& list)
 }
 
 /******************************************************************************
-*  Check for the existence of the attachment file.
-*  If non-null, '*url' receives the KUrl of the attachment.
-*  Reply = 1 if attachment exists
-*        = 0 if null name
-*        = -1 if doesn't exist.
+* Check for the existence of the attachment file.
+* If non-null, '*url' receives the KUrl of the attachment.
+* Reply = 1 if attachment exists
+*       = 0 if null name
+*       = -1 if doesn't exist.
 */
 int KAMail::checkAttachment(QString& attachment, KUrl* url)
 {
@@ -594,7 +604,7 @@ int KAMail::checkAttachment(QString& attachment, KUrl* url)
 }
 
 /******************************************************************************
-*  Check for the existence of the attachment file.
+* Check for the existence of the attachment file.
 */
 bool KAMail::checkAttachment(const KUrl& url)
 {
@@ -627,7 +637,7 @@ QStringList KAMail::errors(const QString& err, ErrType prefix)
 
 #ifdef KMAIL_SUPPORTED
 /******************************************************************************
-*  Get the body of an email from KMail, given its serial number.
+* Get the body of an email from KMail, given its serial number.
 */
 QString KAMail::getMailBody(quint32 serialNumber)
 {
@@ -674,7 +684,7 @@ QByteArray autoDetectCharset(const QString& text)
         {
             const QTextCodec *codec = codecForName(encoding);
             if (!codec)
-                kDebug() <<"Auto-Charset: Something is wrong and I can not get a codec. [" << encoding <<"]";
+                kDebug() <<"Auto-Charset: Something is wrong and I cannot get a codec. [" << encoding <<"]";
             else
             {
                  if (codec->canEncode(text))
@@ -829,8 +839,8 @@ using namespace KMime::Types;
 using namespace KMime::HeaderParsing;
 
 /******************************************************************************
-*  New function.
-*  Allow a local user name to be specified as an email address.
+* New function.
+* Allow a local user name to be specified as an email address.
 */
 bool parseUserName( const char* & scursor, const char * const send,
                     QString & result, bool isCRLF ) {
@@ -863,9 +873,9 @@ bool parseUserName( const char* & scursor, const char * const send,
 }
 
 /******************************************************************************
-*  Modified function.
-*  Allow a local user name to be specified as an email address, and reinstate
-*  the original scursor on error return.
+* Modified function.
+* Allow a local user name to be specified as an email address, and reinstate
+* the original scursor on error return.
 */
 bool parseAddress( const char* & scursor, const char * const send,
                    Address & result, bool isCRLF ) {

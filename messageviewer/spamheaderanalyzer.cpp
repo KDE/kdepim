@@ -51,8 +51,8 @@ using namespace MessageViewer;
 SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
   SpamScores scores;
   const SpamAgents agents = AntiSpamConfig::instance()->uniqueAgents();
-
-  for ( SpamAgents::const_iterator it = agents.begin(); it != agents.end(); ++it ) {
+  SpamAgents::const_iterator end( agents.end() );
+  for ( SpamAgents::const_iterator it = agents.begin(); it != end; ++it ) {
     float score = -2.0;
 
     SpamError spamError = noError;
@@ -66,7 +66,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
     if ( !header )
       continue;
 
-    QString mField = header->asUnicodeString();
+    const QString mField = header->asUnicodeString();
 
     if ( mField.isEmpty() )
       continue;

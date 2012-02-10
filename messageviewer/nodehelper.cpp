@@ -161,8 +161,9 @@ void NodeHelper::clear()
   std::for_each( mBodyPartMementoMap.begin(), mBodyPartMementoMap.end(),
                  &clearBodyPartMemento );
   mBodyPartMementoMap.clear();
+  QMap<KMime::Content*, QList<KMime::Content*> >::ConstIterator end( mExtraContents.constEnd() );
 
-  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+  for ( QMap<KMime::Content*, QList<KMime::Content*> >::ConstIterator it = mExtraContents.constBegin(); it != end; ++it) {
     Q_FOREACH( KMime::Content* c, it.value() ) {
       KMime::Content * p = c->parent();
       if ( p )
@@ -217,12 +218,11 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     return existingFileName.toLocalFile();
   }
 
-  QString fileName = NodeHelper::fileName( node );
-
   QString fname = createTempDir( node->index().toString() );
   if ( fname.isEmpty() )
     return QString();
 
+  QString fileName = NodeHelper::fileName( node );
   // strip off a leading path
   int slashPos = fileName.lastIndexOf( '/' );
   if( -1 != slashPos )
@@ -256,7 +256,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
   if (!node)
     return KUrl();
 
-  QString index = node->index().toString();
+  const QString index = node->index().toString();
 
   foreach ( const QString &path, mTempFiles ) {
     int right = path.lastIndexOf( '/' );
@@ -264,7 +264,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
     if ( left != -1 )
         left += 7;
 
-    QString storedIndex = path.mid( left, right - left );
+    QStringRef storedIndex( &path, left, right - left );
     if ( left != -1 && storedIndex == index )
       return KUrl( path );
   }
@@ -297,14 +297,16 @@ QString NodeHelper::createTempDir( const QString &param )
 
 void NodeHelper::removeTempFiles()
 {
-  for (QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end();
+  QStringList::ConstIterator end = mTempFiles.constEnd();
+  for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end;
     ++it)
   {
     QFile::remove(*it);
   }
   mTempFiles.clear();
-  for (QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end();
-    it++)
+  end = mTempDirs.constEnd();
+  for (QStringList::ConstIterator it = mTempDirs.constBegin(); it != end;
+    ++it)
   {
     QDir(*it).rmdir(*it);
   }
@@ -661,16 +663,18 @@ QString NodeHelper::persistentIndex( const KMime::Content * node ) const
   QString indexStr = node->index().toString();
   const KMime::Content * const topLevel = node->topLevel();
   //if the node is an extra node, prepend the index of the extra node to the url
-  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents )
-    for ( int i = 0; i < extraNodes.size(); ++i )
+  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents ) {
+    const int extraNodesSize( extraNodes.size() );
+    for ( int i = 0; i < extraNodesSize; ++i )
       if ( topLevel == extraNodes[i] )
-        return indexStr.prepend( QString("%1:").arg(i) );
+        return indexStr.prepend( QString::fromLatin1("%1:").arg(i) );
+  }
   return indexStr;
 }
 
 QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
 {
-  return QString( "attachment:%1?place=%2" ).arg( persistentIndex( node ), place );
+  return QString::fromLatin1( "attachment:%1?place=%2" ).arg( persistentIndex( node ), place );
 }
 
 QString NodeHelper::fixEncoding( const QString &encoding )
@@ -698,8 +702,9 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
   QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
   QStringList encodings;
   QMap<QString,bool> mimeNames;
-  for (QStringList::Iterator it = encodingNames.begin();
-    it != encodingNames.end(); ++it)
+  QStringList::ConstIterator constEnd( encodingNames.constEnd() );
+  for (QStringList::ConstIterator it = encodingNames.constBegin();
+    it != constEnd; ++it)
   {
     QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
     QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
@@ -727,7 +732,8 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
     }
 
     QStringList::ConstIterator it = charsets.constBegin();
-    for (; it != charsets.constEnd(); ++it)
+    QStringList::ConstIterator end = charsets.constEnd();
+    for (; it != end; ++it)
     {
        QByteArray encoding = (*it).toLatin1();
        if (encoding == "locale")
@@ -747,7 +753,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
        {
          const QTextCodec *codec = codecForName(encoding);
          if (!codec) {
-           kDebug() << "Auto-Charset: Something is wrong and I can not get a codec:" << encoding;
+           kDebug() << "Auto-Charset: Something is wrong and I cannot get a codec:" << encoding;
          } else {
            if (codec->canEncode(text))
               return encoding;
@@ -761,7 +767,7 @@ QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
 {
   bool all_ok =true;
   QString result = _str;
-  int len = result.length();
+  const int len = result.length();
   for (int i = 0; i < len; i++)
     if (result.at(i).unicode() >= 128) {
       result[i] = '?';

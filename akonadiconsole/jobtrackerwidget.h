@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef JOBTRACKERWIDGET_H
-#define JOBTRACKERWIDGET_H
+#ifndef AKONADICONSOLE_JOBTRACKERWIDGET_H
+#define AKONADICONSOLE_JOBTRACKERWIDGET_H
 
 #include <QtGui/QWidget>
 
@@ -29,7 +29,7 @@ class JobTrackerWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit JobTrackerWidget( const char *name, QWidget *parent = 0 );
+    explicit JobTrackerWidget( const char *name, QWidget *parent, const QString& checkboxText );
     ~JobTrackerWidget();
   private slots:
     void contextMenu(const QPoint& pos);

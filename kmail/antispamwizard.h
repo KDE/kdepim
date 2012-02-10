@@ -32,14 +32,14 @@
 #include <KAssistantDialog>
 #include <KSharedConfig>
 
-#include <QCheckBox>
 #include <QList>
-#include <QListWidget>
-#include <QBoxLayout>
 #include <akonadi/collection.h>
 
 class QLabel;
 class QTextEdit;
+class QCheckBox;
+class QBoxLayout;
+class QListWidget;
 
 namespace MailCommon {
   class FolderTreeWidget;
@@ -126,7 +126,7 @@ namespace MailCommon {
     protected:
       /**
         Instances of this class store the settings for one tool as read from
-        the config file. Visible name and What's this text can not get
+        the config file. Visible name and What's this text cannot get
         translated!
       */
       class SpamToolConfig
@@ -257,9 +257,9 @@ namespace MailCommon {
 
     private:
       /* Check for the availability of an executible along the PATH */
-      int checkForProgram( const QString &executable );
+      int checkForProgram( const QString &executable ) const;
       /* generic checks if any option in a page is checked */
-      bool anyVirusOptionChecked();
+      bool anyVirusOptionChecked() const;
       /* convenience method calling the appropriate filter manager method */
       const QString uniqueNameFor( const QString & name );
       /* convenience method to sort out new and existing filters */
@@ -299,7 +299,6 @@ namespace MailCommon {
 
     protected:
       QBoxLayout *mLayout;
-
     private:
       QLabel *mBannerLabel;
   };
@@ -316,7 +315,7 @@ namespace MailCommon {
 
       void setScanProgressText( const QString &toolName );
       void addAvailableTool( const QString &visibleName );
-      bool isProgramSelected( const QString &visibleName );
+      bool isProgramSelected( const QString &visibleName ) const;
 
     private slots:
       void processSelectionChange();

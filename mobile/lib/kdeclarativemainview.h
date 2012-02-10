@@ -32,6 +32,7 @@ class QAbstractItemModel;
 class QAbstractProxyModel;
 
 namespace Akonadi {
+class AgentActionManager;
 class ChangeRecorder;
 class EntityTreeModel;
 class Item;
@@ -239,7 +240,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      *
      * @param selectionModel The selection model for the agent instances.
      */
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel ) = 0;
 
     /**
      * Returns the a proxy model that will be used on top of the entity tree model.
@@ -326,10 +327,15 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
     void setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel );
 
+    /**
+     * Returns a newly created AgentActionMananger with standard setup.
+     * Use inside setupAgentActionManager();
+     */
+    Akonadi::AgentActionManager *createAgentActionManager( QItemSelectionModel* agentSelectionModel );
+
   private:
     void doDelayedInitInternal();
     KDeclarativeMainViewPrivate * const d;
-    Q_DISABLE_COPY( KDeclarativeMainView )
 
     Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
     Q_PRIVATE_SLOT( d, void bulkActionFilterLineEditChanged( const QString& ) )

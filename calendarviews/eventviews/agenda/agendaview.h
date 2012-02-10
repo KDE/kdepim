@@ -152,10 +152,14 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
                            Akonadi::Collection::Id collectionId );
 
     QVector<bool> busyDayMask() const;
+
   public slots:
     virtual void updateView();
     virtual void updateConfig();
-    virtual void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
+
+    virtual void showDates( const QDate &start, const QDate &end,
+                            const QDate &preferredMonth = QDate() );
+
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();
@@ -168,8 +172,9 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */
-    void slotTodosDropped( const KCalCore::Todo::List &, const QPoint &, bool );
-    void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
+    void slotIncidencesDropped( const KCalCore::Incidence::List &incidences,
+                                const QPoint &, bool );
+    void slotIncidencesDropped( const QList<KUrl>& incidences, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
     void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );

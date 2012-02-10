@@ -35,12 +35,7 @@
 #include <akonadi/collectionquotaattribute.h>
 #include <akonadi/collection.h>
 
-#include <qstackedwidget.h>
-
 #include <qlayout.h>
-#include <qlabel.h>
-#include <qprogressbar.h>
-#include <qwhatsthis.h>
 #include <KLocale>
 #include <assert.h>
 
@@ -84,3 +79,5 @@ void CollectionQuotaPage::save( Akonadi::Collection & )
   // nothing to do, we are read-only
 }
 
+
+#include "collectionquotapage.moc"

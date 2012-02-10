@@ -1,7 +1,7 @@
 /*
  *  editdlgtypes.cpp  -  dialogs to create or edit alarm or alarm template types
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,12 +29,13 @@
 #include "emailidcombo.h"
 #include "fontcolourbutton.h"
 #include "functions.h"
-#include "identities.h"
 #include "kalarmapp.h"
 #include "kamail.h"
 #include "latecancel.h"
 #include "lineedit.h"
 #include "mainwindow.h"
+#include "messagebox.h"
+#include "messagewin.h"
 #include "pickfileradio.h"
 #include "preferences.h"
 #include "radiobutton.h"
@@ -45,6 +46,8 @@
 #include "specialactions.h"
 #include "templatepickdlg.h"
 #include "timespinbox.h"
+
+#include <kalarmcal/identities.h>
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
 #ifdef USE_AKONADI
@@ -61,7 +64,6 @@ using namespace KCal;
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <kfileitem.h>
-#include <kmessagebox.h>
 #include <khbox.h>
 #include <kdebug.h>
 
@@ -73,6 +75,9 @@ using namespace KCal;
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QDragEnterEvent>
+#include <QStandardItemModel>
+
+using namespace KAlarmCal;
 
 enum { tTEXT, tFILE, tCOMMAND };  // order of mTypeCombo items
 
@@ -160,6 +165,18 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     mTypeCombo->addItem(commandItem);  // index = tCOMMAND
     mTypeCombo->setFixedSize(mTypeCombo->sizeHint());
     mTypeCombo->setCurrentIndex(-1);    // ensure slotAlarmTypeChanged() is called when index is set
+    if (!ShellProcess::authorised())
+    {
+        // User not authorised to issue shell commands - disable Command Output option
+        QStandardItemModel* model = qobject_cast<QStandardItemModel*>(mTypeCombo->model());
+        if (model)
+        {
+            QModelIndex index = model->index(2, mTypeCombo->modelColumn(), mTypeCombo->rootModelIndex());
+            QStandardItem* item = model->itemFromIndex(index);
+            if (item)
+                item->setEnabled(false);
+        }
+    }
     connect(mTypeCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotAlarmTypeChanged(int)));
     connect(mTypeCombo, SIGNAL(currentIndexChanged(int)), SLOT(contentsChanged()));
     label->setBuddy(mTypeCombo);
@@ -300,13 +317,13 @@ void EditDisplayAlarmDlg::type_initValues(const KAEvent* event)
         reminder()->setOnceOnly(event->reminderOnceOnly());
         reminder()->enableOnceOnly(recurs);
         if (mSpecialActionsButton)
-            mSpecialActionsButton->setActions(event->preAction(), event->postAction(), event->cancelOnPreActionError(), event->dontShowPreActionError());
+            mSpecialActionsButton->setActions(event->preAction(), event->postAction(), event->extraActionOptions());
         Preferences::SoundType soundType = event->speak()                ? Preferences::Sound_Speak
                                          : event->beep()                 ? Preferences::Sound_Beep
                                          : !event->audioFile().isEmpty() ? Preferences::Sound_File
                                          :                                 Preferences::Sound_None;
         mSoundPicker->set(soundType, event->audioFile(), event->soundVolume(),
-                          event->fadeVolume(), event->fadeSeconds(), event->repeatSound());
+                          event->fadeVolume(), event->fadeSeconds(), event->repeatSoundPause());
     }
     else
     {
@@ -327,10 +344,18 @@ void EditDisplayAlarmDlg::type_initValues(const KAEvent* event)
         reminder()->setMinutes(0, false);
         reminder()->enableOnceOnly(isTimedRecurrence());   // must be called after mRecurrenceEdit is set up
         if (mSpecialActionsButton)
-            mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(),
-                                              Preferences::defaultCancelOnPreActionError(), Preferences::defaultDontShowPreActionError());
+        {
+            KAEvent::ExtraActionOptions opts(0);
+            if (Preferences::defaultExecPreActionOnDeferral())
+                opts |= KAEvent::ExecPreActOnDeferral;
+            if (Preferences::defaultCancelOnPreActionError())
+                opts |= KAEvent::CancelOnPreActError;
+            if (Preferences::defaultDontShowPreActionError())
+                opts |= KAEvent::DontShowPreActError;
+            mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(), opts);
+        }
         mSoundPicker->set(Preferences::defaultSoundType(), Preferences::defaultSoundFile(),
-                          Preferences::defaultSoundVolume(), -1, 0, Preferences::defaultSoundRepeat());
+                          Preferences::defaultSoundVolume(), -1, 0, (Preferences::defaultSoundRepeat() ? 0 : -1));
     }
 }
 
@@ -373,7 +398,7 @@ void EditDisplayAlarmDlg::setColours(const QColor& fgColour, const QColor& bgCol
 /******************************************************************************
 * Set the dialog's action and the action's text.
 */
-void EditDisplayAlarmDlg::setAction(KAEvent::Action action, const AlarmText& alarmText)
+void EditDisplayAlarmDlg::setAction(KAEvent::SubAction action, const AlarmText& alarmText)
 {
     QString text = alarmText.displayText();
     switch (action)
@@ -418,9 +443,9 @@ void EditDisplayAlarmDlg::setAutoClose(bool close)
 {
     lateCancel()->setAutoClose(close);
 }
-void EditDisplayAlarmDlg::setAudio(Preferences::SoundType type, const QString& file, float volume, bool repeat)
+void EditDisplayAlarmDlg::setAudio(Preferences::SoundType type, const QString& file, float volume, int repeatPause)
 {
-    mSoundPicker->set(type, file, volume, -1, 0, repeat);
+    mSoundPicker->set(type, file, volume, -1, 0, repeatPause);
 }
 void EditDisplayAlarmDlg::setReminder(int minutes, bool onceOnly)
 {
@@ -462,7 +487,7 @@ void EditDisplayAlarmDlg::saveState(const KAEvent* event)
     mSavedSoundType   = mSoundPicker->sound();
     mSavedSoundFile   = mSoundPicker->file();
     mSavedSoundVolume = mSoundPicker->volume(mSavedSoundFadeVolume, mSavedSoundFadeSeconds);
-    mSavedRepeatSound = mSoundPicker->repeat();
+    mSavedRepeatPause = mSoundPicker->repeatPause();
     mSavedConfirmAck  = mConfirmAck->isChecked();
     mSavedFont        = mFontColourButton->font();
     mSavedFgColour    = mFontColourButton->fgColour();
@@ -472,9 +497,9 @@ void EditDisplayAlarmDlg::saveState(const KAEvent* event)
     mSavedAutoClose   = lateCancel()->isAutoClose();
     if (mSpecialActionsButton)
     {
-        mSavedPreAction       = mSpecialActionsButton->preAction();
-        mSavedPostAction      = mSpecialActionsButton->postAction();
-        mSavedPreActionCancel = mSpecialActionsButton->cancelOnError();
+        mSavedPreAction        = mSpecialActionsButton->preAction();
+        mSavedPostAction       = mSpecialActionsButton->postAction();
+        mSavedPreActionOptions = mSpecialActionsButton->options();
     }
 }
 
@@ -499,9 +524,9 @@ bool EditDisplayAlarmDlg::type_stateChanged() const
         return true;
     if (mSpecialActionsButton)
     {
-        if (mSavedPreAction       != mSpecialActionsButton->preAction()
-        ||  mSavedPostAction      != mSpecialActionsButton->postAction()
-        ||  mSavedPreActionCancel != mSpecialActionsButton->cancelOnError())
+        if (mSavedPreAction        != mSpecialActionsButton->preAction()
+        ||  mSavedPostAction       != mSpecialActionsButton->postAction()
+        ||  mSavedPreActionOptions != mSpecialActionsButton->options())
             return true;
     }
     if (mSavedSoundType == Preferences::Sound_File)
@@ -512,7 +537,7 @@ bool EditDisplayAlarmDlg::type_stateChanged() const
         {
             float fadeVolume;
             int   fadeSecs;
-            if (mSavedRepeatSound != mSoundPicker->repeat()
+            if (mSavedRepeatPause != mSoundPicker->repeatPause()
             ||  mSavedSoundVolume != mSoundPicker->volume(fadeVolume, fadeSecs)
             ||  mSavedSoundFadeVolume != fadeVolume
             ||  mSavedSoundFadeSeconds != fadeSecs)
@@ -528,7 +553,7 @@ bool EditDisplayAlarmDlg::type_stateChanged() const
 */
 void EditDisplayAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, const QString& text, int lateCancel, bool trial)
 {
-    KAEvent::Action type;
+    KAEvent::SubAction type;
     switch (mTypeCombo->currentIndex())
     {
         case tFILE:     type = KAEvent::FILE; break;
@@ -546,34 +571,36 @@ void EditDisplayAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, con
     float fadeVolume;
     int   fadeSecs;
     float volume = mSoundPicker->volume(fadeVolume, fadeSecs);
-    event.setAudioFile(mSoundPicker->file().prettyUrl(), volume, fadeVolume, fadeSecs);
+    int   repeatPause = mSoundPicker->repeatPause();
+    event.setAudioFile(mSoundPicker->file().prettyUrl(), volume, fadeVolume, fadeSecs, repeatPause);
     if (!trial  &&  reminder()->isEnabled())
         event.setReminder(reminder()->minutes(), reminder()->isOnceOnly());
     if (mSpecialActionsButton  &&  mSpecialActionsButton->isEnabled())
         event.setActions(mSpecialActionsButton->preAction(), mSpecialActionsButton->postAction(),
-                         mSpecialActionsButton->cancelOnError(), mSpecialActionsButton->dontShowError());
+                         mSpecialActionsButton->options());
 }
 
 /******************************************************************************
 * Get the currently specified alarm flag bits.
 */
-int EditDisplayAlarmDlg::getAlarmFlags() const
+KAEvent::Flags EditDisplayAlarmDlg::getAlarmFlags() const
 {
     bool cmd = (mTypeCombo->currentIndex() == tCOMMAND);
-    return EditAlarmDlg::getAlarmFlags()
-         | (mSoundPicker->sound() == Preferences::Sound_Beep  ? KAEvent::BEEP : 0)
-         | (mSoundPicker->sound() == Preferences::Sound_Speak ? KAEvent::SPEAK : 0)
-         | (mSoundPicker->repeat()                            ? KAEvent::REPEAT_SOUND : 0)
-         | (mConfirmAck->isChecked()                          ? KAEvent::CONFIRM_ACK : 0)
-         | (lateCancel()->isAutoClose()                       ? KAEvent::AUTO_CLOSE : 0)
-         | (mFontColourButton->defaultFont()                  ? KAEvent::DEFAULT_FONT : 0)
-         | (cmd                                               ? KAEvent::DISPLAY_COMMAND : 0)
-         | (cmd && mCmdEdit->isScript()                       ? KAEvent::SCRIPT : 0);
+    KAEvent::Flags flags = EditAlarmDlg::getAlarmFlags();
+    if (mSoundPicker->sound() == Preferences::Sound_Beep)  flags |= KAEvent::BEEP;
+    if (mSoundPicker->sound() == Preferences::Sound_Speak) flags |= KAEvent::SPEAK;
+    if (mSoundPicker->repeatPause() >= 0)                  flags |= KAEvent::REPEAT_SOUND;
+    if (mConfirmAck->isChecked())                          flags |= KAEvent::CONFIRM_ACK;
+    if (lateCancel()->isAutoClose())                       flags |= KAEvent::AUTO_CLOSE;
+    if (mFontColourButton->defaultFont())                  flags |= KAEvent::DEFAULT_FONT;
+    if (cmd)                                               flags |= KAEvent::DISPLAY_COMMAND;
+    if (cmd && mCmdEdit->isScript())                       flags |= KAEvent::SCRIPT;
+    return flags;
 }
 
 /******************************************************************************
-*  Called when one of the alarm display type combo box is changed, to display
-*  the appropriate set of controls for that action type.
+* Called when one of the alarm display type combo box is changed, to display
+* the appropriate set of controls for that action type.
 */
 void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
 {
@@ -840,7 +867,7 @@ void EditCommandAlarmDlg::type_showOptions(bool more)
 /******************************************************************************
 * Set the dialog's action and the action's text.
 */
-void EditCommandAlarmDlg::setAction(KAEvent::Action action, const AlarmText& alarmText)
+void EditCommandAlarmDlg::setAction(KAEvent::SubAction action, const AlarmText& alarmText)
 {
     Q_UNUSED(action);
     Q_ASSERT(action == KAEvent::COMMAND);
@@ -906,11 +933,12 @@ void EditCommandAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, con
 /******************************************************************************
 * Get the currently specified alarm flag bits.
 */
-int EditCommandAlarmDlg::getAlarmFlags() const
+KAEvent::Flags EditCommandAlarmDlg::getAlarmFlags() const
 {
-    return EditAlarmDlg::getAlarmFlags()
-         | (mCmdEdit->isScript()                               ? KAEvent::SCRIPT : 0)
-         | (mCmdOutputGroup->checkedButton() == mCmdExecInTerm ? KAEvent::EXEC_IN_XTERM : 0);
+    KAEvent::Flags flags = EditAlarmDlg::getAlarmFlags();
+    if (mCmdEdit->isScript())                               flags |= KAEvent::SCRIPT;
+    if (mCmdOutputGroup->checkedButton() == mCmdExecInTerm) flags |= KAEvent::EXEC_IN_XTERM;
+    return flags;
 }
 
 /******************************************************************************
@@ -942,7 +970,7 @@ bool EditCommandAlarmDlg::type_validate(bool trial)
         {
             showMainPage();
             mCmdLogFileEdit->setFocus();
-            KMessageBox::sorry(this, i18nc("@info", "Log file must be the name or path of a local file, with write permission."));
+            KAMessageBox::sorry(this, i18nc("@info", "Log file must be the name or path of a local file, with write permission."));
             return false;
         }
         // Convert the log file to an absolute path
@@ -952,14 +980,17 @@ bool EditCommandAlarmDlg::type_validate(bool trial)
 }
 
 /******************************************************************************
+* Called when the Try action has been executed.
 * Tell the user the result of the Try action.
 */
-void EditCommandAlarmDlg::type_trySuccessMessage(ShellProcess* proc, const QString& text)
+void EditCommandAlarmDlg::type_executedTry(const QString& text, void* result)
 {
-    if (mCmdOutputGroup->checkedButton() != mCmdExecInTerm)
+    ShellProcess* proc = (ShellProcess*)result;
+    if (proc  &&  proc != (void*)-1
+    &&  mCmdOutputGroup->checkedButton() != mCmdExecInTerm)
     {
         theApp()->commandMessage(proc, this);
-        KMessageBox::information(this, i18nc("@info", "Command executed: <icode>%1</icode>", text));
+        KAMessageBox::information(this, i18nc("@info", "Command executed: <icode>%1</icode>", text));
         theApp()->commandMessage(proc, 0);
     }
 }
@@ -1172,7 +1203,7 @@ void EditEmailAlarmDlg::attachmentEnable()
 /******************************************************************************
 * Set the dialog's action and the action's text.
 */
-void EditEmailAlarmDlg::setAction(KAEvent::Action action, const AlarmText& alarmText)
+void EditEmailAlarmDlg::setAction(KAEvent::SubAction action, const AlarmText& alarmText)
 {
     Q_UNUSED(action);
     Q_ASSERT(action == KAEvent::EMAIL);
@@ -1189,13 +1220,18 @@ void EditEmailAlarmDlg::setAction(KAEvent::Action action, const AlarmText& alarm
 /******************************************************************************
 * Initialise various values in the New Alarm dialogue.
 */
-void EditEmailAlarmDlg::setEmailFields(uint fromID, const EmailAddressList& addresses,
+#ifdef USE_AKONADI
+void EditEmailAlarmDlg::setEmailFields(uint fromID, const KCalCore::Person::List& addresses,
                                        const QString& subject, const QStringList& attachments)
+#else
+void EditEmailAlarmDlg::setEmailFields(uint fromID, const QList<KCal::Person>& addresses,
+                                       const QString& subject, const QStringList& attachments)
+#endif
 {
     if (fromID)
         mEmailFromList->setCurrentIdentity(fromID);
     if (!addresses.isEmpty())
-        mEmailToEdit->setText(addresses.join(", "));
+        mEmailToEdit->setText(KAEvent::joinEmailAddresses(addresses, ", "));
     if (!subject.isEmpty())
         mEmailSubjectEdit->setText(subject);
     if (!attachments.isEmpty())
@@ -1286,10 +1322,11 @@ void EditEmailAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, const
 /******************************************************************************
 * Get the currently specified alarm flag bits.
 */
-int EditEmailAlarmDlg::getAlarmFlags() const
+KAEvent::Flags EditEmailAlarmDlg::getAlarmFlags() const
 {
-    return EditAlarmDlg::getAlarmFlags()
-         | (mEmailBcc->isChecked() ? KAEvent::EMAIL_BCC : 0);
+    KAEvent::Flags flags = EditAlarmDlg::getAlarmFlags();
+    if (mEmailBcc->isChecked()) flags |= KAEvent::EMAIL_BCC;
+    return flags;
 }
 
 /******************************************************************************
@@ -1307,14 +1344,14 @@ bool EditEmailAlarmDlg::type_validate(bool trial)
         if (!bad.isEmpty())
         {
             mEmailToEdit->setFocus();
-            KMessageBox::error(this, i18nc("@info", "Invalid email address: <email>%1</email>", bad));
+            KAMessageBox::error(this, i18nc("@info", "Invalid email address: <email>%1</email>", bad));
             return false;
         }
     }
     if (mEmailAddresses.isEmpty())
     {
         mEmailToEdit->setFocus();
-        KMessageBox::error(this, i18nc("@info", "No email address specified"));
+        KAMessageBox::error(this, i18nc("@info", "No email address specified"));
         return false;
     }
 
@@ -1331,23 +1368,31 @@ bool EditEmailAlarmDlg::type_validate(bool trial)
                 break;      // empty
             case -1:
                 mEmailAttachList->setFocus();
-                KMessageBox::error(this, i18nc("@info", "Invalid email attachment: <filename>%1</filename>", att));
+                KAMessageBox::error(this, i18nc("@info", "Invalid email attachment: <filename>%1</filename>", att));
                 return false;
         }
     }
-    if (trial  &&  KMessageBox::warningContinueCancel(this, i18nc("@info", "Do you really want to send the email now to the specified recipient(s)?"),
-                                                      i18nc("@action:button", "Confirm Email"), KGuiItem(i18nc("@action:button", "Send"))) != KMessageBox::Continue)
+    if (trial  &&  KAMessageBox::warningContinueCancel(this, i18nc("@info", "Do you really want to send the email now to the specified recipient(s)?"),
+                                                       i18nc("@action:button", "Confirm Email"), KGuiItem(i18nc("@action:button", "Send"))) != KMessageBox::Continue)
         return false;
     return true;
 }
 
 /******************************************************************************
+* Called when the Try action is about to be executed.
+*/
+void EditEmailAlarmDlg::type_aboutToTry()
+{
+    connect(theApp(), SIGNAL(execAlarmSuccess()), SLOT(slotTrySuccess()));
+}
+
+/******************************************************************************
 * Tell the user the result of the Try action.
 */
-void EditEmailAlarmDlg::type_trySuccessMessage(ShellProcess*, const QString&)
+void EditEmailAlarmDlg::slotTrySuccess()
 {
     QString msg;
-    QString to = mEmailAddresses.join("<nl/>");
+    QString to = KAEvent::joinEmailAddresses(mEmailAddresses, "<nl/>");
     to.replace('<', "&lt;");
     to.replace('>', "&gt;");
     if (mEmailBcc->isChecked())
@@ -1355,7 +1400,7 @@ void EditEmailAlarmDlg::type_trySuccessMessage(ShellProcess*, const QString&)
                     to, Preferences::emailBccAddress()) + "</qt>";
     else
         msg = "<qt>" + i18nc("@info", "Email sent to:<nl/>%1", to) + "</qt>";
-    KMessageBox::information(this, msg);
+    KAMessageBox::information(this, msg);
 }
 
 /******************************************************************************
@@ -1440,7 +1485,8 @@ bool EditEmailAlarmDlg::checkText(QString& result, bool showErrorMessage) const
 *   event   != to initialise the dialog to show the specified event's data.
 */
 EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, QWidget* parent, GetResourceType getResource)
-    : EditAlarmDlg(Template, KAEvent::AUDIO, parent, getResource)
+    : EditAlarmDlg(Template, KAEvent::AUDIO, parent, getResource),
+      mMessageWin(0)
 {
     kDebug() << "New";
     init(0);
@@ -1448,10 +1494,14 @@ EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, QWidget* parent, GetResource
 
 EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, const KAEvent* event, bool newAlarm, QWidget* parent,
                                      GetResourceType getResource, bool readOnly)
-    : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly)
+    : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly),
+      mMessageWin(0)
 {
     kDebug() << "Event.id()";
     init(event);
+    KPushButton* tryButton = button(Try);
+    tryButton->setEnabled(!MessageWin::isAudioPlaying());
+    connect(theApp(), SIGNAL(audioPlaying(bool)), SLOT(slotAudioPlaying(bool)));
 }
 
 /******************************************************************************
@@ -1510,7 +1560,7 @@ void EditAudioAlarmDlg::setAudio(const QString& file, float volume)
 /******************************************************************************
 * Set the dialog's action and the action's text.
 */
-void EditAudioAlarmDlg::setAction(KAEvent::Action action, const AlarmText& alarmText)
+void EditAudioAlarmDlg::setAction(KAEvent::SubAction action, const AlarmText& alarmText)
 {
     Q_UNUSED(action);
     Q_ASSERT(action == KAEvent::AUDIO);
@@ -1533,7 +1583,8 @@ void EditAudioAlarmDlg::saveState(const KAEvent* event)
 {
     EditAlarmDlg::saveState(event);
     mSavedFile   = mSoundConfig->fileName();
-    mSavedRepeat = mSoundConfig->getVolume(mSavedVolume, mSavedFadeVolume, mSavedFadeSeconds);
+    mSoundConfig->getVolume(mSavedVolume, mSavedFadeVolume, mSavedFadeSeconds);
+    mSavedRepeatPause = mSoundConfig->repeatPause();
 }
 
 /******************************************************************************
@@ -1544,17 +1595,18 @@ void EditAudioAlarmDlg::saveState(const KAEvent* event)
 */
 bool EditAudioAlarmDlg::type_stateChanged() const
 {
-        if (mSavedFile != mSoundConfig->fileName())
-                return true;
-        if (!mSavedFile.isEmpty()  ||  isTemplate())
-        {
-                float volume, fadeVolume;
-                int   fadeSecs;
-        if (mSavedRepeat      != mSoundConfig->getVolume(volume, fadeVolume, fadeSecs)
-                ||  mSavedVolume      != volume
-                ||  mSavedFadeVolume  != fadeVolume
-                ||  mSavedFadeSeconds != fadeSecs)
-                        return true;
+    if (mSavedFile != mSoundConfig->fileName())
+        return true;
+    if (!mSavedFile.isEmpty()  ||  isTemplate())
+    {
+        float volume, fadeVolume;
+        int   fadeSecs;
+        mSoundConfig->getVolume(volume, fadeVolume, fadeSecs);
+        if (mSavedRepeatPause != mSoundConfig->repeatPause()
+        ||  mSavedVolume      != volume
+        ||  mSavedFadeVolume  != fadeVolume
+        ||  mSavedFadeSeconds != fadeSecs)
+            return true;
     }
     return false;
 }
@@ -1571,18 +1623,20 @@ void EditAudioAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, const
     float volume, fadeVolume;
     int   fadeSecs;
     mSoundConfig->getVolume(volume, fadeVolume, fadeSecs);
+    int   repeatPause = mSoundConfig->repeatPause();
     KUrl url;
     mSoundConfig->file(url, false);
-    event.setAudioFile(url.prettyUrl(), volume, fadeVolume, fadeSecs, isTemplate());
+    event.setAudioFile(url.prettyUrl(), volume, fadeVolume, fadeSecs, repeatPause, isTemplate());
 }
 
 /******************************************************************************
 * Get the currently specified alarm flag bits.
 */
-int EditAudioAlarmDlg::getAlarmFlags() const
+KAEvent::Flags EditAudioAlarmDlg::getAlarmFlags() const
 {
-    return EditAlarmDlg::getAlarmFlags()
-         | (mSoundConfig->getRepeat() ? KAEvent::REPEAT_SOUND : 0);
+    KAEvent::Flags flags = EditAlarmDlg::getAlarmFlags();
+    if (mSoundConfig->repeatPause() >= 0) flags |= KAEvent::REPEAT_SOUND;
+    return flags;
 }
 
 /******************************************************************************
@@ -1598,6 +1652,66 @@ bool EditAudioAlarmDlg::checkText(QString& result, bool showErrorMessage) const
     }
     result = url.pathOrUrl();
     return true;
+}
+
+/******************************************************************************
+* Called when the Try button is clicked.
+* If the audio file is currently playing (as a result of previously clicking
+* the Try button), cancel playback. Otherwise, play the audio file.
+*/
+void EditAudioAlarmDlg::slotTry()
+{
+    if (!MessageWin::isAudioPlaying())
+        EditAlarmDlg::slotTry();   // play the audio file
+    else if (mMessageWin)
+    {
+        mMessageWin->stopAudio();
+        mMessageWin = 0;
+    }
+}
+
+/******************************************************************************
+* Called when the Try action has been executed.
+*/
+void EditAudioAlarmDlg::type_executedTry(const QString&, void* result)
+{
+    mMessageWin = (MessageWin*)result;    // note which MessageWin controls the audio playback
+    if (mMessageWin)
+    {
+        slotAudioPlaying(true);
+        connect(mMessageWin, SIGNAL(destroyed(QObject*)), SLOT(audioWinDestroyed()));
+    }
+}
+
+/******************************************************************************
+* Called when audio playing starts or stops.
+* Enable/disable/toggle the Try button.
+*/
+void EditAudioAlarmDlg::slotAudioPlaying(bool playing)
+{
+    KPushButton* tryButton = button(Try);
+    if (!playing)
+    {
+        // Nothing is playing, so enable the Try button
+        tryButton->setEnabled(true);
+        tryButton->setCheckable(false);
+        tryButton->setChecked(false);
+        mMessageWin = 0;
+    }
+    else if (mMessageWin)
+    {
+        // The test sound file is playing, so enable the Try button and depress it
+        tryButton->setEnabled(true);
+        tryButton->setCheckable(true);
+        tryButton->setChecked(true);
+    }
+    else
+    {
+        // An alarm is playing, so disable the Try button
+        tryButton->setEnabled(false);
+        tryButton->setCheckable(false);
+        tryButton->setChecked(false);
+    }
 }
 
 
@@ -1680,7 +1794,7 @@ QString CommandEdit::text(EditAlarmDlg* dlg, bool showErrorMessage) const
 {
     QString result = text();
     if (showErrorMessage  &&  result.isEmpty())
-        KMessageBox::sorry(dlg, i18nc("@info", "Please enter a command or script to execute"));
+        KAMessageBox::sorry(dlg, i18nc("@info", "Please enter a command or script to execute"));
     return result;
 }
 

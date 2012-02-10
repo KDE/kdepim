@@ -97,7 +97,7 @@ class MESSAGELIST_EXPORT ModelInvariantRowMapper : public QObject
   Q_OBJECT
 
 public:
-  ModelInvariantRowMapper();
+  explicit ModelInvariantRowMapper();
   virtual ~ModelInvariantRowMapper();
 
   /**

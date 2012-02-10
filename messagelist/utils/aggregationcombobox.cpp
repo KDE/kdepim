@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "aggregationcombobox.h"
-#include "messagelist/utils/aggregationcombobox.h"
-#include "messagelist/utils/aggregationcombobox_p.h"
+#include "aggregationcombobox_p.h"
 
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"
@@ -32,7 +31,10 @@ using namespace MessageList::Utils;
 AggregationComboBox::AggregationComboBox( QWidget * parent )
 : KComboBox( parent ), d( new AggregationComboBoxPrivate( this ) )
 {
-  d->slotLoadAggregations();
+  if( Manager::instance() ) 
+    d->slotLoadAggregations();
+  else
+    setEnabled(false);
 }
 
 AggregationComboBox::~AggregationComboBox()
@@ -101,18 +103,13 @@ void AggregationComboBox::selectDefault()
   d->setCurrentAggregation( defaultAggregation );
 }
 
-static bool aggregationNameLessThan( const Aggregation * lhs, const Aggregation * rhs )
-{
-  return lhs->name() < rhs->name();
-}
-
 void AggregationComboBoxPrivate::slotLoadAggregations()
 {
   q->clear();
 
   // Get all message list aggregations and sort them into alphabetical order.
   QList< Aggregation * > aggregations = Manager::instance()->aggregations().values();
-  qSort( aggregations.begin(), aggregations.end(), aggregationNameLessThan );
+  qSort( aggregations.begin(), aggregations.end(), MessageList::Core::Aggregation::compareName );
 
   foreach( const Aggregation * aggregation, aggregations )
   {

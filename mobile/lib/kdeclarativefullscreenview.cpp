@@ -31,16 +31,19 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
+#include <KWindowSystem>
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
+#include <QtGui/QResizeEvent>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeError>
+#include <qplatformdefs.h>
 
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -55,18 +58,30 @@
 #include <QDeclarativeContext>
 #endif
 
+#ifdef MEEGO_EDITION_HARMATTAN
+#include <QX11Info>
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+#include <fixx11h.h>
+#endif
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
   QDeclarativeView( parent ),
 #ifndef Q_OS_WIN
   m_glWidget( 0 ),
 #endif
-  m_qmlFileName( qmlFileName )
+  m_qmlFileName( qmlFileName ),
+  m_splashScreen( 0 )
 {
 #ifdef Q_OS_WINCE
   closeAllFrontends( qmlFileName );
   RotateTo270Degrees();
 #endif
+
+#ifdef MEEGO_EDITION_HARMATTAN
+  blockSwipeRegion( 0, 0, 100, height() );
+#endif
+
 #ifndef Q_OS_WIN
   bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
   if ( KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
@@ -96,7 +111,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
+#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE) || defined(MEEGO_EDITION_HARMATTAN)
   setWindowState( Qt::WindowFullScreen );
 #ifndef Q_OS_WINCE
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
@@ -186,7 +201,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
     kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
   qDebug() << "trying to load \"" +  source << "\"";
-  setSource( source );
+  setSource( QUrl::fromLocalFile(source) );
   if ( debugTiming ) {
     kWarning() << "setSourceDone" << t.elapsed() << &t;
   }
@@ -263,7 +278,7 @@ void KDeclarativeFullScreenView::triggerTaskSwitcher()
     ::SetForegroundWindow(hWnd);
   }
 #else
-  kDebug() << "not implemented for this platform";
+  KWindowSystem::minimizeWindow( effectiveWinId() );
 #endif
 }
 
@@ -278,7 +293,10 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
 
   if ( status == QDeclarativeView::Ready ) {
 #ifndef _WIN32_WCE
-    m_splashScreen->deleteLater();
+    if ( m_splashScreen ) {
+      m_splashScreen->deleteLater();
+      m_splashScreen = 0;
+    }
 #else
     show();
     HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
@@ -333,4 +351,27 @@ void KDeclarativeFullScreenView::bringToFront()
   raise();
 #endif
 }
+
+void KDeclarativeFullScreenView::resizeEvent(QResizeEvent* event)
+{
+  QDeclarativeView::resizeEvent(event);
+  if ( m_splashScreen ) {
+    m_splashScreen->move( (event->size().width() - m_splashScreen->sizeHint().width())/2,
+                          (event->size().height() - m_splashScreen->sizeHint().height())/2 );
+  }
+}
+
+#ifdef MEEGO_EDITION_HARMATTAN
+void KDeclarativeFullScreenView::blockSwipeRegion( const int x, const int y, const int  w, const int h )
+{
+  Display *dpy = QX11Info::display();
+  Atom blockedRegionAtom = XInternAtom( dpy, "_MEEGOTOUCH_CUSTOM_REGION", False );
+  unsigned int blockedRegion[] = { x, y, w, h };
+
+  XChangeProperty( dpy, this->winId(), blockedRegionAtom,
+                XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<unsigned char*>( &blockedRegion[0] ), 4 );
+}
+#endif // MEEGO_EDITION_HARMATTAN
+
 #include "kdeclarativefullscreenview.moc"

@@ -253,11 +253,11 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     virtual EventView *viewAt( const QPoint &p );
 
-    /*
-     * @param preferredMonth Used by month orientated views. Contains the month to show when the week crosses months.
-     *                       It's a QDate instead of uint so it can be easily feed to KCalendarSystem's
-                             functions.
-     * */
+    /**
+     * @param preferredMonth Used by month orientated views.  Contains the
+     * month to show when the week crosses months.  It's a QDate instead
+     * of uint so it can be easily fed to KCalendarSystem's functions.
+     */
     virtual void setDateRange( const KDateTime &start, const KDateTime &end,
                                const QDate &preferredMonth = QDate() );
 
@@ -504,13 +504,12 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * view's supported range (e.g., a month view always displays one month)
      * The default implementation returns the range unmodified
      *
-     * @param preferredMonth Used by month orientated views. Contains the month to show when the week crosses months.
-     *                       It's a QDate instead of uint so it can be easily feed to KCalendarSystem's
-     *                       functions.
+     * @param preferredMonth Used by month orientated views. Contains the
+     * month to show when the week crosses months.  It's a QDate instead of
+     * uint so it can be easily fed to KCalendarSystem's functions.
      */
-    virtual QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
-                                                        const KDateTime &end,
-                                                        const QDate &preferredMonth = QDate() ) const;
+    virtual QPair<KDateTime,KDateTime> actualDateRange(
+      const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate() ) const;
     /*
     virtual void incidencesAdded( const Akonadi::Item::List &incidences );
     virtual void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );

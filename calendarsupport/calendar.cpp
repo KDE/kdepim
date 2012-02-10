@@ -1,7 +1,7 @@
 /*
-  Copyright (c) 2009 KDAB
-  Author: Sebastian Sauer <sebsauer@kdab.net>
-          Frank Osterfeld <frank@kdab.net>
+  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Sebastian Sauer <sebsauer@kdab.net>
+    Author: Frank Osterfeld <frank@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -133,8 +133,10 @@ void Calendar::Private::layoutChanged()
 
 }
 
-void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
-                                                const QModelIndex &destinationParent, int destinationRow )
+void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent,
+                                                int sourceStart, int sourceEnd,
+                                                const QModelIndex &destinationParent,
+                                                int destinationRow )
 {
   Q_ASSERT( sourceEnd >= sourceStart );
   Q_ASSERT( sourceStart >= 0 );
@@ -150,21 +152,26 @@ void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent,
                                                      destinationRow + numItems - 1 );
 
     { // Start hack
-      // KSelectionProxyModel doesn't honour rowsMoved() yet, so, if the source model emitted rowsMoved
-      // (items changing collection) we could only catch it in the onLayoutChanged() slot, which isn't
-      // performant. So we listen to the source model's rowsMoved() and check manuall if it when in or
-      // out of the selection, and notify the application.
-      Akonadi::EntityMimeTypeFilterModel *m = qobject_cast<Akonadi::EntityMimeTypeFilterModel*>( m_model );
+      // KSelectionProxyModel doesn't honour rowsMoved() yet, so, if the source
+      // model emitted rowsMoved (items changing collection) we could only
+      // catch it in the onLayoutChanged() slot, which isn't performant.
+      // So we listen to the source model's rowsMoved() and check manually
+      // if it when in or out of the selection, and notify the application.
+      Akonadi::EntityMimeTypeFilterModel *m =
+        qobject_cast<Akonadi::EntityMimeTypeFilterModel*>( m_model );
       if ( m ) {
         KSelectionProxyModel *sm = qobject_cast<KSelectionProxyModel*>( m->sourceModel() );
         if ( sm ) {
           CollectionSelection collectionSelection( sm->selectionModel() );
-          const bool sourceCollectionIsSelected = collectionSelection.contains( sourceCollection.id() );
-          const bool destinationCollectionIsSelected = collectionSelection.contains( destinationCollection.id() );
+          const bool sourceCollectionIsSelected =
+            collectionSelection.contains( sourceCollection.id() );
+          const bool destinationCollectionIsSelected =
+            collectionSelection.contains( destinationCollection.id() );
+
           if ( sourceCollectionIsSelected && destinationCollectionIsSelected ) {
-            foreach( const Akonadi::Item item, movedItems ) {
+            foreach ( const Akonadi::Item &item, movedItems ) {
               if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-                // We have old items ( that think they belong to another collection ) inside m_itemMap
+                // Found old items (that think they belong to another collection) inside m_itemMap
                 if ( m_itemMap.contains( item.id() ) ) {
                   itemsRemoved( movedItems );
                   itemsAdded( movedItems );
@@ -184,7 +191,7 @@ void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent,
 
 void Calendar::Private::appendVirtualItems( Akonadi::Item::List &itemList )
 {
-  foreach( const Akonadi::Item &item, itemList ) {
+  foreach ( const Akonadi::Item &item, itemList ) {
     if ( m_virtualItems.contains( item.id() ) ) {
       itemList.append( m_virtualItems.value( item.id() ) );
     }
@@ -310,7 +317,8 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
           m_unseenItemToItemId.remove( oldUi );
           m_unseenItemToItemId.insert( newUi, item.id() );
         } else {
-          Q_ASSERT_X( false, "Calendar::Private::updateItem", "Item wasn't found in m_unseenItemToItemId" );
+          Q_ASSERT_X( false, "Calendar::Private::updateItem",
+                      "Item wasn't found in m_unseenItemToItemId" );
           return;
         }
       }
@@ -393,7 +401,8 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   if ( alreadyExisted ) { // We're updating an existing item
     const bool existedInUidMap = m_unseenItemToItemId.contains( ui );
     if ( m_unseenItemToItemId.value( ui ) != item.id() ) {
-      kError()<< "Ignoring item. item.id() = " << item.id() << "; cached id = " << m_unseenItemToItemId.value( ui )
+      kError()<< "Ignoring item. item.id() = " << item.id()
+              << "; cached id = " << m_unseenItemToItemId.value( ui )
               << "; item uid = "  << ui.uid
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
@@ -412,7 +421,8 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
             kDebug() << " key " << i.key().uid << i.key().collection << " has value " << i.value();
           }
         }
-        kError() << "Possible cause is that the resource isn't explicitly setting an uid ( and a random one is generated )";
+        kError() << "Possible cause is that the resource isn't explicitly "
+                 << "setting an uid ( and a random one is generated )";
         Q_ASSERT_X( false, "updateItem", "Item not found inside m_unseenItemToItemId" );
       }
       return;
@@ -561,7 +571,7 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   m_itemDateForItemId.remove( item.id() );
 
   const QList<QString> entriesToDelete = m_itemIdsForDate.keys( item.id() );
-  foreach( const QString &entryToDelete, entriesToDelete ) {
+  foreach ( const QString &entryToDelete, entriesToDelete ) {
     m_itemIdsForDate.remove( entryToDelete );
   }
 }
@@ -613,9 +623,9 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
       continue;
     }
 
-    // oldItem will almost always be the same as item, but, when you move an item from one collection
-    // and the destination collection isn't selected, itemsRemoved() is called, and they will differ
-    // on the parentCollection id.
+    // oldItem will almost always be the same as item, but, when you move an
+    // item from one collection and the destination collection isn't selected,
+    // itemsRemoved() is called, and they will differ on the parentCollection id.
     q->notifyIncidenceDeleted( oldItem );
     incidence->unRegisterObserver( q );
   }
@@ -783,7 +793,8 @@ KCalCore::Alarm::List Calendar::alarmsTo( const KDateTime &to )
   return alarms( KDateTime( QDate( 1900, 1, 1 ) ), to );
 }
 
-KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to, bool excludeBlockedAlarms )
+KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to,
+                                        bool excludeBlockedAlarms )
 {
   KCalCore::Alarm::List alarmList;
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
@@ -791,11 +802,13 @@ KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &
     const Akonadi::Item item = i.next().value();
 
     if ( excludeBlockedAlarms ) {
-      // take the collection from m_collectionMap, because we need the up-to-date collection attributes
-      const Akonadi::Collection parentCollection = d->m_collectionMap.value( item.storageCollectionId() );
+      // take the collection from m_collectionMap, because we need the up-to-date collection attrs
+      const Akonadi::Collection parentCollection =
+        d->m_collectionMap.value( item.storageCollectionId() );
       if ( parentCollection.isValid() ) {
-        if ( parentCollection.hasAttribute<BlockAlarmsAttribute>() )
+        if ( parentCollection.hasAttribute<BlockAlarmsAttribute>() ) {
           continue; // do not include alarms from this collection
+        }
       }
     }
 
@@ -1007,7 +1020,7 @@ Akonadi::Item::List Calendar::findChildren( const KCalCore::Incidence::Ptr &inci
 Akonadi::Item::List Calendar::findChildren( const Akonadi::Item &parent ) const
 {
   Akonadi::Item::List l;
-  Q_FOREACH( const Akonadi::Item::Id &id, d->m_parentToChildren.value( parent.id() ) ) {
+  Q_FOREACH ( const Akonadi::Item::Id &id, d->m_parentToChildren.value( parent.id() ) ) {
     l.push_back( d->m_itemMap.value( id ) );
   }
   return l;
@@ -1025,7 +1038,7 @@ Akonadi::Item::Id Calendar::itemIdForIncidenceUid( const QString &uid ) const
   if ( d->m_uidToItemId.contains( uid ) ) {
     id = d->m_uidToItemId[uid];
   } else {
-    kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;  
+    kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;
   }
 
   return id;
@@ -1170,7 +1183,7 @@ QStringList Calendar::categories( Calendar *cal )
   QStringList cats, thisCats;
   // @TODO: For now just iterate over all incidences. In the future,
   // the list of categories should be built when reading the file.
-  Q_FOREACH( const Akonadi::Item &i, rawInc ) {
+  Q_FOREACH ( const Akonadi::Item &i, rawInc ) {
     thisCats = CalendarSupport::incidence( i )->categories();
     for ( QStringList::ConstIterator si = thisCats.constBegin();
           si != thisCats.constEnd(); ++si ) {
@@ -1461,8 +1474,10 @@ Akonadi::Item::List Calendar::incidencesFromSchedulingID( const QString &sid )
 Akonadi::Item Calendar::incidenceFromSchedulingID( const QString &UID )
 {
   const Akonadi::Item::List incidences = rawIncidences();
-  Akonadi::Item::List::const_iterator it = incidences.begin();
-  for ( ; it != incidences.end(); ++it ) {
+  Akonadi::Item::List::const_iterator it = incidences.constBegin();
+  Akonadi::Item::List::const_iterator end = incidences.constEnd();
+
+  for ( ; it != end; ++it ) {
     if ( CalendarSupport::incidence(*it)->schedulingID() == UID ) {
       // Touchdown, and the crowd goes wild
       return *it;

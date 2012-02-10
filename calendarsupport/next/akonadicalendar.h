@@ -18,8 +18,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _CALENDARSUPPORT_AKONADICALENDAR_H_
-#define _CALENDARSUPPORT_AKONADICALENDAR_H_
+#ifndef CALENDARSUPPORT_AKONADICALENDAR_H
+#define CALENDARSUPPORT_AKONADICALENDAR_H
 
 #include <Akonadi/Item>
 #include <KCalCore/MemoryCalendar>
@@ -41,12 +41,11 @@ namespace CalendarSupport {
 
   Q_SIGNALS:
     void loaded();
-  
+
   private:
     class Private;
     Private *const d;
   };
 }
-
 
 #endif

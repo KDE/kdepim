@@ -27,9 +27,9 @@
 #include <kactioncollection.h>
 #include <ksqueezedtextlabel.h>
 
-#include "broadcaststatus.h"
-#include "progressdialog.h"
-#include "statusbarprogresswidget.h"
+#include "libkdepim/broadcaststatus.h"
+#include "libkdepim/progressdialog.h"
+#include "libkdepim/statusbarprogresswidget.h"
 
 //GUI
 #include "knmainwidget.h"

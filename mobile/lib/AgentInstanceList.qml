@@ -34,6 +34,7 @@ QML.Item {
   property alias totalWidth : _listContent.width
   property alias columnHeight : _listContent.height
   property alias depth : _listContent.bottomMargin
+  property alias actionItemHeight: _listContent.actionItemHeight
 
   property alias customActions : _listContent.customActions
 

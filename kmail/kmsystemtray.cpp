@@ -24,26 +24,21 @@
 #include "foldercollection.h"
 #include "globalsettings.h"
 #include "mailutil.h"
+#include "mailcommon/mailkernel.h"
+#include "mailcommon/foldertreeview.h"
 
-
-#include <kxmlguiwindow.h>
-#include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kcolorscheme.h>
 #include <kwindowsystem.h>
 #include <kdebug.h>
 #include <KMenu>
+#include <KLocale>
 
 #include <QPainter>
-#include <QWidget>
-#include <QObject>
-#include <QSignalMapper>
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/CollectionModel>
-#include <math.h>
-#include <assert.h>
 
 using namespace MailCommon;
 
@@ -60,7 +55,6 @@ using namespace MailCommon;
  */
 KMSystemTray::KMSystemTray(QObject *parent)
   : KStatusNotifierItem( parent),
-    mPosOfMainWin( 0, 0 ),
     mDesktopOfMainWin( 0 ),
     mMode( GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ),
     mCount( 0 ),
@@ -80,7 +74,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
     if ( mainWin ) {
       mDesktopOfMainWin = KWindowSystem::windowInfo( mainWin->winId(),
                                             NET::WMDesktop ).desktop();
-      mPosOfMainWin = mainWin->pos();
     }
   }
 #endif
@@ -93,7 +86,7 @@ KMSystemTray::KMSystemTray(QObject *parent)
   connect( contextMenu(), SIGNAL(aboutToShow()),
            this, SLOT(slotContextMenuAboutToShow()) );
 
-  connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), SLOT(initListOfCollection()) );
+  connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), SLOT(slotCollectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
 
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), this, SLOT(initListOfCollection()) );
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionRemoved(Akonadi::Collection)), this, SLOT(initListOfCollection()) );
@@ -134,10 +127,8 @@ void KMSystemTray::buildPopupMenu()
     contextMenu()->addAction( action );
   contextMenu()->addSeparator();
 
-  KXmlGuiWindow *mainWin = ::qobject_cast<KXmlGuiWindow*>(kmkernel->getKMMainWidget()->window());
-  if(mainWin)
-    if ( ( action=mainWin->actionCollection()->action("file_quit") ) )
-      contextMenu()->addAction( action );
+  if ( ( action = actionCollection()->action("file_quit") ) )
+    contextMenu()->addAction( action );
 }
 
 KMSystemTray::~KMSystemTray()
@@ -182,9 +173,9 @@ void KMSystemTray::updateCount()
     setIconByName( "kmail" );
     return;
   }
-  int overlaySize = KIconLoader::SizeSmallMedium;
+  const int overlaySize = KIconLoader::SizeSmallMedium;
 
-  QString countString = QString::number( mCount );
+  const QString countString = QString::number( mCount );
   QFont countFont = KGlobalSettings::generalFont();
   countFont.setBold(true);
 
@@ -269,7 +260,8 @@ void KMSystemTray::slotContextMenuAboutToShow()
     mNewMessagesPopup = 0;
   }
   mNewMessagesPopup = new KMenu();
-  fillFoldersMenu( mNewMessagesPopup, KMKernel::self()->entityTreeModel() );
+  fillFoldersMenu( mNewMessagesPopup, KMKernel::self()->treeviewModelSelection() );
+  
   connect( mNewMessagesPopup, SIGNAL(triggered(QAction*)), this,
            SLOT(slotSelectCollection(QAction*)) );
 
@@ -286,12 +278,12 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
   for ( int row = 0; row < rowCount; ++row ) {
     const QModelIndex index = model->index( row, 0, parentIndex );
     const Akonadi::Collection collection = model->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( MailCommon::Util::isVirtualCollection( collection ) )
+    if ( excludeFolder( collection ) )
       continue;
     Akonadi::CollectionStatistics statistics = collection.statistics();
-    qint64 count = qMax( 0LL, statistics.unreadCount() );
+    const qint64 count = qMax( 0LL, statistics.unreadCount() );
     if ( count > 0 ) {
-      QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
+      const QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, false );
       if ( col && col->ignoreNewMail() )
         continue;
     }
@@ -300,21 +292,13 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
     QString label = parentName.isEmpty() ? QLatin1String("") : QString(parentName + QLatin1String("->"));
     label += model->data( index ).toString();
     label.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
-
+    if ( count > 0 ) {
+      // insert an item
+      QAction* action = menu->addAction( label );
+      action->setData( collection.id() );
+    }
     if ( model->rowCount( index ) > 0 ) {
-      // new level
-      if ( count > 0 ) {
-        QAction * action = menu->addAction( label );
-        action->setData( collection.id() );
-      }
       fillFoldersMenu( menu, model, label, index );
-
-    } else {
-      if ( count > 0 ) {
-        // insert an item
-        QAction* action = menu->addAction( label );
-        action->setData( collection.id() );
-      }
     }
   }
 }
@@ -326,10 +310,9 @@ void KMSystemTray::hideKMail()
   if (!kmkernel->getKMMainWidget())
     return;
   QWidget *mainWin = kmkernel->getKMMainWidget()->window();
-  assert(mainWin);
+  Q_ASSERT(mainWin);
   if(mainWin)
   {
-    mPosOfMainWin = mainWin->pos();
 #ifdef Q_WS_X11
     mDesktopOfMainWin = KWindowSystem::windowInfo( mainWin->winId(),
                                           NET::WMDesktop ).desktop();
@@ -357,14 +340,14 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
     const QModelIndex index = model->index( row, 0, parentIndex );
     const Akonadi::Collection collection = model->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
 
-    if ( MailCommon::Util::isVirtualCollection( collection ) )
+    if ( excludeFolder( collection ) )
       continue;
 
     const Akonadi::CollectionStatistics statistics = collection.statistics();
     const qint64 count = qMax( 0LL, statistics.unreadCount() );
 
     if ( count > 0 ) {
-      QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
+      const QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, false );
       if ( col && !col->ignoreNewMail() ) {
         mCount += count;
       }
@@ -398,11 +381,47 @@ void KMSystemTray::slotSelectCollection(QAction*act)
 {
   const Akonadi::Collection::Id id = act->data().value<Akonadi::Collection::Id>();
   KMKernel::self()->selectCollectionFromId( id );
+  KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
+  if ( !mainWidget )
+    return ;
+  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  if( mainWin && !mainWin->isVisible() )
+    activate();
 }
 
 void KMSystemTray::updateSystemTray()
 {
   initListOfCollection();
+}
+
+void KMSystemTray::slotCollectionStatisticsChanged( Akonadi::Collection::Id id,const Akonadi::CollectionStatistics& )
+{
+  //Exclude sent mail folder
+
+  if ( CommonKernel->outboxCollectionFolder().id() == id ||
+       CommonKernel->sentCollectionFolder().id() == id ||
+       CommonKernel->templatesCollectionFolder().id() == id ||
+       CommonKernel->trashCollectionFolder().id() == id ||
+       CommonKernel->draftsCollectionFolder().id() == id ) {
+    return;
+  }
+  initListOfCollection();
+}
+
+bool KMSystemTray::excludeFolder( const Akonadi::Collection& collection ) const
+{
+  if ( CommonKernel->outboxCollectionFolder() == collection ||
+       CommonKernel->sentCollectionFolder() == collection ||
+       CommonKernel->templatesCollectionFolder() == collection ||
+       CommonKernel->trashCollectionFolder() == collection ||
+       CommonKernel->draftsCollectionFolder() == collection ) {
+    return true;
+  }
+
+  if ( MailCommon::Util::isVirtualCollection( collection ) )
+    return true;
+  
+  return false;
 }
 
 #include "kmsystemtray.moc"

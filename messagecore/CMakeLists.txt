@@ -14,8 +14,11 @@ set(messagecore_LIB_SRCS
 
    asyncnepomukresourceretriever.cpp
    attachmentcollector.cpp
+   imagecollector.cpp
    attachmentcompressjob.cpp
+   attachmentfromfolderjob.cpp
    attachmentfrommimecontentjob.cpp
+   attachmentfromurlbasejob.cpp
    attachmentfromurljob.cpp
    attachmentloadjob.cpp
    attachmentpart.cpp

@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarViews.
-
   Copyright (c) 2007 Till Adam <adam@kde.org>
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
@@ -25,8 +23,8 @@
 */
 
 #include "timelineview.h"
-#include "timelineitem.h"
 #include "timelineview_p.h"
+#include "timelineitem.h"
 #include "helper.h"
 
 #include <kdgantt2/kdganttgraphicsitem.h>
@@ -56,115 +54,161 @@ using namespace KCalCore;
 using namespace EventViews;
 
 namespace EventViews {
-class RowController : public KDGantt::AbstractRowController {
-private:
+
+class RowController : public KDGantt::AbstractRowController
+{
+  private:
     static const int ROW_HEIGHT ;
     QPointer<QAbstractItemModel> m_model;
 
-public:
+  public:
     RowController()
     {
       mRowHeight = 20;
     }
 
-    void setModel( QAbstractItemModel* model )
+    void setModel( QAbstractItemModel *model )
     {
-        m_model = model;
+      m_model = model;
     }
 
-    /*reimp*/int headerHeight() const { return 2*mRowHeight + 10; }
-
-    /*reimp*/ bool isRowVisible( const QModelIndex& ) const { return true;}
-    /*reimp*/ bool isRowExpanded( const QModelIndex& ) const { return false; }
-    /*reimp*/ KDGantt::Span rowGeometry( const QModelIndex& idx ) const
+    /*reimp*/int headerHeight() const
     {
-        return KDGantt::Span( idx.row()*mRowHeight, mRowHeight );
-    }
-    /*reimp*/ int maximumItemHeight() const {
-        return mRowHeight/2;
-    }
-    /*reimp*/int totalHeight() const {
-        return m_model->rowCount()* mRowHeight;
+      return 2 * mRowHeight + 10;
     }
 
-    /*reimp*/ QModelIndex indexAt( int height ) const {
-        return m_model->index( height/mRowHeight, 0 );
+    /*reimp*/bool isRowVisible( const QModelIndex & ) const
+    {
+      return true;
     }
 
-    /*reimp*/ QModelIndex indexBelow( const QModelIndex& idx ) const {
-        if ( !idx.isValid() )return QModelIndex();
-        return idx.model()->index( idx.row()+1, idx.column(), idx.parent() );
-    }
-    /*reimp*/ QModelIndex indexAbove( const QModelIndex& idx ) const {
-        if ( !idx.isValid() )return QModelIndex();
-        return idx.model()->index( idx.row()-1, idx.column(), idx.parent() );
+    /*reimp*/bool isRowExpanded( const QModelIndex & ) const
+    {
+      return false;
     }
 
-    void setRowHeight( int height ) { mRowHeight = height; }
+    /*reimp*/KDGantt::Span rowGeometry( const QModelIndex &idx ) const
+    {
+        return KDGantt::Span( idx.row() * mRowHeight, mRowHeight );
+    }
 
-private:
+    /*reimp*/int maximumItemHeight() const
+    {
+      return mRowHeight / 2;
+    }
+
+    /*reimp*/int totalHeight() const
+    {
+      return m_model->rowCount() * mRowHeight;
+    }
+
+    /*reimp*/QModelIndex indexAt( int height ) const
+    {
+      return m_model->index( height / mRowHeight, 0 );
+    }
+
+    /*reimp*/QModelIndex indexBelow( const QModelIndex &idx ) const
+    {
+      if ( !idx.isValid() ) {
+        return QModelIndex();
+      }
+      return idx.model()->index( idx.row() + 1, idx.column(), idx.parent() );
+    }
+
+    /*reimp*/QModelIndex indexAbove( const QModelIndex &idx ) const
+    {
+      if ( !idx.isValid() ) {
+        return QModelIndex();
+      }
+      return idx.model()->index( idx.row() - 1, idx.column(), idx.parent() );
+    }
+
+    void setRowHeight( int height )
+    {
+      mRowHeight = height;
+    }
+
+  private:
     int mRowHeight;
-
 };
 
-class GanttHeaderView : public QHeaderView {
-public:
-    explicit GanttHeaderView( QWidget* parent=0 ) : QHeaderView( Qt::Horizontal, parent ) {
-    }
-
-    QSize sizeHint() const { QSize s = QHeaderView::sizeHint(); s.rheight() *= 2; return s; }
-};
-
-class GanttItemDelegate : public KDGantt::ItemDelegate {
-    void paintGanttItem( QPainter* painter,
-                         const KDGantt::StyleOptionGanttItem& opt,
-                         const QModelIndex& idx )
+class GanttHeaderView : public QHeaderView
+{
+  public:
+    explicit GanttHeaderView( QWidget *parent=0 ) : QHeaderView( Qt::Horizontal, parent )
     {
-        painter->setRenderHints( QPainter::Antialiasing );
-        if ( !idx.isValid() ) return;
-        KDGantt::ItemType type = static_cast<KDGantt::ItemType>(
-                            idx.model()->data( idx, KDGantt::ItemTypeRole ).toInt() );
-        QString txt = idx.model()->data( idx, Qt::DisplayRole ).toString();
-        QRectF itemRect = opt.itemRect;
-        QRectF boundingRect = opt.boundingRect;
-        boundingRect.setY( itemRect.y() );
-        boundingRect.setHeight( itemRect.height() );
-
-        QBrush brush = defaultBrush( type );
-        if ( opt.state & QStyle::State_Selected ) {
-            QLinearGradient selectedGrad( 0., 0., 0.,
-                                          QApplication::fontMetrics().height() );
-            selectedGrad.setColorAt( 0., Qt::red );
-            selectedGrad.setColorAt( 1., Qt::darkRed );
-
-            brush = QBrush( selectedGrad );
-            painter->setBrush( brush );
-        } else
-          painter->setBrush( idx.model()->data( idx, Qt::DecorationRole ).value<QColor>() );
-
-        painter->setPen( defaultPen( type ) );
-        painter->setBrushOrigin( itemRect.topLeft() );
-
-        switch( type ) {
-        case KDGantt::TypeTask:
-            if ( itemRect.isValid() ) {
-                QRectF r = itemRect;
-                painter->drawRect( r );
-
-                Qt::Alignment ta;
-                switch( opt.displayPosition ) {
-                case KDGantt::StyleOptionGanttItem::Left: ta = Qt::AlignLeft; break;
-                case KDGantt::StyleOptionGanttItem::Right: ta = Qt::AlignRight; break;
-                case KDGantt::StyleOptionGanttItem::Center: ta = Qt::AlignCenter; break;
-                }
-                painter->drawText( boundingRect, ta, txt );
-            }
-            break;
-        default:
-            KDGantt::ItemDelegate::paintGanttItem( painter, opt, idx );
-            break;
-        }
     }
+
+    QSize sizeHint() const
+    {
+      QSize s = QHeaderView::sizeHint();
+      s.rheight() *= 2;
+      return s;
+    }
+};
+
+class GanttItemDelegate : public KDGantt::ItemDelegate
+{
+  void paintGanttItem( QPainter *painter,
+                       const KDGantt::StyleOptionGanttItem &opt,
+                       const QModelIndex &idx )
+  {
+    painter->setRenderHints( QPainter::Antialiasing );
+    if ( !idx.isValid() ) {
+      return;
+    }
+
+    KDGantt::ItemType type = static_cast<KDGantt::ItemType>(
+      idx.model()->data( idx, KDGantt::ItemTypeRole ).toInt() );
+
+    QString txt = idx.model()->data( idx, Qt::DisplayRole ).toString();
+    QRectF itemRect = opt.itemRect;
+    QRectF boundingRect = opt.boundingRect;
+    boundingRect.setY( itemRect.y() );
+    boundingRect.setHeight( itemRect.height() );
+
+    QBrush brush = defaultBrush( type );
+    if ( opt.state & QStyle::State_Selected ) {
+      QLinearGradient selectedGrad( 0., 0., 0.,
+                                    QApplication::fontMetrics().height() );
+      selectedGrad.setColorAt( 0., Qt::red );
+      selectedGrad.setColorAt( 1., Qt::darkRed );
+
+      brush = QBrush( selectedGrad );
+      painter->setBrush( brush );
+    } else {
+      painter->setBrush( idx.model()->data( idx, Qt::DecorationRole ).value<QColor>() );
+    }
+
+    painter->setPen( defaultPen( type ) );
+    painter->setBrushOrigin( itemRect.topLeft() );
+
+    switch( type ) {
+    case KDGantt::TypeTask:
+      if ( itemRect.isValid() ) {
+        QRectF r = itemRect;
+        painter->drawRect( r );
+
+        Qt::Alignment ta;
+        switch( opt.displayPosition ) {
+        case KDGantt::StyleOptionGanttItem::Left:
+          ta = Qt::AlignLeft;
+          break;
+        case KDGantt::StyleOptionGanttItem::Right:
+          ta = Qt::AlignRight;
+          break;
+        case KDGantt::StyleOptionGanttItem::Center:
+          ta = Qt::AlignCenter;
+          break;
+        }
+        painter->drawText( boundingRect, ta, txt );
+      }
+      break;
+    default:
+      KDGantt::ItemDelegate::paintGanttItem( painter, opt, idx );
+      break;
+    }
+  }
 };
 
 }
@@ -177,7 +221,7 @@ TimelineView::TimelineView( QWidget *parent )
   QSplitter *splitter = new QSplitter( Qt::Horizontal, this );
   d->mLeftView = new QTreeWidget;
   d->mLeftView->setHeader( new GanttHeaderView );
-  d->mLeftView->setHeaderLabel( i18n("Calendar") );
+  d->mLeftView->setHeaderLabel( i18n( "Calendar" ) );
   d->mLeftView->setRootIsDecorated( false );
   d->mLeftView->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
@@ -217,10 +261,9 @@ TimelineView::TimelineView( QWidget *parent )
     d->mGantt->setHourFormat( KDGanttView::Hour_24_FourDigit );
   }
 #else
- kDebug() << "Disabled code, port to KDGantt2";
+  kDebug() << "Disabled code, port to KDGantt2";
 #endif
- d->mGantt->setItemDelegate( new GanttItemDelegate);
-
+  d->mGantt->setItemDelegate( new GanttItemDelegate );
 
   vbox->addWidget( splitter );
 
@@ -228,7 +271,7 @@ TimelineView::TimelineView( QWidget *parent )
   connect( d->mGantt, SIGNAL(rescaling(KDGanttView::Scale)),
            SLOT(overscale(KDGanttView::Scale)) );
 #else
- kDebug() << "Disabled code, port to KDGantt2";
+  kDebug() << "Disabled code, port to KDGantt2";
 #endif
   connect( model, SIGNAL(itemChanged(QStandardItem*)),
            d, SLOT(itemChanged(QStandardItem*)) );
@@ -285,7 +328,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   d->mStartDate = start;
   d->mEndDate = end;
   d->mHintDate = QDateTime();
-  KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>(d->mGantt->grid());
+  KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( d->mGantt->grid() );
   grid->setStartDateTime( QDateTime( start ) );
 #if 0
   d->mGantt->setHorizonStart( QDateTime( start ) );
@@ -299,7 +342,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   d->mGantt->setUpdateEnabled( false );
   d->mGantt->clear();
 #else
- kDebug() << "Disabled code, port to KDGantt2";
+  kDebug() << "Disabled code, port to KDGantt2";
 #endif
 
   d->mLeftView->clear();
@@ -308,7 +351,10 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   TimelineItem *item = 0;
   CalendarSupport::Calendar *calres = calendar();
   if ( !calres ) {
-    item = new TimelineItem( calendar(), index++, static_cast<QStandardItemModel*>( d->mGantt->model() ), d->mGantt );
+    item = new TimelineItem( calendar(),
+                             index++,
+                             static_cast<QStandardItemModel*>( d->mGantt->model() ),
+                             d->mGantt );
     d->mLeftView->addTopLevelItem( new QTreeWidgetItem( QStringList() << i18n( "Calendar" ) ) );
     d->mCalendarItemMap.insert( -1, item );
 
@@ -318,14 +364,20 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
 
     Q_FOREACH ( const Akonadi::Collection &collection, collections ) {
       if ( collection.contentMimeTypes().contains( Event::eventMimeType() ) ) {
-        item = new TimelineItem( calendar(), index++, static_cast<QStandardItemModel*>( d->mGantt->model() ), d->mGantt );
-        d->mLeftView->addTopLevelItem(new QTreeWidgetItem( QStringList() << CalendarSupport::displayName( collection ) ) );
+        item = new TimelineItem( calendar(),
+                                 index++,
+                                 static_cast<QStandardItemModel*>( d->mGantt->model() ),
+                                 d->mGantt );
+        d->mLeftView->addTopLevelItem(
+          new QTreeWidgetItem(
+            QStringList() << CalendarSupport::displayName( calendar(), collection ) ) );
         const QColor resourceColor = EventViews::resourceColor( collection, preferences() );
         if ( resourceColor.isValid() ) {
           item->setColor( resourceColor );
         }
-        kDebug() << "Created item " << item << " ( " <<  CalendarSupport::displayName( collection ) << " ) with index"
-                 <<  index - 1 << " from collection " << collection.id();
+        kDebug() << "Created item " << item
+                 << " (" <<  CalendarSupport::displayName( collection ) << ") "
+                 << "with index " <<  index - 1 << " from collection " << collection.id();
         d->mCalendarItemMap.insert( collection.id(), item );
       }
     }
@@ -432,10 +484,15 @@ bool TimelineView::eventFilter( QObject *object, QEvent *event )
         KDGantt::GraphicsItem *graphicsItem = static_cast<KDGantt::GraphicsItem*>( item );
         const QModelIndex itemIndex = graphicsItem->index();
 
-        QStandardItemModel *itemModel = qobject_cast<QStandardItemModel*>( d->mGantt->model() );
-        TimelineSubItem *timelineItem = dynamic_cast<TimelineSubItem*>( itemModel->item( itemIndex.row(), itemIndex.column() ) );
-        if ( timelineItem )
+        QStandardItemModel *itemModel =
+          qobject_cast<QStandardItemModel*>( d->mGantt->model() );
+
+        TimelineSubItem *timelineItem =
+          dynamic_cast<TimelineSubItem*>( itemModel->item( itemIndex.row(), itemIndex.column() ) );
+
+        if ( timelineItem ) {
           timelineItem->updateToolTip();
+        }
       }
     }
   }

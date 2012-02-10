@@ -42,7 +42,6 @@
 #include <KDialog>
 #include <KGlobal>
 #include <KLocale>
-#include <ktimeedit.h>
 #include <KLineEdit>
 #include <KStandardGuiItem>
 #include <KMessageBox>
@@ -95,7 +94,7 @@ void JournalDateView::addJournal( const Akonadi::Item &j )
   QHBoxLayout *layout = new QHBoxLayout( container );
   layout->addStretch( 1 );
   JournalView *entry = new JournalView( j, mCalendar, this );
-  layout->addWidget( entry, 3 /*stretch*/ );
+  layout->addWidget( entry, 3/*stretch*/ );
   layout->addStretch( 1 );
 
   entry->show();
@@ -171,7 +170,6 @@ JournalView::JournalView( const Akonadi::Item &j,
   verticalLayout->setSpacing( KDialog::spacingHint() );
   verticalLayout->setMargin( KDialog::marginHint() );
 
-
   mBrowser = new KTextBrowser( this );
   mBrowser->viewport()->installEventFilter( this );
   mBrowser->setFrameStyle( QFrame::NoFrame );
@@ -246,7 +244,6 @@ bool JournalView::eventFilter ( QObject *object, QEvent *event )
 
   return false;
 }
-
 
 void JournalView::deleteItem()
 {

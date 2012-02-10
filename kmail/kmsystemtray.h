@@ -42,7 +42,7 @@ class KMSystemTray : public KStatusNotifierItem
   Q_OBJECT
 public:
   /** construtor */
-  KMSystemTray(QObject* parent=0);
+  explicit KMSystemTray(QObject* parent=0);
   /** destructor */
   ~KMSystemTray();
 
@@ -59,6 +59,7 @@ private slots:
   void slotContextMenuAboutToShow();
   void slotSelectCollection(QAction*act);
   void initListOfCollection();
+  void slotCollectionStatisticsChanged( Akonadi::Collection::Id,const Akonadi::CollectionStatistics& );
   
 protected:
   bool mainWindowIsOnCurrentDesktop();
@@ -66,10 +67,10 @@ protected:
   void updateCount();
   void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, const QString& parentName = QString(), const QModelIndex& parentIndex = QModelIndex() );
   void unreadMail( const QAbstractItemModel *model, const QModelIndex& parentIndex = QModelIndex() );
+  
+  bool excludeFolder( const Akonadi::Collection& collection ) const;
 
 private:
-
-  QPoint mPosOfMainWin;
   int mDesktopOfMainWin;
 
   int mMode;

@@ -47,7 +47,7 @@ class MESSAGELIST_EXPORT StorageModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  StorageModel( QObject * parent = 0 );
+  explicit StorageModel( QObject * parent = 0 );
   ~StorageModel();
 
   /**
@@ -117,7 +117,7 @@ public:
    * The implementation-specific mime data for this list of items.
    *    Called when the user initiates a drag from the messagelist.
    */
-  virtual QMimeData* mimeData( QList< MessageItem* > ) const = 0;
+  virtual QMimeData* mimeData( const QList< MessageItem* >& ) const = 0;
   using QAbstractItemModel::mimeData;
 };
 

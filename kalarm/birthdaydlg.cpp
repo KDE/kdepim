@@ -1,7 +1,7 @@
 /*
  *  birthdaydlg.cpp  -  dialog to pick birthdays from address book
  *  Program:  kalarm
- *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -232,8 +232,16 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     mSoundPicker->set(Preferences::defaultSoundType(), Preferences::defaultSoundFile(),
                       Preferences::defaultSoundVolume(), -1, 0, Preferences::defaultSoundRepeat());
     if (mSpecialActionsButton)
-        mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(),
-                                          Preferences::defaultCancelOnPreActionError(), Preferences::defaultDontShowPreActionError());
+    {
+        KAEvent::ExtraActionOptions opts(0);
+        if (Preferences::defaultExecPreActionOnDeferral())
+            opts |= KAEvent::ExecPreActOnDeferral;
+        if (Preferences::defaultCancelOnPreActionError())
+            opts |= KAEvent::CancelOnPreActError;
+        if (Preferences::defaultDontShowPreActionError())
+            opts |= KAEvent::DontShowPreActError;
+        mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(), opts);
+    }
 
     KActionCollection* actions = new KActionCollection(this);
     KStandardAction::selectAll(mListView, SLOT(selectAll()), actions);
@@ -248,9 +256,9 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
 /******************************************************************************
 * Return a list of events for birthdays chosen.
 */
-QList<KAEvent> BirthdayDlg::events() const
+QVector<KAEvent> BirthdayDlg::events() const
 {
-    QList<KAEvent> list;
+    QVector<KAEvent> list;
     QModelIndexList indexes = mListView->selectionModel()->selectedRows();
     int count = indexes.count();
     if (!count)
@@ -269,16 +277,16 @@ QList<KAEvent> BirthdayDlg::events() const
         if (date <= today)
             date.setYMD(thisYear + 1, date.month(), date.day());
         KAEvent event(KDateTime(date, KDateTime::ClockTime),
-                  mPrefix->text() + name + mSuffix->text(),
-                  mFontColourButton->bgColour(), mFontColourButton->fgColour(),
-                  mFontColourButton->font(), KAEvent::MESSAGE, mLateCancel->minutes(),
-                  mFlags, true);
+                      mPrefix->text() + name + mSuffix->text(),
+                      mFontColourButton->bgColour(), mFontColourButton->fgColour(),
+                      mFontColourButton->font(), KAEvent::MESSAGE, mLateCancel->minutes(),
+                      mFlags, true);
         float fadeVolume;
         int   fadeSecs;
         float volume = mSoundPicker->volume(fadeVolume, fadeSecs);
-        event.setAudioFile(mSoundPicker->file().prettyUrl(), volume, fadeVolume, fadeSecs);
-        QList<int> months;
-        months.append(date.month());
+        int   repeatPause = mSoundPicker->repeatPause();
+        event.setAudioFile(mSoundPicker->file().prettyUrl(), volume, fadeVolume, fadeSecs, repeatPause);
+        QVector<int> months(1, date.month());
         event.setRecurAnnualByDate(1, months, 0, KARecurrence::defaultFeb29Type(), -1, QDate());
         event.setRepetition(mSubRepetition->repetition());
         event.setNextOccurrence(todayStart);
@@ -286,9 +294,8 @@ QList<KAEvent> BirthdayDlg::events() const
             event.setReminder(reminder, false);
         if (mSpecialActionsButton)
             event.setActions(mSpecialActionsButton->preAction(),
-                     mSpecialActionsButton->postAction(),
-                             mSpecialActionsButton->cancelOnError(),
-                             mSpecialActionsButton->dontShowError());
+                             mSpecialActionsButton->postAction(),
+                             mSpecialActionsButton->options());
         event.endChanges();
         list.append(event);
     }
@@ -306,11 +313,11 @@ void BirthdayDlg::slotOk()
     config.writeEntry("BirthdaySuffix", mSuffix->text());
     config.sync();
 
-    mFlags = (mSoundPicker->sound() == Preferences::Sound_Beep ? KAEvent::BEEP : 0)
-           | (mSoundPicker->repeat()                           ? KAEvent::REPEAT_SOUND : 0)
-           | (mConfirmAck->isChecked()                         ? KAEvent::CONFIRM_ACK : 0)
-           | (mFontColourButton->defaultFont()                 ? KAEvent::DEFAULT_FONT : 0)
-           |                                                     KAEvent::ANY_TIME;
+    mFlags = KAEvent::ANY_TIME;
+    if (mSoundPicker->sound() == Preferences::Sound_Beep) mFlags |= KAEvent::BEEP;
+    if (mSoundPicker->repeatPause() >= 0)                 mFlags |= KAEvent::REPEAT_SOUND;
+    if (mConfirmAck->isChecked())                         mFlags |= KAEvent::CONFIRM_ACK;
+    if (mFontColourButton->defaultFont())                 mFlags |= KAEvent::DEFAULT_FONT;
     KDialog::accept();
 }
 

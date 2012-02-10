@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,7 +21,7 @@
 #include "editoritemmanager.h"
 
 #include <calendarsupport/next/invitationhandler.h>
-#include <utils.h>
+#include <calendarsupport/utils.h>
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
@@ -75,7 +75,6 @@ ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 }
-
 
 void ItemEditorPrivate::createMoveAndModifyTransactionJob()
 {
@@ -412,7 +411,6 @@ bool ItemEditorUi::isValid() const
 {
   return true;
 }
-
 
 } // namespace
 

@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -40,12 +41,18 @@ DelegateSelector::DelegateSelector(QWidget * parent)
   KHBox *delegateBox = new KHBox( mainWidget() );
   new QLabel( i18n("Delegate:"), delegateBox );
   mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
-
+  connect( mDelegate, SIGNAL(textChanged(QString)), SLOT(slotTextChanged(QString)) );
   mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), mainWidget() );
   mRsvp->setChecked( true );
 
   layout->addWidget( delegateBox );
   layout->addWidget( mRsvp );
+  enableButtonOk( false );
+}
+
+void DelegateSelector::slotTextChanged( const QString& text )
+{
+  enableButtonOk( !text.isEmpty() );
 }
 
 QString DelegateSelector::delegate() const

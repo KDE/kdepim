@@ -27,11 +27,7 @@
 #include "korganizerplugin.h"
 #include "summaryeventinfo.h"
 
-#include <korganizer/korganizerinterface.h>
-#include <KontactInterface/Core>
-
-#include <kcalcore/calendar.h>
-#include <kcalcore/event.h>
+#include "korganizer/korganizerinterface.h"
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendaradaptor.h>
@@ -40,21 +36,26 @@
 #include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Session>
 #include <Akonadi/Collection>
-#include <Akonadi/ItemFetchScope>
+#include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Session>
 
-#include <KSystemTimeZones>
+#include <KCalCore/Calendar>
+#include <KCalCore/Event>
+
+#include <KontactInterface/Core>
+
 #include <KConfigGroup>
 #include <KIconLoader>
 #include <KLocale>
 #include <KMenu>
+#include <KSystemTimeZones>
 #include <KUrlLabel>
 
-#include <QLabel>
 #include <QGridLayout>
+#include <QLabel>
 #include <QVBoxLayout>
 
 ApptSummaryWidget::ApptSummaryWidget( KOrganizerPlugin *plugin, QWidget *parent )
@@ -141,7 +142,8 @@ void ApptSummaryWidget::updateView()
     foreach ( SummaryEventInfo *event, events ) {
 
       // Optionally, show only my Events
-/*      if ( mShowMineOnly && !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, event->ev ) ) {
+/*      if ( mShowMineOnly &&
+            !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, event->ev ) ) {
         continue;
       }
       TODO: CalHelper is deprecated, remove this?
@@ -233,7 +235,7 @@ void ApptSummaryWidget::updateView()
     mLabels.append( noEvents );
   }
 
-  Q_FOREACH( label, mLabels ) { //krazy:exclude=foreach as label is a pointer
+  Q_FOREACH ( label, mLabels ) { //krazy:exclude=foreach as label is a pointer
     label->show();
   }
 }
@@ -323,6 +325,5 @@ void ApptSummaryWidget::createCalendar()
   mCalendarAdaptor = CalendarSupport::CalendarAdaptor::Ptr(
     new CalendarSupport::CalendarAdaptor( mCalendar, this ) );
 }
-
 
 #include "apptsummarywidget.moc"

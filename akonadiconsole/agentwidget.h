@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef AGENTWIDGET_H
-#define AGENTWIDGET_H
+#ifndef AKONADICONSOLE_AGENTWIDGET_H
+#define AKONADICONSOLE_AGENTWIDGET_H
 
 #include "ui_agentwidget.h"
 
@@ -50,15 +50,18 @@ protected:
     void synchronizeAgent();
     void synchronizeTree();
     void toggleOnline();
+    void showChangeNotifications();
+    void showTaskList();
     void abortAgent();
     void restartAgent();
     void cloneAgent();
     void cloneAgent( KJob *job );
 
-    void currentChanged( const Akonadi::AgentInstance &instance );
+    void currentChanged();
     void showContextMenu( const QPoint &pos );
 
-    void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+    void selectionChanged();
+    void slotDataChanged( const QModelIndex&, const QModelIndex& );
 
   private:
     Ui::AgentWidget ui;

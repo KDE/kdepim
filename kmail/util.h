@@ -41,12 +41,11 @@
 #include <stdlib.h>
 #include <QWidget>
 #include <kio/netaccess.h>
-#include <kmessagebox.h>
-#include <klocale.h>
 #include <akonadi/item.h>
 #include <kmime/kmime_message.h>
 #include <Akonadi/AgentInstance>
 #include <Akonadi/Collection>
+#include "mailcommon/foldercollection.h"
 class KUrl;
 
 class OrgKdeAkonadiImapSettingsInterface;
@@ -57,6 +56,7 @@ namespace Akonadi {
 
 #define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
 #define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
+#define MAILDISPATCHER_RESOURCE_IDENTIFIER "akonadi_maildispatcher_agent"
 namespace KMail
 {
     /**
@@ -99,6 +99,15 @@ namespace Util {
      * Currently only support mailto.
      */
     void handleClickedURL( const KUrl &url, uint identity );
+
+
+    void mailingListsHandleURL( const KUrl::List& lst,const QSharedPointer<MailCommon::FolderCollection> &folder );
+
+    void mailingListPost( const QSharedPointer<MailCommon::FolderCollection> &fd );
+    void mailingListSubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd );
+    void mailingListUnsubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd );
+    void mailingListArchives( const QSharedPointer<MailCommon::FolderCollection> &fd );
+    void mailingListHelp( const QSharedPointer<MailCommon::FolderCollection> &fd );
 
 }
 }

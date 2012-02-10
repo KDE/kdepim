@@ -26,7 +26,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/session.h>
-#include <akonadi/statisticsproxymodel.h>
+#include <libkdepim/statisticsproxymodel.h>
 
 #include <messagelist/pane.h>
 
@@ -150,7 +150,7 @@ void KPDialog::setupPane()
       collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
       // ... with statistics...
-      Akonadi::StatisticsProxyModel *statisticsProxyModel = new Akonadi::StatisticsProxyModel( m_folderListWidget );
+      KPIM::StatisticsProxyModel *statisticsProxyModel = new KPIM::StatisticsProxyModel( m_folderListWidget );
       statisticsProxyModel->setSourceModel( collectionFilter );
 
       // ... and sortable

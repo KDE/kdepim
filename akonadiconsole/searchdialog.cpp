@@ -21,10 +21,11 @@
 
 #include "searchdialog.h"
 
+#include <KLineEdit>
+#include <KTextEdit>
+
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QTextEdit>
 
 SearchDialog::SearchDialog( QWidget *parent )
   : KDialog( parent )
@@ -37,9 +38,9 @@ SearchDialog::SearchDialog( QWidget *parent )
 
   QGridLayout *layout = new QGridLayout( widget );
 
-  mName = new QLineEdit;
+  mName = new KLineEdit;
   mName->setText( "My Search" );
-  mEdit = new QTextEdit;
+  mEdit = new KTextEdit;
   mEdit->setAcceptRichText( false );
   mEdit->setWhatsThis( "Enter a SparQL query here" );
 

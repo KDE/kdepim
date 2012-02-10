@@ -3,7 +3,7 @@
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,9 +27,9 @@
         kdepim/incidenceeditors/editorattachments.{h,cpp}
 */
 
-#include "attachmenticonview.h"
+#include <config-enterprise.h>
 
-#include "config-enterprise.h"
+#include "attachmenticonview.h"
 
 #include <KIconLoader>
 #include <KLocale>
@@ -52,8 +52,9 @@ AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QL
     // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
     mAttachment =
-      KCalCore::Attachment::Ptr( new KCalCore::Attachment( QByteArray() ) ); //use the non-uri constructor
-                                                                     // as we want inline by default
+      KCalCore::Attachment::Ptr(
+        new KCalCore::Attachment( QByteArray() ) ); // use the non-uri constructor
+                                                    // as we want inline by default
 #else
     mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( QString() ) );
 #endif

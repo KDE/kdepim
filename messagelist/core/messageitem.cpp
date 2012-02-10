@@ -1,3 +1,4 @@
+
 /******************************************************************************
  *
  *  Copyright 2008 Szymon Tomasz Stefanek <pragma@kvirc.net>
@@ -22,25 +23,32 @@
 #include "messageitem_p.h"
 
 #include "messagetag.h"
-#include "ontologies/email.h"
 #include "messagecore/annotationdialog.h"
 #include "core/callbacknepomukresourceretriever.h"
+#include "theme.h"
 
 #include <akonadi/item.h>
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
 #include <Nepomuk/Variant>
+#include <nepomuk/nmo.h>
+#include <nepomuk/resourcemanager.h>
 
 #include <KIconLoader>
 
 using namespace MessageList::Core;
 
-K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriever );
+K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriever )
 
 class MessageItem::Tag::Private
 {
 public:
+  Private()
+    :mPriority( 0 ) //Initialize it
+    {
+
+    }
   QPixmap mPixmap;
   QString mName;
   QString mId;             ///< The unique id of this tag
@@ -120,17 +128,14 @@ void MessageItem::Tag::setPriority( int priority )
 }
 
 
-QColor MessageItemPrivate::mColorNewMessage;
 QColor MessageItemPrivate::mColorUnreadMessage;
 QColor MessageItemPrivate::mColorImportantMessage;
 QColor MessageItemPrivate::mColorToDoMessage;
 QFont MessageItemPrivate::mFont;
-QFont MessageItemPrivate::mFontNewMessage;
 QFont MessageItemPrivate::mFontUnreadMessage;
 QFont MessageItemPrivate::mFontImportantMessage;
 QFont MessageItemPrivate::mFontToDoMessage;
 QString MessageItemPrivate::mFontKey;
-QString MessageItemPrivate::mFontNewMessageKey;
 QString MessageItemPrivate::mFontUnreadMessageKey;
 QString MessageItemPrivate::mFontImportantMessageKey;
 QString MessageItemPrivate::mFontToDoMessageKey;
@@ -286,17 +291,22 @@ QString MessageItem::annotation() const
     Nepomuk::Resource resource( d->mAkonadiItem.url() );
     return resource.description();
   }
-  else return QString();
+  else
+    return QString();
 }
 
 void MessageItem::editAnnotation()
 {
+  if( !Nepomuk::ResourceManager::instance()->initialized() )
+      return;
   Q_D( MessageItem );
-  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
-  dialog->setAttribute( Qt::WA_DeleteOnClose );
-  dialog->show();
-  // invalidate the cached mHasAnnotation value
-  d->mAnnotationStateChecked = false;
+  if ( d->mAnnotationDialog.data() )
+    return;
+  d->mAnnotationDialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
+  d->mAnnotationDialog.data()->setAttribute( Qt::WA_DeleteOnClose );
+  if ( d->mAnnotationDialog.data()->exec() )
+    // invalidate the cached mHasAnnotation value
+    d->mAnnotationStateChecked = false;
 }
 
 QString MessageItem::contentSummary() const
@@ -304,8 +314,7 @@ QString MessageItem::contentSummary() const
   Q_D( const MessageItem );
   Nepomuk::Resource mail( d->mAkonadiItem.url() );
   const QString content =
-      mail.property( NepomukFast::Message::plainTextMessageContentUri() ).toString();
-
+      mail.property( Nepomuk::Vocabulary::NMO::plainTextMessageContent() ).toString();
   // Extract the first 5 non-empty, non-quoted lines from the content and return it
   int numLines = 0;
   const int maxLines = 5;
@@ -388,7 +397,7 @@ QColor MessageItem::backgroundColor() const
 {
   Q_D( const MessageItem );
   const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 ) {
+  if ( bestTag ) {
     return bestTag->backgroundColor();
   } else {
     return QColor();
@@ -403,7 +412,7 @@ QFont MessageItem::font() const
   // and thus this method called for each item
   if ( d->tagListInitialized() ) {
     const Tag *bestTag = d->bestTag();
-    if ( bestTag != 0 && bestTag->font() != QFont() ) {
+    if ( bestTag && bestTag->font() != QFont() ) {
       return bestTag->font();
     }
   }
@@ -434,7 +443,7 @@ QString MessageItem::fontKey() const
   // and thus this method called for each item
   if ( d->tagListInitialized() ) {
     const Tag *bestTag = d->bestTag();
-    if ( bestTag != 0 && bestTag->font() != QFont() ) {
+    if ( bestTag  && bestTag->font() != QFont() ) {
       return bestTag->font().key();
     }
   }
@@ -589,24 +598,67 @@ MessageItem * MessageItem::topmostMessage()
   return this;
 }
 
+QString MessageItem::accessibleTextForField(Theme::ContentItem::Type field)
+{
+  switch (field) {
+  case Theme::ContentItem::Subject:
+    return d_ptr->mSubject;
+  case Theme::ContentItem::Sender:
+    return d_ptr->mSender;
+  case Theme::ContentItem::Receiver:
+    return d_ptr->mReceiver;
+  case Theme::ContentItem::SenderOrReceiver:
+    return senderOrReceiver();
+  case Theme::ContentItem::Date:
+    return formattedDate();
+  case Theme::ContentItem::Size:
+    return formattedSize();
+  case Theme::ContentItem::RepliedStateIcon:
+    return status().isReplied() ? i18nc( "Status of an item", "Replied" ) : QString();
+  case Theme::ContentItem::ReadStateIcon:
+    return status().isRead() ? i18nc( "Status of an item", "Read" ) : i18nc( "Status of an item", "Unread" );
+  case Theme::ContentItem::CombinedReadRepliedStateIcon:
+    return accessibleTextForField( Theme::ContentItem::ReadStateIcon ) + accessibleTextForField( Theme::ContentItem::RepliedStateIcon );
+  default:
+    return QString();
+  }
+}
+
+
+QString MessageItem::accessibleText( const Theme* theme, int columnIndex )
+{
+  QStringList rowsTexts;
+
+  Q_FOREACH( Theme::Row *row, theme->column(columnIndex)->messageRows() ) {
+    QStringList leftStrings;
+    QStringList rightStrings;
+    Q_FOREACH( Theme::ContentItem *contentItem, row->leftItems() ) {
+      leftStrings.append( accessibleTextForField( contentItem->type() ) );
+    }
+
+    Q_FOREACH( Theme::ContentItem *contentItem, row->rightItems() ) {
+      rightStrings.insert( rightStrings.begin(), accessibleTextForField( contentItem->type() ) );
+    }
+
+    rowsTexts.append( ( leftStrings + rightStrings ).join( QLatin1String( " " ) ) );
+  }
+
+  return rowsTexts.join( QLatin1String(" ") );
+}
+
 void MessageItem::subTreeToList( QList< MessageItem * > &list )
 {
   list.append( this );
   QList< Item * > * childList = childItems();
   if ( !childList )
     return;
-  for ( QList< Item * >::Iterator it = childList->begin(); it != childList->end(); ++it )
+  QList< Item * >::ConstIterator end( childList->constEnd() );
+  for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
   {
     Q_ASSERT( ( *it )->type() == Item::Message );
     static_cast< MessageItem * >( *it )->subTreeToList( list );
   }
 }
-
-void MessageItem::setNewMessageColor( const QColor &color )
-{
-  MessageItemPrivate::mColorNewMessage = color;
-}
-
 
 void MessageItem::setUnreadMessageColor( const QColor &color )
 {
@@ -630,12 +682,6 @@ void MessageItem::setGeneralFont( const QFont &font )
 {
   MessageItemPrivate::mFont = font;
   MessageItemPrivate::mFontKey = font.key();
-}
-
-void MessageItem::setNewMessageFont( const QFont &font )
-{
-  MessageItemPrivate::mFontNewMessage = font;
-  MessageItemPrivate::mFontNewMessageKey = font.key();
 }
 
 void MessageItem::setUnreadMessageFont( const QFont &font )

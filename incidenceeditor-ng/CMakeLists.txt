@@ -1,4 +1,4 @@
-if (KDEPIM_MOBILE_UI)
+if(KDEPIM_MOBILE_UI)
   remove_definitions(-DKDEPIM_MOBILE_UI)
 endif()
 
@@ -6,6 +6,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
+  ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_BINARY_DIR}/incidenceeditor-ng
   ${Boost_INCLUDE_DIR}
 )
@@ -64,64 +65,63 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   categorydialog.cpp
 )
 
-kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc )
+kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
 
 ### Build the desktop version
 
-if (NOT WINCE)
+if(NOT WINCE)
+  set(incidenceeditors_ng_shared_LIB_SRCS
+    ${incidenceeditors_ng_shared_LIB_SRCS}
+    incidencedialog.cpp
+  )
 
-set(incidenceeditors_ng_shared_LIB_SRCS
-  ${incidenceeditors_ng_shared_LIB_SRCS}
-  incidencedialog.cpp
-)
-
-set( incidenceeditors_ng_desktop_LIB_SRCS
-  ${incidenceeditors_ng_shared_LIB_SRCS}
-  templatemanagementdialog.cpp
-  incidencedialogfactory.cpp
-  eventortododialog.cpp
-  visualfreebusywidget.cpp
-)
+  set(incidenceeditors_ng_desktop_LIB_SRCS
+    ${incidenceeditors_ng_shared_LIB_SRCS}
+    templatemanagementdialog.cpp
+    incidencedialogfactory.cpp
+    eventortododialog.cpp
+    visualfreebusywidget.cpp
+  )
 
 
-kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
-  categoryeditdialog_base.ui
-  categoryselectdialog_base.ui
-  categorydialog_base.ui
-  template_management_dialog_base.ui
-  eventortododesktop.ui
-  alarmdialog.ui
-  attachmenteditdialog.ui
-  schedulingdialog.ui
-)
+  kde4_add_ui_files(incidenceeditors_ng_desktop_LIB_SRCS
+    categoryeditdialog_base.ui
+    categoryselectdialog_base.ui
+    categorydialog_base.ui
+    template_management_dialog_base.ui
+    eventortododesktop.ui
+    alarmdialog.ui
+    attachmenteditdialog.ui
+    schedulingdialog.ui
+  )
 
-kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
+  kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
 
-target_link_libraries(incidenceeditorsng
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  kdepim               # For KPIM::K{Date|Time}Edit
-  kdepimdbusinterfaces # For UriHandler
-  calendarsupport      # For KCalPrefs
-  kdgantt2             # For FreeBusy Editor
-)
+  target_link_libraries(incidenceeditorsng
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${KDE4_KDEUI_LIBS}
+    ${KDEPIMLIBS_KCALCORE_LIBS}
+    ${KDEPIMLIBS_KCALUTILS_LIBS}
+    kdepim
+    kdepimdbusinterfaces # For UriHandler
+    calendarsupport      # For KCalPrefs
+    kdgantt2             # For FreeBusy Editor
+  )
 
-set_target_properties(incidenceeditorsng
-  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
-)
+  set_target_properties(incidenceeditorsng
+    PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+  )
 
-install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
+  install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-endif(NOT WINCE)
+endif()
 
 ### Build the mobile version if needed
 
-#if (KDEPIM_MOBILE_UI)
-  set (incidenceeditors_ng_mobile_LIB_SRCS
+#if(KDEPIM_MOBILE_UI)
+  set(incidenceeditors_ng_mobile_LIB_SRCS
     ${incidenceeditors_ng_shared_LIB_SRCS}
   )
 
@@ -159,28 +159,29 @@ endif(NOT WINCE)
   )
 
   install(TARGETS incidenceeditorsngmobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-#endif (KDEPIM_MOBILE_UI)
+#endif(KDEPIM_MOBILE_UI)
 
 
 ### Build the test app TODO: Make optional
 
-if (NOT WINCE)
+if(NOT WINCE)
 
-set(testincidenceeditor_SRCS main.cpp)
+  set(testincidenceeditor_SRCS main.cpp)
 
-kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
-target_link_libraries(kincidenceeditor
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  incidenceeditorsng
-  calendarsupport
-  kdepimdbusinterfaces
-)
+  kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
 
-install(TARGETS kincidenceeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+  target_link_libraries(kincidenceeditor
+    ${KDE4_KDEUI_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_KCALCORE_LIBS}
+    ${KDEPIMLIBS_KCALUTILS_LIBS}
+    incidenceeditorsng
+    calendarsupport
+    kdepimdbusinterfaces
+  )
 
-add_subdirectory( tests )
+  install(TARGETS kincidenceeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-endif(NOT WINCE)
+  add_subdirectory(tests)
+
+endif()

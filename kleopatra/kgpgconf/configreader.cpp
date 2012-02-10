@@ -52,7 +52,7 @@
 #include <memory>
 
 namespace {
- 
+
 struct GpgConfResult {
     QByteArray stdOut;
     QByteArray stdErr;
@@ -105,7 +105,7 @@ public:
     ConfigEntry* createEntryFromParsedLine( const QStringList& lst ) const;
     void readConfConf( Config* cfg ) const;
 };
- 
+
 ConfigReader::ConfigReader() : d( new Private )
 {
 }
@@ -121,7 +121,7 @@ Config* ConfigReader::readConfig() const
     std::auto_ptr<Config> cfg( new Config );
     const QMap<QString,QString> componentInfo = d->readComponentInfo();
 
-    Q_FOREACH ( const QString& i, componentInfo.keys() )
+    Q_FOREACH ( const QString& i, componentInfo )
     {
         std::auto_ptr<ConfigComponent> component( new ConfigComponent( i ) );
         component->setDescription( componentInfo[i] );
@@ -230,8 +230,8 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
             continue;
 
         if ( lst.count() < 8 )
-        { 
-            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-config output:", line ) );
+        {
+            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-config output: %1", line ) );
         }
         ConfigComponent* const component = cfg->component( lst[3] );
         if ( !component )
@@ -251,7 +251,7 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         }
         if ( !lst[6].isEmpty() )
             entry->setValueFromRawString( lst[6].mid( 1 ) );
-        
+
         if ( flag == QLatin1String( "no-change" ) )
             entry->setMutability( ConfigEntry::NoChange );
         else if ( flag == QLatin1String( "change" ) )
@@ -280,7 +280,7 @@ QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
         if ( lst.count() >= 2 ) {
             components[lst[0]] = lst[1];
         } else {
-            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-components. output:", line ) );
+            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-components. output: %1", line ) );
         }
     }
     return components;
@@ -303,7 +303,7 @@ GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const
 
     process.waitForStarted();
     process.waitForFinished();
-    
+
     if ( process.exitStatus() != QProcess::NormalExit ) {
         switch ( process.error() )
         {

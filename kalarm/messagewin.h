@@ -1,7 +1,7 @@
 /*
  *  messagewin.h  -  displays an alarm message
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,9 @@
 /** @file messagewin.h - displays an alarm message */
 
 #include "autoqpointer.h"
-#include "kaevent.h"
 #include "mainwindowbase.h"
+
+#include <kalarmcal/kaevent.h>
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
@@ -47,6 +48,8 @@ class EditAlarmDlg;
 class ShellProcess;
 class AudioThread;
 
+using namespace KAlarmCal;
+
 /**
  * MessageWin: A window to display an alarm or error message
  */
@@ -66,7 +69,7 @@ class MessageWin : public MainWindowBase
         ~MessageWin();
         void                repeat(const KAAlarm&);
         void                setRecreating()        { mRecreating = true; }
-        const DateTime&     dateTime()             { return mDateTime; }
+        const DateTime&     dateTime()         { return mDateTime; }
         KAAlarm::Type       alarmType() const      { return mAlarmType; }
         bool                hasDefer() const;
         void                showDefer();
@@ -135,7 +138,7 @@ class MessageWin : public MainWindowBase
         bool                haveErrorMessage(unsigned msg) const;
         void                clearErrorMessage(unsigned msg) const;
 #ifdef USE_AKONADI
-        static bool         reinstateFromDisplaying(const KCalCore::ConstEventPtr&, KAEvent&, Akonadi::Collection&, bool& showEdit, bool& showDefer);
+        static bool         reinstateFromDisplaying(const KCalCore::Event::Ptr&, KAEvent&, Akonadi::Collection&, bool& showEdit, bool& showDefer);
 #else
         static bool         reinstateFromDisplaying(const KCal::Event*, KAEvent&, AlarmResource*&, bool& showEdit, bool& showDefer);
 #endif
@@ -162,19 +165,20 @@ class MessageWin : public MainWindowBase
         int                 mFadeSeconds;
         int                 mDefaultDeferMinutes;
         KAAlarm::Type       mAlarmType;
-        KAEvent::Action     mAction;
+        KAEvent::SubAction  mAction;
         unsigned long       mKMailSerialNumber; // if email text, message's KMail serial number, else 0
         KAEvent::CmdErrType mCommandError;
         QStringList         mErrorMsgs;
         QString             mDontShowAgain;   // non-null for don't-show-again option with error message
         int                 mRestoreHeight;
-        bool                mAudioRepeat;
+        int                 mAudioRepeatPause;
         bool                mConfirmAck;
         bool                mShowEdit;        // display the Edit button
         bool                mNoDefer;         // don't display a Defer option
         bool                mInvalid;         // restored window is invalid
         // Miscellaneous
         KAEvent             mEvent;           // the whole event, for updating the calendar file
+        KAEvent             mOriginalEvent;   // the original event supplied to the constructor
 #ifdef USE_AKONADI
         Akonadi::Collection mCollection;      // collection which the event comes/came from
 #else
@@ -193,8 +197,6 @@ class MessageWin : public MainWindowBase
         EditAlarmDlg*       mEditDlg;         // alarm edit dialog invoked by Edit button
         DeferAlarmDlg*      mDeferDlg;
         QDateTime           mDeferLimit;      // last time to which the message can currently be deferred
-        int                 mFlags;           // event flags
-        int                 mLateCancel;
         int                 mButtonDelay;     // delay (ms) after window is shown before buttons are enabled
         int                 mScreenNumber;    // screen to display on, or -1 for default
         bool                mAlwaysHide;      // the window should never be displayed

@@ -194,7 +194,7 @@ void EditorContactGroup::Private::clearRecipientClicked()
   } else {
     last->mInput->clear();
     last->mItem = Akonadi::Item();
-    last->mPreferredEmail = QString();
+    last->mPreferredEmail.clear();
   }
 }
 

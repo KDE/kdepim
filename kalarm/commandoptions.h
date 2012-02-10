@@ -22,14 +22,17 @@
 #define COMMANDOPTIONS_H
 
 #include "editdlg.h"
-#include "kaevent.h"
-#include "karecurrence.h"
+
+#include <kalarmcal/kaevent.h>
+#include <kalarmcal/karecurrence.h>
 
 #include <kdatetime.h>
 #include <QByteArray>
 #include <QColor>
 #include <QStringList>
 class KCmdLineArgs;
+
+using namespace KAlarmCal;
 
 class CommandOptions
 {
@@ -51,7 +54,7 @@ class CommandOptions
         QString             eventId() const           { return mEventId; }
         QString             templateName() const      { return mTemplateName; }
         EditAlarmDlg::Type  editType() const          { return mEditType; }
-        KAEvent::Action     editAction() const        { return mEditAction; }
+        KAEvent::SubAction  editAction() const        { return mEditAction; }
         QString             text() const              { return mText; }
         KDateTime           alarmTime() const         { return mAlarmTime; }
         KARecurrence*       recurrence() const        { return mRecurrence; }
@@ -63,11 +66,15 @@ class CommandOptions
         int                 reminderMinutes() const   { return mReminderMinutes; }
         QString             audioFile() const         { return mAudioFile; }
         float               audioVolume() const       { return mAudioVolume; }
-        EmailAddressList    addressees() const        { return mAddressees; }
+#ifdef USE_AKONADI
+        KCalCore::Person::List addressees() const     { return mAddressees; }
+#else
+        QList<KCal::Person> addressees() const        { return mAddressees; }
+#endif
         QStringList         attachments() const       { return mAttachments; }
         QString             subject() const           { return mSubject; }
         uint                fromID() const            { return mFromID; }
-        int                 flags() const             { return mFlags; }
+        KAEvent::Flags      flags() const             { return mFlags; }
         bool                disableAll() const        { return mDisableAll; }
 #ifndef NDEBUG
         KDateTime           simulationTime() const    { return mSimulationTime; }
@@ -91,7 +98,7 @@ class CommandOptions
         QString             mEventId;        // TRIGGER_EVENT, CANCEL_EVENT, EDIT: event ID
         QString             mTemplateName;   // EDIT_NEW_PRESET: template name
         EditAlarmDlg::Type  mEditType;       // NEW, EDIT_NEW_*: alarm edit type
-        KAEvent::Action     mEditAction;     // NEW: alarm edit sub-type
+        KAEvent::SubAction  mEditAction;     // NEW: alarm edit sub-type
         bool                mEditActionSet;  // NEW: mEditAction is valid
         QString             mText;           // NEW: alarm text
         KDateTime           mAlarmTime;      // NEW: alarm time
@@ -104,11 +111,15 @@ class CommandOptions
         int                 mReminderMinutes;// NEW: reminder period
         QString             mAudioFile;      // NEW: audio file path
         float               mAudioVolume;    // NEW: audio file volume
-        EmailAddressList    mAddressees;     // NEW: email addressees
+#ifdef USE_AKONADI
+        KCalCore::Person::List mAddressees;  // NEW: email addressees
+#else
+        QList<KCal::Person> mAddressees;     // NEW: email addressees
+#endif
         QStringList         mAttachments;    // NEW: email attachment file names
         QString             mSubject;        // NEW: email subject
         uint                mFromID;         // NEW: email sender ID
-        int                 mFlags;          // NEW: event flags
+        KAEvent::Flags      mFlags;          // NEW: event flags
         bool                mDisableAll;     // disable all alarm monitoring
 #ifndef NDEBUG
         KDateTime           mSimulationTime; // system time to be simulated, or invalid if none

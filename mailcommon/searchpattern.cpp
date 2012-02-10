@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  kmsearchpattern.cpp
-  Author: Marc Mutz <Marc@Mutz.com>
+
+  Author: Marc Mutz <mutz@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,13 +20,11 @@
 #include "searchpattern.h"
 #include "filterlog.h"
 using MailCommon::FilterLog;
-#include <kpimutils/email.h>
 
 #ifndef KDEPIM_NO_NEPOMUK
-
-#include <nie.h>
-#include <nmo.h>
-#include <nco.h>
+#include <ontologies/nie.h>
+#include <ontologies/nmo.h>
+#include <ontologies/nco.h>
 
 #include <Nepomuk/Tag>
 #include <Nepomuk/Query/Query>
@@ -36,46 +34,52 @@ using MailCommon::FilterLog;
 #include <Nepomuk/Query/ResourceTerm>
 #include <Nepomuk/Query/NegationTerm>
 #include <Nepomuk/Query/ResourceTypeTerm>
-
+#include <Nepomuk/Vocabulary/PIMO>
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDF>
-
 #endif
 
-#include <kglobal.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kconfig.h>
-#include <kconfiggroup.h>
+#include <Akonadi/Contact/ContactSearchJob>
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_util.h>
+#include <KMime/KMimeMessage>
 
-#include <akonadi/contact/contactsearchjob.h>
+#include <KPIMUtils/Email>
 
-#include <QRegExp>
-#include <QByteArray>
+#include <kascii.h> //krazy:exclude=camelcase as not available until KDE 4.9
+#include <KDebug>
+#include <KConfigGroup>
+#include <KLocale>
+#include <KGlobal>
+
 #include <QDataStream>
+#include <QRegExp>
 #include <QXmlStreamWriter>
-
-
-#include <assert.h>
 
 using namespace MailCommon;
 
-static const char* funcConfigNames[] =
-  { "contains", "contains-not", "equals", "not-equal", "regexp",
-    "not-regexp", "greater", "less-or-equal", "less", "greater-or-equal",
-    "is-in-addressbook", "is-not-in-addressbook", "is-in-category", "is-not-in-category",
-    "has-attachment", "has-no-attachment"};
-static const int numFuncConfigNames = sizeof funcConfigNames / sizeof *funcConfigNames;
+static const char *funcConfigNames[] =
+{
+  "contains", "contains-not",
+  "equals", "not-equal",
+  "regexp", "not-regexp",
+  "greater", "less-or-equal", "less", "greater-or-equal",
+  "is-in-addressbook", "is-not-in-addressbook",
+  "is-in-category", "is-not-in-category",
+  "has-attachment", "has-no-attachment",
+  "start-with", "not-start-with",
+  "end-with", "not-end-with"
+};
+
+static const int numFuncConfigNames =
+  sizeof funcConfigNames / sizeof *funcConfigNames;
 
 struct _statusNames {
-  const char* name;
+  const char *name;
   Akonadi::MessageStatus status;
 };
 
-static struct _statusNames statusNames[] = {
+static struct _statusNames statusNames[] =
+{
   { "Important", Akonadi::MessageStatus::statusImportant() },
   { "Unread", Akonadi::MessageStatus::statusUnread() },
   { "Read", Akonadi::MessageStatus::statusRead() },
@@ -92,7 +96,8 @@ static struct _statusNames statusNames[] = {
   { "Has Attachment", Akonadi::MessageStatus::statusHasAttachment() }
 };
 
-static const int numStatusNames = sizeof statusNames / sizeof ( struct _statusNames );
+static const int numStatusNames =
+  sizeof statusNames / sizeof ( struct _statusNames );
 
 //==================================================
 //
@@ -100,23 +105,25 @@ static const int numStatusNames = sizeof statusNames / sizeof ( struct _statusNa
 //
 //==================================================
 
-SearchRule::SearchRule( const QByteArray & field, Function func, const QString & contents )
+SearchRule::SearchRule( const QByteArray &field, Function func, const QString &contents )
   : mField( field ),
     mFunction( func ),
     mContents( contents )
 {
 }
 
-SearchRule::SearchRule( const SearchRule & other )
+SearchRule::SearchRule( const SearchRule &other )
   : mField( other.mField ),
     mFunction( other.mFunction ),
     mContents( other.mContents )
 {
 }
 
-const SearchRule & SearchRule::operator=( const SearchRule & other ) {
-  if ( this == &other )
+const SearchRule & SearchRule::operator=( const SearchRule &other )
+{
+  if ( this == &other ) {
     return *this;
+  }
 
   mField = other.mField;
   mFunction = other.mFunction;
@@ -125,36 +132,37 @@ const SearchRule & SearchRule::operator=( const SearchRule & other ) {
   return *this;
 }
 
-SearchRule::Ptr SearchRule::createInstance( const QByteArray & field,
-                                                Function func,
-                                                const QString & contents )
+SearchRule::Ptr SearchRule::createInstance( const QByteArray &field,
+                                            Function func,
+                                            const QString &contents )
 {
   SearchRule::Ptr ret;
-  if (field == "<status>")
+  if ( field == "<status>" ) {
     ret = SearchRule::Ptr( new SearchRuleStatus( field, func, contents ) );
-  else if ( field == "<age in days>" || field == "<size>" )
+  } else if ( field == "<age in days>" || field == "<size>" ) {
     ret = SearchRule::Ptr( new SearchRuleNumerical( field, func, contents ) );
-  else
+  } else {
     ret = SearchRule::Ptr( new SearchRuleString( field, func, contents ) );
+  }
 
   return ret;
 }
 
-SearchRule::Ptr SearchRule::createInstance( const QByteArray & field,
-                                                const char *func,
-                                                const QString & contents )
+SearchRule::Ptr SearchRule::createInstance( const QByteArray &field,
+                                            const char *func,
+                                            const QString &contents )
 {
   return ( createInstance( field, configValueToFunc( func ), contents ) );
 }
 
-SearchRule::Ptr SearchRule::createInstance( const SearchRule & other )
+SearchRule::Ptr SearchRule::createInstance( const SearchRule &other )
 {
   return ( createInstance( other.field(), other.function(), other.contents() ) );
 }
 
-SearchRule::Ptr SearchRule::createInstanceFromConfig( const KConfigGroup & config, int aIdx )
+SearchRule::Ptr SearchRule::createInstanceFromConfig( const KConfigGroup &config, int aIdx )
 {
-  const char cIdx = char( int('A') + aIdx );
+  const char cIdx = char( int( 'A' ) + aIdx );
 
   static const QString & field = KGlobal::staticQString( "field" );
   static const QString & func = KGlobal::staticQString( "func" );
@@ -164,10 +172,11 @@ SearchRule::Ptr SearchRule::createInstanceFromConfig( const KConfigGroup & confi
   Function func2 = configValueToFunc( config.readEntry( func + cIdx, QString() ).toLatin1() );
   const QString & contents2 = config.readEntry( contents + cIdx, QString() );
 
-  if ( field2 == "<To or Cc>" ) // backwards compat
+  if ( field2 == "<To or Cc>" ) { // backwards compat
     return SearchRule::createInstance( "<recipients>", func2, contents2 );
-  else
+  } else {
     return SearchRule::createInstance( field2, func2, contents2 );
+  }
 }
 
 SearchRule::Ptr SearchRule::createInstance( QDataStream &s )
@@ -186,26 +195,33 @@ SearchRule::~SearchRule()
 {
 }
 
-SearchRule::Function SearchRule::configValueToFunc( const char * str ) {
-  if ( !str )
+SearchRule::Function SearchRule::configValueToFunc( const char *str )
+{
+  if ( !str ) {
     return FuncNone;
+  }
 
-  for ( int i = 0 ; i < numFuncConfigNames ; ++i )
-    if ( qstricmp( funcConfigNames[i], str ) == 0 ) return (Function)i;
+  for ( int i = 0; i < numFuncConfigNames; ++i ) {
+    if ( qstricmp( funcConfigNames[i], str ) == 0 ) {
+      return (Function)i;
+    }
+  }
 
   return FuncNone;
 }
 
 QString SearchRule::functionToString( Function function )
 {
-  if ( function != FuncNone )
+  if ( function != FuncNone ) {
     return funcConfigNames[int( function )];
-  else
+  } else {
     return "invalid";
+  }
 }
 
-void SearchRule::writeConfig( KConfigGroup & config, int aIdx ) const {
-  const char cIdx = char('A' + aIdx);
+void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
+{
+  const char cIdx = char( 'A' + aIdx );
   static const QString & field = KGlobal::staticQString( "field" );
   static const QString & func = KGlobal::staticQString( "func" );
   static const QString & contents = KGlobal::staticQString( "contents" );
@@ -264,26 +280,38 @@ bool SearchRule::requiresBody() const
 Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
 {
   switch ( function() ) {
-    case SearchRule::FuncContains:
-    case SearchRule::FuncContainsNot:
-      return Nepomuk::Query::ComparisonTerm::Contains;
-    case SearchRule::FuncEquals:
-    case SearchRule::FuncNotEqual:
-      return Nepomuk::Query::ComparisonTerm::Equal;
-    case SearchRule::FuncIsGreater:
-      return Nepomuk::Query::ComparisonTerm::Greater;
-    case SearchRule::FuncIsGreaterOrEqual:
+  case SearchRule::FuncContains:
+  case SearchRule::FuncContainsNot:
+    return Nepomuk::Query::ComparisonTerm::Contains;
+
+  case SearchRule::FuncEquals:
+  case SearchRule::FuncNotEqual:
+    return Nepomuk::Query::ComparisonTerm::Equal;
+
+  case SearchRule::FuncIsGreater:
+    return Nepomuk::Query::ComparisonTerm::Greater;
+
+  case SearchRule::FuncIsGreaterOrEqual:
       return Nepomuk::Query::ComparisonTerm::GreaterOrEqual;
-    case SearchRule::FuncIsLess:
-      return Nepomuk::Query::ComparisonTerm::Smaller;
-    case SearchRule::FuncIsLessOrEqual:
-      return Nepomuk::Query::ComparisonTerm::SmallerOrEqual;
-    case SearchRule::FuncRegExp:
-    case SearchRule::FuncNotRegExp:
-      return Nepomuk::Query::ComparisonTerm::Regexp;
-    default:
-      kDebug() << "Unhandled function type: " << function();
+
+  case SearchRule::FuncIsLess:
+    return Nepomuk::Query::ComparisonTerm::Smaller;
+
+  case SearchRule::FuncIsLessOrEqual:
+    return Nepomuk::Query::ComparisonTerm::SmallerOrEqual;
+
+  case SearchRule::FuncRegExp:
+  case SearchRule::FuncNotRegExp:
+    return Nepomuk::Query::ComparisonTerm::Regexp;
+
+  case SearchRule::FuncStartWith: //TODO
+  case SearchRule::FuncNotStartWith:
+  case SearchRule::FuncEndWith:
+  case SearchRule::FuncNotEndWith:
+  default:
+    kDebug() << "Unhandled function type: " << function();
   }
+
   return Nepomuk::Query::ComparisonTerm::Equal;
 }
 
@@ -291,20 +319,23 @@ bool SearchRule::isNegated() const
 {
   bool negate = false;
   switch ( function() ) {
-    case SearchRule::FuncContainsNot:
-    case SearchRule::FuncNotEqual:
-    case SearchRule::FuncNotRegExp:
-    case SearchRule::FuncHasNoAttachment:
-    case SearchRule::FuncIsNotInCategory:
-    case SearchRule::FuncIsNotInAddressbook:
-      negate = true;
-    default:
-      break;
+  case SearchRule::FuncContainsNot:
+  case SearchRule::FuncNotEqual:
+  case SearchRule::FuncNotRegExp:
+  case SearchRule::FuncHasNoAttachment:
+  case SearchRule::FuncIsNotInCategory:
+  case SearchRule::FuncIsNotInAddressbook:
+  case SearchRule::FuncNotStartWith:
+  case SearchRule::FuncNotEndWith:
+    negate = true;
+  default:
+    break;
   }
   return negate;
 }
 
-void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Query::GroupTerm& termGroup) const
+void SearchRule::addAndNegateTerm( const Nepomuk::Query::Term &term,
+                                   Nepomuk::Query::GroupTerm &termGroup ) const
 {
   if ( isNegated() ) {
     Nepomuk::Query::NegationTerm neg;
@@ -320,35 +351,45 @@ void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Que
 QString SearchRule::xesamComparator() const
 {
   switch ( function() ) {
-    case SearchRule::FuncContains:
-    case SearchRule::FuncContainsNot:
-    return QLatin1String("contains");
-    case SearchRule::FuncEquals:
-    case SearchRule::FuncNotEqual:
-    return QLatin1String("equals");
-    case SearchRule::FuncIsGreater:
-    return QLatin1String("greaterThan");
-    case SearchRule::FuncIsGreaterOrEqual:
-      return QLatin1String("greaterThanEquals");
-    case SearchRule::FuncIsLess:
-      return QLatin1String("lessThan");
-    case SearchRule::FuncIsLessOrEqual:
-      return QLatin1String("lessThanEquals");
-      // FIXME how to handle the below? full text?
-    case SearchRule::FuncRegExp:
-    case SearchRule::FuncNotRegExp:
-    default:
-      kDebug() << "Unhandled function type: " << function();
+  case SearchRule::FuncContains:
+  case SearchRule::FuncContainsNot:
+    return QLatin1String( "contains" );
+
+  case SearchRule::FuncEquals:
+  case SearchRule::FuncNotEqual:
+    return QLatin1String( "equals" );
+
+  case SearchRule::FuncIsGreater:
+    return QLatin1String( "greaterThan" );
+
+  case SearchRule::FuncIsGreaterOrEqual:
+    return QLatin1String( "greaterThanEquals" );
+
+  case SearchRule::FuncIsLess:
+    return QLatin1String( "lessThan" );
+
+  case SearchRule::FuncIsLessOrEqual:
+    return QLatin1String( "lessThanEquals" );
+
+  // FIXME how to handle the below? full text?
+  case SearchRule::FuncRegExp:
+  case SearchRule::FuncNotRegExp:
+  case SearchRule::FuncStartWith:
+  case SearchRule::FuncNotStartWith:
+  case SearchRule::FuncEndWith:
+  case SearchRule::FuncNotEndWith:
+  default:
+    kDebug() << "Unhandled function type: " << function();
   }
-  return QLatin1String("equals");
+
+  return QLatin1String( "equals" );
 }
 
-QDataStream& SearchRule::operator >>( QDataStream& s ) const
+QDataStream &SearchRule::operator >>( QDataStream &s ) const
 {
   s << mField << functionToString( mFunction ) << mContents;
   return s;
 }
-
 
 //==================================================
 //
@@ -356,21 +397,23 @@ QDataStream& SearchRule::operator >>( QDataStream& s ) const
 //
 //==================================================
 
-SearchRuleString::SearchRuleString( const QByteArray & field,
-                                        Function func, const QString & contents )
-          : SearchRule(field, func, contents)
+SearchRuleString::SearchRuleString( const QByteArray &field,
+                                    Function func,
+                                    const QString &contents )
+  : SearchRule( field, func, contents )
 {
 }
 
-SearchRuleString::SearchRuleString( const SearchRuleString & other )
+SearchRuleString::SearchRuleString( const SearchRuleString &other )
   : SearchRule( other )
 {
 }
 
-const SearchRuleString & SearchRuleString::operator=( const SearchRuleString & other )
+const SearchRuleString &SearchRuleString::operator=( const SearchRuleString &other )
 {
-  if ( this == &other )
+  if ( this == &other ) {
     return *this;
+  }
 
   setField( other.field() );
   setFunction( other.function() );
@@ -390,8 +433,9 @@ bool SearchRuleString::isEmpty() const
 
 bool SearchRuleString::requiresBody() const
 {
-  if ( !field().startsWith( '<' ) || field() == "<recipients>" )
+  if ( !field().startsWith( '<' ) || field() == "<recipients>" ) {
     return false;
+  }
 
   return true;
 }
@@ -399,140 +443,274 @@ bool SearchRuleString::requiresBody() const
 bool SearchRuleString::matches( const Akonadi::Item &item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-  assert( msg.get() );
+  Q_ASSERT( msg.get() );
 
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return false;
+  }
+
+  msg->parse(); // make sure we can access all headers
 
   QString msgContents;
   // Show the value used to compare the rules against in the log.
   // Overwrite the value for complete messages and all headers!
   bool logContents = true;
 
-  if( field() == "<message>" ) {
+  if( kasciistricmp( field(), "<message>" ) == 0 ) {
     msgContents = msg->encodedContent();
     logContents = false;
-  } else if ( field() == "<body>" ) {
+  } else if ( kasciistricmp( field(), "<body>" ) == 0 ) {
     msgContents = msg->body();
     logContents = false;
-  } else if ( field() == "<any header>" ) {
+  } else if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
     msgContents = msg->head();
     logContents = false;
-  } else if ( field() == "<recipients>" ) {
+  } else if ( kasciistricmp( field(), "<recipients>" ) == 0 ) {
     // (mmutz 2001-11-05) hack to fix "<recipients> !contains foo" to
     // meet user's expectations. See FAQ entry in KDE 2.2.2's KMail
     // handbook
-    if ( function() == FuncEquals || function() == FuncNotEqual )
+    if ( function() == FuncEquals || function() == FuncNotEqual ) {
       // do we need to treat this case specially? Ie.: What shall
       // "equality" mean for recipients.
-      return matchesInternal( msg->to()->asUnicodeString() )
-          || matchesInternal( msg->cc()->asUnicodeString() )
-          || matchesInternal( msg->bcc()->asUnicodeString() ) ;
-
+      return
+        matchesInternal( msg->to()->asUnicodeString() ) ||
+        matchesInternal( msg->cc()->asUnicodeString() ) ||
+        matchesInternal( msg->bcc()->asUnicodeString() ) ;
+    }
     msgContents = msg->to()->asUnicodeString();
     msgContents += ", " + msg->cc()->asUnicodeString();
     msgContents += ", " + msg->bcc()->asUnicodeString();
-  } else if ( field() == "<tag>" ) {
-#ifndef KDEPIM_NO_NEPOMUK    
+  } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
+#ifndef KDEPIM_NO_NEPOMUK
     const Nepomuk::Resource res( item.url() );
-    foreach ( const Nepomuk::Tag &tag, res.tags() )
+    foreach ( const Nepomuk::Tag &tag, res.tags() ) {
       msgContents += tag.label();
+    }
     logContents = false;
-#endif    
+#endif
   } else {
     // make sure to treat messages with multiple header lines for
     // the same header correctly
-    msgContents = msg->headerByType( field() ) ? msg->headerByType( field() )->asUnicodeString() : "";
+    msgContents = msg->headerByType( field() ) ?
+                    msg->headerByType( field() )->asUnicodeString() :
+                    "";
   }
 
   if ( function() == FuncIsInAddressbook ||
        function() == FuncIsNotInAddressbook ) {
     // I think only the "from"-field makes sense.
-    msgContents = msg->headerByType( field() ) ? msg->headerByType( field() )->asUnicodeString() : "";
-    if ( msgContents.isEmpty() )
+    msgContents = msg->headerByType( field() ) ?
+                    msg->headerByType( field() )->asUnicodeString() :
+                    "";
+
+    if ( msgContents.isEmpty() ) {
       return ( function() == FuncIsInAddressbook ) ? false : true;
+    }
   }
 
   // these two functions need the kmmessage therefore they don't call matchesInternal
-  if ( function() == FuncHasAttachment )
+  if ( function() == FuncHasAttachment ) {
     return ( msg->attachments().size() > 0 );
-  if ( function() == FuncHasNoAttachment )
+  }
+  if ( function() == FuncHasNoAttachment ) {
     return ( msg->attachments().size() == 0 );
+  }
 
   bool rc = matchesInternal( msgContents );
   if ( FilterLog::instance()->isLogging() ) {
-    QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
-                       : "<font color=#FF0000>0 = </font>" );
+    QString msg = ( rc ? "<font color=#00FF00>1 = </font>" : "<font color=#FF0000>0 = </font>" );
     msg += FilterLog::recode( asString() );
     // only log headers bcause messages and bodies can be pretty large
-    if ( logContents )
+    if ( logContents ) {
       msg += " (<i>" + FilterLog::recode( msgContents ) + "</i>)";
+    }
     FilterLog::instance()->add( msg, FilterLog::RuleResult );
   }
   return rc;
 }
 
 #ifndef KDEPIM_NO_NEPOMUK
-void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const QUrl& field) const
+
+static QString quote( const QString &content )
+{
+   //Without "" nepomuk will search a message containing each individual word
+  return QString::fromLatin1( "\'%1\'" ).arg( content );
+}
+
+void SearchRuleString::addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm,
+                                      const QUrl &field ) const
 {
   // TODO split contents() into address/name and adapt the query accordingly
-  const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
-  const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
-  const Nepomuk::Query::ComparisonTerm personTerm( field, addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
+  const Nepomuk::Query::ComparisonTerm valueTerm(
+    Vocabulary::NCO::emailAddress(),
+    Nepomuk::Query::LiteralTerm( contents() ),
+    nepomukComparator() );
+
+  const Nepomuk::Query::ComparisonTerm addressTerm(
+    Vocabulary::NCO::hasEmailAddress(),
+    valueTerm,
+    Nepomuk::Query::ComparisonTerm::Equal );
+
+  const Nepomuk::Query::ComparisonTerm personTerm(
+    field,
+    addressTerm,
+    Nepomuk::Query::ComparisonTerm::Equal );
+
   groupTerm.addSubTerm( personTerm );
 }
 
-void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
+void SearchRuleString::addHeaderTerm( Nepomuk::Query::GroupTerm &groupTerm,
+                                      const Nepomuk::Query::Term &field ) const
+{
+  const Nepomuk::Query::ComparisonTerm headerName(
+    Vocabulary::NMO::headerName(),
+    field,
+    Nepomuk::Query::ComparisonTerm::Equal );
+
+  const Nepomuk::Query::ComparisonTerm headerTerm(
+    Vocabulary::NMO::headerValue(),
+    Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+    nepomukComparator() );
+
+  groupTerm.addSubTerm( headerName );
+  groupTerm.addSubTerm( headerTerm );
+
+}
+
+void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
 {
   Nepomuk::Query::OrTerm termGroup;
-  if ( field().toLower() == "to" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
+  if ( kasciistricmp( field(), "<message>" ) == 0 ||
+       kasciistricmp( field(), "<recipients>" ) == 0  ||
+       kasciistricmp( field(), "<any header>" ) == 0 ) {
+
+    const Nepomuk::Query::ComparisonTerm valueTerm(
+      Vocabulary::NCO::emailAddress(),
+      Nepomuk::Query::LiteralTerm( contents() ),
+      nepomukComparator() );
+
+    const Nepomuk::Query::ComparisonTerm addressTerm(
+      Vocabulary::NCO::hasEmailAddress(),
+      valueTerm,
+      Nepomuk::Query::ComparisonTerm::Equal );
+
+    const Nepomuk::Query::ComparisonTerm personTerm(
+      Vocabulary::NMO::to(),
+      addressTerm,
+      Nepomuk::Query::ComparisonTerm::Equal );
+
+    const Nepomuk::Query::ComparisonTerm personTermTo(
+      Vocabulary::NMO::cc(),
+      personTerm,
+      Nepomuk::Query::ComparisonTerm::Equal );
+
+    const Nepomuk::Query::ComparisonTerm personTermCC(
+      Vocabulary::NMO::bcc(),
+      personTermTo,
+      Nepomuk::Query::ComparisonTerm::Equal );
+
+    if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
+      const Nepomuk::Query::ComparisonTerm personTermBCC(
+        Vocabulary::NMO::from(),
+        personTermTo,
+        Nepomuk::Query::ComparisonTerm::Equal );
+      termGroup.addSubTerm( personTermBCC );
+    } else {
+      termGroup.addSubTerm( personTermCC );
+    }
+  }
+
+  if ( kasciistricmp( field(), "to" ) == 0 ) {
     addPersonTerm( termGroup, Vocabulary::NMO::to() );
-  if ( field().toLower() == "cc" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
+  } else if ( kasciistricmp( field(), "cc" ) == 0 ) {
     addPersonTerm( termGroup, Vocabulary::NMO::cc() );
-  if ( field().toLower() == "bcc" || field() == "<recipients>" || field() == "<any header>" || field() == "<message>" )
+  } else if ( kasciistricmp( field(), "bcc" ) == 0 ) {
     addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
-
-  if ( field().toLower() == "from" || field() == "<any header>" || field() == "<message>" )
+  } else if ( kasciistricmp( field(), "from" ) == 0 ) {
     addPersonTerm( termGroup, Vocabulary::NMO::from() );
+  }
 
-  if ( field().toLower() == "subject" || field() == "<any header>" || field() == "<message>" ) {
-    const Nepomuk::Query::ComparisonTerm subjectTerm( Vocabulary::NMO::messageSubject(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+  if ( kasciistricmp( field(), "subject" ) == 0 ||
+       kasciistricmp( field(), "<any header>" ) == 0 ||
+       kasciistricmp( field(), "<message>" ) == 0 ) {
+    const Nepomuk::Query::ComparisonTerm subjectTerm(
+      Vocabulary::NMO::messageSubject(),
+      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
+  }
+  if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
+    const Nepomuk::Query::ComparisonTerm replyToTerm(
+      Vocabulary::NMO::messageReplyTo(),
+      Nepomuk::Query::LiteralTerm( contents() ),
+      nepomukComparator() );
+    termGroup.addSubTerm( replyToTerm );
+  }
+
+  if ( kasciistricmp( field(), "list-id" ) == 0 ) {
+    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "List-Id" ) );
+  } else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
+    //TODO
+  } else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
+    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "X-Loop" ) );
+  } else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
+    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "X-Mailing-List" ) );
+  } else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
+    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "X-Spam-Flag" ) );
   }
 
   // TODO complete for other headers, generic headers
 
-  if ( field() == "<tag>" ) {
+  if ( kasciistricmp( field(), "organization" )  == 0 ) {
+    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "Organization" ) );
+  }
+
+  if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
     const Nepomuk::Tag tag( contents() );
-    addAndNegateTerm( Nepomuk::Query::ComparisonTerm( Soprano::Vocabulary::NAO::hasTag(),
-                                                      Nepomuk::Query::ResourceTerm( tag ),
-                                                      Nepomuk::Query::ComparisonTerm::Equal ),
-                                                      groupTerm );
+    addAndNegateTerm(
+      Nepomuk::Query::ComparisonTerm(
+        Soprano::Vocabulary::NAO::hasTag(),
+        Nepomuk::Query::ResourceTerm( tag ),
+        Nepomuk::Query::ComparisonTerm::Equal ),
+      groupTerm );
   }
 
   if ( field() == "<body>" || field() == "<message>" ) {
-    const Nepomuk::Query::ComparisonTerm bodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm bodyTerm(
+      Vocabulary::NMO::plainTextMessageContent(),
+      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      nepomukComparator() );
+
     termGroup.addSubTerm( bodyTerm );
 
-    const Nepomuk::Query::ComparisonTerm attachmentBodyTerm( Vocabulary::NMO::plainTextMessageContent(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
-    const Nepomuk::Query::ComparisonTerm attachmentTerm( Vocabulary::NIE::isPartOf(), attachmentBodyTerm, Nepomuk::Query::ComparisonTerm::Equal );
+    const Nepomuk::Query::ComparisonTerm attachmentBodyTerm(
+      Vocabulary::NMO::plainTextMessageContent(),
+      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      nepomukComparator() );
+
+    const Nepomuk::Query::ComparisonTerm attachmentTerm(
+      Vocabulary::NIE::isPartOf(),
+      attachmentBodyTerm,
+      Nepomuk::Query::ComparisonTerm::Equal );
+
     termGroup.addSubTerm( attachmentTerm );
   }
 
-  if ( !termGroup.subTerms().isEmpty() )
+  if ( !termGroup.subTerms().isEmpty() ) {
     addAndNegateTerm( termGroup, groupTerm );
+  }
 }
 #endif
 
 // helper, does the actual comparing
-bool SearchRuleString::matchesInternal( const QString & msgContents ) const
+bool SearchRuleString::matchesInternal( const QString &msgContents ) const
 {
   switch ( function() ) {
   case SearchRule::FuncEquals:
-      return ( QString::compare( msgContents.toLower(), contents().toLower() ) == 0 );
+    return ( QString::compare( msgContents.toLower(), contents().toLower() ) == 0 );
 
   case SearchRule::FuncNotEqual:
-      return ( QString::compare( msgContents.toLower(), contents().toLower() ) != 0 );
+    return ( QString::compare( msgContents.toLower(), contents().toLower() ) != 0 );
 
   case SearchRule::FuncContains:
     return ( msgContents.contains( contents(), Qt::CaseInsensitive ) );
@@ -541,81 +719,91 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
     return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
 
   case SearchRule::FuncRegExp:
-    {
-      QRegExp regexp( contents(), Qt::CaseInsensitive );
-      return ( regexp.indexIn( msgContents ) >= 0 );
-    }
+  {
+    QRegExp regexp( contents(), Qt::CaseInsensitive );
+    return ( regexp.indexIn( msgContents ) >= 0 );
+  }
 
   case SearchRule::FuncNotRegExp:
-    {
-      QRegExp regexp( contents(), Qt::CaseInsensitive );
-      return ( regexp.indexIn( msgContents ) < 0 );
-    }
+  {
+    QRegExp regexp( contents(), Qt::CaseInsensitive );
+    return ( regexp.indexIn( msgContents ) < 0 );
+  }
+
+  case SearchRule::FuncStartWith:
+  {
+    return msgContents.startsWith( contents() );
+  }
+
+  case SearchRule::FuncNotStartWith:
+  {
+    return !msgContents.startsWith( contents() );
+  }
+
+  case SearchRule::FuncEndWith:
+  {
+    return msgContents.endsWith( contents() );
+  }
+
+  case SearchRule::FuncNotEndWith:
+  {
+    return !msgContents.endsWith( contents() );
+  }
 
   case FuncIsGreater:
-      return ( QString::compare( msgContents.toLower(), contents().toLower() ) > 0 );
+    return ( QString::compare( msgContents.toLower(), contents().toLower() ) > 0 );
 
   case FuncIsLessOrEqual:
-      return ( QString::compare( msgContents.toLower(), contents().toLower() ) <= 0 );
+    return ( QString::compare( msgContents.toLower(), contents().toLower() ) <= 0 );
 
   case FuncIsLess:
-      return ( QString::compare( msgContents.toLower(), contents().toLower() ) < 0 );
+    return ( QString::compare( msgContents.toLower(), contents().toLower() ) < 0 );
 
   case FuncIsGreaterOrEqual:
-      return ( QString::compare( msgContents.toLower(), contents().toLower() ) >= 0 );
+    return ( QString::compare( msgContents.toLower(), contents().toLower() ) >= 0 );
 
-  case FuncIsInAddressbook: {
+  case FuncIsInAddressbook:
+  {
     const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
-    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != addressList.constEnd() ); ++it ) {
+    QStringList::ConstIterator end( addressList.constEnd() );
+    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setLimit( 1 );
       job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
       job->exec();
 
-      if ( !job->contacts().isEmpty() )
+      if ( !job->contacts().isEmpty() ) {
         return true;
-    }
-    return false;
-  }
-
-  case FuncIsNotInAddressbook: {
-    const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
-    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != addressList.constEnd() ); ++it ) {
-      Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-      job->setLimit( 1 );
-      job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
-      job->exec();
-
-      if ( job->contacts().isEmpty() )
-        return true;
-    }
-    return false;
-  }
-
-  case FuncIsInCategory: {
-    QString category = contents();
-    const QStringList addressList =  KPIMUtils::splitAddressList( msgContents.toLower() );
-
-    for ( QStringList::ConstIterator it = addressList.constBegin(); it != addressList.constEnd(); ++it ) {
-      Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-      job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
-      job->exec();
-
-      const KABC::Addressee::List contacts = job->contacts();
-
-      foreach ( const KABC::Addressee &contact, contacts ) {
-        if ( contact.hasCategory( category ) )
-          return true;
       }
     }
     return false;
   }
 
-  case FuncIsNotInCategory: {
+  case FuncIsNotInAddressbook:
+  {
+    const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
+    QStringList::ConstIterator end( addressList.constEnd() );
+
+    for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
+      Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+      job->setLimit( 1 );
+      job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
+      job->exec();
+
+      if ( job->contacts().isEmpty() ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  case FuncIsInCategory:
+  {
     QString category = contents();
     const QStringList addressList =  KPIMUtils::splitAddressList( msgContents.toLower() );
 
-    for ( QStringList::ConstIterator it = addressList.constBegin(); it != addressList.constEnd(); ++it ) {
+    QStringList::ConstIterator end( addressList.constEnd() );
+    for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
       Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
       job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
       job->exec();
@@ -623,8 +811,31 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
       const KABC::Addressee::List contacts = job->contacts();
 
       foreach ( const KABC::Addressee &contact, contacts ) {
-        if ( contact.hasCategory( category ) )
+        if ( contact.hasCategory( category ) ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  case FuncIsNotInCategory:
+  {
+    QString category = contents();
+    const QStringList addressList =  KPIMUtils::splitAddressList( msgContents.toLower() );
+
+    QStringList::ConstIterator end( addressList.constEnd() );
+    for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
+      Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+      job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ) );
+      job->exec();
+
+      const KABC::Addressee::List contacts = job->contacts();
+
+      foreach ( const KABC::Addressee &contact, contacts ) {
+        if ( contact.hasCategory( category ) ) {
           return false;
+        }
       }
 
     }
@@ -637,29 +848,28 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
   return false;
 }
 
-void SearchRuleString::addXesamClause( QXmlStreamWriter& stream ) const
+void SearchRuleString::addXesamClause( QXmlStreamWriter &stream ) const
 {
   const QString func = xesamComparator();
 
   stream.writeStartElement( func );
 
-  if ( field().toLower() == "subject" ||
-       field().toLower() == "to" ||
-       field().toLower() == "cc" ||
-       field().toLower() == "bcc" ||
-       field().toLower() == "from" ||
+  if ( field().toLower() == "subject"  ||
+       field().toLower() == "to"  ||
+       field().toLower() == "cc"  ||
+       field().toLower() == "bcc"  ||
+       field().toLower() == "from"  ||
        field().toLower() == "sender" ) {
-    stream.writeStartElement( QLatin1String("field") );
-    stream.writeAttribute( QLatin1String("name"), field().toLower() );
+    stream.writeStartElement( QLatin1String( "field" ) );
+    stream.writeAttribute( QLatin1String( "name" ), field().toLower() );
   } else {
-    stream.writeStartElement( QLatin1String("fullTextFields") );
+    stream.writeStartElement( QLatin1String( "fullTextFields" ) );
   }
   stream.writeEndElement();
-  stream.writeTextElement( QLatin1String("string"), contents() );
+  stream.writeTextElement( QLatin1String( "string" ), contents() );
 
   stream.writeEndElement();
 }
-
 
 //==================================================
 //
@@ -667,9 +877,10 @@ void SearchRuleString::addXesamClause( QXmlStreamWriter& stream ) const
 //
 //==================================================
 
-SearchRuleNumerical::SearchRuleNumerical( const QByteArray & field,
-                                        Function func, const QString & contents )
-          : SearchRule(field, func, contents)
+SearchRuleNumerical::SearchRuleNumerical( const QByteArray &field,
+                                          Function func,
+                                          const QString &contents )
+  : SearchRule( field, func, contents )
 {
 }
 
@@ -681,7 +892,6 @@ bool SearchRuleNumerical::isEmpty() const
   return !ok;
 }
 
-
 bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
@@ -690,11 +900,11 @@ bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
   qint64 numericalMsgContents = 0;
   qint64 numericalValue = 0;
 
-  if ( field() == "<size>" ) {
+  if ( kasciistricmp( field(), "<size>" ) == 0 ) {
     numericalMsgContents = item.size();
     numericalValue = contents().toLongLong();
     msgContents.setNum( numericalMsgContents );
-  } else if ( field() == "<age in days>" ) {
+  } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
     QDateTime msgDateTime = msg->date()->dateTime().dateTime();
     numericalMsgContents = msgDateTime.daysTo( QDateTime::currentDateTime() );
     numericalValue = contents().toInt();
@@ -716,10 +926,10 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 {
   switch ( function() ) {
   case SearchRule::FuncEquals:
-      return ( numericalValue == numericalMsgContents );
+    return ( numericalValue == numericalMsgContents );
 
   case SearchRule::FuncNotEqual:
-      return ( numericalValue != numericalMsgContents );
+    return ( numericalValue != numericalMsgContents );
 
   case SearchRule::FuncContains:
     return ( msgContents.contains( contents(), Qt::CaseInsensitive ) );
@@ -728,28 +938,28 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
     return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
 
   case SearchRule::FuncRegExp:
-    {
-      QRegExp regexp( contents(), Qt::CaseInsensitive );
-      return ( regexp.indexIn( msgContents ) >= 0 );
-    }
+  {
+    QRegExp regexp( contents(), Qt::CaseInsensitive );
+    return ( regexp.indexIn( msgContents ) >= 0 );
+  }
 
   case SearchRule::FuncNotRegExp:
-    {
-      QRegExp regexp( contents(), Qt::CaseInsensitive );
-      return ( regexp.indexIn( msgContents ) < 0 );
-    }
+  {
+    QRegExp regexp( contents(), Qt::CaseInsensitive );
+    return ( regexp.indexIn( msgContents ) < 0 );
+  }
 
   case FuncIsGreater:
-      return ( numericalMsgContents > numericalValue );
+    return ( numericalMsgContents > numericalValue );
 
   case FuncIsLessOrEqual:
-      return ( numericalMsgContents <= numericalValue );
+    return ( numericalMsgContents <= numericalValue );
 
   case FuncIsLess:
-      return ( numericalMsgContents < numericalValue );
+    return ( numericalMsgContents < numericalValue );
 
   case FuncIsGreaterOrEqual:
-      return ( numericalMsgContents >= numericalValue );
+    return ( numericalMsgContents >= numericalValue );
 
   case FuncIsInAddressbook:  // since email-addresses are not numerical, I settle for false here
     return false;
@@ -766,25 +976,30 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-void SearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
+void SearchRuleNumerical::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
 {
-  if ( field() == "<size>" ) {
-    const Nepomuk::Query::ComparisonTerm sizeTerm( Vocabulary::NIE::byteSize(),
-                                                   Nepomuk::Query::LiteralTerm( contents().toInt() ),
-                                                   nepomukComparator() );
+  if ( kasciistricmp( field(), "<size>" ) == 0 ) {
+    const Nepomuk::Query::ComparisonTerm sizeTerm(
+      Vocabulary::NIE::byteSize(),
+      Nepomuk::Query::LiteralTerm( contents().toInt() ),
+      nepomukComparator() );
     addAndNegateTerm( sizeTerm, groupTerm );
-  } else if ( field() == "<age in days>" ) {
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-    // TODO
+  } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
+    QDate date = QDate::currentDate();
+    date = date.addDays( contents().toInt() );
+    const Nepomuk::Query::ComparisonTerm dateTerm(
+      Vocabulary::NMO::sentDate(),
+      Nepomuk::Query::LiteralTerm( date ),
+      nepomukComparator() );
+    addAndNegateTerm( dateTerm, groupTerm );
   }
 }
 #endif
 
-void SearchRuleNumerical::addXesamClause( QXmlStreamWriter & stream ) const
+void SearchRuleNumerical::addXesamClause( QXmlStreamWriter &stream ) const
 {
-
+  Q_UNUSED( stream );
 }
-
 
 //==================================================
 //
@@ -793,7 +1008,7 @@ void SearchRuleNumerical::addXesamClause( QXmlStreamWriter & stream ) const
 //==================================================
 QString englishNameForStatus( const Akonadi::MessageStatus &status )
 {
-  for ( int i=0; i< numStatusNames; i++ ) {
+  for ( int i=0; i< numStatusNames; ++i ) {
     if ( statusNames[i].status == status ) {
       return statusNames[i].name;
     }
@@ -801,9 +1016,9 @@ QString englishNameForStatus( const Akonadi::MessageStatus &status )
   return QString();
 }
 
-SearchRuleStatus::SearchRuleStatus( const QByteArray & field,
-                                        Function func, const QString & aContents )
-          : SearchRule(field, func, aContents)
+SearchRuleStatus::SearchRuleStatus( const QByteArray &field,
+                                    Function func, const QString &aContents )
+  : SearchRule( field, func, aContents )
 {
   // the values are always in english, both from the conf file as well as
   // the patternedit gui
@@ -818,7 +1033,7 @@ SearchRuleStatus::SearchRuleStatus( Akonadi::MessageStatus status, Function func
 
 Akonadi::MessageStatus SearchRuleStatus::statusFromEnglishName( const QString &aStatusString )
 {
-  for ( int i=0; i< numStatusNames; i++ ) {
+  for ( int i=0; i< numStatusNames; ++i ) {
     if ( !aStatusString.compare( statusNames[i].name ) ) {
       return statusNames[i].status;
     }
@@ -841,13 +1056,15 @@ bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
   switch ( function() ) {
     case FuncEquals: // fallthrough. So that "<status> 'is' 'read'" works
     case FuncContains:
-      if (status & mStatus)
+      if ( status & mStatus ) {
         rc = true;
+      }
       break;
     case FuncNotEqual: // fallthrough. So that "<status> 'is not' 'read'" works
     case FuncContainsNot:
-      if (! (status & mStatus) )
+      if ( ! ( status & mStatus ) ) {
         rc = true;
+      }
       break;
     // FIXME what about the remaining funcs, how can they make sense for
     // stati?
@@ -855,8 +1072,7 @@ bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
       break;
   }
   if ( FilterLog::instance()->isLogging() ) {
-    QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
-                       : "<font color=#FF0000>0 = </font>" );
+    QString msg = ( rc ? "<font color=#00FF00>1 = </font>" : "<font color=#FF0000>0 = </font>" );
     msg += FilterLog::recode( asString() );
     FilterLog::instance()->add( msg, FilterLog::RuleResult );
   }
@@ -864,43 +1080,54 @@ bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
 }
 
 #ifndef KDEPIM_NO_NEPOMUK
-void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const QString &tagId ) const
+void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm,
+                                   const QString &tagId ) const
 {
   // TODO handle function() == NOT
   const Nepomuk::Tag tag( tagId );
-  addAndNegateTerm( Nepomuk::Query::ComparisonTerm( Soprano::Vocabulary::NAO::hasTag(),
-                                                    Nepomuk::Query::ResourceTerm( tag.resourceUri() ),
-                                                    Nepomuk::Query::ComparisonTerm::Equal ),
-                                                    groupTerm );
+  addAndNegateTerm(
+    Nepomuk::Query::ComparisonTerm(
+      Soprano::Vocabulary::NAO::hasTag(),
+      Nepomuk::Query::ResourceTerm( tag.resourceUri() ),
+      Nepomuk::Query::ComparisonTerm::Equal ),
+    groupTerm );
 }
 
-void SearchRuleStatus::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
+void SearchRuleStatus::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
 {
   bool read = false;
-  if ( function() == FuncContains || function() == FuncEquals )
+  if ( function() == FuncContains || function() == FuncEquals ) {
     read = true;
+  }
 
-  if ( !mStatus.isRead() )
+  if ( !mStatus.isRead() ) {
     read = !read;
+  }
 
-  groupTerm.addSubTerm( Nepomuk::Query::ComparisonTerm( Vocabulary::NMO::isRead(), Nepomuk::Query::LiteralTerm( read ), Nepomuk::Query::ComparisonTerm::Equal ) );
+  groupTerm.addSubTerm(
+    Nepomuk::Query::ComparisonTerm(
+      Vocabulary::NMO::isRead(),
+      Nepomuk::Query::LiteralTerm( read ),
+      Nepomuk::Query::ComparisonTerm::Equal ) );
 
-  if ( mStatus.isImportant() )
+  if ( mStatus.isImportant() ) {
     addTagTerm( groupTerm, "important" );
-  if ( mStatus.isToAct() )
+  }
+  if ( mStatus.isToAct() ) {
     addTagTerm( groupTerm, "todo" );
-  if ( mStatus.isWatched() )
+  }
+  if ( mStatus.isWatched() ) {
     addTagTerm( groupTerm, "watched" );
+  }
 
   // TODO
 }
 #endif
 
-void SearchRuleStatus::addXesamClause( QXmlStreamWriter & stream ) const
+void SearchRuleStatus::addXesamClause( QXmlStreamWriter &stream ) const
 {
-
+  Q_UNUSED( stream );
 }
-
 
 // ----------------------------------------------------------------------------
 
@@ -916,7 +1143,7 @@ SearchPattern::SearchPattern()
   init();
 }
 
-SearchPattern::SearchPattern( const KConfigGroup & config )
+SearchPattern::SearchPattern( const KConfigGroup &config )
   : QList<SearchRule::Ptr>()
 {
   readConfig( config );
@@ -928,39 +1155,58 @@ SearchPattern::~SearchPattern()
 
 bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return true;
-  if ( !item.hasPayload<KMime::Message::Ptr>() )
+  }
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
     return false;
+  }
 
   QList<SearchRule::Ptr>::const_iterator it;
+  QList<SearchRule::Ptr>::const_iterator end( constEnd() );
   switch ( mOperator ) {
   case OpAnd: // all rules must match
-    for ( it = begin() ; it != end() ; ++it )
-      if ( !((*it)->requiresBody() && ignoreBody) )
-        if ( !(*it)->matches( item ) )
+    for ( it = constBegin(); it != end; ++it ) {
+      if ( !( (*it)->requiresBody() && ignoreBody ) ) {
+        if ( !(*it)->matches( item ) ) {
           return false;
+        }
+      }
+    }
     return true;
+
   case OpOr:  // at least one rule must match
-    for ( it = begin() ; it != end() ; ++it )
-      if ( !((*it)->requiresBody() && ignoreBody) )
-        if ( (*it)->matches( item ) )
+    for ( it = constBegin(); it != end; ++it ) {
+      if ( !( (*it)->requiresBody() && ignoreBody ) ) {
+        if ( (*it)->matches( item ) ) {
           return true;
-    // fall through
+        }
+      }
+    }
+    return false;
+
+  case OpAll:
+    return true;
+
   default:
     return false;
   }
 }
 
-bool SearchPattern::requiresBody() const {
+bool SearchPattern::requiresBody() const
+{
   QList<SearchRule::Ptr>::const_iterator it;
-    for ( it = begin() ; it != end() ; ++it )
-      if ( (*it)->requiresBody() )
-	return true;
+  QList<SearchRule::Ptr>::const_iterator end( constEnd() );
+  for ( it = constBegin(); it != end; ++it ) {
+    if ( (*it)->requiresBody() ) {
+      return true;
+    }
+  }
   return false;
 }
 
-void SearchPattern::purify() {
+void SearchPattern::purify()
+{
   QList<SearchRule::Ptr>::iterator it = end();
   while ( it != begin() ) {
     --it;
@@ -974,31 +1220,44 @@ void SearchPattern::purify() {
   }
 }
 
-void SearchPattern::readConfig( const KConfigGroup & config ) {
+void SearchPattern::readConfig( const KConfigGroup &config )
+{
   init();
 
-  mName = config.readEntry("name");
-  if ( !config.hasKey("rules") ) {
+  mName = config.readEntry( "name" );
+  if ( !config.hasKey( "rules" ) ) {
     kDebug() << "Found legacy config! Converting.";
     importLegacyConfig( config );
     return;
   }
 
-  mOperator = config.readEntry("operator") == "or" ? OpOr : OpAnd;
+  const QString op = config.readEntry( "operator" );
+  if ( op == QLatin1String( "or" ) ) {
+    mOperator = OpOr;
+  } else if ( op == QLatin1String( "and" ) ) {
+    mOperator = OpAnd;
+  } else if ( op == QLatin1String( "all" ) ) {
+    mOperator = OpAll;
+  }
 
   const int nRules = config.readEntry( "rules", 0 );
 
-  for ( int i = 0 ; i < nRules ; i++ ) {
+  for ( int i = 0; i < nRules; ++i ) {
     SearchRule::Ptr r = SearchRule::createInstanceFromConfig( config, i );
-    if ( !r->isEmpty() )
+    if ( !r->isEmpty() ) {
       append( r );
+    }
   }
 }
 
-void SearchPattern::importLegacyConfig( const KConfigGroup & config ) {
-  SearchRule::Ptr rule = SearchRule::createInstance( config.readEntry("fieldA").toLatin1(),
-					  config.readEntry("funcA").toLatin1(),
-					  config.readEntry("contentsA") );
+void SearchPattern::importLegacyConfig( const KConfigGroup & config )
+{
+  SearchRule::Ptr rule =
+    SearchRule::createInstance(
+      config.readEntry( "fieldA" ).toLatin1(),
+      config.readEntry( "funcA" ).toLatin1(),
+      config.readEntry( "contentsA" ) );
+
   if ( rule->isEmpty() ) {
     // if the first rule is invalid,
     // we really can't do much heuristics...
@@ -1006,23 +1265,28 @@ void SearchPattern::importLegacyConfig( const KConfigGroup & config ) {
   }
   append( rule );
 
-  const QString sOperator = config.readEntry("operator");
-  if ( sOperator == "ignore" ) return;
+  const QString sOperator = config.readEntry( "operator" );
+  if ( sOperator == "ignore" ) {
+    return;
+  }
 
-  rule = SearchRule::createInstance( config.readEntry("fieldB").toLatin1(),
-			   config.readEntry("funcB").toLatin1(),
-			   config.readEntry("contentsB") );
+  rule =
+    SearchRule::createInstance(
+      config.readEntry( "fieldB" ).toLatin1(),
+      config.readEntry( "funcB" ).toLatin1(),
+      config.readEntry( "contentsB" ) );
+
   if ( rule->isEmpty() ) {
     return;
   }
   append( rule );
 
-  if ( sOperator == "or"  ) {
+  if ( sOperator == QLatin1String( "or" ) ) {
     mOperator = OpOr;
     return;
   }
   // This is the interesting case...
-  if ( sOperator == "unless" ) { // meaning "and not", ie we need to...
+  if ( sOperator == QLatin1String( "unless" ) ) { // meaning "and not", ie we need to...
     // ...invert the function (e.g. "equals" <-> "doesn't equal")
     // We simply toggle the last bit (xor with 0x1)... This assumes that
     // SearchRule::Function's come in adjacent pairs of pros and cons
@@ -1036,37 +1300,62 @@ void SearchPattern::importLegacyConfig( const KConfigGroup & config ) {
   // treat any other case as "and" (our default).
 }
 
-void SearchPattern::writeConfig( KConfigGroup & config ) const {
-  config.writeEntry("name", mName);
-  config.writeEntry("operator", (mOperator == SearchPattern::OpOr) ? "or" : "and" );
+void SearchPattern::writeConfig( KConfigGroup &config ) const
+{
+  config.writeEntry( "name", mName );
+  switch( mOperator ) {
+  case OpOr:
+    config.writeEntry( "operator", "or" );
+    break;
+  case OpAnd:
+    config.writeEntry( "operator", "and" );
+    break;
+  case OpAll:
+    config.writeEntry( "operator", "all" );
+    break;
+  }
 
   int i = 0;
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = begin() ; it != end() && i < FILTER_MAX_RULES ; ++i, ++it )
+  QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
+
+  for ( it = begin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
     // we could do this ourselves, but we want the rules to be extensible,
     // so we give the rule it's number and let it do the rest.
     (*it)->writeConfig( config, i );
+  }
 
   // save the total number of rules.
   config.writeEntry( "rules", i );
 }
 
-void SearchPattern::init() {
+void SearchPattern::init()
+{
   clear();
   mOperator = OpAnd;
-  mName = '<' + i18nc("name used for a virgin filter","unknown") + '>';
+  mName = '<' + i18nc( "name used for a virgin filter", "unknown" ) + '>';
 }
 
-QString SearchPattern::asString() const {
+QString SearchPattern::asString() const
+{
   QString result;
-  if ( mOperator == OpOr )
-    result = i18n("(match any of the following)");
-  else
-    result = i18n("(match all of the following)");
+  switch( mOperator ) {
+  case OpOr:
+    result = i18n( "(match any of the following)" );
+    break;
+  case OpAnd:
+    result = i18n( "(match all of the following)" );
+    break;
+  case OpAll:
+    result = i18n( "(match all message)" );
+    break;
+  }
 
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = begin() ; it != end() ; ++it )
+  QList<SearchRule::Ptr>::const_iterator endIt = end();
+  for ( it = begin(); it != endIt; ++it ) {
     result += "\n\t" + FilterLog::recode( (*it)->asString() );
+  }
 
   return result;
 }
@@ -1075,8 +1364,9 @@ QString SearchPattern::asString() const {
 
 static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 {
-  if ( op == SearchPattern::OpOr )
+  if ( op == SearchPattern::OpOr ) {
     return Nepomuk::Query::OrTerm();
+  }
   return Nepomuk::Query::AndTerm();
 }
 #endif
@@ -1090,14 +1380,17 @@ QString SearchPattern::asSparqlQuery() const
   Nepomuk::Query::AndTerm outerGroup;
   const Nepomuk::Types::Class cl( Vocabulary::NMO::Email() );
   const Nepomuk::Query::ResourceTypeTerm typeTerm( cl );
-  const Nepomuk::Query::Query::RequestProperty itemIdProperty( Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
+  const Nepomuk::Query::Query::RequestProperty itemIdProperty(
+    Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
 
   Nepomuk::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
-  for ( const_iterator it = begin(); it != end(); ++it )
+  for ( const_iterator it = constBegin(); it != constEnd(); ++it ) {
     (*it)->addQueryTerms( innerGroup );
+  }
 
-  if ( innerGroup.subTerms().isEmpty() )
+  if ( innerGroup.subTerms().isEmpty() ) {
     return QString();
+  }
   outerGroup.addSubTerm( innerGroup );
   outerGroup.addSubTerm( typeTerm );
   query.setTerm( outerGroup );
@@ -1105,55 +1398,61 @@ QString SearchPattern::asSparqlQuery() const
   return query.toSparqlQuery();
 #else
   return QString(); //TODO what to return in this case?
-#endif  
+#endif
 }
 
 QString MailCommon::SearchPattern::asXesamQuery() const
 {
   QString query;
   QXmlStreamWriter stream( &query );
-  stream.setAutoFormatting(true);
+  stream.setAutoFormatting( true );
   stream.writeStartDocument();
-  stream.writeStartElement( QLatin1String("request" ) );
-  stream.writeAttribute( QLatin1String("xmlns"), QLatin1String("http://freedesktop.org/standards/xesam/1.0/query") );
-  stream.writeStartElement( QLatin1String("query") );
+  stream.writeStartElement( QLatin1String( "request" ) );
+  stream.writeAttribute( QLatin1String( "xmlns" ),
+                         QLatin1String( "http://freedesktop.org/standards/xesam/1.0/query" ) );
+  stream.writeStartElement( QLatin1String( "query" ) );
 
   const bool needsOperator = count() > 1;
   if ( needsOperator ) {
     if ( mOperator == SearchPattern::OpOr ) {
-      stream.writeStartElement( QLatin1String("or") );
+      stream.writeStartElement( QLatin1String( "or" ) );
     } else if ( mOperator == SearchPattern::OpAnd ) {
-      stream.writeStartElement( QLatin1String("and") );
+      stream.writeStartElement( QLatin1String( "and" ) );
     } else {
-      Q_ASSERT(false); // can't happen (TM)
+      Q_ASSERT( false ); // can't happen (TM)
     }
   }
 
   QListIterator<SearchRule::Ptr> it( *this );
-  while( it.hasNext() ) {
+  while ( it.hasNext() ) {
     const SearchRule::Ptr rule = it.next();
     rule->addXesamClause( stream );
   }
 
-  if ( needsOperator )
+  if ( needsOperator ) {
     stream.writeEndElement(); // operator
+  }
   stream.writeEndElement(); // query
   stream.writeEndElement(); // request
   stream.writeEndDocument();
   return query;
 }
 
-const SearchPattern & SearchPattern::operator=( const SearchPattern & other ) {
-  if ( this == &other )
+const SearchPattern & SearchPattern::operator=( const SearchPattern &other )
+{
+  if ( this == &other ) {
     return *this;
+  }
 
   setOp( other.op() );
   setName( other.name() );
 
   clear(); // ###
   QList<SearchRule::Ptr>::const_iterator it;
-  for ( it = other.begin() ; it != other.end() ; ++it )
+  QList<SearchRule::Ptr>::const_iterator end( other.constEnd() );
+  for ( it = other.constBegin(); it != end; ++it ) {
     append( SearchRule::createInstance( **it ) ); // deep copy
+  }
 
   return *this;
 }
@@ -1174,22 +1473,35 @@ void SearchPattern::deserialize( const QByteArray &str )
 
 QDataStream & SearchPattern::operator>>( QDataStream &s ) const
 {
-  if ( op() == SearchPattern::OpAnd ) {
+  switch( op() ) {
+  case SearchPattern::OpAnd:
     s << QString::fromLatin1( "and" );
-  } else {
+    break;
+  case SearchPattern::OpOr:
     s << QString::fromLatin1( "or" );
+    break;
+  case SearchPattern::OpAll:
+    s << QString::fromLatin1( "all" );
+    break;
   }
-  Q_FOREACH( const SearchRule::Ptr rule, *this ) {
+
+  Q_FOREACH ( const SearchRule::Ptr rule, *this ) {
     *rule >> s;
   }
   return s;
 }
 
-QDataStream & SearchPattern::operator <<( QDataStream &s )
+QDataStream &SearchPattern::operator<<( QDataStream &s )
 {
   QString op;
   s >> op;
-  setOp( op == QLatin1String( "and" ) ? OpAnd : OpOr );
+  if ( op == QLatin1String( "and" ) ) {
+    setOp( OpAnd );
+  } else if ( op == QLatin1String( "or" ) ) {
+    setOp( OpOr );
+  } else if ( op == QLatin1String( "all" ) ) {
+    setOp( OpAll );
+  }
 
   while ( !s.atEnd() ) {
     SearchRule::Ptr rule = SearchRule::createInstance( s );
@@ -1201,9 +1513,9 @@ QDataStream & SearchPattern::operator <<( QDataStream &s )
 // Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore
 #ifdef _MSC_VER
 namespace MailCommon {
-uint qHash(SearchRule::Ptr sr)
+uint qHash( SearchRule::Ptr sr )
 {
-  return ::qHash(sr.get());
+  return ::qHash( sr.get() );
 }
 }
 #endif

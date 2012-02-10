@@ -1,7 +1,7 @@
 /*
  *  messagebox.cpp  -  enhanced KMessageBox class
  *  Program:  kalarm
- *  Copyright © 2004,2005,2007,2008 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2004,2005,2007,2008,2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,14 +26,15 @@
 #include <kglobal.h>
 
 
-QMap<QString, KMessageBox::ButtonCode> MessageBox::mContinueDefaults;
+QMap<QString, KMessageBox::ButtonCode> KAMessageBox::mContinueDefaults;
 
+const KAMessageBox::Options KAMessageBox::NoAppModal = KMessageBox::Options(KMessageBox::Notify | KAMessageBox::WindowModal);
 
 /******************************************************************************
 * Set the default button for continue/cancel message boxes with the specified
 * 'dontAskAgainName'.
 */
-void MessageBox::setContinueDefault(const QString& dontAskAgainName, ButtonCode defaultButton)
+void KAMessageBox::setContinueDefault(const QString& dontAskAgainName, ButtonCode defaultButton)
 {
     mContinueDefaults[dontAskAgainName] = (defaultButton == Cancel ? Cancel : Continue);
 }
@@ -42,7 +43,7 @@ void MessageBox::setContinueDefault(const QString& dontAskAgainName, ButtonCode 
 * Get the default button for continue/cancel message boxes with the specified
 * 'dontAskAgainName'.
 */
-KMessageBox::ButtonCode MessageBox::getContinueDefault(const QString& dontAskAgainName)
+KMessageBox::ButtonCode KAMessageBox::getContinueDefault(const QString& dontAskAgainName)
 {
     ButtonCode defaultButton = Continue;
     if (!dontAskAgainName.isEmpty())
@@ -55,26 +56,11 @@ KMessageBox::ButtonCode MessageBox::getContinueDefault(const QString& dontAskAga
 }
 
 /******************************************************************************
-* Continue/cancel message box.
-* If 'dontAskAgainName' is specified:
-*   1) The message box will only be suppressed if the user chose Continue last time.
-*   2) The default button is that last set with either setContinueDefault() or
-*      warningContinueCancel() for that 'dontAskAgainName' value. If neither method
-*      has set a default button, Continue is the default.
-*/
-int MessageBox::warningContinueCancel(QWidget* parent, const QString& text, const QString& caption,
-                                      const KGuiItem& buttonContinue, const QString& dontAskAgainName)
-{
-    ButtonCode defaultButton = getContinueDefault(dontAskAgainName);
-    return warningContinueCancel(parent, defaultButton, text, caption, buttonContinue, dontAskAgainName);
-}
-
-/******************************************************************************
 * Continue/cancel message box with the option as to which button is the default.
 * If 'dontAskAgainName' is specified, the message box will only be suppressed
 * if the user chose Continue last time.
 */
-int MessageBox::warningContinueCancel(QWidget* parent, ButtonCode defaultButton, const QString& text,
+int KAMessageBox::warningContinueCancel(QWidget* parent, ButtonCode defaultButton, const QString& text,
                                       const QString& caption, const KGuiItem& buttonContinue,
                                       const QString& dontAskAgainName)
 {
@@ -105,7 +91,7 @@ int MessageBox::warningContinueCancel(QWidget* parent, ButtonCode defaultButton,
 * previously to set this for this 'dontShowAgainName' value.
 * Reply = true if 'defaultShow' was written.
 */
-bool MessageBox::setDefaultShouldBeShownContinue(const QString& dontShowAgainName, bool defaultShow)
+bool KAMessageBox::setDefaultShouldBeShownContinue(const QString& dontShowAgainName, bool defaultShow)
 {
     if (dontShowAgainName.isEmpty())
         return false;
@@ -125,7 +111,7 @@ bool MessageBox::setDefaultShouldBeShownContinue(const QString& dontShowAgainNam
 * or warningContinueCancel() must have been called previously to set this for this
 * 'dontShowAgainName' value.
 */
-bool MessageBox::shouldBeShownContinue(const QString& dontShowAgainName)
+bool KAMessageBox::shouldBeShownContinue(const QString& dontShowAgainName)
 {
     if (getContinueDefault(dontShowAgainName) != Cancel)
         return KMessageBox::shouldBeShownContinue(dontShowAgainName);
@@ -140,7 +126,7 @@ bool MessageBox::shouldBeShownContinue(const QString& dontShowAgainName)
 * If 'dontShow' is true, the message box will be suppressed and it will return
 * 'result'.
 */
-void MessageBox::saveDontShowAgainYesNo(const QString& dontShowAgainName, bool dontShow, ButtonCode result)
+void KAMessageBox::saveDontShowAgainYesNo(const QString& dontShowAgainName, bool dontShow, ButtonCode result)
 {
     saveDontShowAgain(dontShowAgainName, true, dontShow, (result == Yes ? "yes" : "no"));
 }
@@ -153,7 +139,7 @@ void MessageBox::saveDontShowAgainYesNo(const QString& dontShowAgainName, bool d
 * or warningContinueCancel() must have been called previously to set this for this
 * 'dontShowAgainName' value.
 */
-void MessageBox::saveDontShowAgainContinue(const QString& dontShowAgainName, bool dontShow)
+void KAMessageBox::saveDontShowAgainContinue(const QString& dontShowAgainName, bool dontShow)
 {
     if (getContinueDefault(dontShowAgainName) == Cancel)
         saveDontShowAgainYesNo(dontShowAgainName, dontShow, Yes);
@@ -164,7 +150,7 @@ void MessageBox::saveDontShowAgainContinue(const QString& dontShowAgainName, boo
 /******************************************************************************
 * Save whether the message box should not be shown again.
 */
-void MessageBox::saveDontShowAgain(const QString& dontShowAgainName, bool yesno, bool dontShow, const char* yesnoResult)
+void KAMessageBox::saveDontShowAgain(const QString& dontShowAgainName, bool yesno, bool dontShow, const char* yesnoResult)
 {
     if (dontShowAgainName.isEmpty())
         return;

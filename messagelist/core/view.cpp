@@ -284,7 +284,7 @@ void View::applyThemeColumns()
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   if ( !viewport()->isVisible() )
@@ -325,15 +325,16 @@ void View::applyThemeColumns()
 
   int totalVisibleWidthHint = 0;
   QList< int > lColumnSizeHints;
+  QList< Theme::Column * >::ConstIterator end( columns.end() );
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     if ( ( *it )->currentlyVisible() || ( idx == 0 ) )
     {
       //kDebug() << "Column " << idx << " will be visible";
       // Column visible
-      int savedWidth = ( *it )->currentWidth();
-      int hintWidth = d->mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
+      const int savedWidth = ( *it )->currentWidth();
+      const int hintWidth = d->mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
       totalVisibleWidthHint += savedWidth > 0 ? savedWidth : hintWidth;
       lColumnSizeHints.append( hintWidth );
       //kDebug() << "Column " << idx << " size hint is " << hintWidth;
@@ -353,8 +354,8 @@ void View::applyThemeColumns()
 
   QList< int > lColumnWidths;
   int totalVisibleWidth = 0;
-
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     int savedWidth = ( *it )->currentWidth();
     int hintWidth = savedWidth > 0 ? savedWidth : lColumnSizeHints[ idx ];
@@ -410,7 +411,8 @@ void View::applyThemeColumns()
       // also give more space to the first ones and less space to the last ones
       int available = viewport()->width() - totalVisibleWidth;
 
-      for ( it = columns.begin(); it != columns.end(); ++it )
+      end = columns.end();
+      for ( it = columns.begin(); it != end; ++it )
       {
         if ( ( ( *it )->currentlyVisible() || ( idx == 0 ) ) && ( *it )->containsTextItems() )
         {
@@ -479,7 +481,8 @@ void View::applyThemeColumns()
 
   //kDebug() << "Entering column show/hide loop";
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     bool visible = ( idx == 0 ) || ( *it )->currentlyVisible();
     //kDebug() << "Column " << idx << " visible " << visible;
@@ -493,28 +496,27 @@ void View::applyThemeColumns()
   // But seems to work most of the times...
 
   idx = 0;
-  totalVisibleWidth = 0;
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     if ( ( *it )->currentlyVisible() )
     {
       //kDebug() << "Resize section " << idx << " to " << lColumnWidths[ idx ];
-      ( *it )->setCurrentWidth( lColumnWidths[ idx ] );
-      header()->resizeSection( idx, lColumnWidths[ idx ] );
-      totalVisibleWidth += lColumnWidths[ idx ];
+      const int columnWidth( lColumnWidths[ idx ] );
+      ( *it )->setCurrentWidth( columnWidth );
+      header()->resizeSection( idx, columnWidth );
     } else {
       ( *it )->setCurrentWidth( -1 );
     }
     idx++;
   }
 
-  totalVisibleWidth = 0;
   idx = 0;
 
   bool bTriggeredQtBug = false;
-
-  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     if ( !header()->isSectionHidden( idx ) )
     {
@@ -522,7 +524,6 @@ void View::applyThemeColumns()
       {
         bTriggeredQtBug = true;
       }
-      totalVisibleWidth += header()->sectionSize( idx );
     }
     idx++;
   }
@@ -566,13 +567,13 @@ void View::saveThemeColumnState()
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   int idx = 0;
 
-
-  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != columns.end(); ++it )
+  QList< Theme::Column * >::ConstIterator end(columns.constEnd());
+  for ( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it )
   {
     if ( header()->isSectionHidden( idx ) )
     {
@@ -616,11 +617,11 @@ void View::resizeEvent( QResizeEvent * e )
   bool oldSave = d->mSaveThemeColumnStateOnSectionResize;
   d->mSaveThemeColumnStateOnSectionResize = false;
 
-  if ( ( header()->count() - header()->hiddenSectionCount() ) < 2 )
+  const int count = header()->count();
+  if ( ( count - header()->hiddenSectionCount() ) < 2 )
   {
     // a single column visible: resize it
     int visibleIndex;
-    int count = header()->count();
     for ( visibleIndex = 0; visibleIndex < count; visibleIndex++ )
     {
       if ( !header()->isSectionHidden( visibleIndex ) )
@@ -696,7 +697,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   // the menu for the columns
@@ -704,8 +705,8 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
 
   int idx = 0;
   QAction * act;
-
-  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != columns.end(); ++it )
+  QList< Theme::Column * >::ConstIterator end(columns.end());
+  for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != end; ++it )
   {
     act = menu.addAction( ( *it )->label() );
     act->setCheckable( true );
@@ -857,8 +858,8 @@ QList< MessageItem * > View::selectionAsMessageItemList( bool includeCollapsedCh
   QModelIndexList lSelected = selectionModel()->selectedRows();
   if ( lSelected.isEmpty() )
     return selectedMessages;
-
-  for ( QModelIndexList::Iterator it = lSelected.begin(); it != lSelected.end(); ++it )
+  QModelIndexList::ConstIterator end( lSelected.constEnd() );
+  for ( QModelIndexList::ConstIterator it = lSelected.constBegin(); it != end; ++it )
   {
     // The asserts below are theoretically valid but at the time
     // of writing they fail because of a bug in QItemSelectionModel::selectedRows()
@@ -918,7 +919,8 @@ void View::setChildrenExpanded( const Item * root, bool expand )
   QList< Item * > * childList = root->childItems();
   if ( !childList )
     return;
-  for ( QList< Item * >::Iterator it = childList->begin(); it != childList->end(); ++it )
+  QList< Item * >::ConstIterator end( childList->constEnd() );
+  for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
   {
     QModelIndex idx = d->mModel->index( *it, 0 );
     Q_ASSERT( idx.isValid() );
@@ -1034,7 +1036,8 @@ void View::setAllGroupsExpanded( bool expand )
 void View::selectMessageItems( const QList< MessageItem * > &list )
 {
   QItemSelection selection;
-  for ( QList< MessageItem * >::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it )
+  QList< MessageItem * >::ConstIterator end( list.constEnd() );
+  for ( QList< MessageItem * >::ConstIterator it = list.constBegin(); it != end; ++it )
   {
     Q_ASSERT( *it );
     QModelIndex idx = d->mModel->index( *it, 0 );
@@ -1193,7 +1196,7 @@ Item * View::nextMessageItem( MessageTypeFilter messageTypeFilter, bool loop )
 
 Item * View::deepestExpandedChild( Item * referenceItem ) const
 {
-  int children = referenceItem->childItemCount();
+  const int children = referenceItem->childItemCount();
   if ( children > 0 &&
        isExpanded( d->mModel->index( referenceItem, 0 ) ) ) {
     return deepestExpandedChild( referenceItem->childItem( children -1 ) );
@@ -1254,7 +1257,7 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
     // there was no current item, start from end
     above = d->mModel->rootItem()->deepestItem();
 
-    if ( !above || ( above == d->mModel->rootItem() ) )
+    if ( !above || !above->parent() || ( above == d->mModel->rootItem() ) )
       return 0; // folder empty
   }
 
@@ -1635,7 +1638,8 @@ void View::markMessageItemsAsAboutToBeRemoved( QList< MessageItem * > &items, bo
 {
   if ( !bMark )
   {
-    for ( QList< MessageItem * >::Iterator it = items.begin(); it != items.end(); ++it )
+    QList< MessageItem * >::ConstIterator end( items.constEnd() );
+    for ( QList< MessageItem * >::ConstIterator it = items.constBegin(); it != end; ++it )
     {
       if ( ( *it )->isValid() ) // hasn't been removed in the meantime
         ( *it )->setAboutToBeRemoved( false );
@@ -1775,7 +1779,8 @@ void View::markMessageItemsAsAboutToBeRemoved( QList< MessageItem * > &items, bo
 
   // Now mark messages as about to be removed.
 
-  for ( QList< MessageItem * >::Iterator it = items.begin(); it != items.end(); ++it )
+  QList< MessageItem * >::ConstIterator end( items.constEnd() );
+  for ( QList< MessageItem * >::ConstIterator it = items.constBegin(); it != end; ++it )
   {
     ( *it )->setAboutToBeRemoved( true );
     QModelIndex idx = d->mModel->index( *it, 0 );
@@ -1997,6 +2002,26 @@ void View::mouseDoubleClickEvent( QMouseEvent * e )
   }
 }
 
+void View::changeMessageStatusRead( MessageItem *it, bool read )
+{
+  Akonadi::MessageStatus set = it->status();
+  Akonadi::MessageStatus unset = it->status();
+  if ( read ) {
+    set.setRead( true );
+    unset.setRead( false );
+  } else {
+    set.setRead( false );
+    unset.setRead( true );
+  }
+  viewport()->update();
+
+  // This will actually request the widget to perform a status change on the storage.
+  // The request will be then processed by the Model and the message will be updated again.
+
+  d->mWidget->viewMessageStatusChangeRequest( it, set, unset );
+
+}
+
 void View::changeMessageStatus( MessageItem * it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset )
 {
   // We first change the status of MessageItem itself. This will make the change
@@ -2074,6 +2099,9 @@ void View::mousePressEvent( QMouseEvent * e )
                     it->status().isImportant() ? Akonadi::MessageStatus::statusImportant() : Akonadi::MessageStatus()
                   );
                 return; // don't select the item
+	      case Theme::ContentItem::ReadStateIcon:
+                changeMessageStatusRead( static_cast< MessageItem * >( it ), it->status().isRead() ? false : true );
+		return;
               break;
               case Theme::ContentItem::SpamHamStateIcon:
                 changeMessageStatus(
@@ -2247,12 +2275,12 @@ bool View::event( QEvent *e )
   if( e->type() != QEvent::ToolTip )
     return QTreeView::event( e );
 
+  if ( !Settings::self()->messageToolTipEnabled() )
+    return true; // don't display tooltips
+
   QHelpEvent * he = dynamic_cast< QHelpEvent * >( e );
   if ( !he )
     return true; // eh ?
-
-  if ( !Settings::self()->messageToolTipEnabled() )
-    return true; // don't display tooltips
 
   QPoint pnt = viewport()->mapFromGlobal( mapToGlobal( he->pos() ) );
 

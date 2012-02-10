@@ -22,11 +22,9 @@
 
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collection.h>
-#include <Akonadi/AgentType>
 #include <Akonadi/AgentManager>
 #include <Akonadi/ChangeRecorder>
 
-#include <klineedit.h>
 #include <QLabel>
 #include <KDialog>
 #include <QGroupBox>
@@ -127,3 +125,5 @@ void CollectionMaintenancePage::updateCollectionStatistic(Akonadi::Collection::I
   }
 }
 
+
+#include "collectionmaintenancepage.moc"

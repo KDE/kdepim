@@ -1,9 +1,5 @@
 /*
-  Requires the Qt and KDE widget libraries, available at no cost at
-  http://www.trolltech.com and http://www.kde.org respectively
-
-  Copyright (c) 2002-2004 Klarävdalens Datakonsult AB
-        <info@klaralvdalens-datakonsult.se>
+  Copyright (c) 2002-2004 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -33,8 +29,8 @@
   your version.
 */
 
-#ifndef FREEBUSYMANAGER_P_H
-#define FREEBUSYMANAGER_P_H
+#ifndef CALENDARSUPPORT_FREEBUSYMANAGER_P_H
+#define CALENDARSUPPORT_FREEBUSYMANAGER_P_H
 
 #include <KCalCore/FreeBusy>
 #include <KCalCore/ICalFormat>
@@ -74,7 +70,9 @@ class FreeBusyManagerPrivate : public QObject
 
     struct FreeBusyProvidersRequestsQueue
     {
-      explicit FreeBusyProvidersRequestsQueue( const QString &start = QString(), const QString &end = QString() );
+      explicit FreeBusyProvidersRequestsQueue( const QString &start = QString(),
+                                               const QString &end = QString() );
+
       FreeBusyProvidersRequestsQueue( const KDateTime &start, const KDateTime &end );
 
       QString mStartTime;
@@ -123,7 +121,8 @@ class FreeBusyManagerPrivate : public QObject
     void contactSearchJobFinished( KJob *_job );
     void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
     void onHandlesFreeBusy( const QString &email, bool handles );
-    void onFreeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText );
+    void onFreeBusyRetrieved( const QString &email, const QString &freeBusy,
+                              bool success, const QString &errorText );
 
   signals:
     void freeBusyUrlRetrieved( const QString &email, const KUrl &url );

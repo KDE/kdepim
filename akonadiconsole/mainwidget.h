@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#ifndef AKONADICONSOLE_MAINWIDGET_H
+#define AKONADICONSOLE_MAINWIDGET_H
 
 #include <QtGui/QWidget>
 

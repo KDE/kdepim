@@ -1,28 +1,26 @@
 /*
-    This file is part of KAddressBook.
+  This file is part of KAddressBook.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "mainwidget.h"
-
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
-#include <kdescendantsproxymodel.h>
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"
@@ -34,40 +32,42 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include <akonadi/etmviewstatesaver.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/collectionmodel.h>
-#include <akonadi/contact/contactdefaultactions.h>
-#include <akonadi/contact/contacteditordialog.h>
-#include <akonadi/contact/contactgroupeditordialog.h>
-#include <akonadi/contact/contactgroupviewer.h>
-#include <akonadi/contact/contactsfilterproxymodel.h>
-#include <akonadi/contact/contactstreemodel.h>
-#include <akonadi/contact/contactviewer.h>
-#include <akonadi/contact/standardcontactactionmanager.h>
-#include <akonadi/control.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/entitytreeviewstatesaver.h>
-#include <akonadi/itemview.h>
-#include <akonadi/mimetypechecker.h>
+#include "libkdepim/uistatesaver.h"
 
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
-#include <kapplication.h>
-#include <kcheckableproxymodel.h>
-#include <kicon.h>
-#include <klineedit.h>
-#include <klocale.h>
-#include <kselectionproxymodel.h>
-#include <kstandarddirs.h>
-#include <ktextbrowser.h>
-#include <ktoggleaction.h>
-#include <ktoolbar.h>
-#include <kxmlguiwindow.h>
-#include <libkdepim/uistatesaver.h>
+#include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/CollectionFilterProxyModel>
+#include <Akonadi/CollectionModel>
+#include <Akonadi/Control>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeView>
+#include <Akonadi/ItemView>
+#include <Akonadi/MimeTypeChecker>
+#include <Akonadi/Contact/ContactDefaultActions>
+#include <Akonadi/Contact/ContactEditorDialog>
+#include <Akonadi/Contact/ContactGroupEditorDialog>
+#include <Akonadi/Contact/ContactGroupViewer>
+#include <Akonadi/Contact/ContactsFilterProxyModel>
+#include <Akonadi/Contact/ContactsTreeModel>
+#include <Akonadi/Contact/ContactViewer>
+#include <Akonadi/Contact/StandardContactActionManager>
+
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
+
+#include <KAction>
+#include <KActionCollection>
+#include <KApplication>
+#include <KCheckableProxyModel>
+#include <kdescendantsproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
+#include <KIcon>
+#include <KLineEdit>
+#include <KLocale>
+#include <KSelectionProxyModel>
+#include <KStandardDirs>
+#include <KTextBrowser>
+#include <KToggleAction>
+#include <KToolBar>
+#include <KXmlGuiWindow>
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
@@ -79,8 +79,6 @@
 #include <QtGui/QSplitter>
 #include <QtGui/QStackedWidget>
 
-
-
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )
 {
@@ -88,32 +86,37 @@ static bool isStructuralCollection( const Akonadi::Collection &collection )
   mimeTypes << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType();
   const QStringList collectionMimeTypes = collection.contentMimeTypes();
   foreach ( const QString &mimeType, mimeTypes ) {
-    if ( collectionMimeTypes.contains( mimeType ) )
+    if ( collectionMimeTypes.contains( mimeType ) ) {
       return false;
+    }
   }
   return true;
 }
 
-class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel {
-public:
-  StructuralCollectionsNotCheckableProxy(QObject* parent)
-      : KCheckableProxyModel(parent)
-  { }
+class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
+{
+  public:
+    StructuralCollectionsNotCheckableProxy( QObject *parent )
+      : KCheckableProxyModel( parent )
+    {
+    }
 
-  /* reimp */ QVariant data( const QModelIndex &index, int role ) const
-  {
-    if ( !index.isValid() )
-      return QVariant();
-
-    if ( role == Qt::CheckStateRole ) {
-      // Don't show the checkbox if the collection can't contain incidences
-      const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-      if ( collection.isValid() && isStructuralCollection( collection ) ) {
+    /* reimp */QVariant data( const QModelIndex &index, int role ) const
+    {
+      if ( !index.isValid() ) {
         return QVariant();
       }
+
+      if ( role == Qt::CheckStateRole ) {
+        // Don't show the checkbox if the collection can't contain incidences
+        const Akonadi::Collection collection =
+          index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+        if ( collection.isValid() && isStructuralCollection( collection ) ) {
+          return QVariant();
+        }
+      }
+      return KCheckableProxyModel::data( index, role );
     }
-    return KCheckableProxyModel::data( index, role );
-  }
 };
 
 }
@@ -159,8 +162,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *  GlobalContactModel::instance():  The global contact model (contains collections and items)
    *                 mCollectionTree:  Filters out all items
    *                      proxyModel:  Allows the user to select collections by checkboxes
-   *                  selectionModel:  Represents the selected collections that have been selected in
-   *                                   proxyModel
+   *                  selectionModel:  Represents the selected collections that have been
+   *                                   selected in proxyModel
    *                 mCollectionView:  Shows the collections (address books) in a view
    *             selectionProxyModel:  Filters out all collections and items that are no children
    *                                   of the collections currently selected in selectionModel
@@ -169,7 +172,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
    *
    *                descendantsModel:  Flattens the item/collection tree to a list
-   *               mAllContactsModel:  Provides a list of all available contacts from all address books
+   *               mAllContactsModel:  Provides a list of all available contacts from all
+   *                                   address books
    */
 
   mCollectionTree = new Akonadi::EntityMimeTypeFilterModel( this );
@@ -180,7 +184,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
-  StructuralCollectionsNotCheckableProxy *checkableProxyModel = new StructuralCollectionsNotCheckableProxy( this );
+  StructuralCollectionsNotCheckableProxy *checkableProxyModel =
+    new StructuralCollectionsNotCheckableProxy( this );
   checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
   checkableProxyModel->setSourceModel( mCollectionTree );
 
@@ -192,8 +197,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   connect( mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
            mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)) );
 
-  KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( mCollectionSelectionModel,
-                                                                        this );
+  KSelectionProxyModel *selectionProxyModel =
+    new KSelectionProxyModel( mCollectionSelectionModel, this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
   selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
@@ -227,7 +232,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   connect( mItemView, SIGNAL(currentChanged(Akonadi::Item)),
            this, SLOT(itemSelected(Akonadi::Item)) );
   connect( mItemView, SIGNAL(doubleClicked(Akonadi::Item)),
-           mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SLOT(trigger()) );
+           mActionManager->action( Akonadi::StandardContactActionManager::EditItem ),
+           SLOT(trigger()) );
   connect( mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)) );
 
@@ -257,10 +263,19 @@ void MainWidget::delayedInit()
     KPIM::UiStateSaver::restoreState( mItemView, group );
   }
 
-  mXmlGuiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
+  mXmlGuiClient->
+    actionCollection()->
+      action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
+#if defined(HAVE_PRISON)
+  mXmlGuiClient->
+    actionCollection()->
+      action( "options_show_qrcodes" )->setChecked( showQRCodes() );
+#endif
 
-  connect( GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()), SLOT(saveState()) );
-  connect( GlobalContactModel::instance()->model(), SIGNAL(modelReset()), SLOT(restoreState()) );
+  connect( GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()),
+           SLOT(saveState()) );
+  connect( GlobalContactModel::instance()->model(), SIGNAL(modelReset()),
+           SLOT(restoreState()) );
   connect( kapp, SIGNAL(aboutToQuit()), SLOT(saveState()) );
 
   restoreState();
@@ -418,12 +433,14 @@ void MainWidget::setupGui()
 
 #if 0 // disabled because Grantlee supports no i18n for KDE 4.6 yet
  Akonadi::GrantleeContactFormatter *formatter =
-       new Akonadi::GrantleeContactFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+   new Akonadi::GrantleeContactFormatter(
+     KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
 
  mContactDetails->setContactFormatter( formatter );
 
  Akonadi::GrantleeContactGroupFormatter *groupFormatter =
-       new Akonadi::GrantleeContactGroupFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+   new Akonadi::GrantleeContactGroupFormatter(
+     KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
 
  mContactGroupDetails->setContactGroupFormatter( groupFormatter );
 #endif
@@ -435,7 +452,9 @@ void MainWidget::setupActions( KActionCollection *collection )
   KToggleAction *toggleAction = 0;
 
   action = KStandardAction::print( this, SLOT(print()), collection );
-  action->setWhatsThis( i18n( "Print the complete address book or a selected number of contacts." ) );
+  action->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Print the complete address book or a selected number of contacts." ) );
 
   action = collection->addAction( "quick_search" );
   action->setText( i18n( "Quick search" ) );
@@ -449,8 +468,16 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
   toggleAction->setText( i18n( "Show Simple View" ) );
-  action->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
+  toggleAction->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   connect( toggleAction, SIGNAL(toggled(bool)), SLOT(setSimpleGuiMode(bool)) );
+
+#if defined(HAVE_PRISON)
+  KToggleAction *qrtoggleAction;
+  qrtoggleAction = collection->add<KToggleAction>( "options_show_qrcodes" );
+  qrtoggleAction->setText( i18n( "Show QR Codes" ) );
+  qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
+  connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
+#endif
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
@@ -477,7 +504,6 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Import GMX file..." ) );
   action->setWhatsThis( i18n( "Import contacts from a GMX address book file." ) );
   mXXPortManager->addImportAction( action, "gmx" );
-
 
   // export actions
   action = collection->addAction( "file_export_vcard30" );
@@ -510,19 +536,24 @@ void MainWidget::print()
 {
   QPrinter printer;
   printer.setDocName( i18n( "Address Book" ) );
-  printer.setOutputFileName( "addressbook.pdf" );
+  printer.setOutputFileName( Settings::self()->defaultFileName() );
   printer.setOutputFormat( QPrinter::PdfFormat );
   printer.setCollateCopies( true );
 
   QPrintDialog printDialog( &printer, this );
   printDialog.setWindowTitle( i18n( "Print Contacts" ) );
-  if ( !printDialog.exec() ) //krazy:exclude=crashy
+  if ( !printDialog.exec() ) { //krazy:exclude=crashy
     return;
+  }
 
   KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
   wizard.setDefaultAddressBook( currentAddressBook() );
 
-  wizard.exec();
+  wizard.exec(); //krazy:exclude=crashy
+
+  Settings::self()->setDefaultFileName( printer.outputFileName() );
+  Settings::self()->setPrintingStyle( wizard.printingStyle() );
+  Settings::self()->setSortOrder( wizard.sortOrder() );
 }
 
 void MainWidget::newContact()
@@ -555,10 +586,11 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
  * Catch when the selection has gone ( e.g. an empty address book has been selected )
  * clear the details view in this case.
  */
-void MainWidget::itemSelectionChanged( const QModelIndex &current, const QModelIndex& )
+void MainWidget::itemSelectionChanged( const QModelIndex &current, const QModelIndex & )
 {
-  if ( !current.isValid() )
+  if ( !current.isValid() ) {
     mDetailsViewStack->setCurrentWidget( mEmptyDetails );
+  }
 }
 
 void MainWidget::selectFirstItem()
@@ -579,18 +611,44 @@ void MainWidget::setSimpleGuiMode( bool on )
   mDetailsPane->setVisible( true );
   mContactSwitcher->setVisible( on );
 
-  if ( mItemView->model() )
+  if ( mItemView->model() ) {
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+  }
 
   Settings::self()->setUseSimpleMode( on );
+}
+
+bool MainWidget::showQRCodes()
+{
+#if defined(HAVE_PRISON)
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  return group.readEntry( "QRCodes", true );
+#else
+  return true;
+#endif
+}
+
+void MainWidget::setQRCodeShow( bool on )
+{
+#if defined(HAVE_PRISON)
+  // must write the configuration setting first before updating the view.
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  group.writeEntry( "QRCodes", on );
+
+  if ( mItemView->model() ) {
+    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+  }
+#endif
 }
 
 Akonadi::Collection MainWidget::currentAddressBook() const
 {
   if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
     const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole )
-                                                .value<Akonadi::Collection>();
+    const Akonadi::Collection collection =
+      index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
     return collection;
   }
@@ -598,7 +656,7 @@ Akonadi::Collection MainWidget::currentAddressBook() const
   return Akonadi::Collection();
 }
 
-QAbstractItemModel* MainWidget::allContactsModel()
+QAbstractItemModel *MainWidget::allContactsModel()
 {
   if ( !mAllContactsModel ) {
     KDescendantsProxyModel *descendantsModel = new KDescendantsProxyModel( this );

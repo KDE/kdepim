@@ -1,7 +1,6 @@
 /*
-  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company
-
-  Author: Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Tobias Koenig <tokoe@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,6 +21,7 @@
 #include "incidenceviewer.h"
 #include "incidenceviewer_p.h"
 #include "attachmenthandler.h"
+#include "calendar.h"
 #include "utils.h"
 
 #include "libkdepimdbusinterfaces/urihandler.h"
@@ -68,7 +68,6 @@ void TextBrowser::setSource( const QUrl &name )
   }
 }
 
-
 class IncidenceViewer::Private
 {
   public:
@@ -88,7 +87,7 @@ class IncidenceViewer::Private
 
       if ( mCurrentItem.isValid() ) {
         text = KCalUtils::IncidenceFormatter::extensiveDisplayStr(
-          CalendarSupport::displayName( mParentCollection ),
+          CalendarSupport::displayName( mCalendar, mParentCollection ),
           CalendarSupport::incidence( mCurrentItem ),
           mDate, KSystemTimeZones::local() );
         text.prepend( mHeaderText );
@@ -119,10 +118,12 @@ class IncidenceViewer::Private
 
     void slotAttachmentUrlClicked( const QString &uri )
     {
-      const QString attachmentName = QString::fromUtf8( QByteArray::fromBase64( uri.mid( 7 ).toUtf8() ) );
+      const QString attachmentName =
+        QString::fromUtf8( QByteArray::fromBase64( uri.mid( 7 ).toUtf8() ) );
       mAttachmentHandler->view( attachmentName, CalendarSupport::incidence( mCurrentItem ) );
     }
 
+    Calendar *mCalendar;
     IncidenceViewer *mParent;
     TextBrowser *mBrowser;
     Akonadi::Item mCurrentItem;
@@ -136,8 +137,21 @@ class IncidenceViewer::Private
     AttachmentHandler *mAttachmentHandler;
 };
 
+IncidenceViewer::IncidenceViewer( CalendarSupport::Calendar *calendar, QWidget *parent )
+  : QWidget( parent ), d( new Private( this ) )
+{
+  d->mCalendar = calendar;
+  init();
+}
+
 IncidenceViewer::IncidenceViewer( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
+{
+  d->mCalendar = 0;
+  init();
+}
+
+void IncidenceViewer::init()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
@@ -157,6 +171,11 @@ IncidenceViewer::IncidenceViewer( QWidget *parent )
 IncidenceViewer::~IncidenceViewer()
 {
   delete d;
+}
+
+void IncidenceViewer::setCalendar( Calendar *calendar )
+{
+  d->mCalendar = calendar;
 }
 
 Akonadi::Item IncidenceViewer::incidence() const

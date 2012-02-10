@@ -1,7 +1,7 @@
 /*
  *  preferences.cpp  -  program preference settings
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 #include "kalarm.h"
 
 #include "functions.h"
-#include "identities.h"
 #include "kamail.h"
 #include "messagebox.h"
 #include "preferences.moc"
 
+#include <kalarmcal/identities.h>
+
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 #include <kholidays/holidays.h>
-using namespace KHolidays;
 
 #include <kglobal.h>
 #include <kconfiggroup.h>
@@ -42,6 +42,8 @@ using namespace KHolidays;
 #include <time.h>
 #include <unistd.h>
 
+using namespace KHolidays;
+using namespace KAlarmCal;
 
 // Config file entry names
 static const char* GENERAL_SECTION  = "General";
@@ -78,10 +80,10 @@ Preferences* Preferences::self()
     if (!mInstance)
     {
         // Set the default button for the Quit warning message box to Cancel
-        MessageBox::setContinueDefault(QUIT_WARN, KMessageBox::Cancel);
-        MessageBox::setDefaultShouldBeShownContinue(QUIT_WARN, default_quitWarn);
-        MessageBox::setDefaultShouldBeShownContinue(EMAIL_QUEUED_NOTIFY, default_emailQueuedNotify);
-        MessageBox::setDefaultShouldBeShownContinue(CONFIRM_ALARM_DELETION, default_confirmAlarmDeletion);
+        KAMessageBox::setContinueDefault(QUIT_WARN, KMessageBox::Cancel);
+        KAMessageBox::setDefaultShouldBeShownContinue(QUIT_WARN, default_quitWarn);
+        KAMessageBox::setDefaultShouldBeShownContinue(EMAIL_QUEUED_NOTIFY, default_emailQueuedNotify);
+        KAMessageBox::setDefaultShouldBeShownContinue(CONFIRM_ALARM_DELETION, default_confirmAlarmDeletion);
 
         mInstance = new Preferences;
         mInstance->readConfig();
@@ -99,7 +101,7 @@ Preferences::Preferences()
 
 void Preferences::setAskAutoStart(bool yes)
 {
-    MessageBox::saveDontShowAgainYesNo(ASK_AUTO_START, !yes);
+    KAMessageBox::saveDontShowAgainYesNo(ASK_AUTO_START, !yes);
 }
 
 /******************************************************************************
@@ -288,7 +290,7 @@ void Preferences::connect(const char* signal, const QObject* receiver, const cha
 */
 void Preferences::setNotify(const QString& messageID, bool notify)
 {
-    MessageBox::saveDontShowAgainContinue(messageID, !notify);
+    KAMessageBox::saveDontShowAgainContinue(messageID, !notify);
 }
 
 /******************************************************************************
@@ -300,7 +302,7 @@ void Preferences::setNotify(const QString& messageID, bool notify)
 */
 bool Preferences::notifying(const QString& messageID)
 {
-    return MessageBox::shouldBeShownContinue(messageID);
+    return KAMessageBox::shouldBeShownContinue(messageID);
 }
 
 /******************************************************************************

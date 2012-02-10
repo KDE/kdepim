@@ -1,5 +1,7 @@
 /* Copyright 2010 Thomas McGuire <mcguire@kde.org>
 
+   Copyright 2011 Laurent Montel <montel@kde.org>
+
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
    published by the Free Software Foundation; either version 2 of
@@ -20,23 +22,17 @@
 #define TAGACTIONMANAGER_H
 
 #include "kmail_export.h"
-
-#include <Soprano/Statement>
+#include "tag.h"
+#include <QMap>
 
 class KActionCollection;
 class KXMLGUIClient;
 class KToggleAction;
 class QAction;
 class QSignalMapper;
-
+class KAction;
 namespace Akonadi {
   class Item;
-}
-
-namespace Soprano {
-  namespace Util {
-    class SignalCacheModel;
-  }
 }
 
 namespace MessageCore {
@@ -103,13 +99,16 @@ namespace KMail {
         * should connect to this signal and change the tags of the messages
         */
       void tagActionTriggered( const QString &tagLabel );
-
+      /**
+       * Emitted when we want to select more action
+       */
+      void tagMoreActionClicked();
     private Q_SLOTS:
 
       void tagsChanged();
-      void statementChanged( Soprano::Statement statement );
 
     private:
+      void createTagAction( const KMail::Tag::Ptr &tag, bool addToMenu );
 
       KActionCollection *mActionCollection;
       MessageActions *mMessageActions;
@@ -117,6 +116,8 @@ namespace KMail {
       KXMLGUIClient *mGUIClient;
       MessageCore::TagListMonitor *mTagListMonitor;
 
+      KAction *mSeparatorAction;
+      KAction *mMoreAction;
       // Maps the resource URI or a tag to the action of a tag.
       // Contains all existing tags
       QMap<QString,KToggleAction*> mTagActions;
@@ -124,8 +125,6 @@ namespace KMail {
       // The actions of all tags that are in the toolbar
       QList<QAction*> mToolbarActions;
 
-      // Needed so we can listen to Nepomuk Tag changes
-      QScopedPointer<Soprano::Util::SignalCacheModel> mSopranoModel;
   };
 }
 

@@ -19,13 +19,15 @@
 
 #include "kcalitembrowseritem.h"
 
+#include <calendarsupport/calendar.h>
+
 #include <akonadi/item.h>
 
 using namespace CalendarSupport;
 using namespace CalendarSupport::KCal;
 
-ExtendedIncidenceViewer::ExtendedIncidenceViewer( QWidget *parent )
-  : IncidenceViewer( parent )
+ExtendedIncidenceViewer::ExtendedIncidenceViewer( Calendar *calendar, QWidget *parent )
+  : IncidenceViewer( calendar, parent )
 {
 }
 

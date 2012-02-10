@@ -37,7 +37,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="KPIM::KDateEdit" name="birthdayDateEdit"/>
+      <widget class="KDateComboBox" name="birthdayDateEdit"/>
      </item>
     </layout>
    </item>
@@ -67,7 +67,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="KPIM::KDateEdit" name="anniversaryDateEdit"/>
+      <widget class="KDateComboBox" name="anniversaryDateEdit"/>
      </item>
     </layout>
    </item>
@@ -118,9 +118,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KDateEdit</class>
+   <class>KDateComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/kdateedit.h</header>
+   <header>kdatecombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

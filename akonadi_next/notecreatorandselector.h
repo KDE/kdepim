@@ -31,8 +31,7 @@
 
 class KJob;
 
-namespace Akonotes
-{
+namespace Akonotes {
 
 /**
  * @brief Creates and selects the newly created note.
@@ -46,28 +45,30 @@ namespace Akonotes
 class AKONADI_NEXT_EXPORT NoteCreatorAndSelector : public QObject
 {
   Q_OBJECT
-public:
-  NoteCreatorAndSelector(QItemSelectionModel *primaryModel, QItemSelectionModel *secondaryModel = 0, QObject* parent = 0);
+  public:
+    explicit NoteCreatorAndSelector( QItemSelectionModel *primaryModel,
+                                     QItemSelectionModel *secondaryModel = 0,
+                                     QObject *parent = 0 );
 
   virtual ~NoteCreatorAndSelector();
 
-  void createNote(const Akonadi::Collection &containerCollection);
+  void createNote( const Akonadi::Collection &containerCollection );
 
-private:
-  void doCreateNote();
+  private:
+    void doCreateNote();
 
-private slots:
-  void trySelectCollection();
-  void noteCreationFinished( KJob *job );
-  void trySelectNote();
+  private slots:
+    void trySelectCollection();
+    void noteCreationFinished( KJob *job );
+    void trySelectNote();
 
-private:
-  QItemSelectionModel *m_primarySelectionModel;
-  QItemSelectionModel *m_secondarySelectionModel;
+  private:
+    QItemSelectionModel *m_primarySelectionModel;
+    QItemSelectionModel *m_secondarySelectionModel;
 
-  Akonadi::Entity::Id m_containerCollectionId;
-  Akonadi::Entity::Id m_newNoteId;
-  QTimer *m_giveupTimer;
+    Akonadi::Entity::Id m_containerCollectionId;
+    Akonadi::Entity::Id m_newNoteId;
+    QTimer *m_giveupTimer;
 
 };
 

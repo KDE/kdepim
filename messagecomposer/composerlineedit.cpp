@@ -99,7 +99,7 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
   //multiple emails, let the user choose one
   KMenu menu( this );
   menu.setObjectName( QLatin1String("Addresschooser") );
-  for ( QStringList::const_iterator it = emails.begin(), end = emails.end() ; it != end; ++it )
+  for ( QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd() ; it != end; ++it )
     menu.addAction( *it );
   const QAction *result = menu.exec( QCursor::pos() );
   if ( !result )
@@ -118,8 +118,9 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     KABC::Addressee::List list;
     KABC::VCardDrag::fromMimeData( md, list );
 
-    KABC::Addressee::List::Iterator ait;
-    for ( ait = list.begin(); ait != list.end(); ++ait ){
+    KABC::Addressee::List::ConstIterator ait;
+    KABC::Addressee::List::ConstIterator end( list.constEnd() );
+    for ( ait = list.constBegin(); ait != end; ++ait ){
       insertEmails( (*ait).emails() );
     }
   }
@@ -220,9 +221,7 @@ void ComposerLineEdit::editRecentAddresses()
   dlg->setAddresses( KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses() );
   if ( dlg->exec() && dlg ) {
     KPIM::RecentAddresses::self( m_recentAddressConfig )->clear();
-    const QStringList addrList = dlg->addresses();
-    for ( QStringList::const_iterator it = addrList.constBegin(), end = addrList.constEnd() ; it != end ; ++it )
-      KPIM::RecentAddresses::self( MessageComposerSettings::self()->config() )->add( *it );
+    dlg->addAddresses(m_recentAddressConfig);
     loadContacts();
   }
 }
@@ -234,16 +233,17 @@ void ComposerLineEdit::loadContacts()
   //AddresseeLineEdit::loadContacts();
 
   if ( MessageComposerSettings::self()->showRecentAddressesInComposer() ){
-    QStringList recent =
+    const QStringList recent =
       KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses();
-    QStringList::Iterator it = recent.begin();
+    QStringList::ConstIterator it = recent.constBegin();
     QString name, email;
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
     KConfigGroup group( config, "CompletionWeights" );
-    int weight = group.readEntry( "Recent Addresses", 10 );
-    int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
-    for ( ; it != recent.end(); ++it ) {
+    const int weight = group.readEntry( "Recent Addresses", 10 );
+    const int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
+    QStringList::ConstIterator end = recent.constEnd();
+    for ( ; it != end; ++it ) {
       KABC::Addressee addr;
       KPIMUtils::extractEmailAddressAndName( *it, email, name );
       name = KPIMUtils::quoteNameIfNecessary( name );

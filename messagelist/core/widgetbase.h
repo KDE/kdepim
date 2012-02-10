@@ -61,7 +61,7 @@ class MESSAGELIST_EXPORT Widget : public QWidget
 
   Q_OBJECT
 public:
-  Widget( QWidget *parent );
+  explicit Widget( QWidget *parent );
   ~Widget();
 
   /**
@@ -255,6 +255,8 @@ protected slots:
    * Handles header section clicks switching the Aggregation MessageSorting on-the-fly.
    */
   void slotViewHeaderSectionClicked( int logicalIndex );
+
+  void slotLockSearchClicked(bool b);
 
 private:
   class Private;

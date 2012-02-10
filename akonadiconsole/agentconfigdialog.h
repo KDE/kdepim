@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Volker Krause
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
     USA.
 */
 
-#ifndef AGENTCONFIGDIALOG_H
-#define AGENTCONFIGDIALOG_H
+#ifndef AKONADICONSOLE_AGENTCONFIGDIALOG_H
+#define AKONADICONSOLE_AGENTCONFIGDIALOG_H
 
 #include "ui_agentconfigdialog.h"
 #include <Akonadi/AgentInstance>

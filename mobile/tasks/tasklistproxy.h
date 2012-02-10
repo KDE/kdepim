@@ -36,7 +36,9 @@ class TaskListProxy : public ListProxy
       DescriptionRole,
       PercentCompleteRole,
       BackgroundColorRole,
-      IsSubTaskRole
+      IsSubTaskRole,
+      SingleLineDescriptionRole,
+      HasDescriptionRole
     };
 
     explicit TaskListProxy( QObject* parent = 0 );

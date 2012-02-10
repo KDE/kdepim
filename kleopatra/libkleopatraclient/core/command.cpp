@@ -590,7 +590,7 @@ void Command::Private::run() {
 
     if ( in.parentWId ) {
 #if defined(Q_OS_WIN32) || defined(_WIN32_WCE)
-        err = send_option( ctx, "window-id", QString().sprintf( "%lx", reinterpret_cast<unsigned long>( in.parentWId ) ) );
+        err = send_option( ctx, "window-id", QString().sprintf( "%lx", reinterpret_cast<quintptr>( in.parentWId ) ) );
 #else
         err = send_option( ctx, "window-id", QString().sprintf( "%lx", static_cast<unsigned long>( in.parentWId ) ) );
 #endif

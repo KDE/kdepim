@@ -1,5 +1,6 @@
 File=customtemplates_kfg.kcfg
 ClassName=CTemplates
+NameSpace=TemplateParser
 Mutators=true
 ItemAccessors=true
 SetUserTexts=true

@@ -46,15 +46,29 @@ class Pane::Private
 {
 public:
   Private( Pane *owner )
-    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ), mPreferEmptyTab( false ) { }
+    : q( owner ),
+      mXmlGuiClient( 0 ),
+      mActionMenu( 0 ),
+      mCloseTabAction( 0 ),
+      mActivateNextTabAction( 0 ), 
+      mActivatePreviousTabAction( 0 ),
+      mMoveTabLeftAction( 0 ),
+      mMoveTabRightAction( 0 ), 
+      mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
   void onCloseTabClicked();
+  void activateTab();
   void closeTab( QWidget * );
   void onCurrentTabChanged();
   void onTabContextMenuRequest( const QPoint &pos );
-
+  void activateNextTab();
+  void activatePreviousTab();
+  void moveTabLeft();
+  void moveTabRight();
+  void moveTabBackward();
+  void moveTabForward();
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
@@ -72,6 +86,11 @@ public:
 
   QToolButton *mNewTabButton;
   QToolButton *mCloseTabButton;
+  KAction *mCloseTabAction;
+  KAction *mActivateNextTabAction;
+  KAction *mActivatePreviousTabAction;
+  KAction *mMoveTabLeftAction;
+  KAction *mMoveTabRightAction;
   bool mPreferEmptyTab;
 };
 
@@ -110,6 +129,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   d->mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
   d->mNewTabButton->adjustSize();
   d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
+#ifndef QT_NO_ACCESSIBILITY
+  d->mNewTabButton->setAccessibleName( i18n( "New tab" ) );
+#endif
   setCornerWidget( d->mNewTabButton, Qt::TopLeftCorner );
   connect( d->mNewTabButton, SIGNAL(clicked()),
            SLOT(onNewTabClicked()) );
@@ -118,6 +140,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   d->mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   d->mCloseTabButton->adjustSize();
   d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
+#ifndef QT_NO_ACCESSIBILITY
+  d->mCloseTabButton->setAccessibleName( i18n( "Close tab" ) );
+#endif
   setCornerWidget( d->mCloseTabButton, Qt::TopRightCorner );
   connect( d->mCloseTabButton, SIGNAL(clicked()),
            SLOT(onCloseTabClicked()) );
@@ -171,6 +196,46 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
+
+    d->mCloseTabAction = new KAction( i18n("Close tab"), this );
+    d->mCloseTabAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
+    connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
+    d->mActionMenu->addAction( d->mCloseTabAction );
+    d->mCloseTabAction->setEnabled( false );
+
+    QString actionname;
+    for (int i=1;i<10;i++) {
+      actionname.sprintf("activate_tab_%02d", i);
+      action = new KAction( i18n("Activate Tab %1", i),this );
+      action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
+      d->mXmlGuiClient->actionCollection()->addAction( actionname, action );
+      connect( action, SIGNAL(triggered(bool)), SLOT(activateTab()) );
+    }
+
+    d->mActivateNextTabAction = new KAction( i18n("Activate Next Tab"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_next_tab" ), d->mActivateNextTabAction );
+    d->mActivateNextTabAction->setEnabled( false );
+    connect( d->mActivateNextTabAction, SIGNAL(triggered(bool)), SLOT(activateNextTab()) );
+
+    d->mActivatePreviousTabAction = new KAction( i18n("Activate Previous Tab"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_previous_tab" ), d->mActivatePreviousTabAction );
+    d->mActivatePreviousTabAction->setEnabled( false );
+    connect( d->mActivatePreviousTabAction, SIGNAL(triggered(bool)), SLOT(activatePreviousTab()) );
+
+
+    d->mMoveTabLeftAction = new KAction( i18n("Move Tab Left"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_left" ), d->mMoveTabLeftAction );
+    d->mMoveTabLeftAction->setEnabled( false );
+    connect( d->mMoveTabLeftAction, SIGNAL(triggered(bool)), SLOT(moveTabLeft()) );
+
+    d->mMoveTabRightAction = new KAction( i18n("Move Tab Right"),this );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_right" ), d->mMoveTabRightAction );
+    d->mMoveTabRightAction->setEnabled( false );
+    connect( d->mMoveTabRightAction, SIGNAL(triggered(bool)), SLOT(moveTabRight()) );
+
+
+
   }
 }
 
@@ -361,6 +426,79 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   q->setTabToolTip( index, toolTip);
 }
 
+void Pane::Private::activateTab()
+{
+  q->tabBar()->setCurrentIndex( q->sender()->objectName().right( 2 ).toInt() -1 );
+}
+
+void Pane::Private::moveTabRight()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+  if ( QApplication::isRightToLeft() )
+    moveTabForward();
+  else
+    moveTabBackward();
+
+}
+
+void Pane::Private::moveTabLeft()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+  if ( QApplication::isRightToLeft() )
+    moveTabBackward();
+  else
+    moveTabForward();
+
+}
+
+void Pane::Private::moveTabForward()
+{
+  const int currentIndex = q->tabBar()->currentIndex();
+  if ( currentIndex == q->tabBar()->count()-1 )
+    return;
+  q->tabBar()->moveTab( currentIndex, currentIndex+1 );  
+}
+
+void Pane::Private::moveTabBackward()
+{
+  const int currentIndex = q->tabBar()->currentIndex();  
+  if ( currentIndex == 0 )
+    return;
+  q->tabBar()->moveTab( currentIndex, currentIndex-1 );
+}
+
+void Pane::Private::activateNextTab()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+
+  int indexTab = ( q->tabBar()->currentIndex() + 1 );
+
+  if( indexTab == numberOfTab )
+    indexTab = 0;
+  
+  q->tabBar()->setCurrentIndex( indexTab );  
+}
+
+void Pane::Private::activatePreviousTab()
+{
+  const int numberOfTab = q->tabBar()->count();
+  if( numberOfTab == 1 )
+    return;
+
+  int indexTab = ( q->tabBar()->currentIndex() - 1 );
+
+  if( indexTab == -1 )
+    indexTab = numberOfTab - 1;
+
+  q->tabBar()->setCurrentIndex( indexTab );
+}
+
 void Pane::Private::onNewTabClicked()
 {
   q->createNewTab();
@@ -471,6 +609,19 @@ void Pane::setCurrentFolder( const Akonadi::Collection &, bool, Core::PreSelecti
   }
 }
 
+void Pane::updateTabIconText( const Akonadi::Collection &collection, const QString&label, const QIcon& icon )
+{
+  for ( int i=0; i<count(); ++i ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    if ( w->currentCollection() == collection )
+    {
+        const int index = indexOf( w );
+        setTabText( index, label );
+        setTabIcon( index, icon );
+    }
+  }
+}
+
 void Pane::createNewTab()
 {
   Widget * w = new Widget( this );
@@ -527,10 +678,21 @@ QItemSelection Pane::Private::mapSelectionFromSource( const QItemSelection &sele
 
 void Pane::Private::updateTabControls()
 {
-  mCloseTabButton->setEnabled( q->count()>1 );
-
+  const bool enableAction = ( q->count()>1 );
+  mCloseTabButton->setEnabled( enableAction );
+  if ( mCloseTabAction )
+    mCloseTabAction->setEnabled( enableAction );
+  if ( mActivatePreviousTabAction )
+    mActivatePreviousTabAction->setEnabled( enableAction );
+  if ( mActivateNextTabAction )
+    mActivateNextTabAction->setEnabled( enableAction );
+  if ( mMoveTabRightAction )
+    mMoveTabRightAction->setEnabled( enableAction );
+  if ( mMoveTabLeftAction )
+    mMoveTabLeftAction->setEnabled( enableAction );
+      
   if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
-    q->tabBar()->setVisible( q->count()>1 );
+    q->tabBar()->setVisible( enableAction );
   } else {
     q->tabBar()->setVisible( true );
   }
@@ -574,6 +736,15 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChil
     return QList<Akonadi::Item>();
   }
   return w->selectionAsMessageItemList( includeCollapsedChildren );
+}
+
+QVector<qlonglong> Pane::selectionAsMessageItemListId( bool includeCollapsedChildren ) const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QVector<qlonglong>();
+  }
+  return w->selectionAsMessageItemListId( includeCollapsedChildren );
 }
 
 
@@ -718,5 +889,6 @@ void Pane::setPreferEmptyTab( bool emptyTab )
 {
   d->mPreferEmptyTab = emptyTab;
 }
+
 
 #include "pane.moc"

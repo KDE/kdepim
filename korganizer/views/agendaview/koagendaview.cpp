@@ -83,7 +83,6 @@ KOAgendaView::KOAgendaView( QWidget *parent, bool isSideBySide ) :
   connect( d->mAgendaView, SIGNAL(shiftedEvent(QDate,QDate)),
            SIGNAL(shiftedEvent(QDate,QDate)) );
 
-
   connect( d->mAgendaView, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
@@ -264,16 +263,6 @@ CalPrinter::PrintType KOAgendaView::printType() const
   }
 }
 
-void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
-{
-  d->mAgendaView->slotTodosDropped( items, gpos, allDay );
-}
-
-void KOAgendaView::slotTodosDropped( const Todo::List &items, const QPoint &gpos, bool allDay )
-{
-  d->mAgendaView->slotTodosDropped( items, gpos, allDay );
-}
-
 void KOAgendaView::readSettings()
 {
   d->mAgendaView->readSettings();
@@ -333,11 +322,13 @@ void KOAgendaView::setChanges( EventViews::EventView::Changes changes )
   // the BaseView::setDateRange(...) is called causing DatesChanged
   // flag to be on, when no dates changed.
   EventViews::EventView::Changes c;
-  if ( changes.testFlag( EventViews::EventView::ConfigChanged ) )
+  if ( changes.testFlag( EventViews::EventView::ConfigChanged ) ) {
     c = EventViews::EventView::ConfigChanged;
+  }
 
-  if ( changes.testFlag( EventViews::EventView::FilterChanged ) )
+  if ( changes.testFlag( EventViews::EventView::FilterChanged ) ) {
     c |= EventViews::EventView::FilterChanged;
+  }
 
   d->mAgendaView->setChanges( c | d->mAgendaView->changes() );
 }

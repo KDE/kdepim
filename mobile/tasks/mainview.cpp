@@ -381,23 +381,12 @@ void MainView::updateActionTexts()
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 {
-  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
-  manager->setSelectionModel( selectionModel );
-  manager->createAllActions();
-
-  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
-  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
-  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
-
-  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
-
-  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
-           this, SLOT(launchAccountWizard()) );
+  Akonadi::AgentActionManager *manager = createAgentActionManager( selectionModel );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
-                           i18n( "Could not create account: %1" ) );
+                           ki18n( "Could not create account: %1" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
                            i18n( "Account creation failed" ) );
 
@@ -472,7 +461,7 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
 #ifndef Q_OS_WINCE
   CalendarSupport::saveAttachments( item, this );
 #else
-  // CalendarSupport is not completly ported for Windows CE so we use the
+  // CalendarSupport is not completely ported for Windows CE so we use the
   // attachment handling code from KDeclarativeMainView
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
 

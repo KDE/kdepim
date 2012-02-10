@@ -117,7 +117,15 @@ void MailWebView::scrollPageUp( int percent )
 
 QString MailWebView::selectedText() const
 {
-  //TODO: For html selection see: http://stackoverflow.com/questions/3905619/html-document-selection-using-javascript
+//TODO HTML selection
+/* settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
+  QString textSelected = page()->currentFrame()->evaluateJavaScript(
+    "var span = document.createElement( 'SPAN' ); span.appendChild( window.getSelection().getRangeAt(0).cloneContents() );
+  ).toString();
+  settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+
+  return textSelected;
+*/
   return SuperClass::selectedText();
 }
 

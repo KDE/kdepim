@@ -25,6 +25,7 @@
 #include <kcalcore/todo.h>
 
 #include <QtCore/QDate>
+#include <qplatformdefs.h>
 
 SearchWidget::SearchWidget( QWidget *parent )
   : QWidget( parent )
@@ -41,7 +42,7 @@ SearchWidget::SearchWidget( QWidget *parent )
                                                         << KCalCore::Todo::todoMimeType() );
 
   // UI workarounds for Maemo5
-#ifdef Q_WS_MAEMO_5
+#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
   mUi.startDate->setEditable( false );
   mUi.endDate->setEditable( false );
 #endif

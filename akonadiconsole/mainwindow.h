@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef AKONADICONSOLE_MAINWINDOW_H
+#define AKONADICONSOLE_MAINWINDOW_H
 
 #include <KXmlGuiWindow>
 

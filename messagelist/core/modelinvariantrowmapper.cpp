@@ -48,7 +48,8 @@ public:
 
   ~RowShift()
   {
-    for ( QHash< int, ModelInvariantIndex * >::Iterator it = mInvariantHash->begin(); it != mInvariantHash->end(); ++it )
+    QHash< int, ModelInvariantIndex * >::ConstIterator end( mInvariantHash->constEnd() );
+    for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = mInvariantHash->constBegin(); it != end; ++it )
       ( *it )->d->setRowMapper( 0 );
     delete mInvariantHash;
   }
@@ -81,7 +82,8 @@ ModelInvariantRowMapper::~ModelInvariantRowMapper()
     d->mUpdateTimer->stop();
 
   // FIXME: optimize this (it CAN be optimized)
-  for ( QHash< int, ModelInvariantIndex * >::Iterator it = d->mCurrentInvariantHash->begin(); it != d->mCurrentInvariantHash->end(); ++it )
+  QHash< int, ModelInvariantIndex * >::ConstIterator end( d->mCurrentInvariantHash->constEnd() );
+  for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it )
     ( *it )->d->setRowMapper( 0 );
   delete d->mCurrentInvariantHash;
 
@@ -105,7 +107,7 @@ void ModelInvariantRowMapperPrivate::killFirstRowShift()
   delete shift;
   mRowShiftList->removeAt( 0 );
   mRemovedShiftCount++;
-  if ( mRowShiftList->count() < 1 )
+  if ( mRowShiftList->isEmpty() )
   {
     delete mRowShiftList;
     mRowShiftList = 0;
@@ -118,8 +120,7 @@ void ModelInvariantRowMapperPrivate::indexDead( ModelInvariantIndex * invariant 
 
   if ( invariant->d->rowMapperSerial() == mCurrentShiftSerial )
   {
-    int count = mCurrentInvariantHash->remove( invariant->d->modelIndexRow() );
-    Q_ASSERT( count > 0 );
+    mCurrentInvariantHash->remove( invariant->d->modelIndexRow() );
     return;
   }
 
@@ -135,9 +136,7 @@ void ModelInvariantRowMapperPrivate::indexDead( ModelInvariantIndex * invariant 
 
   Q_ASSERT( shift );
 
-  int removed = shift->mInvariantHash->remove( invariant->d->modelIndexRow() );
-
-  Q_ASSERT( removed > 0 );
+  shift->mInvariantHash->remove( invariant->d->modelIndexRow() );
 
   if ( ( shift->mInvariantHash->isEmpty() ) && ( invariantShiftIndex == 0 ) )
   {
@@ -319,7 +318,7 @@ int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantI
 
   // For the reasoning above invariantShiftIndex is surely < than mRowShiftList.count()
 
-  uint count = static_cast< uint >( d->mRowShiftList->count() );
+  const uint count = static_cast< uint >( d->mRowShiftList->count() );
 
   Q_ASSERT( invariantShiftIndex < count );
 
@@ -371,7 +370,7 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelIndexRowRangeToMo
 
   QList< ModelInvariantIndex * > * invariantList = new QList< ModelInvariantIndex * >();
 
-  int end = startIndexRow + count;
+  const int end = startIndexRow + count;
   for ( int idx = startIndexRow; idx < end; idx++ )
   {
     ModelInvariantIndex * invariant = d->modelIndexRowToModelInvariantIndexInternal( idx, true );
@@ -501,7 +500,7 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
 
   QList< ModelInvariantIndex * > * deadInvariants = new QList< ModelInvariantIndex * >();
 
-  int end = modelIndexRowPosition + count;
+  const int end = modelIndexRowPosition + count;
   for ( int idx = modelIndexRowPosition; idx < end; idx++ )
   {
     // FIXME: One could optimize this by joining the retrieval and destruction functions
@@ -574,7 +573,9 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
 void ModelInvariantRowMapper::modelReset()
 {
   // FIXME: optimize this (it probably can be optimized by providing a more complex user interface)
-  for ( QHash< int, ModelInvariantIndex * >::Iterator it = d->mCurrentInvariantHash->begin(); it != d->mCurrentInvariantHash->end(); ++it )
+  QHash< int, ModelInvariantIndex * >::ConstIterator end( d->mCurrentInvariantHash->constEnd() );
+
+  for ( QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it )
     ( *it )->d->setRowMapper( 0 );
   d->mCurrentInvariantHash->clear();
 
@@ -620,17 +621,18 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
 
     // and update the invariants that belong to it
     QHash< int, ModelInvariantIndex * >::Iterator it = shift->mInvariantHash->begin();
+    QHash< int, ModelInvariantIndex * >::Iterator end = shift->mInvariantHash->end();
 
-    while ( it != shift->mInvariantHash->end() )
+    while ( it != end )
     {
       ModelInvariantIndex * invariant = *it;
 
-      shift->mInvariantHash->erase( it );
+      it = shift->mInvariantHash->erase( it );
 
       // apply shifts
       int modelIndexRow = invariant->d->modelIndexRow();
 
-      for ( uint idx = 0; idx < count; idx++ )
+      for ( uint idx = 0; idx < count; ++idx )
       {
         RowShift * thatShift = mRowShiftList->at( idx );
         if ( modelIndexRow >= thatShift->mMinimumRowIndex )
@@ -654,8 +656,6 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
           return;
         }
       }
-
-      it = shift->mInvariantHash->begin();
 
       curIndex++;
     }

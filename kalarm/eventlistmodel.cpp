@@ -23,10 +23,11 @@
 #include "resources/alarmresource.h"
 #include "resources/alarmresources.h"
 #include "alarmcalendar.h"
-#include "alarmtext.h"
 #include "preferences.h"
 #include "synchtimer.h"
 #include "eventlistmodel.moc"
+
+#include <kalarmcal/alarmtext.h>
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -34,7 +35,6 @@
 
 #include <QApplication>
 #include <QPixmap>
-
 
 /*=============================================================================
 = Class: EventListModel
@@ -56,7 +56,7 @@ EventListModel* EventListModel::alarms()
 {
     if (!mAlarmInstance)
     {
-        mAlarmInstance = new EventListModel(KAlarm::CalEvent::ACTIVE | KAlarm::CalEvent::ARCHIVED);
+        mAlarmInstance = new EventListModel(CalEvent::ACTIVE | CalEvent::ARCHIVED);
         Preferences::connect(SIGNAL(archivedColourChanged(QColor)), mAlarmInstance, SLOT(slotUpdateArchivedColour(QColor)));
         Preferences::connect(SIGNAL(disabledColourChanged(QColor)), mAlarmInstance, SLOT(slotUpdateDisabledColour(QColor)));
         Preferences::connect(SIGNAL(holidaysChanged(KHolidays::HolidayRegion)), mAlarmInstance, SLOT(slotUpdateHolidays()));
@@ -68,7 +68,7 @@ EventListModel* EventListModel::alarms()
 EventListModel* EventListModel::templates()
 {
     if (!mTemplateInstance)
-        mTemplateInstance = new EventListModel(KAlarm::CalEvent::TEMPLATE);
+        mTemplateInstance = new EventListModel(CalEvent::TEMPLATE);
     return mTemplateInstance;
 }
 
@@ -80,7 +80,7 @@ EventListModel::~EventListModel()
         mTemplateInstance = 0;
 }
 
-EventListModel::EventListModel(KAlarm::CalEvent::Types status, QObject* parent)
+EventListModel::EventListModel(CalEvent::Types status, QObject* parent)
     : QAbstractTableModel(parent),
       mStatus(status)
 {
@@ -201,7 +201,7 @@ QVariant EventListModel::data(const QModelIndex& index, int role) const
             switch (role)
             {
                 case Qt::BackgroundRole:
-                    switch (event->actions())
+                    switch (event->actionTypes())
                     {
                         case KAEvent::ACT_DISPLAY_COMMAND:
                         case KAEvent::ACT_DISPLAY:
@@ -217,7 +217,7 @@ QVariant EventListModel::data(const QModelIndex& index, int role) const
                 case Qt::ForegroundRole:
                     if (event->commandError() != KAEvent::CMD_NO_ERROR)
                     {
-                        if (event->actions() == KAEvent::ACT_COMMAND)
+                        if (event->actionTypes() == KAEvent::ACT_COMMAND)
                             return Qt::white;
                         QColor colour = Qt::red;
                         int r, g, b;
@@ -233,7 +233,7 @@ QVariant EventListModel::data(const QModelIndex& index, int role) const
                     break;
                 case SortRole:
                 {
-                    unsigned i = (event->actions() == KAEvent::ACT_DISPLAY)
+                    unsigned i = (event->actionTypes() == KAEvent::ACT_DISPLAY)
                                ? event->bgColour().rgb() : 0;
                     return QString("%1").arg(i, 6, 10, QLatin1Char('0'));
                 }
@@ -260,9 +260,9 @@ QVariant EventListModel::data(const QModelIndex& index, int role) const
 #endif
                     return QString();
                 case ValueRole:
-                    return static_cast<int>(event->action());
+                    return static_cast<int>(event->actionSubType());
                 case SortRole:
-                    return QString("%1").arg(event->action(), 2, 10, QLatin1Char('0'));
+                    return QString("%1").arg(event->actionSubType(), 2, 10, QLatin1Char('0'));
             }
             break;
         case TextColumn:
@@ -405,7 +405,7 @@ void EventListModel::slotUpdateArchivedColour(const QColor&)
     int firstRow = -1;
     for (int row = 0, end = mEvents.count();  row < end;  ++row)
     {
-        if (mEvents[row]->category() == KAlarm::CalEvent::ARCHIVED)
+        if (mEvents[row]->category() == CalEvent::ARCHIVED)
         {
             // For efficiency, emit a single signal for each group
             // of consecutive archived alarms, rather than a separate
@@ -616,7 +616,7 @@ void EventListModel::slotResourceStatusChanged(AlarmResource* resource, AlarmRes
         for (int i = list.count();  --i >= 0;  )
         {
             if (mEvents.indexOf(list[i]) >= 0)
-                list.removeAt(i);    // avoid creating duplicate entries
+                list.remove(i);    // avoid creating duplicate entries
         }
         if (!list.isEmpty())
         {
@@ -656,7 +656,7 @@ void EventListModel::removeResource(AlarmResource* resource)
         {
             beginRemoveRows(QModelIndex(), row + 1, lastRow);
             while (lastRow > row)
-                mEvents.removeAt(lastRow--);
+                mEvents.remove(lastRow--);
             endRemoveRows();
             lastRow = -1;
         }
@@ -665,7 +665,7 @@ void EventListModel::removeResource(AlarmResource* resource)
     {
         beginRemoveRows(QModelIndex(), 0, lastRow);
         while (lastRow >= 0)
-            mEvents.removeAt(lastRow--);
+            mEvents.remove(lastRow--);
         endRemoveRows();
     }
     if (mHaveEvents  &&  mEvents.isEmpty())
@@ -759,7 +759,7 @@ void EventListModel::removeEvent(int row)
     if (row < 0)
         return;
     beginRemoveRows(QModelIndex(), row, row);
-    mEvents.removeAt(row);
+    mEvents.remove(row);
     endRemoveRows();
     if (mHaveEvents  &&  mEvents.isEmpty())
         updateHaveEvents(false);
@@ -935,11 +935,11 @@ QString EventListModel::repeatOrder(const KAEvent* event) const
 }
 
 /******************************************************************************
-*  Return the icon associated with the event's action.
+* Return the icon associated with the event's action.
 */
 QPixmap* EventListModel::eventIcon(const KAEvent* event) const
 {
-    switch (event->actions())
+    switch (event->actionTypes())
     {
         case KAEvent::ACT_EMAIL:
             return mEmailIcon;
@@ -948,7 +948,7 @@ QPixmap* EventListModel::eventIcon(const KAEvent* event) const
         case KAEvent::ACT_COMMAND:
             return mCommandIcon;
         case KAEvent::ACT_DISPLAY:
-            if (event->action() == KAEvent::FILE)
+            if (event->actionSubType() == KAEvent::FILE)
                 return mFileIcon;
             // fall through to ACT_DISPLAY_COMMAND
         case KAEvent::ACT_DISPLAY_COMMAND:
@@ -958,7 +958,7 @@ QPixmap* EventListModel::eventIcon(const KAEvent* event) const
 }
 
 /******************************************************************************
-*  Returns the QWhatsThis text for a specified column.
+* Returns the QWhatsThis text for a specified column.
 */
 QString EventListModel::whatsThisText(int column) const
 {

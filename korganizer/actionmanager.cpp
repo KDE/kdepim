@@ -28,9 +28,12 @@
 */
 
 #include "actionmanager.h"
+#include "akonadicollectionview.h"
 #include "calendaradaptor.h"
 #include "calendarview.h"
 #include "history.h"
+#include "htmlexportjob.h"
+#include "htmlexportsettings.h"
 #include "importdialog.h"
 #include "kocore.h"
 #include "kodialogmanager.h"
@@ -39,15 +42,9 @@
 #include "koviewmanager.h"
 #include "kowindowlist.h"
 #include "reminderclient.h"
-#include "akonadicollectionview.h"
-#include "htmlexportjob.h"
-#include "htmlexportsettings.h"
-
-#include <KCalCore/FileStorage>
-
-#include <KMime/KMimeMessage>
 
 #include <calendarviews/eventviews/eventview.h>
+
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendaradaptor.h>
 #include <calendarsupport/calendarmodel.h>
@@ -63,54 +60,56 @@
 #include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
+using namespace Future;
 
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Session>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/AgentManager>
 #include <Akonadi/AgentInstanceCreateJob>
-#include <akonadi/etmviewstatesaver.h>
+#include <Akonadi/AgentManager>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/EntityTreeView>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Session>
 
-#include <kcheckableproxymodel.h>
+#include <KCalCore/FileStorage>
+using namespace KCalCore;
+
 #include <KHolidays/Holidays>
-#include <kmimetypetrader.h>
-#include <kio/job.h>
+
+#include <KMime/KMimeMessage>
+
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+
 #include <KAction>
 #include <KActionCollection>
+#include <KCmdLineArgs>
 #include <KFileDialog>
 #include <KMenu>
+#include <KMenuBar>
+#include <KMimeTypeTrader>
 #include <KNotification>
 #include <KProcess>
 #include <KRecentFilesAction>
 #include <KSelectAction>
+#include <KSelectionProxyModel>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStandardDirs>
 #include <KSystemTimeZone>
 #include <KTemporaryFile>
 #include <KTipDialog>
-#include <KMenuBar>
 #include <KToggleAction>
 #include <KWindowSystem>
+#include <KIO/Job>
 #include <KIO/NetAccess>
-#include <kcmdlineargs.h>
-#include <knewstuff3/downloaddialog.h>
-
-#include <kselectionproxymodel.h>
+#include <KNS3/DownloadDialog>
 
 #include <QApplication>
-#include <QTimer>
-#include <QDebug>
 #include <QTemporaryFile>
-
-#include <akonadi/entitytreeview.h>
+#include <QTimer>
 #include <QVBoxLayout>
-
-using namespace Future;
-using namespace KCalCore;
 
 KOWindowList *ActionManager::mWindowList = 0;
 
@@ -198,12 +197,7 @@ void ActionManager::init()
     mAutoExportTimer->start( 1000 * 60 * KOPrefs::instance()->mAutoExportInterval );
   }
 
-
-  // per default (no calendars activated) disable actions
-  slotResourcesChanged( false );
-
   // set up autoSaving stuff
-
   mAutoArchiveTimer = new QTimer( this );
   mAutoArchiveTimer->setSingleShot( true );
   connect( mAutoArchiveTimer, SIGNAL(timeout()), SLOT(slotAutoArchive()) );
@@ -259,7 +253,8 @@ void ActionManager::createCalendarAkonadi()
   monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
   monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
   monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
-  CalendarSupport::CalendarModel *calendarModel = new CalendarSupport::CalendarModel( monitor, this );
+  CalendarSupport::CalendarModel *calendarModel =
+    new CalendarSupport::CalendarModel( monitor, this );
   calendarModel->setObjectName( "KOrg CalendarModel" );
   //calendarModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
@@ -277,7 +272,7 @@ void ActionManager::createCalendarAkonadi()
   columnFilterProxy->setObjectName( "Remove columns" );
 
   // Keep track of selected items.
-  QItemSelectionModel* selectionModel = new QItemSelectionModel( columnFilterProxy );
+  QItemSelectionModel *selectionModel = new QItemSelectionModel( columnFilterProxy );
   selectionModel->setObjectName( "Calendar Selection Model" );
 
   // Make item selection work by means of checkboxes.
@@ -287,40 +282,45 @@ void ActionManager::createCalendarAkonadi()
   checkableProxy->setObjectName( "Add checkboxes" );
 
   KConfig *config = KOGlobals::self()->config();
-  mCollectionSelectionModelStateSaver = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( config->group( "GlobalCollectionSelection" ) );
+  mCollectionSelectionModelStateSaver =
+    new KViewStateMaintainer<Akonadi::ETMViewStateSaver>(
+      config->group( "GlobalCollectionSelection" ) );
   mCollectionSelectionModelStateSaver->setSelectionModel( checkableProxy->selectionModel() );
 
   AkonadiCollectionViewFactory factory( mCalendarView );
   mCalendarView->addExtension( &factory );
   mCollectionView = factory.collectionView();
   mCollectionView->setObjectName( "Resource View" );
-  connect( mCollectionView, SIGNAL(resourcesChanged(bool)), SLOT(slotResourcesChanged(bool)));
   connect( mCollectionView, SIGNAL(resourcesAddedRemoved()), SLOT(slotResourcesAddedRemoved()));
   connect( mCollectionView, SIGNAL(defaultResourceChanged(Akonadi::Collection)),
            SLOT(slotDefaultResourceChanged(Akonadi::Collection)) );
   connect( mCollectionView, SIGNAL(colorsChanged()),
            mCalendarView, SLOT(updateConfig()) );
 
-  mCollectionViewStateSaver = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( config->group( "GlobalCollectionView" ) );
+  mCollectionViewStateSaver =
+    new KViewStateMaintainer<Akonadi::ETMViewStateSaver>(
+      config->group( "GlobalCollectionView" ) );
   mCollectionViewStateSaver->setView( mCollectionView->view() );
 
   mCollectionView->setCollectionSelectionProxyModel( checkableProxy );
 
-  CalendarSupport::CollectionSelection *colSel = new CalendarSupport::CollectionSelection( selectionModel );
+  CalendarSupport::CollectionSelection *colSel =
+    new CalendarSupport::CollectionSelection( selectionModel );
   EventViews::EventView::setGlobalCollectionSelection( colSel );
-  KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( selectionModel );
+  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel( selectionModel );
   selectionProxy->setObjectName( "Only show items of selected collection" );
   selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   selectionProxy->setSourceModel( calendarModel );
 
-  Akonadi::EntityMimeTypeFilterModel* filterProxy2 = new Akonadi::EntityMimeTypeFilterModel( this );
-
+  Akonadi::EntityMimeTypeFilterModel *filterProxy2 =
+    new Akonadi::EntityMimeTypeFilterModel( this );
   filterProxy2->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   filterProxy2->setSourceModel( selectionProxy );
   filterProxy2->setSortRole( CalendarSupport::CalendarModel::SortRole );
   filterProxy2->setObjectName( "Show headers" );
 
-  mCalendar = new CalendarSupport::Calendar( calendarModel, filterProxy2, KSystemTimeZones::local() );
+  mCalendar =
+    new CalendarSupport::Calendar( calendarModel, filterProxy2, KSystemTimeZones::local() );
   mCalendar->setObjectName( "KOrg Calendar" );
 
   mCalendarView->setCalendar( mCalendar );
@@ -342,7 +342,6 @@ void ActionManager::createCalendarAkonadi()
 
 }
 
-
 void ActionManager::initActions()
 {
   KAction *action;
@@ -360,12 +359,15 @@ void ActionManager::initActions()
     mACollection->addAction( "korganizer_print", a );
     a = mACollection->addAction( KStandardAction::PrintPreview, mCalendarView, SLOT(print()) );
     mACollection->addAction( "korganizer_print_preview", a );
-    a->setEnabled( !KMimeTypeTrader::self()->query("application/pdf", "KParts/ReadOnlyPart").isEmpty() );
+    a->setEnabled(
+      !KMimeTypeTrader::self()->query( "application/pdf", "KParts/ReadOnlyPart" ).isEmpty() );
   } else {
     KStandardAction::open( this, SLOT(file_open()), mACollection );
     KStandardAction::print( mCalendarView, SLOT(print()), mACollection );
-    QAction * preview = KStandardAction::printPreview( mCalendarView, SLOT(printPreview()), mACollection );
-    preview->setEnabled( !KMimeTypeTrader::self()->query("application/pdf", "KParts/ReadOnlyPart").isEmpty() );
+    QAction *preview =
+      KStandardAction::printPreview( mCalendarView, SLOT(printPreview()), mACollection );
+    preview->setEnabled(
+      !KMimeTypeTrader::self()->query( "application/pdf", "KParts/ReadOnlyPart" ).isEmpty() );
   }
 
   //~~~~~~~~~~~~~~~~~~~~~~~~ IMPORT / EXPORT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -466,7 +468,7 @@ void ActionManager::initActions()
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showWhatsNextView()) );
 
-  action = new KAction( KIcon( "view-calendar-month" ), i18n( "&Month View" ), this );
+  action = new KAction( KIcon( "view-calendar-month" ), i18n( "&Month" ), this );
   mACollection->addAction( "view_month", action );
   connect( action, SIGNAL(triggered(bool)),
            mCalendarView->viewManager(), SLOT(showMonthView()) );
@@ -544,7 +546,6 @@ void ActionManager::initActions()
   mACollection->addAction( "zoom_out_vertically", action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(zoomOutVertically()) );
-
 
   /************************** Actions MENU *********************************/
   bool isRTL = QApplication::isRightToLeft();
@@ -682,7 +683,8 @@ void ActionManager::initActions()
   connect( mPublishEvent, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_publish()) );
   mPublishEvent->setEnabled( false );
 
-  mSendInvitation = new KAction( KIcon( "mail-send" ), i18n( "Send &Invitation to Attendees" ), this );
+  mSendInvitation =
+    new KAction( KIcon( "mail-send" ), i18n( "Send &Invitation to Attendees" ), this );
   mACollection->addAction( "schedule_request", mSendInvitation );
   connect( mSendInvitation, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_request()) );
   mSendInvitation->setEnabled( false );
@@ -703,7 +705,8 @@ void ActionManager::initActions()
   connect( mCalendarView, SIGNAL(organizerEventsSelected(bool)),
            mSendCancel, SLOT(setEnabled(bool)) );
 
-  mSendStatusUpdate = new KAction( KIcon( "mail-reply-sender" ), i18n( "Send Status &Update" ), this );
+  mSendStatusUpdate =
+    new KAction( KIcon( "mail-reply-sender" ), i18n( "Send Status &Update" ), this );
   mACollection->addAction( "schedule_reply", mSendStatusUpdate );
   connect( mSendStatusUpdate, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_reply()) );
   mSendStatusUpdate->setEnabled( false );
@@ -757,7 +760,8 @@ void ActionManager::initActions()
   // if we are a kpart, then let's not show the todo in the left pane by
   // default since there's also a Todo part and we'll assume they'll be
   // using that as well, so let's not duplicate it (by default) here
-  mTodoViewShowAction->setChecked( config.readEntry( "TodoViewVisible", false ) ); //mIsPart ? false : true ) );
+  mTodoViewShowAction->setChecked(
+    config.readEntry( "TodoViewVisible", false ) ); //mIsPart ? false : true ) );
   mEventViewerShowAction->setChecked( config.readEntry( "EventViewerVisible", true ) );
   toggleDateNavigator();
   toggleTodoView();
@@ -812,19 +816,6 @@ void ActionManager::initActions()
   QAction *a = mACollection->addAction( KStandardAction::TipofDay, this,
                                         SLOT(showTip()) );
   mACollection->addAction( "help_tipofday", a );
-}
-
-void ActionManager::slotResourcesChanged( bool enabled )
-{
-  mNewEventAction->setEnabled( enabled );
-  mNewTodoAction->setEnabled( enabled );
-
-  Akonadi::Item item = mCalendarView->currentSelection();
-  mNewSubtodoAction->setEnabled( enabled && CalendarSupport::hasTodo( item ) );
-
-  mNewJournalAction->setEnabled( enabled );
-
-  mCalendarView->setCreatingEnabled( enabled );
 }
 
 void ActionManager::setItems( const QStringList &lst, int idx )
@@ -1089,10 +1080,11 @@ bool ActionManager::openURL( const KUrl &url, bool merge )
 
 bool ActionManager::addResource( const KUrl &url )
 {
-  kDebug()<< url;
-  Akonadi::AgentType type = Akonadi::AgentManager::self()->type( QLatin1String("akonadi_ical_resource") );
+  kDebug() << url;
+  Akonadi::AgentType type =
+    Akonadi::AgentManager::self()->type( QLatin1String( "akonadi_ical_resource" ) );
   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type, this );
-  job->setProperty("path", url.path());
+  job->setProperty( "path", url.path() );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(agentCreated(KJob*)) );
   job->start();
   return true;
@@ -1100,41 +1092,44 @@ bool ActionManager::addResource( const KUrl &url )
 
 void ActionManager::agentCreated( KJob *job )
 {
-    kDebug();
-    Akonadi::AgentInstanceCreateJob *createjob = qobject_cast<Akonadi::AgentInstanceCreateJob*>( job );
-    Q_ASSERT( createjob );
-    if ( createjob->error() ) {
-        mCalendarView->showErrorMessage( createjob->errorString() );
-        return;
-    }
-    Akonadi::AgentInstance instance = createjob->instance();
-    //instance.setName( CalendarName );
-    QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Resource.%1").arg( instance.identifier() ), QLatin1String("/Settings") );
-    if( ! iface.isValid() ) {
-        mCalendarView->showErrorMessage( i18n("Failed to obtain D-Bus interface for remote configuration.") );
-        return;
-    }
-    QString path = createjob->property( "path" ).toString();
-    Q_ASSERT( ! path.isEmpty() );
-    iface.call(QLatin1String("setPath"), path);
-    instance.reconfigure();
+  kDebug();
+  Akonadi::AgentInstanceCreateJob *createjob =
+    qobject_cast<Akonadi::AgentInstanceCreateJob*>( job );
+  Q_ASSERT( createjob );
+  if ( createjob->error() ) {
+    mCalendarView->showErrorMessage( createjob->errorString() );
+    return;
+  }
+
+  Akonadi::AgentInstance instance = createjob->instance();
+  //instance.setName( CalendarName );
+  QDBusInterface iface(
+    QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( instance.identifier() ),
+    QLatin1String( "/Settings" ) );
+
+  if( ! iface.isValid() ) {
+    mCalendarView->showErrorMessage(
+      i18n( "Failed to obtain D-Bus interface for remote configuration." ) );
+    return;
+  }
+  QString path = createjob->property( "path" ).toString();
+  Q_ASSERT( ! path.isEmpty() );
+  iface.call( QLatin1String( "setPath" ), path );
+  instance.reconfigure();
 }
 
 void ActionManager::showStatusMessageOpen( const KUrl &url, bool merge )
 {
   if ( merge ) {
-    mMainWindow->showStatusMessage( i18n( "Merged calendar '%1'.",
-                                      url.prettyUrl() ) );
+    mMainWindow->showStatusMessage( i18n( "Merged calendar '%1'.", url.prettyUrl() ) );
   } else {
-    mMainWindow->showStatusMessage( i18n( "Opened calendar '%1'.",
-                                      url.prettyUrl() ) );
+    mMainWindow->showStatusMessage( i18n( "Opened calendar '%1'.", url.prettyUrl() ) );
   }
 }
 
 void ActionManager::closeUrl()
 {
   kDebug();
-
   file_close();
 }
 
@@ -1233,12 +1228,13 @@ void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings )
   settings->setCreditName( "KOrganizer" );
   settings->setCreditURL( "http://korganizer.kde.org" );
 
-  KOrg::HtmlExportJob *exportJob = new KOrg::HtmlExportJob( mCalendarView->calendar(), settings, view() );
+  KOrg::HtmlExportJob *exportJob =
+    new KOrg::HtmlExportJob( mCalendarView->calendar(), settings, view() );
 
-  if( KOGlobals::self()->holidays() ) {
+  if ( KOGlobals::self()->holidays() ) {
     KHolidays::Holiday::List holidays = KOGlobals::self()->holidays()->holidays(
                                         settings->dateStart().date(), settings->dateEnd().date() );
-    foreach( KHolidays::Holiday holiday, holidays ) {
+    foreach ( const KHolidays::Holiday &holiday, holidays ) {
       exportJob->addHoliday( holiday.date(), holiday.text() );
     }
   }
@@ -1543,15 +1539,15 @@ bool ActionManager::handleCommandLine()
 
     // Check for import, merge or ask
     if ( args->isSet( "import" ) ) {
-      for( int i = 0; i < args->count(); ++i ) {
+      for ( int i = 0; i < args->count(); ++i ) {
         mainWindow->actionManager()->addResource( args->url( i ) );
       }
     } else if ( args->isSet( "merge" ) ) {
-      for( int i = 0; i < args->count(); ++i ) {
+      for ( int i = 0; i < args->count(); ++i ) {
         mainWindow->actionManager()->mergeURL( args->url( i ).url() );
       }
     } else {
-      for( int i = 0; i < args->count(); ++i ) {
+      for ( int i = 0; i < args->count(); ++i ) {
         mainWindow->actionManager()->importCalendar( args->url( i ) );
       }
     }
@@ -1574,15 +1570,15 @@ void ActionManager::downloadNewStuff()
   kDebug();
   KNS3::DownloadDialog dialog(mCalendarView);
   dialog.exec();
-  foreach (const KNS3::Entry& e, dialog.installedEntries()) {
-    kDebug()<<" downloadNewStuff :";
+  foreach ( const KNS3::Entry &e, dialog.installedEntries() ) {
+    kDebug() << " downloadNewStuff :";
     const QStringList lstFile = e.installedFiles();
     if ( lstFile.count() != 1 ) {
       continue;
     }
     const QString file = lstFile.at( 0 );
     const KUrl filename( file );
-    kDebug()<< "filename :"<<filename;
+    kDebug() << "filename :" << filename;
     if( ! filename.isValid() ) {
       continue;
     }
@@ -1592,7 +1588,7 @@ void ActionManager::downloadNewStuff()
 
     CalendarSupport::CalendarAdaptor::Ptr cal(
       new CalendarSupport::CalendarAdaptor(
-        mCalendar, mCalendarView, true /*use default collection*/ ) );
+        mCalendar, mCalendarView, true/*use default collection*/ ) );
 
     FileStorage storage( cal );
     storage.setFileName( file );
@@ -1601,7 +1597,7 @@ void ActionManager::downloadNewStuff()
       KMessageBox::error( mCalendarView, i18n( "Could not load calendar %1.", file ) );
     } else {
       QStringList eventList;
-      foreach( Event::Ptr e, cal->events() ) {
+      foreach ( Event::Ptr e, cal->events() ) {
         eventList.append( e->summary() );
       }
 
@@ -1630,7 +1626,7 @@ class ActionManager::ActionStringsVisitor : public Visitor
   public:
     ActionStringsVisitor() : mShow( 0 ), mEdit( 0 ), mDelete( 0 ) {}
 
-  bool act( IncidenceBase::Ptr incidence, QAction *show, QAction *edit, QAction *del )
+    bool act( IncidenceBase::Ptr incidence, QAction *show, QAction *edit, QAction *del )
     {
       mShow = show;
       mEdit = edit;
@@ -1652,6 +1648,7 @@ class ActionManager::ActionStringsVisitor : public Visitor
       }
       return true;
     }
+
     bool visit( Todo::Ptr )
     {
       if ( mShow ) {
@@ -1665,11 +1662,13 @@ class ActionManager::ActionStringsVisitor : public Visitor
       }
       return true;
     }
+
     bool visit( Journal::Ptr )
     {
       return assignDefaultStrings();
     }
-    bool visit( FreeBusy::Ptr  ) // to inhibit hidden virtual compile warning
+
+    bool visit( FreeBusy::Ptr ) // to inhibit hidden virtual compile warning
     {
       return false;
     }
@@ -1740,8 +1739,9 @@ void ActionManager::enableIncidenceActions( bool enabled )
 Akonadi::Collection ActionManager::selectedCollection() const
 {
   const QModelIndex index = mCollectionView->view()->currentIndex();
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return Akonadi::Collection();
+  }
 
   return index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 }
@@ -1802,7 +1802,8 @@ void ActionManager::openEventEditor( const QString &summary,
   int action = IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod();
   if ( attachmentMimetype != "message/rfc822" ) {
     action = IncidenceEditorNG::GlobalSettings::Link;
-  } else if ( IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod() == IncidenceEditorNG::GlobalSettings::Ask ) {
+  } else if ( IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod() ==
+              IncidenceEditorNG::GlobalSettings::Ask ) {
     KMenu *menu = new KMenu( 0 );
     QAction *attachLink = menu->addAction( i18n( "Attach as &link" ) );
     QAction *attachInline = menu->addAction( i18n( "Attach &inline" ) );
@@ -1828,49 +1829,49 @@ void ActionManager::openEventEditor( const QString &summary,
   KTemporaryFile tf;
   tf.setAutoRemove( true );
   switch ( action ) {
-    case IncidenceEditorNG::GlobalSettings::Link:
-      attData = uri;
-      break;
-    case IncidenceEditorNG::GlobalSettings::InlineFull:
+  case IncidenceEditorNG::GlobalSettings::Link:
+    attData = uri;
+    break;
+  case IncidenceEditorNG::GlobalSettings::InlineFull:
+    attData = file;
+    break;
+  case IncidenceEditorNG::GlobalSettings::InlineBody:
+  {
+    QFile f( file );
+    if ( !f.open( QFile::ReadOnly ) ) {
+      return;
+    }
+    KMime::Message *msg = new KMime::Message();
+    msg->setContent( f.readAll() );
+    msg->parse();
+    if ( msg == msg->textContent() || msg->textContent() == 0 ) { // no attachments
       attData = file;
-      break;
-    case IncidenceEditorNG::GlobalSettings::InlineBody:
-    {
-      QFile f( file );
-      if ( !f.open( QFile::ReadOnly ) ) {
+    } else {
+      if ( KMessageBox::warningContinueCancel(
+             0,
+             i18n( "Removing attachments from an email might invalidate its signature." ),
+             i18n( "Remove Attachments" ), KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
+             "BodyOnlyInlineAttachment" ) != KMessageBox::Continue ) {
+        delete msg;
         return;
       }
-      KMime::Message *msg = new KMime::Message();
-      msg->setContent( f.readAll() );
-      msg->parse();
-      if ( msg == msg->textContent() || msg->textContent() == 0 ) { // no attachments
-        attData = file;
-      } else {
-        if ( KMessageBox::warningContinueCancel(
-               0,
-               i18n( "Removing attachments from an email might invalidate its signature." ),
-               i18n( "Remove Attachments" ), KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-               "BodyOnlyInlineAttachment" ) != KMessageBox::Continue ) {
-          delete msg;
-          return;
-        }
-        KMime::Message *newMsg = new KMime::Message();
-        newMsg->setHead( msg->head() );
-        newMsg->setBody( msg->textContent()->body() );
-        newMsg->parse();
-        newMsg->contentTransferEncoding()->from7BitString(
-              msg->textContent()->contentTransferEncoding()->as7BitString() );
-        newMsg->contentType()->from7BitString( msg->textContent()->contentType()->as7BitString() );
-        newMsg->assemble();
-        tf.write( newMsg->encodedContent() );
-        attData = tf.fileName();
-      }
-      tf.close();
-      delete msg;
-      break;
+      KMime::Message *newMsg = new KMime::Message();
+      newMsg->setHead( msg->head() );
+      newMsg->setBody( msg->textContent()->body() );
+      newMsg->parse();
+      newMsg->contentTransferEncoding()->from7BitString(
+        msg->textContent()->contentTransferEncoding()->as7BitString() );
+      newMsg->contentType()->from7BitString( msg->textContent()->contentType()->as7BitString() );
+      newMsg->assemble();
+      tf.write( newMsg->encodedContent() );
+      attData = tf.fileName();
     }
-    default:
-      return;
+    tf.close();
+    delete msg;
+    break;
+  }
+  default:
+    return;
   }
 
   mCalendarView->newEvent( summary, description, QStringList(attData),
@@ -1928,14 +1929,14 @@ void ActionManager::openTodoEditor( const QString &summary,
 
   QString attData;
   switch ( action ) {
-    case KOPrefs::TodoAttachLink:
-      attData = uri;
-      break;
+  case KOPrefs::TodoAttachLink:
+    attData = uri;
+    break;
   case KOPrefs::TodoAttachInlineFull:
-      attData = file;
-      break;
-    default:
-      return;
+    attData = file;
+    break;
+  default:
+    return;
   }
 
   mCalendarView->newTodo( summary, description, QStringList( attData ),
@@ -2065,7 +2066,8 @@ void ActionManager::slotAutoArchive()
 
   mAutoArchiveTimer->stop();
   CalendarSupport::EventArchiver archiver;
-  connect( &archiver, SIGNAL(eventsDeleted()), mCalendarView, SLOT(updateView()) ); //AKONADI_PORT this signal shouldn't be needed anymore?
+  connect( &archiver, SIGNAL(eventsDeleted()),  //AKONADI_PORT: this signal
+           mCalendarView, SLOT(updateView()) ); //shouldn't be needed anymore?
   //AKONADI_PORT avoid this local incidence changer copy...
   CalendarSupport::IncidenceChanger changer( mCalendar, 0, Akonadi::Collection().id() );
   archiver.runAuto( mCalendarView->calendar(), &changer, mCalendarView, false /*no gui*/);
@@ -2091,7 +2093,6 @@ void ActionManager::checkAutoExport()
     exportHTML();
   }
 }
-
 
 void ActionManager::openTodoEditor( const QString &summary,
                                     const QString &description,
@@ -2135,6 +2136,5 @@ void ActionManager::handleExportJobResult( KJob *job )
     delete htmlExportJob->settings();
   }
 }
-
 
 #include "actionmanager.moc"

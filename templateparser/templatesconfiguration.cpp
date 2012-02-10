@@ -1,49 +1,36 @@
-/*   -*- mode: C++; c-file-style: "gnu" -*-
- *   kmail: KDE mail client
- *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+/*
+ * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
  *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the Free Software Foundation, Inc.,
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+
 #include "templatesconfiguration.h"
-#include "ui_templatesconfiguration_base.h"
-#include "templatesconfiguration_kfg.h"
 #include "globalsettings_base.h"
+#include "templatesconfiguration_kfg.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kglobal.h>
+#include <KMessageBox>
 
-#include <qpushbutton.h>
-#include <qtextedit.h>
-#include <qlineedit.h>
 #include <QWhatsThis>
-#include <qtoolbox.h>
-#include <qfont.h>
+
+using namespace TemplateParser;
 
 TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
   : QWidget( parent )
 {
-  setupUi(this);
-  setObjectName(name);
-
-  QFont f = KGlobalSettings::fixedFont();
-  textEdit_new->setFont( f );
-  textEdit_reply->setFont( f );
-  textEdit_reply_all->setFont( f );
-  textEdit_forward->setFont( f );
+  setupUi( this );
+  setObjectName( name );
 
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
   sizeHint();
@@ -64,20 +51,21 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
 
   mHelpString =
     i18n( "<p>Here you can create and manage templates to use when "
-	  "composing new messages, replies or forwarded messages.</p>"
-	  "<p>The message templates support substitution commands, "
-	  "either simply type them or select them from "
-	  "the <i>Insert command</i> menu.</p>" );
-  if ( QString( name ) == "folder-templates" ) {
+          "composing new messages, replies or forwarded messages.</p>"
+          "<p>The message templates support substitution commands, "
+          "either simply type them or select them from "
+          "the <i>Insert command</i> menu.</p>" );
+  const QString templateConfigurationName( name );
+  if ( templateConfigurationName == QLatin1String( "folder-templates" ) ) {
     mHelpString +=
       i18n( "<p>Templates specified here are folder-specific. "
             "They override both global templates and per-identity "
             "templates.</p>" );
-  } else if ( QString( name ) == "identity-templates" ) {
+  } else if ( templateConfigurationName == QLatin1String( "identity-templates" ) ) {
     mHelpString +=
       i18n( "<p>Templates specified here are identity-specific. "
             "They override global templates, but can be overridden by "
-	    "per-folder templates if they are specified.</p>" );
+            "per-folder templates if they are specified.</p>" );
   } else {
     mHelpString +=
       i18n( "<p>These are global (default) templates. They can be overridden "
@@ -90,8 +78,7 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *nam
            this, SLOT(slotHelpLinkClicked(QString)) );
 }
 
-
-void TemplatesConfiguration::slotHelpLinkClicked( const QString& )
+void TemplatesConfiguration::slotHelpLinkClicked( const QString & )
 {
   QWhatsThis::showText( QCursor::pos(), mHelpString );
 }
@@ -113,31 +100,31 @@ void TemplatesConfiguration::resetToDefault()
 void TemplatesConfiguration::loadFromGlobal()
 {
   QString str;
-  str = TemplateParser::GlobalSettings::self()->templateNewMessage();
+  str = GlobalSettings::self()->templateNewMessage();
   if ( str.isEmpty() ) {
     textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
   } else {
     textEdit_new->setText(str);
   }
-  str = TemplateParser::GlobalSettings::self()->templateReply();
+  str = GlobalSettings::self()->templateReply();
   if ( str.isEmpty() ) {
     textEdit_reply->setText( DefaultTemplates::defaultReply() );
   } else {
     textEdit_reply->setText( str );
   }
-  str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+  str = GlobalSettings::self()->templateReplyAll();
   if ( str.isEmpty() ) {
     textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
   } else {
     textEdit_reply_all->setText( str );
   }
-  str = TemplateParser::GlobalSettings::self()->templateForward();
+  str = GlobalSettings::self()->templateForward();
   if ( str.isEmpty() ) {
     textEdit_forward->setText( DefaultTemplates::defaultForward() );
   } else {
     textEdit_forward->setText( str );
   }
-  str = TemplateParser::GlobalSettings::self()->quoteString();
+  str = GlobalSettings::self()->quoteString();
   if ( str.isEmpty() ) {
     lineEdit_quote->setText( DefaultTemplates::defaultQuoteString() );
   } else {
@@ -147,12 +134,12 @@ void TemplatesConfiguration::loadFromGlobal()
 
 void TemplatesConfiguration::saveToGlobal()
 {
-  TemplateParser::GlobalSettings::self()->setTemplateNewMessage( strOrBlank( textEdit_new->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setTemplateReply( strOrBlank( textEdit_reply->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
-  TemplateParser::GlobalSettings::self()->setQuoteString( lineEdit_quote->text() );
-  TemplateParser::GlobalSettings::self()->writeConfig();
+  GlobalSettings::self()->setTemplateNewMessage( strOrBlank( textEdit_new->toPlainText() ) );
+  GlobalSettings::self()->setTemplateReply( strOrBlank( textEdit_reply->toPlainText() ) );
+  GlobalSettings::self()->setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
+  GlobalSettings::self()->setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
+  GlobalSettings::self()->setQuoteString( lineEdit_quote->text() );
+  GlobalSettings::self()->writeConfig();
 }
 
 void TemplatesConfiguration::loadFromIdentity( uint id )
@@ -163,7 +150,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateNewMessage();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateNewMessage();
+    str = GlobalSettings::self()->templateNewMessage();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultNewMessage();
@@ -172,7 +159,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateReply();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReply();
+    str = GlobalSettings::self()->templateReply();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReply();
@@ -181,7 +168,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateReplyAll();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+    str = GlobalSettings::self()->templateReplyAll();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReplyAll();
@@ -190,7 +177,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.templateForward();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateForward();
+    str = GlobalSettings::self()->templateForward();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultForward();
@@ -199,7 +186,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
 
   str = t.quoteString();
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->quoteString();
+    str = GlobalSettings::self()->quoteString();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultQuoteString();
@@ -221,7 +208,7 @@ void TemplatesConfiguration::saveToIdentity( uint id )
 void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
 {
   Templates t( id );
-  Templates* tid = 0;
+  Templates *tid = 0;
 
   if ( identity ) {
     tid = new Templates( configIdString( identity ) );
@@ -234,7 +221,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateNewMessage();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateNewMessage();
+    str = GlobalSettings::self()->templateNewMessage();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultNewMessage();
@@ -246,7 +233,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateReply();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReply();
+    str = GlobalSettings::self()->templateReply();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReply();
@@ -258,7 +245,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateReplyAll();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+    str = GlobalSettings::self()->templateReplyAll();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReplyAll();
@@ -270,7 +257,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->templateForward();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->templateForward();
+    str = GlobalSettings::self()->templateForward();
   }
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultForward();
@@ -282,7 +269,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = tid->quoteString();
   }
   if ( str.isEmpty() ) {
-    str = TemplateParser::GlobalSettings::self()->quoteString();
+    str = GlobalSettings::self()->quoteString();
   }
   if ( str.isEmpty() ) {
       str = DefaultTemplates::defaultQuoteString();
@@ -306,7 +293,7 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
 
 void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
 {
-  KTextEdit* edit;
+  KTextEdit *edit;
 
   if( toolBox1->widget( toolBox1->currentIndex() ) == page_new ) {
     edit = textEdit_new;
@@ -322,23 +309,36 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   }
 
   // kDebug() << "Insert command:" << cmd;
-  QTextCursor cursor = edit->textCursor();
-  cursor.insertText( cmd );
-  cursor.setPosition( cursor.position() + adjustCursor );
-  edit->setTextCursor( cursor );
-  edit->setFocus();
+  const QString editText( edit->toPlainText() );
+  if ( ( editText.contains( "%FORCEDPLAIN" ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
+       ( editText.contains( "%FORCEDHTML" ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {
+    KMessageBox::error(
+      this,
+      i18n( "Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"
+            " is not correct. Use only one of the aforementioned commands with \" Reply as"
+            " Quoted Message command\" as per your need\n"
+            "(a)Reply using plain text for quotes to be strictly in plain text\n"
+            "(b)Reply using HTML text for quotes being in HTML format if present" ) );
+  } else {
+    QTextCursor cursor = edit->textCursor();
+    cursor.insertText( cmd );
+    cursor.setPosition( cursor.position() + adjustCursor );
+    edit->setTextCursor( cursor );
+    edit->setFocus();
+  }
 }
 
-QString TemplatesConfiguration::strOrBlank( const QString &str ) {
+QString TemplatesConfiguration::strOrBlank( const QString &str )
+{
   if ( str.trimmed().isEmpty() ) {
-    return QString( "%BLANK" );
+    return QString::fromLatin1( "%BLANK" );
   }
   return str;
 }
 
 QString TemplatesConfiguration::configIdString( uint id )
 {
-  return QString( "IDENTITY_%1" ).arg( id );
+  return QString::fromLatin1( "IDENTITY_%1" ).arg( id );
 }
 
 #include "templatesconfiguration.moc"

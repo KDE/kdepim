@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2011 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
-  Author: Volker Krause <vkrause@kde.org>
+    Author: Volker Krause <vkrause@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -23,10 +23,11 @@
 
 #include "calendarsupport_export.h"
 
-#include <akonadi/job.h>
-#include <akonadi/mimetypechecker.h>
+#include <Akonadi/Item>
+#include <Akonadi/Job>
+#include <Akonadi/MimeTypeChecker>
+
 #include <KCalCore/Incidence>
-#include <akonadi/item.h>
 
 namespace CalendarSupport {
 
@@ -39,15 +40,15 @@ class CALENDARSUPPORT_EXPORT IncidenceFetchJob : public Akonadi::Job
 {
   Q_OBJECT
   public:
-    IncidenceFetchJob( QObject * parent = 0 );
-
+    IncidenceFetchJob( QObject *parent = 0 );
     Akonadi::Item::List items() const;
+
   protected:
     void doStart();
 
   private slots:
     void collectionFetchResult( KJob *job );
-    void itemFetchResult( KJob * job );
+    void itemFetchResult( KJob *job );
 
   private:
     Akonadi::Item::List m_items;

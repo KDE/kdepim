@@ -51,7 +51,8 @@ void FilterPlain::import(FilterInfo *info)
     int currentFile = 0;
 
     info->addLog(i18n("Importing new mail files..."));
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile ) {
+    QStringList::ConstIterator end( files.constEnd() );
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
         info->setFrom(*mailFile);
         info->setTo(dir.dirName());
         info->setCurrent(0);
@@ -80,7 +81,7 @@ void FilterPlain::import(FilterInfo *info)
         info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
-    
+
     count_duplicates = 0;
 }
 

@@ -22,12 +22,13 @@
 import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5
+import "../mobileui/ScreenFunctions.js" as Screen
 
 ActionMenuContainer {
 
   menuStyle : true
 
-  actionItemHeight : height / 6 - actionItemSpacing
+  actionItemHeight : Screen.partition( height, 6 ) - actionItemSpacing
   actionItemWidth : 200
   actionItemSpacing : 2
 

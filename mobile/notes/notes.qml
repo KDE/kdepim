@@ -24,6 +24,7 @@ import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.notes 4.5 as Notes
+import "../mobileui/ScreenFunctions.js" as Screen
 
 KPIM.MainView {
   id: notesMobile
@@ -120,6 +121,7 @@ KPIM.MainView {
       width: 1/3 * parent.width
       anchors.bottom : selectButton.top
       anchors.left: parent.left
+      itemHeight: Screen.partition( height, 7 )
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
@@ -218,6 +220,7 @@ KPIM.MainView {
         anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _itemNavigationModel
+        itemHeight: Screen.partition( height, 7 )
       }
 
       Akonadi.FilterLineEdit {
@@ -320,7 +323,10 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: { item.backgroundImage = backgroundImage.source }
+    onLoaded: {
+      item.backgroundImage = backgroundImage.source
+      item.itemHeight = Screen.partition( item.height, 7 )
+    }
   }
 
   KPIM.SearchResultScreen {
@@ -333,6 +339,7 @@ KPIM.MainView {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
+      itemHeight: Screen.partition( height, 7 )
     }
 
     resultText: KDE.i18np( "One note found", "%1 notes found", searchNotesListView.count )

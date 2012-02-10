@@ -19,31 +19,35 @@
 #ifndef KMAIL_MESSAGEACTIONS_H
 #define KMAIL_MESSAGEACTIONS_H
 
-#include "kmcommands.h"
-#include "kmreaderwin.h"
-
+#include "messagecomposer/messagefactory.h"
 #include <KUrl>
 
 #include <qobject.h>
-#include <qlist.h>
 
 class QWidget;
+class QAction;
+class KJob;
 class KAction;
 class KActionMenu;
 class KActionCollection;
 class KXMLGUIClient;
+class KMReaderWin;
 
 namespace Akonadi {
-class Item;
-class Monitor;
+  class Item;
+  class Monitor;
 }
 
 namespace MessageCore {
-class AsyncNepomukResourceRetriever;
+  class AsyncNepomukResourceRetriever;
 }
 
 namespace Nepomuk {
-class Resource;
+  class Resource;
+}
+
+namespace TemplateParser {
+  class CustomTemplatesMenu;
 }
 
 namespace KMail {
@@ -55,7 +59,7 @@ class MessageActions : public QObject
 {
   Q_OBJECT
   public:
-    MessageActions( KActionCollection* ac, QWidget *parent );
+    explicit MessageActions( KActionCollection* ac, QWidget *parent );
     ~MessageActions();
     void setMessageView( KMReaderWin *msgView );
 
@@ -72,7 +76,6 @@ class MessageActions : public QObject
     void setupForwardingActionsList( KXMLGUIClient *guiClient );
 
     void setCurrentMessage( const Akonadi::Item &item );
-    void setSelectedItem( const Akonadi::Item::List& items );
     void setSelectedVisibleItems( const Akonadi::Item::List& items );
 
     KActionMenu* replyMenu() const { return mReplyActionMenu; }
@@ -88,8 +91,10 @@ class MessageActions : public QObject
     KAction* editAction() const { return mEditAction; }
     KAction* annotateAction() const { return mAnnotateAction; }
     KAction* printAction() const { return mPrintAction; }
+    KAction* listFilterAction() const { return mListFilterAction; }
 
     KActionMenu* mailingListActionMenu() const { return mMailingListActionMenu; }
+    TemplateParser::CustomTemplatesMenu* customTemplatesMenu() const;
 
   signals:
 
@@ -105,14 +110,16 @@ class MessageActions : public QObject
 
   private:
     void updateActions();
-    template<typename T> void replyCommand();
+    void replyCommand(MessageComposer::ReplyStrategy strategy);
     void addMailingListAction( const QString &item, const KUrl &url );
     void addMailingListActions( const QString &item, const KUrl::List &list );
     void updateMailingListActions( const Akonadi::Item& messageItem );
-    
+
   private slots:
     void updateAnnotateAction(const QUrl& url, const Nepomuk::Resource& resource);
     void slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers );
+    void slotItemRemoved(const Akonadi::Item& item);
+
     void slotReplyToMsg();
     void slotReplyAuthorToMsg();
     void slotReplyListToMsg();
@@ -122,12 +129,12 @@ class MessageActions : public QObject
     void slotRunUrl( QAction *urlAction );
     void slotPrintMsg();
     void slotUpdateActionsFetchDone( KJob* job );
+    void slotMailingListFilter();
 
   private:
     QWidget *mParent;
     KActionCollection *mActionCollection;
     Akonadi::Item mCurrentItem;
-    Akonadi::Item::List mSelectedItems;
     Akonadi::Item::List mVisibleItems;
     KMReaderWin *mMessageView;
 
@@ -143,6 +150,8 @@ class MessageActions : public QObject
     bool mKorganizerIsOnSystem;
     Akonadi::Monitor *mMonitor;
     MessageCore::AsyncNepomukResourceRetriever *mAsynNepomukRetriever;
+    TemplateParser::CustomTemplatesMenu *mCustomTemplatesMenu;
+    KAction *mListFilterAction;
 };
 
 }

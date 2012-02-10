@@ -105,7 +105,7 @@ public:
   QTimer *mSearchTimer;
   KComboBox *mStatusFilterCombo;
   QToolButton *mOpenFullSearchButton;
-
+  QToolButton *mLockSearch;
   StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
                                          ///  is owned by MessageList::Widget.
   Aggregation * mAggregation;            ///< The currently set aggregation mode, a deep copy
@@ -135,6 +135,22 @@ Widget::Widget( QWidget *pParent )
   g->setMargin( 2 ); // use a smaller default
   g->setSpacing( 2 );
 
+  d->mLockSearch = new QToolButton( this );
+  d->mLockSearch->setCheckable( true );
+  d->mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
+  slotLockSearchClicked( false );
+  d->mLockSearch->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Toggle this button if you want to keep your quick search "
+           "locked when moving to other folders or when narrowing the search "
+           "by message status." ) );
+
+  d->mLockSearch->setVisible( Settings::self()->showQuickSearch() );
+  connect( d->mLockSearch, SIGNAL(toggled(bool)),
+           this, SLOT(slotLockSearchClicked(bool)) );
+  g->addWidget( d->mLockSearch, 0, 0 );
+
+
   d->mSearchEdit = new KLineEdit( this );
   d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
   d->mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
@@ -147,12 +163,12 @@ Widget::Widget( QWidget *pParent )
   connect( d->mSearchEdit, SIGNAL(clearButtonClicked()),
            SLOT(searchEditClearButtonClicked()) );
 
-  g->addWidget( d->mSearchEdit, 0, 0 );
+  g->addWidget( d->mSearchEdit, 0, 1 );
 
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
   d->mStatusFilterCombo = new KComboBox( this ) ;
   d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
-  g->addWidget( d->mStatusFilterCombo, 0, 1 );
+  g->addWidget( d->mStatusFilterCombo, 0, 2 );
 
   // The "Open Full Search" button
   d->mOpenFullSearchButton = new QToolButton( this );
@@ -160,7 +176,7 @@ Widget::Widget( QWidget *pParent )
   d->mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
   d->mOpenFullSearchButton->setToolTip( d->mOpenFullSearchButton->text() );
   d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
-  g->addWidget( d->mOpenFullSearchButton, 0, 2 );
+  g->addWidget( d->mOpenFullSearchButton, 0, 3 );
 
   connect( d->mOpenFullSearchButton, SIGNAL(clicked()),
            this, SIGNAL(fullSearchRequest()) );
@@ -293,26 +309,24 @@ MessageItem *Widget::currentMessageItem() const
 
 Akonadi::MessageStatus Widget::currentFilterStatus() const
 {
-  if ( !d->mFilter )
-    return Akonadi::MessageStatus();
-
-  return d->mFilter->status();
+  if ( d->mFilter )
+    return d->mFilter->status();
+  return Akonadi::MessageStatus();
 }
 
 QString Widget::currentFilterSearchString() const
 {
-  if ( !d->mFilter )
-    return QString();
-
-  return d->mFilter->searchString();
+  if ( d->mFilter )
+    return d->mFilter->searchString();
+  return QString();
 }
 
 QString Widget::currentFilterTagId() const
 {
-  if ( !d->mFilter )
-    return QString();
+  if ( d->mFilter )
+    return d->mFilter->tagId();
 
-  return d->mFilter->tagId();
+  return QString();
 }
 
 void Widget::Private::setDefaultAggregationForStorageModel( const StorageModel * storageModel )
@@ -389,19 +403,20 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   d->setDefaultThemeForStorageModel( storageModel );
   d->setDefaultSortOrderForStorageModel( storageModel );
 
-  if ( d->mSearchTimer )
-  {
-    d->mSearchTimer->stop();
-    delete d->mSearchTimer;
-    d->mSearchTimer = 0;
+  if(!d->mLockSearch->isChecked()) {
+      if ( d->mSearchTimer )
+      {
+          d->mSearchTimer->stop();
+          delete d->mSearchTimer;
+          d->mSearchTimer = 0;
+      }
+
+      d->mSearchEdit->setText( QString() );
+
+      if ( d->mFilter ) {
+          resetFilter();
+      }
   }
-
-  d->mSearchEdit->setText( QString() );
-
-  if ( d->mFilter ) {
-    resetFilter();
-  }
-
   StorageModel * oldModel = d->mStorageModel;
 
   d->mStorageModel = storageModel;
@@ -445,31 +460,14 @@ void Widget::themeMenuAboutToShow()
 
   QActionGroup * grp = new QActionGroup( menu );
 
-  const QHash< QString, Theme * > & themes = Manager::instance()->themes();
+  QList< Theme * > sortedThemes = Manager::instance()->themes().values();
 
   QAction * act;
 
-  QList< const Theme * > sortedThemes;
+  qSort(sortedThemes.begin(),sortedThemes.end(),MessageList::Core::Theme::compareName);
 
-  for ( QHash< QString, Theme * >::ConstIterator ci = themes.constBegin(); ci != themes.constEnd(); ++ci )
-  {
-    int idx = 0;
-    int cnt = sortedThemes.count();
-    while ( idx < cnt )
-    {
-      if ( sortedThemes.at( idx )->name() > ( *ci )->name() )
-      {
-        sortedThemes.insert( idx, *ci );
-        break;
-      }
-      idx++;
-    }
-
-    if ( idx == cnt )
-      sortedThemes.append( *ci );
-  }
-
-  for ( QList< const Theme * >::ConstIterator it = sortedThemes.constBegin(); it != sortedThemes.constEnd(); ++it )
+  QList< Theme * >::ConstIterator endTheme( sortedThemes.constEnd() );
+  for ( QList< Theme * >::ConstIterator it = sortedThemes.constBegin(); it != endTheme; ++it )
   {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
@@ -549,31 +547,15 @@ void Widget::aggregationMenuAboutToShow()
 
   QActionGroup * grp = new QActionGroup( menu );
 
-  const QHash< QString, Aggregation * > & aggregations = Manager::instance()->aggregations();
+  QList< Aggregation * > sortedAggregations = Manager::instance()->aggregations().values();
 
   QAction * act;
 
-  QList< const Aggregation * > sortedAggregations;
+  qSort(sortedAggregations.begin(),sortedAggregations.end(), MessageList::Core::Aggregation::compareName);
 
-  for ( QHash< QString, Aggregation * >::ConstIterator ci = aggregations.constBegin(); ci != aggregations.constEnd(); ++ci )
-  {
-    int idx = 0;
-    int cnt = sortedAggregations.count();
-    while ( idx < cnt )
-    {
-      if ( sortedAggregations.at( idx )->name() > ( *ci )->name() )
-      {
-        sortedAggregations.insert( idx, *ci );
-        break;
-      }
-      idx++;
-    }
+  QList<Aggregation * >::ConstIterator endagg( sortedAggregations.constEnd() );
 
-    if ( idx == cnt )
-      sortedAggregations.append( *ci );
-  }
-
-  for ( QList< const Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != sortedAggregations.constEnd(); ++it )
+  for ( QList< Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != endagg; ++it )
   {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
@@ -652,8 +634,8 @@ void Widget::sortOrderMenuAboutToShow()
   grp = new QActionGroup( menu );
 
   options = SortOrder::enumerateMessageSortingOptions( d->mAggregation->threading() );
-
-  for ( it = options.constBegin(); it != options.constEnd(); ++it )
+  QList< QPair< QString, int > >::ConstIterator end( options.constEnd() );
+  for ( it = options.constBegin(); it != end; ++it )
   {
     act = menu->addAction( ( *it ).first );
     act->setCheckable( true );
@@ -672,8 +654,8 @@ void Widget::sortOrderMenuAboutToShow()
     menu->addTitle( i18n( "Message Sort Direction" ) );
 
     grp = new QActionGroup( menu );
-
-    for ( it = options.constBegin(); it != options.constEnd(); ++it )
+    end = options.constEnd();
+    for ( it = options.constBegin(); it != end; ++it )
     {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
@@ -694,7 +676,8 @@ void Widget::sortOrderMenuAboutToShow()
 
     grp = new QActionGroup( menu );
 
-    for ( it = options.constBegin(); it != options.constEnd(); ++it )
+    end = options.constEnd();
+    for ( it = options.constBegin(); it != end; ++it )
     {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
@@ -715,8 +698,8 @@ void Widget::sortOrderMenuAboutToShow()
     menu->addTitle( i18n( "Group Sort Direction" ) );
 
     grp = new QActionGroup( menu );
-
-    for ( it = options.constBegin(); it != options.constEnd(); ++it )
+    end = options.constEnd();
+    for ( it = options.constBegin(); it != end; ++it )
     {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
@@ -918,6 +901,18 @@ void Widget::resetFilter()
   d->mFilter = 0;
   d->mView->model()->setFilter( 0 );
   d->mStatusFilterCombo->setCurrentIndex( 0 );
+  d->mLockSearch->setChecked(false);
+}
+
+void Widget::slotLockSearchClicked( bool locked )
+{
+  if ( locked ) {
+    d->mLockSearch->setIcon( KIcon( QLatin1String( "object-locked" ) ) );
+    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Unlock search" ) );
+  } else {
+    d->mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
+    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Lock search" ) );
+  }
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
@@ -1080,7 +1075,7 @@ void Widget::searchTimerFired()
   if ( !d->mFilter )
     d->mFilter = new Filter();
 
-  QString text = d->mSearchEdit->text();
+  const QString text = d->mSearchEdit->text();
 
   d->mFilter->setSearchString( text );
   if ( d->mFilter->isEmpty() ) {
@@ -1170,3 +1165,5 @@ bool Widget::selectionEmpty() const
   return d->mView->selectionEmpty();
 }
 
+
+#include "widgetbase.moc"

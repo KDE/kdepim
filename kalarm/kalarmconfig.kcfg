@@ -5,18 +5,21 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
 
+  <include>"timeperiod.h"</include>
+  <include>"kalocale.h"</include>
+  <include>KGlobalSettings</include>
+  <include>KColorScheme</include>
   <include>QFont</include>
   <include>QColor</include>
   <include>qnamespace.h</include>
-  <include>KGlobalSettings</include>
-  <include>KColorScheme</include>
-  <include>"timeperiod.h"</include>
-  <include>"kalocale.h"</include>
 
   <kcfgfile name="kalarmrc"/>
 
   <signal name="showInSystemTrayChanged">
     <argument type="Bool">ShowInSystemTray</argument>
+  </signal>
+  <signal name="autoHideSystemTrayChanged">
+    <argument type="Int">AutoHideSystemTray</argument>
   </signal>
   <signal name="askResourceChanged">
     <argument type="Bool">AskResource</argument>
@@ -89,6 +92,12 @@
       <whatsthis context="@info:whatsthis">&lt;para>Check to show &lt;application>KAlarm&lt;/application>'s icon in the system tray. Showing it in the system tray provides easy access and a status indication.&lt;/para></whatsthis>
       <default>true</default>
       <emit signal="showInSystemTrayChanged"/>
+    </entry>
+    <entry name="AutoHideSystemTray" type="Int">
+      <label context="@label">Auto-hide in system tray if no alarms due within period</label>
+      <whatsthis context="@info:whatsthis">&lt;para>Enter 0 to auto-hide &lt;application>KAlarm&lt;/application>'s icon in the system tray when there are no active alarms.&lt;/para>&lt;para>To auto-hide the system tray icon when there are no alarms due within a set period of time, enter the time period in minutes.&lt;/para>&lt;para>Enter 0 to always show the system tray icon.&lt;/para></whatsthis>
+      <default>1440</default>
+      <emit signal="autoHideSystemTrayChanged"/>
     </entry>
     <entry name="AutoStart" key="AutoStart" type="Bool">
       <label context="@label">Start at login</label>
@@ -172,7 +181,7 @@
     <entry name="Base_EmailFrom" key="EmailFrom" type="String">
       <label context="@label">'From' email address</label>
       <whatsthis context="@info:whatsthis">Your email address, used to identify you as the sender when sending email alarms. Enter "@SystemSettings" to use the email address set in System Settings, "@KMail" to allow choice of KMail identities, or enter the actual email address otherwise.</whatsthis>
-      <default code="true">Identities::identitiesExist() ? QLatin1String("@KMail") : QLatin1String("@SystemSettings")</default>
+      <default code="true">KAlarmCal::Identities::identitiesExist() ? QLatin1String("@KMail") : QLatin1String("@SystemSettings")</default>
     </entry>
     <entry name="Base_EmailBccAddress" key="EmailBccAddress" type="String">
       <label context="@label">'Bcc' email address</label>
@@ -351,6 +360,11 @@
     <entry name="DefaultPreAction" key="PreAction" type="String">
       <label context="@label">Pre-alarm action</label>
       <whatsthis context="@info:whatsthis">Default command to execute before displaying alarms.</whatsthis>
+    </entry>
+    <entry name="DefaultExecPreActionOnDeferral" key="PreActionExecDefer" type="Bool">
+      <label context="@label">Execute pre-alarm action for deferred alarms</label>
+      <whatsthis context="@info:whatsthis">Default setting for whether to execute the pre-alarm action before deferred alarms trigger.</whatsthis>
+      <default>false</default>
     </entry>
     <entry name="DefaultCancelOnPreActionError" key="PreActionErrCancel" type="Bool">
       <label context="@label">Cancel alarm on pre-alarm action error</label>

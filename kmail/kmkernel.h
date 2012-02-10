@@ -5,14 +5,11 @@
 
 #include "mailinterfaces.h"
 
-#include <QByteArray>
 #include <QList>
 #include <QObject>
 #include <QPointer>
-#include <QString>
 #include <QDBusObjectPath>
 
-#include <kconfig.h>
 #include <kurl.h>
 
 #include "kmail_export.h"
@@ -24,7 +21,11 @@
 #define kmkernel KMKernel::self()
 #define kmconfig KMKernel::config()
 
-class KMFilterDlg;
+namespace MailCommon {
+  class KMFilterDialog;
+}
+
+class QAbstractItemModel;
 namespace Akonadi {
   class Collection;
   class ChangeRecorder;
@@ -61,7 +62,6 @@ namespace KPIMIdentities {
   class Identity;
   class IdentityManager;
 }
-class KMKernel;
 class KComponentData;
 class QTimer;
 class KMMainWin;
@@ -150,7 +150,7 @@ public Q_SLOTS:
    */
   Q_SCRIPTABLE void checkAccount( const QString & account );
 
-  Q_SCRIPTABLE void selectFolder( const QString & folder );
+  Q_SCRIPTABLE bool selectFolder( const QString & folder );
 
   Q_SCRIPTABLE bool canQueryClose();
 
@@ -328,14 +328,13 @@ public:
 
   bool isImapFolder( const Akonadi::Collection& ) const;
 
-  void setAccountOnline();
+  //sets online status for akonadi accounts. true for online, false for offline
+  void setAccountStatus(bool);
 
   const KComponentData &xmlGuiInstance() { return mXmlGuiInstance; }
   void setXmlGuiInstance( const KComponentData &instance ) { mXmlGuiInstance = instance; }
 
   UndoStack *undoStack() { return the_undoStack; }
-  MailCommon::FilterManager *filterManager() const { return the_filterMgr; }
-  MailCommon::FilterActionDict *filterActionDict() const { return the_filterActionDict; }
   MessageSender *msgSender();
 
   /*reimp*/ void openFilterDialog(bool createDummyFilter = true);
@@ -406,8 +405,14 @@ public:
 
   /*reimp*/ QStringList customTemplates();
 
-  void checkFolderFromResources( const Akonadi::Collection::Id& collectionId );
+  void checkFolderFromResources( const Akonadi::Collection::List& collectionList );
 
+  const QAbstractItemModel* treeviewModelSelection();
+
+protected:
+  void agentInstanceBroken( const Akonadi::AgentInstance& instance );
+
+  
 public slots:
 
   /*reimp*/ void updateSystemTray();
@@ -435,7 +440,6 @@ public slots:
   void slotRunBackgroundTasks();
 
   void slotConfigChanged();
-  void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
 
 signals:
   void configChanged();
@@ -444,6 +448,8 @@ signals:
 
   void startCheckMail();
   void endCheckMail();
+
+
 
 
 private slots:
@@ -456,14 +462,18 @@ private slots:
 
   void akonadiStateChanged( Akonadi::ServerManager::State );
   void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
+  void instanceError(const Akonadi::AgentInstance& instance, const QString & message);
+  void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+  void slotCollectionRemoved(const Akonadi::Collection& col);
+  void slotDeleteIdentity( uint identity);
+  void slotInstanceRemoved(const Akonadi::AgentInstance&);
+  
 private:
   void migrateFromKMail1();
   void openReader( bool onlyCheck );
   QSharedPointer<MailCommon::FolderCollection> currentFolderCollection();
 
   UndoStack *the_undoStack;
-  MailCommon::FilterManager *the_filterMgr;
-  MailCommon::FilterActionDict *the_filterActionDict;
   mutable KPIMIdentities::IdentityManager *mIdentityManager;
   AkonadiSender *the_msgSender;
   /** previous KMail version. If different from current,
@@ -501,7 +511,7 @@ private:
 
   int mWrapCol;
 
-  QPointer<KMFilterDlg> mFilterEditDialog;
+  QPointer<MailCommon::KMFilterDialog> mFilterEditDialog;
 };
 
 #endif // _KMKERNEL_H

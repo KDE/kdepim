@@ -36,15 +36,9 @@
 #include <kabc/addressee.h>
 #include <kdebug.h>
 #include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/ui/keyselectiondialog.h>
 
 #include <messagecomposer/attachmentmodel.h>
-#include <messagecore/attachmentcompressjob.h>
-#include <messagecore/attachmentfrommimecontentjob.h>
-#include <messagecore/attachmentfromurljob.h>
-#include <messagecore/attachmentpropertiesdialog.h>
 #include <messagecore/attachmentpart.h>
-#include <messageviewer/editorwatcher.h>
 
 using namespace KMail;
 using namespace KPIM;
@@ -77,7 +71,6 @@ AttachmentController::AttachmentController( Message::AttachmentModel *model, Att
 
 AttachmentController::~AttachmentController()
 {
-//   delete d;
 }
 
 void AttachmentController::identityChanged()
@@ -96,7 +89,7 @@ void AttachmentController::attachMyPublicKey()
 {
   const KPIMIdentities::Identity &identity = mComposer->identity();
   kDebug() << identity.identityName();
-  exportPublicKey( mComposer->identity().pgpEncryptionKey() );
+  exportPublicKey( identity.pgpEncryptionKey() );
 }
 
 void AttachmentController::actionsCreated()
@@ -113,42 +106,7 @@ void AttachmentController::addAttachmentItems( const Akonadi::Item::List &items 
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( items, this );
   itemFetchJob->fetchScope().fetchFullPayload( true );
   itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  connect( itemFetchJob, SIGNAL(result(KJob*)), this, SLOT(slotFetchJob(KJob*)) );
-}
-
-void AttachmentController::slotFetchJob( KJob *job )
-{
-  if ( job->error() ) {
-    MailCommon::Util::showJobErrorMessage( job );
-    return;
-  }
-  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-  if ( !fjob )
-    return;
-  Akonadi::Item::List items = fjob->items();
-
-  if ( items.isEmpty() )
-    return;
-
-  if ( items.first().mimeType() == KMime::Message::mimeType() ) {
-    uint identity = 0;
-    if ( items.at( 0 ).isValid() && items.at( 0 ).parentCollection().isValid() ) {
-      QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( items.at( 0 ).parentCollection() ) );
-      identity = fd->identity();
-    }
-    KMCommand *command = new KMForwardAttachedCommand( mComposer, items,identity, mComposer );
-    command->start();
-  } else {
-    foreach ( const Akonadi::Item &item, items ) {
-      QString attachmentName = QLatin1String( "attachment" );
-      if ( item.hasPayload<KABC::Addressee>() ) {
-        const KABC::Addressee contact = item.payload<KABC::Addressee>();
-        attachmentName = contact.realName() + QLatin1String( ".vcf" );
-      }
-
-      mComposer->addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
-    }
-  }
+  connect( itemFetchJob, SIGNAL(result(KJob*)), mComposer, SLOT(slotFetchJob(KJob*)) );
 }
 
 void AttachmentController::selectionChanged()

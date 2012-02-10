@@ -9,6 +9,7 @@
   <!ENTITY kmail-menus SYSTEM "menus.docbook">
   <!ENTITY kmail-faq SYSTEM "faq.docbook">
   <!ENTITY kmail-importing SYSTEM "importing.docbook">
+  <!ENTITY kmail-troubleshooting SYSTEM "troubleshooting.docbook">
   <!ENTITY kmail-credits-and-licenses SYSTEM "credits-and-licenses.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
@@ -75,7 +76,7 @@
 </address></affiliation>
 </author>
 
-<!-- TRANS:ROLES_OF_TRANSLATORS -->  
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <copyright>
@@ -126,6 +127,7 @@
 &kmail-menus;  <!-- 4.7 except missing menu items and Mark Message table-->
 &kmail-faq;  <!-- updated by Yuri with topics from userbase -->
 &kmail-importing; <!-- not reviewed -->
+&kmail-troubleshooting; <!-- exported from UserBase -->
 &kmail-credits-and-licenses;
 
 <appendix id="installation">

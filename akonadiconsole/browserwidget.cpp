@@ -44,7 +44,7 @@
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <akonadi/statisticsproxymodel.h>
+#include <libkdepim/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
@@ -130,7 +130,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   collectionFilter->setDynamicSortFilter( true );
   collectionFilter->setSortCaseSensitivity( Qt::CaseInsensitive );
 
-  statisticsProxyModel = new StatisticsProxyModel( this );
+  statisticsProxyModel = new KPIM::StatisticsProxyModel( this );
   statisticsProxyModel->setToolTipEnabled( true );
   statisticsProxyModel->setSourceModel( collectionFilter );
 
@@ -177,6 +177,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   QWidget *contentViewParent = new QWidget( this );
   contentUi.setupUi( contentViewParent );
+  contentUi.saveButton->setEnabled( false );
   connect( contentUi.saveButton, SIGNAL(clicked()), SLOT(save()) );
   splitter3->addWidget( contentViewParent );
 
@@ -308,7 +309,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     Nepomuk::Resource res( item.url() );
 
     contentUi.tagWidget->setTaggedResource( res );
-    contentUi.ratingWidget->setRating( res.rating() );
+    contentUi.ratingWidget->setRating( int( res.rating() ) );
 
     delete mNepomukModel;
     mNepomukModel = 0;
@@ -416,6 +417,7 @@ void BrowserWidget::addAttribute()
   Q_ASSERT( index.isValid() );
   mAttrModel->setData( index, contentUi.attrName->text() );
   contentUi.attrName->clear();
+  contentUi.saveButton->setEnabled( true );
 }
 
 void BrowserWidget::delAttribute()
@@ -426,6 +428,9 @@ void BrowserWidget::delAttribute()
   if ( selection.count() != 1 )
     return;
   mAttrModel->removeRow( selection.first().row() );
+  if ( mAttrModel->rowCount() == 0 ) {
+    contentUi.saveButton->setEnabled( false );
+  }
 }
 
 void BrowserWidget::dumpToXml()

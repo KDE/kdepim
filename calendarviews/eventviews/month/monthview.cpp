@@ -28,14 +28,13 @@
 #include "monthscene.h"
 #include "prefs.h"
 
-#include <kcheckableproxymodel.h>
-
 //#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 #include <KIcon>
 
 #include <QHBoxLayout>
@@ -325,7 +324,8 @@ QDateTime MonthView::selectionEnd() const
   return selectionStart();
 }
 
-void MonthView::setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth )
+void MonthView::setDateRange( const KDateTime &start, const KDateTime &end,
+                              const QDate &preferredMonth )
 {
   EventView::setDateRange( start, end, preferredMonth );
   // d->calendarSearch->setStartDate( actualStartDateTime() );
@@ -498,14 +498,15 @@ void MonthView::reloadIncidences()
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const Akonadi::Item::List incidences = calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
+  const Akonadi::Item::List incidences =
+    calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
 
   const bool colorMonthBusyDays = preferences()->colorMonthBusyDays();
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
     const bool isTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
 
-    // Remove the two checks when filtering is done through a proxyModel, when calendar search is used.
+    // Remove the two checks when filtering is done through a proxyModel, when using calendar search
     if ( !preferences()->showTodosMonthView() && isTodo ) {
       continue;
     }
@@ -527,21 +528,12 @@ void MonthView::reloadIncidences()
         removeFilteredOccurrences( todo, dateTimeList );
       }
     } else {
-      KDateTime dateToAdd;
+      const KDateTime dtStart = incidence->dateTime( KCalCore::Incidence::RoleDisplayStart );
+      const KDateTime dtEnd   = incidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
 
-      if ( KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem ) ) {
-        if ( todo->hasDueDate() ) {
-          dateToAdd = todo->dtDue();
-        }
-      } else {
-        dateToAdd = incidence->dtStart();
+      if ( dtEnd >= actualStartDateTime() && dtStart <= actualEndDateTime() ) {
+        dateTimeList += dtStart;
       }
-
-      if ( dateToAdd >= actualStartDateTime() &&
-           dateToAdd <= actualEndDateTime() ) {
-        dateTimeList += dateToAdd;
-      }
-
     }
     KCalCore::DateTimeList::const_iterator t;
     const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( incidence );
@@ -552,6 +544,7 @@ void MonthView::reloadIncidences()
       }
 
       MonthItem *manager = new IncidenceMonthItem( d->scene,
+                                                   calendar(),
                                                    aitem,
                                                    t->toTimeSpec( timeSpec ).date() );
       d->scene->mManagerList << manager;

@@ -1,12 +1,11 @@
 /*
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2009 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -21,229 +20,163 @@
 
 #include "mailcommon_export.h"
 
-#include <kshortcut.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <KIO/Job>
-#include <ksharedconfig.h>
-
-#include "messagecore/mailinglist.h"
+#include <messagecore/mailinglist.h>
 using MessageCore::MailingList;
 
-namespace MailCommon {
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionStatistics>
 
-class Kernel;
+#include <KSharedConfig>
+#include <KShortcut>
+#include <KIO/Job>
+
+namespace MailCommon {
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
   Q_OBJECT
-public:
-  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll );
 
-  ~FolderCollection();
+  public:
+    static QSharedPointer<FolderCollection> forCollection(
+      const Akonadi::Collection &coll, bool writeConfig = true );
 
-  /*
-   * Define the possible units to use for measuring message expiry.
-   * expireNever is used to switch off message expiry, and expireMaxUnits
-   * must always be the last in the list (for bounds checking).
-   */
-  enum ExpireUnits { ExpireNever, ExpireDays, ExpireWeeks, ExpireMonths, ExpireMaxUnits };
+    ~FolderCollection();
 
-  Akonadi::Collection collection() const;
+    Akonadi::Collection collection() const;
+    void setCollection( const Akonadi::Collection &collection );
 
+    static QString configGroupName( const Akonadi::Collection &col );
 
-  QString configGroupName() const;
+    bool isWriteConfig() const;
+    void setWriteConfig( bool writeConfig );
 
-  void writeConfig() const;
-  void readConfig();
+    void writeConfig() const;
+    void readConfig();
 
-  QString name() const;
+    QString name() const;
 
-  QString idString() const;
+    bool isReadOnly() const;
 
-  bool isReadOnly() const;
+    bool isStructural() const;
 
-  bool isStructural() const;
+    bool isSystemFolder() const;
 
-  bool isSystemFolder() const;
+    qint64 count() const;
 
-  qint64 count() const;
+    bool canDeleteMessages() const;
 
-  bool canDeleteMessages() const;
+    bool canCreateMessages() const;
 
-  bool canCreateMessages() const;
+    bool isValid() const;
 
-  bool isValid() const;
+    Akonadi::Collection::Rights rights() const;
 
-  Akonadi::Collection::Rights rights() const;
+    Akonadi::CollectionStatistics statistics() const;
 
-  Akonadi::CollectionStatistics statistics() const;
+    void setShortcut( const KShortcut & );
+    const KShortcut &shortcut() const
+    {
+      return mShortcut;
+    }
 
-  enum ExpireAction { ExpireDelete, ExpireMove };
+    /**
+     *  Get / set whether the default identity should be used instead of the
+     *  identity specified by setIdentity().
+     */
+    void setUseDefaultIdentity( bool useDefaultIdentity );
+    bool useDefaultIdentity() const
+    {
+      return mUseDefaultIdentity;
+    }
 
+    void setIdentity( uint identity );
+    uint identity() const;
 
-  const KShortcut &shortcut() const { return mShortcut; }
+    /**
+     * Returns true if this folder is associated with a mailing-list.
+     */
+    void setMailingListEnabled( bool enabled );
+    bool isMailingListEnabled() const
+    {
+      return mMailingListEnabled;
+    }
 
-  void setShortcut( const KShortcut& );
+    void setMailingList( const MailingList &mlist );
 
-  /** Get / set whether the default identity should be used instead of the
-   *  identity specified by setIdentity(). */
-  void setUseDefaultIdentity( bool useDefaultIdentity );
-  bool useDefaultIdentity() const { return mUseDefaultIdentity; }
+    MailingList mailingList() const
+    {
+      return mMailingList;
+    }
 
-  void setIdentity(uint identity);
-  uint identity() const;
+    /**
+     * Returns true if the replies to mails from this folder should be
+     * put in the same folder.
+     */
+    bool putRepliesInSameFolder() const
+    {
+      return mPutRepliesInSameFolder;
+    }
+    void setPutRepliesInSameFolder( bool b )
+    {
+      mPutRepliesInSameFolder = b;
+    }
 
-  /**
-   * Set whether this folder automatically expires messages.
-   */
-  void setAutoExpire(bool enabled);
+    /**
+     * Returns true if this folder should be hidden from all folder selection dialogs
+     */
+    bool hideInSelectionDialog() const
+    {
+      return mHideInSelectionDialog;
+    }
+    void setHideInSelectionDialog( bool hide )
+    {
+      mHideInSelectionDialog = hide;
+    }
 
-  /**
-   * Does this folder automatically expire old messages?
-   */
-  bool isAutoExpire() const { return mExpireMessages; }
+    /**
+     * Returns true if the user doesn't want to get notified about new mail
+     * in this folder.
+     */
+    bool ignoreNewMail() const
+    {
+      return mIgnoreNewMail;
+    }
+    void setIgnoreNewMail( bool b )
+    {
+      mIgnoreNewMail = b;
+    }
 
-  /**
-   * Set the maximum age for unread messages in this folder.
-   * Age should not be negative. Units are set using
-   * setUnreadExpireUnits().
-   */
-  void setUnreadExpireAge(int age);
+    QString mailingListPostAddress() const;
 
-  /**
-   * Set units to use for expiry of unread messages.
-   * Values are 1 = days, 2 = weeks, 3 = months.
-   */
-  void setUnreadExpireUnits(ExpireUnits units);
+  protected slots:
+    void slotIdentitiesChanged();
 
-  /**
-   * Set the maximum age for read messages in this folder.
-   * Age should not be negative. Units are set using
-   * setReadExpireUnits().
-   */
-  void setReadExpireAge(int age);
+  private:
+    explicit FolderCollection( const Akonadi::Collection &col, bool writeconfig );
 
-  /**
-   * Set units to use for expiry of read messages.
-   * Values are 1 = days, 2 = weeks, 3 = months.
-   */
-  void setReadExpireUnits(ExpireUnits units);
+    Akonadi::Collection mCollection;
 
-  /**
-   * Get the age at which unread messages are expired.
-   * Units are determined by getUnreadExpireUnits().
-   */
-  int getUnreadExpireAge() const { return mUnreadExpireAge; }
+    /** Mailing list attributes */
+    bool                mMailingListEnabled;
+    MailingList         mMailingList;
 
-  /**
-   * Get the age at which read messages are expired.
-   * Units are determined by getReadExpireUnits().
-   */
-  int getReadExpireAge() const { return mReadExpireAge; }
+    bool mUseDefaultIdentity;
+    uint mIdentity;
 
-  /**
-   * What should expiry do? Delete or move to another folder?
-   */
-  ExpireAction expireAction() const { return mExpireAction; }
-  void setExpireAction( ExpireAction a );
+    /** Should new mail in this folder be ignored? */
+    bool mIgnoreNewMail;
 
-  /**
-   * If expiry should move to folder, return the ID of that folder
-   */
-  QString expireToFolderId() const { return mExpireToFolderId; }
-  void setExpireToFolderId( const QString& id );
+    /** Should replies to messages in this folder be put in here? */
+    bool mPutRepliesInSameFolder;
 
-  /**
-   * Units getUnreadExpireAge() is returned in.
-   * 1 = days, 2 = weeks, 3 = months.
-   */
-  ExpireUnits getUnreadExpireUnits() const { return mUnreadExpireUnits; }
+    /** Should this folder be hidden in the folder selection dialog? */
+    bool mHideInSelectionDialog;
 
-  /**
-   * Units getReadExpireAge() is returned in.
-   * 1 = days, 2 = weeks, 3 = months.
-   */
-  ExpireUnits getReadExpireUnits() const { return mReadExpireUnits; }
+    /** shortcut associated with this folder or null, if none is configured. */
+    KShortcut mShortcut;
+    bool mWriteConfig;
 
-
-
-  /** Returns true if this folder is associated with a mailing-list. */
-  void setMailingListEnabled( bool enabled );
-  bool isMailingListEnabled() const { return mMailingListEnabled; }
-
-  void setMailingList( const MailingList& mlist );
-  MailingList mailingList() const
-  { return mMailingList; }
-
-  void daysToExpire( int& unreadDays, int& readDays );
-
-  /**
-   * Returns true if the replies to mails from this folder should be
-   * put in the same folder.
-   */
-  bool putRepliesInSameFolder() const { return mPutRepliesInSameFolder; }
-  void setPutRepliesInSameFolder( bool b ) { mPutRepliesInSameFolder = b; }
-
-  /**
-   * Returns true if this folder should be hidden from all folder selection dialogs
-   */
-  bool hideInSelectionDialog() const { return mHideInSelectionDialog; }
-  void setHideInSelectionDialog( bool hide ) { mHideInSelectionDialog = hide; }
-
-  /**
-   * Returns true if the user doesn't want to get notified about new mail
-   * in this folder.
-   */
-  bool ignoreNewMail() const { return mIgnoreNewMail; }
-  void setIgnoreNewMail( bool b ) { mIgnoreNewMail = b; }
-
-  QString mailingListPostAddress() const;
-
-  void removeCollection();
-  void expireOldMessages( bool immediate );
-
-protected slots:
-  void slotIdentitiesChanged();
-  void slotDeletionCollectionResult( KJob *job );
-
-signals:
-  void viewConfigChanged();
-
-private:
-
-  explicit FolderCollection( const Akonadi::Collection& col, bool writeconfig );
-
-  Akonadi::Collection mCollection;
-  bool         mExpireMessages;          // true if old messages are expired
-  int          mUnreadExpireAge;         // Given in unreadExpireUnits
-  int          mReadExpireAge;           // Given in readExpireUnits
-  ExpireUnits  mUnreadExpireUnits;
-  ExpireUnits  mReadExpireUnits;
-  ExpireAction mExpireAction;
-  QString      mExpireToFolderId;
-
-  /** Mailing list attributes */
-  bool                mMailingListEnabled;
-  MailingList         mMailingList;
-
-  bool mUseDefaultIdentity;
-  uint mIdentity;
-
-  /** Should new mail in this folder be ignored? */
-  bool mIgnoreNewMail;
-
-  /** Should replies to messages in this folder be put in here? */
-  bool mPutRepliesInSameFolder;
-
-  /** Should this folder be hidden in the folder selection dialog? */
-  bool mHideInSelectionDialog;
-
-  /** shortcut associated with this folder or null, if none is configured. */
-  KShortcut mShortcut;
-  bool mWriteConfig;
-
-  bool mOldIgnoreNewMail;
+    bool mOldIgnoreNewMail;
 };
 
 }

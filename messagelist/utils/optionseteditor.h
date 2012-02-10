@@ -47,12 +47,9 @@ class OptionSetEditor : public KTabWidget
   Q_OBJECT
 
 public:
-  OptionSetEditor( QWidget *parent );
+  explicit OptionSetEditor( QWidget *parent );
   ~OptionSetEditor();
-
-private:
-  KLineEdit * mNameEdit;                       ///< The editor for the OptionSet name
-  KTextEdit * mDescriptionEdit;                ///< The editor for the OptionSet description
+  void setReadOnly( bool readOnly );
 
 protected:
 
@@ -61,14 +58,14 @@ protected:
    * Derived classes are responsable of filling this UI element and reading back data from it.
    */
   KLineEdit * nameEdit() const
-    { return mNameEdit; };
+    { return mNameEdit; }
 
   /**
    * Returns the editor for the description of the OptionSet.
    * Derived classes are responsable of filling this UI element and reading back data from it.
    */
   KTextEdit * descriptionEdit() const
-    { return mDescriptionEdit; };
+    { return mDescriptionEdit; }
 
 protected slots:
   /**
@@ -76,6 +73,10 @@ protected slots:
    * Pure virtual slot. Derived classes must provide an implementation.
    */
   virtual void slotNameEditTextEdited( const QString &newName ) = 0;
+
+private:
+  KLineEdit * mNameEdit;                       ///< The editor for the OptionSet name
+  KTextEdit * mDescriptionEdit;                ///< The editor for the OptionSet description
 
 };
 

@@ -1,13 +1,12 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
  *
- *  This file is part of KMail, the KDE mail client.
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *
- *  KMail is free software; you can redistribute it and/or modify it
+ *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
- *  KMail is distributed in the hope that it will be useful, but
+ *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  General Public License for more details.
@@ -31,10 +30,7 @@
 #ifndef MAILCOMMON_FOLDERJOB_H
 #define MAILCOMMON_FOLDERJOB_H
 
-#include <kmime/kmime_message.h>
-#include <QList>
-#include <QString>
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
 
 namespace MailCommon {
 
@@ -42,143 +38,77 @@ class FolderJob : public QObject
 {
   Q_OBJECT
 
-public:
-  enum JobType { tListMessages, tGetFolder, tCreateFolder, tExpungeFolder,
-		 tDeleteMessage, tGetMessage, tPutMessage, tAddSubfolders,
-		 tDeleteFolders, tCheckUidValidity, tRenameFolder,
-                 tCopyMessage, tMoveMessage, tOther /* used by subclasses */ };
-  /**
-   * Constructs a new job, operating on the message msg, of type
-   * @p jt and with a parent folder @p folder.
-   */
-  explicit FolderJob( KMime::Message *msg, JobType jt = tGetMessage,
-                      const Akonadi::Collection &folder = Akonadi::Collection(),
-                      const QString &partSpecifier = QString() );
+  public:
+    FolderJob();
 
-  /**
-   * Constructs a new job, operating on a message list @p msgList,
-   * set @sets, JobType @p jt and with the parent folder @p folder.
-   *
-   */
-  FolderJob( const QList<KMime::Message*>& msgList, const QString& sets,
-	     JobType jt = tGetMessage, const Akonadi::Collection & = Akonadi::Collection() );
-  /**
-   * This one should ONLY be used in derived folders, when a job
-   * does something internal and needs to construct an empty parent
-   * FolderJob
-   */
-  FolderJob( JobType jt );
-  virtual ~FolderJob();
+    virtual ~FolderJob();
 
-  QList<KMime::Message*> msgList() const;
-  /**
-   * Start the job
-   */
-  void start();
+    /**
+     * Start the job
+     */
+    void start();
 
-  /**
-   * Interrupt the job. Note that the finished() and result() signal
-   * will be emitted, unless you called setPassiveDestructor(true) before.
-   * This kills the job, don't use it afterwards.
-   */
-  virtual void kill();
+    /**
+     * Interrupt the job. Note that the finished() and result() signal
+     * will be emitted, unless you called setPassiveDestructor(true) before.
+     * This kills the job, don't use it afterwards.
+     */
+    virtual void kill();
 
-  /**
-   * @return the error code of the job. This must only be called from
-   * the slot connected to the finished() signal.
-   */
-  int error() const { return mErrorCode; }
+    /**
+     * @return the error code of the job. This must only be called from
+     * the slot connected to the finished() signal.
+     */
+    int error() const
+    {
+      return mErrorCode;
+    }
 
-  /**
-   * @return true if this job can be canceled, e.g. to exit the application
-   */
-  bool isCancellable() const { return mCancellable; }
+    /**
+     * @return true if this job can be canceled, e.g. to exit the application
+     */
+    bool isCancellable() const
+    {
+      return mCancellable;
+    }
 
-  /**
-   * Call this to change the "cancellable" property of this job.
-   * By default, tListMessages, tGetMessage, tGetFolder and tCheckUidValidity
-   * are cancellable, the others are not. But when copying, a non-cancellable
-   * tGetMessage is needed.
-   */
-  void setCancellable( bool b ) { mCancellable = b; }
+    /**
+     * Call this to change the "cancellable" property of this job.
+     * By default, tListMessages, tGetMessage, tGetFolder and tCheckUidValidity
+     * are cancellable, the others are not. But when copying, a non-cancellable
+     * tGetMessage is needed.
+     */
+    void setCancellable( bool b )
+    {
+      mCancellable = b;
+    }
 
-  void setPassiveDestructor( bool passive ) { mPassiveDestructor = passive; }
-  bool passiveDestructor() { return mPassiveDestructor; }
+  signals:
+    /**
+     * Emitted when the job finishes all processing.
+     */
+    void finished();
 
-signals:
-  /**
-   * Emitted whenever a KMime::Message has been completely
-   * retrieved from the server/folder.
-   */
-  void messageRetrieved( KMime::Message * );
+    /**
+     * Emitted when the job finishes all processing.
+     * More convenient signal than finished(), since it provides a pointer to the job.
+     * This signal is emitted by the FolderJob destructor => do NOT downcast
+     * the job to a subclass!
+     */
+    void result( FolderJob *job );
 
-  /**
-   * Emitted whenever a KMime::Message was updated
-   */
-  void messageUpdated( KMime::Message *, const QString& );
+  protected:
+    /**
+     * Has to be reimplemented. It's called by the start() method. Should
+     * start the processing of the specified job function.
+     */
+    virtual void execute() = 0;
 
-  /**
-   * Emitted whenever a message has been stored in
-   * the folder.
-   */
-  void messageStored( KMime::Message * );
+    Akonadi::Collection mSrcFolder;
+    int                 mErrorCode;
 
-  /**
-   * Emitted when a list of messages has been
-   * copied to the specified location. QPtrList contains
-   * the list of the copied messages.
-   */
-  void messageCopied( QList<KMime::Message*> );
-
-  /**
-   * Overloaded signal to the one above. A lot of copying
-   * specifies only one message as the argument and this
-   * signal is easier to use when this happens.
-   */
-  void messageCopied( KMime::Message * );
-
-  /**
-   * Emitted when the job finishes all processing.
-   */
-  void finished();
-
-  /**
-   * Emitted when the job finishes all processing.
-   * More convenient signal than finished(), since it provides a pointer to the job.
-   * This signal is emitted by the FolderJob destructor => do NOT downcast
-   * the job to a subclass!
-   */
-  void result( FolderJob* job );
-
-  /**
-   * This progress signal contains the "done" and the "total" numbers so
-   * that the caller can either make a % out of it, or combine it into
-   * a higher-level progress info.
-   */
-  void progress( unsigned long bytesDownloaded, unsigned long bytesTotal );
-
-private:
-  void init();
-
-protected:
-  /**
-   * Has to be reimplemented. It's called by the start() method. Should
-   * start the processing of the specified job function.
-   */
-  virtual void execute()=0;
-
-  QList<KMime::Message*>   mMsgList;
-  JobType             mType;
-  QString             mSets;
-  Akonadi::Collection mSrcFolder;
-  Akonadi::Collection mDestFolder;
-  QString             mPartSpecifier;
-  int                 mErrorCode;
-
-  //finished() won't be emitted when this is set
-  bool                mPassiveDestructor;
-  bool                mStarted;
-  bool                mCancellable;
+    bool                mStarted;
+    bool                mCancellable;
 };
 
 }

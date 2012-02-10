@@ -30,17 +30,18 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
-#include <kviewstatemaintainer.h>
-#include <kcheckableproxymodel.h>
+#include <Akonadi/ETMViewStateSaver>
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
+using namespace Future;
+
 #include <KCalCore/Event>
 
-#include <akonadi/etmviewstatesaver.h>
-
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KVBox>
+#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
@@ -54,7 +55,6 @@
 
 using namespace Akonadi;
 using namespace EventViews;
-using namespace Future;
 
 /**
    Function for debugging purposes:
@@ -232,7 +232,7 @@ void MultiAgendaView::recreateViews()
       d->addView( d->mCollectionSelectionModels[i], d->mCustomColumnTitles[i] );
     }
   } else {
-    Q_FOREACH( const Akonadi::Collection &i, collectionSelection()->selectedCollections() ) {
+    Q_FOREACH ( const Akonadi::Collection &i, collectionSelection()->selectedCollections() ) {
       if ( i.contentMimeTypes().contains( KCalCore::Event::eventMimeType() ) ) {
         d->addView( i );
       }
@@ -398,8 +398,7 @@ void MultiAgendaView::showDates( const QDate &start, const QDate &end, const QDa
   }
 }
 
-void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList,
-                                      const QDate &date )
+void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
   foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->showIncidences( incidenceList, date );
@@ -497,7 +496,7 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
 
 void MultiAgendaView::Private::addView( const Akonadi::Collection &collection )
 {
-  AgendaView *av = createView( CalendarSupport::displayName( collection ) );
+  AgendaView *av = createView( CalendarSupport::displayName( q->calendar(), collection ) );
   av->setCollectionId( collection.id() );
 }
 
@@ -714,7 +713,7 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
   const QStringList titleList = d->mCustomColumnTitles.toList();
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
-  foreach( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
+  foreach ( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
     const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( idx );
     KConfigGroup group = configGroup.config()->group( groupName );
     ++idx;

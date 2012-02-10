@@ -19,7 +19,6 @@
 #ifndef __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
 #define __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
 
-#include <messagelist/messagelist_export.h>
 #include <KComboBox>
 
 namespace MessageList

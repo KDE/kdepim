@@ -10,12 +10,13 @@
 
 #include <boost/scoped_ptr.hpp>
 #include <akonadi/item.h>
+#include <akonadi/collection.h>
+#include <QModelIndex>
 class KMReaderWin;
 class KAction;
 class KFontAction;
 class KFontSizeAction;
 class KJob;
-class CustomTemplatesMenu;
 template <typename T, typename S> class QMap;
 
 namespace KMail {
@@ -26,9 +27,7 @@ namespace KMime {
   class Message;
   class Content;
 }
-namespace Akonadi {
-  class Item;
-}
+Q_DECLARE_METATYPE(QModelIndex)
 
 class KMReaderMainWin : public KMail::SecondaryWindow
 {
@@ -50,7 +49,8 @@ public:
    * Then, the reader needs to know about that original message, so those to parameters are passed
    * onto setOriginalMsg() of KMReaderWin.
    */
-  void showMessage( const QString & encoding, const Akonadi::Item &msg );
+  void showMessage( const QString & encoding, const Akonadi::Item &msg, const Akonadi::Collection & parentCollection = Akonadi::Collection());
+  
   void showMessage( const QString & encoding, KMime::Message::Ptr message);
 private slots:
   void slotMessagePopup(const Akonadi::Item& ,const KUrl&,const QPoint& );
@@ -61,11 +61,10 @@ private slots:
   void slotRedirectMsg();
   void slotFontAction(const QString &);
   void slotSizeAction(int);
-  void slotCreateTodo();
   void slotCustomReplyToMsg( const QString &tmpl );
   void slotCustomReplyAllToMsg( const QString &tmpl );
   void slotCustomForwardMsg( const QString &tmpl );
-
+  
   void slotEditToolbars();
   void slotConfigChanged();
   void slotUpdateToolbars();
@@ -73,25 +72,26 @@ private slots:
   /// This closes the window if the setting to close the window after replying or
   /// forwarding is set.
   void slotReplyOrForwardFinished();
-
+  void slotCopyItem(QAction*);
+  void slotCopyResult( KJob * job );
+ 
 private:
+  Akonadi::Collection parentCollection() const;
   void initKMReaderMainWin();
   void setupAccel();
   KAction *copyActionMenu();
-  void updateCustomTemplateMenus();
-
+  
   KMReaderWin *mReaderWin;
   Akonadi::Item mMsg;
   KUrl mUrl;
   // a few actions duplicated from kmmainwidget
   KAction *mTrashAction, *mPrintAction, *mSaveAsAction, *mSaveAtmAction,
-          *mViewSourceAction;
+    *mViewSourceAction;
   KFontAction *fontAction;
   KFontSizeAction *fontSizeAction;
   KMail::MessageActions *mMsgActions;
+  Akonadi::Collection mParentCollection;
 
-  // Custom template actions menu
-  boost::scoped_ptr<CustomTemplatesMenu> mCustomTemplateMenus;
 };
 
 #endif /*KMReaderMainWin_h*/

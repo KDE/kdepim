@@ -29,17 +29,14 @@
     your version.
 */
 
-#include <config-messageviewer.h>
 #include <messagecore/globalsettings.h>
 #include "csshelperbase.h"
 
 #include <KColorScheme>
-#include <KConfig>
 #include <KDebug>
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <QString>
 #include <QApplication>
 #include <QPaintDevice>
 
@@ -102,8 +99,8 @@ namespace MessageViewer {
 
     QFont defaultFont = KGlobalSettings::generalFont();
     QFont defaultFixedFont = KGlobalSettings::fixedFont();
-    mBodyFont = MessageCore::GlobalSettings::self()->bodyFont();
-    mPrintFont = MessageCore::GlobalSettings::self()->printFont();
+    mBodyFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont: MessageCore::GlobalSettings::self()->bodyFont();
+    mPrintFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::GlobalSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;
     defaultFont.setItalic( true );
     for ( int i = 0 ; i < 3 ; ++i )

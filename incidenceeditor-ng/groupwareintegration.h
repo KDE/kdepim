@@ -38,7 +38,7 @@ class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
 
   private:
     static bool sActivated;
-    static CalendarSupport::GroupwareUiDelegate* sDelegate;
+    static CalendarSupport::GroupwareUiDelegate *sDelegate;
 };
 
 }

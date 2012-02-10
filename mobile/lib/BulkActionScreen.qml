@@ -32,6 +32,7 @@ QML.Rectangle {
   property alias actionListWidth : actionList.width
   property alias backgroundImage : _backgroundImage.source
   property alias actionModel : actionList.actionModel
+  property alias itemHeight : actionList.itemHeight
   default property alias actions: actionList.children
 
   anchors.fill: parent

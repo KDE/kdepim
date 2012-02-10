@@ -74,8 +74,8 @@ using namespace Kontact;
 #include <QVBoxLayout>
 #include <QWebSettings>
 
-//Define the maximum time Kontact waits for KSycoca to become available
-#define KSYCOCA_WAIT_TIMEOUT 10
+// Define the maximum time Kontact waits for KSycoca to become available.
+static const int KSYCOCA_WAIT_TIMEOUT = 10;
 
 // This class extends the normal KDBusServiceStarter.
 //
@@ -191,13 +191,14 @@ void MainWindow::waitForKSycoca()
 {
   int i = 0;
   while ( i < KSYCOCA_WAIT_TIMEOUT ) {
-    if ( KSycoca::isAvailable() )
+    if ( KSycoca::isAvailable() ) {
       return;
+    }
     // When KSycoca is not availabe that usually means Kontact
     // was started before kded is done with it's first run
     // we want to block Kontact execution to
-    // give Kded time to initalize and create the
-    // System Configuration database neccessary for further
+    // give Kded time to initialize and create the
+    // System Configuration database necessary for further
     // Kontact startup
     kDebug() << "Waiting for KSycoca";
     sleep(1);
@@ -312,10 +313,11 @@ bool MainWindow::pluginWeightLessThan( const KontactInterface::Plugin *left,
 
 void MainWindow::activateInitialPluginModule()
 {
-  if ( !mInitialActiveModule.isEmpty() ) {
+  if ( !mInitialActiveModule.isEmpty() && !mPlugins.isEmpty() ) {
     PluginList::ConstIterator end = mPlugins.constEnd();
     for ( PluginList::ConstIterator it = mPlugins.constBegin(); it != end; ++it ) {
-      if ( ( *it )->identifier().contains( mInitialActiveModule ) ) {
+      if ( !(*it)->identifier().isEmpty() &&
+           (*it)->identifier().contains( mInitialActiveModule ) ) {
         selectPlugin( *it );
         return;
       }
@@ -379,10 +381,13 @@ void MainWindow::paintAboutScreen( const QString &msg )
 {
   QString location = KStandardDirs::locate( "data", "kontact/about/main.html" );
   QString content = KPIMUtils::kFileToByteArray( location );
-  content = content.arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage.css" ) );
+  content = content.arg( "file:" + KStandardDirs::locate(
+                           "data", "kdeui/about/kde_infopage.css" ) );
   if ( QApplication::isRightToLeft() ) {
-    content = content.arg( "@import \"%1\";" ).
-              arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage_rtl.css" ) );
+    content =
+      content.arg( "@import \"%1\";" ).
+              arg( "file:" + KStandardDirs::locate(
+                     "data", "kdeui/about/kde_infopage_rtl.css" ) );
   } else {
     content = content.arg( "" );
   }
@@ -392,8 +397,7 @@ void MainWindow::paintAboutScreen( const QString &msg )
     arg( i18nc( "@item:intext", "KDE Kontact" ) ).
     arg( i18nc( "@item:intext", "Get Organized!" ) ).
     arg( i18nc( "@item:intext", "The KDE Personal Information Management Suite" ) ).
-    arg( msg ),
-    QUrl( location ) );
+    arg( msg ) );
 }
 
 void MainWindow::initAboutScreen()
@@ -402,6 +406,7 @@ void MainWindow::initAboutScreen()
   mPartsStack->addWidget( introbox );
   mPartsStack->setCurrentWidget( introbox );
   mIntroPart = new KWebView( introbox );
+  mIntroPart->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   mIntroPart->setFocusPolicy( Qt::WheelFocus );
   // Let's better be paranoid and disable plugins (it defaults to enabled):
   mIntroPart->settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
@@ -409,7 +414,7 @@ void MainWindow::initAboutScreen()
   mIntroPart->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 
   connect( mIntroPart->page(), SIGNAL(linkClicked(QUrl)), this,
-           SLOT(slotOpenUrl(QUrl)), Qt::QueuedConnection);
+           SLOT(slotOpenUrl(QUrl)), Qt::QueuedConnection );
 }
 
 void MainWindow::setupActions()
@@ -570,7 +575,7 @@ void MainWindow::loadPlugins()
     }
 
     if ( mSyncActionsEnabled ) {
-      Q_FOREACH( KAction *listIt, plugin->syncActions() ) {
+      Q_FOREACH ( KAction *listIt, plugin->syncActions() ) {
         kDebug() << "Plugging Sync actions" << listIt->objectName();
         mSyncActions->addAction( listIt );
       }
@@ -839,7 +844,7 @@ void MainWindow::selectPlugin( KontactInterface::Plugin *plugin )
     mPartsStack->setCurrentWidget( view );
     view->show();
 
-    if ( mFocusWidgets.contains( plugin->identifier() ) ) {
+    if ( !mFocusWidgets.isEmpty() && mFocusWidgets.contains( plugin->identifier() ) ) {
       focusWidget = mFocusWidgets[ plugin->identifier() ];
       if ( focusWidget ) {
         focusWidget->setFocus();
@@ -1136,9 +1141,12 @@ void MainWindow::readProperties( const KConfigGroup &config )
 
   QSet<QString> activePlugins =
     QSet<QString>::fromList( config.readEntry( "ActivePlugins", QStringList() ) );
-  foreach ( KontactInterface::Plugin *plugin, mPlugins ) {
-    if ( !plugin->isRunningStandalone() && activePlugins.contains( plugin->identifier() ) ) {
-      plugin->readProperties( config );
+
+  if ( !activePlugins.isEmpty() ) {
+    foreach ( KontactInterface::Plugin *plugin, mPlugins ) {
+      if ( !plugin->isRunningStandalone() && activePlugins.contains( plugin->identifier() ) ) {
+        plugin->readProperties( config );
+      }
     }
   }
 }
@@ -1193,7 +1201,7 @@ QString MainWindow::introductionString()
   int iconSize = iconloader->currentSize( KIconLoader::Desktop );
 
   QString handbook_icon_path = iconloader->iconPath( "help-contents", KIconLoader::Desktop );
-  QString html_icon_path = iconloader->iconPath( "text-html", KIconLoader::Desktop );
+  QString html_icon_path = iconloader->iconPath( "kontact", KIconLoader::Desktop );
   QString wizard_icon_path = iconloader->iconPath( "tools-wizard", KIconLoader::Desktop );
 
   QString info =
@@ -1216,21 +1224,21 @@ QString MainWindow::introductionString()
     subs( "exec:/help?kontact" ).
     subs( iconSize ).
     subs( iconSize ).
-    subs( handbook_icon_path ).
+    subs( "file:" + handbook_icon_path ).
     subs( "exec:/help?kontact" ).
     subs( i18nc( "@item:intext", "Read Manual" ) ).
     subs( i18nc( "@item:intext", "Learn more about Kontact and its components" ) ).
     subs( "http://kontact.org" ).
     subs( iconSize ).
     subs( iconSize ).
-    subs( html_icon_path ).
+    subs( "file:" + html_icon_path ).
     subs( "http://kontact.org" ).
     subs( i18nc( "@item:intext", "Visit Kontact Website" ) ).
     subs( i18nc( "@item:intext", "Access online resources and tutorials" ) ).
     subs( "exec:/gwwizard" ).
     subs( iconSize ).
     subs( iconSize ).
-    subs( wizard_icon_path ).
+    subs( "file:" + wizard_icon_path ).
     subs( "exec:/gwwizard" ).
     subs( i18nc( "@item:intext", "Configure Kontact as Groupware Client" ) ).
     subs( i18nc( "@item:intext", "Prepare Kontact for use in corporate networks" ) ).

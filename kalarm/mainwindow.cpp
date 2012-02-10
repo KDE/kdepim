@@ -30,12 +30,11 @@
 #include "alarmresources.h"
 #include "eventlistmodel.h"
 #endif
-#include "alarmtext.h"
 #include "birthdaydlg.h"
 #include "functions.h"
-#include "kaevent.h"
 #include "kalarmapp.h"
 #include "kamail.h"
+#include "messagebox.h"
 #include "newalarmaction.h"
 #include "prefdlg.h"
 #include "preferences.h"
@@ -46,6 +45,9 @@
 #include "templatepickdlg.h"
 #include "traywindow.h"
 #include "wakedlg.h"
+
+#include <kalarmcal/alarmtext.h>
+#include <kalarmcal/kaevent.h>
 
 #include <libkdepim/maillistdrag.h>
 #include <kmime/kmime_content.h>
@@ -69,7 +71,6 @@ using namespace KCal;
 #include <ksystemtrayicon.h>
 #include <kstandardaction.h>
 #include <kiconloader.h>
-#include <kmessagebox.h>
 #include <kurl.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -92,6 +93,8 @@ using namespace KCal;
 #include <QResizeEvent>
 #include <QCloseEvent>
 #include <QTimer>
+
+using namespace KAlarmCal;
 
 static const char* UI_FILE     = "kalarmui.rc";
 static const char* WINDOW_NAME = "MainWindow";
@@ -184,10 +187,10 @@ MainWindow::MainWindow(bool restored)
     // Create the alarm list widget
 #ifdef USE_AKONADI
     mListFilterModel = new AlarmListModel(this);
-    mListFilterModel->setEventTypeFilter(mShowArchived ? KAlarm::CalEvent::ACTIVE | KAlarm::CalEvent::ARCHIVED : KAlarm::CalEvent::ACTIVE);
+    mListFilterModel->setEventTypeFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
 #else
     mListFilterModel = new AlarmListFilterModel(EventListModel::alarms(), this);
-    mListFilterModel->setStatusFilter(mShowArchived ? KAlarm::CalEvent::ACTIVE | KAlarm::CalEvent::ARCHIVED : KAlarm::CalEvent::ACTIVE);
+    mListFilterModel->setStatusFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
 #endif
     mListView = new AlarmListView(WINDOW_NAME, mSplitter);
     mListView->setModel(mListFilterModel);
@@ -309,7 +312,7 @@ bool MainWindow::isTrayParent() const
 }
 
 /******************************************************************************
-*  Close all main windows.
+* Close all main windows.
 */
 void MainWindow::closeAll()
 {
@@ -362,10 +365,10 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* e)
 }
 
 /******************************************************************************
-*  Called when the window's size has changed (before it is painted).
-*  Sets the last column in the list view to extend at least to the right hand
-*  edge of the list view.
-*  Records the new size in the config file.
+* Called when the window's size has changed (before it is painted).
+* Sets the last column in the list view to extend at least to the right hand
+* edge of the list view.
+* Records the new size in the config file.
 */
 void MainWindow::resizeEvent(QResizeEvent* re)
 {
@@ -401,9 +404,9 @@ void MainWindow::resourcesResized()
 }
 
 /******************************************************************************
-*  Called when the window is first displayed.
-*  Sets the last column in the list view to extend at least to the right hand
-*  edge of the list view.
+* Called when the window is first displayed.
+* Sets the last column in the list view to extend at least to the right hand
+* edge of the list view.
 */
 void MainWindow::showEvent(QShowEvent* se)
 {
@@ -419,7 +422,7 @@ void MainWindow::showEvent(QShowEvent* se)
 }
 
 /******************************************************************************
-*  Display the window.
+* Display the window.
 */
 void MainWindow::show()
 {
@@ -429,13 +432,13 @@ void MainWindow::show()
         // Show error message now that the main window has been displayed.
         // Waiting until now lets the user easily associate the message with
         // the main window which is faulty.
-        KMessageBox::error(this, i18nc("@info", "Failure to create menus (perhaps <filename>%1</filename> missing or corrupted)", QLatin1String(UI_FILE)));
+        KAMessageBox::error(this, i18nc("@info", "Failure to create menus (perhaps <filename>%1</filename> missing or corrupted)", QLatin1String(UI_FILE)));
         mMenuError = false;
     }
 }
 
 /******************************************************************************
-*  Called after the window is hidden.
+* Called after the window is hidden.
 */
 void MainWindow::hideEvent(QHideEvent* he)
 {
@@ -443,7 +446,7 @@ void MainWindow::hideEvent(QHideEvent* he)
 }
 
 /******************************************************************************
-*  Initialise the menu, toolbar and main window actions.
+* Initialise the menu, toolbar and main window actions.
 */
 void MainWindow::initActions()
 {
@@ -516,7 +519,7 @@ void MainWindow::initActions()
     mActionEnable->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
     connect(mActionEnable, SIGNAL(triggered(bool)), SLOT(slotEnable()));
 
-    action = new KAction(i18nc("@action", "Wake From Suspend"), this);
+    action = new KAction(i18nc("@action", "Wake From Suspend..."), this);
     actions->addAction(QLatin1String("wakeSuspend"), action);
     connect(action, SIGNAL(triggered(bool)), SLOT(slotWakeFromSuspend()));
 
@@ -733,7 +736,7 @@ void MainWindow::clearSelection()
 }
 
 /******************************************************************************
-*  Called when the New button is clicked to edit a new alarm to add to the list.
+* Called when the New button is clicked to edit a new alarm to add to the list.
 */
 void MainWindow::slotNew(EditAlarmDlg::Type type)
 {
@@ -741,8 +744,8 @@ void MainWindow::slotNew(EditAlarmDlg::Type type)
 }
 
 /******************************************************************************
-*  Called when a template is selected from the New From Template popup menu.
-*  Executes a New Alarm dialog, preset from the selected template.
+* Called when a template is selected from the New From Template popup menu.
+* Executes a New Alarm dialog, preset from the selected template.
 */
 void MainWindow::slotNewFromTemplate(const KAEvent* tmplate)
 {
@@ -750,8 +753,8 @@ void MainWindow::slotNewFromTemplate(const KAEvent* tmplate)
 }
 
 /******************************************************************************
-*  Called when the New Template button is clicked to create a new template
-*  based on the currently selected alarm.
+* Called when the New Template button is clicked to create a new template
+* based on the currently selected alarm.
 */
 void MainWindow::slotNewTemplate()
 {
@@ -767,8 +770,8 @@ void MainWindow::slotNewTemplate()
 }
 
 /******************************************************************************
-*  Called when the Copy button is clicked to edit a copy of an existing alarm,
-*  to add to the list.
+* Called when the Copy button is clicked to edit a copy of an existing alarm,
+* to add to the list.
 */
 void MainWindow::slotCopy()
 {
@@ -784,8 +787,8 @@ void MainWindow::slotCopy()
 }
 
 /******************************************************************************
-*  Called when the Modify button is clicked to edit the currently highlighted
-*  alarm in the list.
+* Called when the Modify button is clicked to edit the currently highlighted
+* alarm in the list.
 */
 void MainWindow::slotModify()
 {
@@ -801,13 +804,13 @@ void MainWindow::slotModify()
 }
 
 /******************************************************************************
-*  Called when the Delete button is clicked to delete the currently highlighted
-*  alarms in the list.
+* Called when the Delete button is clicked to delete the currently highlighted
+* alarms in the list.
 */
 void MainWindow::slotDelete(bool force)
 {
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> events = mListView->selectedEvents();
 #else
     KAEvent::List events = mListView->selectedEvents();
     // Save the IDs of the events to be deleted, in case any events are
@@ -821,12 +824,12 @@ void MainWindow::slotDelete(bool force)
     if (!force  &&  Preferences::confirmAlarmDeletion())
     {
         int n = events.count();
-        if (KMessageBox::warningContinueCancel(this, i18ncp("@info", "Do you really want to delete the selected alarm?",
-                                                           "Do you really want to delete the %1 selected alarms?", n),
-                                               i18ncp("@title:window", "Delete Alarm", "Delete Alarms", n),
-                                               KGuiItem(i18nc("@action:button", "&Delete"), "edit-delete"),
-                                               KStandardGuiItem::cancel(),
-                                               Preferences::CONFIRM_ALARM_DELETION)
+        if (KAMessageBox::warningContinueCancel(this, i18ncp("@info", "Do you really want to delete the selected alarm?",
+                                                             "Do you really want to delete the %1 selected alarms?", n),
+                                                i18ncp("@title:window", "Delete Alarm", "Delete Alarms", n),
+                                                KGuiItem(i18nc("@action:button", "&Delete"), "edit-delete"),
+                                                KStandardGuiItem::cancel(),
+                                                Preferences::CONFIRM_ALARM_DELETION)
             != KMessageBox::Continue)
             return;
     }
@@ -835,24 +838,23 @@ void MainWindow::slotDelete(bool force)
     Undo::EventList undos;
     AlarmCalendar* resources = AlarmCalendar::resources();
 #ifdef USE_AKONADI
-    for (QList<KAEvent>::Iterator eit = events.begin();  eit != events.end();  )
+    for (int i = 0;  i < events.count();  )
     {
-        Akonadi::Collection c = resources->collectionForEvent((*eit).itemId());
+        Akonadi::Collection c = resources->collectionForEvent(events[i].itemId());
         if (!c.isValid())
-            eit = events.erase(eit);
+            events.remove(i);
         else
-            undos.append(*eit++, c);
+            undos.append(events[i++], c);
     }
 #else
-    for (int i = 0, end = ids.count();  i < end;  ++i)
+    for (int i = 0, e = 0, end = ids.count();  i < end;  ++i)
     {
         AlarmResource* r = resources->resourceForEvent(ids[i]);
         if (!r)
-            events[i] = 0;
+            events.remove(e);
         else
-            undos.append(*events[i], r);
+            undos.append(*events[e++], r);
     }
-    events.removeAll((KAEvent*)0);
 #endif
 
     if (events.isEmpty())
@@ -866,13 +868,13 @@ void MainWindow::slotDelete(bool force)
 }
 
 /******************************************************************************
-*  Called when the Reactivate button is clicked to reinstate the currently
-*  highlighted archived alarms in the list.
+* Called when the Reactivate button is clicked to reinstate the currently
+* highlighted archived alarms in the list.
 */
 void MainWindow::slotReactivate()
 {
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> events = mListView->selectedEvents();
 #else
     KAEvent::List events = mListView->selectedEvents();
 #endif
@@ -903,15 +905,15 @@ void MainWindow::slotReactivate()
 }
 
 /******************************************************************************
-*  Called when the Enable/Disable button is clicked to enable or disable the
-*  currently highlighted alarms in the list.
+* Called when the Enable/Disable button is clicked to enable or disable the
+* currently highlighted alarms in the list.
 */
 void MainWindow::slotEnable()
 {
     bool enable = mActionEnableEnable;    // save since changed in response to KAlarm::enableEvent()
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
-    QList<KAEvent> eventCopies;
+    QVector<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> eventCopies;
 #else
     KAEvent::List events = mListView->selectedEvents();
     KAEvent::List eventCopies;
@@ -923,7 +925,7 @@ void MainWindow::slotEnable()
 }
 
 /******************************************************************************
-*  Called when the Show Alarm Times menu item is selected or deselected.
+* Called when the Show Alarm Times menu item is selected or deselected.
 */
 void MainWindow::slotShowTime()
 {
@@ -941,7 +943,7 @@ void MainWindow::slotShowTime()
 }
 
 /******************************************************************************
-*  Called when the Show Time To Alarms menu item is selected or deselected.
+* Called when the Show Time To Alarms menu item is selected or deselected.
 */
 void MainWindow::slotShowTimeTo()
 {
@@ -959,7 +961,7 @@ void MainWindow::slotShowTimeTo()
 }
 
 /******************************************************************************
-*  Called when the Show Archived Alarms menu item is selected or deselected.
+* Called when the Show Archived Alarms menu item is selected or deselected.
 */
 void MainWindow::slotShowArchived()
 {
@@ -968,9 +970,9 @@ void MainWindow::slotShowArchived()
     mActionShowArchived->setToolTip(mShowArchived ? i18nc("@info:tooltip", "Hide Archived Alarms")
                                                   : i18nc("@info:tooltip", "Show Archived Alarms"));
 #ifdef USE_AKONADI
-    mListFilterModel->setEventTypeFilter(mShowArchived ? KAlarm::CalEvent::ACTIVE | KAlarm::CalEvent::ARCHIVED : KAlarm::CalEvent::ACTIVE);
+    mListFilterModel->setEventTypeFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
 #else
-    mListFilterModel->setStatusFilter(mShowArchived ? KAlarm::CalEvent::ACTIVE | KAlarm::CalEvent::ARCHIVED : KAlarm::CalEvent::ACTIVE);
+    mListFilterModel->setStatusFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
 #endif
     mListView->reset();
     KConfigGroup config(KGlobal::config(), VIEW_GROUP);
@@ -995,8 +997,8 @@ void MainWindow::slotWakeFromSuspend()
 }
 
 /******************************************************************************
-*  Called when the Import Alarms menu item is selected, to merge alarms from an
-*  external calendar into the current calendars.
+* Called when the Import Alarms menu item is selected, to merge alarms from an
+* external calendar into the current calendars.
 */
 void MainWindow::slotImportAlarms()
 {
@@ -1010,7 +1012,7 @@ void MainWindow::slotImportAlarms()
 void MainWindow::slotExportAlarms()
 {
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> events = mListView->selectedEvents();
     if (!events.isEmpty())
     {
         KAEvent::List evts = KAEvent::ptrList(events);
@@ -1024,8 +1026,8 @@ void MainWindow::slotExportAlarms()
 }
 
 /******************************************************************************
-*  Called when the Import Birthdays menu item is selected, to display birthdays
-*  from the address book for selection as alarms.
+* Called when the Import Birthdays menu item is selected, to display birthdays
+* from the address book for selection as alarms.
 */
 void MainWindow::slotBirthdays()
 {
@@ -1035,7 +1037,7 @@ void MainWindow::slotBirthdays()
     AutoQPointer<BirthdayDlg> dlg = new BirthdayDlg(this);
     if (dlg->exec() == QDialog::Accepted)
     {
-        QList<KAEvent> events = dlg->events();
+        QVector<KAEvent> events = dlg->events();
         if (!events.isEmpty())
         {
             mListView->clearSelection();
@@ -1062,8 +1064,8 @@ void MainWindow::slotBirthdays()
 }
 
 /******************************************************************************
-*  Called when the Templates menu item is selected, to display the alarm
-*  template editing dialog.
+* Called when the Templates menu item is selected, to display the alarm
+* template editing dialog.
 */
 void MainWindow::slotTemplates()
 {
@@ -1077,7 +1079,7 @@ void MainWindow::slotTemplates()
 }
 
 /******************************************************************************
-*  Called when the alarm template editing dialog has exited.
+* Called when the alarm template editing dialog has exited.
 */
 void MainWindow::slotTemplatesEnd()
 {
@@ -1090,7 +1092,7 @@ void MainWindow::slotTemplatesEnd()
 }
 
 /******************************************************************************
-*  Called when the Display System Tray Icon menu item is selected.
+* Called when the Display System Tray Icon menu item is selected.
 */
 void MainWindow::slotToggleTrayIcon()
 {
@@ -1098,7 +1100,7 @@ void MainWindow::slotToggleTrayIcon()
 }
 
 /******************************************************************************
-*  Called when the Show Resource Selector menu item is selected.
+* Called when the Show Resource Selector menu item is selected.
 */
 void MainWindow::slotToggleResourceSelector()
 {
@@ -1133,7 +1135,7 @@ void MainWindow::slotToggleResourceSelector()
 */
 void MainWindow::showErrorMessage(const QString& msg)
 {
-    KMessageBox::error(this, msg);
+    KAMessageBox::error(this, msg);
 }
 
 /******************************************************************************
@@ -1148,7 +1150,7 @@ void MainWindow::updateTrayIconAction()
 }
 
 /******************************************************************************
-*  Called when the active status of Find changes.
+* Called when the active status of Find changes.
 */
 void MainWindow::slotFindActive(bool active)
 {
@@ -1157,7 +1159,7 @@ void MainWindow::slotFindActive(bool active)
 }
 
 /******************************************************************************
-*  Called when the Undo action is selected.
+* Called when the Undo action is selected.
 */
 void MainWindow::slotUndo()
 {
@@ -1165,7 +1167,7 @@ void MainWindow::slotUndo()
 }
 
 /******************************************************************************
-*  Called when the Redo action is selected.
+* Called when the Redo action is selected.
 */
 void MainWindow::slotRedo()
 {
@@ -1173,7 +1175,7 @@ void MainWindow::slotRedo()
 }
 
 /******************************************************************************
-*  Called when an Undo item is selected.
+* Called when an Undo item is selected.
 */
 void MainWindow::slotUndoItem(QAction* action)
 {
@@ -1182,7 +1184,7 @@ void MainWindow::slotUndoItem(QAction* action)
 }
 
 /******************************************************************************
-*  Called when a Redo item is selected.
+* Called when a Redo item is selected.
 */
 void MainWindow::slotRedoItem(QAction* action)
 {
@@ -1191,8 +1193,8 @@ void MainWindow::slotRedoItem(QAction* action)
 }
 
 /******************************************************************************
-*  Called when the Undo menu is about to show.
-*  Populates the menu.
+* Called when the Undo menu is about to show.
+* Populates the menu.
 */
 void MainWindow::slotInitUndoMenu()
 {
@@ -1200,8 +1202,8 @@ void MainWindow::slotInitUndoMenu()
 }
 
 /******************************************************************************
-*  Called when the Redo menu is about to show.
-*  Populates the menu.
+* Called when the Redo menu is about to show.
+* Populates the menu.
 */
 void MainWindow::slotInitRedoMenu()
 {
@@ -1209,7 +1211,7 @@ void MainWindow::slotInitRedoMenu()
 }
 
 /******************************************************************************
-*  Populate the undo or redo menu.
+* Populate the undo or redo menu.
 */
 void MainWindow::initUndoMenu(QMenu* menu, Undo::Type type)
 {
@@ -1231,8 +1233,8 @@ void MainWindow::initUndoMenu(QMenu* menu, Undo::Type type)
 }
 
 /******************************************************************************
-*  Called when the status of the Undo or Redo list changes.
-*  Change the Undo or Redo text to include the action which would be undone/redone.
+* Called when the status of the Undo or Redo list changes.
+* Change the Undo or Redo text to include the action which would be undone/redone.
 */
 void MainWindow::slotUndoStatus(const QString& undo, const QString& redo)
 {
@@ -1259,7 +1261,7 @@ void MainWindow::slotUndoStatus(const QString& undo, const QString& redo)
 }
 
 /******************************************************************************
-*  Called when the Refresh Alarms menu item is selected.
+* Called when the Refresh Alarms menu item is selected.
 */
 void MainWindow::slotRefreshAlarms()
 {
@@ -1267,7 +1269,7 @@ void MainWindow::slotRefreshAlarms()
 }
 
 /******************************************************************************
-*  Called when the "Configure KAlarm" menu item is selected.
+* Called when the "Configure KAlarm" menu item is selected.
 */
 void MainWindow::slotPreferences()
 {
@@ -1275,7 +1277,7 @@ void MainWindow::slotPreferences()
 }
 
 /******************************************************************************
-*  Called when the Configure Keys menu item is selected.
+* Called when the Configure Keys menu item is selected.
 */
 void MainWindow::slotConfigureKeys()
 {
@@ -1283,7 +1285,7 @@ void MainWindow::slotConfigureKeys()
 }
 
 /******************************************************************************
-*  Called when the Configure Toolbars menu item is selected.
+* Called when the Configure Toolbars menu item is selected.
 */
 void MainWindow::slotConfigureToolbar()
 {
@@ -1294,8 +1296,8 @@ void MainWindow::slotConfigureToolbar()
 }
 
 /******************************************************************************
-*  Called when OK or Apply is clicked in the Configure Toolbars dialog, to save
-*  the new configuration.
+* Called when OK or Apply is clicked in the Configure Toolbars dialog, to save
+* the new configuration.
 */
 void MainWindow::slotNewToolbarConfig()
 {
@@ -1315,7 +1317,7 @@ void MainWindow::slotQuit()
 }
 
 /******************************************************************************
-*  Called when the user or the session manager attempts to close the window.
+* Called when the user or the session manager attempts to close the window.
 */
 void MainWindow::closeEvent(QCloseEvent* ce)
 {
@@ -1336,8 +1338,8 @@ void MainWindow::closeEvent(QCloseEvent* ce)
 }
 
 /******************************************************************************
-*  Called when the drag cursor enters a main or system tray window, to accept
-*  or reject the dragged object.
+* Called when the drag cursor enters a main or system tray window, to accept
+* or reject the dragged object.
 */
 void MainWindow::executeDragEnterEvent(QDragEnterEvent* e)
 {
@@ -1351,8 +1353,8 @@ void MainWindow::executeDragEnterEvent(QDragEnterEvent* e)
 }
 
 /******************************************************************************
-*  Called when an object is dropped on the window.
-*  If the object is recognised, the edit alarm dialog is opened appropriately.
+* Called when an object is dropped on the window.
+* If the object is recognised, the edit alarm dialog is opened appropriately.
 */
 void MainWindow::dropEvent(QDropEvent* e)
 {
@@ -1366,18 +1368,18 @@ static QString getMailHeader(const char* header, KMime::Content& content)
 }
 
 /******************************************************************************
-*  Called when an object is dropped on a main or system tray window, to
-*  evaluate the action required and extract the text.
+* Called when an object is dropped on a main or system tray window, to
+* evaluate the action required and extract the text.
 */
 void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
 {
     kDebug() << "Formats:" << e->mimeData()->formats();
     const QMimeData* data = e->mimeData();
-    KAEvent::Action action = KAEvent::MESSAGE;
-    QByteArray      bytes;
-    AlarmText       alarmText;
-    KPIM::MailList  mailList;
-    KUrl::List      files;
+    KAEvent::SubAction action = KAEvent::MESSAGE;
+    QByteArray         bytes;
+    AlarmText          alarmText;
+    KPIM::MailList     mailList;
+    KUrl::List         files;
 #ifdef USE_AKONADI
     MemoryCalendar::Ptr calendar(new MemoryCalendar(Preferences::timeZone(true)));
 #else
@@ -1471,7 +1473,7 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
         KDateTime start = todo->dtStart(true);
         if (!start.isValid()  &&  todo->hasDueDate())
             start = todo->dtDue(true);
-        int flags = KAEvent::DEFAULT_FONT;
+        KAEvent::Flags flags = KAEvent::DEFAULT_FONT;
         if (start.isDateOnly())
             flags |= KAEvent::ANY_TIME;
         KAEvent ev(start, alarmText.displayText(), Preferences::defaultBgColour(), Preferences::defaultFgColour(),
@@ -1536,12 +1538,12 @@ void MainWindow::slotCalendarStatusChanged()
 {
     // Find whether there are any writable calendars
 #ifdef USE_AKONADI
-    bool active  = !CollectionControlModel::enabledCollections(KAlarm::CalEvent::ACTIVE, true).isEmpty();
-    bool templat = !CollectionControlModel::enabledCollections(KAlarm::CalEvent::TEMPLATE, true).isEmpty();
+    bool active  = !CollectionControlModel::enabledCollections(CalEvent::ACTIVE, true).isEmpty();
+    bool templat = !CollectionControlModel::enabledCollections(CalEvent::TEMPLATE, true).isEmpty();
 #else
     AlarmResources* resources = AlarmResources::instance();
-    bool active  = resources->activeCount(KAlarm::CalEvent::ACTIVE, true);
-    bool templat = resources->activeCount(KAlarm::CalEvent::TEMPLATE, true);
+    bool active  = resources->activeCount(CalEvent::ACTIVE, true);
+    bool templat = resources->activeCount(CalEvent::TEMPLATE, true);
 #endif
     for (int i = 0, end = mWindowList.count();  i < end;  ++i)
     {
@@ -1555,14 +1557,14 @@ void MainWindow::slotCalendarStatusChanged()
 }
 
 /******************************************************************************
-*  Called when the selected items in the ListView change.
-*  Enables the actions appropriately.
+* Called when the selected items in the ListView change.
+* Enables the actions appropriately.
 */
 void MainWindow::slotSelection()
 {
     // Find which events have been selected
 #ifdef USE_AKONADI
-    QList<KAEvent> events = mListView->selectedEvents();
+    QVector<KAEvent> events = mListView->selectedEvents();
 #else
     KAEvent::List events = mListView->selectedEvents();
 #endif
@@ -1621,9 +1623,9 @@ void MainWindow::slotSelection()
 
     kDebug() << "true";
 #ifdef USE_AKONADI
-    mActionCreateTemplate->setEnabled((count == 1) && !CollectionControlModel::enabledCollections(KAlarm::CalEvent::TEMPLATE, true).isEmpty());
+    mActionCreateTemplate->setEnabled((count == 1) && !CollectionControlModel::enabledCollections(CalEvent::TEMPLATE, true).isEmpty());
 #else
-    mActionCreateTemplate->setEnabled((count == 1) && (AlarmResources::instance()->activeCount(KAlarm::CalEvent::TEMPLATE, true) > 0));
+    mActionCreateTemplate->setEnabled((count == 1) && (AlarmResources::instance()->activeCount(CalEvent::TEMPLATE, true) > 0));
 #endif
     mActionExportAlarms->setEnabled(true);
     mActionExport->setEnabled(true);
@@ -1639,8 +1641,8 @@ void MainWindow::slotSelection()
 }
 
 /******************************************************************************
-*  Called when a context menu is requested in the ListView.
-*  Displays a context menu to modify or delete the selected item.
+* Called when a context menu is requested in the ListView.
+* Displays a context menu to modify or delete the selected item.
 */
 void MainWindow::slotContextMenuRequested(const QPoint& globalPos)
 {
@@ -1650,7 +1652,7 @@ void MainWindow::slotContextMenuRequested(const QPoint& globalPos)
 }
 
 /******************************************************************************
-*  Disables actions when no item is selected.
+* Disables actions when no item is selected.
 */
 void MainWindow::selectionCleared()
 {
@@ -1665,7 +1667,7 @@ void MainWindow::selectionCleared()
 }
 
 /******************************************************************************
-*  Set the text of the Enable/Disable menu action.
+* Set the text of the Enable/Disable menu action.
 */
 void MainWindow::setEnableText(bool enable)
 {
@@ -1674,8 +1676,8 @@ void MainWindow::setEnableText(bool enable)
 }
 
 /******************************************************************************
-*  Display or hide the specified main window.
-*  This should only be called when the application doesn't run in the system tray.
+* Display or hide the specified main window.
+* This should only be called when the application doesn't run in the system tray.
 */
 MainWindow* MainWindow::toggleWindow(MainWindow* win)
 {

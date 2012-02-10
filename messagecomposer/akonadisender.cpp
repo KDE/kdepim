@@ -19,14 +19,12 @@
 
 #include "akonadisender.h"
 
-#include <KMessageBox>
 #include <KLocale>
 #include <KDebug>
-#include <KConfig>
-#include <KConfigGroup>
 
 #include "messagehelper.h"
 #include "messagecomposersettings.h"
+#include "util.h"
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -38,8 +36,8 @@
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecore/stringutil.h>
+#include <messagecore/messagehelpers.h>
 
-using namespace KMime;
 using namespace KMime::Types;
 using namespace KPIM;
 using namespace MailTransport;
@@ -48,7 +46,7 @@ using namespace MailTransport;
 static QStringList addrSpecListToStringList( const AddrSpecList &l, bool allowEmpty = false )
 {
   QStringList result;
-  for ( AddrSpecList::const_iterator it = l.begin(), end = l.end() ; it != end ; ++it ) {
+  for ( AddrSpecList::const_iterator it = l.constBegin(), end = l.constEnd() ; it != end ; ++it ) {
     const QString s = (*it).asString();
     if ( allowEmpty || !s.isEmpty() )
       result.push_back( s );
@@ -74,7 +72,8 @@ static void extractSenderToCCAndBcc( const KMime::Message::Ptr &aMsg, QString &s
 
 
 
-AkonadiSender::AkonadiSender()
+AkonadiSender::AkonadiSender( QObject *parent )
+  : QObject( parent )
 {
 }
 
@@ -131,9 +130,14 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   } else {
     transportId = message->headerByType( "X-KMail-Transport"  ) ? message->headerByType( "X-KMail-Transport" )->asUnicodeString().toInt() : -1;
   }
-
   const Transport *transport = TransportManager::self()->transportById( transportId );
-  Q_ASSERT( transport );
+  if( !transport ) { 
+      kDebug()<<" No transport defined. Need to create it";
+      return;
+  }
+  if ( !Message::Util::sendMailDispatcherIsOnline() )
+    return;
+  
   kDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
   qjob->transportAttribute().setTransportId( transport->id() );
 
@@ -150,6 +154,8 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->addressAttribute().setCc( cc );
   qjob->addressAttribute().setBcc( bcc );
 
+  Message::Util::addSendReplyForwardAction(message, qjob);
+  
   MessageCore::StringUtil::removePrivateHeaderFields( message );
   message->assemble();
 

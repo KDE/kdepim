@@ -69,6 +69,7 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
   Q_OBJECT
 
   public:
+    //TODO KDE5 merge two constructors
     /**
      * Creates a new widget lister.
      *
@@ -77,6 +78,15 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      * @param parent The parent widget.
      */
     explicit KWidgetLister( int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
+
+    /**
+     * Creates a new widget lister.
+     * @param fewerMoreButton Add or Not fewerMoreButton
+     * @param minWidgets The minimum number of widgets to stay on the screen.
+     * @param maxWidgets The maximum number of widgets to stay on the screen.
+     * @param parent The parent widget.
+     */
+    explicit KWidgetLister( bool fewerMoreButton, int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
 
     /**
      * Destroys the widget lister.
@@ -169,6 +179,18 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     int widgetsMaximum() const;
 
+    /**
+     * Remove specific widget
+     */
+    virtual void removeWidget(QWidget*widget);
+    /**
+     * Add widget after specific widget
+     */
+    virtual void addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* widget = 0);
+
+  private:
+    void init( bool fewerMoreButton = true );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a widget was added.
@@ -186,6 +208,11 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      * This signal is emitted whenever a widget was removed.
      */
     void widgetRemoved();
+
+  /**
+     * This signal is emitted whenever a widget was removed.
+     */
+    void widgetRemoved( QWidget *widget );
 
     /**
      * This signal is emitted whenever the clear button is clicked.

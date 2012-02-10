@@ -28,10 +28,8 @@
 #include "alarmtimewidget.h"
 #include "checkbox.h"
 #include "combobox.h"
-#include "kaevent.h"
 #include "kalarmapp.h"
 #include "kalocale.h"
-#include "karecurrence.h"
 #include "preferences.h"
 #include "radiobutton.h"
 #include "repetitionbutton.h"
@@ -40,6 +38,9 @@
 #include "timespinbox.h"
 #include "buttongroup.h"
 
+#include <kalarmcal/kaevent.h>
+#include <kalarmcal/karecurrence.h>
+
 #ifdef USE_AKONADI
 #include <kcalcore/event.h>
 using namespace KCalCore;
@@ -47,7 +48,6 @@ using namespace KCalCore;
 #include <kcal/event.h>
 using namespace KCal;
 #endif
-#include <libkdepim/kdateedit.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -56,6 +56,7 @@ using namespace KCal;
 #include <kdialog.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <kdatecombobox.h>
 
 #include <QPushButton>
 #include <QLabel>
@@ -280,8 +281,8 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
           i18nc("@info:whatsthis", "<para>Repeat the alarm until the date/time specified.</para>"
                 "<para><note>This applies to the main recurrence only. It does not limit any sub-repetition which will occur regardless after the last main recurrence.</note></para>"));
     mRangeButtonGroup->addButton(mEndDateButton);
-    mEndDateEdit = new KPIM::KDateEdit(mRangeButtonBox);
-    mEndDateEdit->setReadOnly(mReadOnly);
+    mEndDateEdit = new KDateComboBox(mRangeButtonBox);
+    mEndDateEdit->setOptions(mReadOnly ? KDateComboBox::Options(0) : KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker);
     static const QString tzText = i18nc("@info/plain", "This uses the same time zone as the start time.");
     mEndDateEdit->setWhatsThis(i18nc("@info:whatsthis",
           "<para>Enter the last date to repeat the alarm.</para><para>%1</para>", tzText));
@@ -340,7 +341,8 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
         vlayout = new QVBoxLayout();
         vlayout->setMargin(0);
         hlayout->addLayout(vlayout);
-        mExceptionDateEdit = new KPIM::KDateEdit(mExceptionGroup);
+        mExceptionDateEdit = new KDateComboBox(mExceptionGroup);
+        mExceptionDateEdit->setOptions(mReadOnly ? KDateComboBox::Options(0) : KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker);
         mExceptionDateEdit->setDate(KDateTime::currentLocalDate());
         mExceptionDateEdit->setWhatsThis(i18nc("@info:whatsthis",
               "Enter a date to insert in the exceptions list. "
@@ -545,12 +547,12 @@ Repetition RecurrenceEdit::subRepetition() const
 }
 
 /******************************************************************************
-*  Called when the Sub-Repetition button has been pressed to display the
-*  sub-repetition dialog.
-*  Alarm repetition has the following restrictions:
-*  1) Not allowed for a repeat-at-login alarm
-*  2) For a date-only alarm, the repeat interval must be a whole number of days.
-*  3) The overall repeat duration must be less than the recurrence interval.
+* Called when the Sub-Repetition button has been pressed to display the
+* sub-repetition dialog.
+* Alarm repetition has the following restrictions:
+* 1) Not allowed for a repeat-at-login alarm
+* 2) For a date-only alarm, the repeat interval must be a whole number of days.
+* 3) The overall repeat duration must be less than the recurrence interval.
 */
 void RecurrenceEdit::setSubRepetition(int reminderMinutes, bool dateOnly)
 {
@@ -868,7 +870,7 @@ void RecurrenceEdit::set(const KAEvent& event)
         {
             mMonthlyButton->setChecked(true);
             QList<int> rmd = recurrence->monthDays();
-            int day = (rmd.isEmpty()) ? event.mainDate().day() : rmd.first();
+            int day = (rmd.isEmpty()) ? event.mainDateTime().date().day() : rmd.first();
             mMonthlyRule->setDate(day);
             break;
         }
@@ -879,7 +881,7 @@ void RecurrenceEdit::set(const KAEvent& event)
             {
                 mYearlyButton->setChecked(true);
                 const QList<int> rmd = recurrence->monthDays();
-                int day = (rmd.isEmpty()) ? event.mainDate().day() : rmd.first();
+                int day = (rmd.isEmpty()) ? event.mainDateTime().date().day() : rmd.first();
                 mYearlyRule->setDate(day);
                 mYearlyRule->setFeb29Type(recurrence->feb29Type());
             }
@@ -983,22 +985,20 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
             pos.days.fill(false);
             pos.days.setBit(mMonthlyRule->dayOfWeek() - 1);
             pos.weeknum = mMonthlyRule->week();
-            QList<KAEvent::MonthPos> poses;
-            poses.append(pos);
+            QVector<KAEvent::MonthPos> poses(1, pos);
             event.setRecurMonthlyByPos(frequency, poses, repeatCount, endDate);
         }
         else
         {
             // It's by day
             int daynum = mMonthlyRule->date();
-            QList<int> daynums;
-            daynums.append(daynum);
+            QVector<int> daynums(1, daynum);
             event.setRecurMonthlyByDate(frequency, daynums, repeatCount, endDate);
         }
     }
     else if (button == mYearlyButton)
     {
-        QList<int> months = mYearlyRule->months();
+        QVector<int> months = mYearlyRule->months();
         if (mYearlyRule->type() == YearlyRule::POS)
         {
             // It's by position
@@ -1006,8 +1006,7 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
             pos.days.fill(false);
             pos.days.setBit(mYearlyRule->dayOfWeek() - 1);
             pos.weeknum = mYearlyRule->week();
-            QList<KAEvent::MonthPos> poses;
-            poses.append(pos);
+            QVector<KAEvent::MonthPos> poses(1, pos);
             event.setRecurAnnualByPos(frequency, poses, months, repeatCount, endDate);
         }
         else
@@ -1618,12 +1617,12 @@ void YearlyRule::setDefaultValues(int dayOfMonth, int dayOfWeek, int month)
 }
 
 /******************************************************************************
- * Fetch which months have been checked (1 - 12).
- * Reply = true if February has been checked.
- */
-QList<int> YearlyRule::months() const
+* Fetch which months have been checked (1 - 12).
+* Reply = true if February has been checked.
+*/
+QVector<int> YearlyRule::months() const
 {
-    QList<int> mnths;
+    QVector<int> mnths;
     for (int i = 0;  i < 12;  ++i)
         if (mMonthBox[i]->isChecked()  &&  mMonthBox[i]->isEnabled())
             mnths.append(i + 1);
@@ -1631,8 +1630,8 @@ QList<int> YearlyRule::months() const
 }
 
 /******************************************************************************
- * Check/uncheck each month of the year according to the specified list.
- */
+* Check/uncheck each month of the year according to the specified list.
+*/
 void YearlyRule::setMonths(const QList<int>& mnths)
 {
     bool checked[12];
@@ -1646,8 +1645,8 @@ void YearlyRule::setMonths(const QList<int>& mnths)
 }
 
 /******************************************************************************
- * Return the date for February 29th alarms in non-leap years.
- */
+* Return the date for February 29th alarms in non-leap years.
+*/
 KARecurrence::Feb29Type YearlyRule::feb29Type() const
 {
     if (mFeb29Combo->isEnabled())

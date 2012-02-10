@@ -11,6 +11,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="FixedFont" type="Font" key="fixed-font">
       <default code="true">KGlobalSettings::fixedFont()</default>
     </entry>
+    <entry name="MinimumFontSize" type="Int">
+      <label>When we render html do not use font size inferior to minimum size.</label>
+      <default>8</default>
+    </entry>
   </group>
 
   <group name="Reader">
@@ -125,6 +129,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
     <entry name="htmlLoadExternal" type="Bool">
       <label>Allow messages to load external references from the Internet</label>
+      <default>false</default>
+    </entry>
+    <entry name="zoomTextOnly" type="Bool">
+      <label>Zoom only text</label>
       <default>false</default>
     </entry>
     <entry name="attachmentStrategy" type="String" key="attachment-strategy">

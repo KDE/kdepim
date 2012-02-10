@@ -33,7 +33,6 @@
 #include <libkdepim/openemailaddressjob.h>
 #include "kmcommands.h"
 #include "mailcommon/sendmdnhandler.h"
-#include <QByteArray>
 #include <QVBoxLayout>
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
@@ -59,21 +58,14 @@ using MessageComposer::MessageFactory;
 #include "messagecore/messagehelpers.h"
 
 
-// KABC includes
-#include <kabc/addressee.h>
-#include <kabc/vcardconverter.h>
-
-
 #include <kde_file.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kaction.h>
 #include <kicon.h>
-#include <kiconloader.h>
 #include <kcodecs.h>
-#include <kstandardaction.h>
 #include <ktoggleaction.h>
-#include <kconfiggroup.h>
+#include <kservice.h>
 
 #include <QClipboard>
 
@@ -146,6 +138,7 @@ void KMReaderWin::createActions()
   mMailToComposeAction = new KAction( KIcon( "mail-message-new" ),
                                       i18n( "New Message To..." ), this );
   ac->addAction("mail_new", mMailToComposeAction );
+  mMailToComposeAction->setShortcutConfigurable( false );
   connect( mMailToComposeAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoCompose()) );
 
@@ -153,19 +146,23 @@ void KMReaderWin::createActions()
   mMailToReplyAction = new KAction( KIcon( "mail-reply-sender" ),
                                     i18n( "Reply To..." ), this );
   ac->addAction( "mailto_reply", mMailToReplyAction );
+  mMailToReplyAction->setShortcutConfigurable( false );
   connect( mMailToReplyAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoReply()) );
 
   // forward to
   mMailToForwardAction = new KAction( KIcon( "mail-forward" ),
                                       i18n( "Forward To..." ), this );
+  mMailToForwardAction->setShortcutConfigurable( false );		                                      
   ac->addAction( "mailto_forward", mMailToForwardAction );
   connect( mMailToForwardAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoForward()) );
 
+
   // add to addressbook
   mAddAddrBookAction = new KAction( KIcon( "contact-new" ),
                                     i18n( "Add to Address Book" ), this );
+  mAddAddrBookAction->setShortcutConfigurable( false );
   ac->addAction( "add_addr_book", mAddAddrBookAction );
   connect( mAddAddrBookAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoAddAddrBook()) );
@@ -173,11 +170,13 @@ void KMReaderWin::createActions()
   // open in addressbook
   mOpenAddrBookAction = new KAction( KIcon( "view-pim-contacts" ),
                                      i18n( "Open in Address Book" ), this );
+  mOpenAddrBookAction->setShortcutConfigurable( false );
   ac->addAction( "openin_addr_book", mOpenAddrBookAction );
   connect( mOpenAddrBookAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoOpenAddrBook()) );
   // bookmark message
   mAddBookmarksAction = new KAction( KIcon( "bookmark-new" ), i18n( "Bookmark This Link" ), this );
+  mAddBookmarksAction->setShortcutConfigurable( false );
   ac->addAction( "add_bookmarks", mAddBookmarksAction );
   connect( mAddBookmarksAction, SIGNAL(triggered(bool)),
            SLOT(slotAddBookmarks()) );
@@ -185,6 +184,7 @@ void KMReaderWin::createActions()
   // save URL as
   mUrlSaveAsAction = new KAction( i18n( "Save Link As..." ), this );
   ac->addAction( "saveas_url", mUrlSaveAsAction );
+  mUrlSaveAsAction->setShortcutConfigurable( false );
   connect( mUrlSaveAsAction, SIGNAL(triggered(bool)), SLOT(slotUrlSave()) );
 
   // find text
@@ -442,7 +442,10 @@ void KMReaderWin::slotMailtoForward()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoAddAddrBook()
 {
-  const QString emailString = KPIMUtils::decodeMailtoUrl( urlClicked() );
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;
+  const QString emailString = KPIMUtils::decodeMailtoUrl( url );
 
   KPIM::AddEmailAddressJob *job = new KPIM::AddEmailAddressJob( emailString, mMainWindow, this );
   job->start();
@@ -451,7 +454,10 @@ void KMReaderWin::slotMailtoAddAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoOpenAddrBook()
 {
-  const QString emailString = KPIMUtils::decodeMailtoUrl( urlClicked() );
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;	
+  const QString emailString = KPIMUtils::decodeMailtoUrl( url );
 
   KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( emailString, mMainWindow, this );
   job->start();
@@ -460,14 +466,20 @@ void KMReaderWin::slotMailtoOpenAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotAddBookmarks()
 {
-    KMCommand *command = new KMAddBookmarksCommand( urlClicked(), this );
-    command->start();
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;
+  KMCommand *command = new KMAddBookmarksCommand( url, this );
+  command->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlSave()
 {
-  KMCommand *command = new KMUrlSaveCommand( urlClicked(), mMainWindow );
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;
+  KMCommand *command = new KMUrlSaveCommand( url, mMainWindow );
   command->start();
 }
 
@@ -577,7 +589,7 @@ void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
 {
   uint identity = 0;
   if ( item.isValid() && item.parentCollection().isValid() ) {
-    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );
+    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection(), false );
     if ( fd )
       identity = fd->identity();
   }
@@ -592,7 +604,7 @@ void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const 
 
 void KMReaderWin::slotShowMessage( KMime::Message::Ptr message, const QString& encoding )
 {
-  KMReaderMainWin *win = new KMReaderMainWin();
+  KMReaderMainWin *win = new KMReaderMainWin();  
   win->showMessage( encoding, message );
   win->show();
 }
@@ -604,7 +616,6 @@ void KMReaderWin::slotDeleteMessage(const Akonadi::Item& item)
   KMTrashMsgCommand *command = new KMTrashMsgCommand( item.parentCollection(), item, -1 );
   command->start();
 }
-
 
 #include "kmreaderwin.moc"
 

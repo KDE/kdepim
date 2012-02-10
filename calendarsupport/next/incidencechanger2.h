@@ -49,8 +49,10 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     enum ResultCode {
       ResultCodeSuccess = 0,
       ResultCodeJobError,
-      ResultCodeAlreadyDeleted, ///< That calendar item was already deleted, or currently being deleted.
-      ResultCodeInvalidDefaultCollection, ///< Default collection is invalid and DestinationPolicyNeverAsk was used
+      ResultCodeAlreadyDeleted,           ///< That calendar item was already deleted,
+                                          ///  or currently being deleted.
+      ResultCodeInvalidDefaultCollection, ///< Default collection is invalid and
+                                          ///  DestinationPolicyNeverAsk was used
       ResultCodeRollback
     };
 
@@ -60,9 +62,11 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
        the item will be created.
      */
     enum DestinationPolicy {
-      DestinationPolicyDefault, ///< The default collection is used, if it's invalid, the user is prompted. @see setDefaultCollection().
-      DestinationPolicyAsk,      ///< User is always asked which collection to use.
-      DestinationPolicyNeverAsk ///< The default collection is used, if it's invalid, an error is returned, and the incidence isn't added.
+      DestinationPolicyDefault, ///< The default collection is used, if it's invalid,
+                                ///  the user is prompted. @see setDefaultCollection().
+      DestinationPolicyAsk,     ///< User is always asked which collection to use.
+      DestinationPolicyNeverAsk ///< The default collection is used, if it's invalid,
+                                ///  an error is returned, and the incidence isn't added.
     };
 
     /**
@@ -149,7 +153,6 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
 
     void setDefaultCollection( const Akonadi::Collection &collection );
 
-
     /**
        Returns the defaultCollection.
        If none is set, an invalid Collection is returned.
@@ -167,7 +170,6 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     DestinationPolicy destinationPolicy() const;
 
     void setShowDialogsOnError( bool enable );
-
 
     /**
        Returns if error dialogs are shown by IncidenceChanger when an ItemModify|Create|DeleteJob()

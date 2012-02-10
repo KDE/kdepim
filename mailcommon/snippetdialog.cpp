@@ -18,10 +18,6 @@
 #include <kactioncollection.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <kmessagebox.h>
-
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
 
 SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent )
   : KDialog( parent ), mActionCollection( actionCollection )
@@ -33,9 +29,11 @@ SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupM
   enableButton( Ok, false );
 
   connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
-           this, SLOT(slotTextChanged(QString)) );
+           this, SLOT(slotTextChanged()) );
   connect( mUi->nameEdit, SIGNAL(returnPressed()),
            this, SLOT(slotReturnPressed()) );
+  connect( mUi->groupBox, SIGNAL(currentIndexChanged(QString)), 
+           this, SLOT(slotGroupChanged()));
 
   mUi->snippetText->setMinimumSize( 500, 300 );
 
@@ -46,6 +44,11 @@ SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupM
 SnippetDialog::~SnippetDialog()
 {
   delete mUi;
+}
+
+void SnippetDialog::slotGroupChanged()
+{
+  enableButton( Ok, snippetIsValid() );
 }
 
 void SnippetDialog::setName( const QString &name )
@@ -93,14 +96,23 @@ QModelIndex SnippetDialog::groupIndex() const
   return mUi->groupBox->model()->index( mUi->groupBox->currentIndex(), 0 );
 }
 
-void SnippetDialog::slotTextChanged( const QString &text )
+void SnippetDialog::slotTextChanged()
 {
-  enableButton( Ok, !text.isEmpty() );
+  enableButton( Ok, snippetIsValid() );
+}
+
+bool SnippetDialog::snippetIsValid() const
+{
+  if ( mUi->groupWidget->isVisible() )
+    return ( !mUi->nameEdit->text().isEmpty() &&
+             !mUi->groupBox->currentText().isEmpty() );
+  else
+    return ( !mUi->nameEdit->text().isEmpty() );
 }
 
 void SnippetDialog::slotReturnPressed()
 {
-  if ( !mUi->nameEdit->text().isEmpty() ) {
+  if ( snippetIsValid() ) {
     accept();
   }
 }

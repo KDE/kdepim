@@ -1,7 +1,7 @@
 /*
  *  calendarmigrator.h  -  migrates or creates KAlarm Akonadi resources
  *  Program:  kalarm
- *  Copyright © 2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2011-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #ifndef CALENDARMIGRATOR_H
 #define CALENDARMIGRATOR_H
 
-#include "kacalendar.h"
+#include <kalarmcal/kacalendar.h>
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/collection.h>
@@ -31,10 +31,17 @@
 class KConfigGroup;
 class KJob;
 namespace KRES { class Resource; }
+namespace Akonadi { class CollectionFetchJob; }
 
 class CalendarCreator;
 class CalendarUpdater;
 
+using namespace KAlarmCal;
+
+/**
+ * Class to migrate KResources alarm calendars from pre-Akonadi versions of
+ * KAlarm, and to create default calendar resources if none exist.
+ */
 class CalendarMigrator : public QObject
 {
         Q_OBJECT
@@ -42,7 +49,7 @@ class CalendarMigrator : public QObject
         ~CalendarMigrator();
         static CalendarMigrator* instance();
         static void execute();
-        static void updateToCurrentFormat(const Akonadi::Collection&, bool ignoreKeepFormat, QObject* parent);
+        static void updateToCurrentFormat(const Akonadi::Collection&, bool ignoreKeepFormat, QWidget* parent);
         template <class Interface> static Interface* getAgentInterface(const Akonadi::AgentInstance&, QString& errorMessage, QObject* parent);
 
     signals:
@@ -52,16 +59,20 @@ class CalendarMigrator : public QObject
         void creating(const QString& path, bool finished);
 
     private slots:
+        void collectionFetchResult(KJob*);
         void creatingCalendar(const QString& path);
         void calendarCreated(CalendarCreator*);
 
     private:
         CalendarMigrator(QObject* parent = 0);
         void migrateOrCreate();
+        void createDefaultResources();
         template <class Interface> static bool updateStorageFormat(const Akonadi::AgentInstance&, QString& errorMessage, QObject* parent);
 
         static CalendarMigrator* mInstance;
         QList<CalendarCreator*> mCalendarsPending;   // pending calendar migration or creation jobs
+        QList<Akonadi::CollectionFetchJob*> mFetchesPending;  // pending collection fetch jobs for existing resources
+        CalEvent::Types mExistingAlarmTypes;   // alarm types provided by existing Akonadi resources
 
         friend class CalendarUpdater;
 };

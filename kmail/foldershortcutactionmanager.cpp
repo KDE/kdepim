@@ -26,8 +26,6 @@
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/EntityMimeTypeFilterModel>
 
-#include <QSortFilterProxyModel>
-
 #include <KAction>
 #include <KActionCollection>
 #include <KLocale>
@@ -82,8 +80,9 @@ void FolderShortcutActionManager::createActions()
   connect( KernelIf->folderCollectionMonitor(), SIGNAL(collectionRemoved(Akonadi::Collection)),
            this, SLOT(slotCollectionRemoved(Akonadi::Collection)), Qt::UniqueConnection );
 
-  if ( model->rowCount() > 0 )
+  if ( model->rowCount() > 0 ) {
     updateShortcutsForIndex( QModelIndex(), 0, model->rowCount() - 1 );
+  }
 }
 
 void FolderShortcutActionManager::slotRowsInserted( const QModelIndex &parent, int start, int end )
@@ -91,18 +90,21 @@ void FolderShortcutActionManager::slotRowsInserted( const QModelIndex &parent, i
   updateShortcutsForIndex( parent, start, end );
 }
 
-void FolderShortcutActionManager::updateShortcutsForIndex( const QModelIndex &parent, int start, int end )
+void FolderShortcutActionManager::updateShortcutsForIndex( const QModelIndex &parent,
+                                                           int start, int end )
 {
   QAbstractItemModel *model = KernelIf->collectionModel();
   for ( int i = start; i <= end; i++ ) {
-    const QModelIndex child = model->index( i, 0, parent );
-    Akonadi::Collection collection =
+    if ( model->hasIndex( i, 0, parent ) ) {
+      const QModelIndex child = model->index( i, 0, parent );
+      Akonadi::Collection collection =
         model->data( child, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() ) {
-      shortcutChanged( collection );
-    }
-    if ( model->rowCount( child ) > 0 ) {
-      updateShortcutsForIndex( child, 0, model->rowCount( child ) - 1 );
+      if ( collection.isValid() ) {
+        shortcutChanged( collection );
+      }
+      if ( model->rowCount( child ) > 0 ) {
+        updateShortcutsForIndex( child, 0, model->rowCount( child ) - 1 );
+      }
     }
   }
 }
@@ -116,8 +118,9 @@ void FolderShortcutActionManager::shortcutChanged( const Akonadi::Collection &co
 {
   // remove the old one, no autodelete in Qt4
   slotCollectionRemoved( col );
-  QSharedPointer<FolderCollection> folderCollection( FolderCollection::forCollection( col ) );
-  if ( folderCollection->shortcut().isEmpty() )
+  const QSharedPointer<FolderCollection> folderCollection( FolderCollection::forCollection( col, false ) );
+  const KShortcut shortcut( folderCollection->shortcut() );
+  if ( shortcut.isEmpty() )
     return;
 
   FolderShortcutCommand *command = new FolderShortcutCommand( mParent, col );
@@ -130,7 +133,7 @@ void FolderShortcutActionManager::shortcutChanged( const Akonadi::Collection &co
   }
 
   const QString actionLabel = i18n( "Folder Shortcut %1", col.name() );
-  QString actionName = i18n( "Folder Shortcut %1", folderCollection->idString() );
+  QString actionName = i18n( "Folder Shortcut %1", QString::number( col.id() ) );
   actionName.replace( ' ', '_' );
   KAction *action = mActionCollection->addAction( actionName );
   // The folder shortcut is set in the folder shortcut dialog.
@@ -138,7 +141,7 @@ void FolderShortcutActionManager::shortcutChanged( const Akonadi::Collection &co
   // the folder settings correctly.
   action->setShortcutConfigurable( false );
   action->setText( actionLabel );
-  action->setShortcuts( folderCollection->shortcut() );
+  action->setShortcuts( shortcut );
   action->setIcon( icon );
 
   connect( action, SIGNAL(triggered(bool)), command, SLOT(start()) );

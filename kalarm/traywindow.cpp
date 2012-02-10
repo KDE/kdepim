@@ -1,7 +1,7 @@
 /*
  *  traywindow.cpp  -  the KDE system tray applet
  *  Program:  kalarm
- *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 
 #include "alarmcalendar.h"
 #include "alarmlistview.h"
-#include "alarmtext.h"
 #include "functions.h"
 #include "kalarmapp.h"
 #include "mainwindow.h"
@@ -33,6 +32,8 @@
 #include "preferences.h"
 #include "synchtimer.h"
 #include "templatemenuaction.h"
+
+#include <kalarmcal/alarmtext.h>
 
 #include <kactioncollection.h>
 #include <ktoggleaction.h>
@@ -54,7 +55,9 @@
 #include <QTimer>
 
 #include <stdlib.h>
+#include <limits.h>
 
+using namespace KAlarmCal;
 
 struct TipItem
 {
@@ -74,6 +77,7 @@ TrayWindow::TrayWindow(MainWindow* parent)
 #ifdef USE_AKONADI
       mAlarmsModel(0),
 #endif
+      mStatusUpdateTimer(new QTimer(this)),
       mHaveDisabledAlarms(false)
 {
     kDebug();
@@ -104,6 +108,7 @@ TrayWindow::TrayWindow(MainWindow* parent)
     actions->addAction(QLatin1String("tStopPlay"), a);
     contextMenu()->addAction(a);
     QObject::connect(theApp(), SIGNAL(audioPlaying(bool)), a, SLOT(setVisible(bool)));
+    QObject::connect(theApp(), SIGNAL(audioPlaying(bool)), SLOT(updateStatus()));
 
     a = KAlarm::createSpreadWindowsAction(this);
     actions->addAction(QLatin1String("tSpread"), a);
@@ -130,7 +135,7 @@ TrayWindow::TrayWindow(MainWindow* parent)
     // Hack: KSNI does not let us know when it is about to show the tooltip,
     // so we need to update it whenever something change in it.
 
-    // This timer ensure updateToolTip() is not called several times in a row
+    // This timer ensures that updateToolTip() is not called several times in a row
     mToolTipUpdateTimer = new QTimer(this);
     mToolTipUpdateTimer->setInterval(0);
     mToolTipUpdateTimer->setSingleShot(true);
@@ -164,6 +169,13 @@ TrayWindow::TrayWindow(MainWindow* parent)
             mToolTipUpdateTimer, SLOT(start()));
 #endif
 
+    // Set auto-hide status when next alarm or preferences change
+    mStatusUpdateTimer->setSingleShot(true);
+    connect(mStatusUpdateTimer, SIGNAL(timeout()), SLOT(updateStatus()));
+    connect(AlarmCalendar::resources(), SIGNAL(earliestAlarmChanged()), SLOT(updateStatus()));
+    Preferences::connect(SIGNAL(autoHideSystemTrayChanged(int)), this, SLOT(updateStatus()));
+    updateStatus();
+
     // Update when tooltip preferences are modified
     Preferences::connect(SIGNAL(tooltipPreferencesChanged()), mToolTipUpdateTimer, SLOT(start()));
 }
@@ -176,7 +188,7 @@ TrayWindow::~TrayWindow()
 }
 
 /******************************************************************************
-*  Called when the "New Alarm" menu item is selected to edit a new alarm.
+* Called when the "New Alarm" menu item is selected to edit a new alarm.
 */
 void TrayWindow::slotNewAlarm(EditAlarmDlg::Type type)
 {
@@ -184,7 +196,7 @@ void TrayWindow::slotNewAlarm(EditAlarmDlg::Type type)
 }
 
 /******************************************************************************
-*  Called when the "New Alarm" menu item is selected to edit a new alarm.
+* Called when the "New Alarm" menu item is selected to edit a new alarm.
 */
 void TrayWindow::slotNewFromTemplate(const KAEvent* event)
 {
@@ -192,7 +204,7 @@ void TrayWindow::slotNewFromTemplate(const KAEvent* event)
 }
 
 /******************************************************************************
-*  Called when the "Configure KAlarm" menu item is selected.
+* Called when the "Configure KAlarm" menu item is selected.
 */
 void TrayWindow::slotPreferences()
 {
@@ -219,6 +231,7 @@ void TrayWindow::setEnabledStatus(bool status)
 {
     kDebug() << (int)status;
     updateIcon();
+    updateStatus();
     updateToolTip();
 }
 
@@ -235,7 +248,7 @@ void TrayWindow::slotHaveDisabledAlarms(bool haveDisabled)
 }
 
 /******************************************************************************
-*  A left click displays the KAlarm main window.
+* A left click displays the KAlarm main window.
 */
 void TrayWindow::slotActivateRequested()
 {
@@ -248,7 +261,7 @@ void TrayWindow::slotActivateRequested()
 }
 
 /******************************************************************************
-*  A middle button click displays the New Alarm window.
+* A middle button click displays the New Alarm window.
 */
 void TrayWindow::slotSecondaryActivateRequested()
 {
@@ -257,9 +270,52 @@ void TrayWindow::slotSecondaryActivateRequested()
 }
 
 /******************************************************************************
-*  Adjust tooltip according to the app state.
-*  The tooltip text shows alarms due in the next 24 hours. The limit of 24
-*  hours is because only times, not dates, are displayed.
+* Adjust icon auto-hide status according to when the next alarm is due.
+* The icon is always shown if audio is playing, to give access to the 'stop'
+* menu option.
+*/
+void TrayWindow::updateStatus()
+{
+    mStatusUpdateTimer->stop();
+    int period =  Preferences::autoHideSystemTray();
+    // If the icon is always to be shown (AutoHideSystemTray = 0),
+    // or audio is playing, show the icon.
+    bool active = !period || MessageWin::isAudioPlaying();
+    if (!active)
+    {
+        // Show the icon only if the next active alarm complies
+        active = theApp()->alarmsEnabled();
+        if (active)
+        {
+            KAEvent* event = AlarmCalendar::resources()->earliestAlarm();
+            active = static_cast<bool>(event);
+            if (event  &&  period > 0)
+            {
+                KDateTime dt = event->nextTrigger(KAEvent::ALL_TRIGGER).effectiveKDateTime();
+                qint64 delay = KDateTime::currentLocalDateTime().secsTo_long(dt);
+                delay -= static_cast<qint64>(period) * 60;   // delay until icon to be shown
+                active = (delay <= 0);
+                if (!active)
+                {
+                    // First alarm trigger is too far in future, so tray icon is to
+                    // be auto-hidden. Set timer for when it should be shown again.
+                    delay *= 1000;   // convert to msec
+                    int delay_int = static_cast<int>(delay);
+                    if (delay_int != delay)
+                        delay_int = INT_MAX;
+                    mStatusUpdateTimer->setInterval(delay_int);
+                    mStatusUpdateTimer->start();
+                }
+            }
+        }
+    }
+    setStatus(active ? Active : Passive);
+}
+
+/******************************************************************************
+* Adjust tooltip according to the app state.
+* The tooltip text shows alarms due in the next 24 hours. The limit of 24
+* hours is because only times, not dates, are displayed.
 */
 void TrayWindow::updateToolTip()
 {
@@ -280,7 +336,7 @@ void TrayWindow::updateToolTip()
 }
 
 /******************************************************************************
-*  Adjust icon according to the app state.
+* Adjust icon according to the app state.
 */
 void TrayWindow::updateIcon()
 {
@@ -291,8 +347,8 @@ void TrayWindow::updateIcon()
 }
 
 /******************************************************************************
-*  Return the tooltip text showing alarms due in the next 24 hours.
-*  The limit of 24 hours is because only times, not dates, are displayed.
+* Return the tooltip text showing alarms due in the next 24 hours.
+* The limit of 24 hours is because only times, not dates, are displayed.
 */
 QString TrayWindow::tooltipAlarmText() const
 {
@@ -309,12 +365,12 @@ QString TrayWindow::tooltipAlarmText() const
     if (!mAlarmsModel)
     {
         mAlarmsModel = new AlarmListModel(const_cast<TrayWindow*>(this));
-        mAlarmsModel->setEventTypeFilter(KAlarm::CalEvent::ACTIVE);
+        mAlarmsModel->setEventTypeFilter(CalEvent::ACTIVE);
         mAlarmsModel->sort(AlarmListModel::TimeColumn);
     }
     for (i = 0, iend = mAlarmsModel->rowCount();  i < iend;  ++i)
 #else
-    KAEvent::List events = AlarmCalendar::resources()->events(KDateTime(now.date(), QTime(0,0,0), KDateTime::LocalZone), tomorrow, KAlarm::CalEvent::ACTIVE);
+    KAEvent::List events = AlarmCalendar::resources()->events(KDateTime(now.date(), QTime(0,0,0), KDateTime::LocalZone), tomorrow, CalEvent::ACTIVE);
     for (i = 0, iend = events.count();  i < iend;  ++i)
 #endif
     {
@@ -324,7 +380,7 @@ QString TrayWindow::tooltipAlarmText() const
 #else
         KAEvent* event = events[i];
 #endif
-        if (event->enabled()  &&  !event->expired()  &&  event->action() == KAEvent::MESSAGE)
+        if (event->enabled()  &&  !event->expired()  &&  event->actionSubType() == KAEvent::MESSAGE)
         {
             TipItem item;
             QDateTime dateTime = event->nextTrigger(KAEvent::DISPLAY_TRIGGER).effectiveKDateTime().toLocalZone().dateTime();

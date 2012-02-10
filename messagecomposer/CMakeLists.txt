@@ -3,6 +3,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${SOPRANO_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
 )
 
@@ -59,6 +60,7 @@ set( messagecomposer_src
      emailaddressresolvejob.cpp
 
      keyresolver.cpp
+     kmsubjectlineedit.cpp
 )
 
 if (NOT WINCE)

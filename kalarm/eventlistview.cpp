@@ -146,13 +146,13 @@ kDebug(0)<<"SelectedEvent() count="<<list.count();
 * Return the selected events.
 */
 #ifdef USE_AKONADI
-QList<KAEvent> EventListView::selectedEvents() const
+QVector<KAEvent> EventListView::selectedEvents() const
 #else
 KAEvent::List EventListView::selectedEvents() const
 #endif
 {
 #ifdef USE_AKONADI
-    QList<KAEvent> elist;
+    QVector<KAEvent> elist;
 #else
     KAEvent::List elist;
 #endif
@@ -177,8 +177,8 @@ KAEvent::List EventListView::selectedEvents() const
 }
 
 /******************************************************************************
-*  Called when the Find action is selected.
-*  Display the non-modal Find dialog.
+* Called when the Find action is selected.
+* Display the non-modal Find dialog.
 */
 void EventListView::slotFind()
 {
@@ -191,7 +191,7 @@ void EventListView::slotFind()
 }
 
 /******************************************************************************
-*  Called when the Find Next or Find Prev action is selected.
+* Called when the Find Next or Find Prev action is selected.
 */
 void EventListView::findNext(bool forward)
 {
@@ -229,7 +229,6 @@ bool EventListView::viewportEvent(QEvent* e)
                     QFontMetrics fm(qvariant_cast<QFont>(value).resolve(viewOptions().font));
                     int textWidth = fm.boundingRect(toolTip).width() + 1;
                     const int margin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin) + 1;
-                    QRect rect = visualRect(index);
                     int left = columnViewportPosition(index.column()) + margin;
                     int right = left + textWidth;
                     if (left >= 0  &&  right <= width() - 2*frameWidth())

@@ -43,29 +43,19 @@
 
 using namespace MessageComposer;
 
+namespace KMime {
+namespace Types {
 static bool operator==( const KMime::Types::Mailbox &left, const KMime::Types::Mailbox &right )
 {
   return (left.addrSpec().asString() == right.addrSpec().asString());
+}
+}
 }
 
 /**
  * Strips all the user's addresses from an address list. This is used
  * when replying.
  */
-static QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager *manager )
-{
-  QStringList addresses( list );
-  for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
-    if ( manager->thatIsMe( KPIMUtils::extractEmailAddress( *it ) ) ) {
-      it = addresses.erase( it );
-    } else {
-      ++it;
-    }
-  }
-
-  return addresses;
-}
-
 static KMime::Types::Mailbox::List stripMyAddressesFromAddressList( const KMime::Types::Mailbox::List& list, const KPIMIdentities::IdentityManager *manager )
 {
   KMime::Types::Mailbox::List addresses( list );
@@ -82,7 +72,7 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList( const KMime:
 
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection& col )
   : m_identityManager( 0 )
-  , m_origMsg( KMime::Message::Ptr() )
+  , m_origMsg( origMsg )
   , m_origId( 0 )
   , m_parentFolderId( 0 )
   , m_collection( col )
@@ -91,7 +81,7 @@ MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Ite
   , m_allowDecryption( true )
   , m_id ( id )
 {
-  m_origMsg = origMsg;
+
 }
 
 MessageFactory::~MessageFactory()
@@ -101,7 +91,7 @@ MessageFactory::~MessageFactory()
 MessageFactory::MessageReply MessageFactory::createReply()
 {
   KMime::Message::Ptr msg( new KMime::Message );
-  QString str, mailingListStr;
+  QString mailingListStr;
   QByteArray refStr, headerName;
   bool replyAll = true;
   KMime::Types::Mailbox::List toList;
@@ -127,7 +117,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     case MessageComposer::ReplySmart:
       {
         if ( m_origMsg->headerByType( "Mail-Followup-To" ) ) {
-          toList << MessageCore::StringUtil::mailboxFrom7BitString( m_origMsg->headerByType( "Mail-Followup-To" )->as7BitString( false ) );
+          toList << MessageCore::StringUtil::mailboxListFrom7BitString( m_origMsg->headerByType( "Mail-Followup-To" )->as7BitString( false ) );
         } else if ( !replyToList.isEmpty() ) {
           toList = replyToList;
           // use the ReplyAll template only when it's a reply to a mailing list
@@ -406,61 +396,73 @@ KMime::Message::Ptr MessageFactory::createForward()
   return msg;
 }
 
-QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAttachedForward(QList< KMime::Message::Ptr > msgs)
+QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAttachedForward(const QList< Akonadi::Item >& items)
 {
+  
   // create forwarded message with original message as attachment
   // remove headers that shouldn't be forwarded
   KMime::Message::Ptr msg( new KMime::Message );
   QList< KMime::Content* > attachments;
 
-  if( msgs.count() == 0 )
-    msgs << m_origMsg;
-
-  if( msgs.count() >= 2 ) {
+  const int numberOfItems( items.count() ); 
+  if( numberOfItems >= 2 ) {
     // don't respect X-KMail-Identity headers because they might differ for
     // the selected mails
     MessageHelper::initHeader( msg, m_identityManager, m_origId );
-  } else if( msgs.count() == 1 ) {
-    const uint originalIdentity = identityUoid( msgs.first() );
-    MessageHelper::initFromMessage( msg, msgs.first(), m_identityManager, originalIdentity );
-    msg->subject()->fromUnicodeString( MessageHelper::forwardSubject( msgs.first() ),"utf-8" );
+  } else if( numberOfItems == 1 ) {
+    KMime::Message::Ptr firstMsg = MessageCore::Util::message( items.first() );
+    const uint originalIdentity = identityUoid( firstMsg );
+    MessageHelper::initFromMessage( msg, firstMsg, m_identityManager, originalIdentity );
+    msg->subject()->fromUnicodeString( MessageHelper::forwardSubject( firstMsg ),"utf-8" );
   }
 
   MessageHelper::setAutomaticFields( msg, true );
 #ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
-  // iterate through all the messages to be forwarded
-  foreach ( const KMime::Message::Ptr& fwdMsg, msgs ) {
-    // remove headers that shouldn't be forwarded
-    MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
-    fwdMsg->removeHeader("BCC");
-    // set the part
-    KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
-    msgPart->contentType()->setMimeType( "message/rfc822" );
-
-    msgPart->contentDisposition()->setParameter( QLatin1String( "filename" ), i18n( "forwarded message" ) );
-    msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
-    msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
-    msgPart->setBody( fwdMsg->encodedContent() );
-    msgPart->assemble();
-
-#if 0
-    // THIS HAS TO BE AFTER setCte()!!!!
-    msgPart->setCharset( "" );
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-    MessageCore::Util::addLinkInformation( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
-    attachments << msgPart;
+  if ( numberOfItems == 0 ) {
+    attachments << createForwardAttachmentMessage( m_origMsg );
+    MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
+  }
+  else {
+    // iterate through all the messages to be forwarded
+    foreach ( const Akonadi::Item& item, items ) {
+      attachments << createForwardAttachmentMessage(MessageCore::Util::message( item ));
+      MessageCore::Util::addLinkInformation( msg, item.id(), Akonadi::MessageStatus::statusForwarded() );
+    }
   }
 
   applyCharset( msg );
 
-  MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
-//   msg->assemble();
+  //msg->assemble();
   return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
+
+KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg)
+{
+  // remove headers that shouldn't be forwarded
+  MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
+  fwdMsg->removeHeader("BCC");
+  // set the part
+  KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
+  msgPart->contentType()->setMimeType( "message/rfc822" );
+  
+  msgPart->contentDisposition()->setParameter( QLatin1String( "filename" ), i18n( "forwarded message" ) );
+  msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
+  msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
+  msgPart->setBody( fwdMsg->encodedContent() );
+  msgPart->assemble();
+  
+#if 0
+  // THIS HAS TO BE AFTER setCte()!!!!
+  msgPart->setCharset( "" );
+#else
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
+  MessageCore::Util::addLinkInformation( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
+  return msgPart;
+}
+  
 
 
 KMime::Message::Ptr MessageFactory::createResend()
@@ -480,7 +482,7 @@ KMime::Message::Ptr MessageFactory::createResend()
   return msg;
 }
 
-KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
+KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int transportId, const QString& fcc )
 {
   if ( !m_origMsg )
     return KMime::Message::Ptr();
@@ -548,6 +550,18 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   msg->setHeader( header );
   header = new KMime::Headers::Generic( "X-KMail-Recipients", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
+
+
+  if ( transportId != -1 ) {
+    header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), QString::number( transportId ), "utf-8" );
+    msg->setHeader( header );
+  }
+
+  if ( !fcc.isEmpty() ) {
+    header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), fcc, "utf-8" );
+    msg->setHeader( header );    
+  }
+  
   msg->assemble();
 
   MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
@@ -676,7 +690,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   return receipt;
 }
 
-QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( const QList< KMime::Message::Ptr >& msgs )
+QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( const QList< Akonadi::Item >& items )
 {
   KMime::Message::Ptr msg( new KMime::Message );
   KMime::Content* digest = new KMime::Content( msg.get() );
@@ -686,13 +700,13 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
 
   digest->contentType()->setMimeType( "multipart/digest" );
   digest->contentType()->setBoundary( KMime::multiPartBoundary() );
-  digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( msgs.size() ), "utf8" );
+  digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( items.count() ), "utf8" );
   digest->contentDisposition()->setFilename( QLatin1String( "digest" ) );
   digest->fromUnicodeString( mainPartText );
 
   int id = 0;
-
-  foreach( const KMime::Message::Ptr& fMsg, msgs ) {
+  foreach ( const Akonadi::Item& item, items ) {
+    KMime::Message::Ptr fMsg = MessageCore::Util::message( item );
     if( id == 0 && fMsg->hasHeader( "X-KMail-Identity" ) )
       id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
 
@@ -708,8 +722,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
     part->contentDisposition()->setParameter( QLatin1String( "name" ), i18n( "forwarded message" ) );
     part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
     part->assemble();
-
-    MessageCore::Util::addLinkInformation( fMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
+    MessageCore::Util::addLinkInformation( msg, item.id(), Akonadi::MessageStatus::statusForwarded() );
     digest->addContent( part );
   }
   digest->assemble();

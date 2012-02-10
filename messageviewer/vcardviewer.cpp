@@ -29,12 +29,9 @@ using KABC::VCardConverter;
 using KABC::Addressee;
 
 #include <klocale.h>
-#include <kmessagebox.h>
 
 #include <libkdepim/addcontactjob.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QString>
 
 #ifndef KABC_ADDRESSEE_METATYPE_DEFINED
 Q_DECLARE_METATYPE( KABC::Addressee )
@@ -58,7 +55,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
   VCardConverter vcc;
   mAddresseeList = vcc.parseVCards( vCard );
   if ( !mAddresseeList.empty() ) {
-    itAddresseeList = mAddresseeList.begin();
+    itAddresseeList = mAddresseeList.constBegin();
     mContactViewer->setRawContact( *itAddresseeList );
     if ( mAddresseeList.size() <= 1 ) {
       showButton(User2, false);
@@ -95,7 +92,7 @@ void VCardViewer::slotUser2()
 {
   // next vcard
   mContactViewer->setRawContact( *(++itAddresseeList) );
-  if ( itAddresseeList == --(mAddresseeList.end()) )
+  if ( itAddresseeList == --(mAddresseeList.constEnd()) )
     enableButton(User2, false);
   enableButton(User3, true);
 }
@@ -104,7 +101,7 @@ void VCardViewer::slotUser3()
 {
   // previous vcard
   mContactViewer->setRawContact( *(--itAddresseeList) );
-  if ( itAddresseeList == mAddresseeList.begin() )
+  if ( itAddresseeList == mAddresseeList.constBegin() )
     enableButton(User3, false);
   enableButton(User2, true);
 }

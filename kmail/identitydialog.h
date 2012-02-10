@@ -35,8 +35,6 @@
 #include <kdialog.h>
 
 class QCheckBox;
-class QString;
-class TemplatesConfiguration;
 class SimpleStringListEditor;
 
 class KComboBox;
@@ -66,6 +64,10 @@ namespace Sonnet {
 
 namespace MailTransport {
   class TransportComboBox;
+}
+
+namespace TemplateParser {
+  class TemplatesConfiguration;
 }
 
 namespace KMail {
@@ -119,7 +121,7 @@ namespace KMail {
     QCheckBox                        *mTransportCheck;
     MailTransport::TransportComboBox *mTransportCombo;
     // "templates" tab:
-    TemplatesConfiguration       *mWidget;
+    TemplateParser::TemplatesConfiguration *mWidget;
     QCheckBox                    *mCustom;
     KPushButton                  *mCopyGlobal;
     // "signature" tab:

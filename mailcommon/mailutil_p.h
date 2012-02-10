@@ -1,31 +1,30 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Tobias Koenig <tokoe@kdab.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net,
+    Author Tobias Koenig <tokoe@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef MAILUTIL_P_H
-#define MAILUTIL_P_H
+#ifndef MAILCOMMON_MAILUTIL_P_H
+#define MAILCOMMON_MAILUTIL_P_H
 
-#include <kdialog.h>
-#include <klocale.h>
+#include <KDialog>
+#include <KLocale>
 
-#include <QtGui/QLabel>
+#include <QLabel>
 
 namespace MailCommon {
 
@@ -34,8 +33,7 @@ class AttachmentSelectionDialog : public KDialog
   Q_OBJECT
 
   public:
-    enum Type
-    {
+    enum Type {
       AttachAsLink,
       AttachInline,
       AttachWithoutAttachments
@@ -46,7 +44,7 @@ class AttachmentSelectionDialog : public KDialog
         mButtonCode( KDialog::Cancel )
     {
       setButtons( User1 | User2 | User3 | Cancel );
-      setWindowTitle( i18n( "Create Todo/Reminder") );
+      setWindowTitle( i18n( "Create Todo/Reminder" ) );
       setButtonText( User1, i18n( "Attach inline without attachments" ) );
       setButtonText( User2, i18n( "Attach &inline" ) );
       setButtonText( User3, i18n( "Attach as &link" ) );
@@ -71,8 +69,9 @@ class AttachmentSelectionDialog : public KDialog
     {
       mButtonCode = static_cast<KDialog::ButtonCode>( button );
 
-      if ( mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3 )
+      if ( mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3 ) {
         accept();
+      }
 
       KDialog::slotButtonClicked( button );
     }

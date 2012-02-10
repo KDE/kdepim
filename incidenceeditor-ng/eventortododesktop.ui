@@ -389,7 +389,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KDateEdit" name="mStartDateEdit">
+      <widget class="KDateComboBox" name="mStartDateEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -405,7 +405,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KTimeEdit" name="mStartTimeEdit">
+      <widget class="KTimeComboBox" name="mStartTimeEdit">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -507,7 +507,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KDateEdit" name="mEndDateEdit">
+      <widget class="KDateComboBox" name="mEndDateEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -520,7 +520,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KTimeEdit" name="mEndTimeEdit">
+      <widget class="KTimeComboBox" name="mEndTimeEdit">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -757,7 +757,7 @@
             <string comment="@info:whatsthis">Opens your address book, allowing you to select new attendees from it.</string>
            </property>
            <property name="text">
-            <string comment="@action:button">Select Attendees…</string>
+            <string comment="@action:button">Select Attendees...</string>
            </property>
           </widget>
          </item>
@@ -1227,7 +1227,7 @@
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="KPIM::KDateEdit" name="mRecurrenceEndDate">
+              <widget class="KDateComboBox" name="mRecurrenceEndDate">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1310,7 +1310,7 @@
        <item row="3" column="1" rowspan="2" colspan="2">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="KPIM::KDateEdit" name="mExceptionDateEdit">
+          <widget class="KDateComboBox" name="mExceptionDateEdit">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1476,9 +1476,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KTimeEdit</class>
+   <class>KTimeComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/ktimeedit.h</header>
+   <header>ktimecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KCheckComboBox</class>
@@ -1486,9 +1486,9 @@
    <header>libkdepim/kcheckcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KDateEdit</class>
+   <class>KDateComboBox</class>
    <extends>QComboBox</extends>
-   <header>libkdepim/kdateedit.h</header>
+   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KRichTextEdit</class>

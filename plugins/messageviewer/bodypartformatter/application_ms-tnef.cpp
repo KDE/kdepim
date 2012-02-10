@@ -35,6 +35,16 @@
 #include <messagecore/stringutil.h>
 #include <messageviewer/util.h>
 
+#include <KPIMUtils/KFileIO>
+
+#include <KCalCore/Event>
+#include <KCalCore/Incidence>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
+
+#include <KCalUtils/IncidenceFormatter>
+
+#include <ktnef/formatter.h>
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
@@ -43,6 +53,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocale>
+#include <KSystemTimeZones>
 #include <KUrl>
 
 #include <QApplication>
@@ -56,8 +67,10 @@ namespace {
 
       if ( !writer ) return Ok;
 
-      if (  bodyPart->defaultDisplay() == MessageViewer::Interface::BodyPart::AsIcon )
-        return AsIcon;
+      const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+      QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">";
+      QString startRow = "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
+      QString endRow = "</td></tr>";
 
       const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
       KTnef::KTNEFParser parser;
@@ -66,42 +79,80 @@ namespace {
         return Failed;
       }
 
-      QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
-      if ( tnefatts.isEmpty() ) {
-        kDebug() << "No attachments found in" << fileName;
-        return Failed;
+      // Look for an invitation
+      QString inviteStr;
+      QByteArray buf = KPIMUtils::kFileToByteArray( fileName, false, false );
+      if ( !buf.isEmpty() ) {
+        KCalCore::MemoryCalendar::Ptr cl(
+          new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
+        KCalUtils::InvitationFormatterHelper helper;
+        const QString invite = KTnef::formatTNEFInvitation( buf, cl, &helper );
+        KCalCore::ICalFormat format;
+        KCalCore::Incidence::Ptr inc = format.fromString( invite );
+        KCalCore::Event::Ptr event = inc.dynamicCast<KCalCore::Event>();
+        if ( event && event->hasEndDate() ) {
+          // no enddate => not a valid invitation
+          inviteStr = KCalUtils::IncidenceFormatter::extensiveDisplayStr( cl, inc );
+        }
       }
 
-  //    if ( !showOnlyOneMimePart() ) {
+      QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
+      if ( tnefatts.isEmpty() && inviteStr.isEmpty() ) {
+        kDebug() << "No attachments or invitation found in" << fileName;
+
         QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );
-        const QString comment = MessageCore::StringUtil::quoteHtmlChars( bodyPart->content()->contentDescription()->asUnicodeString(), true );
-        const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+        const QString comment =
+          MessageCore::StringUtil::quoteHtmlChars(
+            bodyPart->content()->contentDescription()->asUnicodeString(), true );
 
-        QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                    "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
-        if ( !fileName.isEmpty() )
-        htmlStr += "<a href=\"" + bodyPart->nodeHelper()->asHREF( bodyPart->content(), "body" ) + "\">"
-                    + label + "</a>";
-        else
-          htmlStr += label;
-        if ( !comment.isEmpty() )
+        htmlStr += startRow;
+        htmlStr += label;
+        if ( !comment.isEmpty() ) {
           htmlStr += "<br/>" + comment;
-        htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
+        }
+        htmlStr += "&nbsp;&lt;" + i18nc( "TNEF attachment has no content", "empty" ) + "&gt;";
+        htmlStr += endRow;
+        htmlStr += "</table>";
         writer->queue( htmlStr );
-  //    }
 
-      for ( int i = 0; i < tnefatts.count(); ++i ) {
+        return NeedContent;
+      }
+
+      QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
+      label = MessageCore::StringUtil::quoteHtmlChars( label, true );
+      const QString comment =
+        MessageCore::StringUtil::quoteHtmlChars(
+          bodyPart->content()->contentDescription()->asUnicodeString(), true );
+
+      htmlStr += startRow;
+      htmlStr += label;
+      if ( !comment.isEmpty() ) {
+        htmlStr += "<br/>" + comment;
+      }
+      htmlStr += endRow;
+      if ( !inviteStr.isEmpty() ) {
+        htmlStr += startRow;
+        htmlStr += inviteStr;
+        htmlStr += endRow;
+      }
+
+      if ( tnefatts.count() > 0 ) {
+        htmlStr += startRow;
+      }
+      writer->queue( htmlStr );
+      const int numberOfTnef( tnefatts.count() );
+      for ( int i = 0; i < numberOfTnef; ++i ) {
         KTnef::KTNEFAttach *att = tnefatts.at( i );
         QString label = att->displayName();
         if( label.isEmpty() )
           label = att->name();
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );
 
-        QString dir = bodyPart->nodeHelper()->createTempDir( "ktnef-" + QString::number( i ) );
+        const QString dir = bodyPart->nodeHelper()->createTempDir( "ktnef-" + QString::number( i ) );
         parser.extractFileTo( att->name(), dir );
         bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
+        const QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
 
         const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
                                                             KIconLoader::Desktop, att->name() );
@@ -111,8 +162,10 @@ namespace {
                               "</a></div><br/>" );
       }
 
-  //    if ( !showOnlyOneMimePart() )
-        writer->queue( "</td></tr></table>" );
+      if ( tnefatts.count() > 0 ) {
+        writer->queue( endRow );
+      }
+      writer->queue( "</table>" );
 
       return Ok;
     }
@@ -127,7 +180,13 @@ namespace {
       return idx == 0 ? "application" : 0 ;
     }
     const char * subtype( int idx ) const {
-      return idx == 0 ? "ms-tnef" : 0 ;
+      if ( idx == 0 ) {
+        return "ms-tnef";
+      } else if ( idx == 1 ) {
+        return "vnd.ms-tnef";
+      } else {
+        return 0;
+      }
     }
 
     const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }

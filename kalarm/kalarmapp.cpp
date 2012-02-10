@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.cpp  -  the KAlarm application object
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,12 +27,13 @@
 #include "commandoptions.h"
 #include "dbushandler.h"
 #include "editdlgtypes.h"
-#ifndef USE_AKONADI
+#ifdef USE_AKONADI
+#include "collectionmodel.h"
+#else
 #include "eventlistmodel.h"
 #endif
 #include "functions.h"
 #include "kamail.h"
-#include "karecurrence.h"
 #include "mainwindow.h"
 #include "messagebox.h"
 #include "messagewin.h"
@@ -43,6 +44,9 @@
 #include "traywindow.h"
 
 #include "kspeechinterface.h"
+
+#include <kalarmcal/datetime.h>
+#include <kalarmcal/karecurrence.h>
 
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -114,6 +118,7 @@ KAlarmApp::KAlarmApp()
       mPurgeDaysQueued(-1),
       mKSpeech(0),
       mPendingQuit(false),
+      mCancelRtcWake(false),
       mProcessingQueue(false),
       mSessionClosingDown(false),
       mAlarmsEnabled(true),
@@ -154,6 +159,8 @@ KAlarmApp::KAlarmApp()
         connect(AlarmCalendar::resources(), SIGNAL(earliestAlarmChanged()), SLOT(checkNextDueAlarm()));
 #ifdef USE_AKONADI
         connect(AlarmCalendar::resources(), SIGNAL(atLoginEventAdded(KAEvent)), SLOT(atLoginEventAdded(KAEvent)));
+        connect(AkonadiModel::instance(), SIGNAL(collectionAdded(Akonadi::Collection)),
+                                          SLOT(purgeNewArchivedDefault(Akonadi::Collection)));
 #endif
 
         KConfigGroup config(KGlobal::config(), "General");
@@ -357,7 +364,7 @@ int KAlarmApp::newInstance()
                         editDlg->setRecurrence(*options.recurrence(), options.subRepeatInterval(), options.subRepeatCount());
                     else if (options.flags() & KAEvent::REPEAT_AT_LOGIN)
                         editDlg->setRepeatAtLogin();
-                    editDlg->setAction(options.editAction(), options.text());
+                    editDlg->setAction(options.editAction(), AlarmText(options.text()));
                     if (options.lateCancel())
                         editDlg->setLateCancel(options.lateCancel());
                     if (options.flags() & KAEvent::COPY_KORGANIZER)
@@ -375,11 +382,11 @@ int KAlarmApp::newInstance()
                             if (!options.audioFile().isEmpty()
                             ||  options.flags() & (KAEvent::BEEP | KAEvent::SPEAK))
                             {
-                                int flags = options.flags();
+                                KAEvent::Flags flags = options.flags();
                                 Preferences::SoundType type = (flags & KAEvent::BEEP) ? Preferences::Sound_Beep
                                                             : (flags & KAEvent::SPEAK) ? Preferences::Sound_Speak
                                                             : Preferences::Sound_File;
-                                dlg->setAudio(type, options.audioFile(), options.audioVolume(), flags & KAEvent::REPEAT_SOUND);
+                                dlg->setAudio(type, options.audioFile(), options.audioVolume(), (flags & KAEvent::REPEAT_SOUND ? 0 : -1));
                             }
                             if (options.reminderMinutes())
                                 dlg->setReminder(options.reminderMinutes(), (options.flags() & KAEvent::REMINDER_ONCE));
@@ -512,8 +519,8 @@ void KAlarmApp::checkKtimezoned()
     if (!KSystemTimeZones::isTimeZoneDaemonAvailable())
     {    
         kDebug() << "ktimezoned not running: using UTC only";
-        KMessageBox::information(MainWindow::mainMainWindow(),
-                                 i18nc("@info", "Time zones are not accessible:<nl/>KAlarm will use the UTC time zone.<nl/><nl/>(The KDE time zone service is not available:<nl/>check that <application>ktimezoned</application> is installed.)"),
+        KAMessageBox::information(MainWindow::mainMainWindow(),
+                                  i18nc("@info", "Time zones are not accessible:<nl/>KAlarm will use the UTC time zone.<nl/><nl/>(The KDE time zone service is not available:<nl/>check that <application>ktimezoned</application> is installed.)"),
                      QString(), QLatin1String("tzunavailable"));
     }
 #endif
@@ -568,6 +575,11 @@ bool KAlarmApp::quitIf(int exitCode, bool force)
     // This was the last/only running "instance" of the program, so exit completely.
     kDebug() << exitCode << ": quitting";
     MessageWin::stopAudio(true);
+    if (mCancelRtcWake)
+    {
+        KAlarm::setRtcWakeTime(0, 0);
+        KAlarm::deleteRtcWakeConfig();
+    }
     delete mAlarmTimer;     // prevent checking for alarms after deleting calendars
     mAlarmTimer = 0;
     mInitialised = false;   // prevent processQueue() from running
@@ -584,17 +596,27 @@ bool KAlarmApp::quitIf(int exitCode, bool force)
 void KAlarmApp::doQuit(QWidget* parent)
 {
     kDebug();
-    if (MessageBox::warningContinueCancel(parent, KMessageBox::Cancel,
-                                          i18nc("@info", "Quitting will disable alarms (once any alarm message windows are closed)."),
-                                          QString(), KStandardGuiItem::quit(), Preferences::QUIT_WARN
-                                         ) != KMessageBox::Yes)
+    if (KAMessageBox::warningContinueCancel(parent, KMessageBox::Cancel,
+                                            i18nc("@info", "Quitting will disable alarms (once any alarm message windows are closed)."),
+                                            QString(), KStandardGuiItem::quit(), Preferences::QUIT_WARN
+                                           ) != KMessageBox::Yes)
         return;
+    if (!KAlarm::checkRtcWakeConfig(true).isEmpty())
+    {
+        // A wake-on-suspend alarm is set
+        if (KAMessageBox::warningContinueCancel(parent, KMessageBox::Cancel,
+                                                i18nc("@info", "Quitting will cancel the scheduled Wake from Suspend."),
+                                                QString(), KStandardGuiItem::quit()
+                                               ) != KMessageBox::Yes)
+            return;
+        mCancelRtcWake = true;
+    }
     if (!Preferences::autoStart())
     {
         int option = KMessageBox::No;
         if (!Preferences::autoStartChangedByUser())
         {
-            option = KMessageBox::questionYesNoCancel(parent,
+            option = KAMessageBox::questionYesNoCancel(parent,
                                          i18nc("@info", "Do you want to start KAlarm at login?<nl/>"
                                                         "(Note that alarms will be disabled if KAlarm is not started.)"),
                                          QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(),
@@ -655,7 +677,7 @@ void KAlarmApp::quitFatal()
             return;
         case 1:
             mFatalError = 2;
-            KMessageBox::error(0, mFatalMessage);
+            KMessageBox::error(0, mFatalMessage);   // this is an application modal window
             mFatalError = 3;
             // fall through to '3'
         case 3:
@@ -857,7 +879,7 @@ void KAlarmApp::removeWindow(TrayWindow*)
 }
 
 /******************************************************************************
-*  Display or close the system tray icon.
+* Display or close the system tray icon.
 */
 bool KAlarmApp::displayTrayIcon(bool show, MainWindow* parent)
 {
@@ -1027,6 +1049,38 @@ bool KAlarmApp::wantShowInSystemTray() const
     return Preferences::showInSystemTray()  &&  KSystemTrayIcon::isSystemTrayAvailable();
 }
 
+#ifdef USE_AKONADI
+/******************************************************************************
+* Called when a new collection has been added, or when a collection has been
+* set as the standard collection for its type.
+* If it is the default archived calendar, purge its old alarms if necessary.
+*/
+void KAlarmApp::purgeNewArchivedDefault(const Akonadi::Collection& collection)
+{
+    Akonadi::Collection col(collection);
+    if (CollectionControlModel::isStandard(col, CalEvent::ARCHIVED))
+    {
+        // Allow time (1 minute) for AkonadiModel to be populated with the
+        // collection's events before purging it.
+        kDebug() << collection.id() << ": standard archived...";
+        QTimer::singleShot(60000, this, SLOT(purgeAfterDelay()));
+    }
+}
+
+/******************************************************************************
+* Called after a delay, after the default archived calendar has been added to
+* AkonadiModel.
+* Purge old alarms from it if necessary.
+*/
+void KAlarmApp::purgeAfterDelay()
+{
+    if (mArchivedPurgeDays >= 0)
+        purge(mArchivedPurgeDays);
+    else
+        setArchivePurgeDays();
+}
+#endif
+
 /******************************************************************************
 * Called when the length of time to keep archived alarms changes in KAlarm's
 * preferences.
@@ -1110,11 +1164,15 @@ void KAlarmApp::setSpreadWindowsState(bool spread)
 * to command line options.
 * Reply = true unless there was a parameter error or an error opening calendar file.
 */
-bool KAlarmApp::scheduleEvent(KAEvent::Action action, const QString& text, const KDateTime& dateTime,
-                              int lateCancel, int flags, const QColor& bg, const QColor& fg, const QFont& font,
-                              const QString& audioFile, float audioVolume, int reminderMinutes,
+bool KAlarmApp::scheduleEvent(KAEvent::SubAction action, const QString& text, const KDateTime& dateTime,
+                              int lateCancel, KAEvent::Flags flags, const QColor& bg, const QColor& fg,
+                              const QFont& font, const QString& audioFile, float audioVolume, int reminderMinutes,
                               const KARecurrence& recurrence, int repeatInterval, int repeatCount,
-                              uint mailFromID, const EmailAddressList& mailAddresses,
+#ifdef USE_AKONADI
+                              uint mailFromID, const KCalCore::Person::List& mailAddresses,
+#else
+                              uint mailFromID, const QList<KCal::Person>& mailAddresses,
+#endif
                               const QString& mailSubject, const QStringList& mailAttachments)
 {
     kDebug() << text;
@@ -1135,7 +1193,7 @@ bool KAlarmApp::scheduleEvent(KAEvent::Action action, const QString& text, const
         event.setReminder(reminderMinutes, onceOnly);
     }
     if (!audioFile.isEmpty())
-        event.setAudioFile(audioFile, audioVolume, -1, 0);
+        event.setAudioFile(audioFile, audioVolume, -1, 0, (flags & KAEvent::REPEAT_SOUND) ? 0 : -1);
     if (!mailAddresses.isEmpty())
         event.setEmail(mailFromID, mailAddresses, mailSubject, mailAttachments);
     event.setRecurrence(recurrence);
@@ -1267,7 +1325,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
                     // Set the time to display if it's a display alarm
                     alarm.setTime(now);
                 }
-                if (!reschedule  &&  alarm.lateCancel())
+                if (!reschedule  &&  event->lateCancel())
                 {
                     // Alarm is due, and it is to be cancelled if too late.
                     kDebug() << "LATE_CANCEL";
@@ -1275,7 +1333,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
                     if (alarm.dateTime().isDateOnly())
                     {
                         // The alarm has no time, so cancel it if its date is too far past
-                        int maxlate = alarm.lateCancel() / 1440;    // maximum lateness in days
+                        int maxlate = event->lateCancel() / 1440;    // maximum lateness in days
                         KDateTime limit(DateTime(nextDT.addDays(maxlate + 1)).effectiveKDateTime());
                         if (now >= limit)
                         {
@@ -1309,7 +1367,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
                     else
                     {
                         // The alarm is timed. Allow it to be the permitted amount late before cancelling it.
-                        int maxlate = maxLateness(alarm.lateCancel());
+                        int maxlate = maxLateness(event->lateCancel());
                         if (secs > maxlate)
                         {
                             // It's over the maximum interval late.
@@ -1352,13 +1410,19 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
                 if (reschedule)
                 {
                     // The latest repetition was too long ago, so schedule the next one
-                    if (rescheduleAlarm(*event, alarm, false, (rescheduleWork ? nextDT : KDateTime())))
+                    switch (rescheduleAlarm(*event, alarm, false, (rescheduleWork ? nextDT : KDateTime())))
                     {
-                        // A working-time-only alarm has been rescheduled and the
-                        // rescheduled time is already due. Start processing the
-                        // event again.
-                        alarmToExecuteValid = false;
-                        restart = true;
+                        case 1:
+                            // A working-time-only alarm has been rescheduled and the
+                            // rescheduled time is already due. Start processing the
+                            // event again.
+                            alarmToExecuteValid = false;
+                            restart = true;
+                            break;
+                        case -1:
+                            return true;   // event has been deleted
+                        default:
+                            break;
                     }
                     updateCalAndDisplay = true;
                     continue;
@@ -1405,14 +1469,11 @@ void KAlarmApp::alarmCompleted(const KAEvent& event)
 {
     if (!event.postAction().isEmpty())
     {
-        if (!ShellProcess::authorised())
-            setEventCommandError(event, KAEvent::CMD_ERROR_POST);
-        else
-        {
-            QString command = event.postAction();
-            kDebug() << event.id() << ":" << command;
-            doShellCommand(command, event, 0, ProcData::POST_ACTION);
-        }
+        // doShellCommand() will error if the user is not authorised to run
+        // shell commands.
+        QString command = event.postAction();
+        kDebug() << event.id() << ":" << command;
+        doShellCommand(command, event, 0, ProcData::POST_ACTION);
     }
 }
 
@@ -1423,12 +1484,14 @@ void KAlarmApp::alarmCompleted(const KAEvent& event)
 * instance.
 * If 'nextDt' is valid, the event is rescheduled for the next non-working
 * time occurrence after that.
-* Reply = true if 'nextDt' is valid and the rescheduled event is already due.
+* Reply = 1 if 'nextDt' is valid and the rescheduled event is already due
+*       = -1 if the event has been deleted
+*       = 0 otherwise.
 */
-bool KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updateCalAndDisplay, const KDateTime& nextDt)
+int KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updateCalAndDisplay, const KDateTime& nextDt)
 {
     kDebug() << "Alarm type:" << alarm.type();
-    bool reply = false;
+    int reply = 0;
     bool update = false;
     event.startChanges();
     if (alarm.repeatAtLogin())
@@ -1465,6 +1528,7 @@ bool KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
             {
                 case KAEvent::NO_OCCURRENCE:
                     // All repetitions are finished, so cancel the event
+                    kDebug() << "No occurrence";
                     if (event.reminderMinutes() < 0  &&  last.isValid()
                     &&  alarm.type() != KAAlarm::AT_LOGIN_ALARM  &&  !event.mainExpired())
                     {
@@ -1474,7 +1538,7 @@ bool KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
                         updateCalAndDisplay = true;
                     }         
                     if (cancelAlarm(event, alarm.type(), updateCalAndDisplay))
-                        return false;
+                        return -1;
                     break;
                 default:
                     if (!(type & KAEvent::OCCURRENCE_REPEAT))
@@ -1514,7 +1578,7 @@ bool KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
                     next = !event.isWorkingTime(next_dt);
             }
         } while (next && next_dt <= now);
-        reply = !cancelled && next_dt.isValid() && (next_dt <= now);
+        reply = (!cancelled && next_dt.isValid() && (next_dt <= now)) ? 1 : 0;
 
         if (event.reminderMinutes() < 0  &&  last.isValid()
         &&  alarm.type() != KAAlarm::AT_LOGIN_ALARM)
@@ -1572,6 +1636,7 @@ bool KAlarmApp::cancelReminderAndDeferral(KAEvent& event)
 /******************************************************************************
 * Execute an alarm by displaying its message or file, or executing its command.
 * Reply = ShellProcess instance if a command alarm
+*       = MessageWin if an audio alarm
 *       != 0 if successful
 *       = -1 if execution has not completed
 *       = 0 if the alarm is disabled, or if an error message was output.
@@ -1590,11 +1655,19 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
     void* result = (void*)1;
     event.setArchive();
 
-    KAAlarm::Action action = alarm.action();
-    if (action == KAAlarm::COMMAND && event.commandDisplay())
-        action = KAAlarm::MESSAGE;
-    switch (action)
+    switch (alarm.action())
     {
+        case KAAlarm::COMMAND:
+            if (!event.commandDisplay())
+            {
+                // execCommandAlarm() will error if the user is not authorised
+                // to run shell commands.
+                result = execCommandAlarm(event, alarm);
+                if (reschedule)
+                    rescheduleAlarm(event, alarm, true);
+                break;
+            }
+            // fall through to MESSAGE
         case KAAlarm::MESSAGE:
         case KAAlarm::FILE:
         {
@@ -1604,50 +1677,49 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
             // Find if we're changing a reminder message to the real message
             bool reminder = (alarm.type() & KAAlarm::REMINDER_ALARM);
             bool replaceReminder = !reminder && win && (win->alarmType() & KAAlarm::REMINDER_ALARM);
-            if (!reminder  &&  !event.deferred()
+            if (!reminder
+            &&  (!event.deferred() || (event.extraActionOptions() & KAEvent::ExecPreActOnDeferral))
             &&  (replaceReminder || !win)  &&  !noPreAction
             &&  !event.preAction().isEmpty())
             {
-                // It's not a reminder or a deferred alarm, and there is no message window
-                // (other than a reminder window) currently displayed for this alarm,
-                // and we need to execute a command before displaying the new window.
+                // It's not a reminder alarm, and it's not a deferred alarm unless the
+                // pre-alarm action applies to deferred alarms, and there is no message
+                // window (other than a reminder window) currently displayed for this
+                // alarm, and we need to execute a command before displaying the new window.
                 //
                 // NOTE: The pre-action is not executed for a recurring alarm if an
                 // alarm message window for a previous occurrence is still visible.
-                if (!ShellProcess::authorised())
-                    setEventCommandError(event, KAEvent::CMD_ERROR_PRE);
-                else
+                // Check whether the command is already being executed for this alarm.
+                for (int i = 0, end = mCommandProcesses.count();  i < end;  ++i)
                 {
-                    // Check whether the command is already being executed for this alarm.
-                    for (int i = 0, end = mCommandProcesses.count();  i < end;  ++i)
+                    ProcData* pd = mCommandProcesses[i];
+                    if (pd->event->id() == event.id()  &&  (pd->flags & ProcData::PRE_ACTION))
                     {
-                        ProcData* pd = mCommandProcesses[i];
-                        if (pd->event->id() == event.id()  &&  (pd->flags & ProcData::PRE_ACTION))
-                        {
-                            kDebug() << "Already executing pre-DISPLAY command";
-                            return pd->process;   // already executing - don't duplicate the action
-                        }
+                        kDebug() << "Already executing pre-DISPLAY command";
+                        return pd->process;   // already executing - don't duplicate the action
                     }
-
-                    QString command = event.preAction();
-                    kDebug() << "Pre-DISPLAY command:" << command;
-                    int flags = (reschedule ? ProcData::RESCHEDULE : 0) | (allowDefer ? ProcData::ALLOW_DEFER : 0);
-                    if (doShellCommand(command, event, &alarm, (flags | ProcData::PRE_ACTION)))
-                    {
-                        AlarmCalendar::resources()->setAlarmPending(&event);
-                        return result;     // display the message after the command completes
-                    }
-                    // Error executing command
-                    if (event.cancelOnPreActionError())
-                    {
-                        // Cancel the rest of the alarm execution
-                        kDebug() << event.id() << ": pre-action failed: cancelled";
-                        if (reschedule)
-                            rescheduleAlarm(event, alarm, true);
-                        return 0;
-                    }
-                    // Display the message even though it failed
                 }
+
+                // doShellCommand() will error if the user is not authorised to run
+                // shell commands.
+                QString command = event.preAction();
+                kDebug() << "Pre-DISPLAY command:" << command;
+                int flags = (reschedule ? ProcData::RESCHEDULE : 0) | (allowDefer ? ProcData::ALLOW_DEFER : 0);
+                if (doShellCommand(command, event, &alarm, (flags | ProcData::PRE_ACTION)))
+                {
+                    AlarmCalendar::resources()->setAlarmPending(&event);
+                    return result;     // display the message after the command completes
+                }
+                // Error executing command
+                if (event.cancelOnPreActionError())
+                {
+                    // Cancel the rest of the alarm execution
+                    kDebug() << event.id() << ": pre-action failed: cancelled";
+                    if (reschedule)
+                        rescheduleAlarm(event, alarm, true);
+                    return 0;
+                }
+                // Display the message even though it failed
             }
 
             if (!win)
@@ -1680,16 +1752,6 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
             }
             break;
         }
-        case KAAlarm::COMMAND:
-            if (!ShellProcess::authorised())
-                setEventCommandError(event, KAEvent::CMD_ERROR);
-            else
-            {
-                result = execCommandAlarm(event, alarm);
-                if (reschedule)
-                    rescheduleAlarm(event, alarm, true);
-            }
-            break;
         case KAAlarm::EMAIL:
         {
             kDebug() << "EMAIL to:" << event.emailAddresses(",");
@@ -1722,14 +1784,14 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
             {
                 // There isn't already a message for this event.
                 int flags = (reschedule ? 0 : MessageWin::NO_RESCHEDULE) | MessageWin::ALWAYS_HIDE;
-                new MessageWin(&event, alarm, flags);
+                win = new MessageWin(&event, alarm, flags);
             }
             else
             {
                 // There's an existing message window: replay the sound
                 win->repeat(alarm);    // N.B. this reschedules the alarm
             }
-            break;
+            return win;
         }
         default:
             return 0;
@@ -1760,6 +1822,8 @@ void KAlarmApp::emailSent(KAMail::JobData& data, const QStringList& errmsgs, boo
 */
 ShellProcess* KAlarmApp::execCommandAlarm(const KAEvent& event, const KAAlarm& alarm, const QObject* receiver, const char* slot)
 {
+    // doShellCommand() will error if the user is not authorised to run
+    // shell commands.
     int flags = (event.commandXterm()   ? ProcData::EXEC_IN_XTERM : 0)
               | (event.commandDisplay() ? ProcData::DISP_OUTPUT : 0);
     QString command = event.cleanText();
@@ -1791,6 +1855,9 @@ ShellProcess* KAlarmApp::execCommandAlarm(const KAEvent& event, const KAAlarm& a
 * a pre- or post-alarm action respectively.
 * To connect to the output ready signals of the process, specify a slot to be
 * called by supplying 'receiver' and 'slot' parameters.
+*
+* Note that if shell access is not authorised, the attempt to run the command
+* will be errored.
 */
 ShellProcess* KAlarmApp::doShellCommand(const QString& command, const KAEvent& event, const KAAlarm* alarm, int flags, const QObject* receiver, const char* slot)
 {
@@ -1813,6 +1880,8 @@ ShellProcess* KAlarmApp::doShellCommand(const QString& command, const KAEvent& e
     ShellProcess* proc = 0;
     if (!cmd.isEmpty())
     {
+        // Use ShellProcess, which automatically checks whether the user is
+        // authorised to run shell commands.
         proc = new ShellProcess(cmd);
         proc->setEnv(QLatin1String("KALARM_UID"), event.id(), true);
         proc->setOutputChannelMode(KProcess::MergedChannels);   // combine stdout & stderr
@@ -1990,7 +2059,7 @@ void KAlarmApp::slotCommandExited(ShellProcess* proc)
                         errmsg += '\n';
                         errmsg += proc->command();
                     }
-                    KMessageBox::error(pd->messageBoxParent, errmsg);
+                    KAMessageBox::error(pd->messageBoxParent, errmsg);
                 }
                 else
                     commandErrorMsg(proc, *pd->event, pd->alarm, pd->flags);

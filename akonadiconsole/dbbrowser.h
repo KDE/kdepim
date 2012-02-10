@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef DBBROWSER_H
-#define DBBROWSER_H
+#ifndef AKONADICONSOLE_DBBROWSER_H
+#define AKONADICONSOLE_DBBROWSER_H
 
 #include "ui_dbbrowser.h"
 

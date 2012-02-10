@@ -65,7 +65,10 @@ Folder::FolderPrivate::FolderPrivate( Folder* qq ) : q( qq ), unread( 0 ), open(
 
 Folder::FolderPrivate::~FolderPrivate()
 {
-    qDeleteAll( children );
+    while (!children.isEmpty()) {
+        // child removes itself from list in its destructor
+        delete children.first();
+    }
     emit q->emitSignalDestroyed();
 }
 
@@ -250,7 +253,7 @@ void Folder::removeChild(TreeNode* node)
 
     emit signalAboutToRemoveChild( node );
     node->setParent(0);
-    d->children.removeAll(node);
+    d->children.removeOne(node);
     disconnectFromNode(node);
     updateUnreadCount();
     emit signalChildRemoved(this, node);

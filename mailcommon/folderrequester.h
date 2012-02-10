@@ -31,93 +31,110 @@
 
 #include "mailcommon_export.h"
 
-#include <klineedit.h>
-#include <ksharedconfig.h>
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
 
-#include <QtGui/QKeyEvent>
-#include <QtGui/QWidget>
+#include <KLineEdit>
+
+#include <QWidget>
+
+class QKeyEvent;
 
 class KJob;
 
 namespace MailCommon {
 
-class Kernel;
-
 /**
-   * A widget that contains a KLineEdit which shows the current folder
-   * and a button that fires a FolderSelectionDialog
-   * The dialog is set to disable readonly folders by default
-   * Search folders are excluded
-   */
-  class MAILCOMMON_EXPORT FolderRequester: public QWidget
-  {
-    Q_OBJECT
+ * A widget that contains a KLineEdit which shows the current folder
+ * and a button that fires a FolderSelectionDialog
+ * The dialog is set to disable readonly folders by default
+ * Search folders are excluded
+ *
+ * @todo This should be cleaned up and go into libakonadi. This includes:
+ * - s/Folder/Collection/g
+ * - Use Akonadi::CollectionDialog instead of MailCommon::FolderSelectionDialog
+ *  - merge that into CollectionDialog
+ *  - or allow to replace the built-in dialog by your own
+ * - Allow to pass in an existing ETM, to remove the Kernel dependency
+ */
+class MAILCOMMON_EXPORT FolderRequester: public QWidget
+{
+  Q_OBJECT
 
-    public:
-      /**
-       * Constructor
-       * @param parent the parent widget
-       */
-      FolderRequester( QWidget* parent );
-      virtual ~FolderRequester();
+  public:
+    /**
+     * Constructor
+     * @param parent the parent widget
+     */
+    explicit FolderRequester( QWidget *parent = 0 );
+    virtual ~FolderRequester();
 
-      Akonadi::Collection folderCollection() const;
+    /**
+     * Returns the selected collection.
+     */
+    Akonadi::Collection collection() const;
 
-      /** Returns the folder id */
-      QString folderId() const { return mFolderId; }
+    /**
+     * Presets the folder to the collection @p collection.
+     */
+    void setCollection( const Akonadi::Collection &collection );
 
-      /** Returns current text */
-      QString text() const { return edit->originalText(); }
+    /**
+     * Returns @c true if there's a valid collection set on this widget.
+     */
+    bool hasCollection() const;
 
-      /** Preset the folder */
-      void setFolder( const Akonadi::Collection & );
-      void setFolder( const QString& idString );
+    /**
+     * Sets if readonly folders should be disabled.
+     * Be aware that if you disable this the user can also select the
+     * 'Local Folders' folder which has no valid folder associated
+     */
+    void setMustBeReadWrite( bool readwrite )
+    {
+      mMustBeReadWrite = readwrite;
+    }
 
-      /**
-       * Set if readonly folders should be disabled
-       * Be aware that if you disable this the user can also select the
-       * 'Local Folders' folder which has no valid folder associated
-       */
-      void setMustBeReadWrite( bool readwrite )
-      { mMustBeReadWrite = readwrite; }
+    /**
+     * Sets if the outbox should be shown.
+     */
+    void setShowOutbox( bool show )
+    {
+      mShowOutbox = show;
+    }
 
-      /** Set if the outbox should be shown */
-      void setShowOutbox( bool show )
-      { mShowOutbox = show; }
+    void setNotAllowToCreateNewFolder( bool notCreateNewFolder )
+    {
+      mNotCreateNewFolder = notCreateNewFolder;
+    }
 
-      /** Set if the imap folders should be shown */
-      void setShowImapFolders( bool show )
-      { mShowImapFolders = show; }
+  protected slots:
+    /**
+     * Opens the folder dialog.
+     */
+    void slotOpenDialog();
 
-      void setNotAllowToCreateNewFolder( bool notCreateNewFolder )
-      { mNotCreateNewFolder = notCreateNewFolder; }
-    protected slots:
-      /** Open the folder dialog */
-      void slotOpenDialog();
+    /**
+     * Updates the information we have about the current folder.
+     */
+    void slotCollectionsReceived( KJob * );
 
-      /** Update the information we have about the current folder. */
-      void slotCollectionsReceived( KJob* );
+  signals:
+    /**
+     * Emitted when the folder changed.
+     */
+    void folderChanged( const Akonadi::Collection & );
 
-    signals:
-      /** Emitted when the folder changed */
-      void folderChanged( const Akonadi::Collection& );
+  protected:
+    /** Capture space key to open the dialog */
+    virtual void keyPressEvent( QKeyEvent *e );
+    void setCollectionFullPath( const Akonadi::Collection &col );
 
-    protected:
-      /** Capture space key to open the dialog */
-      virtual void keyPressEvent( QKeyEvent * e );
-      void setCollectionFullPath( const Akonadi::Collection&col );
-
-    protected:
-      Akonadi::Collection mCollection;
-      KLineEdit* edit;
-      QString mFolderId;
-      bool mMustBeReadWrite;
-      bool mShowOutbox;
-      bool mShowImapFolders;
-      bool mNotCreateNewFolder;
-      Kernel *mMailCommon;
-  };
+  protected:
+    Akonadi::Collection mCollection;
+    KLineEdit *edit;
+    bool mMustBeReadWrite;
+    bool mShowOutbox;
+    bool mNotCreateNewFolder;
+};
 
 }
 

@@ -199,7 +199,7 @@ The <guimenu>View</guimenu> menu</title>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Show/Hide Threads</guimenuitem>
+<guimenuitem>Show Threads</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -320,6 +320,7 @@ When this setting is activated, &knode; shows all characters of the complete art
 </para>
 </listitem>
 </varlistentry>
+<!-- not in 4.7
 <varlistentry>
 <term>
 <menuchoice>
@@ -333,6 +334,7 @@ When this setting is activated, &knode; shows all characters of the complete art
 </para>
 </listitem>
 </varlistentry>
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -370,7 +372,7 @@ Activates the configured fixed-width font for the viewer.</action>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Charset</guimenuitem>
+<guimenuitem>Set charset</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -913,8 +915,7 @@ Opens the Composer for forwarding the active article as e-mail.</action>
 </term>
 <listitem>
 <para>
-Set the status of the active article to<quote>
-read</quote>
+Set the status of the active article to <quote>read</quote>
 </para>
 </listitem>
 </varlistentry>
@@ -928,8 +929,7 @@ read</quote>
 </term>
 <listitem>
 <para>
-Set the status of the active article to<quote>
-unread</quote>
+Set the status of the active article to <quote>unread</quote>
 </para>
 </listitem>
 </varlistentry>
@@ -943,8 +943,7 @@ unread</quote>
 </term>
 <listitem>
 <para>
-Set the status of the active thread to<quote>
-read</quote>
+Set the status of the active thread to <quote>read</quote>
 </para>
 </listitem>
 </varlistentry>
@@ -958,8 +957,7 @@ read</quote>
 </term>
 <listitem>
 <para>
-Set the status of the active thread to<quote>
-unread</quote>
+Set the status of the active thread to <quote>unread</quote>
 </para>
 </listitem>
 </varlistentry>
@@ -1019,17 +1017,15 @@ The active article is opened in a new window.</action>
 <para>
 <action>
 Opens the Composer for editing the active article;</action>
-you can only use this in the <guilabel>
-Outbox</guilabel> 
-and <guilabel>
-Drafts</guilabel> 
+you can only use this in the <guilabel>Outbox</guilabel> 
+and <guilabel>Drafts</guilabel> 
 folders.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>Delete</keycap></shortcut>
+<shortcut><keycap>Del</keycap></shortcut>
 <guimenu>Article</guimenu>
 <guimenuitem>Delete Article</guimenuitem>
 </menuchoice>
@@ -1038,10 +1034,8 @@ folders.</para>
 <para>
 <action>
 Deletes the active article.</action>
-You can only use this in the <guilabel>
-Outbox</guilabel> 
-and <guilabel>
-Drafts</guilabel> 
+You can only use this in the <guilabel>Outbox</guilabel> 
+and <guilabel>Drafts</guilabel> 
  folders.</para>
 </listitem>
 </varlistentry>
@@ -1056,10 +1050,8 @@ Drafts</guilabel>
 <para>
 <action>
 Sends the active article.</action>
-You can only use this in the <guilabel>
-Outbox</guilabel> 
-and <guilabel>
-Drafts</guilabel> 
+You can only use this in the <guilabel>Outbox</guilabel> 
+and <guilabel>Drafts</guilabel> 
 folders.</para>
 </listitem>
 </varlistentry>
@@ -1173,7 +1165,7 @@ The <guimenu>Settings</guimenu> menu</title>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show/Hide Toolbar</guimenuitem>
+<guimenuitem>Show Toolbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1187,7 +1179,7 @@ This option toggles whether the toolbar is shown or not.</action>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show/Hide Statusbar</guimenuitem>
+<guimenuitem>Show Statusbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1197,7 +1189,7 @@ This option toggles whether the statusbar is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
-
+<!-- not in 4.7
 <varlistentry>
 <term>
 <menuchoice>
@@ -1246,7 +1238,7 @@ This option toggles whether the article is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
-
+-->
 
 <varlistentry>
 <term>
@@ -1304,7 +1296,7 @@ The <guimenu>Help</guimenu> menu</title>
 </sect1>
 
 <sect1 id="knode-editorwindow">
-<title>The composer menus.</title>
+<title>The Composer Menus</title>
 
 <sect2> 
 <title>
@@ -1335,8 +1327,7 @@ Sends the current article immediately.</action>
 </term> 
 <listitem> 
 <para> 
-Stores the current article in the <guilabel> 
-Outbox</guilabel> 
+Stores the current article in the <guilabel>Outbox</guilabel> 
 to be sent later.</para> 
 </listitem> 
 </varlistentry> 
@@ -1486,6 +1477,7 @@ line.
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Select All</guimenuitem>
 </menuchoice>
@@ -1512,6 +1504,7 @@ Opens the Find dialog.</action>
 </para>
 </listitem>
 </varlistentry>
+<!-- F3 Find next -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1608,7 +1601,7 @@ The <guimenu>Options</guimenu> menu</title>
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>
-<guimenuitem>Send News-Article</guimenuitem>
+<guimenuitem>Send News Article</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1660,6 +1653,9 @@ Toggles the word wrapping in the editor on or off.</action>
 </para>
 </listitem>
 </varlistentry>
+<!--
+Automatic Spellchecking missing 
+-->
 </variablelist>
 
 </sect2>
@@ -1784,7 +1780,6 @@ Start the external editor (if one is configured) with the current contents of th
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo></shortcut>
 <guimenu>Tools</guimenu>
 <guimenuitem>Spelling...</guimenuitem>
 </menuchoice>

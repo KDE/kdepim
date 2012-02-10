@@ -1,9 +1,5 @@
 /*
-  Requires the Qt and KDE widget libraries, available at no cost at
-  http://www.trolltech.com and http://www.kde.org respectively
-
-  Copyright (c) 2002-2004 Klarälvdalens Datakonsult AB
-        <info@klaralvdalens-datakonsult.se>
+  Copyright (c) 2002-2004 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -49,7 +45,6 @@ Groupware *Groupware::mInstance = 0;
 GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
-
 
 struct Invitation {
   QString type;
@@ -111,9 +106,12 @@ void Groupware::finishHandlingInvitation()
   QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
   NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
 
-  connect( calendar.data(), SIGNAL(addFinished(bool,QString)),SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
-  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString)),SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
-  connect( calendar.data(), SIGNAL(changeFinished(bool,QString)),SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(addFinished(bool,QString)),
+           SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString)),
+           SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(changeFinished(bool,QString)),
+           SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
 
   Invitation *invitation = d->mInvitationByCalendar.value( calendar );
 
@@ -123,8 +121,7 @@ void Groupware::finishHandlingInvitation()
   const QString receiver = invitation->receiver;
   const QString action = invitation->type;
 
-  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( calendar,
-                                                                         iCal );
+  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( calendar, iCal );
   if ( !message ) {
     QString errorMessage;
     if ( mFormat.exception() ) {
@@ -151,10 +148,23 @@ void Groupware::finishHandlingInvitation()
     return;
   }
 
-  KCalCore::Incidence::Ptr existingIncidence = calendar->incidenceFromSchedulingID( incidence->uid() );
+  KCalCore::Incidence::Ptr existingIncidence =
+    calendar->incidenceFromSchedulingID( incidence->uid() );
   if ( existingIncidence ) {
-    kDebug() << "cloning";
     existingIncidence = KCalCore::Incidence::Ptr( existingIncidence->clone() );
+    const bool willCrash = existingIncidence ?
+                             ( calendar->incidence( existingIncidence->uid() ) == 0 ) :
+                             false;
+
+    kDebug() << "cloning. SchedulingId=" << incidence->uid()
+             << "; SchedulingId2="       << ( existingIncidence ?
+                                                existingIncidence->schedulingID() :
+                                                QLatin1String( "invalid" ) )
+             << "; new uid="             << ( existingIncidence ?
+                                                existingIncidence->uid() :
+                                                QLatin1String( "invalid" ) )
+             << "; willCrash="           << willCrash
+             << "; action="              << action;
   }
 
   MailScheduler scheduler( calendar );
@@ -198,7 +208,7 @@ void Groupware::finishHandlingInvitation()
       SendICalMessageDialogAnswers dialogAnswers;
       sendICalMessage( 0, KCalCore::iTIPRequest, incidence,
                        IncidenceChanger::INCIDENCEEDITED, false,
-                       dialogAnswers /*byref*/, scheduler );
+                       dialogAnswers/*byref*/, scheduler );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -211,9 +221,18 @@ void Groupware::finishHandlingInvitation()
     mDelegate->requestIncidenceEditor( item );
   }
 
-
   if ( existingIncidence ) {
     KCalCore::Incidence::Ptr changedIncidence = calendar->incidence( existingIncidence->uid() );
+
+    if ( !changedIncidence ) {
+      const QString errorMsg = "Could not find incidence in calendar"; // no i18n, shouldn't happen
+      kError() << "Couldn't find incidence in calendar. Uid is " <<  existingIncidence->uid();
+      Q_ASSERT( false );
+      emit handleInvitationFinished( /*success=*/false, errorMsg );
+      return;
+    }
+
+    Q_ASSERT( changedIncidence );
     if ( !changedIncidence->dirtyFields().isEmpty() ) {
       calendar->changeIncidence( changedIncidence );
     }
@@ -405,8 +424,9 @@ bool Groupware::sendICalMessage( QWidget *parent,
         if ( reuseDialogAnswers && dialogAnswers.notOrganizerAnswer ) {
           rc = dialogAnswers.notOrganizerAnswer;
         } else {
-          const QString txt = i18n( "You are not the organizer of this event. Editing it will "
-                                    "bring your calendar out of sync with the organizer's calendar. "
+          const QString txt = i18n( "You are not the organizer of this event. "
+                                    "Editing it will bring your calendar out of "
+                                    "sync with the organizer's calendar. "
                                     "Do you really want to edit it?" );
           rc = KMessageBox::warningYesNo( parent, txt );
           dialogAnswers.notOrganizerAnswer = rc;

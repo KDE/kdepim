@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include <calendarsupport/utils.h>
@@ -76,18 +76,23 @@ class HistoryTest : public QObject
     {
       mWaitingForHistorySignals = false;
       mExpectedResult = History::ResultCodeSuccess;
+
       //Control::start(); //TODO: uncomment when using testrunner
-      qRegisterMetaType<CalendarSupport::History::ResultCode>("CalendarSupport::History::ResultCode");
+      qRegisterMetaType<CalendarSupport::History::ResultCode>(
+        "CalendarSupport::History::ResultCode" );
+
       CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
                                                         CollectionFetchJob::Recursive,
                                                         this );
       // Get list of collections
-      job->fetchScope().setContentMimeTypes( QStringList() << "application/x-vnd.akonadi.calendar.event" );
+      job->fetchScope().setContentMimeTypes(
+        QStringList() << "application/x-vnd.akonadi.calendar.event" );
+
       AKVERIFYEXEC( job );
 
       // Find our collection
       Collection::List collections = job->collections();
-      foreach( Collection collection, collections ) {
+      foreach ( const Collection &collection, collections ) {
         if ( collection.name() == QLatin1String( "akonadi_ical_resource_0" ) ) {
           mCollection = collection;
           break;
@@ -330,7 +335,7 @@ class HistoryTest : public QObject
     waitForETMorSignals();
 
     kDebug() << "Editing something that doesn't exist";
-    mHistory->recordModification( item2, item2  );
+    mHistory->recordModification( item2, item2 );
     mExpectedResult = History::ResultCodeError;
     mWaitingForHistorySignals = true;
     QVERIFY( mHistory->undo() );
@@ -346,14 +351,14 @@ class HistoryTest : public QObject
     uidList << "one" << "two" << "three" << "four" << "five";
     mHistory->clear();
 
-    foreach( const QString &uid, uidList ) {
-      mPendingInsertsInETM.append( uid  );
+    foreach ( const QString &uid, uidList ) {
+      mPendingInsertsInETM.append( uid );
       createIncidence( uid );
     }
 
     waitForETMorSignals();
 
-    foreach( const QString &uid, uidList ) {
+    foreach ( const QString &uid, uidList ) {
       const Item item = mCalendar->itemForIncidenceUid( uid );
       QVERIFY( item.isValid() );
       mHistory->recordCreation( item );
@@ -381,10 +386,11 @@ class HistoryTest : public QObject
     {
       Item::List list = itemsFromModel( mCalendarModel, index, start, end );
 
-      foreach( const Item &item, list ) {
+      foreach ( const Item &item, list ) {
         Incidence::Ptr incidence = CalendarSupport::incidence( item );
-        if ( incidence && mPendingInsertsInETM.contains( incidence->uid() ) )
+        if ( incidence && mPendingInsertsInETM.contains( incidence->uid() ) ) {
           mPendingInsertsInETM.removeAll( incidence->uid() );
+        }
       }
     }
 
@@ -398,8 +404,9 @@ class HistoryTest : public QObject
         const Akonadi::Item item = itemFromIndex( i );
         if ( item.isValid() ) {
           Incidence::Ptr incidence = CalendarSupport::incidence( item );
-          if ( incidence && mPendingUpdatesInETM.contains( incidence->uid() ) )
+          if ( incidence && mPendingUpdatesInETM.contains( incidence->uid() ) ) {
             mPendingUpdatesInETM.removeAll( incidence->uid() );
+          }
         }
         ++row;
         i = i.sibling( row, topLeft.column() );
@@ -409,10 +416,11 @@ class HistoryTest : public QObject
     void rowsAboutToBeRemoved( const QModelIndex &index, int start, int end )
     {
       Item::List list = itemsFromModel( mCalendarModel, index, start, end );
-      foreach( const Item &item, list ) {
+      foreach ( const Item &item, list ) {
         Incidence::Ptr incidence = CalendarSupport::incidence( item );
-        if ( incidence && mPendingDeletesInETM.contains( incidence->uid() ) )
+        if ( incidence && mPendingDeletesInETM.contains( incidence->uid() ) ) {
           mPendingDeletesInETM.removeAll( incidence->uid() );
+        }
       }
     }
 

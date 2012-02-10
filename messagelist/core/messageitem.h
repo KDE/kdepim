@@ -29,6 +29,7 @@
 #include <QColor>
 
 #include <messagelist/messagelist_export.h>
+#include "theme.h"
 
 namespace Nepomuk {
 class Resource;
@@ -52,7 +53,7 @@ public:
   class MESSAGELIST_EXPORT Tag
   {
   public:
-    Tag( const QPixmap &pix, const QString &tagName, const QString &tagId );
+    explicit Tag( const QPixmap &pix, const QString &tagName, const QString &tagId );
     ~Tag();
     QPixmap pixmap() const;
     QString name() const;
@@ -96,7 +97,7 @@ public:
     SignatureStateUnknown
   };
 
-  MessageItem();
+  explicit MessageItem();
   virtual ~MessageItem();
 
 public:
@@ -183,6 +184,8 @@ public:
 
   MessageItem * topmostMessage();
 
+  QString accessibleText( const MessageList::Core::Theme* theme, int columnIndex );
+
   /**
    * Appends the whole subtree originating at this item
    * to the specified list. This item is included!
@@ -195,19 +198,20 @@ public:
   // one of these.
   // Call these setters only once when reading the colors from the config file.
   //
-  static void setNewMessageColor( const QColor &color );
   static void setUnreadMessageColor( const QColor &color );
   static void setImportantMessageColor( const QColor &color );
   static void setToDoMessageColor( const QColor &color );
   static void setGeneralFont( const QFont &font );
-  static void setNewMessageFont( const QFont &font );
   static void setUnreadMessageFont( const QFont &font );
   static void setImportantMessageFont( const QFont &font );
   static void setToDoMessageFont( const QFont &font );
 
 protected:
-  MessageItem( MessageItemPrivate* dd );
+  explicit MessageItem( MessageItemPrivate* dd );
 private:
+
+  QString accessibleTextForField( Theme::ContentItem::Type field );
+
   Q_DECLARE_PRIVATE( MessageItem )
 };
 
@@ -219,7 +223,7 @@ class MESSAGELIST_EXPORT FakeItem : public MessageItem
 {
   public:
 
-    FakeItem();
+    explicit FakeItem();
     ~FakeItem();
 
     /// Reimplemented to return the fake tag list

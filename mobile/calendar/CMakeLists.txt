@@ -35,13 +35,11 @@ kde4_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
 qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
-if (WIN32)
-   set(korganizer_mobile_SRCS ${korganizer_mobile_SRCS} korganizer-mobile.rc)
-endif (WIN32)
-
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
+
+kde4_add_app_icon(korganizer_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
 
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 if (WINCE)
@@ -50,8 +48,9 @@ endif (WINCE)
   
 target_link_libraries(korganizer-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDE4_KDECORE_LIBRARY}
-  ${KDE4_KDEUI_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  ${KDE4_KDECLARATIVE_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   ${KDEPIMLIBS_KHOLIDAYS_LIBS}

@@ -2,6 +2,8 @@
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
+  Copyright (c) 2010 Torgny Nyblom <nyblom@kde.org>
+  Copyright (c) 2011 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -122,7 +124,7 @@
 #include "util.h"
 #include "vcardviewer.h"
 #include "mailwebview.h"
-#include "findbar/findbar.h"
+#include "findbar/findbarmailwebview.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -147,6 +149,8 @@ using namespace MessageViewer;
 using namespace MessageCore;
 
 const int ViewerPrivate::delay = 150;
+const qreal ViewerPrivate::zoomBy = 20;
+
 
 ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
@@ -176,6 +180,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
+    mZoomTextOnlyAction( 0 ),
+    mZoomInAction( 0 ),
+    mZoomOutAction( 0 ),
+    mZoomResetAction( 0 ), 
     mToggleMimePartTreeAction( 0 ),
     mCanStartDrag( false ),
     mHtmlWriter( 0 ),
@@ -190,7 +198,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     q( aParent ),
     mShowFullToAddressList( true ),
     mShowFullCcAddressList( true ),
-    mPreviouslyViewedItem( -1 )
+    mPreviouslyViewedItem( -1 ),
+    mZoomFactor( 100 )
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -198,7 +207,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
-
+  mZoomTextOnly = false;
+  
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
@@ -240,6 +250,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
 
 ViewerPrivate::~ViewerPrivate()
 {
+  saveMimePartTreeConfig();
   GlobalSettings::self()->writeConfig();
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
@@ -248,12 +259,30 @@ ViewerPrivate::~ViewerPrivate()
   delete mNodeHelper;
 }
 
+void ViewerPrivate::saveMimePartTreeConfig()
+{
+#ifndef QT_NO_TREEVIEW
+  KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
+  grp.writeEntry( "State", mMimePartTree->header()->saveState() );
+#endif
+}
+
+void ViewerPrivate::restoreMimePartTreeConfig()
+{
+#ifndef QT_NO_TREEVIEW
+  KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
+  mMimePartTree->header()->restoreState( grp.readEntry( "State", QByteArray() ) );
+#endif
+}
+
+
 //-----------------------------------------------------------------------------
 KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
 {
   KMime::Content *node = 0;
-  if ( url.isEmpty() )
+  if ( url.isEmpty() ) {
     return mMessage.get();
+  }
   if ( !url.isLocalFile() ) {
     QString path = url.path(KUrl::RemoveTrailingSlash);
     if ( path.contains(':') ) {
@@ -316,7 +345,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
-    // consider the filename if mimetype can not be found by content-type
+    // consider the filename if mimetype cannot be found by content-type
     mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
 
   }
@@ -542,7 +571,7 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
   }
 
   if ( mimetype.isNull() ) {
-    // consider the filename if mimetype can not be found by content-type
+    // consider the filename if mimetype cannot be found by content-type
     mimetype = KMimeType::findByPath( fileName, 0, true /* no disk access */ );
   }
   if ( ( mimetype->name() == "application/octet-stream" )
@@ -959,12 +988,10 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       mLastClickPosition = me->pos();
     }
   }
-
-  if ( e->type() ==  QEvent::MouseButtonRelease ) {
+  else if ( e->type() ==  QEvent::MouseButtonRelease ) {
     mCanStartDrag = false;
   }
-
-  if ( e->type() == QEvent::MouseMove ) {
+  else if ( e->type() == QEvent::MouseMove ) {
 
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
 
@@ -986,6 +1013,20 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       return true;
     }
   }
+  //Don't tell to Webkit to get zoom > 300 and < 100
+  else if ( e->type() == QEvent::Wheel ) {
+    QWheelEvent* me = static_cast<QWheelEvent*>( e );
+    if ( QApplication::keyboardModifiers() & Qt::ControlModifier ) {
+      const int numDegrees = me->delta() / 8;
+      const int numSteps = numDegrees / 15;
+      const qreal factor = mZoomFactor + numSteps * 10;
+      if ( factor >= 100 && factor <= 300 ) {
+        mZoomFactor = factor;
+        setZoomFactor( factor/100.0 );
+      }
+      return true;
+    }
+  }
 
   // standard event processing
   return false;
@@ -1003,6 +1044,9 @@ void ViewerPrivate::readConfig()
   mHtmlMail = GlobalSettings::self()->htmlMail();
   mHtmlLoadExternal = GlobalSettings::self()->htmlLoadExternal();
 
+  mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
+  setZoomTextOnly( mZoomTextOnly );
+  
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1029,6 +1073,11 @@ void ViewerPrivate::readConfig()
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
 
+#ifndef KDEPIM_NO_WEBKIT
+  mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
+  mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
+#endif
+  
   if ( mMessage )
     update();
   mColorBar->update();
@@ -1044,6 +1093,7 @@ void ViewerPrivate::writeConfig( bool sync )
     GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
   if ( attachmentStrategy() )
     GlobalSettings::self()->setAttachmentStrategy( attachmentStrategy()->name() );
+  GlobalSettings::self()->setZoomTextOnly( mZoomTextOnly );
 
   saveSplitterSizes();
   if ( sync )
@@ -1052,7 +1102,11 @@ void ViewerPrivate::writeConfig( bool sync )
 
 
 void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                               const HeaderStrategy * strategy ) {
+                                               const HeaderStrategy * strategy , bool writeInConfigFile ) {
+
+  if ( mHeaderStyle == style && mHeaderStrategy == strategy )
+    return;
+  
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   if ( mHeaderOnlyAttachmentsAction ) {
@@ -1066,10 +1120,16 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
     }
   }
   update( Viewer::Force );
+  
+  if( !mExternalWindow && writeInConfigFile)
+    writeConfig();
+
 }
 
 
 void ViewerPrivate::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
+  if ( mAttachmentStrategy == strategy )
+    return;
   mAttachmentStrategy = strategy ? strategy : AttachmentStrategy::smart();
   update( Viewer::Force );
 }
@@ -1108,13 +1168,17 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
 
 void ViewerPrivate::printMessage( const Akonadi::Item &message )
 {
+// wince does not support printing
+#ifndef Q_OS_WINCE
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   setMessageItem( message, Viewer::Force );
+#endif
 }
 
 void ViewerPrivate::resetStateForNewMessage()
 {
+  mClickedUrl.clear();
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
@@ -1123,6 +1187,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mSavedRelativePosition = 0;
   setShowSignatureDetails( false );
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
+  mFindBar->closeBar();
   if ( mPrinting )
     mLevelQuote = -1;
 }
@@ -1166,6 +1231,7 @@ void ViewerPrivate::setMessage( const KMime::Message::Ptr& aMsg, Viewer::UpdateM
   resetStateForNewMessage();
 
   Akonadi::Item item;
+  item.setMimeType( KMime::Message::mimeType() );
   item.setPayload( aMsg );
   mMessageItem = item;
 
@@ -1206,15 +1272,20 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
 void ViewerPrivate::showHideMimeTree( )
 {
 #ifndef QT_NO_TREEVIEW
+  bool showMimeTree = false;
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
+  {
     mMimePartTree->show();
+    showMimeTree = true;
+  }
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
     saveSplitterSizes();
     mMimePartTree->hide();
+    showMimeTree = false;
   }
-  if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != mMimePartTree->isVisible() ) )
-    mToggleMimePartTreeAction->setChecked( mMimePartTree->isVisible() );
+  if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != showMimeTree ) )
+    mToggleMimePartTreeAction->setChecked( showMimeTree );
 #endif
 }
 
@@ -1283,6 +1354,8 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
+  connect(mMimePartModel,SIGNAL(modelReset()),mMimePartTree,SLOT(expandAll()));
+  restoreMimePartTreeConfig();
 #endif
 
   mBox = new KHBox( mSplitter );
@@ -1301,7 +1374,7 @@ void ViewerPrivate::createWidgets() {
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
 
-  mFindBar = new FindBar( mViewer, readerBox );
+  mFindBar = new FindBarMailWebView( mViewer, readerBox );
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif
@@ -1466,6 +1539,27 @@ void ViewerPrivate::createActions()
   connect( mToggleFixFontAction, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()) );
   mToggleFixFontAction->setShortcut( QKeySequence( Qt::Key_X ) );
 
+
+  // Zoom actions
+  mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
+  ac->addAction( "toggle_zoomtextonly", mZoomTextOnlyAction );
+  connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
+  mZoomInAction = new KAction( KIcon("zoom-in"), i18n("&Zoom In"), this);
+  ac->addAction("zoom_in", mZoomInAction);
+  connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
+  mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
+
+  mZoomOutAction = new KAction( KIcon("zoom-out"), i18n("Zoom &Out"), this);
+  ac->addAction("zoom_out", mZoomOutAction);
+  connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
+  mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
+
+  mZoomResetAction = new KAction( i18n("Reset"), this);
+  ac->addAction("zoom_reset", mZoomResetAction);
+  connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
+  mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
+
+  
   // Show message structure viewer
   mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
   ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
@@ -1524,6 +1618,7 @@ void ViewerPrivate::createActions()
 
 void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
 {
+#ifndef QT_NO_TREEVIEW
   if ( !content )
     return;
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
@@ -1568,7 +1663,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( !content->isTopLevel() )
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
-#ifndef QT_NO_TREEVIEW
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
 #endif
 
@@ -1753,13 +1847,14 @@ void ViewerPrivate::update( MessageViewer::Viewer::UpdateMode updateMode )
 void ViewerPrivate::slotUrlOpen( const QUrl& url )
 {
   KUrl aUrl(url);
-  mClickedUrl = aUrl;
+  if( !url.isEmpty() )
+    mClickedUrl = aUrl;
 
   // First, let's see if the URL handler manager can handle the URL. If not, try KRun for some
   // known URLs, otherwise fallback to emitting a signal.
   // That signal is caught by KMail, and in case of mailto URLs, a composer is shown.
 
-  if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
+  if ( URLHandlerManager::instance()->handleClick( mClickedUrl, this ) )
     return;
 
   emit urlClicked( mMessageItem, mClickedUrl );
@@ -1775,10 +1870,11 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
   // to get the URL before WebKit managed to mangle it.
   KUrl url( mViewer->linkOrImageUrlAt( QCursor::pos() ) );
-  if ( url.protocol() == QLatin1String( "kmail" ) ||
-       url.protocol() == QLatin1String( "x-kmail" ) ||
-       url.protocol() == QLatin1String( "attachment" ) ||
-       ( url.protocol().isEmpty() && url.path().isEmpty() ) ) {
+  const QString protocol = url.protocol();
+  if ( protocol == QLatin1String( "kmail" ) ||
+       protocol == QLatin1String( "x-kmail" ) ||
+       protocol == QLatin1String( "attachment" ) ||
+       ( protocol.isEmpty() && url.path().isEmpty() ) ) {
     mViewer->setAcceptDrops( false );
   } else {
     mViewer->setAcceptDrops( true );
@@ -1984,53 +2080,43 @@ void ViewerPrivate::slotCycleHeaderStyles() {
 void ViewerPrivate::slotBriefHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
-                             HeaderStrategy::brief() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::brief(),true );
 }
 
 
 void ViewerPrivate::slotFancyHeaders()
 {
+
   setHeaderStyleAndStrategy( HeaderStyle::fancy(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(), true );
 }
 
 
 void ViewerPrivate::slotEnterpriseHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(),true );
 }
 
 
 void ViewerPrivate::slotStandardHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::standard());
-  writeConfig();
+                             HeaderStrategy::standard(), true);
 }
 
 
 void ViewerPrivate::slotLongHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::rich(),true );
 }
 
 
 
 void ViewerPrivate::slotAllHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::all() );
-  if( !mExternalWindow )
-    writeConfig();
+                             HeaderStrategy::all(), true );
 }
 
 
@@ -2211,24 +2297,13 @@ void ViewerPrivate::slotAttachmentOpen()
 void ViewerPrivate::slotAttachmentSaveAs()
 {
   const KMime::Content::List contents = selectedContents();
-  if ( contents.isEmpty() ) {
-    KMessageBox::information( mMainWindow, i18n("Found no attachments to save.") );
-    return;
-  }
-
-  Util::saveContents( mMainWindow, contents );
+  Util::saveAttachments( contents, mMainWindow );
 }
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
   const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
-
-  if ( contents.isEmpty() ) {
-    KMessageBox::information( mMainWindow, i18n( "Found no attachments to save." ) );
-    return;
-  }
-
-  Util::saveContents( mMainWindow, contents );
+  Util::saveAttachments( contents, mMainWindow );
 }
 
 void ViewerPrivate::slotAttachmentView()
@@ -2420,7 +2495,7 @@ void ViewerPrivate::slotUrlCopy()
   QClipboard* clip = QApplication::clipboard();
   if ( mClickedUrl.protocol() == QLatin1String( "mailto" ) ) {
     // put the url into the mouse selection and the clipboard
-    QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
+    const QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
     clip->setText( address, QClipboard::Clipboard );
     clip->setText( address, QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));
@@ -2435,7 +2510,7 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessageItem.isValid() )
+  if( !mMessageItem.hasPayload<KMime::Message::Ptr>() )
     return;
   Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
 }
@@ -2722,7 +2797,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString &
 
 void ViewerPrivate::toggleFullAddressList( const QString &field )
 {
-  const bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
+  const bool doShow = ( field == QLatin1String( "To" ) && showFullToAddressList() ) || ( field == QLatin1String( "Cc" ) && showFullCcAddressList() );
   // First inject the correct icon
   if ( mViewer->replaceInnerHtml( "iconFull" + field + "AddressList",
                                   bind( &ViewerPrivate::recipientsQuickListLinkHtml, this, doShow, field ) ) )
@@ -2740,7 +2815,7 @@ void ViewerPrivate::itemFetchResult( KJob* job )
   } else {
     Akonadi::ItemFetchJob* fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
     Q_ASSERT( fetch );
-    if ( fetch->items().size() < 1 ) {
+    if ( fetch->items().isEmpty() ) {
       displaySplashPage( i18n( "Message not found." ) );
     } else {
       setMessageItem( fetch->items().first() );
@@ -2791,5 +2866,63 @@ void ViewerPrivate::slotMessageRendered()
   foreach ( AbstractMessageLoadedHandler *handler, mMessageLoadedHandlers )
     handler->setItem( mMessageItem );
 }
+
+void ViewerPrivate::setZoomFactor( qreal zoomFactor )
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  mViewer->setZoomFactor ( zoomFactor );
+#endif  
+}
+
+
+void ViewerPrivate::slotZoomIn()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  if( mZoomFactor >= 300 )
+    return;
+  mZoomFactor += zoomBy;
+  if( mZoomFactor > 300 )
+    mZoomFactor = 300;
+  mViewer->setZoomFactor( mZoomFactor/100.0 );
+#endif  
+}
+
+void ViewerPrivate::slotZoomOut()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  if ( mZoomFactor <= 100 )
+    return;
+  mZoomFactor -= zoomBy;
+  if( mZoomFactor < 100 )
+    mZoomFactor = 100;
+  mViewer->setZoomFactor( mZoomFactor/100.0 );
+#endif
+}
+
+void ViewerPrivate::setZoomTextOnly( bool textOnly )
+{
+  mZoomTextOnly = textOnly;
+  if ( mZoomTextOnlyAction )
+  {
+    mZoomTextOnlyAction->setChecked( mZoomTextOnly );
+  }
+#ifndef KDEPIM_NO_WEBKIT    
+  mViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
+#endif  
+}
+
+void ViewerPrivate::slotZoomTextOnly()
+{
+  setZoomTextOnly( !mZoomTextOnly );
+}
+
+void ViewerPrivate::slotZoomReset()
+{
+#ifndef KDEPIM_NO_WEBKIT  
+  mZoomFactor = 100;
+  mViewer->setZoomFactor( 1.0 );
+#endif
+}
+
 
 #include "viewer_p.moc"

@@ -86,6 +86,49 @@ class AddresseeLineEditStatic
       delete ldapSearch;
     }
 
+    void slotEditCompletionOrder()
+    {
+        CompletionOrderEditor editor( ldapSearch, 0 );
+        if( editor.exec() ) {
+            updateLDAPWeights();
+        }
+    }
+
+    void updateLDAPWeights()
+    {
+      /* Add completion sources for all ldap server, 0 to n. Added first so
+       * that they map to the LdapClient::clientNumber() */
+      ldapSearch->updateCompletionWeights();
+      int clientIndex = 0;
+      foreach ( const KLDAP::LdapClient *client, ldapSearch->clients() ) {
+        const int sourceIndex =
+          addCompletionSource( QLatin1String( "LDAP server: " ) + client->server().host(),
+                                  client->completionWeight() );
+
+        ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
+
+        clientIndex++;
+      }
+    }
+
+    int addCompletionSource( const QString &source, int weight )
+    {
+      QMap<QString,int>::iterator it = completionSourceWeights.find( source );
+      if ( it == completionSourceWeights.end() ) {
+        completionSourceWeights.insert( source, weight );
+      } else {
+        completionSourceWeights[source] = weight;
+      }
+
+      const int sourceIndex = completionSources.indexOf( source );
+      if ( sourceIndex == -1 ) {
+        completionSources.append( source );
+        return completionSources.size() - 1;
+      } else {
+        return sourceIndex;
+      }
+    }
+
     KMailCompletion *completion;
     KPIM::CompletionItemsMap completionItemMap;
     QStringList completionSources;
@@ -165,7 +208,6 @@ class AddresseeLineEdit::Private
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
-    void updateLDAPWeights();
     void setCompletedItems( const QStringList &items, bool autoSuggest );
     void addCompletionItem( const QString &string, int weight, int source,
                             const QStringList *keyWords = 0 );
@@ -212,7 +254,7 @@ void AddresseeLineEdit::Private::init()
       s_static->ldapSearch = new KLDAP::LdapClientSearch;
     }
 
-    updateLDAPWeights();
+    s_static->updateLDAPWeights();
 
     if ( !m_completionInitialized ) {
       q->setCompletionObject( s_static->completion, false );
@@ -261,23 +303,6 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
   s_static->ldapLineEdit = 0;
 }
 
-void AddresseeLineEdit::Private::updateLDAPWeights()
-{
-  /* Add completion sources for all ldap server, 0 to n. Added first so
-   * that they map to the LdapClient::clientNumber() */
-  s_static->ldapSearch->updateCompletionWeights();
-  int clientIndex = 0;
-  foreach ( const KLDAP::LdapClient *client, s_static->ldapSearch->clients() ) {
-    const int sourceIndex =
-      q->addCompletionSource( QLatin1String( "LDAP server: " ) + client->server().host(),
-                              client->completionWeight() );
-
-    s_static->ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
-
-    clientIndex++;
-  }
-}
-
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
 {
   KCompletionBox *completionBox = q->completionBox();
@@ -285,8 +310,15 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
   if ( !items.isEmpty() &&
        !( items.count() == 1 && m_searchString == items.first() ) ) {
 
-    completionBox->setItems( items );
-
+    completionBox->clear();
+    const int numberOfItems( items.count() );
+    for ( int i = 0; i< numberOfItems; ++i )
+    {
+      QListWidgetItem *item =new QListWidgetItem(items.at( i ), completionBox);
+      if ( !items.at( i ).startsWith( s_completionItemIndentString ) )
+        item->setFlags( item->flags()&~Qt::ItemIsSelectable );
+      completionBox->addItem( item );
+    }
     if ( !completionBox->isVisible() ) {
       if ( !m_searchString.isEmpty() ) {
         completionBox->setCancelledText( m_searchString );
@@ -403,7 +435,8 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
 
     // Sort the sections
     QList<SourceWithWeight> sourcesAndWeights;
-    for ( int i = 0; i < s_static->completionSources.size(); i++ ) {
+    const int numberOfCompletionSources(s_static->completionSources.size());
+    for ( int i = 0; i < numberOfCompletionSources; ++i ) {
       SourceWithWeight sww;
       sww.sourceName = s_static->completionSources[i];
       sww.weight = s_static->completionSourceWeights[sww.sourceName];
@@ -413,7 +446,8 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
     qSort( sourcesAndWeights.begin(), sourcesAndWeights.end() );
 
     // Add the sections and their items to the final sortedItems result list
-    for ( int i = 0; i < sourcesAndWeights.size(); i++ ) {
+    const int numberOfSources(sourcesAndWeights.size());
+    for ( int i = 0; i < numberOfSources; ++i ) {
       const QStringList sectionItems = sections[sourcesAndWeights[i].index];
       if ( !sectionItems.isEmpty() ) {
         sortedItems.append( sourcesAndWeights[i].sourceName );
@@ -437,11 +471,12 @@ void AddresseeLineEdit::Private::updateSearchString()
   bool inQuote = false;
   uint searchStringLength = m_searchString.length();
   for ( uint i = 0; i < searchStringLength; ++i ) {
-    if ( m_searchString[ i ] == QLatin1Char( '"' ) ) {
+      const QChar searchChar = m_searchString[ i ];
+    if ( searchChar == QLatin1Char( '"' ) ) {
       inQuote = !inQuote;
     }
 
-    if ( m_searchString[ i ] == '\\' &&
+    if ( searchChar == '\\' &&
          ( i + 1 ) < searchStringLength && m_searchString[ i + 1 ] == QLatin1Char( '"' ) ) {
       ++i;
     }
@@ -451,8 +486,8 @@ void AddresseeLineEdit::Private::updateSearchString()
     }
 
     if ( i < searchStringLength &&
-         ( m_searchString[ i ] == ',' ||
-           ( m_useSemicolonAsSeparator && m_searchString[ i ] == ';' ) ) ) {
+         ( searchChar == ',' ||
+           ( m_useSemicolonAsSeparator && searchChar == ';' ) ) ) {
       n = i;
     }
   }
@@ -695,7 +730,7 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
     contact.setEmails( result.email );
 
     if ( !s_static->ldapClientToCompletionSourceMap.contains( result.clientNumber ) ) {
-      updateLDAPWeights(); // we got results from a new source, so update the completion sources
+      s_static->updateLDAPWeights(); // we got results from a new source, so update the completion sources
     }
 
     q->addContact( contact, result.completionWeight,
@@ -719,12 +754,10 @@ void AddresseeLineEdit::Private::slotEditCompletionOrder()
 {
   init(); // for s_static->ldapSearch
 #ifndef Q_OS_WINCE
-  CompletionOrderEditor editor( s_static->ldapSearch, q );
-  editor.exec();
-#endif
-  if ( m_useCompletion ) {
-    updateLDAPWeights();
+  if(m_useCompletion){
+      s_static->slotEditCompletionOrder();
   }
+#endif
 }
 
 void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
@@ -933,7 +966,8 @@ void AddresseeLineEdit::insert( const QString &t )
 
   // remove newlines in the to-be-pasted string
   QStringList lines = newText.split( QRegExp( QLatin1String( "\r?\n" ) ), QString::SkipEmptyParts );
-  for ( QStringList::iterator it = lines.begin(); it != lines.end(); ++it ) {
+  QStringList::iterator end( lines.end() );
+  for ( QStringList::iterator it = lines.begin(); it != end; ++it ) {
     // remove trailing commas and whitespace
     (*it).remove( QRegExp( QLatin1String( ",?\\s*$" ) ) );
   }
@@ -1054,9 +1088,9 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
       }
     } else {
       // Let's see if this drop contains a comma separated list of emails
-      QString dropData = QString::fromUtf8( event->encodedData( "text/plain" ) );
-      QStringList addrs = KPIMUtils::splitAddressList( dropData );
-      if ( addrs.count() > 0 ) {
+      const QString dropData = QString::fromUtf8( event->encodedData( "text/plain" ) );
+      const QStringList addrs = KPIMUtils::splitAddressList( dropData );
+      if ( !addrs.isEmpty() ) {
         setText( KPIMUtils::normalizeAddressesAndDecodeIdn( dropData ) );
         setModified( true );
         return;
@@ -1106,7 +1140,8 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
   QStringList::ConstIterator it;
   const int prefEmailWeight = 1;     //increment weight by prefEmailWeight
   int isPrefEmail = prefEmailWeight; //first in list is preferredEmail
-  for ( it = emails.begin(); it != emails.end(); ++it ) {
+  QStringList::ConstIterator end( emails.constEnd() );
+  for ( it = emails.constBegin(); it != end; ++it ) {
     //TODO: highlight preferredEmail
     const QString email( (*it) );
     const QString givenName = addr.givenName();
@@ -1218,20 +1253,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
 
 int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int weight )
 {
-  QMap<QString,int>::iterator it = s_static->completionSourceWeights.find( source );
-  if ( it == s_static->completionSourceWeights.end() ) {
-    s_static->completionSourceWeights.insert( source, weight );
-  } else {
-    s_static->completionSourceWeights[source] = weight;
-  }
-
-  const int sourceIndex = s_static->completionSources.indexOf( source );
-  if ( sourceIndex == -1 ) {
-    s_static->completionSources.append( source );
-    return s_static->completionSources.size() - 1;
-  } else {
-    return sourceIndex;
-  }
+    return s_static->addCompletionSource(source,weight);
 }
 
 bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )

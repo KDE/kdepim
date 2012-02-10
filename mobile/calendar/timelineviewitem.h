@@ -79,7 +79,7 @@ class TimelineViewItem : public DeclarativeAkonadiItem
 
     /** Show the following date range of equal length right after the current one. */
     void gotoNext();
-    /** Show the preceeding date range. */
+    /** Show the preceding date range. */
     void gotoPrevious();
 
   signals:

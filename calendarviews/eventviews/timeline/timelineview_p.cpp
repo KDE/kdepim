@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarViews.
-
   Copyright (c) 2007 Till Adam <adam@kde.org>
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
@@ -24,9 +22,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "timelineview.h"
-#include "timelineitem.h"
 #include "timelineview_p.h"
+#include "timelineitem.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 
@@ -61,7 +58,9 @@ void TimelineView::Private::splitterMoved()
 
 void TimelineView::Private::itemSelected( const QModelIndex &index )
 {
-  TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>( mGantt->model() )->item( index.row(), index.column() ) );
+  TimelineSubItem *tlitem =
+    dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>(
+                                       mGantt->model() )->item( index.row(), index.column() ) );
   if ( tlitem ) {
     emit q->incidenceSelected( tlitem->incidence(), tlitem->originalStart().date() );
   }
@@ -69,23 +68,28 @@ void TimelineView::Private::itemSelected( const QModelIndex &index )
 
 void TimelineView::Private::itemDoubleClicked( const QModelIndex &index )
 {
-  TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>( mGantt->model() )->item( index.row(), index.column() ) );
+  TimelineSubItem *tlitem =
+    dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>(
+                                       mGantt->model() )->item( index.row(), index.column() ) );
   if ( tlitem ) {
     emit q->editIncidenceSignal( tlitem->incidence() );
   }
 }
 
-void TimelineView::Private::contextMenuRequested(const QPoint& point)
+void TimelineView::Private::contextMenuRequested( const QPoint &point )
 {
   QPersistentModelIndex index = mGantt->indexAt( point );
   // mHintDate = QDateTime( mGantt->getDateTimeForCoordX( QCursor::pos().x(), true ) );
-  TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>( mGantt->model() )->item( index.row(), index.column() ) );
+  TimelineSubItem *tlitem =
+    dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>(
+                                       mGantt->model() )->item( index.row(), index.column() ) );
   if ( !tlitem ) {
     emit q->showNewEventPopupSignal();
     mSelectedItemList = Akonadi::Item::List();
   } else {
-    emit q->showIncidencePopupSignal( tlitem->incidence(),
-                                      CalendarSupport::incidence( tlitem->incidence() )->dtStart().date() );
+    emit q->showIncidencePopupSignal(
+      tlitem->incidence(),
+      CalendarSupport::incidence( tlitem->incidence() )->dtStart().date() );
 
     mSelectedItemList << tlitem->incidence();
   }
@@ -156,13 +160,14 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &incidence )
                                                         timeSpec,
                                                         CalendarSupport::EventSortStartDate,
                                                         CalendarSupport::SortDirectionAscending );
-    if ( events.contains( incidence ) )
+    if ( events.contains( incidence ) ) {
       //PENDING(AKONADI_PORT) check if correct. also check the original if,
       //was inside the for loop (unnecessarily)
       for ( Akonadi::Item::List::ConstIterator it = events.constBegin();
             it != events.constEnd(); ++it ) {
         insertIncidence( *it, day );
       }
+    }
   }
 }
 
@@ -189,7 +194,7 @@ void TimelineView::Private::removeIncidence( const Akonadi::Item &incidence )
   }
 }
 
-void TimelineView::Private::itemChanged( QStandardItem* item )
+void TimelineView::Private::itemChanged( QStandardItem *item )
 {
   TimelineSubItem *tlit = dynamic_cast<TimelineSubItem *>( item );
   if ( !tlit ) {

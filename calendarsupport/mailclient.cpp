@@ -22,9 +22,9 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "mailclient.h"
+#include <config-enterprise.h>
 
-#include "config-enterprise.h"
+#include "mailclient.h"
 #include "kdepim-version.h"
 
 #include <Akonadi/Collection>
@@ -76,7 +76,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
 
   QStringList toList;
   QStringList ccList;
-  for ( int i=0; i<attendees.count(); ++i ) {
+  const int numberOfAttendees( attendees.count() );
+  for ( int i=0; i<numberOfAttendees; ++i ) {
     KCalCore::Attendee::Ptr a = attendees.at(i);
 
     const QString email = a->email();
@@ -96,7 +97,7 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
     const QString username = KPIMUtils::quoteNameIfNecessary( a->name() );
     // ignore the return value from extractEmailAddressAndName() because
     // it will always be false since tusername does not contain "@domain".
-    KPIMUtils::extractEmailAddressAndName( username, temail, tname );
+    KPIMUtils::extractEmailAddressAndName( username, temail/*byref*/, tname/*byref*/ );
     tname += QLatin1String( " <" ) + email + QLatin1Char( '>' );
 
     // Optional Participants and Non-Participants are copied on the email
@@ -107,17 +108,17 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
       toList << tname;
     }
   }
-  if( toList.count() == 0 && ccList.count() == 0 ) {
+  if( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
     kWarning() << "There are really no attendees to e-mail";
     return false;
   }
   QString to;
-  if ( toList.count() > 0 ) {
+  if ( !toList.isEmpty() ) {
     to = toList.join( QLatin1String( ", " ) );
   }
   QString cc;
-  if ( ccList.count() > 0 ) {
+  if ( !ccList.isEmpty() ) {
     cc = ccList.join( QLatin1String( ", " ) );
   }
 
@@ -129,7 +130,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
     subject = i18n( "Free Busy Object" );
   }
 
-  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body =
+    KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
   return send( identity, from, to, cc, subject, body, false,
                bccMe, attachment, mailTransport );
@@ -173,10 +175,23 @@ bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
   } else {
     subject = i18n( "Free Busy Message" );
   }
-  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body =
+    KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
   return send( identity, from, recipients, QString(), subject, body, false,
                bccMe, attachment, mailTransport );
+}
+
+QStringList extractEmailAndNormalize( const QString& email )
+{
+  const QStringList splittedEmail = KPIMUtils::splitAddressList( email );
+  QStringList normalizedEmail;
+  Q_FOREACH( const QString& email, splittedEmail )
+  {
+    const QString str = KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( email ) );
+    normalizedEmail << str;
+  }
+  return normalizedEmail;
 }
 
 bool MailClient::send( const KPIMIdentities::Identity &identity,
@@ -187,6 +202,11 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
 {
   Q_UNUSED( identity );
   Q_UNUSED( hidden );
+
+  if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
+         0, MailTransport::TransportManager::IfNoTransportExists ) ) {
+    return false;
+  }
 
   // We must have a recipients list for most MUAs. Thus, if the 'to' list
   // is empty simply use the 'from' address as the recipient.
@@ -214,10 +234,10 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   }
 
   if ( !transport ) {
-    // TODO: we need better error handling. Currently korganizer just says "Error sending invitation".
+    // TODO: we need better error handling. Currently korganizer says "Error sending invitation".
     // Using a boolean for errors isn't granular enough.
     kError() << "Error fetching transport; mailTransport"
-               << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
+             << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
     return false;
   }
 
@@ -298,7 +318,8 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
       attachMessage->contentType()->setMimeType( "text/calendar" );
       attachMessage->contentType()->setCharset( "utf-8" );
       attachMessage->contentType()->setName( QLatin1String( "cal.ics" ), "utf-8" );
-      attachMessage->contentType()->setParameter( QLatin1String( "method" ), QLatin1String( "request" ) );
+      attachMessage->contentType()->setParameter( QLatin1String( "method" ),
+                                                  QLatin1String( "request" ) );
       attachMessage->setHeader( attachDisposition );
       attachMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
       attachMessage->setBody( KMime::CRLFtoLF( attachment.toUtf8() ) );
@@ -314,15 +335,26 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->transportAttribute().setTransportId( transportId );
   qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
-  qjob->sentBehaviourAttribute().setMoveToCollection( Akonadi::Collection( -1 ) );
-  qjob->addressAttribute().setFrom( from );
-  qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
-  qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
-  if( bccMe ) {
-    qjob->addressAttribute().setBcc( KPIMUtils::splitAddressList( from ) );
+
+  if ( transport && transport->specifySenderOverwriteAddress() ) {
+    qjob->addressAttribute().setFrom(
+      KPIMUtils::extractEmailAddress(
+        KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
+  } else {
+    qjob->addressAttribute().setFrom(
+      KPIMUtils::extractEmailAddress(
+        KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
+  }
+
+  if( !to.isEmpty() )
+    qjob->addressAttribute().setTo( extractEmailAndNormalize( to ) );
+  if( !cc.isEmpty() )
+    qjob->addressAttribute().setCc( extractEmailAndNormalize( cc ) );
+  if ( bccMe ) {
+    qjob->addressAttribute().setBcc( extractEmailAndNormalize( from ) );
   }
   qjob->setMessage( message );
-  if( ! qjob->exec() ) {
+  if ( !qjob->exec() ) {
     kWarning() << "Error queuing message in outbox:" << qjob->errorText();
     return false;
   }

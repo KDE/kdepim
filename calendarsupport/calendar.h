@@ -1,7 +1,7 @@
 /*
-  Copyright (c) 2009 KDAB
-  Author: Sebastian Sauer <sebsauer@kdab.net>
-          Frank Osterfeld <frank@kdab.net>
+  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Sebastian Sauer <sebsauer@kdab.com>
+    Author: Frank Osterfeld <frank@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include "calendarsupport_export.h"
 
+#include <Akonadi/Collection>
 #include <Akonadi/Item>
 
 #include <KCalCore/CustomProperties>
@@ -276,7 +277,7 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
     */
     Akonadi::Item incidence( Akonadi::Item::Id id ) const;
 
-    Akonadi::Collection collection( const Akonadi::Entity::Id &id ) const;
+    Akonadi::Collection collection( const Akonadi::Collection::Id &id ) const;
 
     /**
       Returns the KCalCore::Incidence associated with the given scheduling identifier.
@@ -741,7 +742,9 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
 
     Akonadi::Item journal( Akonadi::Item::Id id ) const;
 
-    KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to, bool excludeBlockedAlarms = false );
+    KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to,
+                                  bool excludeBlockedAlarms = false );
+
     KCalCore::Alarm::List alarmsTo( const KDateTime &to );
 
     Akonadi::Item findParent( const Akonadi::Item &item ) const;

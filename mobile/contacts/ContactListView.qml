@@ -31,7 +31,7 @@ KPIM.ItemListView {
       navigationModel : _top.navigationModel
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
-      height : itemListView.height / 7
+      height : _top.itemHeight
       summaryContent: [
         QML.Image {
           anchors.left: parent.left

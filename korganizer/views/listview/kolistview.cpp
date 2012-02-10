@@ -57,7 +57,6 @@ KOListView::KOListView( CalendarSupport::Calendar *calendar,
   connect( mListView, SIGNAL(shiftedEvent(QDate,QDate)),
            SIGNAL(shiftedEvent(QDate,QDate)) );
 
-
   connect( mListView, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
@@ -148,21 +147,6 @@ DateList KOListView::selectedIncidenceDates()
   return mListView->selectedIncidenceDates();
 }
 
-void KOListView::showDates( bool show )
-{
-  mListView->showDates( show );
-}
-
-void KOListView::showDates()
-{
-  mListView->showDates();
-}
-
-void KOListView::hideDates()
-{
-  mListView->hideDates();
-}
-
 void KOListView::updateView()
 {
   mListView->updateView();
@@ -244,6 +228,5 @@ void KOListView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer
 {
   mListView->setIncidenceChanger( changer );
 }
-
 
 #include "kolistview.moc"

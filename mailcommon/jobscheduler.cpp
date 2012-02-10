@@ -67,7 +67,8 @@ void JobScheduler::registerTask( ScheduledTask* task )
   if ( typeId ) {
     const Akonadi::Collection folder = task->folder();
     // Search for an identical task already scheduled
-    for( TaskList::Iterator it = mTaskList.begin(); it != mTaskList.end(); ++it ) {
+    TaskList::Iterator end( mTaskList.end() );
+    for( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
       if ( (*it)->taskTypeId() == typeId && (*it)->folder() == folder ) {
 #ifdef DEBUG_SCHEDULER
         kDebug() << "JobScheduler: already having task type" << typeId << "for folder" << folder->label();
@@ -105,23 +106,6 @@ void JobScheduler::removeTask( TaskList::Iterator& it )
   mTaskList.erase( it );
 }
 
-void JobScheduler::notifyOpeningFolder( const Akonadi::Collection& folder )
-{
-  if ( mCurrentTask && mCurrentTask->folder() == folder ) {
-    if ( mCurrentJob->isOpeningFolder() ) { // set when starting a job for this folder
-#ifdef DEBUG_SCHEDULER
-      kDebug() << "JobScheduler: got the opening-notification for" << folder.name() << "as expected.";
-#endif
-    } else {
-      // Jobs scheduled from here should always be cancellable.
-      // One exception though, is when ExpireJob does its final KMMoveCommand.
-      // Then that command shouldn't kill its own parent job just because it opens a folder...
-      if ( mCurrentJob->isCancellable() )
-        interruptCurrentTask();
-    }
-  }
-}
-
 void JobScheduler::interruptCurrentTask()
 {
   Q_ASSERT( mCurrentTask );
@@ -143,7 +127,8 @@ void JobScheduler::slotRunNextJob()
     Q_ASSERT( mCurrentTask == 0 );
     ScheduledTask* task = 0;
     // Find a task suitable for being run
-    for( TaskList::Iterator it = mTaskList.begin(); it != mTaskList.end(); ++it ) {
+    TaskList::Iterator end( mTaskList.end() );
+    for( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
       // Remove if folder died
       const Akonadi::Collection folder = (*it)->folder();
       if ( !folder.isValid() ) {
@@ -247,8 +232,7 @@ void JobScheduler::resume()
 ////
 
 ScheduledJob::ScheduledJob( const Akonadi::Collection& folder, bool immediate )
-  : FolderJob( 0, tOther, folder ), mImmediate( immediate ),
-    mOpeningFolder( false )
+  : mImmediate( immediate )
 {
   mCancellable = true;
   mSrcFolder = folder;

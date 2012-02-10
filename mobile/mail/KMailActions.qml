@@ -21,12 +21,14 @@
 import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5
+// FIXME: how do I do this correctly??
+import "../mobileui/ScreenFunctions.js" as Screen
 
 ActionMenuContainer {
 
   menuStyle : true
 
-  actionItemHeight : height / 6 - actionItemSpacing
+  actionItemHeight: Screen.partition( height, 6 ) - actionItemSpacing
   actionItemWidth : 200
   actionItemSpacing : 2
 
@@ -50,13 +52,14 @@ ActionMenuContainer {
 
   FavoriteManager{
     model : favoritesList
+    actionItemHeight: parent.actionItemHeight
   }
 
   AgentInstanceList {
     category : "home"
     name : "accounts_list"
     text : KDE.i18n( "Accounts" )
-
+    actionItemHeight: parent.actionItemHeight
     model : agentInstanceList
   }
 
@@ -64,7 +67,7 @@ ActionMenuContainer {
     category : "home"
     name : "filter_menu"
     text : KDE.i18n( "Filter" )
-
+    actionItemHeight: parent.actionItemHeight
     model: filterModel
   }
 

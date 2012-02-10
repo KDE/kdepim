@@ -1,6 +1,4 @@
 /*
-  This file is part of the KOrganizer interfaces.
-
   Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
   This library is free software; you can redistribute it and/or
@@ -21,8 +19,8 @@
 #ifndef CALENDARSUPPORT_PLUGIN_H
 #define CALENDARSUPPORT_PLUGIN_H
 
-#include <klocale.h>
-#include <kpluginfactory.h>
+#include <KLocale>
+#include <KPluginFactory>
 
 namespace CalendarSupport {
 

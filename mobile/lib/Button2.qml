@@ -31,7 +31,7 @@ QML.Rectangle {
 
   property string _state
   height: 52
-  color: "#00000000" // Set a transparant color.
+  color: "#00000000" // Set a transparent color.
 
   QML.BorderImage {
     id: borderImage
@@ -50,6 +50,9 @@ QML.Rectangle {
       left: (buttonText == "" ? undefined : parent.left);
       horizontalCenter: (buttonText == "" ? parent.horizontalCenter : undefined)
     }
+    fillMode: QML.Image.PreserveAspectFit
+    height: (root.height > sourceSize.height) ? sourceSize.height : (root.height - anchors.margins)
+    smooth: true
   }
 
   QML.Text {

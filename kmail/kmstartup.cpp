@@ -217,7 +217,9 @@ void insertLibraryCataloguesAndIcons() {
     "libtemplateparser",
     "libakonadi_next",
     "libakonadi-kde",
-    "libakonadi-kmime"
+    "libakonadi-kmime",
+    "akonadicontact",
+    "libkpimtextedit"
   };
 
   KLocale * l = KGlobal::locale();

@@ -37,7 +37,7 @@
 #include <QPointer>
 #include <QScrollArea>
 
-static const KCatalogLoader loader("timezones4");
+static const KCatalogLoader loader( "timezones4" );
 
 using namespace EventViews;
 
@@ -185,9 +185,11 @@ void TimeLabels::paintEvent( QPaintEvent * )
   // We won't paint parts that aren't visible
   const int cy = -y();// y() returns a negative value.
 
-  const int beginning = !mSpec.isValid() ? 0 :
-                                           ( mSpec.timeZone().currentOffset() -
-                                             mTimeLabelsZone->preferences()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
+  const int beginning =
+    !mSpec.isValid() ?
+    0 :
+    ( mSpec.timeZone().currentOffset() -
+      mTimeLabelsZone->preferences()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
 
   // bug:  the parameters cx and cw are the areas that need to be
   //       redrawn, not the area of the widget.  unfortunately, this
@@ -312,7 +314,8 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
   if ( activatedAction == editTimeZones ) {
-    QPointer<TimeScaleConfigDialog> dialog = new TimeScaleConfigDialog( mTimeLabelsZone->preferences(), this );
+    QPointer<TimeScaleConfigDialog> dialog =
+      new TimeScaleConfigDialog( mTimeLabelsZone->preferences(), this );
     if ( dialog->exec() == QDialog::Accepted ) {
       mTimeLabelsZone->reset();
     }
@@ -321,6 +324,7 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     QStringList list = mTimeLabelsZone->preferences()->timeScaleTimezones();
     list.removeAll( mSpec.timeZone().name() );
     mTimeLabelsZone->preferences()->setTimeScaleTimezones( list );
+    mTimeLabelsZone->preferences()->writeConfig();
     mTimeLabelsZone->reset();
     hide();
     deleteLater();
@@ -343,22 +347,25 @@ QString TimeLabels::headerToolTip() const
 
   QString toolTip;
   toolTip += "<qt>";
-  toolTip += i18n( "Timezone: %1", i18n( tz.name().toUtf8() ) );
+  toolTip += i18n( "<b>%1</b>", i18n( tz.name().toUtf8() ) );
+  toolTip += "<hr>";
+  //TODO: Once string freeze is lifted, add UTC offset here
   if ( !tz.countryCode().isEmpty() ) {
+    toolTip += i18n( "<i>Country Code:</i> %1", tz.countryCode() );
     toolTip += "<br/>";
-    toolTip += i18n( "Country Code: %1", tz.countryCode() );
   }
   if ( !tz.abbreviations().isEmpty() ) {
-    toolTip += "<br/>";
-    toolTip += i18n( "Abbreviations:" );
+    toolTip += i18n( "<i>Abbreviations:</i>" ) + "</i>";
+    toolTip += "&nbsp;";
     foreach ( const QByteArray &a, tz.abbreviations() ) {
-      toolTip += "<br/>";
-      toolTip += "&nbsp;" + QString::fromLocal8Bit( a );
+      toolTip += QString::fromLocal8Bit( a );
+      toolTip += ",&nbsp;";
     }
+    toolTip.chop( 7 );
+    toolTip += "<br/>";
   }
   if ( !tz.comment().isEmpty() ) {
-    toolTip += "<br/>";
-    toolTip += i18n( "Comment:<br/>%1", tz.comment() );
+    toolTip += i18n( "<i>Comment:</i> %1", tz.comment() );
   }
   toolTip += "</qt>";
 

@@ -1,0 +1,4 @@
+# Migrate kmail's filters setting to Akonadi mail filter agent
+Id=initial-mailfilteragent-migration
+File=kmail2rc,akonadi_mailfilter_agentrc
+Script=migrate-kmail-filters.pl,perl

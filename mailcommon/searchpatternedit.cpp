@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  kmsearchpatternedit.cpp
-  Author: Marc Mutz <Marc@Mutz.com>
+
+  Author: Marc Mutz <mutz@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,24 +18,22 @@
 */
 
 #include "searchpatternedit.h"
-
-#include <QStackedWidget>
+#include "minimumcombobox.h"
 #include "rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
-#include "minimumcombobox.h"
 
-#include <kcombobox.h>
-#include <klocale.h>
-#include <kdialog.h>
-#include <kdebug.h>
+#include <KComboBox>
+#include <KDebug>
+#include <KDialog>
+#include <KLocale>
+#include <KPushButton>
 
 #include <QButtonGroup>
 #include <QByteArray>
 #include <QHBoxLayout>
 #include <QRadioButton>
-
-#include <assert.h>
 #include <QResizeEvent>
+#include <QStackedWidget>
 
 // Definition of special rule field strings
 // Note: Also see SearchRule::matches() and ruleFieldToEnglish() if
@@ -55,7 +53,10 @@ static const struct {
   const char *context;
   const char *displayName;
 
-  QString getLocalizedDisplayName() const { return i18nc(context, displayName); };
+  QString getLocalizedDisplayName() const
+  {
+    return i18nc( context, displayName );
+  }
 
 } SpecialRuleFields[] = {
   { "<message>",     I18N_NOOP( "Complete Message" )       },
@@ -83,8 +84,7 @@ static const int SpecialRuleFieldsCount =
 //=============================================================================
 
 SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
-                                        bool headersOnly,
-                                        bool absoluteDates )
+                                    bool headersOnly, bool absoluteDates )
   : QWidget( parent ),
     mRuleField( 0 ),
     mFunctionStack( 0 ),
@@ -94,10 +94,11 @@ SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
   initFieldList( headersOnly, absoluteDates );
   initWidget();
 
-  if ( aRule )
+  if ( aRule ) {
     setRule( aRule );
-  else
+  } else {
     reset();
+  }
 }
 
 void SearchRuleWidget::setHeadersOnly( bool headersOnly )
@@ -112,16 +113,16 @@ void SearchRuleWidget::setHeadersOnly( bool headersOnly )
   mRuleField->setMaxCount( mRuleField->count() );
   mRuleField->adjustSize();
 
-  if (( currentText != "<message>") &&
-      ( currentText != "<body>"))
+  if ( ( currentText != "<message>") && ( currentText != "<body>" ) ) {
     mRuleField->setItemText( 0, QString::fromAscii( currentText ) );
-  else
+  } else {
     mRuleField->setItemText( 0, QString() );
+  }
 }
 
 void SearchRuleWidget::initWidget()
 {
-  QHBoxLayout * hlay = new QHBoxLayout( this );
+  QHBoxLayout *hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
   hlay->setMargin( 0 );
 
@@ -146,9 +147,17 @@ void SearchRuleWidget::initWidget()
   hlay->addWidget( mValueStack );
   hlay->setStretchFactor( mValueStack, 10 );
 
-  RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack,
-                                                       mValueStack,
-                                                       this );
+  mAdd = new KPushButton( this );
+  mAdd->setIcon( KIcon( "list-add" ) );
+  mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+  hlay->addWidget( mAdd );
+
+  mRemove = new KPushButton( this );
+  mRemove->setIcon( KIcon( "list-remove" ) );
+  mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+  hlay->addWidget( mRemove );
+
+  RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack, mValueStack, this );
 
   // redirect focus to the header field combo box
   setFocusProxy( mRuleField );
@@ -159,12 +168,32 @@ void SearchRuleWidget::initWidget()
            this, SLOT(slotRuleFieldChanged(QString)) );
   connect( mRuleField, SIGNAL(editTextChanged(QString)),
            this, SIGNAL(fieldChanged(QString)) );
+
+  connect( mAdd, SIGNAL(clicked()),
+           this, SLOT(slotAddWidget()) );
+  connect( mRemove, SIGNAL(clicked()),
+           this, SLOT(slotRemoveWidget()) );
 }
 
+void SearchRuleWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+{
+  mAdd->setEnabled( addButtonEnabled );
+  mRemove->setEnabled( removeButtonEnabled );
+}
+
+void SearchRuleWidget::slotAddWidget()
+{
+  emit addWidget( this );
+}
+
+void SearchRuleWidget::slotRemoveWidget()
+{
+  emit removeWidget( this );
+}
 
 void SearchRuleWidget::setRule( SearchRule::Ptr aRule )
 {
-  assert ( aRule );
+  Q_ASSERT( aRule );
 
   kDebug() << "(" << aRule->asString() << ")";
 
@@ -183,18 +212,18 @@ void SearchRuleWidget::setRule( SearchRule::Ptr aRule )
   mRuleField->setCurrentIndex( i );
   mRuleField->blockSignals( false );
 
-  RuleWidgetHandlerManager::instance()->setRule( mFunctionStack, mValueStack,
-                                                 aRule );
+  RuleWidgetHandlerManager::instance()->setRule( mFunctionStack, mValueStack, aRule );
 }
 
-SearchRule::Ptr SearchRuleWidget::rule() const {
+SearchRule::Ptr SearchRuleWidget::rule() const
+{
   const QByteArray ruleField = ruleFieldToEnglish( mRuleField->currentText() );
+
   const SearchRule::Function function =
-    RuleWidgetHandlerManager::instance()->function( ruleField,
-                                                    mFunctionStack );
+    RuleWidgetHandlerManager::instance()->function( ruleField, mFunctionStack );
+
   const QString value =
-    RuleWidgetHandlerManager::instance()->value( ruleField, mFunctionStack,
-                                                 mValueStack );
+    RuleWidgetHandlerManager::instance()->value( ruleField, mFunctionStack, mValueStack );
 
   return SearchRule::createInstance( ruleField, function, value );
 }
@@ -212,30 +241,29 @@ void SearchRuleWidget::reset()
 void SearchRuleWidget::slotFunctionChanged()
 {
   const QByteArray ruleField = ruleFieldToEnglish( mRuleField->currentText() );
-  RuleWidgetHandlerManager::instance()->update( ruleField,
-                                                mFunctionStack,
-                                                mValueStack );
-  const QString prettyValue = RuleWidgetHandlerManager::instance()->prettyValue( ruleField,
-                                                                                 mFunctionStack,
-                                                                                 mValueStack );
+  RuleWidgetHandlerManager::instance()->update( ruleField, mFunctionStack, mValueStack );
+  const QString prettyValue =
+    RuleWidgetHandlerManager::instance()->prettyValue( ruleField, mFunctionStack, mValueStack );
+
   emit contentsChanged( prettyValue );
 }
 
 void SearchRuleWidget::slotValueChanged()
 {
   const QByteArray ruleField = ruleFieldToEnglish( mRuleField->currentText() );
+
   const QString prettyValue =
-    RuleWidgetHandlerManager::instance()->prettyValue( ruleField,
-                                                       mFunctionStack,
-                                                       mValueStack );
+    RuleWidgetHandlerManager::instance()->prettyValue( ruleField, mFunctionStack, mValueStack );
+
   emit contentsChanged( prettyValue );
 }
 
 QByteArray SearchRuleWidget::ruleFieldToEnglish( const QString & i18nVal )
 {
   for ( int i = 0; i < SpecialRuleFieldsCount; ++i ) {
-    if ( i18nVal == SpecialRuleFields[i].getLocalizedDisplayName() )
+    if ( i18nVal == SpecialRuleFields[i].getLocalizedDisplayName() ) {
       return SpecialRuleFields[i].internalName;
+    }
   }
   return i18nVal.toLatin1();
 }
@@ -243,8 +271,9 @@ QByteArray SearchRuleWidget::ruleFieldToEnglish( const QString & i18nVal )
 int SearchRuleWidget::ruleFieldToId( const QString & i18nVal )
 {
   for ( int i = 0; i < SpecialRuleFieldsCount; ++i ) {
-    if ( i18nVal == SpecialRuleFields[i].getLocalizedDisplayName() )
+    if ( i18nVal == SpecialRuleFields[i].getLocalizedDisplayName() ) {
       return i;
+    }
   }
   return -1; // no pseudo header
 }
@@ -252,24 +281,25 @@ int SearchRuleWidget::ruleFieldToId( const QString & i18nVal )
 static QString displayNameFromInternalName( const QString & internal )
 {
   for ( int i = 0; i < SpecialRuleFieldsCount; ++i ) {
-    if ( internal == SpecialRuleFields[i].internalName )
+    if ( internal == SpecialRuleFields[i].internalName ) {
       return SpecialRuleFields[i].getLocalizedDisplayName();
+    }
   }
   return internal.toLatin1();
 }
 
-
-
-int SearchRuleWidget::indexOfRuleField( const QByteArray & aName ) const
+int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
 {
-  if ( aName.isEmpty() )
+  if ( aName.isEmpty() ) {
     return -1;
+  }
 
   const QString i18n_aName = displayNameFromInternalName( aName );
   const int nbRuleField = mRuleField->count();
   for ( int i = 1; i < nbRuleField; ++i ) {
-    if ( mRuleField->itemText( i ) == i18n_aName )
+    if ( mRuleField->itemText( i ) == i18n_aName ) {
       return i;
+    }
   }
 
   return -1;
@@ -278,41 +308,42 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray & aName ) const
 void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
 {
   mFilterFieldList.clear();
-  mFilterFieldList.append(""); // empty entry for user input
-  if( !headersOnly ) {
+  mFilterFieldList.append( "" ); // empty entry for user input
+
+  if ( !headersOnly ) {
     mFilterFieldList.append( SpecialRuleFields[Message].getLocalizedDisplayName() );
-    mFilterFieldList.append( SpecialRuleFields[Body].getLocalizedDisplayName()    );
+    mFilterFieldList.append( SpecialRuleFields[Body].getLocalizedDisplayName() );
   }
-  mFilterFieldList.append( SpecialRuleFields[AnyHeader].getLocalizedDisplayName()  );
+  mFilterFieldList.append( SpecialRuleFields[AnyHeader].getLocalizedDisplayName() );
   mFilterFieldList.append( SpecialRuleFields[Recipients].getLocalizedDisplayName() );
-  mFilterFieldList.append( SpecialRuleFields[Size].getLocalizedDisplayName()       );
-  if ( !absoluteDates )
+  mFilterFieldList.append( SpecialRuleFields[Size].getLocalizedDisplayName() );
+  if ( !absoluteDates ) {
     mFilterFieldList.append( SpecialRuleFields[AgeInDays].getLocalizedDisplayName() );
+  }
   mFilterFieldList.append( SpecialRuleFields[Subject].getLocalizedDisplayName() );
-  mFilterFieldList.append( SpecialRuleFields[From].getLocalizedDisplayName()    );
-  mFilterFieldList.append( SpecialRuleFields[To].getLocalizedDisplayName()      );
-  mFilterFieldList.append( SpecialRuleFields[CC].getLocalizedDisplayName()      );
-  mFilterFieldList.append( SpecialRuleFields[Status].getLocalizedDisplayName()  );
-#ifndef KDEPIM_NO_NEPOMUK  
-  mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName()     );
-#endif  
+  mFilterFieldList.append( SpecialRuleFields[From].getLocalizedDisplayName() );
+  mFilterFieldList.append( SpecialRuleFields[To].getLocalizedDisplayName() );
+  mFilterFieldList.append( SpecialRuleFields[CC].getLocalizedDisplayName() );
+  mFilterFieldList.append( SpecialRuleFields[Status].getLocalizedDisplayName() );
+#ifndef KDEPIM_NO_NEPOMUK
+  mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName() );
+#endif
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
 
   // these others only represent message headers and you can add to
   // them as you like
-  mFilterFieldList.append("List-Id");
-  mFilterFieldList.append("Resent-From");
-  mFilterFieldList.append("X-Loop");
-  mFilterFieldList.append("X-Mailing-List");
-  mFilterFieldList.append("X-Spam-Flag");
+  mFilterFieldList.append( "List-Id" );
+  mFilterFieldList.append( "Resent-From" );
+  mFilterFieldList.append( "X-Loop" );
+  mFilterFieldList.append( "X-Mailing-List" );
+  mFilterFieldList.append( "X-Spam-Flag" );
 }
 
-void SearchRuleWidget::slotRuleFieldChanged( const QString & field )
+void SearchRuleWidget::slotRuleFieldChanged( const QString &field )
 {
-  RuleWidgetHandlerManager::instance()->update( ruleFieldToEnglish( field ),
-                                                mFunctionStack,
-                                                mValueStack );
+  RuleWidgetHandlerManager::instance()->update(
+    ruleFieldToEnglish( field ), mFunctionStack, mValueStack );
 }
 
 //=============================================================================
@@ -321,8 +352,9 @@ void SearchRuleWidget::slotRuleFieldChanged( const QString & field )
 //
 //=============================================================================
 
-SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char*, bool headersOnly, bool absoluteDates )
-  : KWidgetLister( 2, FILTER_MAX_RULES, parent )
+SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char *,
+                                                bool headersOnly, bool absoluteDates )
+  : KWidgetLister( false, 2, FILTER_MAX_RULES, parent )
 {
   mRuleList = 0;
   mHeadersOnly = headersOnly;
@@ -335,19 +367,21 @@ SearchRuleWidgetLister::~SearchRuleWidgetLister()
 
 void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
 {
-  assert ( aList );
+  Q_ASSERT( aList );
 
-  if ( mRuleList && mRuleList != aList )
+  if ( mRuleList && mRuleList != aList ) {
     regenerateRuleListFromWidgets();
+  }
 
   mRuleList = aList;
 
-  if ( !widgets().isEmpty() ) // move this below next 'if'?
-    widgets().first()->blockSignals(true);
+  if ( !widgets().isEmpty() ) { // move this below next 'if'?
+    widgets().first()->blockSignals( true );
+  }
 
-  if ( aList->count() == 0 ) {
+  if ( aList->isEmpty() ) {
     slotClear();
-    widgets().first()->blockSignals(false);
+    widgets().first()->blockSignals( false );
     return;
   }
 
@@ -355,28 +389,74 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
   if ( superfluousItems > 0 ) {
     kDebug() << "Clipping rule list to" << widgetsMaximum() << "items!";
 
-    for ( ; superfluousItems ; superfluousItems-- )
+    for ( ; superfluousItems ; superfluousItems-- ) {
       mRuleList->removeLast();
+    }
   }
 
-  // HACK to workaround regression in Qt 3.1.3 and Qt 3.2.0 (fixes bug #63537)
-  setNumberOfShownWidgetsTo( qMax((int)mRuleList->count(), widgetsMinimum())+1 );
   // set the right number of widgets
-  setNumberOfShownWidgetsTo( qMax((int)mRuleList->count(), widgetsMinimum()) );
+  setNumberOfShownWidgetsTo( qMax( (int)mRuleList->count(), widgetsMinimum() ) );
 
   // load the actions into the widgets
   QList<QWidget*> widgetList = widgets();
   QList<SearchRule::Ptr>::const_iterator rIt;
+  QList<SearchRule::Ptr>::const_iterator rItEnd( mRuleList->constEnd() );
   QList<QWidget*>::const_iterator wIt = widgetList.constBegin();
+  QList<QWidget*>::const_iterator wItEnd = widgetList.constEnd();
   for ( rIt = mRuleList->constBegin();
-        rIt != mRuleList->constEnd() && wIt != widgetList.constEnd(); ++rIt, ++wIt ) {
+        rIt != rItEnd && wIt != wItEnd; ++rIt, ++wIt ) {
     qobject_cast<SearchRuleWidget*>( *wIt )->setRule( (*rIt) );
   }
-  for ( ; wIt != widgetList.constEnd() ; ++wIt )
+  for ( ; wIt != wItEnd; ++wIt ) {
     qobject_cast<SearchRuleWidget*>( *wIt )->reset();
+  }
 
-  assert( !widgets().isEmpty() );
+  Q_ASSERT( !widgets().isEmpty() );
   widgets().first()->blockSignals(false);
+}
+
+void SearchRuleWidgetLister::slotAddWidget( QWidget *w )
+{
+  addWidgetAfterThisWidget( w );
+  updateAddRemoveButton();
+}
+
+void SearchRuleWidgetLister::slotRemoveWidget( QWidget *w )
+{
+  removeWidget( w );
+  updateAddRemoveButton();
+}
+
+void SearchRuleWidgetLister::reconnectWidget( SearchRuleWidget *w )
+{
+  connect( w, SIGNAL(addWidget(QWidget*)),
+           this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+  connect( w, SIGNAL(removeWidget(QWidget*)),
+           this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+}
+
+void SearchRuleWidgetLister::updateAddRemoveButton()
+{
+  QList<QWidget*> widgetList = widgets();
+  const int numberOfWidget( widgetList.count() );
+  bool addButtonEnabled = false;
+  bool removeButtonEnabled = false;
+  if ( numberOfWidget <= widgetsMinimum() ) {
+    addButtonEnabled = true;
+    removeButtonEnabled = false;
+  } else if ( numberOfWidget >= widgetsMaximum() ) {
+    addButtonEnabled = false;
+    removeButtonEnabled = true;
+  } else {
+    addButtonEnabled = true;
+    removeButtonEnabled = true;
+  }
+  QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
+  QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+  for ( ; wIt != wEnd ;++wIt ) {
+    SearchRuleWidget *w = qobject_cast<SearchRuleWidget*>( *wIt );
+    w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+  }
 }
 
 void SearchRuleWidgetLister::setHeadersOnly( bool headersOnly )
@@ -388,39 +468,48 @@ void SearchRuleWidgetLister::setHeadersOnly( bool headersOnly )
 
 void SearchRuleWidgetLister::reset()
 {
-  if ( mRuleList )
+  if ( mRuleList ) {
     regenerateRuleListFromWidgets();
+  }
 
   mRuleList = 0;
   slotClear();
+  updateAddRemoveButton();
 }
 
-QWidget* SearchRuleWidgetLister::createWidget( QWidget *parent )
+QWidget *SearchRuleWidgetLister::createWidget( QWidget *parent )
 {
-  return new SearchRuleWidget(parent, SearchRule::Ptr(),  mHeadersOnly, mAbsoluteDates);
+  SearchRuleWidget *w =
+    new SearchRuleWidget( parent, SearchRule::Ptr(), mHeadersOnly, mAbsoluteDates );
+  reconnectWidget( w );
+  return w;
 }
 
 void SearchRuleWidgetLister::clearWidget( QWidget *aWidget )
 {
-  if ( aWidget )
-    ((SearchRuleWidget*)aWidget)->reset();
+  if ( aWidget ) {
+    SearchRuleWidget *w = static_cast<SearchRuleWidget*>( aWidget );
+    w->reset();
+    reconnectWidget( w );
+  }
 }
 
 void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 {
-  if ( !mRuleList ) return;
+  if ( !mRuleList ) {
+    return;
+  }
 
   mRuleList->clear();
 
   foreach ( const QWidget *w, widgets() ) {
     SearchRule::Ptr r = qobject_cast<const SearchRuleWidget*>( w )->rule();
-    if ( r && !r->isEmpty() )
+    if ( r && !r->isEmpty() ) {
       mRuleList->append( r );
+    }
   }
+  updateAddRemoveButton();
 }
-
-
-
 
 //=============================================================================
 //
@@ -428,79 +517,102 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 //
 //=============================================================================
 
-SearchPatternEdit::SearchPatternEdit( QWidget *parent, bool headersOnly,
-                                          bool absoluteDates )
-  : QWidget( parent )
+SearchPatternEdit::SearchPatternEdit( QWidget *parent, SearchPatternEditOptions options )
+  : QWidget( parent ), mAllMessageRBtn( 0 )
 {
   setObjectName( "SearchPatternEdit" );
-  initLayout( headersOnly, absoluteDates );
+  initLayout( options );
 }
-
 
 SearchPatternEdit::~SearchPatternEdit()
 {
 }
 
-void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates)
+void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
+  const bool matchAllMessages = ( options & MailCommon::SearchPatternEdit::MatchAllMessages );
   //------------the radio buttons
-  mAllRBtn = new QRadioButton( i18n("Match a&ll of the following"), this );
-  mAnyRBtn = new QRadioButton( i18n("Match an&y of the following"), this );
+  mAllRBtn = new QRadioButton( i18n( "Match a&ll of the following" ), this );
+  mAnyRBtn = new QRadioButton( i18n( "Match an&y of the following" ), this );
+  if ( matchAllMessages ) {
+    mAllMessageRBtn = new QRadioButton( i18n( "Match all messages" ), this );
+  }
 
   mAllRBtn->setObjectName( "mAllRBtn" );
-  mAllRBtn->setChecked(true);
+  mAllRBtn->setChecked( true );
   mAnyRBtn->setObjectName( "mAnyRBtn" );
-  mAnyRBtn->setChecked(false);
-
+  mAnyRBtn->setChecked( false );
+  if ( matchAllMessages ) {
+    mAllMessageRBtn->setObjectName( "mAllMessageRBtn" );
+    mAllMessageRBtn->setChecked(false);
+  }
   layout->addWidget( mAllRBtn );
   layout->addWidget( mAnyRBtn );
+  if ( matchAllMessages ) {
+    layout->addWidget( mAllMessageRBtn );
+  }
 
   QButtonGroup *bg = new QButtonGroup( this );
   bg->addButton( mAllRBtn );
   bg->addButton( mAnyRBtn );
+  if ( matchAllMessages ) {
+    bg->addButton( mAllMessageRBtn );
+  }
 
   //------------connect a few signals
   connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
-	   this, SLOT(slotRadioClicked(QAbstractButton*)) );
+           this, SLOT(slotRadioClicked(QAbstractButton*)) );
 
   //------------the list of SearchRuleWidget's
-  mRuleLister = new SearchRuleWidgetLister( this, "swl", headersOnly, absoluteDates );
+  mRuleLister =
+    new SearchRuleWidgetLister(
+      this,
+      "swl",
+      ( options & MailCommon::SearchPatternEdit::HeadersOnly ),
+      ( options & MailCommon::SearchPatternEdit::AbsoluteDate ) );
+
   mRuleLister->slotClear();
 
   if ( !mRuleLister->widgets().isEmpty() ) {
-    for (int i = 0; i < mRuleLister->widgets().count(); i++) {
+    const int numberOfWidget( mRuleLister->widgets().count() );
+    for ( int i = 0; i < numberOfWidget; ++i ) {
       SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( mRuleLister->widgets().at(i) );
       connect( srw, SIGNAL(fieldChanged(QString)),
                this, SLOT(slotAutoNameHack()) );
       connect( srw, SIGNAL(contentsChanged(QString)),
                this, SLOT(slotAutoNameHack()) );
     }
-  } else
+  } else {
     kDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
+  }
 
   connect( mRuleLister, SIGNAL(widgetAdded(QWidget*)),
            this, SLOT(slotRuleAdded(QWidget*)) );
   connect( mRuleLister, SIGNAL(widgetRemoved()), this, SIGNAL(patternChanged()) );
-  
+
   layout->addWidget( mRuleLister );
 }
 
 void SearchPatternEdit::setSearchPattern( SearchPattern *aPattern )
 {
-  assert( aPattern );
+  Q_ASSERT( aPattern );
 
   mRuleLister->setRuleList( aPattern );
 
   mPattern = aPattern;
 
-  blockSignals(true);
-  if ( mPattern->op() == SearchPattern::OpOr )
-    mAnyRBtn->setChecked(true);
-  else
-    mAllRBtn->setChecked(true);
-  blockSignals(false);
+  blockSignals( true );
+  if ( mPattern->op() == SearchPattern::OpOr ) {
+    mAnyRBtn->setChecked( true );
+  } else if ( mPattern->op() == SearchPattern::OpAnd ) {
+    mAllRBtn->setChecked( true );
+  } else if ( mAllMessageRBtn &&  ( mPattern->op() == SearchPattern::OpAll ) ) {
+    mAllMessageRBtn->setChecked( true );
+  }
+  mRuleLister->setEnabled( mPattern->op() != SearchPattern::OpAll );
+  blockSignals( false );
 
   setEnabled( true );
   emit patternChanged();
@@ -524,14 +636,17 @@ void SearchPatternEdit::reset()
   emit patternChanged();
 }
 
-void SearchPatternEdit::slotRadioClicked(QAbstractButton *aRBtn)
+void SearchPatternEdit::slotRadioClicked( QAbstractButton *aRBtn )
 {
   if ( mPattern ) {
-    if ( aRBtn == mAllRBtn )
+    if ( aRBtn == mAllRBtn ) {
       mPattern->setOp( SearchPattern::OpAnd );
-    else
+    } else if ( aRBtn == mAnyRBtn ) {
       mPattern->setOp( SearchPattern::OpOr );
-
+    } else if ( aRBtn == mAllMessageRBtn ) {
+      mPattern->setOp( SearchPattern::OpAll );
+    }
+    mRuleLister->setEnabled( mPattern->op() != SearchPattern::OpAll );
     emit patternChanged();
   }
 }
@@ -543,7 +658,7 @@ void SearchPatternEdit::slotAutoNameHack()
   emit patternChanged();
 }
 
-void SearchPatternEdit::slotRuleAdded(QWidget* newRuleWidget)
+void SearchPatternEdit::slotRuleAdded( QWidget *newRuleWidget )
 {
   SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( newRuleWidget );
   connect( srw, SIGNAL(fieldChanged(QString)), this, SLOT(slotAutoNameHack()) );

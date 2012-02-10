@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef CONTACTIMPORTHANDLER_H
-#define CONTACTIMPORTHANDLER_H
+#ifndef CONTACTSIMPORTHANDLER_H
+#define CONTACTSIMPORTHANDLER_H
 
 #include "../lib/importhandlerbase.h"
 

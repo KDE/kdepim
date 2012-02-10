@@ -77,7 +77,7 @@ class MESSAGECOMPOSER_EXPORT ComposerViewBase : public QObject
 {
   Q_OBJECT
 public:
-  explicit ComposerViewBase ( QObject* parent = 0 );
+  explicit ComposerViewBase ( QObject* parent = 0, QWidget *parentGui = 0 );
   virtual ~ComposerViewBase();
 
   enum Confirmation { LetUserConfirm, NoConfirmationNeeded };
@@ -240,7 +240,6 @@ private slots:
   void slotSaveMessage( KJob *job );
 
 private:
-  bool isHTMLMail( KMime::Content* root );
   /**
   * Searches the mime tree, where root is the root node, for embedded images,
   * extracts them froom the body and adds them to the editor.

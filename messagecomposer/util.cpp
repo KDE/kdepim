@@ -28,10 +28,17 @@
 #include <KCharsets>
 #include <KDebug>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
+#include <mailtransport/messagequeuejob.h>
+#include <akonadi/item.h>
+#include <akonadi/kmime/messagestatus.h>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
+#include <messagecore/messagehelpers.h>
 
 KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
@@ -252,3 +259,47 @@ QStringList Message::Util::AttachmentKeywords()
     "attachment,attached" ).split( QLatin1Char( ',' ) );
 }
 
+QString Message::Util::cleanedUpHeaderString( const QString &s )
+{
+  // remove invalid characters from the header strings
+  QString res( s );
+  res.remove( QChar::fromLatin1( '\r' ) );
+  res.replace( QChar::fromLatin1( '\n' ), QString::fromLatin1( " " ) );
+  return res.trimmed();
+}
+
+void Message::Util::addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob)
+{
+  QList<Akonadi::Item::Id> originalMessageId;
+  QList<Akonadi::MessageStatus> linkStatus;
+  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
+    Q_FOREACH( Akonadi::Item::Id id, originalMessageId )
+    {
+      if ( linkStatus.first() == Akonadi::MessageStatus::statusReplied() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+      } else if ( linkStatus.first() == Akonadi::MessageStatus::statusForwarded() ) {
+        qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+      }
+    }
+  }
+}
+
+bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
+{
+  Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
+  if( !instance.isValid() ) {
+    return false;
+  }
+  if ( instance.isOnline() )
+    return true;
+  else {
+    int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, so mails cannot be sent. Do you want to make it online?"),
+                                        i18n("Mail dispatcher offline."));
+    if ( rc == KMessageBox::No )
+      return false;
+    instance.setIsOnline( true );
+    return true;
+  } 
+  return false;
+}
+  

@@ -49,6 +49,8 @@ namespace KMail {
   // top level kdepim folder as well.
 
   static const about_data authors[] = {
+    { "Laurent Montel", I18N_NOOP("Maintainer"),
+      "montel@kde.org", 0 },
     { "Thomas McGuire", I18N_NOOP("Former maintainer"),
       "mcguire@kde.org", 0 },
     { "Stefan Taferner", I18N_NOOP("Original author"),
@@ -114,8 +116,6 @@ namespace KMail {
       "glaurent@telegraph-road.org", 0 },
     { "Sam Magnuson", 0,
       "sam@trolltech.com", 0 },
-    { "Laurent Montel", I18N_NOOP( "Akonadi porting" ),
-      "montel@kde.org", 0 },
     { "Matt Newell", 0,
       "newellm@proaxis.com", 0 },
     { "Denis Perchine", 0,
@@ -204,7 +204,7 @@ namespace KMail {
     { "Jeffrey McGee", 0, 0, 0 }, // fix for bug:64251
     { "Thomas Moenicke", 0, "tm@php-qt.org", 0 },
     { "Dirk M\303\274ller", 0, 0, 0 }, // KUrl() fixes and qt_cast optimizations
-    { "Torgny Nyblom", 0, "kde@nyblom.org", 0 },
+    { "Torgny Nyblom", 0, "nyblom@kde.org", 0 },
     { "OpenUsability", I18N_NOOP("Usability tests and improvements"), 0, "http://www.openusability.org" },
     { "Mario Teijeiro Otero", 0, 0, 0 }, // various vendor annotations fixes
     { "Kevin Ottens", 0, "ervin@kde.org", 0 },
@@ -239,15 +239,18 @@ namespace KMail {
   AboutData::AboutData()
     : KAboutData( "kmail2", "kmail", ki18n("KMail"),KDEPIM_VERSION,
                   ki18n("KDE Email Client"), License_GPL,
-                  ki18n("Copyright © 1997–2011, KMail authors"), KLocalizedString(),
-                  "http://kontact.kde.org/kmail/" )
+                  ki18n("Copyright © 1997–2012, KMail authors"), KLocalizedString(),
+                  "http://userbase.kde.org/KMail" )
   {
     setProgramIconName("kmail");
     using KMail::authors;
     using KMail::credits;
-    for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
+    const unsigned int numberAuthors( sizeof authors / sizeof *authors );
+    for ( unsigned int i = 0 ; i < numberAuthors; ++i )
       addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc), authors[i].email, authors[i].web );
-    for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
+
+    const unsigned int numberCredits( sizeof credits / sizeof *credits );
+    for ( unsigned int i = 0 ; i < numberCredits; ++i )
       addCredit( ki18n(credits[i].name), ki18n(credits[i].desc), credits[i].email, credits[i].web );
   }
 

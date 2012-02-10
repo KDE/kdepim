@@ -1,4 +1,5 @@
 /* Copyright 2010 Thomas McGuire <mcguire@kde.org>
+   Copyright 2011 Laurent Montel <montel@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -19,9 +20,9 @@
 #include "tagactionmanager.h"
 
 #include "messageactions.h"
-#include "tag.h"
 
 #include "messagecore/taglistmonitor.h"
+#include <nepomuk/tag.h>
 
 #include <KAction>
 #include <KActionCollection>
@@ -29,14 +30,12 @@
 #include <KMenu>
 #include <KToggleAction>
 #include <KXMLGUIClient>
-#include <Nepomuk/Resource>
-#include <Nepomuk/ResourceManager>
-#include <Nepomuk/Tag>
-#include <Soprano/Util/SignalCacheModel>
 
 #include <QSignalMapper>
 
 using namespace KMail;
+
+static int s_numberMaxTag = 10;
 
 TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCollection,
                                     MessageActions *messageActions, KXMLGUIClient *guiClient )
@@ -46,30 +45,17 @@ TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCo
     mMessageTagToggleMapper( 0 ),
     mGUIClient( guiClient ),
     mTagListMonitor( new MessageCore::TagListMonitor( this ) ),
-    mSopranoModel( new Soprano::Util::SignalCacheModel( Nepomuk::ResourceManager::instance()->mainModel() ) )
+    mSeparatorAction( 0 ),
+    mMoreAction( 0 )
 {
-  connect( mTagListMonitor, SIGNAL(tagsChanged()), this, SLOT(tagsChanged()) ); 
-  // Listen to Nepomuk tag updates
-  // ### This is way too slow for now, we use triggerUpdate() instead
-  /*connect( mSopranoModel.data(), SIGNAL(statementAdded(Soprano::Statement)),
-           SLOT(statementChanged(Soprano::Statement)) );
-  connect( mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),
-           SLOT(statementChanged(Soprano::Statement)) );*/
+  connect( mTagListMonitor, SIGNAL(tagsChanged()), this, SLOT(tagsChanged()) );
+  KAction *separator = new KAction( this );
+  separator->setSeparator( true );
+  mMessageActions->messageStatusMenu()->menu()->addAction( separator );
 }
 
 TagActionManager::~TagActionManager()
 {
-}
-
-void TagActionManager::statementChanged( Soprano::Statement statement )
-{
-  // When a tag changes, immediatley update the actions to reflect that
-  if ( statement.subject().type() == Soprano::Node::ResourceNode ) {
-    Nepomuk::Resource res( statement.subject().uri() );
-    if ( res.resourceType() == Nepomuk::Tag::resourceTypeUri() ) {
-      createActions();
-    }
-  }
 }
 
 void TagActionManager::clearActions()
@@ -90,50 +76,90 @@ void TagActionManager::clearActions()
     mActionCollection->removeAction( action );
   }
 
+  if ( mSeparatorAction ) {
+    mMessageActions->messageStatusMenu()->removeAction( mSeparatorAction );
+    mSeparatorAction = 0;
+  }
+  if ( mMoreAction ) {
+    mMessageActions->messageStatusMenu()->removeAction( mMoreAction );
+    mMoreAction = 0;
+  }
+
   mTagActions.clear();
   delete mMessageTagToggleMapper;
   mMessageTagToggleMapper = 0;
+}
+
+void TagActionManager::createTagAction( const Tag::Ptr &tag, bool addToMenu )
+{
+  QString cleanName( i18n("Message Tag %1", tag->tagName ) );
+  cleanName.replace('&',"&&");
+  KToggleAction * const tagAction = new KToggleAction( KIcon( tag->iconName ),
+                                                       cleanName, this );
+  tagAction->setShortcut( tag->shortcut );
+  tagAction->setIconText( tag->tagName );
+  mActionCollection->addAction( tag->nepomukResourceUri.toString(), tagAction );
+  connect( tagAction, SIGNAL(triggered(bool)),
+           mMessageTagToggleMapper, SLOT(map()) );
+
+  // The shortcut configuration is done in the config dialog.
+  // The shortcut set in the shortcut dialog would not be saved back to
+  // the tag descriptions correctly.
+  tagAction->setShortcutConfigurable( false );
+  mMessageTagToggleMapper->setMapping( tagAction, tag->nepomukResourceUri.toString() );
+
+  mTagActions.insert( tag->nepomukResourceUri.toString(), tagAction );
+  if ( addToMenu )
+    mMessageActions->messageStatusMenu()->menu()->addAction( tagAction );
+
+  if ( tag->inToolbar )
+    mToolbarActions.append( tagAction );
 }
 
 void TagActionManager::createActions()
 {
   clearActions();
 
+
+  const QList<Nepomuk::Tag> alltags( Nepomuk::Tag::allTags() );
+  if ( alltags.isEmpty() )
+    return;
+
+  // Build a sorted list of tags
+  QList<Tag::Ptr> tagList;
+  foreach( const Nepomuk::Tag &nepomukTag, alltags ) {
+    tagList.append( Tag::fromNepomuk( nepomukTag ) );
+  }
+  qSort( tagList.begin(), tagList.end(), KMail::Tag::compare );
+
   //Use a mapper to understand which tag button is triggered
   mMessageTagToggleMapper = new QSignalMapper( this );
   connect( mMessageTagToggleMapper, SIGNAL(mapped(QString)),
            this, SIGNAL(tagActionTriggered(QString)) );
 
-  // Build a sorted list of tags
-  QList<Tag::Ptr> tagList;
-  foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
-    tagList.append( Tag::fromNepomuk( nepomukTag ) );
-  }
-  qSort( tagList.begin(), tagList.end(), KMail::Tag::compare );
-
   // Create a action for each tag and plug it into various places
+  int i = 0;
   foreach( const Tag::Ptr &tag, tagList ) {
+    if ( i< s_numberMaxTag )
+      createTagAction( tag,true );
+    else
+    {
+      if ( tag->inToolbar || !tag->shortcut.isEmpty() )
+        createTagAction( tag, false );
 
-    QString cleanName( i18n("Message Tag %1", tag->tagName ) );
-    cleanName.replace('&',"&&");
-    KToggleAction * const tagAction = new KToggleAction( KIcon( tag->iconName ),
-                                                         cleanName, this );
-    tagAction->setShortcut( tag->shortcut );
-    tagAction->setIconText( tag->tagName );
-    mActionCollection->addAction( tag->nepomukResourceUri.toString(), tagAction );
-    connect( tagAction, SIGNAL(triggered(bool)),
-             mMessageTagToggleMapper, SLOT(map()) );
+      if ( i == s_numberMaxTag && i <tagList.count() )
+      {
+        mSeparatorAction = new KAction( this );
+        mSeparatorAction->setSeparator( true );
+        mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorAction );
 
-    // The shortcut configuration is done in the config dialog.
-    // The shortcut set in the shortcut dialog would not be saved back to
-    // the tag descriptions correctly.
-    tagAction->setShortcutConfigurable( false );
-    mMessageTagToggleMapper->setMapping( tagAction, tag->nepomukResourceUri.toString() );
-
-    mTagActions.insert( tag->nepomukResourceUri.toString(), tagAction );
-    mMessageActions->messageStatusMenu()->menu()->addAction( tagAction );
-    if ( tag->inToolbar )
-      mToolbarActions.append( tagAction );
+        mMoreAction = new KAction( i18n( "More..." ), this );
+        mMessageActions->messageStatusMenu()->menu()->addAction( mMoreAction );
+        connect( mMoreAction, SIGNAL(triggered(bool)),
+                 this, SIGNAL(tagMoreActionClicked()) );
+      }
+    }
+    ++i;
   }
 
   if ( !mToolbarActions.isEmpty() && mGUIClient->factory() ) {
@@ -145,18 +171,19 @@ void TagActionManager::updateActionStates( int numberOfSelectedMessages,
                                            const Akonadi::Item &selectedItem )
 {
   QMap<QString,KToggleAction*>::const_iterator it = mTagActions.constBegin();
-  if ( 1 == numberOfSelectedMessages )
+  QMap<QString,KToggleAction*>::const_iterator end = mTagActions.constEnd();
+  if ( numberOfSelectedMessages == 1 )
   {
     Q_ASSERT( selectedItem.isValid() );
     Nepomuk::Resource itemResource( selectedItem.url() );
-    for ( ; it != mTagActions.constEnd(); ++it ) {
+    for ( ; it != end; ++it ) {
       const bool hasTag = itemResource.tags().contains( Nepomuk::Tag( it.key() ) );
       it.value()->setChecked( hasTag );
       it.value()->setEnabled( true );
     }
   }
   else if ( numberOfSelectedMessages > 1 ) {
-    for ( ; it != mTagActions.constEnd(); ++it ) {
+    for ( ; it != end; ++it ) {
       Nepomuk::Tag tag( it.key() );
       it.value()->setChecked( false );
       it.value()->setEnabled( true );
@@ -164,7 +191,7 @@ void TagActionManager::updateActionStates( int numberOfSelectedMessages,
     }
   }
   else {
-    for ( ; it != mTagActions.constEnd(); ++it ) {
+    for ( ; it != end; ++it ) {
       it.value()->setEnabled( false );
     }
   }
@@ -175,3 +202,5 @@ void TagActionManager::tagsChanged()
   createActions();
 }
 
+
+#include "tagactionmanager.moc"

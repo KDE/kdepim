@@ -132,9 +132,9 @@
         <label>Empty the local trash folder on program exit</label>
         <default>false</default>
       </entry>
-      <entry name="StartupFolder" type="String" key="startupFolder">
+      <entry name="StartupFolder" type="LongLong" key="startupFolder">
         <label>Specify the folder to open when the program is started</label>
-        <default></default>
+        <default>-1</default>
       </entry>
       <entry name="ConfirmBeforeEmpty" type="Bool" key="confirm-before-empty">
         <label>Ask for confirmation before moving all messages to trash</label>
@@ -425,36 +425,48 @@
     <entry name="TemplateNewMessage" type="String" key="TemplateNewMessage">
       <label>Message template for new message</label>
       <whatsthis></whatsthis>
-      <default code="true">DefaultTemplates::defaultNewMessage()</default>
+      <default code="true">TemplateParser::DefaultTemplates::defaultNewMessage()</default>
     </entry>
     <entry name="TemplateReply" type="String" key="TemplateReply">
       <label>Message template for reply</label>
       <whatsthis></whatsthis>
-      <default code="true">DefaultTemplates::defaultReply()</default>
+      <default code="true">TemplateParser::DefaultTemplates::defaultReply()</default>
     </entry>
     <entry name="TemplateReplyAll" type="String" key="TemplateReplyAll">
       <label>Message template for reply to all</label>
       <whatsthis></whatsthis>
-      <default code="true">DefaultTemplates::defaultReplyAll()</default>
+      <default code="true">TemplateParser::DefaultTemplates::defaultReplyAll()</default>
     </entry>
     <entry name="TemplateForward" type="String" key="TemplateForward">
       <label>Message template for forward</label>
       <whatsthis></whatsthis>
-      <default code="true">DefaultTemplates::defaultForward()</default>
+      <default code="true">TemplateParser::DefaultTemplates::defaultForward()</default>
     </entry>
     <entry name="QuoteString" type="String" key="QuoteString">
       <label>Quote characters</label>
       <whatsthis></whatsthis>
-      <default code="true">DefaultTemplates::defaultQuoteString()</default>
+      <default code="true">TemplateParser::DefaultTemplates::defaultQuoteString()</default>
     </entry>
   </group>
 
   <group name="FavoriteCollectionView">
-    <entry name="EnableFavoriteCollectionView" type="Bool">
-      <default>true</default>
-    </entry>
     <entry name="FavoriteCollectionViewHeight" type="Int">
       <default>100</default>
+    </entry>
+    <entry name="FavoriteCollectionViewMode" type="Enum">
+    <label>Display Mode of the Favorite Collections View</label>
+       <choices>
+         <choice name ="HiddenMode">
+           <label>Do not show the favorite folders view.</label>
+         </choice>
+         <choice name="IconMode">
+           <label>Show favorite folders in icon mode.</label>
+         </choice>
+         <choice name="ListMode">
+           <label>Show favorite folders in list mode.</label>
+         </choice>
+       </choices>
+       <default>IconMode</default>
     </entry>
   </group>
 
@@ -481,12 +493,20 @@
 
  <!-- Search Dialog settings -->
  <group name="SearchDialog">
+   <entry name="CollectionWidth" type="Int">
+     <label>Specifies the width of the collection field in the Search Window dialog (for internal use only)</label>
+     <default>150</default>
+   </entry>
    <entry name="SubjectWidth" type="Int">
      <label>Specifies the width of the subject field in the Search Window dialog (for internal use only)</label>
      <default>150</default>
    </entry>
    <entry name="SenderWidth" type="Int">
      <label>Specifies the width of the sender field in the Search Window dialog (for internal use only)</label>
+     <default>120</default>
+   </entry>
+   <entry name="ReceiverWidth" type="Int">
+     <label>Specifies the width of the receiver field in the Search Window dialog (for internal use only)</label>
      <default>120</default>
    </entry>
    <entry name="DateWidth" type="Int">

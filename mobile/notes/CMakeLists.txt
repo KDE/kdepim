@@ -20,13 +20,11 @@ set(notes_mobile_SRCS
 
 qt4_wrap_ui(notes_mobile_SRCS searchwidget.ui)
 
-if (WIN32)
-   set(notes_mobile_SRCS ${notes_mobile_SRCS} notes-mobile.rc)
-endif (WIN32)
-
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
+
+kde4_add_app_icon(notes_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-notes-mobile.png")
 
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
 if (WINCE)

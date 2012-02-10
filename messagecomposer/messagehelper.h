@@ -119,10 +119,6 @@ namespace MessageHelper {
   QString MESSAGECOMPOSER_EXPORT skipKeyword( const QString& str, QChar sepChar = QLatin1Char( ':' ),
                                               bool *keywordFound = 0 );
 
-#ifndef _WIN32_WCE
-  QList<Nepomuk::Tag> tagList(const Akonadi::Item &msg);
-  void setTagList( const Akonadi::Item &msg, const QList<Nepomuk::Tag> &tags );
-#endif
 }
 
 

@@ -2895,8 +2895,7 @@ C=DE
                     allowed values:
                     <literal>appearance</literal>,
                     <literal>filtering</literal>
-                    and <literal>any</literal>.
-                  </para>
+                    and <literal>any</literal>.</para>
                 </footnote>
               </entry>
 	      <entry>the context in which this filter matches.</entry>
@@ -3003,8 +3002,7 @@ C=DE
 		    <literal>marginal</literal>,
 		    <literal>full</literal>,
 		    <literal>ultimate</literal>. See the &gpg; and
-		    &gpgsm; manuals for a detailed explanation.
-		  </para>
+		    &gpgsm; manuals for a detailed explanation.</para>
 		</footnote>
 	      </entry>
 	      <entry>

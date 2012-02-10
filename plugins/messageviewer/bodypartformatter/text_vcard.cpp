@@ -73,19 +73,29 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       if ( vCard.isEmpty() ) {
         return AsIcon;
       }
+
       KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-      if ( al.empty() ) {
+
+      // Pre-count the number of non-empty addressees
+      int count = 0;
+      foreach ( const KABC::Addressee &a, al ) {
+        if ( a.isEmpty() ) {
+          continue;
+        }
+        count++;
+      }
+      if ( !count ) {
         return AsIcon;
       }
 
       writer->queue( "<div align=\"center\"><h2>" +
-                     i18n( "Attached business cards" ) +
+                     i18np( "Attached business card", "Attached business cards", count ) +
                      "</h2></div>" );
 
-      int count = 0;
+      count = 0;
       foreach ( const KABC::Addressee &a, al ) {
         if ( a.isEmpty() ) {
-          return AsIcon;
+          continue;
         }
 
         Akonadi::StandardContactFormatter formatter;
@@ -199,7 +209,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool saveAsVCard( const KABC::Addressee &a, const QString &vCard ) const
     {
-      QString fileName = a.givenName() + '_' + a.familyName() + ".vcf";
+      QString fileName = a.givenName() + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
 
       // get the saveas file name
       KUrl saveAsUrl =

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef BROWSERWIDGET_H
-#define BROWSERWIDGET_H
+#ifndef AKONADICONSOLE_BROWSERWIDGET_H
+#define AKONADICONSOLE_BROWSERWIDGET_H
 
 #include <ui_browserwidget_itemview.h>
 #include <ui_browserwidget_contentview.h>
@@ -44,8 +44,10 @@ namespace Akonadi {
 class EntityTreeView;
 class Job;
 class StandardActionManager;
-class StatisticsProxyModel;
 class Monitor;
+}
+namespace KPIM {
+class StatisticsProxyModel;
 }
 
 class BrowserWidget: public QWidget
@@ -74,7 +76,7 @@ class BrowserWidget: public QWidget
   private:
     AkonadiBrowserModel *mBrowserModel;
     Akonadi::EntityTreeView *mCollectionView;
-    Akonadi::StatisticsProxyModel *statisticsProxyModel;
+    KPIM::StatisticsProxyModel *statisticsProxyModel;
     Ui::ItemViewWidget itemUi;
     Ui::ContentViewWidget contentUi;
     Akonadi::Item mCurrentItem;

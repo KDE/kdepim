@@ -19,6 +19,8 @@
  *******************************************************************************/
 #include "core/sortorder.h"
 
+#include "messagelistutil.h"
+
 #include <KLocale>
 
 #include <QMetaEnum>
@@ -83,12 +85,14 @@ QList< QPair< QString, int > > SortOrder::enumerateGroupSortingOptions( Aggregat
     ret.append( QPair< QString, int >( i18n( "None (Storage Order)" ), SortOrder::NoGroupSorting ) );
     ret.append( QPair< QString, int >( i18n( "by Date/Time of Most Recent Message in Group" ), SortOrder::SortGroupsByDateTimeOfMostRecent ) );
   }
+
   if ( g == Aggregation::GroupBySenderOrReceiver )
     ret.append( QPair< QString, int >( i18n( "by Sender/Receiver" ), SortOrder::SortGroupsBySenderOrReceiver ) );
-  if ( g == Aggregation::GroupBySender )
+  else if ( g == Aggregation::GroupBySender )
     ret.append( QPair< QString, int >( i18n( "by Sender" ), SortOrder::SortGroupsBySender ) );
-  if ( g == Aggregation::GroupByReceiver )
+  else if ( g == Aggregation::GroupByReceiver )
     ret.append( QPair< QString, int >( i18n( "by Receiver" ), SortOrder::SortGroupsByReceiver ) );
+
   return ret;
 }
 
@@ -96,10 +100,9 @@ QList< QPair< QString, int > > SortOrder::enumerateGroupSortDirectionOptions( Ag
                                                                               GroupSorting gs )
 {
   QList< QPair< QString, int > > ret;
-  if ( g == Aggregation::NoGrouping )
+  if ( g == Aggregation::NoGrouping || gs == SortOrder::NoGroupSorting)
     return ret;
-  if ( gs == SortOrder::NoGroupSorting )
-    return ret;
+
   if ( gs == SortOrder::SortGroupsByDateTimeOfMostRecent )
   {
     ret.append( QPair< QString, int >( i18n( "Least Recent on Top" ), SortOrder::Ascending ) );
@@ -210,16 +213,16 @@ SortOrder SortOrder::defaultForAggregation( const Aggregation *aggregation,
 
 bool SortOrder::readConfigHelper( KConfigGroup &conf, const QString &id )
 {
-  if ( !conf.hasKey( id + QLatin1String( "MessageSorting" ) ) )
+  if ( !conf.hasKey( id + MessageList::Util::messageSortingConfigName() ) )
     return false;
   mMessageSorting = messageSortingForName(
-       conf.readEntry( id + QLatin1String( "MessageSorting" ) ) );
+       conf.readEntry( id + MessageList::Util::messageSortingConfigName() ) );
   mMessageSortDirection = sortDirectionForName(
-       conf.readEntry( id + QLatin1String( "MessageSortDirection" ) ) );
+       conf.readEntry( id + MessageList::Util::messageSortDirectionConfigName() ) );
   mGroupSorting = groupSortingForName(
-       conf.readEntry( id + QLatin1String( "GroupSorting" ) ) );
+       conf.readEntry( id + MessageList::Util::groupSortingConfigName() ) );
   mGroupSortDirection = sortDirectionForName(
-       conf.readEntry( id + QLatin1String( "GroupSortDirection" ) ) );
+       conf.readEntry( id + MessageList::Util::groupSortDirectionConfigName() ) );
   return true;
 }
 
@@ -242,19 +245,19 @@ void SortOrder::writeConfig( KConfigGroup &conf, const QString &storageId,
   QString id = storageId;
   if ( !storageUsesPrivateSortOrder ) {
     id = QLatin1String( "GlobalSortOrder" );
-    conf.deleteEntry( storageId + QLatin1String( "MessageSorting" ) );
-    conf.deleteEntry( storageId + QLatin1String( "MessageSortDirection" ) );
-    conf.deleteEntry( storageId + QLatin1String( "GroupSorting" ) );
-    conf.deleteEntry( storageId + QLatin1String( "GroupSortDirection" ) );
+    conf.deleteEntry( storageId + MessageList::Util::messageSortingConfigName() );
+    conf.deleteEntry( storageId + MessageList::Util::messageSortDirectionConfigName() );
+    conf.deleteEntry( storageId + MessageList::Util::groupSortingConfigName() );
+    conf.deleteEntry( storageId + MessageList::Util::groupSortDirectionConfigName() );
   }
 
-   conf.writeEntry( id + QLatin1String( "MessageSorting" ),
+   conf.writeEntry( id + MessageList::Util::messageSortingConfigName(),
                     nameForMessageSorting( mMessageSorting ) );
-   conf.writeEntry( id + QLatin1String( "MessageSortDirection" ),
+   conf.writeEntry( id + MessageList::Util::messageSortDirectionConfigName(),
                     nameForSortDirection( mMessageSortDirection ) );
-   conf.writeEntry( id + QLatin1String( "GroupSorting" ),
+   conf.writeEntry( id + MessageList::Util::groupSortingConfigName(),
                     nameForGroupSorting( mGroupSorting ) );
-   conf.writeEntry( id + QLatin1String( "GroupSortDirection" ),
+   conf.writeEntry( id + MessageList::Util::groupSortDirectionConfigName(),
                     nameForSortDirection( mGroupSortDirection ) );
 
 }

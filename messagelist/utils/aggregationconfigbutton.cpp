@@ -62,7 +62,7 @@ AggregationConfigButton::~AggregationConfigButton()
 void AggregationConfigButtonPrivate::slotConfigureAggregations()
 {
   QString currentAggregationID;
-  if ( mAggregationComboBox != 0 ) {
+  if ( mAggregationComboBox ) {
     currentAggregationID = mAggregationComboBox->currentAggregation();
   }
 

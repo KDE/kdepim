@@ -20,8 +20,8 @@
  USA.
  */
 
-#ifndef JOBTRACKER_H_
-#define JOBTRACKER_H_
+#ifndef AKONADICONSOLE_JOBTRACKER_H
+#define AKONADICONSOLE_JOBTRACKER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QDateTime>
@@ -33,7 +33,7 @@ class JobInfo
 public:
   JobInfo() :parent(-1)
   {}
-  bool operator==( const JobInfo& other )
+  bool operator==( const JobInfo& other ) const
   {
       return id == other.id
           && parent == other.parent

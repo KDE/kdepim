@@ -41,7 +41,6 @@ namespace CalendarSupport {
   class Calendar;
 }
 
-
 class KOListView;
 class KOEventPopupMenu;
 
@@ -53,16 +52,14 @@ class KOListView : public KOEventView
 {
   Q_OBJECT
   public:
-  explicit KOListView( CalendarSupport::Calendar *calendar,
-                       QWidget *parent = 0,  bool nonInteractive = false );
+    explicit KOListView( CalendarSupport::Calendar *calendar,
+                         QWidget *parent = 0, bool nonInteractive = false );
     ~KOListView();
 
     virtual int maxDatesHint() const;
     virtual int currentDateCount() const;
     virtual Akonadi::Item::List selectedIncidences();
     virtual DateList selectedIncidenceDates();
-
-    void showDates( bool show );
 
     // Shows all incidences of the calendar
     void showAll();
@@ -80,13 +77,11 @@ class KOListView : public KOEventView
 
   public slots:
     virtual void updateView();
-    virtual void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
+    virtual void showDates( const QDate &start, const QDate &end,
+                            const QDate &preferredMonth = QDate() );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();
-
-    void showDates();
-    void hideDates();
 
     void changeIncidenceDisplay( const Akonadi::Item &, int );
 

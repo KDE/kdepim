@@ -48,8 +48,8 @@ struct MultiChange {
   bool              success;
 
   explicit MultiChange( const Item &parent = Item() )
-    : parent( parent )
-    , success( true )
+    : parent( parent ),
+      success( true )
   {}
 
   bool inProgress() {
@@ -61,44 +61,39 @@ namespace CalendarSupport {
 
 struct CalendarUtilsPrivate
 {
-  /// Methods
-  CalendarUtilsPrivate( Calendar *calendar, CalendarUtils *qq );
-  void handleChangeFinish( const Akonadi::Item &oldInc,
-                           const Akonadi::Item &newInc,
-                           CalendarSupport::IncidenceChanger::WhatChanged,
-                           bool success );
+  public:
+    /// Methods
+    CalendarUtilsPrivate( Calendar *calendar, CalendarUtils *qq );
+    void handleChangeFinish( const Akonadi::Item &oldInc,
+                             const Akonadi::Item &newInc,
+                             CalendarSupport::IncidenceChanger::WhatChanged,
+                             bool success );
 
-  bool purgeCompletedSubTodos( const Akonadi::Item &todoItem, bool &allPurged );
+    bool purgeCompletedSubTodos( const Akonadi::Item &todoItem, bool &allPurged );
 
-  /// Members
-  Calendar         *mCalendar;
-  IncidenceChanger *mChanger;
-  MultiChange       mMultiChange;
+    /// Members
+    Calendar         *mCalendar;
+    IncidenceChanger *mChanger;
+    MultiChange       mMultiChange;
 
-private:
-  CalendarUtils * const q_ptr;
-  Q_DECLARE_PUBLIC( CalendarUtils )
+  private:
+    CalendarUtils *const q_ptr;
+    Q_DECLARE_PUBLIC( CalendarUtils )
 };
 
 }
 
 CalendarUtilsPrivate::CalendarUtilsPrivate( Calendar *calendar, CalendarUtils *qq )
-  : mCalendar( calendar )
-  , mChanger( new IncidenceChanger( calendar, qq ) )
-  , q_ptr( qq )
+  : mCalendar( calendar ),
+    mChanger( new IncidenceChanger( calendar, qq ) ),
+    q_ptr( qq )
 {
   Q_Q( CalendarUtils );
   Q_ASSERT( mCalendar );
 
   q->connect( mChanger,
-             SIGNAL( incidenceChangeFinished( Akonadi::Item,
-                                              Akonadi::Item,
-                                              CalendarSupport::IncidenceChanger::WhatChanged,
-                                              bool ) ),
-             SLOT( handleChangeFinish( Akonadi::Item,
-                                       Akonadi::Item,
-                                       CalendarSupport::IncidenceChanger::WhatChanged,
-                                      bool ) ) );
+              SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)),
+              SLOT(handleChangeFinish(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)) );
 }
 
 void CalendarUtilsPrivate::handleChangeFinish( const Akonadi::Item &oldInc,
@@ -150,7 +145,7 @@ bool CalendarUtilsPrivate::purgeCompletedSubTodos( const Akonadi::Item &todoItem
 
   bool deleteThisTodo = true;
   Akonadi::Item::List subTodos = mCalendar->findChildren( todoItem );
-  foreach( const Akonadi::Item &item,  subTodos ) {
+  foreach ( const Akonadi::Item &item, subTodos ) {
     if ( CalendarSupport::hasTodo( item ) ) {
       deleteThisTodo &= purgeCompletedSubTodos( item, allPurged );
     }
@@ -174,9 +169,9 @@ bool CalendarUtilsPrivate::purgeCompletedSubTodos( const Akonadi::Item &todoItem
 
 /// CalendarUtils
 
-CalendarUtils::CalendarUtils( Calendar *calendar, QObject *parent)
-  : QObject( parent )
-  , d_ptr( new CalendarUtilsPrivate( calendar, this ) )
+CalendarUtils::CalendarUtils( Calendar *calendar, QObject *parent )
+  : QObject( parent ),
+    d_ptr( new CalendarUtilsPrivate( calendar, this ) )
 {
   Q_ASSERT( calendar );
 }
@@ -213,7 +208,9 @@ bool CalendarUtils::makeIndependent( const Akonadi::Item &item )
   Incidence::Ptr oldInc( inc->clone() );
   inc->setRelatedTo( 0 );
   // HACK: This is not a widget, so pass 0 for now
-  return d->mChanger->changeIncidence( oldInc, item, CalendarSupport::IncidenceChanger::RELATION_MODIFIED, 0 );
+  return d->mChanger->changeIncidence( oldInc, item,
+                                       CalendarSupport::IncidenceChanger::RELATION_MODIFIED,
+                                       0 );
 }
 
 bool CalendarUtils::makeChildrenIndependent( const Akonadi::Item &item )
@@ -228,7 +225,7 @@ bool CalendarUtils::makeChildrenIndependent( const Akonadi::Item &item )
 
   if ( d->mMultiChange.inProgress() ) {
     return false;
- }
+  }
 
   const Incidence::Ptr inc = CalendarSupport::incidence( item );
   const Akonadi::Item::List subIncs = d->mCalendar->findChildren( item );
@@ -239,13 +236,14 @@ bool CalendarUtils::makeChildrenIndependent( const Akonadi::Item &item )
 
   // First make sure that no changes are in progress for one of the incs
   foreach ( const Item &subInc, subIncs ) {
-    if ( d->mChanger->changeInProgress( subInc.id() ) )
+    if ( d->mChanger->changeInProgress( subInc.id() ) ) {
       return false;
+    }
   }
 
   d->mMultiChange = MultiChange( item );
   bool allStarted = true;
-  foreach( const Item &subInc, subIncs ) {
+  foreach ( const Item &subInc, subIncs ) {
     d->mMultiChange.children.append( subInc.id() );
     allStarted = allStarted && makeIndependent( subInc );
   }
@@ -267,14 +265,17 @@ void CalendarUtils::purgeCompletedTodos()
   Akonadi::Item::List todos = calendar()->rawTodos();
   Akonadi::Item::List rootTodos;
   Akonadi::Item::List::ConstIterator it;
-  for ( it = todos.constBegin(); it != todos.constEnd(); ++it ) {
+  Akonadi::Item::List::ConstIterator end = todos.constEnd();
+
+  for ( it = todos.constBegin(); it != end; ++it ) {
     Todo::Ptr aTodo = CalendarSupport::todo( *it );
     if ( aTodo && aTodo->relatedTo().isEmpty() ) { // top level todo //REVIEW(AKONADI_PORT)
       rootTodos.append( *it );
     }
   }
+  end = rootTodos.constEnd();
   // now that we have a list of all root todos, check them and their children
-  for ( it = rootTodos.constBegin(); it != rootTodos.constEnd(); ++it ) {
+  for ( it = rootTodos.constBegin(); it != end; ++it ) {
     d->purgeCompletedSubTodos( *it, allDeleted );
   }
 
@@ -284,7 +285,7 @@ void CalendarUtils::purgeCompletedTodos()
       0,
       i18nc( "@info",
              "Unable to purge to-dos with uncompleted children." ),
-      i18n( "Delete To-do" ),
+      i18nc( "@title:window", "Delete To-do" ),
       "UncompletedChildrenPurgeTodos" );
   }
 }

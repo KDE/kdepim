@@ -88,6 +88,12 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="toolTip">
+            <string>Select the headline text background color</string>
+           </property>
+           <property name="whatsThis">
+            <string>Click this button to start a color chooser that will allow you set to the color for the headline background color.</string>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -124,6 +130,12 @@
           <widget class="KColorButton" name="kcbHeaderTextColor">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>Select the headline text color</string>
+           </property>
+           <property name="whatsThis">
+            <string>Click this button to start a color chooser that will allow you set to the color for the headline text.</string>
            </property>
            <property name="text">
             <string/>

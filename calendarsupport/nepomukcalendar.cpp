@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
-  Author: Sérgio Martins <sergio.martins@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Sérgio Martins <sergio.martins@kdab.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,11 +18,11 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "nepomukcalendar.h"
 #include "utils.h"
 #include "kcalprefs.h"
 #include "groupware.h"
 #include "mailscheduler.h"
-#include "nepomukcalendar.h"
 #include "next/incidencesearchjob.h"
 #include "next/incidencefetchjob.h"
 
@@ -43,7 +43,9 @@ class NepomukCalendar::Private
       mChanger = new IncidenceChanger2();
       mChanger->setDestinationPolicy( IncidenceChanger2::DestinationPolicyAsk );
       mParent = parent;
-      mCalendar = KCalCore::MemoryCalendar::Ptr( new KCalCore::MemoryCalendar( KCalPrefs::instance()->timeSpec() ) );
+      mCalendar =
+        KCalCore::MemoryCalendar::Ptr(
+          new KCalCore::MemoryCalendar( KCalPrefs::instance()->timeSpec() ) );
       mJobsInProgress = 0;
     }
 
@@ -73,10 +75,12 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
   : MemoryCalendar( KCalPrefs::instance()->timeSpec() ),
     d( new Private( parent ) )
 {
-  connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+  connect( d->mChanger,
+           SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+  connect( d->mChanger,
+           SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
   IncidenceFetchJob *job = new IncidenceFetchJob();
@@ -146,10 +150,9 @@ KCalCore::Event::List NepomukCalendar::rawEvents( const QDate &start, const QDat
   return d->mCalendar->rawEvents( start, end, timeSpec, inclusive );
 }
 
-KCalCore::Event::List NepomukCalendar::rawEventsForDate( const QDate &date,
-                                                         const KDateTime::Spec &timeSpec,
-                                                         KCalCore::EventSortField sortField,
-                                                         KCalCore::SortDirection sortDirection ) const
+KCalCore::Event::List NepomukCalendar::rawEventsForDate(
+  const QDate &date, const KDateTime::Spec &timeSpec,
+  KCalCore::EventSortField sortField, KCalCore::SortDirection sortDirection ) const
 {
   return d->mCalendar->rawEventsForDate( date, timeSpec, sortField, sortDirection );
 }
@@ -361,10 +364,9 @@ void NepomukCalendar::createFinished( int changeId,
                     errorMessage );
 }
 
-void NepomukCalendar::modifyFinished( int changeId,
-                                      const Akonadi::Item &item,
-                                      CalendarSupport::IncidenceChanger2::ResultCode changerResultCode,
-                                      const QString &errorMessage )
+void NepomukCalendar::modifyFinished(
+  int changeId, const Akonadi::Item &item,
+  CalendarSupport::IncidenceChanger2::ResultCode changerResultCode, const QString &errorMessage )
 {
   d->mJobsInProgress--;
   Q_UNUSED( changeId );
@@ -383,7 +385,7 @@ void NepomukCalendar::searchResult( KJob *job )
   } else {
     success = true;
 
-  IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
+    IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
 /*
 #ifdef KDEPIM_NO_NEPOMUK
     IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
@@ -392,7 +394,7 @@ void NepomukCalendar::searchResult( KJob *job )
 #endif
 */
     const Akonadi::Item::List list = searchJob->items();
-    foreach( const Akonadi::Item &item, list ) {
+    foreach ( const Akonadi::Item &item, list ) {
       if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
         KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
         if ( incidence ) {

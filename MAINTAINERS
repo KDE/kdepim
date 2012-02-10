@@ -11,10 +11,10 @@ kalarm                David Jarvie <djarvie@kde.org>
 kdgantt               KDAB
 kjots                 Stephen Kelly <steveire@gmail.com>
 kleopatra             Marc Mutz <mutz@kde.org>
-kmail                 ?
+kmail                 Laurent Montel <montel@kde.org>
 kmailcvt              Danny Kukawka <danny.kukawka@web.de>
 knode                 Olivier Trichet <nive@nivalis.org>
-knotes                ?
+knotes                DEPRECATED
 konsolekalendar       Allen Winter <winter@kde.org>
 kontact               ?
 korganizer            Allen Winter <winter@kde.org>
@@ -25,13 +25,11 @@ libkdepim             ?
 libkleo               Marc Mutz <mutz@kde.org>
 libkpgp               DEPRECATED
 libksieve             Marc Mutz <mutz@kde.org>
-messagecomposer       ?
-messagecore           ?
-messagelibs           ?
-messageviewer         Torgny Nyblom <kde@nyblom.org>
-nepomuk_email_feeder  ?
+messagecomposer       <kmail maintainer>
+messagecore           <kmail maintainer>
+messagelist           <kmail maintainer>
+messageviewer         <kmail maintainer>
 ontologies            ?
 plugins               ?
 strigi-analyzer       ?
-templateparser        ?
-wizards               ?
+templateparser        <kmail maintainer>

@@ -23,8 +23,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "akregatorconfig.h"
 #include "feed.h"
+#include "akregatorconfig.h"
 #include "article.h"
 #include "articlejobs.h"
 #include "feediconmanager.h"
@@ -210,7 +210,11 @@ QVector<Feed*> Feed::feeds()
 
 Article Feed::findArticle(const QString& guid) const
 {
-    return d->articles[guid];
+  Article a;
+  if ( !d->articles.isEmpty() ) {
+    a = d->articles[guid];
+  }
+  return a;
 }
 
 QList<Article> Feed::articles()
@@ -230,7 +234,7 @@ void Feed::loadArticles()
     if (d->articlesLoaded)
         return;
 
-    if (!d->archive)
+    if (!d->archive && d->storage)
         d->archive = d->storage->archiveFor(xmlUrl());
 
     QStringList list = d->archive->articles();
@@ -869,7 +873,7 @@ void Feed::enforceLimitArticleNumber()
     int c = 0;
     const bool useKeep = Settings::doNotExpireImportantArticles();
 
-    Q_FOREACH ( Article i, articles )
+    Q_FOREACH ( Article i, articles ) //krazy:exclude=foreach
     {
         if (c < limit)
         {

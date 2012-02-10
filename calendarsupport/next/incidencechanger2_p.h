@@ -55,11 +55,18 @@ namespace CalendarSupport {
 
     Akonadi::Collection usedCollection;
 
-    Change(){}
-    Change( int id, uint atomicOperId, bool recToHistory, QWidget *p ) :
-    changeId( id ), atomicOperationId( atomicOperId ), recordToHistory( recToHistory ), parent( p ){}
-  };
+    Change()
+    {
+    }
 
+    Change( int id, uint atomicOperId, bool recToHistory, QWidget *p )
+      : changeId( id ),
+        atomicOperationId( atomicOperId ),
+        recordToHistory( recToHistory ),
+        parent( p )
+    {
+    }
+  };
 
   struct AtomicOperation {
     uint id;
@@ -78,13 +85,20 @@ namespace CalendarSupport {
     // So we can rollback if one change goes wrong
     History *history;
 
-    AtomicOperation( uint ident ) : id ( ident ), endCalled( false ), numChanges( 0 ),
-      numCompletedChanges( 0 ), rollbackInProgress( false ), history( 0 ) {}
+    AtomicOperation( uint ident )
+      : id ( ident ),
+        endCalled( false ),
+        numChanges( 0 ),
+        numCompletedChanges( 0 ),
+        rollbackInProgress( false ),
+        history( 0 )
+    {
+    }
 
     ~AtomicOperation()
-     {
-       delete history;
-     }
+    {
+      delete history;
+    }
   };
 
 class IncidenceChanger2::Private : public QObject
@@ -95,8 +109,9 @@ class IncidenceChanger2::Private : public QObject
     ~Private();
 
     /**
-       Returns true if, for a specific item, an ItemDeleteJob is already running, or if one already run successfully.
-    */
+     * Returns true if, for a specific item, an ItemDeleteJob is already running,
+     * or if one already run successfully.
+     */
     bool deleteAlreadyCalled( Akonadi::Item::Id id ) const;
 
     // Does a queued emit, with QMetaObject::invokeMethod
@@ -135,7 +150,7 @@ class IncidenceChanger2::Private : public QObject
 
   public:
     int mLatestChangeId;
-    QHash<const KJob*,Change> mChangeForJob;
+    QHash<const KJob *,Change> mChangeForJob;
     bool mShowDialogsOnError;
     Akonadi::Collection mDefaultCollection;
     DestinationPolicy mDestinationPolicy;
@@ -145,23 +160,25 @@ class IncidenceChanger2::Private : public QObject
     History *mHistory;
     bool mHistoryEnabled;
 
-    /** Queue modifications by ID. We can only send a modification to akonadi when the previous
-        one ended.
-
-        The container doesn't look like a queue because of an optimization: if there's a modification
-        A in progress, a modification B waiting (queued), and then a new one C comes in, we just discard
-        B, and queue C. The queue always has 1 element max.
-    */
+    /**
+     * Queue modifications by ID. We can only send a modification to Akonadi
+     * when the previous one ended.
+     *
+     * The container doesn't look like a queue because of an optimization:
+     * if there's a modification A in progress, a modification B waiting (queued),
+     * and then a new one C comes in, we just discard B, and queue C.
+     * The queue always has 1 element max.
+     */
     QHash<Akonadi::Item::Id,Change> mQueuedModifications;
 
     /**
-       So we know if there's already a modification in progress
+     * So we know if there's already a modification in progress
      */
     QHash<Akonadi::Item::Id,Change> mModificationsInProgress;
 
     /**
-       Indexed by atomic operation id.
-    */
+     *Indexed by atomic operation id.
+     */
     QHash<uint,AtomicOperation*> mAtomicOperations;
 
     bool mRespectsCollectionRights;

@@ -27,13 +27,11 @@ set(mobile_tasks_SRCS
 qt4_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(mobile_tasks_SRCS settings.kcfgc)
 
-if (WIN32)
-   set(mobile_tasks_SRCS ${mobile_tasks_SRCS} tasks-mobile.rc)
-endif (WIN32)
-
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DKCALCORE_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
+
+kde4_add_app_icon(mobile_tasks_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-tasks-mobile.png")
 
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 if (WINCE)

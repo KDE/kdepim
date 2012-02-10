@@ -10,7 +10,7 @@ add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 include_directories( ${Boost_INCLUDE_DIR} )
 
-option(KDEPIM_INPROCESS_LDAP FALSE "Use in-process rather than KIO slave LDAP" )
+option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)
   add_definitions( -DKDEPIM_INPROCESS_LDAP )
 endif ()
@@ -22,9 +22,7 @@ set(kdepim_LIB_SRCS
    addcontactjob.cpp
    completionordereditor.cpp
    openemailaddressjob.cpp
-   ktimeedit.cpp
    kprefsdialog.cpp
-   kdateedit.cpp
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
@@ -49,6 +47,8 @@ set(kdepim_LIB_SRCS
    multiplyinglineeditor.cpp
    multiplyinglineview_p.cpp
    uistatesaver.cpp
+   nepomukwarning.cpp
+   statisticsproxymodel.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)

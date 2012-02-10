@@ -10,16 +10,12 @@
 #include "kmail_export.h"
 #include "configmodule.h"
 
-#include <QString>
 #include <QStringList>
-#include <QLabel>
 #include <QList>
-#include <QShowEvent>
 #include <QHash>
 #include <QSharedPointer>
+#include <QListWidgetItem>
 
-#include <klineedit.h>
-#include <kcombobox.h>
 #include <kdialog.h>
 #include <kcmodule.h>
 #include <klocale.h>
@@ -33,7 +29,7 @@
 #include "ui_miscpagemaintab.h"
 #include "ui_securitypagegeneraltab.h"
 #include "ui_accountspagereceivingtab.h"
-
+#include "tag.h"
 class QPushButton;
 class QLabel;
 class QCheckBox;
@@ -53,10 +49,6 @@ class ListView;
 class ConfigureDialog;
 class KIntSpinBox;
 class SimpleStringListEditor;
-class KConfig;
-class SMimeConfiguration;
-class TemplatesConfiguration;
-class CustomTemplates;
 class KColorCombo;
 class KFontRequester;
 class KIconButton;
@@ -73,7 +65,12 @@ namespace MessageList {
 
 namespace MessageViewer {
   class ConfigureWidget;
-class InvitationSettings;
+  class InvitationSettings;
+}
+
+namespace TemplateParser {
+  class CustomTemplates;
+  class TemplatesConfiguration;
 }
 
 namespace KMail {
@@ -88,32 +85,6 @@ namespace MailCommon {
 namespace Kleo {
   class CryptoConfig;
 }
-
-class WarningConfiguration : public QWidget, public Ui::WarningConfiguration
-{
-public:
-  WarningConfiguration( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
-class SMimeConfiguration : public QWidget, public Ui::SMimeConfiguration
-{
-public:
-  SMimeConfiguration( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
-
-class ComposerCryptoConfiguration : public QWidget, public Ui::ComposerCryptoConfiguration
-{
-public:
-  ComposerCryptoConfiguration( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
 
 // Individual tab of a ConfigModuleWithTabs
 class ConfigModuleTab : public QWidget {
@@ -163,11 +134,12 @@ public:
   virtual void defaults();
 
 protected:
+  virtual void showEvent ( QShowEvent * event );
   void addTab( ConfigModuleTab* tab, const QString & title );
 
 private:
   KTabWidget *mTabWidget;
-
+  bool mWasInitialized;
 };
 
 
@@ -215,6 +187,7 @@ private slots:
   void slotAddAccount();
   void slotModifySelectedAccount();
   void slotRemoveSelectedAccount();
+  void slotRestartSelectedAccount();
   void slotEditNotifications();
   void slotShowMailCheckMenu( const QString &, const QPoint & );
   void slotIncludeInCheckChanged( bool checked );
@@ -290,7 +263,7 @@ private:
   KFontChooser *mFontChooser;
 
   int          mActiveFontIndex;
-  QFont        mFont[13];
+  QFont        mFont[12];
 };
 
 class AppearancePageColorsTab : public ConfigModuleTab {
@@ -331,10 +304,11 @@ private: // data
   QGroupBox     *mFolderListGroupBox;
   QButtonGroup  *mReaderWindowModeGroup;
   QGroupBox     *mReaderWindowModeGroupBox;
-  QCheckBox     *mFavoriteFolderViewCB;
   QCheckBox     *mFolderQuickSearchCB;
   QButtonGroup  *mFolderToolTipsGroup;
   QGroupBox     *mFolderToolTipsGroupBox;
+  QButtonGroup  *mFavoriteFoldersViewGroup;
+  QGroupBox     *mFavoriteFoldersViewGroupBox;
 };
 
 class AppearancePageHeadersTab : public ConfigModuleTab {
@@ -403,6 +377,20 @@ private: // data
   KButtonGroup *mSystemTrayGroup;
 };
 
+
+class TagListWidgetItem : public QListWidgetItem
+{
+public:
+  explicit TagListWidgetItem( QListWidget *parent = 0);
+  explicit TagListWidgetItem( const QIcon & icon, const QString & text, QListWidget * parent = 0);
+
+  ~TagListWidgetItem();
+  void setKMailTag( const KMail::Tag::Ptr& tag );
+  KMail::Tag::Ptr kmailTag() const;
+private:
+  KMail::Tag::Ptr mTag;
+};
+
 /**Configuration tab in the appearance page for modifying the available set of
 +message tags*/
 class AppearancePageMessageTagTab : public ConfigModuleTab {
@@ -453,10 +441,14 @@ private slots:
   since calling externally decouples the name in the list box from name edit box*/
   void slotNameLineTextChanged( const QString & );
   void slotIconNameChanged( const QString &iconName );
+  void slotRowsMoved( const QModelIndex &,
+                      int sourcestart, int sourceEnd,
+                      const QModelIndex &, int destinationRow );
 
 private:
   virtual void doLoadFromGlobalSettings();
   void swapTagsInListBox( const int first, const int second );
+  void updateButtons();
 
 private: // data
 
@@ -479,11 +471,6 @@ private: // data
 
   KKeySequenceWidget *mKeySequenceWidget;
 
-  // Maps Nepomuk::Tag resource URIs to Tags
-  QHash<QString,KMail::TagPtr> mMsgTagDict;
-
-  // List of all Tags currently in the list
-  QList<KMail::TagPtr> mMsgTagList;
 
   // So we can compare to mMsgTagList and see if the user changed tags
   QList<KMail::TagPtr> mOriginalMsgTagList;
@@ -491,6 +478,7 @@ private: // data
   /*Used to safely call slotRecordTagSettings when the selection in
     list box changes*/
   int mPreviousTag;
+  bool mNepomukActive;
 };
 class KMAIL_EXPORT AppearancePage : public ConfigModuleWithTabs {
   Q_OBJECT
@@ -537,11 +525,13 @@ protected slots:
 
 private:
   virtual void doLoadFromGlobalSettings();
+  virtual void doResetToDefaultsOther();
 
 private:
   QCheckBox     *mAutoAppSignFileCheck;
   QCheckBox     *mTopQuoteCheck;
   QCheckBox     *mDashDashCheck;
+  QCheckBox     *mReplyUsingHtml;
   QCheckBox     *mSmartQuoteCheck;
   QCheckBox     *mStripSignatureCheck;
   QCheckBox     *mQuoteSelectionOnlyCheck;
@@ -552,6 +542,7 @@ private:
   KIntSpinBox   *mAutoSave;
   QCheckBox     *mExternalEditorCheck;
   KUrlRequester *mEditorRequester;
+  KIntSpinBox   *mMaximumRecipients;
 #ifdef KDEPIM_ENTERPRISE_BUILD
   KComboBox     *mForwardTypeCombo;
   QCheckBox     *mRecipientCheck;
@@ -573,7 +564,7 @@ private:
   virtual void doLoadFromGlobalSettings();
   virtual void doResetToDefaultsOther();
 private:
-    TemplatesConfiguration* mWidget;
+  TemplateParser::TemplatesConfiguration* mWidget;
 };
 
 class ComposerPageCustomTemplatesTab : public ConfigModuleTab {
@@ -590,7 +581,7 @@ private:
   virtual void doLoadFromGlobalSettings();
 
 private:
-    CustomTemplates* mWidget;
+  TemplateParser::CustomTemplates* mWidget;
 };
 
 class ComposerPageSubjectTab : public ConfigModuleTab {
@@ -744,7 +735,8 @@ private slots:
 class SecurityPageComposerCryptoTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  SecurityPageComposerCryptoTab( QWidget * parent=0 );
+  explicit SecurityPageComposerCryptoTab( QWidget * parent=0 );
+  ~SecurityPageComposerCryptoTab();
 
   QString helpAnchor() const;
 
@@ -756,13 +748,14 @@ private:
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
-  ComposerCryptoConfiguration* mWidget;
+  Ui::ComposerCryptoConfiguration* mWidget;
 };
 
 class SecurityPageWarningTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  SecurityPageWarningTab( QWidget * parent=0 );
+  explicit SecurityPageWarningTab( QWidget * parent=0 );
+  ~SecurityPageWarningTab();
 
   QString helpAnchor() const;
 
@@ -779,13 +772,13 @@ private:
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
-  WarningConfiguration* mWidget;
+  Ui::WarningConfiguration* mWidget;
 };
 
 class SecurityPageSMimeTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  SecurityPageSMimeTab( QWidget * parent=0 );
+  explicit SecurityPageSMimeTab( QWidget * parent=0 );
   ~SecurityPageSMimeTab();
 
   QString helpAnchor() const;
@@ -801,7 +794,7 @@ private:
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
-  SMimeConfiguration* mWidget;
+  Ui::SMimeConfiguration* mWidget;
   Kleo::CryptoConfig* mConfig;
 };
 

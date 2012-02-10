@@ -18,13 +18,13 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
     USA.
 */
-#ifndef SEARCHDIALOG_H
-#define SEARCHDIALOG_H
+#ifndef AKONADICONSOLE_SEARCHDIALOG_H
+#define AKONADICONSOLE_SEARCHDIALOG_H
 
 #include <kdialog.h>
 
-class QLineEdit;
-class QTextEdit;
+class KLineEdit;
+class KTextEdit;
 
 class SearchDialog : public KDialog
 {
@@ -36,8 +36,8 @@ class SearchDialog : public KDialog
     QString searchQuery() const;
 
   private:
-    QLineEdit* mName;
-    QTextEdit* mEdit;
+    KLineEdit *mName;
+    KTextEdit *mEdit;
 };
 
 #endif

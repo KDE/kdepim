@@ -45,59 +45,55 @@ namespace CalendarSupport {
 
   Includes functions to view and save attachments.
 */
-  class AttachmentHandler : public QObject {
-
+class AttachmentHandler : public QObject
+{
   Q_OBJECT
   public:
 
   /**
-     Constructs an AttachmentHandler.
-     @param parent is the parent widget for the dialogs used by this class.
-  */
+   * Constructs an AttachmentHandler.
+   * @param parent is the parent widget for the dialogs used by this class.
+   */
     AttachmentHandler( QWidget *parent );
    ~AttachmentHandler();
 
   /**
-    Finds the attachment in the user's calendar, by @p attachmentName and @p incidence.
-
-    @param attachmentName is the name of the attachment
-    @param incidence is a pointer to a valid Incidence object containing the attachment.
-
-
-    @return a pointer to the Attachment object located; 0 if no such attachment could be found.
-  */
+   * Finds the attachment in the user's calendar, by @p attachmentName and @p incidence.
+   *
+   * @param attachmentName is the name of the attachment
+   * @param incidence is a pointer to a valid Incidence object containing the attachment.
+   * @return a pointer to the Attachment object located; 0 if no such attachment could be found.
+   */
   KCalCore::Attachment::Ptr find( const QString &attachmentName,
                                   const KCalCore::Incidence::Ptr &incidence );
 
   /**
-    Finds the attachment in the user's calendar, by @p attachmentName and a scheduler message;
-    in other words, this function is intended to retrieve attachments from calendar invitations.
-
-    @param attachmentName is the name of the attachment
-    @param message is a pointer to a valid ScheduleMessage object containing the attachment.
-
-    @return a pointer to the Attachment object located; 0 if no such attachment could be found.
-  */
+   * Finds the attachment in the user's calendar, by @p attachmentName and a scheduler message;
+   * in other words, this function is intended to retrieve attachments from calendar invitations.
+   *
+   * @param attachmentName is the name of the attachment
+   * @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+   * @return a pointer to the Attachment object located; 0 if no such attachment could be found.
+   */
   KCalCore::Attachment::Ptr find( const QString &attachmentName,
                                   const KCalCore::ScheduleMessage::Ptr &message );
 
   /**
-    Launches a viewer on the specified attachment.
-
-    @param attachment is a pointer to a valid Attachment object.
-
-    @return true if the viewer program successfully launched; false otherwise.
-  */
+   * Launches a viewer on the specified attachment.
+   *
+   * @param attachment is a pointer to a valid Attachment object.
+   * @return true if the viewer program successfully launched; false otherwise.
+   */
   bool view( const KCalCore::Attachment::Ptr &attachment );
 
   /**
-    Launches a viewer on the specified attachment.
-
-    @param attachmentName is the name of the attachment
-    @param incidence is a pointer to a valid Incidence object containing the attachment.
-    @return true if the attachment could be found and the viewer program successfully launched;
-    false otherwise.
-  */
+   * Launches a viewer on the specified attachment.
+   *
+   * @param attachmentName is the name of the attachment
+   * @param incidence is a pointer to a valid Incidence object containing the attachment.
+   * @return true if the attachment could be found and the viewer program successfully launched;
+   * false otherwise.
+   */
   bool view( const QString &attachmentName,
              const KCalCore::Incidence::Ptr &incidence );
 
@@ -124,7 +120,6 @@ namespace CalendarSupport {
   */
   bool view( const QString &attachmentName,
              const KCalCore::ScheduleMessage::Ptr &message );
-
 
   /**
     Saves the specified attachment to a file of the user's choice.

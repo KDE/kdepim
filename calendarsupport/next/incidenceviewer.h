@@ -33,6 +33,8 @@ class QAbstractItemModel;
 
 namespace CalendarSupport {
 
+class Calendar;
+
 /**
  * @short A viewer component for incidences in Akonadi.
  *
@@ -63,7 +65,17 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
     /**
      * Creates a new incidence viewer.
      *
-     * @param parent The parent widget.
+     * *param
+     * @param calendar is a pointer to a Calendar instance.
+     * @param parent it the parent widget.
+     */
+    explicit IncidenceViewer( Calendar *calendar, QWidget *parent = 0 );
+
+    /**
+     * Creates a new incidence viewer.
+     *
+     * *param
+     * @param parent it the parent widget.
      */
     IncidenceViewer( QWidget *parent = 0 );
 
@@ -71,6 +83,12 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      * Destroys the incidence viewer.
      */
     ~IncidenceViewer();
+
+    /**
+     * Sets the Calendar for this viewer.
+     * @param calendar is a pointer to a Calendar instance.
+     */
+    void setCalendar( Calendar *calendar );
 
     /**
      * Returns the incidence that is currently displayed.
@@ -111,6 +129,12 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      *                   the selected incidence in case of recurring incidences.
      */
     void setIncidence( const Akonadi::Item &incidence, const QDate &activeDate = QDate() );
+
+  protected:
+    /**
+     * Initialize the widget settings.
+     */
+    void init();
 
   private:
     /**

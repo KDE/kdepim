@@ -45,6 +45,7 @@ OptionSetEditor::OptionSetEditor( QWidget *parent )
   tabg->addWidget( l, 0, 0 );
 
   mNameEdit = new KLineEdit( tab );
+
   tabg->addWidget( mNameEdit, 0, 1 );
 
   connect( mNameEdit, SIGNAL(textEdited(QString)),
@@ -65,3 +66,10 @@ OptionSetEditor::~OptionSetEditor()
 {
 }
 
+void OptionSetEditor::setReadOnly( bool readOnly )
+{
+  mDescriptionEdit->setReadOnly( readOnly );
+  mNameEdit->setReadOnly( readOnly );
+}
+
+#include "optionseteditor.moc"

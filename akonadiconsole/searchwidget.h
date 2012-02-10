@@ -19,18 +19,19 @@
     USA.
 */
 
-#ifndef SEARCHWIDGET_H
-#define SEARCHWIDGET_H
+#ifndef AKONADICONSOLE_SEARCHWIDGET_H
+#define AKONADICONSOLE_SEARCHWIDGET_H
 
 #include <QtGui/QWidget>
 
+class KComboBox;
 class KJob;
-class QComboBox;
+class KTextBrowser;
+class KTextEdit;
+
 class QListView;
 class QModelIndex;
 class QStringListModel;
-class QTextBrowser;
-class QTextEdit;
 
 class SearchWidget : public QWidget
 {
@@ -42,16 +43,16 @@ class SearchWidget : public QWidget
 
   private Q_SLOTS:
     void search();
-    void searchFinished( KJob* );
+    void searchFinished( KJob * );
     void querySelected( int );
-    void fetchItem( const QModelIndex& );
-    void itemFetched( KJob* );
+    void fetchItem( const QModelIndex & );
+    void itemFetched( KJob * );
 
   private:
-    QComboBox* mQueryCombo;
-    QTextEdit* mQueryWidget;
-    QListView* mResultView;
-    QTextBrowser* mItemView;
+    KComboBox *mQueryCombo;
+    KTextBrowser *mItemView;
+    KTextEdit *mQueryWidget;
+    QListView *mResultView;
     QStringListModel *mResultModel;
 };
 

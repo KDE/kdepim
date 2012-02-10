@@ -1,6 +1,6 @@
 # Commented because it uses your real calendar. You can loose data.
 # I'll uncomment this when tests use testrunner.
-# add_subdirectory( next/tests )
+# add_subdirectory(next/tests)
 
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
@@ -49,20 +49,20 @@ set(calendarsupport_LIB_SRCS
   next/incidencesearchjob.cpp
   next/incidenceviewer.cpp
   next/invitationhandler.cpp
-  next/mailscheduler2.cpp
   next/scheduler.cpp
 )
 
-if (NOT WINCE)
-  add_subdirectory( tests )
-  set( calendarsupport_LIB_SRCS ${calendarsupport_LIB_SRCS}
+if(NOT WINCE)
+  add_subdirectory(tests)
+  set(calendarsupport_LIB_SRCS
+    ${calendarsupport_LIB_SRCS}
     dndfactory.cpp
   )
-endif (NOT WINCE)
+endif()
 
 kde4_add_ui_files(calendarsupport_LIB_SRCS publishdialog_base.ui)
 
-kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc )
+kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
 # qt4_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 
@@ -85,7 +85,7 @@ target_link_libraries(calendarsupport
   ${KDE4_KIO_LIBS}
 )
 
-set_target_properties(calendarsupport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties(calendarsupport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
-install( TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

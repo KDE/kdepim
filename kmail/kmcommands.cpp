@@ -66,43 +66,48 @@
 #include <kpimidentities/identitymanager.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemfetchjob.h>
-#include <akonadi/kmime/messageflags.h>
 
 
 #include "foldercollection.h"
 
 #include "messagecore/mailinglist.h"
-#include "messageviewer/nodehelper.h"
 #include "composer.h"
 #include "mailcommon/filteraction.h"
 #include "mailcommon/filtermanager.h"
+#include "mailcommon/mailfilter.h"
 #include "mailcommon/redirectdialog.h"
 #include "kmmainwidget.h"
 #include "undostack.h"
+#ifndef QT_NO_CURSOR
 #include "messageviewer/kcursorsaver.h"
+#endif
 #include "messageviewer/objecttreeparser.h"
 #include "messageviewer/csshelper.h"
 #include "messageviewer/util.h"
 #include "messageviewer/mailsourceviewer.h"
+#include "messageviewer/viewer.h"
+#include "messageviewer/headerstrategy.h"
+#include "messageviewer/headerstyle.h"
 #include "kmreadermainwin.h"
 #include "secondarywindow.h"
 using KMail::SecondaryWindow;
 #include "util.h"
 #include "messageviewer/editorwatcher.h"
+using MessageViewer::EditorWatcher;
 #include "broadcaststatus.h"
 #include "globalsettings.h"
 #include "stringutil.h"
 #include "messageviewer/autoqpointer.h"
 #include "messageviewer/globalsettings.h"
 #include "messagecore/globalsettings.h"
-#include "templateparser/templateparser.h"
 
 #include <kpimutils/kfileio.h>
-#include "interfaces/htmlwriter.h"
 
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemdeletejob.h>
+#include <mailtransport/transportattribute.h>
+#include <mailtransport/sentbehaviourattribute.h>
 
 #include <messagelist/pane.h>
 
@@ -129,7 +134,6 @@ using KPIM::ProgressItem;
 #include <kmime/kmime_mdn.h>
 using namespace KMime;
 
-#include "kleo/specialjob.h"
 #include "kleo/cryptobackend.h"
 #include "kleo/cryptobackendfactory.h"
 
@@ -172,13 +176,13 @@ static void showJobError( KJob* job )
 }
 
 KMCommand::KMCommand( QWidget *parent )
-  : mProgressDialog( 0 ), mResult( Undefined ), mDeletesItself( false ),
+  : mResult( Undefined ), mDeletesItself( false ),
     mEmitsCompletedItself( false ), mParent( parent )
 {
 }
 
 KMCommand::KMCommand( QWidget *parent, const Akonadi::Item &msg )
-  : mProgressDialog( 0 ), mResult( Undefined ), mDeletesItself( false ),
+  : mResult( Undefined ), mDeletesItself( false ),
     mEmitsCompletedItself( false ), mParent( parent )
 {
   if ( msg.isValid() || msg.hasPayload<KMime::Message::Ptr>() ) {
@@ -187,7 +191,7 @@ KMCommand::KMCommand( QWidget *parent, const Akonadi::Item &msg )
 }
 
 KMCommand::KMCommand( QWidget *parent, const QList<Akonadi::Item> &msgList )
-  : mProgressDialog( 0 ), mResult( Undefined ), mDeletesItself( false ),
+  : mResult( Undefined ), mDeletesItself( false ),
     mEmitsCompletedItself( false ), mParent( parent )
 {
   mMsgList = msgList;
@@ -293,8 +297,8 @@ void KMCommand::transferSelectedMsgs()
       i18n("Please wait"),
       i18np("Please wait while the message is transferred",
         "Please wait while the %1 messages are transferred", mMsgList.count()));
-    mProgressDialog->setModal(true);
-    mProgressDialog->setMinimumDuration(1000);
+    mProgressDialog.data()->setModal(true);
+    mProgressDialog.data()->setMinimumDuration(1000);
   }
 
   // TODO once the message list is based on ETM and we get the more advanced caching we need to make that check a bit more clever
@@ -323,22 +327,22 @@ void KMCommand::transferSelectedMsgs()
   }
 
   if ( complete ) {
-    delete mProgressDialog;
-    mProgressDialog = 0;
+    delete mProgressDialog.data();
+    mProgressDialog.clear();
     emit messagesTransfered( OK );
   } else {
     // wait for the transfer and tell the progressBar the necessary steps
-    if ( mProgressDialog ) {
-      connect(mProgressDialog, SIGNAL(cancelClicked()),
+    if ( mProgressDialog.data() ) {
+      connect(mProgressDialog.data(), SIGNAL(cancelClicked()),
               this, SLOT(slotTransferCancelled()));
-      mProgressDialog->progressBar()->setMaximum(totalSize);
+      mProgressDialog.data()->progressBar()->setMaximum(totalSize);
     }
   }
 }
 
 void KMCommand::slotMsgTransfered(const Akonadi::Item::List& msgs)
 {
-  if ( mProgressDialog && mProgressDialog->wasCancelled() ) {
+  if ( mProgressDialog.data() && mProgressDialog.data()->wasCancelled() ) {
     emit messagesTransfered( Canceled );
     return;
   }
@@ -351,26 +355,26 @@ void KMCommand::slotJobFinished()
   // the job is finished (with / without error)
   KMCommand::mCountJobs--;
 
-  if ( mProgressDialog && mProgressDialog->wasCancelled() ) return;
+  if ( mProgressDialog.data() && mProgressDialog.data()->wasCancelled() ) return;
 
   if ( mCountMsgs > mRetrievedMsgs.count() )
   {
     // the message wasn't retrieved before => error
-    if ( mProgressDialog )
-      mProgressDialog->hide();
+    if ( mProgressDialog.data() )
+      mProgressDialog.data()->hide();
     slotTransferCancelled();
     return;
   }
   // update the progressbar
-  if ( mProgressDialog ) {
-    mProgressDialog->setLabelText(i18np("Please wait while the message is transferred",
+  if ( mProgressDialog.data() ) {
+    mProgressDialog.data()->setLabelText(i18np("Please wait while the message is transferred",
           "Please wait while the %1 messages are transferred", KMCommand::mCountJobs));
   }
   if (KMCommand::mCountJobs == 0)
   {
     // all done
-    delete mProgressDialog;
-    mProgressDialog = 0;
+    delete mProgressDialog.data();
+    mProgressDialog.clear();
     emit messagesTransfered( OK );
   }
 }
@@ -411,7 +415,7 @@ KMCommand::Result KMMailtoComposeCommand::execute()
   uint id = 0;
 
   if ( mMessage.isValid() && mMessage.parentCollection().isValid() ) {
-    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( mMessage.parentCollection() );
+    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( mMessage.parentCollection(), false );
     id = fd->identity();
   }
 
@@ -544,38 +548,74 @@ void KMUrlSaveCommand::slotUrlSaveResult( KJob *job )
   }
 }
 
+KMEditMessageCommand::KMEditMessageCommand( QWidget *parent, const KMime::Message::Ptr& msg )
+  :KMCommand( parent ), mMessage( msg )
+{
+}
 
-KMEditMsgCommand::KMEditMsgCommand( QWidget *parent, const Akonadi::Item&msg, bool deleteFromSource )
+KMCommand::Result KMEditMessageCommand::execute()
+{
+  if ( !mMessage )
+    return Failed;
+  
+  KMail::Composer *win = KMail::makeComposer();
+  win->setMsg( mMessage, false, false );
+  win->show();
+  win->setModified( true );
+  return OK;
+}
+
+
+KMEditItemCommand::KMEditItemCommand( QWidget *parent, const Akonadi::Item&msg, bool deleteFromSource )
   :KMCommand( parent, msg )
   , mDeleteFromSource( deleteFromSource )
 {
   fetchScope().fetchFullPayload( true );
+  fetchScope().fetchAttribute<MailTransport::TransportAttribute>();
+  fetchScope().fetchAttribute<MailTransport::SentBehaviourAttribute>();
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  setDeletesItself( true );
 }
 
-KMCommand::Result KMEditMsgCommand::execute()
+KMEditItemCommand::~KMEditItemCommand()
+{
+}
+
+
+KMCommand::Result KMEditItemCommand::execute()
 {
   Akonadi::Item item = retrievedMessage();
   if (!item.isValid() || !item.parentCollection().isValid() ) {
     return Failed;
   }
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
+  if ( !msg ) {
     return Failed;
+  }
+  
   if ( mDeleteFromSource ) {
+    setDeletesItself( true );
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeleteItem(KJob*)) );
   }
   KMail::Composer *win = KMail::makeComposer();
   win->setMsg( msg, false, true );
   win->setFolder( item.parentCollection() );
+  const MailTransport::TransportAttribute *transportAttribute = item.attribute<MailTransport::TransportAttribute>();
+  if ( transportAttribute ) {
+    win->setCurrentTransport( transportAttribute->transportId() );
+  }
+
+  const MailTransport::SentBehaviourAttribute *sentAttribute = item.attribute<MailTransport::SentBehaviourAttribute>();
+  if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
+    win->setFcc( QString::number( sentAttribute->moveToCollection().id() ) );
   win->show();
+  if ( mDeleteFromSource )
+    win->setModified( true );
 
   return OK;
 }
 
-void KMEditMsgCommand::slotDeleteItem( KJob *job )
+void KMEditItemCommand::slotDeleteItem( KJob *job )
 {
   if ( job->error() ) {
     showJobError(job);
@@ -622,15 +662,6 @@ KMCommand::Result KMUseTemplateCommand::execute()
   return OK;
 }
 
-KMSaveMsgCommand::KMSaveMsgCommand( QWidget *parent, const Akonadi::Item& msg )
-  : KMCommand( parent )
-{
-  if ( !msg.isValid() )
-    return;
-
-  fetchScope().fetchFullPayload( true ); // ### unless we call the corresponding KMCommand ctor, this has no effect
-}
-
 KMSaveMsgCommand::KMSaveMsgCommand( QWidget *parent, const QList<Akonadi::Item> &msgList )
   : KMCommand( parent, msgList )
 {
@@ -655,7 +686,6 @@ KMOpenMsgCommand::KMOpenMsgCommand( QWidget *parent, const KUrl & url,
     mUrl( url ),
     mEncoding( encoding )
 {
-  setDeletesItself( true );
 }
 
 KMCommand::Result KMOpenMsgCommand::execute()
@@ -666,9 +696,9 @@ KMCommand::Result KMOpenMsgCommand::execute()
                                     parentWidget(), i18n("Open Message") );
   }
   if ( mUrl.isEmpty() ) {
-    setDeletesItself( false );
     return Canceled;
   }
+  setDeletesItself( true );
   mJob = KIO::get( mUrl, KIO::NoReload, KIO::HideProgressInfo );
   connect( mJob, SIGNAL(data(KIO::Job*,QByteArray)),
            this, SLOT(slotDataArrived(KIO::Job*,QByteArray)) );
@@ -752,20 +782,24 @@ void KMOpenMsgCommand::slotResult( KJob *job )
 }
 
 //-----------------------------------------------------------------------------
-
-//TODO: ReplyTo, NoQuoteReplyTo, ReplyList, ReplyToAll, ReplyAuthor
-//      are all similar and should be factored
-KMReplyToCommand::KMReplyToCommand( QWidget *parent, const Akonadi::Item &msg,
-                                    const QString &selection )
-  : KMCommand( parent, msg ), mSelection( selection )
+KMReplyCommand::KMReplyCommand( QWidget *parent, const Akonadi::Item &msg, MessageComposer::ReplyStrategy replyStrategy,
+                                            const QString &selection, bool noquote, const QString& templateName )
+  : KMCommand( parent, msg ),
+    mSelection( selection ),
+    mTemplate( templateName ),
+    m_replyStrategy( replyStrategy )
 {
-  fetchScope().fetchFullPayload( true );
+  if ( !noquote )
+    fetchScope().fetchFullPayload( true );
+
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 }
 
-KMCommand::Result KMReplyToCommand::execute()
+KMCommand::Result KMReplyCommand::execute()
 {
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
   Akonadi::Item item = retrievedMessage();
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
@@ -773,137 +807,15 @@ KMCommand::Result KMReplyToCommand::execute()
   MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplySmart );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
   factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
+  factory.setReplyStrategy( m_replyStrategy );
   factory.setSelection( mSelection );
-  MessageFactory::MessageReply reply = factory.createReply();
-  KMail::Composer * win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ), 0, mSelection );
-  win->setReplyFocus();
-  win->show();
-
-  return OK;
-}
-
-
-KMNoQuoteReplyToCommand::KMNoQuoteReplyToCommand( QWidget *parent,
-                                                  const Akonadi::Item &msg )
-  : KMCommand( parent, msg )
-{
-}
-
-KMCommand::Result KMNoQuoteReplyToCommand::execute()
-{
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Akonadi::Item item = retrievedMessage();
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
-  factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplySmart );
-  MessageFactory::MessageReply reply = factory.createReply();
-  KMail::Composer *win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ) );
-  win->setReplyFocus( false );
-  win->show();
-
-  return OK;
-}
-
-
-KMReplyListCommand::KMReplyListCommand( QWidget *parent,
-                                        const Akonadi::Item &msg, const QString &selection )
- : KMCommand( parent, msg ), mSelection( selection )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCommand::Result KMReplyListCommand::execute()
-{
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Akonadi::Item item = retrievedMessage();
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
-  factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplyList );
-  factory.setSelection( mSelection );
-  MessageFactory::MessageReply reply = factory.createReply();
-  KMail::Composer * win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ),
-                                               0, mSelection );
-  win->setReplyFocus( false );
-  win->show();
-
-  return OK;
-}
-
-
-KMReplyToAllCommand::KMReplyToAllCommand( QWidget *parent,
-                                          const Akonadi::Item &msg, const QString &selection )
-  :KMCommand( parent, msg ), mSelection( selection )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCommand::Result KMReplyToAllCommand::execute()
-{
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Akonadi::Item item = retrievedMessage();
-
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
-  factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplyAll );
-  factory.setSelection( mSelection );
+  if ( !mTemplate.isEmpty() )
+    factory.setTemplate( mTemplate );
   MessageFactory::MessageReply reply = factory.createReply();
   KMail::Composer * win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ), 0,
-                                               mSelection );
-  win->setReplyFocus();
-  win->show();
-
-  return OK;
-}
-
-
-KMReplyAuthorCommand::KMReplyAuthorCommand( QWidget *parent, const Akonadi::Item &msg,
-                                            const QString &selection )
-  : KMCommand( parent, msg ), mSelection( selection )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCommand::Result KMReplyAuthorCommand::execute()
-{
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Akonadi::Item item = retrievedMessage();
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
-  factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplyAuthor );
-  factory.setSelection( mSelection );
-  MessageFactory::MessageReply reply = factory.createReply();
-  KMail::Composer * win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ), 0,
-                                               mSelection );
+                                               mSelection,mTemplate );
   win->setReplyFocus();
   win->show();
 
@@ -912,21 +824,49 @@ KMCommand::Result KMReplyAuthorCommand::execute()
 
 
 KMForwardCommand::KMForwardCommand( QWidget *parent,
-  const QList<Akonadi::Item> &msgList, uint identity )
+  const QList<Akonadi::Item> &msgList, uint identity,const QString& templateName )
   : KMCommand( parent, msgList ),
-    mIdentity( identity )
+    mIdentity( identity ),
+    mTemplate( templateName )
 {
   fetchScope().fetchFullPayload( true );
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 }
 
 KMForwardCommand::KMForwardCommand( QWidget *parent, const Akonadi::Item &msg,
-                                    uint identity )
+                                    uint identity, const QString& templateName )
   : KMCommand( parent, msg ),
-    mIdentity( identity )
+    mIdentity( identity ),
+    mTemplate( templateName )
 {
   fetchScope().fetchFullPayload( true );
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+}
+
+KMCommand::Result KMForwardCommand::createComposer(const Akonadi::Item& item)
+{
+  KMime::Message::Ptr msg = MessageCore::Util::message( item );
+  if ( !msg )
+    return Failed;
+#ifndef QT_NO_CURSOR
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
+  factory.setIdentityManager( KMKernel::self()->identityManager() );
+  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
+  if ( !mTemplate.isEmpty() )
+    factory.setTemplate( mTemplate );
+  KMime::Message::Ptr fwdMsg = factory.createForward();
+
+  uint id = msg->headerByType( "X-KMail-Identity" ) ?  msg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed().toUInt() : 0;
+  kDebug() << "mail" << msg->encodedContent();
+  if ( id == 0 )
+    id = mIdentity;
+  {
+    KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id,QString(), mTemplate );
+    win->show();
+  }
+  return OK;
 }
 
 KMCommand::Result KMForwardCommand::execute()
@@ -945,42 +885,23 @@ KMCommand::Result KMForwardCommand::execute()
                    KGuiItem(i18n("Send Individually")) );
 
     if ( answer == KMessageBox::Yes ) {
-        MessageFactory factory( KMime::Message::Ptr( new KMime::Message ), mIdentity );
-        factory.setIdentityManager( KMKernel::self()->identityManager() );
-        factory.setFolderIdentity( MailCommon::Util::folderIdentity( msgList.first() ) );
-        // get a list of messages
-        QList< KMime::Message::Ptr > msgs;
-        foreach( const Akonadi::Item& item, msgList )
-          msgs << MessageCore::Util::message( item );
-        QPair< KMime::Message::Ptr, KMime::Content* > fwdMsg = factory.createForwardDigestMIME( msgs );
-        {
-          KMail::Composer * win = KMail::makeComposer( fwdMsg.first, KMail::Composer::Forward, mIdentity );
-          win->addAttach( fwdMsg.second );
-          win->show();
-        }
+      Akonadi::Item firstItem( msgList.first() );
+      MessageFactory factory( KMime::Message::Ptr( new KMime::Message ), firstItem.id(), firstItem.parentCollection() );
+      factory.setIdentityManager( KMKernel::self()->identityManager() );
+      factory.setFolderIdentity( MailCommon::Util::folderIdentity( firstItem ) );
 
+      QPair< KMime::Message::Ptr, KMime::Content* > fwdMsg = factory.createForwardDigestMIME(msgList );
+      KMail::Composer * win = KMail::makeComposer( fwdMsg.first, KMail::Composer::Forward, mIdentity );
+      win->addAttach( fwdMsg.second );
+      win->show();
       return OK;
     } else if ( answer == KMessageBox::No ) {// NO MIME DIGEST, Multiple forward
       QList<Akonadi::Item>::const_iterator it;
-      for ( it = msgList.constBegin(); it != msgList.constEnd(); ++it ) {
-        KMime::Message::Ptr msg = MessageCore::Util::message( *it );
-        if ( !msg )
+      QList<Akonadi::Item>::const_iterator end( msgList.constEnd() );
+
+      for ( it = msgList.constBegin(); it != end; ++it ) {
+        if ( createComposer( *it ) == Failed )
           return Failed;
-        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-        MessageFactory factory( msg, it->id(), it->parentCollection() );
-        factory.setIdentityManager( KMKernel::self()->identityManager() );
-        factory.setFolderIdentity( MailCommon::Util::folderIdentity( *it ) );
-        KMime::Message::Ptr fwdMsg = factory.createForward();
-
-        uint id = msg->headerByType( "X-KMail-Identity" ) ?  msg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed().toUInt() : 0;
-        kDebug() << "mail" << msg->encodedContent();
-        if ( id == 0 )
-          id = mIdentity;
-        {
-          KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id );
-          win->show();
-        }
-
       }
       return OK;
     } else {
@@ -991,22 +912,8 @@ KMCommand::Result KMForwardCommand::execute()
 
   // forward a single message at most.
   Akonadi::Item item = msgList.first();
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
+  if ( createComposer( item ) == Failed )
     return Failed;
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  KMime::Message::Ptr fwdMsg = factory.createForward();
-
-  uint id = msg->headerByType( "X-KMail-Identity" ) ?  msg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed().toUInt() : 0;
-  if ( id == 0 )
-    id = mIdentity;
-  {
-    KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id );
-    win->show();
-  }
   return OK;
 }
 
@@ -1032,23 +939,18 @@ KMForwardAttachedCommand::KMForwardAttachedCommand( QWidget *parent,
 KMCommand::Result KMForwardAttachedCommand::execute()
 {
   QList<Akonadi::Item> msgList = retrievedMsgs();
-  MessageFactory factory( KMime::Message::Ptr( new KMime::Message ), mIdentity );
+  Akonadi::Item firstItem( msgList.first() );
+  MessageFactory factory( KMime::Message::Ptr( new KMime::Message ), firstItem.id(), firstItem.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( msgList.first() ) );
-  // get a list of messages
-  QList< KMime::Message::Ptr > msgs;
-  foreach( const Akonadi::Item& item, msgList )
-    msgs << MessageCore::Util::message( item );
-  QPair< KMime::Message::Ptr, QList< KMime::Content* > > fwdMsg = factory.createAttachedForward( msgs );
-  {
-    if ( !mWin ) {
-      mWin = KMail::makeComposer( fwdMsg.first, KMail::Composer::Forward, mIdentity );
-    }
-    foreach( KMime::Content* attach, fwdMsg.second )
-      mWin->addAttach( attach );
-    mWin->show();
-  }
+  factory.setFolderIdentity( MailCommon::Util::folderIdentity( firstItem ) );
 
+  QPair< KMime::Message::Ptr, QList< KMime::Content* > > fwdMsg = factory.createAttachedForward( msgList );
+  if ( !mWin ) {
+    mWin = KMail::makeComposer( fwdMsg.first, KMail::Composer::Forward, mIdentity );
+  }
+  foreach( KMime::Content* attach, fwdMsg.second ) {
+    mWin->addAttach( attach );
+  }
   mWin->show();
   return OK;
 }
@@ -1059,6 +961,9 @@ KMRedirectCommand::KMRedirectCommand( QWidget *parent,
   : KMCommand( parent, msg )
 {
   fetchScope().fetchFullPayload( true );
+  fetchScope().fetchAttribute<MailTransport::SentBehaviourAttribute>();
+  fetchScope().fetchAttribute<MailTransport::TransportAttribute>();
+
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 }
 
@@ -1087,7 +992,22 @@ KMCommand::Result KMRedirectCommand::execute()
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
 
-  const KMime::Message::Ptr newMsg = factory.createRedirect( dlg->to() );
+  const MailTransport::TransportAttribute *transportAttribute = item.attribute<MailTransport::TransportAttribute>();
+  int transportId = -1;
+  if ( transportAttribute ) {
+    transportId = transportAttribute->transportId();
+    const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
+    if ( !transport ) {
+      transportId = -1;
+    }
+  }
+
+  const MailTransport::SentBehaviourAttribute *sentAttribute = item.attribute<MailTransport::SentBehaviourAttribute>();
+  QString fcc;
+  if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
+    fcc =  QString::number( sentAttribute->moveToCollection().id() );
+
+  const KMime::Message::Ptr newMsg = factory.createRedirect( dlg->to(), transportId, fcc );
   if ( !newMsg )
     return Failed;
 
@@ -1105,147 +1025,6 @@ KMCommand::Result KMRedirectCommand::execute()
     return Failed; // error: couldn't send
   }
 
-  return OK;
-}
-
-
-KMCustomReplyToCommand::KMCustomReplyToCommand( QWidget *parent, const Akonadi::Item &msg,
-                                                const QString &selection,
-                                                const QString &tmpl )
-  : KMCommand( parent, msg ), mSelection( selection ), mTemplate( tmpl )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCommand::Result KMCustomReplyToCommand::execute()
-{
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Akonadi::Item item = retrievedMessage();
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
-  factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplySmart );
-  factory.setSelection( mSelection );
-  factory.setTemplate( mTemplate );
-  MessageFactory::MessageReply reply = factory.createReply();
-  KMail::Composer * win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ), 0,
-                                               mSelection, mTemplate );
-  win->setReplyFocus();
-  win->show();
-
-  return OK;
-}
-
-
-KMCustomReplyAllToCommand::KMCustomReplyAllToCommand( QWidget *parent, const Akonadi::Item &msg,
-                                                      const QString &selection,
-                                                      const QString &tmpl )
-  : KMCommand( parent, msg ), mSelection( selection ), mTemplate( tmpl )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCommand::Result KMCustomReplyAllToCommand::execute()
-{
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Akonadi::Item item = retrievedMessage();
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-  MessageFactory factory( msg, item.id(), item.parentCollection() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-  factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
-  factory.putRepliesInSameFolder( KMail::Util::putRepliesInSameFolder( item ) );
-  factory.setReplyStrategy( MessageComposer::ReplyAll );
-  factory.setSelection( mSelection );
-  factory.setTemplate( mTemplate );
-  MessageFactory::MessageReply reply = factory.createReply();
-  KMail::Composer * win = KMail::makeComposer( KMime::Message::Ptr( reply.msg ), replyContext( reply ), 0,
-                                               mSelection, mTemplate );
-  win->setReplyFocus();
-  win->show();
-
-  return OK;
-}
-
-
-KMCustomForwardCommand::KMCustomForwardCommand( QWidget *parent,
-  const QList<Akonadi::Item> &msgList, uint identity, const QString &tmpl )
-  : KMCommand( parent, msgList ),
-    mIdentity( identity ), mTemplate( tmpl )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCustomForwardCommand::KMCustomForwardCommand( QWidget *parent,
-                                                const Akonadi::Item &msg, uint identity, const QString &tmpl )
-  : KMCommand( parent, msg ),
-    mIdentity( identity ), mTemplate( tmpl )
-{
-  fetchScope().fetchFullPayload( true );
-  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-}
-
-KMCommand::Result KMCustomForwardCommand::execute()
-{
-  QList<Akonadi::Item> msgList = retrievedMsgs();
-  if (msgList.count() >= 2) { // Multiple forward
-     QList<Akonadi::Item>::const_iterator it;
-      for ( it = msgList.constBegin(); it != msgList.constEnd(); ++it ) {
-
-        KMime::Message::Ptr msg = MessageCore::Util::message( *it );
-        if ( !msg )
-          return Failed;
-        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-        MessageFactory factory( msg, it->id(), it->parentCollection() );
-        factory.setIdentityManager( KMKernel::self()->identityManager() );
-        factory.setFolderIdentity( MailCommon::Util::folderIdentity( *it ) );
-        factory.setTemplate( mTemplate );
-        KMime::Message::Ptr fwdMsg = factory.createForward();
-
-        uint id = msg->headerByType( "X-KMail-Identity" ) ?  msg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed().toUInt() : 0;
-        if ( id == 0 )
-          id = mIdentity;
-        {
-          KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id );
-          win->show();
-        }
-
-      }
-  } else { // forward a single message at most
-
-    Akonadi::Item item = msgList.first();
-    KMime::Message::Ptr msg = MessageCore::Util::message( item );
-    if ( !msg )
-      return Failed;
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    MessageFactory factory( msg, item.id(), item.parentCollection() );
-    factory.setIdentityManager( KMKernel::self()->identityManager() );
-    factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-    factory.setTemplate( mTemplate );
-    KMime::Message::Ptr fwdMsg = factory.createForward();
-
-    uint id = 0;
-    QString strId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed() : "";
-    if ( !strId.isEmpty())
-      id = strId.toUInt();
-    if ( id == 0 )
-      id = mIdentity;
-    {
-      KMail::Composer * win = KMail::makeComposer( fwdMsg, KMail::Composer::Forward, id,
-                                                   QString(), mTemplate );
-      win->show();
-    }
-  }
   return OK;
 }
 
@@ -1354,10 +1133,10 @@ KMCommand::Result KMSetStatusCommand::execute()
       if ( !item.hasFlag( flag ) ) {
         item.setFlag( flag );
         itemsToModify.push_back( item );
-      } 
+      }
     }
   }
-  
+
   if ( itemsToModify.isEmpty() ) {
     slotModifyItemDone( 0 ); // pretend we did something
   } else {
@@ -1370,13 +1149,13 @@ KMCommand::Result KMSetStatusCommand::execute()
 
 void KMSetStatusCommand::slotModifyItemDone( KJob * job )
 {
-  if ( job->error() ) {
+  if ( job && job->error() ) {
     kWarning() << " Error trying to set item status:" << job->errorText();
   }
   deleteLater();
 }
 
-KMSetTagCommand::KMSetTagCommand( const QString &tagLabel, const QList<Akonadi::Item> &item,
+KMSetTagCommand::KMSetTagCommand( const QList<QString> &tagLabel, const QList<Akonadi::Item> &item,
     SetTagMode mode )
   : mTagLabel( tagLabel )
   , mItem( item )
@@ -1386,24 +1165,32 @@ KMSetTagCommand::KMSetTagCommand( const QString &tagLabel, const QList<Akonadi::
 
 KMCommand::Result KMSetTagCommand::execute()
 {
-  //Set the visible name for the tag
-  const Nepomuk::Tag n_tag( mTagLabel );
   Q_FOREACH( const Akonadi::Item& item, mItem ) {
     Nepomuk::Resource n_resource( item.url() );
-    const QList<Nepomuk::Tag> tagList = n_resource.tags();
+    QList<Nepomuk::Tag> n_tag_list;
+    if ( mMode != CleanExistingAndAddNew ){
+      n_tag_list = n_resource.tags();
+    }
 
-    const int tagPosition = tagList.indexOf( mTagLabel );
-    if ( tagPosition == -1 ) {
-      n_resource.addTag( n_tag );
-    } else if ( mMode == Toggle ) {
-      QList< Nepomuk::Tag > n_tag_list = n_resource.tags();
-      for (int i = 0; i < n_tag_list.count(); ++i ) {
-        if ( n_tag_list[i].resourceUri() == mTagLabel ) {
-          n_tag_list.removeAt( i );
-          break;
+    Q_FOREACH( const QString &tagLabel, mTagLabel ) {
+      const Nepomuk::Tag n_tag( tagLabel );
+      if ( mMode == CleanExistingAndAddNew ) {
+        n_resource.addTag( n_tag );
+      } else {
+        const int tagPosition = n_tag_list.indexOf( tagLabel );
+        if ( tagPosition == -1 ) {
+          n_resource.addTag( n_tag );
+        } else if ( mMode == Toggle ) {
+          const int numberOfTag( n_tag_list.count() );
+          for (int i = 0; i < numberOfTag; ++i ) {
+            if ( n_tag_list[i].resourceUri() == tagLabel ) {
+              n_tag_list.removeAt( i );
+              break;
+            }
+          }
+          n_resource.setTags( n_tag_list );
         }
       }
-      n_resource.setTags( n_tag_list );
     }
   }
   return OK;
@@ -1416,48 +1203,50 @@ KMFilterCommand::KMFilterCommand( const QByteArray &field, const QString &value 
 
 KMCommand::Result KMFilterCommand::execute()
 {
-  FilterIf->filterManager()->createFilter( mField, mValue );
+  FilterIf->openFilterDialog( false );
+  FilterIf->createFilter( mField, mValue );
 
   return OK;
 }
 
 
 KMFilterActionCommand::KMFilterActionCommand( QWidget *parent,
-                                              const QList<Akonadi::Item> &msgList,
-                                              MailFilter *filter )
-  : KMCommand( parent, msgList ), mFilter( filter  )
+                                              const QVector<qlonglong> &msgListId,
+                                              const QString &filterId, bool requireBody )
+    : KMCommand( parent ), mMsgListId(msgListId), mFilterId( filterId  ), mRequireBody(requireBody)
 {
-  fetchScope().fetchFullPayload();
 }
 
 KMCommand::Result KMFilterActionCommand::execute()
 {
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-
+#endif
   int msgCount = 0;
-  int msgCountToFilter = retrievedMsgs().size();
+  MailCommon::FilterManager::FilterRequires filterrequires = MailCommon::FilterManager::Unknown;
+  if( mRequireBody )
+      filterrequires = MailCommon::FilterManager::FullMessage;
+  else
+      filterrequires = MailCommon::FilterManager::HeaderMessage;
+  const int msgCountToFilter = mMsgListId.count();
   ProgressItem* progressItem =
      ProgressManager::createProgressItem (
          "filter"+ProgressManager::getUniqueID(),
          i18n( "Filtering messages" ) );
   progressItem->setTotalItems( msgCountToFilter );
 
-  foreach ( const Akonadi::Item &item, retrievedMsgs() ) {
+  foreach ( const qlonglong &id, mMsgListId ) {
     int diff = msgCountToFilter - ++msgCount;
     if ( diff < 10 || !( msgCount % 10 ) || msgCount <= 10 ) {
       progressItem->updateProgress();
-      QString statusMsg = i18n( "Filtering message %1 of %2",
+      const QString statusMsg = i18n( "Filtering message %1 of %2",
                                 msgCount, msgCountToFilter );
       KPIM::BroadcastStatus::instance()->setStatusMsg( statusMsg );
       qApp->processEvents( QEventLoop::ExcludeUserInputEvents, 50 );
     }
 
-    int filterResult = FilterIf->filterManager()->process( item, mFilter );
-    if (filterResult == 2) {
-      // something went horribly wrong (out of space?)
-      kError() << "Critical error";
-      CommonKernel->emergencyExit( i18n("Not enough free disk space?" ));
-    }
+
+    MailCommon::FilterManager::instance()->filter( id, mFilterId,filterrequires );
     progressItem->incCompletedItems();
   }
 
@@ -1467,17 +1256,17 @@ KMCommand::Result KMFilterActionCommand::execute()
 }
 
 
-KMMetaFilterActionCommand::KMMetaFilterActionCommand( MailFilter *filter,
+KMMetaFilterActionCommand::KMMetaFilterActionCommand( const QString &filterId, bool requireBody,
                                                       KMMainWidget *main )
     : QObject( main ),
-      mFilter( filter ), mMainWidget( main )
+      mFilterId( filterId ), mRequireBody(requireBody), mMainWidget( main )
 {
 }
 
 void KMMetaFilterActionCommand::start()
 {
   KMCommand *filterCommand = new KMFilterActionCommand(
-      mMainWidget, mMainWidget->messageListPane()->selectionAsMessageItemList() , mFilter );
+      mMainWidget, mMainWidget->messageListPane()->selectionAsMessageItemListId() , mFilterId, mRequireBody );
   filterCommand->start();
 }
 
@@ -1497,7 +1286,8 @@ KMCommand::Result KMMailingListFilterCommand::execute()
   if ( !msg )
     return Failed;
   if ( !MailingList::name( msg, name, value ).isEmpty() ) {
-    FilterIf->filterManager()->createFilter( name, value );
+    FilterIf->openFilterDialog( false );
+    FilterIf->createFilter( name, value );
     return OK;
   } else {
     return Failed;
@@ -1506,20 +1296,18 @@ KMCommand::Result KMMailingListFilterCommand::execute()
 
 KMCopyCommand::KMCopyCommand( const Akonadi::Collection& destFolder,
                               const QList<Akonadi::Item> &msgList)
-  :mDestFolder( destFolder ), mMsgList( msgList )
+  :KMCommand( 0, msgList ), mDestFolder( destFolder )
 {
-  setDeletesItself( true );
 }
 
 KMCopyCommand::KMCopyCommand( const Akonadi::Collection& destFolder, const Akonadi::Item& msg)
-  :mDestFolder( destFolder )
+  :KMCommand( 0,msg ), mDestFolder( destFolder )
 {
-  setDeletesItself( true );
-  mMsgList.append( msg );
 }
 
 KMCommand::Result KMCopyCommand::execute()
 {
+  setDeletesItself( true );
   Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( mMsgList, mDestFolder,this );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCopyResult(KJob*)) );
 
@@ -1565,8 +1353,9 @@ void KMMoveCommand::slotMoveResult( KJob * job )
 
 KMCommand::Result KMMoveCommand::execute()
 {
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-
+#endif
   setEmitsCompletedItself( true );
   setDeletesItself( true );
   if ( mDestFolder.isValid() ) {
@@ -1588,23 +1377,22 @@ KMCommand::Result KMMoveCommand::execute()
       }
       kmkernel->undoStack()->addMsgToAction( undoId, item );
     }
-  }
-  else {
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( retrievedMsgs(), this );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );
+  } else {
+    const QList<Akonadi::Item> retrievedList = retrievedMsgs();
+    if ( !retrievedList.isEmpty() ) {
+      Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( retrievedList, this );
+      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );
+    }
   }
 
-#if 0 //TODO port to akonadi
   // TODO set SSL state according to source and destfolder connection?
   Q_ASSERT( !mProgressItem );
   mProgressItem =
     ProgressManager::createProgressItem ("move"+ProgressManager::getUniqueID(),
-         mDestFolder ? i18n( "Moving messages" ) : i18n( "Deleting messages" ) );
+         mDestFolder.isValid() ? i18n( "Moving messages" ) : i18n( "Deleting messages" ) );
+  mProgressItem->setUsesBusyIndicator( true );
   connect( mProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
            this, SLOT(slotMoveCanceled()) );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   return OK;
 }
 
@@ -1673,17 +1461,9 @@ KMCommand::Result KMSaveAttachmentsCommand::execute()
       kWarning() << "Retrieved item has no payload? Ignoring for saving the attachments";
     }
   }
-
-  if ( contentsToSave.isEmpty() ) {
-    KMessageBox::information( 0, i18n( "Found no attachments to save." ) );
-    return Failed;
-  }
-
-  if ( MessageViewer::Util::saveContents( parentWidget(), contentsToSave ) ) {
+  if ( MessageViewer::Util::saveAttachments( contentsToSave, parentWidget() ) )
     return OK;
-  } else {
-    return Failed;
-  }
+  return Failed;
 }
 
 KMResendMessageCommand::KMResendMessageCommand( QWidget *parent,
@@ -1714,81 +1494,5 @@ KMCommand::Result KMResendMessageCommand::execute()
 
   return OK;
 }
-
-KMMailingListCommand::KMMailingListCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )
-  : KMCommand( parent ), mFolder( folder )
-{
-}
-
-KMCommand::Result KMMailingListCommand::execute()
-{
-  KUrl::List lst = urls();
-  QString handler = ( mFolder->mailingList().handler() == MailingList::KMail )
-    ? "mailto" : "https";
-
-  KUrl urlToHandle;
-  for ( KUrl::List::Iterator itr = lst.begin(); itr != lst.end(); ++itr ) {
-    if ( handler == (*itr).protocol() ) {
-      urlToHandle = *itr;
-      break;
-    }
-  }
-  if ( urlToHandle.isEmpty() && !lst.empty() ) {
-    urlToHandle = lst.first();
-  }
-
-  if ( !urlToHandle.isEmpty() ) {
-    KMail::Util::handleClickedURL( urlToHandle, mFolder->identity() );
-    return OK;
-  } else {
-    return Failed;
-  }
-}
-
-KMMailingListPostCommand::KMMailingListPostCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )
-  : KMMailingListCommand( parent, folder )
-{
-}
-KUrl::List KMMailingListPostCommand::urls() const
-{
-  return mFolder->mailingList().postUrls();
-}
-
-KMMailingListSubscribeCommand::KMMailingListSubscribeCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )
-  : KMMailingListCommand( parent, folder )
-{
-}
-KUrl::List KMMailingListSubscribeCommand::urls() const
-{
-  return mFolder->mailingList().subscribeUrls();
-}
-
-KMMailingListUnsubscribeCommand::KMMailingListUnsubscribeCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )
-  : KMMailingListCommand( parent, folder )
-{
-}
-KUrl::List KMMailingListUnsubscribeCommand::urls() const
-{
-  return mFolder->mailingList().unsubscribeUrls();
-}
-
-KMMailingListArchivesCommand::KMMailingListArchivesCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )
-  : KMMailingListCommand( parent, folder )
-{
-}
-KUrl::List KMMailingListArchivesCommand::urls() const
-{
-  return mFolder->mailingList().archiveUrls();
-}
-
-KMMailingListHelpCommand::KMMailingListHelpCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )
-  : KMMailingListCommand( parent, folder )
-{
-}
-KUrl::List KMMailingListHelpCommand::urls() const
-{
-  return mFolder->mailingList().helpUrls();
-}
-
 
 #include "kmcommands.moc"

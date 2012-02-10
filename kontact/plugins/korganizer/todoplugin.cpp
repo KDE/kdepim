@@ -31,8 +31,9 @@
 
 #include <KABC/VCardDrag>
 
-#include <kcalcore/memorycalendar.h>
-#include <kcalutils/icaldrag.h>
+#include <KCalCore/MemoryCalendar>
+
+#include <KCalUtils/ICalDrag>
 
 #include <KontactInterface/Core>
 
@@ -159,7 +160,7 @@ void TodoPlugin::slotSyncTodos()
   message << QString( "Todo" );
   QDBusConnection::sessionBus().send( message );
 #else
-  kWarning()<<" TodoPlugin::slotSyncTodos : need to port to Akonadi";
+  kWarning() << "TodoPlugin::slotSyncTodos : need to port to Akonadi";
 #endif
 }
 

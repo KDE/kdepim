@@ -31,6 +31,8 @@ target_link_libraries(kdepimmobileuicalendar
   akonadi_next
   incidenceeditorsngmobile
   calendarsupport
+  kdepimmobileui
+  ${QT_QTDECLARATIVE_LIBRARY}
 )
 
 install(FILES incidence-editor.qml DESTINATION ${DATA_INSTALL_DIR}/mobileui)

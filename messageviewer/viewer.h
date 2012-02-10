@@ -247,6 +247,13 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void clearSelection();
   void copySelectionToClipboard();
 
+  void setZoomFactor( qreal zoomFactor );
+
+
+  void setZoomTextOnly( bool textOnly );
+  bool zoomTextOnly() const;
+
+  
   KToggleAction *toggleFixFontAction();
 
   KToggleAction *toggleMimePartTreeAction();
@@ -357,7 +364,9 @@ public slots:
   void slotAttachmentSaveAs();
   void slotAttachmentSaveAll();
   void slotShowMessageSource();
-
+  void slotZoomIn();
+  void slotZoomOut();
+  void slotZoomReset();
 protected:
   /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);

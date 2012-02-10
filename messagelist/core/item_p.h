@@ -51,6 +51,7 @@ public:
       mUseReceiver( false )
   {
   }
+  virtual ~ItemPrivate() {}
 
   /**
    * Implements "in the middle" insertions of child items.
@@ -320,7 +321,7 @@ class ItemSubjectComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = MessageCore::StringUtil::stripOffPrefixes( first->subject() ).
+    const int ret = MessageCore::StringUtil::stripOffPrefixes( first->subject() ).
                 compare( MessageCore::StringUtil::stripOffPrefixes( second->subject() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
@@ -340,7 +341,7 @@ class ItemSenderComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = MessageCore::StringUtil::stripEmailAddr( first->sender() ).compare(
+    const int ret = MessageCore::StringUtil::stripEmailAddr( first->sender() ).compare(
       MessageCore::StringUtil::stripEmailAddr( second->sender() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
@@ -360,7 +361,7 @@ class ItemReceiverComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = MessageCore::StringUtil::stripEmailAddr( first->receiver() ).compare(
+    const int ret = MessageCore::StringUtil::stripEmailAddr( first->receiver() ).compare(
       MessageCore::StringUtil::stripEmailAddr( second->receiver() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
@@ -380,7 +381,7 @@ class ItemSenderOrReceiverComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = MessageCore::StringUtil::stripEmailAddr( first->senderOrReceiver() ).compare(
+    const int ret = MessageCore::StringUtil::stripEmailAddr( first->senderOrReceiver() ).compare(
       MessageCore::StringUtil::stripEmailAddr( second->senderOrReceiver() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;

@@ -57,7 +57,8 @@ void Item::childItemStats( ChildItemStats &stats ) const
   Q_ASSERT( d_ptr->mChildItems );
 
   stats.mTotalChildCount += d_ptr->mChildItems->count();
-  for( QList< Item * >::Iterator it = d_ptr->mChildItems->begin(); it != d_ptr->mChildItems->end(); ++it )
+  QList< Item * >::ConstIterator end( d_ptr->mChildItems->constEnd() );
+  for( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it )
   {
     if ( !( *it )->status().isRead() )
       stats.mUnreadChildCount++;
@@ -114,7 +115,7 @@ Item * Item::itemBelow()
 {
   if ( d_ptr->mChildItems )
   {
-    if ( d_ptr->mChildItems->count() > 0 )
+    if ( !d_ptr->mChildItems->isEmpty() )
       return d_ptr->mChildItems->at( 0 );
   }
 
@@ -128,7 +129,7 @@ Item * Item::deepestItem()
 {
   if ( d_ptr->mChildItems )
   {
-    if ( d_ptr->mChildItems->count() > 0 )
+    if ( !d_ptr->mChildItems->isEmpty() )
       return d_ptr->mChildItems->at( d_ptr->mChildItems->count() - 1 )->deepestItem();
   }
 
@@ -289,7 +290,8 @@ bool Item::recomputeMaxDate()
 
   if ( d_ptr->mChildItems )
   {
-    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != d_ptr->mChildItems->constEnd(); ++it )
+    QList< Item * >::ConstIterator end = d_ptr->mChildItems->constEnd();
+    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it )
     {
       if ( ( *it )->d_ptr->mMaxDate > newMaxDate )
         newMaxDate = ( *it )->d_ptr->mMaxDate;
@@ -363,10 +365,12 @@ void Item::setViewable( Model *model,bool bViewable )
       d_ptr->mIsViewable = true;
     }
 
-    for ( QList< Item * >::Iterator it = d_ptr->mChildItems->begin(); it != d_ptr->mChildItems->end() ;++it )
+    QList< Item * >::ConstIterator end( d_ptr->mChildItems->constEnd() );
+    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end ;++it )
      ( *it )->setViewable( model, bViewable );
   } else {
-    for ( QList< Item * >::Iterator it = d_ptr->mChildItems->begin(); it != d_ptr->mChildItems->end() ;++it )
+    QList< Item * >::ConstIterator end( d_ptr->mChildItems->constEnd() );
+    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end ;++it )
       ( *it )->setViewable( model, bViewable );
 
     // It seems that we can avoid removing child items here since the parent has been removed: this is a hack tough
@@ -522,7 +526,7 @@ int Item::appendChildItem( Model *model, Item *child )
 {
   if ( !d_ptr->mChildItems )
     d_ptr->mChildItems = new QList< Item * >();
-  int idx = d_ptr->mChildItems->count();
+  const int idx = d_ptr->mChildItems->count();
   if ( d_ptr->mIsViewable )
   {
     if ( model )
@@ -542,16 +546,17 @@ int Item::appendChildItem( Model *model, Item *child )
 
 void Item::dump( const QString &prefix )
 {
-  QString out = QString(QLatin1String( "%1 %x VIEWABLE:%2" )).arg(prefix).arg(d_ptr->mIsViewable ? QLatin1String( "yes" ) : QLatin1String( "no" ));
+  QString out = QString::fromLatin1( "%1 %x VIEWABLE:%2" ).arg(prefix).arg(d_ptr->mIsViewable ? QLatin1String( "yes" ) : QLatin1String( "no" ));
   qDebug( out.toUtf8().data(),this );
 
-  QString nPrefix = prefix;
+  QString nPrefix( prefix );
   nPrefix += QLatin1String("  ");
 
   if (!d_ptr->mChildItems )
     return;
 
-  for ( QList< Item * >::Iterator it = d_ptr->mChildItems->begin(); it != d_ptr->mChildItems->end() ;++it )
+  QList< Item * >::ConstIterator end( d_ptr->mChildItems->constEnd() );
+  for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end ;++it )
     (*it)->dump(nPrefix);
 }
 
@@ -583,7 +588,8 @@ void Item::takeChildItem( Model *model, Item *child )
   {
     if ( d_ptr->mChildItems->at( idx ) != child ) // bad guess :/
       idx = d_ptr->mChildItems->indexOf( child );
-  } else
+  }
+  else
     idx = d_ptr->mChildItems->indexOf( child ); // bad guess :/
 
   if ( idx < 0 )

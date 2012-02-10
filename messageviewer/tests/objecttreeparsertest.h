@@ -27,10 +27,16 @@ class ObjectTreeParserTester : public QObject
 {
   Q_OBJECT
 
+  public slots:
+    void initTestCase();
+
   private slots:
     void test_parseEncapsulatedMessage();
     void test_parsePlainMessage();
     void test_missingContentTypeHeader();
+    void test_inlinePGPDecryption();
+    void test_HTML();
+    void test_HTMLOnly();
 };
 
 #endif

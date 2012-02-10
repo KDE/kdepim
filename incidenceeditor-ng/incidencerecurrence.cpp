@@ -72,7 +72,6 @@ enum {
   ComboIndexYearlyDay
 };
 
-
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
@@ -259,31 +258,40 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
   } else if ( recurrenceType == RecurrenceTypeMonthly ) {
     r->setMonthly( mUi->mFrequencyEdit->value() );
 
-    if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyDay ) {      // Every nth
+    if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyDay ) {
+      // Every nth
       r->addMonthlyDate( dayOfMonthFromStart() );
-    } else if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyDayInverted ) { // Every (last - n)th last day
+    } else if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyDayInverted ) {
+      // Every (last - n)th last day
       r->addMonthlyDate( -dayOfMonthFromEnd() );
-    } else if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyPos ) { // Every ith weekday
+    } else if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyPos ) {
+      // Every ith weekday
       r->addMonthlyPos( monthWeekFromStart(), weekday() );
-    } else { // Every (last - i)th last weekday
+    } else {
+      // Every (last - i)th last weekday
       r->addMonthlyPos( -monthWeekFromEnd(), weekday() );
     }
   } else if ( recurrenceType == RecurrenceTypeYearly ) {
     r->setYearly( mUi->mFrequencyEdit->value() );
 
-    if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonth ) {       //Every nth of month
+    if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonth ) {
+      //Every nth of month
       r->addYearlyDate( dayOfMonthFromStart() );
       r->addYearlyMonth( currentDate().month() );
-    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonthInverted ) {//Every (last - n)th last day of month
+    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonthInverted ) {
+      //Every (last - n)th last day of month
       r->addYearlyDate( -dayOfMonthFromEnd() );
       r->addYearlyMonth( currentDate().month() );
-    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPos ) {//Every ith weekday of month
+    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPos ) {
+      //Every ith weekday of month
       r->addYearlyMonth( currentDate().month() );
       r->addYearlyPos( monthWeekFromStart(), weekday() );
-    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPosInverted ) {//Every (last - i)th last weekday of month
+    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPosInverted ) {
+      //Every (last - i)th last weekday of month
       r->addYearlyMonth( currentDate().month() );
       r->addYearlyPos( -monthWeekFromEnd(), weekday() );
-    } else { // The lth day of the year (l : 1 - 356)
+    } else {
+      // The lth day of the year (l : 1 - 356)
       r->addYearlyDay( dayOfYearFromStart() );
     }
   }
@@ -401,7 +409,7 @@ bool IncidenceRecurrence::isDirty() const
 
 bool IncidenceRecurrence::isValid() const
 {
-  mLastErrorString = QString();
+  mLastErrorString.clear();
   KCalCore::Incidence::Ptr incidence( mLoadedIncidence->clone() );
 
   // Write start and end dates to the incidence
@@ -420,8 +428,8 @@ bool IncidenceRecurrence::isValid() const
            incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
         return true;
       } else {
-        // TODO: i18n
-        mLastErrorString = "A recurring event or to-do must occur at least once. Adjust the recurring parameters.";
+        mLastErrorString = i18n( "A recurring event or to-do must occur at least once. "
+                                 "Adjust the recurring parameters." );
         return false;
       }
     } else {
@@ -462,8 +470,10 @@ void IncidenceRecurrence::fillCombos()
   const int currentMonthlyIndex = mUi->mMonthlyCombo->currentIndex();
   mUi->mMonthlyCombo->clear();
   const QDate date = ( mLoadedIncidence &&
-                       mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ? mDateTime->endDate() :
-                                                                                     mDateTime->startDate();
+                       mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ?
+                         mDateTime->endDate() :
+                         mDateTime->startDate();
+
   QString item = subsOrdinal(
     ki18nc( "example: the 30th", "the %1" ), dayOfMonthFromStart() ).toString();
   mUi->mMonthlyCombo->addItem( item );
@@ -712,24 +722,14 @@ short IncidenceRecurrence::monthWeekFromEnd() const
 
 QString IncidenceRecurrence::numberToString( int number ) const
 {
-  const QString result = QString::number( number );
-  if ( result.endsWith( '1' ) ) {
-    if ( result.endsWith( QLatin1String( "11" ) ) ) {
-      return result + "th";
-    } else {
-      return result + "st";
-    }
-  }
+  // The code in here was adapted from an article by Johnathan Wood, see:
+  // http://www.blackbeltcoder.com/Articles/strings/converting-numbers-to-ordinal-strings
 
-  if ( result.endsWith( '2' ) ) {
-    return result + "nd";
-  }
+  static QString _numSuffixes[] = { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 
-  if ( result.endsWith( '3' ) ) {
-    return result + "rd";
-  } else {
-    return result + "th";
-  }
+  int i = ( number % 100 );
+  int j = ( i > 10 && i < 20 ) ? 0 : ( number % 10 );
+  return  QString::number( number ) + _numSuffixes[j];
 }
 
 void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence,
@@ -965,7 +965,6 @@ RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
   return static_cast<RecurrenceType>( currentIndex );
 }
 
-
 void IncidenceRecurrence::handleStartDateChange( const QDate &date )
 {
   // If it's a to-do, recurrence is calculated from dtDue.
@@ -994,6 +993,8 @@ QDate IncidenceRecurrence::currentDate() const
 {
   // If it's a to-do, recurrence is calculated from dtDue, not dtStart.
   // ( not rfc compliant, but it's what we have now )
-  return ( mLoadedIncidence && mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ? mDateTime->endDate():
-                                                                                             mDateTime->startDate();
+  return
+    ( mLoadedIncidence && mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ?
+      mDateTime->endDate():
+      mDateTime->startDate();
 }

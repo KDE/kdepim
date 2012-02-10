@@ -36,12 +36,12 @@ EmptySource::~EmptySource()
 
 bool EmptySource::htmlMail()
 {
-  return false;
+  return true;
 }
 
 bool EmptySource::decryptMessage()
 {
-  return true; //by default decrypt the messages
+  return mAllowDecryption;
 }
 
 bool EmptySource::htmlLoadExternal()
@@ -57,6 +57,11 @@ bool EmptySource::showSignatureDetails()
 void EmptySource::setHtmlMode( Util::HtmlMode mode )
 {
   Q_UNUSED( mode );
+}
+
+void EmptySource::setAllowDecryption( bool allowDecryption )
+{
+  mAllowDecryption = allowDecryption;
 }
 
 int EmptySource::levelQuote()

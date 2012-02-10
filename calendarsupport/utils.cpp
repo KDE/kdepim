@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2009, 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Copyright (C) 2009 KDAB (author: Frank Osterfeld <osterfeld@kde.org>)
-  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
+    Author: Frank Osterfeld <osterfeld@kde.org>
+    Author: Andras Mantia <andras@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 */
 
 #include "utils.h"
+#include "calendar.h"
 #include "kcalprefs.h"
 #include "mailclient.h"
 #include "mailscheduler.h"
@@ -201,7 +202,7 @@ static QByteArray findMostCommonType( const Akonadi::Item::List &items )
     return "Incidence";
   }
 
-  Q_FOREACH( const Akonadi::Item &item, items ) {
+  Q_FOREACH ( const Akonadi::Item &item, items ) {
     if ( !CalendarSupport::hasIncidence( item ) ) {
       continue;
     }
@@ -303,7 +304,7 @@ bool CalendarSupport::canDecode( const QMimeData *md )
 QList<KUrl> CalendarSupport::incidenceItemUrls( const QMimeData *mimeData )
 {
   QList<KUrl> urls;
-  Q_FOREACH( const KUrl &i, mimeData->urls() ) {
+  Q_FOREACH ( const KUrl &i, mimeData->urls() ) {
     if ( isValidIncidenceItemUrl( i ) ) {
       urls.push_back( i );
     }
@@ -315,7 +316,7 @@ QList<KUrl> CalendarSupport::todoItemUrls( const QMimeData *mimeData )
 {
   QList<KUrl> urls;
 
-  Q_FOREACH( const KUrl &i, mimeData->urls() ) {
+  Q_FOREACH ( const KUrl &i, mimeData->urls() ) {
     if ( isValidIncidenceItemUrl( i, QStringList() << KCalCore::Todo::todoMimeType() ) ) {
       urls.push_back( i );
     }
@@ -328,6 +329,12 @@ bool CalendarSupport::mimeDataHasTodo( const QMimeData *mimeData )
   return !todoItemUrls( mimeData ).isEmpty() || !todos( mimeData, KDateTime::Spec() ).isEmpty();
 }
 
+bool CalendarSupport::mimeDataHasIncidence( const QMimeData *mimeData )
+{
+  return !incidenceItemUrls( mimeData ).isEmpty() ||
+         !incidences( mimeData, KDateTime::Spec() ).isEmpty();
+}
+
 KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
                                              const KDateTime::Spec &spec )
 {
@@ -336,7 +343,7 @@ KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
 #ifndef QT_NO_DRAGANDDROP
   KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );
   if ( cal ) {
-    Q_FOREACH( const KCalCore::Todo::Ptr &i, cal->todos() ) {
+    Q_FOREACH ( const KCalCore::Todo::Ptr &i, cal->todos() ) {
       todos.push_back( KCalCore::Todo::Ptr( i->clone() ) );
     }
   }
@@ -345,13 +352,32 @@ KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
   return todos;
 }
 
+KCalCore::Incidence::List CalendarSupport::incidences( const QMimeData *mimeData,
+                                                       const KDateTime::Spec &spec )
+{
+  KCalCore::Incidence::List incidences;
+
+#ifndef QT_NO_DRAGANDDROP
+  KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );
+  if ( cal ) {
+    KCalCore::Incidence::List calIncidences = cal->incidences();
+    Q_FOREACH ( const KCalCore::Incidence::Ptr &i, calIncidences ) {
+      incidences.push_back( KCalCore::Incidence::Ptr( i->clone() ) );
+    }
+  }
+#endif
+
+  return incidences;
+}
+
 Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
                                                        int &dialogCode,
                                                        const QStringList &mimeTypes,
                                                        const Akonadi::Collection &defCollection )
 {
   QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
-
+  dlg->setCaption( i18n( "Select Calendar" ) );
+  dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   kDebug() << "selecting collections with mimeType in " << mimeTypes;
 
   dlg->setMimeTypeFilter( mimeTypes );
@@ -367,7 +393,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
     collection = dlg->selectedCollection();
 
     if ( !collection.isValid() ) {
-      kWarning() <<"An invalid collection was selected!";
+      kWarning() << "An invalid collection was selected!";
     }
   }
   delete dlg;
@@ -424,7 +450,6 @@ Akonadi::Item::List CalendarSupport::itemsFromModel( const QAbstractItemModel * 
         items << itemsFromModel( model, i );
       }
     }
-
     ++row;
     i = i.sibling( row, 0 );
   }
@@ -444,7 +469,7 @@ Akonadi::Collection::Id CalendarSupport::collectionIdFromIndex( const QModelInde
 Akonadi::Collection::List CalendarSupport::collectionsFromIndexes( const QModelIndexList &indexes )
 {
   Akonadi::Collection::List l;
-  Q_FOREACH( const QModelIndex &idx, indexes ) {
+  Q_FOREACH ( const QModelIndex &idx, indexes ) {
     l.push_back( collectionFromIndex( idx ) );
   }
   return l;
@@ -454,6 +479,60 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
 {
   const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
+}
+
+QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collection &c )
+{
+  const QString cName = c.name();
+
+  if ( !c.resource().contains( "kolabproxy" ) ) {
+    // Not groupware so the collection is "mine"
+    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+    if ( attr && !attr->displayName().isEmpty() ) {
+      return i18n( "My %1", attr->displayName() );
+    } else {
+      return i18n( "My %1", cName );
+    }
+  } else {
+    QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
+    QString ownerStr;        // folder owner; "fred", "ethel", etc
+    QString nameStr;         // folder name: "Public", "Test", etc
+    if ( calendar ) {
+      Akonadi::Collection p = c.parentCollection();
+      while ( p != Akonadi::Collection::root() ) {
+        Akonadi::Collection tCol = calendar->collection( p.id() );
+        const QString tName = tCol.name();
+        if ( tName != i18n( "Calendar" ) &&
+             tName != i18n( "Tasks" ) &&
+             tName != i18n( "Journal" ) &&
+             tName != i18n( "Notes" ) ) {
+          ownerStr = tName;
+          break;
+        } else {
+          nameStr = typeStr;
+          typeStr = tName;
+        }
+        p = p.parentCollection();
+      }
+    }
+
+    if ( !ownerStr.isEmpty() ) {
+      if ( ownerStr.toUpper() != QString( "INBOX" ) ) {
+        if ( nameStr.isEmpty() ) {
+          return i18nc( "%1 is folder owner name, %2 is folder contents",
+                        "%1's %2", ownerStr, typeStr );
+        } else {
+          return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
+                        "%1's %2 %3", ownerStr, nameStr, typeStr );
+        }
+      } else {
+        return i18nc( "%1 is folder contents",
+                      "My Shared %1", typeStr );
+      }
+    } else {
+      return typeStr;
+    }
+  }
 }
 
 QString CalendarSupport::subMimeTypeForIncidence( const KCalCore::Incidence::Ptr &incidence )
@@ -482,7 +561,8 @@ QList<QDate> CalendarSupport::workDays( const QDate &startDate,
     //       creating one here.
     const HolidayRegion holidays( KCalPrefs::instance()->mHolidays );
     const Holiday::List list = holidays.holidays( startDate, endDate );
-    for ( int i = 0; i < list.count(); ++i ) {
+    const int listCount( list.count() );
+    for ( int i = 0; i < listCount; ++i ) {
       const Holiday &h = list.at( i );
       const QString dateString = h.date().toString();
       if ( h.dayType() == Holiday::NonWorkday ) {
@@ -500,14 +580,16 @@ QStringList CalendarSupport::holiday( const QDate &date )
 
   const HolidayRegion holidays( KCalPrefs::instance()->mHolidays );
   const Holiday::List list = holidays.holidays( date );
-
-  for ( int i = 0; i < list.count(); ++i ) {
+  const int listCount( list.count() );
+  for ( int i = 0; i < listCount; ++i ) {
     hdays.append( list.at( i ).text() );
   }
   return hdays;
 }
 
-void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities::IdentityManager* identityManager, QWidget* parentWidget)
+void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
+                                       KPIMIdentities::IdentityManager *identityManager,
+                                       QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -521,11 +603,12 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
   }
 
   QPointer<PublishDialog> publishdlg = new PublishDialog;
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     const QString recipients = publishdlg->addresses();
     if ( incidence->organizer()->isEmpty() ) {
-      incidence->setOrganizer( Person::Ptr( new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
+      incidence->setOrganizer( Person::Ptr(
+                                 new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                             CalendarSupport::KCalPrefs::instance()->email() ) ) );
     }
 
     ICalFormat format;
@@ -536,7 +619,8 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
     if ( mailer.mailTo(
            incidence,
            identityManager->identityForAddress( from ),
-           from, bccMe, recipients, messageText, MailTransport::TransportManager::self()->defaultTransportName() ) ) {
+           from, bccMe, recipients, messageText,
+           MailTransport::TransportManager::self()->defaultTransportName() ) ) {
       KMessageBox::information(
         parentWidget,
         i18n( "The item information was successfully sent." ),
@@ -552,7 +636,8 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
   delete publishdlg;
 }
 
-void  CalendarSupport::publishItemInformation(const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget)
+void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calendar *calendar,
+                                               QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -568,11 +653,12 @@ void  CalendarSupport::publishItemInformation(const Akonadi::Item& item, Calenda
   if ( incidence->attendeeCount() > 0 ) {
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
-    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    Attendee::List::ConstIterator end( attendees.constEnd() );
+    for ( it = attendees.constBegin(); it != end; ++it ) {
       publishdlg->addAttendee( *it );
     }
   }
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
     inc->clearAttendees();
@@ -594,7 +680,10 @@ void  CalendarSupport::publishItemInformation(const Akonadi::Item& item, Calenda
   delete publishdlg;
 }
 
-void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method, const Akonadi::Item& item, CalendarSupport::Calendar* calendar, QWidget* parentWidget )
+void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
+                                           const Akonadi::Item &item,
+                                           CalendarSupport::Calendar *calendar,
+                                           QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -640,7 +729,7 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method, const Ak
   }
 }
 
-void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parentWidget)
+void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
@@ -654,8 +743,9 @@ void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parent
 
   Attachment::List attachments = incidence->attachments();
 
-  if ( attachments.empty() )
+  if ( attachments.empty() ) {
     return;
+  }
 
   QString targetFile, targetDir;
   if ( attachments.count() > 1 ) {
@@ -668,10 +758,10 @@ void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parent
     }
 
     // we may not get a slash-terminated url out of KFileDialog
-    if ( !targetDir.endsWith('/') )
-      targetDir.append('/');
-  }
-  else {
+    if ( !targetDir.endsWith( '/' ) ) {
+      targetDir.append( '/' );
+    }
+  } else {
     // only one item, get the desired filename
     QString fileName = attachments.first()->label();
     if ( fileName.isEmpty() ) {
@@ -685,10 +775,10 @@ void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parent
       return;
     }
 
-    targetDir = QFileInfo( targetFile ).absolutePath() + "/";
+    targetDir = QFileInfo( targetFile ).absolutePath() + '/';
   }
 
-  Q_FOREACH( Attachment::Ptr attachment, attachments ) {
+  Q_FOREACH ( Attachment::Ptr attachment, attachments ) {
     targetFile = targetDir + attachment->label();
     KUrl sourceUrl;
     if ( attachment->isUri() ) {

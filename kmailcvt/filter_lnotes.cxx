@@ -57,7 +57,8 @@ void FilterLNotes::import(FilterInfo *info) {
     inf->setOverall(0);
 
     // See filter_mbox.cxx for better reference.
-    for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != filenames.constEnd(); ++filename ) {
+    QStringList::ConstIterator end = filenames.constEnd();
+    for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename ) {
 
         ++currentFile;
         info->addLog( i18n("Importing emails from %1", *filename) );

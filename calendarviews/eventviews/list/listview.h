@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1999 Preston Brown <pbrown@kde.org>
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -23,25 +21,18 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALENDARVIEWS_LISTVIEW_H
-#define CALENDARVIEWS_LISTVIEW_H
+#ifndef EVENTVIEWS_LISTVIEW_H
+#define EVENTVIEWS_LISTVIEW_H
 
 #include "eventview.h"
-#include "customlistviewitem.h"
-
-#include <KCalCore/Incidence>
-
-#include <KConfig>
-
-#include <QHash>
-#include <QList>
 
 namespace CalendarSupport {
   class Calendar;
 }
 
-typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
+class KConfig;
 
+class QModelIndex;
 
 /**
   This class provides a multi-column list view of events.  It can
@@ -56,21 +47,17 @@ typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
 
 namespace EventViews {
 
-class ListView;
-
 class EVENTVIEWS_EXPORT ListView : public EventView
 {
   Q_OBJECT
   public:
     explicit ListView( CalendarSupport::Calendar *calendar,
-                       QWidget *parent = 0,  bool nonInteractive = false );
+                       QWidget *parent = 0, bool nonInteractive = false );
     ~ListView();
 
     virtual int currentDateCount() const;
     virtual Akonadi::Item::List selectedIncidences() const;
     virtual KCalCore::DateList selectedIncidenceDates() const;
-
-    void showDates( bool show );
 
     // Shows all incidences of the calendar
     void showAll();
@@ -83,13 +70,13 @@ class EVENTVIEWS_EXPORT ListView : public EventView
 
   public slots:
     virtual void updateView();
-    virtual void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
+
+    virtual void showDates( const QDate &start, const QDate &end,
+                            const QDate &preferredMonth = QDate() );
+
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();
-
-    void showDates();
-    void hideDates();
 
     void changeIncidenceDisplay( const Akonadi::Item &, int );
 

@@ -527,11 +527,10 @@ QModelIndex KReparentingProxyModel::mapToSource(const QModelIndex& proxyIndex) c
 // kDebug() <<  sourceParent << sourceParent.data();
 
   QModelIndex sourceIndexFirstColumn;
-  if (d->m_pendingRemovalChildIndexes.contains(sourceParent))
-  {
+  if (d->m_pendingRemovalChildIndexes.contains(sourceParent)) {
 //     kDebug() << "#############";
 
-    foreach( KReparentingProxyModelPrivate::PendingRemoval pendingRemoval, d->m_pendingRemovals)
+    foreach( const KReparentingProxyModelPrivate::PendingRemoval &pendingRemoval, d->m_pendingRemovals)
     {
 //       kDebug() << "In" << pendingRemoval.index << pendingRemoval.sourceIndex << sourceParent;
       if (pendingRemoval.sourceIndex == sourceParent)
@@ -787,7 +786,7 @@ QHash<QModelIndex, QModelIndexList> KReparentingProxyModelPrivate::mergeDescenda
 
 QHash<QModelIndex, QModelIndexList> KReparentingProxyModelPrivate::insertTree( QHash<QModelIndex, QModelIndexList> mappings, const QModelIndex &parent )
 {
-
+  return QHash<QModelIndex, QModelIndexList>();
 }
 
 void KReparentingProxyModelPrivate::handleInsertion(const PendingInsertion &pendingInsertion)
@@ -1368,8 +1367,7 @@ void KReparentingProxyModelPrivate::sourceLayoutAboutToBeChanged()
 
   emit q->layoutAboutToBeChanged();
 
-  foreach(QPersistentModelIndex proxyPersistentIndex, q->persistentIndexList())
-  {
+  foreach( const QPersistentModelIndex &proxyPersistentIndex, q->persistentIndexList()) {
     m_proxyIndexes << proxyPersistentIndex;
     m_layoutChangePersistentIndexes << QPersistentModelIndex(q->mapToSource(proxyPersistentIndex));
   }

@@ -1,20 +1,19 @@
-/*   -*- mode: C++; c-file-style: "gnu" -*-
- *   kmail: KDE mail client
- *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@ubiz.ru>
+/*
+ * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@ubiz.ru>
  *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the Free Software Foundation, Inc.,
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "customtemplatesmenu.h"
@@ -22,12 +21,15 @@
 #include "customtemplates_kfg.h"
 #include "globalsettings_base.h"
 
-#include <klocale.h>
-#include <kactionmenu.h>
-#include <kmenu.h>
-#include <kactioncollection.h>
+#include <KActionCollection>
+#include <KActionMenu>
+#include <KIcon>
+#include <KLocale>
+#include <KMenu>
 
 #include <QSignalMapper>
+
+using namespace TemplateParser;
 
 CustomTemplatesMenu::CustomTemplatesMenu( QWidget *owner, KActionCollection *ac )
 {
@@ -95,20 +97,22 @@ void CustomTemplatesMenu::update()
 {
   clear();
 
-  QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
-  QStringList::iterator it = list.begin();
+  const QStringList list = GlobalSettings::self()->customTemplates();
+  QStringList::const_iterator it = list.constBegin();
+  QStringList::const_iterator end = list.constEnd();
   int idx = 0;
   int replyc = 0;
   int replyallc = 0;
   int forwardc = 0;
-  for ( ; it != list.end(); ++it ) {
+  for ( ; it != end; ++it ) {
     CTemplates t( *it );
     mCustomTemplates.append( *it );
-
+    QString nameAction( *it );
+    nameAction.replace( '&', "&&" );
     KAction *action;
     switch ( t.type() ) {
     case CustomTemplates::TReply:
-      action = new KAction( (*it).replace( '&', "&&" ), mOwnerActionCollection );
+      action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       action->setShortcut( t.shortcut() );
       connect( action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()) );
       mCustomReplyMapper->setMapping( action, idx );
@@ -118,7 +122,7 @@ void CustomTemplatesMenu::update()
       break;
 
     case CustomTemplates::TReplyAll:
-      action = new KAction( (*it).replace( '&', "&&" ), mOwnerActionCollection );
+      action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       action->setShortcut( t.shortcut() );
       connect( action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()) );
       mCustomReplyAllMapper->setMapping( action, idx );
@@ -128,7 +132,7 @@ void CustomTemplatesMenu::update()
       break;
 
     case CustomTemplates::TForward:
-      action = new KAction( (*it).replace( '&', "&&" ), mOwnerActionCollection );
+      action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       action->setShortcut( t.shortcut() );
       connect( action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()) );
       mCustomForwardMapper->setMapping( action, idx );
@@ -138,19 +142,19 @@ void CustomTemplatesMenu::update()
       break;
 
     case CustomTemplates::TUniversal:
-      action = new KAction( (*it).replace( '&', "&&" ), mOwnerActionCollection );
+      action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       connect( action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()) );
       mCustomReplyMapper->setMapping( action, idx );
       mCustomReplyActionMenu->addAction( action );
       mCustomTemplateActions.append( action );
       ++replyc;
-      action = new KAction( (*it).replace( '&', "&&" ), mOwnerActionCollection );
+      action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       connect( action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()) );
       mCustomReplyAllMapper->setMapping( action, idx );
       mCustomReplyAllActionMenu->addAction( action );
       mCustomTemplateActions.append( action );
       ++replyallc;
-      action = new KAction( (*it).replace( '&', "&&" ), mOwnerActionCollection );
+      action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       connect( action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()) );
       mCustomForwardMapper->setMapping( action, idx );
       mCustomForwardActionMenu->addAction( action );
@@ -184,17 +188,17 @@ void CustomTemplatesMenu::update()
 
 void CustomTemplatesMenu::slotReplySelected( int idx )
 {
-  emit replyTemplateSelected( mCustomTemplates[idx] );
+  emit replyTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
 void CustomTemplatesMenu::slotReplyAllSelected( int idx )
 {
-  emit replyAllTemplateSelected( mCustomTemplates[idx] );
+  emit replyAllTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
 void CustomTemplatesMenu::slotForwardSelected( int idx )
 {
-  emit forwardTemplateSelected( mCustomTemplates[idx] );
+  emit forwardTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
 #include "customtemplatesmenu.moc"

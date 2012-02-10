@@ -209,7 +209,7 @@ AlarmDialog::AlarmDialog( CalendarSupport::Calendar *calendar, QWidget *parent )
   connect( mIncidenceTree, SIGNAL(itemSelectionChanged()),
            SLOT(update()) );
 
-  mDetailView = new CalendarSupport::IncidenceViewer( topBox );
+  mDetailView = new CalendarSupport::IncidenceViewer( mCalendar, topBox );
   QString s;
   s = i18nc( "@info default incidence details string",
              "<emphasis>Select an event or to-do from the list above "
@@ -333,7 +333,7 @@ void AlarmDialog::addIncidence( const Akonadi::Item &incidenceitem,
                    item->mTrigger, false, true, KDateTime::Spec::LocalZone() ) );
   QString tip =
     IncidenceFormatter::toolTipStr(
-      CalendarSupport::displayName( incidenceitem.parentCollection() ),
+      CalendarSupport::displayName( mCalendar, incidenceitem.parentCollection() ),
       incidence,
       item->mRemindAt.date(), true,
       KDateTime::Spec::LocalZone() );
@@ -934,8 +934,10 @@ bool AlarmDialog::openIncidenceEditorNG( const Akonadi::Item &item )
     IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
   }
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  IncidenceEditorNG::IncidenceDialog *dialog = IncidenceEditorNG::IncidenceDialogFactory::create( false/*doesn't need initial saving*/,
-                                                                                                  incidence->type(), this );
+  IncidenceEditorNG::IncidenceDialog *dialog =
+    IncidenceEditorNG::IncidenceDialogFactory::create(
+      false, /*doesn't need initial saving*/
+      incidence->type(), this );
   dialog->load( item );
   return true;
 }
@@ -968,7 +970,7 @@ void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
 
   genGroup.writeEntry( "Reminders", newReminders.count() );
 
-  //Write everything except those which have an uid we dont want
+  //Write everything except those which have an uid we don't want
   for ( int i = 0; i < newReminders.count(); ++i ) {
     const QString group( QString( "Incidence-%1" ).arg( i + 1 ) );
     KConfigGroup incGroup( config, group );

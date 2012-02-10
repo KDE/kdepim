@@ -47,7 +47,7 @@ class ThemeDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  ThemeDelegate( QAbstractItemView * parent );
+  explicit ThemeDelegate( QAbstractItemView * parent );
   ~ThemeDelegate();
 
 private:

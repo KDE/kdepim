@@ -33,11 +33,11 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemfetchjob.h>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/ItemFetchJob>
 
-#include <kcalutils/icaldrag.h>
-#include <kcalutils/vcaldrag.h>
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
 
 #include <KCalendarSystem>
 #include <KIcon>
@@ -369,10 +369,11 @@ void KODayMatrix::updateEvents()
 
     const KDateTime dtStart = event->dtStart().toTimeSpec( mCalendar->timeSpec() );
 
-    // timed incidences occur in [dtStart(), dtEnd()[. All-day incidences occur in [dtStart(), dtEnd()]
+    // timed incidences occur in
+    //   [dtStart(), dtEnd()[. All-day incidences occur in [dtStart(), dtEnd()]
     // so we subtract 1 second in the timed case
-    const int secsToAdd     = event->allDay() ? 0 : -1;
-    const KDateTime dtEnd   = event->dtEnd().toTimeSpec( mCalendar->timeSpec() ).addSecs( secsToAdd );
+    const int secsToAdd = event->allDay() ? 0 : -1;
+    const KDateTime dtEnd = event->dtEnd().toTimeSpec( mCalendar->timeSpec() ).addSecs( secsToAdd );
 
     if ( !( recurType == Recurrence::rDaily  && !KOPrefs::instance()->mDailyRecur ) &&
          !( recurType == Recurrence::rWeekly && !KOPrefs::instance()->mWeeklyRecur ) ) {
@@ -619,7 +620,7 @@ void KODayMatrix::dragEnterEvent( QDragEnterEvent *e )
 {
   e->acceptProposedAction();
   const QMimeData *md = e->mimeData();
-  if ( !CalendarSupport::canDecode( md )) {
+  if ( !CalendarSupport::canDecode( md ) ) {
     e->ignore();
     return;
   }
@@ -687,7 +688,7 @@ void KODayMatrix::dropEvent( QDropEvent *e )
     } else if ( keyboardModifiers & Qt::ShiftModifier ) {
       action = DRAG_MOVE;
     } else {
-      QAction *copy = 0, *move = 0, *cancel = 0;
+      QAction *copy = 0, *move = 0;
       KMenu *menu = new KMenu( this );
       if ( exist ) {
         move = menu->addAction( KOGlobals::self()->smallIcon( "edit-paste" ), i18n( "&Move" ) );
@@ -698,7 +699,8 @@ void KODayMatrix::dropEvent( QDropEvent *e )
         move = menu->addAction( KOGlobals::self()->smallIcon( "list-add" ), i18n( "&Add" ) );
       }
       menu->addSeparator();
-      cancel = menu->addAction( KOGlobals::self()->smallIcon( "process-stop" ), i18n( "&Cancel" ) );
+      /*QAction *cancel =*/
+      menu->addAction( KOGlobals::self()->smallIcon( "process-stop" ), i18n( "&Cancel" ) );
       QAction *a = menu->exec( QCursor::pos() );
       if ( a == copy ) {
         action = DRAG_COPY;
@@ -728,23 +730,23 @@ void KODayMatrix::dropEvent( QDropEvent *e )
 void KODayMatrix::paintEvent( QPaintEvent * )
 {
   QPainter p;
-  QRect sz = frameRect();
-  int dheight = mDaySize.height();
-  int dwidth = mDaySize.width();
-  int row, col;
-  int selw, selh;
-  bool isRTL = KOGlobals::self()->reverseLayout();
+  const QRect rect = frameRect();
+  const int dayHeight = mDaySize.height();
+  const int dayWidth = mDaySize.width();
+  int row, column;
+  int selectionWidth, selectionHeight;
+  const bool isRTL = KOGlobals::self()->reverseLayout();
 
   QPalette pal = palette();
 
   p.begin( this );
 
   // draw background
-  p.fillRect( 0, 0, sz.width(), sz.height(), QBrush( pal.color( QPalette::Base ) ) );
+  p.fillRect( 0, 0, rect.width(), rect.height(), QBrush( pal.color( QPalette::Base ) ) );
 
   // draw topleft frame
   p.setPen( pal.color( QPalette::Mid ) );
-  p.drawRect( 0, 0, sz.width() - 1, sz.height() - 1 );
+  p.drawRect( 0, 0, rect.width() - 1, rect.height() - 1 );
   // don't paint over borders
   p.translate( 1, 1 );
 
@@ -756,41 +758,46 @@ void KODayMatrix::paintEvent( QPaintEvent * )
     if ( row < 0 && mSelEnd > 0 ) {
       row = 0;
     }
-    col = mSelStart - row * 7;
-    QColor selcol = KOPrefs::instance()->agendaGridHighlightColor();
+    column = mSelStart - row * 7;
+    const QColor selectionColor = KOPrefs::instance()->agendaGridHighlightColor();
 
     if ( row < 6 && row >= 0 ) {
       if ( row == mSelEnd / 7 ) {
         // Single row selection
-        p.fillRect( isRTL ? ( 7 - ( mSelEnd - mSelStart + 1 ) - col ) * dwidth : col * dwidth,
-                    row * dheight,
-                    ( mSelEnd - mSelStart + 1 ) * dwidth, dheight, selcol );
+        p.fillRect( isRTL ?
+                      ( 7 - ( mSelEnd - mSelStart + 1 ) - column ) * dayWidth :
+                       column * dayWidth,
+                    row * dayHeight,
+                    ( mSelEnd - mSelStart + 1 ) * dayWidth, dayHeight, selectionColor );
       } else {
         // draw first row to the right
-        p.fillRect( isRTL ? 0 : col * dwidth, row * dheight,
-                    ( 7 - col ) * dwidth, dheight, selcol );
+        p.fillRect( isRTL ? 0 : column * dayWidth, row * dayHeight,
+                    ( 7 - column ) * dayWidth, dayHeight, selectionColor );
         // draw full block till last line
-        selh = mSelEnd / 7 - row;
-        if ( selh + row >= 6 ) {
-          selh = 6 - row;
+        selectionHeight = mSelEnd / 7 - row;
+        if ( selectionHeight + row >= 6 ) {
+          selectionHeight = 6 - row;
         }
-        if ( selh > 1 ) {
-          p.fillRect( 0, ( row + 1 ) * dheight, 7 * dwidth,
-                      ( selh - 1 ) * dheight, selcol );
+        if ( selectionHeight > 1 ) {
+          p.fillRect( 0, ( row + 1 ) * dayHeight, 7 * dayWidth,
+                      ( selectionHeight - 1 ) * dayHeight, selectionColor );
         }
         // draw last block from left to mSelEnd
         if ( mSelEnd / 7 < 6 ) {
-          selw = mSelEnd - 7 * ( mSelEnd / 7 ) + 1;
-          p.fillRect( isRTL ? ( 7 - selw ) * dwidth : 0, ( row + selh ) * dheight,
-                      selw * dwidth, dheight, selcol );
+          selectionWidth = mSelEnd - 7 * ( mSelEnd / 7 ) + 1;
+          p.fillRect( isRTL ?
+                        ( 7 - selectionWidth ) * dayWidth :
+                        0,
+                      ( row + selectionHeight ) * dayHeight,
+                      selectionWidth * dayWidth, dayHeight, selectionColor );
         }
       }
     }
   }
 
   // iterate over all days in the matrix and draw the day label in appropriate colors
-  QColor textColor = pal.color( QPalette::Text );
-  QColor textColorShaded = getShadedColor( textColor );
+  const QColor textColor = pal.color( QPalette::Text );
+  const QColor textColorShaded = getShadedColor( textColor );
   QColor actcol = textColorShaded;
   p.setPen( actcol );
   QPen tmppen;
@@ -798,7 +805,7 @@ void KODayMatrix::paintEvent( QPaintEvent * )
   const QList<QDate> workDays = KOGlobals::self()->workDays( mDays[0], mDays[NUMDAYS-1] );
   for ( int i = 0; i < NUMDAYS; ++i ) {
     row = i / 7;
-    col = isRTL ? 6 - ( i - row * 7 ) : i - row * 7;
+    column = isRTL ? 6 - ( i - row * 7 ) : i - row * 7;
 
     // if it is the first day of a month switch color from normal to shaded and vice versa
     if ( KOGlobals::self()->calendarSystem()->day( mDays[i] ) == 1 ) {
@@ -817,30 +824,30 @@ void KODayMatrix::paintEvent( QPaintEvent * )
 
     const bool holiday = !workDays.contains( mDays[i] );
 
-    QColor holidayColorShaded =
+    const QColor holidayColorShaded =
       getShadedColor( KOPrefs::instance()->agendaHolidaysBackgroundColor() );
 
     // if today then draw rectangle around day
     if ( mToday == i ) {
       tmppen = p.pen();
-      QPen mTodayPen( p.pen() );
+      QPen todayPen( p.pen() );
 
-      mTodayPen.setWidth( mTodayMarginWidth );
+      todayPen.setWidth( mTodayMarginWidth );
       //draw red rectangle for holidays
       if ( holiday ) {
         if ( actcol == textColor ) {
-          mTodayPen.setColor( KOPrefs::instance()->agendaHolidaysBackgroundColor() );
+          todayPen.setColor( KOPrefs::instance()->agendaHolidaysBackgroundColor() );
         } else {
-          mTodayPen.setColor( holidayColorShaded );
+          todayPen.setColor( holidayColorShaded );
         }
       }
       //draw gray rectangle for today if in selection
       if ( i >= mSelStart && i <= mSelEnd ) {
-        QColor grey( "grey" );
-        mTodayPen.setColor( grey );
+        const QColor grey( "grey" );
+        todayPen.setColor( grey );
       }
-      p.setPen( mTodayPen );
-      p.drawRect( col * dwidth, row * dheight, dwidth, dheight );
+      p.setPen( todayPen );
+      p.drawRect( column * dayWidth, row * dayHeight, dayWidth, dayHeight );
       p.setPen( tmppen );
     }
 
@@ -865,7 +872,7 @@ void KODayMatrix::paintEvent( QPaintEvent * )
       p.setPen( Qt::white );
     }
 
-    p.drawText( col * dwidth, row * dheight, dwidth, dheight,
+    p.drawText( column * dayWidth, row * dayHeight, dayWidth, dayHeight,
                 Qt::AlignHCenter | Qt::AlignVCenter, mDayLabels[i]);
 
     // reset color to actual color
@@ -911,6 +918,5 @@ QPair<QDate,QDate> KODayMatrix::matrixLimits( const QDate &month )
 
   return qMakePair( d, d.addDays( NUMDAYS-1 ) );
 }
-
 
 #include "kodaymatrix.moc"

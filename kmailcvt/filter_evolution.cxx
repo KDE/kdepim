@@ -95,7 +95,9 @@ void FilterEvolution::importDirContents(FilterInfo *info, const QString& dirName
     if(dir.exists("subfolders")) {
         QDir subfolders(dirName + "/subfolders");
         const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
-        for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
+        QStringList::ConstIterator end( subDirs.constEnd() );
+
+        for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
             QString kSubDir;
             if(!KMailSubDir.isNull()) {
                 kSubDir = KMailSubDir + '/' + *filename;

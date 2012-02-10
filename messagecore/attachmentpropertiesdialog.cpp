@@ -94,7 +94,7 @@ void AttachmentPropertiesDialog::Private::polishUi()
     ui.encrypt->setEnabled( false );
     ui.sign->setEnabled( false );
 
-    q->setButtons( Ok | Help );
+    q->setButtons( Close | Help );
   } else {
     populateEncodings();
     populateMimeTypes();
@@ -119,11 +119,9 @@ void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
 
 void AttachmentPropertiesDialog::Private::populateWhatsThis()
 {
-  QString msg;
-
   // FIXME These are such a mess... Make them straightforward and pretty.
 
-  msg = i18n( "<p>The <em>MIME type</em> of the file:</p>"
+  QString msg = i18n( "<p>The <em>MIME type</em> of the file:</p>"
               "<p>Normally, you do not need to touch this setting, since the "
               "type of the file is automatically checked; but, sometimes, %1 "
               "may not detect the type correctly -- here is where you can fix "

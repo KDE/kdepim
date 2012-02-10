@@ -1,7 +1,7 @@
 /*
  *  prefdlg.cpp  -  program preferences dialog
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@
 #include "editdlgtypes.h"
 #include "fontcolour.h"
 #include "functions.h"
-#include "identities.h"
 #include "itembox.h"
 #include "kalarmapp.h"
 #include "kalocale.h"
@@ -41,6 +40,7 @@
 #include "label.h"
 #include "latecancel.h"
 #include "mainwindow.h"
+#include "messagebox.h"
 #include "preferences.h"
 #include "radiobutton.h"
 #include "recurrenceedit.h"
@@ -55,6 +55,8 @@
 #include "prefdlg_p.moc"
 #include "prefdlg.moc"
 
+#include <kalarmcal/identities.h>
+
 #include <kholidays/holidays.h>
 using namespace KHolidays;
 
@@ -64,7 +66,6 @@ using namespace KHolidays;
 #include <kstandarddirs.h>
 #include <kshell.h>
 #include <klineedit.h>
-#include <kmessagebox.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kiconloader.h>
@@ -92,6 +93,13 @@ using namespace KHolidays;
 #include <QStyle>
 #include <QResizeEvent>
 #include <QTimer>
+
+#ifdef USE_AKONADI
+using namespace KCalCore;
+#else
+using namespace KCal;
+#endif
+using namespace KAlarmCal;
 
 static const char PREF_DIALOG_NAME[] = "PrefDialog";
 
@@ -216,7 +224,7 @@ void KAlarmPrefDlg::slotApply()
     if (!errmsg.isEmpty())
     {
         setCurrentPage(mEmailPageItem);
-        if (KMessageBox::warningYesNo(this, errmsg) != KMessageBox::Yes)
+        if (KAMessageBox::warningYesNo(this, errmsg) != KMessageBox::Yes)
         {
             mValid = false;
             return;
@@ -226,7 +234,7 @@ void KAlarmPrefDlg::slotApply()
     if (!errmsg.isEmpty())
     {
         setCurrentPage(mEditPageItem);
-        KMessageBox::sorry(this, errmsg);
+        KAMessageBox::sorry(this, errmsg);
         mValid = false;
         return;
     }
@@ -261,9 +269,9 @@ void KAlarmPrefDlg::slotCancel()
 // Reset all controls to the application defaults
 void KAlarmPrefDlg::slotDefault()
 {
-    switch (KMessageBox::questionYesNoCancel(this, i18nc("@info", "Reset all tabs to their default values, or only reset the current tab?"),
-                                             QString(),
-                                             KGuiItem(i18nc("@action:button Reset ALL tabs", "&All")),
+    switch (KAMessageBox::questionYesNoCancel(this, i18nc("@info", "Reset all tabs to their default values, or only reset the current tab?"),
+                                              QString(),
+                                            KGuiItem(i18nc("@action:button Reset ALL tabs", "&All")),
                          KGuiItem(i18nc("@action:button Reset the CURRENT tab", "C&urrent"))))
     {
         case KMessageBox::Yes:
@@ -271,7 +279,7 @@ void KAlarmPrefDlg::slotDefault()
             break;
         case KMessageBox::No:
             Preferences::self()->useDefaults(true);
-            static_cast<PrefsTabBase*>(currentPage()->widget())->restore(true);
+            static_cast<PrefsTabBase*>(currentPage()->widget())->restore(true, false);
             Preferences::self()->useDefaults(false);
             break;
         default:
@@ -285,12 +293,12 @@ void KAlarmPrefDlg::restore(bool defaults)
     kDebug() << (defaults ? "defaults" : "");
     if (defaults)
         Preferences::self()->useDefaults(true);
-    mEmailPage->restore(defaults);
-    mViewPage->restore(defaults);
-    mEditPage->restore(defaults);
-    mStorePage->restore(defaults);
-    mTimePage->restore(defaults);
-    mMiscPage->restore(defaults);
+    mEmailPage->restore(defaults, true);
+    mViewPage->restore(defaults, true);
+    mEditPage->restore(defaults, true);
+    mStorePage->restore(defaults, true);
+    mTimePage->restore(defaults, true);
+    mMiscPage->restore(defaults, true);
     if (defaults)
         Preferences::self()->useDefaults(false);
 }
@@ -329,8 +337,8 @@ void KAlarmPrefDlg::showEvent(QShowEvent* e)
 }
 
 /******************************************************************************
-*  Called when the dialog's size has changed.
-*  Records the new size in the config file.
+* Called when the dialog's size has changed.
+* Records the new size in the config file.
 */
 void KAlarmPrefDlg::resizeEvent(QResizeEvent* re)
 {
@@ -505,7 +513,7 @@ MiscPrefTab::MiscPrefTab(StackedScrollGroup* scrollGroup)
     topLayout()->addStretch();    // top adjust the widgets
 }
 
-void MiscPrefTab::restore(bool defaults)
+void MiscPrefTab::restore(bool defaults, bool)
 {
     mAutoStart->setChecked(defaults ? true : Preferences::autoStart());
     mQuitWarn->setChecked(Preferences::quitWarn());
@@ -542,7 +550,7 @@ void MiscPrefTab::apply(bool syncToDisc)
             if (KStandardDirs::findExe(cmd).isEmpty())
             {
                 mXtermCommand->setFocus();
-                if (KMessageBox::warningContinueCancel(topWidget(), i18nc("@info", "Command to invoke terminal window not found: <command>%1</command>", cmd))
+                if (KAMessageBox::warningContinueCancel(topWidget(), i18nc("@info", "Command to invoke terminal window not found: <command>%1</command>", cmd))
                                 != KMessageBox::Continue)
                     return;
             }
@@ -584,10 +592,10 @@ void MiscPrefTab::apply(bool syncToDisc)
 void MiscPrefTab::slotAutostartClicked()
 {
     if (!mAutoStart->isChecked()
-    &&  KMessageBox::warningYesNo(topWidget(),
-                              i18nc("@info", "You should not uncheck this option unless you intend to discontinue use of <application>KAlarm</application>"),
-                              QString(), KStandardGuiItem::cont(), KStandardGuiItem::cancel()
-                             ) != KMessageBox::Yes)
+    &&  KAMessageBox::warningYesNo(topWidget(),
+                                   i18nc("@info", "You should not uncheck this option unless you intend to discontinue use of <application>KAlarm</application>"),
+                                   QString(), KStandardGuiItem::cont(), KStandardGuiItem::cancel()
+                                  ) != KMessageBox::Yes)
         mAutoStart->setChecked(true);
 }
 
@@ -754,7 +762,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     topLayout()->addStretch();    // top adjust the widgets
 }
 
-void TimePrefTab::restore(bool)
+void TimePrefTab::restore(bool, bool)
 {
 #if 1
     mTimeZone->setTimeZone(Preferences::timeZone());
@@ -880,9 +888,9 @@ StorePrefTab::StorePrefTab(StackedScrollGroup* scrollGroup)
     mClearArchived->setFixedSize(mClearArchived->sizeHint());
     connect(mClearArchived, SIGNAL(clicked()), SLOT(slotClearArchived()));
 #ifdef USE_AKONADI
-    mClearArchived->setWhatsThis((CollectionControlModel::enabledCollections(KAlarm::CalEvent::ARCHIVED, false).count() <= 1)
+    mClearArchived->setWhatsThis((CollectionControlModel::enabledCollections(CalEvent::ARCHIVED, false).count() <= 1)
 #else
-    mClearArchived->setWhatsThis((AlarmResources::instance()->activeCount(KAlarm::CalEvent::ARCHIVED, false) <= 1)
+    mClearArchived->setWhatsThis((AlarmResources::instance()->activeCount(CalEvent::ARCHIVED, false) <= 1)
 #endif
             ? i18nc("@info:whatsthis", "Delete all existing archived alarms.")
             : i18nc("@info:whatsthis", "Delete all existing archived alarms (from the default archived alarm calendar only)."));
@@ -892,7 +900,7 @@ StorePrefTab::StorePrefTab(StackedScrollGroup* scrollGroup)
     topLayout()->addStretch();    // top adjust the widgets
 }
 
-void StorePrefTab::restore(bool defaults)
+void StorePrefTab::restore(bool defaults, bool)
 {
     mCheckKeepChanges = defaults;
     if (Preferences::askResource())
@@ -930,12 +938,12 @@ void StorePrefTab::slotArchivedToggled(bool)
     bool keep = mKeepArchived->isChecked();
     if (keep  &&  !mOldKeepArchived  &&  mCheckKeepChanges
 #ifdef USE_AKONADI
-    &&  !CollectionControlModel::getStandard(KAlarm::CalEvent::ARCHIVED).isValid())
+    &&  !CollectionControlModel::getStandard(CalEvent::ARCHIVED).isValid())
 #else
-    &&  !AlarmResources::instance()->getStandardResource(KAlarm::CalEvent::ARCHIVED))
+    &&  !AlarmResources::instance()->getStandardResource(CalEvent::ARCHIVED))
 #endif
     {
-        KMessageBox::sorry(topWidget(),
+        KAMessageBox::sorry(topWidget(),
              i18nc("@info", "<para>A default calendar is required in order to archive alarms, but none is currently enabled.</para>"
                   "<para>If you wish to keep expired alarms, please first use the calendars view to select a default "
                   "archived alarms calendar.</para>"));
@@ -952,12 +960,12 @@ void StorePrefTab::slotArchivedToggled(bool)
 void StorePrefTab::slotClearArchived()
 {
 #ifdef USE_AKONADI
-    bool single = CollectionControlModel::enabledCollections(KAlarm::CalEvent::ARCHIVED, false).count() <= 1;
+    bool single = CollectionControlModel::enabledCollections(CalEvent::ARCHIVED, false).count() <= 1;
 #else
-    bool single = AlarmResources::instance()->activeCount(KAlarm::CalEvent::ARCHIVED, false) <= 1;
+    bool single = AlarmResources::instance()->activeCount(CalEvent::ARCHIVED, false) <= 1;
 #endif
-    if (KMessageBox::warningContinueCancel(topWidget(), single ? i18nc("@info", "Do you really want to delete all archived alarms?")
-                                                        : i18nc("@info", "Do you really want to delete all alarms in the default archived alarm calendar?"))
+    if (KAMessageBox::warningContinueCancel(topWidget(), single ? i18nc("@info", "Do you really want to delete all archived alarms?")
+                                                                : i18nc("@info", "Do you really want to delete all alarms in the default archived alarm calendar?"))
             != KMessageBox::Continue)
         return;
     theApp()->purgeAll();
@@ -1085,7 +1093,7 @@ EmailPrefTab::EmailPrefTab(StackedScrollGroup* scrollGroup)
     topLayout()->addStretch();    // top adjust the widgets
 }
 
-void EmailPrefTab::restore(bool defaults)
+void EmailPrefTab::restore(bool defaults, bool)
 {
     mEmailClient->setButton(Preferences::emailClient());
     mEmailCopyToKMail->setChecked(Preferences::emailCopyToKMail());
@@ -1199,20 +1207,20 @@ EditPrefTab::EditPrefTab(StackedScrollGroup* scrollGroup)
 {
     KLocalizedString defsetting = ki18nc("@info:whatsthis", "The default setting for <interface>%1</interface> in the alarm edit dialog.");
 
-    KTabWidget* tabs = new KTabWidget(topWidget());
-    StackedGroupT<KVBox>* tabgroup = new StackedGroupT<KVBox>(tabs);
+    mTabs = new KTabWidget(topWidget());
+    StackedGroupT<KVBox>* tabgroup = new StackedGroupT<KVBox>(mTabs);
     StackedWidgetT<KVBox>* topGeneral = new StackedWidgetT<KVBox>(tabgroup);
     topGeneral->setMargin(KDialog::marginHint()/2);
     topGeneral->setSpacing(KDialog::spacingHint());
-    tabs->addTab(topGeneral, i18nc("@title:tab", "General"));
+    mTabGeneral = mTabs->addTab(topGeneral, i18nc("@title:tab", "General"));
     StackedWidgetT<KVBox>* topTypes = new StackedWidgetT<KVBox>(tabgroup);
     topTypes->setMargin(KDialog::marginHint()/2);
     topTypes->setSpacing(KDialog::spacingHint());
-    tabs->addTab(topTypes, i18nc("@title:tab", "Alarm Types"));
+    mTabTypes = mTabs->addTab(topTypes, i18nc("@title:tab", "Alarm Types"));
     StackedWidgetT<KVBox>* topFontColour = new StackedWidgetT<KVBox>(tabgroup);
     topFontColour->setMargin(KDialog::marginHint()/2);
     topFontColour->setSpacing(KDialog::spacingHint());
-    tabs->addTab(topFontColour, i18nc("@title:tab", "Font && Color"));
+    mTabFontColour = mTabs->addTab(topFontColour, i18nc("@title:tab", "Font && Color"));
 
     // MISCELLANEOUS
     // Show in KOrganizer
@@ -1395,46 +1403,61 @@ EditPrefTab::EditPrefTab(StackedScrollGroup* scrollGroup)
     mFontChooser = new FontColourChooser(topFontColour, QStringList(), i18nc("@title:group", "Message Font && Color"), true);
 }
 
-void EditPrefTab::restore(bool)
+void EditPrefTab::restore(bool, bool allTabs)
 {
     int index;
-    mAutoClose->setChecked(Preferences::defaultAutoClose());
-    mConfirmAck->setChecked(Preferences::defaultConfirmAck());
-    switch (Preferences::defaultReminderUnits())
+    if (allTabs  ||  mTabs->currentIndex() == mTabGeneral)
     {
-        case TimePeriod::Weeks:        index = 3; break;
-        case TimePeriod::Days:         index = 2; break;
-        default:
-        case TimePeriod::HoursMinutes: index = 1; break;
-        case TimePeriod::Minutes:      index = 0; break;
+        mCopyToKOrganizer->setChecked(Preferences::defaultCopyToKOrganizer());
+        mLateCancel->setChecked(Preferences::defaultLateCancel());
+        switch (Preferences::defaultRecurPeriod())
+        {
+            case Preferences::Recur_Yearly:   index = 6; break;
+            case Preferences::Recur_Monthly:  index = 5; break;
+            case Preferences::Recur_Weekly:   index = 4; break;
+            case Preferences::Recur_Daily:    index = 3; break;
+            case Preferences::Recur_SubDaily: index = 2; break;
+            case Preferences::Recur_Login:    index = 1; break;
+            case Preferences::Recur_None:
+            default:                          index = 0; break;
+        }
+        mRecurPeriod->setCurrentIndex(index);
+        mFeb29->setButton(Preferences::defaultFeb29Type());
     }
-    mReminderUnits->setCurrentIndex(index);
-    mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(),
-                                      Preferences::defaultCancelOnPreActionError(), Preferences::defaultDontShowPreActionError());
-    mSound->setCurrentIndex(soundIndex(Preferences::defaultSoundType()));
-    mSoundFile->setText(Preferences::defaultSoundFile());
-    mSoundRepeat->setChecked(Preferences::defaultSoundRepeat());
-    mCmdScript->setChecked(Preferences::defaultCmdScript());
-    mCmdXterm->setChecked(Preferences::defaultCmdLogType() == Preferences::Log_Terminal);
-    mEmailBcc->setChecked(Preferences::defaultEmailBcc());
-    mCopyToKOrganizer->setChecked(Preferences::defaultCopyToKOrganizer());
-    mLateCancel->setChecked(Preferences::defaultLateCancel());
-    switch (Preferences::defaultRecurPeriod())
+    if (allTabs  ||  mTabs->currentIndex() == mTabTypes)
     {
-        case Preferences::Recur_Yearly:   index = 6; break;
-        case Preferences::Recur_Monthly:  index = 5; break;
-        case Preferences::Recur_Weekly:   index = 4; break;
-        case Preferences::Recur_Daily:    index = 3; break;
-        case Preferences::Recur_SubDaily: index = 2; break;
-        case Preferences::Recur_Login:    index = 1; break;
-        case Preferences::Recur_None:
-        default:                          index = 0; break;
+        mConfirmAck->setChecked(Preferences::defaultConfirmAck());
+        mAutoClose->setChecked(Preferences::defaultAutoClose());
+        switch (Preferences::defaultReminderUnits())
+        {
+            case TimePeriod::Weeks:        index = 3; break;
+            case TimePeriod::Days:         index = 2; break;
+            default:
+            case TimePeriod::HoursMinutes: index = 1; break;
+            case TimePeriod::Minutes:      index = 0; break;
+        }
+        mReminderUnits->setCurrentIndex(index);
+        KAEvent::ExtraActionOptions opts(0);
+        if (Preferences::defaultExecPreActionOnDeferral())
+            opts |= KAEvent::ExecPreActOnDeferral;
+        if (Preferences::defaultCancelOnPreActionError())
+            opts |= KAEvent::CancelOnPreActError;
+        if (Preferences::defaultDontShowPreActionError())
+            opts |= KAEvent::DontShowPreActError;
+        mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(), opts);
+        mSound->setCurrentIndex(soundIndex(Preferences::defaultSoundType()));
+        mSoundFile->setText(Preferences::defaultSoundFile());
+        mSoundRepeat->setChecked(Preferences::defaultSoundRepeat());
+        mCmdScript->setChecked(Preferences::defaultCmdScript());
+        mCmdXterm->setChecked(Preferences::defaultCmdLogType() == Preferences::Log_Terminal);
+        mEmailBcc->setChecked(Preferences::defaultEmailBcc());
     }
-    mRecurPeriod->setCurrentIndex(index);
-    mFeb29->setButton(Preferences::defaultFeb29Type());
-    mFontChooser->setFgColour(Preferences::defaultFgColour());
-    mFontChooser->setBgColour(Preferences::defaultBgColour());
-    mFontChooser->setFont(Preferences::messageFont());
+    if (allTabs  ||  mTabs->currentIndex() == mTabFontColour)
+    {
+        mFontChooser->setFgColour(Preferences::defaultFgColour());
+        mFontChooser->setBgColour(Preferences::defaultBgColour());
+        mFontChooser->setFont(Preferences::messageFont());
+    }
 }
 
 void EditPrefTab::apply(bool syncToDisc)
@@ -1459,15 +1482,19 @@ void EditPrefTab::apply(bool syncToDisc)
     QString text = mSpecialActionsButton->preAction();
     if (text != Preferences::defaultPreAction())
         Preferences::setDefaultPreAction(text);
-    b = mSpecialActionsButton->cancelOnError();
-    if (b != Preferences::defaultCancelOnPreActionError())
-        Preferences::setDefaultCancelOnPreActionError(b);
-    b = mSpecialActionsButton->dontShowError();
-    if (b != Preferences::defaultDontShowPreActionError())
-        Preferences::setDefaultDontShowPreActionError(b);
     text = mSpecialActionsButton->postAction();
     if (text != Preferences::defaultPostAction())
         Preferences::setDefaultPostAction(text);
+    KAEvent::ExtraActionOptions opts = mSpecialActionsButton->options();
+    b = opts & KAEvent::ExecPreActOnDeferral;
+    if (b != Preferences::defaultExecPreActionOnDeferral())
+        Preferences::setDefaultExecPreActionOnDeferral(b);
+    b = opts & KAEvent::CancelOnPreActError;
+    if (b != Preferences::defaultCancelOnPreActionError())
+        Preferences::setDefaultCancelOnPreActionError(b);
+    b = opts & KAEvent::DontShowPreActError;
+    if (b != Preferences::defaultDontShowPreActionError())
+        Preferences::setDefaultDontShowPreActionError(b);
     Preferences::SoundType snd;
     switch (mSound->currentIndex())
     {
@@ -1567,28 +1594,65 @@ QString EditPrefTab::validate()
 ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     : PrefsTabBase(scrollGroup)
 {
-    KTabWidget* tabs = new KTabWidget(topWidget());
+    mTabs = new KTabWidget(topWidget());
     KVBox* topGeneral = new KVBox();
     topGeneral->setMargin(KDialog::marginHint()/2);
     topGeneral->setSpacing(KDialog::spacingHint());
-    tabs->addTab(topGeneral, i18nc("@title:tab", "General"));
+    mTabGeneral = mTabs->addTab(topGeneral, i18nc("@title:tab", "General"));
     KVBox* topWindows = new KVBox();
     topWindows->setMargin(KDialog::marginHint()/2);
     topWindows->setSpacing(KDialog::spacingHint());
-    tabs->addTab(topWindows, i18nc("@title:tab", "Alarm Windows"));
+    mTabWindows = mTabs->addTab(topWindows, i18nc("@title:tab", "Alarm Windows"));
 
-    // Run-in-system-tray radio button
-    KHBox* box = new KHBox(topGeneral);   // this is to allow left adjustment
-    box->setMargin(0);
-    mShowInSystemTray = new QCheckBox(i18nc("@option:check", "Show in system tray"), box);
+    // Run-in-system-tray group box
+    mShowInSystemTray = new QGroupBox(i18nc("@option:check", "Show in system tray"), topGeneral);
+    mShowInSystemTray->setCheckable(true);
     mShowInSystemTray->setWhatsThis(
           i18nc("@info:whatsthis", "<para>Check to show <application>KAlarm</application>'s icon in the system tray."
                " Showing it in the system tray provides easy access and a status indication.</para>"));
-    box->setStretchFactor(new QWidget(box), 1);    // left adjust the controls
-    box->setFixedHeight(box->sizeHint().height());
+    QGridLayout* grid = new QGridLayout(mShowInSystemTray);
+    grid->setMargin(KDialog::marginHint());
+    grid->setSpacing(KDialog::spacingHint());
+    grid->setColumnStretch(1, 1);
+    grid->setColumnMinimumWidth(0, indentWidth());
 
+    mAutoHideSystemTray = new ButtonGroup(mShowInSystemTray);
+    connect(mAutoHideSystemTray, SIGNAL(buttonSet(QAbstractButton*)), SLOT(slotAutoHideSysTrayChanged(QAbstractButton*)));
+
+    QRadioButton* radio = new QRadioButton(i18nc("@option:radio Always show KAlarm icon", "Always show"), mShowInSystemTray);
+    mAutoHideSystemTray->addButton(radio, 0);
+    radio->setWhatsThis(
+          i18nc("@info:whatsthis",
+                "Check to show <application>KAlarm</application>'s icon in the system tray "
+                "regardless of whether alarms are due."));
+    grid->addWidget(radio, 0, 0, 1, 2, Qt::AlignLeft);
+
+    radio = new QRadioButton(i18nc("@option:radio", "Automatically hide if no active alarms"), mShowInSystemTray);
+    mAutoHideSystemTray->addButton(radio, 1);
+    radio->setWhatsThis(
+          i18nc("@info:whatsthis",
+                "Check to automatically hide <application>KAlarm</application>'s icon in "
+                "the system tray if there are no active alarms. When hidden, the icon can "
+                "always be made visible by use of the system tray option to show hidden icons."));
+    grid->addWidget(radio, 1, 0, 1, 2, Qt::AlignLeft);
+
+    QString text = i18nc("@info:whatsthis",
+                         "Check to automatically hide <application>KAlarm</application>'s icon in the "
+                         "system tray if no alarms are due within the specified time period. When hidden, "
+                         "the icon can always be made visible by use of the system tray option to show hidden icons.");
+    radio = new QRadioButton(i18nc("@option:radio", "Automatically hide if no alarm due within time period:"), mShowInSystemTray);
+    radio->setWhatsThis(text);
+    mAutoHideSystemTray->addButton(radio, 2);
+    grid->addWidget(radio, 2, 0, 1, 2, Qt::AlignLeft);
+    mAutoHideSystemTrayPeriod = new TimePeriod(true, mShowInSystemTray);
+    mAutoHideSystemTrayPeriod->setWhatsThis(text);
+    mAutoHideSystemTrayPeriod->setMaximumWidth(mAutoHideSystemTrayPeriod->sizeHint().width());
+    grid->addWidget(mAutoHideSystemTrayPeriod, 3, 1, 1, 1, Qt::AlignLeft);
+    mShowInSystemTray->setMaximumHeight(mShowInSystemTray->sizeHint().height());
+
+    // System tray tooltip group box
     QGroupBox* group = new QGroupBox(i18nc("@title:group", "System Tray Tooltip"), topGeneral);
-    QGridLayout* grid = new QGridLayout(group);
+    grid = new QGridLayout(group);
     grid->setMargin(KDialog::marginHint());
     grid->setSpacing(KDialog::spacingHint());
     grid->setColumnStretch(2, 1);
@@ -1602,7 +1666,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
           i18nc("@info:whatsthis", "Specify whether to include in the system tray tooltip, a summary of alarms due in the next 24 hours."));
     grid->addWidget(mTooltipShowAlarms, 0, 0, 1, 3, Qt::AlignLeft);
 
-    box = new KHBox(group);
+    KHBox* box = new KHBox(group);
     box->setMargin(0);
     box->setSpacing(KDialog::spacingHint());
     mTooltipMaxAlarms = new QCheckBox(i18nc("@option:check", "Maximum number of alarms to show:"), box);
@@ -1684,7 +1748,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
           "<para>Choose how to reduce the chance of alarm messages being accidentally acknowledged:"
           "<list><item>Position alarm message windows as far as possible from the current mouse cursor location, or</item>"
           "<item>Position alarm message windows in the center of the screen, but disable buttons for a short time after the window is displayed.</item></list></para>");
-    QRadioButton* radio = new QRadioButton(i18nc("@option:radio", "Position windows far from mouse cursor"), group);
+    radio = new QRadioButton(i18nc("@option:radio", "Position windows far from mouse cursor"), group);
     mWindowPosition->addButton(radio, 0);
     radio->setWhatsThis(whatsthis);
     grid->addWidget(radio, 0, 0, 1, 2, Qt::AlignLeft);
@@ -1723,18 +1787,47 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
         lay->addStretch();    // top adjust the widgets
 }
 
-void ViewPrefTab::restore(bool)
+void ViewPrefTab::restore(bool, bool allTabs)
 {
-    mDisabledColour->setColor(Preferences::disabledColour());
-    mArchivedColour->setColor(Preferences::archivedColour());
-    setTooltip(Preferences::tooltipAlarmCount(),
-               Preferences::showTooltipAlarmTime(),
-               Preferences::showTooltipTimeToAlarm(),
-               Preferences::tooltipTimeToPrefix());
-    mShowInSystemTray->setChecked(Preferences::showInSystemTray());
-    mWindowPosition->setButton(Preferences::messageButtonDelay() ? 1 : 0);
-    mWindowButtonDelay->setValue(Preferences::messageButtonDelay());
-    mModalMessages->setChecked(Preferences::modalMessages());
+    if (allTabs  ||  mTabs->currentIndex() == mTabGeneral)
+    {
+        mShowInSystemTray->setChecked(Preferences::showInSystemTray());
+        int id;
+        int mins = Preferences::autoHideSystemTray();
+        switch (mins)
+        {
+            case -1:  id = 1;  break;    // hide if any active alarms
+            case 0:   id = 0;  break;    // never hide
+            default:
+            {
+                id = 2;
+                int days = 0;
+                int secs = 0;
+                if (mins % 1440)
+                    secs = mins * 60;
+                else
+                    days = mins / 1440;
+                TimePeriod::Units units = secs ? TimePeriod::HoursMinutes
+                                        : (days % 7) ? TimePeriod::Days : TimePeriod::Weeks;
+                Duration duration((secs ? secs : days), (secs ? Duration::Seconds : Duration::Days));
+                mAutoHideSystemTrayPeriod->setPeriod(duration, false, units);
+                break;
+            }
+        }
+        mAutoHideSystemTray->setButton(id);
+        setTooltip(Preferences::tooltipAlarmCount(),
+                   Preferences::showTooltipAlarmTime(),
+                   Preferences::showTooltipTimeToAlarm(),
+                   Preferences::tooltipTimeToPrefix());
+        mDisabledColour->setColor(Preferences::disabledColour());
+        mArchivedColour->setColor(Preferences::archivedColour());
+    }
+    if (allTabs  ||  mTabs->currentIndex() == mTabWindows)
+    {
+        mWindowPosition->setButton(Preferences::messageButtonDelay() ? 1 : 0);
+        mWindowButtonDelay->setValue(Preferences::messageButtonDelay());
+        mModalMessages->setChecked(Preferences::modalMessages());
+    }
 }
 
 void ViewPrefTab::apply(bool syncToDisc)
@@ -1762,6 +1855,19 @@ void ViewPrefTab::apply(bool syncToDisc)
     b = mShowInSystemTray->isChecked();
     if (b != Preferences::showInSystemTray())
         Preferences::setShowInSystemTray(b);
+    if (b)
+    {
+        switch (mAutoHideSystemTray->selectedId())
+        {
+            case 0:  n = 0;   break;    // never hide
+            case 1:  n = -1;  break;    // hide if any active alarms
+            case 2:                     // hide if no alarms due within period
+                     n = mAutoHideSystemTrayPeriod->period().asSeconds() / 60;
+                     break;
+        }
+        if (n != Preferences::autoHideSystemTray())
+            Preferences::setAutoHideSystemTray(n);
+    }
     n = mWindowPosition->selectedId();
     if (n)
         n = mWindowButtonDelay->value();
@@ -1829,6 +1935,11 @@ void ViewPrefTab::slotTooltipTimeToToggled(bool on)
     on = on && mTooltipShowTimeTo->isEnabled();
     mTooltipTimeToPrefix->setEnabled(on);
     mTooltipTimeToPrefixLabel->setEnabled(on);
+}
+
+void ViewPrefTab::slotAutoHideSysTrayChanged(QAbstractButton* button)
+{
+    mAutoHideSystemTrayPeriod->setEnabled(mAutoHideSystemTray->id(button) == 2);
 }
 
 void ViewPrefTab::slotWindowPosChanged(QAbstractButton* button)

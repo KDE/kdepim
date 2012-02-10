@@ -1,7 +1,7 @@
 /*
  *  editdlg.cpp  -  dialog to create or modify an alarm or alarm template
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@
 #include "latecancel.h"
 #include "lineedit.h"
 #include "mainwindow.h"
+#include "messagebox.h"
 #include "packedlayout.h"
 #include "preferences.h"
 #include "radiobutton.h"
@@ -58,7 +59,6 @@
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kpushbutton.h>
-#include <kmessagebox.h>
 #include <khbox.h>
 #include <kvbox.h>
 #include <kwindowsystem.h>
@@ -80,6 +80,7 @@
 #include <QTimer>
 
 using namespace KCal;
+using namespace KAlarmCal;
 
 static const char EDIT_DIALOG_NAME[] = "EditDialog";
 static const char TEMPLATE_DIALOG_NAME[] = "EditTemplateDialog";
@@ -119,7 +120,7 @@ EditAlarmDlg* EditAlarmDlg::create(bool Template, Type type, QWidget* parent, Ge
 EditAlarmDlg* EditAlarmDlg::create(bool Template, const KAEvent* event, bool newAlarm, QWidget* parent,
                                    GetResourceType getResource, bool readOnly)
 {
-    switch (event->actions())
+    switch (event->actionTypes())
     {
         case KAEvent::ACT_COMMAND:  return new EditCommandAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly);
         case KAEvent::ACT_DISPLAY_COMMAND:
@@ -140,7 +141,7 @@ EditAlarmDlg* EditAlarmDlg::create(bool Template, const KAEvent* event, bool new
 *            = false to edit/create an alarm.
 *   event   != to initialise the dialog to show the specified event's data.
 */
-EditAlarmDlg::EditAlarmDlg(bool Template, KAEvent::Action action, QWidget* parent, GetResourceType getResource)
+EditAlarmDlg::EditAlarmDlg(bool Template, KAEvent::SubAction action, QWidget* parent, GetResourceType getResource)
     : KDialog(parent),
       mAlarmType(action),
       mMainPageShown(false),
@@ -168,7 +169,7 @@ EditAlarmDlg::EditAlarmDlg(bool Template, KAEvent::Action action, QWidget* paren
 EditAlarmDlg::EditAlarmDlg(bool Template, const KAEvent* event, bool newAlarm, QWidget* parent,
                            GetResourceType getResource, bool readOnly)
     : KDialog(parent),
-      mAlarmType(event->action()),
+      mAlarmType(event->actionSubType()),
       mMainPageShown(false),
       mRecurPageShown(false),
       mRecurSetDefaultEndDate(true),
@@ -548,12 +549,12 @@ void EditAlarmDlg::initValues(const KAEvent* event)
             else
             {
                 mExpiredRecurrence = recurs && event->mainExpired();
-                mTimeWidget->setDateTime(recurs || event->category() == KAlarm::CalEvent::ARCHIVED ? event->startDateTime()
+                mTimeWidget->setDateTime(recurs || event->category() == CalEvent::ARCHIVED ? event->startDateTime()
                                          : event->mainExpired() ? event->deferDateTime() : event->mainDateTime());
             }
         }
 
-        KAEvent::Action action = event->action();
+        KAEvent::SubAction action = event->actionSubType();
         AlarmText altext;
         if (event->commandScript())
             altext.setScript(event->cleanText());
@@ -594,7 +595,7 @@ void EditAlarmDlg::initValues(const KAEvent* event)
     if (!deferGroupVisible  &&  mDeferGroup)
         mDeferGroup->hide();
 
-    bool empty = AlarmCalendar::resources()->events(KAlarm::CalEvent::TEMPLATE).isEmpty();
+    bool empty = AlarmCalendar::resources()->events(CalEvent::TEMPLATE).isEmpty();
     enableButton(Help, !empty);   // Load Templates button
 }
 
@@ -769,9 +770,9 @@ bool EditAlarmDlg::getEvent(KAEvent& event, AlarmResource*& resource)
 }
 
 /******************************************************************************
-*  Extract the data in the dialog and set up a KAEvent from it.
-*  If 'trial' is true, the event is set up for a simple one-off test, ignoring
-*  recurrence, reminder, template etc. data.
+* Extract the data in the dialog and set up a KAEvent from it.
+* If 'trial' is true, the event is set up for a simple one-off test, ignoring
+* recurrence, reminder, template etc. data.
 */
 void EditAlarmDlg::setEvent(KAEvent& event, const QString& text, bool trial)
 {
@@ -834,17 +835,22 @@ void EditAlarmDlg::setEvent(KAEvent& event, const QString& text, bool trial)
 /******************************************************************************
 * Get the currently specified alarm flag bits.
 */
-int EditAlarmDlg::getAlarmFlags() const
+KAEvent::Flags EditAlarmDlg::getAlarmFlags() const
 {
-    return (mShowInKorganizer && mShowInKorganizer->isEnabled() && mShowInKorganizer->isChecked() ? KAEvent::COPY_KORGANIZER : 0)
-         | (mRecurrenceEdit->repeatType() == RecurrenceEdit::AT_LOGIN                 ? KAEvent::REPEAT_AT_LOGIN : 0)
-         | ((mTemplate ? mTemplateAnyTime->isChecked() : mAlarmDateTime.isDateOnly()) ? KAEvent::ANY_TIME : 0);
+    KAEvent::Flags flags(0);
+    if (mShowInKorganizer && mShowInKorganizer->isEnabled() && mShowInKorganizer->isChecked())
+        flags |= KAEvent::COPY_KORGANIZER;
+    if (mRecurrenceEdit->repeatType() == RecurrenceEdit::AT_LOGIN)
+        flags |= KAEvent::REPEAT_AT_LOGIN;
+    if (mTemplate ? mTemplateAnyTime->isChecked() : mAlarmDateTime.isDateOnly())
+        flags |= KAEvent::ANY_TIME;
+    return flags;
 }
 
 /******************************************************************************
-*  Called when the dialog is displayed.
-*  The first time through, sets the size to the same as the last time it was
-*  displayed.
+* Called when the dialog is displayed.
+* The first time through, sets the size to the same as the last time it was
+* displayed.
 */
 void EditAlarmDlg::showEvent(QShowEvent* se)
 {
@@ -896,9 +902,9 @@ void EditAlarmDlg::slotResize()
 }
 
 /******************************************************************************
-*  Called when the dialog's size has changed.
-*  Records the new size (adjusted to ignore the optional height of the deferred
-*  time edit widget) in the config file.
+* Called when the dialog's size has changed.
+* Records the new size (adjusted to ignore the optional height of the deferred
+* time edit widget) in the config file.
 */
 void EditAlarmDlg::resizeEvent(QResizeEvent* re)
 {
@@ -912,7 +918,7 @@ void EditAlarmDlg::resizeEvent(QResizeEvent* re)
 }
 
 /******************************************************************************
-*  Called when any button is clicked.
+* Called when any button is clicked.
 */
 void EditAlarmDlg::slotButtonClicked(int button)
 {
@@ -926,8 +932,8 @@ void EditAlarmDlg::slotButtonClicked(int button)
 }
 
 /******************************************************************************
-*  Called when the OK button is clicked.
-*  Validate the input data.
+* Called when the OK button is clicked.
+* Validate the input data.
 */
 bool EditAlarmDlg::validate()
 {
@@ -958,7 +964,7 @@ bool EditAlarmDlg::validate()
         if (!errmsg.isEmpty())
         {
             mTemplateName->setFocus();
-            KMessageBox::sorry(this, errmsg);
+            KAMessageBox::sorry(this, errmsg);
             return false;
         }
     }
@@ -1006,7 +1012,7 @@ bool EditAlarmDlg::validate()
                                                   "The start date/time does not match the alarm's recurrence pattern, "
                                                   "so it will be adjusted to the date/time of the next recurrence (%1).",
                                                   KGlobal::locale()->formatDateTime(next.kDateTime(), KLocale::ShortDate));
-                if (KMessageBox::warningContinueCancel(this, prompt) != KMessageBox::Continue)
+                if (KAMessageBox::warningContinueCancel(this, prompt) != KMessageBox::Continue)
                     return false;
             }
         }
@@ -1030,12 +1036,12 @@ bool EditAlarmDlg::validate()
                 // has already expired, so we must adjust it.
                 if (event.nextOccurrence(now, mAlarmDateTime, KAEvent::ALLOW_FOR_REPETITION) == KAEvent::NO_OCCURRENCE)
                 {
-                    KMessageBox::sorry(this, i18nc("@info", "Recurrence has already expired"));
+                    KAMessageBox::sorry(this, i18nc("@info", "Recurrence has already expired"));
                     return false;
                 }
                 if (event.workTimeOnly()  &&  !event.nextTrigger(KAEvent::DISPLAY_TRIGGER).isValid())
                 {
-                    if (KMessageBox::warningContinueCancel(this, i18nc("@info", "The alarm will never occur during working hours"))
+                    if (KAMessageBox::warningContinueCancel(this, i18nc("@info", "The alarm will never occur during working hours"))
                         != KMessageBox::Continue)
                         return false;
                 }
@@ -1047,7 +1053,7 @@ bool EditAlarmDlg::validate()
         {
             mTabs->setCurrentIndex(mRecurPageIndex);
             errWidget->setFocus();
-            KMessageBox::sorry(this, errmsg);
+            KAMessageBox::sorry(this, errmsg);
             return false;
         }
     }
@@ -1064,8 +1070,8 @@ bool EditAlarmDlg::validate()
             {
                 mTabs->setCurrentIndex(mMainPageIndex);
                 mReminder->setFocusOnCount();
-                KMessageBox::sorry(this, i18nc("@info", "Reminder period must be less than the recurrence interval, unless <interface>%1</interface> is checked."
-                                 , Reminder::i18n_chk_FirstRecurrenceOnly()));
+                KAMessageBox::sorry(this, i18nc("@info", "Reminder period must be less than the recurrence interval, unless <interface>%1</interface> is checked.",
+                                                Reminder::i18n_chk_FirstRecurrenceOnly()));
                 return false;
             }
         }
@@ -1079,14 +1085,14 @@ bool EditAlarmDlg::validate()
             if (longestRecurMinutes > 0
             &&  recurEvent.repetition().intervalMinutes() * recurEvent.repetition().count() >= longestRecurMinutes - reminder)
             {
-                KMessageBox::sorry(this, i18nc("@info", "The duration of a repetition within the recurrence must be less than the recurrence interval minus any reminder period"));
+                KAMessageBox::sorry(this, i18nc("@info", "The duration of a repetition within the recurrence must be less than the recurrence interval minus any reminder period"));
                 mRecurrenceEdit->activateSubRepetition();   // display the alarm repetition dialog again
                 return false;
             }
             if (!recurEvent.repetition().isDaily()
             &&  ((mTemplate && mTemplateAnyTime->isChecked())  ||  (!mTemplate && mAlarmDateTime.isDateOnly())))
             {
-                KMessageBox::sorry(this, i18nc("@info", "For a repetition within the recurrence, its period must be in units of days or weeks for a date-only alarm"));
+                KAMessageBox::sorry(this, i18nc("@info", "For a repetition within the recurrence, its period must be in units of days or weeks for a date-only alarm"));
                 mRecurrenceEdit->activateSubRepetition();   // display the alarm repetition dialog again
                 return false;
             }
@@ -1106,19 +1112,19 @@ bool EditAlarmDlg::validate()
             mCollection = AlarmCalendar::resources()->collectionForEvent(mCollectionItemId);
             if (mCollection.isValid())
             {
-                KAlarm::CalEvent::Type type = mTemplate ? KAlarm::CalEvent::TEMPLATE : KAlarm::CalEvent::ACTIVE;
+                CalEvent::Type type = mTemplate ? CalEvent::TEMPLATE : CalEvent::ACTIVE;
                 if (!(AkonadiModel::instance()->types(mCollection) & type))
                     mCollection = Akonadi::Collection();   // event may have expired while dialog was open
             }
         }
         bool cancelled = false;
-        KAlarm::CalEvent::Type type = mTemplate ? KAlarm::CalEvent::TEMPLATE : KAlarm::CalEvent::ACTIVE;
-        if (!CollectionControlModel::isWritableEnabled(mCollection, type))
+        CalEvent::Type type = mTemplate ? CalEvent::TEMPLATE : CalEvent::ACTIVE;
+        if (CollectionControlModel::isWritableEnabled(mCollection, type) <= 0)
             mCollection = CollectionControlModel::destination(type, this, false, &cancelled);
         if (!mCollection.isValid())
         {
             if (!cancelled)
-                KMessageBox::sorry(this, i18nc("@info", "You must select a calendar to save the alarm in"));
+                KAMessageBox::sorry(this, i18nc("@info", "You must select a calendar to save the alarm in"));
             return false;
         }
     }
@@ -1133,7 +1139,7 @@ bool EditAlarmDlg::validate()
             mResource = AlarmCalendar::resources()->resourceForEvent(mResourceEventId);
             if (mResource)
             {
-                KAlarm::CalEvent::Type type = mTemplate ? KAlarm::CalEvent::TEMPLATE : KAlarm::CalEvent::ACTIVE;
+                CalEvent::Type type = mTemplate ? CalEvent::TEMPLATE : CalEvent::ACTIVE;
                 if (mResource->alarmType() != type)
                     mResource = 0;   // event may have expired while dialog was open
             }
@@ -1141,13 +1147,13 @@ bool EditAlarmDlg::validate()
         bool cancelled = false;
         if (!mResource  ||  !mResource->writable())
         {
-            KAlarm::CalEvent::Type type = mTemplate ? KAlarm::CalEvent::TEMPLATE : KAlarm::CalEvent::ACTIVE;
+            CalEvent::Type type = mTemplate ? CalEvent::TEMPLATE : CalEvent::ACTIVE;
             mResource = AlarmResources::instance()->destination(type, this, false, &cancelled);
         }
         if (!mResource)
         {
             if (!cancelled)
-                KMessageBox::sorry(this, i18nc("@info", "You must select a calendar to save the alarm in"));
+                KAMessageBox::sorry(this, i18nc("@info", "You must select a calendar to save the alarm in"));
             return false;
         }
     }
@@ -1156,8 +1162,8 @@ bool EditAlarmDlg::validate()
 }
 
 /******************************************************************************
-*  Called when the Try button is clicked.
-*  Display/execute the alarm immediately for the user to check its configuration.
+* Called when the Try button is clicked.
+* Display/execute the alarm immediately for the user to check its configuration.
 */
 void EditAlarmDlg::slotTry()
 {
@@ -1174,24 +1180,15 @@ void EditAlarmDlg::slotTry()
             // enable KALARM_UID environment variable to be set.
             event.setEventId(mEventId);
         }
-        connect(theApp(), SIGNAL(execAlarmSuccess()), SLOT(slotTrySuccess()));
-        void* proc = theApp()->execAlarm(event, event.firstAlarm(), false, false);
-        if (proc  &&  proc != (void*)-1)
-            type_trySuccessMessage((ShellProcess*)proc, text);
+        type_aboutToTry();
+        void* result = theApp()->execAlarm(event, event.firstAlarm(), false, false);
+        type_executedTry(text, result);
     }
 }
 
 /******************************************************************************
-*  Called when the Try action has completed, successfully.
-*/
-void EditAlarmDlg::slotTrySuccess()
-{
-    type_trySuccessMessage(0, QString());
-}
-
-/******************************************************************************
-*  Called when the Load Template button is clicked.
-*  Prompt to select a template and initialise the dialog with its contents.
+* Called when the Load Template button is clicked.
+* Prompt to select a template and initialise the dialog with its contents.
 */
 void EditAlarmDlg::slotHelp()
 {
@@ -1320,8 +1317,8 @@ void EditAlarmDlg::slotEditDeferral()
 }
 
 /******************************************************************************
-*  Called when the main page is shown.
-*  Sets the focus widget to the first edit field.
+* Called when the main page is shown.
+* Sets the focus widget to the first edit field.
 */
 void EditAlarmDlg::slotShowMainPage()
 {
@@ -1349,10 +1346,10 @@ void EditAlarmDlg::slotShowMainPage()
 }
 
 /******************************************************************************
-*  Called when the recurrence edit page is shown.
-*  The recurrence defaults are set to correspond to the start date.
-*  The first time, for a new alarm, the recurrence end date is set according to
-*  the alarm start time.
+* Called when the recurrence edit page is shown.
+* The recurrence defaults are set to correspond to the start date.
+* The first time, for a new alarm, the recurrence end date is set according to
+* the alarm start time.
 */
 void EditAlarmDlg::slotShowRecurrenceEdit()
 {
@@ -1375,9 +1372,9 @@ void EditAlarmDlg::slotShowRecurrenceEdit()
 }
 
 /******************************************************************************
-*  Called when the recurrence type selection changes.
-*  Enables/disables date-only alarms as appropriate.
-*  Enables/disables controls depending on at-login setting.
+* Called when the recurrence type selection changes.
+* Enables/disables date-only alarms as appropriate.
+* Enables/disables controls depending on at-login setting.
 */
 void EditAlarmDlg::slotRecurTypeChange(int repeatType)
 {
@@ -1405,9 +1402,9 @@ void EditAlarmDlg::slotRecurTypeChange(int repeatType)
 }
 
 /******************************************************************************
-*  Called when the recurrence frequency selection changes, or the sub-
-*  repetition interval changes.
-*  Updates the recurrence frequency text.
+* Called when the recurrence frequency selection changes, or the sub-
+* repetition interval changes.
+* Updates the recurrence frequency text.
 */
 void EditAlarmDlg::slotRecurFrequencyChange()
 {
@@ -1418,12 +1415,12 @@ void EditAlarmDlg::slotRecurFrequencyChange()
 }
 
 /******************************************************************************
-*  Called when the Repetition within Recurrence button has been pressed to
-*  display the sub-repetition dialog.
-*  Alarm repetition has the following restrictions:
-*  1) Not allowed for a repeat-at-login alarm
-*  2) For a date-only alarm, the repeat interval must be a whole number of days.
-*  3) The overall repeat duration must be less than the recurrence interval.
+* Called when the Repetition within Recurrence button has been pressed to
+* display the sub-repetition dialog.
+* Alarm repetition has the following restrictions:
+* 1) Not allowed for a repeat-at-login alarm
+* 2) For a date-only alarm, the repeat interval must be a whole number of days.
+* 3) The overall repeat duration must be less than the recurrence interval.
 */
 void EditAlarmDlg::slotSetSubRepetition()
 {
@@ -1432,8 +1429,8 @@ void EditAlarmDlg::slotSetSubRepetition()
 }
 
 /******************************************************************************
-*  Called when one of the template time radio buttons is clicked,
-*  to enable or disable the template time entry spin boxes.
+* Called when one of the template time radio buttons is clicked,
+* to enable or disable the template time entry spin boxes.
 */
 void EditAlarmDlg::slotTemplateTimeType(QAbstractButton*)
 {
@@ -1442,8 +1439,8 @@ void EditAlarmDlg::slotTemplateTimeType(QAbstractButton*)
 }
 
 /******************************************************************************
-*  Called when the "Any time" checkbox is toggled in the date/time widget.
-*  Sets the advance reminder and late cancel units to days if any time is checked.
+* Called when the "Any time" checkbox is toggled in the date/time widget.
+* Sets the advance reminder and late cancel units to days if any time is checked.
 */
 void EditAlarmDlg::slotAnyTimeToggled(bool anyTime)
 {

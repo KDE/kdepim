@@ -3,28 +3,28 @@ include_directories(
 )
 
 ################ History #############################
-set( historytests_SRCS historytest.cpp  )
+set(historytests_SRCS historytest.cpp)
 
-kde4_add_unit_test( historytests
+kde4_add_unit_test(historytests
   TESTNAME historytests
   ${historytests_SRCS}
 )
 
-target_link_libraries( historytests
+target_link_libraries(historytests
   calendarsupport
   ${KDE4_KDECORE_LIBS}
   ${QT_QTTEST_LIBRARY}
 )
 
 ############## IncidenceChanger ########################
-set( incidencechangertests_SRCS incidencechangertest.cpp  )
+set(incidencechangertests_SRCS incidencechangertest.cpp)
 
-kde4_add_unit_test( incidencechangertests
+kde4_add_unit_test(incidencechangertests
   TESTNAME incidencechangertests
   ${incidencechangertests_SRCS}
 )
 
-target_link_libraries( incidencechangertests
+target_link_libraries(incidencechangertests
   calendarsupport
   ${KDE4_KDECORE_LIBS}
   ${QT_QTTEST_LIBRARY}

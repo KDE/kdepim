@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include <calendarsupport/utils.h>
@@ -77,18 +77,23 @@ class IncidenceChangerTest : public QObject
     {
       mWaitingForIncidenceChangerSignals = false;
       mExpectedResult = IncidenceChanger2::ResultCodeSuccess;
+
       //Control::start(); //TODO: uncomment when using testrunner
-      qRegisterMetaType<CalendarSupport::IncidenceChanger2::ResultCode>("CalendarSupport::IncidenceChanger2::ResultCode");
+      qRegisterMetaType<CalendarSupport::IncidenceChanger2::ResultCode>(
+        "CalendarSupport::IncidenceChanger2::ResultCode" );
+
       CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
                                                         CollectionFetchJob::Recursive,
                                                         this );
       // Get list of collections
-      job->fetchScope().setContentMimeTypes( QStringList() << "application/x-vnd.akonadi.calendar.event" );
+      job->fetchScope().setContentMimeTypes(
+        QStringList() << "application/x-vnd.akonadi.calendar.event" );
+
       AKVERIFYEXEC( job );
 
       // Find our collection
       Collection::List collections = job->collections();
-      foreach( Collection collection, collections ) {
+      foreach ( const Collection &collection, collections ) {
         if ( collection.name().startsWith( QLatin1String( "akonadi_ical_resource" ) ) ) {
           mCollection = collection;
           break;
@@ -120,13 +125,16 @@ class IncidenceChangerTest : public QObject
       mChanger = new IncidenceChanger2();
       mChanger->setShowDialogsOnError( false );
 
-      connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+      connect( mChanger,
+               SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
                SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-      connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+      connect( mChanger,
+               SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
                SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-      connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+      connect( mChanger,
+               SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
                SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
       connect( mCalendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -167,11 +175,7 @@ class IncidenceChangerTest : public QObject
       }
 
       { // Invalid collections
-
-
       }
-
-
     }
 
     void testDeleting()
@@ -180,7 +184,7 @@ class IncidenceChangerTest : public QObject
       const Item::List incidences = mCalendar->rawIncidences();
 
       { // Delete 5 incidences, previously created
-        foreach( const Item &item, incidences ) {
+        foreach ( const Item &item, incidences ) {
           mPendingDeletesInETM.append( item.payload<Incidence::Ptr>()->uid() );
         }
         changeId = mChanger->deleteIncidences( incidences );
@@ -218,8 +222,8 @@ class IncidenceChangerTest : public QObject
       int changeId;
 
       // First create an incidence
-      const QString uid( "uid");
-      const QString summary( "summary");
+      const QString uid( "uid" );
+      const QString summary( "summary" );
       Incidence::Ptr incidence( new Event() );
       incidence->setUid( uid );
       incidence->setSummary( summary );
@@ -272,14 +276,13 @@ class IncidenceChangerTest : public QObject
       int changeId;
 
       // First create an incidence
-      const QString uid( "uid");
-      const QString summary( "summary");
+      const QString uid( "uid" );
+      const QString summary( "summary" );
       Incidence::Ptr incidence( new Event() );
       incidence->setUid( uid );
       incidence->setSummary( summary );
       mPendingInsertsInETM.append( uid );
-      changeId = mChanger->createIncidence( incidence,
-                                            mCollection );
+      changeId = mChanger->createIncidence( incidence, mCollection );
       QVERIFY( changeId != -1 );
       mKnownChangeIds.insert( changeId );
       waitForSignals();
@@ -343,10 +346,11 @@ class IncidenceChangerTest : public QObject
     {
       Item::List list = itemsFromModel( mCalendarModel, index, start, end );
 
-      foreach( const Item &item, list ) {
+      foreach ( const Item &item, list ) {
         Incidence::Ptr incidence = CalendarSupport::incidence( item );
-        if ( incidence && mPendingInsertsInETM.contains( incidence->uid() ) )
+        if ( incidence && mPendingInsertsInETM.contains( incidence->uid() ) ) {
           mPendingInsertsInETM.removeAll( incidence->uid() );
+        }
       }
     }
 
@@ -360,8 +364,9 @@ class IncidenceChangerTest : public QObject
         const Akonadi::Item item = itemFromIndex( i );
         if ( item.isValid() ) {
           Incidence::Ptr incidence = CalendarSupport::incidence( item );
-          if ( incidence && mPendingUpdatesInETM.contains( incidence->uid() ) )
+          if ( incidence && mPendingUpdatesInETM.contains( incidence->uid() ) ) {
             mPendingUpdatesInETM.removeAll( incidence->uid() );
+          }
         }
         ++row;
         i = i.sibling( row, topLeft.column() );
@@ -371,10 +376,11 @@ class IncidenceChangerTest : public QObject
     void rowsAboutToBeRemoved( const QModelIndex &index, int start, int end )
     {
       Item::List list = itemsFromModel( mCalendarModel, index, start, end );
-      foreach( const Item &item, list ) {
+      foreach ( const Item &item, list ) {
         Incidence::Ptr incidence = CalendarSupport::incidence( item );
-        if ( incidence && mPendingDeletesInETM.contains( incidence->uid() ) )
+        if ( incidence && mPendingDeletesInETM.contains( incidence->uid() ) ) {
           mPendingDeletesInETM.removeAll( incidence->uid() );
+        }
       }
     }
 
@@ -391,7 +397,7 @@ class IncidenceChangerTest : public QObject
       kDebug() << "Error string is " << errorMessage;
     } else {
       QVERIFY( !deletedIds.isEmpty() );
-      foreach( Akonadi::Item::Id id , deletedIds ) {
+      foreach ( Akonadi::Item::Id id, deletedIds ) {
         QVERIFY( id != -1 );
       }
     }
@@ -430,10 +436,11 @@ class IncidenceChangerTest : public QObject
     QVERIFY( mKnownChangeIds.contains( changeId ) );
     QVERIFY( changeId != -1 );
 
-    if ( resultCode == IncidenceChanger2::ResultCodeSuccess )
+    if ( resultCode == IncidenceChanger2::ResultCodeSuccess ) {
       QVERIFY( item.isValid() );
-    else
+    } else {
       kDebug() << "Error string is " << errorString;
+    }
 
     QVERIFY( resultCode == mExpectedResult );
 

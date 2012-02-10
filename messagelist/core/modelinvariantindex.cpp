@@ -46,7 +46,7 @@ bool ModelInvariantIndex::isValid() const
 
 int ModelInvariantIndex::currentModelIndexRow()
 {
-  if ( !d->mRowMapper )
-    return -1;
-  return d->mRowMapper->modelInvariantIndexToModelIndexRow( this );
+  if ( d->mRowMapper )
+    return d->mRowMapper->modelInvariantIndexToModelIndexRow( this );
+  return -1;
 }

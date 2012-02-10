@@ -33,7 +33,10 @@ using namespace MessageList::Utils;
 ThemeComboBox::ThemeComboBox( QWidget * parent )
 : KComboBox( parent ), d( new ThemeComboBoxPrivate( this ) )
 {
-  d->slotLoadThemes();
+  if( Manager::instance() )
+     d->slotLoadThemes();
+  else 
+     setEnabled(false);
 }
 
 ThemeComboBox::~ThemeComboBox()
@@ -58,9 +61,8 @@ void ThemeComboBox::writeDefaultConfig() const
 
 void ThemeComboBox::writeStorageModelConfig( const Akonadi::Collection &col, bool isPrivateSetting ) const
 {
-  if ( !col.isValid() )
-    return;
-  writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
+  if ( col.isValid() )
+    writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
 }
 
 void ThemeComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
@@ -100,18 +102,13 @@ void ThemeComboBox::selectDefault()
   d->setCurrentTheme( defaultTheme );
 }
 
-static bool themeNameLessThan( const Theme * lhs, const Theme * rhs )
-{
-  return lhs->name() < rhs->name();
-}
-
 void ThemeComboBoxPrivate::slotLoadThemes()
 {
   q->clear();
 
   // Get all message list themes and sort them into alphabetical order.
   QList< Theme * > themes = Manager::instance()->themes().values();
-  qSort( themes.begin(), themes.end(), themeNameLessThan );
+  qSort( themes.begin(), themes.end(), MessageList::Core::Theme::compareName );
 
   foreach( const Theme * theme, themes )
   {

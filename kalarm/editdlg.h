@@ -1,7 +1,7 @@
 /*
  *  editdlg.h  -  dialog to create or modify an alarm or alarm template
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 #ifndef EDITDLG_H
 #define EDITDLG_H
 
-#include "alarmtext.h"
-#include "datetime.h"
-#include "kaevent.h"
+#include <kalarmcal/alarmtext.h>
+#include <kalarmcal/datetime.h>
+#include <kalarmcal/kaevent.h>
 
 #ifdef USE_AKONADI
 #include <akonadi/collection.h>
@@ -55,6 +55,8 @@ class ShellProcess;
 class StackedScrollGroup;
 class TimeSpinBox;
 
+using namespace KAlarmCal;
+
 
 class EditAlarmDlg : public KDialog
 {
@@ -84,7 +86,7 @@ class EditAlarmDlg : public KDialog
         void            setTime(const DateTime&);    // must be called first to set date-only value
         void            setRecurrence(const KARecurrence&, int subRepeatInterval, int subRepeatCount);
         void            setRepeatAtLogin();
-        virtual void    setAction(KAEvent::Action, const AlarmText& = AlarmText()) = 0;
+        virtual void    setAction(KAEvent::SubAction, const AlarmText& = AlarmText()) = 0;
         void            setLateCancel(int minutes);
         void            setShowInKOrganizer(bool);
 
@@ -93,7 +95,7 @@ class EditAlarmDlg : public KDialog
         static QString  i18n_chk_ShowInKOrganizer();   // text of 'Show in KOrganizer' checkbox
 
     protected:
-        EditAlarmDlg(bool Template, KAEvent::Action, QWidget* parent = 0,
+        EditAlarmDlg(bool Template, KAEvent::SubAction, QWidget* parent = 0,
                      GetResourceType = RES_PROMPT);
         EditAlarmDlg(bool Template, const KAEvent*, bool newAlarm, QWidget* parent = 0,
                      GetResourceType = RES_PROMPT, bool readOnly = false);
@@ -109,9 +111,10 @@ class EditAlarmDlg : public KDialog
         virtual void    saveState(const KAEvent*) = 0;
         virtual bool    type_stateChanged() const = 0;
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial) = 0;
-        virtual int     getAlarmFlags() const;
+        virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial) = 0;
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString& text) = 0;
+        virtual void    type_aboutToTry() {}
+        virtual void    type_executedTry(const QString& text, void* obj) { Q_UNUSED(text); Q_UNUSED(obj); }
         virtual Reminder* createReminder(QWidget* parent)  { Q_UNUSED(parent); return 0; }
         virtual CheckBox* type_createConfirmAckCheckbox(QWidget* parent)  { Q_UNUSED(parent); return 0; }
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const = 0;
@@ -141,7 +144,6 @@ class EditAlarmDlg : public KDialog
         void            slotAnyTimeToggled(bool anyTime);
         void            slotTemplateTimeType(QAbstractButton*);
         void            slotSetSubRepetition();
-        void            slotTrySuccess();
         void            slotResize();
 
     private:
@@ -154,7 +156,7 @@ class EditAlarmDlg : public KDialog
         void            showOptions(bool more);
 
     protected:
-        KAEvent::Action     mAlarmType;           // actual alarm type
+        KAEvent::SubAction  mAlarmType;           // actual alarm type
     private:
         KTabWidget*         mTabs;                // the tabs in the dialog
         StackedScrollGroup* mTabScrollGroup;

@@ -3,8 +3,7 @@ project(kalarm)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5950)
 add_definitions(-DQT_STRICT_ITERATORS)
 
-# Akonadi for KAlarm is still experimental.
-option(KALARM_USE_AKONADI "Build to use Akonadi" FALSE)
+option(KALARM_USE_AKONADI "Build to use Akonadi" ON)
 
 # Kalarm from kdepim master needs kdepimlibs 4.7
 if(NOT ${KDE_VERSION} VERSION_GREATER 4.6.40)
@@ -14,6 +13,7 @@ endif()
 if(KALARM_USE_AKONADI)
     add_definitions(-DUSE_AKONADI)
 else(KALARM_USE_AKONADI)
+    add_definitions(-DUSE_KRESOURCES)
     add_definitions(-DWANT_DEPRECATED_KCAL_API)
     add_definitions(-DWANT_DEPRECATED_KABC_API)
     add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
@@ -25,7 +25,6 @@ if(KALARM_USE_AKONADI)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/cal
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_SOURCE_DIR}
     ${Boost_INCLUDE_DIR}
@@ -34,7 +33,6 @@ else(KALARM_USE_AKONADI)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/cal
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/resources
     ${CMAKE_SOURCE_DIR}
@@ -42,12 +40,9 @@ include_directories(
 )
 endif(KALARM_USE_AKONADI)
 
-add_subdirectory(cal)
-if(KALARM_USE_AKONADI)
-    add_subdirectory(akonadi)
-else(KALARM_USE_AKONADI)
+if(NOT KALARM_USE_AKONADI)
     add_subdirectory(resources)
-endif(KALARM_USE_AKONADI)
+endif(NOT KALARM_USE_AKONADI)
 add_subdirectory(appicons)
 add_subdirectory(pixmaps)
 add_subdirectory(autostart)
@@ -61,6 +56,7 @@ set(libkalarm_SRCS
     lib/combobox.cpp
     lib/desktop.cpp
     lib/filedialog.cpp
+    lib/groupbox.cpp
     lib/itembox.cpp
     lib/kalocale.cpp
     lib/label.cpp
@@ -157,11 +153,11 @@ endif (KMAIL_SUPPORTED)
 qt4_add_dbus_interfaces(kalarm_bin_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.KSpeech.xml)
 
 if(KALARM_USE_AKONADI)
-    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/akonadi/kalarm/kalarmresource.kcfg org.kde.Akonadi.KAlarm.Settings)
-    qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kalarm/org.kde.Akonadi.KAlarm.Settings.xml kalarmsettings KAlarmSettings)
+    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/kalarmresource.kcfg org.kde.Akonadi.KAlarm.Settings)
+    qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.KAlarm.Settings.xml kalarmsettings KAlarmSettings)
 
-    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/akonadi/kalarmdir/kalarmdirresource.kcfg org.kde.Akonadi.KAlarmDir.Settings)
-    qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kalarmdir/org.kde.Akonadi.KAlarmDir.Settings.xml kalarmdirsettings KAlarmDirSettings)
+    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/kalarmdirresource.kcfg org.kde.Akonadi.KAlarmDir.Settings)
+    qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.KAlarmDir.Settings.xml kalarmdirsettings KAlarmDirSettings)
 
     qt4_add_dbus_interfaces(kalarm_bin_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml)
 #    qt4_add_dbus_adaptor(kalarm_bin_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase controladaptor Akonadi__ControlAdaptor)
@@ -183,7 +179,7 @@ set_target_properties(kalarm_bin PROPERTIES OUTPUT_NAME kalarm)
 
 if(KALARM_USE_AKONADI)
     target_link_libraries(kalarm_bin
-        kalarm_calendar
+        ${KDEPIMLIBS_KALARMCAL_LIBS}
         ${KDEPIMLIBS_KCALCORE_LIBS}
         ${KDEPIMLIBS_KCALUTILS_LIBS}
         ${KDEPIMLIBS_KABC_LIBS}
@@ -203,7 +199,7 @@ if(KALARM_USE_AKONADI)
 else(KALARM_USE_AKONADI)
     target_link_libraries(kalarm_bin
         kalarm_resources
-        kalarm_calendar
+        ${KDEPIMLIBS_KALARMCAL_LIBS}
         ${KDEPIMLIBS_KCAL_LIBS}
         ${KDEPIMLIBS_KABC_LIBS}
         ${KDEPIMLIBS_KMIME_LIBS}

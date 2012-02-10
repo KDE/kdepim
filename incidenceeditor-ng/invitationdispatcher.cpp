@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -48,7 +48,8 @@ class InvitationDispatcherPrivate
 
 InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar )
   : mManager( 0 ), mInvitationHandler( calendar ), mIsCounterProposal( false )
-{ }
+{
+}
 
 bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &oldInc,
                                                            const KCalCore::Incidence::Ptr &newInc )
@@ -186,10 +187,13 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
   d->mManager = manager;
   connect( manager, SIGNAL(destroyed()), SLOT(resetManager()));
 
-  qRegisterMetaType<IncidenceEditorNG::EditorItemManager::SaveAction>( "IncidenceEditorNG::EditorItemManager::SaveAction" );
+  qRegisterMetaType<IncidenceEditorNG::EditorItemManager::SaveAction>(
+    "IncidenceEditorNG::EditorItemManager::SaveAction" );
 
-  connect( manager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
-           SLOT(processItemSave(IncidenceEditorNG::EditorItemManager::SaveAction)), Qt::QueuedConnection );
+  connect( manager,
+           SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           SLOT(processItemSave(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           Qt::QueuedConnection );
 }
 
 }

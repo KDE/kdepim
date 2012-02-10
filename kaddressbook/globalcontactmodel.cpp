@@ -1,35 +1,37 @@
 /*
-    This file is part of KAddressBook.
+  This file is part of KAddressBook.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "globalcontactmodel.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/contact/contactstreemodel.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
-#include <klocale.h>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Session>
+#include <Akonadi/Contact/ContactsTreeModel>
 
-GlobalContactModel* GlobalContactModel::mInstance = 0;
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
+
+#include <KLocale>
+
+GlobalContactModel *GlobalContactModel::mInstance = 0;
 
 GlobalContactModel::GlobalContactModel()
 {
@@ -57,15 +59,15 @@ GlobalContactModel::~GlobalContactModel()
   delete mSession;
 }
 
-GlobalContactModel* GlobalContactModel::instance()
+GlobalContactModel *GlobalContactModel::instance()
 {
-  if ( !mInstance )
+  if ( !mInstance ) {
     mInstance = new GlobalContactModel();
-
+  }
   return mInstance;
 }
 
-Akonadi::ContactsTreeModel* GlobalContactModel::model() const
+Akonadi::ContactsTreeModel *GlobalContactModel::model() const
 {
   return mModel;
 }

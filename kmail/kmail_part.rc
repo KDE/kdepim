@@ -2,7 +2,7 @@
      the same menu entries at the same place in KMail and Kontact  -->
 
 <!DOCTYPE kpartgui>
-<kpartgui version="466" name="kmmainwin" >
+<kpartgui version="475" name="kmmainwin" >
  <MenuBar>
   <Menu noMerge="1" name="file" >
    <text>&amp;File</text>
@@ -24,7 +24,7 @@
    <Action name="expire_all_folders" />
    <Action name="akonadi_empty_all_trash"/>
    <Separator/>
-   <Action name="online_status" />
+   <Action name="akonadi_work_offline" />
    <Action name="check_mail" />
    <Action name="check_mail_in" />
    <Action name="akonadi_collection_sync"/>
@@ -78,6 +78,16 @@
    <Separator/>
    <Action name="toggle_fixedfont"/>
    <Action name="encoding" />
+   <Separator/>
+   <Menu noMerge="1" name="zoom" >
+     <text>Zoom</text>
+     <Action name="zoom_in"/>
+     <Action name="zoom_out"/>
+     <Separator/>
+     <Action name="zoom_reset"/>
+     <Separator/>
+     <Action name="toggle_zoomtextonly"/>
+   </Menu>
   </Menu>
   <Menu noMerge="1" name="go">
    <text>&amp;Go</text>
@@ -106,6 +116,8 @@
    <Action name="archive_folder" />
    <Action name="akonadi_collection_delete" />
    <Action name="akonadi_remove_duplicates" />
+   <Separator/>
+   <Action name="apply_filters_on_folder" />
    <Separator/>
    <Action name="prefer_html" />
    <Action name="prefer_html_external_refs" />
@@ -209,6 +221,7 @@
 
  <Menu name="akonadi_favoriteview_emptyselection_contextmenu">
   <Action name="add_favorite_folder" />
+  <Action name="akonadi_collection_sync_favorite_folders" />
  </Menu>
 
  <Menu name="akonadi_collectionview_contextmenu">
@@ -246,6 +259,8 @@
   <Action name="file_print"/>
   <Separator/>
   <Action name="akonadi_move_to_trash"/>
+  <Action name="move_thread_to_trash"/>
+  <Separator/>
   <Action name="akonadi_item_move_to_menu"/>
   <Action name="akonadi_item_copy_to_menu"/>
   <Separator/>
@@ -269,6 +284,7 @@
   <Action name="akonadi_move_to_trash" />
   <Separator/>
   <ActionList name="toolbar_filter_actions" />
+  <Separator/>
   <ActionList name="toolbar_messagetag_actions" />
   <Action name="create_todo"/>
  </ToolBar>

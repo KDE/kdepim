@@ -27,41 +27,40 @@
  *  your version.
  */
 
-
 #include "folderrequester.h"
-
 #include "folderselectiondialog.h"
 #include "mailutil.h"
 #include "mailkernel.h"
 
-#include "messageviewer/autoqpointer.h"
-
-#include <kdebug.h>
-#include <klineedit.h>
-#include <kiconloader.h>
-#include <KLocale>
-#include <kdialog.h>
-#include <QToolButton>
-#include <QHBoxLayout>
-#include <QKeyEvent>
+#include <messageviewer/autoqpointer.h>
 
 #include <Akonadi/CollectionFetchJob>
 
+#include <KDialog>
+#include <KIconLoader>
+#include <KLineEdit>
+#include <KLocale>
+
+#include <QHBoxLayout>
+#include <QKeyEvent>
+#include <QToolButton>
+
 namespace MailCommon {
 
-FolderRequester::FolderRequester( QWidget* parent )
+FolderRequester::FolderRequester( QWidget *parent )
   : QWidget( parent ),
-    mMustBeReadWrite( true ), mShowOutbox( true ), mShowImapFolders( true ), mNotCreateNewFolder( false )
+    mMustBeReadWrite( true ), mShowOutbox( true ), mNotCreateNewFolder( false )
 {
-  QHBoxLayout * hlay = new QHBoxLayout( this );
+  QHBoxLayout *hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
   hlay->setContentsMargins( 0, 0, 0, 0 );
 
   edit = new KLineEdit( this );
+  edit->setClickMessage( i18n( "Select Folder" ) );
   edit->setReadOnly( true );
   hlay->addWidget( edit );
 
-  QToolButton* button = new QToolButton( this );
+  QToolButton *button = new QToolButton( this );
   button->setIcon( KIcon( "folder" ) );
   button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   hlay->addWidget( button );
@@ -78,21 +77,22 @@ void FolderRequester::slotOpenDialog()
   FolderSelectionDialog::SelectionFolderOptions options = FolderSelectionDialog::EnableCheck ;
   options |= FolderSelectionDialog::HideVirtualFolder;
   options |= FolderSelectionDialog::NotUseGlobalSettings;
-  if ( mNotCreateNewFolder )
+  if ( mNotCreateNewFolder ) {
     options |= FolderSelectionDialog::NotAllowToCreateNewFolder;
-  if ( !mShowImapFolders )
-    options |= FolderSelectionDialog::HideImapFolder;
-  if ( !mShowOutbox )
+  }
+  if ( !mShowOutbox ) {
     options |= FolderSelectionDialog::HideOutboxFolder;
+  }
 
   MessageViewer::AutoQPointer<FolderSelectionDialog> dlg(
-      new FolderSelectionDialog( this, options ) );
-  dlg->setCaption( i18n("Select Folder") );
+    new FolderSelectionDialog( this, options ) );
+
+  dlg->setCaption( i18n( "Select Folder" ) );
   dlg->setModal( false );
   dlg->setSelectedCollection( mCollection );
 
   if ( dlg->exec() && dlg ) {
-    setFolder( dlg->selectedCollection() );
+    setCollection( dlg->selectedCollection() );
   }
 }
 
@@ -101,29 +101,38 @@ FolderRequester::~FolderRequester()
 {
 }
 
-Akonadi::Collection FolderRequester::folderCollection() const
+Akonadi::Collection FolderRequester::collection() const
 {
   return mCollection;
 }
 
-void FolderRequester::setCollectionFullPath( const Akonadi::Collection&col )
+void FolderRequester::setCollectionFullPath( const Akonadi::Collection &col )
 {
-  edit->setText( Util::fullCollectionPath( col ) );
+  if ( KernelIf->collectionModel() ) {
+    edit->setText( Util::fullCollectionPath( col ) );
+  } else {
+    edit->clear();
+  }
 }
 
 //-----------------------------------------------------------------------------
-void FolderRequester::setFolder( const Akonadi::Collection&col )
+void FolderRequester::setCollection( const Akonadi::Collection &collection )
 {
-  mCollection = col;
+  mCollection = collection;
   if ( mCollection.isValid() ) {
+    // TODO: we don't need to fetch if the collection is already complete,
+    // e.g. when called from the collection dialog
     setCollectionFullPath( mCollection );
-    mFolderId = QString::number( mCollection.id() );
-    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
+
+    Akonadi::CollectionFetchJob *job =
+      new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
+
     connect( job, SIGNAL(result(KJob*)),
              this, SLOT(slotCollectionsReceived(KJob*)) );
+  } else if ( !mMustBeReadWrite ) { // the Local Folders root node was selected
+    edit->setText( i18n( "Local Folders" ) );
   }
-  else if ( !mMustBeReadWrite ) // the Local Folders root node was selected
-    edit->setText( i18n("Local Folders") );
+
   emit folderChanged( mCollection );
 }
 
@@ -152,30 +161,21 @@ void FolderRequester::slotCollectionsReceived( KJob *job )
   }
 }
 
-//-----------------------------------------------------------------------------
-void FolderRequester::setFolder( const QString &idString )
+bool FolderRequester::hasCollection() const
 {
-  Akonadi::Collection folder = Kernel::self()->collectionFromId( idString );
-  if ( folder.isValid() ) {
-    setFolder( folder );
-  } else {
-    if ( !idString.isEmpty() ) {
-      edit->setText( i18n( "Unknown folder '%1'", idString ) );
-    } else {
-      edit->setText( i18n( "Please select a folder" ) );
-    }
-  }
-  mFolderId = idString;
+  return mCollection.isValid();
 }
 
 //-----------------------------------------------------------------------------
-void FolderRequester::keyPressEvent( QKeyEvent * e )
+void FolderRequester::keyPressEvent( QKeyEvent *e )
 {
-  if ( e->key() == Qt::Key_Space )
+  if ( e->key() == Qt::Key_Space ) {
     slotOpenDialog();
-  else
+  } else {
     e->ignore();
+  }
 }
-} // namespace KMail
+
+} // namespace MailCommon
 
 #include "folderrequester.moc"

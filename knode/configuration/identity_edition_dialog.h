@@ -135,7 +135,7 @@ class KNODE_EXPORT IdentityEditionDialog : public KDialog, private Ui::IdentityE
 
     /**
       List of modified identities. The index in this list is kept in sync
-      with the index of the the combo box mIdentitySelector.
+      with the index of the combo box mIdentitySelector.
     */
     QList<uint> mUoids;
 

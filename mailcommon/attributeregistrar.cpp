@@ -18,6 +18,7 @@
 */
 
 #include "collectionannotationsattribute.h"
+#include "expirecollectionattribute.h"
 
 #include <akonadi/attributefactory.h>
 
@@ -29,7 +30,7 @@ namespace {
 bool dummy()
 {
   Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
-
+  Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpireCollectionAttribute>();
   return true;
 }
 
@@ -43,6 +44,7 @@ const bool registered = dummy();
 extern bool ___MailCommon____INIT()
 {
   Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpirationCollectionAttribute>();
 
   return true;
 }

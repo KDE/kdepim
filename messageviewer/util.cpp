@@ -41,6 +41,7 @@
 
 #include "iconnamecache.h"
 #include "nodehelper.h"
+#include "renamefiledialog.h"
 
 #include "messagecore/globalsettings.h"
 #include "messagecore/nodehelper.h"
@@ -87,18 +88,36 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
                                    const QString &fallbackFileName2 )
 {
   QString fileName;
-  KMimeType::Ptr mime = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+  QString tMimeType = mimeType;
+
+  // convert non-registered types to registered types
+  if ( mimeType == QLatin1String( "application/x-vnd.kolab.contact" ) ) {
+    tMimeType = QLatin1String( "text/x-vcard" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.event" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.calendar.event" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.task" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.calendar.todo" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.journal" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.calendar.journal" );
+  } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.note" ) ) {
+    tMimeType = QLatin1String( "application/x-vnd.akonadi.note" );
+  }
+
+  KMimeType::Ptr mime = KMimeType::mimeType( tMimeType, KMimeType::ResolveAliases );
   if ( mime ) {
     fileName = mime->iconName();
   } else {
-    kWarning() << "unknown mimetype" << mimeType;
+    fileName = QLatin1String( "unknown" );
+    if ( !tMimeType.isEmpty() ) {
+      kWarning() << "unknown mimetype" << tMimeType;
+    }
   }
 
-  if ( fileName.isEmpty() )
-  {
+  if ( fileName.isEmpty() ) {
     fileName = fallbackFileName1;
-    if ( fileName.isEmpty() )
+    if ( fileName.isEmpty() ) {
       fileName = fallbackFileName2;
+    }
     if ( !fileName.isEmpty() ) {
       fileName = KMimeType::findByPath( "/tmp/" + fileName, 0, true )->iconName();
     }
@@ -141,24 +160,22 @@ QList<KMime::Content*> Util::allContents( const KMime::Content *message )
 
 QList<KMime::Content*> Util::extractAttachments( const KMime::Message *message )
 {
-  KMime::Content::List contents = allContents( message );
-  for ( KMime::Content::List::iterator it = contents.begin();
-        it != contents.end(); ) {
-    // only body parts which have a filename or a name parameter (except for
-    // the root node for which name is set to the message's subject) are
-    // considered attachments
+  const KMime::Content::List contents = allContents( message );
+  KMime::Content::List result;
+  for ( KMime::Content::List::const_iterator it = contents.constBegin();
+        it != contents.constEnd(); ) {
     KMime::Content* content = *it;
     if ( content->contentDisposition()->filename().trimmed().isEmpty() &&
           ( content->contentType()->name().trimmed().isEmpty() ||
             content == message ) ) {
-      KMime::Content::List::iterator delIt = it;
       ++it;
-      contents.erase( delIt );
     } else {
+      result <<( *it );
       ++it;
     }
   }
-  return contents;
+
+  return result;
 }
 
 bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents )
@@ -197,7 +214,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
   bool globalResult = true;
   int unnamedAtmCount = 0;
-  bool overwriteAll = false;
+  MessageViewer::RenameFileDialog::RenameFileDialogResult result = MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE;
   foreach( KMime::Content *content, contents ) {
     KUrl curUrl;
     if ( !dirUrl.isEmpty() ) {
@@ -243,32 +260,48 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
       }
 
 
-      if ( !overwriteAll && KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
-        if ( contents.count() == 1 ) {
-          if ( KMessageBox::warningContinueCancel( parent,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
-            continue;
+      if( !(result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
+              result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ))
+      {
+          if ( KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
+              if ( contents.count() == 1 ) {
+                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,false, parent);
+                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
+                  {
+                      delete dlg;
+                      continue;
+                  }
+                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  {
+                      curUrl = dlg->newName();
+                  }
+                  delete dlg;
+              }
+              else {
+                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,true, parent);
+                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+
+                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE ||
+                       result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL )
+                  {
+                      delete dlg;
+                      continue;
+                  }
+                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  {
+                      curUrl = dlg->newName();
+                  }
+                  delete dlg;
+              }
           }
-        }
-        else {
-          int button = KMessageBox::warningYesNoCancel(
-                parent,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")),
-                KGuiItem(i18n("Overwrite &All")) );
-          if ( button == KMessageBox::Cancel )
-            continue;
-          else if ( button == KMessageBox::No )
-            overwriteAll = true;
-        }
       }
       // save
-      const bool result = saveContent( parent, content, curUrl );
-      if ( !result )
-        globalResult = result;
+      if( result != MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ) {
+          const bool result = saveContent( parent, content, curUrl );
+          if ( !result )
+              globalResult = result;
+      }
     }
   }
 
@@ -308,8 +341,8 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
   QByteArray data;
   if( bSaveEncrypted || !bEncryptedParts) {
     KMime::Content *dataNode = content;
-    QByteArray rawReplyString;
-    bool gotRawReplyString = false;
+    QByteArray rawDecryptedBody;
+    bool gotRawDecryptedBody = false;
     if ( !bSaveWithSig ) {
       if ( topContent->contentType()->mimeType() == "multipart/signed" )  {
         // carefully look for the part that is *not* the signature part:
@@ -322,18 +355,18 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
         }
       } else {
         EmptySource emptySource;
-        ObjectTreeParser otp( &emptySource, 0, 0,false, false, false );
+        ObjectTreeParser otp( &emptySource, 0, 0, false, false );
 
         // process this node and all it's siblings and descendants
         mNodeHelper->setNodeUnprocessed( dataNode, true );
         otp.parseObjectTree( dataNode );
 
-        rawReplyString = otp.rawReplyString();
-        gotRawReplyString = true;
+        rawDecryptedBody = otp.rawDecryptedBody();
+        gotRawDecryptedBody = true;
       }
     }
-    QByteArray cstr = gotRawReplyString
-      ? rawReplyString
+    QByteArray cstr = gotRawDecryptedBody
+      ? rawDecryptedBody
       : dataNode->decodedContent();
     data = KMime::CRLFtoLF( cstr );
   }
@@ -422,10 +455,19 @@ int Util::getWritePermissions()
   }
 }
 
+bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *parent )
+{
+  if ( contents.isEmpty() ) {
+    KMessageBox::information( parent, i18n( "Found no attachments to save." ) );
+    return false;
+  }
+
+  return Util::saveContents( parent, contents );
+}
 
 bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
 {
-  
+
   QString fileName;
   if ( retrievedMsgs.isEmpty() )
     return true;

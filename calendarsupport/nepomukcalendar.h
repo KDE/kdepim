@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
-  Author: Sérgio Martins <sergio.martins@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author: Sérgio Martins <sergio.martins@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -45,7 +45,6 @@ class CALENDARSUPPORT_EXPORT NepomukCalendar : public KCalCore::MemoryCalendar
 
   public:
     typedef QSharedPointer<NepomukCalendar> Ptr;
-
 
     static NepomukCalendar::Ptr create( QWidget *parent = 0 );
     virtual ~NepomukCalendar();
@@ -201,14 +200,10 @@ class CALENDARSUPPORT_EXPORT NepomukCalendar : public KCalCore::MemoryCalendar
                          CalendarSupport::IncidenceChanger2::ResultCode changerResultCode,
                          const QString &errorMessage );
 
-
     void searchResult( KJob * );
 
   private:
-
-    /* The ctor is private because somebody might forget to call
-       setWeakPointer().
-
+    /* The ctor is private because somebody might forget to call setWeakPointer().
        Use the static method create().
     */
     NepomukCalendar( QWidget *parent = 0 );

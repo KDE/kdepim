@@ -1,7 +1,7 @@
 /*
  *  alarmtimewidget.h  -  alarm date/time entry widget
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
 #ifndef ALARMTIMEWIDGET_H
 #define ALARMTIMEWIDGET_H
 
-#include "datetime.h"
+#include <kalarmcal/datetime.h>
 #include <QFrame>
 
 class QAbstractButton;
+class KDateComboBox;
 class KHBox;
-namespace KPIM { class KDateEdit; }
 class ButtonGroup;
 class RadioButton;
 class CheckBox;
@@ -34,6 +34,8 @@ class PushButton;
 class TimeEdit;
 class TimeSpinBox;
 class TimeZoneCombo;
+
+using namespace KAlarmCal;
 
 
 class AlarmTimeWidget : public QFrame
@@ -89,7 +91,7 @@ class AlarmTimeWidget : public QFrame
         RadioButton*     mAtTimeRadio;
         RadioButton*     mAfterTimeRadio;
         CheckBox*        mAnyTimeCheckBox;
-        KPIM::KDateEdit* mDateEdit;
+        KDateComboBox*   mDateEdit;
         TimeEdit*        mTimeEdit;
         TimeSpinBox*     mDelayTimeEdit;
         PushButton*      mTimeZoneButton;

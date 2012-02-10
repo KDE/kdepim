@@ -86,12 +86,14 @@ class KOAgendaView : public KOEventView
     void setChanges( EventViews::EventView::Changes changes );
 
     /** reimpl */
-    void setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate() );
+    void setDateRange( const KDateTime &start, const KDateTime &end,
+                       const QDate &preferredMonth = QDate() );
 
   public slots:
     virtual void updateView();
     virtual void updateConfig();
-    virtual void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
+    virtual void showDates( const QDate &start, const QDate &end,
+                            const QDate &preferredMonth = QDate() );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
@@ -103,11 +105,6 @@ class KOAgendaView : public KOEventView
     void readSettings( KConfig * );
     void writeSettings( KConfig * );
 
-    /** reschedule the todo  to the given x- and y- coordinates.
-        Third parameter determines all-day (no time specified) */
-    void slotTodosDropped( const Todo::List  &todos, const QPoint &, bool );
-    void slotTodosDropped( const QList<KUrl> &todos, const QPoint &, bool );
-
     void enableAgendaUpdate( bool enable );
     void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
@@ -117,7 +114,8 @@ class KOAgendaView : public KOEventView
     void zoomInVertically( );
     void zoomOutVertically( );
 
-    void zoomView( const int delta, const QPoint &pos, const Qt::Orientation orient=Qt::Horizontal );
+    void zoomView( const int delta, const QPoint &pos,
+                   const Qt::Orientation orient = Qt::Horizontal );
 
   signals:
     void zoomViewHorizontally( const QDate &, int count );

@@ -12,7 +12,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/session.h>
-#include <akonadi/statisticsproxymodel.h>
+#include <libkdepim/statisticsproxymodel.h>
 #include <akonadi/kmime/messageparts.h>
 
 #include <KDE/KAction>
@@ -89,7 +89,7 @@ void mailreader::setupDocks()
   collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   // ... with statistics...
-  Akonadi::StatisticsProxyModel *statisticsProxyModel = new Akonadi::StatisticsProxyModel( this );
+  KPIM::StatisticsProxyModel *statisticsProxyModel = new KPIM::StatisticsProxyModel( this );
   statisticsProxyModel->setToolTipEnabled( true );
   statisticsProxyModel->setExtraColumnsEnabled( false );
   statisticsProxyModel->setSourceModel( collectionFilter );

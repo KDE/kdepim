@@ -138,7 +138,7 @@
         <number>0</number>
        </property>
        <item row="0" column="0" colspan="2">
-        <widget class="QTextEdit" name="dataView">
+        <widget class="KTextEdit" name="dataView">
          <property name="lineWrapMode">
           <enum>QTextEdit::NoWrap</enum>
          </property>
@@ -485,6 +485,11 @@
    <extends>QWidget</extends>
    <header location="global">akonadi/contact/contactgroupviewer.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) a2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -44,12 +44,14 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
 
   connect( ui.attendeeList, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()) );
+  enableButtonOk( false );
 }
 
 QStringList AttendeeSelector::attendees() const
 {
   QStringList rv;
-  for ( int i = 0; i < ui.attendeeList->count(); ++i ) {
+  const int numberOfAttendee( ui.attendeeList->count() );
+  for ( int i = 0; i < numberOfAttendee; ++i ) {
     const QString addr = ui.attendeeList->item( i )->text();
 
     // Build a nice address for this attendee including the CN.
@@ -66,11 +68,13 @@ void AttendeeSelector::addClicked()
   if ( !ui.attendeeEdit->text().isEmpty() )
     ui.attendeeList->addItem( ui.attendeeEdit->text() );
   ui.attendeeEdit->clear();
+  enableButtonOk( true );
 }
 
 void AttendeeSelector::removeClicked()
 {
   delete ui.attendeeList->takeItem( ui.attendeeList->currentRow() );
+  enableButtonOk( ( ui.attendeeList->count()>0 ) );
 }
 
 void AttendeeSelector::textChanged( const QString &text )

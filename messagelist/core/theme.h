@@ -250,12 +250,12 @@ public:
      * Creates a ContentItem with the specified type.
      * A content item must be added to a theme Row.
      */
-    ContentItem( Type type );
+    explicit ContentItem( Type type );
     /**
      * Creates a ContentItem that is a copy of the content item src.
      * A content item must be added to a theme Row.
      */
-    ContentItem( const ContentItem &src );
+    explicit ContentItem( const ContentItem &src );
 
   public:
     /**
@@ -458,7 +458,6 @@ public:
      * Handles content item loading (used by Theme::Row::load())
      */
     bool load( QDataStream &stream, int themeVersion );
-
   };
 
   /**
@@ -468,8 +467,8 @@ public:
   class Row
   {
   public:
-    Row();
-    Row( const Row &src );
+    explicit Row();
+    explicit Row( const Row &src );
     ~Row();
 
   private:
@@ -581,7 +580,7 @@ public:
         /**
          * Create a shared runtime data object
          */
-        SharedRuntimeData( bool currentlyVisible, int currentWidth );
+        explicit SharedRuntimeData( bool currentlyVisible, int currentWidth );
 
         /**
          * Destroy a shared runtime data object
@@ -603,7 +602,7 @@ public:
          * Returns the current number of reference counts, that is, the number of
          * Theme::Column objects that use this SharedRuntimeData instance.
          */
-        int referenceCount()
+        int referenceCount() const 
           { return mReferences; };
 
         /**
@@ -646,14 +645,14 @@ public:
     /**
      * Create an empty column with default settings
      */
-    Column();
+    explicit Column();
     /**
      * Create an exact copy of the column src.
      * The shared runtime data is not copied (only a reference is added).
      * If you need to create an independent clone then please use detach()
      * after the construction.
      */
-    Column( const Column &src );
+    explicit Column( const Column &src );
     /**
      * Kill a column object
      */
@@ -852,24 +851,29 @@ public:
   /**
    * Creates a totally uninitialized theme object.
    */
-  Theme();
+  explicit Theme();
 
   /**
    * Creates a theme object with the specified name and description.
    */
-  Theme( const QString &name, const QString &description );
+  explicit Theme( const QString &name, const QString &description, bool readOnly = false );
 
   /**
    * Creates an exact copy of the theme sharing the same runtime data.
    * If you need an exact clone please use detach() and generateUniqueId() just
    * after creation.
    */
-  Theme( const Theme &src );
+  explicit Theme( const Theme &src );
 
   /**
    * Destroys this theme object.
    */
   ~Theme();
+
+  static bool compareName( Theme *theme1, Theme *theme2 )
+  {
+      return ( theme1->name() < theme2->name() );
+  }
 
 public:
   /**

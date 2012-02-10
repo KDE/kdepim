@@ -1,35 +1,33 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Tobias Koenig <tokoe@kdab.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net,
+    Author: Tobias Koenig <tokoe@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "filtercontroller.h"
-
 #include "filtereditdialog_p.h"
 #include "filtermodel_p.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
+#include <KLocale>
+#include <KMessageBox>
 
-#include <QtCore/QAbstractItemModel>
-#include <QtGui/QAction>
-#include <QtGui/QItemSelectionModel>
+#include <QAbstractItemModel>
+#include <QAction>
+#include <QItemSelectionModel>
 
 using namespace MailCommon;
 
@@ -63,7 +61,7 @@ void FilterController::Private::selectionChanged()
 
     const QModelIndex index = mSelectionModel->selectedRows().first();
     mMoveUpAction->setEnabled( index.row() != 0 );
-    mMoveDownAction->setEnabled( index.row() != (mModel->rowCount() - 1) );
+    mMoveDownAction->setEnabled( index.row() != ( mModel->rowCount() - 1 ) );
   } else {
     mEditAction->setEnabled( false );
     mRemoveAction->setEnabled( false );
@@ -80,66 +78,78 @@ void FilterController::Private::addFilter()
   dlg.setCaption( i18n( "Add Filter" ) );
   dlg.load( mModel->rowCount() - 1 );
 
-  if ( dlg.exec() )
+  if ( dlg.exec() ) {
     dlg.save();
-  else
+  } else {
     mModel->removeRow( mModel->rowCount() - 1 );
+  }
 }
 
 void FilterController::Private::editFilter()
 {
-  if ( !mSelectionModel->hasSelection() )
+  if ( !mSelectionModel->hasSelection() ) {
     return;
+  }
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
 
   FilterEditDialog dlg;
   dlg.setCaption( i18n( "Edit Filter" ) );
   dlg.load( index.row() );
-  if ( dlg.exec() )
+  if ( dlg.exec() ) {
     dlg.save();
+  }
 }
 
 void FilterController::Private::removeFilter()
 {
-  if ( !mSelectionModel->hasSelection() )
+  if ( !mSelectionModel->hasSelection() ) {
     return;
+  }
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
 
-  const int result = KMessageBox::questionYesNo( 0, i18n( "Do you really want to remove filter <b>%1</b>?",
-                                                          index.data( Qt::DisplayRole ).toString() ),
-                                                    i18n( "Remove Filter" ) );
-  if ( result == KMessageBox::No )
+  const int result =
+    KMessageBox::questionYesNo(
+      0,
+      i18n( "Do you really want to remove filter <b>%1</b>?",
+            index.data( Qt::DisplayRole ).toString() ),
+      i18n( "Remove Filter" ) );
+
+  if ( result == KMessageBox::No ) {
     return;
+  }
 
   mModel->removeRow( index.row() );
 }
 
 void FilterController::Private::moveUpFilter()
 {
-  if ( !mSelectionModel->hasSelection() )
+  if ( !mSelectionModel->hasSelection() ) {
     return;
+  }
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
   mModel->moveRow( index.row(), index.row() - 1 );
 
   // moveRow will reset the model, so restore the selection
-  mSelectionModel->select( mModel->index( index.row() - 1, 0 ), QItemSelectionModel::ClearAndSelect );
+  mSelectionModel->select( mModel->index( index.row() - 1, 0 ),
+                           QItemSelectionModel::ClearAndSelect );
 }
 
 void FilterController::Private::moveDownFilter()
 {
-  if ( !mSelectionModel->hasSelection() )
+  if ( !mSelectionModel->hasSelection() ) {
     return;
+  }
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
   mModel->moveRow( index.row(), index.row() + 1 );
 
   // moveRow will reset the model, so restore the selection
-  mSelectionModel->select( mModel->index( index.row() + 1, 0 ), QItemSelectionModel::ClearAndSelect );
+  mSelectionModel->select( mModel->index( index.row() + 1, 0 ),
+                           QItemSelectionModel::ClearAndSelect );
 }
-
 
 FilterController::FilterController( QObject *parent )
   : QObject( parent ), d( new Private )
@@ -170,37 +180,37 @@ FilterController::~FilterController()
   delete d;
 }
 
-QAbstractItemModel* FilterController::model() const
+QAbstractItemModel *FilterController::model() const
 {
   return d->mModel;
 }
 
-QItemSelectionModel* FilterController::selectionModel() const
+QItemSelectionModel *FilterController::selectionModel() const
 {
   return d->mSelectionModel;
 }
 
-QAction* FilterController::addAction() const
+QAction *FilterController::addAction() const
 {
   return d->mAddAction;
 }
 
-QAction* FilterController::editAction() const
+QAction *FilterController::editAction() const
 {
   return d->mEditAction;
 }
 
-QAction* FilterController::removeAction() const
+QAction *FilterController::removeAction() const
 {
   return d->mRemoveAction;
 }
 
-QAction* FilterController::moveUpAction() const
+QAction *FilterController::moveUpAction() const
 {
   return d->mMoveUpAction;
 }
 
-QAction* FilterController::moveDownAction() const
+QAction *FilterController::moveDownAction() const
 {
   return d->mMoveDownAction;
 }

@@ -2,16 +2,15 @@
 #include "filteractionwidget.h"
 #include "filteraction.h"
 
-#include "filtermanager.h"
 #include "folderrequester.h"
+#include "filteractionmissingargumentdialog.h"
 #include "mailutil.h"
 #include "mailkernel.h"
 #include "mdnadvicedialog.h"
-#include "messageproperty.h"
 #include "minimumcombobox.h"
 #include "regexplineedit.h"
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 #include "soundtestwidget.h"
 #endif
 
@@ -30,8 +29,10 @@
 #include <kpimutils/email.h>
 #include <kprocess.h>
 #include <kshell.h>
+#include <KColorScheme>
 #include <ktemporaryfile.h>
 #include <kurlrequester.h>
+#include <knotification.h>
 #include <libkdepim/addcontactjob.h>
 #include <messagecore/emailaddressrequester.h>
 #include <messagecore/mdnstateattribute.h>
@@ -40,6 +41,9 @@
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
 #include <messageviewer/globalsettings.h>
+#include <mailtransport/transportcombobox.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
 
 #ifndef KDEPIM_NO_NEPOMUK
 #include <nepomuk/tag.h>
@@ -48,18 +52,64 @@
 #include <templateparser/customtemplates_kfg.h>
 #include <templateparser/customtemplates.h>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextDocument>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextDocument>
 
-#include <assert.h>
-#include <string.h>
-
-using MailCommon::MessageProperty;
 using MailCommon::RegExpLineEdit;
 using MessageComposer::MessageFactory;
 
 using namespace MailCommon;
+
+ItemContext::ItemContext( const Akonadi::Item &item )
+    : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false ),mDeleteItem(false)
+{
+}
+
+Akonadi::Item& ItemContext::item()
+{
+  return mItem;
+}
+
+void ItemContext::setMoveTargetCollection( const Akonadi::Collection &collection )
+{
+  mMoveTargetCollection = collection;
+}
+
+Akonadi::Collection ItemContext::moveTargetCollection() const
+{
+  return mMoveTargetCollection;
+}
+
+void ItemContext::setNeedsPayloadStore()
+{
+  mNeedsPayloadStore = true;
+}
+
+bool ItemContext::needsPayloadStore() const
+{
+  return mNeedsPayloadStore;
+}
+
+void ItemContext::setNeedsFlagStore()
+{
+  mNeedsFlagStore = true;
+}
+
+bool ItemContext::needsFlagStore() const
+{
+  return mNeedsFlagStore;
+}
+
+void ItemContext::setDeleteItem()
+{
+  mDeleteItem = true;
+}
+
+bool ItemContext::deleteItem() const
+{
+  return mDeleteItem;
+}
 
 FilterAction::FilterAction( const char *name, const QString &label, QObject *parent )
   : QObject( parent ), mName( name ), mLabel( label )
@@ -100,16 +150,28 @@ QWidget* FilterAction::createParamWidget( QWidget *parent ) const
   return new QWidget( parent );
 }
 
-void FilterAction::applyParamWidgetValue( QWidget* )
+void FilterAction::applyParamWidgetValue( QWidget * )
 {
 }
 
-void FilterAction::setParamWidgetValue( QWidget* ) const
+void FilterAction::setParamWidgetValue( QWidget * ) const
 {
 }
 
-void FilterAction::clearParamWidget( QWidget* ) const
+void FilterAction::clearParamWidget( QWidget * ) const
 {
+}
+
+bool FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
+{
+  Q_UNUSED( filterName );
+  argsFromString(argsStr);
+  return false;
+}
+
+QString FilterAction::argsAsStringReal() const
+{
+  return argsAsString();
 }
 
 bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
@@ -318,7 +380,7 @@ FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString 
 
 bool FilterActionWithFolder::isEmpty() const
 {
-  return (!mFolder.isValid() && mFolderName.isEmpty());
+  return !mFolder.isValid();
 }
 
 QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
@@ -335,21 +397,45 @@ QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
 
 void FilterActionWithFolder::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mFolder = static_cast<FolderRequester*>( paramWidget )->folderCollection();
-  mFolderName = static_cast<FolderRequester*>( paramWidget )->folderId();
+  mFolder = static_cast<FolderRequester*>( paramWidget )->collection();
 }
 
 void FilterActionWithFolder::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  if ( mFolder.isValid() )
-    static_cast<FolderRequester*>( paramWidget )->setFolder( mFolder );
-  else
-    static_cast<FolderRequester*>( paramWidget )->setFolder( mFolderName );
+  static_cast<FolderRequester*>( paramWidget )->setCollection( mFolder );
 }
 
 void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<FolderRequester*>( paramWidget )->setFolder( CommonKernel->draftsCollectionFolder() );
+  static_cast<FolderRequester*>( paramWidget )->setCollection( CommonKernel->draftsCollectionFolder() );
+}
+
+bool FilterActionWithFolder::argsFromStringInteractive( const QString &argsStr , const QString& name)
+{
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if ( !mFolder.isValid() ) {
+    bool exactPath = false;
+    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( argsStr, exactPath );
+    if ( lst.count() == 1 && exactPath )
+      mFolder = lst.at( 0 );
+    else {
+      FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, name, argsStr );
+      if ( dlg->exec() ) {
+        mFolder = dlg->selectedCollection();
+        needUpdate = true;
+      }
+      delete dlg;
+    }
+  }
+  return needUpdate;
+}
+
+QString FilterActionWithFolder::argsAsStringReal() const
+{
+  if ( KernelIf->collectionModel() )
+    return MailCommon::Util::fullCollectionPath( mFolder );
+  return FilterActionWithFolder::argsAsString();
 }
 
 void FilterActionWithFolder::argsFromString( const QString &argsStr )
@@ -358,9 +444,8 @@ void FilterActionWithFolder::argsFromString( const QString &argsStr )
   const Akonadi::Collection::Id id = argsStr.toLongLong( &ok );
   if ( ok ) {
     mFolder = Akonadi::Collection( id );
-    mFolderName= QString::number( mFolder.id() );
   } else {
-    mFolderName = argsStr;
+    mFolder = Akonadi::Collection();
   }
 }
 
@@ -369,8 +454,6 @@ QString FilterActionWithFolder::argsAsString() const
   QString result;
   if ( mFolder.isValid() )
     result = QString::number( mFolder.id() );
-  else
-    result = mFolderName;
 
   return result;
 }
@@ -379,9 +462,7 @@ QString FilterActionWithFolder::displayString() const
 {
   QString result;
   if ( mFolder.isValid() )
-    result = mFolder.url().path();
-  else
-    result = mFolderName;
+    result = QString::number( mFolder.id() );
 
   return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
 }
@@ -390,8 +471,6 @@ bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder
 {
   if ( oldFolder == mFolder ) {
     mFolder = newFolder;
-    if ( newFolder.isValid() )
-      mFolderName = mFolder.id();
     return true;
   } else
     return false;
@@ -502,7 +581,8 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
   // and use QString::arg to substitute filenames for the %n's.
   int lastSeen = -2;
   QString tempFileName;
-  for ( QList<int>::Iterator it = argList.begin() ; it != argList.end() ; ++it ) {
+  QList<int>::ConstIterator end( argList.constEnd() );
+  for ( QList<int>::ConstIterator it = argList.constBegin() ; it != end ; ++it ) {
     // setup temp files with check for duplicate %n's
     if ( (*it) != lastSeen ) {
       KTemporaryFile *tempFile = new KTemporaryFile();
@@ -580,9 +660,9 @@ void substituteCommandLineArgsForItem( const Akonadi::Item &item, QString &comma
 
 }
 
-FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi::Item &item, bool withOutput ) const
+FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &context, bool withOutput ) const
 {
-  const KMime::Message::Ptr aMsg = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr aMsg = context.item().payload<KMime::Message::Ptr>();
   Q_ASSERT( aMsg );
 
   if ( mParameter.isEmpty() )
@@ -591,14 +671,16 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
   // KProcess doesn't support a QProcess::launch() equivalent, so
   // we must use a temp file :-(
   KTemporaryFile * inFile = new KTemporaryFile;
-  if ( !inFile->open() )
+  if ( !inFile->open() ) {
+    delete inFile;
     return ErrorButGoOn;
+  }
 
   QList<KTemporaryFile*> atmList;
   atmList.append( inFile );
 
   QString commandLine = substituteCommandLineArgsFor( aMsg, atmList );
-  substituteCommandLineArgsForItem( item, commandLine );
+  substituteCommandLineArgsForItem( context.item(), commandLine );
   substituteMessageHeaders( aMsg, commandLine );
 
   if ( commandLine.isEmpty() ) {
@@ -653,7 +735,7 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
       KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
 
-      new Akonadi::ItemModifyJob( item, FilterIf->filterManager() ); //TODO: check for errors
+      context.setNeedsPayloadStore();
     } else {
       qDeleteAll( atmList );
       atmList.clear();
@@ -682,7 +764,7 @@ class FilterActionSendReceipt : public FilterActionWithNone
 {
   public:
     FilterActionSendReceipt( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 };
 
@@ -696,12 +778,12 @@ FilterActionSendReceipt::FilterActionSendReceipt( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionSendReceipt::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context ) const
 {
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
-  MessageFactory factory( msg, item.id() );
-  factory.setFolderIdentity( Util::folderIdentity( item ) );
+  MessageFactory factory( msg, context.item().id() );
+  factory.setFolderIdentity( Util::folderIdentity( context.item() ) );
   factory.setIdentityManager( KernelIf->identityManager() );
 
   const KMime::Message::Ptr receipt = factory.createDeliveryReceipt();
@@ -719,51 +801,125 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( const Akonadi::Item &
 //=============================================================================
 // FilterActionSetTransport - set transport to...
 // Specify mail transport (smtp server) to be used when replying to a message
-// TODO: use TransportComboBox so the user does not enter an invalid transport
 //=============================================================================
-class FilterActionTransport: public FilterActionWithString
-{
-  public:
-    FilterActionTransport( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
-    static FilterAction* newAction();
-};
 
 FilterAction* FilterActionTransport::newAction()
 {
   return new FilterActionTransport;
 }
 
+QWidget* FilterActionTransport::createParamWidget( QWidget *parent ) const
+{
+  MailTransport::TransportComboBox *transportCombobox = new MailTransport::TransportComboBox( parent );
+  setParamWidgetValue( transportCombobox );
+
+  connect( transportCombobox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+
+  return transportCombobox;
+}
+
 FilterActionTransport::FilterActionTransport( QObject *parent )
-  : FilterActionWithString( "set transport", i18n( "Set Transport To" ), parent )
+  : FilterAction( "set transport", i18n( "Set Transport To" ), parent ), mParameter( -1 )
 {
 }
 
-FilterAction::ReturnCode FilterActionTransport::process( const Akonadi::Item &item ) const
+bool FilterActionTransport::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
-  if ( mParameter.isEmpty() )
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if ( !MailTransport::TransportManager::self()->transportById( mParameter,false ) )
+  {
+    FilterActionMissingTransportDialog *dlg = new FilterActionMissingTransportDialog( filterName );
+    if ( dlg->exec() ) {
+      mParameter = dlg->selectedTransport();
+      needUpdate = true;
+    }
+    else
+      mParameter = -1;
+    delete dlg;
+  }
+  return needUpdate;
+}
+
+
+FilterAction::ReturnCode FilterActionTransport::process( ItemContext &context ) const
+{
+  if ( isEmpty() )
     return ErrorButGoOn;
 
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), mParameter, "utf-8" );
+  const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( mParameter );
+  //Error if we don't have transport here.
+  if ( !transport )
+    return ErrorButGoOn;
+
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), argsAsString(), "utf-8" );
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  context.setNeedsPayloadStore();
 
   return GoOn;
 }
+
+
+void FilterActionTransport::applyParamWidgetValue( QWidget *paramWidget )
+{
+  const MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  Q_ASSERT( comboBox );
+
+  mParameter = comboBox->currentTransportId();
+}
+
+void FilterActionTransport::clearParamWidget( QWidget *paramWidget ) const
+{
+  MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  Q_ASSERT( comboBox );
+
+  comboBox->setCurrentIndex( 0 );
+}
+
+void FilterActionTransport::setParamWidgetValue( QWidget *paramWidget ) const
+{
+  MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );
+  Q_ASSERT( comboBox );
+
+  comboBox->setCurrentTransport( mParameter );
+}
+
+
+bool FilterActionTransport::isEmpty() const
+{
+  return (mParameter == -1);
+}
+
+void FilterActionTransport::argsFromString( const QString &argsStr )
+{
+  mParameter = argsStr.trimmed().toInt();
+}
+
+QString FilterActionTransport::argsAsString() const
+{
+  return QString::number( mParameter );
+}
+
+QString FilterActionTransport::displayString() const
+{
+  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+}
+
 
 
 //=============================================================================
 // FilterActionReplyTo - set Reply-To to
 // Set the Reply-to header in a message
 //=============================================================================
-class FilterActionReplyTo: public FilterActionWithString
+class FilterActionReplyTo: public FilterActionWithAddress
 {
   public:
     FilterActionReplyTo( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 };
 
@@ -773,19 +929,19 @@ FilterAction* FilterActionReplyTo::newAction()
 }
 
 FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
-  : FilterActionWithString( "set Reply-To", i18n( "Set Reply-To To" ), parent )
+  : FilterActionWithAddress( "set Reply-To", i18n( "Set Reply-To To" ), parent )
 {
-  mParameter = "";
+  mParameter.clear();
 }
 
-FilterAction::ReturnCode FilterActionReplyTo::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
 {
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "Reply-To", msg.get(), mParameter, "utf-8" );
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  context.setNeedsPayloadStore();
 
   return GoOn;
 }
@@ -799,7 +955,8 @@ class FilterActionIdentity: public FilterActionWithUOID
 {
   public:
     FilterActionIdentity( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
     static FilterAction* newAction();
 
     QWidget * createParamWidget( QWidget *parent ) const;
@@ -819,14 +976,35 @@ FilterActionIdentity::FilterActionIdentity( QObject *parent )
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
 
-FilterAction::ReturnCode FilterActionIdentity::process( const Akonadi::Item &item ) const
+bool FilterActionIdentity::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+  {
+    FilterActionMissingIdentityDialog *dlg = new FilterActionMissingIdentityDialog( filterName );
+    if ( dlg->exec() ) {
+      mParameter = dlg->selectedIdentity();
+      needUpdate = true;
+    }
+    else
+      mParameter = -1;
+    delete dlg;
+  }
+  return needUpdate;
+}
+
+FilterAction::ReturnCode FilterActionIdentity::process( ItemContext &context ) const
+{
+  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+    return ErrorButGoOn;
+
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  context.setNeedsPayloadStore();
 
   return GoOn;
 }
@@ -874,7 +1052,7 @@ class FilterActionSetStatus: public FilterActionWithStringList
 {
   public:
     FilterActionSetStatus( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
 
     static FilterAction* newAction();
@@ -927,14 +1105,14 @@ FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
   mParameter = mParameterList.at( 0 );
 }
 
-FilterAction::ReturnCode FilterActionSetStatus::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) const
 {
   const int index = mParameterList.indexOf( mParameter );
   if ( index < 1 )
     return ErrorButGoOn;
 
   Akonadi::MessageStatus status;
-  status.setStatusFromFlags( item.flags() );
+  status.setStatusFromFlags( context.item().flags() );
 
   const Akonadi::MessageStatus newStatus = stati[ index - 1 ];
   if ( newStatus == Akonadi::MessageStatus::statusUnread() )
@@ -942,10 +1120,8 @@ FilterAction::ReturnCode FilterActionSetStatus::process( const Akonadi::Item &it
   else
     status.set( newStatus );
 
-  Akonadi::Item newItem( item.id() );
-  newItem.setRevision( item.revision() );
-  newItem.setFlags( status.statusFlags() );
-  new Akonadi::ItemModifyJob( newItem, FilterIf->filterManager() ); // TODO handle error
+  context.item().setFlags( status.statusFlags() );
+  context.setNeedsFlagStore();
 
   return GoOn;
 }
@@ -1005,7 +1181,7 @@ class FilterActionAddTag: public FilterActionWithStringList
 {
   public:
     FilterActionAddTag( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
 
     static FilterAction* newAction();
@@ -1015,8 +1191,10 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
+    void initializeTagList();
     QStringList mLabelList;
 };
 
@@ -1028,6 +1206,11 @@ FilterAction* FilterActionAddTag::newAction()
 FilterActionAddTag::FilterActionAddTag( QObject *parent )
   : FilterActionWithStringList( "add tag", i18n( "Add Tag" ), parent )
 {
+  initializeTagList();
+}
+
+void FilterActionAddTag::initializeTagList()
+{
 #ifndef KDEPIM_NO_NEPOMUK
   foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
     mParameterList.append( tag.label() );
@@ -1036,14 +1219,35 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
 #endif
 }
 
-FilterAction::ReturnCode FilterActionAddTag::process( const Akonadi::Item &item ) const
+bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+{
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if( mParameterList.isEmpty() )
+    return false;
+#ifndef KDEPIM_NO_NEPOMUK
+  const int index = mParameterList.indexOf( mParameter );
+  if ( index == -1 ) {
+    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+    if ( dlg->exec() ) {
+      mParameter = dlg->selectedTag();
+      needUpdate = true;
+    }
+    delete dlg;
+  }
+#endif
+  return needUpdate;
+}
+
+
+FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 )
     return ErrorButGoOn;
 
-  Nepomuk::Resource resource( item.url() );
+  Nepomuk::Resource resource( context.item().url() );
   resource.addTag( mParameter );
 #endif
 
@@ -1057,6 +1261,11 @@ bool FilterActionAddTag::requiresBody() const
 
 void FilterActionAddTag::argsFromString( const QString &argsStr )
 {
+  if( mParameterList.isEmpty() ) {
+    mParameter = argsStr;
+    return;
+  }
+
   foreach ( const QString& tag, mParameterList ) {
     if ( tag == argsStr ) {
       mParameter = tag;
@@ -1064,7 +1273,7 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
     }
   }
 
-  if ( mParameterList.size() > 0 )
+  if ( !mParameterList.isEmpty() )
     mParameter = mParameterList.at( 0 );
 }
 
@@ -1091,7 +1300,7 @@ class FilterActionFakeDisposition: public FilterActionWithStringList
 {
   public:
     FilterActionFakeDisposition( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction()
     {
       return new FilterActionFakeDisposition;
@@ -1136,20 +1345,19 @@ FilterActionFakeDisposition::FilterActionFakeDisposition( QObject *parent )
   mParameter = mParameterList.at( 0 );
 }
 
-FilterAction::ReturnCode FilterActionFakeDisposition::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionFakeDisposition::process( ItemContext &context ) const
 {
   const int index = mParameterList.indexOf( mParameter );
   if ( index < 1 )
     return ErrorButGoOn;
 
   if ( index == 1 ) { // ignore
-    if ( item.hasAttribute<MessageCore::MDNStateAttribute>() ) {
-      item.attribute<MessageCore::MDNStateAttribute>()->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
-      Akonadi::ItemModifyJob* modifyJob = new Akonadi::ItemModifyJob( item );
-      modifyJob->setIgnorePayload( true );
+    if ( context.item().hasAttribute<MessageCore::MDNStateAttribute>() ) {
+      context.item().attribute<MessageCore::MDNStateAttribute>()->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
+      context.setNeedsFlagStore();
     }
   } else // send
-    sendMDN( item, mdns[ index - 2 ] ); // skip first two entries: "" and "ignore"
+    sendMDN( context.item(), mdns[ index - 2 ] ); // skip first two entries: "" and "ignore"
 
   return GoOn;
 }
@@ -1196,7 +1404,7 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
 {
   public:
     FilterActionRemoveHeader( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
 
@@ -1234,18 +1442,18 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
   return comboBox;
 }
 
-FilterAction::ReturnCode FilterActionRemoveHeader::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
 
-  KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
   while ( msg->headerByType( mParameter.toLatin1() ) )
     msg->removeHeader( mParameter.toLatin1() );
 
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  context.setNeedsPayloadStore();
 
   return GoOn;
 }
@@ -1275,7 +1483,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
 {
   public:
     FilterActionAddHeader( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
@@ -1308,12 +1516,12 @@ FilterActionAddHeader::FilterActionAddHeader( QObject *parent )
   mParameter = mParameterList.at( 0 );
 }
 
-FilterAction::ReturnCode FilterActionAddHeader::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionAddHeader::process( ItemContext &context ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
 
-  KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
   KMime::Headers::Base *header = KMime::Headers::createHeader( mParameter.toLatin1() );
   if ( !header ) {
@@ -1325,7 +1533,7 @@ FilterAction::ReturnCode FilterActionAddHeader::process( const Akonadi::Item &it
   msg->setHeader( header );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  context.setNeedsPayloadStore();
 
   return GoOn;
 }
@@ -1426,7 +1634,7 @@ void FilterActionAddHeader::argsFromString( const QString &argsStr )
   QString result;
   if ( list.count() < 2 ) {
     result = list[ 0 ];
-    mValue = "";
+    mValue.clear();
   } else {
     result = list[ 0 ];
     mValue = list[ 1 ];
@@ -1450,7 +1658,7 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
 {
   public:
     FilterActionRewriteHeader( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
@@ -1485,12 +1693,12 @@ FilterActionRewriteHeader::FilterActionRewriteHeader( QObject *parent )
   mParameter = mParameterList.at( 0 );
 }
 
-FilterAction::ReturnCode FilterActionRewriteHeader::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &context ) const
 {
   if ( mParameter.isEmpty() || !mRegExp.isValid() )
     return ErrorButGoOn;
 
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
   KMime::Headers::Base *header = msg->headerByType( mParameter.toLatin1() );
   QString value = header ? header->asUnicodeString(): "";
@@ -1504,7 +1712,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( const Akonadi::Item
   header->fromUnicodeString( newValue, "utf-8" );
   msg->assemble();
 
-  new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
+  context.setNeedsPayloadStore();
 
   return GoOn;
 }
@@ -1648,7 +1856,7 @@ class FilterActionMove: public FilterActionWithFolder
 {
   public:
     FilterActionMove( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
     static FilterAction* newAction();
 };
@@ -1663,18 +1871,17 @@ FilterActionMove::FilterActionMove( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionMove::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
 {
   if ( !mFolder.isValid() ) {
-    const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolderName );
+    const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
     if ( !targetFolder.isValid() )
       return ErrorButGoOn;
 
-    MessageProperty::setFilterFolder( item, targetFolder );
+    context.setMoveTargetCollection( targetFolder );
     return GoOn;
   }
-
-  MessageProperty::setFilterFolder( item, mFolder );
+  context.setMoveTargetCollection( mFolder );
   return GoOn;
 }
 
@@ -1692,7 +1899,7 @@ class FilterActionCopy: public FilterActionWithFolder
 {
   public:
     FilterActionCopy( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
     static FilterAction* newAction();
 };
@@ -1707,10 +1914,10 @@ FilterActionCopy::FilterActionCopy( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionCopy::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionCopy::process( ItemContext &context ) const
 {
   // copy the message 1:1
-  new Akonadi::ItemCopyJob( item, mFolder, FilterIf->filterManager() ); // TODO handle error
+  new Akonadi::ItemCopyJob( context.item(), mFolder, 0 ); // TODO handle error
 
   return GoOn;
 }
@@ -1730,7 +1937,7 @@ class FilterActionForward: public FilterActionWithAddress
   public:
     FilterActionForward( QObject *parent = 0 );
     static FilterAction* newAction();
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
@@ -1738,6 +1945,7 @@ class FilterActionForward: public FilterActionWithAddress
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;
     virtual QString displayString() const;
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private:
     mutable QString mTemplate;
@@ -1753,12 +1961,12 @@ FilterActionForward::FilterActionForward( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionForward::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionForward::process( ItemContext &context ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
 
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
   // avoid endless loops when this action is used in a filter
   // which applies to sent messages
   if ( MessageCore::StringUtil::addressIsInAddressList( mParameter,
@@ -1767,9 +1975,9 @@ FilterAction::ReturnCode FilterActionForward::process( const Akonadi::Item &item
     return ErrorButGoOn;
   }
 
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, context.item().id() );
   factory.setIdentityManager( KernelIf->identityManager() );
-  factory.setFolderIdentity( Util::folderIdentity( item ) );
+  factory.setFolderIdentity( Util::folderIdentity( context.item() ) );
   factory.setTemplate( mTemplate );
 
   KMime::Message::Ptr fwdMsg = factory.createForward();
@@ -1778,7 +1986,7 @@ FilterAction::ReturnCode FilterActionForward::process( const Akonadi::Item &item
     kWarning() << "FilterAction: could not forward message (sending failed)";
     return ErrorButGoOn; // error: couldn't send
   } else
-    sendMDN( item, KMime::MDN::Dispatched );
+    sendMDN( context.item(), KMime::MDN::Dispatched );
 
   // (the msgSender takes ownership of the message, so don't delete it here)
   return GoOn;
@@ -1808,10 +2016,11 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
 
   const QStringList templateNames = SettingsIf->customTemplates();
   foreach( const QString &templateName, templateNames ) {
-    CTemplates templat( templateName );
-    if ( templat.type() == CustomTemplates::TForward ||
-         templat.type() == CustomTemplates::TUniversal )
+    TemplateParser::CTemplates templat( templateName );
+    if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
+         templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
       templateCombo->addItem( templateName );
+    }
   }
 
   templateCombo->setEnabled( templateCombo->count() > 1 );
@@ -1894,6 +2103,35 @@ void FilterActionForward::argsFromString( const QString &argsStr )
   }
 }
 
+bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
+{
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if ( !mTemplate.isEmpty() ) {
+    const QStringList templateNames = SettingsIf->customTemplates();
+    QStringList currentTemplateList;
+    currentTemplateList << i18n( "Default Template" );
+    foreach( const QString &templateName, templateNames ) {
+      TemplateParser::CTemplates templat( templateName );
+      if ( templat.type() == TemplateParser::CustomTemplates::TForward ||
+           templat.type() == TemplateParser::CustomTemplates::TUniversal ) {
+        if ( templateName == mTemplate ) {
+          return false;
+        }
+        currentTemplateList << templateName;
+      }
+    }
+    FilterActionMissingTemplateDialog *dlg = new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
+    if ( dlg->exec() ) {
+      mTemplate = dlg->selectedTemplate();
+      needUpdate = true;
+    }
+    delete dlg;
+  }
+  return needUpdate;
+}
+
+
 QString FilterActionForward::argsAsString() const
 {
   return FilterActionWithAddress::argsAsString() + forwardFilterArgsSeperator + mTemplate;
@@ -1916,7 +2154,7 @@ class FilterActionRedirect: public FilterActionWithAddress
 {
   public:
     FilterActionRedirect( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 };
 
@@ -1930,22 +2168,22 @@ FilterActionRedirect::FilterActionRedirect( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionRedirect::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
 
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
+  KMime::Message::Ptr msg = MessageCore::Util::message( context.item() );
 
-  MessageFactory factory( msg, item.id() );
-  factory.setFolderIdentity( Util::folderIdentity( item ) );
+  MessageFactory factory( msg, context.item().id() );
+  factory.setFolderIdentity( Util::folderIdentity( context.item() ) );
   factory.setIdentityManager( KernelIf->identityManager() );
 
   KMime::Message::Ptr rmsg = factory.createRedirect( mParameter );
   if ( !rmsg )
     return ErrorButGoOn;
 
-  sendMDN( item, KMime::MDN::Dispatched );
+  sendMDN( context.item(), KMime::MDN::Dispatched );
 
   if ( !KernelIf->msgSender()->send( rmsg, MessageSender::SendLater ) ) {
     kDebug() << "FilterAction: could not redirect message (sending failed)";
@@ -1964,7 +2202,7 @@ class FilterActionExec : public FilterActionWithCommand
 {
   public:
     FilterActionExec( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 };
 
@@ -1978,9 +2216,9 @@ FilterActionExec::FilterActionExec( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionExec::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionExec::process( ItemContext &context ) const
 {
-  return FilterActionWithCommand::genericProcess( item, false ); // ignore output
+  return FilterActionWithCommand::genericProcess( context, false ); // ignore output
 }
 
 
@@ -1993,7 +2231,7 @@ class FilterActionExtFilter: public FilterActionWithCommand
 {
   public:
     FilterActionExtFilter( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 };
 
@@ -2007,13 +2245,13 @@ FilterActionExtFilter::FilterActionExtFilter( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionExtFilter::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionExtFilter::process( ItemContext &context ) const
 {
-  return FilterActionWithCommand::genericProcess( item, true ); // use output
+  return FilterActionWithCommand::genericProcess( context, true ); // use output
 }
 
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 //=============================================================================
 // FilterActionExecSound - execute command
 // Execute a sound
@@ -2021,11 +2259,12 @@ FilterAction::ReturnCode FilterActionExtFilter::process( const Akonadi::Item &it
 class FilterActionExecSound : public FilterActionWithTest
 {
   public:
-    FilterActionExecSound( QObject *parent = 0 );
+    FilterActionExecSound(  );
     ~FilterActionExecSound();
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
     static FilterAction* newAction();
+    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
   private:
     mutable Phonon::MediaObject* mPlayer;
@@ -2087,7 +2326,7 @@ QString FilterActionWithTest::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-FilterActionExecSound::FilterActionExecSound( QObject *parent )
+FilterActionExecSound::FilterActionExecSound( )
   : FilterActionWithTest( "play sound", i18n( "Play Sound" ) ),
     mPlayer( 0 )
 {
@@ -2103,7 +2342,7 @@ FilterAction* FilterActionExecSound::newAction()
   return new FilterActionExecSound();
 }
 
-FilterAction::ReturnCode FilterActionExecSound::process( const Akonadi::Item& ) const
+FilterAction::ReturnCode FilterActionExecSound::process( ItemContext& ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
@@ -2120,6 +2359,21 @@ FilterAction::ReturnCode FilterActionExecSound::process( const Akonadi::Item& ) 
 bool FilterActionExecSound::requiresBody() const
 {
   return false;
+}
+
+bool FilterActionExecSound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+{
+  bool needUpdate = false;
+  argsFromString( argsStr );
+  if(!QFile(mParameter).exists()){
+      FilterActionMissingSoundUrlDialog *dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
+      if ( dlg->exec() ) {
+        mParameter = dlg->soundUrl();
+        needUpdate = true;
+      }
+      delete dlg;
+  }
+  return needUpdate;
 }
 
 #endif
@@ -2190,7 +2444,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
   public:
     FilterActionAddToAddressBook( QObject *parent = 0 );
-    virtual ReturnCode process( const Akonadi::Item &item ) const;
+    virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 
     virtual bool isEmpty() const { return false; }
@@ -2235,9 +2489,9 @@ FilterActionAddToAddressBook::FilterActionAddToAddressBook( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionAddToAddressBook::process( const Akonadi::Item &item ) const
+FilterAction::ReturnCode FilterActionAddToAddressBook::process( ItemContext &context ) const
 {
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
   QString headerLine;
   switch ( mHeaderType ) {
@@ -2298,7 +2552,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
            this, SIGNAL(filterActionModified()) );
   connect( headerCombo, SIGNAL(currentIndexChanged(int)),
            this, SIGNAL(filterActionModified()) );
-  
+
   setParamWidgetValue( widget );
 
   return widget;
@@ -2386,13 +2640,14 @@ QString FilterActionAddToAddressBook::argsAsString() const
 void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
 {
   const QStringList parts = argsStr.split( QLatin1Char( '\t' ), QString::KeepEmptyParts );
-  if ( parts[ 0 ] == QLatin1String( "From" ) )
+  const QString firstElement = parts[ 0 ];
+  if ( firstElement == QLatin1String( "From" ) )
     mHeaderType = FromHeader;
-  else if ( parts[ 0 ] == QLatin1String( "To" ) )
+  else if ( firstElement == QLatin1String( "To" ) )
     mHeaderType = ToHeader;
-  else if ( parts[ 0 ] == QLatin1String( "CC" ) )
+  else if ( firstElement == QLatin1String( "CC" ) )
     mHeaderType = CcHeader;
-  else if ( parts[ 0 ] == QLatin1String( "BCC" ) )
+  else if ( firstElement == QLatin1String( "BCC" ) )
     mHeaderType = BccHeader;
 
   if ( parts.count() >= 2 )
@@ -2404,6 +2659,72 @@ void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
     mCategory = parts[ 2 ];
 }
 
+
+//=============================================================================
+// FilterActionDelete - Delete action
+//=============================================================================
+class FilterActionDelete : public FilterActionWithNone
+{
+  public:
+    FilterActionDelete( QObject *parent = 0 );
+    virtual ReturnCode process( ItemContext &context ) const;
+    static FilterAction* newAction();
+    QWidget* createParamWidget( QWidget *parent ) const;
+};
+
+FilterAction* FilterActionDelete::newAction()
+{
+  return new FilterActionDelete;
+}
+
+FilterActionDelete::FilterActionDelete( QObject *parent )
+  : FilterActionWithNone( "delete", i18n( "Delete Message" ), parent )
+{
+}
+
+FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) const
+{
+  context.setDeleteItem();
+  return GoOn;
+}
+
+QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
+{
+    QLabel *lab = new QLabel(parent);
+    QPalette pal = lab->palette();
+    KColorScheme scheme(QPalette::Active, KColorScheme::View);
+    pal.setColor(QPalette::WindowText, scheme.foreground(KColorScheme::NegativeText).color());
+    lab->setPalette(pal);
+    lab->setText(i18n("Be careful, mails will be removed."));
+    return lab;
+}
+
+//=============================================================================
+// FilterActionBeep - Beep action
+//=============================================================================
+class FilterActionBeep : public FilterActionWithNone
+{
+  public:
+    FilterActionBeep( QObject *parent = 0 );
+    virtual ReturnCode process( ItemContext &context ) const;
+    static FilterAction* newAction();
+};
+
+FilterAction* FilterActionBeep::newAction()
+{
+  return new FilterActionBeep;
+}
+
+FilterActionBeep::FilterActionBeep( QObject *parent )
+  : FilterActionWithNone( "beep", i18n( "Beep" ), parent )
+{
+}
+
+FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/ ) const
+{
+  KNotification::beep();
+  return GoOn;
+}
 
 //=============================================================================
 //
@@ -2433,10 +2754,12 @@ void FilterActionDict::init()
   insert( FilterActionRemoveHeader::newAction );
   insert( FilterActionAddHeader::newAction );
   insert( FilterActionRewriteHeader::newAction );
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
   insert( FilterActionExecSound::newAction );
 #endif
   insert( FilterActionAddToAddressBook::newAction );
+  insert( FilterActionDelete::newAction);
+  insert( FilterActionBeep::newAction);
   // Register custom filter actions below this line.
 }
 

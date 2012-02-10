@@ -51,7 +51,7 @@ QToolButton
   border-bottom: 10px;
   border-left: 10px;
   border-right: 10px;
-  min-height: 48px;
+  min-height: 32px;
 }
 
 /* active button background */
@@ -150,14 +150,14 @@ QScrollArea {
 
 /* QSpinBox and QDateTimeEdit */
 QDateTimeEdit, QSpinBox {
-  margin-left: 68px;
-  margin-right: 68px;
+  margin-left: 52px;
+  margin-right: 52px;
   margin-top: 16px;
   margin-bottom: 16px;
   text-align: center;
   /* for some reason padding is increased by margin here... */
-  padding-left: -64px;
-  padding-right: -64px;
+  padding-left: -52px;
+  padding-right: -52px;
 }
 
 QDateTimeEdit::down-button,
@@ -166,8 +166,8 @@ QSpinBox::down-button,
 QSpinBox::up-button
 {
   subcontrol-origin: margin;
-  height: 48px;
-  width: 48px;
+  height: 32px;
+  width: 32px;
 }
 
 QDateTimeEdit::down-button,
@@ -223,14 +223,19 @@ QSpinBox::up-arrow:off
 }
 
 
-/** Tool buttons */
-QToolButton
+/** Buttons */
+QPushButton, QToolButton:
 {
-  min-width: 48px;
-  padding: 1px;
-  qproperty-iconSize: 48px 48px;
+  qproperty-iconSize: 32px 32px;
 }
 
+QToolButton
+{
+  min-width: 32px;
+  padding: 1px;
+}
+
+/** Menus */
 QMenu
 {
   background-color: white;

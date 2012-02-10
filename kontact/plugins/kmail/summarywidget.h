@@ -27,11 +27,7 @@
 
 #include <KontactInterface/Summary>
 
-#include <kviewstatemaintainer.h>
-
-namespace KontactInterface {
-  class Plugin;
-}
+#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 
 namespace Akonadi {
   class ChangeRecorder;
@@ -40,12 +36,16 @@ namespace Akonadi {
   class ETMViewStateSaver;
 }
 
+namespace KontactInterface {
+  class Plugin;
+}
+
 class KCheckableProxyModel;
 
 class QGridLayout;
+class QItemSelectionModel;
 class QLabel;
 class QModelIndex;
-class QItemSelectionModel;
 
 class SummaryWidget : public KontactInterface::Summary
 {
@@ -65,12 +65,12 @@ class SummaryWidget : public KontactInterface::Summary
 
   private slots:
     void selectFolder( const QString & );
-    void slotCollectionChanged( const Akonadi::Collection& );
+    void slotCollectionChanged( const Akonadi::Collection & );
     void slotRowInserted( const QModelIndex & parent, int start, int end );
 
   private:
     void updateFolderList();
-    void displayModel( const QModelIndex &, int&, const bool, QStringList );
+    void displayModel( const QModelIndex &, int &, const bool, QStringList );
 
     QList<QLabel*> mLabels;
     QGridLayout *mLayout;

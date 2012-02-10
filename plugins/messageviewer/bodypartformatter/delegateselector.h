@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -40,7 +41,8 @@ class DelegateSelector : public KDialog
 
     QString delegate() const;
     bool rsvp() const;
-
+  public slots:
+    void slotTextChanged( const QString& text );
   private:
     KPIM::AddresseeLineEdit *mDelegate;
     QCheckBox *mRsvp;

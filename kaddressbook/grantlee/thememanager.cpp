@@ -1,12 +1,12 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either version
-  2 of the Licence, or (at your option) any later version.
+  2 of the License, or (at your option) any later version.
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,9 +20,9 @@
 
 #include "thememanager.h"
 
-#include <kconfig.h>
-#include <kconfiggroup.h>
-#include <kdirwatch.h>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KDirWatch>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDirIterator>
@@ -65,8 +65,9 @@ class ThemeManager::Private
         //emit q->themeRemoved( theme );
       }
 
-      if ( themesPath.isEmpty() )
+      if ( themesPath.isEmpty() ) {
         return;
+      }
 
       mThemesPath = themesPath;
 
@@ -98,7 +99,8 @@ class ThemeManager::Private
 
     Theme parseTheme( const QString &identifier, const QString &themePath )
     {
-      const QString themeInfoFile = themePath + QDir::separator() + QString::fromLatin1( "theme-%1.desktop" ).arg( identifier );
+      const QString themeInfoFile =
+        themePath + QDir::separator() + QString::fromLatin1( "theme-%1.desktop" ).arg( identifier );
       KConfig config( themeInfoFile );
       KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
 

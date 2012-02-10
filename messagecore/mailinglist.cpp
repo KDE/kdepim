@@ -29,9 +29,9 @@ static QString check_sender( const KMime::Message::Ptr &message,
   if ( header.left( 6 ) == QLatin1String("owner-") ) {
     headerName = "Sender";
     headerValue = header;
-    header = header.mid( 6, header.indexOf( '@' ) - 6 );
+    header = header.mid( 6, header.indexOf( QLatin1Char( '@' ) ) - 6 );
   } else {
-    const int index = header.indexOf( "-owner@ " );
+    const int index = header.indexOf( QLatin1String( "-owner@ " ) );
     if ( index == -1 )
       return QString();
 
@@ -49,12 +49,12 @@ static QString check_x_beenthere( const KMime::Message::Ptr &message,
                                   QString &headerValue )
 {
   QString header = message->headerByType( "X-BeenThere" ) ? message->headerByType( "X-BeenThere" )->asUnicodeString() : "";
-  if ( header.isNull() || header.indexOf( '@' ) == -1 )
+  if ( header.isNull() || header.indexOf( QLatin1Char( '@' ) ) == -1 )
     return QString();
 
   headerName = "X-BeenThere";
   headerValue = header;
-  header.truncate( header.indexOf( '@' ) );
+  header.truncate( header.indexOf( QLatin1Char( '@' ) ) );
 
   return header;
 }
@@ -65,14 +65,15 @@ static QString check_delivered_to( const KMime::Message::Ptr &message,
                                    QString &headerValue )
 {
   QString header = message->headerByType( "Delivered-To" ) ? message->headerByType( "Delivered-To" )->asUnicodeString() : "";
-  if ( header.isNull() || header.left( 13 ) != "mailing list"
-       || header.indexOf( '@' ) == -1 )
+  if ( header.isNull()
+       || header.left( 13 ) != QLatin1String( "mailing list" )
+       || header.indexOf( QLatin1Char( '@' ) ) == -1 )
     return QString();
 
   headerName = "Delivered-To";
   headerValue = header;
 
-  return header.mid( 13, header.indexOf( '@' ) - 13 );
+  return header.mid( 13, header.indexOf( QLatin1Char( '@' ) ) - 13 );
 }
 
 /* X-Mailing-List: <?([^@]+) */
@@ -84,15 +85,15 @@ static QString check_x_mailing_list( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  if ( header.indexOf( '@' ) < 1 )
+  if ( header.indexOf( QLatin1Char( '@' ) ) < 1 )
     return QString();
 
   headerName = "X-Mailing-List";
   headerValue = header;
-  if ( header[0] == '<' )
-    header = header.mid( 1,  header.indexOf( '@' ) - 1 );
+  if ( header[0] == QLatin1Char( '<' ) )
+    header = header.mid( 1,  header.indexOf( QLatin1Char( '@' ) ) - 1 );
   else
-    header.truncate( header.indexOf( '@' ) );
+    header.truncate( header.indexOf( QLatin1Char( '@' ) ) );
 
   return header;
 }
@@ -106,11 +107,11 @@ static QString check_list_id( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  const int leftAnglePos = header.indexOf( '<' );
+  const int leftAnglePos = header.indexOf( QLatin1Char( '<' ) );
   if ( leftAnglePos < 0 )
     return QString();
 
-  const int firstDotPos = header.indexOf( '.', leftAnglePos );
+  const int firstDotPos = header.indexOf( QLatin1Char( '.' ), leftAnglePos );
   if ( firstDotPos < 0 )
     return QString();
 
@@ -131,14 +132,14 @@ static QString check_list_post( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  int leftAnglePos = header.indexOf( "<mailto:" );
+  int leftAnglePos = header.indexOf( QLatin1String( "<mailto:" ) );
   if ( leftAnglePos < 0 )
     return QString();
 
   headerName = "List-Post";
   headerValue = header;
   header = header.mid( leftAnglePos + 8, header.length() );
-  header.truncate( header.indexOf( '@' ) );
+  header.truncate( header.indexOf( QLatin1Char( '@' ) ) );
 
   return header;
 }
@@ -152,12 +153,13 @@ static QString check_mailing_list( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  if ( header.left( 5 ) != "list " || header.indexOf( '@' ) < 5 )
+  if ( header.left( 5 ) != QLatin1String( "list " )
+       || header.indexOf( QLatin1Char( '@' ) ) < 5 )
     return QString();
 
   headerName = "Mailing-List";
   headerValue = header;
-  header = header.mid( 5,  header.indexOf( '@' ) - 5 );
+  header = header.mid( 5,  header.indexOf( QLatin1Char( '@' ) ) - 5 );
 
   return header;
 }
@@ -172,12 +174,13 @@ static QString check_x_loop( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  if (header.indexOf( '@' ) < 2 )
+  const int indexOfHeader( header.indexOf( QLatin1Char( '@' ) ) );
+  if (indexOfHeader < 2 )
     return QString();
 
   headerName = "X-Loop";
   headerValue = header;
-  header.truncate( header.indexOf( '@' ) );
+  header.truncate( indexOfHeader );
 
   return header;
 }
@@ -193,7 +196,7 @@ static QString check_x_ml_name( const KMime::Message::Ptr &message,
 
   headerName = "X-ML-Name";
   headerValue = header;
-  header.truncate( header.indexOf( '@' ) );
+  header.truncate( header.indexOf( QLatin1Char( '@' ) ) );
 
   return header;
 }
@@ -222,8 +225,8 @@ static QStringList headerToAddress( const QString &header )
   if ( header.isEmpty() )
     return addresses;
 
-  while ( (start = header.indexOf( "<", start )) != -1 ) {
-    if ( (end = header.indexOf( ">", ++start ) ) == -1 ) {
+  while ( (start = header.indexOf( QLatin1Char( '<' ), start )) != -1 ) {
+    if ( (end = header.indexOf( QLatin1Char( '>' ), ++start ) ) == -1 ) {
       kWarning() << "Serious mailing list header parsing error!";
       return addresses;
     }
@@ -254,7 +257,7 @@ class MessageCore::MailingList::Private : public QSharedData
       mHelpUrls = other.mHelpUrls;
       mArchiveUrls = other.mArchiveUrls;
       mOwnerUrls = other.mOwnerUrls;
-      mArchivedAtUrl = other.mArchivedAtUrl;
+      mArchivedAtUrls = other.mArchivedAtUrls;
       mId = other.mId;
     }
 
@@ -266,7 +269,7 @@ class MessageCore::MailingList::Private : public QSharedData
     KUrl::List mHelpUrls;
     KUrl::List mArchiveUrls;
     KUrl::List mOwnerUrls;
-    KUrl mArchivedAtUrl;
+    KUrl::List mArchivedAtUrls;
     QString mId;
 };
 
@@ -292,8 +295,9 @@ MailingList MailingList::detect( const KMime::Message::Ptr &message )
   if ( message->headerByType( "List-Owner" ) )
     mailingList.setOwnerUrls( headerToAddress( message->headerByType( "List-Owner" )->asUnicodeString() ) );
 
-  if ( message->headerByType( "Archived-At" ) )
-    mailingList.setArchivedAtUrl( KUrl( message->headerByType( "Archived-At" )->asUnicodeString() ) );
+  if ( message->headerByType( "Archived-At" ) ) {
+    mailingList.setArchivedAtUrls( headerToAddress( message->headerByType( "Archived-At" )->asUnicodeString() ) );
+  }
 
   if ( message->headerByType( "List-Id" ) )
     mailingList.setId( message->headerByType( "List-Id" )->asUnicodeString() );
@@ -337,6 +341,22 @@ MailingList& MailingList::operator=( const MailingList &other )
 
   return *this;
 }
+
+bool MailingList::operator==( const MailingList &other ) const
+{
+  return other.features() == d->mFeatures &&
+    other.handler() == d->mHandler &&
+    other.postUrls() == d->mPostUrls &&
+    other.subscribeUrls() == d->mSubscribeUrls &&
+    other.unsubscribeUrls() == d->mUnsubscribeUrls &&
+    other.helpUrls() == d->mHelpUrls &&
+    other.archiveUrls() == d->mArchiveUrls &&
+    other.ownerUrls() == d->mOwnerUrls &&
+    other.archivedAtUrls() == d->mArchivedAtUrls &&
+    other.id() == d->mId;
+
+}
+
 
 MailingList::~MailingList()
 {
@@ -453,20 +473,20 @@ KUrl::List MailingList::ownerUrls() const
   return d->mOwnerUrls;
 }
 
-void MailingList::setArchivedAtUrl( const KUrl &url )
+void MailingList::setArchivedAtUrls( const KUrl::List &urls )
 {
   d->mFeatures |= ArchivedAt;
 
-  if ( !url.isValid() ) {
+  if ( urls.isEmpty() ) {
     d->mFeatures ^= ArchivedAt;
   }
 
-  d->mArchivedAtUrl = url;
+  d->mArchivedAtUrls = urls;
 }
 
-KUrl MailingList::archivedAtUrl() const
+KUrl::List MailingList::archivedAtUrls() const
 {
-  return d->mArchivedAtUrl;
+  return d->mArchivedAtUrls;
 }
 
 void MailingList::setId( const QString &id )
@@ -490,13 +510,43 @@ void MailingList::writeConfig( KConfigGroup &group ) const
   group.writeEntry( "MailingListFeatures", static_cast<int>( d->mFeatures ) );
   group.writeEntry( "MailingListHandler", static_cast<int>( d->mHandler ) );
   group.writeEntry( "MailingListId", d->mId );
-  group.writeEntry( "MailingListPostingAddress", d->mPostUrls.toStringList() );
-  group.writeEntry( "MailingListSubscribeAddress", d->mSubscribeUrls.toStringList() );
-  group.writeEntry( "MailingListUnsubscribeAddress", d->mUnsubscribeUrls.toStringList() );
-  group.writeEntry( "MailingListArchiveAddress", d->mArchiveUrls.toStringList() );
-  group.writeEntry( "MailingListOwnerAddress", d->mOwnerUrls.toStringList() );
-  group.writeEntry( "MailingListHelpAddress", d->mHelpUrls.toStringList() );
-  /* Note: mArchivedAtUrl deliberately not saved here as it refers to a single 
+  QStringList lst = d->mPostUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListPostingAddress", lst );
+  else
+    group.deleteEntry( "MailingListPostingAddress" );
+
+  lst = d->mSubscribeUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListSubscribeAddress", lst );
+  else
+    group.deleteEntry( "MailingListSubscribeAddress" );
+
+  lst = d->mUnsubscribeUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListUnsubscribeAddress", lst );
+  else
+    group.deleteEntry( "MailingListUnsubscribeAddress" );
+
+  lst = d->mArchiveUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListArchiveAddress", lst );
+  else
+    group.deleteEntry( "MailingListArchiveAddress" );
+
+  lst = d->mOwnerUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListOwnerAddress", lst );
+  else
+    group.deleteEntry( "MailingListOwnerAddress" );
+
+  lst = d->mHelpUrls.toStringList();
+  if ( !lst.isEmpty() )
+    group.writeEntry( "MailingListHelpAddress", lst );
+  else
+    group.deleteEntry( "MailingListHelpAddress" );
+
+  /* Note: mArchivedAtUrl deliberately not saved here as it refers to a single
    * instance of a message rather than an element of a general mailing list.
    * http://reviewboard.kde.org/r/1768/#review2783
    */

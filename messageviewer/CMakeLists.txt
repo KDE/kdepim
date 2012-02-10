@@ -36,6 +36,7 @@ else()
   set(_mailwebview_cpp mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+    add_subdirectory(a11y)
   endif(NOT WINCE)
 endif()
 
@@ -52,7 +53,9 @@ set(libmessageviewer_SRCS
   csshelperbase.cpp
   editorwatcher.cpp
   filehtmlwriter.cpp
-  findbar/findbar.cpp
+  findbar/findbarbase.cpp
+  findbar/findbarmailwebview.cpp
+  findbar/findbarsourceview.cpp
   globalsettings.cpp
   headerstrategy.cpp
   headerstyle.cpp
@@ -80,7 +83,7 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
-
+  renamefiledialog.cpp
   ${_mailwebview_cpp}
 )
 

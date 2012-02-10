@@ -1,7 +1,7 @@
 /*
  *  birthdaydlg.h  -  dialog to pick birthdays from address book
  *  Program:  kalarm
- *  Copyright © 2002-2005,2007-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2005,2007-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
 #ifndef BIRTHDAYDLG_H
 #define BIRTHDAYDLG_H
 
-#include "kaevent.h"
+#include <kalarmcal/kaevent.h>
 
 #include <kdialog.h>
 #include <klineedit.h>
-#include <QList>
+#include <QVector>
 
 class QFocusEvent;
 class QTreeView;
@@ -38,13 +38,14 @@ class Reminder;
 class BLineEdit;
 class BirthdaySortModel;
 
+using namespace KAlarmCal;
 
 class BirthdayDlg : public KDialog
 {
         Q_OBJECT
     public:
         explicit BirthdayDlg(QWidget* parent = 0);
-        QList<KAEvent> events() const;
+        QVector<KAEvent> events() const;
 
     protected slots:
         virtual void   slotOk();
@@ -69,7 +70,7 @@ class BirthdayDlg : public KDialog
         RepetitionButton*     mSubRepetition;
         QString               mPrefixText;   // last entered value of prefix text
         QString               mSuffixText;   // last entered value of suffix text
-        int                   mFlags;        // event flag bits
+        KAEvent::Flags        mFlags;        // event flag bits
 };
 
 

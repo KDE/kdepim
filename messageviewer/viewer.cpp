@@ -30,7 +30,6 @@
 #include "csshelper.h"
 #include "globalsettings.h"
 #include "mailwebview.h"
-#include "findbar/findbar.h"
 #include "mimetreemodel.h"
 
 #include <akonadi/kmime/messageparts.h>
@@ -511,7 +510,42 @@ void Viewer::copySelectionToClipboard()
   d->slotCopySelectedText();
 }
 
+void Viewer::setZoomFactor( qreal zoomFactor )
+{
+  Q_D( Viewer );
+  d->setZoomFactor(zoomFactor);
+}
 
+void Viewer::slotZoomReset()
+{
+  Q_D( Viewer );
+  d->slotZoomReset();
+}
+
+void Viewer::slotZoomIn()
+{
+  Q_D( Viewer );
+  d->slotZoomIn();
+}
+
+void Viewer::slotZoomOut()
+{
+  Q_D( Viewer );
+  d->slotZoomOut();
+}
+
+void Viewer::setZoomTextOnly( bool textOnly )
+{
+  Q_D( Viewer );
+  d->setZoomTextOnly( textOnly );
+}
+
+bool Viewer::zoomTextOnly() const
+{
+  Q_D(const Viewer);
+  return d->mZoomTextOnly;
+}
+  
 }
 
 #include "viewer.moc"

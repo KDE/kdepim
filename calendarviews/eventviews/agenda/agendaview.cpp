@@ -67,6 +67,9 @@ using namespace EventViews;
 enum {
   SPACING = 2
 };
+enum {
+  SHRINKDOWN = 2  // points less for the timezone font
+};
 
 class EventIndicator::Private
 {
@@ -100,7 +103,9 @@ class EventIndicator::Private
       rect.setWidth( q->parentWidget()->width() );
       rect.setHeight( q->height() );
       rect.setLeft( 0 );
-      rect.setTop( mLocation == EventIndicator::Top ? 0 : q->parentWidget()->height() - rect.height() );
+      rect.setTop( mLocation == EventIndicator::Top ?
+                     0 :
+                     q->parentWidget()->height() - rect.height() );
       q->setGeometry( rect );
     }
 
@@ -133,8 +138,7 @@ void EventIndicator::paintEvent( QPaintEvent * )
   const uint pixmapOffset = isRightToLeft ? 0 : ( cellWidth - d->mPixmap.width() );
   for ( int i = 0; i < d->mColumns; ++i ) {
     if ( d->mEnabled[ i ] ) {
-      const int xOffset = ( isRightToLeft ? ( d->mColumns - 1 - i ) : i )
-                          * cellWidth;
+      const int xOffset = ( isRightToLeft ? ( d->mColumns - 1 - i ) : i ) * cellWidth;
       painter.drawPixmap( xOffset + pixmapOffset, 0, d->mPixmap );
     }
   }
@@ -280,7 +284,6 @@ void AgendaView::Private::changeColumns( int numColumns )
   mEventIndicatorTop->changeColumns( numColumns );
   mEventIndicatorBottom->changeColumns( numColumns );
 }
-
 
 /** static */
 QList<QDate> AgendaView::Private::generateDateList( const QDate &start,
@@ -599,7 +602,7 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   /* Create the main agenda widget and the related widgets */
   QWidget *agendaFrame = new QWidget( d->mSplitterAgenda );
-  QHBoxLayout* agendaLayout = new QHBoxLayout( agendaFrame );
+  QHBoxLayout *agendaLayout = new QHBoxLayout( agendaFrame );
   agendaLayout->setMargin( 0 );
   agendaLayout->setSpacing( SPACING );
 
@@ -740,10 +743,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
   // rescheduling of todos by d'n'd
-  connect( agenda, SIGNAL(droppedToDos(KCalCore::Todo::List,QPoint,bool)),
-           SLOT(slotTodosDropped(KCalCore::Todo::List,QPoint,bool)) );
-  connect( agenda, SIGNAL(droppedToDos(QList<KUrl>,QPoint,bool)),
-           SLOT(slotTodosDropped(QList<KUrl>,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedIncidences(KCalCore::Incidence::List,QPoint,bool)),
+           SLOT(slotIncidencesDropped(KCalCore::Incidence::List,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedIncidences(QList<KUrl>,QPoint,bool)),
+           SLOT(slotIncidencesDropped(QList<KUrl>,QPoint,bool)) );
 
 }
 
@@ -985,7 +988,7 @@ void AgendaView::createDayLabels( bool force )
                          loadDecorations( botStrDecos, botDecos ), false );
 #endif
 
-  Q_FOREACH( const QDate &date, d->mSelectedDates ) {
+  Q_FOREACH ( const QDate &date, d->mSelectedDates ) {
     KVBox *topDayLabelBox = new KVBox( d->mTopDayLabels );
     d->mLayoutTopDayLabels->addWidget( topDayLabelBox );
     KVBox *bottomDayLabelBox = new KVBox( d->mBottomDayLabels );
@@ -1011,7 +1014,7 @@ void AgendaView::createDayLabels( bool force )
     d->mDateDayLabels.append( dayLabel );
     // if a holiday region is selected, show the holiday name
     const QStringList texts = CalendarSupport::holiday( date );
-    Q_FOREACH( const QString &text, texts ) {
+    Q_FOREACH ( const QString &text, texts ) {
       // Compute a small version of the holiday string for AlternateLabel
       const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
       AlternateLabel *label =
@@ -1187,16 +1190,22 @@ void AgendaView::createTimeBarHeaders()
   qDeleteAll( d->mTimeBarHeaders );
   d->mTimeBarHeaders.clear();
 
+  const QFont oldFont( font() );
+  QFont labelFont = d->mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
+  labelFont.setPointSize( labelFont.pointSize() - SHRINKDOWN );
+
   foreach ( QScrollArea *area, d->mTimeLabelsZone->timeLabels() ) {
     TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
     QLabel *label = new QLabel( timeLabel->header().replace( '/', "/ " ),
                                 d->mTimeBarHeaderFrame );
-    label->setAlignment( Qt::AlignBottom | Qt::AlignLeft );
-    label->setMargin( 2 );
+    label->setFont( labelFont );
+    label->setAlignment( Qt::AlignBottom | Qt::AlignRight );
+    label->setMargin( 0 );
     label->setWordWrap( true );
     label->setToolTip( timeLabel->headerToolTip() );
     d->mTimeBarHeaders.append( label );
   }
+  setFont( oldFont );
 }
 
 void AgendaView::updateTimeBarWidth()
@@ -1207,7 +1216,10 @@ void AgendaView::updateTimeBarWidth()
 
   createTimeBarHeaders();
 
-  QFontMetrics fm( font() );
+  const QFont oldFont( font() );
+  QFont labelFont = d->mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
+  labelFont.setPointSize( labelFont.pointSize() - SHRINKDOWN );
+  QFontMetrics fm( labelFont );
 
   int width = d->mTimeLabelsZone->preferedTimeLabelsWidth();
   foreach ( QLabel *l, d->mTimeBarHeaders ) {
@@ -1215,6 +1227,7 @@ void AgendaView::updateTimeBarWidth()
       width = qMax( width, fm.width( word ) );
     }
   }
+  setFont( oldFont );
 
   width = width + fm.width( QLatin1Char( '/' ) );
 
@@ -1465,14 +1478,18 @@ void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QD
   KDateTime start =
     CalendarSupport::incidence( incidences.first() )->dtStart().toTimeSpec( timeSpec );
   KDateTime end =
-    CalendarSupport::incidence( incidences.first() )->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
+    CalendarSupport::incidence( incidences.first() )->dateTime(
+      KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
   Akonadi::Item first = incidences.first();
-  Q_FOREACH( const Akonadi::Item &aitem, incidences ) {
+  Q_FOREACH ( const Akonadi::Item &aitem, incidences ) {
     if ( CalendarSupport::incidence( aitem )->dtStart().toTimeSpec( timeSpec ) < start ) {
       first = aitem;
     }
-    start = qMin( start, CalendarSupport::incidence( aitem )->dtStart().toTimeSpec( timeSpec ) );
-    end = qMax( start, CalendarSupport::incidence( aitem )->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec ) );
+    start = qMin( start,
+                  CalendarSupport::incidence( aitem )->dtStart().toTimeSpec( timeSpec ) );
+    end = qMax( start,
+                CalendarSupport::incidence( aitem )->dateTime(
+                  KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec ) );
   }
 
   end.toTimeSpec( start );    // allow direct comparison of dates
@@ -1570,15 +1587,18 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
   KCalCore::DateTimeList dateTimeList;
 
-  const KDateTime incDtStart = incidence->dtStart().toTimeSpec( timeSpec );
-  const KDateTime incDtEnd   = incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
+  const KDateTime incDtStart =
+    incidence->dtStart().toTimeSpec( timeSpec );
+  const KDateTime incDtEnd =
+    incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
 
   if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
     return;
   }
 
   if ( incidence->recurs() ) {
-    // timed incidences occur in [dtStart(), dtEnd()[. All-day incidences occur in [dtStart(), dtEnd()]
+    // timed incidences occur in [dtStart(), dtEnd()[
+    // all-day incidences occur in [dtStart(), dtEnd()]
     // so we subtract 1 second in the timed case
     const int secsToAdd = incidence->allDay() ? 0 : -1;
     const int eventDuration = event ? incDtStart.daysTo( incDtEnd.addSecs( secsToAdd ) ) : 0;
@@ -1689,7 +1709,7 @@ void AgendaView::updateEventIndicatorBottom( int newY )
   d->mEventIndicatorBottom->update();
 }
 
-void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
+void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
 {
   Q_UNUSED( items );
   Q_UNUSED( gpos );
@@ -1707,7 +1727,9 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
 
   Todo::Ptr todo = CalendarSupport::todo( todoItem );
   if ( todo &&  dynamic_cast<CalendarSupport::Calendar*>( calendar() ) ) {
-    const Akonadi::Item existingTodoItem = calendar()->itemForIncidence( calendar()->todo( todo->uid() ) );
+    const Akonadi::Item existingTodoItem =
+      calendar()->itemForIncidence( calendar()->todo( todo->uid() ) );
+
     if ( Todo::Ptr existingTodo = CalendarSupport::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
@@ -1715,7 +1737,11 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
-        changer()->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
+        changer()->changeIncidence(
+          oldTodo,
+          existingTodoItem,
+          IncidenceChanger::DATE_MODIFIED,
+          this );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );
@@ -1737,7 +1763,8 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
 #endif
 }
 
-void AgendaView::slotTodosDropped( const KCalCore::Todo::List &items, const QPoint &gpos, bool allDay )
+void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &incidences,
+                                        const QPoint &gpos, bool allDay )
 {
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
     return;
@@ -1748,32 +1775,40 @@ void AgendaView::slotTodosDropped( const KCalCore::Todo::List &items, const QPoi
   KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
-  Q_FOREACH( const KCalCore::Todo::Ptr &todo, items ) {
-    Akonadi::Item item = calendar()->itemForIncidenceUid( todo->uid() );
-    if ( item.isValid() && CalendarSupport::hasTodo( item ) ) {
-      KCalCore::Todo::Ptr oldTodo( CalendarSupport::todo( item )->clone() );
-      KCalCore::Todo::Ptr newTodo = CalendarSupport::todo( item );
+  Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    const Akonadi::Item existingItem = calendar()->itemForIncidenceUid( incidence->uid() );
+    const bool existsInSameCollection = existingItem.isValid() &&
+                                               existingItem.storageCollectionId() == collectionId();
 
-      newTodo->setDtDue( newTime );
-      newTodo->setAllDay( allDay );
-      newTodo->setHasDueDate( true );
+    if ( existingItem.isValid() && existsInSameCollection ) {
+      KCalCore::Incidence::Ptr newIncidence = existingItem.payload<KCalCore::Incidence::Ptr>();
+      KCalCore::Incidence::Ptr oldIncidence( newIncidence->clone() );
+      newIncidence->setAllDay( allDay );
+      newIncidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
 
-      // We know this incidence, just change it's date/time
-      changer()->changeIncidence( oldTodo, item,
+      changer()->changeIncidence( oldIncidence, existingItem,
                                   CalendarSupport::IncidenceChanger::DATE_MODIFIED, this );
-    } else {
-      // The drop came from another application create a new todo
-      todo->setDtDue( newTime );
-      todo->setAllDay( allDay );
-      todo->setHasDueDate( true );
-      todo->setUid( KCalCore::CalFormat::createUniqueId() );
-      Akonadi::Collection selectedCollection;
+    } else { // Create a new one
+      // The drop came from another application create a new incidence
+      incidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
+      incidence->setAllDay( allDay );
+      incidence->setUid( KCalCore::CalFormat::createUniqueId() );
+      Akonadi::Collection collection( collectionId() );
       int dialogCode = 0;
-      if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+      const bool added = collection.isValid() ?
+                                changer()->addIncidence( incidence, collection, this )            :
+                                changer()->addIncidence( incidence, this, collection, dialogCode );
+
+      if ( added ) {
+        // TODO: make async
+        if ( existingItem.isValid() ) { // Dragged from one agenda to another, delete origin
+          changer()->deleteIncidence( existingItem );
+        }
+      } else {
         if ( dialogCode != QDialog::Rejected ) {
           KMessageBox::sorry( this,
                               i18n( "Unable to save %1 \"%2\".",
-                              i18n( todo->typeStr() ), todo->summary() ) );
+                              i18n( incidence->typeStr() ), incidence->summary() ) );
         }
       }
     }
@@ -1830,7 +1865,7 @@ QVector<bool> AgendaView::busyDayMask() const
   QVector<bool> busyDayMask;
   busyDayMask.resize( d->mSelectedDates.count() );
 
-  for( int i = 0; i < d->mSelectedDates.count(); ++i ) {
+  for ( int i = 0; i < d->mSelectedDates.count(); ++i ) {
     busyDayMask[i] = !d->mBusyDays[d->mSelectedDates[i]].isEmpty();
   }
 
@@ -1880,8 +1915,10 @@ void AgendaView::newTimeSpanSelected( const QPoint &start, const QPoint &end )
 
   d->mTimeSpanInAllDay = false;
 
-  const QDate dayStart = d-> mSelectedDates[ qBound( 0, start.x(), (int)d->mSelectedDates.size() - 1 ) ];
-  const QDate dayEnd = d->mSelectedDates[ qBound( 0, end.x(), (int)d->mSelectedDates.size() - 1 ) ];
+  const QDate dayStart =
+    d-> mSelectedDates[ qBound( 0, start.x(), (int)d->mSelectedDates.size() - 1 ) ];
+  const QDate dayEnd =
+    d->mSelectedDates[ qBound( 0, end.x(), (int)d->mSelectedDates.size() - 1 ) ];
 
   const QTime timeStart = d->mAgenda->gyToTime( start.y() );
   const QTime timeEnd = d->mAgenda->gyToTime( end.y() + 1 );

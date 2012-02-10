@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2009, 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Copyright (C) 2009 KDAB (author: Frank Osterfeld <osterfeld@kde.org>)
-  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
+    Author: Frank Osterfeld <osterfeld@kde.org>
+    Author: Andras Mantia <andras@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ typedef QList<QModelIndex> QModelIndexList;
 namespace CalendarSupport
 {
 
-class Calendar;
+  class Calendar;
 
   /**
    * returns the incidence from an akonadi item, or a null pointer if the item has no such payload
@@ -71,8 +71,7 @@ class Calendar;
   /**
    * returns event pointers from an akonadi item, or a null pointer if the item has no such payload
    */
-  CALENDARSUPPORT_EXPORT KCalCore::Event::List eventsFromItems(
-    const Akonadi::Item::List &items );
+  CALENDARSUPPORT_EXPORT KCalCore::Event::List eventsFromItems( const Akonadi::Item::List &items );
 
   /**
    * returns incidence pointers from an akonadi item.
@@ -80,15 +79,14 @@ class Calendar;
   CALENDARSUPPORT_EXPORT KCalCore::Incidence::List incidencesFromItems(
     const Akonadi::Item::List &items );
 
-
   /**
-  * returns the todo from an akonadi item, or a null pointer if the item has no such payload
-  */
+   * returns the todo from an akonadi item, or a null pointer if the item has no such payload
+   */
   CALENDARSUPPORT_EXPORT KCalCore::Todo::Ptr todo( const Akonadi::Item &item );
 
   /**
-  * returns the journal from an akonadi item, or a null pointer if the item has no such payload
-  */
+   * returns the journal from an akonadi item, or a null pointer if the item has no such payload
+   */
   CALENDARSUPPORT_EXPORT KCalCore::Journal::Ptr journal( const Akonadi::Item &item );
 
   /**
@@ -122,30 +120,34 @@ class Calendar;
   CALENDARSUPPORT_EXPORT bool hasChangeRights( const Akonadi::Item &item );
 
   /**
-  * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
-  */
+   * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
+   */
   CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url,
                                                        const QStringList &supportedMimeTypes );
 
   CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url );
 
   /**
-  * returns @p true if the mime data object contains any of the following:
-  *
-  * * An akonadi item with a supported KCal mimetype
-  * * an iCalendar
-  * * a VCard
-  */
+   * returns @p true if the mime data object contains any of the following:
+   *
+   * - an Akonadi item with a supported KCal mimetype
+   * - an iCalendar
+   * - a VCard
+   */
   CALENDARSUPPORT_EXPORT bool canDecode( const QMimeData *mimeData );
 
   CALENDARSUPPORT_EXPORT QList<KUrl> incidenceItemUrls( const QMimeData *mimeData );
 
   CALENDARSUPPORT_EXPORT QList<KUrl> todoItemUrls( const QMimeData *mimeData );
 
+  CALENDARSUPPORT_EXPORT bool mimeDataHasIncidence( const QMimeData *mimeData );
   CALENDARSUPPORT_EXPORT bool mimeDataHasTodo( const QMimeData *mimeData );
 
   CALENDARSUPPORT_EXPORT KCalCore::Todo::List todos( const QMimeData *mimeData,
                                                      const KDateTime::Spec &timeSpec );
+
+  CALENDARSUPPORT_EXPORT KCalCore::Incidence::List incidences( const QMimeData *mimeData,
+                                                               const KDateTime::Spec &timeSpec );
 
   /**
   * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
@@ -166,14 +168,14 @@ class Calendar;
 
 #ifndef QT_NO_DRAGANDDROP
   /**
-  * creates a drag object for dragging an akonadi item containing an incidence
-  */
+   * creates a drag object for dragging an akonadi item containing an incidence
+   */
   CALENDARSUPPORT_EXPORT QDrag *createDrag( const Akonadi::Item &item,
                                             const KDateTime::Spec &timeSpec, QWidget *parent );
 
   /**
-  * creates a drag object for dragging akonadi items containing an incidence
-  */
+   * creates a drag object for dragging akonadi items containing an incidence
+   */
   CALENDARSUPPORT_EXPORT QDrag *createDrag( const Akonadi::Item::List &items,
                                             const KDateTime::Spec &timeSpec, QWidget *parent );
 #endif
@@ -224,28 +226,39 @@ class Calendar;
   CALENDARSUPPORT_EXPORT Akonadi::Collection::List collectionsFromIndexes(
     const QModelIndexList &indexes );
 
-  CALENDARSUPPORT_EXPORT QString displayName( const Akonadi::Collection &coll );
+  KDE_DEPRECATED CALENDARSUPPORT_EXPORT QString displayName( const Akonadi::Collection &coll );
+
+  CALENDARSUPPORT_EXPORT QString displayName( Calendar *calendar,
+                                              const Akonadi::Collection &coll );
 
   CALENDARSUPPORT_EXPORT QString subMimeTypeForIncidence(
     const KCalCore::Incidence::Ptr &incidence );
 
   /**
-      Returns a list containing work days between @p start and @end.
-  */
+   * Returns a list containing work days between @p start and @end.
+   */
   CALENDARSUPPORT_EXPORT QList<QDate> workDays( const QDate &start, const QDate &end );
 
   /**
-    Returns a list of holidays that occur at @param date.
-  */
+   * Returns a list of holidays that occur at @param date.
+   */
   CALENDARSUPPORT_EXPORT QStringList holiday( const QDate &date );
 
-  CALENDARSUPPORT_EXPORT void sendAsICalendar( const Akonadi::Item& item, KPIMIdentities::IdentityManager *identityManager, QWidget* parentWidget = 0 );
+  CALENDARSUPPORT_EXPORT void sendAsICalendar( const Akonadi::Item &item,
+                                               KPIMIdentities::IdentityManager *identityManager,
+                                               QWidget *parentWidget = 0 );
 
-  CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget = 0 );
+  CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item &item,
+                                                      Calendar *calendar,
+                                                      QWidget *parentWidget = 0 );
 
-  CALENDARSUPPORT_EXPORT void scheduleiTIPMethods( KCalCore::iTIPMethod method, const Akonadi::Item &item, Calendar* calendar, QWidget *parentWidget = 0 );
+  CALENDARSUPPORT_EXPORT void scheduleiTIPMethods( KCalCore::iTIPMethod method,
+                                                   const Akonadi::Item &item,
+                                                   Calendar *calendar,
+                                                   QWidget *parentWidget = 0 );
 
-  CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item& item, QWidget* parentWidget = 0 );
+  CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item &item,
+                                               QWidget *parentWidget = 0 );
 
 }
 

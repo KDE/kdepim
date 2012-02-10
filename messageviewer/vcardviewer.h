@@ -46,7 +46,7 @@ class VCardViewer : public KDialog
       Akonadi::ContactViewer *mContactViewer;
 
       KABC::Addressee::List mAddresseeList;
-      KABC::Addressee::List::Iterator itAddresseeList;
+      KABC::Addressee::List::ConstIterator itAddresseeList;
 };
 
 }

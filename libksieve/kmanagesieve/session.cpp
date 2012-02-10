@@ -79,7 +79,7 @@ void Session::connectToHost( const KUrl &url )
     return;
 
   m_url = url;
-  m_socket->connectToHost( url.host(), url.port() ? url.port() : 2000 );
+  m_socket->connectToHost( url.host(), url.port() ? url.port() : 4190 );
   m_state = PreTlsCapabilities;
 }
 

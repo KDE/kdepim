@@ -26,7 +26,3 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
 add_subdirectory( blog )
 add_subdirectory( remote )
-
-if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
-  add_subdirectory( groupwise )
-endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)

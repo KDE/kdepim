@@ -57,6 +57,10 @@ QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
         return Qt::transparent;
       case IsSubTaskRole:
         return !incidence->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty();
+      case SingleLineDescriptionRole:
+        return incidence->description().replace( '\n', ' ' );
+      case HasDescriptionRole:
+        return !incidence->description().isEmpty();
     }
   }
 
@@ -95,6 +99,8 @@ void TaskListProxy::setSourceModel( QAbstractItemModel *sourceModel )
   names.insert( PercentCompleteRole, "percentComplete" );
   names.insert( BackgroundColorRole, "backgroundColor" );
   names.insert( IsSubTaskRole, "isSubTask" );
+  names.insert( SingleLineDescriptionRole, "singleLineDescription" );
+  names.insert( HasDescriptionRole, "hasDescription" );
 
   setRoleNames( names );
 }

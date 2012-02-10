@@ -48,7 +48,7 @@ class MimeTreeModel::Private
     {
       Q_ASSERT( index.isValid() );
       QStringList ids = index.toString().split( QLatin1Char('.') );
-      QString lastId = ids.takeLast();
+      const QString lastId = ids.takeLast();
       index = KMime::ContentIndex( ids.join( QLatin1String(".") ) );
       return lastId.toInt();
     }
@@ -71,19 +71,22 @@ class MimeTreeModel::Private
 
     QString mimeTypeForContent( KMime::Content *content )
     {
-      if ( !content->contentType( false ) )
-        return QString();
-      return QString::fromLatin1( content->contentType()->mimeType() );
+      if ( content->contentType( false ) )
+        return QString::fromLatin1( content->contentType()->mimeType() );
+      return QString();
     }
 
     QString typeForContent( KMime::Content *content )
     {
-      if ( !content->contentType( false ) )
+      if ( content->contentType( false ) )
+      {
+        KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
+        if ( mimeType.isNull() )
+          return QString::fromLatin1( content->contentType()->mimeType() );
+        return mimeType->comment();
+      }
+      else
         return QString();
-      KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
-      if ( mimeType.isNull() )
-        return QString::fromLatin1( content->contentType()->mimeType() );
-      return mimeType->comment();
     }
 
     QString sizeOfContent( KMime::Content *content )
@@ -95,14 +98,17 @@ class MimeTreeModel::Private
 
     KIcon iconForContent( KMime::Content *content )
     {
-      if ( !content->contentType( false ) )
+      if ( content->contentType( false ) )
+      {
+        KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
+        if ( mimeType.isNull() || mimeType->iconName().isEmpty() )
+          return KIcon();
+        if( mimeType->name().startsWith( QLatin1String( "multipart/" ) ) )
+          return KIcon( "folder" );
+        return KIcon( mimeType->iconName() );
+      }
+      else
         return KIcon();
-      KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
-      if ( mimeType.isNull() || mimeType->iconName().isEmpty() )
-        return KIcon();
-      if( mimeType->name().startsWith( QLatin1String( "multipart/" ) ) )
-        return KIcon( "folder" );
-      return KIcon( mimeType->iconName() );
     }
 
     KMime::Content *root;

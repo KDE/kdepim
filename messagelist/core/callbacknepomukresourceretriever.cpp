@@ -28,7 +28,8 @@ CallbackNepomukResourceRetriever::CallbackNepomukResourceRetriever(QObject* pare
 void CallbackNepomukResourceRetriever::requestResource(Core::MessageItemPrivate* item, const QUrl& url)
 {
   m_pendingCallbacks.insert( url, item );
-  AsyncNepomukResourceRetriever::requestResource( url );
+  AsyncNepomukResourceRetriever::requestResource( url,
+    QVector<QUrl>() << Nepomuk::Resource::tagUri() << Nepomuk::Resource::annotationUri() << Nepomuk::Resource::descriptionUri() );
 }
 
 void CallbackNepomukResourceRetriever::cancelCallbackRequest(const QUrl& url)
@@ -43,3 +44,5 @@ void CallbackNepomukResourceRetriever::resourceAvailable(const QUrl& url, const 
   if ( item )
     item->resourceReceived( resource );
 }
+
+#include "callbacknepomukresourceretriever.moc"

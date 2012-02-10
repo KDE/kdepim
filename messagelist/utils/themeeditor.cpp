@@ -255,6 +255,7 @@ ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
   mSelectedThemeContentItem = 0;
   mSelectedThemeColumn = 0;
   mFirstShow = true;
+  mReadOnly = false;
 
   mDelegate = new ThemePreviewDelegate( this );
   setItemDelegate( mDelegate );
@@ -284,6 +285,12 @@ QSize ThemePreviewWidget::sizeHint() const
   return QSize( 350, 180 );
 }
 
+void ThemePreviewWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+  header()->setMovable(!readOnly);
+}
+
 void ThemePreviewWidget::applyThemeColumnWidths()
 {
   if ( !mTheme )
@@ -291,7 +298,7 @@ void ThemePreviewWidget::applyThemeColumnWidths()
 
   const QList< Theme::Column * > & columns = mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
   {
     viewport()->update(); // trigger a repaint
     return;
@@ -306,8 +313,9 @@ void ThemePreviewWidget::applyThemeColumnWidths()
   // Gather size hints for all sections.
   int idx = 0;
   int totalVisibleWidthHint = 0;
+  QList< Theme::Column * >::ConstIterator end( columns.constEnd() );
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     totalVisibleWidthHint += mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
     idx++;
@@ -323,7 +331,8 @@ void ThemePreviewWidget::applyThemeColumnWidths()
   QList< int > realWidths;
   int totalVisibleWidth = 0;
 
-  for ( it = columns.begin(); it != columns.end(); ++it )
+  end = columns.constEnd();
+  for ( it = columns.constBegin(); it != end; ++it )
   {
     int hintWidth = mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
     int realWidth;
@@ -408,12 +417,12 @@ void ThemePreviewWidget::setTheme( Theme * theme )
   setColumnCount( columns.count() );
 
   QStringList headerLabels;
-
-  for( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != columns.constEnd(); ++it )
+  QList< Theme::Column * >::ConstIterator end( columns.constEnd() );
+  for( QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it )
   {
     QString label = ( *it )->label();
     if ( ( *it )->visibleByDefault() )
-      label += QString( QLatin1String( " (%1)" )).arg( i18nc( "Indicates whether or not a header label is visible", "Visible") );
+      label += QString::fromLatin1( " (%1)" ).arg( i18nc( "Indicates whether or not a header label is visible", "Visible") );
 
     headerLabels.append( label );
   }
@@ -465,6 +474,9 @@ void ThemePreviewWidget::internalHandleDragMoveEvent( QDragMoveEvent * e )
 {
   e->ignore();
 
+  if ( mReadOnly )
+    return;
+
   if ( !e->mimeData() )
     return;
   if ( !e->mimeData()->hasFormat( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) ) )
@@ -485,6 +497,9 @@ void ThemePreviewWidget::internalHandleDragMoveEvent( QDragMoveEvent * e )
 
 void ThemePreviewWidget::dragMoveEvent( QDragMoveEvent * e )
 {
+  if ( mReadOnly )
+    return;
+
   internalHandleDragMoveEvent( e );
 
   mThemeSelectedContentItemRect = QRect();
@@ -498,6 +513,9 @@ void ThemePreviewWidget::dropEvent( QDropEvent * e )
   mDropIndicatorPoint1 = mDropIndicatorPoint2;
 
   e->ignore();
+
+  if ( mReadOnly )
+    return;
 
   if ( !e->mimeData() )
     return;
@@ -762,7 +780,7 @@ bool ThemePreviewWidget::computeContentItemInsertPosition( const QPoint &pos, Th
 
 void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
 {
-  if ( ! ( mSelectedThemeContentItem && ( e->buttons() & Qt::LeftButton ) ) )
+  if ( ! ( mSelectedThemeContentItem && ( e->buttons() & Qt::LeftButton ) ) || mReadOnly )
   {
     QTreeWidget::mouseMoveEvent( e );
     return;
@@ -829,6 +847,11 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
 
 void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 {
+  if ( mReadOnly ) {
+    QTreeWidget::mousePressEvent( e );
+    return;
+  }
+
   mMouseDownPoint = e->pos();
 
   if ( mDelegate->hitTest( mMouseDownPoint ) )
@@ -989,8 +1012,9 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         grp = new QActionGroup( childmenu );
 
         QList< QPair< QString, int > > styles = Theme::enumerateGroupHeaderBackgroundStyles();
+        QList< QPair< QString, int > >::ConstIterator end( styles.constEnd() );
 
-        for ( QList< QPair< QString, int > >::ConstIterator it = styles.constBegin(); it != styles.constEnd(); ++it )
+        for ( QList< QPair< QString, int > >::ConstIterator it = styles.constBegin(); it != end; ++it )
         {
           act = childmenu->addAction( ( *it ).first );
           act->setData( QVariant( ( *it ).second ) );
@@ -1025,7 +1049,7 @@ void ThemePreviewWidget::slotDisabledFlagsMenuTriggered( QAction * act )
     return;
 
   bool ok;
-  int flags = act->data().toInt( &ok );
+  const int flags = act->data().toInt( &ok );
   if ( !ok )
     return;
 
@@ -1041,7 +1065,7 @@ void ThemePreviewWidget::slotForegroundColorMenuTriggered( QAction * act )
     return;
 
   bool ok;
-  int flag = act->data().toInt( &ok );
+  const int flag = act->data().toInt( &ok );
   if ( !ok )
     return;
 
@@ -1053,7 +1077,7 @@ void ThemePreviewWidget::slotForegroundColorMenuTriggered( QAction * act )
   }
 
   QColor clr;
-  int result = KColorDialog::getColor( clr, mSelectedThemeContentItem->customColor(), this );
+  const int result = KColorDialog::getColor( clr, mSelectedThemeContentItem->customColor(), this );
   if ( result != KColorDialog::Accepted )
     return;
 
@@ -1078,7 +1102,7 @@ void ThemePreviewWidget::slotFontMenuTriggered( QAction * act )
     return;
 
   bool ok;
-  int flag = act->data().toInt( &ok );
+  const int flag = act->data().toInt( &ok );
   if ( !ok )
     return;
 
@@ -1171,6 +1195,9 @@ void ThemePreviewWidget::paintEvent( QPaintEvent * e )
 
 void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
 {
+  if ( mReadOnly )
+    return;
+
   QTreeWidgetItem * hitem = headerItem();
   if ( !hitem )
     return; // ooops
@@ -1276,7 +1303,7 @@ void ThemePreviewWidget::slotDeleteColumn()
   if ( !mSelectedThemeColumn )
     return;
 
-  int idx = mTheme->columns().indexOf( mSelectedThemeColumn );
+  const int idx = mTheme->columns().indexOf( mSelectedThemeColumn );
   if ( idx < 1 ) // first column can't be deleted
     return;
 
@@ -1500,7 +1527,6 @@ void ThemeEditor::editTheme( Theme *set )
     setEnabled( false );
     return;
   }
-
   setEnabled( true );
 
   nameEdit()->setText( set->name() );
@@ -1512,11 +1538,20 @@ void ThemeEditor::editTheme( Theme *set )
   ComboBoxUtils::setIntegerOptionComboValue( mViewHeaderPolicyCombo, (int)mCurrentTheme->viewHeaderPolicy() );
 
   mIconSizeSpinBox->setValue( set->iconSize() );
+  setReadOnly( mCurrentTheme->readOnly() );
+}
+
+void ThemeEditor::setReadOnly( bool readOnly )
+{
+  mPreviewWidget->setReadOnly( readOnly );
+  mViewHeaderPolicyCombo->setEnabled( !readOnly );
+  mIconSizeSpinBox->setEnabled( !readOnly );
+  OptionSetEditor::setReadOnly( readOnly );
 }
 
 void ThemeEditor::commit()
 {
-  if ( !mCurrentTheme )
+  if ( !mCurrentTheme || mCurrentTheme->readOnly() )
     return;
 
   mCurrentTheme->setName( nameEdit()->text() );
@@ -1554,3 +1589,5 @@ void ThemeEditor::slotIconSizeSpinBoxValueChanged( int val )
   mPreviewWidget->setTheme( mCurrentTheme ); // will trigger a cache reset and a view update
 }
 
+
+#include "themeeditor.moc"

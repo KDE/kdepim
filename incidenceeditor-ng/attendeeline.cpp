@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -164,9 +164,9 @@ AttendeeLine::AttendeeLine( QWidget *parent )
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
   mResponseCombo->addItem( DesktopIcon( "meeting-participant-request-response", 48 ),
-                           i18n( "Request Response" ) );
+                           i18nc( "@item:inlistbox", "Request Response" ) );
   mResponseCombo->addItem( DesktopIcon( "meeting-participant-no-response", 48 ),
-                           i18n( "Request No Response" ) );
+                           i18nc( "@item:inlistbox", "Request No Response" ) );
 #else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
@@ -178,9 +178,9 @@ AttendeeLine::AttendeeLine( QWidget *parent )
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
   mResponseCombo->addItem( SmallIcon( "meeting-participant-request-response" ),
-                           i18n( "Request Response" ) );
+                           i18nc( "@item:inlistbox", "Request Response" ) );
   mResponseCombo->addItem( SmallIcon( "meeting-participant-no-response" ),
-                           i18n( "Request No Response" ) );
+                           i18nc( "@item:inlistbox", "Request No Response" ) );
 #endif
 
   mEdit->setToolTip( i18nc( "@info:tooltip",
@@ -446,7 +446,7 @@ void AttendeeLine::slotHandleChange()
   if ( mEdit->text().isEmpty() ) {
     emit deleteLine( this );
   } else {
-    // ### has bad side-effects, and I have no idea what this was supposed to be doing in the first place
+    // has bad side-effects, and I have no idea what this was supposed to be doing
 //    mEdit->setCursorPosition( 0 );
     emit editingFinished( this );
     dataFromFields();

@@ -22,7 +22,6 @@
 #include "filteractionwidget.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
-#include "mailkernel.h"
 #include "searchpatternedit.h"
 #include "ui_filterconfigwidget.h"
 
@@ -34,7 +33,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent )
   mUi = new Ui_FilterConfigWidget;
   mUi->setupUi( mainWidget() );
 
-  mPatternEdit = new SearchPatternEdit( this );
+  mPatternEdit = new SearchPatternEdit( this, MailCommon::SearchPatternEdit::MatchAllMessages );
   mUi->criteriaLayout->addWidget( mPatternEdit, 0, Qt::AlignTop );
   mActionLister = new FilterActionWidgetLister( this );
   mUi->actionsLayout->addWidget( mActionLister, 0, Qt::AlignTop );
@@ -47,7 +46,7 @@ FilterEditDialog::~FilterEditDialog()
 
 void FilterEditDialog::load( int index )
 {
-  mFilter = FilterIf->filterManager()->filters().at( index );
+  mFilter = FilterManager::instance()->filters().at( index );
 
   if ( !mFilter )
     return;
@@ -72,17 +71,16 @@ void FilterEditDialog::save()
   mPatternEdit->updateSearchPattern();
   mActionLister->updateActionList();
 
-  FilterIf->filterManager()->beginUpdate();
-  mFilter->pattern()->setName( mUi->filterName->text() );
-  FilterIf->filterManager()->endUpdate();
+  FilterManager::instance()->beginUpdate();
 
+  mFilter->pattern()->setName( mUi->filterName->text() );
   mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
   mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
   mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );
   mFilter->setApplyOnExplicit( mUi->applyManuallyCB->isChecked() );
   mFilter->setStopProcessingHere( mUi->stopIfMatchesCB->isChecked() );
 
-  FilterIf->filterManager()->writeConfig();
+  FilterManager::instance()->endUpdate();
 }
 
 #include "filtereditdialog_p.moc"

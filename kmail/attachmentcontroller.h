@@ -24,23 +24,22 @@
 #define KMAIL_ATTACHMENTCONTROLLER_H
 
 #include "attachmentcontrollerbase.h"
-#include "attachmentview.h"
-
 
 class KMComposeWin;
-
+class QModelIndex;
 namespace Message {
 class AttachmentModel;
 }
 
 namespace KMail {
+class AttachmentView;
 
 class AttachmentController : public Message::AttachmentControllerBase
 {
   Q_OBJECT
 
   public:
-    AttachmentController( Message::AttachmentModel *model, AttachmentView *view, KMComposeWin *composer );
+    explicit AttachmentController( Message::AttachmentModel *model, AttachmentView *view, KMComposeWin *composer );
     ~AttachmentController();
 
   public slots:
@@ -53,7 +52,6 @@ class AttachmentController : public Message::AttachmentControllerBase
     void identityChanged();
     void actionsCreated();
     void addAttachmentItems( const Akonadi::Item::List &items );
-    void slotFetchJob( KJob * job );
     void selectionChanged();
     void onShowAttachment( KMime::Content *content, const QByteArray &charset );
     void doubleClicked( const QModelIndex &itemClicked );

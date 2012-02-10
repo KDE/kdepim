@@ -1,7 +1,9 @@
 
 project(coisceim-mobile)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..
+                    ${CMAKE_SOURCE_DIR}/mobile/lib
+                   )
 
 set(coisceim_mobile_srcs
   main.cpp

@@ -22,8 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "akregatorconfig.h"
 #include "feedpropertiesdialog.h"
+#include "akregatorconfig.h"
 
 #include <kcombobox.h>
 #include <klineedit.h>
@@ -89,14 +89,15 @@ FeedPropertiesDialog::FeedPropertiesDialog(QWidget *parent, const char *name)
     setButtons(KDialog::Ok|KDialog::Cancel);
     setDefaultButton(KDialog::Ok);
     setModal(true);
-    
+
     setMainWidget(widget);
     widget->feedNameEdit->setFocus();
 
     widget->updateComboBox->insertItem(FeedPropertiesWidget::Minutes, i18np("Minute", "Minutes", 0));
     widget->updateComboBox->insertItem(FeedPropertiesWidget::Hours, i18np("Hour", "Hours", 0));
     widget->updateComboBox->insertItem(FeedPropertiesWidget::Days, i18np("Day", "Days", 0));
-    widget->updateComboBox->insertItem(FeedPropertiesWidget::Never, i18n("Never"));
+    widget->updateComboBox->insertItem(FeedPropertiesWidget::Never,
+                                       i18nc("never fetch new articles", "Never"));
     widget->sb_maxArticleAge->setSuffix(ki18np(" day", " days"));
     widget->sb_maxArticleNumber->setSuffix(ki18np(" article", " articles"));
 
@@ -127,7 +128,7 @@ void FeedPropertiesDialog::accept()
 
 void FeedPropertiesDialog::slotSetWindowTitle(const QString& title)
 {
-    setWindowTitle(title.isEmpty() ? i18n("Feed Properties") 
+    setWindowTitle(title.isEmpty() ? i18n("Feed Properties")
                                    : i18n("Properties of %1", title));
 }
 

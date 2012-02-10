@@ -96,8 +96,12 @@ namespace {
             settings.sync();
 
             if ( settings.status() != QSettings::NoError ) {
-                KMessageBox::error( 0, i18nc("@info", "Could not delete the registry key <resource>%1\\%2</resource>" ),
-                                    i18nc("@title", "Error Deleting Registry Key") );
+                KMessageBox::error(
+                    0,
+                    i18nc("@info",
+                          "Could not delete the registry key <resource>%1\\%2</resource>",
+                          gnupg_path, gnupg_key ),
+                    i18nc("@title", "Error Deleting Registry Key") );
                 return false;
             }
 

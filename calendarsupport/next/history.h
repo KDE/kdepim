@@ -1,6 +1,4 @@
 /*
-  This file is part of CalendarSupport
-
   Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,8 +19,6 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
-
 #ifndef CALENDARSUPPORT_HISTORY_H
 #define CALENDARSUPPORT_HISTORY_H
 
@@ -39,25 +35,25 @@ namespace CalendarSupport {
 class IncidenceChanger2;
 
 /**
-   @short History class for implementing undo/redo in your application.
+  @short History class for implementing undo/redo in your application.
 
-   Keeps a stack of all changes ( incidence adds, edits and deletes ) and
-   will fire Item{Modify|Add|Delete}Jobs when undo() and redo() slots are
-   called.
+  Keeps a stack of all changes ( incidence adds, edits and deletes ) and
+  will fire Item{Modify|Add|Delete}Jobs when undo() and redo() slots are called.
 
-   Doesn't really use Item*Jobs directly, it uses IncidenceChanger, so invitation
-   e-mails are sent.
+  Doesn't really use Item*Jobs directly, it uses IncidenceChanger, so invitation
+  e-mails are sent.
 
-   TODO: Talk about atomic operations.
+  TODO: Talk about atomic operations.
 
-   @code
-      TODO:
-   @endcode
+  @code
+  TODO:
+  @endcode
 
-   @author Sérgio Martins <iamsergio@gmail.com>
+  @author Sérgio Martins <iamsergio@gmail.com>
 */
 
-class CALENDARSUPPORT_EXPORT History : public QObject {
+class CALENDARSUPPORT_EXPORT History : public QObject
+{
   Q_OBJECT
   public:
 
@@ -68,9 +64,14 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
        @see redone()
     */
     enum ResultCode {
-      ResultCodeSuccess = 0, ///< Success
-      ResultCodeError, ///< An error occurred. Call lastErrorString() for the error message. This isn't very verbose because IncidenceChanger hasn't been refactored yet.
-      ResultCodeIncidenceChangerError ///< IncidenceChanger returned false and didn't even create the job. This error is temporary. IncidenceChanger needs to be refactored.
+      ResultCodeSuccess = 0,          ///< Success
+      ResultCodeError,                ///< An error occurred.
+                                      ///  Call lastErrorString() for the error message.
+                                      ///  This isn't very verbose because IncidenceChanger
+                                      ///  hasn't been refactored yet.
+      ResultCodeIncidenceChangerError ///< IncidenceChanger returned false and didn't even
+                                      ///  create the job. This error is temporary.
+                                      ///  IncidenceChanger needs to be refactored.
 
     };
 
@@ -129,7 +130,7 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
        Convenience method for disabling the undo/redo button when jobs are in progress,
        so callers don't have to write signal/slot/connect logic for this.
 
-       Each widget registed here will be disabled/enabled depending if there are jobs
+       Each widget registered here will be disabled/enabled depending if there are jobs
        running, or the undo/redo stack contains data.
 
        @param widget The widget pointer to register. Ownership is not taken.
@@ -167,37 +168,36 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
        @see redo()
        @see undone()
      */
-   bool undo( QWidget *parent = 0 );
+    bool undo( QWidget *parent = 0 );
 
     /**
-       Reverts the change that's ontop of the redo stack.
-       Can't be called if there's an undo/redo operation running, Q_ASSERTs.
-       Can be called if the stack is empty, in this case, nothing happens.
-       This function is async, listen to signal redone() to know when the operation finishes.
-
-       @param parent will be passed to dialogs created by IncidenceChanger, for example
-              those which ask if you want to send invitations.
-
-       @return true if the job was started, otherwise false is returned and the redone() signal
-               won't be emitted.
-
-       @see undo()
-       @see redone()
+     * Reverts the change that's ontop of the redo stack.
+     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
+     * Can be called if the stack is empty, in this case, nothing happens.
+     * This function is async, listen to signal redone() to know when the operation finishes.
+     *
+     * @param parent will be passed to dialogs created by IncidenceChanger, for example
+     *        those which ask if you want to send invitations.
+     *
+     * @return true if the job was started, otherwise false is returned and the redone() signal
+     *         won't be emitted.
+     *
+     * @see undo()
+     * @see redone()
      */
     bool redo( QWidget *parent = 0 );
 
-
     /**
-       Reverts every change in the undostack.
+     * Reverts every change in the undostack.
      */
     bool undoAll();
 
   public Q_SLOTS:
     /**
-       Clears the undo and redo stacks.
-       Won't do anything if there's a undo/redo job currently running.
-
-       @return true if the stacks were cleared, false if there was a job running
+     *  Clears the undo and redo stacks.
+     * Won't do anything if there's a undo/redo job currently running.
+     *
+     * @return true if the stacks were cleared, false if there was a job running
      */
     bool clear();
 

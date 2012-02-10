@@ -23,8 +23,6 @@
 
 #include <messagelist/utils/optionseteditor.h>
 
-#include <QTreeWidget>
-
 class KComboBox;
 
 namespace MessageList
@@ -49,7 +47,7 @@ class AggregationEditor : public OptionSetEditor
 {
   Q_OBJECT
 public:
-  AggregationEditor( QWidget *parent );
+  explicit AggregationEditor( QWidget *parent );
   ~AggregationEditor();
 
 private:

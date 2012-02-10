@@ -4,35 +4,34 @@
 
 #include "mailcommon_export.h"
 
+#include <Akonadi/Collection>
 #include <kdialog.h>
-#include <QSharedPointer>
 
 class QCheckBox;
 class QRadioButton;
 class KIntSpinBox;
 
+class KJob;
+
 namespace MailCommon {
 
 class FolderRequester;
-class FolderCollection;
-class Kernel;
 
 class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
 {
     Q_OBJECT
 
 public:
-    explicit ExpiryPropertiesDialog(
-      QWidget *tree,
-      const QSharedPointer<FolderCollection> &folder);
+  explicit ExpiryPropertiesDialog(QWidget *parent, const Akonadi::Collection &collection);
     ~ExpiryPropertiesDialog();
 
 protected slots:
     void accept();
     void slotUpdateControls();
+    void slotCollectionModified(KJob* job);
 
 private:
-    QSharedPointer<FolderCollection> mFolder;
+    Akonadi::Collection mCollection;
 
     QCheckBox *expireReadMailCB;
     KIntSpinBox *expireReadMailSB;

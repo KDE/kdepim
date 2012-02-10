@@ -8,6 +8,8 @@
 *******************************************************************************/
 
 /*******************************************************************************
+**  Copyright (c) 2011 Montel Laurent <montel@kde.org>
+
 **
 **   This program is free software; you can redistribute it and/or modify
 **   it under the terms of the GNU General Public License as published by
@@ -40,11 +42,11 @@
 #include <keditlistwidget.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <kmcommands.h>
 #include "mailutil.h"
-
+#include "util.h"
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/kmime/messageparts.h>
 
 using namespace KMail;
 using namespace MailCommon;
@@ -162,6 +164,10 @@ MailingListFolderPropertiesDialog::MailingListFolderPropertiesDialog( QWidget* p
   setAttribute(Qt::WA_WState_Polished);
 }
 
+MailingListFolderPropertiesDialog::~MailingListFolderPropertiesDialog()
+{
+}
+
 void MailingListFolderPropertiesDialog::slotOk()
 {
   save();
@@ -209,24 +215,14 @@ void MailingListFolderPropertiesDialog::slotDetectMailingList()
 
   kDebug()<< "Detecting mailing list";
 
-  /* FIXME Till - make work without the folder tree
-  // first try the currently selected message
-  KMFolderTree *folderTree = static_cast<KMFolderTree *>( mDlg->parent() );
-  int curMsgIdx = folderTree->mainWidget()->headers()->currentItemIndex();
-  if ( curMsgIdx > 0 ) {
-    KMMessage *mes = mFolder->getMsg( curMsgIdx );
-    if ( mes )
-      mMailingList = MessageCore::MailingList::detect( mes );
-  }
-  */
-
   // next try the 5 most recently added messages
   if ( !( mMailingList.features() & MailingList::Post ) ) {
-
+    //FIXME not load all folder
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolder->collection(), this );
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    job->fetchScope().fetchFullPayload();
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
+    //Don't allow to reactive it
+    mDetectButton->setEnabled( false );
   }
   else {
     mMLId->setText( (mMailingList.id().isEmpty() ? i18n("Not available.") : mMailingList.id() ) );
@@ -237,9 +233,8 @@ void MailingListFolderPropertiesDialog::slotDetectMailingList()
 
 void MailingListFolderPropertiesDialog::slotFetchDone( KJob* job )
 {
-  if ( job->error() ) {
-    // handle errors
-    MailCommon::Util::showJobErrorMessage(job);
+  mDetectButton->setEnabled( true );
+  if ( MailCommon::Util::showJobErrorMessage(job) ) {
     return;
   }
   Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
@@ -292,8 +287,8 @@ void MailingListFolderPropertiesDialog::fillMLFromWidgets()
   bool changed = false;
   QStringList oldList = mEditList->items();
   QStringList newList; // the correct string list
-  for ( QStringList::ConstIterator it = oldList.constBegin();
-        it != oldList.constEnd(); ++it ) {
+  QStringList::ConstIterator end = oldList.constEnd();
+  for ( QStringList::ConstIterator it = oldList.constBegin(); it != end; ++it ) {
     if ( !(*it).startsWith(QLatin1String("http:")) && !(*it).startsWith(QLatin1String("https:")) &&
          !(*it).startsWith(QLatin1String("mailto:")) && ( (*it).contains(QLatin1Char('@')) ) ) {
       changed = true;
@@ -357,28 +352,25 @@ void MailingListFolderPropertiesDialog::fillEditBox()
 void MailingListFolderPropertiesDialog::slotInvokeHandler()
 {
   save();
-  KMCommand *command =0;
   switch ( mAddressCombo->currentIndex() ) {
   case 0:
-    command = new KMMailingListPostCommand( this, mFolder );
+    KMail::Util::mailingListPost( mFolder );
     break;
   case 1:
-    command = new KMMailingListSubscribeCommand( this, mFolder );
+    KMail::Util::mailingListSubscribe( mFolder );
     break;
   case 2:
-    command = new KMMailingListUnsubscribeCommand( this, mFolder );
+    KMail::Util::mailingListUnsubscribe( mFolder );
     break;
   case 3:
-    command = new KMMailingListArchivesCommand( this, mFolder );
+    KMail::Util::mailingListArchives( mFolder );
     break;
   case 4:
-    command = new KMMailingListHelpCommand( this, mFolder );
+    KMail::Util::mailingListHelp( mFolder );
     break;
   default:
     kWarning()<<"Wrong entry in the mailing list entry combo!";
   }
-  if ( command )
-    command->start();
 }
 
 #include "mailinglistpropertiesdialog.moc"

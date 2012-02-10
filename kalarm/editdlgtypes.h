@@ -1,7 +1,7 @@
 /*
  *  editdlgtypes.h  -  dialogues to create or edit alarm or alarm template types
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,10 +21,15 @@
 #ifndef EDITDLGTYPES_H
 #define EDITDLGTYPES_H
 
-#include "alarmtext.h"
 #include "editdlg.h"
-#include "kaevent.h"
 #include "preferences.h"
+
+#include <kalarmcal/alarmtext.h>
+#include <kalarmcal/kaevent.h>
+
+#ifndef USE_AKONADI
+#include <kcal/person.h>
+#endif
 
 #include <kurl.h>
 
@@ -45,6 +50,7 @@ class CommandEdit;
 class LineEdit;
 class TextEdit;
 class SoundWidget;
+class MessageWin;
 class PickLogFileRadio;
 
 
@@ -59,12 +65,12 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         // Methods to initialise values in the New Alarm dialogue.
         // N.B. setTime() must be called first to set the date-only characteristic,
         //      followed by setRecurrence().
-        virtual void    setAction(KAEvent::Action, const AlarmText& = AlarmText());
+        virtual void    setAction(KAEvent::SubAction, const AlarmText& = AlarmText());
         void            setBgColour(const QColor&);
         void            setFgColour(const QColor&);
         void            setConfirmAck(bool);
         void            setAutoClose(bool);
-        void            setAudio(Preferences::SoundType, const QString& file = QString(), float volume = -1, bool repeat = false);
+        void            setAudio(Preferences::SoundType, const QString& file = QString(), float volume = -1, int repeatPause = -1);
         void            setReminder(int minutes, bool onceOnly);
 
         virtual Reminder* createReminder(QWidget* parent);
@@ -81,9 +87,8 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         virtual void    saveState(const KAEvent*);
         virtual bool    type_stateChanged() const;
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
-        virtual int     getAlarmFlags() const;
+        virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial) { Q_UNUSED(trial); return true; }
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString&)  {}
         virtual CheckBox* type_createConfirmAckCheckbox(QWidget* parent)  { mConfirmAck = createConfirmAckCheckbox(parent); return mConfirmAck; }
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
 
@@ -120,7 +125,7 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         int                 mSavedType;             // mTypeCombo index
         Preferences::SoundType mSavedSoundType;     // mSoundPicker sound type
         bool                mSavedSound;            // mSoundPicker sound status
-        bool                mSavedRepeatSound;      // mSoundPicker repeat status
+        int                 mSavedRepeatPause;      // mSoundPicker repeat pause
         KUrl                mSavedSoundFile;        // mSoundPicker sound file
         float               mSavedSoundVolume;      // mSoundPicker volume
         float               mSavedSoundFadeVolume;  // mSoundPicker fade volume
@@ -135,7 +140,7 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         int                 mSavedReminder;         // mReminder value
         bool                mSavedAutoClose;        // mLateCancel->isAutoClose() value
         bool                mSavedOnceOnly;         // mReminder once-only status
-        bool                mSavedPreActionCancel;  // mSpecialActionsButton cancel on pre-alarm action error
+        KAEvent::ExtraActionOptions mSavedPreActionOptions; // mSpecialActionsButton pre-alarm action options
 };
 
 
@@ -150,7 +155,7 @@ class EditCommandAlarmDlg : public EditAlarmDlg
         // Methods to initialise values in the New Alarm dialogue.
         // N.B. setTime() must be called first to set the date-only characteristic,
         //      followed by setRecurrence().
-        virtual void    setAction(KAEvent::Action, const AlarmText& = AlarmText());
+        virtual void    setAction(KAEvent::SubAction, const AlarmText& = AlarmText());
 
         static QString  i18n_chk_EnterScript();        // text of 'Enter a script' checkbox
         static QString  i18n_radio_ExecInTermWindow(); // text of 'Execute in terminal window' radio button
@@ -165,9 +170,9 @@ class EditCommandAlarmDlg : public EditAlarmDlg
         virtual void    saveState(const KAEvent*);
         virtual bool    type_stateChanged() const;
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
-        virtual int     getAlarmFlags() const;
+        virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial);
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString& text);
+        virtual void    type_executedTry(const QString& text, void* obj);
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
 
     private slots:
@@ -202,9 +207,14 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         // Methods to initialise values in the New Alarm dialogue.
         // N.B. setTime() must be called first to set the date-only characteristic,
         //      followed by setRecurrence().
-        virtual void    setAction(KAEvent::Action, const AlarmText& = AlarmText());
-        void            setEmailFields(uint fromID, const EmailAddressList&, const QString& subject,
+        virtual void    setAction(KAEvent::SubAction, const AlarmText& = AlarmText());
+#ifdef USE_AKONADI
+        void            setEmailFields(uint fromID, const KCalCore::Person::List&, const QString& subject,
                                        const QStringList& attachments);
+#else
+        void            setEmailFields(uint fromID, const QList<KCal::Person>&, const QString& subject,
+                                       const QStringList& attachments);
+#endif
         void            setBcc(bool);
 
         static QString  i18n_chk_CopyEmailToSelf();    // text of 'Copy email to self' checkbox
@@ -218,12 +228,13 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         virtual void    saveState(const KAEvent*);
         virtual bool    type_stateChanged() const;
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
-        virtual int     getAlarmFlags() const;
+        virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial);
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString& text);
+        virtual void    type_aboutToTry();
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
 
     private slots:
+        void            slotTrySuccess();
         void            openAddressBook();
         void            slotAddAttachment();
         void            slotRemoveAttachment();
@@ -243,7 +254,12 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         CheckBox*           mEmailBcc;
         QString             mAttachDefaultDir;
 
-        EmailAddressList    mEmailAddresses;     // list of addresses to send email to
+#ifdef USE_AKONADI
+        KCalCore::Person::List mEmailAddresses;  // list of addresses to send email to
+#else
+        QList<KCal::Person> mEmailAddresses;     // list of addresses to send email to
+#endif
+
         QStringList         mEmailAttachments;   // list of email attachment file names
 
         // Initial state of all controls
@@ -266,7 +282,7 @@ class EditAudioAlarmDlg : public EditAlarmDlg
         // Methods to initialise values in the New Alarm dialogue.
         // N.B. setTime() must be called first to set the date-only characteristic,
         //      followed by setRecurrence().
-        virtual void    setAction(KAEvent::Action, const AlarmText& = AlarmText());
+        virtual void    setAction(KAEvent::SubAction, const AlarmText& = AlarmText());
         void            setAudio(const QString& file, float volume = -1);
 
     protected:
@@ -278,10 +294,20 @@ class EditAudioAlarmDlg : public EditAlarmDlg
         virtual void    saveState(const KAEvent*);
         virtual bool    type_stateChanged() const;
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
-        virtual int     getAlarmFlags() const;
+        virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial) { Q_UNUSED(trial); return true; }
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString&)  {}
+        virtual void    type_executedTry(const QString& text, void* obj);
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
+
+    protected slots:
+        virtual void    slotTry();
+
+    private slots:
+        void            audioWinDestroyed()  { slotAudioPlaying(false); }
+        void            slotAudioPlaying(bool playing);
+
+    private:
+        MessageWin*         mMessageWin;       // MessageWin controlling test audio playback
 
         // Audio alarm options
         SoundWidget*        mSoundConfig;
@@ -292,7 +318,7 @@ class EditAudioAlarmDlg : public EditAlarmDlg
         float               mSavedVolume;      // volume
         float               mSavedFadeVolume;  // fade volume
         int                 mSavedFadeSeconds; // fade time
-        bool                mSavedRepeat;      // repeat sound file
+        int                 mSavedRepeatPause; // sound file repeat pause
 };
 
 #endif // EDITDLGTYPES_H

@@ -20,6 +20,7 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
+//krazy:excludeall=style
 
 #ifndef MODELTEST_H
 #define MODELTEST_H
@@ -28,9 +29,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStack>
 
-#include "incidenceeditors-ng_export.h"
-
-class INCIDENCEEDITORS_NG_EXPORT ModelTest : public QObject
+class ModelTest : public QObject
 {
   Q_OBJECT
 

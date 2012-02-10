@@ -22,19 +22,12 @@
 
 #include <QWidget>
 #include <kurl.h>
-#include <kservice.h>
-#include <kvbox.h>
-#include <map>
 #include <messageviewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
-class QString;
-
 
 class KActionCollection;
 class KAction;
 class KToggleAction;
-class KToggleAction;
-class KUrl;
 namespace MessageViewer {
   class HeaderStrategy;
   class HeaderStyle;
@@ -43,9 +36,6 @@ namespace MessageViewer {
   class AttachmentStrategy;
 }
 
-namespace KParts {
-  struct BrowserArguments;
-}
 
 namespace Akonadi {
   class Item;
@@ -88,7 +78,7 @@ public:
   /** Set the override character encoding. */
   void setOverrideEncoding( const QString & encoding );
   virtual void setPrinting(bool enable );
-
+  
   void setMessage( const Akonadi::Item& item, MessageViewer::Viewer::UpdateMode updateMode = MessageViewer::Viewer::Delayed);
 
   void setMessage( KMime::Message::Ptr message );
@@ -159,8 +149,6 @@ public:
 
   MessageViewer::CSSHelper* cssHelper() const;
 
-private:
-
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -199,7 +187,7 @@ private:
   KActionCollection *mActionCollection;
 
   KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
-    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mSelectAllAction;
+    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction;
 
   MessageViewer::Viewer *mViewer;
 };

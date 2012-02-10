@@ -22,10 +22,8 @@
 
 class KPushButton;
 class QCheckBox;
-class TemplatesConfiguration;
-
-namespace MailCommon {
-  class FolderCollection;
+namespace TemplateParser {
+  class TemplatesConfiguration;
 }
 
 template <typename T> class QSharedPointer;
@@ -48,10 +46,10 @@ protected:
   void init();
 private:
   QCheckBox* mCustom;
-  TemplatesConfiguration* mWidget;
+  TemplateParser::TemplatesConfiguration* mWidget;
   KPushButton* mCopyGlobal;
   uint mIdentity;
-  QSharedPointer<MailCommon::FolderCollection> mFolderCollection;
+  QString mCollectionId;
   bool mIsLocalSystemFolder;
 };
 

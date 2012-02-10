@@ -83,6 +83,10 @@ endmacro(add_resource_iface)
 add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
                     org.kde.Akonadi.Maildir.Settings MaildirSettings )
 
+add_custom_target(kjots_settings_xml ALL
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Maildir.Settings.xml
+  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
+)
 
 #########################################################################
 # D-Bus interface

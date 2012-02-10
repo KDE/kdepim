@@ -30,7 +30,6 @@
 // Qt includes
 #include <QFont>
 #include <QList>
-#include <QPalette>
 
 // KDE includes
 #include <kglobalsettings.h>
@@ -61,12 +60,8 @@ class KLineEdit;
 class KMComposeWin;
 class KMComposerEditor;
 class KSelectAction;
-class KSelectAction;
 class KAction;
 class KJob;
-class KToggleAction;
-class KTemporaryFile;
-class KTempDir;
 class KToggleAction;
 class KUrl;
 class KRecentFilesAction;
@@ -84,14 +79,9 @@ namespace KPIMIdentities {
   class Identity;
 }
 
-namespace Akonadi {
-  class CollectionComboBox;
-}
-
 
 namespace KMail {
   class AttachmentController;
-  class AttachmentView;
 }
 
 namespace KIO {
@@ -100,13 +90,18 @@ namespace KIO {
 
 namespace Message {
   class Composer;
+  class KMSubjectLineEdit;
 }
 
 namespace MessageComposer
 {
   class ComposerLineEdit;
 }
-
+namespace MailCommon
+{
+  class FolderRequester;
+}
+ 
 //-----------------------------------------------------------------------------
 class KMComposeWin : public KMail::Composer
 {
@@ -158,12 +153,6 @@ class KMComposeWin : public KMail::Composer
   signals:
     void identityChanged( const KPIMIdentities::Identity &identity );
 
-  private:
-
-    /**
-     * Write settings to app's config file.
-     */
-    void writeConfig( void );
 
   public: // kmkernel, kmcommands, callback
     /**
@@ -172,6 +161,15 @@ class KMComposeWin : public KMail::Composer
      */
     void setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign=true,
                  bool allowDecryption=false, bool isModified=false );
+
+    void setCurrentTransport( int transportId );
+
+    /**
+     * Use the given folder as sent-mail folder if the given folder exists.
+     * Else show an error message and use the default sent-mail folder as
+     * sent-mail folder.
+     */
+    void setFcc( const QString &idString );
 
      /**
       * Disables word wrap completely. No wrapping at all will occur, not even
@@ -204,27 +202,16 @@ class KMComposeWin : public KMail::Composer
       */
      void setCustomTemplate( const QString& customTemplate );
 
-  private: // kmedit
-    /**
-     * Returns message of the composer. To apply the user changes to the
-     * message, call applyChanges() first.
-     */
-    KMime::Message::Ptr msg() const { return mMsg; }
-
-  private:
-    /**
-     * Returns true if the message was modified by the user.
-     */
-    bool isModified() const;
-
-  public: // kmcommand
+    /** Disabled signing and encryption completely for this composer window. */
+    void setSigningAndEncryptionDisabled( bool v )
+    {
+      mSigningAndEncryptionExplicitlyDisabled = v;
+    }
     /**
      * If this folder is set, the original message is inserted back after
      * canceling
      */
-  void setFolder(const Akonadi::Collection &aFolder ) { mFolder = aFolder; }
-
-  public: // kmcommand
+    void setFolder(const Akonadi::Collection &aFolder ) { mFolder = aFolder; }
     /**
      * Sets the focus to the edit-widget.
      */
@@ -236,7 +223,29 @@ class KMComposeWin : public KMail::Composer
      */
      void setFocusToSubject();
 
+  bool insertFromMimeData( const QMimeData *source, bool forceAttachment = false );
+
   private:
+  /**
+   * Write settings to app's config file.
+   */
+  void writeConfig( void );
+
+
+    /**
+     * Returns message of the composer. To apply the user changes to the
+     * message, call applyChanges() first.
+     */
+    KMime::Message::Ptr msg() const { return mMsg; }
+    /**
+     * Returns true if the message was modified by the user.
+     */
+    bool isModified() const;
+    bool isComposerModified() const;
+    void changeModifiedState( bool modified );
+
+
+  
     /**
      * determines whether inline signing/encryption is selected
      */
@@ -250,12 +259,23 @@ class KMComposeWin : public KMail::Composer
       */
      static QString prettyMimeType( const QString &type );
 
-  public: // callback
-    /** Disabled signing and encryption completely for this composer window. */
-    void setSigningAndEncryptionDisabled( bool v )
-    {
-      mSigningAndEncryptionExplicitlyDisabled = v;
-    }
+  public slots: // kmkernel, callback
+    void slotSendNow();
+    /**
+     * Switch wordWrap on/off
+     */
+    void slotWordWrapToggled( bool );
+
+    void slotToggleMarkup();
+    void slotTextModeChanged( KRichTextEdit::Mode );
+    void htmlToolBarVisibilityChanged( bool visible );
+    void slotSpellcheckDoneClearStatus();
+    void autoSaveMessage(bool force = false);
+    /**
+     * Set whether the message should be treated as modified or not.
+     */
+    void setModified( bool modified );
+    void slotFetchJob(KJob*);
 
   private slots:
      /**
@@ -276,10 +296,6 @@ class KMComposeWin : public KMail::Composer
     void slotInsertRecentFile( const KUrl & );
     void slotRecentListFileClear();
 
-  public slots: // kmkernel, callback
-    void slotSendNow();
-
-  private slots:
     void slotSendNowVia( QAction * );
     void slotSendLater();
     void slotSendLaterVia( QAction * );
@@ -305,19 +321,9 @@ class KMComposeWin : public KMail::Composer
 
   void slotFolderRemoved( const Akonadi::Collection& );
     void slotLanguageChanged( const QString &language );
-
+  void slotFccFolderChanged(const Akonadi::Collection&);
     void slotEditorTextChanged();
-
-  public slots: // kmkernel
-    /**
-       Tell the composer to always send the message, even if the user
-       hasn't changed the next. This is useful if a message is
-       autogenerated (e.g., via a D-Bus call), and the user should
-       simply be able to confirm the message and send it.
-    */
-    void slotSetAlwaysSend( bool bAlwaysSend );
-
-  private slots:
+    void slotOverwriteModeChanged();
     /**
      * toggle fixed width font.
      */
@@ -359,7 +365,7 @@ class KMComposeWin : public KMail::Composer
     /**
      * Change window title to given string.
      */
-    void slotUpdWinTitle( const QString & );
+    void slotUpdWinTitle();
 
     /**
      * Switch the icon to lock or unlock respectivly.
@@ -371,28 +377,6 @@ class KMComposeWin : public KMail::Composer
      * Change states of all sign check boxes in the attachments listview
      */
     void slotSignToggled( bool );
-
-  public slots: // kmkernel, callback
-    /**
-     * Switch wordWrap on/off
-     */
-    void slotWordWrapToggled( bool );
-
-  private slots:
-    void slotToggleMarkup();
-    void slotTextModeChanged( KRichTextEdit::Mode );
-    void htmlToolBarVisibilityChanged( bool visible );
-    void slotSpellcheckDoneClearStatus();
-
-  public slots: // kmkernel
-    void autoSaveMessage();
-
-    /**
-     * Set whether the message should be treated as modified or not.
-     */
-    void setModified( bool modified );
-
-  private slots:
 
     void slotView();
 
@@ -409,17 +393,41 @@ class KMComposeWin : public KMail::Composer
     void slotSpellCheckingStatus( const QString & status );
 
     void slotDelayedApplyTemplate( KJob* );
+  
+    void recipientEditorSizeHintChanged();
+    void setMaximumHeaderSize();
+    void slotDoDelayedSend( KJob* );
+
+    void slotCompletionModeChanged( KGlobalSettings::Completion );
+    void slotConfigChanged();
+
+    void slotPrintComposeResult( KJob *job );
+
+    void slotEncryptChiasmusToggled( bool );
+
+    void slotSendFailed( const QString& msg );
+    void slotSendSuccessful();
+
+    /**
+     *  toggle automatic spellchecking
+     */
+    void slotAutoSpellCheckingToggled( bool );
+
+    /**
+     * Updates the visibility and text of the signature and encryption state indicators.
+     */
+    void slotUpdateSignatureAndEncrypionStateIndicators();
+
+    virtual void setAutoSaveFileName( const QString& fileName );
+    void slotSpellCheckingLanguage(const QString& language);
+    void forceAutoSaveMessage();
+  
 
   public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.
     void addAttach( KMime::Content *msgPart );
-
-  public: // AttachmentController
+  
     const KPIMIdentities::Identity &identity() const;
-
-  public:
-    /** Don't check if there are too many recipients for a mail, eg. when sending out invitations. */
-    virtual void disableRecipientNumberCheck();
 
     /** Don't check for forgotten attachments for a mail, eg. when sending out invitations. */
     void disableForgottenAttachmentsCheck();
@@ -437,8 +445,8 @@ class KMComposeWin : public KMail::Composer
 
   private:
     Kleo::CryptoMessageFormat cryptoMessageFormat() const;
+    QString overwriteModeStr() const;
 
-  private:
     /**
      * Install grid management and header fields. If fields exist that
      * should not be there they are removed. Those that are needed are
@@ -454,13 +462,13 @@ class KMComposeWin : public KMail::Composer
     /**
      * Show or hide header lines
      */
-
     void rethinkHeaderLine( int aValue, int aMask, int &aRow,
-                            QLabel *aLbl, KLineEdit *aEdt,
+                            QLabel *aLbl, QWidget *aEdt,
                             QPushButton *aBtn = 0 );
 
     void rethinkHeaderLine( int value, int mask, int &row,
-                            QLabel *lbl, QComboBox *cbx, QCheckBox *chk ); // krazy:exclude=qclasses
+                            QLabel *lbl, QWidget *cbx, QCheckBox *chk ); // krazy:exclude=qclasses
+
 
     /**
      * Apply template to new or unmodified message.
@@ -493,13 +501,6 @@ class KMComposeWin : public KMail::Composer
     QString from() const;
     QString replyTo() const;
 
-    /**
-     * Use the given folder as sent-mail folder if the given folder exists.
-     * Else show an error message and use the default sent-mail folder as
-     * sent-mail folder.
-     */
-    void setFcc( const QString &idString );
-
     void setCharset( const QByteArray &charset );
     void setAutoCharset();
 
@@ -512,8 +513,6 @@ class KMComposeWin : public KMail::Composer
      * prevent kmail from exiting when last window is deleted (kernel rules)
      */
     virtual bool queryExit();
-
-  private:
     /**
      * Turn encryption on/off. If setByUser is true then a message box is shown
      * in case encryption isn't possible.
@@ -549,71 +548,7 @@ class KMComposeWin : public KMail::Composer
     void doDelayedSend( MessageSender::SendMethod method, MessageSender::SaveIn saveIn );
 
     void changeCryptoAction();
-
-
-  private slots:
-    void recipientEditorSizeHintChanged();
-    void setMaximumHeaderSize();
-    void slotDoDelayedSend( KJob* );
-
-  private:
-    QWidget   *mMainWidget;
-    Sonnet::DictionaryComboBox *mDictionaryCombo;
-    Akonadi::CollectionComboBox *mFcc;
-    MessageComposer::ComposerLineEdit *mEdtFrom, *mEdtReplyTo;
-    MessageComposer::ComposerLineEdit *mEdtSubject;
-    QLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
-    QLabel    *mLblFrom, *mLblReplyTo;
-    QLabel    *mLblSubject;
-    QLabel    *mDictionaryLabel;
-    QCheckBox *mBtnIdentity, *mBtnDictionary, *mBtnTransport, *mBtnFcc;
-    bool mDone;
-
-    KMime::Message::Ptr mMsg;
-    QGridLayout *mGrid;
-    QString mTextSelection;
-    QString mCustomTemplate;
-    QAction *mOpenId, *mViewId, *mRemoveId, *mSaveAsId, *mPropertiesId,
-            *mEditAction, *mEditWithAction;
-    bool mLastSignActionState, mLastEncryptActionState, mSigningAndEncryptionExplicitlyDisabled;
-    bool mLastIdentityHasSigningKey, mLastIdentityHasEncryptionKey;
-    Akonadi::Collection mFolder;
-    long mShowHeaders;
-    bool mConfirmSend;
-    //bool mDisableBreaking;
-    bool mForceDisableHtml;     // Completely disable any HTML. Useful when sending invitations in the
-                                // mail body.
-    int mNumHeaders;
-    QFont mBodyFont, mFixedFont;
-    QPalette mPalette;
-    uint mId;
-    TemplateContext mContext;
-
-    KAction *mCleanSpace;
-    KRecentFilesAction *mRecentAction;
-
-    KToggleAction *mSignAction, *mEncryptAction, *mRequestMDNAction;
-    KToggleAction *mUrgentAction, *mAllFieldsAction, *mFromAction;
-    KToggleAction *mReplyToAction;
-    KToggleAction *mSubjectAction;
-    KToggleAction *mIdentityAction, *mTransportAction, *mFccAction;
-    KToggleAction *mWordWrapAction, *mFixedFontAction, *mAutoSpellCheckingAction;
-    KToggleAction *mDictionaryAction, *mSnippetAction;
-
-    KToggleAction *markupAction;
-    KAction *actionFormatReset;
-
-    CodecAction *mCodecAction;
-    KSelectAction *mCryptoModuleAction;
-
-    KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
-
-    bool mAlwaysSend;
-
-    QStringList mFolderNames;
-
-  private:
-
+    void applyComposerSetting( Message::ComposerViewBase* mComposerBase );
     /**
      * Creates a simple composer that creates a KMime::Message out of the composer content.
      * Crypto handling is not done, therefore the name "simple".
@@ -649,47 +584,66 @@ class KMComposeWin : public KMail::Composer
     inline int encryptChainCertNearExpiryWarningThresholdInDays();
     inline int signingChainCertNearExpiryWarningThresholdInDays();
 
-  private slots:
-    void slotCompletionModeChanged( KGlobalSettings::Completion );
-    void slotConfigChanged();
 
-    void slotPrintComposeResult( KJob *job );
-
-    void slotEncryptChiasmusToggled( bool );
-
-    void slotSendFailed( const QString& msg );
-    void slotSendSuccessful();
-
-    /**
-     *  toggle automatic spellchecking
-     */
-    void slotAutoSpellCheckingToggled( bool );
-
-    /**
-     * Updates the visibility and text of the signature and encryption state indicators.
-     */
-    void slotUpdateSignatureAndEncrypionStateIndicators();
-
-    virtual void setAutoSaveFileName( const QString& fileName );
   private:
+    QWidget   *mMainWidget;
+    Sonnet::DictionaryComboBox *mDictionaryCombo;
+    MessageComposer::ComposerLineEdit *mEdtFrom, *mEdtReplyTo;
+    Message::KMSubjectLineEdit *mEdtSubject;
+    QLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
+    QLabel    *mLblFrom, *mLblReplyTo;
+    QLabel    *mLblSubject;
+    QLabel    *mDictionaryLabel;
+    QCheckBox *mBtnIdentity, *mBtnDictionary, *mBtnTransport, *mBtnFcc;
+    bool mDone;
+
+    KMime::Message::Ptr mMsg;
+    QGridLayout *mGrid;
+    QString mTextSelection;
+    QString mCustomTemplate;
+    QAction *mOpenId, *mViewId, *mRemoveId, *mSaveAsId, *mPropertiesId,
+            *mEditAction, *mEditWithAction;
+    bool mLastSignActionState, mLastEncryptActionState, mSigningAndEncryptionExplicitlyDisabled;
+    bool mLastIdentityHasSigningKey, mLastIdentityHasEncryptionKey;
+    Akonadi::Collection mFolder;
+    long mShowHeaders;
+    bool mConfirmSend;
+    bool mForceDisableHtml;     // Completely disable any HTML. Useful when sending invitations in the
+                                // mail body.
+    int mNumHeaders;
+    QFont mBodyFont, mFixedFont;
+    uint mId;
+    TemplateContext mContext;
+
+    KAction *mCleanSpace;
+    KRecentFilesAction *mRecentAction;
+
+    KToggleAction *mSignAction, *mEncryptAction, *mRequestMDNAction;
+    KToggleAction *mUrgentAction, *mAllFieldsAction, *mFromAction;
+    KToggleAction *mReplyToAction;
+    KToggleAction *mSubjectAction;
+    KToggleAction *mIdentityAction, *mTransportAction, *mFccAction;
+    KToggleAction *mWordWrapAction, *mFixedFontAction, *mAutoSpellCheckingAction;
+    KToggleAction *mDictionaryAction, *mSnippetAction;
+
+    KToggleAction *markupAction;
+    KAction *actionFormatReset;
+
+    CodecAction *mCodecAction;
+    KSelectAction *mCryptoModuleAction;
+
+    KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
+  
     QFont mSaveFont;
     QSplitter *mHeadersToEditorSplitter;
     QWidget* mHeadersArea;
     QSplitter *mSplitter;
     QSplitter *mSnippetSplitter;
-    KMail::AttachmentView *mAttachmentView;
     QByteArray mOriginalPreferredCharset;
 
-    // These are for passing on methods over the applyChanges calls
-    MessageSender::SendMethod mSendMethod;
-    MessageSender::SaveIn mSaveIn;
-
     KToggleAction *mEncryptChiasmusAction;
-    bool mEncryptWithChiasmus;
 
     Message::Composer *mDummyComposer;
-    int mPendingQueueJobs;
-    int mPendingCreateItemJobs;
     // used for auto saving, printing, etc. Not for sending, which happens in ComposerViewBase
     QList< Message::Composer* > mMiscComposers;
 
@@ -705,14 +659,14 @@ class KMComposeWin : public KMail::Composer
 
 
     SnippetWidget *mSnippetWidget;
-    QList<KTempDir*> mTempDirs;
 
     QLabel *mSignatureStateIndicator;
-    QLabel *mEncryptionStateIndicator;
-
+  QLabel *mEncryptionStateIndicator;
+  MailCommon::FolderRequester *mFccFolder;
     bool mPreventFccOverwrite;
     bool mCheckForForgottenAttachments;
     bool mIgnoreStickyFields;
+  bool mWasModified;
 };
 
 #endif

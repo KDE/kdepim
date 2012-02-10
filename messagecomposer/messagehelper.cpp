@@ -74,7 +74,7 @@ void initFromMessage( const KMime::Message::Ptr &msg, const KMime::Message::Ptr 
 
   if ( origMsg->headerByType("X-KMail-Transport") ) {
     const QString transport = origMsg->headerByType("X-KMail-Transport")->asUnicodeString();
-    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(),
+    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", msg.get(),
                                                                    transport, "utf-8" );
     msg->setHeader( header );
   }
@@ -156,9 +156,13 @@ KMime::Types::AddrSpecList extractAddrSpecs( const KMime::Message::Ptr &msg, con
 
   KMime::Types::AddressList al =
       MessageCore::StringUtil::splitAddressField( msg->headerByType( header )->asUnicodeString().toUtf8() );
-  for ( KMime::Types::AddressList::const_iterator ait = al.constBegin() ; ait != al.constEnd() ; ++ait )
-    for ( KMime::Types::MailboxList::const_iterator mit = (*ait).mailboxList.constBegin() ; mit != (*ait).mailboxList.constEnd() ; ++mit )
+  KMime::Types::AddressList::const_iterator alend( al.constEnd() );
+  for ( KMime::Types::AddressList::const_iterator ait = al.constBegin() ; ait != alend ; ++ait ) {
+    KMime::Types::MailboxList::const_iterator mitEnd( (*ait).mailboxList.constEnd() );
+    for ( KMime::Types::MailboxList::const_iterator mit = (*ait).mailboxList.constBegin() ; mit != mitEnd ; ++mit ) {
       result.push_back( (*mit).addrSpec() );
+    }
+  }
   return result;
 }
 
@@ -197,20 +201,21 @@ QString replacePrefixes( const QString& str, const QStringList &prefixRegExps,
   QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
                       .arg( prefixRegExps.join(QString::fromLatin1(")|(?:")) );
   QRegExp rx( bigRegExp, Qt::CaseInsensitive );
-  if ( !rx.isValid() ) {
+  if ( rx.isValid() ) {
+      QString tmp = str;
+      if ( rx.indexIn( tmp ) == 0 ) {
+        recognized = true;
+        if ( replace )
+          return tmp.replace( 0, rx.matchedLength(), newPrefix + QString::fromLatin1( " " ) );
+      }
+  } else {
     kWarning() << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
     // try good ole Re/Fwd:
     recognized = str.startsWith( newPrefix );
-  } else { // valid rx
-    QString tmp = str;
-    if ( rx.indexIn( tmp ) == 0 ) {
-      recognized = true;
-      if ( replace )
-        return tmp.replace( 0, rx.matchedLength(), newPrefix + QString::fromLatin1( " " ) );
-    }
   }
+
   if ( !recognized )
     return newPrefix + QString::fromLatin1(" ") + str;
   else
@@ -230,20 +235,6 @@ void setAutomaticFields(const KMime::Message::Ptr &msg, bool aIsMulti)
     msg->contentType()->setBoundary( KMime::multiPartBoundary() );
   }
 }
-
-#ifndef _WIN32_WCE
-QList<Nepomuk::Tag> tagList(const Akonadi::Item &msg)
-{
-  const Nepomuk::Resource res( msg.url() );
-  return res.tags();
-}
-
-void setTagList( const Akonadi::Item& msg, const QList<Nepomuk::Tag> &tags )
-{
-  Nepomuk::Resource res( msg.url() );
-  res.setTags( tags );
-}
-#endif
 
 QString ccStrip( const KMime::Message::Ptr &msg )
 {

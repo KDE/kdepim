@@ -38,6 +38,7 @@
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectiongeneralpage.h"
+#include "mailcommon/filtermanager.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
@@ -85,21 +86,21 @@
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
+#include <kcodecs.h>
 #include <kdebug.h>
 #include <klinkitemselectionmodel.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
+#include <kmimetype.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/filteraction.h>
-#include <mailcommon/filtermanager.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
-#include <mailcommon/mailkernel.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
@@ -181,6 +182,28 @@ MainView::~MainView()
   }
 }
 
+void MainView::handleCommandLine()
+{
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  if ( args->isSet("A") ) {
+    QMetaObject::invokeMethod( this, "openComposerAndAttach", Qt::QueuedConnection,
+                               Q_ARG(QString, args->getOption("t")),
+                               Q_ARG(QString, args->getOption("c")),
+                               Q_ARG(QString, args->getOption("b")),
+                               Q_ARG(QString, args->getOption("s")),
+                               Q_ARG(QString, args->getOption("B")),
+                               Q_ARG(QStringList, QStringList() << args->getOptionList("A")) );
+  } else if ( args->isSet("t") ) {
+    QMetaObject::invokeMethod( this, "openComposer", Qt::QueuedConnection,
+                               Q_ARG(QString, args->getOption("t")),
+                               Q_ARG(QString, args->getOption("c")),
+                               Q_ARG(QString, args->getOption("b")),
+                               Q_ARG(QString, args->getOption("s")),
+                               Q_ARG(QString, args->getOption("B")) );
+  }
+}
+
 void MainView::setConfigWidget( ConfigWidget *configWidget )
 {
   Q_ASSERT( configWidget );
@@ -214,6 +237,89 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
   composer->setIdentity( currentFolderIdentity() );
 
   return 0;
+}
+
+int MainView::openComposerAndAttach( const QString &to, const QString &cc, const QString &bcc,
+                                     const QString &subject, const QString &body,
+                                     const QStringList &attachments )
+{
+  if (attachments.isEmpty()) {
+      return openComposer( to, cc, bcc, subject, body );
+  }
+
+  // Set the multipart message.
+  KMime::Message::Ptr message = KMime::Message::Ptr( new KMime::Message );
+  KMime::Headers::ContentType *ct = message->contentType();
+  ct->setMimeType( "multipart/mixed" );
+  ct->setBoundary( KMime::multiPartBoundary() );
+  ct->setCategory( KMime::Headers::CCcontainer );
+  message->contentTransferEncoding()->clear();
+
+  // Set the headers.
+  message->to()->fromUnicodeString( to, "utf-8" );
+  message->cc()->fromUnicodeString( cc, "utf-8" );
+  message->bcc()->fromUnicodeString( bcc, "utf-8" );
+  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->subject()->fromUnicodeString( subject, "utf-8" );
+
+  // Set the first multipart, the body message.
+  KMime::Content *bodyMessage = new KMime::Content;
+  bodyMessage->contentType()->setMimeType( "text/plain" );
+  bodyMessage->setBody( body.toUtf8() + "\n\n" );
+  message->addContent( bodyMessage );
+
+  KUrl::List attachURLs = KUrl::List( attachments );
+  for ( KUrl::List::ConstIterator it = attachURLs.constBegin(); it != attachURLs.constEnd(); ++it ) {
+    KMime::Content * a = createAttachment( (*it) );
+    if ( a ) {
+        message->addContent( a );
+    }
+  }
+
+  message->assemble();
+
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( message );
+  composer->show();
+  composer->setIdentity( currentFolderIdentity() );
+
+  return 0;
+}
+
+KMime::Content *MainView::createAttachment( const KUrl &url ) const
+{
+  KMimeType::Ptr mimeType = KMimeType::findByUrl(url, 0, true);
+  QString fileName = url.toLocalFile();
+  QFile file(fileName);
+
+  if ( !file.open(QIODevice::ReadOnly) ) {
+      kWarning() << "Error opening file" << fileName << "for attaching: " << file.errorString();
+      return 0;
+  }
+
+  // TODO: abort in case of huge file.
+  qint64 size = file.size();
+  QByteArray contents = file.readAll();
+  file.close();
+
+  if ( contents.size() < size ) {
+      kDebug() << "Short read while attaching file" << fileName;
+  }
+
+  QByteArray coded = KCodecs::base64Encode( contents, true );
+  KMime::Headers::ContentDisposition *d = new KMime::Headers::ContentDisposition;
+  d->setDisposition( KMime::Headers::CDattachment );
+  d->setFilename( fileName.section('/', -1) );
+  d->setDisposition( KMime::Headers::CDattachment );
+
+  KMime::Content *a = new KMime::Content();
+  a->contentType()->fromUnicodeString( mimeType->name(), "utf-8" );
+  a->setHeader( d );
+  a->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
+  a->contentTransferEncoding()->setDecoded( false );
+  a->setBody( coded + "\n\n" );
+
+  return a;
 }
 
 #define VIEW(model) {                        \
@@ -852,17 +958,27 @@ void MainView::forwardFetchResult( KJob* job )
   } else {
     ComposerView *composer = new ComposerView;
     switch ( mode ) {
-      case InLine:
-        composer->setMessage( factory.createForward() );
-        break;
-      case AsAttachment: {
-        QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
-        //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
-        QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
-        foreach ( KMime::Content* attach, forwardMessage.second )
-          QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG( KMime::Content*, attach ) );
-        break;
+    case InLine:
+      composer->setMessage( factory.createForward() );
+      break;
+
+    case AsAttachment: {
+      QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage =
+        factory.createAttachedForward( QList< Akonadi::Item >() << item);
+
+      // the invokeMethods are there to be sure setMessage and addAttachment
+      // are called after composer->delayedInit
+      QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection,
+                                 Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
+      foreach ( KMime::Content* attach, forwardMessage.second ) {
+        QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection,
+                                   Q_ARG( KMime::Content*, attach ) );
       }
+      break;
+    }
+
+    case Redirect:
+      break; // to make compilers happy. the Redirect case is handled above.
     }
 
     composer->show();
@@ -1127,7 +1243,7 @@ void MainView::createDefaultCollectionDone( KJob *job )
   if ( job->error() ) {
     kDebug() << "Error creating default collection: " << job->errorText();
     //###: review error string
-    // diabled for now, triggers too often without good reason on the n900 (too short timeouts probably)
+    // disabled for now, triggers too often without good reason on the n900 (too short timeouts probably)
 /*    KMessageBox::sorry( this,
                         i18n("Error creating default collection."),
                         i18n("Internal Error"));*/
@@ -1294,7 +1410,7 @@ void MainView::mailActionStateUpdated()
     bool allMarkedAsImportant = true;
     bool allMarkedAsRead = true;
     bool allMarkedAsActionItem = true;
-    
+
     foreach ( const Akonadi::Item &item, selectedItems ) {
       Akonadi::MessageStatus status;
       status.setStatusFromFlags( item.flags() );
@@ -1334,24 +1450,12 @@ void MainView::mailActionStateUpdated()
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 {
-  AgentActionManager *manager = new AgentActionManager( actionCollection(), this );
-  manager->setSelectionModel( selectionModel );
-
-  manager->createAllActions();
-
-  manager->action( AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
-  manager->action( AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
-  manager->action( AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
-
-  manager->interceptAction( AgentActionManager::CreateAgentInstance );
-
-  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
-           this, SLOT(launchAccountWizard()) );
+  AgentActionManager *manager = createAgentActionManager( selectionModel );
 
   manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
   manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText,
-                           i18n( "Could not create account: %1" ) );
+                           ki18n( "Could not create account: %1" ) );
   manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle,
                            i18n( "Account creation failed" ) );
 
@@ -1592,7 +1696,7 @@ void MainView::showExpireProperties()
   const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
   Q_ASSERT( collection.isValid() );
 
-  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, MailCommon::FolderCollection::forCollection( collection ) );
+  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, collection );
   dlg->show();
 }
 
@@ -1743,7 +1847,7 @@ void MainView::applyFilters()
     }
   }
 
-  FilterIf->filterManager()->applyFilters( items );
+  MailCommon::FilterManager::instance()->filter( items );
 }
 
 void MainView::applyFiltersBulkAction()
@@ -1756,7 +1860,7 @@ void MainView::applyFiltersBulkAction()
       items << item;
   }
 
-  FilterIf->filterManager()->applyFilters( items );
+  MailCommon::FilterManager::instance()->filter( items );
 }
 
 bool MainView::selectNextUnreadMessageInCurrentFolder()

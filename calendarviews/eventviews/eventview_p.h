@@ -23,11 +23,15 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
+#ifndef EVENTVIEWS_EVENTVIEW_P_H
+#define EVENTVIEWS_EVENTVIEW_P_H
 
 #include "eventview.h"
 
 #include <KDateTime>
 #include <KRandom>
+
+class KCheckableProxyModel;
 
 namespace EventViews {
 
@@ -81,3 +85,5 @@ class EventViewPrivate
 };
 
 } // EventViews
+
+#endif

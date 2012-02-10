@@ -28,11 +28,11 @@
 
 #include <KFileDialog>
 #include <KLocale>
+#include <KTabWidget>
+#include <KTextEdit>
 
 #include <QtGui/QPushButton>
 #include <QtGui/QSplitter>
-#include <QtGui/QTabWidget>
-#include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QCheckBox>
 
@@ -53,10 +53,10 @@ DebugWidget::DebugWidget( QWidget *parent )
   splitter->setObjectName( "debugSplitter" );
   layout->addWidget( splitter );
 
-  mConnectionPages = new QTabWidget( splitter );
+  mConnectionPages = new KTabWidget( splitter );
   mConnectionPages->setTabsClosable( true );
 
-  mGeneralView = new QTextEdit( splitter );
+  mGeneralView = new KTextEdit( splitter );
   mGeneralView->setReadOnly( true );
 
   ConnectionPage *page = new ConnectionPage( "All" );

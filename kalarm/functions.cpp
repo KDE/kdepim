@@ -32,16 +32,18 @@
 #include "autoqpointer.h"
 #include "alarmlistview.h"
 #include "editdlg.h"
-#include "identities.h"
-#include "kaevent.h"
 #include "kalarmapp.h"
 #include "kamail.h"
 #include "mainwindow.h"
+#include "messagebox.h"
 #include "messagewin.h"
 #include "preferences.h"
 #include "shellprocess.h"
 #include "templatelistview.h"
 #include "templatemenuaction.h"
+
+#include <kalarmcal/identities.h>
+#include <kalarmcal/kaevent.h>
 
 #ifdef USE_AKONADI
 #include <kcalcore/event.h>
@@ -72,7 +74,6 @@ using namespace KCal;
 #include <ksystemtimezone.h>
 #include <kstandardguiitem.h>
 #include <kstandardshortcut.h>
-#include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <kicon.h>
 #include <kio/netaccess.h>
@@ -135,7 +136,7 @@ namespace KAlarm
 Private* Private::mInstance = 0;
 
 /******************************************************************************
-*  Display a main window with the specified event selected.
+* Display a main window with the specified event selected.
 */
 #ifdef USE_AKONADI
 MainWindow* displayMainWindowSelected(Akonadi::Item::Id eventId)
@@ -273,7 +274,7 @@ UpdateStatus addEvent(KAEvent& event, AlarmResource* calendar, QWidget* msgParen
 * Save them in the calendar file and add them to every main window instance.
 * The events are updated with their actual event IDs.
 */
-UpdateStatus addEvents(QList<KAEvent>& events, QWidget* msgParent, bool allowKOrgUpdate, bool showKOrgErr)
+UpdateStatus addEvents(QVector<KAEvent>& events, QWidget* msgParent, bool allowKOrgUpdate, bool showKOrgErr)
 {
     kDebug() << events.count();
     if (events.isEmpty())
@@ -291,10 +292,10 @@ UpdateStatus addEvents(QList<KAEvent>& events, QWidget* msgParent, bool allowKOr
     else
     {
 #ifdef USE_AKONADI
-        collection = CollectionControlModel::instance()->destination(KAlarm::CalEvent::ACTIVE, msgParent);
+        collection = CollectionControlModel::instance()->destination(CalEvent::ACTIVE, msgParent);
         if (!collection.isValid())
 #else
-        resource = AlarmResources::instance()->destination(KAlarm::CalEvent::ACTIVE, msgParent);
+        resource = AlarmResources::instance()->destination(CalEvent::ACTIVE, msgParent);
         if (!resource)
 #endif
         {
@@ -370,7 +371,7 @@ bool addArchivedEvent(KAEvent& event, AlarmResource* resource)
 {
     kDebug() << event.id();
     QString oldid = event.id();
-    bool archiving = (event.category() == KAlarm::CalEvent::ACTIVE);
+    bool archiving = (event.category() == CalEvent::ACTIVE);
     if (archiving  &&  !Preferences::archivedKeepDays())
         return false;   // expired alarms aren't being kept
     AlarmCalendar* cal = AlarmCalendar::resources();
@@ -383,8 +384,8 @@ bool addArchivedEvent(KAEvent& event, AlarmResource* resource)
 #endif
     if (archiving)
     {
-        newev->setCategory(KAlarm::CalEvent::ARCHIVED);    // this changes the event ID
-        newev->setSaveDateTime(KDateTime::currentUtcDateTime());   // time stamp to control purging
+        newev->setCategory(CalEvent::ARCHIVED);    // this changes the event ID
+        newev->setCreatedDateTime(KDateTime::currentUtcDateTime());   // time stamp to control purging
     }
     // Note that archived resources are automatically saved after changes are made
 #ifdef USE_AKONADI
@@ -611,8 +612,7 @@ UpdateStatus updateTemplate(KAEvent& event, QWidget* msgParent)
 UpdateStatus deleteEvent(KAEvent& event, bool archive, QWidget* msgParent, bool showKOrgErr)
 {
 #ifdef USE_AKONADI
-    QList<KAEvent> events;
-    events += event;
+    QVector<KAEvent> events(1, event);
 #else
     KAEvent::List events;
     events += &event;
@@ -621,7 +621,7 @@ UpdateStatus deleteEvent(KAEvent& event, bool archive, QWidget* msgParent, bool 
 }
 
 #ifdef USE_AKONADI
-UpdateStatus deleteEvents(QList<KAEvent>& events, bool archive, QWidget* msgParent, bool showKOrgErr)
+UpdateStatus deleteEvents(QVector<KAEvent>& events, bool archive, QWidget* msgParent, bool showKOrgErr)
 #else
 UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParent, bool showKOrgErr)
 #endif
@@ -652,7 +652,7 @@ UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParen
 #endif
 
         // Delete the event from the calendar file
-        if (event->category() != KAlarm::CalEvent::ARCHIVED)
+        if (event->category() != CalEvent::ARCHIVED)
         {
             if (event->copyToKOrganizer())
             {
@@ -788,8 +788,7 @@ UpdateStatus reactivateEvent(KAEvent& event, AlarmResource* calendar, QWidget* m
 {
     QStringList ids;
 #ifdef USE_AKONADI
-    QList<KAEvent> events;
-    events += event;
+    QVector<KAEvent> events(1, event);
 #else
     KAEvent::List events;
     events += &event;
@@ -798,7 +797,7 @@ UpdateStatus reactivateEvent(KAEvent& event, AlarmResource* calendar, QWidget* m
 }
 
 #ifdef USE_AKONADI
-UpdateStatus reactivateEvents(QList<KAEvent>& events, QStringList& ineligibleIDs, Collection* col, QWidget* msgParent, bool showKOrgErr)
+UpdateStatus reactivateEvents(QVector<KAEvent>& events, QStringList& ineligibleIDs, Collection* col, QWidget* msgParent, bool showKOrgErr)
 #else
 UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs, AlarmResource* resource, QWidget* msgParent, bool showKOrgErr)
 #endif
@@ -815,11 +814,11 @@ UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs,
     if (col)
         collection = *col;
     if (!collection.isValid())
-        collection = CollectionControlModel::instance()->destination(KAlarm::CalEvent::ACTIVE, msgParent);
+        collection = CollectionControlModel::instance()->destination(CalEvent::ACTIVE, msgParent);
     if (!collection.isValid())
 #else
     if (!resource)
-        resource = AlarmResources::instance()->destination(KAlarm::CalEvent::ACTIVE, msgParent);
+        resource = AlarmResources::instance()->destination(CalEvent::ACTIVE, msgParent);
     if (!resource)
 #endif
     {
@@ -841,7 +840,7 @@ UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs,
 #else
             KAEvent* event = events[i];
 #endif
-            if (event->category() != KAlarm::CalEvent::ARCHIVED
+            if (event->category() != CalEvent::ARCHIVED
             ||  !event->occursAfter(now, true))
             {
                 ineligibleIDs += event->id();
@@ -856,7 +855,7 @@ UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs,
             KAEvent* newev = new KAEvent(*event);
             QString oldid = event->id();
 #endif
-            newev->setCategory(KAlarm::CalEvent::ACTIVE);    // this changes the event ID
+            newev->setCategory(CalEvent::ACTIVE);    // this changes the event ID
             if (newev->recurs()  ||  newev->repetition())
                 newev->setNextOccurrence(now);   // skip any recurrences in the past
             newev->setArchive();    // ensure that it gets re-archived if it is deleted
@@ -930,7 +929,7 @@ UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs,
 * The new events will have the same event IDs as the old ones.
 */
 #ifdef USE_AKONADI
-UpdateStatus enableEvents(QList<KAEvent>& events, bool enable, QWidget* msgParent)
+UpdateStatus enableEvents(QVector<KAEvent>& events, bool enable, QWidget* msgParent)
 #else
 UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent)
 #endif
@@ -949,7 +948,7 @@ UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent
 #else
         KAEvent* event = events[i];
 #endif
-        if (event->category() == KAlarm::CalEvent::ACTIVE
+        if (event->category() == CalEvent::ACTIVE
         &&  enable != event->enabled())
         {
             event->setEnabled(enable);
@@ -966,7 +965,7 @@ UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent
                 cal->disabledChanged(newev);
 
                 // If we're disabling a display alarm, close any message window
-                if (!enable  &&  event->displayAction())
+                if (!enable  &&  (event->actionTypes() & KAEvent::ACT_DISPLAY))
                 {
                     MessageWin* win = MessageWin::findEvent(event->id());
                     delete win;
@@ -1007,19 +1006,19 @@ void purgeArchive(int purgeDays)
     kDebug() << purgeDays;
     QDate cutoff = KDateTime::currentLocalDate().addDays(-purgeDays);
 #ifdef USE_AKONADI
-    Collection collection = CollectionControlModel::getStandard(KAlarm::CalEvent::ARCHIVED);
+    Collection collection = CollectionControlModel::getStandard(CalEvent::ARCHIVED);
     if (!collection.isValid())
         return;
     KAEvent::List events = AlarmCalendar::resources()->events(collection);
     for (int i = 0;  i < events.count();  )
     {
         if (purgeDays  &&  events[i]->createdDateTime().date() >= cutoff)
-            events.removeAt(i);
+            events.remove(i);
         else
             ++i;
     }
 #else
-    AlarmResource* resource = AlarmResources::instance()->getStandardResource(KAlarm::CalEvent::ARCHIVED);
+    AlarmResource* resource = AlarmResources::instance()->getStandardResource(CalEvent::ARCHIVED);
     if (!resource)
         return;
     KAEvent::List events = AlarmCalendar::resources()->events(resource);
@@ -1028,7 +1027,7 @@ void purgeArchive(int purgeDays)
         KAEvent* event = events[i];
         Incidence* kcalIncidence = resource->incidence(event->id());
         if (purgeDays  &&  kcalIncidence  &&  kcalIncidence->created().date() >= cutoff)
-            events.removeAt(i);
+            events.remove(i);
         else
             EventListModel::alarms()->removeEvent(events[i++]);   // update the window lists
     }
@@ -1065,7 +1064,7 @@ void displayUpdateError(QWidget* parent, UpdateStatus status, UpdateError code, 
                                        : i18nc("@info", "Error saving alarm template");
                 break;
         }
-        KMessageBox::error(parent, errmsg);
+        KAMessageBox::error(parent, errmsg);
     }
     else if (showKOrgError)
         displayKOrgUpdateError(parent, code, status, nKOrgAlarms);
@@ -1101,7 +1100,7 @@ void displayKOrgUpdateError(QWidget* parent, UpdateError code, UpdateStatus korg
         msg = i18nc("@info", "<para>%1</para><para>(Error communicating with KOrganizer)</para>", errmsg);
     else
         msg = errmsg;
-    KMessageBox::error(parent, msg);
+    KAMessageBox::error(parent, msg);
 }
 
 /******************************************************************************
@@ -1115,7 +1114,7 @@ void editNewAlarm(EditAlarmDlg::Type type, QWidget* parent)
 /******************************************************************************
 * Execute a New Alarm dialog for the specified alarm type.
 */
-void editNewAlarm(KAEvent::Action action, QWidget* parent, const AlarmText* text)
+void editNewAlarm(KAEvent::SubAction action, QWidget* parent, const AlarmText* text)
 {
     bool setAction = false;
     EditAlarmDlg::Type type;
@@ -1308,7 +1307,7 @@ void Private::cancelRtcWake()
     // setRtcWakeTime will only work with a parent window specified
     setRtcWakeTime(0, mMsgParent);
     deleteRtcWakeConfig();
-    KMessageBox::information(mMsgParent, i18nc("info", "The scheduled Wake from Suspend has been cancelled."));
+    KAMessageBox::information(mMsgParent, i18nc("info", "The scheduled Wake from Suspend has been cancelled."));
 }
 
 /******************************************************************************
@@ -1354,7 +1353,7 @@ bool setRtcWakeTime(unsigned triggerTime, QWidget* parent)
             }
             errmsg = i18nc("@info", "Error obtaining authorization (%1)", errcode);
         }
-        KMessageBox::information(parent, errmsg);
+        KAMessageBox::information(parent, errmsg);
         return false;
     }
     return true;
@@ -1372,12 +1371,12 @@ namespace
 void editNewTemplate(EditAlarmDlg::Type type, const KAEvent* preset, QWidget* parent)
 {
 #ifdef USE_AKONADI
-    if (CollectionControlModel::enabledCollections(KAlarm::CalEvent::TEMPLATE, true).isEmpty())
+    if (CollectionControlModel::enabledCollections(CalEvent::TEMPLATE, true).isEmpty())
 #else
-    if (!AlarmResources::instance()->activeCount(KAlarm::CalEvent::TEMPLATE, true))
+    if (!AlarmResources::instance()->activeCount(CalEvent::TEMPLATE, true))
 #endif
     {
-        KMessageBox::sorry(parent, i18nc("@info", "You must enable a template calendar to save the template in"));
+        KAMessageBox::sorry(parent, i18nc("@info", "You must enable a template calendar to save the template in"));
         return;
     }
     // Use AutoQPointer to guard against crash on application exit while
@@ -1492,8 +1491,8 @@ bool editAlarm(const QString& eventID, QWidget* parent)
     }
     switch (event->category())
     {
-        case KAlarm::CalEvent::ACTIVE:
-        case KAlarm::CalEvent::TEMPLATE:
+        case CalEvent::ACTIVE:
+        case CalEvent::TEMPLATE:
             break;
         default:
             kError() << eventID << ": event not active or template";
@@ -1613,11 +1612,11 @@ KAEvent::List templateList()
 {
     KAEvent::List templates;
     bool includeCmdAlarms = ShellProcess::authorised();
-    KAEvent::List events = AlarmCalendar::resources()->events(KAlarm::CalEvent::TEMPLATE);
+    KAEvent::List events = AlarmCalendar::resources()->events(CalEvent::TEMPLATE);
     for (int i = 0, end = events.count();  i < end;  ++i)
     {
         KAEvent* event = events[i];
-        if (includeCmdAlarms  ||  !(event->actions() & KAEvent::ACT_COMMAND))
+        if (includeCmdAlarms  ||  !(event->actionTypes() & KAEvent::ACT_COMMAND))
             templates.append(event);
     }
     return templates;
@@ -1630,16 +1629,16 @@ KAEvent::List templateList()
 */
 void outputAlarmWarnings(QWidget* parent, const KAEvent* event)
 {
-    if (event  &&  event->action() == KAEvent::EMAIL
+    if (event  &&  event->actionTypes() == KAEvent::ACT_EMAIL
     &&  Preferences::emailAddress().isEmpty())
-        KMessageBox::information(parent, i18nc("@info Please set the 'From' email address...",
-                                               "<para>%1</para><para>Please set it in the Configuration dialog.</para>", KAMail::i18n_NeedFromEmailAddress()));
+        KAMessageBox::information(parent, i18nc("@info Please set the 'From' email address...",
+                                                "<para>%1</para><para>Please set it in the Configuration dialog.</para>", KAMail::i18n_NeedFromEmailAddress()));
 
     if (!theApp()->alarmsEnabled())
     {
-        if (KMessageBox::warningYesNo(parent, i18nc("@info", "<para>Alarms are currently disabled.</para><para>Do you want to enable alarms now?</para>"),
-                                      QString(), KGuiItem(i18nc("@action:button", "Enable")), KGuiItem(i18nc("@action:button", "Keep Disabled")),
-                                      QLatin1String("EditEnableAlarms"))
+        if (KAMessageBox::warningYesNo(parent, i18nc("@info", "<para>Alarms are currently disabled.</para><para>Do you want to enable alarms now?</para>"),
+                                       QString(), KGuiItem(i18nc("@action:button", "Enable")), KGuiItem(i18nc("@action:button", "Keep Disabled")),
+                                       QLatin1String("EditEnableAlarms"))
                         == KMessageBox::Yes)
             theApp()->setAlarmsEnabled(true);
     }
@@ -1672,11 +1671,11 @@ void refreshAlarmsIfQueued()
         AlarmCalendar::resources()->reload();
 
         // Close any message windows for alarms which are now disabled
-        KAEvent::List events = AlarmCalendar::resources()->events(KAlarm::CalEvent::ACTIVE);
+        KAEvent::List events = AlarmCalendar::resources()->events(CalEvent::ACTIVE);
         for (int i = 0, end = events.count();  i < end;  ++i)
         {
             KAEvent* event = events[i];
-            if (!event->enabled()  &&  event->displayAction())
+            if (!event->enabled()  &&  (event->actionTypes() & KAEvent::ACT_DISPLAY))
             {
                 MessageWin* win = MessageWin::findEvent(event->id());
                 delete win;
@@ -1689,9 +1688,9 @@ void refreshAlarmsIfQueued()
 }
 
 /******************************************************************************
-*  Start KMail if it isn't already running, optionally minimised.
-*  Reply = reason for failure to run KMail (which may be the empty string)
-*        = null string if success.
+* Start KMail if it isn't already running, optionally minimised.
+* Reply = reason for failure to run KMail (which may be the empty string)
+*       = null string if success.
 */
 QString runKMail(bool minimise)
 {
@@ -1864,10 +1863,10 @@ void setDontShowErrors(const QString& eventId, const QString& tag)
 }
 
 /******************************************************************************
-*  Read the size for the specified window from the config file, for the
-*  current screen resolution.
-*  Reply = true if size set in the config file, in which case 'result' is set
-*        = false if no size is set, in which case 'result' is unchanged.
+* Read the size for the specified window from the config file, for the
+* current screen resolution.
+* Reply = true if size set in the config file, in which case 'result' is set
+*       = false if no size is set, in which case 'result' is unchanged.
 */
 bool readConfigWindowSize(const char* window, QSize& result, int* splitterWidth)
 {
@@ -1884,8 +1883,8 @@ bool readConfigWindowSize(const char* window, QSize& result, int* splitterWidth)
 }
 
 /******************************************************************************
-*  Write the size for the specified window to the config file, for the
-*  current screen resolution.
+* Write the size for the specified window to the config file, for the
+* current screen resolution.
 */
 void writeConfigWindowSize(const char* window, const QSize& size, int splitterWidth)
 {
@@ -1988,10 +1987,10 @@ bool showFileErrMessage(const QString& filename, FileErr err, FileErr blankError
                     errmsg = i18nc("@info", "Please select a file to play");
                 else
                     kFatal() << "Program error";
-                KMessageBox::sorry(errmsgParent, errmsg);
+                KAMessageBox::sorry(errmsgParent, errmsg);
                 return false;
             case FileErr_Directory:
-                KMessageBox::sorry(errmsgParent, i18nc("@info", "<filename>%1</filename> is a folder", file));
+                KAMessageBox::sorry(errmsgParent, i18nc("@info", "<filename>%1</filename> is a folder", file));
                 return false;
             case FileErr_Nonexistent:   errmsg = i18nc("@info", "<filename>%1</filename> not found", file);  break;
             case FileErr_Unreadable:    errmsg = i18nc("@info", "<filename>%1</filename> is not readable", file);  break;
@@ -2000,7 +1999,7 @@ bool showFileErrMessage(const QString& filename, FileErr err, FileErr blankError
             default:
                 break;
         }
-        if (KMessageBox::warningContinueCancel(errmsgParent, errmsg)
+        if (KAMessageBox::warningContinueCancel(errmsgParent, errmsg)
             == KMessageBox::Cancel)
             return false;
     }
@@ -2233,6 +2232,30 @@ KDateTime applyTimeZone(const QString& tzstring, const QDate& date, const QTime&
     return result;
 }
 
+/******************************************************************************
+* Return a prompt string to ask the user whether to convert the calendar to the
+* current format.
+* If 'whole' is true, the whole calendar needs to be converted; else only some
+* alarms may need to be converted.
+*
+* Note: This method is defined here to avoid duplicating the i18n string
+*       definition between the Akonadi and KResources code.
+*/
+QString conversionPrompt(const QString& calendarName, const QString& calendarVersion, bool whole)
+{
+    QString msg = whole
+                ? i18nc("@info", "Calendar <resource>%1</resource> is in an old format (<application>KAlarm</application> version %2), "
+                       "and will be read-only unless you choose to update it to the current format.",
+                       calendarName, calendarVersion)
+                : i18nc("@info", "Some or all of the alarms in calendar <resource>%1</resource> are in an old <application>KAlarm</application> format, "
+                       "and will be read-only unless you choose to update them to the current format.",
+                       calendarName);
+    return i18nc("@info", "<para>%1</para><para>"
+                 "<warning>Do not update the calendar if it is also used with an older version of <application>KAlarm</application> "
+                 "(e.g. on another computer). If you do so, the calendar may become unusable there.</warning></para>"
+                 "<para>Do you wish to update the calendar?</para>", msg);
+}
+
 #ifndef NDEBUG
 /******************************************************************************
 * Set up KAlarm test conditions based on environment variables.
@@ -2281,7 +2304,7 @@ KAlarm::UpdateStatus sendToKOrganizer(const KAEvent* event)
     kcalEvent->setUid(uid);
     kcalEvent->clearAlarms();
     QString userEmail;
-    switch (event->actions())
+    switch (event->actionTypes())
     {
         case KAEvent::ACT_DISPLAY:
         case KAEvent::ACT_COMMAND:

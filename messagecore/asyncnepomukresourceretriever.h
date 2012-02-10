@@ -38,8 +38,9 @@ class MESSAGECORE_EXPORT AsyncNepomukResourceRetriever : public QObject
   Q_OBJECT
   public:
     explicit AsyncNepomukResourceRetriever(QObject* parent = 0);
+    ~AsyncNepomukResourceRetriever();
 
-    void requestResource( const QUrl &url );
+    void requestResource( const QUrl &url, const QVector<QUrl> &properties );
     void cancelRequest( const QUrl &url );
 
   Q_SIGNALS:
@@ -51,7 +52,7 @@ class MESSAGECORE_EXPORT AsyncNepomukResourceRetriever : public QObject
   private:
     AsyncNepomukResourceRetrieverPrivate* const d;
     friend class AsyncNepomukResourceRetrieverPrivate;
-    Q_PRIVATE_SLOT( d, void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &resource ) );
+    Q_PRIVATE_SLOT( d, void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &resource ) )
 };
 
 }

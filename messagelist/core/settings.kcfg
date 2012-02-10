@@ -21,25 +21,19 @@
   </group>
 
   <group name="MessageListView::Colors">
-    <entry name="NewMessageColor" type="Color">
-      <default>#FF0000</default>
-    </entry>
     <entry name="UnreadMessageColor" type="Color">
-      <default>#0000FF</default>
+      <default code="true">MessageList::Util::unreadDefaultMessageColor()</default>
     </entry>
     <entry name="ImportantMessageColor" type="Color">
-      <default>#007F00</default>
+      <default code="true">MessageList::Util::importantDefaultMessageColor()</default>
     </entry>
     <entry name="TodoMessageColor" type="Color">
-      <default>#009800</default>
+      <default code="true">MessageList::Util::todoDefaultMessageColor()</default>
     </entry>
   </group>
 
   <group name="MessageListView::Fonts">
     <entry name="MessageListFont" type="Font">
-      <default>KGlobalSettings::generalFont()</default>
-    </entry>
-    <entry name="NewMessageFont" type="Font">
       <default>KGlobalSettings::generalFont()</default>
     </entry>
     <entry name="UnreadMessageFont" type="Font">

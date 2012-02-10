@@ -14,7 +14,7 @@ ENDMACRO(IE_UNIT_TESTS)
 MACRO(IE_EXECUTABLE_TESTS)
   FOREACH(_testname ${ARGN})
     kde4_add_executable(${_testname} NOGUI TEST ${_testname}.cpp modeltest.cpp)
-    target_link_libraries(${_testname} ${KDEPIMLIBS_KCALCORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDECORE_LIBS})
+    target_link_libraries(${_testname} ${KDEPIMLIBS_KCALCORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDECORE_LIBS} incidenceeditorsng)
   ENDFOREACH(_testname)
 ENDMACRO(IE_EXECUTABLE_TESTS)
 
@@ -26,10 +26,8 @@ IE_UNIT_TESTS(
 )
 
 ########### KTimeZoneComboBox unit test #############
-set(ktimezonecomboboxtest_SRCS
-    ktimezonecomboboxtest.cpp
-    ../ktimezonecombobox.cpp
-)
+set(ktimezonecomboboxtest_SRCS ktimezonecomboboxtest.cpp)
+
 kde4_add_unit_test(ktimezonecomboboxtest TESTNAME ktimezonecomboboxtest ${ktimezonecomboboxtest_SRCS})
 
 target_link_libraries(
@@ -39,5 +37,6 @@ target_link_libraries(
   ${QT_QTCORE_LIBRARY}
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
+  incidenceeditorsng
 )
 

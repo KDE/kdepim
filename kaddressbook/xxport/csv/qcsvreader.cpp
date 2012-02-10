@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "qcsvreader.h"
@@ -54,20 +54,23 @@ class QCsvReader::Private
 
 void QCsvReader::Private::emitBeginLine( uint row )
 {
-  if ( (row - mStartRow) > 0 )
+  if ( ( row - mStartRow ) > 0 ) {
     mBuilder->beginLine();
+  }
 }
 
 void QCsvReader::Private::emitEndLine( uint row )
 {
-  if ( (row - mStartRow) > 0 )
+  if ( ( row - mStartRow ) > 0 ) {
     mBuilder->endLine();
+  }
 }
 
 void QCsvReader::Private::emitField( const QString &data, int row, int column )
 {
-  if ( (row - mStartRow) > 0 )
+  if ( ( row - mStartRow ) > 0 ) {
     mBuilder->field( data, row - mStartRow - 1, column - 1 );
+  }
 }
 
 QCsvReader::QCsvReader( QCsvBuilderInterface *builder )
@@ -83,8 +86,7 @@ QCsvReader::~QCsvReader()
 
 bool QCsvReader::read( QIODevice *device )
 {
-  enum State
-  {
+  enum State {
     StartLine,
     QuotedField,
     QuotedFieldEnd,
@@ -356,8 +358,9 @@ uint QCsvStandardBuilder::columnCount() const
 
 QString QCsvStandardBuilder::data( uint row, uint column ) const
 {
-  if ( row > d->mRowCount || column > d->mColumnCount || column >= (uint)d->mRows[ row ].count() )
+  if ( row > d->mRowCount || column > d->mColumnCount || column >= (uint)d->mRows[ row ].count() ) {
     return QString();
+  }
 
   return d->mRows[ row ][ column ];
 }
@@ -377,8 +380,9 @@ void QCsvStandardBuilder::field( const QString &data, uint row, uint column )
 {
   const uint size = d->mRows[ row ].size();
   if ( column >= size ) {
-    for ( uint i = column; i < size + 1; ++i )
+    for ( uint i = column; i < size + 1; ++i ) {
       d->mRows[ row ].append( QString() );
+    }
   }
 
   d->mRows[ row ][ column ] = data;

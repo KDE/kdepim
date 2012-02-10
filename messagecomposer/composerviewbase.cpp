@@ -30,6 +30,7 @@
 #include "kleo_util.h"
 #include "infopart.h"
 #include "composer.h"
+#include "util.h"
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
@@ -65,7 +66,7 @@
 #include <recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
-
+#include "util.h"
 
 static QStringList encodeIdn( const QStringList &emails )
 {
@@ -76,7 +77,7 @@ static QStringList encodeIdn( const QStringList &emails )
   return encoded;
 }
 
-Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
+Message::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *parentGui)
  : QObject ( parent )
  , m_msg( KMime::Message::Ptr( new KMime::Message ) )
  , m_attachmentController( 0 )
@@ -88,6 +89,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_editor( 0 )
  , m_transport( 0 )
  , m_fccCombo( 0 )
+ , m_parentWidget( parentGui )
  , m_sign( false )
  , m_encrypt( false )
  , m_neverEncrypt( false )
@@ -101,37 +103,12 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
   initAutoSave();
+
 }
 
 Message::ComposerViewBase::~ComposerViewBase()
 {
 
-}
-
-// Checks if the mail is a HTML mail.
-// The catch here is that encapsulated messages can also have a HTML part, so we make
-// sure that only messages where the first HTML part is in the same multipart/alternative container
-// as the frist plain text part are counted as HTML mail
-bool Message::ComposerViewBase::isHTMLMail( KMime::Content *root )
-{
-  if ( !root )
-    return false;
-
-  using namespace MessageViewer;
-  KMime::Content *firstTextPart = ObjectTreeParser::findType( root, "text/plain", true, true );
-  KMime::Content *firstHtmlPart = ObjectTreeParser::findType( root, "text/html", true, true );
-  if ( !firstTextPart || !firstHtmlPart )
-    return false;
-
-  KMime::Content *parent = firstTextPart->parent();
-  if ( !parent || parent != firstHtmlPart->parent() )
-    return false;
-
-  if ( !parent->contentType()->isMultipart() ||
-       parent->contentType()->subType() != "alternative" )
-    return false;
-
-  return true;
 }
 
 bool Message::ComposerViewBase::isComposing() const
@@ -179,13 +156,14 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
   otp.parseObjectTree( msgContent );
 
-  m_editor->setText( otp.textualContent() );
+  m_editor->setPlainText( otp.plainTextContent() );
 
   // Load the attachments
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( msgContent );
+  std::vector<KMime::Content*>::const_iterator end( ac.attachments().end() );
   for ( std::vector<KMime::Content*>::const_iterator it = ac.attachments().begin();
-        it != ac.attachments().end() ; ++it ) {
+        it != end ; ++it ) {
     addAttachmentPart( *it );
   }
 
@@ -198,25 +176,12 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     m_transport->setCurrentTransport( transport->id() );
 
   // Set the HTML text and collect HTML images
-  if ( isHTMLMail( m_msg.get() ) ) {
-    KMime::Content *htmlNode = MessageViewer::ObjectTreeParser::findType( msgContent, "text/html", true, true );
-    Q_ASSERT( htmlNode );
-    KMime::Content *parentNode = htmlNode->parent();
-    if ( parentNode && parentNode->contentType()->isMultipart() ) {
-      emit enableHtml();
-
-      const QByteArray htmlCharset = htmlNode->contentType()->charset();
-      const QByteArray htmlBodyDecoded = htmlNode->decodedContent();
-      const QTextCodec *codec = MessageViewer::NodeHelper::codecForName( htmlCharset );
-      if ( codec ) {
-        m_editor->setHtml( codec->toUnicode( htmlBodyDecoded ) );
-      } else {
-        m_editor->setHtml( QString::fromLocal8Bit( htmlBodyDecoded ) );
-      }
-    }
+  if ( !otp.htmlContent().isEmpty() ) {
+    m_editor->setHtml( otp.htmlContent() );
+    emit enableHtml();
     collectImages( m_msg.get() );
   }
-  
+
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
@@ -287,6 +252,8 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-EncryptActionEnabled" );
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
+
+  Message::Util::sendMailDispatcherIsOnline( m_parentWidget );
 
   readyForSending();
 }
@@ -374,7 +341,6 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   }
 
   if( m_composers.isEmpty() ) {
-    // TODO i18n after string freeze!
     emit failed( i18n( "It was not possible to create a message composer." ) );
     return;
   }
@@ -490,8 +456,9 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
       std::vector<Kleo::KeyResolver::SplitInfo> encData = keyResolver->encryptionItems( concreteEncryptFormat );
       std::vector<Kleo::KeyResolver::SplitInfo>::iterator it;
+      std::vector<Kleo::KeyResolver::SplitInfo>::iterator end( encData.end() );
       QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
-      for( it = encData.begin(); it != encData.end(); ++it ) {
+      for( it = encData.begin(); it != end; ++it ) {
         QPair<QStringList, std::vector<GpgME::Key> > p( it->recipients, it->keys );
         data.append( p );
         kDebug() << "got resolved keys for:" << it->recipients;
@@ -515,12 +482,12 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
 
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+      concreteSignFormat = concreteCryptoMessageFormats[i];
+      if ( keyResolver->encryptionItems( concreteSignFormat ).empty() )
         continue;
-      if ( !(concreteCryptoMessageFormats[i] & m_cryptoMessageFormat) )
+      if ( !(concreteSignFormat & m_cryptoMessageFormat) )
         continue;
 
-      concreteSignFormat = concreteCryptoMessageFormats[i];
       std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteSignFormat );
 
       Message::Composer* composer =  new Message::Composer;
@@ -626,7 +593,8 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     Q_ASSERT( m_composers.contains( composer ) );
     // The messages were composed successfully.
     kDebug() << "NoError.";
-    for( int i = 0; i < composer->resultMessages().size(); ++i ) {
+    const int numberOfMessage( composer->resultMessages().size() );
+    for( int i = 0; i < numberOfMessage; ++i ) {
       if ( mSaveIn == MessageSender::SaveInNone ) {
         queueMessage( composer->resultMessages().at( i ), composer );
       } else {
@@ -663,7 +631,6 @@ void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
 }
 
-
 void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Message::Composer* composer )
 {
   const Message::InfoPart *infoPart = composer->infoPart();
@@ -682,18 +649,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
     qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
   }
-
-  Akonadi::Item::Id originalMessageId;
-  Akonadi::MessageStatus linkStatus;
-  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
-    if ( linkStatus == Akonadi::MessageStatus::statusReplied() ) {
-      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied,
-                                             QVariant( originalMessageId ) );
-    } else if ( linkStatus == Akonadi::MessageStatus::statusForwarded() ) {
-      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded,
-                                             QVariant( originalMessageId ) );
-    }
-  }
+  Message::Util::addSendReplyForwardAction(message, qjob);
 
   fillQueueJobHeaders( qjob, message, infoPart );
 
@@ -705,7 +661,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
      message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
   }
   message->assemble();
-  
+
   connect( qjob, SIGNAL(result(KJob*)), this, SLOT(slotQueueResult(KJob*)) );
   m_pendingQueueJobs++;
   qjob->start();
@@ -760,6 +716,7 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
     qjob->addressAttribute().setBcc( cleanEmailList( encodeIdn( infoPart->bcc() ) ) );
   }
 }
+
 void Message::ComposerViewBase::initAutoSave()
 {
   kDebug() << "initalising autosave";
@@ -787,8 +744,13 @@ void Message::ComposerViewBase::updateAutoSave()
   } else {
     if ( !m_autoSaveTimer ) {
       m_autoSaveTimer = new QTimer( this );
-      connect( m_autoSaveTimer, SIGNAL(timeout()),
-               this, SLOT(autoSaveMessage()) );
+      if ( m_parentWidget )
+        connect( m_autoSaveTimer, SIGNAL(timeout()),
+                 m_parentWidget, SLOT(autoSaveMessage()) );
+      else
+        connect( m_autoSaveTimer, SIGNAL(timeout()),
+                 this, SLOT(autoSaveMessage()) );
+
     }
     m_autoSaveTimer->start( m_autoSaveInterval );
   }
@@ -855,23 +817,31 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
   using Message::Composer;
 
   Q_ASSERT( dynamic_cast< Composer* >( job ) );
-  Composer* composer = dynamic_cast< Composer* >( job );
-  Q_ASSERT( m_composers.contains( composer ) );
-  m_composers.removeAll( composer );
+  Composer* composer = static_cast< Composer* >( job );
 
   if( composer->error() == Composer::NoError ) {
+    Q_ASSERT( m_composers.contains( composer ) );
 
     // The messages were composed successfully. Only save the first message, there should
     // only be one anyway, since crypto is disabled.
+    kDebug() << "NoError.";
     writeAutoSaveToDisk( composer->resultMessages().first() );
     Q_ASSERT( composer->resultMessages().size() == 1 );
 
     if( m_autoSaveInterval > 0 ) {
       updateAutoSave();
     }
+  } else if( composer->error() == Message::Composer::UserCancelledError ) {
+    // The job warned the user about something, and the user chose to return
+    // to the message.  Nothing to do.
+    kDebug() << "UserCancelledError.";
+    emit failed( i18n( "Job cancelled by the user" ) );
   } else {
-    kWarning() << "Composer for autosaving failed:" << composer->errorString();
+    kDebug() << "other Error.";
+    emit failed( i18n( "Could not autosave message: %1", job->errorString() ) );
   }
+
+  m_composers.removeAll( composer );
 }
 
 void Message::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
@@ -995,6 +965,7 @@ void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
 
 void Message::ComposerViewBase::addAttachment ( const KUrl& url, const QString& comment )
 {
+  Q_UNUSED( comment );
   kDebug() << "adding attachment with url:" << url;
   m_attachmentController->addAttachment( url );
 }
@@ -1057,46 +1028,36 @@ Message::Composer* Message::ComposerViewBase::createSimpleComposer() {
 }
 
 //-----------------------------------------------------------------------------
-static QString cleanedUpHeaderString( const QString &s )
-{
-  // remove invalid characters from the header strings
-  QString res( s );
-  res.remove( QChar::fromLatin1( '\r' ) );
-  res.replace( QChar::fromLatin1( '\n' ), QString::fromLatin1( " " ) );
-  return res.trimmed();
-}
-
-//-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::to() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::To ) );
+  return Message::Util::cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::To ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::cc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Cc ) );
+  return Message::Util::cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Cc ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::bcc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Bcc ) );
+  return Message::Util::cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Bcc ) );
 }
 
 QString Message::ComposerViewBase::from() const
 {
-  return cleanedUpHeaderString( m_from );
+  return Message::Util::cleanedUpHeaderString( m_from );
 }
 
 QString Message::ComposerViewBase::replyTo() const
 {
-  return cleanedUpHeaderString( m_replyTo );
+  return Message::Util::cleanedUpHeaderString( m_replyTo );
 }
 
 QString Message::ComposerViewBase::subject() const
 {
-  return cleanedUpHeaderString( m_subject );
+  return Message::Util::cleanedUpHeaderString( m_subject );
 }
 
 void Message::ComposerViewBase::setParentWidgetForGui ( QWidget* w )
@@ -1359,10 +1320,10 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
-bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords ) 
+bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
 {
   if ( attachmentKeywords.isEmpty() )
-    return false;	  
+    return false;
   if ( m_attachmentModel->rowCount() > 0 ) {
     return false;
   }
@@ -1378,7 +1339,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
 
   // check whether the subject contains one of the attachment key words
   // unless the message is a reply or a forwarded message
-  QString subj = subject();
+  const QString subj = subject();
   gotMatch = ( MessageHelper::stripOffPrefixes( subj ) == subj ) && ( rx.indexIn( subj ) >= 0 );
 
   if ( !gotMatch ) {
@@ -1386,7 +1347,8 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
     // words
     QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
     QTextDocument *doc = m_editor->document();
-    for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
+    QTextBlock end( doc->end() );
+    for ( QTextBlock it = doc->begin(); it != end; it = it.next() ) {
       const QString line = it.text();
       gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
                  ( rx.indexIn( line ) >= 0 );
@@ -1398,7 +1360,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
 
   if ( !gotMatch )
     return false;
-  
+
   int rc = KMessageBox::warningYesNoCancel( m_editor,
                                             i18n("The message you have composed seems to refer to an "
                                                 "attached file but you have not attached anything.\n"
@@ -1415,3 +1377,5 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
   return false;
 }
 
+
+#include "composerviewbase.moc"

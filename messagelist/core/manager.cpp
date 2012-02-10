@@ -36,6 +36,8 @@
 
 #include "messagecore/globalsettings.h"
 
+#include "messagelistutil.h"
+
 #include <QPixmap>
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
@@ -162,7 +164,7 @@ void Manager::unregisterWidget( Widget *pWidget )
 
   mInstance->mWidgetList.removeAll( pWidget );
 
-  if ( mInstance->mWidgetList.count() < 1 )
+  if ( mInstance->mWidgetList.isEmpty() )
   {
     delete mInstance;
     mInstance = 0;
@@ -172,18 +174,18 @@ void Manager::unregisterWidget( Widget *pWidget )
 unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *storageModel )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelSelectedMessages" );
+                     MessageList::Util::storageModelSelectedMessageGroup() );
 
   // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
   qulonglong defValue = 0;
 
-  return conf.readEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ), defValue );
+  return conf.readEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModel->id() ), defValue );
 }
 
 void Manager::savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelSelectedMessages" );
+                     MessageList::Util::storageModelSelectedMessageGroup() );
 
 
   if ( uniqueIdOfMessage )
@@ -191,9 +193,9 @@ void Manager::savePreSelectedMessageForStorageModelId( const QString &storageMod
     // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
     qulonglong val = uniqueIdOfMessage;
 
-    conf.writeEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModelId ), val );
+    conf.writeEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), val );
   } else
-    conf.deleteEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModelId ) );
+    conf.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ) );
 }
 
 const Aggregation * Manager::aggregation( const QString &id )
@@ -208,9 +210,9 @@ const Aggregation * Manager::aggregation( const QString &id )
 const Aggregation * Manager::defaultAggregation()
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelAggregations" );
+                     MessageList::Util::storageModelAggregationsGroup() );
 
-  QString aggregationId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
+  const QString aggregationId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
   Aggregation * opt = 0;
 
@@ -221,15 +223,14 @@ const Aggregation * Manager::defaultAggregation()
     return opt;
 
   // try just the first one
-  QHash< QString, Aggregation * >::Iterator it = mAggregations.begin();
-  if ( it != mAggregations.end() )
+  QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin();
+  if ( it != mAggregations.constEnd() )
     return *it;
 
   // aargh
   createDefaultAggregations();
 
-  it = mAggregations.begin();
-  return *it;
+  return *( mAggregations.constBegin() );
 }
 
 void Manager::saveAggregationForStorageModel( const Akonadi::Collection &col, const QString &id, bool storageUsesPrivateAggregation )
@@ -247,12 +248,12 @@ void Manager::saveAggregationForStorageModel( const StorageModel *storageModel, 
 void Manager::saveAggregationForStorageModel( const QString &modelId, const QString &id, bool storageUsesPrivateAggregation )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelAggregations" );
+                     MessageList::Util::storageModelAggregationsGroup() );
 
   if ( storageUsesPrivateAggregation )
-    conf.writeEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( modelId ), id );
+    conf.writeEntry( MessageList::Util::setForStorageModelConfigName().arg( modelId ), id );
   else
-    conf.deleteEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( modelId ) );
+    conf.deleteEntry( MessageList::Util::setForStorageModelConfigName().arg( modelId ) );
 
   if ( !storageUsesPrivateAggregation )
     conf.writeEntry( QLatin1String( "DefaultSet" ), id );
@@ -284,9 +285,9 @@ const Aggregation * Manager::aggregationForStorageModel( const StorageModel *sto
 const Aggregation * Manager::aggregationForStorageModel( const QString &storageId, bool *storageUsesPrivateAggregation )
 {
   KConfigGroup conf( Settings::self()->config(),
-                     "MessageListView::StorageModelAggregations" );
+                     MessageList::Util::storageModelAggregationsGroup() );
 
-  QString aggregationId = conf.readEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageId ), "" );
+  const QString aggregationId = conf.readEntry( MessageList::Util::setForStorageModelConfigName().arg( storageId ), "" );
 
   Aggregation * opt = 0;
 
@@ -459,7 +460,8 @@ void Manager::createDefaultAggregations()
 
 void Manager::removeAllAggregations()
 {
-  for( QHash< QString, Aggregation * >::Iterator it = mAggregations.begin(); it != mAggregations.end(); ++it )
+  QHash< QString, Aggregation * >::ConstIterator end( mAggregations.constEnd() );
+  for( QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin(); it != end; ++it )
     delete ( *it );
 
   mAggregations.clear();
@@ -467,7 +469,7 @@ void Manager::removeAllAggregations()
 
 void Manager::aggregationsConfigurationCompleted()
 {
-  if ( mAggregations.count() < 1 )
+  if ( mAggregations.isEmpty() )
     createDefaultAggregations(); // panic
 
   saveConfiguration(); // just to be sure :)
@@ -485,7 +487,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
   if ( !storageModel )
     return SortOrder();
 
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelSortOrderGroup() );
   SortOrder ret;
   ret.readConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
   return ret;
@@ -494,7 +496,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
 void Manager::saveSortOrderForStorageModel( const StorageModel *storageModel,
                                             const SortOrder& order, bool storageUsesPrivateSortOrder )
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelSortOrderGroup() );
   order.writeConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
 }
 
@@ -509,9 +511,9 @@ const Theme * Manager::theme( const QString &id )
 
 const Theme * Manager::defaultTheme()
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelThemesGroup() );
 
-  QString themeId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
+  const QString themeId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
   Theme * opt = 0;
 
@@ -522,16 +524,16 @@ const Theme * Manager::defaultTheme()
     return opt;
 
   // try just the first one
-  QHash< QString, Theme * >::Iterator it = mThemes.begin();
-  if ( it != mThemes.end() )
+  QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin();
+  if ( it != mThemes.constEnd() )
     return *it;
 
   // aargh
   createDefaultThemes();
 
-  it = mThemes.begin();
+  it = mThemes.constBegin();
 
-  Q_ASSERT( it != mThemes.end() );
+  Q_ASSERT( it != mThemes.constEnd() );
 
   return *it;
 }
@@ -548,12 +550,12 @@ void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const 
 
 void Manager::saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme )
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelThemesGroup() );
 
   if ( storageUsesPrivateTheme )
-    conf.writeEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModelIndex ), id );
+    conf.writeEntry( MessageList::Util::setForStorageModelConfigName().arg( storageModelIndex ), id );
   else
-    conf.deleteEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModelIndex ) );
+    conf.deleteEntry( MessageList::Util::setForStorageModelConfigName().arg( storageModelIndex ) );
 
   if ( !storageUsesPrivateTheme )
     conf.writeEntry( QLatin1String( "DefaultSet" ), id );
@@ -587,8 +589,8 @@ const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, b
 
 const Theme * Manager::themeForStorageModel( const QString &id, bool *storageUsesPrivateTheme )
 {
-  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
-  QString themeId = conf.readEntry( QString(QLatin1String(  "SetForStorageModel%1" )).arg( id ), "" );
+  KConfigGroup conf( Settings::self()->config(), MessageList::Util::storageModelThemesGroup() );
+  const QString themeId = conf.readEntry( MessageList::Util::setForStorageModelConfigName().arg( id ), "" );
 
   Theme * opt = 0;
 
@@ -691,7 +693,7 @@ void Manager::createDefaultThemes()
 
   s = new Theme(
       i18nc( "Default theme name", "Classic" ),
-      i18n( "A simple, backward compatible, single row theme" )
+      i18n( "A simple, backward compatible, single row theme" ), true /*readOnly*/
     );
 
     c = new Theme::Column();
@@ -741,7 +743,7 @@ void Manager::createDefaultThemes()
   add_theme_simple_text_column( s, i18n( "Most Recent Date" ), Theme::ContentItem::MostRecentDate, false, SortOrder::SortMessagesByDateTimeOfMostRecent, false, true );
   add_theme_simple_text_column( s, i18nc( "Size of a message", "Size" ), Theme::ContentItem::Size, false, SortOrder::SortMessagesBySize, false, false );
   add_theme_simple_icon_column( s, i18nc( "Attachement indication", "Attachment" ), QLatin1String( "mail-attachment" ), Theme::ContentItem::AttachmentStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "Unread" ), QLatin1String( "mail-unread-new" ), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByUnreadStatus );
+  add_theme_simple_icon_column( s, i18n( "Read/Unread" ), QLatin1String( "mail-unread-new" ), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByUnreadStatus );
   add_theme_simple_icon_column( s, i18n( "Replied" ), QLatin1String( "mail-replied" ), Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting );
   add_theme_simple_icon_column( s, i18nc( "Message importance indication", "Important" ), QLatin1String( "emblem-important" ), Theme::ContentItem::ImportantStateIcon, false, SortOrder::NoMessageSorting );
   add_theme_simple_icon_column( s, i18n( "Action Item" ), QLatin1String( "mail-task" ), Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus );
@@ -759,7 +761,7 @@ void Manager::createDefaultThemes()
 
   s = new Theme(
       i18n( "Fancy" ),
-      i18n( "A fancy multiline and multi item theme" )
+      i18n( "A fancy multiline and multi item theme" ), true /*readOnly*/
     );
 
     c = new Theme::Column();
@@ -857,6 +859,7 @@ void Manager::createDefaultThemes()
 
   s->setName( i18n( "Fancy with Clickable Status" ) );
   s->setDescription( i18n( "A fancy multiline and multi item theme with a clickable status column" ) );
+  s->setReadOnly( true );
 
     c = new Theme::Column();
     c->setLabel( i18n( "Status" ) );
@@ -889,7 +892,8 @@ void Manager::createDefaultThemes()
 
 void Manager::removeAllThemes()
 {
-  for( QHash< QString, Theme * >::Iterator it = mThemes.begin(); it != mThemes.end(); ++it )
+  QHash< QString, Theme * >::ConstIterator end( mThemes.constEnd() );
+  for( QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin(); it != end; ++it )
     delete ( *it );
 
   mThemes.clear();
@@ -897,7 +901,7 @@ void Manager::removeAllThemes()
 
 void Manager::themesConfigurationCompleted()
 {
-  if ( mThemes.count() < 1 )
+  if ( mThemes.isEmpty() )
     createDefaultThemes(); // panic
 
   saveConfiguration(); // just to be sure :)
@@ -908,11 +912,12 @@ void Manager::themesConfigurationCompleted()
 
 void Manager::reloadAllWidgets()
 {
-  for( QList< Widget * >::Iterator it = mWidgetList.begin(); it != mWidgetList.end(); ++it )
+
+  QList< Widget * >::ConstIterator end( mWidgetList.constEnd() );
+  for( QList< Widget * >::ConstIterator it = mWidgetList.constBegin(); it != end; ++it )
   {
-    if ( !( *it )->view() )
-      continue;
-    ( *it )->view()->reload();
+    if ( ( *it )->view() )
+      ( *it )->view()->reload();
   }
 }
 
@@ -920,8 +925,8 @@ void Manager::reloadAllWidgets()
 void Manager::reloadGlobalConfiguration()
 {
   // This is called when configuration changes (probably edited by the options dialog)
-  int oldDateFormat = (int)mDateFormatter->format();
-  QString oldDateCustomFormat = mDateFormatter->customFormat();
+  const int oldDateFormat = (int)mDateFormatter->format();
+  const QString oldDateCustomFormat = mDateFormatter->customFormat();
 
   loadGlobalConfiguration();
 
@@ -953,12 +958,12 @@ void Manager::loadConfiguration()
 
     mAggregations.clear();
 
-    int cnt = conf.readEntry( "Count", (int)0 );
+    const int cnt = conf.readEntry( "Count", 0 );
 
     int idx = 0;
     while ( idx < cnt )
     {
-      QString data = conf.readEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), QString() );
+      const QString data = conf.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
       if ( !data.isEmpty() )
       {
         Aggregation * set = new Aggregation();
@@ -974,7 +979,7 @@ void Manager::loadConfiguration()
       idx++;
     }
 
-    if ( mAggregations.count() == 0 )
+    if ( mAggregations.isEmpty() )
     {
       // don't allow zero configuration, create some presets
       createDefaultAggregations();
@@ -988,12 +993,12 @@ void Manager::loadConfiguration()
 
     mThemes.clear();
 
-    int cnt = conf.readEntry( "Count", (int)0 );
+    const int cnt = conf.readEntry( "Count", 0 );
 
     int idx = 0;
     while ( idx < cnt )
     {
-      QString data = conf.readEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), QString() );
+      const QString data = conf.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
       if ( !data.isEmpty() )
       {
         Theme * set = new Theme();
@@ -1007,10 +1012,10 @@ void Manager::loadConfiguration()
           delete set; // b0rken
         }
       }
-      idx++;
+      ++idx;
     }
 
-    if ( mThemes.count() == 0 )
+    if ( mThemes.isEmpty() )
     {
       // don't allow zero configuration, create some presets
       createDefaultThemes();
@@ -1037,10 +1042,11 @@ void Manager::saveConfiguration()
     conf.writeEntry( "Count", mAggregations.count() );
 
     int idx = 0;
-    for( QHash< QString, Aggregation * >::Iterator it = mAggregations.begin(); it != mAggregations.end(); ++it )
+    QHash< QString, Aggregation * >::ConstIterator end( mAggregations.end() );
+    for( QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin(); it != end; ++it )
     {
-      conf.writeEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), ( *it )->saveToString() );
-      idx++;
+      conf.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), ( *it )->saveToString() );
+      ++idx;
     }
   }
 
@@ -1053,13 +1059,16 @@ void Manager::saveConfiguration()
     conf.writeEntry( "Count", mThemes.count() );
 
     int idx = 0;
-    for( QHash< QString, Theme * >::Iterator it = mThemes.begin(); it != mThemes.end(); ++it )
+    QHash< QString, Theme * >::ConstIterator end( mThemes.constEnd() );
+    for( QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin(); it != end; ++it )
     {
-      conf.writeEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), ( *it )->saveToString() );
-      idx++;
+      conf.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), ( *it )->saveToString() );
+      ++idx;
     }
   }
 
   Settings::self()->config()->sync();
 }
 
+
+#include "manager.moc"

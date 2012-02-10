@@ -24,11 +24,12 @@
 #include <KStandardDirs>
 #include <QFile>
 #include <QtGui/QWidget>
+#include <QtGui/QApplication>
 
 class StyleSheetLoaderPrivate
 {
   public:
-    StyleSheetLoaderPrivate()
+    StyleSheetLoaderPrivate() : appliedGlobally(false)
     {
       QFile f( KStandardDirs::locate( "data", "mobileui/stylesheet.css" ) );
       if ( f.open( QFile::ReadOnly ) ) {
@@ -40,6 +41,7 @@ class StyleSheetLoaderPrivate
     }
 
     QString styleSheet;
+    bool appliedGlobally;
 };
 
 K_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
@@ -47,7 +49,21 @@ K_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
 void StyleSheetLoader::applyStyle(QWidget* widget)
 {
 #ifndef QT_NO_STYLE_STYLESHEET
-  if ( widget && !s_styleSheetLoader->styleSheet.isEmpty() )
+  if ( widget && !s_styleSheetLoader->appliedGlobally && !s_styleSheetLoader->styleSheet.isEmpty() )
     widget->setStyleSheet( s_styleSheetLoader->styleSheet );
 #endif
 }
+
+void StyleSheetLoader::applyStyle(QApplication* app)
+{
+#ifndef QT_NO_STYLE_STYLESHEET
+  if ( app && !s_styleSheetLoader->styleSheet.isEmpty() )
+    app->setStyleSheet( s_styleSheetLoader->styleSheet );
+#endif
+}
+
+QString StyleSheetLoader::styleSheet()
+{
+  return s_styleSheetLoader->styleSheet;
+}
+

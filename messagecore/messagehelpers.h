@@ -41,7 +41,7 @@ namespace Util {
    * Returns whether the item represents a valid KMime::Message that is not
    * in the Akonadi store (yet). This happens when operating on messages
    * attached to other mails, for example. Such items are not "valid", in
-   * the akonadi sense, since jobs can not sensibly use them, but they do
+   * the akonadi sense, since jobs cannot sensibly use them, but they do
    * contain a valid message pointer.
    */
   MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item &item );
@@ -68,9 +68,8 @@ namespace Util {
    * @param status Will contain the status (replied or forwarded) that linked the message to the original message.
    * @returns Whether the mail contains valid link information or not.
    */
-  MESSAGECORE_EXPORT bool getLinkInformation( const KMime::Message::Ptr &message, Akonadi::Item::Id &id, Akonadi::MessageStatus &status );
+   MESSAGECORE_EXPORT bool getLinkInformation( const KMime::Message::Ptr &msg, QList<Akonadi::Item::Id> &id, QList<Akonadi::MessageStatus> &status );
 }
-
 }
 
 #endif

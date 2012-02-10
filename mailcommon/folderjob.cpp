@@ -1,13 +1,12 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
  *
- *  This file is part of KMail, the KDE mail client.
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *
- *  KMail is free software; you can redistribute it and/or modify it
+ *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
- *  KMail is distributed in the hope that it will be useful, but
+ *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  General Public License for more details.
@@ -30,74 +29,28 @@
 
 #include "folderjob.h"
 
-#include <kdebug.h>
-#include <kio/global.h>
+#include <kio/global.h> //krazy:exclude=camelcase as there is no such
+
 
 namespace MailCommon {
 
 //----------------------------------------------------------------------------
-  FolderJob::FolderJob( KMime::Message *msg, JobType jt, const Akonadi::Collection& folder,
-                          const QString &partSpecifier )
-    : mType( jt ), mSrcFolder( Akonadi::Collection() ), mDestFolder( folder ), mPartSpecifier( partSpecifier ),
-    mErrorCode( 0 ),
-    mPassiveDestructor( false ), mStarted( false )
+FolderJob::FolderJob() :
+  mErrorCode( 0 ), mStarted( false ), mCancellable( false )
 {
-  if ( msg ) {
-    mMsgList.append( msg );
-    mSets = msg->headerByType( "X-UID" ) ? msg->headerByType( "X-UID" )->asUnicodeString() : "" ;
-  }
-  init();
-}
-
-//----------------------------------------------------------------------------
-FolderJob::FolderJob( const QList<KMime::Message*>& msgList, const QString& sets,
-                      JobType jt, const Akonadi::Collection& folder )
-  : mMsgList( msgList ),mType( jt ),
-    mSets( sets ), mSrcFolder( Akonadi::Collection() ), mDestFolder( folder ),
-    mErrorCode( 0 ),
-    mPassiveDestructor( false ), mStarted( false )
-{
-  init();
-}
-
-//----------------------------------------------------------------------------
-FolderJob::FolderJob( JobType jt )
-  : mType( jt ),
-    mErrorCode( 0 ),
-    mPassiveDestructor( false ), mStarted( false )
-{
-  init();
-}
-
-//----------------------------------------------------------------------------
-void FolderJob::init()
-{
-  switch ( mType ) {
-  case tListMessages:
-  case tGetFolder:
-  case tGetMessage:
-  case tCheckUidValidity:
-    mCancellable = true;
-    break;
-  default:
-    mCancellable = false;
-  }
 }
 
 //----------------------------------------------------------------------------
 FolderJob::~FolderJob()
 {
-  if( !mPassiveDestructor ) {
-    emit result( this );
-    emit finished();
-  }
+  emit result( this );
+  emit finished();
 }
 
 //----------------------------------------------------------------------------
 void FolderJob::start()
 {
-  if (!mStarted)
-  {
+  if ( !mStarted ) {
     mStarted = true;
     execute();
   }
@@ -108,12 +61,6 @@ void FolderJob::kill()
 {
   mErrorCode = KIO::ERR_USER_CANCELED;
   delete this;
-}
-
-//----------------------------------------------------------------------------
-QList<KMime::Message*> FolderJob::msgList() const
-{
-  return mMsgList;
 }
 
 }

@@ -65,7 +65,7 @@ QString buildTitle(const QString& description)
         else if (tagName.startsWith(QLatin1String("br")) || tagName.startsWith(QLatin1String("BR")))
         {
             toReplace=rx.cap(1);
-            replaceWith=" ";
+            replaceWith=' ';
         }
         else
             toReplace=rx.cap(1);  // strip just tag
@@ -364,7 +364,8 @@ void Article::setStatus(int stat)
                 d->status = (d->status | Private::New) & ~Private::Read;
                 break;
         }
-        d->archive->setStatus(d->guid, d->status);
+        if ( d->archive )
+            d->archive->setStatus(d->guid, d->status);
         if (d->feed)
             d->feed->setArticleChanged(*this, oldStatus);
      }
@@ -372,22 +373,38 @@ void Article::setStatus(int stat)
 
 QString Article::title() const
 {
-    return d->archive->title(d->guid);
+    QString str;
+    if ( d->archive ) {
+        str = d->archive->title(d->guid);
+    }
+    return str;
 }
 
 QString Article::authorName() const
 {
-    return d->archive->authorName(d->guid);
+    QString str;
+    if ( d->archive ) {
+        str = d->archive->authorName(d->guid);
+    }
+    return str;
 }
 
 QString Article::authorEMail() const
 {
-    return d->archive->authorEMail(d->guid);
+    QString str;
+    if ( d->archive ) {
+        str = d->archive->authorEMail(d->guid);
+    }
+    return str;
 }
 
 QString Article::authorUri() const
 {
-    return d->archive->authorUri(d->guid);
+    QString str;
+    if ( d->archive ){
+        str = d->archive->authorUri(d->guid);
+    }
+    return str;
 }
 
 QString Article::authorShort() const {

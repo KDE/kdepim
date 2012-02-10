@@ -139,11 +139,11 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
 
 void DistributionListDialog::setRecipients( const Recipient::List &recipients )
 {
-  Recipient::List::ConstIterator it;
-  for( it = recipients.constBegin(); it != recipients.constEnd(); ++it ) {
+  Recipient::List::ConstIterator end( recipients.constEnd() );
+  for( Recipient::List::ConstIterator it = recipients.constBegin(); it != end; ++it ) {
     QStringList emails = KPIMUtils::splitAddressList( (*it)->email() );
-    QStringList::ConstIterator it2;
-    for( it2 = emails.constBegin(); it2 != emails.constEnd(); ++it2 ) {
+    QStringList::ConstIterator end2( emails.constEnd() );
+    for( QStringList::ConstIterator it2 = emails.constBegin(); it2 != end2; ++it2 ) {
       QString name;
       QString email;
       KABC::Addressee::parseEmailAddress( *it2, name, email );
@@ -197,8 +197,8 @@ void DistributionListDialog::slotDelayedSetRecipients( KJob *job )
 void DistributionListDialog::slotUser1()
 {
   bool isEmpty = true;
-
-  for (int i = 0; i < mRecipientsList->topLevelItemCount(); ++i) {
+  const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );
+  for (int i = 0; i < numberOfTopLevel; ++i) {
     DistributionListItem *item = static_cast<DistributionListItem *>(
         mRecipientsList->topLevelItem( i ));
     if ( item && item->checkState( 0 ) == Qt::Checked ) {
@@ -253,8 +253,8 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
   const Akonadi::Collection targetCollection = dlg.selectedCollection();
 
   KABC::ContactGroup group( name );
-
-  for ( int i = 0; i < mRecipientsList->topLevelItemCount(); ++i ) {
+  const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );
+  for ( int i = 0; i < numberOfTopLevel; ++i ) {
     DistributionListItem *item = static_cast<DistributionListItem *>( mRecipientsList->topLevelItem( i ) );
     if ( item && item->checkState( 0 ) == Qt::Checked ) {
       kDebug() << item->addressee().fullEmail() << item->addressee().uid();

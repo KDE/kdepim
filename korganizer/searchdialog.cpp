@@ -27,8 +27,8 @@
 #include "searchdialog.h"
 #include "koglobals.h"
 #include "calendarview.h"
-#include "views/listview/kolistview.h"
-#include <libkdepim/kdateedit.h>
+
+#include <calendarviews/eventviews/list/listview.h>
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/kcalprefs.h>
@@ -37,8 +37,7 @@
 using namespace KOrg;
 
 SearchDialog::SearchDialog( CalendarView *calendarview )
-  : KDialog( calendarview )
-  , m_calendarview( calendarview )
+  : KDialog( calendarview ), m_calendarview( calendarview )
 {
   setCaption( i18n( "Search Calendar" ) );
   setButtons( User1 | Cancel );
@@ -53,9 +52,12 @@ SearchDialog::SearchDialog( CalendarView *calendarview )
   setupUi( mainwidget );
   setMainWidget( mainwidget );
 
+  resize( QSize( 775, 600 ).expandedTo( minimumSizeHint() ) );
+
   // Set nice initial start and end dates for the search
-  mStartDate->setDate( QDate::currentDate() );
-  mEndDate->setDate( QDate::currentDate().addYears( 1 ) );
+  const QDate currDate = QDate::currentDate();
+  mStartDate->setDate( currDate );
+  mEndDate->setDate( currDate.addYears( 1 ) );
 
   connect( mSearchEdit, SIGNAL(textChanged(QString)),
            this, SLOT(searchTextChanged(QString)) );
@@ -63,8 +65,7 @@ SearchDialog::SearchDialog( CalendarView *calendarview )
   // Results list view
   QVBoxLayout *layout = new QVBoxLayout;
   layout->setMargin( 0 );
-  listView = new KOListView( m_calendarview->calendar(), this );
-  listView->showDates();
+  listView = new EventViews::ListView( m_calendarview->calendar(), this );
   layout->addWidget( listView );
   mListViewFrame->setLayout( layout );
 
@@ -113,7 +114,7 @@ void SearchDialog::doSearch()
       i18n( "No items were found that match your search pattern." ),
       "NoSearchResults" );
   } else {
-    mNumItems->setText( i18np("%1 item","%1 items", mMatchedEvents.count() ) );
+    mNumItems->setText( i18np( "%1 item","%1 items", mMatchedEvents.count() ) );
   }
 }
 
@@ -139,7 +140,8 @@ void SearchDialog::search( const QRegExp &re )
   Akonadi::Item::List events;
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   if ( mEventsCheck->isChecked() ) {
-    events = m_calendarview->calendar()->events( startDt, endDt, timeSpec, mInclusiveCheck->isChecked() );
+    events =
+      m_calendarview->calendar()->events( startDt, endDt, timeSpec, mInclusiveCheck->isChecked() );
   }
   Akonadi::Item::List todos;
   if ( mTodosCheck->isChecked() ) {
@@ -181,7 +183,8 @@ void SearchDialog::search( const QRegExp &re )
   }
 
   mMatchedEvents.clear();
-  Q_FOREACH( const Akonadi::Item &item, CalendarSupport::Calendar::mergeIncidenceList(events, todos, journals) ) {
+  Q_FOREACH ( const Akonadi::Item &item,
+              CalendarSupport::Calendar::mergeIncidenceList( events, todos, journals ) ) {
     const Incidence::Ptr ev = CalendarSupport::incidence( item );
     Q_ASSERT( ev );
     if ( mSummaryCheck->isChecked() ) {

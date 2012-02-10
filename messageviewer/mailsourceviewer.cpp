@@ -32,7 +32,7 @@
 #include <config-messageviewer.h>
 
 #include "mailsourceviewer.h"
-
+#include "findbar/findbarsourceview.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <kstandardguiitem.h>
@@ -45,9 +45,72 @@
 #include <QtGui/QShortcut>
 #include <QtGui/QTabBar>
 #include <QtGui/QVBoxLayout>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 namespace MessageViewer {
 
+
+MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *parent )
+  :QWidget( parent )
+{
+  QVBoxLayout *lay = new QVBoxLayout;
+  setLayout( lay );  
+  mTextBrowser = new MailSourceViewTextBrowser();
+  mTextBrowser->setLineWrapMode( QTextEdit::NoWrap );
+  mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
+  connect( mTextBrowser, SIGNAL(findText()), SLOT(slotFind()) );
+  lay->addWidget( mTextBrowser );
+  mFindBar = new FindBarSourceView( mTextBrowser, this );
+  lay->addWidget( mFindBar );
+  QShortcut *shortcut = new QShortcut( this );
+  shortcut->setKey( Qt::Key_F+Qt::CTRL );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+}
+
+void MailSourceViewTextBrowserWidget::slotFind()
+{
+  mFindBar->show();
+  mFindBar->focusAndSetCursor();  
+}
+
+void MailSourceViewTextBrowserWidget::setText( const QString& text )
+{
+  mTextBrowser->setText( text );
+}
+
+void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
+{
+  mTextBrowser->setPlainText( text );
+}
+
+MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textBrowser() const
+{
+  return mTextBrowser;
+}
+  
+MailSourceViewTextBrowser::MailSourceViewTextBrowser( QWidget *parent )
+  :KTextBrowser( parent )
+{
+}
+
+void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
+{
+  QMenu *popup = createStandardContextMenu(event->pos());
+  if (popup) {
+    popup->addSeparator();
+    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+    //Code from KTextBrowser
+    KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                          : KIconTheme::TextEditor,
+                                          popup->actions() );
+
+    popup->exec( event->globalPos() );
+    delete popup;
+  }
+}
+
+  
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :
   const QRegExp regexp( "^([\\x21-9;-\\x7E]+:\\s)" );
@@ -96,7 +159,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
   QStringList tmpSource;
   QString source( src );
   int pos = 0;
-  QString indent = "";
+  QString indent;
 
   //First make sure that each tag is surrounded by newlines
   while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
@@ -121,11 +184,13 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
   for( int i = 0; i != tmpSource.length(); i++ )  {
     if( htmlTagRegExp.indexIn( tmpSource[i] ) != -1 ) // A tag
     {
-      if( htmlTagRegExp.cap( 3 ) == "/" || htmlTagRegExp.cap( 2 ) == "img" || htmlTagRegExp.cap( 2 ) == "br" ) {
+      if( htmlTagRegExp.cap( 3 ) == QLatin1String( "/" ) ||
+          htmlTagRegExp.cap( 2 ) == QLatin1String( "img" ) ||
+          htmlTagRegExp.cap( 2 ) == QLatin1String( "br" ) ) {
         //Self closing tag or no closure needed
         continue;
       }
-      if( htmlTagRegExp.cap( 1 ) == "/" ) {
+      if( htmlTagRegExp.cap( 1 ) == QLatin1String( "/" ) ) {
         // End tag
         indent.chop( 2 );
         tmpSource[i].prepend( indent );
@@ -157,37 +222,34 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 
   connect( this, SIGNAL(closeClicked()), SLOT(close()) );
 
-  mRawBrowser = new KTextBrowser();
+  mRawBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
   mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
-  mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
 #ifndef NDEBUG
-  mHtmlBrowser = new KTextBrowser();
+  mHtmlBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
-  mTabWidget->setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
-  mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
+  mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
+  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser->textBrowser() );
 #endif
 
   mTabWidget->setCurrentIndex( 0 );
 
-  // combining the shortcuts in one qkeysequence() did not work...
+  // combining the shortcuts in one qkeysequence() did not work...  
   QShortcut* shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_Escape );
   connect( shortcut, SIGNAL(activated()), SLOT(close()) );
-
   shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_W+Qt::CTRL );
   connect( shortcut, SIGNAL(activated()), SLOT(close()) );
+  
   KWindowSystem::setIcons( winId(),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
                   IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
-  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser );
+  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser->textBrowser() );
+  mRawBrowser->textBrowser()->setFocus();
 }
 
 MailSourceViewer::~MailSourceViewer()
@@ -207,6 +269,6 @@ void MailSourceViewer::setDisplayedSource( const QString &source )
   Q_UNUSED( source );
 #endif
 }
-
+  
 #include "mailsourceviewer.moc"
 }

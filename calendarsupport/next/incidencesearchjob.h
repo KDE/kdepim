@@ -1,34 +1,32 @@
 /*
-    This file is part of CalendarSupport.
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
-
-    Copyright (c) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
     Author: Sérgio Martins <sergio.martins@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef AKONADI_CALENDARSEARCHJOB_H
-#define AKONADI_CALENDARSEARCHJOB_H
+#ifndef CALENDARSUPPORT_INCIDENCESEARCHJOB_H
+#define CALENDARSUPPORT_INCIDENCESEARCHJOB_H
 
 #include "calendarsupport_export.h"
 
-#include <akonadi/item.h>
-#include <akonadi/itemsearchjob.h>
+#include <Akonadi/Item>
+#include <Akonadi/ItemSearchJob>
 
 #include <KCalCore/Incidence>
 
@@ -46,14 +44,16 @@ namespace CalendarSupport {
  *
  * // Search all incidences with uid 1234
  * CalendarSupport::IncidenceSearchJob *job = new CalendarSupport::IncidenceSearchJob();
- * job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, "1234", CalendarSupport::IncidenceSearchJob::ExactMatch );
+ * job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, "1234",
+ *                CalendarSupport::IncidenceSearchJob::ExactMatch );
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
  * ...
  *
  * MyClass::searchResult( KJob *job )
  * {
- *   CalendarSupport::IncidenceSearchJob *searchJob = qobject_cast<CalendarSupport::IncidenceSearchJob*>( job );
+ *   CalendarSupport::IncidenceSearchJob *searchJob =
+ *     qobject_cast<CalendarSupport::IncidenceSearchJob*>( job );
  *   const KCalCore::Incidence::List incidences = searchJob->incidences();
  *   // do something with the incidences
  * }
@@ -70,7 +70,8 @@ namespace CalendarSupport {
  *
  * MyClass::searchResult( KJob *job )
  * {
- *   CalendarSupport::IncidenceSearchJob *searchJob = qobject_cast<CalendarSupport::IncidenceSearchJob*>( job );
+ *   CalendarSupport::IncidenceSearchJob *searchJob =
+ *     qobject_cast<CalendarSupport::IncidenceSearchJob*>( job );
  *   const KCalCore::Incidence::List incidences = searchJob->incidences();
  *   // do something with the incidences
  * }
@@ -101,8 +102,7 @@ class CALENDARSUPPORT_EXPORT IncidenceSearchJob : public Akonadi::ItemSearchJob
     /**
      * Describes the criteria that can be searched for.
      */
-    enum Criterion
-    {
+    enum Criterion {
       IncidenceUid   ///< The global unique identifier of the incidence. @since 4.6
     };
 
@@ -111,8 +111,7 @@ class CALENDARSUPPORT_EXPORT IncidenceSearchJob : public Akonadi::ItemSearchJob
      *
      * @since 4.6
      */
-    enum Match
-    {
+    enum Match {
       ExactMatch,      ///< The result must match exactly the pattern (case sensitive).
       StartsWithMatch, ///< The result must start with the pattern (case insensitive).
       ContainsMatch    ///< The result must contain the pattern (case insensitive).
@@ -144,7 +143,7 @@ class CALENDARSUPPORT_EXPORT IncidenceSearchJob : public Akonadi::ItemSearchJob
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

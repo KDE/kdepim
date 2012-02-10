@@ -66,7 +66,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 {
   Q_OBJECT
   public:
-    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns, int rows, int rowSize, bool isInteractive );
+    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea,
+             int columns, int rows, int rowSize, bool isInteractive );
 
     Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns, bool isInteractive );
 
@@ -79,8 +80,15 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     QSize minimumSize() const;
     int minimumHeight() const;
     // QSizePolicy sizePolicy() const;
-    int contentsY() const { return -y(); }
-    int contentsX() const { return x(); }
+    int contentsY() const
+    {
+      return -y();
+    }
+
+    int contentsX() const
+    {
+      return x();
+    }
 
     QScrollBar *verticalScrollBar() const;
 
@@ -171,7 +179,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       deselected. This function emits the itemSelected(bool) signal to inform
       about selection/deselection of events.
     */
-    void selectItem( AgendaItem::QPtr  );
+    void selectItem( AgendaItem::QPtr );
 
     /**
       Selects the item associated with a given Akonadi Item id.
@@ -205,8 +213,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void upperYChanged( int );
 
     void startDragSignal( const Akonadi::Item & );
-    void droppedToDos( const KCalCore::Todo::List &todo, const QPoint &gpos, bool allDay );
-    void droppedToDos( const QList<KUrl> &todo, const QPoint &gpos, bool allDay );
+    void droppedIncidences( const KCalCore::Incidence::List &, const QPoint &gpos, bool allDay );
+    void droppedIncidences( const QList<KUrl> &, const QPoint &gpos, bool allDay );
 
     void enableAgendaUpdate( bool enable );
     void zoomView( const int delta, const QPoint &pos, const Qt::Orientation );

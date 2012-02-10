@@ -502,7 +502,7 @@ void KDeclarativeMainView::launchAccountWizard()
     if ( loader.load() ) {
       QObject *instance = loader.instance();
       // TODO error handling
-      QMetaObject::invokeMethod( instance, "run", Qt::DirectConnection, Q_ARG( QStringList, d->mChangeRecorder->mimeTypesMonitored() ) );
+      QMetaObject::invokeMethod( instance, "run", Qt::DirectConnection, Q_ARG( QStringList, d->mChangeRecorder->mimeTypesMonitored() ), Q_ARG( QWidget*, this ) );
       loader.unload();
       return;
     } else {
@@ -783,7 +783,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
     }
   }
   QStringList patterns = KMimeType::findByUrl( url, 0, true, true, 0 )->patterns();
-  QString filter = QString();
+  QString filter;
   if ( !patterns.isEmpty() ) {
     filter += patterns.join( QLatin1String( "\n" ) );
     filter += i18n( "\n*|all files" );
@@ -869,13 +869,6 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   standardActionManager->setItemSelectionModel( itemSelectionModel );
   standardActionManager->setCollectionSelectionModel( collectionSelectionModel );
   standardActionManager->createAllActions();
-}
-
-void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
-{
-  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
-  manager->setSelectionModel( selectionModel );
-  manager->createAllActions();
 }
 
 QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
@@ -1024,6 +1017,27 @@ void KDeclarativeMainView::checkAllBulkActionItems( bool check )
                                                           d->mListProxy->index( d->mListProxy->rowCount() - 1, 0 ) ),
                                           QItemSelectionModel::Deselect );
   }
+}
+
+AgentActionManager* KDeclarativeMainView::createAgentActionManager(QItemSelectionModel* agentSelectionModel)
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( agentSelectionModel );
+  manager->createAllActions();
+
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
+
+  manager->interceptAction( AgentActionManager::CreateAgentInstance );
+  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL(triggered(bool)),
+           this, SLOT(launchAccountWizard()) );
+
+  manager->interceptAction( Akonadi::AgentActionManager::ConfigureAgentInstance );
+  connect( manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance ), SIGNAL(triggered()),
+           d, SLOT(configureAgentInstance()) );
+
+  return manager;
 }
 
 #include "kdeclarativemainview.moc"

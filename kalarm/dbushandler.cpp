@@ -1,7 +1,7 @@
 /*
  *  dbushandler.cpp  -  handler for D-Bus calls by other applications
  *  Program:  kalarm
- *  Copyright © 2002-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,14 +22,15 @@
 
 #include "alarmcalendar.h"
 #include "functions.h"
-#include "identities.h"
 #include "kalarmapp.h"
 #include "kamail.h"
-#include "karecurrence.h"
 #include "mainwindow.h"
 #include "preferences.h"
 #include "dbushandler.moc"
 #include <kalarmadaptor.h>
+
+#include <kalarmcal/identities.h>
+#include <kalarmcal/karecurrence.h>
 
 #ifdef USE_AKONADI
 #include <kcalcore/duration.h>
@@ -275,8 +276,8 @@ bool DBusHandler::scheduleMessage(const QString& message, const KDateTime& start
                                   const KUrl& audioFile, int reminderMins, const KARecurrence& recurrence,
                                   const Duration& subRepeatDuration, int subRepeatCount)
 {
-    unsigned kaEventFlags = convertStartFlags(start, flags);
-    KAEvent::Action action = (kaEventFlags & KAEvent::DISPLAY_COMMAND) ? KAEvent::COMMAND : KAEvent::MESSAGE;
+    KAEvent::Flags kaEventFlags = convertStartFlags(start, flags);
+    KAEvent::SubAction action = (kaEventFlags & KAEvent::DISPLAY_COMMAND) ? KAEvent::COMMAND : KAEvent::MESSAGE;
     QColor bg = convertBgColour(bgColor);
     if (!bg.isValid())
         return false;
@@ -315,7 +316,7 @@ bool DBusHandler::scheduleFile(const KUrl& file,
                                const KUrl& audioFile, int reminderMins, const KARecurrence& recurrence,
                                const Duration& subRepeatDuration, int subRepeatCount)
 {
-    unsigned kaEventFlags = convertStartFlags(start, flags);
+    KAEvent::Flags kaEventFlags = convertStartFlags(start, flags);
     QColor bg = convertBgColour(bgColor);
     if (!bg.isValid())
         return false;
@@ -330,7 +331,7 @@ bool DBusHandler::scheduleCommand(const QString& commandLine,
                                   const KDateTime& start, int lateCancel, unsigned flags,
                                   const KARecurrence& recurrence, const Duration& subRepeatDuration, int subRepeatCount)
 {
-    unsigned kaEventFlags = convertStartFlags(start, flags);
+    KAEvent::Flags kaEventFlags = convertStartFlags(start, flags);
     return theApp()->scheduleEvent(KAEvent::COMMAND, commandLine, start, lateCancel, kaEventFlags, Qt::black, Qt::black, QFont(),
                                    QString(), -1, 0, recurrence, subRepeatDuration, subRepeatCount);
 }
@@ -343,7 +344,7 @@ bool DBusHandler::scheduleEmail(const QString& fromID, const QString& addresses,
                                 const KDateTime& start, int lateCancel, unsigned flags,
                                 const KARecurrence& recurrence, const Duration& subRepeatDuration, int subRepeatCount)
 {
-    unsigned kaEventFlags = convertStartFlags(start, flags);
+    KAEvent::Flags kaEventFlags = convertStartFlags(start, flags);
     uint senderId = 0;
     if (!fromID.isEmpty())
     {
@@ -354,7 +355,11 @@ bool DBusHandler::scheduleEmail(const QString& fromID, const QString& addresses,
             return false;
         }
     }
-    EmailAddressList addrs;
+#ifdef USE_AKONADI
+    KCalCore::Person::List addrs;
+#else
+    QList<KCal::Person> addrs;
+#endif
     QString bad = KAMail::convertAddresses(addresses, addrs);
     if (!bad.isEmpty())
     {
@@ -384,7 +389,7 @@ bool DBusHandler::scheduleAudio(const QString& audioUrl, int volumePercent,
                                 const KDateTime& start, int lateCancel, unsigned flags,
                                 const KARecurrence& recurrence, const Duration& subRepeatDuration, int subRepeatCount)
 {
-    unsigned kaEventFlags = convertStartFlags(start, flags);
+    KAEvent::Flags kaEventFlags = convertStartFlags(start, flags);
     float volume = (volumePercent >= 0) ? volumePercent / 100.0f : -1;
     return theApp()->scheduleEvent(KAEvent::AUDIO, QString(), start, lateCancel, kaEventFlags, Qt::black, Qt::black, QFont(),
                                    audioUrl, volume, 0, recurrence, subRepeatDuration, subRepeatCount);
@@ -454,9 +459,9 @@ KDateTime DBusHandler::convertDateTime(const QString& dateTime, const KDateTime&
 /******************************************************************************
 * Convert the flag bits to KAEvent flag bits.
 */
-unsigned DBusHandler::convertStartFlags(const KDateTime& start, unsigned flags)
+KAEvent::Flags DBusHandler::convertStartFlags(const KDateTime& start, unsigned flags)
 {
-    unsigned kaEventFlags = 0;
+    KAEvent::Flags kaEventFlags = 0;
     if (flags & REPEAT_AT_LOGIN) kaEventFlags |= KAEvent::REPEAT_AT_LOGIN;
     if (flags & BEEP)            kaEventFlags |= KAEvent::BEEP;
     if (flags & SPEAK)           kaEventFlags |= KAEvent::SPEAK;

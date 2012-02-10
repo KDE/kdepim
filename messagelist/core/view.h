@@ -67,7 +67,7 @@ class MESSAGELIST_EXPORT View : public QTreeView
   friend class ModelPrivate;
   Q_OBJECT
 public:
-  View( Widget *parent );
+  explicit View( Widget *parent );
   ~View();
 
   /**
@@ -562,6 +562,7 @@ protected:
    * then requests our parent widget to act on the storage.
    */
   void changeMessageStatus( MessageItem * it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset );
+  void changeMessageStatusRead( MessageItem *it, bool read );
 
   /**
    * Starts a short-delay timer connected to saveThemeColumnState().

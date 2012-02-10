@@ -29,26 +29,25 @@
 #include "kohelper.h"
 #include "koglobals.h"
 
-#include <calendarviews/eventviews/agenda/cellitem.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
+#include <calendarviews/eventviews/agenda/cellitem.h>
 
-#include <KDebug>
 #include <KCalendarSystem>
 #include <KConfigGroup>
+#include <KDebug>
 #include <KSystemTimeZones>
 #include <KWordWrap>
 
-#include <QPainter>
-#include <QLayout>
+#include <QAbstractTextDocumentLayout>
 #include <QFrame>
 #include <QLabel>
-#include <QtAlgorithms>
-#include <QTextDocumentFragment>
-#include <QTextDocument>
+#include <QLayout>
+#include <QPainter>
 #include <QTextCursor>
-#include <QAbstractTextDocumentLayout>
-#include <qmath.h> // qCeil
+#include <QTextDocument>
+#include <QTextDocumentFragment>
+#include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
 
 using namespace KCalCore;
 
@@ -786,7 +785,7 @@ int CalPrintPluginBase::drawAllDayBox( QPainter &p, const Akonadi::Item::List &e
                                        bool excludeConfidential,
                                        bool excludePrivate )
 {
-  Event::List::Iterator it, itold;
+  Event::List::Iterator it;
   int offset = box.top();
   QString multiDayStr;
 
@@ -800,8 +799,6 @@ int CalPrintPluginBase::drawAllDayBox( QPainter &p, const Akonadi::Item::List &e
   it = eventList.begin();
   while ( it != eventList.end() ) {
     Event::Ptr currEvent = *it;
-    itold = it;
-    ++it;
     if ( ( excludeConfidential && currEvent->secrecy() == Incidence::SecrecyConfidential ) ||
          ( excludePrivate      && currEvent->secrecy() == Incidence::SecrecyPrivate ) ) {
       continue;
@@ -819,7 +816,9 @@ int CalPrintPluginBase::drawAllDayBox( QPainter &p, const Akonadi::Item::List &e
         }
         multiDayStr += currEvent->summary();
       }
-      eventList.erase( itold );
+      it = eventList.erase( it );
+    } else {
+      ++it;
     }
   }
 
@@ -1003,7 +1002,22 @@ void CalPrintPluginBase::drawAgendaItem( PrintCellItem *item, QPainter &p,
         str += event->description();
       }
     }
+    QFont oldFont( p.font() );
+    if ( eventBox.height() < 24 ) {
+      if ( eventBox.height() < 12 ) {
+        if ( eventBox.height() < 8 ) {
+          p.setFont( QFont( "sans-serif", 4 ) );
+        } else {
+          p.setFont( QFont( "sans-serif", 6 ) );
+        }
+      } else {
+        p.setFont( QFont( "sans-serif", 8 ) );
+      }
+    } else {
+       p.setFont( QFont( "sans-serif", 10 ) );
+    }
     showEventBox( p, EVENT_BORDER_WIDTH, eventBox, event, str );
+    p.setFont( oldFont );
   }
 }
 
@@ -1052,7 +1066,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
                                                   CalendarSupport::SortDirectionAscending );
 
   QString timeText;
-  p.setFont( QFont( "sans-serif", 8 ) );
+  p.setFont( QFont( "sans-serif", 7 ) );
 
   int textY = mSubHeaderHeight; // gives the relative y-coord of the next printed entry
   unsigned int visibleEventsCounter = 0;
@@ -1090,12 +1104,17 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
 
     if ( textY >= box.height() ) {
       const QChar downArrow( 0x21e3 );
-      const unsigned int invisibleIncidences = ((eventList.count() - visibleEventsCounter) + mCalendar->todos( qd ).count());
+
+      const unsigned int invisibleIncidences =
+        ( eventList.count() - visibleEventsCounter ) + mCalendar->todos( qd ).count();
+
       const QString warningMsg = QString( "%1 (%2)" ).arg( downArrow ).arg( invisibleIncidences );
 
       QFontMetrics fm( p.font() );
       QRect msgRect = fm.boundingRect( warningMsg );
-      msgRect.setRect( box.right() - msgRect.width() - 2, box.bottom() - msgRect.height() - 2, msgRect.width(), msgRect.height() );
+      msgRect.setRect( box.right() - msgRect.width() - 2,
+                       box.bottom() - msgRect.height() - 2,
+                       msgRect.width(), msgRect.height() );
 
       p.save();
       p.setPen( Qt::red );
@@ -1200,7 +1219,7 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox,
     summaryBound.setHeight(textBoxHeight);
     QRect lineRect( dayBox.x() + borderWidth, dayBox.y() + textY,
                     dayBox.width() - ( borderWidth * 2 ), textBoxHeight );
-    drawBox( p, -1, lineRect );
+    drawBox( p, 1, lineRect );
     if ( !time.isEmpty() ) {
       p.drawText( timeBound, flags, time );
     }
@@ -1238,7 +1257,7 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox,
     p.save();
     QRect backBox( timeBound.x(), timeBound.y(),
                    dayBox.width() - ( borderWidth * 2 ), clipBox.height() );
-    drawBox( p, -1, backBox );
+    drawBox( p, 1, backBox );
 
     if ( !time.isEmpty() ) {
       if ( timeBound.bottom() > dayBox.bottom() ) {
@@ -1517,7 +1536,7 @@ void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
                                                 KDateTime( d.addDays(1), QTime( 0, 0, 0 ) ) ) );
       }
       if ( holidaysFlags & Text ) {
-        textEvents[ d.day() ] << e->summary();
+        textEvents[d.day()] << e->summary();
       }
     }
   }
@@ -1525,7 +1544,7 @@ void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
   QList<MonthEventStruct> monthentries;
 
   KDateTime::Spec timeSpec = KSystemTimeZones::local();
-  Q_FOREACH( const Akonadi::Item &item, events ) {
+  Q_FOREACH ( const Akonadi::Item &item, events ) {
     const Event::Ptr e = CalendarSupport::event( item );
     if ( !e ) {
       continue;
@@ -1578,7 +1597,7 @@ void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
       }
       // Show as text in the box
       if ( subDailyFlags & Text ) {
-        textEvents[ (*mit).start.date().day() ] << CalendarSupport::event( (*mit).event )->summary();
+        textEvents[(*mit).start.date().day()] << CalendarSupport::event( (*mit).event )->summary();
       }
     } else {
       // Multi-day events are always shown as time line boxes
@@ -1759,13 +1778,14 @@ void CalPrintPluginBase::drawTodoLines( QPainter &p,
         mPrinter->newPage();
       }
       y += fm.height();
-      p.drawText( x, y, textLine[ lineCount ] );
+      p.drawText( x, y, textLine[lineCount] );
     }
   }
 }
 
 void CalPrintPluginBase::drawTodo( int &count, const Akonadi::Item &todoItem, QPainter &p,
-                                   CalendarSupport::TodoSortField sortField, CalendarSupport::SortDirection sortDir,
+                                   CalendarSupport::TodoSortField sortField,
+                                   CalendarSupport::SortDirection sortDir,
                                    bool connectSubTodos, bool strikeoutCompleted,
                                    bool desc, int posPriority, int posSummary,
                                    int posDueDt, int posPercentComplete,
@@ -1896,7 +1916,7 @@ void CalPrintPluginBase::drawTodo( int &count, const Akonadi::Item &todoItem, QP
   Akonadi::Item item = mCalendar->itemForIncidenceUid( todo->uid() );
   Akonadi::Item::List relations = mCalendar->findChildren( item );
 
-  foreach( const Akonadi::Item &childItem, relations ) {
+  foreach ( const Akonadi::Item &childItem, relations ) {
     // In the future, to-dos might also be related to events
     // Manually check if the sub-to-do is in the list of to-dos to print
     // The problem is that relations() does not apply filters, so
@@ -1999,19 +2019,19 @@ void CalPrintPluginBase::drawTextLines( QPainter &p, const QString &entry,
         mPrinter->newPage();
       }
       y += fm.height();
-      p.drawText( x, y, textLine[ lineCount ] );
+      p.drawText( x, y, textLine[lineCount] );
     }
   }
 }
 
-void CalPrintPluginBase::drawJournal( const Journal::Ptr &journal, QPainter &p, int x, int &y,
-                                      int width, int pageHeight )
+void CalPrintPluginBase::drawJournal( const Journal::Ptr &journal, QPainter &p,
+                                      int x, int &y, int width, int pageHeight )
 {
   QFont oldFont( p.font() );
   p.setFont( QFont( "sans-serif", 15 ) );
   QString headerText;
-  QString dateText( KGlobal::locale()->
-        formatDate( journal->dtStart().toLocalZone().date(), KLocale::LongDate ) );
+  QString dateText( KGlobal::locale()->formatDate( journal->dtStart().toLocalZone().date(),
+                                                   KLocale::LongDate ) );
 
   if ( journal->summary().isEmpty() ) {
     headerText = dateText;
@@ -2061,14 +2081,14 @@ void CalPrintPluginBase::drawSplitHeaderRight( QPainter &p, const QDate &fd,
     if ( fd.month() == td.month() ) {
       title = i18nc( "Date range: Month dayStart - dayEnd", "%1 %2 - %3",
                      mCalSys->monthName( fd.month(), KCalendarSystem::LongName ),
-                     mCalSys->formatDate(fd, KLocale::Day, KLocale::LongNumber),
-                     mCalSys->formatDate(td, KLocale::Day, KLocale::LongNumber) );
+                     mCalSys->formatDate( fd, KLocale::Day, KLocale::LongNumber ),
+                     mCalSys->formatDate( td, KLocale::Day, KLocale::LongNumber ) );
     } else {
       title = i18nc( "Date range: monthStart dayStart - monthEnd dayEnd", "%1 %2 - %3 %4",
                      mCalSys->monthName( fd.month(), KCalendarSystem::LongName ),
-                     mCalSys->formatDate(fd, KLocale::Day, KLocale::LongNumber),
+                     mCalSys->formatDate( fd, KLocale::Day, KLocale::LongNumber ),
                      mCalSys->monthName( td.month(), KCalendarSystem::LongName ),
-                     mCalSys->formatDate(td, KLocale::Day, KLocale::LongNumber ) );
+                     mCalSys->formatDate( td, KLocale::Day, KLocale::LongNumber ) );
     }
   }
 

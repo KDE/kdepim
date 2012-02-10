@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -50,8 +50,8 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   mUi->mTimeZoneComboEnd->setVisible( false );
 
   // We don't want to see the combobox list / calendar in the mobile version
-  mUi->mStartDateEdit->setReadOnly(true);
-  mUi->mEndDateEdit->setReadOnly(true);
+  mUi->mStartDateEdit->setOptions( mUi->mStartDateEdit->options() & ~KDateComboBox::EditDate );
+  mUi->mEndDateEdit->setOptions( mUi->mEndDateEdit->options() & ~KDateComboBox::EditDate );
   mUi->mStartTimeEdit->clear();
   mUi->mEndTimeEdit->clear();
 
@@ -76,27 +76,27 @@ IncidenceDateTime::~IncidenceDateTime()
   delete mTimeZones;
 }
 
-bool IncidenceDateTime::eventFilter(QObject *obj, QEvent *event)
+bool IncidenceDateTime::eventFilter( QObject *obj, QEvent *event )
 {
-  if (event->type() == QEvent::FocusIn) {
+  if ( event->type() == QEvent::FocusIn ) {
     if ( obj == mUi->mStartDateEdit ) {
       kDebug() << "emiting startDateTime: " << mUi->mStartDateEdit;
-      emit startDateFocus(obj);
+      emit startDateFocus( obj );
     } else if ( obj == mUi->mEndDateEdit ) {
       kDebug() << "emiting endDateTime: " << mUi->mEndDateEdit;
-      emit endDateFocus(obj);
+      emit endDateFocus( obj );
     } else if ( obj == mUi->mStartTimeEdit ) {
       kDebug() << "emiting startTimeTime: " << mUi->mStartTimeEdit;
-      emit startTimeFocus(obj);
+      emit startTimeFocus( obj );
     } else if ( obj == mUi->mEndTimeEdit ) {
       kDebug() << "emiting endTimeTime: " << mUi->mEndTimeEdit;
-      emit endTimeFocus(obj);
+      emit endTimeFocus( obj );
     }
 
     return true;
   } else {
     // standard event processing
-    return QObject::eventFilter(obj, event);
+    return QObject::eventFilter( obj, event );
   }
 }
 
@@ -653,8 +653,8 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
 
-  const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true /** first */ ) : rightNow;
-  const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true /** first */ ) : rightNow;
+  const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true/** first */ ) : rightNow;
+  const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true/** first */ ) : rightNow;
   setDateTimes( startDT, endDT );
 }
 
@@ -698,7 +698,7 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
   }
 
   if ( mUi->mEndCheck->isChecked() ) {
-    todo->setDtDue( currentEndDateTime(), true /** first */ );
+    todo->setDtDue( currentEndDateTime(), true/** first */ );
     // Set allday must be executed after setDtDue
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
 
@@ -728,6 +728,29 @@ void IncidenceDateTime::save( const KCalCore::Journal::Ptr &journal )
 
 void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &end )
 {
+  const KDateTime::Spec startSpec = start.timeSpec();
+  const KDateTime::Spec endSpec = end.timeSpec();
+
+  // Combo boxes only have system time zones
+  if ( startSpec.type() == KDateTime::TimeZone ) {
+    const KTimeZone systemTz = KSystemTimeZones::zone( startSpec.timeZone().name() );
+    if ( !systemTz.isValid() ) {
+      const KCalCore::ICalTimeZone icalTz( startSpec.timeZone() );
+      mTimeZones->add( icalTz );
+    }
+  }
+
+  if ( endSpec.type() == KDateTime::TimeZone ) {
+    const KTimeZone systemTz = KSystemTimeZones::zone( endSpec.timeZone().name() );
+    if ( !systemTz.isValid() ) {
+      const KCalCore::ICalTimeZone icalTz( endSpec.timeZone() );
+      mTimeZones->add( icalTz );
+    }
+  }
+
+  mUi->mTimeZoneComboStart->setAdditionalTimeZones( mTimeZones );
+  mUi->mTimeZoneComboEnd->setAdditionalTimeZones( mTimeZones );
+
   if ( start.isValid() ) {
     mUi->mStartDateEdit->setDate( start.date() );
     mUi->mStartTimeEdit->setTime( start.time() );
@@ -812,18 +835,18 @@ bool IncidenceDateTime::isValid() const
     }
     return false;
   } else {
-    mLastErrorString = QString();
+    mLastErrorString.clear();
     return true;
   }
 }
 
 void IncidenceDateTime::setTimeZoneLabelEnabled( bool enable )
 {
-  #ifndef KDEPIM_MOBILE_UI
-    mUi->mTimeZoneLabel->setVisible( enable );
-  #else
-    Q_UNUSED( enable );
-  #endif
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mTimeZoneLabel->setVisible( enable );
+#else
+  Q_UNUSED( enable );
+#endif
 }
 
 #include "moc_incidencedatetime.cpp"

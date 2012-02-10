@@ -19,12 +19,12 @@
     USA.
 */
 
-#ifndef CONNECTIONPAGE_H
-#define CONNECTIONPAGE_H
+#ifndef AKONADICONSOLE_CONNECTIONPAGE_H
+#define AKONADICONSOLE_CONNECTIONPAGE_H
 
 #include <QtGui/QWidget>
 
-class QTextEdit;
+class KTextEdit;
 
 class ConnectionPage : public QWidget
 {
@@ -45,7 +45,7 @@ class ConnectionPage : public QWidget
     void connectionDataOutput( const QString&, const QString& );
 
   private:
-    QTextEdit *mDataView;
+    KTextEdit *mDataView;
     QString mIdentifier;
     bool mShowAllConnections;
 };

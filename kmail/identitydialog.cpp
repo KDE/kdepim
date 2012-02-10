@@ -70,19 +70,16 @@ using MailTransport::TransportManager;
 // other KDE headers:
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kconfig.h>
 #include <kfileitem.h>
 #include <kurl.h>
 #include <kdebug.h>
 #include <kpushbutton.h>
-#include <kconfiggroup.h>
 #include <kcombobox.h>
 #include <ktabwidget.h>
 #include <sonnet/dictionarycombobox.h>
 
 // Qt headers:
 #include <QLabel>
-#include <QPushButton>
 #include <QCheckBox>
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -343,7 +340,7 @@ namespace KMail {
       << Kleo::cryptoMessageFormatToLabel( Kleo::SMIMEFormat )
       << Kleo::cryptoMessageFormatToLabel( Kleo::SMIMEOpaqueFormat );
     mPreferredCryptoMessageFormat->addItems( l );
-    label = new QLabel( i18nc("Preferred format:", "Crypto"), tab );
+    label = new QLabel( i18nc("preferred format of encrypted messages", "Preferred format:"), tab );
     label->setBuddy( mPreferredCryptoMessageFormat );
 
     glay->addWidget( label, row, 0 );
@@ -468,7 +465,7 @@ namespace KMail {
     tlay->addWidget( mCustom, Qt::AlignLeft );
 
 #ifndef KDEPIM_MOBILE_UI
-    mWidget = new TemplatesConfiguration( tab, "identity-templates" );
+    mWidget = new TemplateParser::TemplatesConfiguration( tab, "identity-templates" );
     mWidget->setEnabled( false );
 
     // Move the help label outside of the templates configuration widget,
@@ -564,7 +561,8 @@ namespace KMail {
 
     bool DoesntMatchEMailAddress::operator()( const GpgME::Key & key ) const {
       const std::vector<GpgME::UserID> uids = key.userIDs();
-      for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
+      std::vector<GpgME::UserID>::const_iterator end = uids.end();
+      for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != end ; ++it )
         if ( checkForEmail( it->email() ? it->email() : it->id() ) )
           return false;
       return true; // note the negation!
@@ -697,7 +695,7 @@ namespace KMail {
   bool IdentityDialog::checkFolderExists( const QString & folderID,
                                           const QString & msg )
   {
-    Akonadi::Collection folder = CommonKernel->collectionFromId( folderID );
+    const Akonadi::Collection folder = CommonKernel->collectionFromId( folderID.toLongLong() );
     if ( !folder.isValid() ) {
       KMessageBox::sorry( this, msg );
       return false;
@@ -743,10 +741,10 @@ namespace KMail {
                                   "therefore, the default sent-mail folder "
                                   "will be used.",
                                   ident.identityName() ) ) ) {
-      mFccCombo->setFolder( CommonKernel->sentCollectionFolder() );
+      mFccCombo->setCollection( CommonKernel->sentCollectionFolder() );
     }
     else {
-      mFccCombo->setFolder( ident.fcc() );
+      mFccCombo->setCollection( Akonadi::Collection( ident.fcc().toLongLong() ) );
     }
     if ( ident.drafts().isEmpty() ||
          !checkFolderExists( ident.drafts(),
@@ -755,10 +753,10 @@ namespace KMail {
                                   "therefore, the default drafts folder "
                                   "will be used.",
                                   ident.identityName() ) ) ) {
-      mDraftsCombo->setFolder( CommonKernel->draftsCollectionFolder() );
+      mDraftsCombo->setCollection( CommonKernel->draftsCollectionFolder() );
     }
     else
-      mDraftsCombo->setFolder( ident.drafts() );
+      mDraftsCombo->setCollection( Akonadi::Collection( ident.drafts().toLongLong() ) );
 
     if ( ident.templates().isEmpty() ||
          !checkFolderExists( ident.templates(),
@@ -766,17 +764,17 @@ namespace KMail {
                                   "\"%1\" does not exist (anymore); "
                                   "therefore, the default templates folder "
                                   "will be used.", ident.identityName()) ) ) {
-      mTemplatesCombo->setFolder( CommonKernel->templatesCollectionFolder() );
+      mTemplatesCombo->setCollection( CommonKernel->templatesCollectionFolder() );
 
     }
     else
-      mTemplatesCombo->setFolder( ident.templates() );
+      mTemplatesCombo->setCollection( Akonadi::Collection( ident.templates().toLongLong() ) );
 
     // "Templates" tab:
 #ifndef KDEPIM_MOBILE_UI
     uint identity = ident.uoid();
-    QString iid = TemplatesConfiguration::configIdString( identity );
-    Templates t( iid );
+    QString iid = TemplateParser::TemplatesConfiguration::configIdString( identity );
+    TemplateParser::Templates t( iid );
     mCustom->setChecked(t.useCustomTemplates());
     mWidget->loadFromIdentity( identity );
 #endif
@@ -784,7 +782,7 @@ namespace KMail {
     // "Signature" tab:
     mSignatureConfigurator->setImageLocation( ident );
     mSignatureConfigurator->setSignature( ident.signature() );
- #ifndef KDEPIM_MOBILE_UI
+#ifndef KDEPIM_MOBILE_UI
     mXFaceConfigurator->setXFace( ident.xface() );
     mXFaceConfigurator->setXFaceEnabled( ident.isXFaceEnabled() );
 #endif
@@ -810,7 +808,7 @@ namespace KMail {
     ident.setTransport( mTransportCheck->isChecked() ? QString::number( mTransportCombo->currentTransportId() )
                                                      : QString() );
     ident.setDictionary( mDictionaryCombo->currentDictionaryName() );
-    Akonadi::Collection collection = mFccCombo->folderCollection();
+    Akonadi::Collection collection = mFccCombo->collection();
     if ( collection.isValid() ) {
       ident.setFcc( QString::number( collection.id() ) );
       Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
@@ -820,7 +818,7 @@ namespace KMail {
     else
       ident.setFcc( QString() );
 
-    collection = mDraftsCombo->folderCollection();
+    collection = mDraftsCombo->collection();
     if ( collection.isValid() ) {
       ident.setDrafts( QString::number( collection.id() ) );
       Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
@@ -830,7 +828,7 @@ namespace KMail {
     else
       ident.setDrafts( QString() );
 
-    collection = mTemplatesCombo->folderCollection();
+    collection = mTemplatesCombo->collection();
     if ( collection.isValid() ) {
       ident.setTemplates( QString::number( collection.id() ) );
       Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
@@ -842,8 +840,8 @@ namespace KMail {
     // "Templates" tab:
 #ifndef KDEPIM_MOBILE_UI
     uint identity = ident.uoid();
-    QString iid = TemplatesConfiguration::configIdString( identity );
-    Templates t( iid );
+    QString iid = TemplateParser::TemplatesConfiguration::configIdString( identity );
+    TemplateParser::Templates t( iid );
     kDebug() << "use custom templates for identity" << identity <<":" << mCustom->isChecked();
     t.setUseCustomTemplates(mCustom->isChecked());
     t.writeConfig();

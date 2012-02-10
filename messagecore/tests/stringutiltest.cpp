@@ -33,12 +33,13 @@ void StringUtilTest::test_SmartQuote()
   QFETCH( QString, quotedString );
 
   QEXPECT_FAIL( "hard linebreak", "Currently no way to differentiate between hard and soft line breaks", Continue );
-  //QEXPECT_FAIL( "Two non-wrapping lines", "The trailing new line on line one carries to line two and thus making it longer then expected", Continue );
-  const QStringList quotedStrings = quotedString.split('\n');
-  foreach(QString line, quotedStrings) {
-    qDebug() << line << ":" << line.length();
-  }
-  QCOMPARE( StringUtil::smartQuote( originalString, lineLength ), quotedString );
+  const QString result = StringUtil::smartQuote( originalString, lineLength );
+  const QStringList resultList = result.split("\n");
+  const QStringList expectedList = quotedString.split("\n");
+  qDebug() << "result  :" << resultList;
+  qDebug() << "expected:" << expectedList;
+  QCOMPARE( resultList, expectedList );
+  //QCOMPARE( result, quotedString );
 }
 
 void StringUtilTest::test_SmartQuote_data()
@@ -121,7 +122,6 @@ void StringUtilTest::test_SmartQuote_data()
                            "> > Another line here."
                         << "> > Very long quoted line, that is very\n"
                            "> > very long.\n"
-                           "\n"
                            "Unquoted line, for a change.\n"
                            "\n"
                            "> > Another line here.";
@@ -231,7 +231,7 @@ void StringUtilTest::test_signatureStripping()
       ">>-------------------\n"
       "text6\n";
 
-  QCOMPARE( StringUtil::stripSignature( test1, false ), test1Result );
+  QCOMPARE( StringUtil::stripSignature( test1 ), test1Result );
 
 
   const QString test2 =
@@ -246,7 +246,7 @@ void StringUtilTest::test_signatureStripping()
       "text6\n";
 
   // No actual signature - should stay the same
-  QCOMPARE( StringUtil::stripSignature( test2, false ), test2 );
+  QCOMPARE( StringUtil::stripSignature( test2 ), test2 );
 
   const QString test3 =
       "text1\n"
@@ -280,7 +280,7 @@ void StringUtilTest::test_signatureStripping()
       ">text4\n"
       "text5\n";
 
-  QCOMPARE( StringUtil::stripSignature( test3, false ), test3Result );
+  QCOMPARE( StringUtil::stripSignature( test3 ), test3Result );
 
   const QString test4 =
       "Text 1\n"
@@ -308,7 +308,7 @@ void StringUtilTest::test_signatureStripping()
       ">> --\n"
       ">> Not Signature block 3\n";
 
-  QCOMPARE( StringUtil::stripSignature( test4, false ), test4Result );
+  QCOMPARE( StringUtil::stripSignature( test4 ), test4Result );
 
   const QString test5 =
       "-- \n"
@@ -318,7 +318,7 @@ void StringUtilTest::test_signatureStripping()
       "-- Tel.: 555 1234\n"
       "--";
 
-  QCOMPARE( StringUtil::stripSignature( test5, false ), QString() );
+  QCOMPARE( StringUtil::stripSignature( test5 ), QString() );
 
   const QString test6 =
       "Text 1\n\n\n\n"
@@ -332,7 +332,7 @@ void StringUtilTest::test_signatureStripping()
       ">> Not Signature block 3\n";
 
   // Again, no actual signature in here
-  QCOMPARE( StringUtil::stripSignature( test6, false ), test6 );
+  QCOMPARE( StringUtil::stripSignature( test6 ), test6 );
 }
 
 void StringUtilTest::test_isCryptoPart()
@@ -355,3 +355,5 @@ void StringUtilTest::test_stripOffMessagePrefix()
     StringUtil::stripOffPrefixes( subject );
   }
 }
+
+#include "stringutiltest.moc"

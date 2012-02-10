@@ -59,7 +59,7 @@ static void removeTrailingSpace( QString &line )
   line.truncate( i + 1 );
 }
 
-// Spilts the line off in two parts: The quote prefixes and the actual text of the line.
+// Splits the line off in two parts: The quote prefixes and the actual text of the line.
 // For example, for the string "> > > Hello", it would be split up in "> > > " as the quote
 // prefix, and "Hello" as the actual text.
 // The actual text is written back to the "line" parameter, and the quote prefix is returned.
@@ -72,7 +72,8 @@ static QString splitLine( QString &line )
   // TODO: Replace tabs with spaces first.
 
   // Loop through the chars in the line to find the place where the quote prefix stops
-  while ( i < line.length() ) {
+  const int lineLength( line.length() );
+  while ( i < lineLength ) {
     const QChar c = line[i];
     const bool isAllowedQuoteChar = (c == '>') || (c == ':') || (c == '|') ||
                                     (c == ' ') || (c == '\t');
@@ -186,12 +187,11 @@ QMap<QString, QString> parseMailtoUrl( const KUrl &url )
   return values;
 }
 
-QString stripSignature( const QString &msg, bool clearSigned )
+QString stripSignature( const QString &msg )
 {
   // Following RFC 3676, only > before --
   // I prefer to not delete a SB instead of delete good mail content.
-  const QRegExp sbDelimiterSearch = clearSigned ?
-      QRegExp( "(^|\n)[> ]*--\\s?\n" ) : QRegExp( "(^|\n)[> ]*-- \n" );
+  const QRegExp sbDelimiterSearch = QRegExp( "(^|\n)[> ]*-- \n" );
   // The regular expression to look for prefix change
   const QRegExp commonReplySearch = QRegExp( "^[ ]*>" );
 
@@ -301,6 +301,7 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
         *d++ = '<';
         *d++ = 'b';
         *d++ = 'r';
+        *d++ = '/';
         *d++ = '>';
         ++s;
       }
@@ -807,7 +808,8 @@ bool addressIsInAddressList( const QString &address,
 {
   const QString addrSpec = KPIMUtils::extractEmailAddress( address );
 
-  for( QStringList::ConstIterator it = addresses.begin(); it != addresses.end(); ++it ) {
+  QStringList::ConstIterator end( addresses.constEnd() );
+  for( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
     if ( kasciistricmp( addrSpec.toUtf8().data(),
          KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 )
       return true;
@@ -927,14 +929,15 @@ QString smartQuote( const QString &msg, int maxLineLength )
 
 bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName )
 {
-  return ( type.toLower() == "application" &&
-           ( subType.toLower() == "pgp-encrypted" ||
-             subType.toLower() == "pgp-signature" ||
-             subType.toLower() == "pkcs7-mime" ||
-             subType.toLower() == "pkcs7-signature" ||
-             subType.toLower() == "x-pkcs7-signature" ||
-             ( subType.toLower() == "octet-stream" &&
-               fileName.toLower() == "msg.asc" ) ) );
+  const QString subTypeLower( subType.toLower() );
+  return ( type.toLower() == QLatin1String( "application" ) &&
+           ( subTypeLower == QLatin1String( "pgp-encrypted" ) ||
+             subTypeLower == QLatin1String( "pgp-signature" ) ||
+             subTypeLower == QLatin1String( "pkcs7-mime" ) ||
+             subTypeLower == QLatin1String( "pkcs7-signature" ) ||
+             subTypeLower == QLatin1String( "x-pkcs7-signature" ) ||
+             ( subTypeLower == QLatin1String( "octet-stream" ) &&
+               fileName.toLower() == QLatin1String( "msg.asc" ) ) ) );
 }
 
 QString formatString( const QString &wildString, const QString &fromAddr )
@@ -1051,21 +1054,22 @@ QString stripOffPrefixes( const QString &subject )
   static QString regExpPattern;
   static QRegExp regExp;
 
+  regExp.setCaseSensitivity( Qt::CaseInsensitive );
   if ( regExpPattern != bigRegExp ) {
     // the prefixes have changed, so update the regexp
     regExpPattern = bigRegExp;
     regExp.setPattern( regExpPattern );
   }
 
-  if ( !regExp.isValid() ) {
-    kWarning() << "bigRegExp = \""
-               << bigRegExp << "\"\n"
-               << "prefix regexp is invalid!";
-  } else {
+  if( regExp.isValid() ) {
     QString tmp = subject;
     if ( regExp.indexIn( tmp ) == 0 ) {
-      return tmp.replace( 0, regExp.matchedLength(), QString() );
-    }
+      return tmp.remove( 0, regExp.matchedLength() );
+    } 
+  } else {
+   kWarning() << "bigRegExp = \""
+               << bigRegExp << "\"\n"
+               << "prefix regexp is invalid!";
   }
 
   return subject;

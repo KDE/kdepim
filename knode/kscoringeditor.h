@@ -20,7 +20,8 @@
 
 #include "knode_export.h"
 #include "kscoring.h"
-#include "kwidgetlister.h"
+
+#include "libkdepim/kwidgetlister.h"
 
 #include <KDialog>
 #include <K3ListBox>

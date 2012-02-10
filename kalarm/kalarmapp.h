@@ -23,12 +23,12 @@
 
 /** @file kalarmapp.h - the KAlarm application object */
 
-#include "kaevent.h"
 #include "kamail.h"
 #include "preferences.h"
 
+#include <kalarmcal/kaevent.h>
+
 #include <kuniqueapplication.h>
-#include <kurl.h>
 
 #include <QPointer>
 #include <QQueue>
@@ -36,11 +36,16 @@
 
 class KDateTime;
 namespace KCal { class Event; }
+#ifdef USE_AKONADI
+namespace Akonadi { class Collection; }
+#endif
 class DBusHandler;
 class MainWindow;
 class TrayWindow;
 class ShellProcess;
 class OrgKdeKSpeechInterface;
+
+using namespace KAlarmCal;
 
 
 class KAlarmApp : public KUniqueApplication
@@ -80,12 +85,16 @@ class KAlarmApp : public KUniqueApplication
         void               notifyAudioPlaying(bool playing);
         void               setSpreadWindowsState(bool spread);
         // Methods called indirectly by the DCOP interface
-        bool               scheduleEvent(KAEvent::Action, const QString& text, const KDateTime&,
-                                         int lateCancel, int flags, const QColor& bg, const QColor& fg,
+        bool               scheduleEvent(KAEvent::SubAction, const QString& text, const KDateTime&,
+                                         int lateCancel, KAEvent::Flags flags, const QColor& bg, const QColor& fg,
                                          const QFont&, const QString& audioFile, float audioVolume,
                                          int reminderMinutes, const KARecurrence& recurrence,
-                         int repeatInterval, int repeatCount,
-                                         uint mailFromID = 0, const EmailAddressList& mailAddresses = EmailAddressList(),
+                                         int repeatInterval, int repeatCount,
+#ifdef USE_AKONADI
+                                         uint mailFromID = 0, const KCalCore::Person::List& mailAddresses = KCalCore::Person::List(),
+#else
+                                         uint mailFromID = 0, const QList<KCal::Person>& mailAddresses = QList<KCal::Person>(),
+#endif
                                          const QString& mailSubject = QString(),
                                          const QStringList& mailAttachments = QStringList());
         bool               dbusTriggerEvent(const QString& eventID)   { return dbusHandleEvent(eventID, EVENT_TRIGGER); }
@@ -95,6 +104,7 @@ class KAlarmApp : public KUniqueApplication
         void               processQueue();
         void               setAlarmsEnabled(bool);
 #ifdef USE_AKONADI
+        void               purgeNewArchivedDefault(const Akonadi::Collection&);
         void               atLoginEventAdded(const KAEvent&);
 #endif
         void               stopAudio();
@@ -126,6 +136,9 @@ class KAlarmApp : public KUniqueApplication
         void               slotMessageFontChanged(const QFont&);
         void               setArchivePurgeDays();
         void               slotPurge()                     { purge(mArchivedPurgeDays); }
+#ifdef USE_AKONADI
+        void               purgeAfterDelay();
+#endif
         void               slotCommandExited(ShellProcess*);
         void               slotDBusServiceUnregistered(const QString& serviceName);
 
@@ -173,7 +186,7 @@ class KAlarmApp : public KUniqueApplication
         void               queueAlarmId(const QString& id);
         bool               dbusHandleEvent(const QString& eventID, EventFunc);
         bool               handleEvent(const QString& eventID, EventFunc);
-        bool               rescheduleAlarm(KAEvent&, const KAAlarm&, bool updateCalAndDisplay, const KDateTime& nextDt = KDateTime());
+        int                rescheduleAlarm(KAEvent&, const KAAlarm&, bool updateCalAndDisplay, const KDateTime& nextDt = KDateTime());
         bool               cancelAlarm(KAEvent&, KAAlarm::Type, bool updateCalAndDisplay);
         bool               cancelReminderAndDeferral(KAEvent&);
         ShellProcess*      doShellCommand(const QString& command, const KAEvent&, const KAAlarm*, int flags = 0, const QObject* receiver = 0, const char* slot = 0);
@@ -200,6 +213,7 @@ class KAlarmApp : public KUniqueApplication
         mutable OrgKdeKSpeechInterface* mKSpeech;// KSpeech D-Bus interface object
         int                mPendingQuitCode;     // exit code for a pending quit
         bool               mPendingQuit;         // quit once the DCOP command and shell command queues have been processed
+        bool               mCancelRtcWake;       // cancel RTC wake on quitting
         bool               mProcessingQueue;     // a mDcopQueue entry is currently being processed
         bool               mNoSystemTray;        // no system tray exists
         bool               mSessionClosingDown;  // session manager is closing the application

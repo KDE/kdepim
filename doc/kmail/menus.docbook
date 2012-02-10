@@ -190,7 +190,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <term>
 <menuchoice>
 <shortcut><keycap>F5</keycap></shortcut>
-<guimenu>Folder</guimenu>
+<guimenu>File</guimenu>
 <guimenuitem>Update Folders</guimenuitem>
 </menuchoice>
 </term>
@@ -1294,8 +1294,9 @@ pane</guilabel>.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Starts up <ulink url="/kaddressbook/">&kaddressbook;</ulink>,
-the &kde; address book.</para>
+<para>Starts up &kaddressbook;, the &kde; address book. If this menu item is disabled
+and greyed out either &kaddressbook; is not installed or the program was not 
+found.</para>
 </listitem>
 </varlistentry>
 
@@ -1309,7 +1310,7 @@ the &kde; address book.</para>
       <listitem>
         <para>
           Starts <ulink
-          url="/kleopatra"><application>Kleopatra</application></ulink>,
+          url="help:kleopatra"><application>Kleopatra</application></ulink>,
           the &kde; certificate manager.
         </para>
       </listitem>
@@ -1325,7 +1326,7 @@ the &kde; address book.</para>
       <listitem>
         <para>
           Starts <ulink
-          url="/kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
+          url="help:kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
           a tool to present the debug output of
           <application>GnuPG</application> application. If
           signing, encryption, or verification mysteriously stop
@@ -2153,7 +2154,7 @@ attachment window.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Uses <ulink url="/kspell/">&sonnet;</ulink> to check the spelling in the body of your
+<para>Uses <ulink url="/sonnet/">&sonnet;</ulink> to check the spelling in the body of your
 message. Note that
 you have to configure &sonnet; with <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Spellchecker...</guimenuitem></menuchoice> if you use it for the
@@ -2204,7 +2205,7 @@ tools to change certain properties of the composed text.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Allows you to configure <ulink url="/kspell/">&sonnet;</ulink>, &kde;'s spellchecker.</para>
+<para>Allows you to configure <ulink url="/sonnet/">&sonnet;</ulink>, &kde;'s spellchecker.</para>
 </listitem>
 </varlistentry>
 

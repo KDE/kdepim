@@ -406,6 +406,8 @@ void Widget::viewDropEvent( QDropEvent *e )
       }
     }
   }
+  if ( action == DragCancel )
+    return;
 
   Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
   Collection target = collections.first();
@@ -440,6 +442,7 @@ void Widget::viewStartDragRequest()
     if ( ( c.rights() & Collection::CanDeleteItem ) == 0 ) {
       // So the drag will be read-only
       readOnly = true;
+      break;
     }
   }
 
@@ -546,6 +549,20 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedCh
   }
   return lstMiPtr;
 }
+
+QVector<qlonglong> Widget::selectionAsMessageItemListId( bool includeCollapsedChildren ) const
+{
+  QVector<qlonglong> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList( includeCollapsedChildren );
+  if ( lstMi.isEmpty() ) {
+     return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->itemForRow( it->currentModelIndexRow() ).id() );
+  }
+  return lstMiPtr;
+}
+
 
 QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 {
@@ -666,3 +683,5 @@ Akonadi::Collection Widget::currentCollection() const
     return Akonadi::Collection(); // no folder here or too many (in case we can't decide where the drop will end)
   return collections.first();
 }
+
+#include "widget.moc"

@@ -24,6 +24,8 @@
 #include "mailkernel.h"
 #include "kmmainwidget.h"
 #include "util.h"
+#include "kmcommands.h"
+#include "customtemplatesmenu.h"
 
 #include "messagecore/annotationdialog.h"
 #include "messagecore/globalsettings.h"
@@ -53,6 +55,7 @@
 #include <Akonadi/Monitor>
 #include <mailutil.h>
 #include <asyncnepomukresourceretriever.h>
+#include <nepomuk/resourcemanager.h>
 
 using namespace KMail;
 
@@ -62,7 +65,8 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
     mActionCollection( ac ),
     mMessageView( 0 ),
     mRedirectAction( 0 ),
-    mAsynNepomukRetriever( new MessageCore::AsyncNepomukResourceRetriever( this ) )
+    mAsynNepomukRetriever( new MessageCore::AsyncNepomukResourceRetriever( this ) ),
+    mCustomTemplatesMenu( 0 )
 {
   mReplyActionMenu = new KActionMenu( KIcon("mail-reply-sender"), i18nc("Message->","&Reply"), this );
   mActionCollection->addAction( "message_reply_menu", mReplyActionMenu );
@@ -104,6 +108,10 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
            this, SLOT(slotNoQuoteReplyToMsg()) );
 
 
+  mListFilterAction = new KAction(i18n("Filter on Mailing-&List..."), this);
+  mActionCollection->addAction("mlist_filter", mListFilterAction );
+  connect(mListFilterAction, SIGNAL(triggered(bool)), SLOT(slotMailingListFilter()));
+
   mCreateTodoAction = new KAction( KIcon( "task-new" ), i18n( "Create To-do/Reminder..." ), this );
   mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
   mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
@@ -121,6 +129,9 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
   KMMainWidget* mainwin = kmkernel->getKMMainWidget();
   if ( mainwin ) {
     KAction * action = mainwin->akonadiStandardAction( Akonadi::StandardMailActionManager::MarkMailAsRead );
+    mStatusMenu->addAction( action );
+
+    action = mainwin->akonadiStandardAction( Akonadi::StandardMailActionManager::MarkMailAsUnread );
     mStatusMenu->addAction( action );
 
     mStatusMenu->addSeparator();
@@ -184,14 +195,37 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
   //FIXME: Attachment fetching is not needed here, but on-demand loading is not supported ATM
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
   connect( mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemModified(Akonadi::Item,QSet<QByteArray>)));
+  connect( mMonitor, SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
 
   connect( mAsynNepomukRetriever, SIGNAL(resourceReceived(QUrl,Nepomuk::Resource)), SLOT(updateAnnotateAction(QUrl,Nepomuk::Resource)) );
+
+  mCustomTemplatesMenu = new TemplateParser::CustomTemplatesMenu( parent, ac );
+
+  connect( mCustomTemplatesMenu, SIGNAL(replyTemplateSelected(QString)),
+           parent, SLOT(slotCustomReplyToMsg(QString)) );
+  connect( mCustomTemplatesMenu, SIGNAL(replyAllTemplateSelected(QString)),
+             parent, SLOT(slotCustomReplyAllToMsg(QString)) );
+  connect( mCustomTemplatesMenu, SIGNAL(forwardTemplateSelected(QString)),
+           parent, SLOT(slotCustomForwardMsg(QString)) );
+  connect( KMKernel::self(), SIGNAL(customTemplatesChanged()), mCustomTemplatesMenu, SLOT(update()) );
+
+  forwardMenu()->addSeparator();
+  forwardMenu()->addAction( mCustomTemplatesMenu->forwardActionMenu() );
+  replyMenu()->addSeparator();
+  replyMenu()->addAction( mCustomTemplatesMenu->replyActionMenu() );
+  replyMenu()->addAction( mCustomTemplatesMenu->replyAllActionMenu() );
 
   updateActions();
 }
 
 MessageActions::~MessageActions()
 {
+  delete mCustomTemplatesMenu;
+}
+
+TemplateParser::CustomTemplatesMenu* MessageActions::customTemplatesMenu() const
+{
+  return mCustomTemplatesMenu;
 }
 
 void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
@@ -200,7 +234,6 @@ void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
   mCurrentItem = msg;
 
   if ( !msg.isValid() ) {
-    mSelectedItems.clear();
     mVisibleItems.clear();
   }
 
@@ -208,27 +241,30 @@ void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
   updateActions();
 }
 
+void MessageActions::slotItemRemoved(const Akonadi::Item& item)
+{
+  if ( item == mCurrentItem )
+  {
+    mCurrentItem = Akonadi::Item();
+    updateActions();
+  }
+}
+
 void MessageActions::slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers )
 {
   Q_UNUSED( partIdentifiers );
   if ( item == mCurrentItem )
+  {
     mCurrentItem = item;
-  const int numberOfVisibleItems = mVisibleItems.count();
-  for( int i = 0; i < numberOfVisibleItems; ++i ) {
-    Akonadi::Item it = mVisibleItems[i];
-    if ( item == it ) {
-      mVisibleItems[i] = item;
+    const int numberOfVisibleItems = mVisibleItems.count();
+    for( int i = 0; i < numberOfVisibleItems; ++i ) {
+      Akonadi::Item it = mVisibleItems[i];
+      if ( item == it ) {
+        mVisibleItems[i] = item;
+      }
     }
+    updateActions();
   }
-  updateActions();
-}
-
-
-
-void MessageActions::setSelectedItem( const Akonadi::Item::List &items )
-{
-  mSelectedItems = items;
-  updateActions();
 }
 
 void MessageActions::setSelectedVisibleItems( const Akonadi::Item::List &items )
@@ -245,44 +281,47 @@ void MessageActions::setSelectedVisibleItems( const Akonadi::Item::List &items )
 
 void MessageActions::updateActions()
 {
-  bool singleMsg = mCurrentItem.isValid();
+  const bool hasPayload = mCurrentItem.hasPayload<KMime::Message::Ptr>();
+  bool itemValid = mCurrentItem.isValid();
   Akonadi::Collection parent;
-  if ( singleMsg ) //=> valid
+  if ( itemValid ) //=> valid
     parent = mCurrentItem.parentCollection();
   if ( parent.isValid() ) {
     if ( CommonKernel->folderIsTemplates(parent) )
-      singleMsg = false;
+      itemValid = false;
   }
 
   const bool multiVisible = mVisibleItems.count() > 0 || mCurrentItem.isValid();
+  const bool uniqItem = ( itemValid||hasPayload ) && ( mVisibleItems.count()<=1 );
+  mCreateTodoAction->setEnabled( itemValid && ( mVisibleItems.count()<=1 ) && mKorganizerIsOnSystem);
+  mReplyActionMenu->setEnabled( hasPayload );
+  mReplyAction->setEnabled( hasPayload );
+  mNoQuoteReplyAction->setEnabled( hasPayload );
+  mReplyAuthorAction->setEnabled( hasPayload );
+  mReplyAllAction->setEnabled( hasPayload );
+  mReplyListAction->setEnabled( hasPayload );
+  mNoQuoteReplyAction->setEnabled( hasPayload );
 
-  mCreateTodoAction->setEnabled( singleMsg && mKorganizerIsOnSystem);
-  mReplyActionMenu->setEnabled( singleMsg );
-  mReplyAction->setEnabled( singleMsg );
-  mNoQuoteReplyAction->setEnabled( singleMsg );
-  mReplyAuthorAction->setEnabled( singleMsg );
-  mReplyAllAction->setEnabled( singleMsg );
-  mReplyListAction->setEnabled( singleMsg );
-  mNoQuoteReplyAction->setEnabled( singleMsg );
-
-  mAnnotateAction->setEnabled( singleMsg );
-  mAsynNepomukRetriever->requestResource( mCurrentItem.url() );
+  if ( Nepomuk::ResourceManager::instance()->initialized() )
+  {
+    mAnnotateAction->setEnabled( uniqItem );
+    mAsynNepomukRetriever->requestResource( mCurrentItem.url(), QVector<QUrl>() << Nepomuk::Resource::descriptionUri() << Nepomuk::Resource::annotationUri() );
+  }
+  else
+  {
+    mAnnotateAction->setEnabled( false );
+  }
 
   mStatusMenu->setEnabled( multiVisible );
 
   if ( mCurrentItem.hasPayload<KMime::Message::Ptr>() ) {
-
-    if ( !mCurrentItem.loadedPayloadParts().contains( Akonadi::MessagePart::Header ) ) {
-      mMailingListActionMenu->setEnabled( false );
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentItem, this );
-      job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
-      connect( job, SIGNAL(result(KJob*)), SLOT(slotUpdateActionsFetchDone(KJob*)) );
-    } else {
-      updateMailingListActions( mCurrentItem );
-    }
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentItem );
+    job->fetchScope().fetchAllAttributes();
+    job->fetchScope().fetchFullPayload( true );
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotUpdateActionsFetchDone(KJob*)) );
   }
-
-  mEditAction->setEnabled( singleMsg );
+  mEditAction->setEnabled( uniqItem );
 }
 
 void MessageActions::slotUpdateActionsFetchDone(KJob* job)
@@ -293,7 +332,6 @@ void MessageActions::slotUpdateActionsFetchDone(KJob* job)
   Akonadi::ItemFetchJob *fetchJob = static_cast<Akonadi::ItemFetchJob*>( job );
   if ( fetchJob->items().isEmpty() )
     return;
-
   Akonadi::Item  messageItem = fetchJob->items().first();
   if ( messageItem == mCurrentItem ) {
     mCurrentItem = messageItem;
@@ -303,10 +341,13 @@ void MessageActions::slotUpdateActionsFetchDone(KJob* job)
 
 void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem )
 {
-  const MessageCore::MailingList mailList = MessageCore::MailingList::detect( MessageCore::Util::message( messageItem ) );
+  KMime::Message::Ptr message = messageItem.payload<KMime::Message::Ptr>();
+  const MessageCore::MailingList mailList = MessageCore::MailingList::detect( message );
 
   if ( mailList.features() == MessageCore::MailingList::None ) {
     mMailingListActionMenu->setEnabled( false );
+    mListFilterAction->setEnabled( false );
+    mListFilterAction->setText( i18n("Filter on Mailing-List...") );
   } else {
     // A mailing list menu with only a title is pretty boring
     // so make sure theres at least some content
@@ -315,11 +356,11 @@ void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem 
       // From a list-id in the form, "Birds of France <bof.yahoo.com>",
       // take "Birds of France" if it exists otherwise "bof.yahoo.com".
       listId = mailList.id();
-      const int start = listId.indexOf( '<' );
+      const int start = listId.indexOf( QLatin1Char( '<' ) );
       if ( start > 0 ) {
         listId.truncate( start - 1 );
       } else if ( start == 0 ) {
-        const int end = listId.lastIndexOf( '>' );
+        const int end = listId.lastIndexOf( QLatin1Char( '>' ) );
         if ( end < 1 ) { // shouldn't happen but account for it anyway
           listId.remove( 0, 1 );
         } else {
@@ -333,7 +374,7 @@ void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem 
 
     if ( mailList.features() & MessageCore::MailingList::ArchivedAt )
       // IDEA: this may be something you want to copy - "Copy in submenu"?
-      addMailingListAction( i18n( "Open Message in List Archive" ), mailList.archivedAtUrl() );
+      addMailingListActions( i18n( "Open Message in List Archive" ), mailList.archivedAtUrls() );
     if ( mailList.features() & MessageCore::MailingList::Post )
       addMailingListActions( i18n( "Post New Message" ), mailList.postUrls() );
     if ( mailList.features() & MessageCore::MailingList::Archive )
@@ -347,16 +388,25 @@ void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem 
     if ( mailList.features() & MessageCore::MailingList::Unsubscribe )
       addMailingListActions( i18n( "Unsubscribe from List" ), mailList.unsubscribeUrls() );
     mMailingListActionMenu->setEnabled( true );
+
+    QByteArray name;
+    QString value;
+    const QString lname = MailingList::name( message, name, value );
+    if ( !lname.isEmpty() )
+    {
+      mListFilterAction->setEnabled( true );
+      mListFilterAction->setText( i18n( "Filter on Mailing-List %1...", lname ) );
+    }
   }
 }
 
 
-template<typename T> void MessageActions::replyCommand()
+void MessageActions::replyCommand(MessageComposer::ReplyStrategy strategy)
 {
-  if ( !mCurrentItem.isValid() )
-    return;
+  if ( !mCurrentItem.hasPayload<KMime::Message::Ptr>() ) return;
+
   const QString text = mMessageView ? mMessageView->copyText() : QString();
-  KMCommand *command = new T( mParent, mCurrentItem, text );
+  KMCommand *command = new KMReplyCommand( mParent, mCurrentItem, strategy, text );
   connect( command, SIGNAL(completed(KMCommand*)),
            this, SIGNAL(replyActionFinished()) );
   command->start();
@@ -418,29 +468,29 @@ void MessageActions::setupForwardingActionsList( KXMLGUIClient *guiClient )
 
 void MessageActions::slotReplyToMsg()
 {
-  replyCommand<KMReplyToCommand>();
+  replyCommand( MessageComposer::ReplySmart );
 }
 
 void MessageActions::slotReplyAuthorToMsg()
 {
-  replyCommand<KMReplyAuthorCommand>();
+  replyCommand( MessageComposer::ReplyAuthor );
 }
 
 void MessageActions::slotReplyListToMsg()
 {
-  replyCommand<KMReplyListCommand>();
+  replyCommand( MessageComposer::ReplyList );
 }
 
 void MessageActions::slotReplyAllToMsg()
 {
-  replyCommand<KMReplyToAllCommand>();
+  replyCommand( MessageComposer::ReplyAll );
 }
 
 void MessageActions::slotNoQuoteReplyToMsg()
 {
-  if ( !mCurrentItem.isValid() )
+  if ( !mCurrentItem.hasPayload<KMime::Message::Ptr>() )
     return;
-  KMCommand *command = new KMNoQuoteReplyToCommand( mParent, mCurrentItem );
+  KMCommand *command = new KMReplyCommand( mParent, mCurrentItem, MessageComposer::ReplySmart, QString(), true );
   command->start();
 }
 
@@ -452,30 +502,36 @@ void MessageActions::slotRunUrl( QAction *urlAction )
   }
 }
 
+void MessageActions::slotMailingListFilter()
+{
+  if ( !mCurrentItem.hasPayload<KMime::Message::Ptr>() )
+    return;
+
+  KMCommand *command = new KMMailingListFilterCommand( mParent, mCurrentItem );
+  command->start();
+}
+
+
 void MessageActions::slotPrintMsg()
 {
-  const bool htmlOverride = mMessageView ? mMessageView->htmlOverride() : false;
-  const bool htmlLoadExtOverride = mMessageView ? mMessageView->htmlLoadExtOverride() : false;
-  const bool useFixedFont = mMessageView ? mMessageView->isFixedFont() :
-                                           MessageViewer::GlobalSettings::self()->useFixedFont();
-  const QString overrideEncoding = mMessageView ? mMessageView->overrideEncoding() :
-                                 MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
-
-  // FIXME: This is broken when the Viewer shows an encapsulated message
-  const Akonadi::Item message = mMessageView ? mMessageView->message() : mCurrentItem;
-  KMPrintCommand *command =
-    new KMPrintCommand( mParent, message,
-                        mMessageView ? mMessageView->headerStyle() : 0,
-                        mMessageView ? mMessageView->headerStrategy() : 0,
-                        htmlOverride, htmlLoadExtOverride,
-                        useFixedFont, overrideEncoding );
-
-  if ( mMessageView ) {
-    command->setAttachmentStrategy( mMessageView->attachmentStrategy() );
-    command->setOverrideFont( mMessageView->cssHelper()->bodyFont(
-        mMessageView->isFixedFont(), true /*printing*/ ) );
+  if ( mMessageView )
+  {
+    mMessageView->viewer()->print();
   }
-  command->start();
+  else
+  {
+    const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+
+    const Akonadi::Item message = mCurrentItem;
+    KMPrintCommand *command =
+      new KMPrintCommand( mParent, message,
+                          0,
+                          0,
+                          false, false,
+                          useFixedFont, overrideEncoding );
+    command->start();
+  }
 }
 
 
@@ -502,7 +558,7 @@ void MessageActions::addMailingListAction( const QString &item, const KUrl &url 
 {
   QString protocol = url.protocol().toLower();
   QString prettyUrl = url.prettyUrl();
-  if ( protocol == "mailto" ) {
+  if ( protocol == QLatin1String("mailto") ) {
     protocol = i18n( "email" );
     prettyUrl.remove( 0, 7 ); // length( "mailto:" )
   } else if ( protocol.startsWith( QLatin1String( "http" ) ) ) {
@@ -518,20 +574,24 @@ void MessageActions::addMailingListAction( const QString &item, const KUrl &url 
 
 void MessageActions::editCurrentMessage()
 {
-  if ( !mCurrentItem.isValid() )
-    return;
   KMCommand *command = 0;
-  Akonadi::Collection col = mCurrentItem.parentCollection();
-  // edit, unlike send again, removes the message from the folder
-  // we only want that for templates and drafts folders
-  if ( col.isValid()
-       && ( CommonKernel->folderIsDraftOrOutbox( col ) ||
-            CommonKernel->folderIsTemplates( col ) )
-    )
-    command = new KMEditMsgCommand( mParent, mCurrentItem, true );
-  else
-    command = new KMEditMsgCommand( mParent, mCurrentItem, false );
-  command->start();
+  if ( mCurrentItem.isValid() )
+  {
+    Akonadi::Collection col = mCurrentItem.parentCollection();
+    // edit, unlike send again, removes the message from the folder
+    // we only want that for templates and drafts folders
+    if ( col.isValid()
+         && ( CommonKernel->folderIsDraftOrOutbox( col ) ||
+              CommonKernel->folderIsTemplates( col ) )
+      )
+      command = new KMEditItemCommand( mParent, mCurrentItem, true );
+    else
+      command = new KMEditItemCommand( mParent, mCurrentItem, false );
+    command->start();
+  } else if ( mCurrentItem.hasPayload<KMime::Message::Ptr>() ) {
+    command = new KMEditMessageCommand( mParent, mCurrentItem.payload<KMime::Message::Ptr>() );
+    command->start();
+  }
 }
 
 void MessageActions::annotateMessage()
@@ -539,10 +599,11 @@ void MessageActions::annotateMessage()
   if ( !mCurrentItem.isValid() )
     return;
 
-  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( mCurrentItem.url() );
+  const QUrl url = mCurrentItem.url();
+  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( url );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
-  dialog->exec();
-  mAsynNepomukRetriever->requestResource( mCurrentItem.url() );
+  if ( dialog->exec() )
+    mAsynNepomukRetriever->requestResource( url, QVector<QUrl>() << Nepomuk::Resource::descriptionUri() << Nepomuk::Resource::annotationUri() );
 }
 
 void MessageActions::updateAnnotateAction( const QUrl &url, const Nepomuk::Resource &resource )
