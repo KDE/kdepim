@@ -1386,21 +1386,25 @@ void KMFilterListBox::slotBottom()
 
 void KMFilterListBox::slotUp()
 {
-  QListWidgetItem *item = mListWidget->currentItem();
-  if ( !itemIsValid( item ) ) {
+  QList<QListWidgetItem*> listWidgetItem = selectedFilter();
+  if ( listWidgetItem.isEmpty() ) {
     return;
   }
 
-  const int currentIndex = mListWidget->currentRow( );
-  if ( currentIndex == 0 ) {
+  const int numberOfItem( listWidgetItem.count() );
+  if ( ( numberOfItem == 1 ) && ( mListWidget->currentRow() == 0 ) ) {
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
-  if ( item->isHidden() ) {
-    return;
+
+  for ( int i = 0; i<numberOfItem; ++i ) {
+    const int posItem = mListWidget->row( listWidgetItem.at( i ) );
+    if ( posItem == i ) {
+      continue;
+    }
+    swapNeighbouringFilters( posItem, posItem - 1 );
   }
 
-  swapNeighbouringFilters( currentIndex, currentIndex - 1 );
   enableControls();
 
   emit filterOrderAltered();
@@ -1408,19 +1412,27 @@ void KMFilterListBox::slotUp()
 
 void KMFilterListBox::slotDown()
 {
-  QListWidgetItem *item = mListWidget->currentItem();
-  if ( !itemIsValid(item) ) {
+  QList<QListWidgetItem*> listWidgetItem = selectedFilter();
+  if ( listWidgetItem.isEmpty() ) {
     return;
   }
-  const int currentIndex = mListWidget->currentRow();
-  if ( currentIndex == (int)mListWidget->count() - 1 ) {
+
+  const int numberOfElement( mListWidget->count() );
+  const int numberOfItem( listWidgetItem.count() );
+  if ( ( numberOfItem == 1 ) && ( mListWidget->currentRow() == numberOfElement - 1 ) ) {
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
-  if ( item->isHidden() ) {
-    return;
+
+  int j = 0;
+  for ( int i = numberOfItem-1; i>= 0; --i, j++ ) {
+    const int posItem = mListWidget->row( listWidgetItem.at( i ) );
+    if ( posItem == i ) {
+      continue;
+    }
+    swapNeighbouringFilters( posItem, posItem + 1 );
   }
-  swapNeighbouringFilters( currentIndex, currentIndex + 1 );
+  
   enableControls();
 
   emit filterOrderAltered();
@@ -1484,14 +1496,21 @@ void KMFilterListBox::enableControls()
   const int numberOfSelectedItem( mListWidget->selectedItems().count() );
   const bool uniqFilterSelected = ( numberOfSelectedItem == 1 );
   const bool allItemSelected = ( numberOfSelectedItem == numberOfElement );
-  mBtnUp->setEnabled( aFilterIsSelected && !theFirst && uniqFilterSelected );
-  mBtnDown->setEnabled( aFilterIsSelected && !theLast && uniqFilterSelected );
+
+  mBtnUp->setEnabled( aFilterIsSelected && ( ( uniqFilterSelected && !theFirst ) ||
+                         ( !uniqFilterSelected ) ) && !allItemSelected );
+  mBtnDown->setEnabled( aFilterIsSelected &&
+                          ( ( uniqFilterSelected && !theLast ) ||
+                            ( !uniqFilterSelected ) ) && !allItemSelected );
+  
   mBtnCopy->setEnabled( aFilterIsSelected && uniqFilterSelected );
   mBtnDelete->setEnabled( aFilterIsSelected );
   mBtnRename->setEnabled( aFilterIsSelected && uniqFilterSelected );
+
   mBtnTop->setEnabled( aFilterIsSelected &&
                        ( ( uniqFilterSelected && !theFirst ) ||
                          ( !uniqFilterSelected ) ) && !allItemSelected );
+  
   mBtnBottom->setEnabled( aFilterIsSelected &&
                           ( ( uniqFilterSelected && !theLast ) ||
                             ( !uniqFilterSelected ) ) && !allItemSelected );
