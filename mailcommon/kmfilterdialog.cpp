@@ -1305,6 +1305,7 @@ void KMFilterListBox::slotTop()
   }
 
   QListWidgetItem *item = 0;
+  bool wasMoved = false;
   for ( int i = 0; i<numberOfItem; ++i ) {
     const int posItem = mListWidget->row( listWidgetItem.at( i ) );
     if ( posItem == i ) {
@@ -1312,13 +1313,13 @@ void KMFilterListBox::slotTop()
     }
     item = mListWidget->takeItem( mListWidget->row( listWidgetItem.at( i ) ) );
     mListWidget->insertItem( i, item );
+    wasMoved = true;
   }
 
-  mListWidget->setCurrentItem( mListWidget->item( 0 ) );
-
-  enableControls();
-
-  emit filterOrderAltered();
+  if ( wasMoved ) {
+    enableControls();
+    emit filterOrderAltered();
+  }
 }
 
 QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
@@ -1368,6 +1369,7 @@ void KMFilterListBox::slotBottom()
 
   QListWidgetItem *item = 0;
   int j = 0;
+  bool wasMoved = false;
   for ( int i = numberOfItem-1; i>= 0; --i, j++ ) {
     const int posItem = mListWidget->row( listWidgetItem.at( i ) );
     if ( posItem == ( numberOfElement-1 -j ) ) {
@@ -1375,13 +1377,13 @@ void KMFilterListBox::slotBottom()
     }
     item = mListWidget->takeItem( mListWidget->row( listWidgetItem.at( i ) ) );
     mListWidget->insertItem( numberOfElement-j, item );
-
+    wasMoved = true;
   }
 
-  mListWidget->setCurrentItem( mListWidget->item( numberOfElement - 1 ) );
-  enableControls();
-
-  emit filterOrderAltered();
+  if ( wasMoved ) {
+    enableControls();
+    emit filterOrderAltered();
+  }
 }
 
 void KMFilterListBox::slotUp()
@@ -1396,6 +1398,7 @@ void KMFilterListBox::slotUp()
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
+  bool wasMoved = false;
 
   for ( int i = 0; i<numberOfItem; ++i ) {
     const int posItem = mListWidget->row( listWidgetItem.at( i ) );
@@ -1403,11 +1406,12 @@ void KMFilterListBox::slotUp()
       continue;
     }
     swapNeighbouringFilters( posItem, posItem - 1 );
+    wasMoved = true;
   }
-
-  enableControls();
-
-  emit filterOrderAltered();
+  if ( wasMoved ) {
+    enableControls();
+    emit filterOrderAltered();
+  }
 }
 
 void KMFilterListBox::slotDown()
@@ -1425,17 +1429,20 @@ void KMFilterListBox::slotDown()
   }
 
   int j = 0;
+  bool wasMoved = false;
   for ( int i = numberOfItem-1; i>= 0; --i, j++ ) {
     const int posItem = mListWidget->row( listWidgetItem.at( i ) );
     if ( posItem == ( numberOfElement-1 -j ) ) {
       continue;
     }
     swapNeighbouringFilters( posItem, posItem + 1 );
+    wasMoved = true;
   }
-  
-  enableControls();
 
-  emit filterOrderAltered();
+  if ( wasMoved ) {
+    enableControls();
+    emit filterOrderAltered();
+  }
 }
 
 void KMFilterListBox::slotRename()
