@@ -54,6 +54,9 @@
         * - <a href="calendarsupport/html/index.html"><b>calendarsupport</b></a>
         *   (<a href="calendarsupport/html/classes.html">classes</a>)\n
         *   <i>Calendar support tools and utilities.</i>
+        * - <a href="mailcommon/html/index.html"><b>mailcommon</b></a>
+        *   (<a href="mailcommon/html/classes.html">classes</a>)\n
+        *   <i>Mail message filtering, archiving, expiry, annotations, etc.</i>
         * - <a href="messageviewer/html/index.html"><b>messageviewer</b></a>
         *   (<a href="messageviewer/html/classes.html">classes</a>)\n
         *   <i>A widget that can show a KMime::Message in a nice way.</i>
