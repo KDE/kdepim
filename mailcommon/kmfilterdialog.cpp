@@ -619,16 +619,18 @@ void KMFilterDialog::slotRunFilters()
   if ( !mFolderRequester->collection().isValid() ) {
     KMessageBox::information(
       this,
-      i18n( "Unable to apply this filter since there are no folders selected." ),
+      i18nc( "@info",
+             "Unable to apply this filter since there are no folders selected." ),
       i18n( "No folder selected." ) );
     return;
   }
 
-  if(isButtonEnabled(KDialog::Apply))
-  {
+  if ( isButtonEnabled( KDialog::Apply ) ) {
       KMessageBox::information(
         this,
-        i18n( "Some filters were changed. Save them before to apply filters." ),
+        i18nc( "@info",
+               "Some filters were changed and not saved yet. "
+               "You must save your filters before they can be applied." ),
         i18n( "Filters changed." ) );
       return;
   }
@@ -637,7 +639,8 @@ void KMFilterDialog::slotRunFilters()
   if ( selectedFiltersId.isEmpty() ) {
     KMessageBox::information(
       this,
-      i18n( "Unable to apply a filter since there are no filters currently selected." ),
+      i18nc( "@info",
+             "Unable to apply a filter since there are no filters currently selected." ),
       i18n( "No filters selected." ) );
     return;
   }
@@ -1196,8 +1199,9 @@ void KMFilterListBox::slotSelected( int aIdx )
 void KMFilterListBox::slotNew()
 {
   QListWidgetItem *item = mListWidget->currentItem();
-  if ( item && item->isHidden() )
-    return;	
+  if ( item && item->isHidden() ) {
+    return;
+  }
   // just insert a new filter.
   insertFilter( new MailFilter() );
   enableControls();
@@ -1509,7 +1513,7 @@ void KMFilterListBox::enableControls()
   mBtnDown->setEnabled( aFilterIsSelected &&
                           ( ( uniqFilterSelected && !theLast ) ||
                             ( !uniqFilterSelected ) ) && !allItemSelected );
-  
+
   mBtnCopy->setEnabled( aFilterIsSelected && uniqFilterSelected );
   mBtnDelete->setEnabled( aFilterIsSelected );
   mBtnRename->setEnabled( aFilterIsSelected && uniqFilterSelected );
@@ -1517,7 +1521,7 @@ void KMFilterListBox::enableControls()
   mBtnTop->setEnabled( aFilterIsSelected &&
                        ( ( uniqFilterSelected && !theFirst ) ||
                          ( !uniqFilterSelected ) ) && !allItemSelected );
-  
+
   mBtnBottom->setEnabled( aFilterIsSelected &&
                           ( ( uniqFilterSelected && !theLast ) ||
                             ( !uniqFilterSelected ) ) && !allItemSelected );
