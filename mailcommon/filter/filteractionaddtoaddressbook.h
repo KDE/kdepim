@@ -35,7 +35,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
     virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 
-    virtual bool isEmpty() const { return false; }
+    virtual bool isEmpty() const;
 
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;

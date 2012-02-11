@@ -67,6 +67,11 @@ FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
   mParameter = mParameterList.at( 0 );
 }
 
+bool FilterActionSetStatus::isEmpty() const
+{
+  return false;
+}
+
 FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) const
 {
   const int index = mParameterList.indexOf( mParameter );

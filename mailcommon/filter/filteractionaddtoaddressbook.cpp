@@ -51,6 +51,11 @@ FilterActionAddToAddressBook::FilterActionAddToAddressBook( QObject *parent )
 {
 }
 
+bool FilterActionAddToAddressBook::isEmpty() const
+{
+  return false;
+}
+
 FilterAction::ReturnCode FilterActionAddToAddressBook::process( ItemContext &context ) const
 {
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();

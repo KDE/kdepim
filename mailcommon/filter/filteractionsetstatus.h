@@ -37,7 +37,7 @@ class FilterActionSetStatus: public FilterActionWithStringList
 
     static FilterAction* newAction();
 
-    virtual bool isEmpty() const { return false; }
+    virtual bool isEmpty() const;
 
     virtual void argsFromString( const QString &argsStr );
     virtual QString argsAsString() const;

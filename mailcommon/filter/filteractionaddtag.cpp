@@ -40,6 +40,11 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
   initializeTagList();
 }
 
+bool FilterActionAddTag::isEmpty() const
+{
+  return false;
+}
+
 void FilterActionAddTag::initializeTagList()
 {
 #ifndef KDEPIM_NO_NEPOMUK
