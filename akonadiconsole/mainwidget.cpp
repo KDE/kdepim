@@ -75,6 +75,10 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   action->setText( "Dump to XML..." );
   connect( action, SIGNAL(triggered()), browser, SLOT(dumpToXml()) );
 
+  action = parent->actionCollection()->addAction( "akonadiconsole_clearcache" );
+  action->setText( "Clear Akonadi Cache" );
+  connect( action, SIGNAL(triggered()), browser, SLOT(clearCache()) );
+
   action = parent->actionCollection()->addAction( "akonadiserver_start" );
   action->setText( "Start Server" );
   connect( action, SIGNAL(triggered()), SLOT(startServer()) );
