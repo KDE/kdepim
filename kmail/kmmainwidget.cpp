@@ -3752,7 +3752,7 @@ void KMMainWidget::updateMessageActions( bool fast )
        mMessagePane->getSelectionStats( selectedItems, selectedVisibleItems, &allSelectedBelongToSameThread )
      )
   {
-    mMsgActions->setCurrentMessage( mMessagePane->currentItem() );
+    mMsgActions->setCurrentMessage( mMsgView->message() );
     mMsgActions->setSelectedVisibleItems( selectedVisibleItems );
 
   } else {
