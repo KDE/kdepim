@@ -22,9 +22,9 @@
 #include <kmime/kmime_message.h>
 #include <libkdepim/progressmanager.h>
 #include <libkdepim/broadcaststatus.h>
-#include <mailcommon/filterimporterexporter.h>
-#include <mailcommon/filterlog.h>
-#include <mailcommon/mailfilter.h>
+#include <mailcommon/filter/filterimporterexporter.h>
+#include <mailcommon/filter/filterlog.h>
+#include <mailcommon/filter/mailfilter.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>

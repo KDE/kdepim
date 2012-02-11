@@ -22,7 +22,7 @@
 #include "filtereditor.h"
 
 #include <kactioncollection.h>
-#include <mailcommon/filtercontroller.h>
+#include <mailcommon/filter/filtercontroller.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QItemSelectionModel>

@@ -20,10 +20,10 @@
 #ifndef MAILCOMMON_MAILFILTER_H
 #define MAILCOMMON_MAILFILTER_H
 
-#include "mailcommon_export.h"
+#include "../mailcommon_export.h"
 
 #include "filteraction.h"
-#include "searchpattern.h"
+#include "../searchpattern.h"
 
 #include <kshortcut.h>
 #include <akonadi/collection.h>
