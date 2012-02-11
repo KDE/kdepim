@@ -722,7 +722,8 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &c
        using that, and look it up in the message. When the (new) message
        is uploaded, the header is stripped anyhow. */
       const QString uid = aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : "";
-      aMsg->setContent( msgText );
+      aMsg->setContent( KMime::CRLFtoLF( msgText ) );
+      aMsg->parse();
 
       KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
