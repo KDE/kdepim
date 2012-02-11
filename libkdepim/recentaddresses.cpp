@@ -80,7 +80,7 @@ RecentAddresses::RecentAddresses( KConfig *config )
 
 RecentAddresses::~RecentAddresses()
 {
-  // if you want this destructor to get called, use a K3StaticDeleter
+  // if you want this destructor to get called, use K_GLOBAL_STATIC
   // on s_self
 }
 
