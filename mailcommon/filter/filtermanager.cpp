@@ -20,6 +20,7 @@
 #include "filtermanager.h"
 
 #include "filteraction.h"
+#include "filteractiondict.h"
 #include "filterimporterexporter.h"
 #include "mailfilteragentinterface.h"
 

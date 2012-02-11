@@ -25,8 +25,38 @@ set(libmailcommon_SRCS
   expirypropertiesdialog.cpp
   favoritecollectionwidget.cpp
   filter/filteraction.cpp
+  filter/filteractionaddheader.cpp
+  filter/filteractionaddtag.cpp
+  filter/filteractionaddtoaddressbook.cpp
+  filter/filteractionbeep.cpp
+  filter/filteractioncopy.cpp
+  filter/filteractiondelete.cpp
+  filter/filteractiondict.cpp
+  filter/filteractionexec.cpp
+  filter/filteractionforward.cpp
   filter/filteractionmissingargumentdialog.cpp
+  filter/filteractionmove.cpp
+  filter/filteractionpipethrough.cpp
+  filter/filteractionplaysound.cpp
+  filter/filteractionredirect.cpp
+  filter/filteractionremoveheader.cpp
+  filter/filteractionreplyto.cpp
+  filter/filteractionrewriteheader.cpp
+  filter/filteractionsendfakedisposition.cpp
+  filter/filteractionsendreceipt.cpp
+  filter/filteractionsetidentity.cpp
+  filter/filteractionsetstatus.cpp
+  filter/filteractionsettransport.cpp
   filter/filteractionwidget.cpp
+  filter/filteractionwithaddress.cpp
+  filter/filteractionwithcommand.cpp
+  filter/filteractionwithfolder.cpp
+  filter/filteractionwithnone.cpp
+  filter/filteractionwithstring.cpp
+  filter/filteractionwithstringlist.cpp
+  filter/filteractionwithtest.cpp
+  filter/filteractionwithuoid.cpp
+  filter/filteractionwithurl.cpp
   filter/filtercontroller.cpp
   filter/filtereditdialog.cpp
   filter/filterimporterexporter.cpp
@@ -37,6 +67,7 @@ set(libmailcommon_SRCS
   filter/filterlog.cpp
   filter/filtermanager.cpp
   filter/filtermodel.cpp
+  filter/itemcontext.cpp
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
   foldercollection.cpp

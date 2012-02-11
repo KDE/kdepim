@@ -20,6 +20,7 @@
 #include "filteractionwidget.h"
 
 #include "filteraction.h"
+#include "filteractiondict.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 #include "minimumcombobox.h"

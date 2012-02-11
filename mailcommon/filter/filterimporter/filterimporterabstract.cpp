@@ -16,6 +16,8 @@
 */
 
 #include "filterimporterabstract_p.h"
+
+#include "filteractiondict.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 

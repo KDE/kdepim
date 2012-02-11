@@ -22,6 +22,7 @@
 
 #include "kmfilterdialog.h"
 
+#include "filteractiondict.h"
 #include "filteractionwidget.h"
 #include "filterimporterexporter.h"
 using MailCommon::FilterImporterExporter;
