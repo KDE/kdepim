@@ -22,6 +22,7 @@
 #include "collectionattributespage.h"
 #include "collectioninternalspage.h"
 #include "collectionaclpage.h"
+#include "dbaccess.h"
 #include "settings.h"
 #include "akonadibrowsermodel.h"
 
@@ -68,6 +69,8 @@
 #include <QStackedWidget>
 #include <QtGui/QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QSqlError>
+#include <QSqlQuery>
 #include <QTimer>
 
 using namespace Akonadi;
@@ -435,7 +438,7 @@ void BrowserWidget::delAttribute()
 
 void BrowserWidget::dumpToXml()
 {
-  const Collection root = mCollectionView->currentIndex().data( EntityTreeModel::CollectionRole ).value<Collection>();
+  const Collection root = currentCollection();
   if ( !root.isValid() )
     return;
   const QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.xml", this, i18n( "Select XML file" ) );
@@ -451,6 +454,26 @@ void BrowserWidget::dumpToXmlResult( KJob* job )
 {
   if ( job->error() )
     KMessageBox::error( this, job->errorString() );
+}
+
+void BrowserWidget::clearCache()
+{
+  const Collection coll = currentCollection();
+  if ( !coll.isValid() )
+    return;
+  QString str = QString("DELETE FROM pimitemtable WHERE collectionId=%1").arg(coll.id());
+  qDebug() << str;
+  QSqlQuery query( str, DbAccess::database() );
+  query.exec();
+  if (query.lastError().isValid()) {
+     qDebug() << query.lastError();
+     KMessageBox::error( this, query.lastError().text() );
+   }
+}
+
+Akonadi::Collection BrowserWidget::currentCollection() const
+{
+  return mCollectionView->currentIndex().data( EntityTreeModel::CollectionRole ).value<Collection>();
 }
 
 #include "browserwidget.moc"

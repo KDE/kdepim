@@ -59,6 +59,7 @@
   <Action name="akonadi_collection_sync"/>
   <Action name="akonadi_collection_sync_recursive"/>
   <Action name="akonadiconsole_akonadi2xml"/>
+  <Action name="akonadiconsole_clearcache"/>
   <Separator/>
   <Action name="akonadi_collection_properties"/>
  </Menu>
