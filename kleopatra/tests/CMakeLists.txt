@@ -24,14 +24,6 @@ kde4_add_executable(test_useridlistmodels TEST ${test_useridlistmodels_SRCS})
 
 target_link_libraries(test_useridlistmodels kleo ${KDE4_KDECORE_LIBS} )
 
-########### next target ###############
-
-#set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp ../utils/formatting.cpp ../certificateinfowidgetimpl.cpp ../uiserver/resultdisplaywidget.cpp)
-#kde4_add_ui_files( test_verificationresultdialog_SRCS ../certificateinfowidget.ui)
-#kde4_add_executable(test_verificationresultdialog TEST ${test_verificationresultdialog_SRCS})
-#
-#target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY})
-
 endif ( PORT_ME_AWAY_FROM_EVENT_LOOPS )
 
 ########### next target ###############
