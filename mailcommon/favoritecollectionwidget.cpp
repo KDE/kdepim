@@ -65,6 +65,10 @@ void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
   if ( !model() || model()->rowCount() == 0 ) {
     QPainter p( viewport() );
 
+    QFont font = p.font();
+    font.setItalic( true );
+    p.setFont( font );
+
     QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
     color.setAlpha( 128 );
