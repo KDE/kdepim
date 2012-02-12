@@ -5,6 +5,7 @@ KAlarm Change Log
 - [Akonadi] Prevent duplicate prompts to update format of new calendar resource.
 - [Akonadi] Automatically disable duplicated calendar resources.
 - [Akonadi] Fix errors when creating default calendar resources.
+- [Akonadi] Prevent multiple standard calendars for any alarm type.
 - Output cmake error if Akonadi option incompatible with kdepimlibs/kalarmcal.
 
 === Version 2.8.0 (KDE 4.8.0) --- 16 January 2012 ===
