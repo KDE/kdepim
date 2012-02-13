@@ -43,8 +43,8 @@ FilterAction::ReturnCode FilterActionUnsetStatus::process( ItemContext &context 
   const Akonadi::Item::Flag flag = *(flags.begin());
   if ( context.item().hasFlag( flag ) ) {
       context.item().clearFlag( flag );
+      context.setNeedsFlagStore();
   }
-  context.setNeedsFlagStore();
   return GoOn;
 }
 
