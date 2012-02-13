@@ -1814,6 +1814,7 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   } else {
     QLabel *lab = new QLabel;
     lab->setText( i18n( "The Nepomuk semantic search service is not available. We can not configurate tags. You can enable it in \"System Settings\"" ) );
+    lab->setWordWrap(true);
     maingrid->addWidget( lab );
   }
 }
