@@ -22,25 +22,7 @@
 #include <KDE/Akonadi/KMime/MessageStatus>
 #include <KDE/KLocale>
 
-#include <QtGui/QTextDocument>
-
 using namespace MailCommon;
-
-static const Akonadi::MessageStatus stati[] =
-{
-  Akonadi::MessageStatus::statusImportant(),
-  Akonadi::MessageStatus::statusRead(),
-  Akonadi::MessageStatus::statusUnread(),
-  Akonadi::MessageStatus::statusReplied(),
-  Akonadi::MessageStatus::statusForwarded(),
-  Akonadi::MessageStatus::statusWatched(),
-  Akonadi::MessageStatus::statusIgnored(),
-  Akonadi::MessageStatus::statusSpam(),
-  Akonadi::MessageStatus::statusHam(),
-  Akonadi::MessageStatus::statusToAct()
-};
-
-static const int StatiCount = sizeof( stati ) / sizeof( Akonadi::MessageStatus );
 
 FilterAction* FilterActionSetStatus::newAction()
 {
@@ -48,29 +30,11 @@ FilterAction* FilterActionSetStatus::newAction()
 }
 
 FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
-  : FilterActionWithStringList( "set status", i18n( "Mark As" ), parent )
+  : FilterActionStatus( "set status", i18n( "Mark As" ), parent )
 {
-  // if you change this list, also update
-  // FilterActionSetStatus::stati above
-  mParameterList.append( "" );
-  mParameterList.append( i18nc( "msg status", "Important" ) );
-  mParameterList.append( i18nc( "msg status", "Read" ) );
-  mParameterList.append( i18nc( "msg status", "Unread" ) );
-  mParameterList.append( i18nc( "msg status", "Replied" ) );
-  mParameterList.append( i18nc( "msg status", "Forwarded" ) );
-  mParameterList.append( i18nc( "msg status", "Watched" ) );
-  mParameterList.append( i18nc( "msg status", "Ignored" ) );
-  mParameterList.append( i18nc( "msg status", "Spam" ) );
-  mParameterList.append( i18nc( "msg status", "Ham" ) );
-  mParameterList.append( i18nc( "msg status", "Action Item" ) );
-
-  mParameter = mParameterList.at( 0 );
 }
 
-bool FilterActionSetStatus::isEmpty() const
-{
-  return false;
-}
+
 
 FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) const
 {
@@ -81,7 +45,7 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( context.item().flags() );
 
-  const Akonadi::MessageStatus newStatus = stati[ index - 1 ];
+  const Akonadi::MessageStatus newStatus = FilterActionStatus::stati[ index - 1 ];
   if ( newStatus == Akonadi::MessageStatus::statusUnread() )
     status.setRead( false );
   else
@@ -91,53 +55,6 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   context.setNeedsFlagStore();
 
   return GoOn;
-}
-
-bool FilterActionSetStatus::requiresBody() const
-{
-  return false;
-}
-
-static QString realStatusString( const QString &statusStr )
-{
-  QString result( statusStr );
-
-  if ( result.size() == 2 )
-    result.remove( QLatin1Char( 'U' ) );
-
-  return result;
-}
-
-
-void FilterActionSetStatus::argsFromString( const QString &argsStr )
-{
-  if ( argsStr.length() == 1 ) {
-    Akonadi::MessageStatus status;
-
-    for ( int i = 0 ; i < StatiCount ; ++i ) {
-      status = stati[i];
-      if ( realStatusString( status.statusStr() ) == argsStr.toLatin1() ) {
-        mParameter = mParameterList.at( i + 1 );
-        return;
-      }
-    }
-  }
-
-  mParameter = mParameterList.at( 0 );
-}
-
-QString FilterActionSetStatus::argsAsString() const
-{
-  const int index = mParameterList.indexOf( mParameter );
-  if ( index < 1 )
-    return QString();
-
-  return realStatusString( stati[index - 1].statusStr() );
-}
-
-QString FilterActionSetStatus::displayString() const
-{
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
 

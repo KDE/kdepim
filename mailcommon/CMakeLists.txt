@@ -46,6 +46,8 @@ set(libmailcommon_SRCS
   filter/filteractionsendreceipt.cpp
   filter/filteractionsetidentity.cpp
   filter/filteractionsetstatus.cpp
+  filter/filteractionstatus.cpp
+  filter/filteractionunsetstatus.cpp
   filter/filteractionsettransport.cpp
   filter/filteractionwidget.cpp
   filter/filteractionwithaddress.cpp

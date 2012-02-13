@@ -20,28 +20,21 @@
 #ifndef MAILCOMMON_FILTERACTIONSETSTATUS_H
 #define MAILCOMMON_FILTERACTIONSETSTATUS_H
 
-#include "filteractionwithstringlist.h"
-
+#include "filteractionstatus.h"
 namespace MailCommon {
 
 //=============================================================================
 // FilterActionSetStatus - set status to
 // Set the status of messages
 //=============================================================================
-class FilterActionSetStatus: public FilterActionWithStringList
+class FilterActionSetStatus: public FilterActionStatus
 {
   public:
     FilterActionSetStatus( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual bool requiresBody() const;
 
     static FilterAction* newAction();
 
-    virtual bool isEmpty() const;
-
-    virtual void argsFromString( const QString &argsStr );
-    virtual QString argsAsString() const;
-    virtual QString displayString() const;
 };
 
 }

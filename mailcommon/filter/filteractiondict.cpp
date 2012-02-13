@@ -40,6 +40,7 @@
 #include "filteractionsetidentity.h"
 #include "filteractionsetstatus.h"
 #include "filteractionsettransport.h"
+#include "filteractionunsetstatus.h"
 
 using namespace MailCommon;
 
@@ -77,6 +78,7 @@ void FilterActionDict::init()
   insert( FilterActionAddToAddressBook::newAction );
   insert( FilterActionDelete::newAction);
   insert( FilterActionBeep::newAction);
+  insert( FilterActionUnsetStatus::newAction );
   // Register custom filter actions below this line.
 }
 
