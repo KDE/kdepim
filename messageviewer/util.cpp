@@ -465,7 +465,7 @@ bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *paren
   return Util::saveContents( parent, contents );
 }
 
-bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
+bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent, bool appendMessages )
 {
 
   QString fileName;
@@ -479,7 +479,10 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
     fileName += ".mbox";
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent );
+  KFileDialog::Option options = static_cast<KFileDialog::Option>(0);
+  if( !appendMessages )
+      options = KFileDialog::ConfirmOverwrite;
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent, i18np("Save Message", "Save Messages", retrievedMsgs.count() ), options);
 
   if ( url.isEmpty() )
     return true;
@@ -488,12 +491,15 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   if ( localFileName.isEmpty() )
     return true;
 
+  if( !appendMessages ) {
+      QFile::remove(localFileName);
+  }
+
   KMBox::MBox mbox;
   if ( !mbox.load( localFileName ) ) {
     //TODO: error
     return false;
   }
-
   foreach ( const Akonadi::Item &item, retrievedMsgs ) {
     if ( item.hasPayload<KMime::Message::Ptr>() ) {
       mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
