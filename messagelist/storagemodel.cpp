@@ -259,6 +259,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                     item.size(),
                     sender, receiver,
                     bUseReceiver );
+  mi->setItemId( item.id() );
 
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {

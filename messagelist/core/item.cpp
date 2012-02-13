@@ -506,6 +506,16 @@ void MessageList::Core::Item::initialSetup( time_t date, size_t size,
   d_ptr->mUseReceiver = useReceiver;
 }
 
+void MessageList::Core::Item::setItemId(qint64 id)
+{
+  d_ptr->mItemId = id;
+}
+
+qint64 MessageList::Core::Item::itemId() const
+{
+  return d_ptr->mItemId;
+}
+
 void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
                                                   const Akonadi::MessageStatus &status)
 {
