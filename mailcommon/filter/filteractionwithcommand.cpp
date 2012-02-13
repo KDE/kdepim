@@ -259,3 +259,5 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &c
 
   return GoOn;
 }
+
+#include "filteractionwithcommand.moc"

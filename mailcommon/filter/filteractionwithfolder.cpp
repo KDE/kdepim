@@ -131,3 +131,5 @@ bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder
     return false;
 }
 
+
+#include "filteractionwithfolder.moc"

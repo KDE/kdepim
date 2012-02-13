@@ -81,3 +81,5 @@ QString FilterActionWithTest::displayString() const
 {
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
+
+#include "filteractionwithtest.moc"

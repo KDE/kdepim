@@ -67,3 +67,5 @@ void FilterActionWithStringList::argsFromString( const QString &argsStr )
 
   mParameter = mParameterList.at( index );
 }
+
+#include "filteractionwithstringlist.moc"
