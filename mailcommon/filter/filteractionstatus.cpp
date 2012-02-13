@@ -107,5 +107,5 @@ QString FilterActionStatus::argsAsString() const
 
 QString FilterActionStatus::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+  return label() + QLatin1String( " \"" ) + mParameter + QLatin1String( "\"" );
 }
