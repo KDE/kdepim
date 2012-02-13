@@ -15,6 +15,11 @@
       <label>Hide tab bar when only one tab is open</label>
       <whatsthis>With this option enabled the tab bar will be displayed only when there are two or more tabs. With this option disabled the tab bar will be always shown. When the tab bar is hidden you can always open a folder in a new tab by middle-clicking it.</whatsthis>
     </entry>
+    <entry name="TabsHaveCloseButton" type="Bool">
+      <default>false</default>
+      <label>Show close button on each tab</label>
+      <whatsthis>Enable this option if you want to have a close button on each tab.</whatsthis>
+    </entry>
     <entry name="ShowQuickSearch" type="Bool">
       <default>true</default>
     </entry>

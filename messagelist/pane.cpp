@@ -50,10 +50,10 @@ public:
       mXmlGuiClient( 0 ),
       mActionMenu( 0 ),
       mCloseTabAction( 0 ),
-      mActivateNextTabAction( 0 ), 
+      mActivateNextTabAction( 0 ),
       mActivatePreviousTabAction( 0 ),
       mMoveTabLeftAction( 0 ),
-      mMoveTabRightAction( 0 ), 
+      mMoveTabRightAction( 0 ),
       mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
@@ -161,6 +161,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
   connect( Core::Settings::self(), SIGNAL(configChanged()),
            this, SLOT(updateTabControls()) );
+
+  connect( this, SIGNAL(mouseDoubleClick()),
+           this, SLOT(createNewTab()) );
 
   connect( this, SIGNAL(mouseMiddleClick(QWidget*)),
            this, SLOT(closeTab(QWidget*)) );
@@ -460,12 +463,12 @@ void Pane::Private::moveTabForward()
   const int currentIndex = q->tabBar()->currentIndex();
   if ( currentIndex == q->tabBar()->count()-1 )
     return;
-  q->tabBar()->moveTab( currentIndex, currentIndex+1 );  
+  q->tabBar()->moveTab( currentIndex, currentIndex+1 );
 }
 
 void Pane::Private::moveTabBackward()
 {
-  const int currentIndex = q->tabBar()->currentIndex();  
+  const int currentIndex = q->tabBar()->currentIndex();
   if ( currentIndex == 0 )
     return;
   q->tabBar()->moveTab( currentIndex, currentIndex-1 );
@@ -481,8 +484,8 @@ void Pane::Private::activateNextTab()
 
   if( indexTab == numberOfTab )
     indexTab = 0;
-  
-  q->tabBar()->setCurrentIndex( indexTab );  
+
+  q->tabBar()->setCurrentIndex( indexTab );
 }
 
 void Pane::Private::activatePreviousTab()
@@ -535,6 +538,7 @@ void Pane::Private::onCurrentTabChanged()
   emit q->currentTabChanged();
 
   Widget *w = static_cast<Widget*>( q->currentWidget() );
+
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
   disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -628,6 +632,10 @@ void Pane::createNewTab()
   w->setXmlGuiClient( d->mXmlGuiClient );
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
 
+  setCloseButtonEnabled( Core::Settings::self()->tabsHaveCloseButton() );
+
+  connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(onCloseTabClicked()) );
+
   QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
   MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
   w->setStorageModel( m );
@@ -690,12 +698,14 @@ void Pane::Private::updateTabControls()
     mMoveTabRightAction->setEnabled( enableAction );
   if ( mMoveTabLeftAction )
     mMoveTabLeftAction->setEnabled( enableAction );
-      
+
   if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
     q->tabBar()->setVisible( enableAction );
   } else {
     q->tabBar()->setVisible( true );
   }
+
+  q->setCloseButtonEnabled( Core::Settings::self()->tabsHaveCloseButton() );
 }
 
 Item Pane::currentItem() const
