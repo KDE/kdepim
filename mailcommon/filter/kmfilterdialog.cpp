@@ -486,6 +486,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   QLabel *lab = new QLabel( i18n( "Run selected filter(s) on: " ) );
   applySpecificFiltersLayout->addWidget( lab );
   mFolderRequester = new MailCommon::FolderRequester;
+  mFolderRequester->setNotAllowToCreateNewFolder(true);
   applySpecificFiltersLayout->addWidget( mFolderRequester );
   connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
            this, SLOT(slotFolderChanged(Akonadi::Collection)) );
