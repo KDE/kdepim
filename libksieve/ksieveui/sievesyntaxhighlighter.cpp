@@ -93,7 +93,7 @@ void SieveSyntaxHighlighter::init()
   actionFormat.setForeground( Qt::blue );
   actionFormat.setFontWeight( QFont::Bold );
   QStringList actionType;
-  actionType << QLatin1String( "\\bkeep\\b" )<<QLatin1String( "\\breject\\b" )<<QLatin1String( "\\bdiscard\\b" )<<QLatin1String( "\\bredirect\\b" )<<QLatin1String( "\\bfileinto\\b" )<<QLatin1String( "\\bsetflag\\b" )<<QLatin1String( "\\baddflag\\b" );
+  actionType << QLatin1String( "\\bkeep\\b" )<<QLatin1String( "\\breject\\b" )<<QLatin1String( "\\bdiscard\\b" )<<QLatin1String( "\\bredirect\\b" )<<QLatin1String( "\\bfileinto\\b" )<<QLatin1String( "\\bsetflag\\b" )<<QLatin1String( "\\baddflag\\b" )<<QLatin1String("\\bvacation\\b");
   Q_FOREACH( const QString & s, actionType ) {
     const QRegExp regex( s, Qt::CaseInsensitive );
     m_rules.append( Rule( regex, actionFormat ) );
