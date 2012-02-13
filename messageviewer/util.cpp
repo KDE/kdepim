@@ -465,7 +465,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   KFileDialog::Option options = static_cast<KFileDialog::Option>(0);
   if( !appendMessages )
       options = KFileDialog::ConfirmOverwrite;
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent, i18np("Save Message", "Save Messages", retrievedMsgs.count() ), options);
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent, QString(), options);
 
   if ( url.isEmpty() )
     return true;
