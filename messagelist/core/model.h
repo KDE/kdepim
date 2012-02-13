@@ -245,6 +245,7 @@ private:
   Q_PRIVATE_SLOT(d, void slotStorageModelDataChanged( const QModelIndex &, const QModelIndex & ))
   Q_PRIVATE_SLOT(d, void slotStorageModelHeaderDataChanged( Qt::Orientation, int, int ))
   Q_PRIVATE_SLOT(d, void slotStorageModelLayoutChanged())
+  Q_PRIVATE_SLOT(d, void slotApplyFilter())
 
   friend class ModelPrivate;
   ModelPrivate * const d;

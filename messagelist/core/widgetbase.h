@@ -37,6 +37,7 @@ class KComboBox;
 
 namespace Akonadi
 {
+  class Collection;
   class MessageStatus;
 }
 
@@ -123,6 +124,11 @@ public:
    * Fast function that determines if the selection is empty
    */
   bool selectionEmpty() const;
+
+  /**
+   * Sets the current folder.
+   */
+  void setCurrentFolder( const Akonadi::Collection &collection );
 
 public slots:
 

@@ -53,6 +53,7 @@
 #include <KDE/KMenu>
 #include <KDE/KStandardDirs>
 
+#include <akonadi/collection.h>
 #include <akonadi/kmime/messagestatus.h>
 
 using namespace MessageList::Core;
@@ -116,7 +117,7 @@ public:
   bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
   int mFirstTagInComboIndex;             ///< the index of the combobox where the first tag starts
-
+  KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
 };
 
 Widget::Widget( QWidget *pParent )
@@ -1077,6 +1078,7 @@ void Widget::searchTimerFired()
 
   const QString text = d->mSearchEdit->text();
 
+  d->mFilter->setCurrentFolder( d->mCurrentFolderUrl );
   d->mFilter->setSearchString( text );
   if ( d->mFilter->isEmpty() ) {
     resetFilter();
@@ -1165,5 +1167,9 @@ bool Widget::selectionEmpty() const
   return d->mView->selectionEmpty();
 }
 
+void Widget::setCurrentFolder( const Akonadi::Collection &collection )
+{
+  d->mCurrentFolderUrl = collection.url( Akonadi::Collection::UrlShort );
+}
 
 #include "widgetbase.moc"

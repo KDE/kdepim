@@ -161,6 +161,7 @@ public:
   void slotStorageModelDataChanged( const QModelIndex &fromIndex, const QModelIndex &toIndex );
   void slotStorageModelHeaderDataChanged( Qt::Orientation orientation, int first, int last );
   void slotStorageModelLayoutChanged();
+  void slotApplyFilter();
 
 
   Model * const q;
