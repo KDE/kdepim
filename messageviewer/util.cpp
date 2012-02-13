@@ -497,8 +497,8 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
 
   KMBox::MBox mbox;
   if ( !mbox.load( localFileName ) ) {
-    //TODO: error
-    return false;
+      KMessageBox::error( parent, i18n("File %1 can not load.",localFileName) , i18n( "Error loading message" ) );
+      return false;
   }
   foreach ( const Akonadi::Item &item, retrievedMsgs ) {
     if ( item.hasPayload<KMime::Message::Ptr>() ) {
@@ -507,8 +507,8 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   }
 
   if ( !mbox.save() ) {
-    //TODO: error
-    return false;
+      KMessageBox::error( parent, i18n("We can not save message.") , i18n( "Error saving message" ) );
+      return false;
   }
   return true;
 }
