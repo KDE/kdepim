@@ -323,6 +323,10 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   act->setData( (int)MailCommon::FilterImporterExporter::SylpheedFilter );
   menu->addAction( act );
 
+  act = new QAction( i18n( "Procmail filters" ), this );
+  act->setData( (int)MailCommon::FilterImporterExporter::ProcmailFilter );
+  menu->addAction( act );
+
   connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
   button( KDialog::User1 )->setMenu( menu );

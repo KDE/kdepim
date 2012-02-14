@@ -20,6 +20,8 @@
 
 #include "filterimporter/filterimporterabstract_p.h"
 
+#include <QTextStream>
+
 class QFile;
 
 namespace MailCommon {
@@ -33,6 +35,7 @@ class FilterImporterProcmail : public FilterImporterAbstract
     ~FilterImporterProcmail();
 
   private:
+  MailCommon::MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );
 
 };
 

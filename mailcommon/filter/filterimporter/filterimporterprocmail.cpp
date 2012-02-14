@@ -29,9 +29,50 @@ using namespace MailCommon;
 FilterImporterProcmail::FilterImporterProcmail( QFile *file )
   :FilterImporterAbstract()
 {
+  QTextStream stream(file);
+  MailFilter *filter = 0;
+  while ( !stream.atEnd() ) {
+    QString line = stream.readLine();
+    kDebug() << " line :" << line << " filter " << filter;
+    filter = parseLine( stream, line, filter );
+  }
+
+  if ( filter ) {
+    appendFilter(filter);
+  }
 }
 
 FilterImporterProcmail::~FilterImporterProcmail()
 {
 }
 
+
+MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
+                                                           QString line,
+                                                           MailCommon::MailFilter *filter )
+{
+  if ( line.isEmpty() ) {
+    //Empty line
+    return filter;
+  } else if ( line.startsWith( QLatin1Char( '#' ) ) ){
+    //Commented line
+    return filter;
+  } else if ( line.startsWith( QLatin1String( ":0" ) ) ) {
+    //TODO
+  } else if ( line.startsWith( QLatin1Char( '*' ) ) ) {
+    //Condition
+  } else if ( line.startsWith( QLatin1Char( '!' ) ) ) {
+    //Redirect email
+  } else if ( line.startsWith( QLatin1Char( '|' ) ) ) {
+    //Shell
+  } else if ( line.startsWith( QLatin1Char( '{' ) ) ) {
+    //Block
+  } else if ( line.startsWith( QLatin1Char( '}' ) ) ) {
+    //End block
+  } else {
+    //Folder
+  }
+
+
+  return filter;
+}

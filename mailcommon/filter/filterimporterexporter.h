@@ -55,7 +55,8 @@ class MAILCOMMON_EXPORT FilterImporterExporter
         KMailFilter = 0,
         ThunderBirdFilter = 1,
         EvolutionFilter = 2,
-        SylpheedFilter = 3
+        SylpheedFilter = 3, 
+        ProcmailFilter = 4
     };
 
     /**

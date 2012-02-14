@@ -35,6 +35,7 @@
 #include "filterimporter/filterimporterthunderbird_p.h"
 #include "filterimporter/filterimporterevolution_p.h"
 #include "filterimporter/filterimportersylpheed_p.h"
+#include "filterimporter/filterimporterprocmail_p.h"
 
 #include <messageviewer/autoqpointer.h>
 #include <messageviewer/util.h>
@@ -272,6 +273,9 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   case SylpheedFilter:
     title = i18n( "Import Sylpheed Filters" );
     break;
+  case ProcmailFilter:
+    title = i18n( "Import Procmail Filters" );
+    break;
   }
 
   const QString fileName = KFileDialog::getOpenFileName(
@@ -324,6 +328,16 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   {
     MailCommon::FilterImporterSylpheed *filter =
       new MailCommon::FilterImporterSylpheed( &file );
+
+    imported = filter->importFilter();
+    emptyFilter = filter->emptyFilter();
+    delete filter;
+    break;
+  }
+  case ProcmailFilter:
+  {
+    MailCommon::FilterImporterProcmail *filter =
+      new MailCommon::FilterImporterProcmail( &file );
 
     imported = filter->importFilter();
     emptyFilter = filter->emptyFilter();
