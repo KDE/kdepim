@@ -147,6 +147,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   connect( d->mCloseTabButton, SIGNAL(clicked()),
            SLOT(onCloseTabClicked()) );
 
+  setCloseButtonEnabled( Core::Settings::self()->tabsHaveCloseButton() );
+  connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)) );
+
   createNewTab();
   setMovable( true );
 
@@ -631,10 +634,6 @@ void Pane::createNewTab()
   Widget * w = new Widget( this );
   w->setXmlGuiClient( d->mXmlGuiClient );
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
-
-  setCloseButtonEnabled( Core::Settings::self()->tabsHaveCloseButton() );
-
-  connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(onCloseTabClicked()) );
 
   QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
   MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
