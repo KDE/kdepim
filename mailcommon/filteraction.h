@@ -517,6 +517,7 @@ class FilterActionTransport: public FilterAction
     virtual QString displayString() const;
 protected:
     int mParameter;
+    mutable QString mTransportName;
 };
 
 
