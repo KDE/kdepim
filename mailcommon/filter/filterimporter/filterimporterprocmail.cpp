@@ -58,7 +58,11 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
     //Commented line
     return filter;
   } else if ( line.startsWith( QLatin1String( ":0" ) ) ) {
-    //TODO
+    if ( filter ) {
+      appendFilter(filter);
+    }
+    filter = new MailFilter();
+
   } else if ( line.startsWith( QLatin1Char( '*' ) ) ) {
     //Condition
   } else if ( line.startsWith( QLatin1Char( '!' ) ) ) {
