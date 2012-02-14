@@ -1695,13 +1695,12 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
   KMime::Headers::Base *header = msg->headerByType( mParameter.toLatin1() );
-  QString value = header ? header->asUnicodeString(): "";
-
-  const QString newValue = value.replace( mRegExp, mReplacementString );
-
   if ( !header ) {
     return GoOn; //TODO: Maybe create a new header by type?
   }
+  QString value = header->asUnicodeString();
+
+  const QString newValue = value.replace( mRegExp, mReplacementString );
 
   header->fromUnicodeString( newValue, "utf-8" );
   msg->assemble();
