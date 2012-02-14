@@ -1113,9 +1113,10 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   else
     status.set( newStatus );
 
-  context.item().setFlags( status.statusFlags() );
-  context.setNeedsFlagStore();
-
+  if( newStatus!= newStatus ) {
+    context.item().setFlags( status.statusFlags() );
+    context.setNeedsFlagStore();
+  }
   return GoOn;
 }
 
