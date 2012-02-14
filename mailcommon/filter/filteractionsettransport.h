@@ -72,6 +72,7 @@ class FilterActionSetTransport: public FilterAction
 
   protected:
     int mParameter;
+    mutable QString mTransportName;
 };
 
 }

@@ -96,6 +96,7 @@ void FilterActionSetTransport::applyParamWidgetValue( QWidget *paramWidget )
   Q_ASSERT( comboBox );
 
   mParameter = comboBox->currentTransportId();
+  mTransportName.clear();
 }
 
 void FilterActionSetTransport::clearParamWidget( QWidget *paramWidget ) const
@@ -132,5 +133,12 @@ QString FilterActionSetTransport::argsAsString() const
 
 QString FilterActionSetTransport::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+  if ( mTransportName.isEmpty() ) {
+    const QStringList listNames = MailTransport::TransportManager::self()->transportNames();
+    const int index = MailTransport::TransportManager::self()->transportIds().indexOf( mParameter );
+    if ( index != -1 ) {
+      mTransportName = listNames.at( index );
+    }
+  }
+  return label() + QLatin1String( " \"" ) + ( mTransportName.isEmpty() ? Qt::escape( argsAsString() ) : mTransportName ) + QLatin1String( "\"" );
 }
