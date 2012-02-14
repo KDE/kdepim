@@ -290,8 +290,14 @@ bool Kernel::folderIsInbox( const Akonadi::Collection& collection, bool withoutP
 {
   if ( collection.remoteId().toLower() == QLatin1String("inbox") ||
        collection.remoteId().toLower() == QLatin1String("/inbox") ||
-       collection.remoteId().toLower() == QLatin1String(".inbox") )
+       collection.remoteId().toLower() == QLatin1String(".inbox") ) {
     return true;
+  }
+  //Fix order. Remoteid is not "inbox" when translated
+  if( collection == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ) ) {
+    return true;
+  }
+
   if ( !withoutPop3InboxSetting ) {
     const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
     foreach ( const Akonadi::AgentInstance& type, lst ) {
