@@ -128,7 +128,9 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
     QDir importDir (dirName);
     const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile, ++currentFile) {
+    QStringList::ConstIterator filesEnd( files.constEnd() );
+    
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != filesEnd; ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString temp_mailfile = *mailFile;
         if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
@@ -138,7 +140,8 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
                 QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
-                for ( QStringList::Iterator it = subFList.begin(); it != subFList.end(); ++it ) {
+                QStringList::ConstIterator end( subFList.end() ); 
+                for ( QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it ) {
                     QString _cat = *it;
                     if(!(_cat == *mailFile)) {
                         if(_cat.startsWith('.') && _cat.endsWith(".directory")) {
