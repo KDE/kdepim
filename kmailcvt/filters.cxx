@@ -119,7 +119,7 @@ void FilterInfo::terminateASAP()
   s_terminateASAP = true;
 }
 
-bool FilterInfo::shouldTerminate()
+bool FilterInfo::shouldTerminate() const
 {
   return s_terminateASAP;
 }

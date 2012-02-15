@@ -21,7 +21,7 @@
 #include <kfiledialog.h>
 
 /** Default constructor. */
-FilterKMail_maildir::FilterKMail_maildir( void ) :
+FilterKMail_maildir::FilterKMail_maildir() :
         Filter( i18n( "Import KMail Maildirs and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>KMail import filter</b></p>"
@@ -35,7 +35,7 @@ FilterKMail_maildir::FilterKMail_maildir( void ) :
 {}
 
 /** Destructor. */
-FilterKMail_maildir::~FilterKMail_maildir( void )
+FilterKMail_maildir::~FilterKMail_maildir()
 {
 }
 
@@ -68,8 +68,9 @@ void FilterKMail_maildir::import( FilterInfo *info )
         int currentDir = 1, numSubDirs = rootSubDirs.size();
 	QStringList::ConstIterator end = rootSubDirs.constEnd();
         for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
-            if(info->shouldTerminate()) break;
-            if(!(*filename == "." || *filename == "..")) {
+            if(info->shouldTerminate())
+              break;
+            if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
                 info->setCurrent(0);
                 importDirContents(info, dir.filePath(*filename));
                 info->setOverall((int) ((float) currentDir / numSubDirs * 100));
@@ -107,7 +108,7 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
     QStringList::ConstIterator end = subDirs.constEnd();     
     for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         if(info->shouldTerminate()) return;
-        if(!(*filename == "." || *filename == "..")) {
+        if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
             importDirContents(info, subfolders.filePath(*filename));
         }
     }
@@ -139,7 +140,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 _path = "KMail-Import";
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
-                QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
+                const QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
                 QStringList::ConstIterator end( subFList.end() ); 
                 for ( QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it ) {
                     QString _cat = *it;

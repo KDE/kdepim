@@ -23,7 +23,7 @@
 
 
 /** Default constructor. */
-FilterThunderbird::FilterThunderbird(void) :
+FilterThunderbird::FilterThunderbird() :
         Filter(i18n("Import Thunderbird/Mozilla Local Mails and Folder Structure"),
                "Danny Kukawka",
                i18n("<p><b>Thunderbird/Mozilla import filter</b></p>"
@@ -36,7 +36,7 @@ FilterThunderbird::FilterThunderbird(void) :
 {}
 
 /** Destructor. */
-FilterThunderbird::~FilterThunderbird(void)
+FilterThunderbird::~FilterThunderbird()
 {
 }
 
@@ -57,9 +57,11 @@ void FilterThunderbird::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir  = kfd->selectedFile();
-
+    delete kfd;
+    
     if (mailDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -100,10 +102,10 @@ void FilterThunderbird::import(FilterInfo *info)
             info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
         }
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
-    delete kfd;
 }
 
 /**

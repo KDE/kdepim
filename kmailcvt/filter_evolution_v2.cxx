@@ -56,15 +56,15 @@ void FilterEvolution_v2::import(FilterInfo *info)
         }
     }
 
-    //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
-    KFileDialog *kfd;
-    kfd = new KFileDialog( evolDir, "", 0 );
+    KFileDialog *kfd = new KFileDialog( evolDir, "", 0 );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir = kfd->selectedFile();
-
+    delete kfd;
+    
     if (mailDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -107,7 +107,6 @@ void FilterEvolution_v2::import(FilterInfo *info)
     }
     info->setCurrent(100);
     info->setOverall(100);
-    delete kfd;
 }
 
 /**

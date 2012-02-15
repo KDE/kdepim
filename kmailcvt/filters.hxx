@@ -31,7 +31,7 @@
 class FilterInfo
 {
   public:
-    FilterInfo(KImportPageDlg *dlg, QWidget *parent, bool _removeDupMsg);
+    explicit FilterInfo(KImportPageDlg *dlg, QWidget *parent, bool _removeDupMsg);
    ~FilterInfo();
 
     void setStatusMsg( const QString& status );
@@ -44,7 +44,7 @@ class FilterInfo
     void clear();
     void alert( const QString& message );
     static void terminateASAP();
-    bool shouldTerminate();
+    bool shouldTerminate() const;
     Akonadi::Collection rootCollection() const;
     void setRootCollection( const Akonadi::Collection &collection );
 

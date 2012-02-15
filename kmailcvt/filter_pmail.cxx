@@ -42,8 +42,7 @@ void FilterPMail::import(FilterInfo *info)
     inf = info;
 
     // Select directory from where I have to import files
-    KFileDialog *kfd;
-    kfd = new KFileDialog( QDir::homePath(), "", 0 );
+    KFileDialog *kfd = new KFileDialog( QDir::homePath(), "", 0 );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     chosenDir = kfd->selectedFile();
@@ -296,7 +295,8 @@ bool FilterPMail::parseFolderMatrix()
             tmpRead.remove(tmpRead.length() -2,2);
             QStringList tmpList = QString(tmpRead).split(',', QString::SkipEmptyParts);
             int i = 0;
-            for ( QStringList::Iterator it = tmpList.begin(); it != tmpList.end(); ++it, i++) {
+            QStringList::ConstIterator end( tmpList.constEnd() );
+            for ( QStringList::ConstIterator it = tmpList.constBegin(); it != end; ++it, i++) {
                 QString _tmp = *it;
                 if(i < 5) tmpArray[i] = _tmp.remove('\"');
                 else {
@@ -312,7 +312,7 @@ bool FilterPMail::parseFolderMatrix()
 }
 
 /** get the foldername for a given file ID from folderMatrix */
-QString FilterPMail::getFolderName(QString ID)
+QString FilterPMail::getFolderName(const QString& ID)
 {
     bool found = false;
     QString folder;
@@ -320,7 +320,8 @@ QString FilterPMail::getFolderName(QString ID)
 
     while (!found)
     {
-        for ( FolderStructureIterator it = folderMatrix.begin(); it != folderMatrix.end(); ++it) {
+      FolderStructureIterator end( folderMatrix.end() );
+        for ( FolderStructureIterator it = folderMatrix.begin(); it != end; ++it) {
             FolderStructure tmp = *it;
 
             QString _ID = tmp[2];

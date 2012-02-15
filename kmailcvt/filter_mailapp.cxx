@@ -120,7 +120,8 @@ void FilterMailApp::import(FilterInfo *info)
             mbox.close();
         }
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
 }
 
 void FilterMailApp::traverseDirectory(const QString &dirName)

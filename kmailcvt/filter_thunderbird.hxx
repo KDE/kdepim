@@ -27,8 +27,8 @@
 class FilterThunderbird : public Filter
 {
 public:
-    FilterThunderbird(void);
-    ~FilterThunderbird(void);
+    explicit FilterThunderbird();
+    ~FilterThunderbird();
 
     void import(FilterInfo *info);
 
