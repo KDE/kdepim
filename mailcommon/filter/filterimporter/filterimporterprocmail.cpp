@@ -63,7 +63,15 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
     }
     filter = new MailFilter();
 
-  } else if ( line.startsWith( QLatin1Char( '*' ) ) ) {
+  } else if ( line.startsWith( QLatin1String( "* " ) ) ) {
+    line.remove( 0, 2 );
+    if ( line.startsWith( QLatin1String( "^From" ) ) ) {
+    } else if ( line.startsWith( QLatin1String( "^Subject:" ) ) ) {
+    } else if ( line.startsWith( QLatin1String( "^Sender:" ) ) ) {
+    } else if ( line.startsWith( QLatin1String( "^Subject:" ) ) ) {
+    } else {
+      qDebug()<<" line condition not parsed :"<<line;
+    }
     //Condition
   } else if ( line.startsWith( QLatin1Char( '!' ) ) ) {
     //Redirect email
