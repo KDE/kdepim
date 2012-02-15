@@ -46,6 +46,10 @@ FilterImporterProcmail::~FilterImporterProcmail()
 {
 }
 
+QString FilterImporterProcmail::createUniqFilterName()
+{
+  return QString();
+}
 
 MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
                                                            QString line,

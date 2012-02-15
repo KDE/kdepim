@@ -36,6 +36,7 @@ class FilterImporterProcmail : public FilterImporterAbstract
 
   private:
   MailCommon::MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );
+  QString createUniqFilterName();
 
 };
 
