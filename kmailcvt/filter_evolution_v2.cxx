@@ -49,7 +49,11 @@ void FilterEvolution_v2::import(FilterInfo *info)
     QString evolDir = QDir::homePath() + "/.evolution/mail/local";
     QDir d( evolDir );
     if ( !d.exists() ) {
-        evolDir = QDir::homePath();
+	evolDir = QDir::homePath() + "/.local/share/evolution/mail/local/";
+	d = QDir( evolDir );
+	if ( !d.exists() ) {
+          evolDir = QDir::homePath();
+        }
     }
 
     //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
@@ -87,7 +91,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
         for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
             if (info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
-            if (temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
+            if (temp_mailfile.endsWith(QLatin1String(".db")) || temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
                 temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) {}
             else {
                 info->addLog( i18n("Start import file %1...", temp_mailfile ) );
