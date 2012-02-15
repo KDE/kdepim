@@ -27,7 +27,7 @@
 using namespace MailCommon;
 
 FilterImporterProcmail::FilterImporterProcmail( QFile *file )
-  :FilterImporterAbstract()
+  :FilterImporterAbstract(), mFilterCount( 0 )
 {
   QTextStream stream(file);
   MailFilter *filter = 0;
@@ -48,7 +48,7 @@ FilterImporterProcmail::~FilterImporterProcmail()
 
 QString FilterImporterProcmail::createUniqFilterName()
 {
-  return QString();
+  return QString::fromLatin1( "Procmail filter %1" ).arg( mFilterCount++ );
 }
 
 MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
@@ -66,6 +66,9 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
       appendFilter(filter);
     }
     filter = new MailFilter();
+    const QString uniqName = createUniqFilterName();
+    filter->pattern()->setName( uniqName );
+    filter->setToolbarName( uniqName );
 
   } else if ( line.startsWith( QLatin1String( "* " ) ) ) {
     line.remove( 0, 2 );
