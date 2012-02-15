@@ -544,10 +544,15 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   UnseenItem unseen_item;
   UnseenItem unseen_parent;
 
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  if ( !incidence ) {
+    return;
+  }
+
   unseen_item.collection = unseen_parent.collection = item.storageCollectionId();
 
-  unseen_item.uid   = CalendarSupport::incidence( item )->uid();
-  unseen_parent.uid = CalendarSupport::incidence( item )->relatedTo();
+  unseen_item.uid   = incidence->uid();
+  unseen_parent.uid = incidence->relatedTo();
 
   m_uidToItemId.remove( unseen_item.uid );
 
