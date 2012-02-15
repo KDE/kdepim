@@ -72,15 +72,20 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
 
   } else if ( line.startsWith( QLatin1String( "* " ) ) ) {
     line.remove( 0, 2 );
-    if ( line.startsWith( QLatin1String( "^From" ) ) ) {
+    if ( line.startsWith( QLatin1String( "^From:" ) ) ) {
+      line.remove( QLatin1String( "^From:" ) );
     } else if ( line.startsWith( QLatin1String( "^Subject:" ) ) ) {
+      line.remove( QLatin1String( "^Subject:" ) );
     } else if ( line.startsWith( QLatin1String( "^Sender:" ) ) ) {
+      line.remove( QLatin1String( "^Sender:" ) );
     } else if ( line.startsWith( QLatin1String( "^Subject:" ) ) ) {
+      line.remove( QLatin1String( "^Subject:" ) );
     } else {
       qDebug()<<" line condition not parsed :"<<line;
     }
     //Condition
   } else if ( line.startsWith( QLatin1Char( '!' ) ) ) {
+    line.remove( QLatin1Char( '!' ) );
     //Redirect email
   } else if ( line.startsWith( QLatin1Char( '|' ) ) ) {
     //Shell
