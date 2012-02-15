@@ -116,7 +116,8 @@ void FilterTheBat::importDirContents( FilterInfo *info, const QString& dirName)
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
+    QStringList::ConstIterator endFile( subDirs.constEnd() );
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != endFile; ++filename) {
         importDirContents(info, subfolders.filePath(*filename));
         if(info->shouldTerminate()) return;
     }

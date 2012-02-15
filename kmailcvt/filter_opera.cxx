@@ -64,7 +64,8 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, Fil
   int totalFiles = files.count();
   int currentFile = 1;
   info->addLog(i18n("Importing new mail files..."));
-  for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
+  QStringList::ConstIterator end( files.constEnd() );
+  for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
     info->setCurrent(0);
     QFile operaArchiv( importDir.filePath(*mailFile) );
     if (! operaArchiv.open( QIODevice::ReadOnly ) ) {
@@ -149,8 +150,7 @@ void FilterOpera::import(FilterInfo *info)
     }
 
     //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
-    KFileDialog *kfd;
-    kfd = new KFileDialog( startdir, "", 0);
+    KFileDialog *kfd = new KFileDialog( startdir, "", 0);
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     QString operaDir = kfd->selectedFile();

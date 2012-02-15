@@ -22,7 +22,7 @@
 #include <kdebug.h>
 
 /** Default constructor. */
-FilterSylpheed::FilterSylpheed( void ) :
+FilterSylpheed::FilterSylpheed() :
         Filter( i18n( "Import Sylpheed Maildirs and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>Sylpheed import filter</b></p>"
@@ -34,7 +34,7 @@ FilterSylpheed::FilterSylpheed( void ) :
 {}
 
 /** Destructor. */
-FilterSylpheed::~FilterSylpheed( void )
+FilterSylpheed::~FilterSylpheed()
 {
 }
 
@@ -51,6 +51,7 @@ void FilterSylpheed::import( FilterInfo *info )
 
     if ( mailDir.isEmpty() ) {
         info->alert( i18n( "No directory selected." ) );
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -126,7 +127,8 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 
     readMarkFile(info, dir.filePath(".sylpheed_mark"), msgflags);
 
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile, ++currentFile) {
+    QStringList::ConstIterator end( files.constEnd() );
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString _mfile = *mailFile;
         if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))

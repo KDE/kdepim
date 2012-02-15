@@ -42,16 +42,18 @@ FilterKMail_maildir::~FilterKMail_maildir()
 /** Recursive import of KMail maildir. */
 void FilterKMail_maildir::import( FilterInfo *info )
 {
-
+    count_duplicates = 0;
     QString _homeDir = QDir::homePath();
 
     KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
     kfd->setMode( KFile::Directory | KFile::LocalOnly );
     kfd->exec();
     mailDir = kfd->selectedFile();
-
+    delete kfd;
+    
     if ( mailDir.isEmpty() ) {
         info->alert( i18n( "No directory selected." ) );
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -83,11 +85,10 @@ void FilterKMail_maildir::import( FilterInfo *info )
     if (count_duplicates > 0) {
         info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
-    count_duplicates = 0;
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
-    delete kfd;
 }
 
 /**

@@ -41,6 +41,7 @@ FilterEvolution_v3::~FilterEvolution_v3()
 /** Recursive import of KMail maildir. */
 void FilterEvolution_v3::import( FilterInfo *info )
 {
+  count_duplicates = 0;
   QString evolDir = QDir::homePath() + "/.local/share/evolution/mail/local/";
   QDir d( evolDir );
   if ( !d.exists() ) {
@@ -52,9 +53,11 @@ void FilterEvolution_v3::import( FilterInfo *info )
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
   mailDir = kfd->selectedFile();
-
+  delete kfd;
+  
   if ( mailDir.isEmpty() ) {
     info->alert( i18n( "No directory selected." ) );
+    return;
   }
   /**
    * If the user only select homedir no import needed because
@@ -91,10 +94,8 @@ void FilterEvolution_v3::import( FilterInfo *info )
   if (info->shouldTerminate())
     info->addLog( i18n("Finished import, canceled by user."));
 
-  count_duplicates = 0;
   info->setCurrent(100);
   info->setOverall(100);
-  delete kfd;
 }
 
 /**

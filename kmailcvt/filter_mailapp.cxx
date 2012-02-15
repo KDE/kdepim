@@ -45,13 +45,21 @@ void FilterMailApp::import(FilterInfo *info)
     bool first_msg = true;
 
     const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), info->parent() );
+    if ( directory.isEmpty() )
+    {
+      info->alert(i18n("No files selected."));
+      return;
+    }
+    
     info->setOverall(0);
 
     //   kDebug() <<"starting by looking in directory" << directory;
     traverseDirectory(directory);
 
-    for ( QStringList::ConstIterator filename = mMboxFiles.constBegin(); filename != mMboxFiles.constEnd(); ++filename, ++currentFile) {
-        if ( info->shouldTerminate() ) break;
+    QStringList::ConstIterator end( mMboxFiles.constEnd() );
+    for ( QStringList::ConstIterator filename = mMboxFiles.constBegin(); filename != end; ++filename, ++currentFile) {
+        if ( info->shouldTerminate() )
+          break;
         QFile mbox( *filename );
         if (! mbox.open( QIODevice::ReadOnly ) ) {
             info->alert( i18n("Unable to open %1, skipping", *filename ) );
@@ -131,13 +139,13 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
 
     const QFileInfoList fileinfolist = dir.entryInfoList();
     Q_FOREACH( const QFileInfo &fi, fileinfolist ) {
-        if (fi.fileName() == "." || fi.fileName() == "..") {
+        if (fi.fileName() == QLatin1String( "." ) || fi.fileName() == QLatin1String( ".." ) ) {
             continue;
         }
         if (fi.isDir() && fi.isReadable()) {
             traverseDirectory(fi.filePath());
         } else {
-            if (!fi.isDir() && fi.fileName() == "mbox") {
+            if (!fi.isDir() && fi.fileName() == QLatin1String( "mbox" )) {
                 kDebug() <<"adding the file" << fi.filePath();
                 mMboxFiles.append(fi.filePath());
             }
