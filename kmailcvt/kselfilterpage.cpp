@@ -37,6 +37,8 @@
 
 #include "filters.hxx"
 
+#include "filter_evolution_v3.hxx"
+
 // KDE includes
 #include <kstandarddirs.h>
 #include <klocale.h>
@@ -65,6 +67,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
         addFilter(new FilterMBox);
         addFilter(new FilterEvolution);
         addFilter(new FilterEvolution_v2);
+	addFilter(new FilterEvolution_v3);
         addFilter(new FilterKMail_maildir);
         addFilter(new FilterMailApp);
         addFilter(new FilterOpera);
