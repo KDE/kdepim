@@ -6,8 +6,16 @@ add_definitions(-DQT_STRICT_ITERATORS)
 option(KALARM_USE_AKONADI "Build to use Akonadi" ON)
 
 # Kalarm from kdepim master needs kdepimlibs 4.7
-if(NOT ${KDE_VERSION} VERSION_GREATER 4.6.40)
+if(${KDE_VERSION} VERSION_LESS 4.6.40)
   set(KALARM_USE_AKONADI FALSE)
+endif()
+
+if(KALARM_USE_KRESOURCES AND KALARM_USE_AKONADI)
+    message(STATUS "Kalarmcal (in kdepimlibs) was built to use KResources, not Akonadi. KAlarm will NOT be built with Akonadi support.")
+    set(KALARM_USE_AKONADI FALSE)
+elseif(NOT KALARM_USE_KRESOURCES AND NOT KALARM_USE_AKONADI)
+    message(STATUS "Kalarmcal (in kdepimlibs) was built to use Akonadi, not KResources. KAlarm will be built WITH Akonadi support.")
+    set(KALARM_USE_AKONADI TRUE)
 endif()
 
 if(KALARM_USE_AKONADI)
@@ -216,33 +224,6 @@ else(KALARM_USE_AKONADI)
         ${X11_X11_LIB}
     )
 endif(KALARM_USE_AKONADI)
-
-
-if(${KDE_VERSION} VERSION_GREATER 4.6.40)
-    set(_source "#include <kalarmcal/kalarmcal_export.h>
-#ifdef KALARMCAL_USE_KRESOURCES
-#error error
-#endif
-int main() { return 0; }")
-    set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_kalarmcal_akonadi.cpp)
-    file(WRITE "${_source_file}" "${_source}")
-    set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${KDE4_INCLUDES}")
-    try_compile(HAVE_PIMLIBS_AKONADI ${CMAKE_BINARY_DIR} ${_source_file}
-                CMAKE_FLAGS "${_include_dirs};${QT_INCLUDE_DIR}"
-	        LINK_DIRECTORIES "-DLINK_DIRECTORIES:STRING=${QT_LIBRARY_DIR}"
-	        LINK_LIBRARIES "-DLINK_LIBRARIES:STRING=QtCore"
-	        COMPILE_OUTPUT_VARIABLE _compile_output_var)
-
-    if(KALARM_USE_AKONADI AND NOT HAVE_PIMLIBS_AKONADI)
-        message(FATAL_ERROR "\nIncompatible build options between KAlarm and kdepimlibs/kalarmcal.
-To use KResources, set KALARM_USE_AKONADI=OFF.
-To use Akonadi, rebuild kdepimlibs with KALARM_USE_KRESOURCES=OFF.")
-    elseif(HAVE_PIMLIBS_AKONADI AND NOT KALARM_USE_AKONADI)
-        message(FATAL_ERROR "\nIncompatible build options between KAlarm and kdepimlibs/kalarmcal.
-To use Akonadi, set KALARM_USE_AKONADI=ON.
-To use KResources, rebuild kdepimlibs with KALARM_USE_KRESOURCES=ON.")
-    endif()
-endif()
 
 
 install(TARGETS kalarm_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
