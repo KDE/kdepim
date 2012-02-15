@@ -27,7 +27,7 @@
 #include <kmessagebox.h>
 
 /** Default constructor. */
-FilterTheBat::FilterTheBat( void ) :
+FilterTheBat::FilterTheBat() :
         Filter( i18n( "Import The Bat! Mails and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>The Bat! import filter</b></p>"
@@ -40,7 +40,7 @@ FilterTheBat::FilterTheBat( void ) :
 {}
 
 /** Destructor. */
-FilterTheBat::~FilterTheBat( void )
+FilterTheBat::~FilterTheBat()
 {
 }
 
@@ -49,14 +49,15 @@ void FilterTheBat::import( FilterInfo *info )
 {
     QString _homeDir = QDir::homePath();
 
-    KFileDialog *kfd;
-    kfd = new KFileDialog( _homeDir, "", 0 );
+    KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
     kfd->setMode( KFile::Directory | KFile::LocalOnly );
     kfd->exec();
     mailDir = kfd->selectedFile();
-
+    delete kfd;
+    
     if ( mailDir.isEmpty() ) {
         info->alert( i18n( "No directory selected." ) );
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -71,7 +72,8 @@ void FilterTheBat::import( FilterInfo *info )
         QDir dir(mailDir);
         const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
+        QStringList::ConstIterator end( rootSubDirs.constEnd() );
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
             importDirContents(info, dir.filePath(*filename));
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
             if(info->shouldTerminate()) break;
@@ -82,12 +84,13 @@ void FilterTheBat::import( FilterInfo *info )
     if (count_duplicates > 0) {
         info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
 
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);
-    delete kfd;
 }
 
 /**
