@@ -120,11 +120,7 @@ void EntityCollectionOrderProxyModel::setManualSortingActive( bool active )
     return;
   d->manualSortingActive = active;
   d->collectionRanks.clear();
-  if ( !active ) {
-    clearTreeOrder();
-  } else {
-    invalidate();
-  }
+  invalidate();
 }
 
 bool EntityCollectionOrderProxyModel::isManualSortingActive() const
