@@ -99,7 +99,8 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
+    QStringList::ConstIterator end = subDirs.constEnd();
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         if(info->shouldTerminate()) return;
         importDirContents(info, subfolders.filePath(*filename));
     }
