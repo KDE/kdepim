@@ -56,37 +56,37 @@
 KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
 
 	mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
-	connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+    connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
-	// Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
-        // The former approach was overengineered and only worked around problems in the design
-        // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
-        // Patches appreciated. (danimo)
+    // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
+    // The former approach was overengineered and only worked around problems in the design
+    // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
+    // Patches appreciated. (danimo)
 
-        addFilter(new FilterKMailArchive);
-        addFilter(new FilterMBox);
-        addFilter(new FilterEvolution);
-        addFilter(new FilterEvolution_v2);
-	addFilter(new FilterEvolution_v3);
-        addFilter(new FilterKMail_maildir);
-        addFilter(new FilterMailApp);
-        addFilter(new FilterOpera);
-        addFilter(new FilterSylpheed);
-        addFilter(new FilterThunderbird);
-        addFilter(new FilterTheBat);
-        addFilter(new FilterOE);
-//        addFilter(new FilterOutlook);
-        addFilter(new FilterPMail);
-        addFilter(new FilterLNotes);
-        addFilter(new FilterPlain);
+    addFilter(new FilterKMailArchive);
+    addFilter(new FilterMBox);
+    addFilter(new FilterEvolution);
+    addFilter(new FilterEvolution_v2);
+    addFilter(new FilterEvolution_v3);
+    addFilter(new FilterKMail_maildir);
+    addFilter(new FilterMailApp);
+    addFilter(new FilterOpera);
+    addFilter(new FilterSylpheed);
+    addFilter(new FilterThunderbird);
+    addFilter(new FilterTheBat);
+    addFilter(new FilterOE);
+    //        addFilter(new FilterOutlook);
+    addFilter(new FilterPMail);
+    addFilter(new FilterLNotes);
+    addFilter(new FilterPlain);
 
-        // Ensure we return the correct type of Akonadi collection.
-        mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
-        mCollectionRequestor->setCollection(Akonadi::Collection());
-        mCollectionRequestor->setAccessRightsFilter(
-          Akonadi::Collection::CanCreateCollection |
-          Akonadi::Collection::CanCreateItem );
-        mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
+    // Ensure we return the correct type of Akonadi collection.
+    mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
+    mCollectionRequestor->setCollection(Akonadi::Collection());
+    mCollectionRequestor->setAccessRightsFilter(
+                Akonadi::Collection::CanCreateCollection |
+                Akonadi::Collection::CanCreateItem );
+    mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
 }
 
 KSelFilterPage::~KSelFilterPage() {
@@ -107,12 +107,13 @@ void KSelFilterPage::addFilter(Filter *f)
 {
 	mFilterList.append(f);
 	mFilterCombo->addItem(f->name());
-	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
+    if (mFilterCombo->count() == 1)
+        filterSelected(0); // Setup description box with fist filter selected
 }
 
 bool KSelFilterPage::removeDupMsg_checked() const
 {
-        return remDupMsg->isChecked();
+    return remDupMsg->isChecked();
 }
 
 Filter * KSelFilterPage::getSelectedFilter(void)

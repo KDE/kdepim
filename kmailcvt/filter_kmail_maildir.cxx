@@ -79,11 +79,10 @@ void FilterKMail_maildir::import( FilterInfo *info )
                 info->setCurrent(100);
             }
         }
-    }
-
-    info->addLog( i18n("Finished importing emails from %1", mailDir ));
-    if (count_duplicates > 0) {
-        info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        info->addLog( i18n("Finished importing emails from %1", mailDir ));
+        if (count_duplicates > 0) {
+            info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        }
     }
     if (info->shouldTerminate())
       info->addLog( i18n("Finished import, canceled by user."));
