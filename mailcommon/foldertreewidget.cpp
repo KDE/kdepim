@@ -375,6 +375,7 @@ void FolderTreeWidget::clearFilter()
 void FolderTreeWidget::slotManualSortingChanged( bool active )
 {
   d->entityOrderProxy->setManualSortingActive( active );
+  d->folderTreeView->setManualSortingActive( active );
 }
 
 bool FolderTreeWidget::eventFilter( QObject *o, QEvent *e )
