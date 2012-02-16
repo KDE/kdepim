@@ -38,6 +38,9 @@ class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListVie
 
   protected slots:
     void slotGeneralFontChanged();
+
+  protected:
+    virtual void paintEvent(QPaintEvent*);
 };
 
 }

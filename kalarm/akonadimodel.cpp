@@ -91,7 +91,8 @@ AkonadiModel* AkonadiModel::instance()
 */
 AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     : EntityTreeModel(monitor, parent),
-      mMonitor(monitor)
+      mMonitor(monitor),
+      mResourcesChecked(false)
 {
     // Set lazy population to enable the contents of unselected collections to be ignored
     setItemPopulationStrategy(LazyPopulation);
@@ -136,10 +137,25 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     connect(this, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(slotRowsAboutToBeRemoved(QModelIndex,int,int)));
     connect(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotMonitoredItemChanged(Akonadi::Item,QSet<QByteArray>)));
 
-    // If necessary, migrate any KResources alarm calendars from pre-Akonadi
-    // versions of KAlarm, or create default Akonadi calendar resources if any
-    // are missing.
-    CalendarMigrator::execute();
+    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+                                   SLOT(checkResources(Akonadi::ServerManager::State)));
+    checkResources(ServerManager::state());
+}
+
+/******************************************************************************
+* Called when the server manager is running, i.e. the agent manager knows about
+* all existing resources.
+* Once it is running, if necessary migrate any KResources alarm calendars from
+* pre-Akonadi versions of KAlarm, or create default Akonadi calendar resources
+* if any are missing.
+*/
+void AkonadiModel::checkResources(ServerManager::State state)
+{
+    if (!mResourcesChecked  &&  state == ServerManager::Running)
+    {
+        mResourcesChecked = true;
+        CalendarMigrator::execute();
+    }
 }
 
 /******************************************************************************
@@ -1616,7 +1632,11 @@ AkonadiModel::EventList AkonadiModel::eventList(const QModelIndex& parent, int s
         QModelIndex ix = index(row, 0, parent);
         KAEvent evnt = event(ix.data(ItemRole).value<Item>());
         if (evnt.isValid())
-            events += Event(evnt, data(ix, ParentCollectionRole).value<Collection>());
+        {
+            Collection c = data(ix, ParentCollectionRole).value<Collection>();
+            evnt.setCollectionId(c.id());
+            events += Event(evnt, c);
+        }
     }
     return events;
 }
@@ -1718,7 +1738,9 @@ void AkonadiModel::slotMonitoredItemChanged(const Akonadi::Item& item, const QSe
         {
             // Wait to ensure that the base EntityTreeModel has processed the
             // itemChanged() signal first, before we emit eventChanged().
-            mPendingEventChanges.enqueue(Event(evnt, data(index, ParentCollectionRole).value<Collection>()));
+            Collection c = data(index, ParentCollectionRole).value<Collection>();
+            evnt.setCollectionId(c.id());
+            mPendingEventChanges.enqueue(Event(evnt, c));
             QTimer::singleShot(0, this, SLOT(slotEmitEventChanged()));
             break;
         }

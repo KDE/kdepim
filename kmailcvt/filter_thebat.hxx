@@ -27,8 +27,8 @@ class FilterTheBat : public Filter
 {
 
 public:
-    FilterTheBat(void);
-    ~FilterTheBat(void);
+    explicit FilterTheBat();
+    ~FilterTheBat();
 
     void import(FilterInfo *info);
 

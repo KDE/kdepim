@@ -296,7 +296,8 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
     }
     else
     {
-        for ( QStringList::const_iterator it = caps.constBegin(); it != caps.constEnd(); ++it )
+      QStringList::const_iterator end = caps.constEnd();
+        for ( QStringList::const_iterator it = caps.constBegin(); it !=end; ++it )
             mEdit->append( "* " + *it + '\n' );
         mEdit->append( "\n" );
     }
@@ -310,7 +311,8 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
     else
     {
         mScriptList = scriptList;
-        for ( QStringList::const_iterator it = scriptList.begin(); it != scriptList.end(); ++it )
+        QStringList::const_iterator end = scriptList.constEnd();
+        for ( QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it )
             mEdit->append( "* " + *it + '\n' );
         mEdit->append( "\n" );
         mEdit->append( i18n( "Active script: %1\n\n", activeScript ) );

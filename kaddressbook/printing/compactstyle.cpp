@@ -1,42 +1,40 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2011 Mario Scheel <zweistein12@gmx.de>
+  This file is part of KAddressBook.
+  Copyright (c) 2011 Mario Scheel <zweistein12@gmx.de>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
-#include <QtGui/QPrinter>
-#include <QtGui/QTextDocument>
-#include <QtGui/QCheckBox>
-#include <QCheckBox>
-
-#include <kabc/addressee.h>
-#include <kdebug.h>
-#include <klocale.h>
-
+#include "compactstyle.h"
 #include "contactfields.h"
-#include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
-
-#include "compactstyle.h"
+#include "printingwizard.h"
 #include "ui_compactstyle.h"
+
+#include <KABC/Addressee>
+
+#include <KLocale>
+
+#include <QCheckBox>
+#include <QPrinter>
+#include <QTextDocument>
 
 using namespace KABPrinting;
 
@@ -101,31 +99,32 @@ QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) co
   foreach ( const KABC::Addressee &contact, contacts ) {
     // get the values
     QStringList values;
-    foreach ( const ContactFields::Field field, fields) {
-        // we need only values with content
-        QString value = ContactFields::value( field, contact ).trimmed();
-        if (value.size() > 0)
-          values << value;
+    foreach ( const ContactFields::Field &field, fields ) {
+      // we need only values with content
+      QString value = ContactFields::value( field, contact ).trimmed();
+      if ( value.size() > 0 ) {
+        values << value;
+      }
     }
 
     content += "   <tr>\n";
     QString style = "background-color:";
-    if ( this->withAlternating )
+    if ( this->withAlternating ) {
       style += ( odd ) ? this->firstColor.name() : this->secondColor.name();
-    else
+    } else {
       style += "#ffffff";
+    }
     content += "    <td style=\""+ style + ";\">" + values.join("; ") + "</td>\n";
     content += "   </tr>\n";
     odd = !odd;
   }
-  
+
   content += "  </table>\n";
   content += " </body>\n";
   content += "</html>\n";
 
   return content;
 }
-
 
 CompactStyle::CompactStyle( PrintingWizard *parent )
   : PrintStyle( parent ),
@@ -136,7 +135,8 @@ CompactStyle::CompactStyle( PrintingWizard *parent )
 
   addPage( mPageSettings, i18n( "Compact Style" ) );
 
-  connect(mPageSettings->cbAlternating, SIGNAL(clicked()), this, SLOT(setAlternatingColors()) );
+  connect( mPageSettings->cbAlternating, SIGNAL(clicked()),
+           this, SLOT(setAlternatingColors()) );
 
   // set the controls, with the values in config
   KConfigGroup config( KGlobal::config(), CompactStyleConfigSectionName );
@@ -173,7 +173,7 @@ void CompactStyle::print( const KABC::Addressee::List &contacts, PrintProgress *
   withBusinessAddress = mPageSettings->cbWithBusinessAddress->isChecked();
   withBirthday = mPageSettings->cbWithBirthday->isChecked();
   withEMail = mPageSettings->cbWithEMail->isChecked();
-  
+
   // to config
   KConfigGroup config( KGlobal::config(), CompactStyleConfigSectionName );
 
@@ -185,7 +185,7 @@ void CompactStyle::print( const KABC::Addressee::List &contacts, PrintProgress *
   config.writeEntry( WithBirthday, withBirthday );
   config.writeEntry( WithEMail, withEMail );
   config.sync();
-  
+
   // print
   QPrinter *printer = wizard()->printer();
   printer->setPageMargins( 20, 20, 20, 20, QPrinter::DevicePixel );
@@ -211,7 +211,6 @@ void CompactStyle::setAlternatingColors()
   mPageSettings->cbSecond->setEnabled( mPageSettings->cbAlternating->isChecked() );
   mPageSettings->lbCbSecond->setEnabled( mPageSettings->cbAlternating->isChecked() );
 }
-
 
 CompactStyleFactory::CompactStyleFactory( PrintingWizard *parent )
   : PrintStyleFactory( parent )

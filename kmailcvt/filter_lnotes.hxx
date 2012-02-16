@@ -27,7 +27,7 @@
 class FilterLNotes : public Filter {
 
 public:
-    FilterLNotes();
+    explicit FilterLNotes();
     ~FilterLNotes();
     /** Standard import filter... starting line for our import */
     void import(FilterInfo *info);
@@ -35,8 +35,6 @@ public:
 private:
     /** the working directory */
     QDir dir;
-    /** Our Filterinfo stuff... important methods for getting the email imported */
-    FilterInfo * inf;
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
     /** total number of files that get imported */
@@ -46,7 +44,7 @@ private:
      * This is were all the real action is gonna be handled.  
      * Gets called once for EACH file imported 
      */
-    void ImportLNotes(const QString& file);
+    void ImportLNotes(const QString& file,FilterInfo *info );
     
 };
 

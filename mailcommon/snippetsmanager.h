@@ -23,7 +23,7 @@
 
 #include "mailcommon_export.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class KActionCollection;
 

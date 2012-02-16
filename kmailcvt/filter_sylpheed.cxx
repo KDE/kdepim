@@ -22,7 +22,7 @@
 #include <kdebug.h>
 
 /** Default constructor. */
-FilterSylpheed::FilterSylpheed( void ) :
+FilterSylpheed::FilterSylpheed() :
         Filter( i18n( "Import Sylpheed Maildirs and Folder Structure" ),
                 "Danny Kukawka",
                 i18n( "<p><b>Sylpheed import filter</b></p>"
@@ -34,7 +34,7 @@ FilterSylpheed::FilterSylpheed( void ) :
 {}
 
 /** Destructor. */
-FilterSylpheed::~FilterSylpheed( void )
+FilterSylpheed::~FilterSylpheed()
 {
 }
 
@@ -51,6 +51,7 @@ void FilterSylpheed::import( FilterInfo *info )
 
     if ( mailDir.isEmpty() ) {
         info->alert( i18n( "No directory selected." ) );
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -71,13 +72,14 @@ void FilterSylpheed::import( FilterInfo *info )
             importDirContents(info, dir.filePath(*filename));
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
-    }
 
-    info->addLog( i18n("Finished importing emails from %1", mailDir ));
-    if (count_duplicates > 0) {
-        info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        info->addLog( i18n("Finished importing emails from %1", mailDir ));
+        if (count_duplicates > 0) {
+            info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        }
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+        info->addLog( i18n("Finished import, canceled by user."));
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);
@@ -99,7 +101,8 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
+    QStringList::ConstIterator end = subDirs.constEnd();
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         if(info->shouldTerminate()) return;
         importDirContents(info, subfolders.filePath(*filename));
     }
@@ -125,7 +128,8 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 
     readMarkFile(info, dir.filePath(".sylpheed_mark"), msgflags);
 
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile, ++currentFile) {
+    QStringList::ConstIterator end( files.constEnd() );
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString _mfile = *mailFile;
         if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))

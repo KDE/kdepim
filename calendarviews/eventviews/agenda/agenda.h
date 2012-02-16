@@ -238,7 +238,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
   protected:
     /**
-      Reimp from Q3ScrollView: Draw the background grid of the agenda.
+      Draw the background grid of the agenda.
       @p cw grid width
       @p ch grid height
     */

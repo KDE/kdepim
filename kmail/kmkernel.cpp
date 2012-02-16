@@ -22,7 +22,7 @@ using KPIM::RecentAddresses;
 #include "mailutil.h"
 #include "mailcommon/pop3settings.h"
 #include "mailcommon/foldertreeview.h"
-#include "mailcommon/kmfilterdialog.h"
+#include "mailcommon/filter/kmfilterdialog.h"
 
 
 // kdepim includes
@@ -1319,6 +1319,11 @@ void KMKernel::slotSyncConfig()
   MessageList::Core::Settings::self()->writeConfig();
   GlobalSettings::self()->writeConfig();
   KMKernel::config()->sync();
+}
+
+void KMKernel::updateConfig()
+{
+  slotConfigChanged();
 }
 
 void KMKernel::slotShowConfigurationDialog()

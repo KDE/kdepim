@@ -27,7 +27,7 @@
 */
 
 #include "filterlogdialog.h"
-#include <mailcommon/filterlog.h>
+#include <mailcommon/filter/filterlog.h>
 #include <messageviewer/autoqpointer.h>
 
 #include <kdebug.h>

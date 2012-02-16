@@ -26,7 +26,7 @@
 
 
 /** Default constructor. */
-FilterEvolution::FilterEvolution(void) :
+FilterEvolution::FilterEvolution() :
         Filter(i18n("Import Evolution 1.x Local Mails and Folder Structure"),
                "Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )",
                i18n("<p><b>Evolution 1.x import filter</b></p>"
@@ -36,7 +36,7 @@ FilterEvolution::FilterEvolution(void) :
 {}
 
 /** Destructor. */
-FilterEvolution::~FilterEvolution(void)
+FilterEvolution::~FilterEvolution()
 {
 }
 
@@ -54,6 +54,7 @@ void FilterEvolution::import(FilterInfo *info)
 
     if (mailDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -67,7 +68,8 @@ void FilterEvolution::import(FilterInfo *info)
         QDir dir(mailDir);
         const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
+        QStringList::ConstIterator end( rootSubDirs.constEnd() );
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
             importDirContents(info, dir.filePath(*filename), *filename, QString());
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
@@ -88,12 +90,12 @@ void FilterEvolution::importDirContents(FilterInfo *info, const QString& dirName
 {
     // If there is a mbox, we import it
     QDir dir(dirName);
-    if(dir.exists("mbox")) {
+    if(dir.exists(QLatin1String( "mbox" ))) {
         importMBox(info, dirName + "/mbox", KMailRootDir, KMailSubDir);
     }
     // If there are subfolders, we import them one by one
     if(dir.exists("subfolders")) {
-        QDir subfolders(dirName + "/subfolders");
+        QDir subfolders(dirName + QLatin1String( "/subfolders" ));
         const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
         QStringList::ConstIterator end( subDirs.constEnd() );
 

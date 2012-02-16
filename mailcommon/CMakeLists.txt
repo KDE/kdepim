@@ -4,6 +4,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
+  ${CMAKE_CURRENT_SOURCE_DIR}/filter
+  ${CMAKE_CURRENT_SOURCE_DIR}
   ${SOPRANO_INCLUDE_DIR}
 )
 
@@ -14,19 +16,63 @@ set(libmailcommon_SRCS
   aclmanager.cpp
   aclutils.cpp
   attributeregistrar.cpp
+  backupjob.cpp
   collectionannotationsattribute.cpp
   collectiongeneralpage.cpp
   entitycollectionorderproxymodel.cpp
+  expirecollectionattribute.cpp
   expirejob.cpp
   expirypropertiesdialog.cpp
-  filteraction.cpp
-  filteractionwidget.cpp
-  filtercontroller.cpp
-  filtereditdialog.cpp
-  filterimporterexporter.cpp
-  filterlog.cpp
-  filtermanager.cpp
-  filtermodel.cpp
+  favoritecollectionwidget.cpp
+  filter/filteraction.cpp
+  filter/filteractionaddheader.cpp
+  filter/filteractionaddtag.cpp
+  filter/filteractionaddtoaddressbook.cpp
+  filter/filteractionbeep.cpp
+  filter/filteractioncopy.cpp
+  filter/filteractiondelete.cpp
+  filter/filteractiondict.cpp
+  filter/filteractionexec.cpp
+  filter/filteractionforward.cpp
+  filter/filteractionmissingargumentdialog.cpp
+  filter/filteractionmove.cpp
+  filter/filteractionpipethrough.cpp
+  filter/filteractionplaysound.cpp
+  filter/filteractionredirect.cpp
+  filter/filteractionremoveheader.cpp
+  filter/filteractionreplyto.cpp
+  filter/filteractionrewriteheader.cpp
+  filter/filteractionsendfakedisposition.cpp
+  filter/filteractionsendreceipt.cpp
+  filter/filteractionsetidentity.cpp
+  filter/filteractionsetstatus.cpp
+  filter/filteractionstatus.cpp
+  filter/filteractionunsetstatus.cpp
+  filter/filteractionsettransport.cpp
+  filter/filteractionwidget.cpp
+  filter/filteractionwithaddress.cpp
+  filter/filteractionwithcommand.cpp
+  filter/filteractionwithfolder.cpp
+  filter/filteractionwithnone.cpp
+  filter/filteractionwithstring.cpp
+  filter/filteractionwithstringlist.cpp
+  filter/filteractionwithtest.cpp
+  filter/filteractionwithuoid.cpp
+  filter/filteractionwithurl.cpp
+  filter/filtercontroller.cpp
+  filter/filtereditdialog.cpp
+  filter/filterimporterexporter.cpp
+  filter/filterimporter/filterimporterabstract.cpp
+  filter/filterimporter/filterimporterevolution.cpp
+  filter/filterimporter/filterimportersylpheed.cpp
+  filter/filterimporter/filterimporterthunderbird.cpp
+  filter/filterimporter/filterimporterprocmail.cpp
+  filter/filterlog.cpp
+  filter/filtermanager.cpp
+  filter/filtermodel.cpp
+  filter/itemcontext.cpp
+  filter/kmfilterdialog.cpp
+  filter/mailfilter.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -34,14 +80,13 @@ set(libmailcommon_SRCS
   folderselectiondialog.cpp
   foldertreeview.cpp
   foldertreewidget.cpp
+  foldertreewidgetproxymodel.cpp
   imapaclattribute.cpp
   jobscheduler.cpp
-  mailfilter.cpp
   mailkernel.cpp
   mailutil.cpp
   mdnadvicedialog.cpp
   minimumcombobox.cpp
-  foldertreewidgetproxymodel.cpp
   redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp
@@ -52,15 +97,6 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
-  backupjob.cpp
-  kmfilterdialog.cpp
-  filteractionmissingargumentdialog.cpp
-  expirecollectionattribute.cpp
-  filterimporter/filterimporterthunderbird.cpp
-  filterimporter/filterimporterabstract.cpp
-  filterimporter/filterimporterevolution.cpp
-  filterimporter/filterimportersylpheed.cpp
-  favoritecollectionwidget.cpp
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
@@ -69,7 +105,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filterconfigwidget.ui snippetdialog.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui)
 
 if(NOT WINCE)
   set(libmailcommon_SRCS ${libmailcommon_SRCS} soundtestwidget.cpp)

@@ -19,7 +19,7 @@
 
 
 #include "mobilekernel.h"
-#include <mailcommon/filteraction.h>
+#include <mailcommon/filter/filteraction.h>
 #include <mailcommon/mailkernel.h>
 #include <mailcommon/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>

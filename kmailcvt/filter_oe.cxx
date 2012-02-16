@@ -74,11 +74,13 @@ void FilterOE::import(FilterInfo *info)
     info->setOverall(0);
 
     /** search the folderfile to recreate folder struct */
+    
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
-        if(*mailFile == "Folders.dbx") {
+        if(*mailFile == QLatin1String( "Folders.dbx" )) {
             info->addLog(i18n("Import folder structure..."));
             importMailBox(info, dir.filePath(*mailFile));
-            if(!folderStructure.isEmpty()) parsedFolder = true;
+            if(!folderStructure.isEmpty())
+              parsedFolder = true;
             // remove file from QStringList::files, no longer needed
             files.erase(mailFile);
             currentIsFolderFile = false;
@@ -87,8 +89,10 @@ void FilterOE::import(FilterInfo *info)
     }
 
     int n=0;
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile ) {
-        if ( info->shouldTerminate() ) break;
+    QStringList::ConstIterator end( files.constEnd() );
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
+        if ( info->shouldTerminate() )
+          break;
         importMailBox(info, dir.filePath(*mailFile));
         info->setOverall(100 * ++n  / files.count());
     }
@@ -96,7 +100,8 @@ void FilterOE::import(FilterInfo *info)
     info->setOverall(100);
     info->setCurrent(100);
     info->addLog(i18n("Finished importing Outlook Express emails"));
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
 
     kDebug() <<"total emails in current file:" << totalEmails;
     kDebug() <<"0x84 Mails:" << count0x84;

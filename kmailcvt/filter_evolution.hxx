@@ -30,11 +30,10 @@
 class FilterEvolution : public Filter
 {
 public:
-    FilterEvolution(void);
-    ~FilterEvolution(void);
+    explicit FilterEvolution();
+    ~FilterEvolution();
 
     void import(FilterInfo *info);
-
 private:
     QString mailDir;
 

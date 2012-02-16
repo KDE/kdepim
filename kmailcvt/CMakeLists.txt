@@ -18,6 +18,7 @@ set(kmailcvt_SRCS
   filter_evolution.cxx
   filter_mailapp.cxx
   filter_evolution_v2.cxx
+  filter_evolution_v3.cxx
   filter_opera.cxx
   filter_thunderbird.cxx
   filter_kmail_maildir.cxx

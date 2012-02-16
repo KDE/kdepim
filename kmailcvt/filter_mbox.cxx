@@ -45,9 +45,17 @@ void FilterMBox::import(FilterInfo *info)
     bool first_msg = true;
 
     const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("mbox Files (*)"), info->parent() );
+    if ( filenames.isEmpty() )
+    {
+      info->alert(i18n("No files selected."));
+      return;
+    }
+    
+ 
     info->setOverall(0);
 
-    for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != filenames.constEnd(); ++filename, ++currentFile) {
+    QStringList::ConstIterator end( filenames.constEnd() );
+    for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename, ++currentFile) {
         QFile mbox( *filename );
         if (! mbox.open( QIODevice::ReadOnly ) ) {
             info->alert( i18n("Unable to open %1, skipping", *filename ) );
@@ -76,22 +84,22 @@ void FilterMBox::import(FilterInfo *info)
                 * get Unicode/UTF-email but KMail can't detect the correct charset.
                 */
                 QByteArray separate;
-                QString x_status_flag = "";
+                QString x_status_flag;
 
                 /* check if the first line start with "From " (and not "From: ") and discard the line
                  * in this case because some IMAP servers (e.g. Cyrus) don't accept this header line */
-                if(!first_msg && ((separate = input.data()).left(5) != "From "))
+                if(!first_msg && ((separate = input.data()).left(5) !=  "From " ))
                     tmp.write( input, l );
 
                 l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
 
-                if ((separate = input.data()).left(5) != "From ")
+                if ((separate = input.data()).left(5) != "From " )
                     tmp.write( input, l );
 
                 while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((separate = input.data()).left(5) != "From ")) {
                     tmp.write( input, l );
 
-                    if ((separate = input.data()).left(10) == "X-Status: ") {
+                    if ((separate = input.data()).left(10) == "X-Status: " ) {
                         x_status_flag = separate;
                         x_status_flag.remove("X-Status: ");
                         x_status_flag = x_status_flag.trimmed();
@@ -138,7 +146,9 @@ void FilterMBox::import(FilterInfo *info)
                                    "%1 duplicate messages not imported to folder %2 in KMail",
                                    count_duplicates, folderName));
             }
-            if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+            if (info->shouldTerminate())
+              info->addLog( i18n("Finished import, canceled by user."));
+            
             count_duplicates = 0;
             // don't forget to close the file !!!
             mbox.close();

@@ -80,7 +80,7 @@ RecentAddresses::RecentAddresses( KConfig *config )
 
 RecentAddresses::~RecentAddresses()
 {
-  // if you want this destructor to get called, use a K3StaticDeleter
+  // if you want this destructor to get called, use K_GLOBAL_STATIC
   // on s_self
 }
 
@@ -197,7 +197,7 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
   mLineEdit->setTrapReturnKey(true);
   mLineEdit->installEventFilter(this);
 
-  connect(mLineEdit,SIGNAL(textChanged(const QString&)),SLOT(slotTypedSomething(const QString&)));
+  connect(mLineEdit,SIGNAL(textChanged(QString)),SLOT(slotTypedSomething(QString)));
   connect(mLineEdit,SIGNAL(returnPressed()),SLOT(slotAddItem()));
 
 
@@ -221,7 +221,7 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
   hboxLayout->addWidget(mListView);
   hboxLayout->addLayout(btnsLayout);
   layout->addLayout(hboxLayout);
-  connect(mListView, SIGNAL(itemSelectionChanged ()),
+  connect(mListView, SIGNAL(itemSelectionChanged()),
           SLOT(slotSelectionChanged()));
   // maybe supplied lineedit has some text already
   slotTypedSomething( mLineEdit->text() );

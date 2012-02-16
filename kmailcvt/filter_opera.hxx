@@ -28,10 +28,11 @@
 class FilterOpera : public Filter
 {
 public:
-    FilterOpera();
-    ~FilterOpera();
+  explicit FilterOpera();
+  ~FilterOpera();
 
-    void import(FilterInfo *info);
+  void import(FilterInfo *info);
+private:
   void importBox( const QDir & importDir, const QStringList & , FilterInfo *info, const QString & accountName = QString());
   void importRecursive(const QDir& maildir, FilterInfo *info, const QString &accountName = QString() );
 };

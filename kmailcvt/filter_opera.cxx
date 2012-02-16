@@ -45,7 +45,8 @@ void FilterOpera::importRecursive(const QDir& mailDir, FilterInfo *info, const Q
   int currentDir = 1;
   int numSubDirs = rootSubDirs.size();
   if ( numSubDirs > 0 ) {
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
+    QStringList::ConstIterator end( rootSubDirs.constEnd() );
+    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
       QDir importDir ( mailDir.path() +QDir::separator()+ *filename );
       const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
       if ( files.isEmpty() ) {
@@ -63,7 +64,8 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, Fil
   int totalFiles = files.count();
   int currentFile = 1;
   info->addLog(i18n("Importing new mail files..."));
-  for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
+  QStringList::ConstIterator end( files.constEnd() );
+  for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
     info->setCurrent(0);
     QFile operaArchiv( importDir.filePath(*mailFile) );
     if (! operaArchiv.open( QIODevice::ReadOnly ) ) {
@@ -148,8 +150,7 @@ void FilterOpera::import(FilterInfo *info)
     }
 
     //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
-    KFileDialog *kfd;
-    kfd = new KFileDialog( startdir, "", 0);
+    KFileDialog *kfd = new KFileDialog( startdir, "", 0);
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     QString operaDir = kfd->selectedFile();
@@ -157,6 +158,7 @@ void FilterOpera::import(FilterInfo *info)
 
     if (operaDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -173,14 +175,15 @@ void FilterOpera::import(FilterInfo *info)
         // Count total number of files to be processed
         info->addLog(i18n("Counting files..."));
 
-        if(files.count() > 0) {
+        if(!files.isEmpty()) {
           importBox(importDir, files,info );
         } else {
           //opera > 9.10 stores mail in subfolder.
           importRecursive( importDir, info );
         }
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
 }

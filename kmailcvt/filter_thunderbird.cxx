@@ -23,7 +23,7 @@
 
 
 /** Default constructor. */
-FilterThunderbird::FilterThunderbird(void) :
+FilterThunderbird::FilterThunderbird() :
         Filter(i18n("Import Thunderbird/Mozilla Local Mails and Folder Structure"),
                "Danny Kukawka",
                i18n("<p><b>Thunderbird/Mozilla import filter</b></p>"
@@ -36,7 +36,7 @@ FilterThunderbird::FilterThunderbird(void) :
 {}
 
 /** Destructor. */
-FilterThunderbird::~FilterThunderbird(void)
+FilterThunderbird::~FilterThunderbird()
 {
 }
 
@@ -57,9 +57,11 @@ void FilterThunderbird::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir  = kfd->selectedFile();
-
+    delete kfd;
+    
     if (mailDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
+        return;
     }
     /**
      * If the user only select homedir no import needed because
@@ -74,7 +76,7 @@ void FilterThunderbird::import(FilterInfo *info)
         QDir dir(mailDir);
         const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-	QStringList::ConstIterator end = rootSubDirs.constEnd();
+        QStringList::ConstIterator end = rootSubDirs.constEnd();
         for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
             importDirContents(info, dir.filePath(*filename), *filename, *filename);
@@ -84,7 +86,7 @@ void FilterThunderbird::import(FilterInfo *info)
         /** import last but not least all archives from the root-dir */
         QDir importDir (mailDir);
         const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-	QStringList::ConstIterator mailFileEnd = files.constEnd();
+        QStringList::ConstIterator mailFileEnd = files.constEnd();
         for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
             if(info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
@@ -100,10 +102,10 @@ void FilterThunderbird::import(FilterInfo *info)
             info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
         }
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
-    delete kfd;
 }
 
 /**

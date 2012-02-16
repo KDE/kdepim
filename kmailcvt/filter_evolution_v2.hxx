@@ -27,8 +27,8 @@
 class FilterEvolution_v2 : public Filter
 {
 public:
-    FilterEvolution_v2(void);
-    ~FilterEvolution_v2(void);
+    explicit FilterEvolution_v2();
+    ~FilterEvolution_v2();
 
     void import(FilterInfo *info);
 

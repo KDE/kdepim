@@ -26,8 +26,8 @@
 class FilterKMail_maildir : public Filter
 {
 public:
-    FilterKMail_maildir(void);
-    ~FilterKMail_maildir(void);
+    explicit FilterKMail_maildir();
+    ~FilterKMail_maildir();
 
     void import(FilterInfo *info);
 

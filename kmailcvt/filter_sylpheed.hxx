@@ -29,8 +29,8 @@ class FilterSylpheed : public Filter
 {
 
 public:
-    FilterSylpheed(void);
-    ~FilterSylpheed(void);
+    explicit FilterSylpheed();
+    ~FilterSylpheed();
 
     void import(FilterInfo *info);
 

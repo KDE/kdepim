@@ -80,7 +80,8 @@ void FilterPlain::import(FilterInfo *info)
     if (count_duplicates > 0) {
         info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
     }
-    if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
+    if (info->shouldTerminate())
+      info->addLog( i18n("Finished import, canceled by user."));
 
     count_duplicates = 0;
 }

@@ -42,7 +42,7 @@ protected:
     /** this function recreate the folder structure */
     bool parseFolderMatrix();
     /** this function parse the folder structure */
-    QString getFolderName(QString ID); 
+    QString getFolderName(const QString& ID); 
     
 private:
     /** the working directory */

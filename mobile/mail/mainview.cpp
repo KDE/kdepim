@@ -38,7 +38,7 @@
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectiongeneralpage.h"
-#include "mailcommon/filtermanager.h"
+#include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
@@ -98,7 +98,7 @@
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
 #include <mailcommon/expirypropertiesdialog.h>
-#include <mailcommon/filteraction.h>
+#include <mailcommon/filter/filteraction.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
 #include <mailtransport/transportmanager.h>

@@ -21,8 +21,11 @@
 
 #include <messagecore/globalsettings.h>
 
-#include <KGlobalSettings>
-#include <KXMLGUIClient>
+#include <KDE/KGlobalSettings>
+#include <KDE/KLocale>
+#include <KDE/KXMLGUIClient>
+
+#include <QtGui/QPainter>
 
 using namespace MailCommon;
 
@@ -54,6 +57,27 @@ void FavoriteCollectionWidget::readConfig()
     setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
   } else {
     setFont( KGlobalSettings::generalFont() );
+  }
+}
+
+void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
+{
+  if ( !model() || model()->rowCount() == 0 ) {
+    QPainter p( viewport() );
+
+    QFont font = p.font();
+    font.setItalic( true );
+    p.setFont( font );
+
+    QPalette palette = viewport()->palette();
+    QColor color = palette.text().color();
+    color.setAlpha( 128 );
+
+    p.setPen( color );
+
+    p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Drop your favorite folders here..." ) );
+  } else {
+    Akonadi::EntityListView::paintEvent( event );
   }
 }
 
