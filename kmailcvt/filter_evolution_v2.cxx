@@ -32,7 +32,8 @@ FilterEvolution_v2::FilterEvolution_v2() :
                     "a maildir): if you do, you will get many new folders.</p>"
                     "<p>Since it is possible to recreate the folder structure, the folders "
                     "will be stored under: \"Evolution-Import\".</p>"))
-{}
+{
+}
 
 /** Destructor. */
 FilterEvolution_v2::~FilterEvolution_v2()
@@ -50,11 +51,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
     QString evolDir = QDir::homePath() + "/.evolution/mail/local";
     QDir d( evolDir );
     if ( !d.exists() ) {
-	evolDir = QDir::homePath() + "/.local/share/evolution/mail/local/";
-	d = QDir( evolDir );
-	if ( !d.exists() ) {
-          evolDir = QDir::homePath();
-        }
+        evolDir = QDir::homePath();
     }
 
     KFileDialog *kfd = new KFileDialog( evolDir, "", 0 );
