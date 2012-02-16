@@ -53,7 +53,8 @@ void ImportOpmlJobTest::testGoodOpml()
     org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0"),
                                                     QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
-    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), kdehome + QLatin1String("/to-import.opml"), defaultTag );
+    QString fileToImport = kdehome + QLatin1String("/to-import.opml");
+    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), fileToImport, defaultTag );
     QVERIFY( reply.isValid() );
     QVERIFY( reply.value().value( QLatin1String("error") ).toInt() == 0 );
 
@@ -174,7 +175,8 @@ void ImportOpmlJobTest::testImportDuplicates()
     org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0"),
                                                     QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
-    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), kdehome + QLatin1String("/to-import-duplicates.opml"),
+    QString fileToImport = kdehome + QLatin1String("/to-import-duplicates.opml");
+    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), fileToImport,
                                                      defaultTag );
     QVERIFY( reply.isValid() );
     QVERIFY( reply.value().value( QLatin1String("error") ).toInt() == 0 );
@@ -217,7 +219,8 @@ void ImportOpmlJobTest::testBrokenOpml()
     org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0"),
                                                     QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
-    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), kdehome + QLatin1String("/to-import-broken.opml"), defaultTag );
+    QString fileToImport = kdehome + QLatin1String("/to-import-broken.opml");
+    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), fileToImport, defaultTag );
     QVERIFY( reply.isValid() );
     QVERIFY( reply.value().value( QLatin1String("error") ).toInt() != 0 );
 }
