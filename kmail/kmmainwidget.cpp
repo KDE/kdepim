@@ -355,7 +355,7 @@ void KMMainWidget::destruct()
     return;
   if ( mSearchWin )
     mSearchWin->close();
-  writeConfig();
+  writeConfig(false); /* don't force kmkernel sync when close BUG: 289287 */
   writeFolderConfig();
   deleteWidgets();
   delete mSystemTray;
@@ -919,7 +919,7 @@ void KMMainWidget::readConfig()
 }
 
 //-----------------------------------------------------------------------------
-void KMMainWidget::writeConfig()
+void KMMainWidget::writeConfig(bool force)
 {
   // Don't save the sizes of all the widgets when we were never shown.
   // This can happen in Kontact, where the KMail plugin is automatically
@@ -965,7 +965,7 @@ void KMMainWidget::writeConfig()
     if ( mMsgView ) {
       if ( !mReaderWindowBelow )
         GlobalSettings::self()->setReaderWindowWidth( mMsgView->width() );
-      mMsgView->viewer()->writeConfig();
+      mMsgView->viewer()->writeConfig(force);
       GlobalSettings::self()->setReaderWindowHeight( mMsgView->height() );
     }
   }
