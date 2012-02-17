@@ -18,7 +18,7 @@
 #include "kmailcvt.h"
 #include "kimportpage.h"
 #include "kselfilterpage.h"
-#include "filters.hxx"
+#include "filters.h"
 
 // KDE includes
 #include <kaboutapplicationdialog.h>
@@ -73,33 +73,26 @@ void KMailCVT::next()
     // Ensure we have a valid collection.
     if( !selectedCollection.isValid() )
       return;
-    if ( !selectedFilter->needsSecondPage() ) {
-      FilterInfo *info = new FilterInfo( importpage, this, selfilterpage->removeDupMsg_checked() );
-      info->setRootCollection( selectedCollection );
-      selectedFilter->setFilterInfo( info );
-      selectedFilter->import();
-      accept();
-      delete info;
-    }
-    else {
-      // Goto next page
-      KAssistantDialog::next();
-      // Disable back & finish
-      setValid( currentPage(), false );
-      // Start import
-      FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
-      info->setStatusMsg(i18n("Import in progress"));
-      info->clear(); // Clear info from last time
-      info->setRootCollection( selectedCollection );
-      selectedFilter->setFilterInfo( info );
-      selectedFilter->import();
-      info->setStatusMsg(i18n("Import finished"));
-      // Cleanup
-      delete info;
-      // Enable finish & back buttons
-      setValid( currentPage(), true );
-    }
-  } else KAssistantDialog::next();
+    // Goto next page
+    KAssistantDialog::next();
+    // Disable back & finish
+    setValid( currentPage(), false );
+    // Start import
+    FilterInfo *info = new FilterInfo(importpage, this);
+    info->setStatusMsg(i18n("Import in progress"));
+    info->setRemoveDupMessage( selfilterpage->removeDupMsg_checked() );
+    info->clear(); // Clear info from last time
+    info->setRootCollection( selectedCollection );
+    selectedFilter->setFilterInfo( info );
+    selectedFilter->import();
+    info->setStatusMsg(i18n("Import finished"));
+    // Cleanup
+    delete info;
+    // Enable finish & back buttons
+    setValid( currentPage(), true );
+  }
+  else
+    KAssistantDialog::next();
 }
 
 void KMailCVT::reject() {

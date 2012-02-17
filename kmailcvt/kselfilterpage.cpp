@@ -19,25 +19,25 @@
 #include "kselfilterpage.h"
 
 // Filter includes
-#include "filter_mbox.hxx"
-#include "filter_oe.hxx"
-#include "filter_outlook.hxx"
-#include "filter_pmail.hxx"
-#include "filter_plain.hxx"
-#include "filter_evolution.hxx"
-#include "filter_mailapp.hxx"
-#include "filter_evolution_v2.hxx"
-#include "filter_opera.hxx"
-#include "filter_thunderbird.hxx"
-#include "filter_kmail_maildir.hxx"
-#include "filter_kmail_archive.hxx"
-#include "filter_sylpheed.hxx"
-#include "filter_thebat.hxx"
-#include "filter_lnotes.hxx"
+#include "filter_mbox.h"
+#include "filter_oe.h"
+#include "filter_outlook.h"
+#include "filter_pmail.h"
+#include "filter_plain.h"
+#include "filter_evolution.h"
+#include "filter_mailapp.h"
+#include "filter_evolution_v2.h"
+#include "filter_opera.h"
+#include "filter_thunderbird.h"
+#include "filter_kmail_maildir.h"
+#include "filter_kmail_archive.h"
+#include "filter_sylpheed.h"
+#include "filter_thebat.h"
+#include "filter_lnotes.h"
 
-#include "filters.hxx"
+#include "filters.h"
 
-#include "filter_evolution_v3.hxx"
+#include "filter_evolution_v3.h"
 
 // KDE includes
 #include <kstandarddirs.h>

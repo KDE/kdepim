@@ -7,25 +7,25 @@ add_subdirectory( pics )
 set(kmailcvt_SRCS
   kimportpage.cpp
   kselfilterpage.cpp
-  filters.cxx
-  filter_oe.cxx
+  filters.cpp
+  filter_oe.cpp
   kmailcvt.cpp
   main.cpp
-  filter_pmail.cxx
-  filter_plain.cxx
-  filter_outlook.cxx
-  filter_mbox.cxx
-  filter_evolution.cxx
-  filter_mailapp.cxx
-  filter_evolution_v2.cxx
-  filter_evolution_v3.cxx
-  filter_opera.cxx
-  filter_thunderbird.cxx
-  filter_kmail_maildir.cxx
-  filter_sylpheed.cxx
-  filter_thebat.cxx
-  filter_lnotes.cxx
-  filter_kmail_archive.cxx )
+  filter_pmail.cpp
+  filter_plain.cpp
+  filter_outlook.cpp
+  filter_mbox.cpp
+  filter_evolution.cpp
+  filter_mailapp.cpp
+  filter_evolution_v2.cpp
+  filter_evolution_v3.cpp
+  filter_opera.cpp
+  filter_thunderbird.cpp
+  filter_kmail_maildir.cpp
+  filter_sylpheed.cpp
+  filter_thebat.cpp
+  filter_lnotes.cpp
+  filter_kmail_archive.cpp )
 
 include_directories(${Boost_INCLUDE_DIR} )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
