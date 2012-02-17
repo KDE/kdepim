@@ -90,10 +90,10 @@ void FilterThunderbird::import(FilterInfo *info)
         for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
             if(info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
-            if (temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat"))) {}
-            else {
-                info->addLog( i18n("Start import file %1...", temp_mailfile ) );
-                importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
+            if (!( temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")) ))
+            {
+              info->addLog( i18n("Start import file %1...", temp_mailfile ) );
+              importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 
