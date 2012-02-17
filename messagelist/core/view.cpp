@@ -42,6 +42,7 @@
 #include <QPaintEvent>
 #include <QTextDocument>
 #include <QApplication>
+#include <QScrollBar>
 
 #include <KMenu>
 #include <KLocale>
@@ -174,11 +175,63 @@ void View::ignoreUpdateGeometries( bool ignore )
   d->mIgnoreUpdateGeometries = ignore;
 }
 
+bool View::isScrollingLocked() const
+{
+  // There is another popular requisite: people want the view to automatically
+  // scroll in order to show new arriving mail. This actually makes sense
+  // only when the view is sorted by date and the new mail is (usually) either
+  // appended at the bottom or inserted at the top. It would be also confusing
+  // when the user is browsing some other thread in the meantime.
+  //
+  // So here we make a simple guess: if the view is scrolled somewhere in the
+  // middle then we assume that the user is browsing other threads and we
+  // try to keep the currently selected item steady on the screen.
+  // When the view is "locked" to the top (scrollbar value 0) or to the
+  // bottom (scrollbar value == maximum) then we assume that the user
+  // isn't browsing and we should attempt to show the incoming messages
+  // by keeping the view "locked".
+  //
+  // The "locking" also doesn't make sense in the first big fill view job.
+  // [Well this concept is pre-akonadi. Now the loading is all async anyway...
+  //  So all this code is actually triggered during the initial loading, too.]
+  const int scrollBarPosition = verticalScrollBar()->value();
+  const int scrollBarMaximum = verticalScrollBar()->maximum();
+  const SortOrder* sortOrder = d->mModel->sortOrder();
+  const bool lockView = (
+                    // not the first loading job
+                    !d->mModel->isLoading()
+                  ) && (
+                    // messages sorted by date
+                    ( sortOrder->messageSorting() == SortOrder::SortMessagesByDateTime ) ||
+                    ( sortOrder->messageSorting() == SortOrder::SortMessagesByDateTimeOfMostRecent )
+                  ) && (
+                    // scrollbar at top (Descending order) or bottom (Ascending order)
+                    ( scrollBarPosition == 0 && sortOrder->messageSortDirection() == SortOrder::Descending ) ||
+                    ( scrollBarPosition == scrollBarMaximum && sortOrder->messageSortDirection() == SortOrder::Ascending )
+                  );
+  return lockView;
+}
+
 void View::updateGeometries()
 {
-  if( d->mIgnoreUpdateGeometries )
+  if( d->mIgnoreUpdateGeometries || !d->mModel )
     return;
+
+  const int scrollBarPositionBefore = verticalScrollBar()->value();
+  const bool lockView = isScrollingLocked();
+
   QTreeView::updateGeometries();
+
+  if ( lockView )
+  {
+    // we prefer to keep the view locked to the top or bottom
+    if ( scrollBarPositionBefore != 0 )
+    {
+      // we wanted the view to be locked to the bottom
+      if ( verticalScrollBar()->value() != verticalScrollBar()->maximum() )
+        verticalScrollBar()->setValue( verticalScrollBar()->maximum() );
+    } // else we wanted the view to be locked to top and we shouldn't need to do anything
+  }
 }
 
 StorageModel * View::storageModel() const
