@@ -93,8 +93,11 @@ void FilterEvolution_v2::import(FilterInfo *info)
             if (info->shouldTerminate())
               break;
             QString temp_mailfile = *mailFile;
-            if (!( temp_mailfile.endsWith(QLatin1String(".db")) || temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
-                temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
+            if (!( temp_mailfile.endsWith(QLatin1String(".db")) ||
+                   temp_mailfile.endsWith(QLatin1String(".cmeta")) ||
+                   temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
+                   temp_mailfile.endsWith(QLatin1String(".ibex.index")) ||
+                   temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
             {
               info->addLog( i18n("Start import file %1...", temp_mailfile ) );
               importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
