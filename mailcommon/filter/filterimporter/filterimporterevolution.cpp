@@ -54,6 +54,11 @@ FilterImporterEvolution::~FilterImporterEvolution()
 {
 }
 
+QString FilterImporterEvolution::defaultPath()
+{
+  return QString::fromLatin1( "%1/.config/evolution/mail/" ).arg( QDir::homePath() );
+}
+
 void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                                MailCommon::MailFilter *filter,
                                                parseType type )

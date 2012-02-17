@@ -260,18 +260,23 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   bool &canceled, FilterImporterExporter::FilterType type )
 {
   QString title;
+  QString defaultPath;
   switch(type){
   case KMailFilter:
     title = i18n( "Import KMail Filters" );
+    defaultPath = QDir::homePath();
     break;
   case ThunderBirdFilter:
     title = i18n( "Import Thunderbird Filters" );
+    defaultPath = MailCommon::FilterImporterThunderbird::defaultPath();
     break;
   case EvolutionFilter:
     title = i18n( "Import Evolution Filters" );
+     defaultPath = MailCommon::FilterImporterEvolution::defaultPath();
     break;
   case SylpheedFilter:
     title = i18n( "Import Sylpheed Filters" );
+    defaultPath = MailCommon::FilterImporterSylpheed::defaultPath();
     break;
   case ProcmailFilter:
     title = i18n( "Import Procmail Filters" );
@@ -279,7 +284,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   }
 
   const QString fileName = KFileDialog::getOpenFileName(
-    QDir::homePath(), QString(), d->mParent, title );
+    defaultPath, QString(), d->mParent, title );
   if ( fileName.isEmpty() ) {
     canceled = true;
     return QList<MailFilter*>(); // cancel

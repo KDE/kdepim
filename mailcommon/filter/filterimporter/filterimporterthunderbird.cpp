@@ -21,6 +21,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 
 using namespace MailCommon;
 
@@ -42,6 +43,12 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
 FilterImporterThunderbird::~FilterImporterThunderbird()
 {
 }
+
+QString FilterImporterThunderbird::defaultPath()
+{
+  return QString::fromLatin1( "%1/.thunderbird/" ).arg( QDir::homePath() );
+}
+
 
 MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &stream,
                                                               QString line,

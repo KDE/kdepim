@@ -32,7 +32,7 @@ class FilterImporterThunderbird : public FilterImporterAbstract
   public:
     explicit FilterImporterThunderbird( QFile *file );
     ~FilterImporterThunderbird();
-
+    static QString defaultPath();
   private:
     QString cleanArgument( const QString &line, const QString &removeStr );
     void extractConditions( const QString &line, MailCommon::MailFilter *filter );

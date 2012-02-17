@@ -21,6 +21,7 @@
 #include <QDomDocument>
 #include <QList>
 #include <QStringList>
+#include <QDir>
 
 class QFile;
 
