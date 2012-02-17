@@ -180,8 +180,8 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &col
 Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& folderParseString)
 {
   // Return an already created collection:
-  for( QMap<QString, Akonadi::Collection>::const_iterator it =
-    m_messageFolderCollectionMap.constBegin(); it != m_messageFolderCollectionMap.constEnd(); it ++ ) {
+  QMap<QString, Akonadi::Collection>::const_iterator end(  m_messageFolderCollectionMap.constEnd() );
+  for( QMap<QString, Akonadi::Collection>::const_iterator it = m_messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
     if( it.key() ==  folderParseString )
       return it.value();
   }
@@ -250,8 +250,9 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
   bool folderFound = false;
 
   // Check if the contents of this collection have already been found.
+  QMultiMap<QString, QString>::const_iterator end( m_messageFolderMessageIDMap.constEnd() );
   for( QMultiMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
-       it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+       it != end; it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
       break;
@@ -287,8 +288,9 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
   }
 
   // Check if this message has a duplicate
+  QMultiMap<QString, QString>::const_iterator endMsgID( m_messageFolderMessageIDMap.constEnd() );
   for( QMultiMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
-       it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+       it !=endMsgID ; it++ ) {
     if( it.key() == messageFolder &&
         it.value() == msgID )
       return true;
