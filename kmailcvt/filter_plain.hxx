@@ -31,7 +31,7 @@ public:
     FilterPlain();
     ~FilterPlain();
 
-    void import(FilterInfo *info);
+    void import();
 };
 
 #endif

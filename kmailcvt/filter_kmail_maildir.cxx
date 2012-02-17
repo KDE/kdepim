@@ -40,9 +40,9 @@ FilterKMail_maildir::~FilterKMail_maildir()
 }
 
 /** Recursive import of KMail maildir. */
-void FilterKMail_maildir::import( FilterInfo *info )
+void FilterKMail_maildir::import()
 {
-    count_duplicates = 0;
+    m_count_duplicates = 0;
     QString _homeDir = QDir::homePath();
 
     KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
@@ -52,7 +52,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
     delete kfd;
     
     if ( mailDir.isEmpty() ) {
-        info->alert( i18n( "No directory selected." ) );
+        m_filterInfo->alert( i18n( "No directory selected." ) );
         return;
     }
     /**
@@ -60,9 +60,9 @@ void FilterKMail_maildir::import( FilterInfo *info )
      * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
-        info->addLog( i18n( "No files found for import." ) );
+        m_filterInfo->addLog( i18n( "No files found for import." ) );
     } else {
-        info->setOverall(0);
+        m_filterInfo->setOverall(0);
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
@@ -70,24 +70,24 @@ void FilterKMail_maildir::import( FilterInfo *info )
         int currentDir = 1, numSubDirs = rootSubDirs.size();
 	QStringList::ConstIterator end = rootSubDirs.constEnd();
         for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
-            if(info->shouldTerminate())
+            if(m_filterInfo->shouldTerminate())
               break;
             if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
-                info->setCurrent(0);
-                importDirContents(info, dir.filePath(*filename));
-                info->setOverall((int) ((float) currentDir / numSubDirs * 100));
-                info->setCurrent(100);
+                m_filterInfo->setCurrent(0);
+                importDirContents(m_filterInfo, dir.filePath(*filename));
+                m_filterInfo->setOverall((int) ((float) currentDir / numSubDirs * 100));
+                m_filterInfo->setCurrent(100);
             }
         }
-        info->addLog( i18n("Finished importing emails from %1", mailDir ));
-        if (count_duplicates > 0) {
-            info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        m_filterInfo->addLog( i18n("Finished importing emails from %1", mailDir ));
+        if (m_count_duplicates > 0) {
+            m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
         }
     }
-    if (info->shouldTerminate())
-      info->addLog( i18n("Finished import, canceled by user."));
-    info->setCurrent(100);
-    info->setOverall(100);
+    if (m_filterInfo->shouldTerminate())
+      m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+    m_filterInfo->setCurrent(100);
+    m_filterInfo->setOverall(100);
 }
 
 /**
@@ -107,7 +107,7 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
     const QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
     QStringList::ConstIterator end = subDirs.constEnd();     
     for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-        if(info->shouldTerminate()) return;
+        if(m_filterInfo->shouldTerminate()) return;
         if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
             importDirContents(info, subfolders.filePath(*filename));
         }
@@ -132,7 +132,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
     QStringList::ConstIterator filesEnd( files.constEnd() );
     
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != filesEnd; ++mailFile, ++currentFile) {
-        if(info->shouldTerminate()) return;
+        if(m_filterInfo->shouldTerminate()) return;
         QString temp_mailfile = *mailFile;
         if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
                 temp_mailfile.endsWith(QLatin1String(".index.sorted")) || temp_mailfile.endsWith(QLatin1String(".uidcache")) )) {
@@ -157,22 +157,22 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 if(_path.endsWith("cur"))
                     _path.remove(_path.length() - 4 , 4);
                 QString _info = _path;
-                info->addLog(i18n("Import folder %1...", _info.remove(0,12)));
-                info->setFrom(_info);
-                info->setTo(_path);
+                m_filterInfo->addLog(i18n("Import folder %1...", _info.remove(0,12)));
+                m_filterInfo->setFrom(_info);
+                m_filterInfo->setTo(_path);
                 generatedPath = true;
             }
 
-            if(info->removeDupMsg) {
-                if(! addMessage( info, _path, dir.filePath(*mailFile) )) {
-                    info->addLog( i18n("Could not import %1", *mailFile ) );
+            if(m_filterInfo->removeDupMsg) {
+                if(! addMessage( _path, dir.filePath(*mailFile) )) {
+                    m_filterInfo->addLog( i18n("Could not import %1", *mailFile ) );
                 }
-                info->setCurrent((int) ((float) currentFile / numFiles * 100));
+                m_filterInfo->setCurrent((int) ((float) currentFile / numFiles * 100));
             } else {
-                if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile) )) {
-                    info->addLog( i18n("Could not import %1", *mailFile ) );
+                if(! addMessage_fastImport( _path, dir.filePath(*mailFile) )) {
+                    m_filterInfo->addLog( i18n("Could not import %1", *mailFile ) );
                 }
-                info->setCurrent((int) ((float) currentFile / numFiles * 100));
+                m_filterInfo->setCurrent((int) ((float) currentFile / numFiles * 100));
             }
         }
     }

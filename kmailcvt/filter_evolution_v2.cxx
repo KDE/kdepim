@@ -41,9 +41,9 @@ FilterEvolution_v2::~FilterEvolution_v2()
 }
 
 /** Recursive import of Evolution's mboxes. */
-void FilterEvolution_v2::import(FilterInfo *info)
+void FilterEvolution_v2::import()
 {
-  count_duplicates = 0;
+  m_count_duplicates = 0;
     /**
      * We ask the user to choose Evolution's root directory.
      * This should be usually ~/.evolution/mail/local/
@@ -61,7 +61,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
     delete kfd;
     
     if (mailDir.isEmpty()) {
-        info->alert(i18n("No directory selected."));
+        m_filterInfo->alert(i18n("No directory selected."));
         return;
     }
     /**
@@ -69,9 +69,9 @@ void FilterEvolution_v2::import(FilterInfo *info)
      * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
-        info->addLog(i18n("No files found for import."));
+        m_filterInfo->addLog(i18n("No files found for import."));
     } else {
-        info->setOverall(0);
+        m_filterInfo->setOverall(0);
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
@@ -79,10 +79,10 @@ void FilterEvolution_v2::import(FilterInfo *info)
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         QStringList::ConstIterator endFilename( rootSubDirs.constEnd() );
         for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != endFilename ; ++filename, ++currentDir) {
-            if (info->shouldTerminate())
+            if (m_filterInfo->shouldTerminate())
               break;
-            importDirContents(info, dir.filePath(*filename), *filename, *filename);
-            info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+            importDirContents(dir.filePath(*filename), *filename, *filename);
+            m_filterInfo->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
 
         /** import last but not least all archives from the root-dir */
@@ -90,7 +90,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
         const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
         endFilename = files.constEnd();
         for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != endFilename; ++mailFile) {
-            if (info->shouldTerminate())
+            if (m_filterInfo->shouldTerminate())
               break;
             QString temp_mailfile = *mailFile;
             if (!( temp_mailfile.endsWith(QLatin1String(".db")) ||
@@ -99,20 +99,20 @@ void FilterEvolution_v2::import(FilterInfo *info)
                    temp_mailfile.endsWith(QLatin1String(".ibex.index")) ||
                    temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
             {
-              info->addLog( i18n("Start import file %1...", temp_mailfile ) );
-              importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
+              m_filterInfo->addLog( i18n("Start import file %1...", temp_mailfile ) );
+              importMBox(mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 
-        info->addLog( i18n("Finished importing emails from %1", mailDir ));
-        if(count_duplicates > 0) {
-            info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        m_filterInfo->addLog( i18n("Finished importing emails from %1", mailDir ));
+        if(m_count_duplicates > 0) {
+            m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
         }
-        if (info->shouldTerminate())
-          info->addLog( i18n("Finished import, canceled by user."));
+        if (m_filterInfo->shouldTerminate())
+          m_filterInfo->addLog( i18n("Finished import, canceled by user."));
     }
-    info->setCurrent(100);
-    info->setOverall(100);
+    m_filterInfo->setCurrent(100);
+    m_filterInfo->setOverall(100);
 }
 
 /**
@@ -122,9 +122,9 @@ void FilterEvolution_v2::import(FilterInfo *info)
  * @param KMailRootDir The directory's root directory in KMail's folder structure.
  * @param KMailSubDir The directory's direct ancestor in KMail's folder structure.
  */
-void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirName, const QString& KMailRootDir, const QString& KMailSubDir)
+void FilterEvolution_v2::importDirContents(const QString& dirName, const QString& KMailRootDir, const QString& KMailSubDir)
 {
-    if (info->shouldTerminate()) return;
+    if (m_filterInfo->shouldTerminate()) return;
 
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
@@ -137,8 +137,8 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
         if (!( temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
             temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
         {
-          info->addLog( i18n("Start import file %1...", temp_mailfile ) );
-          importMBox(info, (dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
+          m_filterInfo->addLog( i18n("Start import file %1...", temp_mailfile ) );
+          importMBox((dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
 
@@ -153,7 +153,7 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
         } else {
             kSubDir = *filename;
         }
-        importDirContents(info, subfolders.filePath(*filename), KMailRootDir, kSubDir);
+        importDirContents( subfolders.filePath(*filename), KMailRootDir, kSubDir);
     }
 }
 
@@ -164,31 +164,31 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
  * @param KMailRootDir The directory's root directory in KMail's folder structure.
  * @param KMailSubDir The directory's equivalent in KMail's folder structure. *
  */
-void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, const QString& rootDir, const QString& targetDir)
+void FilterEvolution_v2::importMBox(const QString& mboxName, const QString& rootDir, const QString& targetDir)
 {
     QFile mbox(mboxName);
     bool first_msg = true;
     if (!mbox.open(QIODevice::ReadOnly)) {
-        info->alert(i18n("Unable to open %1, skipping", mboxName));
+        m_filterInfo->alert(i18n("Unable to open %1, skipping", mboxName));
     } else {
         QFileInfo filenameInfo(mboxName);
 
-        info->setCurrent(0);
+        m_filterInfo->setCurrent(0);
         if( mboxName.length() > 20 ) {
             QString tmp_info = mboxName;
             tmp_info = tmp_info.replace( mailDir, "../" );
             if (tmp_info.contains(".sbd"))
                 tmp_info.remove(".sbd");
-            info->setFrom( tmp_info );
+            m_filterInfo->setFrom( tmp_info );
         } else
-            info->setFrom(mboxName);
+            m_filterInfo->setFrom(mboxName);
         
         if(targetDir.contains(QLatin1String( ".sbd" ))) {
             QString tmp_info = targetDir;
             tmp_info.remove(QLatin1String( ".sbd" ));
-            info->setTo(tmp_info);
+            m_filterInfo->setTo(tmp_info);
         } else
-            info->setTo(targetDir);
+            m_filterInfo->setTo(targetDir);
 
         QByteArray input(MAX_LINE, '\0');
         long l = 0;
@@ -230,14 +230,14 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
             }
 
 
-            if(info->removeDupMsg)
-                addMessage( info, destFolder, tmp.fileName() );
+            if(m_filterInfo->removeDupMsg)
+                addMessage( destFolder, tmp.fileName() );
             else
-                addMessage_fastImport( info, destFolder, tmp.fileName() );
+                addMessage_fastImport( destFolder, tmp.fileName() );
 
             int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
-            info->setCurrent(currentPercentage);
-            if (info->shouldTerminate())
+            m_filterInfo->setCurrent(currentPercentage);
+            if (m_filterInfo->shouldTerminate())
               break;
         }
         mbox.close();

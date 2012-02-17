@@ -34,7 +34,6 @@ FilterKMailArchive::FilterKMailArchive()
             i18n( "<p><b>KMail Archive File Import Filter</b></p>"
                   "<p>This filter will import archives files previously exported by KMail.</p>"
                   "<p>Archive files contain a complete folder subtree compressed into a single file.</p>" ) ),
-    mFilterInfo( 0 ),
     mFilesDone( 0 )
 {
 }
@@ -60,7 +59,7 @@ static QString folderNameForDirectoryName( const QString &dirName )
 
 bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString &folderPath )
 {
-  if ( mFilterInfo->shouldTerminate() )
+  if ( m_filterInfo->shouldTerminate() )
     return false;
 
   qApp->processEvents();
@@ -69,23 +68,23 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
   newMessage->setContent( file->data() );
   newMessage->parse();
 
-  Akonadi::Collection collection = parseFolderString( mFilterInfo, folderPath );
+  Akonadi::Collection collection = parseFolderString( folderPath );
   if ( !collection.isValid() ) {
-    mFilterInfo->addLog( i18n( "Unable to retrieve folder for folder path %1.", folderPath ) );
+    m_filterInfo->addLog( i18n( "Unable to retrieve folder for folder path %1.", folderPath ) );
     return false;
   }
 
-  if ( mFilterInfo->removeDupMsg ) {
+  if ( m_filterInfo->removeDupMsg ) {
     KMime::Headers::MessageID *messageId = newMessage->messageID( false );
     if ( messageId && !messageId->asUnicodeString().isEmpty() ) {
-      if ( checkForDuplicates( mFilterInfo, messageId->asUnicodeString(), collection, folderPath ) ) {
+      if ( checkForDuplicates( messageId->asUnicodeString(), collection, folderPath ) ) {
         mTotalFiles--;
         return true;
       }
     }
   }
 
-  const bool result = addAkonadiMessage( mFilterInfo, collection, newMessage );
+  const bool result = addAkonadiMessage( collection, newMessage );
   if ( result ) {
     mFilesDone++;
   }
@@ -95,8 +94,8 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
 bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QString &folderPath )
 {
   kDebug() << "Importing folder" << folder->name();
-  mFilterInfo->addLog( i18n( "Importing folder '%1'...", folderPath ) );
-  mFilterInfo->setTo( mFilterInfo->rootCollection().name() + folderPath );
+  m_filterInfo->addLog( i18n( "Importing folder '%1'...", folderPath ) );
+  m_filterInfo->setTo( m_filterInfo->rootCollection().name() + folderPath );
   const KArchiveDirectory * const messageDir =
       dynamic_cast<const KArchiveDirectory*>( folder->entry( "cur" ) );
   if ( messageDir ) {
@@ -105,8 +104,8 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
     int cur = 1;
 
     foreach( const QString &entryName, messageDir->entries() ) {
-      mFilterInfo->setCurrent( cur * 100 / total );
-      mFilterInfo->setOverall( mFilesDone * 100 / mTotalFiles );
+      m_filterInfo->setCurrent( cur * 100 / total );
+      m_filterInfo->setOverall( mFilesDone * 100 / mTotalFiles );
       const KArchiveEntry * const entry = messageDir->entry( entryName );
 
       if ( entry->isFile() ) {
@@ -121,12 +120,12 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
           total--;
       }
       else {
-        mFilterInfo->addLog( i18n( "Unexpected subfolder %1 in folder %2.", entryName, folder->name() ) );
+        m_filterInfo->addLog( i18n( "Unexpected subfolder %1 in folder %2.", entryName, folder->name() ) );
       }
     }
   }
   else {
-    mFilterInfo->addLog( i18n( "No subfolder named 'cur' in folder %1.", folder->name() ) );
+    m_filterInfo->addLog( i18n( "No subfolder named 'cur' in folder %1.", folder->name() ) );
   }
   return true;
 }
@@ -151,7 +150,7 @@ bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, co
 
         const QString folderName = folderNameForDirectoryName( entry->name() );
         if ( folderName.isEmpty() ) {
-          mFilterInfo->addLog( i18n( "Unexpected subdirectory named '%1'.", entry->name() ) );
+          m_filterInfo->addLog( i18n( "Unexpected subdirectory named '%1'.", entry->name() ) );
         }
         else {
 
@@ -178,22 +177,21 @@ int FilterKMailArchive::countFiles( const KArchiveDirectory *directory ) const
   return count;
 }
 
-void FilterKMailArchive::import( FilterInfo *info )
+void FilterKMailArchive::import()
 {
-  Q_ASSERT( info->rootCollection().isValid() );
+  Q_ASSERT( m_filterInfo->rootCollection().isValid() );
 
-  mFilterInfo = info;
-  KFileDialog fileDialog( KUrl(), QString(), mFilterInfo->parent() );
+  KFileDialog fileDialog( KUrl(), QString(), m_filterInfo->parent() );
   fileDialog.setMode( KFile::File | KFile::LocalOnly );
   fileDialog.setCaption( i18n( "Select KMail Archive File to Import" ) );
   fileDialog.setFilter( "*.tar.bz2 *.tar.gz *.tar *.zip|" +
                         i18n( "KMail Archive Files (*.tar, *.tar.gz, *.tar.bz2, *.zip)" ) );
   if ( !fileDialog.exec() ) {
-    mFilterInfo->alert( i18n( "Please select an archive file that should be imported." ) );
+    m_filterInfo->alert( i18n( "Please select an archive file that should be imported." ) );
     return;
   }
   const QString archiveFile = fileDialog.selectedFile();
-  mFilterInfo->setFrom( archiveFile );
+  m_filterInfo->setFrom( archiveFile );
 
   KMimeType::Ptr mimeType = KMimeType::findByUrl( archiveFile, 0, true /* local file */ );
   typedef QSharedPointer<KArchive> KArchivePtr;
@@ -203,29 +201,29 @@ void FilterKMailArchive::import( FilterInfo *info )
   else if ( !mimeType->patterns().filter( "zip", Qt::CaseInsensitive ).isEmpty() )
     archive = KArchivePtr( new KZip( archiveFile ) );
   else {
-    mFilterInfo->alert( i18n( "The file '%1' does not appear to be a valid archive.", archiveFile ) );
+    m_filterInfo->alert( i18n( "The file '%1' does not appear to be a valid archive.", archiveFile ) );
     return;
   }
 
   if ( !archive->open( QIODevice::ReadOnly ) ) {
-    mFilterInfo->alert( i18n( "Unable to open archive file '%1'", archiveFile ) );
+    m_filterInfo->alert( i18n( "Unable to open archive file '%1'", archiveFile ) );
     return;
   }
 
-  mFilterInfo->setOverall( 0 );
-  mFilterInfo->addLog( i18n( "Counting files in archive..." ) );
+  m_filterInfo->setOverall( 0 );
+  m_filterInfo->addLog( i18n( "Counting files in archive..." ) );
   mTotalFiles = countFiles( archive->directory() );
 
   if ( importDirectory( archive->directory(), QString() ) ) {
-    mFilterInfo->setOverall( 100 );
-    mFilterInfo->setCurrent( 100 );
-    mFilterInfo->addLog( i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
-                               archiveFile, mFilterInfo->rootCollection().name() ) );
-    mFilterInfo->addLog( i18np( "1 message was imported.", "%1 messages were imported.",
+    m_filterInfo->setOverall( 100 );
+    m_filterInfo->setCurrent( 100 );
+    m_filterInfo->addLog( i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
+                               archiveFile, m_filterInfo->rootCollection().name() ) );
+    m_filterInfo->addLog( i18np( "1 message was imported.", "%1 messages were imported.",
                                 mFilesDone ) );
   }
   else {
-    mFilterInfo->addLog( i18n( "Importing the archive failed." ) );
+    m_filterInfo->addLog( i18n( "Importing the archive failed." ) );
   }
   archive->close();
 }

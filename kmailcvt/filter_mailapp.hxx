@@ -26,7 +26,7 @@ public:
     FilterMailApp();
     ~FilterMailApp();
 
-    void import(FilterInfo *info);
+    void import();
 
 private:
     QStringList mMboxFiles;

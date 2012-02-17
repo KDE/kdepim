@@ -37,23 +37,23 @@ FilterOutlook::~FilterOutlook()
 {
 }
 
-void FilterOutlook::import(FilterInfo *info)
+void FilterOutlook::import()
 {
-    info->alert(i18n("No directory selected."));
-    info->addLog(i18n("Counting files..."));
-    info->addLog(i18n("Counting mail..."));
-    info->addLog(i18nc("'directories' means directories on hard disc, not email-folders.", "Counting directories..."));
-    info->addLog(i18nc("'folders' means email-folders, not folders on disc.", "Counting folders..."));
-    info->addLog(i18n("Importing new mail files..."));
-    info->addLog(i18n("No files found for import."));
+    m_filterInfo->alert(i18n("No directory selected."));
+    m_filterInfo->addLog(i18n("Counting files..."));
+    m_filterInfo->addLog(i18n("Counting mail..."));
+    m_filterInfo->addLog(i18nc("'directories' means directories on hard disc, not email-folders.", "Counting directories..."));
+    m_filterInfo->addLog(i18nc("'folders' means email-folders, not folders on disc.", "Counting folders..."));
+    m_filterInfo->addLog(i18n("Importing new mail files..."));
+    m_filterInfo->addLog(i18n("No files found for import."));
 
     QString outlookDir;
-    outlookDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
+    outlookDir = KFileDialog::getExistingDirectory(QDir::homePath(), m_filterInfo->parent());
     QDir importDir (outlookDir);
     const QStringList files = importDir.entryList(QStringList("*.[pP][sS][tT]"), QDir::Files, QDir::Name);
     for ( QStringList::ConstIterator pstFile = files.constBegin(); pstFile != files.constEnd(); ++pstFile) {
-        info->addLog( i18n("Importing emails from %1...", *pstFile ) );
-        info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
-        info->alert( i18n("Unable to open %1, skipping", *pstFile ) );
+        m_filterInfo->addLog( i18n("Importing emails from %1...", *pstFile ) );
+        m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+        m_filterInfo->alert( i18n("Unable to open %1, skipping", *pstFile ) );
     }
 }

@@ -41,7 +41,7 @@ FilterThunderbird::~FilterThunderbird()
 }
 
 /** Recursive import of Evolution's mboxes. */
-void FilterThunderbird::import(FilterInfo *info)
+void FilterThunderbird::import()
 {
     /**
      * We ask the user to choose Evolution's root directory.
@@ -60,7 +60,7 @@ void FilterThunderbird::import(FilterInfo *info)
     delete kfd;
     
     if (mailDir.isEmpty()) {
-        info->alert(i18n("No directory selected."));
+        m_filterInfo->alert(i18n("No directory selected."));
         return;
     }
     /**
@@ -68,9 +68,9 @@ void FilterThunderbird::import(FilterInfo *info)
      * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
-        info->addLog(i18n("No files found for import."));
+        m_filterInfo->addLog(i18n("No files found for import."));
     } else {
-        info->setOverall(0);
+        m_filterInfo->setOverall(0);
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
@@ -78,9 +78,9 @@ void FilterThunderbird::import(FilterInfo *info)
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         QStringList::ConstIterator end = rootSubDirs.constEnd();
         for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
-            if(info->shouldTerminate()) break;
-            importDirContents(info, dir.filePath(*filename), *filename, *filename);
-            info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+            if(m_filterInfo->shouldTerminate()) break;
+            importDirContents(m_filterInfo, dir.filePath(*filename), *filename, *filename);
+            m_filterInfo->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
 
         /** import last but not least all archives from the root-dir */
@@ -88,24 +88,24 @@ void FilterThunderbird::import(FilterInfo *info)
         const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
         QStringList::ConstIterator mailFileEnd = files.constEnd();
         for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
-            if(info->shouldTerminate()) break;
+            if(m_filterInfo->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
             if (!( temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")) ))
             {
-              info->addLog( i18n("Start import file %1...", temp_mailfile ) );
-              importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
+              m_filterInfo->addLog( i18n("Start import file %1...", temp_mailfile ) );
+              importMBox(m_filterInfo, mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 
-        info->addLog( i18n("Finished importing emails from %1", mailDir ));
-        if(count_duplicates > 0) {
-            info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
+        m_filterInfo->addLog( i18n("Finished importing emails from %1", mailDir ));
+        if(m_count_duplicates > 0) {
+            m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
         }
     }
-    if (info->shouldTerminate())
-      info->addLog( i18n("Finished import, canceled by user."));
-    info->setCurrent(100);
-    info->setOverall(100);
+    if (m_filterInfo->shouldTerminate())
+      m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+    m_filterInfo->setCurrent(100);
+    m_filterInfo->setOverall(100);
 }
 
 /**
@@ -117,7 +117,7 @@ void FilterThunderbird::import(FilterInfo *info)
  */
 void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirName, const QString& KMailRootDir, const QString& KMailSubDir)
 {
-    if(info->shouldTerminate()) return;
+    if(m_filterInfo->shouldTerminate()) return;
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
 
@@ -125,11 +125,11 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
     const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     QStringList::ConstIterator mailFileEnd = files.constEnd();
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
-        if(info->shouldTerminate()) break;
+        if(m_filterInfo->shouldTerminate()) break;
         QString temp_mailfile = *mailFile;
         if (temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat"))) {}
         else {
-            info->addLog( i18n("Start import file %1...", temp_mailfile ) );
+            m_filterInfo->addLog( i18n("Start import file %1...", temp_mailfile ) );
             importMBox(info, (dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
@@ -139,7 +139,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
     QStringList::ConstIterator end = subDirs.constEnd();
     for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-        if(info->shouldTerminate()) break;
+        if(m_filterInfo->shouldTerminate()) break;
         QString kSubDir;
         if(!KMailSubDir.isNull()) {
             kSubDir = KMailSubDir + '/' + *filename;
@@ -162,25 +162,25 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
     QFile mbox(mboxName);
     bool first_msg = true;
     if (!mbox.open(QIODevice::ReadOnly)) {
-        info->alert(i18n("Unable to open %1, skipping", mboxName));
+        m_filterInfo->alert(i18n("Unable to open %1, skipping", mboxName));
     } else {
         QFileInfo filenameInfo(mboxName);
 
-        info->setCurrent(0);
+        m_filterInfo->setCurrent(0);
         if( mboxName.length() > 20 ) {
             QString tmp_info = mboxName;
             tmp_info = tmp_info.replace( mailDir, "../" );
             if (tmp_info.contains(".sbd"))
                 tmp_info.remove(".sbd");
-            info->setFrom( tmp_info );
+            m_filterInfo->setFrom( tmp_info );
         } else
-            info->setFrom(mboxName);
+            m_filterInfo->setFrom(mboxName);
         if(targetDir.contains(".sbd")) {
             QString tmp_info = targetDir;
             tmp_info.remove(".sbd");
-            info->setTo(tmp_info);
+            m_filterInfo->setTo(tmp_info);
         } else
-            info->setTo(targetDir);
+            m_filterInfo->setTo(targetDir);
 
         QByteArray input(MAX_LINE,'\0');
         long l = 0;
@@ -221,14 +221,14 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
                     destFolder.remove(".sbd");
             }
 
-            if(info->removeDupMsg)
-                addMessage( info, destFolder, tmp.fileName() );
+            if(m_filterInfo->removeDupMsg)
+                addMessage( destFolder, tmp.fileName() );
             else
-                addMessage_fastImport( info, destFolder, tmp.fileName() );
+                addMessage_fastImport( destFolder, tmp.fileName() );
 
             int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
-            info->setCurrent(currentPercentage);
-            if (info->shouldTerminate()) {
+            m_filterInfo->setCurrent(currentPercentage);
+            if (m_filterInfo->shouldTerminate()) {
                 mbox.close();
                 return;
             }

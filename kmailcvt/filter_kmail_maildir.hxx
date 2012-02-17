@@ -29,7 +29,7 @@ public:
     explicit FilterKMail_maildir();
     ~FilterKMail_maildir();
 
-    void import(FilterInfo *info);
+    void import();
 
 private:
     QString mailDir;
