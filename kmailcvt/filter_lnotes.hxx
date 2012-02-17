@@ -30,7 +30,7 @@ public:
     explicit FilterLNotes();
     ~FilterLNotes();
     /** Standard import filter... starting line for our import */
-    void import(FilterInfo *info);
+    void import();
 
 private:
     /** the working directory */

@@ -29,9 +29,7 @@ class FilterKMailArchive : public Filter
 public:
   FilterKMailArchive();
   ~FilterKMailArchive();
-  void import( FilterInfo *info );
-  virtual bool needsSecondPage() { return true; }
-
+  void import();
 private:
 
   bool importDirectory( const KArchiveDirectory *directory, const QString &folderPath );
@@ -40,7 +38,6 @@ private:
 
   int countFiles( const KArchiveDirectory *directory ) const;
 
-  FilterInfo *mFilterInfo;
   int mTotalFiles;
   int mFilesDone;
 };

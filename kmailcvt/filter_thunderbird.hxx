@@ -30,7 +30,7 @@ public:
     explicit FilterThunderbird();
     ~FilterThunderbird();
 
-    void import(FilterInfo *info);
+    void import();
 
 private:
     QString mailDir;

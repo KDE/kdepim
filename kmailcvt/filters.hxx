@@ -64,14 +64,17 @@ class Filter
     Filter( const QString& name, const QString& author,
             const QString& info = QString() );
     virtual ~Filter() {}
-    virtual void import( FilterInfo* ) = 0;
+    virtual void import() = 0;
     QString author() const { return m_author; }
     QString name() const { return m_name; }
     QString info() const { return m_info; }
 
     virtual bool needsSecondPage();
+    void setFilterInfo( FilterInfo* info );
 
-    int count_duplicates; //to count all duplicate messages
+  protected:
+    int m_count_duplicates; //to count all duplicate messages
+    FilterInfo *m_filterInfo;
 
   protected:
 
@@ -79,8 +82,7 @@ class Filter
      * Adds a single subcollection to the given base collection and returns it.
      * Use parseFolderString() instead if you want to create hierachies of collections.
      */
-    Akonadi::Collection addSubCollection( FilterInfo* info,
-                                          const Akonadi::Collection &baseCollection,
+    Akonadi::Collection addSubCollection( const Akonadi::Collection &baseCollection,
                                           const QString &newCollectionPathName );
 
     /**
@@ -92,15 +94,12 @@ class Filter
      * The "test" collection will be returned.
      * An invalid collection will be returned in case of an error.
      */
-    Akonadi::Collection parseFolderString( FilterInfo* info,
-                                           const QString &folderParseString );
+    Akonadi::Collection parseFolderString( const QString &folderParseString );
 
-    bool addAkonadiMessage( FilterInfo* info,
-                            const Akonadi::Collection &collection,
+    bool addAkonadiMessage( const Akonadi::Collection &collection,
                             const KMime::Message::Ptr& message );
 
-    bool addMessage( FilterInfo* info,
-                     const QString& folder,
+    bool addMessage( const QString& folder,
                      const QString& msgFile,
                      const QString& msgStatusFlags = QString());
 
@@ -110,17 +109,14 @@ class Filter
     * NOTE: Only call this method if a message ID exists, otherwise
     * you could get false positives.
     */
-    bool checkForDuplicates( FilterInfo* info,
-                             const QString& msgID,
+    bool checkForDuplicates( const QString& msgID,
                              const Akonadi::Collection& msgCollection,
                              const QString& messageFolder );
-    bool addMessage_fastImport( FilterInfo* info,
-                     		    const QString& folder,
-                     		    const QString& msgFile,
-                                const QString& msgStatusFlags = QString());
+  bool addMessage_fastImport( const QString& folder,
+                              const QString& msgFile,
+                              const QString& msgStatusFlags = QString());
   private: 
-    bool doAddMessage( FilterInfo* info,
-                       const QString& folderName,
+    bool doAddMessage( const QString& folderName,
                        const QString& msgPath,
                        bool duplicateCheck = false );
 

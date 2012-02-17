@@ -31,7 +31,7 @@ public:
     FilterMBox();
     ~FilterMBox();
 
-    void import(FilterInfo *info);
+    void import();
 };
 
 #endif

@@ -28,7 +28,7 @@ public:
     FilterPMail();
     ~FilterPMail();
 
-    void import(FilterInfo *info);
+    void import();
 
 protected:
     /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
@@ -47,8 +47,6 @@ protected:
 private:
     /** the working directory */
     QDir dir;
-    /**  pointer to the info */
-    FilterInfo * inf;
 
     /** Folder structure here has 5 entries. */
     typedef FolderStructureBase<5> FolderStructure;

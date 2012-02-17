@@ -33,12 +33,12 @@ public:
     explicit FilterEvolution();
     ~FilterEvolution();
 
-    void import(FilterInfo *info);
+    void import();
 private:
     QString mailDir;
 
-    void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
-    void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
+    void importDirContents(const QString&, const QString&, const QString&);
+    void importMBox(const QString&, const QString&, const QString&);
 };
 
 #endif

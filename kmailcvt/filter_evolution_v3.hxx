@@ -26,7 +26,7 @@ public:
   FilterEvolution_v3(void);
   ~FilterEvolution_v3(void);
 
-  void import(FilterInfo *info);
+  void import();
 
 private:
   QString mailDir;

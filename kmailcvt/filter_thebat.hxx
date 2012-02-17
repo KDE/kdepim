@@ -30,7 +30,7 @@ public:
     explicit FilterTheBat();
     ~FilterTheBat();
 
-    void import(FilterInfo *info);
+    void import();
 
 private:
     QString mailDir;

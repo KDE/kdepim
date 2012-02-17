@@ -45,12 +45,12 @@ FilterLNotes::~FilterLNotes() {
  * Recursive import of The Bat! maildir.
  * @param info Information storage for the operation.
  */
-void FilterLNotes::import(FilterInfo *info) {
+void FilterLNotes::import() {
 
     const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("All Files (*)"), 
-                                                           info->parent() );
+                                                           m_filterInfo->parent() );
     if (filenames.isEmpty()) {
-        info->alert(i18n("No files selected."));
+        m_filterInfo->alert(i18n("No files selected."));
         return;
     }
 
@@ -58,17 +58,17 @@ void FilterLNotes::import(FilterInfo *info) {
     totalFiles = 0;
 
     totalFiles = filenames.count();
-    info->setOverall(0);
+    m_filterInfo->setOverall(0);
 
     // See filter_mbox.cxx for better reference.
     QStringList::ConstIterator end = filenames.constEnd();
     for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename ) {
 
         ++currentFile;
-        info->addLog( i18n("Importing emails from %1", *filename) );
-        ImportLNotes( *filename, info );
-        info->setOverall( 100 * currentFile / totalFiles );
-        if ( info->shouldTerminate() )
+        m_filterInfo->addLog( i18n("Importing emails from %1", *filename) );
+        ImportLNotes( *filename, m_filterInfo );
+        m_filterInfo->setOverall( 100 * currentFile / totalFiles );
+        if ( m_filterInfo->shouldTerminate() )
             break;
     }
 }
@@ -89,7 +89,7 @@ void FilterLNotes::ImportLNotes(const QString& file, FilterInfo *info) {
     QFile f(file);
 
     if (! f.open( QIODevice::ReadOnly ) ) {
-        info->alert( i18n("Unable to open %1, skipping", file ) );
+        m_filterInfo->alert( i18n("Unable to open %1, skipping", file ) );
     } else {
 
         char ch = 0;
@@ -100,7 +100,7 @@ void FilterLNotes::ImportLNotes(const QString& file, FilterInfo *info) {
         // Get folder name
         QFileInfo filenameInfo( file );
         QString folder("LNotes-Import/" + filenameInfo.completeBaseName());
-        info->setTo(folder);
+        m_filterInfo->setTo(folder);
 
         // State machine to read the data in. The fgetc usage is probably terribly slow ...
         while (f.getChar(&ch)) {
@@ -109,8 +109,8 @@ void FilterLNotes::ImportLNotes(const QString& file, FilterInfo *info) {
                 case 0:
                     // open temp output file
                     state = 1;
-                    info->setCurrent(i18n("Message %1", n++));
-                    if ( info->shouldTerminate() )
+                    m_filterInfo->setCurrent(i18n("Message %1", n++));
+                    if ( m_filterInfo->shouldTerminate() )
                         return;
 
                     tempfile = new KTemporaryFile;
@@ -124,17 +124,17 @@ void FilterLNotes::ImportLNotes(const QString& file, FilterInfo *info) {
                         // close file, send it
                         tempfile->close();
 
-                        if(info->removeDupMsg)
-                            addMessage( info, folder, tempfile->fileName() );
+                        if(m_filterInfo->removeDupMsg)
+                            addMessage( folder, tempfile->fileName() );
                         else
-                            addMessage_fastImport( info, folder, tempfile->fileName() );
+                            addMessage_fastImport( folder, tempfile->fileName() );
 
                         tempfile->setAutoRemove(true);
                         state = 0;
 
                         int currentPercentage = (int) ( ( (float) f.pos() / filenameInfo.size() ) * 100 );
-                        info->setCurrent( currentPercentage );
-                        if ( info->shouldTerminate() )
+                        m_filterInfo->setCurrent( currentPercentage );
+                        if ( m_filterInfo->shouldTerminate() )
                             return;
 
                         break;
@@ -153,10 +153,10 @@ void FilterLNotes::ImportLNotes(const QString& file, FilterInfo *info) {
         if (state != 0) {
             Q_ASSERT(tempfile);
 
-            if(info->removeDupMsg)
-                addMessage( info, folder, tempfile->fileName() );
+            if(m_filterInfo->removeDupMsg)
+                addMessage( folder, tempfile->fileName() );
             else
-                addMessage_fastImport( info, folder, tempfile->fileName() );
+                addMessage_fastImport( folder, tempfile->fileName() );
         }
 	if (tempfile) {
             tempfile->setAutoRemove(true);

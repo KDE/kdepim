@@ -33,7 +33,7 @@ public:
     FilterOE();
     ~FilterOE();
 
-    void import(FilterInfo *info);
+    void import();
 
 protected:
     void importMailBox( FilterInfo *info, const QString& fileName);

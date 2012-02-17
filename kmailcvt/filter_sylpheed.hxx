@@ -32,7 +32,7 @@ public:
     explicit FilterSylpheed();
     ~FilterSylpheed();
 
-    void import(FilterInfo *info);
+    void import();
 
 private:
     QString mailDir;

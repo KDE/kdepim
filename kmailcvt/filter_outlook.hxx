@@ -32,7 +32,7 @@ public:
     FilterOutlook();
     ~FilterOutlook();
 
-    void import(FilterInfo *info);
+    void import();
 };
 
 #endif
