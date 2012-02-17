@@ -53,21 +53,22 @@ void FilterPlain::import(FilterInfo *info)
   } else {
     info->addLog(i18n("Importing new mail files..."));
     QStringList::ConstIterator end( files.constEnd() );
+    const QString destName = QString::fromLatin1( "PLAIN-%1" ).arg( dir.dirName() );
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
-      info->setFrom(*mailFile);
-      info->setTo(dir.dirName());
+      const QString dirRealPath = dir.filePath(*mailFile);
+      info->setFrom(dirRealPath);
+      info->setTo(destName);
       info->setCurrent(0);
-
       /* comment by Danny Kukawka:
        * addMessage() == old function, need more time and check for duplicates
        * addMessage_fastImport == new function, faster and no check for duplicates
        */
       if(info->removeDupMsg) {
-        if(! addMessage( info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile) )) {
+        if(! addMessage( info, destName, dirRealPath )) {
           info->addLog( i18n("Could not import %1", *mailFile ) );
         }
       } else {
-        if( ! addMessage_fastImport( info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile) )) {
+        if( ! addMessage_fastImport( info, destName, dirRealPath )) {
           info->addLog( i18n("Could not import %1", *mailFile ) );
         }
       }
