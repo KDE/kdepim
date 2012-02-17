@@ -33,7 +33,7 @@ class FilterImporterEvolution : public FilterImporterAbstract
   public:
     explicit FilterImporterEvolution( QFile *file );
     ~FilterImporterEvolution();
-
+    static QString defaultPath();
   private:
     enum parseType {
       PartType = 0,
