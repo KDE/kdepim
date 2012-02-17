@@ -45,7 +45,7 @@ void FilterPMail::import(FilterInfo *info)
     KFileDialog *kfd = new KFileDialog( QDir::homePath(), "", 0 );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
-    chosenDir = kfd->selectedFile();
+    const QString chosenDir = kfd->selectedFile();
     delete kfd;
     if (chosenDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
@@ -60,7 +60,7 @@ void FilterPMail::import(FilterInfo *info)
     currentFile = 0;
     kDebug() <<"Count is" << totalFiles;
 
-    if(!(folderParsed = parseFolderMatrix())) {
+    if(!(folderParsed = parseFolderMatrix(chosenDir))) {
         info->addLog(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
     }
 
@@ -275,7 +275,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 }
 
 /** Parse the information about folderstructure to folderMatrix */
-bool FilterPMail::parseFolderMatrix()
+bool FilterPMail::parseFolderMatrix( const QString & chosenDir )
 {
     kDebug() <<"Start parsing the foldermatrix.";
     inf->addLog(i18n("Parsing the folder structure..."));

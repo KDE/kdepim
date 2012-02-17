@@ -40,7 +40,7 @@ protected:
     /** imports a 'unix' format mail folder (*.MBX) */
     void importUnixMailFolder(const QString& file);
     /** this function recreate the folder structure */
-    bool parseFolderMatrix();
+    bool parseFolderMatrix(const QString& chosenDir);
     /** this function parse the folder structure */
     QString getFolderName(const QString& ID); 
     
