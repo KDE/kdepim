@@ -46,6 +46,11 @@ FilterImporterProcmail::~FilterImporterProcmail()
 {
 }
 
+QString FilterImporterProcmail::defaultPath()
+{
+  return QDir::homePath();
+}
+
 QString FilterImporterProcmail::createUniqFilterName()
 {
   return QString::fromLatin1( "Procmail filter %1" ).arg( mFilterCount++ );
