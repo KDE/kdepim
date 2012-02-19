@@ -5,6 +5,7 @@ add_subdirectory( pics )
 ########### next target ###############
 
 set(kmailcvt_SRCS
+  filterinfo.cpp
   kimportpage.cpp
   kselfilterpage.cpp
   filters.cpp

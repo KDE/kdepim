@@ -27,38 +27,7 @@
 
 
 #include "kimportpage.h"
-
-class FilterInfo
-{
-  public:
-    explicit FilterInfo(KImportPageDlg *dlg, QWidget *parent );
-   ~FilterInfo();
-
-    void setStatusMsg( const QString& status );
-    void setFrom( const QString& from );
-    void setTo( const QString& to );
-    void setCurrent( const QString& current );
-    void setCurrent( int percent = 0 );
-    void setOverall( int percent = 0 );
-    void addLog( const QString& log );
-    void clear();
-    void alert( const QString& message );
-    static void terminateASAP();
-    bool shouldTerminate() const;
-    Akonadi::Collection rootCollection() const;
-    void setRootCollection( const Akonadi::Collection &collection );
-
-    QWidget *parent() { return m_parent; }
-    void setRemoveDupMessage( bool removeDupMessage );
-    bool removeDupMessage() const;
-
-  private:
-    KImportPageDlg *m_dlg;
-    Akonadi::Collection m_rootCollection;
-    QWidget      *m_parent;
-    bool m_removeDupMsg;
-    static bool s_terminateASAP;
-};
+#include "filterinfo.h"
 
 class Filter
 {
