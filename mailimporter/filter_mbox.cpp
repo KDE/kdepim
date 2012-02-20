@@ -45,30 +45,30 @@ void FilterMBox::import()
   int overall_status = 0;
   bool first_msg = true;
 
-  const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("mbox Files (*)"), m_filterInfo->parent() );
+  const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("mbox Files (*)"), filterInfo()->parent() );
   if ( filenames.isEmpty() )
   {
-    m_filterInfo->alert(i18n("No files selected."));
+    filterInfo()->alert(i18n("No files selected."));
     return;
   }
     
  
-  m_filterInfo->setOverall(0);
+  filterInfo()->setOverall(0);
 
   QStringList::ConstIterator end( filenames.constEnd() );
   for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename, ++currentFile) {
     QFile mbox( *filename );
     if (! mbox.open( QIODevice::ReadOnly ) ) {
-      m_filterInfo->alert( i18n("Unable to open %1, skipping", *filename ) );
+      filterInfo()->alert( i18n("Unable to open %1, skipping", *filename ) );
     } else {
       QFileInfo filenameInfo( *filename );
       QString folderName( "MBOX-" + filenameInfo.completeBaseName() );
 
-      m_filterInfo->setCurrent(0);
-      m_filterInfo->addLog( i18n("Importing emails from %1...", *filename ) );
+      filterInfo()->setCurrent(0);
+      filterInfo()->addLog( i18n("Importing emails from %1...", *filename ) );
 
-      m_filterInfo->setFrom( *filename );
-      m_filterInfo->setTo( folderName );
+      filterInfo()->setFrom( *filename );
+      filterInfo()->setTo( folderName );
 
       QByteArray input(MAX_LINE,'\0');
       long l = 0;
@@ -122,7 +122,7 @@ void FilterMBox::import()
          * addMessage_fastImport == new function, faster and no check for duplicates
          */
         if ( tmp.size() > 0 ) {
-          if(m_filterInfo->removeDupMessage())
+          if(filterInfo()->removeDupMessage())
             addMessage( folderName, tmp.fileName(), x_status_flag );
           else
             addMessage_fastImport( folderName, tmp.fileName(), x_status_flag );
@@ -131,24 +131,24 @@ void FilterMBox::import()
           kWarning() << "Message size is 0 bytes, not importing it.";
 
         int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
-        m_filterInfo->setCurrent( currentPercentage );
+        filterInfo()->setCurrent( currentPercentage );
         if (currentFile == 1)
           overall_status = (int)( currentPercentage*((float)currentFile/filenames.count()));
         else
           overall_status = (int)(((currentFile-1)*(100.0/(float)filenames.count()))+(currentPercentage*(1.0/(float)filenames.count())));
-        m_filterInfo->setOverall( overall_status );
+        filterInfo()->setOverall( overall_status );
 
-        if ( m_filterInfo->shouldTerminate() ) break;
+        if ( filterInfo()->shouldTerminate() ) break;
       }
 
-      m_filterInfo->addLog( i18n("Finished importing emails from %1", *filename ));
+      filterInfo()->addLog( i18n("Finished importing emails from %1", *filename ));
       if (m_count_duplicates > 0) {
-        m_filterInfo->addLog( i18np("1 duplicate message not imported to folder %2 in KMail",
+        filterInfo()->addLog( i18np("1 duplicate message not imported to folder %2 in KMail",
                                     "%1 duplicate messages not imported to folder %2 in KMail",
                                     m_count_duplicates, folderName));
       }
-      if (m_filterInfo->shouldTerminate())
-        m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+      if (filterInfo()->shouldTerminate())
+        filterInfo()->addLog( i18n("Finished import, canceled by user."));
             
       m_count_duplicates = 0;
       // don't forget to close the file !!!

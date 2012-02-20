@@ -52,7 +52,7 @@ void FilterSylpheed::import()
   mailDir = kfd->selectedFile();
 
   if ( mailDir.isEmpty() ) {
-    m_filterInfo->alert( i18n( "No directory selected." ) );
+    filterInfo()->alert( i18n( "No directory selected." ) );
     return;
   }
   /**
@@ -60,9 +60,9 @@ void FilterSylpheed::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
-    m_filterInfo->addLog( i18n( "No files found for import." ) );
+    filterInfo()->addLog( i18n( "No files found for import." ) );
   } else {
-    m_filterInfo->setOverall(0);
+    filterInfo()->setOverall(0);
 
     /** Recursive import of the MailFolders */
     QDir dir(mailDir);
@@ -70,21 +70,21 @@ void FilterSylpheed::import()
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
     for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
-      if(m_filterInfo->shouldTerminate()) break;
+      if(filterInfo()->shouldTerminate()) break;
       importDirContents(dir.filePath(*filename));
-      m_filterInfo->setOverall((int) ((float) currentDir / numSubDirs * 100));
+      filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
 
-    m_filterInfo->addLog( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
     if (m_count_duplicates > 0) {
-      m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
     }
   }
-  if (m_filterInfo->shouldTerminate())
-    m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+  if (filterInfo()->shouldTerminate())
+    filterInfo()->addLog( i18n("Finished import, canceled by user."));
   m_count_duplicates = 0;
-  m_filterInfo->setCurrent(100);
-  m_filterInfo->setOverall(100);
+  filterInfo()->setCurrent(100);
+  filterInfo()->setOverall(100);
   delete kfd;
 }
 
@@ -95,7 +95,7 @@ void FilterSylpheed::import()
  */
 void FilterSylpheed::importDirContents( const QString& dirName)
 {
-  if(m_filterInfo->shouldTerminate()) return;
+  if(filterInfo()->shouldTerminate()) return;
 
   /** Here Import all archives in the current dir */
   importFiles(dirName);
@@ -105,7 +105,7 @@ void FilterSylpheed::importDirContents( const QString& dirName)
   const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
   QStringList::ConstIterator end = subDirs.constEnd();
   for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-    if(m_filterInfo->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) return;
     importDirContents(subfolders.filePath(*filename));
   }
 }
@@ -132,7 +132,7 @@ void FilterSylpheed::importFiles( const QString& dirName)
 
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
-    if(m_filterInfo->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) return;
     QString _mfile = *mailFile;
     if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
           || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
@@ -142,10 +142,10 @@ void FilterSylpheed::importFiles( const QString& dirName)
         _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
         _path += _tmp.remove( mailDir, Qt::CaseSensitive );
         QString _info = _path;
-        m_filterInfo->addLog(i18n("Import folder %1...", _info.remove(0,15)));
+        filterInfo()->addLog(i18n("Import folder %1...", _info.remove(0,15)));
 
-        m_filterInfo->setFrom(_info);
-        m_filterInfo->setTo(_path);
+        filterInfo()->setFrom(_info);
+        filterInfo()->setTo(_path);
         generatedPath = true;
       }
 
@@ -153,16 +153,16 @@ void FilterSylpheed::importFiles( const QString& dirName)
       if (msgflags[_mfile])
         flags = msgFlagsToString((msgflags[_mfile]));
 
-      if(m_filterInfo->removeDupMessage()) {
+      if(filterInfo()->removeDupMessage()) {
         if(! addMessage( _path, dir.filePath(*mailFile), flags )) {
-          m_filterInfo->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
         }
-        m_filterInfo->setCurrent((int) ((float) currentFile / numFiles * 100));
+        filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
         if(! addMessage_fastImport( _path, dir.filePath(*mailFile), flags )) {
-          m_filterInfo->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
         }
-        m_filterInfo->setCurrent((int) ((float) currentFile / numFiles * 100));
+        filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       }
     }
   }
@@ -205,7 +205,7 @@ void FilterSylpheed::readMarkFile( const QString &path, QHash<QString,unsigned l
     return;
 
   while (!stream.atEnd()) {
-    if(m_filterInfo->shouldTerminate()){
+    if(filterInfo()->shouldTerminate()){
       file.close();
       return;
     }

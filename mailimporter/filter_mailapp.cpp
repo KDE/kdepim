@@ -48,35 +48,35 @@ void FilterMailApp::import()
   int overall_status = 0;
   bool first_msg = true;
 
-  const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), m_filterInfo->parent() );
+  const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), filterInfo()->parent() );
   if ( directory.isEmpty() )
   {
-    m_filterInfo->alert(i18n("No files selected."));
+    filterInfo()->alert(i18n("No files selected."));
     return;
   }
     
-  m_filterInfo->setOverall(0);
+  filterInfo()->setOverall(0);
 
   //   kDebug() <<"starting by looking in directory" << directory;
   traverseDirectory(directory);
 
   QStringList::ConstIterator end( mMboxFiles.constEnd() );
   for ( QStringList::ConstIterator filename = mMboxFiles.constBegin(); filename != end; ++filename, ++currentFile) {
-    if ( m_filterInfo->shouldTerminate() )
+    if ( filterInfo()->shouldTerminate() )
       break;
     QFile mbox( *filename );
     if (! mbox.open( QIODevice::ReadOnly ) ) {
-      m_filterInfo->alert( i18n("Unable to open %1, skipping", *filename ) );
+      filterInfo()->alert( i18n("Unable to open %1, skipping", *filename ) );
     } else {
       QFileInfo filenameInfo( *filename );
       kDebug() <<"importing filename" << *filename;
       QStringList name = (*filename).split('/', QString::SkipEmptyParts);
       QString folderName(name[name.count() - 2]);
 
-      m_filterInfo->setCurrent(0);
-      m_filterInfo->addLog( i18n("Importing emails from %1...", *filename ) );
-      m_filterInfo->setFrom( *filename );
-      m_filterInfo->setTo( folderName );
+      filterInfo()->setCurrent(0);
+      filterInfo()->addLog( i18n("Importing emails from %1...", *filename ) );
+      filterInfo()->setFrom( *filename );
+      filterInfo()->setTo( folderName );
 
       QByteArray input(MAX_LINE,'\0');
       long l = 0;
@@ -108,32 +108,32 @@ void FilterMailApp::import()
          * addMessage() == old function, need more time and check for duplicates
          * addMessage_fastImport == new function, faster and no check for duplicates
          */
-        if(m_filterInfo->removeDupMessage())
+        if(filterInfo()->removeDupMessage())
           addMessage( folderName, tmp.fileName() );
         else
           addMessage_fastImport( folderName, tmp.fileName() );
 
         int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
-        m_filterInfo->setCurrent( currentPercentage );
+        filterInfo()->setCurrent( currentPercentage );
         if (currentFile == 1)
           overall_status = (int)( currentPercentage*((float)currentFile/mMboxFiles.count()));
         else
           overall_status = (int)(((currentFile-1)*(100.0/(float)mMboxFiles.count()))+(currentPercentage*(1.0/(float)mMboxFiles.count())));
-        m_filterInfo->setOverall( overall_status );
-        if ( m_filterInfo->shouldTerminate() ) break;
+        filterInfo()->setOverall( overall_status );
+        if ( filterInfo()->shouldTerminate() ) break;
       }
 
-      m_filterInfo->addLog( i18n("Finished importing emails from %1", *filename ) );
+      filterInfo()->addLog( i18n("Finished importing emails from %1", *filename ) );
       if (m_count_duplicates > 0) {
-        m_filterInfo->addLog( i18np("1 duplicate message not imported to folder %2 in KMail", 
+        filterInfo()->addLog( i18np("1 duplicate message not imported to folder %2 in KMail", 
                                     "%1 duplicate messages not imported to folder %2 in KMail", m_count_duplicates, folderName));
       }
       m_count_duplicates = 0;
       mbox.close();
     }
   }
-  if (m_filterInfo->shouldTerminate())
-    m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+  if (filterInfo()->shouldTerminate())
+    filterInfo()->addLog( i18n("Finished import, canceled by user."));
 }
 
 void FilterMailApp::traverseDirectory(const QString &dirName)
