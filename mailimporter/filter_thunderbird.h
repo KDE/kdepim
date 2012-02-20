@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_THUNDERBIRD_HXX
-#define FILTER_THUNDERBIRD_HXX
+#ifndef MAILIMPORTER_FILTER_THUNDERBIRD_HXX
+#define MAILIMPORTER_FILTER_THUNDERBIRD_HXX
 
 #include "filters.h"
 #include "filters.h"
@@ -36,8 +36,6 @@ public:
   void import();
 
 private:
-  QString mailDir;
-
   void importDirContents(const QString&, const QString&, const QString&);
   void importMBox(const QString&, const QString&, const QString&);
 };

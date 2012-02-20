@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_EVOLUTION_V2_HXX
-#define FILTER_EVOLUTION_V2_HXX
+#ifndef MAILIMPORTER_FILTER_EVOLUTION_V2_HXX
+#define MAILIMPORTER_FILTER_EVOLUTION_V2_HXX
 
 #include "filters.h"
 #include "mailimporter_export.h"
@@ -35,8 +35,6 @@ public:
   void import();
 
 private:
-  QString mailDir;
-
   void importDirContents(const QString&, const QString&, const QString&);
   void importMBox(const QString&, const QString&, const QString&);
 };

@@ -14,8 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILTER_SYLPHEED_HXX
-#define FILTER_SYLPHEED_HXX
+#ifndef MAILIMPORTER_FILTER_SYLPHEED_HXX
+#define MAILIMPORTER_FILTER_SYLPHEED_HXX
 
 #include <QHash>
 
@@ -37,8 +37,6 @@ public:
     void import();
 
 private:
-    QString mailDir;
-
     void importDirContents(const QString&);
     void importFiles(const QString&);
     

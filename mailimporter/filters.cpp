@@ -67,6 +67,7 @@ class Filter::Private
   QString name;
   QString author;
   QString info;
+  QString mailDir;
   QMultiMap<QString, QString> messageFolderMessageIDMap;
   QMap<QString, Akonadi::Collection> messageFolderCollectionMap;
   int count_duplicates; //to count all duplicate messages
@@ -83,6 +84,16 @@ Filter::Filter( const QString& name, const QString& author,
 Filter::~Filter()
 {
   delete d;
+}
+
+void Filter::setMailDir( const QString& mailDir )
+{
+  d->mailDir = mailDir;
+}
+
+QString Filter::mailDir() const 
+{
+  return d->mailDir;
 }
 
 void Filter::setFilterInfo( FilterInfo* info )
@@ -171,7 +182,7 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
       lastCollection = d->messageFolderCollectionMap[folder];
       isFirst = false;
     } else {
-      folderBuilder += '/' + folder;
+      folderBuilder += QLatin1Char( '/' ) + folder;
       d->messageFolderCollectionMap[folderBuilder] = addSubCollection( lastCollection, folder );
       lastCollection = d->messageFolderCollectionMap[folderBuilder];
     }
@@ -221,8 +232,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if the contents of this collection have already been found.
   QMultiMap<QString, QString>::const_iterator end( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();
-       it != end; it++ ) {
+  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != end; it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
       break;
@@ -259,8 +269,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if this message has a duplicate
   QMultiMap<QString, QString>::const_iterator endMsgID( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();
-       it !=endMsgID ; it++ ) {
+  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();it !=endMsgID ; it++ ) {
     if( it.key() == messageFolder &&
         it.value() == msgID )
       return true;

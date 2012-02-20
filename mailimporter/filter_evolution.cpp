@@ -50,9 +50,9 @@ void FilterEvolution::import()
     evolDir = QDir::homePath();
   }
 
-  mailDir = KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent());
+  setMailDir(KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent()));
 
-  if (mailDir.isEmpty()) {
+  if (mailDir().isEmpty()) {
     filterInfo()->alert(i18n("No directory selected."));
     return;
   }
@@ -60,12 +60,12 @@ void FilterEvolution::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
     filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
     // Recursive import of the MBoxes.
-    QDir dir(mailDir);
+    QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end( rootSubDirs.constEnd() );
@@ -74,7 +74,7 @@ void FilterEvolution::import()
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
   }
-  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
+  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
 }
@@ -131,7 +131,7 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
     filterInfo()->setCurrent(0);
     if( mboxName.length() > 20 ) {
       QString tmp_info = mboxName;
-      tmp_info = tmp_info.replace( mailDir, ".." );
+      tmp_info = tmp_info.replace( mailDir(), ".." );
       if (tmp_info.contains("subfolders/"))
         tmp_info.remove("subfolders/");
       filterInfo()->setFrom( tmp_info );

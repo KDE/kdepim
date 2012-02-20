@@ -50,7 +50,10 @@ public:
 
   void setCountDuplicates( int countDuplicate );
   int countDuplicates() const;
-  
+
+  void setMailDir( const QString& mailDir );
+  QString mailDir() const;
+
 protected:
 
   /**

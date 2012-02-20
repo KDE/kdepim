@@ -83,13 +83,13 @@ void KMailCVT::next()
     FilterInfo *info = new FilterInfo();
     KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
     info->setFilterInfoGui(infoGui);
-    info->setStatusMsg(i18n("Import in progress"));
+    info->setStatusMessage(i18n("Import in progress"));
     info->setRemoveDupMessage( selfilterpage->removeDupMsg_checked() );
     info->clear(); // Clear info from last time
     info->setRootCollection( selectedCollection );
     selectedFilter->setFilterInfo( info );
     selectedFilter->import();
-    info->setStatusMsg(i18n("Import finished"));
+    info->setStatusMessage(i18n("Import finished"));
     // Cleanup
     delete info;
     // Enable finish & back buttons

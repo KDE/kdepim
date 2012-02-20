@@ -16,8 +16,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef FILTER_KMAIL_ARCHIVE_HXX
-#define FILTER_KMAIL_ARCHIVE_HXX
+#ifndef MAILIMPORTER_FILTER_KMAIL_ARCHIVE_HXX
+#define MAILIMPORTER_FILTER_KMAIL_ARCHIVE_HXX
 
 #include "filters.h"
 #include "mailimporter_export.h"

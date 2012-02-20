@@ -49,9 +49,9 @@ void FilterSylpheed::import()
   KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
-  mailDir = kfd->selectedFile();
+  setMailDir(kfd->selectedFile());
 
-  if ( mailDir.isEmpty() ) {
+  if ( mailDir().isEmpty() ) {
     filterInfo()->alert( i18n( "No directory selected." ) );
     return;
   }
@@ -59,13 +59,13 @@ void FilterSylpheed::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == ( QDir::homePath() + '/' ) ) {
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
     /** Recursive import of the MailFolders */
-    QDir dir(mailDir);
+    QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
@@ -75,7 +75,7 @@ void FilterSylpheed::import()
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
 
-    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
     if (countDuplicates() > 0) {
       filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
@@ -140,7 +140,7 @@ void FilterSylpheed::importFiles( const QString& dirName)
         _path = "Sylpheed-Import/";
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
-        _path += _tmp.remove( mailDir, Qt::CaseSensitive );
+        _path += _tmp.remove( mailDir(), Qt::CaseSensitive );
         QString _info = _path;
         filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0,15)));
 

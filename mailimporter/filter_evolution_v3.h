@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTER_EVOLUTION_V3_HXX
-#define FILTER_EVOLUTION_V3_HXX
+#ifndef MAILIMPORTER_FILTER_EVOLUTION_V3_HXX
+#define MAILIMPORTER_FILTER_EVOLUTION_V3_HXX
 
 #include "filters.h"
 #include "mailimporter_export.h"
@@ -31,8 +31,6 @@ public:
   void import();
 
 private:
-  QString mailDir;
-
   void importDirContents(const QString&);
   void importFiles(const QString&);
 };

@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_OPERA_HXX
-#define FILTER_OPERA_HXX
+#ifndef MAILIMPORTER_FILTER_OPERA_HXX
+#define MAILIMPORTER_FILTER_OPERA_HXX
 
 #include "filters.h"
 #include "filters.h"

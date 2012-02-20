@@ -27,7 +27,7 @@ class MAILIMPORTER_EXPORT FilterInfoGui
 public:
   explicit FilterInfoGui();
   virtual ~FilterInfoGui();
-  virtual void setStatusMsg( const QString& status );
+  virtual void setStatusMessage( const QString& status );
   virtual void setFrom( const QString& from );
   virtual void setTo( const QString& to );
   virtual void setCurrent( const QString& current );

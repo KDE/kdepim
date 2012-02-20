@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_OE_HXX
-#define FILTER_OE_HXX
+#ifndef MAILIMPORTER_FILTER_OE_HXX
+#define MAILIMPORTER_FILTER_OE_HXX
 
 #include "filters.h"
 //Added by qt3to4:
@@ -33,7 +33,7 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterOE : public Filter
 {
 public:
-  FilterOE();
+  explicit FilterOE();
   ~FilterOE();
 
   void import();
@@ -83,7 +83,7 @@ private: // Private methods
   /** name of the current folder */
   QString folderName;
   /** name of the chosen folder */
-  QString mailDir;
+  
 };
 }
 

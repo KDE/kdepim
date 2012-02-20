@@ -62,10 +62,10 @@ void FilterInfo::setFilterInfoGui( FilterInfoGui *filterinfogui )
   d->m_filterInfoGui = filterinfogui;
 }
 
-void FilterInfo::setStatusMsg( const QString& status )
+void FilterInfo::setStatusMessage( const QString& status )
 {
   if ( d->m_filterInfoGui )
-    d->m_filterInfoGui->setStatusMsg( status );
+    d->m_filterInfoGui->setStatusMessage( status );
 }
 
 void FilterInfo::setFrom( const QString& from )

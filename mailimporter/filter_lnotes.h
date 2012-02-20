@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_LNOTES_HXX
-#define FILTER_LNOTES_HXX
+#ifndef MAILIMPORTER_FILTER_LNOTES_HXX
+#define MAILIMPORTER_FILTER_LNOTES_HXX
 
 #include "filters.h"
 #include "mailimporter_export.h"

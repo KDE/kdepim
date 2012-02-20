@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_PMAIL_HXX
-#define FILTER_PMAIL_HXX
+#ifndef MAILIMPORTER_FILTER_PMAIL_HXX
+#define MAILIMPORTER_FILTER_PMAIL_HXX
 
 #include <QDir>
 

@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_PLAIN_HXX
-#define FILTER_PLAIN_HXX
+#ifndef MAILIMPORTER_FILTER_PLAIN_HXX
+#define MAILIMPORTER_FILTER_PLAIN_HXX
 
 #include "filters.h"
 #include "filters.h"

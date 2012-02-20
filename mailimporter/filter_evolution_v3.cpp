@@ -54,10 +54,10 @@ void FilterEvolution_v3::import()
   KFileDialog *kfd = new KFileDialog( evolDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
-  mailDir = kfd->selectedFile();
+  setMailDir(kfd->selectedFile());
   delete kfd;
   
-  if ( mailDir.isEmpty() ) {
+  if ( mailDir().isEmpty() ) {
     filterInfo()->alert( i18n( "No directory selected." ) );
     return;
   }
@@ -65,13 +65,13 @@ void FilterEvolution_v3::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == ( QDir::homePath() + '/' ) ) {
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
     /** Recursive import of the MailArchives */
-    QDir dir(mailDir);
+    QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
@@ -86,7 +86,7 @@ void FilterEvolution_v3::import()
       }
     }
 
-    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
 
     if (countDuplicates() > 0) {
         filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
@@ -153,7 +153,7 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
       if(!generatedPath) {
         _path = QLatin1String( "Evolution-Import" );
         QString _tmp = dir.filePath(*mailFile);
-        _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
+        _tmp = _tmp.remove( mailDir(), Qt::CaseSensitive );
         QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
         QStringList::ConstIterator end( subFList.end() ); 
         for ( QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it ) {

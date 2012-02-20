@@ -14,8 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILTER_THEBAT_HXX
-#define FILTER_THEBAT_HXX
+#ifndef MAILIMPORTER_FILTER_THEBAT_HXX
+#define MAILIMPORTER_FILTER_THEBAT_HXX
 
 #include "filters.h"
 #include "filters.h"
@@ -35,8 +35,6 @@ public:
   void import();
 
 private:
-  QString mailDir;
-
   void importDirContents( const QString&);
   void importFiles( const QString&);
 };
