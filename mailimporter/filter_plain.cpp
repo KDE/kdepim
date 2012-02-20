@@ -50,7 +50,7 @@ void FilterPlain::import()
   int totalFiles = files.count();
   int currentFile = 0;
   if ( files.isEmpty() ) {
-    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
+    filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->addInfoLogEntry(i18n("Importing new mail files..."));
     QStringList::ConstIterator end( files.constEnd() );
@@ -66,11 +66,11 @@ void FilterPlain::import()
        */
       if(filterInfo()->removeDupMessage()) {
         if(! addMessage( destName, dirRealPath )) {
-          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
       } else {
         if( ! addMessage_fastImport( destName, dirRealPath )) {
-          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
       }
 

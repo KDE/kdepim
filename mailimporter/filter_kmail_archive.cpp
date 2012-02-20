@@ -74,7 +74,7 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
 
   Akonadi::Collection collection = parseFolderString( folderPath );
   if ( !collection.isValid() ) {
-    filterInfo()->addInfoLogEntry( i18n( "Unable to retrieve folder for folder path %1.", folderPath ) );
+    filterInfo()->addErrorLogEntry( i18n( "Unable to retrieve folder for folder path %1.", folderPath ) );
     return false;
   }
 
@@ -124,12 +124,12 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
           total--;
       }
       else {
-        filterInfo()->addInfoLogEntry( i18n( "Unexpected subfolder %1 in folder %2.", entryName, folder->name() ) );
+        filterInfo()->addErrorLogEntry( i18n( "Unexpected subfolder %1 in folder %2.", entryName, folder->name() ) );
       }
     }
   }
   else {
-    filterInfo()->addInfoLogEntry( i18n( "No subfolder named 'cur' in folder %1.", folder->name() ) );
+    filterInfo()->addErrorLogEntry( i18n( "No subfolder named 'cur' in folder %1.", folder->name() ) );
   }
   return true;
 }
@@ -154,7 +154,7 @@ bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, co
 
         const QString folderName = folderNameForDirectoryName( entry->name() );
         if ( folderName.isEmpty() ) {
-          filterInfo()->addInfoLogEntry( i18n( "Unexpected subdirectory named '%1'.", entry->name() ) );
+          filterInfo()->addErrorLogEntry( i18n( "Unexpected subdirectory named '%1'.", entry->name() ) );
         }
         else {
 

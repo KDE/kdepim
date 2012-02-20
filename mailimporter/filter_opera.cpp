@@ -166,7 +166,7 @@ void FilterOpera::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + '/')) {
-    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
+    filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
 

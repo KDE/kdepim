@@ -70,7 +70,7 @@ void FilterEvolution_v2::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
-    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
+    filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
 

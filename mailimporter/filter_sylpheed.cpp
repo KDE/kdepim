@@ -60,7 +60,7 @@ void FilterSylpheed::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
-    filterInfo()->addInfoLogEntry( i18n( "No files found for import." ) );
+    filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
@@ -155,12 +155,12 @@ void FilterSylpheed::importFiles( const QString& dirName)
 
       if(filterInfo()->removeDupMessage()) {
         if(! addMessage( _path, dir.filePath(*mailFile), flags )) {
-          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
         if(! addMessage_fastImport( _path, dir.filePath(*mailFile), flags )) {
-          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       }
