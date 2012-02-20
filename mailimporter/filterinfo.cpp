@@ -21,116 +21,135 @@
 
 using namespace MailImporter;
 
-bool FilterInfo::s_terminateASAP = false;
+
+class FilterInfo::Private
+{
+  public:
+  Private()
+    : m_removeDupMsg( false ),
+      m_filterInfoGui( 0 )
+    {
+    }
+  ~Private()
+    {
+      delete m_filterInfoGui;
+      m_filterInfoGui = 0;
+    }
+  Akonadi::Collection m_rootCollection;
+  bool m_removeDupMsg;
+  FilterInfoGui *m_filterInfoGui;
+  static bool s_terminateASAP;
+
+};
+
+
+bool FilterInfo::Private::s_terminateASAP = false;
 
 FilterInfo::FilterInfo()
-  : m_removeDupMsg( false ),
-    m_filterInfoGui( 0 )
-  
+  : d( new Private )  
 {
-  s_terminateASAP = false;
+  Private::s_terminateASAP = false;
 }
 
 FilterInfo::~FilterInfo()
 {
-  delete m_filterInfoGui;
-  m_filterInfoGui = 0;
+  delete d;
 }
 
 void FilterInfo::setFilterInfoGui( FilterInfoGui *filterinfogui )
 {
-  delete m_filterInfoGui;
-  m_filterInfoGui = filterinfogui;
+  delete d->m_filterInfoGui;
+  d->m_filterInfoGui = filterinfogui;
 }
 
 void FilterInfo::setStatusMsg( const QString& status )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->setStatusMsg( status );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->setStatusMsg( status );
 }
 
 void FilterInfo::setFrom( const QString& from )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->setFrom( from );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->setFrom( from );
 }
 
 void FilterInfo::setTo( const QString& to )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->setTo(to );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->setTo(to );
 }
 
 void FilterInfo::setCurrent( const QString& current )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->setCurrent( current );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->setCurrent( current );
 }
 
 void  FilterInfo::setCurrent( int percent )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->setCurrent( percent );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->setCurrent( percent );
 }
 
 void  FilterInfo::setOverall( int percent )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->setOverall(percent );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->setOverall(percent );
 }
 
 void FilterInfo::addLog( const QString& log )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->addLog( log );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->addLog( log );
 }
 
 void FilterInfo::clear()
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->clear();
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->clear();
 }
 
 void FilterInfo::alert( const QString& message )
 {
-  if ( m_filterInfoGui )
-    m_filterInfoGui->alert( message );
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->alert( message );
 }
 
 void FilterInfo::terminateASAP()
 {
-  s_terminateASAP = true;
+  Private::s_terminateASAP = true;
 }
 
 bool FilterInfo::shouldTerminate() const
 {
-  return s_terminateASAP;
+  return Private::s_terminateASAP;
 }
 
 Akonadi::Collection FilterInfo::rootCollection() const
 {
-  return m_rootCollection;
+  return d->m_rootCollection;
 }
 
 void FilterInfo::setRootCollection( const Akonadi::Collection &collection )
 {
-  m_rootCollection = collection;
+  d->m_rootCollection = collection;
 }
 
 void FilterInfo::setRemoveDupMessage( bool removeDupMessage )
 {
-  m_removeDupMsg = removeDupMessage;
+  d->m_removeDupMsg = removeDupMessage;
 }
 
 bool FilterInfo::removeDupMessage() const
 {
-  return m_removeDupMsg;
+  return d->m_removeDupMsg;
 }
 
 QWidget* FilterInfo::parent()
 {
-  if ( m_filterInfoGui )
-    return m_filterInfoGui->parent();
+  if ( d->m_filterInfoGui )
+    return d->m_filterInfoGui->parent();
   return 0;
 }
   
