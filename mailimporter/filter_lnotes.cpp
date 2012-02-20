@@ -66,7 +66,7 @@ void FilterLNotes::import() {
   for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename ) {
 
     ++currentFile;
-    filterInfo()->addLog( i18n("Importing emails from %1", *filename) );
+    filterInfo()->addInfoLogEntry( i18n("Importing emails from %1", *filename) );
     ImportLNotes( *filename );
     filterInfo()->setOverall( 100 * currentFile / totalFiles );
     if ( filterInfo()->shouldTerminate() )

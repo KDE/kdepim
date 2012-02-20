@@ -66,7 +66,7 @@ void FilterTheBat::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
-    filterInfo()->addLog( i18n( "No files found for import." ) );
+    filterInfo()->addInfoLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
@@ -80,13 +80,13 @@ void FilterTheBat::import()
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
       if(filterInfo()->shouldTerminate()) break;
     }
-    filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
     if (countDuplicates() > 0) {
-      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+      filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
   }
   if (filterInfo()->shouldTerminate())
-    filterInfo()->addLog( i18n("Finished import, canceled by user."));
+    filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
 
   setCountDuplicates(0);
   filterInfo()->setCurrent(100);
@@ -185,7 +185,7 @@ void FilterTheBat::importFiles( const QString& FileName)
         offsets.append(endOfEmail);
       }
     }
-    // filterInfo()->addLog(i18n("--COUNTED: %1").arg(count));
+    // filterInfo()->addInfoLogEntry(i18n("--COUNTED: %1").arg(count));
 
     // IMPORT the messages:
     if(!offsets.empty() || (offsets.empty() && (tbb.size() > 3128))) {
@@ -199,7 +199,7 @@ void FilterTheBat::importFiles( const QString& FileName)
       _tmp = _tmp.remove(_tmp.length() - 13, 13);
       _path += _tmp.remove( mailDir, Qt::CaseSensitive );
       QString _info = _path;
-      filterInfo()->addLog(i18n("Import folder %1...", _info.remove(0,14)));
+      filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0,14)));
       filterInfo()->setTo(_path);
       filterInfo()->setFrom("../" + _info + "/messages.tbb");
 

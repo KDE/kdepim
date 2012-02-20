@@ -74,7 +74,7 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
 
   Akonadi::Collection collection = parseFolderString( folderPath );
   if ( !collection.isValid() ) {
-    filterInfo()->addLog( i18n( "Unable to retrieve folder for folder path %1.", folderPath ) );
+    filterInfo()->addInfoLogEntry( i18n( "Unable to retrieve folder for folder path %1.", folderPath ) );
     return false;
   }
 
@@ -98,7 +98,7 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
 bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QString &folderPath )
 {
   kDebug() << "Importing folder" << folder->name();
-  filterInfo()->addLog( i18n( "Importing folder '%1'...", folderPath ) );
+  filterInfo()->addInfoLogEntry( i18n( "Importing folder '%1'...", folderPath ) );
   filterInfo()->setTo( filterInfo()->rootCollection().name() + folderPath );
   const KArchiveDirectory * const messageDir =
       dynamic_cast<const KArchiveDirectory*>( folder->entry( "cur" ) );
@@ -124,12 +124,12 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
           total--;
       }
       else {
-        filterInfo()->addLog( i18n( "Unexpected subfolder %1 in folder %2.", entryName, folder->name() ) );
+        filterInfo()->addInfoLogEntry( i18n( "Unexpected subfolder %1 in folder %2.", entryName, folder->name() ) );
       }
     }
   }
   else {
-    filterInfo()->addLog( i18n( "No subfolder named 'cur' in folder %1.", folder->name() ) );
+    filterInfo()->addInfoLogEntry( i18n( "No subfolder named 'cur' in folder %1.", folder->name() ) );
   }
   return true;
 }
@@ -154,7 +154,7 @@ bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, co
 
         const QString folderName = folderNameForDirectoryName( entry->name() );
         if ( folderName.isEmpty() ) {
-          filterInfo()->addLog( i18n( "Unexpected subdirectory named '%1'.", entry->name() ) );
+          filterInfo()->addInfoLogEntry( i18n( "Unexpected subdirectory named '%1'.", entry->name() ) );
         }
         else {
 
@@ -215,19 +215,19 @@ void FilterKMailArchive::import()
   }
 
   filterInfo()->setOverall( 0 );
-  filterInfo()->addLog( i18n( "Counting files in archive..." ) );
+  filterInfo()->addInfoLogEntry( i18n( "Counting files in archive..." ) );
   mTotalFiles = countFiles( archive->directory() );
 
   if ( importDirectory( archive->directory(), QString() ) ) {
     filterInfo()->setOverall( 100 );
     filterInfo()->setCurrent( 100 );
-    filterInfo()->addLog( i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
+    filterInfo()->addInfoLogEntry( i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
                                archiveFile, filterInfo()->rootCollection().name() ) );
-    filterInfo()->addLog( i18np( "1 message was imported.", "%1 messages were imported.",
+    filterInfo()->addInfoLogEntry( i18np( "1 message was imported.", "%1 messages were imported.",
                                 mFilesDone ) );
   }
   else {
-    filterInfo()->addLog( i18n( "Importing the archive failed." ) );
+    filterInfo()->addInfoLogEntry( i18n( "Importing the archive failed." ) );
   }
   archive->close();
 }

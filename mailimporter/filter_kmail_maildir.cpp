@@ -62,7 +62,7 @@ void FilterKMail_maildir::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
-    filterInfo()->addLog( i18n( "No files found for import." ) );
+    filterInfo()->addInfoLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
@@ -81,13 +81,13 @@ void FilterKMail_maildir::import()
         filterInfo()->setCurrent(100);
       }
     }
-    filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
     if (countDuplicates() > 0) {
-      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+      filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
   }
   if (filterInfo()->shouldTerminate())
-    filterInfo()->addLog( i18n("Finished import, canceled by user."));
+    filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
 }
@@ -159,7 +159,7 @@ void FilterKMail_maildir::importFiles( const QString& dirName)
         if(_path.endsWith("cur"))
           _path.remove(_path.length() - 4 , 4);
         QString _info = _path;
-        filterInfo()->addLog(i18n("Import folder %1...", _info.remove(0,12)));
+        filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0,12)));
         filterInfo()->setFrom(_info);
         filterInfo()->setTo(_path);
         generatedPath = true;
@@ -167,12 +167,12 @@ void FilterKMail_maildir::importFiles( const QString& dirName)
 
       if(filterInfo()->removeDupMessage()) {
         if(! addMessage( _path, dir.filePath(*mailFile) )) {
-          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
         if(! addMessage_fastImport( _path, dir.filePath(*mailFile) )) {
-          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       }

@@ -61,7 +61,7 @@ void FilterEvolution::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
-    filterInfo()->addLog(i18n("No files found for import."));
+    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
     // Recursive import of the MBoxes.
@@ -74,7 +74,7 @@ void FilterEvolution::import()
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
   }
-  filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
+  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
 }
@@ -145,7 +145,7 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
     } else
       filterInfo()->setTo(targetDir);
 
-    filterInfo()->addLog(i18n("Importing emails from %1...", tmp_from));
+    filterInfo()->addInfoLogEntry(i18n("Importing emails from %1...", tmp_from));
 
     QByteArray input(MAX_LINE,'\0');
     long l = 0;
@@ -195,7 +195,7 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
     }
 
     if (countDuplicates() > 0) {
-      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+      filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
     setCountDuplicates(0);
     mbox.close();

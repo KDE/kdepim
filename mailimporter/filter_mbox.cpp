@@ -65,7 +65,7 @@ void FilterMBox::import()
       QString folderName( "MBOX-" + filenameInfo.completeBaseName() );
 
       filterInfo()->setCurrent(0);
-      filterInfo()->addLog( i18n("Importing emails from %1...", *filename ) );
+      filterInfo()->addInfoLogEntry( i18n("Importing emails from %1...", *filename ) );
 
       filterInfo()->setFrom( *filename );
       filterInfo()->setTo( folderName );
@@ -141,14 +141,14 @@ void FilterMBox::import()
         if ( filterInfo()->shouldTerminate() ) break;
       }
 
-      filterInfo()->addLog( i18n("Finished importing emails from %1", *filename ));
+      filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", *filename ));
       if (countDuplicates() > 0) {
-        filterInfo()->addLog( i18np("1 duplicate message not imported to folder %2 in KMail",
+        filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported to folder %2 in KMail",
                                     "%1 duplicate messages not imported to folder %2 in KMail",
                                     countDuplicates(), folderName));
       }
       if (filterInfo()->shouldTerminate())
-        filterInfo()->addLog( i18n("Finished import, canceled by user."));
+        filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
             
       setCountDuplicates(0);
       // don't forget to close the file !!!

@@ -64,7 +64,7 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
   int overall_status = 0;
   int totalFiles = files.count();
   int currentFile = 1;
-  filterInfo()->addLog(i18n("Importing new mail files..."));
+  filterInfo()->addInfoLogEntry(i18n("Importing new mail files..."));
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
     filterInfo()->setCurrent(0);
@@ -72,7 +72,7 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
     if (! operaArchiv.open( QIODevice::ReadOnly ) ) {
       filterInfo()->alert( i18n("Unable to open %1, skipping", *mailFile ) );
     } else {
-      filterInfo()->addLog( i18n("Importing emails from %1...", *mailFile ) );
+      filterInfo()->addInfoLogEntry( i18n("Importing emails from %1...", *mailFile ) );
       QFileInfo filenameInfo( importDir.filePath(*mailFile) );
       QString folderName;
       if ( accountName.isEmpty() )
@@ -128,9 +128,9 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
         if ( filterInfo()->shouldTerminate() ) break;
       }
 
-      filterInfo()->addLog( i18n("Finished importing emails from %1", *mailFile ));
+      filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", *mailFile ));
       if (countDuplicates() > 0) {
-        filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+        filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
       }
       currentFile++;
       setCountDuplicates(0);
@@ -166,7 +166,7 @@ void FilterOpera::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + '/')) {
-    filterInfo()->addLog(i18n("No files found for import."));
+    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
 
@@ -174,7 +174,7 @@ void FilterOpera::import()
     const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
 
     // Count total number of files to be processed
-    filterInfo()->addLog(i18n("Counting files..."));
+    filterInfo()->addInfoLogEntry(i18n("Counting files..."));
 
     if(!files.isEmpty()) {
       importBox(importDir, files);
@@ -184,7 +184,7 @@ void FilterOpera::import()
     }
   }
   if (filterInfo()->shouldTerminate())
-    filterInfo()->addLog( i18n("Finished import, canceled by user."));
+    filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
 }

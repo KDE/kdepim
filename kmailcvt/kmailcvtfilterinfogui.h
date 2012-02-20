@@ -32,7 +32,8 @@ public:
   void setCurrent( const QString& current );
   void setCurrent( int percent = 0 );
   void setOverall( int percent = 0 );
-  void addLog( const QString& log );
+  void addErrorLogEntry( const QString& log );
+  void addInfoLogEntry( const QString& log );
   void clear();
   void alert( const QString& message );
   QWidget *parent();
