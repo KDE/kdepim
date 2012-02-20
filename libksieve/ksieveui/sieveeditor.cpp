@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -175,7 +175,7 @@ QString SieveEditor::script() const
 
 void SieveEditor::setScript( const QString & script )
 {
-  mTextEdit->append( script );
+  mTextEdit->setPlainText( script );
 }
 
 void SieveEditor::setDebugColor( const QColor& col )
