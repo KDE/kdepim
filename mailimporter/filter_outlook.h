@@ -1,9 +1,9 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+                  filter_opera.h  -  Outlook mail import
                              -------------------
-    begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
-    email                : l.d.anderson@warwick.ac.uk
+    begin                : Januar 26 2005
+    copyright            : (C) 2005 by Danny Kukawka
+    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,38 +15,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#ifndef FILTER_OUTLOOK_HXX
+#define FILTER_OUTLOOK_HXX
 
-#include "ui_kselfilterpagedlg.h"
-#include <QList>
+#include "filters.h"
+#include "filters.h"
+#include "mailimporter_export.h"
+/**
+ * imports mails from Outlook pst-files into KMail
+ * NOTE: This is a dummy at the moment
+ * @author Danny Kukawka
+ */
 namespace MailImporter {
-  class Filter;
-}
-
-
-class KSelFilterPageDlg : public QWidget, public Ui::KSelFilterPageDlg
+class MAILIMPORTER_EXPORT FilterOutlook : public Filter
 {
 public:
-  KSelFilterPageDlg( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
+  explicit FilterOutlook();
+  ~FilterOutlook();
 
-
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
-public:
-	KSelFilterPage(QWidget *parent=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(MailImporter::Filter *f);
-	MailImporter::Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked() const;
-private:
-	QList<MailImporter::Filter*> mFilterList;
-private slots:
-	void filterSelected(int i);
+  void import();
 };
+}
 
 #endif

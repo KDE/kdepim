@@ -1,8 +1,8 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+                          FilterPlain.h  -  Plain mail import
                              -------------------
-    begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
+    begin                : Fri Jun 24 2002
+    copyright            : (C) 2002 by Laurence Anderson
     email                : l.d.anderson@warwick.ac.uk
  ***************************************************************************/
 
@@ -15,38 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#ifndef FILTER_PLAIN_HXX
+#define FILTER_PLAIN_HXX
 
-#include "ui_kselfilterpagedlg.h"
-#include <QList>
+#include "filters.h"
+#include "filters.h"
+#include "mailimporter_export.h"
+/**
+ *imports Plain text messages into KMail
+ *@author laurence
+ */
 namespace MailImporter {
-  class Filter;
-}
-
-
-class KSelFilterPageDlg : public QWidget, public Ui::KSelFilterPageDlg
+class MAILIMPORTER_EXPORT FilterPlain : public Filter
 {
 public:
-  KSelFilterPageDlg( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
+  explicit FilterPlain();
+  ~FilterPlain();
 
-
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
-public:
-	KSelFilterPage(QWidget *parent=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(MailImporter::Filter *f);
-	MailImporter::Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked() const;
-private:
-	QList<MailImporter::Filter*> mFilterList;
-private slots:
-	void filterSelected(int i);
+  void import();
 };
+}
 
 #endif

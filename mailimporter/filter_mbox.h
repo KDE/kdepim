@@ -1,7 +1,7 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+                          filter_mbox.h  -  mbox mail import
                              -------------------
-    begin                : Fri Jan 17 2003
+    begin                : Sat Apr 5 2003
     copyright            : (C) 2003 by Laurence Anderson
     email                : l.d.anderson@warwick.ac.uk
  ***************************************************************************/
@@ -15,38 +15,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#ifndef FILTER_MBOX_HXX
+#define FILTER_MBOX_HXX
 
-#include "ui_kselfilterpagedlg.h"
-#include <QList>
+#include "filters.h"
+#include "filters.h"
+#include "mailimporter_export.h"
+
+/**
+ * imports mbox archives messages into KMail
+ * @author Laurence Anderson
+ */
 namespace MailImporter {
-  class Filter;
-}
-
-
-class KSelFilterPageDlg : public QWidget, public Ui::KSelFilterPageDlg
+class MAILIMPORTER_EXPORT FilterMBox : public Filter
 {
 public:
-  KSelFilterPageDlg( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
+    FilterMBox();
+    ~FilterMBox();
 
-
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
-public:
-	KSelFilterPage(QWidget *parent=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(MailImporter::Filter *f);
-	MailImporter::Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked() const;
-private:
-	QList<MailImporter::Filter*> mFilterList;
-private slots:
-	void filterSelected(int i);
+    void import();
 };
+}
 
 #endif

@@ -5,30 +5,14 @@ add_subdirectory( pics )
 ########### next target ###############
 
 set(kmailcvt_SRCS
-  filterinfo.cpp
+  kmailcvtfilterinfogui.cpp
   kimportpage.cpp
   kselfilterpage.cpp
-  filters.cpp
-  filter_oe.cpp
   kmailcvt.cpp
   main.cpp
-  filter_pmail.cpp
-  filter_plain.cpp
-  filter_outlook.cpp
-  filter_mbox.cpp
-  filter_evolution.cpp
-  filter_mailapp.cpp
-  filter_evolution_v2.cpp
-  filter_evolution_v3.cpp
-  filter_opera.cpp
-  filter_thunderbird.cpp
-  filter_kmail_maildir.cpp
-  filter_sylpheed.cpp
-  filter_thebat.cpp
-  filter_lnotes.cpp
-  filter_kmail_archive.cpp )
+)
 
-include_directories(${Boost_INCLUDE_DIR} )
+include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
@@ -43,6 +27,7 @@ target_link_libraries(kmailcvt
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   messagecore
+  mailimporter
 )
 
 install(TARGETS kmailcvt  ${INSTALL_TARGETS_DEFAULT_ARGS} )
