@@ -24,29 +24,20 @@ namespace MailImporter {
   class Filter;
 }
 
-
-class KSelFilterPageDlg : public QWidget, public Ui::KSelFilterPageDlg
-{
+class KSelFilterPage : public QWidget  {
+  Q_OBJECT
 public:
-  KSelFilterPageDlg( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
-
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
-public:
-	KSelFilterPage(QWidget *parent=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(MailImporter::Filter *f);
-	MailImporter::Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked() const;
+  explicit KSelFilterPage(QWidget *parent=0);
+  ~KSelFilterPage();
+  void  addFilter(MailImporter::Filter *f);
+  MailImporter::Filter *getSelectedFilter(void);
+  bool removeDupMsg_checked() const;
+  Ui::KSelFilterPageDlg *mWidget;  
 private:
-	QList<MailImporter::Filter*> mFilterList;
+  QList<MailImporter::Filter*> mFilterList;
+  
 private slots:
-	void filterSelected(int i);
+  void filterSelected(int i);
 };
 
 #endif

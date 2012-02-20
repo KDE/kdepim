@@ -25,23 +25,23 @@ class KImportPage;
 
 /** KMailCVT is the base class of the project */
 class KMailCVT : public KAssistantDialog {
-	Q_OBJECT
+  Q_OBJECT
 public:
-	KMailCVT(QWidget* parent=0);
-	~KMailCVT();
+  KMailCVT(QWidget* parent=0);
+  ~KMailCVT();
 
-	virtual void next();
-	virtual void reject();
-public slots:
-	void help();
+  virtual void next();
+  virtual void reject();
+            public slots:
+            void help();
 
-private slots:
-        void collectionChanged( const Akonadi::Collection& selectedCollection );
+             private slots:
+             void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
-	KPageWidgetItem* page1;
-	KPageWidgetItem* page2;
-	KSelFilterPage *selfilterpage;
-	KImportPage *importpage;
+  KPageWidgetItem* page1;
+  KPageWidgetItem* page2;
+  KSelFilterPage *selfilterpage;
+  KImportPage *importpage;
 
 };
 
