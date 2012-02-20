@@ -33,6 +33,8 @@ FilterInfo::FilterInfo()
 
 FilterInfo::~FilterInfo()
 {
+  delete m_filterInfoGui;
+  m_filterInfoGui = 0;
 }
 
 void FilterInfo::setFilterInfoGui( FilterInfoGui *filterinfogui )
