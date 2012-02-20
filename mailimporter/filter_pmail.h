@@ -23,6 +23,7 @@
 #include "filters.h"
 #include "filters.h"
 #include "mailimporter_export.h"
+#include "mailimporter_utils.h"
 namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterPMail : public Filter
 {
