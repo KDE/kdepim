@@ -70,6 +70,7 @@ set(krss_LIB_HDRS
    person.h
    category.h
    feeditemmodel.h 
+   rssitem.h  #TODO review if rssitem.h should be private
 )
 
 set(krss_UI_LIB_HDRS
@@ -79,7 +80,6 @@ set(krss_UI_LIB_HDRS
 )
 
 set(krss_PRIVATE_LIB_HDRS
-    rssitem.h
     rssitemserializer.h
 )
 
