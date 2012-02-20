@@ -60,7 +60,7 @@ void FilterPMail::import()
   kDebug() <<"Count is" << totalFiles;
 
   if(!(folderParsed = parseFolderMatrix(chosenDir))) {
-    filterInfo()->addInfoLogEntry(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
+    filterInfo()->addErrorLogEntry(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
   }
 
   filterInfo()->addInfoLogEntry(i18n("Importing new mail files ('.cnm')..."));

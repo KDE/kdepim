@@ -120,7 +120,7 @@ void FilterOE::importMailBox( const QString& fileName)
     filterInfo()->setFrom(mailfileinfo.fileName());
 
     if (!mailfile.open(QIODevice::ReadOnly)) {
-        filterInfo()->addInfoLogEntry(i18n("Unable to open mailbox %1", fileName));
+        filterInfo()->addErrorLogEntry(i18n("Unable to open mailbox %1", fileName));
         return;
     }
     QDataStream mailbox(&mailfile);
