@@ -21,9 +21,20 @@
 #ifndef __MESSAGELIST_CORE_FILTER_H__
 #define __MESSAGELIST_CORE_FILTER_H__
 
-#include <QString>
+#include <QtCore/QObject>
+#include <QtCore/QSet>
+#include <QtCore/QString>
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
+#include <KUrl>
+#include <Nepomuk/Query/Query>
+#include <Nepomuk/Query/Result>
+
+namespace Nepomuk {
+  namespace Query {
+    class QueryServiceClient;
+  }
+}
 
 namespace MessageList
 {
@@ -37,8 +48,10 @@ class MessageItem;
  * This class is responsable of matching messages that should be displayed
  * in the View. It's used mainly by Model and Widget.
  */
-class Filter
+class Filter : public QObject
 {
+  Q_OBJECT
+
 public:
   Filter();
 
@@ -66,6 +79,11 @@ public:
    { mStatus = status; };
 
   /**
+   * Sets the current folder of this filter.
+   */
+  void setCurrentFolder( const KUrl &url );
+
+  /**
    * Returns the currently set search string.
    */
   const QString & searchString() const
@@ -74,8 +92,7 @@ public:
   /**
    * Sets the search string for this filter.
    */
-  void setSearchString( const QString &search )
-   { mSearchString = search; };
+  void setSearchString( const QString &search );
 
   /**
    * Returns the currently set MessageItem::Tag id
@@ -99,6 +116,18 @@ public:
    * and it's useless to call match() that will always return true.
    */
   bool isEmpty() const;
+
+Q_SIGNALS:
+  void finished();
+
+private Q_SLOTS:
+  void newEntries( const QList<Nepomuk::Query::Result>& );
+  void finishedListing();
+
+private:
+  Nepomuk::Query::QueryServiceClient *mQueryClient;
+  QSet<qint64> mMatchingItemIds;
+  KUrl mCurrentFolder;
 };
 
 } // namespace Core

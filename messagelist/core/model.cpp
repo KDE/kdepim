@@ -353,7 +353,15 @@ void Model::setFilter( const Filter *filter )
 {
   d->mFilter = filter;
 
-  QList< Item * > * childList = d->mRootItem->childItems();
+  if (d->mFilter)
+    connect( d->mFilter, SIGNAL( finished() ), this, SLOT( slotApplyFilter() ) );
+
+  d->slotApplyFilter();
+}
+
+void ModelPrivate::slotApplyFilter()
+{
+  QList< Item * > * childList = mRootItem->childItems();
   if ( !childList )
     return;
 
@@ -362,7 +370,7 @@ void Model::setFilter( const Filter *filter )
   QApplication::setOverrideCursor( Qt::WaitCursor );
   QList< Item * >::ConstIterator end = childList->constEnd();
   for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
-    d->applyFilterToSubtree( *it, idx );
+    applyFilterToSubtree( *it, idx );
 
   QApplication::restoreOverrideCursor();
 }

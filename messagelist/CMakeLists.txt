@@ -102,6 +102,7 @@ target_link_libraries(messagelist
     ${KDEPIMLIBS_KMIME_LIBS}
     ${NEPOMUK_LIBRARIES}
     ${SOPRANO_LIBRARIES}
+    nepomukquery
     messagecore
     niefast_apps
 )
