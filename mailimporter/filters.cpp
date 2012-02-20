@@ -57,6 +57,7 @@ class Filter::Private
     : name( _name ),
       author( _author ),
       info( _info ),
+      count_duplicates( 0 ), 
       filterInfo( 0 )
     {
     }
@@ -68,13 +69,14 @@ class Filter::Private
   QString info;
   QMultiMap<QString, QString> messageFolderMessageIDMap;
   QMap<QString, Akonadi::Collection> messageFolderCollectionMap;
+  int count_duplicates; //to count all duplicate messages
+  
   MailImporter::FilterInfo *filterInfo;
 };
 
 Filter::Filter( const QString& name, const QString& author,
                 const QString& info )
-  : m_count_duplicates( 0 ),
-    d( new Private( name,author,info ) )
+  : d( new Private( name,author,info ) )
 {
 }
 
@@ -91,6 +93,16 @@ void Filter::setFilterInfo( FilterInfo* info )
 MailImporter::FilterInfo* Filter::filterInfo()
 {
   return d->filterInfo;
+}
+
+void Filter::setCountDuplicates( int countDuplicate )
+{
+  d->count_duplicates = countDuplicate;
+}
+
+int Filter::countDuplicates() const
+{
+  return d->count_duplicates;
 }
 
 
@@ -315,7 +327,7 @@ bool Filter::doAddMessage( const QString& folderName,
       if( !messageID.isEmpty() ) {
         // Check for duplicate.
         if( checkForDuplicates( messageID, mailFolder, folderName ) ) {
-          m_count_duplicates++;
+          d->count_duplicates++;
           return false;
         }
       }

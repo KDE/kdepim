@@ -44,7 +44,7 @@ FilterKMail_maildir::~FilterKMail_maildir()
 /** Recursive import of KMail maildir. */
 void FilterKMail_maildir::import()
 {
-  m_count_duplicates = 0;
+  setCountDuplicates(0);
   QString _homeDir = QDir::homePath();
 
   KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
@@ -82,8 +82,8 @@ void FilterKMail_maildir::import()
       }
     }
     filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
-    if (m_count_duplicates > 0) {
-      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+    if (countDuplicates() > 0) {
+      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
   }
   if (filterInfo()->shouldTerminate())

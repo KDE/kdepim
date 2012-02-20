@@ -48,6 +48,9 @@ public:
 
   MailImporter::FilterInfo* filterInfo();
 
+  void setCountDuplicates( int countDuplicate );
+  int countDuplicates() const;
+  
 protected:
 
   /**
@@ -87,8 +90,6 @@ protected:
   bool addMessage_fastImport( const QString& folder,
                               const QString& msgFile,
                               const QString& msgStatusFlags = QString());
-protected:
-  int m_count_duplicates; //to count all duplicate messages
   
 private: 
   bool doAddMessage( const QString& folderName,
