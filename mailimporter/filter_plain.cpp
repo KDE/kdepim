@@ -38,53 +38,53 @@ FilterPlain::~FilterPlain()
 void FilterPlain::import()
 {
   // Select directory containing plain text emails
-  const QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),m_filterInfo->parent());
+  const QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent());
   if (mailDir.isEmpty()) { // No directory selected
-    m_filterInfo->alert(i18n("No directory selected."));
+    filterInfo()->alert(i18n("No directory selected."));
     return;
   }
   QDir dir (mailDir);
   const QStringList files = dir.entryList(QStringList("*.[eE][mM][lL]")<<"*.[tT][xX][tT]"<<"*.[mM][sS][gG]", QDir::Files, QDir::Name);
   // Count total number of files to be processed
-  m_filterInfo->addLog(i18n("Counting files..."));
+  filterInfo()->addLog(i18n("Counting files..."));
   int totalFiles = files.count();
   int currentFile = 0;
   if ( files.isEmpty() ) {
-    m_filterInfo->addLog(i18n("No files found for import."));
+    filterInfo()->addLog(i18n("No files found for import."));
   } else {
-    m_filterInfo->addLog(i18n("Importing new mail files..."));
+    filterInfo()->addLog(i18n("Importing new mail files..."));
     QStringList::ConstIterator end( files.constEnd() );
     const QString destName = QString::fromLatin1( "PLAIN-%1" ).arg( dir.dirName() );
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
       const QString dirRealPath = dir.filePath(*mailFile);
-      m_filterInfo->setFrom(dirRealPath);
-      m_filterInfo->setTo(destName);
-      m_filterInfo->setCurrent(0);
+      filterInfo()->setFrom(dirRealPath);
+      filterInfo()->setTo(destName);
+      filterInfo()->setCurrent(0);
       /* comment by Danny Kukawka:
        * addMessage() == old function, need more time and check for duplicates
        * addMessage_fastImport == new function, faster and no check for duplicates
        */
-      if(m_filterInfo->removeDupMessage()) {
+      if(filterInfo()->removeDupMessage()) {
         if(! addMessage( destName, dirRealPath )) {
-          m_filterInfo->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
         }
       } else {
         if( ! addMessage_fastImport( destName, dirRealPath )) {
-          m_filterInfo->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
         }
       }
 
-      m_filterInfo->setCurrent(100);
-      m_filterInfo->setOverall(100 * ++currentFile/ totalFiles);
-      if ( m_filterInfo->shouldTerminate() ) break;
+      filterInfo()->setCurrent(100);
+      filterInfo()->setOverall(100 * ++currentFile/ totalFiles);
+      if ( filterInfo()->shouldTerminate() ) break;
     }
 
-    m_filterInfo->addLog( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
     if (m_count_duplicates > 0) {
-      m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
     }
-    if (m_filterInfo->shouldTerminate())
-      m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+    if (filterInfo()->shouldTerminate())
+      filterInfo()->addLog( i18n("Finished import, canceled by user."));
   }
   m_count_duplicates = 0;
 }

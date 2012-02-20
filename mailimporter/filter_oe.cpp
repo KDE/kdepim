@@ -54,16 +54,16 @@ FilterOE::~FilterOE()
 void FilterOE::import()
 {
   // Select directory containing plain text emails
-  mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),m_filterInfo->parent());
+  mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent());
   if (mailDir.isEmpty()) { // No directory selected
-    m_filterInfo->alert(i18n("No directory selected."));
+    filterInfo()->alert(i18n("No directory selected."));
     return;
   }
 
   QDir dir (mailDir);
   QStringList files = dir.entryList(QStringList("*.[dDmM][bB][xX]"), QDir::Files, QDir::Name);
   if (files.isEmpty()) {
-    m_filterInfo->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir));
+    filterInfo()->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir));
     return;
   }
 
@@ -73,13 +73,13 @@ void FilterOE::import()
   count0x84 = 0;
   parsedFolder = false;
 
-  m_filterInfo->setOverall(0);
+  filterInfo()->setOverall(0);
 
   /** search the folderfile to recreate folder struct */
     
   for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
     if(*mailFile == QLatin1String( "Folders.dbx" )) {
-      m_filterInfo->addLog(i18n("Import folder structure..."));
+      filterInfo()->addLog(i18n("Import folder structure..."));
       importMailBox(dir.filePath(*mailFile));
       if(!folderStructure.isEmpty())
         parsedFolder = true;
@@ -93,17 +93,17 @@ void FilterOE::import()
   int n=0;
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
-    if ( m_filterInfo->shouldTerminate() )
+    if ( filterInfo()->shouldTerminate() )
       break;
     importMailBox(dir.filePath(*mailFile));
-    m_filterInfo->setOverall(100 * ++n  / files.count());
+    filterInfo()->setOverall(100 * ++n  / files.count());
   }
 
-  m_filterInfo->setOverall(100);
-  m_filterInfo->setCurrent(100);
-  m_filterInfo->addLog(i18n("Finished importing Outlook Express emails"));
-  if (m_filterInfo->shouldTerminate())
-    m_filterInfo->addLog( i18n("Finished import, canceled by user."));
+  filterInfo()->setOverall(100);
+  filterInfo()->setCurrent(100);
+  filterInfo()->addLog(i18n("Finished importing Outlook Express emails"));
+  if (filterInfo()->shouldTerminate())
+    filterInfo()->addLog( i18n("Finished import, canceled by user."));
 
   kDebug() <<"total emails in current file:" << totalEmails;
   kDebug() <<"0x84 Mails:" << count0x84;
@@ -117,10 +117,10 @@ void FilterOE::importMailBox( const QString& fileName)
     QString _nameOfFile = fileName;
     _nameOfFile.remove( mailDir );
     _nameOfFile.remove( '/' );
-    m_filterInfo->setFrom(mailfileinfo.fileName());
+    filterInfo()->setFrom(mailfileinfo.fileName());
 
     if (!mailfile.open(QIODevice::ReadOnly)) {
-        m_filterInfo->addLog(i18n("Unable to open mailbox %1", fileName));
+        filterInfo()->addLog(i18n("Unable to open mailbox %1", fileName));
         return;
     }
     QDataStream mailbox(&mailfile);
@@ -131,8 +131,8 @@ void FilterOE::importMailBox( const QString& fileName)
     mailbox >> sig_block1 >> sig_block2;
     if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
         folderName = "OE-Import/" + mailfileinfo.completeBaseName();
-        m_filterInfo->addLog(i18n("Importing OE4 Mailbox %1", QString("../") + _nameOfFile));
-        m_filterInfo->setTo(folderName);
+        filterInfo()->addLog(i18n("Importing OE4 Mailbox %1", QString("../") + _nameOfFile));
+        filterInfo()->setTo(folderName);
         mbxImport(mailbox);
         return;
     } else {
@@ -145,13 +145,13 @@ void FilterOE::importMailBox( const QString& fileName)
                     const QString _tmpFolder = getFolderName(_nameOfFile);
                     if(!_tmpFolder.isEmpty()) folderName = "OE-Import/" + _tmpFolder;
                 }
-                m_filterInfo->addLog(i18n("Importing OE5+ Mailbox %1", QString("../") + _nameOfFile));
-                m_filterInfo->setTo(folderName);
+                filterInfo()->addLog(i18n("Importing OE5+ Mailbox %1", QString("../") + _nameOfFile));
+                filterInfo()->setTo(folderName);
                 dbxImport(mailbox);
                 return;
             } else if (sig_block2 == OE5_FOLDER_SIG_2) {
                 if(!parsedFolder) {
-                    m_filterInfo->addLog(i18n("Importing OE5+ Folder file %1", QString("../") + _nameOfFile));
+                    filterInfo()->addLog(i18n("Importing OE5+ Folder file %1", QString("../") + _nameOfFile));
                     currentIsFolderFile = true;
                     dbxImport(mailbox);
                     currentIsFolderFile = false;
@@ -160,7 +160,7 @@ void FilterOE::importMailBox( const QString& fileName)
             }
         }
     }
-    // m_filterInfo->addLog(i18n("File %1 does not seem to be an Outlook Express mailbox").arg("../" + _nameOfFile));
+    // filterInfo()->addLog(i18n("File %1 does not seem to be an Outlook Express mailbox").arg("../" + _nameOfFile));
 }
 
 /* ------------------- MBX support ------------------- */
@@ -202,12 +202,12 @@ void FilterOE::mbxImport( QDataStream& ds)
      * addMessage() == old function, need more time and check for duplicates
      * addMessage_fastImport == new function, faster and no check for duplicates
      */
-    if(m_filterInfo->removeDupMessage())
+    if(filterInfo()->removeDupMessage())
       addMessage( folderName, tmp.fileName() );
     else
       addMessage_fastImport( folderName, tmp.fileName() );
 
-    if(m_filterInfo->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) return;
   }
 }
 
@@ -235,7 +235,7 @@ void FilterOE::dbxImport( QDataStream& ds)
 void FilterOE::dbxReadIndex( QDataStream& ds, int filePos)
 {
 
-  if(m_filterInfo->shouldTerminate()) return;
+  if(filterInfo()->shouldTerminate()) return;
   quint32 self, unknown, nextIndexPtr, parent, indexCount;
   quint8 unknown2, ptrCount;
   quint16 unknown3;
@@ -248,7 +248,7 @@ void FilterOE::dbxReadIndex( QDataStream& ds, int filePos)
 
   kDebug() <<"This index has" << (int) ptrCount <<" data pointers";
   for (int count = 0; count < ptrCount; count++) {
-    if(m_filterInfo->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) return;
     quint32 dataIndexPtr, anotherIndexPtr, anotherIndexCount; // _dbx_indexstruct
     ds >> dataIndexPtr >> anotherIndexPtr >> anotherIndexCount;
 
@@ -283,7 +283,7 @@ void FilterOE::dbxReadDataBlock(QDataStream& ds, int filePos)
   kDebug() <<"Data block has" << (int) count <<" elements";
 
   for (int c = 0; c < count; c++) {
-    if(m_filterInfo->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) return;
     quint8 type;  // _dbx_email_pointerstruct
     quint32 value; // Actually 24 bit
 
@@ -334,7 +334,7 @@ void FilterOE::dbxReadDataBlock(QDataStream& ds, int filePos)
 
 void FilterOE::dbxReadEmail(QDataStream& ds, int filePos)
 {
-  if(m_filterInfo->shouldTerminate()) return;
+  if(filterInfo()->shouldTerminate()) return;
   quint32 self, nextAddressOffset, nextAddress=0;
   quint16 blockSize;
   quint8 intCount, unknown;
@@ -360,14 +360,14 @@ void FilterOE::dbxReadEmail(QDataStream& ds, int filePos)
   tmp.flush();
 
   if(!_break) {
-    if(m_filterInfo->removeDupMessage())
+    if(filterInfo()->removeDupMessage())
       addMessage( folderName, tmp.fileName() );
     else
       addMessage_fastImport( folderName, tmp.fileName() );
 
     currentEmail++;
     int currentPercentage = (int) ( ( (float) currentEmail / totalEmails ) * 100 );
-    m_filterInfo->setCurrent(currentPercentage);
+    filterInfo()->setCurrent(currentPercentage);
     ds.device()->seek(wasAt);
   }
 }

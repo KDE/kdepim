@@ -64,15 +64,15 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
   int overall_status = 0;
   int totalFiles = files.count();
   int currentFile = 1;
-  m_filterInfo->addLog(i18n("Importing new mail files..."));
+  filterInfo()->addLog(i18n("Importing new mail files..."));
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
-    m_filterInfo->setCurrent(0);
+    filterInfo()->setCurrent(0);
     QFile operaArchiv( importDir.filePath(*mailFile) );
     if (! operaArchiv.open( QIODevice::ReadOnly ) ) {
-      m_filterInfo->alert( i18n("Unable to open %1, skipping", *mailFile ) );
+      filterInfo()->alert( i18n("Unable to open %1, skipping", *mailFile ) );
     } else {
-      m_filterInfo->addLog( i18n("Importing emails from %1...", *mailFile ) );
+      filterInfo()->addLog( i18n("Importing emails from %1...", *mailFile ) );
       QFileInfo filenameInfo( importDir.filePath(*mailFile) );
       QString folderName;
       if ( accountName.isEmpty() )
@@ -80,8 +80,8 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
       else
         folderName = QString( "OPERA-" + accountName );
 
-      m_filterInfo->setFrom( *mailFile );
-      m_filterInfo->setTo( folderName );
+      filterInfo()->setFrom( *mailFile );
+      filterInfo()->setTo( folderName );
 
       QByteArray input(MAX_LINE,'\0');
       long l = 0;
@@ -112,31 +112,31 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
         tmp.flush();
         first_msg = false;
 
-        if(m_filterInfo->removeDupMessage())
+        if(filterInfo()->removeDupMessage())
           addMessage( folderName, tmp.fileName() );
         else
           addMessage_fastImport( folderName, tmp.fileName() );
         int currentPercentage = (int) ( ( (float) operaArchiv.pos() / filenameInfo.size() ) * 100 );
-        m_filterInfo->setCurrent( currentPercentage );
+        filterInfo()->setCurrent( currentPercentage );
 
         if (currentFile == 1)
           overall_status = (int) ( currentPercentage * ( (float) currentFile / totalFiles ) );
         else
           overall_status = (int)(((currentFile-1)*(100.0/(float)totalFiles))+(currentPercentage*(1.0/(float)totalFiles)));
 
-        m_filterInfo->setOverall( overall_status );
-        if ( m_filterInfo->shouldTerminate() ) break;
+        filterInfo()->setOverall( overall_status );
+        if ( filterInfo()->shouldTerminate() ) break;
       }
 
-      m_filterInfo->addLog( i18n("Finished importing emails from %1", *mailFile ));
+      filterInfo()->addLog( i18n("Finished importing emails from %1", *mailFile ));
       if (m_count_duplicates > 0) {
-        m_filterInfo->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+        filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
       }
       currentFile++;
       m_count_duplicates = 0;
       operaArchiv.close();
     }
-    if ( m_filterInfo->shouldTerminate() ) break;
+    if ( filterInfo()->shouldTerminate() ) break;
   }
 
 }
@@ -150,7 +150,7 @@ void FilterOpera::import()
     startdir = QDir::homePath();
   }
 
-  //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), m_filterInfo->parent());
+  //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), filterInfo()->parent());
   KFileDialog *kfd = new KFileDialog( startdir, "", 0);
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
   kfd->exec();
@@ -158,7 +158,7 @@ void FilterOpera::import()
   delete kfd;
 
   if (operaDir.isEmpty()) {
-    m_filterInfo->alert(i18n("No directory selected."));
+    filterInfo()->alert(i18n("No directory selected."));
     return;
   }
   /**
@@ -166,15 +166,15 @@ void FilterOpera::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + '/')) {
-    m_filterInfo->addLog(i18n("No files found for import."));
+    filterInfo()->addLog(i18n("No files found for import."));
   } else {
-    m_filterInfo->setOverall(0);
+    filterInfo()->setOverall(0);
 
     QDir importDir (operaDir);
     const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
 
     // Count total number of files to be processed
-    m_filterInfo->addLog(i18n("Counting files..."));
+    filterInfo()->addLog(i18n("Counting files..."));
 
     if(!files.isEmpty()) {
       importBox(importDir, files);
@@ -183,9 +183,9 @@ void FilterOpera::import()
       importRecursive( importDir);
     }
   }
-  if (m_filterInfo->shouldTerminate())
-    m_filterInfo->addLog( i18n("Finished import, canceled by user."));
-  m_filterInfo->setCurrent(100);
-  m_filterInfo->setOverall(100);
+  if (filterInfo()->shouldTerminate())
+    filterInfo()->addLog( i18n("Finished import, canceled by user."));
+  filterInfo()->setCurrent(100);
+  filterInfo()->setOverall(100);
 }
 

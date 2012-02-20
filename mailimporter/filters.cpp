@@ -74,7 +74,6 @@ class Filter::Private
 Filter::Filter( const QString& name, const QString& author,
                 const QString& info )
   : m_count_duplicates( 0 ),
-    m_filterInfo( 0 ),
     d( new Private( name,author,info ) )
 {
 }
@@ -89,7 +88,7 @@ void Filter::setFilterInfo( FilterInfo* info )
   d->filterInfo = info;
 }
 
-MailImporter::FilterInfo* filterInfo()
+MailImporter::FilterInfo* Filter::filterInfo()
 {
   return d->filterInfo;
 }
