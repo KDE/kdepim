@@ -55,7 +55,7 @@ void FilterOutlook::import()
   const QStringList files = importDir.entryList(QStringList("*.[pP][sS][tT]"), QDir::Files, QDir::Name);
   for ( QStringList::ConstIterator pstFile = files.constBegin(); pstFile != files.constEnd(); ++pstFile) {
     filterInfo()->addLog( i18n("Importing emails from %1...", *pstFile ) );
-    filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+    filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     filterInfo()->alert( i18n("Unable to open %1, skipping", *pstFile ) );
   }
 }

@@ -43,7 +43,7 @@ FilterEvolution_v3::~FilterEvolution_v3()
 /** Recursive import of KMail maildir. */
 void FilterEvolution_v3::import()
 {
-  m_count_duplicates = 0;
+  setCountDuplicates(0);
   QString evolDir = QDir::homePath() + "/.local/share/evolution/mail/local/";
   QDir d( evolDir );
   if ( !d.exists() ) {
@@ -88,8 +88,8 @@ void FilterEvolution_v3::import()
 
     filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
 
-    if (m_count_duplicates > 0) {
-        filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", m_count_duplicates));
+    if (countDuplicates() > 0) {
+        filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
 
     if (filterInfo()->shouldTerminate())
