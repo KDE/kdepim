@@ -53,20 +53,20 @@ using namespace MailImporter;
 class Filter::Private
 {
   public:
-  Private(const QString& name, const QString& author, const QString& info)
-    : m_name( name ),
-      m_author( author ),
-      m_info( info )
+  Private(const QString& _name, const QString& _author, const QString& _info)
+    : name( _name ),
+      author( _author ),
+      info( _info )
     {
     }
   ~Private()
     {
     }
-  QString m_name;
-  QString m_author;
-  QString m_info;
-  QMultiMap<QString, QString> m_messageFolderMessageIDMap;
-  QMap<QString, Akonadi::Collection> m_messageFolderCollectionMap;
+  QString name;
+  QString author;
+  QString info;
+  QMultiMap<QString, QString> messageFolderMessageIDMap;
+  QMap<QString, Akonadi::Collection> messageFolderCollectionMap;
 
 };
 
@@ -115,17 +115,17 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
 
 QString Filter::author() const
 {
-  return d->m_author;
+  return d->author;
 }
 
 QString Filter::name() const
 {
-  return d->m_name;
+  return d->name;
 }
 
 QString Filter::info() const
 {
-  return d->m_info;
+  return d->info;
 }
 
 
@@ -133,8 +133,8 @@ QString Filter::info() const
 Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
 {
   // Return an already created collection:
-  QMap<QString, Akonadi::Collection>::const_iterator end(  d->m_messageFolderCollectionMap.constEnd() );
-  for( QMap<QString, Akonadi::Collection>::const_iterator it = d->m_messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
+  QMap<QString, Akonadi::Collection>::const_iterator end(  d->messageFolderCollectionMap.constEnd() );
+  for( QMap<QString, Akonadi::Collection>::const_iterator it = d->messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
     if( it.key() ==  folderParseString )
       return it.value();
   }
@@ -148,14 +148,14 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
   // Create each folder on the folder list and add it the map.
   foreach( const QString &folder, folderList ) {
     if( isFirst ) {
-      d->m_messageFolderCollectionMap[folder] = addSubCollection( m_filterInfo->rootCollection(), folder );
+      d->messageFolderCollectionMap[folder] = addSubCollection( m_filterInfo->rootCollection(), folder );
       folderBuilder = folder;
-      lastCollection = d->m_messageFolderCollectionMap[folder];
+      lastCollection = d->messageFolderCollectionMap[folder];
       isFirst = false;
     } else {
       folderBuilder += '/' + folder;
-      d->m_messageFolderCollectionMap[folderBuilder] = addSubCollection( lastCollection, folder );
-      lastCollection = d->m_messageFolderCollectionMap[folderBuilder];
+      d->messageFolderCollectionMap[folderBuilder] = addSubCollection( lastCollection, folder );
+      lastCollection = d->messageFolderCollectionMap[folderBuilder];
     }
   }
 
@@ -202,8 +202,8 @@ bool Filter::checkForDuplicates ( const QString& msgID,
   bool folderFound = false;
 
   // Check if the contents of this collection have already been found.
-  QMultiMap<QString, QString>::const_iterator end( d->m_messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->m_messageFolderMessageIDMap.constBegin();
+  QMultiMap<QString, QString>::const_iterator end( d->messageFolderMessageIDMap.constEnd() );
+  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();
        it != end; it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
@@ -230,7 +230,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
             const KMime::Headers::Base* messageID = message->messageID( false );
             if( messageID ) {
               if( !messageID->isEmpty() ) {
-                d->m_messageFolderMessageIDMap.insert( messageFolder, messageID->asUnicodeString() );
+                d->messageFolderMessageIDMap.insert( messageFolder, messageID->asUnicodeString() );
               }
             }
           }
@@ -240,8 +240,8 @@ bool Filter::checkForDuplicates ( const QString& msgID,
   }
 
   // Check if this message has a duplicate
-  QMultiMap<QString, QString>::const_iterator endMsgID( d->m_messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->m_messageFolderMessageIDMap.constBegin();
+  QMultiMap<QString, QString>::const_iterator endMsgID( d->messageFolderMessageIDMap.constEnd() );
+  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();
        it !=endMsgID ; it++ ) {
     if( it.key() == messageFolder &&
         it.value() == msgID )
@@ -249,7 +249,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
   }
 
   // The message isn't a duplicate, but add it to the map for checking in the future.
-  d->m_messageFolderMessageIDMap.insert( messageFolder, msgID );
+  d->messageFolderMessageIDMap.insert( messageFolder, msgID );
   return false;
 }
 
