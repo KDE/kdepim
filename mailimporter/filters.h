@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
 
 #ifndef FILTERS_HXX
 #define FILTERS_HXX
@@ -45,6 +46,7 @@ public:
 
   void setFilterInfo( MailImporter::FilterInfo* info );
 
+  MailImporter::FilterInfo* filterInfo();
 
 protected:
 
@@ -87,7 +89,6 @@ protected:
                               const QString& msgStatusFlags = QString());
 protected:
   int m_count_duplicates; //to count all duplicate messages
-  MailImporter::FilterInfo *m_filterInfo;
   
 private: 
   bool doAddMessage( const QString& folderName,

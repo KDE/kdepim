@@ -56,7 +56,8 @@ class Filter::Private
   Private(const QString& _name, const QString& _author, const QString& _info)
     : name( _name ),
       author( _author ),
-      info( _info )
+      info( _info ),
+      filterInfo( 0 )
     {
     }
   ~Private()
@@ -67,7 +68,7 @@ class Filter::Private
   QString info;
   QMultiMap<QString, QString> messageFolderMessageIDMap;
   QMap<QString, Akonadi::Collection> messageFolderCollectionMap;
-
+  MailImporter::FilterInfo *filterInfo;
 };
 
 Filter::Filter( const QString& name, const QString& author,
@@ -85,8 +86,14 @@ Filter::~Filter()
 
 void Filter::setFilterInfo( FilterInfo* info )
 {
-  m_filterInfo = info;
+  d->filterInfo = info;
 }
+
+MailImporter::FilterInfo* filterInfo()
+{
+  return d->filterInfo;
+}
+
 
 bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
                                 const KMime::Message::Ptr& message )
@@ -106,7 +113,7 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
   item.setPayload<KMime::Message::Ptr>( message );
   Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
   if( !job->exec() ) {
-    m_filterInfo->alert( i18n( "<b>Error:</b> Could not add message to folder %1. Reason: %2",
+    d->filterInfo->alert( i18n( "<b>Error:</b> Could not add message to folder %1. Reason: %2",
 		       collection.name(), job->errorString() ) );
     return false;
   }
@@ -148,7 +155,7 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
   // Create each folder on the folder list and add it the map.
   foreach( const QString &folder, folderList ) {
     if( isFirst ) {
-      d->messageFolderCollectionMap[folder] = addSubCollection( m_filterInfo->rootCollection(), folder );
+      d->messageFolderCollectionMap[folder] = addSubCollection( d->filterInfo->rootCollection(), folder );
       folderBuilder = folder;
       lastCollection = d->messageFolderCollectionMap[folder];
       isFirst = false;
@@ -169,7 +176,7 @@ Akonadi::Collection Filter::addSubCollection( const Akonadi::Collection &baseCol
   Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob( baseCollection,
 									   Akonadi::CollectionFetchJob::FirstLevel);
   if( !fetchJob->exec() ) {
-    m_filterInfo->alert( i18n( "<b>Warning:</b> Could not check that the folder already exists. Reason: %1",
+    d->filterInfo->alert( i18n( "<b>Warning:</b> Could not check that the folder already exists. Reason: %1",
 		       fetchJob->errorString() ) );
     return Akonadi::Collection();
   }
@@ -187,7 +194,7 @@ Akonadi::Collection Filter::addSubCollection( const Akonadi::Collection &baseCol
 
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
   if( !job->exec() ) {
-    m_filterInfo->alert( i18n("<b>Error:</b> Could not create folder. Reason: %1",
+    d->filterInfo->alert( i18n("<b>Error:</b> Could not create folder. Reason: %1",
 		 job->errorString() ) );
     return Akonadi::Collection();
   }
@@ -217,12 +224,12 @@ bool Filter::checkForDuplicates ( const QString& msgID,
       Akonadi::ItemFetchJob job( msgCollection );
       job.fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
       if( !job.exec() ) {
-        m_filterInfo->addLog( i18n( "<b>Warning:</b> Could not fetch mail in folder %1. Reason: %2"
+        d->filterInfo->addLog( i18n( "<b>Warning:</b> Could not fetch mail in folder %1. Reason: %2"
         " You may have duplicate messages.", messageFolder, job.errorString() ) );
       } else {
         foreach( const Akonadi::Item& messageItem, job.items() ) {
           if( !messageItem.isValid() ) {
-            m_filterInfo->addLog( i18n( "<b>Warning:</b> Got an invalid message in folder %1.", messageFolder ) );
+            d->filterInfo->addLog( i18n( "<b>Warning:</b> Got an invalid message in folder %1.", messageFolder ) );
           } else {
             if( !messageItem.hasPayload<KMime::Message::Ptr>() )
               continue;
@@ -291,7 +298,7 @@ bool Filter::doAddMessage( const QString& folderName,
     const QByteArray msgText =
       KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
     if( msgText.isEmpty() ) {
-      m_filterInfo->addLog( i18n( "Error: failed to read temporary file at %1", msgPath ) );
+      d->filterInfo->addLog( i18n( "Error: failed to read temporary file at %1", msgPath ) );
       return false;
     }
 
@@ -319,8 +326,8 @@ bool Filter::doAddMessage( const QString& folderName,
     if( mailFolder.isValid() ) {
       addAkonadiMessage( mailFolder, newMessage );
     } else {
-      m_filterInfo->alert( i18n( "<b>Warning:</b> Got a bad message folder, adding to root folder." ) );
-      addAkonadiMessage( m_filterInfo->rootCollection(), newMessage );
+      d->filterInfo->alert( i18n( "<b>Warning:</b> Got a bad message folder, adding to root folder." ) );
+      addAkonadiMessage( d->filterInfo->rootCollection(), newMessage );
     }
   }
   return true;
