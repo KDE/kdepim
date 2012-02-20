@@ -3,6 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libksieve )
 add_subdirectory( tests )
 
 set(ksieveui_LIB_SRCS
+    sievelinenumberarea.cpp
     managesievescriptsdialog.cpp
     sievedebugdialog.cpp
     util.cpp

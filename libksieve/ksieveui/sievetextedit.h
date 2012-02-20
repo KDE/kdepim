@@ -22,27 +22,37 @@
 
 #include "ksieveui_export.h"
 
-#include <KTextEdit>
+//#include <KTextEdit>
+#include <QPlainTextEdit>
 class QCompleter;
 
 namespace KSieveUi {
+class SieveLineNumberArea;
 
-class KSIEVEUI_EXPORT SieveTextEdit : public KTextEdit
+class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 {
   Q_OBJECT
 public:
   explicit SieveTextEdit( QWidget *parent );
   virtual ~SieveTextEdit();
-
+  
+  void lineNumberAreaPaintEvent(QPaintEvent *event);
+  int lineNumberAreaWidth();
+  
 
 protected slots:
   void slotInsertCompletion( const QString& );
   QString wordUnderCursor();
+  void updateLineNumberAreaWidth(int newBlockCount);
+  void updateLineNumberArea(const QRect &, int);
+
 protected:
   void initCompleter();
-  void keyPressEvent(QKeyEvent* e);  
+  void keyPressEvent(QKeyEvent* e);
+  void resizeEvent(QResizeEvent *event);
 private:
   QCompleter *m_completer;
+  SieveLineNumberArea *m_sieveLineNumberArea;
 };
 
 }
