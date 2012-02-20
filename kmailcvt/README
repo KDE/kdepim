@@ -10,9 +10,9 @@ that is no longer necessary, KMailCVT is independent of KMail.
 Writing a filter
 ----------------
 
-...is very easy. Create two files filter_myformat.cxx and filter_myformat.hxx
+...is very easy. Create two files filter_myformat.cpp and filter_myformat.h
 and add "filter_myformat.cxx" to the end of the kmailcvt_SRCS line in
-CMakeLists.txt and "filter_myformat.cxx filter_myformat.hxx" . 
+CMakeLists.txt and "filter_myformat.cpp filter_myformat.h" ../mailimporter/
 Now run "cmake ../;" in
 your kdepim source directory.
 
