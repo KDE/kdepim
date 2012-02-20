@@ -70,7 +70,7 @@ void FilterEvolution_v2::import()
    * there should be no files and we surely import wrong files.
    */
   else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
-    filterInfo()->addLog(i18n("No files found for import."));
+    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
 
@@ -100,17 +100,17 @@ void FilterEvolution_v2::import()
              temp_mailfile.endsWith(QLatin1String(".ibex.index")) ||
              temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
       {
-        filterInfo()->addLog( i18n("Start import file %1...", temp_mailfile ) );
+        filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
         importMBox(mailDir + temp_mailfile , temp_mailfile, QString());
       }
     }
 
-    filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
     if(countDuplicates() > 0) {
-      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+      filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
     if (filterInfo()->shouldTerminate())
-      filterInfo()->addLog( i18n("Finished import, canceled by user."));
+      filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
   }
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
@@ -138,7 +138,7 @@ void FilterEvolution_v2::importDirContents(const QString& dirName, const QString
         if (!( temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
             temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
         {
-          filterInfo()->addLog( i18n("Start import file %1...", temp_mailfile ) );
+          filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
           importMBox((dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }

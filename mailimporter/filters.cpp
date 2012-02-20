@@ -235,12 +235,12 @@ bool Filter::checkForDuplicates ( const QString& msgID,
       Akonadi::ItemFetchJob job( msgCollection );
       job.fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
       if( !job.exec() ) {
-        d->filterInfo->addLog( i18n( "<b>Warning:</b> Could not fetch mail in folder %1. Reason: %2"
+        d->filterInfo->addInfoLogEntry( i18n( "<b>Warning:</b> Could not fetch mail in folder %1. Reason: %2"
         " You may have duplicate messages.", messageFolder, job.errorString() ) );
       } else {
         foreach( const Akonadi::Item& messageItem, job.items() ) {
           if( !messageItem.isValid() ) {
-            d->filterInfo->addLog( i18n( "<b>Warning:</b> Got an invalid message in folder %1.", messageFolder ) );
+            d->filterInfo->addInfoLogEntry( i18n( "<b>Warning:</b> Got an invalid message in folder %1.", messageFolder ) );
           } else {
             if( !messageItem.hasPayload<KMime::Message::Ptr>() )
               continue;
@@ -309,7 +309,7 @@ bool Filter::doAddMessage( const QString& folderName,
     const QByteArray msgText =
       KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
     if( msgText.isEmpty() ) {
-      d->filterInfo->addLog( i18n( "Error: failed to read temporary file at %1", msgPath ) );
+      d->filterInfo->addInfoLogEntry( i18n( "Error: failed to read temporary file at %1", msgPath ) );
       return false;
     }
 

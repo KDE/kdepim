@@ -74,7 +74,7 @@ void FilterMailApp::import()
       QString folderName(name[name.count() - 2]);
 
       filterInfo()->setCurrent(0);
-      filterInfo()->addLog( i18n("Importing emails from %1...", *filename ) );
+      filterInfo()->addInfoLogEntry( i18n("Importing emails from %1...", *filename ) );
       filterInfo()->setFrom( *filename );
       filterInfo()->setTo( folderName );
 
@@ -123,9 +123,9 @@ void FilterMailApp::import()
         if ( filterInfo()->shouldTerminate() ) break;
       }
 
-      filterInfo()->addLog( i18n("Finished importing emails from %1", *filename ) );
+      filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", *filename ) );
       if (countDuplicates() > 0) {
-        filterInfo()->addLog( i18np("1 duplicate message not imported to folder %2 in KMail", 
+        filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported to folder %2 in KMail", 
                                     "%1 duplicate messages not imported to folder %2 in KMail", countDuplicates(), folderName));
       }
       setCountDuplicates(0);
@@ -133,7 +133,7 @@ void FilterMailApp::import()
     }
   }
   if (filterInfo()->shouldTerminate())
-    filterInfo()->addLog( i18n("Finished import, canceled by user."));
+    filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
 }
 
 void FilterMailApp::traverseDirectory(const QString &dirName)

@@ -79,7 +79,7 @@ void FilterOE::import()
     
   for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
     if(*mailFile == QLatin1String( "Folders.dbx" )) {
-      filterInfo()->addLog(i18n("Import folder structure..."));
+      filterInfo()->addInfoLogEntry(i18n("Import folder structure..."));
       importMailBox(dir.filePath(*mailFile));
       if(!folderStructure.isEmpty())
         parsedFolder = true;
@@ -101,9 +101,9 @@ void FilterOE::import()
 
   filterInfo()->setOverall(100);
   filterInfo()->setCurrent(100);
-  filterInfo()->addLog(i18n("Finished importing Outlook Express emails"));
+  filterInfo()->addInfoLogEntry(i18n("Finished importing Outlook Express emails"));
   if (filterInfo()->shouldTerminate())
-    filterInfo()->addLog( i18n("Finished import, canceled by user."));
+    filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
 
   kDebug() <<"total emails in current file:" << totalEmails;
   kDebug() <<"0x84 Mails:" << count0x84;
@@ -120,7 +120,7 @@ void FilterOE::importMailBox( const QString& fileName)
     filterInfo()->setFrom(mailfileinfo.fileName());
 
     if (!mailfile.open(QIODevice::ReadOnly)) {
-        filterInfo()->addLog(i18n("Unable to open mailbox %1", fileName));
+        filterInfo()->addInfoLogEntry(i18n("Unable to open mailbox %1", fileName));
         return;
     }
     QDataStream mailbox(&mailfile);
@@ -131,7 +131,7 @@ void FilterOE::importMailBox( const QString& fileName)
     mailbox >> sig_block1 >> sig_block2;
     if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
         folderName = "OE-Import/" + mailfileinfo.completeBaseName();
-        filterInfo()->addLog(i18n("Importing OE4 Mailbox %1", QString("../") + _nameOfFile));
+        filterInfo()->addInfoLogEntry(i18n("Importing OE4 Mailbox %1", QString("../") + _nameOfFile));
         filterInfo()->setTo(folderName);
         mbxImport(mailbox);
         return;
@@ -145,13 +145,13 @@ void FilterOE::importMailBox( const QString& fileName)
                     const QString _tmpFolder = getFolderName(_nameOfFile);
                     if(!_tmpFolder.isEmpty()) folderName = "OE-Import/" + _tmpFolder;
                 }
-                filterInfo()->addLog(i18n("Importing OE5+ Mailbox %1", QString("../") + _nameOfFile));
+                filterInfo()->addInfoLogEntry(i18n("Importing OE5+ Mailbox %1", QString("../") + _nameOfFile));
                 filterInfo()->setTo(folderName);
                 dbxImport(mailbox);
                 return;
             } else if (sig_block2 == OE5_FOLDER_SIG_2) {
                 if(!parsedFolder) {
-                    filterInfo()->addLog(i18n("Importing OE5+ Folder file %1", QString("../") + _nameOfFile));
+                    filterInfo()->addInfoLogEntry(i18n("Importing OE5+ Folder file %1", QString("../") + _nameOfFile));
                     currentIsFolderFile = true;
                     dbxImport(mailbox);
                     currentIsFolderFile = false;
@@ -160,7 +160,7 @@ void FilterOE::importMailBox( const QString& fileName)
             }
         }
     }
-    // filterInfo()->addLog(i18n("File %1 does not seem to be an Outlook Express mailbox").arg("../" + _nameOfFile));
+    // filterInfo()->addInfoLogEntry(i18n("File %1 does not seem to be an Outlook Express mailbox").arg("../" + _nameOfFile));
 }
 
 /* ------------------- MBX support ------------------- */

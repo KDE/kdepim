@@ -33,7 +33,10 @@ public:
   virtual void setCurrent( const QString& current );
   virtual void setCurrent( int percent = 0 );
   virtual void setOverall( int percent = 0 );
-  virtual void addLog( const QString& log );
+
+  virtual void addInfoLogEntry( const QString& log );
+  virtual void addErrorLogEntry( const QString& log );
+  
   virtual void clear();
   virtual void alert( const QString& message );
   virtual QWidget *parent();

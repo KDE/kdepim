@@ -42,20 +42,20 @@ FilterOutlook::~FilterOutlook()
 void FilterOutlook::import()
 {
   filterInfo()->alert(i18n("No directory selected."));
-  filterInfo()->addLog(i18n("Counting files..."));
-  filterInfo()->addLog(i18n("Counting mail..."));
-  filterInfo()->addLog(i18nc("'directories' means directories on hard disc, not email-folders.", "Counting directories..."));
-  filterInfo()->addLog(i18nc("'folders' means email-folders, not folders on disc.", "Counting folders..."));
-  filterInfo()->addLog(i18n("Importing new mail files..."));
-  filterInfo()->addLog(i18n("No files found for import."));
+  filterInfo()->addInfoLogEntry(i18n("Counting files..."));
+  filterInfo()->addInfoLogEntry(i18n("Counting mail..."));
+  filterInfo()->addInfoLogEntry(i18nc("'directories' means directories on hard disc, not email-folders.", "Counting directories..."));
+  filterInfo()->addInfoLogEntry(i18nc("'folders' means email-folders, not folders on disc.", "Counting folders..."));
+  filterInfo()->addInfoLogEntry(i18n("Importing new mail files..."));
+  filterInfo()->addInfoLogEntry(i18n("No files found for import."));
 
   QString outlookDir;
   outlookDir = KFileDialog::getExistingDirectory(QDir::homePath(), filterInfo()->parent());
   QDir importDir (outlookDir);
   const QStringList files = importDir.entryList(QStringList("*.[pP][sS][tT]"), QDir::Files, QDir::Name);
   for ( QStringList::ConstIterator pstFile = files.constBegin(); pstFile != files.constEnd(); ++pstFile) {
-    filterInfo()->addLog( i18n("Importing emails from %1...", *pstFile ) );
-    filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+    filterInfo()->addInfoLogEntry( i18n("Importing emails from %1...", *pstFile ) );
+    filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     filterInfo()->alert( i18n("Unable to open %1, skipping", *pstFile ) );
   }
 }

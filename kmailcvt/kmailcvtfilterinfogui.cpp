@@ -61,12 +61,20 @@ void  KMailCvtFilterInfoGui::setOverall( int percent )
   m_dlg->mWidget->_done_overall->setValue( percent );
 }
 
-void KMailCvtFilterInfoGui::addLog( const QString& log )
+void KMailCvtFilterInfoGui::addInfoLogEntry( const QString& log )
 {
   m_dlg->mWidget->_log->addItem( log );
   m_dlg->mWidget->_log->setCurrentItem( m_dlg->mWidget->_log->item(m_dlg->mWidget->_log->count() - 1 ));
   kapp->processEvents();
 }
+
+void KMailCvtFilterInfoGui::addErrorLogEntry( const QString& log )
+{
+  m_dlg->mWidget->_log->addItem( log );
+  m_dlg->mWidget->_log->setCurrentItem( m_dlg->mWidget->_log->item(m_dlg->mWidget->_log->count() - 1 ));
+  kapp->processEvents();
+}
+
 
 void KMailCvtFilterInfoGui::clear()
 {

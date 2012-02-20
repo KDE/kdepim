@@ -52,7 +52,11 @@ void  FilterInfoGui::setOverall( int percent )
 {
 }
 
-void FilterInfoGui::addLog( const QString& log )
+void FilterInfoGui::addErrorLogEntry( const QString& log )
+{
+}
+
+void FilterInfoGui::addInfoLogEntry( const QString& log )
 {
 }
 

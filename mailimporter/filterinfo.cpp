@@ -98,11 +98,18 @@ void  FilterInfo::setOverall( int percent )
     d->m_filterInfoGui->setOverall(percent );
 }
 
-void FilterInfo::addLog( const QString& log )
+void FilterInfo::addInfoLogEntry( const QString& log )
 {
   if ( d->m_filterInfoGui )
-    d->m_filterInfoGui->addLog( log );
+    d->m_filterInfoGui->addInfoLogEntry( log );
 }
+
+void FilterInfo::addErrorLogEntry( const QString& log )
+{
+  if ( d->m_filterInfoGui )
+    d->m_filterInfoGui->addErrorLogEntry( log );
+}
+
 
 void FilterInfo::clear()
 {

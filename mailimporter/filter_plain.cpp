@@ -46,13 +46,13 @@ void FilterPlain::import()
   QDir dir (mailDir);
   const QStringList files = dir.entryList(QStringList("*.[eE][mM][lL]")<<"*.[tT][xX][tT]"<<"*.[mM][sS][gG]", QDir::Files, QDir::Name);
   // Count total number of files to be processed
-  filterInfo()->addLog(i18n("Counting files..."));
+  filterInfo()->addInfoLogEntry(i18n("Counting files..."));
   int totalFiles = files.count();
   int currentFile = 0;
   if ( files.isEmpty() ) {
-    filterInfo()->addLog(i18n("No files found for import."));
+    filterInfo()->addInfoLogEntry(i18n("No files found for import."));
   } else {
-    filterInfo()->addLog(i18n("Importing new mail files..."));
+    filterInfo()->addInfoLogEntry(i18n("Importing new mail files..."));
     QStringList::ConstIterator end( files.constEnd() );
     const QString destName = QString::fromLatin1( "PLAIN-%1" ).arg( dir.dirName() );
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
@@ -66,11 +66,11 @@ void FilterPlain::import()
        */
       if(filterInfo()->removeDupMessage()) {
         if(! addMessage( destName, dirRealPath )) {
-          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
         }
       } else {
         if( ! addMessage_fastImport( destName, dirRealPath )) {
-          filterInfo()->addLog( i18n("Could not import %1", *mailFile ) );
+          filterInfo()->addInfoLogEntry( i18n("Could not import %1", *mailFile ) );
         }
       }
 
@@ -79,12 +79,12 @@ void FilterPlain::import()
       if ( filterInfo()->shouldTerminate() ) break;
     }
 
-    filterInfo()->addLog( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
     if (countDuplicates() > 0) {
-      filterInfo()->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+      filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
     if (filterInfo()->shouldTerminate())
-      filterInfo()->addLog( i18n("Finished import, canceled by user."));
+      filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
   }
   setCountDuplicates(0);
 }
