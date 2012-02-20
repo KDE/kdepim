@@ -1,10 +1,6 @@
-# needed to compile the code in subdirectories
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(tests)
 
-# taken from dolphin
-macro_optional_find_package(Nepomuk)
 # Nepomuk is not ready for being the default tag provider
 # so better disable it
 SET( Nepomuk_FOUND FALSE )
@@ -69,7 +65,7 @@ set(krss_LIB_HDRS
    enclosure.h
    person.h
    category.h
-   feeditemmodel.h 
+   feeditemmodel.h
    rssitem.h  #TODO review if rssitem.h should be private
 )
 
@@ -85,12 +81,19 @@ set(krss_PRIVATE_LIB_HDRS
 
 kde4_add_ui_files(krss_LIB_SRCS ui/netfeedcreatedialog.ui ui/feedpropertiesdialog.ui)
 
-kde4_add_library(krss SHARED ${krss_LIB_SRCS})
+kde4_add_library(krss ${LIBRARY_TYPE} ${krss_LIB_SRCS})
 
 if(KRSS_ENABLE_PROTOBUF_SERIALIZER)
 endif(KRSS_ENABLE_PROTOBUF_SERIALIZER)
 
-target_link_libraries(krss ${KDEPIMLIBS_SYNDICATION_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KRSS_EXTRA_LIBS})
+target_link_libraries(krss
+                      ${KDE4_KDECORE_LIBS}
+                      ${KDE4_KDEUI_LIBS}
+                      ${KDE4_KIO_LIBS}
+                      ${KDEPIMLIBS_AKONADI_LIBS}
+                      ${KDEPIMLIBS_SYNDICATION_LIBS}
+                      ${KRSS_EXTRA_LIBS}
+)
 
 if (Nepomuk_FOUND)
     target_link_libraries(krss ${NEPOMUK_LIBRARIES} ${SOPRANO_LIBRARIES})
@@ -98,6 +101,3 @@ endif (Nepomuk_FOUND)
 
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS krss ${INSTALL_TARGETS_DEFAULT_ARGS})
-install( FILES ${krss_LIB_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/krss )
-install( FILES ${krss_UI_LIB_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/krss/ui )
-install( FILES ${krss_PRIVATE_LIB_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/krss/private )
