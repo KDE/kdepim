@@ -55,10 +55,8 @@ public:
   bool removeDupMessage() const;
 
 private:
-  Akonadi::Collection m_rootCollection;
-  bool m_removeDupMsg;
-  static bool s_terminateASAP;
-  FilterInfoGui *m_filterInfoGui;
+  class Private;
+  Private *const d;
 };
 }
 
