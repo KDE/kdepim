@@ -2,7 +2,7 @@
 #define SIEVETEXTEDIT_H
 
 
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,7 +22,6 @@
 
 #include "ksieveui_export.h"
 
-//#include <KTextEdit>
 #include <QPlainTextEdit>
 class QCompleter;
 
