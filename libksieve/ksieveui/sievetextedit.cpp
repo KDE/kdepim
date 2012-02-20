@@ -17,6 +17,8 @@
  */
 
 #include "sievetextedit.h"
+#include "sievelinenumberarea.h"
+
 #include "sievesyntaxhighlighter.h"
 #include <kglobalsettings.h>
 #include <QCompleter>
@@ -24,18 +26,26 @@
 #include <QKeyEvent>
 #include <QAbstractItemView>
 #include <QScrollBar>
+#include <QPainter>
 
 using namespace KSieveUi;
 
 SieveTextEdit::SieveTextEdit( QWidget *parent )
-  :KTextEdit( parent )
+  :QPlainTextEdit( parent )
 {
   setFocus();
-  setAcceptRichText( false );
-  setCheckSpellingEnabled( false );
+  //setAcceptRichText( false );
+  //setCheckSpellingEnabled( false );
   setWordWrapMode ( QTextOption::NoWrap );
   setFont( KGlobalSettings::fixedFont() );
   (void) new SieveSyntaxHighlighter( document() );
+  m_sieveLineNumberArea = new SieveLineNumberArea(this);
+
+  connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
+  connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
+  
+  updateLineNumberAreaWidth(0);
+
   initCompleter();
 }
 
@@ -43,6 +53,66 @@ SieveTextEdit::~SieveTextEdit()
 {
 }
 
+void SieveTextEdit::resizeEvent(QResizeEvent *e)
+{
+  QPlainTextEdit::resizeEvent(e);
+  
+  QRect cr = contentsRect();
+  m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+}
+
+int SieveTextEdit::lineNumberAreaWidth()
+{
+  int digits = 1;
+  int max = qMax(1, blockCount());
+  while (max >= 10) {
+    max /= 10;
+    ++digits;
+  }
+  
+  int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
+  return space;
+}
+
+void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
+{
+  QPainter painter(m_sieveLineNumberArea);
+  painter.fillRect(event->rect(), Qt::lightGray);
+
+  QTextBlock block = firstVisibleBlock();
+  int blockNumber = block.blockNumber();
+  int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+  int bottom = top + (int) blockBoundingRect(block).height();
+  while (block.isValid() && top <= event->rect().bottom()) {
+    if (block.isVisible() && bottom >= event->rect().top()) {
+      QString number = QString::number(blockNumber + 1);
+      painter.setPen(Qt::black);
+      painter.drawText(0, top, m_sieveLineNumberArea->width(), fontMetrics().height(),
+                       Qt::AlignRight, number);
+    }
+    
+    block = block.next();
+    top = bottom;
+    bottom = top + (int) blockBoundingRect(block).height();
+    ++blockNumber;
+  }
+}
+
+void SieveTextEdit::updateLineNumberAreaWidth(int)
+{ 
+  setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
+}
+
+void SieveTextEdit::updateLineNumberArea(const QRect &rect, int dy)
+{
+  if (dy)
+    m_sieveLineNumberArea->scroll(0, dy);
+  else
+    m_sieveLineNumberArea->update(0, rect.y(), m_sieveLineNumberArea->width(), rect.height());
+
+  if (rect.contains(viewport()->rect()))
+    updateLineNumberAreaWidth(0);
+}
 
 void SieveTextEdit::initCompleter()
 {
@@ -91,7 +161,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
       break;
     }
   }
-  KTextEdit::keyPressEvent(e);
+  QPlainTextEdit::keyPressEvent(e);
   QString text = wordUnderCursor();
   if( text.length() < 2 ) // min 2 char for completion
     return;
