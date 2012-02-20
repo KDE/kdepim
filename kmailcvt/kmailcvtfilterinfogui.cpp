@@ -19,7 +19,7 @@
 #include <KMessageBox>
 #include <KApplication>
 
-KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPageDlg* dlg, QWidget* parent)
+KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage* dlg, QWidget* parent)
   : MailImporter::FilterInfoGui(),
     m_parent( parent ),
     m_dlg( dlg )
@@ -31,46 +31,46 @@ KMailCvtFilterInfoGui::~KMailCvtFilterInfoGui()
 }
 void KMailCvtFilterInfoGui::setStatusMsg( const QString& status )
 {
-  m_dlg->_textStatus->setText( status );
+  m_dlg->mWidget->_textStatus->setText( status );
 }
 
 void KMailCvtFilterInfoGui::setFrom( const QString& from )
 {
-  m_dlg->_from->setText( from );
+  m_dlg->mWidget->_from->setText( from );
 }
 
 void KMailCvtFilterInfoGui::setTo( const QString& to )
 {
-  m_dlg->_to->setText( to );
+  m_dlg->mWidget->_to->setText( to );
 }
 
 void KMailCvtFilterInfoGui::setCurrent( const QString& current )
 {
-  m_dlg->_current->setText( current );
+  m_dlg->mWidget->_current->setText( current );
   kapp->processEvents();
 }
 
 void  KMailCvtFilterInfoGui::setCurrent( int percent )
 {
-  m_dlg->_done_current->setValue( percent );
+  m_dlg->mWidget->_done_current->setValue( percent );
   kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  KMailCvtFilterInfoGui::setOverall( int percent )
 {
-  m_dlg->_done_overall->setValue( percent );
+  m_dlg->mWidget->_done_overall->setValue( percent );
 }
 
 void KMailCvtFilterInfoGui::addLog( const QString& log )
 {
-  m_dlg->_log->addItem( log );
-  m_dlg->_log->setCurrentItem( m_dlg->_log->item(m_dlg->_log->count() - 1 ));
+  m_dlg->mWidget->_log->addItem( log );
+  m_dlg->mWidget->_log->setCurrentItem( m_dlg->mWidget->_log->item(m_dlg->mWidget->_log->count() - 1 ));
   kapp->processEvents();
 }
 
 void KMailCvtFilterInfoGui::clear()
 {
-  m_dlg->_log->clear();
+  m_dlg->mWidget->_log->clear();
   setCurrent();
   setOverall();
   setCurrent( QString() );

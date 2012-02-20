@@ -54,7 +54,7 @@ KMailCVT::KMailCVT(QWidget *parent)
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
 
-  connect( selfilterpage->mCollectionRequestor, SIGNAL(collectionChanged(Akonadi::Collection)),
+  connect( selfilterpage->mWidget->mCollectionRequestor, SIGNAL(collectionChanged(Akonadi::Collection)),
            this, SLOT(collectionChanged(Akonadi::Collection)) );
   Akonadi::Control::widgetNeedsAkonadi(this);
 }
@@ -68,7 +68,7 @@ void KMailCVT::next()
   if( currentPage() == page1 ){
     // Save selected filter
     Filter *selectedFilter = selfilterpage->getSelectedFilter();
-    Akonadi::Collection selectedCollection = selfilterpage->mCollectionRequestor->collection();
+    Akonadi::Collection selectedCollection = selfilterpage->mWidget->mCollectionRequestor->collection();
     // without filter don't go next
     if ( !selectedFilter )
       return;

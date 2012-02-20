@@ -54,10 +54,12 @@
 using namespace MailImporter;
 
 KSelFilterPage::KSelFilterPage(QWidget *parent )
-  : KSelFilterPageDlg(parent)
+  : QWidget(parent)
 {
-  mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
-  connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+  mWidget = new Ui::KSelFilterPageDlg;
+  mWidget->setupUi( this );
+  mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+  connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
   // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
   // The former approach was overengineered and only worked around problems in the design
@@ -82,17 +84,18 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
   addFilter(new MailImporter::FilterPlain);
 
   // Ensure we return the correct type of Akonadi collection.
-  mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
-  mCollectionRequestor->setCollection(Akonadi::Collection());
-  mCollectionRequestor->setAccessRightsFilter(
+  mWidget->mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
+  mWidget->mCollectionRequestor->setCollection(Akonadi::Collection());
+  mWidget->mCollectionRequestor->setAccessRightsFilter(
     Akonadi::Collection::CanCreateCollection |
     Akonadi::Collection::CanCreateItem );
-  mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
+  mWidget->mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
 }
 
 KSelFilterPage::~KSelFilterPage() {
   qDeleteAll(mFilterList);
   mFilterList.clear();
+  delete mWidget;
 }
 
 void KSelFilterPage::filterSelected(int i)
@@ -101,25 +104,25 @@ void KSelFilterPage::filterSelected(int i)
   const QString author = mFilterList.at(i)->author();
   if(!author.isEmpty())
     info += i18n("<p><i>Written by %1.</i></p>", author);
-  mDesc->setText(info);
+  mWidget->mDesc->setText(info);
 }
 
 void KSelFilterPage::addFilter(Filter *f)
 {
   mFilterList.append(f);
-  mFilterCombo->addItem(f->name());
-  if (mFilterCombo->count() == 1)
+  mWidget->mFilterCombo->addItem(f->name());
+  if (mWidget->mFilterCombo->count() == 1)
     filterSelected(0); // Setup description box with fist filter selected
 }
 
 bool KSelFilterPage::removeDupMsg_checked() const
 {
-  return remDupMsg->isChecked();
+  return mWidget->remDupMsg->isChecked();
 }
 
 Filter * KSelFilterPage::getSelectedFilter(void)
 {
-  return mFilterList.at(mFilterCombo->currentIndex());
+  return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }
 
 #include "kselfilterpage.moc"
