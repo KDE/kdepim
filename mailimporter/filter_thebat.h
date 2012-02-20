@@ -1,9 +1,9 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+            filter_thebat.h  -  TheBat! mail import
                              -------------------
-    begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
-    email                : l.d.anderson@warwick.ac.uk
+    begin                : April 07 2005
+    copyright            : (C) 2005 by Danny Kukawka
+    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,39 +14,32 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifndef FILTER_THEBAT_HXX
+#define FILTER_THEBAT_HXX
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
-
-#include "ui_kselfilterpagedlg.h"
-#include <QList>
+#include "filters.h"
+#include "filters.h"
+#include "mailimporter_export.h"
+/**
+ * Imports The Bat! mail folder recursively, recreating the folder structure.
+ * @author Danny Kukawka
+ */
 namespace MailImporter {
-  class Filter;
-}
-
-
-class KSelFilterPageDlg : public QWidget, public Ui::KSelFilterPageDlg
+class MAILIMPORTER_EXPORT FilterTheBat : public Filter
 {
-public:
-  KSelFilterPageDlg( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
 
+public:
+  explicit FilterTheBat();
+  ~FilterTheBat();
 
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
-public:
-	KSelFilterPage(QWidget *parent=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(MailImporter::Filter *f);
-	MailImporter::Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked() const;
+  void import();
+
 private:
-	QList<MailImporter::Filter*> mFilterList;
-private slots:
-	void filterSelected(int i);
+  QString mailDir;
+
+  void importDirContents( const QString&);
+  void importFiles( const QString&);
 };
+}
 
 #endif

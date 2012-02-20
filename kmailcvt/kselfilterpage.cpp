@@ -19,25 +19,25 @@
 #include "kselfilterpage.h"
 
 // Filter includes
-#include "filter_mbox.h"
-#include "filter_oe.h"
-#include "filter_outlook.h"
-#include "filter_pmail.h"
-#include "filter_plain.h"
-#include "filter_evolution.h"
-#include "filter_mailapp.h"
-#include "filter_evolution_v2.h"
-#include "filter_opera.h"
-#include "filter_thunderbird.h"
-#include "filter_kmail_maildir.h"
-#include "filter_kmail_archive.h"
-#include "filter_sylpheed.h"
-#include "filter_thebat.h"
-#include "filter_lnotes.h"
+#include <filter_mbox.h>
+#include <filter_oe.h>
+#include <filter_outlook.h>
+#include <filter_pmail.h>
+#include <filter_plain.h>
+#include <filter_evolution.h>
+#include <filter_mailapp.h>
+#include <filter_evolution_v2.h>
+#include <filter_opera.h>
+#include <filter_thunderbird.h>
+#include <filter_kmail_maildir.h>
+#include <filter_kmail_archive.h>
+#include <filter_sylpheed.h>
+#include <filter_thebat.h>
+#include <filter_lnotes.h>
 
-#include "filters.h"
+#include <filters.h>
 
-#include "filter_evolution_v3.h"
+#include <filter_evolution_v3.h>
 
 // KDE includes
 #include <kstandarddirs.h>
@@ -51,7 +51,7 @@
 #include <akonadi/collectionrequester.h>
 #include <akonadi/control.h>
 
-
+using namespace MailImporter;
 
 KSelFilterPage::KSelFilterPage(QWidget *parent )
   : KSelFilterPageDlg(parent)
@@ -64,22 +64,22 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
   // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
   // Patches appreciated. (danimo)
 
-  addFilter(new FilterKMailArchive);
-  addFilter(new FilterMBox);
-  addFilter(new FilterEvolution);
-  addFilter(new FilterEvolution_v2);
-  addFilter(new FilterEvolution_v3);
-  addFilter(new FilterKMail_maildir);
-  addFilter(new FilterMailApp);
-  addFilter(new FilterOpera);
-  addFilter(new FilterSylpheed);
-  addFilter(new FilterThunderbird);
-  addFilter(new FilterTheBat);
-  addFilter(new FilterOE);
+  addFilter(new MailImporter::FilterKMailArchive);
+  addFilter(new MailImporter::FilterMBox);
+  addFilter(new MailImporter::FilterEvolution);
+  addFilter(new MailImporter::FilterEvolution_v2);
+  addFilter(new MailImporter::FilterEvolution_v3);
+  addFilter(new MailImporter::FilterKMail_maildir);
+  addFilter(new MailImporter::FilterMailApp);
+  addFilter(new MailImporter::FilterOpera);
+  addFilter(new MailImporter::FilterSylpheed);
+  addFilter(new MailImporter::FilterThunderbird);
+  addFilter(new MailImporter::FilterTheBat);
+  addFilter(new MailImporter::FilterOE);
   //        addFilter(new FilterOutlook);
-  addFilter(new FilterPMail);
-  addFilter(new FilterLNotes);
-  addFilter(new FilterPlain);
+  addFilter(new MailImporter::FilterPMail);
+  addFilter(new MailImporter::FilterLNotes);
+  addFilter(new MailImporter::FilterPlain);
 
   // Ensure we return the correct type of Akonadi collection.
   mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );

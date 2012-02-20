@@ -18,7 +18,8 @@
 #include "kmailcvt.h"
 #include "kimportpage.h"
 #include "kselfilterpage.h"
-#include "filters.h"
+#include <filters.h>
+#include "kmailcvtfilterinfogui.h"
 
 // KDE includes
 #include <kaboutapplicationdialog.h>
@@ -32,6 +33,7 @@
 
 #include <akonadi/control.h>
 
+using namespace MailImporter;
 
 KMailCVT::KMailCVT(QWidget *parent)
   : KAssistantDialog(parent) {
@@ -78,7 +80,9 @@ void KMailCVT::next()
     // Disable back & finish
     setValid( currentPage(), false );
     // Start import
-    FilterInfo *info = new FilterInfo(importpage, this);
+    FilterInfo *info = new FilterInfo();
+    KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
+    info->setFilterInfoGui(infoGui);
     info->setStatusMsg(i18n("Import in progress"));
     info->setRemoveDupMessage( selfilterpage->removeDupMsg_checked() );
     info->clear(); // Clear info from last time

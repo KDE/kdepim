@@ -345,6 +345,7 @@ endif()
     endif()
 
     if(KDEPIM_BUILD_DESKTOP)
+      macro_optional_add_subdirectory(mailimporter)
       macro_optional_add_subdirectory(kmailcvt)
       macro_optional_add_subdirectory(ksendemail)
     endif()
