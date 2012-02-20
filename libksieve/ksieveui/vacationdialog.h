@@ -20,7 +20,6 @@ class KIntSpinBox;
 class KLineEdit;
 class KTextEdit;
 
-class QString;
 class QCheckBox;
 template <typename T> class QList;
 
