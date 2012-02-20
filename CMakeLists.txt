@@ -361,6 +361,7 @@ endif()
   if(KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(krss)
     if(BUILD_krss)
+      add_subdirectory(krsslocal)
       macro_optional_add_subdirectory(akregator)
     endif()
 
