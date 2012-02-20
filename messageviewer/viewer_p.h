@@ -46,12 +46,14 @@ class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class KHBox;
+class KMenu;
 
 class QPoint;
 class QSplitter;
 class QStyle;
 class QModelIndex;
 class QTreeView;
+class QActionGroup;
 
 namespace KParts {
   struct BrowserArguments;
@@ -225,6 +227,7 @@ public:
   KService::Ptr getServiceOffer( KMime::Content *content);
   KMime::Content::List selectedContents();
   void attachmentOpenWith( KMime::Content *node );
+  void attachmentOpen( KMime::Content *node, KService::Ptr offer );
   void attachmentOpen( KMime::Content *node );
 
 
@@ -277,7 +280,8 @@ private:
   void initHtmlWidget();
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
-
+  void createOpenWithMenu( KMenu *topMenu, KMime::Content* node );
+  KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup);
 public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
@@ -463,7 +467,10 @@ private slots:
   void slotClear();
 
   void slotMessageRendered();
-
+  
+  void slotOpenWithAction(QAction *act);
+  void slotOpenWithDialog();
+  
 public slots:
   /** An URL has been activate with a click. */
   void slotUrlOpen( const QUrl &url = QUrl());
@@ -660,4 +667,6 @@ public:
 
 }
 
+Q_DECLARE_METATYPE(KService::Ptr)
+  
 #endif
