@@ -153,17 +153,18 @@ void FilterSylpheed::importFiles( const QString& dirName)
         generatedPath = true;
       }
 
+#if 0
       QString flags;
       if (msgflags[_mfile])
         flags = msgFlagsToString((msgflags[_mfile]));
-
+#endif
       if(filterInfo()->removeDupMessage()) {
-        if(! addMessage( _path, dir.filePath(*mailFile), flags )) {
+        if(! addMessage( _path, dir.filePath(*mailFile)/*, flags*/ )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
-        if(! addMessage_fastImport( _path, dir.filePath(*mailFile), flags )) {
+        if(! addMessage_fastImport( _path, dir.filePath(*mailFile)/*, flags*/ )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));

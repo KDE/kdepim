@@ -25,6 +25,7 @@
 
 #include <Akonadi/Collection>
 #include <KMime/KMimeMessage>
+#include <akonadi/kmime/messagestatus.h>
 
 
 #include "filterinfo.h"
@@ -75,11 +76,11 @@ protected:
   Akonadi::Collection parseFolderString( const QString &folderParseString );
 
   bool addAkonadiMessage( const Akonadi::Collection &collection,
-                          const KMime::Message::Ptr& message );
+                          const KMime::Message::Ptr& message, Akonadi::MessageStatus status = Akonadi::MessageStatus() );
 
   bool addMessage( const QString& folder,
                    const QString& msgFile,
-                   const QString& msgStatusFlags = QString());
+                   Akonadi::MessageStatus status = Akonadi::MessageStatus() );
 
   /**
    * Checks for duplicate messages in the collection by message ID.
@@ -92,12 +93,13 @@ protected:
                            const QString& messageFolder );
   bool addMessage_fastImport( const QString& folder,
                               const QString& msgFile,
-                              const QString& msgStatusFlags = QString());
+                              Akonadi::MessageStatus status = Akonadi::MessageStatus() );
   
 private: 
   bool doAddMessage( const QString& folderName,
                      const QString& msgPath,
-                     bool duplicateCheck = false );
+                     bool duplicateCheck, 
+                     Akonadi::MessageStatus status = Akonadi::MessageStatus() );
   class Private;
   Private *const d;
 };
