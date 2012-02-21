@@ -79,6 +79,16 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
+  //Enabled or not filterlogdialog
+  KSharedConfig::Ptr config = KGlobal::config();
+  if ( config->hasGroup( "FilterLog" ) ) {
+    KConfigGroup group( config, "FilterLog" );
+    if ( group.hasKey( "Enabled" ) ) {
+      if ( group.readEntry( "Enabled", false ) ) {
+          m_filterLogDialog = new FilterLogDialog( 0 );
+      }
+    }
+  }  
 }
 
 void MailFilterAgent::initializeCollections()

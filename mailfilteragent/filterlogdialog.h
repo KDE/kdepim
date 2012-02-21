@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -60,7 +61,9 @@ class FilterLogDialog : public KDialog
 
     void slotUser1();
     void slotUser2();
-
+  private:
+    void readConfig();
+    void writeConfig();
   protected:
     KTextEdit * mTextEdit;
     QCheckBox * mLogActiveBox;
@@ -70,6 +73,7 @@ class FilterLogDialog : public KDialog
     QCheckBox * mLogPatternResultBox;
     QCheckBox * mLogFilterActionBox;
     QSpinBox  * mLogMemLimitSpin;
+    bool mIsInitialized;
 };
 
 #endif
