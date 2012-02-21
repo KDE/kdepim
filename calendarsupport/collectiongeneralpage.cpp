@@ -67,7 +67,13 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
 
-  mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block alarms locally" ), this );
+  mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block reminders locally" ), this );
+  mBlockAlarmsCheckBox->setToolTip(
+    i18nc( "@info:tooltip", "Ignore reminders from this calendar" ) );
+  mBlockAlarmsCheckBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you do not want to receive reminders from items "
+           "associated with this calendar." ) );
   hbox->addWidget( mBlockAlarmsCheckBox );
   hbox->addStretch( 1 );
 
