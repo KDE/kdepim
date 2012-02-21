@@ -85,7 +85,6 @@ void FilterMBox::import()
          * get Unicode/UTF-email but KMail can't detect the correct charset.
          */
         QByteArray separate;
-        QString x_status_flag;
 
         /* check if the first line start with "From " (and not "From: ") and discard the line
          * in this case because some IMAP servers (e.g. Cyrus) don't accept this header line */
@@ -99,13 +98,6 @@ void FilterMBox::import()
 
         while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((separate = input.data()).left(5) != "From ")) {
           tmp.write( input, l );
-
-          if ((separate = input.data()).left(10) == "X-Status: " ) {
-            x_status_flag = separate;
-            x_status_flag.remove("X-Status: ");
-            x_status_flag = x_status_flag.trimmed();
-            // qDebug("x_status_flag: %s", x_status_flag.toLatin1() );
-          }
 
           // workaround to fix hang if a corrupted mbox contains some
           // binary data, for more see bug #106796
@@ -123,9 +115,9 @@ void FilterMBox::import()
          */
         if ( tmp.size() > 0 ) {
           if(filterInfo()->removeDupMessage())
-            addMessage( folderName, tmp.fileName(), x_status_flag );
+            addMessage( folderName, tmp.fileName() );
           else
-            addMessage_fastImport( folderName, tmp.fileName(), x_status_flag );
+            addMessage_fastImport( folderName, tmp.fileName() );
         }
         else
           kWarning() << "Message size is 0 bytes, not importing it.";
