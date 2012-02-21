@@ -85,6 +85,12 @@ Filter::~Filter()
   delete d;
 }
 
+void Filter::clear()
+{
+  d->messageFolderMessageIDMap.clear();
+  d->messageFolderCollectionMap.clear();
+}
+
 void Filter::setMailDir( const QString& mailDir )
 {
   d->mailDir = mailDir;
@@ -98,6 +104,7 @@ QString Filter::mailDir() const
 void Filter::setFilterInfo( FilterInfo* info )
 {
   d->filterInfo = info;
+  clear();
 }
 
 MailImporter::FilterInfo* Filter::filterInfo()

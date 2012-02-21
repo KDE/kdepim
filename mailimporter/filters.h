@@ -45,6 +45,7 @@ public:
   QString name() const;
   QString info() const;
 
+  void clear();
   void setFilterInfo( MailImporter::FilterInfo* info );
 
   MailImporter::FilterInfo* filterInfo();
