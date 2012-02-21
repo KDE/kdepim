@@ -394,6 +394,9 @@ endif()
     macro_optional_add_subdirectory(kontact) # must be the last one.
   endif()
 
+  if(KDEPIM_BUILD_DESKTOP)
+    macro_optional_add_subdirectory(importwizard)
+  endif()
   # These targets depend on optional applications
   if(KDEPIMLIBS_KRESOURCES_LIBRARY)
     add_subdirectory(kresources) # Must be after KAddressbook
