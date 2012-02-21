@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
 
 #include "filter_sylpheed.h"
 
@@ -153,18 +154,18 @@ void FilterSylpheed::importFiles( const QString& dirName)
         generatedPath = true;
       }
 
-#if 0
-      QString flags;
+      Akonadi::MessageStatus status;
       if (msgflags[_mfile])
-        flags = msgFlagsToString((msgflags[_mfile]));
-#endif
+        status = msgFlagsToString((msgflags[_mfile]));
+      else
+        status.setRead( true ); // 0 == read
       if(filterInfo()->removeDupMessage()) {
-        if(! addMessage( _path, dir.filePath(*mailFile)/*, flags*/ )) {
+        if(! addMessage( _path, dir.filePath(*mailFile),status )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
-        if(! addMessage_fastImport( _path, dir.filePath(*mailFile)/*, flags*/ )) {
+        if(! addMessage_fastImport( _path, dir.filePath(*mailFile),status )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
@@ -222,17 +223,19 @@ void FilterSylpheed::readMarkFile( const QString &path, QHash<QString,unsigned l
   }
 }
 
-QString FilterSylpheed::msgFlagsToString(unsigned long flags)
+Akonadi::MessageStatus FilterSylpheed::msgFlagsToString(unsigned long flags)
 {
-  QString status;
-
+  Akonadi::MessageStatus status;
   /* see sylpheed's procmsg.h */
-  if (flags & 1UL) status += 'N';
-  if (flags & 2UL) status += 'U';
-  if ((flags & 3UL) == 0UL) status += 'R';
-  if (flags & 8UL) status += 'D';
-  if (flags & 16UL) status += 'A';
-  if (flags & 32UL) status += 'F';
-
+  if (flags & 2UL)
+    status.setRead( false );
+  if ((flags & 3UL) == 0UL)
+    status.setRead( true );
+  if (flags & 8UL)
+    status.setDeleted( true );
+  if (flags & 16UL)
+    status.setReplied( true );
+  if (flags & 32UL)
+    status.setForwarded( true );
   return status;
 }

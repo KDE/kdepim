@@ -42,7 +42,7 @@ private:
   void importFiles(const QString&);
   
   void readMarkFile( const QString&, QHash<QString,unsigned long>&);
-  QString msgFlagsToString(unsigned long);
+  Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
 };
 }
 
