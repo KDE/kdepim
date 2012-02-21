@@ -57,9 +57,14 @@ void FilterThunderbird::import()
   KFileDialog *kfd = new KFileDialog( thunderDir, "", 0 );
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
   kfd->exec();
-  setMailDir(kfd->selectedFile());
+  const QString maildir = kfd->selectedFile();
   delete kfd;
-    
+  importMails( maildir );
+}
+
+void FilterThunderbird::importMails( const QString & maildir )
+{
+  setMailDir(maildir);
   if (mailDir().isEmpty()) {
     filterInfo()->alert(i18n("No directory selected."));
     return;

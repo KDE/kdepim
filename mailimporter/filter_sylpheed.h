@@ -31,17 +31,18 @@ class MAILIMPORTER_EXPORT FilterSylpheed : public Filter
 {
 
 public:
-    explicit FilterSylpheed();
-    ~FilterSylpheed();
-
-    void import();
-
+  explicit FilterSylpheed();
+  ~FilterSylpheed();
+  
+  void import();
+  void importMails( const QString& maildir );
+  
 private:
-    void importDirContents(const QString&);
-    void importFiles(const QString&);
-    
-    void readMarkFile( const QString&, QHash<QString,unsigned long>&);
-    QString msgFlagsToString(unsigned long);
+  void importDirContents(const QString&);
+  void importFiles(const QString&);
+  
+  void readMarkFile( const QString&, QHash<QString,unsigned long>&);
+  QString msgFlagsToString(unsigned long);
 };
 }
 

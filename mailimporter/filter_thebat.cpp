@@ -54,9 +54,14 @@ void FilterTheBat::import()
   KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
-  setMailDir(kfd->selectedFile());
+  const QString maildir = kfd->selectedFile();
   delete kfd;
-    
+  importMails( maildir );
+}
+
+void FilterTheBat::importMails( const QString & maildir )
+{
+  setMailDir(maildir);
   if ( mailDir().isEmpty() ) {
     filterInfo()->alert( i18n( "No directory selected." ) );
     return;

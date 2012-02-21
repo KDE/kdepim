@@ -33,6 +33,7 @@ public:
   ~FilterTheBat();
 
   void import();
+  void importMails( const QString & maildir );
 
 private:
   void importDirContents( const QString&);
