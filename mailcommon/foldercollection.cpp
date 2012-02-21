@@ -82,6 +82,12 @@ FolderCollection::~FolderCollection()
   }
 }
 
+void FolderCollection::clearCache()
+{
+  QMutexLocker lock( &mapMutex );
+  fcMap.clear();
+}
+
 bool FolderCollection::isWriteConfig() const
 {
   return mWriteConfig;
