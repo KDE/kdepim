@@ -160,24 +160,24 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
         _path = QLatin1String( "Evolution-Import" );
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove( mailDir(), Qt::CaseSensitive );
-        QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
+        QStringList subFList = _tmp.split( QLatin1Char( '/' ), QString::SkipEmptyParts );
         QStringList::ConstIterator end( subFList.end() ); 
         for ( QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it ) {
           QString _cat = *it;
           if(!(_cat == *mailFile)) {
-            if (_cat.startsWith('.')) {
+            if (_cat.startsWith(QLatin1Char( '.' ))) {
               _cat = _cat.remove(0 , 1);
             }
             //Evolution store inbox as "."
-            if ( _cat.startsWith('.')) {
-              _cat = _cat.replace( 0, 1, QString( "Inbox/" ) );
+            if ( _cat.startsWith(QLatin1Char( '.' ))) {
+              _cat = _cat.replace( 0, 1, QLatin1String( "Inbox/" ) );
             }
               
             _path += QLatin1Char( '/' ) + _cat;
             _path.replace( QLatin1Char( '.' ), QLatin1Char( '/' ) );
           }
         }
-        if(_path.endsWith("cur"))
+        if(_path.endsWith(QLatin1String( "cur" )))
           _path.remove(_path.length() - 4 , 4);
         QString _info = _path;
         filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info));
@@ -185,14 +185,15 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
         filterInfo()->setTo(_path);
         generatedPath = true;
       }
-
+      Akonadi::MessageStatus status = statusFromFile( *mailFile );
+      
       if(filterInfo()->removeDupMessage()) {
-        if(! addMessage( _path, dir.filePath(*mailFile) )) {
+        if(! addMessage( _path, dir.filePath(*mailFile),status )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
-        if(! addMessage_fastImport( _path, dir.filePath(*mailFile) )) {
+        if(! addMessage_fastImport( _path, dir.filePath(*mailFile),status )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
@@ -201,3 +202,25 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
   }
 }
 
+Akonadi::MessageStatus FilterEvolution_v3::statusFromFile( const QString& filename)
+{
+  Akonadi::MessageStatus status;
+  const int statusIndex = filename.indexOf( ":2," );
+  if ( statusIndex != -1 ) {
+    const QString statusStr = filename.right( filename.length() - statusIndex -3 );
+    if ( statusStr.contains( QLatin1Char( 'S' ) ) ) {
+      status.setRead( true );
+    }
+    if ( statusStr.contains( QLatin1Char( 'F' ) ) ) {
+      
+    }
+    if ( statusStr.contains( QLatin1Char( 'R' ) ) ) {
+      status.setReplied( true );
+    }
+    if ( statusStr.contains( QLatin1Char( 'P' ) ) ) {
+      status.setForwarded( true );
+    }
+  }
+  return status;
+}
+  

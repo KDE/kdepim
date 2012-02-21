@@ -34,6 +34,7 @@ public:
 private:
   void importDirContents(const QString&);
   void importFiles(const QString&);
+  Akonadi::MessageStatus statusFromFile( const QString& filename);
 };
 }
 
