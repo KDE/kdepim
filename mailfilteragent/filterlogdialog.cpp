@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -49,7 +50,7 @@
 using namespace MailCommon;
 
 FilterLogDialog::FilterLogDialog( QWidget * parent )
-  : KDialog( parent )
+  : KDialog( parent ), mIsInitialized( false )
 {
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
@@ -162,8 +163,50 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   setInitialSize( QSize( 500, 500 ) );
   connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
   connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+  readConfig();
+  mIsInitialized = true;
 }
 
+void FilterLogDialog::readConfig()
+{
+  KSharedConfig::Ptr config = KGlobal::config();
+  KConfigGroup group( config, "FilterLog" );
+  const bool isEnabled = group.readEntry( "Enabled", false );
+  const bool isLogPatternDescription = group.readEntry( "LogPatternDescription", false );
+  const bool isLogRuleResult = group.readEntry( "LogRuleResult", false );
+  const bool isLogPatternResult = group.readEntry( "LogPatternResult", false );
+  const bool isLogAppliedAction = group.readEntry( "LogAppliedAction", false );
+  const int maxLogSize = group.readEntry( "maxLogSize", 0 );
+
+  if ( isEnabled !=FilterLog::instance()->isLogging() )  
+    FilterLog::instance()->setLogging( isEnabled );
+  if ( isLogPatternDescription != FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternDescription ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::PatternDescription, isLogPatternDescription );
+  if (  isLogRuleResult!= FilterLog::instance()->isContentTypeEnabled( FilterLog::RuleResult ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::RuleResult, isLogRuleResult);
+  if ( isLogPatternResult != FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternResult ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::PatternResult,isLogPatternResult );
+  if ( isLogAppliedAction != FilterLog::instance()->isContentTypeEnabled( FilterLog::AppliedAction ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::AppliedAction,isLogAppliedAction ); 
+  if ( FilterLog::instance()->maxLogSize() != maxLogSize )
+    FilterLog::instance()->setMaxLogSize( maxLogSize );  
+}
+
+void FilterLogDialog::writeConfig()
+{
+  if ( !mIsInitialized )
+    return;
+  
+  KSharedConfig::Ptr config = KGlobal::config();
+  KConfigGroup group( config, "FilterLog" );
+  group.writeEntry( "Enabled", FilterLog::instance()->isLogging() );
+  group.writeEntry( "LogPatternDescription", FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternDescription ) );
+  group.writeEntry( "LogRuleResult", FilterLog::instance()->isContentTypeEnabled( FilterLog::RuleResult ) );
+  group.writeEntry( "LogPatternResult", FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternResult ) );
+  group.writeEntry( "LogAppliedAction", FilterLog::instance()->isContentTypeEnabled( FilterLog::AppliedAction ) );
+  group.writeEntry( "maxLogSize", ( int )( FilterLog::instance()->maxLogSize() ) );
+  group.sync();
+}
 
 void FilterLogDialog::slotLogEntryAdded(const QString& logEntry )
 {
@@ -196,6 +239,7 @@ void FilterLogDialog::slotLogStateChanged()
   int newLogSize = FilterLog::instance()->maxLogSize() / 1024;
   if ( mLogMemLimitSpin->value() != newLogSize )
     mLogMemLimitSpin->setValue( newLogSize );
+  writeConfig();
 }
 
 
