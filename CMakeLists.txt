@@ -362,8 +362,9 @@ endif()
     macro_optional_add_subdirectory(krss)
     if(BUILD_krss)
       add_subdirectory(krsslocal)
-      macro_optional_add_subdirectory(akregator)
+      add_subdirectory(akregator2)
     endif()
+  macro_optional_add_subdirectory(akregator)
 
   macro_optional_add_subdirectory(akonadiconsole)
 

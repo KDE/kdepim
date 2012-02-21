@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Gary Cramblitt</author>
+ <class>Akregator2::SettingsBrowser</class>
+ <widget class="QWidget" name="Akregator2::SettingsBrowser">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="LMBlabel">
+       <property name="text">
+        <string>Left mouse click:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="kcfg_LMBBehaviour">
+       <item>
+        <property name="text">
+         <string>Open in Tab</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Open in Background Tab</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Open in External Browser</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="MMBlabel">
+       <property name="text">
+        <string>Middle mouse click:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="kcfg_MMBBehaviour">
+       <item>
+        <property name="text">
+         <string>Open in Tab</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Open in Background Tab</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Open in External Browser</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="externalBrowserGroupBox">
+     <property name="title">
+      <string>External Browsing</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="kcfg_ExternalBrowserCustomCommand">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>firefox %u</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="kcfg_ExternalBrowserUseCustomCommand">
+        <property name="text">
+         <string>Use this command:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QRadioButton" name="kcfg_ExternalBrowserUseKdeDefault">
+        <property name="text">
+         <string>Use default web browser</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="tabsGroupBox">
+     <property name="title">
+      <string>Tabs</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="kcfg_AlwaysShowTabBar">
+        <property name="text">
+         <string>Always show the tab bar</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_CloseButtonOnTabs">
+        <property name="text">
+         <string>Show close button on each tab</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>1</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

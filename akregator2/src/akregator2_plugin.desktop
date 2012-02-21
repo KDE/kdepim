@@ -1,0 +1,90 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Akregator2/Plugin
+Comment=Plugin for Akregator2
+Comment[af]=Inprop module vir Akregator2
+Comment[ar]=ملحق لاكريغاتور
+Comment[be]=Утулка для Akregator2
+Comment[bg]=Приставка за Akregator2
+Comment[br]=Lugent evit Akregator2
+Comment[ca]=Connector per a l'Akregator2
+Comment[cs]=Modul pro Akregator2
+Comment[da]=Plugin for Akregator2
+Comment[de]=Modul für Akregator2
+Comment[el]=Πρόσθετο για το Akregator2
+Comment[en_GB]=Plugin for Akregator2
+Comment[eo]=Kromprogramo por Akregator2
+Comment[es]=Complemento para Akregator2
+Comment[et]=Akregator2i plugin
+Comment[eu]=Akregator2-en plugina
+Comment[fa]=وصله برای Akregator2
+Comment[fi]=Liitännäinen Akregator2iin
+Comment[fr]=Module pour Akregator2
+Comment[fy]=Plugin foar Akregator2
+Comment[ga]=Breiseán Akregator2
+Comment[gl]=Engadido para o Akregator2
+Comment[he]=תוסף עבור Akregator2
+Comment[hu]=Akregator2 bővítőmodul
+Comment[is]=Íforrit fyrir Akregator2
+Comment[it]=Estensione per Akregator2
+Comment[ja]=Akregator2 用プラグイン
+Comment[ka]=Akregator2-ის მოდული
+Comment[kk]=Akregator2-дың плагин модулі
+Comment[km]=កម្មវិធី​ជំនួយ Akregator2
+Comment[ko]=Akregator2 플러그인
+Comment[lt]=Akregator2 skirtas įskiepis
+Comment[lv]=Akregator2 spraudnis
+Comment[mk]=Приклучок за Akregator2
+Comment[ms]=Plugin untuk Akregator2
+Comment[nb]=Programtillegg for Akregator2
+Comment[nds]=Moduul för Akregator2
+Comment[ne]=एक्रिगेटरका लागि प्लगइन
+Comment[nl]=Plugin voor Akregator2
+Comment[nn]=Programtillegg til Akregator2
+Comment[pa]=ਅਕਰੀਗੇਟਰ ਲਈ ਪਲੱਗਇਨ
+Comment[pl]=Wtyczka dla Akregator2a
+Comment[pt]='Plugin' para o Akregator2
+Comment[pt_BR]=Plug-in para o Akregator2
+Comment[ro]=Modul pentru Akregator2
+Comment[ru]=Модуль для Akregator2
+Comment[sk]=Modul pre Akregator2
+Comment[sl]=Vstavek za Akregator2
+Comment[sv]=Insticksprogram för Akregator2
+Comment[tr]=Akregator2 için Eklenti
+Comment[uk]=Додаток до Akregator2
+Comment[uz]=Akregator2 uchun plagin
+Comment[uz@cyrillic]=Akregator2 учун плагин
+Comment[x-test]=xxPlugin for Akregator2xx
+Comment[zh_CN]=Akregator2 插件
+Comment[zh_TW]=Akregator2 外掛程式
+
+
+# Type of plugin, e.g. "storage".
+[PropertyDef::X-KDE-akregator2-plugintype]
+Type=QString
+
+# Internal name for identification, not translated.
+[PropertyDef::X-KDE-akregator2-name]
+Type=QString
+
+# List of authors.
+[PropertyDef::X-KDE-akregator2-authors]
+Type=QStringList
+
+# List of author's email addresses.
+[PropertyDef::X-KDE-akregator2-email]
+Type=QStringList
+
+# Priority of the plugin. When KTrader returns multiple offers, the one with the highest rank is chosen.
+# Range: 0 (disabled) - 255 (highest)
+[PropertyDef::X-KDE-akregator2-rank]
+Type=int
+
+# Version of the plugin.
+[PropertyDef::X-KDE-akregator2-version]
+Type=int
+
+# Version of the framework this plugin is compatible with.
+# Must be bumped after making incompatible changes.
+[PropertyDef::X-KDE-akregator2-framework-version]
+Type=int

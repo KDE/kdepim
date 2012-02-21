@@ -1,0 +1,271 @@
+/*
+    This file is part of Akregator2.
+
+    Copyright (C) 2004 Stanislav Karchebny <Stanislav.Karchebny@kdemail.net>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
+*/
+
+#include "mainwindow.h"
+#include "akregator2_part.h"
+#include "akregator2config.h"
+#include "trayicon.h"
+
+#include <libkdepim/progressdialog.h>
+#include <libkdepim/statusbarprogresswidget.h>
+#include <libkdepim/broadcaststatus.h>
+
+#include <KAction>
+#include <KActionCollection>
+#include <KApplication>
+#include <KConfig>
+#include <KEditToolBar>
+#include <KLibLoader>
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KMenuBar>
+#include <KSqueezedTextLabel>
+#include <KStatusBar>
+#include <KShortcutsDialog>
+#include <KStandardAction>
+#include <KToolBar>
+#include <KStandardDirs>
+#include <KTemporaryFile>
+
+using namespace Akregator2;
+
+BrowserInterface::BrowserInterface( MainWindow *shell, const char *name )
+    : KParts::BrowserInterface( shell )
+{
+    setObjectName(name);
+    m_shell = shell;
+}
+
+MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
+    : KParts::MainWindow( parent, f )
+    , m_browserIface( new BrowserInterface( this, "browser_interface" ) )
+    , m_part()
+    , m_progressBar( 0 )
+    , m_statusLabel( new KSqueezedTextLabel( this ) )
+{
+    setPluginLoadingMode( DoNotLoadPlugins );
+
+    // set the shell's ui resource file
+    setXMLFile("akregator2_shell.rc");
+
+    KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection()); // options_configure_keybinding
+    KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection()); // options_configure_toolbars
+
+    toolBar()->show();
+    statusBar()->show();
+
+    int statH=fontMetrics().height()+2;
+    m_statusLabel->setTextFormat(Qt::RichText);
+    m_statusLabel->setSizePolicy(QSizePolicy( QSizePolicy::Ignored, QSizePolicy::Fixed ));
+    m_statusLabel->setMinimumWidth( 0 );
+    m_statusLabel->setFixedHeight( statH );
+    statusBar()->addWidget( m_statusLabel, 1 );
+
+    KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+    KStandardAction::showMenubar( menuBar(), SLOT(setVisible(bool)), actionCollection());
+    setStandardToolBarMenuEnabled(true);
+    createStandardStatusBarAction();
+    autoReadProperties();
+
+#ifdef WITH_LIBKDEPIM
+    connect( KPIM::BroadcastStatus::instance(), SIGNAL( statusMsg( const QString& ) ),
+             this, SLOT( slotSetStatusBarText(const QString&) ) );
+#endif
+}
+
+bool MainWindow::loadPart()
+{
+    if ( m_part )
+        return true;
+    // this routine will find and load our Part.  it finds the Part by
+    // name which is a bad idea usually.. but it's alright in this
+    // case since our Part is made for this Shell
+    KPluginLoader loader("akregator2part");
+    KPluginFactory* const factory = loader.factory();
+    if (!factory) {
+        KMessageBox::error(this, i18n("Could not find the Akregator2 part; please check your installation."));
+        return false;
+    }
+
+    m_part = static_cast<Akregator2::Part*>( factory->create<KParts::ReadOnlyPart>(this) );
+
+    if ( !m_part )
+        return false;
+
+    m_part->setObjectName("akregator2_part");
+    setCentralWidget(m_part->widget());
+
+    connect(m_part, SIGNAL(setWindowCaption(QString)), this, SLOT(setCaption(QString)) );
+    connect(TrayIcon::getInstance(), SIGNAL(quitSelected()), this, SLOT(slotQuit()));
+
+    createGUI(m_part);
+    browserExtension(m_part)->setBrowserInterface(m_browserIface);
+    setAutoSaveSettings();
+    return true;
+}
+
+void MainWindow::setupProgressWidgets()
+{
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
+    progressDialog->raise();
+    progressDialog->hide();
+    m_progressBar = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
+    m_progressBar->show();
+    statusBar()->addPermanentWidget( m_progressBar, 0 );
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::saveProperties(KConfigGroup &config)
+{
+    if (!m_part)
+        loadPart();
+
+    m_part->saveProperties(config);
+    config.writeEntry("docked", isHidden());
+}
+
+void MainWindow::readProperties(const KConfigGroup & config)
+{
+    if (!m_part)
+        loadPart();
+    m_part->readProperties(config);
+    setVisible( !Settings::showTrayIcon() || !config.readEntry("docked", false) );
+}
+
+// TODO: move to part?
+void MainWindow::optionsConfigureKeys()
+{
+    KShortcutsDialog dlg( KShortcutsEditor::AllActions,
+      KShortcutsEditor::LetterShortcutsAllowed, this );
+
+    dlg.addCollection(actionCollection());
+    if (m_part)
+        dlg.addCollection(m_part->actionCollection());
+
+    dlg.configure();
+}
+
+// TODO: move to part?
+void MainWindow::optionsConfigureToolbars()
+{
+    saveMainWindowSettings(KGlobal::config().data()->group( autoSaveGroup()) );
+    KEditToolBar dlg(factory());
+    connect(&dlg, SIGNAL(newToolBarConfig()),
+            this, SLOT(applyNewToolbarConfig()));
+    dlg.exec();
+}
+
+// TODO: move to part?
+void MainWindow::applyNewToolbarConfig()
+{
+    applyMainWindowSettings(KGlobal::config()->group( autoSaveGroup()) );
+}
+
+KParts::BrowserExtension *MainWindow::browserExtension(KParts::ReadOnlyPart *p)
+{
+    return KParts::BrowserExtension::childObject( p );
+}
+
+bool MainWindow::queryExit()
+{
+    if ( !kapp->sessionSaving() )
+    {
+        autoSaveProperties();
+        delete m_part; // delete that here instead of dtor to ensure nested khtmlparts are deleted before singleton objects like KHTMLPageCache
+    }
+    return KMainWindow::queryExit();
+}
+
+void MainWindow::slotQuit()
+{
+    if (TrayIcon::getInstance())
+        TrayIcon::getInstance()->hide();
+    autoSaveProperties();
+    kapp->quit();
+}
+
+bool MainWindow::queryClose()
+{
+    if (kapp->sessionSaving())
+        return true;
+    else if (TrayIcon::getInstance() == 0 || !TrayIcon::getInstance()->isVisible() )
+    {
+        autoSaveProperties();
+        return true;
+    }
+
+    const QPixmap shot = TrayIcon::getInstance()->takeScreenshot();
+    KTemporaryFile tmp;
+    QString tmpFileName;
+    if ( tmp.open() ) {
+        tmpFileName = tmp.fileName();
+        shot.save( &tmp, "PNG" );
+        tmp.close();
+    }
+
+    const QString imgTag = !tmpFileName.isEmpty() ? QString::fromLatin1( "<img src=\"%1\"/>" ).arg( tmpFileName ) : QString();
+
+    QPointer<QObject> that( this );
+    KMessageBox::information(this, i18n( "<qt><p>Closing the main window will keep Akregator2 running in the system tray. Use 'Quit' from the 'File' menu to quit the application.</p><p><center>%1</center></p></qt>", imgTag ), i18n( "Docking in System Tray" ), "hideOnCloseInfo");
+    if ( that )
+        hide();
+    return false;
+}
+
+void MainWindow::slotClearStatusText()
+{
+    m_statusLabel->setText(QString());
+}
+
+void MainWindow::slotSetStatusBarText( const QString & text )
+{
+    m_statusLabel->setText(text);
+}
+
+void MainWindow::autoSaveProperties()
+{
+    KConfig config("autosaved", KConfig::SimpleConfig,
+        "appdata");
+    KConfigGroup configGroup(&config, "MainWindow");
+    configGroup.deleteGroup();
+
+    saveProperties(configGroup);
+}
+
+void MainWindow::autoReadProperties()
+{
+    if(kapp->isSessionRestored())
+        return;
+
+    KConfig config("autosaved", KConfig::SimpleConfig,
+        "appdata");
+    KConfigGroup configGroup(&config, "MainWindow");
+
+    readProperties(configGroup);
+}
+
+#include "mainwindow.moc"

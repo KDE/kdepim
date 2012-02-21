@@ -1,0 +1,12 @@
+[Protocol]
+exec=akregator2 -a "%u"
+protocol=feed
+input=none
+output=none
+helper=true
+reading=false
+listing=
+writing=false
+makedir=false
+deleting=false
+
