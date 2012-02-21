@@ -581,7 +581,7 @@ void NepomukFeederAgentBase::processPipeline()
   processing = false;
 
   if ( mItemPipeline.isEmpty() )
-    emit status( AgentBase::Idle, QString() );
+    emit status( AgentBase::Idle, i18n( "Nothing to do, pipeline empty" ) );
 
   if ( !isOnline() )
     return;
