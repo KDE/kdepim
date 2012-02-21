@@ -133,8 +133,7 @@ void FilterThunderbird::importDirContents(const QString& dirName, const QString&
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
     if(filterInfo()->shouldTerminate()) break;
     QString temp_mailfile = *mailFile;
-    if (temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat"))) {}
-    else {
+    if (!(temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")))) {
       filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
       importMBox( (dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
     }
@@ -148,7 +147,7 @@ void FilterThunderbird::importDirContents(const QString& dirName, const QString&
     if(filterInfo()->shouldTerminate()) break;
     QString kSubDir;
     if(!KMailSubDir.isNull()) {
-      kSubDir = KMailSubDir + '/' + *filename;
+      kSubDir = KMailSubDir + QLatin1Char('/') + *filename;
     } else {
       kSubDir = *filename;
     }
