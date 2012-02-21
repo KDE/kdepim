@@ -195,6 +195,11 @@ void FilterKMailArchive::import()
     return;
   }
   const QString archiveFile = fileDialog.selectedFile();
+  importMails( archiveFile );
+}
+
+void FilterKMailArchive::importMails( const QString & archiveFile )
+{
   filterInfo()->setFrom( archiveFile );
 
   KMimeType::Ptr mimeType = KMimeType::findByUrl( archiveFile, 0, true /* local file */ );

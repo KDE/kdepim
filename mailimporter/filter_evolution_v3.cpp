@@ -50,13 +50,19 @@ void FilterEvolution_v3::import()
     evolDir = QDir::homePath();
   }
     
-
   KFileDialog *kfd = new KFileDialog( evolDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
-  setMailDir(kfd->selectedFile());
+  const QString dir = kfd->selectedFile();
   delete kfd;
-  
+
+  importMails( dir );
+
+}
+
+void FilterEvolution_v3::importMails( const QString& maildir )
+{
+  setMailDir(maildir);
   if ( mailDir().isEmpty() ) {
     filterInfo()->alert( i18n( "No directory selected." ) );
     return;

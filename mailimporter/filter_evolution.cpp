@@ -49,8 +49,12 @@ void FilterEvolution::import()
   if ( !d.exists() ) {
     evolDir = QDir::homePath();
   }
+  importMails( KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent() ) );
+}
 
-  setMailDir(KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent()));
+void FilterEvolution::importMails( const QString& maildir )
+{ 
+  setMailDir(maildir);
 
   if (mailDir().isEmpty()) {
     filterInfo()->alert(i18n("No directory selected."));

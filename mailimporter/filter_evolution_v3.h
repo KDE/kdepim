@@ -29,6 +29,7 @@ public:
   ~FilterEvolution_v3();
 
   void import();
+  void importMails( const QString& maildir );
 
 private:
   void importDirContents(const QString&);

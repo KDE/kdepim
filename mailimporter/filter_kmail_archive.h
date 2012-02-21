@@ -30,9 +30,11 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterKMailArchive : public Filter
 {
 public:
-  FilterKMailArchive();
+  explicit FilterKMailArchive();
   ~FilterKMailArchive();
+  
   void import();
+  void importMails( const QString & archiveFile );
 private:
 
   bool importDirectory( const KArchiveDirectory *directory, const QString &folderPath );

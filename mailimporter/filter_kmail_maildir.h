@@ -31,6 +31,7 @@ public:
   ~FilterKMail_maildir();
 
   void import();
+  void importMails( const QString& maildir );
 
 private:
   void importDirContents(const QString&);
