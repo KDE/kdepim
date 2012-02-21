@@ -292,7 +292,7 @@ void NepomukFeederAgentBase::itemFetchResult(KJob* job)
   --mPendingJobs;
   if ( mPendingJobs == 0 && mItemPipeline.isEmpty() ) {
     mCurrentCollection = Collection();
-    emit status( Idle, i18n( "Indexing completed." ) );
+    emit status( AgentBase::Idle, i18n( "Indexing completed." ) );
     processNextCollection();
     return;
   }
@@ -349,7 +349,7 @@ void NepomukFeederAgentBase::selfTest()
       mNepomukStartupTimeout.start();
       // wait for Nepomuk to start
       checkOnline();
-      emit status( Broken, i18n( "Waiting for the Nepomuk server to start..." ) );
+      emit status( AgentBase::Broken, i18n( "Waiting for the Nepomuk server to start..." ) );
       return;
     }
   }
@@ -370,7 +370,7 @@ void NepomukFeederAgentBase::selfTest()
   } else if ( mNepomukStartupAttempted && mNepomukStartupTimeout.isActive() ) {
     // still waiting for Nepomuk to start
     setOnline( false );
-    emit status( Broken, i18n( "Waiting for the Nepomuk server to start..." ) );
+    emit status( AgentBase::Broken, i18n( "Waiting for the Nepomuk server to start..." ) );
     return;
   } else {
     errorMessages.append( i18n( "Nepomuk is not running." ) );
@@ -395,7 +395,7 @@ void NepomukFeederAgentBase::selfTest()
       mInitialUpdateDone = true;
       QTimer::singleShot( 0, this, SLOT(updateAll()) );
     } else {
-      emit status( Idle, i18n( "Ready to index data." ) );
+      emit status( AgentBase::Idle, i18n( "Ready to index data." ) );
     }
     return;
   }
@@ -411,7 +411,7 @@ void NepomukFeederAgentBase::selfTest()
                           errorMessages.join( QLatin1String( "</li><li>" ) ) );
 
   // prevent a message storm from all agents
-  emit status( Broken, i18n( "Nepomuk not operational" ) );
+  emit status( AgentBase::Broken, i18n( "Nepomuk not operational" ) );
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.pim.nepomukfeeder.selftestreport" ) ) )
     return;
   KNotification::event( KNotification::Warning, i18n( "Nepomuk Indexing Disabled" ), message );
@@ -474,7 +474,7 @@ void NepomukFeederAgentBase::indexData(const KUrl& url, const QByteArray& data, 
 {
   Q_ASSERT( mNeedsStrigi );
   if ( !mStrigiIndexManager ) {
-    emit status( Broken, i18n( "Strigi is not available for indexing." ) );
+    emit status( AgentBase::Broken, i18n( "Strigi is not available for indexing." ) );
     return;
   }
 
@@ -542,7 +542,7 @@ void NepomukFeederAgentBase::systemIdle()
   if ( mIdleDetectionDisabled )
     return;
 
-  emit status( Idle, i18n( "System idle, ready to index data." ) );
+  emit status( AgentBase::Idle, i18n( "System idle, ready to index data." ) );
   mSystemIsIdle = true;
   KIdleTime::instance()->catchNextResumeEvent();
   checkOnline();
@@ -553,7 +553,7 @@ void NepomukFeederAgentBase::systemResumed()
   if ( mIdleDetectionDisabled )
     return;
 
-  emit status( Idle, i18n( "System busy, indexing suspended." ) );
+  emit status( AgentBase::Idle, i18n( "System busy, indexing suspended." ) );
   mSystemIsIdle = false;
   checkOnline();
 }
@@ -588,7 +588,7 @@ void NepomukFeederAgentBase::processPipeline()
 
   if ( mPendingJobs == 0 && mCurrentCollection.isValid() && mItemPipeline.isEmpty() ) {
     mCurrentCollection = Collection();
-    emit status( Idle, i18n( "Indexing completed." ) );
+    emit status( AgentBase::Idle, i18n( "Indexing completed." ) );
     processNextCollection();
     return;
   }
