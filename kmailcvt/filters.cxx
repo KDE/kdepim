@@ -378,4 +378,10 @@ bool Filter::needsSecondPage()
   return true;
 }
 
+void Filter::clear()
+{
+  m_messageFolderMessageIDMap.clear();  
+  m_messageFolderCollectionMap.clear();
+}
+
 // vim: ts=2 sw=2 et

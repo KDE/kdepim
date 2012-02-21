@@ -66,6 +66,7 @@ void KMailCVT::next()
   if( currentPage() == page1 ){
     // Save selected filter
     Filter *selectedFilter = selfilterpage->getSelectedFilter();
+    selectedFilter->clear();
     Akonadi::Collection selectedCollection = selfilterpage->mCollectionRequestor->collection();
     // without filter don't go next
     if ( !selectedFilter )

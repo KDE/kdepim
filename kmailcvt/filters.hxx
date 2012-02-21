@@ -72,7 +72,7 @@ class Filter
     virtual bool needsSecondPage();
 
     int count_duplicates; //to count all duplicate messages
-
+    void clear();
   protected:
 
     /**
