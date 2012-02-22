@@ -35,6 +35,9 @@ public:
   ImportWizard( QWidget* parent=0);
   ~ImportWizard();
 
+  void next();
+  void reject();
+
 public slots:
   void help();
 

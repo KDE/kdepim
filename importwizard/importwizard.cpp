@@ -77,4 +77,18 @@ void ImportWizard::help()
   a.exec();
 }
 
+void ImportWizard::next()
+{
+  if( currentPage() == mPage1 ) {
+    KAssistantDialog::next();
+  } else {
+     KAssistantDialog::next();
+  }
+}
+
+void ImportWizard::reject()
+{
+  KAssistantDialog::reject();
+}
+
 #include "importwizard.moc"
