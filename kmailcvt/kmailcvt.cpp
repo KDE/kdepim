@@ -26,7 +26,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <ktoolinvocation.h>
 
 // Qt includes
 #include <QPushButton>
