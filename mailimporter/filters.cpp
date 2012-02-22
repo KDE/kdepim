@@ -89,6 +89,8 @@ void Filter::clear()
 {
   d->messageFolderMessageIDMap.clear();
   d->messageFolderCollectionMap.clear();
+  d->mailDir.clear();
+  d->count_duplicates = 0;
 }
 
 void Filter::setMailDir( const QString& mailDir )
