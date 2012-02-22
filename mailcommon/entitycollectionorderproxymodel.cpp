@@ -18,6 +18,7 @@
 
 #include "entitycollectionorderproxymodel.h"
 #include "mailkernel.h"
+#include "mailutil.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/EntityTreeModel>
@@ -55,6 +56,8 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
         rank = 4;
       } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
         rank = 6;
+      } else if ( MailCommon::Util::isVirtualCollection( collection ) ) {
+        rank = 200;
       }
       collectionRanks.insert( id, rank );
       return rank;
