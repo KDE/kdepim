@@ -18,6 +18,7 @@
 
 #include "entitycollectionorderproxymodel.h"
 #include "mailkernel.h"
+#include "mailutil.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
@@ -51,15 +52,17 @@ public:
         } else {
           rank = 2;
         }
-    } else if ( Kernel::self()->folderIsSentMailFolder( collection ) ) {
-      rank = 3;
-    } else if ( Kernel::self()->folderIsTrash( collection ) ) {
-      rank = 4;
-    } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
-      rank = 6;
-    }
-    collectionRanks.insert( id, rank );
-    return rank;
+      } else if ( Kernel::self()->folderIsSentMailFolder( collection ) ) {
+        rank = 3;
+      } else if ( Kernel::self()->folderIsTrash( collection ) ) {
+        rank = 4;
+      } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
+        rank = 6;
+      } else if ( MailCommon::Util::isVirtualCollection( collection ) ) {
+        rank = 200;
+      }
+      collectionRanks.insert( id, rank );
+      return rank;
   }
 
   bool manualSortingActive;
