@@ -28,6 +28,7 @@ class ImportMailPage;
 class ImportFilterPage;
 class ImportSettingPage;
 class ImportAddressbookPage;
+class PimImportAbstract;
 
 class ImportWizard : public KAssistantDialog {
   Q_OBJECT
@@ -42,6 +43,10 @@ public slots:
   void help();
 
 private:
+  void addImportModule(PimImportAbstract *);
+
+  QList<PimImportAbstract*> mlistImport;
+
   KPageWidgetItem *mPage1;
   KPageWidgetItem *mPage2;
   KPageWidgetItem *mPage3;

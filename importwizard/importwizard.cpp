@@ -23,6 +23,8 @@
 #include "importsettingpage.h"
 #include "importaddressbookpage.h"
 
+#include "thunderbirdimportdata.h"
+
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -60,6 +62,8 @@ ImportWizard::ImportWizard(QWidget *parent)
   mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Step 6: Import addressbooks" ) );
   addPage( mPage6 );
 
+  addImportModule(new ThunderbirdImportData());
+
   // Disable the 'next button to begin with.
   setValid( currentPage(), true );
 
@@ -71,6 +75,11 @@ ImportWizard::~ImportWizard()
 {
 }
 
+void ImportWizard::addImportModule(PimImportAbstract *import)
+{
+  mlistImport.append(import);
+}
+
 void ImportWizard::help()
 {
   KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
@@ -80,10 +89,20 @@ void ImportWizard::help()
 void ImportWizard::next()
 {
   if( currentPage() == mPage1 ) {
-    KAssistantDialog::next();
-  } else {
-     KAssistantDialog::next();
-  }
+      KAssistantDialog::next();
+    } else if( currentPage() == mPage2 ) {
+      KAssistantDialog::next();
+    } else if( currentPage() == mPage3 ) {
+      KAssistantDialog::next();
+    } else if( currentPage() == mPage4 ) {
+      KAssistantDialog::next();
+    } else if( currentPage() == mPage5 ) {
+      KAssistantDialog::next();
+    } else if( currentPage() == mPage6 ) {
+      KAssistantDialog::next();
+    } else {
+      KAssistantDialog::next();
+    }
 }
 
 void ImportWizard::reject()
