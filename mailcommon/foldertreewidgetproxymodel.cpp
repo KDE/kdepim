@@ -91,15 +91,15 @@ void FolderTreeWidgetProxyModel::readConfig()
   KConfigGroup collectionFolderView( KernelIf->config(), "CollectionFolderView" );
   KColorScheme scheme( QPalette::Active, KColorScheme::View );
   if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-     d->offlineAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
-     d->brokenAccountColor = scheme.foreground( KColorScheme::InactiveText ).color();
+     d->offlineAccountColor = scheme.foreground( KColorScheme::InactiveText ).color();
+     d->brokenAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
   } else {
      d->offlineAccountColor =
        collectionFolderView.readEntry( "OfflineAccountColor",
-                                       scheme.foreground( KColorScheme::NegativeText ).color() );
+                                       scheme.foreground( KColorScheme::InactiveText ).color() );
      d->brokenAccountColor =
        collectionFolderView.readEntry( "BrokenAccountColor",
-                                       scheme.foreground( KColorScheme::InactiveText ).color() );
+                                       scheme.foreground( KColorScheme::NegativeText ).color() );
   }
   invalidate();
 }
@@ -242,8 +242,8 @@ void FolderTreeWidgetProxyModel::updatePalette()
 {
   if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KColorScheme scheme( QPalette::Active, KColorScheme::View );
-    d->offlineAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
-    d->brokenAccountColor = scheme.foreground( KColorScheme::InactiveText ).color();
+    d->offlineAccountColor = scheme.foreground( KColorScheme::InactiveText ).color();
+    d->brokenAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
     invalidate();
   }
 }
