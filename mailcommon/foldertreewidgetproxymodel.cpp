@@ -76,8 +76,8 @@ FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModel( QObject *parent, FolderT
     d->hideOutboxFolder = true;
   }
   KColorScheme scheme(QPalette::Active, KColorScheme::View);
-  d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
-  d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  d->offlineAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  d->brokenAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
 }
 
 FolderTreeWidgetProxyModel::~FolderTreeWidgetProxyModel()
@@ -205,8 +205,8 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex & index, int role) 
 void FolderTreeWidgetProxyModel::updatePalette()
 {
   KColorScheme scheme(QPalette::Active, KColorScheme::View);
-  d->offlineAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
-  d->brokenAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  d->offlineAccountColor = scheme.foreground(KColorScheme::InactiveText).color();
+  d->brokenAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
   invalidate();
 }
 
