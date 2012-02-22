@@ -21,6 +21,14 @@
 #include <kapplication.h>
 #include <KAssistantDialog>
 
+class KPageWidgetItem;
+class CheckProgramPage;
+class SelectComponentPage;
+class ImportMailPage;
+class ImportFilterPage;
+class ImportSettingPage;
+class ImportAddressbookPage;
+
 class ImportWizard : public KAssistantDialog {
   Q_OBJECT
 public:
@@ -29,6 +37,21 @@ public:
 
 public slots:
   void help();
+
+private:
+  KPageWidgetItem *mPage1;
+  KPageWidgetItem *mPage2;
+  KPageWidgetItem *mPage3;
+  KPageWidgetItem *mPage4;
+  KPageWidgetItem *mPage5;
+  KPageWidgetItem *mPage6;
+
+  CheckProgramPage *mCheckProgramPage;
+  SelectComponentPage *mSelectComponentPage;
+  ImportMailPage *mImportMailPage;
+  ImportFilterPage *mImportFilterPage;
+  ImportSettingPage *mImportSettingPage;
+  ImportAddressbookPage *mImportAddressbookPage;
 };
 
 #endif /* IMPORTWIZARD_H */
