@@ -26,10 +26,12 @@ public:
   ~ThunderbirdImportData();
     
   TypeSupportedOptions supportedOption();
-  virtual void importSettings();
-  virtual void importMails();
-  virtual void importFilters();
-  virtual void importAddressBook();
+  bool foundMailer() const;
+  
+  void importSettings();
+  void importMails();
+  void importFilters();
+  void importAddressBook();
   
 };
 

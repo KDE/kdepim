@@ -35,7 +35,9 @@ public:
 
   explicit PimImportAbstract();
   virtual ~PimImportAbstract();
-    
+
+  virtual bool foundMailer() const= 0;
+  
   virtual TypeSupportedOptions supportedOption() = 0;
   virtual void importSettings();
   virtual void importMails();

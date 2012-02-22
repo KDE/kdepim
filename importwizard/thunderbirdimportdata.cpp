@@ -26,6 +26,10 @@ ThunderbirdImportData::~ThunderbirdImportData()
 {
 }
 
+bool ThunderbirdImportData::foundMailer() const
+{
+  return false;
+}
 
 void ThunderbirdImportData::importSettings()
 {
@@ -45,5 +49,8 @@ void ThunderbirdImportData::importAddressBook()
 
 PimImportAbstract::TypeSupportedOptions ThunderbirdImportData::supportedOption()
 {
-  return PimImportAbstract::Mails;
+  TypeSupportedOptions options;
+  options |=PimImportAbstract::Mails;
+  options |=PimImportAbstract::Filters;
+  return options;
 }
