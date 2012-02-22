@@ -21,7 +21,8 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <ktoolinvocation.h>
+#include <akonadi/control.h>
+
 
 ImportWizard::ImportWizard(QWidget *parent)
   : KAssistantDialog(parent)
@@ -29,6 +30,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   setModal(true);
   setWindowTitle( i18n( "KMailCVT Import Tool" ) );
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
+  Akonadi::Control::widgetNeedsAkonadi(this);
 }
 
 ImportWizard::~ImportWizard()
