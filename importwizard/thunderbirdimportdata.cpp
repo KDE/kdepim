@@ -17,6 +17,7 @@
 
 #include "thunderbirdimportdata.h"
 
+#include <QDir>
 
 ThunderbirdImportData::ThunderbirdImportData()
 {
@@ -28,23 +29,31 @@ ThunderbirdImportData::~ThunderbirdImportData()
 
 bool ThunderbirdImportData::foundMailer() const
 {
+  const QString thunderDir = QDir::homePath() + QLatin1String( "/.thunderbird/" );
+  QDir directory( thunderDir );
+  if ( directory.exists() )
+    return true;
   return false;
 }
 
-void ThunderbirdImportData::importSettings()
+bool ThunderbirdImportData::importSettings()
 {
+  return false;
 }
 
-void ThunderbirdImportData::importMails()
+bool ThunderbirdImportData::importMails()
 {
+  return false;
 }
 
-void ThunderbirdImportData::importFilters()
+bool ThunderbirdImportData::importFilters()
 {
+  return false;
 }
 
-void ThunderbirdImportData::importAddressBook()
+bool ThunderbirdImportData::importAddressBook()
 {
+  return false;
 }
 
 PimImportAbstract::TypeSupportedOptions ThunderbirdImportData::supportedOption()

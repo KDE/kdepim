@@ -28,10 +28,10 @@ public:
   TypeSupportedOptions supportedOption();
   bool foundMailer() const;
   
-  void importSettings();
-  void importMails();
-  void importFilters();
-  void importAddressBook();
+  bool importSettings();
+  bool importMails();
+  bool importFilters();
+  bool importAddressBook();
   
 };
 

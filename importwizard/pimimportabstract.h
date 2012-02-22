@@ -39,10 +39,10 @@ public:
   virtual bool foundMailer() const= 0;
   
   virtual TypeSupportedOptions supportedOption() = 0;
-  virtual void importSettings();
-  virtual void importMails();
-  virtual void importFilters();
-  virtual void importAddressBook();
+  virtual bool importSettings();
+  virtual bool importMails();
+  virtual bool importFilters();
+  virtual bool importAddressBook();
 };
 
 

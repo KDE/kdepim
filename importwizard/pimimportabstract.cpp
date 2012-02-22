@@ -26,19 +26,23 @@ PimImportAbstract::~PimImportAbstract()
 }
 
 
-void PimImportAbstract::importSettings()
+bool PimImportAbstract::importSettings()
 {
+  return false;
 }
 
-void PimImportAbstract::importMails()
+bool PimImportAbstract::importMails()
 {
+  return false;
 }
 
-void PimImportAbstract::importFilters()
+bool PimImportAbstract::importFilters()
 {
+  return false;
 }
 
-void PimImportAbstract::importAddressBook()
+bool PimImportAbstract::importAddressBook()
 {
+  return false;
 }
 
