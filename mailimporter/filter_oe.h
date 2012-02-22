@@ -48,7 +48,7 @@ protected:
     
   /** helperfunctions for folder structure support */
   QString parseFolderString( QDataStream& ds, int filePos);
-  QString getFolderName(QString filename);
+  QString getFolderName(const QString &filename);
 
 private: // Private methods
   /** which file (of totalFiles) is now in the work? */

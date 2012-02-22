@@ -34,7 +34,8 @@ FilterKMail_maildir::FilterKMail_maildir() :
                 "<p>This filter does not import KMail mailfolders with mbox files.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
                 "will be stored under: \"KMail-Import\" in your local folder.</p>" ) )
-{}
+{
+}
 
 /** Destructor. */
 FilterKMail_maildir::~FilterKMail_maildir()

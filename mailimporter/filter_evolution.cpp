@@ -33,7 +33,8 @@ FilterEvolution::FilterEvolution() :
               "<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
               "<p>Since it is possible to recreate the folder structure, the folders "
               "will be stored under: \"Evolution-Import\".</p>"))
-{}
+{
+}
 
 /** Destructor. */
 FilterEvolution::~FilterEvolution()
@@ -179,9 +180,9 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
 
       QString destFolder = rootDir;
       if(!targetDir.isNull()) {
-        destFolder = "Evolution-Import/" + destFolder + '/' + targetDir;
+        destFolder = QLatin1String("Evolution-Import/") + destFolder + QLatin1Char('/') + targetDir;
       } else {
-        destFolder = "Evolution-Import/" + destFolder;
+        destFolder = QLatin1String("Evolution-Import/") + destFolder;
       }
 
       /* comment by Danny Kukawka:
@@ -193,9 +194,10 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
       else
         addMessage_fastImport(destFolder, tmp.fileName() );
 
-      int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
+      const int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
       filterInfo()->setCurrent(currentPercentage);
-      if (filterInfo()->shouldTerminate()) return;
+      if (filterInfo()->shouldTerminate())
+          return;
     }
 
     if (countDuplicates() > 0) {

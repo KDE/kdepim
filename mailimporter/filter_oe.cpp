@@ -45,7 +45,8 @@ FilterOE::FilterOE() :
                "<li><i>Documents and Settings</i> in Windows 2000 or later</li></ul></p>"
                "<p><b>Note:</b> Since it is possible to recreate the folder structure, the folders from "
                "Outlook Express 5 and 6 will be stored under: \"OE-Import\" in your local folder.</p>" ))
-{}
+{
+}
 
 FilterOE::~FilterOE()
 {
@@ -206,7 +207,8 @@ void FilterOE::mbxImport( QDataStream& ds)
     else
       addMessage_fastImport( folderName, tmp.fileName() );
 
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate())
+        return;
   }
 }
 
@@ -392,7 +394,7 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
 }
 
 /** get the foldername for a given file ID from folderMatrix */
-QString FilterOE::getFolderName(QString filename)
+QString FilterOE::getFolderName(const QString& filename)
 {
   bool found = false;
   bool foundFilename = false;
