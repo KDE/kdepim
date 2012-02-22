@@ -38,21 +38,27 @@ ImportWizard::ImportWizard(QWidget *parent)
 
   mCheckProgramPage = new CheckProgramPage(this);
   mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Step 1: Detect pim" ) );
+  addPage( mPage1);
 
   mSelectComponentPage = new SelectComponentPage(this);
   mPage2 = new KPageWidgetItem( mSelectComponentPage, i18n( "Step 2: Select import components" ) );
+  addPage( mPage2);
 
   mImportMailPage = new ImportMailPage(this);
   mPage3 = new KPageWidgetItem( mImportMailPage, i18n( "Step 3: Import mails" ) );
+  addPage( mPage3);
 
   mImportFilterPage = new ImportFilterPage(this);
   mPage4 = new KPageWidgetItem( mImportFilterPage, i18n( "Step 4: Import filters" ) );
+  addPage( mPage4 );
 
   mImportSettingPage = new ImportSettingPage(this);
   mPage5 = new KPageWidgetItem( mImportSettingPage, i18n( "Step 5: Import settings" ) );
+  addPage( mPage5);
 
   mImportAddressbookPage = new ImportAddressbookPage(this);
   mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Step 6: Import addressbooks" ) );
+  addPage( mPage6 );
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), true );
