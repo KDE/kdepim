@@ -44,22 +44,28 @@ void FilterPMail::import()
   KFileDialog *kfd = new KFileDialog( QDir::homePath(), "", 0 );
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
   kfd->exec();
-  const QString chosenDir = kfd->selectedFile();
+  const QString maildir = kfd->selectedFile();
   delete kfd;
-  if (chosenDir.isEmpty()) {
+  importMails( maildir );
+}
+
+void FilterPMail::importMails( const QString & chosenDir )
+{
+  setMailDir( chosenDir );
+  if (mailDir().isEmpty()) {
     filterInfo()->alert(i18n("No directory selected."));
     return;
   }
 
   // Count total number of files to be processed
   filterInfo()->addInfoLogEntry(i18n("Counting files..."));
-  dir.setPath (chosenDir);
+  dir.setPath (mailDir());
   const QStringList files = dir.entryList(QStringList("*.[cC][nN][mM]")<<"*.[pP][mM][mM]"<<"*.[mM][bB][xX]", QDir::Files, QDir::Name);
   totalFiles = files.count();
   currentFile = 0;
   kDebug() <<"Count is" << totalFiles;
 
-  if(!(folderParsed = parseFolderMatrix(chosenDir))) {
+  if(!(folderParsed = parseFolderMatrix(mailDir()))) {
     filterInfo()->addErrorLogEntry(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
   }
 
@@ -70,7 +76,7 @@ void FilterPMail::import()
   filterInfo()->addInfoLogEntry(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
   processFiles("*.[mM][bB][xX]", &FilterPMail::importUnixMailFolder);
 
-  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", chosenDir ));
+  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
 }
@@ -274,14 +280,14 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 }
 
 /** Parse the m_filterInfoormation about folderstructure to folderMatrix */
-bool FilterPMail::parseFolderMatrix( const QString & chosenDir )
+bool FilterPMail::parseFolderMatrix( const QString & chosendir )
 {
   kDebug() <<"Start parsing the foldermatrix.";
   filterInfo()->addInfoLogEntry(i18n("Parsing the folder structure..."));
 
-  QFile hierarch(chosenDir + "/hierarch.pm");
+  QFile hierarch(chosendir + "/hierarch.pm");
   if (! hierarch.open( QIODevice::ReadOnly ) ) {
-    filterInfo()->alert( i18n("Unable to open %1, skipping", chosenDir + "hierarch.pm" ) );
+    filterInfo()->alert( i18n("Unable to open %1, skipping",chosendir + "hierarch.pm" ) );
     return false;
   } else {
     QStringList tmpList;

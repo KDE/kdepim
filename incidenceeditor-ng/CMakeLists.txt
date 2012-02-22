@@ -83,7 +83,6 @@ if(NOT WINCE)
     visualfreebusywidget.cpp
   )
 
-
   kde4_add_ui_files(incidenceeditors_ng_desktop_LIB_SRCS
     categoryeditdialog_base.ui
     categoryselectdialog_base.ui
@@ -160,7 +159,6 @@ endif()
 
   install(TARGETS incidenceeditorsngmobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 #endif(KDEPIM_MOBILE_UI)
-
 
 ### Build the test app TODO: Make optional
 

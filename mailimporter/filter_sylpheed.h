@@ -14,8 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILTER_SYLPHEED_HXX
-#define FILTER_SYLPHEED_HXX
+#ifndef MAILIMPORTER_FILTER_SYLPHEED_HXX
+#define MAILIMPORTER_FILTER_SYLPHEED_HXX
 
 #include <QHash>
 
@@ -31,19 +31,18 @@ class MAILIMPORTER_EXPORT FilterSylpheed : public Filter
 {
 
 public:
-    explicit FilterSylpheed();
-    ~FilterSylpheed();
-
-    void import();
-
+  explicit FilterSylpheed();
+  ~FilterSylpheed();
+  
+  void import();
+  void importMails( const QString& maildir );
+  
 private:
-    QString mailDir;
-
-    void importDirContents(const QString&);
-    void importFiles(const QString&);
-    
-    void readMarkFile( const QString&, QHash<QString,unsigned long>&);
-    QString msgFlagsToString(unsigned long);
+  void importDirContents(const QString&);
+  void importFiles(const QString&);
+  
+  void readMarkFile( const QString&, QHash<QString,unsigned long>&);
+  Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
 };
 }
 

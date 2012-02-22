@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_MBOX_HXX
-#define FILTER_MBOX_HXX
+#ifndef MAILIMPORTER_FILTER_MBOX_HXX
+#define MAILIMPORTER_FILTER_MBOX_HXX
 
 #include "filters.h"
 #include "filters.h"

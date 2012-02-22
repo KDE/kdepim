@@ -14,8 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILTER_KMAIL_MAILDIR_HXX
-#define FILTER_KMAIL_MAILDIR_HXX
+#ifndef MAILIMPORTER_FILTER_KMAIL_MAILDIR_HXX
+#define MAILIMPORTER_FILTER_KMAIL_MAILDIR_HXX
 
 #include "filters.h"
 #include "mailimporter_export.h"
@@ -31,10 +31,9 @@ public:
   ~FilterKMail_maildir();
 
   void import();
+  void importMails( const QString& maildir );
 
 private:
-  QString mailDir;
-
   void importDirContents(const QString&);
   void importFiles(const QString&);
 };

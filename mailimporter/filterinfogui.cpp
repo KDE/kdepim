@@ -28,7 +28,7 @@ FilterInfoGui::FilterInfoGui()
 FilterInfoGui::~FilterInfoGui()
 {
 }
-void FilterInfoGui::setStatusMsg( const QString& status )
+void FilterInfoGui::setStatusMessage( const QString& status )
 {
 }
 

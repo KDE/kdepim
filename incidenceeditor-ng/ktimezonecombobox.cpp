@@ -136,7 +136,8 @@ KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec() const
       if ( systemTz.isValid() ) {
         spec.setType( systemTz );
       } else {
-        const KCalCore::ICalTimeZone additionalTz = d->mAdditionalZones->zone( d->mZones[currentIndex()] );
+        const KCalCore::ICalTimeZone additionalTz =
+          d->mAdditionalZones->zone( d->mZones[currentIndex()] );
         spec.setType( additionalTz );
       }
     }

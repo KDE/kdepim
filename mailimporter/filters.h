@@ -25,6 +25,7 @@
 
 #include <Akonadi/Collection>
 #include <KMime/KMimeMessage>
+#include <akonadi/kmime/messagestatus.h>
 
 
 #include "filterinfo.h"
@@ -44,13 +45,17 @@ public:
   QString name() const;
   QString info() const;
 
+  void clear();
   void setFilterInfo( MailImporter::FilterInfo* info );
 
   MailImporter::FilterInfo* filterInfo();
 
   void setCountDuplicates( int countDuplicate );
   int countDuplicates() const;
-  
+
+  void setMailDir( const QString& mailDir );
+  QString mailDir() const;
+
 protected:
 
   /**
@@ -72,11 +77,11 @@ protected:
   Akonadi::Collection parseFolderString( const QString &folderParseString );
 
   bool addAkonadiMessage( const Akonadi::Collection &collection,
-                          const KMime::Message::Ptr& message );
+                          const KMime::Message::Ptr& message, Akonadi::MessageStatus status = Akonadi::MessageStatus() );
 
   bool addMessage( const QString& folder,
                    const QString& msgFile,
-                   const QString& msgStatusFlags = QString());
+                   Akonadi::MessageStatus status = Akonadi::MessageStatus() );
 
   /**
    * Checks for duplicate messages in the collection by message ID.
@@ -89,12 +94,13 @@ protected:
                            const QString& messageFolder );
   bool addMessage_fastImport( const QString& folder,
                               const QString& msgFile,
-                              const QString& msgStatusFlags = QString());
+                              Akonadi::MessageStatus status = Akonadi::MessageStatus() );
   
 private: 
   bool doAddMessage( const QString& folderName,
                      const QString& msgPath,
-                     bool duplicateCheck = false );
+                     bool duplicateCheck, 
+                     Akonadi::MessageStatus status = Akonadi::MessageStatus() );
   class Private;
   Private *const d;
 };

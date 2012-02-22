@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -34,8 +34,6 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
   :QPlainTextEdit( parent )
 {
   setFocus();
-  //setAcceptRichText( false );
-  //setCheckSpellingEnabled( false );
   setWordWrapMode ( QTextOption::NoWrap );
   setFont( KGlobalSettings::fixedFont() );
   (void) new SieveSyntaxHighlighter( document() );
@@ -70,7 +68,7 @@ int SieveTextEdit::lineNumberAreaWidth()
     ++digits;
   }
   
-  int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
+  const int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
   return space;
 }
 
@@ -85,7 +83,7 @@ void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
   int bottom = top + (int) blockBoundingRect(block).height();
   while (block.isValid() && top <= event->rect().bottom()) {
     if (block.isVisible() && bottom >= event->rect().top()) {
-      QString number = QString::number(blockNumber + 1);
+      const QString number = QString::number(blockNumber + 1);
       painter.setPen(Qt::black);
       painter.drawText(0, top, m_sieveLineNumberArea->width(), fontMetrics().height(),
                        Qt::AlignRight, number);
@@ -138,7 +136,7 @@ void SieveTextEdit::initCompleter()
 void SieveTextEdit::slotInsertCompletion( const QString& completion )
 {
   QTextCursor tc = textCursor();
-  int extra = completion.length() - m_completer->completionPrefix().length();
+  const int extra = completion.length() - m_completer->completionPrefix().length();
   tc.movePosition(QTextCursor::Left);
   tc.movePosition(QTextCursor::EndOfWord);
   tc.insertText(completion.right(extra));

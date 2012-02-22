@@ -18,8 +18,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef FILTER_EVOLUTION_HXX
-#define FILTER_EVOLUTION_HXX
+#ifndef MAILIMPORTER_FILTER_EVOLUTION_HXX
+#define MAILIMPORTER_FILTER_EVOLUTION_HXX
 
 #include "filters.h"
 #include "mailimporter_export.h"
@@ -36,9 +36,8 @@ public:
   ~FilterEvolution();
 
   void import();
+  void importMails( const QString& maildir );
 private:
-  QString mailDir;
-
   void importDirContents(const QString&, const QString&, const QString&);
   void importMBox(const QString&, const QString&, const QString&);
 };

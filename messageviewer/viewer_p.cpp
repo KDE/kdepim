@@ -58,6 +58,9 @@
 #include <KTemporaryFile>
 #include <KToggleAction>
 
+#include <kfileitemactions.h>
+#include <KFileItemListProperties>
+
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
 #include <KABC/VCardConverter>
@@ -460,12 +463,90 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
+void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
+{
+  const QString contentTypeStr = node->contentType()->mimeType();
+  const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
+  if (!offers.isEmpty()) {
+    QMenu* menu = topMenu;
+    QActionGroup *actionGroup = new QActionGroup( menu );
+    connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
+    
+    if (offers.count() > 1) { // submenu 'open with'
+      menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
+      menu->menuAction()->setObjectName("openWith_submenu"); // for the unittest
+      topMenu->addMenu(menu);
+    }
+    //kDebug() << offers.count() << "offers" << topMenu << menu;
+
+    KService::List::ConstIterator it = offers.constBegin();
+    for(; it != offers.constEnd(); it++) {
+      KAction* act = createAppAction(*it,
+                                        // no submenu -> prefix single offer
+                                        menu == topMenu, actionGroup);
+      menu->addAction(act);
+    }
+
+    QString openWithActionName;
+    if (menu != topMenu) { // submenu
+      menu->addSeparator();
+      openWithActionName = i18nc("@action:inmenu Open With", "&Other...");
+    } else {
+      openWithActionName = i18nc("@title:menu", "&Open With...");
+    }
+    KAction *openWithAct = new KAction(this);
+    openWithAct->setText(openWithActionName);
+    QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+    menu->addAction(openWithAct);
+  }
+  else { // no app offers -> Open With...
+    KAction *act = new KAction(this);
+    act->setText(i18nc("@title:menu", "&Open With..."));
+    QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+    topMenu->addAction(act);
+  }
+}
+
+void ViewerPrivate::slotOpenWithDialog()
+{
+  if ( !mCurrentContent )
+    return;
+  attachmentOpenWith( mCurrentContent );
+}
+
+KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup )
+{
+  QString actionName(service->name().replace('&', "&&"));
+  if (singleOffer) {
+    actionName = i18n("Open &with %1", actionName);
+  } else {
+    actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
+  }
+
+  KAction *act = new KAction(this);
+  act->setIcon(KIcon(service->icon()));
+  act->setText(actionName);
+  actionGroup->addAction( act );
+  act->setData(QVariant::fromValue(service));
+  return act;
+}
+
+void ViewerPrivate::slotOpenWithAction(QAction *act)
+{
+  if(!mCurrentContent)
+    return;
+
+  KService::Ptr app = act->data().value<KService::Ptr>();
+  attachmentOpen( mCurrentContent, app );
+}
+
+
 void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & globalPos )
 {
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
   QAction *action;
-
+  
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
   connect( attachmentMapper, SIGNAL(mapped(int)),
            this, SLOT(slotHandleAttachment(int)) );
@@ -474,10 +555,8 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Open );
 
-  action = menu->addAction(i18n("Open With..."));
-  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
-  attachmentMapper->setMapping( action, Viewer::OpenWith );
-
+  createOpenWithMenu( menu, node );
+  
   action = menu->addAction(i18nc("to view something", "View") );
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::View );
@@ -631,6 +710,11 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
+  attachmentOpen( node, offer );
+}
+
+void ViewerPrivate::attachmentOpen( KMime::Content *node, KService::Ptr offer )
+{
   const QString name = mNodeHelper->writeNodeToTempFile( node );
   KUrl::List lst;
   KUrl url;

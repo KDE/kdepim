@@ -33,7 +33,8 @@ FilterOutlook::FilterOutlook() :
                "<i>C:\\Documents and Settings</i> in Windows 2000 or later</p>"
                "<p><b>Note:</b> Emails will be imported into a folder named after the "
                "account they came from, prefixed with OUTLOOK-</p>" ))
-{}
+{
+}
 
 FilterOutlook::~FilterOutlook()
 {

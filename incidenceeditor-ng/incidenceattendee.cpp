@@ -493,7 +493,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   AttendeeData::Ptr currentOrganizerAttendee;
   AttendeeData::Ptr newOrganizerAttendee;
 
-  Q_FOREACH( AttendeeData::Ptr attendee, mAttendeeEditor->attendees() ) {
+  Q_FOREACH ( AttendeeData::Ptr attendee, mAttendeeEditor->attendees() ) {
     if ( attendee->fullName() == mOrganizer ) {
       currentOrganizerAttendee = attendee;
     }

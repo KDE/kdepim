@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTER_OUTLOOK_HXX
-#define FILTER_OUTLOOK_HXX
+#ifndef MAILIMPORTER_FILTER_OUTLOOK_HXX
+#define MAILIMPORTER_FILTER_OUTLOOK_HXX
 
 #include "filters.h"
 #include "filters.h"

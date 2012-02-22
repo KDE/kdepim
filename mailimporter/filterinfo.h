@@ -35,7 +35,7 @@ public:
 
   void setFilterInfoGui( FilterInfoGui *filterinfogui );
   
-  void setStatusMsg( const QString& status );
+  void setStatusMessage( const QString& status );
   void setFrom( const QString& from );
   void setTo( const QString& to );
   void setCurrent( const QString& current );

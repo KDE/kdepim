@@ -34,7 +34,8 @@ FilterKMail_maildir::FilterKMail_maildir() :
                 "<p>This filter does not import KMail mailfolders with mbox files.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
                 "will be stored under: \"KMail-Import\" in your local folder.</p>" ) )
-{}
+{
+}
 
 /** Destructor. */
 FilterKMail_maildir::~FilterKMail_maildir()
@@ -50,10 +51,15 @@ void FilterKMail_maildir::import()
   KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
-  mailDir = kfd->selectedFile();
+  const QString maildir = kfd->selectedFile();
   delete kfd;
-    
-  if ( mailDir.isEmpty() ) {
+  importMails( maildir );
+}
+
+void FilterKMail_maildir::importMails( const QString& maildir )
+{
+  setMailDir(maildir);
+  if ( mailDir().isEmpty() ) {
     filterInfo()->alert( i18n( "No directory selected." ) );
     return;
   }
@@ -61,13 +67,13 @@ void FilterKMail_maildir::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == ( QDir::homePath() + '/' ) ) {
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
     /** Recursive import of the MailArchives */
-    QDir dir(mailDir);
+    QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
@@ -81,7 +87,7 @@ void FilterKMail_maildir::import()
         filterInfo()->setCurrent(100);
       }
     }
-    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
     if (countDuplicates() > 0) {
       filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
     }
@@ -141,7 +147,7 @@ void FilterKMail_maildir::importFiles( const QString& dirName)
       if(!generatedPath) {
         _path = "KMail-Import";
         QString _tmp = dir.filePath(*mailFile);
-        _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
+        _tmp = _tmp.remove( mailDir(), Qt::CaseSensitive );
         const QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
         QStringList::ConstIterator end( subFList.end() ); 
         for ( QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it ) {

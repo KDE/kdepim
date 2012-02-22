@@ -31,7 +31,6 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/CollectionCreateJob>
 #include <akonadi/kmime/messageparts.h>
-#include <akonadi/kmime/messagestatus.h>
 
 // KDE Includes
 #include <KUrl>
@@ -67,6 +66,7 @@ class Filter::Private
   QString name;
   QString author;
   QString info;
+  QString mailDir;
   QMultiMap<QString, QString> messageFolderMessageIDMap;
   QMap<QString, Akonadi::Collection> messageFolderCollectionMap;
   int count_duplicates; //to count all duplicate messages
@@ -85,9 +85,28 @@ Filter::~Filter()
   delete d;
 }
 
+void Filter::clear()
+{
+  d->messageFolderMessageIDMap.clear();
+  d->messageFolderCollectionMap.clear();
+  d->mailDir.clear();
+  d->count_duplicates = 0;
+}
+
+void Filter::setMailDir( const QString& mailDir )
+{
+  d->mailDir = mailDir;
+}
+
+QString Filter::mailDir() const 
+{
+  return d->mailDir;
+}
+
 void Filter::setFilterInfo( FilterInfo* info )
 {
   d->filterInfo = info;
+  clear();
 }
 
 MailImporter::FilterInfo* Filter::filterInfo()
@@ -107,20 +126,24 @@ int Filter::countDuplicates() const
 
 
 bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
-                                const KMime::Message::Ptr& message )
+                                const KMime::Message::Ptr& message, Akonadi::MessageStatus status )
 {
   Akonadi::Item item;
-  Akonadi::MessageStatus status;
 
   item.setMimeType( "message/rfc822" );
 
-  KMime::Headers::Base *statusHeaders = message->headerByType( "X-Status" );
-  if( statusHeaders ) {
-    if( !statusHeaders->isEmpty() ) {
-      status.setStatusFromStr( statusHeaders->asUnicodeString() );
-      item.setFlags( status.statusFlags() );
+  if ( status.isOfUnknownStatus() ) {
+    KMime::Headers::Base *statusHeaders = message->headerByType( "X-Status" );
+    if( statusHeaders ) {
+      if( !statusHeaders->isEmpty() ) {
+        status.setStatusFromStr( statusHeaders->asUnicodeString() );
+        item.setFlags( status.statusFlags() );
+      }
     }
+  } else {
+    item.setFlags( status.statusFlags() );
   }
+    
   item.setPayload<KMime::Message::Ptr>( message );
   Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
   if( !job->exec() ) {
@@ -171,7 +194,7 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
       lastCollection = d->messageFolderCollectionMap[folder];
       isFirst = false;
     } else {
-      folderBuilder += '/' + folder;
+      folderBuilder += QLatin1Char( '/' ) + folder;
       d->messageFolderCollectionMap[folderBuilder] = addSubCollection( lastCollection, folder );
       lastCollection = d->messageFolderCollectionMap[folderBuilder];
     }
@@ -221,8 +244,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if the contents of this collection have already been found.
   QMultiMap<QString, QString>::const_iterator end( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();
-       it != end; it++ ) {
+  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != end; it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
       break;
@@ -259,8 +281,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if this message has a duplicate
   QMultiMap<QString, QString>::const_iterator endMsgID( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();
-       it !=endMsgID ; it++ ) {
+  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();it !=endMsgID ; it++ ) {
     if( it.key() == messageFolder &&
         it.value() == msgID )
       return true;
@@ -274,29 +295,25 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
 bool Filter::addMessage( const QString& folderName,
                          const QString& msgPath,
-                         const QString&  msgStatusFlags // Defunct - KMime will now handle the MessageStatus flags.
-                         )
+                         Akonadi::MessageStatus status )
 {
-  Q_UNUSED( msgStatusFlags );
-
   // Add the message.
-  return doAddMessage( folderName, msgPath, true );
+  return doAddMessage( folderName, msgPath, true, status );
 }
 
 bool Filter::addMessage_fastImport( const QString& folderName,
                          	    const QString& msgPath,
-                                    const QString& msgStatusFlags // Defunct - KMime will now handle the MessageStatus flags.
+                                    Akonadi::MessageStatus status
                                     )
 {
-  Q_UNUSED( msgStatusFlags );
-
   // Add the message.
-  return doAddMessage( folderName, msgPath );
+  return doAddMessage( folderName, msgPath,false, status );
 }
 
 bool Filter::doAddMessage( const QString& folderName,
                            const QString& msgPath,
-                           bool duplicateCheck )
+                           bool duplicateCheck,
+                           Akonadi::MessageStatus status )
 {
   QString messageID;
   // Create the mail folder (if not already created).
@@ -335,10 +352,10 @@ bool Filter::doAddMessage( const QString& folderName,
 
     // Add it to the collection.
     if( mailFolder.isValid() ) {
-      addAkonadiMessage( mailFolder, newMessage );
+      addAkonadiMessage( mailFolder, newMessage, status );
     } else {
       d->filterInfo->alert( i18n( "<b>Warning:</b> Got a bad message folder, adding to root folder." ) );
-      addAkonadiMessage( d->filterInfo->rootCollection(), newMessage );
+      addAkonadiMessage( d->filterInfo->rootCollection(), newMessage, status );
     }
   }
   return true;

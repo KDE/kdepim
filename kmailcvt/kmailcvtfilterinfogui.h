@@ -26,7 +26,7 @@ class KMailCvtFilterInfoGui : public MailImporter::FilterInfoGui
 public:
   explicit KMailCvtFilterInfoGui(KImportPage* dlg, QWidget* parent);
   ~KMailCvtFilterInfoGui();
-  void setStatusMsg( const QString& status );
+  void setStatusMessage( const QString& status );
   void setFrom( const QString& from );
   void setTo( const QString& to );
   void setCurrent( const QString& current );

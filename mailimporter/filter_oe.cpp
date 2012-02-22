@@ -45,7 +45,8 @@ FilterOE::FilterOE() :
                "<li><i>Documents and Settings</i> in Windows 2000 or later</li></ul></p>"
                "<p><b>Note:</b> Since it is possible to recreate the folder structure, the folders from "
                "Outlook Express 5 and 6 will be stored under: \"OE-Import\" in your local folder.</p>" ))
-{}
+{
+}
 
 FilterOE::~FilterOE()
 {
@@ -54,16 +55,16 @@ FilterOE::~FilterOE()
 void FilterOE::import()
 {
   // Select directory containing plain text emails
-  mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent());
-  if (mailDir.isEmpty()) { // No directory selected
+  setMailDir(KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent()));
+  if (mailDir().isEmpty()) { // No directory selected
     filterInfo()->alert(i18n("No directory selected."));
     return;
   }
 
-  QDir dir (mailDir);
+  QDir dir (mailDir());
   QStringList files = dir.entryList(QStringList("*.[dDmM][bB][xX]"), QDir::Files, QDir::Name);
   if (files.isEmpty()) {
-    filterInfo()->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir));
+    filterInfo()->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir()));
     return;
   }
 
@@ -76,7 +77,6 @@ void FilterOE::import()
   filterInfo()->setOverall(0);
 
   /** search the folderfile to recreate folder struct */
-    
   for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
     if(*mailFile == QLatin1String( "Folders.dbx" )) {
       filterInfo()->addInfoLogEntry(i18n("Import folder structure..."));
@@ -115,7 +115,7 @@ void FilterOE::importMailBox( const QString& fileName)
     QFile mailfile(fileName);
     QFileInfo mailfileinfo(fileName);
     QString _nameOfFile = fileName;
-    _nameOfFile.remove( mailDir );
+    _nameOfFile.remove( mailDir() );
     _nameOfFile.remove( '/' );
     filterInfo()->setFrom(mailfileinfo.fileName());
 
@@ -207,7 +207,8 @@ void FilterOE::mbxImport( QDataStream& ds)
     else
       addMessage_fastImport( folderName, tmp.fileName() );
 
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate())
+        return;
   }
 }
 
@@ -393,7 +394,7 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
 }
 
 /** get the foldername for a given file ID from folderMatrix */
-QString FilterOE::getFolderName(QString filename)
+QString FilterOE::getFolderName(const QString& filename)
 {
   bool found = false;
   bool foundFilename = false;

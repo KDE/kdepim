@@ -33,7 +33,8 @@ FilterOpera::FilterOpera() :
                "<p>Select the directory of the account (usually ~/.opera/mail/store/account*).</p>"
                "<p><b>Note:</b> Emails will be imported into a folder named after the account "
                "they came from, prefixed with OPERA-</p>" ))
-{}
+{
+}
 
 FilterOpera::~FilterOpera()
 {
@@ -144,13 +145,12 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
 void FilterOpera::import()
 {
   /** try to go to opera mailfolder in the home of the user */
-  QString startdir = QDir::homePath() + "/.opera/mail/store/";
+  QString startdir = QDir::homePath() + QLatin1String("/.opera/mail/store/");
   QDir d( startdir );
   if ( !d.exists() ) {
     startdir = QDir::homePath();
   }
 
-  //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), filterInfo()->parent());
   KFileDialog *kfd = new KFileDialog( startdir, "", 0);
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
   kfd->exec();

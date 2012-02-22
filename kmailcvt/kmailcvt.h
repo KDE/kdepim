@@ -32,11 +32,11 @@ public:
 
   virtual void next();
   virtual void reject();
-            public slots:
-            void help();
-
-             private slots:
-             void collectionChanged( const Akonadi::Collection& selectedCollection );
+public slots:
+  void help();
+  
+private slots:
+  void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
   KPageWidgetItem* page1;
   KPageWidgetItem* page2;

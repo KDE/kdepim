@@ -29,7 +29,8 @@ FilterPlain::FilterPlain() :
               "The emails are placed in a folder with the same name as the "
               "directory they were in, prefixed by PLAIN-</p>"
               "<p>This filter will import all .msg, .eml and .txt emails.</p>"))
-{}
+{
+}
 
 FilterPlain::~FilterPlain()
 {

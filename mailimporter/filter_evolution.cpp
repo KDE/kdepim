@@ -33,7 +33,8 @@ FilterEvolution::FilterEvolution() :
               "<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
               "<p>Since it is possible to recreate the folder structure, the folders "
               "will be stored under: \"Evolution-Import\".</p>"))
-{}
+{
+}
 
 /** Destructor. */
 FilterEvolution::~FilterEvolution()
@@ -49,10 +50,14 @@ void FilterEvolution::import()
   if ( !d.exists() ) {
     evolDir = QDir::homePath();
   }
+  importMails( KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent() ) );
+}
 
-  mailDir = KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent());
+void FilterEvolution::importMails( const QString& maildir )
+{ 
+  setMailDir(maildir);
 
-  if (mailDir.isEmpty()) {
+  if (mailDir().isEmpty()) {
     filterInfo()->alert(i18n("No directory selected."));
     return;
   }
@@ -60,12 +65,12 @@ void FilterEvolution::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
     filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
     // Recursive import of the MBoxes.
-    QDir dir(mailDir);
+    QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end( rootSubDirs.constEnd() );
@@ -74,7 +79,7 @@ void FilterEvolution::import()
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
   }
-  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
+  filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
   filterInfo()->setCurrent(100);
   filterInfo()->setOverall(100);
 }
@@ -131,7 +136,7 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
     filterInfo()->setCurrent(0);
     if( mboxName.length() > 20 ) {
       QString tmp_info = mboxName;
-      tmp_info = tmp_info.replace( mailDir, ".." );
+      tmp_info = tmp_info.replace( mailDir(), ".." );
       if (tmp_info.contains("subfolders/"))
         tmp_info.remove("subfolders/");
       filterInfo()->setFrom( tmp_info );
@@ -175,9 +180,9 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
 
       QString destFolder = rootDir;
       if(!targetDir.isNull()) {
-        destFolder = "Evolution-Import/" + destFolder + '/' + targetDir;
+        destFolder = QLatin1String("Evolution-Import/") + destFolder + QLatin1Char('/') + targetDir;
       } else {
-        destFolder = "Evolution-Import/" + destFolder;
+        destFolder = QLatin1String("Evolution-Import/") + destFolder;
       }
 
       /* comment by Danny Kukawka:
@@ -189,9 +194,10 @@ void FilterEvolution::importMBox(const QString& mboxName, const QString& rootDir
       else
         addMessage_fastImport(destFolder, tmp.fileName() );
 
-      int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
+      const int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
       filterInfo()->setCurrent(currentPercentage);
-      if (filterInfo()->shouldTerminate()) return;
+      if (filterInfo()->shouldTerminate())
+          return;
     }
 
     if (countDuplicates() > 0) {

@@ -46,6 +46,7 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
     void setCollection( const Akonadi::Collection &collection );
 
     static QString configGroupName( const Akonadi::Collection &col );
+    static void clearCache();
 
     bool isWriteConfig() const;
     void setWriteConfig( bool writeConfig );

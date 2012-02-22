@@ -581,8 +581,8 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                << script;
   mSieveJob = 0; // job deletes itself after returning from this slot!
 
-  if ( !mCheckOnly && mUrl.protocol() == "sieve" && !job->sieveCapabilities().isEmpty() &&
-       !job->sieveCapabilities().contains("vacation") ) {
+  if ( !mCheckOnly && mUrl.protocol() == QLatin1String("sieve") && !job->sieveCapabilities().isEmpty() &&
+       !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
     KMessageBox::sorry( 0, i18n( "Your server did not list \"vacation\" in "
                                  "its list of supported Sieve extensions;\n"
                                  "without it, KMail cannot install out-of-"

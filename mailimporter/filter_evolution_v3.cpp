@@ -50,14 +50,20 @@ void FilterEvolution_v3::import()
     evolDir = QDir::homePath();
   }
     
-
   KFileDialog *kfd = new KFileDialog( evolDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
-  mailDir = kfd->selectedFile();
+  const QString dir = kfd->selectedFile();
   delete kfd;
-  
-  if ( mailDir.isEmpty() ) {
+
+  importMails( dir );
+
+}
+
+void FilterEvolution_v3::importMails( const QString& maildir )
+{
+  setMailDir(maildir);
+  if ( mailDir().isEmpty() ) {
     filterInfo()->alert( i18n( "No directory selected." ) );
     return;
   }
@@ -65,13 +71,13 @@ void FilterEvolution_v3::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == ( QDir::homePath() + '/' ) ) {
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
 
     /** Recursive import of the MailArchives */
-    QDir dir(mailDir);
+    QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
@@ -86,7 +92,7 @@ void FilterEvolution_v3::import()
       }
     }
 
-    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir ));
+    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
 
     if (countDuplicates() > 0) {
         filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
@@ -153,25 +159,25 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
       if(!generatedPath) {
         _path = QLatin1String( "Evolution-Import" );
         QString _tmp = dir.filePath(*mailFile);
-        _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
-        QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
+        _tmp = _tmp.remove( mailDir(), Qt::CaseSensitive );
+        QStringList subFList = _tmp.split( QLatin1Char( '/' ), QString::SkipEmptyParts );
         QStringList::ConstIterator end( subFList.end() ); 
         for ( QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it ) {
           QString _cat = *it;
           if(!(_cat == *mailFile)) {
-            if (_cat.startsWith('.')) {
+            if (_cat.startsWith(QLatin1Char( '.' ))) {
               _cat = _cat.remove(0 , 1);
             }
             //Evolution store inbox as "."
-            if ( _cat.startsWith('.')) {
-              _cat = _cat.replace( 0, 1, QString( "Inbox/" ) );
+            if ( _cat.startsWith(QLatin1Char( '.' ))) {
+              _cat = _cat.replace( 0, 1, QLatin1String( "Inbox/" ) );
             }
               
             _path += QLatin1Char( '/' ) + _cat;
             _path.replace( QLatin1Char( '.' ), QLatin1Char( '/' ) );
           }
         }
-        if(_path.endsWith("cur"))
+        if(_path.endsWith(QLatin1String( "cur" )))
           _path.remove(_path.length() - 4 , 4);
         QString _info = _path;
         filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info));
@@ -179,14 +185,15 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
         filterInfo()->setTo(_path);
         generatedPath = true;
       }
-
+      Akonadi::MessageStatus status = statusFromFile( *mailFile );
+      
       if(filterInfo()->removeDupMessage()) {
-        if(! addMessage( _path, dir.filePath(*mailFile) )) {
+        if(! addMessage( _path, dir.filePath(*mailFile),status )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
       } else {
-        if(! addMessage_fastImport( _path, dir.filePath(*mailFile) )) {
+        if(! addMessage_fastImport( _path, dir.filePath(*mailFile),status )) {
           filterInfo()->addErrorLogEntry( i18n("Could not import %1", *mailFile ) );
         }
         filterInfo()->setCurrent((int) ((float) currentFile / numFiles * 100));
@@ -195,3 +202,25 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
   }
 }
 
+Akonadi::MessageStatus FilterEvolution_v3::statusFromFile( const QString& filename)
+{
+  Akonadi::MessageStatus status;
+  const int statusIndex = filename.indexOf( ":2," );
+  if ( statusIndex != -1 ) {
+    const QString statusStr = filename.right( filename.length() - statusIndex -3 );
+    if ( statusStr.contains( QLatin1Char( 'S' ) ) ) {
+      status.setRead( true );
+    }
+    if ( statusStr.contains( QLatin1Char( 'F' ) ) ) {
+      
+    }
+    if ( statusStr.contains( QLatin1Char( 'R' ) ) ) {
+      status.setReplied( true );
+    }
+    if ( statusStr.contains( QLatin1Char( 'P' ) ) ) {
+      status.setForwarded( true );
+    }
+  }
+  return status;
+}
+  

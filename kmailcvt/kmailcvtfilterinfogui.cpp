@@ -29,7 +29,8 @@ KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage* dlg, QWidget* parent)
 KMailCvtFilterInfoGui::~KMailCvtFilterInfoGui()
 {
 }
-void KMailCvtFilterInfoGui::setStatusMsg( const QString& status )
+
+void KMailCvtFilterInfoGui::setStatusMessage( const QString& status )
 {
   m_dlg->mWidget->_textStatus->setText( status );
 }
