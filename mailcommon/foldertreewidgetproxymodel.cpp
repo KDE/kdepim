@@ -108,15 +108,22 @@ Qt::ItemFlags FolderTreeWidgetProxyModel::flags( const QModelIndex &index ) cons
 {
   if ( !d->filterStr.isEmpty() ) {
     if ( !index.data().toString().contains( d->filterStr, Qt::CaseInsensitive ) ) {
-      return
-        KRecursiveFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+      return KRecursiveFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
     }
   }
 
   if ( d->enableCheck ) {
-    return Akonadi::EntityRightsFilterModel::flags( index );
+      const QModelIndex sourceIndex = mapToSource( index );
+      const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
+      const Akonadi::Collection collection = sourceModel()->data( rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( !MailCommon::Util::isVirtualCollection( collection ) ) {
+          const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
+          if ( instance.status() == Akonadi::AgentInstance::Broken ) {
+              return KRecursiveFilterProxyModel::flags( sourceIndex ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+          }
+      }
+      return Akonadi::EntityRightsFilterModel::flags( index );
   }
-
   return QSortFilterProxyModel::flags( index );
 }
 
