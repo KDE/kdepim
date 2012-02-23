@@ -99,7 +99,13 @@ bool IncidenceChanger::endChange( Incidence *incidence,
 bool IncidenceChanger::deleteIncidence( Incidence *incidence, QWidget *parent )
 {
   if ( !incidence ) return true;
-kdDebug(5850)<<"IncidenceChanger::deleteIncidence for incidence \""<<incidence->summary()<<"\""<<endl;
+  kdDebug(5850) << "IncidenceChanger::deleteIncidence() Explicit delete for incidence \""
+                << incidence->summary()
+                << "\""
+                << "; uid="
+                << incidence->uid()
+                << "; schedulingId=" << incidence->schedulingID()
+                << endl;
   bool doDelete = sendGroupwareMessage( incidence, KCal::Scheduler::Cancel,
                                         KOGlobals::INCIDENCEDELETED, parent );
   if( doDelete ) {
