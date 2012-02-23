@@ -74,6 +74,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   setValid( currentPage(), false );
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
+  connect(mCheckProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
   Akonadi::Control::widgetNeedsAkonadi(this);
 
   checkModules();
@@ -84,6 +85,11 @@ ImportWizard::~ImportWizard()
   qDeleteAll(mlistImport);
 }
 
+void ImportWizard::slotProgramSelected(const QString& program)
+{
+    if(mlistImport.contains(program))
+        setValid( currentPage(), true );
+}
 
 void ImportWizard::checkModules()
 {

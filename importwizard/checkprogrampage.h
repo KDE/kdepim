@@ -33,6 +33,12 @@ public:
   ~CheckProgramPage();
     void setFoundProgram(const QStringList& list);
 
+private slots:
+    void slotItemSelectionChanged();
+
+signals:
+    void programSelected(const QString&);
+
 private:
   Ui::CheckProgramPage *ui;
 };

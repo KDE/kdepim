@@ -39,8 +39,9 @@ public:
   void next();
   void reject();
 
-public slots:
+private slots:
   void help();
+  void slotProgramSelected(const QString& program);
 
 private:
   void addImportModule(PimImportAbstract *);

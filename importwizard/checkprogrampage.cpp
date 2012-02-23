@@ -23,6 +23,7 @@ CheckProgramPage::CheckProgramPage(QWidget *parent) :
   ui(new Ui::CheckProgramPage)
 {
   ui->setupUi(this);
+  connect(ui->listProgramFound,SIGNAL(itemSelectionChanged()),this,SLOT(slotItemSelectionChanged()));
 }
 
 CheckProgramPage::~CheckProgramPage()
@@ -32,7 +33,13 @@ CheckProgramPage::~CheckProgramPage()
 
 void CheckProgramPage::setFoundProgram(const QStringList& list)
 {
-//TODO
+    ui->listProgramFound->addItems(list);
+}
+
+void CheckProgramPage::slotItemSelectionChanged()
+{
+    if(ui->listProgramFound->currentItem())
+        emit programSelected(ui->listProgramFound->currentItem()->text());
 }
 
 #include "checkprogrampage.moc"
