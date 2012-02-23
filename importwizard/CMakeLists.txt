@@ -1,6 +1,7 @@
 project(importwizard)
 
 set(importwizard_SRCS
+importwizardkernel.cpp
 checkprogrampage.cpp
 importaddressbookpage.cpp
 importfilterpage.cpp
@@ -34,6 +35,8 @@ target_link_libraries(importwizard
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   mailimporter
   mailcommon
+  kdepim
+  messagecomposer
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )

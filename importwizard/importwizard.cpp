@@ -16,6 +16,7 @@
 */
 
 #include "importwizard.h"
+#include "importwizardkernel.h"
 #include "checkprogrampage.h"
 #include "selectcomponentpage.h"
 #include "importmailpage.h"
@@ -30,13 +31,17 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <akonadi/control.h>
-
+#include <mailcommon/mailkernel.h>
 
 ImportWizard::ImportWizard(QWidget *parent)
   : KAssistantDialog(parent)
 {
   setModal(true);
   setWindowTitle( i18n( "PIM Import Tool" ) );
+
+  ImportWizardKernel *kernel = new ImportWizardKernel( this );
+  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
   mCheckProgramPage = new CheckProgramPage(this);
   mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Step 1: Detect pim" ) );
