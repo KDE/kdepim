@@ -84,12 +84,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
   addFilter(new MailImporter::FilterPlain);
 
   // Ensure we return the correct type of Akonadi collection.
-  mWidget->mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
-  mWidget->mCollectionRequestor->setCollection(Akonadi::Collection());
-  mWidget->mCollectionRequestor->setAccessRightsFilter(
-    Akonadi::Collection::CanCreateCollection |
-    Akonadi::Collection::CanCreateItem );
-  mWidget->mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
+  mWidget->mCollectionRequestor->setMustBeReadWrite(true);
 }
 
 KSelFilterPage::~KSelFilterPage() {

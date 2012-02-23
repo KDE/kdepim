@@ -38,6 +38,8 @@ public slots:
 private slots:
   void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
+  void writeConfig();
+  void readConfig();
   KPageWidgetItem* page1;
   KPageWidgetItem* page2;
   KSelFilterPage *selfilterpage;

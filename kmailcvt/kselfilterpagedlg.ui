@@ -117,7 +117,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="Akonadi::CollectionRequester" name="mCollectionRequestor" native="true"/>
+      <widget class="MailCommon::FolderRequester" name="mCollectionRequestor" native="true"/>
      </item>
      <item>
       <widget class="QCheckBox" name="remDupMsg">
@@ -135,9 +135,9 @@ p, li { white-space: pre-wrap; }
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Akonadi::CollectionRequester</class>
+   <class>MailCommon::FolderRequester</class>
    <extends>QWidget</extends>
-   <header location="global">akonadi/collectionrequester.h</header>
+   <header location="global">mailcommon/folderrequester.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
