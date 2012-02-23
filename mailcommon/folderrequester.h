@@ -75,8 +75,9 @@ class MAILCOMMON_EXPORT FolderRequester: public QWidget
 
     /**
      * Presets the folder to the collection @p collection.
+     * Disable fetchcollection when not necessary @p fetchCollection
      */
-    void setCollection( const Akonadi::Collection &collection );
+    void setCollection(const Akonadi::Collection &collection , bool fetchCollection = true );
 
     /**
      * Returns @c true if there's a valid collection set on this widget.
