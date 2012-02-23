@@ -29,16 +29,35 @@
 
 using namespace MailCommon;
 
+class FavoriteCollectionWidget::Private
+{
+public:
+  Private() {
+  }
+  QColor textColor;
+};
+
 FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent )
-  : Akonadi::EntityListView( xmlGuiClient, parent )
+  : Akonadi::EntityListView( xmlGuiClient, parent ), d( new Private )
 {
   connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
            this, SLOT(slotGeneralFontChanged()));
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+           this, SLOT(slotGeneralPaletteChanged()));
   readConfig();
 }
 
 FavoriteCollectionWidget::~FavoriteCollectionWidget()
 {
+  delete d;
+}
+
+void FavoriteCollectionWidget::slotGeneralPaletteChanged()
+{
+  const QPalette palette = viewport()->palette();
+  QColor color = palette.text().color();
+  color.setAlpha( 128 );
+  d->textColor = color;
 }
 
 void FavoriteCollectionWidget::slotGeneralFontChanged()
@@ -69,11 +88,10 @@ void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
     font.setItalic( true );
     p.setFont( font );
 
-    QPalette palette = viewport()->palette();
-    QColor color = palette.text().color();
-    color.setAlpha( 128 );
-
-    p.setPen( color );
+    if(!d->textColor.isValid()) {
+        slotGeneralPaletteChanged();
+    }
+    p.setPen( d->textColor );
 
     p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Drop your favorite folders here..." ) );
   } else {
