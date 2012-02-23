@@ -482,7 +482,8 @@ void KMeditor::setCursorPositionFromStart( unsigned int pos )
 {
   if ( pos > 0 ) {
     QTextCursor cursor = textCursor();
-    cursor.setPosition( pos );
+    //Fix html pos cursor
+    cursor.setPosition( qMin( pos,(unsigned int)cursor.document()->characterCount ()-1) );
     setTextCursor( cursor );
     ensureCursorVisible();
   }
