@@ -46,7 +46,7 @@ private:
   void addImportModule(PimImportAbstract *);
   void checkModules();
 
-  QList<PimImportAbstract*> mlistImport;
+  QMap<QString, PimImportAbstract*> mlistImport;
 
   KPageWidgetItem *mPage1;
   KPageWidgetItem *mPage2;

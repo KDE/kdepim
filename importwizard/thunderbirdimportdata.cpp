@@ -21,6 +21,7 @@
 
 ThunderbirdImportData::ThunderbirdImportData()
 {
+    mPath = QDir::homePath() + QLatin1String( "/.thunderbird/" );
 }
 
 ThunderbirdImportData::~ThunderbirdImportData()
@@ -29,8 +30,7 @@ ThunderbirdImportData::~ThunderbirdImportData()
 
 bool ThunderbirdImportData::foundMailer() const
 {
-  const QString thunderDir = QDir::homePath() + QLatin1String( "/.thunderbird/" );
-  QDir directory( thunderDir );
+  QDir directory( mPath );
   if ( directory.exists() )
     return true;
   return false;

@@ -82,17 +82,12 @@ ImportWizard::~ImportWizard()
 
 void ImportWizard::checkModules()
 {
-  QStringList listModules;
-  Q_FOREACH(PimImportAbstract* a, mlistImport) {
-      if( a->foundMailer()) {
-          listModules<<a->name();
-        }
-    }
+    mCheckProgramPage->setFoundProgram(mlistImport.keys());
 }
 
 void ImportWizard::addImportModule(PimImportAbstract *import)
 {
-  mlistImport.append(import);
+  mlistImport.insert(import->name(),import);
 }
 
 void ImportWizard::help()

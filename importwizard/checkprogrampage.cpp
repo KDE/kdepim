@@ -30,4 +30,9 @@ CheckProgramPage::~CheckProgramPage()
   delete ui;
 }
 
+void CheckProgramPage::setFoundProgram(const QStringList& list)
+{
+//TODO
+}
+
 #include "checkprogrampage.moc"

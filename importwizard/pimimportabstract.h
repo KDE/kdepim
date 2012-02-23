@@ -44,6 +44,8 @@ public:
   virtual bool importMails();
   virtual bool importFilters();
   virtual bool importAddressBook();
+protected:
+  QString mPath;
 };
 
 

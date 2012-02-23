@@ -31,7 +31,8 @@ class CheckProgramPage : public QWidget
 public:
   explicit CheckProgramPage(QWidget *parent = 0);
   ~CheckProgramPage();
-  
+    void setFoundProgram(const QStringList& list);
+
 private:
   Ui::CheckProgramPage *ui;
 };
