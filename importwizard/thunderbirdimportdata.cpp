@@ -36,6 +36,11 @@ bool ThunderbirdImportData::foundMailer() const
   return false;
 }
 
+QString ThunderbirdImportData::name() const
+{
+  return QLatin1String("Thunderbird");
+}
+
 bool ThunderbirdImportData::importSettings()
 {
   return false;

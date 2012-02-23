@@ -62,17 +62,32 @@ ImportWizard::ImportWizard(QWidget *parent)
   mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Step 6: Import addressbooks" ) );
   addPage( mPage6 );
 
+  //Import module
   addImportModule(new ThunderbirdImportData());
 
   // Disable the 'next button to begin with.
-  setValid( currentPage(), true );
+  setValid( currentPage(), false );
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
   Akonadi::Control::widgetNeedsAkonadi(this);
+
+  checkModules();
 }
 
 ImportWizard::~ImportWizard()
 {
+  qDeleteAll(mlistImport);
+}
+
+
+void ImportWizard::checkModules()
+{
+  QStringList listModules;
+  Q_FOREACH(PimImportAbstract* a, mlistImport) {
+      if( a->foundMailer()) {
+          listModules<<a->name();
+        }
+    }
 }
 
 void ImportWizard::addImportModule(PimImportAbstract *import)

@@ -44,6 +44,7 @@ public slots:
 
 private:
   void addImportModule(PimImportAbstract *);
+  void checkModules();
 
   QList<PimImportAbstract*> mlistImport;
 
