@@ -343,6 +343,7 @@ void KOEventEditor::processCancel()
 
   if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
     *mRecurIncidenceAfterDissoc = *mRecurIncidence;
+    mRecurIncidenceAfterDissoc->updated();
   }
 
 }
