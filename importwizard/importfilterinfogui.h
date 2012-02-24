@@ -15,25 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTMAILPAGE_H
-#define IMPORTMAILPAGE_H
+#ifndef IMPORTFILTERINFOGUI_H
+#define IMPORTFILTERINFOGUI_H
 
-#include <QWidget>
+#include "filterinfogui.h"
 
-namespace Ui {
-  class ImportMailPage;
-}
-
-class ImportMailPage : public QWidget
+class ImportFilterInfoGui : public MailImporter::FilterInfoGui
 {
-  Q_OBJECT
-  
 public:
-  explicit ImportMailPage(QWidget *parent = 0);
-  ~ImportMailPage();
-  
+  explicit ImportFilterInfoGui( QWidget* parent);
+  ~ImportFilterInfoGui();
+  void setStatusMessage( const QString& status );
+  void setFrom( const QString& from );
+  void setTo( const QString& to );
+  void setCurrent( const QString& current );
+  void setCurrent( int percent = 0 );
+  void setOverall( int percent = 0 );
+  void addErrorLogEntry( const QString& log );
+  void addInfoLogEntry( const QString& log );
+  void clear();
+  void alert( const QString& message );
+  QWidget *parent();
 private:
-  Ui::ImportMailPage *ui;
+  QWidget *m_parent;
 };
 
-#endif // IMPORTMAILPAGE_H
+
+#endif /* IMPORTFILTERINFOGUI_H */
+

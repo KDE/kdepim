@@ -39,10 +39,13 @@ public:
   virtual bool foundMailer() const= 0;
   
   virtual TypeSupportedOptions supportedOption() = 0;
+  virtual QString name() const = 0;
   virtual bool importSettings();
   virtual bool importMails();
   virtual bool importFilters();
   virtual bool importAddressBook();
+protected:
+  QString mPath;
 };
 
 

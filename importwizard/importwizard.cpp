@@ -16,6 +16,7 @@
 */
 
 #include "importwizard.h"
+#include "importwizardkernel.h"
 #include "checkprogrampage.h"
 #include "selectcomponentpage.h"
 #include "importmailpage.h"
@@ -30,13 +31,17 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <akonadi/control.h>
-
+#include <mailcommon/mailkernel.h>
 
 ImportWizard::ImportWizard(QWidget *parent)
-  : KAssistantDialog(parent)
+  : KAssistantDialog(parent), mSelectedPim( 0 )
 {
   setModal(true);
   setWindowTitle( i18n( "PIM Import Tool" ) );
+
+  ImportWizardKernel *kernel = new ImportWizardKernel( this );
+  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
   mCheckProgramPage = new CheckProgramPage(this);
   mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Step 1: Detect pim" ) );
@@ -62,22 +67,41 @@ ImportWizard::ImportWizard(QWidget *parent)
   mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Step 6: Import addressbooks" ) );
   addPage( mPage6 );
 
+  //Import module
   addImportModule(new ThunderbirdImportData());
 
   // Disable the 'next button to begin with.
-  setValid( currentPage(), true );
+  setValid( currentPage(), false );
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
+  connect(mCheckProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
   Akonadi::Control::widgetNeedsAkonadi(this);
+
+  checkModules();
 }
 
 ImportWizard::~ImportWizard()
 {
+  qDeleteAll(mlistImport);
+}
+
+void ImportWizard::slotProgramSelected(const QString& program)
+{
+  
+  if(mlistImport.contains(program)) {
+    mSelectedPim = mlistImport.value( program );
+    setValid( currentPage(), true );
+  }
+}
+
+void ImportWizard::checkModules()
+{
+  mCheckProgramPage->setFoundProgram(mlistImport.keys());
 }
 
 void ImportWizard::addImportModule(PimImportAbstract *import)
 {
-  mlistImport.append(import);
+  mlistImport.insert(import->name(),import);
 }
 
 void ImportWizard::help()
@@ -90,6 +114,7 @@ void ImportWizard::next()
 {
   if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
+      mCheckProgramPage->disableSelectProgram();
     } else if( currentPage() == mPage2 ) {
       KAssistantDialog::next();
     } else if( currentPage() == mPage3 ) {

@@ -92,7 +92,7 @@ void FolderRequester::slotOpenDialog()
   dlg->setSelectedCollection( mCollection );
 
   if ( dlg->exec() && dlg ) {
-    setCollection( dlg->selectedCollection() );
+    setCollection( dlg->selectedCollection(), false );
   }
 }
 
@@ -116,19 +116,19 @@ void FolderRequester::setCollectionFullPath( const Akonadi::Collection &col )
 }
 
 //-----------------------------------------------------------------------------
-void FolderRequester::setCollection( const Akonadi::Collection &collection )
+void FolderRequester::setCollection( const Akonadi::Collection &collection, bool fetchCollection )
 {
   mCollection = collection;
   if ( mCollection.isValid() ) {
-    // TODO: we don't need to fetch if the collection is already complete,
-    // e.g. when called from the collection dialog
-    setCollectionFullPath( mCollection );
+    if( fetchCollection ) {
+        Akonadi::CollectionFetchJob *job =
+                new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
 
-    Akonadi::CollectionFetchJob *job =
-      new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
-
-    connect( job, SIGNAL(result(KJob*)),
-             this, SLOT(slotCollectionsReceived(KJob*)) );
+        connect( job, SIGNAL(result(KJob*)),
+                 this, SLOT(slotCollectionsReceived(KJob*)) );
+    } else {
+        setCollectionFullPath( mCollection );
+    }
   } else if ( !mMustBeReadWrite ) { // the Local Folders root node was selected
     edit->setText( i18n( "Local Folders" ) );
   }

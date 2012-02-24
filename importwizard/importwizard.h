@@ -39,14 +39,18 @@ public:
   void next();
   void reject();
 
-public slots:
+private slots:
   void help();
+  void slotProgramSelected(const QString& program);
 
 private:
   void addImportModule(PimImportAbstract *);
+  void checkModules();
 
-  QList<PimImportAbstract*> mlistImport;
+  QMap<QString, PimImportAbstract*> mlistImport;
 
+  PimImportAbstract *mSelectedPim;
+  
   KPageWidgetItem *mPage1;
   KPageWidgetItem *mPage2;
   KPageWidgetItem *mPage3;

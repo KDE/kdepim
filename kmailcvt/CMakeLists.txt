@@ -5,6 +5,7 @@ add_subdirectory( pics )
 ########### next target ###############
 
 set(kmailcvt_SRCS
+  kmailcvtkernel.cpp
   kmailcvtfilterinfogui.cpp
   kimportpage.cpp
   kselfilterpage.cpp
@@ -26,8 +27,9 @@ target_link_libraries(kmailcvt
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  messagecore
   mailimporter
+  mailcommon
+  kdepim
 )
 
 install(TARGETS kmailcvt  ${INSTALL_TARGETS_DEFAULT_ARGS} )
