@@ -12,6 +12,7 @@ main.cpp
 pimimportabstract.cpp
 selectcomponentpage.cpp
 thunderbirdimportdata.cpp
+importfilterinfogui.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon )

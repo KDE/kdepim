@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="everything">
      <property name="text">
       <string>Import Everything</string>
      </property>
@@ -52,28 +52,28 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="mails">
          <property name="text">
           <string>Mails</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_3">
+        <widget class="QCheckBox" name="filters">
          <property name="text">
           <string>Filters</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_4">
+        <widget class="QCheckBox" name="settings">
          <property name="text">
           <string>Settings</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_5">
+        <widget class="QCheckBox" name="addressbooks">
          <property name="text">
           <string>Address Books</string>
          </property>
@@ -104,14 +104,8 @@
     </spacer>
    </item>
   </layout>
-  <zorder>checkBox</zorder>
-  <zorder>checkBox_2</zorder>
-  <zorder>checkBox_3</zorder>
-  <zorder>checkBox_4</zorder>
-  <zorder>checkBox_5</zorder>
+  <zorder>everything</zorder>
   <zorder>label</zorder>
-  <zorder>checkBox_2</zorder>
-  <zorder>horizontalSpacer</zorder>
   <zorder>verticalSpacer</zorder>
   <zorder>horizontalSpacer_2</zorder>
  </widget>
