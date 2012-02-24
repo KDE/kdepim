@@ -49,6 +49,8 @@ private:
 
   QMap<QString, PimImportAbstract*> mlistImport;
 
+  PimImportAbstract *mSelectedPim;
+  
   KPageWidgetItem *mPage1;
   KPageWidgetItem *mPage2;
   KPageWidgetItem *mPage3;

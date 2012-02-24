@@ -34,7 +34,7 @@
 #include <mailcommon/mailkernel.h>
 
 ImportWizard::ImportWizard(QWidget *parent)
-  : KAssistantDialog(parent)
+  : KAssistantDialog(parent), mSelectedPim( 0 )
 {
   setModal(true);
   setWindowTitle( i18n( "PIM Import Tool" ) );
@@ -87,13 +87,17 @@ ImportWizard::~ImportWizard()
 
 void ImportWizard::slotProgramSelected(const QString& program)
 {
-    if(mlistImport.contains(program))
-        setValid( currentPage(), true );
+  
+  if(mlistImport.contains(program)) {
+    mSelectedPim = mlistImport.value( program );
+    setValid( currentPage(), true );
+    mCheckProgramPage->disableSelectProgram();
+  }
 }
 
 void ImportWizard::checkModules()
 {
-    mCheckProgramPage->setFoundProgram(mlistImport.keys());
+  mCheckProgramPage->setFoundProgram(mlistImport.keys());
 }
 
 void ImportWizard::addImportModule(PimImportAbstract *import)

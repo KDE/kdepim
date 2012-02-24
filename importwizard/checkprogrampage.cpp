@@ -42,4 +42,9 @@ void CheckProgramPage::slotItemSelectionChanged()
         emit programSelected(ui->listProgramFound->currentItem()->text());
 }
 
+void CheckProgramPage::disableSelectProgram()
+{
+  ui->listProgramFound->setEnabled( false );
+}
+
 #include "checkprogrampage.moc"

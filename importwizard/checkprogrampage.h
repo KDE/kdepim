@@ -32,6 +32,7 @@ public:
   explicit CheckProgramPage(QWidget *parent = 0);
   ~CheckProgramPage();
     void setFoundProgram(const QStringList& list);
+  void disableSelectProgram();
 
 private slots:
     void slotItemSelectionChanged();
