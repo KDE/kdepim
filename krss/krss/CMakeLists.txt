@@ -22,8 +22,6 @@ set(krss_LIB_SRCS
    feedcollection.cpp
    helper.cpp
    feeditemmodel.cpp
-# ui stuff
-   ui/feedpropertiesdialog.cpp
 )
 
 if(KRSS_ENABLE_PROTOBUF_SERIALIZER)
@@ -68,15 +66,9 @@ set(krss_LIB_HDRS
    rssitem.h  #TODO review if rssitem.h should be private
 )
 
-set(krss_UI_LIB_HDRS
-   ui/feedpropertiesdialog.h
-)
-
 set(krss_PRIVATE_LIB_HDRS
     rssitemserializer.h
 )
-
-kde4_add_ui_files(krss_LIB_SRCS ui/netfeedcreatedialog.ui ui/feedpropertiesdialog.ui)
 
 kde4_add_library(krss ${LIBRARY_TYPE} ${krss_LIB_SRCS})
 

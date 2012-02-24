@@ -18,15 +18,13 @@
 #ifndef KRSS_FEEDPROPERTIESDIALOG_H
 #define KRSS_FEEDPROPERTIESDIALOG_H
 
-#include "krss/krss_export.h"
-
 #include <KDialog>
 
 namespace KRss {
 
 class FeedPropertiesDialogPrivate;
 
-class KRSS_EXPORT FeedPropertiesDialog : public KDialog
+class FeedPropertiesDialog : public KDialog
 {
     Q_OBJECT
 

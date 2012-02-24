@@ -62,6 +62,7 @@ set(akregator2part_PART_SRCS
 #   deletesubscriptioncommand.cpp
    feediconmanager.cpp
    feedlistview.cpp
+   feedpropertiesdialog.cpp
    pluginmanager.cpp
    selectioncontroller.cpp
    utils.cpp
@@ -100,7 +101,7 @@ qt4_add_dbus_adaptor( akregator2part_PART_SRCS org.kde.akregator2.part.xml akreg
 
 
 kde4_add_ui_files(akregator2part_PART_SRCS
-   addfeedwidgetbase.ui
+   addfeedwidgetbase.ui feedpropertiesdialog.ui
 )
 
 kde4_add_plugin(akregator2part ${akregator2part_PART_SRCS})

@@ -24,9 +24,9 @@
 
 #include "editfeedcommand.h"
 #include "command_p.h"
+#include "feedpropertiesdialog.h"
 
 #include <krss/feedcollection.h>
-#include <krss/ui/feedpropertiesdialog.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
