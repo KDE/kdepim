@@ -19,12 +19,12 @@ include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcom
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(importwizard_SRCS 
-                  checkprogrampage.ui
-                  importaddressbookpage.ui
-                  importfilterpage.ui
-                  importmailpage.ui
-                  importsettingpage.ui
-                  selectcomponentpage.ui )
+                  ui/checkprogrampage.ui
+                  ui/importaddressbookpage.ui
+                  ui/importfilterpage.ui
+                  ui/importmailpage.ui
+                  ui/importsettingpage.ui
+                  ui/selectcomponentpage.ui )
 
 kde4_add_executable(importwizard ${importwizard_SRCS})
 
