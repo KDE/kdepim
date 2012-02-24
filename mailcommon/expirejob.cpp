@@ -36,12 +36,13 @@ using KPIM::BroadcastStatus;
 #include <KLocale>
 
 #include <Akonadi/ItemDeleteJob>
+#include <Akonadi/ItemModifyJob>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemMoveJob>
 #include <Akonadi/KMime/MessageParts>
 #include <Akonadi/KMime/MessageStatus>
-
+#include <akonadi/kmime/messageflags.h>
 #include <KMime/Message>
 
 /*
@@ -173,7 +174,7 @@ void ExpireJob::done()
                << mSrcFolder.name()
                << count << "messages to remove.";
       Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( mRemovedMsgs, this );
-      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMessagesMoved(KJob*)) );
+      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)) );
       moving = true;
       str = i18np( "Removing 1 old message from folder %2...",
                    "Removing %1 old messages from folder %2...",
@@ -192,7 +193,7 @@ void ExpireJob::done()
                  << mRemovedMsgs.count() << "messages to move to"
                  << mMoveToFolder.name();
         Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mRemovedMsgs, mMoveToFolder, this );
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMessagesMoved(KJob*)) );
+        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveDone(KJob*)) );
         moving = true;
         str = i18np( "Moving 1 old message from folder %2 to folder %3...",
                      "Moving %1 old messages from folder %2 to folder %3...",
@@ -212,7 +213,30 @@ void ExpireJob::done()
   }
 }
 
-void ExpireJob::slotMessagesMoved( KJob *job )
+void ExpireJob::slotMoveDone( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << job->error() << job->errorString();
+  }
+  Akonadi::ItemMoveJob *itemjob = dynamic_cast<Akonadi::ItemMoveJob *>( job );
+  if ( itemjob ) {
+    QList<Akonadi::Item> lst = itemjob->items();
+    if ( !lst.isEmpty() ) {
+      QList<Akonadi::Item> newLst;
+      Q_FOREACH( Akonadi::Item item, lst ) {
+        item.setFlag( Akonadi::MessageFlags::Seen );
+        newLst<<item;
+      }
+      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( newLst, this );
+      modifyJob->disableRevisionCheck();
+      connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)) );
+    }
+  } else {
+    slotExpireDone( job );
+  }
+}
+
+void ExpireJob::slotExpireDone( KJob *job )
 {
   if ( job->error() ) {
     kError() << job->error() << job->errorString();

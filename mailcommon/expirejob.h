@@ -53,7 +53,8 @@ class ExpireJob : public ScheduledJob
 
   private slots:
     void slotDoWork();
-    void slotMessagesMoved( KJob *job );
+    void slotExpireDone( KJob *job );
+    void slotMoveDone( KJob *job );
     void itemFetchResult( KJob *job );
 
   private:
