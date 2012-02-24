@@ -235,11 +235,11 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex &index, int role ) 
       const Akonadi::AgentInstance instance =
         Akonadi::AgentManager::self()->instance( collection.resource() );
 
-      if ( !instance.isOnline() ) {
-        return d->offlineAccountColor;
-      } else if ( instance.status() == Akonadi::AgentInstance::Broken ) {
+      if ( instance.status() == Akonadi::AgentInstance::Broken ) {
         return d->brokenAccountColor;
-      }
+      } else if ( !instance.isOnline() ) {
+        return d->offlineAccountColor;
+      } 
     }
   }
   return  Akonadi::EntityRightsFilterModel::data( index, role );
