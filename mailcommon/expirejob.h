@@ -43,26 +43,27 @@ class ExpireCollectionAttribute;
 class ExpireJob : public ScheduledJob
 {
   Q_OBJECT
-public:
-  explicit ExpireJob( const Akonadi::Collection& folder, bool immediate );
-  virtual ~ExpireJob();
+  public:
+    explicit ExpireJob( const Akonadi::Collection &folder, bool immediate );
+    virtual ~ExpireJob();
 
-  virtual void execute();
-  virtual void kill();
+    virtual void execute();
+    virtual void kill();
 
-private slots:
-  void slotDoWork();
-  void slotMessagesMoved( KJob *job );
-  void itemFetchResult( KJob* job );
+  private slots:
+    void slotDoWork();
+    void slotExpireDone( KJob *job );
+    void slotMoveDone( KJob *job );
+    void itemFetchResult( KJob *job );
 
-private:
-  void done();
+  private:
+    void done();
 
-private:
-  QList<Akonadi::Item> mRemovedMsgs;
-  int mMaxUnreadTime;
-  int mMaxReadTime;
-  Akonadi::Collection mMoveToFolder;
+  private:
+    QList<Akonadi::Item> mRemovedMsgs;
+    int mMaxUnreadTime;
+    int mMaxReadTime;
+    Akonadi::Collection mMoveToFolder;
 };
 
 /// A scheduled "expire mails in this folder" task.
