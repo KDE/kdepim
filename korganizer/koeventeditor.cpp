@@ -276,6 +276,8 @@ bool KOEventEditor::processInput()
       if ( mIsCounter ) {
         KMessageBox::information( this, i18n("You didn't change the event, thus no counter proposal has been sent to the organizer."), i18n("No changes") );
       }
+      // If it's a recurring event, lets undo the dissociation:
+      processCancel();
     } else {
       kdDebug(5850) << "Event changed" << endl;
       //IncidenceChanger::assignIncidence( mEvent, event );
