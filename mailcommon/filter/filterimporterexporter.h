@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2007 Till Adam <adam@kde.org>
+  Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -84,7 +85,7 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      */
     QList<MailFilter*> importFilters(
       bool &canceled,
-      FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter );
+      FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter, const QString& filename = QString() );
 
     /**
      * Writes the given list of @p filters to the given @p config file.
