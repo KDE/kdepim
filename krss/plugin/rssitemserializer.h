@@ -23,8 +23,6 @@
 #ifndef KRSS_RSSITEMSERIALIZER_H
 #define KRSS_RSSITEMSERIALIZER_H
 
-#include "krss_export.h"
-
 class QByteArray;
 
 namespace KRss
@@ -32,7 +30,7 @@ namespace KRss
 
 class RssItem;
 
-class KRSS_EXPORT RssItemSerializer
+class RssItemSerializer
 {
 public:
 

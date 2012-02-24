@@ -21,10 +21,10 @@
  */
 
 #include "rssitemserializer.h"
-#include "category.h"
-#include "enclosure.h"
-#include "rssitem.h"
-#include "person.h"
+#include <krss/category.h>
+#include <krss/enclosure.h>
+#include <krss/rssitem.h>
+#include <krss/person.h>
 
 #include <syndication/atom/constants.h>
 #include <syndication/constants.h>

@@ -33,7 +33,7 @@ macro(add_simple_test _testName)
 endmacro(add_simple_test)
 
 #add_simple_test(feedcollectiontest feedcollectiontest.cpp)
-add_simple_test(testxmlitemserializer testxmlitemserializer.cpp)
+#add_simple_test(testxmlitemserializer testxmlitemserializer.cpp)
 add_simple_test(testitem testitem.cpp)
 add_simple_test(testcategory testcategory.cpp)
 add_simple_test(testperson testperson.cpp)

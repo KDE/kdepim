@@ -24,38 +24,6 @@ set(krss_LIB_SRCS
    feeditemmodel.cpp
 )
 
-if(KRSS_ENABLE_PROTOBUF_SERIALIZER)
-    WRAP_PROTO(krss_LIB_PROTOBUF_SRCS krss.proto)
-
-    set(krss_LIB_SRCS
-        ${krss_LIB_SRCS}
-        ${krss_LIB_PROTOBUF_SRCS}
-        rssitemserializer_protobuf.cpp
-    )
-    set(KRSS_EXTRA_LIBS ${PROTOBUF_LIBRARY})
-else(KRSS_ENABLE_PROTOBUF_SERIALIZER)
-if(KRSS_ENABLE_QDATASTREAM_SERIALIZER)
-    set(krss_LIB_SRCS
-        ${krss_LIB_SRCS}
-        rssitemserializer_qdatastream.cpp
-    )
-    set(KRSS_EXTRA_LIBS ${PROTOBUF_LIBRARY})
-else(KRSS_ENABLE_QDATASTREAM_SERIALIZER)
-if(KRSS_ENABLE_JSON_SERIALIZER)
-   set(krss_LIB_SRCS
-       ${krss_LIB_SRCS}
-       rssitemserializer_json.cpp
-   )
-   set(KRSS_EXTRA_LIBS qjson)
-else(KRSS_ENABLE_JSON_SERIALIZER)
-   set(krss_LIB_SRCS
-       ${krss_LIB_SRCS}
-       rssitemserializer_xml.cpp
-   )
-endif(KRSS_ENABLE_JSON_SERIALIZER)
-endif(KRSS_ENABLE_QDATASTREAM_SERIALIZER)
-endif(KRSS_ENABLE_PROTOBUF_SERIALIZER)
-
 set(krss_LIB_HDRS
    krss_export.h
    item.h
@@ -64,10 +32,6 @@ set(krss_LIB_HDRS
    category.h
    feeditemmodel.h
    rssitem.h  #TODO review if rssitem.h should be private
-)
-
-set(krss_PRIVATE_LIB_HDRS
-    rssitemserializer.h
 )
 
 kde4_add_library(krss ${LIBRARY_TYPE} ${krss_LIB_SRCS})
@@ -83,10 +47,6 @@ target_link_libraries(krss
                       ${KDEPIMLIBS_SYNDICATION_LIBS}
                       ${KRSS_EXTRA_LIBS}
 )
-
-if (Nepomuk_FOUND)
-    target_link_libraries(krss ${NEPOMUK_LIBRARIES} ${SOPRANO_LIBRARIES})
-endif (Nepomuk_FOUND)
 
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS krss ${INSTALL_TARGETS_DEFAULT_ARGS})

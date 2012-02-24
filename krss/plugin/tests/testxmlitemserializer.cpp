@@ -22,11 +22,11 @@
 
 #include "testxmlitemserializer.h"
 
-#include "enclosure.h"
-#include "person.h"
-#include "category.h"
-#include "item.h"
-#include "rssitem.h"
+#include <krss/enclosure.h>
+#include <krss/person.h>
+#include <krss/category.h>
+#include <krss/item.h>
+#include <krss/rssitem.h>
 #include "rssitemserializer.h"
 
 #include <KDateTime>
