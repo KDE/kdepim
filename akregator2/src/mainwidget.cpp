@@ -37,6 +37,7 @@
 #include "modifycommands.h"
 #include "deletesubscriptioncommand.h"
 #include "editfeedcommand.h"
+#include "feedlistview.h"
 #include "importfeedlistcommand.h"
 #include "exportfeedlistcommand.h"
 #include "framemanager.h"
@@ -60,7 +61,6 @@
 
 #include <krss/feedcollection.h>
 #include <krss/item.h>
-#include <krss/ui/feedlistview.h>
 
 #include <solid/networking.h>
 

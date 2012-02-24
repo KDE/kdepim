@@ -32,11 +32,11 @@
 #include "speechclient.h"
 #include "tabwidget.h"
 #include "trayicon.h"
+#include "feedlistview.h"
 
 #include <Akonadi/Collection>
 
 #include <krss/feedcollection.h>
-#include <krss/ui/feedlistview.h>
 
 #include <kactionmenu.h>
 #include <ktoolbarpopupaction.h>

@@ -23,7 +23,6 @@ set(krss_LIB_SRCS
    helper.cpp
    feeditemmodel.cpp
 # ui stuff
-   ui/feedlistview.cpp
    ui/feedpropertiesdialog.cpp
 )
 
@@ -70,8 +69,6 @@ set(krss_LIB_HDRS
 )
 
 set(krss_UI_LIB_HDRS
-   ui/feedlistview.h
-   ui/netfeedcreatedialog.h
    ui/feedpropertiesdialog.h
 )
 

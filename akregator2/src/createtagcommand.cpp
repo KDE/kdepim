@@ -24,6 +24,7 @@
 
 #include "createtagcommand.h"
 #include "command_p.h"
+#include "feedlistview.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionCreateJob>
@@ -33,7 +34,6 @@
 
 #include <krss/feedcollection.h>
 #include <krss/item.h>
-#include <krss/ui/feedlistview.h>
 
 #include <KLocalizedString>
 

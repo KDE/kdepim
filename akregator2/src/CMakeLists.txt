@@ -61,6 +61,7 @@ set(akregator2part_PART_SRCS
    command_p.cpp
 #   deletesubscriptioncommand.cpp
    feediconmanager.cpp
+   feedlistview.cpp
    pluginmanager.cpp
    selectioncontroller.cpp
    utils.cpp

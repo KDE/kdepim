@@ -19,7 +19,6 @@
 #ifndef KRSS_FEEDLISTVIEW_H
 #define KRSS_FEEDLISTVIEW_H
 
-#include "krss/krss_export.h"
 
 #include <Akonadi/EntityTreeView>
 
@@ -32,7 +31,7 @@ namespace Akonadi {
 }
 namespace KRss {
 
-class KRSS_EXPORT FeedListView : public Akonadi::EntityTreeView
+class FeedListView : public Akonadi::EntityTreeView
 {
     Q_OBJECT
 
