@@ -91,7 +91,6 @@ void ImportWizard::slotProgramSelected(const QString& program)
   if(mlistImport.contains(program)) {
     mSelectedPim = mlistImport.value( program );
     setValid( currentPage(), true );
-    mCheckProgramPage->disableSelectProgram();
   }
 }
 
@@ -115,6 +114,7 @@ void ImportWizard::next()
 {
   if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
+      mCheckProgramPage->disableSelectProgram();
     } else if( currentPage() == mPage2 ) {
       KAssistantDialog::next();
     } else if( currentPage() == mPage3 ) {

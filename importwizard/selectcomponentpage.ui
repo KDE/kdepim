@@ -19,6 +19,9 @@
      <property name="text">
       <string>Import Everything</string>
      </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="3" column="0">
@@ -53,6 +56,9 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QCheckBox" name="mails">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Mails</string>
          </property>
@@ -60,6 +66,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="filters">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Filters</string>
          </property>
@@ -67,6 +76,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="settings">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Settings</string>
          </property>
@@ -74,6 +86,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="addressbooks">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Address Books</string>
          </property>
