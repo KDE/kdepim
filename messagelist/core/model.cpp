@@ -4175,67 +4175,80 @@ void ModelPrivate::slotStorageModelRowsInserted( const QModelIndex &parent, int 
   for ( int idx = 0; idx < jobCount; idx++ )
   {
     ViewItemJob * job = mViewItemJobs.at( idx );
-    if ( job->currentPass() == ViewItemJob::Pass1Fill )
+
+    if ( job->currentPass() != ViewItemJob::Pass1Fill )
     {
-      //
-      // The following cases are possible:
-      //
-      //               from  to
-      //                 |    |                              -> shift up job
-      //               from             to
-      //                 |              |                    -> shift up job
-      //               from                            to
-      //                 |                             |     -> shift up job
-      //                           from   to
-      //                             |     |                 -> split job
-      //                           from                to
-      //                             |                 |     -> split job
-      //                                     from      to
-      //                                       |       |     -> job unaffected
-      //
-      //
-      // FOLDER
-      // |-------------------------|---------|--------------|
-      // 0                   currentIndex endIndex         count
-      //                           +-- job --+
-
-      //
-
-      if ( from > job->endIndex() )
-      {
-        // The change is completely above the job, the job is not affected
-      } else if( from > job->currentIndex() ) // and from <= job->endIndex()
-      {
-        // The change starts in the middle of the job in a way that it must be split in two.
-        // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1.
-        // The second part ranges from "from" to job->endIndex() that are now shifted up by count steps.
-
-        // First add a new job for the second part.
-        ViewItemJob * newJob = new ViewItemJob( from + count, job->endIndex() + count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
-
-        Q_ASSERT( newJob->currentIndex() <= newJob->endIndex() );
-
-        // Then limit the original job to the first part
-        job->setEndIndex( from - 1 );
-
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-
-        idx++; // we can skip this job in the loop, it's already ok
-        jobCount++; // and our range increases by one.
-        mViewItemJobs.insert( idx, newJob );
-
-      } else {
-        // The change starts below (or exactly on the beginning of) the job.
-        // The job must be shifted up.
-        job->setCurrentIndex( job->currentIndex() + count );
-        job->setEndIndex( job->endIndex() + count );
-
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-      }
-    } else {
       // The job is a cleanup or in a later pass: the storage has been already accessed
       // and the messages created... no need to care anymore: the invariant row mapper will do the job.
+      continue;
     }
+
+    if ( job->currentIndex() > job->endIndex() )
+    {
+      // The job finished the Pass1Fill but still waits for the pass indicator to be
+      // changed. This is unlikely but still may happen if the job has been interrupted
+      // and then a call to slotStorageModelRowsRemoved() caused it to be forcibly completed.
+      continue;
+    }
+
+    //
+    // The following cases are possible:
+    //
+    //               from  to
+    //                 |    |                              -> shift up job
+    //               from             to
+    //                 |              |                    -> shift up job
+    //               from                            to
+    //                 |                             |     -> shift up job
+    //                           from   to
+    //                             |     |                 -> split job
+    //                           from                to
+    //                             |                 |     -> split job
+    //                                     from      to
+    //                                       |       |     -> job unaffected
+    //
+    //
+    // FOLDER
+    // |-------------------------|---------|--------------|
+    // 0                   currentIndex endIndex         count
+    //                           +-- job --+
+    //
+
+    if ( from > job->endIndex() )
+    {
+      // The change is completely above the job, the job is not affected
+      continue;
+    }
+
+    if( from > job->currentIndex() ) // and from <= job->endIndex()
+    {
+      // The change starts in the middle of the job in a way that it must be split in two.
+      // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1.
+      // The second part ranges from "from" to job->endIndex() that are now shifted up by count steps.
+
+      // First add a new job for the second part.
+      ViewItemJob * newJob = new ViewItemJob( from + count, job->endIndex() + count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
+
+      Q_ASSERT( newJob->currentIndex() <= newJob->endIndex() );
+
+      idx++; // we can skip this job in the loop, it's already ok
+      jobCount++; // and our range increases by one.
+      mViewItemJobs.insert( idx, newJob );
+
+      // Then limit the original job to the first part
+      job->setEndIndex( from - 1 );
+
+      Q_ASSERT( job->currentIndex() <= job->endIndex() );
+
+      continue;
+    }
+
+    // The change starts below (or exactly on the beginning of) the job.
+    // The job must be shifted up.
+    job->setCurrentIndex( job->currentIndex() + count );
+    job->setEndIndex( job->endIndex() + count );
+
+    Q_ASSERT( job->currentIndex() <= job->endIndex() );
   }
 
   bool newJobNeeded = true;
@@ -4294,94 +4307,113 @@ void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int f
   for ( int idx = 0; idx < jobCount; idx++ )
   {
     ViewItemJob * job = mViewItemJobs.at( idx );
-    if ( job->currentPass() == ViewItemJob::Pass1Fill )
+
+    if ( job->currentPass() != ViewItemJob::Pass1Fill )
     {
-      //
-      // The following cases are possible:
-      //
-      //               from  to
-      //                 |    |                              -> shift down job
-      //               from             to
-      //                 |              |                    -> shift down and crop job
-      //               from                            to
-      //                 |                             |     -> kill job
-      //                           from   to
-      //                             |     |                 -> split job, crop and shift
-      //                           from                to
-      //                             |                 |     -> crop job
-      //                                     from      to
-      //                                       |       |     -> job unaffected
-      //
-      //
-      // FOLDER
-      // |-------------------------|---------|--------------|
-      // 0                   currentIndex endIndex         count
-      //                           +-- job --+
-
-      //
-
-      if ( from > job->endIndex() )
-      {
-        // The change is completely above the job, the job is not affected
-      } else if( from > job->currentIndex() ) // and from <= job->endIndex()
-      {
-        // The change starts in the middle of the job and ends in the middle or after the job.
-
-        // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1
-        // We use the existing job for this.
-        job->setEndIndex( from - 1 ); // stop before the first removed row
-
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-
-        if ( to < job->endIndex() )
-        {
-          // The change ends inside the job and a part of it can be completed.
-          // We create a new job for the shifted remaining part. It would actually
-          // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
-          // since count = ( to - from ) + 1 so from = to + 1 - count
-
-          ViewItemJob * newJob = new ViewItemJob( from, job->endIndex() - count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
-
-          Q_ASSERT( newJob->currentIndex() < newJob->endIndex() );
-
-          idx++; // we can skip this job in the loop, it's already ok
-          jobCount++; // and our range increases by one.
-          mViewItemJobs.insert( idx, newJob );
-        } // else the change includes completely the end of the job and no other part of it can be completed.
-      } else {
-        // The change starts below (or exactly on the beginning of) the job. ( from <= job->currentIndex() )
-        if ( to >= job->endIndex() )
-        {
-          // The change completely covers the job: kill it
-
-          // We don't delete the job since we want the other passes to be completed
-          // This is because the Pass1Fill may have already filled mUnassignedMessageListForPass2
-          // and may have set mOldestItem and mNewestItem. We *COULD* clear the unassigned
-          // message list with clearUnassignedMessageLists() but mOldestItem and mNewestItem
-          // could be still dangling pointers. So we just move the current index of the job
-          // after the end (so storage model scan terminates) and let it complete spontaneously.
-          job->setCurrentIndex( job->endIndex() + 1 );
-
-        } else if ( to >= job->currentIndex() )
-        {
-          // The change partially covers the job. Only a part of it can be completed
-          // and it must be shifted down. It would actually
-          // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
-          // since count = ( to - from ) + 1 so from = to + 1 - count
-          job->setCurrentIndex( from );
-          job->setEndIndex( job->endIndex() - count );
-
-          Q_ASSERT( job->currentIndex() <= job->endIndex() );
-        } else {
-          // The change is completely below the job: it must be shifted down.
-          job->setCurrentIndex( job->currentIndex() - count );
-          job->setEndIndex( job->endIndex() - count );
-        }
-      }
-    } else {
       // The job is a cleanup or in a later pass: the storage has been already accessed
       // and the messages created... no need to care: we will invalidate the messages in a while.
+      continue;
     }
+
+    if ( job->currentIndex() > job->endIndex() )
+    {
+      // The job finished the Pass1Fill but still waits for the pass indicator to be
+      // changed. This is unlikely but still may happen if the job has been interrupted
+      // and then a call to slotStorageModelRowsRemoved() caused it to be forcibly completed.
+      continue;
+    }
+
+    //
+    // The following cases are possible:
+    //
+    //               from  to
+    //                 |    |                              -> shift down job
+    //               from             to
+    //                 |              |                    -> shift down and crop job
+    //               from                            to
+    //                 |                             |     -> kill job
+    //                           from   to
+    //                             |     |                 -> split job, crop and shift
+    //                           from                to
+    //                             |                 |     -> crop job
+    //                                     from      to
+    //                                       |       |     -> job unaffected
+    //
+    //
+    // FOLDER
+    // |-------------------------|---------|--------------|
+    // 0                   currentIndex endIndex         count
+    //                           +-- job --+
+    //
+
+    if ( from > job->endIndex() )
+    {
+      // The change is completely above the job, the job is not affected
+      continue;
+    }
+
+    if( from > job->currentIndex() ) // and from <= job->endIndex()
+    {
+      // The change starts in the middle of the job and ends in the middle or after the job.
+      // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1
+      // We use the existing job for this.
+      job->setEndIndex( from - 1 ); // stop before the first removed row
+
+      Q_ASSERT( job->currentIndex() <= job->endIndex() );
+
+      if ( to < job->endIndex() )
+      {
+        // The change ends inside the job and a part of it can be completed.
+
+        // We create a new job for the shifted remaining part. It would actually
+        // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
+        // since count = ( to - from ) + 1 so from = to + 1 - count
+
+        ViewItemJob * newJob = new ViewItemJob( from, job->endIndex() - count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
+
+        Q_ASSERT( newJob->currentIndex() < newJob->endIndex() );
+
+        idx++; // we can skip this job in the loop, it's already ok
+        jobCount++; // and our range increases by one.
+        mViewItemJobs.insert( idx, newJob );
+      } // else the change includes completely the end of the job and no other part of it can be completed.
+
+      continue;
+    }
+
+    // The change starts below (or exactly on the beginning of) the job. ( from <= job->currentIndex() )
+    if ( to >= job->endIndex() )
+    {
+      // The change completely covers the job: kill it
+
+      // We don't delete the job since we want the other passes to be completed
+      // This is because the Pass1Fill may have already filled mUnassignedMessageListForPass2
+      // and may have set mOldestItem and mNewestItem. We *COULD* clear the unassigned
+      // message list with clearUnassignedMessageLists() but mOldestItem and mNewestItem
+      // could be still dangling pointers. So we just move the current index of the job
+      // after the end (so storage model scan terminates) and let it complete spontaneously.
+      job->setCurrentIndex( job->endIndex() + 1 );
+
+      continue;
+    }
+
+    if ( to >= job->currentIndex() )
+    {
+      // The change partially covers the job. Only a part of it can be completed
+      // and it must be shifted down. It would actually
+      // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
+      // since count = ( to - from ) + 1 so from = to + 1 - count
+      job->setCurrentIndex( from );
+      job->setEndIndex( job->endIndex() - count );
+
+      Q_ASSERT( job->currentIndex() <= job->endIndex() );
+
+      continue;
+    }
+
+    // The change is completely below the job: it must be shifted down.
+    job->setCurrentIndex( job->currentIndex() - count );
+    job->setEndIndex( job->endIndex() - count );
   }
 
   // This will invalidate the ModelInvariantIndex-es that have been removed and return
