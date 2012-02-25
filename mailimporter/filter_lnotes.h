@@ -19,7 +19,6 @@
 #define MAILIMPORTER_FILTER_LNOTES_HXX
 
 #include "filters.h"
-#include "mailimporter_export.h"
 /**imports Lotus Notes Structured Text Archives and archvies messages into KMail
  *@author Robert Rockers
  */

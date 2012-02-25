@@ -20,7 +20,6 @@
 #define MAILIMPORTER_FILTER_KMAIL_ARCHIVE_HXX
 
 #include "filters.h"
-#include "mailimporter_export.h"
 
 class KArchiveFile;
 class KArchiveDirectory;

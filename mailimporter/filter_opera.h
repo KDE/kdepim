@@ -19,8 +19,6 @@
 #define MAILIMPORTER_FILTER_OPERA_HXX
 
 #include "filters.h"
-#include "filters.h"
-#include "mailimporter_export.h"
 
 /**
  *imports opera account-archives into KMail
