@@ -11,7 +11,7 @@ importwizard.cpp
 main.cpp
 pimimportabstract.cpp
 selectcomponentpage.cpp
-thunderbirdimportdata.cpp
+thunderbird/thunderbirdimportdata.cpp
 importfilterinfogui.cpp
 )
 
