@@ -224,12 +224,18 @@ void ExpireJob::slotMoveDone( KJob *job )
     if ( !lst.isEmpty() ) {
       QList<Akonadi::Item> newLst;
       Q_FOREACH( Akonadi::Item item, lst ) {
-        item.setFlag( Akonadi::MessageFlags::Seen );
-        newLst<<item;
+	if(!item.hasFlag(Akonadi::MessageFlags::Seen) ) {
+           item.setFlag( Akonadi::MessageFlags::Seen );
+           newLst<<item;
+	}
       }
-      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( newLst, this );
-      modifyJob->disableRevisionCheck();
-      connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)) );
+      if( !newLst.isEmpty() ) {
+         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( newLst, this );
+         modifyJob->disableRevisionCheck();
+         connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)) );
+      } else {
+         slotExpireDone( job );
+      }
     }
   } else {
     slotExpireDone( job );
