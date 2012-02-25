@@ -24,7 +24,7 @@
 #include "importsettingpage.h"
 #include "importaddressbookpage.h"
 
-#include "thunderbirdimportdata.h"
+#include "thunderbird/thunderbirdimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
