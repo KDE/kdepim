@@ -4208,16 +4208,17 @@ void ModelPrivate::slotStorageModelRowsInserted( const QModelIndex &parent, int 
       {
         // The change starts in the middle of the job in a way that it must be split in two.
         // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1.
-        // We use the existing job for this.
-        job->setEndIndex( from - 1 );
+        // The second part ranges from "from" to job->endIndex() that are now shifted up by count steps.
 
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-
-        // The second part would range from "from" to job->endIndex() but must
-        // be shifted up by count. We add a new job for this.
+        // First add a new job for the second part.
         ViewItemJob * newJob = new ViewItemJob( from + count, job->endIndex() + count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
 
         Q_ASSERT( newJob->currentIndex() <= newJob->endIndex() );
+
+        // Then limit the original job to the first part
+        job->setEndIndex( from - 1 );
+
+        Q_ASSERT( job->currentIndex() <= job->endIndex() );
 
         idx++; // we can skip this job in the loop, it's already ok
         jobCount++; // and our range increases by one.
