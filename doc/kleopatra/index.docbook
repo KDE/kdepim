@@ -2056,8 +2056,8 @@ button.</para>
         <para>
           Here you can configure some aspects of the email operations
           of &kleopatra;'s &uiserver;. Currently, you can only
-          configure whether to use <quote>Quick Mode</quote> for
-          signing and encrypting emails, respectively.
+          configure whether or not to use <quote>Quick Mode</quote> for
+          signing and encrypting emails, individually.
         </para>
         <para>
           When <quote>Quick Mode</quote> is enabled, no dialog is
