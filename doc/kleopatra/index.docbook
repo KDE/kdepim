@@ -1981,7 +1981,7 @@ itself, of course.</para></note>
 the known attributes (<guilabel>Available attributes</guilabel>), and
 one describing the <guilabel>Current attribute order</guilabel>.</para>
 
-<para>Both lists contain entries described by the short from of the
+<para>Both lists contain entries described by the short form of the
 attribute (&eg; <guilabel>CN</guilabel>) as well as the spelled-out
 form (<guilabel>Common Name</guilabel>).</para>
 
