@@ -130,12 +130,16 @@ void ImportWizard::next()
       KAssistantDialog::next();
     } else if( currentPage() == mPage3 ) {
       KAssistantDialog::next();
+      mSelectedPim->importMails();
     } else if( currentPage() == mPage4 ) {
       KAssistantDialog::next();
+      mSelectedPim->importFilters();
     } else if( currentPage() == mPage5 ) {
       KAssistantDialog::next();
+      mSelectedPim->importSettings();
     } else if( currentPage() == mPage6 ) {
       KAssistantDialog::next();
+      mSelectedPim->importAddressBook();
     } else {
       KAssistantDialog::next();
     }

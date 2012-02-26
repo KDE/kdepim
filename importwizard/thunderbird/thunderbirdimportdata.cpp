@@ -52,6 +52,7 @@ bool ThunderbirdImportData::importSettings()
 
 bool ThunderbirdImportData::importMails()
 {
+    //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
     MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
     ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
     info->setFilterInfoGui(infoGui);
