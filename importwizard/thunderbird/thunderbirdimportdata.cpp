@@ -74,9 +74,10 @@ bool ThunderbirdImportData::importMails()
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/");
     QDir directory(mailsPath);
-    if(!directory.exists())
-        return false;
-
+    if(directory.exists())
+        thunderbird.importMails(mailsPath);
+    else
+        thunderbird.import();
     thunderbird.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
     info->clear(); // Clear info from last time

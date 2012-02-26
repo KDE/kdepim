@@ -22,7 +22,7 @@ SelectComponentPage::SelectComponentPage(QWidget *parent) :
   ui(new Ui::SelectComponentPage)
 {
   ui->setupUi(this);
-  connect( ui->everything, SIGNAL( clicked ( bool ) ), this, SLOT( slotEverythingClicked( bool ) ) );
+  connect( ui->everything, SIGNAL(clicked(bool)), this, SLOT(slotEverythingClicked(bool)) );
 }
 
 SelectComponentPage::~SelectComponentPage()
