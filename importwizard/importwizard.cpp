@@ -129,11 +129,13 @@ void ImportWizard::next()
       setAppropriatePage(mSelectComponentPage->selectedComponents());
       KAssistantDialog::next();
     } else if( currentPage() == mPage3 ) {
+      setValid(mPage3,false);
       KAssistantDialog::next();
-      mSelectedPim->importMails();
+      setValid(mPage3,mSelectedPim->importMails());
     } else if( currentPage() == mPage4 ) {
+      setValid(mPage4,false);
       KAssistantDialog::next();
-      mSelectedPim->importFilters();
+      setValid(mPage4,mSelectedPim->importFilters());
     } else if( currentPage() == mPage5 ) {
       KAssistantDialog::next();
       mSelectedPim->importSettings();

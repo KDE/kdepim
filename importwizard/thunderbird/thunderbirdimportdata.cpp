@@ -69,7 +69,7 @@ bool ThunderbirdImportData::importMails()
     info->clear(); // Clear info from last time
 
     delete info;
-    return false;
+    return true;
 }
 
 bool ThunderbirdImportData::importFilters()
