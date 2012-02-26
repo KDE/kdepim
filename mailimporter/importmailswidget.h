@@ -18,7 +18,10 @@
 #define IMPORTMAILSWIDGET_H
 
 #include <QWidget>
+
 #include "mailimporter_export.h"
+
+class QListWidgetItem;
 
 namespace Ui {
 class ImportMailsWidget;
@@ -38,6 +41,9 @@ public:
     void setCurrent( const QString& current );
     void setCurrent( int percent );
     void setOverall( int percent );
+    void addItem( QListWidgetItem* item );
+    void setLastCurrentItem();
+    void clear();
 
 private:
     Ui::ImportMailsWidget *ui;

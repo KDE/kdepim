@@ -18,6 +18,7 @@
 #include "kmailcvtfilterinfogui.h"
 #include <KMessageBox>
 #include <KApplication>
+#include <QListWidgetItem>
 
 KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage* dlg, QWidget* parent)
   : MailImporter::FilterInfoGui(),
@@ -32,42 +33,42 @@ KMailCvtFilterInfoGui::~KMailCvtFilterInfoGui()
 
 void KMailCvtFilterInfoGui::setStatusMessage( const QString& status )
 {
-  m_dlg->mWidget->_textStatus->setText( status );
+  m_dlg->mWidget->mMailImporterWidget->setStatusMessage( status );
 }
 
 void KMailCvtFilterInfoGui::setFrom( const QString& from )
 {
-  m_dlg->mWidget->_from->setText( from );
+  m_dlg->mWidget->mMailImporterWidget->setFrom( from );
 }
 
 void KMailCvtFilterInfoGui::setTo( const QString& to )
 {
-  m_dlg->mWidget->_to->setText( to );
+  m_dlg->mWidget->mMailImporterWidget->setTo( to );
 }
 
 void KMailCvtFilterInfoGui::setCurrent( const QString& current )
 {
-  m_dlg->mWidget->_current->setText( current );
+  m_dlg->mWidget->mMailImporterWidget->setCurrent( current );
   kapp->processEvents();
 }
 
 void  KMailCvtFilterInfoGui::setCurrent( int percent )
 {
-  m_dlg->mWidget->_done_current->setValue( percent );
+  m_dlg->mWidget->mMailImporterWidget->setCurrent( percent );
   kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  KMailCvtFilterInfoGui::setOverall( int percent )
 {
-  m_dlg->mWidget->_done_overall->setValue( percent );
+  m_dlg->mWidget->mMailImporterWidget->setOverall( percent );
 }
 
 void KMailCvtFilterInfoGui::addInfoLogEntry( const QString& log )
 {
   QListWidgetItem* item =new QListWidgetItem(log);
   item->setForeground(Qt::blue);
-  m_dlg->mWidget->_log->addItem( item );
-  m_dlg->mWidget->_log->setCurrentItem( m_dlg->mWidget->_log->item(m_dlg->mWidget->_log->count() - 1 ));
+  m_dlg->mWidget->mMailImporterWidget->addItem( item );
+  m_dlg->mWidget->mMailImporterWidget->setLastCurrentItem();
   kapp->processEvents();
 }
 
@@ -75,20 +76,15 @@ void KMailCvtFilterInfoGui::addErrorLogEntry( const QString& log )
 {
   QListWidgetItem* item =new QListWidgetItem(log);
   item->setForeground(Qt::red);
-  m_dlg->mWidget->_log->addItem( item );
-  m_dlg->mWidget->_log->setCurrentItem( m_dlg->mWidget->_log->item(m_dlg->mWidget->_log->count() - 1 ));
+  m_dlg->mWidget->mMailImporterWidget->addItem( item );
+  m_dlg->mWidget->mMailImporterWidget->setLastCurrentItem();
   kapp->processEvents();
 }
 
 
 void KMailCvtFilterInfoGui::clear()
 {
-  m_dlg->mWidget->_log->clear();
-  setCurrent();
-  setOverall();
-  setCurrent( QString() );
-  setFrom( QString() );
-  setTo( QString() );
+    m_dlg->mWidget->mMailImporterWidget->clear();
 }
 
 void KMailCvtFilterInfoGui::alert( const QString& message )

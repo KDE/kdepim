@@ -61,3 +61,23 @@ void  ImportMailsWidget::setOverall( int percent )
 {
   ui->done_overall->setValue( percent );
 }
+
+void ImportMailsWidget::addItem( QListWidgetItem* item )
+{
+  ui->log->addItem(item);
+}
+
+void ImportMailsWidget::setLastCurrentItem()
+{
+  ui->log->setCurrentItem(ui->log->item(ui->log->count() - 1 ));
+}
+
+void ImportMailsWidget::clear()
+{
+    ui->log->clear();
+    setCurrent(0);
+    setOverall(0);
+    setCurrent( QString() );
+    setFrom( QString() );
+    setTo( QString() );
+}
