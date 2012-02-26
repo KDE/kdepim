@@ -19,8 +19,12 @@
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
+
+#include <KLocale>
+
 #include <QDir>
 #include <QWidget>
+
 
 ThunderbirdImportData::ThunderbirdImportData(ImportMailPage*parent)
     :PimImportAbstract(parent)
@@ -53,9 +57,17 @@ bool ThunderbirdImportData::importSettings()
 bool ThunderbirdImportData::importMails()
 {
     //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
-    MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
-    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
-    info->setFilterInfoGui(infoGui);
+    MailImporter::FilterInfo *info = initializeInfo();
+
+
+    MailImporter::FilterThunderbird thunderbird;
+    thunderbird.setFilterInfo( info );
+    //info->setRootCollection( selectedCollection );    //TODO
+    info->setStatusMessage(i18n("Import in progress"));
+    //thunderbird.importMails(); //TODO
+    info->setStatusMessage(i18n("Import finished"));
+    info->clear(); // Clear info from last time
+
     delete info;
     return false;
 }

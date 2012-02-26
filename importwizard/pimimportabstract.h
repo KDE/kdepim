@@ -21,6 +21,10 @@
 
 class ImportMailPage;
 
+namespace MailImporter {
+    class FilterInfo;
+}
+
 class PimImportAbstract
 {
 public:
@@ -46,6 +50,8 @@ public:
   virtual bool importMails();
   virtual bool importFilters();
   virtual bool importAddressBook();
+
+  MailImporter::FilterInfo* initializeInfo();
 protected:
   QString mPath;
   ImportMailPage *mMailPage;
