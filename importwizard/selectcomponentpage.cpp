@@ -45,4 +45,26 @@ void SelectComponentPage::setEnabledComponent(PimImportAbstract::TypeSupportedOp
   slotEverythingClicked(ui->everything->isChecked());
 }
 
+PimImportAbstract::TypeSupportedOptions SelectComponentPage::selectedComponents() const
+{
+    if( ui->everything->isChecked() )
+        return mOptions;
+    else {
+        PimImportAbstract::TypeSupportedOptions newOptions;
+        if(ui->addressbooks->isChecked()) {
+            newOptions|=PimImportAbstract::AddressBook;
+        }
+        if(ui->filters->isChecked()) {
+            newOptions|=PimImportAbstract::Filters;
+        }
+        if(ui->mails->isChecked()) {
+            newOptions|=PimImportAbstract::Mails;
+        }
+        if(ui->settings->isChecked()) {
+            newOptions|=PimImportAbstract::Settings;
+        }
+        return newOptions;
+    }
+}
+
 #include "selectcomponentpage.moc"

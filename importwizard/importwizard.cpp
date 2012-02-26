@@ -110,6 +110,15 @@ void ImportWizard::help()
   a.exec();
 }
 
+void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions options)
+{
+    setAppropriate(mPage6,(options & PimImportAbstract::AddressBook));
+    setAppropriate(mPage4,(options & PimImportAbstract::Filters));
+    setAppropriate(mPage3,(options & PimImportAbstract::Mails));
+    setAppropriate(mPage5,(options & PimImportAbstract::Settings));
+
+}
+
 void ImportWizard::next()
 {
   if( currentPage() == mPage1 ) {
@@ -117,6 +126,7 @@ void ImportWizard::next()
       mCheckProgramPage->disableSelectProgram();
       mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
     } else if( currentPage() == mPage2 ) {
+      setAppropriatePage(mSelectComponentPage->selectedComponents());
       KAssistantDialog::next();
     } else if( currentPage() == mPage3 ) {
       KAssistantDialog::next();

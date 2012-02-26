@@ -32,6 +32,8 @@ public:
   explicit SelectComponentPage(QWidget *parent = 0);
   ~SelectComponentPage();
     void setEnabledComponent(PimImportAbstract::TypeSupportedOptions options);
+    PimImportAbstract::TypeSupportedOptions selectedComponents() const;
+
 private slots:
   void slotEverythingClicked( bool clicked );
 
