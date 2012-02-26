@@ -1,0 +1,97 @@
+/*
+  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#include "evolutionv3importdata.h"
+#include "mailimporter/filter_evolution_v3.h"
+#include "mailimporter/filterinfo.h"
+#include "importfilterinfogui.h"
+
+#include <KLocale>
+
+#include <QDir>
+#include <QWidget>
+
+
+Evolutionv3ImportData::Evolutionv3ImportData(ImportMailPage*parent)
+    :PimImportAbstract(parent)
+{
+    mPath = QDir::homePath() + QLatin1String( "/.local/share/evolution" );
+}
+
+Evolutionv3ImportData::~Evolutionv3ImportData()
+{
+}
+
+
+bool Evolutionv3ImportData::foundMailer() const
+{
+  QDir directory( mPath );
+  if ( directory.exists() )
+    return true;
+  return false;
+}
+
+QString Evolutionv3ImportData::name() const
+{
+  return QLatin1String("Evolution 3.x");
+}
+
+bool Evolutionv3ImportData::importSettings()
+{
+  return false;
+}
+
+bool Evolutionv3ImportData::importMails()
+{
+    MailImporter::FilterInfo *info = initializeInfo();
+
+
+    MailImporter::FilterEvolution_v3 evolution;
+    evolution.setFilterInfo( info );
+    //info->setRootCollection( selectedCollection );    //TODO
+    info->setStatusMessage(i18n("Import in progress"));
+    const QString mailsPath = mPath + QLatin1String("/Mail/Local Folders/"); //TODO
+    QDir directory(mailsPath);
+    if(directory.exists())
+        evolution.importMails(mailsPath);
+    else
+        evolution.import();
+    evolution.importMails(mailsPath);
+    info->setStatusMessage(i18n("Import finished"));
+    info->clear(); // Clear info from last time
+
+    delete info;
+    return true;
+}
+
+bool Evolutionv3ImportData::importFilters()
+{
+  return false;
+}
+
+bool Evolutionv3ImportData::importAddressBook()
+{
+  return false;
+}
+
+PimImportAbstract::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
+{
+  TypeSupportedOptions options;
+  options |=PimImportAbstract::Mails;
+  options |=PimImportAbstract::Filters;
+  return options;
+}

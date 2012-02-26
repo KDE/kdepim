@@ -25,6 +25,7 @@
 #include "importaddressbookpage.h"
 
 #include "thunderbird/thunderbirdimportdata.h"
+#include "sylpheed/sylpheedimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -69,6 +70,7 @@ ImportWizard::ImportWizard(QWidget *parent)
 
   //Import module
   addImportModule(new ThunderbirdImportData(mImportMailPage));
+  addImportModule(new SylpheedImportData(mImportMailPage));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
