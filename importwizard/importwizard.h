@@ -44,6 +44,7 @@ public:
 private slots:
   void help();
   void slotProgramSelected(const QString& program);
+  void slotImportMailsClicked();
 
 private:
   void addImportModule(PimImportAbstract *);

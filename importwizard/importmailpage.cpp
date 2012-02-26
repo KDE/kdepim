@@ -23,6 +23,7 @@ ImportMailPage::ImportMailPage(QWidget *parent) :
   ui(new Ui::ImportMailPage)
 {
   ui->setupUi(this);
+  connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
 }
 
 ImportMailPage::~ImportMailPage()

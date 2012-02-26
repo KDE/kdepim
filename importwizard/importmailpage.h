@@ -37,6 +37,9 @@ public:
   ~ImportMailPage();
   MailImporter::ImportMailsWidget *mailWidget();
 
+signals:
+  void importMailsClicked();
+
 private:
   Ui::ImportMailPage *ui;
 };
