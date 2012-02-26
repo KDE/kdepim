@@ -36,6 +36,7 @@
 #include <mailcommon/mailkernel.h>
 #include <KLocalizedString>
 #include <KMime/Message>
+#include <KNotification>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -86,9 +87,15 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     if ( group.hasKey( "Enabled" ) ) {
       if ( group.readEntry( "Enabled", false ) ) {
           m_filterLogDialog = new FilterLogDialog( 0 );
+          const QPixmap pixmap = KIcon( "mail-folder-outbox" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+          KNotification *notify = new KNotification( "mailfilterlogenabled" );
+          notify->setComponentData( componentData() );
+          notify->setPixmap( pixmap );
+          notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
+          notify->sendEvent();
       }
     }
-  }  
+  }
 }
 
 void MailFilterAgent::initializeCollections()
