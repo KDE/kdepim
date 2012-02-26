@@ -19,8 +19,9 @@ set(krss_LIB_HDRS
    person.h
    category.h
    feeditemmodel.h
-   rssitem.h  #TODO review if rssitem.h should be private
+   rssitem.h
 )
+
 
 kde4_add_library(krss ${LIBRARY_TYPE} ${krss_LIB_SRCS})
 
@@ -35,3 +36,15 @@ target_link_libraries(krss
 
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS krss ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+########### install files ###############
+
+install( FILES
+   krss_export.h
+   item.h
+   enclosure.h
+   person.h
+   category.h
+   feeditemmodel.h
+   rssitem.h  #TODO review if rssitem.h should be private
+   DESTINATION ${INCLUDE_INSTALL_DIR}/krss COMPONENT Devel)
