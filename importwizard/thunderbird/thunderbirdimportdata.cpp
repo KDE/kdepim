@@ -16,10 +16,14 @@
 */
 
 #include "thunderbirdimportdata.h"
-
+#include "mailimporter/filter_thunderbird.h"
+#include "mailimporter/filterinfo.h"
+#include "importfilterinfogui.h"
 #include <QDir>
+#include <QWidget>
 
-ThunderbirdImportData::ThunderbirdImportData()
+ThunderbirdImportData::ThunderbirdImportData(ImportMailPage*parent)
+    :PimImportAbstract(parent)
 {
     mPath = QDir::homePath() + QLatin1String( "/.thunderbird/" );
 }
@@ -48,7 +52,11 @@ bool ThunderbirdImportData::importSettings()
 
 bool ThunderbirdImportData::importMails()
 {
-  return false;
+    MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
+    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
+    info->setFilterInfoGui(infoGui);
+    delete info;
+    return false;
 }
 
 bool ThunderbirdImportData::importFilters()

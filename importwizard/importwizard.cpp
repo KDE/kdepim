@@ -68,7 +68,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   addPage( mPage6 );
 
   //Import module
-  addImportModule(new ThunderbirdImportData());
+  addImportModule(new ThunderbirdImportData(mImportMailPage));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );

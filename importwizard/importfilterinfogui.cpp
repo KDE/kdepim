@@ -16,10 +16,11 @@
 */
 
 #include "importfilterinfogui.h"
+#include "importmailpage.h"
 #include <KMessageBox>
 #include <KApplication>
 
-ImportFilterInfoGui::ImportFilterInfoGui(QWidget* parent)
+ImportFilterInfoGui::ImportFilterInfoGui(ImportMailPage* parent)
   : MailImporter::FilterInfoGui(),
     m_parent( parent )
 {

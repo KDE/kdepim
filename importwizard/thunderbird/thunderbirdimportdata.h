@@ -18,11 +18,12 @@
 #define THUNDERBIRDIMPORTDATA_H
 
 #include "pimimportabstract.h"
+class ImportMailPage;
 
 class ThunderbirdImportData : public PimImportAbstract
 {
 public:
-  explicit ThunderbirdImportData();
+  explicit ThunderbirdImportData(ImportMailPage *parent);
   ~ThunderbirdImportData();
     
   TypeSupportedOptions supportedOption();

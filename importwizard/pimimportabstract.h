@@ -19,6 +19,8 @@
 #define PIMIMPORTABSTRACT_H
 #include <QObject>
 
+class ImportMailPage;
+
 class PimImportAbstract
 {
 public:
@@ -33,7 +35,7 @@ public:
 
   Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption )
 
-  explicit PimImportAbstract();
+  explicit PimImportAbstract(ImportMailPage *parent);
   virtual ~PimImportAbstract();
 
   virtual bool foundMailer() const= 0;
@@ -46,6 +48,7 @@ public:
   virtual bool importAddressBook();
 protected:
   QString mPath;
+  ImportMailPage *mMailPage;
 };
 
 

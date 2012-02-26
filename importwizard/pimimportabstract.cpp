@@ -16,8 +16,10 @@
 */
 
 #include "pimimportabstract.h"
+#include "importmailpage.h"
 
-PimImportAbstract::PimImportAbstract()
+PimImportAbstract::PimImportAbstract(ImportMailPage *parent)
+    :mMailPage(parent)
 {
 }
 
