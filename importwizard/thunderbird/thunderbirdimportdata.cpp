@@ -36,6 +36,14 @@ ThunderbirdImportData::~ThunderbirdImportData()
 {
 }
 
+QString ThunderbirdImportData::defaultProfile()
+{
+    if(mDefaultProfile.isEmpty()) {
+        //TODO
+    }
+    return mDefaultProfile;
+}
+
 bool ThunderbirdImportData::foundMailer() const
 {
   QDir directory( mPath );
@@ -64,7 +72,12 @@ bool ThunderbirdImportData::importMails()
     thunderbird.setFilterInfo( info );
     //info->setRootCollection( selectedCollection );    //TODO
     info->setStatusMessage(i18n("Import in progress"));
-    //thunderbird.importMails(); //TODO
+    const QString mailsPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/");
+    QDir directory(mailsPath);
+    if(!directory.exists())
+        return false;
+
+    thunderbird.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
     info->clear(); // Clear info from last time
 

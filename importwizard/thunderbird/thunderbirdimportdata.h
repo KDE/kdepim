@@ -34,7 +34,10 @@ public:
   bool importFilters();
   bool importAddressBook();
   QString name() const;
-  
+private:
+  QString defaultProfile();
+
+  QString mDefaultProfile;
 };
 
 #endif /* THUNDERBIRDIMPORTDATA_H */
