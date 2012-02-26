@@ -1,7 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>ImportMailPage</class>
  <widget class="QWidget" name="ImportMailPage">
   <property name="geometry">
@@ -15,7 +13,20 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="MailImporter::ImportMailsWidget" name="mMailImporterWidget" native="true"/>
+   </item>
+  </layout>
  </widget>
- <pixmapfunction/>
+ <customwidgets>
+  <customwidget>
+   <class>MailImporter::ImportMailsWidget</class>
+   <extends>QWidget</extends>
+   <header>importmailswidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
  <connections/>
 </ui>
