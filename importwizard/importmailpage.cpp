@@ -30,4 +30,9 @@ ImportMailPage::~ImportMailPage()
   delete ui;
 }
 
+MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
+{
+    return ui->mMailImporterWidget;
+}
+
 #include "importmailpage.moc"

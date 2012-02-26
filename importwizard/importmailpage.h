@@ -24,6 +24,10 @@ namespace Ui {
   class ImportMailPage;
 }
 
+namespace MailImporter{
+class ImportMailsWidget;
+}
+
 class ImportMailPage : public QWidget
 {
   Q_OBJECT
@@ -31,7 +35,8 @@ class ImportMailPage : public QWidget
 public:
   explicit ImportMailPage(QWidget *parent = 0);
   ~ImportMailPage();
-  
+  MailImporter::ImportMailsWidget *mailWidget();
+
 private:
   Ui::ImportMailPage *ui;
 };

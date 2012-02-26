@@ -17,8 +17,13 @@
 
 #include "importfilterinfogui.h"
 #include "importmailpage.h"
+
+#include "mailimporter/importmailswidget.h"
+
 #include <KMessageBox>
 #include <KApplication>
+
+#include <QListWidgetItem>
 
 ImportFilterInfoGui::ImportFilterInfoGui(ImportMailPage* parent)
   : MailImporter::FilterInfoGui(),
@@ -32,52 +37,63 @@ ImportFilterInfoGui::~ImportFilterInfoGui()
 
 void ImportFilterInfoGui::setStatusMessage( const QString& status )
 {
+    m_parent->mailWidget()->setStatusMessage(status);
 }
 
 void ImportFilterInfoGui::setFrom( const QString& from )
 {
+    m_parent->mailWidget()->setFrom(from);
 }
 
 void ImportFilterInfoGui::setTo( const QString& to )
 {
+    m_parent->mailWidget()->setTo(to);
 }
 
 void ImportFilterInfoGui::setCurrent( const QString& current )
 {
+    m_parent->mailWidget()->setCurrent(current);
   kapp->processEvents();
 }
 
 void  ImportFilterInfoGui::setCurrent( int percent )
 {
+    m_parent->mailWidget()->setCurrent(percent);
   kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  ImportFilterInfoGui::setOverall( int percent )
 {
+    m_parent->mailWidget()->setOverall(percent);
 }
 
 void ImportFilterInfoGui::addInfoLogEntry( const QString& log )
 {
-  kapp->processEvents();
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::blue);
+    m_parent->mailWidget()->addItem( item );
+    m_parent->mailWidget()->setLastCurrentItem();
+    kapp->processEvents();
 }
 
 void ImportFilterInfoGui::addErrorLogEntry( const QString& log )
 {
-  kapp->processEvents();
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::red);
+    m_parent->mailWidget()->addItem( item );
+    m_parent->mailWidget()->setLastCurrentItem();
+    kapp->processEvents();
 }
 
 
 void ImportFilterInfoGui::clear()
 {
-  setCurrent();
-  setOverall();
-  setCurrent( QString() );
-  setFrom( QString() );
-  setTo( QString() );
+    m_parent->mailWidget()->clear();
 }
 
 void ImportFilterInfoGui::alert( const QString& message )
 {
+    KMessageBox::information( m_parent, message );
 }
 
 QWidget *ImportFilterInfoGui::parent()
