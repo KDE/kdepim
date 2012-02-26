@@ -18,6 +18,7 @@
 #define SELECTCOMPONENTPAGE_H
 
 #include <QWidget>
+#include "pimimportabstract.h"
 
 namespace Ui {
   class SelectComponentPage;
@@ -30,11 +31,12 @@ class SelectComponentPage : public QWidget
 public:
   explicit SelectComponentPage(QWidget *parent = 0);
   ~SelectComponentPage();
-
+    void setEnabledComponent(PimImportAbstract::TypeSupportedOptions options);
 private slots:
   void slotEverythingClicked( bool clicked );
 
 private:
+  PimImportAbstract::TypeSupportedOptions mOptions;
   Ui::SelectComponentPage *ui;
 };
 

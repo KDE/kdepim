@@ -32,10 +32,17 @@ SelectComponentPage::~SelectComponentPage()
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )
 {
-  ui->addressbooks->setEnabled( !clicked );
-  ui->filters->setEnabled( !clicked );
-  ui->mails->setEnabled( !clicked );
-  ui->settings->setEnabled( !clicked );
+  ui->addressbooks->setEnabled( !clicked && (mOptions & PimImportAbstract::AddressBook));
+  ui->filters->setEnabled( !clicked && (mOptions & PimImportAbstract::Filters));
+  ui->mails->setEnabled( !clicked && (mOptions & PimImportAbstract::Mails));
+  ui->settings->setEnabled( !clicked && (mOptions & PimImportAbstract::Settings));
+}
+
+
+void SelectComponentPage::setEnabledComponent(PimImportAbstract::TypeSupportedOptions options)
+{
+  mOptions = options;
+  slotEverythingClicked(ui->everything->isChecked());
 }
 
 #include "selectcomponentpage.moc"

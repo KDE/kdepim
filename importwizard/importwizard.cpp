@@ -115,6 +115,7 @@ void ImportWizard::next()
   if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
       mCheckProgramPage->disableSelectProgram();
+      mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
     } else if( currentPage() == mPage2 ) {
       KAssistantDialog::next();
     } else if( currentPage() == mPage3 ) {
