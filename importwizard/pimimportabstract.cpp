@@ -16,8 +16,13 @@
 */
 
 #include "pimimportabstract.h"
+#include "importmailpage.h"
+#include "importfilterinfogui.h"
 
-PimImportAbstract::PimImportAbstract()
+#include "mailimporter/filterinfo.h"
+
+PimImportAbstract::PimImportAbstract(ImportMailPage *parent)
+    :mMailPage(parent)
 {
 }
 
@@ -46,3 +51,10 @@ bool PimImportAbstract::importAddressBook()
   return false;
 }
 
+MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
+{
+    MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
+    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
+    info->setFilterInfoGui(infoGui);
+    return info;
+}

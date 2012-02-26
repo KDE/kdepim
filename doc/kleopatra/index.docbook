@@ -1981,7 +1981,7 @@ itself, of course.</para></note>
 the known attributes (<guilabel>Available attributes</guilabel>), and
 one describing the <guilabel>Current attribute order</guilabel>.</para>
 
-<para>Both lists contain entries described by the short from of the
+<para>Both lists contain entries described by the short form of the
 attribute (&eg; <guilabel>CN</guilabel>) as well as the spelled-out
 form (<guilabel>Common Name</guilabel>).</para>
 
@@ -2056,8 +2056,8 @@ button.</para>
         <para>
           Here you can configure some aspects of the email operations
           of &kleopatra;'s &uiserver;. Currently, you can only
-          configure whether to use <quote>Quick Mode</quote> for
-          signing and encrypting emails, respectively.
+          configure whether or not to use <quote>Quick Mode</quote> for
+          signing and encrypting emails, individually.
         </para>
         <para>
           When <quote>Quick Mode</quote> is enabled, no dialog is

@@ -19,8 +19,6 @@
 #define MAILIMPORTER_FILTER_PLAIN_HXX
 
 #include "filters.h"
-#include "filters.h"
-#include "mailimporter_export.h"
 /**
  *imports Plain text messages into KMail
  *@author laurence

@@ -294,6 +294,7 @@ void FilterLogDialog::slotUser2()
   fdlg->setMode( KFile::File );
   fdlg->setSelection( "kmail-filter.log" );
   fdlg->setOperationMode( KFileDialog::Saving );
+  fdlg->setConfirmOverwrite(true);
   if ( fdlg->exec() == QDialog::Accepted && fdlg )
   {
     const QString fileName = fdlg->selectedFile();

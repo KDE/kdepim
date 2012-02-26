@@ -14,7 +14,6 @@
 #define MAILIMPORTER_FILTER_MAILAPP_HXX
 
 #include "filters.h"
-#include "mailimporter_export.h"
 /**
  *imports mbox archives messages into KMail
  *@author Chris Howells

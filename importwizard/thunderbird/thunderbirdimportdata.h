@@ -14,26 +14,31 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef THUNDERBIRDIMPORTDATA_H
+#define THUNDERBIRDIMPORTDATA_H
 
-#include "importmailpage.h"
-#include "ui_importmailpage.h"
+#include "pimimportabstract.h"
+class ImportMailPage;
 
-ImportMailPage::ImportMailPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportMailPage)
+class ThunderbirdImportData : public PimImportAbstract
 {
-  ui->setupUi(this);
-  connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
-}
+public:
+  explicit ThunderbirdImportData(ImportMailPage *parent);
+  ~ThunderbirdImportData();
+    
+  TypeSupportedOptions supportedOption();
+  bool foundMailer() const;
+  
+  bool importSettings();
+  bool importMails();
+  bool importFilters();
+  bool importAddressBook();
+  QString name() const;
+private:
+  QString defaultProfile();
 
-ImportMailPage::~ImportMailPage()
-{
-  delete ui;
-}
+  QString mDefaultProfile;
+};
 
-MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
-{
-    return ui->mMailImporterWidget;
-}
+#endif /* THUNDERBIRDIMPORTDATA_H */
 
-#include "importmailpage.moc"

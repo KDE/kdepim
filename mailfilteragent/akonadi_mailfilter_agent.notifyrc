@@ -1,0 +1,9 @@
+[Global]
+IconName=view-filter
+Comment=Mail Filter Agent
+Name=Mail Filter Agent
+
+[Event/mailfilterlogenabled]
+Name=Mail filter log enabled
+Action=Popup
+

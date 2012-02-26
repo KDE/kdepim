@@ -19,8 +19,6 @@
 #define MAILIMPORTER_FILTER_OUTLOOK_HXX
 
 #include "filters.h"
-#include "filters.h"
-#include "mailimporter_export.h"
 /**
  * imports mails from Outlook pst-files into KMail
  * NOTE: This is a dummy at the moment

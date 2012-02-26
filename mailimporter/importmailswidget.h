@@ -14,32 +14,40 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef SELECTCOMPONENTPAGE_H
-#define SELECTCOMPONENTPAGE_H
+#ifndef IMPORTMAILSWIDGET_H
+#define IMPORTMAILSWIDGET_H
 
 #include <QWidget>
-#include "pimimportabstract.h"
+
+#include "mailimporter_export.h"
+
+class QListWidgetItem;
 
 namespace Ui {
-  class SelectComponentPage;
+class ImportMailsWidget;
 }
-
-class SelectComponentPage : public QWidget
+namespace MailImporter {
+class MAILIMPORTER_EXPORT ImportMailsWidget : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+    
 public:
-  explicit SelectComponentPage(QWidget *parent = 0);
-  ~SelectComponentPage();
-    void setEnabledComponent(PimImportAbstract::TypeSupportedOptions options);
-    PimImportAbstract::TypeSupportedOptions selectedComponents() const;
+    explicit ImportMailsWidget(QWidget *parent = 0);
+    ~ImportMailsWidget();
 
-private slots:
-  void slotEverythingClicked( bool clicked );
+    void setStatusMessage( const QString& status );
+    void setFrom( const QString& from );
+    void setTo( const QString& to );
+    void setCurrent( const QString& current );
+    void setCurrent( int percent );
+    void setOverall( int percent );
+    void addItem( QListWidgetItem* item );
+    void setLastCurrentItem();
+    void clear();
 
 private:
-  PimImportAbstract::TypeSupportedOptions mOptions;
-  Ui::SelectComponentPage *ui;
+    Ui::ImportMailsWidget *ui;
 };
+}
 
-#endif // SELECTCOMPONENTPAGE_H
+#endif // IMPORTMAILSWIDGET_H

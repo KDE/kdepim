@@ -14,26 +14,27 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef SylpheedImportData_H
+#define SylpheedImportData_H
 
-#include "importmailpage.h"
-#include "ui_importmailpage.h"
+#include "pimimportabstract.h"
+class ImportMailPage;
 
-ImportMailPage::ImportMailPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportMailPage)
+class SylpheedImportData : public PimImportAbstract
 {
-  ui->setupUi(this);
-  connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
-}
+public:
+  explicit SylpheedImportData(ImportMailPage *parent);
+  ~SylpheedImportData();
+    
+  TypeSupportedOptions supportedOption();
+  bool foundMailer() const;
+  
+  bool importSettings();
+  bool importMails();
+  bool importFilters();
+  bool importAddressBook();
+  QString name() const;
+};
 
-ImportMailPage::~ImportMailPage()
-{
-  delete ui;
-}
+#endif /* SylpheedImportData_H */
 
-MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
-{
-    return ui->mMailImporterWidget;
-}
-
-#include "importmailpage.moc"

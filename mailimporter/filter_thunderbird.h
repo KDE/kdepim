@@ -19,8 +19,6 @@
 #define MAILIMPORTER_FILTER_THUNDERBIRD_HXX
 
 #include "filters.h"
-#include "filters.h"
-#include "mailimporter_export.h"
 
 /**
  * Imports Thinderbird mail folder recursively, keeping the folder structure.

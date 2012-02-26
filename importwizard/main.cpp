@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 {
   KLocale::setMainCatalog("importwizard");
 
+  //FIXME: "wizards" are "assistents" in new KDE slang
   KAboutData aboutData( "importwizard", 0, ki18n("importwizard"),
     KDEPIM_VERSION, ki18n("PIM Import Tool"), KAboutData::License_GPL_V2,
     ki18n("Copyright © 2012 importwizard authors"));

@@ -15,25 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "importmailpage.h"
-#include "ui_importmailpage.h"
+#ifndef ACCOUNTCONFIGORDERDIALOG_H
+#define ACCOUNTCONFIGORDERDIALOG_H
 
-ImportMailPage::ImportMailPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportMailPage)
+#include <KDialog>
+
+class QListWidget;
+class KPushButton;
+
+class AccountConfigOrderDialog : public KDialog
 {
-  ui->setupUi(this);
-  connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
-}
+    Q_OBJECT
+public:
+    explicit AccountConfigOrderDialog(QWidget *parent);
+    ~AccountConfigOrderDialog();
+    enum Type {
+        IdentifierAccount = (Qt::UserRole+1)
+    };
+protected slots:
+    void slotOk();
+    void slotMoveUp();
+    void slotMoveDown();
 
-ImportMailPage::~ImportMailPage()
-{
-  delete ui;
-}
+private:
+    void init();
+    QListWidget *mListAccount;
+    KPushButton *mUpButton;
+    KPushButton *mDownButton;
+};
 
-MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
-{
-    return ui->mMailImporterWidget;
-}
-
-#include "importmailpage.moc"
+#endif // ACCOUNTCONFIGORDERDIALOG_H

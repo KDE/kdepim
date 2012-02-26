@@ -14,16 +14,17 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef THUNDERBIRDIMPORTDATA_H
-#define THUNDERBIRDIMPORTDATA_H
+#ifndef Evolutionv3ImportData_H
+#define Evolutionv3ImportData_H
 
 #include "pimimportabstract.h"
+class ImportMailPage;
 
-class ThunderbirdImportData : public PimImportAbstract
+class Evolutionv3ImportData : public PimImportAbstract
 {
 public:
-  explicit ThunderbirdImportData();
-  ~ThunderbirdImportData();
+  explicit Evolutionv3ImportData(ImportMailPage *parent);
+  ~Evolutionv3ImportData();
     
   TypeSupportedOptions supportedOption();
   bool foundMailer() const;
@@ -33,8 +34,7 @@ public:
   bool importFilters();
   bool importAddressBook();
   QString name() const;
-  
 };
 
-#endif /* THUNDERBIRDIMPORTDATA_H */
+#endif /* Evolutionv3ImportData_H */
 

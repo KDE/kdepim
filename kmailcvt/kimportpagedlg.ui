@@ -1,207 +1,96 @@
-<ui version="4.0" stdsetdef="1" >
-  <class>KImportPageDlg</class>
-  <widget class="QWidget" name="KImportPageDlg" >
-    <property name="geometry" >
-      <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>586</width>
-        <height>452</height>
-      </rect>
-    </property>
-    <layout class="QHBoxLayout" >
-      <item>
-        <widget class="QLabel" name="mIntroSidebar" >
-          <property name="sizePolicy" >
-            <sizepolicy>
-              <hsizetype>0</hsizetype>
-              <vsizetype>0</vsizetype>
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-            </sizepolicy>
-          </property>
-          <property name="minimumSize" >
-            <size>
-              <width>170</width>
-              <height>430</height>
-            </size>
-          </property>
-          <property name="frameShape" >
-            <enum>QFrame::Panel</enum>
-          </property>
-          <property name="frameShadow" >
-            <enum>QFrame::Plain</enum>
-          </property>
-          <property name="lineWidth" >
-            <number>0</number>
-          </property>
-          <property name="scaledContents" >
-            <bool>true</bool>
-          </property>
-          <property name="indent" >
-            <number>0</number>
-          </property>
-          <property name="wordWrap" >
-            <bool>false</bool>
-          </property>
-        </widget>
-      </item>
-      <item>
-        <spacer name="spacer54" >
-          <property name="sizeHint" >
-            <size>
-              <width>10</width>
-              <height>10</height>
-            </size>
-          </property>
-          <property name="sizeType" >
-            <enum>Fixed</enum>
-          </property>
-          <property name="orientation" >
-            <enum>Horizontal</enum>
-          </property>
-        </spacer>
-      </item>
-      <item>
-        <layout class="QVBoxLayout" >
-          <property name="margin" >
-            <number>0</number>
-          </property>
-          <item>
-            <layout class="QGridLayout" >
-              <property name="margin" >
-                <number>0</number>
-              </property>
-              <item row="2" column="0" >
-                <widget class="QLabel" name="textLabel1_3" >
-                  <property name="text" >
-                    <string>From:</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="3" column="0" >
-                <widget class="QLabel" name="textLabel2" >
-                  <property name="text" >
-                    <string>To:</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="4" column="0" >
-                <widget class="QLabel" name="textLabel3" >
-                  <property name="text" >
-                    <string>Current:</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item rowspan="1" row="0" column="0" colspan="2" >
-                <widget class="QLabel" name="_textStatus" >
-                  <property name="text" >
-                    <string>Importing in progress...</string>
-                  </property>
-                  <property name="alignment" >
-                    <set>Qt::AlignTop</set>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="1" column="1" >
-                <widget class="QLabel" name="_current" >
-                  <property name="sizePolicy" >
-                    <sizepolicy>
-                      <hsizetype>7</hsizetype>
-                      <vsizetype>5</vsizetype>
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                    </sizepolicy>
-                  </property>
-                  <property name="text" >
-                    <string>...</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="3" column="1" >
-                <widget class="QLabel" name="_to" >
-                  <property name="sizePolicy" >
-                    <sizepolicy>
-                      <hsizetype>7</hsizetype>
-                      <vsizetype>5</vsizetype>
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                    </sizepolicy>
-                  </property>
-                  <property name="text" >
-                    <string>...</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="5" column="0" >
-                <widget class="QLabel" name="textLabel4" >
-                  <property name="text" >
-                    <string>Total:</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="2" column="1" >
-                <widget class="QLabel" name="_from" >
-                  <property name="sizePolicy" >
-                    <sizepolicy>
-                      <hsizetype>7</hsizetype>
-                      <vsizetype>5</vsizetype>
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                    </sizepolicy>
-                  </property>
-                  <property name="text" >
-                    <string>...</string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item row="5" column="1" >
-                <widget class="QProgressBar" name="_done_overall" />
-              </item>
-              <item row="4" column="1" >
-                <widget class="QProgressBar" name="_done_current" />
-              </item>
-            </layout>
-          </item>
-          <item>
-            <widget class="QListWidget" name="_log" />
-          </item>
-          <item>
-            <widget class="QLabel" name="textLabel1_2" >
-              <property name="text" >
-                <string>Click 'Back' to import more emails or contacts</string>
-              </property>
-              <property name="wordWrap" >
-                <bool>false</bool>
-              </property>
-            </widget>
-          </item>
-        </layout>
-      </item>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KImportPageDlg</class>
+ <widget class="QWidget" name="KImportPageDlg">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>586</width>
+    <height>452</height>
+   </rect>
+  </property>
+  <layout class="QHBoxLayout">
+   <item>
+    <widget class="QLabel" name="mIntroSidebar">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>170</width>
+       <height>430</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+     <property name="indent">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="spacer54">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>10</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QVBoxLayout">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="MailImporter::ImportMailsWidget" name="mMailImporterWidget" native="true"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="textLabel1_2">
+       <property name="text">
+        <string>Click 'Back' to import more emails or contacts</string>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
     </layout>
-  </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MailImporter::ImportMailsWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">mailimporter/importmailswidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets> 
+ <resources/>
+ <connections/>
 </ui>

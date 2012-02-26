@@ -45,7 +45,7 @@ FilterThunderbird::~FilterThunderbird()
 void FilterThunderbird::import()
 {
   /**
-   * We ask the user to choose Evolution's root directory.
+   * We ask the user to choose Thunderbird's root directory.
    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
   QString thunderDir = QDir::homePath() + "/.thunderbird/";

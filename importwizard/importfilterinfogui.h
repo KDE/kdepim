@@ -19,11 +19,12 @@
 #define IMPORTFILTERINFOGUI_H
 
 #include "filterinfogui.h"
+class ImportMailPage;
 
 class ImportFilterInfoGui : public MailImporter::FilterInfoGui
 {
 public:
-  explicit ImportFilterInfoGui( QWidget* parent);
+  explicit ImportFilterInfoGui(ImportMailPage *parent);
   ~ImportFilterInfoGui();
   void setStatusMessage( const QString& status );
   void setFrom( const QString& from );
@@ -37,7 +38,7 @@ public:
   void alert( const QString& message );
   QWidget *parent();
 private:
-  QWidget *m_parent;
+  ImportMailPage *m_parent;
 };
 
 

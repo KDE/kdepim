@@ -24,7 +24,9 @@
 #include "importsettingpage.h"
 #include "importaddressbookpage.h"
 
-#include "thunderbirdimportdata.h"
+#include "thunderbird/thunderbirdimportdata.h"
+#include "sylpheed/sylpheedimportdata.h"
+#include "evolutionv3/evolutionv3importdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -68,13 +70,16 @@ ImportWizard::ImportWizard(QWidget *parent)
   addPage( mPage6 );
 
   //Import module
-  addImportModule(new ThunderbirdImportData());
+  addImportModule(new ThunderbirdImportData(mImportMailPage));
+  addImportModule(new SylpheedImportData(mImportMailPage));
+  addImportModule(new Evolutionv3ImportData(mImportMailPage));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
   connect(mCheckProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
+  connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
   Akonadi::Control::widgetNeedsAkonadi(this);
 
   checkModules();
@@ -85,9 +90,15 @@ ImportWizard::~ImportWizard()
   qDeleteAll(mlistImport);
 }
 
+void ImportWizard::slotImportMailsClicked()
+{
+    const bool result = mSelectedPim->importMails();
+    setValid(mPage3,result);
+}
+
 void ImportWizard::slotProgramSelected(const QString& program)
 {
-  
+
   if(mlistImport.contains(program)) {
     mSelectedPim = mlistImport.value( program );
     setValid( currentPage(), true );
@@ -110,21 +121,38 @@ void ImportWizard::help()
   a.exec();
 }
 
+void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions options)
+{
+    setAppropriate(mPage6,(options & PimImportAbstract::AddressBook));
+    setAppropriate(mPage4,(options & PimImportAbstract::Filters));
+    setAppropriate(mPage3,(options & PimImportAbstract::Mails));
+    setAppropriate(mPage5,(options & PimImportAbstract::Settings));
+
+}
+
 void ImportWizard::next()
 {
   if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
       mCheckProgramPage->disableSelectProgram();
+      mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
     } else if( currentPage() == mPage2 ) {
+      setAppropriatePage(mSelectComponentPage->selectedComponents());
       KAssistantDialog::next();
+      setValid(mPage3,false);
     } else if( currentPage() == mPage3 ) {
       KAssistantDialog::next();
+      setValid(mPage4,false);
     } else if( currentPage() == mPage4 ) {
+      setValid(mPage5,false);
       KAssistantDialog::next();
+      setValid(mPage4,mSelectedPim->importFilters());
     } else if( currentPage() == mPage5 ) {
       KAssistantDialog::next();
+      mSelectedPim->importSettings();
     } else if( currentPage() == mPage6 ) {
       KAssistantDialog::next();
+      mSelectedPim->importAddressBook();
     } else {
       KAssistantDialog::next();
     }
