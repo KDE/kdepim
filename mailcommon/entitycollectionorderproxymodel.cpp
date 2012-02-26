@@ -59,13 +59,21 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
         rank = 6;
       } else if ( MailCommon::Util::isVirtualCollection( collection ) ) {
         rank = 200;
-      } 
+      } else if( !topLevelOrder.isEmpty() ) {
+          if( collection.parentCollection() == Akonadi::Collection::root()) {
+              const int order = topLevelOrder.indexOf(collection.resource());
+              if( order != -1 ) {
+                  rank = order;
+              }
+          }
+      }
       collectionRanks.insert( id, rank );
       return rank;
     }
 
     bool manualSortingActive;
     QMap<Akonadi::Collection::Id, int> collectionRanks;
+    QStringList topLevelOrder;
 };
 
 EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject *parent )
@@ -92,6 +100,12 @@ void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
     d->collectionRanks.clear();
     invalidate();
   }
+}
+
+void EntityCollectionOrderProxyModel::setTopLevelOrder(const QStringList& list)
+{
+    d->topLevelOrder = list;
+    clearRanks();
 }
 
 void EntityCollectionOrderProxyModel::clearRanks()

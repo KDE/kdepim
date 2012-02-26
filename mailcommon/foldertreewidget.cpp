@@ -288,6 +288,11 @@ void FolderTreeWidget::readConfig()
   d->folderTreeView->readConfig();
   d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
   d->readableproxy->readConfig();
+
+  KConfigGroup readerConfig( KernelIf->config(), "AccountOrder" );
+  const QStringList listOrder = readerConfig.readEntry( "order", QStringList() );
+  d->entityOrderProxy->setTopLevelOrder(listOrder);
+
   readQuotaConfig();
 }
 
