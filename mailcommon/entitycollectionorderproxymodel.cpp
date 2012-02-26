@@ -23,6 +23,7 @@
 #include <Akonadi/Collection>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/KMime/SpecialMailCollections>
+#include <Akonadi/AgentManager>
 
 namespace MailCommon {
 
@@ -58,7 +59,7 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
         rank = 6;
       } else if ( MailCommon::Util::isVirtualCollection( collection ) ) {
         rank = 200;
-      }
+      } 
       collectionRanks.insert( id, rank );
       return rank;
     }
@@ -91,6 +92,12 @@ void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
     d->collectionRanks.clear();
     invalidate();
   }
+}
+
+void EntityCollectionOrderProxyModel::clearRanks()
+{
+    d->collectionRanks.clear();
+    invalidate();
 }
 
 bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex &left,
