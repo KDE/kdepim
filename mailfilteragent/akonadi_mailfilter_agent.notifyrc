@@ -1,5 +1,5 @@
 [Global]
-IconName=mail-folder-outbox
+IconName=view-filter
 Comment=Mail Filter Agent
 Name=Mail Filter Agent
 

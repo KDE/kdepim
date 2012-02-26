@@ -87,7 +87,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     if ( group.hasKey( "Enabled" ) ) {
       if ( group.readEntry( "Enabled", false ) ) {
           m_filterLogDialog = new FilterLogDialog( 0 );
-          const QPixmap pixmap = KIcon( "mail-folder-outbox" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+          const QPixmap pixmap = KIcon( "view-filter" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
           KNotification *notify = new KNotification( "mailfilterlogenabled" );
           notify->setComponentData( componentData() );
           notify->setPixmap( pixmap );
