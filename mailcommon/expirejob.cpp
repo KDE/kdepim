@@ -36,13 +36,15 @@ using KPIM::BroadcastStatus;
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemMoveJob>
-#include <Akonadi/KMime/MessageParts>
-#include <Akonadi/KMime/MessageStatus>
+#include <akonadi/kmime/messagestatus.h>
+
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/kmime/messageparts.h>
+#include <akonadi/itemmovejob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemmodifyjob.h>
+
 #include <akonadi/kmime/messageflags.h>
 #include <KMime/Message>
 
