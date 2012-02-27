@@ -52,6 +52,7 @@ public:
   virtual bool importAddressBook();
 
   MailImporter::FilterInfo* initializeInfo();
+
 protected:
   QString mPath;
   ImportMailPage *mMailPage;

@@ -59,10 +59,10 @@ bool Evolutionv2ImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
 
+    info->clear(); // Clear info from last time
 
     MailImporter::FilterEvolution_v2 evolution;
     evolution.setFilterInfo( info );
-    //info->setRootCollection( selectedCollection );    //TODO
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath + QLatin1String("/Mail/Local Folders/"); //TODO
     QDir directory(mailsPath);
@@ -70,9 +70,7 @@ bool Evolutionv2ImportData::importMails()
         evolution.importMails(mailsPath);
     else
         evolution.import();
-    evolution.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
-    info->clear(); // Clear info from last time
 
     delete info;
     return true;

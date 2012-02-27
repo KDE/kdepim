@@ -29,7 +29,7 @@
 SylpheedImportData::SylpheedImportData(ImportMailPage*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.sylpheed/" );
+    mPath = QDir::homePath() + QLatin1String( "/.sylpheed-2.0/" );
 }
 
 SylpheedImportData::~SylpheedImportData()
@@ -59,10 +59,10 @@ bool SylpheedImportData::importMails()
     //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
     MailImporter::FilterInfo *info = initializeInfo();
 
-
+    info->clear(); // Clear info from last time
+ 
     MailImporter::FilterSylpheed sylpheed;
     sylpheed.setFilterInfo( info );
-    //info->setRootCollection( selectedCollection );    //TODO
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath  + QLatin1String("/Mail/Local Folders/"); //TODO
     QDir directory(mailsPath);
@@ -70,9 +70,7 @@ bool SylpheedImportData::importMails()
         sylpheed.importMails(mailsPath);
     else
         sylpheed.import();
-    sylpheed.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
-    info->clear(); // Clear info from last time
 
     delete info;
     return true;

@@ -27,6 +27,8 @@
 #include "thunderbird/thunderbirdimportdata.h"
 #include "sylpheed/sylpheedimportdata.h"
 #include "evolutionv3/evolutionv3importdata.h"
+#include "evolutionv2/evolutionv2importdata.h"
+#include "evolutionv1/evolutionv1importdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -73,6 +75,8 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new ThunderbirdImportData(mImportMailPage));
   addImportModule(new SylpheedImportData(mImportMailPage));
   addImportModule(new Evolutionv3ImportData(mImportMailPage));
+  addImportModule(new Evolutionv2ImportData(mImportMailPage));
+  addImportModule(new Evolutionv1ImportData(mImportMailPage));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
@@ -92,6 +96,7 @@ ImportWizard::~ImportWizard()
 
 void ImportWizard::slotImportMailsClicked()
 {
+  qDebug()<<" importMailsClicked !!!!!!!!!!!";
     const bool result = mSelectedPim->importMails();
     setValid(mPage3,result);
 }
@@ -112,7 +117,8 @@ void ImportWizard::checkModules()
 
 void ImportWizard::addImportModule(PimImportAbstract *import)
 {
-  mlistImport.insert(import->name(),import);
+  if ( import->foundMailer() )
+    mlistImport.insert(import->name(),import);
 }
 
 void ImportWizard::help()

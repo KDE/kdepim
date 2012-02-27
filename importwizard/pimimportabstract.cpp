@@ -56,5 +56,8 @@ MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
     MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
     ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
     info->setFilterInfoGui(infoGui);
+    info->setRootCollection( mMailPage->selectedCollection() );
     return info;
 }
+
+  

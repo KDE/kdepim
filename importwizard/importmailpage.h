@@ -24,6 +24,10 @@ namespace Ui {
   class ImportMailPage;
 }
 
+namespace Akonadi {
+  class Collection;
+}
+
 namespace MailImporter{
 class ImportMailsWidget;
 }
@@ -36,7 +40,11 @@ public:
   explicit ImportMailPage(QWidget *parent = 0);
   ~ImportMailPage();
   MailImporter::ImportMailsWidget *mailWidget();
-
+  Akonadi::Collection selectedCollection() const;
+  
+private slots:
+  void collectionChanged(const Akonadi::Collection& collection);
+  
 signals:
   void importMailsClicked();
 
