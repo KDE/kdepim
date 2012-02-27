@@ -23,6 +23,8 @@
 class QListWidget;
 class KPushButton;
 
+namespace KMail {
+
 class AccountConfigOrderDialog : public KDialog
 {
     Q_OBJECT
@@ -36,12 +38,14 @@ protected slots:
     void slotOk();
     void slotMoveUp();
     void slotMoveDown();
-
+    void slotEnableControls();
+  
 private:
     void init();
     QListWidget *mListAccount;
     KPushButton *mUpButton;
     KPushButton *mDownButton;
 };
+}
 
 #endif // ACCOUNTCONFIGORDERDIALOG_H
