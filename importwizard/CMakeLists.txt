@@ -14,6 +14,8 @@ selectcomponentpage.cpp
 thunderbird/thunderbirdimportdata.cpp
 sylpheed/sylpheedimportdata.cpp
 evolutionv3/evolutionv3importdata.cpp
+evolutionv2/evolutionv2importdata.cpp
+evolutionv1/evolutionv1importdata.cpp
 importfilterinfogui.cpp
 )
 

@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sylpheed/sylpheedimportdata.h"
-#include "mailimporter/filter_sylpheed.h"
+#include "evolutionv1/evolutionv1importdata.h"
+#include "mailimporter/filter_evolution.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 
@@ -26,17 +26,18 @@
 #include <QWidget>
 
 
-SylpheedImportData::SylpheedImportData(ImportMailPage*parent)
+Evolutionv1ImportData::Evolutionv1ImportData(ImportMailPage*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.sylpheed/" );
+    mPath = QDir::homePath() + QLatin1String( "/evolution/local/" );
 }
 
-SylpheedImportData::~SylpheedImportData()
+Evolutionv1ImportData::~Evolutionv1ImportData()
 {
 }
 
-bool SylpheedImportData::foundMailer() const
+
+bool Evolutionv1ImportData::foundMailer() const
 {
   QDir directory( mPath );
   if ( directory.exists() )
@@ -44,33 +45,32 @@ bool SylpheedImportData::foundMailer() const
   return false;
 }
 
-QString SylpheedImportData::name() const
+QString Evolutionv1ImportData::name() const
 {
-  return QLatin1String("Sylpheed");
+  return QLatin1String("Evolution 1.x");
 }
 
-bool SylpheedImportData::importSettings()
+bool Evolutionv1ImportData::importSettings()
 {
   return false;
 }
 
-bool SylpheedImportData::importMails()
+bool Evolutionv1ImportData::importMails()
 {
-    //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
     MailImporter::FilterInfo *info = initializeInfo();
 
 
-    MailImporter::FilterSylpheed sylpheed;
-    sylpheed.setFilterInfo( info );
+    MailImporter::FilterEvolution evolution;
+    evolution.setFilterInfo( info );
     //info->setRootCollection( selectedCollection );    //TODO
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath  + QLatin1String("/Mail/Local Folders/"); //TODO
+    const QString mailsPath = mPath + QLatin1String("/Mail/Local Folders/"); //TODO
     QDir directory(mailsPath);
     if(directory.exists())
-        sylpheed.importMails(mailsPath);
+        evolution.importMails(mailsPath);
     else
-        sylpheed.import();
-    sylpheed.importMails(mailsPath);
+        evolution.import();
+    evolution.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
     info->clear(); // Clear info from last time
 
@@ -78,20 +78,19 @@ bool SylpheedImportData::importMails()
     return true;
 }
 
-bool SylpheedImportData::importFilters()
+bool Evolutionv1ImportData::importFilters()
 {
   return false;
 }
 
-bool SylpheedImportData::importAddressBook()
+bool Evolutionv1ImportData::importAddressBook()
 {
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions SylpheedImportData::supportedOption()
+PimImportAbstract::TypeSupportedOptions Evolutionv1ImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=PimImportAbstract::Mails;
-  options |=PimImportAbstract::Filters;
   return options;
 }
