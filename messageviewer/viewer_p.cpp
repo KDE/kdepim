@@ -3,7 +3,7 @@
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
   Copyright (c) 2010 Torgny Nyblom <nyblom@kde.org>
-  Copyright (c) 2011 Laurent Montel <montel@kde.org>
+  Copyright (c) 2011, 2012 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -2924,5 +2924,9 @@ void ViewerPrivate::slotZoomReset()
 #endif
 }
 
+void ViewerPrivate::goOnline()
+{
+  emit resumeNetworkJobs();
+}
 
 #include "viewer_p.moc"
