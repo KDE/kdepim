@@ -25,6 +25,10 @@ namespace MailImporter {
     class FilterInfo;
 }
 
+namespace MailCommon {
+class MailFilter;
+}
+
 class PimImportAbstract
 {
 public:
@@ -51,9 +55,10 @@ public:
   virtual bool importFilters();
   virtual bool importAddressBook();
 
+protected:
+  void appendFilters( const QList<MailCommon::MailFilter*>& filters );
   MailImporter::FilterInfo* initializeInfo();
 
-protected:
   QString mPath;
   ImportWizard *mImportWizard;
 };

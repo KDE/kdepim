@@ -109,6 +109,8 @@ bool ThunderbirdImportData::importFilters()
   const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
   if ( QFile( filterPath ).exists() ) {
     QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::ThunderBirdFilter, filterPath );
+    appendFilters( listFilter );
+    return true;
   } else {
     //TODO
   }

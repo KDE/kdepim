@@ -21,6 +21,7 @@
 #include "importfilterinfogui.h"
 
 #include "mailimporter/filterinfo.h"
+#include "mailcommon/filter/filtermanager.h"
 
 PimImportAbstract::PimImportAbstract(ImportWizard *parent)
     :mImportWizard(parent)
@@ -61,4 +62,8 @@ MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
     return info;
 }
 
-  
+void PimImportAbstract::appendFilters( const QList<MailCommon::MailFilter*>& filters )
+{
+  if ( !filters.isEmpty() )
+    MailCommon::FilterManager::instance()->appendFilters(filters, false );
+}
