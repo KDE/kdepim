@@ -24,6 +24,14 @@ namespace Ui {
   class ImportMailPage;
 }
 
+namespace Akonadi {
+  class Collection;
+}
+
+namespace MailImporter{
+class ImportMailsWidget;
+}
+
 class ImportMailPage : public QWidget
 {
   Q_OBJECT
@@ -31,7 +39,15 @@ class ImportMailPage : public QWidget
 public:
   explicit ImportMailPage(QWidget *parent = 0);
   ~ImportMailPage();
+  MailImporter::ImportMailsWidget *mailWidget();
+  Akonadi::Collection selectedCollection() const;
   
+private slots:
+  void collectionChanged(const Akonadi::Collection& collection);
+  
+signals:
+  void importMailsClicked();
+
 private:
   Ui::ImportMailPage *ui;
 };

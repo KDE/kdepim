@@ -346,6 +346,8 @@ signals:
   /// Emitted when the item, previously set with setMessageItem, has been removed.
   void itemRemoved();
 
+  void resumeNetworkJobs();
+
 public slots:
 
   /**

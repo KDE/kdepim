@@ -22,7 +22,7 @@ SelectComponentPage::SelectComponentPage(QWidget *parent) :
   ui(new Ui::SelectComponentPage)
 {
   ui->setupUi(this);
-  connect( ui->everything, SIGNAL( clicked ( bool ) ), this, SLOT( slotEverythingClicked( bool ) ) );
+  connect( ui->everything, SIGNAL(clicked(bool)), this, SLOT(slotEverythingClicked(bool)) );
 }
 
 SelectComponentPage::~SelectComponentPage()
@@ -32,10 +32,39 @@ SelectComponentPage::~SelectComponentPage()
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )
 {
-  ui->addressbooks->setEnabled( !clicked );
-  ui->filters->setEnabled( !clicked );
-  ui->mails->setEnabled( !clicked );
-  ui->settings->setEnabled( !clicked );
+  ui->addressbooks->setEnabled( !clicked && (mOptions & PimImportAbstract::AddressBook));
+  ui->filters->setEnabled( !clicked && (mOptions & PimImportAbstract::Filters));
+  ui->mails->setEnabled( !clicked && (mOptions & PimImportAbstract::Mails));
+  ui->settings->setEnabled( !clicked && (mOptions & PimImportAbstract::Settings));
+}
+
+
+void SelectComponentPage::setEnabledComponent(PimImportAbstract::TypeSupportedOptions options)
+{
+  mOptions = options;
+  slotEverythingClicked(ui->everything->isChecked());
+}
+
+PimImportAbstract::TypeSupportedOptions SelectComponentPage::selectedComponents() const
+{
+    if( ui->everything->isChecked() )
+        return mOptions;
+    else {
+        PimImportAbstract::TypeSupportedOptions newOptions;
+        if(ui->addressbooks->isChecked()) {
+            newOptions|=PimImportAbstract::AddressBook;
+        }
+        if(ui->filters->isChecked()) {
+            newOptions|=PimImportAbstract::Filters;
+        }
+        if(ui->mails->isChecked()) {
+            newOptions|=PimImportAbstract::Mails;
+        }
+        if(ui->settings->isChecked()) {
+            newOptions|=PimImportAbstract::Settings;
+        }
+        return newOptions;
+    }
 }
 
 #include "selectcomponentpage.moc"

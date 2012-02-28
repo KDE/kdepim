@@ -22,8 +22,6 @@
 #define MAILIMPORTER_FILTER_EVOLUTION_HXX
 
 #include "filters.h"
-#include "mailimporter_export.h"
-
 /**
  * Imports Evolution mboxes recursively, keeping the folder structure.
  * @author Simon MARTIN

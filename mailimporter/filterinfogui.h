@@ -19,7 +19,6 @@
 #define FILTERINFOGUI_H
 
 #include "filters.h"
-#include "mailimporter_export.h"
 
 namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterInfoGui

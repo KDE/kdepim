@@ -20,8 +20,6 @@
 #include <QHash>
 
 #include "filters.h"
-#include "filters.h"
-#include "mailimporter_export.h"
 /**
  * Imports Sylpheed mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka

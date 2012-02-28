@@ -18,6 +18,8 @@
 #ifndef IMPORTWIZARD_H
 #define IMPORTWIZARD_H
 
+#include "pimimportabstract.h"
+
 #include <kapplication.h>
 #include <KAssistantDialog>
 
@@ -38,14 +40,20 @@ public:
 
   void next();
   void reject();
-
+  
+  ImportMailPage* importMailPage();
+  
+  
 private slots:
   void help();
   void slotProgramSelected(const QString& program);
+  void slotImportMailsClicked();
+  void slotImportFiltersClicked();
 
 private:
   void addImportModule(PimImportAbstract *);
   void checkModules();
+  void setAppropriatePage(PimImportAbstract::TypeSupportedOptions options);
 
   QMap<QString, PimImportAbstract*> mlistImport;
 

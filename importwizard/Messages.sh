@@ -1,4 +1,4 @@
 #! /bin/sh
 $EXTRACTRC *.ui >> rc.cpp
-$XGETTEXT *.cpp -o $podir/importwizard.pot
+$XGETTEXT `find -name '*.cpp'` -o $podir/importwizard.pot
 rm -f rc.cpp

@@ -26,8 +26,6 @@
  *imports outlook text messages into KMail
  *@author Laurence Anderson
  */
-#include "filters.h"
-#include "mailimporter_export.h"
 #include "mailimporter_utils.h"
 namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterOE : public Filter

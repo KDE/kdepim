@@ -19,7 +19,6 @@
 #define MAILIMPORTER_FILTER_EVOLUTION_V3_HXX
 
 #include "filters.h"
-#include "mailimporter_export.h"
 namespace MailImporter
 {
 class MAILIMPORTER_EXPORT FilterEvolution_v3 : public Filter

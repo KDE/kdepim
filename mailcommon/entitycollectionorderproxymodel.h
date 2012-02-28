@@ -36,6 +36,9 @@ class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
     void setManualSortingActive( bool active );
     bool isManualSortingActive() const;
 
+    void clearRanks();
+    void setTopLevelOrder(const QStringList& list);
+
   public slots:
     void slotDefaultCollectionsChanged();
 

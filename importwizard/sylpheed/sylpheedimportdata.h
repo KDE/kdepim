@@ -14,16 +14,17 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef THUNDERBIRDIMPORTDATA_H
-#define THUNDERBIRDIMPORTDATA_H
+#ifndef SylpheedImportData_H
+#define SylpheedImportData_H
 
 #include "pimimportabstract.h"
+class ImportWizard;
 
-class ThunderbirdImportData : public PimImportAbstract
+class SylpheedImportData : public PimImportAbstract
 {
 public:
-  explicit ThunderbirdImportData();
-  ~ThunderbirdImportData();
+  explicit SylpheedImportData(ImportWizard *parent);
+  ~SylpheedImportData();
     
   TypeSupportedOptions supportedOption();
   bool foundMailer() const;
@@ -33,8 +34,11 @@ public:
   bool importFilters();
   bool importAddressBook();
   QString name() const;
-  
+
+private:
+  QString localMailDirPath();
+
 };
 
-#endif /* THUNDERBIRDIMPORTDATA_H */
+#endif /* SylpheedImportData_H */
 

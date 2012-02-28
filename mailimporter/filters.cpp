@@ -111,6 +111,9 @@ void Filter::setFilterInfo( FilterInfo* info )
 
 MailImporter::FilterInfo* Filter::filterInfo()
 {
+  if( !d->filterInfo ) {
+    qDebug()<<" filterInfo must never be null. You forgot to create a filterinfo";
+  }
   return d->filterInfo;
 }
 

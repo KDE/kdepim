@@ -19,7 +19,6 @@
 #define MAILIMPORTER_FILTER_EVOLUTION_V2_HXX
 
 #include "filters.h"
-#include "mailimporter_export.h"
 /**
  * Imports Evolution v2.x mail folder recursively, keeping the folder structure.
  * @author Danny Kukawka

@@ -442,6 +442,10 @@ namespace {
         w->update( Viewer::Force );
         return true;
       }
+      else if ( urlPath == QLatin1String( "goOnline" ) ) {
+        w->goOnline();
+        return true;
+      }
       else if ( urlPath == QLatin1String( "loadExternal" ) ) {
         w->setHtmlLoadExtOverride( !w->htmlLoadExtOverride() );
         w->update( Viewer::Force );
