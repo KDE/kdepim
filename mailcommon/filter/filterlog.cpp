@@ -214,10 +214,12 @@ bool FilterLog::saveToFile( const QString &fileName ) const
 
   fchmod( file.handle(), MessageViewer::Util::getWritePermissions() );
 
+  file.write( "<html>\n<body>\n" );
   foreach ( const QString &entry, d->mLogEntries ) {
-    const QString line = entry + QLatin1Char( '\n' );
+    const QString line = QLatin1String( "<p>" ) + entry + QLatin1String( "</p>" ) + QLatin1Char( '\n' );
     file.write( line.toLocal8Bit() );
   }
+  file.write( "</body>\n</html>\n" );
   file.close();
   return true;
 }

@@ -292,7 +292,7 @@ void FilterLogDialog::slotUser2()
   MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
   fdlg->setMode( KFile::File );
-  fdlg->setSelection( "kmail-filter.log" );
+  fdlg->setSelection( "kmail-filter.html" );
   fdlg->setOperationMode( KFileDialog::Saving );
   fdlg->setConfirmOverwrite(true);
   if ( fdlg->exec() == QDialog::Accepted && fdlg )
