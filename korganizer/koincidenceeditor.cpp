@@ -84,6 +84,7 @@ KOIncidenceEditor::KOIncidenceEditor( const QString &caption,
 
 KOIncidenceEditor::~KOIncidenceEditor()
 {
+  delete mRecurIncidenceAfterDissoc;
 }
 
 void KOIncidenceEditor::setupAttendeesTab()

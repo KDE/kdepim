@@ -298,6 +298,7 @@ bool KOEventEditor::processInput()
           *mRecurIncidence = *mRecurIncidenceAfterDissoc;
           const bool success = mChanger->changeIncidence( savedIncidence, mRecurIncidence,
                                                           KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this, false );
+          delete savedIncidence;
           if ( success ) {
             mRecurIncidence->endUpdates();
             mChanger->addIncidence( mEvent, mResource, mSubResource, this, true );

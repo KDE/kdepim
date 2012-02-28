@@ -2249,8 +2249,7 @@ bool CalendarView::editIncidence( Incidence *incidence, const QDate &date, bool 
   QPair<ResourceCalendar *, QString>p =
     CalHelper::incSubResourceCalendar( calendar(), incidence );
 
-  //Incidence *savedIncidence = incidence->clone();
-  Incidence *incToChange;
+  Incidence *incToChange = 0;
 
   Incidence *incidenceCopy = 0;
   if ( incidence->doesRecur() ) {
