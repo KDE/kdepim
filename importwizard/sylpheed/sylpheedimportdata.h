@@ -34,6 +34,10 @@ public:
   bool importFilters();
   bool importAddressBook();
   QString name() const;
+
+private:
+  QString localMailDirPath();
+
 };
 
 #endif /* SylpheedImportData_H */

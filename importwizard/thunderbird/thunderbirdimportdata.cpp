@@ -46,6 +46,7 @@ QString ThunderbirdImportData::defaultProfile()
       if ( profiles.exists() ) {
         //ini file.
         KConfig config( mPath + QLatin1String( "/profiles.ini" ) );
+        //TODO look at support of multi profile
         if ( config.hasGroup( "Profile0" ) ) {
           KConfigGroup group = config.group( "Profile0" );
           const QString path = group.readEntry( "Path" );
@@ -86,7 +87,6 @@ bool ThunderbirdImportData::importMails()
     info->clear();
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/");
-    qDebug()<<" mailsPath :"<<mailsPath;
     QDir directory(mailsPath);
     if(directory.exists())
         thunderbird.importMails(mailsPath);

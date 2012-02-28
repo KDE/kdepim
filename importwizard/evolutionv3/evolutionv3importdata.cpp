@@ -64,7 +64,7 @@ bool Evolutionv3ImportData::importMails()
     MailImporter::FilterEvolution_v3 evolution;
     evolution.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath + QLatin1String("/Mail/Local Folders/"); //TODO
+    const QString mailsPath = mPath;
     QDir directory(mailsPath);
     if(directory.exists())
         evolution.importMails(mailsPath);

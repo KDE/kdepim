@@ -36,6 +36,15 @@ SylpheedImportData::~SylpheedImportData()
 {
 }
 
+QString SylpheedImportData::localMailDirPath()
+{
+  QFile folderlist( mPath + QLatin1String( "/folderlist.xml" ) );
+  if ( folderlist.exists() ) {
+    //TODO
+  }
+  return QString();
+}
+
 bool SylpheedImportData::foundMailer() const
 {
   QDir directory( mPath );
@@ -56,7 +65,6 @@ bool SylpheedImportData::importSettings()
 
 bool SylpheedImportData::importMails()
 {
-    //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
     MailImporter::FilterInfo *info = initializeInfo();
 
     info->clear(); // Clear info from last time
@@ -64,7 +72,7 @@ bool SylpheedImportData::importMails()
     MailImporter::FilterSylpheed sylpheed;
     sylpheed.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath  + QLatin1String("/Mail/Local Folders/"); //TODO
+    const QString mailsPath = mPath  + localMailDirPath();
     QDir directory(mailsPath);
     if(directory.exists())
         sylpheed.importMails(mailsPath);
