@@ -29,7 +29,7 @@
 Evolutionv2ImportData::Evolutionv2ImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.evolution/mail/local" );
+    mPath = MailImporter::FilterEvolution_v2::defaultPath();
 }
 
 Evolutionv2ImportData::~Evolutionv2ImportData()

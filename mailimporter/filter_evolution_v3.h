@@ -29,7 +29,8 @@ public:
 
   void import();
   void importMails( const QString& maildir );
-
+  static QString defaultPath();
+  
 private:
   void importDirContents(const QString&);
   void importFiles(const QString&);

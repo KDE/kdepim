@@ -40,11 +40,17 @@ FilterEvolution_v3::~FilterEvolution_v3()
 {
 }
 
+QString FilterEvolution_v3::defaultPath()
+{
+  return QDir::homePath() + QLatin1String( "/.local/share/evolution/mail/local/" );
+}
+
+
 /** Recursive import of KMail maildir. */
 void FilterEvolution_v3::import()
 {
   setCountDuplicates(0);
-  QString evolDir = QDir::homePath() + "/.local/share/evolution/mail/local/";
+  QString evolDir = defaultPath();
   QDir d( evolDir );
   if ( !d.exists() ) {
     evolDir = QDir::homePath();

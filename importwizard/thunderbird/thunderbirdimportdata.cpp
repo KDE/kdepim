@@ -36,7 +36,7 @@
 ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.thunderbird/" );
+  mPath = MailImporter::FilterThunderbird::defaultPath();
 }
 
 ThunderbirdImportData::~ThunderbirdImportData()

@@ -34,6 +34,8 @@ public:
   void import();
   void importMails( const QString & maildir );
 
+  static QString defaultPath();
+
 private:
   void importDirContents(const QString&, const QString&, const QString&);
   void importMBox(const QString&, const QString&, const QString&);

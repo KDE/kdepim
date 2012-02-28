@@ -41,6 +41,12 @@ FilterThunderbird::~FilterThunderbird()
 {
 }
 
+
+QString FilterThunderbird::defaultPath()
+{
+  return QDir::homePath() + QLatin1String( "/.thunderbird/" );
+}
+
 /** Recursive import of Evolution's mboxes. */
 void FilterThunderbird::import()
 {
@@ -48,7 +54,7 @@ void FilterThunderbird::import()
    * We ask the user to choose Thunderbird's root directory.
    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
-  QString thunderDir = QDir::homePath() + "/.thunderbird/";
+  QString thunderDir = defaultPath();
   QDir d( thunderDir );
   if ( !d.exists() ) {
     thunderDir = QDir::homePath();
