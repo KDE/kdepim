@@ -414,7 +414,9 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
   if ( isEmpty() )
     return false;
 
-  msg->parse(); // make sure we can access all headers
+  if ( !msg->hasHeader( "From" ) ) {
+    msg->parse(); // probably not parsed yet: make sure we can access all headers
+  }
 
   QString msgContents;
   // Show the value used to compare the rules against in the log.
