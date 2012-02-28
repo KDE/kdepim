@@ -186,7 +186,6 @@ void FilterLog::clear()
 {
   d->mLogEntries.clear();
   d->mCurrentLogSize = 0;
-  emit logShrinked();
 }
 
 QStringList FilterLog::logEntries() const
