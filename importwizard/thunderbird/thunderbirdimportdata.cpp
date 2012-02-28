@@ -16,9 +16,13 @@
 */
 
 #include "thunderbirdimportdata.h"
+#include "importfilterinfogui.h"
+#include "importwizard.h"
+
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
-#include "importfilterinfogui.h"
+
+#include "mailcommon/filter/filterimporterexporter.h"
 
 #include <KLocale>
 #include <KConfig>
@@ -100,6 +104,15 @@ bool ThunderbirdImportData::importMails()
 
 bool ThunderbirdImportData::importFilters()
 {
+  MailCommon::FilterImporterExporter importer( mImportWizard );
+  bool canceled = false;
+  const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
+  if ( QFile( filterPath ).exists() ) {
+    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::ThunderBirdFilter, filterPath );
+  } else {
+    //TODO
+  }
+  
   return false;
 }
 
