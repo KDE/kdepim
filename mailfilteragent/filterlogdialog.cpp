@@ -276,6 +276,7 @@ void FilterLogDialog::slotSwitchLogState()
 
 void FilterLogDialog::slotChangeLogMemLimit( int value )
 {
+  mTextEdit->document()->setMaximumBlockCount( 0 ); //Reset value
   FilterLog::instance()->setMaxLogSize( value * 1024 );
 }
 
