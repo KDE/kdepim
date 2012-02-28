@@ -18,12 +18,12 @@
 #define Evolutionv2ImportData_H
 
 #include "pimimportabstract.h"
-class ImportMailPage;
+class ImportWizard;
 
 class Evolutionv2ImportData : public PimImportAbstract
 {
 public:
-  explicit Evolutionv2ImportData(ImportMailPage *parent);
+  explicit Evolutionv2ImportData(ImportWizard *parent);
   ~Evolutionv2ImportData();
     
   TypeSupportedOptions supportedOption();

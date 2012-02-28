@@ -19,7 +19,7 @@
 #define PIMIMPORTABSTRACT_H
 #include <QObject>
 
-class ImportMailPage;
+class ImportWizard;
 
 namespace MailImporter {
     class FilterInfo;
@@ -39,7 +39,7 @@ public:
 
   Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption )
 
-  explicit PimImportAbstract(ImportMailPage *parent);
+  explicit PimImportAbstract(ImportWizard *parent);
   virtual ~PimImportAbstract();
 
   virtual bool foundMailer() const= 0;
@@ -55,7 +55,7 @@ public:
 
 protected:
   QString mPath;
-  ImportMailPage *mMailPage;
+  ImportWizard *mImportWizard;
 };
 
 

@@ -16,13 +16,14 @@
 */
 
 #include "pimimportabstract.h"
+#include "importwizard.h"
 #include "importmailpage.h"
 #include "importfilterinfogui.h"
 
 #include "mailimporter/filterinfo.h"
 
-PimImportAbstract::PimImportAbstract(ImportMailPage *parent)
-    :mMailPage(parent)
+PimImportAbstract::PimImportAbstract(ImportWizard *parent)
+    :mImportWizard(parent)
 {
 }
 
@@ -54,9 +55,9 @@ bool PimImportAbstract::importAddressBook()
 MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
 {
     MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
-    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
+    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
     info->setFilterInfoGui(infoGui);
-    info->setRootCollection( mMailPage->selectedCollection() );
+    info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
     return info;
 }
 

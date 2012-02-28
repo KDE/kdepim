@@ -26,7 +26,7 @@
 #include <QWidget>
 
 
-Evolutionv2ImportData::Evolutionv2ImportData(ImportMailPage*parent)
+Evolutionv2ImportData::Evolutionv2ImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
     mPath = QDir::homePath() + QLatin1String( "/.evolution/mail/local" );

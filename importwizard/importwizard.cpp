@@ -72,11 +72,11 @@ ImportWizard::ImportWizard(QWidget *parent)
   addPage( mPage6 );
 
   //Import module
-  addImportModule(new ThunderbirdImportData(mImportMailPage));
-  addImportModule(new SylpheedImportData(mImportMailPage));
-  addImportModule(new Evolutionv3ImportData(mImportMailPage));
-  addImportModule(new Evolutionv2ImportData(mImportMailPage));
-  addImportModule(new Evolutionv1ImportData(mImportMailPage));
+  addImportModule(new ThunderbirdImportData(this));
+  addImportModule(new SylpheedImportData(this));
+  addImportModule(new Evolutionv3ImportData(this));
+  addImportModule(new Evolutionv2ImportData(this));
+  addImportModule(new Evolutionv1ImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
@@ -168,5 +168,11 @@ void ImportWizard::reject()
 {
   KAssistantDialog::reject();
 }
+
+ImportMailPage* ImportWizard::importMailPage()
+{
+  return mImportMailPage;
+}
+
 
 #include "importwizard.moc"

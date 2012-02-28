@@ -26,7 +26,7 @@
 #include <QWidget>
 
 
-SylpheedImportData::SylpheedImportData(ImportMailPage*parent)
+SylpheedImportData::SylpheedImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
     mPath = QDir::homePath() + QLatin1String( "/.sylpheed-2.0/" );

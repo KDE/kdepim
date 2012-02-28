@@ -40,7 +40,10 @@ public:
 
   void next();
   void reject();
-
+  
+  ImportMailPage* importMailPage();
+  
+  
 private slots:
   void help();
   void slotProgramSelected(const QString& program);

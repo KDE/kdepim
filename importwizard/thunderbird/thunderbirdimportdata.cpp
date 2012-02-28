@@ -29,7 +29,7 @@
 #include <QDebug>
 
 
-ThunderbirdImportData::ThunderbirdImportData(ImportMailPage*parent)
+ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
     mPath = QDir::homePath() + QLatin1String( "/.thunderbird/" );
