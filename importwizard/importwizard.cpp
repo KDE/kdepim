@@ -94,9 +94,14 @@ ImportWizard::~ImportWizard()
   qDeleteAll(mlistImport);
 }
 
+void ImportWizard::slotImportFiltersClicked()
+{
+  const bool result = mSelectedPim->importFilters();
+  setValid(mPage4,result);
+}
+
 void ImportWizard::slotImportMailsClicked()
 {
-  qDebug()<<" importMailsClicked !!!!!!!!!!!";
     const bool result = mSelectedPim->importMails();
     setValid(mPage3,result);
 }
