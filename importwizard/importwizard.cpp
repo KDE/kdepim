@@ -48,27 +48,27 @@ ImportWizard::ImportWizard(QWidget *parent)
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
   mCheckProgramPage = new CheckProgramPage(this);
-  mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Step 1: Detect pim" ) );
+  mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Detect program" ) );
   addPage( mPage1);
 
   mSelectComponentPage = new SelectComponentPage(this);
-  mPage2 = new KPageWidgetItem( mSelectComponentPage, i18n( "Step 2: Select import components" ) );
+  mPage2 = new KPageWidgetItem( mSelectComponentPage, i18n( "Select material to import" ) );
   addPage( mPage2);
 
   mImportMailPage = new ImportMailPage(this);
-  mPage3 = new KPageWidgetItem( mImportMailPage, i18n( "Step 3: Import mails" ) );
+  mPage3 = new KPageWidgetItem( mImportMailPage, i18n( "Import mail messages" ) );
   addPage( mPage3);
 
   mImportFilterPage = new ImportFilterPage(this);
-  mPage4 = new KPageWidgetItem( mImportFilterPage, i18n( "Step 4: Import filters" ) );
+  mPage4 = new KPageWidgetItem( mImportFilterPage, i18n( "Import mail filters" ) );
   addPage( mPage4 );
 
   mImportSettingPage = new ImportSettingPage(this);
-  mPage5 = new KPageWidgetItem( mImportSettingPage, i18n( "Step 5: Import settings" ) );
+  mPage5 = new KPageWidgetItem( mImportSettingPage, i18n( "Import settings" ) );
   addPage( mPage5);
 
   mImportAddressbookPage = new ImportAddressbookPage(this);
-  mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Step 6: Import addressbooks" ) );
+  mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Import addressbooks" ) );
   addPage( mPage6 );
 
   //Import module
@@ -108,7 +108,6 @@ void ImportWizard::slotImportMailsClicked()
 
 void ImportWizard::slotProgramSelected(const QString& program)
 {
-
   if(mlistImport.contains(program)) {
     mSelectedPim = mlistImport.value( program );
     setValid( currentPage(), true );
@@ -143,7 +142,7 @@ void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions op
 
 void ImportWizard::next()
 {
-  if( currentPage() == mPage1 ) {
+   if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
       mCheckProgramPage->disableSelectProgram();
       mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
@@ -177,6 +176,11 @@ void ImportWizard::reject()
 ImportMailPage* ImportWizard::importMailPage()
 {
   return mImportMailPage;
+}
+
+ImportFilterPage* ImportWizard::importFilterPage()
+{
+  return mImportFilterPage;
 }
 
 

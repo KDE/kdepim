@@ -42,7 +42,7 @@ public:
   void reject();
   
   ImportMailPage* importMailPage();
-  
+  ImportFilterPage* importFilterPage();
   
 private slots:
   void help();

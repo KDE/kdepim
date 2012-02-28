@@ -23,7 +23,7 @@
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Programs found:</string>
+            <string>Please select the program from which you like to import:</string>
            </property>
           </widget>
          </item>
