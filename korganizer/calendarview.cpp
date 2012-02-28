@@ -2249,12 +2249,17 @@ bool CalendarView::editIncidence( Incidence *incidence, const QDate &date, bool 
   QPair<ResourceCalendar *, QString>p =
     CalHelper::incSubResourceCalendar( calendar(), incidence );
 
-  Incidence *savedIncidence = incidence->clone();
+  //Incidence *savedIncidence = incidence->clone();
   Incidence *incToChange;
 
+  Incidence *incidenceCopy = 0;
   if ( incidence->doesRecur() ) {
     KOGlobals::WhichOccurrences chosenOption;
-    incToChange = singleOccurrenceOrAll( incidence, KOGlobals::EDIT, chosenOption, date );
+    incidenceCopy = incidence->clone(); // Don't dissociate directly, only after the user
+    //pressed ok/apply in the event editor
+    incToChange = singleOccurrenceOrAll( incidenceCopy, KOGlobals::EDIT, chosenOption, date );
+    if ( incToChange == incidenceCopy )
+      incToChange = incidence; // no dissociate, edit directly
   } else {
     incToChange = incidence;
   }
@@ -2274,7 +2279,7 @@ bool CalendarView::editIncidence( Incidence *incidence, const QDate &date, bool 
 
     mDialogList.insert( incToChange, incidenceEditor );
     if ( incidence != incToChange ) {
-      incidenceEditor->setRecurringIncidence( savedIncidence, incidence );
+      incidenceEditor->setRecurringIncidence( incidence, incidenceCopy );
     }
     incidenceEditor->setResource( p.first, p.second );
     incidenceEditor->editIncidence( incToChange, date, mCalendar );

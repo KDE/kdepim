@@ -292,15 +292,17 @@ bool KOEventEditor::processInput()
       } else {
         if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
           writeEvent( mEvent );
+          Incidence *savedIncidence = mRecurIncidence->clone();
 
-          mRecurIncidenceAfterDissoc->startUpdates();
-          const bool success = mChanger->changeIncidence( mRecurIncidence, mRecurIncidenceAfterDissoc,
+          mRecurIncidence->startUpdates();
+          *mRecurIncidence = *mRecurIncidenceAfterDissoc;
+          const bool success = mChanger->changeIncidence( savedIncidence, mRecurIncidence,
                                                           KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this, false );
           if ( success ) {
-            mRecurIncidenceAfterDissoc->endUpdates();
+            mRecurIncidence->endUpdates();
             mChanger->addIncidence( mEvent, mResource, mSubResource, this, true );
           } else {
-            mRecurIncidenceAfterDissoc->cancelUpdates();
+            mRecurIncidence->cancelUpdates();
           }
         } else {
           mEvent->startUpdates();
@@ -342,12 +344,6 @@ void KOEventEditor::processCancel()
   kdDebug(5850) << "KOEventEditor::processCancel()" << endl;
 
   if ( mFreeBusy ) mFreeBusy->cancelReload();
-
-  if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
-    *mRecurIncidenceAfterDissoc = *mRecurIncidence;
-    mRecurIncidenceAfterDissoc->updated();
-  }
-
 }
 
 void KOEventEditor::deleteEvent()
