@@ -519,7 +519,7 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   Nepomuk::Query::OrTerm termGroup;
   if ( kasciistricmp( field(), "<message>" ) == 0 || kasciistricmp( field(), "<recipients>" ) ==0  || kasciistricmp( field(), "<any header>" ) == 0 ) {
-    const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm valueTerm( Vocabulary::NCO::emailAddress(), Nepomuk::Query::LiteralTerm( quote (contents()) ), nepomukComparator() );
     const Nepomuk::Query::ComparisonTerm addressTerm( Vocabulary::NCO::hasEmailAddress(), valueTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTerm( Vocabulary::NMO::to(), addressTerm, Nepomuk::Query::ComparisonTerm::Equal );
     const Nepomuk::Query::ComparisonTerm personTermTo( Vocabulary::NMO::cc(), personTerm, Nepomuk::Query::ComparisonTerm::Equal );
@@ -547,7 +547,10 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
     termGroup.addSubTerm( subjectTerm );
   }
   if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
-    const Nepomuk::Query::ComparisonTerm replyToTerm( Vocabulary::NMO::messageReplyTo(), Nepomuk::Query::LiteralTerm( contents() ), nepomukComparator() );
+    const Nepomuk::Query::ComparisonTerm replyToTerm(
+      Vocabulary::NMO::messageReplyTo(),
+      Nepomuk::Query::LiteralTerm( quote(contents() ) ),
+      nepomukComparator() );
     termGroup.addSubTerm( replyToTerm );
   }
 
