@@ -300,8 +300,10 @@ protected:
      */
     QString xesamComparator() const;
 
-  private:
-    static Function configValueToFunc( const char* );
+protected:
+    QString quote( const QString &content ) const;
+private:
+    static Function configValueToFunc( const char * );
     static QString functionToString( Function );
 
     QByteArray mField;
