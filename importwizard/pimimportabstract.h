@@ -18,7 +18,6 @@
 #ifndef PIMIMPORTABSTRACT_H
 #define PIMIMPORTABSTRACT_H
 #include <QObject>
-
 class ImportWizard;
 
 namespace MailImporter {

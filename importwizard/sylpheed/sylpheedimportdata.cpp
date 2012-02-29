@@ -19,6 +19,8 @@
 #include "mailimporter/filter_sylpheed.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
+#include "mailcommon/filter/filterimporterexporter.h"
+#include "importwizard.h"
 
 #include <KLocale>
 
@@ -86,6 +88,17 @@ bool SylpheedImportData::importMails()
 
 bool SylpheedImportData::importFilters()
 {
+  MailCommon::FilterImporterExporter importer( mImportWizard );
+  bool canceled = false;
+  const QString filterPath = mPath + QLatin1String("/filter.xml");
+  if ( QFile( filterPath ).exists() ) {
+    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::SylpheedFilter, filterPath );
+    appendFilters( listFilter );
+    return true;
+  } else {
+    //TODO
+  }
+  
   return false;
 }
 

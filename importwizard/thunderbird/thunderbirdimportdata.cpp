@@ -17,12 +17,12 @@
 
 #include "thunderbirdimportdata.h"
 #include "importfilterinfogui.h"
-#include "importwizard.h"
 
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
-
 #include "mailcommon/filter/filterimporterexporter.h"
+#include "importwizard.h"
+
 
 #include <KLocale>
 #include <KConfig>
