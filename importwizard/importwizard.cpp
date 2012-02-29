@@ -23,6 +23,7 @@
 #include "importfilterpage.h"
 #include "importsettingpage.h"
 #include "importaddressbookpage.h"
+#include "importfinishpage.h"
 
 #include "thunderbird/thunderbirdimportdata.h"
 #include "sylpheed/sylpheedimportdata.h"
@@ -71,6 +72,11 @@ ImportWizard::ImportWizard(QWidget *parent)
   mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Import addressbooks" ) );
   addPage( mPage6 );
 
+  mImportFinishPage = new ImportFinishPage(this);
+  mPage7 = new KPageWidgetItem( mImportFinishPage, i18n( "Finish" ) );
+  addPage( mPage7 );
+
+  
   //Import module
   addImportModule(new ThunderbirdImportData(this));
   addImportModule(new SylpheedImportData(this));

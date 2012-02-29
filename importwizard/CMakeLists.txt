@@ -8,15 +8,16 @@ importfilterpage.cpp
 importmailpage.cpp
 importsettingpage.cpp
 importwizard.cpp
+importfinishpage.cpp
 main.cpp
 pimimportabstract.cpp
 selectcomponentpage.cpp
+importfilterinfogui.cpp
 thunderbird/thunderbirdimportdata.cpp
 sylpheed/sylpheedimportdata.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
-importfilterinfogui.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon )
@@ -28,7 +29,8 @@ kde4_add_ui_files(importwizard_SRCS
                   ui/importfilterpage.ui
                   ui/importmailpage.ui
                   ui/importsettingpage.ui
-                  ui/selectcomponentpage.ui )
+                  ui/selectcomponentpage.ui 
+		  ui/importfinishpage.ui )
 
 kde4_add_executable(importwizard ${importwizard_SRCS})
 

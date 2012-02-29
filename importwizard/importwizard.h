@@ -30,6 +30,7 @@ class ImportMailPage;
 class ImportFilterPage;
 class ImportSettingPage;
 class ImportAddressbookPage;
+class ImportFinishPage;
 class PimImportAbstract;
 
 class ImportWizard : public KAssistantDialog {
@@ -65,6 +66,7 @@ private:
   KPageWidgetItem *mPage4;
   KPageWidgetItem *mPage5;
   KPageWidgetItem *mPage6;
+  KPageWidgetItem *mPage7;
 
   CheckProgramPage *mCheckProgramPage;
   SelectComponentPage *mSelectComponentPage;
@@ -72,6 +74,7 @@ private:
   ImportFilterPage *mImportFilterPage;
   ImportSettingPage *mImportSettingPage;
   ImportAddressbookPage *mImportAddressbookPage;
+  ImportFinishPage *mImportFinishPage;
 };
 
 #endif /* IMPORTWIZARD_H */
