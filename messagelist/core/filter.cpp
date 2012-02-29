@@ -110,8 +110,10 @@ void Filter::setSearchString( const QString &search )
 
   emit finished(); // let the view update according to restrictions
 
-  if( mSearchString.isEmpty())
+  if( mSearchString.isEmpty()) {
+    mQueryClient->close();
     return;
+  }
   const Nepomuk::Resource parentResource( mCurrentFolder );
 
   const Nepomuk::Query::ComparisonTerm isChildTerm( Nepomuk::Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
