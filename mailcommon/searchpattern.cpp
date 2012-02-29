@@ -275,19 +275,24 @@ Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
       return Nepomuk::Query::ComparisonTerm::Greater;
     case SearchRule::FuncIsGreaterOrEqual:
       return Nepomuk::Query::ComparisonTerm::GreaterOrEqual;
-    case SearchRule::FuncIsLess:
-      return Nepomuk::Query::ComparisonTerm::Smaller;
-    case SearchRule::FuncIsLessOrEqual:
-      return Nepomuk::Query::ComparisonTerm::SmallerOrEqual;
-    case SearchRule::FuncRegExp:
-    case SearchRule::FuncNotRegExp:
-      return Nepomuk::Query::ComparisonTerm::Regexp;
-    case SearchRule::FuncStartWith: //TODO
-    case SearchRule::FuncNotStartWith:
-    case SearchRule::FuncEndWith:
-    case SearchRule::FuncNotEndWith:
-    default:
-      kDebug() << "Unhandled function type: " << function();
+
+  case SearchRule::FuncIsLess:
+    return Nepomuk::Query::ComparisonTerm::Smaller;
+
+  case SearchRule::FuncIsLessOrEqual:
+    return Nepomuk::Query::ComparisonTerm::SmallerOrEqual;
+
+  case SearchRule::FuncRegExp:
+  case SearchRule::FuncNotRegExp:
+    return Nepomuk::Query::ComparisonTerm::Regexp;
+
+  case SearchRule::FuncStartWith:
+  case SearchRule::FuncNotStartWith:
+  case SearchRule::FuncEndWith:
+  case SearchRule::FuncNotEndWith:
+    return Nepomuk::Query::ComparisonTerm::Regexp;
+  default:
+    kDebug() << "Unhandled function type: " << function();
   }
   return Nepomuk::Query::ComparisonTerm::Equal;
 }
@@ -492,9 +497,25 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
 QString SearchRule::quote( const QString &content ) const
 {
    //Without "" nepomuk will search a message containing each individual word
-  if ( function() == SearchRule::FuncRegExp || function() == SearchRule::FuncNotRegExp )
-    return content;
-  return QString::fromLatin1( "\'%1\'" ).arg( content );
+  QString newContent;
+  switch( function() ) {
+  case SearchRule::FuncRegExp:
+  case SearchRule::FuncNotRegExp:
+    newContent = content;
+    break;
+  case SearchRule::FuncStartWith:
+  case SearchRule::FuncNotStartWith:
+    newContent = QString::fromLatin1( "^%1" ).arg( content );
+    break;
+  case SearchRule::FuncEndWith:
+  case SearchRule::FuncNotEndWith:
+    newContent = QString::fromLatin1( "%1$" ).arg( content );;
+    break;
+  default:
+    newContent = QString::fromLatin1( "\'%1\'" ).arg( content );
+    break;
+  }
+  return newContent;
 }
 
 void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const QUrl& field) const
