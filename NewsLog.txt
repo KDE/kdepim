@@ -1,10 +1,19 @@
 
-Friday 24 February 2012
+Wednesday 29 February 2012
 
 Problems addressed
 ------------------
 
 * kolab/issue4817: Edit event with recurrence without changes deletes entry (rt#10114)
+* kolab/issue4823: Kontact Crash in KCal::IncidenceBase::isReadOnly (rt#10111)
+
+
+
+Friday 24 February 2012
+
+Problems addressed
+------------------
+
 * kolab/issue4818: Add kdebug output for 'explicit delete' by user
 
 
