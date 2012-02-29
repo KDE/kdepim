@@ -96,6 +96,7 @@ void Filter::clear()
   mSearchString.clear();
   mTagId.clear();
   mMatchingItemIds.clear();
+  mQueryClient->close();
 }
 
 void Filter::setCurrentFolder( const KUrl &url )
@@ -109,6 +110,8 @@ void Filter::setSearchString( const QString &search )
 
   emit finished(); // let the view update according to restrictions
 
+  if( mSearchString.isEmpty())
+    return;
   const Nepomuk::Resource parentResource( mCurrentFolder );
 
   const Nepomuk::Query::ComparisonTerm isChildTerm( Nepomuk::Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
