@@ -534,9 +534,11 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-static QString quote( const QString &content )
+QString SearchRule::quote( const QString &content ) const
 {
    //Without "" nepomuk will search a message containing each individual word
+  if ( function() == SearchRule::FuncRegExp || function() == SearchRule::FuncNotRegExp )
+    return content;
   return QString::fromLatin1( "\'%1\'" ).arg( content );
 }
 

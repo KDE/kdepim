@@ -298,7 +298,9 @@ class MAILCOMMON_EXPORT SearchRule
      */
     QString xesamComparator() const;
 
-  private:
+protected:
+    QString quote( const QString &content ) const;
+private:
     static Function configValueToFunc( const char * );
     static QString functionToString( Function );
 
