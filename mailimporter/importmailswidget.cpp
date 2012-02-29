@@ -166,3 +166,5 @@ void ImportMailsWidget::clear()
     setFrom( QString() );
     setTo( QString() );
 }
+
+#include "importmailswidget.moc"
