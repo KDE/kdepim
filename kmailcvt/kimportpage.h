@@ -19,6 +19,23 @@
 #define KIMPORTPAGE_H
 
 #include "ui_kimportpagedlg.h"
+#include <QStyledItemDelegate>
+class QTextDocument;
+
+class LogItemDelegate : public QStyledItemDelegate
+{
+  public:
+  explicit LogItemDelegate( QObject *parent );
+  ~LogItemDelegate();
+  
+  virtual QSize sizeHint ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+  virtual void paint ( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+  virtual QWidget  *createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const;
+
+
+  private:
+  QTextDocument* document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+};
 
 class KImportPageDlg : public QWidget, public Ui::KImportPageDlg
 {
