@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CHECKPROGRAMPAGE_H
-#define CHECKPROGRAMPAGE_H
+#ifndef SELECTPROGRAMPAGE_H
+#define SELECTPROGRAMPAGE_H
 
 #include <QWidget>
 
 namespace Ui {
-  class CheckProgramPage;
+  class SelectProgramPage;
 }
 
-class CheckProgramPage : public QWidget
+class SelectProgramPage : public QWidget
 {
   Q_OBJECT
   
 public:
-  explicit CheckProgramPage(QWidget *parent = 0);
-  ~CheckProgramPage();
+  explicit SelectProgramPage(QWidget *parent = 0);
+  ~SelectProgramPage();
     void setFoundProgram(const QStringList& list);
   void disableSelectProgram();
 
@@ -41,7 +41,7 @@ signals:
     void programSelected(const QString&);
 
 private:
-  Ui::CheckProgramPage *ui;
+  Ui::SelectProgramPage *ui;
 };
 
-#endif // CHECKPROGRAMPAGE_H
+#endif // SELECTPROGRAMPAGE_H

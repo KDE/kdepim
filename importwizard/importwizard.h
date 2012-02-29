@@ -24,7 +24,7 @@
 #include <KAssistantDialog>
 
 class KPageWidgetItem;
-class CheckProgramPage;
+class SelectProgramPage;
 class SelectComponentPage;
 class ImportMailPage;
 class ImportFilterPage;
@@ -68,7 +68,7 @@ private:
   KPageWidgetItem *mPage6;
   KPageWidgetItem *mPage7;
 
-  CheckProgramPage *mCheckProgramPage;
+  SelectProgramPage *mSelectProgramPage;
   SelectComponentPage *mSelectComponentPage;
   ImportMailPage *mImportMailPage;
   ImportFilterPage *mImportFilterPage;

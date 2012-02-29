@@ -15,36 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "checkprogrampage.h"
-#include "ui_checkprogrampage.h"
+#include "selectprogrampage.h"
+#include "ui_selectprogrampage.h"
 
-CheckProgramPage::CheckProgramPage(QWidget *parent) :
+SelectProgramPage::SelectProgramPage(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::CheckProgramPage)
+  ui(new Ui::SelectProgramPage)
 {
   ui->setupUi(this);
   connect(ui->listProgramFound,SIGNAL(itemSelectionChanged()),this,SLOT(slotItemSelectionChanged()));
 }
 
-CheckProgramPage::~CheckProgramPage()
+SelectProgramPage::~SelectProgramPage()
 {
   delete ui;
 }
 
-void CheckProgramPage::setFoundProgram(const QStringList& list)
+void SelectProgramPage::setFoundProgram(const QStringList& list)
 {
     ui->listProgramFound->addItems(list);
 }
 
-void CheckProgramPage::slotItemSelectionChanged()
+void SelectProgramPage::slotItemSelectionChanged()
 {
     if(ui->listProgramFound->currentItem())
         emit programSelected(ui->listProgramFound->currentItem()->text());
 }
 
-void CheckProgramPage::disableSelectProgram()
+void SelectProgramPage::disableSelectProgram()
 {
   ui->listProgramFound->setEnabled( false );
 }
 
-#include "checkprogrampage.moc"
+#include "selectprogrampage.moc"
