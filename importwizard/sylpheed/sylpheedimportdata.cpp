@@ -24,6 +24,8 @@
 
 #include <KLocale>
 
+#include <QDomDocument>
+#include <QDomElement>
 #include <QDir>
 #include <QWidget>
 
@@ -40,9 +42,32 @@ SylpheedImportData::~SylpheedImportData()
 
 QString SylpheedImportData::localMailDirPath()
 {
-  QFile folderlist( mPath + QLatin1String( "/folderlist.xml" ) );
-  if ( folderlist.exists() ) {
-    //TODO
+  QFile folderListFile( mPath + QLatin1String( "/folderlist.xml" ) );
+  if ( folderListFile.exists() ) {
+    QDomDocument doc;
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    if ( !doc.setContent( &folderListFile, &errorMsg, &errorRow, &errorCol ) ) {
+      kDebug() << "Unable to load document.Parse error in line " << errorRow
+               << ", col " << errorCol << ": " << errorMsg;
+      return QString();
+    }
+    QDomElement settings = doc.documentElement();
+
+    if ( settings.isNull() ) {
+      return QString();
+    }
+
+    for ( QDomElement e = settings.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+      if ( e.tagName() == QLatin1String( "folder" ) ) {
+        if ( e.hasAttribute( "type" ) ) {
+          if ( e.attribute( "type" ) == QLatin1String( "mh" ) ) {
+            return e.attribute("path" );
+          }   
+        }
+      }
+    }
   }
   return QString();
 }
@@ -74,7 +99,7 @@ bool SylpheedImportData::importMails()
     MailImporter::FilterSylpheed sylpheed;
     sylpheed.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath  + localMailDirPath();
+    const QString mailsPath = localMailDirPath();
     QDir directory(mailsPath);
     if(directory.exists())
         sylpheed.importMails(mailsPath);
