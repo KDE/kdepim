@@ -432,6 +432,14 @@ void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemMod
   }
 }
 
+QWidget *CustomTemplateItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+{
+  if ( index.column() == 1 )
+    return QStyledItemDelegate::createEditor( parent, option, index );
+  return 0;
+}
+
+  
 CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
                                         const QString &name,
                                         const QString &content,
