@@ -36,10 +36,10 @@ using namespace MessageList::Core;
 Filter::Filter()
   : mQueryClient( new Nepomuk::Query::QueryServiceClient( this ) )
 {
-  connect( mQueryClient, SIGNAL( newEntries( QList<Nepomuk::Query::Result> ) ),
-           this, SLOT( newEntries( QList<Nepomuk::Query::Result> ) ) );
-  connect( mQueryClient, SIGNAL( finishedListing() ),
-           this, SLOT( finishedListing() ) );
+  connect( mQueryClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+           this, SLOT(newEntries(QList<Nepomuk::Query::Result>)) );
+  connect( mQueryClient, SIGNAL(finishedListing()),
+           this, SLOT(finishedListing()) );
 }
 
 bool Filter::match( const MessageItem * item ) const

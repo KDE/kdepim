@@ -354,7 +354,7 @@ void Model::setFilter( const Filter *filter )
   d->mFilter = filter;
 
   if (d->mFilter)
-    connect( d->mFilter, SIGNAL( finished() ), this, SLOT( slotApplyFilter() ) );
+    connect( d->mFilter, SIGNAL(finished()), this, SLOT(slotApplyFilter()) );
 
   d->slotApplyFilter();
 }
