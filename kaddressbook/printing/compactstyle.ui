@@ -31,10 +31,10 @@
         <item>
          <widget class="QCheckBox" name="cbWithHomeAddress">
           <property name="toolTip">
-           <string>print the home address, with home phone number and mobile phone number</string>
+           <string>Print the home address, with home phone number and mobile phone number</string>
           </property>
           <property name="whatsThis">
-           <string>print the home address, with home phone number and mobile phone number</string>
+           <string>Print the home address, with home phone number and mobile phone number</string>
           </property>
           <property name="text">
            <string>with home address</string>
@@ -57,10 +57,10 @@
         <item>
          <widget class="QCheckBox" name="cbWithBirthday">
           <property name="toolTip">
-           <string>print the birthday</string>
+           <string>Print the birthday</string>
           </property>
           <property name="whatsThis">
-           <string>print the birthday</string>
+           <string>Print the birthday</string>
           </property>
           <property name="text">
            <string>with birthday</string>
@@ -70,10 +70,10 @@
         <item>
          <widget class="QCheckBox" name="cbWithEMail">
           <property name="toolTip">
-           <string>prints the e-mail and e-mail2 fields</string>
+           <string>Print the e-mail and e-mail2 fields</string>
           </property>
           <property name="whatsThis">
-           <string>prints the e-mail and e-mail2 fields</string>
+           <string>Print the e-mail and e-mail2 fields</string>
           </property>
           <property name="text">
            <string>with e-mail</string>
