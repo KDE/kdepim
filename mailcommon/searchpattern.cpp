@@ -591,7 +591,7 @@ void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
 
     const Nepomuk::Query::ComparisonTerm valueTerm(
       Vocabulary::NCO::emailAddress(),
-      Nepomuk::Query::LiteralTerm( contents() ),
+      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
       nepomukComparator() );
 
     const Nepomuk::Query::ComparisonTerm addressTerm(
@@ -647,7 +647,7 @@ void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
   if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm replyToTerm(
       Vocabulary::NMO::messageReplyTo(),
-      Nepomuk::Query::LiteralTerm( contents() ),
+      Nepomuk::Query::LiteralTerm( quote(contents() ) ),
       nepomukComparator() );
     termGroup.addSubTerm( replyToTerm );
   }
