@@ -15,41 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTMAILPAGE_H
-#define IMPORTMAILPAGE_H
+#include "importfinishpage.h"
+#include "ui_importfinishpage.h"
 
-#include <QWidget>
-
-namespace Ui {
-  class ImportMailPage;
-}
-
-namespace Akonadi {
-  class Collection;
-}
-
-namespace MailImporter{
-class ImportMailsWidget;
-}
-
-class ImportMailPage : public QWidget
+ImportFinishPage::ImportFinishPage(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::ImportFinishPage)
 {
-  Q_OBJECT
-  
-public:
-  explicit ImportMailPage(QWidget *parent = 0);
-  ~ImportMailPage();
-  MailImporter::ImportMailsWidget *mailWidget();
-  Akonadi::Collection selectedCollection() const;
-  
-private slots:
-  void collectionChanged(const Akonadi::Collection& collection);
-  
-signals:
-  void importMailsClicked();
+    ui->setupUi(this);
+}
 
-private:
-  Ui::ImportMailPage *ui;
-};
-
-#endif // IMPORTMAILPAGE_H
+ImportFinishPage::~ImportFinishPage()
+{
+    delete ui;
+}

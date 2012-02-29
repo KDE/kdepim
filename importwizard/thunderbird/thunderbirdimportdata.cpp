@@ -16,20 +16,27 @@
 */
 
 #include "thunderbirdimportdata.h"
+#include "importfilterinfogui.h"
+#include "importwizard.h"
+
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
-#include "importfilterinfogui.h"
+
+#include "mailcommon/filter/filterimporterexporter.h"
 
 #include <KLocale>
+#include <KConfig>
+#include <KConfigGroup>
 
 #include <QDir>
 #include <QWidget>
+#include <QDebug>
 
 
-ThunderbirdImportData::ThunderbirdImportData(ImportMailPage*parent)
+ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.thunderbird/" );
+  mPath = MailImporter::FilterThunderbird::defaultPath();
 }
 
 ThunderbirdImportData::~ThunderbirdImportData()
@@ -39,7 +46,18 @@ ThunderbirdImportData::~ThunderbirdImportData()
 QString ThunderbirdImportData::defaultProfile()
 {
     if(mDefaultProfile.isEmpty()) {
-        //TODO
+      QFile profiles( mPath + QLatin1String( "/profiles.ini" ) );
+      if ( profiles.exists() ) {
+        //ini file.
+        KConfig config( mPath + QLatin1String( "/profiles.ini" ) );
+        //TODO look at support of multi profile
+        if ( config.hasGroup( "Profile0" ) ) {
+          KConfigGroup group = config.group( "Profile0" );
+          const QString path = group.readEntry( "Path" );
+          return path;
+        }
+      }
+        
     }
     return mDefaultProfile;
 }
@@ -70,7 +88,7 @@ bool ThunderbirdImportData::importMails()
 
     MailImporter::FilterThunderbird thunderbird;
     thunderbird.setFilterInfo( info );
-    //info->setRootCollection( selectedCollection );    //TODO
+    info->clear();
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/");
     QDir directory(mailsPath);
@@ -78,9 +96,7 @@ bool ThunderbirdImportData::importMails()
         thunderbird.importMails(mailsPath);
     else
         thunderbird.import();
-    thunderbird.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
-    info->clear(); // Clear info from last time
 
     delete info;
     return true;
@@ -88,6 +104,17 @@ bool ThunderbirdImportData::importMails()
 
 bool ThunderbirdImportData::importFilters()
 {
+  MailCommon::FilterImporterExporter importer( mImportWizard );
+  bool canceled = false;
+  const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
+  if ( QFile( filterPath ).exists() ) {
+    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::ThunderBirdFilter, filterPath );
+    appendFilters( listFilter );
+    return true;
+  } else {
+    //TODO
+  }
+  
   return false;
 }
 

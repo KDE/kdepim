@@ -41,6 +41,12 @@ FilterThunderbird::~FilterThunderbird()
 {
 }
 
+
+QString FilterThunderbird::defaultPath()
+{
+  return QDir::homePath() + QLatin1String( "/.thunderbird/" );
+}
+
 /** Recursive import of Evolution's mboxes. */
 void FilterThunderbird::import()
 {
@@ -48,7 +54,7 @@ void FilterThunderbird::import()
    * We ask the user to choose Thunderbird's root directory.
    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
-  QString thunderDir = QDir::homePath() + "/.thunderbird/";
+  QString thunderDir = defaultPath();
   QDir d( thunderDir );
   if ( !d.exists() ) {
     thunderDir = QDir::homePath();
@@ -77,7 +83,6 @@ void FilterThunderbird::importMails( const QString & maildir )
     filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
-
     /** Recursive import of the MailArchives */
     QDir dir(mailDir());
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
@@ -96,7 +101,10 @@ void FilterThunderbird::importMails( const QString & maildir )
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
       if(filterInfo()->shouldTerminate()) break;
       QString temp_mailfile = *mailFile;
-      if (!( temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")) ))
+      if (!( temp_mailfile.endsWith(QLatin1String(".msf")) ||
+             temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")) ||
+             temp_mailfile.endsWith(QLatin1String(".html"))
+        ))
       {
         filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
         importMBox(mailDir() + temp_mailfile , temp_mailfile, QString());
@@ -133,7 +141,10 @@ void FilterThunderbird::importDirContents(const QString& dirName, const QString&
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
     if(filterInfo()->shouldTerminate()) break;
     QString temp_mailfile = *mailFile;
-    if (!(temp_mailfile.endsWith(QLatin1String(".msf")) || temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")))) {
+    if (!(temp_mailfile.endsWith(QLatin1String(".msf")) ||
+          temp_mailfile.endsWith(QLatin1String("msgFilterRules.dat")) ||
+          temp_mailfile.endsWith(QLatin1String(".html"))
+          )) {
       filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
       importMBox( (dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
     }

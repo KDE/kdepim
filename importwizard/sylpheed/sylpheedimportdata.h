@@ -18,12 +18,12 @@
 #define SylpheedImportData_H
 
 #include "pimimportabstract.h"
-class ImportMailPage;
+class ImportWizard;
 
 class SylpheedImportData : public PimImportAbstract
 {
 public:
-  explicit SylpheedImportData(ImportMailPage *parent);
+  explicit SylpheedImportData(ImportWizard *parent);
   ~SylpheedImportData();
     
   TypeSupportedOptions supportedOption();
@@ -34,6 +34,10 @@ public:
   bool importFilters();
   bool importAddressBook();
   QString name() const;
+
+private:
+  QString localMailDirPath();
+
 };
 
 #endif /* SylpheedImportData_H */

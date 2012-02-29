@@ -14,42 +14,25 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef IMPORTMAILPAGE_H
-#define IMPORTMAILPAGE_H
+#ifndef IMPORTFINISHPAGE_H
+#define IMPORTFINISHPAGE_H
 
 #include <QWidget>
 
 namespace Ui {
-  class ImportMailPage;
+class ImportFinishPage;
 }
 
-namespace Akonadi {
-  class Collection;
-}
-
-namespace MailImporter{
-class ImportMailsWidget;
-}
-
-class ImportMailPage : public QWidget
+class ImportFinishPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+    
 public:
-  explicit ImportMailPage(QWidget *parent = 0);
-  ~ImportMailPage();
-  MailImporter::ImportMailsWidget *mailWidget();
-  Akonadi::Collection selectedCollection() const;
-  
-private slots:
-  void collectionChanged(const Akonadi::Collection& collection);
-  
-signals:
-  void importMailsClicked();
-
+    explicit ImportFinishPage(QWidget *parent = 0);
+    ~ImportFinishPage();
+    
 private:
-  Ui::ImportMailPage *ui;
+    Ui::ImportFinishPage *ui;
 };
 
-#endif // IMPORTMAILPAGE_H
+#endif // IMPORTFINISHPAGE_H

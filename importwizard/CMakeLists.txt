@@ -8,16 +8,19 @@ importfilterpage.cpp
 importmailpage.cpp
 importsettingpage.cpp
 importwizard.cpp
+importfinishpage.cpp
 main.cpp
 pimimportabstract.cpp
 selectcomponentpage.cpp
+importfilterinfogui.cpp
 thunderbird/thunderbirdimportdata.cpp
 sylpheed/sylpheedimportdata.cpp
 evolutionv3/evolutionv3importdata.cpp
-importfilterinfogui.cpp
+evolutionv2/evolutionv2importdata.cpp
+evolutionv1/evolutionv1importdata.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon )
+include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${SOPRANO_INCLUDE_DIR})
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(importwizard_SRCS 
@@ -26,7 +29,8 @@ kde4_add_ui_files(importwizard_SRCS
                   ui/importfilterpage.ui
                   ui/importmailpage.ui
                   ui/importsettingpage.ui
-                  ui/selectcomponentpage.ui )
+                  ui/selectcomponentpage.ui 
+		  ui/importfinishpage.ui )
 
 kde4_add_executable(importwizard ${importwizard_SRCS})
 

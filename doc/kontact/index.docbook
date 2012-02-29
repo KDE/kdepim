@@ -705,9 +705,8 @@ menu.</para>
 <sect1 id="summary-view-config">
 <title>Configuring &kontact;'s Summary View</title>
 
-<para>When you select <guimenuitem>Configure Summary View...</guimenuitem>
-from the &kontact; <guimenu>Settings</guimenu> menu (only available in
-Summary View), a dialog pops up that allows you to select which summary
+<para>When you select <guilabel>Summaries</guilabel>
+in the &kontact; settings dialog, a page is displayed that allows you to select which summary
 plugins &kontact; should show in its summary view.
 Here is a brief list of the currently available plugins and what they do:
 </para>

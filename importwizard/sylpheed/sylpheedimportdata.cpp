@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sylpheedimportdata.h"
+#include "sylpheed/sylpheedimportdata.h"
 #include "mailimporter/filter_sylpheed.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -26,14 +26,23 @@
 #include <QWidget>
 
 
-SylpheedImportData::SylpheedImportData(ImportMailPage*parent)
+SylpheedImportData::SylpheedImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.sylpheed/" );
+    mPath = QDir::homePath() + QLatin1String( "/.sylpheed-2.0/" );
 }
 
 SylpheedImportData::~SylpheedImportData()
 {
+}
+
+QString SylpheedImportData::localMailDirPath()
+{
+  QFile folderlist( mPath + QLatin1String( "/folderlist.xml" ) );
+  if ( folderlist.exists() ) {
+    //TODO
+  }
+  return QString();
 }
 
 bool SylpheedImportData::foundMailer() const
@@ -56,23 +65,20 @@ bool SylpheedImportData::importSettings()
 
 bool SylpheedImportData::importMails()
 {
-    //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
     MailImporter::FilterInfo *info = initializeInfo();
 
-
+    info->clear(); // Clear info from last time
+ 
     MailImporter::FilterSylpheed sylpheed;
     sylpheed.setFilterInfo( info );
-    //info->setRootCollection( selectedCollection );    //TODO
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath  + QLatin1String("/Mail/Local Folders/"); //TODO
+    const QString mailsPath = mPath  + localMailDirPath();
     QDir directory(mailsPath);
     if(directory.exists())
         sylpheed.importMails(mailsPath);
     else
         sylpheed.import();
-    sylpheed.importMails(mailsPath);
     info->setStatusMessage(i18n("Import finished"));
-    info->clear(); // Clear info from last time
 
     delete info;
     return true;

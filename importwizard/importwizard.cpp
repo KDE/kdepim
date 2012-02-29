@@ -23,10 +23,13 @@
 #include "importfilterpage.h"
 #include "importsettingpage.h"
 #include "importaddressbookpage.h"
+#include "importfinishpage.h"
 
 #include "thunderbird/thunderbirdimportdata.h"
 #include "sylpheed/sylpheedimportdata.h"
 #include "evolutionv3/evolutionv3importdata.h"
+#include "evolutionv2/evolutionv2importdata.h"
+#include "evolutionv1/evolutionv1importdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -46,33 +49,40 @@ ImportWizard::ImportWizard(QWidget *parent)
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
   mCheckProgramPage = new CheckProgramPage(this);
-  mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Step 1: Detect pim" ) );
+  mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Detect program" ) );
   addPage( mPage1);
 
   mSelectComponentPage = new SelectComponentPage(this);
-  mPage2 = new KPageWidgetItem( mSelectComponentPage, i18n( "Step 2: Select import components" ) );
+  mPage2 = new KPageWidgetItem( mSelectComponentPage, i18n( "Select material to import" ) );
   addPage( mPage2);
 
   mImportMailPage = new ImportMailPage(this);
-  mPage3 = new KPageWidgetItem( mImportMailPage, i18n( "Step 3: Import mails" ) );
+  mPage3 = new KPageWidgetItem( mImportMailPage, i18n( "Import mail messages" ) );
   addPage( mPage3);
 
   mImportFilterPage = new ImportFilterPage(this);
-  mPage4 = new KPageWidgetItem( mImportFilterPage, i18n( "Step 4: Import filters" ) );
+  mPage4 = new KPageWidgetItem( mImportFilterPage, i18n( "Import mail filters" ) );
   addPage( mPage4 );
 
   mImportSettingPage = new ImportSettingPage(this);
-  mPage5 = new KPageWidgetItem( mImportSettingPage, i18n( "Step 5: Import settings" ) );
+  mPage5 = new KPageWidgetItem( mImportSettingPage, i18n( "Import settings" ) );
   addPage( mPage5);
 
   mImportAddressbookPage = new ImportAddressbookPage(this);
-  mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Step 6: Import addressbooks" ) );
+  mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Import addressbooks" ) );
   addPage( mPage6 );
 
+  mImportFinishPage = new ImportFinishPage(this);
+  mPage7 = new KPageWidgetItem( mImportFinishPage, i18n( "Finish" ) );
+  addPage( mPage7 );
+
+  
   //Import module
-  addImportModule(new ThunderbirdImportData(mImportMailPage));
-  addImportModule(new SylpheedImportData(mImportMailPage));
-  addImportModule(new Evolutionv3ImportData(mImportMailPage));
+  addImportModule(new ThunderbirdImportData(this));
+  addImportModule(new SylpheedImportData(this));
+  addImportModule(new Evolutionv3ImportData(this));
+  addImportModule(new Evolutionv2ImportData(this));
+  addImportModule(new Evolutionv1ImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
@@ -90,6 +100,12 @@ ImportWizard::~ImportWizard()
   qDeleteAll(mlistImport);
 }
 
+void ImportWizard::slotImportFiltersClicked()
+{
+  const bool result = mSelectedPim->importFilters();
+  setValid(mPage4,result);
+}
+
 void ImportWizard::slotImportMailsClicked()
 {
     const bool result = mSelectedPim->importMails();
@@ -98,7 +114,6 @@ void ImportWizard::slotImportMailsClicked()
 
 void ImportWizard::slotProgramSelected(const QString& program)
 {
-
   if(mlistImport.contains(program)) {
     mSelectedPim = mlistImport.value( program );
     setValid( currentPage(), true );
@@ -112,7 +127,8 @@ void ImportWizard::checkModules()
 
 void ImportWizard::addImportModule(PimImportAbstract *import)
 {
-  mlistImport.insert(import->name(),import);
+  if ( import->foundMailer() )
+    mlistImport.insert(import->name(),import);
 }
 
 void ImportWizard::help()
@@ -132,7 +148,7 @@ void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions op
 
 void ImportWizard::next()
 {
-  if( currentPage() == mPage1 ) {
+   if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
       mCheckProgramPage->disableSelectProgram();
       mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
@@ -162,5 +178,16 @@ void ImportWizard::reject()
 {
   KAssistantDialog::reject();
 }
+
+ImportMailPage* ImportWizard::importMailPage()
+{
+  return mImportMailPage;
+}
+
+ImportFilterPage* ImportWizard::importFilterPage()
+{
+  return mImportFilterPage;
+}
+
 
 #include "importwizard.moc"

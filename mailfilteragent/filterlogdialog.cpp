@@ -68,8 +68,9 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
 
   QString text;
   const QStringList logEntries = FilterLog::instance()->logEntries();
+  QStringList::ConstIterator end( logEntries.constEnd() ); 
   for ( QStringList::ConstIterator it = logEntries.constBegin();
-        it != logEntries.constEnd(); ++it )
+        it != end; ++it )
   {
     mTextEdit->append(*it);
   }
@@ -218,8 +219,9 @@ void FilterLogDialog::slotLogShrinked()
 {
   // limit the size of the shown log lines as soon as
   // the log has reached it's memory limit
-  if ( mTextEdit->document()->maximumBlockCount () <= 0 )
+  if ( mTextEdit->document()->maximumBlockCount () <= 0 ) {
     mTextEdit->document()->setMaximumBlockCount( mTextEdit->document()->blockCount() );
+  }
 }
 
 
@@ -275,7 +277,9 @@ void FilterLogDialog::slotSwitchLogState()
 
 void FilterLogDialog::slotChangeLogMemLimit( int value )
 {
+  mTextEdit->document()->setMaximumBlockCount( 0 ); //Reset value
   FilterLog::instance()->setMaxLogSize( value * 1024 );
+  
 }
 
 
@@ -292,7 +296,7 @@ void FilterLogDialog::slotUser2()
   MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
   fdlg->setMode( KFile::File );
-  fdlg->setSelection( "kmail-filter.log" );
+  fdlg->setSelection( "kmail-filter.html" );
   fdlg->setOperationMode( KFileDialog::Saving );
   fdlg->setConfirmOverwrite(true);
   if ( fdlg->exec() == QDialog::Accepted && fdlg )

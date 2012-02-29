@@ -41,11 +41,16 @@ FilterEvolution::~FilterEvolution()
 {
 }
 
+QString FilterEvolution::defaultPath()
+{
+  return QDir::homePath() + QLatin1String( "/evolution/local" );
+}
+
 /** Recursive import of Evolution's mboxes. */
 void FilterEvolution::import()
 {
   // We ask the user to choose Evolution's root directory.
-  QString evolDir = QDir::homePath() + "/evolution/local";
+  QString evolDir = defaultPath();
   QDir d( evolDir );
   if ( !d.exists() ) {
     evolDir = QDir::homePath();

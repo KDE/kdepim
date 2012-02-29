@@ -37,6 +37,7 @@ using MailCommon::FilterLog;
 #include <Nepomuk/Vocabulary/PIMO>
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDF>
+#include <Nepomuk/Vocabulary/NIE>
 #endif
 
 #include <Akonadi/Contact/ContactSearchJob>
@@ -304,10 +305,11 @@ Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
   case SearchRule::FuncNotRegExp:
     return Nepomuk::Query::ComparisonTerm::Regexp;
 
-  case SearchRule::FuncStartWith: //TODO
+  case SearchRule::FuncStartWith:
   case SearchRule::FuncNotStartWith:
   case SearchRule::FuncEndWith:
   case SearchRule::FuncNotEndWith:
+    return Nepomuk::Query::ComparisonTerm::Regexp;
   default:
     kDebug() << "Unhandled function type: " << function();
   }
@@ -449,7 +451,9 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     return false;
   }
 
-  msg->parse(); // make sure we can access all headers
+  if ( !msg->hasHeader( "From" ) ) {
+    msg->parse(); // probably not parsed yet: make sure we can access all headers
+  }
 
   QString msgContents;
   // Show the value used to compare the rules against in the log.
@@ -531,10 +535,28 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-static QString quote( const QString &content )
+QString SearchRule::quote( const QString &content ) const
 {
    //Without "" nepomuk will search a message containing each individual word
-  return QString::fromLatin1( "\'%1\'" ).arg( content );
+  QString newContent;
+  switch( function() ) {
+  case SearchRule::FuncRegExp:
+  case SearchRule::FuncNotRegExp:
+    newContent = content;
+    break;
+  case SearchRule::FuncStartWith:
+  case SearchRule::FuncNotStartWith:
+    newContent = QString::fromLatin1( "^%1" ).arg( content );
+    break;
+  case SearchRule::FuncEndWith:
+  case SearchRule::FuncNotEndWith:
+    newContent = QString::fromLatin1( "%1$" ).arg( content );;
+    break;
+  default:
+    newContent = QString::fromLatin1( "\'%1\'" ).arg( content );
+    break;
+  }
+  return newContent;
 }
 
 void SearchRuleString::addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm,
@@ -586,7 +608,7 @@ void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
 
     const Nepomuk::Query::ComparisonTerm valueTerm(
       Vocabulary::NCO::emailAddress(),
-      Nepomuk::Query::LiteralTerm( contents() ),
+      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
       nepomukComparator() );
 
     const Nepomuk::Query::ComparisonTerm addressTerm(
@@ -642,7 +664,7 @@ void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
   if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
     const Nepomuk::Query::ComparisonTerm replyToTerm(
       Vocabulary::NMO::messageReplyTo(),
-      Nepomuk::Query::LiteralTerm( contents() ),
+      Nepomuk::Query::LiteralTerm( quote(contents() ) ),
       nepomukComparator() );
     termGroup.addSubTerm( replyToTerm );
   }
@@ -1371,7 +1393,7 @@ static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 }
 #endif
 
-QString SearchPattern::asSparqlQuery() const
+QString SearchPattern::asSparqlQuery(const KUrl& url) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
 
@@ -1384,14 +1406,24 @@ QString SearchPattern::asSparqlQuery() const
     Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
 
   Nepomuk::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
-  for ( const_iterator it = constBegin(); it != constEnd(); ++it ) {
+  const_iterator end( constEnd() );
+  for ( const_iterator it = constBegin(); it != end; ++it ) {
     (*it)->addQueryTerms( innerGroup );
   }
 
   if ( innerGroup.subTerms().isEmpty() ) {
     return QString();
   }
-  outerGroup.addSubTerm( innerGroup );
+  if ( !url.isEmpty() ) {
+    const Nepomuk::Resource parentResource( url );
+    const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
+
+    const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );
+  
+    outerGroup.addSubTerm( andTerm );
+  } else {
+    outerGroup.addSubTerm( innerGroup );
+  }
   outerGroup.addSubTerm( typeTerm );
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );

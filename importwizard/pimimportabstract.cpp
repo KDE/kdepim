@@ -16,13 +16,15 @@
 */
 
 #include "pimimportabstract.h"
+#include "importwizard.h"
 #include "importmailpage.h"
 #include "importfilterinfogui.h"
 
 #include "mailimporter/filterinfo.h"
+#include "mailcommon/filter/filtermanager.h"
 
-PimImportAbstract::PimImportAbstract(ImportMailPage *parent)
-    :mMailPage(parent)
+PimImportAbstract::PimImportAbstract(ImportWizard *parent)
+    :mImportWizard(parent)
 {
 }
 
@@ -54,7 +56,14 @@ bool PimImportAbstract::importAddressBook()
 MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
 {
     MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
-    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mMailPage);
+    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
     info->setFilterInfoGui(infoGui);
+    info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
     return info;
+}
+
+void PimImportAbstract::appendFilters( const QList<MailCommon::MailFilter*>& filters )
+{
+  if ( !filters.isEmpty() )
+    MailCommon::FilterManager::instance()->appendFilters(filters, false );
 }

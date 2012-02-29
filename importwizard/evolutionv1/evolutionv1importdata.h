@@ -14,42 +14,27 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef Evolutionv1ImportData_H
+#define Evolutionv1ImportData_H
 
-#ifndef IMPORTMAILPAGE_H
-#define IMPORTMAILPAGE_H
+#include "pimimportabstract.h"
+class ImportWizard;
 
-#include <QWidget>
-
-namespace Ui {
-  class ImportMailPage;
-}
-
-namespace Akonadi {
-  class Collection;
-}
-
-namespace MailImporter{
-class ImportMailsWidget;
-}
-
-class ImportMailPage : public QWidget
+class Evolutionv1ImportData : public PimImportAbstract
 {
-  Q_OBJECT
-  
 public:
-  explicit ImportMailPage(QWidget *parent = 0);
-  ~ImportMailPage();
-  MailImporter::ImportMailsWidget *mailWidget();
-  Akonadi::Collection selectedCollection() const;
+  explicit Evolutionv1ImportData(ImportWizard *parent);
+  ~Evolutionv1ImportData();
+    
+  TypeSupportedOptions supportedOption();
+  bool foundMailer() const;
   
-private slots:
-  void collectionChanged(const Akonadi::Collection& collection);
-  
-signals:
-  void importMailsClicked();
-
-private:
-  Ui::ImportMailPage *ui;
+  bool importSettings();
+  bool importMails();
+  bool importFilters();
+  bool importAddressBook();
+  QString name() const;
 };
 
-#endif // IMPORTMAILPAGE_H
+#endif /* Evolutionv1ImportData_H */
+

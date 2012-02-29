@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "evolutionv3importdata.h"
-#include "mailimporter/filter_evolution_v3.h"
+#include "evolutionv1/evolutionv1importdata.h"
+#include "mailimporter/filter_evolution.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 
@@ -26,18 +26,18 @@
 #include <QWidget>
 
 
-Evolutionv3ImportData::Evolutionv3ImportData(ImportWizard*parent)
+Evolutionv1ImportData::Evolutionv1ImportData(ImportWizard *parent)
     :PimImportAbstract(parent)
 {
-    mPath = MailImporter::FilterEvolution_v3::defaultPath();
+  mPath = MailImporter::FilterEvolution::defaultPath();
 }
 
-Evolutionv3ImportData::~Evolutionv3ImportData()
+Evolutionv1ImportData::~Evolutionv1ImportData()
 {
 }
 
 
-bool Evolutionv3ImportData::foundMailer() const
+bool Evolutionv1ImportData::foundMailer() const
 {
   QDir directory( mPath );
   if ( directory.exists() )
@@ -45,23 +45,23 @@ bool Evolutionv3ImportData::foundMailer() const
   return false;
 }
 
-QString Evolutionv3ImportData::name() const
+QString Evolutionv1ImportData::name() const
 {
-  return QLatin1String("Evolution 3.x");
+  return QLatin1String("Evolution 1.x");
 }
 
-bool Evolutionv3ImportData::importSettings()
+bool Evolutionv1ImportData::importSettings()
 {
   return false;
 }
 
-bool Evolutionv3ImportData::importMails()
+bool Evolutionv1ImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
+
+
     info->clear(); // Clear info from last time
-
-
-    MailImporter::FilterEvolution_v3 evolution;
+    MailImporter::FilterEvolution evolution;
     evolution.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath;
@@ -76,20 +76,19 @@ bool Evolutionv3ImportData::importMails()
     return true;
 }
 
-bool Evolutionv3ImportData::importFilters()
+bool Evolutionv1ImportData::importFilters()
 {
   return false;
 }
 
-bool Evolutionv3ImportData::importAddressBook()
+bool Evolutionv1ImportData::importAddressBook()
 {
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
+PimImportAbstract::TypeSupportedOptions Evolutionv1ImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=PimImportAbstract::Mails;
-  options |=PimImportAbstract::Filters;
   return options;
 }

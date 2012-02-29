@@ -30,6 +30,7 @@
 #endif
 
 #include <KLocale>
+#include <KUrl>
 
 #include <QList>
 #include <QString>
@@ -297,7 +298,9 @@ class MAILCOMMON_EXPORT SearchRule
      */
     QString xesamComparator() const;
 
-  private:
+protected:
+    QString quote( const QString &content ) const;
+private:
     static Function configValueToFunc( const char * );
     static QString functionToString( Function );
 
@@ -680,7 +683,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     /**
      * Returns the pattern as a SPARQL query.
      */
-    QString asSparqlQuery() const;
+    QString asSparqlQuery(const KUrl& url = KUrl()) const;
 
     /**
      * Returns the pattern as a XESAM query.

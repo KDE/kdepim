@@ -10,12 +10,19 @@
     <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="MailImporter::ImportMailsWidget" name="mMailImporterWidget" native="true"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Please select the folder to import to:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="MailCommon::FolderRequester" name="mCollectionRequestor" native="true"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -34,6 +41,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="importMails">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Import Mails</string>
        </property>
@@ -48,6 +58,12 @@
    <class>MailImporter::ImportMailsWidget</class>
    <extends>QWidget</extends>
    <header>importmailswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MailCommon::FolderRequester</class>
+   <extends>QWidget</extends>
+   <header location="global">mailcommon/folderrequester.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

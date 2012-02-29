@@ -36,10 +36,10 @@ using namespace MessageList::Core;
 Filter::Filter()
   : mQueryClient( new Nepomuk::Query::QueryServiceClient( this ) )
 {
-  connect( mQueryClient, SIGNAL( newEntries( QList<Nepomuk::Query::Result> ) ),
-           this, SLOT( newEntries( QList<Nepomuk::Query::Result> ) ) );
-  connect( mQueryClient, SIGNAL( finishedListing() ),
-           this, SLOT( finishedListing() ) );
+  connect( mQueryClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+           this, SLOT(newEntries(QList<Nepomuk::Query::Result>)) );
+  connect( mQueryClient, SIGNAL(finishedListing()),
+           this, SLOT(finishedListing()) );
 }
 
 bool Filter::match( const MessageItem * item ) const
@@ -96,6 +96,7 @@ void Filter::clear()
   mSearchString.clear();
   mTagId.clear();
   mMatchingItemIds.clear();
+  mQueryClient->close();
 }
 
 void Filter::setCurrentFolder( const KUrl &url )
@@ -109,6 +110,10 @@ void Filter::setSearchString( const QString &search )
 
   emit finished(); // let the view update according to restrictions
 
+  if( mSearchString.isEmpty()) {
+    mQueryClient->close();
+    return;
+  }
   const Nepomuk::Resource parentResource( mCurrentFolder );
 
   const Nepomuk::Query::ComparisonTerm isChildTerm( Nepomuk::Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
