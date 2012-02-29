@@ -39,6 +39,7 @@ using MailCommon::FilterLog;
 #include <nepomuk/pimo.h>
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDF>
+#include <Nepomuk/Vocabulary/NIE>
 
 #endif
 
@@ -1175,7 +1176,7 @@ static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 }
 #endif
 
-QString SearchPattern::asSparqlQuery() const
+QString SearchPattern::asSparqlQuery(const KUrl& url) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
 
@@ -1194,7 +1195,16 @@ QString SearchPattern::asSparqlQuery() const
 
   if ( innerGroup.subTerms().isEmpty() )
     return QString();
-  outerGroup.addSubTerm( innerGroup );
+  if ( !url.isEmpty() ) {
+    const Nepomuk::Resource parentResource( url );
+    const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
+
+    const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );
+  
+    outerGroup.addSubTerm( andTerm );
+  } else {
+    outerGroup.addSubTerm( innerGroup );
+  }
   outerGroup.addSubTerm( typeTerm );
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );

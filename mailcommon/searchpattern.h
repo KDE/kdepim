@@ -30,8 +30,11 @@
 #include <Nepomuk/Query/ComparisonTerm>
 #endif
 
-#include <QtCore/QList>
-#include <QtCore/QString>
+#include <KLocale>
+#include <KUrl>
+
+#include <QList>
+#include <QString>
 
 #include <boost/shared_ptr.hpp>
 
@@ -556,120 +559,168 @@ private:
 class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 {
 
-public:
-  /** Boolean operators that connect the return values of the
-      individual rules. A pattern with @p OpAnd will match iff all
-      it's rules match, whereas a pattern with @p OpOr will match iff
-      any of it's rules matches.
-  */
-  enum Operator { OpAnd, OpOr };
+  public:
+    /**
+     * Boolean operators that connect the return values of the
+     * individual rules. A pattern with @p OpAnd will match iff all
+     *  it's rules match, whereas a pattern with @p OpOr will match if
+     *  any of it's rules matches.
+     */
+    enum Operator {
+      OpAnd,
+      OpOr,
+      OpAll
+    };
 
-  /** Constructor which provides a pattern with minimal, but
-      sufficient initialization. Unmodified, such a pattern will fail
-      to match any KMime::Message. You can query for such an empty
-      rule by using isEmpty, which is inherited from QPtrList.
-  */
-  SearchPattern();
+    /**
+     * Constructor which provides a pattern with minimal, but
+     * sufficient initialization. Unmodified, such a pattern will fail
+     * to match any KMime::Message. You can query for such an empty
+     * rule by using isEmpty, which is inherited from QPtrList.
+     */
+    SearchPattern();
 
-  /** Constructor that initializes from a given KConfig group, if
-      given. This feature is mainly (solely?) used in KMFilter,
-      as we don't allow to store search patterns in the config (yet).
-  */
-  SearchPattern( const KConfigGroup & config );
+    /**
+     * Constructor that initializes from a given KConfig group, if
+     * given. This feature is mainly (solely?) used in KMFilter,
+     * as we don't allow to store search patterns in the config (yet).
+     */
+    SearchPattern( const KConfigGroup &config );
 
-  /** Destructor. Deletes all stored rules! */
-  ~SearchPattern();
+    /** Destructor. Deletes all stored rules! */
+    ~SearchPattern();
 
-  /** The central function of this class. Tries to match the set of
-      rules against a KMime::Message. It's virtual to allow derived
-      classes with added rules to reimplement it, yet reimplemented
-      methods should and (&&) the result of this function with their
-      own result or else most functionality is lacking, or has to be
-      reimplemented, since the rules are private to this class.
+    /**
+     * The central function of this class. Tries to match the set of
+     * rules against a KMime::Message. It's virtual to allow derived
+     * classes with added rules to reimplement it, yet reimplemented
+     * methods should and (&&) the result of this function with their
+     * own result or else most functionality is lacking, or has to be
+     * reimplemented, since the rules are private to this class.
+     *
+     * @return true if the match was successful, false otherwise.
+     */
+    bool matches( const Akonadi::Item &item, bool ignoreBody = false ) const;
 
-      @return true if the match was successful, false otherwise.
-  */
-  bool matches( const Akonadi::Item &item, bool ignoreBody = false ) const;
+    /**
+     * Returns true if the pattern only depends the DwString that backs a message.
+     */
+    bool requiresBody() const;
 
-  /** Returns true if the pattern only depends the DwString that backs
-      a message */
-  bool requiresBody() const;
+    /**
+     * Removes all empty rules from the list. You should call this
+     * method whenever the user had had control of the rules outside of
+     * this class. (e.g. after editing it with SearchPatternEdit).
+     */
+    void purify();
 
-  /** Removes all empty rules from the list. You should call this
-      method whenever the user had had control of the rules outside of
-      this class. (e.g. after editing it with SearchPatternEdit).
-  */
-  void purify();
+    /**
+     * Reads a search pattern from a KConfigGroup. If it does not find
+     * a valid saerch pattern in the preset group, initializes the pattern
+     * as if it were constructed using the default constructor.
+     *
+     * For backwards compatibility with previous versions of KMail, it
+     * checks for old-style filter rules (e.g. using @p OpIgnore)
+     * in @p config und converts them to the new format on writeConfig.
+     *
+     * Derived classes reimplementing readConfig() should also call this
+     * method, or else the rules will not be loaded.
+     */
+    void readConfig( const KConfigGroup &config );
 
-  /** Reads a search pattern from a KConfigGroup. If it does not find
-      a valid saerch pattern in the preset group, initializes the pattern
-      as if it were constructed using the default constructor.
+    /**
+     * Writes itself into @p config. Tries to delete old-style keys by
+     * overwriting them with QString().
+     *
+     * Derived classes reimplementing writeConfig() should also call this
+     * method, or else the rules will not be stored.
+     */
+    void writeConfig( KConfigGroup &config ) const;
 
-      For backwards compatibility with previous versions of KMail, it
-      checks for old-style filter rules (e.g. using @p OpIgnore)
-      in @p config und converts them to the new format on writeConfig.
+    /**
+     * Returns the name of the search pattern.
+     */
+    QString name() const
+    {
+      return mName;
+    }
 
-      Derived classes reimplementing readConfig() should also call this
-      method, or else the rules will not be loaded.
-  */
-  void readConfig( const KConfigGroup & config );
+    /**
+     * Sets the name of the search pattern. KMFilter uses this to
+     * store it's own name, too.
+     */
+    void setName( const QString &newName )
+    {
+      mName = newName;
+    }
 
-  /** Writes itself into @p config. Tries to delete old-style keys by
-      overwriting them with QString().
+    /**
+     * Returns the filter operator.
+     */
+    SearchPattern::Operator op() const
+    {
+      return mOperator;
+    }
 
-      Derived classes reimplementing writeConfig() should also call this
-      method, or else the rules will not be stored.
-  */
-  void writeConfig( KConfigGroup & config ) const;
+    /**
+     * Sets the filter operator.
+     */
+    void setOp( SearchPattern::Operator aOp )
+    {
+      mOperator = aOp;
+    }
 
-  /** Get the name of the search pattern. */
-  QString name() const { return mName; }
-  /** Set the name of the search pattern. KMFilter uses this to
-      store it's own name, too. */
-  void setName( const QString & newName ) { mName = newName ; }
+    /**
+     * Returns the pattern as string. For debugging.
+     */
+    QString asString() const;
 
-  /** Get the filter operator */
-  SearchPattern::Operator op() const { return mOperator; }
-  /** Set the filter operator */
-  void setOp( SearchPattern::Operator aOp ) { mOperator = aOp; }
+    /**
+     * Returns the pattern as a SPARQL query.
+     */
+    QString asSparqlQuery(const KUrl& url = KUrl()) const;
 
-  /** Returns the pattern as string. For debugging.*/
-  QString asString() const;
+    /**
+     * Returns the pattern as a XESAM query.
+     */
+    QString asXesamQuery() const;
 
-  /** Returns the pattern as a SPARQL query. */
-  QString asSparqlQuery() const;
+    /**
+     * Overloaded assignment operator. Makes a deep copy.
+     */
+    const SearchPattern &operator=( const SearchPattern &aPattern );
 
-  /** Returns the pattern as a XESAM query. */
-  QString asXesamQuery() const;
+    /**
+     * Writes the pattern into a byte array for persistance purposes.
+     */
+    QByteArray serialize() const;
 
-  /** Overloaded assignment operator. Makes a deep copy. */
-  const SearchPattern & operator=( const SearchPattern & aPattern );
+    /**
+     * Constructs the pattern from a byte array serialization.
+     */
+    void deserialize( const QByteArray & );
 
-  /** Writes the pattern into a byte array for persistance purposes. */
-  QByteArray serialize() const;
+    QDataStream &operator>>( QDataStream &s ) const;
+    QDataStream &operator<<( QDataStream &s );
 
-  /** Constructs the pattern from a byte array serialization. */
-  void deserialize( const QByteArray& );
+  private:
+    /**
+     * Tries to import a legacy search pattern, ie. one that still has
+     * e.g. the @p unless or @p ignore operator which were useful as long as
+     * the number of rules was restricted to two. This method is called from
+     * readConfig, which detects legacy configurations and also makes sure
+     * that this method is called from an initialized object.
+     */
+    void importLegacyConfig( const KConfigGroup &config );
 
-  QDataStream & operator>>( QDataStream & s ) const;
-  QDataStream & operator<<( QDataStream & s );
+    /**
+     * Initializes the object. Clears the list of rules, sets the name
+     * to "<i18n("unnamed")>", and the boolean operator to @p OpAnd.
+     */
+    void init();
 
-private:
-  /** Tries to import a legacy search pattern, ie. one that still has
-      e.g. the @p unless or @p ignore operator which were useful as
-      long as the number of rules was restricted to two. This method
-      is called from readConfig, which detects legacy configurations
-      and also makes sure that this method is called from an initialized
-      object.
-  */
-  void importLegacyConfig( const KConfigGroup & config );
-
-  /** Initializes the object. Clears the list of rules, sets the name
-      to "<i18n("unnamed")>", and the boolean operator to @p OpAnd. */
-  void init();
-
-  QString  mName;
-  Operator mOperator;
+    QString  mName;
+    Operator mOperator;
 };
 
 }
