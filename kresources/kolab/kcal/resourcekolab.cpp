@@ -532,6 +532,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
     }
   } else {
     // nothing there locally, just take the new one. Can't Happen (TM)
+    kdWarning() << k_funcinfo << "; local incidence wasn't found in the calendar";
     chosenIncidence = remoteIncidence;
   }
 
@@ -554,10 +555,12 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
   } else { // Take Remote or Take Both
     addedIncidence = remoteIncidence;
     if ( chosenIncidence == remoteIncidence ) { // Take Remote
-      const bool silent = mSilent;
-      mSilent = false;
-      deleteIncidence( localIncidence ); // remove local from kmail
-      mSilent = silent;
+      if ( localIncidence ) { // Should always be valid
+        const bool silent = mSilent;
+        mSilent = false;
+        deleteIncidence( localIncidence ); // remove local from kmail
+        mSilent = silent;
+      }
     } else if ( chosenIncidence == 0 ) { // Take Both
       addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
       addedIncidence->setUid( CalFormat::createUniqueId() );
