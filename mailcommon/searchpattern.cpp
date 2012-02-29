@@ -1386,7 +1386,8 @@ QString SearchPattern::asSparqlQuery() const
     Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
 
   Nepomuk::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
-  for ( const_iterator it = constBegin(); it != constEnd(); ++it ) {
+  const_iterator end( constEnd() );
+  for ( const_iterator it = constBegin(); it != end; ++it ) {
     (*it)->addQueryTerms( innerGroup );
   }
 
