@@ -419,16 +419,6 @@ CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
 {
 }
 
-QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &index) const
-{
-  if (index.column() == 1) {
-    QLineEdit *lineEdit = new QLineEdit(parent);
-    lineEdit->setFrame(false);
-    return lineEdit;
-  }
-  return 0;
-}
-
 void CustomTemplateItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                     const QModelIndex &index) const
 {
@@ -438,7 +428,14 @@ void CustomTemplateItemDelegate::setModelData(QWidget *editor, QAbstractItemMode
     model->setData(index, lineEdit->text(), Qt::EditRole);
 }
 
+QWidget *CustomTemplateItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+{
+  if ( index.column() == 1 )
+    return QStyledItemDelegate::createEditor( parent, option, index );
+  return 0;
+}
 
+  
 CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
                                         const QString &name,
                                         const QString &content,

@@ -120,16 +120,13 @@ private:
 
 class CustomTemplateItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  
-public:
-  explicit CustomTemplateItemDelegate(QObject *parent = 0);
-  ~CustomTemplateItemDelegate();
-  
-  QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const;
-  void setModelData(QWidget *editor, QAbstractItemModel *model,
-                        const QModelIndex &index) const;
+  public:
+    explicit CustomTemplateItemDelegate( QObject *parent = 0 );
+    ~CustomTemplateItemDelegate();
+    QWidget *createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+
+    void setModelData( QWidget *editor, QAbstractItemModel *model,
+                       const QModelIndex &index ) const;
 
 };
 
