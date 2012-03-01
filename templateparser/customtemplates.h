@@ -68,6 +68,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotNameChanged( const QString &text );
 
   private:
+    bool nameAlreadyExists( const QString& str, QTreeWidgetItem *item = 0 );
     QString indexToType( int index );
     /// These templates will be deleted when we're saving.
     QStringList mItemsToDelete;
