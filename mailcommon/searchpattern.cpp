@@ -600,10 +600,9 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 
   if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
     const Nepomuk::Tag tag( contents() );
-    addAndNegateTerm( Nepomuk::Query::ComparisonTerm( Soprano::Vocabulary::NAO::hasTag(),
-                                                      Nepomuk::Query::ResourceTerm( tag ),
-                                                      Nepomuk::Query::ComparisonTerm::Equal ),
-                                                      groupTerm );
+    if ( tag.exists() ) {
+      addAndNegateTerm(Nepomuk::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk::Query::ResourceTerm( tag ), Nepomuk::Query::ComparisonTerm::Equal ),groupTerm );
+    }
   }
 
   if ( field() == "<body>" || field() == "<message>" ) {
