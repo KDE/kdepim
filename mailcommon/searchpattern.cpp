@@ -1416,6 +1416,8 @@ QString SearchPattern::asSparqlQuery(const KUrl& url) const
   }
   if ( !url.isEmpty() ) {
     const Nepomuk::Resource parentResource( url );
+    if( !parentResource.exists() )
+      return QString();
     const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
 
     const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );
