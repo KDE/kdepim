@@ -212,7 +212,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
            this, SLOT(slotInstanceRemoved(Akonadi::AgentInstance)) );
 
 
-  
+
   connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
            this, SLOT(slotProgressItemCompletedOrCanceled(KPIM::ProgressItem*)) );
   connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
@@ -919,7 +919,7 @@ void KMKernel::stopNetworkJobs()
     return;
 
   setAccountStatus(false);
-  
+
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Offline );
   BroadcastStatus::instance()->setStatusMsg( i18n("KMail is set to be offline; all network jobs are suspended"));
   emit onlineStatusChanged( (GlobalSettings::EnumNetworkState::type)GlobalSettings::networkState() );
@@ -930,7 +930,7 @@ void KMKernel::setAccountStatus(bool goOnline)
 {
   const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances(false);
   foreach ( Akonadi::AgentInstance type, lst ) {
-    const QString identifier( type.identifier() ); 
+    const QString identifier( type.identifier() );
     if ( identifier.contains( IMAP_RESOURCE_IDENTIFIER ) ||
          identifier.contains( POP3_RESOURCE_IDENTIFIER ) ||
          identifier.contains( MAILDISPATCHER_RESOURCE_IDENTIFIER ) ) {
@@ -1237,6 +1237,10 @@ void KMKernel::cleanup(void)
   dumpDeadLetters();
   the_shuttingDown = true;
   closeAllKMailWindows();
+
+  // Flush the cache of foldercollection objects. This results
+  // in configuration writes, so we need to do it early enough.
+  MailCommon::FolderCollection::clearCache();
 
   // Write the config while all other managers are alive
   delete the_msgSender;
@@ -1690,7 +1694,7 @@ void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
       }
 
 
-      
+
       // Creating a progress item twice is ok, it will simply return the already existing
       // item
       KPIM::ProgressItem *progress =  KPIM::ProgressManager::createProgressItem( 0, instance,
@@ -1843,7 +1847,7 @@ void KMKernel::checkFolderFromResources( const Akonadi::Collection::List& collec
             //Use default trash
             iface->setTrashCollection( CommonKernel->trashCollectionFolder().id() );
             iface->writeConfig();
-            break; 
+            break;
           }
         }
       }

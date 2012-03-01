@@ -78,8 +78,15 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
 FolderCollection::~FolderCollection()
 {
   //kDebug()<<" FolderCollection::~FolderCollection"<<this;
-  if ( mWriteConfig )
+  if ( mWriteConfig ) {
     writeConfig();
+  }
+}
+
+void FolderCollection::clearCache()
+{
+  QMutexLocker lock( &mapMutex );
+  fcMap.clear();
 }
 
 bool FolderCollection::isWriteConfig() const
@@ -323,7 +330,7 @@ void FolderCollection::setMailingList( const MailingList& mlist )
 {
   if ( mMailingList == mlist )
     return;
-  
+
   mMailingList = mlist;
   writeConfig();
 }
