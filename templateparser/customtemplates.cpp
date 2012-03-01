@@ -424,8 +424,9 @@ void CustomTemplateItemDelegate::setModelData(QWidget *editor, QAbstractItemMode
 {
   QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
   const QString text = lineEdit->text();
-  if( !text.isEmpty() )
-    model->setData(index, lineEdit->text(), Qt::EditRole);
+  if( !text.isEmpty() ) {
+    model->setData( index, text, Qt::EditRole );
+  }
 }
 
 QWidget *CustomTemplateItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
