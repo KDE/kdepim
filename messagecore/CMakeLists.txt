@@ -10,6 +10,12 @@ include_directories( ${Boost_INCLUDE_DIR}
 
 ########### next target ###############
 
+configure_file(messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
+
+install(FILES  messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
+
+
+
 set(messagecore_LIB_SRCS
 
    asyncnepomukresourceretriever.cpp
