@@ -157,7 +157,13 @@ void FilterOpera::import()
   QString operaDir = kfd->selectedFile();
   delete kfd;
 
-  if (operaDir.isEmpty()) {
+  importMails( operaDir );
+}
+
+void FilterOpera::importMails( const QString &maildir )
+{
+  setMailDir(maildir);
+  if (mailDir().isEmpty()) {
     filterInfo()->alert(i18n("No directory selected."));
     return;
   }
@@ -165,12 +171,12 @@ void FilterOpera::import()
    * If the user only select homedir no import needed because
    * there should be no files and we surely import wrong files.
    */
-  else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + '/')) {
+  else if ( mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + QLatin1Char( '/' ))) {
     filterInfo()->addErrorLogEntry(i18n("No files found for import."));
   } else {
     filterInfo()->setOverall(0);
 
-    QDir importDir (operaDir);
+    QDir importDir (mailDir());
     const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
 
     // Count total number of files to be processed
