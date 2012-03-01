@@ -689,12 +689,9 @@ void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
 
   if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
     const Nepomuk::Tag tag( contents() );
-    addAndNegateTerm(
-      Nepomuk::Query::ComparisonTerm(
-        Soprano::Vocabulary::NAO::hasTag(),
-        Nepomuk::Query::ResourceTerm( tag ),
-        Nepomuk::Query::ComparisonTerm::Equal ),
-      groupTerm );
+    if ( tag.exists() ) {
+      addAndNegateTerm(Nepomuk::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk::Query::ResourceTerm( tag ), Nepomuk::Query::ComparisonTerm::Equal ),groupTerm );
+    }
   }
 
   if ( field() == "<body>" || field() == "<message>" ) {
@@ -1416,6 +1413,8 @@ QString SearchPattern::asSparqlQuery(const KUrl& url) const
   }
   if ( !url.isEmpty() ) {
     const Nepomuk::Resource parentResource( url );
+    if( !parentResource.exists() )
+      return QString();
     const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
 
     const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );

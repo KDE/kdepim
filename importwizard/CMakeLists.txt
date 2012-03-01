@@ -2,7 +2,7 @@ project(importwizard)
 
 set(importwizard_SRCS
 importwizardkernel.cpp
-checkprogrampage.cpp
+selectprogrampage.cpp
 importaddressbookpage.cpp
 importfilterpage.cpp
 importmailpage.cpp
@@ -18,13 +18,14 @@ sylpheed/sylpheedimportdata.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
+opera/operaimportdata.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${SOPRANO_INCLUDE_DIR})
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(importwizard_SRCS 
-                  ui/checkprogrampage.ui
+                  ui/selectprogrampage.ui
                   ui/importaddressbookpage.ui
                   ui/importfilterpage.ui
                   ui/importmailpage.ui

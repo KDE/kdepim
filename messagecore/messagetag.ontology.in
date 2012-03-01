@@ -1,0 +1,8 @@
+[Ontology]
+Version=1.0
+Name=KMail Message Tag
+Comment=The KMail Message Tag define specific tag for kmail
+Namespace=http://www.kde.org/kmail-ext#
+Path=${CMAKE_INSTALL_PREFIX}/share/ontology/kde/messagetag.trig
+MimeType=application/x-trig
+Type=Data

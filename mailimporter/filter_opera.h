@@ -19,7 +19,7 @@
 #define MAILIMPORTER_FILTER_OPERA_HXX
 
 #include "filters.h"
-
+#include <QDir>
 /**
  *imports opera account-archives into KMail
  *@author Danny Kukawka
@@ -32,6 +32,9 @@ public:
   ~FilterOpera();
 
   void import();
+  void importMails( const QString &maildir );
+  static QString defaultPath();
+
 private:
   void importBox( const QDir & importDir, const QStringList & , const QString & accountName = QString());
   void importRecursive(const QDir& maildir, const QString &accountName = QString() );

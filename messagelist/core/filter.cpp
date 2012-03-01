@@ -115,7 +115,10 @@ void Filter::setSearchString( const QString &search )
     return;
   }
   const Nepomuk::Resource parentResource( mCurrentFolder );
-
+  if( !parentResource.exists() ) {
+     mQueryClient->close();
+     return;
+  }
   const Nepomuk::Query::ComparisonTerm isChildTerm( Nepomuk::Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
 
   const Nepomuk::Query::ComparisonTerm bodyTerm(

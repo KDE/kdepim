@@ -14,34 +14,28 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef OperaImportData_H
+#define OperaImportData_H
 
-#ifndef CHECKPROGRAMPAGE_H
-#define CHECKPROGRAMPAGE_H
+#include "pimimportabstract.h"
+class ImportWizard;
 
-#include <QWidget>
-
-namespace Ui {
-  class CheckProgramPage;
-}
-
-class CheckProgramPage : public QWidget
+class OperaImportData : public PimImportAbstract
 {
-  Q_OBJECT
-  
 public:
-  explicit CheckProgramPage(QWidget *parent = 0);
-  ~CheckProgramPage();
-    void setFoundProgram(const QStringList& list);
-  void disableSelectProgram();
+  explicit OperaImportData(ImportWizard *parent);
+  ~OperaImportData();
+    
+  TypeSupportedOptions supportedOption();
+  bool foundMailer() const;
+  
+  bool importSettings();
+  bool importMails();
+  bool importFilters();
+  bool importAddressBook();
+  QString name() const;
 
-private slots:
-    void slotItemSelectionChanged();
-
-signals:
-    void programSelected(const QString&);
-
-private:
-  Ui::CheckProgramPage *ui;
 };
 
-#endif // CHECKPROGRAMPAGE_H
+#endif /* OperaImportData_H */
+

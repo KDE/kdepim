@@ -14,28 +14,34 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef SylpheedImportData_H
-#define SylpheedImportData_H
 
-#include "pimimportabstract.h"
-class ImportWizard;
+#ifndef SELECTPROGRAMPAGE_H
+#define SELECTPROGRAMPAGE_H
 
-class SylpheedImportData : public PimImportAbstract
+#include <QWidget>
+
+namespace Ui {
+  class SelectProgramPage;
+}
+
+class SelectProgramPage : public QWidget
 {
-public:
-  explicit SylpheedImportData(ImportWizard *parent);
-  ~SylpheedImportData();
-    
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
+  Q_OBJECT
   
-  bool importSettings();
-  bool importMails();
-  bool importFilters();
-  bool importAddressBook();
-  QString name() const;
+public:
+  explicit SelectProgramPage(QWidget *parent = 0);
+  ~SelectProgramPage();
+    void setFoundProgram(const QStringList& list);
+  void disableSelectProgram();
 
+private slots:
+    void slotItemSelectionChanged();
+
+signals:
+    void programSelected(const QString&);
+
+private:
+  Ui::SelectProgramPage *ui;
 };
 
-#endif /* SylpheedImportData_H */
-
+#endif // SELECTPROGRAMPAGE_H

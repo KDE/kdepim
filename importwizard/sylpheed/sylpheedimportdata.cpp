@@ -19,6 +19,8 @@
 #include "mailimporter/filter_sylpheed.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
+#include "mailcommon/filter/filterimporterexporter.h"
+#include "importwizard.h"
 
 #include <KLocale>
 
@@ -29,21 +31,13 @@
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
-    mPath = QDir::homePath() + QLatin1String( "/.sylpheed-2.0/" );
+  mPath = MailImporter::FilterSylpheed::defaultPath();
 }
 
 SylpheedImportData::~SylpheedImportData()
 {
 }
 
-QString SylpheedImportData::localMailDirPath()
-{
-  QFile folderlist( mPath + QLatin1String( "/folderlist.xml" ) );
-  if ( folderlist.exists() ) {
-    //TODO
-  }
-  return QString();
-}
 
 bool SylpheedImportData::foundMailer() const
 {
@@ -60,6 +54,10 @@ QString SylpheedImportData::name() const
 
 bool SylpheedImportData::importSettings()
 {
+  const QString accountFile = mPath + QLatin1String("/accountrc");
+  if ( QFile( accountFile ).exists() ) {
+    return true;
+  }
   return false;
 }
 
@@ -72,7 +70,7 @@ bool SylpheedImportData::importMails()
     MailImporter::FilterSylpheed sylpheed;
     sylpheed.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath  + localMailDirPath();
+    const QString mailsPath = sylpheed.localMailDirPath();
     QDir directory(mailsPath);
     if(directory.exists())
         sylpheed.importMails(mailsPath);
@@ -86,6 +84,17 @@ bool SylpheedImportData::importMails()
 
 bool SylpheedImportData::importFilters()
 {
+  MailCommon::FilterImporterExporter importer( mImportWizard );
+  bool canceled = false;
+  const QString filterPath = mPath + QLatin1String("/filter.xml");
+  if ( QFile( filterPath ).exists() ) {
+    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::SylpheedFilter, filterPath );
+    appendFilters( listFilter );
+    return true;
+  } else {
+    //TODO
+  }
+  
   return false;
 }
 

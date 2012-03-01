@@ -17,7 +17,7 @@
 
 #include "importwizard.h"
 #include "importwizardkernel.h"
-#include "checkprogrampage.h"
+#include "selectprogrampage.h"
 #include "selectcomponentpage.h"
 #include "importmailpage.h"
 #include "importfilterpage.h"
@@ -30,6 +30,7 @@
 #include "evolutionv3/evolutionv3importdata.h"
 #include "evolutionv2/evolutionv2importdata.h"
 #include "evolutionv1/evolutionv1importdata.h"
+#include "opera/operaimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -48,8 +49,8 @@ ImportWizard::ImportWizard(QWidget *parent)
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
-  mCheckProgramPage = new CheckProgramPage(this);
-  mPage1 = new KPageWidgetItem( mCheckProgramPage, i18n( "Detect program" ) );
+  mSelectProgramPage = new SelectProgramPage(this);
+  mPage1 = new KPageWidgetItem( mSelectProgramPage, i18n( "Detect program" ) );
   addPage( mPage1);
 
   mSelectComponentPage = new SelectComponentPage(this);
@@ -83,12 +84,13 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new Evolutionv3ImportData(this));
   addImportModule(new Evolutionv2ImportData(this));
   addImportModule(new Evolutionv1ImportData(this));
+  addImportModule(new OperaImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
-  connect(mCheckProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
+  connect(mSelectProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
   Akonadi::Control::widgetNeedsAkonadi(this);
 
@@ -122,13 +124,15 @@ void ImportWizard::slotProgramSelected(const QString& program)
 
 void ImportWizard::checkModules()
 {
-  mCheckProgramPage->setFoundProgram(mlistImport.keys());
+  mSelectProgramPage->setFoundProgram(mlistImport.keys());
 }
 
 void ImportWizard::addImportModule(PimImportAbstract *import)
 {
   if ( import->foundMailer() )
     mlistImport.insert(import->name(),import);
+  else
+    delete import;
 }
 
 void ImportWizard::help()
@@ -150,7 +154,7 @@ void ImportWizard::next()
 {
    if( currentPage() == mPage1 ) {
       KAssistantDialog::next();
-      mCheckProgramPage->disableSelectProgram();
+      mSelectProgramPage->disableSelectProgram();
       mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
     } else if( currentPage() == mPage2 ) {
       setAppropriatePage(mSelectComponentPage->selectedComponents());

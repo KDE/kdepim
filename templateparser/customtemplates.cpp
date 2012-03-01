@@ -253,21 +253,30 @@ void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
   mUi->mEdit->setFocus();
 }
 
+bool CustomTemplates::nameAlreadyExists( const QString& str,QTreeWidgetItem *item )
+{
+  QTreeWidgetItemIterator lit( mUi->mList );
+  while ( *lit ) {
+    const QString name = ( *lit )->text( 1 );
+    if ( ( name == str ) && ( ( *lit ) != item )) {
+      KMessageBox::error(
+        this,
+        i18n( "A template with same name already exists." ),
+        i18n( "Can not create template" ) );
+      return true;
+    }
+    ++lit;
+  }
+  return false;
+}
+  
+
 void CustomTemplates::slotAddClicked()
 {
   const QString str = mUi->mName->text();
   if ( !str.isEmpty() ) {
-    QTreeWidgetItemIterator lit( mUi->mList );
-    while ( *lit ) {
-      const QString name = ( *lit )->text( 1 );
-      if ( name == str ) {
-        KMessageBox::error(
-          this,
-          i18n( "A template with same name already exists." ),
-          i18n( "Can not create template" ) );
-        return;
-      }
-      ++lit;
+    if ( nameAlreadyExists( str ) ) {
+      return;
     }
 
     // KShortcut::null() doesn't seem to be present, although documented
@@ -401,6 +410,10 @@ void CustomTemplates::slotItemChanged( QTreeWidgetItem *item, int column )
       const QString newName = vitem->text( 1 );
       if( !newName.isEmpty() ) {
         const QString oldName = vitem->oldName();
+        if ( nameAlreadyExists( newName, item ) ) {
+          vitem->setText( 1, oldName );
+          return;
+        }
         if ( newName != oldName ) {
           mItemsToDelete.append( oldName );
           vitem->setOldName( newName );
@@ -428,7 +441,7 @@ void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemMod
   KLineEdit *lineEdit = static_cast<KLineEdit*>( editor );
   const QString text = lineEdit->text();
   if( !text.isEmpty() ) {
-    model->setData( index, lineEdit->text(), Qt::EditRole );
+    model->setData( index, text, Qt::EditRole );
   }
 }
 

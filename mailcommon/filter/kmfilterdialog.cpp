@@ -1231,7 +1231,10 @@ void KMFilterListBox::slotCopy()
   Q_ASSERT( filter );
 
   // inserts a copy of the current filter.
-  insertFilter( new MailFilter( *filter ) );
+  MailFilter *copyFilter = new MailFilter( *filter );
+  copyFilter->setShortcut( KShortcut() );
+
+  insertFilter( copyFilter );
   enableControls();
 }
 
