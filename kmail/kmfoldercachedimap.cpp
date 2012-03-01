@@ -2662,7 +2662,7 @@ void KMFolderCachedImap::newState( int progress, const QString& syncStatus )
   if ( !syncStatus.isEmpty() ) {
     QString str;
     // For a subfolder, show the label. But for the main folder, it's already shown.
-    if ( mAccount->imapFolder() == this )
+    if ( !mAccount->imapFolder() || mAccount->imapFolder() == this )
       str = syncStatus;
     else
       str = QString( "%1: %2" ).arg( label() ).arg( syncStatus );
