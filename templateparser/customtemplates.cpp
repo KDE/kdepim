@@ -428,7 +428,7 @@ void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemMod
   KLineEdit *lineEdit = static_cast<KLineEdit*>( editor );
   const QString text = lineEdit->text();
   if( !text.isEmpty() ) {
-    model->setData( index, lineEdit->text(), Qt::EditRole );
+    model->setData( index, text, Qt::EditRole );
   }
 }
 
