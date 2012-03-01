@@ -14,6 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
+
 #ifndef MAILIMPORTER_FILTER_SYLPHEED_HXX
 #define MAILIMPORTER_FILTER_SYLPHEED_HXX
 
@@ -31,9 +33,14 @@ class MAILIMPORTER_EXPORT FilterSylpheed : public Filter
 public:
   explicit FilterSylpheed();
   ~FilterSylpheed();
-  
+
+  static QString defaultPath();
+
   void import();
   void importMails( const QString& maildir );
+
+  /* return local mail dir from folderlist.xml*/
+  QString localMailDirPath();
   
 private:
   void importDirContents(const QString&);

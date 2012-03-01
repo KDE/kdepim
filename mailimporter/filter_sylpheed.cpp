@@ -21,6 +21,8 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
+#include <QDomDocument>
+#include <QDomElement>
 
 using namespace MailImporter;
 
@@ -41,12 +43,51 @@ FilterSylpheed::~FilterSylpheed()
 {
 }
 
+QString FilterSylpheed::defaultPath()
+{
+  return QDir::homePath() + QLatin1String( "/.sylpheed-2.0/" );
+}
+
+QString FilterSylpheed::localMailDirPath()
+{
+  QFile folderListFile( defaultPath() + QLatin1String( "/folderlist.xml" ) );
+  if ( folderListFile.exists() ) {
+    QDomDocument doc;
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    if ( !doc.setContent( &folderListFile, &errorMsg, &errorRow, &errorCol ) ) {
+      kDebug() << "Unable to load document.Parse error in line " << errorRow
+               << ", col " << errorCol << ": " << errorMsg;
+      return QString();
+    }
+    QDomElement settings = doc.documentElement();
+
+    if ( settings.isNull() ) {
+      return QString();
+    }
+
+    for ( QDomElement e = settings.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+      if ( e.tagName() == QLatin1String( "folder" ) ) {
+        if ( e.hasAttribute( "type" ) ) {
+          if ( e.attribute( "type" ) == QLatin1String( "mh" ) ) {
+            return e.attribute("path" );
+          }   
+        }
+      }
+    }
+  }
+  return QString();
+}
+
 /** Recursive import of Sylpheed maildir. */
 void FilterSylpheed::import()
 {
-  QString _homeDir = QDir::homePath();
+  QString homeDir = localMailDirPath();
+  if ( homeDir.isEmpty() )
+    homeDir = QDir::homePath();
 
-  KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
+  KFileDialog *kfd = new KFileDialog( homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
   const QString maildir = kfd->selectedFile();
