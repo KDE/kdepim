@@ -40,6 +40,12 @@ FilterOpera::~FilterOpera()
 {
 }
 
+QString FilterOpera::defaultPath()
+{
+  return QDir::homePath() + QLatin1String("/.opera/mail/store/");;
+}
+
+
 void FilterOpera::importRecursive(const QDir& mailDir, const QString &accountName)
 {
   // Recursive import of the MBoxes.
@@ -145,7 +151,7 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
 void FilterOpera::import()
 {
   /** try to go to opera mailfolder in the home of the user */
-  QString startdir = QDir::homePath() + QLatin1String("/.opera/mail/store/");
+  QString startdir = defaultPath();
   QDir d( startdir );
   if ( !d.exists() ) {
     startdir = QDir::homePath();

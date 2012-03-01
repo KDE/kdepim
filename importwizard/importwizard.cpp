@@ -30,6 +30,7 @@
 #include "evolutionv3/evolutionv3importdata.h"
 #include "evolutionv2/evolutionv2importdata.h"
 #include "evolutionv1/evolutionv1importdata.h"
+#include "opera/operaimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -83,6 +84,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new Evolutionv3ImportData(this));
   addImportModule(new Evolutionv2ImportData(this));
   addImportModule(new Evolutionv1ImportData(this));
+  addImportModule(new OperaImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
@@ -129,6 +131,8 @@ void ImportWizard::addImportModule(PimImportAbstract *import)
 {
   if ( import->foundMailer() )
     mlistImport.insert(import->name(),import);
+  else
+    delete import;
 }
 
 void ImportWizard::help()

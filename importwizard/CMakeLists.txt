@@ -18,6 +18,7 @@ sylpheed/sylpheedimportdata.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
+opera/operaimportdata.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${SOPRANO_INCLUDE_DIR})
