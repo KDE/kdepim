@@ -31,7 +31,7 @@
 
 #include <QMutex>
 #include <QMutexLocker>
-#include <QWeakPointer>
+#include <QSharedPointer>
 #include "mailkernel.h"
 
 using namespace Akonadi;
@@ -39,14 +39,14 @@ using namespace Akonadi;
 namespace MailCommon {
 
 static QMutex mapMutex;
-static QMap<Collection::Id,QWeakPointer<FolderCollection> > fcMap;
+static QMap<Collection::Id,QSharedPointer<FolderCollection> > fcMap;
 
 
 QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll, bool writeConfig )
 {
   QMutexLocker lock( &mapMutex );
 
-  QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() ).toStrongRef();
+  QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() );
 
   if ( !sptr ) {
     sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
