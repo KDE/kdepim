@@ -196,7 +196,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
 
-  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), m_transport->currentText(), "utf-8" ) );
+  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
 
   // Save the quote prefix which is used for this message. Each message can have
   // a different quote prefix, for example depending on the original sender.
