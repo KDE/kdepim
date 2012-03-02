@@ -208,7 +208,8 @@ void FilterTheBat::importFiles( const QString& FileName)
       filterInfo()->setTo(_path);
       filterInfo()->setFrom("../" + _info + "/messages.tbb");
 
-      for(QList<long>::Iterator it = offsets.begin() ; it != offsets.end() ; ++it) {
+      QList<long>::Iterator end = offsets.end();
+      for(QList<long>::Iterator it = offsets.begin() ; it != end ; ++it) {
         if(filterInfo()->shouldTerminate()) {
           tbb.close();
           return;
