@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QListWidget" name="listWidget"/>
+    <widget class="QListWidget" name="logFilters"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
