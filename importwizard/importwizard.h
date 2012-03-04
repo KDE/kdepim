@@ -44,7 +44,9 @@ public:
   
   ImportMailPage* importMailPage();
   ImportFilterPage* importFilterPage();
-  
+  ImportAddressbookPage *importAddressBookPage();
+  ImportSettingPage *importSettingPage();
+  ImportFinishPage *importFinishPage();
 private slots:
   void help();
   void slotProgramSelected(const QString& program);
