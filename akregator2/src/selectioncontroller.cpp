@@ -25,6 +25,7 @@
 #include "selectioncontroller.h"
 #include "actionmanager.h"
 
+#include <krss/feedcollection.h>
 #include <krss/feeditemmodel.h>
 #include <krss/rssitem.h>
 
@@ -229,20 +230,18 @@ void Akregator2::SelectionController::setFolderExpansionHandler( Akregator2::Fol
 
 void Akregator2::SelectionController::subscriptionContextMenuRequested( const QPoint& point )
 {
-#ifdef KRSS_PORT_DISABLED
     Q_ASSERT( m_feedSelector );
-    const shared_ptr<const KRss::TreeNode> treeNode = ::subscriptionForIndex( m_feedSelector->indexAt( point ) );
-    if ( !treeNode )
+    const QModelIndex index = m_feedSelector->indexAt( point );
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( !collection.isValid() )
         return;
-
-    QWidget* w = ActionManager::getInstance()->container( treeNode->tier() == KRss::TreeNode::TagTier ?
-                                                          "feedgroup_popup" : "feeds_popup" );
+    const bool isFolder = FeedCollection( collection ).isFolder();
+    QWidget* w = ActionManager::getInstance()->container( isFolder ? "feedgroup_popup" : "feeds_popup" );
     QMenu* popup = qobject_cast<QMenu*>( w );
     if ( popup ) {
         const QPoint globalPos = m_feedSelector->viewport()->mapToGlobal( point );
         popup->exec( globalPos );
     }
-#endif
 }
 
 void Akregator2::SelectionController::itemSelectionChanged()
