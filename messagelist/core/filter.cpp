@@ -31,6 +31,8 @@
 #include <ontologies/nie.h>
 #include <ontologies/nmo.h>
 
+#include <akonadi/itemsearchjob.h>
+
 using namespace MessageList::Core;
 
 Filter::Filter()
@@ -129,7 +131,7 @@ void Filter::setSearchString( const QString &search )
   const Nepomuk::Query::AndTerm andTerm( isChildTerm, bodyTerm );
 
   Nepomuk::Query::Query query( andTerm );
-  query.setRequestProperties( QList<Nepomuk::Query::Query::RequestProperty>() << Nepomuk::Types::Property( QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ) ) );
+  query.setRequestProperties( QList<Nepomuk::Query::Query::RequestProperty>() << Nepomuk::Types::Property( Akonadi::ItemSearchJob::akonadiItemIdUri() ) );
 
   mMatchingItemIds.clear();
   mQueryClient->close();
@@ -142,7 +144,7 @@ void Filter::setSearchString( const QString &search )
 void Filter::newEntries( const QList<Nepomuk::Query::Result> &entries )
 {
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
-    const Soprano::Node &property = result.requestProperty( QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ) );
+    const Soprano::Node &property = result.requestProperty( Akonadi::ItemSearchJob::akonadiItemIdUri() );
     if ( !(property.isValid() && property.isLiteral() && property.literal().isString()) ) {
       continue;
     } else {
