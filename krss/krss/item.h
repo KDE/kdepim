@@ -192,6 +192,8 @@ public:
     QList<Person> authors() const;
     void setAuthors( const QList<Person>& authors );
 
+    QString authorsAsHtml() const;
+
     /**
      * returns the language used in the item's content
      *

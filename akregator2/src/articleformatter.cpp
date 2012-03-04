@@ -211,8 +211,7 @@ QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOpti
         text += KGlobal::locale()->formatDateTime(item.dateUpdated(), KLocale::FancyLongDate) +"</span>\n"; // TODO: might need RTL?
     }
 
-#ifdef KRSS_PORT_DISABLED
-    const QString author = item.authorAsHtml();
+    const QString author = item.authorsAsHtml();
     if (!author.isEmpty())
     {
         text += QString("<br/><span class=\"header\" dir=\"%1\">").arg(Utils::directionOf(i18n("Author")));
@@ -220,9 +219,6 @@ QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOpti
         text += "</span><span class=\"headertext\">";
         text += author+"</span>\n"; // TODO: might need RTL?
     }
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
 
     if (!enc.isEmpty())
     {
@@ -393,8 +389,7 @@ QString DefaultCombinedViewFormatter::formatItem( const KRss::Item& item, IconOp
         text += KGlobal::locale()->formatDateTime(item.datePublished(), KLocale::FancyLongDate) + "</span>\n"; // TODO: might need RTL?
     }
 
-#ifdef KRSS_PORT_DISABLED
-    const QString author = item.authorAsHtml();
+    const QString author = item.authorsAsHtml();
     if (!author.isEmpty())
     {
         text += QString("<br/><span class=\"header\" dir=\"%1\">").arg(Utils::directionOf(i18n("Author")));
@@ -402,9 +397,6 @@ QString DefaultCombinedViewFormatter::formatItem( const KRss::Item& item, IconOp
         text += "</span><span class=\"headertext\">";
         text += author+"</span>\n"; // TODO: might need RTL?
     }
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
     if (!enc.isEmpty())
     {
         text += QString("<br/><span class=\"header\" dir=\"%1\">").arg(Utils::directionOf(i18n("Enclosure")));

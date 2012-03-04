@@ -30,6 +30,9 @@
 #include <syndication/tools.h>
 
 #include <KDateTime>
+#include <KLocalizedString>
+
+#include <QTextDocument>
 
 #include <algorithm>
 
@@ -201,6 +204,40 @@ void Item::setGuid( const QString& guid )
 QList<Person> Item::authors() const
 {
     return d->akonadiItem.payload<RssItem>().authors();
+}
+
+static QString authorAsHtml( const Person& p ) {
+    const QString name = Qt::escape( p.name() );
+    const QString email = Qt::escape( p.email() );
+
+    if (!email.isEmpty()) {
+        if (!name.isEmpty())
+            return QString::fromLatin1("<a href=\"mailto:%1\">%2</a>").arg( email, name );
+        else
+            return QString::fromLatin1("<a href=\"mailto:%1\">%1</a>").arg( email );
+    }
+
+    const QString uri = Qt::escape( p.uri() );
+    if (!name.isEmpty()) {
+        if (!uri.isEmpty())
+            return QString::fromLatin1("<a href=\"%1\">%2</a>").arg( uri, name );
+        else
+            return Qt::escape( name );
+    }
+
+    if ( !uri.isEmpty() )
+        return QString::fromLatin1( "<a href=\"%1\">%1</a>" ).arg( uri );
+    return QString();
+
+}
+
+QString Item::authorsAsHtml() const
+{
+    const QList<Person> authors = d->akonadiItem.payload<RssItem>().authors();
+    QStringList formatted;
+    Q_FOREACH( const Person& i, authors )
+        formatted += authorAsHtml( i );
+    return formatted.join( i18nc("separator for listing multiple authors", ", ") );
 }
 
 void Item::setAuthors( const QList<Person>& authors )
