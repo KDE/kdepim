@@ -87,7 +87,6 @@ ArticleViewer::ArticleViewer(QWidget *parent)
       m_htmlFooter(),
       m_currentText(),
       m_imageDir( KUrl::fromPath( KGlobal::dirs()->saveLocation("cache", "akregator2/Media/" ) ) ),
-      m_collectionId(0),
       m_viewMode(NormalView),
       m_part( new ArticleViewerPart( this ) ),
       m_model( 0 ),
@@ -481,7 +480,7 @@ void ArticleViewer::endWriting()
 }
 
 
-void ArticleViewer::slotShowSummary( const Akonadi::Collection& c )
+void ArticleViewer::slotShowSummary( const Akonadi::Collection& c, int unread )
 {
     m_viewMode = SummaryView;
 
@@ -491,18 +490,7 @@ void ArticleViewer::slotShowSummary( const Akonadi::Collection& c )
         return;
     }
 
-    if ( c.id() == m_collectionId )
-    {
-    #ifdef KRSS_PORT_DISABLED
-        disconnectFromNode(m_node);
-        connectToNode(node);
-    #else
-        kWarning() << "Code temporarily disabled (Akonadi port)";
-    #endif //KRSS_PORT_DISABLED
-        m_collectionId = c.id();
-    }
-
-    QString summary = m_normalViewFormatter->formatSummary( c );
+    QString summary = m_normalViewFormatter->formatSummary( c, unread );
     m_link.clear();
     renderContent(summary);
 

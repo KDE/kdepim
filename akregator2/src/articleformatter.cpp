@@ -27,6 +27,7 @@
 #include "utils.h"
 
 #include <Akonadi/Collection>
+#include <Akonadi/CollectionStatistics>
 
 #include <krss/feedcollection.h>
 #include <krss/enclosure.h>
@@ -113,35 +114,32 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
     return ( pointSize * d->device->logicalDpiY() + 36 ) / 72 ;
 }
 
-static QString formatFolderSummary( const Collection& c ) {
+static QString formatFolderSummary( const Collection& c, int unread ) {
     const QString title = FeedCollection( c ).title();
     QString text = QString::fromLatin1("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
     text += QString::fromLatin1("<div class=\"headertitle\" dir=\"%1\">%2").arg(Utils::directionOf(Utils::stripTags(title)), title);
-#ifdef KRSS_PORT_DISABLED
-    if(node->unread() == 0)
+
+    if(unread == 0)
         text += i18n(" (no unread articles)");
     else
-        text += i18np(" (1 unread article)", " (%1 unread articles)", node->unread());
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
+        text += i18np(" (1 unread article)", " (%1 unread articles)", unread);
     text += QString("</div>\n");
     text += "</div>\n"; // /headerbox
     return text;
 }
 
-static QString formatFeedSummary( const FeedCollection& feed, const KUrl& imageDir ) {
+static QString formatFeedSummary( const FeedCollection& feed, int unread, const KUrl& imageDir ) {
 
     QString text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
 
     text += QString("<div class=\"headertitle\" dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(feed.title())));
     text += feed.title();
-#ifdef KRSS_PORT_DISABLED
-    if(node->unread() == 0)
+
+    if(unread == 0)
         text += i18n(" (no unread articles)");
     else
-        text += i18np(" (1 unread article)", " (%1 unread articles)", node->unread());
-#endif
+        text += i18np(" (1 unread article)", " (%1 unread articles)", unread);
+
     text += "</div>\n"; // headertitle
     text += "</div>\n"; // /headerbox
 
@@ -178,12 +176,12 @@ static QString formatFeedSummary( const FeedCollection& feed, const KUrl& imageD
     return text;
 }
 
-static QString formatCollectionSummary( const Collection& c, const KUrl& imageDir ) {
+static QString formatCollectionSummary( const Collection& c, int unread, const KUrl& imageDir ) {
     FeedCollection fc;
     if ( fc.isFolder() )
-        return formatFolderSummary( c );
+        return formatFolderSummary( c, unread );
     else
-        return formatFeedSummary( fc, imageDir );
+        return formatFeedSummary( fc, unread, imageDir );
 }
 
 QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOption icon) const
@@ -527,12 +525,12 @@ QString DefaultCombinedViewFormatter::getCss() const
     return css;
 }
 
-QString DefaultNormalViewFormatter::formatSummary( const Akonadi::Collection& c ) const
+QString DefaultNormalViewFormatter::formatSummary( const Akonadi::Collection& c, int unread ) const
 {
-    return formatCollectionSummary( c, m_imageDir );
+    return formatCollectionSummary( c, unread, m_imageDir );
 }
 
-QString DefaultCombinedViewFormatter::formatSummary( const Akonadi::Collection& ) const
+QString DefaultCombinedViewFormatter::formatSummary( const Akonadi::Collection&, int ) const
 {
     return QString();
 }

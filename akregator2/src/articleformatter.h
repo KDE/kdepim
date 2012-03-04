@@ -39,6 +39,7 @@ namespace KRss {
 namespace Akonadi {
     class Collection;
 }
+
 namespace Akregator2 {
 
 class ArticleFormatter
@@ -58,7 +59,7 @@ class ArticleFormatter
 
         virtual QString formatItem( const KRss::Item& item, IconOption icon ) const = 0;
 
-        virtual QString formatSummary( const Akonadi::Collection& collection ) const = 0;
+        virtual QString formatSummary( const Akonadi::Collection& collection, int unread ) const = 0;
 
         virtual QString getCss() const = 0;
 
@@ -81,7 +82,7 @@ class DefaultNormalViewFormatter : public ArticleFormatter
 
         QString formatItem( const KRss::Item& item, IconOption option ) const;
 
-        /* reimp */ QString formatSummary( const Akonadi::Collection& collection ) const;
+        /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 
         QString getCss() const;
 
@@ -102,7 +103,7 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
 
         QString formatItem( const KRss::Item& item, IconOption option ) const;
 
-        /* reimp */ QString formatSummary( const Akonadi::Collection& ) const;
+        /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 
         QString getCss() const;
 

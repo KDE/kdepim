@@ -464,7 +464,8 @@ void Akregator2::MainWidget::slotNormalView()
         if ( !item.isNull() )
             m_articleViewer->showItem( item );
         else
-            m_articleViewer->slotShowSummary( m_selectionController->selectedCollection() );
+            m_articleViewer->slotShowSummary( m_selectionController->selectedCollection(),
+                                              m_selectionController->selectedCollectionIndex().data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() );
     }
 
     m_articleSplitter->setOrientation(Qt::Vertical);
@@ -487,7 +488,8 @@ void Akregator2::MainWidget::slotWidescreenView()
         if ( !item.isNull() )
             m_articleViewer->showItem( item );
         else
-            m_articleViewer->slotShowSummary( m_selectionController->selectedCollection() );
+            m_articleViewer->slotShowSummary( m_selectionController->selectedCollection(),
+                                              m_selectionController->selectedCollectionIndex().data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() );
     }
     m_articleSplitter->setOrientation(Qt::Horizontal);
     m_viewMode = WidescreenView;
@@ -514,6 +516,7 @@ void Akregator2::MainWidget::slotNodeSelected(const Akonadi::Collection& c)
 {
     m_markReadTimer->stop();
 
+    const int unread = m_selectionController->selectedCollectionIndex().data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt();
     if (m_displayingAboutPage)
     {
         m_mainFrame->slotSetTitle(i18n("Articles"));
@@ -534,7 +537,7 @@ void Akregator2::MainWidget::slotNodeSelected(const Akonadi::Collection& c)
     }
     else
     {
-        m_articleViewer->slotShowSummary( c );
+        m_articleViewer->slotShowSummary( c, unread );
     }
 
     if ( c.isValid() )

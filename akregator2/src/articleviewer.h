@@ -98,7 +98,7 @@ class ArticleViewer : public QWidget
          */
         void slotClear();
 
-        void slotShowSummary( const Akonadi::Collection& );
+        void slotShowSummary( const Akonadi::Collection& collection, int unreadCount );
 
         void slotPaletteOrFontChanged();
 
@@ -190,7 +190,6 @@ class ArticleViewer : public QWidget
         QString m_currentText;
         KUrl m_imageDir;
         KUrl m_link;
-        Akonadi::Collection::Id m_collectionId;
         enum ViewMode { NormalView, CombinedView, SummaryView };
         ViewMode m_viewMode;
         ArticleViewerPart* m_part;
