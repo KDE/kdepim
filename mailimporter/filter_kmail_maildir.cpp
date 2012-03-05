@@ -141,7 +141,10 @@ void FilterKMail_maildir::importFiles( const QString& dirName)
   QStringList::ConstIterator filesEnd( files.constEnd() );
     
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != filesEnd; ++mailFile, ++currentFile) {
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) {
+      return;
+    }
+    
     QString temp_mailfile = *mailFile;
     if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
           temp_mailfile.endsWith(QLatin1String(".index.sorted")) || temp_mailfile.endsWith(QLatin1String(".uidcache")) )) {
