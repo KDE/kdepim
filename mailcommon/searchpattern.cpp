@@ -1201,6 +1201,18 @@ static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 }
 #endif
 
+Nepomuk::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const 
+{
+  const Nepomuk::Resource parentResource( url );
+  if( !parentResource.exists() ) {
+    empty = true;
+    return Nepomuk::Query::ComparisonTerm();
+  }
+  empty = false;
+  const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
+  return isChildTerm;
+}
+
 QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
@@ -1221,14 +1233,29 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
   if ( innerGroup.subTerms().isEmpty() )
     return QString();
   if ( !urlList.isEmpty() ) {
-    const Nepomuk::Resource parentResource( urlList.at( 0 ) );
-    if( !parentResource.exists() )
-      return QString();
-    const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
-
-    const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );
-  
-    outerGroup.addSubTerm( andTerm );
+    const int numberOfUrl = urlList.count();
+    if ( numberOfUrl == 1 ) {
+      bool empty = false;
+      const Nepomuk::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
+      if ( empty )
+        return QString();
+      const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );
+      outerGroup.addSubTerm( andTerm );
+    } else {
+      QList<Nepomuk::Query::Term> term;
+      
+      for ( int i = 0; i < numberOfUrl; ++i ) {
+        bool empty = false;
+        const Nepomuk::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
+        if ( empty )
+          return QString();      
+        term<<childTerm;
+      }
+      const Nepomuk::Query::OrTerm orTerm( term );
+      const Nepomuk::Query::AndTerm andTerm( orTerm, innerGroup );
+      outerGroup.addSubTerm( andTerm );
+    }
+      
   } else {
     outerGroup.addSubTerm( innerGroup );
   }
