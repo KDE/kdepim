@@ -723,7 +723,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      * to "<i18n("unnamed")>", and the boolean operator to @p OpAnd.
      */
     void init();
-
+    Nepomuk::Query::ComparisonTerm createChildTerm( const KUrl& url, bool& empty ) const;
     QString  mName;
     Operator mOperator;
 };
