@@ -497,7 +497,11 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
 
   KMBox::MBox mbox;
   if ( !mbox.load( localFileName ) ) {
-      KMessageBox::error( parent, i18n("File %1 can not load.",localFileName) , i18n( "Error loading message" ) );
+      if( appendMessages ) {
+         KMessageBox::error( parent, i18n("File %1 can not load.",localFileName) , i18n( "Error loading message" ) );
+      } else {
+	 KMessageBox::error( parent, i18n("File %1 can not created.",localFileName) , i18n( "Error saving message" ) );
+      }
       return false;
   }
   foreach ( const Akonadi::Item &item, retrievedMsgs ) {
