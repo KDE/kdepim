@@ -318,7 +318,6 @@ bool Filter::doAddMessage( const QString& folderName,
                            bool duplicateCheck,
                            Akonadi::MessageStatus status )
 {
-    qDebug()<<" doAddMessage";
   QString messageID;
   // Create the mail folder (if not already created).
   Akonadi::Collection mailFolder = parseFolderString(folderName );
@@ -362,7 +361,6 @@ bool Filter::doAddMessage( const QString& folderName,
       addAkonadiMessage( d->filterInfo->rootCollection(), newMessage, status );
     }
   }
-  qDebug()<<" return doAddMessage";
   return true;
 }
 
