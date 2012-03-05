@@ -74,7 +74,7 @@ bool PimImportAbstract::addFilters( const QString& filterPath, MailCommon::Filte
     appendFilters( listFilter );
     return true;
   } else {
-    addFilterImportInfo( i18n( "Filters file was not found" ) );
+    addFilterImportError( i18n( "Filters file was not found" ) );
     return false;
   }
 }
@@ -88,4 +88,9 @@ void PimImportAbstract::appendFilters( const QList<MailCommon::MailFilter*>& fil
 void PimImportAbstract::addFilterImportInfo( const QString& log )
 {
   mImportWizard->importFilterPage()->addFilterImportInfo( log );
+}
+
+void PimImportAbstract::addFilterImportError( const QString& log )
+{
+  mImportWizard->importFilterPage()->addFilterImportError( log );
 }
