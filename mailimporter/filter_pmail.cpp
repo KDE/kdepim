@@ -88,7 +88,8 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
 
   const QStringList files = dir.entryList(QStringList(mask), QDir::Files, QDir::Name);
   //kDebug() <<"Mask is" << mask <<" count is" << files.count();
-  for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile ) {
+  QStringList::ConstIterator end = files.constEnd();
+  for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
     // Notify current file
     QFileInfo mailfilem_filterInfoo(*mailFile);
     filterInfo()->setFrom(mailfilem_filterInfoo.fileName());

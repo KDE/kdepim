@@ -193,5 +193,18 @@ ImportFilterPage* ImportWizard::importFilterPage()
   return mImportFilterPage;
 }
 
+ImportAddressbookPage *ImportWizard::importAddressBookPage()
+{
+  return mImportAddressbookPage;
+}
+
+ImportSettingPage *ImportWizard::importSettingPage()
+{
+  return mImportSettingPage;
+}
+ImportFinishPage *ImportWizard::importFinishPage()
+{
+  return mImportFinishPage;
+}
 
 #include "importwizard.moc"

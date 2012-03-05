@@ -104,18 +104,8 @@ bool ThunderbirdImportData::importMails()
 
 bool ThunderbirdImportData::importFilters()
 {
-  MailCommon::FilterImporterExporter importer( mImportWizard );
-  bool canceled = false;
   const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
-  if ( QFile( filterPath ).exists() ) {
-    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::ThunderBirdFilter, filterPath );
-    appendFilters( listFilter );
-    return true;
-  } else {
-    //TODO
-  }
-  
-  return false;
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::ThunderBirdFilter );
 }
 
 bool ThunderbirdImportData::importAddressBook()

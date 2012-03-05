@@ -101,7 +101,7 @@ void FilterEvolution::importDirContents(const QString& dirName, const QString& K
   // If there is a mbox, we import it
   QDir dir(dirName);
   if(dir.exists(QLatin1String( "mbox" ))) {
-    importMBox(dirName + "/mbox", KMailRootDir, KMailSubDir);
+    importMBox(dirName + QLatin1String("/mbox"), KMailRootDir, KMailSubDir);
   }
   // If there are subfolders, we import them one by one
   if(dir.exists("subfolders")) {
@@ -112,7 +112,7 @@ void FilterEvolution::importDirContents(const QString& dirName, const QString& K
     for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
       QString kSubDir;
       if(!KMailSubDir.isNull()) {
-        kSubDir = KMailSubDir + '/' + *filename;
+        kSubDir = KMailSubDir + QLatin1Char('/') + *filename;
       } else {
         kSubDir = *filename;
       }

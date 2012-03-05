@@ -19,6 +19,8 @@
 #include "mailimporter/filter_evolution_v3.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
+#include "mailcommon/filter/filterimporterexporter.h"
+#include "importwizard.h"
 
 #include <KLocale>
 
@@ -78,7 +80,8 @@ bool Evolutionv3ImportData::importMails()
 
 bool Evolutionv3ImportData::importFilters()
 {
-  return false;
+  const QString filterPath = QDir::homePath() +QLatin1String("/.config/evolution/mail/filter.xml");
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::EvolutionFilter );
 }
 
 bool Evolutionv3ImportData::importAddressBook()

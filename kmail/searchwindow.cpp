@@ -131,7 +131,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   hbl->addWidget( mChkSubFolders );
   radioLayout->addLayout( hbl );
 
-  //mChkbxSpecificFolders->hide();
   mChkSubFolders->hide();
   
   QGroupBox *patternGroupBox = new QGroupBox( searchWidget );
@@ -479,9 +478,13 @@ void SearchWindow::slotSearch()
 
   mSearchFolderEdt->setEnabled( false );
 
-  KUrl url;
+  KUrl::List urls;
   if ( !mChkbxAllFolders->isChecked() ) {
-    url =  mCbxFolders->collection().url( Akonadi::Collection::UrlShort ); 
+    const Akonadi::Collection col = mCbxFolders->collection();
+    urls<< col.url( Akonadi::Collection::UrlShort );
+    if ( mChkSubFolders->isChecked() ) {
+      childCollectionsFromSelectedCollection( col, urls );
+    }
   }
 
 
@@ -498,7 +501,7 @@ void SearchWindow::slotSearch()
   const QString query = searchPattern.asXesamQuery();
   const QString queryLanguage = "XESAM";
 #else
-  const QString query = searchPattern.asSparqlQuery(url);
+  const QString query = searchPattern.asSparqlQuery(urls);
   const QString queryLanguage = "SPARQL";
 #endif
 
@@ -839,6 +842,35 @@ void SearchWindow::setSearchPattern( const SearchPattern &pattern )
   mSearchPattern = pattern;
   mPatternEdit->setSearchPattern( &mSearchPattern );
 }
+
+
+void SearchWindow::childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List&lstUrlCollection )
+{  
+  if ( collection.isValid() )  {
+    QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KMKernel::self()->collectionModel(), collection );
+    if ( idx.isValid() ) {
+      getChildren( KMKernel::self()->collectionModel(), idx, lstUrlCollection );
+    }
+  }
+}
+
+void SearchWindow::getChildren( const QAbstractItemModel *model,
+                                const QModelIndex &parentIndex,
+                                KUrl::List &list )
+{
+  const int rowCount = model->rowCount( parentIndex );
+  for ( int row = 0; row < rowCount; ++row ) {
+    const QModelIndex index = model->index( row, 0, parentIndex );
+    if ( model->rowCount( index ) > 0 ) {
+      
+      getChildren( model, index, list );
+    }
+    Akonadi::Collection c = model->data(index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( c.isValid() )
+      list << c.url( Akonadi::Collection::UrlShort );
+  }
+}
+
 
 }
 

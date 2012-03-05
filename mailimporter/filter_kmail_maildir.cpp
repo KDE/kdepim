@@ -115,7 +115,8 @@ void FilterKMail_maildir::importDirContents( const QString& dirName)
   const QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
   QStringList::ConstIterator end = subDirs.constEnd();     
   for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate())
+        return;
     if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
       importDirContents(subfolders.filePath(*filename));
     }

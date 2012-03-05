@@ -40,7 +40,8 @@ FilterLNotes::FilterLNotes() :
 }
 
 /** Destructor. */
-FilterLNotes::~FilterLNotes() {
+FilterLNotes::~FilterLNotes()
+{
 }
 
 /** 

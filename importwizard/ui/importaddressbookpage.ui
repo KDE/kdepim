@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QListWidget" name="listWidget"/>
+    <widget class="QListWidget" name="logAddressBook"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -30,7 +30,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="importFilters">
+      <widget class="QPushButton" name="importAddressBook">
        <property name="text">
         <string>Import addressbook</string>
        </property>

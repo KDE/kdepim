@@ -29,4 +29,14 @@ ImportFilterPage::~ImportFilterPage()
   delete ui;
 }
 
+void ImportFilterPage::addFilterImportInfo( const QString& log )
+{
+  //TODO
+}
+
+void ImportFilterPage::addFilterImportError( const QString& log )
+{
+  //TODO
+}
+
 #include "importfilterpage.moc"
