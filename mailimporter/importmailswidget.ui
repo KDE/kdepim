@@ -10,9 +10,6 @@
     <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -131,7 +128,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="log"/>
+      <widget class="MailImporter::ImportLogWidget" name="log" native="true"/>
      </item>
     </layout>
    </item>
@@ -139,4 +136,12 @@
  </widget>
  <resources/>
  <connections/>
+ <customwidgets>
+  <customwidget>
+   <class>MailImporter::ImportLogWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">mailimporter/importlogwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
 </ui>

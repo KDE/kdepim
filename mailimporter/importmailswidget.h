@@ -20,31 +20,11 @@
 #include <QWidget>
 
 #include "mailimporter_export.h"
-#include <QStyledItemDelegate>
-
-class QTextDocument;
 class QListWidgetItem;
-
 namespace Ui {
 class ImportMailsWidget;
 }
 namespace MailImporter {
-
-class LogItemDelegate : public QStyledItemDelegate
-{
-  public:
-  explicit LogItemDelegate( QObject *parent );
-  ~LogItemDelegate();
-  
-  virtual QSize sizeHint ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-  virtual void paint ( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-  virtual QWidget  *createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const;
-
-
-  private:
-  QTextDocument* document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-};
-
 
 class MAILIMPORTER_EXPORT ImportMailsWidget : public QWidget
 {
