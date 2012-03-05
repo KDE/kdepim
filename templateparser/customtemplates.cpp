@@ -348,18 +348,20 @@ void CustomTemplates::slotDuplicateClicked()
   // see slotShortcutChanged(). oh, and you should look up documentation on the EBN!
   // FIXME There must be a better way of doing this...
   QKeySequence nullShortcut;
+  CustomTemplates::Type type =  origItem->customType();
   CustomTemplateItem *item =
-      new CustomTemplateItem( mUi->mList, templateName, origItem->content(), nullShortcut, origItem->customType(),
+      new CustomTemplateItem( mUi->mList, templateName, origItem->content(), nullShortcut, type,
                               origItem->to(), origItem->cc() );
-  item->setText( 0, indexToType( origItem->customType() ) );
+  item->setText( 0, indexToType( type ) );
   item->setText( 1, templateName );
-  iconFromType( origItem->customType(), item );
+  iconFromType( type, item );
 
   mUi->mList->setCurrentItem( item );
   mUi->mRemove->setEnabled( true );
   mUi->mDuplicate->setEnabled( true );
   mUi->mName->clear();
-  mUi->mKeySequenceWidget->setEnabled( false );
+  mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
+
   emit changed();
 }
 
@@ -400,7 +402,9 @@ void CustomTemplates::slotListSelectionChanged()
     mUi->mEdit->setText( vitem->content() );
     mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut(),
                                              KKeySequenceWidget::NoValidate );
-    mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( vitem->customType() ) ) );
+    CustomTemplates::Type type =  vitem->customType();
+    
+    mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( type ) ) );
     mUi->mToEdit->setText( vitem->to() );
     mUi->mCCEdit->setText( vitem->cc() );
     mBlockChangeSignal = false;
@@ -410,7 +414,7 @@ void CustomTemplates::slotListSelectionChanged()
     // a universal, as otherwise we won't know what sort of action to do when the
     // key sequence is activated!
     // This agrees with KMMainWidget::updateCustomTemplateMenus() -- marten
-    mUi->mKeySequenceWidget->setEnabled( vitem->customType() != TUniversal );
+    mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
   } else {
     mUi->mEditFrame->setEnabled( false );
     mUi->mEdit->clear();
