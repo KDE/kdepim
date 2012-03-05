@@ -149,11 +149,13 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
     
   item.setPayload<KMime::Message::Ptr>( message );
   Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
+  job->setAutoDelete( false );
   if( !job->exec() ) {
     d->filterInfo->alert( i18n( "<b>Error:</b> Could not add message to folder %1. Reason: %2",
 		       collection.name(), job->errorString() ) );
     return false;
   }
+  delete job;
   return true;
 }
 
