@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
- * Copyright (C) 2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2011,2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,8 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi->mAdd->setIcon( KIcon( "list-add" ) );
   mUi->mAdd->setEnabled( false );
   mUi->mRemove->setIcon( KIcon( "list-remove" ) );
-
+  mUi->mDuplicate->setIcon( KIcon( "edit-copy" ) );
+  
   mUi->mList->setColumnWidth( 0, 100 );
   mUi->mList->header()->setStretchLastSection( true );
   mUi->mList->setItemDelegate( new CustomTemplateItemDelegate( this ) );
@@ -69,6 +70,8 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
            this, SLOT(slotAddClicked()) );
   connect( mUi->mRemove, SIGNAL(clicked()),
            this, SLOT(slotRemoveClicked()) );
+  connect( mUi->mDuplicate, SIGNAL(clicked()),
+           this, SLOT(slotDuplicateClicked()) );
   connect( mUi->mList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
            this, SLOT(slotListSelectionChanged()) );
   connect( mUi->mList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
@@ -173,6 +176,25 @@ void CustomTemplates::slotTextChanged()
   }
 }
 
+void CustomTemplates::iconFromType( CustomTemplates::Type type, CustomTemplateItem *item )
+{
+  switch ( type ) {
+  case TReply:
+    item->setIcon( 0, mReplyPix );
+    break;
+  case TReplyAll:
+    item->setIcon( 0, mReplyAllPix );
+    break;
+  case TForward:
+    item->setIcon( 0, mForwardPix );
+    break;
+  default:
+    item->setIcon( 0, QPixmap() );
+    break;
+  };
+
+}
+
 void CustomTemplates::load()
 {
   const QStringList list = GlobalSettings::self()->customTemplates();
@@ -185,24 +207,11 @@ void CustomTemplates::load()
                                                        shortcut, type, t.to(), t.cC() );
     item->setText( 1, *it );
     item->setText( 0, indexToType( type ) );
-
-    switch ( type ) {
-    case TReply:
-      item->setIcon( 0, mReplyPix );
-      break;
-    case TReplyAll:
-      item->setIcon( 0, mReplyAllPix );
-      break;
-    case TForward:
-      item->setIcon( 0, mForwardPix );
-      break;
-    default:
-      item->setIcon( 0, QPixmap() );
-      break;
-    };
+    iconFromType( type, item );
   }
 
   mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem() );
+  mUi->mDuplicate->setEnabled( mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem() );
 }
 
 void CustomTemplates::save()
@@ -290,12 +299,68 @@ void CustomTemplates::slotAddClicked()
     item->setText( 1, str );
     mUi->mList->setCurrentItem( item );
     mUi->mRemove->setEnabled( true );
+    mUi->mDuplicate->setEnabled( true );
     mUi->mName->clear();
     mUi->mKeySequenceWidget->setEnabled( false );
     if ( !mBlockChangeSignal ) {
       emit changed();
     }
   }
+}
+
+QString CustomTemplates::createUniqueName( const QString& name) const
+{
+  QString uniqueName = name;
+
+  int counter = 0;
+  bool found = true;
+
+  while ( found ) {
+    found = false;
+
+    QTreeWidgetItemIterator lit( mUi->mList );
+    while ( *lit ) {
+      const QString itemName = ( *lit )->text( 1 );
+      if ( !itemName.compare( uniqueName ) ) {
+        found = true;
+        ++counter;
+        uniqueName = name;
+        uniqueName += QString( " (" ) + QString::number( counter )
+                      + QString( ")" );
+        break;
+      }
+      lit++;
+    }
+  }
+
+  return uniqueName;
+}
+
+void CustomTemplates::slotDuplicateClicked()
+{
+  QTreeWidgetItem *currentItem = mUi->mList->currentItem();
+  if ( !currentItem ) {
+    return;
+  }
+  CustomTemplateItem * origItem = static_cast<CustomTemplateItem*>( currentItem );
+  const QString templateName = createUniqueName( origItem->text( 1 ) );
+  // KShortcut::null() doesn't seem to be present, although documented
+  // see slotShortcutChanged(). oh, and you should look up documentation on the EBN!
+  // FIXME There must be a better way of doing this...
+  QKeySequence nullShortcut;
+  CustomTemplateItem *item =
+      new CustomTemplateItem( mUi->mList, templateName, origItem->content(), nullShortcut, origItem->customType(),
+                              origItem->to(), origItem->cc() );
+  item->setText( 0, indexToType( origItem->customType() ) );
+  item->setText( 1, templateName );
+  iconFromType( origItem->customType(), item );
+
+  mUi->mList->setCurrentItem( item );
+  mUi->mRemove->setEnabled( true );
+  mUi->mDuplicate->setEnabled( true );
+  mUi->mName->clear();
+  mUi->mKeySequenceWidget->setEnabled( false );
+  emit changed();
 }
 
 void CustomTemplates::slotRemoveClicked()
@@ -316,6 +381,7 @@ void CustomTemplates::slotRemoveClicked()
     mItemsToDelete.append( templateName );
     delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
     mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
+    mUi->mDuplicate->setEnabled( mUi->mList->topLevelItemCount() > 0 );
     if ( !mBlockChangeSignal ) {
       emit changed();
     }
@@ -328,6 +394,7 @@ void CustomTemplates::slotListSelectionChanged()
   if ( item ) {
     mUi->mEditFrame->setEnabled( true );
     mUi->mRemove->setEnabled(true);
+    mUi->mDuplicate->setEnabled(true);
     CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
     mBlockChangeSignal = true;
     mUi->mEdit->setText( vitem->content() );
@@ -362,22 +429,9 @@ void CustomTemplates::slotTypeActivated( int index )
     CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
     CustomTemplates::Type customtype = static_cast<Type>(index);
     vitem->setCustomType( customtype );
-    mUi->mList->currentItem()->setText( 0, indexToType( customtype ) );
+    vitem->setText( 0, indexToType( customtype ) );
 
-    switch ( customtype ) {
-    case TReply:
-      mUi->mList->currentItem()->setIcon( 0, mReplyPix );
-      break;
-    case TReplyAll:
-      mUi->mList->currentItem()->setIcon( 0, mReplyAllPix );
-      break;
-    case TForward:
-      mUi->mList->currentItem()->setIcon( 0, mForwardPix );
-      break;
-    default:
-      mUi->mList->currentItem()->setIcon( 0, QPixmap() );
-      break;
-    };
+    iconFromType( customtype, vitem);
 
     // see slotListSelectionChanged() above
     mUi->mKeySequenceWidget->setEnabled( customtype != TUniversal );

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>743</width>
     <height>480</height>
    </rect>
   </property>
@@ -75,6 +75,16 @@
          </item>
          <item>
           <widget class="KPushButton" name="mRemove">
+           <property name="toolTip">
+            <string comment="@info:tooltip">Remove the selected custom template</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Press this button if you want to remove the currently selected custom template</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="KPushButton" name="mDuplicate">
            <property name="toolTip">
             <string comment="@info:tooltip">Remove the selected custom template</string>
            </property>

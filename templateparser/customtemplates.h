@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
- * Copyright (C) 2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ class KActionCollection;
 class Ui_CustomTemplatesBase;
 
 namespace TemplateParser {
+class CustomTemplateItem;
 
 class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 {
@@ -66,10 +67,14 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotItemChanged( QTreeWidgetItem *item, int column );
     void slotHelpLinkClicked( const QString & );
     void slotNameChanged( const QString &text );
+    void slotDuplicateClicked();
 
   private:
     bool nameAlreadyExists( const QString& str, QTreeWidgetItem *item = 0 );
     QString indexToType( int index );
+    QString createUniqueName( const QString& name) const;
+    void iconFromType( CustomTemplates::Type type, CustomTemplateItem *item );
+
     /// These templates will be deleted when we're saving.
     QStringList mItemsToDelete;
 
