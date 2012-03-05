@@ -19,9 +19,12 @@
 #include "importwizard.h"
 #include "importmailpage.h"
 #include "importfilterinfogui.h"
+#include "importfilterpage.h"
 
 #include "mailimporter/filterinfo.h"
 #include "mailcommon/filter/filtermanager.h"
+
+#include <QFile>
 
 PimImportAbstract::PimImportAbstract(ImportWizard *parent)
     :mImportWizard(parent)
@@ -62,8 +65,27 @@ MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
     return info;
 }
 
+bool PimImportAbstract::addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type )
+{
+  if ( QFile( filterPath ).exists() ) {
+    bool canceled = false;
+    MailCommon::FilterImporterExporter importer( mImportWizard );
+    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, type, filterPath );
+    appendFilters( listFilter );
+    return true;
+  } else {
+    addFilterImportInfo( i18n( "Filters file was not found" ) );
+    return false;
+  }
+}
+
 void PimImportAbstract::appendFilters( const QList<MailCommon::MailFilter*>& filters )
 {
   if ( !filters.isEmpty() )
     MailCommon::FilterManager::instance()->appendFilters(filters, false );
+}
+
+void PimImportAbstract::addFilterImportInfo( const QString& log )
+{
+  mImportWizard->importFilterPage()->addFilterImportInfo( log );
 }

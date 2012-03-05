@@ -18,6 +18,8 @@
 #ifndef PIMIMPORTABSTRACT_H
 #define PIMIMPORTABSTRACT_H
 #include <QObject>
+#include "mailcommon/filter/filterimporterexporter.h"
+
 class ImportWizard;
 
 namespace MailImporter {
@@ -26,6 +28,7 @@ namespace MailImporter {
 
 namespace MailCommon {
 class MailFilter;
+class FilterImporterExporter;
 }
 
 class PimImportAbstract
@@ -57,6 +60,9 @@ public:
 protected:
   void appendFilters( const QList<MailCommon::MailFilter*>& filters );
   MailImporter::FilterInfo* initializeInfo();
+  void addFilterImportInfo( const QString& log );
+  bool addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type );
+
 
   QString mPath;
   ImportWizard *mImportWizard;

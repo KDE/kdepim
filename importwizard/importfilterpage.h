@@ -31,6 +31,7 @@ class ImportFilterPage : public QWidget
 public:
   explicit ImportFilterPage(QWidget *parent = 0);
   ~ImportFilterPage();
+  void addFilterImportInfo( const QString& log );
   
 private:
   Ui::ImportFilterPage *ui;

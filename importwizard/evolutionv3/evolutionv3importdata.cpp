@@ -80,18 +80,8 @@ bool Evolutionv3ImportData::importMails()
 
 bool Evolutionv3ImportData::importFilters()
 {
-  MailCommon::FilterImporterExporter importer( mImportWizard );
-  bool canceled = false;
   const QString filterPath = QDir::homePath() +QLatin1String("/.config/evolution/mail/filter.xml");
-  if ( QFile( filterPath ).exists() ) {
-    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, MailCommon::FilterImporterExporter::EvolutionFilter, filterPath );
-    appendFilters( listFilter );
-    return true;
-  } else {
-    //TODO
-  }
-  
-  return false;
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::EvolutionFilter );
 }
 
 bool Evolutionv3ImportData::importAddressBook()

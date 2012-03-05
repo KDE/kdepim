@@ -29,4 +29,9 @@ ImportFilterPage::~ImportFilterPage()
   delete ui;
 }
 
+void ImportFilterPage::addFilterImportInfo( const QString& log )
+{
+  //TODO
+}
+
 #include "importfilterpage.moc"
