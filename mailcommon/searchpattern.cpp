@@ -1201,7 +1201,7 @@ static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 }
 #endif
 
-QString SearchPattern::asSparqlQuery(const KUrl& url) const
+QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
 
@@ -1220,8 +1220,8 @@ QString SearchPattern::asSparqlQuery(const KUrl& url) const
 
   if ( innerGroup.subTerms().isEmpty() )
     return QString();
-  if ( !url.isEmpty() ) {
-    const Nepomuk::Resource parentResource( url );
+  if ( !urlList.isEmpty() ) {
+    const Nepomuk::Resource parentResource( urlList.at( 0 ) );
     if( !parentResource.exists() )
       return QString();
     const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
