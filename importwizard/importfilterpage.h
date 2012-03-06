@@ -33,6 +33,9 @@ public:
   ~ImportFilterPage();
   void addFilterImportInfo( const QString& log );
   void addFilterImportError( const QString& log );
+
+signals:
+  void importFiltersClicked();
   
 private:
   Ui::ImportFilterPage *ui;
