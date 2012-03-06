@@ -153,6 +153,7 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
   if( !job->exec() ) {
     d->filterInfo->alert( i18n( "<b>Error:</b> Could not add message to folder %1. Reason: %2",
 		       collection.name(), job->errorString() ) );
+    delete job;
     return false;
   }
   delete job;
