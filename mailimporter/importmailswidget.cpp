@@ -78,6 +78,16 @@ void ImportMailsWidget::setLastCurrentItem()
   ui->log->setCurrentItem(ui->log->item(ui->log->count() - 1 ));
 }
 
+void ImportMailsWidget::addInfoLogEntry( const QString& log )
+{
+  ui->log->addInfoLogEntry( log );
+}
+
+void ImportMailsWidget::addErrorLogEntry( const QString& log )
+{
+  ui->log->addErrorLogEntry( log );
+}
+
 void ImportMailsWidget::clear()
 {
     ui->log->clear();

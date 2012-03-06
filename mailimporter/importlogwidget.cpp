@@ -112,3 +112,18 @@ ImportLogWidget::ImportLogWidget( QWidget * parent )
 ImportLogWidget::~ImportLogWidget()
 {
 }
+
+void ImportLogWidget::addInfoLogEntry( const QString& log )
+{
+  QListWidgetItem* item =new QListWidgetItem(log);
+  item->setForeground(Qt::blue);
+  addItem( item );
+}
+
+void ImportLogWidget::addErrorLogEntry( const QString& log )
+{
+  QListWidgetItem* item =new QListWidgetItem(log);
+  item->setForeground(Qt::red);
+  addItem( item );
+}
+

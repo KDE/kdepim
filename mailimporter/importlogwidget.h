@@ -47,8 +47,10 @@ class MAILIMPORTER_EXPORT ImportLogWidget : public QListWidget
   public:
   explicit ImportLogWidget( QWidget * parent = 0 );
   ~ImportLogWidget();
-};
 
+  void addInfoLogEntry( const QString& log );
+  void addErrorLogEntry( const QString& log );
+};
 }
 
 #endif /* IMPORTLOGWIDGET_H */
