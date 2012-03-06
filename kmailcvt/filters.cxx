@@ -237,13 +237,17 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
   newSubCollection.setName( newCollectionPathName );
 
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
+  job->setAutoDelete( false );
   if( !job->exec() ) {
     info->alert( i18n("<b>Error:</b> Could not create folder. Reason: %1",
 		 job->errorString() ) );
+    delete job;
     return Akonadi::Collection();
   }
   // Return the newly created collection
-  return job->collection();
+  Akonadi::Collection collection = job->collection();
+  delete job;
+  return collection;
 }
 
 bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
