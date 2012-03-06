@@ -14,6 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
+
 #ifndef MAILIMPORTER_FILTER_THEBAT_HXX
 #define MAILIMPORTER_FILTER_THEBAT_HXX
 
@@ -38,6 +40,10 @@ public:
 private:
   void importDirContents( const QString&);
   void importFiles( const QString&);
+  void processDirectory( const QString& path);
+  int mImportDirDone;
+  int mTotalDir;
+
 };
 }
 
