@@ -103,7 +103,7 @@ void FilterEvolution_v3::importMails( const QString& maildir )
 
     /** Recursive import of the MailArchives */
     QDir dir(mailDir());
-    mTotalDir = Filter::countDirectory( dir );
+    mTotalDir = Filter::countDirectory( dir, true /*search hidden directory*/ );
 
     processDirectory( mailDir() );
     

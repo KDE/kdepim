@@ -371,14 +371,19 @@ bool Filter::doAddMessage( const QString& folderName,
   return true;
 }
 
-int Filter::countDirectory(const QDir& dir)
+int Filter::countDirectory(const QDir& dir, bool searchHiddenDirectory)
 {
   int countDir = 0;
-  const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-  QStringList::ConstIterator end = rootSubDirs.constEnd();
-  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
+  QStringList subDirs;
+  if ( searchHiddenDirectory )
+    subDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+  else
+    subDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+  
+  QStringList::ConstIterator end = subDirs.constEnd();
+  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
     if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
-      countDir += countDirectory( QDir( dir.filePath(*filename ) ) ) + 1;
+      countDir += countDirectory( QDir( dir.filePath(*filename ) ), searchHiddenDirectory ) + 1;
     }
   }
   return countDir;

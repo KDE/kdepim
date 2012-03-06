@@ -60,7 +60,7 @@ public:
   QString mailDir() const;
   
 protected:
-  static int countDirectory(const QDir& dir);
+  static int countDirectory(const QDir& dir, bool searchHiddenDirectory);
   /**
    * Adds a single subcollection to the given base collection and returns it.
    * Use parseFolderString() instead if you want to create hierachies of collections.

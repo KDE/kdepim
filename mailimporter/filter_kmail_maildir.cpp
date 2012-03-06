@@ -96,8 +96,7 @@ void FilterKMail_maildir::importMails( const QString& maildir )
 
     /** Recursive import of the MailArchives */
     QDir dir(mailDir());
-    mTotalDir = Filter::countDirectory( dir );
-
+    mTotalDir = Filter::countDirectory( dir, true /*search hidden directory*/ );
     processDirectory( mailDir());
     
     filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));

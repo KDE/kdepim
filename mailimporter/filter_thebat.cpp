@@ -81,9 +81,10 @@ void FilterTheBat::importMails( const QString & maildir )
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end( rootSubDirs.constEnd() );
     for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
+      if(filterInfo()->shouldTerminate())
+        break;
       importDirContents(dir.filePath(*filename));
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
-      if(filterInfo()->shouldTerminate()) break;
     }
     filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
     if (countDuplicates() > 0) {
