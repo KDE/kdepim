@@ -205,15 +205,21 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   } else if ( field == QLatin1String( "age in days" ) ) {
       fieldName = "<age in days>";
   } else if ( field == QLatin1String( "label" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "tag" ) ) {
     fieldName = "<tag>";
   } else if ( field == QLatin1String( "size" ) ) {
     fieldName = "<size>";
   } else if ( field == QLatin1String( "from in ab" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "junk status" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "junk percent" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "junk score origin" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "has attachment status" ) ) {
+    //TODO
   }
 
   if ( fieldName.isEmpty() ) {
@@ -271,7 +277,9 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     functionName = SearchRule::FuncEquals;
   } else if ( function == QLatin1String( "doesn't match" ) ) {
     functionName = SearchRule::FuncNotEqual;
-  } else {
+  }
+  
+  if( functionName == SearchRule::FuncNone ) {
     kDebug() << " functionName not implemented: " << function;
   }
   QString contentsName;
