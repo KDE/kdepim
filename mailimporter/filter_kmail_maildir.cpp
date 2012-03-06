@@ -58,19 +58,6 @@ void FilterKMail_maildir::import()
   importMails( maildir );
 }
 
-int FilterKMail_maildir::countDirectory(const QDir& dir) const
-{
-  int countDir = 0;
-  const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-  QStringList::ConstIterator end = rootSubDirs.constEnd();
-  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
-    if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
-      countDir += countDirectory( QDir( dir.filePath(*filename ) ) ) + 1;
-    }
-  }
-  return countDir;
-}
-
 
 void FilterKMail_maildir::processDirectory( const QString& path)
 {
@@ -109,7 +96,7 @@ void FilterKMail_maildir::importMails( const QString& maildir )
 
     /** Recursive import of the MailArchives */
     QDir dir(mailDir());
-    mTotalDir = countDirectory( dir );
+    mTotalDir = Filter::countDirectory( dir );
 
     processDirectory( mailDir());
     

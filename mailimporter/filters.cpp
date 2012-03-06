@@ -367,4 +367,17 @@ bool Filter::doAddMessage( const QString& folderName,
   return true;
 }
 
+int Filter::countDirectory(const QDir& dir)
+{
+  int countDir = 0;
+  const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+  QStringList::ConstIterator end = rootSubDirs.constEnd();
+  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
+    if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
+      countDir += countDirectory( QDir( dir.filePath(*filename ) ) ) + 1;
+    }
+  }
+  return countDir;
+}
+
 // vim: ts=2 sw=2 et

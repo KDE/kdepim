@@ -23,14 +23,17 @@
 #define MAX_LINE 4096
 #endif
 
+#include "filterinfo.h"
+#include "filters.h"
+#include "mailimporter_export.h"
+
 #include <Akonadi/Collection>
 #include <KMime/KMimeMessage>
 #include <akonadi/kmime/messagestatus.h>
 
 
-#include "filterinfo.h"
-#include "filters.h"
-#include "mailimporter_export.h"
+
+#include <QDir>
 
 namespace MailImporter {
 class MAILIMPORTER_EXPORT Filter
@@ -55,9 +58,9 @@ public:
 
   void setMailDir( const QString& mailDir );
   QString mailDir() const;
-
+  
 protected:
-
+  static int countDirectory(const QDir& dir);
   /**
    * Adds a single subcollection to the given base collection and returns it.
    * Use parseFolderString() instead if you want to create hierachies of collections.

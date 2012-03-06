@@ -66,6 +66,24 @@ void FilterEvolution_v3::import()
 
 }
 
+void FilterEvolution_v3::processDirectory( const QString& path)
+{
+  QDir dir(path);
+  const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+  QStringList::ConstIterator end = rootSubDirs.constEnd();
+  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
+    if(filterInfo()->shouldTerminate())
+      break;
+    if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
+      filterInfo()->setCurrent(0);
+      importDirContents(dir.filePath(*filename));
+      filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
+      filterInfo()->setCurrent(100);
+    }
+  }
+  
+}
+  
 void FilterEvolution_v3::importMails( const QString& maildir )
 {
   setMailDir(maildir);
@@ -81,23 +99,14 @@ void FilterEvolution_v3::importMails( const QString& maildir )
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
+    mImportDirDone = 0;
 
     /** Recursive import of the MailArchives */
     QDir dir(mailDir());
-    const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-    int currentDir = 1, numSubDirs = rootSubDirs.size();
-    QStringList::ConstIterator end = rootSubDirs.constEnd();
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
-      if(filterInfo()->shouldTerminate())
-        break;
-      if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
-        filterInfo()->setCurrent(0);
-        importDirContents(dir.filePath(*filename));
-        filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
-        filterInfo()->setCurrent(100);
-      }
-    }
+    mTotalDir = Filter::countDirectory( dir );
 
+    processDirectory( mailDir() );
+    
     filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
 
     if (countDuplicates() > 0) {
@@ -123,18 +132,7 @@ void FilterEvolution_v3::importDirContents( const QString& dirName)
   importFiles(dirName);
 
   /** If there are subfolders, we import them one by one */
-
-  QDir subfolders(dirName);
-  const QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-  QStringList::ConstIterator end = subDirs.constEnd();     
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-    if(filterInfo()->shouldTerminate())
-      return;
-    else if(!(*filename == QLatin1String( "." )
-              || *filename == QLatin1String( ".." ) ) ) {
-      importDirContents(subfolders.filePath(*filename));
-    }
-  }
+  processDirectory( dirName );
 }
 
 /**

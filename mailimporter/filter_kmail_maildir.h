@@ -38,7 +38,6 @@ public:
 private:
   void processDirectory( const QString& path);
 
-  int countDirectory(const QDir& dir) const;
   void importDirContents(const QString&);
   void importFiles(const QString&);
   int mImportDirDone;
