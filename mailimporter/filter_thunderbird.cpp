@@ -20,6 +20,8 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
+#include <KConfig>
+#include <QFile>
 
 using namespace MailImporter;
 
@@ -45,6 +47,28 @@ FilterThunderbird::~FilterThunderbird()
 QString FilterThunderbird::defaultPath()
 {
   return QDir::homePath() + QLatin1String( "/.thunderbird/" );
+}
+
+
+QString FilterThunderbird::defaultProfile()
+{
+  const QString thunderbirdPath = defaultPath() + QLatin1String( "/profiles.ini" );
+  QFile profiles( thunderbirdPath );
+  if ( profiles.exists() ) {
+    //ini file.
+    KConfig config( thunderbirdPath );
+    const QStringList profileList = config.groupList().filter( QRegExp( "Profile\\d+" ) );
+    Q_FOREACH( const QString& profileName, profileList )
+    {
+      KConfigGroup group = config.group( profileName );
+      if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
+      {
+        const QString path = group.readEntry( "Path" );
+        return path;            
+      }
+    }
+  }
+  return QString();
 }
 
 

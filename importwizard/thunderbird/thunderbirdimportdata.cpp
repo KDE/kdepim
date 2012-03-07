@@ -45,25 +45,10 @@ ThunderbirdImportData::~ThunderbirdImportData()
 
 QString ThunderbirdImportData::defaultProfile()
 {
-    if(mDefaultProfile.isEmpty()) {
-      QFile profiles( mPath + QLatin1String( "/profiles.ini" ) );
-      if ( profiles.exists() ) {
-        //ini file.
-        KConfig config( mPath + QLatin1String( "/profiles.ini" ) );
-        const QStringList profileList = config.groupList().filter( QRegExp( "Profile\\d+" ) );
-        Q_FOREACH( const QString& profileName, profileList )
-        {
-          KConfigGroup group = config.group( profileName );
-          if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
-          {
-            const QString path = group.readEntry( "Path" );
-            mDefaultProfile = profileName;
-            return path;            
-          }
-        }
-      }
-    }
-    return mDefaultProfile;
+  if(mDefaultProfile.isEmpty()) {
+    mDefaultProfile = MailImporter::FilterThunderbird::defaultProfile();
+  }
+  return mDefaultProfile;
 }
 
 bool ThunderbirdImportData::foundMailer() const
