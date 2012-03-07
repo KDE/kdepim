@@ -81,7 +81,8 @@ class SearchRuleWidget : public QWidget
       To,
       CC,
       ReplyTo,
-      Organization
+      Organization,
+      Date
     };
 
     /**

@@ -298,6 +298,55 @@ class NumericRuleWidgetHandler : public MailCommon::RuleWidgetHandler
     QString currentValue( const QStackedWidget *valueStack ) const;
 };
 
+class DateRuleWidgetHandler : public MailCommon::RuleWidgetHandler
+{
+  public:
+    DateRuleWidgetHandler() : MailCommon::RuleWidgetHandler()
+    {
+    }
+
+    ~DateRuleWidgetHandler()
+    {
+    }
+
+    QWidget *createFunctionWidget( int number,
+                                   QStackedWidget *functionStack,
+                                   const QObject *receiver ) const;
+
+    QWidget *createValueWidget( int number,
+                                QStackedWidget *valueStack,
+                                const QObject *receiver ) const;
+
+    SearchRule::Function function( const QByteArray & field,
+                                     const QStackedWidget *functionStack ) const;
+
+    QString value( const QByteArray & field,
+                   const QStackedWidget *functionStack,
+                   const QStackedWidget *valueStack ) const;
+
+    QString prettyValue( const QByteArray & field,
+                         const QStackedWidget *functionStack,
+                         const QStackedWidget *valueStack ) const;
+
+    bool handlesField( const QByteArray & field ) const;
+
+    void reset( QStackedWidget *functionStack,
+                QStackedWidget *valueStack ) const;
+
+    bool setRule( QStackedWidget *functionStack,
+                  QStackedWidget *valueStack,
+                  const SearchRule::Ptr rule ) const;
+
+    bool update( const QByteArray & field,
+                 QStackedWidget *functionStack,
+                 QStackedWidget *valueStack ) const;
+
+  private:
+    SearchRule::Function currentFunction( const QStackedWidget *functionStack ) const;
+    QString currentValue( const QStackedWidget *valueStack ) const;
+};
+
+
 }
 
 MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
@@ -305,7 +354,7 @@ MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
 #ifndef KDEPIM_NO_NEPOMUK
   registerHandler( new TagRuleWidgetHandler() );
 #endif
-
+  registerHandler( new DateRuleWidgetHandler() );
   registerHandler( new NumericRuleWidgetHandler() );
   registerHandler( new StatusRuleWidgetHandler() );
   registerHandler( new MessageRuleWidgetHandler() );
@@ -477,6 +526,7 @@ using MailCommon::RegExpLineEdit;
 
 #include <KLocale>
 #include <KNumInput>
+#include <KDateComboBox>
 
 #include <QLabel>
 
@@ -1879,6 +1929,239 @@ bool NumericRuleWidgetHandler::update( const QByteArray &field,
   }
   return true;
 }
+}
 
-} // anonymous namespace for NumericRuleWidgetHandler
+//***//
+//=============================================================================
+//
+// class DateRuleWidgetHandler
+//
+//=============================================================================
+
+namespace {
+
+static const struct {
+  SearchRule::Function id;
+  const char *displayName;
+} DateFunctions[] = {
+  { SearchRule::FuncEquals,           I18N_NOOP( "is equal to" )         },
+  { SearchRule::FuncNotEqual,         I18N_NOOP( "is not equal to" )      },
+  { SearchRule::FuncIsGreater,        I18N_NOOP( "is greater than" )     },
+  { SearchRule::FuncIsLessOrEqual,    I18N_NOOP( "is less than or equal to" ) },
+  { SearchRule::FuncIsLess,           I18N_NOOP( "is less than" )        },
+  { SearchRule::FuncIsGreaterOrEqual, I18N_NOOP( "is greater than or equal to" ) }
+};
+static const int DateFunctionCount =
+  sizeof( DateFunctions ) / sizeof( *DateFunctions );
+
+//---------------------------------------------------------------------------
+
+QWidget *DateRuleWidgetHandler::createFunctionWidget(
+  int number, QStackedWidget *functionStack, const QObject *receiver ) const
+{
+  if ( number != 0 ) {
+    return 0;
+  }
+
+  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  funcCombo->setObjectName( "dateRuleFuncCombo" );
+  for ( int i = 0; i < DateFunctionCount; ++i ) {
+    funcCombo->addItem( i18n( DateFunctions[i].displayName ) );
+  }
+  funcCombo->adjustSize();
+  QObject::connect( funcCombo, SIGNAL(activated(int)),
+                    receiver, SLOT(slotFunctionChanged()) );
+  return funcCombo;
+}
+
+//---------------------------------------------------------------------------
+
+QWidget *DateRuleWidgetHandler::createValueWidget( int number,
+                                                      QStackedWidget *valueStack,
+                                                      const QObject *receiver ) const
+{
+  if ( number != 0 ) {
+    return 0;
+  }
+
+  KDateComboBox *dateCombo = new KDateComboBox( valueStack );
+  dateCombo->setObjectName( "KDateComboBox" );
+  dateCombo->setOptions( KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords );
+  QObject::connect( dateCombo, SIGNAL(dateChanged(const QDate &)),
+                    receiver, SLOT(slotValueChanged()) );
+  return dateCombo;
+}
+
+//---------------------------------------------------------------------------
+
+SearchRule::Function DateRuleWidgetHandler::currentFunction(
+  const QStackedWidget *functionStack ) const
+{
+  const MinimumComboBox *funcCombo =
+    functionStack->findChild<MinimumComboBox*>( "dateRuleFuncCombo" );
+
+  if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
+    return DateFunctions[funcCombo->currentIndex()].id;
+  }
+
+  return SearchRule::FuncNone;
+}
+
+//---------------------------------------------------------------------------
+
+SearchRule::Function DateRuleWidgetHandler::function( const QByteArray &field,
+                                                         const QStackedWidget *functionStack ) const
+{
+  if ( !handlesField( field ) ) {
+    return SearchRule::FuncNone;
+  }
+
+  return currentFunction( functionStack );
+}
+
+//---------------------------------------------------------------------------
+
+QString DateRuleWidgetHandler::currentValue( const QStackedWidget *valueStack ) const
+{
+  const KDateComboBox *dateInput = valueStack->findChild<KDateComboBox*>( "KDateComboBox" );
+
+  if ( dateInput ) {
+    return dateInput->date().toString( Qt::ISODate );
+  }
+
+  return QString();
+}
+
+//---------------------------------------------------------------------------
+
+QString DateRuleWidgetHandler::value( const QByteArray &field,
+                                         const QStackedWidget *,
+                                         const QStackedWidget *valueStack ) const
+{
+  if ( !handlesField( field ) ) {
+    return QString();
+  }
+
+  return currentValue( valueStack );
+}
+
+//---------------------------------------------------------------------------
+
+QString DateRuleWidgetHandler::prettyValue( const QByteArray &field,
+                                               const QStackedWidget *,
+                                               const QStackedWidget *valueStack ) const
+{
+  if ( !handlesField( field ) ) {
+    return QString();
+  }
+
+  return currentValue( valueStack );
+}
+
+//---------------------------------------------------------------------------
+
+bool DateRuleWidgetHandler::handlesField( const QByteArray &field ) const
+{
+  return ( field == "<date>" );
+}
+
+//---------------------------------------------------------------------------
+
+void DateRuleWidgetHandler::reset( QStackedWidget *functionStack,
+                                      QStackedWidget *valueStack ) const
+{
+  // reset the function combo box
+  MinimumComboBox *funcCombo =
+    functionStack->findChild<MinimumComboBox*>( "dateRuleFuncCombo" );
+
+  if ( funcCombo ) {
+    funcCombo->blockSignals( true );
+    funcCombo->setCurrentIndex( 0 );
+    funcCombo->blockSignals( false );
+  }
+
+  // reset the value widget
+  KDateComboBox *dateInput = valueStack->findChild<KDateComboBox*>( "KDateComboBox" );
+
+  if ( dateInput ) {
+    dateInput->blockSignals( true );
+    dateInput->setDate( QDate::currentDate() );
+    dateInput->blockSignals( false );
+  }
+}
+
+//---------------------------------------------------------------------------
+
+bool DateRuleWidgetHandler::setRule( QStackedWidget *functionStack,
+                                        QStackedWidget *valueStack,
+                                        const SearchRule::Ptr rule ) const
+{
+  if ( !rule || !handlesField( rule->field() ) ) {
+    reset( functionStack, valueStack );
+    return false;
+  }
+
+  // set the function
+  const SearchRule::Function func = rule->function();
+  int funcIndex = 0;
+  for ( ; funcIndex < DateFunctionCount; ++funcIndex ) {
+    if ( func == DateFunctions[funcIndex].id ) {
+      break;
+    }
+  }
+
+  MinimumComboBox *funcCombo =
+    functionStack->findChild<MinimumComboBox*>( "dateRuleFuncCombo" );
+
+  if ( funcCombo ) {
+    funcCombo->blockSignals( true );
+    if ( funcIndex < DateFunctionCount ) {
+      funcCombo->setCurrentIndex( funcIndex );
+    } else {
+      funcCombo->setCurrentIndex( 0 );
+    }
+    funcCombo->blockSignals( false );
+    functionStack->setCurrentWidget( funcCombo );
+  }
+
+  // set the value
+  const QString value = rule->contents();
+
+  KDateComboBox *dateInput = valueStack->findChild<KDateComboBox*>( "KDateComboBox" );
+
+  if ( dateInput ) {
+    dateInput->blockSignals( true );
+    dateInput->setDate( QDate::fromString ( value, Qt::ISODate )  );
+    dateInput->blockSignals( false );
+    valueStack->setCurrentWidget( dateInput );
+  }
+  return true;
+}
+
+//---------------------------------------------------------------------------
+
+bool DateRuleWidgetHandler::update( const QByteArray &field,
+                                       QStackedWidget *functionStack,
+                                       QStackedWidget *valueStack ) const
+{
+  if ( !handlesField( field ) ) {
+    return false;
+  }
+
+  // raise the correct function widget
+  functionStack->setCurrentWidget( functionStack->findChild<QWidget*>( "dateRuleFuncCombo" ) );
+
+  // raise the correct value widget
+  KDateComboBox *dateInput = valueStack->findChild<KDateComboBox*>( "KDateComboBox" );
+
+  if ( dateInput ) {
+    //initNumInput( numInput, field );
+    valueStack->setCurrentWidget( dateInput );
+  }
+  return true;
+}
+
+
+
+} // anonymous namespace for DateRuleWidgetHandler
 

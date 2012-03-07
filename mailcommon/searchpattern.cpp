@@ -142,6 +142,8 @@ SearchRule::Ptr SearchRule::createInstance( const QByteArray &field,
     ret = SearchRule::Ptr( new SearchRuleStatus( field, func, contents ) );
   } else if ( field == "<age in days>" || field == "<size>" ) {
     ret = SearchRule::Ptr( new SearchRuleNumerical( field, func, contents ) );
+  } else if ( field == "<date>" ) {
+    ret = SearchRule::Ptr( new SearchRuleDate( field, func, contents ) );
   } else {
     ret = SearchRule::Ptr( new SearchRuleString( field, func, contents ) );
   }
@@ -1019,6 +1021,126 @@ void SearchRuleNumerical::addXesamClause( QXmlStreamWriter &stream ) const
 {
   Q_UNUSED( stream );
 }
+
+
+//==================================================
+//
+// class SearchRuleDate
+//
+//==================================================
+
+SearchRuleDate::SearchRuleDate( const QByteArray &field,
+                                          Function func,
+                                          const QString &contents )
+  : SearchRule( field, func, contents )
+{
+}
+
+bool SearchRuleDate::isEmpty() const
+{
+  return !QDate::fromString( contents() ).isValid();
+}
+
+bool SearchRuleDate::matches( const Akonadi::Item &item ) const
+{
+  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+  QString msgContents;
+  QDate numericalMsgContents;
+  QDate numericalValue;
+
+  QDate msgDate = msg->date()->dateTime().date();
+  numericalMsgContents = msgDate;
+  numericalValue = QDate::fromString( contents() );
+#if 0 //TODO
+  
+  msgContents.setNum( numericalMsgContents );
+  bool rc = matchesInternal( numericalValue, numericalMsgContents, msgContents );
+  if ( FilterLog::instance()->isLogging() ) {
+    QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
+                       : "<font color=#FF0000>0 = </font>" );
+    msg += FilterLog::recode( asString() );
+    msg += " ( <i>" + QString::number( numericalMsgContents ) + "</i> )";
+    FilterLog::instance()->add( msg, FilterLog::RuleResult );
+  }
+  return rc;
+#else
+return false;
+#endif
+}
+
+bool SearchRuleDate::matchesInternal( long numericalValue,
+    long numericalMsgContents, const QString & msgContents ) const
+{
+#if 0  
+  switch ( function() ) {
+  case SearchRule::FuncEquals:
+    return ( numericalValue == numericalMsgContents );
+
+  case SearchRule::FuncNotEqual:
+    return ( numericalValue != numericalMsgContents );
+
+  case SearchRule::FuncContains:
+    return ( msgContents.contains( contents(), Qt::CaseInsensitive ) );
+
+  case SearchRule::FuncContainsNot:
+    return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
+
+  case SearchRule::FuncRegExp:
+  {
+    QRegExp regexp( contents(), Qt::CaseInsensitive );
+    return ( regexp.indexIn( msgContents ) >= 0 );
+  }
+
+  case SearchRule::FuncNotRegExp:
+  {
+    QRegExp regexp( contents(), Qt::CaseInsensitive );
+    return ( regexp.indexIn( msgContents ) < 0 );
+  }
+
+  case FuncIsGreater:
+    return ( numericalMsgContents > numericalValue );
+
+  case FuncIsLessOrEqual:
+    return ( numericalMsgContents <= numericalValue );
+
+  case FuncIsLess:
+    return ( numericalMsgContents < numericalValue );
+
+  case FuncIsGreaterOrEqual:
+    return ( numericalMsgContents >= numericalValue );
+
+  case FuncIsInAddressbook:  // since email-addresses are not numerical, I settle for false here
+    return false;
+
+  case FuncIsNotInAddressbook:
+    return false;
+
+  default:
+    ;
+  }
+#endif
+  return false;
+}
+
+#ifndef KDEPIM_NO_NEPOMUK
+
+void SearchRuleDate::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
+{
+    QDate date = QDate::fromString( contents() );
+    const Nepomuk::Query::ComparisonTerm dateTerm(
+      Vocabulary::NMO::sentDate(),
+      Nepomuk::Query::LiteralTerm( date ),
+      nepomukComparator() );
+    addAndNegateTerm( dateTerm, groupTerm );
+}
+#endif
+
+void SearchRuleDate::addXesamClause( QXmlStreamWriter &stream ) const
+{
+  Q_UNUSED( stream );
+}
+
 
 //==================================================
 //

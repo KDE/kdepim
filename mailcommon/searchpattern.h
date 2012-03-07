@@ -404,7 +404,7 @@ class SearchRuleNumerical : public SearchRule
 {
   public:
     /**
-     * Creates new new numerical search rule.
+     * Creates new numerical search rule.
      *
      * @param field The field to search in.
      * @param function The function to use for searching.
@@ -448,6 +448,59 @@ class SearchRuleNumerical : public SearchRule
     virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 };
 
+
+class SearchRuleDate : public SearchRule
+{
+  public:
+    /**
+     * Creates new date search rule.
+     *
+     * @param field The field to search in.
+     * @param function The function to use for searching.
+     * @param contents The contents to search for.
+     */
+    explicit SearchRuleDate( const QByteArray &field = 0,
+                                  Function function = FuncContains,
+                                  const QString &contents = QString() );
+
+    /**
+     * @copydoc SearchRule::isEmpty()
+     */
+    virtual bool isEmpty() const ;
+
+    /**
+     * @copydoc SearchRule::matches()
+     */
+    virtual bool matches( const Akonadi::Item &item ) const;
+
+    // Optimized matching not implemented, will use the unoptimized matching
+    // from SearchRule
+    using SearchRule::matches;
+
+    /**
+     * A helper method for the main matches() method.
+     * Does the actual comparing.
+     */
+    bool matchesInternal( long numericalValue, long numericalContents,
+                          const QString &contents ) const;
+
+#ifndef KDEPIM_NO_NEPOMUK
+    /**
+     * @copydoc SearchRule::addQueryTerms()
+     */
+    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+#endif
+
+    /**
+     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
+     */
+    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
+};
+
+
+
+
+  
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
 struct MessageStatusInfo {
