@@ -94,7 +94,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   connect( mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
   connect( mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
-  resize( 400, 600 );
+  resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
 
   checkModules();
