@@ -1038,7 +1038,7 @@ SearchRuleDate::SearchRuleDate( const QByteArray &field,
 
 bool SearchRuleDate::isEmpty() const
 {
-  return !QDate::fromString( contents() ).isValid();
+  return !QDate::fromString( contents(), Qt::ISODate ).isValid();
 }
 
 bool SearchRuleDate::matches( const Akonadi::Item &item ) const
@@ -1047,7 +1047,7 @@ bool SearchRuleDate::matches( const Akonadi::Item &item ) const
 
 
   QDate msgDate = msg->date()->dateTime().date();
-  QDate dateValue = QDate::fromString( contents() );
+  QDate dateValue = QDate::fromString( contents(), Qt::ISODate );
   bool rc = matchesInternal( dateValue, msgDate );
   if ( FilterLog::instance()->isLogging() ) {
     QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
@@ -1091,7 +1091,7 @@ bool SearchRuleDate::matchesInternal( const QDate& dateValue,
 
 void SearchRuleDate::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
 {
-    QDate date = QDate::fromString( contents() );
+    QDate date = QDate::fromString( contents(), Qt::ISODate );
     const Nepomuk::Query::ComparisonTerm dateTerm(
       Vocabulary::NMO::sentDate(),
       Nepomuk::Query::LiteralTerm( date ),
