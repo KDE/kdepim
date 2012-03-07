@@ -55,7 +55,13 @@ FilterOE::~FilterOE()
 void FilterOE::import()
 {
   // Select directory containing plain text emails
-  setMailDir(KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent()));
+  const QString maildir = KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent());
+  importMails(maildir);
+}
+
+void FilterOE::importMails(const QString & maildir)
+{
+  setMailDir(maildir);
   if (mailDir().isEmpty()) { // No directory selected
     filterInfo()->alert(i18n("No directory selected."));
     return;
