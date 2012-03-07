@@ -52,7 +52,8 @@ QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi:
     sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
     fcMap.insert( coll.id(), sptr );
   } else {
-    if ( !sptr->isWriteConfig() && writeConfig )
+    sptr->setCollection( coll );
+    if ( !sptr->isWriteConfig() && writeConfig ) 
       sptr->setWriteConfig( true );
   }
 
