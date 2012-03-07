@@ -51,15 +51,17 @@ QString ThunderbirdImportData::defaultProfile()
         //ini file.
         KConfig config( mPath + QLatin1String( "/profiles.ini" ) );
         const QStringList profileList = config.groupList().filter( QRegExp( "Profile\\d+" ) );
-        qDebug()<<" profileList :"<<profileList;
-        //TODO look at support of multi profile
-        if ( config.hasGroup( "Profile0" ) ) {
-          KConfigGroup group = config.group( "Profile0" );
-          const QString path = group.readEntry( "Path" );
-          return path;
+        Q_FOREACH( const QString& profileName, profileList )
+        {
+          KConfigGroup group = config.group( profileName );
+          if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
+          {
+            const QString path = group.readEntry( "Path" );
+            mDefaultProfile = profileName;
+            return path;            
+          }
         }
       }
-        
     }
     return mDefaultProfile;
 }
