@@ -72,7 +72,7 @@ bool PimImportAbstract::addFilters( const QString& filterPath, MailCommon::Filte
     MailCommon::FilterImporterExporter importer( mImportWizard );
     QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, type, filterPath );
     appendFilters( listFilter );
-    addFilterImportInfo( i18n( "%1 filters were imported", listFilter.count() ) );
+    addFilterImportInfo( i18np( "1 filter was imported", "%1 filters were imported", listFilter.count() ) );
     return true;
   } else {
     addFilterImportError( i18n( "Filters file was not found" ) );
