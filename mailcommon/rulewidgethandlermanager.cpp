@@ -1987,7 +1987,7 @@ QWidget *DateRuleWidgetHandler::createValueWidget( int number,
   KDateComboBox *dateCombo = new KDateComboBox( valueStack );
   dateCombo->setObjectName( "KDateComboBox" );
   dateCombo->setOptions( KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords );
-  QObject::connect( dateCombo, SIGNAL(dateChanged(const QDate &)),
+  QObject::connect( dateCombo, SIGNAL(dateChanged(QDate)),
                     receiver, SLOT(slotValueChanged()) );
   return dateCombo;
 }
