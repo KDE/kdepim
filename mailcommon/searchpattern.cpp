@@ -1045,81 +1045,45 @@ bool SearchRuleDate::matches( const Akonadi::Item &item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
-  QString msgContents;
-  QDate numericalMsgContents;
-  QDate numericalValue;
 
   QDate msgDate = msg->date()->dateTime().date();
-  numericalMsgContents = msgDate;
-  numericalValue = QDate::fromString( contents() );
-#if 0 //TODO
-  
-  msgContents.setNum( numericalMsgContents );
-  bool rc = matchesInternal( numericalValue, numericalMsgContents, msgContents );
+  QDate dateValue = QDate::fromString( contents() );
+  bool rc = matchesInternal( dateValue, msgDate );
   if ( FilterLog::instance()->isLogging() ) {
     QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
                        : "<font color=#FF0000>0 = </font>" );
     msg += FilterLog::recode( asString() );
-    msg += " ( <i>" + QString::number( numericalMsgContents ) + "</i> )";
+    msg += " ( <i>" + contents() + "</i> )"; //TODO change with locale?
     FilterLog::instance()->add( msg, FilterLog::RuleResult );
   }
   return rc;
-#else
-return false;
-#endif
 }
 
-bool SearchRuleDate::matchesInternal( long numericalValue,
-    long numericalMsgContents, const QString & msgContents ) const
+bool SearchRuleDate::matchesInternal( const QDate& dateValue,
+    const QDate& msgDate ) const
 {
-#if 0  
   switch ( function() ) {
   case SearchRule::FuncEquals:
-    return ( numericalValue == numericalMsgContents );
+    return ( dateValue == msgDate );
 
   case SearchRule::FuncNotEqual:
-    return ( numericalValue != numericalMsgContents );
-
-  case SearchRule::FuncContains:
-    return ( msgContents.contains( contents(), Qt::CaseInsensitive ) );
-
-  case SearchRule::FuncContainsNot:
-    return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
-
-  case SearchRule::FuncRegExp:
-  {
-    QRegExp regexp( contents(), Qt::CaseInsensitive );
-    return ( regexp.indexIn( msgContents ) >= 0 );
-  }
-
-  case SearchRule::FuncNotRegExp:
-  {
-    QRegExp regexp( contents(), Qt::CaseInsensitive );
-    return ( regexp.indexIn( msgContents ) < 0 );
-  }
+    return ( dateValue != msgDate );
 
   case FuncIsGreater:
-    return ( numericalMsgContents > numericalValue );
+    return ( msgDate > dateValue );
 
   case FuncIsLessOrEqual:
-    return ( numericalMsgContents <= numericalValue );
+    return ( msgDate <= dateValue );
 
   case FuncIsLess:
-    return ( numericalMsgContents < numericalValue );
+    return ( msgDate < dateValue );
 
   case FuncIsGreaterOrEqual:
-    return ( numericalMsgContents >= numericalValue );
-
-  case FuncIsInAddressbook:  // since email-addresses are not numerical, I settle for false here
-    return false;
-
-  case FuncIsNotInAddressbook:
-    return false;
+    return ( msgDate >= dateValue );
 
   default:
     ;
   }
-#endif
   return false;
 }
 

@@ -481,8 +481,7 @@ class SearchRuleDate : public SearchRule
      * A helper method for the main matches() method.
      * Does the actual comparing.
      */
-    bool matchesInternal( long numericalValue, long numericalContents,
-                          const QString &contents ) const;
+    bool matchesInternal( const QDate& dateValue, const QDate& msgDate ) const;
 
 #ifndef KDEPIM_NO_NEPOMUK
     /**
