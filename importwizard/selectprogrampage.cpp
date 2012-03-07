@@ -24,7 +24,7 @@ SelectProgramPage::SelectProgramPage(QWidget *parent) :
 {
   ui->setupUi(this);
   connect(ui->listProgramFound,SIGNAL(itemSelectionChanged()),this,SLOT(slotItemSelectionChanged()));
-  connect( ui->listProgramFound, SIGNAL(itemDoubleClicked(QListWidgetItem *) ), this, SLOT( slotItemDoubleClicked( QListWidgetItem* ) ) );
+  connect( ui->listProgramFound, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)) );
 }
 
 

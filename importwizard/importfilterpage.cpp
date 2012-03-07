@@ -22,7 +22,7 @@ ImportFilterPage::ImportFilterPage(QWidget *parent) :
   ui(new Ui::ImportFilterPage)
 {
   ui->setupUi(this);
-  connect( ui->importFilters, SIGNAL( clicked() ), SIGNAL(importFiltersClicked()));
+  connect( ui->importFilters, SIGNAL(clicked()), SIGNAL(importFiltersClicked()));
 }
 
 ImportFilterPage::~ImportFilterPage()
