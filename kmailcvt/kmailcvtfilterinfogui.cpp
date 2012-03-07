@@ -65,18 +65,14 @@ void  KMailCvtFilterInfoGui::setOverall( int percent )
 
 void KMailCvtFilterInfoGui::addInfoLogEntry( const QString& log )
 {
-  QListWidgetItem* item =new QListWidgetItem(log);
-  item->setForeground(Qt::blue);
-  m_dlg->mWidget->mMailImporterWidget->addItem( item );
+  m_dlg->mWidget->mMailImporterWidget->addInfoLogEntry( log );
   m_dlg->mWidget->mMailImporterWidget->setLastCurrentItem();
   kapp->processEvents();
 }
 
 void KMailCvtFilterInfoGui::addErrorLogEntry( const QString& log )
 {
-  QListWidgetItem* item =new QListWidgetItem(log);
-  item->setForeground(Qt::red);
-  m_dlg->mWidget->mMailImporterWidget->addItem( item );
+  m_dlg->mWidget->mMailImporterWidget->addErrorLogEntry( log );
   m_dlg->mWidget->mMailImporterWidget->setLastCurrentItem();
   kapp->processEvents();
 }

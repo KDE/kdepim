@@ -189,7 +189,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   } else if ( field == QLatin1String( "body" ) ) {
     fieldName = "<body>";
   } else if ( field == QLatin1String( "date" ) ) {
-      //TODO
+    fieldName = "<date>";
   } else if ( field == QLatin1String( "priority" ) ) {
       //TODO
   } else if ( field == QLatin1String( "status" ) ) {
@@ -205,15 +205,21 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   } else if ( field == QLatin1String( "age in days" ) ) {
       fieldName = "<age in days>";
   } else if ( field == QLatin1String( "label" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "tag" ) ) {
     fieldName = "<tag>";
   } else if ( field == QLatin1String( "size" ) ) {
     fieldName = "<size>";
   } else if ( field == QLatin1String( "from in ab" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "junk status" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "junk percent" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "junk score origin" ) ) {
+    //TODO
   } else if ( field == QLatin1String( "has attachment status" ) ) {
+    //TODO
   }
 
   if ( fieldName.isEmpty() ) {
@@ -250,11 +256,17 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   } else if ( function == QLatin1String( "isn't" ) ) {
     functionName = SearchRule::FuncNotEqual;
   } else if ( function == QLatin1String( "is empty" ) ) {
+    //TODO
   } else if ( function == QLatin1String( "isn't empty" ) ) {
+    //TODO
   } else if ( function == QLatin1String( "is before" ) ) {
+    functionName = SearchRule::FuncIsLess;
   } else if ( function == QLatin1String( "is after" ) ) {
+    functionName = SearchRule::FuncIsGreater;
   } else if ( function == QLatin1String( "is higher than" ) ) {
+    //TODO
   } else if ( function == QLatin1String( "is lower than" ) ) {
+    //TODO
   } else if ( function == QLatin1String( "begins with" ) ) {
     functionName = SearchRule::FuncStartWith;
   } else if ( function == QLatin1String( "ends with" ) ) {
@@ -271,7 +283,9 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     functionName = SearchRule::FuncEquals;
   } else if ( function == QLatin1String( "doesn't match" ) ) {
     functionName = SearchRule::FuncNotEqual;
-  } else {
+  }
+  
+  if( functionName == SearchRule::FuncNone ) {
     kDebug() << " functionName not implemented: " << function;
   }
   QString contentsName;
@@ -291,6 +305,9 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     int value = contents.toInt();
     value = value * 1000; //Ko
     contentsName = QString::number( value );
+  } else if ( fieldName == "<date>" ) {
+    //TODO look at how to convert it
+    contentsName = contents;
   } else {
     contentsName = contents;
   }

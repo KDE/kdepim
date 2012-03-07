@@ -22,6 +22,7 @@ ImportFilterPage::ImportFilterPage(QWidget *parent) :
   ui(new Ui::ImportFilterPage)
 {
   ui->setupUi(this);
+  connect( ui->importFilters, SIGNAL( clicked() ), SIGNAL(importFiltersClicked()));
 }
 
 ImportFilterPage::~ImportFilterPage()
@@ -31,12 +32,12 @@ ImportFilterPage::~ImportFilterPage()
 
 void ImportFilterPage::addFilterImportInfo( const QString& log )
 {
-  //TODO
+  ui->logFilters->addInfoLogEntry( log );
 }
 
 void ImportFilterPage::addFilterImportError( const QString& log )
 {
-  //TODO
+  ui->logFilters->addErrorLogEntry( log );
 }
 
 #include "importfilterpage.moc"

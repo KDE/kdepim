@@ -95,6 +95,20 @@ void FilterSylpheed::import()
   importMails( maildir );
 }
 
+void FilterSylpheed::processDirectory( const QString& path)
+{
+  QDir dir(path);
+  const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+  QStringList::ConstIterator end = rootSubDirs.constEnd();
+  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
+    if(filterInfo()->shouldTerminate())
+      break;
+    importDirContents(dir.filePath(*filename));
+    filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
+    mImportDirDone++;
+  }
+}
+
 void FilterSylpheed::importMails( const QString &maildir )
 {
   setMailDir(maildir);
@@ -111,17 +125,14 @@ void FilterSylpheed::importMails( const QString &maildir )
   } else {
     filterInfo()->setOverall(0);
 
+    mImportDirDone = 0;
+    
     /** Recursive import of the MailFolders */
     QDir dir(mailDir());
-    const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    int currentDir = 1, numSubDirs = rootSubDirs.size();
-    QStringList::ConstIterator end = rootSubDirs.constEnd();
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
-      if(filterInfo()->shouldTerminate()) break;
-      importDirContents(dir.filePath(*filename));
-      filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
-    }
 
+    mTotalDir = Filter::countDirectory( dir, false );
+    processDirectory( mailDir() );
+    
     filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
     if (countDuplicates() > 0) {
       filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
@@ -147,13 +158,7 @@ void FilterSylpheed::importDirContents( const QString& dirName)
   importFiles(dirName);
 
   /** If there are subfolders, we import them one by one */
-  QDir subfolders(dirName);
-  const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-  QStringList::ConstIterator end = subDirs.constEnd();
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-    if(filterInfo()->shouldTerminate()) return;
-    importDirContents(subfolders.filePath(*filename));
-  }
+  processDirectory( dirName );
 }
 
 
@@ -178,7 +183,8 @@ void FilterSylpheed::importFiles( const QString& dirName)
 
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate())
+      return;
     QString _mfile = *mailFile;
     if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
           || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {

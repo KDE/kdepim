@@ -88,6 +88,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
             fieldName = "<body>";
           } else if ( name == QLatin1String( "sexp" ) ) {
           } else if ( name == QLatin1String( "recv-date" ) ) {
+            fieldName = "<date>";
           } else if ( name == QLatin1String( "label" ) ) {
           } else if ( name == QLatin1String( "score" ) ) {
           } else if ( name == QLatin1String( "size" ) ) {

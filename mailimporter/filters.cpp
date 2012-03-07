@@ -149,11 +149,14 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
     
   item.setPayload<KMime::Message::Ptr>( message );
   Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
+  job->setAutoDelete( false );
   if( !job->exec() ) {
     d->filterInfo->alert( i18n( "<b>Error:</b> Could not add message to folder %1. Reason: %2",
 		       collection.name(), job->errorString() ) );
+    delete job;
     return false;
   }
+  delete job;
   return true;
 }
 
@@ -230,13 +233,17 @@ Akonadi::Collection Filter::addSubCollection( const Akonadi::Collection &baseCol
   newSubCollection.setName( newCollectionPathName );
 
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
+  job->setAutoDelete( false );
   if( !job->exec() ) {
     d->filterInfo->alert( i18n("<b>Error:</b> Could not create folder. Reason: %1",
 		 job->errorString() ) );
+    delete job;
     return Akonadi::Collection();
   }
   // Return the newly created collection
-  return job->collection();
+  Akonadi::Collection collection = job->collection();
+  delete job;
+  return collection;
 }
 
 bool Filter::checkForDuplicates ( const QString& msgID,
@@ -318,7 +325,6 @@ bool Filter::doAddMessage( const QString& folderName,
                            bool duplicateCheck,
                            Akonadi::MessageStatus status )
 {
-    qDebug()<<" doAddMessage";
   QString messageID;
   // Create the mail folder (if not already created).
   Akonadi::Collection mailFolder = parseFolderString(folderName );
@@ -362,8 +368,25 @@ bool Filter::doAddMessage( const QString& folderName,
       addAkonadiMessage( d->filterInfo->rootCollection(), newMessage, status );
     }
   }
-  qDebug()<<" return doAddMessage";
   return true;
+}
+
+int Filter::countDirectory(const QDir& dir, bool searchHiddenDirectory)
+{
+  int countDir = 0;
+  QStringList subDirs;
+  if ( searchHiddenDirectory )
+    subDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+  else
+    subDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+  
+  QStringList::ConstIterator end = subDirs.constEnd();
+  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
+    if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
+      countDir += countDirectory( QDir( dir.filePath(*filename ) ), searchHiddenDirectory ) + 1;
+    }
+  }
+  return countDir;
 }
 
 // vim: ts=2 sw=2 et

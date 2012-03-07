@@ -14,10 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
+
 #ifndef MAILIMPORTER_FILTER_KMAIL_MAILDIR_HXX
 #define MAILIMPORTER_FILTER_KMAIL_MAILDIR_HXX
 
 #include "filters.h"
+class QDir;
 /**
  * Imports KMail mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka
@@ -33,8 +36,12 @@ public:
   void importMails( const QString& maildir );
 
 private:
+  void processDirectory( const QString& path);
+
   void importDirContents(const QString&);
   void importFiles(const QString&);
+  int mImportDirDone;
+  int mTotalDir;
 };
 }
 

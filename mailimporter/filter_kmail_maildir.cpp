@@ -14,6 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
+
 
 #include "filter_kmail_maildir.h"
 
@@ -56,6 +58,25 @@ void FilterKMail_maildir::import()
   importMails( maildir );
 }
 
+
+void FilterKMail_maildir::processDirectory( const QString& path)
+{
+  QDir dir(path);
+  const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+  QStringList::ConstIterator end = rootSubDirs.constEnd();
+  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
+    if(filterInfo()->shouldTerminate())
+      break;
+    if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
+      filterInfo()->setCurrent(0);
+      importDirContents(dir.filePath(*filename));
+      filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
+      filterInfo()->setCurrent(100);
+      mImportDirDone++;
+    }
+  }
+}
+
 void FilterKMail_maildir::importMails( const QString& maildir )
 {
   setMailDir(maildir);
@@ -71,22 +92,13 @@ void FilterKMail_maildir::importMails( const QString& maildir )
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
+    mImportDirDone = 0;
 
     /** Recursive import of the MailArchives */
     QDir dir(mailDir());
-    const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-    int currentDir = 1, numSubDirs = rootSubDirs.size();
-    QStringList::ConstIterator end = rootSubDirs.constEnd();
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
-      if(filterInfo()->shouldTerminate())
-        break;
-      if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
-        filterInfo()->setCurrent(0);
-        importDirContents(dir.filePath(*filename));
-        filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
-        filterInfo()->setCurrent(100);
-      }
-    }
+    mTotalDir = Filter::countDirectory( dir, true /*search hidden directory*/ );
+    processDirectory( mailDir());
+    
     filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
     if (countDuplicates() > 0) {
       filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
@@ -111,16 +123,7 @@ void FilterKMail_maildir::importDirContents( const QString& dirName)
 
   /** If there are subfolders, we import them one by one */
 
-  QDir subfolders(dirName);
-  const QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-  QStringList::ConstIterator end = subDirs.constEnd();     
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
-    if(filterInfo()->shouldTerminate())
-        return;
-    if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
-      importDirContents(subfolders.filePath(*filename));
-    }
-  }
+  processDirectory( dirName );
 }
 
 /**
@@ -141,7 +144,10 @@ void FilterKMail_maildir::importFiles( const QString& dirName)
   QStringList::ConstIterator filesEnd( files.constEnd() );
     
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != filesEnd; ++mailFile, ++currentFile) {
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate()) {
+      return;
+    }
+    
     QString temp_mailfile = *mailFile;
     if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
           temp_mailfile.endsWith(QLatin1String(".index.sorted")) || temp_mailfile.endsWith(QLatin1String(".uidcache")) )) {

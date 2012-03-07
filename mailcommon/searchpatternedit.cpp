@@ -72,7 +72,8 @@ static const struct {
   { "To",            I18N_NOOP2( "Receiver of an email.", "To" )  },
   { "CC",            I18N_NOOP( "CC" )  },
   { "Reply-To",      I18N_NOOP( "Reply To" )  },
-  { "Organization",  I18N_NOOP( "Organization" )  }
+  { "Organization",  I18N_NOOP( "Organization" )  }, 
+  { "<date>",  I18N_NOOP( "Date" )  }
 };
 static const int SpecialRuleFieldsCount =
   sizeof( SpecialRuleFields ) / sizeof( *SpecialRuleFields );
@@ -330,6 +331,7 @@ void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
 #endif
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
+  mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );
 
   // these others only represent message headers and you can add to
   // them as you like

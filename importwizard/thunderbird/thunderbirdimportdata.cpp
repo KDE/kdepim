@@ -50,6 +50,8 @@ QString ThunderbirdImportData::defaultProfile()
       if ( profiles.exists() ) {
         //ini file.
         KConfig config( mPath + QLatin1String( "/profiles.ini" ) );
+        const QStringList profileList = config.groupList().filter( QRegExp( "Profile\\d+" ) );
+        qDebug()<<" profileList :"<<profileList;
         //TODO look at support of multi profile
         if ( config.hasGroup( "Profile0" ) ) {
           KConfigGroup group = config.group( "Profile0" );

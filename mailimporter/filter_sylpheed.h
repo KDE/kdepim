@@ -45,9 +45,13 @@ public:
 private:
   void importDirContents(const QString&);
   void importFiles(const QString&);
+  void processDirectory( const QString& path);
   
   void readMarkFile( const QString&, QHash<QString,unsigned long>&);
   Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
+  int mImportDirDone;
+  int mTotalDir;
+
 };
 }
 

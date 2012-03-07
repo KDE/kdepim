@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
 
 #include "filter_thebat.h"
 
@@ -24,7 +25,6 @@
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 
-#include <kmessagebox.h>
 
 using namespace MailImporter;
 
@@ -59,6 +59,20 @@ void FilterTheBat::import()
   importMails( maildir );
 }
 
+void FilterTheBat::processDirectory( const QString& path)
+{
+  QDir dir(path);
+  const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+  QStringList::ConstIterator end = rootSubDirs.constEnd();
+  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
+    if(filterInfo()->shouldTerminate())
+      break;
+    importDirContents(dir.filePath(*filename));
+    filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
+    mImportDirDone++;
+  }
+}
+
 void FilterTheBat::importMails( const QString & maildir )
 {
   setMailDir(maildir);
@@ -74,17 +88,14 @@ void FilterTheBat::importMails( const QString & maildir )
     filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
   } else {
     filterInfo()->setOverall(0);
-
+    mImportDirDone = 0;
+    
     /** Recursive import of the MailFolders */
     QDir dir(mailDir());
-    const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    int currentDir = 1, numSubDirs = rootSubDirs.size();
-    QStringList::ConstIterator end( rootSubDirs.constEnd() );
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
-      importDirContents(dir.filePath(*filename));
-      filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
-      if(filterInfo()->shouldTerminate()) break;
-    }
+    mTotalDir = Filter::countDirectory( dir, false );
+
+    processDirectory( mailDir() );
+
     filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
     if (countDuplicates() > 0) {
       filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
@@ -115,17 +126,12 @@ void FilterTheBat::importDirContents(const QString& dirName)
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
     QString temp_mailfile = *mailFile;
     importFiles((dirName + '/' + temp_mailfile));
-    if(filterInfo()->shouldTerminate()) return;
+    if(filterInfo()->shouldTerminate())
+      return;
   }
 
   /** If there are subfolders, we import them one by one */
-  QDir subfolders(dirName);
-  const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-  QStringList::ConstIterator endFile( subDirs.constEnd() );
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != endFile; ++filename) {
-    importDirContents( subfolders.filePath(*filename));
-    if(filterInfo()->shouldTerminate()) return;
-  }
+  processDirectory( dirName );
 }
 
 /**
@@ -223,7 +229,6 @@ void FilterTheBat::importFiles( const QString& FileName)
         tmp.write( input, endPos-lastPos );
         tmp.flush();
 
-        //KMessageBox::warningContinueCancel(filterInfo()->parent(), "");
         if(filterInfo()->removeDupMessage())
           addMessage( _path, tmp.fileName() );
         else

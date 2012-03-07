@@ -2,6 +2,7 @@ project(mailimporter)
 
 set(libmailimporter_SRCS
   importmailswidget.cpp
+  importlogwidget.cpp
   filterinfogui.cpp
   filterinfo.cpp
   filters.cpp

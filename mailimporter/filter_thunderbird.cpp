@@ -47,6 +47,7 @@ QString FilterThunderbird::defaultPath()
   return QDir::homePath() + QLatin1String( "/.thunderbird/" );
 }
 
+
 /** Recursive import of Evolution's mboxes. */
 void FilterThunderbird::import()
 {
@@ -89,7 +90,8 @@ void FilterThunderbird::importMails( const QString & maildir )
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
     for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
-      if(filterInfo()->shouldTerminate()) break;
+      if(filterInfo()->shouldTerminate())
+        break;
       importDirContents(dir.filePath(*filename), *filename, *filename);
       filterInfo()->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
