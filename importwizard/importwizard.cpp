@@ -34,6 +34,7 @@
 #include "oe/oeimportdata.h"
 #include "mailapp/mailappimportdata.h"
 #include "pmail/pmailimportdata.h"
+#include "thebat/thebatimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -91,6 +92,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new OeImportData(this));
   addImportModule(new MailAppImportData(this));
   addImportModule(new PMailImportData(this));
+  addImportModule(new TheBatImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
