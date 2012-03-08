@@ -33,6 +33,7 @@
 #include "opera/operaimportdata.h"
 #include "oe/oeimportdata.h"
 #include "mailapp/mailappimportdata.h"
+#include "pmail/pmailimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -89,6 +90,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new OperaImportData(this));
   addImportModule(new OeImportData(this));
   addImportModule(new MailAppImportData(this));
+  addImportModule(new PMailImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
