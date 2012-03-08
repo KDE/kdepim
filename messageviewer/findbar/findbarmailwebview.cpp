@@ -70,15 +70,17 @@ void FindBarMailWebView::searchText( bool backward, bool isAutoSearch )
 void FindBarMailWebView::updateHighLight(bool highLight)
 {
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
+  bool found = false;
   if ( highLight ) {
     MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
     if ( m_caseSensitiveAct->isChecked() )
       searchOptions |= MailWebView::FindCaseSensitively;
     searchOptions |= MailWebView::HighlightAllOccurrences;
-    m_view->findText(mLastSearchStr, searchOptions);
+    found = m_view->findText(mLastSearchStr, searchOptions);
   }
   else
-    m_view->findText(QString(), MailWebView::HighlightAllOccurrences);
+    found = m_view->findText(QString(), MailWebView::HighlightAllOccurrences);
+  setFoundMatch( found );
 #endif
 }
 
@@ -93,7 +95,8 @@ void FindBarMailWebView::updateSensitivity( bool sensitivity )
   if ( m_highlightAll->isChecked() )
     searchOptions |= MailWebView::HighlightAllOccurrences;
 #endif
-  m_view->findText(mLastSearchStr, searchOptions);
+  const bool found = m_view->findText(mLastSearchStr, searchOptions);
+  setFoundMatch( found );
 }
 
 

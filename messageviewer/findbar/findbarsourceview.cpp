@@ -77,7 +77,12 @@ void FindBarSourceView::updateHighLight(bool)
 
 void FindBarSourceView::updateSensitivity(bool)
 {
-  clearSelections();
+  QTextDocument::FindFlags searchOptions = 0;
+  if ( m_caseSensitiveAct->isChecked() )
+    searchOptions |= QTextDocument::FindCaseSensitively;
+  mLastSearchStr = m_search->text();
+  const bool found = m_view->find( mLastSearchStr, searchOptions );
+  setFoundMatch( found );
 }
 
 
