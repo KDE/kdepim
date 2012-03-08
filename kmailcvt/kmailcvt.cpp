@@ -101,6 +101,7 @@ void KMailCVT::next()
     KAssistantDialog::next();
     // Disable back & finish
     setValid( currentPage(), false );
+    enableButton(KDialog::User3,false);
     // Start import
     FilterInfo *info = new FilterInfo();
     KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
@@ -116,6 +117,8 @@ void KMailCVT::next()
     delete info;
     // Enable finish & back buttons
     setValid( currentPage(), true );
+    enableButton(KDialog::User3,true);
+
   }
   else
     KAssistantDialog::next();
