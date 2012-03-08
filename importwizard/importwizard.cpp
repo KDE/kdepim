@@ -32,6 +32,7 @@
 #include "evolutionv1/evolutionv1importdata.h"
 #include "opera/operaimportdata.h"
 #include "oe/oeimportdata.h"
+#include "mailapp/mailappimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -87,6 +88,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new Evolutionv1ImportData(this));
   addImportModule(new OperaImportData(this));
   addImportModule(new OeImportData(this));
+  addImportModule(new MailAppImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );

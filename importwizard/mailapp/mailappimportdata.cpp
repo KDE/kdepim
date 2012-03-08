@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "oe/oeimportdata.h"
-#include "mailimporter/filter_oe.h"
+#include "mailapp/mailappimportdata.h"
+#include "mailimporter/filter_mailapp.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
@@ -27,18 +27,18 @@
 #include <QWidget>
 
 
-OeImportData::OeImportData(ImportWizard*parent)
+MailAppImportData::MailAppImportData(ImportWizard*parent)
     :PimImportAbstract(parent)
 {
   mPath = QDir::homePath();
 }
 
-OeImportData::~OeImportData()
+MailAppImportData::~MailAppImportData()
 {
 }
 
 
-bool OeImportData::foundMailer() const
+bool MailAppImportData::foundMailer() const
 {
   //TODO find a method to search it. Perhaps look at binary.
   QDir directory( mPath );
@@ -47,47 +47,47 @@ bool OeImportData::foundMailer() const
   return false;
 }
 
-QString OeImportData::name() const
+QString MailAppImportData::name() const
 {
-  return QLatin1String("Outlook Express");
+  return QLatin1String("Mail App");
 }
 
-bool OeImportData::importSettings()
+bool MailAppImportData::importSettings()
 {
   return false;
 }
 
-bool OeImportData::importMails()
+bool MailAppImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
 
     info->clear(); // Clear info from last time
  
-    MailImporter::FilterOE opera;
-    opera.setFilterInfo( info );
+    MailImporter::FilterMailApp mailapp;
+    mailapp.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
     QDir directory(mPath);
     if(directory.exists())
-        opera.importMails(mPath);
+        mailapp.importMails(mPath);
     else
-        opera.import();
+        mailapp.import();
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
     return true;
 }
 
-bool OeImportData::importFilters()
+bool MailAppImportData::importFilters()
 {
   return false;
 }
 
-bool OeImportData::importAddressBook()
+bool MailAppImportData::importAddressBook()
 {
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions OeImportData::supportedOption()
+PimImportAbstract::TypeSupportedOptions MailAppImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=PimImportAbstract::Mails;
