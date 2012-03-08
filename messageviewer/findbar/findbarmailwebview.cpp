@@ -59,7 +59,8 @@ void FindBarMailWebView::searchText( bool backward, bool isAutoSearch )
   {
     clearSelections();
   }
- 
+  m_view->findText(QString(), searchOptions); //Clear an existing highligh
+
   mLastSearchStr = searchWord;
   const bool found = m_view->findText( mLastSearchStr, searchOptions );
 
