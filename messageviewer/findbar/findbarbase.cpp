@@ -88,7 +88,7 @@ FindBarBase::FindBarBase( QWidget * parent )
   connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
   connect( m_findNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
   connect( m_findPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
-  connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged()) );
+  connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
   connect( m_search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
   connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
   setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -190,14 +190,22 @@ void FindBarBase::findPrev()
   searchText( true, false );
 }
 
-void FindBarBase::caseSensitivityChanged()
+void FindBarBase::caseSensitivityChanged(bool b)
 {
-  clearSelections();
+  updateSensitivity( b );
 }
 
-void FindBarBase::highlightAllChanged()
+void FindBarBase::updateSensitivity( bool )
 {
-  clearSelections();
+}
+
+void FindBarBase::slotHighlightAllChanged(bool b)
+{
+  updateHighLight(b);
+}
+
+void FindBarBase::updateHighLight( bool )
+{
 }
 
 void FindBarBase::clearSelections()

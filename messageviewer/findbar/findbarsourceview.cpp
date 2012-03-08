@@ -70,4 +70,15 @@ void FindBarSourceView::clearSelections()
   FindBarBase::clearSelections();
 }
 
+void FindBarSourceView::updateHighLight(bool)
+{
+  clearSelections();
+}
+
+void FindBarSourceView::updateSensitivity(bool)
+{
+  clearSelections();
+}
+
+
 #include "findbarsourceview.moc"
