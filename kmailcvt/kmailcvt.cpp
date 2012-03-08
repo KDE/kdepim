@@ -85,6 +85,7 @@ void KMailCVT::next()
       KAssistantDialog::next();
       // Disable back & finish
       setValid( currentPage(), false );
+      enableButton(KDialog::User3,false);
       // Start import
       FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
       info->setStatusMsg(i18n("Import in progress"));
@@ -96,6 +97,7 @@ void KMailCVT::next()
       delete info;
       // Enable finish & back buttons
       setValid( currentPage(), true );
+      enableButton(KDialog::User3,true);
     }
   } else KAssistantDialog::next();
 }
