@@ -315,8 +315,10 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
             // catch the signal and think there isn't any schedulingId.
             // Possible kcal improvement: create a setUids( schedulingId, uid )
             // that changes both members and emits incidenceuIpdated() at the end.
-            i->setSchedulingID( inc->uid() );
-            i->setUid( oldUid );
+            if ( inc->uid() != i->schedulingID() || i->uid() != oldUid ) {
+              i->setSchedulingID( inc->uid() );
+              i->setUid( oldUid );
+            }
           }
         }
         deleteTransaction( incidence );
