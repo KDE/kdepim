@@ -21,6 +21,7 @@
 #include "importfilterinfogui.h"
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "importwizard.h"
+#include "sylpheed/sylpheedsettings.h"
 
 #include <KLocale>
 
@@ -56,6 +57,8 @@ bool SylpheedImportData::importSettings()
 {
   const QString accountFile = mPath + QLatin1String("/accountrc");
   if ( QFile( accountFile ).exists() ) {
+    SylpheedSettings account( accountFile );
+    //TODO
     return true;
   }
   return false;
