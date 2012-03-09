@@ -9,7 +9,6 @@ set(libmailimporter_SRCS
   filter_oe.cpp
   filter_pmail.cpp
   filter_plain.cpp
-  filter_outlook.cpp
   filter_mbox.cpp
   filter_evolution.cpp
   filter_mailapp.cpp

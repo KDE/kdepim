@@ -23,6 +23,7 @@
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+
 using namespace Akonadi;
 
 #include <KPIMIdentities/IdentityManager>
@@ -50,6 +51,7 @@ QSharedPointer<FolderCollection> FolderCollection::forCollection(
     sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
     fcMap.insert( coll.id(), sptr );
   } else {
+    sptr->setCollection( coll );
     if ( !sptr->isWriteConfig() && writeConfig ) {
       sptr->setWriteConfig( true );
     }

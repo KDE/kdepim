@@ -70,4 +70,20 @@ void FindBarSourceView::clearSelections()
   FindBarBase::clearSelections();
 }
 
+void FindBarSourceView::updateHighLight(bool)
+{
+  clearSelections();
+}
+
+void FindBarSourceView::updateSensitivity(bool)
+{
+  QTextDocument::FindFlags searchOptions = 0;
+  if ( m_caseSensitiveAct->isChecked() )
+    searchOptions |= QTextDocument::FindCaseSensitively;
+  mLastSearchStr = m_search->text();
+  const bool found = m_view->find( mLastSearchStr, searchOptions );
+  setFoundMatch( found );
+}
+
+
 #include "findbarsourceview.moc"

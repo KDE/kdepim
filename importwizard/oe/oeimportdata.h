@@ -14,30 +14,28 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "importfilterpage.h"
-#include "ui_importfilterpage.h"
+#ifndef OeImportData_H
+#define OeImportData_H
 
-ImportFilterPage::ImportFilterPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportFilterPage)
+#include "pimimportabstract.h"
+class ImportWizard;
+
+class OeImportData : public PimImportAbstract
 {
-  ui->setupUi(this);
-  connect( ui->importFilters, SIGNAL(clicked()), SIGNAL(importFiltersClicked()));
-}
+public:
+  explicit OeImportData(ImportWizard *parent);
+  ~OeImportData();
+    
+  TypeSupportedOptions supportedOption();
+  bool foundMailer() const;
+  
+  bool importSettings();
+  bool importMails();
+  bool importFilters();
+  bool importAddressBook();
+  QString name() const;
 
-ImportFilterPage::~ImportFilterPage()
-{
-  delete ui;
-}
+};
 
-void ImportFilterPage::addFilterImportInfo( const QString& log )
-{
-  ui->logFilters->addInfoLogEntry( log );
-}
+#endif /* Oe ImportData_H */
 
-void ImportFilterPage::addFilterImportError( const QString& log )
-{
-  ui->logFilters->addErrorLogEntry( log );
-}
-
-#include "importfilterpage.moc"

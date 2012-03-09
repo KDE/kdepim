@@ -53,6 +53,7 @@ private slots:
   void slotImportMailsClicked();
   void slotImportFiltersClicked();
   void slotProgramDoubleClicked();
+  void slotAtLeastOneComponentSelected( bool b );
 
 private:
   void addImportModule(PimImportAbstract *);

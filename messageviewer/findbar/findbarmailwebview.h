@@ -44,7 +44,8 @@ class FindBarMailWebView : public FindBarBase
     FindBarMailWebView( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
     void searchText( bool backward, bool isAutoSearch );
-
+    void updateHighLight(bool);
+    void updateSensitivity( bool sensitivity );
   private:
     MailWebView * m_view;
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL

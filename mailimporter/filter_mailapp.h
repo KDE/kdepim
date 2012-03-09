@@ -26,7 +26,7 @@ public:
   ~FilterMailApp();
 
   void import();
-
+  void importMails( const QString & maildir );
 private:
   QStringList mMboxFiles;
   void traverseDirectory(const QString &);

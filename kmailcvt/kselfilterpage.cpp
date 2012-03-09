@@ -21,7 +21,6 @@
 // Filter includes
 #include <filter_mbox.h>
 #include <filter_oe.h>
-#include <filter_outlook.h>
 #include <filter_pmail.h>
 #include <filter_plain.h>
 #include <filter_evolution.h>

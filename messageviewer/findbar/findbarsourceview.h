@@ -36,6 +36,8 @@ class FindBarSourceView : public FindBarBase
     FindBarSourceView( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
     void searchText( bool backward, bool isAutoSearch );
+    void updateHighLight(bool);
+    void updateSensitivity(bool);
 
   private:
     KTextBrowser * m_view;

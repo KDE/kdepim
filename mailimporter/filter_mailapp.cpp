@@ -42,14 +42,22 @@ FilterMailApp::~FilterMailApp()
 {
 }
 
+
+
 void FilterMailApp::import()
+{
+  const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), filterInfo()->parent() );
+  importMails( directory );
+}
+
+void FilterMailApp::importMails( const QString & maildir )
 {
   int currentFile = 1;
   int overall_status = 0;
   bool first_msg = true;
 
-  const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), filterInfo()->parent() );
-  if ( directory.isEmpty() )
+  setMailDir(maildir);
+  if ( mailDir().isEmpty() )
   {
     filterInfo()->alert(i18n("No files selected."));
     return;
@@ -58,7 +66,7 @@ void FilterMailApp::import()
   filterInfo()->setOverall(0);
 
   //   kDebug() <<"starting by looking in directory" << directory;
-  traverseDirectory(directory);
+  traverseDirectory(mailDir());
 
   QStringList::ConstIterator end( mMboxFiles.constEnd() );
   for ( QStringList::ConstIterator filename = mMboxFiles.constBegin(); filename != end; ++filename, ++currentFile) {

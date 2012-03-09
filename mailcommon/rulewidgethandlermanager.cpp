@@ -1946,10 +1946,10 @@ static const struct {
 } DateFunctions[] = {
   { SearchRule::FuncEquals,           I18N_NOOP( "is equal to" )         },
   { SearchRule::FuncNotEqual,         I18N_NOOP( "is not equal to" )      },
-  { SearchRule::FuncIsGreater,        I18N_NOOP( "is greater than" )     },
-  { SearchRule::FuncIsLessOrEqual,    I18N_NOOP( "is less than or equal to" ) },
-  { SearchRule::FuncIsLess,           I18N_NOOP( "is less than" )        },
-  { SearchRule::FuncIsGreaterOrEqual, I18N_NOOP( "is greater than or equal to" ) }
+  { SearchRule::FuncIsGreater,        I18N_NOOP( "is after" )     },
+  { SearchRule::FuncIsLessOrEqual,    I18N_NOOP( "is before or equal to" ) },
+  { SearchRule::FuncIsLess,           I18N_NOOP( "is before" )        },
+  { SearchRule::FuncIsGreaterOrEqual, I18N_NOOP( "is after or equal to" ) }
 };
 static const int DateFunctionCount =
   sizeof( DateFunctions ) / sizeof( *DateFunctions );
@@ -1987,7 +1987,7 @@ QWidget *DateRuleWidgetHandler::createValueWidget( int number,
   KDateComboBox *dateCombo = new KDateComboBox( valueStack );
   dateCombo->setObjectName( "KDateComboBox" );
   dateCombo->setOptions( KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords );
-  QObject::connect( dateCombo, SIGNAL(dateChanged(const QDate &)),
+  QObject::connect( dateCombo, SIGNAL(dateChanged(QDate)),
                     receiver, SLOT(slotValueChanged()) );
   return dateCombo;
 }

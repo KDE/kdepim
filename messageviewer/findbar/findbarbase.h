@@ -47,7 +47,10 @@ class FindBarBase : public QWidget
   protected:
     virtual bool event(QEvent* e);
     virtual void clearSelections();
+    virtual void updateHighLight(bool);
     virtual void searchText( bool backward, bool isAutoSearch );
+    virtual void updateSensitivity( bool );
+
     void setFoundMatch( bool match );
     void messageInfo( bool backward, bool isAutoSearch, bool found );
     QMenu *optionsMenu();
@@ -59,8 +62,8 @@ class FindBarBase : public QWidget
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
   private slots:
-    void caseSensitivityChanged();
-    void highlightAllChanged();
+    void caseSensitivityChanged(bool);
+    void slotHighlightAllChanged(bool);
     void slotClearSearch();
 
   protected:

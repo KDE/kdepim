@@ -35,6 +35,7 @@ public:
   ~FilterOE();
 
   void import();
+  void importMails(const QString & maildir);
 
 protected:
   void importMailBox( const QString& fileName);

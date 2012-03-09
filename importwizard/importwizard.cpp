@@ -31,6 +31,10 @@
 #include "evolutionv2/evolutionv2importdata.h"
 #include "evolutionv1/evolutionv1importdata.h"
 #include "opera/operaimportdata.h"
+#include "oe/oeimportdata.h"
+#include "mailapp/mailappimportdata.h"
+#include "pmail/pmailimportdata.h"
+#include "thebat/thebatimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -85,16 +89,22 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new Evolutionv2ImportData(this));
   addImportModule(new Evolutionv1ImportData(this));
   addImportModule(new OperaImportData(this));
+  addImportModule(new OeImportData(this));
+  addImportModule(new MailAppImportData(this));
+  addImportModule(new PMailImportData(this));
+  addImportModule(new TheBatImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
   connect(mSelectProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
-  connect( mSelectProgramPage, SIGNAL( doubleClicked() ), this, SLOT( slotProgramDoubleClicked() ) );
+  connect(mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
-  connect( mImportFilterPage, SIGNAL( importFiltersClicked() ), this, SLOT( slotImportFiltersClicked() ) );
-  resize( 400, 600 );
+  connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
+  connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT( slotAtLeastOneComponentSelected( bool ) ) );
+
+  resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
 
   checkModules();
@@ -147,6 +157,11 @@ void ImportWizard::help()
 {
   KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
   a.exec();
+}
+
+void ImportWizard::slotAtLeastOneComponentSelected( bool result )
+{
+  setValid(mPage2,result);
 }
 
 void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions options)
