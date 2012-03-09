@@ -99,9 +99,11 @@ ImportWizard::ImportWizard(QWidget *parent)
 
   connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
   connect(mSelectProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
-  connect( mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
+  connect(mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
-  connect( mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
+  connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
+  connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT( slotAtLeastOneComponentSelected( bool ) ) );
+
   resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
 
@@ -155,6 +157,11 @@ void ImportWizard::help()
 {
   KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
   a.exec();
+}
+
+void ImportWizard::slotAtLeastOneComponentSelected( bool result )
+{
+  setValid(mPage2,result);
 }
 
 void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions options)

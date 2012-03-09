@@ -36,6 +36,10 @@ public:
 
 private slots:
   void slotEverythingClicked( bool clicked );
+  void slotComponentClicked();
+
+signals:
+  void atLeastOneComponentSelected(bool componentSelected);
 
 private:
   PimImportAbstract::TypeSupportedOptions mOptions;

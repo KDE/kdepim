@@ -23,11 +23,21 @@ SelectComponentPage::SelectComponentPage(QWidget *parent) :
 {
   ui->setupUi(this);
   connect( ui->everything, SIGNAL(clicked(bool)), this, SLOT(slotEverythingClicked(bool)) );
+  connect( ui->addressbooks, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+  connect( ui->filters, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+  connect( ui->mails, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+  connect( ui->settings, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
 }
 
 SelectComponentPage::~SelectComponentPage()
 {
   delete ui;
+}
+
+void SelectComponentPage::slotComponentClicked()
+{
+  const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked() || ui->everything->isChecked() );
+  emit atLeastOneComponentSelected(componentSelected);
 }
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )
@@ -36,6 +46,7 @@ void SelectComponentPage::slotEverythingClicked( bool clicked )
   ui->filters->setEnabled( !clicked && (mOptions & PimImportAbstract::Filters));
   ui->mails->setEnabled( !clicked && (mOptions & PimImportAbstract::Mails));
   ui->settings->setEnabled( !clicked && (mOptions & PimImportAbstract::Settings));
+  slotComponentClicked();
 }
 
 
