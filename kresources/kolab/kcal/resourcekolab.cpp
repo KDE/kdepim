@@ -36,6 +36,7 @@
 #include "event.h"
 #include "task.h"
 #include "journal.h"
+#include "conflictpreventer.h"
 
 #include <kio/observer.h>
 #include <kio/uiserver_stub.h>
@@ -75,7 +76,7 @@ ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
         "mResourceChangedTimer" ), mBatchAddingInProgress( false ), mDisableOptimization( false ),
-        mDequeingScheduled( false )
+        mDequeingScheduled( false ), mConflictPreventer( new ConflictPreventer() )
 {
   if ( !config ) {
     setResourceName( i18n( "Kolab Server" ) );
@@ -92,6 +93,7 @@ ResourceKolab::~ResourceKolab()
   if ( mOpen ) {
     close();
   }
+  delete mConflictPreventer;
 }
 
 void ResourceKolab::loadSubResourceConfig( KConfig& config,
@@ -372,6 +374,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     sernum = mUidMap[ uid ].serialNumber();
     if ( kmailMessageReadyForUpdate( subResource, sernum ) == KMailICalIface::Yes ) {
       mUidsPendingUpdate.append( uid );
+      mConflictPreventer->registerOldPayload( mUidMap[uid].incidenceCopy() );
       sendKMailUpdate( incidencebase, subResource, sernum );
     } else { // It's not ready yet, lets try later
       queueUpdate( incidencebase );
@@ -545,7 +548,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
 
     //kdDebug() << "DEBUG Local conflict with id " << localIncidence->uid() << origUid
     //          << " and scheduling id " << localIncidence->schedulingID() << endl;
-    mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum ) );
+    mPendingDuplicateDeletions.insert( origUid, StorageReference( subresource, sernum, localIncidence ) );
     const bool success = sendKMailUpdate( localIncidence, mUidMap[origUid].resource(),
                                           mUidMap[origUid].serialNumber(), /*force=*/true );
     Q_UNUSED( success );
@@ -820,6 +823,19 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
     }
   } else { /* KMail told us */
+
+    { // This blocks fixes issue4826. Checks of the addition if a false positive conflict
+      if ( mUidMap.contains( uid ) &&
+           mConflictPreventer->processNewPayload( incidence, _subresource, sernum ) ) {
+        const bool success = kmailDeleteIncidence( _subresource, sernum, /*force=*/true );
+        if ( !success ) {
+          // What do to in case if unsucess? log message
+          kdWarning() << "Error deleting false positive conflict" << endl;
+        }
+        return false;
+      }
+    }
+
     const bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
     kdDebug( 5650 ) << "addIncidence: ourOwnUpdate " << ourOwnUpdate << endl;
     /* Check if we updated this one, which means kmail deleted and added it.
@@ -830,7 +846,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     if ( ourOwnUpdate ) {
       mUidsPendingUpdate.remove( uid );
       mUidMap.remove( uid );
-      mUidMap[ uid ] = StorageReference( subResource, sernum );
+      mUidMap[ uid ] = StorageReference( subResource, sernum, incidence );
     } else {
       /* This is a real add, from KMail, we didn't trigger this ourselves.
        * If this uid already exists in this folder, do conflict resolution,
@@ -877,7 +893,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         incidence->registerObserver( this );
       }
       if ( !subResource.isEmpty() && sernum != 0 ) {
-        mUidMap[ uid ] = StorageReference( subResource, sernum );
+        mUidMap.insert( uid, StorageReference( subResource, sernum, incidence ) );
         incidence->setReadOnly( !(*map)[ subResource ].writable() );
       }
     }
@@ -1180,6 +1196,11 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if ( !subresourceActive( subResource ) ) return;
 
   //kdDebug() << "DEBUG fromKMailDelIncidence " << uid << endl;
+
+  if ( mConflictPreventer->isFalsePositive( subResource, sernum ) ) {
+    mConflictPreventer->cleanup( subResource, sernum );
+    return;
+  }
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.find( uid ) != mUidsPendingDeletion.end() ) {

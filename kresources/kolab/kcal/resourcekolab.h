@@ -43,6 +43,8 @@
 #include <libkcal/resourcecalendar.h>
 #include "../shared/resourcekolabbase.h"
 
+class ConflictPreventer;
+
 namespace KCal {
 
 struct TemporarySilencer;
@@ -301,6 +303,7 @@ private:
    */
   QValueList<KCal::IncidenceBase*> mQueuedIncidenceUpdates;
   bool mDequeingScheduled;
+  ConflictPreventer *mConflictPreventer;
 };
 
 struct TemporarySilencer {
