@@ -86,7 +86,8 @@ public:
                                       const QString& data ) = 0;
   virtual void fromKMailDelIncidence( const QString& type,
                                       const QString& resource,
-                                      const QString& xml ) = 0;
+                                      const QString& xml,
+                                      Q_INT32 sernum ) = 0;
   virtual void fromKMailRefresh( const QString& type,
                                  const QString& resource ) = 0;
   virtual void fromKMailAddSubresource( const QString& type,

@@ -114,8 +114,8 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "incidenceAdded(QString,QString,Q_UINT32,int,QString)",
                               "fromKMailAddIncidence(QString,QString,Q_UINT32,int,QString)" ) )
       kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
-    if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
-                              "fromKMailDelIncidence(QString,QString,QString)" ) )
+    if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString,Q_INT32)",
+                              "fromKMailDelIncidence(QString,QString,QString,Q_INT32)" ) )
       kdError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "fromKMailRefresh(QString,QString)" ) )
@@ -150,11 +150,12 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
 
 void KMailConnection::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
-                                             const QString& xml )
+                                             const QString& xml,
+                                             Q_INT32 sernum )
 {
 //   kdDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
-  mResource->fromKMailDelIncidence( type, folder, xml );
+  mResource->fromKMailDelIncidence( type, folder, xml, sernum );
 }
 
 void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )

@@ -489,8 +489,10 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
 
 void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
                                                  const QString& subResource,
-                                                 const QString& uid )
+                                                 const QString& uid,
+                                                 Q_INT32 sernum )
 {
+  Q_UNUSED( sernum );
   // Check if this is a contact
   if( type != s_kmailContentsType || !subresourceActive( subResource ) )
     return;

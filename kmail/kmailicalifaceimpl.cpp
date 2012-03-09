@@ -1197,7 +1197,7 @@ void KMailICalIfaceImpl::slotIncidenceDeleted( KMFolder* folder,
         kdDebug(5006) << "Emitting DCOP signal incidenceDeleted( "
                       << type << ", " << folder->location() << ", " << uid
                       << " )" << endl;
-        incidenceDeleted( type, folder->location(), uid );
+        incidenceDeleted( type, folder->location(), uid, sernum );
     }
     if( unget ) folder->unGetMsg(i);
   } else

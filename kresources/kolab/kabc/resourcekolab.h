@@ -114,7 +114,7 @@ public:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               Q_UINT32 sernum, int format, const QString& contact );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& contact );
+                              const QString& contact, Q_INT32 sernum );
   void fromKMailRefresh( const QString& type, const QString& resource );
 
   void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,

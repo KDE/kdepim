@@ -1170,7 +1170,8 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& subResource,
-                                           const QString& uid )
+                                           const QString& uid,
+                                           Q_INT32 sernum )
 {
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
        && type != kmailJournalContentsType )

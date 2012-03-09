@@ -155,7 +155,7 @@ k_dcop_signals:
   void asyncLoadResult( const QMap<Q_UINT32, QString>, const QString& type,
                         const QString& folder );
   void incidenceDeleted( const QString& type, const QString& folder,
-                         const QString& uid );
+                         const QString& uid, Q_INT32 sernum );
   void signalRefresh( const QString& type, const QString& folder );
   void subresourceAdded( const QString& type, const QString& resource,
                          const QString& label, bool writable, bool alarmRelevant );

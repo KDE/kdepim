@@ -57,7 +57,7 @@ k_dcop:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               Q_UINT32 sernum, int format, const QString& xml );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& xml );
+                              const QString& xml, Q_INT32 sernum );
   void fromKMailRefresh( const QString& type, const QString& resource );
   void fromKMailAddSubresource( const QString& type, const QString& resource,
                                 const QString& label, bool writable,
