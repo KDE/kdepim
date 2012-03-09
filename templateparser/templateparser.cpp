@@ -1094,7 +1094,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         // turn on debug
         kDebug() << "Command: CURSOR";
         i += strlen( "CURSOR" );
-        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(), QString::number( plainBody.length()-1 ), "utf-8" );
+        KMime::Headers::Generic *header =
+          new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(),
+                                       QString::number( plainBody.length() ), "utf-8" );
         mMsg->setHeader( header );
         //FIXME HTML part for header remaining
       } else if ( cmd.startsWith( QLatin1String( "SIGNATURE" ) ) ) {
