@@ -46,7 +46,7 @@ using MailCommon::FilterLog;
 
 #include <KPIMUtils/Email>
 
-#include <kascii.h> //krazy:exclude=camelcase as not available until KDE 4.9
+#include <KAscii>
 #include <KDebug>
 #include <KConfigGroup>
 #include <KLocale>
