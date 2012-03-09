@@ -36,6 +36,9 @@
 #include <qstring.h>
 #include <qmap.h>
 
+namespace KCal {
+  class Incidence;
+}
 
 namespace Kolab {
 
@@ -94,10 +97,23 @@ typedef QMap<QString, SubResource> ResourceMap;
 class StorageReference {
 public:
   // Just for QMap
-  StorageReference() {}
+  StorageReference() : mIncidenceCopy( 0 ) { }
+
+  StorageReference( const StorageReference &other );
 
   StorageReference( const QString& resource, Q_UINT32 sernum );
+
+  /**
+   * We need a copy of the incidence that's in the calendar so have the old incidence after
+   * the user changes it. Needed for issue4826, see msg28607.
+   *
+   * I'll leave this here for now, until this proves as the way to go. Then we can create
+   * a StorageReference reference subclass for kcal, kabc and knotes. The baseclass doesn't
+   * need to know about kcal.
+   */
+  StorageReference( const QString& resource, Q_UINT32 sernum, KCal::Incidence *incidenceCopy );
   virtual ~StorageReference();
+  StorageReference& operator=( const StorageReference &other );
 
   virtual void setResource( const QString& resource );
   virtual QString resource() const;
@@ -105,9 +121,12 @@ public:
   virtual void setSerialNumber( Q_UINT32 serialNumber );
   virtual Q_UINT32 serialNumber() const;
 
+  KCal::Incidence* incidenceCopy() const;
+
 private:
   QString mResource;
   Q_UINT32 mSerialNumber;
+  KCal::Incidence *mIncidenceCopy;
 };
 
 typedef QMap<QString, StorageReference> UidMap;
