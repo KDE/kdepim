@@ -83,7 +83,7 @@ public:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               Q_UINT32 sernum, int format, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& uid );
+                              const QString& uid, Q_INT32 sernum );
   void fromKMailRefresh( const QString& type, const QString& resource );
 
   /// Listen to KMail changes in the amount of sub resources

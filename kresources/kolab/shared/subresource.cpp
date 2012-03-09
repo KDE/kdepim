@@ -31,6 +31,7 @@
 */
 
 #include "subresource.h"
+#include <libkcal/incidence.h>
 
 using namespace Kolab;
 
@@ -104,12 +105,37 @@ int SubResource::completionWeight() const
 }
 
 StorageReference::StorageReference( const QString& resource, Q_UINT32 sernum )
-  : mResource( resource ), mSerialNumber( sernum )
+  : mResource( resource ), mSerialNumber( sernum ), mIncidenceCopy( 0 )
 {
+}
+
+StorageReference::StorageReference( const QString& resource,
+                                    Q_UINT32 sernum,
+                                    KCal::Incidence *incidence )
+  : mResource( resource ), mSerialNumber( sernum ), mIncidenceCopy( incidence->clone() )
+{
+}
+
+StorageReference::StorageReference( const StorageReference &other )
+{
+  mResource = other.resource();
+  mSerialNumber = other.serialNumber();
+  if ( other.incidenceCopy() )
+    mIncidenceCopy = other.incidenceCopy()->clone();
+}
+
+StorageReference& StorageReference::operator=( const StorageReference &other )
+{
+  mResource = other.resource();
+  mSerialNumber = other.serialNumber();
+  if ( other.incidenceCopy() )
+    mIncidenceCopy = other.incidenceCopy()->clone();
+  return *this;
 }
 
 StorageReference::~StorageReference()
 {
+  delete mIncidenceCopy;
 }
 
 void StorageReference::setResource( const QString& resource )
@@ -130,4 +156,9 @@ void StorageReference::setSerialNumber( Q_UINT32 serialNumber )
 Q_UINT32 StorageReference::serialNumber() const
 {
   return mSerialNumber;
+}
+
+KCal::Incidence* StorageReference::incidenceCopy() const
+{
+  return mIncidenceCopy;
 }

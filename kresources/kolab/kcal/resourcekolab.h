@@ -43,6 +43,8 @@
 #include <libkcal/resourcecalendar.h>
 #include "../shared/resourcekolabbase.h"
 
+class ConflictPreventer;
+
 namespace KCal {
 
 struct TemporarySilencer;
@@ -108,7 +110,7 @@ public:
   bool fromKMailAddIncidence( const QString& type, const QString& subResource,
                               Q_UINT32 sernum, int format, const QString& data );
   void fromKMailDelIncidence( const QString& type, const QString& subResource,
-                              const QString& uid );
+                              const QString& uid, Q_INT32 sernum );
   void fromKMailRefresh( const QString& type, const QString& subResource );
 
   /// Listen to KMail changes in the amount of sub resources
@@ -301,6 +303,7 @@ private:
    */
   QValueList<KCal::IncidenceBase*> mQueuedIncidenceUpdates;
   bool mDequeingScheduled;
+  ConflictPreventer *mConflictPreventer;
 };
 
 struct TemporarySilencer {
