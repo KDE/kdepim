@@ -77,7 +77,6 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
   addFilter(new MailImporter::FilterThunderbird);
   addFilter(new MailImporter::FilterTheBat);
   addFilter(new MailImporter::FilterOE);
-  //        addFilter(new FilterOutlook);
   addFilter(new MailImporter::FilterPMail);
   addFilter(new MailImporter::FilterLNotes);
   addFilter(new MailImporter::FilterPlain);
