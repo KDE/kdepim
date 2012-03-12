@@ -46,7 +46,8 @@ using MailCommon::FilterLog;
 
 #include <KPIMUtils/Email>
 
-#include <KAscii>
+//note: lowercase include for compatibility
+#include <kascii.h>
 #include <KDebug>
 #include <KConfigGroup>
 #include <KLocale>
