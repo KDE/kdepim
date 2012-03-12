@@ -121,17 +121,18 @@ bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
   if ( !CustomProperties::operator==(i2) )
     return false;
 
-  return ( dtStart() == i2.dtStart() &&
-           organizer() == i2.organizer() &&
-           uid() == i2.uid() &&
-           // Don't compare lastModified, otherwise the operator is not
-           // of much use. We are not comparing for identity, after all.
-           doesFloat() == i2.doesFloat() &&
-           duration() == i2.duration() &&
-           hasDuration() == i2.hasDuration() &&
-           pilotId() == i2.pilotId() &&
-           syncStatus() == i2.syncStatus() );
-  // no need to compare mObserver
+  // not using one big expression to make it gdb friendly
+  const bool a = dtStart() == i2.dtStart();
+  const bool b = organizer() == i2.organizer();
+  const bool c = uid() == i2.uid();
+  const bool d = doesFloat() == i2.doesFloat();
+  const bool e = duration() == i2.duration();
+  const bool f = hasDuration() == i2.hasDuration();
+  const bool g = pilotId() == i2.pilotId();
+  const bool h = syncStatus() == i2.syncStatus();
+  // no need to compare mObserver and mLastModified
+
+  return a && b && c && d && e && f && g && h;
 }
 
 void IncidenceBase::setUid(const QString &uid)
