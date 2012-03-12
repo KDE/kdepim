@@ -464,6 +464,13 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       if you have access to other peoples resources.
     */
     void setSchedulingID( const QString& sid );
+
+    /**
+     * Sets both UID and scheduling UID in one go.
+     * Only one updated() call is made.
+     */
+    void setUids( const QString &uid, const QString &schedulingId );
+
     /**
       Return the event's/todo's scheduling ID. Does not make sense for journals
       If this is not set, it will return uid().

@@ -846,3 +846,12 @@ void Incidence::recurrenceUpdated( Recurrence *recurrence )
     updated();
 }
 
+void Incidence::setUids( const QString &_uid, const QString &schedulingId )
+{
+  if ( uid() != _uid || schedulingID() != schedulingId ) {
+    startUpdates();
+    setUid( _uid );
+    setSchedulingID( schedulingId );
+    endUpdates();
+  }
+}
