@@ -66,7 +66,6 @@ bool FilterDeletedProxyModel::filterAcceptsRow( int source_row, const QModelInde
 
 SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), m_keepFlagIcon( KIcon( "mail-mark-important" ) )
 {
-    setDynamicSortFilter( true );
 }
 
 bool SortColorizeProxyModel::filterAcceptsRow ( int source_row, const QModelIndex& source_parent ) const
