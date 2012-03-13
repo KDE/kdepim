@@ -305,22 +305,25 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
         bool res = true;
         AssignmentVisitor visitor;
         const QString oldUid = i->uid();
-        if ( !visitor.assign( i, inc ) ) {
-          kdError(5800) << "assigning different incidence types" << endl;
-          res = false;
-        } else {
-          {
-            // issue4579: DON'T change this order. setUid() emits incidenceUpdated().
-            // setSchedulingID() doesn't. If you change the order, kolab resource will
-            // catch the signal and think there isn't any schedulingId.
-            // Possible kcal improvement: create a setUids( schedulingId, uid )
-            // that changes both members and emits incidenceuIpdated() at the end.
-            if ( inc->uid() != i->schedulingID() || i->uid() != oldUid ) {
-              i->setSchedulingID( inc->uid() );
-              i->setUid( oldUid );
-            }
+        Incidence *incidenceCopy = inc->clone();
+        incidenceCopy->setSyncStatus( i->syncStatus() );
+        const bool incidencesAreEqual = ( *i == *incidenceCopy );
+
+        if ( !incidencesAreEqual ) { // If they are equal, lets not bother the resource with update()s
+          kdError(5800) << "Scheduler::acceptRequest(): incidences are different, assigning" << endl;
+          if ( visitor.assign( i, incidenceCopy ) ) {
+            i->startUpdates();
+            i->setUids( oldUid, incidenceCopy->uid() );
+            i->endUpdates();
+          } else {
+            kdError(5800) << "assigning different incidence types" << endl;
+            res = false;
           }
+          delete incidenceCopy;
+        } else {
+          kdDebug() << "Scheduler::acceptRequest(): incidences are equal, skipping.";
         }
+
         deleteTransaction( incidence );
         return res;
       }
