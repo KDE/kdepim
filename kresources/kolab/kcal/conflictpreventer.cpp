@@ -65,7 +65,7 @@ void ConflictPreventer::registerOldPayload( KCal::Incidence *incidence )
 {
   Q_ASSERT( incidence );
   KCal::Incidence *clone = incidence->clone();
-  kdDebug() << "ConflictPreventer::registerOldPayload() registering " << clone->summary();
+  kdDebug() << "ConflictPreventer::registerOldPayload() registering " << clone->summary() << endl;
   QPtrList<KCal::Incidence> &list = d->m_payloadsByUid[clone->uid()];
   list.setAutoDelete( true );
   list.append( clone );
@@ -83,7 +83,7 @@ bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
     KCal::Incidence *inc = incidences.at( i );
     if ( *inc == *incidence ) {
       kdDebug() << "ConflictPreventer::isOldPayload() found false positive: "
-                << incidence->summary();
+                << incidence->summary() << endl;
       d->m_falsePositives.insert( QPair<QString,Q_INT32>( resource, sernum ), true );
       return true;
     }
@@ -95,7 +95,7 @@ bool ConflictPreventer::isFalsePositive( const QString &resource, Q_INT32 sernum
 {
   const bool result = d->m_falsePositives.contains( QPair<QString,Q_INT32>( resource, sernum ) );
   if ( result )
-    kdDebug() << "ConflictPreventer::isFalsePositive() It's a false positive";
+    kdDebug() << "ConflictPreventer::isFalsePositive() It's a false positive" << endl;
   return result;
 }
 

@@ -310,7 +310,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
         const bool incidencesAreEqual = ( *i == *incidenceCopy );
 
         if ( !incidencesAreEqual ) { // If they are equal, lets not bother the resource with update()s
-          kdError(5800) << "Scheduler::acceptRequest(): incidences are different, assigning" << endl;
+          kdDebug(5800) << "Scheduler::acceptRequest(): incidences are different, assigning" << endl;
           if ( visitor.assign( i, incidenceCopy ) ) {
             i->startUpdates();
             i->setUids( oldUid, incidenceCopy->uid() );
@@ -321,7 +321,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           }
           delete incidenceCopy;
         } else {
-          kdDebug() << "Scheduler::acceptRequest(): incidences are equal, skipping.";
+          kdDebug() << "Scheduler::acceptRequest(): incidences are equal, skipping." << endl;
         }
 
         deleteTransaction( incidence );
