@@ -516,7 +516,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
 
       if ( chooser ) {
         KIncidenceChooser *ch =
-          new KIncidenceChooser( labelForSubresource( subresource ), askPolicy, folderOnly );
+          new KIncidenceChooser( labelForSubresource( subresource ), askPolicy, folderOnly, qApp->mainWidget() );
         chosenIncidence = takeOneByChooser( ch, localIncidence, remoteIncidence );
 
         if ( ch->folderOnly() ) {
