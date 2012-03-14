@@ -71,6 +71,8 @@ public:
   /// Close the notes resource.
   void doClose();
 
+  static int instanceCount();
+
   // The libkcal functions. See the resource for descriptions
   KDE_DEPRECATED bool addEvent( KCal::Event *event );
   bool addEvent( KCal::Event *event, const QString &subResource );
@@ -304,6 +306,7 @@ private:
   QValueList<KCal::IncidenceBase*> mQueuedIncidenceUpdates;
   bool mDequeingScheduled;
   ConflictPreventer *mConflictPreventer;
+  static int sResourceCount;
 };
 
 struct TemporarySilencer {

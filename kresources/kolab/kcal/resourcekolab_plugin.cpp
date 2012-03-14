@@ -37,7 +37,9 @@ class KolabFactory : public KRES::PluginFactoryBase
 public:
   KRES::Resource *resource( const KConfig *config )
   {
-    return new KCal::ResourceKolab( config );
+    // Don't allow more than one kolab resource ( issue4819 ).
+    // We can move singleton support to KolabResourceBase or KRes when there's a need for it
+    return ( KCal::ResourceKolab::instanceCount() == 0 ) ?  new KCal::ResourceKolab( config ) : 0;
   }
 
   KRES::ConfigWidget *configWidget( QWidget* )

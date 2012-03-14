@@ -69,6 +69,8 @@ static const char* todoAttachmentMimeType = "application/x-vnd.kolab.task";
 static const char* journalAttachmentMimeType = "application/x-vnd.kolab.journal";
 static const char* incidenceInlineMimeType = "text/calendar";
 
+int ResourceKolab::sResourceCount = 0;
+
 // flag to determine if a conflict has occurred during the current sync
 static bool conflictThisSync = false;
 
@@ -84,6 +86,7 @@ ResourceKolab::ResourceKolab( const KConfig *config )
   setType( "imap" );
   connect( &mResourceChangedTimer, SIGNAL( timeout() ),
            this, SLOT( slotEmitResourceChanged() ) );
+  ++sResourceCount;
 }
 
 ResourceKolab::~ResourceKolab()
@@ -94,6 +97,7 @@ ResourceKolab::~ResourceKolab()
     close();
   }
   delete mConflictPreventer;
+  --sResourceCount;
 }
 
 void ResourceKolab::loadSubResourceConfig( KConfig& config,
@@ -1576,5 +1580,10 @@ void ResourceKolab::dequeueUpdates()
   }
 }
 
+/**static*/
+int ResourceKolab::instanceCount()
+{
+  return sResourceCount;
+}
 
 #include "resourcekolab.moc"
