@@ -81,6 +81,14 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
 )
 
+if(NOT KDEPIM_NO_NEPOMUK)
+  target_link_libraries(kdepim
+    ${NEPOMUK_QUERY_LIBRARIES}
+    ${SOPRANO_LIBRARIES}
+  )
+endif()
+
+
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KRESOURCES_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
