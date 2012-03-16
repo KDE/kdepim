@@ -39,7 +39,12 @@ public:
   {
     // Don't allow more than one kolab resource ( issue4819 ).
     // We can move singleton support to KolabResourceBase or KRes when there's a need for it
-    return ( KCal::ResourceKolab::instanceCount() == 0 ) ?  new KCal::ResourceKolab( config ) : 0;
+    if ( KCal::ResourceKolab::instanceCount() == 0 ) {
+      return new KCal::ResourceKolab( config );
+    } else {
+      kdDebug() << "KolabFactory: Not loading more kolab resources" << endl;
+      return 0;
+    }
   }
 
   KRES::ConfigWidget *configWidget( QWidget* )
