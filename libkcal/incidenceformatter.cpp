@@ -2896,7 +2896,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     if ( !existingIncidence ) {
       kdDebug() << "formatICalInvitationHelper: Incidence is not in our calendar. uid: "
                 << incBase->uid() << "; incidence count: "
-                << helper->calendar()->incidences().count() << endl;
+                << helper->calendar()->incidences().count()
+                << "; Calendar = " << helper->calendar()
+                << endl;
     }
 
     if ( !CalHelper::isMyCalendarIncidence( helper->calendar(), existingIncidence ) ) {
