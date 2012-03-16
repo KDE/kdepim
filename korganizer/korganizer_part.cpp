@@ -33,8 +33,9 @@
 #include "aboutdata.h"
 #include "kocore.h"
 #include "korganizerifaceimpl.h"
-#include "stdcalendar.h"
 #include "alarmclient.h"
+
+#include <libkdepim/stdcalendar.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
@@ -91,7 +92,7 @@ KOrganizerPart::KOrganizerPart( QWidget *parentWidget, const char *widgetName,
   if ( pname == "kontact" ) {
     mActionManager->createCalendarResources();
     setHasDocument( false );
-    KOrg::StdCalendar::self()->load();
+    KCal::StdCalendar::self()->load();
     mView->updateCategories();
   } else {
     mActionManager->createCalendarLocal();

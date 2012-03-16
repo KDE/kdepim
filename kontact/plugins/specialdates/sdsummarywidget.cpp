@@ -31,7 +31,7 @@
 #include <dcopclient.h>
 #include <dcopref.h>
 #include <kabc/stdaddressbook.h>
-#include <korganizer/stdcalendar.h>
+#include <libkdepim/stdcalendar.h>
 #include <kapplication.h>
 #include <kdialog.h>
 #include <kglobal.h>
@@ -126,7 +126,7 @@ SDSummaryWidget::SDSummaryWidget( Kontact::Plugin *plugin, QWidget *parent,
     manager->add( defaultResource );
     manager->setStandardResource( defaultResource );
   }
-  mCalendar = KOrg::StdCalendar::self();
+  mCalendar = KCal::StdCalendar::self();
 
   connect( mCalendar, SIGNAL( calendarChanged() ),
            this, SLOT( updateView() ) );

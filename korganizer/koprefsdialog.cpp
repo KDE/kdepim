@@ -76,7 +76,7 @@
 #include "kogroupwareprefspage.h"
 #include "ktimeedit.h"
 #include "koglobals.h"
-#include "stdcalendar.h"
+#include <libkdepim/stdcalendar.h>
 #include <kdepimmacros.h>
 
 
@@ -797,7 +797,7 @@ void KOPrefsDialogColors::updateResources()
   mResourceIdentifier.clear();
   kdDebug( 5850) << "KOPrefsDialogColors::updateResources()" << endl;
 
-  KCal::CalendarResourceManager *manager = KOrg::StdCalendar::self()->resourceManager();
+  KCal::CalendarResourceManager *manager = KCal::StdCalendar::self()->resourceManager();
 
   kdDebug(5850) << "Loading Calendar resources...:" << endl;
   KCal::CalendarResourceManager::Iterator it;

@@ -47,9 +47,9 @@
 #include "importdialog.h"
 #include "kocore.h"
 #include "calendarview.h"
-#include "stdcalendar.h"
-
 #include "koapp.h"
+
+#include <libkdepim/stdcalendar.h>
 #include <kstartupinfo.h>
 
 using namespace std;
@@ -71,7 +71,7 @@ int KOrganizerApp::newInstance()
   if ( isRestored() && first ) {
      KOrg::MainWindow *korg = ActionManager::findInstance( KURL() );
      if ( korg ) {
-       KOrg::StdCalendar::self()->load();
+       KCal::StdCalendar::self()->load();
        korg->view()->updateCategories();
        korg->view()->updateView();
      }
@@ -140,7 +140,7 @@ void KOrganizerApp::processCalendar( const KURL &url )
     if ( hasDocument )
       korg->openURL( url );
     else {
-      KOrg::StdCalendar::self()->load();
+      KCal::StdCalendar::self()->load();
       korg->view()->updateCategories();
       korg->view()->updateView();
     }

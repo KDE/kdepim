@@ -39,14 +39,13 @@
 #include <libkcal/resourcelocal.h>
 #include <libkcal/incidenceformatter.h>
 #include <libkdepim/kpimprefs.h>
+#include <libkdepim/stdcalendar.h>
 
 #include "korganizeriface_stub.h"
 
 #include "core.h"
 #include "plugin.h"
 #include "korganizerplugin.h"
-
-#include "korganizer/stdcalendar.h"
 
 #include "summarywidget.h"
 
@@ -64,7 +63,7 @@ SummaryWidget::SummaryWidget( KOrganizerPlugin *plugin, QWidget *parent,
   mLayout = new QGridLayout( mainLayout, 7, 5, 3 );
   mLayout->setRowStretch( 6, 1 );
 
-  mCalendar = KOrg::StdCalendar::self();
+  mCalendar = KCal::StdCalendar::self();
 
   connect( mCalendar, SIGNAL( calendarChanged() ), SLOT( updateView() ) );
   connect( mPlugin->core(), SIGNAL( dayChanged( const QDate& ) ),

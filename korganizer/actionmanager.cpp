@@ -44,9 +44,9 @@
 #include "resourceview.h"
 #include "previewdialog.h"
 #include "eventarchiver.h"
-#include "stdcalendar.h"
 #include "freebusymanager.h"
 
+#include <libkdepim/stdcalendar.h>
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
 #include <libkcal/htmlexport.h>
@@ -177,7 +177,7 @@ void ActionManager::createCalendarLocal()
 
 void ActionManager::createCalendarResources()
 {
-  mCalendarResources = KOrg::StdCalendar::self();
+  mCalendarResources = KCal::StdCalendar::self();
 
   CalendarResourceManager *manager = mCalendarResources->resourceManager();
 
@@ -916,7 +916,7 @@ bool ActionManager::openURL( const KURL &url,bool merge )
 
 bool ActionManager::addResource( const KURL &mUrl )
 {
-  CalendarResources *cr = KOrg::StdCalendar::self();
+  CalendarResources *cr = KCal::StdCalendar::self();
 
   CalendarResourceManager *manager = cr->resourceManager();
 

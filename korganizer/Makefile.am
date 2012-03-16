@@ -126,7 +126,7 @@ libkorganizer_calendar_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) \
 libkorganizer_calendar_la_LIBADD  = $(LIB_KPARTS) \
                                     $(top_builddir)/libkdepim/libkdepim.la \
                                     $(top_builddir)/libkcal/libkcal.la
-libkorganizer_calendar_la_SOURCES = stdcalendar.cpp
+libkorganizer_calendar_la_SOURCES = 
 
 
 kmailIface_DIR = $(top_srcdir)/kmail

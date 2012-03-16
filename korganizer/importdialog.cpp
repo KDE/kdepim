@@ -26,8 +26,8 @@
 #include "importdialog.h"
 
 #include "koprefs.h"
-#include "stdcalendar.h"
 
+#include <libkdepim/stdcalendar.h>
 #include <klocale.h>
 
 #include <qlabel.h>

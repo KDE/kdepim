@@ -35,7 +35,8 @@ libkdepim_la_SOURCES = \
   embeddedurlpage.cpp kincidencechooser.cpp \
   groupwarejob.cpp pimemoticons.kcfgc \
   krsqueezedtextlabel.cpp csshelper.cpp distributionlist.cpp \
-  kpimurlrequesterdlg.cpp sendsmsdialog.cpp kmailcompletion.cpp
+  kpimurlrequesterdlg.cpp sendsmsdialog.cpp kmailcompletion.cpp \
+  stdcalendar.cpp
 
 MailTransportServiceIface_DCOPIDLNG = true
 MailTransportServiceIface_DIR = $(srcdir)/interfaces

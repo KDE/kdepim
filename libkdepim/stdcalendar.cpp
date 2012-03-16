@@ -20,9 +20,9 @@
 */
 
 #include "stdcalendar.h"
+#include "kpimprefs.h"
 
 #include <libkcal/resourcecalendar.h>
-#include <libkdepim/kpimprefs.h>
 
 #include <kstaticdeleter.h>
 #include <kconfig.h>
@@ -30,7 +30,7 @@
 #include <klocale.h>
 #include <kurl.h>
 
-using namespace KOrg;
+using namespace KCal;
 
 static KStaticDeleter<StdCalendar> selfDeleter;
 
