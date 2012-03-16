@@ -2893,6 +2893,12 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   Incidence *existingIncidence = 0;
   if ( incBase && helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
+    if ( !existingIncidence ) {
+      kdDebug() << "formatICalInvitationHelper: Incidence is not in our calendar. uid: "
+                << incBase->uid() << "; incidence count: "
+                << helper->calendar()->incidences().count() << endl;
+    }
+
     if ( !CalHelper::isMyCalendarIncidence( helper->calendar(), existingIncidence ) ) {
       //sergio, 03/2011: This never happens I think. If the incidence is in a shared calendar
       //then it's uid will be a new one, and won't match incBase->uid().
