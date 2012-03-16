@@ -1,4 +1,16 @@
 
+Friday 16 March 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4819: Conflict handling 'take remote' deletes appointment if second disabled calendar resource available (rt#10111)
+* kolab/issue4821: Sync conflict: Resolving with "newest" can lead to an assert (rt#10111)
+* kolab/issue4822: Sync conflict: Take remote "Race" get Kontact into an instable state (rt#10111)
+* kolab/issue4826: Unnecessary conflict after modify an appointment created by 'take remote' conflict result (rt#10111)
+
+
+
 Wednesday 29 February 2012
 
 Problems addressed
