@@ -1,6 +1,7 @@
 [Global]
 IconName=view-filter
 Comment=Mail Filter Agent
+Comment[cs]=Agent filtrování pošty
 Comment[de]=Agent zur E-Mail-Filterung
 Comment[nl]=E-mail filteragent
 Comment[pt]=Agente de Filtragem de E-mail
@@ -40,6 +41,7 @@ Name[zh_TW]=郵件過濾代理程式
 
 [Event/mailfilterlogenabled]
 Name=Mail filter log enabled
+Name[cs]=Záznam filtrování pošty povolen
 Name[de]=E-Mail-Filterprotokoll aktiviert
 Name[nl]=E-mail filterlog ingeschakeld
 Name[pt]=Registo de filtragem de e-mail activado
