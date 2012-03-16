@@ -39,6 +39,7 @@
 #include <khtmlparthtmlwriter.h>
 
 #include <libkdepim/kfileio.h>
+#include <libkdepim/stdcalendar.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
@@ -91,70 +92,12 @@ using namespace KCal;
 
 namespace {
 
-class CalendarManager
-{
-  public:
-    CalendarManager();
-    ~CalendarManager();
-    static Calendar* calendar();
-
-  private:
-    CalendarResources* mCalendar;
-    static CalendarManager* mSelf;
-};
-
-static KStaticDeleter<CalendarManager> sCalendarDeleter;
-CalendarManager *CalendarManager::mSelf = 0;
-
-CalendarManager::CalendarManager()
-{
-  mCalendar = new CalendarResources( KPimPrefs::timezone() );
-  mCalendar->readConfig();
-  mCalendar->load();
-  bool multipleKolabResources = false;
-  CalendarResourceManager *mgr = mCalendar->resourceManager();
-  for ( CalendarResourceManager::ActiveIterator it = mgr->activeBegin(); it != mgr->activeEnd(); ++it ) {
-    if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
-      const QStringList subResources = (*it)->subresources();
-      QMap<QString, int> prefixSet; // KDE4: QSet
-      for ( QStringList::ConstIterator subIt = subResources.begin(); subIt != subResources.end(); ++subIt ) {
-        if ( !(*subIt).contains( "/.INBOX.directory/" ) )
-          // we don't care about shared folders
-          continue;
-        prefixSet.insert( (*subIt).left( (*subIt).find( "/.INBOX.directory/" ) ), 0 );
-      }
-      if ( prefixSet.count() > 1 )
-        multipleKolabResources = true;
-    }
-  }
-  if ( multipleKolabResources ) {
-    kdDebug() << k_funcinfo << "disabling calendar lookup because multiple active Kolab resources" << endl;
-    delete mCalendar;
-    mCalendar = 0;
-  }
-}
-
-CalendarManager::~CalendarManager()
-{
-  delete mCalendar;
-  mSelf = 0;
-}
-
-Calendar* CalendarManager::calendar()
-{
-  if ( !mSelf ) {
-    sCalendarDeleter.setObject( mSelf, new CalendarManager() );
-  }
-  return mSelf->mCalendar;
-}
-
-
 class KMInvitationFormatterHelper : public InvitationFormatterHelper
 {
   public:
     KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
-    Calendar* calendar() const { return CalendarManager::calendar(); }
+    Calendar* calendar() const { return KCal::StdCalendar::self(); }
   private:
     KMail::Interface::BodyPart *mBodyPart;
 };
@@ -713,9 +656,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       Incidence *incidence = icalToString( iCal );
       Incidence *existing = 0;
-      if ( CalendarManager::calendar() ) {
-        existing = CalendarManager::calendar()->incidence( incidence->uid() );
-      }
+      existing = KCal::StdCalendar::self()->incidence( incidence->uid() );
 
       if ( !existing ) {
         KMessageBox::sorry(
