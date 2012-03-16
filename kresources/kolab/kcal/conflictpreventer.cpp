@@ -47,13 +47,12 @@ public:
   {
   }
 
-  QMap<IncidenceUid, QPtrList<KCal::Incidence> > m_payloadsByUid;
+  QMap<IncidenceUid, KCal::Incidence*> m_payloadsByUid;
   QMap<QPair<QString,Q_INT32>, bool> m_falsePositives;
 };
 
 ConflictPreventer::ConflictPreventer() : d( new Private() )
 {
-
 }
 
 ConflictPreventer::~ConflictPreventer()
@@ -66,9 +65,10 @@ void ConflictPreventer::registerOldPayload( KCal::Incidence *incidence )
   Q_ASSERT( incidence );
   KCal::Incidence *clone = incidence->clone();
   kdDebug() << "ConflictPreventer::registerOldPayload() registering " << clone->summary() << endl;
-  QPtrList<KCal::Incidence> &list = d->m_payloadsByUid[clone->uid()];
-  list.setAutoDelete( true );
-  list.append( clone );
+  if ( d->m_payloadsByUid.contains( clone->uid() ) ) {
+    delete d->m_payloadsByUid[clone->uid()];
+  }
+  d->m_payloadsByUid.insert( clone->uid(), clone );
 }
 
 bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
@@ -77,16 +77,12 @@ bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
 {
   Q_ASSERT( incidence );
 
-  QPtrList<KCal::Incidence> incidences = d->m_payloadsByUid[incidence->uid()];
-  const int count = incidences.count();
-  for( int i=0; i<count; ++i ) {
-    KCal::Incidence *inc = incidences.at( i );
-    if ( *inc == *incidence ) {
-      kdDebug() << "ConflictPreventer::isOldPayload() found false positive: "
-                << incidence->summary() << endl;
-      d->m_falsePositives.insert( QPair<QString,Q_INT32>( resource, sernum ), true );
-      return true;
-    }
+  KCal::Incidence *inc = d->m_payloadsByUid[incidence->uid()];
+  if ( *inc == *incidence ) {
+    kdDebug() << "ConflictPreventer::isOldPayload() found false positive: "
+              << incidence->summary() << endl;
+    d->m_falsePositives.insert( QPair<QString,Q_INT32>( resource, sernum ), true );
+    return true;
   }
   return false;
 }
