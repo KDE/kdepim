@@ -330,6 +330,9 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     return;
   }
 
+  //IncidenceBase doesn't have revision(), downcast needed.
+  Incidence *incidence = dynamic_cast<Incidence*>( incidencebase );
+
   if ( !mDisableOptimization && false) { // Disabled for now. Has corner-cases.
     // start optimization
     /**
@@ -342,26 +345,23 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
        the second. This makes things faster.
     */
 
-    //IncidenceBase doesn't have revision(), downcast needed.
-    Incidence *i = dynamic_cast<Incidence*>( incidencebase );
-
-    if ( i ) {
+    if ( incidence ) {
       bool ignoreThisUpdate = false;
 
       if ( mLastKnownRevisions.contains( uid ) ) {
-        if ( mLastKnownRevisions[uid] < i->revision() ) { // update the last known revision
-          mLastKnownRevisions[uid] = i->revision();
+        if ( mLastKnownRevisions[uid] < incidence->revision() ) { // update the last known revision
+          mLastKnownRevisions[uid] = incidence->revision();
         } else {
           /*
           * "ignoreThisUpdate = true;" will cause issue/kolab4698, because recording the
           * attendee status in the calendar doesn't bump the SEQUENCE/revision.
           **/
-          ignoreThisUpdate = !( i->dirtyFields().contains( Incidence::FieldAttendees ) ||
+          ignoreThisUpdate = !( incidence->dirtyFields().contains( Incidence::FieldAttendees ) ||
                                 // ( FieldUnknown is used when you assign for example ).
-                                i->dirtyFields().contains( Incidence::FieldUnknown ) );
+                                incidence->dirtyFields().contains( Incidence::FieldUnknown ) );
         }
       } else {
-        mLastKnownRevisions[uid] = i->revision();
+        mLastKnownRevisions[uid] = incidence->revision();
       }
 
       if ( ignoreThisUpdate ) {
