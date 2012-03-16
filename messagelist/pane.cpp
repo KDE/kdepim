@@ -147,7 +147,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   connect( d->mCloseTabButton, SIGNAL(clicked()),
            SLOT(onCloseTabClicked()) );
 
-  setCloseButtonEnabled( Core::Settings::self()->tabsHaveCloseButton() );
+  setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
   connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)) );
 
   createNewTab();
@@ -705,7 +705,7 @@ void Pane::Private::updateTabControls()
     q->tabBar()->setVisible( true );
   }
 
-  q->setCloseButtonEnabled( Core::Settings::self()->tabsHaveCloseButton() );
+  q->setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
 }
 
 Item Pane::currentItem() const
