@@ -181,6 +181,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
   public:
     UrlHandler()
     {
+      KCal::StdCalendar::self()->load();
       kdDebug() << "UrlHandler() (iCalendar)" << endl;
     }
 
