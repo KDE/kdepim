@@ -437,7 +437,12 @@ bool FolderTreeView::trySelectNextUnreadFolder( const QModelIndex &current, Mail
     if ( !index.isValid() )
       return false;
 
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    const Akonadi::Collection collection =
+      index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if( collection == Kernel::self()->trashCollectionFolder() ||
+        collection == Kernel::self()->outboxCollectionFolder() )
+      continue;
+
     if ( ignoreUnreadFolder( collection, confirm ) )
       continue;
 
