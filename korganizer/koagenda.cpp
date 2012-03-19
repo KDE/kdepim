@@ -1112,6 +1112,7 @@ void KOAgenda::endItemAction()
   bool useLastGroupwareDialogAnswer = false;
   bool addIncidence = false;
   bool multiModify = false;
+  bool endUpdatesPending = false;
   // FIXME: do the cloning here...
   Incidence *inc = mActionItem->incidence();
 
@@ -1153,13 +1154,15 @@ void KOAgenda::endItemAction()
         if ( success ) {
           mActionItem->dissociateFromMultiItem();
           mActionItem->setIncidence( incToChange );
-          inc->endUpdates();
+          //inc->endUpdates();
+          endUpdatesPending = true;
         } else {
           inc->cancelUpdates();
           incToChange = 0;
         }
       } else {
-        inc->endUpdates();
+        endUpdatesPending = true;
+        //inc->endUpdates();
       }
     }
 
@@ -1205,6 +1208,9 @@ void KOAgenda::endItemAction()
                                      addIncidence );
     }
   }
+
+  if ( endUpdatesPending )
+    inc->endUpdates();
 
   mActionItem = 0;
   mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), QString() );
