@@ -707,7 +707,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     return false;
   }
 
-  kdDebug() << "DEBUG Resourcekolab, adding incidence "
+  kdDebug() << "Resourcekolab, adding incidence "
             << incidence->summary()
             << "; subresource = " << _subresource
             << "; sernum = " << sernum
@@ -1540,7 +1540,7 @@ void ResourceKolab::endAddingIncidences()
 
 void ResourceKolab::queueUpdate( IncidenceBase *incidence )
 {
-  kdDebug() << "DEBUG ResourceKolab::queueUpdate()" << endl;
+  kdDebug() << "ResourceKolab::queueUpdate()" << endl;
   Q_ASSERT( incidence );
   const int count = mQueuedIncidenceUpdates.count();
   bool found = false;
@@ -1566,7 +1566,7 @@ void ResourceKolab::queueUpdate( IncidenceBase *incidence )
 
 void ResourceKolab::dequeueUpdates()
 {
-  kdDebug() << "DEBUG ResourceKolab::dequeueUpdates()" << endl;
+  kdDebug() << "ResourceKolab::dequeueUpdates()" << endl;
   mDequeingScheduled = false;
   const int count = mQueuedIncidenceUpdates.count();
   // queueUpdate() will be called while we are still in the for loop below, so use a copy
