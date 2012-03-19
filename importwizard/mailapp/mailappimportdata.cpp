@@ -28,7 +28,7 @@
 
 
 MailAppImportData::MailAppImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+  :AbstractImporter(parent)
 {
   mPath = QDir::homePath();
 }
@@ -59,22 +59,22 @@ bool MailAppImportData::importSettings()
 
 bool MailAppImportData::importMails()
 {
-    MailImporter::FilterInfo *info = initializeInfo();
+  MailImporter::FilterInfo *info = initializeInfo();
 
-    info->clear(); // Clear info from last time
- 
-    MailImporter::FilterMailApp mailapp;
-    mailapp.setFilterInfo( info );
-    info->setStatusMessage(i18n("Import in progress"));
-    QDir directory(mPath);
-    if(directory.exists())
-        mailapp.importMails(mPath);
-    else
-        mailapp.import();
-    info->setStatusMessage(i18n("Import finished"));
+  info->clear(); // Clear info from last time
 
-    delete info;
-    return true;
+  MailImporter::FilterMailApp mailapp;
+  mailapp.setFilterInfo( info );
+  info->setStatusMessage(i18n("Import in progress"));
+  QDir directory(mPath);
+  if(directory.exists())
+    mailapp.importMails(mPath);
+  else
+    mailapp.import();
+  info->setStatusMessage(i18n("Import finished"));
+
+  delete info;
+  return true;
 }
 
 bool MailAppImportData::importFilters()

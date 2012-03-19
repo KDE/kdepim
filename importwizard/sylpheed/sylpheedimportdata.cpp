@@ -30,7 +30,7 @@
 
 
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+  :AbstractImporter(parent)
 {
   mPath = MailImporter::FilterSylpheed::defaultPath();
 }
@@ -66,23 +66,23 @@ bool SylpheedImportData::importSettings()
 
 bool SylpheedImportData::importMails()
 {
-    MailImporter::FilterInfo *info = initializeInfo();
+  MailImporter::FilterInfo *info = initializeInfo();
 
-    info->clear(); // Clear info from last time
- 
-    MailImporter::FilterSylpheed sylpheed;
-    sylpheed.setFilterInfo( info );
-    info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = sylpheed.localMailDirPath();
-    QDir directory(mailsPath);
-    if(directory.exists())
-        sylpheed.importMails(mailsPath);
-    else
-        sylpheed.import();
-    info->setStatusMessage(i18n("Import finished"));
+  info->clear(); // Clear info from last time
 
-    delete info;
-    return true;
+  MailImporter::FilterSylpheed sylpheed;
+  sylpheed.setFilterInfo( info );
+  info->setStatusMessage(i18n("Import in progress"));
+  const QString mailsPath = sylpheed.localMailDirPath();
+  QDir directory(mailsPath);
+  if(directory.exists())
+    sylpheed.importMails(mailsPath);
+  else
+    sylpheed.import();
+  info->setStatusMessage(i18n("Import finished"));
+
+  delete info;
+  return true;
 }
 
 bool SylpheedImportData::importFilters()

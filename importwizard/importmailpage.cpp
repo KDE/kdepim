@@ -35,7 +35,7 @@ ImportMailPage::~ImportMailPage()
 
 MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
 {
-    return ui->mMailImporterWidget;
+  return ui->mMailImporterWidget;
 }
 
 void ImportMailPage::collectionChanged(const Akonadi::Collection& collection)

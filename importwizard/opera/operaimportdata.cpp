@@ -28,7 +28,7 @@
 
 
 OperaImportData::OperaImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+  :AbstractImporter(parent)
 {
   mPath = MailImporter::FilterOpera::defaultPath();
 }
@@ -58,22 +58,22 @@ bool OperaImportData::importSettings()
 
 bool OperaImportData::importMails()
 {
-    MailImporter::FilterInfo *info = initializeInfo();
+  MailImporter::FilterInfo *info = initializeInfo();
 
-    info->clear(); // Clear info from last time
- 
-    MailImporter::FilterOpera opera;
-    opera.setFilterInfo( info );
-    info->setStatusMessage(i18n("Import in progress"));
-    QDir directory(mPath);
-    if(directory.exists())
-        opera.importMails(mPath);
-    else
-        opera.import();
-    info->setStatusMessage(i18n("Import finished"));
+  info->clear(); // Clear info from last time
 
-    delete info;
-    return true;
+  MailImporter::FilterOpera opera;
+  opera.setFilterInfo( info );
+  info->setStatusMessage(i18n("Import in progress"));
+  QDir directory(mPath);
+  if(directory.exists())
+    opera.importMails(mPath);
+  else
+    opera.import();
+  info->setStatusMessage(i18n("Import finished"));
+
+  delete info;
+  return true;
 }
 
 bool OperaImportData::importFilters()

@@ -58,24 +58,24 @@ void SelectComponentPage::setEnabledComponent(AbstractImporter::TypeSupportedOpt
 
 AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents() const
 {
-    if( ui->everything->isChecked() )
-        return mOptions;
-    else {
-        AbstractImporter::TypeSupportedOptions newOptions;
-        if(ui->addressbooks->isChecked()) {
-            newOptions|=AbstractImporter::AddressBook;
-        }
-        if(ui->filters->isChecked()) {
-            newOptions|=AbstractImporter::Filters;
-        }
-        if(ui->mails->isChecked()) {
-            newOptions|=AbstractImporter::Mails;
-        }
-        if(ui->settings->isChecked()) {
-            newOptions|=AbstractImporter::Settings;
-        }
-        return newOptions;
+  if( ui->everything->isChecked() )
+    return mOptions;
+  else {
+    AbstractImporter::TypeSupportedOptions newOptions;
+    if(ui->addressbooks->isChecked()) {
+      newOptions|=AbstractImporter::AddressBook;
     }
+    if(ui->filters->isChecked()) {
+      newOptions|=AbstractImporter::Filters;
+    }
+    if(ui->mails->isChecked()) {
+      newOptions|=AbstractImporter::Mails;
+    }
+    if(ui->settings->isChecked()) {
+      newOptions|=AbstractImporter::Settings;
+    }
+    return newOptions;
+  }
 }
 
 #include "selectcomponentpage.moc"

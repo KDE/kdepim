@@ -27,7 +27,7 @@
 
 
 Evolutionv1ImportData::Evolutionv1ImportData(ImportWizard *parent)
-    :AbstractImporter(parent)
+  :AbstractImporter(parent)
 {
   mPath = MailImporter::FilterEvolution::defaultPath();
 }
@@ -57,23 +57,23 @@ bool Evolutionv1ImportData::importSettings()
 
 bool Evolutionv1ImportData::importMails()
 {
-    MailImporter::FilterInfo *info = initializeInfo();
+  MailImporter::FilterInfo *info = initializeInfo();
 
 
-    info->clear(); // Clear info from last time
-    MailImporter::FilterEvolution evolution;
-    evolution.setFilterInfo( info );
-    info->setStatusMessage(i18n("Import in progress"));
-    const QString mailsPath = mPath;
-    QDir directory(mailsPath);
-    if(directory.exists())
-        evolution.importMails(mailsPath);
-    else
-        evolution.import();
-    info->setStatusMessage(i18n("Import finished"));
+  info->clear(); // Clear info from last time
+  MailImporter::FilterEvolution evolution;
+  evolution.setFilterInfo( info );
+  info->setStatusMessage(i18n("Import in progress"));
+  const QString mailsPath = mPath;
+  QDir directory(mailsPath);
+  if(directory.exists())
+    evolution.importMails(mailsPath);
+  else
+    evolution.import();
+  info->setStatusMessage(i18n("Import finished"));
 
-    delete info;
-    return true;
+  delete info;
+  return true;
 }
 
 bool Evolutionv1ImportData::importFilters()

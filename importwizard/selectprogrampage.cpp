@@ -35,13 +35,13 @@ SelectProgramPage::~SelectProgramPage()
 
 void SelectProgramPage::setFoundProgram(const QStringList& list)
 {
-    ui->listProgramFound->addItems(list);
+  ui->listProgramFound->addItems(list);
 }
 
 void SelectProgramPage::slotItemSelectionChanged()
 {
-    if(ui->listProgramFound->currentItem())
-        emit programSelected(ui->listProgramFound->currentItem()->text());
+  if(ui->listProgramFound->currentItem())
+    emit programSelected(ui->listProgramFound->currentItem()->text());
 }
 
 void SelectProgramPage::slotItemDoubleClicked( QListWidgetItem*item )

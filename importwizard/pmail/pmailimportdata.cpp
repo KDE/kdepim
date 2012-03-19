@@ -28,7 +28,7 @@
 
 
 PMailImportData::PMailImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+  :AbstractImporter(parent)
 {
   mPath = QDir::homePath();
 }
@@ -59,22 +59,22 @@ bool PMailImportData::importSettings()
 
 bool PMailImportData::importMails()
 {
-    MailImporter::FilterInfo *info = initializeInfo();
+  MailImporter::FilterInfo *info = initializeInfo();
 
-    info->clear(); // Clear info from last time
- 
-    MailImporter::FilterPMail pmail;
-    pmail.setFilterInfo( info );
-    info->setStatusMessage(i18n("Import in progress"));
-    QDir directory(mPath);
-    if(directory.exists())
-        pmail.importMails(mPath);
-    else
-        pmail.import();
-    info->setStatusMessage(i18n("Import finished"));
+  info->clear(); // Clear info from last time
 
-    delete info;
-    return true;
+  MailImporter::FilterPMail pmail;
+  pmail.setFilterInfo( info );
+  info->setStatusMessage(i18n("Import in progress"));
+  QDir directory(mPath);
+  if(directory.exists())
+    pmail.importMails(mPath);
+  else
+    pmail.import();
+  info->setStatusMessage(i18n("Import finished"));
+
+  delete info;
+  return true;
 }
 
 bool PMailImportData::importFilters()

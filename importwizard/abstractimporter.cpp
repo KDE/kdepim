@@ -27,7 +27,7 @@
 #include <QFile>
 
 AbstractImporter::AbstractImporter(ImportWizard *parent)
-    :mImportWizard(parent)
+  :mImportWizard(parent)
 {
 }
 
@@ -58,11 +58,11 @@ bool AbstractImporter::importAddressBook()
 
 MailImporter::FilterInfo* AbstractImporter::initializeInfo()
 {
-    MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
-    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
-    info->setFilterInfoGui(infoGui);
-    info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
-    return info;
+  MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
+  ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
+  info->setFilterInfoGui(infoGui);
+  info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
+  return info;
 }
 
 bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type )
