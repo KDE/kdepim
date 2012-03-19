@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 #include "importwizard.h"
 #include "importmailpage.h"
 #include "importfilterinfogui.h"
@@ -26,37 +26,37 @@
 
 #include <QFile>
 
-PimImportAbstract::PimImportAbstract(ImportWizard *parent)
+AbstractImporter::AbstractImporter(ImportWizard *parent)
     :mImportWizard(parent)
 {
 }
 
-PimImportAbstract::~PimImportAbstract()
+AbstractImporter::~AbstractImporter()
 {
 }
 
 
-bool PimImportAbstract::importSettings()
-{
-  return false;
-}
-
-bool PimImportAbstract::importMails()
+bool AbstractImporter::importSettings()
 {
   return false;
 }
 
-bool PimImportAbstract::importFilters()
+bool AbstractImporter::importMails()
 {
   return false;
 }
 
-bool PimImportAbstract::importAddressBook()
+bool AbstractImporter::importFilters()
 {
   return false;
 }
 
-MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
+bool AbstractImporter::importAddressBook()
+{
+  return false;
+}
+
+MailImporter::FilterInfo* AbstractImporter::initializeInfo()
 {
     MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
     ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
@@ -65,7 +65,7 @@ MailImporter::FilterInfo* PimImportAbstract::initializeInfo()
     return info;
 }
 
-bool PimImportAbstract::addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type )
+bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type )
 {
   if ( QFile( filterPath ).exists() ) {
     bool canceled = false;
@@ -80,18 +80,18 @@ bool PimImportAbstract::addFilters( const QString& filterPath, MailCommon::Filte
   }
 }
 
-void PimImportAbstract::appendFilters( const QList<MailCommon::MailFilter*>& filters )
+void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*>& filters )
 {
   if ( !filters.isEmpty() )
     MailCommon::FilterManager::instance()->appendFilters(filters, false );
 }
 
-void PimImportAbstract::addFilterImportInfo( const QString& log )
+void AbstractImporter::addFilterImportInfo( const QString& log )
 {
   mImportWizard->importFilterPage()->addFilterImportInfo( log );
 }
 
-void PimImportAbstract::addFilterImportError( const QString& log )
+void AbstractImporter::addFilterImportError( const QString& log )
 {
   mImportWizard->importFilterPage()->addFilterImportError( log );
 }

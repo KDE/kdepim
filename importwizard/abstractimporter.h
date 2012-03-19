@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef PIMIMPORTABSTRACT_H
-#define PIMIMPORTABSTRACT_H
+#ifndef AbstractImporter_H
+#define AbstractImporter_H
 #include <QObject>
 #include "mailcommon/filter/filterimporterexporter.h"
 
@@ -31,7 +31,7 @@ class MailFilter;
 class FilterImporterExporter;
 }
 
-class PimImportAbstract
+class AbstractImporter
 {
 public:
   enum TypeSupportedOption
@@ -45,8 +45,8 @@ public:
 
   Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption )
 
-  explicit PimImportAbstract(ImportWizard *parent);
-  virtual ~PimImportAbstract();
+  explicit AbstractImporter(ImportWizard *parent);
+  virtual ~AbstractImporter();
 
   virtual bool foundMailer() const= 0;
   
@@ -70,5 +70,5 @@ protected:
 };
 
 
-#endif /* PIMIMPORTABSTRACT_H */
+#endif /* AbstractImporter_H */
 

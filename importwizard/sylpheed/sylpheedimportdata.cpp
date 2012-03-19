@@ -30,7 +30,7 @@
 
 
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)
-    :PimImportAbstract(parent)
+    :AbstractImporter(parent)
 {
   mPath = MailImporter::FilterSylpheed::defaultPath();
 }
@@ -96,10 +96,10 @@ bool SylpheedImportData::importAddressBook()
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions SylpheedImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions SylpheedImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=PimImportAbstract::Mails;
-  options |=PimImportAbstract::Filters;
+  options |=AbstractImporter::Mails;
+  options |=AbstractImporter::Filters;
   return options;
 }

@@ -28,7 +28,7 @@
 
 
 OperaImportData::OperaImportData(ImportWizard*parent)
-    :PimImportAbstract(parent)
+    :AbstractImporter(parent)
 {
   mPath = MailImporter::FilterOpera::defaultPath();
 }
@@ -86,9 +86,9 @@ bool OperaImportData::importAddressBook()
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions OperaImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions OperaImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=PimImportAbstract::Mails;
+  options |=AbstractImporter::Mails;
   return options;
 }

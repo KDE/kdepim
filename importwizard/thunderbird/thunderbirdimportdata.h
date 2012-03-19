@@ -17,10 +17,10 @@
 #ifndef THUNDERBIRDIMPORTDATA_H
 #define THUNDERBIRDIMPORTDATA_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class ThunderbirdImportData : public PimImportAbstract
+class ThunderbirdImportData : public AbstractImporter
 {
 public:
   explicit ThunderbirdImportData(ImportWizard *parent);

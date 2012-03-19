@@ -145,7 +145,7 @@ void ImportWizard::checkModules()
   mSelectProgramPage->setFoundProgram(mlistImport.keys());
 }
 
-void ImportWizard::addImportModule(PimImportAbstract *import)
+void ImportWizard::addImportModule(AbstractImporter *import)
 {
   if ( import->foundMailer() )
     mlistImport.insert(import->name(),import);
@@ -164,12 +164,12 @@ void ImportWizard::slotAtLeastOneComponentSelected( bool result )
   setValid(mPage2,result);
 }
 
-void ImportWizard::setAppropriatePage(PimImportAbstract::TypeSupportedOptions options)
+void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions options)
 {
-    setAppropriate(mPage6,(options & PimImportAbstract::AddressBook));
-    setAppropriate(mPage4,(options & PimImportAbstract::Filters));
-    setAppropriate(mPage3,(options & PimImportAbstract::Mails));
-    setAppropriate(mPage5,(options & PimImportAbstract::Settings));
+    setAppropriate(mPage6,(options & AbstractImporter::AddressBook));
+    setAppropriate(mPage4,(options & AbstractImporter::Filters));
+    setAppropriate(mPage3,(options & AbstractImporter::Mails));
+    setAppropriate(mPage5,(options & AbstractImporter::Settings));
 
 }
 

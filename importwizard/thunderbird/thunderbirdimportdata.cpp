@@ -34,7 +34,7 @@
 
 
 ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)
-    :PimImportAbstract(parent)
+    :AbstractImporter(parent)
 {
   mPath = MailImporter::FilterThunderbird::defaultPath();
 }
@@ -102,10 +102,10 @@ bool ThunderbirdImportData::importAddressBook()
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions ThunderbirdImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=PimImportAbstract::Mails;
-  options |=PimImportAbstract::Filters;
+  options |=AbstractImporter::Mails;
+  options |=AbstractImporter::Filters;
   return options;
 }

@@ -28,7 +28,7 @@
 
 
 PMailImportData::PMailImportData(ImportWizard*parent)
-    :PimImportAbstract(parent)
+    :AbstractImporter(parent)
 {
   mPath = QDir::homePath();
 }
@@ -87,9 +87,9 @@ bool PMailImportData::importAddressBook()
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions PMailImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions PMailImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=PimImportAbstract::Mails;
+  options |=AbstractImporter::Mails;
   return options;
 }

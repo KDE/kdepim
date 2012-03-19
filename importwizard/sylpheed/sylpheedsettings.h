@@ -24,7 +24,7 @@
 class SylpheedSettings : public AbstractSettings
 {
 public:
-    explicit SylpheedSettings( const QString& name );
+    explicit SylpheedSettings(const QString& filename );
     ~SylpheedSettings();
 };
 

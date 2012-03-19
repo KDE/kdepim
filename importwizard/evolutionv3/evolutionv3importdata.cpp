@@ -29,7 +29,7 @@
 
 
 Evolutionv3ImportData::Evolutionv3ImportData(ImportWizard*parent)
-    :PimImportAbstract(parent)
+    :AbstractImporter(parent)
 {
     mPath = MailImporter::FilterEvolution_v3::defaultPath();
 }
@@ -89,10 +89,10 @@ bool Evolutionv3ImportData::importAddressBook()
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=PimImportAbstract::Mails;
-  options |=PimImportAbstract::Filters;
+  options |=AbstractImporter::Mails;
+  options |=AbstractImporter::Filters;
   return options;
 }

@@ -10,7 +10,7 @@ importsettingpage.cpp
 importwizard.cpp
 importfinishpage.cpp
 main.cpp
-pimimportabstract.cpp
+abstractimporter.cpp
 selectcomponentpage.cpp
 importfilterinfogui.cpp
 abstractsettings.cpp

@@ -17,10 +17,10 @@
 #ifndef OperaImportData_H
 #define OperaImportData_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class OperaImportData : public PimImportAbstract
+class OperaImportData : public AbstractImporter
 {
 public:
   explicit OperaImportData(ImportWizard *parent);

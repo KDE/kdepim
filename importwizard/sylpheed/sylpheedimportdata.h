@@ -17,10 +17,10 @@
 #ifndef SylpheedImportData_H
 #define SylpheedImportData_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class SylpheedImportData : public PimImportAbstract
+class SylpheedImportData : public AbstractImporter
 {
 public:
   explicit SylpheedImportData(ImportWizard *parent);

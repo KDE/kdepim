@@ -17,10 +17,10 @@
 #ifndef OeImportData_H
 #define OeImportData_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class OeImportData : public PimImportAbstract
+class OeImportData : public AbstractImporter
 {
 public:
   explicit OeImportData(ImportWizard *parent);
