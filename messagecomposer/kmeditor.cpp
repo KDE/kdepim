@@ -705,6 +705,7 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
     // Remove the old and insert the new signature
     cursor.removeSelectedText();
+    cursor.setPosition(qMin(cursor.position(),document()->toPlainText().length()-1));
     setTextCursor( cursor );
     newSig.insertIntoTextEdit( KPIMIdentities::Signature::AtCursor,
                                KPIMIdentities::Signature::AddNothing, this );
