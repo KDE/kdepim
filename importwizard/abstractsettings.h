@@ -15,18 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SYLPHEEDSETTINGS_H
-#define SYLPHEEDSETTINGS_H
+#ifndef ABSTRACTSETTINGS_H
+#define ABSTRACTSETTINGS_H
 
-#include <QString>
-#include "abstractsettings.h"
-
-class SylpheedSettings : public AbstractSettings
+class AbstractSettings
 {
 public:
-    explicit SylpheedSettings( const QString& name );
-    ~SylpheedSettings();
+    explicit AbstractSettings();
+    ~AbstractSettings();
 };
 
-#endif /* SYLPHEEDSETTINGS_H */
-
+#endif // ABSTRACTSETTINGS_H

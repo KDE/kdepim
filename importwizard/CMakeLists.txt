@@ -13,6 +13,7 @@ main.cpp
 pimimportabstract.cpp
 selectcomponentpage.cpp
 importfilterinfogui.cpp
+abstractsettings.cpp
 thunderbird/thunderbirdimportdata.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp

@@ -14,19 +14,13 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef SYLPHEEDSETTINGS_H
-#define SYLPHEEDSETTINGS_H
-
-#include <QString>
 #include "abstractsettings.h"
 
-class SylpheedSettings : public AbstractSettings
+AbstractSettings::AbstractSettings()
 {
-public:
-    explicit SylpheedSettings( const QString& name );
-    ~SylpheedSettings();
-};
+}
 
-#endif /* SYLPHEEDSETTINGS_H */
+AbstractSettings::~AbstractSettings()
+{
 
+}

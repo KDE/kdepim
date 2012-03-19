@@ -20,6 +20,7 @@
 
 
 SylpheedSettings::SylpheedSettings( const QString& name )
+    :AbstractSettings()
 {
 }
 
