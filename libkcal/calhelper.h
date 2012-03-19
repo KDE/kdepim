@@ -30,6 +30,7 @@
 #define KCAL_CALHELPER_H
 
 class QString;
+#include "resourcecalendar.h"
 #include <qpair.h>
 
 namespace KCal {
@@ -93,11 +94,12 @@ namespace CalHelper {
     Determines if the Calendar has any writable folders with Events content
     that are owned by me.
     @param family is the resource family name or "calendar" if empty.
+    @param manager An existing calendar manager here
 
     @return true if the any such writable folders are found; false otherwise.
     @since 4.5
   */
-  bool hasMyWritableEventsFolders( const QString &family );
+  bool hasMyWritableEventsFolders( const QString &family, CalendarResourceManager *manager );
 
   /**
     Returns the ResourceCalendar where the Incidence is stored, if any.

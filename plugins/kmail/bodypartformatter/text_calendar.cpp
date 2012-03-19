@@ -709,7 +709,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
-      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
+      if ( !CalHelper::hasMyWritableEventsFolders( "calendar", StdCalendar::self()->resourceManager() ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "
