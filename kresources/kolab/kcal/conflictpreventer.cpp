@@ -76,6 +76,8 @@ bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
                                            Q_INT32 sernum )
 {
   Q_ASSERT( incidence );
+  if ( !d->m_payloadsByUid.contains( incidence->uid() ) )
+    return false;
 
   KCal::Incidence *inc = d->m_payloadsByUid[incidence->uid()];
   if ( *inc == *incidence ) {
