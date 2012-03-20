@@ -237,7 +237,10 @@ bool FindBarBase::event(QEvent* e)
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
           e->accept();
-          findNext();
+          if ( kev->modifiers() & Qt::ShiftModifier )
+            findPrev();
+          else if ( kev->modifiers() == Qt::NoModifier )
+            findNext();
           return true;
         }
     }
