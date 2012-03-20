@@ -17,6 +17,8 @@
  */
 
 #include "sieveeditor.h"
+#include "sievefindbar.h"
+
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
@@ -29,6 +31,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QShortcut>
 
 using namespace KSieveUi;
 
@@ -59,10 +62,24 @@ SieveEditor::SieveEditor( QWidget * parent )
   lay->addWidget( splitter );
   QList<int> size;
   size << 400 << 100;
+
   mTextEdit = new SieveTextEdit( splitter );
+  mFindBar = new SieveFindBar( mTextEdit, splitter );
+
+  QWidget *widget = new QWidget( splitter );
+  QVBoxLayout *layTextEdit = new QVBoxLayout;
+  layTextEdit->addWidget( mTextEdit );
+  layTextEdit->addWidget( mFindBar );
+  widget->setLayout( layTextEdit );
+
+  QShortcut *shortcut = new QShortcut( this );
+  shortcut->setKey( Qt::Key_F+Qt::CTRL );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+
+   
   mDebugTextEdit = new QTextEdit;
   mDebugTextEdit->setReadOnly( true );
-  splitter->addWidget( mTextEdit );
+  splitter->addWidget( /*mTextEdit*/widget );
   splitter->addWidget( mDebugTextEdit );
   splitter->setSizes( size );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
@@ -75,6 +92,12 @@ SieveEditor::SieveEditor( QWidget * parent )
 
 SieveEditor::~SieveEditor()
 {
+}
+
+void SieveEditor::slotFind()
+{
+  mFindBar->show();
+  mFindBar->focusAndSetCursor();  
 }
 
 void SieveEditor::slotSaveAs()

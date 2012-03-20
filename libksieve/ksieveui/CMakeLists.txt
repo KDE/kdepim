@@ -12,6 +12,7 @@ set(ksieveui_LIB_SRCS
     sievesyntaxhighlighter.cpp
     sievetextedit.cpp
     sieveeditor.cpp
+    sievefindbar.cpp
    )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
