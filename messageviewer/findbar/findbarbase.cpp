@@ -227,7 +227,7 @@ bool FindBarBase::event(QEvent* e)
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
-    if (e->type() == QEvent::ShortcutOverride) {
+    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
