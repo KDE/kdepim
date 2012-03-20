@@ -19,12 +19,12 @@
 
 #include <KLocale>
 #include <KLineEdit>
-#include <KTextBrowser>
+#include <QPlainTextEdit>
 #include <QAction>
 
 using namespace MessageViewer;
 
-FindBarSourceView::FindBarSourceView( KTextBrowser * view, QWidget * parent )
+FindBarSourceView::FindBarSourceView( QPlainTextEdit * view, QWidget * parent )
   : FindBarBase( parent ), m_view( view )
 {  
 }
