@@ -87,7 +87,7 @@ SieveEditor::SieveEditor( QWidget * parent )
   connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
   setMainWidget( mainWidget );
-  resize( 640,480);
+  resize( 800,600);
 }
 
 SieveEditor::~SieveEditor()
