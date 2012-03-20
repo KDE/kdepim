@@ -18,15 +18,23 @@
 #ifndef ABSTRACTSETTINGS_H
 #define ABSTRACTSETTINGS_H
 
-class ImportWizard;
+#include <QObject>
 
-class AbstractSettings
+class ImportWizard;
+class KJob;
+class AbstractSettings : public QObject
 {
+  Q_OBJECT
 public:
-    explicit AbstractSettings(ImportWizard *parent);
-    ~AbstractSettings();
+  explicit AbstractSettings(ImportWizard *parent);
+  ~AbstractSettings();
+private slots:
+  void instanceCreateResult( KJob* job );
+
 protected:
-    ImportWizard *m_parent;
+  void createResource( const QString& resources );
+
+  ImportWizard *m_parent;
 };
 
 #endif // ABSTRACTSETTINGS_H

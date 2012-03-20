@@ -16,15 +16,62 @@
 */
 
 #include "sylpheedsettings.h"
+#include <KConfig>
+#include <KConfigGroup>
 
-
+#include <QRegExp>
+#include <QStringList>
 
 SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
 {
+  KConfig config( filename );
+  const QStringList accountList = config.groupList().filter( QRegExp( "Account:\\d+" ) );
+  const QStringList::const_iterator end( accountList.constEnd() );
+  for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
+  {
+    KConfigGroup group = config.group( *it );
+    readAccount( group );
+    readIdentity( group );
+  }
+  
 }
 
 SylpheedSettings::~SylpheedSettings()
 {
 }
    
+
+void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
+{
+  if ( accountConfig.hasKey( QLatin1String( "protocol" ) ) )
+  {
+    const int protocol = accountConfig.readEntry( QLatin1String( "protocol" ), 0 );
+    switch( protocol )
+    {
+    case 0:
+      //pop3
+      break;
+    case 3:
+      //imap
+      break;
+    case 4:
+      //news
+      break;
+    case 5:
+      //local
+      break;
+    }
+  }
+  const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+  const QString smtp = accountConfig.readEntry( QLatin1String( "smtp_server" ) );
+  
+}
+  
+void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
+{
+  const QString identity = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
+  const QString email = accountConfig.readEntry( QLatin1String( "address" ) );
+  
+}
+  

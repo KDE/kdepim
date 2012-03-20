@@ -22,12 +22,16 @@
 #include <QString>
 
 class ImportWizard;
+class KConfigGroup;
 
 class SylpheedSettings : public AbstractSettings
 {
 public:
-    explicit SylpheedSettings(const QString& filename, ImportWizard *parent );
-    ~SylpheedSettings();
+  explicit SylpheedSettings(const QString& filename, ImportWizard *parent );
+  ~SylpheedSettings();
+private:
+  void readAccount( const KConfigGroup& accountConfig );
+  void readIdentity( const KConfigGroup& accountConfig );
 };
 
 #endif /* SYLPHEEDSETTINGS_H */
