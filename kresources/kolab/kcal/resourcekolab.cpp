@@ -77,7 +77,7 @@ static bool conflictThisSync = false;
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
-        "mResourceChangedTimer" ), mBatchAddingInProgress( false ), mDisableOptimization( false ),
+        "mResourceChangedTimer" ), mBatchAddingInProgress( false ),
         mDequeingScheduled( false ), mConflictPreventer( new ConflictPreventer() )
 {
   if ( !config ) {
@@ -321,6 +321,9 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
   const QString uid = incidencebase->uid();
   //kdDebug() << k_funcinfo << uid << endl;
 
+  //IncidenceBase doesn't have revision(), downcast needed.
+  Incidence *incidence = dynamic_cast<Incidence*>( incidencebase );
+
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
     /* We are currently processing this event ( removing and readding or
      * adding it ). If so, ignore this update. Keep the last of these around
@@ -329,47 +332,6 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     mPendingUpdates.insert( uid, incidencebase );
     return;
   }
-
-  //IncidenceBase doesn't have revision(), downcast needed.
-  Incidence *incidence = dynamic_cast<Incidence*>( incidencebase );
-
-  if ( !mDisableOptimization && false) { // Disabled for now. Has corner-cases.
-    // start optimization
-    /**
-       KOrganizer and libkcal like calling two Incidence::updated()
-       for only one user change. That's because after a change,
-       IncidenceChanger calls incidence->setRevision( rev++ );
-       which also calls Incidence::updated().
-
-       Lets ignore the first updated() and only send to kmail
-       the second. This makes things faster.
-    */
-
-    if ( incidence ) {
-      bool ignoreThisUpdate = false;
-
-      if ( mLastKnownRevisions.contains( uid ) ) {
-        if ( mLastKnownRevisions[uid] < incidence->revision() ) { // update the last known revision
-          mLastKnownRevisions[uid] = incidence->revision();
-        } else {
-          /*
-          * "ignoreThisUpdate = true;" will cause issue/kolab4698, because recording the
-          * attendee status in the calendar doesn't bump the SEQUENCE/revision.
-          **/
-          ignoreThisUpdate = !( incidence->dirtyFields().contains( Incidence::FieldAttendees ) ||
-                                // ( FieldUnknown is used when you assign for example ).
-                                incidence->dirtyFields().contains( Incidence::FieldUnknown ) );
-        }
-      } else {
-        mLastKnownRevisions[uid] = incidence->revision();
-      }
-
-      if ( ignoreThisUpdate ) {
-        kdDebug(5650) << "Ignoring this update" << endl;
-        return;
-      }
-    }
-  } // end optimization
 
   QString subResource;
   Q_UINT32 sernum = 0;
@@ -907,9 +869,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mPendingUpdates.remove( uid );
       mUidsPendingAdding.remove( uid );
 
-      mDisableOptimization = true;
       incidenceUpdated( update );
-      mDisableOptimization = false;
     } else {
       /* If the uid was added by KMail, KOrganizer needs to be told, so
        * schedule emitting of the resourceChanged signal. */

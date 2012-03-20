@@ -266,30 +266,6 @@ private:
   QMap<Kolab::ResourceType,QString> mLastUsedResources;
 
   /**
-     Indexed by uid, it holds the last known revision of an incidence.
-     If we receive an update where the incidence still has the same
-     revision as the last known, we ignore it and don't send it to kmail,
-     because shortly after, IncidenceChanger will increment the revision
-     and that will trigger another update.
-
-     If we didn't discard the first update, kmail would have been updated twice.
-  */
-  QMap<QString,int> mLastKnownRevisions;
-
-  /**
-     incidenceUpdated( IncidenceBase * ) does an optimization so an incidence isn't sent twice
-     to kolab server.
-     This optimization should only be done when this method call is triggered from the outside, i.e.
-     from the CalendarObserver mechanism ( Incidence::update() ).
-
-     When it's called directly by ResourceKolab, we set this variable to true so we don't optimize
-     in incidenceUpdated( IncidenceBase *).
-
-     I didn't just add a new parameter to incidenceUpdated() because it's a re-implementation
-     of a pure virtual in KCal::CalendarObserver. */
-  bool mDisableOptimization;
-
-  /**
    * When there are two duplicate incidences, we keep one and discard the other one.
    * To prevent data loss due to race between two kolab clients, that's implemented by one
    * adition, and two removals ( issue4805 ).
