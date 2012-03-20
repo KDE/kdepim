@@ -19,8 +19,8 @@
 
 
 
-SylpheedSettings::SylpheedSettings( const QString& filename )
-    :AbstractSettings()
+SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *parent )
+    :AbstractSettings( parent )
 {
 }
 

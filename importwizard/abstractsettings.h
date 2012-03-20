@@ -18,11 +18,15 @@
 #ifndef ABSTRACTSETTINGS_H
 #define ABSTRACTSETTINGS_H
 
+class ImportWizard;
+
 class AbstractSettings
 {
 public:
-    explicit AbstractSettings();
+    explicit AbstractSettings(ImportWizard *parent);
     ~AbstractSettings();
+protected:
+    ImportWizard *m_parent;
 };
 
 #endif // ABSTRACTSETTINGS_H

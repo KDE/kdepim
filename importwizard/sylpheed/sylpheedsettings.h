@@ -18,13 +18,15 @@
 #ifndef SYLPHEEDSETTINGS_H
 #define SYLPHEEDSETTINGS_H
 
-#include <QString>
 #include "abstractsettings.h"
+#include <QString>
+
+class ImportWizard;
 
 class SylpheedSettings : public AbstractSettings
 {
 public:
-    explicit SylpheedSettings(const QString& filename );
+    explicit SylpheedSettings(const QString& filename, ImportWizard *parent );
     ~SylpheedSettings();
 };
 

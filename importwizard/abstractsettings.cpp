@@ -15,8 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "abstractsettings.h"
+#include "importwizard.h"
 
-AbstractSettings::AbstractSettings()
+AbstractSettings::AbstractSettings(ImportWizard *parent)
 {
 }
 
