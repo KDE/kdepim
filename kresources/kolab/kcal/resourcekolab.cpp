@@ -339,6 +339,10 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
     if ( kmailMessageReadyForUpdate( subResource, sernum ) == KMailICalIface::Yes ) {
+      if ( *incidence == *(mUidMap[uid].incidenceCopy() ) ) {
+        kdDebug() << "incidenceUpdatedSilent(): Skipping redundant change" << endl;
+        return;
+      }
       mUidsPendingUpdate.append( uid );
       mConflictPreventer->registerOldPayload( mUidMap[uid].incidenceCopy() );
       sendKMailUpdate( incidencebase, subResource, sernum );
