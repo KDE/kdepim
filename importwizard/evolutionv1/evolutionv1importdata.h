@@ -17,10 +17,10 @@
 #ifndef Evolutionv1ImportData_H
 #define Evolutionv1ImportData_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class Evolutionv1ImportData : public PimImportAbstract
+class Evolutionv1ImportData : public AbstractImporter
 {
 public:
   explicit Evolutionv1ImportData(ImportWizard *parent);

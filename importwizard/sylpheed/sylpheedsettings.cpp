@@ -19,7 +19,8 @@
 
 
 
-SylpheedSettings::SylpheedSettings( const QString& name )
+SylpheedSettings::SylpheedSettings( const QString& filename )
+    :AbstractSettings()
 {
 }
 

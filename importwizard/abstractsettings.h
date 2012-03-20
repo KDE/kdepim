@@ -14,27 +14,15 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef Evolutionv2ImportData_H
-#define Evolutionv2ImportData_H
 
-#include "abstractimporter.h"
-class ImportWizard;
+#ifndef ABSTRACTSETTINGS_H
+#define ABSTRACTSETTINGS_H
 
-class Evolutionv2ImportData : public AbstractImporter
+class AbstractSettings
 {
 public:
-  explicit Evolutionv2ImportData(ImportWizard *parent);
-  ~Evolutionv2ImportData();
-    
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importSettings();
-  bool importMails();
-  bool importFilters();
-  bool importAddressBook();
-  QString name() const;
+    explicit AbstractSettings();
+    ~AbstractSettings();
 };
 
-#endif /* Evolutionv2ImportData_H */
-
+#endif // ABSTRACTSETTINGS_H

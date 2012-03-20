@@ -131,4 +131,33 @@ Online=true</screen>
 </para>
 </sect1>
 
+<sect1 id="local-folders-is-added-over-and-over"><title>Local Folders is added over and over</title>
+<para>In some cases you might end up with a maildir account pointing to a certain place (like <filename>$HOME/Mail</filename>), but you still see a <guilabel>Local Folders</guilabel> folder in the folder list with Inbox/Outbox/Trash/Drafts/&etc; subfolders and &kmail; keeps putting mails there, especially sent mails.
+</para>
+<para>The problem is that certain folders are marked as special folders (system folders) and if you don't have them, &kmail; cannot operate correctly. That is the reason why it keeps re-creating that folder.
+</para>
+<para>A this time there is no easy way to change this in the UI for all types of special folders. Here are what you can do:
+</para>
+<orderedlist>
+<listitem><para>The <emphasis>Sent-Mail, Drafts and Templates</emphasis> folder is configurable for each identity. Go to  <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Identities</guimenuitem></menuchoice>, select your identity, click on <guilabel>Modify</guilabel>, go to the <guilabel>Advanced</guilabel> tab and set the folders to point to the right place.</para></listitem>
+<listitem><para>The default <emphasis>Inbox</emphasis> is configurable for each POP3 account. Go to  <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Account</guimenuitem></menuchoice>, select your POP3 account, click on <guilabel>Modify</guilabel> go to the <guilabel>Advanced</guilabel> tab and set the <guilabel>Destination folder</guilabel>.</para></listitem>
+<listitem><para>For IMAP accounts you can configure the <emphasis>Trash</emphasis> folder. Do like above. The setting name is <emphasis>Trash folder</emphasis>.</para></listitem>
+<listitem><para>The most problematic part is the <emphasis>Outbox</emphasis>. First, locate <filename>specialmailcollectionsrc</filename> in your &kde; configuration directory (<filename>$HOME/.kde4/share/config</filename> or similar). It contains something like this:</para></listitem>
+</orderedlist>
+<para><userinput>
+[SpecialCollections]
+DefaultResourceId=akonadi_maildir_resource_0</userinput>
+</para>
+<para>Now start <application>akonadiconsole</application>, on the <guilabel>Agents</guilabel> tab locate your local account in what you want to have your <emphasis>Outbox</emphasis> folder, click on it and note the identifier that appears in the lower part (<replaceable>akonadi_maildir_resource_XXX</replaceable> or similar). Put this identifier in the above shown <filename>specialmailcollectionsrc</filename>, by replacing the existing one.
+</para>
+<para>After that restart <application>akonadi</application> (you can do from the <application>akonadiconsole</application>, <menuchoice><guimenu>Server</guimenu><guimenuitem>Restart Server</guimenuitem></menuchoice> or from command line with
+</para>
+<para><userinput>akonadictl restart</userinput>
+</para>
+<para>Now remove the <guilabel>Local Folders</guilabel> that you don't want to use anymore.
+</para>
+<para>If it keeps reappearing and the <guilabel>Mail Dispatcher Agent</guilabel> still crashes, you need to do one more thing in <application>akonadiconsole</application>. Go to the <guilabel>Browser</guilabel> tab, find the outbox you <emphasis>want</emphasis> to use, right click on it, <guilabel>Folder Properties</guilabel>, <guilabel>Attributes</guilabel> tab, enter <userinput>SpecialCollectionAttribute</userinput> then <guilabel>Add</guilabel>, double click on the <guilabel>Value</guilabel> near the <guilabel>SpecialCollectionAttribute</guilabel> and enter <userinput>outbox</userinput>. Add also another attribute, the attribute name has to be <guilabel>ENTITYDISPLAY</guilabel> and the value <userinput>("outbox" "mail-folder-outbox" "" ())</userinput> (just copy paste from here). Restart <application>akonadi</application> and now you should be able to remove completely the unneeded local folder account.
+</para>
+</sect1>
+
 </chapter>

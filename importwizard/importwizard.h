@@ -18,7 +18,7 @@
 #ifndef IMPORTWIZARD_H
 #define IMPORTWIZARD_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 
 #include <kapplication.h>
 #include <KAssistantDialog>
@@ -31,7 +31,7 @@ class ImportFilterPage;
 class ImportSettingPage;
 class ImportAddressbookPage;
 class ImportFinishPage;
-class PimImportAbstract;
+class AbstractImporter;
 
 class ImportWizard : public KAssistantDialog {
   Q_OBJECT
@@ -56,13 +56,13 @@ private slots:
   void slotAtLeastOneComponentSelected( bool b );
 
 private:
-  void addImportModule(PimImportAbstract *);
+  void addImportModule(AbstractImporter *);
   void checkModules();
-  void setAppropriatePage(PimImportAbstract::TypeSupportedOptions options);
+  void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
 
-  QMap<QString, PimImportAbstract*> mlistImport;
+  QMap<QString, AbstractImporter*> mlistImport;
 
-  PimImportAbstract *mSelectedPim;
+  AbstractImporter *mSelectedPim;
   
   KPageWidgetItem *mPage1;
   KPageWidgetItem *mPage2;

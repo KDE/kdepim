@@ -19,12 +19,13 @@
 #define SYLPHEEDSETTINGS_H
 
 #include <QString>
+#include "abstractsettings.h"
 
-class SylpheedSettings
+class SylpheedSettings : public AbstractSettings
 {
-  public:
-  explicit SylpheedSettings( const QString& name );
-  ~SylpheedSettings();
+public:
+    explicit SylpheedSettings(const QString& filename );
+    ~SylpheedSettings();
 };
 
 #endif /* SYLPHEEDSETTINGS_H */

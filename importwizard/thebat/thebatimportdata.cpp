@@ -28,7 +28,7 @@
 
 
 TheBatImportData::TheBatImportData(ImportWizard*parent)
-    :PimImportAbstract(parent)
+    :AbstractImporter(parent)
 {
   mPath = QDir::homePath();
 }
@@ -86,9 +86,9 @@ bool TheBatImportData::importAddressBook()
   return false;
 }
 
-PimImportAbstract::TypeSupportedOptions TheBatImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions TheBatImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=PimImportAbstract::Mails;
+  options |=AbstractImporter::Mails;
   return options;
 }

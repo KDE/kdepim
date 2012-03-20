@@ -17,10 +17,10 @@
 #ifndef TheBatImportData_H
 #define TheBatImportData_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class TheBatImportData : public PimImportAbstract
+class TheBatImportData : public AbstractImporter
 {
 public:
   explicit TheBatImportData(ImportWizard *parent);

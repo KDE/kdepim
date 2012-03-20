@@ -17,10 +17,10 @@
 #ifndef PMailImportData_H
 #define PMailImportData_H
 
-#include "pimimportabstract.h"
+#include "abstractimporter.h"
 class ImportWizard;
 
-class PMailImportData : public PimImportAbstract
+class PMailImportData : public AbstractImporter
 {
 public:
   explicit PMailImportData(ImportWizard *parent);

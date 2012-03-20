@@ -42,40 +42,40 @@ void SelectComponentPage::slotComponentClicked()
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )
 {
-  ui->addressbooks->setEnabled( !clicked && (mOptions & PimImportAbstract::AddressBook));
-  ui->filters->setEnabled( !clicked && (mOptions & PimImportAbstract::Filters));
-  ui->mails->setEnabled( !clicked && (mOptions & PimImportAbstract::Mails));
-  ui->settings->setEnabled( !clicked && (mOptions & PimImportAbstract::Settings));
+  ui->addressbooks->setEnabled( !clicked && (mOptions & AbstractImporter::AddressBook));
+  ui->filters->setEnabled( !clicked && (mOptions & AbstractImporter::Filters));
+  ui->mails->setEnabled( !clicked && (mOptions & AbstractImporter::Mails));
+  ui->settings->setEnabled( !clicked && (mOptions & AbstractImporter::Settings));
   slotComponentClicked();
 }
 
 
-void SelectComponentPage::setEnabledComponent(PimImportAbstract::TypeSupportedOptions options)
+void SelectComponentPage::setEnabledComponent(AbstractImporter::TypeSupportedOptions options)
 {
   mOptions = options;
   slotEverythingClicked(ui->everything->isChecked());
 }
 
-PimImportAbstract::TypeSupportedOptions SelectComponentPage::selectedComponents() const
+AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents() const
 {
-    if( ui->everything->isChecked() )
-        return mOptions;
-    else {
-        PimImportAbstract::TypeSupportedOptions newOptions;
-        if(ui->addressbooks->isChecked()) {
-            newOptions|=PimImportAbstract::AddressBook;
-        }
-        if(ui->filters->isChecked()) {
-            newOptions|=PimImportAbstract::Filters;
-        }
-        if(ui->mails->isChecked()) {
-            newOptions|=PimImportAbstract::Mails;
-        }
-        if(ui->settings->isChecked()) {
-            newOptions|=PimImportAbstract::Settings;
-        }
-        return newOptions;
+  if( ui->everything->isChecked() )
+    return mOptions;
+  else {
+    AbstractImporter::TypeSupportedOptions newOptions;
+    if(ui->addressbooks->isChecked()) {
+      newOptions|=AbstractImporter::AddressBook;
     }
+    if(ui->filters->isChecked()) {
+      newOptions|=AbstractImporter::Filters;
+    }
+    if(ui->mails->isChecked()) {
+      newOptions|=AbstractImporter::Mails;
+    }
+    if(ui->settings->isChecked()) {
+      newOptions|=AbstractImporter::Settings;
+    }
+    return newOptions;
+  }
 }
 
 #include "selectcomponentpage.moc"

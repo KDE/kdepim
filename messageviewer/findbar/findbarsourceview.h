@@ -20,7 +20,7 @@
 
 #include "findbarbase.h"
 
-class KTextBrowser;
+class QPlainTextEdit;
 
 namespace MessageViewer
 {
@@ -29,7 +29,7 @@ class FindBarSourceView : public FindBarBase
   Q_OBJECT
 
   public:
-    explicit FindBarSourceView( KTextBrowser * view, QWidget * parent = 0 );
+    explicit FindBarSourceView( QPlainTextEdit * view, QWidget * parent = 0 );
     virtual ~FindBarSourceView();
 
   private:
@@ -40,7 +40,7 @@ class FindBarSourceView : public FindBarBase
     void updateSensitivity(bool);
 
   private:
-    KTextBrowser * m_view;
+    QPlainTextEdit * m_view;
 };
 }
 
