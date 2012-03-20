@@ -21,12 +21,15 @@
 
 #include "sievesyntaxhighlighter.h"
 #include <kglobalsettings.h>
+#include <KIconTheme>
+#include <KStandardGuiItem>
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>
 #include <QAbstractItemView>
 #include <QScrollBar>
 #include <QPainter>
+#include <QMenu>
 
 using namespace KSieveUi;
 
@@ -49,6 +52,22 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
 
 SieveTextEdit::~SieveTextEdit()
 {
+}
+
+void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
+{
+  QMenu *popup = createStandardContextMenu();
+  if (popup) {
+    popup->addSeparator();
+    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+    //Code from KTextBrowser
+    KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                          : KIconTheme::TextEditor,
+                                          popup->actions() );
+
+    popup->exec( event->globalPos() );
+    delete popup;
+  }
 }
 
 void SieveTextEdit::resizeEvent(QResizeEvent *e)

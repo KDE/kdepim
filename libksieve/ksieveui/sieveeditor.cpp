@@ -75,11 +75,11 @@ SieveEditor::SieveEditor( QWidget * parent )
   QShortcut *shortcut = new QShortcut( this );
   shortcut->setKey( Qt::Key_F+Qt::CTRL );
   connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
-
+  connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
    
   mDebugTextEdit = new QTextEdit;
   mDebugTextEdit->setReadOnly( true );
-  splitter->addWidget( /*mTextEdit*/widget );
+  splitter->addWidget( widget );
   splitter->addWidget( mDebugTextEdit );
   splitter->setSizes( size );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
