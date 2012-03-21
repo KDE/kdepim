@@ -58,6 +58,11 @@ public:
   void registerOldPayload( KCal::Incidence *incidence );
 
   /**
+   * For debug purposes.
+   */
+  bool isRegistered( KCal::Incidence *incidence ) const;
+
+  /**
    * Returns true if the payload is equal to an old payload, and marks it as a false positive
    * conflict.
    *
@@ -73,7 +78,7 @@ public:
    */
   bool isFalsePositive( const QString &resource, Q_INT32 sernum ) const;
 
-  void cleanup( const QString &resource, Q_INT32 sernum );
+  void cleanup( const QString &uid, const QString &resource = QString(), Q_INT32 sernum = 0 );
 
 private:
   class Private;

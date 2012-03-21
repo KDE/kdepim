@@ -320,6 +320,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
 {
   const QString uid = incidencebase->uid();
   //kdDebug() << k_funcinfo << uid << endl;
+  kdDebug() << "incidenceUpdatedSilent " << incidencebase->dtStart() << endl;
 
   //IncidenceBase doesn't have revision(), downcast needed.
   Incidence *incidence = dynamic_cast<Incidence*>( incidencebase );
@@ -342,8 +343,16 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     sernum = mUidMap[ uid ].serialNumber();
     if ( kmailMessageReadyForUpdate( subResource, sernum ) == KMailICalIface::Yes ) {
       if ( *incidence == *(mUidMap[uid].incidenceCopy() ) ) {
-        kdDebug() << "incidenceUpdatedSilent(): Skipping redundant change" << endl;
+        kdDebug() << "incidenceUpdatedSilent(): Skipping redundant change."
+                  << "new dtEnd: " << incidence->dtEnd()
+                  << " old dtEnd: " << mUidMap[uid].incidenceCopy()->dtEnd()
+                  << endl;
         return;
+      }
+      if ( mConflictPreventer->isRegistered( incidence ) ) {
+        kdDebug() << "incidenceUpdatedSilent(): incidence " << incidence->dtStart()
+                  << " is already registered. Cleaning up conflict preventer cache" << endl;
+        mConflictPreventer->cleanup( uid );
       }
       mUidsPendingUpdate.append( uid );
       mConflictPreventer->registerOldPayload( mUidMap[uid].incidenceCopy() );
@@ -874,7 +883,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mSilent = false; // we do want to tell KMail
       mPendingUpdates.remove( uid );
       mUidsPendingAdding.remove( uid );
-
+      kdDebug() << "sendKMailUpdate(): firing pending update " << update->dtStart() << endl;
       incidenceUpdated( update );
     } else {
       /* If the uid was added by KMail, KOrganizer needs to be told, so
@@ -1117,6 +1126,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            int format,
                                            const QString& data )
 {
+  kdDebug() << "fromKMailAddIncidence()" << endl;
   bool rc = true;
   TemporarySilencer t( this ); // RAII
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
@@ -1159,6 +1169,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& uid,
                                            Q_INT32 sernum )
 {
+  kdDebug() << "fromKMailDelIncidence()" << endl;
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
        && type != kmailJournalContentsType )
     // Not ours
@@ -1168,7 +1179,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   //kdDebug() << "DEBUG fromKMailDelIncidence " << uid << endl;
 
   if ( mConflictPreventer->isFalsePositive( subResource, sernum ) ) {
-    mConflictPreventer->cleanup( subResource, sernum );
+    mConflictPreventer->cleanup( uid, subResource, sernum );
     return;
   }
 

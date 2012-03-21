@@ -98,7 +98,17 @@ bool ConflictPreventer::isFalsePositive( const QString &resource, Q_INT32 sernum
   return result;
 }
 
-void ConflictPreventer::cleanup(const QString& resource, Q_INT32 sernum)
+
+bool ConflictPreventer::isRegistered( KCal::Incidence *incidence ) const
 {
-  d->m_falsePositives.remove( QPair<QString,Q_INT32>( resource, sernum ) );
+  Q_ASSERT( false );
+  return d->m_payloadsByUid.contains( incidence->uid() ) &&
+         *( d->m_payloadsByUid[incidence->uid()] ) == *incidence;
+}
+
+void ConflictPreventer::cleanup( const QString &uid, const QString &resource, Q_INT32 sernum )
+{
+  d->m_payloadsByUid.remove( uid );
+  if ( !resource.isEmpty() )
+    d->m_falsePositives.remove( QPair<QString,Q_INT32>( resource, sernum ) );
 }
