@@ -103,7 +103,6 @@ bool ConflictPreventer::isFalsePositive( const QString &resource, Q_INT32 sernum
 
 bool ConflictPreventer::isRegistered( KCal::Incidence *incidence ) const
 {
-  Q_ASSERT( false );
   KCal::ComparisonVisitor v;
   return d->m_payloadsByUid.contains( incidence->uid() ) &&
          v.compare( d->m_payloadsByUid[incidence->uid()], incidence );
