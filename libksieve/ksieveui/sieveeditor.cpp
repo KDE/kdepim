@@ -96,6 +96,8 @@ SieveEditor::~SieveEditor()
 
 void SieveEditor::slotFind()
 {
+  if ( mTextEdit->textCursor().hasSelection() )
+    mFindBar->setText( mTextEdit->textCursor().selectedText() );
   mFindBar->show();
   mFindBar->focusAndSetCursor();  
 }

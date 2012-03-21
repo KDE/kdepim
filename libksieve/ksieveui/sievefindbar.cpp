@@ -97,6 +97,11 @@ SieveFindBar::~SieveFindBar()
 {
 }
 
+void SieveFindBar::setText( const QString&text )
+{
+  m_search->setText( text );
+}
+
 QString SieveFindBar::text() const
 {
   return m_search->text();

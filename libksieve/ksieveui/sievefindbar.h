@@ -40,6 +40,7 @@ public:
   ~SieveFindBar();
 
   QString text() const;
+  void setText( const QString&text );
   
   void focusAndSetCursor();
     
