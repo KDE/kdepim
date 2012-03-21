@@ -1,5 +1,5 @@
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010,2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -107,6 +107,11 @@ QMenu* FindBarBase::optionsMenu()
 QString FindBarBase::text() const
 {
   return m_search->text();
+}
+
+void FindBarBase::setText( const QString&text )
+{
+  m_search->setText( text );
 }
 
 void FindBarBase::focusAndSetCursor()
