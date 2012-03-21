@@ -71,6 +71,8 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
 
 void MailSourceViewTextBrowserWidget::slotFind()
 {
+  if ( mTextBrowser->textCursor().hasSelection() )
+    mFindBar->setText( mTextBrowser->textCursor().selectedText() );
   mFindBar->show();
   mFindBar->focusAndSetCursor();  
 }
