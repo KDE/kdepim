@@ -16,10 +16,12 @@
 */
 
 #include "evolutionv3importdata.h"
+#include "evolutionsettings.h"
 #include "mailimporter/filter_evolution_v3.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "mailcommon/filter/filterimporterexporter.h"
+
 #include "importwizard.h"
 
 #include <KLocale>
@@ -54,6 +56,12 @@ QString Evolutionv3ImportData::name() const
 
 bool Evolutionv3ImportData::importSettings()
 {
+  const QString accountFile = mPath + QLatin1String("/accountrc");
+  if ( QFile( accountFile ).exists() ) {
+    EvolutionSettings account( accountFile, mImportWizard );
+    //TODO
+    return true;
+  }
   return false;
 }
 
@@ -94,5 +102,6 @@ AbstractImporter::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
+  options |=AbstractImporter::Settings;
   return options;
 }
