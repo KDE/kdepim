@@ -18,13 +18,25 @@
 #include "thunderbirdsettings.h"
 #include <KConfig>
 #include <KConfigGroup>
-
+#include <QTextStream>
 #include <QRegExp>
 #include <QStringList>
+#include <QFile>
+#include <QDebug>
 
 ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
 {
+  QFile file(filename);
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    qDebug()<<" We can't open file"<<filename;
+    return;
+  }
+  QTextStream stream(&file);
+  while ( !stream.atEnd() ) {
+    QString line = stream.readLine();
+    //TODO
+  }
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
