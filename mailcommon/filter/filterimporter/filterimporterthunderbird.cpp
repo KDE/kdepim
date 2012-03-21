@@ -35,9 +35,7 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
     kDebug() << " line :" << line << " filter " << filter;
     filter = parseLine( stream, line, filter );
   }
-  if ( filter ) {
-    appendFilter(filter);
-  }
+  appendFilter(filter);
 }
 
 FilterImporterThunderbird::~FilterImporterThunderbird()
@@ -55,9 +53,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
                                                               MailCommon::MailFilter *filter )
 {
   if ( line.startsWith( QLatin1String( "name=" ) ) ) {
-    if ( filter ) {
-      appendFilter(filter);
-    }
+    appendFilter(filter);
     filter = new MailFilter();
     line = cleanArgument( line, QLatin1String( "name=" ) );
     filter->pattern()->setName( line );

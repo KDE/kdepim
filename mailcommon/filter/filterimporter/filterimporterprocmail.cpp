@@ -37,9 +37,7 @@ FilterImporterProcmail::FilterImporterProcmail( QFile *file )
     filter = parseLine( stream, line, filter );
   }
 
-  if ( filter ) {
-    appendFilter(filter);
-  }
+  appendFilter(filter);
 }
 
 FilterImporterProcmail::~FilterImporterProcmail()
@@ -67,9 +65,7 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
     //Commented line
     return filter;
   } else if ( line.startsWith( QLatin1String( ":0" ) ) ) {
-    if ( filter ) {
-      appendFilter(filter);
-    }
+    appendFilter(filter);
     filter = new MailFilter();
     const QString uniqName = createUniqFilterName();
     filter->pattern()->setName( uniqName );
