@@ -43,6 +43,7 @@
 #include <kapplication.h>
 #include <dcopclient.h>
 #include <libkdepim/kincidencechooser.h>
+#include <libkcal/comparisonvisitor.h>
 #include <kabc/locknull.h>
 #include <kmainwindow.h>
 #include <klocale.h>
@@ -342,7 +343,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
     if ( kmailMessageReadyForUpdate( subResource, sernum ) == KMailICalIface::Yes ) {
-      if ( *incidence == *(mUidMap[uid].incidenceCopy() ) ) {
+      KCal::ComparisonVisitor v;
+      if ( v.compare( incidence, mUidMap[uid].incidenceCopy() ) ) {
         kdDebug() << "incidenceUpdatedSilent(): Skipping redundant change."
                   << "new dtEnd: " << incidence->dtEnd()
                   << " old dtEnd: " << mUidMap[uid].incidenceCopy()->dtEnd()
@@ -439,7 +441,8 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
   Incidence* addedIncidence = 0;
   Incidence* chosenIncidence = 0;
   if ( localIncidence ) {
-    if ( *localIncidence == *remoteIncidence ) {
+    KCal::ComparisonVisitor v;
+    if ( v.compare( localIncidence, remoteIncidence ) ) {
       // real duplicate, we keep the second one.
       chosenIncidence = localIncidence; // Just like a "Take Local"
     } else {

@@ -34,6 +34,7 @@
 
 #include "conflictpreventer.h"
 #include <libkcal/incidence.h>
+#include <libkcal/comparisonvisitor.h>
 #include <qmap.h>
 #include <qptrlist.h>
 #include <kdebug.h>
@@ -81,7 +82,8 @@ bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
     return false;
 
   KCal::Incidence *inc = d->m_payloadsByUid[incidence->uid()];
-  if ( *inc == *incidence ) {
+  KCal::ComparisonVisitor v;
+  if ( v.compare( inc, incidence ) ) {
     kdDebug() << "ConflictPreventer::isOldPayload() found false positive: "
               << incidence->summary() << endl;
     d->m_falsePositives.insert( QPair<QString,Q_INT32>( resource, sernum ), true );
@@ -102,8 +104,9 @@ bool ConflictPreventer::isFalsePositive( const QString &resource, Q_INT32 sernum
 bool ConflictPreventer::isRegistered( KCal::Incidence *incidence ) const
 {
   Q_ASSERT( false );
+  KCal::ComparisonVisitor v;
   return d->m_payloadsByUid.contains( incidence->uid() ) &&
-         *( d->m_payloadsByUid[incidence->uid()] ) == *incidence;
+         v.compare( d->m_payloadsByUid[incidence->uid()], incidence );
 }
 
 void ConflictPreventer::cleanup( const QString &uid, const QString &resource, Q_INT32 sernum )
