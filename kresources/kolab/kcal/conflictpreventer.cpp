@@ -64,7 +64,8 @@ void ConflictPreventer::registerOldPayload( KCal::Incidence *incidence )
 {
   Q_ASSERT( incidence );
   KCal::Incidence *clone = incidence->clone();
-  kdDebug() << "ConflictPreventer::registerOldPayload() registering " << clone->summary() << endl;
+  kdDebug() << "ConflictPreventer::registerOldPayload() registering " << clone->summary()
+            << "; dtStart = " << incidence->dtStart() << endl;
   if ( d->m_payloadsByUid.contains( clone->uid() ) ) {
     delete d->m_payloadsByUid[clone->uid()];
   }
