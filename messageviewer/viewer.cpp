@@ -400,6 +400,12 @@ KAction *Viewer::copyAction()
   return d->mCopyAction;
 }
 
+KAction *Viewer::speakTextAction()
+{
+  Q_D( Viewer );
+  return d->mSpeakTextAction;
+}
+
 KAction *Viewer::urlOpenAction()
 {
   Q_D( Viewer );

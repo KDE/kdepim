@@ -57,6 +57,7 @@
 #include <KTempDir>
 #include <KTemporaryFile>
 #include <KToggleAction>
+#include <ktoolinvocation.h>
 
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -93,6 +94,9 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
+
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
@@ -188,6 +192,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomOutAction( 0 ),
     mZoomResetAction( 0 ), 
     mToggleMimePartTreeAction( 0 ),
+    mSpeakTextAction(0),
     mCanStartDrag( false ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
@@ -1697,6 +1702,13 @@ void ViewerPrivate::createActions()
   connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
            SLOT(slotToggleHtmlMode()) );
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+
+
+  mSpeakTextAction = new KAction(i18n("Speak Text"),this);
+  mSpeakTextAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
+  ac->addAction( "speak_text", mSpeakTextAction );
+  connect( mSpeakTextAction, SIGNAL(triggered(bool)),
+           this, SLOT(slotSpeakText()) );
 }
 
 
@@ -2540,6 +2552,26 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   else {
     kDebug() << " not implemented :" << choice;
   }
+}
+
+void ViewerPrivate::slotSpeakText()
+{
+  const QString text = mViewer->selectedText();
+  if(text.isEmpty())
+    return;
+
+  // If KTTSD not running, start it.
+  if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd"))
+  {
+    QString error;
+    if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error))
+    {
+      KMessageBox::error(mMainWindow, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+      return;
+    }
+  }
+  QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
+  ktts.asyncCall("say", text, 0);
 }
 
 void ViewerPrivate::slotCopySelectedText()

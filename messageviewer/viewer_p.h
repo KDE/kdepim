@@ -570,6 +570,7 @@ public slots:
   void slotZoomIn();
   void slotZoomOut();
   void slotZoomReset();
+  void slotSpeakText();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -631,6 +632,7 @@ public:
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
+  KAction *mSpeakTextAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
   QPoint mLastClickPosition;
