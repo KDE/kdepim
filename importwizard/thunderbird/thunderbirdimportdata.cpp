@@ -67,10 +67,9 @@ QString ThunderbirdImportData::name() const
 
 bool ThunderbirdImportData::importSettings()
 {
-  const QString accountFile = mPath + QLatin1String("/accountrc");
+  const QString accountFile = mDefaultProfile + QLatin1String("/prefs.js");
   if ( QFile( accountFile ).exists() ) {
     ThunderbirdSettings account( accountFile, mImportWizard );
-    //TODO
     return true;
   }
   return false;
