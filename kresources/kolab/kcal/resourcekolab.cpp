@@ -330,6 +330,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
      * and process once we hear back from KMail on this event. */
     mPendingUpdates.remove( uid );
     mPendingUpdates.insert( uid, incidencebase );
+    kdDebug() << "incidenceUpdatedSilent(): skipping and updating mPendingUpdates with incidence "
+              << incidencebase->dtStart() << endl;
     return;
   }
 

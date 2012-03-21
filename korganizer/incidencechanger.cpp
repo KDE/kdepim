@@ -328,7 +328,10 @@ bool IncidenceChanger::changeIncidence( Incidence *oldinc, Incidence *newinc,
                                         QWidget *parent,
                                         bool useLastDialogAnswer )
 {
-kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->summary()<<"\" ( old one was \""<<oldinc->summary()<<"\")"<<endl;
+  kdDebug(5850) << "IncidenceChanger::changeIncidence for incidence \""
+                << newinc->summary() << " " << newinc->dtStart()
+                << "\" ( old one was \""
+                << oldinc->summary() << " " <<oldinc->dtStart() << "\")" <<endl;
   if ( incidencesEqual( newinc, oldinc ) ) {
     // Don't do anything
     kdDebug(5850) << "Incidence not changed\n";
