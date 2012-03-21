@@ -63,9 +63,12 @@
 #include <kdebug.h>
 #include <KMimeType>
 #include <KTemporaryFile>
+#include <ktoolinvocation.h>
 
 #include <QTextCodec>
 #include <QWidget>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
 
 using namespace MessageViewer;
 
@@ -514,5 +517,26 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
       KMessageBox::error( parent, i18n("We can not save message.") , i18n( "Error saving message" ) );
       return false;
   }
+  return true;
+}
+
+
+bool Util::speakSelectedText( const QString& text, QWidget *parent)
+{
+  if(text.isEmpty())
+    return false;
+
+  // If KTTSD not running, start it.
+  if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd"))
+  {
+    QString error;
+    if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error))
+    {
+      KMessageBox::error(parent, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+      return false;
+    }
+  }
+  QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
+  ktts.asyncCall("say", text, 0);
   return true;
 }

@@ -57,7 +57,6 @@
 #include <KTempDir>
 #include <KTemporaryFile>
 #include <KToggleAction>
-#include <ktoolinvocation.h>
 
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -94,8 +93,6 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
-#include <QDBusInterface>
-#include <QDBusConnectionInterface>
 
 
 //libkdepim
@@ -2557,21 +2554,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
 void ViewerPrivate::slotSpeakText()
 {
   const QString text = mViewer->selectedText();
-  if(text.isEmpty())
-    return;
-
-  // If KTTSD not running, start it.
-  if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd"))
-  {
-    QString error;
-    if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error))
-    {
-      KMessageBox::error(mMainWindow, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
-      return;
-    }
-  }
-  QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
-  ktts.asyncCall("say", text, 0);
+  MessageViewer::Util::speakSelectedText( text, mMainWindow);
 }
 
 void ViewerPrivate::slotCopySelectedText()

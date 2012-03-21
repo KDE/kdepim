@@ -95,6 +95,8 @@ public:
   explicit MailSourceViewTextBrowser( QWidget *parent = 0 );
 protected:
   virtual void contextMenuEvent( QContextMenuEvent *event );
+private slots:
+  void slotSpeakText();
 signals:
   void findText();
 };

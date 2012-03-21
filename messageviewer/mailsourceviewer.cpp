@@ -32,6 +32,7 @@
 #include <config-messageviewer.h>
 
 #include "mailsourceviewer.h"
+#include "util.h"
 #include "findbar/findbarsourceview.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
@@ -107,12 +108,20 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
                                           popup->actions() );
+    popup->addSeparator();
+    popup->addAction( KIcon("preferences-desktop-text-to-speech"),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
     popup->exec( event->globalPos() );
     delete popup;
   }
 }
 
+void MailSourceViewTextBrowser::slotSpeakText()
+{
+  if ( textCursor().hasSelection() ) {
+    MessageViewer::Util::speakSelectedText( textCursor().selectedText(), this);
+  }
+}
   
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :
