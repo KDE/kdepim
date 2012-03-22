@@ -56,4 +56,5 @@ target_link_libraries(importwizard
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(PROGRAMS importwizard.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
