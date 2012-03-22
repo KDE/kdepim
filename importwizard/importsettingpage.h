@@ -33,7 +33,8 @@ public:
   ~ImportSettingPage();
   void addFilterImportInfo( const QString& log );
   void addFilterImportError( const QString& log );
-
+signals:
+  void importSettingsClicked();
 private:
   Ui::ImportSettingPage *ui;
 };

@@ -54,7 +54,7 @@ private slots:
   void slotImportFiltersClicked();
   void slotProgramDoubleClicked();
   void slotAtLeastOneComponentSelected( bool b );
-
+  void slotImportSettingsClicked();
 private:
   void addImportModule(AbstractImporter *);
   void checkModules();
