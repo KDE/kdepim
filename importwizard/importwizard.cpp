@@ -102,7 +102,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   connect(mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
   connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
-  connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT( slotAtLeastOneComponentSelected( bool ) ) );
+  connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT(slotAtLeastOneComponentSelected(bool)) );
 
   resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
