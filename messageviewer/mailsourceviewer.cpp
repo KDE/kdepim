@@ -118,9 +118,13 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
 
 void MailSourceViewTextBrowser::slotSpeakText()
 {
+  QString text;
   if ( textCursor().hasSelection() ) {
-    MessageViewer::Util::speakSelectedText( textCursor().selectedText(), this);
+    text = textCursor().selectedText();
+  } else {
+    text = toPlainText();
   }
+  MessageViewer::Util::speakSelectedText( text, this);
 }
   
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
