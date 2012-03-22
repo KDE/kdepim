@@ -1,0 +1,8 @@
+[Global]
+Comment=Archive Mail Agent
+Name=Archive Mail Agent
+
+[Event/archivemailfinished]
+Name=Archive Mail finished
+Action=Popup
+
