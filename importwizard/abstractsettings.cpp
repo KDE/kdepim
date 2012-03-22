@@ -22,7 +22,7 @@
 #include <kpimidentities/identity.h>
 #include <mailtransport/transportmanager.h>
 
-
+#include <KLocale>
 #include <KDebug>
 
 #include <akonadi/agenttype.h>
@@ -58,7 +58,7 @@ void AbstractSettings::createResource( const QString& resources )
 {
   const AgentType type = AgentManager::self()->type( resources );
   if ( !type.isValid() ) {
-    //emit error( i18n( "Resource type '%1' is not available.", resources ) );
+    addFilterImportError( i18n( "Resource type '%1' is not available.", resources ) );
     return;
   }
 
@@ -68,13 +68,13 @@ void AbstractSettings::createResource( const QString& resources )
     foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
       kDebug() << instance.type().identifier() << (instance.type() == type);
       if ( instance.type() == type ) {
-        //emit finished( i18n( "Resource '%1' is already set up.", type.name() ) );
+        addFilterImportInfo( i18n( "Resource '%1' is already set up.", type.name() ) );
         return;
       }
     }
   }
 
-  //emit info( i18n( "Creating resource instance for '%1'...", type.name() ) );
+  addFilterImportInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, this );
   connect( job, SIGNAL(result(KJob*)), SLOT(instanceCreateResult(KJob*)) );
   job->start();
@@ -85,17 +85,17 @@ void AbstractSettings::instanceCreateResult(KJob* job)
 {
 #if 0  
   if ( job->error() ) {
-    //emit error( i18n( "Failed to create resource instance: %1", job->errorText() ) );
+    addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
     return;
   }
 
   m_instance = qobject_cast<AgentInstanceCreateJob*>( job )->instance();
 
   if ( !m_settings.isEmpty() ) {
-    //emit info( i18n( "Configuring resource instance..." ) );
+    addFilterImportInfo( i18n( "Configuring resource instance..." ) );
     QDBusInterface iface( "org.freedesktop.Akonadi.Resource." + m_instance.identifier(), "/Settings" );
     if ( !iface.isValid() ) {
-      emit error( i18n( "Unable to configure resource instance." ) );
+      addFilterImportError( i18n( "Unable to configure resource instance." ) );
       return;
     }
 
@@ -109,20 +109,20 @@ void AbstractSettings::instanceCreateResult(KJob* job)
       QVariant arg = it.value();
       const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );
       if ( !arg.canConvert( targetType ) ) {
-        emit error( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
+        addFilterImportError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
         return;
       }
       arg.convert( targetType );
       QDBusReply<void> reply = iface.call( methodName, arg );
       if ( !reply.isValid() ) {
-        emit error( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
+        addFilterImportError( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
         return;
       }
     }
     m_instance.reconfigure();
   }
 
-  emit finished( i18n( "Resource setup completed." ) );
+  addFilterImportError( i18n( "Resource setup completed." ) );
 #endif
 }
 
