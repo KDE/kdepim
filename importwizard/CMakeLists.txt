@@ -49,6 +49,7 @@ target_link_libraries(importwizard
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   mailimporter
   mailcommon
   kdepim

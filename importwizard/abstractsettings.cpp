@@ -17,6 +17,11 @@
 #include "abstractsettings.h"
 #include "importwizard.h"
 
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
+#include <mailtransport/transportmanager.h>
+
+
 #include <KDebug>
 
 #include <akonadi/agenttype.h>
@@ -27,11 +32,24 @@ using namespace Akonadi;
 
 AbstractSettings::AbstractSettings(ImportWizard *parent)
 {
+  m_manager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
 }
 
 AbstractSettings::~AbstractSettings()
 {
+  delete m_manager;
+}
 
+KPIMIdentities::Identity* AbstractSettings::createIdentity()
+{
+  KPIMIdentities::Identity* identity = &m_manager->newFromScratch( QString() );
+  return identity;
+}
+
+MailTransport::Transport *AbstractSettings::createTransport()
+{
+  MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
+  return mt;
 }
 
 void AbstractSettings::createResource( const QString& resources )

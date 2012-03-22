@@ -22,6 +22,16 @@
 
 class ImportWizard;
 class KJob;
+
+namespace KPIMIdentities {
+  class Identity;
+  class IdentityManager;
+}
+
+namespace MailTransport {
+  class Transport;
+}
+
 class AbstractSettings : public QObject
 {
   Q_OBJECT
@@ -33,8 +43,11 @@ private slots:
 
 protected:
   void createResource( const QString& resources );
+  KPIMIdentities::Identity* createIdentity();
+  MailTransport::Transport *createTransport();
 
   ImportWizard *m_parent;
+  KPIMIdentities::IdentityManager *m_manager;
 };
 
 #endif // ABSTRACTSETTINGS_H
