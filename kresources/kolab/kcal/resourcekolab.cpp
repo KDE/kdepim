@@ -334,6 +334,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     mPendingUpdates.insert( uid, incidencebase );
     kdDebug() << "incidenceUpdatedSilent(): skipping and updating mPendingUpdates with incidence "
               << incidencebase->dtStart() << endl;
+
+    mConflictPreventer->cleanup( uid );
     return;
   }
 
@@ -939,6 +941,8 @@ bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
       mQueuedIncidenceUpdates.remove( queuedIncidence );
     }
   }
+
+  mConflictPreventer->cleanup( incidence->uid() );
 
   const QString uid = incidence->uid();
   if( !mUidMap.contains( uid ) ) return false; // Odd
