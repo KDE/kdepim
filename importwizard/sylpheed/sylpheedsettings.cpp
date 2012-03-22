@@ -16,6 +16,9 @@
 */
 
 #include "sylpheedsettings.h"
+
+#include <kpimidentities/identity.h>
+
 #include <KConfig>
 #include <KConfigGroup>
 
@@ -34,7 +37,6 @@ SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *paren
     readAccount( group );
     readIdentity( group );
   }
-  
 }
 
 SylpheedSettings::~SylpheedSettings()
@@ -70,8 +72,11 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
   
 void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
 {
-  const QString identity = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
+  const QString organization = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
   const QString email = accountConfig.readEntry( QLatin1String( "address" ) );
-  
+  KPIMIdentities::Identity* identity  = createIdentity();
+  identity->setOrganization(organization);
+  identity->setPrimaryEmailAddress(email);
+  storeIdentity(identity);
 }
   

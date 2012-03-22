@@ -45,8 +45,17 @@ AbstractSettings::~AbstractSettings()
 KPIMIdentities::Identity* AbstractSettings::createIdentity()
 {
   KPIMIdentities::Identity* identity = &mManager->newFromScratch( QString() );
+  addFilterImportInfo(i18n("Setting up identity..."));
   return identity;
 }
+
+void AbstractSettings::storeIdentity(KPIMIdentities::Identity* identity)
+{
+  mManager->setAsDefault( identity->uoid() );
+  mManager->commit();
+  addFilterImportInfo(i18n("Identity set up."));
+}
+
 
 MailTransport::Transport *AbstractSettings::createTransport()
 {

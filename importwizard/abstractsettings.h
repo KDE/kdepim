@@ -48,6 +48,7 @@ protected:
   void createResource( const QString& resources );
   KPIMIdentities::Identity* createIdentity();
   MailTransport::Transport *createTransport();
+  void storeIdentity(KPIMIdentities::Identity* identity);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;
