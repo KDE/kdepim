@@ -37,7 +37,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
     QString line = stream.readLine();
     if(line.startsWith(QLatin1String("user_pref"))) {
       //TODO
-      if(line.contains(QLatin1String("mail.smtpserver."))){
+      if(line.contains(QLatin1String("mail.smtpserver."))) {
 
       } else if(line.contains(QLatin1String("mail.server."))) {
 

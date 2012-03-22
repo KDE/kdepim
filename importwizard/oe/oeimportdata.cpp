@@ -40,10 +40,12 @@ OeImportData::~OeImportData()
 
 bool OeImportData::foundMailer() const
 {
+#ifdef Q_OS_WIN
   //TODO find a method to search it. Perhaps look at binary.
   QDir directory( mPath );
   if ( directory.exists() )
     return true;
+#endif
   return false;
 }
 

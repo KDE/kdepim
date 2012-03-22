@@ -59,7 +59,6 @@ bool Evolutionv3ImportData::importSettings()
   const QString accountFile = mPath + QLatin1String("/accountrc");
   if ( QFile( accountFile ).exists() ) {
     EvolutionSettings account( accountFile, mImportWizard );
-    //TODO
     return true;
   }
   return false;
