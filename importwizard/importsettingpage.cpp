@@ -30,4 +30,15 @@ ImportSettingPage::~ImportSettingPage()
   delete ui;
 }
 
+void ImportSettingPage::addFilterImportInfo( const QString& log )
+{
+  ui->logSettings->addInfoLogEntry( log );
+}
+
+void ImportSettingPage::addFilterImportError( const QString& log )
+{
+  ui->logSettings->addErrorLogEntry( log );
+}
+
+
 #include "importsettingpage.moc"

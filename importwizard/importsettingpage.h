@@ -31,7 +31,9 @@ class ImportSettingPage : public QWidget
 public:
   explicit ImportSettingPage(QWidget *parent = 0);
   ~ImportSettingPage();
-  
+  void addFilterImportInfo( const QString& log );
+  void addFilterImportError( const QString& log );
+
 private:
   Ui::ImportSettingPage *ui;
 };

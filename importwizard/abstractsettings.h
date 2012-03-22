@@ -42,12 +42,15 @@ private slots:
   void instanceCreateResult( KJob* job );
 
 protected:
+  void addFilterImportInfo( const QString& log );
+  void addFilterImportError( const QString& log );
+
   void createResource( const QString& resources );
   KPIMIdentities::Identity* createIdentity();
   MailTransport::Transport *createTransport();
 
-  ImportWizard *m_parent;
-  KPIMIdentities::IdentityManager *m_manager;
+  ImportWizard *mImportWizard;
+  KPIMIdentities::IdentityManager *mManager;
 };
 
 #endif // ABSTRACTSETTINGS_H

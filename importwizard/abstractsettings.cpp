@@ -16,6 +16,7 @@
 */
 #include "abstractsettings.h"
 #include "importwizard.h"
+#include "importsettingpage.h"
 
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
@@ -31,18 +32,19 @@
 using namespace Akonadi;
 
 AbstractSettings::AbstractSettings(ImportWizard *parent)
+  :mImportWizard(parent)
 {
-  m_manager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
+  mManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
 }
 
 AbstractSettings::~AbstractSettings()
 {
-  delete m_manager;
+  delete mManager;
 }
 
 KPIMIdentities::Identity* AbstractSettings::createIdentity()
 {
-  KPIMIdentities::Identity* identity = &m_manager->newFromScratch( QString() );
+  KPIMIdentities::Identity* identity = &mManager->newFromScratch( QString() );
   return identity;
 }
 
@@ -122,4 +124,14 @@ void AbstractSettings::instanceCreateResult(KJob* job)
 
   emit finished( i18n( "Resource setup completed." ) );
 #endif
+}
+
+void AbstractSettings::addFilterImportInfo( const QString& log )
+{
+  mImportWizard->importSettingPage()->addFilterImportInfo( log );
+}
+
+void AbstractSettings::addFilterImportError( const QString& log )
+{
+  mImportWizard->importSettingPage()->addFilterImportError( log );
 }
