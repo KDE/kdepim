@@ -1,13 +1,22 @@
 
+Thursday 22 March 2012
+
+Problems addressed
+------------------
+* kolab/issue4832: Kontact Crash in KCal::ResourceKolab::unloadSubResource (this=0x8681f68, subResource=@0x86d43ec) at resourcekolab.cpp:1487 (rt#10111)
+* kolab/issue4831: Kontact Crash in KOAgendaItem::firstMultiItem (this=0x0) at koagendaitem.h:126 (rt#10114)
+* kolab/issue4829: Wrong message text in update email (rt#10111)
+* kolab/issue4821: Sync conflict: Resolving with "newest" can lead to an assert (rt#10111)
+
 Friday 16 March 2012
 
 Problems addressed
 ------------------
 
-* kolab/issue4819: Conflict handling 'take remote' deletes appointment if second disabled calendar resource available (rt#10111)
-* kolab/issue4821: Sync conflict: Resolving with "newest" can lead to an assert (rt#10111)
-* kolab/issue4822: Sync conflict: Take remote "Race" get Kontact into an instable state (rt#10111)
 * kolab/issue4826: Unnecessary conflict after modify an appointment created by 'take remote' conflict result (rt#10111)
+* kolab/issue4822: Sync conflict: Take remote "Race" get Kontact into an instable state (rt#10111)
+* kolab/issue4820: Accepting an appointment in a shared imap calendar modifies the server object (rt#10111)
+* kolab/issue4819: Conflict handling 'take remote' deletes appointment if second disabled calendar resource available (rt#10111)
 
 
 
