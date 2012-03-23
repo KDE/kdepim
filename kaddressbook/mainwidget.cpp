@@ -228,6 +228,11 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
   mActionManager->createAllActions();
+  const QStringList pages =
+      QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
+                    << QLatin1String( "Akonadi::CachePolicyPage" );
+
+  mActionManager->setCollectionPropertiesPageNames( pages );
 
   connect( mItemView, SIGNAL(currentChanged(Akonadi::Item)),
            this, SLOT(itemSelected(Akonadi::Item)) );
