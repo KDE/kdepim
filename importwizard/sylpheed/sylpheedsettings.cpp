@@ -48,14 +48,17 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 {
   //TODO
   QMap<QString, QVariant> settings;
-  createResource( "akonadi_pop3_resource", settings );
+  const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+  createResource( "akonadi_pop3_resource", name, settings );
 }
 
 void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
 {
   //TODO
   QMap<QString, QVariant> settings;
-  createResource( "akonadi_imap_resource", settings );
+  const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+
+  createResource( "akonadi_imap_resource", name,settings );
 }
 
 
@@ -85,9 +88,7 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
         //local
         break;
     }
-  }
-  const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-  
+  }  
 }
   
 void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )

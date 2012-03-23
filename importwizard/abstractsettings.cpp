@@ -31,6 +31,7 @@
 
 #include <QDBusReply>
 #include <QDBusInterface>
+#include <QMetaMethod>
 
 using namespace Akonadi;
 
@@ -66,7 +67,33 @@ MailTransport::Transport *AbstractSettings::createTransport()
   return mt;
 }
 
-void AbstractSettings::createResource( const QString& resources, const QMap<QString, QVariant>& settings )
+//code from accountwizard
+static QVariant::Type argumentType( const QMetaObject *mo, const QString &method )
+{
+  QMetaMethod m;
+  for ( int i = 0; i < mo->methodCount(); ++i ) {
+    const QString signature = QString::fromLatin1( mo->method( i ).signature() );
+    if ( signature.startsWith( method ) )
+      m = mo->method( i );
+  }
+
+  if ( !m.signature() ) {
+    kWarning() << "Did not find D-Bus method: " << method << " available methods are:";
+    const int numberOfMethod(mo->methodCount());
+    for ( int i = 0; i < numberOfMethod; ++ i )
+      kWarning() << mo->method( i ).signature();
+    return QVariant::Invalid;
+  }
+
+  const QList<QByteArray> argTypes = m.parameterTypes();
+  if ( argTypes.count() != 1 )
+    return QVariant::Invalid;
+
+  return QVariant::nameToType( argTypes.first() );
+}
+
+
+void AbstractSettings::createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings )
 {
   const AgentType type = AgentManager::self()->type( resources );
   if ( !type.isValid() ) {
@@ -89,7 +116,7 @@ void AbstractSettings::createResource( const QString& resources, const QMap<QStr
   addFilterImportInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, this );
   if(job->exec()) {
-#if 0
+#if 1
     Akonadi::AgentInstance instance = job->instance();
 
     if ( !settings.isEmpty() ) {
@@ -101,8 +128,8 @@ void AbstractSettings::createResource( const QString& resources, const QMap<QStr
       }
 
       // configure resource
-      if ( !m_name.isEmpty() )
-        instance.setName( m_name );
+      if ( !name.isEmpty() )
+        instance.setName( name );
       QMap<QString, QVariant>::const_iterator end( settings.constEnd());
       for ( QMap<QString, QVariant>::const_iterator it = settings.constBegin(); it != end; ++it ) {
         kDebug() << "Setting up " << it.key() << " for agent " << instance.identifier();
