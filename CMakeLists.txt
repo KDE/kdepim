@@ -396,6 +396,7 @@ endif()
 
   if(KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(importwizard)
+    macro_optional_add_subdirectory(archivemailagent)
   endif()
   # These targets depend on optional applications
   if(KDEPIMLIBS_KRESOURCES_LIBRARY)
