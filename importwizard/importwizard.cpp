@@ -236,4 +236,14 @@ ImportFinishPage *ImportWizard::importFinishPage()
   return mImportFinishPage;
 }
 
+void ImportWizard::addFinishInfo( const QString& log )
+{
+  mImportFinishPage->addFilterImportInfo( log );
+}
+
+void ImportWizard::addFinishError( const QString& log )
+{
+  mImportFinishPage->addFilterImportError( log );
+}
+
 #include "importwizard.moc"
