@@ -32,6 +32,7 @@ public:
   ~EvolutionSettings();
 private:
   void readAccount(const QDomElement &account);
+  void extractAccountInfo(const QString& info);
 
 };
 

@@ -44,7 +44,6 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
              << ", col " << errorCol << ": " << errorMsg;
     return;
   }
-  return;
   QDomElement config = doc.documentElement();
 
   if ( config.isNull() ) {
@@ -70,7 +69,14 @@ void EvolutionSettings::readAccount(const QDomElement &account)
 {
   for ( QDomElement accountConfig = account.firstChildElement(); !accountConfig.isNull(); accountConfig = accountConfig.nextSiblingElement() ) {
     if(accountConfig.tagName() == QLatin1String("li")) {
-      //TODO
+      QDomElement stringValue = accountConfig.firstChildElement();
+      extractAccountInfo(stringValue.text());
     }
   }
+}
+
+void EvolutionSettings::extractAccountInfo(const QString& info)
+{
+  qDebug()<<" info "<<info;
+
 }

@@ -56,7 +56,7 @@ QString Evolutionv3ImportData::name() const
 
 bool Evolutionv3ImportData::importSettings()
 {
-  const QString accountFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/mail/%gconf");
+  const QString accountFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/mail/%gconf.xml");
   if ( QFile( accountFile ).exists() ) {
     EvolutionSettings account( accountFile, mImportWizard );
     return true;
