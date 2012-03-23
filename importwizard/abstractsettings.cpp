@@ -18,6 +18,8 @@
 #include "importwizard.h"
 #include "importsettingpage.h"
 
+#include "mailcommon/filter/filteractionmissingargumentdialog.h"
+
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <mailtransport/transportmanager.h>
@@ -168,4 +170,22 @@ void AbstractSettings::addFilterImportInfo( const QString& log )
 void AbstractSettings::addFilterImportError( const QString& log )
 {
   mImportWizard->importSettingPage()->addFilterImportError( log );
+}
+
+
+QString AbstractSettings::adaptFolder( const QString& folder)
+{
+  QString newFolder;
+  bool exactPath = false;
+  Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
+  if ( lst.count() == 1 && exactPath )
+    newFolder = QString::number(lst.at( 0 ).id());
+  else {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
+    if ( dlg->exec() ) {
+      newFolder = QString::number(dlg->selectedCollection().id());
+    }
+    delete dlg;
+  }
+  return newFolder;
 }

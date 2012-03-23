@@ -51,8 +51,8 @@ class MAILCOMMON_EXPORT FilterActionMissingCollectionDialog : public KDialog
   Q_OBJECT
   public:
     explicit FilterActionMissingCollectionDialog( const Akonadi::Collection::List &list,
-                                                  const QString &filtername,
-                                                  const QString &argStr,
+                                                  const QString &filtername = QString(),
+                                                  const QString &argStr = QString(),
                                                   QWidget *parent = 0 );
     ~FilterActionMissingCollectionDialog();
 

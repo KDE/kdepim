@@ -47,6 +47,7 @@ protected:
   KPIMIdentities::Identity* createIdentity();
   MailTransport::Transport *createTransport();
   void storeIdentity(KPIMIdentities::Identity* identity);
+  QString adaptFolder( const QString& folder);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;

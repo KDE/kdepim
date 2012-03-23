@@ -67,10 +67,6 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
   if ( accountConfig.hasKey( QLatin1String( "protocol" ) ) )
   {
     const int protocol = accountConfig.readEntry( QLatin1String( "protocol" ), 0 );
-
-    //TODO
-    QMap<QString, QVariant> settings;
-
     switch( protocol )
     {
       case 0:
@@ -103,8 +99,8 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   identity->setOrganization(organization);
   identity->setPrimaryEmailAddress(email);
   identity->setBcc(bcc);
-  identity->setDrafts(draft); //FIXME
-  identity->setFcc(sent);//FIXME
+  identity->setDrafts(adaptFolder(draft));
+  identity->setFcc(adaptFolder(sent));
 
   //identity->setcc(cc); //FIXME
   const QString transportId = readTransport(accountConfig);
