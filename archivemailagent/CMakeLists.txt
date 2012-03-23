@@ -1,6 +1,8 @@
 project(archivemailagent)
 
 set(archivemailagent_SRCS
+   archivemailkernel.cpp
+   archivemailagent.cpp
 )
 
 #include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter )
