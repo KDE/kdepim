@@ -46,9 +46,10 @@ SylpheedSettings::~SylpheedSettings()
    
 void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 {
-  //TODO
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+  const QString inbox = adaptFolder(accountConfig.readEntry(QLatin1String("inbox")));
+  settings.insert(QLatin1String("TargetCollection"), inbox);
   createResource( "akonadi_pop3_resource", name, settings );
 }
 
@@ -89,20 +90,25 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
   
 void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
 {
-  const QString organization = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
-  const QString email = accountConfig.readEntry( QLatin1String( "address" ) );
-  const QString bcc = accountConfig.readEntry(QLatin1String("auto_bcc"));
-  const QString cc = accountConfig.readEntry(QLatin1String("auto_cc"));
-  const QString draft = accountConfig.readEntry(QLatin1String("draft_folder"));
-  const QString sent = accountConfig.readEntry(QLatin1String("sent_folder"));
   KPIMIdentities::Identity* identity  = createIdentity();
+  const QString organization = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
   identity->setOrganization(organization);
+  const QString email = accountConfig.readEntry( QLatin1String( "address" ) );
   identity->setPrimaryEmailAddress(email);
-  identity->setBcc(bcc);
-  identity->setDrafts(adaptFolder(draft));
-  identity->setFcc(adaptFolder(sent));
-
+  if(accountConfig.readEntry(QLatin1String("set_autobcc"),0)==1 ) {
+    const QString bcc = accountConfig.readEntry(QLatin1String("auto_bcc"));
+    identity->setBcc(bcc);
+  }
+  const QString cc = accountConfig.readEntry(QLatin1String("auto_cc"));
   //identity->setcc(cc); //FIXME
+  const QString draft = accountConfig.readEntry(QLatin1String("draft_folder"));
+  identity->setDrafts(adaptFolder(draft));
+
+  if(accountConfig.readEntry(QLatin1String("set_sent_folder"),0) == 1) {
+    const QString sent = accountConfig.readEntry(QLatin1String("sent_folder"));
+    identity->setFcc(adaptFolder(sent));
+  }
+
   const QString transportId = readTransport(accountConfig);
   if(!transportId.isEmpty())
   {

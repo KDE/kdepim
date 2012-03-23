@@ -118,7 +118,6 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
   addFilterImportInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, this );
   if(job->exec()) {
-#if 1
     Akonadi::AgentInstance instance = job->instance();
 
     if ( !settings.isEmpty() ) {
@@ -153,7 +152,6 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
     }
 
     addFilterImportError( i18n( "Resource setup completed." ) );
-#endif
   } else {
     if ( job->error() ) {
       addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
