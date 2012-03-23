@@ -28,6 +28,8 @@
 #include <KLocale>
 #include <KPluginFactory>
 #include <KParts/StatusBarExtension>
+#include <KAction>
+#include <KActionCollection>
 
 #include <QtGui/QVBoxLayout>
 
@@ -41,7 +43,6 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
   setComponentData( KAddressBookFactory::componentData() );
 
   KIconLoader::global()->addAppDir( "kaddressbook" );
-  setXMLFile( "kaddressbookui.rc" );
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget );
   canvas->setFocusPolicy( Qt::ClickFocus );
@@ -49,9 +50,19 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
   mMainWidget = new MainWidget( this, canvas );
+  initAction();
 
   topLayout->addWidget( mMainWidget );
   topLayout->setMargin(0);
+  setXMLFile( "kaddressbookui.rc" );
+}
+
+void KAddressBookPart::initAction()
+{
+  KAction *action = new KAction( KIcon( "configure" ), i18n( "&Configure KAddressBook..." ), this );
+  actionCollection()->addAction( "kaddressbook_configure", action );
+  connect( action, SIGNAL(triggered(bool)), mMainWidget,
+           SLOT(configure()) );
 }
 
 void KAddressBookPart::newContact()

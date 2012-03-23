@@ -68,6 +68,7 @@
 #include <KToggleAction>
 #include <KToolBar>
 #include <KXmlGuiWindow>
+#include <KCMultiDialog>
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
@@ -254,6 +255,15 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager->load();
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+}
+
+void MainWidget::configure()
+{
+  KCMultiDialog dlg( this );
+  dlg.addModule( "akonadicontact_actions.desktop" );
+  dlg.addModule( "kcmldap.desktop" );
+
+  dlg.exec();
 }
 
 void MainWidget::delayedInit()
