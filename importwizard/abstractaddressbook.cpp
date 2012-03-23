@@ -14,26 +14,15 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include "abstractaddressbook.h"
+#include "importwizard.h"
 
-#ifndef EVOLUTIONSETTINGS_H
-#define EVOLUTIONSETTINGS_H
-
-#include "abstractsettings.h"
-#include <QString>
-
-class ImportWizard;
-class KConfigGroup;
-class QDomElement;
-
-class EvolutionSettings : public AbstractSettings
+AbstractAddressBook::AbstractAddressBook(ImportWizard *parent)
+  :mImportWizard(parent)
 {
-public:
-  explicit EvolutionSettings(const QString& filename, ImportWizard *parent );
-  ~EvolutionSettings();
-private:
-  void readAccount(const QDomElement &account);
+}
 
-};
+AbstractAddressBook::~AbstractAddressBook()
+{
 
-#endif /* EVOLUTIONSETTINGS_H */
-
+}

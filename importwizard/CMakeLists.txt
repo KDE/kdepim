@@ -14,6 +14,7 @@ abstractimporter.cpp
 selectcomponentpage.cpp
 importfilterinfogui.cpp
 abstractsettings.cpp
+abstractaddressbook.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 sylpheed/sylpheedimportdata.cpp

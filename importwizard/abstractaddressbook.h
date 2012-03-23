@@ -15,25 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EVOLUTIONSETTINGS_H
-#define EVOLUTIONSETTINGS_H
-
-#include "abstractsettings.h"
-#include <QString>
+#ifndef ABSTRACTADDRESSBOOK_H
+#define ABSTRACTADDRESSBOOK_H
 
 class ImportWizard;
-class KConfigGroup;
-class QDomElement;
 
-class EvolutionSettings : public AbstractSettings
+class AbstractAddressBook
 {
 public:
-  explicit EvolutionSettings(const QString& filename, ImportWizard *parent );
-  ~EvolutionSettings();
+  explicit AbstractAddressBook(ImportWizard *parent);
+  ~AbstractAddressBook();
 private:
-  void readAccount(const QDomElement &account);
-
+  ImportWizard *mImportWizard;
 };
 
-#endif /* EVOLUTIONSETTINGS_H */
-
+#endif // ABSTRACTADDRESSBOOK_H

@@ -32,6 +32,10 @@ public:
 private:
   void readAccount( const KConfigGroup& accountConfig );
   void readIdentity( const KConfigGroup& accountConfig );
+  QString readTransport( const KConfigGroup& accountConfig );
+  void readPop3Account( const KConfigGroup& accountConfig );
+  void readImapAccount( const KConfigGroup& accountConfig );
+
 };
 
 #endif /* SYLPHEEDSETTINGS_H */

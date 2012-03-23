@@ -16,6 +16,7 @@
 */
 
 #include "sylpheedsettings.h"
+#include <mailtransport/transportmanager.h>
 
 #include <kpimidentities/identity.h>
 
@@ -43,30 +44,49 @@ SylpheedSettings::~SylpheedSettings()
 {
 }
    
+void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
+{
+  //TODO
+  QMap<QString, QVariant> settings;
+  createResource( "akonadi_pop3_resource", settings );
+}
+
+void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
+{
+  //TODO
+  QMap<QString, QVariant> settings;
+  createResource( "akonadi_imap_resource", settings );
+}
+
 
 void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
 {
   if ( accountConfig.hasKey( QLatin1String( "protocol" ) ) )
   {
     const int protocol = accountConfig.readEntry( QLatin1String( "protocol" ), 0 );
+
+    //TODO
+    QMap<QString, QVariant> settings;
+
     switch( protocol )
     {
-    case 0:
-      //pop3
-      break;
-    case 3:
-      //imap
-      break;
-    case 4:
-      //news
-      break;
-    case 5:
-      //local
-      break;
+      case 0:
+        readPop3Account( accountConfig );
+        break;
+      case 3:
+        //imap
+        readImapAccount(accountConfig);
+        break;
+      case 4:
+        qDebug()<<" we can't create news item";
+        //news
+        break;
+      case 5:
+        //local
+        break;
     }
   }
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-  const QString smtp = accountConfig.readEntry( QLatin1String( "smtp_server" ) );
   
 }
   
@@ -74,9 +94,43 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
 {
   const QString organization = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
   const QString email = accountConfig.readEntry( QLatin1String( "address" ) );
+  const QString bcc = accountConfig.readEntry(QLatin1String("auto_bcc"));
+  const QString cc = accountConfig.readEntry(QLatin1String("auto_cc"));
+  const QString draft = accountConfig.readEntry(QLatin1String("draft_folder"));
+  const QString sent = accountConfig.readEntry(QLatin1String("sent_folder"));
   KPIMIdentities::Identity* identity  = createIdentity();
   identity->setOrganization(organization);
   identity->setPrimaryEmailAddress(email);
+  identity->setBcc(bcc);
+  identity->setDrafts(draft); //FIXME
+  identity->setFcc(sent);//FIXME
+
+  //identity->setcc(cc); //FIXME
+  const QString transportId = readTransport(accountConfig);
+  if(!transportId.isEmpty())
+  {
+    identity->setTransport(transportId);
+  }
   storeIdentity(identity);
 }
   
+QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
+{
+  const QString smtpservername = accountConfig.readEntry("receive_server");
+  const QString smtpserver = accountConfig.readEntry("smtp_server");
+  if(!smtpserver.isEmpty()) {
+    MailTransport::Transport *mt = createTransport();
+    mt->setName( smtpservername );
+    mt->writeConfig();
+    MailTransport::TransportManager::self()->addTransport( mt );
+    MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+    return QString::number(mt->id()); //TODO verify
+    /*
+  smtp_auth_method=0
+  smtp_user_id=
+  smtp_password=
+  ssl_smtp=0
+*/
+  }
+  return QString();//TODO
+}

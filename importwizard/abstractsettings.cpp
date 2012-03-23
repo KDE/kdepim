@@ -63,7 +63,7 @@ MailTransport::Transport *AbstractSettings::createTransport()
   return mt;
 }
 
-void AbstractSettings::createResource( const QString& resources )
+void AbstractSettings::createResource( const QString& resources, const QMap<QString, QVariant>& settings )
 {
   const AgentType type = AgentManager::self()->type( resources );
   if ( !type.isValid() ) {
@@ -85,54 +85,49 @@ void AbstractSettings::createResource( const QString& resources )
 
   addFilterImportInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(instanceCreateResult(KJob*)) );
-  job->start();
+  if(job->exec()) {
+#if 0
+    Akonadi::AgentInstance instance = job->instance();
 
-}
-
-void AbstractSettings::instanceCreateResult(KJob* job)
-{
-#if 0  
-  if ( job->error() ) {
-    addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
-    return;
-  }
-
-  m_instance = qobject_cast<AgentInstanceCreateJob*>( job )->instance();
-
-  if ( !m_settings.isEmpty() ) {
-    addFilterImportInfo( i18n( "Configuring resource instance..." ) );
-    QDBusInterface iface( "org.freedesktop.Akonadi.Resource." + m_instance.identifier(), "/Settings" );
-    if ( !iface.isValid() ) {
-      addFilterImportError( i18n( "Unable to configure resource instance." ) );
-      return;
-    }
-
-    // configure resource
-    if ( !m_name.isEmpty() )
-      m_instance.setName( m_name );
-    QMap<QString, QVariant>::const_iterator end( m_settings.constEnd());
-    for ( QMap<QString, QVariant>::const_iterator it = m_settings.constBegin(); it != end; ++it ) {
-      kDebug() << "Setting up " << it.key() << " for agent " << m_instance.identifier();
-      const QString methodName = QString::fromLatin1("set%1").arg( it.key() );
-      QVariant arg = it.value();
-      const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );
-      if ( !arg.canConvert( targetType ) ) {
-        addFilterImportError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
+    if ( !settings.isEmpty() ) {
+      addFilterImportInfo( i18n( "Configuring resource instance..." ) );
+      QDBusInterface iface( "org.freedesktop.Akonadi.Resource." + instance.identifier(), "/Settings" );
+      if ( !iface.isValid() ) {
+        addFilterImportError( i18n( "Unable to configure resource instance." ) );
         return;
       }
-      arg.convert( targetType );
-      QDBusReply<void> reply = iface.call( methodName, arg );
-      if ( !reply.isValid() ) {
-        addFilterImportError( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
-        return;
-      }
-    }
-    m_instance.reconfigure();
-  }
 
-  addFilterImportError( i18n( "Resource setup completed." ) );
+      // configure resource
+      if ( !m_name.isEmpty() )
+        instance.setName( m_name );
+      QMap<QString, QVariant>::const_iterator end( settings.constEnd());
+      for ( QMap<QString, QVariant>::const_iterator it = settings.constBegin(); it != end; ++it ) {
+        kDebug() << "Setting up " << it.key() << " for agent " << instance.identifier();
+        const QString methodName = QString::fromLatin1("set%1").arg( it.key() );
+        QVariant arg = it.value();
+        const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );
+        if ( !arg.canConvert( targetType ) ) {
+          addFilterImportError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
+          return;
+        }
+        arg.convert( targetType );
+        QDBusReply<void> reply = iface.call( methodName, arg );
+        if ( !reply.isValid() ) {
+          addFilterImportError( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
+          return;
+        }
+      }
+      instance.reconfigure();
+    }
+
+    addFilterImportError( i18n( "Resource setup completed." ) );
 #endif
+  } else {
+    if ( job->error() ) {
+      addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
+    }
+  }
+
 }
 
 void AbstractSettings::addFilterImportInfo( const QString& log )

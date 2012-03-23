@@ -19,7 +19,7 @@
 #define ABSTRACTSETTINGS_H
 
 #include <QObject>
-
+#include <QMap>
 class ImportWizard;
 class KJob;
 
@@ -38,14 +38,12 @@ class AbstractSettings : public QObject
 public:
   explicit AbstractSettings(ImportWizard *parent);
   ~AbstractSettings();
-private slots:
-  void instanceCreateResult( KJob* job );
 
 protected:
   void addFilterImportInfo( const QString& log );
   void addFilterImportError( const QString& log );
 
-  void createResource( const QString& resources );
+  void createResource(const QString& resources , const QMap<QString, QVariant> &settings);
   KPIMIdentities::Identity* createIdentity();
   MailTransport::Transport *createTransport();
   void storeIdentity(KPIMIdentities::Identity* identity);
