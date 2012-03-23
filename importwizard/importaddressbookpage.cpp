@@ -30,4 +30,15 @@ ImportAddressbookPage::~ImportAddressbookPage()
   delete ui;
 }
 
+void ImportAddressbookPage::addFilterImportInfo( const QString& log )
+{
+  ui->logAddressbook->addInfoLogEntry( log );
+}
+
+void ImportAddressbookPage::addFilterImportError( const QString& log )
+{
+  ui->logAddressbook->addErrorLogEntry( log );
+}
+
+
 #include "importaddressbookpage.moc"

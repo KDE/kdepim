@@ -39,3 +39,5 @@ void ImportFinishPage::addFilterImportError( const QString& log )
 {
   ui->logFinish->addErrorLogEntry( log );
 }
+
+#include "importfinishpage.moc"

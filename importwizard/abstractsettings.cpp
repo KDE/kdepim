@@ -187,3 +187,5 @@ QString AbstractSettings::adaptFolder( const QString& folder)
   }
   return newFolder;
 }
+
+#include "abstractsettings.moc"
