@@ -3,7 +3,6 @@ Thursday 22 March 2012
 
 Problems addressed
 ------------------
-* kolab/issue4832: Kontact Crash in KCal::ResourceKolab::unloadSubResource (this=0x8681f68, subResource=@0x86d43ec) at resourcekolab.cpp:1487 (rt#10111)
 * kolab/issue4831: Kontact Crash in KOAgendaItem::firstMultiItem (this=0x0) at koagendaitem.h:126 (rt#10114)
 * kolab/issue4829: Wrong message text in update email (rt#10111)
 * kolab/issue4821: Sync conflict: Resolving with "newest" can lead to an assert (rt#10111)
