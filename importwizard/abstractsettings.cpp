@@ -29,6 +29,9 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
 
+#include <QDBusReply>
+#include <QDBusInterface>
+
 using namespace Akonadi;
 
 AbstractSettings::AbstractSettings(ImportWizard *parent)
