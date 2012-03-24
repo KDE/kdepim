@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Archive Mail Agent
+Name[pt]=Agente de Arquivo de E-Mail
+Name[sv]=E-postarkiveringsmodul
+Name[uk]=Агент архівування пошти
+Name[x-test]=xxArchive Mail Agentxx
 Comment=Archive Mail Agent
+Comment[pt]=Agente de Arquivo de E-Mail
+Comment[sv]=E-postarkiveringsmodul
+Comment[uk]=Агент архівування пошти
+Comment[x-test]=xxArchive Mail Agentxx
 Type=AkonadiAgent
 Exec=akonadi_archivemail_agent
 #Icon=view-filter

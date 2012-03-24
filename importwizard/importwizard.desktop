@@ -1,7 +1,15 @@
 [Desktop Entry]
 Name=Import Wizard
+Name[pt]=Assistente de Importação
+Name[sv]=Importguide
+Name[uk]=Майстер імпортування
+Name[x-test]=xxImport Wizardxx
 Exec=importwizard
 Type=Application
 NoDisplay=true
 Comment=Launch the import wizard to migrate data from mailer as thunderbird/evolution etc.
+Comment[pt]=Invoca o assistente de importação para migrar os dados dos sistemas de e-mail, como o Thunderbird/Evolution etc.
+Comment[sv]=Starta importguiden för att överföra data från e-postprogram som thunderbird, evolution, etc.
+Comment[uk]=Запустити майстер імпортування даних з поштових програм, зокрема thunderbird, evolution тощо
+Comment[x-test]=xxLaunch the import wizard to migrate data from mailer as thunderbird/evolution etc.xx
 Terminal=false
