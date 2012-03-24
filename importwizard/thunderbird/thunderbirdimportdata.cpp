@@ -17,6 +17,7 @@
 
 #include "thunderbirdimportdata.h"
 #include "importfilterinfogui.h"
+#include "thunderbirdsettings.h"
 
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
@@ -66,6 +67,11 @@ QString ThunderbirdImportData::name() const
 
 bool ThunderbirdImportData::importSettings()
 {
+  const QString accountFile = mDefaultProfile + QLatin1String("/prefs.js");
+  if ( QFile( accountFile ).exists() ) {
+    ThunderbirdSettings account( accountFile, mImportWizard );
+    return true;
+  }
   return false;
 }
 
@@ -107,5 +113,6 @@ AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
+  options |=AbstractImporter::Settings;
   return options;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="8">
+<kpartgui name="kaddressbook" version="9">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -47,6 +47,11 @@
     <Menu name="settings"><text>&amp;Settings</text>
       <Action name="options_show_simplegui"/>
       <Action name="options_show_qrcodes"/>
+      <Separator/>
+      <Action name="options_configure_keybinding" group="settings_configure"/>
+      <Action name="options_configure_toolbars" group="settings_configure" />
+      <Action name="kaddressbook_configure" group="settings_configure" />
+
     </Menu>
 
   </MenuBar>

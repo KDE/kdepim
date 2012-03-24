@@ -70,9 +70,12 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
   }
 
   QLabel *label = new QLabel( this );
-  label->setText( i18n( "Filter folder is missing. "
-                        "Please select a folder to use with filter \"%1\"",
-                        filtername ) );
+  if(filtername.isEmpty())
+    label->setText( i18n( "Please select a folder" ));
+  else
+    label->setText( i18n( "Filter folder is missing. "
+                          "Please select a folder to use with filter \"%1\"",
+                          filtername ) );
   lay->addWidget( label );
   mFolderRequester = new MailCommon::FolderRequester( this );
   connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),

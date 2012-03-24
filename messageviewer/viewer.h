@@ -262,6 +262,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *copyURLAction();
   KAction *copyAction();
   KAction *urlOpenAction();
+  KAction *speakTextAction();
 
   const HeaderStrategy * headerStrategy() const;
 

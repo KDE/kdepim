@@ -31,7 +31,9 @@ class ImportAddressbookPage : public QWidget
 public:
   explicit ImportAddressbookPage(QWidget *parent = 0);
   ~ImportAddressbookPage();
-  
+  void addFilterImportInfo( const QString& log );
+  void addFilterImportError( const QString& log );
+
 private:
   Ui::ImportAddressbookPage *ui;
 };

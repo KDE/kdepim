@@ -18,11 +18,39 @@
 #ifndef ABSTRACTSETTINGS_H
 #define ABSTRACTSETTINGS_H
 
-class AbstractSettings
+#include <QObject>
+#include <QMap>
+class ImportWizard;
+class KJob;
+
+namespace KPIMIdentities {
+  class Identity;
+  class IdentityManager;
+}
+
+namespace MailTransport {
+  class Transport;
+}
+
+class AbstractSettings : public QObject
 {
+  Q_OBJECT
 public:
-    explicit AbstractSettings();
-    ~AbstractSettings();
+  explicit AbstractSettings(ImportWizard *parent);
+  ~AbstractSettings();
+
+protected:
+  void addFilterImportInfo( const QString& log );
+  void addFilterImportError( const QString& log );
+
+  void createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+  KPIMIdentities::Identity* createIdentity();
+  MailTransport::Transport *createTransport();
+  void storeIdentity(KPIMIdentities::Identity* identity);
+  QString adaptFolder( const QString& folder);
+
+  ImportWizard *mImportWizard;
+  KPIMIdentities::IdentityManager *mManager;
 };
 
 #endif // ABSTRACTSETTINGS_H

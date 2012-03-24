@@ -26,7 +26,10 @@
 
 class QLineEdit;
 
+
 namespace KSieveUi {
+
+class SieveFindBar;
 
 class KSIEVEUI_EXPORT SieveEditor : public KDialog {
   Q_OBJECT
@@ -45,12 +48,15 @@ private slots:
   void slotTextChanged();
   void slotImport();
   void slotSaveAs();
+  void slotFind();
+
 private:
   bool saveToFile( const QString&filename );
   bool loadFromFile( const QString& filename );
   SieveTextEdit * mTextEdit;
   QTextEdit *mDebugTextEdit;
   QLineEdit *mScriptName;
+  SieveFindBar *mFindBar;
 };
 }
 

@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Copyright (c) 2011 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011, 2012 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,6 +18,8 @@
 
 #ifndef MAILCOMMON_FILTERACTIONMISSINGARGUMENTDIALOG_H
 #define MAILCOMMON_FILTERACTIONMISSINGARGUMENTDIALOG_H
+
+#include "../mailcommon_export.h"
 
 #include <Akonadi/Collection>
 
@@ -44,13 +46,13 @@ namespace MailTransport {
   class TransportComboBox;
 }
 
-class FilterActionMissingCollectionDialog : public KDialog
+class MAILCOMMON_EXPORT FilterActionMissingCollectionDialog : public KDialog
 {
   Q_OBJECT
   public:
     explicit FilterActionMissingCollectionDialog( const Akonadi::Collection::List &list,
-                                                  const QString &filtername,
-                                                  const QString &argStr,
+                                                  const QString &filtername = QString(),
+                                                  const QString &argStr = QString(),
                                                   QWidget *parent = 0 );
     ~FilterActionMissingCollectionDialog();
 

@@ -23,11 +23,11 @@
 
 #include <KAction>
 #include <KActionCollection>
-#include <KCMultiDialog>
 #include <KEditToolBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KToolBar>
+#include <KLocale>
 
 MainWindow::MainWindow()
   : KXmlGuiWindow( 0 )
@@ -68,11 +68,7 @@ void MainWindow::initActions()
 
 void MainWindow::configure()
 {
-  KCMultiDialog dlg( this );
-  dlg.addModule( "akonadicontact_actions.desktop" );
-  dlg.addModule( "kcmldap.desktop" );
-
-  dlg.exec();
+  mMainWidget->configure();
 }
 
 void MainWindow::configureKeyBindings()

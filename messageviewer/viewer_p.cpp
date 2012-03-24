@@ -94,6 +94,7 @@
 #include <QPrintDialog>
 #include <QHeaderView>
 
+
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
 #include <messagecore/attachmentpropertiesdialog.h>
@@ -188,6 +189,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomOutAction( 0 ),
     mZoomResetAction( 0 ), 
     mToggleMimePartTreeAction( 0 ),
+    mSpeakTextAction(0),
     mCanStartDrag( false ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
@@ -1697,6 +1699,13 @@ void ViewerPrivate::createActions()
   connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
            SLOT(slotToggleHtmlMode()) );
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+
+
+  mSpeakTextAction = new KAction(i18n("Speak Text"),this);
+  mSpeakTextAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
+  ac->addAction( "speak_text", mSpeakTextAction );
+  connect( mSpeakTextAction, SIGNAL(triggered(bool)),
+           this, SLOT(slotSpeakText()) );
 }
 
 
@@ -2540,6 +2549,12 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   else {
     kDebug() << " not implemented :" << choice;
   }
+}
+
+void ViewerPrivate::slotSpeakText()
+{
+  const QString text = mViewer->selectedText();
+  MessageViewer::Util::speakSelectedText( text, mMainWindow);
 }
 
 void ViewerPrivate::slotCopySelectedText()

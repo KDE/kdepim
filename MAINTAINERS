@@ -5,6 +5,7 @@ blogilo               Mehrdad Momeny <mehrdad.momeny@gmail.com>
 calendarsupport       Sérgio Martins <iamsergio@gmail.com>
 calendarviews         Sérgio Martins <iamsergio@gmail.com>
 incidenceeditors-ng   Sérgio Martins <iamsergio@gmail.com>
+importwizard          Laurent Montel <montel@kde.org>
 kabcclient            Kevin Krammer <kevin.krammer@gmx.at>
 kaddressbook          Tobias Koenig <tokoe@kde.org>
 kalarm                David Jarvie <djarvie@kde.org>
@@ -29,6 +30,7 @@ messagecomposer       <kmail maintainer>
 messagecore           <kmail maintainer>
 messagelist           <kmail maintainer>
 messageviewer         <kmail maintainer>
+mailimporter          Laurent Montel <montel@kde.org>
 ontologies            ?
 plugins               ?
 strigi-analyzer       ?

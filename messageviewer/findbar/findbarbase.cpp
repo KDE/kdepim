@@ -1,5 +1,5 @@
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010,2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -107,6 +107,11 @@ QMenu* FindBarBase::optionsMenu()
 QString FindBarBase::text() const
 {
   return m_search->text();
+}
+
+void FindBarBase::setText( const QString&text )
+{
+  m_search->setText( text );
 }
 
 void FindBarBase::focusAndSetCursor()
@@ -227,7 +232,7 @@ bool FindBarBase::event(QEvent* e)
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
-    if (e->type() == QEvent::ShortcutOverride) {
+    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
@@ -237,7 +242,10 @@ bool FindBarBase::event(QEvent* e)
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
           e->accept();
-          findNext();
+          if ( kev->modifiers() & Qt::ShiftModifier )
+            findPrev();
+          else if ( kev->modifiers() == Qt::NoModifier )
+            findNext();
           return true;
         }
     }

@@ -57,8 +57,7 @@ bool SylpheedImportData::importSettings()
 {
   const QString accountFile = mPath + QLatin1String("/accountrc");
   if ( QFile( accountFile ).exists() ) {
-    SylpheedSettings account( accountFile );
-    //TODO
+    SylpheedSettings account( accountFile, mImportWizard );
     return true;
   }
   return false;
@@ -101,5 +100,6 @@ AbstractImporter::TypeSupportedOptions SylpheedImportData::supportedOption()
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
+  options |=AbstractImporter::Settings;
   return options;
 }

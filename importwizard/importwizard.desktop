@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Import Wizard
+Exec=importwizard
+Type=Application
+NoDisplay=true
+Comment=Launch the import wizard to migrate data from mailer as thunderbird/evolution etc.
+Terminal=false

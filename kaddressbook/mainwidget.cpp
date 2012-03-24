@@ -68,6 +68,7 @@
 #include <KToggleAction>
 #include <KToolBar>
 #include <KXmlGuiWindow>
+#include <KCMultiDialog>
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
@@ -228,6 +229,11 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
   mActionManager->createAllActions();
+  const QStringList pages =
+      QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
+                    << QLatin1String( "Akonadi::CachePolicyPage" );
+
+  mActionManager->setCollectionPropertiesPageNames( pages );
 
   connect( mItemView, SIGNAL(currentChanged(Akonadi::Item)),
            this, SLOT(itemSelected(Akonadi::Item)) );
@@ -249,6 +255,15 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager->load();
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+}
+
+void MainWidget::configure()
+{
+  KCMultiDialog dlg( this );
+  dlg.addModule( "akonadicontact_actions.desktop" );
+  dlg.addModule( "kcmldap.desktop" );
+
+  dlg.exec();
 }
 
 void MainWidget::delayedInit()

@@ -1092,7 +1092,7 @@ bool SearchRuleDate::matchesInternal( const QDate& dateValue,
 
 void SearchRuleDate::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
 {
-    QDate date = QDate::fromString( contents(), Qt::ISODate );
+    const QDate date = QDate::fromString( contents(), Qt::ISODate );
     const Nepomuk::Query::ComparisonTerm dateTerm(
       Vocabulary::NMO::sentDate(),
       Nepomuk::Query::LiteralTerm( date ),

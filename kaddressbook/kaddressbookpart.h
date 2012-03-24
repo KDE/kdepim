@@ -41,7 +41,7 @@ class KAddressBookPart: public KParts::ReadOnlyPart
   protected:
     virtual bool openFile();
     virtual void guiActivateEvent( KParts::GUIActivateEvent * );
-
+    void initAction();
   private:
     MainWidget *mMainWidget;
 };

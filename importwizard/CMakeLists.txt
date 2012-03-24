@@ -14,10 +14,13 @@ abstractimporter.cpp
 selectcomponentpage.cpp
 importfilterinfogui.cpp
 abstractsettings.cpp
+abstractaddressbook.cpp
 thunderbird/thunderbirdimportdata.cpp
+thunderbird/thunderbirdsettings.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp
 evolutionv3/evolutionv3importdata.cpp
+evolutionv3/evolutionsettings.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
 opera/operaimportdata.cpp
@@ -47,6 +50,7 @@ target_link_libraries(importwizard
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   mailimporter
   mailcommon
   kdepim
@@ -54,4 +58,5 @@ target_link_libraries(importwizard
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(PROGRAMS importwizard.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 

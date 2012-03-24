@@ -47,6 +47,10 @@ public:
   ImportAddressbookPage *importAddressBookPage();
   ImportSettingPage *importSettingPage();
   ImportFinishPage *importFinishPage();
+
+  void addFinishInfo( const QString& log );
+  void addFinishError( const QString& log );
+
 private slots:
   void help();
   void slotProgramSelected(const QString& program);
@@ -54,7 +58,7 @@ private slots:
   void slotImportFiltersClicked();
   void slotProgramDoubleClicked();
   void slotAtLeastOneComponentSelected( bool b );
-
+  void slotImportSettingsClicked();
 private:
   void addImportModule(AbstractImporter *);
   void checkModules();

@@ -30,6 +30,8 @@ class ImportFinishPage : public QWidget
 public:
     explicit ImportFinishPage(QWidget *parent = 0);
     ~ImportFinishPage();
+    void addFilterImportInfo( const QString& log );
+    void addFilterImportError( const QString& log );
     
 private:
     Ui::ImportFinishPage *ui;

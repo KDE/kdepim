@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Archive Mail Agent
+Comment=Archive Mail Agent
+Type=AkonadiAgent
+Exec=akonadi_archivemail_agent
+#Icon=view-filter
+
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_archivemail_agent

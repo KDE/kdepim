@@ -49,6 +49,10 @@ protected:
   void initCompleter();
   void keyPressEvent(QKeyEvent* e);
   void resizeEvent(QResizeEvent *event);
+  void contextMenuEvent( QContextMenuEvent *event );
+  
+signals:
+  void findText();
 private:
   QCompleter *m_completer;
   SieveLineNumberArea *m_sieveLineNumberArea;

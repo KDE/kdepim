@@ -102,7 +102,8 @@ ImportWizard::ImportWizard(QWidget *parent)
   connect(mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
   connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
-  connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT( slotAtLeastOneComponentSelected( bool ) ) );
+  connect(mImportSettingPage, SIGNAL(importSettingsClicked()), this, SLOT(slotImportSettingsClicked()) );
+  connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT(slotAtLeastOneComponentSelected(bool)) );
 
   resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
@@ -130,6 +131,12 @@ void ImportWizard::slotImportMailsClicked()
 {
   const bool result = mSelectedPim->importMails();
   setValid(mPage3,result);
+}
+
+void ImportWizard::slotImportSettingsClicked()
+{
+  const bool result = mSelectedPim->importSettings();
+  setValid(mPage6,result);
 }
 
 void ImportWizard::slotProgramSelected(const QString& program)
@@ -190,8 +197,8 @@ void ImportWizard::next()
     setValid(mPage5,false);
     KAssistantDialog::next();
   } else if( currentPage() == mPage5 ) {
+    setValid(mPage6,false);
     KAssistantDialog::next();
-    mSelectedPim->importSettings();
   } else if( currentPage() == mPage6 ) {
     KAssistantDialog::next();
     mSelectedPim->importAddressBook();
@@ -227,6 +234,16 @@ ImportSettingPage *ImportWizard::importSettingPage()
 ImportFinishPage *ImportWizard::importFinishPage()
 {
   return mImportFinishPage;
+}
+
+void ImportWizard::addFinishInfo( const QString& log )
+{
+  mImportFinishPage->addFilterImportInfo( log );
+}
+
+void ImportWizard::addFinishError( const QString& log )
+{
+  mImportFinishPage->addFilterImportError( log );
 }
 
 #include "importwizard.moc"
