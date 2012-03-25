@@ -162,7 +162,7 @@ void TemplatesTextEdit::keyPressEvent( QKeyEvent *e )
     }
   }
   KTextEdit::keyPressEvent( e );
-  QString text = wordUnderCursor();
+  const QString text = wordUnderCursor();
   if( text.length() < 2 ) {
     // min 2 char for completion
     return;
