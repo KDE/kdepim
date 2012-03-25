@@ -19,6 +19,8 @@
 
 #include <kpimidentities/identity.h>
 
+#include <mailtransport/transportmanager.h>
+
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
@@ -138,6 +140,24 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "transport" ) )
     {
+      MailTransport::Transport *transport = createTransport();
+      for ( QDomElement smtp = e.firstChildElement(); !smtp.isNull(); smtp = smtp.nextSiblingElement() ) {
+        const QString smtpTag = smtp.tagName();
+        if ( smtpTag == QLatin1String( "url" ) ) {
+          QUrl smtpUrl( smtpTag );
+          
+          transport->setHost( smtpUrl.host() );
+          transport->setPort( smtpUrl.port() );
+        } else {
+          qDebug()<<" smtp tag unknow :"<<smtpTag;
+        }
+      }
+      //TODO
+      //mt->setName( smtpservername );
+      
+      transport->writeConfig();
+      MailTransport::TransportManager::self()->addTransport( transport );
+      MailTransport::TransportManager::self()->setDefaultTransport( transport->id() );
     }
     else if ( tag == QLatin1String( "drafts-folder" ) )
     {
