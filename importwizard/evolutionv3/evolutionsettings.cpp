@@ -122,6 +122,10 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         {
           //TODO
         }
+        else if ( identityTag == QLatin1String( "reply-to" ) )
+        {
+          newIdentity->setReplyToAddr( identity.text() );
+        }
         else
         {
           qDebug()<<" tag identity not found :"<<identityTag;
