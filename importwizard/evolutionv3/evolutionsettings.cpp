@@ -103,9 +103,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
     qDebug()<<" tag :"<<tag;
+    KPIMIdentities::Identity* newIdentity = createIdentity();
     if ( tag == QLatin1String( "identity" ) )
     {
-      KPIMIdentities::Identity* newIdentity = createIdentity();
       for ( QDomElement identity = e.firstChildElement(); !identity.isNull(); identity = identity.nextSiblingElement() ) {
         const QString identityTag = identity.tagName();
         if ( identityTag == QLatin1String( "name" ) )
@@ -137,9 +137,15 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "source" ) )
     {
+      //TODO imap ? pop3 ? 
     }
     else if ( tag == QLatin1String( "transport" ) )
     {
+      if ( e.hasAttribute( "save-passwd" ) && e.attribute( "save-passwd" ) == QLatin1String( "true" ) )
+      {
+        //TODO
+      }
+      
       MailTransport::Transport *transport = createTransport();
       for ( QDomElement smtp = e.firstChildElement(); !smtp.isNull(); smtp = smtp.nextSiblingElement() ) {
         const QString smtpTag = smtp.tagName();
@@ -161,9 +167,11 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "drafts-folder" ) )
     {
+      newIdentity->setDrafts(adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) ) ); 
     }
     else if ( tag == QLatin1String( "sent-folder" ) )
     {
+      newIdentity->setFcc(adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) ) ); 
     }
     else if ( tag == QLatin1String( "auto-cc" ) )
     {
@@ -182,6 +190,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else
       qDebug()<<" tag not know :"<<tag;
+   
+    storeIdentity(newIdentity);
   }
 
 }
