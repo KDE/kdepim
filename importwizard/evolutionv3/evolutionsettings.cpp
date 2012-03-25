@@ -78,5 +78,58 @@ void EvolutionSettings::readAccount(const QDomElement &account)
 void EvolutionSettings::extractAccountInfo(const QString& info)
 {
   qDebug()<<" info "<<info;
+  //Read QDomElement
+  QDomDocument account;
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !account.setContent( info, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return;
+  }
+
+  QDomElement domElement = account.documentElement();
+
+  if ( domElement.isNull() ) {
+    kDebug() << "Account not found";
+    return;
+  }
+  for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    const QString tag = e.tagName();
+    qDebug()<<" tag :"<<tag;
+    if ( tag == QLatin1String( "identity" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "source" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "transport" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "drafts-folder" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "sent-folder" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "auto-cc" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "auto-bcc" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "receipt-policy" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "pgp" ) )
+    {
+    }
+    else if ( tag == QLatin1String( "smime" ) )
+    {
+    }
+    else
+      qDebug()<<" tag not know :"<<tag;
+  }
 
 }
