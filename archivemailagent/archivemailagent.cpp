@@ -39,3 +39,5 @@ ArchiveMailAgent::~ArchiveMailAgent()
 }
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
+
+#include "archivemailagent.moc"
