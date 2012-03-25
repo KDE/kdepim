@@ -62,7 +62,7 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
       {
         readAccount(e);
       } else if ( tag == QLatin1String( "signatures" ) ) {
-        //TODO
+        readSignatures( e );
       }
     }
   }
@@ -71,7 +71,40 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
 EvolutionSettings::~EvolutionSettings()
 {
 }
-   
+
+void EvolutionSettings::readSignatures(const QDomElement &account)
+{
+  for ( QDomElement signatureConfig = account.firstChildElement(); !signatureConfig.isNull(); signatureConfig = signatureConfig.nextSiblingElement() ) {
+    if(signatureConfig.tagName() == QLatin1String("li")) {
+      QDomElement stringValue = signatureConfig.firstChildElement();
+      extractSignatureInfo(stringValue.text());
+    }
+  }
+}
+
+void EvolutionSettings::extractSignatureInfo( const QString&info )
+{
+  qDebug()<<" signature info "<<info;
+  //Read QDomElement
+  QDomDocument signature;
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !signature.setContent( info, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return;
+  }
+
+  QDomElement domElement = signature.documentElement();
+
+  if ( domElement.isNull() ) {
+    kDebug() << "Signature not found";
+    return;
+  }
+
+}
+
 void EvolutionSettings::readAccount(const QDomElement &account)
 {
   for ( QDomElement accountConfig = account.firstChildElement(); !accountConfig.isNull(); accountConfig = accountConfig.nextSiblingElement() ) {
