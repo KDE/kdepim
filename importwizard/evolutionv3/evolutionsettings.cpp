@@ -61,6 +61,8 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
       if(e.hasAttribute( "name" ) && e.attribute("name") == QLatin1String("accounts") )
       {
         readAccount(e);
+      } else if ( tag == QLatin1String( "signatures" ) ) {
+        //TODO
       }
     }
   }
