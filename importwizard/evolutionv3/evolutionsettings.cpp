@@ -16,6 +16,9 @@
 */
 
 #include "evolutionsettings.h"
+
+#include <kpimidentities/identity.h>
+
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
@@ -100,6 +103,31 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     qDebug()<<" tag :"<<tag;
     if ( tag == QLatin1String( "identity" ) )
     {
+      KPIMIdentities::Identity* newIdentity = createIdentity();
+      for ( QDomElement identity = e.firstChildElement(); !identity.isNull(); identity = identity.nextSiblingElement() ) {
+        const QString identityTag = identity.tagName();
+        if ( identityTag == QLatin1String( "name" ) )
+        {
+          newIdentity->setIdentityName( identity.text() );
+        }
+        else if ( identityTag == QLatin1String( "addr-spec" ) )
+        {
+          newIdentity->setPrimaryEmailAddress(identity.text());
+        }
+        else if ( identityTag == QLatin1String( "organization" ) )
+        {
+          newIdentity->setOrganization(identity.text());
+        }
+        else if ( identityTag == QLatin1String( "signature" ) )
+        {
+          //TODO
+        }
+        else
+        {
+          qDebug()<<" tag identity not found :"<<identityTag;
+        }
+        storeIdentity(newIdentity);
+      }
     }
     else if ( tag == QLatin1String( "source" ) )
     {
