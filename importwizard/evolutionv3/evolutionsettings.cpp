@@ -102,7 +102,10 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     kDebug() << "Signature not found";
     return;
   }
-
+  for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    const QString tag = e.tagName();
+    qDebug()<<" signature tag :"<<tag;
+  }
 }
 
 void EvolutionSettings::readAccount(const QDomElement &account)
