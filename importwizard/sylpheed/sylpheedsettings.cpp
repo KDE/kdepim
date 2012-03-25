@@ -95,10 +95,12 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   identity->setOrganization(organization);
   const QString email = accountConfig.readEntry( QLatin1String( "address" ) );
   identity->setPrimaryEmailAddress(email);
+  
   if(accountConfig.readEntry(QLatin1String("set_autobcc"),0)==1 ) {
     const QString bcc = accountConfig.readEntry(QLatin1String("auto_bcc"));
     identity->setBcc(bcc);
   }
+
   const QString cc = accountConfig.readEntry(QLatin1String("auto_cc"));
   //identity->setcc(cc); //FIXME
   const QString draft = accountConfig.readEntry(QLatin1String("draft_folder"));
