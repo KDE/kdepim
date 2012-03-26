@@ -15,25 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THUNDERBIRDSETTINGS_H
-#define THUNDERBIRDSETTINGS_H
+#ifndef ARCHIVEMAILMANAGER_H
+#define ARCHIVEMAILMANAGER_H
 
-#include "abstractsettings.h"
-#include <QString>
-#include <QMap>
+#include <QObject>
 
-class ImportWizard;
-class KConfigGroup;
-
-class ThunderbirdSettings : public AbstractSettings
+class ArchiveMailManager : public QObject
 {
+  Q_OBJECT
 public:
-  explicit ThunderbirdSettings(const QString& filename, ImportWizard *parent );
-  ~ThunderbirdSettings();
-private:
-  void insertIntoMap( const QString& line );
-  QMap<QString, QVariant> mMapConfig;
+  explicit ArchiveMailManager(QObject *parent = 0);
+  ~ArchiveMailManager();
 };
 
-#endif /* THUNDERBIRDSETTINGS_H */
+
+#endif /* ARCHIVEMAILMANAGER_H */
 

@@ -16,10 +16,22 @@
 */
 
 #include "archivemailagent.h"
+#include "archivemailkernel.h"
+
+#include <mailcommon/mailkernel.h>
+#include <akonadi/dbusconnectionpool.h>
+
 
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
 {
+  ArchiveMailKernel *kernel = new ArchiveMailKernel( this );
+  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+
+  Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
+  Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
+
 }
 
 ArchiveMailAgent::~ArchiveMailAgent()
@@ -27,3 +39,5 @@ ArchiveMailAgent::~ArchiveMailAgent()
 }
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
+
+#include "archivemailagent.moc"

@@ -18,6 +18,8 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+#include <QWidget>
+#include <QVBoxLayout>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -33,10 +35,16 @@ int main(int argc, char* argv[])
   KCmdLineArgs::init(argc,argv,&aboutData);
 
   KApplication app;
+  QWidget *w = new QWidget;
+  QVBoxLayout *vbox = new QVBoxLayout(w);
 
-  KPIM::AddresseeLineEdit *kale = new KPIM::AddresseeLineEdit(0);
-  kale->resize( 400, 20 );
-  kale->show();
+  KPIM::AddresseeLineEdit *kale1 = new KPIM::AddresseeLineEdit(0);
+  vbox->addWidget(kale1);
+  KPIM::AddresseeLineEdit *kale2 = new KPIM::AddresseeLineEdit(0);
+  vbox->addWidget(kale2);
+
+  w->resize( 400, 20 );
+  w->show();
 
   return app.exec();
 

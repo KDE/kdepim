@@ -35,6 +35,7 @@ private:
   QString readTransport( const KConfigGroup& accountConfig );
   void readPop3Account( const KConfigGroup& accountConfig );
   void readImapAccount( const KConfigGroup& accountConfig );
+  void readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity );
 
 };
 

@@ -349,6 +349,9 @@ QString FilterImporterThunderbird::extractActions( const QString &line,
   } else if ( line == QLatin1String( "Mark read" ) ) {
     actionName = QLatin1String( "set status" );
     value = QLatin1String( "R" );
+  } else if ( line == QLatin1String( "Mark unread" ) ) {
+    actionName = QLatin1String( "set status" );
+    value = QLatin1String( "U" ); //TODO verify
   } else if ( line == QLatin1String( "Copy to folder" ) ) {
     actionName = QLatin1String( "copy" );
   } else if ( line == QLatin1String( "AddTag" ) ) {
