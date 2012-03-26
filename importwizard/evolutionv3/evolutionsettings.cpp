@@ -215,14 +215,18 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     {
       if ( e.hasAttribute( "always" ) && ( e.attribute( "always" ) == QLatin1String( "true" ) ) )
       {
-        //<recipients></recipients>
+        QDomElement recipient = e.firstChildElement();
+        const QString text = recipient.text();
+        newIdentity->setReplyToAddr(text);
       }
     }
     else if ( tag == QLatin1String( "auto-bcc" ) )
     {
       if ( e.hasAttribute( "always" ) && ( e.attribute( "always" ) == QLatin1String( "true" ) ) )
       {
-        //<recipients></recipients>
+        QDomElement recipient = e.firstChildElement();
+        const QString text = recipient.text();
+        newIdentity->setBcc(text);
       }
     }
     else if ( tag == QLatin1String( "receipt-policy" ) )
