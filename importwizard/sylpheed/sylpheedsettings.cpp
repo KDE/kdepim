@@ -19,6 +19,7 @@
 #include <mailtransport/transportmanager.h>
 
 #include <kpimidentities/identity.h>
+#include <kpimidentities/signature.h>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -43,7 +44,32 @@ SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *paren
 SylpheedSettings::~SylpheedSettings()
 {
 }
-   
+
+void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
+{
+  KPIMIdentities::Signature signature;
+  const int signatureType = accountConfig.readEntry("signature_type", 0 );
+  switch( signatureType ) {
+  case 0: //File
+    signature.setType( KPIMIdentities::Signature::FromFile );
+    signature.setUrl( accountConfig.readEntry("signature_path" ),false );
+    break;
+  case 1: //Output
+    signature.setType( KPIMIdentities::Signature::FromCommand );
+    signature.setUrl( accountConfig.readEntry("signature_path" ),true );
+    break;
+  case 2: //Text
+    signature.setType( KPIMIdentities::Signature::Inlined );
+    signature.setText( accountConfig.readEntry("signature_text" ) );
+    break;
+  default:
+    qDebug()<<" signature type unknow :"<<signatureType;
+  }
+  //TODO  const bool signatureBeforeQuote = ( accountConfig.readEntry( "signature_before_quote", 0 ) == 1 ); not implemented in kmail
+
+  identity->setSignature( signature );
+}
+
 void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 {
   QMap<QString, QVariant> settings;
@@ -119,6 +145,7 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   {
     identity->setTransport(transportId);
   }
+  readSignature( accountConfig, identity );
   storeIdentity(identity);
 }
   
@@ -140,5 +167,5 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
   ssl_smtp=0
 */
   }
-  return QString();//TODO
+  return QString();
 }
