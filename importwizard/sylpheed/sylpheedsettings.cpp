@@ -101,8 +101,11 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
     identity->setBcc(bcc);
   }
 
-  const QString cc = accountConfig.readEntry(QLatin1String("auto_cc"));
-  //identity->setcc(cc); //FIXME
+  if(accountConfig.readEntry(QLatin1String("set_autocc"),0)==1 ) {
+    const QString cc = accountConfig.readEntry(QLatin1String("auto_cc"));
+    identity->setReplyToAddr(cc);
+  }
+  
   const QString draft = accountConfig.readEntry(QLatin1String("draft_folder"));
   identity->setDrafts(adaptFolder(draft));
 
