@@ -19,6 +19,7 @@
 #define EVOLUTIONSETTINGS_H
 
 #include "abstractsettings.h"
+#include <kpimidentities/signature.h>
 #include <QString>
 
 class ImportWizard;
@@ -35,7 +36,7 @@ private:
   void extractAccountInfo(const QString& info);
   void readSignatures(const QDomElement &account);
   void extractSignatureInfo( const QString&info );
-
+  QMap<QString, KPIMIdentities::Signature> mMapSignature;
 };
 
 #endif /* EVOLUTIONSETTINGS_H */

@@ -105,15 +105,29 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     return;
   }
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    KPIMIdentities::Signature signature;
+    
     const QString tag = e.tagName();
+    const QString uid = e.attribute( QLatin1String( "uid" ) );
+    const QString signatureName = e.attribute( QLatin1String( "name" ) );
+    const QString format = e.attribute( QLatin1String( "text" ) );
+    const bool automatic = ( e.attribute( QLatin1String( "auto" ) ) == QLatin1String( "true" ) );
+    
     if ( tag == QLatin1String( "filename" ) ) {
       //TODO store it
     }
-      
+    
+    if ( automatic )
+      signature.setType( KPIMIdentities::Signature::FromCommand );
+    else
+      signature.setType( KPIMIdentities::Signature::FromFile );
+    //void setUrl( const QString &url, bool isExecutable=false );
+    mMapSignature.insert( uid, signature );
+        
     qDebug()<<" signature tag :"<<tag;
   }
 
-
+//<signature name="html" uid="1332775655.21659.4@krita" auto="false" format="text/html"><filename>signature-1</filename></signature>
   //TODO signature path :  ~/.local/share/evolution/signatures/*
 }
 
@@ -169,7 +183,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         }
         else if ( identityTag == QLatin1String( "signature" ) )
         {
-          //TODO
+          if ( identity.hasAttribute( "uid" ) ) {
+            newIdentity->setSignature( mMapSignature.value( identity.attribute( "uid" ) ) );
+          }
         }
         else if ( identityTag == QLatin1String( "reply-to" ) )
         {

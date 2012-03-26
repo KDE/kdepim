@@ -16,10 +16,7 @@
 */
 
 #include "thunderbirdsettings.h"
-#include <KConfig>
-#include <KConfigGroup>
 #include <QTextStream>
-#include <QRegExp>
 #include <QStringList>
 #include <QFile>
 #include <QDebug>
@@ -34,17 +31,14 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   }
   QTextStream stream(&file);
   while ( !stream.atEnd() ) {
-    QString line = stream.readLine();
+    const QString line = stream.readLine();
     if(line.startsWith(QLatin1String("user_pref"))) {
-      //TODO
-      if(line.contains(QLatin1String("mail.smtpserver."))) {
-
-      } else if(line.contains(QLatin1String("mail.server."))) {
-
-      } else if(line.contains(QLatin1String("mail.identity."))) {
-
-      } else if(line.contains(QLatin1String("mail.account."))) {
-
+      if(line.contains(QLatin1String("mail.smtpserver.")) ||
+         line.contains(QLatin1String("mail.server.") ) ||
+         line.contains(QLatin1String("mail.identity.")) ||
+         line.contains(QLatin1String("mail.account.")) ||
+         line.contains( QLatin1String( "mail.accountmanager." ) ) ) {
+        insertIntoMap( line );
       }
     }
   }
@@ -53,4 +47,11 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
 }
-   
+
+void ThunderbirdSettings::insertIntoMap( const QString& line )
+{
+  //TODO
+  QString newLine = line;
+  newLine.remove( QLatin1String( "user_pref(" ) );
+  newLine.remove( QLatin1String( ");" ) );
+}
