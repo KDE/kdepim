@@ -58,12 +58,14 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
   for ( QDomElement e = config.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
     if ( tag == QLatin1String( "entry" ) ) {
-      if(e.hasAttribute( "name" ) && e.attribute("name") == QLatin1String("accounts") )
-      {
-        readAccount(e);
-      } else if ( tag == QLatin1String( "signatures" ) ) {
-        readSignatures( e );
-      }
+      if ( e.hasAttribute( "name" ) ) {
+        const QString attr = e.attribute("name");
+        if ( attr == QLatin1String( "accounts" ) ) {
+          readAccount(e);
+        } else if ( attr == QLatin1String( "signatures" ) ) {
+          readSignatures( e );
+        }
+      }  
     }
   }
 }
@@ -104,6 +106,10 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
   }
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
+    if ( tag == QLatin1String( "filename" ) ) {
+      //TODO store it
+    }
+      
     qDebug()<<" signature tag :"<<tag;
   }
 
@@ -141,10 +147,10 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     kDebug() << "Account not found";
     return;
   }
+  KPIMIdentities::Identity* newIdentity = createIdentity();
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
     qDebug()<<" tag :"<<tag;
-    KPIMIdentities::Identity* newIdentity = createIdentity();
     if ( tag == QLatin1String( "identity" ) )
     {
       for ( QDomElement identity = e.firstChildElement(); !identity.isNull(); identity = identity.nextSiblingElement() ) {
@@ -173,7 +179,6 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         {
           qDebug()<<" tag identity not found :"<<identityTag;
         }
-        storeIdentity(newIdentity);
       }
     }
     else if ( tag == QLatin1String( "source" ) )
@@ -184,35 +189,41 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     {
       if ( e.hasAttribute( "save-passwd" ) && e.attribute( "save-passwd" ) == QLatin1String( "true" ) )
       {
-        //TODO
+        //TODO save to kwallet ?
       }
       
       MailTransport::Transport *transport = createTransport();
       for ( QDomElement smtp = e.firstChildElement(); !smtp.isNull(); smtp = smtp.nextSiblingElement() ) {
         const QString smtpTag = smtp.tagName();
         if ( smtpTag == QLatin1String( "url" ) ) {
-          QUrl smtpUrl( smtpTag );
-          
+          qDebug()<<" smtp.text() :"<<smtp.text();
+          QUrl smtpUrl( smtp.text() );
+
           transport->setHost( smtpUrl.host() );
-          transport->setPort( smtpUrl.port() );
+          transport->setName( smtpUrl.host() );
+
+          const int port = smtpUrl.port();
+          if ( port > 0 )
+            transport->setPort( port );
+          
         } else {
           qDebug()<<" smtp tag unknow :"<<smtpTag;
         }
       }
-      //TODO
-      //mt->setName( smtpservername );
-      
+      //TODO authentification
       transport->writeConfig();
       MailTransport::TransportManager::self()->addTransport( transport );
       MailTransport::TransportManager::self()->setDefaultTransport( transport->id() );
     }
     else if ( tag == QLatin1String( "drafts-folder" ) )
     {
-      newIdentity->setDrafts(adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) ) ); 
+      const QString selectedFolder = adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) );
+      newIdentity->setDrafts(selectedFolder); 
     }
     else if ( tag == QLatin1String( "sent-folder" ) )
     {
-      newIdentity->setFcc(adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) ) ); 
+      const QString selectedFolder = adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) );
+      newIdentity->setFcc(selectedFolder);
     }
     else if ( tag == QLatin1String( "auto-cc" ) )
     {
@@ -246,8 +257,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else
       qDebug()<<" tag not know :"<<tag;
-   
-    storeIdentity(newIdentity);
-  }
 
+  }
+  storeIdentity(newIdentity);
 }

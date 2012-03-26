@@ -36,7 +36,6 @@ private:
   void readSignatures(const QDomElement &account);
   void extractSignatureInfo( const QString&info );
 
-
 };
 
 #endif /* EVOLUTIONSETTINGS_H */
