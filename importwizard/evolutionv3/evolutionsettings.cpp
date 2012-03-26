@@ -106,6 +106,9 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     const QString tag = e.tagName();
     qDebug()<<" signature tag :"<<tag;
   }
+
+
+  //TODO signature path :  ~/.local/share/evolution/signatures/*
 }
 
 void EvolutionSettings::readAccount(const QDomElement &account)
