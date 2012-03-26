@@ -213,18 +213,29 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "auto-cc" ) )
     {
+      if ( e.hasAttribute( "always" ) && ( e.attribute( "always" ) == QLatin1String( "true" ) ) )
+      {
+        //<recipients></recipients>
+      }
     }
     else if ( tag == QLatin1String( "auto-bcc" ) )
     {
+      if ( e.hasAttribute( "always" ) && ( e.attribute( "always" ) == QLatin1String( "true" ) ) )
+      {
+        //<recipients></recipients>
+      }
     }
     else if ( tag == QLatin1String( "receipt-policy" ) )
     {
+      //TODO
     }
     else if ( tag == QLatin1String( "pgp" ) )
     {
+      //TODO
     }
     else if ( tag == QLatin1String( "smime" ) )
     {
+      //TODO
     }
     else
       qDebug()<<" tag not know :"<<tag;
