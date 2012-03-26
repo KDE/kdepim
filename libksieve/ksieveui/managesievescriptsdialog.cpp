@@ -31,6 +31,7 @@ bool ItemRadioButton::mTreeWidgetIsBeingCleared = false;
 ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
   : QDialog( parent ),
     mSieveEditor( 0 ),
+    mIsNewScript( false ), 
     mWasActive( false )
 {
   setWindowTitle( i18n( "Manage Sieve Scripts" ) );
@@ -404,6 +405,7 @@ void ManageSieveScriptsDialog::slotEditScript()
     return;
   url.setFileName( itemText( currentItem ) );
   mCurrentURL = url;
+  mIsNewScript = false;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
   connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
            this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
@@ -455,6 +457,7 @@ void ManageSieveScriptsDialog::slotNewScript()
     new QTreeWidgetItem( currentItem );
   addRadioButton( newItem, name );
   mCurrentURL = u;
+  mIsNewScript = true;
   slotGetResult( 0, true, QString(), false );
 }
 
@@ -500,7 +503,8 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
   mSieveEditor->deleteLater();
   mSieveEditor = 0;
   mCurrentURL = KUrl();
-  slotRefresh(true);
+  if ( mIsNewScript )
+    slotRefresh(true);
 }
 
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg)

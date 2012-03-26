@@ -116,7 +116,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     KPushButton *mDeleteScript;
     KPushButton *mDeactivateScript;
 
-  
+    bool mIsNewScript : 1;
     bool mWasActive : 1;
 };
 
