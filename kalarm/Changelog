@@ -16,6 +16,7 @@ KAlarm Change Log
 
 === Version 2.8.0 (KDE 4.8.0) --- 16 January 2012 ===
 - Use Akonadi as the default calendar access method.
+- Use configurable colours and KDE colour scheme for calendar list.
 - Allow user to stop playback after clicking Try in audio alarm edit dialogue.
 
 === Version 2.7.5 (KDE 4.7.4) --- 23 November 2011 ===
