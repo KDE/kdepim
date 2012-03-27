@@ -103,11 +103,11 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
   const QString inbox = adaptFolder(accountConfig.readEntry(QLatin1String("inbox")));
   settings.insert(QLatin1String("TargetCollection"), inbox);
-
-/*
-  set_popport=0
-pop_port=110
-*/
+  int port = 0;
+  if ( readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
+    settings.insert( QLatin1String( "Port" ), port );
+  if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) && accountConfig.readEntry( QLatin1String( "ssl_pop" ), false ) )
+    settings.insert( QLatin1String( "UseSSL" ), true );
   
   createResource( "akonadi_pop3_resource", name, settings );
 }
@@ -181,10 +181,14 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
 {
   const QString smtpservername = accountConfig.readEntry("receive_server");
   const QString smtpserver = accountConfig.readEntry("smtp_server");
-  int port = 0;
+  
   if(!smtpserver.isEmpty()) {
     MailTransport::Transport *mt = createTransport();
     mt->setName( smtpservername );
+    int port = 0;
+    if ( readConfig( QLatin1String( "smtp_port" ), accountConfig, port, true ) )
+      mt->setPort( port );
+
     mt->writeConfig();
     MailTransport::TransportManager::self()->addTransport( mt );
     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
