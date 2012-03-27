@@ -70,12 +70,30 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
   identity->setSignature( signature );
 }
 
+bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accountConfig, bool& useConfig )
+{
+  //TODO
+  const QString useKey = QLatin1String( "set_" )+ key;
+  if ( accountConfig.hasKey( useKey ) && ( accountConfig.readEntry( useKey, 0 ) == 1 ) ) {
+    useConfig = true;
+    return true;
+  }
+  useConfig = false;
+  return true;
+}
+
 void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 {
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
   const QString inbox = adaptFolder(accountConfig.readEntry(QLatin1String("inbox")));
   settings.insert(QLatin1String("TargetCollection"), inbox);
+
+/*
+  set_popport=0
+pop_port=110
+*/
+  
   createResource( "akonadi_pop3_resource", name, settings );
 }
 
