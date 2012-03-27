@@ -36,7 +36,8 @@ private:
   void readPop3Account( const KConfigGroup& accountConfig );
   void readImapAccount( const KConfigGroup& accountConfig );
   void readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity );
-  bool readConfig( const QString& key, const KConfigGroup& accountConfig, bool& useConfig );
+  bool readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value );
+
 
 };
 
