@@ -100,6 +100,9 @@ bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accou
 void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 {
   QMap<QString, QVariant> settings;
+  const QString host = accountConfig.readEntry("receive_server");
+  settings.insert( QLatin1String( "Host" ), host );
+  
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
   const QString inbox = adaptFolder(accountConfig.readEntry(QLatin1String("inbox")));
   settings.insert(QLatin1String("TargetCollection"), inbox);
@@ -108,6 +111,14 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
     settings.insert( QLatin1String( "Port" ), port );
   if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) && accountConfig.readEntry( QLatin1String( "ssl_pop" ), false ) )
     settings.insert( QLatin1String( "UseSSL" ), true );
+  if ( accountConfig.hasKey( QLatin1String( "message_leave_time" ) ) ){
+    settings.insert( QLatin1String( "LeaveOnServerDays" ), accountConfig.readEntry( QLatin1String( "message_leave_time" ) ) );
+  }
+  const QString user = accountConfig.readEntry( QLatin1String( "user_id" ) );
+  settings.insert( QLatin1String( "Login" ), user );
+
+  const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
+  settings.insert( QLatin1String( "Password" ), password );
   
   createResource( "akonadi_pop3_resource", name, settings );
 }
@@ -179,26 +190,63 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   
 QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
 {
-  const QString smtpservername = accountConfig.readEntry("receive_server");
   const QString smtpserver = accountConfig.readEntry("smtp_server");
   
   if(!smtpserver.isEmpty()) {
     MailTransport::Transport *mt = createTransport();
-    mt->setName( smtpservername );
+    mt->setName( smtpserver );
     int port = 0;
     if ( readConfig( QLatin1String( "smtp_port" ), accountConfig, port, true ) )
       mt->setPort( port );
-
+    const QString user = accountConfig.readEntry( QLatin1String( "smtp_user_id" ) );
+    
+    if ( !user.isEmpty() ) {
+      mt->setUserName( user );
+      mt->setRequiresAuthentication( true );
+    }
+    const QString password = accountConfig.readEntry( QLatin1String( "smtp_password" ) );
+    if ( !password.isEmpty() ) {
+      mt->setStorePassword( true );
+      mt->setPassword( password );
+    }
+    if ( accountConfig.readEntry( QLatin1String( "use_smtp_auth" ), 0 )==1 ) {
+      const int authMethod = accountConfig.readEntry( QLatin1String( "smtp_auth_method" ), 0 );
+      switch( authMethod ) {
+      case 0: //Automatic:
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN); //????
+        break;
+      case 1: //Login
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN);
+        break;
+      case 2: //Cram-MD5
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+        break;
+      case 8: //Plain
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN);
+        break;
+      default:
+        qDebug()<<" smtp authentification unknown :"<<authMethod;
+      }
+    }
+    const int sslSmtp = accountConfig.readEntry( QLatin1String( "ssl_smtp" ), 0 );
+    switch( sslSmtp ) {
+    case 0:
+      mt->setEncryption( MailTransport::Transport::EnumEncryption::None ); 
+      break;
+    case 1:
+      mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
+      break;
+    case 2:
+      mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+      break;
+    default:
+      qDebug()<<" smtp ssl config unknown :"<<sslSmtp;
+        
+    }
     mt->writeConfig();
     MailTransport::TransportManager::self()->addTransport( mt );
     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
     return QString::number(mt->id()); //TODO verify
-    /*
-  smtp_auth_method=0
-  smtp_user_id=
-  smtp_password=
-  ssl_smtp=0
-*/
   }
   return QString();
 }
