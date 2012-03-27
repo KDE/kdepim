@@ -48,6 +48,7 @@ class QSplitter;
 class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;
+class QActionGroup;
 
 class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 {
@@ -70,7 +71,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void itemSelectionChanged( const QModelIndex &, const QModelIndex & );
     void selectFirstItem();
 
-    void setSimpleGuiMode( bool on );
+    void setViewMode( QAction *action );
     void setQRCodeShow( bool on );
 
     void restoreState();
@@ -80,6 +81,9 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void setupGui();
     void setupActions( KActionCollection * );
     bool showQRCodes();
+    void setViewMode( int mode );
+    void saveSplitterStates() const;
+    void restoreSplitterStates();
 
     QAbstractItemModel *allContactsModel();
 
@@ -102,12 +106,15 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     QStackedWidget *mDetailsViewStack;
     ContactSwitcher *mContactSwitcher;
 
-    QSplitter *mMainWidgetSplitter;
+    QSplitter *mMainWidgetSplitter1;
+    QSplitter *mMainWidgetSplitter2;
     Akonadi::ContactViewer *mContactDetails;
     Akonadi::ContactGroupViewer *mContactGroupDetails;
     QWidget *mEmptyDetails;
     Akonadi::StandardContactActionManager *mActionManager;
     QItemSelectionModel *mCollectionSelectionModel;
+
+    QActionGroup *mViewModeGroup;
 
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;

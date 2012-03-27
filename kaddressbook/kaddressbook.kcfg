@@ -43,6 +43,19 @@
       <tooltip>View columns</tooltip>
       <whatsthis>Set the number of contact model view columns.</whatsthis>
     </entry>
+
+    <entry type="Enum" name="ViewMode">
+      <choices>
+        <choice name="Dummy" />
+        <choice name="Simple" />
+        <choice name="TwoColumn" />
+        <choice name="ThreeColumn" />
+      </choices>
+      <default>3</default>
+      <label>Viewing mode</label>
+      <tooltip>Viewing mode (number of columns)</tooltip>
+      <whatsthis>Choose the layout for the main view</whatsthis>
+      </entry>
   </group>
 
 </kcfg>
