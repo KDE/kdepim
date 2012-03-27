@@ -70,9 +70,26 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
   identity->setSignature( signature );
 }
 
-bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value )
+bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accountConfig, int& value, bool remove_underscore )
 {
-  const QString useKey = QLatin1String( "set_" )+ key;
+  QString cleanedKey( key );
+  if ( remove_underscore )
+    cleanedKey.remove( QLatin1Char( '_' ) );
+  const QString useKey = QLatin1String( "set_" )+ cleanedKey;
+  if ( accountConfig.hasKey( useKey ) && ( accountConfig.readEntry( useKey, 0 ) == 1 ) ) {
+    value = accountConfig.readEntry( key,0 );
+    return true;
+  }
+  return false;
+}
+
+
+bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value, bool remove_underscore )
+{
+  QString cleanedKey( key );
+  if ( remove_underscore )
+    cleanedKey.remove( QLatin1Char( '_' ) );
+  const QString useKey = QLatin1String( "set_" )+ cleanedKey;
   if ( accountConfig.hasKey( useKey ) && ( accountConfig.readEntry( useKey, 0 ) == 1 ) ) {
     value = accountConfig.readEntry( key );
     return true;
@@ -139,16 +156,16 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   identity->setPrimaryEmailAddress(email);
 
   QString value;
-  if ( readConfig( QLatin1String("auto_bcc") , accountConfig, value ) )
+  if ( readConfig( QLatin1String("auto_bcc") , accountConfig, value, true ) )
     identity->setBcc(value);
 
-  if ( readConfig( QLatin1String("auto_cc") , accountConfig, value ) )
+  if ( readConfig( QLatin1String("auto_cc") , accountConfig, value, true ) )
     identity->setReplyToAddr(value);
   
-  if ( readConfig( QLatin1String("daft_folder") , accountConfig, value ) )
+  if ( readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
     identity->setDrafts(adaptFolder(value));
 
-  if ( readConfig( QLatin1String("sent_folder") , accountConfig, value ) )
+  if ( readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) )
     identity->setFcc(adaptFolder(value));
 
   const QString transportId = readTransport(accountConfig);
@@ -164,6 +181,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
 {
   const QString smtpservername = accountConfig.readEntry("receive_server");
   const QString smtpserver = accountConfig.readEntry("smtp_server");
+  int port = 0;
   if(!smtpserver.isEmpty()) {
     MailTransport::Transport *mt = createTransport();
     mt->setName( smtpservername );
