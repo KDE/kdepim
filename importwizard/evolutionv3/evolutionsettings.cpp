@@ -26,6 +26,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QDebug>
@@ -112,16 +113,30 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     const QString signatureName = e.attribute( QLatin1String( "name" ) );
     const QString format = e.attribute( QLatin1String( "text" ) );
     const bool automatic = ( e.attribute( QLatin1String( "auto" ) ) == QLatin1String( "true" ) );
-    
-    if ( tag == QLatin1String( "filename" ) ) {
-      //TODO store it
+
+    if ( format == QLatin1String( "text/html" ) ) {
+      signature.setInlinedHtml( true );
+    } else if ( format == QLatin1String( "text/plain" ) ) {
+      signature.setInlinedHtml( false );
     }
     
-    if ( automatic )
-      signature.setType( KPIMIdentities::Signature::FromCommand );
-    else
-      signature.setType( KPIMIdentities::Signature::FromFile );
-    //void setUrl( const QString &url, bool isExecutable=false );
+    
+    if ( tag == QLatin1String( "filename" ) ) {
+      if ( e.hasAttribute( QLatin1String( "script" ) ) && e.attribute( QLatin1String( "script" ) ) == QLatin1String( "true" ) ){
+        signature.setUrl( e.text(), true );
+        signature.setType( KPIMIdentities::Signature::FromCommand );
+      }
+      else {
+        signature.setUrl( QDir::homePath() + QLatin1String( ".local/share/evolution/signatures/" ) + e.text(), false );
+        signature.setType( KPIMIdentities::Signature::FromFile );
+
+      }
+    }
+    
+    if ( automatic ) {
+      //TODO
+    }
+    
     mMapSignature.insert( uid, signature );
         
     qDebug()<<" signature tag :"<<tag;

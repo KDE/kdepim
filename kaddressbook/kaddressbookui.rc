@@ -44,8 +44,11 @@
       <Action name="akonadi_resource_delete"/>
     </Menu>
 
-    <Menu name="settings"><text>&amp;Settings</text>
-      <Action name="options_show_simplegui"/>
+    <Menu name="view" noMerge="1"><text>&amp;View</text>
+      <Action name="view_mode_simple"/>
+      <Action name="view_mode_2columns"/>
+      <Action name="view_mode_3columns"/>
+      <Separator/>
       <Action name="options_show_qrcodes"/>
       <Separator/>
       <Action name="options_configure_keybinding" group="settings_configure"/>

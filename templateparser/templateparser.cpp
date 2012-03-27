@@ -1493,7 +1493,7 @@ QString TemplateParser::findTemplate()
     return QString();
   }
 
-  mQuoteString = DefaultTemplates::defaultQuoteString();
+  mQuoteString = GlobalSettings::self()->quoteString();
   return tmpl;
 }
 

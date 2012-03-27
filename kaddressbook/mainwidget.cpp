@@ -71,6 +71,7 @@
 #include <KCMultiDialog>
 
 #include <QtGui/QAction>
+#include <QtGui/QActionGroup>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QListView>
@@ -268,19 +269,11 @@ void MainWidget::configure()
 
 void MainWidget::delayedInit()
 {
-  // restore previous state
-  {
-    const KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
-    KPIM::UiStateSaver::restoreState( mMainWidgetSplitter, group );
-  }
-  {
-    const KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
-    KPIM::UiStateSaver::restoreState( mItemView, group );
-  }
+  setViewMode(0);					// get default from settings
 
-  mXmlGuiClient->
-    actionCollection()->
-      action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
+  const KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
+  KPIM::UiStateSaver::restoreState( mItemView, group );
+
 #if defined(HAVE_PRISON)
   mXmlGuiClient->
     actionCollection()->
@@ -299,20 +292,10 @@ void MainWidget::delayedInit()
 MainWidget::~MainWidget()
 {
   mModelColumnManager->store();
+  saveSplitterStates();
 
-  {
-    if ( !Settings::self()->useSimpleMode() ) {
-      // Do not save the splitter values when in simple mode, because we can't
-      // restore them correctly when switching back to normal mode
-
-      KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
-      KPIM::UiStateSaver::saveState( mMainWidgetSplitter, group );
-    }
-  }
-  {
-    KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
-    KPIM::UiStateSaver::saveState( mItemView, group );
-  }
+  KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
+  KPIM::UiStateSaver::saveState( mItemView, group );
 
   saveState();
 
@@ -390,30 +373,40 @@ void MainWidget::setupGui()
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
 
-  // The splitter that contains the three main parts of the gui
-  //   - collection view on the left
-  //   - item view in the middle
-  //   - details pane on the right, that contains
-  //       - details view stack on the top
-  //       - contact switcher at the bottom
-  mMainWidgetSplitter = new QSplitter;
-  mMainWidgetSplitter->setObjectName( "MainWidgetSplitter" );
+  // Splitter 1 contains the two main parts of the GUI:
+  //  - collection and item view splitter 2 on the left (see below)
+  //  - details pane on the right, that contains
+  //   - details view stack on the top
+  //   - contact switcher at the bottom
+  mMainWidgetSplitter1 = new QSplitter(Qt::Horizontal);
+  mMainWidgetSplitter1->setObjectName( "MainWidgetSplitter1" );
+  layout->addWidget( mMainWidgetSplitter1 );
 
-  layout->addWidget( mMainWidgetSplitter );
+  // Splitter 2 contains the remaining parts of the GUI:
+  //  - collection view on either the left or the top
+  //  - item view on either the right or the bottom
+  // The orientation of this splitter is changed for either
+  // a three or two column view;  in simple mode it is hidden.
+  mMainWidgetSplitter2 = new QSplitter(Qt::Vertical);
+  mMainWidgetSplitter2->setObjectName( "MainWidgetSplitter2" );
+  mMainWidgetSplitter1->addWidget( mMainWidgetSplitter2 );
 
   // the collection view
   mCollectionView = new Akonadi::EntityTreeView();
-  mMainWidgetSplitter->addWidget( mCollectionView );
+  mMainWidgetSplitter2->addWidget( mCollectionView );
 
   // the items view
   mItemView = new Akonadi::EntityTreeView();
   mItemView->setObjectName( "ContactView" );
   mItemView->setDefaultPopupMenu( QLatin1String( "akonadi_itemview_contextmenu" ) );
-  mMainWidgetSplitter->addWidget( mItemView );
+  mMainWidgetSplitter2->addWidget( mItemView );
 
   // the details pane that contains the details view stack and contact switcher
   mDetailsPane = new QWidget;
-  mMainWidgetSplitter->addWidget( mDetailsPane );
+  mMainWidgetSplitter1->addWidget( mDetailsPane );
+
+  mMainWidgetSplitter1->setStretchFactor( 1, 9 );	// maximum width for detail
+  mMainWidgetSplitter2->setStretchFactor( 1, 9 );	// for intuitive resizing
 
   QVBoxLayout *detailsPaneLayout = new QVBoxLayout( mDetailsPane );
   detailsPaneLayout->setMargin( 0 );
@@ -465,7 +458,6 @@ void MainWidget::setupGui()
 void MainWidget::setupActions( KActionCollection *collection )
 {
   KAction *action = 0;
-  KToggleAction *toggleAction = 0;
 
   action = KStandardAction::print( this, SLOT(print()), collection );
   action->setWhatsThis(
@@ -482,11 +474,6 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
   connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
 
-  toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
-  toggleAction->setText( i18n( "Show Simple View" ) );
-  toggleAction->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
-  connect( toggleAction, SIGNAL(toggled(bool)), SLOT(setSimpleGuiMode(bool)) );
-
 #if defined(HAVE_PRISON)
   KToggleAction *qrtoggleAction;
   qrtoggleAction = collection->add<KToggleAction>( "options_show_qrcodes" );
@@ -494,6 +481,29 @@ void MainWidget::setupActions( KActionCollection *collection )
   qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
   connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
 #endif
+
+  mViewModeGroup = new QActionGroup( this );
+
+  KAction *act = new KAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
+  act->setCheckable( true );
+  act->setData( 1 );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_1 ) );
+  act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
+  collection->addAction( "view_mode_simple", act );
+
+  act = new KAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
+  act->setCheckable( true );
+  act->setData( 2 );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_2 ) );
+  collection->addAction( "view_mode_2columns", act );
+
+  act = new KAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
+  act->setCheckable( true );
+  act->setData( 3 );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_3 ) );
+  collection->addAction( "view_mode_3columns", act );
+
+  connect( mViewModeGroup, SIGNAL(triggered(QAction *)), SLOT(setViewMode(QAction *)) );
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
@@ -620,20 +630,6 @@ void MainWidget::selectFirstItem()
   }
 }
 
-void MainWidget::setSimpleGuiMode( bool on )
-{
-  mCollectionView->setVisible( !on );
-  mItemView->setVisible( !on );
-  mDetailsPane->setVisible( true );
-  mContactSwitcher->setVisible( on );
-
-  if ( mItemView->model() ) {
-    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
-  }
-
-  Settings::self()->setUseSimpleMode( on );
-}
-
 bool MainWidget::showQRCodes()
 {
 #if defined(HAVE_PRISON)
@@ -685,6 +681,78 @@ QAbstractItemModel *MainWidget::allContactsModel()
   }
 
   return mAllContactsModel;
+}
+
+void MainWidget::setViewMode( QAction *action )
+{
+  setViewMode( action->data().toInt() );
+}
+
+void MainWidget::setViewMode( int mode )
+{
+  int currentMode = Settings::self()->viewMode();
+  //kDebug() << "cur" << currentMode << "new" << mode;
+  if ( mode == currentMode ) return;			// nothing to do
+
+  if ( mode == 0)
+      mode = currentMode;				// initialisation, no save
+  else
+      saveSplitterStates();				// for 2- or 3-column mode
+
+  if ( mode == 1 ) {					// simple mode
+    mMainWidgetSplitter2->setVisible( false );
+    mDetailsPane->setVisible( true );
+    mContactSwitcher->setVisible( true );
+  }
+  else {
+    mMainWidgetSplitter2->setVisible( true );
+    mContactSwitcher->setVisible( false );
+
+    if ( mode == 2) {					// 2 columns
+        mMainWidgetSplitter2->setOrientation( Qt::Vertical );
+    }
+    else if ( mode == 3) {				// 3 columns
+        mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
+    }
+  }
+
+  Settings::self()->setViewMode( mode );		// save new mode in settings
+  restoreSplitterStates();				// restore state for new mode
+  mViewModeGroup->actions().at( mode-1 )->setChecked( true );
+
+  if ( mItemView->model() ) {
+    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+  }
+}
+
+void MainWidget::saveSplitterStates() const
+{
+  // The splitter states are saved separately for each column view mode,
+  // but only if not in simple mode (1 column).
+  int currentMode = Settings::self()->viewMode();
+  if ( currentMode == 1 )
+    return;
+
+  QString groupName = QString( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
+  //kDebug() << "saving to group" << groupName;
+  KConfigGroup group( Settings::self()->config(), groupName );
+  KPIM::UiStateSaver::saveState( mMainWidgetSplitter1, group );
+  KPIM::UiStateSaver::saveState( mMainWidgetSplitter2, group );
+}
+
+void MainWidget::restoreSplitterStates()
+{
+  // The splitter states are restored as appropriate for the current
+  // column view mode, but not for simple mode (1 column).
+  int currentMode = Settings::self()->viewMode();
+  if ( currentMode == 1 )
+    return;
+
+  QString groupName = QString( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
+  //kDebug() << "restoring from group" << groupName;
+  KConfigGroup group( Settings::self()->config(), groupName );
+  KPIM::UiStateSaver::restoreState( mMainWidgetSplitter1, group );
+  KPIM::UiStateSaver::restoreState( mMainWidgetSplitter2, group );
 }
 
 #include "mainwidget.moc"
