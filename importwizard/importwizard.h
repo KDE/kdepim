@@ -59,6 +59,8 @@ private slots:
   void slotProgramDoubleClicked();
   void slotAtLeastOneComponentSelected( bool b );
   void slotImportSettingsClicked();
+  void slotImportAddressbookClicked();
+  
 private:
   void addImportModule(AbstractImporter *);
   void checkModules();

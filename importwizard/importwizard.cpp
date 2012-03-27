@@ -103,6 +103,9 @@ ImportWizard::ImportWizard(QWidget *parent)
   connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
   connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
   connect(mImportSettingPage, SIGNAL(importSettingsClicked()), this, SLOT(slotImportSettingsClicked()) );
+  connect(mImportAddressbookPage, SIGNAL(importAddressbookClicked()), this, SLOT(slotImportAddressbookClicked()) );
+
+  
   connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT(slotAtLeastOneComponentSelected(bool)) );
 
   resize( 640, 480 );
@@ -119,6 +122,12 @@ ImportWizard::~ImportWizard()
 void ImportWizard::slotProgramDoubleClicked()
 {
   next();
+}
+
+void ImportWizard::slotImportAddressbookClicked()
+{
+  const bool result = mSelectedPim->importAddressBook();
+  setValid(mPage7,result);
 }
 
 void ImportWizard::slotImportFiltersClicked()
@@ -194,14 +203,14 @@ void ImportWizard::next()
     KAssistantDialog::next();
     setValid(mPage4,false);
   } else if( currentPage() == mPage4 ) {
+    KAssistantDialog::next();
     setValid(mPage5,false);
-    KAssistantDialog::next();
   } else if( currentPage() == mPage5 ) {
-    setValid(mPage6,false);
     KAssistantDialog::next();
+    setValid(mPage6,false);
   } else if( currentPage() == mPage6 ) {
     KAssistantDialog::next();
-    mSelectedPim->importAddressBook();
+    setValid(mPage7,false);
   } else {
     KAssistantDialog::next();
   }

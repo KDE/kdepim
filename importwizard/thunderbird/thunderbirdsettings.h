@@ -20,7 +20,7 @@
 
 #include "abstractsettings.h"
 #include <QString>
-#include <QMap>
+#include <QHash>
 
 class ImportWizard;
 class KConfigGroup;
@@ -32,7 +32,7 @@ public:
   ~ThunderbirdSettings();
 private:
   void insertIntoMap( const QString& line );
-  QMap<QString, QVariant> mMapConfig;
+  QHash<QString, QVariant> mHashConfig;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */

@@ -50,8 +50,22 @@ ThunderbirdSettings::~ThunderbirdSettings()
 
 void ThunderbirdSettings::insertIntoMap( const QString& line )
 {
-  //TODO
   QString newLine = line;
-  newLine.remove( QLatin1String( "user_pref(" ) );
+  newLine.remove( QLatin1String( "user_pref(\"" ) );
   newLine.remove( QLatin1String( ");" ) );
+  const int pos = newLine.indexOf( QLatin1Char( ',' ) );
+  QString key = newLine.left( pos );
+  key.remove( key.length() -1, 1 );
+  QString valueStr = newLine.right( newLine.length() - pos -2);
+  if ( valueStr.at( 0 ) == QLatin1Char( '"' ) ) {
+    valueStr.remove( 0, 1 );
+    if ( valueStr.at( valueStr.length()-1 ) == QLatin1Char( '"' ) )
+      valueStr.remove( valueStr.length()-1, 1 );
+    //Store as String
+    mHashConfig.insert( key, valueStr );
+  } else {
+    //Store as integer
+    const int value = valueStr.toInt();
+    mHashConfig.insert( key, value );
+  }
 }
