@@ -183,6 +183,14 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
+
+  KPIMIdentities::Signature signature;
+  //TODO
+  const bool signatureHtml = mHashConfig.value(identity + QLatin1String( ".htmlSigFormat" )).toBool();
+  const QString textSignature = mHashConfig.value(identity + QLatin1String( ".htmlSigText" ) ).toString();
+  const QString fileSignature = mHashConfig.value(identity + QLatin1String( ".sig_file")).toString();
+  newIdentity->setSignature( signature );
+
   storeIdentity(newIdentity);
 }
 
