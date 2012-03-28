@@ -236,7 +236,8 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   mConfig = config;
   mGUIClient = aGUIClient;
   mFolderTreeWidget = 0;
-
+  mPreferHtmlAction = 0;
+  mPreferHtmlLoadExtAction = 0;
   Akonadi::Control::widgetNeedsAkonadi( this );
 
 
@@ -615,6 +616,7 @@ void KMMainWidget::readPreConfig()
   mHtmlLoadExtPref = MessageViewer::GlobalSettings::self()->htmlLoadExternal();
   mEnableFavoriteFolderView = ( GlobalSettings::self()->favoriteCollectionViewMode() != GlobalSettings::EnumFavoriteCollectionViewMode::HiddenMode );
   mEnableFolderQuickSearch = GlobalSettings::self()->enableFolderQuickSearch();
+  updateHtmlMenuEntry();
 }
 
 
@@ -4044,6 +4046,26 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
 
 }
 
+void KMMainWidget::updateHtmlMenuEntry()
+{
+  if(mPreferHtmlAction && mPreferHtmlLoadExtAction) {
+    bool multiFolder = false;
+    if ( mFolderTreeWidget ) {
+      multiFolder = mFolderTreeWidget->selectedCollections().count() > 1;
+    }
+    // the visual ones only make sense if we are showing a message list
+    mPreferHtmlAction->setEnabled( mFolderTreeWidget &&
+                                   mFolderTreeWidget->folderTreeView()->currentFolder().isValid() &&
+                                   !multiFolder );
+    mPreferHtmlLoadExtAction->setEnabled( mFolderTreeWidget &&
+                                          mFolderTreeWidget->folderTreeView()->currentFolder().isValid() &&
+                                          !multiFolder &&
+                                          (mHtmlPref ? !mFolderHtmlPref : mFolderHtmlPref) ? true : false );
+    mPreferHtmlAction->setChecked( !multiFolder &&  ( mHtmlPref ? !mFolderHtmlPref : mFolderHtmlPref ) );
+    mPreferHtmlLoadExtAction->setChecked( !multiFolder &&  ( mHtmlLoadExtPref ? !mFolderHtmlLoadExtPref : mFolderHtmlLoadExtPref ) );
+  }
+}
+
 //-----------------------------------------------------------------------------
 void KMMainWidget::updateFolderMenu()
 {
@@ -4089,18 +4111,8 @@ void KMMainWidget::updateFolderMenu()
                                    folderWithContent &&
                                    !MailCommon::Util::isVirtualCollection( mCurrentFolder->collection() ) );
 
-  // the visual ones only make sense if we are showing a message list
-  mPreferHtmlAction->setEnabled( mFolderTreeWidget &&
-                                 mFolderTreeWidget->folderTreeView()->currentFolder().isValid() &&
-                                 !multiFolder );
+  updateHtmlMenuEntry();
 
-  mPreferHtmlLoadExtAction->setEnabled( mFolderTreeWidget &&
-                                        mFolderTreeWidget->folderTreeView()->currentFolder().isValid() &&
-                                        !multiFolder &&
-                                        (mHtmlPref ? !mFolderHtmlPref : mFolderHtmlPref) ? true : false );
-
-  mPreferHtmlAction->setChecked( !multiFolder &&  ( mHtmlPref ? !mFolderHtmlPref : mFolderHtmlPref ) );
-  mPreferHtmlLoadExtAction->setChecked( !multiFolder &&  ( mHtmlLoadExtPref ? !mFolderHtmlLoadExtPref : mFolderHtmlLoadExtPref ) );
   mShowFolderShortcutDialogAction->setEnabled( !multiFolder && folderWithContent );
 
   actionlist << akonadiStandardAction( Akonadi::StandardActionManager::ManageLocalSubscriptions );
