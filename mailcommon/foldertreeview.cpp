@@ -562,7 +562,14 @@ void FolderTreeView::mousePressEvent( QMouseEvent * e )
 
 void FolderTreeView::restoreHeaderState( const QByteArray& data )
 {
-  header()->restoreState( data );
+  if(data.isEmpty()) {
+    const int nbColumn = header()->count();
+    for ( int i = 1; i <nbColumn; ++i ) {
+      setColumnHidden( i, true );
+    }
+  }
+  else
+    header()->restoreState( data );
   mCollectionStatisticsDelegate->setUnreadCountShown( header()->isSectionHidden( 1 ) );
 }
 
