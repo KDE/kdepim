@@ -34,11 +34,11 @@ public:
     void setEnabledComponent(AbstractImporter::TypeSupportedOptions options);
     AbstractImporter::TypeSupportedOptions selectedComponents() const;
 
-private slots:
+private Q_SLOTS:
   void slotEverythingClicked( bool clicked );
   void slotComponentClicked();
 
-signals:
+Q_SIGNALS:
   void atLeastOneComponentSelected(bool componentSelected);
 
 private:

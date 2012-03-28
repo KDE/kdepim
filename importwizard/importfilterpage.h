@@ -34,7 +34,7 @@ public:
   void addFilterImportInfo( const QString& log );
   void addFilterImportError( const QString& log );
 
-signals:
+Q_SIGNALS:
   void importFiltersClicked();
   
 private:

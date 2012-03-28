@@ -31,6 +31,8 @@ public:
   explicit ThunderbirdSettings(const QString& filename, ImportWizard *parent );
   ~ThunderbirdSettings();
 private:
+  void readAccount();
+  void readIdentity();
   void insertIntoMap( const QString& line );
   QHash<QString, QVariant> mHashConfig;
 };

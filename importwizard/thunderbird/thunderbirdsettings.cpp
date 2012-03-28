@@ -42,9 +42,19 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
       }
     }
   }
+  readAccount();
+  readIdentity();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
+{
+}
+
+void ThunderbirdSettings::readAccount()
+{
+}
+
+void ThunderbirdSettings::readIdentity()
 {
 }
 
