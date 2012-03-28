@@ -32,13 +32,13 @@ public:
   ~ThunderbirdSettings();
 private:
   void readAccount();
-  void readIdentity();
+  void readIdentity( const QString& account );
   void readTransport();
   
   void insertIntoMap( const QString& line );
   QHash<QString, QVariant> mHashConfig;
+  QHash<QString, QString> mHashSmtp;
   QStringList mAccountList;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */
-

@@ -17,7 +17,9 @@
 
 #include "sylpheedaddressbook.h"
 
-SylpheedAddressBook::SylpheedAddressBook(ImportWizard *parent)
+#include <QDir>
+
+SylpheedAddressBook::SylpheedAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
 }
@@ -26,5 +28,6 @@ SylpheedAddressBook::~SylpheedAddressBook()
 {
 }
 
-
-
+void SylpheedAddressBook::readAddressBook( const QString& filename )
+{
+}

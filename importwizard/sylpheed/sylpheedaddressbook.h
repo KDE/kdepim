@@ -20,14 +20,19 @@
 #define SYLPHEEDADDRESSBOOK_H
 
 #include "abstractaddressbook.h"
+class QDir;
+class QString;
 
 class ImportWizard;
 
 class SylpheedAddressBook : public AbstractAddressBook
 {
 public:
-  explicit SylpheedAddressBook(ImportWizard *parent);
+  explicit SylpheedAddressBook(const QDir &dir, ImportWizard *parent);
   ~SylpheedAddressBook();
+private:
+  void readAddressBook( const QString& filename );
+
 };
 
 #endif /* SYLPHEEDADDRESSBOOK_H */

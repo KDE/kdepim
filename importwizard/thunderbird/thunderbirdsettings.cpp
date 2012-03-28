@@ -54,7 +54,6 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
     return;
   readTransport();
   readAccount();
-  readIdentity();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
@@ -68,10 +67,31 @@ void ThunderbirdSettings::readAccount()
     const QString accountName = QString::fromLatin1( "mail.account.%1" ).arg( account );
     const QString serverName = mHashConfig.value( accountName + QLatin1String( ".server" ) ).toString();
     const QString host = mHashConfig.value( accountName + QLatin1String( ".hostname" ) ).toString();
-    const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
     const QString userName = mHashConfig.value( accountName + QLatin1String( ".userName" ) ).toString();
     const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
-    
+
+    const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt();
+
+    const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
+    if( type == QLatin1String("imap")) {
+      QMap<QString, QVariant> settings;
+      settings.insert(QLatin1String("ImapServer"),serverName);
+      settings.insert(QLatin1String("UserName"),userName);
+      //settings.insert(QLatin1String(""),);
+      createResource( "akonadi_imap_resource", name,settings );
+    } else if( type == QLatin1String("pop3")) {
+      QMap<QString, QVariant> settings;
+      settings.insert( QLatin1String( "Host" ), host );
+      settings.insert( QLatin1String( "Login" ), userName );
+      createResource( "akonadi_pop3_resource", name, settings );
+    } else {
+      qDebug()<<" type unknown : "<<type;
+    }
+
+    if ( mHashConfig.contains( accountName + QLatin1String( ".identities" ) ) )
+    {
+      readIdentity(account);
+    }
   }
 }
 
@@ -79,6 +99,7 @@ void ThunderbirdSettings::readTransport()
 {
   const QString mailSmtpServer = mHashConfig.value( QLatin1String( "mail.smtpservers" ) ).toString();
   QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
+  const QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
   if ( smtpList.isEmpty() )
     return;
   Q_FOREACH( const QString &smtp, smtpList )
@@ -97,20 +118,72 @@ void ThunderbirdSettings::readTransport()
       mt->setPort( port );
     
     const int authMethod = mHashConfig.value( smtpName + QLatin1String( ".authMethod" ) ).toInt();
-    //TODO boolean ?
+    switch(authMethod) {
+      case 0:
+        break;
+      default:
+        qDebug()<<" authMethod unknown :"<<authMethod;
+    }
+
     const int trySsl = mHashConfig.value( smtpName + QLatin1String( ".try_ssl" ) ).toInt();
+    switch(trySsl) {
+      case 0:
+        mt->setEncryption( MailTransport::Transport::EnumEncryption::None );
+        break;
+      case 2:
+        mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
+        break;
+      case 3:
+        mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+        break;
+      default:
+        qDebug()<<" trySsl unknown :"<<trySsl;
+    }
+
+    const QString userName = mHashConfig.value( smtpName + QLatin1String( ".username" ) ).toString();
+    if ( !userName.isEmpty() ) {
+      mt->setUserName( userName );
+      mt->setRequiresAuthentication( true );
+    }
 
     mt->writeConfig();
     MailTransport::TransportManager::self()->addTransport( mt );
-    //TODO ?
-    //MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
-
+    if ( smtp == defaultSmtp )
+      MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+    mHashSmtp.insert( smtp, QString::number( mt->id() ) ); 
   }
 }
 
-void ThunderbirdSettings::readIdentity()
+void ThunderbirdSettings::readIdentity( const QString& account )
 {
-  //TODO
+  KPIMIdentities::Identity* newIdentity = createIdentity();
+  const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
+  
+  const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
+
+  const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
+  if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
+  {
+    newIdentity->setTransport(mHashSmtp.value(smtpServer));
+  }
+
+  const QString userEmail = mHashConfig.value( identity + QLatin1String( ".useremail" ) ).toString();
+  newIdentity->setPrimaryEmailAddress(userEmail);
+
+  const QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
+
+  const QString organization = mHashConfig.value(identity + QLatin1String(".organization")).toString();
+  newIdentity->setOrganization(organization);
+
+  bool doBcc = mHashConfig.value(identity + QLatin1String(".doBcc")).toBool();
+  if(doBcc) {
+    //TODO
+  }
+  const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
+  newIdentity->setDrafts(draft);
+
+  const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
+  storeIdentity(newIdentity);
 }
 
 void ThunderbirdSettings::insertIntoMap( const QString& line )
@@ -129,8 +202,16 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
     //Store as String
     mHashConfig.insert( key, valueStr );
   } else {
-    //Store as integer
-    const int value = valueStr.toInt();
-    mHashConfig.insert( key, value );
+    if ( valueStr == QLatin1String( "true" ) ) {
+      bool b = true;
+      mHashConfig.insert( key, b );
+    } else if ( valueStr == QLatin1String( "false" ) ) {
+      bool b = false;
+      mHashConfig.insert( key, b );
+    } else { 
+      //Store as integer
+      const int value = valueStr.toInt();
+      mHashConfig.insert( key, value );
+    }
   }
 }
