@@ -1,7 +1,7 @@
 /*
  *  alarmcalendar.cpp  -  KAlarm calendar file access
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -187,11 +187,24 @@ AlarmCalendar::~AlarmCalendar()
 }
 
 /******************************************************************************
+* Check whether the calendar is open.
+*/
+bool AlarmCalendar::isOpen()
+{
+	if (mOpen  &&  mCalType == RESOURCES  &&  !AlarmResources::instance())
+	{
+		mCalendar = 0;
+		mOpen = false;
+	}
+	return mOpen;
+}
+
+/******************************************************************************
 * Open the calendar if not already open, and load it into memory.
 */
 bool AlarmCalendar::open()
 {
-	if (mOpen)
+	if (isOpen())
 		return true;
 	if (mCalType == RESOURCES)
 	{
@@ -233,7 +246,7 @@ bool AlarmCalendar::open()
 		delete mCalendar;
 		mCalendar = 0;
 	}
-	return mOpen;
+	return isOpen();
 }
 
 /******************************************************************************

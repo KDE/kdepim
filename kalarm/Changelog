@@ -1,10 +1,11 @@
 KAlarm Change Log
 
-=== Version 2.4.12 --- 26 April 2011 ===
+=== Version 2.4.12 --- 29 March 2012 ===
 - Fix crash on some systems when New Alarm dialogue is displayed from system tray
   icon menu.
 - Fix KAlarm button in alarm window not always showing main window and not
   highlighting the alarm in the main window.
+- Fail cleanly if calendar resources fail to open.
 
 === Version 2.4.11 (KDEPIM 4.4.11) --- 16 April 2011 ===
 - Fix bad borders round left hand buttons of time spinboxes in Oxygen style.

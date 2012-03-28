@@ -1,7 +1,7 @@
 /*
  *  alarmcalendar.h  -  KAlarm calendar file access
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ class AlarmCalendar : public QObject
 		KAEvent*              updateEvent(const KAEvent*);
 		bool                  deleteEvent(const QString& eventID, bool save = false);
 		void                  purgeEvents(const KAEvent::List&);
-		bool                  isOpen() const         { return mOpen; }
+		bool                  isOpen();
 		QString               path() const           { return (mCalType == RESOURCES) ? QString() : mUrl.prettyUrl(); }
 		QString               urlString() const      { return (mCalType == RESOURCES) ? QString() : mUrl.url(); }
 		void                  adjustStartOfDay();
