@@ -42,10 +42,10 @@ public:
   MailImporter::ImportMailsWidget *mailWidget();
   Akonadi::Collection selectedCollection() const;
   
-private slots:
+private Q_SLOTS:
   void collectionChanged(const Akonadi::Collection& collection);
   
-signals:
+Q_SIGNALS:
   void importMailsClicked();
 
 private:

@@ -33,7 +33,8 @@ public:
   ~ImportAddressbookPage();
   void addFilterImportInfo( const QString& log );
   void addFilterImportError( const QString& log );
-
+Q_SIGNALS:
+  void importAddressbookClicked();
 private:
   Ui::ImportAddressbookPage *ui;
 };

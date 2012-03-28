@@ -22,6 +22,7 @@
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "importwizard.h"
 #include "sylpheed/sylpheedsettings.h"
+#include "sylpheed/sylpheedaddressbook.h"
 
 #include <KLocale>
 
@@ -92,7 +93,9 @@ bool SylpheedImportData::importFilters()
 
 bool SylpheedImportData::importAddressBook()
 {
-  return false;
+  const QDir addressbookDir(mPath);
+  SylpheedAddressBook account( addressbookDir, mImportWizard );
+  return true;
 }
 
 AbstractImporter::TypeSupportedOptions SylpheedImportData::supportedOption()
@@ -101,5 +104,6 @@ AbstractImporter::TypeSupportedOptions SylpheedImportData::supportedOption()
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::AddressBook;
   return options;
 }

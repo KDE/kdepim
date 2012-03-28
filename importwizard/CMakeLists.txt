@@ -19,6 +19,7 @@ thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp
+sylpheed/sylpheedaddressbook.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv3/evolutionsettings.cpp
 evolutionv2/evolutionv2importdata.cpp

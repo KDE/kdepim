@@ -51,7 +51,7 @@ public:
   void addFinishInfo( const QString& log );
   void addFinishError( const QString& log );
 
-private slots:
+private Q_SLOTS:
   void help();
   void slotProgramSelected(const QString& program);
   void slotImportMailsClicked();
@@ -59,6 +59,8 @@ private slots:
   void slotProgramDoubleClicked();
   void slotAtLeastOneComponentSelected( bool b );
   void slotImportSettingsClicked();
+  void slotImportAddressbookClicked();
+  
 private:
   void addImportModule(AbstractImporter *);
   void checkModules();

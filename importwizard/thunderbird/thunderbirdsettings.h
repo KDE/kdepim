@@ -19,8 +19,8 @@
 #define THUNDERBIRDSETTINGS_H
 
 #include "abstractsettings.h"
-#include <QString>
-#include <QMap>
+#include <QHash>
+#include <QStringList>
 
 class ImportWizard;
 class KConfigGroup;
@@ -31,9 +31,14 @@ public:
   explicit ThunderbirdSettings(const QString& filename, ImportWizard *parent );
   ~ThunderbirdSettings();
 private:
+  void readAccount();
+  void readIdentity( const QString& account );
+  void readTransport();
+  
   void insertIntoMap( const QString& line );
-  QMap<QString, QVariant> mMapConfig;
+  QHash<QString, QVariant> mHashConfig;
+  QHash<QString, QString> mHashSmtp;
+  QStringList mAccountList;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */
-

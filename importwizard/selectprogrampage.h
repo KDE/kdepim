@@ -36,11 +36,11 @@ public:
   void setFoundProgram(const QStringList& list);
   void disableSelectProgram();
 
-private slots:
+private Q_SLOTS:
   void slotItemSelectionChanged();
   void slotItemDoubleClicked( QListWidgetItem*item );
 
-signals:
+Q_SIGNALS:
   void programSelected(const QString&);
   void doubleClicked();
   

@@ -15,30 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTFILTERPAGE_H
-#define IMPORTFILTERPAGE_H
+#include "sylpheedaddressbook.h"
 
-#include <QWidget>
+#include <QDir>
 
-namespace Ui {
-  class ImportFilterPage;
+SylpheedAddressBook::SylpheedAddressBook(const QDir& dir, ImportWizard *parent)
+  : AbstractAddressBook( parent )
+{
 }
 
-class ImportFilterPage : public QWidget
+SylpheedAddressBook::~SylpheedAddressBook()
 {
-  Q_OBJECT
-  
-public:
-  explicit ImportFilterPage(QWidget *parent = 0);
-  ~ImportFilterPage();
-  void addFilterImportInfo( const QString& log );
-  void addFilterImportError( const QString& log );
+}
 
-Q_SIGNALS:
-  void importFiltersClicked();
-  
-private:
-  Ui::ImportFilterPage *ui;
-};
-
-#endif // IMPORTFILTERPAGE_H
+void SylpheedAddressBook::readAddressBook( const QString& filename )
+{
+}
