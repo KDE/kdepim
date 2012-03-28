@@ -19,8 +19,8 @@
 #define THUNDERBIRDSETTINGS_H
 
 #include "abstractsettings.h"
-#include <QString>
 #include <QHash>
+#include <QStringList>
 
 class ImportWizard;
 class KConfigGroup;
@@ -33,8 +33,11 @@ public:
 private:
   void readAccount();
   void readIdentity();
+  void readTransport();
+  
   void insertIntoMap( const QString& line );
   QHash<QString, QVariant> mHashConfig;
+  QStringList mAccountList;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */

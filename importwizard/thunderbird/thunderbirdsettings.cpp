@@ -16,6 +16,12 @@
 */
 
 #include "thunderbirdsettings.h"
+#include <mailtransport/transportmanager.h>
+
+#include <kpimidentities/identity.h>
+#include <kpimidentities/signature.h>
+
+
 #include <QTextStream>
 #include <QStringList>
 #include <QFile>
@@ -42,6 +48,11 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
       }
     }
   }
+  const QString mailAccountPreference = mHashConfig.value( QLatin1String( "mail.accountmanager.accounts" ) ).toString();
+  mAccountList = mailAccountPreference.split( QLatin1Char( ',' ) );
+  if ( mAccountList.isEmpty() )
+    return;
+  readTransport();
   readAccount();
   readIdentity();
 }
@@ -52,10 +63,26 @@ ThunderbirdSettings::~ThunderbirdSettings()
 
 void ThunderbirdSettings::readAccount()
 {
+  Q_FOREACH( const QString&account, mAccountList )
+  {
+    const QString accountName = QString::fromLatin1( "mail.account.%1" ).arg( account );
+    const QString serverName = mHashConfig.value( accountName + QLatin1String( ".server" ) ).toString();
+    const QString host = mHashConfig.value( accountName + QLatin1String( ".hostname" ) ).toString();
+    const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
+    const QString userName = mHashConfig.value( accountName + QLatin1String( ".userName" ) ).toString();
+    const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
+    
+  }
+}
+
+void ThunderbirdSettings::readTransport()
+{
+  //TODO
 }
 
 void ThunderbirdSettings::readIdentity()
 {
+  //TODO
 }
 
 void ThunderbirdSettings::insertIntoMap( const QString& line )
