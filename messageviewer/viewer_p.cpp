@@ -1921,6 +1921,8 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
 
 void ViewerPrivate::slotToggleHtmlMode()
 {
+  if(mColorBar->isNormal())
+    return;
   setHtmlOverride( !htmlMail() );
   update( Viewer::Force );
 }
