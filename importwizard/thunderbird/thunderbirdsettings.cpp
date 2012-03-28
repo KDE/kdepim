@@ -77,7 +77,35 @@ void ThunderbirdSettings::readAccount()
 
 void ThunderbirdSettings::readTransport()
 {
-  //TODO
+  const QString mailSmtpServer = mHashConfig.value( QLatin1String( "mail.smtpservers" ) ).toString();
+  QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
+  if ( smtpList.isEmpty() )
+    return;
+  Q_FOREACH( const QString &smtp, smtpList )
+  {
+    const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
+
+    MailTransport::Transport *mt = createTransport();
+    //TODO ?
+    const QString name = mHashConfig.value( smtpName + QLatin1String( ".description" ) ).toString();
+    
+    const QString hostName = mHashConfig.value( smtpName + QLatin1String( ".hostname" ) ).toString();
+    mt->setName( hostName );
+    
+    const int port = mHashConfig.value( smtpName + QLatin1String( ".port" ) ).toInt();
+    if ( port > 0 )
+      mt->setPort( port );
+    
+    const int authMethod = mHashConfig.value( smtpName + QLatin1String( ".authMethod" ) ).toInt();
+    //TODO boolean ?
+    const int trySsl = mHashConfig.value( smtpName + QLatin1String( ".try_ssl" ) ).toInt();
+
+    mt->writeConfig();
+    MailTransport::TransportManager::self()->addTransport( mt );
+    //TODO ?
+    //MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+
+  }
 }
 
 void ThunderbirdSettings::readIdentity()
