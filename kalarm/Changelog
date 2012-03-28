@@ -1,8 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.8.2 --- 10 March 2012 ===
+=== Version 2.8.2 --- 29 March 2012 ===
 - [Akonadi] Fix error saving changed alarms when closing Edit Alarm dialogue.
 - [Akonadi] Show old-format calendars in read-only colour in calendar list.
+- [KResources] Fail cleanly if calendar resources fail to open.
 - Prevent multiple email success messages after Try used in Edit Alarm dialogue.
 
 === Version 2.8.1 (KDE 4.8.1) --- 19 February 2012 ===
