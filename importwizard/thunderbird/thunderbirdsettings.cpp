@@ -107,11 +107,10 @@ void ThunderbirdSettings::readTransport()
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
 
     MailTransport::Transport *mt = createTransport();
-    //TODO ?
     const QString name = mHashConfig.value( smtpName + QLatin1String( ".description" ) ).toString();
-    
+    mt->setName(name);
     const QString hostName = mHashConfig.value( smtpName + QLatin1String( ".hostname" ) ).toString();
-    mt->setName( hostName );
+    mt->setHost( hostName );
     
     const int port = mHashConfig.value( smtpName + QLatin1String( ".port" ) ).toInt();
     if ( port > 0 )
@@ -120,6 +119,21 @@ void ThunderbirdSettings::readTransport()
     const int authMethod = mHashConfig.value( smtpName + QLatin1String( ".authMethod" ) ).toInt();
     switch(authMethod) {
       case 0:
+        break;
+      case 1: //No authentification
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN); //????
+        break;
+      case 3: //Uncrypted password
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CLEAR); //???
+        break;
+      case 4: //crypted password
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN); //???
+        break;
+      case 5: //GSSAPI
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::GSSAPI);
+        break;
+      case 6: //NTLM
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::NTLM);
         break;
       default:
         qDebug()<<" authMethod unknown :"<<authMethod;
