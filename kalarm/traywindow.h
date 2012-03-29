@@ -39,6 +39,8 @@ class NewAlarmAction;
 class AlarmListModel;
 #endif
 
+using namespace KAlarmCal;
+
 class TrayWindow : public KStatusNotifierItem
 {
         Q_OBJECT
