@@ -177,16 +177,25 @@ void ThunderbirdSettings::readIdentity( const QString& account )
 
   bool doBcc = mHashConfig.value(identity + QLatin1String(".doBcc")).toBool();
   if(doBcc) {
-    //TODO
+    const QString bcc = mHashConfig.value(identity + QLatin1String(".doBccList")).toString();
   }
+
+  bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
+  if(doCc) {
+    const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
+  }
+
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
+  newIdentity->setReplyToAddr( replyTo );
 
   KPIMIdentities::Signature signature;
-  //TODO
   const bool signatureHtml = mHashConfig.value(identity + QLatin1String( ".htmlSigFormat" )).toBool();
+  if(signatureHtml) {
+      signature.setInlinedHtml( true );
+  }
   const QString textSignature = mHashConfig.value(identity + QLatin1String( ".htmlSigText" ) ).toString();
   const QString fileSignature = mHashConfig.value(identity + QLatin1String( ".sig_file")).toString();
   newIdentity->setSignature( signature );
