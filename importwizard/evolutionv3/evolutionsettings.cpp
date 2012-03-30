@@ -280,14 +280,17 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         if ( smtpTag == QLatin1String( "url" ) ) {
           qDebug()<<" smtp.text() :"<<smtp.text();
           QUrl smtpUrl( smtp.text() );
+          const QString scheme = smtpUrl.scheme();
+          if(scheme == QLatin1String("sendmail")) {
+            transport->setType(MailTransport::Transport::EnumType::Sendmail);
+          } else {
+            transport->setHost( smtpUrl.host() );
+            transport->setName( smtpUrl.host() );
 
-          transport->setHost( smtpUrl.host() );
-          transport->setName( smtpUrl.host() );
-
-          const int port = smtpUrl.port();
-          if ( port > 0 )
-            transport->setPort( port );
-          
+            const int port = smtpUrl.port();
+            if ( port > 0 )
+              transport->setPort( port );
+          }
         } else {
           qDebug()<<" smtp tag unknow :"<<smtpTag;
         }
