@@ -65,7 +65,7 @@ KMSystemTray::KMSystemTray(QObject *parent)
   setToolTipTitle( i18n("KMail") );
   setToolTipIconByName( "kmail" );
   setIconByName( "kmail" );
-  mIcon = KIcon( "kmail" );
+  mIcon = KIcon( "mail-unread-new" );
 
 #ifdef Q_WS_X11
   KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
@@ -173,6 +173,8 @@ void KMSystemTray::updateCount()
     setIconByName( "kmail" );
     return;
   }
+  setIconByName( "mail-unread-new" );
+
   const int overlaySize = KIconLoader::SizeSmallMedium;
 
   const QString countString = QString::number( mCount );
