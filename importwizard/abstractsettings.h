@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <Akonadi/Collection>
 class ImportWizard;
 class KJob;
 
@@ -48,6 +49,7 @@ protected:
   MailTransport::Transport *createTransport();
   void storeIdentity(KPIMIdentities::Identity* identity);
   QString adaptFolder( const QString& folder);
+  Akonadi::Collection::Id adaptFolderId( const QString& folder);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;

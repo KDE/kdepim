@@ -170,22 +170,29 @@ void AbstractSettings::addFilterImportError( const QString& log )
   mImportWizard->importSettingPage()->addFilterImportError( log );
 }
 
-
-QString AbstractSettings::adaptFolder( const QString& folder)
+Akonadi::Collection::Id AbstractSettings::adaptFolderId( const QString& folder)
 {
-  QString newFolder;
+  Akonadi::Collection::Id newFolderId=-1;
   bool exactPath = false;
   Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
   if ( lst.count() == 1 && exactPath )
-    newFolder = QString::number(lst.at( 0 ).id());
+    newFolderId = lst.at( 0 ).id();
   else {
     FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
     if ( dlg->exec() ) {
-      newFolder = QString::number(dlg->selectedCollection().id());
+      newFolderId = dlg->selectedCollection().id();
     }
     delete dlg;
   }
-  return newFolder;
+  return newFolderId;
+}
+
+QString AbstractSettings::adaptFolder( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId= adaptFolderId(folder);
+  if(newFolderId == -1 )
+    return QString();
+  return QString::number(newFolderId);
 }
 
 #include "abstractsettings.moc"

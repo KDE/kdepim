@@ -125,9 +125,28 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 
 void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
 {
-  //TODO
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+
+  if ( accountConfig.hasKey( QLatin1String( "ssl_imap" ) ) && accountConfig.readEntry( QLatin1String( "ssl_imap" ), false ) ) {
+    //TODO
+  }
+  int port = 0;
+  if ( readConfig( QLatin1String( "imap_port" ), accountConfig, port, true ) )
+    settings.insert( QLatin1String( "ImapPort" ), port );
+
+  QString trashFolder;
+  if ( readConfig( QLatin1String( "trash_folder" ), accountConfig, trashFolder, false ) )
+    settings.insert( QLatin1String( "TrashCollection" ), adaptFolderId( trashFolder ) );
+
+  const int auth = accountConfig.readEntry(QLatin1String("imap_auth_method"),0);
+  switch(auth) {
+    case 0:
+      break;
+    default:
+      qDebug()<<" imap auth unknown "<<auth;
+      break;
+  }
 
   createResource( "akonadi_imap_resource", name,settings );
 }
