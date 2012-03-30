@@ -125,9 +125,47 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
 
 void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
 {
-  //TODO
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+
+
+  const int sslimap = accountConfig.readEntry( QLatin1String( "ssl_imap" ), 0);
+  switch(sslimap) {
+    //TODO
+    case 0:
+      break;
+    default:
+      qDebug()<<" sslimap unknown "<<sslimap;
+      break;
+  }
+
+  int port = 0;
+  if ( readConfig( QLatin1String( "imap_port" ), accountConfig, port, true ) )
+    settings.insert( QLatin1String( "ImapPort" ), port );
+
+  QString trashFolder;
+  if ( readConfig( QLatin1String( "trash_folder" ), accountConfig, trashFolder, false ) )
+    settings.insert( QLatin1String( "TrashCollection" ), adaptFolderId( trashFolder ) );
+
+  const int auth = accountConfig.readEntry(QLatin1String("imap_auth_method"),0);
+  switch(auth) {
+    case 0:
+      break;
+    case 1: //Login
+      //TODO
+      //settings.insert(QLatin1String("Authentication"),);
+      break;
+    case 2: //Cram-md5
+      //TODO
+      //settings.insert(QLatin1String("Authentication"),);
+      break;
+    case 4: //Plain
+      //TODO
+      //settings.insert(QLatin1String("Authentication"),);
+    default:
+      qDebug()<<" imap auth unknown "<<auth;
+      break;
+  }
 
   createResource( "akonadi_imap_resource", name,settings );
 }
@@ -195,6 +233,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
   if(!smtpserver.isEmpty()) {
     MailTransport::Transport *mt = createTransport();
     mt->setName( smtpserver );
+    mt->setHost(smtpserver);
     int port = 0;
     if ( readConfig( QLatin1String( "smtp_port" ), accountConfig, port, true ) )
       mt->setPort( port );
@@ -243,6 +282,10 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
       qDebug()<<" smtp ssl config unknown :"<<sslSmtp;
         
     }
+    QString domainName;
+    if ( readConfig( QLatin1String( "domain" ), accountConfig, domainName, false ) )
+      mt->setLocalHostname( domainName );
+
     mt->writeConfig();
     MailTransport::TransportManager::self()->addTransport( mt );
     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );

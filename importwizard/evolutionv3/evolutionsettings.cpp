@@ -177,9 +177,12 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     return;
   }
   KPIMIdentities::Identity* newIdentity = createIdentity();
+  QString name;
+  if(domElement.hasAttribute(QLatin1String("name"))) {
+    name = domElement.attribute(QLatin1String("name"));
+  }
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
-    qDebug()<<" tag :"<<tag;
     if ( tag == QLatin1String( "identity" ) )
     {
       for ( QDomElement identity = e.firstChildElement(); !identity.isNull(); identity = identity.nextSiblingElement() ) {
@@ -214,7 +217,70 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "source" ) )
     {
-      //TODO imap ? pop3 ? 
+      if(e.hasAttribute(QLatin1String("save-passwd"))&& e.attribute( "save-passwd" ) == QLatin1String( "true" ) ) {
+        //TODO
+      }
+      if(e.hasAttribute(QLatin1String("keep-on-server"))) {
+        //TODO
+      }
+      if(e.hasAttribute(QLatin1String("auto-check"))) {
+        //TODO
+      }
+      if(e.hasAttribute(QLatin1String("auto-check-timeout"))) {
+        //TODO
+      }
+      for ( QDomElement server = e.firstChildElement(); !server.isNull(); server = server.nextSiblingElement() ) {
+        const QString serverTag = server.tagName();
+        if ( serverTag == QLatin1String( "url" ) ) {
+          qDebug()<<" server.text() :"<<server.text();
+          QUrl serverUrl( server.text() );
+          const QString scheme = serverUrl.scheme();
+          QMap<QString, QVariant> settings;
+          const int port = serverUrl.port();
+          if( port > 0 )
+            settings.insert(QLatin1String("Port"),port);
+
+          const QString path = serverUrl.path();
+          bool found = false;
+          QString securityMethod = getSecurityMethod( path, found );
+          if( found ) {
+            if( securityMethod == QLatin1String("none")) {
+
+            } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
+              //TODO
+            } else {
+              qDebug()<<" security method unknown : "<<path;
+            }
+          } else {
+            //TODO
+          }
+          const QString userName = serverUrl.userInfo();
+          found = false;
+          const QString authMethod = getAuthMethod(userName, found);
+          if( found ) {
+            //TODO
+            if(authMethod==QLatin1String("PLAIN")) {
+            } else if(authMethod==QLatin1String("NTLM")) {
+            } else if(authMethod==QLatin1String("DIGEST-MD5")) {
+            } else if(authMethod==QLatin1String("CRAM-MD5")) {
+            } else if(authMethod==QLatin1String("LOGIN")) {
+            } else if(authMethod==QLatin1String("POPB4SMTP")) {
+            } else {
+              qDebug()<<" smtp auth method unknown "<<authMethod;
+            }
+          }
+          if(scheme == QLatin1String("imap")) {
+            createResource( "akonadi_imap_resource", name,settings );
+          } else if(scheme == QLatin1String("pop")) {
+            createResource( "akonadi_pop3_resource", name, settings );
+
+          } else {
+            qDebug()<<" unknown scheme "<<scheme;
+          }
+        } else {
+          qDebug()<<" server tag unknow :"<<serverTag;
+        }
+      }
     }
     else if ( tag == QLatin1String( "transport" ) )
     {
@@ -229,14 +295,54 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         if ( smtpTag == QLatin1String( "url" ) ) {
           qDebug()<<" smtp.text() :"<<smtp.text();
           QUrl smtpUrl( smtp.text() );
+          const QString scheme = smtpUrl.scheme();
+          if(scheme == QLatin1String("sendmail")) {
+            transport->setType(MailTransport::Transport::EnumType::Sendmail);
+          } else {
+            transport->setHost( smtpUrl.host() );
+            transport->setName( smtpUrl.host() );
 
-          transport->setHost( smtpUrl.host() );
-          transport->setName( smtpUrl.host() );
+            const int port = smtpUrl.port();
+            if ( port > 0 )
+              transport->setPort( port );
 
-          const int port = smtpUrl.port();
-          if ( port > 0 )
-            transport->setPort( port );
-          
+            const QString userName = smtpUrl.userInfo();
+            bool found = false;
+            const QString authMethod = getAuthMethod(userName, found);
+            if( found ) {
+              if(authMethod==QLatin1String("PLAIN")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN);
+              } else if(authMethod==QLatin1String("NTLM")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::NTLM);
+              } else if(authMethod==QLatin1String("DIGEST-MD5")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5);
+              } else if(authMethod==QLatin1String("CRAM-MD5")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+              } else if(authMethod==QLatin1String("LOGIN")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN);
+              } else if(authMethod==QLatin1String("POPB4SMTP")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::APOP); //????
+              } else {
+                qDebug()<<" smtp auth method unknown "<<authMethod;
+              }
+            }
+
+            const QString path = smtpUrl.path();
+            found = false;
+            QString securityMethod = ( path, found );
+            if( found ) {
+              if( securityMethod == QLatin1String("none")) {
+                transport->setEncryption( MailTransport::Transport::EnumEncryption::None );
+
+              } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
+                transport->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
+              } else {
+                qDebug()<<" security method unknown : "<<path;
+              }
+            } else {
+              transport->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+            }
+          }
         } else {
           qDebug()<<" smtp tag unknow :"<<smtpTag;
         }
@@ -291,4 +397,28 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
   }
   storeIdentity(newIdentity);
+}
+
+QString EvolutionSettings::( const QString& path, bool & found )
+{
+  const int index = path.indexOf(QLatin1String("security-method="));
+  if(index != -1) {
+    const QString securityMethod = path.right(path.length() - index - 16 /*security-method=*/);
+    found = true;
+    return securityMethod;
+  }
+  found = false;
+  return QString();
+}
+
+QString EvolutionSettings::getAuthMethod( const QString& path, bool & found)
+{
+  const int index = path.indexOf(QLatin1String("auth="));
+  if(index != -1) {
+    const QString securityMethod = path.right(path.length() - index - 5 /*auth=*/);
+    found = true;
+    return securityMethod;
+  }
+  found = false;
+  return QString();
 }

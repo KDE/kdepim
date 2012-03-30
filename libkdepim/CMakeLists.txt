@@ -9,6 +9,9 @@ add_subdirectory(pics)
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 include_directories( ${Boost_INCLUDE_DIR} )
+if(NOT KDEPIM_NO_NEPOMUK)
+  include_directories( ${SOPRANO_INCLUDE_DIR} )
+endif()
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)

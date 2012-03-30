@@ -83,6 +83,7 @@ void ThunderbirdSettings::readAccount()
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
       settings.insert( QLatin1String( "Login" ), userName );
+      settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
       createResource( "akonadi_pop3_resource", name, settings );
     } else {
       qDebug()<<" type unknown : "<<type;
@@ -107,11 +108,10 @@ void ThunderbirdSettings::readTransport()
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
 
     MailTransport::Transport *mt = createTransport();
-    //TODO ?
     const QString name = mHashConfig.value( smtpName + QLatin1String( ".description" ) ).toString();
-    
+    mt->setName(name);
     const QString hostName = mHashConfig.value( smtpName + QLatin1String( ".hostname" ) ).toString();
-    mt->setName( hostName );
+    mt->setHost( hostName );
     
     const int port = mHashConfig.value( smtpName + QLatin1String( ".port" ) ).toInt();
     if ( port > 0 )
@@ -120,6 +120,21 @@ void ThunderbirdSettings::readTransport()
     const int authMethod = mHashConfig.value( smtpName + QLatin1String( ".authMethod" ) ).toInt();
     switch(authMethod) {
       case 0:
+        break;
+      case 1: //No authentification
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN); //????
+        break;
+      case 3: //Uncrypted password
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CLEAR); //???
+        break;
+      case 4: //crypted password
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN); //???
+        break;
+      case 5: //GSSAPI
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::GSSAPI);
+        break;
+      case 6: //NTLM
+        mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::NTLM);
         break;
       default:
         qDebug()<<" authMethod unknown :"<<authMethod;
@@ -177,16 +192,25 @@ void ThunderbirdSettings::readIdentity( const QString& account )
 
   bool doBcc = mHashConfig.value(identity + QLatin1String(".doBcc")).toBool();
   if(doBcc) {
-    //TODO
+    const QString bcc = mHashConfig.value(identity + QLatin1String(".doBccList")).toString();
   }
+
+  bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
+  if(doCc) {
+    const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
+  }
+
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
+  newIdentity->setReplyToAddr( replyTo );
 
   KPIMIdentities::Signature signature;
-  //TODO
   const bool signatureHtml = mHashConfig.value(identity + QLatin1String( ".htmlSigFormat" )).toBool();
+  if(signatureHtml) {
+      signature.setInlinedHtml( true );
+  }
   const QString textSignature = mHashConfig.value(identity + QLatin1String( ".htmlSigText" ) ).toString();
   const QString fileSignature = mHashConfig.value(identity + QLatin1String( ".sig_file")).toString();
   newIdentity->setSignature( signature );
