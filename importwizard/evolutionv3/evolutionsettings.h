@@ -36,6 +36,9 @@ private:
   void extractAccountInfo(const QString& info);
   void readSignatures(const QDomElement &account);
   void extractSignatureInfo( const QString&info );
+  QString getSecurityMethod(const QString &path, bool & found );
+  QString getAuthMethod( const QString& path, bool & found);
+
   QMap<QString, KPIMIdentities::Signature> mMapSignature;
 };
 

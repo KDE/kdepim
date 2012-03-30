@@ -151,7 +151,7 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
       instance.reconfigure();
     }
 
-    addFilterImportError( i18n( "Resource setup completed." ) );
+    addFilterImportInfo( i18n( "Resource setup completed." ) );
   } else {
     if ( job->error() ) {
       addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
