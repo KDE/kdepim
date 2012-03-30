@@ -233,6 +233,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
   if(!smtpserver.isEmpty()) {
     MailTransport::Transport *mt = createTransport();
     mt->setName( smtpserver );
+    mt->setHost(smtpserver);
     int port = 0;
     if ( readConfig( QLatin1String( "smtp_port" ), accountConfig, port, true ) )
       mt->setPort( port );
@@ -281,6 +282,10 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
       qDebug()<<" smtp ssl config unknown :"<<sslSmtp;
         
     }
+    QString domainName;
+    if ( readConfig( QLatin1String( "domain" ), accountConfig, domainName, false ) )
+      mt->setLocalHostname( domainName );
+
     mt->writeConfig();
     MailTransport::TransportManager::self()->addTransport( mt );
     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );

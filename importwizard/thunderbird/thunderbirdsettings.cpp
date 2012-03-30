@@ -83,6 +83,7 @@ void ThunderbirdSettings::readAccount()
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
       settings.insert( QLatin1String( "Login" ), userName );
+      settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
       createResource( "akonadi_pop3_resource", name, settings );
     } else {
       qDebug()<<" type unknown : "<<type;

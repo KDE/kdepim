@@ -177,6 +177,11 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     return;
   }
   KPIMIdentities::Identity* newIdentity = createIdentity();
+  QString name;
+  if(domElement.hasAttribute(QLatin1String("name"))) {
+    name = domElement.attribute(QLatin1String("name"));
+  }
+
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
     qDebug()<<" tag :"<<tag;
@@ -214,7 +219,53 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "source" ) )
     {
-      //TODO imap ? pop3 ? 
+      if(e.hasAttribute(QLatin1String("save-passwd"))&& e.attribute( "save-passwd" ) == QLatin1String( "true" ) ) {
+        //TODO
+      }
+      if(e.hasAttribute(QLatin1String("keep-on-server"))) {
+        //TODO
+      }
+      if(e.hasAttribute(QLatin1String("auto-check"))) {
+        //TODO
+
+      }
+      if(e.hasAttribute(QLatin1String("auto-check-timeout"))) {
+        //TODO
+
+      }
+      if(e.hasAttribute(QLatin1String(""))) {
+        //TODO
+
+      }
+      for ( QDomElement server = e.firstChildElement(); !server.isNull(); server = server.nextSiblingElement() ) {
+        const QString serverTag = server.tagName();
+        if ( serverTag == QLatin1String( "url" ) ) {
+          qDebug()<<" server.text() :"<<server.text();
+          QUrl serverUrl( server.text() );
+          const QString scheme = serverUrl.scheme();
+          QMap<QString, QVariant> settings;
+          if(scheme == QLatin1String("imap")) {
+            createResource( "akonadi_imap_resource", name,settings );
+          } else if(scheme == QLatin1String("pop3")) {
+            createResource( "akonadi_pop3_resource", name, settings );
+
+          } else {
+            qDebug()<<" unknown scheme "<<scheme;
+          }
+#if 0
+          transport->setHost( smtpUrl.host() );
+          transport->setName( smtpUrl.host() );
+
+          const int port = smtpUrl.port();
+          if ( port > 0 )
+            transport->setPort( port );
+#endif
+        } else {
+          qDebug()<<" server tag unknow :"<<serverTag;
+        }
+      }
+
+      //TODO imap ? pop3 ?
     }
     else if ( tag == QLatin1String( "transport" ) )
     {
