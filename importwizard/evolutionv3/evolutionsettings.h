@@ -38,6 +38,7 @@ private:
   void extractSignatureInfo( const QString&info );
   QString getSecurityMethod(const QString &path, bool & found );
   QString getAuthMethod( const QString& path, bool & found);
+  void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName);
 
   QMap<QString, KPIMIdentities::Signature> mMapSignature;
 };
