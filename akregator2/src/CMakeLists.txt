@@ -3,17 +3,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 add_subdirectory( about )
 add_subdirectory( icons )
 
-# re-enable when moving libkrss into kdepimlibs
-#find_package(LibKRSS REQUIRED)
 find_package(Akonadi REQUIRED)
 
 include_directories (
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/akregator2/interfaces
     ${CMAKE_BINARY_DIR}/akregator2/interfaces
-    # re-enable when moving libkrss into kdepimlibs
-    #${LIBKRSS_INCLUDE_DIR}
-    ${krss_SOURCE_DIR}
     )
 
 ########### next target ###############
@@ -106,8 +101,17 @@ kde4_add_ui_files(akregator2part_PART_SRCS
 
 kde4_add_plugin(akregator2part ${akregator2part_PART_SRCS})
 
-# add ${LIBKRSS_LIBRARIES} when moving libkrss into kdepimlibs
-target_link_libraries(akregator2part  ${KDE4_KUTILS_LIBS} ${KDE4_KNOTIFYCONFIG_LIBS} ${KDE4_SOLID_LIBRARY} akregator2interfaces akregator2private kdepim ${KDEPIMLIBS_KPIMUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} krss ${KDE4_AKONADI_LIBS})
+target_link_libraries(akregator2part
+                      ${KDE4_KUTILS_LIBS}
+                      ${KDE4_KNOTIFYCONFIG_LIBS}
+                      ${KDE4_SOLID_LIBRARY}
+                      akregator2interfaces
+                      akregator2private
+                      kdepim
+                      ${KDEPIMLIBS_KPIMUTILS_LIBS}
+                      ${KDE4_KDE3SUPPORT_LIBS}
+                      ${KDEPIMLIBS_KRSS_LIBS}
+${KDE4_AKONADI_LIBS})
 
 install(TARGETS akregator2part  DESTINATION ${PLUGIN_INSTALL_DIR})
 
