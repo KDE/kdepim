@@ -255,20 +255,6 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             //TODO
           }
           const QString userName = serverUrl.userInfo();
-          found = false;
-          const QString authMethod = getAuthMethod(userName, found);
-          if( found ) {
-            //TODO
-            if(authMethod==QLatin1String("PLAIN")) {
-            } else if(authMethod==QLatin1String("NTLM")) {
-            } else if(authMethod==QLatin1String("DIGEST-MD5")) {
-            } else if(authMethod==QLatin1String("CRAM-MD5")) {
-            } else if(authMethod==QLatin1String("LOGIN")) {
-            } else if(authMethod==QLatin1String("POPB4SMTP")) {
-            } else {
-              qDebug()<<" smtp auth method unknown "<<authMethod;
-            }
-          }
           if(scheme == QLatin1String("imap")) {
             found = false;
             const QString authMethod = getAuthMethod(userName, found);
