@@ -358,13 +358,8 @@ endif()
     macro_optional_add_subdirectory(knode)
   endif()
 
-  if(KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(krss)
-    if(BUILD_krss)
-      add_subdirectory(krsslocal)
-      add_subdirectory(akregator2)
-    endif()
   macro_optional_add_subdirectory(akregator)
+  macro_optional_add_subdirectory(akregator2)
 
   macro_optional_add_subdirectory(akonadiconsole)
 
