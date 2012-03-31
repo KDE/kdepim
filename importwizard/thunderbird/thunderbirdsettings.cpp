@@ -70,9 +70,8 @@ void ThunderbirdSettings::readAccount()
     const QString userName = mHashConfig.value( accountName + QLatin1String( ".userName" ) ).toString();
     const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
 
-    const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt();
-
     const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
+
     if( type == QLatin1String("imap")) {
       QMap<QString, QVariant> settings;
       settings.insert(QLatin1String("ImapServer"),serverName);
@@ -83,6 +82,7 @@ void ThunderbirdSettings::readAccount()
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
       settings.insert( QLatin1String( "Login" ), userName );
+      const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt();
       settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
       createResource( "akonadi_pop3_resource", name, settings );
     } else {

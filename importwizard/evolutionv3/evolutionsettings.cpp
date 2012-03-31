@@ -257,7 +257,6 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           const QString userName = serverUrl.userInfo();
           if(scheme == QLatin1String("imap")) {
             addAuth(settings, QLatin1String( "Authentication" ), userName);
-
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
             addAuth(settings, QLatin1String( "AuthenticationMethod" ), userName);
