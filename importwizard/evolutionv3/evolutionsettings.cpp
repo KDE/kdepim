@@ -242,7 +242,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
           const QString path = serverUrl.path();
           bool found = false;
-          QString securityMethod = getSecurityMethod( path, found );
+          const QString securityMethod = getSecurityMethod( path, found );
           if( found ) {
             if( securityMethod == QLatin1String("none")) {
 
@@ -329,7 +329,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
             const QString path = smtpUrl.path();
             found = false;
-            QString securityMethod = ( path, found );
+            const QString securityMethod = getSecurityMethod( path, found );
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
                 transport->setEncryption( MailTransport::Transport::EnumEncryption::None );
@@ -399,7 +399,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   storeIdentity(newIdentity);
 }
 
-QString EvolutionSettings::( const QString& path, bool & found )
+QString EvolutionSettings::getSecurityMethod( const QString& path, bool & found )
 {
   const int index = path.indexOf(QLatin1String("security-method="));
   if(index != -1) {
