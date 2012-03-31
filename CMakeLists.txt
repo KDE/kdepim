@@ -226,8 +226,6 @@ else()
   find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 
-endif()
-
 ############### Desktop vs. Mobile options ##############
 
   if(KDEPIM_MOBILE_UI)
