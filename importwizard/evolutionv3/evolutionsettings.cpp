@@ -270,8 +270,46 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             }
           }
           if(scheme == QLatin1String("imap")) {
+            found = false;
+            const QString authMethod = getAuthMethod(userName, found);
+            if( found ) {
+              if(authMethod==QLatin1String("PLAIN")) {
+                settings.insert( QLatin1String( "Authentication" ), MailTransport::Transport::EnumAuthenticationType::PLAIN );
+              } else if(authMethod==QLatin1String("NTLM")) {
+                settings.insert( QLatin1String( "Authentication" ), MailTransport::Transport::EnumAuthenticationType::NTLM );
+              } else if(authMethod==QLatin1String("DIGEST-MD5")) {
+                settings.insert( QLatin1String( "Authentication" ), MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
+              } else if(authMethod==QLatin1String("CRAM-MD5")) {
+                settings.insert( QLatin1String( "Authentication" ), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
+              } else if(authMethod==QLatin1String("LOGIN")) {
+                settings.insert( QLatin1String( "Authentication" ), MailTransport::Transport::EnumAuthenticationType::LOGIN );
+              } else if(authMethod==QLatin1String("POPB4SMTP")) {
+                settings.insert( QLatin1String( "Authentication" ), MailTransport::Transport::EnumAuthenticationType::APOP ); //????
+              } else {
+                qDebug()<<" smtp auth method unknown "<<authMethod;
+              }
+            }
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
+            found = false;
+            const QString authMethod = getAuthMethod(userName, found);
+            if( found ) {
+              if(authMethod==QLatin1String("PLAIN")) {
+                settings.insert( QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::PLAIN );
+              } else if(authMethod==QLatin1String("NTLM")) {
+                settings.insert( QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::NTLM );
+              } else if(authMethod==QLatin1String("DIGEST-MD5")) {
+                settings.insert( QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
+              } else if(authMethod==QLatin1String("CRAM-MD5")) {
+                settings.insert( QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
+              } else if(authMethod==QLatin1String("LOGIN")) {
+                settings.insert( QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::LOGIN );
+              } else if(authMethod==QLatin1String("POPB4SMTP")) {
+                settings.insert( QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP ); //????
+              } else {
+                qDebug()<<" smtp auth method unknown "<<authMethod;
+              }
+            }
             createResource( "akonadi_pop3_resource", name, settings );
 
           } else {
