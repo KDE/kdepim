@@ -73,7 +73,8 @@ MailTransport::Transport *AbstractSettings::createTransport()
 static QVariant::Type argumentType( const QMetaObject *mo, const QString &method )
 {
   QMetaMethod m;
-  for ( int i = 0; i < mo->methodCount(); ++i ) {
+  const int numberOfMethod( mo->methodCount() );
+  for ( int i = 0; i < numberOfMethod; ++i ) {
     const QString signature = QString::fromLatin1( mo->method( i ).signature() );
     if ( signature.startsWith( method ) )
       m = mo->method( i );

@@ -255,23 +255,11 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             //TODO
           }
           const QString userName = serverUrl.userInfo();
-          found = false;
-          const QString authMethod = getAuthMethod(userName, found);
-          if( found ) {
-            //TODO
-            if(authMethod==QLatin1String("PLAIN")) {
-            } else if(authMethod==QLatin1String("NTLM")) {
-            } else if(authMethod==QLatin1String("DIGEST-MD5")) {
-            } else if(authMethod==QLatin1String("CRAM-MD5")) {
-            } else if(authMethod==QLatin1String("LOGIN")) {
-            } else if(authMethod==QLatin1String("POPB4SMTP")) {
-            } else {
-              qDebug()<<" smtp auth method unknown "<<authMethod;
-            }
-          }
           if(scheme == QLatin1String("imap")) {
+            addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
+            addAuth(settings, QLatin1String( "AuthenticationMethod" ), userName);
             createResource( "akonadi_pop3_resource", name, settings );
 
           } else {
@@ -421,4 +409,27 @@ QString EvolutionSettings::getAuthMethod( const QString& path, bool & found)
   }
   found = false;
   return QString();
+}
+
+void EvolutionSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName)
+{
+  bool found = false;
+  const QString authMethod = getAuthMethod(userName, found);
+  if( found ) {
+    if(authMethod==QLatin1String("PLAIN")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::PLAIN );
+    } else if(authMethod==QLatin1String("NTLM")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
+    } else if(authMethod==QLatin1String("DIGEST-MD5")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
+    } else if(authMethod==QLatin1String("CRAM-MD5")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
+    } else if(authMethod==QLatin1String("LOGIN")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::LOGIN );
+    } else if(authMethod==QLatin1String("POPB4SMTP")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::APOP ); //????
+    } else {
+      qDebug()<<" smtp auth method unknown "<<authMethod;
+    }
+  }
 }
