@@ -117,7 +117,6 @@ void CreateFolderCommand::doStart()
 
     Collection c;
     c.setParentCollection( d->parentCollection );
-    c.setRemoteId( title );
     c.setName( title );
     c.setContentMimeTypes( QStringList( Collection::mimeType() ) );
     c.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( title );
