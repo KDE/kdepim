@@ -34,6 +34,7 @@
 #include <Akonadi/Session>
 
 #include <KLocalizedString>
+#include <KInputDialog>
 #include <KMessageBox>
 
 #include <QPointer>
@@ -65,7 +66,14 @@ public:
         collection = job->collections().first();
         FeedCollection fc( collection );
         if ( fc.isFolder() ) {
-            //TODO
+            bool ok = false;
+            const QString newName = KInputDialog::getText( i18n("Rename Folder"), i18n("Rename folder:"), fc.title(), &ok, q->parentWidget() );
+            if ( ok ) {
+                fc.setTitle( newName );
+                CollectionModifyJob* job = new CollectionModifyJob( fc, session );
+                connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionModified(KJob*)) );
+                job->start();
+            }
         } else {
             QPointer<FeedPropertiesDialog> dlg( new FeedPropertiesDialog( q->parentWidget() ) );
             dlg->setFeedTitle( fc.title() );
@@ -85,7 +93,6 @@ public:
             CollectionModifyJob* job = new CollectionModifyJob( fc, session );
             connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionModified(KJob*)) );
             job->start();
-
         }
     }
 
