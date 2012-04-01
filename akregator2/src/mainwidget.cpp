@@ -586,7 +586,7 @@ void Akregator2::MainWidget::slotFeedRemove()
     //PENDING(frank) make this a command and the message more sophisticated (feed vs. foldre etc.)
 
     if ( KMessageBox::questionYesNo( this,
-                                     i18n("<qt>Are you sure you want to delete %1?", c.name() ),
+                                     i18n("<qt>Are you sure you want to delete <strong>%1</strong>?</qt>", Qt::escape( KRss::FeedCollection( c ).title() ) ),
                                      i18n("Delete Feed"),
                                      KStandardGuiItem::del(),
                                      KStandardGuiItem::cancel() ) == KMessageBox::No )
