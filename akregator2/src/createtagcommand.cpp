@@ -36,6 +36,7 @@
 #include <krss/item.h>
 
 #include <KLocalizedString>
+#include <KRandom>
 
 #include <QPointer>
 
@@ -117,7 +118,8 @@ void CreateFolderCommand::doStart()
 
     FeedCollection c;
     c.setParentCollection( d->parentCollection );
-    c.setName( title );
+    c.setName( title + KRandom::randomString( 8 ) );
+    c.setTitle( title );
     c.setContentMimeTypes( QStringList() << Collection::mimeType() << KRss::Item::mimeType() );
     c.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( title );
     c.setIsFolder( true );

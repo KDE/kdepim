@@ -41,6 +41,7 @@
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KRandom>
 #include <KUrl>
 
 #include <QPointer>
@@ -123,7 +124,8 @@ void CreateFeedCommand::Private::doCreate()
     feed.setCachePolicy( policy );
     feed.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setIconName( QLatin1String("application-rss+xml") );
     feed.setParentCollection( m_parentCollection );
-    feed.setName( url );
+    feed.setName( url + KRandom::randomString( 8 ) );
+    feed.setTitle( url );
     Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob( feed );
     q->connect( job, SIGNAL(finished(KJob*)), q, SLOT(creationDone(KJob*)) );
     job->start();

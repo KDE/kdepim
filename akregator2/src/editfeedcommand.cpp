@@ -35,6 +35,7 @@
 
 #include <KLocalizedString>
 #include <KInputDialog>
+#include <KRandom>
 #include <KMessageBox>
 
 #include <QPointer>
@@ -69,6 +70,7 @@ public:
             bool ok = false;
             const QString newName = KInputDialog::getText( i18n("Rename Folder"), i18n("Rename folder:"), fc.title(), &ok, q->parentWidget() );
             if ( ok ) {
+                fc.setName( newName + KRandom::randomString( 8 ) );
                 fc.setTitle( newName );
                 CollectionModifyJob* job = new CollectionModifyJob( fc, session );
                 connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionModified(KJob*)) );
@@ -86,6 +88,7 @@ public:
                 guard.emitCanceled();
                 return;
             }
+            fc.setName( dlg->feedTitle() + KRandom::randomString( 8 ) );
             fc.setTitle( dlg->feedTitle() );
             fc.setXmlUrl( dlg->url() );
             fc.setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : 0 );
