@@ -115,11 +115,12 @@ void CreateFolderCommand::doStart()
 
     const QString title = !d->title.isEmpty() ? d->title : i18n("New Folder");
 
-    Collection c;
+    FeedCollection c;
     c.setParentCollection( d->parentCollection );
     c.setName( title );
     c.setContentMimeTypes( QStringList() << Collection::mimeType() << KRss::Item::mimeType() );
     c.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( title );
+    c.setIsFolder( true );
     CollectionCreateJob * const job = new CollectionCreateJob( c, d->session );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(collectionCreated(KJob*)) );
     job->start();

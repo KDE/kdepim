@@ -565,6 +565,9 @@ void Akregator2::MainWidget::addFeed(const QString& url, bool autoExec)
 void Akregator2::MainWidget::slotFolderAdd()
 {
     const Akonadi::Collection c = m_selectionController->selectedCollection();
+    KRss::FeedCollection fc( c );
+    if ( !fc.isFolder() )
+        fc = KRss::FeedCollection( fc.parentCollection() );
     std::auto_ptr<CreateFolderCommand> cmd( new CreateFolderCommand( c, QString(), this ) );
     cmd->setSession( m_session );
     cmd->setFeedListView( m_feedListView );
