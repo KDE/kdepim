@@ -923,46 +923,64 @@ void Akregator2::MainWidget::slotArticleToggleKeepFlag( bool )
             break;
     }
 
+
+    QList<Akonadi::Item> aitems;
+
+
     Q_FOREACH ( const KRss::Item& i, items )
     {
-        KRss::Item modifiedItem = i;
-        if ( allFlagsSet )
-            modifiedItem.setStatus( i.status() & ~KRss::Item::Important );
-        else
-            modifiedItem.setStatus( i.status() | KRss::Item::Important );
-
-        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), m_session );
-        connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
-        job->setIgnorePayload( true );
-        job->start();
+        if ( !allFlagsSet && !i.isImportant() ) {
+            Akonadi::Item modifiedItem( i.id() );
+            KRss::Item::setStatus( modifiedItem, i.status() | KRss::Item::Important );
+            aitems.append( modifiedItem );
+        } else if ( allFlagsSet && i.isImportant() ) {
+            Akonadi::Item modifiedItem( i.id() );
+            KRss::Item::setStatus( modifiedItem, i.status() & ~KRss::Item::Important );
+            aitems.append( modifiedItem );
+        }
     }
+
+    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aitems, m_session );
+    connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
+    job->setIgnorePayload( true );
+    job->start();
+
 }
 
 namespace {
 
 static void setSelectedArticleStatus( Akonadi::Session* session, QObject* rec, const Akregator2::AbstractSelectionController* controller, Akregator2::ArticleStatus status )
 {
-    const QList<KRss::Item> items = controller->selectedItems();
+    QList<KRss::Item> items = controller->selectedItems();
 
     if (items.isEmpty())
         return;
 
+    QList<Akonadi::Item> aitems;
+
     Q_FOREACH ( const KRss::Item& i, items )
     {
-        KRss::Item modifiedItem = i;
+        Akonadi::Item aitem( i.akonadiItem().id() );
         switch ( status ) {
         case Akregator2::Read:
-            modifiedItem.setStatus( i.status() & ~KRss::Item::Unread );
+            if ( !i.isRead() ) {
+                KRss::Item::setStatus( aitem, i.status() & ~KRss::Item::Unread );
+                aitems.append( aitem );
+            }
             break;
         case Akregator2::Unread:
-            modifiedItem.setStatus( i.status() | KRss::Item::Unread );
+            if ( i.isRead() ) {
+                KRss::Item::setStatus( aitem, i.status() | KRss::Item::Unread );
+                aitems.append( aitem );
+            }
             break;
         }
-        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), session );
-        rec->connect( job, SIGNAL(finished(KJob*)), rec, SLOT(slotJobFinished(KJob*)) );
-        job->setIgnorePayload( true );
-        job->start();
     }
+
+    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aitems, session );
+    rec->connect( job, SIGNAL(finished(KJob*)), rec, SLOT(slotJobFinished(KJob*)) );
+    job->setIgnorePayload( true );
+    job->start();
 }
 
 }

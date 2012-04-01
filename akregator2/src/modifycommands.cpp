@@ -26,6 +26,7 @@
 
 #include <krss/feedcollection.h>
 #include <krss/item.h>
+#include <KRss/RssItem>
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
@@ -37,6 +38,8 @@
 #include <KLocalizedString>
 
 #include <QPointer>
+
+#include <algorithm>
 
 using namespace Akonadi;
 using namespace Akregator2;
@@ -109,7 +112,12 @@ void MarkAsReadCommand::collectionsFetched( KJob* j ) {
     }
 }
 
-#include <QDebug>
+struct ItemIsRead {
+    bool operator()( const Akonadi::Item& item ) const {
+        return !KRss::RssItem::isUnread( item );
+    }
+};
+
 
 void MarkAsReadCommand::itemsFetched( KJob* j ) {
     --d->pendingFetches;
@@ -122,11 +130,14 @@ void MarkAsReadCommand::itemsFetched( KJob* j ) {
         const ItemFetchJob * const fjob = qobject_cast<const ItemFetchJob*>( j );
         Q_ASSERT( fjob );
         Akonadi::Item::List items = fjob->items();
+
+        items.erase( std::remove_if( items.begin(), items.end(), ItemIsRead() ), items.end() );
         if ( !items.isEmpty() ) {
             Akonadi::Item::List::Iterator it = items.begin();
             for ( ; it != items.end(); ++it )
                 KRss::Item::setStatus( *it, KRss::Item::status( *it ) & ~KRss::Item::Unread );
             ItemModifyJob* mjob = new ItemModifyJob( items, d->session );
+            mjob->setIgnorePayload( true );
             connect( mjob, SIGNAL(finished(KJob*)), this, SLOT(itemsModified(KJob*)) );
             ++d->pendingModifies;
             mjob->start();
