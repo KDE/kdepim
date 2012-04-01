@@ -940,6 +940,9 @@ void Akregator2::MainWidget::slotArticleToggleKeepFlag( bool )
         }
     }
 
+    if ( aitems.isEmpty() )
+        return;
+
     Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aitems, m_session );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
     job->setIgnorePayload( true );
@@ -976,6 +979,9 @@ static void setSelectedArticleStatus( Akonadi::Session* session, QObject* rec, c
             break;
         }
     }
+
+    if ( aitems.isEmpty() )
+        return;
 
     Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aitems, session );
     rec->connect( job, SIGNAL(finished(KJob*)), rec, SLOT(slotJobFinished(KJob*)) );
