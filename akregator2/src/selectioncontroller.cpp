@@ -91,7 +91,6 @@ Akregator2::SelectionController::SelectionController( Akonadi::Session* session,
     recorder->fetchCollectionStatistics( true );
     recorder->setCollectionMonitored( Akonadi::Collection::root() );
     recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
-
     m_itemModel = new FeedItemModel( recorder, this );
 
     Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
@@ -142,7 +141,7 @@ void Akregator2::SelectionController::init() {
 
     Akonadi::EntityMimeTypeFilterModel* filterProxy2 = new Akonadi::EntityMimeTypeFilterModel;
     filterProxy2->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-    filterProxy2->addMimeTypeInclusionFilter( QLatin1String("application/rss+xml") );
+    filterProxy2->addMimeTypeInclusionFilter( KRss::Item::mimeType() );
     filterProxy2->setSortRole( FeedItemModel::SortRole );
     filterProxy2->setDynamicSortFilter( true );
     filterProxy2->setSourceModel( selectionProxy );

@@ -118,7 +118,7 @@ void CreateFolderCommand::doStart()
     Collection c;
     c.setParentCollection( d->parentCollection );
     c.setName( title );
-    c.setContentMimeTypes( QStringList( Collection::mimeType() ) );
+    c.setContentMimeTypes( QStringList() << Collection::mimeType() << KRss::Item::mimeType() );
     c.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setDisplayName( title );
     CollectionCreateJob * const job = new CollectionCreateJob( c, d->session );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(collectionCreated(KJob*)) );
