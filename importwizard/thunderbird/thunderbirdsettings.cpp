@@ -30,6 +30,7 @@
 ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
 {
+  qDebug()<<" filename :"<<filename;
   QFile file(filename);
   if ( !file.open( QIODevice::ReadOnly ) ) {
     qDebug()<<" We can't open file"<<filename;
@@ -50,6 +51,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   }
   const QString mailAccountPreference = mHashConfig.value( QLatin1String( "mail.accountmanager.accounts" ) ).toString();
   mAccountList = mailAccountPreference.split( QLatin1Char( ',' ) );
+  qDebug()<<" mAccountList :"<<mAccountList;
   if ( mAccountList.isEmpty() )
     return;
   readTransport();
@@ -64,14 +66,15 @@ void ThunderbirdSettings::readAccount()
 {
   Q_FOREACH( const QString&account, mAccountList )
   {
-    const QString accountName = QString::fromLatin1( "mail.account.%1" ).arg( account );
-    const QString serverName = mHashConfig.value( accountName + QLatin1String( ".server" ) ).toString();
+    const QString serverName = mHashConfig.value( QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".server" ) ).toString();
+    const QString accountName = QString::fromLatin1( "mail.server.%1" ).arg( serverName );
     const QString host = mHashConfig.value( accountName + QLatin1String( ".hostname" ) ).toString();
     const QString userName = mHashConfig.value( accountName + QLatin1String( ".userName" ) ).toString();
     const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
 
     const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
 
+    qDebug()<<" ttttttttt :"<<( accountName + QLatin1String( ".type" ) );
     if( type == QLatin1String("imap")) {
       QMap<QString, QVariant> settings;
       settings.insert(QLatin1String("ImapServer"),serverName);
@@ -85,6 +88,9 @@ void ThunderbirdSettings::readAccount()
       const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt();
       settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
       createResource( "akonadi_pop3_resource", name, settings );
+    } else if ( type == QLatin1String( "none" ) ) {
+      //TODO
+      qDebug()<<" account type none!";
     } else {
       qDebug()<<" type unknown : "<<type;
     }
@@ -99,14 +105,13 @@ void ThunderbirdSettings::readAccount()
 void ThunderbirdSettings::readTransport()
 {
   const QString mailSmtpServer = mHashConfig.value( QLatin1String( "mail.smtpservers" ) ).toString();
+  if ( mailSmtpServer.isEmpty() )
+    return;
   QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
   const QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
-  if ( smtpList.isEmpty() )
-    return;
   Q_FOREACH( const QString &smtp, smtpList )
   {
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
-
     MailTransport::Transport *mt = createTransport();
     const QString name = mHashConfig.value( smtpName + QLatin1String( ".description" ) ).toString();
     mt->setName(name);
@@ -171,6 +176,7 @@ void ThunderbirdSettings::readTransport()
 
 void ThunderbirdSettings::readIdentity( const QString& account )
 {
+  qDebug()<<" readIdentity :";
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   
