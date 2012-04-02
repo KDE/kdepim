@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Import Wizard
+Name[nb]=Importveiviser
 Name[nl]=Assistent voor importeren
+Name[pl]=Asystent importu
 Name[pt]=Assistente de Importação
 Name[pt_BR]=Assistente de importação
 Name[sv]=Importguide
@@ -10,7 +12,9 @@ Exec=importwizard
 Type=Application
 NoDisplay=true
 Comment=Launch the import wizard to migrate data from mailer as thunderbird/evolution etc.
+Comment[nb]=Start importveiviseren for å hente inn data fra e-postprogrammer slik som thunderbird/evolution osv.
 Comment[nl]=Start de assistent voor importeren om gegevens van een mailer als thunderbird/evolution etc. te migreren.
+Comment[pl]=Uruchom asystenta importu, aby przenieść dane z takich programów pocztowych jak thunderbird, evolution itp.
 Comment[pt]=Invoca o assistente de importação para migrar os dados dos sistemas de e-mail, como o Thunderbird/Evolution etc.
 Comment[pt_BR]=Carrega o assistente de importação para migrar os dados dos sistemas de e-mail, tais como o Thunderbird/Evolution, etc.
 Comment[sv]=Starta importguiden för att överföra data från e-postprogram som thunderbird, evolution, etc.
