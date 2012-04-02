@@ -40,7 +40,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   while ( !stream.atEnd() ) {
     const QString line = stream.readLine();
     if(line.startsWith(QLatin1String("user_pref"))) {
-      if(line.contains(QLatin1String("mail.smtpserver.")) ||
+      if(line.contains(QLatin1String("mail.smtpserver")) ||
          line.contains(QLatin1String("mail.server.") ) ||
          line.contains(QLatin1String("mail.identity.")) ||
          line.contains(QLatin1String("mail.account.")) ||
@@ -50,10 +50,10 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
     }
   }
   const QString mailAccountPreference = mHashConfig.value( QLatin1String( "mail.accountmanager.accounts" ) ).toString();
+  if ( mailAccountPreference.isEmpty() )
+    return;
   mAccountList = mailAccountPreference.split( QLatin1Char( ',' ) );
   qDebug()<<" mAccountList :"<<mAccountList;
-  if ( mAccountList.isEmpty() )
-    return;
   readTransport();
   readAccount();
 }
@@ -95,9 +95,10 @@ void ThunderbirdSettings::readAccount()
       qDebug()<<" type unknown : "<<type;
     }
 
-    if ( mHashConfig.contains( accountName + QLatin1String( ".identities" ) ) )
+    const QString identityConfig = QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".identities" );
+    if ( mHashConfig.contains( identityConfig ) )
     {
-      readIdentity(account);
+      readIdentity(mHashConfig.value(identityConfig).toString() );
     }
   }
 }
@@ -105,12 +106,15 @@ void ThunderbirdSettings::readAccount()
 void ThunderbirdSettings::readTransport()
 {
   const QString mailSmtpServer = mHashConfig.value( QLatin1String( "mail.smtpservers" ) ).toString();
+  qDebug()<<" mailSmtpServer :"<<mailSmtpServer;
   if ( mailSmtpServer.isEmpty() )
     return;
   QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
+  qDebug()<<" smtpList :"<<smtpList;
   const QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
   Q_FOREACH( const QString &smtp, smtpList )
   {
+    qDebug()<<" CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
     MailTransport::Transport *mt = createTransport();
     const QString name = mHashConfig.value( smtpName + QLatin1String( ".description" ) ).toString();
@@ -166,17 +170,14 @@ void ThunderbirdSettings::readTransport()
       mt->setRequiresAuthentication( true );
     }
 
-    mt->writeConfig();
-    MailTransport::TransportManager::self()->addTransport( mt );
-    if ( smtp == defaultSmtp )
-      MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+    storeTransport( mt, ( smtp == defaultSmtp ) );
     mHashSmtp.insert( smtp, QString::number( mt->id() ) ); 
   }
 }
 
 void ThunderbirdSettings::readIdentity( const QString& account )
 {
-  qDebug()<<" readIdentity :";
+  qDebug()<<" readIdentity :"<<account;
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   

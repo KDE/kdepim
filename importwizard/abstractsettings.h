@@ -45,10 +45,17 @@ protected:
   void addFilterImportError( const QString& log );
 
   void createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+
   KPIMIdentities::Identity* createIdentity();
+
   MailTransport::Transport *createTransport();
+  
+  void storeTransport(MailTransport::Transport * mt, bool isDefault = false );
+  
   void storeIdentity(KPIMIdentities::Identity* identity);
+
   QString adaptFolder( const QString& folder);
+
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
 
   ImportWizard *mImportWizard;

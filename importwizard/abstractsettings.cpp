@@ -66,8 +66,19 @@ void AbstractSettings::storeIdentity(KPIMIdentities::Identity* identity)
 MailTransport::Transport *AbstractSettings::createTransport()
 {
   MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
+  addFilterImportInfo(i18n("Setting up transport..."));
   return mt;
 }
+
+void AbstractSettings::storeTransport(MailTransport::Transport * mt, bool isDefault )
+{
+  mt->writeConfig();
+  MailTransport::TransportManager::self()->addTransport( mt );
+  if ( isDefault )
+    MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+  addFilterImportInfo(i18n("Transport set up."));
+}
+
 
 //code from accountwizard
 static QVariant::Type argumentType( const QMetaObject *mo, const QString &method )

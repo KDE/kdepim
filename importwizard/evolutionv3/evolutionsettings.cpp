@@ -352,9 +352,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         }
       }
       //TODO authentification
-      transport->writeConfig();
-      MailTransport::TransportManager::self()->addTransport( transport );
-      MailTransport::TransportManager::self()->setDefaultTransport( transport->id() );
+      storeTransport(transport, true );
     }
     else if ( tag == QLatin1String( "drafts-folder" ) )
     {
