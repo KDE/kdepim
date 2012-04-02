@@ -240,19 +240,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             settings.insert(QLatin1String("Port"),port);
 
           const QString path = serverUrl.path();
-          bool found = false;
-          const QString securityMethod = getSecurityMethod( path, found );
-          if( found ) {
-            if( securityMethod == QLatin1String("none")) {
-
-            } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
-              //TODO
-            } else {
-              qDebug()<<" security method unknown : "<<path;
-            }
-          } else {
-            //TODO
-          }
+            
           const QString userName = serverUrl.userInfo();
           if(scheme == QLatin1String("imap")) {
             if ( intervalCheck ) {
@@ -264,6 +252,20 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
+            bool found = false;
+            const QString securityMethod = getSecurityMethod( path, found );
+            if( found ) {
+              if( securityMethod == QLatin1String("none")) {
+                //Nothing
+              } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
+                settings.insert( QLatin1String( "UseSSL" ), true );
+              } else {
+                qDebug()<<" security method unknown : "<<path;
+              }
+            } else {
+              settings.insert( QLatin1String( "UseTLS" ), true );
+            }
+
             if ( intervalCheck ) {
               settings.insert( QLatin1String( "IntervalCheckEnabled" ), true );
             }
