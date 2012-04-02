@@ -286,9 +286,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
     if ( readConfig( QLatin1String( "domain" ), accountConfig, domainName, false ) )
       mt->setLocalHostname( domainName );
 
-    mt->writeConfig();
-    MailTransport::TransportManager::self()->addTransport( mt );
-    MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+    storeTransport( mt, true );
     return QString::number(mt->id()); //TODO verify
   }
   return QString();

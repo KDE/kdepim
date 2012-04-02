@@ -109,7 +109,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
   QFrame *radioFrame = new QFrame( searchWidget );
   QVBoxLayout *radioLayout = new QVBoxLayout( radioFrame );
-  mChkbxAllFolders = new QRadioButton( i18n( "Search in &all local folders" ), searchWidget );
+  mChkbxAllFolders = new QRadioButton( i18n( "Search in &all folders" ), searchWidget );
 
   QHBoxLayout *hbl = new QHBoxLayout();
 
@@ -119,8 +119,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   mCbxFolders = new FolderRequester( searchWidget );
   mCbxFolders->setMustBeReadWrite( false );
   mCbxFolders->setNotAllowToCreateNewFolder( true );
-
-  mCbxFolders->setCollection( collection );
 
   mChkSubFolders = new QCheckBox( i18n( "I&nclude sub-folders" ), searchWidget );
   mChkSubFolders->setChecked( true );
@@ -144,6 +142,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   if ( !collection.hasAttribute<Akonadi::PersistentSearchAttribute>() ) {
     // it's not a search folder, make a new search
     mSearchPattern.append( SearchRule::createInstance( "Subject" ) );
+    mCbxFolders->setCollection( collection );
   } else {
     // it's a search folder
     if ( collection.hasAttribute<Akonadi::SearchDescriptionAttribute>() ) {
@@ -417,13 +416,11 @@ void SearchWindow::setEnabledSearchButton( bool )
 
 void SearchWindow::updateCollectionStatistic(Akonadi::Collection::Id id,Akonadi::CollectionStatistics statistic)
 {
-  QString genMsg, detailMsg;
+  QString genMsg;
   if ( id == mFolder.id() ) {
     genMsg = i18np( "%1 match", "%1 matches", statistic.count() );
-    detailMsg = i18n( "Searching in %1", mFolder.name() );
   }
   mStatusBar->changeItem( genMsg, 0 );
-  mStatusBar->changeItem( detailMsg, 1 );
 }
 
 void SearchWindow::keyPressEvent( QKeyEvent *event )
@@ -485,9 +482,8 @@ void SearchWindow::slotSearch()
     }
   }
 
-
-  
   mPatternEdit->updateSearchPattern();
+
   SearchPattern searchPattern( mSearchPattern );
   searchPattern.purify();
   enableGUI();
@@ -554,8 +550,12 @@ void SearchWindow::searchDone( KJob* job )
       Q_ASSERT( !search.isEmpty() );
       Akonadi::SearchDescriptionAttribute *searchDescription = mFolder.attribute<Akonadi::SearchDescriptionAttribute>( Akonadi::Entity::AddIfMissing );
       searchDescription->setDescription( search );
-      const Akonadi::Collection collection = mCbxFolders->collection();
-      searchDescription->setBaseCollection( collection );
+      if ( !mChkbxAllFolders->isChecked() ) {
+        const Akonadi::Collection collection = mCbxFolders->collection();
+        searchDescription->setBaseCollection( collection );
+      } else {
+        searchDescription->setBaseCollection( Akonadi::Collection() );
+      }
       searchDescription->setRecursive( mChkSubFolders->isChecked() );
       new Akonadi::CollectionModifyJob( mFolder, this );
       mSearchJob = 0;

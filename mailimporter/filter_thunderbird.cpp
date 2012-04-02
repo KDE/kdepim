@@ -58,13 +58,20 @@ QString FilterThunderbird::defaultProfile()
     //ini file.
     KConfig config( thunderbirdPath );
     const QStringList profileList = config.groupList().filter( QRegExp( "Profile\\d+" ) );
-    Q_FOREACH( const QString& profileName, profileList )
-    {
-      KConfigGroup group = config.group( profileName );
-      if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
+    const bool uniqProfile = ( profileList.count() == 1 );
+    if ( uniqProfile ) {
+      KConfigGroup group = config.group( profileList.at( 0 ) );
+      const QString path = group.readEntry( "Path" );
+      return path;
+    } else {
+      Q_FOREACH( const QString& profileName, profileList )
       {
-        const QString path = group.readEntry( "Path" );
-        return path;            
+        KConfigGroup group = config.group( profileName );
+        if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
+        {
+          const QString path = group.readEntry( "Path" );
+          return path;            
+        }
       }
     }
   }

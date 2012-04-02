@@ -126,24 +126,30 @@ void ImportWizard::slotProgramDoubleClicked()
 
 void ImportWizard::slotImportAddressbookClicked()
 {
+  addFinishInfo( i18n( "Import addressbook from %1...", mSelectedPim->name() ) );
   const bool result = mSelectedPim->importAddressBook();
   setValid(mPage7,result);
 }
 
 void ImportWizard::slotImportFiltersClicked()
 {
+  addFinishInfo( i18n( "Import filters from %1...", mSelectedPim->name() ) );
   const bool result = mSelectedPim->importFilters();
   setValid(mPage4,result);
 }
 
 void ImportWizard::slotImportMailsClicked()
 {
+  addFinishInfo( i18n( "Import mails from %1...", mSelectedPim->name() ) );
+
   const bool result = mSelectedPim->importMails();
   setValid(mPage3,result);
 }
 
 void ImportWizard::slotImportSettingsClicked()
 {
+  addFinishInfo( i18n( "Import settings from %1...", mSelectedPim->name() ) );
+
   const bool result = mSelectedPim->importSettings();
   setValid(mPage6,result);
 }

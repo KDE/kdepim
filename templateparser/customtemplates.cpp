@@ -197,6 +197,7 @@ void CustomTemplates::iconFromType( CustomTemplates::Type type, CustomTemplateIt
 void CustomTemplates::load()
 {
   const QStringList list = GlobalSettings::self()->customTemplates();
+  mUi->mList->clear();
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
