@@ -32,16 +32,16 @@ install(TARGETS akregator2_config_appearance DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
-set(kcm_akrarchiveconfig_SRCS 
-   akregator2_config_archive.cpp )
+set(kcm_akrfeedlistsconfig_SRCS
+   akregator2_config_feedlists.cpp )
 
-kde4_add_ui_files( kcm_akrarchiveconfig_SRCS settings_archive.ui )
-kde4_add_plugin( akregator2_config_archive ${kcm_akrarchiveconfig_SRCS})
+kde4_add_ui_files( kcm_akrfeedlistsconfig_SRCS settings_feedlists.ui )
+kde4_add_plugin( akregator2_config_feedlists ${kcm_akrfeedlistsconfig_SRCS})
 
-target_link_libraries( akregator2_config_archive akregator2interfaces ${KDE4_KIO_LIBS} )
+target_link_libraries( akregator2_config_feedlists akregator2interfaces ${KDE4_KIO_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} )
 
-install( FILES akregator2_config_archive.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-install(TARGETS akregator2_config_archive  DESTINATION ${PLUGIN_INSTALL_DIR})
+install( FILES akregator2_config_feedlists.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS akregator2_config_feedlists  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############

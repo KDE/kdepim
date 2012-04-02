@@ -1,0 +1,15 @@
+[Desktop Entry]
+Icon=akregator
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-DocPath=akregator2/preferences.html#general-lookup
+
+X-KDE-Library=akregator2_config_feedlists
+X-KDE-ParentApp=akregator2
+X-KDE-ParentComponents=akregator2,kontact_akregator2plugin
+X-KDE-CfgDlgHierarchy=Akregator2
+X-KDE-Weight=400
+
+Name=Feed Lists
+Comment=Configure Feed Lists
+X-KDE-Keywords=akregator2, configure, settings, akonadi, resources

@@ -284,19 +284,11 @@ void Part::showOptions()
         connect( m_dialog, SIGNAL(configCommitted()),
                  TrayIcon::getInstance(), SLOT(settingsChanged()) );
 
-        QStringList modules;
-
-        modules.append( "akregator2_config_general.desktop" );
-        modules.append( "akregator2_config_onlinesync.desktop" );
-        modules.append( "akregator2_config_archive.desktop" );
-        modules.append( "akregator2_config_appearance.desktop" );
-        modules.append( "akregator2_config_browser.desktop" );
-        modules.append( "akregator2_config_advanced.desktop" );
-
-        // add them all
-        QStringList::iterator mit;
-        for ( mit = modules.begin(); mit != modules.end(); ++mit ) {
-            m_dialog->addModule( *mit );
+        // query for akregator's kcm modules
+        const QString constraint = "[X-KDE-ParentApp] == 'akregator2'";
+        const KService::List offers = KServiceTypeTrader::self()->query( "KCModule", constraint );
+        foreach( const KService::Ptr &service, offers ) {
+            m_dialog->addModule( service->storageId() );
         }
     }
 
