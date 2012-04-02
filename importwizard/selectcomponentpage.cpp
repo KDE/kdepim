@@ -37,7 +37,7 @@ SelectComponentPage::~SelectComponentPage()
 void SelectComponentPage::slotComponentClicked()
 {
   const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked() || ui->everything->isChecked() );
-  emit atLeastOneComponentSelected(componentSelected);
+  Q_EMIT atLeastOneComponentSelected(componentSelected);
 }
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )

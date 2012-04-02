@@ -30,10 +30,9 @@
 ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
 {
-  qDebug()<<" filename :"<<filename;
   QFile file(filename);
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    qDebug()<<" We can't open file"<<filename;
+    kDebug()<<" We can't open file"<<filename;
     return;
   }
   QTextStream stream(&file);
@@ -53,13 +52,46 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   if ( mailAccountPreference.isEmpty() )
     return;
   mAccountList = mailAccountPreference.split( QLatin1Char( ',' ) );
-  qDebug()<<" mAccountList :"<<mAccountList;
   readTransport();
   readAccount();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
+}
+
+void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )
+{
+  //TODO
+  bool found = false;
+  const int authMethod = mHashConfig.value( accountName + QLatin1String( ".authMethod" ) ).toInt(&found);
+  if( found ) {
+    switch( authMethod ) {
+    case 0:
+      break;
+    default:
+      qDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
+      break;
+    }
+  }
+  
+#if 0
+    if(authMethod==QLatin1String("PLAIN")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::PLAIN );
+    } else if(authMethod==QLatin1String("NTLM")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
+    } else if(authMethod==QLatin1String("DIGEST-MD5")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
+    } else if(authMethod==QLatin1String("CRAM-MD5")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
+    } else if(authMethod==QLatin1String("LOGIN")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::LOGIN );
+    } else if(authMethod==QLatin1String("POPB4SMTP")) {
+      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::APOP ); //????
+    } else {
+      qDebug()<<" smtp auth method unknown "<<authMethod;
+    }
+#endif    
 }
 
 void ThunderbirdSettings::readAccount()
@@ -73,20 +105,44 @@ void ThunderbirdSettings::readAccount()
     const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
 
     const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
-
-    qDebug()<<" ttttttttt :"<<( accountName + QLatin1String( ".type" ) );
+    
+    bool found = false;
     if( type == QLatin1String("imap")) {
       QMap<QString, QVariant> settings;
       settings.insert(QLatin1String("ImapServer"),serverName);
       settings.insert(QLatin1String("UserName"),userName);
-      //settings.insert(QLatin1String(""),);
+      found = false;
+      const int port = mHashConfig.value( accountName + QLatin1String( ".port" ) ).toInt( &found);
+      if ( found ) {
+        settings.insert( QLatin1String( "ImapPort" ), port );
+      }
+      addAuth( settings, QLatin1String( "Authentication" ), account );
+      const QString offline = accountName + QLatin1String( ".offline_download" );
+      if ( mHashConfig.contains( offline ) ) {
+        const bool offlineStatus = mHashConfig.value( offline ).toBool();
+        if ( offlineStatus ) {
+          settings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
+        }
+      }
       createResource( "akonadi_imap_resource", name,settings );
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
       settings.insert( QLatin1String( "Login" ), userName );
-      const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt();
-      settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
+
+      found = false;
+      const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt(&found);
+      if ( found ) {
+        settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
+      }
+      
+      found = false;
+      const int port = mHashConfig.value( accountName + QLatin1String( ".port" ) ).toInt( &found);
+      if ( found ) {
+        settings.insert( QLatin1String( "Port" ), port );
+      }
+      addAuth( settings, QLatin1String( "AuthenticationMethod" ),account );
+      
       createResource( "akonadi_pop3_resource", name, settings );
     } else if ( type == QLatin1String( "none" ) ) {
       //TODO
@@ -106,15 +162,12 @@ void ThunderbirdSettings::readAccount()
 void ThunderbirdSettings::readTransport()
 {
   const QString mailSmtpServer = mHashConfig.value( QLatin1String( "mail.smtpservers" ) ).toString();
-  qDebug()<<" mailSmtpServer :"<<mailSmtpServer;
   if ( mailSmtpServer.isEmpty() )
     return;
   QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
-  qDebug()<<" smtpList :"<<smtpList;
   const QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
   Q_FOREACH( const QString &smtp, smtpList )
   {
-    qDebug()<<" CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
     MailTransport::Transport *mt = createTransport();
     const QString name = mHashConfig.value( smtpName + QLatin1String( ".description" ) ).toString();
@@ -155,10 +208,10 @@ void ThunderbirdSettings::readTransport()
         mt->setEncryption( MailTransport::Transport::EnumEncryption::None );
         break;
       case 2:
-        mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
+        mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
         break;
       case 3:
-        mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+        mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
         break;
       default:
         qDebug()<<" trySsl unknown :"<<trySsl;
@@ -177,7 +230,6 @@ void ThunderbirdSettings::readTransport()
 
 void ThunderbirdSettings::readIdentity( const QString& account )
 {
-  qDebug()<<" readIdentity :"<<account;
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   
@@ -218,8 +270,19 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   if(signatureHtml) {
       signature.setInlinedHtml( true );
   }
-  const QString textSignature = mHashConfig.value(identity + QLatin1String( ".htmlSigText" ) ).toString();
-  const QString fileSignature = mHashConfig.value(identity + QLatin1String( ".sig_file")).toString();
+
+  const bool attachSignature = mHashConfig.value(identity + QLatin1String( ".attach_signature" )).toBool();
+  if ( attachSignature ) {
+    const QString fileSignature = mHashConfig.value(identity + QLatin1String( ".sig_file")).toString();
+    signature.setType( KPIMIdentities::Signature::FromFile );
+    signature.setUrl( fileSignature,false );
+  }
+  else {
+    const QString textSignature = mHashConfig.value(identity + QLatin1String( ".htmlSigText" ) ).toString();
+    signature.setType( KPIMIdentities::Signature::Inlined );
+    signature.setText( textSignature );
+  }
+  
   newIdentity->setSignature( signature );
 
   storeIdentity(newIdentity);

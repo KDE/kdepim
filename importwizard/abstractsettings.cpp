@@ -118,7 +118,7 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
   // check if unique instance already exists
   kDebug() << type.capabilities();
   if ( type.capabilities().contains( QLatin1String( "Unique" ) ) ) {
-    foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
+    Q_FOREACH ( const AgentInstance &instance, AgentManager::self()->instances() ) {
       kDebug() << instance.type().identifier() << (instance.type() == type);
       if ( instance.type() == type ) {
         addFilterImportInfo( i18n( "Resource '%1' is already set up.", type.name() ) );
