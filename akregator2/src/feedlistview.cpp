@@ -211,6 +211,7 @@ FeedListView::FeedListView( QWidget *parent )
     setDragDropMode( QAbstractItemView::DragDrop );
     setDropIndicatorShown( true );
     setAcceptDrops( true );
+    setDropActionMenuEnabled( false );
     setUniformRowHeights( true );
     Akonadi::CollectionStatisticsDelegate* delegate = new Akonadi::CollectionStatisticsDelegate( this );
     delegate->setProgressAnimationEnabled( true );
