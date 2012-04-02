@@ -220,14 +220,13 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
       if(e.hasAttribute(QLatin1String("save-passwd"))&& e.attribute( "save-passwd" ) == QLatin1String( "true" ) ) {
         //TODO
       }
-      if(e.hasAttribute(QLatin1String("keep-on-server"))) {
-        //TODO
-      }
+      int interval = -1;
+      bool intervalCheck = false;
       if(e.hasAttribute(QLatin1String("auto-check"))) {
-        //TODO
+        intervalCheck = ( e.attribute(QLatin1String("auto-check")) == QLatin1String( "true" ) );
       }
       if(e.hasAttribute(QLatin1String("auto-check-timeout"))) {
-        //TODO
+        interval = e.attribute(QLatin1String("auto-check-timeout")).toInt();
       }
       for ( QDomElement server = e.firstChildElement(); !server.isNull(); server = server.nextSiblingElement() ) {
         const QString serverTag = server.tagName();
@@ -256,9 +255,24 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           }
           const QString userName = serverUrl.userInfo();
           if(scheme == QLatin1String("imap")) {
+            if ( intervalCheck ) {
+              settings.insert( QLatin1String( "IntervalCheckEnabled" ), true );
+            }
+            if ( interval > -1 ) {
+              settings.insert(QLatin1String("IntervalCheckTime" ), interval );
+            }
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
+            if ( intervalCheck ) {
+              settings.insert( QLatin1String( "IntervalCheckEnabled" ), true );
+            }
+            if ( interval > -1 ) {
+              settings.insert(QLatin1String("IntervalCheckInterval" ), interval );
+            }
+            if(e.hasAttribute(QLatin1String("keep-on-server"))&& e.attribute(QLatin1String("keep-on-server") ) == QLatin1String( "true" ) ) {
+              settings.insert(QLatin1String("LeaveOnServer"),true);
+            }
             addAuth(settings, QLatin1String( "AuthenticationMethod" ), userName);
             createResource( "akonadi_pop3_resource", name, settings );
 
