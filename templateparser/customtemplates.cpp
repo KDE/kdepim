@@ -190,6 +190,7 @@ void CustomTemplates::slotTextChanged()
 void CustomTemplates::load()
 {
   const QStringList list = TemplateParser::GlobalSettings::self()->customTemplates();
+  mUi->mList->clear();
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
