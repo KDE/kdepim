@@ -96,6 +96,7 @@ Akregator2::SelectionController::SelectionController( Akonadi::Session* session,
     Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
     filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
     filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+    filterProxy->setSupportedDragActions( Qt::MoveAction );
     filterProxy->setSourceModel( m_itemModel );
     filterProxy->setDynamicSortFilter( true );
     m_collectionFilterModel = filterProxy;

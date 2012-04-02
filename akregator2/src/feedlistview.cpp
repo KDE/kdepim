@@ -213,6 +213,7 @@ FeedListView::FeedListView( QWidget *parent )
     setAcceptDrops( true );
     setDropActionMenuEnabled( false );
     setUniformRowHeights( true );
+    setManualSortingActive( true );
     Akonadi::CollectionStatisticsDelegate* delegate = new Akonadi::CollectionStatisticsDelegate( this );
     delegate->setProgressAnimationEnabled( true );
     delegate->setUnreadCountShown( true );
