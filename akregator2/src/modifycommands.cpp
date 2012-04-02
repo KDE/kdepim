@@ -96,7 +96,7 @@ void MarkAsReadCommand::collectionsFetched( KJob* j ) {
     const CollectionFetchJob * const fjob = qobject_cast<const CollectionFetchJob*>( j );
     Q_ASSERT( fjob );
 
-    const Collection::List l = fjob->collections();
+    const Collection::List l = d->collections + fjob->collections();
 
     if ( l.isEmpty() ) {
         emitResult();
