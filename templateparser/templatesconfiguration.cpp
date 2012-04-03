@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ * Copyright (C) 2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -291,22 +292,31 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
   t.writeConfig();
 }
 
-void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
+KTextEdit* TemplatesConfiguration::currentTextEdit() const
 {
   KTextEdit *edit;
 
-  if( toolBox1->widget( toolBox1->currentIndex() ) == page_new ) {
+  const int toolboxCurrentIndex( toolBox1->currentIndex() );
+  if( toolBox1->widget( toolboxCurrentIndex ) == page_new ) {
     edit = textEdit_new;
-  } else if( toolBox1->widget( toolBox1->currentIndex() ) == page_reply ) {
+  } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply ) {
     edit = textEdit_reply;
-  } else if( toolBox1->widget( toolBox1->currentIndex() ) == page_reply_all ) {
+  } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply_all ) {
     edit = textEdit_reply_all;
-  } else if( toolBox1->widget( toolBox1->currentIndex() ) == page_forward ) {
+  } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
     edit = textEdit_forward;
   } else {
     kDebug() << "Unknown current page in TemplatesConfiguration!";
-    return;
+    edit = 0;
   }
+  return edit;
+}
+
+void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
+{
+  KTextEdit *edit = currentTextEdit();
+  if ( !edit )
+    return;
 
   // kDebug() << "Insert command:" << cmd;
   const QString editText( edit->toPlainText() );
