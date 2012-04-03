@@ -22,6 +22,9 @@
 #include <kpimidentities/signature.h>
 #include <QString>
 
+class QFile;
+class QDomDocument;
+
 class ImportWizard;
 class KConfigGroup;
 class QDomElement;
@@ -39,6 +42,9 @@ private:
   QString getSecurityMethod(const QString &path, bool & found );
   QString getAuthMethod( const QString& path, bool & found);
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName);
+  
+  bool loadInDomDocument( QFile *file, QDomDocument & doc );
+  bool loadInDomDocument( const QString &file, QDomDocument & doc );
 
   QMap<QString, KPIMIdentities::Signature> mMapSignature;
 };

@@ -40,16 +40,9 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
     qDebug()<<" We can't open file"<<filename;
     return;
   }
-
   QDomDocument doc;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( &file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
+  if ( !loadInDomDocument( &file, doc ) )
     return;
-  }
   QDomElement config = doc.documentElement();
 
   if ( config.isNull() ) {
@@ -75,6 +68,33 @@ EvolutionSettings::~EvolutionSettings()
 {
 }
 
+bool EvolutionSettings::loadInDomDocument( QFile *file, QDomDocument & doc )
+{
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return false;
+  }
+  return true;
+}
+
+bool EvolutionSettings::loadInDomDocument( const QString &file, QDomDocument & doc )
+{
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return false;
+  }
+  return true;
+}
+
+
 void EvolutionSettings::readSignatures(const QDomElement &account)
 {
   for ( QDomElement signatureConfig = account.firstChildElement(); !signatureConfig.isNull(); signatureConfig = signatureConfig.nextSiblingElement() ) {
@@ -88,16 +108,9 @@ void EvolutionSettings::readSignatures(const QDomElement &account)
 void EvolutionSettings::extractSignatureInfo( const QString&info )
 {
   qDebug()<<" signature info "<<info;
-  //Read QDomElement
   QDomDocument signature;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !signature.setContent( info, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
+  if ( !loadInDomDocument( info, signature ) )
     return;
-  }
 
   QDomElement domElement = signature.documentElement();
 
@@ -161,14 +174,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   qDebug()<<" info "<<info;
   //Read QDomElement
   QDomDocument account;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !account.setContent( info, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
+  if ( !loadInDomDocument( info, account ) )
     return;
-  }
 
   QDomElement domElement = account.documentElement();
 
