@@ -19,17 +19,13 @@
 #ifndef CONTACTPHOTOMEMENTO_H
 #define CONTACTPHOTOMEMENTO_H
 
-#include "interfaces/bodypart.h"
+#include "contactabstractmemento.h"
 
 #include "viewer.h"
 
 #include <KABC/Picture>
 
-#include <KUrl>
-
 #include <QObject>
-
-class KJob;
 
 namespace Akonadi {
   class ContactSearchJob;
@@ -37,26 +33,17 @@ namespace Akonadi {
 
 namespace MessageViewer {
 
-class ContactPhotoMemento : public QObject, public Interface::BodyPartMemento
+class ContactPhotoMemento : public ContactAbstractMemento
 {
   Q_OBJECT
   public:
-    ContactPhotoMemento( const QString &emailAddress );
+    explicit ContactPhotoMemento( const QString &emailAddress );
 
-    bool finished() const;
+    void processAddress( const KABC::Addressee& addressee );
+
     KABC::Picture photo() const;
 
-    virtual void detach();
-
-  signals:
-    // TODO: Factor our update and detach into base class
-    void update( MessageViewer::Viewer::UpdateMode );
-
-  private slots:
-    void slotSearchJobFinished( KJob *job );
-
   private:
-    bool mFinished;
     KABC::Picture mPhoto;
 };
 
