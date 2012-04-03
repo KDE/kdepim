@@ -253,11 +253,13 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   bool doBcc = mHashConfig.value(identity + QLatin1String(".doBcc")).toBool();
   if(doBcc) {
     const QString bcc = mHashConfig.value(identity + QLatin1String(".doBccList")).toString();
+    //TODO
   }
 
   bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
   if(doCc) {
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
+    //TODO
   }
 
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
