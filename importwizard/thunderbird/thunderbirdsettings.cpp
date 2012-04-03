@@ -245,6 +245,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   newIdentity->setPrimaryEmailAddress(userEmail);
 
   const QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
+  newIdentity->setFullName( fullName );
 
   const QString organization = mHashConfig.value(identity + QLatin1String(".organization")).toString();
   newIdentity->setOrganization(organization);
@@ -282,7 +283,15 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     signature.setType( KPIMIdentities::Signature::Inlined );
     signature.setText( textSignature );
   }
-  
+
+  const QString attachVcardStr( identity + QLatin1String( ".attach_vcard" ) );
+  if ( mHashConfig.contains( attachVcardStr ) ) {
+    const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
+    if ( attachVcard ) {
+      //TODO mail.identity.id1.escapedVCard
+    }
+  }
+    
   newIdentity->setSignature( signature );
 
   storeIdentity(newIdentity);
