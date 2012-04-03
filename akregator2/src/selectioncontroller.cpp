@@ -77,7 +77,7 @@ Akregator2::SelectionController::SelectionController( Akonadi::Session* session,
     m_collectionFilterModel( 0 )
 {
     Akonadi::ItemFetchScope iscope;
-    iscope.fetchFullPayload( true );
+    iscope.fetchPayloadPart( KRss::Item::HeadersPart );
     iscope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
     Akonadi::CollectionFetchScope cscope;
     cscope.setIncludeStatistics( true );
@@ -264,6 +264,7 @@ void Akregator2::SelectionController::fullItemFetched( KJob* j )
     assert( job );
     if ( job->error() ) {
         //PENDING(frank) TODO handle error
+        kDebug() << job->errorString();
         return;
     }
 
