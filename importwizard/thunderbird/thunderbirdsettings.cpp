@@ -253,20 +253,21 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   bool doBcc = mHashConfig.value(identity + QLatin1String(".doBcc")).toBool();
   if(doBcc) {
     const QString bcc = mHashConfig.value(identity + QLatin1String(".doBccList")).toString();
-    //TODO
+    newIdentity->setBcc( bcc );
   }
 
   bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
   if(doCc) {
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
-    //TODO
+    newIdentity->setReplyToAddr( cc );
   }
 
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
-  newIdentity->setReplyToAddr( replyTo );
+  //FIXME
+  //newIdentity->setReplyToAddr( replyTo );
 
   KPIMIdentities::Signature signature;
   const bool signatureHtml = mHashConfig.value(identity + QLatin1String( ".htmlSigFormat" )).toBool();
