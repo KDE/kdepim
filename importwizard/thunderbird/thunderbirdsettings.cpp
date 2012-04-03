@@ -284,6 +284,28 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     signature.setText( textSignature );
   }
 
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".drafts_folder_picker_mode" ) ) )
+  {
+    const int useSpecificDraftFolder = mHashConfig.value(  identity + QLatin1String( ".drafts_folder_picker_mode" ) ).toInt();
+    if ( useSpecificDraftFolder == 1 )
+    {
+      const QString draftFolder = adaptFolder( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
+      newIdentity->setDrafts( draftFolder );
+    }
+  }
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
+  {
+    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    if ( useSpecificTemplateFolder == 1 )
+    {
+      const QString templateFolder = adaptFolder( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      newIdentity->setTemplates( templateFolder );
+    }
+  }
+
+  
   const QString attachVcardStr( identity + QLatin1String( ".attach_vcard" ) );
   if ( mHashConfig.contains( attachVcardStr ) ) {
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
