@@ -20,7 +20,10 @@
 
 #include <mailcommon/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
-
+#include <Akonadi/Monitor>
+#include <Akonadi/Session>
+#include <Akonadi/CollectionFetchScope>
+#include <KMime/Message>
 
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
@@ -29,13 +32,26 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
+  m_collectionMonitor = new Akonadi::Monitor( this );
+  m_collectionMonitor->fetchCollection( true );
+  m_collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
+  m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+  m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
+  connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+           this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
 
 }
 
 ArchiveMailAgent::~ArchiveMailAgent()
 {
+}
+
+void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collection)
+{
+  //TODO
 }
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
