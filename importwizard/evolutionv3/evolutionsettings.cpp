@@ -154,9 +154,6 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
         
     qDebug()<<" signature tag :"<<tag;
   }
-
-//<signature name="html" uid="1332775655.21659.4@krita" auto="false" format="text/html"><filename>signature-1</filename></signature>
-  //TODO signature path :  ~/.local/share/evolution/signatures/*
 }
 
 void EvolutionSettings::readAccount(const QDomElement &account)
@@ -391,14 +388,44 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "receipt-policy" ) )
     {
-      //TODO
+      if ( e.hasAttribute( QLatin1String( "policy" ) ) ) {
+        const QString policy = e.attribute( QLatin1String( "policy" ) );
+        //TODO
+      }
     }
     else if ( tag == QLatin1String( "pgp" ) )
     {
-      //TODO
+      if ( e.hasAttribute( QLatin1String( "encrypt-to-self" ) ) &&
+           ( e.attribute( QLatin1String( "encrypt-to-self" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "always-trust" ) ) &&
+           ( e.attribute( QLatin1String( "always-trust" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "always-sign" ) ) &&
+           ( e.attribute( QLatin1String( "always-sign" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "no-imip-sign" ) ) &&
+           ( e.attribute( QLatin1String( "no-imip-sign" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
     }
     else if ( tag == QLatin1String( "smime" ) )
     {
+      if ( e.hasAttribute( QLatin1String( "sign-default" ) ) &&
+           ( e.attribute( QLatin1String( "sign-default" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "encrypt-default" ) ) &&
+           ( e.attribute( QLatin1String( "encrypt-default" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "encrypt-to-self" ) ) &&
+           ( e.attribute( QLatin1String( "encrypt-to-self" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
       //TODO
     }
     else

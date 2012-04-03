@@ -313,7 +313,8 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   if ( mHashConfig.contains( attachVcardStr ) ) {
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
     if ( attachVcard ) {
-      //TODO mail.identity.id1.escapedVCard
+      const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
+      //TODO not implemented in kmail
     }
   }
     
