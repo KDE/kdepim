@@ -64,34 +64,31 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
 {
   //TODO
   bool found = false;
-  const int authMethod = mHashConfig.value( accountName + QLatin1String( ".authMethod" ) ).toInt(&found);
-  if( found ) {
-    switch( authMethod ) {
-    case 0:
-      break;
-    default:
-      qDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
-      break;
+  if ( mHashConfig.contains( accountName + QLatin1String( ".authMethod" ) ) ) {
+    const int authMethod = mHashConfig.value( accountName + QLatin1String( ".authMethod" ) ).toInt(&found);
+    if( found ) {
+      switch( authMethod ) {
+      case 0:
+        break;
+      case 4: //Encrypted password ???
+        settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::LOGIN ); //????
+        qDebug()<<" authmethod == encrypt password";
+        break;
+      case 5: //GSSAPI
+        settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::GSSAPI );
+        break;
+      case 6: //NTLM
+        settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
+        break;
+      case 7: //TLS
+        qDebug()<<" authmethod method == TLS"; ????
+        break;
+      default:
+        qDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
+        break;
+      }
     }
   }
-  
-#if 0
-    if(authMethod==QLatin1String("PLAIN")) {
-      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::PLAIN );
-    } else if(authMethod==QLatin1String("NTLM")) {
-      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
-    } else if(authMethod==QLatin1String("DIGEST-MD5")) {
-      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
-    } else if(authMethod==QLatin1String("CRAM-MD5")) {
-      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
-    } else if(authMethod==QLatin1String("LOGIN")) {
-      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::LOGIN );
-    } else if(authMethod==QLatin1String("POPB4SMTP")) {
-      settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::APOP ); //????
-    } else {
-      qDebug()<<" smtp auth method unknown "<<authMethod;
-    }
-#endif    
 }
 
 void ThunderbirdSettings::readAccount()
