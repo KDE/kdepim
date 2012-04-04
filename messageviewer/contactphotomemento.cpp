@@ -23,50 +23,19 @@
 using namespace MessageViewer;
 
 ContactPhotoMemento::ContactPhotoMemento( const QString &emailAddress )
-  : QObject( 0 ), mFinished( false )
+  : ContactAbstractMemento( emailAddress )
 {
-  Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-  searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
-  connect( searchJob, SIGNAL(result(KJob*)),
-           this, SLOT(slotSearchJobFinished(KJob*)) );
 }
 
-void ContactPhotoMemento::slotSearchJobFinished( KJob *job )
+void ContactPhotoMemento::processAddress( const KABC::Addressee& addressee )
 {
-  mFinished = true;
-  Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
-  if ( searchJob->error() ) {
-    kWarning() << "Unable to fetch photo for contact:" << searchJob->errorText();
-    return;
-  }
-
-  if ( searchJob->contacts().size() == 1 ) {
-
-    KABC::Addressee addressee = searchJob->contacts().first();
-    mPhoto = addressee.photo();
-    emit update( Viewer::Delayed );
-
-  } else if ( searchJob->contacts().size() > 1 ) {
-    // TODO: Figure out something here...
-  }
-}
-
-bool ContactPhotoMemento::finished() const
-{
-  return mFinished;
+  mPhoto = addressee.photo();
 }
 
 KABC::Picture ContactPhotoMemento::photo() const
 {
-  Q_ASSERT( mFinished );
   return mPhoto;
 }
-
-void ContactPhotoMemento::detach()
-{
-  disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
-}
-
 
 
 #include "contactphotomemento.moc"

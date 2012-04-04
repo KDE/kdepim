@@ -40,16 +40,9 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
     qDebug()<<" We can't open file"<<filename;
     return;
   }
-
   QDomDocument doc;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( &file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
+  if ( !loadInDomDocument( &file, doc ) )
     return;
-  }
   QDomElement config = doc.documentElement();
 
   if ( config.isNull() ) {
@@ -75,6 +68,33 @@ EvolutionSettings::~EvolutionSettings()
 {
 }
 
+bool EvolutionSettings::loadInDomDocument( QFile *file, QDomDocument & doc )
+{
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return false;
+  }
+  return true;
+}
+
+bool EvolutionSettings::loadInDomDocument( const QString &file, QDomDocument & doc )
+{
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return false;
+  }
+  return true;
+}
+
+
 void EvolutionSettings::readSignatures(const QDomElement &account)
 {
   for ( QDomElement signatureConfig = account.firstChildElement(); !signatureConfig.isNull(); signatureConfig = signatureConfig.nextSiblingElement() ) {
@@ -88,16 +108,9 @@ void EvolutionSettings::readSignatures(const QDomElement &account)
 void EvolutionSettings::extractSignatureInfo( const QString&info )
 {
   qDebug()<<" signature info "<<info;
-  //Read QDomElement
   QDomDocument signature;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !signature.setContent( info, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
+  if ( !loadInDomDocument( info, signature ) )
     return;
-  }
 
   QDomElement domElement = signature.documentElement();
 
@@ -141,9 +154,6 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
         
     qDebug()<<" signature tag :"<<tag;
   }
-
-//<signature name="html" uid="1332775655.21659.4@krita" auto="false" format="text/html"><filename>signature-1</filename></signature>
-  //TODO signature path :  ~/.local/share/evolution/signatures/*
 }
 
 void EvolutionSettings::readAccount(const QDomElement &account)
@@ -161,14 +171,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   qDebug()<<" info "<<info;
   //Read QDomElement
   QDomDocument account;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !account.setContent( info, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
+  if ( !loadInDomDocument( info, account ) )
     return;
-  }
 
   QDomElement domElement = account.documentElement();
 
@@ -384,14 +388,44 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "receipt-policy" ) )
     {
-      //TODO
+      if ( e.hasAttribute( QLatin1String( "policy" ) ) ) {
+        const QString policy = e.attribute( QLatin1String( "policy" ) );
+        //TODO
+      }
     }
     else if ( tag == QLatin1String( "pgp" ) )
     {
-      //TODO
+      if ( e.hasAttribute( QLatin1String( "encrypt-to-self" ) ) &&
+           ( e.attribute( QLatin1String( "encrypt-to-self" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "always-trust" ) ) &&
+           ( e.attribute( QLatin1String( "always-trust" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "always-sign" ) ) &&
+           ( e.attribute( QLatin1String( "always-sign" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "no-imip-sign" ) ) &&
+           ( e.attribute( QLatin1String( "no-imip-sign" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
     }
     else if ( tag == QLatin1String( "smime" ) )
     {
+      if ( e.hasAttribute( QLatin1String( "sign-default" ) ) &&
+           ( e.attribute( QLatin1String( "sign-default" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "encrypt-default" ) ) &&
+           ( e.attribute( QLatin1String( "encrypt-default" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
+      if ( e.hasAttribute( QLatin1String( "encrypt-to-self" ) ) &&
+           ( e.attribute( QLatin1String( "encrypt-to-self" ) ) == QLatin1String( "true" ) ) ) {
+        //TODO
+      }
       //TODO
     }
     else

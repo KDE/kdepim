@@ -48,10 +48,20 @@ public:
   explicit AbstractImporter(ImportWizard *parent);
   virtual ~AbstractImporter();
 
+  /**
+   * Return true if mail found on system
+   */
   virtual bool foundMailer() const= 0;
-  
+
+  /**
+   * Return type of data that we can import
+   */
   virtual TypeSupportedOptions supportedOption() = 0;
+  /**
+   * Return name for plugins
+   */
   virtual QString name() const = 0;
+
   virtual bool importSettings();
   virtual bool importMails();
   virtual bool importFilters();

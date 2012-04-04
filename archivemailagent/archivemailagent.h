@@ -20,6 +20,11 @@
 
 #include <akonadi/agentbase.h>
 
+namespace Akonadi {
+class Monitor;
+}
+
+
 class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
 {
   Q_OBJECT
@@ -27,6 +32,11 @@ class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::O
   public:
     explicit ArchiveMailAgent( const QString &id );
     ~ArchiveMailAgent();
+  private Q_SLOTS:
+    void mailCollectionRemoved( const Akonadi::Collection& collection );
+
+  private:
+     Akonadi::Monitor *m_collectionMonitor;
 };
 
 

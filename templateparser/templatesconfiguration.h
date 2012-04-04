@@ -58,6 +58,9 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
   protected:
     QString strOrBlank( const QString &str );
     QString mHelpString;
+  
+  private:
+    KTextEdit* currentTextEdit() const;
 
   private slots:
     void slotHelpLinkClicked( const QString & );

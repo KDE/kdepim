@@ -245,6 +245,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   newIdentity->setPrimaryEmailAddress(userEmail);
 
   const QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
+  newIdentity->setFullName( fullName );
 
   const QString organization = mHashConfig.value(identity + QLatin1String(".organization")).toString();
   newIdentity->setOrganization(organization);
@@ -252,13 +253,17 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   bool doBcc = mHashConfig.value(identity + QLatin1String(".doBcc")).toBool();
   if(doBcc) {
     const QString bcc = mHashConfig.value(identity + QLatin1String(".doBccList")).toString();
+    newIdentity->setBcc( bcc );
   }
 
+#if 0
+  //Not implemented in kmail
   bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
   if(doCc) {
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
+    newIdentity->setReplyToAddr( cc );
   }
-
+#endif
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 
@@ -282,7 +287,38 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     signature.setType( KPIMIdentities::Signature::Inlined );
     signature.setText( textSignature );
   }
+
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".drafts_folder_picker_mode" ) ) )
+  {
+    const int useSpecificDraftFolder = mHashConfig.value(  identity + QLatin1String( ".drafts_folder_picker_mode" ) ).toInt();
+    if ( useSpecificDraftFolder == 1 )
+    {
+      const QString draftFolder = adaptFolder( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
+      newIdentity->setDrafts( draftFolder );
+    }
+  }
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
+  {
+    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    if ( useSpecificTemplateFolder == 1 )
+    {
+      const QString templateFolder = adaptFolder( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      newIdentity->setTemplates( templateFolder );
+    }
+  }
+
   
+  const QString attachVcardStr( identity + QLatin1String( ".attach_vcard" ) );
+  if ( mHashConfig.contains( attachVcardStr ) ) {
+    const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
+    if ( attachVcard ) {
+      const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
+      //TODO not implemented in kmail
+    }
+  }
+    
   newIdentity->setSignature( signature );
 
   storeIdentity(newIdentity);

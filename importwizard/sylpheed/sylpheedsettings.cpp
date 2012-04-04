@@ -132,11 +132,20 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
   const int sslimap = accountConfig.readEntry( QLatin1String( "ssl_imap" ), 0);
   switch(sslimap) {
     //TODO
-    case 0:
-      break;
-    default:
-      qDebug()<<" sslimap unknown "<<sslimap;
-      break;
+  case 0:
+    //None
+    settings.insert( QLatin1String( "Safety" ), QLatin1String( "NONE" ) );
+    break;
+  case 1:
+    //SSL
+    settings.insert( QLatin1String( "Safety" ), QLatin1String( "SSL" ) );
+    break;
+  case 2:
+    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
+    //TLS
+  default:
+    qDebug()<<" sslimap unknown "<<sslimap;
+    break;
   }
 
   int port = 0;
@@ -152,16 +161,13 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
     case 0:
       break;
     case 1: //Login
-      //TODO
-      //settings.insert(QLatin1String("Authentication"),);
+      settings.insert(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::LOGIN);
       break;
     case 2: //Cram-md5
-      //TODO
-      //settings.insert(QLatin1String("Authentication"),);
+      settings.insert(QLatin1String("Authentication"),MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
       break;
     case 4: //Plain
-      //TODO
-      //settings.insert(QLatin1String("Authentication"),);
+      settings.insert(QLatin1String("Authentication"),MailTransport::Transport::EnumAuthenticationType::PLAIN);
     default:
       qDebug()<<" imap auth unknown "<<auth;
       break;
@@ -207,8 +213,12 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   QString value;
   if ( readConfig( QLatin1String("auto_bcc") , accountConfig, value, true ) )
     identity->setBcc(value);
-
+#if 0
+  //Not implemented in kmail
   if ( readConfig( QLatin1String("auto_cc") , accountConfig, value, true ) )
+    identity->setReplyToAddr(value);
+#endif
+  if ( readConfig( QLatin1String("auto_replyto") , accountConfig, value, true ) )
     identity->setReplyToAddr(value);
   
   if ( readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
