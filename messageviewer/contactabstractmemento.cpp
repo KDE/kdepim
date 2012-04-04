@@ -41,13 +41,14 @@ void ContactAbstractMemento::slotSearchJobFinished( KJob *job )
     return;
   }
 
-  if ( searchJob->contacts().size() == 1 ) {
+  const int contactSize( searchJob->contacts().size() );
+  if ( contactSize == 1 ) {
 
     KABC::Addressee addressee = searchJob->contacts().first();
     processAddress( addressee );
     emit update( Viewer::Delayed );
 
-  } else if ( searchJob->contacts().size() > 1 ) {
+  } else if ( contactSize > 1 ) {
     // TODO: Figure out something here...
   }
 }
@@ -62,8 +63,9 @@ void ContactAbstractMemento::detach()
   disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
 }
 
-void ContactAbstractMemento::processAddress( const KABC::Addressee& addressee )
+void ContactAbstractMemento::processAddress( const KABC::Addressee& /*addressee*/ )
 {
+  //Reimplement in sub class
 }
    
 
