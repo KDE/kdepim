@@ -81,7 +81,7 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
         settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
         break;
       case 7: //TLS
-        qDebug()<<" authmethod method == TLS"; ????
+        qDebug()<<" authmethod method == TLS"; //????
         break;
       default:
         qDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
