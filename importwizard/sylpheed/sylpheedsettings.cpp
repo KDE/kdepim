@@ -213,8 +213,12 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   QString value;
   if ( readConfig( QLatin1String("auto_bcc") , accountConfig, value, true ) )
     identity->setBcc(value);
-
+#if 0
+  //Not implemented in kmail
   if ( readConfig( QLatin1String("auto_cc") , accountConfig, value, true ) )
+    identity->setReplyToAddr(value);
+#endif
+  if ( readConfig( QLatin1String("auto_replyto") , accountConfig, value, true ) )
     identity->setReplyToAddr(value);
   
   if ( readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )

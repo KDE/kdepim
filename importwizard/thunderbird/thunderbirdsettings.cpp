@@ -256,18 +256,19 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     newIdentity->setBcc( bcc );
   }
 
+#if 0
+  //Not implemented in kmail
   bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
   if(doCc) {
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
     newIdentity->setReplyToAddr( cc );
   }
-
+#endif
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
-  //FIXME
-  //newIdentity->setReplyToAddr( replyTo );
+  newIdentity->setReplyToAddr( replyTo );
 
   KPIMIdentities::Signature signature;
   const bool signatureHtml = mHashConfig.value(identity + QLatin1String( ".htmlSigFormat" )).toBool();
