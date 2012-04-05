@@ -67,6 +67,7 @@ protected Q_SLOTS:
     void activeAnchorChanged(const QString &, const QString &);
 
 private:
+    void initAction();
     KJotsWidget *component;
     KParts::StatusBarExtension *mStatusBar;
 };

@@ -67,6 +67,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     mStatusBar = new KParts::StatusBarExtension(this);
     // notify the part that this is our internal widget
     setWidget(component);
+    initAction();
 
     // set our XML-UI resource file
     setXMLFile(KStandardDirs::locate("data", "kjots/kjotspartui.rc"));
@@ -77,6 +78,14 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
 KJotsPart::~KJotsPart()
 {
 // 	component->queryClose();
+}
+
+void KJotsPart::initAction()
+{
+  KAction *action = new KAction( KIcon( "configure" ), i18n( "&Configure KJots..." ), this );
+  actionCollection()->addAction( "kjots_configure", action );
+  connect( action, SIGNAL(triggered(bool)), component,
+           SLOT(configure()) );
 }
 
 bool KJotsPart::openFile()

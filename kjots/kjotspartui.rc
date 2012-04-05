@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui version="8" name="kjots" >
+<kpartgui version="9" name="kjots" >
  <MenuBar>
 
   <Menu name="file">
@@ -56,7 +56,10 @@
   
   <Action name="bookmarks"/>
 
-  <Menu name="settings"></Menu>
+  <Menu noMerge="1" name="settings">
+    <text>&amp;Settings</text>
+	<Action name="kjots_configure" group="settings_configure" />
+  </Menu>
 
   <Menu name="help"></Menu>
  </MenuBar>
