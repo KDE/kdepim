@@ -35,6 +35,7 @@ public:
   explicit AbstractAddressBook(ImportWizard *parent);
   ~AbstractAddressBook();
 protected:
+  void createGroup();
   void createContact( const KABC::Addressee& address );
   
   void addAddressBookImportInfo( const QString& log );

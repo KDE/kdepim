@@ -33,6 +33,11 @@ AbstractAddressBook::~AbstractAddressBook()
 
 }
 
+void AbstractAddressBook::createGroup()
+{
+  //TODO
+}
+
 void AbstractAddressBook::createContact( const KABC::Addressee& address )
 {
   addAddressBookImportInfo( i18n( "Creating new contact..." ) );
