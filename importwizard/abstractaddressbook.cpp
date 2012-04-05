@@ -19,6 +19,7 @@
 #include "importaddressbookpage.h"
 
 #include <KABC/Addressee>
+#include <KLocale>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/Item>
 
@@ -34,6 +35,7 @@ AbstractAddressBook::~AbstractAddressBook()
 
 void AbstractAddressBook::createContact( const KABC::Addressee& address )
 {
+  addAddressBookImportInfo( i18n( "Creating new contact..." ) );
   Akonadi::Item item;
   item.setPayload<KABC::Addressee>( address );
   item.setMimeType( KABC::Addressee::mimeType() );
@@ -47,17 +49,19 @@ void AbstractAddressBook::slotStoreDone(KJob*job)
 {
   if ( job->error() ) {
     qDebug()<<" job->errorString() : "<<job->errorString();
+    addAddressBookImportError( i18n( "Error during create contact : %1", job->errorString() ) );
     return;
   }
+  addAddressBookImportInfo( i18n( "Contact created done" ) );
 }
 
 
-void AbstractAddressBook::addFilterImportInfo( const QString& log )
+void AbstractAddressBook::addAddressBookImportInfo( const QString& log )
 {
   mImportWizard->importAddressBookPage()->addFilterImportInfo( log );
 }
 
-void AbstractAddressBook::addFilterImportError( const QString& log )
+void AbstractAddressBook::addAddressBookImportError( const QString& log )
 {
   mImportWizard->importAddressBookPage()->addFilterImportError( log );
 }

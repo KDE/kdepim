@@ -37,8 +37,8 @@ public:
 protected:
   void createContact( const KABC::Addressee& address );
   
-  void addFilterImportInfo( const QString& log );
-  void addFilterImportError( const QString& log );
+  void addAddressBookImportInfo( const QString& log );
+  void addAddressBookImportError( const QString& log );
 
 private Q_SLOTS:
   void slotStoreDone(KJob*job);
