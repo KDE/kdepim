@@ -22,9 +22,12 @@
 #include <KLocale>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/Item>
+#include <Akonadi/CollectionDialog>
+
+#include <QPointer>
 
 AbstractAddressBook::AbstractAddressBook(ImportWizard *parent)
-  :mImportWizard(parent)
+  : mCollection( -1 ), mImportWizard(parent)
 {
 }
 
@@ -41,12 +44,32 @@ void AbstractAddressBook::createGroup()
 void AbstractAddressBook::createContact( const KABC::Addressee& address )
 {
   addAddressBookImportInfo( i18n( "Creating new contact..." ) );
+
+  if ( !mCollection.isValid() )
+  {
+    const QStringList mimeTypes( KABC::Addressee::mimeType() );
+    QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mImportWizard );
+    dlg->setMimeTypeFilter( mimeTypes );
+    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+    dlg->setCaption( i18n( "Select Address Book" ) );
+    dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+    
+    if ( dlg->exec() == QDialog::Accepted && dlg ) {
+      mCollection = dlg->selectedCollection();
+    } else {
+      addAddressBookImportError( i18n( "Address Book was not selected." ) );
+      delete dlg;
+      return;
+    }
+
+    delete dlg;
+  }
+  
   Akonadi::Item item;
   item.setPayload<KABC::Addressee>( address );
   item.setMimeType( KABC::Addressee::mimeType() );
-  //TODO
-  //Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
-  //connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
 
 }
 

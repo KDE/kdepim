@@ -19,13 +19,14 @@
 #define ABSTRACTADDRESSBOOK_H
 
 #include <QObject>
-
+#include <Akonadi/Collection>
 
 class ImportWizard;
 
 namespace KABC {
   class Addressee;
 }
+
 class KJob;
 
 class AbstractAddressBook: public QObject
@@ -45,6 +46,7 @@ private Q_SLOTS:
   void slotStoreDone(KJob*job);
 
 private:
+  Akonadi::Collection mCollection;
   ImportWizard *mImportWizard;
 };
 
