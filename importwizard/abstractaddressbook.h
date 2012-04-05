@@ -41,6 +41,7 @@ protected:
   
   void addAddressBookImportInfo( const QString& log );
   void addAddressBookImportError( const QString& log );
+  void cleanUp();
 
 private Q_SLOTS:
   void slotStoreDone(KJob*job);

@@ -16,6 +16,7 @@
 */
 
 #include "sylpheedaddressbook.h"
+#include <KABC/Addressee>
 
 #include <KDebug>
 
@@ -31,6 +32,7 @@ SylpheedAddressBook::SylpheedAddressBook(const QDir& dir, ImportWizard *parent)
   Q_FOREACH( const QString& file, files ) {
     readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
   }
+  cleanUp();
 }
 
 SylpheedAddressBook::~SylpheedAddressBook()
@@ -70,33 +72,57 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       
     const QString tag = e.tagName();
     if ( tag == QLatin1String( "person" ) ) {
+      KABC::Addressee address;
 //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
       if ( e.hasAttribute( QLatin1String( "uid" ) ) ) {
         //Nothing
       }
       if ( e.hasAttribute( QLatin1String( "first-name" ) ) ) {
-        
+        address.setName( e.attribute( QLatin1String( "first-name" ) ) );
       }
       if ( e.hasAttribute( QLatin1String( "last-name" ) ) ) {
+        address.setFamilyName( e.attribute( QLatin1String( "last-name" ) ) );
         
       }
       if ( e.hasAttribute( QLatin1String( "nick-name" ) ) ) {
-        
+        address.setNickName( QLatin1String( "nick-name" ) );
       }
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
         
       }
-      for ( QDomElement address = e.firstChildElement(); !address.isNull(); address = address.nextSiblingElement() ) {
-        const QString addressTag = address.tagName();
+      for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
+        const QString addressTag = addressElement.tagName();
         if ( addressTag == QLatin1String( "address-list" ) ) {
-          
+          QStringList emails;
+          for ( QDomElement addresslist = addressElement.firstChildElement(); !addresslist.isNull(); addresslist = addresslist.nextSiblingElement() ) {
+            const QString tagAddressList = addresslist.tagName();
+            if ( tagAddressList == QLatin1String( "address" ) ) {
+              if ( addresslist.hasAttribute( QLatin1String( "email" ) ) ) {
+                emails<<addresslist.attribute( QLatin1String( "email" ) );
+              }
+            } else {
+              qDebug()<<" tagAddressList unknown :"<<tagAddressList;
+            }
+          }
+          if ( !emails.isEmpty() ) {
+            address.setEmails( emails );
+          }
+            
         } else if ( addressTag == QLatin1String( "attribute-list" ) ) {
+          for ( QDomElement attributelist = addressElement.firstChildElement(); !attributelist.isNull(); attributelist = attributelist.nextSiblingElement() ) {
+            const QString tagAttributeList = attributelist.tagName();
+            if ( tagAttributeList == QLatin1String( "attribute" ) ) {
+              //TODO
+            } else {
+              //TODO
+            }
+          }
           
         } else {
           qDebug()<<" addressTag unknown :"<<addressTag;
         }
       }
-
+      createContact( address );
     } else {
       qDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
     }

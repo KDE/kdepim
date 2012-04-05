@@ -94,6 +94,11 @@ void AbstractAddressBook::addAddressBookImportError( const QString& log )
   mImportWizard->importAddressBookPage()->addFilterImportError( log );
 }
 
+void AbstractAddressBook::cleanUp()
+{
+  mCollection = Akonadi::Collection();
+}
+
 #include "abstractaddressbook.moc"
 
   
