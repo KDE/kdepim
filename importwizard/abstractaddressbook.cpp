@@ -16,6 +16,11 @@
 */
 #include "abstractaddressbook.h"
 #include "importwizard.h"
+#include "importaddressbookpage.h"
+
+#include <KABC/Addressee>
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/Item>
 
 AbstractAddressBook::AbstractAddressBook(ImportWizard *parent)
   :mImportWizard(parent)
@@ -26,3 +31,37 @@ AbstractAddressBook::~AbstractAddressBook()
 {
 
 }
+
+void AbstractAddressBook::createContact( const KABC::Addressee& address )
+{
+  Akonadi::Item item;
+  item.setPayload<KABC::Addressee>( address );
+  item.setMimeType( KABC::Addressee::mimeType() );
+  //TODO
+  //Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
+  //connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+
+}
+
+void AbstractAddressBook::slotStoreDone(KJob*job)
+{
+  if ( job->error() ) {
+    qDebug()<<" job->errorString() : "<<job->errorString();
+    return;
+  }
+}
+
+
+void AbstractAddressBook::addFilterImportInfo( const QString& log )
+{
+  mImportWizard->importAddressBookPage()->addFilterImportInfo( log );
+}
+
+void AbstractAddressBook::addFilterImportError( const QString& log )
+{
+  mImportWizard->importAddressBookPage()->addFilterImportError( log );
+}
+
+#include "abstractaddressbook.moc"
+
+  

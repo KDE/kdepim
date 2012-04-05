@@ -18,13 +18,31 @@
 #ifndef ABSTRACTADDRESSBOOK_H
 #define ABSTRACTADDRESSBOOK_H
 
+#include <QObject>
+
+
 class ImportWizard;
 
-class AbstractAddressBook
+namespace KABC {
+  class Addressee;
+}
+class KJob;
+
+class AbstractAddressBook: public QObject
 {
+  Q_OBJECT
 public:
   explicit AbstractAddressBook(ImportWizard *parent);
   ~AbstractAddressBook();
+protected:
+  void createContact( const KABC::Addressee& address );
+  
+  void addFilterImportInfo( const QString& log );
+  void addFilterImportError( const QString& log );
+
+private Q_SLOTS:
+  void slotStoreDone(KJob*job);
+
 private:
   ImportWizard *mImportWizard;
 };
