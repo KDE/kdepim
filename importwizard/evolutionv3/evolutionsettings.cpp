@@ -282,6 +282,10 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             addAuth(settings, QLatin1String( "AuthenticationMethod" ), userName);
             createResource( "akonadi_pop3_resource", name, settings );
 
+          } else if( scheme == QLatin1String("spool")) {
+            //mbox file
+            settings.insert(QLatin1String("Path"),path);
+            createResource( "akonadi_mbox_resource", name, settings );
           } else {
             qDebug()<<" unknown scheme "<<scheme;
           }
