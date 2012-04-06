@@ -14,41 +14,22 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include "evolutionaddressbook.h"
 
-#ifndef ABSTRACTADDRESSBOOK_H
-#define ABSTRACTADDRESSBOOK_H
-
-#include <QObject>
-#include <Akonadi/Collection>
-
-class ImportWizard;
-
-namespace KABC {
-  class Addressee;
+EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)
+  : AbstractAddressBook( parent )
+{
+  exportEvolutionAddressBook();
 }
 
-class KJob;
-
-class AbstractAddressBook: public QObject
+EvolutionAddressBook::~EvolutionAddressBook()
 {
-  Q_OBJECT
-public:
-  explicit AbstractAddressBook(ImportWizard *parent);
-  ~AbstractAddressBook();
-protected:
-  void createGroup();
-  void createContact( const KABC::Addressee& address );
+
+}
+
+void EvolutionAddressBook::exportEvolutionAddressBook()
+{
+
+}
+
   
-  void addAddressBookImportInfo( const QString& log );
-  void addAddressBookImportError( const QString& log );
-  void cleanUp();
-
-private Q_SLOTS:
-  void slotStoreDone(KJob*job);
-
-private:
-  Akonadi::Collection mCollection;
-  ImportWizard *mImportWizard;
-};
-
-#endif // ABSTRACTADDRESSBOOK_H

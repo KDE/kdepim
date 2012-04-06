@@ -15,11 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTADDRESSBOOK_H
-#define ABSTRACTADDRESSBOOK_H
+#ifndef EVOLUTIONADDRESSBOOK_H
+#define EVOLUTIONADDRESSBOOK_H
 
-#include <QObject>
-#include <Akonadi/Collection>
+#include "abstractaddressbook.h"
 
 class ImportWizard;
 
@@ -29,26 +28,15 @@ namespace KABC {
 
 class KJob;
 
-class AbstractAddressBook: public QObject
+class EvolutionAddressBook: public AbstractAddressBook
 {
   Q_OBJECT
 public:
-  explicit AbstractAddressBook(ImportWizard *parent);
-  ~AbstractAddressBook();
-protected:
-  void createGroup();
-  void createContact( const KABC::Addressee& address );
-  
-  void addAddressBookImportInfo( const QString& log );
-  void addAddressBookImportError( const QString& log );
-  void cleanUp();
-
-private Q_SLOTS:
-  void slotStoreDone(KJob*job);
-
+  explicit EvolutionAddressBook(ImportWizard *parent);
+  ~EvolutionAddressBook();
 private:
-  Akonadi::Collection mCollection;
-  ImportWizard *mImportWizard;
+  void exportEvolutionAddressBook();
+
 };
 
 #endif // ABSTRACTADDRESSBOOK_H

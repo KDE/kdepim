@@ -16,9 +16,18 @@
 */
 #include "abstractaddressbook.h"
 #include "importwizard.h"
+#include "importaddressbookpage.h"
+
+#include <KABC/Addressee>
+#include <KLocale>
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/Item>
+#include <Akonadi/CollectionDialog>
+
+#include <QPointer>
 
 AbstractAddressBook::AbstractAddressBook(ImportWizard *parent)
-  :mImportWizard(parent)
+  : mCollection( -1 ), mImportWizard(parent)
 {
 }
 
@@ -26,3 +35,70 @@ AbstractAddressBook::~AbstractAddressBook()
 {
 
 }
+
+void AbstractAddressBook::createGroup()
+{
+  //TODO
+}
+
+void AbstractAddressBook::createContact( const KABC::Addressee& address )
+{
+  addAddressBookImportInfo( i18n( "Creating new contact..." ) );
+
+  if ( !mCollection.isValid() )
+  {
+    const QStringList mimeTypes( KABC::Addressee::mimeType() );
+    QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mImportWizard );
+    dlg->setMimeTypeFilter( mimeTypes );
+    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+    dlg->setCaption( i18n( "Select Address Book" ) );
+    dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+    
+    if ( dlg->exec() == QDialog::Accepted && dlg ) {
+      mCollection = dlg->selectedCollection();
+    } else {
+      addAddressBookImportError( i18n( "Address Book was not selected." ) );
+      delete dlg;
+      return;
+    }
+
+    delete dlg;
+  }
+  
+  Akonadi::Item item;
+  item.setPayload<KABC::Addressee>( address );
+  item.setMimeType( KABC::Addressee::mimeType() );
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+
+}
+
+void AbstractAddressBook::slotStoreDone(KJob*job)
+{
+  if ( job->error() ) {
+    qDebug()<<" job->errorString() : "<<job->errorString();
+    addAddressBookImportError( i18n( "Error during create contact : %1", job->errorString() ) );
+    return;
+  }
+  addAddressBookImportInfo( i18n( "Contact created done" ) );
+}
+
+
+void AbstractAddressBook::addAddressBookImportInfo( const QString& log )
+{
+  mImportWizard->importAddressBookPage()->addFilterImportInfo( log );
+}
+
+void AbstractAddressBook::addAddressBookImportError( const QString& log )
+{
+  mImportWizard->importAddressBookPage()->addFilterImportError( log );
+}
+
+void AbstractAddressBook::cleanUp()
+{
+  mCollection = Akonadi::Collection();
+}
+
+#include "abstractaddressbook.moc"
+
+  

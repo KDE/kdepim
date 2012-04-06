@@ -33,7 +33,7 @@ ImportWizardKernel::ImportWizardKernel( QObject *parent )
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
   mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
 
-  Akonadi::Session *session = new Akonadi::Session( "MailFilter Kernel ETM", this );
+  Akonadi::Session *session = new Akonadi::Session( "ImportWizard Kernel ETM", this );
   folderCollectionMonitor()->setSession( session );
   mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
   mEntityTreeModel->setIncludeUnsubscribed( false );

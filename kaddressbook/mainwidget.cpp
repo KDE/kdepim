@@ -439,8 +439,8 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
-
-#if 0 // disabled because Grantlee supports no i18n for KDE 4.6 yet
+#ifdef GRANTLEE_FOUND
+//#if 0 // disabled because Grantlee supports no i18n for KDE 4.6 yet
  Akonadi::GrantleeContactFormatter *formatter =
    new Akonadi::GrantleeContactFormatter(
      KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
@@ -503,7 +503,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_3 ) );
   collection->addAction( "view_mode_3columns", act );
 
-  connect( mViewModeGroup, SIGNAL(triggered(QAction *)), SLOT(setViewMode(QAction *)) );
+  connect( mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)) );
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
