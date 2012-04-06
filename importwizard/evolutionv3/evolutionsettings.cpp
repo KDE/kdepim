@@ -282,7 +282,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             addAuth(settings, QLatin1String( "AuthenticationMethod" ), userName);
             createResource( "akonadi_pop3_resource", name, settings );
 
-          } else if( scheme == QLatin1String("spool")) {
+          } else if( scheme == QLatin1String("spool") || scheme == QLatin1String("mbox") ) {
             //mbox file
             settings.insert(QLatin1String("Path"),path);
             settings.insert(QLatin1String("DisplayName"),name);
