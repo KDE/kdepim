@@ -19,6 +19,7 @@
 EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
+  exportEvolutionAddressBook();
 }
 
 EvolutionAddressBook::~EvolutionAddressBook()
@@ -26,5 +27,9 @@ EvolutionAddressBook::~EvolutionAddressBook()
 
 }
 
+void EvolutionAddressBook::exportEvolutionAddressBook()
+{
+
+}
 
   
