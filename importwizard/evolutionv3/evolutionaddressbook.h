@@ -34,6 +34,9 @@ class EvolutionAddressBook: public AbstractAddressBook
 public:
   explicit EvolutionAddressBook(ImportWizard *parent);
   ~EvolutionAddressBook();
+private:
+  void exportEvolutionAddressBook();
+
 };
 
 #endif // ABSTRACTADDRESSBOOK_H
