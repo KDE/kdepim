@@ -154,10 +154,12 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     m_feedListView->setConfigGroup( group );
     m_actionManager->initFeedListView( m_feedListView );
 
+#if 0
     connect(m_feedListView, SIGNAL(signalDropped (KUrl::List &, Akregator2::TreeNode*,
             Akregator2::Folder*)),
             this, SLOT(slotFeedUrlDropped (KUrl::List &,
             Akregator2::TreeNode*, Akregator2::Folder*)));
+#endif
 
     m_tabWidget = new TabWidget(m_horizontalSplitter);
     m_actionManager->initTabWidget(m_tabWidget);
@@ -848,11 +850,14 @@ void Akregator2::MainWidget::slotCopyLinkAddress()
     }
 }
 
+#if 0
 void Akregator2::MainWidget::slotFeedUrlDropped(KUrl::List &urls, TreeNode* after, Folder* parent)
 {
     Q_FOREACH ( const KUrl& i, urls )
         addFeed( i.prettyUrl(), false );
 }
+#endif
+
 
 void Akregator2::MainWidget::slotToggleShowQuickFilter()
 {

@@ -61,15 +61,11 @@ class AbstractSelectionController;
 class ActionManagerImpl;
 class ArticleListView;
 class ArticleViewer;
-class Folder;
-class FeedList;
 class Frame;
 class FrameManager;
 class Part;
 class SearchBar;
-class SubscriptionListView;
 class TabWidget;
-class TreeNode;
 
 /**
     * This is the main widget of the view, containing tree view, article list, viewer etc.
@@ -150,9 +146,6 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         void slotCopyLinkAddress();
 
         void slotRequestNewFrame(int& frameId);
-
-        /** called when URLs are dropped into the tree view */
-        void slotFeedUrlDropped (KUrl::List &urls, Akregator2::TreeNode* after, Akregator2::Folder *parent);
 
         /** displays a URL in the status bar when the user moves the mouse over a link */
         void slotMouseOverInfo(const KFileItem& kifi);
