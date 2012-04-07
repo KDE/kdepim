@@ -8,7 +8,7 @@ X-KDE-Library=akregator2_config_feedlists
 X-KDE-ParentApp=akregator2
 X-KDE-ParentComponents=akregator2,kontact_akregator2plugin
 X-KDE-CfgDlgHierarchy=Akregator2
-X-KDE-Weight=400
+X-KDE-Weight=200
 
 Name=Feed Lists
 Comment=Configure Feed Lists
