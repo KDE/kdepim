@@ -20,6 +20,7 @@
 #include "krss/feeditemmodel.h"
 
 #include <Akonadi/CollectionStatisticsDelegate>
+#include <Akonadi/EntityTreeModel>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -32,6 +33,7 @@
 
 #include <cassert>
 
+using namespace Akonadi;
 using namespace KRss;
 using boost::shared_ptr;
 
@@ -65,11 +67,9 @@ static QModelIndex prevFeedIndex( const QModelIndex& idx, bool allowPassed = fal
 
 static QModelIndex prevUnreadFeedIndex( const QModelIndex& idx, bool allowPassed = false )
 {
-    QModelIndex prev = allowPassed ? idx : prevIndex( idx );
-    while ( prev.isValid() && ( prev.data( FeedItemModel::IsFolderRole ).toBool() ||
-            prev.sibling( prev.row(), FeedItemModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
-        prev = prevIndex( prev );
-    }
+    QModelIndex prev = allowPassed ? idx : prevFeedIndex( idx );
+    while ( prev.isValid() && prev.data( EntityTreeModel::UnreadCountRole ).toInt() == 0 )
+        prev = prevFeedIndex( prev );
     return prev;
 }
 
@@ -115,11 +115,9 @@ static QModelIndex nextFeedIndex( const QModelIndex& idx )
 
 static QModelIndex nextUnreadFeedIndex( const QModelIndex& idx )
 {
-    QModelIndex next = nextIndex( idx );
-    while ( next.isValid() && ( next.data( FeedItemModel::IsFolderRole ).toBool() ||
-            next.sibling( next.row(), FeedItemModel::UnreadCountColumn ).data().toInt() == 0 ) ) {
-        next = nextIndex( next );
-    }
+    QModelIndex next = nextFeedIndex( idx );
+    while ( next.isValid() && next.data( EntityTreeModel::UnreadCountRole ).toInt() == 0 )
+        next = nextFeedIndex( next );
     return next;
 }
 
