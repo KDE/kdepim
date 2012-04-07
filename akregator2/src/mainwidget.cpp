@@ -213,7 +213,7 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     m_selectionController = new SelectionController( m_session, this );
     m_selectionController->setArticleLister( m_articleListView );
     m_selectionController->setFeedSelector( m_feedListView );
-
+    connect( m_selectionController, SIGNAL(totalUnreadCountChanged(int)), this, SIGNAL(signalUnreadCountChanged(int)) );
     connect(m_searchBar, SIGNAL( signalSearch( std::vector<boost::shared_ptr<const Akregator2::Filters::AbstractMatcher> > ) ),
             m_selectionController, SLOT( setFilters( std::vector<boost::shared_ptr<const Akregator2::Filters::AbstractMatcher> > ) ) );
 
@@ -662,13 +662,6 @@ void Akregator2::MainWidget::slotMarkFeedRead()
     cmd->setCollections( Akonadi::Collection::List() << c );
     cmd->setSession( m_session );
     d->setUpAndStart( cmd );
-}
-
-void Akregator2::MainWidget::slotSetTotalUnread()
-{
-#ifdef KRSS_PORT_DISABLED
-    emit signalUnreadCountChanged( m_feedList ? m_feedList->unreadCount() : 0 );
-#endif
 }
 
 void Akregator2::MainWidget::slotFetchCurrentFeed()

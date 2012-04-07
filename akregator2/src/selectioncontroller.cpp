@@ -44,12 +44,71 @@
 
 #include <QAbstractItemView>
 #include <QMenu>
+#include <QtCore/QTimer>
 
 #include <cassert>
 
 using namespace boost;
 using namespace Akregator2;
 using namespace KRss;
+
+TotalUnreadCountWatcher::TotalUnreadCountWatcher( QObject* parent )
+    : QObject( parent )
+    , m_unreadCount( 0 )
+    , m_timer( new QTimer( this ) )
+{
+    m_timer->setInterval( 250 );
+    m_timer->setSingleShot( true );
+    connect( m_timer, SIGNAL(timeout()), this, SLOT(updateUnreadCount()) );
+}
+
+void TotalUnreadCountWatcher::setModel( QAbstractItemModel* model ) {
+    if ( m_model )
+        m_model->disconnect( this );
+
+    m_model = model;
+
+    if ( m_model )
+        connect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
+
+    updateUnreadCount();
+}
+
+int TotalUnreadCountWatcher::unreadCount() const {
+    return m_unreadCount;
+}
+
+void TotalUnreadCountWatcher::dataChanged( const QModelIndex&, const QModelIndex& ) {
+    if ( !m_timer->isActive() )
+        m_timer->start();
+}
+
+static int recursiveUnreadCount( const QModelIndex& index ) {
+    const int childCount = index.model()->rowCount( index );
+    int unread = index.data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt();
+
+    for ( int i = 0; i < childCount; ++i ) {
+        const QModelIndex child = index.child( i, 0 );
+        unread += recursiveUnreadCount( child );
+    }
+
+    return unread;
+}
+
+void TotalUnreadCountWatcher::updateUnreadCount() {
+    int count = 0;
+    if ( m_model ) {
+        const int rowCount = m_model->rowCount();
+        for ( int i = 0; i < rowCount; ++i ) {
+            const QModelIndex idx = m_model->index( i, 0 );
+            count += recursiveUnreadCount( idx );
+        }
+    }
+    if ( m_unreadCount == count )
+        return;
+    m_unreadCount = count;
+    emit unreadCountChanged( count );
+}
 
 static KRss::Item itemForIndex( const QModelIndex& index )
 {
@@ -74,7 +133,8 @@ Akregator2::SelectionController::SelectionController( Akonadi::Session* session,
     m_itemModel( 0 ),
     m_feedSelectionResolved( 0 ),
     m_session( session ),
-    m_collectionFilterModel( 0 )
+    m_collectionFilterModel( 0 ),
+    m_unreadWatcher( new TotalUnreadCountWatcher( this ) )
 {
     Akonadi::ItemFetchScope iscope;
     iscope.fetchPayloadPart( KRss::Item::HeadersPart );
@@ -101,6 +161,8 @@ Akregator2::SelectionController::SelectionController( Akonadi::Session* session,
     filterProxy->setDynamicSortFilter( true );
     m_collectionFilterModel = filterProxy;
 
+    connect( m_unreadWatcher, SIGNAL(unreadCountChanged(int)), this, SIGNAL(totalUnreadCountChanged(int)) );
+    m_unreadWatcher->setModel( m_collectionFilterModel );
 }
 
 

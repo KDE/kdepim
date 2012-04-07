@@ -57,7 +57,6 @@ namespace Akonadi {
 
 namespace Akregator2 {
 
-class AbstractSelectionController;
 class ActionManagerImpl;
 class ArticleListView;
 class ArticleViewer;
@@ -65,11 +64,16 @@ class Frame;
 class FrameManager;
 class Part;
 class SearchBar;
+class SelectionController;
 class TabWidget;
 
+}
+
+namespace Akregator2 {
+
 /**
-    * This is the main widget of the view, containing tree view, article list, viewer etc.
-    */
+ * This is the main widget of the view, containing tree view, article list, viewer etc.
+ */
 class AKREGATOR2PART_EXPORT MainWidget : public QWidget
 {
     Q_OBJECT
@@ -137,9 +141,6 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
 
         /** the item selection has changed */
         void slotItemSelected( const KRss::Item& item );
-
-        /** emits @ref signalUnreadCountChanged(int) */
-        void slotSetTotalUnread();
 
         /** copies the link of current article to clipboard
         */
@@ -224,7 +225,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
 
         void addFeed(const QString& url, bool autoExec );
 
-        AbstractSelectionController* m_selectionController;
+        SelectionController* m_selectionController;
 
         KRss::FeedListView* m_feedListView;
         ArticleListView* m_articleListView;

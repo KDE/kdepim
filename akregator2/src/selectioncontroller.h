@@ -30,12 +30,12 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QPointer>
-#include <QtCore/QTime>
 
 class QModelIndex;
 class QPoint;
 class QItemSelection;
 class QItemSelectionModel;
+class QTimer;
 
 class KJob;
 
@@ -50,6 +50,28 @@ namespace KRss {
 
 namespace Akregator2
 {
+
+class TotalUnreadCountWatcher : public QObject {
+    Q_OBJECT
+public:
+    explicit TotalUnreadCountWatcher( QObject* parent=0 );
+
+    void setModel( QAbstractItemModel* model );
+
+    int unreadCount() const;
+
+Q_SIGNALS:
+    void unreadCountChanged( int count );
+
+private Q_SLOTS:
+    void dataChanged( const QModelIndex& topLeft, const QModelIndex&  bottomRight );
+    void updateUnreadCount();
+
+private:
+    QPointer<QAbstractItemModel> m_model;
+    int m_unreadCount;
+    QTimer* m_timer;
+};
 
 class SelectionController : public AbstractSelectionController
 {
@@ -83,7 +105,8 @@ public:
     //impl
     void setFolderExpansionHandler( Akregator2::FolderExpansionHandler* handler );
 
-
+Q_SIGNALS:
+    void totalUnreadCountChanged( int );
 
 public Q_SLOTS:
 
@@ -113,6 +136,7 @@ private:
     QMap<Akonadi::Collection, QPoint> m_scrollBarPositions;
     Akonadi::Session* m_session;
     QAbstractItemModel* m_collectionFilterModel;
+    TotalUnreadCountWatcher* m_unreadWatcher;
 };
 
 } // namespace Akregator2
