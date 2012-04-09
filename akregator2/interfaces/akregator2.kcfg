@@ -125,16 +125,6 @@
    <whatsthis>Mark all feeds as read on startup.</whatsthis>
    <default>false</default>
   </entry>
-  <entry key="Use Interval Fetch" type="Bool" >
-   <label>Use interval fetching</label>
-   <whatsthis>Fetch all feeds every %1 minutes.</whatsthis>
-   <default>true</default>
-  </entry>
-  <entry key="Auto Fetch Interval" type="Int" >
-   <label>Interval for autofetching</label>
-   <whatsthis>Interval for autofetching in minutes.</whatsthis>
-   <default>30</default>
-  </entry>
   <entry key="Use Notifications" type="Bool" >
    <label>Use notifications</label>
    <whatsthis>Specifies if the balloon notifications are used or not.</whatsthis>
