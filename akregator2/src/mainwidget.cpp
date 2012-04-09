@@ -403,17 +403,30 @@ void Akregator2::MainWidget::sendArticle(bool attach)
 
 void MainWidget::slotImportFeedList()
 {
+    KRss::FeedCollection c( m_selectionController->selectedCollection() );
+    if ( c.isValid() && !c.isFolder() )
+        c = KRss::FeedCollection( c.parentCollection() );
+    if ( !c.isValid() ) { //TODO
+        KMessageBox::error( this, i18n("Select a parent folder for the import.") );
+        return;
+    }
+
     std::auto_ptr<ImportFeedListCommand> cmd( new ImportFeedListCommand );
     cmd->setSession( m_session );
-    cmd->setTargetCollection( m_selectionController->selectedCollection() );
+    cmd->setTargetCollection( c );
     d->setUpAndStart( cmd.release() );
 }
 
 void MainWidget::slotExportFeedList()
 {
+    const Akonadi::Collection c = m_selectionController->selectedCollection();
+    if (!c.isValid()) { //TODO
+        KMessageBox::error( this, i18n("Select a feed list to export.") );
+        return;
+    }
     std::auto_ptr<ExportFeedListCommand> cmd( new ExportFeedListCommand );
     cmd->setSession( m_session );
-    cmd->setRootCollections( m_selectionController->resourceRootCollections(), Akonadi::Collection() );
+    cmd->setResource( c.resource() );
     d->setUpAndStart( cmd.release() );
 }
 

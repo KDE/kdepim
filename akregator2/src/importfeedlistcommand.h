@@ -28,7 +28,6 @@
 #include "command.h"
 
 class QString;
-
 class KUrl;
 
 namespace Akonadi {
@@ -36,8 +35,6 @@ namespace Akonadi {
     class Session;
 }
 namespace Akregator2 {
-
-class FeedList;
 
 class ImportFeedListCommand : public Command
 {
@@ -57,6 +54,8 @@ private:
     class Private;
     Private* const d;
     Q_PRIVATE_SLOT( d, void importFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionDeleted( KJob* ) )
+    Q_PRIVATE_SLOT( d, void pendingCreateFinished( KJob* ) )
 };
 
 }

@@ -44,9 +44,9 @@ public:
     explicit ExportFeedListCommand( QObject* parent = 0 );
     ~ExportFeedListCommand();
 
-    void setRootCollections( const Akonadi::Collection::List& list, const Akonadi::Collection& preset );
+    void setResource( const QString& identifier );
     void setSession( Akonadi::Session* session );
-    void setTargetUrl( const KUrl& url );
+    void setOutputFile( const QString& outputFile );
 
 private:
     void doStart();

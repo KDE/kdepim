@@ -26,12 +26,19 @@
 #include "command_p.h"
 
 #include <Akonadi/Collection>
+#include <Akonadi/CollectionCreateJob>
+#include <Akonadi/CollectionDeleteJob>
 #include <Akonadi/Session>
 
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KUrl>
+#include <KRandom>
+
+#include <KRss/FeedCollection>
+#include <KRss/Item>
+#include <KRss/ImportFromOpmlJob>
 
 #include <QTimer>
 
@@ -41,6 +48,7 @@
 
 using namespace Akonadi;
 using namespace Akregator2;
+using namespace KRss;
 
 class ImportFeedListCommand::Private
 {
@@ -50,9 +58,14 @@ public:
 
     void doImport();
     void importFinished( KJob* );
+    void collectionDeleted( KJob* );
+    void createNextPendingCollection();
+    void pendingCreateFinished( KJob* );
 
     KUrl url;
     Collection targetCollection;
+    Collection parentFolder;
+    Collection::List pendingCollections;
     Session* session;
 };
 
@@ -87,22 +100,76 @@ void ImportFeedListCommand::Private::doImport()
         guard.emitCanceled();
         return;
     }
-#ifdef KRSS_PORT_DISABLED
-    KRss::ImportOpmlJob* job = resource->createImportOpmlJob( url );
-    connect( job, SIGNAL(finished(KJob*)), q, SLOT(importFinished(KJob*)) );
-    job->start();
-#endif
+
+    if ( !guard.exists() )
+        return;
+
+    const QString title = i18nc( "Parent folder title for imported RSS feeds", "Imported Feeds" );
+    FeedCollection importedFeeds;
+    importedFeeds.setParentCollection( targetCollection );
+    importedFeeds.setIsFolder( true );
+    importedFeeds.setName( title + KRandom::randomString( 8 ) );
+    importedFeeds.setTitle( title );
+    importedFeeds.setContentMimeTypes( QStringList() << Collection::mimeType() << KRss::Item::mimeType() );
+    parentFolder = importedFeeds;
+    ImportFromOpmlJob* importJob = new ImportFromOpmlJob( q );
+    importJob->setInputFile( url.toLocalFile() );
+    importJob->setParentFolder( parentFolder );
+    importJob->setSession( session );
+    q->connect( importJob, SIGNAL(result(KJob*)), q, SLOT(importFinished(KJob*)) );
+    importJob->start();
 }
 
-void ImportFeedListCommand::Private::importFinished( KJob* job ) {
-    EmitResultGuard guard( q );
+void ImportFeedListCommand::Private::importFinished( KJob* j ) {
+    ImportFromOpmlJob* job = qobject_cast<ImportFromOpmlJob*>( j );
+    Q_ASSERT( job );
     if ( job->error() ) {
         q->setError( Command::SomeError );
         q->setErrorText( i18n("Could not import feed list: %1", job->errorString() ) );
+        //delete parent folder
+        CollectionDeleteJob* deleteJob = new CollectionDeleteJob( parentFolder, session );
+        connect( deleteJob, SIGNAL(result(KJob*)), q, SLOT(collectionDeleted(KJob*)) );
+        deleteJob->start();
     }
-    else
+    else {
+        pendingCollections = job->collections();
+        createNextPendingCollection();
+    }
+}
+
+void ImportFeedListCommand::Private::collectionDeleted( KJob* job ) {
+    if ( job->error() )
+        kDebug() << "Could not delete parent folder" << job->errorString();
+    //keep the previous error, so don't overwrite errorText and error
+    q->emitResult();
+}
+
+void ImportFeedListCommand::Private::createNextPendingCollection()
+{
+
+    if ( pendingCollections.isEmpty() ) {
+        EmitResultGuard guard( q );
         KMessageBox::information( q->parentWidget(), i18n("The feed list was successfully imported." ), i18n("Import Finished") );
-    guard.emitResult();
+        guard.emitResult();
+        return;
+    }
+
+    const Collection c = pendingCollections.takeFirst();
+    CollectionCreateJob* job = new CollectionCreateJob( c, session );
+    q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pendingCreateFinished(KJob*)) );
+    job->start();
+}
+
+void ImportFeedListCommand::Private::pendingCreateFinished( KJob* j ) {
+    CollectionCreateJob* job = qobject_cast<CollectionCreateJob*>( j );
+    Q_ASSERT( job );
+    if ( job->error() ) {
+        q->setError( Command::SomeError );
+        q->setErrorText( i18n("Could not create collection %1: %2", FeedCollection( job->collection() ).title(), job->errorString() ) );
+        q->emitResult();
+        return;
+    }
+    createNextPendingCollection();
 }
 
 ImportFeedListCommand::ImportFeedListCommand( QObject* parent ) : Command( parent ), d( new Private( this ) )
@@ -123,7 +190,6 @@ void ImportFeedListCommand::setSession( Session* s )
 {
     d->session = s;
 }
-
 
 void ImportFeedListCommand::setTargetCollection( const Collection& c )
 {

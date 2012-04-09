@@ -25,7 +25,8 @@
 #include "exportfeedlistcommand.h"
 #include "command_p.h"
 
-
+#include <Akonadi/AgentManager>
+#include <KRss/ExportToOpmlJob>
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KLocalizedString>
@@ -34,8 +35,10 @@
 
 #include <QTimer>
 
+
 using namespace Akonadi;
 using namespace Akregator2;
+using namespace KRss;
 
 class ExportFeedListCommand::Private
 {
@@ -46,10 +49,9 @@ public:
     void doExport();
     void exportFinished( KJob* );
 
-    KUrl url;
+    QString outputFile;
     Akonadi::Session* session;
-    Collection::List rootCollections;
-    Collection preset;
+    QString resourceIdentifier;
 };
 
 ExportFeedListCommand::Private::Private( ExportFeedListCommand* qq )
@@ -64,61 +66,30 @@ void ExportFeedListCommand::Private::doExport()
 {
     EmitResultGuard guard( q );
 
-    Collection selected = preset;
-    QHash<QString,int> occs;
-    QStringList titles;
-    titles.reserve( rootCollections.size() );
-    Q_FOREACH( const Collection& i, rootCollections ) {
-        const QString t = i.name();
-        //not efficient, but who has trillions of resources anyway? Right? Right.
-        if ( titles.contains( t ) ) {
-            occs[t] += 1;
-            titles.append( i18nc( "folder title (occurrence number, for duplicates)", "%1 (%2)", t, QString::number( occs[t] + 1 ) ) );
-        }
-        else
-            titles.append( t );
+    if ( resourceIdentifier.isEmpty() ) {
+        //TODO
     }
 
-    if ( rootCollections.size() > 1 ) {
-        bool ok;
-        const QString sel =
-                KInputDialog::getItem( i18n("Feed List Export"),
-                                       i18n("Please select the list to export"),
-                                       titles,
-                                       rootCollections.indexOf( selected ),
-                                       /*editable=*/false,
-                                       &ok,
-                                       q->parentWidget() );
-        if ( !ok ) {
-            guard.emitCanceled();
-            return;
-        }
 
-        if ( !guard.exists() )
-            return;
-
-        selected = rootCollections.at( titles.indexOf( sel ) );
-    }
-
-    Q_ASSERT( selected.isValid() );
-
-    if ( !url.isValid() ) {
-        url = KFileDialog::getSaveUrl( KUrl(),
+    if ( outputFile.isEmpty() ) {
+        outputFile = KFileDialog::getSaveFileName( KUrl(),
                             QLatin1String("*.opml *.xml|") + i18n("OPML Outlines (*.opml, *.xml)")
-                            + QLatin1String("\n*|") + i18n("All Files") );
+                            + QLatin1String("\n*|") + i18n("All Files"), q->parentWidget() );
         if ( !guard.exists() )
            return;
     }
 
-    if ( !url.isValid() ) {
+    if ( outputFile.isEmpty() ) {
         guard.emitCanceled();
         return;
     }
-#ifdef KRSS_PORT_DISABLED
-    KRss::ExportOpmlJob* job = resource->createExportOpmlJob( url );
+
+    ExportToOpmlJob* job = new ExportToOpmlJob( q );
+    job->setResource( resourceIdentifier );
+    job->setOutputFile( outputFile );
+    job->setIncludeCustomProperties( false );
     connect( job, SIGNAL(finished(KJob*)), q, SLOT(exportFinished(KJob*)) );
     job->start();
-#endif
 }
 
 void ExportFeedListCommand::Private::exportFinished( KJob* job ) {
@@ -137,9 +108,9 @@ ExportFeedListCommand::~ExportFeedListCommand()
     delete d;
 }
 
-void ExportFeedListCommand::setTargetUrl( const KUrl& url )
+void ExportFeedListCommand::setOutputFile( const QString& outputFile )
 {
-    d->url = url;
+    d->outputFile = outputFile;
 }
 
 void ExportFeedListCommand::setSession( Akonadi::Session* s )
@@ -147,13 +118,9 @@ void ExportFeedListCommand::setSession( Akonadi::Session* s )
     d->session = s;
 }
 
-void ExportFeedListCommand::setRootCollections(const Akonadi::Collection::List& list, const Akonadi::Collection& preset ) {
-    Q_ASSERT( !preset.isValid() || list.contains( preset ) );
-    d->rootCollections = list;
-    if( !list.isEmpty() )
-        d->preset = preset.isValid() ? preset : d->rootCollections.first();
-    else
-        d->preset = Collection();
+void ExportFeedListCommand::setResource( const QString& identifier )
+{
+    d->resourceIdentifier = identifier;
 }
 
 void ExportFeedListCommand::doStart()
