@@ -189,7 +189,9 @@ void FilterSylpheed::importFiles( const QString& dirName)
     if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
           || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
       if(!generatedPath) {
-        _path = "Sylpheed-Import/";
+        //FIXME: Why recreate all the time _path ?
+
+        _path = i18nc("define folder name where we will import sylpheed mails", "Sylpheed-Import") + QLatin1Char('/');
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
         _path += _tmp.remove( mailDir(), Qt::CaseSensitive );

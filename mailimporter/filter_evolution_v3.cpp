@@ -161,7 +161,7 @@ void FilterEvolution_v3::importFiles( const QString& dirName)
            || temp_mailfile.endsWith(QLatin1String(".ibex.index"))
            || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) ) {
       if(!generatedPath) {
-        _path = QLatin1String( "Evolution-Import" );
+        _path = i18nc("define folder name where we import evolution mails", "Evolution-Import" );
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove( mailDir(), Qt::CaseSensitive );
         QStringList subFList = _tmp.split( QLatin1Char( '/' ), QString::SkipEmptyParts );

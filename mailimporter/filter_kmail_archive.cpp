@@ -158,7 +158,7 @@ bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, co
         }
         else {
 
-          if ( !importDirectory( dir, folderPath + '/' + folderName ) )
+          if ( !importDirectory( dir, folderPath + QLatin1Char('/') + folderName ) )
             return false;
         }
       }

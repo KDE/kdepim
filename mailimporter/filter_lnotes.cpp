@@ -102,7 +102,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
 
     // Get folder name
     QFileInfo filenameInfo( file );
-    QString folder("LNotes-Import/" + filenameInfo.completeBaseName());
+    QString folder(i18nc("Define folder name where we import lotus note mails", "LNotes-Import") +QLatin1Char('/') + filenameInfo.completeBaseName());
     filterInfo()->setTo(folder);
 
     // State machine to read the data in. The fgetc usage is probably terribly slow ...

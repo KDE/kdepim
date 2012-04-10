@@ -167,7 +167,7 @@ void FilterPMail::importMailFolder(const QString& file)
   } else {
     // Get folder name
     l = f.read((char *) &pmm_head, sizeof(pmm_head));
-    QString folder("PegasusMail-Import/");
+    QString folder(i18nc("define folder name when we will import pegasus mail","PegasusMail-Import") + QLatin1Char('/'));
     if(folderParsed)
       folder.append(getFolderName((QString)pmm_head.id));
     else
@@ -227,8 +227,8 @@ void FilterPMail::importUnixMailFolder(const QString& file)
   int n = 0, l = 0;
 
   /** Get the folder name */
-  s.replace( QRegExp("mbx$"), "pmg");
-  s.replace( QRegExp("MBX$"), "PMG");
+  s.replace( QRegExp("mbx$"), QLatin1String("pmg"));
+  s.replace( QRegExp("MBX$"), QLatin1String("PMG"));
   f.setFileName(s);
   if (! f.open( QIODevice::ReadOnly ) ) {
     filterInfo()->alert( i18n("Unable to open %1, skipping", s ) );
@@ -333,12 +333,12 @@ QString FilterPMail::getFolderName(const QString& ID)
       QString _ID = tmp[2];
       if(_ID == search) {
         QString _type = tmp[0] + tmp[1];
-        if(( _type == "21")) {
+        if(( _type == QLatin1String("21"))) {
           found = true;
           break;
         }
         else {
-          folder.prepend((tmp[4] + '/'));
+          folder.prepend((tmp[4] + QLatin1Char('/')));
           search = tmp[3];
         }
       }

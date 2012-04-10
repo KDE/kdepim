@@ -39,7 +39,8 @@ FilterTheBat::FilterTheBat() :
                 "local folder, e.g. from POP accounts, and not from IMAP/DIMAP accounts.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
                 "will be stored under: \"TheBat-Import\" in your local account.</p>" ) )
-{}
+{
+}
 
 /** Destructor. */
 FilterTheBat::~FilterTheBat()
@@ -205,7 +206,7 @@ void FilterTheBat::importFiles( const QString& FileName)
       long lastPos = 3128;
       long endPos = 0;
 
-      QString _path = "TheBat-Import/";
+      QString _path = i18nc("Define folder where we will import thebat mails", "TheBat-Import") + QLatin1Char('/');
       QString _tmp = FileName;
       _tmp = _tmp.remove(_tmp.length() - 13, 13);
       _path += _tmp.remove( mailDir(), Qt::CaseSensitive );
