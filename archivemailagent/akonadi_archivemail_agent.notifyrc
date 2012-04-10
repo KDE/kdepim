@@ -1,5 +1,6 @@
 [Global]
 Comment=Archive Mail Agent
+Comment[es]=Agente de archivado de correo
 Comment[nb]=Arkivpost-agent
 Comment[nl]=E-mailagent voor archiveren
 Comment[pl]=Agent archiwizacji poczty
@@ -9,6 +10,7 @@ Comment[sv]=E-postarkiveringsmodul
 Comment[uk]=Агент архівування пошти
 Comment[x-test]=xxArchive Mail Agentxx
 Name=Archive Mail Agent
+Name[es]=Agente de archivado de correo
 Name[nb]=Arkivpost-agent
 Name[nl]=E-mailagent voor archiveren
 Name[pl]=Agent archiwizacji poczty
@@ -20,6 +22,7 @@ Name[x-test]=xxArchive Mail Agentxx
 
 [Event/archivemailfinished]
 Name=Archive Mail finished
+Name[es]=Archivado de correo terminado
 Name[nb]=Arkivpost fullført
 Name[nl]=E-mail archiveren is gereed
 Name[pl]=Ukończono archiwizację poczty
