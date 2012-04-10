@@ -17,13 +17,13 @@
 #include "archivemailinfo.h"
 
 ArchiveMailInfo::ArchiveMailInfo()
-  :mSaveCollection(-1)
+  :mSaveCollection()
   ,mSaveSubCollection(false)
 {
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  :mSaveCollection(-1)
+  :mSaveCollection()
   ,mSaveSubCollection(false)
 {
   //TODO
@@ -39,7 +39,10 @@ void ArchiveMailInfo::load(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
-  mSaveCollection = config.readEntry("saveCollectionId",mSaveCollection.id());
+  Akonadi::Entity::Id tId = config.readEntry("saveCollectionId",mSaveCollection.id());
+  if ( tId >= 0 ) {
+    mSaveCollection = Akonadi::Collection( tId );
+  }
 }
 
 void ArchiveMailInfo::save(KConfigGroup & config )
