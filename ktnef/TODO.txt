@@ -1,6 +1,5 @@
 resurrect and install docbook
 
-create a bugs.kde.org product
-
-kdepim/(CMakeLists.txt, MAINTAINERS, README)
+look at current bugs and see if I can/should fix any:
+https://bugs.kde.org/buglist.cgi?product=ktnef&list_id=43608
 
