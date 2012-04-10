@@ -346,6 +346,7 @@ else()
     macro_optional_add_subdirectory(knotes)
     macro_optional_add_subdirectory(korganizer)
     macro_optional_add_subdirectory(ksendemail)
+    macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)
