@@ -14,41 +14,35 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef ARCHIVEMAILINFO_H
+#define ARCHIVEMAILINFO_H
 
-#ifndef ARCHIVEMAILWIDGET_H
-#define ARCHIVEMAILWIDGET_H
+#include <KConfigGroup>
+#include <Akonadi/Collection>
+#include <KUrl>
 
-#include "ui_archivemailwidget.h"
-#include <QListWidgetItem>
-#include <QListWidget>
 
-class ArchiveMailItem : public QListWidgetItem
+class ArchiveMailInfo
 {
 public:
-  explicit ArchiveMailItem( const QString &text, QListWidget *parent = 0 );
-  ~ArchiveMailItem();
+  explicit ArchiveMailInfo();
+  explicit ArchiveMailInfo(const KConfigGroup& config);
+  ~ArchiveMailInfo();
 
- private:
+  //FIXME use Collection or CollectionId ?
+  Akonadi::Collection saveCollection() const;
+  void setSaveCollection(const Akonadi::Collection& collection);
+
+  void setSaveSubCollection(bool b);
+  bool saveSubCollection() const;
+
+  void setUrl(const KUrl& url);
+  KUrl url() const;
+
+private:
+  Akonadi::Collection mSaveCollection;
+  KUrl mPath;
+  bool mSaveSubCollection;
 };
 
-class ArchiveMailWidget : public QWidget
-{
-  Q_OBJECT
-public:
-  explicit ArchiveMailWidget( QWidget *parent = 0 );
-  ~ArchiveMailWidget();
-private:
-  void load();
-  void save();
-
-private Q_SLOTS:
-  void slotRemoveItem();
-  void slotModifyItem();
-  void slotAddItem();
-private:
-  Ui::ArchiveMailWidget *mWidget;
-};
-
-
-#endif /* ARCHIVEMAILWIDGET_H */
-
+#endif // ARCHIVEMAILINFO_H

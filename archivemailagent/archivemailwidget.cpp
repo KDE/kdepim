@@ -18,17 +18,57 @@
 #include "archivemailwidget.h"
 
 
+ArchiveMailItem::ArchiveMailItem( const QString &text, QListWidget *parent )
+  : QListWidgetItem(text,parent)
+{
+}
+
+ArchiveMailItem::~ArchiveMailItem()
+{
+}
 
 ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   : QWidget( parent )
 {
   mWidget = new Ui::ArchiveMailWidget;
   mWidget->setupUi( this );
+  connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
+  connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
+  connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
 }
 
 ArchiveMailWidget::~ArchiveMailWidget()
 {
   delete mWidget;
+}
+
+void ArchiveMailWidget::load()
+{
+  //TODO
+}
+
+void ArchiveMailWidget::save()
+{
+  //TODO
+}
+
+void ArchiveMailWidget::slotRemoveItem()
+{
+  if(!mWidget->listWidget->currentItem())
+    return;
+//TODO
+}
+
+void ArchiveMailWidget::slotModifyItem()
+{
+  if(!mWidget->listWidget->currentItem())
+    return;
+//TODO
+}
+
+void ArchiveMailWidget::slotAddItem()
+{
+  //TODO
 }
 
 #include "archivemailwidget.moc"
