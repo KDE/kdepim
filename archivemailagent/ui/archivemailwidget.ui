@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>archiveMailWidget</class>
- <widget class="QWidget" name="archiveMailWidget">
+ <class>ArchiveMailWidget</class>
+ <widget class="QWidget" name="ArchiveMailWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
