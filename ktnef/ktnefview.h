@@ -1,49 +1,52 @@
 /*
-    ktnefview.h
+  This file is part of KTnef.
 
-    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
+  Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
+  Copyright (c) 2012 Allen Winter <winter@kde.org>
 
-    This file is part of KTNEF, the KDE TNEF support library/program.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#ifndef KTNEF_KTNEFVIEW_H
-#define	KTNEF_KTNEFVIEW_H
+#ifndef KTNEFVIEW_H
+#define	KTNEFVIEW_H
 
-#include <k3listview.h>
-#include <q3ptrlist.h>
-#include <QResizeEvent>
+#include <QTreeWidget>
 
-#include <ktnef/ktnefattach.h>
+namespace KTnef {
+  class KTNEFAttach;
+}
+using namespace KTnef;
 
-class KTNEFView : public K3ListView
+class KTNEFView : public QTreeWidget
 {
-	Q_OBJECT
+  Q_OBJECT
 
-public:
-	KTNEFView( QWidget *parent = 0 );
-	~KTNEFView();
+  public:
+    KTNEFView( QWidget *parent = 0 );
+    ~KTNEFView();
 
-        void setAttachments(const QList<KTnef::KTNEFAttach*> &list);
-        QList<KTnef::KTNEFAttach*>* getSelection();
+    void setAttachments( QList<KTNEFAttach *> list );
+    QList<KTNEFAttach *> getSelection();
 
-signals:
-        void dragRequested( const QList<KTnef::KTNEFAttach*>& list );
+  signals:
+    void dragRequested( const QList<KTNEFAttach *> &list );
 
-protected:
-	void resizeEvent(QResizeEvent *e);
-	void startDrag();
+  protected:
+    void resizeEvent( QResizeEvent *e );
+    void startDrag( Qt::DropActions dropAction );
 
-private:
-        QList<KTnef::KTNEFAttach*>	attachments_;
+  private slots:
+    void adjustColumnWidth();
+
+  private:
+    QList<KTNEFAttach *> mAttachments;
 };
 
-#endif // KTNEF_KTNEFVIEW_H
+#endif

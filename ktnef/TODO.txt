@@ -1,0 +1,6 @@
+resurrect and install docbook
+
+create a bugs.kde.org product
+
+kdepim/(CMakeLists.txt, MAINTAINERS, README)
+

@@ -1,21 +1,20 @@
-/*
-   WMF Metafile Structures
-   Author: Stefan Taferner <taferner@kde.org>
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License along
-   with this program; if not, write to the Free Software Foundation, Inc.,
-   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-*/
+/* This file is part of the Calligra project
+ * Copyright (c) 2003 Stefan Taferner <taferner@kde.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License version 2 as published by the Free Software Foundation.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
 #ifndef wmfstruct_h
 #define wmfstruct_h
 
@@ -24,37 +23,32 @@ typedef int DWORD;
 typedef qint32 LONG;
 typedef void* _HANDLE;
 
-typedef struct _RECT
-{
+typedef struct _RECT {
     WORD left;
     WORD top;
     WORD right;
     WORD bottom;
 } RECT;
 
-typedef struct _RECTL
-{
+typedef struct _RECTL {
     LONG left;
     LONG top;
     LONG right;
     LONG bottom;
 } RECTL;
 
-typedef struct _SIZE
-{
+typedef struct _SIZE {
     WORD width;
     WORD height;
 } SIZE;
 
-typedef struct _SIZEL
-{
+typedef struct _SIZEL {
     LONG width;
     LONG height;
 } SIZEL;
 
 
-struct WmfEnhMetaHeader
-{
+struct WmfEnhMetaHeader {
     DWORD   iType;              // Record type EMR_HEADER
     DWORD   nSize;              // Record size in bytes.  This may be greater
     // than the sizeof( ENHMETAHEADER ).
@@ -79,8 +73,7 @@ struct WmfEnhMetaHeader
 #define ENHMETA_SIGNATURE       0x464D4520
 
 
-struct WmfMetaHeader
-{
+struct WmfMetaHeader {
     WORD        mtType;
     WORD        mtHeaderSize;
     WORD        mtVersion;
@@ -91,8 +84,7 @@ struct WmfMetaHeader
 };
 
 
-struct WmfPlaceableHeader
-{
+struct WmfPlaceableHeader {
     DWORD key;
     WORD hmf;
     RECT bbox;
@@ -103,16 +95,14 @@ struct WmfPlaceableHeader
 #define APMHEADER_KEY 0x9AC6CDD7
 
 
-struct WmfMetaRecord
-{
+struct WmfMetaRecord {
     DWORD rdSize;       // Record size ( in words ) of the function
     WORD  rdFunction;   // Record function number
     WORD  rdParm[ 1 ];  // WORD array of parameters
 };
 
 
-struct WmfEnhMetaRecord
-{
+struct WmfEnhMetaRecord {
     DWORD iType;        // Record type EMR_xxx
     DWORD nSize;        // Record size in bytes
     DWORD dParm[ 1 ];   // DWORD array of parameters

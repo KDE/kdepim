@@ -1,5 +1,5 @@
 Michael Goffioul <kdeprint@swing.be>
   - Main developer
 
-Bo Thorsen <bo@sonofthor.dk>
-  - ktnefwriter.cpp, ktnefwriter.h
+Allen Winter <winter@kde.org>
+  - Ported from Qt3/KDE3 to Qt4/KDE4

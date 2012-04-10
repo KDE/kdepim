@@ -1,52 +1,62 @@
 /*
-    attachpropertydialog.h
+  This file is part of KTnef.
 
-    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
+  Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
+  Copyright (c) 2012 Allen Winter <winter@kde.org>
 
-    This file is part of KTNEF, the KDE TNEF support library/program.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+*/
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- */
+#ifndef ATTACHPROPERTYDIALOG_H
+#define ATTACHPROPERTYDIALOG_H
 
-#ifndef KTNEF_ATTACHPROPERTYDIALOG_H
-#define KTNEF_ATTACHPROPERTYDIALOG_H
+#include "ui_attachpropertydialogbase.h"
 
-#include "attachpropertydialogbase.h"
+#include <QDialog>
 #include <QMap>
 #include <QPixmap>
 
-#include <ktnef/ktnefattach.h>
-#include <ktnef/ktnefproperty.h>
-#include <ktnef/ktnefpropertyset.h>
+namespace KTnef {
+  class KTNEFAttach;
+  class KTNEFProperty;
+  class KTNEFPropertySet;
+}
+using namespace KTnef;
 
-class Q3ListView;
-class Q3ListViewItem;
+class QTreeWidget;
+class QTreeWidgetItem;
 
-class AttachPropertyDialog : public AttachPropertyDialogBase
+class Ui_AttachPropertyDialogBase;
+
+class AttachPropertyDialog : public QDialog
 {
-public:
-	AttachPropertyDialog(QWidget *parent = 0);
-	~AttachPropertyDialog();
+  public:
+    AttachPropertyDialog( QWidget *parent = 0 );
+    ~AttachPropertyDialog();
 
-        void setAttachment(KTnef::KTNEFAttach *attach);
+    void setAttachment( KTNEFAttach *attach );
 
-protected slots:
-	void saveClicked();
+  public slots:
+    void accept();
 
-private:
-        KTnef::KTNEFAttach *m_attach;
+  protected:
+    Ui::AttachPropertyDialogBase mUI;
+
+  private:
+    KTNEFAttach *mAttach;
 };
 
-void formatProperties( const QMap<int,KTnef::KTNEFProperty*>&, Q3ListView*, Q3ListViewItem*, const QString& = "prop" );
-void formatPropertySet( KTnef::KTNEFPropertySet*, Q3ListView* );
-void saveProperty( Q3ListView*, KTnef::KTNEFPropertySet*, QWidget* );
-QPixmap loadRenderingPixmap( KTnef::KTNEFPropertySet*, const QColor& );
+void formatProperties( const QMap<int,KTNEFProperty*> &, QTreeWidget *,
+                       QTreeWidgetItem *, const QString & = "prop" );
+void formatPropertySet( KTNEFPropertySet *, QTreeWidget * );
+void saveProperty( QTreeWidget *, KTNEFPropertySet *, QWidget * );
+QPixmap loadRenderingPixmap( KTNEFPropertySet *, const QColor & );
 
-#endif // KTNEF_ATTACHPROPERTYDIALOG_H
+#endif
