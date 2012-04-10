@@ -29,6 +29,13 @@ public:
   explicit ArchiveMailInfo(const KConfigGroup& config);
   ~ArchiveMailInfo();
 
+  enum ArchiveUnits {
+    ArchiveDays = 0,
+    ArchiveWeeks,
+    ArchiveMonths,
+    ArchiveMaxUnits
+  };
+
   //FIXME use Collection or CollectionId ?
   Akonadi::Collection saveCollection() const;
   void setSaveCollection(const Akonadi::Collection& collection);
@@ -38,6 +45,9 @@ public:
 
   void setUrl(const KUrl& url);
   KUrl url() const;
+
+  void load(const KConfigGroup& config);
+  void save(KConfigGroup & config );
 
 private:
   Akonadi::Collection mSaveCollection;

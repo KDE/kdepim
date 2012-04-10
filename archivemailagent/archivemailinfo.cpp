@@ -35,6 +35,18 @@ ArchiveMailInfo::~ArchiveMailInfo()
 
 }
 
+void ArchiveMailInfo::load(const KConfigGroup& config)
+{
+  mPath = config.readEntry("storePath",KUrl());
+  mSaveSubCollection = config.readEntry("saveSubCollection",false);
+  mSaveCollection = config.readEntry("saveCollectionId",mSaveCollection.id());
+}
+
+void ArchiveMailInfo::save(KConfigGroup & config )
+{
+
+}
+
 KUrl ArchiveMailInfo::url() const
 {
   return mPath;
