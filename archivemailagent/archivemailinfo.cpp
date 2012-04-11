@@ -73,13 +73,26 @@ MailCommon::BackupJob::ArchiveType ArchiveMailInfo::archiveType() const
   return mArchiveType;
 }
 
+void ArchiveMailInfo::setLastDateSaved( const QDate& date )
+{
+  mLastDateSaved = date;
+}
+
+QDate ArchiveMailInfo::lastDateSaved() const
+{
+  return mLastDateSaved;
+}
+
+
 void ArchiveMailInfo::load(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
+  mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"));
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
   mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
   mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
   Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
+  mArchiveAge = config.readEntry("archiveAge",1);
   if ( tId >= 0 ) {
     mSaveCollectionId = tId;
   }

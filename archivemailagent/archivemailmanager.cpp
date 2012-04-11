@@ -26,6 +26,9 @@ ArchiveMailManager::~ArchiveMailManager()
 {
 }
 
-
+void ArchiveMailManager::load()
+{
+//test if necessary to archive.
+}
 
 #include "archivemailmanager.moc"

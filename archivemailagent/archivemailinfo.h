@@ -21,6 +21,7 @@
 #include <KConfigGroup>
 #include <Akonadi/Collection>
 #include <KUrl>
+#include <QDate>
 
 
 class ArchiveMailInfo
@@ -58,8 +59,11 @@ public:
   void setArchiveAge( int age );
   int archiveAge() const;
 
-  
+  void setLastDateSaved( const QDate& date );
+  QDate lastDateSaved() const;
+
 private:
+  QDate mLastDateSaved;
   int mArchiveAge;
   MailCommon::BackupJob::ArchiveType mArchiveType;
   ArchiveUnit mArchiveUnit;

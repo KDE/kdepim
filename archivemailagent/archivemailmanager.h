@@ -26,6 +26,8 @@ class ArchiveMailManager : public QObject
 public:
   explicit ArchiveMailManager(QObject *parent = 0);
   ~ArchiveMailManager();
+  void load();
+
 };
 
 
