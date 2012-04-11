@@ -1,5 +1,9 @@
 project(archivemailagent)
 
+include_directories(
+   ${CMAKE_SOURCE_DIR}/libkdepim
+)
+
 set(archivemailagent_SRCS
    archivemailkernel.cpp
    archivemailagent.cpp

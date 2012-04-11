@@ -17,14 +17,16 @@
 #include "archivemailinfo.h"
 
 ArchiveMailInfo::ArchiveMailInfo()
-  :mSaveCollectionId(-1)
-  ,mSaveSubCollection(false)
+  : mArchiveType( MailCommon::BackupJob::Zip )
+  , mSaveCollectionId(-1)
+  , mSaveSubCollection(false)
 {
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  :mSaveCollectionId(-1)
-  ,mSaveSubCollection(false)
+  : mArchiveType( MailCommon::BackupJob::Zip )
+  , mSaveCollectionId(-1)
+  , mSaveSubCollection(false)
 {
   //TODO
 }
@@ -35,10 +37,22 @@ ArchiveMailInfo::~ArchiveMailInfo()
 
 }
 
+
+void ArchiveMailInfo::setArchiveType( MailCommon::BackupJob::ArchiveType type )
+{
+  mArchiveType = type;
+}
+
+MailCommon::BackupJob::ArchiveType ArchiveMailInfo::archiveType() const
+{
+  return mArchiveType;
+}
+
 void ArchiveMailInfo::load(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
+  mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
   Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
   if ( tId >= 0 ) {
     mSaveCollectionId = tId;

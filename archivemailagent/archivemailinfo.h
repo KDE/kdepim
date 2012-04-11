@@ -17,6 +17,7 @@
 #ifndef ARCHIVEMAILINFO_H
 #define ARCHIVEMAILINFO_H
 
+#include "mailcommon/backupjob.h"
 #include <KConfigGroup>
 #include <Akonadi/Collection>
 #include <KUrl>
@@ -48,7 +49,13 @@ public:
   void load(const KConfigGroup& config);
   void save(KConfigGroup & config );
 
+  void setArchiveType( MailCommon::BackupJob::ArchiveType type );
+  MailCommon::BackupJob::ArchiveType archiveType() const;
+  
+  
 private:
+  MailCommon::BackupJob::ArchiveType mArchiveType;
+  
   Akonadi::Collection::Id mSaveCollectionId;
   KUrl mPath;
   bool mSaveSubCollection;
