@@ -54,9 +54,13 @@ public:
 
   void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
   ArchiveMailInfo::ArchiveUnit archiveUnit() const;
-  
+
+  void setArchiveAge( int age );
+  int archiveAge() const;
+
   
 private:
+  int mArchiveAge;
   MailCommon::BackupJob::ArchiveType mArchiveType;
   ArchiveUnit mArchiveUnit;
   Akonadi::Collection::Id mSaveCollectionId;

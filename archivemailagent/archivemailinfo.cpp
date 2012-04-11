@@ -17,7 +17,8 @@
 #include "archivemailinfo.h"
 
 ArchiveMailInfo::ArchiveMailInfo()
-  : mArchiveType( MailCommon::BackupJob::Zip )
+  : mArchiveAge( 1 )
+  , mArchiveType( MailCommon::BackupJob::Zip )
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1) 
   , mSaveSubCollection(false)
@@ -25,7 +26,8 @@ ArchiveMailInfo::ArchiveMailInfo()
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  : mArchiveType( MailCommon::BackupJob::Zip ) 
+  : mArchiveAge( 1 )
+  , mArchiveType( MailCommon::BackupJob::Zip ) 
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1)
   , mSaveSubCollection(false)
@@ -37,6 +39,16 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
 ArchiveMailInfo::~ArchiveMailInfo()
 {
 
+}
+
+void ArchiveMailInfo::setArchiveAge( int age )
+{
+  mArchiveAge = age;
+}
+    
+int ArchiveMailInfo::archiveAge() const
+{
+  return mArchiveAge;
 }
 
 
