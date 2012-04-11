@@ -1136,6 +1136,22 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
     m_recipientsEditor->setFocusBottom();
   }
 
+  if ( oldIdent.cc() != ident.cc() ) {
+    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdent.cc() );
+    foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
+      m_recipientsEditor->removeRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
+                                           MessageComposer::Recipient::Cc );
+    }
+
+    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.cc() );
+    foreach ( const KMime::Types::Mailbox &recipient, newRecipients ) {
+      m_recipientsEditor->addRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
+                                        MessageComposer::Recipient::Cc );
+    }
+
+    m_recipientsEditor->setFocusBottom();
+  }
+
 
   KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>
                                                ( oldIdent ).signature();
