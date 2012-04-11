@@ -18,13 +18,15 @@
 
 ArchiveMailInfo::ArchiveMailInfo()
   : mArchiveType( MailCommon::BackupJob::Zip )
-  , mSaveCollectionId(-1)
+  , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
+  , mSaveCollectionId(-1) 
   , mSaveSubCollection(false)
 {
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  : mArchiveType( MailCommon::BackupJob::Zip )
+  : mArchiveType( MailCommon::BackupJob::Zip ) 
+  , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1)
   , mSaveSubCollection(false)
 {
@@ -35,6 +37,17 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
 ArchiveMailInfo::~ArchiveMailInfo()
 {
 
+}
+
+
+void ArchiveMailInfo::setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit )
+{
+  mArchiveUnit = unit;
+}
+
+ArchiveMailInfo::ArchiveUnit ArchiveMailInfo::archiveUnit() const
+{
+  return mArchiveUnit;
 }
 
 
@@ -53,6 +66,7 @@ void ArchiveMailInfo::load(const KConfigGroup& config)
   mPath = config.readEntry("storePath",KUrl());
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
   mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
+  mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
   Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
   if ( tId >= 0 ) {
     mSaveCollectionId = tId;

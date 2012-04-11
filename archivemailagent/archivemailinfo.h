@@ -30,7 +30,7 @@ public:
   explicit ArchiveMailInfo(const KConfigGroup& config);
   ~ArchiveMailInfo();
 
-  enum ArchiveUnits {
+  enum ArchiveUnit {
     ArchiveDays = 0,
     ArchiveWeeks,
     ArchiveMonths,
@@ -51,11 +51,14 @@ public:
 
   void setArchiveType( MailCommon::BackupJob::ArchiveType type );
   MailCommon::BackupJob::ArchiveType archiveType() const;
+
+  void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
+  ArchiveMailInfo::ArchiveUnit archiveUnit() const;
   
   
 private:
   MailCommon::BackupJob::ArchiveType mArchiveType;
-  
+  ArchiveUnit mArchiveUnit;
   Akonadi::Collection::Id mSaveCollectionId;
   KUrl mPath;
   bool mSaveSubCollection;
