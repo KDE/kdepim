@@ -100,8 +100,8 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
                         newItem->text( 0 ) +
                         " [" + QString::number( value.toList().count() ) + ']' );
       int i = 0;
-      for ( QList<QVariant>::ConstIterator lit = value.toList().begin();
-            lit != value.toList().end(); ++lit, i++ ) {
+      for ( QList<QVariant>::ConstIterator lit = value.toList().constBegin();
+            lit != value.toList().constEnd(); ++lit, i++ ) {
         new QTreeWidgetItem( newItem,
                              QStringList()
                                << QString( '[' + QString::number( i ) + ']' )
