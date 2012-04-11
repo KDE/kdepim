@@ -17,13 +17,13 @@
 #include "archivemailinfo.h"
 
 ArchiveMailInfo::ArchiveMailInfo()
-  :mSaveCollection()
+  :mSaveCollectionId(-1)
   ,mSaveSubCollection(false)
 {
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  :mSaveCollection()
+  :mSaveCollectionId(-1)
   ,mSaveSubCollection(false)
 {
   //TODO
@@ -39,9 +39,9 @@ void ArchiveMailInfo::load(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
-  Akonadi::Entity::Id tId = config.readEntry("saveCollectionId",mSaveCollection.id());
+  Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
   if ( tId >= 0 ) {
-    mSaveCollection = Akonadi::Collection( tId );
+    mSaveCollectionId = tId;
   }
 }
 
@@ -70,12 +70,12 @@ void ArchiveMailInfo::setSaveSubCollection( bool saveSubCol )
   mSaveSubCollection = saveSubCol;
 }
 
-void ArchiveMailInfo::setSaveCollection(const Akonadi::Collection& collection)
+void ArchiveMailInfo::setSaveCollectionId(Akonadi::Collection::Id collectionId)
 {
-  mSaveCollection = collection;
+  mSaveCollectionId = collectionId;
 }
 
-Akonadi::Collection ArchiveMailInfo::saveCollection() const
+Akonadi::Collection::Id ArchiveMailInfo::saveCollectionId() const
 {
-  return mSaveCollection;
+  return mSaveCollectionId;
 }

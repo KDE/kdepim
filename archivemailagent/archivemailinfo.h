@@ -36,9 +36,8 @@ public:
     ArchiveMaxUnits
   };
 
-  //FIXME use Collection or CollectionId ?
-  Akonadi::Collection saveCollection() const;
-  void setSaveCollection(const Akonadi::Collection& collection);
+  Akonadi::Collection::Id saveCollectionId() const;
+  void setSaveCollectionId(Akonadi::Collection::Id collectionId);
 
   void setSaveSubCollection(bool b);
   bool saveSubCollection() const;
@@ -50,7 +49,7 @@ public:
   void save(KConfigGroup & config );
 
 private:
-  Akonadi::Collection mSaveCollection;
+  Akonadi::Collection::Id mSaveCollectionId;
   KUrl mPath;
   bool mSaveSubCollection;
 };
