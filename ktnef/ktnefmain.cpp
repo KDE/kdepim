@@ -292,8 +292,9 @@ void KTNEFMain::extractAllFiles()
     mLastDir = dir;
     dir.append( "/" );
     QList<KTNEFAttach *> list = mParser->message()->attachmentList();
-    QList<KTNEFAttach *>::iterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
+    QList<KTNEFAttach *>::ConstIterator it;
+    QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
+    for ( it = list.constBegin(); it != end; ++it ) {
       if ( !mParser->extractFileTo( (*it)->name(), dir ) ) {
         KMessageBox::error(
           this,
@@ -315,7 +316,7 @@ void KTNEFMain::propertiesFile()
 
 void KTNEFMain::optionDefaultDir()
 {
-  QString dirname = KFileDialog::getExistingDirectory( mDefaultDir, this );
+  const QString dirname = KFileDialog::getExistingDirectory( mDefaultDir, this );
   if ( !dirname.isEmpty() ) {
     mDefaultDir = dirname;
 
@@ -374,8 +375,9 @@ void KTNEFMain::extractTo( const QString &dirname )
     dir.append( "/" );
   }
   QList<KTNEFAttach *>list = mView->getSelection();
-  QList<KTNEFAttach *>::iterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
+  QList<KTNEFAttach *>::ConstIterator it;
+  QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
+  for ( it = list.constBegin(); it != end; ++it ) {
     if ( !mParser->extractFileTo( (*it)->name(), dir ) ) {
       KMessageBox::error(
         this,
@@ -445,8 +447,9 @@ void KTNEFMain::viewDoubleClicked( QTreeWidgetItem *item )
 void KTNEFMain::viewDragRequested( const QList<KTNEFAttach *>& list )
 {
   KUrl::List urlList;
+  QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
   for ( QList<KTNEFAttach *>::ConstIterator it = list.constBegin();
-        it != list.constEnd(); ++it ) {
+        it != end; ++it ) {
     urlList << KUrl( extractTemp( *it ) );
   }
 
@@ -497,6 +500,7 @@ void KTNEFMain::slotShowMessageText()
     tmpFile->close();
 
     KRun::runUrl( KUrl( tmpFile->fileName() ), "text/rtf", this, true );
+    delete tmpFile;
   } else {
       KMessageBox::error(
         this,
