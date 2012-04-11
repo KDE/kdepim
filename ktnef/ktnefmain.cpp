@@ -293,7 +293,7 @@ void KTNEFMain::extractAllFiles()
     dir.append( "/" );
     QList<KTNEFAttach *> list = mParser->message()->attachmentList();
     QList<KTNEFAttach *>::ConstIterator it;
-    QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
+    QList<KTNEFAttach *>::ConstIterator end( list.constEnd() );
     for ( it = list.constBegin(); it != end; ++it ) {
       if ( !mParser->extractFileTo( (*it)->name(), dir ) ) {
         KMessageBox::error(
@@ -376,7 +376,7 @@ void KTNEFMain::extractTo( const QString &dirname )
   }
   QList<KTNEFAttach *>list = mView->getSelection();
   QList<KTNEFAttach *>::ConstIterator it;
-  QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
+  QList<KTNEFAttach *>::ConstIterator end( list.constEnd() );
   for ( it = list.constBegin(); it != end; ++it ) {
     if ( !mParser->extractFileTo( (*it)->name(), dir ) ) {
       KMessageBox::error(
@@ -447,7 +447,7 @@ void KTNEFMain::viewDoubleClicked( QTreeWidgetItem *item )
 void KTNEFMain::viewDragRequested( const QList<KTNEFAttach *>& list )
 {
   KUrl::List urlList;
-  QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
+  QList<KTNEFAttach *>::ConstIterator end( list.constEnd() );
   for ( QList<KTNEFAttach *>::ConstIterator it = list.constBegin();
         it != end; ++it ) {
     urlList << KUrl( extractTemp( *it ) );
