@@ -1,5 +1,9 @@
 project(ktnef)
 
+include(TestBigEndian)
+test_big_endian(CMAKE_WORDS_BIGENDIAN)
+configure_file(config-ktnef.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktnef.h)
+
 add_subdirectory(pics)
 
 set(ktnef_SRCS
