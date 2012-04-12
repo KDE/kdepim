@@ -333,9 +333,4 @@ void MailWebView::clearFindSelection()
   SuperClass::findText( QString(), QWebPage::HighlightAllOccurrences );
 }
 
-QAction *MailWebView::downloadImageToDiskAction() const
-{
-  return pageAction(QWebPage::DownloadImageToDisk);
-}
-
 #include "moc_mailwebview.cpp"

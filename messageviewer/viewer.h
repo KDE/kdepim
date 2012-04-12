@@ -264,7 +264,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *urlOpenAction();
   KAction *speakTextAction();
   KAction *copyImageLocation();
-  QAction *downloadImageToDiskAction() const;
 
   const HeaderStrategy * headerStrategy() const;
 
@@ -275,6 +274,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void writeConfig( bool withSync=true );
 
   KUrl urlClicked() const;
+  KUrl imageUrlClicked() const;
 
   void readConfig();
 

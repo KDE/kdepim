@@ -302,10 +302,5 @@ void MailWebView::clearFindSelection()
   // not supported
 }
 
-QAction *MailWebView::downloadImageToDiskAction() const
-{
-  return 0;
-}
-
 
 #include "moc_mailwebview.cpp"

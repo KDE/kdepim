@@ -97,7 +97,6 @@ public:
 
     void setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy );
     Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
-    QAction *downloadImageToDiskAction() const;
 
 Q_SIGNALS:
 

@@ -3048,9 +3048,4 @@ void ViewerPrivate::goOnline()
   emit resumeNetworkJobs();
 }
 
-QAction *ViewerPrivate::downloadImageToDiskAction() const
-{
-  return mViewer->downloadImageToDiskAction();
-}
-
 #include "viewer_p.moc"

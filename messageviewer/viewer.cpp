@@ -437,6 +437,12 @@ KUrl Viewer::urlClicked() const
   return d->mClickedUrl;
 }
 
+KUrl Viewer::imageUrlClicked() const
+{
+  Q_D( const Viewer );
+  return d->mImageUrl;
+}
+
 void Viewer::update( MessageViewer::Viewer::UpdateMode updateMode )
 {
   Q_D( Viewer );
@@ -560,11 +566,6 @@ bool Viewer::zoomTextOnly() const
   return d->mZoomTextOnly;
 }
 
-QAction *Viewer::downloadImageToDiskAction() const
-{
-  Q_D(const Viewer);
-  return d->downloadImageToDiskAction();
-}
 }
 
 #include "viewer.moc"
