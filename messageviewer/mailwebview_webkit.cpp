@@ -333,4 +333,4 @@ void MailWebView::clearFindSelection()
   SuperClass::findText( QString(), QWebPage::HighlightAllOccurrences );
 }
 
-#include "moc_mailwebview.cpp"
+#include "mailwebview.moc"

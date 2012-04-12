@@ -303,4 +303,4 @@ void MailWebView::clearFindSelection()
 }
 
 
-#include "moc_mailwebview.cpp"
+#include "mailwebview.moc"
