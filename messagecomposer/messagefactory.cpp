@@ -440,9 +440,11 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 
 KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg)
 {
+	qDebug()<<" KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg)******************";
   // remove headers that shouldn't be forwarded
   MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
-  fwdMsg->removeHeader("BCC");
+  fwdMsg->removeHeader("Bcc");
+  fwdMsg->assemble();
   // set the part
   KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
   msgPart->contentType()->setMimeType( "message/rfc822" );
