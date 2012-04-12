@@ -49,3 +49,7 @@ endif(BUILD_kontact)
 if(BUILD_ktimetracker)
   add_subdirectory(ktimetracker)
 endif(BUILD_ktimetracker)
+
+if(BUILD_ktnef)
+  add_subdirectory(ktnef)
+endif(BUILD_ktnef)
