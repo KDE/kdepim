@@ -1118,40 +1118,41 @@ KPIMIdentities::IdentityCombo* Message::ComposerViewBase::identityCombo()
   return m_identityCombo;
 }
 
+void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type )
+{
+  QString oldIdentList;
+  QString newIdentList;
+  if ( type == MessageComposer::Recipient::Bcc ) {
+    oldIdentList = oldIdent.bcc();
+    newIdentList = ident.bcc();
+    
+  } else if ( type == MessageComposer::Recipient::Cc ) {
+    oldIdentList = oldIdent.cc();
+    newIdentList = ident.cc();
+  } else {
+    return;
+  }
+    
+  if ( oldIdentList != newIdentList ) {
+    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdentList );
+    foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
+      m_recipientsEditor->removeRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
+                                           type );
+    }
+
+    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( newIdentList );
+    foreach ( const KMime::Types::Mailbox &recipient, newRecipients ) {
+      m_recipientsEditor->addRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
+                                        type );
+    }
+    m_recipientsEditor->setFocusBottom();
+  }
+}
+
 void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
 {
-  if ( oldIdent.bcc() != ident.bcc() ) {
-    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdent.bcc() );
-    foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
-      m_recipientsEditor->removeRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
-                                           MessageComposer::Recipient::Bcc );
-    }
-
-    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
-    foreach ( const KMime::Types::Mailbox &recipient, newRecipients ) {
-      m_recipientsEditor->addRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
-                                        MessageComposer::Recipient::Bcc );
-    }
-
-    m_recipientsEditor->setFocusBottom();
-  }
-
-  if ( oldIdent.cc() != ident.cc() ) {
-    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdent.cc() );
-    foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
-      m_recipientsEditor->removeRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
-                                           MessageComposer::Recipient::Cc );
-    }
-
-    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.cc() );
-    foreach ( const KMime::Types::Mailbox &recipient, newRecipients ) {
-      m_recipientsEditor->addRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
-                                        MessageComposer::Recipient::Cc );
-    }
-
-    m_recipientsEditor->setFocusBottom();
-  }
-
+  updateRecipients( ident, oldIdent, MessageComposer::Recipient::Bcc );
+  updateRecipients( ident, oldIdent, MessageComposer::Recipient::Cc );
 
   KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>
                                                ( oldIdent ).signature();
