@@ -35,6 +35,8 @@
 
 #include <boost/function.hpp>
 
+class QAction;
+
 namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
@@ -95,6 +97,7 @@ public:
 
     void setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy );
     Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
+    QAction *downloadImageToDiskAction() const;
 
 Q_SIGNALS:
 

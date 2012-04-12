@@ -71,9 +71,6 @@ bool MailWebView::event( QEvent *event )
     const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
     kDebug() << "Right-clicked URL:" << hit.linkUrl();
 
-    qDebug()<<" resultHit & WebView::ImageSelection :"<<(hit.pixmap().isNull());
-    qDebug()<<" result.imageUrl() :"<<hit.imageUrl();
-
 #ifdef Q_OS_WINCE
     if ( !hit.linkUrl().isEmpty() )
 #endif
@@ -334,6 +331,11 @@ void MailWebView::clearFindSelection()
   //WEBKIT: TODO: Find a way to unselect last selection
   // http://bugreports.qt.nokia.com/browse/QTWEBKIT-80
   SuperClass::findText( QString(), QWebPage::HighlightAllOccurrences );
+}
+
+QAction *MailWebView::downloadImageToDiskAction() const
+{
+  return pageAction(QWebPage::DownloadImageToDisk);
 }
 
 #include "moc_mailwebview.cpp"

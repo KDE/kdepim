@@ -264,6 +264,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *urlOpenAction();
   KAction *speakTextAction();
   KAction *copyImageLocation();
+  QAction *downloadImageToDiskAction() const;
 
   const HeaderStrategy * headerStrategy() const;
 

@@ -446,7 +446,7 @@ public:
   void setZoomFactor( qreal zoomFactor );
 
   void goOnline();
-
+  QAction *downloadImageToDiskAction() const;
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );

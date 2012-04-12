@@ -559,7 +559,12 @@ bool Viewer::zoomTextOnly() const
   Q_D(const Viewer);
   return d->mZoomTextOnly;
 }
-  
+
+QAction *Viewer::downloadImageToDiskAction() const
+{
+  Q_D(const Viewer);
+  return d->downloadImageToDiskAction();
+}
 }
 
 #include "viewer.moc"
