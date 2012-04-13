@@ -713,8 +713,8 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
       id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
 
     MessageCore::StringUtil::removePrivateHeaderFields( fMsg );
-    fMsg->bcc()->clear();
-
+    fMsg->removeHeader("Bcc");
+    fMsg->assemble();
     KMime::Content* part = new KMime::Content( digest );
 
     part->contentType()->setMimeType( "message/rfc822" );
