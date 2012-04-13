@@ -84,7 +84,7 @@ QDate ArchiveMailInfo::lastDateSaved() const
 }
 
 
-void ArchiveMailInfo::load(const KConfigGroup& config)
+void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
   mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"));
@@ -98,9 +98,15 @@ void ArchiveMailInfo::load(const KConfigGroup& config)
   }
 }
 
-void ArchiveMailInfo::save(KConfigGroup & config )
+void ArchiveMailInfo::writeConfig(KConfigGroup & config )
 {
-
+  config.writeEntry("storePath",mPath);
+  config.writeEntry("lastDateSaved", mLastDateSaved.toString() );
+  config.writeEntry("saveSubCollection",mSaveSubCollection);
+  config.writeEntry( "archiveType", ( int )mArchiveType );
+  config.writeEntry( "archiveUnit", ( int )mArchiveUnit );
+  config.writeEntry("saveCollectionId",mSaveCollectionId);
+  config.writeEntry("archiveAge",mArchiveAge);
 }
 
 KUrl ArchiveMailInfo::url() const
