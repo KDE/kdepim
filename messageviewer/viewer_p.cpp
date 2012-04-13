@@ -1711,6 +1711,7 @@ void ViewerPrivate::createActions()
   mCopyImageLocation = new KAction(i18n("Copy Image Location"),this);
   mCopyImageLocation->setIcon(KIcon("view-media-visualization"));
   ac->addAction("copy_image_location", mCopyImageLocation);
+  mCopyImageLocation->setShortcutConfigurable( false );
   connect( mCopyImageLocation, SIGNAL(triggered(bool)),
            SLOT(slotCopyImageLocation()) );
 
