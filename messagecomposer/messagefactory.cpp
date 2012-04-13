@@ -440,7 +440,6 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 
 KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg)
 {
-	qDebug()<<" KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg)******************";
   // remove headers that shouldn't be forwarded
   MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
   fwdMsg->removeHeader("Bcc");
