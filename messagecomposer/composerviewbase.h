@@ -262,6 +262,8 @@ private:
   void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart );
   QStringList cleanEmailList( const QStringList& emails );
   void saveRecentAddresses( KMime::Message::Ptr ptr );
+  void updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type );
+
   /**
   * Writes out autosave data to the disk from the KMime::Message message.
   * Also appends the msgNum to the filename as a message can have a number of

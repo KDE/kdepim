@@ -263,6 +263,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *copyAction();
   KAction *urlOpenAction();
   KAction *speakTextAction();
+  KAction *copyImageLocation();
 
   const HeaderStrategy * headerStrategy() const;
 
@@ -273,6 +274,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void writeConfig( bool withSync=true );
 
   KUrl urlClicked() const;
+  KUrl imageUrlClicked() const;
 
   void readConfig();
 
@@ -326,7 +328,7 @@ signals:
   void replaceMsgByUnencryptedVersion();
 
   /** The user presses the right mouse button. 'url' may be 0. */
-  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
+  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const KUrl &imageUrl, const QPoint& mousePos);
 
   /**
    * The message viewer handles some types of urls itself, most notably http(s)

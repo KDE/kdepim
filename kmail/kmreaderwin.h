@@ -135,11 +135,13 @@ public:
   KAction *copyAction();
   KAction *selectAllAction();
   KAction *copyURLAction();
+  KAction *copyImageLocation();
   KAction *urlOpenAction();
   KAction *urlSaveAsAction() { return mUrlSaveAsAction; }
   KAction *addBookmarksAction() { return mAddBookmarksAction;}
   KAction *toggleMimePartTreeAction();
   KAction *speakTextAction();
+  KAction* downloadImageToDiskAction() const;
 
   Akonadi::Item message() const;
 
@@ -178,9 +180,12 @@ public slots:
   void slotShowReader( KMime::Content* , bool, const QString& );
   void slotShowMessage( KMime::Message::Ptr message, const QString& encoding );
   void slotDeleteMessage( const Akonadi::Item& );
+  void slotSaveImageOnDisk();
 protected:
 
   KUrl urlClicked() const;
+  KUrl imageUrlClicked() const;
+
 private:
   void createActions();
 private:
@@ -188,7 +193,7 @@ private:
   KActionCollection *mActionCollection;
 
   KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
-    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction;
+    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction,*mImageUrlSaveAsAction;
 
   MessageViewer::Viewer *mViewer;
 };

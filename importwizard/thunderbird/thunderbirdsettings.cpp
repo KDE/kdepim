@@ -253,14 +253,11 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     newIdentity->setBcc( bcc );
   }
 
-#if 0
-  //Not implemented in kmail
   bool doCc = mHashConfig.value(identity + QLatin1String(".doCc")).toBool();
   if(doCc) {
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
-    newIdentity->setReplyToAddr( cc );
+    newIdentity->setCc( cc );
   }
-#endif
   const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 

@@ -1056,8 +1056,8 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
-  connect( mViewer, SIGNAL(popupMenu(QUrl,QPoint)),
-           SLOT(slotUrlPopup(QUrl,QPoint)) );
+  connect( mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
+           SLOT(slotUrlPopup(QUrl,QUrl,QPoint)) );
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -1265,6 +1265,7 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
 void ViewerPrivate::resetStateForNewMessage()
 {
   mClickedUrl.clear();
+  mImageUrl.clear();
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
@@ -1706,6 +1707,15 @@ void ViewerPrivate::createActions()
   ac->addAction( "speak_text", mSpeakTextAction );
   connect( mSpeakTextAction, SIGNAL(triggered(bool)),
            this, SLOT(slotSpeakText()) );
+
+  mCopyImageLocation = new KAction(i18n("Copy Image Location"),this);
+  mCopyImageLocation->setIcon(KIcon("view-media-visualization"));
+  ac->addAction("copy_image_location", mCopyImageLocation);
+  mCopyImageLocation->setShortcutConfigurable( false );
+  connect( mCopyImageLocation, SIGNAL(triggered(bool)),
+           SLOT(slotCopyImageLocation()) );
+
+
 }
 
 
@@ -1992,10 +2002,12 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   emit showStatusBarMessage( msg );
 }
 
-void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
+void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const QPoint& aPos)
 {
   const KUrl url( aUrl );
+  const KUrl iUrl( imageUrl );
   mClickedUrl = url;
+  mImageUrl = iUrl;
 
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
@@ -2009,7 +2021,7 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
     mCopyURLAction->setText( i18n( "Copy Link Address" ) );
   }
 
-  emit popupMenu( mMessageItem, aUrl, aPos );
+  emit popupMenu( mMessageItem, aUrl, imageUrl, aPos );
 }
 
 void ViewerPrivate::slotToggleHtmlMode()
@@ -2557,6 +2569,13 @@ void ViewerPrivate::slotSpeakText()
 {
   const QString text = mViewer->selectedText();
   MessageViewer::Util::speakSelectedText( text, mMainWindow);
+}
+
+void ViewerPrivate::slotCopyImageLocation()
+{
+#ifndef QT_NO_CLIPBOARD
+  QApplication::clipboard()->setText( mImageUrl.url() );
+#endif
 }
 
 void ViewerPrivate::slotCopySelectedText()

@@ -17,7 +17,8 @@
 #include "archivemailinfo.h"
 
 ArchiveMailInfo::ArchiveMailInfo()
-  : mArchiveType( MailCommon::BackupJob::Zip )
+  : mArchiveAge( 1 )
+  , mArchiveType( MailCommon::BackupJob::Zip )
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1) 
   , mSaveSubCollection(false)
@@ -25,18 +26,29 @@ ArchiveMailInfo::ArchiveMailInfo()
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  : mArchiveType( MailCommon::BackupJob::Zip ) 
+  : mArchiveAge( 1 )
+  , mArchiveType( MailCommon::BackupJob::Zip ) 
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1)
   , mSaveSubCollection(false)
 {
-  //TODO
+  readConfig(config);
 }
 
 
 ArchiveMailInfo::~ArchiveMailInfo()
 {
+//FIXME writeConfig ?
+}
 
+void ArchiveMailInfo::setArchiveAge( int age )
+{
+  mArchiveAge = age;
+}
+    
+int ArchiveMailInfo::archiveAge() const
+{
+  return mArchiveAge;
 }
 
 
@@ -61,21 +73,40 @@ MailCommon::BackupJob::ArchiveType ArchiveMailInfo::archiveType() const
   return mArchiveType;
 }
 
-void ArchiveMailInfo::load(const KConfigGroup& config)
+void ArchiveMailInfo::setLastDateSaved( const QDate& date )
+{
+  mLastDateSaved = date;
+}
+
+QDate ArchiveMailInfo::lastDateSaved() const
+{
+  return mLastDateSaved;
+}
+
+
+void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
+  mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"));
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
   mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
   mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
   Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
+  mArchiveAge = config.readEntry("archiveAge",1);
   if ( tId >= 0 ) {
     mSaveCollectionId = tId;
   }
 }
 
-void ArchiveMailInfo::save(KConfigGroup & config )
+void ArchiveMailInfo::writeConfig(KConfigGroup & config )
 {
-
+  config.writeEntry("storePath",mPath);
+  config.writeEntry("lastDateSaved", mLastDateSaved.toString() );
+  config.writeEntry("saveSubCollection",mSaveSubCollection);
+  config.writeEntry( "archiveType", ( int )mArchiveType );
+  config.writeEntry( "archiveUnit", ( int )mArchiveUnit );
+  config.writeEntry("saveCollectionId",mSaveCollectionId);
+  config.writeEntry("archiveAge",mArchiveAge);
 }
 
 KUrl ArchiveMailInfo::url() const

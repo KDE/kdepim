@@ -70,10 +70,11 @@ bool MailWebView::event( QEvent *event )
     const QWebFrame * const frame = page()->currentFrame();
     const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
     kDebug() << "Right-clicked URL:" << hit.linkUrl();
+
 #ifdef Q_OS_WINCE
     if ( !hit.linkUrl().isEmpty() )
 #endif
-    emit popupMenu( hit.linkUrl(), mapToGlobal( contextMenuEvent->pos() ) );
+      emit popupMenu( hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal( contextMenuEvent->pos() ) );
     event->accept();
     return true;
   }
@@ -332,4 +333,4 @@ void MailWebView::clearFindSelection()
   SuperClass::findText( QString(), QWebPage::HighlightAllOccurrences );
 }
 
-#include "moc_mailwebview.cpp"
+#include "mailwebview.moc"

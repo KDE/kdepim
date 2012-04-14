@@ -56,7 +56,7 @@ void ArchiveMailWidget::slotRemoveItem()
 {
   if(!mWidget->listWidget->currentItem())
     return;
-//TODO
+  delete mWidget->listWidget->takeItem(mWidget->listWidget->currentRow());
 }
 
 void ArchiveMailWidget::slotModifyItem()
@@ -68,6 +68,8 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
+  //FIXME
+  ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
   //TODO
 }
 

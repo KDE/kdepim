@@ -53,7 +53,7 @@ public:
   
   void showMessage( const QString & encoding, KMime::Message::Ptr message);
 private slots:
-  void slotMessagePopup(const Akonadi::Item& ,const KUrl&,const QPoint& );
+  void slotMessagePopup(const Akonadi::Item& , const KUrl&, const KUrl &imageUrl, const QPoint& );
   void slotDelayedMessagePopup( KJob* );
   void slotTrashMsg();
   void slotForwardInlineMsg();
@@ -83,7 +83,6 @@ private:
   
   KMReaderWin *mReaderWin;
   Akonadi::Item mMsg;
-  KUrl mUrl;
   // a few actions duplicated from kmmainwidget
   KAction *mTrashAction, *mPrintAction, *mSaveAsAction, *mSaveAtmAction,
     *mViewSourceAction;

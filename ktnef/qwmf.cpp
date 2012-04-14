@@ -17,7 +17,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-//#include <KoConfig.h> // WORDS_BIGENDIAN
+#include <config-ktnef.h> // WORDS_BIGENDIAN
 
 #include <math.h>
 #include <assert.h>

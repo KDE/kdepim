@@ -352,8 +352,8 @@ void KMReaderMainWin::setupAccel()
            SLOT(slotSizeAction(int)) );
 
 
-  connect( mReaderWin->viewer(), SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)),
-           this, SLOT(slotMessagePopup(Akonadi::Item,KUrl,QPoint)) );
+  connect( mReaderWin->viewer(), SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
+           this, SLOT(slotMessagePopup(Akonadi::Item,KUrl,KUrl,QPoint)) );
 
   setStandardToolBarMenuEnabled(true);
   KStandardAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
@@ -404,9 +404,8 @@ void KMReaderMainWin::slotCopyResult( KJob * job )
   }
 }
 
-void KMReaderMainWin::slotMessagePopup(const Akonadi::Item&aMsg ,const KUrl&aUrl,const QPoint& aPoint)
+void KMReaderMainWin::slotMessagePopup(const Akonadi::Item&aMsg , const KUrl&aUrl, const KUrl&imageUrl, const QPoint& aPoint)
 {
-  mUrl = aUrl;
   mMsg = aMsg;
 
   const QString email =  KPIMUtils::firstEmailAddress( aUrl.path() );
@@ -414,6 +413,8 @@ void KMReaderMainWin::slotMessagePopup(const Akonadi::Item&aMsg ,const KUrl&aUrl
   job->setLimit( 1 );
   job->setQuery( Akonadi::ContactSearchJob::Email, email, Akonadi::ContactSearchJob::ExactMatch );
   job->setProperty( "point", aPoint );
+  job->setProperty( "imageUrl", imageUrl );
+  job->setProperty( "url", aUrl );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedMessagePopup(KJob*)) );
 }
 
@@ -423,12 +424,14 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
   const bool contactAlreadyExists = !searchJob->contacts().isEmpty();
 
   const QPoint aPoint = job->property( "point" ).toPoint();
+  const KUrl iUrl = job->property("imageUrl").value<KUrl>();
+  const KUrl url = job->property("url").value<KUrl>();
   KMenu *menu = new KMenu;
 
   bool urlMenuAdded = false;
   bool copyAdded = false;
-  if ( !mUrl.isEmpty() ) {
-    if ( mUrl.protocol() == QLatin1String( "mailto" ) ) {
+  if ( !url.isEmpty() ) {
+    if ( url.protocol() == QLatin1String( "mailto" ) ) {
       // popup on a mailto URL
       menu->addAction( mReaderWin->mailToComposeAction() );
       if ( mMsg.hasPayload<KMime::Message::Ptr>() ) {
@@ -451,6 +454,11 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
       menu->addAction( mReaderWin->addBookmarksAction() );
       menu->addAction( mReaderWin->urlSaveAsAction() );
       menu->addAction( mReaderWin->copyURLAction() );
+      if(!iUrl.isEmpty()) {
+        menu->addSeparator();
+        menu->addAction( mReaderWin->copyImageLocation());
+        menu->addAction(mReaderWin->downloadImageToDiskAction());
+      }
     }
     urlMenuAdded = true;
   }

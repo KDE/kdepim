@@ -446,7 +446,6 @@ public:
   void setZoomFactor( qreal zoomFactor );
 
   void goOnline();
-
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
@@ -480,7 +479,7 @@ public slots:
   void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
 
   /** The user presses the right mouse button on an URL. */
-  void slotUrlPopup(const QUrl &, const QPoint& mousePos);
+  void slotUrlPopup(const QUrl &, const QUrl &imageUrl, const QPoint& mousePos);
 
   /** The user selected "Find" from the menu. */
   void slotFind();
@@ -571,10 +570,11 @@ public slots:
   void slotZoomOut();
   void slotZoomReset();
   void slotSpeakText();
+  void slotCopyImageLocation();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
-  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
+  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const KUrl &imageUrl, const QPoint& mousePos);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
@@ -633,8 +633,10 @@ public:
   KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
   KAction *mSpeakTextAction;
+  KAction *mCopyImageLocation;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
+  KUrl mImageUrl;
   QPoint mLastClickPosition;
   bool mCanStartDrag;
   HtmlWriter * mHtmlWriter;

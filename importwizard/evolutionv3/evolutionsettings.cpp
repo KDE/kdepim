@@ -360,7 +360,6 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           qDebug()<<" smtp tag unknow :"<<smtpTag;
         }
       }
-      //TODO authentification
       storeTransport(transport, true );
     }
     else if ( tag == QLatin1String( "drafts-folder" ) )
@@ -379,8 +378,12 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
       {
         QDomElement recipient = e.firstChildElement();
         const QString text = recipient.text();
-        newIdentity->setReplyToAddr(text);
+        newIdentity->setCc(text);
       }
+    }
+    else if( tag == QLatin1String("reply-to"))
+    {
+      newIdentity->setReplyToAddr(e.text());
     }
     else if ( tag == QLatin1String( "auto-bcc" ) )
     {

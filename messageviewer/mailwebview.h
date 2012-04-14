@@ -35,6 +35,8 @@
 
 #include <boost/function.hpp>
 
+class QAction;
+
 namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
@@ -101,7 +103,7 @@ Q_SIGNALS:
     /// Emitted when the user right-clicks somewhere
     /// @param url if an URL was under the cursor, this parameter contains it. Otherwise empty
     /// @param point position where the click happened, in local coordinates
-    void popupMenu( const QUrl &url, const QPoint &point );
+    void popupMenu( const QUrl &url, const QUrl&imageUrl, const QPoint &point );
 
     void linkHovered( const QString & link, const QString & title=QString(), const QString & textContent=QString() );
 #ifdef KDEPIM_NO_WEBKIT

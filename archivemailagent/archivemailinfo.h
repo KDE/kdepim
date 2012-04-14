@@ -21,6 +21,7 @@
 #include <KConfigGroup>
 #include <Akonadi/Collection>
 #include <KUrl>
+#include <QDate>
 
 
 class ArchiveMailInfo
@@ -46,17 +47,24 @@ public:
   void setUrl(const KUrl& url);
   KUrl url() const;
 
-  void load(const KConfigGroup& config);
-  void save(KConfigGroup & config );
+  void readConfig(const KConfigGroup& config);
+  void writeConfig(KConfigGroup & config );
 
   void setArchiveType( MailCommon::BackupJob::ArchiveType type );
   MailCommon::BackupJob::ArchiveType archiveType() const;
 
   void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
   ArchiveMailInfo::ArchiveUnit archiveUnit() const;
-  
-  
+
+  void setArchiveAge( int age );
+  int archiveAge() const;
+
+  void setLastDateSaved( const QDate& date );
+  QDate lastDateSaved() const;
+
 private:
+  QDate mLastDateSaved;
+  int mArchiveAge;
   MailCommon::BackupJob::ArchiveType mArchiveType;
   ArchiveUnit mArchiveUnit;
   Akonadi::Collection::Id mSaveCollectionId;

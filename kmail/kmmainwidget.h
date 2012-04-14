@@ -371,7 +371,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotSendQueuedVia( QAction* item );
     void slotOnlineStatus();
     void slotUpdateOnlineStatus( GlobalSettings::EnumNetworkState::type );
-    void slotMessagePopup(const Akonadi::Item& ,const KUrl&,const QPoint& );
+    void slotMessagePopup(const Akonadi::Item& ,const KUrl&,const KUrl &imageUrl,const QPoint& );
     void slotDelayedMessagePopup( KJob *job );
     void slotMarkAll();
     void slotFocusQuickSearch();
@@ -585,7 +585,6 @@ private:
     KMReaderWin  *mMsgView;
     QSplitter    *mSplitter1, *mSplitter2, *mFolderViewSplitter;
     Akonadi::Collection mTemplateFolder;
-    KUrl          mUrlCurrent;
     QMenu        *mActMenu;
     QMenu        *mSendMenu;
     bool          mLongFolderList;

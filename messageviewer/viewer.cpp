@@ -51,8 +51,8 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
 {
   connect( d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
           SIGNAL(replaceMsgByUnencryptedVersion()) );
-  connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)),
-           SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)) );
+  connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
+           SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)) );
   connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
            SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
   connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
@@ -406,6 +406,13 @@ KAction *Viewer::speakTextAction()
   return d->mSpeakTextAction;
 }
 
+KAction *Viewer::copyImageLocation()
+{
+  Q_D( Viewer );
+  return d->mCopyImageLocation;
+}
+
+
 KAction *Viewer::urlOpenAction()
 {
   Q_D( Viewer );
@@ -428,6 +435,12 @@ KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );
   return d->mClickedUrl;
+}
+
+KUrl Viewer::imageUrlClicked() const
+{
+  Q_D( const Viewer );
+  return d->mImageUrl;
 }
 
 void Viewer::update( MessageViewer::Viewer::UpdateMode updateMode )
@@ -552,7 +565,7 @@ bool Viewer::zoomTextOnly() const
   Q_D(const Viewer);
   return d->mZoomTextOnly;
 }
-  
+
 }
 
 #include "viewer.moc"
