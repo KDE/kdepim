@@ -8,7 +8,7 @@ set(archivemailagent_SRCS
    archivemailkernel.cpp
    archivemailagent.cpp
    archivemailmanager.cpp
-   archivemailwidget.cpp
+   archivemaildialog.cpp
    archivemailinfo.cpp
    addarchivemaildialog.cpp
 )

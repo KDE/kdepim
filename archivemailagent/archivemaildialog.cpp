@@ -15,8 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "archivemailwidget.h"
+#include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
+
+ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
+  :KDialog(parent)
+{
+  setCaption( i18n( "Configure Archive Mail Agent" ) );
+  setButtons( Ok|Cancel );
+  setDefaultButton( Ok );
+  setModal( true );
+  QWidget *mainWidget = new QWidget( this );
+  QGridLayout *mainLayout = new QGridLayout( mainWidget );
+  mainLayout->setSpacing( KDialog::spacingHint() );
+  mainLayout->setMargin( KDialog::marginHint() );
+  mWidget = new ArchiveMailWidget(this);
+  mainLayout->addWidget(mWidget);
+  setMainWidget( mainWidget );
+}
+
+ArchiveMailDialog::~ArchiveMailDialog()
+{
+
+}
+
 
 ArchiveMailItem::ArchiveMailItem( const QString &text, QListWidget *parent )
   : QListWidgetItem(text,parent)
@@ -77,4 +99,4 @@ void ArchiveMailWidget::slotAddItem()
   delete dialog;
 }
 
-#include "archivemailwidget.moc"
+#include "archivemaildialog.moc"
