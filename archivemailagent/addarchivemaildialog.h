@@ -25,6 +25,7 @@
 
 class KComboBox;
 class QCheckBox;
+class KUrlRequester;
 
 namespace MailCommon {
   class FolderRequester;
@@ -47,6 +48,9 @@ public:
   void setSelectedFolder(const Akonadi::Collection& collection);
   Akonadi::Collection selectedFolder() const;
 
+  KUrl path() const;
+  void setPath(const KUrl&);
+
 private Q_SLOTS:
   void slotFolderChanged(const Akonadi::Collection&);
 
@@ -54,6 +58,7 @@ private:
   MailCommon::FolderRequester *mFolderRequester;
   KComboBox *mFormatComboBox;
   QCheckBox *mRecursiveCheckBox;
+  KUrlRequester *mPath;
 };
 
 #endif // ADDARCHIVEMAILDIALOG_H

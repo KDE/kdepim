@@ -25,6 +25,7 @@ target_link_libraries(akonadi_archivemail_agent
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDE4_KIO_LIBS}
   mailcommon
 )
 

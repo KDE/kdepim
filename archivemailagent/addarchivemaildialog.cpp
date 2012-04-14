@@ -21,6 +21,7 @@
 
 #include <KLocale>
 #include <KComboBox>
+#include <KUrlRequester>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -56,6 +57,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(QWidget *parent)
   mFormatComboBox = new KComboBox( mainWidget );
   formatLabel->setBuddy( mFormatComboBox );
 
+
   // These combobox values have to stay in sync with the ArchiveType enum from BackupJob!
   mFormatComboBox->addItem( i18n( "Compressed Zip Archive (.zip)" ) );
   mFormatComboBox->addItem( i18n( "Uncompressed Archive (.tar)" ) );
@@ -72,6 +74,13 @@ AddArchiveMailDialog::AddArchiveMailDialog(QWidget *parent)
   mainLayout->addWidget( mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft );
   mRecursiveCheckBox->setChecked( true );
   row++;
+
+  QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
+  mainLayout->addWidget( pathLabel, row, 0 );
+  mPath = new KUrlRequester(mainWidget);
+  mainLayout->addWidget(mPath);
+  row++;
+
   mainLayout->setColumnStretch( 1, 1 );
   mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
@@ -93,13 +102,12 @@ void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collecti
 
 void AddArchiveMailDialog::setArchiveType(MailCommon::BackupJob::ArchiveType type)
 {
-  //FIXME
+  mFormatComboBox->setCurrentIndex((int)type);
 }
 
 MailCommon::BackupJob::ArchiveType AddArchiveMailDialog::archiveType() const
 {
-  //FIXME
-  return MailCommon::BackupJob::Zip;
+  return static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex());
 }
 
 void AddArchiveMailDialog::setRecursive( bool b )
@@ -120,6 +128,16 @@ void AddArchiveMailDialog::setSelectedFolder(const Akonadi::Collection& collecti
 Akonadi::Collection AddArchiveMailDialog::selectedFolder() const
 {
   return mFolderRequester->collection();
+}
+
+KUrl AddArchiveMailDialog::path() const
+{
+  return mPath->url();
+}
+
+void AddArchiveMailDialog::setPath(const KUrl&url)
+{
+  mPath->setUrl(url);
 }
 
 
