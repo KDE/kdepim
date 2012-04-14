@@ -76,7 +76,7 @@ void AbstractAddressBook::createContact( const KABC::Addressee& address )
 void AbstractAddressBook::slotStoreDone(KJob*job)
 {
   if ( job->error() ) {
-    qDebug()<<" job->errorString() : "<<job->errorString();
+    kDebug()<<" job->errorString() : "<<job->errorString();
     addAddressBookImportError( i18n( "Error during create contact : %1", job->errorString() ) );
     return;
   }

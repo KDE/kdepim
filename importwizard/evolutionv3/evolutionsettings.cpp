@@ -244,15 +244,34 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             settings.insert(QLatin1String("Port"),port);
 
           const QString path = serverUrl.path();
-            
+          qDebug()<<" path !"<<path;
           const QString userName = serverUrl.userInfo();
-          if(scheme == QLatin1String("imap")) {
+          //imapx://name@pop3.xx.org:993/;security-method=ssl-on-alternate-port;namespace;shell-command=ssh%20-C%20-l%20%25u%20%25h%20exec%20/usr/sbin/imapd%20;use-shell-command=true
+          if(scheme == QLatin1String("imap") || scheme == QLatin1String("imapx")) {
+            //Perhaps imapx is specific don't know
             if ( intervalCheck ) {
               settings.insert( QLatin1String( "IntervalCheckEnabled" ), true );
             }
             if ( interval > -1 ) {
               settings.insert(QLatin1String("IntervalCheckTime" ), interval );
             }
+
+            bool found = false;
+            const QString securityMethod = getSecurityMethod( path, found );
+#if 0 //FIXME
+            if( found ) {
+              if( securityMethod == QLatin1String("none")) {
+                //Nothing
+              } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
+                settings.insert( QLatin1String( "UseSSL" ), true );
+              } else {
+                qDebug()<<" security method unknown : "<<path;
+              }
+            } else {
+              settings.insert( QLatin1String( "UseTLS" ), true );
+            }
+#endif
+
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {

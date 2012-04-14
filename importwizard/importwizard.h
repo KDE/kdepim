@@ -42,11 +42,11 @@ public:
   void next();
   void reject();
   
-  ImportMailPage* importMailPage();
-  ImportFilterPage* importFilterPage();
-  ImportAddressbookPage *importAddressBookPage();
-  ImportSettingPage *importSettingPage();
-  ImportFinishPage *importFinishPage();
+  ImportMailPage* importMailPage() const;
+  ImportFilterPage* importFilterPage() const;
+  ImportAddressbookPage *importAddressBookPage() const;
+  ImportSettingPage *importSettingPage() const;
+  ImportFinishPage *importFinishPage() const;
 
   void addFinishInfo( const QString& log );
   void addFinishError( const QString& log );

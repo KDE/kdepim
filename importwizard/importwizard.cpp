@@ -227,26 +227,26 @@ void ImportWizard::reject()
   KAssistantDialog::reject();
 }
 
-ImportMailPage* ImportWizard::importMailPage()
+ImportMailPage* ImportWizard::importMailPage() const
 {
   return mImportMailPage;
 }
 
-ImportFilterPage* ImportWizard::importFilterPage()
+ImportFilterPage* ImportWizard::importFilterPage() const
 {
   return mImportFilterPage;
 }
 
-ImportAddressbookPage *ImportWizard::importAddressBookPage()
+ImportAddressbookPage *ImportWizard::importAddressBookPage() const
 {
   return mImportAddressbookPage;
 }
 
-ImportSettingPage *ImportWizard::importSettingPage()
+ImportSettingPage *ImportWizard::importSettingPage() const
 {
   return mImportSettingPage;
 }
-ImportFinishPage *ImportWizard::importFinishPage()
+ImportFinishPage *ImportWizard::importFinishPage() const
 {
   return mImportFinishPage;
 }
