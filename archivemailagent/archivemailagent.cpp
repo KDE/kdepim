@@ -61,6 +61,12 @@ void ArchiveMailAgent::showConfigureDialog()
   //TODO
 }
 
+void ArchiveMailAgent::configure( WId windowId )
+{
+  Q_UNUSED( windowId );
+  showConfigureDialog();
+}
+
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 
 #include "archivemailagent.moc"

@@ -29,15 +29,19 @@ class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::O
 {
   Q_OBJECT
 
-  public:
-    explicit ArchiveMailAgent( const QString &id );
-    ~ArchiveMailAgent();
-    void showConfigureDialog();
-  private Q_SLOTS:
-    void mailCollectionRemoved( const Akonadi::Collection& collection );
+public:
+  explicit ArchiveMailAgent( const QString &id );
+  ~ArchiveMailAgent();
+  void showConfigureDialog();
 
-  private:
-     Akonadi::Monitor *m_collectionMonitor;
+public Q_SLOTS:
+  virtual void configure( WId windowId );
+
+private Q_SLOTS:
+  void mailCollectionRemoved( const Akonadi::Collection& collection );
+
+private:
+  Akonadi::Monitor *m_collectionMonitor;
 };
 
 
