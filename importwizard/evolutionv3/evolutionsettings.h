@@ -39,7 +39,7 @@ private:
   void extractAccountInfo(const QString& info);
   void readSignatures(const QDomElement &account);
   void extractSignatureInfo( const QString&info );
-  QString getSecurityMethod(const QString &path, bool & found );
+  QString getSecurityMethod(const QStringList &listArgument, bool & found );
   QString getAuthMethod( const QString& path, bool & found);
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName);
   

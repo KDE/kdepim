@@ -244,6 +244,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           const QString path = serverUrl.path();
           qDebug()<<" path !"<<path;
           const QString userName = serverUrl.userInfo();
+
+          const QStringList listArgument = path.split(QLatin1Char(';'));
+
           //imapx://name@pop3.xx.org:993/;security-method=ssl-on-alternate-port;namespace;shell-command=ssh%20-C%20-l%20%25u%20%25h%20exec%20/usr/sbin/imapd%20;use-shell-command=true
           if(scheme == QLatin1String("imap") || scheme == QLatin1String("imapx")) {
             if( port > 0 )
@@ -257,7 +260,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             }
 
             bool found = false;
-            const QString securityMethod = getSecurityMethod( path, found );
+            const QString securityMethod = getSecurityMethod( listArgument, found );
 #if 0 //FIXME
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
@@ -278,7 +281,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             if( port > 0 )
               settings.insert(QLatin1String("Port"),port);
             bool found = false;
-            const QString securityMethod = getSecurityMethod( path, found );
+            const QString securityMethod = getSecurityMethod( listArgument, found );
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
                 //Nothing
@@ -366,7 +369,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
             const QString path = smtpUrl.path();
             found = false;
-            const QString securityMethod = getSecurityMethod( path, found );
+            const QStringList listArgument = path.split(QLatin1Char(';'));
+            const QString securityMethod = getSecurityMethod( listArgument, found );
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
                 transport->setEncryption( MailTransport::Transport::EnumEncryption::None );
@@ -467,15 +471,21 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   storeIdentity(newIdentity);
 }
 
-QString EvolutionSettings::getSecurityMethod( const QString& path, bool & found )
+QString EvolutionSettings::getSecurityMethod( const QStringList& listArgument, bool & found )
 {
-  const int index = path.indexOf(QLatin1String("security-method="));
-  if(index != -1) {
-    const QString securityMethod = path.right(path.length() - index - 16 /*security-method=*/);
-    found = true;
-    return securityMethod;
-  }
   found = false;
+  if(listArgument.isEmpty())
+    return QString();
+  Q_FOREACH( const QString& str, listArgument ) {
+    if(str.contains(QLatin1String("security-method="))) {
+      const int index = str.indexOf(QLatin1String("security-method="));
+      if(index != -1) {
+        const QString securityMethod = str.right(str.length() - index - 16 /*security-method=*/);
+        found = true;
+        return securityMethod;
+      }
+    }
+  }
   return QString();
 }
 
