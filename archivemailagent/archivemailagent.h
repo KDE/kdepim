@@ -32,6 +32,7 @@ class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::O
   public:
     explicit ArchiveMailAgent( const QString &id );
     ~ArchiveMailAgent();
+    void showConfigureDialog();
   private Q_SLOTS:
     void mailCollectionRemoved( const Akonadi::Collection& collection );
 
