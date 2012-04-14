@@ -308,6 +308,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             settings.insert(QLatin1String("Path"),path);
             settings.insert(QLatin1String("DisplayName"),name);
             createResource( "akonadi_mbox_resource", name, settings );
+          } else if( scheme == QLatin1String("maildir")) {
+            settings.insert(QLatin1String("Path"),path);
+            createResource( "akonadi_maildir_resource", name, settings );
           } else {
             qDebug()<<" unknown scheme "<<scheme;
           }
