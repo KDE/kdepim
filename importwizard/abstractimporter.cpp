@@ -76,7 +76,7 @@ bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::Filter
     return true;
   } else {
     addFilterImportError( i18n( "Filters file was not found" ) );
-    return false;
+    return true;
   }
 }
 
