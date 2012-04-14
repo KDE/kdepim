@@ -32,13 +32,13 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
   , mSaveCollectionId(-1)
   , mSaveSubCollection(false)
 {
-  //TODO
+  readConfig(config);
 }
 
 
 ArchiveMailInfo::~ArchiveMailInfo()
 {
-
+//FIXME writeConfig ?
 }
 
 void ArchiveMailInfo::setArchiveAge( int age )
