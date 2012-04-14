@@ -240,14 +240,14 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           const QString scheme = serverUrl.scheme();
           QMap<QString, QVariant> settings;
           const int port = serverUrl.port();
-          if( port > 0 )
-            settings.insert(QLatin1String("Port"),port);
 
           const QString path = serverUrl.path();
           qDebug()<<" path !"<<path;
           const QString userName = serverUrl.userInfo();
           //imapx://name@pop3.xx.org:993/;security-method=ssl-on-alternate-port;namespace;shell-command=ssh%20-C%20-l%20%25u%20%25h%20exec%20/usr/sbin/imapd%20;use-shell-command=true
           if(scheme == QLatin1String("imap") || scheme == QLatin1String("imapx")) {
+            if( port > 0 )
+              settings.insert(QLatin1String("ImapPort"),port);
             //Perhaps imapx is specific don't know
             if ( intervalCheck ) {
               settings.insert( QLatin1String( "IntervalCheckEnabled" ), true );
@@ -275,6 +275,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
+            if( port > 0 )
+              settings.insert(QLatin1String("Port"),port);
             bool found = false;
             const QString securityMethod = getSecurityMethod( path, found );
             if( found ) {
