@@ -10,6 +10,7 @@ set(archivemailagent_SRCS
    archivemailmanager.cpp
    archivemailwidget.cpp
    archivemailinfo.cpp
+   addarchivemaildialog.cpp
 )
 
 #include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter )
