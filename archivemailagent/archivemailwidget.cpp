@@ -16,7 +16,7 @@
 */
 
 #include "archivemailwidget.h"
-
+#include "addarchivemaildialog.h"
 
 ArchiveMailItem::ArchiveMailItem( const QString &text, QListWidget *parent )
   : QListWidgetItem(text,parent)
@@ -68,9 +68,13 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-  //FIXME
-  ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
-  //TODO
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(this);
+  if( dialog->exec() ) {
+    //FIXME
+   ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
+   //TODO
+  }
+  delete dialog;
 }
 
 #include "archivemailwidget.moc"

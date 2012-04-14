@@ -91,4 +91,36 @@ void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collecti
 
 }
 
+void AddArchiveMailDialog::setArchiveType(MailCommon::BackupJob::ArchiveType type)
+{
+  //FIXME
+}
+
+MailCommon::BackupJob::ArchiveType AddArchiveMailDialog::archiveType() const
+{
+  //FIXME
+  return MailCommon::BackupJob::Zip;
+}
+
+void AddArchiveMailDialog::setRecursive( bool b )
+{
+  mRecursiveCheckBox->setChecked(b);
+}
+
+bool AddArchiveMailDialog::recursive() const
+{
+  return mRecursiveCheckBox->isChecked();
+}
+
+void AddArchiveMailDialog::setSelectedFolder(const Akonadi::Collection& collection)
+{
+  mFolderRequester->setCollection(collection);
+}
+
+Akonadi::Collection AddArchiveMailDialog::selectedFolder() const
+{
+  return mFolderRequester->collection();
+}
+
+
 #include "addarchivemaildialog.moc"

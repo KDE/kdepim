@@ -17,6 +17,9 @@
 
 #ifndef ADDARCHIVEMAILDIALOG_H
 #define ADDARCHIVEMAILDIALOG_H
+
+#include "mailcommon/backupjob.h"
+
 #include <kdialog.h>
 #include <Akonadi/Collection>
 
@@ -34,6 +37,15 @@ class AddArchiveMailDialog : public KDialog
 public:
   explicit AddArchiveMailDialog(QWidget *parent = 0);
   ~AddArchiveMailDialog();
+
+  void setArchiveType(MailCommon::BackupJob::ArchiveType type);
+  MailCommon::BackupJob::ArchiveType archiveType() const;
+
+  void setRecursive( bool b );
+  bool recursive() const;
+
+  void setSelectedFolder(const Akonadi::Collection& collection);
+  Akonadi::Collection selectedFolder() const;
 
 private Q_SLOTS:
   void slotFolderChanged(const Akonadi::Collection&);
