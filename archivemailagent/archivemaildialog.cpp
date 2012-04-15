@@ -58,6 +58,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
   connect(mWidget->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(updateButtons()));
+  connect(mWidget->listWidget,SIGNAL(itemDoubleClicked(QListWidgetItem*)),SLOT(slotModifyItem()));
   updateButtons();
 }
 
@@ -99,7 +100,11 @@ void ArchiveMailWidget::slotModifyItem()
 {
   if(!mWidget->listWidget->currentItem())
     return;
-//TODO
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(this);
+  //TODO MODIFY it
+  if( dialog->exec() ) {
+  }
+  delete dialog;
 }
 
 void ArchiveMailWidget::slotAddItem()
