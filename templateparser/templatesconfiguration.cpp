@@ -91,11 +91,15 @@ void TemplatesConfiguration::slotTextChanged()
 
 void TemplatesConfiguration::resetToDefault()
 {
-  const int choice = KMessageBox::questionYesNoCancel( 0, i18n( "Do you want to reset current template or all templates to default?" ) ,
-                                                       i18n( "Reset to default" ),
-                                                       KGuiItem(i18n( "Reset Current Template" )),
-                                                       KGuiItem(i18n( "Reset All Templates" )),
-                                                       KStandardGuiItem::cancel() );
+  const int choice =
+    KMessageBox::questionYesNoCancel(
+      0,
+      i18n( "Do you want to reset current template or all templates to default?" ),
+      i18n( "Reset to default" ),
+      KGuiItem( i18n( "Reset Current Template" ) ),
+      KGuiItem( i18n( "Reset All Templates" ) ),
+      KStandardGuiItem::cancel() );
+
   if ( choice == KMessageBox::Cancel ) {
     return;
   } else if ( choice == KMessageBox::Yes ) {
@@ -314,7 +318,7 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
   t.writeConfig();
 }
 
-KTextEdit* TemplatesConfiguration::currentTextEdit() const
+KTextEdit *TemplatesConfiguration::currentTextEdit() const
 {
   KTextEdit *edit;
 
@@ -337,8 +341,9 @@ KTextEdit* TemplatesConfiguration::currentTextEdit() const
 void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
 {
   KTextEdit *edit = currentTextEdit();
-  if ( !edit )
+  if ( !edit ) {
     return;
+  }
 
   // kDebug() << "Insert command:" << cmd;
   const QString editText( edit->toPlainText() );

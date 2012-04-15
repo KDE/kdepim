@@ -54,11 +54,17 @@ target_link_libraries(templateparser
   ${QGPGME_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARY}
 )
-set_target_properties(templateparser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(templateparser PROPERTIES
+  VERSION ${GENERIC_LIB_VERSION}
+  SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(FILES customtemplates_kfg.kcfg templatesconfiguration_kfg.kcfg DESTINATION ${KCFG_INSTALL_DIR}
+install(FILES
+  customtemplates_kfg.kcfg
+  templatesconfiguration_kfg.kcfg
+  DESTINATION ${KCFG_INSTALL_DIR}
 )
 
 #add_subdirectory(tests)

@@ -193,7 +193,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         const QString identityTag = identity.tagName();
         if ( identityTag == QLatin1String( "name" ) )
         {
-          newIdentity->setIdentityName( identity.text() );
+          const QString fullName( identity.text() );
+          newIdentity->setIdentityName( fullName );
+          newIdentity->setFullName( fullName );
         }
         else if ( identityTag == QLatin1String( "addr-spec" ) )
         {
@@ -240,24 +242,48 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           const QString scheme = serverUrl.scheme();
           QMap<QString, QVariant> settings;
           const int port = serverUrl.port();
-          if( port > 0 )
-            settings.insert(QLatin1String("Port"),port);
 
           const QString path = serverUrl.path();
-            
+          qDebug()<<" path !"<<path;
           const QString userName = serverUrl.userInfo();
-          if(scheme == QLatin1String("imap")) {
+
+          const QStringList listArgument = path.split(QLatin1Char(';'));
+
+          //imapx://name@pop3.xx.org:993/;security-method=ssl-on-alternate-port;namespace;shell-command=ssh%20-C%20-l%20%25u%20%25h%20exec%20/usr/sbin/imapd%20;use-shell-command=true
+          if(scheme == QLatin1String("imap") || scheme == QLatin1String("imapx")) {
+            if( port > 0 )
+              settings.insert(QLatin1String("ImapPort"),port);
+            //Perhaps imapx is specific don't know
             if ( intervalCheck ) {
               settings.insert( QLatin1String( "IntervalCheckEnabled" ), true );
             }
             if ( interval > -1 ) {
               settings.insert(QLatin1String("IntervalCheckTime" ), interval );
             }
+
+            bool found = false;
+            const QString securityMethod = getSecurityMethod( listArgument, found );
+#if 0 //FIXME
+            if( found ) {
+              if( securityMethod == QLatin1String("none")) {
+                //Nothing
+              } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
+                settings.insert( QLatin1String( "UseSSL" ), true );
+              } else {
+                qDebug()<<" security method unknown : "<<path;
+              }
+            } else {
+              settings.insert( QLatin1String( "UseTLS" ), true );
+            }
+#endif
+
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
           } else if(scheme == QLatin1String("pop")) {
+            if( port > 0 )
+              settings.insert(QLatin1String("Port"),port);
             bool found = false;
-            const QString securityMethod = getSecurityMethod( path, found );
+            const QString securityMethod = getSecurityMethod( listArgument, found );
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
                 //Nothing
@@ -287,6 +313,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
             settings.insert(QLatin1String("Path"),path);
             settings.insert(QLatin1String("DisplayName"),name);
             createResource( "akonadi_mbox_resource", name, settings );
+          } else if( scheme == QLatin1String("maildir") ||scheme == QLatin1String( "spooldir" ) ) {
+            settings.insert(QLatin1String("Path"),path);
+            createResource( "akonadi_maildir_resource", name, settings );
           } else {
             qDebug()<<" unknown scheme "<<scheme;
           }
@@ -314,7 +343,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           } else {
             transport->setHost( smtpUrl.host() );
             transport->setName( smtpUrl.host() );
-
+            //TODO setUserName :
+            //transport->setRequiresAuthentication(true);
+            //transport->setUserName(....);
             const int port = smtpUrl.port();
             if ( port > 0 )
               transport->setPort( port );
@@ -342,7 +373,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
             const QString path = smtpUrl.path();
             found = false;
-            const QString securityMethod = getSecurityMethod( path, found );
+            const QStringList listArgument = path.split(QLatin1Char(';'));
+            const QString securityMethod = getSecurityMethod( listArgument, found );
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
                 transport->setEncryption( MailTransport::Transport::EnumEncryption::None );
@@ -443,15 +475,21 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   storeIdentity(newIdentity);
 }
 
-QString EvolutionSettings::getSecurityMethod( const QString& path, bool & found )
+QString EvolutionSettings::getSecurityMethod( const QStringList& listArgument, bool & found )
 {
-  const int index = path.indexOf(QLatin1String("security-method="));
-  if(index != -1) {
-    const QString securityMethod = path.right(path.length() - index - 16 /*security-method=*/);
-    found = true;
-    return securityMethod;
-  }
   found = false;
+  if(listArgument.isEmpty())
+    return QString();
+  Q_FOREACH( const QString& str, listArgument ) {
+    if(str.contains(QLatin1String("security-method="))) {
+      const int index = str.indexOf(QLatin1String("security-method="));
+      if(index != -1) {
+        const QString securityMethod = str.right(str.length() - index - 16 /*security-method=*/);
+        found = true;
+        return securityMethod;
+      }
+    }
+  }
   return QString();
 }
 

@@ -20,12 +20,11 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CGENDANALYZER_H
-#define CGENDANALYZER_H
+#ifndef CTGENDANALYZER_H
+#define CTGENDANALYZER_H
 
 #define STRIGI_IMPORT_API
 
-#include "config-strigi.h"
 #include "pimstrigi-analyzer_export.h"
 
 #include <strigi/analyzerplugin.h>
@@ -68,10 +67,10 @@ class PIMSTRIGI_ANALYZER_EXPORT CtgFactoryFactory : public Strigi::AnalyzerFacto
     std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const;
 };
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 STRIGI_ANALYZER_FACTORY( CtgFactoryFactory )
 #else
-EXPORT_PLUGIN(Strigi_Plugin_Ctg,CtgFactoryFactory)
+EXPORT_PLUGIN( Strigi_Plugin_Ctg,CtgFactoryFactory )
 #endif
 
 #endif

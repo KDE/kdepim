@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ARCHIVEMAILWIDGET_H
-#define ARCHIVEMAILWIDGET_H
+#ifndef ARCHIVEMAILDIALOG_H
+#define ARCHIVEMAILDIALOG_H
 
 #include "ui_archivemailwidget.h"
 #include <QListWidgetItem>
@@ -45,8 +45,20 @@ private Q_SLOTS:
   void slotRemoveItem();
   void slotModifyItem();
   void slotAddItem();
+  void updateButtons();
+
 private:
   Ui::ArchiveMailWidget *mWidget;
+};
+
+class ArchiveMailDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit ArchiveMailDialog(QWidget *parent = 0);
+  ~ArchiveMailDialog();
+private:
+  ArchiveMailWidget *mWidget;
 };
 
 

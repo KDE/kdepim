@@ -8,9 +8,12 @@ set(archivemailagent_SRCS
    archivemailkernel.cpp
    archivemailagent.cpp
    archivemailmanager.cpp
-   archivemailwidget.cpp
+   archivemaildialog.cpp
    archivemailinfo.cpp
+   addarchivemaildialog.cpp
 )
+
+qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
 
 #include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -24,6 +27,7 @@ target_link_libraries(akonadi_archivemail_agent
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDE4_KIO_LIBS}
   mailcommon
 )
 

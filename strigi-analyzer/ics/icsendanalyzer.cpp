@@ -18,6 +18,7 @@
  *
  */
 
+#include <config-strigi.h>
 #include "icsendanalyzer.h"
 
 #include <kcalcore/icalformat.h>

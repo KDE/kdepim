@@ -15,7 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "archivemailwidget.h"
+#include "archivemaildialog.h"
+#include "addarchivemaildialog.h"
+
+ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
+  :KDialog(parent)
+{
+  setCaption( i18n( "Configure Archive Mail Agent" ) );
+  setButtons( Ok|Cancel );
+  setDefaultButton( Ok );
+  setModal( true );
+  QWidget *mainWidget = new QWidget( this );
+  QGridLayout *mainLayout = new QGridLayout( mainWidget );
+  mainLayout->setSpacing( KDialog::spacingHint() );
+  mainLayout->setMargin( KDialog::marginHint() );
+  mWidget = new ArchiveMailWidget(this);
+  mainLayout->addWidget(mWidget);
+  setMainWidget( mainWidget );
+}
+
+ArchiveMailDialog::~ArchiveMailDialog()
+{
+
+}
 
 
 ArchiveMailItem::ArchiveMailItem( const QString &text, QListWidget *parent )
@@ -35,11 +57,25 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
+  connect(mWidget->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(updateButtons()));
+  connect(mWidget->listWidget,SIGNAL(itemDoubleClicked(QListWidgetItem*)),SLOT(slotModifyItem()));
+  updateButtons();
 }
 
 ArchiveMailWidget::~ArchiveMailWidget()
 {
   delete mWidget;
+}
+
+void ArchiveMailWidget::updateButtons()
+{
+  if(!mWidget->listWidget->currentItem()) {
+    mWidget->removeItem->setEnabled(true);
+    mWidget->modifyItem->setEnabled(true);
+  } else {
+    mWidget->removeItem->setEnabled(false);
+    mWidget->modifyItem->setEnabled(false);
+  }
 }
 
 void ArchiveMailWidget::load()
@@ -57,20 +93,30 @@ void ArchiveMailWidget::slotRemoveItem()
   if(!mWidget->listWidget->currentItem())
     return;
   delete mWidget->listWidget->takeItem(mWidget->listWidget->currentRow());
+  updateButtons();
 }
 
 void ArchiveMailWidget::slotModifyItem()
 {
   if(!mWidget->listWidget->currentItem())
     return;
-//TODO
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(this);
+  //TODO MODIFY it
+  if( dialog->exec() ) {
+  }
+  delete dialog;
 }
 
 void ArchiveMailWidget::slotAddItem()
 {
-  //FIXME
-  ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
-  //TODO
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(this);
+  if( dialog->exec() ) {
+    //FIXME
+   ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
+   //TODO
+   updateButtons();
+  }
+  delete dialog;
 }
 
-#include "archivemailwidget.moc"
+#include "archivemaildialog.moc"

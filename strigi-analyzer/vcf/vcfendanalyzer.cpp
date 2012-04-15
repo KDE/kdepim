@@ -18,6 +18,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include <config-strigi.h>
 #include "vcfendanalyzer.h"
 
 #include <strigi/fieldtypes.h>
@@ -97,7 +98,7 @@ STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult &index
     index.addValue( m_factory->noteField, contact.note().toUtf8().data() );
 
   Q_FOREACH ( const PhoneNumber &number, contact.phoneNumbers() ) {
-    index.addValue( m_factory->phoneNumberField, number.number().toUtf8().data() ); 
+    index.addValue( m_factory->phoneNumberField, number.number().toUtf8().data() );
   }
 
   Q_FOREACH ( const Address &address, contact.addresses() ) {
