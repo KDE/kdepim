@@ -341,7 +341,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           } else {
             transport->setHost( smtpUrl.host() );
             transport->setName( smtpUrl.host() );
-
+            //TODO setUserName :
+            //transport->setRequiresAuthentication(true);
+            //transport->setUserName(....);
             const int port = smtpUrl.port();
             if ( port > 0 )
               transport->setPort( port );
