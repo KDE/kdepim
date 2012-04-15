@@ -45,6 +45,8 @@ private Q_SLOTS:
   void slotRemoveItem();
   void slotModifyItem();
   void slotAddItem();
+  void updateButtons();
+
 private:
   Ui::ArchiveMailWidget *mWidget;
 };
