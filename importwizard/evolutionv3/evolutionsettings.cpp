@@ -193,7 +193,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         const QString identityTag = identity.tagName();
         if ( identityTag == QLatin1String( "name" ) )
         {
-          newIdentity->setIdentityName( identity.text() );
+          const QString fullName( identity.text() );
+          newIdentity->setIdentityName( fullName );
+          newIdentity->setFullName( fullName );
         }
         else if ( identityTag == QLatin1String( "addr-spec" ) )
         {
