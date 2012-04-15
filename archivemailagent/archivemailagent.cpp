@@ -18,6 +18,7 @@
 #include "archivemailagent.h"
 #include "archivemailkernel.h"
 #include "archivemailagentadaptor.h"
+#include "archivemaildialog.h"
 
 #include <mailcommon/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
@@ -58,7 +59,9 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
 
 void ArchiveMailAgent::showConfigureDialog()
 {
-  //TODO
+  ArchiveMailDialog *dialog = new ArchiveMailDialog();
+  dialog->exec();
+  delete dialog;
 }
 
 void ArchiveMailAgent::configure( WId windowId )
