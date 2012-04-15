@@ -68,10 +68,10 @@ class PIMSTRIGI_ANALYZER_EXPORT CtgFactoryFactory : public Strigi::AnalyzerFacto
     std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const;
 };
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 STRIGI_ANALYZER_FACTORY( CtgFactoryFactory )
 #else
-EXPORT_PLUGIN(Strigi_Plugin_Ctg,CtgFactoryFactory)
+EXPORT_PLUGIN( Strigi_Plugin_Ctg,CtgFactoryFactory )
 #endif
 
 #endif
