@@ -21,7 +21,6 @@
 */
 
 #include "mailendanalyzer.h"
-
 #include "messageanalyzer.h"
 
 #include <strigi/fieldtypes.h>

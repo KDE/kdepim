@@ -25,7 +25,7 @@
 
 #define STRIGI_IMPORT_API
 
-#include "config-strigi.h"
+#include <config-strigi.h>
 #include "pimstrigi-analyzer_export.h"
 
 #include <strigi/analyzerplugin.h>

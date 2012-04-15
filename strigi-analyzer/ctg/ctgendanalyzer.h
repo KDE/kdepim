@@ -20,12 +20,11 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CGENDANALYZER_H
-#define CGENDANALYZER_H
+#ifndef CTGENDANALYZER_H
+#define CTGENDANALYZER_H
 
 #define STRIGI_IMPORT_API
 
-#include "config-strigi.h"
 #include "pimstrigi-analyzer_export.h"
 
 #include <strigi/analyzerplugin.h>

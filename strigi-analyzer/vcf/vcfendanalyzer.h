@@ -23,7 +23,6 @@
 
 #define STRIGI_IMPORT_API
 
-#include "config-strigi.h"
 #include "pimstrigi-analyzer_export.h"
 
 #include <kabc/vcardconverter.h>
