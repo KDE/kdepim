@@ -42,7 +42,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi->mAdd->setEnabled( false );
   mUi->mRemove->setIcon( KIcon( "list-remove" ) );
   mUi->mDuplicate->setIcon( KIcon( "edit-copy" ) );
-  
+
   mUi->mList->setColumnWidth( 0, 100 );
   mUi->mList->header()->setStretchLastSection( true );
   mUi->mList->setItemDelegate( new CustomTemplateItemDelegate( this ) );
@@ -262,12 +262,12 @@ void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
   mUi->mEdit->setFocus();
 }
 
-bool CustomTemplates::nameAlreadyExists( const QString& str,QTreeWidgetItem *item )
+bool CustomTemplates::nameAlreadyExists( const QString &str, QTreeWidgetItem *item )
 {
   QTreeWidgetItemIterator lit( mUi->mList );
   while ( *lit ) {
     const QString name = ( *lit )->text( 1 );
-    if ( ( name == str ) && ( ( *lit ) != item )) {
+    if ( ( name == str ) && ( (*lit) != item ) ) {
       KMessageBox::error(
         this,
         i18n( "A template with same name already exists." ),
@@ -278,7 +278,6 @@ bool CustomTemplates::nameAlreadyExists( const QString& str,QTreeWidgetItem *ite
   }
   return false;
 }
-  
 
 void CustomTemplates::slotAddClicked()
 {
@@ -308,7 +307,7 @@ void CustomTemplates::slotAddClicked()
   }
 }
 
-QString CustomTemplates::createUniqueName( const QString& name) const
+QString CustomTemplates::createUniqueName( const QString &name ) const
 {
   QString uniqueName = name;
 
@@ -325,8 +324,7 @@ QString CustomTemplates::createUniqueName( const QString& name) const
         found = true;
         ++counter;
         uniqueName = name;
-        uniqueName += QString( " (" ) + QString::number( counter )
-                      + QString( ")" );
+        uniqueName += QString( " (" ) + QString::number( counter ) + QString( ")" );
         break;
       }
       lit++;
@@ -403,7 +401,7 @@ void CustomTemplates::slotListSelectionChanged()
     mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut(),
                                              KKeySequenceWidget::NoValidate );
     CustomTemplates::Type type =  vitem->customType();
-    
+
     mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( type ) ) );
     mUi->mToEdit->setText( vitem->to() );
     mUi->mCCEdit->setText( vitem->cc() );
@@ -435,7 +433,7 @@ void CustomTemplates::slotTypeActivated( int index )
     vitem->setCustomType( customtype );
     vitem->setText( 0, indexToType( customtype ) );
 
-    iconFromType( customtype, vitem);
+    iconFromType( customtype, vitem );
 
     // see slotListSelectionChanged() above
     mUi->mKeySequenceWidget->setEnabled( customtype != TUniversal );
@@ -503,14 +501,16 @@ void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemMod
   }
 }
 
-QWidget *CustomTemplateItemDelegate::createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget *CustomTemplateItemDelegate::createEditor( QWidget *parent,
+                                                   const QStyleOptionViewItem &option,
+                                                   const QModelIndex &index ) const
 {
-  if ( index.column() == 1 )
+  if ( index.column() == 1 ) {
     return QStyledItemDelegate::createEditor( parent, option, index );
+  }
   return 0;
 }
 
-  
 CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
                                         const QString &name,
                                         const QString &content,

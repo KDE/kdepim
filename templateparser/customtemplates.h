@@ -70,9 +70,9 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotDuplicateClicked();
 
   private:
-    bool nameAlreadyExists( const QString& str, QTreeWidgetItem *item = 0 );
+    bool nameAlreadyExists( const QString &str, QTreeWidgetItem *item = 0 );
     QString indexToType( int index );
-    QString createUniqueName( const QString& name) const;
+    QString createUniqueName( const QString &name ) const;
     void iconFromType( CustomTemplates::Type type, CustomTemplateItem *item );
 
     /// These templates will be deleted when we're saving.
@@ -131,7 +131,8 @@ class CustomTemplateItemDelegate : public QStyledItemDelegate
   public:
     explicit CustomTemplateItemDelegate( QObject *parent = 0 );
     ~CustomTemplateItemDelegate();
-    QWidget *createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget *createEditor ( QWidget *parent, const QStyleOptionViewItem &option,
+                            const QModelIndex &index ) const;
 
     void setModelData( QWidget *editor, QAbstractItemModel *model,
                        const QModelIndex &index ) const;
