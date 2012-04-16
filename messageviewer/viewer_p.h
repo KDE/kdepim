@@ -327,6 +327,7 @@ public:
 
   /** Print message. */
   void printMessage( const Akonadi::Item &msg );
+  void printPreviousMessage( const Akonadi::Item &message );
 
   void resetStateForNewMessage();
 
@@ -519,6 +520,8 @@ public slots:
       In the very end it deletes the KMReaderWin window that was created
       for the purpose of rendering. */
   void slotPrintMsg();
+  void slotPrintPreview();
+
 
   void slotSetEncoding();
   void injectAttachments();

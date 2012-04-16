@@ -109,6 +109,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
+  ${KDE4_KUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
 )

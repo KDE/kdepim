@@ -57,6 +57,7 @@
 #include <KTempDir>
 #include <KTemporaryFile>
 #include <KToggleAction>
+#include <KPrintPreview>
 
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -1262,6 +1263,17 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
 #endif
 }
 
+void ViewerPrivate::printPreviousMessage( const Akonadi::Item &message )
+{
+// wince does not support printing
+#ifndef Q_OS_WINCE
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
+  connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
+  setMessageItem( message, Viewer::Force );
+#endif
+}
+
+
 void ViewerPrivate::resetStateForNewMessage()
 {
   mClickedUrl.clear();
@@ -2287,14 +2299,28 @@ void ViewerPrivate::slotDelayedResize()
   mSplitter->setGeometry( 0, 0, q->width(), q->height() );
 }
 
+void ViewerPrivate::slotPrintPreview()
+{
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
+  // wince does not support printing
+#ifndef Q_OS_WINCE
+  if ( !mMessage )
+    return;
+  QPrinter printer;
+  KPrintPreview previewdlg( &printer, mViewer );
+  mViewer->print( &printer );
+  previewdlg.exec();
+#endif
+}
 
 void ViewerPrivate::slotPrintMsg()
 {
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
-  if ( !mMessage ) return;
 
 // wince does not support printing
 #ifndef Q_OS_WINCE
+  if ( !mMessage )
+    return;
   QPrinter printer;
 
   AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
