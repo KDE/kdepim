@@ -49,6 +49,17 @@ ArchiveMailItem::~ArchiveMailItem()
 {
 }
 
+void ArchiveMailItem::setInfo(const ArchiveMailInfo& info)
+{
+  mInfo = info;
+}
+
+ArchiveMailInfo ArchiveMailItem::info() const
+{
+  return mInfo;
+}
+
+
 ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   : QWidget( parent )
 {
@@ -98,10 +109,11 @@ void ArchiveMailWidget::slotRemoveItem()
 
 void ArchiveMailWidget::slotModifyItem()
 {
-  if(!mWidget->listWidget->currentItem())
+  QListWidgetItem *item = mWidget->listWidget->currentItem();
+  if(!item)
     return;
-  //FIXME
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(ArchiveMailInfo(), this);
+  ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
   //TODO MODIFY it
   if( dialog->exec() ) {
   }
@@ -111,10 +123,12 @@ void ArchiveMailWidget::slotModifyItem()
 void ArchiveMailWidget::slotAddItem()
 {
   //FIXME
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(ArchiveMailInfo(),this);
+  ArchiveMailInfo archiveInfo;
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveInfo,this);
   if( dialog->exec() ) {
     //FIXME
    ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
+   item->setInfo(archiveInfo);
    //TODO
    updateButtons();
   }

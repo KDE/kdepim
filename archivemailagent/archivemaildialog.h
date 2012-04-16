@@ -19,6 +19,7 @@
 #define ARCHIVEMAILDIALOG_H
 
 #include "ui_archivemailwidget.h"
+#include "archivemailinfo.h"
 #include <QListWidgetItem>
 #include <QListWidget>
 
@@ -28,7 +29,10 @@ public:
   explicit ArchiveMailItem( const QString &text, QListWidget *parent = 0 );
   ~ArchiveMailItem();
 
+  void setInfo(const ArchiveMailInfo& info);
+  ArchiveMailInfo info() const;
  private:
+  ArchiveMailInfo mInfo;
 };
 
 class ArchiveMailWidget : public QWidget
