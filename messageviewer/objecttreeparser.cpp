@@ -703,8 +703,39 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
         messagePart.status = i18n("Different results for signatures");
       }
     }
-    if ( messagePart.status_code & GPGME_SIG_STAT_GOOD )
+    if ( messagePart.status_code & GPGME_SIG_STAT_GOOD ) {
       messagePart.isGoodSignature = true;
+      if ( !doCheck ) {
+        // We have a good signature but did not do a verify,
+        // this means the signature was already validated before by
+        // decryptverify for example.
+        Q_ASSERT( !key.keyID() ); // There should be no key set without doCheck
+
+        // Search for the key by it's fingerprint so that we can check for
+        // trust etc.
+        Kleo::KeyListJob * job = cryptProto->keyListJob( false ); // local, no sigs
+        if ( !job ) {
+          kDebug() << "The Crypto backend does not support listing keys. ";
+        } else {
+          std::vector<GpgME::Key> found_keys;
+          // As we are local it is ok to make this synchronous
+          GpgME::KeyListResult res = job->exec( QStringList( signature.fingerprint() ), false, found_keys );
+          if ( res.error() ) {
+            kDebug() << "Error while searching key for Fingerprint: " << signature.fingerprint();
+          }
+          if ( found_keys.size() > 1 ) {
+            // Should not Happen
+            kDebug() << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
+          }
+          if ( found_keys.size() != 1 ) {
+            // Should not Happen at this point
+            kDebug() << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+          } else {
+            key = found_keys[0];
+          }
+        }
+      }
+    }
 
     // save extended signature status flags
     messagePart.sigSummary = signature.summary();
