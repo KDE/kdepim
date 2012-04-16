@@ -37,6 +37,7 @@ public:
     ArchiveMonths,
     ArchiveMaxUnits
   };
+  bool isEmpty() const;
 
   Akonadi::Collection::Id saveCollectionId() const;
   void setSaveCollectionId(Akonadi::Collection::Id collectionId);

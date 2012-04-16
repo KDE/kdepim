@@ -41,6 +41,12 @@ ArchiveMailInfo::~ArchiveMailInfo()
 //FIXME writeConfig ?
 }
 
+bool ArchiveMailInfo::isEmpty() const
+{
+  return (mSaveCollectionId==-1);
+}
+
+
 void ArchiveMailInfo::setArchiveAge( int age )
 {
   mArchiveAge = age;

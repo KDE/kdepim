@@ -100,7 +100,8 @@ void ArchiveMailWidget::slotModifyItem()
 {
   if(!mWidget->listWidget->currentItem())
     return;
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(this);
+  //FIXME
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(ArchiveMailInfo(), this);
   //TODO MODIFY it
   if( dialog->exec() ) {
   }
@@ -109,7 +110,8 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(this);
+  //FIXME
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(ArchiveMailInfo(),this);
   if( dialog->exec() ) {
     //FIXME
    ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
