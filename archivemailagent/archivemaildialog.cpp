@@ -122,7 +122,6 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-  //FIXME
   ArchiveMailInfo archiveInfo;
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveInfo,this);
   if( dialog->exec() ) {
