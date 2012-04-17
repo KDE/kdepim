@@ -102,7 +102,6 @@ void TranslateWidget::slotTranslate()
   const QString from = QLatin1String( "fr" );
   const QString to = QLatin1String( "en" );
   d->translate->setEnabled( false );
-  //TODO
   KUrl geturl ( "http://babelfish.yahoo.com/translate_txt" );
 
   QString body = QUrl::toPercentEncoding( textToTranslate );
@@ -114,7 +113,8 @@ void TranslateWidget::slotTranslate()
   KIO::TransferJob *job = KIO::http_post( geturl, postData );
   job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
   job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
-
+  d->data.clear();
+  d->job = job;
   connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(slotDataReceived(KIO::Job*,QByteArray)) );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
 }
@@ -132,11 +132,12 @@ void TranslateWidget::slotJobDone ( KJob *job )
     disconnect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(slotDataReceived(KIO::Job*,QByteArray)) );
     disconnect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
 
-    d->translate->setEnabled( false );
+    d->translate->setEnabled( true );
     QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
     re.setMinimal( true );
     re.indexIn( d->data );
     d->translatedText->setText( re.cap( 1 ) );
+    qDebug()<<" re.cap( 1 ) :"<<re.cap( 1 );
   }
 }
 
