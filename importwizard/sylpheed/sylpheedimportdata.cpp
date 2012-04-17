@@ -56,6 +56,7 @@ QString SylpheedImportData::name() const
 
 bool SylpheedImportData::importSettings()
 {
+  //TODO look at /sylpheedrc too 
   const QString accountFile = mPath + QLatin1String("/accountrc");
   if ( QFile( accountFile ).exists() ) {
     SylpheedSettings account( accountFile, mImportWizard );
