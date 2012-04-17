@@ -16,19 +16,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TRANSLATEWIDGET_H
-#define TRANSLATEWIDGET_H
+#ifndef TRANSLATORWIDGET_H
+#define TRANSLATORWIDGET_H
 #include "mailcommon_export.h"
 #include <QWidget>
 #include <kio/job.h>
 
 namespace MailCommon {
-class MAILCOMMON_EXPORT TranslateWidget : public QWidget
+class MAILCOMMON_EXPORT TranslatorWidget : public QWidget
 {
   Q_OBJECT
 public:
-  explicit TranslateWidget( QWidget* parent = 0 );
-  ~TranslateWidget();
+  explicit TranslatorWidget( QWidget* parent = 0 );
+  explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
+  ~TranslatorWidget();
   void setTextToTranslate( const QString& );
 public Q_SLOTS:
   void slotTranslate();
@@ -36,14 +37,17 @@ public Q_SLOTS:
 private Q_SLOTS:
   void slotDataReceived ( KIO::Job *job, const QByteArray &data );
   void slotJobDone(KJob*);
-
+  void slotFromLanguageChanged( int );
+  void slotTextChanged();
+  
 private:
+  void init();
   void initLanguage();
-  class TranslateWidgetPrivate;
-  TranslateWidgetPrivate *const d;
+  class TranslatorWidgetPrivate;
+  TranslatorWidgetPrivate *const d;
 
 };
 }
 
-#endif /* TRANSLATEWIDGET_H */
+#endif /* TRANSLATORWIDGET_H */
 
