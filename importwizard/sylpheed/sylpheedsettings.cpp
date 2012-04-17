@@ -205,6 +205,9 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
 void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
 {
   KPIMIdentities::Identity* identity  = createIdentity();
+  const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+  identity->setFullName( name );
+  identity->setIdentityName( name );
   const QString organization = accountConfig.readEntry( QLatin1String( "organization" ), QString() );
   identity->setOrganization(organization);
   const QString email = accountConfig.readEntry( QLatin1String( "address" ) );

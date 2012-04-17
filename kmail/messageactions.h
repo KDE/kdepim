@@ -32,6 +32,7 @@ class KActionMenu;
 class KActionCollection;
 class KXMLGUIClient;
 class KMReaderWin;
+class KMenu;
 
 namespace Akonadi {
   class Item;
@@ -91,10 +92,14 @@ class MessageActions : public QObject
     KAction* editAction() const { return mEditAction; }
     KAction* annotateAction() const { return mAnnotateAction; }
     KAction* printAction() const { return mPrintAction; }
+    KAction* printPreviewAction() const { return mPrintPreviewAction; }
     KAction* listFilterAction() const { return mListFilterAction; }
 
     KActionMenu* mailingListActionMenu() const { return mMailingListActionMenu; }
     TemplateParser::CustomTemplatesMenu* customTemplatesMenu() const;
+
+    void addWebShortcutsMenu( KMenu *menu, const QString & text );
+
 
   signals:
 
@@ -128,8 +133,13 @@ class MessageActions : public QObject
     void slotCreateTodo();
     void slotRunUrl( QAction *urlAction );
     void slotPrintMsg();
+    void slotPrintPreviewMsg();
+
     void slotUpdateActionsFetchDone( KJob* job );
     void slotMailingListFilter();
+    void slotHandleWebShortcutAction();
+    void slotConfigureWebShortcuts();
+
 
   private:
     QWidget *mParent;
@@ -146,7 +156,7 @@ class MessageActions : public QObject
     KActionMenu *mStatusMenu;
     KActionMenu *mForwardActionMenu;
     KActionMenu *mMailingListActionMenu;
-    KAction *mEditAction, *mAnnotateAction, *mPrintAction;
+    KAction *mEditAction, *mAnnotateAction, *mPrintAction, *mPrintPreviewAction;
     bool mKorganizerIsOnSystem;
     Akonadi::Monitor *mMonitor;
     MessageCore::AsyncNepomukResourceRetriever *mAsynNepomukRetriever;

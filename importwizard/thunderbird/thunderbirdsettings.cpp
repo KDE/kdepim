@@ -243,6 +243,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
 
   const QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
   newIdentity->setFullName( fullName );
+  newIdentity->setIdentityName( fullName );
 
   const QString organization = mHashConfig.value(identity + QLatin1String(".organization")).toString();
   newIdentity->setOrganization(organization);

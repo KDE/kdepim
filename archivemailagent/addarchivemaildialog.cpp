@@ -27,7 +27,7 @@
 #include <QLabel>
 #include <QCheckBox>
 
-AddArchiveMailDialog::AddArchiveMailDialog(QWidget *parent)
+AddArchiveMailDialog::AddArchiveMailDialog(const ArchiveMailInfo& info,QWidget *parent)
   :KDialog(parent)
 {
   setCaption( i18n( "Add Archive Mail" ) );
@@ -85,6 +85,9 @@ AddArchiveMailDialog::AddArchiveMailDialog(QWidget *parent)
   mainLayout->setColumnStretch( 1, 1 );
   mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
+  if(!info.isEmpty()) {
+    load(info);
+  }
   // Make it a bit bigger, else the folder requester cuts off the text too early
   resize( 500, minimumSize().height() );
 
@@ -94,6 +97,11 @@ AddArchiveMailDialog::AddArchiveMailDialog(QWidget *parent)
 AddArchiveMailDialog::~AddArchiveMailDialog()
 {
 
+}
+
+void AddArchiveMailDialog::load(const ArchiveMailInfo& info)
+{
+  //TODO
 }
 
 void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collection)

@@ -127,6 +127,18 @@ void Viewer::printMessage( const Akonadi::Item &msg )
   d->printMessage( msg );
 }
 
+void Viewer::printPreviousMessage( const Akonadi::Item &message )
+{
+  Q_D( Viewer );
+  d->printPreviousMessage( message );
+}
+
+void Viewer::printPreview()
+{
+  Q_D(Viewer);
+  d->slotPrintPreview();
+}
+
 void Viewer::print()
 {
   Q_D(Viewer);
