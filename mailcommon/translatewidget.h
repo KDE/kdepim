@@ -29,6 +29,7 @@ class MAILCOMMON_EXPORT TranslateWidget : public QWidget
 public:
   explicit TranslateWidget( QWidget* parent = 0 );
   ~TranslateWidget();
+  void setTextToTranslate( const QString& );
 public Q_SLOTS:
   void slotTranslate();
 

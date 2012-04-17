@@ -48,30 +48,30 @@ public:
 TranslateWidget::TranslateWidget( QWidget* parent )
   :QWidget( parent ), d( new TranslateWidgetPrivate )
 {
-   QHBoxLayout *layout = new QHBoxLayout( this );
-   QVBoxLayout *vboxLayout = new QVBoxLayout;
+   QVBoxLayout *layout = new QVBoxLayout( this );
+   QHBoxLayout *hboxLayout = new QHBoxLayout;
    d->translate = new KPushButton( i18n( "Translate" ) );
-   vboxLayout->addWidget( d->translate );
+   hboxLayout->addWidget( d->translate );
    connect( d->translate, SIGNAL( clicked() ), SLOT( slotTranslate() ) );
    QLabel *label = new QLabel( i18n( "From:" ) );
-   vboxLayout->addWidget( label );
+   hboxLayout->addWidget( label );
    d->from = new KComboBox;
-   vboxLayout->addWidget( d->from );
+   hboxLayout->addWidget( d->from );
 
    label = new QLabel( i18n( "To:" ) );
-   vboxLayout->addWidget( label );
+   hboxLayout->addWidget( label );
    d->to = new KComboBox;
-   vboxLayout->addWidget( d->to );
-   layout->addLayout( vboxLayout );
+   hboxLayout->addWidget( d->to );
+   layout->addLayout( hboxLayout );
 
-   vboxLayout = new QVBoxLayout;
+   hboxLayout = new QHBoxLayout;
    d->inputText = new KTextEdit;
-   vboxLayout->addWidget( d->inputText );
+   hboxLayout->addWidget( d->inputText );
    d->translatedText = new KTextEdit;
    d->translatedText->setReadOnly( true );
-   vboxLayout->addWidget( d->translatedText );
+   hboxLayout->addWidget( d->translatedText );
 
-   layout->addLayout( vboxLayout );
+   layout->addLayout( hboxLayout );
    
    initLanguage();
 }
@@ -87,6 +87,11 @@ void TranslateWidget::initLanguage()
   //TODO
 }
 
+void TranslateWidget::setTextToTranslate( const QString& text)
+{
+  d->inputText->setPlainText( text );
+}
+
 
 void TranslateWidget::slotTranslate()
 {
@@ -95,7 +100,7 @@ void TranslateWidget::slotTranslate()
     return;
   //FIXME
   const QString from = QLatin1String( "fr" );
-  const QString to = QLatin1String( "fr_en" );
+  const QString to = QLatin1String( "en" );
   d->translate->setEnabled( false );
   //TODO
   KUrl geturl ( "http://babelfish.yahoo.com/translate_txt" );
