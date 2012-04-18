@@ -263,19 +263,18 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
             bool found = false;
             const QString securityMethod = getSecurityMethod( listArgument, found );
-#if 0 //FIXME
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
+                settings.insert( QLatin1String( "Safety" ), QLatin1String("None") );
                 //Nothing
               } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
-                settings.insert( QLatin1String( "UseSSL" ), true );
+                settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
               } else {
                 qDebug()<<" security method unknown : "<<path;
               }
             } else {
-              settings.insert( QLatin1String( "UseTLS" ), true );
+              settings.insert( QLatin1String( "Safety" ), QLatin1String("STARTTLS") );
             }
-#endif
 
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
