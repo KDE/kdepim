@@ -316,6 +316,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           } else if( scheme == QLatin1String("maildir") ||scheme == QLatin1String( "spooldir" ) ) {
             settings.insert(QLatin1String("Path"),path);
             createResource( "akonadi_maildir_resource", name, settings );
+          } else if( scheme == QLatin1String("nntp")) {
+            //FIXME in the future
+            qDebug()<<" For the moment we can't import nntp resource";
           } else {
             qDebug()<<" unknown scheme "<<scheme;
           }
