@@ -199,6 +199,21 @@ TranslatorWidget::TranslatorWidget( const QString& text, QWidget* parent )
   d->inputText->setPlainText( text );
 }
 
+TranslatorWidget::~TranslatorWidget()
+{
+  delete d;
+}
+
+void TranslatorWidget::writeConfig()
+{
+  //TODO
+}
+
+void TranslatorWidget::readConfig()
+{
+  //TODO
+}
+
 void TranslatorWidget::init()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -232,14 +247,10 @@ void TranslatorWidget::init()
    
   d->initLanguage();
   connect( d->from, SIGNAL(currentIndexChanged(int) ), SLOT( slotFromLanguageChanged( int ) ) );
-  //TODO restore previous config
+
   d->from->setCurrentIndex( 0 ); //Fill "to" combobox
   slotTextChanged();
-}
-
-TranslatorWidget::~TranslatorWidget()
-{
-  delete d;
+  readConfig();
 }
 
 void TranslatorWidget::slotTextChanged()

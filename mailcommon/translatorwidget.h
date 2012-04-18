@@ -31,6 +31,10 @@ public:
   explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
   ~TranslatorWidget();
   void setTextToTranslate( const QString& );
+  void writeConfig();
+  void readConfig();
+
+  
 public Q_SLOTS:
   void slotTranslate();
 
