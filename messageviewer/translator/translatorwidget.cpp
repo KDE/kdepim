@@ -17,7 +17,7 @@
 */
 
 #include "translatorwidget.h"
-#include "mailkernel.h"
+#include "globalsettings.h"
 
 #include <KTextEdit>
 #include <KComboBox>
@@ -33,8 +33,9 @@
 #include <QLabel>
 #include <QRegExp>
 #include <QToolButton>
+#include <QKeyEvent>
 
-using namespace MailCommon;
+using namespace MessageViewer;
 
 class TranslatorWidget::TranslatorWidgetPrivate
 {
@@ -72,7 +73,8 @@ void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& l
   to->clear();
   const QMap<QString, QString> list = listLanguage.value( lang );
   QMap<QString, QString>::const_iterator i = list.constBegin();
-  while (i != list.constEnd()) {
+  QMap<QString, QString>::const_iterator end = list.constEnd();
+  while (i != end) {
     to->addItem( i.key(), i.value() );
     ++i;
  }
@@ -211,14 +213,17 @@ TranslatorWidget::~TranslatorWidget()
 
 void TranslatorWidget::writeConfig()
 {
-  KConfigGroup myGroup( KernelIf->config(), "TranslatorWidget" );
+  KConfig *config = GlobalSettings::self()->config();
+  KConfigGroup myGroup( config, "TranslatorWidget" );
   myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
   myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+  config->sync();
 }
 
 void TranslatorWidget::readConfig()
 {
-  KConfigGroup myGroup( KernelIf->config(), "TranslatorWidget" );
+  KConfig *config = GlobalSettings::self()->config();
+  KConfigGroup myGroup( config, "TranslatorWidget" );
   const QString from = myGroup.readEntry( QLatin1String( "FromLanguage" ) );
   const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
   if ( from.isEmpty() )
@@ -268,6 +273,7 @@ void TranslatorWidget::init()
 
   hboxLayout = new QHBoxLayout;
   d->inputText = new KTextEdit;
+  d->inputText->setAcceptRichText(false);
   connect( d->inputText, SIGNAL(textChanged() ), SLOT( slotTextChanged() ) );
 
   hboxLayout->addWidget( d->inputText );
@@ -284,6 +290,7 @@ void TranslatorWidget::init()
   slotFromLanguageChanged( 0 );
   slotTextChanged();
   readConfig();
+  hide();
 }
 
 void TranslatorWidget::slotTextChanged()
@@ -345,14 +352,35 @@ void TranslatorWidget::slotJobDone ( KJob *job )
     QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
     re.setMinimal( true );
     re.indexIn( d->data );
-    d->translatedText->setText( re.cap( 1 ) );
+    d->translatedText->setHtml( re.cap( 1 ) );
   }
 }
 
 void TranslatorWidget::slotCloseWidget()
 {
-  //TODO
+  d->inputText->clear();
+  d->translatedText->clear();
+  hide();
+  Q_EMIT translatorWasClosed();
 }
+
+bool TranslatorWidget::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->accept();
+            slotCloseWidget();
+            return true;
+        }
+    }
+    return QWidget::event(e);
+}
+
 
 #include "translatorwidget.moc"
 

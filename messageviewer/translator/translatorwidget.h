@@ -18,12 +18,12 @@
 
 #ifndef TRANSLATORWIDGET_H
 #define TRANSLATORWIDGET_H
-#include "mailcommon_export.h"
+#include "messageviewer_export.h"
 #include <QWidget>
 #include <kio/job.h>
 
-namespace MailCommon {
-class MAILCOMMON_EXPORT TranslatorWidget : public QWidget
+namespace MessageViewer {
+class MESSAGEVIEWER_EXPORT TranslatorWidget : public QWidget
 {
   Q_OBJECT
 public:
@@ -37,14 +37,18 @@ public:
   
 public Q_SLOTS:
   void slotTranslate();
+  void slotCloseWidget();
 
 private Q_SLOTS:
   void slotDataReceived ( KIO::Job *job, const QByteArray &data );
   void slotJobDone(KJob*);
   void slotFromLanguageChanged( int );
   void slotTextChanged();
-  void slotCloseWidget();
+protected:
+  bool event(QEvent* e);
 
+Q_SIGNALS:
+  void translatorWasClosed();
 private:
   void init();
   void initLanguage();

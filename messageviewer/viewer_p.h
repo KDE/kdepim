@@ -75,6 +75,7 @@ namespace MessageViewer {
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;
+  class TranslatorWidget;
 }
 
 namespace MessageViewer {
@@ -485,6 +486,9 @@ public slots:
   /** The user selected "Find" from the menu. */
   void slotFind();
 
+  void slotTranslate();
+
+
   /** The user toggled the "Fixed Font" flag from the view menu. */
   void slotToggleFixedFont();
   void slotToggleMimePartTree();
@@ -604,6 +608,7 @@ public:
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
   FindBarMailWebView *mFindBar;
+  TranslatorWidget *mTranslatorWidget;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
@@ -637,6 +642,7 @@ public:
   KToggleAction *mToggleMimePartTreeAction;
   KAction *mSpeakTextAction;
   KAction *mCopyImageLocation;
+  KAction *mTranslateAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
   KUrl mImageUrl;

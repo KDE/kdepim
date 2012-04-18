@@ -86,6 +86,7 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   renamefiledialog.cpp
+  translator/translatorwidget.cpp
   ${_mailwebview_cpp}
 )
 

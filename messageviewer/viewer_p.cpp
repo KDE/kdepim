@@ -130,6 +130,7 @@
 #include "vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
+#include "translator/translatorwidget.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -163,6 +164,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mNodeHelper( new NodeHelper ),
     mViewer( 0 ),
     mFindBar( 0 ),
+    mTranslatorWidget(0),
     mAttachmentStrategy( 0 ),
     mHeaderStrategy( 0 ),
     mHeaderStyle( 0 ),
@@ -850,7 +852,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage( KJob* job )
   if ( !col.isValid() )
     return;
   Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
-  QString itemResource = col.resource();
+  const QString itemResource = col.resource();
   Akonadi::AgentInstance resourceInstance;
   foreach ( const Akonadi::AgentInstance &instance, instances ) {
     if ( instance.identifier() == itemResource ) {
@@ -1287,6 +1289,8 @@ void ViewerPrivate::resetStateForNewMessage()
   setShowSignatureDetails( false );
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
   mFindBar->closeBar();
+  mTranslatorWidget->slotCloseWidget();
+
   if ( mPrinting )
     mLevelQuote = -1;
 }
@@ -1474,6 +1478,7 @@ void ViewerPrivate::createWidgets() {
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
+  mTranslatorWidget = new TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif
@@ -1727,6 +1732,11 @@ void ViewerPrivate::createActions()
   connect( mCopyImageLocation, SIGNAL(triggered(bool)),
            SLOT(slotCopyImageLocation()) );
 
+  mTranslateAction = new KAction(i18n("Translate..."),this);
+  mTranslateAction->setIcon(KIcon("preferences-desktop-locale"));
+  ac->addAction("translate_text", mTranslateAction);
+  connect( mTranslateAction, SIGNAL(triggered(bool)),
+           SLOT(slotTranslate()) );
 
 }
 
@@ -2050,6 +2060,12 @@ void ViewerPrivate::slotFind()
   mFindBar->focusAndSetCursor();
 }
 
+void ViewerPrivate::slotTranslate()
+{
+  const QString text = mViewer->selectedText();
+  mTranslatorWidget->show();
+  mTranslatorWidget->setTextToTranslate(text);
+}
 
 void ViewerPrivate::slotToggleFixedFont()
 {
