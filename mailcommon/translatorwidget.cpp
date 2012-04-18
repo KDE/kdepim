@@ -235,6 +235,7 @@ void TranslatorWidget::readConfig()
 void TranslatorWidget::init()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
   QHBoxLayout *hboxLayout = new QHBoxLayout;
   d->translate = new KPushButton( i18n( "Translate" ) );
   hboxLayout->addWidget( d->translate );
@@ -267,6 +268,7 @@ void TranslatorWidget::init()
   connect( d->from, SIGNAL(currentIndexChanged(int) ), SLOT( slotFromLanguageChanged( int ) ) );
 
   d->from->setCurrentIndex( 0 ); //Fill "to" combobox
+  slotFromLanguageChanged( 0 );
   slotTextChanged();
   readConfig();
 }
