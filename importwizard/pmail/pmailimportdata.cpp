@@ -60,9 +60,6 @@ bool PMailImportData::importSettings()
 bool PMailImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
-
-  info->clear(); // Clear info from last time
-
   MailImporter::FilterPMail pmail;
   pmail.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));

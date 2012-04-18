@@ -59,8 +59,6 @@ bool TheBatImportData::importSettings()
 bool TheBatImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
-
-    info->clear(); // Clear info from last time
  
     MailImporter::FilterTheBat thebat;
     thebat.setFilterInfo( info );

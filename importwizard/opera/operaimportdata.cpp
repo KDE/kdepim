@@ -60,8 +60,6 @@ bool OperaImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
 
-  info->clear(); // Clear info from last time
-
   MailImporter::FilterOpera opera;
   opera.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
