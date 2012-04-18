@@ -218,7 +218,7 @@ void TranslatorWidget::writeConfig()
 
 void TranslatorWidget::readConfig()
 {
-  KConfigGroup myGroup( KernelIf->config(), "MainFolderView" );
+  KConfigGroup myGroup( KernelIf->config(), "TranslatorWidget" );
   const QString from = myGroup.readEntry( QLatin1String( "FromLanguage" ) );
   const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
   if ( from.isEmpty() )
