@@ -30,7 +30,10 @@
 AddArchiveMailDialog::AddArchiveMailDialog(const ArchiveMailInfo& info,QWidget *parent)
   :KDialog(parent)
 {
-  setCaption( i18n( "Add Archive Mail" ) );
+  if(info.isEmpty())
+    setCaption( i18n( "Add Archive Mail" ) );
+  else
+    setCaption( i18n( "Modify Archive Mail" ) );
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
   setModal( true );
@@ -101,7 +104,31 @@ AddArchiveMailDialog::~AddArchiveMailDialog()
 
 void AddArchiveMailDialog::load(const ArchiveMailInfo& info)
 {
+  mPath->setUrl(info.url());
+  mRecursiveCheckBox->setChecked(info.saveSubCollection());
+  mFolderRequester->setCollection(Akonadi::Collection(info.saveCollectionId()));
+  mFormatComboBox->setCurrentIndex(static_cast<int>(info.archiveType()));
+#if 0 //TODO
+  void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
+  ArchiveMailInfo::ArchiveUnit archiveUnit() const;
+
+  void setArchiveAge( int age );
+  int archiveAge() const;
+
+  void setLastDateSaved( const QDate& date );
+  QDate lastDateSaved() const;
+#endif
+
   //TODO
+}
+
+ArchiveMailInfo AddArchiveMailDialog::info()
+{
+  ArchiveMailInfo newInfo;
+  newInfo.setSaveSubCollection(mRecursiveCheckBox->isChecked());
+  newInfo.setArchiveType(static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex()));
+  //TODO
+  return newInfo;
 }
 
 void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collection)
