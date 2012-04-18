@@ -403,8 +403,14 @@ bool MailCommon::Util::createEventFromMail( const Akonadi::Item &mailItem )
 uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
 {
   uint id = 0;
-  if( item.isValid() && item.parentCollection().isValid() ) {
-    const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection(),false );
+  if ( item.isValid() && item.parentCollection().isValid() ) {
+    Akonadi::Collection col = item.parentCollection();
+    if( col.resource().isEmpty()) {
+      col = parentCollectionFromItem(item);
+    }
+    const QSharedPointer<FolderCollection> fd =
+      FolderCollection::forCollection( col, false );
+
     id = fd->identity();
   }
   return id;
@@ -508,9 +514,7 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
 
 Akonadi::Collection MailCommon::Util::parentCollectionFromItem(const Akonadi::Item& item)
 {
-  const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), item.parentCollection() );
-  const Akonadi::Collection parentCollection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  return parentCollection;
+  return updatedCollection(item.parentCollection());
 }
 
 
@@ -535,3 +539,11 @@ void MailCommon::Util::expireOldMessages( const Akonadi::Collection& collection,
   ScheduledExpireTask* task = new ScheduledExpireTask(collection, immediate);
   KernelIf->jobScheduler()->registerTask( task );
 }
+
+Akonadi::Collection MailCommon::Util::updatedCollection( const Akonadi::Collection& col )
+{
+  const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), col );
+  const Akonadi::Collection collection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  return collection;
+}
+

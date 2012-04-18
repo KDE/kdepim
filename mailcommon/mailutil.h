@@ -113,6 +113,7 @@ namespace Util {
     MAILCOMMON_EXPORT QColor defaultQuotaColor();
     MAILCOMMON_EXPORT void expireOldMessages( const Akonadi::Collection& collection, bool immediate );
 
+  MAILCOMMON_EXPORT Akonadi::Collection updatedCollection( const Akonadi::Collection& col );
 }
 
 }
