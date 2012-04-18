@@ -62,6 +62,7 @@ MailImporter::FilterInfo* AbstractImporter::initializeInfo()
   ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
   info->setFilterInfoGui(infoGui);
   info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
+  info->clear(); // Clear info from last time
   return info;
 }
 
