@@ -222,7 +222,14 @@ void TranslatorWidget::readConfig()
   const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
   if ( from.isEmpty() )
     return;
-  //TODO fix index
+  const int indexFrom = d->from->findData( from );
+  if ( indexFrom != -1 ) {
+    d->from->setCurrentIndex( indexFrom );
+  }
+  const int indexTo = d->to->findData( to );
+  if ( indexTo != -1 ) {
+    d->to->setCurrentIndex( indexTo );
+  }
 }
 
 void TranslatorWidget::init()
