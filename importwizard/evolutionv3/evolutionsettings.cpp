@@ -367,6 +367,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
               } else if(authMethod==QLatin1String("LOGIN")) {
                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN);
+              } else if(authMethod==QLatin1String("GSSAPI")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::GSSAPI);
               } else if(authMethod==QLatin1String("POPB4SMTP")) {
                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::APOP); //????
               } else {
