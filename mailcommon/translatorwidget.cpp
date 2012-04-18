@@ -32,6 +32,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QRegExp>
+#include <QToolButton>
 
 using namespace MailCommon;
 
@@ -237,6 +238,18 @@ void TranslatorWidget::init()
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
   QHBoxLayout *hboxLayout = new QHBoxLayout;
+  QToolButton * closeBtn = new QToolButton( this );
+  closeBtn->setIcon( KIcon( "dialog-close" ) );
+  closeBtn->setIconSize( QSize( 24, 24 ) );
+  closeBtn->setToolTip( i18n( "Close" ) );
+
+#ifndef QT_NO_ACCESSIBILITY
+  closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+  closeBtn->setAutoRaise( true );
+  hboxLayout->addWidget( closeBtn );
+  connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
+
   d->translate = new KPushButton( i18n( "Translate" ) );
   hboxLayout->addWidget( d->translate );
   connect( d->translate, SIGNAL( clicked() ), SLOT( slotTranslate() ) );
@@ -334,6 +347,11 @@ void TranslatorWidget::slotJobDone ( KJob *job )
     re.indexIn( d->data );
     d->translatedText->setText( re.cap( 1 ) );
   }
+}
+
+void TranslatorWidget::slotCloseWidget()
+{
+  //TODO
 }
 
 #include "translatorwidget.moc"

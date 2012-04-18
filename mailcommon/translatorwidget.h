@@ -43,7 +43,8 @@ private Q_SLOTS:
   void slotJobDone(KJob*);
   void slotFromLanguageChanged( int );
   void slotTextChanged();
-  
+  void slotCloseWidget();
+
 private:
   void init();
   void initLanguage();
