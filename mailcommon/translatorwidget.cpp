@@ -17,12 +17,15 @@
 */
 
 #include "translatorwidget.h"
+#include "mailkernel.h"
+
 #include <KTextEdit>
 #include <KComboBox>
 #include <KPushButton>
 #include <KLocale>
 #include <kio/job.h>
 #include <KDebug>
+#include <KConfigGroup>
 
 #include <QPair>
 #include <QHBoxLayout>
@@ -201,17 +204,25 @@ TranslatorWidget::TranslatorWidget( const QString& text, QWidget* parent )
 
 TranslatorWidget::~TranslatorWidget()
 {
+  writeConfig();
   delete d;
 }
 
 void TranslatorWidget::writeConfig()
 {
-  //TODO
+  KConfigGroup myGroup( KernelIf->config(), "TranslatorWidget" );
+  myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
+  myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
 }
 
 void TranslatorWidget::readConfig()
 {
-  //TODO
+  KConfigGroup myGroup( KernelIf->config(), "MainFolderView" );
+  const QString from = myGroup.readEntry( QLatin1String( "FromLanguage" ) );
+  const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
+  if ( from.isEmpty() )
+    return;
+  //TODO fix index
 }
 
 void TranslatorWidget::init()
