@@ -256,7 +256,7 @@ void TranslatorWidget::init()
 
   d->translate = new KPushButton( i18n( "Translate" ) );
   hboxLayout->addWidget( d->translate );
-  connect( d->translate, SIGNAL( clicked() ), SLOT( slotTranslate() ) );
+  connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
   QLabel *label = new QLabel( i18n( "From:" ) );
   hboxLayout->addWidget( label );
   d->from = new KComboBox;
@@ -277,7 +277,7 @@ void TranslatorWidget::init()
   hboxLayout = new QHBoxLayout;
   d->inputText = new KTextEdit;
   d->inputText->setAcceptRichText(false);
-  connect( d->inputText, SIGNAL(textChanged() ), SLOT( slotTextChanged() ) );
+  connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
   hboxLayout->addWidget( d->inputText );
   d->translatedText = new KTextEdit;
@@ -287,7 +287,7 @@ void TranslatorWidget::init()
   layout->addLayout( hboxLayout );
    
   d->initLanguage();
-  connect( d->from, SIGNAL(currentIndexChanged(int) ), SLOT( slotFromLanguageChanged( int ) ) );
+  connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );
 
   d->from->setCurrentIndex( 0 ); //Fill "to" combobox
   slotFromLanguageChanged( 0 );
@@ -376,19 +376,19 @@ void TranslatorWidget::slotCloseWidget()
 
 bool TranslatorWidget::event(QEvent* e)
 {
-    // Close the bar when pressing Escape.
-    // Not using a QShortcut for this because it could conflict with
-    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
-    // With a shortcut override we can catch this before it gets to kactions.
-    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
-        if (kev->key() == Qt::Key_Escape) {
-            e->accept();
-            slotCloseWidget();
-            return true;
-        }
+  // Close the bar when pressing Escape.
+  // Not using a QShortcut for this because it could conflict with
+  // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+  // With a shortcut override we can catch this before it gets to kactions.
+  if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
+    QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (kev->key() == Qt::Key_Escape) {
+      e->accept();
+      slotCloseWidget();
+      return true;
     }
-    return QWidget::event(e);
+  }
+  return QWidget::event(e);
 }
 
 
