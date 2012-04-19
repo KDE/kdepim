@@ -351,7 +351,7 @@ void TranslatorWidget::slotJobDone ( KJob *job )
     d->translate->setEnabled( true );
     QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
     re.setMinimal( true );
-    re.indexIn( d->data );
+    re.indexIn( QString::fromUtf8(d->data) );
     d->translatedText->setHtml( re.cap( 1 ) );
   }
 }
