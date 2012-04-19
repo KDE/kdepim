@@ -267,6 +267,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *urlOpenAction();
   KAction *speakTextAction();
   KAction *copyImageLocation();
+  KAction *translateAction();
 
   const HeaderStrategy * headerStrategy() const;
 
@@ -368,6 +369,7 @@ public slots:
   void slotScrollNext();
   void slotJumpDown();
   void slotFind();
+  void slotTranslate();
   void slotSaveMessage();
   void slotAttachmentSaveAs();
   void slotAttachmentSaveAll();

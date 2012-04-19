@@ -59,8 +59,6 @@ bool Evolutionv2ImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
 
-  info->clear(); // Clear info from last time
-
   MailImporter::FilterEvolution_v2 evolution;
   evolution.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));

@@ -62,7 +62,6 @@ ThunderbirdSettings::~ThunderbirdSettings()
 
 void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )
 {
-  //TODO
   bool found = false;
   if ( mHashConfig.contains( accountName + QLatin1String( ".authMethod" ) ) ) {
     const int authMethod = mHashConfig.value( accountName + QLatin1String( ".authMethod" ) ).toInt(&found);

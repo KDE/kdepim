@@ -96,6 +96,10 @@ void ArchiveMailWidget::load()
 
 void ArchiveMailWidget::save()
 {
+  const int numberOfItem(mWidget->listWidget->count());
+  for(int i = 0; i < numberOfItem; ++i) {
+    //Save
+  }
   //TODO
 }
 
@@ -114,21 +118,18 @@ void ArchiveMailWidget::slotModifyItem()
     return;
   ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
-  //TODO MODIFY it
   if( dialog->exec() ) {
+    archiveItem->setInfo(dialog->info());
   }
   delete dialog;
 }
 
 void ArchiveMailWidget::slotAddItem()
 {
-  ArchiveMailInfo archiveInfo;
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveInfo,this);
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(ArchiveMailInfo(),this);
   if( dialog->exec() ) {
-    //FIXME
    ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
-   item->setInfo(archiveInfo);
-   //TODO
+   item->setInfo(dialog->info());
    updateButtons();
   }
   delete dialog;

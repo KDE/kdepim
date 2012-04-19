@@ -331,6 +331,13 @@ void Viewer::slotFind()
   d->slotFind();
 }
 
+void Viewer::slotTranslate()
+{
+  Q_D(Viewer);
+  d->slotTranslate();
+}
+
+
 const AttachmentStrategy * Viewer::attachmentStrategy() const
 {
   Q_D(const Viewer);
@@ -423,6 +430,13 @@ KAction *Viewer::copyImageLocation()
   Q_D( Viewer );
   return d->mCopyImageLocation;
 }
+
+KAction *Viewer::translateAction()
+{
+  Q_D( Viewer );
+  return d->mTranslateAction;
+}
+
 
 
 KAction *Viewer::urlOpenAction()

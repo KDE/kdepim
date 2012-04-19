@@ -263,19 +263,18 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
 
             bool found = false;
             const QString securityMethod = getSecurityMethod( listArgument, found );
-#if 0 //FIXME
             if( found ) {
               if( securityMethod == QLatin1String("none")) {
+                settings.insert( QLatin1String( "Safety" ), QLatin1String("None") );
                 //Nothing
               } else if(securityMethod == QLatin1String("ssl-on-alternate-port")){
-                settings.insert( QLatin1String( "UseSSL" ), true );
+                settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
               } else {
                 qDebug()<<" security method unknown : "<<path;
               }
             } else {
-              settings.insert( QLatin1String( "UseTLS" ), true );
+              settings.insert( QLatin1String( "Safety" ), QLatin1String("STARTTLS") );
             }
-#endif
 
             addAuth(settings, QLatin1String( "Authentication" ), userName);
             createResource( "akonadi_imap_resource", name,settings );
@@ -316,6 +315,9 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
           } else if( scheme == QLatin1String("maildir") ||scheme == QLatin1String( "spooldir" ) ) {
             settings.insert(QLatin1String("Path"),path);
             createResource( "akonadi_maildir_resource", name, settings );
+          } else if( scheme == QLatin1String("nntp")) {
+            //FIXME in the future
+            qDebug()<<" For the moment we can't import nntp resource";
           } else {
             qDebug()<<" unknown scheme "<<scheme;
           }
@@ -364,6 +366,8 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
               } else if(authMethod==QLatin1String("LOGIN")) {
                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN);
+              } else if(authMethod==QLatin1String("GSSAPI")) {
+                transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::GSSAPI);
               } else if(authMethod==QLatin1String("POPB4SMTP")) {
                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::APOP); //????
               } else {

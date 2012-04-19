@@ -69,8 +69,6 @@ bool SylpheedImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
 
-  info->clear(); // Clear info from last time
-
   MailImporter::FilterSylpheed sylpheed;
   sylpheed.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));

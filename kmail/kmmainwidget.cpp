@@ -3035,6 +3035,8 @@ void KMMainWidget::slotDelayedMessagePopup( KJob *job )
     menu->addSeparator();
     mMsgActions->addWebShortcutsMenu(menu,selectedText);
     menu->addSeparator();
+    menu->addAction(mMsgView->translateAction());
+    menu->addSeparator();
     menu->addAction( mMsgView->speakTextAction());
   } else if ( !urlMenuAdded ) {
     // popup somewhere else (i.e., not a URL) on the message
@@ -3968,7 +3970,7 @@ void KMMainWidget::updateMessageActionsDelayed()
 
   updateMoveAction( (mCurrentFolder&& mCurrentFolder->isValid()) ? mCurrentFolder->statistics().count() : 0 );
 
-  const qint64 nbMsgOutboxCollection = KMail::Util::updatedCollection( CommonKernel->outboxCollectionFolder() ).statistics().count();
+  const qint64 nbMsgOutboxCollection = MailCommon::Util::updatedCollection( CommonKernel->outboxCollectionFolder() ).statistics().count();
   
   actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
   actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );

@@ -17,26 +17,31 @@
 */
 
 #include "translatorwidget.h"
+#include "globalsettings.h"
+
 #include <KTextEdit>
 #include <KComboBox>
 #include <KPushButton>
 #include <KLocale>
 #include <kio/job.h>
 #include <KDebug>
+#include <KConfigGroup>
 
 #include <QPair>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QRegExp>
+#include <QToolButton>
+#include <QKeyEvent>
 
-using namespace MailCommon;
+using namespace MessageViewer;
 
 class TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
   TranslatorWidgetPrivate()
-    : job( 0 ) {
+  {
     
   }
   void initLanguage();
@@ -49,7 +54,6 @@ public:
   KComboBox *from;
   KComboBox *to;
   KPushButton *translate;
-  KIO::Job *job;
 };
 
 static void addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
@@ -68,7 +72,8 @@ void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& l
   to->clear();
   const QMap<QString, QString> list = listLanguage.value( lang );
   QMap<QString, QString>::const_iterator i = list.constBegin();
-  while (i != list.constEnd()) {
+  QMap<QString, QString>::const_iterator end = list.constEnd();
+  while (i != end) {
     to->addItem( i.key(), i.value() );
     ++i;
  }
@@ -167,7 +172,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 
   addItemToFromComboBox( from, ru );
   QMap<QString, QString> ruList;
-  addPairToMap( ruList, ru );
+  addPairToMap( ruList, en );
   listLanguage.insert( ru.second, ruList );
 
 
@@ -199,13 +204,59 @@ TranslatorWidget::TranslatorWidget( const QString& text, QWidget* parent )
   d->inputText->setPlainText( text );
 }
 
+TranslatorWidget::~TranslatorWidget()
+{
+  writeConfig();
+  delete d;
+}
+
+void TranslatorWidget::writeConfig()
+{
+  KConfig *config = GlobalSettings::self()->config();
+  KConfigGroup myGroup( config, "TranslatorWidget" );
+  myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
+  myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+  config->sync();
+}
+
+void TranslatorWidget::readConfig()
+{
+  KConfig *config = GlobalSettings::self()->config();
+  KConfigGroup myGroup( config, "TranslatorWidget" );
+  const QString from = myGroup.readEntry( QLatin1String( "FromLanguage" ) );
+  const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
+  if ( from.isEmpty() )
+    return;
+  const int indexFrom = d->from->findData( from );
+  if ( indexFrom != -1 ) {
+    d->from->setCurrentIndex( indexFrom );
+  }
+  const int indexTo = d->to->findData( to );
+  if ( indexTo != -1 ) {
+    d->to->setCurrentIndex( indexTo );
+  }
+}
+
 void TranslatorWidget::init()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
   QHBoxLayout *hboxLayout = new QHBoxLayout;
+  QToolButton * closeBtn = new QToolButton( this );
+  closeBtn->setIcon( KIcon( "dialog-close" ) );
+  closeBtn->setIconSize( QSize( 24, 24 ) );
+  closeBtn->setToolTip( i18n( "Close" ) );
+
+#ifndef QT_NO_ACCESSIBILITY
+  closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+  closeBtn->setAutoRaise( true );
+  hboxLayout->addWidget( closeBtn );
+  connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
+
   d->translate = new KPushButton( i18n( "Translate" ) );
   hboxLayout->addWidget( d->translate );
-  connect( d->translate, SIGNAL( clicked() ), SLOT( slotTranslate() ) );
+  connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
   QLabel *label = new QLabel( i18n( "From:" ) );
   hboxLayout->addWidget( label );
   d->from = new KComboBox;
@@ -215,13 +266,18 @@ void TranslatorWidget::init()
   hboxLayout->addWidget( label );
   d->to = new KComboBox;
   hboxLayout->addWidget( d->to );
+
+  KPushButton *invert = new KPushButton(i18n("Invert"),this);
+  connect(invert,SIGNAL(clicked()),this,SLOT(slotInvertLanguage()));
+  hboxLayout->addWidget(invert);
   hboxLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum ) );
    
   layout->addLayout( hboxLayout );
 
   hboxLayout = new QHBoxLayout;
   d->inputText = new KTextEdit;
-  connect( d->inputText, SIGNAL(textChanged() ), SLOT( slotTextChanged() ) );
+  d->inputText->setAcceptRichText(false);
+  connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
   hboxLayout->addWidget( d->inputText );
   d->translatedText = new KTextEdit;
@@ -231,15 +287,13 @@ void TranslatorWidget::init()
   layout->addLayout( hboxLayout );
    
   d->initLanguage();
-  connect( d->from, SIGNAL(currentIndexChanged(int) ), SLOT( slotFromLanguageChanged( int ) ) );
-  //TODO restore previous config
-  d->from->setCurrentIndex( 0 ); //Fill "to" combobox
-  slotTextChanged();
-}
+  connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );
 
-TranslatorWidget::~TranslatorWidget()
-{
-  delete d;
+  d->from->setCurrentIndex( 0 ); //Fill "to" combobox
+  slotFromLanguageChanged( 0 );
+  slotTextChanged();
+  readConfig();
+  hide();
 }
 
 void TranslatorWidget::slotTextChanged()
@@ -275,35 +329,68 @@ void TranslatorWidget::slotTranslate()
   QByteArray postData = QString( "ei=UTF-8&doit=done&fr=bf-res&intl=1&tt=urltext&trtext=%1&lp=%2_%3&btnTrTxt=Translate").arg( body, from, to ).toLocal8Bit();
   kDebug(14308) << "URL:" << geturl << "(post data" << postData << ")";
 
-  KIO::TransferJob *job = KIO::http_post( geturl, postData );
+  KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,geturl);
   job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
   job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
-  d->data.clear();
-  d->job = job;
-  connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(slotDataReceived(KIO::Job*,QByteArray)) );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
-}
-
-void TranslatorWidget::slotDataReceived ( KIO::Job *job, const QByteArray &data )
-{
-  if ( job == d->job )
-    d->data.append(data);
 }
 
 void TranslatorWidget::slotJobDone ( KJob *job )
 {
-  if ( job == d->job )
-  {
-    disconnect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(slotDataReceived(KIO::Job*,QByteArray)) );
-    disconnect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
-
+  KIO::StoredTransferJob *httpPostJob = dynamic_cast<KIO::StoredTransferJob *>(job);
+  if(httpPostJob) {
     d->translate->setEnabled( true );
-    QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
-    re.setMinimal( true );
-    re.indexIn( d->data );
-    d->translatedText->setText( re.cap( 1 ) );
+    const QString data = QString::fromUtf8(httpPostJob->data());
+    int index = data.indexOf(QLatin1String("<div style=\"padding:0.6em;\">"));
+    if(index != -1) {
+      QString newStr = data.right(data.length()-index - 29);
+      index = newStr.indexOf(QLatin1String("</div>"));
+      d->translatedText->setHtml(newStr.left(index));
+    } else {
+      d->translatedText->clear();
+    }
   }
 }
+
+void TranslatorWidget::slotInvertLanguage()
+{
+  const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
+  const int indexFrom = d->from->findData( toLanguage );
+  if ( indexFrom != -1 ) {
+    d->from->setCurrentIndex( indexFrom );
+  }
+  const QString fromLanguage = d->to->itemData(d->from->currentIndex()).toString();
+  const int indexTo = d->to->findData( fromLanguage );
+  if ( indexTo != -1 ) {
+    d->to->setCurrentIndex( indexTo );
+  }
+}
+
+void TranslatorWidget::slotCloseWidget()
+{
+  d->inputText->clear();
+  d->translatedText->clear();
+  hide();
+  Q_EMIT translatorWasClosed();
+}
+
+bool TranslatorWidget::event(QEvent* e)
+{
+  // Close the bar when pressing Escape.
+  // Not using a QShortcut for this because it could conflict with
+  // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+  // With a shortcut override we can catch this before it gets to kactions.
+  if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
+    QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (kev->key() == Qt::Key_Escape) {
+      e->accept();
+      slotCloseWidget();
+      return true;
+    }
+  }
+  return QWidget::event(e);
+}
+
 
 #include "translatorwidget.moc"
 

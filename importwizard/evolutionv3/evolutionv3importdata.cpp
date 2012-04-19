@@ -67,8 +67,6 @@ bool Evolutionv3ImportData::importSettings()
 bool Evolutionv3ImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
-  info->clear(); // Clear info from last time
-
 
   MailImporter::FilterEvolution_v3 evolution;
   evolution.setFilterInfo( info );

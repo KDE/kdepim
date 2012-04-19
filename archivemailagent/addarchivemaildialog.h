@@ -52,6 +52,8 @@ public:
   KUrl path() const;
   void setPath(const KUrl&);
 
+  ArchiveMailInfo info();
+
 private Q_SLOTS:
   void slotFolderChanged(const Akonadi::Collection&);
 
