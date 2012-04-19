@@ -267,6 +267,10 @@ void TranslatorWidget::init()
   hboxLayout->addWidget( label );
   d->to = new KComboBox;
   hboxLayout->addWidget( d->to );
+
+  KPushButton *invert = new KPushButton(i18n("Invert"),this);
+  connect(invert,SIGNAL(clicked()),this,SLOT(slotInvertLanguage()));
+  hboxLayout->addWidget(invert);
   hboxLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum ) );
    
   layout->addLayout( hboxLayout );
@@ -343,6 +347,20 @@ void TranslatorWidget::slotJobDone ( KJob *job )
     d->translatedText->setHtml(newStr.left(index));
   } else {
     d->translatedText->clear();
+  }
+}
+
+void TranslatorWidget::slotInvertLanguage()
+{
+  const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
+  const int indexFrom = d->from->findData( toLanguage );
+  if ( indexFrom != -1 ) {
+    d->from->setCurrentIndex( indexFrom );
+  }
+  const QString fromLanguage = d->to->itemData(d->from->currentIndex()).toString();
+  const int indexTo = d->to->findData( fromLanguage );
+  if ( indexTo != -1 ) {
+    d->to->setCurrentIndex( indexTo );
   }
 }
 

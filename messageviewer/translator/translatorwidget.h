@@ -43,6 +43,7 @@ private Q_SLOTS:
   void slotJobDone(KJob*);
   void slotFromLanguageChanged( int );
   void slotTextChanged();
+  void slotInvertLanguage();
 protected:
   bool event(QEvent* e);
 
