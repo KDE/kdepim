@@ -96,6 +96,10 @@ void ArchiveMailWidget::load()
 
 void ArchiveMailWidget::save()
 {
+  const int numberOfItem(mWidget->listWidget->count());
+  for(int i = 0; i < numberOfItem; ++i) {
+    //Save
+  }
   //TODO
 }
 
