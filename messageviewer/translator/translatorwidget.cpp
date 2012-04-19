@@ -41,7 +41,7 @@ class TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
   TranslatorWidgetPrivate()
-    : job( 0 ) {
+  {
     
   }
   void initLanguage();
@@ -54,7 +54,6 @@ public:
   KComboBox *from;
   KComboBox *to;
   KPushButton *translate;
-  KIO::StoredTransferJob *job;
 };
 
 static void addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
@@ -330,23 +329,26 @@ void TranslatorWidget::slotTranslate()
   QByteArray postData = QString( "ei=UTF-8&doit=done&fr=bf-res&intl=1&tt=urltext&trtext=%1&lp=%2_%3&btnTrTxt=Translate").arg( body, from, to ).toLocal8Bit();
   kDebug(14308) << "URL:" << geturl << "(post data" << postData << ")";
 
-  d->job = KIO::storedHttpPost(postData,geturl);
-  d->job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
-  d->job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
-  connect( d->job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
+  KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,geturl);
+  job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
+  job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
 }
 
 void TranslatorWidget::slotJobDone ( KJob *job )
 {
-  d->translate->setEnabled( true );
-  const QString data = QString::fromUtf8(d->job->data());
-  int index = data.indexOf(QLatin1String("<div style=\"padding:0.6em;\">"));
-  if(index != -1) {
-    QString newStr = data.right(data.length()-index - 29);
-    index = newStr.indexOf(QLatin1String("</div>"));
-    d->translatedText->setHtml(newStr.left(index));
-  } else {
-    d->translatedText->clear();
+  KIO::StoredTransferJob *httpPostJob = dynamic_cast<KIO::StoredTransferJob *>(job);
+  if(httpPostJob) {
+    d->translate->setEnabled( true );
+    const QString data = QString::fromUtf8(httpPostJob->data());
+    int index = data.indexOf(QLatin1String("<div style=\"padding:0.6em;\">"));
+    if(index != -1) {
+      QString newStr = data.right(data.length()-index - 29);
+      index = newStr.indexOf(QLatin1String("</div>"));
+      d->translatedText->setHtml(newStr.left(index));
+    } else {
+      d->translatedText->clear();
+    }
   }
 }
 
