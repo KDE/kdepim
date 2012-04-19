@@ -1,6 +1,7 @@
 [Global]
 Comment=Archive Mail Agent
 Comment[es]=Agente de archivado de correo
+Comment[ia]=Agente de Archivar posta
 Comment[nb]=Arkivpost-agent
 Comment[nl]=E-mailagent voor archiveren
 Comment[pl]=Agent archiwizacji poczty
@@ -9,8 +10,10 @@ Comment[pt_BR]=Agente de arquivamento de e-mails
 Comment[sv]=E-postarkiveringsmodul
 Comment[uk]=Агент архівування пошти
 Comment[x-test]=xxArchive Mail Agentxx
+Comment[zh_TW]=歸檔郵件代理程式
 Name=Archive Mail Agent
 Name[es]=Agente de archivado de correo
+Name[ia]=Agente de Archivar posta
 Name[nb]=Arkivpost-agent
 Name[nl]=E-mailagent voor archiveren
 Name[pl]=Agent archiwizacji poczty
@@ -19,10 +22,12 @@ Name[pt_BR]=Agente de arquivamento de e-mails
 Name[sv]=E-postarkiveringsmodul
 Name[uk]=Агент архівування пошти
 Name[x-test]=xxArchive Mail Agentxx
+Name[zh_TW]=歸檔郵件代理程式
 
 [Event/archivemailfinished]
 Name=Archive Mail finished
 Name[es]=Archivado de correo terminado
+Name[ia]=Action de archivar posta terminate
 Name[nb]=Arkivpost fullført
 Name[nl]=E-mail archiveren is gereed
 Name[pl]=Ukończono archiwizację poczty
@@ -31,5 +36,6 @@ Name[pt_BR]=O arquivamento de e-mails foi concluído
 Name[sv]=Arkivering av e-post klar
 Name[uk]=Архівування пошти завершено
 Name[x-test]=xxArchive Mail finishedxx
+Name[zh_TW]=歸檔郵件已完成
 Action=Popup
 
