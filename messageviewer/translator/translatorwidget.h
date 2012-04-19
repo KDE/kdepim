@@ -40,7 +40,6 @@ public Q_SLOTS:
   void slotCloseWidget();
 
 private Q_SLOTS:
-  void slotDataReceived ( KIO::Job *job, const QByteArray &data );
   void slotJobDone(KJob*);
   void slotFromLanguageChanged( int );
   void slotTextChanged();

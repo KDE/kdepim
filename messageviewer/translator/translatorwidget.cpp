@@ -54,7 +54,7 @@ public:
   KComboBox *from;
   KComboBox *to;
   KPushButton *translate;
-  KIO::Job *job;
+  KIO::StoredTransferJob *job;
 };
 
 static void addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
@@ -326,34 +326,19 @@ void TranslatorWidget::slotTranslate()
   QByteArray postData = QString( "ei=UTF-8&doit=done&fr=bf-res&intl=1&tt=urltext&trtext=%1&lp=%2_%3&btnTrTxt=Translate").arg( body, from, to ).toLocal8Bit();
   kDebug(14308) << "URL:" << geturl << "(post data" << postData << ")";
 
-  KIO::TransferJob *job = KIO::http_post( geturl, postData );
-  job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
-  job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
-  d->data.clear();
-  d->job = job;
-  connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(slotDataReceived(KIO::Job*,QByteArray)) );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
-}
-
-void TranslatorWidget::slotDataReceived ( KIO::Job *job, const QByteArray &data )
-{
-  if ( job == d->job )
-    d->data.append(data);
+  d->job = KIO::storedHttpPost(postData,geturl);
+  d->job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
+  d->job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
+  connect( d->job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
 }
 
 void TranslatorWidget::slotJobDone ( KJob *job )
 {
-  if ( job == d->job )
-  {
-    disconnect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(slotDataReceived(KIO::Job*,QByteArray)) );
-    disconnect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
-
-    d->translate->setEnabled( true );
-    QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
-    re.setMinimal( true );
-    re.indexIn( QString::fromUtf8(d->data) );
-    d->translatedText->setHtml( re.cap( 1 ) );
-  }
+  d->translate->setEnabled( true );
+  QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
+  re.setMinimal( true );
+  re.indexIn( QString::fromUtf8(d->job->data()) );
+  d->translatedText->setHtml( re.cap( 1 ) );
 }
 
 void TranslatorWidget::slotCloseWidget()
