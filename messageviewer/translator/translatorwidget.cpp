@@ -335,10 +335,15 @@ void TranslatorWidget::slotTranslate()
 void TranslatorWidget::slotJobDone ( KJob *job )
 {
   d->translate->setEnabled( true );
-  QRegExp re( "<div style=\"padding:0.6em;\">(.*)</div>" );
-  re.setMinimal( true );
-  re.indexIn( QString::fromUtf8(d->job->data()) );
-  d->translatedText->setHtml( re.cap( 1 ) );
+  const QString data = QString::fromUtf8(d->job->data());
+  int index = data.indexOf(QLatin1String("<div style=\"padding:0.6em;\">"));
+  if(index != -1) {
+    QString newStr = data.right(data.length()-index - 29);
+    index = newStr.indexOf(QLatin1String("</div>"));
+    d->translatedText->setHtml(newStr.left(index));
+  } else {
+    d->translatedText->clear();
+  }
 }
 
 void TranslatorWidget::slotCloseWidget()
