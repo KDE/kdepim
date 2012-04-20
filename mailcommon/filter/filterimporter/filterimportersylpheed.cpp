@@ -74,7 +74,6 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
         !ruleFilter.isNull();
         ruleFilter = ruleFilter.nextSiblingElement() ) {
     QString contentsName;
-    QString contents;
     QByteArray fieldName;
     SearchRule::Function functionName = SearchRule::FuncNone;
 
@@ -104,26 +103,35 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
       contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-any-header" ) ) {
       fieldName = "<recipients>";
-      contents = ruleFilter.text();
+      contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-to-or-cc" ) ) {
       fieldName = "<recipients>";
-      contents = ruleFilter.text();
+      contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-body-text" ) ) {
       fieldName = "<body>";
-      contents = ruleFilter.text();
+      contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "command-test" ) ) {
+      //TODO
+      //Not implemented in kmail
     } else if ( nexttag == QLatin1String( "size" ) ) {
       fieldName = "<size>";
-      contents = ruleFilter.text();
+      contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "age" ) ) {
       fieldName = "<age in days>";
+      contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "unread" ) ) {
+      fieldName = "<status>";
+      contentsName = QLatin1String( "Unread" );
     } else if ( nexttag == QLatin1String( "mark" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "color-label" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "mime" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "account-id" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "target-folder" ) ) {
-
+      //TODO
     } else {
       kDebug() << " tag not recognize " << nexttag;
     }
@@ -170,26 +178,35 @@ void FilterImporterSylpheed::parseActions( const QDomElement &e,
     QString value = ruleFilter.text();
     if ( nexttag == QLatin1String( "move" ) ){
       actionName = QLatin1String( "transfer" );
+      value = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "copy" ) ) {
       actionName = QLatin1String( "copy" );
       value = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "not-receive" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "delete" ) ) {
       actionName = QLatin1String( "delete" );
     } else if ( nexttag == QLatin1String( "exec" ) ) {
       actionName = QLatin1String( "execute" );
+      value = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "exec-async" ) ) {
       actionName = QLatin1String( "filter app" );
+      value = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "mark" ) ) {
+      //FIXME add tag ?
     } else if ( nexttag == QLatin1String( "color-label" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "mark-as-read" ) ) {
       actionName = QLatin1String( "set status" );
       value = QLatin1String( "R" );
     } else if ( nexttag == QLatin1String( "forward" ) ) {
       actionName = QLatin1String( "forward" );
+      value = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "forward-as-attachment" ) ) {
+      //TODO
     } else if ( nexttag == QLatin1String( "redirect" ) ) {
       actionName = QLatin1String( "redirect" );
+      value = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "stop-eval" ) ) {
       filter->setStopProcessingHere( true );
       break;
