@@ -1574,7 +1574,8 @@ void ViewerPrivate::createActions()
   mSaveMessageAction = new KAction(i18n("&Save message"), this);
   ac->addAction("save_message", mSaveMessageAction);
   connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
-  mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+  //Laurent: conflict with kmail shortcut
+  //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   //
   // Scroll actions
