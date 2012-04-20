@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Backup Mail
+Exec=backupmail
+Type=Application
+NoDisplay=true
+Comment=Backup Mail allows to save all data from kmail and restore them in other system.
+Terminal=false
