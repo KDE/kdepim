@@ -15,23 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef BACKUPMAILWIDGET_H
+#define BACKUPMAILWIDGET_H
 
-#ifndef BACKUPMAILAPPLICATION_H
-#define BACKUPMAILAPPLICATION_H
-#include <kxmlguiwindow.h>
+#include <QWidget>
 
-class BackupMailWidget;
-class BackupMailApplication: public KXmlGuiWindow
+class BackupMailWidget : public QWidget
 {
-  Q_OBJECT
 public:
-  explicit BackupMailApplication(QWidget *parent=0);
-  ~BackupMailApplication();
-private:
-  setupActions();
-  BackupMailWidget *mBackupMailWidget;
+  explicit BackupMailWidget(QWidget *parent);
+  ~BackupMailWidget();
 };
 
-
-#endif /* BACKUPMAILAPPLICATION_H */
-
+#endif // BACKUPMAILWIDGET_H

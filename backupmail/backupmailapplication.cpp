@@ -16,16 +16,25 @@
 */
 
 #include "backupmailapplication.h"
+#include "backupmailwidget.h"
 
-BackupMailApplication::BackupMailApplication()
-  : KXmlGuiWindow()
+BackupMailApplication::BackupMailApplication(QWidget *parent)
+  : KXmlGuiWindow(parent)
 {
+  setupActions();
   setupGUI(Default,"backupmailapplication.rc");
+  mBackupMailWidget = new BackupMailWidget(this);
+
+  setCentralWidget(mBackupMailWidget);
 }
 
 BackupMailApplication::~BackupMailApplication()
 {
 }
 
+void BackupMailApplication::setupActions()
+{
+
+}
 
 #include "backupmailapplication.moc"
