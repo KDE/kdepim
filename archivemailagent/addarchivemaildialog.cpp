@@ -107,7 +107,7 @@ void AddArchiveMailDialog::load(const ArchiveMailInfo& info)
   mPath->setUrl(info.url());
   mRecursiveCheckBox->setChecked(info.saveSubCollection());
   mFolderRequester->setCollection(Akonadi::Collection(info.saveCollectionId()));
-  mFormatComboBox->setCurrentIndex(static_cast<int>(info.archiveType()));
+  mFormatComboBox->setCurrentIndex(static_cast<int>(info.archiveType()));  
 #if 0 //TODO
   void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
   ArchiveMailInfo::ArchiveUnit archiveUnit() const;
@@ -127,6 +127,8 @@ ArchiveMailInfo AddArchiveMailDialog::info()
   ArchiveMailInfo newInfo;
   newInfo.setSaveSubCollection(mRecursiveCheckBox->isChecked());
   newInfo.setArchiveType(static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex()));
+  newInfo.setSaveCollectionId(mFolderRequester->collection().id());
+  newInfo.setUrl(mPath->url());
   //TODO
   return newInfo;
 }
