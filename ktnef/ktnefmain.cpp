@@ -125,7 +125,7 @@ void KTNEFMain::setupActions()
   KAction *filePropsAction = actionCollection()->addAction( "properties_file" );
   filePropsAction->setText( i18nc( "@action:inmenu", "Properties" ) );
   filePropsAction->setIcon( KIcon( "document-properties" ) );
-  connect( filePropsAction, SIGNAL(triggered()), this, SLOT(propertiesFile() ));
+  connect( filePropsAction, SIGNAL(triggered()), this, SLOT(propertiesFile()));
 
   KAction *messPropsAction = actionCollection()->addAction( "msg_properties" );
   messPropsAction->setText( i18nc( "@action:inmenu", "Message Properties" ) );
@@ -181,8 +181,8 @@ void KTNEFMain::setupTNEF()
   connect( mView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(viewDoubleClicked(QTreeWidgetItem*)) );
 
-//PORTME:  connect( mView, SIGNAL(dragRequested(const QList<KTNEFAttach*>&)),
-//PORTME:           SLOT(viewDragRequested(const QList<KTNEFAttach*>&)) );
+//PORTME:  connect( mView, SIGNAL(dragRequested(QList<KTNEFAttach*>)),
+//PORTME:           SLOT(viewDragRequested(QList<KTNEFAttach*>)) );
 }
 
 void KTNEFMain::loadFile( const QString &filename )
