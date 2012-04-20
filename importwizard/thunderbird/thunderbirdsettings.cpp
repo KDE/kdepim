@@ -138,6 +138,18 @@ void ThunderbirdSettings::readAccount()
       if ( found ) {
         settings.insert( QLatin1String( "Port" ), port );
       }
+      found = false;
+      const int socketType = mHashConfig.value( accountName + QLatin1String( ".socketType" ) ).toInt( &found);
+      if(found) {
+        switch(socketType) {
+          case 0:
+            break;
+          default:
+            qDebug()<<" socketType "<<socketType;
+        }
+
+        //TODO
+      }
       addAuth( settings, QLatin1String( "AuthenticationMethod" ),account );
       
       createResource( "akonadi_pop3_resource", name, settings );
