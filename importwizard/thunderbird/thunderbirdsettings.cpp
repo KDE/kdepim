@@ -143,8 +143,19 @@ void ThunderbirdSettings::readAccount()
     } else if ( type == QLatin1String( "none" ) ) {
       //TODO
       qDebug()<<" account type none!";
+    } else if (type == QLatin1String("movemail")) {
+      //TODO
+    } else if (type == QLatin1String("rss")) {
+      //TODO when akregator2 will merge in kdepim
+      qDebug()<<" rss resource needs to be implemented";
+      continue;
+    } else if (type == QLatin1String("nntp")) {
+      //TODO when akregator2 will merge in kdepim
+      qDebug()<<" nntp resource need to be implemented";
+      continue;
     } else {
       qDebug()<<" type unknown : "<<type;
+      continue;
     }
 
     const QString identityConfig = QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".identities" );
