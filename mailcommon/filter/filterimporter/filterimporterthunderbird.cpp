@@ -260,9 +260,9 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   } else if ( function == QLatin1String( "is after" ) ) {
     functionName = SearchRule::FuncIsGreater;
   } else if ( function == QLatin1String( "is higher than" ) ) {
-    //TODO
+    functionName = SearchRule::FuncIsGreater;
   } else if ( function == QLatin1String( "is lower than" ) ) {
-    //TODO
+    functionName = SearchRule::FuncIsLess;
   } else if ( function == QLatin1String( "begins with" ) ) {
     functionName = SearchRule::FuncStartWith;
   } else if ( function == QLatin1String( "ends with" ) ) {
