@@ -20,6 +20,7 @@
 BackupMailApplication::BackupMailApplication()
   : KXmlGuiWindow()
 {
+  setupGUI(Default,"backupmailapplication.rc");
 }
 
 BackupMailApplication::~BackupMailApplication()
