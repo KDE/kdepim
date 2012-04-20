@@ -102,6 +102,9 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
   } else if ( line.startsWith( QLatin1Char( '}' ) ) ) {
     //End block
   } else {
+    const QString actionName( QLatin1String( "transfer" ) );
+    const QString value( line );
+    createFilterAction( filter, actionName, value );
     //Folder
   }
 
