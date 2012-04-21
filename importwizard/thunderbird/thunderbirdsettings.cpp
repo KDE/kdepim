@@ -129,7 +129,8 @@ void ThunderbirdSettings::readAccount()
       found = false;
       const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt(&found);
       if ( found ) {
-        settings.insert(QLatin1String("LeaveOnServer"),numberDayToLeave);
+        settings.insert(QLatin1String("LeaveOnServer"),true);
+        settings.insert(QLatin1String("LeaveOnServerDays"),numberDayToLeave);
       }
       
       found = false;
@@ -137,14 +138,37 @@ void ThunderbirdSettings::readAccount()
       if ( found ) {
         settings.insert( QLatin1String( "Port" ), port );
       }
+      found = false;
+      const int socketType = mHashConfig.value( accountName + QLatin1String( ".socketType" ) ).toInt( &found);
+      if(found) {
+        switch(socketType) {
+          case 0:
+            break;
+          default:
+            qDebug()<<" socketType "<<socketType;
+        }
+
+        //TODO
+      }
       addAuth( settings, QLatin1String( "AuthenticationMethod" ),account );
       
       createResource( "akonadi_pop3_resource", name, settings );
     } else if ( type == QLatin1String( "none" ) ) {
       //TODO
       qDebug()<<" account type none!";
+    } else if (type == QLatin1String("movemail")) {
+      //TODO
+    } else if (type == QLatin1String("rss")) {
+      //TODO when akregator2 will merge in kdepim
+      qDebug()<<" rss resource needs to be implemented";
+      continue;
+    } else if (type == QLatin1String("nntp")) {
+      //TODO when akregator2 will merge in kdepim
+      qDebug()<<" nntp resource need to be implemented";
+      continue;
     } else {
       qDebug()<<" type unknown : "<<type;
+      continue;
     }
 
     const QString identityConfig = QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".identities" );

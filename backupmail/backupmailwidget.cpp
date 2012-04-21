@@ -14,22 +14,17 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "evolutionaddressbook.h"
 
-EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)
-  : AbstractAddressBook( parent )
+#include "backupmailwidget.h"
+
+BackupMailWidget::BackupMailWidget(QWidget * parent)
+  :QWidget(parent)
 {
-  exportEvolutionAddressBook();
 }
 
-EvolutionAddressBook::~EvolutionAddressBook()
+BackupMailWidget::~BackupMailWidget()
 {
 
 }
 
-void EvolutionAddressBook::exportEvolutionAddressBook()
-{
-  //TODO
-}
-
-  
+#include "backupmailwidget.moc"

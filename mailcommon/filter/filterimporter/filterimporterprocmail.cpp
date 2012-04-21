@@ -97,11 +97,17 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
     //Redirect email
   } else if ( line.startsWith( QLatin1Char( '|' ) ) ) {
     //Shell
+    const QString actionName( QLatin1String( "execute" ) );
+    const QString value( line );
+    createFilterAction( filter, actionName, value );
   } else if ( line.startsWith( QLatin1Char( '{' ) ) ) {
     //Block
   } else if ( line.startsWith( QLatin1Char( '}' ) ) ) {
     //End block
   } else {
+    const QString actionName( QLatin1String( "transfer" ) );
+    const QString value( line );
+    createFilterAction( filter, actionName, value );
     //Folder
   }
 

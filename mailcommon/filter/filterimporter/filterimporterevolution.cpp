@@ -79,7 +79,9 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else if ( name == QLatin1String( "cc" ) ) {
             fieldName = "cc";
           } else if ( name == QLatin1String( "bcc" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "senderto" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "subject" ) ) {
             fieldName = "subject";
           } else if ( name == QLatin1String( "header" ) ) {
@@ -87,22 +89,33 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else if ( name == QLatin1String( "body" ) ) {
             fieldName = "<body>";
           } else if ( name == QLatin1String( "sexp" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "recv-date" ) ) {
             fieldName = "<date>";
           } else if ( name == QLatin1String( "label" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "score" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "size" ) ) {
             fieldName = "<size>";
           } else if ( name == QLatin1String( "status" ) ) {
             fieldName = "<status>";
           } else if ( name == QLatin1String( "follow-up" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "completed-on" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "attachments" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "mlist" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "regex" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "source" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "pipe" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "junk" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "all" ) ) {
             filter->pattern()->setOp( SearchPattern::OpAll );
             break;
@@ -164,7 +177,9 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                 } else if ( value == QLatin1String( "is" ) ) {
                   functionName = SearchRule::FuncEquals;
                 } else if ( value == QLatin1String( "exist" ) ) {
+                  //TODO
                 } else if ( value == QLatin1String( "not exist" ) ) {
+                  //TODO
                 } else if ( value == QLatin1String( "not starts with" ) ) {
                   functionName = SearchRule::FuncNotStartWith;
                 } else if ( value == QLatin1String( "ends with" ) ) {
@@ -172,9 +187,13 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                 } else if ( value == QLatin1String( "not ends with" ) ) {
                   functionName = SearchRule::FuncNotEndWith;
                 } else if ( value == QLatin1String( "matches soundex" ) ) {
+                  //TODO
                 } else if ( value == QLatin1String( "not match soundex" ) ) {
+                  //TODO
                 } else if ( value == QLatin1String( "before" ) ) {
+                  //TODO
                 } else if ( value == QLatin1String( "after" ) ) {
+                  //TODO
                 } else if ( value == QLatin1String( "greater-than" ) ) {
                   functionName = SearchRule::FuncIsGreater;
                 } else if ( value == QLatin1String( "less-than" ) ) {
@@ -200,9 +219,13 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else if ( name == QLatin1String( "delete" ) ) {
             actionName = QLatin1String( "delete" );
           } else if ( name == QLatin1String( "label" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "colour" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "score" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "adj-score" ) ) {
+            //TODO
           } else if ( name == QLatin1String( "set-status" ) ) {
             actionName = QLatin1String( "set status" );
           } else if ( name == QLatin1String( "unset-status" ) ) {

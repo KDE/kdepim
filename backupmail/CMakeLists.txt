@@ -4,6 +4,8 @@ project(backupmail)
 
 set(backupmail_SRCS
   main.cpp
+  backupmailapplication.cpp
+  backupmailwidget.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
