@@ -1,7 +1,19 @@
 [Desktop Entry]
 Name=Backup Mail
+Name[nl]=Reservekopie van e-mail
+Name[pt]=Salvaguarda de Correio
+Name[pt_BR]=Cópia de segurança de e-mails
+Name[sv]=Säkerhetskopiera brev
+Name[uk]=Резервне копіювання пошти
+Name[x-test]=xxBackup Mailxx
 Exec=backupmail
 Type=Application
 NoDisplay=true
 Comment=Backup Mail allows to save all data from kmail and restore them in other system.
+Comment[nl]=Backup Mail stelt u in staat alle gegevens van kmail op te slaan en ze in een ander systeem te herstellen.
+Comment[pt]=A Salvaguarda de Correio permite-lhe guardar todos os dados do KMail e repô-los noutro sistema.
+Comment[pt_BR]=A cópia de segurança de e-mails permite salvar todos os dados do KMail e restaurá-los em outro sistema.
+Comment[sv]=Säkerhetskopiera brev gör det möjligt att spara all data från Kmail och återställa den på andra datorer.
+Comment[uk]=За допомогою програми з резервного копіювання пошти ви зможете зберегти всі дані KMail, а потім відновити їх у іншій системі.
+Comment[x-test]=xxBackup Mail allows to save all data from kmail and restore them in other system.xx
 Terminal=false
