@@ -120,6 +120,27 @@ void ThunderbirdSettings::readAccount()
           settings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
         }
       }
+
+      found = false;
+      const int socketType = mHashConfig.value( accountName + QLatin1String( ".socketType" ) ).toInt( &found);
+      if(found) {
+        switch(socketType) {
+          case 0:
+            //None
+            settings.insert( QLatin1String( "Safety" ), QLatin1String("None") );
+            break;
+          case 2:
+            //STARTTLS
+            settings.insert( QLatin1String( "Safety" ), QLatin1String("STARTTLS") );
+            break;
+          case 3:
+            //SSL/TLS
+            settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
+          default:
+            qDebug()<<" socketType "<<socketType;
+        }
+      }
+
       createResource( "akonadi_imap_resource", name,settings );
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
@@ -138,17 +159,25 @@ void ThunderbirdSettings::readAccount()
       if ( found ) {
         settings.insert( QLatin1String( "Port" ), port );
       }
+
       found = false;
       const int socketType = mHashConfig.value( accountName + QLatin1String( ".socketType" ) ).toInt( &found);
       if(found) {
         switch(socketType) {
           case 0:
+            //None
+            //nothing
             break;
+          case 2:
+            //STARTTLS
+            settings.insert( QLatin1String( "UseTLS" ), true );
+            break;
+          case 3:
+            //SSL/TLS
+            settings.insert( QLatin1String( "UseSSL" ), true );
           default:
             qDebug()<<" socketType "<<socketType;
         }
-
-        //TODO
       }
       addAuth( settings, QLatin1String( "AuthenticationMethod" ),account );
       
