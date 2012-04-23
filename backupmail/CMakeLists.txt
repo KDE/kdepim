@@ -10,7 +10,7 @@ set(backupmail_SRCS
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_executable(backupmail_SRCS ${backupmail_SRCS})
+kde4_add_executable(backupmail ${backupmail_SRCS})
 
 target_link_libraries(backupmail
   ${KDE4_KIO_LIBS}
