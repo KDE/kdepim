@@ -183,10 +183,12 @@ void ThunderbirdSettings::readAccount()
       
       createResource( "akonadi_pop3_resource", name, settings );
     } else if ( type == QLatin1String( "none" ) ) {
-      //TODO
+      //FIXME look at if we can implement it
       qDebug()<<" account type none!";
+      continue;
     } else if (type == QLatin1String("movemail")) {
       qDebug()<<" movemail accound found and not implemented in importthunderbird";
+      continue;
       //TODO
     } else if (type == QLatin1String("rss")) {
       //TODO when akregator2 will merge in kdepim
@@ -383,17 +385,16 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
   QString valueStr = newLine.right( newLine.length() - pos -2);
   if ( valueStr.at( 0 ) == QLatin1Char( '"' ) ) {
     valueStr.remove( 0, 1 );
-    if ( valueStr.at( valueStr.length()-1 ) == QLatin1Char( '"' ) )
-      valueStr.remove( valueStr.length()-1, 1 );
+    const int pos(valueStr.length()-1);
+    if ( valueStr.at( pos ) == QLatin1Char( '"' ) )
+      valueStr.remove( pos, 1 );
     //Store as String
     mHashConfig.insert( key, valueStr );
   } else {
     if ( valueStr == QLatin1String( "true" ) ) {
-      bool b = true;
-      mHashConfig.insert( key, b );
+      mHashConfig.insert( key, true );
     } else if ( valueStr == QLatin1String( "false" ) ) {
-      bool b = false;
-      mHashConfig.insert( key, b );
+      mHashConfig.insert( key, false );
     } else { 
       //Store as integer
       const int value = valueStr.toInt();
