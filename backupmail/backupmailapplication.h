@@ -21,15 +21,25 @@
 #include <kxmlguiwindow.h>
 
 class BackupMailWidget;
+class BackupData;
+class RestoreData;
+
 class BackupMailApplication: public KXmlGuiWindow
 {
   Q_OBJECT
 public:
   explicit BackupMailApplication(QWidget *parent=0);
   ~BackupMailApplication();
+private Q_SLOTS:
+  void slotBackupData();
+  void slotRestoreData();
+  void slotAddInfo(const QString& info);
+  void slotAddError(const QString& info);
 private:
   void setupActions();
   BackupMailWidget *mBackupMailWidget;
+  BackupData *mBackupData;
+  RestoreData *mRestoreData;
 };
 
 

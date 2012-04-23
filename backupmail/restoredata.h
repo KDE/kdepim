@@ -15,37 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailwidget.h"
+#ifndef RESTOREDATA_H
+#define RESTOREDATA_H
 
-#include "libkdepim/customlogwidget.h"
+#include <QObject>
 
-#include <QHBoxLayout>
-#include <QListWidget>
-
-
-BackupMailWidget::BackupMailWidget(QWidget * parent)
-  :QWidget(parent)
+class RestoreData : public QObject
 {
-  QHBoxLayout *layout = new QHBoxLayout;
-  mCustomLogWidget = new KPIM::CustomLogWidget;
-  layout->addWidget(mCustomLogWidget);
-  setLayout(layout);
-}
+  Q_OBJECT
+public:
+  explicit RestoreData();
+  ~RestoreData();
+private:
+  void restoreTransports();
+  void restoreResources();
+  void restoreMails();
+};
 
-BackupMailWidget::~BackupMailWidget()
-{
-
-}
-
-void BackupMailWidget::addInfoLogEntry( const QString& log )
-{
-  mCustomLogWidget->addInfoLogEntry(log);
-}
-
-void BackupMailWidget::addErrorLogEntry( const QString& log )
-{
-  mCustomLogWidget->addErrorLogEntry(log);
-}
-
-
-#include "backupmailwidget.moc"
+#endif // RESTOREDATA_H
