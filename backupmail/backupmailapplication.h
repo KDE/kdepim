@@ -28,7 +28,7 @@ public:
   explicit BackupMailApplication(QWidget *parent=0);
   ~BackupMailApplication();
 private:
-  setupActions();
+  void setupActions();
   BackupMailWidget *mBackupMailWidget;
 };
 

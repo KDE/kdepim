@@ -349,6 +349,7 @@ else()
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
+    macro_optional_add_subdirectory(backupmail)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)
       macro_optional_add_subdirectory(blogilo)

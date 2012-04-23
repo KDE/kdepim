@@ -16,10 +16,17 @@
 */
 
 #include "backupmailwidget.h"
+#include <QHBoxLayout>
+#include <QListWidget>
+
 
 BackupMailWidget::BackupMailWidget(QWidget * parent)
   :QWidget(parent)
 {
+  QHBoxLayout *layout = new QHBoxLayout;
+  mListWidget = new QListWidget;
+  layout->addWidget(mListWidget);
+  setLayout(layout);
 }
 
 BackupMailWidget::~BackupMailWidget()
