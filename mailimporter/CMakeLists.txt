@@ -2,7 +2,6 @@ project(mailimporter)
 
 set(libmailimporter_SRCS
   importmailswidget.cpp
-  importlogwidget.cpp
   filterinfogui.cpp
   filterinfo.cpp
   filters.cpp
@@ -34,6 +33,7 @@ target_link_libraries(mailimporter
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  kdepim
   messagecore
 )
 

@@ -15,12 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "importlogwidget.h"
+#include "customlogwidget.h"
 #include <QTextDocument>
 #include <QPainter>
 #include <QApplication>
 #include <QAbstractTextDocumentLayout>
-using namespace MailImporter;
+using namespace KPIM;
 
 LogItemDelegate::LogItemDelegate( QObject *parent )
   : QStyledItemDelegate( parent )
@@ -102,25 +102,25 @@ QWidget  * LogItemDelegate::createEditor ( QWidget *, const QStyleOptionViewItem
 
 
 
-ImportLogWidget::ImportLogWidget( QWidget * parent )
+CustomLogWidget::CustomLogWidget( QWidget * parent )
   :QListWidget( parent )
 {
   LogItemDelegate *itemDelegate = new LogItemDelegate( this );
   setItemDelegate( itemDelegate );
 }
 
-ImportLogWidget::~ImportLogWidget()
+CustomLogWidget::~CustomLogWidget()
 {
 }
 
-void ImportLogWidget::addInfoLogEntry( const QString& log )
+void CustomLogWidget::addInfoLogEntry( const QString& log )
 {
   QListWidgetItem* item =new QListWidgetItem(log);
   item->setForeground(Qt::blue);
   addItem( item );
 }
 
-void ImportLogWidget::addErrorLogEntry( const QString& log )
+void CustomLogWidget::addErrorLogEntry( const QString& log )
 {
   QListWidgetItem* item =new QListWidgetItem(log);
   item->setForeground(Qt::red);

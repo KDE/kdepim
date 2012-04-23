@@ -19,7 +19,7 @@
     </widget>
    </item>
    <item>
-    <widget class="MailImporter::ImportLogWidget" name="logFinish" native="true"/>
+    <widget class="KPIM::CustomLogWidget" name="logFinish" native="true"/>
    </item>
   </layout>
  </widget>
@@ -27,9 +27,9 @@
  <connections/>
  <customwidgets>
   <customwidget>
-   <class>MailImporter::ImportLogWidget</class>
+   <class>KPIM::CustomLogWidget</class>
    <extends>QWidget</extends>
-   <header location="global">mailimporter/importlogwidget.h</header>
+   <header location="global">libkdepim/customlogwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
