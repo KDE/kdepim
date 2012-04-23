@@ -112,6 +112,8 @@ MainWindow::MainWindow()
 
   initGUI();
   initObject();
+  kdDebug(5600) << "Kontact Version: " << kapp->aboutData()->version()
+              << " started at: " << QDateTime::currentDateTime().toString() << endl;
 }
 
 void MainWindow::initGUI()
