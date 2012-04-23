@@ -186,6 +186,7 @@ void ThunderbirdSettings::readAccount()
       //TODO
       qDebug()<<" account type none!";
     } else if (type == QLatin1String("movemail")) {
+      qDebug()<<" movemail accound found and not implemented in importthunderbird";
       //TODO
     } else if (type == QLatin1String("rss")) {
       //TODO when akregator2 will merge in kdepim
