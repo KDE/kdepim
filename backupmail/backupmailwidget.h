@@ -19,12 +19,15 @@
 #define BACKUPMAILWIDGET_H
 
 #include <QWidget>
+class QListWidget;
 
 class BackupMailWidget : public QWidget
 {
 public:
   explicit BackupMailWidget(QWidget *parent);
   ~BackupMailWidget();
+private:
+  QListWidget *mListWidget;
 };
 
 #endif // BACKUPMAILWIDGET_H

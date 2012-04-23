@@ -16,6 +16,8 @@
 */
 
 
+#include "backupmailapplication.h"
+
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
@@ -38,6 +40,10 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;
+  BackupMailApplication *backupMailApp = new BackupMailApplication();
+  a.setTopWidget(backupMailApp);
+  backupMailApp->show();
+
   int ret = a.exec();
   return ret;
 }
