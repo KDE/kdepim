@@ -19,6 +19,12 @@
 #include "backupmailwidget.h"
 #include "backupdata.h"
 #include "restoredata.h"
+#include "backupmailkernel.h"
+
+
+#include <mailcommon/mailkernel.h>
+
+#include <Akonadi/Control>
 
 #include <KStandardAction>
 #include <KAction>
@@ -29,11 +35,17 @@
 BackupMailApplication::BackupMailApplication(QWidget *parent)
   : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
 {
+  BackupMailKernel *kernel = new BackupMailKernel( this );
+  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+
   setupActions();
   setupGUI(Default,"backupmailapplication.rc");
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
+  Akonadi::Control::widgetNeedsAkonadi(this);
+
 }
 
 BackupMailApplication::~BackupMailApplication()

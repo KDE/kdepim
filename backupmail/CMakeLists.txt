@@ -8,6 +8,7 @@ set(backupmail_SRCS
   backupmailwidget.cpp
   backupdata.cpp
   restoredata.cpp
+  backupmailkernel.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -24,6 +25,7 @@ target_link_libraries(backupmail
   mailimporter
   mailcommon
   kdepim
+  messagecomposer
 )
 
 install(TARGETS backupmail ${INSTALL_TARGETS_DEFAULT_ARGS} )
