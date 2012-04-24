@@ -277,6 +277,7 @@ void TranslatorWidget::init()
   hboxLayout = new QHBoxLayout;
   d->inputText = new KTextEdit;
   d->inputText->setAcceptRichText(false);
+  d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
   connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
   hboxLayout->addWidget( d->inputText );
