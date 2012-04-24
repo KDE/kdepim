@@ -565,9 +565,11 @@ void KMFolderTree::reload(bool openFolders)
     ( oldCurrent ? static_cast<KMFolderTreeItem*>(oldCurrent)->folder(): 0 );
   for ( QListViewItemIterator it( this ) ; it.current() ; ++it ) {
     KMFolderTreeItem * fti = static_cast<KMFolderTreeItem*>(it.current());
-    writeIsListViewItemOpen( fti );
-    if ( fti->isSelected() )
-      selected = fti->folder();
+    if ( fti ) {
+      writeIsListViewItemOpen( fti );
+      if ( fti->isSelected() )
+        selected = fti->folder();
+    }
   }
   mFolderToItem.clear();
   clear();
