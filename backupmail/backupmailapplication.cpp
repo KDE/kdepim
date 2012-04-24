@@ -81,8 +81,8 @@ void BackupMailApplication::slotAddError(const QString& info)
 void BackupMailApplication::slotRestoreData()
 {
   mRestoreData = new RestoreData();
-
-  //TODO
+  connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+  connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
 }
 
 
