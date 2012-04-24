@@ -2057,6 +2057,8 @@ void ViewerPrivate::slotToggleHtmlMode()
 
 void ViewerPrivate::slotFind()
 {
+  if ( mViewer->hasSelection() )
+    mFindBar->setText( mViewer->selectedText() );
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
