@@ -328,7 +328,7 @@ void TranslatorWidget::slotTranslate()
   body.replace(QLatin1String( "%20" ), QLatin1String( "+" ));
 
   QByteArray postData = QString( "ei=UTF-8&doit=done&fr=bf-res&intl=1&tt=urltext&trtext=%1&lp=%2_%3&btnTrTxt=Translate").arg( body, from, to ).toLocal8Bit();
-  kDebug(14308) << "URL:" << geturl << "(post data" << postData << ")";
+  kDebug() << "URL:" << geturl << "(post data" << postData << ")";
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,geturl);
   job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
