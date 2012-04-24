@@ -88,8 +88,10 @@ static QVariant::Type argumentType( const QMetaObject *mo, const QString &method
   const int numberOfMethod( mo->methodCount() );
   for ( int i = 0; i < numberOfMethod; ++i ) {
     const QString signature = QString::fromLatin1( mo->method( i ).signature() );
-    if ( signature.startsWith( method ) )
+    if ( signature.contains(method + QLatin1Char('(') )) {
       m = mo->method( i );
+      break;
+    }
   }
 
   if ( !m.signature() ) {

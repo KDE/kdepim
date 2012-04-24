@@ -148,9 +148,14 @@ void ThunderbirdSettings::readAccount()
       settings.insert( QLatin1String( "Login" ), userName );
 
       found = false;
+      const bool leaveOnServer = mHashConfig.value( accountName + QLatin1String( ".leave_on_server")).toBool();
+      if(leaveOnServer) {
+        settings.insert(QLatin1String("LeaveOnServer"),leaveOnServer);
+      }
+
+      found = false;
       const int numberDayToLeave = mHashConfig.value( accountName + QLatin1String( ".num_days_to_leave_on_server")).toInt(&found);
       if ( found ) {
-        settings.insert(QLatin1String("LeaveOnServer"),true);
         settings.insert(QLatin1String("LeaveOnServerDays"),numberDayToLeave);
       }
       
