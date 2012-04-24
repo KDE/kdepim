@@ -21,6 +21,10 @@
 #include <QObject>
 
 class KZip;
+namespace KPIMIdentities {
+  class Identity;
+  class IdentityManager;
+}
 
 class BackupData : public QObject
 {
@@ -35,11 +39,13 @@ private:
   void backupTransports();
   void backupResources();
   void backupMails();
-  void saveConfig();
-  void saveIdentity();
+  void backupConfig();
+  void backupIdentity();
 
   qint64 writeFile(const char* data, qint64 len);
   KZip *mArchive;
+  KPIMIdentities::IdentityManager *mIdentityManager;
+
 };
 
 #endif // BACKUPDATA_H

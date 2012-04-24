@@ -17,6 +17,9 @@
 
 #include "backupdata.h"
 
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
+
 #include <Mailtransport/TransportManager>
 
 #include <KZip>
@@ -27,13 +30,15 @@ BackupData::BackupData()
   :mArchive(new KZip("backup"))
 {
   bool good = mArchive->open(QIODevice::WriteOnly);
-
+  mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
+  backupIdentity();
 }
 
 BackupData::~BackupData()
 {
   //TODO Verify
   delete mArchive;
+  delete mIdentityManager;
 }
 
 void BackupData::backupTransports()
@@ -49,13 +54,20 @@ void BackupData::backupResources()
 
 }
 
-void BackupData::saveConfig()
+void BackupData::backupConfig()
 {
 }
 
-void BackupData::saveIdentity()
+void BackupData::backupIdentity()
 {
-
+  //FIXME
+  KConfig config( "/home/laurent/testrc" );
+  KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
+  for ( KPIMIdentities::IdentityManager::ConstIterator it = mIdentityManager->begin(); it != end; ++it ) {
+    KConfigGroup group(&config,"DD");
+    (*it).writeConfig(group);
+  }
+  config.sync();
 }
 
 void BackupData::backupMails()
