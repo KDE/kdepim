@@ -69,6 +69,18 @@ void FilterEvolution_v2::import()
   importMails( dir );
 }
 
+bool FilterEvolution_v2::excludeFiles(const QString& file)
+{
+  if (( file.endsWith(QLatin1String(".db")) ||
+         file.endsWith(QLatin1String(".cmeta")) ||
+         file.endsWith(QLatin1String(".ev-summary")) ||
+         file.endsWith(QLatin1String(".ibex.index")) ||
+         file.endsWith(QLatin1String(".ibex.index.data")) )) {
+    return true;
+  }
+  return false;
+}
+
 void FilterEvolution_v2::importMails( const QString& maildir )
 {
   setMailDir( maildir );
@@ -105,11 +117,7 @@ void FilterEvolution_v2::importMails( const QString& maildir )
       if (filterInfo()->shouldTerminate())
         break;
       QString temp_mailfile = *mailFile;
-      if (!( temp_mailfile.endsWith(QLatin1String(".db")) ||
-             temp_mailfile.endsWith(QLatin1String(".cmeta")) ||
-             temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
-             temp_mailfile.endsWith(QLatin1String(".ibex.index")) ||
-             temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
+      if (!excludeFiles(temp_mailfile) )
       {
         filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
         importMBox(mailDir() + temp_mailfile , temp_mailfile, QString());
@@ -146,8 +154,7 @@ void FilterEvolution_v2::importDirContents(const QString& dirName, const QString
     QStringList::ConstIterator mailFileEnd( files.constEnd() );
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
         QString temp_mailfile = *mailFile;
-        if (!( temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
-            temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) )
+        if (!excludeFiles(temp_mailfile))
         {
           filterInfo()->addInfoLogEntry( i18n("Start import file %1...", temp_mailfile ) );
           importMBox((dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);

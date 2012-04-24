@@ -15,37 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailwidget.h"
+#ifndef BACKUPDATA_H
+#define BACKUPDATA_H
 
-#include "libkdepim/customlogwidget.h"
+#include <QObject>
 
-#include <QHBoxLayout>
-#include <QListWidget>
+class KZip;
 
-
-BackupMailWidget::BackupMailWidget(QWidget * parent)
-  :QWidget(parent)
+class BackupData : public QObject
 {
-  QHBoxLayout *layout = new QHBoxLayout;
-  mCustomLogWidget = new KPIM::CustomLogWidget;
-  layout->addWidget(mCustomLogWidget);
-  setLayout(layout);
-}
+  Q_OBJECT
+public:
+  explicit BackupData();
+  ~BackupData();
+Q_SIGNALS:
+  void info(const QString&);
+  void error(const QString&);
+private:
+  void backupTransports();
+  void backupResources();
+  void backupMails();
+  void saveConfig();
+  void saveIdentity();
 
-BackupMailWidget::~BackupMailWidget()
-{
+  qint64 writeFile(const char* data, qint64 len);
+  KZip *mArchive;
+};
 
-}
-
-void BackupMailWidget::addInfoLogEntry( const QString& log )
-{
-  mCustomLogWidget->addInfoLogEntry(log);
-}
-
-void BackupMailWidget::addErrorLogEntry( const QString& log )
-{
-  mCustomLogWidget->addErrorLogEntry(log);
-}
-
-
-#include "backupmailwidget.moc"
+#endif // BACKUPDATA_H

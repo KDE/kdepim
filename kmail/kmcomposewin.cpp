@@ -2548,30 +2548,28 @@ void KMComposeWin::ignoreStickyFields()
 
 void KMComposeWin::slotPrint()
 {
+  printComposer(false);
+}
+
+void KMComposeWin::slotPrintPreview()
+{
+  printComposer(true);
+}
+
+void KMComposeWin::printComposer(bool preview)
+{
   Message::Composer* composer = createSimpleComposer();
   mMiscComposers.append( composer );
+  composer->setProperty("preview",preview);
   connect( composer, SIGNAL(result(KJob*)),
            this, SLOT(slotPrintComposeResult(KJob*)) );
   composer->start();
 }
 
-void KMComposeWin::slotPrintPreview()
-{
-  Message::Composer* composer = createSimpleComposer();
-  mMiscComposers.append( composer );
-  connect( composer, SIGNAL(result(KJob*)),
-           this, SLOT(slotPrintPreviewComposeResult(KJob*)) );
-  composer->start();
-}
-
-void KMComposeWin::slotPrintPreviewComposeResult( KJob *job )
-{
-  printComposeResult( job, true );
-}
-
 void KMComposeWin::slotPrintComposeResult( KJob *job )
 {
-  printComposeResult( job, false );
+  const bool preview = job->property("preview").toBool();
+  printComposeResult( job, preview );
 }
 
 void KMComposeWin::printComposeResult( KJob *job, bool preview )
@@ -2586,13 +2584,17 @@ void KMComposeWin::printComposeResult( KJob *job, bool preview )
     Q_ASSERT( composer->resultMessages().size() == 1 );
     Akonadi::Item printItem;
     printItem.setPayload<KMime::Message::Ptr>( composer->resultMessages().first() );
+    const bool isHtml = ( mComposerBase->editor()->textMode() == KMeditor::Rich );
     KMPrintCommand *command = new KMPrintCommand( this, printItem,0,
-                                             0, ( mComposerBase->editor()->textMode() == KMeditor::Rich ) );
+                                             0, isHtml, isHtml );
     command->setPrintPreview( preview );
     command->start();
   } else {
-    // TODO: error reporting to the user
-    kWarning() << "Composer for printing failed:" << composer->errorString();
+    if ( static_cast<KIO::Job*>(job)->ui() ) {
+      static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    } else {
+      kWarning() << "Composer for printing failed:" << composer->errorString();
+    }
   }
 
 }

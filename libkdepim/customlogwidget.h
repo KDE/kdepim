@@ -18,15 +18,14 @@
 #ifndef IMPORTLOGWIDGET_H
 #define IMPORTLOGWIDGET_H
 
-#include "mailimporter_export.h"
+#include "kdepim_export.h"
 #include <QStyledItemDelegate>
 #include <QListWidget>
 
 class QTextDocument;
 class QListWidgetItem;
 
-namespace MailImporter {
-
+namespace KPIM {
 class LogItemDelegate : public QStyledItemDelegate
 {
   public:
@@ -42,11 +41,11 @@ class LogItemDelegate : public QStyledItemDelegate
   QTextDocument* document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
-class MAILIMPORTER_EXPORT ImportLogWidget : public QListWidget
+class KDEPIM_EXPORT CustomLogWidget : public QListWidget
 {
   public:
-  explicit ImportLogWidget( QWidget * parent = 0 );
-  ~ImportLogWidget();
+  explicit CustomLogWidget( QWidget * parent = 0 );
+  ~CustomLogWidget();
 
   void addInfoLogEntry( const QString& log );
   void addErrorLogEntry( const QString& log );

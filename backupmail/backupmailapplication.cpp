@@ -17,9 +17,17 @@
 
 #include "backupmailapplication.h"
 #include "backupmailwidget.h"
+#include "backupdata.h"
+#include "restoredata.h"
+
+#include <KStandardAction>
+#include <KAction>
+#include <KActionCollection>
+
+#include <KLocale>
 
 BackupMailApplication::BackupMailApplication(QWidget *parent)
-  : KXmlGuiWindow(parent)
+  : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
 {
   setupActions();
   setupGUI(Default,"backupmailapplication.rc");
@@ -30,11 +38,52 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 
 BackupMailApplication::~BackupMailApplication()
 {
+  if(mBackupData) {
+    //TODO close backupData
+    delete mBackupData;
+  }
+  if(mRestoreData) {
+    //TODO close it
+    delete mRestoreData;
+  }
 }
 
 void BackupMailApplication::setupActions()
 {
-//TODO
+  KActionCollection* ac=actionCollection();
+
+  KAction *backupAction = ac->addAction("backup",this,SLOT(slotBackupData()));
+  backupAction->setText(i18n("Back Up Data..."));
+
+  KAction *restoreAction = ac->addAction("restore",this,SLOT(slotRestoreData()));
+  restoreAction->setText(i18n("Restore Data..."));
+  KStandardAction::quit( this, SLOT(close()), ac );
 }
+
+void BackupMailApplication::slotBackupData()
+{
+  mBackupData = new BackupData();
+  connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+  connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+}
+
+void BackupMailApplication::slotAddInfo(const QString& info)
+{
+  mBackupMailWidget->addInfoLogEntry(info);
+}
+
+void BackupMailApplication::slotAddError(const QString& info)
+{
+  mBackupMailWidget->addErrorLogEntry(info);
+}
+
+
+void BackupMailApplication::slotRestoreData()
+{
+  mRestoreData = new RestoreData();
+
+  //TODO
+}
+
 
 #include "backupmailapplication.moc"

@@ -38,7 +38,7 @@
 #include <KDebug>
 #include <KMessageBox>
 
-
+#include <QScopedPointer>
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -148,15 +148,13 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
   }
     
   item.setPayload<KMime::Message::Ptr>( message );
-  Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
+  QScopedPointer<Akonadi::ItemCreateJob> job(new Akonadi::ItemCreateJob( item, collection ));
   job->setAutoDelete( false );
   if( !job->exec() ) {
     d->filterInfo->alert( i18n( "<b>Error:</b> Could not add message to folder %1. Reason: %2",
 		       collection.name(), job->errorString() ) );
-    delete job;
     return false;
   }
-  delete job;
   return true;
 }
 
@@ -232,17 +230,15 @@ Akonadi::Collection Filter::addSubCollection( const Akonadi::Collection &baseCol
   newSubCollection.setParentCollection( baseCollection );
   newSubCollection.setName( newCollectionPathName );
 
-  Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
+  QScopedPointer<Akonadi::CollectionCreateJob> job(new Akonadi::CollectionCreateJob( newSubCollection ));
   job->setAutoDelete( false );
   if( !job->exec() ) {
     d->filterInfo->alert( i18n("<b>Error:</b> Could not create folder. Reason: %1",
 		 job->errorString() ) );
-    delete job;
     return Akonadi::Collection();
   }
   // Return the newly created collection
   Akonadi::Collection collection = job->collection();
-  delete job;
   return collection;
 }
 

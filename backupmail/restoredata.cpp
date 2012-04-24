@@ -15,37 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailwidget.h"
+#include "restoredata.h"
 
-#include "libkdepim/customlogwidget.h"
-
-#include <QHBoxLayout>
-#include <QListWidget>
-
-
-BackupMailWidget::BackupMailWidget(QWidget * parent)
-  :QWidget(parent)
+RestoreData::RestoreData()
 {
-  QHBoxLayout *layout = new QHBoxLayout;
-  mCustomLogWidget = new KPIM::CustomLogWidget;
-  layout->addWidget(mCustomLogWidget);
-  setLayout(layout);
 }
 
-BackupMailWidget::~BackupMailWidget()
+RestoreData::~RestoreData()
 {
 
 }
 
-void BackupMailWidget::addInfoLogEntry( const QString& log )
+void RestoreData::restoreTransports()
 {
-  mCustomLogWidget->addInfoLogEntry(log);
+
 }
 
-void BackupMailWidget::addErrorLogEntry( const QString& log )
+void RestoreData::restoreResources()
 {
-  mCustomLogWidget->addErrorLogEntry(log);
+
 }
 
+void RestoreData::restoreMails()
+{
 
-#include "backupmailwidget.moc"
+}
+
+#include "restoredata.moc"
+
