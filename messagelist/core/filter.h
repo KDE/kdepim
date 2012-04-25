@@ -125,9 +125,11 @@ private Q_SLOTS:
   void finishedListing();
 
 private:
-  Nepomuk::Query::QueryServiceClient *mQueryClient;
-  QSet<qint64> mMatchingItemIds;
+  bool containString(const QString& searchInString) const;
+  QStringList mSearchList;
   KUrl mCurrentFolder;
+  QSet<qint64> mMatchingItemIds;
+  Nepomuk::Query::QueryServiceClient *mQueryClient;
 };
 
 } // namespace Core
