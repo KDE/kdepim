@@ -19,6 +19,7 @@
 #define SELECTIONTYPEDIALOG_H
 
 #include <KDialog>
+#include "util.h"
 
 class SelectTypeWidget;
 
@@ -28,8 +29,8 @@ class SelectionTypeDialog : public KDialog
 public:
   explicit SelectionTypeDialog(QWidget * parent);
   ~SelectionTypeDialog();
-private Q_SLOTS:
-  void slotOk();
+  Util::BackupTypes backupTypesSelected() const;
+
 private:
   SelectTypeWidget *mWidget;
 };

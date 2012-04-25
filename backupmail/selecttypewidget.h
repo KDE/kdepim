@@ -20,7 +20,7 @@
 #define SELECTTYPEWIDGET_H
 
 #include <QWidget>
-
+#include "util.h"
 namespace Ui {
   class SelectTypeWidget;
 }
@@ -32,7 +32,7 @@ class SelectTypeWidget : public QWidget
 public:
   explicit SelectTypeWidget(QWidget *parent = 0);
   ~SelectTypeWidget();
-  
+  Util::BackupTypes backupTypesSelected() const;
 private:
   Ui::SelectTypeWidget *ui;
 };

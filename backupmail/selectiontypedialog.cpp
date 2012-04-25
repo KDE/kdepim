@@ -43,7 +43,7 @@ SelectionTypeDialog::~SelectionTypeDialog()
 
 }
 
-void SelectionTypeDialog::slotOk()
+Util::BackupTypes SelectionTypeDialog::backupTypesSelected() const
 {
-
+  return mWidget->backupTypesSelected();
 }

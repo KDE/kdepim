@@ -30,4 +30,31 @@ SelectTypeWidget::~SelectTypeWidget()
   delete ui;
 }
 
+Util::BackupTypes SelectTypeWidget::backupTypesSelected() const
+{
+  Util::BackupTypes types = Util::None;
+  if(ui->resources->isChecked())
+  {
+    types|= Util::Resources;
+  }
+  if(ui->mailtransport->isChecked())
+  {
+    types|= Util::MailTransport;
+  }
+  if(ui->config->isChecked())
+  {
+    types|= Util::Resources;
+  }
+  if(ui->identity->isChecked())
+  {
+    types|= Util::Identity;
+  }
+  if(ui->mails->isChecked())
+  {
+    types|= Util::Mails;
+  }
+  return types;
+}
+
+
 #include "selecttypewidget.moc"
