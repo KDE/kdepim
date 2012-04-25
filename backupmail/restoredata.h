@@ -34,6 +34,10 @@ private:
   void restoreTransports();
   void restoreResources();
   void restoreMails();
+  void restoreConfig();
+  void restoreIdentity();
+
+
 };
 
 #endif // RESTOREDATA_H

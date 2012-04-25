@@ -43,3 +43,7 @@ SelectionTypeDialog::~SelectionTypeDialog()
 
 }
 
+void SelectionTypeDialog::slotOk()
+{
+
+}

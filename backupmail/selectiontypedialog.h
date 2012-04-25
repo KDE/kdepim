@@ -24,9 +24,12 @@ class SelectTypeWidget;
 
 class SelectionTypeDialog : public KDialog
 {
+  Q_OBJECT
 public:
   explicit SelectionTypeDialog(QWidget * parent);
   ~SelectionTypeDialog();
+private Q_SLOTS:
+  void slotOk();
 private:
   SelectTypeWidget *mWidget;
 };

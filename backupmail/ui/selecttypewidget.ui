@@ -15,35 +15,35 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="resources">
      <property name="text">
       <string>Resources</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox_2">
+    <widget class="QCheckBox" name="mailtransport">
      <property name="text">
       <string>Mail Transport</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox_4">
+    <widget class="QCheckBox" name="config">
      <property name="text">
       <string>Config</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox_5">
+    <widget class="QCheckBox" name="identity">
      <property name="text">
       <string>Identity</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox_6">
+    <widget class="QCheckBox" name="mails">
      <property name="text">
       <string>Mails</string>
      </property>

@@ -41,5 +41,15 @@ void RestoreData::restoreMails()
 
 }
 
-#include "restoredata.moc"
+void RestoreData::restoreConfig()
+{
 
+}
+
+void RestoreData::restoreIdentity()
+{
+
+}
+
+
+#include "restoredata.moc"
