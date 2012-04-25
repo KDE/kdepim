@@ -34,11 +34,17 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   mWidget = new ArchiveMailWidget(this);
   mainLayout->addWidget(mWidget);
   setMainWidget( mainWidget );
+  connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
 
+}
+
+void ArchiveMailDialog::slotSave()
+{
+  mWidget->save();
 }
 
 
@@ -67,6 +73,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 {
   mWidget = new Ui::ArchiveMailWidget;
   mWidget->setupUi( this );
+  load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));

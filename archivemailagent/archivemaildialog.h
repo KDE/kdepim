@@ -31,7 +31,7 @@ public:
 
   void setInfo(const ArchiveMailInfo& info);
   ArchiveMailInfo info() const;
- private:
+private:
   ArchiveMailInfo mInfo;
 };
 
@@ -41,9 +41,9 @@ class ArchiveMailWidget : public QWidget
 public:
   explicit ArchiveMailWidget( QWidget *parent = 0 );
   ~ArchiveMailWidget();
+  void save();
 private:
   void load();
-  void save();
 
 private Q_SLOTS:
   void slotRemoveItem();
@@ -61,6 +61,9 @@ class ArchiveMailDialog : public KDialog
 public:
   explicit ArchiveMailDialog(QWidget *parent = 0);
   ~ArchiveMailDialog();
+protected Q_SLOTS:
+  void slotSave();
+
 private:
   ArchiveMailWidget *mWidget;
 };
