@@ -15,37 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKUPDATA_H
-#define BACKUPDATA_H
-
-#include <QObject>
-#include "util.h"
-class KZip;
-namespace KPIMIdentities {
-  class Identity;
-  class IdentityManager;
+#ifndef UTIL_H
+#define UTIL_H
+#include <Qt>
+namespace Util {
+  enum BackupType {
+    None = 0,
+    Identity = 1,
+    Mails = 2,
+    MailTransport = 4,
+    Resources = 8,
+    Config = 16
+  };
+  Q_DECLARE_FLAGS(BackupTypes, BackupType )
 }
-
-class BackupData : public QObject
-{
-  Q_OBJECT
-public:
-  explicit BackupData();
-  ~BackupData();
-Q_SIGNALS:
-  void info(const QString&);
-  void error(const QString&);
-private:
-  void backupTransports();
-  void backupResources();
-  void backupMails();
-  void backupConfig();
-  void backupIdentity();
-
-  qint64 writeFile(const char* data, qint64 len);
-  KZip *mArchive;
-  KPIMIdentities::IdentityManager *mIdentityManager;
-
-};
-
-#endif // BACKUPDATA_H
+#endif // UTIL_H
