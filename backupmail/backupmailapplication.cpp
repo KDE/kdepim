@@ -20,7 +20,8 @@
 #include "backupdata.h"
 #include "restoredata.h"
 #include "backupmailkernel.h"
-
+#include "selectiontypedialog.h"
+#include "util.h"
 
 #include <mailcommon/mailkernel.h>
 
@@ -74,9 +75,15 @@ void BackupMailApplication::setupActions()
 
 void BackupMailApplication::slotBackupData()
 {
-  mBackupData = new BackupData();
-  connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-  connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
+  if(dialog->exec()) {
+    Util::BackupTypes typeSelected = dialog->backupTypesSelected();
+    delete mBackupData;
+    mBackupData = new BackupData(typeSelected);
+    connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+    connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  }
+  delete dialog;
 }
 
 void BackupMailApplication::slotAddInfo(const QString& info)
@@ -92,9 +99,15 @@ void BackupMailApplication::slotAddError(const QString& info)
 
 void BackupMailApplication::slotRestoreData()
 {
-  mRestoreData = new RestoreData();
-  connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-  connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
+  if(dialog->exec()) {
+    Util::BackupTypes typeSelected = dialog->backupTypesSelected();
+    delete mRestoreData;
+    mRestoreData = new RestoreData(typeSelected);
+    connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+    connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  }
+  delete dialog;
 }
 
 

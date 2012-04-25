@@ -17,8 +17,18 @@
 
 #include "restoredata.h"
 
-RestoreData::RestoreData()
+RestoreData::RestoreData(Util::BackupTypes typeSelected)
 {
+  if(typeSelected & Util::Identity)
+    restoreIdentity();
+  if(typeSelected & Util::MailTransport)
+    restoreTransports();
+  if(typeSelected & Util::Mails)
+    restoreMails();
+  if(typeSelected & Util::Resources)
+    restoreResources();
+  if(typeSelected & Util::Config)
+    restoreConfig();
 }
 
 RestoreData::~RestoreData()

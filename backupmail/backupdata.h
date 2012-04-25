@@ -30,7 +30,7 @@ class BackupData : public QObject
 {
   Q_OBJECT
 public:
-  explicit BackupData();
+  explicit BackupData(Util::BackupTypes typeSelected);
   ~BackupData();
 Q_SIGNALS:
   void info(const QString&);

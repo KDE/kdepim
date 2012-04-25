@@ -26,12 +26,21 @@
 
 #include <QDebug>
 
-BackupData::BackupData()
+BackupData::BackupData(Util::BackupTypes typeSelected)
   :mArchive(new KZip("backup"))
 {
   bool good = mArchive->open(QIODevice::WriteOnly);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
-  backupIdentity();
+  if(typeSelected & Util::Identity)
+    backupIdentity();
+  if(typeSelected & Util::MailTransport)
+    backupTransports();
+  if(typeSelected & Util::Mails)
+    backupMails();
+  if(typeSelected & Util::Resources)
+    backupResources();
+  if(typeSelected & Util::Config)
+    backupConfig();
 }
 
 BackupData::~BackupData()
