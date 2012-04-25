@@ -26,6 +26,10 @@ class RestoreData : public QObject
 public:
   explicit RestoreData();
   ~RestoreData();
+Q_SIGNALS:
+  void info(const QString&);
+  void error(const QString&);
+
 private:
   void restoreTransports();
   void restoreResources();

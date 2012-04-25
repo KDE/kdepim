@@ -9,6 +9,8 @@ set(backupmail_SRCS
   backupdata.cpp
   restoredata.cpp
   backupmailkernel.cpp
+  selecttypewidget.cpp
+  selectiontypedialog.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
