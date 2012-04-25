@@ -19,17 +19,25 @@
 #define RESTOREDATA_H
 
 #include <QObject>
-
+#include "util.h"
 class RestoreData : public QObject
 {
   Q_OBJECT
 public:
-  explicit RestoreData();
+  explicit RestoreData(Util::BackupTypes typeSelected);
   ~RestoreData();
+Q_SIGNALS:
+  void info(const QString&);
+  void error(const QString&);
+
 private:
   void restoreTransports();
   void restoreResources();
   void restoreMails();
+  void restoreConfig();
+  void restoreIdentity();
+
+
 };
 
 #endif // RESTOREDATA_H

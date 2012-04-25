@@ -157,7 +157,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                   if ( valueFilter.hasAttribute( "integer" ) ) {
                     contents = valueFilter.attribute( "integer" );
                     int val = contents.toInt();
-                    val = val * 1000; //store in Ko
+                    val = val * 1024; //store in Ko
                     contents = QString::number(val);
                   }
                 } else {

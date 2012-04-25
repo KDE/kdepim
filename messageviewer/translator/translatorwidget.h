@@ -44,6 +44,8 @@ private Q_SLOTS:
   void slotFromLanguageChanged( int );
   void slotTextChanged();
   void slotInvertLanguage();
+  void slotClear();
+
 protected:
   bool event(QEvent* e);
 

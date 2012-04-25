@@ -19,14 +19,18 @@
 #define BACKUPDATA_H
 
 #include <QObject>
-
+#include "util.h"
 class KZip;
+namespace KPIMIdentities {
+  class Identity;
+  class IdentityManager;
+}
 
 class BackupData : public QObject
 {
   Q_OBJECT
 public:
-  explicit BackupData();
+  explicit BackupData(Util::BackupTypes typeSelected);
   ~BackupData();
 Q_SIGNALS:
   void info(const QString&);
@@ -35,11 +39,13 @@ private:
   void backupTransports();
   void backupResources();
   void backupMails();
-  void saveConfig();
-  void saveIdentity();
+  void backupConfig();
+  void backupIdentity();
 
   qint64 writeFile(const char* data, qint64 len);
   KZip *mArchive;
+  KPIMIdentities::IdentityManager *mIdentityManager;
+
 };
 
 #endif // BACKUPDATA_H

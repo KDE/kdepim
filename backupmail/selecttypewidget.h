@@ -15,51 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "restoredata.h"
 
-RestoreData::RestoreData(Util::BackupTypes typeSelected)
-{
-  if(typeSelected & Util::Identity)
-    restoreIdentity();
-  if(typeSelected & Util::MailTransport)
-    restoreTransports();
-  if(typeSelected & Util::Mails)
-    restoreMails();
-  if(typeSelected & Util::Resources)
-    restoreResources();
-  if(typeSelected & Util::Config)
-    restoreConfig();
+#ifndef SELECTTYPEWIDGET_H
+#define SELECTTYPEWIDGET_H
+
+#include <QWidget>
+#include "util.h"
+namespace Ui {
+  class SelectTypeWidget;
 }
 
-RestoreData::~RestoreData()
+class SelectTypeWidget : public QWidget
 {
+  Q_OBJECT
+  
+public:
+  explicit SelectTypeWidget(QWidget *parent = 0);
+  ~SelectTypeWidget();
+  Util::BackupTypes backupTypesSelected() const;
+private:
+  Ui::SelectTypeWidget *ui;
+};
 
-}
-
-void RestoreData::restoreTransports()
-{
-
-}
-
-void RestoreData::restoreResources()
-{
-
-}
-
-void RestoreData::restoreMails()
-{
-
-}
-
-void RestoreData::restoreConfig()
-{
-
-}
-
-void RestoreData::restoreIdentity()
-{
-
-}
-
-
-#include "restoredata.moc"
+#endif // SELECTTYPEWIDGET_H

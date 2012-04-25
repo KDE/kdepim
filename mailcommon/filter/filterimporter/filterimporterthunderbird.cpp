@@ -299,7 +299,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     }
   } else if ( fieldName == "<size>" ) {
     int value = contents.toInt();
-    value = value * 1000; //Ko
+    value = value * 1024; //Ko
     contentsName = QString::number( value );
   } else if ( fieldName == "<date>" ) {
     //TODO look at how to convert it

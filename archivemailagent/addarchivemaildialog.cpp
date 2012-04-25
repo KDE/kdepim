@@ -91,6 +91,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(const ArchiveMailInfo& info,QWidget *
   if(!info.isEmpty()) {
     load(info);
   }
+
   // Make it a bit bigger, else the folder requester cuts off the text too early
   resize( 500, minimumSize().height() );
 

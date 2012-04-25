@@ -18,6 +18,8 @@
 #include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
 
+#include <QHBoxLayout>
+
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   :KDialog(parent)
 {
@@ -26,17 +28,23 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   setDefaultButton( Ok );
   setModal( true );
   QWidget *mainWidget = new QWidget( this );
-  QGridLayout *mainLayout = new QGridLayout( mainWidget );
+  QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
   mainLayout->setSpacing( KDialog::spacingHint() );
   mainLayout->setMargin( KDialog::marginHint() );
   mWidget = new ArchiveMailWidget(this);
   mainLayout->addWidget(mWidget);
   setMainWidget( mainWidget );
+  connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
 
+}
+
+void ArchiveMailDialog::slotSave()
+{
+  mWidget->save();
 }
 
 
@@ -65,6 +73,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 {
   mWidget = new Ui::ArchiveMailWidget;
   mWidget->setupUi( this );
+  load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));

@@ -270,6 +270,12 @@ void TranslatorWidget::init()
   KPushButton *invert = new KPushButton(i18n("Invert"),this);
   connect(invert,SIGNAL(clicked()),this,SLOT(slotInvertLanguage()));
   hboxLayout->addWidget(invert);
+
+  KPushButton *clear = new KPushButton(i18n("Clear"),this);
+  connect(clear,SIGNAL(clicked()),this,SLOT(slotClear()));
+  hboxLayout->addWidget(clear);
+
+
   hboxLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum ) );
    
   layout->addLayout( hboxLayout );
@@ -392,6 +398,11 @@ bool TranslatorWidget::event(QEvent* e)
   return QWidget::event(e);
 }
 
+void TranslatorWidget::slotClear()
+{
+  d->inputText->clear();
+  d->translatedText->clear();
+}
 
 #include "translatorwidget.moc"
 

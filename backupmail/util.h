@@ -15,51 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "restoredata.h"
-
-RestoreData::RestoreData(Util::BackupTypes typeSelected)
-{
-  if(typeSelected & Util::Identity)
-    restoreIdentity();
-  if(typeSelected & Util::MailTransport)
-    restoreTransports();
-  if(typeSelected & Util::Mails)
-    restoreMails();
-  if(typeSelected & Util::Resources)
-    restoreResources();
-  if(typeSelected & Util::Config)
-    restoreConfig();
+#ifndef UTIL_H
+#define UTIL_H
+#include <Qt>
+namespace Util {
+  enum BackupType {
+    None = 0,
+    Identity = 1,
+    Mails = 2,
+    MailTransport = 4,
+    Resources = 8,
+    Config = 16
+  };
+  Q_DECLARE_FLAGS(BackupTypes, BackupType )
 }
-
-RestoreData::~RestoreData()
-{
-
-}
-
-void RestoreData::restoreTransports()
-{
-
-}
-
-void RestoreData::restoreResources()
-{
-
-}
-
-void RestoreData::restoreMails()
-{
-
-}
-
-void RestoreData::restoreConfig()
-{
-
-}
-
-void RestoreData::restoreIdentity()
-{
-
-}
-
-
-#include "restoredata.moc"
+#endif // UTIL_H

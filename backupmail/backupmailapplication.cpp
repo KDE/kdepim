@@ -19,6 +19,13 @@
 #include "backupmailwidget.h"
 #include "backupdata.h"
 #include "restoredata.h"
+#include "backupmailkernel.h"
+#include "selectiontypedialog.h"
+#include "util.h"
+
+#include <mailcommon/mailkernel.h>
+
+#include <Akonadi/Control>
 
 #include <KStandardAction>
 #include <KAction>
@@ -29,11 +36,17 @@
 BackupMailApplication::BackupMailApplication(QWidget *parent)
   : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
 {
+  BackupMailKernel *kernel = new BackupMailKernel( this );
+  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+
   setupActions();
   setupGUI(Default,"backupmailapplication.rc");
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
+  Akonadi::Control::widgetNeedsAkonadi(this);
+
 }
 
 BackupMailApplication::~BackupMailApplication()
@@ -62,9 +75,15 @@ void BackupMailApplication::setupActions()
 
 void BackupMailApplication::slotBackupData()
 {
-  mBackupData = new BackupData();
-  connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-  connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
+  if(dialog->exec()) {
+    Util::BackupTypes typeSelected = dialog->backupTypesSelected();
+    delete mBackupData;
+    mBackupData = new BackupData(typeSelected);
+    connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+    connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  }
+  delete dialog;
 }
 
 void BackupMailApplication::slotAddInfo(const QString& info)
@@ -80,9 +99,15 @@ void BackupMailApplication::slotAddError(const QString& info)
 
 void BackupMailApplication::slotRestoreData()
 {
-  mRestoreData = new RestoreData();
-
-  //TODO
+  SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
+  if(dialog->exec()) {
+    Util::BackupTypes typeSelected = dialog->backupTypesSelected();
+    delete mRestoreData;
+    mRestoreData = new RestoreData(typeSelected);
+    connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+    connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+  }
+  delete dialog;
 }
 
 

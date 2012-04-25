@@ -44,6 +44,20 @@ Filter::Filter()
            this, SLOT(finishedListing()) );
 }
 
+bool Filter::containString(const QString& searchInString) const
+{
+  bool found = false;
+  Q_FOREACH(const QString& str, mSearchList) {
+    if(searchInString.contains(str,Qt::CaseInsensitive)) {
+      found = true;
+    } else {
+      found = false;
+      break;
+    }
+  }
+  return found;
+}
+
 bool Filter::match( const MessageItem * item ) const
 {
   if ( !mStatus.isOfUnknownStatus() )
@@ -58,11 +72,11 @@ bool Filter::match( const MessageItem * item ) const
       return true;
 
     bool searchMatches = false;
-    if ( item->subject().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
+    if ( containString(item->subject()) )
       searchMatches = true;
-    else if ( item->sender().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
+    else if ( containString(item->sender()) )
       searchMatches = true;
-    else if ( item->receiver().indexOf( mSearchString, 0, Qt::CaseInsensitive ) >= 0 )
+    else if ( containString(item->receiver()) )
       searchMatches = true;
 
     if ( !searchMatches )
@@ -99,6 +113,7 @@ void Filter::clear()
   mTagId.clear();
   mMatchingItemIds.clear();
   mQueryClient->close();
+  mSearchList.clear();
 }
 
 void Filter::setCurrentFolder( const KUrl &url )
@@ -109,6 +124,7 @@ void Filter::setCurrentFolder( const KUrl &url )
 void Filter::setSearchString( const QString &search )
 {
   mSearchString = search;
+  mSearchList = mSearchString.trimmed().split(QLatin1Char(' '));
 
   emit finished(); // let the view update according to restrictions
 
