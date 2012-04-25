@@ -18,6 +18,8 @@
 #include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
 
+#include <QHBoxLayout>
+
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   :KDialog(parent)
 {
@@ -26,7 +28,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   setDefaultButton( Ok );
   setModal( true );
   QWidget *mainWidget = new QWidget( this );
-  QGridLayout *mainLayout = new QGridLayout( mainWidget );
+  QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
   mainLayout->setSpacing( KDialog::spacingHint() );
   mainLayout->setMargin( KDialog::marginHint() );
   mWidget = new ArchiveMailWidget(this);
