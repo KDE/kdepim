@@ -222,7 +222,13 @@ void ThunderbirdSettings::readTransport()
   if ( mailSmtpServer.isEmpty() )
     return;
   QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
-  const QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
+  QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
+  if(smtpList.count() == 1 && defaultSmtp.isEmpty())
+  {
+    //Be sure to define default smtp
+    defaultSmtp = smtpList.at(0);
+  }
+
   Q_FOREACH( const QString &smtp, smtpList )
   {
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
