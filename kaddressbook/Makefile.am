@@ -48,7 +48,7 @@ libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la 
                             -lkabc_file $(LIB_KABC) $(LIB_KHTML) \
                             $(top_builddir)/kaddressbook/common/libkabcommon.la \
                             $(top_builddir)/kaddressbook/editors/libkabim.la \
-                            -lkdeprint
+                            -lkdeprint -lkutils
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
                                    $(top_srcdir)/libkdepim/categoryeditdialog.h \
                                    $(top_builddir)/kaddressbook/common/kabprefs_base.h
