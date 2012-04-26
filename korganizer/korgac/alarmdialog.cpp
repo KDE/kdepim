@@ -512,9 +512,9 @@ void AlarmDialog::eventNotification()
     found = true;
     item->mNotified = true;
     Alarm::List alarms = incidence->alarms();
-    Alarm::List::ConstIterator it;
-    for ( it = alarms.begin(); it != alarms.end(); ++it ) {
-      Alarm *alarm = *it;
+    Alarm::List::ConstIterator it2;
+    for ( it2 = alarms.begin(); it2 != alarms.end(); ++it2 ) {
+      Alarm *alarm = *it2;
       // FIXME: Check whether this should be done for all multiple alarms
       if (alarm->type() == Alarm::Procedure) {
         // FIXME: Add a message box asking whether the procedure should really be executed
