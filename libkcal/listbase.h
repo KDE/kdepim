@@ -67,7 +67,7 @@ class ListBase : public QValueList<T *>
 
     bool removeRef( T *t )
     {
-      QValueListIterator<T *> it = find( t );
+      QValueListIterator<T *> it = this->find( t );
       if ( it == QValueList<T*>::end() ) {
         return false;
       } else {
