@@ -283,7 +283,9 @@ void ThunderbirdSettings::readTransport()
     const QString userName = mHashConfig.value( smtpName + QLatin1String( ".username" ) ).toString();
     if ( !userName.isEmpty() ) {
       mt->setUserName( userName );
-      mt->setRequiresAuthentication( true );
+      if(authMethod > 1) {
+        mt->setRequiresAuthentication( true );
+      }
     }
 
     storeTransport( mt, ( smtp == defaultSmtp ) );
