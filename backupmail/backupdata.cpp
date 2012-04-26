@@ -26,8 +26,8 @@
 
 #include <QDebug>
 
-BackupData::BackupData(Util::BackupTypes typeSelected)
-  :mArchive(new KZip("backup"))
+BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
+  :mArchive(new KZip(filename))
 {
   bool good = mArchive->open(QIODevice::WriteOnly);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );

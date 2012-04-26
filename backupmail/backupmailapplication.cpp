@@ -30,6 +30,7 @@
 #include <KStandardAction>
 #include <KAction>
 #include <KActionCollection>
+#include <KFileDialog>
 
 #include <KLocale>
 
@@ -75,11 +76,14 @@ void BackupMailApplication::setupActions()
 
 void BackupMailApplication::slotBackupData()
 {
+  const QString filename = KFileDialog::getSaveFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Create backup"));
+  if(filename.isEmpty())
+    return;
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
     Util::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete mBackupData;
-    mBackupData = new BackupData(typeSelected);
+    mBackupData = new BackupData(typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
   }
@@ -99,11 +103,15 @@ void BackupMailApplication::slotAddError(const QString& info)
 
 void BackupMailApplication::slotRestoreData()
 {
+  const QString filename = KFileDialog::getOpenFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Restore backup"));
+  if(filename.isEmpty())
+    return;
+
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
     Util::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete mRestoreData;
-    mRestoreData = new RestoreData(typeSelected);
+    mRestoreData = new RestoreData(typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
   }

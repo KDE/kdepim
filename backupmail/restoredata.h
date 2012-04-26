@@ -20,11 +20,14 @@
 
 #include <QObject>
 #include "util.h"
+
+class KZip;
+
 class RestoreData : public QObject
 {
   Q_OBJECT
 public:
-  explicit RestoreData(Util::BackupTypes typeSelected);
+  explicit RestoreData(Util::BackupTypes typeSelected, const QString &filename);
   ~RestoreData();
 Q_SIGNALS:
   void info(const QString&);
@@ -36,6 +39,7 @@ private:
   void restoreMails();
   void restoreConfig();
   void restoreIdentity();
+  KZip *mArchive;
 
 
 };

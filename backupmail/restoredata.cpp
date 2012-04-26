@@ -16,8 +16,10 @@
 */
 
 #include "restoredata.h"
+#include <KZip>
 
-RestoreData::RestoreData(Util::BackupTypes typeSelected)
+RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
+  :mArchive(new KZip(filename))
 {
   if(typeSelected & Util::Identity)
     restoreIdentity();
@@ -33,7 +35,7 @@ RestoreData::RestoreData(Util::BackupTypes typeSelected)
 
 RestoreData::~RestoreData()
 {
-
+  delete mArchive;
 }
 
 void RestoreData::restoreTransports()
