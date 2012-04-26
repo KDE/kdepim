@@ -56,7 +56,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Destruct Alarm object.
     */
-    ~Alarm();
+    virtual ~Alarm();
 
     /**
       Returns an exact copy of this alarm. The returned object is owned by the caller.
