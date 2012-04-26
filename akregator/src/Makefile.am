@@ -21,8 +21,7 @@ bin_PROGRAMS = akregator
 # the application source, library search path, and link libraries
 akregator_SOURCES = main.cpp mainwindow.cpp
 akregator_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-akregator_LDADD = $(LIB_KPARTS) libakregatorprivate.la
-#akregator_LDADD = $(LIB_KPARTS) libakregatorprivate.la $(top_builddir)/libkdepim/libkdepim.la
+akregator_LDADD = $(LIB_KPARTS) libakregatorprivate.la $(top_builddir)/libkdepim/libkdepim.la
 
 # this is where the desktop file will go
 xdg_apps_DATA = akregator.desktop
