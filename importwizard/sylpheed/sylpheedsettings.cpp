@@ -111,6 +111,12 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
     settings.insert( QLatin1String( "Port" ), port );
   if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) && accountConfig.readEntry( QLatin1String( "ssl_pop" ), false ) )
     settings.insert( QLatin1String( "UseSSL" ), true );
+
+  if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
+    const bool removeMail = (accountConfig.readEntry( QLatin1String( "remove_mail" ), 1)==1);
+    settings.insert(QLatin1String("LeaveOnServer"),removeMail);
+  }
+
   if ( accountConfig.hasKey( QLatin1String( "message_leave_time" ) ) ){
     settings.insert( QLatin1String( "LeaveOnServerDays" ), accountConfig.readEntry( QLatin1String( "message_leave_time" ) ) );
   }
@@ -194,7 +200,7 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
         readImapAccount(accountConfig);
         break;
       case 4:
-        qDebug()<<" we can't create news item";
+        qDebug()<<" Add it when nntp resource will implemented";
         //news
         break;
       case 5:
