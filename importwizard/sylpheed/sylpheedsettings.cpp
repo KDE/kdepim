@@ -109,9 +109,22 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
   int port = 0;
   if ( readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
     settings.insert( QLatin1String( "Port" ), port );
-  if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) && accountConfig.readEntry( QLatin1String( "ssl_pop" ), false ) )
-    settings.insert( QLatin1String( "UseSSL" ), true );
-
+  if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) ) {
+    const int sslPop = accountConfig.readEntry( QLatin1String( "ssl_pop" ), 0 );
+    switch(sslPop) {
+      case 0:
+        //Nothing
+        break;
+      case 1:
+        settings.insert( QLatin1String( "UseSSL" ), true );
+        break;
+      case 2:
+        settings.insert( QLatin1String( "UseTLS" ), true );
+        break;
+      default:
+        qDebug()<<" unknown ssl_pop value "<<sslPop;
+    }
+  }
   if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
     const bool removeMail = (accountConfig.readEntry( QLatin1String( "remove_mail" ), 1)==1);
     settings.insert(QLatin1String("LeaveOnServer"),removeMail);
