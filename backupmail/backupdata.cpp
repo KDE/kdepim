@@ -23,6 +23,7 @@
 #include <Mailtransport/TransportManager>
 
 #include <KZip>
+#include <KLocale>
 
 #include <QDebug>
 
@@ -43,6 +44,7 @@ BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
     backupConfig();
   if(typeSelected & Util::AkonadiDb)
     backupAkonadiDb();
+  closeArchive();
 }
 
 BackupData::~BackupData()
@@ -54,10 +56,12 @@ BackupData::~BackupData()
 
 void BackupData::backupTransports()
 {
+  Q_EMIT info(i18n("Backup transports..."));
   const QList<MailTransport::Transport *> listTransport = MailTransport::TransportManager::self()->transports();
   Q_FOREACH( MailTransport::Transport *mt, listTransport) {
     //TODO save it
   }
+  Q_EMIT info(i18n("Transports backuped."));
 }
 
 void BackupData::closeArchive()
@@ -67,15 +71,19 @@ void BackupData::closeArchive()
 
 void BackupData::backupResources()
 {
-
+  Q_EMIT info(i18n("Backup resources..."));
+  Q_EMIT info(i18n("Resources backuped."));
 }
 
 void BackupData::backupConfig()
 {
+  Q_EMIT info(i18n("Backup config..."));
+  Q_EMIT info(i18n("Config backuped."));
 }
 
 void BackupData::backupIdentity()
 {
+  Q_EMIT info(i18n("Backup identity..."));
   //FIXME
   KConfig config( "/home/laurent/testrc" );
   KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
@@ -84,15 +92,20 @@ void BackupData::backupIdentity()
     (*it).writeConfig(group);
   }
   config.sync();
+  Q_EMIT info(i18n("Identity backuped."));
 }
 
 void BackupData::backupMails()
 {
+  Q_EMIT info(i18n("Backup Mails..."));
+  Q_EMIT info(i18n("Mails backuped."));
 
 }
 
 void BackupData::backupAkonadiDb()
 {
+  Q_EMIT info(i18n("Backup Akonadi Database..."));
+  Q_EMIT info(i18n("Akonadi Database backuped."));
 
 }
 
