@@ -50,6 +50,7 @@ BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
 
 BackupData::~BackupData()
 {
+  closeArchive();
   //TODO Verify
   delete mArchive;
   delete mIdentityManager;
@@ -69,6 +70,9 @@ void BackupData::backupTransports()
 void BackupData::closeArchive()
 {
   //TODO
+  if(mArchive) {
+
+  }
 }
 
 void BackupData::backupResources()

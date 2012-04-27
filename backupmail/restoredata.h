@@ -40,6 +40,7 @@ private:
   void restoreConfig();
   void restoreIdentity();
   void restoreAkonadiDb();
+  void closeArchive();
 
   KZip *mArchive;
 

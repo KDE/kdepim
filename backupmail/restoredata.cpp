@@ -37,8 +37,19 @@ RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
 
 RestoreData::~RestoreData()
 {
+  closeArchive();
   delete mArchive;
 }
+
+void RestoreData::closeArchive()
+{
+  if(mArchive) {
+
+  }
+
+  //TODO
+}
+
 
 void RestoreData::restoreTransports()
 {
