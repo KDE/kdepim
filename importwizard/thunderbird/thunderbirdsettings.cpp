@@ -105,7 +105,7 @@ void ThunderbirdSettings::readAccount()
     bool found = false;
     if( type == QLatin1String("imap")) {
       QMap<QString, QVariant> settings;
-      settings.insert(QLatin1String("ImapServer"),serverName);
+      settings.insert(QLatin1String("ImapServer"),host);
       settings.insert(QLatin1String("UserName"),userName);
       found = false;
       const int port = mHashConfig.value( accountName + QLatin1String( ".port" ) ).toInt( &found);
