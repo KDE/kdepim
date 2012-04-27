@@ -101,7 +101,14 @@ void ThunderbirdSettings::readAccount()
     const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
 
     const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
-    
+    //TODO use it ?
+    const QString directory = mHashConfig.value( accountName + QLatin1String( ".directory" ) ).toString();
+
+    const QString loginAtStartupStr = accountName + QLatin1String( ".login_at_startup" );
+    if ( mHashConfig.contains( loginAtStartupStr ) ) {
+      const bool loginAtStartup = mHashConfig.value( loginAtStartupStr ).toBool();
+      //TODO modify kmailrc. We need resource name.
+    }
     bool found = false;
     if( type == QLatin1String("imap")) {
       QMap<QString, QVariant> settings;
@@ -240,7 +247,7 @@ void ThunderbirdSettings::readAccount()
       qDebug()<<" rss resource needs to be implemented";
       continue;
     } else if (type == QLatin1String("nntp")) {
-      //TODO when akregator2 will merge in kdepim
+      //TODO when knode will merge in kdepim
       qDebug()<<" nntp resource need to be implemented";
       continue;
     } else {

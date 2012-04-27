@@ -40,6 +40,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <KMessageBox>
 #include <akonadi/control.h>
 #include <mailcommon/mailkernel.h>
 
@@ -112,6 +113,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   Akonadi::Control::widgetNeedsAkonadi(this);
 
   checkModules();
+  KMessageBox::information(this,i18n("Close kmail before to import data. Some plugins will modify KMail config file."));
 }
 
 ImportWizard::~ImportWizard()

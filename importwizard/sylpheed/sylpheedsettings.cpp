@@ -155,11 +155,8 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
 {
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-
-
   const int sslimap = accountConfig.readEntry( QLatin1String( "ssl_imap" ), 0);
   switch(sslimap) {
-    //TODO
   case 0:
     //None
     settings.insert( QLatin1String( "Safety" ), QLatin1String( "NONE" ) );
