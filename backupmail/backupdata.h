@@ -41,6 +41,7 @@ private:
   void backupMails();
   void backupConfig();
   void backupIdentity();
+  void closeArchive();
 
   qint64 writeFile(const char* data, qint64 len);
   KZip *mArchive;

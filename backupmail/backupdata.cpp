@@ -58,6 +58,11 @@ void BackupData::backupTransports()
   }
 }
 
+void BackupData::closeArchive()
+{
+  //TODO
+}
+
 void BackupData::backupResources()
 {
 
