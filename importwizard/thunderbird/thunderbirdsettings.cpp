@@ -153,6 +153,9 @@ void ThunderbirdSettings::readAccount()
         if(found) {
           settings.insert(QLatin1String("IntervalCheckTime"),checkTime);
         }
+      } else {
+        //Default value from thunderbird
+        settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
       }
 
       createResource( "akonadi_imap_resource", name,settings );
@@ -199,7 +202,23 @@ void ThunderbirdSettings::readAccount()
         }
       }
       addAuth( settings, QLatin1String( "AuthenticationMethod" ),accountName );
-      
+      const QString checkNewMailStr = accountName + QLatin1String( ".check_new_mail" );
+      if(mHashConfig.contains(checkNewMailStr)) {
+        const bool checkNewMail = mHashConfig.value(checkNewMailStr).toBool();
+        settings.insert(QLatin1String("IntervalCheckEnabled"), checkNewMail);
+      }
+      const QString checkTimeStr = accountName + QLatin1String( ".check_time" );
+      if(mHashConfig.contains(checkTimeStr)) {
+        found = false;
+        const int checkTime = mHashConfig.value( checkTimeStr ).toInt( &found);
+        if(found) {
+          settings.insert(QLatin1String("IntervalCheckInterval"),checkTime);
+        }
+      } else {
+        //Default value from thunderbird
+        settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
+      }
+
       createResource( "akonadi_pop3_resource", name, settings );
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
