@@ -31,7 +31,7 @@ SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *paren
     :AbstractSettings( parent )
 {
   KConfig config( filename );
-  const QStringList accountList = config.groupList().filter( QRegExp( "Account:\\d+" ) );
+  const QStringList accountList = config.groupList().filter( QRegExp( "Account: \\d+" ) );
   const QStringList::const_iterator end( accountList.constEnd() );
   for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
   {
@@ -198,6 +198,8 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
       case 5:
         //local
         break;
+      default:
+        qDebug()<<" protocol not defined"<<protocol;
     }
   }  
 }

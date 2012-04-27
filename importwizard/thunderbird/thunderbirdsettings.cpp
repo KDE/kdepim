@@ -119,6 +119,9 @@ void ThunderbirdSettings::readAccount()
         if ( offlineStatus ) {
           settings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
         }
+      } else {
+        //default value == true
+        settings.insert( QLatin1String( "DisconnectedModeEnabled" ), true );
       }
 
       found = false;
@@ -156,6 +159,10 @@ void ThunderbirdSettings::readAccount()
       } else {
         //Default value from thunderbird
         settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
+      }
+      const QString trashFolderStr = accountName + QLatin1String( ".trash_folder_name" );
+      if(mHashConfig.contains(trashFolderStr)) {
+        settings.insert(QLatin1String("TrashCollection"),adaptFolderId(mHashConfig.value(trashFolderStr).toString()));
       }
 
       createResource( "akonadi_imap_resource", name,settings );
