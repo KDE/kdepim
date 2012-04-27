@@ -172,6 +172,8 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
       qDebug()<<" imap auth unknown "<<auth;
       break;
   }
+  const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
+  settings.insert( QLatin1String( "Password" ), password );
 
   createResource( "akonadi_imap_resource", name,settings );
 }
