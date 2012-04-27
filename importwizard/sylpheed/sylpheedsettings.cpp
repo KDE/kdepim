@@ -126,6 +126,15 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
   settings.insert( QLatin1String( "Password" ), password );
   
+  //use_apop_auth
+  if ( accountConfig.hasKey( QLatin1String( "use_apop_auth" ) ) ){
+    const bool useApop = (accountConfig.readEntry( QLatin1String( "use_apop_auth" ), 1)==1);
+    if(useApop) {
+      settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP);
+    }
+  }
+
+
   createResource( "akonadi_pop3_resource", name, settings );
 }
 
