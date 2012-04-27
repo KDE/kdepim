@@ -140,6 +140,20 @@ void ThunderbirdSettings::readAccount()
             qDebug()<<" socketType "<<socketType;
         }
       }
+      const QString checkNewMailStr = accountName + QLatin1String( ".check_new_mail" );
+      if(mHashConfig.contains(checkNewMailStr)) {
+        const bool checkNewMail = mHashConfig.value(checkNewMailStr).toBool();
+        settings.insert(QLatin1String("IntervalCheckEnabled"), checkNewMail);
+      }
+
+      const QString checkTimeStr = accountName + QLatin1String( ".check_time" );
+      if(mHashConfig.contains(checkTimeStr)) {
+        found = false;
+        const int checkTime = mHashConfig.value( checkTimeStr ).toInt( &found);
+        if(found) {
+          settings.insert(QLatin1String("IntervalCheckTime"),checkTime);
+        }
+      }
 
       createResource( "akonadi_imap_resource", name,settings );
     } else if( type == QLatin1String("pop3")) {
