@@ -39,6 +39,8 @@ private:
   void restoreMails();
   void restoreConfig();
   void restoreIdentity();
+  void restoreAkonadiDb();
+
   KZip *mArchive;
 
 

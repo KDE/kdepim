@@ -31,6 +31,8 @@ RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
     restoreResources();
   if(typeSelected & Util::Config)
     restoreConfig();
+  if(typeSelected & Util::AkonadiDb)
+    restoreAkonadiDb();
 }
 
 RestoreData::~RestoreData()
@@ -59,6 +61,11 @@ void RestoreData::restoreConfig()
 }
 
 void RestoreData::restoreIdentity()
+{
+
+}
+
+void RestoreData::restoreAkonadiDb()
 {
 
 }

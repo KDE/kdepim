@@ -41,6 +41,8 @@ BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
     backupResources();
   if(typeSelected & Util::Config)
     backupConfig();
+  if(typeSelected & Util::AkonadiDb)
+    backupAkonadiDb();
 }
 
 BackupData::~BackupData()
@@ -85,6 +87,11 @@ void BackupData::backupIdentity()
 }
 
 void BackupData::backupMails()
+{
+
+}
+
+void BackupData::backupAkonadiDb()
 {
 
 }
