@@ -112,7 +112,7 @@ void ThunderbirdSettings::readAccount()
       if ( found ) {
         settings.insert( QLatin1String( "ImapPort" ), port );
       }
-      addAuth( settings, QLatin1String( "Authentication" ), account );
+      addAuth( settings, QLatin1String( "Authentication" ), accountName );
       const QString offline = accountName + QLatin1String( ".offline_download" );
       if ( mHashConfig.contains( offline ) ) {
         const bool offlineStatus = mHashConfig.value( offline ).toBool();
@@ -184,7 +184,7 @@ void ThunderbirdSettings::readAccount()
             qDebug()<<" socketType "<<socketType;
         }
       }
-      addAuth( settings, QLatin1String( "AuthenticationMethod" ),account );
+      addAuth( settings, QLatin1String( "AuthenticationMethod" ),accountName );
       
       createResource( "akonadi_pop3_resource", name, settings );
     } else if ( type == QLatin1String( "none" ) ) {
