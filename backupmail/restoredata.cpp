@@ -16,8 +16,10 @@
 */
 
 #include "restoredata.h"
+#include <KZip>
 
-RestoreData::RestoreData(Util::BackupTypes typeSelected)
+RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
+  :mArchive(new KZip(filename))
 {
   if(typeSelected & Util::Identity)
     restoreIdentity();
@@ -29,12 +31,25 @@ RestoreData::RestoreData(Util::BackupTypes typeSelected)
     restoreResources();
   if(typeSelected & Util::Config)
     restoreConfig();
+  if(typeSelected & Util::AkonadiDb)
+    restoreAkonadiDb();
 }
 
 RestoreData::~RestoreData()
 {
-
+  closeArchive();
+  delete mArchive;
 }
+
+void RestoreData::closeArchive()
+{
+  if(mArchive) {
+
+  }
+
+  //TODO
+}
+
 
 void RestoreData::restoreTransports()
 {
@@ -57,6 +72,11 @@ void RestoreData::restoreConfig()
 }
 
 void RestoreData::restoreIdentity()
+{
+
+}
+
+void RestoreData::restoreAkonadiDb()
 {
 
 }

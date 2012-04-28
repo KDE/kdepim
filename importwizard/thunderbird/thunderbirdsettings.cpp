@@ -101,24 +101,34 @@ void ThunderbirdSettings::readAccount()
     const QString name = mHashConfig.value( accountName + QLatin1String( ".name" ) ).toString();
 
     const QString type = mHashConfig.value( accountName + QLatin1String( ".type" ) ).toString();
-    
+    //TODO use it ?
+    const QString directory = mHashConfig.value( accountName + QLatin1String( ".directory" ) ).toString();
+
+    const QString loginAtStartupStr = accountName + QLatin1String( ".login_at_startup" );
+    if ( mHashConfig.contains( loginAtStartupStr ) ) {
+      const bool loginAtStartup = mHashConfig.value( loginAtStartupStr ).toBool();
+      //TODO modify kmailrc. We need resource name.
+    }
     bool found = false;
     if( type == QLatin1String("imap")) {
       QMap<QString, QVariant> settings;
-      settings.insert(QLatin1String("ImapServer"),serverName);
+      settings.insert(QLatin1String("ImapServer"),host);
       settings.insert(QLatin1String("UserName"),userName);
       found = false;
       const int port = mHashConfig.value( accountName + QLatin1String( ".port" ) ).toInt( &found);
       if ( found ) {
         settings.insert( QLatin1String( "ImapPort" ), port );
       }
-      addAuth( settings, QLatin1String( "Authentication" ), account );
+      addAuth( settings, QLatin1String( "Authentication" ), accountName );
       const QString offline = accountName + QLatin1String( ".offline_download" );
       if ( mHashConfig.contains( offline ) ) {
         const bool offlineStatus = mHashConfig.value( offline ).toBool();
         if ( offlineStatus ) {
           settings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
         }
+      } else {
+        //default value == true
+        settings.insert( QLatin1String( "DisconnectedModeEnabled" ), true );
       }
 
       found = false;
@@ -139,6 +149,27 @@ void ThunderbirdSettings::readAccount()
           default:
             qDebug()<<" socketType "<<socketType;
         }
+      }
+      const QString checkNewMailStr = accountName + QLatin1String( ".check_new_mail" );
+      if(mHashConfig.contains(checkNewMailStr)) {
+        const bool checkNewMail = mHashConfig.value(checkNewMailStr).toBool();
+        settings.insert(QLatin1String("IntervalCheckEnabled"), checkNewMail);
+      }
+
+      const QString checkTimeStr = accountName + QLatin1String( ".check_time" );
+      if(mHashConfig.contains(checkTimeStr)) {
+        found = false;
+        const int checkTime = mHashConfig.value( checkTimeStr ).toInt( &found);
+        if(found) {
+          settings.insert(QLatin1String("IntervalCheckTime"),checkTime);
+        }
+      } else {
+        //Default value from thunderbird
+        settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
+      }
+      const QString trashFolderStr = accountName + QLatin1String( ".trash_folder_name" );
+      if(mHashConfig.contains(trashFolderStr)) {
+        settings.insert(QLatin1String("TrashCollection"),adaptFolderId(mHashConfig.value(trashFolderStr).toString()));
       }
 
       createResource( "akonadi_imap_resource", name,settings );
@@ -184,8 +215,24 @@ void ThunderbirdSettings::readAccount()
             qDebug()<<" socketType "<<socketType;
         }
       }
-      addAuth( settings, QLatin1String( "AuthenticationMethod" ),account );
-      
+      addAuth( settings, QLatin1String( "AuthenticationMethod" ),accountName );
+      const QString checkNewMailStr = accountName + QLatin1String( ".check_new_mail" );
+      if(mHashConfig.contains(checkNewMailStr)) {
+        const bool checkNewMail = mHashConfig.value(checkNewMailStr).toBool();
+        settings.insert(QLatin1String("IntervalCheckEnabled"), checkNewMail);
+      }
+      const QString checkTimeStr = accountName + QLatin1String( ".check_time" );
+      if(mHashConfig.contains(checkTimeStr)) {
+        found = false;
+        const int checkTime = mHashConfig.value( checkTimeStr ).toInt( &found);
+        if(found) {
+          settings.insert(QLatin1String("IntervalCheckInterval"),checkTime);
+        }
+      } else {
+        //Default value from thunderbird
+        settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
+      }
+
       createResource( "akonadi_pop3_resource", name, settings );
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
@@ -200,7 +247,7 @@ void ThunderbirdSettings::readAccount()
       qDebug()<<" rss resource needs to be implemented";
       continue;
     } else if (type == QLatin1String("nntp")) {
-      //TODO when akregator2 will merge in kdepim
+      //TODO when knode will merge in kdepim
       qDebug()<<" nntp resource need to be implemented";
       continue;
     } else {
@@ -222,7 +269,13 @@ void ThunderbirdSettings::readTransport()
   if ( mailSmtpServer.isEmpty() )
     return;
   QStringList smtpList = mailSmtpServer.split( QLatin1Char( ',' ) );
-  const QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
+  QString defaultSmtp = mHashConfig.value( QLatin1String( "mail.smtp.defaultserver" ) ).toString();
+  if(smtpList.count() == 1 && defaultSmtp.isEmpty())
+  {
+    //Be sure to define default smtp
+    defaultSmtp = smtpList.at(0);
+  }
+
   Q_FOREACH( const QString &smtp, smtpList )
   {
     const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
@@ -277,7 +330,9 @@ void ThunderbirdSettings::readTransport()
     const QString userName = mHashConfig.value( smtpName + QLatin1String( ".username" ) ).toString();
     if ( !userName.isEmpty() ) {
       mt->setUserName( userName );
-      mt->setRequiresAuthentication( true );
+      if(authMethod > 1) {
+        mt->setRequiresAuthentication( true );
+      }
     }
 
     storeTransport( mt, ( smtp == defaultSmtp ) );

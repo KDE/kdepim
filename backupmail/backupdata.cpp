@@ -16,6 +16,7 @@
 */
 
 #include "backupdata.h"
+#include "messageviewer/kcursorsaver.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
@@ -23,11 +24,12 @@
 #include <Mailtransport/TransportManager>
 
 #include <KZip>
+#include <KLocale>
 
 #include <QDebug>
 
-BackupData::BackupData(Util::BackupTypes typeSelected)
-  :mArchive(new KZip("backup"))
+BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
+  :mArchive(new KZip(filename))
 {
   bool good = mArchive->open(QIODevice::WriteOnly);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
@@ -41,10 +43,14 @@ BackupData::BackupData(Util::BackupTypes typeSelected)
     backupResources();
   if(typeSelected & Util::Config)
     backupConfig();
+  if(typeSelected & Util::AkonadiDb)
+    backupAkonadiDb();
+  closeArchive();
 }
 
 BackupData::~BackupData()
 {
+  closeArchive();
   //TODO Verify
   delete mArchive;
   delete mIdentityManager;
@@ -52,23 +58,41 @@ BackupData::~BackupData()
 
 void BackupData::backupTransports()
 {
+  Q_EMIT info(i18n("Backup transports..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   const QList<MailTransport::Transport *> listTransport = MailTransport::TransportManager::self()->transports();
   Q_FOREACH( MailTransport::Transport *mt, listTransport) {
     //TODO save it
+  }
+  Q_EMIT info(i18n("Transports backuped."));
+}
+
+void BackupData::closeArchive()
+{
+  //TODO
+  if(mArchive) {
+
   }
 }
 
 void BackupData::backupResources()
 {
-
+  Q_EMIT info(i18n("Backup resources..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Q_EMIT info(i18n("Resources backuped."));
 }
 
 void BackupData::backupConfig()
 {
+  Q_EMIT info(i18n("Backup config..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Q_EMIT info(i18n("Config backuped."));
 }
 
 void BackupData::backupIdentity()
 {
+  Q_EMIT info(i18n("Backup identity..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   //FIXME
   KConfig config( "/home/laurent/testrc" );
   KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
@@ -77,10 +101,22 @@ void BackupData::backupIdentity()
     (*it).writeConfig(group);
   }
   config.sync();
+  Q_EMIT info(i18n("Identity backuped."));
 }
 
 void BackupData::backupMails()
 {
+  Q_EMIT info(i18n("Backup Mails..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Q_EMIT info(i18n("Mails backuped."));
+
+}
+
+void BackupData::backupAkonadiDb()
+{
+  Q_EMIT info(i18n("Backup Akonadi Database..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Q_EMIT info(i18n("Akonadi Database backuped."));
 
 }
 

@@ -31,7 +31,7 @@ SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *paren
     :AbstractSettings( parent )
 {
   KConfig config( filename );
-  const QStringList accountList = config.groupList().filter( QRegExp( "Account:\\d+" ) );
+  const QStringList accountList = config.groupList().filter( QRegExp( "Account: \\d+" ) );
   const QStringList::const_iterator end( accountList.constEnd() );
   for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
   {
@@ -109,8 +109,27 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
   int port = 0;
   if ( readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
     settings.insert( QLatin1String( "Port" ), port );
-  if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) && accountConfig.readEntry( QLatin1String( "ssl_pop" ), false ) )
-    settings.insert( QLatin1String( "UseSSL" ), true );
+  if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) ) {
+    const int sslPop = accountConfig.readEntry( QLatin1String( "ssl_pop" ), 0 );
+    switch(sslPop) {
+      case 0:
+        //Nothing
+        break;
+      case 1:
+        settings.insert( QLatin1String( "UseSSL" ), true );
+        break;
+      case 2:
+        settings.insert( QLatin1String( "UseTLS" ), true );
+        break;
+      default:
+        qDebug()<<" unknown ssl_pop value "<<sslPop;
+    }
+  }
+  if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
+    const bool removeMail = (accountConfig.readEntry( QLatin1String( "remove_mail" ), 1)==1);
+    settings.insert(QLatin1String("LeaveOnServer"),removeMail);
+  }
+
   if ( accountConfig.hasKey( QLatin1String( "message_leave_time" ) ) ){
     settings.insert( QLatin1String( "LeaveOnServerDays" ), accountConfig.readEntry( QLatin1String( "message_leave_time" ) ) );
   }
@@ -120,6 +139,15 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
   settings.insert( QLatin1String( "Password" ), password );
   
+  //use_apop_auth
+  if ( accountConfig.hasKey( QLatin1String( "use_apop_auth" ) ) ){
+    const bool useApop = (accountConfig.readEntry( QLatin1String( "use_apop_auth" ), 1)==1);
+    if(useApop) {
+      settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP);
+    }
+  }
+
+
   createResource( "akonadi_pop3_resource", name, settings );
 }
 
@@ -127,11 +155,8 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
 {
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-
-
   const int sslimap = accountConfig.readEntry( QLatin1String( "ssl_imap" ), 0);
   switch(sslimap) {
-    //TODO
   case 0:
     //None
     settings.insert( QLatin1String( "Safety" ), QLatin1String( "NONE" ) );
@@ -172,6 +197,8 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
       qDebug()<<" imap auth unknown "<<auth;
       break;
   }
+  const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
+  settings.insert( QLatin1String( "Password" ), password );
 
   createResource( "akonadi_imap_resource", name,settings );
 }
@@ -192,12 +219,14 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
         readImapAccount(accountConfig);
         break;
       case 4:
-        qDebug()<<" we can't create news item";
+        qDebug()<<" Add it when nntp resource will implemented";
         //news
         break;
       case 5:
         //local
         break;
+      default:
+        qDebug()<<" protocol not defined"<<protocol;
     }
   }  
 }

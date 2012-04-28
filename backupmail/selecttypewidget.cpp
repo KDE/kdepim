@@ -53,6 +53,10 @@ Util::BackupTypes SelectTypeWidget::backupTypesSelected() const
   {
     types|= Util::Mails;
   }
+  if(ui->akonadi->isChecked())
+  {
+    types|= Util::AkonadiDb;
+  }
   return types;
 }
 

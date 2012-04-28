@@ -217,7 +217,7 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
 
   mListView = new QListWidget(this);
   mListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
+  mListView->setSortingEnabled(true);
   hboxLayout->addWidget(mListView);
   hboxLayout->addLayout(btnsLayout);
   layout->addLayout(hboxLayout);

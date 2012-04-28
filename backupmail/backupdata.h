@@ -30,7 +30,7 @@ class BackupData : public QObject
 {
   Q_OBJECT
 public:
-  explicit BackupData(Util::BackupTypes typeSelected);
+  explicit BackupData(Util::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
 Q_SIGNALS:
   void info(const QString&);
@@ -41,6 +41,9 @@ private:
   void backupMails();
   void backupConfig();
   void backupIdentity();
+  void backupAkonadiDb();
+
+  void closeArchive();
 
   qint64 writeFile(const char* data, qint64 len);
   KZip *mArchive;
