@@ -56,6 +56,8 @@ protected:
 
   QString adaptFolder( const QString& folder);
 
+  void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
+
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
 
   ImportWizard *mImportWizard;

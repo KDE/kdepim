@@ -26,6 +26,7 @@
 
 #include <KLocale>
 #include <KDebug>
+#include <KSharedConfig>
 
 #include <akonadi/agenttype.h>
 #include <akonadi/agentmanager.h>
@@ -209,6 +210,12 @@ QString AbstractSettings::adaptFolder( const QString& folder)
   if(newFolderId == -1 )
     return QString();
   return QString::number(newFolderId);
+}
+
+void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
+{
+  KSharedConfigPtr kmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
+  //TODO
 }
 
 #include "abstractsettings.moc"
