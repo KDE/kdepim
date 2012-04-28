@@ -77,7 +77,7 @@ void BackupMailApplication::setupActions()
 
 void BackupMailApplication::slotBackupData()
 {
-  KMessageBox::information(this,i18n("Before to backup info, close all kdepim application."),i18n("Backup"));
+  KMessageBox::information(this,i18n("Before to backup info, close all kdepim applications."),i18n("Backup"));
 
   const QString filename = KFileDialog::getSaveFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Create backup"));
   if(filename.isEmpty())
