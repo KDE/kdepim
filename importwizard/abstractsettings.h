@@ -44,7 +44,7 @@ protected:
   void addFilterImportInfo( const QString& log );
   void addFilterImportError( const QString& log );
 
-  void createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+  QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 
   KPIMIdentities::Identity* createIdentity();
 
@@ -55,6 +55,8 @@ protected:
   void storeIdentity(KPIMIdentities::Identity* identity);
 
   QString adaptFolder( const QString& folder);
+
+  void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
 
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
 

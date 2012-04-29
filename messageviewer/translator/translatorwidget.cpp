@@ -348,9 +348,10 @@ void TranslatorWidget::slotJobDone ( KJob *job )
   if(httpPostJob) {
     d->translate->setEnabled( true );
     const QString data = QString::fromUtf8(httpPostJob->data());
-    int index = data.indexOf(QLatin1String("<div style=\"padding:0.6em;\">"));
+    const QString startTag = QLatin1String("<div style=\"padding:0.6em;\">");
+    int index = data.indexOf(startTag);
     if(index != -1) {
-      QString newStr = data.right(data.length()-index - 29);
+      QString newStr = data.right(data.length() - index - startTag.length());
       index = newStr.indexOf(QLatin1String("</div>"));
       d->translatedText->setHtml(newStr.left(index));
     } else {

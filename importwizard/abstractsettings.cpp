@@ -26,6 +26,7 @@
 
 #include <KLocale>
 #include <KDebug>
+#include <KSharedConfig>
 
 #include <akonadi/agenttype.h>
 #include <akonadi/agentmanager.h>
@@ -110,12 +111,12 @@ static QVariant::Type argumentType( const QMetaObject *mo, const QString &method
 }
 
 
-void AbstractSettings::createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings )
+QString AbstractSettings::createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings )
 {
   const AgentType type = AgentManager::self()->type( resources );
   if ( !type.isValid() ) {
     addFilterImportError( i18n( "Resource type '%1' is not available.", resources ) );
-    return;
+    return QString();
   }
 
   // check if unique instance already exists
@@ -125,7 +126,7 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
       kDebug() << instance.type().identifier() << (instance.type() == type);
       if ( instance.type() == type ) {
         addFilterImportInfo( i18n( "Resource '%1' is already set up.", type.name() ) );
-        return;
+        return QString();
       }
     }
   }
@@ -140,7 +141,7 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
       QDBusInterface iface( "org.freedesktop.Akonadi.Resource." + instance.identifier(), "/Settings" );
       if ( !iface.isValid() ) {
         addFilterImportError( i18n( "Unable to configure resource instance." ) );
-        return;
+        return QString();
       }
 
       // configure resource
@@ -154,25 +155,26 @@ void AbstractSettings::createResource( const QString& resources, const QString& 
         const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );
         if ( !arg.canConvert( targetType ) ) {
           addFilterImportError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
-          return;
+          return QString();
         }
         arg.convert( targetType );
         QDBusReply<void> reply = iface.call( methodName, arg );
         if ( !reply.isValid() ) {
           addFilterImportError( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
-          return;
+          return QString();
         }
       }
       instance.reconfigure();
     }
 
     addFilterImportInfo( i18n( "Resource setup completed." ) );
+    return instance.identifier();
   } else {
     if ( job->error() ) {
       addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
     }
   }
-
+  return QString();
 }
 
 void AbstractSettings::addFilterImportInfo( const QString& log )
@@ -208,6 +210,12 @@ QString AbstractSettings::adaptFolder( const QString& folder)
   if(newFolderId == -1 )
     return QString();
   return QString::number(newFolderId);
+}
+
+void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
+{
+  KSharedConfigPtr kmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
+  //TODO
 }
 
 #include "abstractsettings.moc"
