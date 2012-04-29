@@ -140,7 +140,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.8.2 REQUIRED)
+find_package(KdepimLibs 4.8.3 REQUIRED)
 
 ############### Load the CTest options ###############
 
