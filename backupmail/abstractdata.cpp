@@ -36,3 +36,5 @@ void AbstractData::closeArchive()
   }
 }
 
+
+#include "abstractdata.moc"
