@@ -26,14 +26,16 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
+#include <QSpinBox>
 
-AddArchiveMailDialog::AddArchiveMailDialog(const ArchiveMailInfo& info,QWidget *parent)
-  :KDialog(parent)
+AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent)
+  : KDialog(parent),
+    mInfo(info)
 {
-  if(info.isEmpty())
-    setCaption( i18n( "Add Archive Mail" ) );
-  else
+  if(info)
     setCaption( i18n( "Modify Archive Mail" ) );
+  else
+    setCaption( i18n( "Add Archive Mail" ) );
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
   setModal( true );
@@ -73,7 +75,6 @@ AddArchiveMailDialog::AddArchiveMailDialog(const ArchiveMailInfo& info,QWidget *
   row++;
 
   mRecursiveCheckBox = new QCheckBox( i18n( "Archive all subfolders" ), mainWidget );
-  connect( mRecursiveCheckBox, SIGNAL(clicked()), this, SLOT(slotRecursiveCheckboxClicked()) );
   mainLayout->addWidget( mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft );
   mRecursiveCheckBox->setChecked( true );
   row++;
@@ -85,11 +86,22 @@ AddArchiveMailDialog::AddArchiveMailDialog(const ArchiveMailInfo& info,QWidget *
   mainLayout->addWidget(mPath);
   row++;
 
+  QLabel *dateLabel = new QLabel( i18n( "Backup each:" ), mainWidget );
+  mainLayout->addWidget( dateLabel, row, 0 );
+  mDays = new QSpinBox(mainWidget);
+  mDays->setMinimum(1);
+  mDays->setMinimum(3600);
+  mainLayout->addWidget(mDays);
+  row++;
+
+  //TODO add units
+
+
   mainLayout->setColumnStretch( 1, 1 );
   mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
-  if(!info.isEmpty()) {
-    load(info);
+  if(mInfo) {
+    load(mInfo);
   }
 
   // Make it a bit bigger, else the folder requester cuts off the text too early
@@ -103,40 +115,41 @@ AddArchiveMailDialog::~AddArchiveMailDialog()
 
 }
 
-void AddArchiveMailDialog::load(const ArchiveMailInfo& info)
+void AddArchiveMailDialog::load(ArchiveMailInfo* info)
 {
-  mPath->setUrl(info.url());
-  mRecursiveCheckBox->setChecked(info.saveSubCollection());
-  mFolderRequester->setCollection(Akonadi::Collection(info.saveCollectionId()));
-  mFormatComboBox->setCurrentIndex(static_cast<int>(info.archiveType()));  
+  mPath->setUrl(info->url());
+  mRecursiveCheckBox->setChecked(info->saveSubCollection());
+  mFolderRequester->setCollection(Akonadi::Collection(info->saveCollectionId()));
+  mFormatComboBox->setCurrentIndex(static_cast<int>(info->archiveType()));
+  mDays->setValue(info->archiveAge());
 #if 0 //TODO
   void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
   ArchiveMailInfo::ArchiveUnit archiveUnit() const;
 
-  void setArchiveAge( int age );
-  int archiveAge() const;
-
   void setLastDateSaved( const QDate& date );
   QDate lastDateSaved() const;
 #endif
-
-  //TODO
 }
 
-ArchiveMailInfo AddArchiveMailDialog::info()
+ArchiveMailInfo* AddArchiveMailDialog::info()
 {
-  ArchiveMailInfo newInfo;
-  newInfo.setSaveSubCollection(mRecursiveCheckBox->isChecked());
-  newInfo.setArchiveType(static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex()));
-  newInfo.setSaveCollectionId(mFolderRequester->collection().id());
-  newInfo.setUrl(mPath->url());
-  //TODO
-  return newInfo;
+  if(!mInfo) {
+    mInfo = new ArchiveMailInfo();
+  }
+  mInfo->setSaveSubCollection(mRecursiveCheckBox->isChecked());
+  mInfo->setArchiveType(static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex()));
+  mInfo->setSaveCollectionId(mFolderRequester->collection().id());
+  mInfo->setUrl(mPath->url());
+  mInfo->setArchiveAge(mDays->value());
+  //TODO unit
+  return mInfo;
 }
 
 void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collection)
 {
+  if(collection.isValid()) {
 
+  }
 }
 
 void AddArchiveMailDialog::setArchiveType(MailCommon::BackupJob::ArchiveType type)

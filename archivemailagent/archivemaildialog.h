@@ -29,10 +29,10 @@ public:
   explicit ArchiveMailItem( const QString &text, QListWidget *parent = 0 );
   ~ArchiveMailItem();
 
-  void setInfo(const ArchiveMailInfo& info);
-  ArchiveMailInfo info() const;
+  void setInfo(ArchiveMailInfo *info);
+  ArchiveMailInfo *info() const;
 private:
-  ArchiveMailInfo mInfo;
+  ArchiveMailInfo *mInfo;
 };
 
 class ArchiveMailWidget : public QWidget
