@@ -212,10 +212,30 @@ QString AbstractSettings::adaptFolder( const QString& folder)
   return QString::number(newFolderId);
 }
 
+void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup)
+{
+  if(agentIdentifyName.isEmpty())
+    return;
+  const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
+  addKmailConfig(groupName,QLatin1String("CheckOnStartup"), loginAtStartup);
+}
+
+
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
 {
   KSharedConfigPtr kmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
-  //TODO
+  KConfigGroup group = kmailConfig->group(groupName);
+  group.writeEntry(key,value);
+  group.sync();
 }
+
+void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, bool value)
+{
+  KSharedConfigPtr kmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
+  KConfigGroup group = kmailConfig->group(groupName);
+  group.writeEntry(key,value);
+  group.sync();
+}
+
 
 #include "abstractsettings.moc"
