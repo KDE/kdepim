@@ -25,6 +25,7 @@
 
 #include <KZip>
 #include <KLocale>
+#include <KTemporaryFile>
 
 #include <QDebug>
 
@@ -86,17 +87,22 @@ void BackupData::backupIdentity()
 {
   Q_EMIT info(i18n("Backup identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  //TODO add ktemporaryfile
-  //FIXME
-  KConfig config( "/home/laurent/testrc" );
+  KTemporaryFile tmp;
+  tmp.open();
+  KConfig config( tmp.fileName() );
   int i = 0;
   KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
   for ( KPIMIdentities::IdentityManager::ConstIterator it = mIdentityManager->begin(); it != end; ++it ) {
-    KConfigGroup group(&config,QString::fromLatin1("MailTransport %1").arg(QString::number(i)));
+    KConfigGroup group(&config,QString::fromLatin1("Identity %1").arg(QString::number(i)));
     (*it).writeConfig(group);
+    i++;
   }
   config.sync();
-  Q_EMIT info(i18n("Identity backuped."));
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("identityrc"));
+  if(fileAdded)
+    Q_EMIT info(i18n("Identity backuped."));
+  else
+    Q_EMIT error(i18n("Identity file can not add to backup file."));
 }
 
 void BackupData::backupMails()

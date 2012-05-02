@@ -32,7 +32,7 @@ void AbstractData::closeArchive()
 {
   //TODO
   if(mArchive) {
-
+    mArchive->close();
   }
 }
 
