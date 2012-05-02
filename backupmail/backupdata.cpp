@@ -25,54 +25,58 @@
 
 #include <KZip>
 #include <KLocale>
+#include <KTemporaryFile>
 
 #include <QDebug>
 
 BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
-  :mArchive(new KZip(filename))
+  :AbstractData(filename,typeSelected)
 {
-  bool good = mArchive->open(QIODevice::WriteOnly);
-  mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
-  if(typeSelected & Util::Identity)
-    backupIdentity();
-  if(typeSelected & Util::MailTransport)
-    backupTransports();
-  if(typeSelected & Util::Mails)
-    backupMails();
-  if(typeSelected & Util::Resources)
-    backupResources();
-  if(typeSelected & Util::Config)
-    backupConfig();
-  if(typeSelected & Util::AkonadiDb)
-    backupAkonadiDb();
-  closeArchive();
 }
 
 BackupData::~BackupData()
 {
+}
+
+void BackupData::startBackup()
+{
+  bool good = mArchive->open(QIODevice::WriteOnly);
+  if(!good) {
+    //TODO
+  }
+
+  if(mTypeSelected & Util::Identity)
+    backupIdentity();
+  if(mTypeSelected & Util::MailTransport)
+    backupTransports();
+  if(mTypeSelected & Util::Mails)
+    backupMails();
+  if(mTypeSelected & Util::Resources)
+    backupResources();
+  if(mTypeSelected & Util::Config)
+    backupConfig();
+  if(mTypeSelected & Util::AkonadiDb)
+    backupAkonadiDb();
   closeArchive();
-  //TODO Verify
-  delete mArchive;
-  delete mIdentityManager;
 }
 
 void BackupData::backupTransports()
 {
   Q_EMIT info(i18n("Backup transports..."));
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const QList<MailTransport::Transport *> listTransport = MailTransport::TransportManager::self()->transports();
-  Q_FOREACH( MailTransport::Transport *mt, listTransport) {
-    //TODO save it
-  }
-  Q_EMIT info(i18n("Transports backuped."));
-}
+  KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( QLatin1String( "mailtransports" ) );
 
-void BackupData::closeArchive()
-{
-  //TODO
-  if(mArchive) {
+  KTemporaryFile tmp;
+  tmp.open();
+  KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(tmp.fileName());
 
-  }
+  mailtransportsConfig->copyTo( tmp.fileName(), transportConfig.data() );
+
+  transportConfig->sync();
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("transportrc"));
+  if(fileAdded)
+    Q_EMIT info(i18n("Transports backuped."));
+  else
+    Q_EMIT error(i18n("Transport file can not add to backup file."));
 }
 
 void BackupData::backupResources()
@@ -93,15 +97,22 @@ void BackupData::backupIdentity()
 {
   Q_EMIT info(i18n("Backup identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  //FIXME
-  KConfig config( "/home/laurent/testrc" );
+  KTemporaryFile tmp;
+  tmp.open();
+  KConfig config( tmp.fileName() );
+  int i = 0;
   KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
   for ( KPIMIdentities::IdentityManager::ConstIterator it = mIdentityManager->begin(); it != end; ++it ) {
-    KConfigGroup group(&config,"DD");
+    KConfigGroup group(&config,QString::fromLatin1("Identity %1").arg(QString::number(i)));
     (*it).writeConfig(group);
+    i++;
   }
   config.sync();
-  Q_EMIT info(i18n("Identity backuped."));
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("identityrc"));
+  if(fileAdded)
+    Q_EMIT info(i18n("Identity backuped."));
+  else
+    Q_EMIT error(i18n("Identity file can not add to backup file."));
 }
 
 void BackupData::backupMails()
@@ -134,5 +145,3 @@ qint64 BackupData::writeFile(const char* data, qint64 len)
   }
   return 0;
 }
-
-#include "backupdata.moc"

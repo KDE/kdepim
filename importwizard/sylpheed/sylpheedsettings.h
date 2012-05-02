@@ -27,14 +27,14 @@ class KConfigGroup;
 class SylpheedSettings : public AbstractSettings
 {
 public:
-  explicit SylpheedSettings(const QString& filename, ImportWizard *parent );
+  explicit SylpheedSettings(const QString& filename, const QString &sylpheedrc, ImportWizard *parent );
   ~SylpheedSettings();
 private:
-  void readAccount( const KConfigGroup& accountConfig );
+  void readAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup );
   void readIdentity( const KConfigGroup& accountConfig );
   QString readTransport( const KConfigGroup& accountConfig );
-  void readPop3Account( const KConfigGroup& accountConfig );
-  void readImapAccount( const KConfigGroup& accountConfig );
+  void readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup );
+  void readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup );
   void readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity );
   bool readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value, bool remove_underscore = false );
   bool readConfig( const QString& key, const KConfigGroup& accountConfig, int& value, bool remove_underscore = false );

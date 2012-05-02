@@ -1521,14 +1521,17 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
       outerGroup.addSubTerm( andTerm );
     } else {
       QList<Nepomuk::Query::Term> term;
-      
+      bool allIsEmpty = true;
       for ( int i = 0; i < numberOfUrl; ++i ) {
         bool empty = false;
         const Nepomuk::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
-        if ( empty )
-          return QString();      
-        term<<childTerm;
+        if ( !empty ) {
+          term<<childTerm;
+          allIsEmpty = false;
+        }
       }
+      if(allIsEmpty)
+        return QString();
       const Nepomuk::Query::OrTerm orTerm( term );
       const Nepomuk::Query::AndTerm andTerm( orTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );

@@ -26,17 +26,26 @@
 
 #include <QRegExp>
 #include <QStringList>
+#include <QFile>
 
-SylpheedSettings::SylpheedSettings( const QString& filename, ImportWizard *parent )
+SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylpheedrc, ImportWizard *parent )
     :AbstractSettings( parent )
 {
+  bool checkMailOnStartup = true;
+  if(QFile( sylpheedrc ).exists()) {
+    KConfig configCommon( sylpheedrc );
+    if(configCommon.hasGroup("Common")) {
+      KConfigGroup common = configCommon.group("Common");
+      checkMailOnStartup = ( common.readEntry("check_on_startup",1) == 1 );
+    }
+  }
   KConfig config( filename );
   const QStringList accountList = config.groupList().filter( QRegExp( "Account: \\d+" ) );
   const QStringList::const_iterator end( accountList.constEnd() );
   for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
   {
     KConfigGroup group = config.group( *it );
-    readAccount( group );
+    readAccount( group, checkMailOnStartup );
     readIdentity( group );
   }
 }
@@ -97,7 +106,7 @@ bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accou
   return false;
 }
 
-void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
+void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup )
 {
   QMap<QString, QVariant> settings;
   const QString host = accountConfig.readEntry("receive_server");
@@ -147,11 +156,11 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig )
     }
   }
 
-
-  createResource( "akonadi_pop3_resource", name, settings );
+  const QString agentIdentifyName = createResource( "akonadi_pop3_resource", name, settings );
+  addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
 }
 
-void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
+void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup )
 {
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
@@ -200,11 +209,12 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig )
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
   settings.insert( QLatin1String( "Password" ), password );
 
-  createResource( "akonadi_imap_resource", name,settings );
+  const QString agentIdentifyName = createResource( "akonadi_imap_resource", name,settings );
+  addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
 }
 
 
-void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
+void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool checkMailOnStartup)
 {
   if ( accountConfig.hasKey( QLatin1String( "protocol" ) ) )
   {
@@ -212,11 +222,11 @@ void SylpheedSettings::readAccount( const KConfigGroup& accountConfig )
     switch( protocol )
     {
       case 0:
-        readPop3Account( accountConfig );
+        readPop3Account( accountConfig, checkMailOnStartup );
         break;
       case 3:
         //imap
-        readImapAccount(accountConfig);
+        readImapAccount(accountConfig, checkMailOnStartup);
         break;
       case 4:
         qDebug()<<" Add it when nntp resource will implemented";

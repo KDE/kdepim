@@ -4,6 +4,7 @@ project(backupmail)
 
 set(backupmail_SRCS
   main.cpp
+  abstractdata.cpp
   backupmailapplication.cpp
   backupmailwidget.cpp
   backupdata.cpp

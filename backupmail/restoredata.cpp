@@ -19,37 +19,34 @@
 #include <KZip>
 
 RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
-  :mArchive(new KZip(filename))
+  :AbstractData(filename,typeSelected)
 {
-  if(typeSelected & Util::Identity)
-    restoreIdentity();
-  if(typeSelected & Util::MailTransport)
-    restoreTransports();
-  if(typeSelected & Util::Mails)
-    restoreMails();
-  if(typeSelected & Util::Resources)
-    restoreResources();
-  if(typeSelected & Util::Config)
-    restoreConfig();
-  if(typeSelected & Util::AkonadiDb)
-    restoreAkonadiDb();
 }
 
 RestoreData::~RestoreData()
 {
-  closeArchive();
-  delete mArchive;
 }
 
-void RestoreData::closeArchive()
+void RestoreData::startRestore()
 {
-  if(mArchive) {
-
+  bool good = mArchive->open(QIODevice::ReadOnly);
+  if(!good) {
+    //TODO
   }
-
-  //TODO
+  if(mTypeSelected & Util::Identity)
+    restoreIdentity();
+  if(mTypeSelected & Util::MailTransport)
+    restoreTransports();
+  if(mTypeSelected & Util::Mails)
+    restoreMails();
+  if(mTypeSelected & Util::Resources)
+    restoreResources();
+  if(mTypeSelected & Util::Config)
+    restoreConfig();
+  if(mTypeSelected & Util::AkonadiDb)
+    restoreAkonadiDb();
+  closeArchive();
 }
-
 
 void RestoreData::restoreTransports()
 {
@@ -80,6 +77,3 @@ void RestoreData::restoreAkonadiDb()
 {
 
 }
-
-
-#include "restoredata.moc"

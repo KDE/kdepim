@@ -47,3 +47,5 @@ Util::BackupTypes SelectionTypeDialog::backupTypesSelected() const
 {
   return mWidget->backupTypesSelected();
 }
+
+#include "selectiontypedialog.moc"

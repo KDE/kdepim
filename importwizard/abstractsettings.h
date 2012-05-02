@@ -57,6 +57,9 @@ protected:
   QString adaptFolder( const QString& folder);
 
   void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
+  void addKmailConfig( const QString& groupName, const QString& key, bool value);
+
+  void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
 
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
 

@@ -1,41 +1,46 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKUPDATA_H
-#define BACKUPDATA_H
+#ifndef ABSTRACTDATA_H
+#define ABSTRACTDATA_H
+#include <QObject>
+#include "util.h"
 
-#include "abstractdata.h"
+class KZip;
+namespace KPIMIdentities {
+  class Identity;
+  class IdentityManager;
+}
 
-class BackupData : public AbstractData
+class AbstractData : public QObject
 {
+  Q_OBJECT
 public:
-  explicit BackupData(Util::BackupTypes typeSelected,const QString& filename);
-  ~BackupData();
-  void startBackup();
-
-private:
-  void backupTransports();
-  void backupResources();
-  void backupMails();
-  void backupConfig();
-  void backupIdentity();
-  void backupAkonadiDb();
-
-  qint64 writeFile(const char* data, qint64 len);
+  explicit AbstractData(const QString& filename, Util::BackupTypes typeSelected);
+  ~AbstractData();
+Q_SIGNALS:
+  void info(const QString&);
+  void error(const QString&);
+protected:
+  void closeArchive();
+protected:
+  Util::BackupTypes mTypeSelected;
+  KZip *mArchive;
+  KPIMIdentities::IdentityManager *mIdentityManager;
 };
 
-#endif // BACKUPDATA_H
+#endif // ABSTRACTDATA_H

@@ -54,11 +54,9 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 BackupMailApplication::~BackupMailApplication()
 {
   if(mBackupData) {
-    //TODO close backupData
     delete mBackupData;
   }
   if(mRestoreData) {
-    //TODO close it
     delete mRestoreData;
   }
 }
@@ -89,17 +87,20 @@ void BackupMailApplication::slotBackupData()
     mBackupData = new BackupData(typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+    mBackupData->startBackup();
   }
   delete dialog;
 }
 
 void BackupMailApplication::slotAddInfo(const QString& info)
 {
+  qDebug()<<" BackupMailApplication::slotAddInfo"<<info;
   mBackupMailWidget->addInfoLogEntry(info);
 }
 
 void BackupMailApplication::slotAddError(const QString& info)
 {
+  qDebug()<<"BackupMailApplication::slotAddError "<<info;
   mBackupMailWidget->addErrorLogEntry(info);
 }
 
@@ -117,6 +118,7 @@ void BackupMailApplication::slotRestoreData()
     mRestoreData = new RestoreData(typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+    mRestoreData->startRestore();
   }
   delete dialog;
 }

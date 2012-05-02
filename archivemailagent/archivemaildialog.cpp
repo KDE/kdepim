@@ -49,20 +49,21 @@ void ArchiveMailDialog::slotSave()
 
 
 ArchiveMailItem::ArchiveMailItem( const QString &text, QListWidget *parent )
-  : QListWidgetItem(text,parent)
+  : QListWidgetItem(text,parent),mInfo(0)
 {
 }
 
 ArchiveMailItem::~ArchiveMailItem()
 {
+  delete mInfo;
 }
 
-void ArchiveMailItem::setInfo(const ArchiveMailInfo& info)
+void ArchiveMailItem::setInfo(ArchiveMailInfo* info)
 {
   mInfo = info;
 }
 
-ArchiveMailInfo ArchiveMailItem::info() const
+ArchiveMailInfo* ArchiveMailItem::info() const
 {
   return mInfo;
 }
@@ -135,7 +136,7 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(ArchiveMailInfo(),this);
+  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
   if( dialog->exec() ) {
    ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
    item->setInfo(dialog->info());

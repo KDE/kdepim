@@ -105,9 +105,9 @@ void ThunderbirdSettings::readAccount()
     const QString directory = mHashConfig.value( accountName + QLatin1String( ".directory" ) ).toString();
 
     const QString loginAtStartupStr = accountName + QLatin1String( ".login_at_startup" );
+    bool loginAtStartup = true; //Default for thunderbird;
     if ( mHashConfig.contains( loginAtStartupStr ) ) {
-      const bool loginAtStartup = mHashConfig.value( loginAtStartupStr ).toBool();
-      //TODO modify kmailrc. We need resource name.
+      loginAtStartup = mHashConfig.value( loginAtStartupStr ).toBool();
     }
     bool found = false;
     if( type == QLatin1String("imap")) {
@@ -172,7 +172,8 @@ void ThunderbirdSettings::readAccount()
         settings.insert(QLatin1String("TrashCollection"),adaptFolderId(mHashConfig.value(trashFolderStr).toString()));
       }
 
-      createResource( "akonadi_imap_resource", name,settings );
+      const QString agentIdentifyName = createResource( "akonadi_imap_resource", name,settings );
+      addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
@@ -233,7 +234,8 @@ void ThunderbirdSettings::readAccount()
         settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
       }
 
-      createResource( "akonadi_pop3_resource", name, settings );
+      const QString agentIdentifyName = createResource( "akonadi_pop3_resource", name, settings );
+      addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
       qDebug()<<" account type none!";

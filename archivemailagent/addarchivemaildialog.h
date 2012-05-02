@@ -26,6 +26,7 @@
 class KComboBox;
 class QCheckBox;
 class KUrlRequester;
+class QSpinBox;
 
 namespace MailCommon {
   class FolderRequester;
@@ -36,7 +37,7 @@ class AddArchiveMailDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit AddArchiveMailDialog(const ArchiveMailInfo &info, QWidget *parent = 0);
+  explicit AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *parent = 0);
   ~AddArchiveMailDialog();
 
 
@@ -52,17 +53,19 @@ public:
   KUrl path() const;
   void setPath(const KUrl&);
 
-  ArchiveMailInfo info();
+  ArchiveMailInfo *info();
 
 private Q_SLOTS:
   void slotFolderChanged(const Akonadi::Collection&);
 
 private:
-  void load(const ArchiveMailInfo& info);
+  void load(ArchiveMailInfo *info);
   MailCommon::FolderRequester *mFolderRequester;
   KComboBox *mFormatComboBox;
   QCheckBox *mRecursiveCheckBox;
   KUrlRequester *mPath;
+  QSpinBox *mDays;
+  ArchiveMailInfo *mInfo;
 };
 
 #endif // ADDARCHIVEMAILDIALOG_H

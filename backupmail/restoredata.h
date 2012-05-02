@@ -18,21 +18,14 @@
 #ifndef RESTOREDATA_H
 #define RESTOREDATA_H
 
-#include <QObject>
-#include "util.h"
+#include "abstractdata.h"
 
-class KZip;
-
-class RestoreData : public QObject
+class RestoreData : public AbstractData
 {
-  Q_OBJECT
 public:
   explicit RestoreData(Util::BackupTypes typeSelected, const QString &filename);
   ~RestoreData();
-Q_SIGNALS:
-  void info(const QString&);
-  void error(const QString&);
-
+  void startRestore();
 private:
   void restoreTransports();
   void restoreResources();
@@ -40,11 +33,6 @@ private:
   void restoreConfig();
   void restoreIdentity();
   void restoreAkonadiDb();
-  void closeArchive();
-
-  KZip *mArchive;
-
-
 };
 
 #endif // RESTOREDATA_H
