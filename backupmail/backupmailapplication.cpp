@@ -54,11 +54,9 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 BackupMailApplication::~BackupMailApplication()
 {
   if(mBackupData) {
-    //TODO close backupData
     delete mBackupData;
   }
   if(mRestoreData) {
-    //TODO close it
     delete mRestoreData;
   }
 }

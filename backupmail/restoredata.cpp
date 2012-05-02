@@ -21,6 +21,10 @@
 RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
   :AbstractData(filename)
 {
+  bool good = mArchive->open(QIODevice::ReadOnly);
+  if(!good) {
+    //TODO
+  }
   if(typeSelected & Util::Identity)
     restoreIdentity();
   if(typeSelected & Util::MailTransport)

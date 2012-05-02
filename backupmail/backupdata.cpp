@@ -32,6 +32,10 @@ BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
   :AbstractData(filename)
 {
   bool good = mArchive->open(QIODevice::WriteOnly);
+  if(!good) {
+    //TODO
+  }
+
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
   if(typeSelected & Util::Identity)
     backupIdentity();
@@ -50,7 +54,6 @@ BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
 
 BackupData::~BackupData()
 {
-  //TODO Verify
   delete mIdentityManager;
 }
 
@@ -83,11 +86,13 @@ void BackupData::backupIdentity()
 {
   Q_EMIT info(i18n("Backup identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  //TODO add ktemporaryfile
   //FIXME
   KConfig config( "/home/laurent/testrc" );
+  int i = 0;
   KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
   for ( KPIMIdentities::IdentityManager::ConstIterator it = mIdentityManager->begin(); it != end; ++it ) {
-    KConfigGroup group(&config,"DD");
+    KConfigGroup group(&config,QString::fromLatin1("MailTransport %1").arg(QString::number(i)));
     (*it).writeConfig(group);
   }
   config.sync();
