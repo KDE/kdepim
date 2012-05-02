@@ -18,16 +18,14 @@
 #ifndef RESTOREDATA_H
 #define RESTOREDATA_H
 
-#include <QObject>
-#include "util.h"
 #include "abstractdata.h"
 
 class RestoreData : public AbstractData
 {
-  Q_OBJECT
 public:
   explicit RestoreData(Util::BackupTypes typeSelected, const QString &filename);
   ~RestoreData();
+  void startRestore();
 private:
   void restoreTransports();
   void restoreResources();

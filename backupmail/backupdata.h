@@ -18,20 +18,15 @@
 #ifndef BACKUPDATA_H
 #define BACKUPDATA_H
 
-#include <QObject>
-#include "util.h"
 #include "abstractdata.h"
-namespace KPIMIdentities {
-  class Identity;
-  class IdentityManager;
-}
 
 class BackupData : public AbstractData
 {
-  Q_OBJECT
 public:
   explicit BackupData(Util::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
+  void startBackup();
+
 private:
   void backupTransports();
   void backupResources();
@@ -41,8 +36,6 @@ private:
   void backupAkonadiDb();
 
   qint64 writeFile(const char* data, qint64 len);
-  KPIMIdentities::IdentityManager *mIdentityManager;
-
 };
 
 #endif // BACKUPDATA_H

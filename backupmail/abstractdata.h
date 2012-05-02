@@ -18,14 +18,19 @@
 #ifndef ABSTRACTDATA_H
 #define ABSTRACTDATA_H
 #include <QObject>
+#include "util.h"
 
 class KZip;
+namespace KPIMIdentities {
+  class Identity;
+  class IdentityManager;
+}
 
 class AbstractData : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractData(const QString& filename);
+  explicit AbstractData(const QString& filename, Util::BackupTypes typeSelected);
   ~AbstractData();
 Q_SIGNALS:
   void info(const QString&);
@@ -33,7 +38,9 @@ Q_SIGNALS:
 protected:
   void closeArchive();
 protected:
+  Util::BackupTypes mTypeSelected;
   KZip *mArchive;
+  KPIMIdentities::IdentityManager *mIdentityManager;
 };
 
 #endif // ABSTRACTDATA_H

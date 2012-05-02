@@ -16,9 +16,15 @@
 */
 
 #include "abstractdata.h"
+
+#include <kpimidentities/identitymanager.h>
 #include <KZip>
-AbstractData::AbstractData(const QString &filename)
-  : mArchive(new KZip(filename))
+
+AbstractData::AbstractData(const QString &filename,Util::BackupTypes typeSelected)
+  : mTypeSelected(typeSelected),
+    mArchive(new KZip(filename)),
+    mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" ))
+
 {
 }
 
@@ -26,12 +32,12 @@ AbstractData::~AbstractData()
 {
   closeArchive();
   delete mArchive;
+  delete mIdentityManager;
 }
 
 void AbstractData::closeArchive()
 {
-  //TODO
-  if(mArchive) {
+  if(mArchive && mArchive->isOpen()) {
     mArchive->close();
   }
 }

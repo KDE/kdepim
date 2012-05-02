@@ -30,43 +30,53 @@
 #include <QDebug>
 
 BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
-  :AbstractData(filename)
+  :AbstractData(filename,typeSelected)
+{
+}
+
+BackupData::~BackupData()
+{
+}
+
+void BackupData::startBackup()
 {
   bool good = mArchive->open(QIODevice::WriteOnly);
   if(!good) {
     //TODO
   }
 
-  mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
-  if(typeSelected & Util::Identity)
+  if(mTypeSelected & Util::Identity)
     backupIdentity();
-  if(typeSelected & Util::MailTransport)
+  if(mTypeSelected & Util::MailTransport)
     backupTransports();
-  if(typeSelected & Util::Mails)
+  if(mTypeSelected & Util::Mails)
     backupMails();
-  if(typeSelected & Util::Resources)
+  if(mTypeSelected & Util::Resources)
     backupResources();
-  if(typeSelected & Util::Config)
+  if(mTypeSelected & Util::Config)
     backupConfig();
-  if(typeSelected & Util::AkonadiDb)
+  if(mTypeSelected & Util::AkonadiDb)
     backupAkonadiDb();
   closeArchive();
-}
-
-BackupData::~BackupData()
-{
-  delete mIdentityManager;
 }
 
 void BackupData::backupTransports()
 {
   Q_EMIT info(i18n("Backup transports..."));
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const QList<MailTransport::Transport *> listTransport = MailTransport::TransportManager::self()->transports();
-  Q_FOREACH( MailTransport::Transport *mt, listTransport) {
-    //TODO save it
-  }
-  Q_EMIT info(i18n("Transports backuped."));
+  KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( QLatin1String( "mailtransports" ) );
+
+  KTemporaryFile tmp;
+  tmp.open();
+  KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(tmp.fileName());
+
+  mailtransportsConfig->copyTo( tmp.fileName(), transportConfig.data() );
+
+  transportConfig->sync();
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("transportrc"));
+  if(fileAdded)
+    Q_EMIT info(i18n("Transports backuped."));
+  else
+    Q_EMIT error(i18n("Transport file can not add to backup file."));
 }
 
 void BackupData::backupResources()
@@ -135,5 +145,3 @@ qint64 BackupData::writeFile(const char* data, qint64 len)
   }
   return 0;
 }
-
-#include "backupdata.moc"
