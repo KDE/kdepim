@@ -62,6 +62,8 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
           //TODO
         } else if( attr == QLatin1String("send_recv_on_start")) {
           //TODO
+        } else {
+          qDebug()<<" attr unknown "<<attr;
         }
       }
     }
