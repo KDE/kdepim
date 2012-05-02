@@ -20,21 +20,18 @@
 
 #include <QObject>
 #include "util.h"
-class KZip;
+#include "abstractdata.h"
 namespace KPIMIdentities {
   class Identity;
   class IdentityManager;
 }
 
-class BackupData : public QObject
+class BackupData : public AbstractData
 {
   Q_OBJECT
 public:
   explicit BackupData(Util::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
-Q_SIGNALS:
-  void info(const QString&);
-  void error(const QString&);
 private:
   void backupTransports();
   void backupResources();
@@ -43,10 +40,7 @@ private:
   void backupIdentity();
   void backupAkonadiDb();
 
-  void closeArchive();
-
   qint64 writeFile(const char* data, qint64 len);
-  KZip *mArchive;
   KPIMIdentities::IdentityManager *mIdentityManager;
 
 };

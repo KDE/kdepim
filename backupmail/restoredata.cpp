@@ -19,7 +19,7 @@
 #include <KZip>
 
 RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
-  :mArchive(new KZip(filename))
+  :AbstractData(filename)
 {
   if(typeSelected & Util::Identity)
     restoreIdentity();
@@ -37,19 +37,7 @@ RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
 
 RestoreData::~RestoreData()
 {
-  closeArchive();
-  delete mArchive;
 }
-
-void RestoreData::closeArchive()
-{
-  if(mArchive) {
-
-  }
-
-  //TODO
-}
-
 
 void RestoreData::restoreTransports()
 {
