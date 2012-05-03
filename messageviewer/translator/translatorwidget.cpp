@@ -311,7 +311,12 @@ void TranslatorWidget::slotTextChanged()
 void TranslatorWidget::slotFromLanguageChanged( int index )
 {
   const QString lang = d->from->itemData(index).toString();
+  const QString to = d->to->itemData(d->to->currentIndex()).toString();
   d->fillToCombobox( lang );
+  const int indexTo = d->to->findData( to );
+  if ( indexTo != -1 ) {
+    d->to->setCurrentIndex( indexTo );
+  }
 }
 
 void TranslatorWidget::setTextToTranslate( const QString& text)
