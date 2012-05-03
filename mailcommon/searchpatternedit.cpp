@@ -409,6 +409,7 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
 
   assert( !widgets().isEmpty() );
   widgets().first()->blockSignals(false);
+  updateAddRemoveButton();
 }
 
 void SearchRuleWidgetLister::slotAddWidget( QWidget* w)
