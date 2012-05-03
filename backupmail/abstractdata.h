@@ -37,6 +37,8 @@ Q_SIGNALS:
   void error(const QString&);
 protected:
   void closeArchive();
+  bool openArchive(bool write);
+
 protected:
   Util::BackupTypes mTypeSelected;
   KZip *mArchive;

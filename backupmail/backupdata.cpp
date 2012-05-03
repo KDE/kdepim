@@ -40,10 +40,8 @@ BackupData::~BackupData()
 
 void BackupData::startBackup()
 {
-  bool good = mArchive->open(QIODevice::WriteOnly);
-  if(!good) {
-    //TODO
-  }
+  if(!openArchive(true))
+    return;
 
   if(mTypeSelected & Util::Identity)
     backupIdentity();
