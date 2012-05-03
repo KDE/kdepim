@@ -43,7 +43,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.server.") ) ||
          line.contains(QLatin1String("mail.identity.")) ||
          line.contains(QLatin1String("mail.account.")) ||
-         line.contains( QLatin1String( "mail.accountmanager." ) ) ) {
+         line.contains(QLatin1String("mail.accountmanager.")) ||
+         line.contains(QLatin1String("mailnews."))) {
         insertIntoMap( line );
       }
     }
@@ -54,10 +55,28 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   mAccountList = mailAccountPreference.split( QLatin1Char( ',' ) );
   readTransport();
   readAccount();
+  readGlobalSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
+}
+
+void ThunderbirdSettings::readGlobalSettings()
+{
+  const QString markMessageReadStr = QLatin1String("mailnews.mark_message_read.delay");
+  if(mHashConfig.contains(markMessageReadStr)) {
+    const bool markMessageRead = mHashConfig.value(markMessageReadStr).toBool();
+    //TODO
+  }
+  const QString markMessageReadIntervalStr = QLatin1String("mailnews.mark_message_read.delay.interval");
+  if(mHashConfig.contains(markMessageReadIntervalStr)) {
+    bool found = false;
+    const int markMessageReadInterval = mHashConfig.value(markMessageReadIntervalStr).toInt(&found);
+    if(found) {
+      //TODO
+    }
+  }
 }
 
 void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )
