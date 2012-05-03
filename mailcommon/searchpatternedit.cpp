@@ -494,6 +494,7 @@ void SearchRuleWidgetLister::clearWidget( QWidget *aWidget )
     SearchRuleWidget *w = static_cast<SearchRuleWidget*>( aWidget );
     w->reset();
     reconnectWidget( w );
+    updateAddRemoveButton();
   }
 }
 
