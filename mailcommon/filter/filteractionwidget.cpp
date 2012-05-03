@@ -416,6 +416,7 @@ void FilterActionWidgetLister::clearWidget( QWidget *widget )
     w->setAction( 0 );
     w->disconnect( this );
     reconnectWidget( w ) ;
+    updateAddRemoveButton();
   }
 }
 
