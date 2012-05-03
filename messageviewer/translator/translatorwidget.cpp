@@ -167,7 +167,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 
   addItemToFromComboBox( from, ko );
   QMap<QString, QString> koList;
-  addPairToMap( koList, ko );
+  addPairToMap( koList, en );
   listLanguage.insert( ko.second, koList );
 
   addItemToFromComboBox( from, ru );
