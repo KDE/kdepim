@@ -57,10 +57,17 @@ SylpheedSettings::~SylpheedSettings()
 
 void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
 {
-  //TODO
-  //show_trayicon=0
-  //clean_trash_on_exit=1
-  //always_mark_read_on_show_msg=1
+  const bool showTrayIcon = (group.readEntry("show_trayicon", 0) == 1 );
+  addKmailConfig(QLatin1String("General"), QLatin1String("SystemTrayEnabled"), showTrayIcon);
+
+  const bool cleanTrashOnExit = (group.readEntry("clean_trash_on_exit", 0) == 1 );
+  addKmailConfig(QLatin1String("General"), QLatin1String("EmptyTrashOnExit"), cleanTrashOnExit);
+
+  const bool alwaysMarkReadOnShowMsg = (group.readEntry("always_mark_read_on_show_msg", 0) == 1 );
+  if(alwaysMarkReadOnShowMsg) {
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 0);
+  }
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
