@@ -4532,3 +4532,9 @@ void KMMainWidget::slotCollectionPropertiesContinued( KJob* job )
   dlg->show();
 }
 
+void KMMainWidget::savePaneSelection()
+{
+  if(mMessagePane) {
+    mMessagePane->saveCurrentSelection();
+  }
+}

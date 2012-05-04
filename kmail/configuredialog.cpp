@@ -1366,8 +1366,7 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
       mCustomDateFormatEdit->setWhatsThis( mCustomDateWhatsThis );
       radio->setWhatsThis( mCustomDateWhatsThis );
       gvlay->addWidget( hbox );
-    }
-  } // end for loop populating mDateDisplay
+    }  } // end for loop populating mDateDisplay
 
   vlay->addWidget( mDateDisplay );
   connect( mDateDisplay, SIGNAL(clicked(int)),
@@ -1450,6 +1449,7 @@ void AppearancePage::HeadersTab::save()
   MessageList::Core::Settings::self()->setMessageToolTipEnabled( mDisplayMessageToolTips->isChecked() );
   MessageList::Core::Settings::self()->setAutoHideTabBarWithSingleTab( mHideTabBarWithSingleTab->isChecked() );
 
+  KMKernel::self()->savePaneSelection();
   // "Aggregation"
   mAggregationComboBox->writeDefaultConfig();
 

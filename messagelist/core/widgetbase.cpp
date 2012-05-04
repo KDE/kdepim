@@ -368,11 +368,8 @@ void Widget::Private::setDefaultSortOrderForStorageModel( const StorageModel * s
   checkSortOrder( storageModel );
 }
 
-void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preSelectionMode )
+void Widget::saveCurrentSelection()
 {
-  if ( storageModel == d->mStorageModel )
-    return; // nuthin to do here
-
   if ( d->mStorageModel )
   {
     // Save the current selection
@@ -382,7 +379,14 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
         lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
       );
   }
+}
 
+void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preSelectionMode )
+{
+  if ( storageModel == d->mStorageModel )
+    return; // nuthin to do here
+
+  saveCurrentSelection();
   d->setDefaultAggregationForStorageModel( storageModel );
   d->setDefaultThemeForStorageModel( storageModel );
   d->setDefaultSortOrderForStorageModel( storageModel );

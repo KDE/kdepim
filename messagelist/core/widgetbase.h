@@ -124,6 +124,8 @@ public:
    */
   bool selectionEmpty() const;
 
+  void saveCurrentSelection();
+
 public slots:
 
   /**

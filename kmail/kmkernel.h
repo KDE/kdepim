@@ -410,6 +410,8 @@ public:
 
   const QAbstractItemModel* treeviewModelSelection();
 
+  void savePaneSelection();
+
 protected:
   void agentInstanceBroken( const Akonadi::AgentInstance& instance );
 
