@@ -16,7 +16,10 @@
 */
 
 #include "archivemailmanager.h"
-
+#include "archivemailinfo.h"
+#include <KConfigGroup>
+#include <KSharedConfig>
+#include <KGlobal>
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
   : QObject( parent )
 {
@@ -28,6 +31,16 @@ ArchiveMailManager::~ArchiveMailManager()
 
 void ArchiveMailManager::load()
 {
+  KSharedConfig::Ptr config = KGlobal::config();
+  const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+  qDebug()<<"collectionList "<<collectionList;
+  const int numberOfCollection = collectionList.count();
+  for(int i = 0 ; i < numberOfCollection; ++i) {
+    KConfigGroup group = config->group(collectionList.at(i));
+    ArchiveMailInfo *info = new ArchiveMailInfo(group);
+    //TODO
+  }
+
 //test if necessary to archive.
 }
 
