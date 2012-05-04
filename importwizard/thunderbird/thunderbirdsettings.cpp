@@ -44,7 +44,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.identity.")) ||
          line.contains(QLatin1String("mail.account.")) ||
          line.contains(QLatin1String("mail.accountmanager.")) ||
-         line.contains(QLatin1String("mailnews."))) {
+         line.contains(QLatin1String("mailnews."))||
+         line.contains(QLatin1String("mail.compose."))) {
         insertIntoMap( line );
       }
     }
@@ -83,6 +84,20 @@ void ThunderbirdSettings::readGlobalSettings()
     addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
     //Default 5 seconds
   }
+
+  const QString mailComposeAttachmentReminderStr = QLatin1String("mail.compose.attachment_reminder");
+  if(mHashConfig.contains(mailComposeAttachmentReminderStr)) {
+    const bool mailComposeAttachmentReminder = mHashConfig.value(mailComposeAttachmentReminderStr).toBool();
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("showForgottenAttachmentWarning"), mailComposeAttachmentReminder);
+  } else {
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("showForgottenAttachmentWarning"), true);
+  }
+
+  const QString mailComposeAttachmentReminderKeywordsStr = QLatin1String("mail.compose.attachment_reminder_keywords");
+  if(mHashConfig.contains(mailComposeAttachmentReminderKeywordsStr)) {
+    const QString mailComposeAttachmentReminderKeywords = mHashConfig.value(mailComposeAttachmentReminderKeywordsStr).toString();
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("attachment-keywords"), mailComposeAttachmentReminderKeywords);
+  } //not default value keep kmail use one default value
 }
 
 void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )
