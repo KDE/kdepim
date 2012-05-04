@@ -37,6 +37,7 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylp
     if(configCommon.hasGroup("Common")) {
       KConfigGroup common = configCommon.group("Common");
       checkMailOnStartup = ( common.readEntry("check_on_startup",1) == 1 );
+      readGlobalSettings(common);
     }
   }
   KConfig config( filename );
@@ -52,6 +53,14 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylp
 
 SylpheedSettings::~SylpheedSettings()
 {
+}
+
+void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
+{
+  //TODO
+  //show_trayicon=0
+  //clean_trash_on_exit=1
+  //always_mark_read_on_show_msg=1
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )

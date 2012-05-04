@@ -30,6 +30,7 @@ public:
   explicit SylpheedSettings(const QString& filename, const QString &sylpheedrc, ImportWizard *parent );
   ~SylpheedSettings();
 private:
+  void readGlobalSettings(const KConfigGroup& group);
   void readAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup );
   void readIdentity( const KConfigGroup& accountConfig );
   QString readTransport( const KConfigGroup& accountConfig );
