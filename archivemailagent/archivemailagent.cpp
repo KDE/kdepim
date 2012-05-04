@@ -64,6 +64,7 @@ void ArchiveMailAgent::showConfigureDialog()
   ArchiveMailDialog *dialog = new ArchiveMailDialog();
   dialog->exec();
   delete dialog;
+  //TODO reload config.
 }
 
 void ArchiveMailAgent::configure( WId windowId )
