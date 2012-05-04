@@ -67,15 +67,21 @@ void ThunderbirdSettings::readGlobalSettings()
   const QString markMessageReadStr = QLatin1String("mailnews.mark_message_read.delay");
   if(mHashConfig.contains(markMessageReadStr)) {
     const bool markMessageRead = mHashConfig.value(markMessageReadStr).toBool();
-    //TODO
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), markMessageRead);
+  } else {
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
+    //Default value
   }
   const QString markMessageReadIntervalStr = QLatin1String("mailnews.mark_message_read.delay.interval");
   if(mHashConfig.contains(markMessageReadIntervalStr)) {
     bool found = false;
     const int markMessageReadInterval = mHashConfig.value(markMessageReadIntervalStr).toInt(&found);
     if(found) {
-      //TODO
+      addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markMessageReadInterval);
     }
+  } else {
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
+    //Default 5 seconds
   }
 }
 
