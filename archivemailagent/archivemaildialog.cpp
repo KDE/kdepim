@@ -101,16 +101,31 @@ void ArchiveMailWidget::updateButtons()
 
 void ArchiveMailWidget::load()
 {
-  //TODO
+  KSharedConfig::Ptr config = KGlobal::config();
+  const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+  qDebug()<<"collectionList "<<collectionList;
+  const int numberOfCollection = collectionList.count();
+  for(int i = 0 ; i < numberOfCollection; ++i) {
+    KConfigGroup group = config->group(collectionList.at(i));
+    ArchiveMailInfo *info = new ArchiveMailInfo(group);
+    ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",QString::number(info->saveCollectionId())), mWidget->listWidget);
+    item->setInfo(info);
+  }
+  updateButtons();
 }
 
 void ArchiveMailWidget::save()
 {
+  KSharedConfig::Ptr config = KGlobal::config();
   const int numberOfItem(mWidget->listWidget->count());
   for(int i = 0; i < numberOfItem; ++i) {
-    //Save
+    ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->listWidget->item(i));
+    if(mailItem->info()) {
+      KConfigGroup group = config->group(QString::fromLatin1("ArchiveMailCollection %1").arg(mailItem->info()->saveCollectionId()));
+      mailItem->info()->writeConfig(group);
+    }
   }
-  //TODO
+  config->sync();
 }
 
 void ArchiveMailWidget::slotRemoveItem()
@@ -129,6 +144,7 @@ void ArchiveMailWidget::slotModifyItem()
   ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
   if( dialog->exec() ) {
+    //TODO fix item name
     archiveItem->setInfo(dialog->info());
   }
   delete dialog;
@@ -138,9 +154,11 @@ void ArchiveMailWidget::slotAddItem()
 {
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
   if( dialog->exec() ) {
-   ArchiveMailItem *item = new ArchiveMailItem(i18n("foo"), mWidget->listWidget);
-   item->setInfo(dialog->info());
-   updateButtons();
+    ArchiveMailInfo *info = dialog->info();
+    //FIXME item name
+    ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",QString::number(info->saveCollectionId())), mWidget->listWidget);
+    item->setInfo(info);
+    updateButtons();
   }
   delete dialog;
 }
