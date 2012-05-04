@@ -900,5 +900,11 @@ void Pane::setPreferEmptyTab( bool emptyTab )
   d->mPreferEmptyTab = emptyTab;
 }
 
-
+void Pane::saveCurrentSelection()
+{
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    w->saveCurrentSelection();
+  }
+}
 #include "pane.moc"
