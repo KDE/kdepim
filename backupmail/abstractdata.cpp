@@ -48,9 +48,9 @@ bool AbstractData::openArchive(bool write)
   bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
   if(!result) {
     if(write) {
-      Q_EMIT error(i18n("Archive can not open in write mode."));
+      Q_EMIT error(i18n("Archive cannot be opened in write mode."));
     } else {
-      Q_EMIT error(i18n("Archive can not open in read mode."));
+      Q_EMIT error(i18n("Archive cannot be opened in read mode."));
     }
   }
   return result;
