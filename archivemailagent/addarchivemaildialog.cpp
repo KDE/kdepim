@@ -90,7 +90,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   mainLayout->addWidget( dateLabel, row, 0 );
   mDays = new QSpinBox(mainWidget);
   mDays->setMinimum(1);
-  mDays->setMinimum(3600);
+  mDays->setMaximum(3600);
   mainLayout->addWidget(mDays);
   row++;
 
