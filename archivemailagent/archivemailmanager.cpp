@@ -18,6 +18,9 @@
 #include "archivemailmanager.h"
 #include "archivemailinfo.h"
 #include "archivejob.h"
+#include "archivemailkernel.h"
+
+#include <mailcommon/mailkernel.h>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -28,6 +31,9 @@
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
   : QObject( parent )
 {
+  mArchiveMailKernel = new ArchiveMailKernel( this );
+  CommonKernel->registerKernelIf( mArchiveMailKernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( mArchiveMailKernel ); //SettingsIf is used in FolderTreeWidget
 }
 
 ArchiveMailManager::~ArchiveMailManager()
@@ -44,6 +50,7 @@ void ArchiveMailManager::load()
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
+      //mArchiveMailKernel->jobScheduler()->registerTask();
       //Launch job
     } else {
       delete info;

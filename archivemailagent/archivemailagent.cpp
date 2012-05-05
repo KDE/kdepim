@@ -16,7 +16,6 @@
 */
 
 #include "archivemailagent.h"
-#include "archivemailkernel.h"
 #include "archivemailagentadaptor.h"
 #include "archivemaildialog.h"
 #include "archivemailmanager.h"
@@ -31,9 +30,7 @@
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
 {
-  ArchiveMailKernel *kernel = new ArchiveMailKernel( this );
-  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+  mArchiveManager = new ArchiveMailManager(this);
 
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );
@@ -41,7 +38,6 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
   m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 
-  mArchiveManager = new ArchiveMailManager(this);
 
   new ArchiveMailAgentAdaptor( this );
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );

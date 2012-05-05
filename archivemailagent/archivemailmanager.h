@@ -20,6 +20,8 @@
 
 #include <QObject>
 
+class ArchiveMailKernel;
+
 class ArchiveMailManager : public QObject
 {
   Q_OBJECT
@@ -27,7 +29,8 @@ public:
   explicit ArchiveMailManager(QObject *parent = 0);
   ~ArchiveMailManager();
   void load();
-
+private:
+  ArchiveMailKernel *mArchiveMailKernel;
 };
 
 
