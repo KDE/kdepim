@@ -42,6 +42,7 @@ AbstractSettings::AbstractSettings(ImportWizard *parent)
   :mImportWizard(parent)
 {
   mManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
+  mKmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
 }
 
 AbstractSettings::~AbstractSettings()
@@ -223,16 +224,14 @@ void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bo
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
 {
-  KSharedConfigPtr kmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
-  KConfigGroup group = kmailConfig->group(groupName);
+  KConfigGroup group = mKmailConfig->group(groupName);
   group.writeEntry(key,value);
   group.sync();
 }
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, bool value)
 {
-  KSharedConfigPtr kmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
-  KConfigGroup group = kmailConfig->group(groupName);
+  KConfigGroup group = mKmailConfig->group(groupName);
   group.writeEntry(key,value);
   group.sync();
 }

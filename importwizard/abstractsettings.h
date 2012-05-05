@@ -18,9 +18,13 @@
 #ifndef ABSTRACTSETTINGS_H
 #define ABSTRACTSETTINGS_H
 
+#include <KSharedConfig>
+
+#include <Akonadi/Collection>
+
 #include <QObject>
 #include <QMap>
-#include <Akonadi/Collection>
+
 class ImportWizard;
 class KJob;
 
@@ -65,6 +69,7 @@ protected:
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;
+  KSharedConfigPtr mKmailConfig;
 };
 
 #endif // ABSTRACTSETTINGS_H
