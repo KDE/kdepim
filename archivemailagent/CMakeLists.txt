@@ -11,6 +11,7 @@ set(archivemailagent_SRCS
    archivemaildialog.cpp
    archivemailinfo.cpp
    addarchivemaildialog.cpp
+   archivejob.cpp
 )
 
 qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)

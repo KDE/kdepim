@@ -56,7 +56,6 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
 {
   const Akonadi::Collection::Id id = collection.id();
   //TODO remove it from config
-  //TODO
 }
 
 void ArchiveMailAgent::showConfigureDialog()

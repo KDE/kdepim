@@ -109,8 +109,8 @@ void ArchiveMailInfo::writeConfig(KConfigGroup & config )
   config.writeEntry("storePath",mPath);
   config.writeEntry("lastDateSaved", mLastDateSaved.toString() );
   config.writeEntry("saveSubCollection",mSaveSubCollection);
-  config.writeEntry( "archiveType", ( int )mArchiveType );
-  config.writeEntry( "archiveUnit", ( int )mArchiveUnit );
+  config.writeEntry("archiveType", ( int )mArchiveType );
+  config.writeEntry("archiveUnit", ( int )mArchiveUnit );
   config.writeEntry("saveCollectionId",mSaveCollectionId);
   config.writeEntry("archiveAge",mArchiveAge);
 }

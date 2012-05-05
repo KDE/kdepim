@@ -134,7 +134,7 @@ private:
 /**
  * Base class for scheduled jobs
  */
-class ScheduledJob : public FolderJob
+class MAILCOMMON_EXPORT ScheduledJob : public FolderJob
 {
 public:
   ScheduledJob( const Akonadi::Collection & folder, bool immediate );
