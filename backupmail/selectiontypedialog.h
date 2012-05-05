@@ -19,7 +19,7 @@
 #define SELECTIONTYPEDIALOG_H
 
 #include <KDialog>
-#include "util.h"
+#include "backupmailutil.h"
 
 class SelectTypeWidget;
 

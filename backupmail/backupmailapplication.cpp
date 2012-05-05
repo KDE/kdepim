@@ -21,7 +21,7 @@
 #include "restoredata.h"
 #include "backupmailkernel.h"
 #include "selectiontypedialog.h"
-#include "util.h"
+#include "backupmailutil.h"
 
 #include <mailcommon/mailkernel.h>
 

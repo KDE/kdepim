@@ -20,7 +20,7 @@
 #define SELECTTYPEWIDGET_H
 
 #include <QWidget>
-#include "util.h"
+#include "backupmailutil.h"
 namespace Ui {
   class SelectTypeWidget;
 }

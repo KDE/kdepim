@@ -18,7 +18,7 @@
 #ifndef ABSTRACTDATA_H
 #define ABSTRACTDATA_H
 #include <QObject>
-#include "util.h"
+#include "backupmailutil.h"
 
 class KZip;
 namespace KPIMIdentities {
