@@ -98,6 +98,29 @@ void ThunderbirdSettings::readGlobalSettings()
     const QString mailComposeAttachmentReminderKeywords = mHashConfig.value(mailComposeAttachmentReminderKeywordsStr).toString();
     addKmailConfig(QLatin1String("Composer"), QLatin1String("attachment-keywords"), mailComposeAttachmentReminderKeywords);
   } //not default value keep kmail use one default value
+
+  const QString mailComposeAutosaveStr = QLatin1String("mail.compose.autosave");
+  if(mHashConfig.contains(mailComposeAutosaveStr)) {
+    const bool mailComposeAutosave = mHashConfig.value(mailComposeAutosaveStr).toBool();
+    if(mailComposeAutosave) {
+      const QString mailComposeAutosaveintervalStr = QLatin1String("mail.compose.autosaveinterval");
+      if(mHashConfig.contains(mailComposeAutosaveintervalStr)) {
+        bool found = false;
+        const int mailComposeAutosaveinterval = mHashConfig.value(mailComposeAutosaveintervalStr).toInt(&found);
+        if(found) {
+          addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), mailComposeAutosaveinterval);
+        } else {
+          addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 5);
+        }
+      } else {
+        //Default value
+        addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 5);
+      }
+    } else {
+      //Don't autosave
+      addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 0);
+    }
+  }
 }
 
 void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )
