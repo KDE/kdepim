@@ -317,6 +317,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   void removeMessageLoadedHandler( AbstractMessageLoadedHandler *handler );
 
+
+  QString selectedText() const;
+
 signals:
 
   /**

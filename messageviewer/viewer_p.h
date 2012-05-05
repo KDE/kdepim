@@ -448,6 +448,9 @@ public:
   void setZoomFactor( qreal zoomFactor );
 
   void goOnline();
+
+  QString selectedText() const;
+
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );

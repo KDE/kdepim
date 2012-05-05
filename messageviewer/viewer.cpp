@@ -592,6 +592,13 @@ bool Viewer::zoomTextOnly() const
   return d->mZoomTextOnly;
 }
 
+QString Viewer::selectedText() const
+{
+  Q_D(const Viewer);
+  return d->selectedText();
+}
+
+
 }
 
 #include "viewer.moc"
