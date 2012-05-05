@@ -2069,7 +2069,8 @@ void ViewerPrivate::slotTranslate()
 {
   const QString text = mViewer->selectedText();
   mTranslatorWidget->show();
-  mTranslatorWidget->setTextToTranslate(text);
+  if(!text.isEmpty())
+    mTranslatorWidget->setTextToTranslate(text);
 }
 
 void ViewerPrivate::slotToggleFixedFont()
