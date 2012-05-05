@@ -59,6 +59,7 @@ private Q_SLOTS:
   void slotFolderChanged(const Akonadi::Collection&);
 
 private:
+  void updateOkButton();
   void load(ArchiveMailInfo *info);
   MailCommon::FolderRequester *mFolderRequester;
   KComboBox *mFormatComboBox;
