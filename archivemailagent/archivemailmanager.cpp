@@ -17,9 +17,14 @@
 
 #include "archivemailmanager.h"
 #include "archivemailinfo.h"
+#include "archivejob.h"
+
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KGlobal>
+
+#include <QDate>
+
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
   : QObject( parent )
 {
@@ -38,10 +43,12 @@ void ArchiveMailManager::load()
   for(int i = 0 ; i < numberOfCollection; ++i) {
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
-    //TODO
+    if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
+      //Launch job
+    } else {
+      delete info;
+    }
   }
-
-//test if necessary to archive.
 }
 
 #include "archivemailmanager.moc"
