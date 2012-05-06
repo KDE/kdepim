@@ -810,7 +810,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
   } else { /* KMail told us */
 
-    { // This blocks fixes issue4826. Checks of the addition if a false positive conflict
+    { // This blocks fixes issue4826. Checks if the addition is a false positive conflict
       if ( mUidMap.contains( uid ) &&
            mConflictPreventer->processNewPayload( incidence, _subresource, sernum ) ) {
         const bool success = kmailDeleteIncidence( _subresource, sernum, /*force=*/true );
