@@ -2573,7 +2573,7 @@ some other manner such that &korganizer; cannot guess its duration,
 <term><guilabel>Reminders</guilabel></term>
 <listitem><para>
 Select a <guilabel>Default reminder time</guilabel> to determine how long before 
-the actual event's scheduled time will the reminder activate.</para>
+the actual event's scheduled time the reminder will activate.</para>
 <para>Set a file to be used as the default sound file for new reminders. You can 
 always specify another file in the Advanced Reminder accessible from the 
 Event or To-do editors.</para>
