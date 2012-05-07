@@ -35,7 +35,6 @@ private:
   void backupIdentity();
   void backupAkonadiDb();
 
-  qint64 writeFile(const char* data, qint64 len);
 };
 
 #endif // BACKUPDATA_H

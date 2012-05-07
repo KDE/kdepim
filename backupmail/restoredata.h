@@ -19,6 +19,9 @@
 #define RESTOREDATA_H
 
 #include "abstractdata.h"
+#include <QStringList>
+
+class KArchiveDirectory;
 
 class RestoreData : public AbstractData
 {
@@ -33,6 +36,8 @@ private:
   void restoreConfig();
   void restoreIdentity();
   void restoreAkonadiDb();
+  QStringList mFileList;
+  const KArchiveDirectory* mArchiveDirectory;
 };
 
 #endif // RESTOREDATA_H

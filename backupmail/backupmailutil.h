@@ -26,7 +26,8 @@ namespace Util {
     MailTransport = 4,
     Resources = 8,
     Config = 16,
-    AkonadiDb = 32
+    AkonadiDb = 32,
+    Nepomuk = 64 //TODO
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
 }

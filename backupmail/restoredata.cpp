@@ -16,10 +16,14 @@
 */
 
 #include "restoredata.h"
+
+#include "messageviewer/kcursorsaver.h"
+
 #include <KZip>
+#include <KLocale>
 
 RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
-  :AbstractData(filename,typeSelected)
+  :AbstractData(filename,typeSelected), mArchiveDirectory(0)
 {
 }
 
@@ -31,6 +35,9 @@ void RestoreData::startRestore()
 {
   if(!openArchive(false /*readonly*/))
     return;
+  mArchiveDirectory = mArchive->directory();
+  mFileList = mArchiveDirectory->entries();
+
   if(mTypeSelected & Util::Identity)
     restoreIdentity();
   if(mTypeSelected & Util::MailTransport)
@@ -48,7 +55,19 @@ void RestoreData::startRestore()
 
 void RestoreData::restoreTransports()
 {
-
+  if(!mFileList.contains(QLatin1String("mailtransports"))) {
+    Q_EMIT error(i18n("mailtransports file not found in archive."));
+    return;
+  }
+  Q_EMIT info(i18n("Restore transports..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  const KArchiveEntry* transport = mArchiveDirectory->entry(QLatin1String("mailtransports"));
+  if(transport->isFile()) {
+    const KArchiveFile* fileTransport = static_cast<const KArchiveFile*>(transport);
+    //fileTransport->copyTo();
+  }
+  //TODO
+  Q_EMIT info(i18n("Transports restored."));
 }
 
 void RestoreData::restoreResources()
@@ -68,7 +87,15 @@ void RestoreData::restoreConfig()
 
 void RestoreData::restoreIdentity()
 {
-
+  if(!mFileList.contains(QLatin1String("emailidentities"))) {
+    Q_EMIT error(i18n("emailidentitied file not found in archive."));
+    return;
+  }
+  Q_EMIT info(i18n("Restore identities..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  const KArchiveEntry* transport = mArchiveDirectory->entry(QLatin1String("emailidentities"));
+  //TODO
+  Q_EMIT info(i18n("Identities restored."));
 }
 
 void RestoreData::restoreAkonadiDb()
