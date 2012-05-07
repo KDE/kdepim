@@ -1,4 +1,14 @@
 
+Monday 07 May 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4836: Incidence with same uid gets deleted after modifying the same incidence in another folder (rt#10111)
+* kolab/issue4841: Segmentation fault in KMFolderNode::parent
+
+
+
 Thursday 22 March 2012
 
 Problems addressed
