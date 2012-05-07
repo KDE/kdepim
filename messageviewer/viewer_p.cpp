@@ -2584,7 +2584,6 @@ void ViewerPrivate::slotLevelQuote( int l )
 
 void ViewerPrivate::slotHandleAttachment( int choice )
 {
-  //mAtmUpdate = true;
   if(!mCurrentContent)
     return;
   if ( choice == Viewer::Delete ) {
