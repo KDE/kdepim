@@ -16,6 +16,10 @@
 */
 
 #include "archivejob.h"
+#include "archivemailinfo.h"
+#include <KSharedConfig>
+#include <KGlobal>
+#include <KConfigGroup>
 
 ArchiveJob::ArchiveJob(const Akonadi::Collection &folder, bool immediate )
   : MailCommon::ScheduledJob( folder, immediate )
@@ -24,12 +28,18 @@ ArchiveJob::ArchiveJob(const Akonadi::Collection &folder, bool immediate )
 
 ArchiveJob::~ArchiveJob()
 {
-
 }
 
 void ArchiveJob::execute()
 {
   //TODO
+  KSharedConfig::Ptr config = KGlobal::config();
+  const QString groupName = QString::fromLatin1("ArchiveMailCollection %1").arg(mSrcFolder.id());
+  if(config->hasGroup(groupName)) {
+    KConfigGroup group = config->group(groupName);
+    ArchiveMailInfo info(group);
+    //TODO use config
+  }
 }
 
 void ArchiveJob::kill()
