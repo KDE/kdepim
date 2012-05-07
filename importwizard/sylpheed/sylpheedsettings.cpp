@@ -68,6 +68,11 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
     addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
     addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 0);
   }
+
+  if(group.readEntry("enable_autosave", 0) == 1 ) {
+    const int autosaveInterval = group.readEntry("autosave_interval",5);
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), autosaveInterval);
+  }
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )

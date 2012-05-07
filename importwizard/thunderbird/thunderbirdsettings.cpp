@@ -312,6 +312,7 @@ void ThunderbirdSettings::readAccount()
       qDebug()<<" rss resource needs to be implemented";
       continue;
     } else if (type == QLatin1String("nntp")) {
+      //TODO add config directly to knode
       //TODO when knode will merge in kdepim
       qDebug()<<" nntp resource need to be implemented";
       continue;
