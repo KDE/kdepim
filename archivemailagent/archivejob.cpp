@@ -37,4 +37,10 @@ void ArchiveJob::kill()
   ScheduledJob::kill();
 }
 
+MailCommon::ScheduledJob *ScheduledArchiveTask::run()
+{
+  return folder().isValid() ? new ArchiveJob( folder(), isImmediate() ) : 0;
+}
+
+
 #include "archivejob.moc"

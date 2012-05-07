@@ -47,10 +47,7 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
     {
     }
 
-    virtual MailCommon::ScheduledJob *run()
-    {
-      return folder().isValid() ? new ArchiveJob( folder(), isImmediate() ) : 0;
-    }
+    virtual MailCommon::ScheduledJob *run();
 
     virtual int taskTypeId() const
     {

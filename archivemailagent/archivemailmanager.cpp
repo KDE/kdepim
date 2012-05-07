@@ -50,8 +50,9 @@ void ArchiveMailManager::load()
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
-      //mArchiveMailKernel->jobScheduler()->registerTask();
-      //Launch job
+      ScheduledArchiveTask *task = new ScheduledArchiveTask( Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
+      mArchiveMailKernel->jobScheduler()->registerTask( task );
+
     } else {
       delete info;
     }
