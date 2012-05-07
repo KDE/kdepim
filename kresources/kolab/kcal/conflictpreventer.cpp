@@ -40,6 +40,7 @@
 #include <kdebug.h>
 
 typedef QString IncidenceUid;
+typedef QString ResourceString;
 
 class ConflictPreventer::Private
 {
@@ -48,7 +49,7 @@ public:
   {
   }
 
-  QMap<IncidenceUid, KCal::Incidence*> m_payloadsByUid;
+  QMap<QPair<ResourceString,IncidenceUid>, KCal::Incidence*> m_payloadsByUid;
   QMap<QPair<QString,Q_INT32>, bool> m_falsePositives;
 };
 
@@ -61,16 +62,19 @@ ConflictPreventer::~ConflictPreventer()
   delete d;
 }
 
-void ConflictPreventer::registerOldPayload( KCal::Incidence *incidence )
+void ConflictPreventer::registerOldPayload( KCal::Incidence *incidence, const QString &subresource )
 {
   Q_ASSERT( incidence );
   KCal::Incidence *clone = incidence->clone();
   kdDebug() << "ConflictPreventer::registerOldPayload() registering " << clone->summary()
-            << "; dtStart = " << incidence->dtStart() << endl;
-  if ( d->m_payloadsByUid.contains( clone->uid() ) ) {
-    delete d->m_payloadsByUid[clone->uid()];
+            << "; dtStart = " << incidence->dtStart()
+            << "; subresource = " << subresource
+            << endl;
+  const QPair<ResourceString,IncidenceUid> key( subresource, clone->uid() );
+  if ( d->m_payloadsByUid.contains( key ) ) {
+    delete d->m_payloadsByUid[key];
   }
-  d->m_payloadsByUid.insert( clone->uid(), clone );
+  d->m_payloadsByUid.insert( key, clone );
 }
 
 bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
@@ -78,10 +82,11 @@ bool ConflictPreventer::processNewPayload( KCal::Incidence *incidence,
                                            Q_INT32 sernum )
 {
   Q_ASSERT( incidence );
-  if ( !d->m_payloadsByUid.contains( incidence->uid() ) )
+  const QPair<ResourceString,IncidenceUid> key( resource, incidence->uid() );
+  if ( !d->m_payloadsByUid.contains( key ) )
     return false;
 
-  KCal::Incidence *inc = d->m_payloadsByUid[incidence->uid()];
+  KCal::Incidence *inc = d->m_payloadsByUid[key];
   KCal::ComparisonVisitor v;
   if ( v.compare( inc, incidence ) ) {
     kdDebug() << "ConflictPreventer::isOldPayload() found false positive: "
@@ -101,16 +106,18 @@ bool ConflictPreventer::isFalsePositive( const QString &resource, Q_INT32 sernum
 }
 
 
-bool ConflictPreventer::isRegistered( KCal::Incidence *incidence ) const
+bool ConflictPreventer::isRegistered( KCal::Incidence *incidence, const QString &subresource ) const
 {
   KCal::ComparisonVisitor v;
-  return d->m_payloadsByUid.contains( incidence->uid() ) &&
-         v.compare( d->m_payloadsByUid[incidence->uid()], incidence );
+  const QPair<ResourceString,IncidenceUid> key( subresource, incidence->uid() );
+  return d->m_payloadsByUid.contains( key ) &&
+         v.compare( d->m_payloadsByUid[key], incidence );
 }
 
 void ConflictPreventer::cleanup( const QString &uid, const QString &resource, Q_INT32 sernum )
 {
-  d->m_payloadsByUid.remove( uid );
+  const QPair<ResourceString,IncidenceUid> key( resource, uid );
+  d->m_payloadsByUid.remove( key );
   if ( !resource.isEmpty() )
     d->m_falsePositives.remove( QPair<QString,Q_INT32>( resource, sernum ) );
 }

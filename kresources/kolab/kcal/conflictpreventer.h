@@ -53,14 +53,15 @@ public:
 
   /**
    * @param incidence original payload, before a change.
+   * @param subresource the folder this incidence belongs too
    * This method clones the incidence internally, ownership is not taken.
    */
-  void registerOldPayload( KCal::Incidence *incidence );
+  void registerOldPayload( KCal::Incidence *incidence, const QString &subresource );
 
   /**
-   * For debug purposes.
+   * Checks if a payload is registered.
    */
-  bool isRegistered( KCal::Incidence *incidence ) const;
+  bool isRegistered( KCal::Incidence *incidence, const QString &subresource ) const;
 
   /**
    * Returns true if the payload is equal to an old payload, and marks it as a false positive

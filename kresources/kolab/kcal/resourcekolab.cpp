@@ -353,13 +353,13 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
                   << endl;
         return;
       }
-      if ( mConflictPreventer->isRegistered( incidence ) ) {
+      if ( mConflictPreventer->isRegistered( incidence, subResource ) ) {
         kdDebug() << "incidenceUpdatedSilent(): incidence " << incidence->dtStart()
                   << " is already registered. Cleaning up conflict preventer cache" << endl;
         mConflictPreventer->cleanup( uid );
       }
       mUidsPendingUpdate.append( uid );
-      mConflictPreventer->registerOldPayload( mUidMap[uid].incidenceCopy() );
+      mConflictPreventer->registerOldPayload( mUidMap[uid].incidenceCopy(), subResource );
       sendKMailUpdate( incidencebase, subResource, sernum );
     } else { // It's not ready yet, lets try later
       queueUpdate( incidencebase );
@@ -1133,7 +1133,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            int format,
                                            const QString& data )
 {
-  kdDebug() << "fromKMailAddIncidence()" << endl;
+  kdDebug() << "fromKMailAddIncidence()" << subResource << endl;
   bool rc = true;
   TemporarySilencer t( this ); // RAII
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
