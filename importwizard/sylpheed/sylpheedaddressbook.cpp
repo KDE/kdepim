@@ -42,9 +42,9 @@ SylpheedAddressBook::~SylpheedAddressBook()
 void SylpheedAddressBook::readAddressBook( const QString& filename )
 {
   QFile file(filename);
-  qDebug()<<" import filename :"<<filename;
+  //kDebug()<<" import filename :"<<filename;
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    qDebug()<<" We can't open file"<<filename;
+    kDebug()<<" We can't open file"<<filename;
     return;
   }
   QString errorMsg;
