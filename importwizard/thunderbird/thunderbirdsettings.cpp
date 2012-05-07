@@ -45,7 +45,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.account.")) ||
          line.contains(QLatin1String("mail.accountmanager.")) ||
          line.contains(QLatin1String("mailnews."))||
-         line.contains(QLatin1String("mail.compose."))) {
+         line.contains(QLatin1String("mail.compose."))||
+         line.contains(QLatin1String("mail.spellcheck"))) {
         insertIntoMap( line );
       }
     }
@@ -120,6 +121,14 @@ void ThunderbirdSettings::readGlobalSettings()
       //Don't autosave
       addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 0);
     }
+  }
+
+  const QString mailSpellCheckInlineStr = QLatin1String("mail.spellcheck.inline");
+  if(mHashConfig.contains(mailSpellCheckInlineStr)) {
+    const bool mailSpellCheckInline = mHashConfig.value(mailSpellCheckInlineStr).toBool();
+    addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),mailSpellCheckInline);
+  } else {
+    addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),false);
   }
 }
 

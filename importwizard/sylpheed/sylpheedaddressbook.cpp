@@ -88,7 +88,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
         address.setNickName( QLatin1String( "nick-name" ) );
       }
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
-        
+        //FIXME ????
       }
       for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
         const QString addressTag = addressElement.tagName();
