@@ -116,6 +116,14 @@ void ArchiveMailWidget::load()
 void ArchiveMailWidget::save()
 {
   KSharedConfig::Ptr config = KGlobal::config();
+
+  // first, delete all filter groups:
+  const QStringList filterGroups =config->groupList().filter( QRegExp( "ArchiveMailCollection #\\d+" ) );
+
+  foreach ( const QString &group, filterGroups ) {
+    config->deleteGroup( group );
+  }
+
   const int numberOfItem(mWidget->listWidget->count());
   for(int i = 0; i < numberOfItem; ++i) {
     ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->listWidget->item(i));
