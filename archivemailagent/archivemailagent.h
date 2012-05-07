@@ -21,9 +21,10 @@
 #include <akonadi/agentbase.h>
 
 namespace Akonadi {
-class Monitor;
+  class Monitor;
 }
 
+class ArchiveMailManager;
 
 class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
 {
@@ -42,6 +43,7 @@ private Q_SLOTS:
 
 private:
   Akonadi::Monitor *m_collectionMonitor;
+  ArchiveMailManager *mArchiveManager;
 };
 
 

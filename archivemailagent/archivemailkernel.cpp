@@ -21,6 +21,7 @@
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
 #include <mailcommon/foldercollectionmonitor.h>
+#include <mailcommon/jobscheduler.h>
 #include <messagecomposer/akonadisender.h>
 #include <akonadi/session.h>
 #include <akonadi/entitytreemodel.h>
@@ -45,6 +46,7 @@ ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
   mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
   mCollectionModel->setDynamicSortFilter( true );
   mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+  mJobScheduler = new MailCommon::JobScheduler(this);
 }
 
 KPIMIdentities::IdentityManager *ArchiveMailKernel::identityManager()
@@ -74,8 +76,7 @@ void ArchiveMailKernel::syncConfig()
 
 MailCommon::JobScheduler* ArchiveMailKernel::jobScheduler() const
 {
-  Q_ASSERT( false );
-  return 0;
+  return mJobScheduler;
 }
 
 Akonadi::ChangeRecorder *ArchiveMailKernel::folderCollectionMonitor() const

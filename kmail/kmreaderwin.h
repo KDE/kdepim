@@ -40,6 +40,7 @@ namespace MessageViewer {
 namespace Akonadi {
   class Item;
 }
+class KJob;
 
 /**
    This class implements a "reader window", that is a window
@@ -153,6 +154,7 @@ public:
 
   MessageViewer::CSSHelper* cssHelper() const;
 
+  bool printSelectedText(bool preview);
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -182,6 +184,8 @@ public slots:
   void slotShowMessage( KMime::Message::Ptr message, const QString& encoding );
   void slotDeleteMessage( const Akonadi::Item& );
   void slotSaveImageOnDisk();
+
+  void slotPrintComposeResult( KJob *job );
 protected:
 
   KUrl urlClicked() const;

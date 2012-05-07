@@ -16,9 +16,9 @@
 */
 
 #include "archivemailagent.h"
-#include "archivemailkernel.h"
 #include "archivemailagentadaptor.h"
 #include "archivemaildialog.h"
+#include "archivemailmanager.h"
 
 #include <mailcommon/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
@@ -30,9 +30,7 @@
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
 {
-  ArchiveMailKernel *kernel = new ArchiveMailKernel( this );
-  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+  mArchiveManager = new ArchiveMailManager(this);
 
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );
@@ -40,12 +38,13 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
   m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 
+
   new ArchiveMailAgentAdaptor( this );
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
   connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
            this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
-
+  mArchiveManager->load();
 }
 
 ArchiveMailAgent::~ArchiveMailAgent()
@@ -56,13 +55,14 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
 {
   const Akonadi::Collection::Id id = collection.id();
   //TODO remove it from config
-  //TODO
 }
 
 void ArchiveMailAgent::showConfigureDialog()
 {
   ArchiveMailDialog *dialog = new ArchiveMailDialog();
-  dialog->exec();
+  if(dialog->exec()) {
+    mArchiveManager->load();
+  }
   delete dialog;
 }
 

@@ -37,6 +37,7 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylp
     if(configCommon.hasGroup("Common")) {
       KConfigGroup common = configCommon.group("Common");
       checkMailOnStartup = ( common.readEntry("check_on_startup",1) == 1 );
+      readGlobalSettings(common);
     }
   }
   KConfig config( filename );
@@ -52,6 +53,27 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylp
 
 SylpheedSettings::~SylpheedSettings()
 {
+}
+
+void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
+{
+  const bool showTrayIcon = (group.readEntry("show_trayicon", 0) == 1 );
+  addKmailConfig(QLatin1String("General"), QLatin1String("SystemTrayEnabled"), showTrayIcon);
+
+  const bool cleanTrashOnExit = (group.readEntry("clean_trash_on_exit", 0) == 1 );
+  addKmailConfig(QLatin1String("General"), QLatin1String("empty-trash-on-exit"), cleanTrashOnExit);
+
+  const bool alwaysMarkReadOnShowMsg = (group.readEntry("always_mark_read_on_show_msg", 0) == 1 );
+  if(alwaysMarkReadOnShowMsg) {
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 0);
+  }
+
+  if(group.readEntry("enable_autosave", 0) == 1 ) {
+    const int autosaveInterval = group.readEntry("autosave_interval",5);
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), autosaveInterval);
+  }
+
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )

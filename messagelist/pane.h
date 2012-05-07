@@ -373,6 +373,8 @@ public:
 
   void updateTabIconText( const Akonadi::Collection &collection, const QString&label, const QIcon& icon );
 
+  void saveCurrentSelection();
+
 public slots:
   /**
    * Selects all the items in the current folder.

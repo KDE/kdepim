@@ -43,7 +43,10 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.server.") ) ||
          line.contains(QLatin1String("mail.identity.")) ||
          line.contains(QLatin1String("mail.account.")) ||
-         line.contains( QLatin1String( "mail.accountmanager." ) ) ) {
+         line.contains(QLatin1String("mail.accountmanager.")) ||
+         line.contains(QLatin1String("mailnews."))||
+         line.contains(QLatin1String("mail.compose."))||
+         line.contains(QLatin1String("mail.spellcheck"))) {
         insertIntoMap( line );
       }
     }
@@ -54,10 +57,79 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   mAccountList = mailAccountPreference.split( QLatin1Char( ',' ) );
   readTransport();
   readAccount();
+  readGlobalSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
+}
+
+void ThunderbirdSettings::readGlobalSettings()
+{
+  const QString markMessageReadStr = QLatin1String("mailnews.mark_message_read.delay");
+  if(mHashConfig.contains(markMessageReadStr)) {
+    const bool markMessageRead = mHashConfig.value(markMessageReadStr).toBool();
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), markMessageRead);
+  } else {
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
+    //Default value
+  }
+  const QString markMessageReadIntervalStr = QLatin1String("mailnews.mark_message_read.delay.interval");
+  if(mHashConfig.contains(markMessageReadIntervalStr)) {
+    bool found = false;
+    const int markMessageReadInterval = mHashConfig.value(markMessageReadIntervalStr).toInt(&found);
+    if(found) {
+      addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markMessageReadInterval);
+    }
+  } else {
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
+    //Default 5 seconds
+  }
+
+  const QString mailComposeAttachmentReminderStr = QLatin1String("mail.compose.attachment_reminder");
+  if(mHashConfig.contains(mailComposeAttachmentReminderStr)) {
+    const bool mailComposeAttachmentReminder = mHashConfig.value(mailComposeAttachmentReminderStr).toBool();
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("showForgottenAttachmentWarning"), mailComposeAttachmentReminder);
+  } else {
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("showForgottenAttachmentWarning"), true);
+  }
+
+  const QString mailComposeAttachmentReminderKeywordsStr = QLatin1String("mail.compose.attachment_reminder_keywords");
+  if(mHashConfig.contains(mailComposeAttachmentReminderKeywordsStr)) {
+    const QString mailComposeAttachmentReminderKeywords = mHashConfig.value(mailComposeAttachmentReminderKeywordsStr).toString();
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("attachment-keywords"), mailComposeAttachmentReminderKeywords);
+  } //not default value keep kmail use one default value
+
+  const QString mailComposeAutosaveStr = QLatin1String("mail.compose.autosave");
+  if(mHashConfig.contains(mailComposeAutosaveStr)) {
+    const bool mailComposeAutosave = mHashConfig.value(mailComposeAutosaveStr).toBool();
+    if(mailComposeAutosave) {
+      const QString mailComposeAutosaveintervalStr = QLatin1String("mail.compose.autosaveinterval");
+      if(mHashConfig.contains(mailComposeAutosaveintervalStr)) {
+        bool found = false;
+        const int mailComposeAutosaveinterval = mHashConfig.value(mailComposeAutosaveintervalStr).toInt(&found);
+        if(found) {
+          addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), mailComposeAutosaveinterval);
+        } else {
+          addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 5);
+        }
+      } else {
+        //Default value
+        addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 5);
+      }
+    } else {
+      //Don't autosave
+      addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), 0);
+    }
+  }
+
+  const QString mailSpellCheckInlineStr = QLatin1String("mail.spellcheck.inline");
+  if(mHashConfig.contains(mailSpellCheckInlineStr)) {
+    const bool mailSpellCheckInline = mHashConfig.value(mailSpellCheckInlineStr).toBool();
+    addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),mailSpellCheckInline);
+  } else {
+    addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),false);
+  }
 }
 
 void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )
@@ -249,6 +321,7 @@ void ThunderbirdSettings::readAccount()
       qDebug()<<" rss resource needs to be implemented";
       continue;
     } else if (type == QLatin1String("nntp")) {
+      //TODO add config directly to knode
       //TODO when knode will merge in kdepim
       qDebug()<<" nntp resource need to be implemented";
       continue;

@@ -40,10 +40,8 @@ BackupData::~BackupData()
 
 void BackupData::startBackup()
 {
-  bool good = mArchive->open(QIODevice::WriteOnly);
-  if(!good) {
-    //TODO
-  }
+  if(!openArchive(true))
+    return;
 
   if(mTypeSelected & Util::Identity)
     backupIdentity();
@@ -76,7 +74,7 @@ void BackupData::backupTransports()
   if(fileAdded)
     Q_EMIT info(i18n("Transports backuped."));
   else
-    Q_EMIT error(i18n("Transport file can not add to backup file."));
+    Q_EMIT error(i18n("Transport file cannot be added to backup file."));
 }
 
 void BackupData::backupResources()
@@ -112,7 +110,7 @@ void BackupData::backupIdentity()
   if(fileAdded)
     Q_EMIT info(i18n("Identity backuped."));
   else
-    Q_EMIT error(i18n("Identity file can not add to backup file."));
+    Q_EMIT error(i18n("Identity file cannot be added to backup file."));
 }
 
 void BackupData::backupMails()

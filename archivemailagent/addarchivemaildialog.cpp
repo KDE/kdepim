@@ -90,7 +90,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   mainLayout->addWidget( dateLabel, row, 0 );
   mDays = new QSpinBox(mainWidget);
   mDays->setMinimum(1);
-  mDays->setMinimum(3600);
+  mDays->setMaximum(3600);
   mainLayout->addWidget(mDays);
   row++;
 
@@ -102,6 +102,8 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
 
   if(mInfo) {
     load(mInfo);
+  } else {
+    enableButtonOk(false);
   }
 
   // Make it a bit bigger, else the folder requester cuts off the text too early
@@ -129,6 +131,7 @@ void AddArchiveMailDialog::load(ArchiveMailInfo* info)
   void setLastDateSaved( const QDate& date );
   QDate lastDateSaved() const;
 #endif
+  updateOkButton();
 }
 
 ArchiveMailInfo* AddArchiveMailDialog::info()
@@ -145,11 +148,16 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
   return mInfo;
 }
 
+void AddArchiveMailDialog::updateOkButton()
+{
+  bool valid = !mPath->url().isEmpty() && mFolderRequester->collection().isValid();
+  enableButtonOk(valid);
+}
+
 void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collection)
 {
-  if(collection.isValid()) {
-
-  }
+  Q_UNUSED(collection);
+  updateOkButton();
 }
 
 void AddArchiveMailDialog::setArchiveType(MailCommon::BackupJob::ArchiveType type)

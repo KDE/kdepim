@@ -130,6 +130,8 @@ public:
    */
   void setCurrentFolder( const Akonadi::Collection &collection );
 
+  void saveCurrentSelection();
+
 public slots:
 
   /**

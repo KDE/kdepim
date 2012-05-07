@@ -51,7 +51,7 @@ class ScheduledJob;
  * As long as it's not running, it's called a "task", i.e. something that needs to be done.
  * Tasks are held in the JobScheduler.
  */
-class ScheduledTask {
+class MAILCOMMON_EXPORT ScheduledTask {
 public:
   /// Create a scheduled task for a given folder
   /// If @p immediate is true, the scheduler will run this task as soon
@@ -134,7 +134,7 @@ private:
 /**
  * Base class for scheduled jobs
  */
-class ScheduledJob : public FolderJob
+class MAILCOMMON_EXPORT ScheduledJob : public FolderJob
 {
 public:
   ScheduledJob( const Akonadi::Collection & folder, bool immediate );

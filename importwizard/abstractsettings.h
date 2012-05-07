@@ -18,9 +18,13 @@
 #ifndef ABSTRACTSETTINGS_H
 #define ABSTRACTSETTINGS_H
 
+#include <KSharedConfig>
+
+#include <Akonadi/Collection>
+
 #include <QObject>
 #include <QMap>
-#include <Akonadi/Collection>
+
 class ImportWizard;
 class KJob;
 
@@ -59,12 +63,17 @@ protected:
   void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
   void addKmailConfig( const QString& groupName, const QString& key, bool value);
 
+  void addKNodeConfig(const QString& groupName, const QString& key, bool value);
+  void addAkregatorConfig(const QString& groupName, const QString& key, bool value);
+
+
   void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
 
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;
+  KSharedConfigPtr mKmailConfig;
 };
 
 #endif // ABSTRACTSETTINGS_H

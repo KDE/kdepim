@@ -16,10 +16,24 @@
 */
 
 #include "archivemailmanager.h"
+#include "archivemailinfo.h"
+#include "archivejob.h"
+#include "archivemailkernel.h"
+
+#include <mailcommon/mailkernel.h>
+
+#include <KConfigGroup>
+#include <KSharedConfig>
+#include <KGlobal>
+
+#include <QDate>
 
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
   : QObject( parent )
 {
+  mArchiveMailKernel = new ArchiveMailKernel( this );
+  CommonKernel->registerKernelIf( mArchiveMailKernel ); //register KernelIf early, it is used by the Filter classes
+  CommonKernel->registerSettingsIf( mArchiveMailKernel ); //SettingsIf is used in FolderTreeWidget
 }
 
 ArchiveMailManager::~ArchiveMailManager()
@@ -28,7 +42,21 @@ ArchiveMailManager::~ArchiveMailManager()
 
 void ArchiveMailManager::load()
 {
-//test if necessary to archive.
+  KSharedConfig::Ptr config = KGlobal::config();
+  const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+  qDebug()<<"collectionList "<<collectionList;
+  const int numberOfCollection = collectionList.count();
+  for(int i = 0 ; i < numberOfCollection; ++i) {
+    KConfigGroup group = config->group(collectionList.at(i));
+    ArchiveMailInfo *info = new ArchiveMailInfo(group);
+    if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
+      ScheduledArchiveTask *task = new ScheduledArchiveTask( Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
+      mArchiveMailKernel->jobScheduler()->registerTask( task );
+
+    } else {
+      delete info;
+    }
+  }
 }
 
 #include "archivemailmanager.moc"

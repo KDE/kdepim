@@ -21,12 +21,13 @@
 #include <mailcommon/mailinterfaces.h>
 
 namespace Akonadi {
-class EntityTreeModel;
-class EntityMimeTypeFilterModel;
+  class EntityTreeModel;
+  class EntityMimeTypeFilterModel;
 }
 
 namespace MailCommon {
-class FolderCollectionMonitor;
+  class FolderCollectionMonitor;
+  class JobScheduler;
 }
 
 class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
@@ -57,6 +58,7 @@ class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public Mai
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
+    MailCommon::JobScheduler* mJobScheduler;
 };
 
 #endif

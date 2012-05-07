@@ -29,10 +29,8 @@ RestoreData::~RestoreData()
 
 void RestoreData::startRestore()
 {
-  bool good = mArchive->open(QIODevice::ReadOnly);
-  if(!good) {
-    //TODO
-  }
+  if(!openArchive(false /*readonly*/))
+    return;
   if(mTypeSelected & Util::Identity)
     restoreIdentity();
   if(mTypeSelected & Util::MailTransport)

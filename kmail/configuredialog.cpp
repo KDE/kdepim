@@ -1397,8 +1397,7 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
       mCustomDateFormatEdit->setWhatsThis( mCustomDateWhatsThis );
       radio->setWhatsThis( mCustomDateWhatsThis );
       gvlay->addWidget( hbox );
-    }
-  } // end for loop populating mDateDisplay
+    }  } // end for loop populating mDateDisplay
 
   vlay->addWidget( mDateDisplay );
   connect( mDateDisplay, SIGNAL(clicked(int)),
@@ -1500,6 +1499,7 @@ void AppearancePage::HeadersTab::save()
   MessageList::Core::Settings::self()->
     setTabsHaveCloseButton( mTabsHaveCloseButton->isChecked() );
 
+  KMKernel::self()->savePaneSelection();
   // "Aggregation"
   mAggregationComboBox->writeDefaultConfig();
 
@@ -4000,6 +4000,8 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent )
            mMMTab.mDelayedMarkTime, SLOT(setEnabled(bool)));
   connect( mMMTab.mDelayedMarkAsRead, SIGNAL(toggled(bool)),
            this , SLOT(slotEmitChanged()) );
+  connect( mMMTab.mPrintEmptySelectedText, SIGNAL(toggled(bool)),
+           this, SLOT(slotEmitChanged()) );
   connect( mMMTab.mShowPopupAfterDnD, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
   connect( mOnStartupOpenFolder, SIGNAL(folderChanged(Akonadi::Collection)),
@@ -4018,6 +4020,7 @@ void MiscPage::FolderTab::doLoadFromGlobalSettings()
   mMMTab.mDelayedMarkAsRead->setChecked( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() );
   mMMTab.mDelayedMarkTime->setValue( MessageViewer::GlobalSettings::self()->delayedMarkTime() );
   mMMTab.mShowPopupAfterDnD->setChecked( GlobalSettings::self()->showPopupAfterDnD() );
+  mMMTab.mPrintEmptySelectedText->setChecked(GlobalSettings::self()->printSelectedText());
   doLoadOther();
 }
 
@@ -4041,6 +4044,7 @@ void MiscPage::FolderTab::save()
   GlobalSettings::self()->setShowPopupAfterDnD( mMMTab.mShowPopupAfterDnD->isChecked() );
   GlobalSettings::self()->setExcludeImportantMailFromExpiry(
         mMMTab.mExcludeImportantFromExpiry->isChecked() );
+  GlobalSettings::self()->setPrintSelectedText(mMMTab.mPrintEmptySelectedText->isChecked());
 }
 
 

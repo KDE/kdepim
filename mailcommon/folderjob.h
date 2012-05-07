@@ -31,10 +31,11 @@
 #define MAILCOMMON_FOLDERJOB_H
 
 #include <Akonadi/Collection>
+#include "mailcommon_export.h"
 
 namespace MailCommon {
 
-class FolderJob : public QObject
+class MAILCOMMON_EXPORT FolderJob : public QObject
 {
   Q_OBJECT
 

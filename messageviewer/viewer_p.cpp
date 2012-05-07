@@ -2057,8 +2057,10 @@ void ViewerPrivate::slotToggleHtmlMode()
 
 void ViewerPrivate::slotFind()
 {
+#if QT_VERSION >= 0x040800
   if ( mViewer->hasSelection() )
     mFindBar->setText( mViewer->selectedText() );
+#endif  
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
@@ -2067,7 +2069,8 @@ void ViewerPrivate::slotTranslate()
 {
   const QString text = mViewer->selectedText();
   mTranslatorWidget->show();
-  mTranslatorWidget->setTextToTranslate(text);
+  if(!text.isEmpty())
+    mTranslatorWidget->setTextToTranslate(text);
 }
 
 void ViewerPrivate::slotToggleFixedFont()
@@ -2581,7 +2584,6 @@ void ViewerPrivate::slotLevelQuote( int l )
 
 void ViewerPrivate::slotHandleAttachment( int choice )
 {
-  //mAtmUpdate = true;
   if(!mCurrentContent)
     return;
   if ( choice == Viewer::Delete ) {
@@ -3093,5 +3095,7 @@ void ViewerPrivate::goOnline()
 {
   emit resumeNetworkJobs();
 }
+
+
 
 #include "viewer_p.moc"

@@ -415,6 +415,7 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
 
   Q_ASSERT( !widgets().isEmpty() );
   widgets().first()->blockSignals(false);
+  updateAddRemoveButton();
 }
 
 void SearchRuleWidgetLister::slotAddWidget( QWidget *w )
@@ -493,6 +494,7 @@ void SearchRuleWidgetLister::clearWidget( QWidget *aWidget )
     SearchRuleWidget *w = static_cast<SearchRuleWidget*>( aWidget );
     w->reset();
     reconnectWidget( w );
+    updateAddRemoveButton();
   }
 }
 

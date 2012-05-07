@@ -18,7 +18,7 @@
 #ifndef ABSTRACTDATA_H
 #define ABSTRACTDATA_H
 #include <QObject>
-#include "util.h"
+#include "backupmailutil.h"
 
 class KZip;
 namespace KPIMIdentities {
@@ -37,6 +37,8 @@ Q_SIGNALS:
   void error(const QString&);
 protected:
   void closeArchive();
+  bool openArchive(bool write);
+
 protected:
   Util::BackupTypes mTypeSelected;
   KZip *mArchive;

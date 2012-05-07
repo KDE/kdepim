@@ -42,9 +42,9 @@ SylpheedAddressBook::~SylpheedAddressBook()
 void SylpheedAddressBook::readAddressBook( const QString& filename )
 {
   QFile file(filename);
-  qDebug()<<" import filename :"<<filename;
+  //kDebug()<<" import filename :"<<filename;
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    qDebug()<<" We can't open file"<<filename;
+    kDebug()<<" We can't open file"<<filename;
     return;
   }
   QString errorMsg;
@@ -88,7 +88,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
         address.setNickName( QLatin1String( "nick-name" ) );
       }
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
-        
+        //FIXME ????
       }
       for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
         const QString addressTag = addressElement.tagName();

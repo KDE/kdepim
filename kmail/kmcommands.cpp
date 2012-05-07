@@ -1488,7 +1488,6 @@ KMResendMessageCommand::KMResendMessageCommand( QWidget *parent,
 
 KMCommand::Result KMResendMessageCommand::execute()
 {
-
   Akonadi::Item item = retrievedMessage();
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
@@ -1506,5 +1505,6 @@ KMCommand::Result KMResendMessageCommand::execute()
 
   return OK;
 }
+
 
 #include "kmcommands.moc"

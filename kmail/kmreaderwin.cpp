@@ -39,7 +39,6 @@
 #include "messageviewer/mailwebview.h"
 #include "messageviewer/markmessagereadhandler.h"
 #include "messageviewer/globalsettings.h"
-
 #include "messageviewer/csshelper.h"
 using MessageViewer::CSSHelper;
 #include "util.h"
@@ -50,9 +49,15 @@ using namespace KMime;
 
 #include "messageviewer/viewer.h"
 using namespace MessageViewer;
+#include <messagecore/globalsettings.h>
+
 #include "messageviewer/attachmentstrategy.h"
 #include "messagecomposer/messagesender.h"
 #include "messagecomposer/messagefactory.h"
+#include "messagecomposer/composer.h"
+#include "messagecomposer/textpart.h"
+#include "messagecomposer/infopart.h"
+#include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 
 #include "messagecore/messagehelpers.h"
@@ -630,7 +635,8 @@ void KMReaderWin::update( bool force )
 void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
 {
   if ( item.isValid() && item.parentCollection().isValid() ) {
-    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection(), false );
+    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection(
+        MailCommon::Util::updatedCollection( item.parentCollection() ), false );
     KMail::Util::handleClickedURL( url, fd );
     return;
   }
@@ -658,6 +664,57 @@ void KMReaderWin::slotDeleteMessage(const Akonadi::Item& item)
   KMTrashMsgCommand *command = new KMTrashMsgCommand( item.parentCollection(), item, -1 );
   command->start();
 }
+
+bool KMReaderWin::printSelectedText(bool preview)
+{
+  const QString str = mViewer->selectedText();
+  if(str.isEmpty())
+    return false;
+  Message::Composer* composer = new Message::Composer;
+  composer->textPart()->setCleanPlainText(str);
+  composer->textPart()->setWrappedPlainText(str);
+  KMime::Message::Ptr messagePtr = message().payload<KMime::Message::Ptr>();
+  composer->infoPart()->setFrom(messagePtr->from()->asUnicodeString());
+  composer->infoPart()->setTo(QStringList()<<messagePtr->to()->asUnicodeString());
+  composer->infoPart()->setCc(QStringList()<<messagePtr->cc()->asUnicodeString());
+  composer->infoPart()->setSubject(messagePtr->subject()->asUnicodeString());
+  composer->setProperty("preview",preview);
+  connect( composer, SIGNAL(result(KJob*)),
+           this, SLOT(slotPrintComposeResult(KJob*)) );
+  composer->start();
+  return true;
+}
+
+void KMReaderWin::slotPrintComposeResult( KJob *job )
+{
+  const bool preview = job->property("preview").toBool();
+  Q_ASSERT( dynamic_cast< Message::Composer* >( job ) );
+
+  Message::Composer* composer = dynamic_cast< Message::Composer* >( job );
+  if( composer->error() == Message::Composer::NoError ) {
+
+    Q_ASSERT( composer->resultMessages().size() == 1 );
+    Akonadi::Item printItem;
+    printItem.setPayload<KMime::Message::Ptr>( composer->resultMessages().first() );
+    //FIXME
+    //const bool isHtml = ( mComposerBase->editor()->textMode() == KMeditor::Rich );
+    const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+
+    KMPrintCommand *command = new KMPrintCommand( this, printItem,0,
+                                             0, false, false,useFixedFont, overrideEncoding );
+    command->setPrintPreview( preview );
+    command->start();
+  } else {
+    if ( static_cast<KIO::Job*>(job)->ui() ) {
+      static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    } else {
+      kWarning() << "Composer for printing failed:" << composer->errorString();
+    }
+  }
+
+}
+
 
 #include "kmreaderwin.moc"
 
