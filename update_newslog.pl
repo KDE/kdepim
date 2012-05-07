@@ -2,7 +2,7 @@
 
 #########################################################################################
 # Updates the E35 NewsLog.txt file for a tag release.                                   #
-# Copyright (c) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com> #
+# Copyright (c) 2010-2012 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com> #
 # Author: Allen Winter <allen.winter@kdab.com>                                          #
 #                                                                                       #
 # This program is free software; you can redistribute it and/or modify                  #
@@ -20,6 +20,10 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.                         #
 #                                                                                       #
 #########################################################################################
+
+# Requires LWP::UserAgent::https
+#  If you get error message: "501  Protocol scheme 'https' is not supported..."
+#  then you need to install LPW::UserAgent::https
 
 # Requires the Term::Prompt module, available as source from CPAN,
 #    http://search.cpan.org/~allens/Term-Prompt-0.11/Prompt.pm
@@ -44,7 +48,7 @@ use Term::Prompt;
 
 my($Prog) = 'update_newslog.pl';
 my
- $VERSION = '0.95';    #split line so MakeMaker can find the version here
+ $VERSION = '0.96';    #split line so MakeMaker can find the version here
 
 # do not allow Git work dirs
 -l ".git/refs" && die "Seems you are running this from a Git work dir.\nPlease change to a real Git repo instead\n";
@@ -52,6 +56,7 @@ my
 my($logFile) = "NewsLog.txt";
 -f "$logFile" || die "Cannot locate the E35 NewsLog.txt.\nAre you in the E35 branch?\nIs your branch up-to-date?\n";
 
+&Message("Welcome to $Prog v$VERSION");
 &Message("Please wait a few seconds while we check the status of your current log...");
 
 # ensure the log file has no local mods
@@ -385,7 +390,6 @@ sub issueString {
 
   $Ua->ssl_opts( verify_hostname => 0 );
   my($res) = $Ua ->request($req);
-
   if ($res->is_success) {
     my($tmp,$tmp1);
     my($issue_pr,$summ_pr,$rt_pr);
@@ -419,7 +423,7 @@ sub issueString {
       print &Warning("issue $issue is empty.");
     }
   } else {
-    print &Warning("cannot access issue $issue.");
+    print &Warning($res->status_line . ": cannot access issue $issue.");
   }
 
   return $str;
