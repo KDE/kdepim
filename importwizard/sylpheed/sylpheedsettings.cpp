@@ -61,7 +61,7 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   addKmailConfig(QLatin1String("General"), QLatin1String("SystemTrayEnabled"), showTrayIcon);
 
   const bool cleanTrashOnExit = (group.readEntry("clean_trash_on_exit", 0) == 1 );
-  addKmailConfig(QLatin1String("General"), QLatin1String("EmptyTrashOnExit"), cleanTrashOnExit);
+  addKmailConfig(QLatin1String("General"), QLatin1String("empty-trash-on-exit"), cleanTrashOnExit);
 
   const bool alwaysMarkReadOnShowMsg = (group.readEntry("always_mark_read_on_show_msg", 0) == 1 );
   if(alwaysMarkReadOnShowMsg) {
@@ -73,6 +73,7 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
     const int autosaveInterval = group.readEntry("autosave_interval",5);
     addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), autosaveInterval);
   }
+
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
