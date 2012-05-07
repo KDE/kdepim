@@ -181,9 +181,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void print();
   void printPreview();
 
-  /** Return selected text */
-  QString selectedText();
-
   /** Get the html override setting */
   bool htmlOverride() const;
 

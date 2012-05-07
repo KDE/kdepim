@@ -219,9 +219,9 @@ void Viewer::slotScrollNext()
   d->mViewer->scrollPageDown( 80 );
 }
 
-QString Viewer::selectedText()
+QString Viewer::selectedText() const
 {
-  Q_D(Viewer);
+  Q_D(const Viewer);
   QString temp = d->mViewer->selectedText();
   return temp;
 }
@@ -590,12 +590,6 @@ bool Viewer::zoomTextOnly() const
 {
   Q_D(const Viewer);
   return d->mZoomTextOnly;
-}
-
-QString Viewer::selectedText() const
-{
-  Q_D(const Viewer);
-  return d->selectedText();
 }
 
 
