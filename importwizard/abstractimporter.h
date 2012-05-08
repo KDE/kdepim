@@ -40,7 +40,8 @@ public:
     Mails = 1,
     Settings = 2,
     Filters = 4,
-    AddressBook = 8
+    AddressBook = 8,
+    Calendar = 16
   };
 
   Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption )
@@ -66,6 +67,7 @@ public:
   virtual bool importMails();
   virtual bool importFilters();
   virtual bool importAddressBook();
+  virtual bool importCalendar();
 
 protected:
   void appendFilters( const QList<MailCommon::MailFilter*>& filters );

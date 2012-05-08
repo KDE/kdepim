@@ -56,6 +56,12 @@ bool AbstractImporter::importAddressBook()
   return false;
 }
 
+bool AbstractImporter::importCalendar()
+{
+  return false;
+}
+
+
 MailImporter::FilterInfo* AbstractImporter::initializeInfo()
 {
   MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
