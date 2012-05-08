@@ -23,6 +23,7 @@
 #include "importfilterpage.h"
 #include "importsettingpage.h"
 #include "importaddressbookpage.h"
+#include "importcalendarpage.h"
 #include "importfinishpage.h"
 
 #include "thunderbird/thunderbirdimportdata.h"
@@ -78,9 +79,14 @@ ImportWizard::ImportWizard(QWidget *parent)
   mPage6 = new KPageWidgetItem( mImportAddressbookPage, i18n( "Import addressbooks" ) );
   addPage( mPage6 );
 
-  mImportFinishPage = new ImportFinishPage(this);
-  mPage7 = new KPageWidgetItem( mImportFinishPage, i18n( "Finish" ) );
+  mImportCalendarPage = new ImportCalendarPage(this);
+  mPage7 = new KPageWidgetItem( mImportCalendarPage, i18n( "Import calendars" ) );
   addPage( mPage7 );
+
+
+  mImportFinishPage = new ImportFinishPage(this);
+  mPage8 = new KPageWidgetItem( mImportFinishPage, i18n( "Finish" ) );
+  addPage( mPage8 );
 
   
   //Import module
@@ -105,6 +111,7 @@ ImportWizard::ImportWizard(QWidget *parent)
   connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
   connect(mImportSettingPage, SIGNAL(importSettingsClicked()), this, SLOT(slotImportSettingsClicked()) );
   connect(mImportAddressbookPage, SIGNAL(importAddressbookClicked()), this, SLOT(slotImportAddressbookClicked()) );
+  connect(mImportCalendarPage, SIGNAL(importCalendarClicked()), this, SLOT(slotImportCalendarClicked()) );
 
   
   connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT(slotAtLeastOneComponentSelected(bool)) );
@@ -156,6 +163,14 @@ void ImportWizard::slotImportSettingsClicked()
   setValid(mPage6,result);
 }
 
+void ImportWizard::slotImportCalendarClicked()
+{
+  addFinishInfo( i18n( "Import calendar from %1...", mSelectedPim->name() ) );
+
+  const bool result = mSelectedPim->importSettings();
+  setValid(mPage7,result);
+}
+
 void ImportWizard::slotProgramSelected(const QString& program)
 {
   if(mlistImport.contains(program)) {
@@ -194,6 +209,7 @@ void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions opt
   setAppropriate(mPage4,(options & AbstractImporter::Filters));
   setAppropriate(mPage3,(options & AbstractImporter::Mails));
   setAppropriate(mPage5,(options & AbstractImporter::Settings));
+  setAppropriate(mPage6,(options & AbstractImporter::Calendar));
 
 }
 
@@ -219,6 +235,9 @@ void ImportWizard::next()
   } else if( currentPage() == mPage6 ) {
     KAssistantDialog::next();
     setValid(mPage7,false);
+  } else if( currentPage() == mPage7 ) {
+    KAssistantDialog::next();
+    setValid(mPage8,false);
   } else {
     KAssistantDialog::next();
   }
@@ -251,6 +270,11 @@ ImportSettingPage *ImportWizard::importSettingPage() const
 ImportFinishPage *ImportWizard::importFinishPage() const
 {
   return mImportFinishPage;
+}
+
+ImportCalendarPage *ImportWizard::importCalendarPage() const
+{
+  return mImportCalendarPage;
 }
 
 void ImportWizard::addFinishInfo( const QString& log )

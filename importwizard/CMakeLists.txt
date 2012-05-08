@@ -16,6 +16,7 @@ importfilterinfogui.cpp
 abstractsettings.cpp
 abstractaddressbook.cpp
 abstractcalendar.cpp
+importcalendarpage.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 sylpheed/sylpheedimportdata.cpp
@@ -43,7 +44,8 @@ kde4_add_ui_files(importwizard_SRCS
                   ui/importmailpage.ui
                   ui/importsettingpage.ui
                   ui/selectcomponentpage.ui 
-		  ui/importfinishpage.ui )
+		  ui/importfinishpage.ui 
+		  ui/importcalendarpage.ui)
 
 kde4_add_executable(importwizard ${importwizard_SRCS})
 

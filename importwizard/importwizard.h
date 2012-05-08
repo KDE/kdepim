@@ -31,6 +31,7 @@ class ImportFilterPage;
 class ImportSettingPage;
 class ImportAddressbookPage;
 class ImportFinishPage;
+class ImportCalendarPage;
 class AbstractImporter;
 
 class ImportWizard : public KAssistantDialog {
@@ -47,6 +48,7 @@ public:
   ImportAddressbookPage *importAddressBookPage() const;
   ImportSettingPage *importSettingPage() const;
   ImportFinishPage *importFinishPage() const;
+  ImportCalendarPage *importCalendarPage() const;
 
   void addFinishInfo( const QString& log );
   void addFinishError( const QString& log );
@@ -60,7 +62,8 @@ private Q_SLOTS:
   void slotAtLeastOneComponentSelected( bool b );
   void slotImportSettingsClicked();
   void slotImportAddressbookClicked();
-  
+  void slotImportCalendarClicked();
+
 private:
   void addImportModule(AbstractImporter *);
   void checkModules();
@@ -77,6 +80,7 @@ private:
   KPageWidgetItem *mPage5;
   KPageWidgetItem *mPage6;
   KPageWidgetItem *mPage7;
+  KPageWidgetItem *mPage8;
 
   SelectProgramPage *mSelectProgramPage;
   SelectComponentPage *mSelectComponentPage;
@@ -85,6 +89,7 @@ private:
   ImportSettingPage *mImportSettingPage;
   ImportAddressbookPage *mImportAddressbookPage;
   ImportFinishPage *mImportFinishPage;
+  ImportCalendarPage *mImportCalendarPage;
 };
 
 #endif /* IMPORTWIZARD_H */

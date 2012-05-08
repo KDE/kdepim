@@ -27,6 +27,7 @@ SelectComponentPage::SelectComponentPage(QWidget *parent) :
   connect( ui->filters, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
   connect( ui->mails, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
   connect( ui->settings, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+  connect( ui->calendars, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
 }
 
 SelectComponentPage::~SelectComponentPage()
@@ -36,7 +37,7 @@ SelectComponentPage::~SelectComponentPage()
 
 void SelectComponentPage::slotComponentClicked()
 {
-  const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked() || ui->everything->isChecked() );
+  const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked()|| ui->calendars->isChecked() || ui->everything->isChecked() );
   Q_EMIT atLeastOneComponentSelected(componentSelected);
 }
 
@@ -46,6 +47,7 @@ void SelectComponentPage::slotEverythingClicked( bool clicked )
   ui->filters->setEnabled( !clicked && (mOptions & AbstractImporter::Filters));
   ui->mails->setEnabled( !clicked && (mOptions & AbstractImporter::Mails));
   ui->settings->setEnabled( !clicked && (mOptions & AbstractImporter::Settings));
+  ui->calendars->setEnabled( !clicked && (mOptions & AbstractImporter::Calendar));
   slotComponentClicked();
 }
 
@@ -74,6 +76,10 @@ AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents()
     if(ui->settings->isChecked()) {
       newOptions|=AbstractImporter::Settings;
     }
+    if(ui->calendars->isChecked()) {
+      newOptions|=AbstractImporter::Calendar;
+    }
+
     return newOptions;
   }
 }

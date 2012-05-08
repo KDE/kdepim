@@ -68,6 +68,16 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QCheckBox" name="calendars">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Calendars</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
