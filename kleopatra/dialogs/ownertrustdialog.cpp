@@ -93,7 +93,11 @@ private:
 OwnerTrustDialog::OwnerTrustDialog( QWidget * p, Qt::WindowFlags f )
     : KDialog( p, f ), d( new Private( this ) )
 {
-
+    connect( d->ui.unknownRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );
+    connect( d->ui.neverRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );
+    connect( d->ui.marginalRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );
+    connect( d->ui.fullRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );
+    connect( d->ui.ultimateRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );
 }
 
 OwnerTrustDialog::~OwnerTrustDialog() {}
