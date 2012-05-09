@@ -18,10 +18,14 @@
 #ifndef EVOLUTIONCALENDAR_H
 #define EVOLUTIONCALENDAR_H
 
-class EvolutionCalendar
+#include "abstractcalendar.h"
+
+class ImportWizard;
+
+class EvolutionCalendar : public AbstractCalendar
 {
 public:
-  explicit EvolutionCalendar();
+  explicit EvolutionCalendar(const QString &file, ImportWizard *parent);
   ~EvolutionCalendar();
 };
 

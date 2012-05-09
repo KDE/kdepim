@@ -33,6 +33,8 @@ public:
   bool importMails();
   bool importFilters();
   bool importAddressBook();
+  bool importCalendar();
+
   QString name() const;
 };
 

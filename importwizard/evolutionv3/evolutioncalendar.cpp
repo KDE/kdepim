@@ -17,8 +17,10 @@
 
 #include "evolutioncalendar.h"
 
-EvolutionCalendar::EvolutionCalendar()
+EvolutionCalendar::EvolutionCalendar(const QString& file,ImportWizard *parent)
+  :AbstractCalendar(parent)
 {
+  //TODO
 }
 
 EvolutionCalendar::~EvolutionCalendar()

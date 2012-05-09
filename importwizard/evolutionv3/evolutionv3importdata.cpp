@@ -17,6 +17,7 @@
 
 #include "evolutionv3importdata.h"
 #include "evolutionsettings.h"
+#include "evolutioncalendar.h"
 #include "mailimporter/filter_evolution_v3.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -93,6 +94,17 @@ bool Evolutionv3ImportData::importAddressBook()
 {
   return false;
 }
+
+bool Evolutionv3ImportData::importCalendar()
+{
+  const QString calendarFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/calendar/%gconf.xml");
+  if ( QFile( calendarFile ).exists() ) {
+    EvolutionCalendar calendar( calendarFile, mImportWizard );
+    return true;
+  }
+  return false;
+}
+
 
 AbstractImporter::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
 {
