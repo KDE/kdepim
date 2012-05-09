@@ -103,7 +103,7 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     
     const QString tag = e.tagName();
     const QString uid = e.attribute( QLatin1String( "uid" ) );
-    const QString signatureName = e.attribute( QLatin1String( "name" ) );
+    const QString signatureName = e.attribute( QLatin1String( "name" ) ); //Use it ?
     const QString format = e.attribute( QLatin1String( "text" ) );
     const bool automatic = ( e.attribute( QLatin1String( "auto" ) ) == QLatin1String( "true" ) );
 
@@ -127,7 +127,7 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     }
     
     if ( automatic ) {
-      //TODO
+      // TODO
     }
     
     mMapSignature.insert( uid, signature );

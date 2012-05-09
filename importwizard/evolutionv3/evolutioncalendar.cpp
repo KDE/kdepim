@@ -21,6 +21,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 #include <QDomDocument>
 #include <QDomElement>
@@ -31,7 +32,7 @@ EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *paren
   //Read gconf file
   QFile file(filename);
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    qDebug()<<" We can't open file"<<filename;
+    kDebug()<<" We can't open file"<<filename;
     return;
   }
   QDomDocument doc;
@@ -43,6 +44,7 @@ EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *paren
     kDebug() << "No config found";
     return;
   }
+  mCalendarPath = QDir::homePath() + QLatin1String("/.local/share/evolution/calendar/");
   for ( QDomElement e = config.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
     if ( tag == QLatin1String( "entry" ) ) {
@@ -86,20 +88,37 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
     kDebug() << "Account not found";
     return;
   }
-  //TODO <group uid="1326983249.24740.3@kspread" name="Sur cet ordinateur" base_uri="local:" readonly="no">
-  for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
-    const QString tag = e.tagName();
-    if(tag == QLatin1String("uid")) {
+  QString base_uri;
+  if(domElement.hasAttribute(QLatin1String("base_uri"))) {
+    base_uri = domElement.attribute(QLatin1String("base_uri"));
+  }
+  if(base_uri == QLatin1String("local:")) {
+    //TODO <group uid="1326983249.24740.3@kspread" name="Sur cet ordinateur" base_uri="local:" readonly="no">
+    for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+      const QString tag = e.tagName();
+      if(tag == QLatin1String("source")) {
+        QString name; //FIXME
+        QMap<QString, QVariant> settings;
+        if(e.hasAttribute(QLatin1String("uid"))) {
 
-    } else if(tag == QLatin1String("name")) {
-
-    } else if(tag == QLatin1String("relative_uri")) {
-
-    } else if(tag == QLatin1String("color_spec")) {
-
-    } else {
-      qDebug()<<" tag unknown :"<<tag;
+        } else if(e.hasAttribute(QLatin1String("name"))) {
+          settings.insert(QLatin1String("DisplayName"), e.attribute(QLatin1String("name")));
+        } else if(e.hasAttribute(QLatin1String("relative_uri"))) {
+          const QString path = mCalendarPath + e.attribute(QLatin1String("relative_uri")) + QLatin1String("/calendar.ics");
+          settings.insert(QLatin1String("Path"), path);
+        } else if(e.hasAttribute(QLatin1String("color_spec"))) {
+          //TODO
+        } else {
+          qDebug()<<" tag unknown :"<<tag;
+        }
+        //TODO read properties
+        AbstractBase::createResource(QLatin1String("akonadi_ical_resource"),name,settings);
+      } else {
+        qDebug()<<" tag unknown :"<<tag;
+      }
+      //TODO use AbstractBase::createResource;
     }
-    //TODO use AbstractBase::createResource;
+  } else {
+    qDebug()<<" base_uri unknown"<<base_uri;
   }
 }

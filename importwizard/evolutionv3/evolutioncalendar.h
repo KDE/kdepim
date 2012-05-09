@@ -32,6 +32,7 @@ public:
 private:
   void readCalendar(const QDomElement &calendar);
   void extractCalendarInfo(const QString& info);
+  QString mCalendarPath;
 };
 
 #endif // EVOLUTIONCALENDAR_H
