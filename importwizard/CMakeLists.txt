@@ -1,6 +1,7 @@
 project(importwizard)
 
 set(importwizard_SRCS
+abstractbase.cpp
 importwizardkernel.cpp
 selectprogrampage.cpp
 importaddressbookpage.cpp

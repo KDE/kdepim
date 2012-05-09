@@ -19,8 +19,9 @@
 #include "importwizard.h"
 #include "importcalendarpage.h"
 
+
 AbstractCalendar::AbstractCalendar(ImportWizard *parent)
-  :mImportWizard(parent)
+  : mImportWizard(parent)
 {
 }
 
@@ -30,12 +31,12 @@ AbstractCalendar::~AbstractCalendar()
 }
 
 
-void AbstractCalendar::addCalendarImportInfo( const QString& log )
+void AbstractCalendar::addImportInfo( const QString& log )
 {
   mImportWizard->importCalendarPage()->addImportInfo( log );
 }
 
-void AbstractCalendar::addCalendarImportError( const QString& log )
+void AbstractCalendar::addImportError( const QString& log )
 {
   mImportWizard->importCalendarPage()->addImportError( log );
 }

@@ -15,24 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTCALENDAR_H
-#define ABSTRACTCALENDAR_H
+#ifndef ABSTRACTBASE_H
+#define ABSTRACTBASE_H
 
-class ImportWizard;
-#include "abstractbase.h"
-
+#include <QObject>
 #include <QString>
+#include <QMap>
+#include <QVariant>
 
-class AbstractCalendar : public AbstractBase
+class AbstractBase : public QObject
 {
+  Q_OBJECT
 public:
-  explicit AbstractCalendar(ImportWizard *parent);
-  virtual ~AbstractCalendar();
+  explicit AbstractBase();
+  virtual ~AbstractBase();
+  QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 protected:
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-private:
-  ImportWizard *mImportWizard;
+  virtual void addImportInfo( const QString& log ) = 0;
+  virtual void addImportError( const QString& log ) = 0;
 };
 
-#endif // ABSTRACTCALENDAR_H
+#endif // ABSTRACTBASE_H
