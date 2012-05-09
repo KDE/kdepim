@@ -205,11 +205,11 @@ void ImportWizard::slotAtLeastOneComponentSelected( bool result )
 
 void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions options)
 {
-  setAppropriate(mPage6,(options & AbstractImporter::AddressBook));
+  setAppropriate(mPage6,(options & AbstractImporter::AddressBooks));
   setAppropriate(mPage4,(options & AbstractImporter::Filters));
   setAppropriate(mPage3,(options & AbstractImporter::Mails));
   setAppropriate(mPage5,(options & AbstractImporter::Settings));
-  setAppropriate(mPage6,(options & AbstractImporter::Calendar));
+  setAppropriate(mPage6,(options & AbstractImporter::Calendars));
 
 }
 

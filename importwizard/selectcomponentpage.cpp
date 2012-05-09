@@ -43,11 +43,11 @@ void SelectComponentPage::slotComponentClicked()
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )
 {
-  ui->addressbooks->setEnabled( !clicked && (mOptions & AbstractImporter::AddressBook));
+  ui->addressbooks->setEnabled( !clicked && (mOptions & AbstractImporter::AddressBooks));
   ui->filters->setEnabled( !clicked && (mOptions & AbstractImporter::Filters));
   ui->mails->setEnabled( !clicked && (mOptions & AbstractImporter::Mails));
   ui->settings->setEnabled( !clicked && (mOptions & AbstractImporter::Settings));
-  ui->calendars->setEnabled( !clicked && (mOptions & AbstractImporter::Calendar));
+  ui->calendars->setEnabled( !clicked && (mOptions & AbstractImporter::Calendars));
   slotComponentClicked();
 }
 
@@ -65,7 +65,7 @@ AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents()
   else {
     AbstractImporter::TypeSupportedOptions newOptions;
     if(ui->addressbooks->isChecked()) {
-      newOptions|=AbstractImporter::AddressBook;
+      newOptions|=AbstractImporter::AddressBooks;
     }
     if(ui->filters->isChecked()) {
       newOptions|=AbstractImporter::Filters;
@@ -77,7 +77,7 @@ AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents()
       newOptions|=AbstractImporter::Settings;
     }
     if(ui->calendars->isChecked()) {
-      newOptions|=AbstractImporter::Calendar;
+      newOptions|=AbstractImporter::Calendars;
     }
 
     return newOptions;

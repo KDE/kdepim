@@ -40,8 +40,8 @@ public:
     Mails = 1,
     Settings = 2,
     Filters = 4,
-    AddressBook = 8,
-    Calendar = 16
+    AddressBooks = 8,
+    Calendars = 16
   };
 
   Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption )
