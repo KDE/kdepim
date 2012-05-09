@@ -89,5 +89,7 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
     qDebug()<<" EvolutionCalendar::extractCalendarInfo tag :"<<tag;
+
+    //TODO use AbstractBase::createResource;
   }
 }
