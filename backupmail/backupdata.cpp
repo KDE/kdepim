@@ -93,7 +93,11 @@ void BackupData::backupResources()
             !capabilities.contains( "Virtual" ) &&
             !capabilities.contains( "MailTransport" ) )
       {
-
+        const QString identifier = agent.identifier();
+        if(identifier.contains(QLatin1String("pop3"))) {
+          //TODO
+        }
+        //TODO fix collection path.
         const QString agentFileName = agent.identifier() + QLatin1String("rc");
         const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
