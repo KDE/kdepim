@@ -156,7 +156,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
 
   Message::Util::addSendReplyForwardAction(message, qjob);
   
-  MessageCore::StringUtil::removePrivateHeaderFields( message );
+  MessageCore::StringUtil::removePrivateHeaderFields( message,false );
   message->assemble();
 
   // Queue the message.
