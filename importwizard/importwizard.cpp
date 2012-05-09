@@ -167,7 +167,7 @@ void ImportWizard::slotImportCalendarClicked()
 {
   addFinishInfo( i18n( "Import calendar from %1...", mSelectedPim->name() ) );
 
-  const bool result = mSelectedPim->importSettings();
+  const bool result = mSelectedPim->importCalendar();
   setValid(mPage7,result);
 }
 
@@ -205,11 +205,11 @@ void ImportWizard::slotAtLeastOneComponentSelected( bool result )
 
 void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions options)
 {
-  setAppropriate(mPage6,(options & AbstractImporter::AddressBooks));
-  setAppropriate(mPage4,(options & AbstractImporter::Filters));
   setAppropriate(mPage3,(options & AbstractImporter::Mails));
+  setAppropriate(mPage4,(options & AbstractImporter::Filters));
   setAppropriate(mPage5,(options & AbstractImporter::Settings));
-  setAppropriate(mPage6,(options & AbstractImporter::Calendars));
+  setAppropriate(mPage6,(options & AbstractImporter::AddressBooks));
+  setAppropriate(mPage7,(options & AbstractImporter::Calendars));
 
 }
 
