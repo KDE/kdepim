@@ -72,7 +72,7 @@ void BackupData::backupTransports()
   mailtransportsConfig->copyTo( tmp.fileName(), transportConfig.data() );
 
   transportConfig->sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("mailtransports"));
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::transportsPath() + QLatin1String("mailtransports"));
   if(fileAdded)
     Q_EMIT info(i18n("Transports backuped."));
   else
@@ -96,7 +96,10 @@ void BackupData::backupResources()
 
         const QString agentFileName = agent.identifier() + QLatin1String("rc");
         const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-        qDebug()<<" configFileName "<<configFileName;
+
+        const bool fileAdded  = mArchive->addLocalFile(configFileName, BackupMailUtil::resourcesPath() + agentFileName);
+        if(!fileAdded)
+          Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
       }
     }
   }
@@ -125,7 +128,7 @@ void BackupData::backupIdentity()
   identityConfig->copyTo( tmp.fileName(), identityConfig.data() );
 
   identityConfig->sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("emailidentities"));
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
   if(fileAdded)
     Q_EMIT info(i18n("Identity backuped."));
   else

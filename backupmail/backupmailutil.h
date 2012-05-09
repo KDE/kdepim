@@ -31,5 +31,20 @@ namespace BackupMailUtil {
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
 
+  static QString transportsPath()
+  {
+    return QLatin1String("transports/");
+  }
+
+  static QString resourcesPath()
+  {
+    return QLatin1String("resources/");
+  }
+
+  static QString identitiesPath()
+  {
+    return QLatin1String("identities/");
+  }
+
 }
 #endif // UTIL_H
