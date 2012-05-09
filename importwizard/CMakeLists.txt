@@ -24,6 +24,7 @@ sylpheed/sylpheedsettings.cpp
 sylpheed/sylpheedaddressbook.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv3/evolutionsettings.cpp
+evolutionv3/evolutioncalendar.cpp
 evolutionv3/evolutionaddressbook.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
