@@ -32,11 +32,11 @@ AbstractCalendar::~AbstractCalendar()
 
 void AbstractCalendar::addCalendarImportInfo( const QString& log )
 {
-  mImportWizard->importCalendarPage()->addFilterImportInfo( log );
+  mImportWizard->importCalendarPage()->addImportInfo( log );
 }
 
 void AbstractCalendar::addCalendarImportError( const QString& log )
 {
-  mImportWizard->importCalendarPage()->addFilterImportError( log );
+  mImportWizard->importCalendarPage()->addImportError( log );
 }
 

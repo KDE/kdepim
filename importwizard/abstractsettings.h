@@ -45,8 +45,8 @@ public:
   ~AbstractSettings();
 
 protected:
-  void addFilterImportInfo( const QString& log );
-  void addFilterImportError( const QString& log );
+  void addImportInfo( const QString& log );
+  void addImportError( const QString& log );
 
   QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 

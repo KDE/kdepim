@@ -279,12 +279,12 @@ ImportCalendarPage *ImportWizard::importCalendarPage() const
 
 void ImportWizard::addFinishInfo( const QString& log )
 {
-  mImportFinishPage->addFilterImportInfo( log );
+  mImportFinishPage->addImportInfo( log );
 }
 
 void ImportWizard::addFinishError( const QString& log )
 {
-  mImportFinishPage->addFilterImportError( log );
+  mImportFinishPage->addImportError( log );
 }
 
 #include "importwizard.moc"

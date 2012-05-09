@@ -31,12 +31,12 @@ ImportCalendarPage::~ImportCalendarPage()
   delete ui;
 }
 
-void ImportCalendarPage::addFilterImportInfo( const QString& log )
+void ImportCalendarPage::addImportInfo( const QString& log )
 {
   ui->logCalendar->addInfoLogEntry( log );
 }
 
-void ImportCalendarPage::addFilterImportError( const QString& log )
+void ImportCalendarPage::addImportError( const QString& log )
 {
   ui->logCalendar->addErrorLogEntry( log );
 }

@@ -31,12 +31,12 @@ ImportSettingPage::~ImportSettingPage()
   delete ui;
 }
 
-void ImportSettingPage::addFilterImportInfo( const QString& log )
+void ImportSettingPage::addImportInfo( const QString& log )
 {
   ui->logSettings->addInfoLogEntry( log );
 }
 
-void ImportSettingPage::addFilterImportError( const QString& log )
+void ImportSettingPage::addImportError( const QString& log )
 {
   ui->logSettings->addErrorLogEntry( log );
 }

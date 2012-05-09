@@ -31,8 +31,8 @@ class ImportCalendarPage : public QWidget
 public:
   explicit ImportCalendarPage(QWidget *parent = 0);
   ~ImportCalendarPage();
-  void addFilterImportInfo( const QString& log );
-  void addFilterImportError( const QString& log );
+  void addImportInfo( const QString& log );
+  void addImportError( const QString& log );
 Q_SIGNALS:
   void importAddressbookClicked();
 private:

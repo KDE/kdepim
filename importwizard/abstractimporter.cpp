@@ -79,10 +79,10 @@ bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::Filter
     MailCommon::FilterImporterExporter importer( mImportWizard );
     QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, type, filterPath );
     appendFilters( listFilter );
-    addFilterImportInfo( i18np( "1 filter was imported", "%1 filters were imported", listFilter.count() ) );
+    addImportInfo( i18np( "1 filter was imported", "%1 filters were imported", listFilter.count() ) );
     return true;
   } else {
-    addFilterImportError( i18n( "Filters file was not found" ) );
+    addImportError( i18n( "Filters file was not found" ) );
     return true;
   }
 }
@@ -93,12 +93,12 @@ void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*>& filt
     MailCommon::FilterManager::instance()->appendFilters(filters, false );
 }
 
-void AbstractImporter::addFilterImportInfo( const QString& log )
+void AbstractImporter::addImportInfo( const QString& log )
 {
-  mImportWizard->importFilterPage()->addFilterImportInfo( log );
+  mImportWizard->importFilterPage()->addImportInfo( log );
 }
 
-void AbstractImporter::addFilterImportError( const QString& log )
+void AbstractImporter::addImportError( const QString& log )
 {
-  mImportWizard->importFilterPage()->addFilterImportError( log );
+  mImportWizard->importFilterPage()->addImportError( log );
 }

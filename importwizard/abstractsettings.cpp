@@ -53,7 +53,7 @@ AbstractSettings::~AbstractSettings()
 KPIMIdentities::Identity* AbstractSettings::createIdentity()
 {
   KPIMIdentities::Identity* identity = &mManager->newFromScratch( QString() );
-  addFilterImportInfo(i18n("Setting up identity..."));
+  addImportInfo(i18n("Setting up identity..."));
   return identity;
 }
 
@@ -61,14 +61,14 @@ void AbstractSettings::storeIdentity(KPIMIdentities::Identity* identity)
 {
   mManager->setAsDefault( identity->uoid() );
   mManager->commit();
-  addFilterImportInfo(i18n("Identity set up."));
+  addImportInfo(i18n("Identity set up."));
 }
 
 
 MailTransport::Transport *AbstractSettings::createTransport()
 {
   MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
-  addFilterImportInfo(i18n("Setting up transport..."));
+  addImportInfo(i18n("Setting up transport..."));
   return mt;
 }
 
@@ -79,7 +79,7 @@ void AbstractSettings::storeTransport(MailTransport::Transport * mt, bool isDefa
   MailTransport::TransportManager::self()->addTransport( mt );
   if ( isDefault )
     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
-  addFilterImportInfo(i18n("Transport set up."));
+  addImportInfo(i18n("Transport set up."));
 }
 
 
@@ -116,7 +116,7 @@ QString AbstractSettings::createResource( const QString& resources, const QStrin
 {
   const AgentType type = AgentManager::self()->type( resources );
   if ( !type.isValid() ) {
-    addFilterImportError( i18n( "Resource type '%1' is not available.", resources ) );
+    addImportError( i18n( "Resource type '%1' is not available.", resources ) );
     return QString();
   }
 
@@ -126,22 +126,22 @@ QString AbstractSettings::createResource( const QString& resources, const QStrin
     Q_FOREACH ( const AgentInstance &instance, AgentManager::self()->instances() ) {
       kDebug() << instance.type().identifier() << (instance.type() == type);
       if ( instance.type() == type ) {
-        addFilterImportInfo( i18n( "Resource '%1' is already set up.", type.name() ) );
+        addImportInfo( i18n( "Resource '%1' is already set up.", type.name() ) );
         return QString();
       }
     }
   }
 
-  addFilterImportInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
+  addImportInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, this );
   if(job->exec()) {
     Akonadi::AgentInstance instance = job->instance();
 
     if ( !settings.isEmpty() ) {
-      addFilterImportInfo( i18n( "Configuring resource instance..." ) );
+      addImportInfo( i18n( "Configuring resource instance..." ) );
       QDBusInterface iface( "org.freedesktop.Akonadi.Resource." + instance.identifier(), "/Settings" );
       if ( !iface.isValid() ) {
-        addFilterImportError( i18n( "Unable to configure resource instance." ) );
+        addImportError( i18n( "Unable to configure resource instance." ) );
         return QString();
       }
 
@@ -155,37 +155,37 @@ QString AbstractSettings::createResource( const QString& resources, const QStrin
         QVariant arg = it.value();
         const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );
         if ( !arg.canConvert( targetType ) ) {
-          addFilterImportError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
+          addImportError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
           return QString();
         }
         arg.convert( targetType );
         QDBusReply<void> reply = iface.call( methodName, arg );
         if ( !reply.isValid() ) {
-          addFilterImportError( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
+          addImportError( i18n( "Could not set setting '%1': %2", it.key(), reply.error().message() ) );
           return QString();
         }
       }
       instance.reconfigure();
     }
 
-    addFilterImportInfo( i18n( "Resource setup completed." ) );
+    addImportInfo( i18n( "Resource setup completed." ) );
     return instance.identifier();
   } else {
     if ( job->error() ) {
-      addFilterImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
+      addImportError( i18n( "Failed to create resource instance: %1", job->errorText() ) );
     }
   }
   return QString();
 }
 
-void AbstractSettings::addFilterImportInfo( const QString& log )
+void AbstractSettings::addImportInfo( const QString& log )
 {
-  mImportWizard->importSettingPage()->addFilterImportInfo( log );
+  mImportWizard->importSettingPage()->addImportInfo( log );
 }
 
-void AbstractSettings::addFilterImportError( const QString& log )
+void AbstractSettings::addImportError( const QString& log )
 {
-  mImportWizard->importSettingPage()->addFilterImportError( log );
+  mImportWizard->importSettingPage()->addImportError( log );
 }
 
 Akonadi::Collection::Id AbstractSettings::adaptFolderId( const QString& folder)

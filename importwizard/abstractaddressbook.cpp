@@ -86,12 +86,12 @@ void AbstractAddressBook::slotStoreDone(KJob*job)
 
 void AbstractAddressBook::addAddressBookImportInfo( const QString& log )
 {
-  mImportWizard->importAddressBookPage()->addFilterImportInfo( log );
+  mImportWizard->importAddressBookPage()->addImportInfo( log );
 }
 
 void AbstractAddressBook::addAddressBookImportError( const QString& log )
 {
-  mImportWizard->importAddressBookPage()->addFilterImportError( log );
+  mImportWizard->importAddressBookPage()->addImportError( log );
 }
 
 void AbstractAddressBook::cleanUp()

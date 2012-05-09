@@ -72,8 +72,8 @@ public:
 protected:
   void appendFilters( const QList<MailCommon::MailFilter*>& filters );
   MailImporter::FilterInfo* initializeInfo();
-  void addFilterImportInfo( const QString& log );
-  void addFilterImportError( const QString& log );
+  void addImportInfo( const QString& log );
+  void addImportError( const QString& log );
   bool addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type );
 
 
