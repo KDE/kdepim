@@ -15,23 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EVOLUTIONCALENDAR_H
-#define EVOLUTIONCALENDAR_H
+#ifndef EVOLUTIONUTIL_H
+#define EVOLUTIONUTIL_H
+#include <QString>
+class QFile;
+class QDomDocument;
 
-#include "abstractcalendar.h"
+namespace EvolutionUtil {
+  bool loadInDomDocument( QFile *file, QDomDocument & doc );
+  bool loadInDomDocument( const QString &file, QDomDocument & doc );
+}
 
-class QDomElement;
-
-class ImportWizard;
-
-class EvolutionCalendar : public AbstractCalendar
-{
-public:
-  explicit EvolutionCalendar(const QString &file, ImportWizard *parent);
-  ~EvolutionCalendar();
-private:
-  void readCalendar(const QDomElement &calendar);
-  void extractCalendarInfo(const QString& info);
-};
-
-#endif // EVOLUTIONCALENDAR_H
+#endif // EVOLUTIONUTIL_H

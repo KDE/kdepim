@@ -16,6 +16,7 @@
 */
 
 #include "evolutionsettings.h"
+#include "evolutionutil.h"
 
 #include <kpimidentities/identity.h>
 
@@ -41,7 +42,7 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
     return;
   }
   QDomDocument doc;
-  if ( !loadInDomDocument( &file, doc ) )
+  if ( !EvolutionUtil::loadInDomDocument( &file, doc ) )
     return;
   QDomElement config = doc.documentElement();
 
@@ -74,33 +75,6 @@ EvolutionSettings::~EvolutionSettings()
 {
 }
 
-bool EvolutionSettings::loadInDomDocument( QFile *file, QDomDocument & doc )
-{
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
-    return false;
-  }
-  return true;
-}
-
-bool EvolutionSettings::loadInDomDocument( const QString &file, QDomDocument & doc )
-{
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
-    return false;
-  }
-  return true;
-}
-
-
 void EvolutionSettings::readSignatures(const QDomElement &account)
 {
   for ( QDomElement signatureConfig = account.firstChildElement(); !signatureConfig.isNull(); signatureConfig = signatureConfig.nextSiblingElement() ) {
@@ -115,7 +89,7 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
 {
   qDebug()<<" signature info "<<info;
   QDomDocument signature;
-  if ( !loadInDomDocument( info, signature ) )
+  if ( !EvolutionUtil::loadInDomDocument( info, signature ) )
     return;
 
   QDomElement domElement = signature.documentElement();
@@ -177,7 +151,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
   qDebug()<<" info "<<info;
   //Read QDomElement
   QDomDocument account;
-  if ( !loadInDomDocument( info, account ) )
+  if ( !EvolutionUtil::loadInDomDocument( info, account ) )
     return;
 
   QDomElement domElement = account.documentElement();
