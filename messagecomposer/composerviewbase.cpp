@@ -656,7 +656,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
 
   fillQueueJobHeaders( qjob, message, infoPart );
 
-  MessageCore::StringUtil::removePrivateHeaderFields( message );
+  MessageCore::StringUtil::removePrivateHeaderFields( message, false );
 
   QMapIterator<QByteArray, QString> customHeader(m_customHeader);
   while (customHeader.hasNext()) {

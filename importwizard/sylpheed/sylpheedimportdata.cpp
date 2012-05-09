@@ -104,6 +104,6 @@ AbstractImporter::TypeSupportedOptions SylpheedImportData::supportedOption()
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
-  options |=AbstractImporter::AddressBook;
+  options |=AbstractImporter::AddressBooks;
   return options;
 }

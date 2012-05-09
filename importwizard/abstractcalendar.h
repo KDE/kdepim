@@ -1,40 +1,38 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef ABSTRACTCALENDAR_H
+#define ABSTRACTCALENDAR_H
 
-#ifndef SELECTTYPEWIDGET_H
-#define SELECTTYPEWIDGET_H
+class ImportWizard;
+#include "abstractbase.h"
 
-#include <QWidget>
-#include "backupmailutil.h"
-namespace Ui {
-  class SelectTypeWidget;
-}
+#include <QString>
 
-class SelectTypeWidget : public QWidget
+class AbstractCalendar : public AbstractBase
 {
-  Q_OBJECT
-  
 public:
-  explicit SelectTypeWidget(QWidget *parent = 0);
-  ~SelectTypeWidget();
-  BackupMailUtil::BackupTypes backupTypesSelected() const;
+  explicit AbstractCalendar(ImportWizard *parent);
+  virtual ~AbstractCalendar();
+protected:
+  void addImportInfo( const QString& log );
+  void addImportError( const QString& log );
 private:
-  Ui::SelectTypeWidget *ui;
+  ImportWizard *mImportWizard;
 };
 
-#endif // SELECTTYPEWIDGET_H
+#endif // ABSTRACTCALENDAR_H

@@ -18,18 +18,23 @@
 #ifndef ARCHIVEJOB_H
 #define ARCHIVEJOB_H
 
+
 #include <mailcommon/jobscheduler.h>
 #include <Akonadi/Collection>
+
+class ArchiveMailInfo;
 
 class ArchiveJob : public MailCommon::ScheduledJob
 {
   Q_OBJECT
 public:
-  explicit ArchiveJob(const Akonadi::Collection &folder, bool immediate);
+  explicit ArchiveJob(ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
   virtual ~ArchiveJob();
 
   virtual void execute();
   virtual void kill();
+private:
+  ArchiveMailInfo *mInfo;
 };
 
 /// A scheduled "expire mails in this folder" task.
@@ -38,8 +43,8 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
   public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
-    ScheduledArchiveTask( const Akonadi::Collection &folder, bool immediate )
-      : MailCommon::ScheduledTask( folder, immediate )
+    ScheduledArchiveTask( ArchiveMailInfo * info, const Akonadi::Collection &folder, bool immediate )
+      : MailCommon::ScheduledTask( folder, immediate ), mInfo(info)
     {
     }
 
@@ -53,6 +58,8 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
     {
       return 2;
     }
+private:
+    ArchiveMailInfo *mInfo;
 };
 
 

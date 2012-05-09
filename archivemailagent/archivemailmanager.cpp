@@ -44,15 +44,13 @@ void ArchiveMailManager::load()
 {
   KSharedConfig::Ptr config = KGlobal::config();
   const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
-  qDebug()<<"collectionList "<<collectionList;
   const int numberOfCollection = collectionList.count();
   for(int i = 0 ; i < numberOfCollection; ++i) {
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
-      ScheduledArchiveTask *task = new ScheduledArchiveTask( Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
+      ScheduledArchiveTask *task = new ScheduledArchiveTask( info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
       mArchiveMailKernel->jobScheduler()->registerTask( task );
-
     } else {
       delete info;
     }

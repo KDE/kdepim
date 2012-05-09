@@ -30,12 +30,12 @@ ImportFilterPage::~ImportFilterPage()
   delete ui;
 }
 
-void ImportFilterPage::addFilterImportInfo( const QString& log )
+void ImportFilterPage::addImportInfo( const QString& log )
 {
   ui->logFilters->addInfoLogEntry( log );
 }
 
-void ImportFilterPage::addFilterImportError( const QString& log )
+void ImportFilterPage::addImportError( const QString& log )
 {
   ui->logFilters->addErrorLogEntry( log );
 }

@@ -18,18 +18,20 @@
 #include "backupdata.h"
 #include "messageviewer/kcursorsaver.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <Akonadi/AgentManager>
 
 #include <Mailtransport/TransportManager>
+
+#include <KMime/KMimeMessage>
 
 #include <KZip>
 #include <KLocale>
 #include <KTemporaryFile>
+#include <KStandardDirs>
 
 #include <QDebug>
 
-BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
+BackupData::BackupData(BackupMailUtil::BackupTypes typeSelected, const QString &filename)
   :AbstractData(filename,typeSelected)
 {
 }
@@ -43,17 +45,17 @@ void BackupData::startBackup()
   if(!openArchive(true))
     return;
 
-  if(mTypeSelected & Util::Identity)
+  if(mTypeSelected & BackupMailUtil::Identity)
     backupIdentity();
-  if(mTypeSelected & Util::MailTransport)
+  if(mTypeSelected & BackupMailUtil::MailTransport)
     backupTransports();
-  if(mTypeSelected & Util::Mails)
+  if(mTypeSelected & BackupMailUtil::Mails)
     backupMails();
-  if(mTypeSelected & Util::Resources)
+  if(mTypeSelected & BackupMailUtil::Resources)
     backupResources();
-  if(mTypeSelected & Util::Config)
+  if(mTypeSelected & BackupMailUtil::Config)
     backupConfig();
-  if(mTypeSelected & Util::AkonadiDb)
+  if(mTypeSelected & BackupMailUtil::AkonadiDb)
     backupAkonadiDb();
   closeArchive();
 }
@@ -70,7 +72,7 @@ void BackupData::backupTransports()
   mailtransportsConfig->copyTo( tmp.fileName(), transportConfig.data() );
 
   transportConfig->sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("transportrc"));
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::transportsPath() + QLatin1String("mailtransports"));
   if(fileAdded)
     Q_EMIT info(i18n("Transports backuped."));
   else
@@ -81,6 +83,31 @@ void BackupData::backupResources()
 {
   Q_EMIT info(i18n("Backup resources..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+  const Akonadi::AgentInstance::List list = manager->instances();
+  foreach( const Akonadi::AgentInstance &agent, list ) {
+    const QStringList capabilities( agent.type().capabilities() );
+    if(agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
+      if ( capabilities.contains( "Resource" ) &&
+            !capabilities.contains( "Virtual" ) &&
+            !capabilities.contains( "MailTransport" ) )
+      {
+        const QString identifier = agent.identifier();
+        if(identifier.contains(QLatin1String("pop3"))) {
+          //TODO
+        }
+        //TODO fix collection path.
+        const QString agentFileName = agent.identifier() + QLatin1String("rc");
+        const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+        const bool fileAdded  = mArchive->addLocalFile(configFileName, BackupMailUtil::resourcesPath() + agentFileName);
+        if(!fileAdded)
+          Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
+      }
+    }
+  }
+
   Q_EMIT info(i18n("Resources backuped."));
 }
 
@@ -95,18 +122,17 @@ void BackupData::backupIdentity()
 {
   Q_EMIT info(i18n("Backup identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  KSharedConfigPtr identity = KSharedConfig::openConfig( QLatin1String( "emailidentities" ) );
+
   KTemporaryFile tmp;
   tmp.open();
-  KConfig config( tmp.fileName() );
-  int i = 0;
-  KPIMIdentities::IdentityManager::ConstIterator end( mIdentityManager->end() );
-  for ( KPIMIdentities::IdentityManager::ConstIterator it = mIdentityManager->begin(); it != end; ++it ) {
-    KConfigGroup group(&config,QString::fromLatin1("Identity %1").arg(QString::number(i)));
-    (*it).writeConfig(group);
-    i++;
-  }
-  config.sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), QLatin1String("identityrc"));
+
+  KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+
+  identityConfig->copyTo( tmp.fileName(), identityConfig.data() );
+
+  identityConfig->sync();
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
   if(fileAdded)
     Q_EMIT info(i18n("Identity backuped."));
   else
@@ -129,17 +155,3 @@ void BackupData::backupAkonadiDb()
 
 }
 
-qint64 BackupData::writeFile(const char* data, qint64 len)
-{
-  if (len == 0)
-    return 0;
-
-  if (!mArchive->isOpen()) {
-    qDebug()<<" Open Archive before to write";
-    return 0;
-  }
-  if (mArchive->writeData(data, len)) {
-    return len;
-  }
-  return 0;
-}

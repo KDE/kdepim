@@ -39,3 +39,18 @@ Name[x-test]=xxArchive Mail finishedxx
 Name[zh_TW]=歸檔郵件已完成
 Action=Popup
 
+[Event/archivemailstarted]
+Name=Archive Mail finished
+Name[es]=Archivado de correo terminado
+Name[ia]=Action de archivar posta terminate
+Name[nb]=Arkivpost fullført
+Name[nl]=E-mail archiveren is gereed
+Name[pl]=Ukończono archiwizację poczty
+Name[pt]=O Arquivo de E-Mail Terminou
+Name[pt_BR]=O arquivamento de e-mails foi concluído
+Name[sv]=Arkivering av e-post klar
+Name[uk]=Архівування пошти завершено
+Name[x-test]=xxArchive Mail finishedxx
+Name[zh_TW]=歸檔郵件已完成
+Action=Popup
+

@@ -18,6 +18,7 @@
 #ifndef ABSTRACTSETTINGS_H
 #define ABSTRACTSETTINGS_H
 
+#include "abstractbase.h"
 #include <KSharedConfig>
 
 #include <Akonadi/Collection>
@@ -37,16 +38,15 @@ namespace MailTransport {
   class Transport;
 }
 
-class AbstractSettings : public QObject
+class AbstractSettings : public AbstractBase
 {
-  Q_OBJECT
 public:
   explicit AbstractSettings(ImportWizard *parent);
   ~AbstractSettings();
 
 protected:
-  void addFilterImportInfo( const QString& log );
-  void addFilterImportError( const QString& log );
+  void addImportInfo( const QString& log );
+  void addImportError( const QString& log );
 
   QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 

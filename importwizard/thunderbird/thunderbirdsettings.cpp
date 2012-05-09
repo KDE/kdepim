@@ -244,7 +244,7 @@ void ThunderbirdSettings::readAccount()
         settings.insert(QLatin1String("TrashCollection"),adaptFolderId(mHashConfig.value(trashFolderStr).toString()));
       }
 
-      const QString agentIdentifyName = createResource( "akonadi_imap_resource", name,settings );
+      const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
@@ -306,7 +306,7 @@ void ThunderbirdSettings::readAccount()
         settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
       }
 
-      const QString agentIdentifyName = createResource( "akonadi_pop3_resource", name, settings );
+      const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it

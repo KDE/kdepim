@@ -31,12 +31,12 @@ ImportAddressbookPage::~ImportAddressbookPage()
   delete ui;
 }
 
-void ImportAddressbookPage::addFilterImportInfo( const QString& log )
+void ImportAddressbookPage::addImportInfo( const QString& log )
 {
   ui->logAddressbook->addInfoLogEntry( log );
 }
 
-void ImportAddressbookPage::addFilterImportError( const QString& log )
+void ImportAddressbookPage::addImportError( const QString& log )
 {
   ui->logAddressbook->addErrorLogEntry( log );
 }

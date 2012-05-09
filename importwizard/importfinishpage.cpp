@@ -30,12 +30,12 @@ ImportFinishPage::~ImportFinishPage()
     delete ui;
 }
 
-void ImportFinishPage::addFilterImportInfo( const QString& log )
+void ImportFinishPage::addImportInfo( const QString& log )
 {
   ui->logFinish->addInfoLogEntry( log );
 }
 
-void ImportFinishPage::addFilterImportError( const QString& log )
+void ImportFinishPage::addImportError( const QString& log )
 {
   ui->logFinish->addErrorLogEntry( log );
 }

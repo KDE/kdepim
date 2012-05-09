@@ -43,7 +43,7 @@ SelectionTypeDialog::~SelectionTypeDialog()
 
 }
 
-Util::BackupTypes SelectionTypeDialog::backupTypesSelected() const
+BackupMailUtil::BackupTypes SelectionTypeDialog::backupTypesSelected() const
 {
   return mWidget->backupTypesSelected();
 }

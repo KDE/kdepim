@@ -19,11 +19,14 @@
 #define RESTOREDATA_H
 
 #include "abstractdata.h"
+#include <QStringList>
+
+class KArchiveDirectory;
 
 class RestoreData : public AbstractData
 {
 public:
-  explicit RestoreData(Util::BackupTypes typeSelected, const QString &filename);
+  explicit RestoreData(BackupMailUtil::BackupTypes typeSelected, const QString &filename);
   ~RestoreData();
   void startRestore();
 private:
@@ -33,6 +36,8 @@ private:
   void restoreConfig();
   void restoreIdentity();
   void restoreAkonadiDb();
+  QStringList mFileList;
+  const KArchiveDirectory* mArchiveDirectory;
 };
 
 #endif // RESTOREDATA_H

@@ -21,7 +21,6 @@
 
 #include <KDE/Akonadi/KMime/MessageStatus>
 #include <KDE/KLocale>
-
 using namespace MailCommon;
 
 FilterAction* FilterActionSetStatus::newAction()
@@ -45,12 +44,14 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( context.item().flags() );
 
+  Akonadi::MessageStatus oldStatus = status; 
   const Akonadi::MessageStatus newStatus = FilterActionStatus::stati[ index - 1 ];
-  if ( newStatus == Akonadi::MessageStatus::statusUnread() )
+  if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
     status.setRead( false );
+  }
   else
     status.set( newStatus );
-  if( newStatus!= newStatus ) {
+  if( oldStatus != status ) {
     context.item().setFlags( status.statusFlags() );
     context.setNeedsFlagStore();
   }

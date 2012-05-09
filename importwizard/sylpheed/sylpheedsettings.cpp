@@ -178,7 +178,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
     }
   }
 
-  const QString agentIdentifyName = createResource( "akonadi_pop3_resource", name, settings );
+  const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
   addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
 }
 
@@ -231,7 +231,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
   settings.insert( QLatin1String( "Password" ), password );
 
-  const QString agentIdentifyName = createResource( "akonadi_imap_resource", name,settings );
+  const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
   addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
 }
 

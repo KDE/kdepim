@@ -15,26 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "importcalendarpage.h"
+#include "ui_importcalendarpage.h"
 
-#ifndef SELECTTYPEWIDGET_H
-#define SELECTTYPEWIDGET_H
-
-#include <QWidget>
-#include "backupmailutil.h"
-namespace Ui {
-  class SelectTypeWidget;
+ImportCalendarPage::ImportCalendarPage(QWidget *parent) :
+  QWidget(parent),
+  ui(new Ui::ImportCalendarPage)
+{
+  ui->setupUi(this);
+  connect( ui->importCalendar, SIGNAL(clicked()), SIGNAL(importCalendarClicked()));
 }
 
-class SelectTypeWidget : public QWidget
+ImportCalendarPage::~ImportCalendarPage()
 {
-  Q_OBJECT
-  
-public:
-  explicit SelectTypeWidget(QWidget *parent = 0);
-  ~SelectTypeWidget();
-  BackupMailUtil::BackupTypes backupTypesSelected() const;
-private:
-  Ui::SelectTypeWidget *ui;
-};
+  delete ui;
+}
 
-#endif // SELECTTYPEWIDGET_H
+void ImportCalendarPage::addImportInfo( const QString& log )
+{
+  ui->logCalendar->addInfoLogEntry( log );
+}
+
+void ImportCalendarPage::addImportError( const QString& log )
+{
+  ui->logCalendar->addErrorLogEntry( log );
+}
+
+
+#include "importcalendarpage.moc"

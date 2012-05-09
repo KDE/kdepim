@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef BACKUPUTIL_H
+#define BACKUPUTIL_H
 #include <Qt>
-namespace Util {
+namespace BackupMailUtil {
   enum BackupType {
     None = 0,
     Identity = 1,
@@ -26,8 +26,25 @@ namespace Util {
     MailTransport = 4,
     Resources = 8,
     Config = 16,
-    AkonadiDb = 32
+    AkonadiDb = 32,
+    Nepomuk = 64 //TODO
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
+
+  static QString transportsPath()
+  {
+    return QLatin1String("transports/");
+  }
+
+  static QString resourcesPath()
+  {
+    return QLatin1String("resources/");
+  }
+
+  static QString identitiesPath()
+  {
+    return QLatin1String("identities/");
+  }
+
 }
 #endif // UTIL_H

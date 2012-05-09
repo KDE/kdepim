@@ -23,7 +23,7 @@
 class BackupData : public AbstractData
 {
 public:
-  explicit BackupData(Util::BackupTypes typeSelected,const QString& filename);
+  explicit BackupData(BackupMailUtil::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
   void startBackup();
 
@@ -35,7 +35,6 @@ private:
   void backupIdentity();
   void backupAkonadiDb();
 
-  qint64 writeFile(const char* data, qint64 len);
 };
 
 #endif // BACKUPDATA_H
