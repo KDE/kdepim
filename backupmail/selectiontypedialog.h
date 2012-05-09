@@ -29,7 +29,7 @@ class SelectionTypeDialog : public KDialog
 public:
   explicit SelectionTypeDialog(QWidget * parent);
   ~SelectionTypeDialog();
-  Util::BackupTypes backupTypesSelected() const;
+  BackupMailUtil::BackupTypes backupTypesSelected() const;
 
 private:
   SelectTypeWidget *mWidget;

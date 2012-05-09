@@ -30,7 +30,7 @@ class AbstractData : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractData(const QString& filename, Util::BackupTypes typeSelected);
+  explicit AbstractData(const QString& filename, BackupMailUtil::BackupTypes typeSelected);
   ~AbstractData();
 Q_SIGNALS:
   void info(const QString&);
@@ -40,7 +40,7 @@ protected:
   bool openArchive(bool write);
 
 protected:
-  Util::BackupTypes mTypeSelected;
+  BackupMailUtil::BackupTypes mTypeSelected;
   KZip *mArchive;
   KPIMIdentities::IdentityManager *mIdentityManager;
 };

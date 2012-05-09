@@ -26,7 +26,7 @@ class KArchiveDirectory;
 class RestoreData : public AbstractData
 {
 public:
-  explicit RestoreData(Util::BackupTypes typeSelected, const QString &filename);
+  explicit RestoreData(BackupMailUtil::BackupTypes typeSelected, const QString &filename);
   ~RestoreData();
   void startRestore();
 private:

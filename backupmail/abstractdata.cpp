@@ -21,7 +21,7 @@
 #include <KZip>
 #include <KLocale>
 
-AbstractData::AbstractData(const QString &filename,Util::BackupTypes typeSelected)
+AbstractData::AbstractData(const QString &filename,BackupMailUtil::BackupTypes typeSelected)
   : mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" ))

@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef BACKUPUTIL_H
+#define BACKUPUTIL_H
 #include <Qt>
-namespace Util {
+namespace BackupMailUtil {
   enum BackupType {
     None = 0,
     Identity = 1,
@@ -30,5 +30,6 @@ namespace Util {
     Nepomuk = 64 //TODO
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
+
 }
 #endif // UTIL_H

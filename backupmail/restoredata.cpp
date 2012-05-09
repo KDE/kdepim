@@ -22,7 +22,7 @@
 #include <KZip>
 #include <KLocale>
 
-RestoreData::RestoreData(Util::BackupTypes typeSelected,const QString& filename)
+RestoreData::RestoreData(BackupMailUtil::BackupTypes typeSelected,const QString& filename)
   :AbstractData(filename,typeSelected), mArchiveDirectory(0)
 {
 }
@@ -38,17 +38,17 @@ void RestoreData::startRestore()
   mArchiveDirectory = mArchive->directory();
   mFileList = mArchiveDirectory->entries();
 
-  if(mTypeSelected & Util::Identity)
+  if(mTypeSelected & BackupMailUtil::Identity)
     restoreIdentity();
-  if(mTypeSelected & Util::MailTransport)
+  if(mTypeSelected & BackupMailUtil::MailTransport)
     restoreTransports();
-  if(mTypeSelected & Util::Mails)
+  if(mTypeSelected & BackupMailUtil::Mails)
     restoreMails();
-  if(mTypeSelected & Util::Resources)
+  if(mTypeSelected & BackupMailUtil::Resources)
     restoreResources();
-  if(mTypeSelected & Util::Config)
+  if(mTypeSelected & BackupMailUtil::Config)
     restoreConfig();
-  if(mTypeSelected & Util::AkonadiDb)
+  if(mTypeSelected & BackupMailUtil::AkonadiDb)
     restoreAkonadiDb();
   closeArchive();
 }

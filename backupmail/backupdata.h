@@ -23,7 +23,7 @@
 class BackupData : public AbstractData
 {
 public:
-  explicit BackupData(Util::BackupTypes typeSelected,const QString& filename);
+  explicit BackupData(BackupMailUtil::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
   void startBackup();
 

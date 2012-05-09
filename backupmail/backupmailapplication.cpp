@@ -82,7 +82,7 @@ void BackupMailApplication::slotBackupData()
     return;
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
-    Util::BackupTypes typeSelected = dialog->backupTypesSelected();
+    BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete mBackupData;
     mBackupData = new BackupData(typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
@@ -113,7 +113,7 @@ void BackupMailApplication::slotRestoreData()
 
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
-    Util::BackupTypes typeSelected = dialog->backupTypesSelected();
+    BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete mRestoreData;
     mRestoreData = new RestoreData(typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));

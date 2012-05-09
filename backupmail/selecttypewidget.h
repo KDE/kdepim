@@ -32,7 +32,7 @@ class SelectTypeWidget : public QWidget
 public:
   explicit SelectTypeWidget(QWidget *parent = 0);
   ~SelectTypeWidget();
-  Util::BackupTypes backupTypesSelected() const;
+  BackupMailUtil::BackupTypes backupTypesSelected() const;
 private:
   Ui::SelectTypeWidget *ui;
 };

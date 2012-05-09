@@ -30,32 +30,32 @@ SelectTypeWidget::~SelectTypeWidget()
   delete ui;
 }
 
-Util::BackupTypes SelectTypeWidget::backupTypesSelected() const
+BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected() const
 {
-  Util::BackupTypes types = Util::None;
+  BackupMailUtil::BackupTypes types = BackupMailUtil::None;
   if(ui->resources->isChecked())
   {
-    types|= Util::Resources;
+    types|= BackupMailUtil::Resources;
   }
   if(ui->mailtransport->isChecked())
   {
-    types|= Util::MailTransport;
+    types|= BackupMailUtil::MailTransport;
   }
   if(ui->config->isChecked())
   {
-    types|= Util::Resources;
+    types|= BackupMailUtil::Resources;
   }
   if(ui->identity->isChecked())
   {
-    types|= Util::Identity;
+    types|= BackupMailUtil::Identity;
   }
   if(ui->mails->isChecked())
   {
-    types|= Util::Mails;
+    types|= BackupMailUtil::Mails;
   }
   if(ui->akonadi->isChecked())
   {
-    types|= Util::AkonadiDb;
+    types|= BackupMailUtil::AkonadiDb;
   }
   return types;
 }

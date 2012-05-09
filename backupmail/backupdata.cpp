@@ -31,7 +31,7 @@
 
 #include <QDebug>
 
-BackupData::BackupData(Util::BackupTypes typeSelected, const QString &filename)
+BackupData::BackupData(BackupMailUtil::BackupTypes typeSelected, const QString &filename)
   :AbstractData(filename,typeSelected)
 {
 }
@@ -45,17 +45,17 @@ void BackupData::startBackup()
   if(!openArchive(true))
     return;
 
-  if(mTypeSelected & Util::Identity)
+  if(mTypeSelected & BackupMailUtil::Identity)
     backupIdentity();
-  if(mTypeSelected & Util::MailTransport)
+  if(mTypeSelected & BackupMailUtil::MailTransport)
     backupTransports();
-  if(mTypeSelected & Util::Mails)
+  if(mTypeSelected & BackupMailUtil::Mails)
     backupMails();
-  if(mTypeSelected & Util::Resources)
+  if(mTypeSelected & BackupMailUtil::Resources)
     backupResources();
-  if(mTypeSelected & Util::Config)
+  if(mTypeSelected & BackupMailUtil::Config)
     backupConfig();
-  if(mTypeSelected & Util::AkonadiDb)
+  if(mTypeSelected & BackupMailUtil::AkonadiDb)
     backupAkonadiDb();
   closeArchive();
 }
