@@ -97,21 +97,41 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
     for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
       const QString tag = e.tagName();
       if(tag == QLatin1String("source")) {
-        QString name; //FIXME
+        QString name;
         QMap<QString, QVariant> settings;
         if(e.hasAttribute(QLatin1String("uid"))) {
-
-        } else if(e.hasAttribute(QLatin1String("name"))) {
-          settings.insert(QLatin1String("DisplayName"), e.attribute(QLatin1String("name")));
-        } else if(e.hasAttribute(QLatin1String("relative_uri"))) {
+        }
+        if(e.hasAttribute(QLatin1String("name"))) {
+          name = e.attribute(QLatin1String("name"));
+          settings.insert(QLatin1String("DisplayName"), name);
+        }
+        if(e.hasAttribute(QLatin1String("relative_uri"))) {
           const QString path = mCalendarPath + e.attribute(QLatin1String("relative_uri")) + QLatin1String("/calendar.ics");
           settings.insert(QLatin1String("Path"), path);
-        } else if(e.hasAttribute(QLatin1String("color_spec"))) {
-          //TODO
-        } else {
-          qDebug()<<" tag unknown :"<<tag;
         }
-        //TODO read properties
+        if(e.hasAttribute(QLatin1String("color_spec"))) {
+          //TODO
+        }
+        QDomElement propertiesElement = e.firstChildElement();
+        if(!propertiesElement.isNull()) {
+          for ( QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement() ) {
+            const QString propertyTag = property.tagName();
+            if(propertyTag == QLatin1String("property")) {
+              if(property.hasAttribute(QLatin1String("name"))) {
+                const QString propertyName = property.attribute(QLatin1String("name"));
+                if(propertyName == QLatin1String("custom-file-readonly")) {
+                  if(property.hasAttribute(QLatin1String("value"))) {
+                    if(property.attribute(QLatin1String("value")) == QLatin1String("1")) {
+                      settings.insert(QLatin1String("ReadOnly"), true);
+                    }
+                  }
+                }
+              }
+            } else {
+              qDebug()<<" property unknown :"<<propertyTag;
+            }
+          }
+        }
         AbstractBase::createResource(QLatin1String("akonadi_ical_resource"),name,settings);
       } else {
         qDebug()<<" tag unknown :"<<tag;
