@@ -18,11 +18,16 @@
 #include "backupdata.h"
 #include "messageviewer/kcursorsaver.h"
 
+#include <Akonadi/AgentManager>
+
 #include <Mailtransport/TransportManager>
+
+#include <KMime/KMimeMessage>
 
 #include <KZip>
 #include <KLocale>
 #include <KTemporaryFile>
+#include <KStandardDirs>
 
 #include <QDebug>
 
@@ -78,6 +83,24 @@ void BackupData::backupResources()
 {
   Q_EMIT info(i18n("Backup resources..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+  const Akonadi::AgentInstance::List list = manager->instances();
+  foreach( const Akonadi::AgentInstance &agent, list ) {
+    const QStringList capabilities( agent.type().capabilities() );
+    if(agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
+      if ( capabilities.contains( "Resource" ) &&
+            !capabilities.contains( "Virtual" ) &&
+            !capabilities.contains( "MailTransport" ) )
+      {
+
+        const QString agentFileName = agent.identifier() + QLatin1String("rc");
+        const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+        qDebug()<<" configFileName "<<configFileName;
+      }
+    }
+  }
+
   Q_EMIT info(i18n("Resources backuped."));
 }
 
