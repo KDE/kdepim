@@ -53,7 +53,7 @@ EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *paren
         if ( attr == QLatin1String( "sources" ) ) {
           readCalendar(e);
         } else {
-        qDebug()<<" attr unknown "<<attr;
+          qDebug()<<" attr unknown "<<attr;
         }
       }
     }
@@ -136,7 +136,6 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
       } else {
         qDebug()<<" tag unknown :"<<tag;
       }
-      //TODO use AbstractBase::createResource;
     }
   } else {
     qDebug()<<" base_uri unknown"<<base_uri;
