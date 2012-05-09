@@ -86,10 +86,20 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
     kDebug() << "Account not found";
     return;
   }
+  //TODO <group uid="1326983249.24740.3@kspread" name="Sur cet ordinateur" base_uri="local:" readonly="no">
   for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
-    qDebug()<<" EvolutionCalendar::extractCalendarInfo tag :"<<tag;
+    if(tag == QLatin1String("uid")) {
 
+    } else if(tag == QLatin1String("name")) {
+
+    } else if(tag == QLatin1String("relative_uri")) {
+
+    } else if(tag == QLatin1String("color_spec")) {
+
+    } else {
+      qDebug()<<" tag unknown :"<<tag;
+    }
     //TODO use AbstractBase::createResource;
   }
 }
