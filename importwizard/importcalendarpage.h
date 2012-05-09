@@ -34,7 +34,7 @@ public:
   void addImportInfo( const QString& log );
   void addImportError( const QString& log );
 Q_SIGNALS:
-  void importAddressbookClicked();
+  void importCalendarClicked();
 private:
   Ui::ImportCalendarPage *ui;
 };

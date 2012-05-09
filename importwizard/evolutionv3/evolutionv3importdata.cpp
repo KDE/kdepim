@@ -100,5 +100,6 @@ AbstractImporter::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::Calendars;
   return options;
 }
