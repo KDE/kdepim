@@ -1115,6 +1115,7 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( context.item().flags() );
+  Akonadi::MessageStatus oldStatus = status; 
 
   const Akonadi::MessageStatus newStatus = stati[ index - 1 ];
   if ( newStatus == Akonadi::MessageStatus::statusUnread() )
@@ -1122,7 +1123,7 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   else
     status.set( newStatus );
 
-  if( newStatus!= newStatus ) {
+  if( oldStatus!= status ) {
     context.item().setFlags( status.statusFlags() );
     context.setNeedsFlagStore();
   }
