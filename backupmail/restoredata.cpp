@@ -21,6 +21,8 @@
 
 #include <KZip>
 #include <KLocale>
+#include <KTemporaryFile>
+#include <KSharedConfig>
 
 RestoreData::RestoreData(BackupMailUtil::BackupTypes typeSelected,const QString& filename)
   :AbstractData(filename,typeSelected), mArchiveDirectory(0)
@@ -61,13 +63,20 @@ void RestoreData::restoreTransports()
   }
   Q_EMIT info(i18n("Restore transports..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const KArchiveEntry* transport = mArchiveDirectory->entry(QLatin1String("mailtransports"));
+  const KArchiveEntry* transport = mArchiveDirectory->entry(BackupMailUtil::transportsPath()+QLatin1String("mailtransports"));
   if(transport->isFile()) {
     const KArchiveFile* fileTransport = static_cast<const KArchiveFile*>(transport);
-    //fileTransport->copyTo();
+
+    KTemporaryFile tmp;
+    tmp.open();
+
+    fileTransport->copyTo(tmp.fileName());
+    KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+    //TODO modify it.
+    Q_EMIT info(i18n("Transports restored."));
+  } else {
+    Q_EMIT error(i18n("Failed to restore transports file."));
   }
-  //TODO
-  Q_EMIT info(i18n("Transports restored."));
 }
 
 void RestoreData::restoreResources()
@@ -93,9 +102,21 @@ void RestoreData::restoreIdentity()
   }
   Q_EMIT info(i18n("Restore identities..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const KArchiveEntry* transport = mArchiveDirectory->entry(QLatin1String("emailidentities"));
-  //TODO
-  Q_EMIT info(i18n("Identities restored."));
+  const KArchiveEntry* identity = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
+  if(identity->isFile()) {
+    const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
+
+    KTemporaryFile tmp;
+    tmp.open();
+
+    fileIdentity->copyTo(tmp.fileName());
+    KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+
+    //TODO
+    Q_EMIT info(i18n("Identities restored."));
+  } else {
+    Q_EMIT error(i18n("Failed to restore identity file."));
+  }
 }
 
 void RestoreData::restoreAkonadiDb()
