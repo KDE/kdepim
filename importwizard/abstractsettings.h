@@ -62,6 +62,7 @@ protected:
 
   void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
   void addKmailConfig( const QString& groupName, const QString& key, bool value);
+  void addKmailConfig( const QString& groupName, const QString& key, int value);
 
   void addKNodeConfig(const QString& groupName, const QString& key, bool value);
   void addAkregatorConfig(const QString& groupName, const QString& key, bool value);

@@ -80,6 +80,10 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   if(!attachStr.isEmpty()) {
     addKmailConfig(QLatin1String("Composer"), QLatin1String("attachment-keywords"), attachStr);
   }
+
+  const int lineWrap = group.readEntry("linewrap_length", 80);
+  addKmailConfig(QLatin1String("Composer"), QLatin1String("break-at"), lineWrap);
+  addKmailConfig(QLatin1String("Composer"), QLatin1String("word-wrap"), true);
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
