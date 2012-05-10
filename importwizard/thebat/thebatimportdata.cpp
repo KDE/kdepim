@@ -40,9 +40,11 @@ TheBatImportData::~TheBatImportData()
 
 bool TheBatImportData::foundMailer() const
 {
+#ifdef Q_OS_WIN
   QDir directory( mPath );
   if ( directory.exists() )
     return true;
+#endif
   return false;
 }
 
