@@ -694,6 +694,9 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeI
   message->removeHeader( "X-KMail-Templates" );
   message->removeHeader( "X-KMail-Drafts" );
   message->removeHeader( "X-KMail-Tag" );
+  message->removeHeader( "X-KMail-UnExpanded-To" );
+  message->removeHeader( "X-KMail-UnExpanded-CC" );
+  message->removeHeader( "X-KMail-UnExpanded-BCC" );
 
   if(removeIdentityTag)
     message->removeHeader( "X-KMail-Identity" );
