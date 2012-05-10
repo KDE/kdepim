@@ -73,7 +73,13 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
     const int autosaveInterval = group.readEntry("autosave_interval",5);
     addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), autosaveInterval);
   }
+  const bool checkAttach = (group.readEntry("check_attach", 0) == 1 );
+  addKmailConfig(QLatin1String("Composer"), QLatin1String("showForgottenAttachmentWarning"), checkAttach);
 
+  const QString attachStr = group.readEntry("check_attach_str");
+  if(!attachStr.isEmpty()) {
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("attachment-keywords"), attachStr);
+  }
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
