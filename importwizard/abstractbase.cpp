@@ -135,3 +135,5 @@ QString AbstractBase::createResource( const QString& resources, const QString& n
   }
   return QString();
 }
+
+#include "abstractbase.moc"

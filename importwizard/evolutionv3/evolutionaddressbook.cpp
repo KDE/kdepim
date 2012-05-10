@@ -33,3 +33,5 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
 }
 
   
+
+#include "evolutionaddressbook.moc"

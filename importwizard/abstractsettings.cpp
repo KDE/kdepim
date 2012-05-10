@@ -160,6 +160,3 @@ void AbstractSettings::addAkregatorConfig(const QString& groupName, const QStrin
 {
   //TODO
 }
-
-
-#include "abstractsettings.moc"
