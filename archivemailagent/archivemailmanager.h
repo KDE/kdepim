@@ -22,6 +22,10 @@
 
 class ArchiveMailKernel;
 
+namespace Akonadi {
+  class Collection;
+}
+
 class ArchiveMailManager : public QObject
 {
   Q_OBJECT
@@ -29,6 +33,8 @@ public:
   explicit ArchiveMailManager(QObject *parent = 0);
   ~ArchiveMailManager();
   void load();
+  void removeCollection(const Akonadi::Collection& collection);
+
 private:
   ArchiveMailKernel *mArchiveMailKernel;
 };
