@@ -46,5 +46,20 @@ namespace BackupMailUtil {
     return QLatin1String("identities/");
   }
 
+  static QString mailsPath()
+  {
+    return QLatin1String("mails/");
+  }
+
+  static QString configsPath()
+  {
+    return QLatin1String("configs/");
+  }
+
+  static QString akonadiPath()
+  {
+    return QLatin1String("akonadi/");
+  }
+
 }
 #endif // UTIL_H

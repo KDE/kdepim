@@ -33,6 +33,7 @@
 #include "../mailcommon_export.h"
 
 #include <KSharedConfig>
+#include <KUrl>
 
 #include <QList>
 #include <QStringList>
@@ -77,7 +78,7 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      * is asked from the user. The list to export is also
      * presented for confirmation/selection.
      */
-    void exportFilters( const QList<MailFilter*> &filters );
+    void exportFilters(const QList<MailFilter*> &filters , const KUrl &fileName = KUrl(), bool saveAll = false);
 
     /**
      * Imports filters. Ask the user where to import them from
