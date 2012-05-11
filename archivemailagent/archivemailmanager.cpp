@@ -63,8 +63,10 @@ void ArchiveMailManager::load()
 void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
 {
   KSharedConfig::Ptr config = KGlobal::config();
-  if(config->hasGroup(QString::fromLatin1("ArchiveMailCollection %1").arg(collection.id()))) {
-    //TODO remove it from config
+  const QString groupname = QString::fromLatin1("ArchiveMailCollection %1").arg(collection.id());
+  if(config->hasGroup(groupname)) {
+    KConfigGroup group = config->group(groupname);
+    group.deleteGroup();
     //TODO stop task
   }
 }

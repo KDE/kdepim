@@ -37,6 +37,9 @@ public:
     ArchiveMonths,
     ArchiveMaxUnits
   };
+
+  KUrl realUrl() const;
+
   bool isEmpty() const;
 
   Akonadi::Collection::Id saveCollectionId() const;
