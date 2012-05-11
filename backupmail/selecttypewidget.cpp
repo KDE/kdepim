@@ -43,7 +43,7 @@ BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected() const
   }
   if(ui->config->isChecked())
   {
-    types|= BackupMailUtil::Resources;
+    types|= BackupMailUtil::Config;
   }
   if(ui->identity->isChecked())
   {

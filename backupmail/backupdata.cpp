@@ -17,8 +17,12 @@
 
 #include "backupdata.h"
 #include "messageviewer/kcursorsaver.h"
+#include "mailcommon/mailutil.h"
+#include "mailcommon/filter/filtermanager.h"
+#include "mailcommon/filter/filterimporterexporter.h"
 
 #include <Akonadi/AgentManager>
+#include <Akonadi/Collection>
 
 #include <Mailtransport/TransportManager>
 
@@ -62,26 +66,24 @@ void BackupData::startBackup()
 
 void BackupData::backupTransports()
 {
-  Q_EMIT info(i18n("Backup transports..."));
+  Q_EMIT info(i18n("Backing up transports..."));
   KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( QLatin1String( "mailtransports" ) );
 
   KTemporaryFile tmp;
   tmp.open();
-  KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(tmp.fileName());
+  KConfig *config = mailtransportsConfig->copyTo( tmp.fileName() );
 
-  mailtransportsConfig->copyTo( tmp.fileName(), transportConfig.data() );
-
-  transportConfig->sync();
+  config->sync();
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::transportsPath() + QLatin1String("mailtransports"));
   if(fileAdded)
-    Q_EMIT info(i18n("Transports backuped."));
+    Q_EMIT info(i18n("Transports backup done."));
   else
     Q_EMIT error(i18n("Transport file cannot be added to backup file."));
 }
 
 void BackupData::backupResources()
 {
-  Q_EMIT info(i18n("Backup resources..."));
+  Q_EMIT info(i18n("Backing up resources..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
   Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
@@ -93,65 +95,102 @@ void BackupData::backupResources()
             !capabilities.contains( "Virtual" ) &&
             !capabilities.contains( "MailTransport" ) )
       {
-        const QString identifier = agent.identifier();
-        if(identifier.contains(QLatin1String("pop3"))) {
-          //TODO
-        }
-        //TODO fix collection path.
         const QString agentFileName = agent.identifier() + QLatin1String("rc");
         const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
-        const bool fileAdded  = mArchive->addLocalFile(configFileName, BackupMailUtil::resourcesPath() + agentFileName);
+        KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+        KTemporaryFile tmp;
+        tmp.open();
+        KConfig * config = resourceConfig->copyTo( tmp.fileName() );
+
+        const QString identifier = agent.identifier();
+        if(identifier.contains(QLatin1String("pop3"))) {
+          const QString targetCollection = QLatin1String("targetCollection");
+          KConfigGroup group = config->group("General");
+          if(group.hasGroup(targetCollection)) {
+             group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+          }
+        } else if(identifier.contains(QLatin1String("imap"))) {
+          const QString trash = QLatin1String("TrashCollection");
+          KConfigGroup group = config->group("cache");
+          if(group.hasGroup(trash)) {
+            group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
+          }
+        }
+        config->sync();
+        const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::resourcesPath() + agentFileName);
         if(!fileAdded)
           Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
       }
     }
   }
 
-  Q_EMIT info(i18n("Resources backuped."));
+  Q_EMIT info(i18n("Resources backup done."));
 }
 
 void BackupData::backupConfig()
 {
-  Q_EMIT info(i18n("Backup config..."));
+  Q_EMIT info(i18n("Backing up config..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Q_EMIT info(i18n("Config backuped."));
+  QList<MailCommon::MailFilter*> lstFilter = MailCommon::FilterManager::instance()->filters();
+  KTemporaryFile tmp;
+  tmp.open();
+  KUrl url(tmp.fileName());
+  MailCommon::FilterImporterExporter exportFilters;
+  exportFilters.exportFilters(lstFilter,url, true);
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
+  if(!fileAdded)
+    Q_EMIT error(i18n("Filters cannot be exported."));
+  Q_EMIT info(i18n("Config backup done."));
 }
 
 void BackupData::backupIdentity()
 {
-  Q_EMIT info(i18n("Backup identity..."));
+  Q_EMIT info(i18n("Backing up identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   KSharedConfigPtr identity = KSharedConfig::openConfig( QLatin1String( "emailidentities" ) );
 
   KTemporaryFile tmp;
   tmp.open();
 
-  KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
-
-  identityConfig->copyTo( tmp.fileName(), identityConfig.data() );
+  KConfig *identityConfig = identity->copyTo( tmp.fileName() );
+  const QStringList accountList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
+  Q_FOREACH(const QString& account, accountList) {
+    KConfigGroup group = identityConfig->group(account);
+    const QString fcc =QLatin1String("Fcc");
+    if(group.hasKey(fcc)) {
+      group.writeEntry(fcc,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(fcc).toLongLong())));
+    }
+    const QString draft = QLatin1String("Drafts");
+    if(group.hasKey(draft)) {
+      group.writeEntry(draft,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(draft).toLongLong())));
+    }
+    const QString templates = QLatin1String("Templates");
+    if(group.hasKey(templates)) {
+      group.writeEntry(templates,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(templates).toLongLong())));
+    }
+  }
 
   identityConfig->sync();
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
   if(fileAdded)
-    Q_EMIT info(i18n("Identity backuped."));
+    Q_EMIT info(i18n("Identity backup done."));
   else
     Q_EMIT error(i18n("Identity file cannot be added to backup file."));
 }
 
 void BackupData::backupMails()
 {
-  Q_EMIT info(i18n("Backup Mails..."));
+  Q_EMIT info(i18n("Backing up Mails..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Q_EMIT info(i18n("Mails backuped."));
+  Q_EMIT info(i18n("Mails backup done."));
 
 }
 
 void BackupData::backupAkonadiDb()
 {
-  Q_EMIT info(i18n("Backup Akonadi Database..."));
+  Q_EMIT info(i18n("Backing up Akonadi Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Q_EMIT info(i18n("Akonadi Database backuped."));
-
+  Q_EMIT info(i18n("Akonadi Database backup done."));
 }
 

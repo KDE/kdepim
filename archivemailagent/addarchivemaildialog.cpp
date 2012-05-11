@@ -82,6 +82,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
   mainLayout->addWidget( pathLabel, row, 0 );
   mPath = new KUrlRequester(mainWidget);
+  connect(mPath,SIGNAL(textChanged(QString)),this,SLOT(slotUpdateOkButton()));
   mPath->setMode(KFile::Directory);
   mainLayout->addWidget(mPath);
   row++;
@@ -131,7 +132,7 @@ void AddArchiveMailDialog::load(ArchiveMailInfo* info)
   void setLastDateSaved( const QDate& date );
   QDate lastDateSaved() const;
 #endif
-  updateOkButton();
+  slotUpdateOkButton();
 }
 
 ArchiveMailInfo* AddArchiveMailDialog::info()
@@ -148,7 +149,7 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
   return mInfo;
 }
 
-void AddArchiveMailDialog::updateOkButton()
+void AddArchiveMailDialog::slotUpdateOkButton()
 {
   bool valid = !mPath->url().isEmpty() && mFolderRequester->collection().isValid();
   enableButtonOk(valid);
@@ -157,7 +158,7 @@ void AddArchiveMailDialog::updateOkButton()
 void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collection)
 {
   Q_UNUSED(collection);
-  updateOkButton();
+  slotUpdateOkButton();
 }
 
 void AddArchiveMailDialog::setArchiveType(MailCommon::BackupJob::ArchiveType type)

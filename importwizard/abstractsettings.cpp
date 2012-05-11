@@ -143,6 +143,14 @@ void AbstractSettings::addKmailConfig( const QString& groupName, const QString& 
   group.sync();
 }
 
+void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, int value)
+{
+  KConfigGroup group = mKmailConfig->group(groupName);
+  group.writeEntry(key,value);
+  group.sync();
+}
+
+
 void AbstractSettings::addKNodeConfig(const QString& groupName, const QString& key, bool value)
 {
   //TODO
@@ -152,6 +160,3 @@ void AbstractSettings::addAkregatorConfig(const QString& groupName, const QStrin
 {
   //TODO
 }
-
-
-#include "abstractsettings.moc"

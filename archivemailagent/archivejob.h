@@ -33,6 +33,8 @@ public:
 
   virtual void execute();
   virtual void kill();
+protected Q_SLOT:
+  void slotBackupDone();
 private:
   ArchiveMailInfo *mInfo;
 };

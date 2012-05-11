@@ -365,24 +365,33 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   return QList<MailFilter*>();
 }
 
-void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
+void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl&fileName, bool saveAll )
 {
-  const KUrl saveUrl = KFileDialog::getSaveUrl(
-    QDir::homePath(), QString(), d->mParent, i18n( "Export Filters" ) );
+  KUrl saveUrl;
+  if(fileName.isEmpty()) {
+    saveUrl = KFileDialog::getSaveUrl(
+          QDir::homePath(), QString(), d->mParent, i18n( "Export Filters" ) );
 
-  if ( saveUrl.isEmpty() ||
-       !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) ) {
-    return;
+    if ( saveUrl.isEmpty() ||
+         !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) ) {
+      return;
+    }
+  } else {
+    saveUrl= fileName;
   }
 
   KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
-  MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
-  dlg->setFilters( filters );
-  if ( dlg->exec() == QDialog::Accepted && dlg ) {
-    QList<MailFilter*> lst = dlg->selectedFilters();
-    writeFiltersToConfig( lst, config, true );
-    qDeleteAll(lst);
-  } 
+  if(saveAll) {
+    writeFiltersToConfig( filters, config, true );
+  } else {
+    MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
+    dlg->setFilters( filters );
+    if ( dlg->exec() == QDialog::Accepted && dlg ) {
+      QList<MailFilter*> lst = dlg->selectedFilters();
+      writeFiltersToConfig( lst, config, true );
+      qDeleteAll(lst);
+    }
+  }
 }
 
 #include "filterimporterexporter_p.moc"

@@ -53,8 +53,7 @@ ArchiveMailAgent::~ArchiveMailAgent()
 
 void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collection)
 {
-  const Akonadi::Collection::Id id = collection.id();
-  //TODO remove it from config
+  mArchiveManager->removeCollection(collection);
 }
 
 void ArchiveMailAgent::showConfigureDialog()

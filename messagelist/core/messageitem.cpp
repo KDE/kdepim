@@ -375,7 +375,11 @@ void MessageItem::invalidateAnnotationCache()
 QColor MessageItem::textColor() const
 {
   Q_D( const MessageItem );
-  QColor clr;
+  const Tag *bestTag = d->bestTag();
+  if ( bestTag != 0 ) {
+    return bestTag->textColor();
+  }
+  QColor clr; 
   Akonadi::MessageStatus messageStatus = status();
   if ( !messageStatus.isRead() ) {
     clr = d->mColorUnreadMessage;
@@ -383,11 +387,6 @@ QColor MessageItem::textColor() const
     clr = d->mColorImportantMessage;
   } else if ( messageStatus.isToAct() ) {
     clr = d->mColorToDoMessage;
-  }
-
-  const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 ) {
-    clr = bestTag->textColor();
   }
 
   return clr;

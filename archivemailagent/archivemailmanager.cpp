@@ -22,6 +22,8 @@
 
 #include <mailcommon/mailkernel.h>
 
+#include <Akonadi/Collection>
+
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KGlobal>
@@ -38,6 +40,7 @@ ArchiveMailManager::ArchiveMailManager(QObject *parent)
 
 ArchiveMailManager::~ArchiveMailManager()
 {
+  qDeleteAll(mListArchiveInfo);
 }
 
 void ArchiveMailManager::load()
@@ -49,11 +52,24 @@ void ArchiveMailManager::load()
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
+      //Store task started
+      mListArchiveInfo.append(info);
       ScheduledArchiveTask *task = new ScheduledArchiveTask( info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
       mArchiveMailKernel->jobScheduler()->registerTask( task );
     } else {
       delete info;
     }
+  }
+}
+
+void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
+{
+  KSharedConfig::Ptr config = KGlobal::config();
+  const QString groupname = QString::fromLatin1("ArchiveMailCollection %1").arg(collection.id());
+  if(config->hasGroup(groupname)) {
+    KConfigGroup group = config->group(groupname);
+    group.deleteGroup();
+    //TODO stop task
   }
 }
 
