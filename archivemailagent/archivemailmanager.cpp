@@ -40,6 +40,7 @@ ArchiveMailManager::ArchiveMailManager(QObject *parent)
 
 ArchiveMailManager::~ArchiveMailManager()
 {
+  qDeleteAll(mListArchiveInfo);
 }
 
 void ArchiveMailManager::load()
@@ -52,6 +53,7 @@ void ArchiveMailManager::load()
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
       //Store task started
+      mListArchiveInfo.append(info);
       ScheduledArchiveTask *task = new ScheduledArchiveTask( info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
       mArchiveMailKernel->jobScheduler()->registerTask( task );
     } else {

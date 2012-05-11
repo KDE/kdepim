@@ -21,7 +21,7 @@
 #include <QObject>
 
 class ArchiveMailKernel;
-
+class ArchiveMailInfo;
 namespace Akonadi {
   class Collection;
 }
@@ -36,6 +36,7 @@ public:
   void removeCollection(const Akonadi::Collection& collection);
 
 private:
+  QList<ArchiveMailInfo *> mListArchiveInfo;
   ArchiveMailKernel *mArchiveMailKernel;
 };
 
