@@ -17,6 +17,7 @@
 
 #include "archivejob.h"
 #include "archivemailinfo.h"
+#include <mailcommon/backupjob.h>
 
 ArchiveJob::ArchiveJob(ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
   : MailCommon::ScheduledJob( folder, immediate ),mInfo(info)
@@ -31,7 +32,23 @@ ArchiveJob::~ArchiveJob()
 void ArchiveJob::execute()
 {
   if(mInfo) {
-//TODO
+    MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
+    backupJob->setRootFolder( Akonadi::Collection(mInfo->saveCollectionId()) );
+    backupJob->setSaveLocation( mInfo->url() );//TODO fix me
+    backupJob->setArchiveType( mInfo->archiveType() );
+    backupJob->setDeleteFoldersAfterCompletion( false );
+    backupJob->setRecursive( mInfo->saveSubCollection() );
+    connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
+    backupJob->start();
+  }
+}
+
+void ArchiveJob::slotBackupDone()
+{
+  if(mInfo) {
+    mInfo->setLastDateSaved(QDate::currentDate());
+    //FIXME
+    //mInfo->writeConfig();
   }
 }
 

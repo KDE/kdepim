@@ -73,6 +73,8 @@ class  MAILCOMMON_EXPORT BackupJob : public QObject
     void setDeleteFoldersAfterCompletion( bool deleteThem );
     void setRecursive( bool recursive );
     void start();
+  signals:
+    void backupDone();
 
   private slots:
     void itemFetchJobResult( KJob *job );

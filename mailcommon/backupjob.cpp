@@ -208,7 +208,7 @@ void BackupJob::finish()
       new Akonadi::CollectionDeleteJob( mRootFolder );
     }
   }
-
+  Q_EMIT backupDone();
   deleteLater();
 }
 
