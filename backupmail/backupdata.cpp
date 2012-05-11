@@ -131,7 +131,7 @@ void BackupData::backupConfig()
   exportFilters.exportFilters(lstFilter,url, true);
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
   if(!fileAdded)
-    Q_EMIT error(i18n("Filters can not export."));
+    Q_EMIT error(i18n("Filters cannot be exported."));
   Q_EMIT info(i18n("Config backup done."));
 }
 
