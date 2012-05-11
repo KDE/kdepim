@@ -354,7 +354,6 @@ public:
   void atmViewMsg( KMime::Message::Ptr message );
 
   void adjustLayout();
-  void saveSplitterSizes() const;
   void createWidgets();
   void createActions();
 
@@ -464,6 +463,8 @@ private slots:
   void slotClear();
 
   void slotMessageRendered();
+
+  void saveSplitterSizes() const;
 
 public slots:
   /** An URL has been activate with a click. */
@@ -611,7 +612,6 @@ public:
   bool mUseFixedFont;
   bool mPrinting;
   //bool mShowCompleteMessage;
-  QList<int> mSplitterSizes;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;
