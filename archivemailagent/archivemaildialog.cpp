@@ -90,7 +90,7 @@ ArchiveMailWidget::~ArchiveMailWidget()
 
 void ArchiveMailWidget::updateButtons()
 {
-  if(!mWidget->listWidget->currentItem()) {
+  if(mWidget->listWidget->currentItem()) {
     mWidget->removeItem->setEnabled(true);
     mWidget->modifyItem->setEnabled(true);
   } else {
