@@ -17,7 +17,7 @@
 
 #include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
-
+#include <mailcommon/mailutil.h>
 #include <QHBoxLayout>
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
@@ -151,8 +151,9 @@ void ArchiveMailWidget::slotModifyItem()
   ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
   if( dialog->exec() ) {
-    //TODO fix item name
-    archiveItem->setInfo(dialog->info());
+    ArchiveMailInfo *info = dialog->info();
+    archiveItem->setText(i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
+    archiveItem->setInfo(info);
   }
   delete dialog;
 }
@@ -162,8 +163,7 @@ void ArchiveMailWidget::slotAddItem()
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
   if( dialog->exec() ) {
     ArchiveMailInfo *info = dialog->info();
-    //FIXME item name
-    ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",QString::number(info->saveCollectionId())), mWidget->listWidget);
+    ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))), mWidget->listWidget);
     item->setInfo(info);
     updateButtons();
   }
