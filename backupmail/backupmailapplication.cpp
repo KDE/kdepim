@@ -53,12 +53,8 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 
 BackupMailApplication::~BackupMailApplication()
 {
-  if(mBackupData) {
-    delete mBackupData;
-  }
-  if(mRestoreData) {
-    delete mRestoreData;
-  }
+  delete mBackupData;
+  delete mRestoreData;
 }
 
 void BackupMailApplication::setupActions()
@@ -75,7 +71,8 @@ void BackupMailApplication::setupActions()
 
 void BackupMailApplication::slotBackupData()
 {
-  KMessageBox::information(this,i18n("Before to backup info, close all kdepim applications."),i18n("Backup"));
+  if(KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
+    return;
 
   const QString filename = KFileDialog::getSaveFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Create backup"));
   if(filename.isEmpty())
@@ -107,6 +104,8 @@ void BackupMailApplication::slotAddError(const QString& info)
 
 void BackupMailApplication::slotRestoreData()
 {
+  if(KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
+    return;
   const QString filename = KFileDialog::getOpenFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Restore backup"));
   if(filename.isEmpty())
     return;

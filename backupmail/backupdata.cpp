@@ -104,7 +104,6 @@ void BackupData::backupResources()
         KConfig * config = resourceConfig->copyTo( tmp.fileName() );
 
         const QString identifier = agent.identifier();
-        //FIX folder path
         if(identifier.contains(QLatin1String("pop3"))) {
           const QString targetCollection = QLatin1String("targetCollection");
           KConfigGroup group = config->group("General");
