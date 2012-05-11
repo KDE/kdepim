@@ -29,6 +29,7 @@ public:
   explicit AbstractCalendar(ImportWizard *parent);
   virtual ~AbstractCalendar();
 protected:
+  void addEvenViewConfig( const QString& groupName, const QString& key, const QString& value);
   void addImportInfo( const QString& log );
   void addImportError( const QString& log );
 private:
