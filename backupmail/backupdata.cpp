@@ -106,7 +106,17 @@ void BackupData::backupResources()
         const QString identifier = agent.identifier();
         //FIX folder path
         if(identifier.contains(QLatin1String("pop3"))) {
-          //TODO
+          const QString targetCollection = QLatin1String("targetCollection");
+          KConfigGroup group = config->group("General");
+          if(group.hasGroup(targetCollection)) {
+             group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+          }
+        } else if(identifier.contains(QLatin1String("imap"))) {
+          const QString trash = QLatin1String("TrashCollection");
+          KConfigGroup group = config->group("cache");
+          if(group.hasGroup(trash)) {
+            group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
+          }
         }
         config->sync();
         const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::resourcesPath() + agentFileName);
