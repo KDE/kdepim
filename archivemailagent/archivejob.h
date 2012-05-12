@@ -23,20 +23,23 @@
 #include <Akonadi/Collection>
 
 class ArchiveMailInfo;
+class ArchiveMailManager;
 
 class ArchiveJob : public MailCommon::ScheduledJob
 {
   Q_OBJECT
 public:
-  explicit ArchiveJob(ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
+  explicit ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
   virtual ~ArchiveJob();
 
   virtual void execute();
   virtual void kill();
-protected Q_SLOT:
+
+protected slots:
   void slotBackupDone();
 private:
   ArchiveMailInfo *mInfo;
+  ArchiveMailManager *mManager;
 };
 
 /// A scheduled "expire mails in this folder" task.
@@ -45,8 +48,10 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
   public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
-    ScheduledArchiveTask( ArchiveMailInfo * info, const Akonadi::Collection &folder, bool immediate )
-      : MailCommon::ScheduledTask( folder, immediate ), mInfo(info)
+    ScheduledArchiveTask( ArchiveMailManager *manager, ArchiveMailInfo * info, const Akonadi::Collection &folder, bool immediate )
+      : MailCommon::ScheduledTask( folder, immediate )
+      , mInfo(info)
+      , mManager(manager)
     {
     }
 
@@ -62,6 +67,7 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
     }
 private:
     ArchiveMailInfo *mInfo;
+    ArchiveMailManager *mManager;
 };
 
 

@@ -17,10 +17,13 @@
 
 #include "archivejob.h"
 #include "archivemailinfo.h"
+#include "archivemailmanager.h"
 #include <mailcommon/backupjob.h>
 
-ArchiveJob::ArchiveJob(ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
-  : MailCommon::ScheduledJob( folder, immediate ),mInfo(info)
+ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
+  : MailCommon::ScheduledJob( folder, immediate )
+  ,mInfo(info)
+  ,mManager(manager)
 {
 }
 
@@ -45,21 +48,18 @@ void ArchiveJob::execute()
 
 void ArchiveJob::slotBackupDone()
 {
-  if(mInfo) {
-    mInfo->setLastDateSaved(QDate::currentDate());
-    //FIXME
-    //mInfo->writeConfig();
-  }
+  mManager->backupDone(mInfo);
 }
 
 void ArchiveJob::kill()
 {
+  //TODO fix kill program.
   ScheduledJob::kill();
 }
 
 MailCommon::ScheduledJob *ScheduledArchiveTask::run()
 {
-  return folder().isValid() ? new ArchiveJob( mInfo, folder(), isImmediate() ) : 0;
+  return folder().isValid() ? new ArchiveJob( mManager, mInfo, folder(), isImmediate() ) : 0;
 }
 
 
