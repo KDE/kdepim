@@ -46,7 +46,8 @@ AbstractSettings::AbstractSettings(ImportWizard *parent)
 }
 
 AbstractSettings::~AbstractSettings()
-{
+{  
+  syncKmailConfig();
   delete mManager;
 }
 
@@ -133,23 +134,24 @@ void AbstractSettings::addKmailConfig( const QString& groupName, const QString& 
 {
   KConfigGroup group = mKmailConfig->group(groupName);
   group.writeEntry(key,value);
-  group.sync();
 }
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, bool value)
 {
   KConfigGroup group = mKmailConfig->group(groupName);
   group.writeEntry(key,value);
-  group.sync();
 }
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, int value)
 {
   KConfigGroup group = mKmailConfig->group(groupName);
   group.writeEntry(key,value);
-  group.sync();
 }
 
+void AbstractSettings::syncKmailConfig()
+{
+  mKmailConfig->sync();
+}
 
 void AbstractSettings::addKNodeConfig(const QString& groupName, const QString& key, bool value)
 {
