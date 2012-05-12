@@ -54,3 +54,7 @@ Name[x-test]=xxArchive Mail finishedxx
 Name[zh_TW]=歸檔郵件已完成
 Action=Popup
 
+[Event/archivemailerror]
+Name=Archive Mail Error
+Action=Popup
+
