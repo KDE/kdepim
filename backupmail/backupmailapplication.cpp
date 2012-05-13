@@ -91,13 +91,11 @@ void BackupMailApplication::slotBackupData()
 
 void BackupMailApplication::slotAddInfo(const QString& info)
 {
-  qDebug()<<" BackupMailApplication::slotAddInfo"<<info;
   mBackupMailWidget->addInfoLogEntry(info);
 }
 
 void BackupMailApplication::slotAddError(const QString& info)
 {
-  qDebug()<<"BackupMailApplication::slotAddError "<<info;
   mBackupMailWidget->addErrorLogEntry(info);
 }
 

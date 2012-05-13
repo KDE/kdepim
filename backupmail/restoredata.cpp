@@ -58,7 +58,7 @@ void RestoreData::startRestore()
 void RestoreData::restoreTransports()
 {
   if(!mFileList.contains(QLatin1String("mailtransports"))) {
-    Q_EMIT error(i18n("mailtransports file not found in archive."));
+    Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
     return;
   }
   Q_EMIT info(i18n("Restore transports..."));
@@ -97,7 +97,7 @@ void RestoreData::restoreConfig()
 void RestoreData::restoreIdentity()
 {
   if(!mFileList.contains(QLatin1String("emailidentities"))) {
-    Q_EMIT error(i18n("emailidentitied file not found in archive."));
+    Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
     return;
   }
   Q_EMIT info(i18n("Restore identities..."));

@@ -34,6 +34,7 @@ public:
   ~ArchiveMailManager();
   void load();
   void removeCollection(const Akonadi::Collection& collection);
+  void backupDone(ArchiveMailInfo *info);
 
 private:
   QList<ArchiveMailInfo *> mListArchiveInfo;

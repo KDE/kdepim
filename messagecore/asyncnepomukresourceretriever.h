@@ -45,6 +45,9 @@ class MESSAGECORE_EXPORT AsyncNepomukResourceRetriever : public QObject
 
   Q_SIGNALS:
     void resourceReceived( const QUrl &url, const Nepomuk::Resource &resource );
+  protected Q_SLOTS:
+    void nepomukStarted();
+    void nepomukStopped();
 
   protected:
     virtual void resourceAvailable( const QUrl &url, const Nepomuk::Resource &resource );

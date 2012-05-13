@@ -54,7 +54,7 @@ void ArchiveMailManager::load()
     if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
       //Store task started
       mListArchiveInfo.append(info);
-      ScheduledArchiveTask *task = new ScheduledArchiveTask( info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
+      ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
       mArchiveMailKernel->jobScheduler()->registerTask( task );
     } else {
       delete info;
@@ -69,8 +69,23 @@ void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
   if(config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     group.deleteGroup();
-    //TODO stop task
+    Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
+      if(info->saveCollectionId() == collection.id()) {
+        //TODO stop task
+        mListArchiveInfo.removeAll(info);
+      }
+    }
   }
+}
+
+void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
+{
+  info->setLastDateSaved(QDate::currentDate());
+  KSharedConfig::Ptr config = KGlobal::config();
+  const QString groupname = QString::fromLatin1("ArchiveMailCollection %1").arg(info->saveCollectionId());
+  KConfigGroup group = config->group(groupname);
+  info->writeConfig(group);
+  mListArchiveInfo.removeAll(info);
 }
 
 #include "archivemailmanager.moc"

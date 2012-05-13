@@ -48,6 +48,8 @@ protected:
   void addImportInfo( const QString& log );
   void addImportError( const QString& log );
 
+  void syncKmailConfig();
+
   QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 
   KPIMIdentities::Identity* createIdentity();

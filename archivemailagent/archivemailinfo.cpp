@@ -131,6 +131,7 @@ void ArchiveMailInfo::writeConfig(KConfigGroup & config )
   config.writeEntry("archiveUnit", ( int )mArchiveUnit );
   config.writeEntry("saveCollectionId",mSaveCollectionId);
   config.writeEntry("archiveAge",mArchiveAge);
+  config.sync();
 }
 
 KUrl ArchiveMailInfo::url() const

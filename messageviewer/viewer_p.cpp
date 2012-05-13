@@ -221,7 +221,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mResizeTimer.setObjectName( "mResizeTimer" );
 
   mExternalWindow  = ( aParent == mainWindow );
-  mSplitterSizes << 180 << 100;
   mPrinting = false;
 
   createWidgets();
@@ -1145,14 +1144,6 @@ void ViewerPrivate::readConfig()
   if ( raction )
     raction->setChecked( true );
 
-  const int mimeH = GlobalSettings::self()->mimePaneHeight();
-  const int messageH = GlobalSettings::self()->messagePaneHeight();
-  mSplitterSizes.clear();
-  if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
-    mSplitterSizes << messageH << mimeH;
-  else
-    mSplitterSizes << mimeH << messageH;
-
   adjustLayout();
 
   readGlobalOverrideCodec();
@@ -1402,11 +1393,19 @@ void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 void ViewerPrivate::adjustLayout()
 {
 #ifndef QT_NO_TREEVIEW
+  const int mimeH = GlobalSettings::self()->mimePaneHeight();
+  const int messageH = GlobalSettings::self()->messagePaneHeight();
+  QList<int> splitterSizes;
+  if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
+    splitterSizes << messageH << mimeH;
+  else
+    splitterSizes << mimeH << messageH;
+
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
     mSplitter->insertWidget( 0, mMimePartTree );
-  mSplitter->setSizes( mSplitterSizes );
+  mSplitter->setSizes( splitterSizes );
 
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
        mMsgDisplay )
@@ -1442,6 +1441,7 @@ void ViewerPrivate::createWidgets() {
   QVBoxLayout * vlay = new QVBoxLayout( q );
   vlay->setMargin( 0 );
   mSplitter = new QSplitter( Qt::Vertical, q );
+  connect(mSplitter, SIGNAL(splitterMoved(int,int)), this, SLOT(saveSplitterSizes()));
   mSplitter->setObjectName( "mSplitter" );
   mSplitter->setChildrenCollapsible( false );
   vlay->addWidget( mSplitter );
