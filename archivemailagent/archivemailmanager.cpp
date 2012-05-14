@@ -30,6 +30,8 @@
 
 #include <QDate>
 
+static QString archivePattern = QLatin1String("ArchiveMailCollection %1");
+
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
   : QObject( parent )
 {
@@ -51,7 +53,23 @@ void ArchiveMailManager::load()
   for(int i = 0 ; i < numberOfCollection; ++i) {
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
-    if(QDate::currentDate() > (info->lastDateSaved().addDays(info->archiveAge()))) {//TODO use unit
+
+    QDate diffDate(info->lastDateSaved());
+    switch(info->archiveUnit()) {
+      case ArchiveMailInfo::ArchiveDays:
+        diffDate = diffDate.addDays(info->archiveAge());
+        break;
+      case ArchiveMailInfo::ArchiveWeeks:
+        diffDate = diffDate.addDays(info->archiveAge()*7);
+        break;
+      case ArchiveMailInfo::ArchiveMonths:
+        diffDate = diffDate.addMonths(info->archiveAge());
+        break;
+      default:
+        qDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
+        break;
+    }
+    if(QDate::currentDate() > diffDate) {
       //Store task started
       mListArchiveInfo.append(info);
       ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
@@ -65,7 +83,7 @@ void ArchiveMailManager::load()
 void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
 {
   KSharedConfig::Ptr config = KGlobal::config();
-  const QString groupname = QString::fromLatin1("ArchiveMailCollection %1").arg(collection.id());
+  const QString groupname = archivePattern.arg(collection.id());
   if(config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     group.deleteGroup();
@@ -82,7 +100,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
 {
   info->setLastDateSaved(QDate::currentDate());
   KSharedConfig::Ptr config = KGlobal::config();
-  const QString groupname = QString::fromLatin1("ArchiveMailCollection %1").arg(info->saveCollectionId());
+  const QString groupname = archivePattern.arg(info->saveCollectionId());
   KConfigGroup group = config->group(groupname);
   info->writeConfig(group);
   mListArchiveInfo.removeAll(info);

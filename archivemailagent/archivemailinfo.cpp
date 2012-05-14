@@ -42,7 +42,6 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
 
 ArchiveMailInfo::~ArchiveMailInfo()
 {
-//FIXME writeConfig ?
 }
 
 KUrl ArchiveMailInfo::realUrl() const

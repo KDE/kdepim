@@ -20,6 +20,8 @@
 #include <mailcommon/mailutil.h>
 #include <QHBoxLayout>
 
+static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
+
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   :KDialog(parent)
 {
@@ -102,15 +104,20 @@ void ArchiveMailWidget::updateButtons()
 void ArchiveMailWidget::load()
 {
   KSharedConfig::Ptr config = KGlobal::config();
-  const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+  const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
   const int numberOfCollection = collectionList.count();
   for(int i = 0 ; i < numberOfCollection; ++i) {
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
-    ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",QString::number(info->saveCollectionId())), mWidget->listWidget);
-    item->setInfo(info);
+    addItem(info);
   }
   updateButtons();
+}
+
+void ArchiveMailWidget::addItem(ArchiveMailInfo *info)
+{
+  ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))), mWidget->listWidget);
+  item->setInfo(info);
 }
 
 void ArchiveMailWidget::save()
@@ -118,7 +125,7 @@ void ArchiveMailWidget::save()
   KSharedConfig::Ptr config = KGlobal::config();
 
   // first, delete all filter groups:
-  const QStringList filterGroups =config->groupList().filter( QRegExp( "ArchiveMailCollection #\\d+" ) );
+  const QStringList filterGroups =config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
 
   foreach ( const QString &group, filterGroups ) {
     config->deleteGroup( group );
@@ -163,8 +170,7 @@ void ArchiveMailWidget::slotAddItem()
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
   if( dialog->exec() ) {
     ArchiveMailInfo *info = dialog->info();
-    ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))), mWidget->listWidget);
-    item->setInfo(info);
+    addItem(info);
     updateButtons();
   }
   delete dialog;
