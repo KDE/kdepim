@@ -34,6 +34,7 @@
 #include <KStandardDirs>
 
 #include <QDebug>
+#include <QDir>
 
 BackupData::BackupData(BackupMailUtil::BackupTypes typeSelected, const QString &filename)
   :AbstractData(filename,typeSelected)
@@ -182,6 +183,8 @@ void BackupData::backupMails()
           //TODO get path
           //1 file
           //TODO
+          storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
+
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
           const QString agentFileName = agent.identifier() + QLatin1String("rc");
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
@@ -189,6 +192,7 @@ void BackupData::backupMails()
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
           //TODO
           //Several file. Look at archive mail dialog
+          storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
         }
       }
     }
