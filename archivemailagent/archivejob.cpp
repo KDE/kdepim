@@ -52,7 +52,7 @@ void ArchiveJob::execute()
     connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
     backupJob->start();
     const QString summary = i18n("Start to archive %1",MailCommon::Util::fullCollectionPath(collection) );
-    KNotification::event( "akonadi-resource-broken",
+    KNotification::event( "",
                           summary,
                           QPixmap(),
                           0,
@@ -62,6 +62,13 @@ void ArchiveJob::execute()
 
 void ArchiveJob::slotBackupDone()
 {
+  Akonadi::Collection collection(mInfo->saveCollectionId());
+  const QString summary = i18n("Archive done for %1",MailCommon::Util::fullCollectionPath(collection) );
+  KNotification::event( "",
+                        summary,
+                        QPixmap(),
+                        0,
+                        KNotification::CloseOnTimeout);
   mManager->backupDone(mInfo);
 }
 
