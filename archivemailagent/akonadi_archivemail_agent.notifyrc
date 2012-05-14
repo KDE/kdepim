@@ -56,5 +56,8 @@ Action=Popup
 
 [Event/archivemailerror]
 Name=Archive Mail Error
+Name[pt]=Erro no Arquivo de E-Mail
+Name[uk]=Помилка під час архівування пошти
+Name[x-test]=xxArchive Mail Errorxx
 Action=Popup
 
