@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KTemporaryFile>
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 RestoreData::RestoreData(BackupMailUtil::BackupTypes typeSelected,const QString& filename)
   :AbstractData(filename,typeSelected), mArchiveDirectory(0)
@@ -40,14 +41,14 @@ void RestoreData::startRestore()
   mArchiveDirectory = mArchive->directory();
   mFileList = mArchiveDirectory->entries();
 
-  if(mTypeSelected & BackupMailUtil::Identity)
-    restoreIdentity();
   if(mTypeSelected & BackupMailUtil::MailTransport)
     restoreTransports();
-  if(mTypeSelected & BackupMailUtil::Mails)
-    restoreMails();
   if(mTypeSelected & BackupMailUtil::Resources)
     restoreResources();
+  if(mTypeSelected & BackupMailUtil::Identity)
+    restoreIdentity();
+  if(mTypeSelected & BackupMailUtil::Mails)
+    restoreMails();
   if(mTypeSelected & BackupMailUtil::Config)
     restoreConfig();
   if(mTypeSelected & BackupMailUtil::AkonadiDb)
@@ -57,7 +58,7 @@ void RestoreData::startRestore()
 
 void RestoreData::restoreTransports()
 {
-  if(!mFileList.contains(QLatin1String("mailtransports"))) {
+  if(!mFileList.contains(BackupMailUtil::transportsPath()+QLatin1String("mailtransports"))) {
     Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
     return;
   }
@@ -71,7 +72,14 @@ void RestoreData::restoreTransports()
     tmp.open();
 
     fileTransport->copyTo(tmp.fileName());
-    KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+    KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(tmp.fileName());
+    const QStringList transportList = transportConfig->groupList().filter( QRegExp( "Transport \\d+" ) );
+    Q_FOREACH(const QString&transport, transportList) {
+      KConfigGroup group = transportConfig->group(transport);
+      //TODO load it.
+      //Save new Id
+    }
+
     //TODO modify it.
     Q_EMIT info(i18n("Transports restored."));
   } else {
@@ -91,12 +99,17 @@ void RestoreData::restoreMails()
 
 void RestoreData::restoreConfig()
 {
-
+  if(!mFileList.contains(BackupMailUtil::configsPath() + QLatin1String("filters"))) {
+    Q_EMIT error(i18n("filters file could not be found in the archive."));
+    return;
+  }
+  //TODO fix identity.
+  //TODO fix transport.
 }
 
 void RestoreData::restoreIdentity()
 {
-  if(!mFileList.contains(QLatin1String("emailidentities"))) {
+  if(!mFileList.contains(BackupMailUtil::identitiesPath() +QLatin1String("emailidentities"))) {
     Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
     return;
   }
@@ -111,6 +124,12 @@ void RestoreData::restoreIdentity()
 
     fileIdentity->copyTo(tmp.fileName());
     KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+    const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
+    Q_FOREACH(const QString&identityStr, identityList) {
+      KConfigGroup group = identityConfig->group(identityStr);
+      //TODO fix draft/FCC/Templates
+      //Save new Id
+    }
 
     //TODO
     Q_EMIT info(i18n("Identities restored."));

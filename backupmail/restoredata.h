@@ -39,6 +39,7 @@ private:
   void restoreAkonadiDb();
   QHash<QString, QString> mHashIdentity;
   QHash<QString, QString> mHashTransport;
+  QHash<QString, QString> mHashResources;
   QStringList mFileList;
   const KArchiveDirectory* mArchiveDirectory;
 };
