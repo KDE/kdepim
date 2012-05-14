@@ -17,6 +17,10 @@
 
 #include "restoredata.h"
 
+#include "mailcommon/filter/filtermanager.h"
+#include "mailcommon/filter/filterimporterexporter.h"
+
+
 #include "messageviewer/kcursorsaver.h"
 
 #include <KZip>
@@ -53,6 +57,8 @@ void RestoreData::startRestore()
     restoreConfig();
   if(mTypeSelected & BackupMailUtil::AkonadiDb)
     restoreAkonadiDb();
+  if(mTypeSelected & BackupMailUtil::Nepomuk)
+    restoreNepomuk();
   closeArchive();
 }
 
@@ -103,8 +109,26 @@ void RestoreData::restoreConfig()
     Q_EMIT error(i18n("filters file could not be found in the archive."));
     return;
   }
-  //TODO fix identity.
-  //TODO fix transport.
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  const KArchiveEntry* filter = mArchiveDirectory->entry(BackupMailUtil::configsPath() + QLatin1String("filters"));
+  if(filter->isFile()) {
+    const KArchiveFile* fileFilter = static_cast<const KArchiveFile*>(filter);
+    KTemporaryFile tmp;
+    tmp.open();
+
+    fileFilter->copyTo(tmp.fileName());
+
+    //FIX before to append filters.
+    //TODO fix identity.
+    //TODO fix transport.
+
+    bool canceled = false;
+    MailCommon::FilterImporterExporter exportFilters;
+    QList<MailCommon::MailFilter*> lstFilter = exportFilters.importFilters(canceled, MailCommon::FilterImporterExporter::KMailFilter, tmp.fileName());
+    if(canceled) {
+      MailCommon::FilterManager::instance()->appendFilters(lstFilter);
+    }
+  }
 }
 
 void RestoreData::restoreIdentity()
@@ -140,5 +164,10 @@ void RestoreData::restoreIdentity()
 
 void RestoreData::restoreAkonadiDb()
 {
+  //TODO
+}
 
+void RestoreData::restoreNepomuk()
+{
+  //TODO
 }

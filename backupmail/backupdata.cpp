@@ -61,6 +61,8 @@ void BackupData::startBackup()
     backupConfig();
   if(mTypeSelected & BackupMailUtil::AkonadiDb)
     backupAkonadiDb();
+  if(mTypeSelected & BackupMailUtil::Nepomuk)
+    backupNepomuk();
   closeArchive();
 }
 
@@ -95,32 +97,11 @@ void BackupData::backupResources()
             !capabilities.contains( "Virtual" ) &&
             !capabilities.contains( "MailTransport" ) )
       {
-        const QString agentFileName = agent.identifier() + QLatin1String("rc");
-        const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-
-        KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-        KTemporaryFile tmp;
-        tmp.open();
-        KConfig * config = resourceConfig->copyTo( tmp.fileName() );
-
         const QString identifier = agent.identifier();
-        if(identifier.contains(QLatin1String("pop3"))) {
-          const QString targetCollection = QLatin1String("targetCollection");
-          KConfigGroup group = config->group("General");
-          if(group.hasGroup(targetCollection)) {
-             group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
-          }
-        } else if(identifier.contains(QLatin1String("imap"))) {
-          const QString trash = QLatin1String("TrashCollection");
-          KConfigGroup group = config->group("cache");
-          if(group.hasGroup(trash)) {
-            group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
-          }
+        //Store just pop3/imap account. Store other config when we copy data.
+        if(identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("imap"))) {
+          storeResources(identifier,BackupMailUtil::resourcesPath());
         }
-        config->sync();
-        const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::resourcesPath() + agentFileName);
-        if(!fileAdded)
-          Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
       }
     }
   }
@@ -183,6 +164,36 @@ void BackupData::backupMails()
 {
   Q_EMIT info(i18n("Backing up Mails..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+  const Akonadi::AgentInstance::List list = manager->instances();
+  foreach( const Akonadi::AgentInstance &agent, list ) {
+    const QStringList capabilities( agent.type().capabilities() );
+    if(agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
+      if ( capabilities.contains( "Resource" ) &&
+            !capabilities.contains( "Virtual" ) &&
+            !capabilities.contains( "MailTransport" ) )
+      {
+        const QString identifier = agent.identifier();
+        if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
+          const QString agentFileName = agent.identifier() + QLatin1String("rc");
+          const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+          KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+          //TODO get path
+          //1 file
+          //TODO
+        } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
+          const QString agentFileName = agent.identifier() + QLatin1String("rc");
+          const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+          KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+          //TODO
+          //Several file. Look at archive mail dialog
+        }
+      }
+    }
+  }
+
   Q_EMIT info(i18n("Mails backup done."));
 
 }
@@ -194,3 +205,36 @@ void BackupData::backupAkonadiDb()
   Q_EMIT info(i18n("Akonadi Database backup done."));
 }
 
+void BackupData::backupNepomuk()
+{
+
+}
+
+void BackupData::storeResources(const QString&identifier, const QString& path)
+{
+  const QString agentFileName = identifier + QLatin1String("rc");
+  const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+  KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+  KTemporaryFile tmp;
+  tmp.open();
+  KConfig * config = resourceConfig->copyTo( tmp.fileName() );
+
+  if(identifier.contains(QLatin1String("pop3"))) {
+    const QString targetCollection = QLatin1String("targetCollection");
+    KConfigGroup group = config->group("General");
+    if(group.hasGroup(targetCollection)) {
+       group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+    }
+  } else if(identifier.contains(QLatin1String("imap"))) {
+    const QString trash = QLatin1String("TrashCollection");
+    KConfigGroup group = config->group("cache");
+    if(group.hasGroup(trash)) {
+      group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
+    }
+  }
+  config->sync();
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), path + agentFileName);
+  if(!fileAdded)
+    Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
+}

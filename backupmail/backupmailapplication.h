@@ -36,7 +36,8 @@ private Q_SLOTS:
   void slotAddInfo(const QString& info);
   void slotAddError(const QString& info);
 private:
-  void setupActions();
+  bool canZip() const;
+  void setupActions(bool canZipFile);
   BackupMailWidget *mBackupMailWidget;
   BackupData *mBackupData;
   RestoreData *mRestoreData;

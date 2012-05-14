@@ -37,6 +37,7 @@ private:
   void restoreConfig();
   void restoreIdentity();
   void restoreAkonadiDb();
+  void restoreNepomuk();
   QHash<QString, QString> mHashIdentity;
   QHash<QString, QString> mHashTransport;
   QHash<QString, QString> mHashResources;

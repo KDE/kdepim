@@ -32,6 +32,7 @@
 #include <KActionCollection>
 #include <KFileDialog>
 #include <KMessageBox>
+#include <KStandardDirs>
 
 #include <KLocale>
 
@@ -42,13 +43,16 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
-  setupActions();
+  bool canZipFile = canZip();
+  setupActions(canZipFile);
   setupGUI(Default,"backupmailapplication.rc");
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
   Akonadi::Control::widgetNeedsAkonadi(this);
-
+  if(!canZipFile) {
+    KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
+  }
 }
 
 BackupMailApplication::~BackupMailApplication()
@@ -57,15 +61,18 @@ BackupMailApplication::~BackupMailApplication()
   delete mRestoreData;
 }
 
-void BackupMailApplication::setupActions()
+void BackupMailApplication::setupActions(bool canZipFile)
 {
   KActionCollection* ac=actionCollection();
 
   KAction *backupAction = ac->addAction("backup",this,SLOT(slotBackupData()));
   backupAction->setText(i18n("Back Up Data..."));
+  backupAction->setEnabled(canZipFile);
 
   KAction *restoreAction = ac->addAction("restore",this,SLOT(slotRestoreData()));
   restoreAction->setText(i18n("Restore Data..."));
+  restoreAction->setEnabled(canZipFile);
+
   KStandardAction::quit( this, SLOT(close()), ac );
 }
 
@@ -120,5 +127,13 @@ void BackupMailApplication::slotRestoreData()
   delete dialog;
 }
 
+bool BackupMailApplication::canZip() const
+{
+  const QString zip = KStandardDirs::findExe( "zip" );
+  if(zip.isEmpty()) {
+    return false;
+  }
+  return true;
+}
 
 #include "backupmailapplication.moc"
