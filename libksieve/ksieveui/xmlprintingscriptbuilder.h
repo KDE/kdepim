@@ -71,7 +71,4 @@ private:
   }
 };
 
-
-};
-
 #endif // XMLPRINTINGSCRIPTBUILDER_H
