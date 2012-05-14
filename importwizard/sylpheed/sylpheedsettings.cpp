@@ -84,6 +84,25 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   const int lineWrap = group.readEntry("linewrap_length", 80);
   addKmailConfig(QLatin1String("Composer"), QLatin1String("break-at"), lineWrap);
   addKmailConfig(QLatin1String("Composer"), QLatin1String("word-wrap"), true);
+
+  const bool enableColor = group.readEntry("enable_color", false);
+  if(enableColor) {
+    const int colorLevel1 = group.readEntry("quote_level1_color", -1);
+    if(colorLevel1!=-1) {
+      //[Reader]  QuotedText1
+    }
+    const int colorLevel2 = group.readEntry("quote_level2_color", -1);
+    if(colorLevel2!=-1) {
+      //[Reader]  QuotedText2
+
+    }
+    const int colorLevel3 = group.readEntry("quote_level3_color", -1);
+    if(colorLevel3!=-1) {
+      //[Reader]  QuotedText3
+
+    }
+
+  }
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
