@@ -83,7 +83,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 {
   const QPair<QString, QString> en( i18n("English"), QLatin1String( "en" ) );
   const QPair<QString, QString> zh( i18n("Chinese (Simplified)"), QLatin1String( "zh" ) );
-  const QPair<QString, QString> zt( i18n("Chinese (Simplified)"), QLatin1String( "zt" ) );
+  const QPair<QString, QString> zt( i18n("Chinese (Traditional)"), QLatin1String( "zt" ) );
   const QPair<QString, QString> nl( i18n("Dutch"), QLatin1String( "nl" ) );
   const QPair<QString, QString> fr( i18n("French"), QLatin1String( "fr" ) );
   const QPair<QString, QString> de( i18n("German"), QLatin1String( "de" ) );
