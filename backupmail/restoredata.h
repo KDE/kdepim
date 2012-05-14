@@ -20,6 +20,7 @@
 
 #include "abstractdata.h"
 #include <QStringList>
+#include <QHash>
 
 class KArchiveDirectory;
 
@@ -36,6 +37,10 @@ private:
   void restoreConfig();
   void restoreIdentity();
   void restoreAkonadiDb();
+  void restoreNepomuk();
+  QHash<QString, QString> mHashIdentity;
+  QHash<QString, QString> mHashTransport;
+  QHash<QString, QString> mHashResources;
   QStringList mFileList;
   const KArchiveDirectory* mArchiveDirectory;
 };

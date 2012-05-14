@@ -18,7 +18,14 @@
 #include "archivejob.h"
 #include "archivemailinfo.h"
 #include "archivemailmanager.h"
+
+#include "mailcommon/mailutil.h"
+
 #include <mailcommon/backupjob.h>
+
+#include <KNotification>
+#include <KLocale>
+
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
   : MailCommon::ScheduledJob( folder, immediate )
@@ -36,6 +43,7 @@ void ArchiveJob::execute()
 {
   if(mInfo) {
     MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
+    Akonadi::Collection collection(mInfo->saveCollectionId());
     backupJob->setRootFolder( Akonadi::Collection(mInfo->saveCollectionId()) );
     backupJob->setSaveLocation( mInfo->realUrl() );
     backupJob->setArchiveType( mInfo->archiveType() );
@@ -43,11 +51,24 @@ void ArchiveJob::execute()
     backupJob->setRecursive( mInfo->saveSubCollection() );
     connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
     backupJob->start();
+    const QString summary = i18n("Start to archive %1",MailCommon::Util::fullCollectionPath(collection) );
+    KNotification::event( "",
+                          summary,
+                          QPixmap(),
+                          0,
+                          KNotification::CloseOnTimeout);
   }
 }
 
 void ArchiveJob::slotBackupDone()
 {
+  Akonadi::Collection collection(mInfo->saveCollectionId());
+  const QString summary = i18n("Archive done for %1",MailCommon::Util::fullCollectionPath(collection) );
+  KNotification::event( "",
+                        summary,
+                        QPixmap(),
+                        0,
+                        KNotification::CloseOnTimeout);
   mManager->backupDone(mInfo);
 }
 

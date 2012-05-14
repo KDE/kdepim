@@ -34,6 +34,8 @@ private:
   void backupConfig();
   void backupIdentity();
   void backupAkonadiDb();
+  void backupNepomuk();
+  void storeResources(const QString&identifier, const QString& path);
 
 };
 

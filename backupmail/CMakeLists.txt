@@ -1,5 +1,7 @@
 project(backupmail)
 
+include_directories(${SOPRANO_INCLUDE_DIR})
+
 ########### next target ###############
 
 set(backupmail_SRCS

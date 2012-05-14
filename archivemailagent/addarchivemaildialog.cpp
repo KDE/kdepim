@@ -89,14 +89,23 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
 
   QLabel *dateLabel = new QLabel( i18n( "Backup each:" ), mainWidget );
   mainLayout->addWidget( dateLabel, row, 0 );
+
+  QHBoxLayout * hlayout = new QHBoxLayout;
   mDays = new QSpinBox(mainWidget);
   mDays->setMinimum(1);
   mDays->setMaximum(3600);
-  mainLayout->addWidget(mDays);
+  hlayout->addWidget(mDays);
+
+  mUnits = new KComboBox(mainWidget);
+  QStringList unitsList;
+  unitsList<<i18n("Days");
+  unitsList<<i18n("Weeks");
+  unitsList<<i18n("Months");
+  mUnits->addItems(unitsList);
+  hlayout->addWidget(mUnits);
+
+  mainLayout->addLayout(hlayout, row, 1);
   row++;
-
-  //TODO add units
-
 
   mainLayout->setColumnStretch( 1, 1 );
   mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
@@ -125,13 +134,8 @@ void AddArchiveMailDialog::load(ArchiveMailInfo* info)
   mFolderRequester->setCollection(Akonadi::Collection(info->saveCollectionId()));
   mFormatComboBox->setCurrentIndex(static_cast<int>(info->archiveType()));
   mDays->setValue(info->archiveAge());
-#if 0 //TODO
-  void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
-  ArchiveMailInfo::ArchiveUnit archiveUnit() const;
+  mUnits->setCurrentIndex(static_cast<int>(info->archiveUnit()));
 
-  void setLastDateSaved( const QDate& date );
-  QDate lastDateSaved() const;
-#endif
   slotUpdateOkButton();
 }
 
@@ -145,7 +149,7 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
   mInfo->setSaveCollectionId(mFolderRequester->collection().id());
   mInfo->setUrl(mPath->url());
   mInfo->setArchiveAge(mDays->value());
-  //TODO unit
+  mInfo->setArchiveUnit(static_cast<ArchiveMailInfo::ArchiveUnit>(mUnits->currentIndex()));
   return mInfo;
 }
 

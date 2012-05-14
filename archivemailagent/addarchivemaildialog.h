@@ -63,6 +63,7 @@ private:
   void load(ArchiveMailInfo *info);
   MailCommon::FolderRequester *mFolderRequester;
   KComboBox *mFormatComboBox;
+  KComboBox *mUnits;
   QCheckBox *mRecursiveCheckBox;
   KUrlRequester *mPath;
   QSpinBox *mDays;

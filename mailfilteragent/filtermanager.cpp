@@ -25,6 +25,7 @@
 #include <mailcommon/filter/filterimporterexporter.h>
 #include <mailcommon/filter/filterlog.h>
 #include <mailcommon/filter/mailfilter.h>
+#include <mailcommon/mailutil.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
@@ -418,21 +419,28 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     msg->assemble();
 
+    const bool itemCanDelete = (MailCommon::Util::updatedCollection(context.item().parentCollection()).rights() & Akonadi::Collection::CanDeleteItem);
     if ( context.deleteItem() ) {
+      if(itemCanDelete){
         Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( context.item(), this );
-        connect( deleteJob, SIGNAL(result(KJob*)), SLOT(deleteJobResult(KJob*)));	
+        connect( deleteJob, SIGNAL(result(KJob*)), SLOT(deleteJobResult(KJob*)));
+      }
     } else if ( context.needsPayloadStore() ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-        modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
+        if(itemCanDelete) {
+          modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
+        }
         connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else if ( context.needsFlagStore() ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-        modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-        modifyJob->setIgnorePayload( true );
+        if(itemCanDelete) {
+          modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
+          modifyJob->setIgnorePayload( true );
+        }
         connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else {
         if ( context.moveTargetCollection().isValid() ) {
-            if( context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
+            if( context.item().storageCollectionId() != context.moveTargetCollection().id() && itemCanDelete ) {
                 Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
                 connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
             }

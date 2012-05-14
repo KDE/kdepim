@@ -117,7 +117,7 @@ QString FilterActionWithFolder::displayString() const
 {
   QString result;
   if ( mFolder.isValid() )
-    result = QString::number( mFolder.id() );
+    result = MailCommon::Util::fullCollectionPath(MailCommon::Util::updatedCollection( mFolder ));
 
   return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
 }
