@@ -23,6 +23,8 @@
 
 #include "messageviewer/kcursorsaver.h"
 
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
 #include <KZip>
 #include <KLocale>
 #include <KTemporaryFile>
@@ -151,10 +153,10 @@ void RestoreData::restoreIdentity()
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
       KConfigGroup group = identityConfig->group(identityStr);
-      QString oldUid;
+      uint oldUid = -1;
       const QString uidStr("uoid");
       if(group.hasKey(uidStr)) {
-        oldUid = group.readEntry(uidStr);
+        oldUid = group.readEntry(uidStr).toUInt();
         group.deleteEntry(uidStr);
       }
       const QString fcc(QLatin1String("Fcc"));
@@ -170,10 +172,13 @@ void RestoreData::restoreIdentity()
         group.writeEntry(templates,adaptFolderId(group.readEntry(templates)));
       }
       group.sync();
-      //Save new Id
-    }
+      KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( QString() );
 
-    //TODO
+      identity->readConfig(group);
+      if(oldUid != -1) {
+        mHashIdentity.insert(oldUid,identity->uoid());
+      }
+    }
     Q_EMIT info(i18n("Identities restored."));
   } else {
     Q_EMIT error(i18n("Failed to restore identity file."));

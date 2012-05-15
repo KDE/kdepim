@@ -40,7 +40,7 @@ private:
   void restoreAkonadiDb();
   void restoreNepomuk();
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
-  QHash<QString, QString> mHashIdentity;
+  QHash<uint, uint> mHashIdentity;
   QHash<QString, QString> mHashTransport;
   QHash<QString, QString> mHashResources;
   QStringList mFileList;
