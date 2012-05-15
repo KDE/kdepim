@@ -18,6 +18,7 @@
 #include "evolutionv3importdata.h"
 #include "evolutionsettings.h"
 #include "evolutioncalendar.h"
+#include "evolutionaddressbook.h"
 #include "mailimporter/filter_evolution_v3.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -92,6 +93,7 @@ bool Evolutionv3ImportData::importFilters()
 
 bool Evolutionv3ImportData::importAddressBook()
 {
+  EvolutionAddressBook addressbook(mImportWizard);
   return false;
 }
 
@@ -113,5 +115,7 @@ AbstractImporter::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
   options |=AbstractImporter::Calendars;
+  //TODO uncomment when implemented.
+  //options |=AbstractImporter::AddressBooks;
   return options;
 }
