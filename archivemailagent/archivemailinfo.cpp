@@ -110,7 +110,7 @@ QDate ArchiveMailInfo::lastDateSaved() const
 void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
-  mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"));
+  mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
   mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
   mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
@@ -124,7 +124,7 @@ void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 void ArchiveMailInfo::writeConfig(KConfigGroup & config )
 {
   config.writeEntry("storePath",mPath);
-  config.writeEntry("lastDateSaved", mLastDateSaved.toString() );
+  config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate) );
   config.writeEntry("saveSubCollection",mSaveSubCollection);
   config.writeEntry("archiveType", ( int )mArchiveType );
   config.writeEntry("archiveUnit", ( int )mArchiveUnit );
