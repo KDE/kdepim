@@ -19,7 +19,7 @@
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
-
+#include "mailcommon/filter/filteractionmissingargumentdialog.h"
 
 #include "messageviewer/kcursorsaver.h"
 
@@ -151,7 +151,25 @@ void RestoreData::restoreIdentity()
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
       KConfigGroup group = identityConfig->group(identityStr);
-      //TODO fix draft/FCC/Templates
+      QString oldUid;
+      const QString uidStr("uoid");
+      if(group.hasKey(uidStr)) {
+        oldUid = group.readEntry(uidStr);
+        group.deleteEntry(uidStr);
+      }
+      const QString fcc(QLatin1String("Fcc"));
+      if(group.hasKey(fcc)) {
+        group.writeEntry(fcc,adaptFolderId(group.readEntry(fcc)));
+      }
+      const QString draft = QLatin1String("Drafts");
+      if(group.hasKey(draft)) {
+        group.writeEntry(draft,adaptFolderId(group.readEntry(draft)));
+      }
+      const QString templates = QLatin1String("Templates");
+      if(group.hasKey(templates)) {
+        group.writeEntry(templates,adaptFolderId(group.readEntry(templates)));
+      }
+      group.sync();
       //Save new Id
     }
 
@@ -170,4 +188,22 @@ void RestoreData::restoreAkonadiDb()
 void RestoreData::restoreNepomuk()
 {
   //TODO
+}
+
+
+Akonadi::Collection::Id RestoreData::adaptFolderId( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId=-1;
+  bool exactPath = false;
+  Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
+  if ( lst.count() == 1 && exactPath )
+    newFolderId = lst.at( 0 ).id();
+  else {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
+    if ( dlg->exec() ) {
+      newFolderId = dlg->selectedCollection().id();
+    }
+    delete dlg;
+  }
+  return newFolderId;
 }
