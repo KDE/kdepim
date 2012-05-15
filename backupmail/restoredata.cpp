@@ -91,14 +91,47 @@ void RestoreData::restoreTransports()
       const int transportId = group.readEntry(QLatin1String("id"), -1);
       MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
       mt->setName(group.readEntry(QLatin1String("name")));
-      mt->setHost(group.readEntry(QLatin1String("host")));
-      mt->setPort(group.readEntry(QLatin1String("port"),-1));
-      //TODO
-      //TODO load it.
-      //Save new Id
-    }
+      const QString hostStr(QLatin1String("host"));
+      if(group.hasKey(hostStr)) {
+        mt->setHost(group.readEntry(hostStr));
+      }
+      const QString portStr(QLatin1String("port"));
+      if(group.hasKey(portStr)) {
+        mt->setPort(group.readEntry(portStr,-1));
+      }
+      const QString userNameStr(QLatin1String("userName"));
+      if(group.hasKey(userNameStr)) {
+        mt->setUserName(group.readEntry(userNameStr));
+      }
+      const QString precommandStr(QLatin1String("precommand"));
+      if(group.hasKey(precommandStr)) {
+        mt->setPrecommand(group.readEntry(precommandStr));
+      }
+      const QString requiresAuthenticationStr(QLatin1String("requiresAuthentication"));
+      if(group.hasKey(requiresAuthenticationStr)) {
+        mt->setRequiresAuthentication(group.readEntry(requiresAuthenticationStr,false));
+      }
+      const QString specifyHostnameStr(QLatin1String("specifyHostname"));
+      if(group.hasKey(specifyHostnameStr)) {
+        mt->setSpecifyHostname(group.readEntry(specifyHostnameStr,false));
+      }
+      const QString localHostnameStr(QLatin1String("localHostname"));
+      if(group.hasKey(localHostnameStr)) {
+        mt->setLocalHostname(group.readEntry(localHostnameStr));
+      }
+      const QString specifySenderOverwriteAddressStr(QLatin1String("specifySenderOverwriteAddress"));
+      if(group.hasKey(specifySenderOverwriteAddressStr)) {
+        mt->setSpecifySenderOverwriteAddress(group.readEntry(specifySenderOverwriteAddressStr,false));
+      }
 
-    //TODO modify it.
+      //storePassword
+      //encryption
+      //authenticationType
+      //specifySenderOverwriteAddress
+      //senderOverwriteAddress
+
+      mHashTransport.insert(transportId, mt->id());
+    }
     Q_EMIT info(i18n("Transports restored."));
   } else {
     Q_EMIT error(i18n("Failed to restore transports file."));
