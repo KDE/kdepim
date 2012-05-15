@@ -21,7 +21,11 @@
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "mailcommon/filter/filteractionmissingargumentdialog.h"
 
+
 #include "messageviewer/kcursorsaver.h"
+
+
+#include <mailtransport/transportmanager.h>
 
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
@@ -84,6 +88,12 @@ void RestoreData::restoreTransports()
     const QStringList transportList = transportConfig->groupList().filter( QRegExp( "Transport \\d+" ) );
     Q_FOREACH(const QString&transport, transportList) {
       KConfigGroup group = transportConfig->group(transport);
+      const int transportId = group.readEntry(QLatin1String("id"), -1);
+      MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
+      mt->setName(group.readEntry(QLatin1String("name")));
+      mt->setHost(group.readEntry(QLatin1String("host")));
+      mt->setPort(group.readEntry(QLatin1String("port"),-1));
+      //TODO
       //TODO load it.
       //Save new Id
     }
