@@ -20,13 +20,13 @@
 
 #include "ui_archivemailwidget.h"
 #include "archivemailinfo.h"
-#include <QListWidgetItem>
-#include <QListWidget>
+#include <QTreeWidgetItem>
+#include <QTreeWidget>
 
-class ArchiveMailItem : public QListWidgetItem
+class ArchiveMailItem : public QTreeWidgetItem
 {
 public:
-  explicit ArchiveMailItem( const QString &text, QListWidget *parent = 0 );
+  explicit ArchiveMailItem(QTreeWidget *parent = 0);
   ~ArchiveMailItem();
 
   void setInfo(ArchiveMailInfo *info);

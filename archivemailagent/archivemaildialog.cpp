@@ -50,8 +50,8 @@ void ArchiveMailDialog::slotSave()
 }
 
 
-ArchiveMailItem::ArchiveMailItem( const QString &text, QListWidget *parent )
-  : QListWidgetItem(text,parent),mInfo(0)
+ArchiveMailItem::ArchiveMailItem(QTreeWidget *parent )
+  : QTreeWidgetItem(parent),mInfo(0)
 {
 }
 
@@ -80,8 +80,8 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
-  connect(mWidget->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(updateButtons()));
-  connect(mWidget->listWidget,SIGNAL(itemDoubleClicked(QListWidgetItem*)),SLOT(slotModifyItem()));
+  connect(mWidget->treeWidget,SIGNAL(itemClicked(QTreeWidgetItem*)),SLOT(updateButtons()));
+  connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*)),SLOT(slotModifyItem()));
   updateButtons();
 }
 
@@ -92,7 +92,7 @@ ArchiveMailWidget::~ArchiveMailWidget()
 
 void ArchiveMailWidget::updateButtons()
 {
-  if(mWidget->listWidget->currentItem()) {
+  if(mWidget->treeWidget->currentItem()) {
     mWidget->removeItem->setEnabled(true);
     mWidget->modifyItem->setEnabled(true);
   } else {
@@ -116,7 +116,8 @@ void ArchiveMailWidget::load()
 
 void ArchiveMailWidget::addItem(ArchiveMailInfo *info)
 {
-  ArchiveMailItem *item = new ArchiveMailItem(i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))), mWidget->listWidget);
+  ArchiveMailItem *item = new ArchiveMailItem(mWidget->treeWidget);
+  item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
   item->setInfo(info);
 }
 
@@ -131,9 +132,9 @@ void ArchiveMailWidget::save()
     config->deleteGroup( group );
   }
 
-  const int numberOfItem(mWidget->listWidget->count());
+  const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
   for(int i = 0; i < numberOfItem; ++i) {
-    ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->listWidget->item(i));
+    ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
     if(mailItem->info()) {
       KConfigGroup group = config->group(QString::fromLatin1("ArchiveMailCollection %1").arg(mailItem->info()->saveCollectionId()));
       mailItem->info()->writeConfig(group);
@@ -144,25 +145,29 @@ void ArchiveMailWidget::save()
 
 void ArchiveMailWidget::slotRemoveItem()
 {
-  if(!mWidget->listWidget->currentItem())
-    return;
-  delete mWidget->listWidget->takeItem(mWidget->listWidget->currentRow());
+  QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  Q_FOREACH(QTreeWidgetItem *item,listItems) {
+    delete item;
+  }
   updateButtons();
 }
 
 void ArchiveMailWidget::slotModifyItem()
 {
-  QListWidgetItem *item = mWidget->listWidget->currentItem();
-  if(!item)
-    return;
-  ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
-  AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
-  if( dialog->exec() ) {
-    ArchiveMailInfo *info = dialog->info();
-    archiveItem->setText(i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
-    archiveItem->setInfo(info);
+  QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  if(listItems.count()==1) {
+    QTreeWidgetItem *item = listItems.at(0);
+    if(!item)
+      return;
+    ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
+    AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
+    if( dialog->exec() ) {
+      ArchiveMailInfo *info = dialog->info();
+      archiveItem->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
+      archiveItem->setInfo(info);
+    }
+    delete dialog;
   }
-  delete dialog;
 }
 
 void ArchiveMailWidget::slotAddItem()
