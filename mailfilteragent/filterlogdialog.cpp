@@ -177,7 +177,7 @@ void FilterLogDialog::readConfig()
   const bool isLogRuleResult = group.readEntry( "LogRuleResult", false );
   const bool isLogPatternResult = group.readEntry( "LogPatternResult", false );
   const bool isLogAppliedAction = group.readEntry( "LogAppliedAction", false );
-  const int maxLogSize = group.readEntry( "maxLogSize", 0 );
+  const int maxLogSize = group.readEntry( "maxLogSize", -1 );
 
   if ( isEnabled !=FilterLog::instance()->isLogging() )  
     FilterLog::instance()->setLogging( isEnabled );
@@ -239,8 +239,12 @@ void FilterLogDialog::slotLogStateChanged()
 
   // value in the QSpinBox is in KB while it's in Byte in the FilterLog
   int newLogSize = FilterLog::instance()->maxLogSize() / 1024;
-  if ( mLogMemLimitSpin->value() != newLogSize )
-    mLogMemLimitSpin->setValue( newLogSize );
+  if ( mLogMemLimitSpin->value() != newLogSize ) {
+    if(newLogSize <= 0)
+      mLogMemLimitSpin->setValue( 1 );
+    else
+      mLogMemLimitSpin->setValue( newLogSize );
+  }
   writeConfig();
 }
 
@@ -278,8 +282,10 @@ void FilterLogDialog::slotSwitchLogState()
 void FilterLogDialog::slotChangeLogMemLimit( int value )
 {
   mTextEdit->document()->setMaximumBlockCount( 0 ); //Reset value
-  FilterLog::instance()->setMaxLogSize( value * 1024 );
-  
+  if(value == 1) //unilimited
+    FilterLog::instance()->setMaxLogSize(-1);
+  else
+    FilterLog::instance()->setMaxLogSize( value * 1024 );
 }
 
 
