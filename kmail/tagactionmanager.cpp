@@ -23,6 +23,7 @@
 
 #include "messagecore/taglistmonitor.h"
 #include <nepomuk/tag.h>
+#include <Nepomuk/ResourceManager>
 
 #include <KAction>
 #include <KActionCollection>
@@ -52,6 +53,18 @@ TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCo
   KAction *separator = new KAction( this );
   separator->setSeparator( true );
   mMessageActions->messageStatusMenu()->menu()->addAction( separator );
+  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
+           SLOT(slotNepomukStarted()) );
+  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
+           SLOT(slotNepomukStopped()) );
+
+#if 0
+  Nepomuk::ResourceWatcher* watcher = new Nepomuk::ResourceWatcher(this);
+  watcher->addType(Soprano::Vocabulary::NAO::Tag());
+  connect(watcher, SIGNAL(propertyAdded(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)), this, SLOT(tagsChanged()));
+  connect(watcher, SIGNAL(propertyRemoved(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)),this, SLOT(tagsChanged()));
+  watcher->start();
+#endif
 }
 
 TagActionManager::~TagActionManager()
@@ -200,6 +213,17 @@ void TagActionManager::updateActionStates( int numberOfSelectedMessages,
 void TagActionManager::tagsChanged()
 {
   createActions();
+}
+
+void TagActionManager::slotNepomukStarted()
+{
+  tagsChanged();
+}
+
+void TagActionManager::slotNepomukStopped()
+{
+  mTags.clear();
+  clearActions();
 }
 
 
