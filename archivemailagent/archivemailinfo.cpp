@@ -44,13 +44,13 @@ ArchiveMailInfo::~ArchiveMailInfo()
 {
 }
 
-KUrl ArchiveMailInfo::realUrl() const
+KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
 {
   //FIXME
   const int numExtensions = 4;
   // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-  QString path = url().path() + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
+  QString path = url().path() + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) + foldername + QLatin1Char( '_' ) + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
 ;
   KUrl real;
   real.setPath(path);

@@ -44,8 +44,8 @@ void ArchiveJob::execute()
   if(mInfo) {
     MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
     Akonadi::Collection collection(mInfo->saveCollectionId());
-    backupJob->setRootFolder( Akonadi::Collection(mInfo->saveCollectionId()) );
-    backupJob->setSaveLocation( mInfo->realUrl() );
+    backupJob->setRootFolder( collection );
+    backupJob->setSaveLocation( mInfo->realUrl(collection.name()) );
     backupJob->setArchiveType( mInfo->archiveType() );
     backupJob->setDeleteFoldersAfterCompletion( false );
     backupJob->setRecursive( mInfo->saveSubCollection() );
