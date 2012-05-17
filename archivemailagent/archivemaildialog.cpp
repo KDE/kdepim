@@ -20,6 +20,7 @@
 #include <mailcommon/mailutil.h>
 #include <KGlobal>
 #include <KLocale>
+#include <KMessageBox>
 #include <QHBoxLayout>
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
@@ -174,8 +175,10 @@ void ArchiveMailWidget::save()
 void ArchiveMailWidget::slotRemoveItem()
 {
   QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-  Q_FOREACH(QTreeWidgetItem *item,listItems) {
+  if(KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items?. Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
+    return;
 
+  Q_FOREACH(QTreeWidgetItem *item,listItems) {
     delete item;
   }
   updateButtons();
