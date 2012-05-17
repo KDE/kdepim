@@ -18,6 +18,8 @@
 #include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
 #include <mailcommon/mailutil.h>
+#include <KGlobal>
+#include <KLocale>
 #include <QHBoxLayout>
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
@@ -76,6 +78,9 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 {
   mWidget = new Ui::ArchiveMailWidget;
   mWidget->setupUi( this );
+  QStringList headers;
+  headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
+  mWidget->treeWidget->setHeaderLabels(headers);
   load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
@@ -118,6 +123,27 @@ void ArchiveMailWidget::addItem(ArchiveMailInfo *info)
 {
   ArchiveMailItem *item = new ArchiveMailItem(mWidget->treeWidget);
   item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
+  item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
+#if 0
+  QDate diffDate(info->lastDateSaved());
+  switch(info->archiveUnit()) {
+    case ArchiveMailInfo::ArchiveDays:
+      diffDate = diffDate.addDays(info->archiveAge());
+      break;
+    case ArchiveMailInfo::ArchiveWeeks:
+      diffDate = diffDate.addDays(info->archiveAge()*7);
+      break;
+    case ArchiveMailInfo::ArchiveMonths:
+      diffDate = diffDate.addMonths(info->archiveAge());
+      break;
+    default:
+      qDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
+      break;
+  }
+
+
+  item->setText(2,(diffDate.datesT -info->lastDateSaved()));
+#endif
   item->setInfo(info);
 }
 
