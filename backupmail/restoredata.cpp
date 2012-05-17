@@ -152,7 +152,18 @@ void RestoreData::restoreTransports()
 
 void RestoreData::restoreResources()
 {
-
+  Q_FOREACH(const QString& filename, mFileList) {
+    if(filename.startsWith(BackupMailUtil::resourcesPath())) {
+      const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
+      if(fileEntry->isFile()) {
+        const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
+        KTemporaryFile tmp;
+        tmp.open();
+        file->copyTo(tmp.fileName());
+        //TODO
+      }
+    }
+  }
 }
 
 void RestoreData::restoreMails()
@@ -175,9 +186,12 @@ void RestoreData::restoreConfig()
 
     fileFilter->copyTo(tmp.fileName());
 
+    KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(tmp.fileName());
+
     //FIX before to append filters.
     //TODO fix identity.
     //TODO fix transport.
+    //Fix resources
 
     bool canceled = false;
     MailCommon::FilterImporterExporter exportFilters;
