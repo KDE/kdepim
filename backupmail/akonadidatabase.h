@@ -18,11 +18,23 @@
 #ifndef AKONADIDATABASE_H
 #define AKONADIDATABASE_H
 
+#include <QString>
+#include <QStringList>
+
 class AkonadiDataBase
 {
 public:
   explicit AkonadiDataBase();
   ~AkonadiDataBase();
+
+  QStringList options() const;
+  QString driver() const;
+  QString name() const;
+private:
+  void init();
+  QStringList m_dboptions;
+  QString m_dbdriver;
+  QString m_dbname;
 };
 
 #endif // AKONADIDATABASE_H

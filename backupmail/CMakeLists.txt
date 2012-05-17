@@ -30,6 +30,7 @@ target_link_libraries(backupmail
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${AKONADI_COMMON_LIBRARIES}
   mailimporter
   mailcommon
   kdepim
