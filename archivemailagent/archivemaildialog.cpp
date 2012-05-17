@@ -127,7 +127,6 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
   }
   item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
   item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
-#if 0
   QDate diffDate(info->lastDateSaved());
   switch(info->archiveUnit()) {
     case ArchiveMailInfo::ArchiveDays:
@@ -143,10 +142,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
       qDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
       break;
   }
-
-
-  item->setText(2,(diffDate.datesT -info->lastDateSaved()));
-#endif
+  item->setText(2,i18np("1 day", "%1 days",QString::number(info->lastDateSaved().daysTo(diffDate))));
   item->setInfo(info);
 }
 
