@@ -14,6 +14,7 @@ set(backupmail_SRCS
   backupmailkernel.cpp
   selecttypewidget.cpp
   selectiontypedialog.cpp
+  akonadidatabase.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
