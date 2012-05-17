@@ -123,12 +123,24 @@ void RestoreData::restoreTransports()
       if(group.hasKey(specifySenderOverwriteAddressStr)) {
         mt->setSpecifySenderOverwriteAddress(group.readEntry(specifySenderOverwriteAddressStr,false));
       }
+      const QString storePasswordStr(QLatin1String("storePassword"));
+      if(group.hasKey(storePasswordStr)) {
+        mt->setStorePassword(group.readEntry(storePasswordStr,false));
+      }
+      const QString senderOverwriteAddressStr(QLatin1String("senderOverwriteAddress"));
+      if(group.hasKey(senderOverwriteAddressStr)) {
+        mt->setSenderOverwriteAddress(group.readEntry(senderOverwriteAddressStr));
+      }
+      const QString encryptionStr(QLatin1String("encryption"));
+      if(group.hasKey(encryptionStr)) {
+        mt->setEncryption(group.readEntry(encryptionStr,1)); //TODO verify
+      }
+      const QString authenticationTypeStr(QLatin1String("authenticationType"));
+      if(group.hasKey(authenticationTypeStr)) {
+        mt->setAuthenticationType(group.readEntry(authenticationTypeStr,1));//TODO verify
+      }
 
-      //storePassword
-      //encryption
       //authenticationType
-      //specifySenderOverwriteAddress
-      //senderOverwriteAddress
 
       mHashTransport.insert(transportId, mt->id());
     }
