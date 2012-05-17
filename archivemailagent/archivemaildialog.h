@@ -44,7 +44,7 @@ public:
   void save();
 private:
   void load();
-  void addItem(ArchiveMailInfo *info);
+  void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
 
 private Q_SLOTS:
   void slotRemoveItem();
