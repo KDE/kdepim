@@ -93,7 +93,6 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
     base_uri = domElement.attribute(QLatin1String("base_uri"));
   }
   if(base_uri == QLatin1String("local:")) {
-    //TODO <group uid="1326983249.24740.3@kspread" name="Sur cet ordinateur" base_uri="local:" readonly="no">
     for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
       const QString tag = e.tagName();
       if(tag == QLatin1String("source")) {
@@ -127,10 +126,14 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
                       settings.insert(QLatin1String("ReadOnly"), true);
                     }
                   }
+                } else if( propertyName == QLatin1String("alarm")) {
+                  qDebug()<<" need to implement alarm property";
+                }else {
+                  qDebug()<<" property unknown :"<<propertyName;
                 }
               }
             } else {
-              qDebug()<<" property unknown :"<<propertyTag;
+              qDebug()<<" tag unknown :"<<propertyTag;
             }
           }
         }
@@ -139,6 +142,12 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
         qDebug()<<" tag unknown :"<<tag;
       }
     }
+  } else if(base_uri == QLatin1String("webcal://")) {
+    qDebug()<<" need to implement webcal protocol";
+  } else if(base_uri == QLatin1String("google://")) {
+    qDebug()<<" need to implement google protocol";
+  } else if(base_uri == QLatin1String("caldav://")) {
+    qDebug()<<" need to implement caldav protocol";
   } else {
     qDebug()<<" base_uri unknown"<<base_uri;
   }

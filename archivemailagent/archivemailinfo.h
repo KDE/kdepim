@@ -38,7 +38,7 @@ public:
     ArchiveMaxUnits
   };
 
-  KUrl realUrl() const;
+  KUrl realUrl(const QString &filename) const;
 
   bool isEmpty() const;
 

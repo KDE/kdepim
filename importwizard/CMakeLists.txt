@@ -20,6 +20,7 @@ abstractcalendar.cpp
 importcalendarpage.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
+thunderbird/thunderbirdaddressbook.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp
 sylpheed/sylpheedaddressbook.cpp

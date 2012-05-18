@@ -19,6 +19,7 @@
 #define RESTOREDATA_H
 
 #include "abstractdata.h"
+#include <Akonadi/Collection>
 #include <QStringList>
 #include <QHash>
 
@@ -38,8 +39,9 @@ private:
   void restoreIdentity();
   void restoreAkonadiDb();
   void restoreNepomuk();
-  QHash<QString, QString> mHashIdentity;
-  QHash<QString, QString> mHashTransport;
+  Akonadi::Collection::Id adaptFolderId( const QString& folder);
+  QHash<uint, uint> mHashIdentity;
+  QHash<int, int> mHashTransport;
   QHash<QString, QString> mHashResources;
   QStringList mFileList;
   const KArchiveDirectory* mArchiveDirectory;

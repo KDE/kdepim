@@ -45,5 +45,6 @@ int main(int argc, char *argv[])
   a.setTopWidget(wizard);
   wizard->show();
   int ret = a.exec();
+  delete wizard;
   return ret;
 }

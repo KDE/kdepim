@@ -74,7 +74,6 @@ void BackupMailKernel::syncConfig()
 
 MailCommon::JobScheduler* BackupMailKernel::jobScheduler() const
 {
-  //FIXME. We need it.
   Q_ASSERT( false );
   return 0;
 }

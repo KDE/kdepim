@@ -50,16 +50,11 @@
       <Action name="view_mode_3columns"/>
       <Separator/>
       <Action name="options_show_qrcodes"/>
-      <Separator/>
-      <Action name="options_configure_keybinding" group="settings_configure"/>
-      <Action name="options_configure_toolbars" group="settings_configure" />
-
-    </Menu>
-    <Menu noMerge="1" name="settings">
-      <text>&amp;Settings</text>
-      <Action name="kaddressbook_configure" group="settings_configure" />
     </Menu>
 
+    <Menu name="settings"><text>&amp;Settings</text>
+      <Action name="kaddressbook_configure" />
+    </Menu>
   </MenuBar>
 
   <Menu name="akonadi_collectionview_contextmenu">

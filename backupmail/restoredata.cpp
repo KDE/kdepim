@@ -19,10 +19,16 @@
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
+#include "mailcommon/filter/filteractionmissingargumentdialog.h"
 
 
 #include "messageviewer/kcursorsaver.h"
 
+
+#include <mailtransport/transportmanager.h>
+
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
 #include <KZip>
 #include <KLocale>
 #include <KTemporaryFile>
@@ -82,11 +88,62 @@ void RestoreData::restoreTransports()
     const QStringList transportList = transportConfig->groupList().filter( QRegExp( "Transport \\d+" ) );
     Q_FOREACH(const QString&transport, transportList) {
       KConfigGroup group = transportConfig->group(transport);
-      //TODO load it.
-      //Save new Id
-    }
+      const int transportId = group.readEntry(QLatin1String("id"), -1);
+      MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
+      mt->setName(group.readEntry(QLatin1String("name")));
+      const QString hostStr(QLatin1String("host"));
+      if(group.hasKey(hostStr)) {
+        mt->setHost(group.readEntry(hostStr));
+      }
+      const QString portStr(QLatin1String("port"));
+      if(group.hasKey(portStr)) {
+        mt->setPort(group.readEntry(portStr,-1));
+      }
+      const QString userNameStr(QLatin1String("userName"));
+      if(group.hasKey(userNameStr)) {
+        mt->setUserName(group.readEntry(userNameStr));
+      }
+      const QString precommandStr(QLatin1String("precommand"));
+      if(group.hasKey(precommandStr)) {
+        mt->setPrecommand(group.readEntry(precommandStr));
+      }
+      const QString requiresAuthenticationStr(QLatin1String("requiresAuthentication"));
+      if(group.hasKey(requiresAuthenticationStr)) {
+        mt->setRequiresAuthentication(group.readEntry(requiresAuthenticationStr,false));
+      }
+      const QString specifyHostnameStr(QLatin1String("specifyHostname"));
+      if(group.hasKey(specifyHostnameStr)) {
+        mt->setSpecifyHostname(group.readEntry(specifyHostnameStr,false));
+      }
+      const QString localHostnameStr(QLatin1String("localHostname"));
+      if(group.hasKey(localHostnameStr)) {
+        mt->setLocalHostname(group.readEntry(localHostnameStr));
+      }
+      const QString specifySenderOverwriteAddressStr(QLatin1String("specifySenderOverwriteAddress"));
+      if(group.hasKey(specifySenderOverwriteAddressStr)) {
+        mt->setSpecifySenderOverwriteAddress(group.readEntry(specifySenderOverwriteAddressStr,false));
+      }
+      const QString storePasswordStr(QLatin1String("storePassword"));
+      if(group.hasKey(storePasswordStr)) {
+        mt->setStorePassword(group.readEntry(storePasswordStr,false));
+      }
+      const QString senderOverwriteAddressStr(QLatin1String("senderOverwriteAddress"));
+      if(group.hasKey(senderOverwriteAddressStr)) {
+        mt->setSenderOverwriteAddress(group.readEntry(senderOverwriteAddressStr));
+      }
+      const QString encryptionStr(QLatin1String("encryption"));
+      if(group.hasKey(encryptionStr)) {
+        mt->setEncryption(group.readEntry(encryptionStr,1)); //TODO verify
+      }
+      const QString authenticationTypeStr(QLatin1String("authenticationType"));
+      if(group.hasKey(authenticationTypeStr)) {
+        mt->setAuthenticationType(group.readEntry(authenticationTypeStr,1));//TODO verify
+      }
 
-    //TODO modify it.
+      //authenticationType
+
+      mHashTransport.insert(transportId, mt->id());
+    }
     Q_EMIT info(i18n("Transports restored."));
   } else {
     Q_EMIT error(i18n("Failed to restore transports file."));
@@ -95,7 +152,18 @@ void RestoreData::restoreTransports()
 
 void RestoreData::restoreResources()
 {
-
+  Q_FOREACH(const QString& filename, mFileList) {
+    if(filename.startsWith(BackupMailUtil::resourcesPath())) {
+      const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
+      if(fileEntry->isFile()) {
+        const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
+        KTemporaryFile tmp;
+        tmp.open();
+        file->copyTo(tmp.fileName());
+        //TODO
+      }
+    }
+  }
 }
 
 void RestoreData::restoreMails()
@@ -118,9 +186,12 @@ void RestoreData::restoreConfig()
 
     fileFilter->copyTo(tmp.fileName());
 
+    KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(tmp.fileName());
+
     //FIX before to append filters.
     //TODO fix identity.
     //TODO fix transport.
+    //Fix resources
 
     bool canceled = false;
     MailCommon::FilterImporterExporter exportFilters;
@@ -151,11 +222,32 @@ void RestoreData::restoreIdentity()
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
       KConfigGroup group = identityConfig->group(identityStr);
-      //TODO fix draft/FCC/Templates
-      //Save new Id
-    }
+      uint oldUid = -1;
+      const QString uidStr("uoid");
+      if(group.hasKey(uidStr)) {
+        oldUid = group.readEntry(uidStr).toUInt();
+        group.deleteEntry(uidStr);
+      }
+      const QString fcc(QLatin1String("Fcc"));
+      if(group.hasKey(fcc)) {
+        group.writeEntry(fcc,adaptFolderId(group.readEntry(fcc)));
+      }
+      const QString draft = QLatin1String("Drafts");
+      if(group.hasKey(draft)) {
+        group.writeEntry(draft,adaptFolderId(group.readEntry(draft)));
+      }
+      const QString templates = QLatin1String("Templates");
+      if(group.hasKey(templates)) {
+        group.writeEntry(templates,adaptFolderId(group.readEntry(templates)));
+      }
+      group.sync();
+      KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( QString() );
 
-    //TODO
+      identity->readConfig(group);
+      if(oldUid != -1) {
+        mHashIdentity.insert(oldUid,identity->uoid());
+      }
+    }
     Q_EMIT info(i18n("Identities restored."));
   } else {
     Q_EMIT error(i18n("Failed to restore identity file."));
@@ -170,4 +262,22 @@ void RestoreData::restoreAkonadiDb()
 void RestoreData::restoreNepomuk()
 {
   //TODO
+}
+
+
+Akonadi::Collection::Id RestoreData::adaptFolderId( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId=-1;
+  bool exactPath = false;
+  Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
+  if ( lst.count() == 1 && exactPath )
+    newFolderId = lst.at( 0 ).id();
+  else {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
+    if ( dlg->exec() ) {
+      newFolderId = dlg->selectedCollection().id();
+    }
+    delete dlg;
+  }
+  return newFolderId;
 }
