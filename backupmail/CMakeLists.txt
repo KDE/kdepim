@@ -1,6 +1,6 @@
 project(backupmail)
 
-include_directories(${SOPRANO_INCLUDE_DIR})
+include_directories(${AKONADI_INCLUDE_DIR} ${SOPRANO_INCLUDE_DIR})
 
 ########### next target ###############
 
