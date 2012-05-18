@@ -88,8 +88,11 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
   info->setLastDateSaved(QDate::currentDate());
   KSharedConfig::Ptr config = KGlobal::config();
   const QString groupname = archivePattern.arg(info->saveCollectionId());
-  KConfigGroup group = config->group(groupname);
-  info->writeConfig(group);
+  //Don't store it if we removed this task
+  if(config->hasGroup(groupname)) {
+    KConfigGroup group = config->group(groupname);
+    info->writeConfig(group);
+  }
   mListArchiveInfo.removeAll(info);
 }
 
