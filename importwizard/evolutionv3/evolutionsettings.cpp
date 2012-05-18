@@ -38,7 +38,7 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
   //Read gconf file
   QFile file(filename);
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    qDebug()<<" We can't open file"<<filename;
+    kDebug()<<" We can't open file"<<filename;
     return;
   }
   QDomDocument doc;
