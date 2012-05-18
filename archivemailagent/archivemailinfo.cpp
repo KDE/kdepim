@@ -46,7 +46,6 @@ ArchiveMailInfo::~ArchiveMailInfo()
 
 KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
 {
-  //FIXME
   const int numExtensions = 4;
   // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };

@@ -17,6 +17,7 @@
 
 #include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
+#include "archivemailagentutil.h"
 #include <mailcommon/mailutil.h>
 #include <KGlobal>
 #include <KLocale>
@@ -127,21 +128,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
   }
   item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
   item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
-  QDate diffDate(info->lastDateSaved());
-  switch(info->archiveUnit()) {
-    case ArchiveMailInfo::ArchiveDays:
-      diffDate = diffDate.addDays(info->archiveAge());
-      break;
-    case ArchiveMailInfo::ArchiveWeeks:
-      diffDate = diffDate.addDays(info->archiveAge()*7);
-      break;
-    case ArchiveMailInfo::ArchiveMonths:
-      diffDate = diffDate.addMonths(info->archiveAge());
-      break;
-    default:
-      qDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
-      break;
-  }
+  QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
   item->setText(2,i18np("1 day", "%1 days",QString::number(info->lastDateSaved().daysTo(diffDate))));
   item->setInfo(info);
 }

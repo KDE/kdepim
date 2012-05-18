@@ -19,6 +19,7 @@
 #include "archivemailinfo.h"
 #include "archivejob.h"
 #include "archivemailkernel.h"
+#include "archivemailagentutil.h"
 
 #include <mailcommon/mailkernel.h>
 
@@ -54,21 +55,7 @@ void ArchiveMailManager::load()
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
-    QDate diffDate(info->lastDateSaved());
-    switch(info->archiveUnit()) {
-      case ArchiveMailInfo::ArchiveDays:
-        diffDate = diffDate.addDays(info->archiveAge());
-        break;
-      case ArchiveMailInfo::ArchiveWeeks:
-        diffDate = diffDate.addDays(info->archiveAge()*7);
-        break;
-      case ArchiveMailInfo::ArchiveMonths:
-        diffDate = diffDate.addMonths(info->archiveAge());
-        break;
-      default:
-        qDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
-        break;
-    }
+    QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
     if(QDate::currentDate() > diffDate) {
       //Store task started
       mListArchiveInfo.append(info);
