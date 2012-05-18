@@ -222,7 +222,7 @@ void TagActionManager::slotNepomukStarted()
 
 void TagActionManager::slotNepomukStopped()
 {
-  mTags.clear();
+  //mTags.clear();
   clearActions();
 }
 
