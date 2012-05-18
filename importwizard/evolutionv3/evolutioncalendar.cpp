@@ -139,6 +139,12 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
         qDebug()<<" tag unknown :"<<tag;
       }
     }
+  } else if(base_uri == QLatin1String("webcal://")) {
+    qDebug()<<" need to implement webcal protocol";
+  } else if(base_uri == QLatin1String("google://")) {
+    qDebug()<<" need to implement google protocol";
+  } else if(base_uri == QLatin1String("caldav://")) {
+    qDebug()<<" need to implement caldav protocol";
   } else {
     qDebug()<<" base_uri unknown"<<base_uri;
   }
