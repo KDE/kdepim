@@ -32,6 +32,11 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
+#include <Nepomuk/Resource>
+#include <Nepomuk/Vocabulary/NIE>
+#include <Nepomuk/Variant>
+
+
 #include <KDE/KLocale>
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Statement>
@@ -417,11 +422,11 @@ void StorageModel::Private::statementChanged( const Soprano::Statement &statemen
   if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ||
        statement.predicate() == Soprano::Vocabulary::NAO::description() )
   {
-    const Akonadi::Item item = Item::fromUrl( statement.subject().uri() );
+    Nepomuk::Resource resource(statement.subject().uri());
+    const Akonadi::Item item = Item::fromUrl( resource.property(Nepomuk::Vocabulary::NIE::url()).toUrl() );
     if ( !item.isValid() ) {
       return;
     }
-
     const QModelIndexList list = mModel->match( QModelIndex(), EntityTreeModel::ItemIdRole, item.id() );
     if ( list.isEmpty() ) {
       return;
