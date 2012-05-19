@@ -56,6 +56,7 @@ Action=Popup
 
 [Event/archivemailerror]
 Name=Archive Mail Error
+Name[ia]=Error de Archivar posta
 Name[nl]=Fout in e-mail archiveren
 Name[pt]=Erro no Arquivo de E-Mail
 Name[pt_BR]=Erro no arquivamento de e-mails
