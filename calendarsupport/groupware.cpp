@@ -90,6 +90,12 @@ void Groupware::handleInvitation( const QString &receiver,
                                   const QString &type )
 {
   NepomukCalendar::Ptr calendar = NepomukCalendar::create();
+  if ( !calendar ) {
+   KMessageBox::error(
+      0,
+      i18n( "Error while processing an invitation or update." ) );
+    return;
+  }
   connect( calendar.data(), SIGNAL(loadFinished(bool,QString)),
            SLOT(finishHandlingInvitation()) );
 
