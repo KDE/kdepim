@@ -42,6 +42,8 @@ public:
   explicit ArchiveMailWidget( QWidget *parent = 0 );
   ~ArchiveMailWidget();
   void save();
+  void saveTreeWidgetHeader(KConfigGroup& group);
+  void restoreTreeWidgetHeader(const QByteArray &group);
 private:
   void load();
   void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);

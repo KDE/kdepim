@@ -61,12 +61,15 @@ void ArchiveMailDialog::readConfig()
   } else {
     resize( 500, 300 );
   }
+
+  mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
 }
 
 void ArchiveMailDialog::writeConfig()
 {
   KConfigGroup group( KGlobal::config(), myConfigGroupName );
   group.writeEntry( "Size", size() );
+  mWidget->saveTreeWidgetHeader(group);
   group.sync();
 }
 
@@ -117,6 +120,16 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 ArchiveMailWidget::~ArchiveMailWidget()
 {
   delete mWidget;
+}
+
+void ArchiveMailWidget::restoreTreeWidgetHeader(const QByteArray& data)
+{
+  mWidget->treeWidget->header()->restoreState(data);
+}
+
+void ArchiveMailWidget::saveTreeWidgetHeader(KConfigGroup& group)
+{
+  group.writeEntry( "HeaderState", mWidget->treeWidget->header()->saveState() );
 }
 
 void ArchiveMailWidget::updateButtons()
