@@ -97,6 +97,7 @@ void Groupware::handleInvitation( const QString &receiver,
             "Therefore this invitation cannot be handled." ),
       i18n( "Invitation Handling Error")
     );
+    return;
   }
 
   connect( calendar.data(), SIGNAL(loadFinished(bool,QString)),
