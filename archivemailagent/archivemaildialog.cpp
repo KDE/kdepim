@@ -41,11 +41,33 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   mainLayout->addWidget(mWidget);
   setMainWidget( mainWidget );
   connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
+  readConfig();
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
+  writeConfig();
+}
 
+static const char *myConfigGroupName = "ArchiveMailDialog";
+
+void ArchiveMailDialog::readConfig()
+{
+  KConfigGroup group( KGlobal::config(), myConfigGroupName );
+
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    resize( size );
+  } else {
+    resize( 500, 300 );
+  }
+}
+
+void ArchiveMailDialog::writeConfig()
+{
+  KConfigGroup group( KGlobal::config(), myConfigGroupName );
+  group.writeEntry( "Size", size() );
+  group.sync();
 }
 
 void ArchiveMailDialog::slotSave()
@@ -118,7 +140,6 @@ void ArchiveMailWidget::load()
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     createOrUpdateItem(info);
   }
-  updateButtons();
 }
 
 void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item)

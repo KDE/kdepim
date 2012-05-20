@@ -66,6 +66,8 @@ protected Q_SLOTS:
   void slotSave();
 
 private:
+  void writeConfig();
+  void readConfig();
   ArchiveMailWidget *mWidget;
 };
 
