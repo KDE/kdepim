@@ -93,7 +93,7 @@ void Groupware::handleInvitation( const QString &receiver,
   if ( !calendar ) {
     KMessageBox::error(
       0,
-      i18n( "Unable to create the calendar information for this invitation."
+      i18n( "Unable to create the calendar information for this invitation. "
             "Therefore this invitation cannot be handled." ),
       i18n( "Invitation Handling Error")
     );
