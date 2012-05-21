@@ -27,6 +27,8 @@
 #include <Akonadi/CollectionFetchScope>
 #include <KMime/Message>
 
+#include <QTimer>
+
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
 {
@@ -45,6 +47,9 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
            this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
   mArchiveManager->load();
+  mTimer = new QTimer(this);
+  connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
+  mTimer->start(24*60*60*1000);
 }
 
 ArchiveMailAgent::~ArchiveMailAgent()
@@ -63,6 +68,12 @@ void ArchiveMailAgent::showConfigureDialog()
     mArchiveManager->load();
   }
   delete dialog;
+}
+
+
+void ArchiveMailAgent::reload()
+{
+  mArchiveManager->load();
 }
 
 void ArchiveMailAgent::configure( WId windowId )
