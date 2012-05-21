@@ -122,7 +122,6 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   Nepomuk::ResourceWatcher *watcher = new Nepomuk::ResourceWatcher(this);
   watcher->addProperty(Nepomuk::Types::Property(Soprano::Vocabulary::NAO::hasTag()));
   watcher->addProperty(Nepomuk::Types::Property(Soprano::Vocabulary::NAO::description()));
-  watcher->start();
   connect(watcher, SIGNAL(propertyChanged(Nepomuk::Resource,Nepomuk::Types::Property,QVariantList,QVariantList)),
           this, SLOT(statementChanged(Nepomuk::Resource)));
   connect(watcher, SIGNAL(propertyRemoved(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)),
@@ -131,6 +130,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
           this, SLOT(statementChanged(Nepomuk::Resource)));
   connect(watcher, SIGNAL(resourceCreated(Nepomuk::Resource,QList<QUrl>)),
           this, SLOT(statementChanged(Nepomuk::Resource)));
+  watcher->start();
 
   connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)) );
