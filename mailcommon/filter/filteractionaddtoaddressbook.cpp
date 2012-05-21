@@ -19,7 +19,7 @@
 
 #include "filteractionaddtoaddressbook.h"
 
-#include "../minimumcombobox.h"
+#include <messageviewer/minimumcombobox.h>
 
 #include <libkdepim/addcontactjob.h>
 
@@ -92,7 +92,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
   QWidget *widget = new QWidget( parent );
   QGridLayout *layout = new QGridLayout( widget );
 
-  MinimumComboBox *headerCombo = new MinimumComboBox( widget );
+  MessageViewer::MinimumComboBox *headerCombo = new MessageViewer::MinimumComboBox( widget );
   headerCombo->setObjectName( "HeaderComboBox" );
   layout->addWidget( headerCombo, 0, 0, 2, 1, Qt::AlignVCenter );
 
@@ -127,7 +127,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
 
 void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
+  MessageViewer::MinimumComboBox *headerCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
   headerCombo->clear();
   headerCombo->addItem( mFromStr, FromHeader );
@@ -149,7 +149,7 @@ void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) c
 
 void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
+  const MessageViewer::MinimumComboBox *headerCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
   mHeaderType = static_cast<HeaderType>( headerCombo->itemData( headerCombo->currentIndex() ).toInt() );
 
@@ -176,7 +176,7 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionAddToAddressBook::clearParamWidget( QWidget *paramWidget ) const
 {
-  MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
+  MessageViewer::MinimumComboBox *headerCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
   headerCombo->setCurrentItem( 0 );
 

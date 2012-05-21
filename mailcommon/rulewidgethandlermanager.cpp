@@ -29,10 +29,10 @@
 */
 
 #include "rulewidgethandlermanager.h"
-#include "minimumcombobox.h"
 #include "interfaces/rulewidgethandler.h"
 
 #include <messageviewer/stl_util.h>
+#include <messageviewer/minimumcombobox.h>
 
 #ifndef KDEPIM_NO_NEPOMUK
 #include <Nepomuk/Tag>
@@ -624,7 +624,7 @@ QWidget *TextRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "textRuleFuncCombo" );
   for ( int i = 0; i < TextFunctionCount; ++i ) {
     funcCombo->addItem( i18n( TextFunctions[i].displayName ) );
@@ -661,7 +661,7 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
 #ifndef KDEPIM_NO_NEPOMUK
 
   if ( number == 2 ) {
-    MinimumComboBox *combo =  new MinimumComboBox( valueStack );
+    MessageViewer::MinimumComboBox *combo =  new MessageViewer::MinimumComboBox( valueStack );
     combo->setObjectName( "categoryCombo" );
     foreach ( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
       if ( tag.genericIcon().isEmpty() ) {
@@ -684,8 +684,8 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
 SearchRule::Function TextRuleWidgetHandler::currentFunction(
   const QStackedWidget *functionStack ) const
 {
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( QString( "textRuleFuncCombo" ) );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( QString( "textRuleFuncCombo" ) );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return TextFunctions[funcCombo->currentIndex()].id;
@@ -711,7 +711,7 @@ QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
   // here we gotta check the combobox which contains the categories
   if ( func  == SearchRule::FuncIsInCategory ||
        func  == SearchRule::FuncIsNotInCategory ) {
-    const MinimumComboBox *combo = valueStack->findChild<MinimumComboBox*>( "categoryCombo" );
+    const MessageViewer::MinimumComboBox *combo = valueStack->findChild<MessageViewer::MinimumComboBox*>( "categoryCombo" );
 
     if ( combo ) {
       return combo->currentText();
@@ -778,7 +778,7 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                    QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo = functionStack->findChild<MinimumComboBox*>( "textRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo = functionStack->findChild<MessageViewer::MinimumComboBox*>( "textRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -796,7 +796,7 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
     valueStack->setCurrentWidget( lineEdit );
   }
 
-  MinimumComboBox *combo = valueStack->findChild<MinimumComboBox*>( "categoryCombo" );
+  MessageViewer::MinimumComboBox *combo = valueStack->findChild<MessageViewer::MinimumComboBox*>( "categoryCombo" );
 
   if ( combo ) {
     combo->blockSignals( true );
@@ -824,7 +824,7 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo = functionStack->findChild<MinimumComboBox*>( "textRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo = functionStack->findChild<MessageViewer::MinimumComboBox*>( "textRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -845,7 +845,7 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 #ifndef KDEPIM_NO_NEPOMUK
   else if ( func == SearchRule::FuncIsInCategory ||
             func == SearchRule::FuncIsNotInCategory ) {
-    MinimumComboBox *combo = valueStack->findChild<MinimumComboBox*>( "categoryCombo" );
+    MessageViewer::MinimumComboBox *combo = valueStack->findChild<MessageViewer::MinimumComboBox*>( "categoryCombo" );
 
     combo->blockSignals( true );
     const int numberOfElement( combo->count() );
@@ -948,7 +948,7 @@ QWidget *MessageRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "messageRuleFuncCombo" );
   for ( int i = 0; i < MessageFunctionCount; ++i ) {
     funcCombo->addItem( i18n( MessageFunctions[i].displayName ) );
@@ -990,8 +990,8 @@ QWidget *MessageRuleWidgetHandler::createValueWidget( int number,
 SearchRule::Function MessageRuleWidgetHandler::currentFunction(
   const QStackedWidget *functionStack ) const
 {
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "messageRuleFuncCombo" );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "messageRuleFuncCombo" );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return MessageFunctions[funcCombo->currentIndex()].id;
@@ -1079,7 +1079,7 @@ void MessageRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                       QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo = functionStack->findChild<MinimumComboBox*>( "messageRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo = functionStack->findChild<MessageViewer::MinimumComboBox*>( "messageRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1118,8 +1118,8 @@ bool MessageRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "messageRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "messageRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1211,7 +1211,7 @@ QWidget *StatusRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "statusRuleFuncCombo" );
   for ( int i = 0; i < StatusFunctionCount; ++i ) {
     funcCombo->addItem( i18n( StatusFunctions[i].displayName ) );
@@ -1232,7 +1232,7 @@ QWidget * StatusRuleWidgetHandler::createValueWidget( int number,
     return 0;
   }
 
-  MinimumComboBox *statusCombo = new MinimumComboBox( valueStack );
+  MessageViewer::MinimumComboBox *statusCombo = new MessageViewer::MinimumComboBox( valueStack );
   statusCombo->setObjectName( "statusRuleValueCombo" );
   for ( int i = 0; i < MailCommon::StatusValueCountWithoutHidden; ++i ) {
     if ( MailCommon::StatusValues[ i ].icon != 0 ) {
@@ -1255,8 +1255,8 @@ QWidget * StatusRuleWidgetHandler::createValueWidget( int number,
 SearchRule::Function StatusRuleWidgetHandler::currentFunction(
   const QStackedWidget *functionStack ) const
 {
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "statusRuleFuncCombo" );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "statusRuleFuncCombo" );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return StatusFunctions[funcCombo->currentIndex()].id;
@@ -1281,8 +1281,8 @@ SearchRule::Function StatusRuleWidgetHandler::function( const QByteArray &field,
 
 int StatusRuleWidgetHandler::currentStatusValue( const QStackedWidget *valueStack ) const
 {
-  const MinimumComboBox *statusCombo =
-    valueStack->findChild<MinimumComboBox*>( "statusRuleValueCombo" );
+  const MessageViewer::MinimumComboBox *statusCombo =
+    valueStack->findChild<MessageViewer::MinimumComboBox*>( "statusRuleValueCombo" );
 
   if ( statusCombo ) {
     return statusCombo->currentIndex();
@@ -1340,8 +1340,8 @@ void StatusRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                      QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "statusRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "statusRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1350,8 +1350,8 @@ void StatusRuleWidgetHandler::reset( QStackedWidget *functionStack,
   }
 
   // reset the status value combo box
-  MinimumComboBox *statusCombo =
-    valueStack->findChild<MinimumComboBox*>( "statusRuleValueCombo" );
+  MessageViewer::MinimumComboBox *statusCombo =
+    valueStack->findChild<MessageViewer::MinimumComboBox*>( "statusRuleValueCombo" );
 
   if ( statusCombo ) {
     statusCombo->blockSignals( true );
@@ -1380,8 +1380,8 @@ bool StatusRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "statusRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "statusRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1403,8 +1403,8 @@ bool StatusRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *statusCombo =
-    valueStack->findChild<MinimumComboBox*>( "statusRuleValueCombo" );
+  MessageViewer::MinimumComboBox *statusCombo =
+    valueStack->findChild<MessageViewer::MinimumComboBox*>( "statusRuleValueCombo" );
 
   if ( statusCombo ) {
     statusCombo->blockSignals( true );
@@ -1473,7 +1473,7 @@ QWidget *TagRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "tagRuleFuncCombo" );
   for ( int i = 0; i < TagFunctionCount; ++i ) {
     funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
@@ -1499,7 +1499,7 @@ QWidget *TagRuleWidgetHandler::createValueWidget( int number,
   }
 
   if ( number == 1 ) {
-    MinimumComboBox *valueCombo = new MinimumComboBox( valueStack );
+    MessageViewer::MinimumComboBox *valueCombo = new MessageViewer::MinimumComboBox( valueStack );
     valueCombo->setObjectName( "tagRuleValueCombo" );
     valueCombo->setEditable( true );
     valueCombo->addItem( QString() ); // empty entry for user input
@@ -1528,8 +1528,8 @@ SearchRule::Function TagRuleWidgetHandler::function( const QByteArray &field,
     return SearchRule::FuncNone;
   }
 
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "tagRuleFuncCombo" );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "tagRuleFuncCombo" );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return TagFunctions[funcCombo->currentIndex()].id;
@@ -1561,8 +1561,8 @@ QString TagRuleWidgetHandler::value( const QByteArray &field,
   }
 
   // Use combo box
-  const MinimumComboBox *tagCombo =
-    valueStack->findChild<MinimumComboBox*>( "tagRuleValueCombo" );
+  const MessageViewer::MinimumComboBox *tagCombo =
+    valueStack->findChild<MessageViewer::MinimumComboBox*>( "tagRuleValueCombo" );
 
   if ( tagCombo ) {
     return tagCombo->currentText();
@@ -1593,8 +1593,8 @@ void TagRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                   QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "tagRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "tagRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1614,7 +1614,7 @@ void TagRuleWidgetHandler::reset( QStackedWidget *functionStack,
     valueStack->setCurrentWidget( lineEdit );
   }
 
-  MinimumComboBox *tagCombo = valueStack->findChild<MinimumComboBox*>( "tagRuleValueCombo" );
+  MessageViewer::MinimumComboBox *tagCombo = valueStack->findChild<MessageViewer::MinimumComboBox*>( "tagRuleValueCombo" );
   if ( tagCombo ) {
     tagCombo->blockSignals( true );
     tagCombo->setCurrentIndex( 0 );
@@ -1642,8 +1642,8 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "tagRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "tagRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1680,8 +1680,8 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
       tagIndex++;
     }
 
-    MinimumComboBox *tagCombo =
-      valueStack->findChild<MinimumComboBox*>( "tagRuleValueCombo" );
+    MessageViewer::MinimumComboBox *tagCombo =
+      valueStack->findChild<MessageViewer::MinimumComboBox*>( "tagRuleValueCombo" );
 
     if ( tagCombo ) {
       tagCombo->blockSignals( true );
@@ -1761,7 +1761,7 @@ QWidget *NumericRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "numericRuleFuncCombo" );
   for ( int i = 0; i < NumericFunctionCount; ++i ) {
     funcCombo->addItem( i18n( NumericFunctions[i].displayName ) );
@@ -1795,8 +1795,8 @@ QWidget *NumericRuleWidgetHandler::createValueWidget( int number,
 SearchRule::Function NumericRuleWidgetHandler::currentFunction(
   const QStackedWidget *functionStack ) const
 {
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "numericRuleFuncCombo" );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "numericRuleFuncCombo" );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return NumericFunctions[funcCombo->currentIndex()].id;
@@ -1869,8 +1869,8 @@ void NumericRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                       QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "numericRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "numericRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -1919,8 +1919,8 @@ bool NumericRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "numericRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "numericRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -2008,7 +2008,7 @@ QWidget *DateRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "dateRuleFuncCombo" );
   for ( int i = 0; i < DateFunctionCount; ++i ) {
     funcCombo->addItem( i18n( DateFunctions[i].displayName ) );
@@ -2042,8 +2042,8 @@ QWidget *DateRuleWidgetHandler::createValueWidget( int number,
 SearchRule::Function DateRuleWidgetHandler::currentFunction(
   const QStackedWidget *functionStack ) const
 {
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "dateRuleFuncCombo" );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "dateRuleFuncCombo" );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return DateFunctions[funcCombo->currentIndex()].id;
@@ -2116,8 +2116,8 @@ void DateRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                       QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "dateRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "dateRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -2155,8 +2155,8 @@ bool DateRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "dateRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "dateRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -2226,7 +2226,7 @@ QWidget *NumericDoubleRuleWidgetHandler::createFunctionWidget(
     return 0;
   }
 
-  MinimumComboBox *funcCombo = new MinimumComboBox( functionStack );
+  MessageViewer::MinimumComboBox *funcCombo = new MessageViewer::MinimumComboBox( functionStack );
   funcCombo->setObjectName( "numericDoubleRuleFuncCombo" );
   for ( int i = 0; i < NumericFunctionCount; ++i ) {
     funcCombo->addItem( i18n( NumericFunctions[i].displayName ) );
@@ -2260,8 +2260,8 @@ QWidget *NumericDoubleRuleWidgetHandler::createValueWidget( int number,
 SearchRule::Function NumericDoubleRuleWidgetHandler::currentFunction(
   const QStackedWidget *functionStack ) const
 {
-  const MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "numericDoubleRuleFuncCombo" );
+  const MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "numericDoubleRuleFuncCombo" );
 
   if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
     return NumericFunctions[funcCombo->currentIndex()].id;
@@ -2334,8 +2334,8 @@ void NumericDoubleRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                       QStackedWidget *valueStack ) const
 {
   // reset the function combo box
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "numericDoubleRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "numericDoubleRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );
@@ -2384,8 +2384,8 @@ bool NumericDoubleRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
   }
 
-  MinimumComboBox *funcCombo =
-    functionStack->findChild<MinimumComboBox*>( "numericDoubleRuleFuncCombo" );
+  MessageViewer::MinimumComboBox *funcCombo =
+    functionStack->findChild<MessageViewer::MinimumComboBox*>( "numericDoubleRuleFuncCombo" );
 
   if ( funcCombo ) {
     funcCombo->blockSignals( true );

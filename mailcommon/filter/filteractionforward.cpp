@@ -21,9 +21,9 @@
 
 #include "../mailkernel.h"
 #include "../mailutil.h"
-#include "../minimumcombobox.h"
 #include "filteractionmissingargumentdialog.h"
 
+#include <messageviewer/minimumcombobox.h>
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
 #include <messagecore/emailaddressrequester.h>
@@ -95,7 +95,7 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
   lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );
 
-  MinimumComboBox *templateCombo = new MinimumComboBox( addressAndTemplate );
+  MessageViewer::MinimumComboBox *templateCombo = new MessageViewer::MinimumComboBox( addressAndTemplate );
   templateCombo->setObjectName( "templateCombo" );
   layout->addWidget( templateCombo );
 
@@ -128,7 +128,7 @@ void FilterActionForward::applyParamWidgetValue( QWidget *paramWidget )
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::applyParamWidgetValue( addressEdit );
 
-  const MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
+  const MessageViewer::MinimumComboBox *templateCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   if ( templateCombo->currentIndex() == 0 ) {
@@ -145,7 +145,7 @@ void FilterActionForward::setParamWidgetValue( QWidget *paramWidget ) const
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::setParamWidgetValue( addressEdit );
 
-  MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
+  MessageViewer::MinimumComboBox *templateCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   if ( mTemplate.isEmpty() ) {
@@ -166,7 +166,7 @@ void FilterActionForward::clearParamWidget( QWidget *paramWidget ) const
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::clearParamWidget( addressEdit );
 
-  MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
+  MessageViewer::MinimumComboBox *templateCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   templateCombo->setCurrentIndex( 0 );

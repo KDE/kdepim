@@ -18,6 +18,7 @@
 
 #include "translatorwidget.h"
 #include "globalsettings.h"
+#include "minimumcombobox.h"
 
 #include <KTextEdit>
 #include <KComboBox>
@@ -51,8 +52,8 @@ public:
   QByteArray data;
   KTextEdit *inputText;
   KTextEdit *translatedText;
-  KComboBox *from;
-  KComboBox *to;
+  MinimumComboBox *from;
+  MinimumComboBox *to;
   KPushButton *translate;
 };
 
@@ -259,12 +260,12 @@ void TranslatorWidget::init()
   connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
   QLabel *label = new QLabel( i18n( "From:" ) );
   hboxLayout->addWidget( label );
-  d->from = new KComboBox;
+  d->from = new MinimumComboBox;
   hboxLayout->addWidget( d->from );
 
   label = new QLabel( i18n( "To:" ) );
   hboxLayout->addWidget( label );
-  d->to = new KComboBox;
+  d->to = new MinimumComboBox;
   hboxLayout->addWidget( d->to );
 
   KPushButton *invert = new KPushButton(i18n("Invert"),this);

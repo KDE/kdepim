@@ -18,16 +18,16 @@
 */
 
 
-#ifndef MAILCOMMON_MINIMUMCOMBOBOX_H
-#define MAILCOMMON_MINIMUMCOMBOBOX_H
+#ifndef MESSAGEVIEWER_MINIMUMCOMBOBOX_H
+#define MESSAGEVIEWER_MINIMUMCOMBOBOX_H
 
 #include <kcombobox.h>
+#include "messageviewer_export.h"
 
-
-namespace MailCommon {
+namespace MessageViewer {
 
   /** @short A KComboBox, which minimum size hint can be really small */
-  class MinimumComboBox: public KComboBox {
+  class MESSAGEVIEWER_EXPORT MinimumComboBox: public KComboBox {
     Q_OBJECT
   public:
       explicit MinimumComboBox(QWidget* parent = 0) : KComboBox( parent ) {}
