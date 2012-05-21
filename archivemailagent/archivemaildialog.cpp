@@ -108,6 +108,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   QStringList headers;
   headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
   mWidget->treeWidget->setHeaderLabels(headers);
+  mWidget->treeWidget->setSortingEnabled(true);
   load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
