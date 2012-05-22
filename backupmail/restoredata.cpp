@@ -140,8 +140,6 @@ void RestoreData::restoreTransports()
         mt->setAuthenticationType(group.readEntry(authenticationTypeStr,1));//TODO verify
       }
 
-      //authenticationType
-
       mHashTransport.insert(transportId, mt->id());
     }
     Q_EMIT info(i18n("Transports restored."));
@@ -212,6 +210,7 @@ void RestoreData::restoreIdentity()
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   const KArchiveEntry* identity = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
   if(identity->isFile()) {
+
     const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
 
     KTemporaryFile tmp;
@@ -219,6 +218,9 @@ void RestoreData::restoreIdentity()
 
     fileIdentity->copyTo(tmp.fileName());
     KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+    KConfigGroup general = identityConfig->group(QLatin1String("General"));
+    const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
+
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
       KConfigGroup group = identityConfig->group(identityStr);
@@ -246,6 +248,9 @@ void RestoreData::restoreIdentity()
       identity->readConfig(group);
       if(oldUid != -1) {
         mHashIdentity.insert(oldUid,identity->uoid());
+        if(oldUid == defaultIdentity) {
+          mIdentityManager->setAsDefault(identity->uoid());
+        }
       }
     }
     Q_EMIT info(i18n("Identities restored."));
