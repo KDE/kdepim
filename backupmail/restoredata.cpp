@@ -202,12 +202,17 @@ void RestoreData::restoreConfig()
               group.writeEntry(argsName,mHashIdentity.value(argsValue));
             }
           }
+        } else if(actValue==QLatin1String("set transport")) {
+          const int argsValue = group.readEntry(argsName,-1);
+          if(argsValue!=-1) {
+            if(mHashTransport.contains(argsValue)) {
+              group.writeEntry(argsName,mHashTransport.value(argsValue));
+            }
+          }
         }
       }
     }
     filtersConfig->sync();
-    //FIX before to append filters.
-    //TODO fix transport.
     //Fix resources
 
     bool canceled = false;
