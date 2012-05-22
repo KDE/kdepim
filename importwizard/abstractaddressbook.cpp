@@ -27,7 +27,7 @@
 #include <QPointer>
 
 AbstractAddressBook::AbstractAddressBook(ImportWizard *parent)
-  : mCollection( -1 ), mImportWizard(parent)
+  : mImportWizard(parent), mCollection( -1 )
 {
 }
 

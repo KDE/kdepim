@@ -15,6 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "evolutionaddressbook.h"
+#include "importwizard.h"
+#include <KMessageBox>
+#include <KLocale>
 
 EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)
   : AbstractAddressBook( parent )
@@ -29,6 +32,9 @@ EvolutionAddressBook::~EvolutionAddressBook()
 
 void EvolutionAddressBook::exportEvolutionAddressBook()
 {
+  KMessageBox::information(mImportWizard,i18n("Export Evolution AddressBook"),i18n("Evolution AddressBook will export as vcard. Import vcard in KAddressBook."));
+
+
   //TODO
 }
 
