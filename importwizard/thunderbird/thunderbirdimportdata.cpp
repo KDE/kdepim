@@ -47,7 +47,7 @@ ThunderbirdImportData::~ThunderbirdImportData()
 QString ThunderbirdImportData::defaultProfile()
 {
   if(mDefaultProfile.isEmpty()) {
-    mDefaultProfile = MailImporter::FilterThunderbird::defaultProfile();
+    mDefaultProfile = MailImporter::FilterThunderbird::defaultProfile(mImportWizard);
   }
   return mDefaultProfile;
 }
