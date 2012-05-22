@@ -69,7 +69,7 @@ void SelectThunderbirdProfileWidget::fillProfile(const QMap<QString,QString>& ma
   QMap<QString, QString>::const_iterator i = map.constBegin();
   while (i != map.constEnd()) {
     QString name = i.key();
-    if(name==defaultProfile){
+    if(i.value()==defaultProfile){
       name+=i18n("(default)");
     }
     ui->profile->addItem(name,i.value());
