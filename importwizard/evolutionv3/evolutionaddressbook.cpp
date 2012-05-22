@@ -16,6 +16,7 @@
 */
 #include "evolutionaddressbook.h"
 #include "importwizard.h"
+#include <QProcess>
 #include <KMessageBox>
 #include <KLocale>
 #include <KFileDialog>
@@ -33,22 +34,30 @@ EvolutionAddressBook::~EvolutionAddressBook()
 
 void EvolutionAddressBook::exportEvolutionAddressBook()
 {
-  KMessageBox::information(mImportWizard,i18n("Export Evolution AddressBook"),i18n("Evolution AddressBook will export as vcard. Import vcard in KAddressBook."));
+  KMessageBox::information(mImportWizard,i18n("Evolution AddressBook will export as vcard. Import vcard in KAddressBook."),i18n("Export Evolution AddressBook"));
 
   const QString directory = KFileDialog::getExistingDirectory( KUrl(), mImportWizard, i18n("Select directory where vcards will stored."));
   if(directory.isEmpty()) {
     return;
   }
-  QDir evolutionDir;
+  QFile evolutionFile;
   bool found = false;
   for(int i=0;i<9; ++i) {
-    evolutionDir.setPath(QString::fromLatin1("/usr/lib/evolution/3.%1/evolution-addressbook-export").arg(i));
-    if(evolutionDir.exists()) {
+    evolutionFile.setFileName(QString::fromLatin1("/usr/lib/evolution/3.%1/evolution-addressbook-export").arg(i));
+    if(evolutionFile.exists()) {
       found = true;
       break;
     }
   }
   if(found) {
+    QStringList arguments;
+    arguments<<QLatin1String("-l");
+    QProcess proc;
+    proc.start(evolutionFile.fileName(), arguments);
+    if (!proc.waitForFinished())
+      return;
+    QByteArray result = proc.readAll();
+
     //TODO use QProcess
   }
   //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export -l" to show list.
