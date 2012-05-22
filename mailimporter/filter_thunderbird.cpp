@@ -78,10 +78,10 @@ QString FilterThunderbird::defaultProfile()
   return QString();
 }
 
-QStringList FilterThunderbird::listProfile(QString&currentProfile)
+QMap<QString,QString> FilterThunderbird::listProfile(QString&currentProfile)
 {
   const QString thunderbirdPath = defaultPath() + QLatin1String( "/profiles.ini" );
-  QStringList lstProfile;
+  QMap<QString,QString> lstProfile;
   QFile profiles( thunderbirdPath );
   if ( profiles.exists() ) {
     //ini file.
@@ -91,19 +91,21 @@ QStringList FilterThunderbird::listProfile(QString&currentProfile)
     if ( uniqProfile ) {
       KConfigGroup group = config.group( profileList.at( 0 ) );
       const QString path = group.readEntry( "Path" );
+      const QString name = group.readEntry(QLatin1String("Name"));
       currentProfile = path;
-      lstProfile<<path;
+      lstProfile.insert(name,path);
       return lstProfile;
     } else {
       Q_FOREACH( const QString& profileName, profileList )
       {
         KConfigGroup group = config.group( profileName );
         const QString path = group.readEntry( "Path" );
+        const QString name = group.readEntry(QLatin1String("Name"));
         if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
         {
           currentProfile = path;
         }
-        lstProfile<<path;
+        lstProfile.insert(name,path);
       }
     }
   }
