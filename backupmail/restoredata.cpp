@@ -185,9 +185,28 @@ void RestoreData::restoreConfig()
     fileFilter->copyTo(tmp.fileName());
 
     KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(tmp.fileName());
-
+    const QStringList filterList = filtersConfig->groupList().filter( QRegExp( "Filter #\\d+" ) );
+    Q_FOREACH(const QString&filterStr, filterList) {
+      KConfigGroup group = filtersConfig->group(filterStr);
+      const int numActions = group.readEntry( "actions", 0 );
+      QString actName;
+      QString argsName;
+      for ( int i=0 ; i < numActions ; ++i ) {
+        actName.sprintf("action-name-%d", i);
+        argsName.sprintf("action-args-%d", i);
+        const QString actValue = group.readEntry(actName);
+        if(actValue==QLatin1String("set identity")) {
+          const int argsValue = group.readEntry(argsName,-1);
+          if(argsValue!=-1) {
+            if(mHashIdentity.contains(argsValue)) {
+              group.writeEntry(argsName,mHashIdentity.value(argsValue));
+            }
+          }
+        }
+      }
+    }
+    filtersConfig->sync();
     //FIX before to append filters.
-    //TODO fix identity.
     //TODO fix transport.
     //Fix resources
 
