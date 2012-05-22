@@ -19,12 +19,13 @@ set(libmailimporter_SRCS
   filter_sylpheed.cpp
   filter_thebat.cpp
   filter_lnotes.cpp
-  filter_kmail_archive.cpp )
+  filter_kmail_archive.cpp 
+  selectthunderbirdprofilewidget.cpp )
 
 include_directories(${Boost_INCLUDE_DIR} )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_ui_files(libmailimporter_SRCS importmailswidget.ui)
+kde4_add_ui_files(libmailimporter_SRCS importmailswidget.ui selectthunderbirdprofilewidget.ui)
 
 kde4_add_library(mailimporter ${LIBRARY_TYPE} ${libmailimporter_SRCS})
 target_link_libraries(mailimporter
