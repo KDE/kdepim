@@ -115,7 +115,6 @@ AbstractImporter::TypeSupportedOptions Evolutionv3ImportData::supportedOption()
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
   options |=AbstractImporter::Calendars;
-  //TODO uncomment when implemented.
-  //options |=AbstractImporter::AddressBooks;
+  options |=AbstractImporter::AddressBooks;
   return options;
 }

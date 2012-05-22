@@ -18,6 +18,7 @@
 #include "importwizard.h"
 #include <KMessageBox>
 #include <KLocale>
+#include <KFileDialog>
 
 EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)
   : AbstractAddressBook( parent )
@@ -34,8 +35,12 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
 {
   KMessageBox::information(mImportWizard,i18n("Export Evolution AddressBook"),i18n("Evolution AddressBook will export as vcard. Import vcard in KAddressBook."));
 
-
-  //TODO
+  const QString directory = KFileDialog::getExistingDirectory( KUrl(), mImportWizard, i18n("Select directory where vcards will stored."));
+  if(directory.isEmpty()) {
+    return;
+  }
+  //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export -l" to show list.
+  //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export --format=vcard <addressbook> --output=toto.vcard"
 }
 
   
