@@ -78,6 +78,38 @@ QString FilterThunderbird::defaultProfile()
   return QString();
 }
 
+QStringList FilterThunderbird::listProfile(QString&currentProfile)
+{
+  const QString thunderbirdPath = defaultPath() + QLatin1String( "/profiles.ini" );
+  QStringList lstProfile;
+  QFile profiles( thunderbirdPath );
+  if ( profiles.exists() ) {
+    //ini file.
+    KConfig config( thunderbirdPath );
+    const QStringList profileList = config.groupList().filter( QRegExp( "Profile\\d+" ) );
+    const bool uniqProfile = ( profileList.count() == 1 );
+    if ( uniqProfile ) {
+      KConfigGroup group = config.group( profileList.at( 0 ) );
+      const QString path = group.readEntry( "Path" );
+      currentProfile = path;
+      lstProfile<<path;
+      return lstProfile;
+    } else {
+      Q_FOREACH( const QString& profileName, profileList )
+      {
+        KConfigGroup group = config.group( profileName );
+        const QString path = group.readEntry( "Path" );
+        if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
+        {
+          currentProfile = path;
+        }
+        lstProfile<<path;
+      }
+    }
+  }
+  return lstProfile;
+
+}
 
 /** Recursive import of Evolution's mboxes. */
 void FilterThunderbird::import()
