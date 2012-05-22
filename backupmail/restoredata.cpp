@@ -188,6 +188,22 @@ void RestoreData::restoreConfig()
     const QStringList filterList = filtersConfig->groupList().filter( QRegExp( "Filter #\\d+" ) );
     Q_FOREACH(const QString&filterStr, filterList) {
       KConfigGroup group = filtersConfig->group(filterStr);
+      const QString accountStr("accounts-set");
+      if(group.hasKey(accountStr)) {
+        const QString accounts = group.readEntry(accountStr);
+        if(!accounts.isEmpty()) {
+          const QStringList lstAccounts = accounts.split(QLatin1Char(','));
+          QStringList newLstAccounts;
+          Q_FOREACH(const QString&acc, lstAccounts) {
+            if(mHashResources.contains(acc)) {
+              newLstAccounts.append(mHashResources.value(acc));
+            } else {
+              newLstAccounts.append(acc);
+            }
+          }
+          group.writeEntry(accountStr,newLstAccounts);
+        }
+      }
       const int numActions = group.readEntry( "actions", 0 );
       QString actName;
       QString argsName;
@@ -213,7 +229,6 @@ void RestoreData::restoreConfig()
       }
     }
     filtersConfig->sync();
-    //Fix resources
 
     bool canceled = false;
     MailCommon::FilterImporterExporter exportFilters;
