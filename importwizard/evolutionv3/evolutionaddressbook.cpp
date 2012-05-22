@@ -39,6 +39,18 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
   if(directory.isEmpty()) {
     return;
   }
+  QDir evolutionDir;
+  bool found = false;
+  for(int i=0;i<9; ++i) {
+    evolutionDir.setPath(QString::fromLatin1("/usr/lib/evolution/3.%1/evolution-addressbook-export").arg(i));
+    if(evolutionDir.exists()) {
+      found = true;
+      break;
+    }
+  }
+  if(found) {
+    //TODO use QProcess
+  }
   //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export -l" to show list.
   //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export --format=vcard <addressbook> --output=toto.vcard"
 }
