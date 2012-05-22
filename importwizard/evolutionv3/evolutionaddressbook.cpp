@@ -57,8 +57,14 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     if (!proc.waitForFinished())
       return;
     QByteArray result = proc.readAll();
-
-    //TODO use QProcess
+    proc.close();
+    if(!result.isEmpty()) {
+      arguments.clear();
+      arguments<<QLatin1String("--format=vcard")<<QString::fromLatin1("--output=%1/%2").arg(directory).arg(QLatin1String("exportevolution.vcard"));
+      proc.start(evolutionFile.fileName(),arguments);
+      if (!proc.waitForFinished())
+        return;
+    }
   }
   //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export -l" to show list.
   //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export --format=vcard <addressbook> --output=toto.vcard"
