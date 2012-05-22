@@ -57,17 +57,25 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
-  KMime::Headers::Base *header = msg->headerByType( mParameter.toLatin1() );
+  const QByteArray param(mParameter.toLatin1());
+  KMime::Headers::Base *header = msg->headerByType(param);
   if ( !header ) {
     return GoOn; //TODO: Maybe create a new header by type?
   }
-
 
   QString value = header->asUnicodeString();
 
   const QString newValue = value.replace( mRegExp, mReplacementString );
 
-  header->fromUnicodeString( newValue, "utf-8" );
+  msg->removeHeader( mParameter.toLatin1() );
+
+  KMime::Headers::Base *newheader = KMime::Headers::createHeader(param);
+  if ( !newheader ) {
+    newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
+  } else {
+    header->fromUnicodeString( newValue, "utf-8" );
+  }
+  msg->setHeader( newheader );
   msg->assemble();
 
   context.setNeedsPayloadStore();
