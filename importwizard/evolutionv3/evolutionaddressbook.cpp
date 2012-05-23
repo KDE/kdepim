@@ -59,6 +59,10 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     QByteArray result = proc.readAll();
     proc.close();
     if(!result.isEmpty()) {
+      result = result.replace('\n',",");
+      QString value(result.trimmed());
+      QStringList listAddressBook = value.split(QLatin1Char(','));
+      qDebug()<<" listAddressBook"<<listAddressBook;
       arguments.clear();
       arguments<<QLatin1String("--format=vcard")<<QString::fromLatin1("--output=%1/%2").arg(directory).arg(QLatin1String("exportevolution.vcard"));
       proc.start(evolutionFile.fileName(),arguments);
