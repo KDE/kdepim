@@ -180,9 +180,16 @@ void BackupData::backupMails()
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          //TODO get path
-          //1 file
-          //TODO
+          KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+          KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
+          const QString filename = url.fileName();
+          if(!url.isEmpty()) {
+            const bool fileAdded  = mArchive->addLocalFile(url.path(), BackupMailUtil::mailsPath() + identifier + QDir::separator() + filename);
+            if(fileAdded)
+              Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
+            else
+              Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
+          }
           storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
 
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
@@ -211,7 +218,9 @@ void BackupData::backupAkonadiDb()
 
 void BackupData::backupNepomuk()
 {
-
+  Q_EMIT info(i18n("Backing up Nepomuk Database..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
 
 void BackupData::storeResources(const QString&identifier, const QString& path)

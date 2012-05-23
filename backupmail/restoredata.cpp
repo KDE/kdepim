@@ -166,7 +166,18 @@ void RestoreData::restoreResources()
 
 void RestoreData::restoreMails()
 {
-
+  Q_FOREACH(const QString& filename, mFileList) {
+    if(filename.startsWith(BackupMailUtil::mailsPath())) {
+      const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
+      if(fileEntry->isFile()) {
+        const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
+        KTemporaryFile tmp;
+        tmp.open();
+        file->copyTo(tmp.fileName());
+        //TODO
+      }
+    }
+  }
 }
 
 void RestoreData::restoreConfig()
@@ -300,11 +311,15 @@ void RestoreData::restoreIdentity()
 
 void RestoreData::restoreAkonadiDb()
 {
+  Q_EMIT info(i18n("Akonadi Database restored."));
+  Q_EMIT error(i18n("Failed to restore Akonadi Database."));
   //TODO
 }
 
 void RestoreData::restoreNepomuk()
 {
+  Q_EMIT info(i18n("Nepomuk Database restored."));
+  Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
   //TODO
 }
 
