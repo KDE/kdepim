@@ -60,18 +60,45 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     proc.close();
     if(!result.isEmpty()) {
       result = result.replace('\n',",");
-      QString value(result.trimmed());
-      QStringList listAddressBook = value.split(QLatin1Char(','));
+      const QString value(result.trimmed());
+      const QStringList listAddressBook = value.split(QLatin1Char(','));
       qDebug()<<" listAddressBook"<<listAddressBook;
-      arguments.clear();
-      arguments<<QLatin1String("--format=vcard")<<QString::fromLatin1("--output=%1/%2").arg(directory).arg(QLatin1String("exportevolution.vcard"));
-      proc.start(evolutionFile.fileName(),arguments);
-      if (!proc.waitForFinished())
-        return;
+      int i = 0;
+      QString name;
+      QString displayname;
+      Q_FOREACH(const QString&arg, listAddressBook) {
+        switch(i) {
+          case 0:
+            name = arg;
+            name = name.remove(0,1);
+            name = name.remove(name.length()-1,1);
+            i++;
+            //name
+            break;
+          case 1:
+            displayname = arg;
+            displayname = displayname.remove(0,1);
+            displayname = displayname.remove(displayname.length()-1,1);
+            //display name
+            i++;
+            break;
+          case 2:
+            if(!displayname.isEmpty()&&!name.isEmpty()) {
+              arguments.clear();
+              arguments<<QLatin1String("--format=vcard")<<name<<QString::fromLatin1("--output=%1/%2.vcard").arg(directory).arg(displayname);
+              proc.start(evolutionFile.fileName(),arguments);
+              if (proc.waitForFinished()) {
+                addAddressBookImportInfo(i18n("Addressbook \"%1\" exported.",displayname));
+              } else {
+                addAddressBookImportError(i18n("Failed to export Addressbook \"%1\".",displayname));
+              }
+            }
+            i = 0; //reset
+            break;
+        }
+      }
     }
   }
-  //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export -l" to show list.
-  //TODO use "/usr/lib/evolution/3.2/evolution-addressbook-export --format=vcard <addressbook> --output=toto.vcard"
 }
 
   
