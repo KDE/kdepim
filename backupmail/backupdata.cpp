@@ -174,32 +174,34 @@ void BackupData::backupMails()
             !capabilities.contains( "Virtual" ) &&
             !capabilities.contains( "MailTransport" ) )
       {
-        const QString identifier = agent.identifier();
+        const QString identifier = agent.identifier();        
+        const QString archivePath = BackupMailUtil::mailsPath() + identifier + QDir::separator();
         if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
           const QString agentFileName = agent.identifier() + QLatin1String("rc");
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-          KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
+          KUrl url = resourcePath(resourceConfig);
           const QString filename = url.fileName();
           if(!url.isEmpty()) {
-            const bool fileAdded  = mArchive->addLocalFile(url.path(), BackupMailUtil::mailsPath() + identifier + QDir::separator() + filename);
+            const bool fileAdded  = mArchive->addLocalFile(url.path(), archivePath + filename);
             if(fileAdded)
               Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
             else
               Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
           }
-          storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
+          storeResources(identifier, archivePath + identifier);
 
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
           const QString agentFileName = agent.identifier() + QLatin1String("rc");
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+          KUrl url = resourcePath(resourceConfig);
+          const QString filename = url.fileName();
           //TODO
           //Several file. Look at archive mail dialog
-          storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
+          storeResources(identifier, archivePath + identifier);
         }
       }
     }
@@ -207,6 +209,13 @@ void BackupData::backupMails()
 
   Q_EMIT info(i18n("Mails backup done."));
 
+}
+
+KUrl BackupData::resourcePath(KSharedConfigPtr resourceConfig) const
+{
+  KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+  KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
+  return url;
 }
 
 void BackupData::backupAkonadiDb()

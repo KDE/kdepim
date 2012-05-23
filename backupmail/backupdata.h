@@ -19,6 +19,8 @@
 #define BACKUPDATA_H
 
 #include "abstractdata.h"
+#include <KSharedConfig>
+class KUrl;
 
 class BackupData : public AbstractData
 {
@@ -36,6 +38,7 @@ private:
   void backupAkonadiDb();
   void backupNepomuk();
   void storeResources(const QString&identifier, const QString& path);
+  KUrl resourcePath(KSharedConfigPtr resourceConfig) const;
 
 };
 
