@@ -1704,7 +1704,8 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
-  KMime::Headers::Base *header = msg->headerByType( mParameter.toLatin1() );
+  const QByteArray param(mParameter.toLatin1());
+  KMime::Headers::Base *header = msg->headerByType(param);
   if ( !header ) {
     return GoOn; //TODO: Maybe create a new header by type?
   }
