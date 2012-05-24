@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "filter_thunderbird.h"
-
+#include "selectthunderbirdprofilewidget.h"
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
@@ -50,9 +50,28 @@ QString FilterThunderbird::defaultPath()
 }
 
 
-QString FilterThunderbird::defaultProfile()
+QString FilterThunderbird::defaultProfile(QWidget * parent)
+{
+  QString currentProfile;
+  QMap<QString,QString> listProfile = FilterThunderbird::listProfile(currentProfile);
+  if(listProfile.isEmpty()) {
+    return QString();
+  } else if(listProfile.count() == 1) {
+    return currentProfile;
+  } else {
+    SelectThunderbirdProfileDialog dialog(parent);
+    dialog.fillProfile(listProfile,currentProfile);
+    if(dialog.exec()) {
+      return dialog.selectedProfile();
+    }
+  }
+  return currentProfile;
+}
+
+QMap<QString,QString> FilterThunderbird::listProfile(QString&currentProfile)
 {
   const QString thunderbirdPath = defaultPath() + QLatin1String( "/profiles.ini" );
+  QMap<QString,QString> lstProfile;
   QFile profiles( thunderbirdPath );
   if ( profiles.exists() ) {
     //ini file.
@@ -62,22 +81,27 @@ QString FilterThunderbird::defaultProfile()
     if ( uniqProfile ) {
       KConfigGroup group = config.group( profileList.at( 0 ) );
       const QString path = group.readEntry( "Path" );
-      return path;
+      const QString name = group.readEntry(QLatin1String("Name"));
+      currentProfile = path;
+      lstProfile.insert(name,path);
+      return lstProfile;
     } else {
       Q_FOREACH( const QString& profileName, profileList )
       {
         KConfigGroup group = config.group( profileName );
+        const QString path = group.readEntry( "Path" );
+        const QString name = group.readEntry(QLatin1String("Name"));
         if ( group.hasKey( "Default" ) && ( group.readEntry( "Default", 0 ) == 1 ) )
         {
-          const QString path = group.readEntry( "Path" );
-          return path;            
+          currentProfile = path;
         }
+        lstProfile.insert(name,path);
       }
     }
   }
-  return QString();
-}
+  return lstProfile;
 
+}
 
 /** Recursive import of Evolution's mboxes. */
 void FilterThunderbird::import()

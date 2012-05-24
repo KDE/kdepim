@@ -1,6 +1,8 @@
 [Global]
 Comment=Archive Mail Agent
 Comment[es]=Agente de archivado de correo
+Comment[et]=Kirjade arhiveerimise agent
+Comment[gl]=Axente Arquivar o correo
 Comment[ia]=Agente de Archivar posta
 Comment[nb]=Arkivpost-agent
 Comment[nl]=E-mailagent voor archiveren
@@ -13,6 +15,8 @@ Comment[x-test]=xxArchive Mail Agentxx
 Comment[zh_TW]=歸檔郵件代理程式
 Name=Archive Mail Agent
 Name[es]=Agente de archivado de correo
+Name[et]=Kirjade arhiveerimise agent
+Name[gl]=Axente Arquivar o correo
 Name[ia]=Agente de Archivar posta
 Name[nb]=Arkivpost-agent
 Name[nl]=E-mailagent voor archiveren
@@ -27,6 +31,8 @@ Name[zh_TW]=歸檔郵件代理程式
 [Event/archivemailfinished]
 Name=Archive Mail finished
 Name[es]=Archivado de correo terminado
+Name[et]=Kirjad on arhiveeritud
+Name[gl]=Rematou Arquivar o correo
 Name[ia]=Action de archivar posta terminate
 Name[nb]=Arkivpost fullført
 Name[nl]=E-mail archiveren is gereed
@@ -42,6 +48,8 @@ Action=Popup
 [Event/archivemailstarted]
 Name=Archive Mail finished
 Name[es]=Archivado de correo terminado
+Name[et]=Kirjad on arhiveeritud
+Name[gl]=Rematou Arquivar o correo
 Name[ia]=Action de archivar posta terminate
 Name[nb]=Arkivpost fullført
 Name[nl]=E-mail archiveren is gereed
@@ -56,9 +64,14 @@ Action=Popup
 
 [Event/archivemailerror]
 Name=Archive Mail Error
+Name[es]=Error de archivado de correo
+Name[et]=Kirjade arhiveerimise tõrge
+Name[gl]=Erro de Arquivar o correo
+Name[ia]=Error de Archivar posta
 Name[nl]=Fout in e-mail archiveren
 Name[pt]=Erro no Arquivo de E-Mail
 Name[pt_BR]=Erro no arquivamento de e-mails
+Name[sv]=Fel vid brevarkivering
 Name[uk]=Помилка під час архівування пошти
 Name[x-test]=xxArchive Mail Errorxx
 Action=Popup

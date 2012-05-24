@@ -5,6 +5,7 @@
     copyright            : (C) 2005 by Danny Kukawka
     email                : danny.kukawka@web.de
  ***************************************************************************/
+/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
 
 /***************************************************************************
  *                                                                         *
@@ -35,7 +36,8 @@ public:
   void importMails( const QString & maildir );
 
   static QString defaultPath();
-  static QString defaultProfile();
+  static QString defaultProfile(QWidget *parent = 0);
+  static QMap<QString, QString> listProfile(QString&currentProfile);
 
 private:
   void importDirContents(const QString&, const QString&, const QString&);

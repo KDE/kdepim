@@ -19,8 +19,8 @@
 
 #include "filteractionremoveheader.h"
 
-#include "../minimumcombobox.h"
 
+#include <messageviewer/minimumcombobox.h>
 #include <KDE/KLocale>
 
 using namespace MailCommon;
@@ -45,7 +45,7 @@ FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
 
 QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
 {
-  MinimumComboBox *comboBox = new MinimumComboBox( parent );
+  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( parent );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
@@ -62,8 +62,9 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context
     return ErrorButGoOn;
 
   KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  while ( msg->headerByType( mParameter.toLatin1() ) )
-    msg->removeHeader( mParameter.toLatin1() );
+  const QByteArray param(mParameter.toLatin1());
+  while ( msg->headerByType( param ) )
+    msg->removeHeader( param );
 
   msg->assemble();
 
@@ -74,7 +75,7 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MinimumComboBox *comboBox = dynamic_cast<MinimumComboBox*>(paramWidget );
+  MessageViewer::MinimumComboBox *comboBox = dynamic_cast<MessageViewer::MinimumComboBox*>(paramWidget );
   Q_ASSERT( comboBox );
 
   const int index = mParameterList.indexOf( mParameter );

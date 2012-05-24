@@ -19,8 +19,8 @@
 
 #include "filteractionrewriteheader.h"
 
-#include "../minimumcombobox.h"
 #include "../regexplineedit.h"
+#include <messageviewer/minimumcombobox.h>
 
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>
@@ -57,17 +57,25 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
 
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
-  KMime::Headers::Base *header = msg->headerByType( mParameter.toLatin1() );
+  const QByteArray param(mParameter.toLatin1());
+  KMime::Headers::Base *header = msg->headerByType(param);
   if ( !header ) {
     return GoOn; //TODO: Maybe create a new header by type?
   }
-
 
   QString value = header->asUnicodeString();
 
   const QString newValue = value.replace( mRegExp, mReplacementString );
 
-  header->fromUnicodeString( newValue, "utf-8" );
+  msg->removeHeader( param );
+
+  KMime::Headers::Base *newheader = KMime::Headers::createHeader(param);
+  if ( !newheader ) {
+    newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
+  } else {
+    header->fromUnicodeString( newValue, "utf-8" );
+  }
+  msg->setHeader( newheader );
   msg->assemble();
 
   context.setNeedsPayloadStore();
@@ -82,7 +90,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   layout->setSpacing( 4 );
   layout->setMargin( 0 );
 
-  MinimumComboBox *comboBox = new MinimumComboBox( widget );
+  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( widget );
   comboBox->setEditable( true );
   comboBox->setObjectName( "combo" );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
@@ -120,7 +128,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 void FilterActionRewriteHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
   const int index = mParameterList.indexOf( mParameter );
-  MinimumComboBox *comboBox = paramWidget->findChild<MinimumComboBox*>( "combo" );
+  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
 
   comboBox->clear();
@@ -143,7 +151,7 @@ void FilterActionRewriteHeader::setParamWidgetValue( QWidget *paramWidget ) cons
 
 void FilterActionRewriteHeader::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MinimumComboBox *comboBox = paramWidget->findChild<MinimumComboBox*>( "combo" );
+  const MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   mParameter = comboBox->currentText();
 
@@ -158,7 +166,7 @@ void FilterActionRewriteHeader::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionRewriteHeader::clearParamWidget( QWidget *paramWidget ) const
 {
-  MinimumComboBox *comboBox = paramWidget->findChild<MinimumComboBox*>( "combo" );
+  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   comboBox->setCurrentIndex( 0 );
 

@@ -19,7 +19,7 @@
 
 #include "filteractionaddheader.h"
 
-#include "../minimumcombobox.h"
+#include <messageviewer/minimumcombobox.h>
 
 #include <KLineEdit>
 #include <KLocale>
@@ -73,7 +73,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   layout->setSpacing( 4 );
   layout->setMargin( 0 );
 
-  MinimumComboBox *comboBox = new MinimumComboBox( widget );
+  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( widget );
   comboBox->setObjectName( "combo" );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
@@ -102,7 +102,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
   const int index = mParameterList.indexOf( mParameter );
 
-  MinimumComboBox *comboBox = paramWidget->findChild<MinimumComboBox*>( "combo" );
+  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   comboBox->clear();
   comboBox->addItems( mParameterList );
@@ -122,7 +122,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
 
 void FilterActionAddHeader::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MinimumComboBox *comboBox = paramWidget->findChild<MinimumComboBox*>( "combo" );
+  const MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   mParameter = comboBox->currentText();
 
@@ -133,7 +133,7 @@ void FilterActionAddHeader::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionAddHeader::clearParamWidget( QWidget *paramWidget ) const
 {
-  MinimumComboBox *comboBox = paramWidget->findChild<MinimumComboBox*>( "combo" );
+  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   comboBox->setCurrentIndex( 0 );
 

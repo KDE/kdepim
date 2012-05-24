@@ -41,11 +41,36 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   mainLayout->addWidget(mWidget);
   setMainWidget( mainWidget );
   connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
+  readConfig();
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
+  writeConfig();
+}
 
+static const char *myConfigGroupName = "ArchiveMailDialog";
+
+void ArchiveMailDialog::readConfig()
+{
+  KConfigGroup group( KGlobal::config(), myConfigGroupName );
+
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    resize( size );
+  } else {
+    resize( 500, 300 );
+  }
+
+  mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
+}
+
+void ArchiveMailDialog::writeConfig()
+{
+  KConfigGroup group( KGlobal::config(), myConfigGroupName );
+  group.writeEntry( "Size", size() );
+  mWidget->saveTreeWidgetHeader(group);
+  group.sync();
 }
 
 void ArchiveMailDialog::slotSave()
@@ -83,6 +108,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   QStringList headers;
   headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
   mWidget->treeWidget->setHeaderLabels(headers);
+  mWidget->treeWidget->setSortingEnabled(true);
   load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
@@ -95,6 +121,16 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 ArchiveMailWidget::~ArchiveMailWidget()
 {
   delete mWidget;
+}
+
+void ArchiveMailWidget::restoreTreeWidgetHeader(const QByteArray& data)
+{
+  mWidget->treeWidget->header()->restoreState(data);
+}
+
+void ArchiveMailWidget::saveTreeWidgetHeader(KConfigGroup& group)
+{
+  group.writeEntry( "HeaderState", mWidget->treeWidget->header()->saveState() );
 }
 
 void ArchiveMailWidget::updateButtons()
@@ -118,7 +154,6 @@ void ArchiveMailWidget::load()
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
     createOrUpdateItem(info);
   }
-  updateButtons();
 }
 
 void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item)

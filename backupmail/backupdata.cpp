@@ -16,6 +16,7 @@
 */
 
 #include "backupdata.h"
+#include "akonadidatabase.h"
 #include "messageviewer/kcursorsaver.h"
 #include "mailcommon/mailutil.h"
 #include "mailcommon/filter/filtermanager.h"
@@ -32,6 +33,7 @@
 #include <KLocale>
 #include <KTemporaryFile>
 #include <KStandardDirs>
+#include <KProcess>
 
 #include <QDebug>
 #include <QDir>
@@ -174,25 +176,34 @@ void BackupData::backupMails()
             !capabilities.contains( "Virtual" ) &&
             !capabilities.contains( "MailTransport" ) )
       {
-        const QString identifier = agent.identifier();
+        const QString identifier = agent.identifier();        
+        const QString archivePath = BackupMailUtil::mailsPath() + identifier + QDir::separator();
         if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
           const QString agentFileName = agent.identifier() + QLatin1String("rc");
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          //TODO get path
-          //1 file
-          //TODO
-          storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
+          KUrl url = resourcePath(resourceConfig);
+          const QString filename = url.fileName();
+          if(!url.isEmpty()) {
+            const bool fileAdded  = mArchive->addLocalFile(url.path(), archivePath + filename);
+            if(fileAdded)
+              Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
+            else
+              Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
+          }
+          storeResources(identifier, archivePath + identifier);
 
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
           const QString agentFileName = agent.identifier() + QLatin1String("rc");
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+          KUrl url = resourcePath(resourceConfig);
+          const QString filename = url.fileName();
           //TODO
           //Several file. Look at archive mail dialog
-          storeResources(identifier, BackupMailUtil::mailsPath() + identifier + QDir::separator() + identifier);
+          storeResources(identifier, archivePath + identifier);
         }
       }
     }
@@ -202,16 +213,67 @@ void BackupData::backupMails()
 
 }
 
+KUrl BackupData::resourcePath(KSharedConfigPtr resourceConfig) const
+{
+  KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+  KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
+  return url;
+}
+
 void BackupData::backupAkonadiDb()
 {
   Q_EMIT info(i18n("Backing up Akonadi Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  AkonadiDataBase akonadiDataBase;
+  const QString dbDriver(akonadiDataBase.driver());
+
+  KTemporaryFile tmp;
+  tmp.open();
+  KProcess *proc = new KProcess( this );
+  QStringList params;
+  QString dbDumpAppName;
+  if( dbDriver == QLatin1String("QMYSQL") ) {
+    dbDumpAppName = QString::fromLatin1("mysqldump");
+
+    params << "--single-transaction"
+           << "--flush-logs"
+           << "--triggers"
+           << "--result-file=" + tmp.fileName()
+           << akonadiDataBase.options()
+           << akonadiDataBase.name();
+  } else if ( dbDriver == QLatin1String("QPSQL") ) {
+    dbDumpAppName = QString::fromLatin1("pg_dump");
+    params << "--format=custom"
+           << "--blobs"
+           << "--file=" + tmp.fileName()
+           << akonadiDataBase.options()
+           << akonadiDataBase.name();
+  }
+  const QString dbDumpApp = KStandardDirs::findExe( dbDumpAppName );
+  if(dbDumpApp.isEmpty()) {
+    Q_EMIT error(i18n("Could not find %1 necessary to dump database.",dbDumpAppName));
+    return;
+  }
+  proc->setProgram( dbDumpApp, params );
+  int result = proc->execute();
+  delete proc;
+  if ( result != 0 ) {
+    qDebug()<<" Error during dump Database";
+    return;
+  }
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
+  if(!fileAdded)
+    Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QString::fromLatin1("akonadidatabase.sql")));
+
+
   Q_EMIT info(i18n("Akonadi Database backup done."));
 }
 
 void BackupData::backupNepomuk()
 {
-
+  Q_EMIT info(i18n("Backing up Nepomuk Database..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
 
 void BackupData::storeResources(const QString&identifier, const QString& path)

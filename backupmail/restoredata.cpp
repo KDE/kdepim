@@ -140,8 +140,6 @@ void RestoreData::restoreTransports()
         mt->setAuthenticationType(group.readEntry(authenticationTypeStr,1));//TODO verify
       }
 
-      //authenticationType
-
       mHashTransport.insert(transportId, mt->id());
     }
     Q_EMIT info(i18n("Transports restored."));
@@ -168,7 +166,18 @@ void RestoreData::restoreResources()
 
 void RestoreData::restoreMails()
 {
-
+  Q_FOREACH(const QString& filename, mFileList) {
+    if(filename.startsWith(BackupMailUtil::mailsPath())) {
+      const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
+      if(fileEntry->isFile()) {
+        const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
+        KTemporaryFile tmp;
+        tmp.open();
+        file->copyTo(tmp.fileName());
+        //TODO
+      }
+    }
+  }
 }
 
 void RestoreData::restoreConfig()
@@ -187,11 +196,50 @@ void RestoreData::restoreConfig()
     fileFilter->copyTo(tmp.fileName());
 
     KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(tmp.fileName());
-
-    //FIX before to append filters.
-    //TODO fix identity.
-    //TODO fix transport.
-    //Fix resources
+    const QStringList filterList = filtersConfig->groupList().filter( QRegExp( "Filter #\\d+" ) );
+    Q_FOREACH(const QString&filterStr, filterList) {
+      KConfigGroup group = filtersConfig->group(filterStr);
+      const QString accountStr("accounts-set");
+      if(group.hasKey(accountStr)) {
+        const QString accounts = group.readEntry(accountStr);
+        if(!accounts.isEmpty()) {
+          const QStringList lstAccounts = accounts.split(QLatin1Char(','));
+          QStringList newLstAccounts;
+          Q_FOREACH(const QString&acc, lstAccounts) {
+            if(mHashResources.contains(acc)) {
+              newLstAccounts.append(mHashResources.value(acc));
+            } else {
+              newLstAccounts.append(acc);
+            }
+          }
+          group.writeEntry(accountStr,newLstAccounts);
+        }
+      }
+      const int numActions = group.readEntry( "actions", 0 );
+      QString actName;
+      QString argsName;
+      for ( int i=0 ; i < numActions ; ++i ) {
+        actName.sprintf("action-name-%d", i);
+        argsName.sprintf("action-args-%d", i);
+        const QString actValue = group.readEntry(actName);
+        if(actValue==QLatin1String("set identity")) {
+          const int argsValue = group.readEntry(argsName,-1);
+          if(argsValue!=-1) {
+            if(mHashIdentity.contains(argsValue)) {
+              group.writeEntry(argsName,mHashIdentity.value(argsValue));
+            }
+          }
+        } else if(actValue==QLatin1String("set transport")) {
+          const int argsValue = group.readEntry(argsName,-1);
+          if(argsValue!=-1) {
+            if(mHashTransport.contains(argsValue)) {
+              group.writeEntry(argsName,mHashTransport.value(argsValue));
+            }
+          }
+        }
+      }
+    }
+    filtersConfig->sync();
 
     bool canceled = false;
     MailCommon::FilterImporterExporter exportFilters;
@@ -212,6 +260,7 @@ void RestoreData::restoreIdentity()
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   const KArchiveEntry* identity = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
   if(identity->isFile()) {
+
     const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
 
     KTemporaryFile tmp;
@@ -219,6 +268,9 @@ void RestoreData::restoreIdentity()
 
     fileIdentity->copyTo(tmp.fileName());
     KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+    KConfigGroup general = identityConfig->group(QLatin1String("General"));
+    const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
+
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
       KConfigGroup group = identityConfig->group(identityStr);
@@ -246,6 +298,9 @@ void RestoreData::restoreIdentity()
       identity->readConfig(group);
       if(oldUid != -1) {
         mHashIdentity.insert(oldUid,identity->uoid());
+        if(oldUid == defaultIdentity) {
+          mIdentityManager->setAsDefault(identity->uoid());
+        }
       }
     }
     Q_EMIT info(i18n("Identities restored."));
@@ -256,11 +311,15 @@ void RestoreData::restoreIdentity()
 
 void RestoreData::restoreAkonadiDb()
 {
+  Q_EMIT info(i18n("Akonadi Database restored."));
+  Q_EMIT error(i18n("Failed to restore Akonadi Database."));
   //TODO
 }
 
 void RestoreData::restoreNepomuk()
 {
+  Q_EMIT info(i18n("Nepomuk Database restored."));
+  Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
   //TODO
 }
 

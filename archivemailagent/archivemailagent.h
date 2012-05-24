@@ -20,6 +20,8 @@
 
 #include <akonadi/agentbase.h>
 
+class QTimer;
+
 namespace Akonadi {
   class Monitor;
 }
@@ -37,11 +39,13 @@ public:
 
 public Q_SLOTS:
   virtual void configure( WId windowId );
+  void reload();
 
 private Q_SLOTS:
   void mailCollectionRemoved( const Akonadi::Collection& collection );
 
 private:
+  QTimer *mTimer;
   Akonadi::Monitor *m_collectionMonitor;
   ArchiveMailManager *mArchiveManager;
 };

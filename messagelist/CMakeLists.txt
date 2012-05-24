@@ -51,7 +51,17 @@ set(libmessagelist_SRCS
     storagemodel.cpp
     widget.cpp
     messagelistutil.cpp
+    private/nepomuk/resourcewatcher.cpp
 )
+
+qt4_add_dbus_interface(libmessagelist_SRCS
+                       private/nepomuk/org.kde.nepomuk.ResourceWatcherConnection.xml
+                       resourcewatcherconnectioninterface)
+
+qt4_add_dbus_interface(libmessagelist_SRCS
+                       private/nepomuk/org.kde.nepomuk.ResourceWatcher.xml
+                       resourcewatchermanagerinterface)
+
 
 set(libmessagelist_core_HEADERS
     core/enums.h

@@ -21,8 +21,8 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
-#include <KApplication>
-
+#include <KUniqueApplication>
+#include <KDebug>
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
@@ -39,7 +39,15 @@ int main(int argc, char *argv[])
   KCmdLineOptions options;
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KApplication a;
+  KUniqueApplication::addCmdLineOptions();
+  KUniqueApplication a;
+
+  if (!KUniqueApplication::start())
+  {
+    kDebug() << "backupmail is already running!";
+    return (0);
+  }
+
   BackupMailApplication *backupMailApp = new BackupMailApplication();
   a.setTopWidget(backupMailApp);
   backupMailApp->show();

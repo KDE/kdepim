@@ -86,7 +86,6 @@ set(libmailcommon_SRCS
   mailkernel.cpp
   mailutil.cpp
   mdnadvicedialog.cpp
-  minimumcombobox.cpp
   redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp

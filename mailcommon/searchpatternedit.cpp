@@ -18,10 +18,10 @@
 */
 
 #include "searchpatternedit.h"
-#include "minimumcombobox.h"
 #include "rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
 
+#include <messageviewer/minimumcombobox.h>
 #include <KComboBox>
 #include <KDebug>
 #include <KDialog>
@@ -128,7 +128,7 @@ void SearchRuleWidget::initWidget()
   hlay->setMargin( 0 );
 
   // initialize the header field combo box
-  mRuleField = new MinimumComboBox( this );
+  mRuleField = new MessageViewer::MinimumComboBox( this );
   mRuleField->setObjectName( "mRuleField" );
   mRuleField->setEditable( true );
   mRuleField->addItems( mFilterFieldList );

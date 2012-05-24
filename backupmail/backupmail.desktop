@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Backup Mail
 Name[es]=Copia de respaldo del correo
+Name[et]=Kirjade varundamine
+Name[gl]=Copia de seguranza do correo
 Name[ia]=Backup Mail (Retrocopia de posta)
 Name[nl]=Reservekopie van e-mail
 Name[pl]=Kopia zapasowa poczty
@@ -15,6 +17,8 @@ Type=Application
 NoDisplay=true
 Comment=Backup Mail allows to save all data from kmail and restore them in other system.
 Comment[es]=Copia de respaldo del correo permite guardar todos los datos de kmail y restaurarlos en otro sistema.
+Comment[et]=Kirjade varundamine võimaldab salvestada kõik KMaili andmed ja taastada need teises süsteemis.
+Comment[gl]=A Copia de seguranza do correo permite gardar os datos do kmail e restauralos noutro sistema.
 Comment[ia]=Backup Mail permitte de salveguardar tote datos ex kmail e restabili los in altere systema.
 Comment[nl]=Backup Mail stelt u in staat alle gegevens van kmail op te slaan en ze in een ander systeem te herstellen.
 Comment[pl]=Kopia zapasowa poczty pozwala na zapisanie wszystkich danych z kmail i przywrócenie ich na innym systemie.

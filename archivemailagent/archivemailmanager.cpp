@@ -57,6 +57,14 @@ void ArchiveMailManager::load()
 
     QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
     if(QDate::currentDate() > diffDate) {
+      Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
+        if(oldInfo->saveCollectionId() == info->saveCollectionId()) {
+          //already in jobscheduler
+          delete info;
+          continue;
+        }
+      }
+
       //Store task started
       mListArchiveInfo.append(info);
       ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );

@@ -46,9 +46,11 @@ protected:
 private Q_SLOTS:
   void slotStoreDone(KJob*job);
 
+protected:
+  ImportWizard *mImportWizard;
+
 private:
   Akonadi::Collection mCollection;
-  ImportWizard *mImportWizard;
 };
 
 #endif // ABSTRACTADDRESSBOOK_H

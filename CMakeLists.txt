@@ -108,7 +108,7 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION pre)
+set(KDEPIM_DEV_VERSION beta1)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
@@ -215,7 +215,7 @@ else()
   include(SopranoAddOntology)
 
   find_package(Grantlee QUIET NO_MODULE)
-  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots and KaddressBook." )
+  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.gitorious.org/grantlee/pages/Home" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
   if(NOT KDEPIM_NO_NEPOMUK)
     find_package(Nepomuk)
