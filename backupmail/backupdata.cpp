@@ -72,6 +72,7 @@ void BackupData::startBackup()
 void BackupData::backupTransports()
 {
   Q_EMIT info(i18n("Backing up transports..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( QLatin1String( "mailtransports" ) );
 
   KTemporaryFile tmp;

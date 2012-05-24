@@ -153,6 +153,7 @@ void RestoreData::restoreTransports()
 
 void RestoreData::restoreResources()
 {
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_FOREACH(const QString& filename, mFileList) {
     if(filename.startsWith(BackupMailUtil::resourcesPath())) {
       const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
@@ -169,6 +170,7 @@ void RestoreData::restoreResources()
 
 void RestoreData::restoreMails()
 {
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_FOREACH(const QString& filename, mFileList) {
     if(filename.startsWith(BackupMailUtil::mailsPath())) {
       const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
@@ -376,6 +378,7 @@ void RestoreData::restoreAkonadiDb()
 
 void RestoreData::restoreNepomuk()
 {
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_EMIT info(i18n("Nepomuk Database restored."));
   Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
   //TODO
