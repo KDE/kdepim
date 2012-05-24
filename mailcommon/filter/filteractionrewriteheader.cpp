@@ -67,7 +67,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
 
   const QString newValue = value.replace( mRegExp, mReplacementString );
 
-  msg->removeHeader( mParameter.toLatin1() );
+  msg->removeHeader( param );
 
   KMime::Headers::Base *newheader = KMime::Headers::createHeader(param);
   if ( !newheader ) {
