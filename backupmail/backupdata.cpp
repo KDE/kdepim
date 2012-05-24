@@ -16,6 +16,7 @@
 */
 
 #include "backupdata.h"
+#include "akonadidatabase.h"
 #include "messageviewer/kcursorsaver.h"
 #include "mailcommon/mailutil.h"
 #include "mailcommon/filter/filtermanager.h"
@@ -32,6 +33,7 @@
 #include <KLocale>
 #include <KTemporaryFile>
 #include <KStandardDirs>
+#include <KProcess>
 
 #include <QDebug>
 #include <QDir>
@@ -222,6 +224,48 @@ void BackupData::backupAkonadiDb()
 {
   Q_EMIT info(i18n("Backing up Akonadi Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  AkonadiDataBase akonadiDataBase;
+  const QString dbDriver(akonadiDataBase.driver());
+
+  KTemporaryFile tmp;
+  tmp.open();
+  KProcess *proc = new KProcess( this );
+  QStringList params;
+  QString dbDumpAppName;
+  if( dbDriver == QLatin1String("QMYSQL") ) {
+    dbDumpAppName = QString::fromLatin1("mysqldump");
+
+    params << "--single-transaction"
+           << "--flush-logs"
+           << "--triggers"
+           << "--result-file=" + tmp.fileName()
+           << akonadiDataBase.options()
+           << akonadiDataBase.name();
+  } else if ( dbDriver == QLatin1String("QPSQL") ) {
+    dbDumpAppName = QString::fromLatin1("pg_dump");
+    params << "--format=custom"
+           << "--blobs"
+           << "--file=" + tmp.fileName()
+           << akonadiDataBase.options()
+           << akonadiDataBase.name();
+  }
+  const QString dbDumpApp = KStandardDirs::findExe( dbDumpAppName );
+  if(dbDumpApp.isEmpty()) {
+    Q_EMIT error(i18n("Could not find %1 necessary to dump database.",dbDumpAppName));
+    return;
+  }
+  proc->setProgram( dbDumpApp, params );
+  int result = proc->execute();
+  delete proc;
+  if ( result != 0 ) {
+    qDebug()<<" Error during dump Database";
+    return;
+  }
+  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
+  if(!fileAdded)
+    Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QString::fromLatin1("akonadidatabase.sql")));
+
+
   Q_EMIT info(i18n("Akonadi Database backup done."));
 }
 
