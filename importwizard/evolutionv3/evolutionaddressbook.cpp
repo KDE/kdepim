@@ -34,7 +34,7 @@ EvolutionAddressBook::~EvolutionAddressBook()
 
 void EvolutionAddressBook::exportEvolutionAddressBook()
 {
-  KMessageBox::information(mImportWizard,i18n("Evolution AddressBook will export as vcard. Import vcard in KAddressBook."),i18n("Export Evolution AddressBook"));
+  KMessageBox::information(mImportWizard,i18n("Evolution address book will be exported as vcard. Import vcard in KAddressBook."),i18n("Export Evolution Address Book"));
 
   const QString directory = KFileDialog::getExistingDirectory( KUrl(), mImportWizard, i18n("Select directory where vcards will stored."));
   if(directory.isEmpty()) {
@@ -88,9 +88,9 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
               arguments<<QLatin1String("--format=vcard")<<name<<QString::fromLatin1("--output=%1/%2.vcard").arg(directory).arg(displayname);
               proc.start(evolutionFile.fileName(),arguments);
               if (proc.waitForFinished()) {
-                addAddressBookImportInfo(i18n("Addressbook \"%1\" exported.",displayname));
+                addAddressBookImportInfo(i18n("Address book \"%1\" exported.",displayname));
               } else {
-                addAddressBookImportError(i18n("Failed to export Addressbook \"%1\".",displayname));
+                addAddressBookImportError(i18n("Failed to export address book \"%1\".",displayname));
               }
             }
             i = 0; //reset
