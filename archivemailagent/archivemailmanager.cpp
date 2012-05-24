@@ -55,20 +55,22 @@ void ArchiveMailManager::load()
     KConfigGroup group = config->group(collectionList.at(i));
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
-    QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
+    const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
     if(QDate::currentDate() > diffDate) {
       Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
         if(oldInfo->saveCollectionId() == info->saveCollectionId()) {
           //already in jobscheduler
           delete info;
-          continue;
+          info = 0;
+          break;
         }
       }
-
-      //Store task started
-      mListArchiveInfo.append(info);
-      ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
-      mArchiveMailKernel->jobScheduler()->registerTask( task );
+      if(info) {
+        //Store task started
+        mListArchiveInfo.append(info);
+        ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
+        mArchiveMailKernel->jobScheduler()->registerTask( task );
+      }
     } else {
       delete info;
     }
