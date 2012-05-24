@@ -16,6 +16,7 @@
 */
 
 #include "restoredata.h"
+#include "akonadidatabase.h"
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
@@ -30,7 +31,9 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <KZip>
+#include <KStandardDirs>
 #include <KLocale>
+#include <KProcess>
 #include <KTemporaryFile>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -311,9 +314,64 @@ void RestoreData::restoreIdentity()
 
 void RestoreData::restoreAkonadiDb()
 {
+  const QString akonadiDbPath(BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
+  if(!mFileList.contains(akonadiDbPath)) {
+    Q_EMIT error(i18n("akonadi database file could not be found in the archive."));
+    return;
+  }
+
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+  const KArchiveEntry* akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
+  if(akonadiDataBaseEntry->isFile()) {
+
+    const KArchiveFile* akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
+
+    KTemporaryFile tmp;
+    tmp.open();
+
+    akonadiDataBaseFile->copyTo(tmp.fileName());
+
+    /* Restore the database */
+    AkonadiDataBase akonadiDataBase;
+
+    const QString dbDriver(akonadiDataBase.driver());
+    QStringList params;
+    QString dbRestoreAppName;
+    if( dbDriver == QLatin1String("QPSQL") ) {
+      dbRestoreAppName = QLatin1String("pg_restore");
+      params << akonadiDataBase.options()
+             << QLatin1String("--dbname=") + akonadiDataBase.name()
+             << QLatin1String("--format=custom")
+             << QLatin1String("--clean")
+             << QLatin1String("--no-owner")
+             << QLatin1String("--no-privileges")
+             << tmp.fileName();
+    }
+    else if (dbDriver == QLatin1String("QMYSQL") ) {
+      dbRestoreAppName = QLatin1String("mysql");
+      params << akonadiDataBase.options()
+             << QLatin1String("--database=") + akonadiDataBase.name();
+    } else {
+      Q_EMIT error(i18n("Database driver \"%1\" not supported.",dbDriver));
+      return;
+    }
+    const QString dbRestoreApp = KStandardDirs::findExe( dbRestoreAppName );
+    if(dbRestoreApp.isEmpty()) {
+      Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.",dbRestoreAppName));
+      return;
+    }
+    KProcess *proc = new KProcess( this );
+    proc->setProgram( KStandardDirs::findExe( dbRestoreApp ), params );
+    proc->setStandardInputFile(tmp.fileName());
+    const int result = proc->execute();
+    delete proc;
+    if ( result != 0 ) {
+      Q_EMIT error(i18n("Failed to restore Akonadi Database."));
+      return;
+    }
+  }
   Q_EMIT info(i18n("Akonadi Database restored."));
-  Q_EMIT error(i18n("Failed to restore Akonadi Database."));
-  //TODO
 }
 
 void RestoreData::restoreNepomuk()

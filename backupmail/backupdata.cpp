@@ -229,31 +229,35 @@ void BackupData::backupAkonadiDb()
 
   KTemporaryFile tmp;
   tmp.open();
-  KProcess *proc = new KProcess( this );
+
   QStringList params;
   QString dbDumpAppName;
   if( dbDriver == QLatin1String("QMYSQL") ) {
     dbDumpAppName = QString::fromLatin1("mysqldump");
 
-    params << "--single-transaction"
-           << "--flush-logs"
-           << "--triggers"
-           << "--result-file=" + tmp.fileName()
+    params << QLatin1String("--single-transaction")
+           << QLatin1String("--flush-logs")
+           << QLatin1String("--triggers")
+           << QLatin1String("--result-file=") + tmp.fileName()
            << akonadiDataBase.options()
            << akonadiDataBase.name();
   } else if ( dbDriver == QLatin1String("QPSQL") ) {
     dbDumpAppName = QString::fromLatin1("pg_dump");
-    params << "--format=custom"
-           << "--blobs"
-           << "--file=" + tmp.fileName()
+    params << QLatin1String("--format=custom")
+           << QLatin1String("--blobs")
+           << QLatin1String("--file=") + tmp.fileName()
            << akonadiDataBase.options()
            << akonadiDataBase.name();
+  } else {
+    Q_EMIT error(i18n("Database driver \"%1\" not supported.",dbDriver));
+    return;
   }
   const QString dbDumpApp = KStandardDirs::findExe( dbDumpAppName );
   if(dbDumpApp.isEmpty()) {
-    Q_EMIT error(i18n("Could not find %1 necessary to dump database.",dbDumpAppName));
+    Q_EMIT error(i18n("Could not find \"%1\" necessary to dump database.",dbDumpAppName));
     return;
   }
+  KProcess *proc = new KProcess( this );
   proc->setProgram( dbDumpApp, params );
   int result = proc->execute();
   delete proc;
