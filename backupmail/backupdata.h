@@ -39,6 +39,7 @@ private:
   void backupNepomuk();
   void storeResources(const QString&identifier, const QString& path);
   KUrl resourcePath(KSharedConfigPtr resourceConfig) const;
+  void backupFile(const QString&filename, const QString& path, const QString&storedName);
 
 };
 

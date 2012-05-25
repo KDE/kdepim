@@ -126,8 +126,19 @@ void BackupData::backupConfig()
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
   if(!fileAdded)
     Q_EMIT error(i18n("Filters cannot be exported."));
+  else
+    Q_EMIT error(i18n("Filters backup done."));
+  tmp.close();
+
+  const QString kmailsnippetrcStr("kmailsnippetrc");
+  const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
+  if(!kmailsnippetrc.isEmpty()) {
+    backupFile(kmailsnippetrc, BackupMailUtil::configsPath(), kmailsnippetrcStr);
+  }
+
   Q_EMIT info(i18n("Config backup done."));
 }
+
 
 void BackupData::backupIdentity()
 {
@@ -308,4 +319,13 @@ void BackupData::storeResources(const QString&identifier, const QString& path)
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), path + agentFileName);
   if(!fileAdded)
     Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
+}
+
+void BackupData::backupFile(const QString&filename, const QString& path, const QString&storedName)
+{
+  const bool fileAdded  = mArchive->addLocalFile(filename, path + storedName);
+  if(!fileAdded)
+    Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
+  else
+    Q_EMIT error(i18n("\"%1\" backup done.",storedName));
 }
