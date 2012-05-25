@@ -38,8 +38,8 @@
 #include <QDebug>
 #include <QDir>
 
-BackupData::BackupData(BackupMailUtil::BackupTypes typeSelected, const QString &filename)
-  :AbstractData(filename,typeSelected)
+BackupData::BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
+  :AbstractData(parent,filename,typeSelected)
 {
 }
 
@@ -73,7 +73,13 @@ void BackupData::backupTransports()
 {
   Q_EMIT info(i18n("Backing up transports..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( QLatin1String( "mailtransports" ) );
+
+  const QString mailtransportsStr("mailtransports");
+  const QString maitransportsrc = KStandardDirs::locateLocal( "config",  mailtransportsStr);
+  if(!QFile(maitransportsrc).exists()) {
+    return;
+  }
+  KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( mailtransportsStr );
 
   KTemporaryFile tmp;
   tmp.open();
@@ -132,8 +138,45 @@ void BackupData::backupConfig()
 
   const QString kmailsnippetrcStr("kmailsnippetrc");
   const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
-  if(!kmailsnippetrc.isEmpty()) {
+  if(QFile(kmailsnippetrc).exists()) {
     backupFile(kmailsnippetrc, BackupMailUtil::configsPath(), kmailsnippetrcStr);
+  }
+
+  const QString templatesconfigurationrcStr("templatesconfigurationrc");
+  const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
+  //Fix path
+  if(QFile(templatesconfigurationrc).exists()) {
+#if 0  //FIXME
+    KSharedConfigPtr templaterc = KSharedConfig::openConfig(templatesconfigurationrcStr);
+
+    KTemporaryFile tmp;
+    tmp.open();
+
+    KConfig *templateConfig = templaterc->copyTo( tmp.fileName() );
+    const QString templateGroupPattern = QLatin1String( "Templates #" );
+    const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
+    Q_FOREACH(const QString& str, templateList) {
+      bool found = false;
+      int collectionId = str.remove(templateGroupPattern).toInt(found);
+      if(found) {
+        KConfigGroup oldGroup = templateConfig->group(str);
+
+        KConfigGroup newGroup( templateConfig, templateGroupPattern.arg( MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ) ));
+        oldGroup.copyTo( &newGroup );
+        oldGroup.deleteGroup();
+      }
+    }
+#endif
+
+
+    backupFile(templatesconfigurationrc, BackupMailUtil::configsPath(), templatesconfigurationrcStr);
+  }
+
+  const QString kmailStr("kmail2rc");
+  const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
+  //FIXME save folder as real path not id
+  if(QFile(kmail2rc).exists()) {
+    backupFile(kmail2rc, BackupMailUtil::configsPath(), kmailStr);
   }
 
   Q_EMIT info(i18n("Config backup done."));
@@ -144,6 +187,12 @@ void BackupData::backupIdentity()
 {
   Q_EMIT info(i18n("Backing up identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  const QString emailidentitiesStr("emailidentities");
+  const QString emailidentitiesrc = KStandardDirs::locateLocal( "config",  emailidentitiesStr);
+  if(!QFile(emailidentitiesrc).exists()) {
+    return;
+  }
+
   KSharedConfigPtr identity = KSharedConfig::openConfig( QLatin1String( "emailidentities" ) );
 
   KTemporaryFile tmp;

@@ -87,13 +87,15 @@ void BackupMailApplication::slotBackupData()
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
+    delete dialog;
     delete mBackupData;
-    mBackupData = new BackupData(typeSelected,filename);
+    mBackupData = new BackupData(this,typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     mBackupData->startBackup();
+  } else {
+    delete dialog;
   }
-  delete dialog;
 }
 
 void BackupMailApplication::slotAddInfo(const QString& info)
@@ -118,13 +120,15 @@ void BackupMailApplication::slotRestoreData()
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
+    delete dialog;
     delete mRestoreData;
-    mRestoreData = new RestoreData(typeSelected,filename);
+    mRestoreData = new RestoreData(this,typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     mRestoreData->startRestore();
+  } else {
+    delete dialog;
   }
-  delete dialog;
 }
 
 bool BackupMailApplication::canZip() const

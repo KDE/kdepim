@@ -25,7 +25,7 @@ class KUrl;
 class BackupData : public AbstractData
 {
 public:
-  explicit BackupData(BackupMailUtil::BackupTypes typeSelected,const QString& filename);
+  explicit BackupData(QWidget *parent,BackupMailUtil::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
   void startBackup();
 

@@ -21,11 +21,11 @@
 #include <KZip>
 #include <KLocale>
 
-AbstractData::AbstractData(const QString &filename,BackupMailUtil::BackupTypes typeSelected)
+AbstractData::AbstractData(QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
   : mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
-    mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" ))
-
+    mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
+    mParent(parent)
 {
 }
 

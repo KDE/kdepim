@@ -39,8 +39,8 @@
 #include <KConfigGroup>
 #include <KMessageBox>
 
-RestoreData::RestoreData(BackupMailUtil::BackupTypes typeSelected,const QString& filename)
-  :AbstractData(filename,typeSelected), mArchiveDirectory(0)
+RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
+  :AbstractData(parent,filename,typeSelected), mArchiveDirectory(0)
 {
 }
 
@@ -258,17 +258,53 @@ void RestoreData::restoreConfig()
   const KArchiveEntry* kmailsnippetentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailsnippetrcStr);
   if(kmailsnippetentry->isFile()) {
     const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(kmailsnippetentry);
-    //FIXME verify that kmailsnippetrc return empty when not exist.
     const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
-
-    if(!kmailsnippetrc.isEmpty()) {
+    if(QFile(kmailsnippetrc).exists()) {
       //TODO 4.10 allow to merge config.
-      //FIXME use parent
-      if(KMessageBox::warningYesNo(0,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
         kmailsnippet->copyTo(kmailsnippetrc);
       }
+    } else {
+      kmailsnippet->copyTo(kmailsnippetrc);
     }
   }
+
+
+  const QString templatesconfigurationrcStr("templatesconfigurationrc");
+  //Fix identity id
+  const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
+  if(templatesconfigurationentry->isFile()) {
+    const KArchiveFile* templatesconfiguration = static_cast<const KArchiveFile*>(templatesconfigurationentry);
+    const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
+    if(QFile(templatesconfigurationrc).exists()) {
+      //TODO 4.10 allow to merge config.
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",templatesconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
+        templatesconfiguration->copyTo(templatesconfigurationrc);
+      }
+    } else {
+      templatesconfiguration->copyTo(templatesconfigurationrc);
+    }
+  }
+
+
+
+  const QString kmailStr("kmail2rc");
+  //TODO fix folder id.
+  const KArchiveEntry* kmail2rcentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailStr);
+  if(kmail2rcentry->isFile()) {
+    const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(kmail2rcentry);
+    const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
+    if(QFile(kmail2rc).exists()) {
+      //TODO 4.10 allow to merge config.
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
+        kmailsnippet->copyTo(kmail2rc);
+      }
+    } else {
+      kmailsnippet->copyTo(kmail2rc);
+    }
+  }
+
+
   Q_EMIT info(i18n("Config restored."));
 }
 
@@ -296,7 +332,7 @@ void RestoreData::restoreIdentity()
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
       KConfigGroup group = identityConfig->group(identityStr);
-      uint oldUid = -1;
+      int oldUid = -1;
       const QString uidStr("uoid");
       if(group.hasKey(uidStr)) {
         oldUid = group.readEntry(uidStr).toUInt();
