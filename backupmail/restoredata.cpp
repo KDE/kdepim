@@ -37,6 +37,7 @@
 #include <KTemporaryFile>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KMessageBox>
 
 RestoreData::RestoreData(BackupMailUtil::BackupTypes typeSelected,const QString& filename)
   :AbstractData(filename,typeSelected), mArchiveDirectory(0)
@@ -253,6 +254,22 @@ void RestoreData::restoreConfig()
       MailCommon::FilterManager::instance()->appendFilters(lstFilter);
     }
   }
+  const QString kmailsnippetrcStr("kmailsnippetrc");
+  const KArchiveEntry* kmailsnippetentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailsnippetrcStr);
+  if(kmailsnippetentry->isFile()) {
+    const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(kmailsnippetentry);
+    //FIXME verify that kmailsnippetrc return empty when not exist.
+    const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
+
+    if(!kmailsnippetrc.isEmpty()) {
+      //TODO 4.10 allow to merge config.
+      //FIXME use parent
+      if(KMessageBox::warningYesNo(0,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
+        kmailsnippet->copyTo(kmailsnippetrc);
+      }
+    }
+  }
+  Q_EMIT info(i18n("Config restored."));
 }
 
 void RestoreData::restoreIdentity()
