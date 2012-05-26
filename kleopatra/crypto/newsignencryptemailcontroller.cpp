@@ -523,7 +523,7 @@ void NewSignEncryptEMailController::doTaskDone( const Task * task, const shared_
         if ( !that )
             return;
     }
-    
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
@@ -545,7 +545,7 @@ void NewSignEncryptEMailController::cancel() {
         d->dialog->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 
@@ -555,7 +555,7 @@ void NewSignEncryptEMailController::Private::cancelAllTasks() {
     // signal emissions.
     runnable.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( cms )
         cms->cancel();
     if ( openpgp )

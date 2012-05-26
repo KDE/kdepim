@@ -116,6 +116,9 @@ static bool is_algo( gpgme_pubkey_algo_t algo, KeyAlgo what ) {
         return what == ELG;
     case GPGME_PK_DSA:
         return what == DSA;
+    case GPGME_PK_ECDSA: //TODO: not handled, here to make gcc happy
+    case GPGME_PK_ECDH:  //TODO: not handled, here to make gcc happy
+        break;
     }
     return false;
 }
@@ -145,7 +148,7 @@ static void set_keysize( QComboBox * cb, unsigned int strength ) {
         return;
     const int idx = cb->findData( static_cast<int>( strength ) );
     if ( idx < 0 )
-        qWarning( "NewCertificateWizard: AdvancedSettingsDialog: keysize %u not allowed", strength );
+        kWarning() << "keysize " << strength << " not allowed";
     cb->setCurrentIndex( idx );
 }
 
@@ -569,7 +572,9 @@ namespace {
         QString createGnupgKeyParms() const;
 
     private Q_SLOTS:
-        void slotResult( const GpgME::KeyGenerationResult & result, const QByteArray & request, const QString & auditLog ) {
+        void slotResult( const GpgME::KeyGenerationResult & result, const QByteArray & request, const QString & auditLog )
+        {
+            Q_UNUSED( auditLog );
             if ( result.error().code() ) {
                 setField( "error", result.error().isCanceled()
                           ? i18n("Operation canceled.")
@@ -648,7 +653,7 @@ namespace {
             ui.saveRequestToFilePB      ->setVisible( !pgp() );
             ui.makeBackupPB             ->setVisible(  pgp() );
             ui.createRevocationRequestPB->setVisible(  pgp() && false ); // not implemented
-            
+
 #ifdef KDEPIM_MOBILE_UI
             ui.sendCertificateByEMailPB ->setVisible(  false );
             ui.sendRequestByEMailPB     ->setVisible(  false );
@@ -821,11 +826,12 @@ namespace {
         void toggleSignEncryptAndRestart() {
             if ( !wizard() )
                 return;
-            if ( KMessageBox::warningContinueCancel( this,
-                                                     i18nc("@info",
-                                                           "This operation will delete the certification request. "
-                                                           "Please make sure that you have sent or saved it before proceeding." ),
-                                                     i18nc("@title", "Certification Request About To Be Deleted") ) != KMessageBox::Continue )
+            if ( KMessageBox::warningContinueCancel(
+                     this,
+                     i18nc("@info",
+                           "This operation will delete the certification request. "
+                           "Please make sure that you have sent or saved it before proceeding." ),
+                     i18nc("@title", "Certification Request About To Be Deleted") ) != KMessageBox::Continue )
                 return;
             const bool sign = signingAllowed();
             const bool encr = encryptionAllowed();
@@ -937,6 +943,8 @@ static QString attributeLabel( const QString & attr, bool pgp ) {
     return attr;
 }
 
+#if 0
+//Not used anywhere
 static QString attributeLabelWithColor( const QString & attr, bool pgp ) {
     const QString result = attributeLabel( attr, pgp );
     if ( result.isEmpty() )
@@ -944,6 +952,7 @@ static QString attributeLabelWithColor( const QString & attr, bool pgp ) {
     else
         return result + ':';
 }
+#endif
 
 static QString attributeFromKey( QString key ) {
   return key.remove( '!' );
@@ -1425,8 +1434,9 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
         setSubkeyType( GPGME_PK_ELG_E );
     } else {
         if ( !keyType.isEmpty() && keyType != "RSA" )
-            qWarning( "NewCertificateWizard: AdvancedSettingsDialog: invalid value \"%s\" for entry \"[CertificateCreationWizard]%s\"",
-                      qPrintable( keyType ), qPrintable( entry ) );
+            kWarning() << "invalid value \"" << qPrintable( keyType )
+                       << "\" for entry \"[CertificateCreationWizard]"
+                       << qPrintable( entry ) << "\"";
         setKeyType( GPGME_PK_RSA );
         setSubkeyType( 0 );
     }

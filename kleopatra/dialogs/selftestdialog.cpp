@@ -38,6 +38,8 @@
 
 #include <selftest/selftest.h>
 
+#include <KDebug>
+
 #include <QAbstractTableModel>
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
@@ -169,23 +171,38 @@ namespace {
         }
 
     private:
-        /* reimp */ bool filterAcceptsRow( int src_row, const QModelIndex & src_parent ) const {
-            if ( m_showAll )
+        /* reimp */ bool filterAcceptsRow( int src_row, const QModelIndex & src_parent ) const
+        {
+            if ( m_showAll ) {
                 return true;
-            if ( const Model * const model = qobject_cast<Model*>( sourceModel() ) )
-                if ( !src_parent.isValid() && src_row >= 0 && src_row < model->rowCount( src_parent ) )
-                    if ( const shared_ptr<SelfTest> & t = model->at( src_row ) )
+            }
+            if ( const Model * const model = qobject_cast<Model*>( sourceModel() ) ) {
+                if ( !src_parent.isValid() && src_row >= 0 &&
+                     src_row < model->rowCount( src_parent ) ) {
+                    if ( const shared_ptr<SelfTest> & t = model->at( src_row ) ) {
                         return !t->passed() ;
-                    else
-                        qWarning( "%s: NULL test??", Q_FUNC_INFO );
-                else
-                    if ( src_parent.isValid() )
-                        qWarning( "%s: view asks for subitems!", Q_FUNC_INFO );
-                    else
-                        qWarning( "%s: index %d is out of range [%d,%d[", Q_FUNC_INFO, src_row, 0, model->rowCount( src_parent ) );
-            else
-                qWarning( "%s: expected a ::Model, got %s", Q_FUNC_INFO,
-                          sourceModel() ? sourceModel()->metaObject()->className() : "nullptr" );
+                    } else {
+                        kWarning() <<  "NULL test??";
+                    }
+                } else {
+                    if ( src_parent.isValid() ) {
+                        kWarning() <<  "view asks for subitems!";
+                    } else {
+                        kWarning() << "index " << src_row
+                                   << " is out of range [" << 0
+                                   << "," <<  model->rowCount( src_parent )
+                                   << "]";
+                    }
+                }
+            } else {
+                kWarning() << "expected a ::Model, got ";
+                if ( !sourceModel() ) {
+                    kWarning() << "a null pointer";
+                } else {
+                    kWarning() <<  sourceModel()->metaObject()->className();
+                }
+
+            }
             return false;
         }
 

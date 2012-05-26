@@ -264,13 +264,13 @@ namespace {
         const Protocol proto;
         FindExtension( const QString & ext, Protocol proto ) : ext( ext ), proto( proto ) {}
         bool operator()( const shared_ptr<ArchiveDefinition> & ad ) const {
-            qDebug() << "   considering" << ( ad ? ad->label() : QLatin1String( "<null>" ) ) << "for" << ext;
+            kDebug() << "   considering" << ( ad ? ad->label() : QLatin1String( "<null>" ) ) << "for" << ext;
             bool result;
             if ( proto == UnknownProtocol )
                 result = ad && ( ad->extensions( OpenPGP ).contains( ext, Qt::CaseInsensitive ) || ad->extensions( CMS ).contains( ext, Qt::CaseInsensitive ) );
             else
                 result = ad && ad->extensions( proto ).contains( ext, Qt::CaseInsensitive );
-            qDebug() << ( result ? "   -> matches" : "   -> doesn't match" );
+            kDebug() << ( result ? "   -> matches" : "   -> doesn't match" );
             return result;
         }
     };
@@ -297,7 +297,7 @@ shared_ptr<ArchiveDefinition> pick_archive_definition( GpgME::Protocol proto, co
         extension = extension.mid( idx + 1 );
     }
 }
-    
+
 
 QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles()
 {
@@ -464,7 +464,7 @@ void DecryptVerifyFilesController::cancel()
             d->m_wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 

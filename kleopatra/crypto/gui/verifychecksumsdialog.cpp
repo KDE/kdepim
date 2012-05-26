@@ -103,7 +103,7 @@ namespace {
             const QModelIndex mi = index( file );
             const QString canonical = filePath( mi );
             if ( canonical.isEmpty() ) {
-                qDebug() << Q_FUNC_INFO << ": can't locate file" << file;
+                kDebug() << "can't locate file " << file;
                 return;
             }
 
@@ -174,17 +174,17 @@ namespace {
             proxy.setSourceModel( model );
 
             view.setModel( &proxy );
-       
+
             QRect r;
             for( int i = 0; i < proxy.columnCount(); ++i )
                 view.resizeColumnToContents( i );
-            
+
             // define some minimum sizes
             view.header()->resizeSection( 0, qMax( view.header()->sectionSize( 0 ), 220 ) );
             view.header()->resizeSection( 1, qMax( view.header()->sectionSize( 1 ), 75 ) );
             view.header()->resizeSection( 2, qMax( view.header()->sectionSize( 2 ), 75 ) );
             view.header()->resizeSection( 3, qMax( view.header()->sectionSize( 3 ), 140 ) );
-            
+
             for( int i = 0; i < proxy.rowCount(); ++i )
                 r = r.united( view.visualRect( proxy.index( proxy.columnCount() - 1, i ) ) );
             view.setMinimumSize( QSize( qBound( r.width() + 4 * view.frameWidth(), 220+75+75+140 + 4 * view.frameWidth(), 1024 ), // 100 is the default defaultSectionSize
@@ -193,11 +193,16 @@ namespace {
 
         void setBase( const QString & base ) {
             label.setText( base );
-            if ( QDirModel * fsm = qobject_cast<QDirModel*>( proxy.sourceModel() ) )
+            if ( QDirModel * fsm = qobject_cast<QDirModel*>( proxy.sourceModel() ) ) {
                 view.setRootIndex( proxy.mapFromSource( fsm->index( base ) ) );
-            else
-                qWarning( "%s: expect a QDirModel-derived class as proxy.sourceModel(), got %s",
-                          Q_FUNC_INFO, proxy.sourceModel() ? proxy.sourceModel()->metaObject()->className() : "null pointer" );
+            } else {
+                kWarning() << "expect a QDirModel-derived class as proxy.sourceModel(), got ";
+                if ( !proxy.sourceModel() ) {
+                    kWarning() << "a null pointer";
+                } else {
+                    kWarning() << proxy.sourceModel()->metaObject()->className();
+                }
+            }
         }
     };
 
@@ -241,7 +246,7 @@ private:
     QStringList bases;
     QStringList errors;
     ColorizedFileSystemModel model;
-    
+
     struct UI {
         std::vector<BaseWidget*> baseWidgets;
         QLabel progressLabel;

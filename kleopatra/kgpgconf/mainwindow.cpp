@@ -37,7 +37,6 @@
 #include "configwriter.h"
 #include "exception.h"
 
-#include <QDebug>
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -55,7 +54,7 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     QWidget* mainWidget = new QWidget( this );
     m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
-    connect( m_ui.treeWidget, SIGNAL(itemSelectionChanged()), 
+    connect( m_ui.treeWidget, SIGNAL(itemSelectionChanged()),
              SLOT(treeWidgetItemSelectionChanged()) );
     connect( m_ui.treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
              SLOT(treeWidgetItemChanged(QTreeWidgetItem*,int)) );
@@ -88,7 +87,7 @@ void MainWindow::delayedInit()
     }
     catch( const MalformedGpgConfOutputException& e )
     {
-        QMessageBox::critical( this, i18n( "Parsing Error" ), i18n( "An error occurred while reading the current configuration.\n\nError: %1", e.message() ) ); 
+        QMessageBox::critical( this, i18n( "Parsing Error" ), i18n( "An error occurred while reading the current configuration.\n\nError: %1", e.message() ) );
         qApp->quit();
     }
     catch( const KGpgConfException& e )
@@ -144,7 +143,7 @@ void MainWindow::treeWidgetItemChanged( QTreeWidgetItem* item, int column )
 void MainWindow::useDefaultToggled( bool useDefault )
 {
     if ( !m_selectedEntry )
-        return;    
+        return;
     m_selectedEntry->setUseBuiltInDefault( useDefault );
 }
 
@@ -192,7 +191,7 @@ void MainWindow::readConfiguration()
                 entryItem->setData( NameColumn, IsOptionRole, true );
                 entryItem->setText( NameColumn, entry->name() );
 //                entryItem->setText( ValueColumn, QString() );
-                entryItem->setCheckState( ReadOnlyColumn, entry->mutability() == ConfigEntry::NoChange ? Qt::Checked : Qt::Unchecked ); 
+                entryItem->setCheckState( ReadOnlyColumn, entry->mutability() == ConfigEntry::NoChange ? Qt::Checked : Qt::Unchecked );
                 groupItem->addChild( entryItem );
                 m_componentForEntry[entry] = component;
                 m_itemToEntry[entryItem] = entry;
@@ -213,7 +212,7 @@ void MainWindow::saveToFile( const QString& fileName )
         QMessageBox::warning( this, i18n( "Write Error" ), i18n( "Could not open file %1 for writing. You might not have the permission to write to that file.", fileName ) );
         return;
     }
-    tmp.setTextModeEnabled( true ); 
+    tmp.setTextModeEnabled( true );
     ConfigWriter writer( &tmp );
     if ( writer.writeConfig( m_config ) )
     {
@@ -229,7 +228,7 @@ void MainWindow::saveToFile( const QString& fileName )
         }
         tmp.setAutoRemove( true );
     }
-    QMessageBox::critical( this, i18n( "Write Error" ), i18n( "Error while writing to file %1.", fileName ) ); 
+    QMessageBox::critical( this, i18n( "Write Error" ), i18n( "Error while writing to file %1.", fileName ) );
 
 }
 

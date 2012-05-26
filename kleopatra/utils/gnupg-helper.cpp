@@ -38,6 +38,7 @@
 
 #include <gpgme++/engineinfo.h>
 
+#include <KDebug>
 #include <KStandardDirs>
 
 #include <QDir>
@@ -139,11 +140,11 @@ QString Kleo::gpgConfListDir( const char * which ) {
     if ( gpgConfPath.isEmpty() )
         return QString();
     QProcess gpgConf;
-    qDebug( "gpgConfListDir: starting %s --list-dirs", qPrintable( gpgConfPath ) );
+    kDebug() << "gpgConfListDir: starting " << qPrintable( gpgConfPath ) << " --list-dirs";
     gpgConf.start( gpgConfPath, QStringList() << QLatin1String( "--list-dirs" ) );
     if ( !gpgConf.waitForFinished() ) {
-        qDebug( "gpgConfListDir(): failed to execute gpgconf: %s", qPrintable( gpgConf.errorString() ) );
-        qDebug( "output was:\n%s", gpgConf.readAllStandardError().constData() );
+        kDebug() << "gpgConfListDir(): failed to execute gpgconf: " << qPrintable( gpgConf.errorString() );
+        kDebug() << "output was:" << endl << gpgConf.readAllStandardError().constData();
         return QString();
     }
     const QList<QByteArray> lines = gpgConf.readAllStandardOutput().split( '\n' );
@@ -154,9 +155,11 @@ QString Kleo::gpgConfListDir( const char * which ) {
             while ( end && line[end-1] == '\n' || line[end-1] == '\r' )
                 --end;
             const QString result = QDir::fromNativeSeparators( QFile::decodeName( hexdecode( line.mid( begin, end - begin ) ) ) );
-            qDebug( "gpgConfListDir: found %s for '%s' entry", qPrintable( result ), which );
+            kDebug() << "gpgConfListDir: found " << qPrintable( result )
+                     << " for '" << which << "'entry";
             return result;
         }
-    qDebug( "gpgConfListDir(): didn't find '%s' entry in output:\n%s", which, gpgConf.readAllStandardError().constData() );
+    kDebug() << "gpgConfListDir(): didn't find '" << which << "'"
+             << "entry in output:" << endl << gpgConf.readAllStandardError().constData();
     return QString();
 }

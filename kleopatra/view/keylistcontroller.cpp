@@ -92,8 +92,8 @@
 #include <algorithm>
 #include <cassert>
 
-using namespace Kleo; 
-using namespace Kleo::Commands; 
+using namespace Kleo;
+using namespace Kleo::Commands;
 using namespace Kleo::SmartCard;
 using namespace boost;
 using namespace GpgME;
@@ -127,7 +127,7 @@ public:
 
 public:
     void slotDestroyed( QObject * o ) {
-        qDebug( "KeyListController::Private::slotDestroyed( %p )", ( void* )o );
+        kDebug() << ( void* )o;
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
 	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
@@ -245,7 +245,7 @@ void KeyListController::setFlatModel( AbstractKeyListModel * model ) {
         return;
 
     d->flatModel = model;
-    
+
     if ( model ) {
         model->clear();
         model->addKeys( KeyCache::instance()->keys() );
@@ -258,7 +258,7 @@ void KeyListController::setHierarchicalModel( AbstractKeyListModel * model ) {
         return;
 
     d->hierarchicalModel = model;
-    
+
     if ( model ) {
         model->clear();
         model->addKeys( KeyCache::instance()->keys() );
@@ -466,7 +466,7 @@ void KeyListController::registerCommand( Command * cmd ) {
     if ( !cmd || kdtools::binary_search( d->commands, cmd ) )
         return;
     d->addCommand( cmd );
-    qDebug( "KeyListController::registerCommand( %p )", ( void* )cmd );
+    kDebug() << ( void* )cmd;
     if ( d->commands.size() == 1 )
         emit commandsExecuting( true );
 }
@@ -524,14 +524,20 @@ void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
     c->start();
 }
 
-void KeyListController::Private::slotActivated( const QModelIndex & idx ) {
+void KeyListController::Private::slotActivated( const QModelIndex & idx )
+{
+    Q_UNUSED( idx );
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
     if ( !view || !kdtools::binary_search( views, view ) )
 	return;
-    
+
 }
 
-void KeyListController::Private::slotSelectionChanged( const QItemSelection & old, const QItemSelection & new_ ) {
+void KeyListController::Private::slotSelectionChanged( const QItemSelection & old, const QItemSelection & new_ )
+{
+    Q_UNUSED( old );
+    Q_UNUSED( new_ );
+
     const QItemSelectionModel * const sm = qobject_cast<QItemSelectionModel*>( q->sender() );
     if ( !sm )
 	return;
@@ -543,14 +549,14 @@ void KeyListController::Private::slotContextMenu( const QPoint & p ) {
     if ( view && kdtools::binary_search( views, view ) )
         emit q->contextMenuRequested( view, view->viewport()->mapToGlobal( p ) );
     else
-        qDebug( "KeyListController::Private::slotContextMenu: sender is not a QAbstractItemView*!" );
+        kDebug() << "sender is not a QAbstractItemView*!";
 }
 
 void KeyListController::Private::slotCommandFinished() {
     Command * const cmd = qobject_cast<Command*>( q->sender() );
     if ( !cmd || !kdtools::binary_search( commands, cmd ) )
         return;
-    qDebug( "KeyListController::Private::slotCommandFinished( %p )", ( void* )cmd );
+    kDebug() << ( void* )cmd;
     if ( commands.size() == 1 )
         emit q->commandsExecuting( false );
 }
@@ -647,11 +653,12 @@ void KeyListController::Private::slotActionTriggered() {
                 c->start();
             }
             else
-                qDebug( "KeyListController::Private::slotActionTriggered: createCommand() == NULL for action(?) \"%s\"", qPrintable( s->objectName() ) );
+                kDebug() << "createCommand() == NULL for action(?) \""
+                         << qPrintable( s->objectName() ) << "\"";
         else
-            qDebug( "KeyListController::Private::slotActionTriggered: I don't know anything about action(?) \"%s\"", qPrintable( s->objectName() ) );
+            kDebug() << "I don't know anything about action(?) \"%s\"", qPrintable( s->objectName() );
     } else {
-        qDebug( "KeyListController::Private::slotActionTriggered: not called through a signal/slot connection (sender() == NULL)" );
+        kDebug() << "not called through a signal/slot connection (sender() == NULL)";
     }
 }
 
@@ -663,7 +670,7 @@ int KeyListController::Private::toolTipOptions() const
     static const int detailsFlags = StorageLocation|CertificateType|SerialNumber|Fingerprint;
 
     const TooltipPreferences prefs;
-    
+
     int flags = KeyID;
     flags |= prefs.showValidity() ? validityFlags : 0;
     flags |= prefs.showOwnerInformation() ? ownerFlags : 0;

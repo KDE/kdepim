@@ -158,7 +158,7 @@ void SignEMailController::startResolveSigners( const std::vector<Mailbox> & sign
     d->ensureWizardCreated();
 
     d->wizard->setSignersAndCandidates( signers, keys );
-  
+
     d->ensureWizardVisible();
 }
 
@@ -273,9 +273,11 @@ shared_ptr<SignEMailTask> SignEMailController::Private::takeRunnable( GpgME::Pro
 }
 
 // ### extract to base
-void SignEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
+void SignEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result )
+{
+    Q_UNUSED( result );
     assert( task );
-    
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
@@ -299,7 +301,7 @@ void SignEMailController::cancel() {
             d->wizard->close();
         d->cancelAllJobs();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 
@@ -310,7 +312,7 @@ void SignEMailController::Private::cancelAllJobs() {
     // signal emissions.
     runnable.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( cms )
         cms->cancel();
     if ( openpgp )
