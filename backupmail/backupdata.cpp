@@ -155,7 +155,7 @@ void BackupData::backupConfig()
     const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
     Q_FOREACH(const QString& str, templateList) {
       bool found = false;
-      int collectionId = str.right(str.length()-templateGroupPattern.length()).toInt(&found);
+      const int collectionId = str.right(str.length()-templateGroupPattern.length()).toInt(&found);
       if(found) {
         KConfigGroup oldGroup = templateConfig->group(str);
         const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
@@ -173,8 +173,32 @@ void BackupData::backupConfig()
 
   const QString kmailStr("kmail2rc");
   const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
-  //FIXME save folder as real path not id
   if(QFile(kmail2rc).exists()) {
+    KSharedConfigPtr kmailrc = KSharedConfig::openConfig(kmail2rc);
+
+    KTemporaryFile tmp;
+    tmp.open();
+
+    KConfig *kmailConfig = kmailrc->copyTo( tmp.fileName() );
+    const QString folderGroupPattern = QLatin1String( "Folder-" );
+    const QStringList folderList = kmailConfig->groupList().filter( QRegExp( "Folder-\\d+" ) );
+    Q_FOREACH(const QString& str, folderList) {
+      bool found = false;
+      const int collectionId = str.right(str.length()-folderGroupPattern.length()).toInt(&found);
+      if(found) {
+        KConfigGroup oldGroup = kmailConfig->group(str);
+        const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+        if(!realPath.isEmpty()) {
+          KConfigGroup newGroup( kmailConfig, folderGroupPattern + realPath);
+          oldGroup.copyTo( &newGroup );
+        }
+        oldGroup.deleteGroup();
+      }
+    }
+    kmailConfig->sync();
+//TODO fix other group/key based on akonadi-id
+
+
     backupFile(kmail2rc, BackupMailUtil::configsPath(), kmailStr);
   }
 
