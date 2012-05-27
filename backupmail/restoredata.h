@@ -41,6 +41,8 @@ private:
   void restoreAkonadiDb();
   void restoreNepomuk();
   void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc);
+  void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc);
+
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
   QHash<uint, uint> mHashIdentity;
   QHash<int, int> mHashTransport;

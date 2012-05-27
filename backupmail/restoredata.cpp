@@ -297,10 +297,10 @@ void RestoreData::restoreConfig()
     if(QFile(kmail2rc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
-        kmailsnippet->copyTo(kmail2rc);
+        importKmailConfig(kmailsnippet,kmail2rc);
       }
     } else {
-      kmailsnippet->copyTo(kmail2rc);
+      importKmailConfig(kmailsnippet,kmail2rc);
     }
   }
 
@@ -460,4 +460,10 @@ void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfigurati
 {
   //TODO
   templatesconfiguration->copyTo(templatesconfigurationrc);
+}
+
+void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc)
+{
+  //TODO
+  kmailsnippet->copyTo(kmail2rc);
 }
