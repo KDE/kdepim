@@ -892,7 +892,8 @@ NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo( KMime::Cont
 {
   AttachmentDisplayInfo info;
   info.icon = iconName( node, KIconLoader::Small );
-  info.label = fileName( node );
+  const QString name = node->contentType()->name();
+  info.label = name.isEmpty() ? fileName( node ) : name;
   if( info.label.isEmpty() ) {
     info.label = node->contentDescription()->asUnicodeString();
   }

@@ -2182,7 +2182,8 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( !htmlWriter() || !msgPart )
     return;
 
-  QString label = NodeHelper::fileName( msgPart );
+  const QString name = msgPart->contentType()->name();
+  QString label = name.isEmpty() ? NodeHelper::fileName( msgPart ) : name;
   if ( label.isEmpty() )
     label = i18nc( "display name for an unnamed attachment", "Unnamed" );
   label = StringUtil::quoteHtmlChars( label, true );
