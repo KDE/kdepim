@@ -279,10 +279,10 @@ void RestoreData::restoreConfig()
     if(QFile(templatesconfigurationrc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",templatesconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
-        templatesconfiguration->copyTo(templatesconfigurationrc);
+        importTemplatesConfig(templatesconfiguration, templatesconfigurationrc);
       }
     } else {
-      templatesconfiguration->copyTo(templatesconfigurationrc);
+      importTemplatesConfig(templatesconfiguration, templatesconfigurationrc);
     }
   }
 
@@ -453,4 +453,11 @@ Akonadi::Collection::Id RestoreData::adaptFolderId( const QString& folder)
     delete dlg;
   }
   return newFolderId;
+}
+
+
+void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc)
+{
+  //TODO
+  templatesconfiguration->copyTo(templatesconfigurationrc);
 }

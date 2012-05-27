@@ -24,6 +24,7 @@
 #include <QHash>
 
 class KArchiveDirectory;
+class KArchiveFile;
 
 class RestoreData : public AbstractData
 {
@@ -39,6 +40,7 @@ private:
   void restoreIdentity();
   void restoreAkonadiDb();
   void restoreNepomuk();
+  void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc);
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
   QHash<uint, uint> mHashIdentity;
   QHash<int, int> mHashTransport;
