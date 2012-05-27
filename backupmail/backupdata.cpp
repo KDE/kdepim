@@ -130,10 +130,10 @@ void BackupData::backupConfig()
   MailCommon::FilterImporterExporter exportFilters;
   exportFilters.exportFilters(lstFilter,url, true);
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
-  if(!fileAdded)
-    Q_EMIT error(i18n("Filters cannot be exported."));
-  else
+  if(fileAdded)
     Q_EMIT info(i18n("Filters backup done."));
+  else
+    Q_EMIT error(i18n("Filters cannot be exported."));
   tmp.close();
 
   const QString kmailsnippetrcStr("kmailsnippetrc");
@@ -153,14 +153,16 @@ void BackupData::backupConfig()
     KConfig *templateConfig = templaterc->copyTo( tmp.fileName() );
     const QString templateGroupPattern = QLatin1String( "Templates #" );
     const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
-    Q_FOREACH(QString str, templateList) {
+    Q_FOREACH(const QString& str, templateList) {
       bool found = false;
-      int collectionId = str.remove(templateGroupPattern).toInt(&found);
+      int collectionId = str.right(str.length()-templateGroupPattern.length()).toInt(&found);
       if(found) {
         KConfigGroup oldGroup = templateConfig->group(str);
-
-        KConfigGroup newGroup( templateConfig, templateGroupPattern + MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId )));
-        oldGroup.copyTo( &newGroup );
+        const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+        if(!realPath.isEmpty()) {
+          KConfigGroup newGroup( templateConfig, templateGroupPattern + realPath);
+          oldGroup.copyTo( &newGroup );
+        }
         oldGroup.deleteGroup();
       }
     }
@@ -370,8 +372,8 @@ void BackupData::storeResources(const QString&identifier, const QString& path)
 void BackupData::backupFile(const QString&filename, const QString& path, const QString&storedName)
 {
   const bool fileAdded  = mArchive->addLocalFile(filename, path + storedName);
-  if(!fileAdded)
-    Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
-  else
+  if(fileAdded)
     Q_EMIT info(i18n("\"%1\" backup done.",storedName));
+  else
+    Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
 }
