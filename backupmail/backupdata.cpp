@@ -133,7 +133,7 @@ void BackupData::backupConfig()
   if(!fileAdded)
     Q_EMIT error(i18n("Filters cannot be exported."));
   else
-    Q_EMIT error(i18n("Filters backup done."));
+    Q_EMIT info(i18n("Filters backup done."));
   tmp.close();
 
   const QString kmailsnippetrcStr("kmailsnippetrc");
@@ -144,9 +144,7 @@ void BackupData::backupConfig()
 
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
-  //Fix path
   if(QFile(templatesconfigurationrc).exists()) {
-#if 0  //FIXME
     KSharedConfigPtr templaterc = KSharedConfig::openConfig(templatesconfigurationrcStr);
 
     KTemporaryFile tmp;
@@ -155,21 +153,20 @@ void BackupData::backupConfig()
     KConfig *templateConfig = templaterc->copyTo( tmp.fileName() );
     const QString templateGroupPattern = QLatin1String( "Templates #" );
     const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
-    Q_FOREACH(const QString& str, templateList) {
+    Q_FOREACH(QString str, templateList) {
       bool found = false;
-      int collectionId = str.remove(templateGroupPattern).toInt(found);
+      int collectionId = str.remove(templateGroupPattern).toInt(&found);
       if(found) {
         KConfigGroup oldGroup = templateConfig->group(str);
 
-        KConfigGroup newGroup( templateConfig, templateGroupPattern.arg( MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ) ));
+        KConfigGroup newGroup( templateConfig, templateGroupPattern + MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId )));
         oldGroup.copyTo( &newGroup );
         oldGroup.deleteGroup();
       }
     }
-#endif
+    templateConfig->sync();
 
-
-    backupFile(templatesconfigurationrc, BackupMailUtil::configsPath(), templatesconfigurationrcStr);
+    backupFile(tmp.fileName(), BackupMailUtil::configsPath(), templatesconfigurationrcStr);
   }
 
   const QString kmailStr("kmail2rc");
@@ -376,5 +373,5 @@ void BackupData::backupFile(const QString&filename, const QString& path, const Q
   if(!fileAdded)
     Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
   else
-    Q_EMIT error(i18n("\"%1\" backup done.",storedName));
+    Q_EMIT info(i18n("\"%1\" backup done.",storedName));
 }
