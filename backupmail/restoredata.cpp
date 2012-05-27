@@ -458,8 +458,43 @@ Akonadi::Collection::Id RestoreData::adaptFolderId( const QString& folder)
 
 void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc)
 {
-  //TODO
   templatesconfiguration->copyTo(templatesconfigurationrc);
+  KSharedConfig::Ptr templateConfig = KSharedConfig::openConfig(templatesconfigurationrc);
+
+  //adapt id
+  const QString templateGroupPattern = QLatin1String( "Templates #" );
+  const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
+  Q_FOREACH(const QString& str, templateList) {
+    const QString path = str.right(str.length()-templateGroupPattern.length());
+    if(!path.isEmpty())
+    {
+      KConfigGroup oldGroup = templateConfig->group(str);
+      Akonadi::Collection::Id id = adaptFolderId(path);
+      if(id!=-1) {
+        KConfigGroup newGroup( templateConfig, templateGroupPattern + QString::number(id));
+        oldGroup.copyTo( &newGroup );
+      }
+      oldGroup.deleteGroup();
+    }
+  }
+  //adapt identity
+  const QString templateGroupIdentityPattern = QLatin1String( "Templates #IDENTITY_" );
+  const QStringList templateListIdentity = templateConfig->groupList().filter( QRegExp( "Templates #IDENTITY_\\d+" ) );
+  Q_FOREACH(const QString& str, templateListIdentity) {
+    bool found = false;
+    const int identity = str.right(str.length()-templateGroupIdentityPattern.length()).toInt(&found);
+    if(found)
+    {
+      KConfigGroup oldGroup = templateConfig->group(str);
+      if(mHashIdentity.contains(identity)) {
+        KConfigGroup newGroup( templateConfig, templateGroupPattern + QString::number(mHashIdentity.value(identity)));
+        oldGroup.copyTo( &newGroup );
+      }
+      oldGroup.deleteGroup();
+    }
+
+  }
+  templateConfig->sync();
 }
 
 void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc)
