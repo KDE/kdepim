@@ -116,8 +116,7 @@ static bool is_algo( gpgme_pubkey_algo_t algo, KeyAlgo what ) {
         return what == ELG;
     case GPGME_PK_DSA:
         return what == DSA;
-    case GPGME_PK_ECDSA: //TODO: not handled, here to make gcc happy
-    case GPGME_PK_ECDH:  //TODO: not handled, here to make gcc happy
+    default:
         break;
     }
     return false;
