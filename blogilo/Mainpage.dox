@@ -1,0 +1,6 @@
+/** @mainpage blogilo
+
+Blogilo is the KDE Blogging application, focused on simplicity and usability.
+
+// DOXYGEN_REFERENCES = kdecore
+// DOXYGEN_SET_PROJECT_NAME = blogilo
