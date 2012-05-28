@@ -25,6 +25,7 @@
 
 #include <KNotification>
 #include <KLocale>
+#include <KGlobal>
 
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
@@ -56,7 +57,8 @@ void ArchiveJob::execute()
                           summary,
                           QPixmap(),
                           0,
-                          KNotification::CloseOnTimeout);
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
   }
 }
 
@@ -68,7 +70,8 @@ void ArchiveJob::slotBackupDone()
                         summary,
                         QPixmap(),
                         0,
-                        KNotification::CloseOnTimeout);
+                        KNotification::CloseOnTimeout,
+                        KGlobal::mainComponent());
   mManager->backupDone(mInfo);
 }
 
