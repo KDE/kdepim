@@ -285,7 +285,11 @@ void IncidenceAlarm::updateButtons()
     mUi->mAlarmConfigureButton->setEnabled( true );
     mUi->mAlarmRemoveButton->setEnabled( true );
     mUi->mAlarmToggleButton->setEnabled( true );
-    if ( mAlarms.at( mUi->mAlarmList->currentIndex().row() )->enabled() ) {
+    KCalCore::Alarm::Ptr selAlarm;
+    if ( mUi->mAlarmList->currentIndex().isValid() ) {
+      selAlarm = mAlarms.at( mUi->mAlarmList->currentIndex().row() );
+    }
+    if ( selAlarm && selAlarm->enabled() ) {
       mUi->mAlarmToggleButton->setText( i18nc( "Disable currently selected reminder", "Disable" ) );
     } else {
       mUi->mAlarmToggleButton->setText( i18nc( "Enable currently selected reminder", "Enable" ) );
