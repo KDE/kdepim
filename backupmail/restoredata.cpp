@@ -269,6 +269,21 @@ void RestoreData::restoreConfig()
     }
   }
 
+  const QString labldaprcStr("kabldaprc");
+  const KArchiveEntry* kabldapentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + labldaprcStr);
+  if(kabldapentry->isFile()) {
+    const KArchiveFile* kabldap= static_cast<const KArchiveFile*>(kabldapentry);
+    const QString kabldaprc = KStandardDirs::locateLocal( "config",  labldaprcStr);
+    if(QFile(kabldaprc).exists()) {
+      //TODO 4.10 allow to merge config.
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",labldaprcStr),i18n("Restore"))== KMessageBox::Yes) {
+        kabldap->copyTo(kabldaprc);
+      }
+    } else {
+      kabldap->copyTo(kabldaprc);
+    }
+  }
+
 
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   //Fix identity id

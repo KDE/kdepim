@@ -136,6 +136,12 @@ void BackupData::backupConfig()
     Q_EMIT error(i18n("Filters cannot be exported."));
   tmp.close();
 
+  const QString labldaprcStr("kabldaprc");
+  const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
+  if(QFile(labldaprc).exists()) {
+    backupFile(labldaprc, BackupMailUtil::configsPath(), labldaprcStr);
+  }
+
   const QString kmailsnippetrcStr("kmailsnippetrc");
   const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
   if(QFile(kmailsnippetrc).exists()) {
