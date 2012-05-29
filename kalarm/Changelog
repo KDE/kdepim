@@ -1,6 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.8.3 --- 22 April 2012 ===
+=== Version 2.8.4 --- 29 May 2012 ===
+- [Akonadi] Fix crash when saving new alarm.
+
+=== Version 2.8.3 (KDE 4.8.3) --- 22 April 2012 ===
 - Store KAlarm version and backend in config file.
 - Use the last selected sound file picker directory as the default next time.
 
