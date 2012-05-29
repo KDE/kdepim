@@ -41,9 +41,23 @@ namespace KCal {
   class Incidence;
 }
 
-
 /**
- * Class to try to avoid false positive conflicts, as the one reported in issue4826
+ * Class to try to avoid false positive conflicts, as the one reported in issue4826.
+ *
+ * Here's the use-case:
+ *
+ * 1. userA changes an event; syncs
+ * 2. userB changes the same event; syncs ( userB has write access to userA's folder. )
+ * 3. userB gets conflict dialog and chooses "keep theirs".
+ *    As of 2012, "keep theirs" will create a new object on the server ( to avoid dataloss )
+ *    userA doesn't know about this new object.
+ * 4. userA changes the event again; syncs
+ *    userA gets a conflict dialog! This conflict dialog unecessary, because although userA
+ *    doesn't know about the object userB created, the event that userA had, had the same contents has
+ *    said new object.
+ *    This is where the conflict-preventer comes in, it keeps track of payloads from userA, and when
+ *    fromKMailAddIncidence() is called, we can see if it's a duplicated payload, and just discard it
+ *    instead of showing the conflict dialog.
  */
 class ConflictPreventer {
 
