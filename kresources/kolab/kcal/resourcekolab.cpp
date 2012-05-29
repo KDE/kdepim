@@ -813,10 +813,15 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     { // This blocks fixes issue4826. Checks if the addition is a false positive conflict
       if ( mUidMap.contains( uid ) &&
            mConflictPreventer->processNewPayload( incidence, _subresource, sernum ) ) {
-        const bool success = kmailDeleteIncidence( _subresource, sernum, /*force=*/true );
-        if ( !success ) {
-          // What do to in case if unsucess? log message
-          kdWarning() << "Error deleting false positive conflict" << endl;
+        if ( (mUidMap[uid].serialNumber() == sernum ) ) {
+          kdWarning() << "Two incidences with the same SerialNumber. Ignoring: "
+                      << mUidMap[uid].serialNumber() << endl;
+        } else {
+          const bool success = kmailDeleteIncidence( _subresource, sernum, /*force=*/true );
+          if ( !success ) {
+            // What do to in case if unsucess? log message
+            kdWarning() << "Error deleting false positive conflict" << endl;
+          }
         }
         return false;
       }
