@@ -122,7 +122,7 @@ namespace {
         size_t operator()( const Sender & sender ) const {
             const size_t result = sender.signingCertificateCandidates( proto ).size();
             qDebug( "count_signing_certificates( %9s %20s ) == %2lu",
-                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unkown>,",
+                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unknown>,",
                     qPrintable( sender.mailbox().prettyAddress() ), result );
             return result;
         }
@@ -135,7 +135,7 @@ namespace {
         size_t operator()( const Sender & sender ) const {
             const size_t result = sender.encryptToSelfCertificateCandidates( proto ).size();
             qDebug( "count_encrypt_certificates( %9s %20s ) == %2lu",
-                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unkown>,",
+                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unknown>,",
                     qPrintable( sender.mailbox().prettyAddress() ), result );
             return result;
         }
@@ -143,7 +143,7 @@ namespace {
         size_t operator()( const Recipient & recipient ) const {
             const size_t result = recipient.encryptionCertificateCandidates( proto ).size();
             qDebug( "count_encrypt_certificates( %9s %20s ) == %2lu",
-                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unkown>,",
+                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unknown>,",
                     qPrintable( recipient.mailbox().prettyAddress() ), result );
             return result;
         }
