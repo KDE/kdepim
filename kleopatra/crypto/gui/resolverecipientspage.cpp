@@ -90,8 +90,7 @@ ResolveRecipientsPage::ListWidget::~ListWidget()
 
 void ResolveRecipientsPage::ListWidget::onSelectionChange()
 {
-    Q_FOREACH ( const QString& i, widgets.keys() )
-    {
+    Q_FOREACH ( const QString& i, widgets.keys() ) { //krazy:exclude=foreach
         assert( items.contains( i ) );
         widgets[i]->setSelected( items[i]->isSelected() );
     }
@@ -614,7 +613,9 @@ void ResolveRecipientsPage::setAdditionalRecipientsInfo( const std::vector<Key> 
     d->m_additionalRecipientsLabel->setVisible( !recipients.empty() );
     if ( recipients.empty() )
         return;
-    d->m_additionalRecipientsLabel->setText( i18n( "<qt><p>Recipients predefined via GnuPG settings:</p>%1", listKeysForInfo( recipients ) ) );
+    d->m_additionalRecipientsLabel->setText(
+        i18n( "<qt><p>Recipients predefined via GnuPG settings:</p>%1</qt>",
+              listKeysForInfo( recipients ) ) );
 }
 
 void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipients, const std::vector<Mailbox> & encryptToSelfRecipients )
