@@ -143,6 +143,7 @@ private:
   QString mString; // Used as uids and as rename target
   QString mOldImapPath, mNewImapPath, mNewName; // used for renaming
   KMFolderCachedImap *mParentFolder;
+  int m_dbgCurrentSerNum; // for debug
 //public:
 //  static int sJobCount;
 };

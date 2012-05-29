@@ -96,7 +96,7 @@ namespace KMail {
 CachedImapJob::CachedImapJob( const QValueList<MsgForDownload>& msgs,
                               JobType type, KMFolderCachedImap* folder )
   : FolderJob( type ), mFolder( folder ), mMsgsForDownload( msgs ),
-    mTotalBytes(0), mMsg(0), mParentFolder( 0 )
+    mTotalBytes(0), mMsg(0), mParentFolder( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -117,7 +117,7 @@ CachedImapJob::CachedImapJob( const QPtrList<KMMessage>& msgs, JobType type,
                               KMFolderCachedImap* folder )
   : FolderJob( msgs, QString::null, type, folder?folder->folder():0 ), mFolder( folder ),
     mTotalBytes( msgs.count() ), // we abuse it as "total number of messages"
-    mMsg( 0 ), mParentFolder( 0 )
+    mMsg( 0 ), mParentFolder( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -134,7 +134,7 @@ CachedImapJob::CachedImapJob( const QValueList<unsigned long>& msgs,
 			      JobType type, KMFolderCachedImap* folder )
   : FolderJob( QPtrList<KMMessage>(), QString::null, type, folder?folder->folder():0 ),
     mFolder( folder ), mSerNumMsgList( msgs ), mTotalBytes( msgs.count() ), mMsg( 0 ),
-    mParentFolder ( 0 )
+    mParentFolder ( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -151,7 +151,7 @@ CachedImapJob::CachedImapJob( const QValueList<unsigned long>& msgs,
 CachedImapJob::CachedImapJob( const QValueList<KMFolderCachedImap*>& fList,
                               JobType type, KMFolderCachedImap* folder )
   : FolderJob( type ), mFolder( folder ), mFolderList( fList ), mMsg( 0 ),
-    mParentFolder ( 0 )
+    mParentFolder ( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -168,7 +168,7 @@ CachedImapJob::CachedImapJob( const QValueList<KMFolderCachedImap*>& fList,
 CachedImapJob::CachedImapJob( const QString& string1, JobType type,
                               KMFolderCachedImap* folder )
   : FolderJob( type ), mFolder(folder), mMsg( 0 ), mString( string1 ),
-    mParentFolder ( 0 )
+    mParentFolder ( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -187,7 +187,7 @@ CachedImapJob::CachedImapJob( const QString& string1, JobType type,
 CachedImapJob::CachedImapJob( const QStringList& foldersOrMsgs, JobType type,
                               KMFolderCachedImap* folder )
   : FolderJob( type ), mFolder( folder ), mFoldersOrMessages( foldersOrMsgs ),
-    mMsg( 0 ), mParentFolder( 0 )
+    mMsg( 0 ), mParentFolder( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -203,7 +203,7 @@ CachedImapJob::CachedImapJob( const QStringList& foldersOrMsgs, JobType type,
 
 // Other jobs (list messages,expunge folder, check uid validity)
 CachedImapJob::CachedImapJob( JobType type, KMFolderCachedImap* folder )
-  : FolderJob( type ), mFolder( folder ), mMsg( 0 ), mParentFolder ( 0 )
+  : FolderJob( type ), mFolder( folder ), mMsg( 0 ), mParentFolder ( 0 ), m_dbgCurrentSerNum( 0 )
 {
   /*
   sJobCount++;
@@ -487,6 +487,7 @@ void CachedImapJob::slotPutNextMessage()
   while( mMsg == 0 && !mSerNumMsgList.isEmpty() ) {
     unsigned long serNum = mSerNumMsgList.first();
     mSerNumMsgList.pop_front();
+    m_dbgCurrentSerNum = serNum;
 
     // Find the message with this serial number
     int i = 0;
@@ -573,10 +574,22 @@ void CachedImapJob::slotPutMessageInfoData( KIO::Job *job, const QString &data )
     if ( it == account->jobsEnd() ) {
       return;
     }
-
     if ( data.find( "UID" ) != -1 && mMsg ) {
       int uid = ( data.right( data.length() - 4 ) ).toInt();
-      kdDebug( 5006 ) << k_funcinfo << "Server told us uid is: " << uid << endl;
+      if ( m_dbgCurrentSerNum != 0 ) {
+        // Debug block
+       KMMessage *oldMsg = KMailICalIfaceImpl::findMessageBySerNum( m_dbgCurrentSerNum, mDestFolder );
+       if ( !oldMsg || oldMsg != mMsg ) {
+         // Should never happen!
+         kdWarning ( 5006 ) << "Messagepointer in cachedImapJob has been modified during operation!"
+                    << endl << "Should be: " << m_dbgCurrentSerNum << endl
+                    << "Actually: " << mMsg->getMsgSerNum() << endl;
+         Q_ASSERT( false );
+         return;
+       }
+      }
+
+      kdDebug( 5006 ) << k_funcinfo << "Server told us uid is-: " << uid << "-" << mMsg->getMsgSerNum() << mSerNumMsgList << endl;
       mMsg->setUID( uid );
     }
   }
