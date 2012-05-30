@@ -283,7 +283,7 @@ shared_ptr<ArchiveDefinition> pick_archive_definition( GpgME::Protocol proto, co
     if ( extension == QLatin1String("out") ) // added by outputFileName() -> useless
         return shared_ptr<ArchiveDefinition>();
 
-    if ( extension.endsWith( ".out" ) )      // added by outputFileName() -> remove
+    if ( extension.endsWith( QLatin1String( ".out" ) ) ) // added by outputFileName() -> remove
         extension.chop(4);
 
     for ( ;; ) {

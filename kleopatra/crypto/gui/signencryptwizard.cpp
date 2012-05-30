@@ -201,10 +201,10 @@ void SignEncryptWizard::setFiles( const QStringList & files ) {
 
 QFileInfoList SignEncryptWizard::resolvedFiles() const {
     const QStringList files = d->objectsPage->files();
-    QFileInfoList infos;
+    QFileInfoList fileInfos;
     Q_FOREACH( const QString& i, files )
-        infos.push_back( QFileInfo( i ) );
-    return infos;
+        fileInfos.push_back( QFileInfo( i ) );
+    return fileInfos;
 }
 
 bool SignEncryptWizard::signingSelected() const {

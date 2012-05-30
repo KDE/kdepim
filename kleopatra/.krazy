@@ -1,2 +1,2 @@
 EXCLUDE qclasses
-SKIP /tests/\|/models/modeltest.[cpp,h]
+SKIP /tests/\|/models/modeltest.[cpp,h]\|/utils/kdpipeiodevice.[cpp,h]

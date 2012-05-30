@@ -35,8 +35,6 @@
 #include "keylistcontroller.h"
 #include "tabwidget.h"
 
-#include <commands/detailscommand.h>
-
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
