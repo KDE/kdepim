@@ -240,8 +240,14 @@ void FolderCollection::writeConfig() const
   }
 
   configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
-  configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
-  configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
+  if(mHideInSelectionDialog)
+      configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
+  else
+      configGroup.deleteEntry("HideInSelectionDialog");
+  if(mIgnoreNewMail)
+      configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
+  else
+      configGroup.deleteEntry("IgnoreNewMail");
 
   if ( !mShortcut.isEmpty() ) {
     configGroup.writeEntry( "Shortcut", mShortcut.toString() );
