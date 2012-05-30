@@ -527,12 +527,18 @@ QString NodeHelper::cleanSubject( KMime::Message *message )
                        true, QString() ).trimmed();
 }
 
-QString NodeHelper::cleanSubject( KMime::Message *message, const QStringList & prefixRegExps,
+QString NodeHelper::cleanSubject( KMime::Message *message,
+                                  const QStringList &prefixRegExps,
                                   bool replace,
-                                  const QString & newPrefix )
+                                  const QString &newPrefix )
 {
-  return NodeHelper::replacePrefixes( message->subject()->asUnicodeString(), prefixRegExps, replace,
-                                      newPrefix );
+  QString cleanStr;
+  if ( message ) {
+    cleanStr =
+      NodeHelper::replacePrefixes(
+        message->subject()->asUnicodeString(), prefixRegExps, replace, newPrefix );
+  }
+  return cleanStr;
 }
 
 void NodeHelper::setOverrideCodec( KMime::Content* node, const QTextCodec* codec )
