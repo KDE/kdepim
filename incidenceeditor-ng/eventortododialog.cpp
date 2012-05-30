@@ -296,7 +296,9 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
   }
 
   mIeDateTime->setActiveDate( QDate() );
-  mEditor->load( KCalCore::Incidence::Ptr( incidences.first()->clone() ) );
+  KCalCore::Incidence::Ptr newInc = KCalCore::Incidence::Ptr( incidences.first()->clone() );
+  newInc->setUid( KCalCore::CalFormat::createUniqueId() );
+  mEditor->load( newInc );
 }
 
 void EventOrTodoDialogPrivate::manageTemplates()
