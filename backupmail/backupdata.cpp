@@ -349,7 +349,7 @@ void BackupData::backupAkonadiDb()
   }
   KProcess *proc = new KProcess( this );
   proc->setProgram( dbDumpApp, params );
-  int result = proc->execute();
+  const int result = proc->execute();
   delete proc;
   if ( result != 0 ) {
     qDebug()<<" Error during dump Database";
@@ -358,9 +358,8 @@ void BackupData::backupAkonadiDb()
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
   if(!fileAdded)
     Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QString::fromLatin1("akonadidatabase.sql")));
-
-
-  Q_EMIT info(i18n("Akonadi Database backup done."));
+  else
+    Q_EMIT info(i18n("Akonadi Database backup done."));
 }
 
 void BackupData::backupNepomuk()
