@@ -190,7 +190,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomTextOnlyAction( 0 ),
     mZoomInAction( 0 ),
     mZoomOutAction( 0 ),
-    mZoomResetAction( 0 ), 
+    mZoomResetAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
     mSpeakTextAction(0),
     mCanStartDrag( false ),
@@ -216,7 +216,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
   mZoomTextOnly = false;
-  
+
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
@@ -475,7 +475,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     QMenu* menu = topMenu;
     QActionGroup *actionGroup = new QActionGroup( menu );
     connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
-    
+
     if (offers.count() > 1) { // submenu 'open with'
       menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
       menu->menuAction()->setObjectName("openWith_submenu"); // for the unittest
@@ -550,7 +550,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
   QAction *action;
-  
+
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
   connect( attachmentMapper, SIGNAL(mapped(int)),
            this, SLOT(slotHandleAttachment(int)) );
@@ -560,7 +560,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Open );
 
   createOpenWithMenu( menu, node );
-  
+
   action = menu->addAction(i18nc("to view something", "View") );
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::View );
@@ -1134,7 +1134,7 @@ void ViewerPrivate::readConfig()
 
   mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
   setZoomTextOnly( mZoomTextOnly );
-  
+
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1157,7 +1157,7 @@ void ViewerPrivate::readConfig()
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
   mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
 #endif
-  
+
   if ( mMessage )
     update();
   mColorBar->update();
@@ -1186,7 +1186,7 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
 
   if ( mHeaderStyle == style && mHeaderStrategy == strategy )
     return;
-  
+
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   if ( mHeaderOnlyAttachmentsAction ) {
@@ -1200,7 +1200,7 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
     }
   }
   update( Viewer::Force );
-  
+
   if( !mExternalWindow && writeInConfigFile)
     writeConfig();
 
@@ -1663,7 +1663,7 @@ void ViewerPrivate::createActions()
   connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
   mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
 
-  
+
   // Show message structure viewer
   mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
   ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
@@ -2060,7 +2060,7 @@ void ViewerPrivate::slotFind()
 #if QT_VERSION >= 0x040800
   if ( mViewer->hasSelection() )
     mFindBar->setText( mViewer->selectedText() );
-#endif  
+#endif
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
@@ -2501,7 +2501,7 @@ void ViewerPrivate::slotAttachmentCopy()
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
 {
-#ifndef QT_NO_CLIPBOARD	
+#ifndef QT_NO_CLIPBOARD
   if ( contents.isEmpty() )
     return;
 
@@ -2677,9 +2677,18 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessageItem.hasPayload<KMime::Message::Ptr>() )
+  if ( !mMessageItem.isValid() ) {
     return;
-  Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
+  }
+
+  if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+    if ( mMessageItem.isValid() ) {
+      kWarning() << "Payload is not a MessagePtr!";
+    }
+    return;
+  }
+
+  Util::saveMessageInMbox( QList<Akonadi::Item>() << mMessageItem, mMainWindow );
 }
 
 void ViewerPrivate::saveRelativePosition()
@@ -3036,27 +3045,27 @@ void ViewerPrivate::slotMessageRendered()
 
 void ViewerPrivate::setZoomFactor( qreal zoomFactor )
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   mViewer->setZoomFactor ( zoomFactor );
-#endif  
+#endif
 }
 
 
 void ViewerPrivate::slotZoomIn()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   if( mZoomFactor >= 300 )
     return;
   mZoomFactor += zoomBy;
   if( mZoomFactor > 300 )
     mZoomFactor = 300;
   mViewer->setZoomFactor( mZoomFactor/100.0 );
-#endif  
+#endif
 }
 
 void ViewerPrivate::slotZoomOut()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   if ( mZoomFactor <= 100 )
     return;
   mZoomFactor -= zoomBy;
@@ -3073,9 +3082,9 @@ void ViewerPrivate::setZoomTextOnly( bool textOnly )
   {
     mZoomTextOnlyAction->setChecked( mZoomTextOnly );
   }
-#ifndef KDEPIM_NO_WEBKIT    
+#ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
-#endif  
+#endif
 }
 
 void ViewerPrivate::slotZoomTextOnly()
@@ -3085,7 +3094,7 @@ void ViewerPrivate::slotZoomTextOnly()
 
 void ViewerPrivate::slotZoomReset()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   mZoomFactor = 100;
   mViewer->setZoomFactor( 1.0 );
 #endif
