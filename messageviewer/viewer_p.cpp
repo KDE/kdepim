@@ -622,7 +622,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 {
   QFileInfo atmFileInfo( atmFileName );
 
-  // tempfile name ist /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
+  // tempfile name is /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
   KTempDir *linkDir = new KTempDir( KStandardDirs::locateLocal( "tmp", "attachments" ) );
   QString linkPath = linkDir->name() + atmFileInfo.fileName();
   QFile *linkFile = new QFile( linkPath );
