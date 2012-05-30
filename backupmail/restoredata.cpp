@@ -478,7 +478,7 @@ void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfigurati
 
   //adapt id
   const QString templateGroupPattern = QLatin1String( "Templates #" );
-  const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
+  const QStringList templateList = templateConfig->groupList().filter( templateGroupPattern );
   Q_FOREACH(const QString& str, templateList) {
     const QString path = str.right(str.length()-templateGroupPattern.length());
     if(!path.isEmpty())
@@ -494,7 +494,7 @@ void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfigurati
   }
   //adapt identity
   const QString templateGroupIdentityPattern = QLatin1String( "Templates #IDENTITY_" );
-  const QStringList templateListIdentity = templateConfig->groupList().filter( QRegExp( "Templates #IDENTITY_\\d+" ) );
+  const QStringList templateListIdentity = templateConfig->groupList().filter( templateGroupIdentityPattern );
   Q_FOREACH(const QString& str, templateListIdentity) {
     bool found = false;
     const int identity = str.right(str.length()-templateGroupIdentityPattern.length()).toInt(&found);
@@ -514,6 +514,24 @@ void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfigurati
 
 void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc)
 {
-  //TODO
   kmailsnippet->copyTo(kmail2rc);
+  KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
+
+  //adapt folder id
+  const QString folderGroupPattern = QLatin1String( "Folder-" );
+  const QStringList folderList = kmailConfig->groupList().filter( folderGroupPattern );
+  Q_FOREACH(const QString&str, folderList) {
+    const QString path = str.right(str.length()-folderGroupPattern.length());
+    if(!path.isEmpty()) {
+        KConfigGroup oldGroup = kmailConfig->group(str);
+        Akonadi::Collection::Id id = adaptFolderId(path);
+        if(id!=-1) {
+          KConfigGroup newGroup( kmailConfig, folderGroupPattern + QString::number(id));
+          oldGroup.copyTo( &newGroup );
+        }
+        oldGroup.deleteGroup();
+    }
+  }
+//TODO fix all other id
+  kmailConfig->sync();
 }
