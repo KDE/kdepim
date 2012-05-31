@@ -203,7 +203,7 @@ void BackupJob::finish()
 
   if ( mDeleteFoldersAfterCompletion ) {
     // Some safety checks first...
-    if ( archiveFileInfo.size() > 0 && ( mArchivedSize > 0 || mArchivedMessages == 0 ) ) {
+    if ( archiveFileInfo.exists() && ( mArchivedSize > 0 || mArchivedMessages == 0 ) ) {
       // Sorry for any data loss!
       new Akonadi::CollectionDeleteJob( mRootFolder );
     }
@@ -309,11 +309,11 @@ QString BackupJob::pathForCollection( const Akonadi::Collection &collection ) co
   if ( collection != mRootFolder ) {
     Q_ASSERT( curCol.isValid() );
     while ( curCol != mRootFolder ) {
-      fullPath.prepend( '.' + collectionName( curCol ) + ".directory" + '/' );
+      fullPath.prepend( '.' + collectionName( curCol ) + QString::fromLatin1(".directory/") );
       curCol = curCol.parentCollection();
     }
     Q_ASSERT( curCol == mRootFolder );
-    fullPath.prepend( '.' + collectionName( curCol ) + ".directory" + '/' );
+    fullPath.prepend( '.' + collectionName( curCol ) + QString::fromLatin1(".directory/") );
   }
   return fullPath;
 }
@@ -354,28 +354,22 @@ void BackupJob::archiveNextFolder()
       success = false;
     }
   }
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) ) ) {
-    success = false;
+  if(success) {
+    if ( !writeDirHelper( pathForCollection( mCurrentFolder ) ) ) {
+        success = false;
+    } else if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + QLatin1String("/cur") ) ) {
+        success = false;
+    } else if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + QLatin1String("/new") ) ) {
+        success = false;
+    } else if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + QLatin1String("/tmp") ) ) {
+        success = false;
+    }
   }
-
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/cur" ) ) {
-    success = false;
-  }
-
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/new" ) ) {
-    success = false;
-  }
-
-  if ( !writeDirHelper( pathForCollection( mCurrentFolder ) + "/tmp" ) ) {
-    success = false;
-  }
-
   if ( !success ) {
     abort( i18n( "Unable to create folder structure for folder '%1' within archive file.",
                  mCurrentFolder.name() ) );
     return;
   }
-
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentFolder );
   job->setProperty( "folderName", folderName );
   connect( job, SIGNAL(result(KJob*)), SLOT(onArchiveNextFolderDone(KJob*)) );
