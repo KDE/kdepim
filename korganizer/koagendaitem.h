@@ -29,6 +29,7 @@
 
 #include <qdatetime.h>
 #include <qguardedptr.h>
+#include <qmutex.h>
 
 class QToolTipGroup;
 class QDragEnterEvent;
@@ -187,6 +188,7 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
 
     Calendar *mCalendar;
     Incidence *mIncidence; // corresponding event or todo
+    QMutex mIncidencePaintLock;
     QDate mDate; //date this events occurs (for recurrence)
     QString mLabelText;
     bool mIconAlarm, mIconRecur, mIconReadonly;

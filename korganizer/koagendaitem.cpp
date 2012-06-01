@@ -170,7 +170,10 @@ bool KOAgendaItem::dissociateFromMultiItem()
 
 bool KOAgendaItem::setIncidence( Incidence *i )
 {
+  // Do not invalidate the incidence pointer during paintig
+  mIncidencePaintLock.lock();
   mIncidence = i;
+  mIncidencePaintLock.unlock();
   updateIcons();
   return true;
 }
@@ -731,19 +734,26 @@ void KOAgendaItem::paintIcons( QPainter *p, int &x, int ft )
 
 void KOAgendaItem::paintEvent( QPaintEvent *ev )
 {
+  // Avoid that the incidence pointer is changed during painting
+  mIncidencePaintLock.lock();
+
   //HACK
   // to reproduce a crash:
   // 1. start Kontact with the Calendar as the initial module
   // 2. immediately select the summary (which must include appt and to-do)
   // causes a crash for me every time in this method unless we make
   // the following check
-  if ( !mIncidence )return;
+  if ( !mIncidence ) {
+    mIncidencePaintLock.unlock();
+    return;
+  }
 
   QRect visRect = visibleRect();
   // when scrolling horizontally in the side-by-side view, the repainted area is clipped
   // to the newly visible area, which is a problem since the content changes when visRect
   // changes, so repaint the full item in that case
   if ( ev->rect() != visRect && visRect.isValid() && ev->rect().isValid() ) {
+    mIncidencePaintLock.unlock();
     repaint( visRect );
     return;
   }
@@ -875,6 +885,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
        ( width() < 16 ) ) {
     int x = margin;
     paintTodoIcon( &p, x/*by-ref*/, ft );
+    mIncidencePaintLock.unlock();
     return;
   }
 
@@ -895,6 +906,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     const int y = ((height() - 2 * ft - singleLineHeight) / 2) + fm.ascent();
     KWordWrap::drawFadeoutText( &p, x, y,
                                 txtWidth, mLabelText );
+    mIncidencePaintLock.unlock();
     return;
   }
 
@@ -923,6 +935,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     //kdDebug() << "SIZES for " << mLabelText <<  ": " << width() << " :: " << txtWidth << endl;
     ww->drawText( &p, x, margin, Qt::AlignHCenter | KWordWrap::FadeOut );
     delete ww;
+    mIncidencePaintLock.unlock();
     return;
   }
 
@@ -997,5 +1010,6 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     ww->drawText( &p, eventX + (txtWidth-ww->boundingRect().width()-2*margin)/2,
                   y, Qt::AlignHCenter | KWordWrap::FadeOut );
   delete ww;
+  mIncidencePaintLock.unlock();
 }
 
