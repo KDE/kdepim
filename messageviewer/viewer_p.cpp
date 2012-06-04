@@ -323,6 +323,13 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
+  bool deletedAttachment = false;
+  if(node->contentType(false)) {
+    deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
+  }
+  if(deletedAttachment)
+    return;
+
   const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
   if ( isEncapsulatedMessage ) {
 
@@ -411,7 +418,37 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
 
+  QString filename;
+  QString name;
+  QByteArray mimetype;
+  if(node->contentDisposition(false)) {
+    filename = node->contentDisposition()->filename();
+  }
+
+  if(node->contentType(false)) {
+    name = node->contentType()->name();
+    mimetype = node->contentType()->mimeType();
+  }
+
   parent->removeContent( node, true );
+
+  // text/plain part:
+  KMime::Content* deletePart = new KMime::Content(parent);
+  deletePart->contentType()->setMimeType( "text/x-moz-deleted" );
+  deletePart->contentType()->setName(QString::fromLatin1("Deleted: %1").arg(name),"utf8");
+  deletePart->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
+  deletePart->contentDisposition()->setFilename(QString::fromLatin1("Deleted: %1").arg(name));
+
+  deletePart->contentType()->setCharset( "utf-8" );
+  deletePart->contentTransferEncoding()->from7BitString( "7bit" );
+  QByteArray bodyMessage = QByteArray("\nYou deleted an attachment from this message. The original MIME headers for the attachment were:");
+  bodyMessage +=("\nContent-Type: ") + mimetype;
+  bodyMessage +=("\nname=\"") + name.toUtf8() + "\"";
+  bodyMessage +=("\nfilename=\"") + filename.toUtf8() + "\"";
+  deletePart->setBody(bodyMessage);
+  parent->addContent( deletePart );
+
+
   parent->assemble();
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
@@ -550,18 +587,24 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
   QAction *action;
-
+  bool deletedAttachment = false;
+  if(node->contentType(false)) {
+    deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
+  }
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
   connect( attachmentMapper, SIGNAL(mapped(int)),
            this, SLOT(slotHandleAttachment(int)) );
 
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Open );
 
-  createOpenWithMenu( menu, node );
+  if(!deletedAttachment)
+    createOpenWithMenu( menu, node );
 
   action = menu->addAction(i18nc("to view something", "View") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::View );
 
@@ -574,10 +617,12 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Save );
 
   action = menu->addAction(SmallIcon("edit-copy"), i18n("Copy") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Copy );
 
@@ -597,7 +642,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
     action = menu->addAction(SmallIcon("edit-delete"), i18n("Delete Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
     attachmentMapper->setMapping( action, Viewer::Delete );
-    action->setEnabled( canChange );
+    action->setEnabled( canChange && !deletedAttachment );
   }
   if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive )
        && Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" )) {
@@ -1747,6 +1792,14 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 #ifndef QT_NO_TREEVIEW
   if ( !content )
     return;
+
+  bool deletedAttachment = false;
+  if(content->contentType(false)) {
+    deletedAttachment = (content->contentType()->mimeType() == "text/x-moz-deleted");
+  }
+  if(deletedAttachment)
+    return;
+
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
   const bool isRoot = ( content == mMessage.get() );
 
