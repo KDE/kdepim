@@ -47,12 +47,14 @@ void ArchiveJob::execute()
     Akonadi::Collection collection(mInfo->saveCollectionId());
     backupJob->setRootFolder( collection );
     backupJob->setSaveLocation( mInfo->realUrl(collection.name()) );
+    qDebug()<<" collection.name() "<<collection.name();
     backupJob->setArchiveType( mInfo->archiveType() );
     backupJob->setDeleteFoldersAfterCompletion( false );
     backupJob->setRecursive( mInfo->saveSubCollection() );
     connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
     backupJob->start();
     const QString summary = i18n("Start to archive %1",MailCommon::Util::fullCollectionPath(collection) );
+    qDebug()<<" summary :"<<summary;
     KNotification::event( "kmail",
                           summary,
                           QPixmap(),

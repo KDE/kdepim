@@ -32,10 +32,10 @@ class ArchiveMailManager : public QObject
 public:
   explicit ArchiveMailManager(QObject *parent = 0);
   ~ArchiveMailManager();
-  void load();
   void removeCollection(const Akonadi::Collection& collection);
   void backupDone(ArchiveMailInfo *info);
-
+public Q_SLOTS:
+  void load();
 private:
   QList<ArchiveMailInfo *> mListArchiveInfo;
   ArchiveMailKernel *mArchiveMailKernel;
