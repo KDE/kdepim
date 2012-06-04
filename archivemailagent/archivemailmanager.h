@@ -34,6 +34,8 @@ public:
   ~ArchiveMailManager();
   void removeCollection(const Akonadi::Collection& collection);
   void backupDone(ArchiveMailInfo *info);
+  void pause();
+  void resume();
 public Q_SLOTS:
   void load();
 private:

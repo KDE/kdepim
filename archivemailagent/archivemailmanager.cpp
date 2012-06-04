@@ -106,4 +106,15 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
   mListArchiveInfo.removeAll(info);
 }
 
+void ArchiveMailManager::pause()
+{
+  mArchiveMailKernel->jobScheduler()->pause();
+}
+
+void ArchiveMailManager::resume()
+{
+  mArchiveMailKernel->jobScheduler()->resume();
+}
+
+
 #include "archivemailmanager.moc"

@@ -84,6 +84,17 @@ void ArchiveMailAgent::configure( WId windowId )
   showConfigureDialog();
 }
 
+void ArchiveMailAgent::pause()
+{
+  mArchiveManager->pause();
+}
+
+void ArchiveMailAgent::resume()
+{
+  mArchiveManager->resume();
+}
+
+
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 
 #include "archivemailagent.moc"

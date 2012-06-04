@@ -40,6 +40,8 @@ public:
 public Q_SLOTS:
   virtual void configure( WId windowId );
   void reload();
+  void pause();
+  void resume();
 
 private Q_SLOTS:
   void mailCollectionRemoved( const Akonadi::Collection& collection );

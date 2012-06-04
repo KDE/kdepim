@@ -2,5 +2,7 @@
 <node>
   <interface name="org.freedesktop.Akonadi.ArchiveMailAgent">
     <method name="showConfigureDialog"/>
+    <method name="pause"/>
+    <method name="resume"/>
   </interface>
 </node>
