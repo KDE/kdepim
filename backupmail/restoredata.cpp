@@ -307,15 +307,15 @@ void RestoreData::restoreConfig()
   //TODO fix folder id.
   const KArchiveEntry* kmail2rcentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailStr);
   if(kmail2rcentry->isFile()) {
-    const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(kmail2rcentry);
+    const KArchiveFile* kmailrc = static_cast<const KArchiveFile*>(kmail2rcentry);
     const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
     if(QFile(kmail2rc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
-        importKmailConfig(kmailsnippet,kmail2rc);
+        importKmailConfig(kmailrc,kmail2rc);
       }
     } else {
-      importKmailConfig(kmailsnippet,kmail2rc);
+      importKmailConfig(kmailrc,kmail2rc);
     }
   }
 
@@ -532,6 +532,22 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
         oldGroup.deleteGroup();
     }
   }
+  const QString accountOrder("AccountOrder");
+  if(kmailConfig->hasGroup(accountOrder)) {
+    KConfigGroup group = kmailConfig->group(accountOrder);
+    QStringList orderList = group.readEntry(QLatin1String("order"),QStringList());
+    QStringList newOrderList;
+    if(!orderList.isEmpty()) {
+      Q_FOREACH(const QString&account, orderList) {
+        if(mHashResources.contains(account)) {
+          newOrderList.append(mHashResources.value(account));
+        } else {
+          newOrderList.append(account);
+        }
+      }
+    }
+  }
+
 //TODO fix all other id
   kmailConfig->sync();
 }
