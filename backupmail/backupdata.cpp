@@ -311,7 +311,7 @@ void BackupData::backupMails()
             else
               Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
           }
-          storeResources(identifier, archivePath + identifier);
+          storeResources(identifier, archivePath );
 
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
           const QString agentFileName = agent.identifier() + QLatin1String("rc");
@@ -322,7 +322,7 @@ void BackupData::backupMails()
           const QString filename = url.fileName();
           //TODO
           //Several file. Look at archive mail dialog
-          storeResources(identifier, archivePath + identifier);
+          storeResources(identifier, archivePath);
         }
       }
     }
