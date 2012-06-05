@@ -21,7 +21,7 @@
 #include "minimumcombobox.h"
 #include "translatorutil.h"
 #include "translator/babelfishtranslator.h"
-
+#include "translator/googletranslator.h"
 #include <KTextEdit>
 #include <KComboBox>
 #include <KPushButton>
@@ -136,7 +136,7 @@ void TranslatorWidget::readConfig()
 
 void TranslatorWidget::init()
 {
-  d->abstractTranslator = new BabelFishTranslator();
+  d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
   connect(d->abstractTranslator,SIGNAL(translateDone()),SLOT(slotTranslateDone()));
   connect(d->abstractTranslator,SIGNAL(translateFailed()),SLOT(slotTranslateFailed()));
 
@@ -240,6 +240,7 @@ void TranslatorWidget::slotTranslate()
 
   d->abstractTranslator->setFrom(from);
   d->abstractTranslator->setTo(to);
+  d->abstractTranslator->setInputText(d->inputText->toPlainText());
   d->abstractTranslator->translate();
 }
 

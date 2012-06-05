@@ -37,112 +37,99 @@ BabelFishTranslator::~BabelFishTranslator()
 QMap<QString, QMap<QString, QString> > BabelFishTranslator::initListLanguage(KComboBox* from)
 {
   QMap<QString, QMap<QString, QString> > listLanguage;
-  const QPair<QString, QString> en( i18n("English"), QLatin1String( "en" ) );
-  const QPair<QString, QString> zh( i18n("Chinese (Simplified)"), QLatin1String( "zh" ) );
-  const QPair<QString, QString> zt( i18n("Chinese (Traditional)"), QLatin1String( "zt" ) );
-  const QPair<QString, QString> nl( i18n("Dutch"), QLatin1String( "nl" ) );
-  const QPair<QString, QString> fr( i18n("French"), QLatin1String( "fr" ) );
-  const QPair<QString, QString> de( i18n("German"), QLatin1String( "de" ) );
-  const QPair<QString, QString> el( i18n("Greek"), QLatin1String( "el" ) );
-  const QPair<QString, QString> it( i18n("Italian"), QLatin1String( "it" ) );
-  const QPair<QString, QString> ja( i18n("Japanese"), QLatin1String( "ja" ) );
-  const QPair<QString, QString> ko( i18n("Korean"), QLatin1String( "ko" ) );
-  const QPair<QString, QString> pt( i18n("Portuguese"), QLatin1String( "pt" ) );
-  const QPair<QString, QString> ru( i18n("Russian"), QLatin1String( "ru" ) );
-  const QPair<QString, QString> es( i18n("Spanish"), QLatin1String( "es" ) );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, en );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::en );
   QMap<QString, QString> enList;
-  MessageViewer::TranslatorUtil::addPairToMap( enList, zh );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, zt );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, nl );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, fr );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, de );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, it );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, ja );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, ko );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, pt );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, ru );
-  MessageViewer::TranslatorUtil::addPairToMap( enList, es );
-  listLanguage.insert( en.second, enList );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::zh );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::zt );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::nl );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::fr );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::de );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::it );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::ja );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::ko );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::pt );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::ru );
+  MessageViewer::TranslatorUtil::addPairToMap( enList, TranslatorUtil::es );
+  listLanguage.insert( TranslatorUtil::en.second, enList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, nl );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::nl );
   QMap<QString, QString> nlList;
-  MessageViewer::TranslatorUtil::addPairToMap( nlList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( nlList, fr );
-  listLanguage.insert( nl.second, nlList );
+  MessageViewer::TranslatorUtil::addPairToMap( nlList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( nlList, TranslatorUtil::fr );
+  listLanguage.insert( TranslatorUtil::nl.second, nlList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, fr );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::fr );
   QMap<QString, QString> frList;
-  MessageViewer::TranslatorUtil::addPairToMap( frList, nl );
-  MessageViewer::TranslatorUtil::addPairToMap( frList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( frList, de );
-  MessageViewer::TranslatorUtil::addPairToMap( frList, el );
-  MessageViewer::TranslatorUtil::addPairToMap( frList, it );
-  MessageViewer::TranslatorUtil::addPairToMap( frList, pt );
-  MessageViewer::TranslatorUtil::addPairToMap( frList, es );
-  listLanguage.insert( fr.second, frList );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::nl );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::de );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::el );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::it );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::pt );
+  MessageViewer::TranslatorUtil::addPairToMap( frList, TranslatorUtil::es );
+  listLanguage.insert( TranslatorUtil::fr.second, frList );
 
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, de );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::de );
   QMap<QString, QString> deList;
-  MessageViewer::TranslatorUtil::addPairToMap( deList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( deList, fr );
-  listLanguage.insert( de.second, deList );
+  MessageViewer::TranslatorUtil::addPairToMap( deList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( deList, TranslatorUtil::fr );
+  listLanguage.insert( TranslatorUtil::de.second, deList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, el );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::el );
   QMap<QString, QString> elList;
-  MessageViewer::TranslatorUtil::addPairToMap( elList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( elList, fr );
-  listLanguage.insert( el.second, elList );
+  MessageViewer::TranslatorUtil::addPairToMap( elList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( elList, TranslatorUtil::fr );
+  listLanguage.insert( TranslatorUtil::el.second, elList );
 
 
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, it );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::it );
   QMap<QString, QString> itList;
-  MessageViewer::TranslatorUtil::addPairToMap( itList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( itList, fr );
-  listLanguage.insert( it.second, itList );
+  MessageViewer::TranslatorUtil::addPairToMap( itList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( itList, TranslatorUtil::fr );
+  listLanguage.insert( TranslatorUtil::it.second, itList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, es );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::es );
   QMap<QString, QString> esList;
-  MessageViewer::TranslatorUtil::addPairToMap( esList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( esList, fr );
-  listLanguage.insert( es.second, esList );
+  MessageViewer::TranslatorUtil::addPairToMap( esList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( esList, TranslatorUtil::fr );
+  listLanguage.insert( TranslatorUtil::es.second, esList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, pt );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::pt );
   QMap<QString, QString> ptList;
-  MessageViewer::TranslatorUtil::addPairToMap( ptList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( ptList, fr );
-  listLanguage.insert( pt.second, ptList );
+  MessageViewer::TranslatorUtil::addPairToMap( ptList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( ptList, TranslatorUtil::fr );
+  listLanguage.insert( TranslatorUtil::pt.second, ptList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, ja );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::ja );
   QMap<QString, QString> jaList;
-  MessageViewer::TranslatorUtil::addPairToMap( jaList, en );
-  listLanguage.insert( ja.second, jaList );
+  MessageViewer::TranslatorUtil::addPairToMap( jaList, TranslatorUtil::en );
+  listLanguage.insert( TranslatorUtil::ja.second, jaList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, ko );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::ko );
   QMap<QString, QString> koList;
-  MessageViewer::TranslatorUtil::addPairToMap( koList, en );
-  listLanguage.insert( ko.second, koList );
+  MessageViewer::TranslatorUtil::addPairToMap( koList, TranslatorUtil::en );
+  listLanguage.insert( TranslatorUtil::ko.second, koList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, ru );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::ru );
   QMap<QString, QString> ruList;
-  MessageViewer::TranslatorUtil::addPairToMap( ruList, en );
-  listLanguage.insert( ru.second, ruList );
+  MessageViewer::TranslatorUtil::addPairToMap( ruList, TranslatorUtil::en );
+  listLanguage.insert( TranslatorUtil::ru.second, ruList );
 
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, zt );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::zt );
   QMap<QString, QString> ztList;
-  MessageViewer::TranslatorUtil::addPairToMap( ztList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( ztList, zh );
-  listLanguage.insert( zt.second, ztList );
+  MessageViewer::TranslatorUtil::addPairToMap( ztList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( ztList, TranslatorUtil::zh );
+  listLanguage.insert( TranslatorUtil::zt.second, ztList );
 
-  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, zh );
+  MessageViewer::TranslatorUtil::addItemToFromComboBox( from, TranslatorUtil::zh );
   QMap<QString, QString> zhList;
-  MessageViewer::TranslatorUtil::addPairToMap( zhList, en );
-  MessageViewer::TranslatorUtil::addPairToMap( zhList, zt );
-  listLanguage.insert( zh.second, zhList );
+  MessageViewer::TranslatorUtil::addPairToMap( zhList, TranslatorUtil::en );
+  MessageViewer::TranslatorUtil::addPairToMap( zhList, TranslatorUtil::zt );
+  listLanguage.insert( TranslatorUtil::zh.second, zhList );
   return listLanguage;
 }
 
@@ -167,7 +154,6 @@ void BabelFishTranslator::slotJobDone ( KJob *job )
 {
   KIO::StoredTransferJob *httpPostJob = dynamic_cast<KIO::StoredTransferJob *>(job);
   if(httpPostJob) {
-    //d->translate->setEnabled( true );
     const QString data = QString::fromUtf8(httpPostJob->data());
     const QString startTag = QLatin1String("<div style=\"padding:0.6em;\">");
     int index = data.indexOf(startTag);
@@ -176,10 +162,8 @@ void BabelFishTranslator::slotJobDone ( KJob *job )
       index = newStr.indexOf(QLatin1String("</div>"));
       mResult = newStr.left(index);
       Q_EMIT translateDone();
-      //d->translatedText->setHtml(newStr.left(index));
     } else {
       Q_EMIT translateFailed();
-      //d->translatedText->clear();
     }
   }
 }

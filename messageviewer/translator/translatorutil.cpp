@@ -16,7 +16,7 @@
 */
 
 #include "translatorutil.h"
-
+#include <KComboBox>
 
 void MessageViewer::TranslatorUtil::addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
 {
