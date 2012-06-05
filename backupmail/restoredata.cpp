@@ -559,8 +559,31 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
         composerGroup.writeEntry(previousStr,id);
       }
     }
+    const QString previousIdentityStr("previous-identity");
+    if(composerGroup.hasKey(previousIdentityStr)) {
+      const int identityValue = composerGroup.readEntry(previousIdentityStr, -1);
+      if(identityValue!=-1) {
+        if(mHashIdentity.contains(identityValue)) {
+          composerGroup.writeEntry(previousIdentityStr,mHashIdentity.value(identityValue));
+        } else {
+          composerGroup.writeEntry(previousIdentityStr,identityValue);
+        }
+      }
+    }
   }
 
+  const QString generalStr("General");
+  if(kmailConfig->hasGroup(generalStr)) {
+    KConfigGroup generalGroup = kmailConfig->group(generalStr);
+    const QString startupFolderStr("startupFolder");
+    if(generalGroup.hasKey(startupFolderStr)) {
+      const QString path = generalGroup.readEntry(startupFolderStr);
+      if(!path.isEmpty()) {
+        Akonadi::Collection::Id id = adaptFolderId(path);
+        generalGroup.writeEntry(startupFolderStr,id);
+      }
+    }
+  }
 //TODO fix all other id
   kmailConfig->sync();
 }

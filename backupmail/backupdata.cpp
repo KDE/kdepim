@@ -213,6 +213,23 @@ void BackupData::backupConfig()
         }
       }
     }
+
+    const QString generalStr("General");
+    if(kmailConfig->hasGroup(generalStr)) {
+      KConfigGroup generalGroup = kmailConfig->group(generalStr);
+      const QString startupFolderStr("startupFolder");
+      if(generalGroup.hasKey(startupFolderStr)) {
+        const int collectionId = generalGroup.readEntry(startupFolderStr,-1);
+        if(collectionId!=-1) {
+          const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+          generalGroup.writeEntry(startupFolderStr,realPath);
+        }
+      }
+    }
+
+
+
+
     kmailConfig->sync();
 //TODO fix other group/key based on akonadi-id
 
