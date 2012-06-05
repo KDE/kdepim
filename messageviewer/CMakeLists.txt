@@ -87,6 +87,8 @@ set(libmessageviewer_SRCS
   webkitparthtmlwriter.cpp
   renamefiledialog.cpp
   translator/translatorwidget.cpp
+  translator/abstracttranslator.cpp
+  translator/babelfishtranslator.cpp
   minimumcombobox.cpp
   ${_mailwebview_cpp}
 )
