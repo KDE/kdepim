@@ -548,6 +548,19 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
     }
   }
 
+  const QString composerStr("Composer");
+  if(kmailConfig->hasGroup(composerStr)) {
+    KConfigGroup composerGroup = kmailConfig->group(composerStr);
+    const QString previousStr("previous-fcc");
+    if(composerGroup.hasKey(previousStr)) {
+      const QString path = composerGroup.readEntry(previousStr);
+      if(!path.isEmpty()) {
+        Akonadi::Collection::Id id = adaptFolderId(path);
+        composerGroup.writeEntry(previousStr,id);
+      }
+    }
+  }
+
 //TODO fix all other id
   kmailConfig->sync();
 }

@@ -201,6 +201,18 @@ void BackupData::backupConfig()
         oldGroup.deleteGroup();
       }
     }
+    const QString composerStr("Composer");
+    if(kmailConfig->hasGroup(composerStr)) {
+      KConfigGroup composerGroup = kmailConfig->group(composerStr);
+      const QString previousStr("previous-fcc");
+      if(composerGroup.hasKey(previousStr)) {
+        const int collectionId = composerGroup.readEntry(previousStr,-1);
+        if(collectionId!=-1) {
+          const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+          composerGroup.writeEntry(previousStr,realPath);
+        }
+      }
+    }
     kmailConfig->sync();
 //TODO fix other group/key based on akonadi-id
 
