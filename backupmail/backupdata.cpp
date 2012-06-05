@@ -234,7 +234,7 @@ void BackupData::backupConfig()
 //TODO fix other group/key based on akonadi-id
 
 
-    backupFile(kmail2rc, BackupMailUtil::configsPath(), kmailStr);
+    backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kmailStr);
   }
 
   Q_EMIT info(i18n("Config backup done."));
