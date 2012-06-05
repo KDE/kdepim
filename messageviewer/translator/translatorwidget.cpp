@@ -19,6 +19,8 @@
 #include "translatorwidget.h"
 #include "globalsettings.h"
 #include "minimumcombobox.h"
+#include "translatorutil.h"
+#include "translator/babelfishtranslator.h"
 
 #include <KTextEdit>
 #include <KComboBox>
@@ -42,9 +44,15 @@ class TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
   TranslatorWidgetPrivate()
+    : abstractTranslator(0)
   {
     
   }
+  ~TranslatorWidgetPrivate()
+  {
+    delete abstractTranslator;
+  }
+
   void initLanguage();
   void fillToCombobox( const QString& lang );
   
@@ -55,18 +63,8 @@ public:
   MinimumComboBox *from;
   MinimumComboBox *to;
   KPushButton *translate;
+  MessageViewer::AbstractTranslator *abstractTranslator;
 };
-
-static void addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
-{
-  map.insert( pair.first, pair.second );
-}
-
-static void addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString>& pair )
-{
-  combo->addItem( pair.first, pair.second );
-}
-
 
 void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& lang )
 {
@@ -82,112 +80,10 @@ void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& l
 
 void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 {
-  const QPair<QString, QString> en( i18n("English"), QLatin1String( "en" ) );
-  const QPair<QString, QString> zh( i18n("Chinese (Simplified)"), QLatin1String( "zh" ) );
-  const QPair<QString, QString> zt( i18n("Chinese (Traditional)"), QLatin1String( "zt" ) );
-  const QPair<QString, QString> nl( i18n("Dutch"), QLatin1String( "nl" ) );
-  const QPair<QString, QString> fr( i18n("French"), QLatin1String( "fr" ) );
-  const QPair<QString, QString> de( i18n("German"), QLatin1String( "de" ) );
-  const QPair<QString, QString> el( i18n("Greek"), QLatin1String( "el" ) );
-  const QPair<QString, QString> it( i18n("Italian"), QLatin1String( "it" ) );
-  const QPair<QString, QString> ja( i18n("Japanese"), QLatin1String( "ja" ) );
-  const QPair<QString, QString> ko( i18n("Korean"), QLatin1String( "ko" ) );
-  const QPair<QString, QString> pt( i18n("Portuguese"), QLatin1String( "pt" ) );
-  const QPair<QString, QString> ru( i18n("Russian"), QLatin1String( "ru" ) );
-  const QPair<QString, QString> es( i18n("Spanish"), QLatin1String( "es" ) );
-
-  addItemToFromComboBox( from, en );
-  QMap<QString, QString> enList;
-  addPairToMap( enList, zh );
-  addPairToMap( enList, zt );
-  addPairToMap( enList, nl );
-  addPairToMap( enList, fr );
-  addPairToMap( enList, de );
-  addPairToMap( enList, it );
-  addPairToMap( enList, ja );
-  addPairToMap( enList, ko );
-  addPairToMap( enList, pt );
-  addPairToMap( enList, ru );
-  addPairToMap( enList, es );
-  listLanguage.insert( en.second, enList );
-
-  addItemToFromComboBox( from, nl );
-  QMap<QString, QString> nlList;
-  addPairToMap( nlList, en );
-  addPairToMap( nlList, fr );  
-  listLanguage.insert( nl.second, nlList );
-
-  addItemToFromComboBox( from, fr );  
-  QMap<QString, QString> frList;
-  addPairToMap( frList, nl );
-  addPairToMap( frList, en );
-  addPairToMap( frList, de );
-  addPairToMap( frList, el );
-  addPairToMap( frList, it );
-  addPairToMap( frList, pt );
-  addPairToMap( frList, es );
-  listLanguage.insert( fr.second, frList );
-
-
-  addItemToFromComboBox( from, de );
-  QMap<QString, QString> deList;
-  addPairToMap( deList, en );
-  addPairToMap( deList, fr );
-  listLanguage.insert( de.second, deList );
-
-  addItemToFromComboBox( from, el );
-  QMap<QString, QString> elList;
-  addPairToMap( elList, en );
-  addPairToMap( elList, fr );
-  listLanguage.insert( el.second, elList );
-
-
-
-  addItemToFromComboBox( from, it );
-  QMap<QString, QString> itList;
-  addPairToMap( itList, en );
-  addPairToMap( itList, fr );
-  listLanguage.insert( it.second, itList );
-
-  addItemToFromComboBox( from, es );
-  QMap<QString, QString> esList;
-  addPairToMap( esList, en );
-  addPairToMap( esList, fr );
-  listLanguage.insert( es.second, esList );
-
-  addItemToFromComboBox( from, pt );
-  QMap<QString, QString> ptList;
-  addPairToMap( ptList, en );
-  addPairToMap( ptList, fr );
-  listLanguage.insert( pt.second, ptList );
-
-  addItemToFromComboBox( from, ja );
-  QMap<QString, QString> jaList;
-  addPairToMap( jaList, en );
-  listLanguage.insert( ja.second, jaList );
-
-  addItemToFromComboBox( from, ko );
-  QMap<QString, QString> koList;
-  addPairToMap( koList, en );
-  listLanguage.insert( ko.second, koList );
-
-  addItemToFromComboBox( from, ru );
-  QMap<QString, QString> ruList;
-  addPairToMap( ruList, en );
-  listLanguage.insert( ru.second, ruList );
-
-
-  addItemToFromComboBox( from, zt );
-  QMap<QString, QString> ztList;
-  addPairToMap( ztList, en );
-  addPairToMap( ztList, zh );
-  listLanguage.insert( zt.second, ztList );
-
-  addItemToFromComboBox( from, zh );
-  QMap<QString, QString> zhList;
-  addPairToMap( zhList, en );
-  addPairToMap( zhList, zt );
-  listLanguage.insert( zh.second, zhList );
+  if(!abstractTranslator) {
+    return;
+  }
+  listLanguage = abstractTranslator->initListLanguage(from);
 }
 
 
@@ -240,6 +136,10 @@ void TranslatorWidget::readConfig()
 
 void TranslatorWidget::init()
 {
+  d->abstractTranslator = new BabelFishTranslator();
+  connect(d->abstractTranslator,SIGNAL(translateDone()),SLOT(slotTranslateDone()));
+  connect(d->abstractTranslator,SIGNAL(translateFailed()),SLOT(slotTranslateFailed()));
+
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
   QHBoxLayout *hboxLayout = new QHBoxLayout;
@@ -333,39 +233,26 @@ void TranslatorWidget::slotTranslate()
   const QString textToTranslate = d->inputText->toPlainText();
   if ( textToTranslate.isEmpty() )
     return;
+
   const QString from = d->from->itemData(d->from->currentIndex()).toString();
   const QString to = d->to->itemData(d->to->currentIndex()).toString();
   d->translate->setEnabled( false );
-  KUrl geturl ( "http://babelfish.yahoo.com/translate_txt" );
 
-  QString body = QUrl::toPercentEncoding( textToTranslate );
-  body.replace(QLatin1String( "%20" ), QLatin1String( "+" ));
-
-  QByteArray postData = QString( "ei=UTF-8&doit=done&fr=bf-res&intl=1&tt=urltext&trtext=%1&lp=%2_%3&btnTrTxt=Translate").arg( body, from, to ).toLocal8Bit();
-  kDebug() << "URL:" << geturl << "(post data" << postData << ")";
-
-  KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,geturl);
-  job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
-  job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
+  d->abstractTranslator->setFrom(from);
+  d->abstractTranslator->setTo(to);
+  d->abstractTranslator->translate();
 }
 
-void TranslatorWidget::slotJobDone ( KJob *job )
+void TranslatorWidget::slotTranslateDone()
 {
-  KIO::StoredTransferJob *httpPostJob = dynamic_cast<KIO::StoredTransferJob *>(job);
-  if(httpPostJob) {
-    d->translate->setEnabled( true );
-    const QString data = QString::fromUtf8(httpPostJob->data());
-    const QString startTag = QLatin1String("<div style=\"padding:0.6em;\">");
-    int index = data.indexOf(startTag);
-    if(index != -1) {
-      QString newStr = data.right(data.length() - index - startTag.length());
-      index = newStr.indexOf(QLatin1String("</div>"));
-      d->translatedText->setHtml(newStr.left(index));
-    } else {
-      d->translatedText->clear();
-    }
-  }
+  d->translate->setEnabled( true );
+  d->translatedText->setHtml(d->abstractTranslator->resultTranslate());
+}
+
+void TranslatorWidget::slotTranslateFailed()
+{
+  d->translate->setEnabled( true );
+  d->translatedText->clear();
 }
 
 void TranslatorWidget::slotInvertLanguage()

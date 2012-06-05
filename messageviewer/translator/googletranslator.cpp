@@ -15,25 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BABELFISHTRANSLATOR_H
-#define BABELFISHTRANSLATOR_H
+#include "googletranslator.h"
 
-#include "abstracttranslator.h"
-#include <kio/job.h>
+using namespace MessageViewer;
 
-namespace MessageViewer {
-class BabelFishTranslator : public MessageViewer::AbstractTranslator
+GoogleTranslator::GoogleTranslator()
+  :AbstractTranslator()
 {
-  Q_OBJECT
-public:
-  explicit BabelFishTranslator();
-  ~BabelFishTranslator();
-
-  QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from);
-  void translate();
-protected Q_SLOTS:
-  void slotJobDone(KJob *job);
-};
 }
 
-#endif // BABELFISHTRANSLATOR_H
+
+GoogleTranslator::~GoogleTranslator()
+{
+}
+
+
+QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KComboBox* from)
+{
+  //TODO
+  return QMap<QString, QMap<QString, QString> >();
+}
+
+void GoogleTranslator::translate()
+{
+
+}

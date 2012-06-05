@@ -19,7 +19,10 @@
 #define ABSTRACTTRANSLATOR_H
 
 #include <QString>
+#include <QMap>
 #include <QObject>
+
+class KComboBox;
 
 namespace MessageViewer {
 class AbstractTranslator : public QObject
@@ -31,6 +34,7 @@ public:
 
   virtual void translate() = 0;
 
+  virtual QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from) = 0;
 
   QString resultTranslate() const;
   void setInputText(const QString& text);
