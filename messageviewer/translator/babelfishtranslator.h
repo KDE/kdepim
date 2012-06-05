@@ -30,11 +30,8 @@ public:
   ~BabelFishTranslator();
 
   void translate();
-  QString resultTranslate();
 protected Q_SLOTS:
   void slotJobDone(KJob *job);
-private:
-  QString mResult;
 };
 }
 

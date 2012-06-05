@@ -42,4 +42,9 @@ void AbstractTranslator::setTo(const QString& language)
   mTo = language;
 }
 
+QString AbstractTranslator::resultTranslate() const
+{
+  return mResult;
+}
+
 #include "abstracttranslator.moc"

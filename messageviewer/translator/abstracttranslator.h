@@ -28,17 +28,24 @@ class AbstractTranslator : public QObject
 public:
   explicit AbstractTranslator();
   virtual ~AbstractTranslator();
+
   virtual void translate() = 0;
-  virtual QString resultTranslate() = 0;
 
 
+  QString resultTranslate() const;
   void setInputText(const QString& text);
   void setFrom(const QString& language);
   void setTo(const QString& language);
+
+Q_SIGNALS:
+  void translateDone();
+  void translateFailed();
+
 protected:
   QString mInputText;
   QString mFrom;
   QString mTo;
+  QString mResult;
 };
 }
 

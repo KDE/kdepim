@@ -31,13 +31,6 @@ BabelFishTranslator::~BabelFishTranslator()
 
 }
 
-
-
-QString BabelFishTranslator::resultTranslate()
-{
-  return mResult;
-}
-
 void BabelFishTranslator::translate()
 {
   mResult.clear();
@@ -67,8 +60,10 @@ void BabelFishTranslator::slotJobDone ( KJob *job )
       QString newStr = data.right(data.length() - index - startTag.length());
       index = newStr.indexOf(QLatin1String("</div>"));
       mResult = newStr.left(index);
+      Q_EMIT translateDone();
       //d->translatedText->setHtml(newStr.left(index));
     } else {
+      Q_EMIT translateFailed();
       //d->translatedText->clear();
     }
   }
