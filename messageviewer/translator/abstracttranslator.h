@@ -19,14 +19,27 @@
 #define ABSTRACTTRANSLATOR_H
 
 #include <QString>
+#include <QObject>
 
-class AbstractTranslator
+namespace MessageViewer {
+class AbstractTranslator : public QObject
 {
+  Q_OBJECT
 public:
   explicit AbstractTranslator();
   virtual ~AbstractTranslator();
   virtual void translate() = 0;
   virtual QString resultTranslate() = 0;
+
+
+  void setInputText(const QString& text);
+  void setFrom(const QString& language);
+  void setTo(const QString& language);
+protected:
+  QString mInputText;
+  QString mFrom;
+  QString mTo;
 };
+}
 
 #endif // ABSTRACTTRANSLATOR_H

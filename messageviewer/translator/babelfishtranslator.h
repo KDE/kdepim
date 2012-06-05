@@ -19,16 +19,23 @@
 #define BABELFISHTRANSLATOR_H
 
 #include "abstracttranslator.h"
+#include <kio/job.h>
 
-class BabelFishTranslator : public AbstractTranslator
+namespace MessageViewer {
+class BabelFishTranslator : public MessageViewer::AbstractTranslator
 {
+  Q_OBJECT
 public:
   explicit BabelFishTranslator();
   ~BabelFishTranslator();
 
   void translate();
   QString resultTranslate();
-
+protected Q_SLOTS:
+  void slotJobDone(KJob *job);
+private:
+  QString mResult;
 };
+}
 
 #endif // BABELFISHTRANSLATOR_H
