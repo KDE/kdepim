@@ -173,6 +173,8 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
   item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
   if(diff<0) {
     item->setBackgroundColor(2,Qt::red);
+  } else {
+    item->setToolTip(2,i18n("Archive will done %1",KGlobal::locale()->formatDate(diffDate)));
   }
   item->setInfo(info);
 }
