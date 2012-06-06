@@ -1453,7 +1453,7 @@ QString SearchPattern::asString() const
     result = i18n( "(match all of the following)" );
     break;
   case OpAll:
-    result = i18n( "(match all message)" );
+    result = i18n( "(match all messages)" );
     break;
   }
 
