@@ -255,7 +255,8 @@ void RestoreData::restoreMails()
         file->copyTo(tmp.fileName());
         const QString filename(file->name());
         if(filename.contains(QLatin1String("akonadi_maildir_resource_")) ||
-           filename.contains(QLatin1String("akonadi_mbox_resource_"))) {
+           filename.contains(QLatin1String("akonadi_mbox_resource_")) ||
+           filename.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
           //TODO resource file.
           KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(tmp.fileName());
           KUrl url = BackupMailUtil::resourcePath(resourceConfig);
