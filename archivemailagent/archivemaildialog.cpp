@@ -236,10 +236,30 @@ void ArchiveMailWidget::slotAddItem()
   AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
   if( dialog->exec() ) {
     ArchiveMailInfo *info = dialog->info();
+    if(verifyExistingArchive(info)) {
+      KMessageBox::error(this,i18n("There is already an archive for this folder. Modify it. We can not add two archive for an folder."),i18n("Add Archive Mail"));
+      delete info;
+      delete dialog;
+      return;
+    }
     createOrUpdateItem(info);
     updateButtons();
   }
   delete dialog;
+}
+
+bool ArchiveMailWidget::verifyExistingArchive(ArchiveMailInfo *info) const
+{
+  const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
+  for(int i = 0; i < numberOfItem; ++i) {
+    ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
+    if(mailItem->info()) {
+      if(info->saveCollectionId() == mailItem->info()->saveCollectionId()) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 #include "archivemaildialog.moc"

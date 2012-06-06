@@ -48,6 +48,8 @@ private:
   void load();
   void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
 
+  bool verifyExistingArchive(ArchiveMailInfo *info) const;
+
 private Q_SLOTS:
   void slotRemoveItem();
   void slotModifyItem();
