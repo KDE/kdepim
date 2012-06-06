@@ -163,7 +163,17 @@ void RestoreData::restoreResources()
         KTemporaryFile tmp;
         tmp.open();
         file->copyTo(tmp.fileName());
-        //TODO
+        KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(tmp.fileName());
+        const QString filename(file->name());
+        if(filename.contains(QLatin1String("pop3"))) {
+          //TODO
+        } else if(filename.contains(QLatin1String("imap"))) {
+          //TODO
+        } else {
+          qDebug()<<" problem with resource";
+        }
+
+        //TODO restore it
       }
     }
   }
@@ -180,6 +190,13 @@ void RestoreData::restoreMails()
         KTemporaryFile tmp;
         tmp.open();
         file->copyTo(tmp.fileName());
+        const QString filename(file->name());
+        if(filename.contains(QLatin1String("akonadi_maildir_resource_")) ||
+           filename.contains(QLatin1String("akonadi_mbox_resource_"))) {
+          //TODO resource file.
+          KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(tmp.fileName());
+          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+        }
         //TODO
       }
     }

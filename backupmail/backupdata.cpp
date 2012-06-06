@@ -302,7 +302,7 @@ void BackupData::backupMails()
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KUrl url = resourcePath(resourceConfig);
+          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
           const QString filename = url.fileName();
           if(!url.isEmpty()) {
             const bool fileAdded  = mArchive->addLocalFile(url.path(), archivePath + filename);
@@ -318,7 +318,7 @@ void BackupData::backupMails()
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KUrl url = resourcePath(resourceConfig);
+          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
           const QString filename = url.fileName();
           //TODO
           //Several file. Look at archive mail dialog
@@ -330,13 +330,6 @@ void BackupData::backupMails()
 
   Q_EMIT info(i18n("Mails backup done."));
 
-}
-
-KUrl BackupData::resourcePath(KSharedConfigPtr resourceConfig) const
-{
-  KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-  KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
-  return url;
 }
 
 void BackupData::backupAkonadiDb()

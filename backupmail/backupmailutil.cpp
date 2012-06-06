@@ -16,6 +16,7 @@
 */
 
 #include "backupmailutil.h"
+#include <KConfigGroup>
 
 QString BackupMailUtil::transportsPath()
 {
@@ -47,3 +48,9 @@ QString BackupMailUtil::akonadiPath()
   return QLatin1String("akonadi/");
 }
 
+KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
+{
+  KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+  KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
+  return url;
+}

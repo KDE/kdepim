@@ -18,6 +18,9 @@
 #ifndef BACKUPMAILUTIL_H
 #define BACKUPMAILUTIL_H
 #include <QString>
+#include <KUrl>
+#include <KSharedConfig>
+
 namespace BackupMailUtil {
   enum BackupType {
     None = 0,
@@ -31,6 +34,7 @@ namespace BackupMailUtil {
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
 
+  KUrl resourcePath(KSharedConfigPtr resourceConfig);
   QString transportsPath();
   QString resourcesPath();
   QString identitiesPath();
