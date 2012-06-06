@@ -584,6 +584,21 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
       }
     }
   }
+
+  const QString resourceGroupPattern = QLatin1String( "Resource " );
+  const QStringList resourceList = kmailConfig->groupList().filter( resourceGroupPattern );
+  Q_FOREACH(const QString&str, resourceList) {
+    const QString res = str.right(str.length()-resourceGroupPattern.length());
+    if(!res.isEmpty()) {
+        KConfigGroup oldGroup = kmailConfig->group(str);
+        if(mHashResources.contains(res)) {
+          KConfigGroup newGroup( kmailConfig, folderGroupPattern + mHashResources.value(res));
+          oldGroup.copyTo( &newGroup );
+        }
+        oldGroup.deleteGroup();
+    }
+  }
+
 //TODO fix all other id
   kmailConfig->sync();
 }
