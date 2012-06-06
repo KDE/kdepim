@@ -374,7 +374,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     Util::saveContents( mMainWindow, KMime::Content::List() << node );
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
-    attachmentOpen( node );
+    if( offer )
+      attachmentOpen( node, offer );
+    else
+      attachmentOpen( node );
   } else if ( choice == AttachmentDialog::OpenWith ) {
     attachmentOpenWith( node );
   } else { // Cancel
