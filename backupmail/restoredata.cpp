@@ -198,6 +198,35 @@ void RestoreData::restoreResources()
           if(network.hasKey(QLatin1String("UserName"))) {
             settings.insert(QLatin1String("UserName"),network.readEntry("UserName"));
           }
+
+          KConfigGroup cache = resourceConfig->group(QLatin1String("cache"));
+
+          if(cache.hasKey(QLatin1String("AccountIdentity"))) {
+            const int identity = cache.readEntry("AccountIdentity",-1);
+            if(identity!=-1) {
+              if(mHashIdentity.contains(identity)) {
+                settings.insert(QLatin1String("AccountIdentity"),mHashIdentity.value(identity));
+              } else {
+                settings.insert(QLatin1String("AccountIdentity"),identity);
+              }
+            }
+          }
+          if(cache.hasKey(QLatin1String("DisconnectedModeEnabled"))) {
+            settings.insert(QLatin1String("DisconnectedModeEnabled"),cache.readEntry("DisconnectedModeEnabled",false));
+          }
+          if(cache.hasKey(QLatin1String("IntervalCheckTime"))) {
+            settings.insert(QLatin1String("IntervalCheckTime"),cache.readEntry("IntervalCheckTime",-1));
+          }
+          if(cache.hasKey(QLatin1String("UseDefaultIdentity"))) {
+            settings.insert(QLatin1String("UseDefaultIdentity"),cache.readEntry("UseDefaultIdentity",true));
+          }
+          if(cache.hasKey(QLatin1String("TrashCollection"))) {
+            const int collection = adaptFolderId(cache.readEntry("TrashCollection"));
+            if(collection != -1) {
+              settings.insert(QLatin1String("TrashCollection"),collection);
+            }
+          }
+
           //Fixit
           const QString newResource = createResource( QString::fromLatin1("akonadi_imap_resource"), "", settings );
           if(!newResource.isEmpty())
