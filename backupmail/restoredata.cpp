@@ -303,7 +303,6 @@ void RestoreData::restoreConfig()
 
 
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
-  //Fix identity id
   const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
   if(templatesconfigurationentry->isFile()) {
     const KArchiveFile* templatesconfiguration = static_cast<const KArchiveFile*>(templatesconfigurationentry);
