@@ -82,7 +82,7 @@ private:
     void ensureWizardCreated() const;
     void ensureWizardVisible();
     void cancelAllTasks();
-    
+
     void schedule();
     shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
 
@@ -246,9 +246,11 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
     return result;
 }
 
-void EncryptEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
+void EncryptEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result )
+{
+    Q_UNUSED( result );
     assert( task );
-    
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
@@ -271,7 +273,7 @@ void EncryptEMailController::cancel() {
             d->wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 
@@ -281,7 +283,7 @@ void EncryptEMailController::Private::cancelAllTasks() {
     // signal emissions.
     runnable.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( cms )
         cms->cancel();
     if ( openpgp )

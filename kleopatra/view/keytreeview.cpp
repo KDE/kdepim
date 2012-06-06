@@ -43,6 +43,8 @@
 #include <kleo/stl_util.h>
 #include <kleo/keyfilter.h>
 
+#include <KDebug>
+
 #include <QTreeView>
 #include <QHeaderView>
 #include <QItemSelectionModel>
@@ -149,7 +151,7 @@ std::vector<int> KeyTreeView::columnSizes() const {
         return hv->sectionSizes();
     else
         return std::vector<int>();
-}    
+}
 
 void KeyTreeView::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
@@ -227,7 +229,7 @@ void KeyTreeView::setStringFilter( const QString & filter ) {
     if ( filter == m_stringFilter )
         return;
     m_stringFilter = filter;
-    m_proxy->setFilterFixedString( filter ); 
+    m_proxy->setFilterFixedString( filter );
     emit stringFilterChanged( filter );
 }
 
@@ -261,11 +263,11 @@ void KeyTreeView::setHierarchicalView( bool on ) {
     if ( on == m_isHierarchical )
         return;
     if ( on && !hierarchicalModel() ) {
-        qWarning( "%s: hierarchical view requested, but no hierarchical model set", Q_FUNC_INFO );
+        kWarning() <<  "hierarchical view requested, but no hierarchical model set";
         return;
     }
     if ( !on && !flatModel() ) {
-        qWarning( "%s: flat view requested, but no flat model set", Q_FUNC_INFO );
+        kWarning() << "flat view requested, but no flat model set";
         return;
     }
     const std::vector<Key> selectedKeys = m_proxy->keys( m_view->selectionModel()->selectedRows() );

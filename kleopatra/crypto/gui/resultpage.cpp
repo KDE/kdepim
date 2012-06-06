@@ -107,8 +107,9 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     layout->addWidget( m_keepOpenCB );
 }
 
-void ResultPage::Private::progress( const QString & msg, int progress, int total )
+void ResultPage::Private::progress( const QString &msg, int progress, int total )
 {
+    Q_UNUSED( msg );
     assert( progress >= 0 );
     assert( total >= 0 );
     m_progressBar->setRange( 0, total );
@@ -126,11 +127,12 @@ void ResultPage::Private::allDone()
     m_progressBar->setRange( 0, 100 );
     m_progressBar->setValue( 100 );
     m_tasks.reset();
-    Q_FOREACH ( const QString & i, m_progressLabelByTag.keys() ) {
-        if ( !i.isEmpty() )
-            m_progressLabelByTag.value( i )->setText( i18n("%1: All operations completed.", i ) );
-        else
-            m_progressLabelByTag.value( i )->setText( i18n("All operations completed." ) );
+    Q_FOREACH ( const QString &i, m_progressLabelByTag.keys() ) { //krazy:exclude=foreach
+        if ( !i.isEmpty() ) {
+            m_progressLabelByTag.value( i )->setText( i18n( "%1: All operations completed.", i ) );
+        } else {
+            m_progressLabelByTag.value( i )->setText( i18n( "All operations completed." ) );
+        }
     }
     emit q->completeChanged();
 }
@@ -186,7 +188,7 @@ void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
              this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
     connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
-    
+
     Q_FOREACH ( const shared_ptr<Task> & i, d->m_tasks->tasks() ) // create labels for all tags in collection
         assert( i && d->labelForTag( i->tag() ) );
     emit completeChanged();

@@ -39,6 +39,7 @@
 #include <utils/gnupg-helper.h>
 #include <utils/hex.h>
 
+#include <KDebug>
 #include <KLocale>
 
 #include <QProcess>
@@ -83,7 +84,7 @@ namespace {
             gpgconf.start( gpgConfPath(), QStringList() << "--list-dirs", QIODevice::ReadOnly );
             gpgconf.waitForFinished();
             if ( gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0 ) {
-                qDebug( "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling" );
+                kDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";
                 return false;
             }
             const QList<QByteArray> lines = gpgconf.readAll().split( '\n' );
@@ -92,7 +93,7 @@ namespace {
                     try {
                         return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( "gpgconf.conf" );
                     } catch ( ... ) { return false; }
-            qDebug( "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry" );
+            kDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry";
             return false;
         }
 

@@ -57,7 +57,6 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QProcess>
-#include <QDebug>
 #include <QTimer>
 
 #ifdef Q_OS_WIN
@@ -430,9 +429,7 @@ ProcessStdInOutput::ProcessStdInOutput( const QString & cmd, const QStringList &
       m_arguments( args ),
       m_proc( new redirect_close<QProcess> )
 {
-    qDebug() << "ProcessStdInOutput:" << "\n"
-        "cd" << wd.absolutePath() << "\n" <<
-        cmd << args;
+    kDebug() << "cd" << wd.absolutePath() << endl << cmd << args;
     if ( cmd.isEmpty() )
         throw Exception( gpg_error( GPG_ERR_INV_ARG ),
                          i18n("Command not specified") );

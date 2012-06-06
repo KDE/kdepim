@@ -205,7 +205,7 @@ private:
         q->emitDoneOrError();
     }
     void slotProgress( int current, int total, const QString & what ) {
-        qDebug( "progress: %d/%d: %s", current, total, qPrintable( what ) );
+        kDebug() << "progress: " << current << "/" << total << ": " << qPrintable( what );
 #ifndef QT_NO_PROGRESSDIALOG
         if ( !progressDialog )
             return;
@@ -361,7 +361,7 @@ static QString decode( const QString & encoded ) {
             case '\\': decoded += QLatin1Char( '\\' ); break;
             case 'n':  decoded += QLatin1Char( '\n' ); break;
             default:
-                qDebug() << Q_FUNC_INFO << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
+                kDebug() << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
                 decoded += ch;
                 break;
             }
@@ -472,6 +472,7 @@ static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, con
                                                   const function<void(int)> & progress,
                                                   const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions )
 {
+    Q_UNUSED( allowAddition );
     if ( !checksumDefinition )
         return std::vector<Dir>();
 
@@ -541,7 +542,7 @@ static QString process( const Dir & dir, bool * fatal ) {
     const QString program = dir.checksumDefinition->createCommand();
     dir.checksumDefinition->startCreateCommand( &p, dir.inputFiles );
     p.waitForFinished();
-    qDebug( "[%p] Exit code %d.", &p, p.exitCode() );
+    kDebug() << "[" << &p << "] Exit code " << p.exitCode();
 
     if ( p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0 ) {
         file.abort();
@@ -587,7 +588,7 @@ void CreateChecksumsController::Private::run() {
         this->errors = errors;
         return;
     } else {
-        qDebug() << Q_FUNC_INFO << "using checksum-definition" << checksumDefinition->id();
+        kDebug() << "using checksum-definition" << checksumDefinition->id();
     }
 
     //
@@ -605,12 +606,12 @@ void CreateChecksumsController::Private::run() {
         : find_dirs_by_input_files( files, checksumDefinition, allowAddition, progressCb, checksumDefinitions ) ;
 
     Q_FOREACH( const Dir & dir, dirs )
-        qDebug() << dir;
+        kDebug() << dir;
 
     if ( !canceled ) {
 
         emit progress( 0, 0, i18n("Calculating total size...") );
-    
+
         const quint64 total
             = kdtools::accumulate_transform( dirs, mem_fn( &Dir::totalSize ), Q_UINT64_C(0) );
 

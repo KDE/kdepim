@@ -110,6 +110,7 @@ NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemI
 
 void NewResultPage::Private::progress( const QString & msg, int progress, int total )
 {
+    Q_UNUSED( msg );
     assert( progress >= 0 );
     assert( total >= 0 );
     m_progressBar->setRange( 0, total );
@@ -130,11 +131,12 @@ void NewResultPage::Private::allDone()
     const bool errorOccurred =
         kdtools::any( m_collections, mem_fn( &TaskCollection::errorOccurred ) );
     m_collections.clear();
-    Q_FOREACH ( const QString & i, m_progressLabelByTag.keys() ) {
-        if ( !i.isEmpty() )
-            m_progressLabelByTag.value( i )->setText( i18n("%1: All operations completed.", i ) );
-        else
-            m_progressLabelByTag.value( i )->setText( i18n("All operations completed." ) );
+    Q_FOREACH ( const QString &i, m_progressLabelByTag.keys() ) { //krazy:exclude=foreach
+        if ( !i.isEmpty() ) {
+            m_progressLabelByTag.value( i )->setText( i18n( "%1: All operations completed.", i ) );
+        } else {
+            m_progressLabelByTag.value( i )->setText( i18n( "All operations completed." ) );
+        }
     }
     if ( QAbstractButton * cancel = q->wizard()->button( QWizard::CancelButton ) )
         cancel->setEnabled( false );
@@ -210,7 +212,7 @@ void NewResultPage::addTaskCollection( const shared_ptr<TaskCollection> & coll )
              this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
     connect( coll.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
-    
+
     Q_FOREACH ( const shared_ptr<Task> & i, coll->tasks() ) { // create labels for all tags in collection
         assert( i );
         QLabel * l = d->labelForTag( i->tag() );

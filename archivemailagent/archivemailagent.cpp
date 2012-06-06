@@ -46,7 +46,9 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
   connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
            this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
-  mArchiveManager->load();
+
+  QTimer::singleShot(1000*60*5,mArchiveManager,SLOT(load()));
+
   mTimer = new QTimer(this);
   connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
   mTimer->start(24*60*60*1000);
@@ -81,6 +83,17 @@ void ArchiveMailAgent::configure( WId windowId )
   Q_UNUSED( windowId );
   showConfigureDialog();
 }
+
+void ArchiveMailAgent::pause()
+{
+  mArchiveManager->pause();
+}
+
+void ArchiveMailAgent::resume()
+{
+  mArchiveManager->resume();
+}
+
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 

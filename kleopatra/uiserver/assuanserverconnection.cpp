@@ -62,6 +62,7 @@
 
 #include <kmime/kmime_header_parsing.h>
 
+#include <KDebug>
 #include <KLocalizedString>
 #include <KWindowSystem>
 #include <KMessageBox>
@@ -71,7 +72,6 @@
 #include <QVariant>
 #include <QPointer>
 #include <QFileInfo>
-#include <QDebug>
 #include <QStringList>
 #include <QDialog>
 #include <QRegExp>
@@ -226,7 +226,7 @@ static void apply_window_id( QWidget * widget, const QString & winIdStr ) {
     bool ok = false;
     const WId wid = wid_from_string( winIdStr, &ok );
     if ( !ok ) {
-        qDebug() << "window-id value" << wid << "doesn't look like a number";
+        kDebug() << "window-id value" << wid << "doesn't look like a number";
         return;
     }
     if ( QWidget * pw = QWidget::find( wid ) )
@@ -380,8 +380,9 @@ private:
         }
         if ( !rx.cap( 2 ).isEmpty() )
             conn.sessionTitle = rx.cap( 2 );
-        qDebug( "session_handler: id=%lu, title=%s",
-                static_cast<unsigned long>( conn.sessionId ), qPrintable( conn.sessionTitle ) );
+        kDebug() << "session_handler: "
+                 << "id=" << static_cast<unsigned long>( conn.sessionId )
+                 << ", title=" << qPrintable( conn.sessionTitle );
         return assuan_process_done( ctx_, 0 );
     }
 
@@ -546,7 +547,7 @@ private:
 
             (conn.*which).push_back( io );
 
-            qDebug() << "AssuanServerConnection: added" << io->label();
+            kDebug() << "AssuanServerConnection: added" << io->label();
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const GpgME::Exception & e ) {
@@ -601,7 +602,7 @@ private:
                 throw gpg_error( GPG_ERR_ENOENT );
             if ( !fi.isReadable() || ( fi.isDir() && !fi.isExecutable() ) )
                 throw gpg_error( GPG_ERR_EPERM );
-            
+
             conn.files.push_back( fi.absoluteFilePath() );
 
             return assuan_process_done( conn.ctx.get(), 0 );
@@ -636,8 +637,9 @@ private:
                 } else if ( qstrnicmp( pos, "CMS", strlen("CMS") ) == 0 ) {
                     protocol = GpgME::CMS;
                     pos += strlen("CMS");
-                } else
+                } else {
                     ;
+                }
             } else if ( qstrncmp( pos, "-- ", strlen("-- ") ) == 0 ) {
                 pos += 3;
                 while ( *pos == ' ' || *pos == '\t' )
@@ -1277,7 +1279,7 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 
 void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
     if ( d->ctx && !d->done && !details.isEmpty() ) {
-	qDebug() << "AssuanCommand::done(): Error: " << details;
+	kDebug() << "Error: " << details;
         d->utf8ErrorKeepAlive = details.toUtf8();
         if ( !d->nohup )
             assuan_set_error( d->ctx.get(), err.encodedError(), d->utf8ErrorKeepAlive.constData() );
@@ -1287,11 +1289,11 @@ void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
 
 void AssuanCommand::done( const GpgME::Error& err ) {
     if ( !d->ctx ) {
-        qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", err.asString() );
+        kDebug() << err.asString() << ": called with NULL ctx.";
         return;
     }
     if ( d->done ) {
-        qDebug( "AssuanCommand::done( %s ): called twice!", err.asString() );
+        kDebug() << err.asString() << ": called twice!";
         return;
     }
 

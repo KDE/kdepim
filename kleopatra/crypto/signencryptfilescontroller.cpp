@@ -138,7 +138,7 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
     const bool archiveForced = (op & ArchiveMask) == ArchiveForced;
 
     kleo_assert( !signDisallowed || !encryptDisallowed );
- 
+
     if ( !signDisallowed && encryptDisallowed ) {
         if ( archiveForced )
             return i18n( "Archive and Sign Files" );
@@ -446,7 +446,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
                                                            pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
         else
             Q_FOREACH( const QString & file, files ) {
-                const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
+                const std::vector< shared_ptr<SignEncryptFilesTask> > created =
                     createSignEncryptTasksForFileInfo( QFileInfo( file ), sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
                 tasks.insert( tasks.end(), created.begin(), created.end() );
             }
@@ -458,7 +458,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         kleo_assert( runnable.empty() );
 
         runnable.swap( tasks );
-        
+
         Q_FOREACH( const shared_ptr<Task> task, runnable )
             q->connectTask( task );
 
@@ -514,7 +514,9 @@ shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnab
     return result;
 }
 
-void SignEncryptFilesController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
+void SignEncryptFilesController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result )
+{
+    Q_UNUSED( result )
     assert( task );
 
     // We could just delete the tasks here, but we can't use
@@ -529,7 +531,7 @@ void SignEncryptFilesController::doTaskDone( const Task * task, const shared_ptr
         d->completed.push_back( d->openpgp );
         d->openpgp.reset();
     }
-    
+
     QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
 
@@ -540,7 +542,7 @@ void SignEncryptFilesController::cancel() {
             d->wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 
@@ -550,7 +552,7 @@ void SignEncryptFilesController::Private::cancelAllTasks() {
     // signal emissions.
     runnable.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( cms )
         cms->cancel();
     if ( openpgp )

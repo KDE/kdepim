@@ -21,6 +21,7 @@
 #include "backupmailutil.h"
 
 class KZip;
+class QWidget;
 namespace KPIMIdentities {
   class Identity;
   class IdentityManager;
@@ -30,7 +31,7 @@ class AbstractData : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractData(const QString& filename, BackupMailUtil::BackupTypes typeSelected);
+  explicit AbstractData(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
   ~AbstractData();
 Q_SIGNALS:
   void info(const QString&);
@@ -43,6 +44,7 @@ protected:
   BackupMailUtil::BackupTypes mTypeSelected;
   KZip *mArchive;
   KPIMIdentities::IdentityManager *mIdentityManager;
+  QWidget *mParent;
 };
 
 #endif // ABSTRACTDATA_H

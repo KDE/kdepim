@@ -40,12 +40,12 @@ public Q_SLOTS:
   void slotCloseWidget();
 
 private Q_SLOTS:
-  void slotJobDone(KJob*);
   void slotFromLanguageChanged( int );
   void slotTextChanged();
   void slotInvertLanguage();
   void slotClear();
-
+  void slotTranslateDone();
+  void slotTranslateFailed();
 protected:
   bool event(QEvent* e);
 

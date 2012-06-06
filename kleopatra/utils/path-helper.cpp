@@ -38,13 +38,13 @@
 
 #include <kleo/exception.h>
 
+#include <KDebug>
 #include <KLocalizedString>
 
 #include <QString>
 #include <QStringList>
 #include <QFileInfo>
 #include <QDir>
-#include <QDebug>
 
 #include <boost/bind.hpp>
 
@@ -70,7 +70,7 @@ QString Kleo::heuristicBaseDirectory( const QStringList & fileNames ) {
     QStringList dirs;
     Q_FOREACH( const QString & fileName, fileNames )
         dirs.push_back( QFileInfo( fileName ).path() + QLatin1Char( '/' ) );
-    qDebug() << "dirs" << dirs;
+    kDebug() << "dirs" << dirs;
     const QString candidate = longestCommonPrefix( dirs );
     const int idx = candidate.lastIndexOf( QLatin1Char( '/' ) );
     return candidate.left( idx );

@@ -3,7 +3,7 @@ Type=Application
 Icon=kleopatra
 Exec=kleopatra --import-certificate %F
 MimeType=application/pkcs7-mime;application/x-x509-ca-cert;application/x-pkcs12;application/pgp-keys;
-Categories=Qt;KDE;Utility;Security;X-KDE-Utilities-PIM;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
 
 Name=Kleopatra
 Name[af]=Kleopatra

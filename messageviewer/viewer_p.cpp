@@ -190,7 +190,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomTextOnlyAction( 0 ),
     mZoomInAction( 0 ),
     mZoomOutAction( 0 ),
-    mZoomResetAction( 0 ), 
+    mZoomResetAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
     mSpeakTextAction(0),
     mCanStartDrag( false ),
@@ -216,7 +216,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
   mZoomTextOnly = false;
-  
+
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
@@ -323,6 +323,13 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
+  bool deletedAttachment = false;
+  if(node->contentType(false)) {
+    deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
+  }
+  if(deletedAttachment)
+    return;
+
   const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
   if ( isEncapsulatedMessage ) {
 
@@ -411,7 +418,37 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
 
+  QString filename;
+  QString name;
+  QByteArray mimetype;
+  if(node->contentDisposition(false)) {
+    filename = node->contentDisposition()->filename();
+  }
+
+  if(node->contentType(false)) {
+    name = node->contentType()->name();
+    mimetype = node->contentType()->mimeType();
+  }
+
   parent->removeContent( node, true );
+
+  // text/plain part:
+  KMime::Content* deletePart = new KMime::Content(parent);
+  deletePart->contentType()->setMimeType( "text/x-moz-deleted" );
+  deletePart->contentType()->setName(QString::fromLatin1("Deleted: %1").arg(name),"utf8");
+  deletePart->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
+  deletePart->contentDisposition()->setFilename(QString::fromLatin1("Deleted: %1").arg(name));
+
+  deletePart->contentType()->setCharset( "utf-8" );
+  deletePart->contentTransferEncoding()->from7BitString( "7bit" );
+  QByteArray bodyMessage = QByteArray("\nYou deleted an attachment from this message. The original MIME headers for the attachment were:");
+  bodyMessage +=("\nContent-Type: ") + mimetype;
+  bodyMessage +=("\nname=\"") + name.toUtf8() + "\"";
+  bodyMessage +=("\nfilename=\"") + filename.toUtf8() + "\"";
+  deletePart->setBody(bodyMessage);
+  parent->addContent( deletePart );
+
+
   parent->assemble();
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
@@ -475,7 +512,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     QMenu* menu = topMenu;
     QActionGroup *actionGroup = new QActionGroup( menu );
     connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
-    
+
     if (offers.count() > 1) { // submenu 'open with'
       menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
       menu->menuAction()->setObjectName("openWith_submenu"); // for the unittest
@@ -550,18 +587,24 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
   QAction *action;
-  
+  bool deletedAttachment = false;
+  if(node->contentType(false)) {
+    deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
+  }
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
   connect( attachmentMapper, SIGNAL(mapped(int)),
            this, SLOT(slotHandleAttachment(int)) );
 
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Open );
 
-  createOpenWithMenu( menu, node );
-  
+  if(!deletedAttachment)
+    createOpenWithMenu( menu, node );
+
   action = menu->addAction(i18nc("to view something", "View") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::View );
 
@@ -574,10 +617,12 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Save );
 
   action = menu->addAction(SmallIcon("edit-copy"), i18n("Copy") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Copy );
 
@@ -597,7 +642,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
     action = menu->addAction(SmallIcon("edit-delete"), i18n("Delete Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
     attachmentMapper->setMapping( action, Viewer::Delete );
-    action->setEnabled( canChange );
+    action->setEnabled( canChange && !deletedAttachment );
   }
   if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive )
        && Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" )) {
@@ -622,7 +667,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 {
   QFileInfo atmFileInfo( atmFileName );
 
-  // tempfile name ist /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
+  // tempfile name is /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
   KTempDir *linkDir = new KTempDir( KStandardDirs::locateLocal( "tmp", "attachments" ) );
   QString linkPath = linkDir->name() + atmFileInfo.fileName();
   QFile *linkFile = new QFile( linkPath );
@@ -1134,7 +1179,7 @@ void ViewerPrivate::readConfig()
 
   mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
   setZoomTextOnly( mZoomTextOnly );
-  
+
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1157,7 +1202,7 @@ void ViewerPrivate::readConfig()
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
   mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
 #endif
-  
+
   if ( mMessage )
     update();
   mColorBar->update();
@@ -1186,7 +1231,7 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
 
   if ( mHeaderStyle == style && mHeaderStrategy == strategy )
     return;
-  
+
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   if ( mHeaderOnlyAttachmentsAction ) {
@@ -1200,7 +1245,7 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
     }
   }
   update( Viewer::Force );
-  
+
   if( !mExternalWindow && writeInConfigFile)
     writeConfig();
 
@@ -1663,7 +1708,7 @@ void ViewerPrivate::createActions()
   connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
   mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
 
-  
+
   // Show message structure viewer
   mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
   ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
@@ -1747,6 +1792,14 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 #ifndef QT_NO_TREEVIEW
   if ( !content )
     return;
+
+  bool deletedAttachment = false;
+  if(content->contentType(false)) {
+    deletedAttachment = (content->contentType()->mimeType() == "text/x-moz-deleted");
+  }
+  if(deletedAttachment)
+    return;
+
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
   const bool isRoot = ( content == mMessage.get() );
 
@@ -2060,7 +2113,7 @@ void ViewerPrivate::slotFind()
 #if QT_VERSION >= 0x040800
   if ( mViewer->hasSelection() )
     mFindBar->setText( mViewer->selectedText() );
-#endif  
+#endif
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
@@ -2501,7 +2554,7 @@ void ViewerPrivate::slotAttachmentCopy()
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
 {
-#ifndef QT_NO_CLIPBOARD	
+#ifndef QT_NO_CLIPBOARD
   if ( contents.isEmpty() )
     return;
 
@@ -2677,9 +2730,18 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessageItem.hasPayload<KMime::Message::Ptr>() )
+  if ( !mMessageItem.isValid() ) {
     return;
-  Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
+  }
+
+  if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+    if ( mMessageItem.isValid() ) {
+      kWarning() << "Payload is not a MessagePtr!";
+    }
+    return;
+  }
+
+  Util::saveMessageInMbox( QList<Akonadi::Item>() << mMessageItem, mMainWindow );
 }
 
 void ViewerPrivate::saveRelativePosition()
@@ -3036,27 +3098,27 @@ void ViewerPrivate::slotMessageRendered()
 
 void ViewerPrivate::setZoomFactor( qreal zoomFactor )
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   mViewer->setZoomFactor ( zoomFactor );
-#endif  
+#endif
 }
 
 
 void ViewerPrivate::slotZoomIn()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   if( mZoomFactor >= 300 )
     return;
   mZoomFactor += zoomBy;
   if( mZoomFactor > 300 )
     mZoomFactor = 300;
   mViewer->setZoomFactor( mZoomFactor/100.0 );
-#endif  
+#endif
 }
 
 void ViewerPrivate::slotZoomOut()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   if ( mZoomFactor <= 100 )
     return;
   mZoomFactor -= zoomBy;
@@ -3073,9 +3135,9 @@ void ViewerPrivate::setZoomTextOnly( bool textOnly )
   {
     mZoomTextOnlyAction->setChecked( mZoomTextOnly );
   }
-#ifndef KDEPIM_NO_WEBKIT    
+#ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
-#endif  
+#endif
 }
 
 void ViewerPrivate::slotZoomTextOnly()
@@ -3085,7 +3147,7 @@ void ViewerPrivate::slotZoomTextOnly()
 
 void ViewerPrivate::slotZoomReset()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   mZoomFactor = 100;
   mViewer->setZoomFactor( 1.0 );
 #endif

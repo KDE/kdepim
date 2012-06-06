@@ -16,6 +16,7 @@
 */
 
 #include "archivemailagentutil.h"
+#include <KDebug>
 
 QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
 {
@@ -31,7 +32,7 @@ QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
       diffDate = diffDate.addMonths(info->archiveAge());
       break;
     default:
-      qDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
+      kDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
       break;
   }
   return diffDate;

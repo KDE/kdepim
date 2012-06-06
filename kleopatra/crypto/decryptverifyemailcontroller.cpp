@@ -234,7 +234,7 @@ DecryptVerifyEMailWizard * DecryptVerifyEMailController::Private::findOrCreateWi
 
     collectGarbage( s_wizards );
 
-    qDebug( "DecryptVerifyEMailWizard::Private::findOrCreateWizard( %ud )", id );
+    kDebug() << "id = " << id;
 
     if ( id != 0 ) {
 
@@ -456,7 +456,7 @@ void DecryptVerifyEMailController::setProtocol( Protocol prot )
 
 void DecryptVerifyEMailController::setSessionId( unsigned int id )
 {
-    qDebug( "DecryptVerifyEMailController::setSessionId( %ud )", id );
+    kDebug() << "id = " << id;
     d->m_sessionId = id;
 }
 
@@ -470,7 +470,7 @@ void DecryptVerifyEMailController::cancel()
         }
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 

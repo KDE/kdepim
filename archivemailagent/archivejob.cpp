@@ -25,6 +25,7 @@
 
 #include <KNotification>
 #include <KLocale>
+#include <KGlobal>
 
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
@@ -45,18 +46,21 @@ void ArchiveJob::execute()
     MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
     Akonadi::Collection collection(mInfo->saveCollectionId());
     backupJob->setRootFolder( collection );
-    backupJob->setSaveLocation( mInfo->realUrl(collection.name()) );
+    const QString realPath = MailCommon::Util::fullCollectionPath(collection);
+    backupJob->setSaveLocation( mInfo->realUrl(realPath) );
     backupJob->setArchiveType( mInfo->archiveType() );
     backupJob->setDeleteFoldersAfterCompletion( false );
     backupJob->setRecursive( mInfo->saveSubCollection() );
     connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
     backupJob->start();
-    const QString summary = i18n("Start to archive %1",MailCommon::Util::fullCollectionPath(collection) );
-    KNotification::event( "",
+    const QString summary = i18n("Start to archive %1",realPath );
+    qDebug()<<" summary :"<<summary;
+    KNotification::event( "kmail",
                           summary,
                           QPixmap(),
                           0,
-                          KNotification::CloseOnTimeout);
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
   }
 }
 
@@ -64,11 +68,12 @@ void ArchiveJob::slotBackupDone()
 {
   Akonadi::Collection collection(mInfo->saveCollectionId());
   const QString summary = i18n("Archive done for %1",MailCommon::Util::fullCollectionPath(collection) );
-  KNotification::event( "",
+  KNotification::event( "kmail",
                         summary,
                         QPixmap(),
                         0,
-                        KNotification::CloseOnTimeout);
+                        KNotification::CloseOnTimeout,
+                        KGlobal::mainComponent());
   mManager->backupDone(mInfo);
 }
 

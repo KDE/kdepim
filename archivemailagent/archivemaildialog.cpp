@@ -109,6 +109,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
   mWidget->treeWidget->setHeaderLabels(headers);
   mWidget->treeWidget->setSortingEnabled(true);
+  mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
   load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
@@ -135,11 +136,15 @@ void ArchiveMailWidget::saveTreeWidgetHeader(KConfigGroup& group)
 
 void ArchiveMailWidget::updateButtons()
 {
-  if(mWidget->treeWidget->currentItem()) {
+  const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  if(listItems.isEmpty()) {
+    mWidget->removeItem->setEnabled(false);
+    mWidget->modifyItem->setEnabled(false);
+  } else if(listItems.count() == 1) {
     mWidget->removeItem->setEnabled(true);
     mWidget->modifyItem->setEnabled(true);
   } else {
-    mWidget->removeItem->setEnabled(false);
+    mWidget->removeItem->setEnabled(true);
     mWidget->modifyItem->setEnabled(false);
   }
 }
@@ -163,7 +168,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
   }
   item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
   item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
-  QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
+  const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
   item->setText(2,i18np("1 day", "%1 days",QString::number(info->lastDateSaved().daysTo(diffDate))));
   item->setInfo(info);
 }
@@ -192,7 +197,7 @@ void ArchiveMailWidget::save()
 
 void ArchiveMailWidget::slotRemoveItem()
 {
-  QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
   if(KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items? Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
     return;
 
@@ -204,7 +209,7 @@ void ArchiveMailWidget::slotRemoveItem()
 
 void ArchiveMailWidget::slotModifyItem()
 {
-  QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
   if(listItems.count()==1) {
     QTreeWidgetItem *item = listItems.at(0);
     if(!item)

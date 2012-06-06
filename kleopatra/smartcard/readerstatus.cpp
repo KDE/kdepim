@@ -48,6 +48,8 @@
 
 #include <gpg-error.h>
 
+#include <KDebug>
+
 #include <QStringList>
 #include <QDir>
 #include <QFileInfo>
@@ -56,7 +58,6 @@
 #include <QThread>
 #include <QTimer>
 #include <QPointer>
-#include <QDebug>
 
 #ifndef _WIN32_WCE
 #include <boost/algorithm/string/split.hpp>
@@ -133,11 +134,11 @@ BOOST_STATIC_ASSERT(( sizeof prettyFlags/sizeof *prettyFlags == ReaderStatus::Nu
 static QByteArray read_file( const QString & fileName ) {
     QFile file( fileName );
     if ( !file.exists() ) {
-        qDebug() << "read_file: file" << fileName << "does not exist";
+        kDebug() << "read_file: file" << fileName << "does not exist";
         return QByteArray();
     }
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "read_file: failed to open" << fileName << ':' << file.errorString();
+        kDebug() << "read_file: failed to open" << fileName << ':' << file.errorString();
         return QByteArray();
     }
     return file.readAll().trimmed();
@@ -165,7 +166,7 @@ namespace {
 
     template <typename T>
     const T & _trace__impl( const T & t, const char * msg ) {
-        qDebug() << msg << t;
+        kDebug() << msg << t;
         return t;
     }
 #define TRACE( x ) _trace__impl( x, #x )
@@ -188,10 +189,10 @@ static const char * app_types[] = {
     "geldkarte",
 };
 BOOST_STATIC_ASSERT(( sizeof app_types / sizeof *app_types == ReaderStatus::NumAppTypes ));
-    
+
 
 static ReaderStatus::AppType parse_app_type( const std::string & s ) {
-    qDebug() << "parse_app_type(" << s.c_str() << ")";
+    kDebug() << "parse_app_type(" << s.c_str() << ")";
 #ifndef _WIN32_WCE
     const char ** it = std::find( begin( app_types ), end( app_types ), to_lower_copy( s ) );
 #else
@@ -226,15 +227,15 @@ static ReaderStatus::PinState parse_pin_state( const std::string & s ) {
 }
 
 static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
-    qDebug() << "gpgagent_transact(" << command << ")";
+    kDebug() << "gpgagent_transact(" << command << ")";
     const AssuanResult res = gpgAgent->assuanTransact( command );
     err = res.error();
     if ( !err.code() )
         err = res.assuanError();
     if ( err.code() ) {
-        qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
+        kDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
         if ( err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE ) {
-            qDebug() << "Assuan problem, killing context";
+            kDebug() << "Assuan problem, killing context";
             gpgAgent.reset();
         }
         return std::auto_ptr<DefaultAssuanTransaction>();
@@ -249,10 +250,10 @@ static const std::string scd_getattr_status( shared_ptr<Context> & gpgAgent, con
     cmd += what;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, cmd.c_str(), err );
     if ( t.get() ) {
-        qDebug() << "scd_getattr_status(" << what << "): got" << t->statusLines();
+        kDebug() << "scd_getattr_status(" << what << "): got" << t->statusLines();
         return t->firstStatusLine( what );
     } else {
-        qDebug() << "scd_getattr_status(" << what << "): t == NULL";
+        kDebug() << "scd_getattr_status(" << what << "): t == NULL";
         return std::string();
     }
 }
@@ -268,12 +269,12 @@ static unsigned int get_event_counter( shared_ptr<Context> & gpgAgent ) {
     Error err;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, "GETEVENTCOUNTER", err );
     if ( err.code() )
-        qDebug() << "get_event_counter(): got error" << err.asString();
+        kDebug() << "get_event_counter(): got error" << err.asString();
     if ( t.get() ) {
-        qDebug() << "get_event_counter(): got" << t->statusLines();
+        kDebug() << "get_event_counter(): got" << t->statusLines();
         return parse_event_counter( t->firstStatusLine( "EVENTCOUNTER" ) );
     } else {
-        qDebug() << "scd_getattr_status(): t == NULL";
+        kDebug() << "scd_getattr_status(): t == NULL";
         return -1;
     }
 }
@@ -296,20 +297,20 @@ static bool parse_keypairinfo_and_lookup_key( Context * ctx, const std::string &
     if ( !ctx )
         return false;
     const std::string pattern = parse_keypairinfo( kpi );
-    qDebug() << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
+    kDebug() << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
     if ( const Error err = ctx->startKeyListing( pattern.c_str() ) ) {
-        qDebug() << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
+        kDebug() << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
         return false;
     }
     Error e;
     const Key key = ctx->nextKey( e );
     ctx->endKeyListing();
-    qDebug() << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
+    kDebug() << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
     return !e && !key.isNull();
 }
 
 static CardInfo get_card_status( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent ) {
-    qDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
+    kDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
     CardInfo ci( fileName, ReaderStatus::CardUsable );
     if ( idx != 0 || !gpg_agent )
         return ci;
@@ -327,14 +328,14 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     if ( err.code() )
         return ci;
     if ( ci.appType != ReaderStatus::NksApplication ) {
-        qDebug() << "get_card_status: not a NetKey card, giving up";
+        kDebug() << "get_card_status: not a NetKey card, giving up";
         return ci;
     }
     ci.appVersion = parse_app_version( scd_getattr_status( gpg_agent, "NKS-VERSION", err ) );
     if ( err.code() )
         return ci;
     if ( ci.appVersion != 3 ) {
-        qDebug() << "get_card_status: not a NetKey v3 card, giving up";
+        kDebug() << "get_card_status: not a NetKey v3 card, giving up";
         return ci;
     }
 
@@ -367,7 +368,7 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     if ( keyPairInfos.empty() )
         return ci;
 
-    // check that any of the 
+    // check that any of the
     const std::auto_ptr<Context> klc( Context::createForProtocol( CMS ) ); // what about OpenPGP?
     if ( !klc.get() )
         return ci;
@@ -376,20 +377,20 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     if ( kdtools::any( keyPairInfos, !boost::bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
         ci.status = ReaderStatus::CardCanLearnKeys;
 
-    qDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
+    kDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
 
     return ci;
 }
 
 static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent ) {
-    qDebug() << "<update_cardinfo>";
+    kDebug() << "<update_cardinfo>";
     const QDir gnupgHome( gnupgHomePath );
     if ( !gnupgHome.exists() )
-        qWarning() << "update_cardinfo: gnupg home" << gnupgHomePath << "does not exist!";
+        kWarning() << "gnupg home" << gnupgHomePath << "does not exist!";
 
     const CardInfo ci = get_card_status( gnupgHome.absoluteFilePath( QLatin1String( "reader_0.status" ) ), 0, gpgAgent );
 
-    qDebug() << "</update_cardinfo>";
+    kDebug() << "</update_cardinfo>";
     return std::vector<CardInfo>( 1, ci );
 }
 
@@ -397,7 +398,7 @@ static bool check_event_counter_changed( shared_ptr<Context> & gpg_agent, unsign
     const unsigned int oldCounter = counter;
     counter = get_event_counter( gpg_agent );
     if ( oldCounter != counter ) {
-        qDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+        kDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
         return true;
     } else {
         return false;
@@ -458,7 +459,7 @@ namespace {
 
     public Q_SLOTS:
         void ping() {
-            qDebug() << "ReaderStatusThread[GUI]::ping()";
+            kDebug() << "ReaderStatusThread[GUI]::ping()";
             addTransaction( updateTransaction );
         }
 
@@ -471,7 +472,7 @@ namespace {
         void slotReaderStatusFileChanged() {
             const QDir gnupgHome( m_gnupgHomePath );
             if ( !gnupgHome.exists() ) {
-                qWarning() << "ReaderStatusThread::slotReaderStatusFileChanged: gnupg home" << m_gnupgHomePath << "does not exist!";
+                kWarning() << "gnupg home" << m_gnupgHomePath << "does not exist!";
                 return;
             }
 
@@ -485,7 +486,7 @@ namespace {
                 bool ok = false;
                 const unsigned int idx = parseFileName( file, &ok );
                 if ( !ok ) {
-                    qDebug() << "filename" << file << ": cannot parse reader slot number";
+                    kDebug() << "filename" << file << ": cannot parse reader slot number";
                     continue;
                 }
                 assert( idx >= contents.size() );
@@ -538,10 +539,10 @@ namespace {
 
                     while ( m_transactions.empty() ) {
                         // go to sleep waiting for more work:
-                        qDebug( "ReaderStatusThread[2nd]: .zZZ" );
+                        kDebug() << "ReaderStatusThread[2nd]: .zZZ";
                         if ( !m_waitForTransactions.wait( &m_mutex, CHECK_INTERVAL ) )
                             m_transactions.push_front( checkTransaction );
-                        qDebug( "ReaderStatusThread[2nd]: .oOO" );
+                        kDebug() << "ReaderStatusThread[2nd]: .oOO";
                     }
 
                     // splice off the first transaction without
@@ -550,7 +551,7 @@ namespace {
                     // thread-safe):
                     item.splice( item.end(),
                                  m_transactions, m_transactions.begin() );
-                    
+
                     // make local copies of the interesting stuff so
                     // we can release the mutex again:
                     command = item.front().command;
@@ -558,7 +559,7 @@ namespace {
                     oldCardInfos = m_cardInfos;
                 }
 
-                qDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
+                kDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
 
                 // now, let's see what we got:
 
@@ -590,7 +591,7 @@ namespace {
                     bool anyError = false;
                     while ( nit != nend && oit != oend ) {
                         if ( nit->status != oit->status ) {
-                            qDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
+                            kDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
                             emit cardStatusChanged( idx, nit->status );
                         }
                         if ( nit->status == ReaderStatus::CardCanLearnKeys )
@@ -629,7 +630,7 @@ namespace {
                 else
                     eventCounter = -1;
 
-                qDebug() << "eventCounter:" << eventCounter;
+                kDebug() << "eventCounter:" << eventCounter;
 
             }
         }

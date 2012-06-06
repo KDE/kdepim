@@ -47,5 +47,3 @@ void BackupMailWidget::addErrorLogEntry( const QString& log )
   mCustomLogWidget->addErrorLogEntry(log);
 }
 
-
-#include "backupmailwidget.moc"

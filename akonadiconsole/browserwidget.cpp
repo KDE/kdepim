@@ -461,7 +461,7 @@ void BrowserWidget::clearCache()
   const Collection coll = currentCollection();
   if ( !coll.isValid() )
     return;
-  QString str = QString("DELETE FROM pimitemtable WHERE collectionId=%1").arg(coll.id());
+  QString str = QString("DELETE FROM PimItemTable WHERE collectionId=%1").arg(coll.id());
   qDebug() << str;
   QSqlQuery query( str, DbAccess::database() );
   query.exec();

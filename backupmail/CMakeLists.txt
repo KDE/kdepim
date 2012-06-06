@@ -12,6 +12,7 @@ set(backupmail_SRCS
   backupdata.cpp
   restoredata.cpp
   backupmailkernel.cpp
+  backupmailutil.cpp
   selecttypewidget.cpp
   selectiontypedialog.cpp
   akonadidatabase.cpp

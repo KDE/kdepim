@@ -15,9 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKUPUTIL_H
-#define BACKUPUTIL_H
-#include <Qt>
+#ifndef BACKUPMAILUTIL_H
+#define BACKUPMAILUTIL_H
+#include <QString>
+#include <KUrl>
+#include <KSharedConfig>
+
 namespace BackupMailUtil {
   enum BackupType {
     None = 0,
@@ -31,35 +34,12 @@ namespace BackupMailUtil {
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
 
-  static QString transportsPath()
-  {
-    return QLatin1String("transports/");
-  }
-
-  static QString resourcesPath()
-  {
-    return QLatin1String("resources/");
-  }
-
-  static QString identitiesPath()
-  {
-    return QLatin1String("identities/");
-  }
-
-  static QString mailsPath()
-  {
-    return QLatin1String("mails/");
-  }
-
-  static QString configsPath()
-  {
-    return QLatin1String("configs/");
-  }
-
-  static QString akonadiPath()
-  {
-    return QLatin1String("akonadi/");
-  }
-
+  KUrl resourcePath(KSharedConfigPtr resourceConfig);
+  QString transportsPath();
+  QString resourcesPath();
+  QString identitiesPath();
+  QString mailsPath();
+  QString configsPath();
+  QString akonadiPath();
 }
 #endif // UTIL_H

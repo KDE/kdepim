@@ -56,7 +56,7 @@ void AkonadiDataBase::init()
   m_dbdriver = settings.value( "General/Driver", "QMYSQL" ).toString();
   settings.beginGroup( m_dbdriver );
 
-  if( m_dbdriver == "QPSQL" ) {
+  if( m_dbdriver == QLatin1String("QPSQL") ) {
     m_dbname = settings.value( "Name", "akonadi" ).toString();
     m_dboptions.append( "--host=" + settings.value( "Host", "" ).toString() );
     // If the server is started by the user, we don't need to know the username/password.
@@ -68,7 +68,7 @@ void AkonadiDataBase::init()
     settings.endGroup();
   }
 
-  else if( m_dbdriver == "QMYSQL" ) {
+  else if( m_dbdriver == QLatin1String("QMYSQL") ) {
     m_dbname = settings.value( "Name", "akonadi" ).toString();
     // If the server is started by the user, we don't need to know the username/password.
     bool startServer = settings.value( "StartServer", "" ).toBool();

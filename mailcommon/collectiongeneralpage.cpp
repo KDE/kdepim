@@ -573,7 +573,7 @@ void CollectionGeneralPage::slotFolderContentsSelectionChanged( int )
 
   if ( type != CollectionGeneralPage::ContentsTypeMail ) {
     const QString message =
-      i18n( "You have configured this folder to contain groupware information "
+      i18n( "You have configured this folder to contain groupware information. "
             "That means that this folder will disappear once the configuration "
             "dialog is closed." );
 

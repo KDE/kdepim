@@ -43,6 +43,7 @@
 
 #include <kleo/exception.h>
 
+#include <KDebug>
 #include <KLocale>
 
 #include <QFile>
@@ -54,7 +55,6 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QProcess>
-#include <QDebug>
 
 #include <errno.h>
 
@@ -282,9 +282,7 @@ ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList &
 {
     const QIODevice::OpenMode openMode =
         stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
-    qDebug() << "ProcessStdOutInput:" << "\n"
-        "cd" << wd.absolutePath() << "\n" <<
-        cmd << args << Outputter( stdin_ );
+    kDebug() << "cd" << wd.absolutePath() << endl << cmd << args << Outputter( stdin_ );
     if ( cmd.isEmpty() )
         throw Exception( gpg_error( GPG_ERR_INV_ARG ),
                          i18n("Command not specified") );
@@ -329,7 +327,9 @@ shared_ptr<Input> Input::createFromClipboard() {
     return shared_ptr<Input>( new ClipboardInput( QClipboard::Clipboard ) );
 }
 
-static QByteArray dataFromClipboard( QClipboard::Mode mode ) {
+static QByteArray dataFromClipboard( QClipboard::Mode mode )
+{
+    Q_UNUSED( mode );
     if ( QClipboard * const cb = QApplication::clipboard() )
         return cb->text().toUtf8();
     else
