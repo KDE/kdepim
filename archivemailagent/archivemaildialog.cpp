@@ -109,6 +109,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
   mWidget->treeWidget->setHeaderLabels(headers);
   mWidget->treeWidget->setSortingEnabled(true);
+  mWidget->treeWidget->setRootIsDecorated(false);
   mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
   load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
@@ -169,7 +170,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
   item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
   item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
   const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-  const int diff = info->lastDateSaved().daysTo(diffDate);
+  const int diff = QDate::currentDate().daysTo(diffDate);
   item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
   if(diff<0) {
     item->setBackgroundColor(2,Qt::red);
