@@ -84,6 +84,7 @@ void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
   if(config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     group.deleteGroup();
+    config->sync();
     Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
       if(info->saveCollectionId() == collection.id()) {
         //TODO stop task
