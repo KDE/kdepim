@@ -227,7 +227,25 @@ void BackupData::backupConfig()
       }
     }
 
-
+    const QString storageModelSelectedMessageStr("MessageListView::StorageModelSelectedMessages");
+    if(kmailConfig->hasGroup(storageModelSelectedMessageStr)) {
+      KConfigGroup storageGroup = kmailConfig->group(storageModelSelectedMessageStr);
+      const QString storageModelSelectedPattern("MessageUniqueIdForStorageModel");
+      const QStringList storageList = storageGroup.keyList().filter( QRegExp( "MessageUniqueIdForStorageModel\\d+" ) );
+      Q_FOREACH(const QString& str, storageList) {
+        bool found = false;
+        const int collectionId = str.right(str.length()-storageModelSelectedPattern.length()).toInt(&found);
+        const QString oldValue = storageGroup.readEntry(str);
+        if(found) {
+          const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+          if(!realPath.isEmpty()) {
+            storageGroup.writeEntry(QString::fromLatin1("%1%2").arg(storageModelSelectedPattern).arg(realPath),oldValue);
+            storageGroup.deleteEntry(str);
+          }
+        }
+      }
+      //TODO
+    }
 
 
     kmailConfig->sync();
