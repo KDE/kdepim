@@ -101,31 +101,6 @@ SDSummaryWidget::SDSummaryWidget( Kontact::Plugin *plugin, QWidget *parent,
            this, SLOT( updateView() ) );
 
   // Setup the Calendar
-  mCalendar = new KCal::CalendarResources( KPimPrefs::timezone() );
-  mCalendar->readConfig();
-
-  KCal::CalendarResourceManager *manager = mCalendar->resourceManager();
-  if ( manager->isEmpty() ) {
-    KConfig config( "korganizerrc" );
-    config.setGroup( "General" );
-    QString fileName = config.readPathEntry( "Active Calendar" );
-
-    QString resourceName;
-    if ( fileName.isEmpty() ) {
-      fileName = locateLocal( "data", "korganizer/std.ics" );
-      resourceName = i18n( "Default KOrganizer resource" );
-    } else {
-      resourceName = i18n( "Active Calendar" );
-    }
-
-    KCal::ResourceCalendar *defaultResource =
-      new KCal::ResourceLocal( fileName );
-
-    defaultResource->setResourceName( resourceName );
-
-    manager->add( defaultResource );
-    manager->setStandardResource( defaultResource );
-  }
   mCalendar = KCal::StdCalendar::self();
 
   connect( mCalendar, SIGNAL( calendarChanged() ),
