@@ -244,6 +244,9 @@ void RestoreData::restoreResources()
           if(leaveOnserver.hasKey(QLatin1String("downloadLater"))) {
             settings.insert(QLatin1String("DownloadLater"),leaveOnserver.readEntry("downloadLater",QStringList()));
           }
+          const QString newResource = createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
+          if(!newResource.isEmpty())
+            mHashResources.insert(filename,newResource);
         } else if(filename.contains(QLatin1String("imap"))) {
           KConfigGroup network = resourceConfig->group(QLatin1String("network"));
           if(network.hasKey(QLatin1String("Authentication"))) {
@@ -328,16 +331,12 @@ void RestoreData::restoreResources()
           }
 
 
-          //Fixit
-          const QString newResource = createResource( QString::fromLatin1("akonadi_imap_resource"), "", settings );
+          const QString newResource = createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
           if(!newResource.isEmpty())
             mHashResources.insert(filename,newResource);
-          //TODO
         } else {
           qDebug()<<" problem with resource";
         }
-
-        //TODO restore it
       }
     }
   }
