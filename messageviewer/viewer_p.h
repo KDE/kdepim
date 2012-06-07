@@ -225,6 +225,7 @@ public:
   KService::Ptr getServiceOffer( KMime::Content *content);
   KMime::Content::List selectedContents();
   void attachmentOpenWith( KMime::Content *node );
+  void attachmentOpen( KMime::Content *node, KService::Ptr offer );
   void attachmentOpen( KMime::Content *node );
 
 

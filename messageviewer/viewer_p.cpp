@@ -678,6 +678,11 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
+  attachmentOpen( node, offer );
+}
+
+void ViewerPrivate::attachmentOpen( KMime::Content *node, KService::Ptr offer )
+{
   const QString name = mNodeHelper->writeNodeToTempFile( node );
   KUrl::List lst;
   KUrl url;
