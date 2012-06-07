@@ -202,6 +202,7 @@ void RestoreData::restoreResources()
           if(network.hasKey(QLatin1String("SessionTimeout"))) {
             settings.insert(QLatin1String("SessionTimeout"),network.readEntry("SessionTimeout",30));
           }
+
           KConfigGroup cache = resourceConfig->group(QLatin1String("cache"));
 
           if(cache.hasKey(QLatin1String("AccountIdentity"))) {
@@ -213,6 +214,18 @@ void RestoreData::restoreResources()
                 settings.insert(QLatin1String("AccountIdentity"),identity);
               }
             }
+          }
+          if(cache.hasKey(QLatin1String("IntervalCheckEnabled"))) {
+            settings.insert(QLatin1String("IntervalCheckEnabled"),cache.readEntry("IntervalCheckEnabled",true));
+          }
+          if(cache.hasKey(QLatin1String("RetrieveMetadataOnFolderListing"))) {
+            settings.insert(QLatin1String("RetrieveMetadataOnFolderListing"),cache.readEntry("RetrieveMetadataOnFolderListing",true));
+          }
+          if(cache.hasKey(QLatin1String("AutomaticExpungeEnabled"))) {
+            settings.insert(QLatin1String("AutomaticExpungeEnabled"),cache.readEntry("AutomaticExpungeEnabled",true));
+          }
+          if(cache.hasKey(QLatin1String(""))) {
+            settings.insert(QLatin1String(""),cache.readEntry(""));
           }
           if(cache.hasKey(QLatin1String("DisconnectedModeEnabled"))) {
             settings.insert(QLatin1String("DisconnectedModeEnabled"),cache.readEntry("DisconnectedModeEnabled",false));
@@ -229,6 +242,8 @@ void RestoreData::restoreResources()
               settings.insert(QLatin1String("TrashCollection"),collection);
             }
           }
+
+
           KConfigGroup siever = resourceConfig->group(QLatin1String("siever"));
           if(siever.hasKey(QLatin1String("SieveSupport"))) {
             settings.insert(QLatin1String("SieveSupport"),siever.readEntry("SieveSupport",false));
