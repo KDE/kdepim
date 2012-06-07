@@ -54,6 +54,7 @@ void ArchiveJob::execute()
     backupJob->setDeleteFoldersAfterCompletion( false );
     backupJob->setRecursive( mInfo->saveSubCollection() );
     connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
+    connect(backupJob,SIGNAL(error(QString)),this,SLOT(slotError(QString)));
     backupJob->start();
     const QString summary = i18n("Start to archive %1",realPath );
     const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
@@ -64,6 +65,19 @@ void ArchiveJob::execute()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
   }
+}
+
+void ArchiveJob::slotError(const QString& error)
+{
+  Akonadi::Collection collection(mInfo->saveCollectionId());
+  const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+  KNotification::event( "archivemailerror",
+                        error,
+                        pixmap,
+                        0,
+                        KNotification::CloseOnTimeout,
+                        KGlobal::mainComponent());
 }
 
 void ArchiveJob::slotBackupDone()

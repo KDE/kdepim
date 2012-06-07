@@ -37,6 +37,7 @@ public:
 
 protected slots:
   void slotBackupDone();
+  void slotError(const QString& error);
 private:
   ArchiveMailInfo *mInfo;
   ArchiveMailManager *mManager;
