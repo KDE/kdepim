@@ -2359,7 +2359,7 @@ void initDoubleNumInput( KDoubleNumInput *numInput, const QByteArray &field )
 {
   if ( field == "<size>" ) {
     numInput->setMinimum( 0 );
-    numInput->setSuffix( i18nc( "spinbox suffix: unit for kilooctet", " ko" ) );
+    numInput->setSuffix( i18nc( "spinbox suffix: unit for kilobyte", " kb" ) );
     numInput->setSliderEnabled( false );
   }
 }
