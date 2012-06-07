@@ -175,7 +175,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
   if(diff<0) {
     item->setBackgroundColor(2,Qt::red);
   } else {
-    item->setToolTip(2,i18n("Archive will done %1",KGlobal::locale()->formatDate(diffDate)));
+    item->setToolTip(2,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
   }
   item->setInfo(info);
 }
