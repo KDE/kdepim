@@ -177,7 +177,73 @@ void RestoreData::restoreResources()
         const QString filename(file->name());
         QMap<QString, QVariant> settings;
         if(filename.contains(QLatin1String("pop3"))) {
-          //TODO
+          KConfigGroup general = resourceConfig->group(QLatin1String("General"));
+          if(general.hasKey(QLatin1String("login"))) {
+            settings.insert(QLatin1String("Login"),general.readEntry("login"));
+          }
+          if(general.hasKey(QLatin1String("host"))) {
+            settings.insert(QLatin1String("Host"),general.readEntry("host"));
+          }
+          if(general.hasKey(QLatin1String("port"))) {
+            settings.insert(QLatin1String("Port"),general.readEntry("port",110));
+          }
+          if(general.hasKey(QLatin1String("authenticationMethod"))) {
+            settings.insert(QLatin1String("AuthenticationMethod"),general.readEntry("authenticationMethod",7));
+          }
+          if(general.hasKey(QLatin1String("useSSL"))) {
+            settings.insert(QLatin1String("UseSSL"),general.readEntry("useSSL",false));
+          }
+          if(general.hasKey(QLatin1String("useTLS"))) {
+            settings.insert(QLatin1String("UseTLS"),general.readEntry("useTLS",false));
+          }
+          if(general.hasKey(QLatin1String("pipelining"))) {
+            settings.insert(QLatin1String("Pipelining"),general.readEntry("pipelining",false));
+          }
+          if(general.hasKey(QLatin1String("leaveOnServer"))) {
+            settings.insert(QLatin1String("LeaveOnServer"),general.readEntry("leaveOnServer",false));
+          }
+          if(general.hasKey(QLatin1String("leaveOnServerDays"))) {
+            settings.insert(QLatin1String("LeaveOnServerDays"),general.readEntry("leaveOnServerDays",-1));
+          }
+          if(general.hasKey(QLatin1String("leaveOnServerCount"))) {
+            settings.insert(QLatin1String("LeaveOnServerCount"),general.readEntry("leaveOnServerCount",-1));
+          }
+          if(general.hasKey(QLatin1String("leaveOnServerSize"))) {
+            settings.insert(QLatin1String("LeaveOnServerSize"),general.readEntry("leaveOnServerSize",-1));
+          }
+          if(general.hasKey(QLatin1String("filterOnServer"))) {
+            settings.insert(QLatin1String("FilterOnServer"),general.readEntry("filterOnServer",false));
+          }
+          if(general.hasKey(QLatin1String("filterCheckSize"))) {
+            settings.insert(QLatin1String("FilterCheckSize"),general.readEntry("filterCheckSize"));
+          }
+          if(general.hasKey(QLatin1String("targetCollection"))) {
+            const int collection = adaptFolderId(general.readEntry("targetCollection"));
+            if(collection != -1)
+              settings.insert(QLatin1String("TargetCollection"),collection);
+          }
+          if(general.hasKey(QLatin1String("precommand"))) {
+            settings.insert(QLatin1String("Precommand"),general.readEntry("precommand"));
+          }
+          if(general.hasKey(QLatin1String("intervalCheckEnabled"))) {
+            settings.insert(QLatin1String("IntervalCheckEnabled"),general.readEntry("intervalCheckEnabled",false));
+          }
+          if(general.hasKey(QLatin1String("intervalCheckInterval"))) {
+            settings.insert(QLatin1String("IntervalCheckInterval"),general.readEntry("intervalCheckInterval",5));
+          }
+
+          KConfigGroup leaveOnserver = resourceConfig->group(QLatin1String("LeaveOnServer"));
+
+          if(leaveOnserver.hasKey(QLatin1String("seenUidList"))) {
+            settings.insert(QLatin1String("SeenUidList"),leaveOnserver.readEntry("seenUidList",QStringList()));
+          }
+          if(leaveOnserver.hasKey(QLatin1String("seenUidTimeList"))) {
+            //FIXME
+            //settings.insert(QLatin1String("SeenUidTimeList"),QVariant::fromValue<QList<int> >(leaveOnserver.readEntry("seenUidTimeList",QList<int>())));
+          }
+          if(leaveOnserver.hasKey(QLatin1String("downloadLater"))) {
+            settings.insert(QLatin1String("DownloadLater"),leaveOnserver.readEntry("downloadLater",QStringList()));
+          }
         } else if(filename.contains(QLatin1String("imap"))) {
           KConfigGroup network = resourceConfig->group(QLatin1String("network"));
           if(network.hasKey(QLatin1String("Authentication"))) {
