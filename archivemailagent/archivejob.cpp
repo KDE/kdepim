@@ -26,6 +26,8 @@
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
+#include <KIcon>
+#include <KIconLoader>
 
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
@@ -54,10 +56,10 @@ void ArchiveJob::execute()
     connect(backupJob,SIGNAL(backupDone()),this,SLOT(slotBackupDone()));
     backupJob->start();
     const QString summary = i18n("Start to archive %1",realPath );
-    qDebug()<<" summary :"<<summary;
-    KNotification::event( "kmail",
+    const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    KNotification::event( "archivemailfinished",
                           summary,
-                          QPixmap(),
+                          pixmap,
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
@@ -68,9 +70,11 @@ void ArchiveJob::slotBackupDone()
 {
   Akonadi::Collection collection(mInfo->saveCollectionId());
   const QString summary = i18n("Archive done for %1",MailCommon::Util::fullCollectionPath(collection) );
-  KNotification::event( "kmail",
+  const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+  KNotification::event( "archivemailstarted",
                         summary,
-                        QPixmap(),
+                        pixmap,
                         0,
                         KNotification::CloseOnTimeout,
                         KGlobal::mainComponent());
