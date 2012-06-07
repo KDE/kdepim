@@ -181,16 +181,16 @@ void RestoreData::restoreResources()
         } else if(filename.contains(QLatin1String("imap"))) {
           KConfigGroup network = resourceConfig->group(QLatin1String("network"));
           if(network.hasKey(QLatin1String("Authentication"))) {
-            settings.insert(QLatin1String("Authentication"),network.readEntry("Authentication",-1));
+            settings.insert(QLatin1String("Authentication"),network.readEntry("Authentication",1));
           }
           if(network.hasKey(QLatin1String("ImapPort"))) {
-            settings.insert(QLatin1String("ImapPort"),network.readEntry("ImapPort",143));
+            settings.insert(QLatin1String("ImapPort"),network.readEntry("ImapPort",993));
           }
           if(network.hasKey(QLatin1String("ImapServer"))) {
             settings.insert(QLatin1String("ImapServer"),network.readEntry("ImapServer"));
           }
           if(network.hasKey(QLatin1String("Safety"))) {
-            settings.insert(QLatin1String("Safety"),network.readEntry("Safety"));
+            settings.insert(QLatin1String("Safety"),network.readEntry("Safety","SSL"));
           }
           if(network.hasKey(QLatin1String("SubscriptionEnabled"))) {
             settings.insert(QLatin1String("SubscriptionEnabled"),network.readEntry("SubscriptionEnabled",false));
@@ -199,6 +199,9 @@ void RestoreData::restoreResources()
             settings.insert(QLatin1String("UserName"),network.readEntry("UserName"));
           }
 
+          if(network.hasKey(QLatin1String("SessionTimeout"))) {
+            settings.insert(QLatin1String("SessionTimeout"),network.readEntry("SessionTimeout",30));
+          }
           KConfigGroup cache = resourceConfig->group(QLatin1String("cache"));
 
           if(cache.hasKey(QLatin1String("AccountIdentity"))) {
@@ -226,6 +229,23 @@ void RestoreData::restoreResources()
               settings.insert(QLatin1String("TrashCollection"),collection);
             }
           }
+          KConfigGroup siever = resourceConfig->group(QLatin1String("siever"));
+          if(siever.hasKey(QLatin1String("SieveSupport"))) {
+            settings.insert(QLatin1String("SieveSupport"),siever.readEntry("SieveSupport",false));
+          }
+          if(siever.hasKey(QLatin1String("SieveReuseConfig"))) {
+            settings.insert(QLatin1String("SieveReuseConfig"),siever.readEntry("SieveReuseConfig",true));
+          }
+          if(siever.hasKey(QLatin1String("SievePort"))) {
+            settings.insert(QLatin1String("SievePort"),siever.readEntry("SievePort",4190));
+          }
+          if(siever.hasKey(QLatin1String("SieveAlternateUrl"))) {
+            settings.insert(QLatin1String("SieveAlternateUrl"),siever.readEntry("SieveAlternateUrl"));
+          }
+          if(siever.hasKey(QLatin1String("SieveVacationFilename"))) {
+            settings.insert(QLatin1String("SieveVacationFilename"),siever.readEntry("SieveVacationFilename"));
+          }
+
 
           //Fixit
           const QString newResource = createResource( QString::fromLatin1("akonadi_imap_resource"), "", settings );
