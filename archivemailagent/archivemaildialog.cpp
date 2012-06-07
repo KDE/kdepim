@@ -237,7 +237,7 @@ void ArchiveMailWidget::slotAddItem()
   if( dialog->exec() ) {
     ArchiveMailInfo *info = dialog->info();
     if(verifyExistingArchive(info)) {
-      KMessageBox::error(this,i18n("There is already an archive for this folder. Modify it. We cannot add two archives for one folder."),i18n("Add Archive Mail"));
+      KMessageBox::error(this,i18n("Cannot add a second archive for this folder. Modify the existing one instead."),i18n("Add Archive Mail"));
       delete info;
       delete dialog;
       return;
