@@ -56,7 +56,7 @@ void ArchiveMailManager::load()
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
     const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-    if(QDate::currentDate() > diffDate) {
+    if(QDate::currentDate() >= diffDate) {
       Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
         if(oldInfo->saveCollectionId() == info->saveCollectionId()) {
           //already in jobscheduler
