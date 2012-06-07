@@ -26,7 +26,7 @@ FilterAction* FilterActionUnsetStatus::newAction()
 }
 
 FilterActionUnsetStatus::FilterActionUnsetStatus( QObject *parent )
-  : FilterActionStatus( "unset status", i18n( "Unset Status" ), parent )
+  : FilterActionStatus( "unset status", i18nc( "action: to unset the status", "Unset Status" ), parent )
 {
 }
 
