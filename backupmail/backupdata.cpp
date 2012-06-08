@@ -440,16 +440,16 @@ void BackupData::storeResources(const QString&identifier, const QString& path)
   tmp.open();
   KConfig * config = resourceConfig->copyTo( tmp.fileName() );
 
-  if(identifier.contains(QLatin1String("pop3"))) {
+  if(identifier.contains(QLatin1String("akonadi_pop3_resource"))) {
     const QString targetCollection = QLatin1String("targetCollection");
     KConfigGroup group = config->group("General");
-    if(group.hasGroup(targetCollection)) {
-       group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+    if(group.hasKey(targetCollection)) {
+      group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
     }
-  } else if(identifier.contains(QLatin1String("imap"))) {
+  } else if(identifier.contains(QLatin1String("akonadi_imap_resource"))) {
     const QString trash = QLatin1String("TrashCollection");
     KConfigGroup group = config->group("cache");
-    if(group.hasGroup(trash)) {
+    if(group.hasKey(trash)) {
       group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
     }
   }
