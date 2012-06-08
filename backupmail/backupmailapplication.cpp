@@ -81,7 +81,7 @@ void BackupMailApplication::slotBackupData()
   if(KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
     return;
 
-  const QString filename = KFileDialog::getSaveFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Create backup"));
+  const QString filename = KFileDialog::getSaveFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
   if(filename.isEmpty())
     return;
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
