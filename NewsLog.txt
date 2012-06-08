@@ -1,4 +1,14 @@
 
+Friday 08 June 2012
+
+Problems addressed
+------------------
+
+* kolab/issue2685: Signature not recognised with "combined" OpenPGP encrypted/signed email
+* kolab/issue4845: Kolab calendar resource removed for some users (RT#10122)
+
+
+
 Monday 07 May 2012
 
 Problems addressed
