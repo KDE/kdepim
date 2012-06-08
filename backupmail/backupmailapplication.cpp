@@ -49,6 +49,7 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
+  resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
   if(!canZipFile) {
     KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
