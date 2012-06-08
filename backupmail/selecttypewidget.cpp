@@ -23,11 +23,28 @@ SelectTypeWidget::SelectTypeWidget(QWidget *parent) :
   ui(new Ui::SelectTypeWidget)
 {
   ui->setupUi(this);
+  connect(ui->resources,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  connect(ui->mailtransport,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  connect(ui->config,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  connect(ui->identity,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  connect(ui->mails,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  connect(ui->akonadi,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
 }
 
 SelectTypeWidget::~SelectTypeWidget()
 {
   delete ui;
+}
+
+void SelectTypeWidget::slotTypeClicked()
+{
+  const bool selected = (ui->resources->isChecked() ||
+                         ui->mailtransport->isChecked() ||
+                         ui->config->isChecked() ||
+                         ui->identity->isChecked() ||
+                         ui->mails->isChecked() ||
+                         ui->akonadi->isChecked());
+  Q_EMIT itemSelected(selected);
 }
 
 BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected() const
