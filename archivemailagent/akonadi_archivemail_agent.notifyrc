@@ -66,5 +66,6 @@ Name[pt_BR]=Erro no arquivamento de e-mails
 Name[sv]=Fel vid brevarkivering
 Name[uk]=Помилка під час архівування пошти
 Name[x-test]=xxArchive Mail Errorxx
+Name[zh_TW]=歸檔郵件發生錯誤
 Action=Popup
 
