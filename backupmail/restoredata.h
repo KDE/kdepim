@@ -45,12 +45,15 @@ private:
   void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc);
   QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
   void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
-
+  void storeMailArchiveResource(const KArchiveDirectory*dir);
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
+
+  QHash<QString, QString> mHashMailArchive;
   QHash<uint, uint> mHashIdentity;
   QHash<int, int> mHashTransport;
   QHash<QString, QString> mHashResources;
   QStringList mFileList;
+  QString mTempDirName;
   const KArchiveDirectory* mArchiveDirectory;
   KTempDir *mTempDir;
 };
