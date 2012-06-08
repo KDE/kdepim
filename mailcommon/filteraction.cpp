@@ -939,7 +939,13 @@ FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
 FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
 {
   const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "Reply-To", msg.get(), mParameter, "utf-8" );
+  const QByteArray replyTo("Reply-To");
+  KMime::Headers::Base *header = KMime::Headers::createHeader( replyTo );
+  if ( !header ) {
+    header = new KMime::Headers::Generic( replyTo, msg.get(), mParameter, "utf-8" );
+  } else {
+    header->fromUnicodeString( mParameter, "utf-8" );
+  }
   msg->setHeader( header );
   msg->assemble();
 
