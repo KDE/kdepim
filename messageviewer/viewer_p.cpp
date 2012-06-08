@@ -1538,6 +1538,7 @@ void ViewerPrivate::slotMimePartDestroyed()
 #ifndef QT_NO_TREEVIEW
   //root is either null or a modified tree that we need to clean up
   delete mMimePartModel->root();
+  mMimePartModel->setRoot(0);
 #endif
 }
 
