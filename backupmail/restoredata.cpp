@@ -702,13 +702,13 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
   Q_FOREACH(const QString&str, folderList) {
     const QString path = str.right(str.length()-folderGroupPattern.length());
     if(!path.isEmpty()) {
-        KConfigGroup oldGroup = kmailConfig->group(str);
-        Akonadi::Collection::Id id = adaptFolderId(path);
-        if(id!=-1) {
-          KConfigGroup newGroup( kmailConfig, folderGroupPattern + QString::number(id));
-          oldGroup.copyTo( &newGroup );
-        }
-        oldGroup.deleteGroup();
+      KConfigGroup oldGroup = kmailConfig->group(str);
+      Akonadi::Collection::Id id = adaptFolderId(path);
+      if(id!=-1) {
+        KConfigGroup newGroup( kmailConfig, folderGroupPattern + QString::number(id));
+        oldGroup.copyTo( &newGroup );
+      }
+      oldGroup.deleteGroup();
     }
   }
   const QString accountOrder("AccountOrder");
