@@ -111,8 +111,6 @@ void RestoreData::restoreTransports()
   const KArchiveEntry* transport = mArchiveDirectory->entry(path);
   if(transport->isFile()) {
     const KArchiveFile* fileTransport = static_cast<const KArchiveFile*>(transport);
-    KTemporaryFile tmp;
-    tmp.open();
 
     fileTransport->copyTo(mTempDir->name());
     KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(mTempDir->name() + QLatin1Char('/') +QLatin1String("mailtransports"));
@@ -386,20 +384,19 @@ void RestoreData::restoreMails()
 
 void RestoreData::restoreConfig()
 {
-  if(!mFileList.contains(BackupMailUtil::configsPath() + QLatin1String("filters"))) {
+  const QString filtersPath(BackupMailUtil::configsPath() + QLatin1String("filters"));
+  if(!mFileList.contains(filtersPath)) {
     Q_EMIT error(i18n("filters file could not be found in the archive."));
     return;
   }
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const KArchiveEntry* filter = mArchiveDirectory->entry(BackupMailUtil::configsPath() + QLatin1String("filters"));
+  const KArchiveEntry* filter = mArchiveDirectory->entry(filtersPath);
   if(filter->isFile()) {
     const KArchiveFile* fileFilter = static_cast<const KArchiveFile*>(filter);
-    KTemporaryFile tmp;
-    tmp.open();
 
-    fileFilter->copyTo(tmp.fileName());
-
-    KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(tmp.fileName());
+    fileFilter->copyTo(mTempDir->name());
+    const QString filterFileName(mTempDir->name() + QLatin1Char('/') +QLatin1String("filters"));
+    KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(filterFileName);
     const QStringList filterList = filtersConfig->groupList().filter( QRegExp( "Filter #\\d+" ) );
     Q_FOREACH(const QString&filterStr, filterList) {
       KConfigGroup group = filtersConfig->group(filterStr);
@@ -447,7 +444,7 @@ void RestoreData::restoreConfig()
 
     bool canceled = false;
     MailCommon::FilterImporterExporter exportFilters;
-    QList<MailCommon::MailFilter*> lstFilter = exportFilters.importFilters(canceled, MailCommon::FilterImporterExporter::KMailFilter, tmp.fileName());
+    QList<MailCommon::MailFilter*> lstFilter = exportFilters.importFilters(canceled, MailCommon::FilterImporterExporter::KMailFilter, filterFileName);
     if(canceled) {
       MailCommon::FilterManager::instance()->appendFilters(lstFilter);
     }
@@ -521,22 +518,20 @@ void RestoreData::restoreConfig()
 
 void RestoreData::restoreIdentity()
 {
-  if(!mFileList.contains(BackupMailUtil::identitiesPath() +QLatin1String("emailidentities"))) {
+  const QString path(BackupMailUtil::identitiesPath() +QLatin1String("emailidentities"));
+  if(!mFileList.contains(path)) {
     Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
     return;
   }
   Q_EMIT info(i18n("Restore identities..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const KArchiveEntry* identity = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
+  const KArchiveEntry* identity = mArchiveDirectory->entry(path);
   if(identity->isFile()) {
 
     const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
+    fileIdentity->copyTo(mTempDir->name());
 
-    KTemporaryFile tmp;
-    tmp.open();
-
-    fileIdentity->copyTo(tmp.fileName());
-    KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(tmp.fileName());
+    KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(mTempDir->name() + QLatin1Char('/') +QLatin1String("emailidentities"));
     KConfigGroup general = identityConfig->group(QLatin1String("General"));
     const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
 
