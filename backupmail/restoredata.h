@@ -43,6 +43,7 @@ private:
   void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc);
   void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc);
   QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
+  void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
 
   Akonadi::Collection::Id adaptFolderId( const QString& folder);
   QHash<uint, uint> mHashIdentity;

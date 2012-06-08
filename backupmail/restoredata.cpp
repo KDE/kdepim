@@ -63,7 +63,7 @@ void RestoreData::startRestore()
   if(!openArchive(false /*readonly*/))
     return;
   mArchiveDirectory = mArchive->directory();
-  mFileList = mArchiveDirectory->entries();
+  searchAllFiles(mArchiveDirectory,QString());
 
   if(mTypeSelected & BackupMailUtil::MailTransport)
     restoreTransports();
@@ -82,8 +82,23 @@ void RestoreData::startRestore()
   closeArchive();
 }
 
+void RestoreData::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)
+{
+  Q_FOREACH(const QString& entryName, dir->entries()) {
+    const KArchiveEntry *entry = dir->entry(entryName);
+    if (entry->isDirectory()) {
+      const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
+      searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+    } else {
+      QString fileName = prefix.isEmpty() ? entry->name() : prefix + QLatin1Char('/') + entry->name();
+      mFileList<<fileName;
+    }
+  }
+}
+
 void RestoreData::restoreTransports()
 {
+  qDebug()<<" mFileList"<<mFileList;
   if(!mFileList.contains(BackupMailUtil::transportsPath()+QLatin1String("mailtransports"))) {
     Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
     return;
