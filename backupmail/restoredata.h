@@ -25,6 +25,7 @@
 
 class KArchiveDirectory;
 class KArchiveFile;
+class KTempDir;
 
 class RestoreData : public AbstractData
 {
@@ -51,6 +52,7 @@ private:
   QHash<QString, QString> mHashResources;
   QStringList mFileList;
   const KArchiveDirectory* mArchiveDirectory;
+  KTempDir *mTempDir;
 };
 
 #endif // RESTOREDATA_H

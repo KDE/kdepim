@@ -34,6 +34,7 @@
 #include <KStandardDirs>
 #include <KLocale>
 #include <KProcess>
+#include <KTempDir>
 #include <KTemporaryFile>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -52,10 +53,12 @@ using namespace Akonadi;
 RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
   :AbstractData(parent,filename,typeSelected), mArchiveDirectory(0)
 {
+  mTempDir = new KTempDir();
 }
 
 RestoreData::~RestoreData()
 {
+  delete mTempDir;
 }
 
 void RestoreData::startRestore()
@@ -98,22 +101,21 @@ void RestoreData::searchAllFiles(const KArchiveDirectory*dir,const QString&prefi
 
 void RestoreData::restoreTransports()
 {
-  qDebug()<<" mFileList"<<mFileList;
-  if(!mFileList.contains(BackupMailUtil::transportsPath()+QLatin1String("mailtransports"))) {
+  const QString path = BackupMailUtil::transportsPath()+QLatin1String("mailtransports");
+  if(!mFileList.contains(path)) {
     Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
     return;
   }
   Q_EMIT info(i18n("Restore transports..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  const KArchiveEntry* transport = mArchiveDirectory->entry(BackupMailUtil::transportsPath()+QLatin1String("mailtransports"));
+  const KArchiveEntry* transport = mArchiveDirectory->entry(path);
   if(transport->isFile()) {
     const KArchiveFile* fileTransport = static_cast<const KArchiveFile*>(transport);
-
     KTemporaryFile tmp;
     tmp.open();
 
-    fileTransport->copyTo(tmp.fileName());
-    KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(tmp.fileName());
+    fileTransport->copyTo(mTempDir->name());
+    KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(mTempDir->name() + QLatin1Char('/') +QLatin1String("mailtransports"));
     const QStringList transportList = transportConfig->groupList().filter( QRegExp( "Transport \\d+" ) );
     Q_FOREACH(const QString&transport, transportList) {
       KConfigGroup group = transportConfig->group(transport);
