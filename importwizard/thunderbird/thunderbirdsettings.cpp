@@ -237,7 +237,7 @@ void ThunderbirdSettings::readAccount()
         }
       } else {
         //Default value from thunderbird
-        settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
+        settings.insert(QLatin1String("IntervalCheckTime"), 10 );
       }
       const QString trashFolderStr = accountName + QLatin1String( ".trash_folder_name" );
       if(mHashConfig.contains(trashFolderStr)) {
