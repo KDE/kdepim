@@ -417,10 +417,8 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
      != KMessageBox::Continue ) {
     return false; //cancelled
   }
-
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
-
   QString filename;
   QString name;
   QByteArray mimetype;
@@ -456,7 +454,6 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
   mMimePartModel->setRoot( modifiedMessage );
-
   mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
@@ -1952,12 +1949,13 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      const bool result = ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() );
+      if ( result )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType().toLower() == "message" ||  node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      if ( result )
         html += "</div>";
     }
   } else {
