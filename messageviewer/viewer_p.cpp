@@ -1827,8 +1827,11 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                    SLOT(slotSaveAsEncoded()) );
   */
 
-  popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT(slotAttachmentSaveAll()) );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
+  if( !contents.isEmpty() ) {
+    popup.addAction( i18n( "Save All Attachments..." ), this,
+                     SLOT(slotAttachmentSaveAll()) );
+  }
 
   // edit + delete only for attachments
   if ( !isRoot ) {
