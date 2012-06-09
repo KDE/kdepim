@@ -21,8 +21,6 @@
 #include "abstractbase.h"
 #include <KSharedConfig>
 
-#include <Akonadi/Collection>
-
 #include <QObject>
 #include <QMap>
 
@@ -60,8 +58,6 @@ protected:
   
   void storeIdentity(KPIMIdentities::Identity* identity);
 
-  QString adaptFolder( const QString& folder);
-
   void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
   void addKmailConfig( const QString& groupName, const QString& key, bool value);
   void addKmailConfig( const QString& groupName, const QString& key, int value);
@@ -71,8 +67,6 @@ protected:
 
 
   void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
-
-  Akonadi::Collection::Id adaptFolderId( const QString& folder);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;

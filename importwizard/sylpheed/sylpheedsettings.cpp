@@ -17,6 +17,7 @@
 
 #include "sylpheedsettings.h"
 #include <mailtransport/transportmanager.h>
+#include "mailcommon/mailutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -164,7 +165,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
   settings.insert( QLatin1String( "Host" ), host );
   
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-  const QString inbox = adaptFolder(accountConfig.readEntry(QLatin1String("inbox")));
+  const QString inbox = MailCommon::Util::convertFolderPathToCollectionStr(accountConfig.readEntry(QLatin1String("inbox")));
   settings.insert(QLatin1String("TargetCollection"), inbox);
   int port = 0;
   if ( readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
@@ -239,7 +240,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
 
   QString trashFolder;
   if ( readConfig( QLatin1String( "trash_folder" ), accountConfig, trashFolder, false ) )
-    settings.insert( QLatin1String( "TrashCollection" ), adaptFolderId( trashFolder ) );
+    settings.insert( QLatin1String( "TrashCollection" ), MailCommon::Util::convertFolderPathToCollectionId( trashFolder ) );
 
   const int auth = accountConfig.readEntry(QLatin1String("imap_auth_method"),0);
   switch(auth) {
@@ -312,10 +313,10 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
     identity->setReplyToAddr(value);
   
   if ( readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
-    identity->setDrafts(adaptFolder(value));
+    identity->setDrafts(MailCommon::Util::convertFolderPathToCollectionStr(value));
 
   if ( readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) )
-    identity->setFcc(adaptFolder(value));
+    identity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(value));
 
   const QString transportId = readTransport(accountConfig);
   if(!transportId.isEmpty())

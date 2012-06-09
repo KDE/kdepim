@@ -19,7 +19,6 @@
 #define RESTOREDATA_H
 
 #include "abstractdata.h"
-#include <Akonadi/Collection>
 #include <QStringList>
 #include <QHash>
 
@@ -46,7 +45,6 @@ private:
   QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
   void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
   void storeMailArchiveResource(const KArchiveDirectory*dir);
-  Akonadi::Collection::Id adaptFolderId( const QString& folder);
 
   QHash<QString, QString> mHashMailArchive;
   QHash<uint, uint> mHashIdentity;

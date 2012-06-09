@@ -18,8 +18,6 @@
 #include "importwizard.h"
 #include "importsettingpage.h"
 
-#include "mailcommon/filter/filteractionmissingargumentdialog.h"
-
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <mailtransport/transportmanager.h>
@@ -94,31 +92,6 @@ void AbstractSettings::addImportInfo( const QString& log )
 void AbstractSettings::addImportError( const QString& log )
 {
   mImportWizard->importSettingPage()->addImportError( log );
-}
-
-Akonadi::Collection::Id AbstractSettings::adaptFolderId( const QString& folder)
-{
-  Akonadi::Collection::Id newFolderId=-1;
-  bool exactPath = false;
-  Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
-  if ( lst.count() == 1 && exactPath )
-    newFolderId = lst.at( 0 ).id();
-  else {
-    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
-    if ( dlg->exec() ) {
-      newFolderId = dlg->selectedCollection().id();
-    }
-    delete dlg;
-  }
-  return newFolderId;
-}
-
-QString AbstractSettings::adaptFolder( const QString& folder)
-{
-  Akonadi::Collection::Id newFolderId= adaptFolderId(folder);
-  if(newFolderId == -1 )
-    return QString();
-  return QString::number(newFolderId);
 }
 
 void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup)

@@ -17,6 +17,7 @@
 
 #include "thunderbirdsettings.h"
 #include <mailtransport/transportmanager.h>
+#include "mailcommon/mailutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -241,7 +242,7 @@ void ThunderbirdSettings::readAccount()
       }
       const QString trashFolderStr = accountName + QLatin1String( ".trash_folder_name" );
       if(mHashConfig.contains(trashFolderStr)) {
-        settings.insert(QLatin1String("TrashCollection"),adaptFolderId(mHashConfig.value(trashFolderStr).toString()));
+        settings.insert(QLatin1String("TrashCollection"),MailCommon::Util::convertFolderPathToCollectionId(mHashConfig.value(trashFolderStr).toString()));
       }
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
@@ -449,7 +450,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
     newIdentity->setCc( cc );
   }
-  const QString draft = adaptFolder(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
+  const QString draft = MailCommon::Util::convertFolderPathToCollectionStr(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
   newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
@@ -479,7 +480,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const int useSpecificDraftFolder = mHashConfig.value(  identity + QLatin1String( ".drafts_folder_picker_mode" ) ).toInt();
     if ( useSpecificDraftFolder == 1 )
     {
-      const QString draftFolder = adaptFolder( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
+      const QString draftFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
       newIdentity->setDrafts( draftFolder );
     }
   }
@@ -489,7 +490,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
     if ( useSpecificTemplateFolder == 1 )
     {
-      const QString templateFolder = adaptFolder( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
       newIdentity->setTemplates( templateFolder );
     }
   }
