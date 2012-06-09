@@ -431,9 +431,12 @@ void RestoreData::copyToFile(const KArchiveFile * archivefile, const QString& de
 {
   QDir dir(mTempDirName);
   dir.mkdir(prefix);
-  archivefile->copyTo(mTempDirName + QLatin1Char('/') + prefix);
+
+  const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+  archivefile->copyTo(copyToDirName);
   QFile file;
-  file.setFileName(mTempDirName + QLatin1Char('/') + prefix + QLatin1Char('/') + filename);
+  file.setFileName(copyToDirName + QLatin1Char('/') + filename);
+
   if(!file.copy(dest)) {
     KMessageBox::error(mParent,i18n("File \"%1\" can not copy to \"%2\".",filename,dest),i18n("Copy file"));
   }
@@ -545,10 +548,10 @@ void RestoreData::restoreConfig()
     if(QFile(templatesconfigurationrc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",templatesconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
-        importTemplatesConfig(templatesconfiguration, templatesconfigurationrc);
+        importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
       }
     } else {
-      importTemplatesConfig(templatesconfiguration, templatesconfigurationrc);
+      importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
     }
   }
 
@@ -701,9 +704,9 @@ void RestoreData::restoreNepomuk()
 }
 
 
-void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc)
+void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
 {
-  templatesconfiguration->copyTo(templatesconfigurationrc);
+  copyToFile(templatesconfiguration,templatesconfigurationrc,filename,prefix);
   KSharedConfig::Ptr templateConfig = KSharedConfig::openConfig(templatesconfigurationrc);
 
   //adapt id
