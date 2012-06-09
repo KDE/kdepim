@@ -46,6 +46,7 @@
 #include <QDBusReply>
 #include <QDBusInterface>
 #include <QMetaMethod>
+#include <QDir>
 
 using namespace Akonadi;
 
@@ -53,7 +54,7 @@ RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelect
   :AbstractData(parent,filename,typeSelected), mArchiveDirectory(0)
 {
   mTempDir = new KTempDir();
-  mTempDirName = mTempDirName;
+  mTempDirName = mTempDir->name();
 }
 
 RestoreData::~RestoreData()
@@ -67,7 +68,7 @@ void RestoreData::startRestore()
     return;
   mArchiveDirectory = mArchive->directory();
   searchAllFiles(mArchiveDirectory,QString());
-  qDebug()<<" mFileList :"<<mFileList;
+  //qDebug()<<" mFileList :"<<mFileList;
   if(!mFileList.isEmpty()) {
     if(mTypeSelected & BackupMailUtil::MailTransport)
       restoreTransports();
@@ -426,6 +427,18 @@ void RestoreData::restoreMails()
   }
 }
 
+void RestoreData::copyToFile(const KArchiveFile * archivefile, const QString& dest, const QString&filename, const QString&prefix)
+{
+  QDir dir(mTempDirName);
+  dir.mkdir(prefix);
+  archivefile->copyTo(mTempDirName + QLatin1Char('/') + prefix);
+  QFile file;
+  file.setFileName(mTempDirName + QLatin1Char('/') + prefix + QLatin1Char('/') + filename);
+  if(!file.copy(dest)) {
+    KMessageBox::error(mParent,i18n("File \"%1\" can not copy to \"%2\".",filename,dest),i18n("Copy file"));
+  }
+}
+
 void RestoreData::restoreConfig()
 {
   const QString filtersPath(BackupMailUtil::configsPath() + QLatin1String("filters"));
@@ -501,10 +514,10 @@ void RestoreData::restoreConfig()
     if(QFile(kmailsnippetrc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
-        kmailsnippet->copyTo(kmailsnippetrc);
+        copyToFile(kmailsnippet, kmailsnippetrc,kmailsnippetrcStr,BackupMailUtil::configsPath());
       }
     } else {
-      kmailsnippet->copyTo(kmailsnippetrc);
+      copyToFile(kmailsnippet, kmailsnippetrc,kmailsnippetrcStr,BackupMailUtil::configsPath());
     }
   }
 
@@ -516,10 +529,10 @@ void RestoreData::restoreConfig()
     if(QFile(kabldaprc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",labldaprcStr),i18n("Restore"))== KMessageBox::Yes) {
-        kabldap->copyTo(kabldaprc);
+        copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
       }
     } else {
-      kabldap->copyTo(kabldaprc);
+      copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
     }
   }
 

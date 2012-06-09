@@ -46,6 +46,9 @@ private:
   void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
   void storeMailArchiveResource(const KArchiveDirectory*dir);
 
+  void copyToFile(const KArchiveFile * file, const QString& dest, const QString&filename,const QString& prefix);
+
+
   QHash<QString, QString> mHashMailArchive;
   QHash<uint, uint> mHashIdentity;
   QHash<int, int> mHashTransport;
