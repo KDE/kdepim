@@ -50,6 +50,11 @@ Action=Popup
 
 [Event/archivemailstarted]
 Name=Archive Mail started
+Name[nl]=E-mail archiveren is gestart
+Name[pt]=O Arquivo de E-Mail Iniciou
+Name[sv]=Arkivering av e-post påbörjad
+Name[uk]=Розпочато архівування пошти
+Name[x-test]=xxArchive Mail startedxx
 Action=Popup
 
 [Event/archivemailerror]
