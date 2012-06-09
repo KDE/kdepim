@@ -565,10 +565,10 @@ void RestoreData::restoreConfig()
     if(QFile(kmail2rc).exists()) {
       //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
-        importKmailConfig(kmailrc,kmail2rc);
+        importKmailConfig(kmailrc,kmail2rc,kmailStr,BackupMailUtil::configsPath());
       }
     } else {
-      importKmailConfig(kmailrc,kmail2rc);
+      importKmailConfig(kmailrc,kmail2rc,kmailStr,BackupMailUtil::configsPath());
     }
   }
 
@@ -745,10 +745,10 @@ void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfigurati
   templateConfig->sync();
 }
 
-void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc)
+void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString&filename,const QString& prefix)
 {
-  kmailsnippet->copyTo(mTempDirName);
-  KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(mTempDirName +QLatin1Char('/') +  "kmail2rc");
+  copyToFile(kmailsnippet,kmail2rc,filename,prefix);
+  KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
 
   //adapt folder id
   const QString folderGroupPattern = QLatin1String( "Folder-" );
@@ -834,7 +834,6 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
 
 //TODO fix all other id
   kmailConfig->sync();
-  QFile(mTempDirName +QLatin1Char('/') +  "kmail2rc").copy(kmail2rc);
 }
 
 
