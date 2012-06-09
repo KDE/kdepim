@@ -1835,9 +1835,11 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
                        this, SLOT(slotAttachmentCopy()) );
+#if 0  //FIXME Laurent Comment for the moment it crash see Bug 287177
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT(slotAttachmentDelete()) );
+#endif
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT(slotAttachmentEdit()) );
