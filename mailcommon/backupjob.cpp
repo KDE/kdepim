@@ -55,7 +55,8 @@ BackupJob::BackupJob( QWidget *parent )
     mDeleteFoldersAfterCompletion( false ),
     mRecursive( true ),
     mCurrentFolder( Akonadi::Collection() ),
-    mCurrentJob( 0 )
+    mCurrentJob( 0 ),
+    mDisplayMessageBox(true)
 {
 }
 
@@ -167,7 +168,8 @@ void BackupJob::abort( const QString &errorMessage )
   QString text = i18n( "Failed to archive the folder '%1'.", mRootFolder.name() );
   text += '\n' + errorMessage;
   Q_EMIT error(text);
-  KMessageBox::sorry( mParentWidget, text, i18n( "Archiving failed" ) );
+  if(mDisplayMessageBox)
+    KMessageBox::sorry( mParentWidget, text, i18n( "Archiving failed" ) );
   deleteLater();
   // Clean up archive file here?
 }
@@ -199,7 +201,9 @@ void BackupJob::finish()
                         mArchivedMessages, KIO::convertSize( mArchivedSize ) );
   text += '\n' + i18n( "The archive file has a size of %1.",
                        KIO::convertSize( archiveFileInfo.size() ) );
-  KMessageBox::information( mParentWidget, text, i18n( "Archiving finished" ) );
+  if(mDisplayMessageBox) {
+    KMessageBox::information( mParentWidget, text, i18n( "Archiving finished" ) );
+  }
 
   if ( mDeleteFoldersAfterCompletion ) {
     // Some safety checks first...
@@ -208,7 +212,7 @@ void BackupJob::finish()
       new Akonadi::CollectionDeleteJob( mRootFolder );
     }
   }
-  Q_EMIT backupDone();
+  Q_EMIT backupDone(text);
   deleteLater();
 }
 
@@ -439,6 +443,11 @@ void BackupJob::start()
            this, SLOT(cancelJob()) );
 
   archiveNextFolder();
+}
+
+void BackupJob::setDisplayMessageBox(bool display)
+{
+  mDisplayMessageBox = display;
 }
 
 #include "backupjob.moc"
