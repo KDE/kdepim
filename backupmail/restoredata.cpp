@@ -438,7 +438,7 @@ void RestoreData::copyToFile(const KArchiveFile * archivefile, const QString& de
   file.setFileName(copyToDirName + QLatin1Char('/') + filename);
 
   if(!file.copy(dest)) {
-    KMessageBox::error(mParent,i18n("File \"%1\" can not copy to \"%2\".",filename,dest),i18n("Copy file"));
+    KMessageBox::error(mParent,i18n("File \"%1\" can not be copied to \"%2\".",filename,dest),i18n("Copy file"));
   }
 }
 
