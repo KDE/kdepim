@@ -23,6 +23,8 @@
 #include <KLocale>
 
 using namespace MessageViewer;
+//Laurent 2012-05-29: Babelfish was replaced by bing translator.
+//This code will not get result.
 
 BabelFishTranslator::BabelFishTranslator()
   : AbstractTranslator()

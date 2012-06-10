@@ -382,7 +382,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     Util::saveContents( mMainWindow, KMime::Content::List() << node );
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
-    attachmentOpen( node );
+    if( offer )
+      attachmentOpen( node, offer );
+    else
+      attachmentOpen( node );
   } else if ( choice == AttachmentDialog::OpenWith ) {
     attachmentOpenWith( node );
   } else { // Cancel
@@ -414,10 +417,8 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
      != KMessageBox::Continue ) {
     return false; //cancelled
   }
-
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
-
   QString filename;
   QString name;
   QByteArray mimetype;
@@ -453,7 +454,6 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
   mMimePartModel->setRoot( modifiedMessage );
-
   mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
@@ -1535,6 +1535,7 @@ void ViewerPrivate::slotMimePartDestroyed()
 #ifndef QT_NO_TREEVIEW
   //root is either null or a modified tree that we need to clean up
   delete mMimePartModel->root();
+  mMimePartModel->setRoot(0);
 #endif
 }
 
@@ -1823,17 +1824,22 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                    SLOT(slotSaveAsEncoded()) );
   */
 
-  popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT(slotAttachmentSaveAll()) );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
+  if( !contents.isEmpty() ) {
+    popup.addAction( i18n( "Save All Attachments..." ), this,
+                     SLOT(slotAttachmentSaveAll()) );
+  }
 
   // edit + delete only for attachments
   if ( !isRoot ) {
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
                        this, SLOT(slotAttachmentCopy()) );
+#if 0  //FIXME Laurent Comment for the moment it crash see Bug 287177
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT(slotAttachmentDelete()) );
+#endif
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT(slotAttachmentEdit()) );
@@ -1945,12 +1951,13 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      const bool result = ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() );
+      if ( result )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType().toLower() == "message" ||  node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      if ( result )
         html += "</div>";
     }
   } else {

@@ -75,6 +75,7 @@ class  MAILCOMMON_EXPORT BackupJob : public QObject
     void start();
   signals:
     void backupDone();
+    void error(const QString&);
 
   private slots:
     void itemFetchJobResult( KJob *job );

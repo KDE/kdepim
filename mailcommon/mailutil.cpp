@@ -45,6 +45,7 @@
 #include "pop3settings.h"
 #include "imapsettings.h"
 #include "mailkernel.h"
+#include "filter/filteractionmissingargumentdialog.h"
 
 #include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
@@ -601,5 +602,30 @@ Akonadi::Collection MailCommon::Util::updatedCollection( const Akonadi::Collecti
   const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), col );
   const Akonadi::Collection collection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   return collection;
+}
+
+Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId=-1;
+  bool exactPath = false;
+  Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
+  if ( lst.count() == 1 && exactPath )
+    newFolderId = lst.at( 0 ).id();
+  else {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
+    if ( dlg->exec() ) {
+      newFolderId = dlg->selectedCollection().id();
+    }
+    delete dlg;
+  }
+  return newFolderId;
+}
+
+QString MailCommon::Util::convertFolderPathToCollectionStr( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId= MailCommon::Util::convertFolderPathToCollectionId(folder);
+  if(newFolderId == -1 )
+    return QString();
+  return QString::number(newFolderId);
 }
 

@@ -40,14 +40,13 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KUniqueApplication::addCmdLineOptions();
-  KUniqueApplication a;
 
   if (!KUniqueApplication::start())
   {
     kDebug() << "backupmail is already running!";
     return (0);
   }
-
+  KUniqueApplication a;
   BackupMailApplication *backupMailApp = new BackupMailApplication();
   a.setTopWidget(backupMailApp);
   backupMailApp->show();

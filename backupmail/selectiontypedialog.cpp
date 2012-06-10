@@ -35,12 +35,19 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
   mWidget = new SelectTypeWidget(this);
   mainLayout->addWidget(mWidget);
   setMainWidget( mainWidget );
+  enableButtonOk(false);
+  connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
 
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
 
+}
+
+void SelectionTypeDialog::slotItemSelected(bool selected)
+{
+  enableButtonOk(selected);
 }
 
 BackupMailUtil::BackupTypes SelectionTypeDialog::backupTypesSelected() const

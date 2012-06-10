@@ -164,9 +164,9 @@ void BackupJob::abort( const QString &errorMessage )
     mProgressItem = 0;
     // The progressmanager will delete it
   }
-
   QString text = i18n( "Failed to archive the folder '%1'.", mRootFolder.name() );
   text += '\n' + errorMessage;
+  Q_EMIT error(text);
   KMessageBox::sorry( mParentWidget, text, i18n( "Archiving failed" ) );
   deleteLater();
   // Clean up archive file here?

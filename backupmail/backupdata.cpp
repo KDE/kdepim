@@ -227,8 +227,45 @@ void BackupData::backupConfig()
       }
     }
 
-
-
+    const QString storageModelSelectedMessageStr("MessageListView::StorageModelSelectedMessages");
+    if(kmailConfig->hasGroup(storageModelSelectedMessageStr)) {
+      KConfigGroup storageGroup = kmailConfig->group(storageModelSelectedMessageStr);
+      const QString storageModelSelectedPattern("MessageUniqueIdForStorageModel");
+      const QStringList storageList = storageGroup.keyList().filter( QRegExp( "MessageUniqueIdForStorageModel\\d+" ) );
+      Q_FOREACH(const QString& str, storageList) {
+        bool found = false;
+        const int collectionId = str.right(str.length()-storageModelSelectedPattern.length()).toInt(&found);
+        const QString oldValue = storageGroup.readEntry(str);
+        if(found) {
+          const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+          if(!realPath.isEmpty()) {
+            storageGroup.writeEntry(QString::fromLatin1("%1%2").arg(storageModelSelectedPattern).arg(realPath),oldValue);
+            storageGroup.deleteEntry(str);
+          }
+        }
+      }
+      //TODO
+    }
+    const QString favoriteCollectionStr("FavoriteCollections");
+    if(kmailConfig->hasGroup(favoriteCollectionStr)) {
+      KConfigGroup favoriteGroup = kmailConfig->group(favoriteCollectionStr);
+      const QString favoriteCollectionIdsStr("FavoriteCollectionIds");
+      if(favoriteGroup.hasKey(favoriteCollectionIdsStr)) {
+        const QStringList value = favoriteGroup.readEntry(favoriteCollectionIdsStr,QStringList());
+        QStringList newValue;
+        Q_FOREACH(const QString&str,value) {
+          bool found = false;
+          const int collectionId = str.toInt(&found);
+          if(found) {
+            const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+            if(!realPath.isEmpty()) {
+              newValue<<realPath;
+            }
+          }
+        }
+        favoriteGroup.writeEntry(favoriteCollectionIdsStr,newValue);
+      }
+    }
 
     kmailConfig->sync();
 //TODO fix other group/key based on akonadi-id
@@ -323,6 +360,8 @@ void BackupData::backupMails()
           //TODO
           //Several file. Look at archive mail dialog
           storeResources(identifier, archivePath);
+        } else if(identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+          //TODO
         }
       }
     }
@@ -401,16 +440,16 @@ void BackupData::storeResources(const QString&identifier, const QString& path)
   tmp.open();
   KConfig * config = resourceConfig->copyTo( tmp.fileName() );
 
-  if(identifier.contains(QLatin1String("pop3"))) {
+  if(identifier.contains(QLatin1String("akonadi_pop3_resource"))) {
     const QString targetCollection = QLatin1String("targetCollection");
     KConfigGroup group = config->group("General");
-    if(group.hasGroup(targetCollection)) {
-       group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+    if(group.hasKey(targetCollection)) {
+      group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
     }
-  } else if(identifier.contains(QLatin1String("imap"))) {
+  } else if(identifier.contains(QLatin1String("akonadi_imap_resource"))) {
     const QString trash = QLatin1String("TrashCollection");
     KConfigGroup group = config->group("cache");
-    if(group.hasGroup(trash)) {
+    if(group.hasKey(trash)) {
       group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
     }
   }

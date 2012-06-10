@@ -80,9 +80,10 @@ class MimeTreeModel::Private
     {
       if ( content->contentType( false ) )
       {
-        KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
+        const QString contentMimeType = QString::fromLatin1(content->contentType()->mimeType());
+        KMimeType::Ptr mimeType = KMimeType::mimeType( contentMimeType );
         if ( mimeType.isNull() )
-          return QString::fromLatin1( content->contentType()->mimeType() );
+          return contentMimeType;
         return mimeType->comment();
       }
       else

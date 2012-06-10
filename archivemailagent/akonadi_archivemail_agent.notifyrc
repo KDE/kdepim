@@ -49,21 +49,13 @@ Name[zh_TW]=歸檔郵件已完成
 Action=Popup
 
 [Event/archivemailstarted]
-Name=Archive Mail finished
-Name[el]=Η αρχειοθέτηση της αλληλογραφίας ολοκληρώθηκε
-Name[es]=Archivado de correo terminado
-Name[et]=Kirjad on arhiveeritud
-Name[gl]=Rematou Arquivar o correo
-Name[ia]=Action de archivar posta terminate
-Name[nb]=Arkivpost fullført
-Name[nl]=E-mail archiveren is gereed
-Name[pl]=Ukończono archiwizację poczty
-Name[pt]=O Arquivo de E-Mail Terminou
-Name[pt_BR]=O arquivamento de e-mails foi concluído
-Name[sv]=Arkivering av e-post klar
-Name[uk]=Архівування пошти завершено
-Name[x-test]=xxArchive Mail finishedxx
-Name[zh_TW]=歸檔郵件已完成
+Name=Archive Mail started
+Name[nl]=E-mail archiveren is gestart
+Name[pt]=O Arquivo de E-Mail Iniciou
+Name[pt_BR]=O arquivamento de e-mails foi iniciado
+Name[sv]=Arkivering av e-post påbörjad
+Name[uk]=Розпочато архівування пошти
+Name[x-test]=xxArchive Mail startedxx
 Action=Popup
 
 [Event/archivemailerror]
@@ -80,5 +72,6 @@ Name[pt_BR]=Erro no arquivamento de e-mails
 Name[sv]=Fel vid brevarkivering
 Name[uk]=Помилка під час архівування пошти
 Name[x-test]=xxArchive Mail Errorxx
+Name[zh_TW]=歸檔郵件發生錯誤
 Action=Popup
 

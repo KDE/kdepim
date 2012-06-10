@@ -96,8 +96,12 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new Evolutionv2ImportData(this));
   addImportModule(new Evolutionv1ImportData(this));
   addImportModule(new OperaImportData(this));
+#ifdef Q_OS_WIN
   addImportModule(new OeImportData(this));
+#endif
+#ifdef Q_OS_MAC
   addImportModule(new MailAppImportData(this));
+#endif
   addImportModule(new PMailImportData(this));
   addImportModule(new TheBatImportData(this));
 

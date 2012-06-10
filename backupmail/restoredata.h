@@ -19,12 +19,15 @@
 #define RESTOREDATA_H
 
 #include "abstractdata.h"
-#include <Akonadi/Collection>
 #include <QStringList>
 #include <QHash>
 
 class KArchiveDirectory;
 class KArchiveFile;
+class KTempDir;
+namespace MailCommon {
+  class CreateResource;
+}
 
 class RestoreData : public AbstractData
 {
@@ -40,15 +43,24 @@ private:
   void restoreIdentity();
   void restoreAkonadiDb();
   void restoreNepomuk();
-  void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc);
-  void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc);
+  void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString &filename, const QString &prefix);
+  void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString &filename, const QString &prefix);
+  QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
+  void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
+  void storeMailArchiveResource(const KArchiveDirectory*dir);
 
-  Akonadi::Collection::Id adaptFolderId( const QString& folder);
+  void copyToFile(const KArchiveFile * file, const QString& dest, const QString&filename,const QString& prefix);
+
+
+  QHash<QString, QString> mHashMailArchive;
   QHash<uint, uint> mHashIdentity;
   QHash<int, int> mHashTransport;
   QHash<QString, QString> mHashResources;
   QStringList mFileList;
+  QString mTempDirName;
   const KArchiveDirectory* mArchiveDirectory;
+  KTempDir *mTempDir;
+  MailCommon::CreateResource *mCreateResource;
 };
 
 #endif // RESTOREDATA_H

@@ -56,7 +56,7 @@ void ArchiveMailManager::load()
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
     const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-    if(QDate::currentDate() > diffDate) {
+    if(QDate::currentDate() >= diffDate) {
       Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
         if(oldInfo->saveCollectionId() == info->saveCollectionId()) {
           //already in jobscheduler
@@ -84,6 +84,7 @@ void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
   if(config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     group.deleteGroup();
+    config->sync();
     Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
       if(info->saveCollectionId() == collection.id()) {
         //TODO stop task

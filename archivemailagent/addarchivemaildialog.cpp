@@ -53,6 +53,8 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   mFolderRequester->setMustBeReadWrite( false );
   mFolderRequester->setNotAllowToCreateNewFolder( true );
   connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), SLOT(slotFolderChanged(Akonadi::Collection)) );
+  if(info) //Don't autorize to modify folder when we just modify item.
+    mFolderRequester->setEnabled( false );
   folderLabel->setBuddy( mFolderRequester );
   mainLayout->addWidget( mFolderRequester, row, 1 );
   row++;

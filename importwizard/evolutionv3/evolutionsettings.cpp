@@ -17,7 +17,7 @@
 
 #include "evolutionsettings.h"
 #include "evolutionutil.h"
-
+#include "mailcommon/mailutil.h"
 #include <kpimidentities/identity.h>
 
 #include <mailtransport/transportmanager.h>
@@ -380,12 +380,12 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     }
     else if ( tag == QLatin1String( "drafts-folder" ) )
     {
-      const QString selectedFolder = adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) );
+      const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr( e.text().remove( QLatin1String( "folder://" ) ) );
       newIdentity->setDrafts(selectedFolder); 
     }
     else if ( tag == QLatin1String( "sent-folder" ) )
     {
-      const QString selectedFolder = adaptFolder( e.text().remove( QLatin1String( "folder://" ) ) );
+      const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr( e.text().remove( QLatin1String( "folder://" ) ) );
       newIdentity->setFcc(selectedFolder);
     }
     else if ( tag == QLatin1String( "auto-cc" ) )

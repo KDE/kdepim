@@ -49,6 +49,7 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
+  resize( 640, 480 );
   Akonadi::Control::widgetNeedsAkonadi(this);
   if(!canZipFile) {
     KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
@@ -81,7 +82,7 @@ void BackupMailApplication::slotBackupData()
   if(KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
     return;
 
-  const QString filename = KFileDialog::getSaveFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Create backup"));
+  const QString filename = KFileDialog::getSaveFileName(KUrl("kfiledialog:///backupMail"),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
   if(filename.isEmpty())
     return;
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
@@ -113,7 +114,7 @@ void BackupMailApplication::slotRestoreData()
 {
   if(KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
     return;
-  const QString filename = KFileDialog::getOpenFileName(KUrl(),QLatin1String("*.zip"),this,i18n("Restore backup"));
+  const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///backupMail"),QLatin1String("*.zip"),this,i18n("Restore backup"));
   if(filename.isEmpty())
     return;
 
