@@ -32,7 +32,7 @@ class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KTextEdit
     explicit TemplatesTextEdit( QWidget *parent );
     virtual ~TemplatesTextEdit();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotInsertCompletion( const QString & );
     QString wordUnderCursor();
 
