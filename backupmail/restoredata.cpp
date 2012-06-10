@@ -421,8 +421,20 @@ void RestoreData::restoreMails()
     if(fileResouceEntry->isFile()) {
       const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
       file->copyTo(copyToDirName);
-      KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + file->name());
-      KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+      const QString resourceName(file->name());
+      KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+      const KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+
+      if(resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
+
+      } else if(resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+
+      } else if(resourceName.contains(QLatin1String("akonadi_maildir_resource_"))) {
+
+      } else {
+        qDebug()<<" resource name not supported "<<resourceName;
+        continue;
+      }
       qDebug()<<"url "<<url;
     }
     const QString dataFile = res.value();
