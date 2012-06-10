@@ -410,25 +410,29 @@ void RestoreData::restoreResources()
 void RestoreData::restoreMails()
 {
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  Q_FOREACH(const QString& filename, mFileList) {
-    if(filename.startsWith(BackupMailUtil::mailsPath())) {
-      const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
-      if(fileEntry->isFile()) {
-        const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
-        KTemporaryFile tmp;
-        tmp.open();
-        file->copyTo(tmp.fileName());
-        const QString filename(file->name());
-        if(filename.contains(QLatin1String("akonadi_maildir_resource_")) ||
-           filename.contains(QLatin1String("akonadi_mbox_resource_")) ||
-           filename.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
-          //TODO resource file.
-          KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(tmp.fileName());
-          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
-        }
-        //TODO
-      }
+  QDir dir(mTempDirName);
+  dir.mkdir(BackupMailUtil::mailsPath());
+  const QString copyToDirName(mTempDirName + QLatin1Char('/') + BackupMailUtil::mailsPath());
+  QHashIterator<QString, QString> res(mHashResources);
+  while (res.hasNext()) {
+    res.next();
+    const QString resourceFile = res.key();
+    const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(resourceFile);
+    if(fileResouceEntry->isFile()) {
+      const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+      file->copyTo(copyToDirName);
+      KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + file->name());
+      KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+      qDebug()<<"url "<<url;
     }
+    const QString dataFile = res.value();
+    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+    if(dataResouceEntry->isFile()) {
+      const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+      file->copyTo(copyToDirName);
+      //TODO
+    }
+
   }
 }
 
