@@ -47,7 +47,7 @@ void ArchiveJob::execute()
   if(mInfo) {
     MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
     Akonadi::Collection collection(mInfo->saveCollectionId());
-    backupJob->setRootFolder( collection );
+    backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
     const QString realPath = MailCommon::Util::fullCollectionPath(collection);
     backupJob->setSaveLocation( mInfo->realUrl(realPath) );
     backupJob->setArchiveType( mInfo->archiveType() );
