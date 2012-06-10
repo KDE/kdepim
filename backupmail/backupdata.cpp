@@ -124,17 +124,18 @@ void BackupData::backupConfig()
   Q_EMIT info(i18n("Backing up config..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   QList<MailCommon::MailFilter*> lstFilter = MailCommon::FilterManager::instance()->filters();
-  KTemporaryFile tmp;
-  tmp.open();
-  KUrl url(tmp.fileName());
-  MailCommon::FilterImporterExporter exportFilters;
-  exportFilters.exportFilters(lstFilter,url, true);
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
-  if(fileAdded)
-    Q_EMIT info(i18n("Filters backup done."));
-  else
-    Q_EMIT error(i18n("Filters cannot be exported."));
-  tmp.close();
+  if(!lstFilter.isEmpty()) {
+    KTemporaryFile tmp;
+    tmp.open();
+    KUrl url(tmp.fileName());
+    MailCommon::FilterImporterExporter exportFilters;
+    exportFilters.exportFilters(lstFilter,url, true);
+    const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
+    if(fileAdded)
+      Q_EMIT info(i18n("Filters backup done."));
+    else
+      Q_EMIT error(i18n("Filters cannot be exported."));
+  }
 
   const QString labldaprcStr("kabldaprc");
   const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
@@ -244,7 +245,6 @@ void BackupData::backupConfig()
           }
         }
       }
-      //TODO
     }
     const QString favoriteCollectionStr("FavoriteCollections");
     if(kmailConfig->hasGroup(favoriteCollectionStr)) {
@@ -268,9 +268,6 @@ void BackupData::backupConfig()
     }
 
     kmailConfig->sync();
-//TODO fix other group/key based on akonadi-id
-
-
     backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kmailStr);
   }
 
@@ -288,7 +285,7 @@ void BackupData::backupIdentity()
     return;
   }
 
-  KSharedConfigPtr identity = KSharedConfig::openConfig( QLatin1String( "emailidentities" ) );
+  KSharedConfigPtr identity = KSharedConfig::openConfig( emailidentitiesrc );
 
   KTemporaryFile tmp;
   tmp.open();
