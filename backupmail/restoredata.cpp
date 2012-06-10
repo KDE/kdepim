@@ -424,27 +424,79 @@ void RestoreData::restoreMails()
       const QString resourceName(file->name());
       KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
       const KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+      const QString filename(file->name());
+
+      KUrl newUrl;
+      if(QFile(url.fileName()).exists()) {
+        QString newFileName = url.fileName();
+        for(int i = 0;; ++i) {
+          newFileName = url.fileName() + QString::fromLatin1("_%1").arg(i);
+          if(!QFile(newFileName).exists()) {
+            break;
+          }
+        }
+        newUrl.setFileName(newFileName);
+      } else {
+        newUrl= url;
+      }
+      QMap<QString, QVariant> settings;
 
       if(resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
+        const QString dataFile = res.value();
+        const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+        if(dataResouceEntry->isFile()) {
+          const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+          file->copyTo(newUrl.path());
+        }
+        settings.insert(QLatin1String("Path"),newUrl.path());
 
+
+        KConfigGroup general = resourceConfig->group(QLatin1String("General"));
+        if(general.hasKey(QLatin1String("DisplayName"))) {
+          settings.insert(QLatin1String("DisplayName"),general.readEntry(QLatin1String("DisplayName")));
+        }
+        if(general.hasKey(QLatin1String("ReadOnly"))) {
+          settings.insert(QLatin1String("ReadOnly"),general.readEntry(QLatin1String("ReadOnly"),false));
+        }
+        if(general.hasKey(QLatin1String("MonitorFile"))) {
+          settings.insert(QLatin1String("MonitorFile"),general.readEntry(QLatin1String("MonitorFile"),false));
+        }
+        if(resourceConfig->hasGroup(QLatin1String("Locking"))) {
+          KConfigGroup locking = resourceConfig->group(QLatin1String("Locking"));
+          if(locking.hasKey(QLatin1String("Lockfile"))) {
+            settings.insert(QLatin1String("Lockfile"),locking.readEntry(QLatin1String("Lockfile")));
+          }
+          //TODO verify
+          if(locking.hasKey(QLatin1String("LockfileMethod"))) {
+            settings.insert(QLatin1String("LockfileMethod"),locking.readEntry(QLatin1String("LockfileMethod"),4));
+          }
+        }
+        if(resourceConfig->hasGroup(QLatin1String("Compacting"))) {
+          KConfigGroup compacting = resourceConfig->group(QLatin1String("Compacting"));
+          if(compacting.hasKey(QLatin1String("CompactFrequency"))) {
+            settings.insert(QLatin1String("CompactFrequency"),compacting.readEntry(QLatin1String("CompactFrequency"),1));
+          }
+          if(compacting.hasKey(QLatin1String("MessageCount"))) {
+            settings.insert(QLatin1String("MessageCount"),compacting.readEntry(QLatin1String("MessageCount"),50));
+          }
+        }
+        const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mbox_resource"), filename, settings );
+        if(!newResource.isEmpty())
+          mHashResources.insert(filename,newResource);
       } else if(resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
-
+        const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mixedmaildir_resource"), filename, settings );
+        if(!newResource.isEmpty())
+          mHashResources.insert(filename,newResource);
       } else if(resourceName.contains(QLatin1String("akonadi_maildir_resource_"))) {
-
+        const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_maildir_resource"), filename, settings );
+        if(!newResource.isEmpty())
+          mHashResources.insert(filename,newResource);
       } else {
         qDebug()<<" resource name not supported "<<resourceName;
         continue;
       }
       qDebug()<<"url "<<url;
     }
-    const QString dataFile = res.value();
-    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
-    if(dataResouceEntry->isFile()) {
-      const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-      file->copyTo(copyToDirName);
-      //TODO
-    }
-
   }
 }
 

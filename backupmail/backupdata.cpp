@@ -352,7 +352,7 @@ void BackupData::backupMails()
           const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
           KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+          const KUrl url = BackupMailUtil::resourcePath(resourceConfig);
           const QString filename = url.fileName();
           //TODO
           //Several file. Look at archive mail dialog
