@@ -55,7 +55,7 @@ FilterImporterSylpheed::~FilterImporterSylpheed()
 
 QString FilterImporterSylpheed::defaultPath()
 {
-  return QString::fromLatin1( "%1/.sylpheed-2.0/" ).arg( QDir::homePath() );
+  return QString::fromLatin1( "%1/.sylpheed-2.0/filter.xml" ).arg( QDir::homePath() );
 }
 
 void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::MailFilter *filter )
