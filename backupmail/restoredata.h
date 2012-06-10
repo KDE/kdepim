@@ -25,6 +25,9 @@
 class KArchiveDirectory;
 class KArchiveFile;
 class KTempDir;
+namespace MailCommon {
+  class CreateResource;
+}
 
 class RestoreData : public AbstractData
 {
@@ -57,6 +60,7 @@ private:
   QString mTempDirName;
   const KArchiveDirectory* mArchiveDirectory;
   KTempDir *mTempDir;
+  MailCommon::CreateResource *mCreateResource;
 };
 
 #endif // RESTOREDATA_H

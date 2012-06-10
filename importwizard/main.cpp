@@ -41,6 +41,13 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;
+    KGlobal::locale()->insertCatalog( "libakonadi" );
+      KGlobal::locale()->insertCatalog( "libkdepim" );
+        KGlobal::locale()->insertCatalog( "kabc" );
+	  KGlobal::locale()->insertCatalog( "libakonadi" );
+	    KGlobal::locale()->insertCatalog( "kabcakonadi" );
+	      KGlobal::locale()->insertCatalog( "akonadicontact" );
+
   ImportWizard *wizard = new ImportWizard();
   a.setTopWidget(wizard);
   wizard->show();

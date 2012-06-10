@@ -15,33 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTBASE_H
-#define ABSTRACTBASE_H
+#ifndef CREATERESOURCE_H
+#define CREATERESOURCE_H
 
+#include "mailcommon_export.h"
 #include <QObject>
-#include <QString>
-#include <QMap>
 #include <QVariant>
+#include <QMap>
 
 namespace MailCommon {
-  class CreateResource;
-}
-
-class AbstractBase : public QObject
+class MAILCOMMON_EXPORT CreateResource  : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractBase();
-  virtual ~AbstractBase();
-  QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
-private Q_SLOTS:
-  void slotCreateResourceError(const QString&);
-  void slotCreateResourceInfo(const QString&);
-protected:
-  virtual void addImportInfo( const QString& log ) = 0;
-  virtual void addImportError( const QString& log ) = 0;
-private:
-  MailCommon::CreateResource *mCreateResource;
-};
+  explicit CreateResource();
+  ~CreateResource();
 
-#endif // ABSTRACTBASE_H
+  QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
+
+Q_SIGNALS:
+  void createResourceInfo(const QString&);
+  void createResourceError(const QString&);
+};
+}
+
+#endif // CREATERESOURCE_H
