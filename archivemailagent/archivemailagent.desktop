@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Archive Mail Agent
+Name[da]=Agent til mail-arkivering
 Name[el]=Πράκτορας αρχειοθέτησης αλληλογραφίας
 Name[es]=Agente de archivado de correo
 Name[et]=Kirjade arhiveerimise agent
@@ -15,6 +16,7 @@ Name[uk]=Агент архівування пошти
 Name[x-test]=xxArchive Mail Agentxx
 Name[zh_TW]=歸檔郵件代理程式
 Comment=Archive Mail Agent
+Comment[da]=Agent til mail-arkivering
 Comment[el]=Πράκτορας αρχειοθέτησης αλληλογραφίας
 Comment[es]=Agente de archivado de correo
 Comment[et]=Kirjade arhiveerimise agent

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Backup Mail
+Name[da]=Tag backup af e-mails
 Name[el]=Αντίγραφα ασφαλείας αλληλογραφίας
 Name[es]=Copia de respaldo del correo
 Name[et]=Kirjade varundamine
@@ -17,6 +18,7 @@ Exec=backupmail
 Type=Application
 NoDisplay=true
 Comment=Backup Mail allows to save all data from kmail and restore them in other system.
+Comment[da]=Backup af e-mails lader dig gemme alle data fra KMail og genskabe dem på et andet system.
 Comment[el]=Τα αντίγραφα ασφαλείας αλληλογραφίας σας επιτρέπουν την αποθήκευση όλων των δεδομένων από το kmail και την επαναφορά τους σε άλλο σύστημα.
 Comment[es]=Copia de respaldo del correo permite guardar todos los datos de kmail y restaurarlos en otro sistema.
 Comment[et]=Kirjade varundamine võimaldab salvestada kõik KMaili andmed ja taastada need teises süsteemis.
