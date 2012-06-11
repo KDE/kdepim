@@ -94,7 +94,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
         } else if ( attr == QLatin1String( "List-Id" ) ) {
           fieldName = "list-id";
         } else if ( attr == QLatin1String( "X-ML-Name" ) ) {
-          //TODO
+          fieldName = "x-mailing-list";
         }
         if ( fieldName.isEmpty() ) {
           kDebug()<<" match-header not implemented " << attr;
