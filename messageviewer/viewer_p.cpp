@@ -2393,7 +2393,7 @@ void ViewerPrivate::slotPrintPreview()
   if ( !mMessage )
     return;
   QPrinter printer;
-  KPrintPreview previewdlg( &printer, mViewer );
+  KPrintPreview previewdlg( &printer/*, mViewer*/ );
   mViewer->print( &printer );
   previewdlg.exec();
 #endif
@@ -2409,7 +2409,7 @@ void ViewerPrivate::slotPrintMsg()
     return;
   QPrinter printer;
 
-  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
+  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer/*, mViewer*/ ) );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     mViewer->print( &printer );
   }
