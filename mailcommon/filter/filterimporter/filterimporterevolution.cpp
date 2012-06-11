@@ -76,9 +76,12 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
 
           if ( name == QLatin1String( "to" ) ) {
             fieldName = "to";
+          } else if ( name == QLatin1String( "sender" ) ) {
+            fieldName = "from";
           } else if ( name == QLatin1String( "cc" ) ) {
             fieldName = "cc";
           } else if ( name == QLatin1String( "bcc" ) ) {
+            fieldName = "bcc"; //Verify
             //TODO
           } else if ( name == QLatin1String( "senderto" ) ) {
             //TODO
@@ -89,6 +92,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else if ( name == QLatin1String( "body" ) ) {
             fieldName = "<body>";
           } else if ( name == QLatin1String( "sexp" ) ) {
+            //TODO
+          } else if ( name == QLatin1String( "sent-date" ) ) {
             //TODO
           } else if ( name == QLatin1String( "recv-date" ) ) {
             fieldName = "<date>";
@@ -122,7 +127,10 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else {
             kDebug() << " parttype part : name : not implemented :" << name;
           }
-          QString value;
+          if(fieldName.isEmpty()) {
+            qDebug()<<" parttype part : name : not implemented :" << name;
+            continue;
+          }
           QString contents;
           SearchRule::Function functionName = SearchRule::FuncNone;
 
@@ -130,9 +138,29 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                 !valueFilter.isNull();
                 valueFilter = valueFilter.nextSiblingElement() ) {
             const QString valueTag = valueFilter.tagName();
+
             if ( valueTag == QLatin1String( "value" ) ) {
+
               if ( valueFilter.hasAttribute( "name" ) ) {
                 const QString name = valueFilter.attribute( "name" );
+                if(name==QLatin1String("flag")) {
+
+                  const QString flag = valueFilter.attribute( "value" );
+                  qDebug()<<" flag :"<<flag;
+                  if(flag==QLatin1String("Seen")) {
+                    contents = QLatin1String("Read");
+                  } else if(flag==QLatin1String("Answered")) {
+                    contents = QLatin1String("Sent");
+                  } else if(flag==QLatin1String("Draft")) {
+                    //FIXME
+                  } else if(flag==QLatin1String("Flagged")) { //Important
+                    contents = QLatin1String("Important");
+                  } else if(flag==QLatin1String("Junk")) {
+                    contents = QLatin1String("Spam");
+                  } else {
+                    qDebug()<<" unknown status flags "<<flag;
+                  }
+                }
                 kDebug() << " value filter name :" << name;
               }
               if ( valueFilter.hasAttribute( "type" ) ) {
@@ -166,8 +194,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
 
               }
               if ( valueFilter.hasAttribute( "value" ) ) {
-                const QString name = valueFilter.attribute( "value" );
-                kDebug() << " value filter value :" << name;
+                const QString value = valueFilter.attribute( "value" );
+                qDebug() << " value filter value :" << name;
                 if ( value == QLatin1String( "contains" ) ) {
                   functionName = SearchRule::FuncContains;
                 } else if ( value == QLatin1String( "not contains" ) ) {

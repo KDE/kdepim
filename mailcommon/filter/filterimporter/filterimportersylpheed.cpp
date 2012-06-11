@@ -115,7 +115,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
       //Not implemented in kmail
     } else if ( nexttag == QLatin1String( "size" ) ) {
       fieldName = "<size>";
-      contentsName = ruleFilter.text();
+      contentsName = QString::number(ruleFilter.text().toInt()*1024); //Stored as kb
     } else if ( nexttag == QLatin1String( "age" ) ) {
       fieldName = "<age in days>";
       contentsName = ruleFilter.text();
