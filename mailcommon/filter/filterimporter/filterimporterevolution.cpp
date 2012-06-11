@@ -107,7 +107,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else if ( name == QLatin1String( "attachments" ) ) {
             //TODO
           } else if ( name == QLatin1String( "mlist" ) ) {
-            //TODO
+            fieldName = "list-id"; //Verify
           } else if ( name == QLatin1String( "regex" ) ) {
             //TODO
           } else if ( name == QLatin1String( "source" ) ) {
@@ -309,7 +309,7 @@ void FilterImporterEvolution::parseFilters( const QDomElement &e )
     } else if ( attr == QLatin1String( "any" ) ) {
       filter->pattern()->setOp( SearchPattern::OpOr );
     } else {
-      kDebug() << " grouping not defined: " << attr;
+      kDebug() << " grouping not implemented: " << attr;
     }
 
   }
@@ -338,7 +338,7 @@ void FilterImporterEvolution::parseFilters( const QDomElement &e )
     } else if ( nexttag == QLatin1String( "actionset" ) ) {
       parsePartAction( ruleFilter, filter, ActionType );
     } else {
-      kDebug() << " 1) tag not implemented : " << nexttag;
+      kDebug() << " tag not implemented : " << nexttag;
     }
   }
 
