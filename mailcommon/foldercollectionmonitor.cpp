@@ -46,7 +46,8 @@ FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
   mMonitor->fetchCollection( true );
   mMonitor->setAllMonitored( true );
   mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
-  mMonitor->setResourceMonitored( "akonadi_search_resource" ,  true );
+  mMonitor->setMimeTypeMonitored(QString::fromLatin1( "inode/directory" ));
+  mMonitor->setResourceMonitored( "akonadi_search_resource", true );
 #ifndef KDEPIM_NO_NEPOMUK
   mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource" ,  true );
 #endif
