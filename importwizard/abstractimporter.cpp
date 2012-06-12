@@ -20,6 +20,8 @@
 #include "importmailpage.h"
 #include "importfilterinfogui.h"
 #include "importfilterpage.h"
+#include "importsettingpage.h"
+#include "importcalendarpage.h"
 
 #include "mailimporter/filterinfo.h"
 #include "mailcommon/filter/filtermanager.h"
@@ -79,10 +81,10 @@ bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::Filter
     MailCommon::FilterImporterExporter importer( mImportWizard );
     QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, type, filterPath );
     appendFilters( listFilter );
-    addImportInfo( i18np( "1 filter was imported", "%1 filters were imported", listFilter.count() ) );
+    addImportFilterInfo( i18np( "1 filter was imported", "%1 filters were imported", listFilter.count() ) );
     return true;
   } else {
-    addImportError( i18n( "Filters file was not found" ) );
+    addImportFilterError( i18n( "Filters file was not found" ) );
     return true;
   }
 }
@@ -93,12 +95,22 @@ void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*>& filt
     MailCommon::FilterManager::instance()->appendFilters(filters, false );
 }
 
-void AbstractImporter::addImportInfo( const QString& log )
+void AbstractImporter::addImportFilterInfo( const QString& log )
 {
   mImportWizard->importFilterPage()->addImportInfo( log );
 }
 
-void AbstractImporter::addImportError( const QString& log )
+void AbstractImporter::addImportFilterError( const QString& log )
 {
   mImportWizard->importFilterPage()->addImportError( log );
+}
+
+void AbstractImporter::addImportSettingsInfo(const QString& log)
+{
+  mImportWizard->importSettingPage()->addImportError( log );
+}
+
+void AbstractImporter::addImportCalendarInfo(const QString&log)
+{
+  mImportWizard->importCalendarPage()->addImportError( log );
 }

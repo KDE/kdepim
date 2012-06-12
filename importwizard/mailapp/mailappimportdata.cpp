@@ -54,11 +54,6 @@ QString MailAppImportData::name() const
   return QLatin1String("Mail App");
 }
 
-bool MailAppImportData::importSettings()
-{
-  return false;
-}
-
 bool MailAppImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
@@ -75,16 +70,6 @@ bool MailAppImportData::importMails()
 
   delete info;
   return true;
-}
-
-bool MailAppImportData::importFilters()
-{
-  return false;
-}
-
-bool MailAppImportData::importAddressBook()
-{
-  return false;
 }
 
 AbstractImporter::TypeSupportedOptions MailAppImportData::supportedOption()

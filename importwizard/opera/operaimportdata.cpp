@@ -51,11 +51,6 @@ QString OperaImportData::name() const
   return QLatin1String("Opera");
 }
 
-bool OperaImportData::importSettings()
-{
-  return false;
-}
-
 bool OperaImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
@@ -72,16 +67,6 @@ bool OperaImportData::importMails()
 
   delete info;
   return true;
-}
-
-bool OperaImportData::importFilters()
-{
-  return false;
-}
-
-bool OperaImportData::importAddressBook()
-{
-  return false;
 }
 
 AbstractImporter::TypeSupportedOptions OperaImportData::supportedOption()

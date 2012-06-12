@@ -70,9 +70,10 @@ bool ThunderbirdImportData::importSettings()
   const QString accountFile = mPath + defaultProfile() + QLatin1String("/prefs.js");
   if ( QFile( accountFile ).exists() ) {
     ThunderbirdSettings account( accountFile, mImportWizard );
-    return true;
+  } else {
+    addImportSettingsInfo(i18n("Thunderbird settings not found."));
   }
-  return false;
+  return true;
 }
 
 bool ThunderbirdImportData::importMails()
@@ -101,11 +102,6 @@ bool ThunderbirdImportData::importFilters()
 {
   const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
   return addFilters( filterPath, MailCommon::FilterImporterExporter::ThunderBirdFilter );
-}
-
-bool ThunderbirdImportData::importAddressBook()
-{
-  return false;
 }
 
 AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
