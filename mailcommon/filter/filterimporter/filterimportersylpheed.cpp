@@ -135,6 +135,9 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
     } else {
       kDebug() << " tag not recognize " << nexttag;
     }
+    if(fieldName.isEmpty()) {
+      qDebug()<<" field not implemented "<<nexttag;
+    }
 
     if ( ruleFilter.hasAttribute( "type" ) ) {
       const QString attr = ruleFilter.attribute( "type" );

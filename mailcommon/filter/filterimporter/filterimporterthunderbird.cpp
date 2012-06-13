@@ -65,8 +65,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
     if ( !stream.atEnd() ) {
       line = stream.readLine();
       if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "actionValue=" ) );
-        value = extractValues( line );
+        value = cleanArgument( line, QLatin1String( "actionValue=" ) );
         createFilterAction( filter, actionName, value );
       } else {
         createFilterAction( filter, actionName, value );
@@ -379,12 +378,6 @@ QString FilterImporterThunderbird::extractActions( const QString &line,
     kDebug() << QString::fromLatin1( " missing convert method: %1" ).arg( line );
   }
   return actionName;
-}
-
-QString FilterImporterThunderbird::extractValues( const QString &line )
-{
-  //TODO
-  return line;
 }
 
 void FilterImporterThunderbird::extractType( const QString &line, MailCommon::MailFilter *filter )
