@@ -102,7 +102,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
       }
       contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-any-header" ) ) {
-      fieldName = "<recipients>";
+      fieldName = "<any header>";
       contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-to-or-cc" ) ) {
       fieldName = "<recipients>";
