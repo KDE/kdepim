@@ -302,8 +302,9 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     value = value * 1024; //Ko
     contentsName = QString::number( value );
   } else if ( fieldName == "<date>" ) {
-    //TODO look at how to convert it
-    contentsName = contents;
+    //TODO FIXME stored as english text => will not work in other language
+    const QDate date = QDate::fromString(contents,QString::fromLatin1("dd-MMM-yyyy"));
+    contentsName = date.toString(Qt::ISODate);
   } else {
     contentsName = contents;
   }
