@@ -23,8 +23,8 @@
 #include "filteractiondict.h"
 #include "filterimporterexporter.h"
 #include "mailfilteragentinterface.h"
-
 #include <kconfiggroup.h>
+
 
 namespace MailCommon {
 
@@ -105,8 +105,21 @@ FilterManager::FilterManager()
   : d( new Private( this ) )
 {
   qDBusRegisterMetaType<QVector<qlonglong> >();
+  Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
+  if(state == Akonadi::ServerManager::Running) {
+    d->readConfig();
+  } else {
+    connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+             SLOT(slotServerStateChanged(Akonadi::ServerManager::State)) );
+  }
+}
 
-  d->readConfig();
+void FilterManager::slotServerStateChanged(Akonadi::ServerManager::State state)
+{
+  if(state == Akonadi::ServerManager::Running) {
+    d->readConfig();
+    disconnect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)));
+  }
 }
 
 bool FilterManager::isValid() const
