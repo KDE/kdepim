@@ -22,7 +22,6 @@
 
 #include <QFile>
 #include <QDir>
-#include <QDebug>
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -53,7 +52,7 @@ EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *paren
         if ( attr == QLatin1String( "sources" ) ) {
           readCalendar(e);
         } else {
-          qDebug()<<" attr unknown "<<attr;
+          kDebug()<<" attr unknown "<<attr;
         }
       }
     }
@@ -77,7 +76,7 @@ void EvolutionCalendar::readCalendar(const QDomElement &calendar)
 
 void EvolutionCalendar::extractCalendarInfo(const QString& info)
 {
-  qDebug()<<" info "<<info;
+  kDebug()<<" info "<<info;
   //Read QDomElement
   QDomDocument cal;
   if ( !EvolutionUtil::loadInDomDocument( info, cal ) )
@@ -127,28 +126,28 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
                     }
                   }
                 } else if( propertyName == QLatin1String("alarm")) {
-                  qDebug()<<" need to implement alarm property";
+                  kDebug()<<" need to implement alarm property";
                 }else {
-                  qDebug()<<" property unknown :"<<propertyName;
+                  kDebug()<<" property unknown :"<<propertyName;
                 }
               }
             } else {
-              qDebug()<<" tag unknown :"<<propertyTag;
+              kDebug()<<" tag unknown :"<<propertyTag;
             }
           }
         }
         AbstractBase::createResource(QLatin1String("akonadi_ical_resource"),name,settings);
       } else {
-        qDebug()<<" tag unknown :"<<tag;
+        kDebug()<<" tag unknown :"<<tag;
       }
     }
   } else if(base_uri == QLatin1String("webcal://")) {
-    qDebug()<<" need to implement webcal protocol";
+    kDebug()<<" need to implement webcal protocol";
   } else if(base_uri == QLatin1String("google://")) {
-    qDebug()<<" need to implement google protocol";
+    kDebug()<<" need to implement google protocol";
   } else if(base_uri == QLatin1String("caldav://")) {
-    qDebug()<<" need to implement caldav protocol";
+    kDebug()<<" need to implement caldav protocol";
   } else {
-    qDebug()<<" base_uri unknown"<<base_uri;
+    kDebug()<<" base_uri unknown"<<base_uri;
   }
 }
