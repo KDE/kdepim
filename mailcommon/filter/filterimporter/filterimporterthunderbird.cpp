@@ -391,6 +391,7 @@ void FilterImporterThunderbird::extractType( const QString &line, MailCommon::Ma
   const int value = line.toInt();
   if ( value == 1 ) {
     filter->setApplyOnInbound( true );
+    filter->setApplyOnExplicit( false );
     //Checking mail
   } else if ( value == 16 ) {
     filter->setApplyOnInbound( false );
@@ -401,6 +402,7 @@ void FilterImporterThunderbird::extractType( const QString &line, MailCommon::Ma
     filter->setApplyOnExplicit( true );
     //Checking mail or manual
   } else if ( value == 32 ) {
+    filter->setApplyOnExplicit( false );
     filter->setApplyOnOutbound( true );
     filter->setApplyOnInbound( false );
     //checking mail after classification
