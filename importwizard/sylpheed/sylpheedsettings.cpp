@@ -29,10 +29,11 @@
 #include <QStringList>
 #include <QFile>
 
-SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylpheedrc, ImportWizard *parent )
+SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path, ImportWizard *parent )
     :AbstractSettings( parent )
 {
   bool checkMailOnStartup = true;
+  const QString sylpheedrc = path + QLatin1String("/sylpheedrc");
   if(QFile( sylpheedrc ).exists()) {
     KConfig configCommon( sylpheedrc );
     if(configCommon.hasGroup("Common")) {
@@ -50,10 +51,37 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylp
     readAccount( group, checkMailOnStartup );
     readIdentity( group );
   }
+  const QString customheaderrc = path + QLatin1String("/customheaderrc");
+  QFile customHeaderFile(customheaderrc);
+  if(customHeaderFile.exists()) {
+    if ( !customHeaderFile.open( QIODevice::ReadOnly ) ) {
+      kDebug()<<" We can't open file"<<customheaderrc;
+    } else {
+      readCustomHeader(&customHeaderFile);
+    }
+  }
 }
 
 SylpheedSettings::~SylpheedSettings()
 {
+}
+
+void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
+{
+  QTextStream stream(customHeaderFile);
+  QMap<QString, QString> header;
+  while ( !stream.atEnd() ) {
+    const QString line = stream.readLine();
+    QStringList lst = line.split(QLatin1Char(':'));
+    if(lst.count() == 3) {
+      QString str = lst.at(2);
+      str.remove(0,1);
+      header.insert(lst.at(1),str);
+    }
+  }
+  if(!header.isEmpty()) {
+    //TODO
+  }
 }
 
 void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
