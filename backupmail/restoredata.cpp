@@ -79,10 +79,10 @@ void RestoreData::startRestore()
       restoreTransports();
     if(mTypeSelected & BackupMailUtil::Resources)
       restoreResources();
-    if(mTypeSelected & BackupMailUtil::Identity)
-      restoreIdentity();
     if(mTypeSelected & BackupMailUtil::Mails)
       restoreMails();
+    if(mTypeSelected & BackupMailUtil::Identity)
+      restoreIdentity();
     if(mTypeSelected & BackupMailUtil::Config)
       restoreConfig();
     if(mTypeSelected & BackupMailUtil::AkonadiDb)
