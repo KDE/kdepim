@@ -483,12 +483,24 @@ void RestoreData::restoreMails()
         const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mbox_resource"), filename, settings );
         if(!newResource.isEmpty())
           mHashResources.insert(filename,newResource);
-      } else if(resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
-        const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mixedmaildir_resource"), filename, settings );
-        if(!newResource.isEmpty())
-          mHashResources.insert(filename,newResource);
-      } else if(resourceName.contains(QLatin1String("akonadi_maildir_resource_"))) {
-        const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_maildir_resource"), filename, settings );
+      } else if(resourceName.contains(QLatin1String("akonadi_maildir_resource_")) ||
+                resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+        settings.insert(QLatin1String("Path"),newUrl.path());
+        KConfigGroup general = resourceConfig->group(QLatin1String("General"));
+        if(general.hasKey(QLatin1String("TopLevelIsContainer"))) {
+          settings.insert(QLatin1String("TopLevelIsContainer"),general.readEntry(QLatin1String("TopLevelIsContainer"),false));
+        }
+        if(general.hasKey(QLatin1String("ReadOnly"))) {
+          settings.insert(QLatin1String("ReadOnly"),general.readEntry(QLatin1String("ReadOnly"),false));
+        }
+        if(general.hasKey(QLatin1String("MonitorFilesystem"))) {
+          settings.insert(QLatin1String("MonitorFilesystem"),general.readEntry(QLatin1String("MonitorFilesystem"),true));
+        }
+
+        const QString newResource = mCreateResource->createResource( resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ?
+                                                                       QString::fromLatin1("akonadi_mixedmaildir_resource")
+                                                                     : QString::fromLatin1("akonadi_maildir_resource")
+                                                                       , filename, settings );
         if(!newResource.isEmpty())
           mHashResources.insert(filename,newResource);
       } else {
