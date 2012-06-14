@@ -32,6 +32,7 @@
 
 #include <KColorScheme>
 #include <KDebug>
+#include <KLocale>
 
 #include <QApplication>
 #include <QPalette>
@@ -53,7 +54,6 @@ class FolderTreeWidgetProxyModel::Private
     Akonadi::MimeTypeChecker checker;
 
     QColor brokenAccountColor;
-    QColor offlineAccountColor;
     QString filterStr;
     bool enableCheck;
     bool hideVirtualFolder;
@@ -91,12 +91,8 @@ void FolderTreeWidgetProxyModel::readConfig()
   KConfigGroup collectionFolderView( KernelIf->config(), "CollectionFolderView" );
   KColorScheme scheme( QPalette::Active, KColorScheme::View );
   if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-     d->offlineAccountColor = scheme.foreground( KColorScheme::InactiveText ).color();
      d->brokenAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
   } else {
-     d->offlineAccountColor =
-       collectionFolderView.readEntry( "OfflineAccountColor",
-                                       scheme.foreground( KColorScheme::InactiveText ).color() );
      d->brokenAccountColor =
        collectionFolderView.readEntry( "BrokenAccountColor",
                                        scheme.foreground( KColorScheme::NegativeText ).color() );
@@ -237,9 +233,19 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex &index, int role ) 
 
       if ( instance.status() == Akonadi::AgentInstance::Broken ) {
         return d->brokenAccountColor;
-      } else if ( !instance.isOnline() ) {
-        return d->offlineAccountColor;
-      } 
+      }
+    }
+  } else if( role == Qt::DisplayRole) {
+    const QModelIndex sourceIndex = mapToSource( index );
+    const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
+    const Akonadi::Collection collection =
+      sourceModel()->data(
+        rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    const Akonadi::AgentInstance instance =
+      Akonadi::AgentManager::self()->instance( collection.resource() );
+    if(collection.parentCollection() == Akonadi::Collection::root()) {
+      if(!instance.isOnline())
+        return i18n("%1 (Offline)",Akonadi::EntityRightsFilterModel::data(index,role).toString());
     }
   }
   return  Akonadi::EntityRightsFilterModel::data( index, role );
@@ -249,7 +255,6 @@ void FolderTreeWidgetProxyModel::updatePalette()
 {
   if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KColorScheme scheme( QPalette::Active, KColorScheme::View );
-    d->offlineAccountColor = scheme.foreground( KColorScheme::InactiveText ).color();
     d->brokenAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
     invalidate();
   }
