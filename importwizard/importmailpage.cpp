@@ -25,7 +25,6 @@ ImportMailPage::ImportMailPage(QWidget *parent) :
   ui->setupUi(this);
   connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
   connect( ui->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(collectionChanged(Akonadi::Collection)) );
-
 }
 
 ImportMailPage::~ImportMailPage()

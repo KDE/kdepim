@@ -72,8 +72,8 @@ void ThunderbirdSettings::readGlobalSettings()
     const bool markMessageRead = mHashConfig.value(markMessageReadStr).toBool();
     addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), markMessageRead);
   } else {
-    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
     //Default value
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
   }
   const QString markMessageReadIntervalStr = QLatin1String("mailnews.mark_message_read.delay.interval");
   if(mHashConfig.contains(markMessageReadIntervalStr)) {
@@ -83,8 +83,8 @@ void ThunderbirdSettings::readGlobalSettings()
       addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markMessageReadInterval);
     }
   } else {
-    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
     //Default 5 seconds
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
   }
 
   const QString mailComposeAttachmentReminderStr = QLatin1String("mail.compose.attachment_reminder");
@@ -187,7 +187,6 @@ void ThunderbirdSettings::readAccount()
       QMap<QString, QVariant> settings;
       settings.insert(QLatin1String("ImapServer"),host);
       settings.insert(QLatin1String("UserName"),userName);
-      found = false;
       const int port = mHashConfig.value( accountName + QLatin1String( ".port" ) ).toInt( &found);
       if ( found ) {
         settings.insert( QLatin1String( "ImapPort" ), port );
@@ -252,7 +251,6 @@ void ThunderbirdSettings::readAccount()
       settings.insert( QLatin1String( "Host" ), host );
       settings.insert( QLatin1String( "Login" ), userName );
 
-      found = false;
       const bool leaveOnServer = mHashConfig.value( accountName + QLatin1String( ".leave_on_server")).toBool();
       if(leaveOnServer) {
         settings.insert(QLatin1String("LeaveOnServer"),leaveOnServer);

@@ -60,9 +60,9 @@ void SelectComponentPage::setEnabledComponent(AbstractImporter::TypeSupportedOpt
 
 AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents() const
 {
-  if( ui->everything->isChecked() )
+  if( ui->everything->isChecked() ) {
     return mOptions;
-  else {
+  } else {
     AbstractImporter::TypeSupportedOptions newOptions;
     if(ui->addressbooks->isChecked()) {
       newOptions|=AbstractImporter::AddressBooks;

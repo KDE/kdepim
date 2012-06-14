@@ -37,7 +37,6 @@ AbstractImporter::~AbstractImporter()
 {
 }
 
-
 bool AbstractImporter::importSettings()
 {
   return false;
@@ -62,7 +61,6 @@ bool AbstractImporter::importCalendar()
 {
   return false;
 }
-
 
 MailImporter::FilterInfo* AbstractImporter::initializeInfo()
 {
