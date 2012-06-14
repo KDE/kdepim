@@ -66,6 +66,16 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
       line = stream.readLine();
       if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
         value = cleanArgument( line, QLatin1String( "actionValue=" ) );
+        if(actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
+          KUrl url(value);
+          if(url.isValid()) {
+            QString path = url.path();
+            if(path.startsWith(QLatin1Char('/'))) {
+              path.remove(0,1); //Remove '/'
+            }
+            value = path;
+          }
+        }
         createFilterAction( filter, actionName, value );
       } else {
         createFilterAction( filter, actionName, value );
