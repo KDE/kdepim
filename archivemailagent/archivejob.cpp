@@ -97,7 +97,6 @@ void ArchiveJob::slotBackupDone(const QString& info)
 
 void ArchiveJob::kill()
 {
-  //TODO fix kill program.
   ScheduledJob::kill();
 }
 

@@ -90,7 +90,6 @@ void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
     config->sync();
     Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
       if(info->saveCollectionId() == collection.id()) {
-        //TODO stop task
         mListArchiveInfo.removeAll(info);
       }
     }
