@@ -316,6 +316,16 @@ void BackupData::backupIdentity()
     Q_EMIT error(i18n("Identity file cannot be added to backup file."));
 }
 
+KUrl BackupData::resourcePath(const Akonadi::AgentInstance& agent) const
+{
+  const QString agentFileName = agent.identifier() + QLatin1String("rc");
+  const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+  KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+  KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+  return url;
+}
+
 void BackupData::backupMails()
 {
   Q_EMIT info(i18n("Backing up Mails..."));
@@ -331,33 +341,27 @@ void BackupData::backupMails()
       {
         const QString identifier = agent.identifier();        
         const QString archivePath = BackupMailUtil::mailsPath() + identifier + QDir::separator();
-        if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
-          const QString agentFileName = agent.identifier() + QLatin1String("rc");
-          const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-
-          KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
-          const QString filename = url.fileName();
+        if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {          
+          KUrl url = resourcePath(agent);
           if(!url.isEmpty()) {
+            const QString filename = url.fileName();
             const bool fileAdded  = mArchive->addLocalFile(url.path(), archivePath + filename);
-            if(fileAdded)
+            if(fileAdded) {
+              storeResources(identifier, archivePath );
               Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
+            }
             else
               Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
           }
-          storeResources(identifier, archivePath );
-
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
-          const QString agentFileName = agent.identifier() + QLatin1String("rc");
-          const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-
-          KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          const KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+          const KUrl url = resourcePath(agent);
           const QString filename = url.fileName();
           //TODO
           //Several file. Look at archive mail dialog
           storeResources(identifier, archivePath);
         } else if(identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+          const KUrl url = resourcePath(agent);
+          const QString filename = url.fileName();
           //TODO
         }
       }

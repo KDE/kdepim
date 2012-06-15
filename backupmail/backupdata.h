@@ -22,6 +22,10 @@
 #include <KSharedConfig>
 class KUrl;
 
+namespace Akonadi {
+  class AgentInstance;
+}
+
 class BackupData : public AbstractData
 {
 public:
@@ -38,7 +42,7 @@ private:
   void backupAkonadiDb();
   void backupNepomuk();
   void storeResources(const QString&identifier, const QString& path);
-  KUrl resourcePath(KSharedConfigPtr resourceConfig) const;
+  KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
   void backupFile(const QString&filename, const QString& path, const QString&storedName);
 
 };
