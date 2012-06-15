@@ -21,7 +21,6 @@
 #include "mailcommon/mailutil.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
-#include "mailcommon/backupjob.h"
 
 #include <Akonadi/AgentManager>
 #include <Akonadi/Collection>
@@ -359,9 +358,8 @@ void BackupData::backupMails()
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
                   identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
           const KUrl url = resourcePath(agent);
-          const QString filename = url.fileName();
 
-          if(backupMailData(url, archivePath,identifier)) {
+          if(backupMailData(url, archivePath)) {
             storeResources(identifier, archivePath );
           }
         }
@@ -372,44 +370,60 @@ void BackupData::backupMails()
   Q_EMIT info(i18n("Mails backup done."));
 }
 
-bool BackupData::backupMailData(const KUrl& url,const QString& archivePath, const QString&identifier)
+void BackupData::writeDirectory(const QString& path, const QString&currentPath, KZip *mailArchive)
 {
-  const QString filename = url.fileName();
-  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
-  Akonadi::CollectionFetchScope scope;
-  scope.setIncludeUnsubscribed( true );
-  scope.setResource(identifier);
-  job->setFetchScope(scope);
-  if(job->exec()) {
-    Akonadi::Collection::List list = job->collections();
-    qDebug()<<" list.count()"<<list.count();
-    qDebug()<<" list.at(0)"<<list.at(0).name()<<"list.at(0)."<<list.at(0).resource()<<" id :"<<list.at(0).id()<<" list.at(0)"<<list.at(0);
-    if(list.count()==1) {
-      KTemporaryFile tmp;
-      tmp.open();
-      Akonadi::Collection collection(list.at(0));
-      MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
-      backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
-      const QString realPath = MailCommon::Util::fullCollectionPath(collection);
-      backupJob->setSaveLocation( tmp.fileName() );
-      //backupJob->setArchiveType( mInfo->archiveType() );
-      backupJob->setDeleteFoldersAfterCompletion( false );
-      backupJob->setRecursive( true );
-      backupJob->setDisplayMessageBox(false);
-      backupJob->start();
+  QDir dir(currentPath);
+  qDebug()<<" currentPath"<<currentPath;
+  mailArchive->writeDir(path,"","");
+  const QFileInfoList lst= dir.entryInfoList();
+  const int numberItems(lst.count());
+  for(int i = 0; i < numberItems;++i) {
+    const QString filename(lst.at(i).fileName());
+    qDebug()<<" filename "<<filename;
+    if(filename == QLatin1String("..") ||
+       filename == QLatin1String("."))
+      continue;
 
-      //TODO: store as an uniq file
-      //TODO: don't compress when we add it to main archive.
-      const bool fileAdded = mArchive->addLocalFile(tmp.fileName(), archivePath + filename);
-      if(fileAdded) {
-        storeResources(identifier, archivePath );
-        Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
-        return true;
-      }
+    if(lst.at(i).isDir()) {
+      writeDirectory(lst.at(i).absoluteFilePath().remove(path),lst.at(i).absoluteFilePath(),mailArchive);
+    } else {
+      //TODO: verify
+      mailArchive->addLocalFile(lst.at(i).absoluteFilePath().remove(path),QString());
     }
   }
-  Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
-  return false;
+}
+
+bool BackupData::backupMailData(const KUrl& url,const QString& archivePath)
+{
+  const QString filename = url.fileName();
+  KTemporaryFile tmp;
+  tmp.open();
+  KZip *mailArchive = new KZip(tmp.fileName());
+  bool result = mailArchive->open(QIODevice::WriteOnly);
+  if(!result) {
+    Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
+    delete mailArchive;
+    return false;
+  }
+
+  writeDirectory(url.path(),url.path(),mailArchive);
+
+  //TODO: save .local.....
+  mailArchive->close();
+
+  //TODO: store as an uniq file
+  mailArchive->setCompression(KZip::NoCompression);
+  const bool fileAdded = mArchive->addLocalFile(tmp.fileName(), archivePath + filename);
+  mailArchive->setCompression(KZip::DeflateCompression);
+  delete mailArchive;
+
+  if(fileAdded) {
+    Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
+    return true;
+  } else {
+    Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
+    return false;
+  }
 }
 
 void BackupData::backupAkonadiDb()

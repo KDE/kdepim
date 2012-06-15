@@ -17,6 +17,7 @@
 
 #include "backupmailutil.h"
 #include <KConfigGroup>
+#include <QDir>
 
 QString BackupMailUtil::transportsPath()
 {
@@ -51,6 +52,7 @@ QString BackupMailUtil::akonadiPath()
 KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
 {
   KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-  KUrl url = group.readEntry(QLatin1String("Path"),KUrl());
-  return url;
+  QString url = group.readEntry(QLatin1String("Path"),QString());
+  url.replace("$HOME", QDir::homePath());
+  return KUrl(url);
 }
