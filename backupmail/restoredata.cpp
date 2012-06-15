@@ -67,6 +67,11 @@ RestoreData::~RestoreData()
   delete mCreateResource;
 }
 
+void RestoreData::run()
+{
+  startRestore();
+}
+
 void RestoreData::startRestore()
 {
   if(!openArchive(false /*readonly*/))

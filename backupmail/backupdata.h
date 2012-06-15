@@ -31,9 +31,10 @@ class BackupData : public AbstractData
 public:
   explicit BackupData(QWidget *parent,BackupMailUtil::BackupTypes typeSelected,const QString& filename);
   ~BackupData();
+  void run();
+private:
   void startBackup();
 
-private:
   void backupTransports();
   void backupResources();
   void backupMails();

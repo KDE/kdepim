@@ -34,8 +34,9 @@ class RestoreData : public AbstractData
 public:
   explicit RestoreData(QWidget *parent,BackupMailUtil::BackupTypes typeSelected, const QString &filename);
   ~RestoreData();
-  void startRestore();
+  void run();
 private:
+  void startRestore();
   void restoreTransports();
   void restoreResources();
   void restoreMails();

@@ -22,7 +22,8 @@
 #include <KLocale>
 
 AbstractData::AbstractData(QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
-  : mTypeSelected(typeSelected),
+  : QThread(),
+    mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
     mParent(parent)

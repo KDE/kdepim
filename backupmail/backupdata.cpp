@@ -49,6 +49,11 @@ BackupData::~BackupData()
 {
 }
 
+void BackupData::run()
+{
+  startBackup();
+}
+
 void BackupData::startBackup()
 {
   if(!openArchive(true))
