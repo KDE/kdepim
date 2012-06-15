@@ -196,10 +196,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
 
+  const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
  
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
-
+  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Identity", m_msg.get(), QString::number( identity.uoid() ), "utf-8" ));
 
   // Save the quote prefix which is used for this message. Each message can have
   // a different quote prefix, for example depending on the original sender.
