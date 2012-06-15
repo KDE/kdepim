@@ -353,27 +353,37 @@ void BackupData::backupMails()
             else
               Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
           }
-        } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
+        } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
+                  identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
           const KUrl url = resourcePath(agent);
           const QString filename = url.fileName();
 
-          storeResources(identifier, archivePath );
-          //TODO
-          //Several file. Look at archive mail dialog
-          storeResources(identifier, archivePath);
-        } else if(identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
-          const KUrl url = resourcePath(agent);
-          const QString filename = url.fileName();
-
-          storeResources(identifier, archivePath );
-          //TODO
+          if(backupMailData(url, archivePath,identifier)) {
+            storeResources(identifier, archivePath );
+          }
         }
       }
     }
   }
 
   Q_EMIT info(i18n("Mails backup done."));
+}
 
+bool BackupData::backupMailData(const KUrl& url,const QString& archivePath, const QString&identifier)
+{
+  //TODO: store as an uniq file
+  //TODO: don't compress when we add it to main archive.
+  const bool fileAdded = true;// = mArchive->addLocalFile(url.path(), archivePath + filename);
+  const QString filename = url.fileName();
+  if(fileAdded) {
+    storeResources(identifier, archivePath );
+    Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
+    return true;
+  }
+  else {
+    Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
+    return false;
+  }
 }
 
 void BackupData::backupAkonadiDb()
