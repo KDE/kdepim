@@ -21,12 +21,12 @@
 #include <KZip>
 #include <KLocale>
 
-AbstractData::AbstractData(QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
-  : QThread(),
+AbstractData::AbstractData( QWidget *widget, const QString &filename,BackupMailUtil::BackupTypes typeSelected, QObject*parent)
+  : QThread(parent),
     mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
-    mParent(parent)
+    mParent(widget)
 {
 }
 

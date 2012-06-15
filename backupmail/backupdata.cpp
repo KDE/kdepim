@@ -40,8 +40,8 @@
 #include <QDebug>
 #include <QDir>
 
-BackupData::BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
-  :AbstractData(parent,filename,typeSelected)
+BackupData::BackupData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename,QObject *parent)
+  :AbstractData(widget,filename,typeSelected,parent)
 {
 }
 

@@ -101,7 +101,7 @@ void BackupMailApplication::slotBackupData()
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
     delete mBackupData;
-    mBackupData = new BackupData(this,typeSelected,filename);
+    mBackupData = new BackupData(this,typeSelected,filename,this);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     connect(mBackupData,SIGNAL(finished()),SLOT(slotBackupDataFinished()));
@@ -140,7 +140,7 @@ void BackupMailApplication::slotRestoreData()
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
-    mRestoreData = new RestoreData(this,typeSelected,filename);
+    mRestoreData = new RestoreData(this,typeSelected,filename,this);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     connect(mRestoreData,SIGNAL(finished()),SLOT(slotRestoreDataFinished()));
