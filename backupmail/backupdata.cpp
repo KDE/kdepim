@@ -356,12 +356,16 @@ void BackupData::backupMails()
         } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
           const KUrl url = resourcePath(agent);
           const QString filename = url.fileName();
+
+          storeResources(identifier, archivePath );
           //TODO
           //Several file. Look at archive mail dialog
           storeResources(identifier, archivePath);
         } else if(identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
           const KUrl url = resourcePath(agent);
           const QString filename = url.fileName();
+
+          storeResources(identifier, archivePath );
           //TODO
         }
       }
