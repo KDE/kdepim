@@ -21,9 +21,12 @@
 #include "mailcommon/mailutil.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
+#include "mailcommon/backupjob.h"
 
 #include <Akonadi/AgentManager>
 #include <Akonadi/Collection>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
 
 #include <Mailtransport/TransportManager>
 
@@ -371,19 +374,42 @@ void BackupData::backupMails()
 
 bool BackupData::backupMailData(const KUrl& url,const QString& archivePath, const QString&identifier)
 {
-  //TODO: store as an uniq file
-  //TODO: don't compress when we add it to main archive.
-  const bool fileAdded = true;// = mArchive->addLocalFile(url.path(), archivePath + filename);
   const QString filename = url.fileName();
-  if(fileAdded) {
-    storeResources(identifier, archivePath );
-    Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
-    return true;
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
+  Akonadi::CollectionFetchScope scope;
+  scope.setIncludeUnsubscribed( true );
+  scope.setResource(identifier);
+  job->setFetchScope(scope);
+  if(job->exec()) {
+    Akonadi::Collection::List list = job->collections();
+    qDebug()<<" list.count()"<<list.count();
+    qDebug()<<" list.at(0)"<<list.at(0).name()<<"list.at(0)."<<list.at(0).resource()<<" id :"<<list.at(0).id()<<" list.at(0)"<<list.at(0);
+    if(list.count()==1) {
+      KTemporaryFile tmp;
+      tmp.open();
+      Akonadi::Collection collection(list.at(0));
+      MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
+      backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
+      const QString realPath = MailCommon::Util::fullCollectionPath(collection);
+      backupJob->setSaveLocation( tmp.fileName() );
+      //backupJob->setArchiveType( mInfo->archiveType() );
+      backupJob->setDeleteFoldersAfterCompletion( false );
+      backupJob->setRecursive( true );
+      backupJob->setDisplayMessageBox(false);
+      backupJob->start();
+
+      //TODO: store as an uniq file
+      //TODO: don't compress when we add it to main archive.
+      const bool fileAdded = mArchive->addLocalFile(tmp.fileName(), archivePath + filename);
+      if(fileAdded) {
+        storeResources(identifier, archivePath );
+        Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
+        return true;
+      }
+    }
   }
-  else {
-    Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
-    return false;
-  }
+  Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
+  return false;
 }
 
 void BackupData::backupAkonadiDb()
