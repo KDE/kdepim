@@ -58,8 +58,8 @@ void KJotsBrowser::linkClicked(const QUrl& link)
 
     QString anchor = link.fragment();
 
-    if ( link.toString().startsWith("#") && anchor.startsWith( QLatin1String( "book_" ) )
-            || anchor.startsWith( QLatin1String( "page_" ) ) ) {
+    if ( link.toString().startsWith("#") && (anchor.startsWith( QLatin1String( "book_" ) )
+            || anchor.startsWith( QLatin1String( "page_" ) ) ) ) {
         scrollToAnchor(anchor);
         return;
     }
