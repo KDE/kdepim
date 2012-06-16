@@ -102,11 +102,11 @@ class KReparentingProxyModelPrivate
   struct PendingInsertion
   {
     PendingInsertion()
-      : start(-1), end(-1), parentId(-1)
+      : parentId(-1), start(-1), end(-1)
     { }
 
     PendingInsertion(const QModelIndex &_index, int _start, int _end)
-      : index(_index), start(_start), end(_end)
+      : index(_index), parentId(-1), start(_start), end(_end)
     { }
 
     QPersistentModelIndex index;
