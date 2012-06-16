@@ -70,7 +70,7 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
     }
 
     // start a new page after every second table
-    const QString pageBreak = ( counter % 2 ? "page-break-after: always;" : QString() );
+    const QString pageBreak = ( ( counter % 2 ) ? "page-break-after: always;" : QString() );
 
     content += "  <table style=\"border-width: 0px; " + pageBreak + "\" width=\"100%\">\n";
     content += "   <tr>\n";
