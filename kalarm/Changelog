@@ -1,7 +1,8 @@
 KAlarm Change Log
 
-=== Version 2.8.6 --- 6 June 2012 ===
+=== Version 2.8.6 --- 16 June 2012 ===
 - Fix crash when closing alarm window for alarm which plays audio file.
+- [Akonadi] Don't show alarms from calendars which have no Akonadi resource.
 
 === Version 2.8.5 (KDE 4.8.4) --- 6 June 2012 ===
 - [Akonadi] Warn user and disable KAlarm if Akonadi fails to run.
