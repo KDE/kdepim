@@ -57,6 +57,7 @@ Action=Popup
 [Event/archivemailstarted]
 Name=Archive Mail started
 Name[da]=Mail-arkivering startet
+Name[el]=Η αρχειοθέτηση της αλληλογραφίας ξεκίνησε
 Name[et]=Kirjade arhiveerimine algas
 Name[ia]=Action de archivar posta initiate
 Name[km]=បាន​ចាប់ផ្ដើម​ការ​ទុក​សំបុត្រ​ក្នុង​ប័ណ្ណសារ

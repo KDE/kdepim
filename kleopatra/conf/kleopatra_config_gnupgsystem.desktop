@@ -106,6 +106,7 @@ X-KDE-Keywords=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signing,encryption
 X-KDE-Keywords[ca]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signatura,encriptatge
 X-KDE-Keywords[da]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signering,kryptering
 X-KDE-Keywords[de]=GPG,GPGSM,GPG-Agent,dirmngr,SC-Daemon,Kleopatra,signieren,verschlüsseln
+X-KDE-Keywords[el]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,υπογραφή,κρυπτογράφηση
 X-KDE-Keywords[es]=gpg,gpgsm,agente-gpg,dirmngr,scdaemon,kleopatra,firmado,cifrado
 X-KDE-Keywords[et]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,allkirjastamine,krüptimine
 X-KDE-Keywords[fr]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signature,chiffrement
