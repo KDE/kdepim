@@ -81,9 +81,6 @@ void AbstractSettings::storeTransport(MailTransport::Transport * mt, bool isDefa
   addImportInfo(i18n("Transport set up."));
 }
 
-
-
-
 void AbstractSettings::addImportInfo( const QString& log )
 {
   mImportWizard->importSettingPage()->addImportInfo( log );

@@ -29,10 +29,7 @@ public:
   TypeSupportedOptions supportedOption();
   bool foundMailer() const;
   
-  bool importSettings();
   bool importMails();
-  bool importFilters();
-  bool importAddressBook();
   QString name() const;
 
 };

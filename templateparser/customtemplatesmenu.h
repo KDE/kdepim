@@ -45,7 +45,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
     KActionMenu *replyAllActionMenu() const { return (mCustomReplyAllActionMenu); }
     KActionMenu *forwardActionMenu() const { return (mCustomForwardActionMenu); }
 
-  public slots:
+  public Q_SLOTS:
     void update();
 
   signals:
@@ -53,7 +53,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
     void replyAllTemplateSelected( const QString &tmpl );
     void forwardTemplateSelected( const QString &tmpl );
 
-  private slots:
+  private Q_SLOTS:
     void slotReplySelected( int idx );
     void slotReplyAllSelected( int idx );
     void slotForwardSelected( int idx );

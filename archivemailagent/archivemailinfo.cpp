@@ -51,10 +51,10 @@ KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
   QString adaptFolderName(foldername);
   adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
-  QString path = url().path() + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' ) + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
-;
-  KUrl real;
-  real.setPath(path);
+  const QString path = url().path() + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
+      + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' )
+      + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
+  KUrl real(path);
   return real;
 }
 
@@ -75,7 +75,6 @@ int ArchiveMailInfo::archiveAge() const
   return mArchiveAge;
 }
 
-
 void ArchiveMailInfo::setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit )
 {
   mArchiveUnit = unit;
@@ -85,7 +84,6 @@ ArchiveMailInfo::ArchiveUnit ArchiveMailInfo::archiveUnit() const
 {
   return mArchiveUnit;
 }
-
 
 void ArchiveMailInfo::setArchiveType( MailCommon::BackupJob::ArchiveType type )
 {
@@ -106,7 +104,6 @@ QDate ArchiveMailInfo::lastDateSaved() const
 {
   return mLastDateSaved;
 }
-
 
 void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 {

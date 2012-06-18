@@ -54,11 +54,6 @@ QString PMailImportData::name() const
   return QLatin1String("Pegasus Mail");
 }
 
-bool PMailImportData::importSettings()
-{
-  return false;
-}
-
 bool PMailImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
@@ -76,15 +71,6 @@ bool PMailImportData::importMails()
   return true;
 }
 
-bool PMailImportData::importFilters()
-{
-  return false;
-}
-
-bool PMailImportData::importAddressBook()
-{
-  return false;
-}
 
 AbstractImporter::TypeSupportedOptions PMailImportData::supportedOption()
 {

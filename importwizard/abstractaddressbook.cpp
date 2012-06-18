@@ -61,7 +61,6 @@ void AbstractAddressBook::createContact( const KABC::Addressee& address )
       delete dlg;
       return;
     }
-
     delete dlg;
   }
   
@@ -82,7 +81,6 @@ void AbstractAddressBook::slotStoreDone(KJob*job)
   }
   addAddressBookImportInfo( i18n( "Contact created done" ) );
 }
-
 
 void AbstractAddressBook::addAddressBookImportInfo( const QString& log )
 {

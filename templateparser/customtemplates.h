@@ -56,7 +56,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void changed();
     void templatesUpdated();
 
-  private slots:
+  private Q_SLOTS:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
     void slotAddClicked();

@@ -26,7 +26,7 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QFile>
-#include <QDebug>
+#include <KDebug>
 
 ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
@@ -72,8 +72,8 @@ void ThunderbirdSettings::readGlobalSettings()
     const bool markMessageRead = mHashConfig.value(markMessageReadStr).toBool();
     addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), markMessageRead);
   } else {
-    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
     //Default value
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
   }
   const QString markMessageReadIntervalStr = QLatin1String("mailnews.mark_message_read.delay.interval");
   if(mHashConfig.contains(markMessageReadIntervalStr)) {
@@ -83,8 +83,8 @@ void ThunderbirdSettings::readGlobalSettings()
       addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markMessageReadInterval);
     }
   } else {
-    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
     //Default 5 seconds
+    addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 5);
   }
 
   const QString mailComposeAttachmentReminderStr = QLatin1String("mail.compose.attachment_reminder");
@@ -144,7 +144,7 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
         break;
       case 4: //Encrypted password ???
         settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::LOGIN ); //????
-        qDebug()<<" authmethod == encrypt password";
+        kDebug()<<" authmethod == encrypt password";
         break;
       case 5: //GSSAPI
         settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::GSSAPI );
@@ -153,10 +153,10 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
         settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
         break;
       case 7: //TLS
-        qDebug()<<" authmethod method == TLS"; //????
+        kDebug()<<" authmethod method == TLS"; //????
         break;
       default:
-        qDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
+        kDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
         break;
       }
     }
@@ -187,7 +187,6 @@ void ThunderbirdSettings::readAccount()
       QMap<QString, QVariant> settings;
       settings.insert(QLatin1String("ImapServer"),host);
       settings.insert(QLatin1String("UserName"),userName);
-      found = false;
       const int port = mHashConfig.value( accountName + QLatin1String( ".port" ) ).toInt( &found);
       if ( found ) {
         settings.insert( QLatin1String( "ImapPort" ), port );
@@ -220,7 +219,7 @@ void ThunderbirdSettings::readAccount()
             //SSL/TLS
             settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
           default:
-            qDebug()<<" socketType "<<socketType;
+            kDebug()<<" socketType "<<socketType;
         }
       }
       const QString checkNewMailStr = accountName + QLatin1String( ".check_new_mail" );
@@ -252,7 +251,6 @@ void ThunderbirdSettings::readAccount()
       settings.insert( QLatin1String( "Host" ), host );
       settings.insert( QLatin1String( "Login" ), userName );
 
-      found = false;
       const bool leaveOnServer = mHashConfig.value( accountName + QLatin1String( ".leave_on_server")).toBool();
       if(leaveOnServer) {
         settings.insert(QLatin1String("LeaveOnServer"),leaveOnServer);
@@ -286,7 +284,7 @@ void ThunderbirdSettings::readAccount()
             //SSL/TLS
             settings.insert( QLatin1String( "UseSSL" ), true );
           default:
-            qDebug()<<" socketType "<<socketType;
+            kDebug()<<" socketType "<<socketType;
         }
       }
       addAuth( settings, QLatin1String( "AuthenticationMethod" ),accountName );
@@ -311,23 +309,23 @@ void ThunderbirdSettings::readAccount()
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
-      qDebug()<<" account type none!";
+      kDebug()<<" account type none!";
       continue;
     } else if (type == QLatin1String("movemail")) {
-      qDebug()<<" movemail accound found and not implemented in importthunderbird";
+      kDebug()<<" movemail accound found and not implemented in importthunderbird";
       continue;
       //TODO
     } else if (type == QLatin1String("rss")) {
       //TODO when akregator2 will merge in kdepim
-      qDebug()<<" rss resource needs to be implemented";
+      kDebug()<<" rss resource needs to be implemented";
       continue;
     } else if (type == QLatin1String("nntp")) {
       //TODO add config directly to knode
       //TODO when knode will merge in kdepim
-      qDebug()<<" nntp resource need to be implemented";
+      kDebug()<<" nntp resource need to be implemented";
       continue;
     } else {
-      qDebug()<<" type unknown : "<<type;
+      kDebug()<<" type unknown : "<<type;
       continue;
     }
 
@@ -385,7 +383,7 @@ void ThunderbirdSettings::readTransport()
         mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::NTLM);
         break;
       default:
-        qDebug()<<" authMethod unknown :"<<authMethod;
+        kDebug()<<" authMethod unknown :"<<authMethod;
     }
 
     const int trySsl = mHashConfig.value( smtpName + QLatin1String( ".try_ssl" ) ).toInt();
@@ -400,7 +398,7 @@ void ThunderbirdSettings::readTransport()
         mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
         break;
       default:
-        qDebug()<<" trySsl unknown :"<<trySsl;
+        kDebug()<<" trySsl unknown :"<<trySsl;
     }
 
     const QString userName = mHashConfig.value( smtpName + QLatin1String( ".username" ) ).toString();

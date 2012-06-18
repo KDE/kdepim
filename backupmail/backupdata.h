@@ -22,14 +22,19 @@
 #include <KSharedConfig>
 class KUrl;
 
+namespace Akonadi {
+  class AgentInstance;
+}
+
 class BackupData : public AbstractData
 {
 public:
-  explicit BackupData(QWidget *parent,BackupMailUtil::BackupTypes typeSelected,const QString& filename);
+  explicit BackupData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString& filename, QObject *parent);
   ~BackupData();
+  void run();
+private:
   void startBackup();
 
-private:
   void backupTransports();
   void backupResources();
   void backupMails();
@@ -37,9 +42,11 @@ private:
   void backupIdentity();
   void backupAkonadiDb();
   void backupNepomuk();
+  void writeDirectory(const QString& path, const QString &currentPath, KZip *mailArchive);
   void storeResources(const QString&identifier, const QString& path);
-  KUrl resourcePath(KSharedConfigPtr resourceConfig) const;
+  KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
   void backupFile(const QString&filename, const QString& path, const QString&storedName);
+  bool backupMailData(const KUrl& url, const QString& archivePath);
 
 };
 

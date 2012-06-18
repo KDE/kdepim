@@ -76,6 +76,7 @@ void ArchiveMailAgent::showConfigureDialog()
 void ArchiveMailAgent::reload()
 {
   mArchiveManager->load();
+  mTimer->start();
 }
 
 void ArchiveMailAgent::configure( WId windowId )

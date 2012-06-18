@@ -197,7 +197,7 @@ static ReaderStatus::AppType parse_app_type( const std::string & s ) {
     const char ** it = std::find( begin( app_types ), end( app_types ), to_lower_copy( s ) );
 #else
     std::string lowerStr ;
-    for (std::string::const_iterator itr = s.begin();itr!=s.end();itr++) {
+    for (std::string::const_iterator itr = s.begin();itr!=s.end();++itr) {
       lowerStr+=tolower(*itr);
     }
     const char ** it = std::find( begin( app_types ), end( app_types ), lowerStr );

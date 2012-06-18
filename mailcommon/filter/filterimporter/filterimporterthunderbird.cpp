@@ -65,8 +65,17 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
     if ( !stream.atEnd() ) {
       line = stream.readLine();
       if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "actionValue=" ) );
-        value = extractValues( line );
+        value = cleanArgument( line, QLatin1String( "actionValue=" ) );
+        if(actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
+          KUrl url(value);
+          if(url.isValid()) {
+            QString path = url.path();
+            if(path.startsWith(QLatin1Char('/'))) {
+              path.remove(0,1); //Remove '/'
+            }
+            value = path;
+          }
+        }
         createFilterAction( filter, actionName, value );
       } else {
         createFilterAction( filter, actionName, value );
@@ -302,8 +311,9 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     value = value * 1024; //Ko
     contentsName = QString::number( value );
   } else if ( fieldName == "<date>" ) {
-    //TODO look at how to convert it
-    contentsName = contents;
+    QLocale locale(QLocale::C);
+    const QDate date = locale.toDate(contents,QString::fromLatin1("dd-MMM-yyyy"));
+    contentsName = date.toString(Qt::ISODate);
   } else {
     contentsName = contents;
   }
@@ -380,17 +390,12 @@ QString FilterImporterThunderbird::extractActions( const QString &line,
   return actionName;
 }
 
-QString FilterImporterThunderbird::extractValues( const QString &line )
-{
-  //TODO
-  return line;
-}
-
 void FilterImporterThunderbird::extractType( const QString &line, MailCommon::MailFilter *filter )
 {
   const int value = line.toInt();
   if ( value == 1 ) {
     filter->setApplyOnInbound( true );
+    filter->setApplyOnExplicit( false );
     //Checking mail
   } else if ( value == 16 ) {
     filter->setApplyOnInbound( false );
@@ -401,6 +406,7 @@ void FilterImporterThunderbird::extractType( const QString &line, MailCommon::Ma
     filter->setApplyOnExplicit( true );
     //Checking mail or manual
   } else if ( value == 32 ) {
+    filter->setApplyOnExplicit( false );
     filter->setApplyOnOutbound( true );
     filter->setApplyOnInbound( false );
     //checking mail after classification

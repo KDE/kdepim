@@ -28,8 +28,6 @@
 
 using namespace KPIMIdentities;
 
-extern "C" {
-
 KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
   KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );
@@ -73,6 +71,4 @@ KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *w
     return defaultIdentity.primaryEmailAddress();
   else
     return QString();
-}
-
 }

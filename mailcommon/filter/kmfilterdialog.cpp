@@ -61,6 +61,7 @@ using MailCommon::FilterImporterExporter;
 #include <QRadioButton>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <QShortcut>
 
 using namespace MailCommon;
 
@@ -960,6 +961,10 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 
   layout->addWidget( hb );
   setLayout( layout );
+
+  QShortcut *shortcut = new QShortcut( this );
+  shortcut->setKey( Qt::Key_Delete );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotDelete()) );
 
   //----------- now connect everything
   connect( mListWidget, SIGNAL(currentRowChanged(int)),

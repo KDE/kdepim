@@ -61,9 +61,10 @@ bool Evolutionv3ImportData::importSettings()
   const QString accountFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/mail/%gconf.xml");
   if ( QFile( accountFile ).exists() ) {
     EvolutionSettings account( accountFile, mImportWizard );
-    return true;
+  } else {
+    addImportSettingsInfo(i18n("Evolution settings not found."));
   }
-  return false;
+  return true;
 }
 
 bool Evolutionv3ImportData::importMails()
@@ -94,7 +95,7 @@ bool Evolutionv3ImportData::importFilters()
 bool Evolutionv3ImportData::importAddressBook()
 {
   EvolutionAddressBook addressbook(mImportWizard);
-  return false;
+  return true;
 }
 
 bool Evolutionv3ImportData::importCalendar()
@@ -102,9 +103,10 @@ bool Evolutionv3ImportData::importCalendar()
   const QString calendarFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/calendar/%gconf.xml");
   if ( QFile( calendarFile ).exists() ) {
     EvolutionCalendar calendar( calendarFile, mImportWizard );
-    return true;
+  } else {
+    addImportCalendarInfo(i18n("Evolution calendar not found."));
   }
-  return false;
+  return true;
 }
 
 

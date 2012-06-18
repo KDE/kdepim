@@ -1803,6 +1803,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
   const bool isRoot = ( content == mMessage.get() );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
   KMenu popup;
 
@@ -1813,7 +1814,11 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
                        this, SLOT(slotAttachmentOpen()) );
-      popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
+
+      if(selectedContents().count() == 1)
+        createOpenWithMenu(&popup,content);
+      else
+        popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );
     }
   }
@@ -1824,7 +1829,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                    SLOT(slotSaveAsEncoded()) );
   */
 
-  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
   if( !contents.isEmpty() ) {
     popup.addAction( i18n( "Save All Attachments..." ), this,
                      SLOT(slotAttachmentSaveAll()) );
@@ -2389,7 +2393,7 @@ void ViewerPrivate::slotPrintPreview()
   if ( !mMessage )
     return;
   QPrinter printer;
-  KPrintPreview previewdlg( &printer, mViewer );
+  KPrintPreview previewdlg( &printer/*, mViewer*/ );
   mViewer->print( &printer );
   previewdlg.exec();
 #endif
@@ -2405,7 +2409,7 @@ void ViewerPrivate::slotPrintMsg()
     return;
   QPrinter printer;
 
-  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
+  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer/*, mViewer*/ ) );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     mViewer->print( &printer );
   }

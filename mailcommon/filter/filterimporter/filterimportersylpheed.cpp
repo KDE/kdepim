@@ -55,7 +55,7 @@ FilterImporterSylpheed::~FilterImporterSylpheed()
 
 QString FilterImporterSylpheed::defaultPath()
 {
-  return QString::fromLatin1( "%1/.sylpheed-2.0/" ).arg( QDir::homePath() );
+  return QString::fromLatin1( "%1/.sylpheed-2.0/filter.xml" ).arg( QDir::homePath() );
 }
 
 void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::MailFilter *filter )
@@ -94,7 +94,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
         } else if ( attr == QLatin1String( "List-Id" ) ) {
           fieldName = "list-id";
         } else if ( attr == QLatin1String( "X-ML-Name" ) ) {
-          //TODO
+          fieldName = "x-mailing-list";
         }
         if ( fieldName.isEmpty() ) {
           kDebug()<<" match-header not implemented " << attr;
@@ -102,7 +102,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
       }
       contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-any-header" ) ) {
-      fieldName = "<recipients>";
+      fieldName = "<any header>";
       contentsName = ruleFilter.text();
     } else if ( nexttag == QLatin1String( "match-to-or-cc" ) ) {
       fieldName = "<recipients>";
@@ -115,7 +115,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
       //Not implemented in kmail
     } else if ( nexttag == QLatin1String( "size" ) ) {
       fieldName = "<size>";
-      contentsName = ruleFilter.text();
+      contentsName = QString::number(ruleFilter.text().toInt()*1024); //Stored as kb
     } else if ( nexttag == QLatin1String( "age" ) ) {
       fieldName = "<age in days>";
       contentsName = ruleFilter.text();
@@ -134,6 +134,9 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
       //TODO
     } else {
       kDebug() << " tag not recognize " << nexttag;
+    }
+    if(fieldName.isEmpty()) {
+      qDebug()<<" field not implemented "<<nexttag;
     }
 
     if ( ruleFilter.hasAttribute( "type" ) ) {

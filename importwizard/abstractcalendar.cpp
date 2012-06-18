@@ -27,9 +27,7 @@ AbstractCalendar::AbstractCalendar(ImportWizard *parent)
 
 AbstractCalendar::~AbstractCalendar()
 {
-
 }
-
 
 void AbstractCalendar::addImportInfo( const QString& log )
 {

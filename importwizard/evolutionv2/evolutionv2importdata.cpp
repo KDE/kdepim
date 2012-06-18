@@ -50,11 +50,6 @@ QString Evolutionv2ImportData::name() const
   return QLatin1String("Evolution 2.x");
 }
 
-bool Evolutionv2ImportData::importSettings()
-{
-  return false;
-}
-
 bool Evolutionv2ImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
@@ -72,16 +67,6 @@ bool Evolutionv2ImportData::importMails()
 
   delete info;
   return true;
-}
-
-bool Evolutionv2ImportData::importFilters()
-{
-  return false;
-}
-
-bool Evolutionv2ImportData::importAddressBook()
-{
-  return false;
 }
 
 AbstractImporter::TypeSupportedOptions Evolutionv2ImportData::supportedOption()

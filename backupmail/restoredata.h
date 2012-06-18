@@ -32,10 +32,11 @@ namespace MailCommon {
 class RestoreData : public AbstractData
 {
 public:
-  explicit RestoreData(QWidget *parent,BackupMailUtil::BackupTypes typeSelected, const QString &filename);
+  explicit RestoreData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename, QObject *parent);
   ~RestoreData();
-  void startRestore();
+  void run();
 private:
+  void startRestore();
   void restoreTransports();
   void restoreResources();
   void restoreMails();

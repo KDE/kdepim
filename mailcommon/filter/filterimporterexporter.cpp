@@ -283,6 +283,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
       break;
     case ProcmailFilter:
       title = i18n( "Import Procmail Filters" );
+      defaultPath = MailCommon::FilterImporterProcmail::defaultPath();
       break;
     }
 
