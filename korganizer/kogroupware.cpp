@@ -345,7 +345,10 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
   if ( isOrganizer ) {
     // We are the organizer. If there is more than one attendee, or if there is
     // only one, and it's not the same as the organizer, ask the user to send mail.
+    // Also send a mail if there were more then one attendees in the previous version
+    // of the incidence.
     if ( incidence->attendees().count() > 1
+        || ( oldincidence && oldincidence->attendees().count() > 1 )
         || incidence->attendees().first()->email() != incidence->organizer().email() ) {
 
       QString txt;
