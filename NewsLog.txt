@@ -1,4 +1,13 @@
 
+Friday 22 June 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4847: Uninvites no longer cause a mail to be sent (RT#10123)
+
+
+
 Friday 08 June 2012
 
 Problems addressed
