@@ -204,7 +204,7 @@ else()
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  set(SDO_MIN_VERSION 0.9)
+  set(SDO_MIN_VERSION 0.10)
   set(SOPRANO_MIN_VERSION 2.3.70)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
