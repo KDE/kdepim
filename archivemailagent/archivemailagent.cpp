@@ -29,6 +29,8 @@
 
 #include <QTimer>
 
+//#define DEBUG_ARCHIVEMAILAGENT 1
+
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
 {
@@ -46,9 +48,11 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
   connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
            this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
-
+#ifdef DEBUG_ARCHIVEMAILAGENT
+  QTimer::singleShot(1000,mArchiveManager,SLOT(load()));
+#else
   QTimer::singleShot(1000*60*5,mArchiveManager,SLOT(load()));
-
+#endif
   mTimer = new QTimer(this);
   connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
   mTimer->start(24*60*60*1000);
