@@ -143,7 +143,6 @@ void BackupData::backupConfig()
     else
       Q_EMIT error(i18n("Filters cannot be exported."));
   }
-
   const QString labldaprcStr("kabldaprc");
   const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
   if(QFile(labldaprc).exists()) {
@@ -389,6 +388,7 @@ void BackupData::writeDirectory(const QString& path, const QString&currentPath, 
        filename == QLatin1String("."))
       continue;
 
+    //TODO: fix date/group
     if(lst.at(i).isDir()) {
       writeDirectory(lst.at(i).absoluteFilePath().remove(path),lst.at(i).absoluteFilePath(),mailArchive);
     } else {
