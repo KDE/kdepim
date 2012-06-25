@@ -328,10 +328,6 @@ void KMSystemTray::hideKMail()
 void KMSystemTray::initListOfCollection()
 {
   mCount = 0;
-  if ( mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) {
-    setStatus( KStatusNotifierItem::Passive );
-  }
-
   unreadMail( KMKernel::self()->entityTreeModel() );
 }
 
@@ -365,9 +361,12 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
                                           "%1 unread messages",
                                           mCount));
   // Make sure the icon will be displayed
-  if ( ( mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) &&
-       status() == KStatusNotifierItem::Passive && mCount > 0) {
-    setStatus( KStatusNotifierItem::Active );
+  if ( mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) {
+    if(status() == KStatusNotifierItem::Passive && (mCount > 0)) {
+      setStatus( KStatusNotifierItem::Active );
+    } else if( status() == KStatusNotifierItem::Active && (mCount == 0) ) {
+      setStatus( KStatusNotifierItem::Passive );
+    }
   }
 
   //kDebug()<<" mCount :"<<mCount;
