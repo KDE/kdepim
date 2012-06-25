@@ -26,6 +26,7 @@
 #include <Akonadi/Session>
 #include <Akonadi/CollectionFetchScope>
 #include <KMime/Message>
+#include <KWindowSystem>
 
 #include <QTimer>
 
@@ -67,9 +68,12 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
   mArchiveManager->removeCollection(collection);
 }
 
-void ArchiveMailAgent::showConfigureDialog()
+void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
   ArchiveMailDialog *dialog = new ArchiveMailDialog();
+  if(windowId) {
+    KWindowSystem::setMainWindow( dialog, windowId );
+  }
   if(dialog->exec()) {
     mArchiveManager->load();
   }

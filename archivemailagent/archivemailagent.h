@@ -35,7 +35,7 @@ class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::O
 public:
   explicit ArchiveMailAgent( const QString &id );
   ~ArchiveMailAgent();
-  void showConfigureDialog();
+  void showConfigureDialog(qlonglong windowId = 0);
 
 public Q_SLOTS:
   virtual void configure( WId windowId );
