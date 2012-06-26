@@ -19,12 +19,23 @@
 #define BACKUPTHREAD_H
 
 #include <QThread>
+class AbstractData;
+
 class BackupThread : public QThread
 {
 public:
-  explicit BackupThread(QObject *parent);
+  enum ThreadType {
+    backup = 0,
+    restore = 1
+  };
+
+  explicit BackupThread(BackupThread::ThreadType type, QObject *parent);
   ~BackupThread();
+
+  void start();
+private:
   void run();
+  AbstractData *mAbstract;
 };
 
 #endif // BACKUPTHREAD_H

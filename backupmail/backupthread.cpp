@@ -16,15 +16,29 @@
 */
 
 #include "backupthread.h"
+#include "backupdata.h"
+#include "restoredata.h"
 
-BackupThread::BackupThread(QObject *parent)
+BackupThread::BackupThread(ThreadType type, QObject *parent)
   :QThread(parent)
+  ,mAbstract(0)
 {
+  switch(type) {
+    case backup:
+      break;
+    case restore:
+      break;
+  }
 }
 
 BackupThread::~BackupThread()
 {
 
+}
+
+void BackupThread::start()
+{
+  run();
 }
 
 void BackupThread::run()
