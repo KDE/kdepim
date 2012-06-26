@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;
+
   ImportWizard *wizard = new ImportWizard();
   a.setTopWidget(wizard);
   wizard->show();

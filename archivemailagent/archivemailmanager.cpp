@@ -48,6 +48,9 @@ ArchiveMailManager::~ArchiveMailManager()
 
 void ArchiveMailManager::load()
 {
+  qDeleteAll(mListArchiveInfo);
+  mListArchiveInfo.clear();
+
   KSharedConfig::Ptr config = KGlobal::config();
   const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
   const int numberOfCollection = collectionList.count();
@@ -87,7 +90,6 @@ void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
     config->sync();
     Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
       if(info->saveCollectionId() == collection.id()) {
-        //TODO stop task
         mListArchiveInfo.removeAll(info);
       }
     }

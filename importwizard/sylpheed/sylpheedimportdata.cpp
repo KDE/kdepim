@@ -56,14 +56,13 @@ QString SylpheedImportData::name() const
 
 bool SylpheedImportData::importSettings()
 {
-  //TODO look at /sylpheedrc too 
   const QString accountFile = mPath + QLatin1String("/accountrc");
   if ( QFile( accountFile ).exists() ) {
-    const QString sylpheedrc = mPath + QLatin1String("/sylpheedrc");
-    SylpheedSettings account( accountFile, sylpheedrc, mImportWizard );
-    return true;
+    SylpheedSettings account( accountFile, mPath, mImportWizard );
+  } else {
+    addImportSettingsInfo(i18n("Sylpheed settings not found."));
   }
-  return false;
+  return true;
 }
 
 bool SylpheedImportData::importMails()

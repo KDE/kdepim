@@ -40,14 +40,16 @@ void SelectProgramPage::setFoundProgram(const QStringList& list)
 
 void SelectProgramPage::slotItemSelectionChanged()
 {
-  if(ui->listProgramFound->currentItem())
+  if(ui->listProgramFound->currentItem()) {
     Q_EMIT programSelected(ui->listProgramFound->currentItem()->text());
+  }
 }
 
 void SelectProgramPage::slotItemDoubleClicked( QListWidgetItem*item )
 {
-  if ( item )
+  if ( item ) {
     Q_EMIT doubleClicked();
+  }
 }
 
 void SelectProgramPage::disableSelectProgram()

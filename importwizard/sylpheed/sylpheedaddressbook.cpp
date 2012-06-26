@@ -27,7 +27,7 @@
 SylpheedAddressBook::SylpheedAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
-  qDebug()<<" dir :"<<dir;
+  //qDebug()<<" dir :"<<dir;
   const QStringList files = dir.entryList(QStringList("addrbook-[0-9]*.xml" ), QDir::Files, QDir::Name);
   Q_FOREACH( const QString& file, files ) {
     readAddressBook( dir.path() + QLatin1Char( '/' ) + file );

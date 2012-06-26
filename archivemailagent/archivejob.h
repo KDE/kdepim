@@ -35,8 +35,8 @@ public:
   virtual void execute();
   virtual void kill();
 
-protected slots:
-  void slotBackupDone();
+private Q_SLOTS:
+  void slotBackupDone(const QString& info);
   void slotError(const QString& error);
 private:
   ArchiveMailInfo *mInfo;

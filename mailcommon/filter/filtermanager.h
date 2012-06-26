@@ -24,6 +24,7 @@
 #include "mailfilter.h"
 
 #include <Akonadi/Item>
+#include <Akonadi/ServerManager>
 
 #include <QObject>
 
@@ -162,6 +163,9 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * Should be called at the end of an filter list update.
      */
     void endUpdate();
+
+  private Q_SLOTS:
+    void slotServerStateChanged(Akonadi::ServerManager::State);
 
   Q_SIGNALS:
     /**

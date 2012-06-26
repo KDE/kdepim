@@ -17,7 +17,7 @@
 
 #ifndef ABSTRACTDATA_H
 #define ABSTRACTDATA_H
-#include <QObject>
+#include <QThread>
 #include "backupmailutil.h"
 
 class KZip;
@@ -27,12 +27,13 @@ namespace KPIMIdentities {
   class IdentityManager;
 }
 
-class AbstractData : public QObject
+class AbstractData : public QThread
 {
   Q_OBJECT
 public:
-  explicit AbstractData(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
+  explicit AbstractData(QWidget *widget, const QString& filename, BackupMailUtil::BackupTypes typeSelected, QObject *parent);
   ~AbstractData();
+
 Q_SIGNALS:
   void info(const QString&);
   void error(const QString&);

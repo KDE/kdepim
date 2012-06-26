@@ -23,13 +23,15 @@
 
 class ImportWizard;
 class KConfigGroup;
+class QFile;
 
 class SylpheedSettings : public AbstractSettings
 {
 public:
-  explicit SylpheedSettings(const QString& filename, const QString &sylpheedrc, ImportWizard *parent );
+  explicit SylpheedSettings(const QString& filename, const QString &path, ImportWizard *parent );
   ~SylpheedSettings();
 private:
+  void readCustomHeader(QFile *customHeaderFile);
   void readGlobalSettings(const KConfigGroup& group);
   void readAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup );
   void readIdentity( const KConfigGroup& accountConfig );

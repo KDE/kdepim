@@ -390,9 +390,9 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
           d->emitCreateFinished( change.changeId,
                                  Item(),
                                  ResultCodeInvalidDefaultCollection,
-                                 QLatin1String( "Default collection is invalid or doesn't have "
+                                 QString::fromLatin1( "Default collection is invalid or doesn't have "
                                                 "rights and DestinationPolicyNeverAsk was used. "
-                                                "; rights = " + rights ) );
+                                                "; rights = %1").arg(rights) );
           return change.changeId;
         }
       }

@@ -72,10 +72,11 @@ public:
 protected:
   void appendFilters( const QList<MailCommon::MailFilter*>& filters );
   MailImporter::FilterInfo* initializeInfo();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
+  void addImportFilterInfo( const QString& log );
+  void addImportFilterError( const QString& log );
   bool addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type );
-
+  void addImportSettingsInfo(const QString& log);
+  void addImportCalendarInfo(const QString&log);
 
   QString mPath;
   ImportWizard *mImportWizard;

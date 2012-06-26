@@ -120,8 +120,6 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
 
   // Make it a bit bigger, else the folder requester cuts off the text too early
   resize( 500, minimumSize().height() );
-
-
 }
 
 AddArchiveMailDialog::~AddArchiveMailDialog()
@@ -157,7 +155,7 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
 
 void AddArchiveMailDialog::slotUpdateOkButton()
 {
-  bool valid = !mPath->url().isEmpty() && mFolderRequester->collection().isValid();
+  const bool valid = (!mPath->url().isEmpty() && mFolderRequester->collection().isValid());
   enableButtonOk(valid);
 }
 

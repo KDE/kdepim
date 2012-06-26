@@ -103,7 +103,9 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new MailAppImportData(this));
 #endif
   addImportModule(new PMailImportData(this));
+#ifdef Q_OS_WIN
   addImportModule(new TheBatImportData(this));
+#endif
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );

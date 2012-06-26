@@ -24,6 +24,8 @@
 
 #include <Akonadi/AgentManager>
 #include <Akonadi/Collection>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
 
 #include <Mailtransport/TransportManager>
 
@@ -38,13 +40,18 @@
 #include <QDebug>
 #include <QDir>
 
-BackupData::BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
-  :AbstractData(parent,filename,typeSelected)
+BackupData::BackupData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename,QObject *parent)
+  :AbstractData(widget,filename,typeSelected,parent)
 {
 }
 
 BackupData::~BackupData()
 {
+}
+
+void BackupData::run()
+{
+  startBackup();
 }
 
 void BackupData::startBackup()
@@ -124,18 +131,18 @@ void BackupData::backupConfig()
   Q_EMIT info(i18n("Backing up config..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   QList<MailCommon::MailFilter*> lstFilter = MailCommon::FilterManager::instance()->filters();
-  KTemporaryFile tmp;
-  tmp.open();
-  KUrl url(tmp.fileName());
-  MailCommon::FilterImporterExporter exportFilters;
-  exportFilters.exportFilters(lstFilter,url, true);
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
-  if(fileAdded)
-    Q_EMIT info(i18n("Filters backup done."));
-  else
-    Q_EMIT error(i18n("Filters cannot be exported."));
-  tmp.close();
-
+  if(!lstFilter.isEmpty()) {
+    KTemporaryFile tmp;
+    tmp.open();
+    KUrl url(tmp.fileName());
+    MailCommon::FilterImporterExporter exportFilters;
+    exportFilters.exportFilters(lstFilter,url, true);
+    const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
+    if(fileAdded)
+      Q_EMIT info(i18n("Filters backup done."));
+    else
+      Q_EMIT error(i18n("Filters cannot be exported."));
+  }
   const QString labldaprcStr("kabldaprc");
   const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
   if(QFile(labldaprc).exists()) {
@@ -244,7 +251,6 @@ void BackupData::backupConfig()
           }
         }
       }
-      //TODO
     }
     const QString favoriteCollectionStr("FavoriteCollections");
     if(kmailConfig->hasGroup(favoriteCollectionStr)) {
@@ -268,9 +274,6 @@ void BackupData::backupConfig()
     }
 
     kmailConfig->sync();
-//TODO fix other group/key based on akonadi-id
-
-
     backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kmailStr);
   }
 
@@ -288,7 +291,7 @@ void BackupData::backupIdentity()
     return;
   }
 
-  KSharedConfigPtr identity = KSharedConfig::openConfig( QLatin1String( "emailidentities" ) );
+  KSharedConfigPtr identity = KSharedConfig::openConfig( emailidentitiesrc );
 
   KTemporaryFile tmp;
   tmp.open();
@@ -319,6 +322,16 @@ void BackupData::backupIdentity()
     Q_EMIT error(i18n("Identity file cannot be added to backup file."));
 }
 
+KUrl BackupData::resourcePath(const Akonadi::AgentInstance& agent) const
+{
+  const QString agentFileName = agent.identifier() + QLatin1String("rc");
+  const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+  KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+  KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+  return url;
+}
+
 void BackupData::backupMails()
 {
   Q_EMIT info(i18n("Backing up Mails..."));
@@ -334,41 +347,88 @@ void BackupData::backupMails()
       {
         const QString identifier = agent.identifier();        
         const QString archivePath = BackupMailUtil::mailsPath() + identifier + QDir::separator();
-        if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
-          const QString agentFileName = agent.identifier() + QLatin1String("rc");
-          const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-
-          KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
-          const QString filename = url.fileName();
+        if(identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {          
+          KUrl url = resourcePath(agent);
           if(!url.isEmpty()) {
+            const QString filename = url.fileName();
             const bool fileAdded  = mArchive->addLocalFile(url.path(), archivePath + filename);
-            if(fileAdded)
+            if(fileAdded) {
+              storeResources(identifier, archivePath );
               Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
+            }
             else
               Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
           }
-          storeResources(identifier, archivePath );
+        } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
+                  identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+          const KUrl url = resourcePath(agent);
 
-        } else if(identifier.contains(QLatin1String("akonadi_maildir_resource_"))) {
-          const QString agentFileName = agent.identifier() + QLatin1String("rc");
-          const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-
-          KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-          KUrl url = BackupMailUtil::resourcePath(resourceConfig);
-          const QString filename = url.fileName();
-          //TODO
-          //Several file. Look at archive mail dialog
-          storeResources(identifier, archivePath);
-        } else if(identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
-          //TODO
+          if(backupMailData(url, archivePath)) {
+            storeResources(identifier, archivePath );
+          }
         }
       }
     }
   }
 
   Q_EMIT info(i18n("Mails backup done."));
+}
 
+void BackupData::writeDirectory(const QString& path, const QString&currentPath, KZip *mailArchive)
+{
+  QDir dir(currentPath);
+  qDebug()<<" currentPath"<<currentPath;
+  mailArchive->writeDir(path,"","");
+  const QFileInfoList lst= dir.entryInfoList();
+  const int numberItems(lst.count());
+  for(int i = 0; i < numberItems;++i) {
+    const QString filename(lst.at(i).fileName());
+    qDebug()<<" filename "<<filename;
+    if(filename == QLatin1String("..") ||
+       filename == QLatin1String("."))
+      continue;
+
+    //TODO: fix date/group
+    if(lst.at(i).isDir()) {
+      writeDirectory(lst.at(i).absoluteFilePath().remove(path),lst.at(i).absoluteFilePath(),mailArchive);
+    } else {
+      //TODO: verify
+      mailArchive->addLocalFile(lst.at(i).absoluteFilePath().remove(path),QString());
+    }
+  }
+}
+
+bool BackupData::backupMailData(const KUrl& url,const QString& archivePath)
+{
+  const QString filename = url.fileName();
+  KTemporaryFile tmp;
+  tmp.open();
+  KZip *mailArchive = new KZip(tmp.fileName());
+  bool result = mailArchive->open(QIODevice::WriteOnly);
+  if(!result) {
+    Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
+    delete mailArchive;
+    return false;
+  }
+
+  writeDirectory(url.path(),url.path(),mailArchive);
+
+  //TODO: save .local.....
+  mailArchive->close();
+
+  //TODO: store as an uniq file
+  mailArchive->setCompression(KZip::NoCompression);
+  const bool fileAdded = mArchive->addLocalFile(tmp.fileName(), archivePath + filename);
+  mailArchive->setCompression(KZip::DeflateCompression);
+  delete mailArchive;
+
+  if(fileAdded) {
+    Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
+    return true;
+  } else {
+    Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
+    return false;
+  }
 }
 
 void BackupData::backupAkonadiDb()

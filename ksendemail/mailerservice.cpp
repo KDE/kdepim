@@ -147,7 +147,8 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if (!attachList.isEmpty())
     {
         mailto = true;
-        for ( QStringList::ConstIterator it = attachList.constBegin() ; it != attachList.constEnd() ; ++it )
+	QStringList::ConstIterator end(attachList.constEnd());
+        for ( QStringList::ConstIterator it = attachList.constBegin() ; it != end ; ++it )
         {
             if ( !(*it).isEmpty() )
             {
@@ -173,12 +174,13 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if ( !calledWithSession ) {
     // only read additional command line arguments if kmail/kontact is
     // not called with "-session foo"
-        for(int i= 0; i < args->count(); i++)
+        const int numberOfArgs(args->count());
+        for(int i= 0; i < numberOfArgs; i++)
         {
             if (args->arg(i).startsWith(QLatin1String("mailto:"), Qt::CaseInsensitive))
                 to += args->url(i).path() + ", ";
             else {
-                QString tmpArg = args->arg(i);
+                const QString tmpArg = args->arg(i);
                 KUrl url( tmpArg );
                 if (url.isValid() && !url.protocol().isEmpty())
                     attachURLs.append( url.url() );
@@ -196,6 +198,8 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if ( !calledWithSession )
         args->clear();
 
+    if( !mailto )
+       return;
     if ( mSuccess ) {
      QDBusInterface kmailObj( "org.kde.kmail", "/KMail", "org.kde.kmail.kmail" );
 

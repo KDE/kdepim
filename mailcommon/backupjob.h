@@ -72,9 +72,12 @@ class  MAILCOMMON_EXPORT BackupJob : public QObject
     void setArchiveType( ArchiveType type );
     void setDeleteFoldersAfterCompletion( bool deleteThem );
     void setRecursive( bool recursive );
+    void setDisplayMessageBox(bool display);
+
+
     void start();
   signals:
-    void backupDone();
+    void backupDone(const QString&);
     void error(const QString&);
 
   private slots:
@@ -117,6 +120,7 @@ class  MAILCOMMON_EXPORT BackupJob : public QObject
     Akonadi::Collection mCurrentFolder;
     Akonadi::Item::List mPendingMessages;
     Akonadi::ItemFetchJob *mCurrentJob;
+    bool mDisplayMessageBox;
 };
 
 }

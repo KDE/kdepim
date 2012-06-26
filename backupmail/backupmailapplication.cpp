@@ -58,8 +58,19 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 
 BackupMailApplication::~BackupMailApplication()
 {
-  delete mBackupData;
-  delete mRestoreData;
+  if(mRestoreData ) {
+    if(mRestoreData->isRunning()) {
+      mRestoreData->quit();
+    }
+    delete mRestoreData;
+  }
+
+  if(mBackupData) {
+    if(mBackupData->isRunning()) {
+      mBackupData->quit();
+    }
+    delete mBackupData;
+  }
 }
 
 void BackupMailApplication::setupActions(bool canZipFile)
@@ -90,13 +101,20 @@ void BackupMailApplication::slotBackupData()
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
     delete mBackupData;
-    mBackupData = new BackupData(this,typeSelected,filename);
+    mBackupData = new BackupData(this,typeSelected,filename,this);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-    mBackupData->startBackup();
+    connect(mBackupData,SIGNAL(finished()),SLOT(slotBackupDataFinished()));
+    mBackupData->start();
   } else {
     delete dialog;
   }
+}
+
+void BackupMailApplication::slotBackupDataFinished()
+{
+  mBackupData->deleteLater();
+  mBackupData = 0;
 }
 
 void BackupMailApplication::slotAddInfo(const QString& info)
@@ -122,14 +140,20 @@ void BackupMailApplication::slotRestoreData()
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
-    delete mRestoreData;
-    mRestoreData = new RestoreData(this,typeSelected,filename);
+    mRestoreData = new RestoreData(this,typeSelected,filename,this);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-    mRestoreData->startRestore();
+    connect(mRestoreData,SIGNAL(finished()),SLOT(slotRestoreDataFinished()));
+    mRestoreData->start();
   } else {
     delete dialog;
   }
+}
+
+void BackupMailApplication::slotRestoreDataFinished()
+{
+  mRestoreData->deleteLater();
+  mRestoreData = 0;
 }
 
 bool BackupMailApplication::canZip() const

@@ -152,7 +152,7 @@ QString Kleo::gpgConfListDir( const char * which ) {
         if ( line.startsWith( which ) && line[qstrlen(which)] == ':' ) {
             const int begin = qstrlen(which) + 1;
             int end = line.size();
-            while ( end && line[end-1] == '\n' || line[end-1] == '\r' )
+            while ( end && ( line[end-1] == '\n' || line[end-1] == '\r' ) )
                 --end;
             const QString result = QDir::fromNativeSeparators( QFile::decodeName( hexdecode( line.mid( begin, end - begin ) ) ) );
             kDebug() << "gpgConfListDir: found " << qPrintable( result )

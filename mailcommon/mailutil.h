@@ -41,12 +41,12 @@
 #include "mailcommon_export.h"
 
 #include <Akonadi/AgentInstance>
+#include <Akonadi/Collection>
 
 class OrgKdeAkonadiImapSettingsInterface;
 class OrgKdeAkonadiPOP3SettingsInterface;
 
 namespace Akonadi {
-  class Collection;
   class Item;
 }
 
@@ -126,6 +126,9 @@ namespace Util {
                                             bool immediate );
 
   MAILCOMMON_EXPORT Akonadi::Collection updatedCollection( const Akonadi::Collection& col );
+
+  MAILCOMMON_EXPORT Akonadi::Collection::Id convertFolderPathToCollectionId( const QString& folder);
+  MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr( const QString& folder);
 }
 
 }

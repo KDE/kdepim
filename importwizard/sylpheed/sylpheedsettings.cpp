@@ -17,6 +17,7 @@
 
 #include "sylpheedsettings.h"
 #include <mailtransport/transportmanager.h>
+#include "mailcommon/mailutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -28,10 +29,11 @@
 #include <QStringList>
 #include <QFile>
 
-SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylpheedrc, ImportWizard *parent )
+SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path, ImportWizard *parent )
     :AbstractSettings( parent )
 {
   bool checkMailOnStartup = true;
+  const QString sylpheedrc = path + QLatin1String("/sylpheedrc");
   if(QFile( sylpheedrc ).exists()) {
     KConfig configCommon( sylpheedrc );
     if(configCommon.hasGroup("Common")) {
@@ -49,10 +51,37 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& sylp
     readAccount( group, checkMailOnStartup );
     readIdentity( group );
   }
+  const QString customheaderrc = path + QLatin1String("/customheaderrc");
+  QFile customHeaderFile(customheaderrc);
+  if(customHeaderFile.exists()) {
+    if ( !customHeaderFile.open( QIODevice::ReadOnly ) ) {
+      kDebug()<<" We can't open file"<<customheaderrc;
+    } else {
+      readCustomHeader(&customHeaderFile);
+    }
+  }
 }
 
 SylpheedSettings::~SylpheedSettings()
 {
+}
+
+void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
+{
+  QTextStream stream(customHeaderFile);
+  QMap<QString, QString> header;
+  while ( !stream.atEnd() ) {
+    const QString line = stream.readLine();
+    QStringList lst = line.split(QLatin1Char(':'));
+    if(lst.count() == 3) {
+      QString str = lst.at(2);
+      str.remove(0,1);
+      header.insert(lst.at(1),str);
+    }
+  }
+  if(!header.isEmpty()) {
+    //TODO
+  }
 }
 
 void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
@@ -123,7 +152,7 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
     signature.setText( accountConfig.readEntry("signature_text" ) );
     break;
   default:
-    qDebug()<<" signature type unknow :"<<signatureType;
+    kDebug()<<" signature type unknow :"<<signatureType;
   }
   //TODO  const bool signatureBeforeQuote = ( accountConfig.readEntry( "signature_before_quote", 0 ) == 1 ); not implemented in kmail
 
@@ -164,7 +193,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
   settings.insert( QLatin1String( "Host" ), host );
   
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-  const QString inbox = adaptFolder(accountConfig.readEntry(QLatin1String("inbox")));
+  const QString inbox = MailCommon::Util::convertFolderPathToCollectionStr(accountConfig.readEntry(QLatin1String("inbox")));
   settings.insert(QLatin1String("TargetCollection"), inbox);
   int port = 0;
   if ( readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
@@ -182,7 +211,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
         settings.insert( QLatin1String( "UseTLS" ), true );
         break;
       default:
-        qDebug()<<" unknown ssl_pop value "<<sslPop;
+        kDebug()<<" unknown ssl_pop value "<<sslPop;
     }
   }
   if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
@@ -229,7 +258,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
     settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
     //TLS
   default:
-    qDebug()<<" sslimap unknown "<<sslimap;
+    kDebug()<<" sslimap unknown "<<sslimap;
     break;
   }
 
@@ -239,7 +268,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
 
   QString trashFolder;
   if ( readConfig( QLatin1String( "trash_folder" ), accountConfig, trashFolder, false ) )
-    settings.insert( QLatin1String( "TrashCollection" ), adaptFolderId( trashFolder ) );
+    settings.insert( QLatin1String( "TrashCollection" ), MailCommon::Util::convertFolderPathToCollectionId( trashFolder ) );
 
   const int auth = accountConfig.readEntry(QLatin1String("imap_auth_method"),0);
   switch(auth) {
@@ -254,7 +283,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
     case 4: //Plain
       settings.insert(QLatin1String("Authentication"),MailTransport::Transport::EnumAuthenticationType::PLAIN);
     default:
-      qDebug()<<" imap auth unknown "<<auth;
+      kDebug()<<" imap auth unknown "<<auth;
       break;
   }
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
@@ -280,14 +309,14 @@ void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool chec
         readImapAccount(accountConfig, checkMailOnStartup);
         break;
       case 4:
-        qDebug()<<" Add it when nntp resource will implemented";
+        kDebug()<<" Add it when nntp resource will implemented";
         //news
         break;
       case 5:
         //local
         break;
       default:
-        qDebug()<<" protocol not defined"<<protocol;
+        kDebug()<<" protocol not defined"<<protocol;
     }
   }  
 }
@@ -312,10 +341,10 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
     identity->setReplyToAddr(value);
   
   if ( readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
-    identity->setDrafts(adaptFolder(value));
+    identity->setDrafts(MailCommon::Util::convertFolderPathToCollectionStr(value));
 
   if ( readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) )
-    identity->setFcc(adaptFolder(value));
+    identity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(value));
 
   const QString transportId = readTransport(accountConfig);
   if(!transportId.isEmpty())
@@ -364,7 +393,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
         mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN);
         break;
       default:
-        qDebug()<<" smtp authentification unknown :"<<authMethod;
+        kDebug()<<" smtp authentification unknown :"<<authMethod;
       }
     }
     const int sslSmtp = accountConfig.readEntry( QLatin1String( "ssl_smtp" ), 0 );
@@ -379,7 +408,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
       mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
       break;
     default:
-      qDebug()<<" smtp ssl config unknown :"<<sslSmtp;
+      kDebug()<<" smtp ssl config unknown :"<<sslSmtp;
         
     }
     QString domainName;
@@ -387,7 +416,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
       mt->setLocalHostname( domainName );
 
     storeTransport( mt, true );
-    return QString::number(mt->id()); //TODO verify
+    return QString::number(mt->id());
   }
   return QString();
 }

@@ -1,50 +1,42 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef CREATERESOURCE_H
+#define CREATERESOURCE_H
 
-#ifndef BACKUPMAILAPPLICATION_H
-#define BACKUPMAILAPPLICATION_H
-#include <kxmlguiwindow.h>
+#include "mailcommon_export.h"
+#include <QObject>
+#include <QVariant>
+#include <QMap>
 
-class BackupMailWidget;
-class BackupData;
-class RestoreData;
-
-class BackupMailApplication: public KXmlGuiWindow
+namespace MailCommon {
+class MAILCOMMON_EXPORT CreateResource  : public QObject
 {
   Q_OBJECT
 public:
-  explicit BackupMailApplication(QWidget *parent=0);
-  ~BackupMailApplication();
-private Q_SLOTS:
-  void slotBackupData();
-  void slotRestoreData();
-  void slotAddInfo(const QString& info);
-  void slotAddError(const QString& info);
-  void slotBackupDataFinished();
-  void slotRestoreDataFinished();
-private:
-  bool canZip() const;
-  void setupActions(bool canZipFile);
-  BackupMailWidget *mBackupMailWidget;
-  BackupData *mBackupData;
-  RestoreData *mRestoreData;
+  explicit CreateResource();
+  ~CreateResource();
+
+  QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
+
+Q_SIGNALS:
+  void createResourceInfo(const QString&);
+  void createResourceError(const QString&);
 };
+}
 
-
-#endif /* BACKUPMAILAPPLICATION_H */
-
+#endif // CREATERESOURCE_H

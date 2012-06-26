@@ -54,11 +54,6 @@ QString OeImportData::name() const
   return QLatin1String("Outlook Express");
 }
 
-bool OeImportData::importSettings()
-{
-  return false;
-}
-
 bool OeImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
@@ -75,16 +70,6 @@ bool OeImportData::importMails()
 
   delete info;
   return true;
-}
-
-bool OeImportData::importFilters()
-{
-  return false;
-}
-
-bool OeImportData::importAddressBook()
-{
-  return false;
 }
 
 AbstractImporter::TypeSupportedOptions OeImportData::supportedOption()

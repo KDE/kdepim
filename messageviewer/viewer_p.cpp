@@ -417,10 +417,8 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
      != KMessageBox::Continue ) {
     return false; //cancelled
   }
-
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
-
   QString filename;
   QString name;
   QByteArray mimetype;
@@ -456,7 +454,6 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
   mMimePartModel->setRoot( modifiedMessage );
-
   mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
@@ -1806,6 +1803,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
   const bool isRoot = ( content == mMessage.get() );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
   KMenu popup;
 
@@ -1816,7 +1814,11 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
                        this, SLOT(slotAttachmentOpen()) );
-      popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
+
+      if(selectedContents().count() == 1)
+        createOpenWithMenu(&popup,content);
+      else
+        popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );
     }
   }
@@ -1827,17 +1829,21 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                    SLOT(slotSaveAsEncoded()) );
   */
 
-  popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT(slotAttachmentSaveAll()) );
+  if( !contents.isEmpty() ) {
+    popup.addAction( i18n( "Save All Attachments..." ), this,
+                     SLOT(slotAttachmentSaveAll()) );
+  }
 
   // edit + delete only for attachments
   if ( !isRoot ) {
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
                        this, SLOT(slotAttachmentCopy()) );
+#if 0  //FIXME Laurent Comment for the moment it crash see Bug 287177
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT(slotAttachmentDelete()) );
+#endif
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT(slotAttachmentEdit()) );
@@ -1949,12 +1955,13 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      const bool result = ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() );
+      if ( result )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType().toLower() == "message" ||  node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      if ( result )
         html += "</div>";
     }
   } else {
@@ -2386,7 +2393,7 @@ void ViewerPrivate::slotPrintPreview()
   if ( !mMessage )
     return;
   QPrinter printer;
-  KPrintPreview previewdlg( &printer, mViewer );
+  KPrintPreview previewdlg( &printer/*, mViewer*/ );
   mViewer->print( &printer );
   previewdlg.exec();
 #endif
@@ -2402,7 +2409,7 @@ void ViewerPrivate::slotPrintMsg()
     return;
   QPrinter printer;
 
-  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
+  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer/*, mViewer*/ ) );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     mViewer->print( &printer );
   }

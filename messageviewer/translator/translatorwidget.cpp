@@ -155,9 +155,6 @@ void TranslatorWidget::init()
   hboxLayout->addWidget( closeBtn );
   connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
 
-  d->translate = new KPushButton( i18n( "Translate" ) );
-  hboxLayout->addWidget( d->translate );
-  connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
   QLabel *label = new QLabel( i18n( "From:" ) );
   hboxLayout->addWidget( label );
   d->from = new MinimumComboBox;
@@ -175,6 +172,10 @@ void TranslatorWidget::init()
   KPushButton *clear = new KPushButton(i18n("Clear"),this);
   connect(clear,SIGNAL(clicked()),this,SLOT(slotClear()));
   hboxLayout->addWidget(clear);
+
+  d->translate = new KPushButton( i18n( "Translate" ) );
+  hboxLayout->addWidget( d->translate );
+  connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
 
 
   hboxLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum ) );
@@ -259,11 +260,12 @@ void TranslatorWidget::slotTranslateFailed()
 void TranslatorWidget::slotInvertLanguage()
 {
   const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
+  const QString fromLanguage = d->from->itemData(d->from->currentIndex()).toString();
+
   const int indexFrom = d->from->findData( toLanguage );
   if ( indexFrom != -1 ) {
     d->from->setCurrentIndex( indexFrom );
   }
-  const QString fromLanguage = d->to->itemData(d->from->currentIndex()).toString();
   const int indexTo = d->to->findData( fromLanguage );
   if ( indexTo != -1 ) {
     d->to->setCurrentIndex( indexTo );

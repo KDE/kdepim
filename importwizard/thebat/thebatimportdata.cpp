@@ -53,11 +53,6 @@ QString TheBatImportData::name() const
   return QLatin1String("TheBat");
 }
 
-bool TheBatImportData::importSettings()
-{
-  return false;
-}
-
 bool TheBatImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
@@ -74,16 +69,6 @@ bool TheBatImportData::importMails()
 
     delete info;
     return true;
-}
-
-bool TheBatImportData::importFilters()
-{
-  return false;
-}
-
-bool TheBatImportData::importAddressBook()
-{
-  return false;
 }
 
 AbstractImporter::TypeSupportedOptions TheBatImportData::supportedOption()
