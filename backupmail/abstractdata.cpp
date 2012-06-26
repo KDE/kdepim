@@ -20,13 +20,14 @@
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
 #include <KLocale>
+#include <QWidget>
 
-AbstractData::AbstractData( QWidget *widget, const QString &filename,BackupMailUtil::BackupTypes typeSelected, QObject*parent)
-  : QThread(parent),
+AbstractData::AbstractData( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
+  : QObject(parent),
     mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
-    mParent(widget)
+    mParent(parent)
 {
 }
 
@@ -35,6 +36,11 @@ AbstractData::~AbstractData()
   closeArchive();
   delete mArchive;
   delete mIdentityManager;
+}
+
+void AbstractData::start()
+{
+
 }
 
 void AbstractData::closeArchive()

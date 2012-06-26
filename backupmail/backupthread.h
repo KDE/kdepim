@@ -15,39 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTDATA_H
-#define ABSTRACTDATA_H
+#ifndef BACKUPTHREAD_H
+#define BACKUPTHREAD_H
+
 #include <QThread>
-#include "backupmailutil.h"
-
-class KZip;
-class QWidget;
-namespace KPIMIdentities {
-  class Identity;
-  class IdentityManager;
-}
-
-class AbstractData : public QObject
+class BackupThread : public QThread
 {
-  Q_OBJECT
 public:
-  explicit AbstractData(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
-  ~AbstractData();
-
-  virtual void start();
-
-Q_SIGNALS:
-  void info(const QString&);
-  void error(const QString&);
-protected:
-  void closeArchive();
-  bool openArchive(bool write);
-
-protected:
-  BackupMailUtil::BackupTypes mTypeSelected;
-  KZip *mArchive;
-  KPIMIdentities::IdentityManager *mIdentityManager;
-  QWidget *mParent;
+  explicit BackupThread(QObject *parent);
+  ~BackupThread();
+  void run();
 };
 
-#endif // ABSTRACTDATA_H
+#endif // BACKUPTHREAD_H

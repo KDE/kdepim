@@ -29,9 +29,10 @@ namespace Akonadi {
 class BackupData : public AbstractData
 {
 public:
-  explicit BackupData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString& filename, QObject *parent);
+  explicit BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename);
   ~BackupData();
-  void run();
+  void start();
+
 private:
   void startBackup();
 
