@@ -93,7 +93,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)),SLOT(initListOfCollection()) );
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionUnsubscribed(Akonadi::Collection)),SLOT(initListOfCollection()) );
 
-  
   initListOfCollection();
 
 }
@@ -203,7 +202,7 @@ void KMSystemTray::updateCount()
   p.setBrush( Qt::NoBrush );
   p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
   p.setOpacity( 1.0 );
-  p.drawText( overlayPixmap.rect(), Qt::AlignCenter, countString );
+  p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
   p.end();
 
   QPixmap iconPixmap = mIcon.pixmap(overlaySize, overlaySize);
@@ -328,7 +327,12 @@ void KMSystemTray::hideKMail()
 void KMSystemTray::initListOfCollection()
 {
   mCount = 0;
-  unreadMail( KMKernel::self()->entityTreeModel() );
+  const QAbstractItemModel *model = KMKernel::self()->entityTreeModel();
+  if(model->rowCount() == 0) {
+    QTimer::singleShot(1000,this,SLOT(initListOfCollection()));
+    return;
+  }
+  unreadMail( model );
 
   if ( mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) {
     if(status() == KStatusNotifierItem::Passive && (mCount > 0)) {
