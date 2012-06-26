@@ -547,8 +547,11 @@ void CollectionGeneralPage::save( Collection &collection )
       annotations[ KOLAB_FOLDERTYPE ] = kolabName;
     }
   }
-
-  annotationsAttribute->setAnnotations( annotations );
+  if( annotations.isEmpty() ) {
+    collection.removeAttribute<CollectionAnnotationsAttribute>();
+  } else {
+    annotationsAttribute->setAnnotations( annotations );
+  }
 
   if ( mFolderCollection ) {
     mFolderCollection->setIdentity( mIdentityComboBox->currentIdentity() );
