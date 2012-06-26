@@ -51,8 +51,8 @@
 
 using namespace Akonadi;
 
-RestoreData::RestoreData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected,const QString& filename,QObject *parent)
-  :AbstractData(widget,filename,typeSelected,parent), mArchiveDirectory(0)
+RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
+  :AbstractData(parent,filename,typeSelected), mArchiveDirectory(0)
 {
   mTempDir = new KTempDir();
   mTempDirName = mTempDir->name();
@@ -67,7 +67,7 @@ RestoreData::~RestoreData()
   delete mCreateResource;
 }
 
-void RestoreData::run()
+void RestoreData::start()
 {
   startRestore();
 }

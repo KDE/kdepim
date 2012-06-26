@@ -58,19 +58,8 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 
 BackupMailApplication::~BackupMailApplication()
 {
-  if(mRestoreData ) {
-    if(mRestoreData->isRunning()) {
-      mRestoreData->quit();
-    }
-    delete mRestoreData;
-  }
-
-  if(mBackupData) {
-    if(mBackupData->isRunning()) {
-      mBackupData->quit();
-    }
-    delete mBackupData;
-  }
+  delete mRestoreData;
+  delete mBackupData;
 }
 
 void BackupMailApplication::setupActions(bool canZipFile)
@@ -101,7 +90,7 @@ void BackupMailApplication::slotBackupData()
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
     delete mBackupData;
-    mBackupData = new BackupData(this,typeSelected,filename,this);
+    mBackupData = new BackupData(this,typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     connect(mBackupData,SIGNAL(finished()),SLOT(slotBackupDataFinished()));
@@ -140,7 +129,7 @@ void BackupMailApplication::slotRestoreData()
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
-    mRestoreData = new RestoreData(this,typeSelected,filename,this);
+    mRestoreData = new RestoreData(this,typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     connect(mRestoreData,SIGNAL(finished()),SLOT(slotRestoreDataFinished()));
