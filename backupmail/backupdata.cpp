@@ -375,26 +375,22 @@ void BackupData::backupMails()
   Q_EMIT info(i18n("Mails backup done."));
 }
 
-void BackupData::writeDirectory(const QString& path, const QString&currentPath, KZip *mailArchive)
+void BackupData::writeDirectory(QString path, const QString& relativePath, KZip *mailArchive)
 {
-  QDir dir(currentPath);
-  //qDebug()<<" currentPath"<<currentPath;
-  mailArchive->writeDir(path,"","");
+  QDir dir(path);
+  mailArchive->writeDir(path.remove(relativePath),"","");
   const QFileInfoList lst= dir.entryInfoList();
   const int numberItems(lst.count());
   for(int i = 0; i < numberItems;++i) {
     const QString filename(lst.at(i).fileName());
-    //qDebug()<<" filename "<<filename;
     if(filename == QLatin1String("..") ||
        filename == QLatin1String("."))
       continue;
 
-    //TODO: fix date/group
     if(lst.at(i).isDir()) {
-      writeDirectory(lst.at(i).absoluteFilePath().remove(path),lst.at(i).absoluteFilePath(),mailArchive);
+        writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);
     } else {
-      //TODO: verify
-      mailArchive->addLocalFile(lst.at(i).absoluteFilePath().remove(path),QString());
+        mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),path.remove(relativePath) + QLatin1Char('/') + filename);
     }
   }
 }
@@ -412,10 +408,14 @@ bool BackupData::backupMailData(const KUrl& url,const QString& archivePath)
     return false;
   }
 
-  writeDirectory(url.path(),url.path(),mailArchive);
+  QString relatifPath = url.path();
+  const int parentDirEndIndex = relatifPath.lastIndexOf( filename );
+  relatifPath = relatifPath.left( parentDirEndIndex );
+
+  writeDirectory(url.path(),relatifPath, mailArchive);
   KUrl subDir = subdirPath(url);
   if(QFile(subDir.path()).exists()) {
-    writeDirectory(subDir.path(),subDir.path(),mailArchive);
+    writeDirectory(subDir.path(),relatifPath,mailArchive);
   }
   mailArchive->close();
 
