@@ -92,10 +92,10 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
         
       }
       if ( e.hasAttribute( QLatin1String( "nick-name" ) ) ) {
-        address.setNickName( QLatin1String( "nick-name" ) );
+        address.setNickName( e.attribute(QLatin1String( "nick-name" )) );
       }
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
-        //FIXME ????
+        address.setFormattedName(e.attribute(QLatin1String( "cn" )));
       }
       for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
         const QString addressTag = addressElement.tagName();
@@ -106,6 +106,8 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
             if ( tagAddressList == QLatin1String( "address" ) ) {
               if ( addresslist.hasAttribute( QLatin1String( "email" ) ) ) {
                 emails<<addresslist.attribute( QLatin1String( "email" ) );
+              } else if(addresslist.hasAttribute(QLatin1String("alias"))) {
+                //TODO:
               }
             } else {
              kDebug()<<" tagAddressList unknown :"<<tagAddressList;
