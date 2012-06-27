@@ -379,14 +379,10 @@ void BackupData::writeDirectory(QString path, const QString& relativePath, KZip 
 {
   QDir dir(path);
   mailArchive->writeDir(path.remove(relativePath),"","");
-  const QFileInfoList lst= dir.entryInfoList();
+  const QFileInfoList lst= dir.entryInfoList(QDir::NoDot|QDir::NoDotDot|QDir::Dirs|QDir::AllDirs|QDir::Hidden|QDir::Files);
   const int numberItems(lst.count());
   for(int i = 0; i < numberItems;++i) {
     const QString filename(lst.at(i).fileName());
-    if(filename == QLatin1String("..") ||
-       filename == QLatin1String("."))
-      continue;
-
     if(lst.at(i).isDir()) {
         writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);
     } else {
