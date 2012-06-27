@@ -125,7 +125,7 @@ void RestoreData::storeMailArchiveResource(const KArchiveDirectory*dir)
       const QStringList lst = resourceDir->entries();
       if(lst.count() == 2) {
         const QString name(lst.at(0));
-        qDebug()<<" lst.at(0)"<<lst.at(0)<<"lst.at(1)"<<lst.at(1);
+        //qDebug()<<" lst.at(0)"<<lst.at(0)<<"lst.at(1)"<<lst.at(1);
         if(name.endsWith(QLatin1String("_rc"))&&
            (name.contains(QLatin1String("akonadi_mbox_resource_")) ||
             name.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ||
@@ -135,8 +135,8 @@ void RestoreData::storeMailArchiveResource(const KArchiveDirectory*dir)
           mHashMailArchive.insert(lst.at(1),name);
         }
       } else {
-        qDebug()<<" lst.at(0)"<<lst.at(0);
-        qDebug()<<" Problem in archive. number of file "<<lst.count();
+        kDebug()<<" lst.at(0)"<<lst.at(0);
+        kDebug()<<" Problem in archive. number of file "<<lst.count();
       }
     }
   }
@@ -405,7 +405,7 @@ void RestoreData::restoreResources()
           if(!newResource.isEmpty())
             mHashResources.insert(filename,newResource);
         } else {
-          qDebug()<<" problem with resource";
+          kDebug()<<" problem with resource";
         }
       }
     }
@@ -509,10 +509,10 @@ void RestoreData::restoreMails()
         if(!newResource.isEmpty())
           mHashResources.insert(filename,newResource);
       } else {
-        qDebug()<<" resource name not supported "<<resourceName;
+        kDebug()<<" resource name not supported "<<resourceName;
         continue;
       }
-      qDebug()<<"url "<<url;
+      //qDebug()<<"url "<<url;
     }
   }
 }

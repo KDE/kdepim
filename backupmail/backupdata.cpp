@@ -377,13 +377,13 @@ void BackupData::backupMails()
 void BackupData::writeDirectory(const QString& path, const QString&currentPath, KZip *mailArchive)
 {
   QDir dir(currentPath);
-  qDebug()<<" currentPath"<<currentPath;
+  //qDebug()<<" currentPath"<<currentPath;
   mailArchive->writeDir(path,"","");
   const QFileInfoList lst= dir.entryInfoList();
   const int numberItems(lst.count());
   for(int i = 0; i < numberItems;++i) {
     const QString filename(lst.at(i).fileName());
-    qDebug()<<" filename "<<filename;
+    //qDebug()<<" filename "<<filename;
     if(filename == QLatin1String("..") ||
        filename == QLatin1String("."))
       continue;
@@ -473,7 +473,7 @@ void BackupData::backupAkonadiDb()
   const int result = proc->execute();
   delete proc;
   if ( result != 0 ) {
-    qDebug()<<" Error during dump Database";
+    kDebug()<<" Error during dump Database";
     return;
   }
   const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
