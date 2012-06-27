@@ -36,6 +36,8 @@ public:
 private:
   void startBackup();
 
+  KUrl subdirPath(const KUrl &url ) const;
+
   void backupTransports();
   void backupResources();
   void backupMails();
