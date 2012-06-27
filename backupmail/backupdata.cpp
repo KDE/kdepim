@@ -413,8 +413,10 @@ bool BackupData::backupMailData(const KUrl& url,const QString& archivePath)
   }
 
   writeDirectory(url.path(),url.path(),mailArchive);
-
-  //TODO: save .local.....
+  KUrl subDir = subdirPath(url);
+  if(QFile(subDir.path()).exists()) {
+    writeDirectory(subDir.path(),subDir.path(),mailArchive);
+  }
   mailArchive->close();
 
   //TODO: store as an uniq file
@@ -527,4 +529,14 @@ void BackupData::backupFile(const QString&filename, const QString& path, const Q
     Q_EMIT info(i18n("\"%1\" backup done.",storedName));
   else
     Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
+}
+
+KUrl BackupData::subdirPath( const KUrl& url) const
+{
+  const QString filename(url.fileName());
+  QString path = url.path();
+  const int parentDirEndIndex = path.lastIndexOf( filename );
+  path = path.left( parentDirEndIndex );
+  path.append( '.' + filename + ".directory" );
+  return KUrl(path);
 }
