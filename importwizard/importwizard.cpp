@@ -243,7 +243,7 @@ void ImportWizard::next()
     setValid(mPage7,false);
   } else if( currentPage() == mPage7 ) {
     KAssistantDialog::next();
-    setValid(mPage8,false);
+    setValid(mPage8,true);
   } else {
     KAssistantDialog::next();
   }
