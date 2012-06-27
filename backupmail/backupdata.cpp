@@ -84,6 +84,7 @@ void BackupData::backupTransports()
   const QString mailtransportsStr("mailtransports");
   const QString maitransportsrc = KStandardDirs::locateLocal( "config",  mailtransportsStr);
   if(!QFile(maitransportsrc).exists()) {
+    Q_EMIT info(i18n("Transports backup done."));
     return;
   }
   KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( mailtransportsStr );
