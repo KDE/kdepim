@@ -67,7 +67,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     QString name;
     if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
       name = e.attribute( QLatin1String( "name" ) );
-      qDebug()<<" name :"<<name;
+      //qDebug()<<" name :"<<name;
     }
       
     const QString tag = e.tagName();
@@ -101,7 +101,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                 emails<<addresslist.attribute( QLatin1String( "email" ) );
               }
             } else {
-              qDebug()<<" tagAddressList unknown :"<<tagAddressList;
+             kDebug()<<" tagAddressList unknown :"<<tagAddressList;
             }
           }
           if ( !emails.isEmpty() ) {
@@ -119,14 +119,14 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
           }
           
         } else {
-          qDebug()<<" addressTag unknown :"<<addressTag;
+          kDebug()<<" addressTag unknown :"<<addressTag;
         }
       }
       createContact( address );
     } else {
-      qDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
+      kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
     }
       
-    qDebug()<<" tag :"<<tag;
+    //qDebug()<<" tag :"<<tag;
   }
 }
