@@ -65,6 +65,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QProcess>
+#include <QFile>
 
 #include <algorithm>
 
@@ -810,7 +811,8 @@ namespace {
     const KUrl tUrl = window->nodeHelper()->tempFileUrlFromNode( node );
     const QString fileName = tUrl.path();
     if ( !fileName.isEmpty() ) {
-      KPIMUtils::checkAndCorrectPermissionsIfPossible( fileName, false, true, true );
+      QFile f(fileName);
+      f.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ReadUser|QFile::ReadGroup|QFile::ReadOther);
       const QString icon = window->nodeHelper()->iconName( node, KIconLoader::Small );
       QDrag *drag = new QDrag( window->viewer() );
       QMimeData *mimeData = new QMimeData();
