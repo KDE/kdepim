@@ -19,6 +19,7 @@
 #include <KABC/Addressee>
 
 #include <KDebug>
+#include <KLocale>
 
 #include <QDir>
 #include <QDebug>
@@ -63,7 +64,13 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     return;
   }
 
-  for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+  QDomElement e = domElement.firstChildElement();
+  if(e.isNull()) {
+    addAddressBookImportError( i18n("No contact found in %1").arg(filename) );
+    return;
+  }
+
+  for ( ; !e.isNull(); e = e.nextSiblingElement() ) {
     QString name;
     if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
       name = e.attribute( QLatin1String( "name" ) );
