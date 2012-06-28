@@ -25,6 +25,7 @@ class ImportWizard;
 
 namespace KABC {
   class Addressee;
+  class ContactGroup;
 }
 
 class KJob;
@@ -36,7 +37,7 @@ public:
   explicit AbstractAddressBook(ImportWizard *parent);
   ~AbstractAddressBook();
 protected:
-  void createGroup();
+  void createGroup(const KABC::ContactGroup& group);
   void createContact( const KABC::Addressee& address );
   
   void addAddressBookImportInfo( const QString& log );
@@ -50,6 +51,7 @@ protected:
   ImportWizard *mImportWizard;
 
 private:
+  bool selectAddressBook();
   Akonadi::Collection mCollection;
 };
 

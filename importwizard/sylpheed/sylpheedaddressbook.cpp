@@ -17,6 +17,7 @@
 
 #include "sylpheedaddressbook.h"
 #include <KABC/Addressee>
+#include <kabc/contactgroup.h>
 
 #include <KDebug>
 
@@ -134,6 +135,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
         name = e.attribute( QLatin1String( "name" ) );
       }
+      KABC::ContactGroup group(name);
       //TODO: create Group
       for ( QDomElement groupElement = e.firstChildElement(); !groupElement.isNull(); groupElement = groupElement.nextSiblingElement() ) {
         const QString groupTag = groupElement.tagName();
@@ -141,11 +143,18 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
           for ( QDomElement memberlist = groupElement.firstChildElement(); !memberlist.isNull(); memberlist = memberlist.nextSiblingElement() ) {
             const QString tagMemberList = memberlist.tagName();
             if(tagMemberList == QLatin1String("member")) {
+                if(memberlist.hasAttribute(QLatin1String("pid"))) {
+
+                }
+                if(memberlist.hasAttribute(QLatin1String("eid"))) {
+
+                }
                //TODO
             }
           }
         }
       }
+      createGroup(group);
       kDebug()<<" Implement group";
     } else {
       kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
