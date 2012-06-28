@@ -1183,10 +1183,8 @@ Item * View::messageItemAfter( Item * referenceItem, MessageTypeFilter messageTy
 
   QModelIndex parentIndex = d->mModel->index( below->parent(), 0 );
   QModelIndex belowIndex = d->mModel->index( below, 0 );
-  int belowRowIdx = below->parent()->indexOfChildItem( below );
 
   Q_ASSERT( belowIndex.isValid() );
-  Q_ASSERT( belowRowIdx >= 0 );
 
   while (
           // is not a message (we want messages, don't we ?)
@@ -1194,7 +1192,7 @@ Item * View::messageItemAfter( Item * referenceItem, MessageTypeFilter messageTy
           // message filter doesn't match
           ( !message_type_matches( below, messageTypeFilter ) ) ||
           // is hidden (and we don't want hidden items as they arent "officially" in the view)
-          isRowHidden( belowRowIdx, parentIndex ) ||
+          isRowHidden( belowIndex.row(), parentIndex ) ||
           // is not enabled or not selectable
           ( ( d->mModel->flags( belowIndex ) & ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) ) != ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) )
     )
@@ -1233,10 +1231,8 @@ Item * View::messageItemAfter( Item * referenceItem, MessageTypeFilter messageTy
 
     parentIndex = d->mModel->index( below->parent(), 0 );
     belowIndex = d->mModel->index( below, 0 );
-    belowRowIdx = below->parent()->indexOfChildItem( below );
 
     Q_ASSERT( belowIndex.isValid() );
-    Q_ASSERT( belowRowIdx >= 0 );
   }
 
   return below;
@@ -1319,10 +1315,8 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
 
   QModelIndex parentIndex = d->mModel->index( above->parent(), 0 );
   QModelIndex aboveIndex = d->mModel->index( above, 0 );
-  int aboveRowIdx = above->parent()->indexOfChildItem( above );
 
   Q_ASSERT( aboveIndex.isValid() );
-  Q_ASSERT( aboveRowIdx >= 0 );
 
   while (
           // is not a message (we want messages, don't we ?)
@@ -1337,7 +1331,7 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
             ( ! isDisplayedWithParentsExpanded( above ) )
           ) ||
           // is hidden
-          isRowHidden( aboveRowIdx, parentIndex ) ||
+          isRowHidden( aboveIndex.row(), parentIndex ) ||
           // is not enabled or not selectable
           ( ( d->mModel->flags( aboveIndex ) & ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) ) != ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) )
     )
@@ -1368,10 +1362,8 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
 
     parentIndex = d->mModel->index( above->parent(), 0 );
     aboveIndex = d->mModel->index( above, 0 );
-    aboveRowIdx = above->parent()->indexOfChildItem( above );
 
     Q_ASSERT( aboveIndex.isValid() );
-    Q_ASSERT( aboveRowIdx >= 0 );
   }
 
   return above;
