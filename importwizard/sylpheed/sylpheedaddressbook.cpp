@@ -136,6 +136,24 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
         }
       }
       createContact( address );
+    } else if(tag == QLatin1String("group")) {
+      QString name;
+      if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
+        name = e.attribute( QLatin1String( "name" ) );
+      }
+      //TODO: create Group
+      for ( QDomElement groupElement = e.firstChildElement(); !groupElement.isNull(); groupElement = groupElement.nextSiblingElement() ) {
+        const QString groupTag = groupElement.tagName();
+        if ( groupTag == QLatin1String( "member-list" ) ) {
+          for ( QDomElement memberlist = groupElement.firstChildElement(); !memberlist.isNull(); memberlist = memberlist.nextSiblingElement() ) {
+            const QString tagMemberList = memberlist.tagName();
+            if(tagMemberList == QLatin1String("member")) {
+               //TODO
+            }
+          }
+        }
+      }
+      kDebug()<<" Implement group";
     } else {
       kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
     }
