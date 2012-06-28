@@ -117,7 +117,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                 if(attributelist.hasAttribute(QLatin1String("name"))) {
                   const QString name = attributelist.attribute(QLatin1String("name"));
                   const QString value = attributelist.text();
-                  //TODO
+                  address.insertCustom( QLatin1String( "KADDRESSBOOK" ), name, value );
                 }
             } else {
               kDebug()<<"tagAttributeList not implemented "<<tagAttributeList;
