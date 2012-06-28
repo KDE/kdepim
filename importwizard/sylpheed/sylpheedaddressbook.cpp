@@ -114,9 +114,13 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
           for ( QDomElement attributelist = addressElement.firstChildElement(); !attributelist.isNull(); attributelist = attributelist.nextSiblingElement() ) {
             const QString tagAttributeList = attributelist.tagName();
             if ( tagAttributeList == QLatin1String( "attribute" ) ) {
-              //TODO
+                if(attributelist.hasAttribute(QLatin1String("name"))) {
+                  const QString name = attributelist.attribute(QLatin1String("name"));
+                  const QString value = attributelist.text();
+                  //TODO
+                }
             } else {
-              //TODO
+              kDebug()<<"tagAttributeList not implemented "<<tagAttributeList;
             }
           }
           
