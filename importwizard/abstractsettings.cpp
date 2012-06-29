@@ -132,3 +132,11 @@ void AbstractSettings::addAkregatorConfig(const QString& groupName, const QStrin
 {
   //TODO
 }
+
+
+int AbstractSettings::readKmailSettings( const QString&groupName, const QString& key)
+{
+  KConfigGroup group = mKmailConfig->group(groupName);
+  int value = group.readEntry(key,-1);
+  return value;
+}
