@@ -79,7 +79,7 @@ void AkonadiDataBase::init()
     }
     else {
       const QString options = settings.value( "Options", "" ).toString();
-      const QStringList list = options.split( '=' );
+      const QStringList list = options.split( QLatin1Char('=') );
       m_dboptions.append( "--socket=" + list.at( 1 ) );
     }
 
