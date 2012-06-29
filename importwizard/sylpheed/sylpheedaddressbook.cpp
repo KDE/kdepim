@@ -82,8 +82,9 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     if ( tag == QLatin1String( "person" ) ) {
       KABC::Addressee address;
 //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
+      QString uidPerson;
       if ( e.hasAttribute( QLatin1String( "uid" ) ) ) {
-        //Nothing person uid need to store it.
+          uidPerson = e.attribute( QLatin1String( "uid" ) );
       }
       if ( e.hasAttribute( QLatin1String( "first-name" ) ) ) {
         address.setName( e.attribute( QLatin1String( "first-name" ) ) );
@@ -98,6 +99,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
         address.setFormattedName(e.attribute(QLatin1String( "cn" )));
       }
+      QStringList uidAddress;
       for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
         const QString addressTag = addressElement.tagName();
         if ( addressTag == QLatin1String( "address-list" ) ) {
@@ -110,7 +112,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
               } else if(addresslist.hasAttribute(QLatin1String("alias"))) {
                 //TODO:
               } else if(addresslist.hasAttribute(QLatin1String("uid"))) {
-                //TODO: store it address uid
+                  uidAddress<<addresslist.attribute(QLatin1String("uid"));
               }
             } else {
              kDebug()<<" tagAddressList unknown :"<<tagAddressList;
@@ -137,6 +139,11 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
         } else {
           kDebug()<<" addressTag unknown :"<<addressTag;
         }
+      }
+      if(!mAddressBookUid.contains(uidPerson)) {
+        mAddressBookUid.insert(uidPerson,uidAddress);
+      } else {
+        qDebug()<<" problem uidPerson already stored"<<uidPerson;
       }
       createContact( address );
     } else if(tag == QLatin1String("group")) {
