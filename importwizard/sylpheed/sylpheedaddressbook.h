@@ -34,7 +34,7 @@ public:
   ~SylpheedAddressBook();
 private:
   void readAddressBook( const QString& filename );
-  QList<QHash<QString,QString> > mAddressBookUid;
+  QHash<QString, QStringList > mAddressBookUid;
 };
 
 #endif /* SYLPHEEDADDRESSBOOK_H */
