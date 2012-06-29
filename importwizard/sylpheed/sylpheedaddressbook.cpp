@@ -83,7 +83,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       KABC::Addressee address;
 //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
       if ( e.hasAttribute( QLatin1String( "uid" ) ) ) {
-        //Nothing
+        //Nothing person uid need to store it.
       }
       if ( e.hasAttribute( QLatin1String( "first-name" ) ) ) {
         address.setName( e.attribute( QLatin1String( "first-name" ) ) );
@@ -109,6 +109,8 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                 emails<<addresslist.attribute( QLatin1String( "email" ) );
               } else if(addresslist.hasAttribute(QLatin1String("alias"))) {
                 //TODO:
+              } else if(addresslist.hasAttribute(QLatin1String("uid"))) {
+                //TODO: store it address uid
               }
             } else {
              kDebug()<<" tagAddressList unknown :"<<tagAddressList;
@@ -150,11 +152,13 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
           for ( QDomElement memberlist = groupElement.firstChildElement(); !memberlist.isNull(); memberlist = memberlist.nextSiblingElement() ) {
             const QString tagMemberList = memberlist.tagName();
             if(tagMemberList == QLatin1String("member")) {
+                QString pid;
+                QString eid;
                 if(memberlist.hasAttribute(QLatin1String("pid"))) {
-
+                  pid = memberlist.attribute(QLatin1String("pid"));
                 }
                 if(memberlist.hasAttribute(QLatin1String("eid"))) {
-
+                    eid = memberlist.attribute(QLatin1String("eid"));
                 }
                //TODO
             }
