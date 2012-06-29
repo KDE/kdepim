@@ -36,7 +36,8 @@ FilterSylpheed::FilterSylpheed() :
                 "<p>Since it is possible to recreate the folder structure, the folders "
                 "will be stored under: \"Sylpheed-Import\" in your local folder.</p>"
                 "<p>This filter also recreates the status of message, e.g. new or forwarded.</p>") )
-{}
+{
+}
 
 /** Destructor. */
 FilterSylpheed::~FilterSylpheed()

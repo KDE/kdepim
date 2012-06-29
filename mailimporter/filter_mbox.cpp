@@ -33,7 +33,8 @@ FilterMBox::FilterMBox() :
                "that use this traditional UNIX format.</p>"
                "<p><b>Note:</b> Emails will be imported into folders named after the "
                "file they came from, prefixed with MBOX-</p>" ))
-{}
+{
+}
 
 FilterMBox::~FilterMBox()
 {

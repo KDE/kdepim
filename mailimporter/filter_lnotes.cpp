@@ -150,7 +150,8 @@ void FilterLNotes::ImportLNotes(const QString& file) {
       }
     }
 
-    if (tempfile) tempfile->close();
+    if (tempfile)
+      tempfile->close();
 
     // did Folder end without 0x1a at the end?
     if (state != 0) {
