@@ -17,6 +17,7 @@
 #include "archivemailinfo.h"
 
 #include <KLocale>
+#include <QDir>
 
 ArchiveMailInfo::ArchiveMailInfo()
   : mLastDateSaved(QDate::currentDate())
@@ -51,7 +52,13 @@ KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
   QString adaptFolderName(foldername);
   adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
-  const QString path = url().path() + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
+  QDir dir(url().path());
+  QString dirPath = url().path();
+  if(!dir.exists()) {
+    dirPath = QDir::homePath();
+    qDebug()<<" Path doesn't exist"<<dir.path();
+  }
+  const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
       + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' )
       + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
   KUrl real(path);
