@@ -924,7 +924,6 @@ void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QStr
     }
   }
 
-//TODO fix all other id
   kmailConfig->sync();
 }
 
