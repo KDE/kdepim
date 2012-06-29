@@ -22,6 +22,7 @@
 
 #include "htmlexportjob.h"
 #include "htmlexportsettings.h"
+#include "korganizer/mainwindow.h"
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
@@ -59,15 +60,20 @@ class KOrg::HtmlExportJob::Private
 {
   public:
     Private( CalendarSupport::Calendar *calendar,
-             KOrg::HTMLExportSettings *settings, QWidget *parent )
+             KOrg::HTMLExportSettings *settings, bool autoMode,
+             KOrg::MainWindow *mainWindow, QWidget *parent )
       : mCalendar( calendar ),
         mSettings( settings ),
+        mAutoMode( autoMode ),
+        mMainWindow( mainWindow ),
         mParentWidget( parent ),
         mSubJobCount( 0 )
     {}
 
     CalendarSupport::Calendar *mCalendar;
     KOrg::HTMLExportSettings *mSettings;
+    bool mAutoMode;
+    KOrg::MainWindow *mMainWindow;
     QWidget *mParentWidget;
     QMap<QDate,QString> mHolidayMap;
     qulonglong mSubJobCount;
@@ -76,8 +82,9 @@ class KOrg::HtmlExportJob::Private
 //@endcond
 
 HtmlExportJob::HtmlExportJob( CalendarSupport::Calendar *calendar,
-                              KOrg::HTMLExportSettings *settings, QWidget *parent )
-  : KJob( parent ), d( new Private( calendar, settings, parent ) )
+                              KOrg::HTMLExportSettings *settings, bool autoMode,
+                              KOrg::MainWindow *mainWindow, QWidget *parent )
+  : KJob( parent ), d( new Private( calendar, settings, autoMode, mainWindow, parent ) )
 {
 }
 
@@ -178,8 +185,18 @@ void HtmlExportJob::finishExport()
     saveMessage = i18n( "Export failed. %1", errorMessage );
   }
 
-  KMessageBox::information( d->mParentWidget, saveMessage,
-               i18nc( "@title:window", "Export Status" ) );
+  if ( !d->mAutoMode ) {
+    KMessageBox::information(
+      d->mParentWidget,
+      saveMessage,
+      i18nc( "@title:window", "Export Status" ) );
+  } else {
+    d->mMainWindow->showStatusMessage( saveMessage );
+      //uncomment when new strings permitted
+//      i18nc( "@info:status",
+//             "Automatic Export: %1", saveMessage ) );
+
+  }
   emitResult();
 }
 
