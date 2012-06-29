@@ -67,6 +67,7 @@ protected:
 
 
   void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
+  int readKmailSettings( const QString&groupName, const QString& key);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;

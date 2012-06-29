@@ -68,6 +68,8 @@ SylpheedSettings::~SylpheedSettings()
 
 void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
 {
+  //In sylpheed we define custom header from account.
+  //In kmail it's global
   QTextStream stream(customHeaderFile);
   QMap<QString, QString> header;
   while ( !stream.atEnd() ) {
@@ -80,7 +82,20 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
     }
   }
   if(!header.isEmpty()) {
-    //TODO
+    const int oldValue = readKmailSettings(QLatin1String("General"),QLatin1String("mime-header-count"));
+    int newValue = header.count();
+    if(oldValue!=-1) {
+       newValue+=oldValue;
+    }
+    addKmailConfig( QLatin1String("General"),QLatin1String("mime-header-count"), newValue);
+    int currentHeader = (oldValue>0) ? oldValue-1 : 0;
+    for (QMapIterator<QString, QString> it(header);  it.hasNext();  )
+    {
+        it.next();
+        addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("name"), (it).key());
+        addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("value"), (it).value());
+        currentHeader++;
+    }
   }
 }
 

@@ -167,13 +167,17 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                 if(memberlist.hasAttribute(QLatin1String("eid"))) {
                     eid = memberlist.attribute(QLatin1String("eid"));
                 }
+                if(!pid.isEmpty()&&!eid.isEmpty()) {
+                  //TODO
+                } else {
+                  qDebug()<<" Problem with group"<<name;
+                }
                //TODO
             }
           }
         }
       }
       createGroup(group);
-      kDebug()<<" Implement group";
     } else {
       kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
     }
