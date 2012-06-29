@@ -353,7 +353,7 @@ KPrefsWidDuration::KPrefsWidDuration( KConfigSkeleton::ItemDateTime *item,
   }
   mTimeEdit->setMinimumTime( QTime( 0, 1 ) ); // [1 min]
   mTimeEdit->setMaximumTime( QTime( 24, 0 ) ); // [24 hr]
-  connect( mTimeEdit, SIGNAL(timeEdited(QTime)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeChanged(QTime)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
