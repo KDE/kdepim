@@ -379,6 +379,8 @@ void RestoreData::restoreResources()
             const int collection = MailCommon::Util::convertFolderPathToCollectionId(cache.readEntry("TrashCollection"));
             if(collection != -1) {
               settings.insert(QLatin1String("TrashCollection"),collection);
+            } else {
+              kDebug()<<" Use default trash folder";
             }
           }
 
