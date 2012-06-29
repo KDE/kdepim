@@ -20,8 +20,10 @@
 #define SYLPHEEDADDRESSBOOK_H
 
 #include "abstractaddressbook.h"
+#include <QHash>
 class QDir;
 class QString;
+
 
 class ImportWizard;
 
@@ -32,7 +34,7 @@ public:
   ~SylpheedAddressBook();
 private:
   void readAddressBook( const QString& filename );
-
+  QList<QHash<QString,QString> > mAddressBookUid;
 };
 
 #endif /* SYLPHEEDADDRESSBOOK_H */
