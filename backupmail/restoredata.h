@@ -18,7 +18,7 @@
 #ifndef RESTOREDATA_H
 #define RESTOREDATA_H
 
-#include "abstractdata.h"
+#include "abstractimportexportjob.h"
 #include <QStringList>
 #include <QHash>
 
@@ -29,7 +29,7 @@ namespace MailCommon {
   class CreateResource;
 }
 
-class RestoreData : public AbstractData
+class RestoreData : public AbstractImportExportJob
 {
 public:
   explicit RestoreData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename);

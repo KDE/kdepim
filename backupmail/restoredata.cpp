@@ -52,7 +52,7 @@
 using namespace Akonadi;
 
 RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
-  :AbstractData(parent,filename,typeSelected), mArchiveDirectory(0)
+  :AbstractImportExportJob(parent,filename,typeSelected), mArchiveDirectory(0)
 {
   mTempDir = new KTempDir();
   mTempDirName = mTempDir->name();

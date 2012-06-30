@@ -41,7 +41,7 @@
 #include <QDir>
 
 BackupData::BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
-  :AbstractData(parent,filename,typeSelected)
+  :AbstractImportExportJob(parent,filename,typeSelected)
 {
 }
 

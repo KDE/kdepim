@@ -18,7 +18,7 @@
 #ifndef BACKUPDATA_H
 #define BACKUPDATA_H
 
-#include "abstractdata.h"
+#include "abstractimportexportjob.h"
 #include <KSharedConfig>
 class KUrl;
 
@@ -26,7 +26,7 @@ namespace Akonadi {
   class AgentInstance;
 }
 
-class BackupData : public AbstractData
+class BackupData : public AbstractImportExportJob
 {
 public:
   explicit BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename);

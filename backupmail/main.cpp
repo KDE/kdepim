@@ -51,6 +51,5 @@ int main(int argc, char *argv[])
   a.setTopWidget(backupMailWin);
   backupMailWin->show();
 
-  int ret = a.exec();
-  return ret;
+  return a.exec();
 }
