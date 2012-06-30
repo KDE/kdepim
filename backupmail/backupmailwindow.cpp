@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailapplication.h"
+#include "backupmailwindow.h"
 #include "backupmailwidget.h"
 #include "backupdata.h"
 #include "restoredata.h"
@@ -36,7 +36,7 @@
 
 #include <KLocale>
 
-BackupMailApplication::BackupMailApplication(QWidget *parent)
+BackupMailWindow::BackupMailWindow(QWidget *parent)
   : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
 {
   BackupMailKernel *kernel = new BackupMailKernel( this );
@@ -45,7 +45,7 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
 
   bool canZipFile = canZip();
   setupActions(canZipFile);
-  setupGUI(Default,"backupmailapplication.rc");
+  setupGUI(Default,"backupmailwindow.rc");
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
@@ -56,13 +56,13 @@ BackupMailApplication::BackupMailApplication(QWidget *parent)
   }
 }
 
-BackupMailApplication::~BackupMailApplication()
+BackupMailWindow::~BackupMailWindow()
 {
   delete mRestoreData;
   delete mBackupData;
 }
 
-void BackupMailApplication::setupActions(bool canZipFile)
+void BackupMailWindow::setupActions(bool canZipFile)
 {
   KActionCollection* ac=actionCollection();
 
@@ -77,7 +77,7 @@ void BackupMailApplication::setupActions(bool canZipFile)
   KStandardAction::quit( this, SLOT(close()), ac );
 }
 
-void BackupMailApplication::slotBackupData()
+void BackupMailWindow::slotBackupData()
 {
   if(KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
     return;
@@ -100,24 +100,24 @@ void BackupMailApplication::slotBackupData()
   }
 }
 
-void BackupMailApplication::slotBackupDataFinished()
+void BackupMailWindow::slotBackupDataFinished()
 {
   mBackupData->deleteLater();
   mBackupData = 0;
 }
 
-void BackupMailApplication::slotAddInfo(const QString& info)
+void BackupMailWindow::slotAddInfo(const QString& info)
 {
   mBackupMailWidget->addInfoLogEntry(info);
 }
 
-void BackupMailApplication::slotAddError(const QString& info)
+void BackupMailWindow::slotAddError(const QString& info)
 {
   mBackupMailWidget->addErrorLogEntry(info);
 }
 
 
-void BackupMailApplication::slotRestoreData()
+void BackupMailWindow::slotRestoreData()
 {
   if(KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
     return;
@@ -139,13 +139,13 @@ void BackupMailApplication::slotRestoreData()
   }
 }
 
-void BackupMailApplication::slotRestoreDataFinished()
+void BackupMailWindow::slotRestoreDataFinished()
 {
   mRestoreData->deleteLater();
   mRestoreData = 0;
 }
 
-bool BackupMailApplication::canZip() const
+bool BackupMailWindow::canZip() const
 {
   const QString zip = KStandardDirs::findExe( "zip" );
   if(zip.isEmpty()) {
@@ -154,4 +154,4 @@ bool BackupMailApplication::canZip() const
   return true;
 }
 
-#include "backupmailapplication.moc"
+#include "backupmailwindow.moc"

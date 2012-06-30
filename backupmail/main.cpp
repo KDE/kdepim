@@ -16,7 +16,7 @@
 */
 
 
-#include "backupmailapplication.h"
+#include "backupmailwindow.h"
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -47,9 +47,9 @@ int main(int argc, char *argv[])
     return (0);
   }
   KUniqueApplication a;
-  BackupMailApplication *backupMailApp = new BackupMailApplication();
-  a.setTopWidget(backupMailApp);
-  backupMailApp->show();
+  BackupMailWindow *backupMailWin = new BackupMailWindow();
+  a.setTopWidget(backupMailWin);
+  backupMailWin->show();
 
   int ret = a.exec();
   return ret;
