@@ -11,7 +11,7 @@ set(backupmail_SRCS
   backupmailwindow.cpp
   backupmailwidget.cpp
   exportmailjob.cpp
-  restoredata.cpp
+  importmailjob.cpp
   backupmailkernel.cpp
   backupmailutil.cpp
   selecttypewidget.cpp

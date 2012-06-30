@@ -22,7 +22,7 @@
 
 class BackupMailWidget;
 class ExportMailJob;
-class RestoreData;
+class ImportMailJob;
 
 class BackupMailWindow: public KXmlGuiWindow
 {
@@ -42,7 +42,7 @@ private:
   void setupActions(bool canZipFile);
   BackupMailWidget *mBackupMailWidget;
   ExportMailJob *mBackupData;
-  RestoreData *mRestoreData;
+  ImportMailJob *mRestoreData;
 };
 
 
