@@ -17,8 +17,8 @@
 
 #include "backupmailwindow.h"
 #include "backupmailwidget.h"
-#include "backupdata.h"
-#include "restoredata.h"
+#include "exportmailjob.h"
+#include "importmailjob.h"
 #include "backupmailkernel.h"
 #include "selectiontypedialog.h"
 #include "backupmailutil.h"
@@ -90,7 +90,7 @@ void BackupMailWindow::slotBackupData()
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
     delete mBackupData;
-    mBackupData = new BackupData(this,typeSelected,filename);
+    mBackupData = new ExportMailJob(this,typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     connect(mBackupData,SIGNAL(finished()),SLOT(slotBackupDataFinished()));
@@ -129,7 +129,7 @@ void BackupMailWindow::slotRestoreData()
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
-    mRestoreData = new RestoreData(this,typeSelected,filename);
+    mRestoreData = new ImportMailJob(this,typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     connect(mRestoreData,SIGNAL(finished()),SLOT(slotRestoreDataFinished()));

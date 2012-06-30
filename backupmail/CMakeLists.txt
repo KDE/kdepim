@@ -7,11 +7,11 @@ include_directories(${AKONADI_INCLUDE_DIR} ${SOPRANO_INCLUDE_DIR} ${CMAKE_SOURCE
 
 set(backupmail_SRCS
   main.cpp
-  abstractdata.cpp
+  abstractimportexportjob.cpp
   backupmailwindow.cpp
   backupmailwidget.cpp
-  backupdata.cpp
-  restoredata.cpp
+  exportmailjob.cpp
+  importmailjob.cpp
   backupmailkernel.cpp
   backupmailutil.cpp
   selecttypewidget.cpp

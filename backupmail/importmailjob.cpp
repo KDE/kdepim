@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "restoredata.h"
+#include "importmailjob.h"
 #include "akonadidatabase.h"
 
 #include "mailcommon/filter/filtermanager.h"
@@ -51,8 +51,8 @@
 
 using namespace Akonadi;
 
-RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
-  :AbstractData(parent,filename,typeSelected), mArchiveDirectory(0)
+ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
+  :AbstractImportExportJob(parent,filename,typeSelected), mArchiveDirectory(0)
 {
   mTempDir = new KTempDir();
   mTempDirName = mTempDir->name();
@@ -61,18 +61,18 @@ RestoreData::RestoreData(QWidget *parent, BackupMailUtil::BackupTypes typeSelect
   connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
 }
 
-RestoreData::~RestoreData()
+ImportMailJob::~ImportMailJob()
 {
   delete mTempDir;
   delete mCreateResource;
 }
 
-void RestoreData::start()
+void ImportMailJob::start()
 {
   startRestore();
 }
 
-void RestoreData::startRestore()
+void ImportMailJob::startRestore()
 {
   if(!openArchive(false /*readonly*/))
     return;
@@ -98,7 +98,7 @@ void RestoreData::startRestore()
   closeArchive();
 }
 
-void RestoreData::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)
+void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)
 {
   Q_FOREACH(const QString& entryName, dir->entries()) {
     const KArchiveEntry *entry = dir->entry(entryName);
@@ -116,7 +116,7 @@ void RestoreData::searchAllFiles(const KArchiveDirectory*dir,const QString&prefi
   }
 }
 
-void RestoreData::storeMailArchiveResource(const KArchiveDirectory*dir)
+void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir)
 {
   Q_FOREACH(const QString& entryName, dir->entries()) {
     const KArchiveEntry *entry = dir->entry(entryName);
@@ -142,7 +142,7 @@ void RestoreData::storeMailArchiveResource(const KArchiveDirectory*dir)
   }
 }
 
-void RestoreData::restoreTransports()
+void ImportMailJob::restoreTransports()
 {
   const QString path = BackupMailUtil::transportsPath()+QLatin1String("mailtransports");
   if(!mFileList.contains(path)) {
@@ -232,7 +232,7 @@ void RestoreData::restoreTransports()
   }
 }
 
-void RestoreData::restoreResources()
+void ImportMailJob::restoreResources()
 {
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_FOREACH(const QString& filename, mFileList) {
@@ -414,7 +414,7 @@ void RestoreData::restoreResources()
   }
 }
 
-void RestoreData::restoreMails()
+void ImportMailJob::restoreMails()
 {
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   QDir dir(mTempDirName);
@@ -519,7 +519,7 @@ void RestoreData::restoreMails()
   }
 }
 
-void RestoreData::copyToFile(const KArchiveFile * archivefile, const QString& dest, const QString&filename, const QString&prefix)
+void ImportMailJob::copyToFile(const KArchiveFile * archivefile, const QString& dest, const QString&filename, const QString&prefix)
 {
   QDir dir(mTempDirName);
   dir.mkdir(prefix);
@@ -534,7 +534,7 @@ void RestoreData::copyToFile(const KArchiveFile * archivefile, const QString& de
   }
 }
 
-void RestoreData::restoreConfig()
+void ImportMailJob::restoreConfig()
 {
   const QString filtersPath(BackupMailUtil::configsPath() + QLatin1String("filters"));
   if(!mFileList.contains(filtersPath)) {
@@ -668,7 +668,7 @@ void RestoreData::restoreConfig()
   Q_EMIT info(i18n("Config restored."));
 }
 
-void RestoreData::restoreIdentity()
+void ImportMailJob::restoreIdentity()
 {
   const QString path(BackupMailUtil::identitiesPath() +QLatin1String("emailidentities"));
   if(!mFileList.contains(path)) {
@@ -725,7 +725,7 @@ void RestoreData::restoreIdentity()
   }
 }
 
-void RestoreData::restoreAkonadiDb()
+void ImportMailJob::restoreAkonadiDb()
 {
   const QString akonadiDbPath(BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
   if(!mFileList.contains(akonadiDbPath)) {
@@ -787,7 +787,7 @@ void RestoreData::restoreAkonadiDb()
   Q_EMIT info(i18n("Akonadi Database restored."));
 }
 
-void RestoreData::restoreNepomuk()
+void ImportMailJob::restoreNepomuk()
 {
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_EMIT info(i18n("Nepomuk Database restored."));
@@ -796,7 +796,7 @@ void RestoreData::restoreNepomuk()
 }
 
 
-void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
+void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
 {
   copyToFile(templatesconfiguration,templatesconfigurationrc,filename,prefix);
   KSharedConfig::Ptr templateConfig = KSharedConfig::openConfig(templatesconfigurationrc);
@@ -837,7 +837,7 @@ void RestoreData::importTemplatesConfig(const KArchiveFile* templatesconfigurati
   templateConfig->sync();
 }
 
-void RestoreData::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString&filename,const QString& prefix)
+void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString&filename,const QString& prefix)
 {
   copyToFile(kmailsnippet,kmail2rc,filename,prefix);
   KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);

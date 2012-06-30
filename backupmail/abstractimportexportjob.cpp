@@ -15,14 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "abstractdata.h"
+#include "abstractimportexportjob.h"
 
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
 #include <KLocale>
 #include <QWidget>
 
-AbstractData::AbstractData( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
+AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
   : QObject(parent),
     mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
@@ -31,21 +31,21 @@ AbstractData::AbstractData( QWidget *parent, const QString &filename,BackupMailU
 {
 }
 
-AbstractData::~AbstractData()
+AbstractImportExportJob::~AbstractImportExportJob()
 {
   closeArchive();
   delete mArchive;
   delete mIdentityManager;
 }
 
-void AbstractData::closeArchive()
+void AbstractImportExportJob::closeArchive()
 {
   if(mArchive && mArchive->isOpen()) {
     mArchive->close();
   }
 }
 
-bool AbstractData::openArchive(bool write)
+bool AbstractImportExportJob::openArchive(bool write)
 {
   bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
   if(!result) {
@@ -60,4 +60,4 @@ bool AbstractData::openArchive(bool write)
 
 
 
-#include "abstractdata.moc"
+#include "abstractimportexportjob.moc"

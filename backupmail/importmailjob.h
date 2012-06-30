@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef RESTOREDATA_H
-#define RESTOREDATA_H
+#ifndef ImportMailJob_H
+#define ImportMailJob_H
 
-#include "abstractdata.h"
+#include "abstractimportexportjob.h"
 #include <QStringList>
 #include <QHash>
 
@@ -29,11 +29,11 @@ namespace MailCommon {
   class CreateResource;
 }
 
-class RestoreData : public AbstractData
+class ImportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit RestoreData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename);
-  ~RestoreData();
+  explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename);
+  ~ImportMailJob();
   void start();
 private:
   void startRestore();
@@ -64,4 +64,4 @@ private:
   MailCommon::CreateResource *mCreateResource;
 };
 
-#endif // RESTOREDATA_H
+#endif // ImportMailJob_H
