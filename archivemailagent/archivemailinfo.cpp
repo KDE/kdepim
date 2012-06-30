@@ -52,7 +52,7 @@ KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
   QString adaptFolderName(foldername);
   adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
-  QDir dir(url().path());
+  const QDir dir(url().path());
   QString dirPath = url().path();
   if(!dir.exists()) {
     dirPath = QDir::homePath();
