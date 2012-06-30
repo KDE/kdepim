@@ -17,7 +17,7 @@
 
 #ifndef ABSTRACTDATA_H
 #define ABSTRACTDATA_H
-#include <QThread>
+
 #include "backupmailutil.h"
 
 class KZip;
