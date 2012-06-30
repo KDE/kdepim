@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKUPDATA_H
-#define BACKUPDATA_H
+#ifndef ExportMailJob_H
+#define ExportMailJob_H
 
 #include "abstractimportexportjob.h"
 #include <KSharedConfig>
@@ -26,11 +26,11 @@ namespace Akonadi {
   class AgentInstance;
 }
 
-class BackupData : public AbstractImportExportJob
+class ExportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename);
-  ~BackupData();
+  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename);
+  ~ExportMailJob();
   void start();
 
 private:
@@ -53,4 +53,4 @@ private:
 
 };
 
-#endif // BACKUPDATA_H
+#endif // ExportMailJob_H

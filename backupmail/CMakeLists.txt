@@ -10,7 +10,7 @@ set(backupmail_SRCS
   abstractimportexportjob.cpp
   backupmailwindow.cpp
   backupmailwidget.cpp
-  backupdata.cpp
+  exportmailjob.cpp
   restoredata.cpp
   backupmailkernel.cpp
   backupmailutil.cpp

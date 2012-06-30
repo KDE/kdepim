@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupdata.h"
+#include "exportmailjob.h"
 #include "akonadidatabase.h"
 #include "messageviewer/kcursorsaver.h"
 #include "mailcommon/mailutil.h"
@@ -40,21 +40,21 @@
 #include <QDebug>
 #include <QDir>
 
-BackupData::BackupData(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
+ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
   :AbstractImportExportJob(parent,filename,typeSelected)
 {
 }
 
-BackupData::~BackupData()
+ExportMailJob::~ExportMailJob()
 {
 }
 
-void BackupData::start()
+void ExportMailJob::start()
 {
   startBackup();
 }
 
-void BackupData::startBackup()
+void ExportMailJob::startBackup()
 {
   if(!openArchive(true))
     return;
@@ -76,7 +76,7 @@ void BackupData::startBackup()
   closeArchive();
 }
 
-void BackupData::backupTransports()
+void ExportMailJob::backupTransports()
 {
   Q_EMIT info(i18n("Backing up transports..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -101,7 +101,7 @@ void BackupData::backupTransports()
     Q_EMIT error(i18n("Transport file cannot be added to backup file."));
 }
 
-void BackupData::backupResources()
+void ExportMailJob::backupResources()
 {
   Q_EMIT info(i18n("Backing up resources..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -127,7 +127,7 @@ void BackupData::backupResources()
   Q_EMIT info(i18n("Resources backup done."));
 }
 
-void BackupData::backupConfig()
+void ExportMailJob::backupConfig()
 {
   Q_EMIT info(i18n("Backing up config..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -282,7 +282,7 @@ void BackupData::backupConfig()
 }
 
 
-void BackupData::backupIdentity()
+void ExportMailJob::backupIdentity()
 {
   Q_EMIT info(i18n("Backing up identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -323,7 +323,7 @@ void BackupData::backupIdentity()
     Q_EMIT error(i18n("Identity file cannot be added to backup file."));
 }
 
-KUrl BackupData::resourcePath(const Akonadi::AgentInstance& agent) const
+KUrl ExportMailJob::resourcePath(const Akonadi::AgentInstance& agent) const
 {
   const QString agentFileName = agent.identifier() + QLatin1String("rc");
   const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
@@ -333,7 +333,7 @@ KUrl BackupData::resourcePath(const Akonadi::AgentInstance& agent) const
   return url;
 }
 
-void BackupData::backupMails()
+void ExportMailJob::backupMails()
 {
   Q_EMIT info(i18n("Backing up Mails..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -375,7 +375,7 @@ void BackupData::backupMails()
   Q_EMIT info(i18n("Mails backup done."));
 }
 
-void BackupData::writeDirectory(QString path, const QString& relativePath, KZip *mailArchive)
+void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZip *mailArchive)
 {
   QDir dir(path);
   mailArchive->writeDir(path.remove(relativePath),"","");
@@ -391,7 +391,7 @@ void BackupData::writeDirectory(QString path, const QString& relativePath, KZip 
   }
 }
 
-bool BackupData::backupMailData(const KUrl& url,const QString& archivePath)
+bool ExportMailJob::backupMailData(const KUrl& url,const QString& archivePath)
 {
   const QString filename = url.fileName();
   KTemporaryFile tmp;
@@ -430,7 +430,7 @@ bool BackupData::backupMailData(const KUrl& url,const QString& archivePath)
   }
 }
 
-void BackupData::backupAkonadiDb()
+void ExportMailJob::backupAkonadiDb()
 {
   Q_EMIT info(i18n("Backing up Akonadi Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -482,14 +482,14 @@ void BackupData::backupAkonadiDb()
     Q_EMIT info(i18n("Akonadi Database backup done."));
 }
 
-void BackupData::backupNepomuk()
+void ExportMailJob::backupNepomuk()
 {
   Q_EMIT info(i18n("Backing up Nepomuk Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
 
-void BackupData::storeResources(const QString&identifier, const QString& path)
+void ExportMailJob::storeResources(const QString&identifier, const QString& path)
 {
   const QString agentFileName = identifier + QLatin1String("rc");
   const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
@@ -518,7 +518,7 @@ void BackupData::storeResources(const QString&identifier, const QString& path)
     Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
 }
 
-void BackupData::backupFile(const QString&filename, const QString& path, const QString&storedName)
+void ExportMailJob::backupFile(const QString&filename, const QString& path, const QString&storedName)
 {
   const bool fileAdded  = mArchive->addLocalFile(filename, path + storedName);
   if(fileAdded)
@@ -527,7 +527,7 @@ void BackupData::backupFile(const QString&filename, const QString& path, const Q
     Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
 }
 
-KUrl BackupData::subdirPath( const KUrl& url) const
+KUrl ExportMailJob::subdirPath( const KUrl& url) const
 {
   const QString filename(url.fileName());
   QString path = url.path();
