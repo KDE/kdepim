@@ -34,7 +34,7 @@ public:
   explicit AbstractData(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
   ~AbstractData();
 
-  virtual void start();
+  virtual void start() = 0;
 
 Q_SIGNALS:
   void info(const QString&);
