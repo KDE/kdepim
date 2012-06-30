@@ -28,7 +28,6 @@
 SylpheedAddressBook::SylpheedAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
-  //qDebug()<<" dir :"<<dir;
   const QStringList files = dir.entryList(QStringList("addrbook-[0-9]*.xml" ), QDir::Files, QDir::Name);
   Q_FOREACH( const QString& file, files ) {
     readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
@@ -68,7 +67,6 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     QString name;
     if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
       name = e.attribute( QLatin1String( "name" ) );
-      //qDebug()<<" name :"<<name;
     }
       
     const QString tag = e.tagName();
@@ -174,7 +172,5 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     } else {
       kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
     }
-      
-    //qDebug()<<" tag :"<<tag;
   }
 }
