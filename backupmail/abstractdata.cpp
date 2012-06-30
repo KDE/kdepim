@@ -38,11 +38,6 @@ AbstractData::~AbstractData()
   delete mIdentityManager;
 }
 
-void AbstractData::start()
-{
-
-}
-
 void AbstractData::closeArchive()
 {
   if(mArchive && mArchive->isOpen()) {
