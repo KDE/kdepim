@@ -264,7 +264,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
 
-  // TODO: remove this debug message in a few months
+  /*
   kDebug() << "id=" << item.id()
            << "version=" << item.revision()
            << "alreadyExisted=" << alreadyExisted
@@ -272,6 +272,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
            << "; uid = " << incidence->uid()
            << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
            << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
+    */
 
   if ( mode != AssertExists && alreadyExisted ) {
     // An item from a virtual folder was inserted and we already have an item with
