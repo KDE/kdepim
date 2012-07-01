@@ -575,6 +575,21 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
 
   m_unseenItemToItemId.remove( unseen_item );
   m_itemDateForItemId.remove( item.id() );
+
+  if ( const KCalCore::Event::Ptr e = incidence.dynamicCast<KCalCore::Event>() ) {
+    if ( !e->recurs() ) {
+      m_itemIdsForDate.remove( e->dtStart().date().toString(), item.id() );
+    }
+  } else if ( const KCalCore::Todo::Ptr t = incidence.dynamicCast<KCalCore::Todo>( ) ) {
+    if ( t->hasDueDate() ) {
+      m_itemIdsForDate.remove( t->dtDue().date().toString(), item.id() );
+    }
+  } else if ( const KCalCore::Journal::Ptr j = incidence.dynamicCast<KCalCore::Journal>() ) {
+    m_itemIdsForDate.remove( j->dtStart().date().toString(), item.id() );
+  } else {
+    kError() << "Unsupported incidence type: " << incidence;
+    Q_ASSERT( false );
+  }
 }
 
 void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
@@ -607,22 +622,6 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
              << " calendar = "
              << q;
     */
-
-    if ( const KCalCore::Event::Ptr e = incidence.dynamicCast<KCalCore::Event>() ) {
-      if ( !e->recurs() ) {
-        m_itemIdsForDate.remove( e->dtStart().date().toString(), item.id() );
-      }
-    } else if ( const KCalCore::Todo::Ptr t = incidence.dynamicCast<KCalCore::Todo>( ) ) {
-      if ( t->hasDueDate() ) {
-        m_itemIdsForDate.remove( t->dtDue().date().toString(), item.id() );
-      }
-    } else if ( const KCalCore::Journal::Ptr j = incidence.dynamicCast<KCalCore::Journal>() ) {
-      m_itemIdsForDate.remove( j->dtStart().date().toString(), item.id() );
-    } else {
-      kError() << "Unsupported incidence type: " << incidence;
-      Q_ASSERT( false );
-      continue;
-    }
 
     // oldItem will almost always be the same as item, but, when you move an
     // item from one collection and the destination collection isn't selected,
