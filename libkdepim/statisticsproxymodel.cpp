@@ -67,9 +67,9 @@ class StatisticsProxyModel::Private
       }
     }
 
-    int sourceColumnCount( const QModelIndex &parent )
+    int sourceColumnCount()
     {
-      return mParent->sourceModel()->columnCount( mParent->mapToSource( parent ) );
+      return mParent->sourceModel()->columnCount();
     }
 
     QString toolTipForCollection( const QModelIndex &index, const Collection &collection )
@@ -331,7 +331,7 @@ QModelIndex StatisticsProxyModel::index( int row, int column, const QModelIndex 
 
     int sourceColumn = column;
 
-    if ( column>=d->sourceColumnCount( parent ) ) {
+    if ( column>=d->sourceColumnCount() ) {
       sourceColumn = 0;
     }
 
@@ -343,16 +343,16 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
 {
   if (!sourceModel())
     return QVariant();
-  if ( role == Qt::DisplayRole && index.column()>=d->sourceColumnCount( index.parent() ) ) {
+  if ( role == Qt::DisplayRole && index.column()>=d->sourceColumnCount() ) {
     const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
     Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
 
     if ( collection.isValid() && collection.statistics().count()>=0 ) {
-      if ( index.column() == d->sourceColumnCount( QModelIndex() )+2 ) {
+      if ( index.column() == d->sourceColumnCount()+2 ) {
         return KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) );
-      } else if ( index.column() == d->sourceColumnCount( QModelIndex() )+1 ) {
+      } else if ( index.column() == d->sourceColumnCount()+1 ) {
         return collection.statistics().count();
-      } else if ( index.column() == d->sourceColumnCount( QModelIndex() ) ) {
+      } else if ( index.column() == d->sourceColumnCount() ) {
         if ( collection.statistics().unreadCount() > 0 ) {
           return collection.statistics().unreadCount();
         } else {
@@ -364,7 +364,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
       }
     }
 
-  } else if ( role == Qt::TextAlignmentRole && index.column()>=d->sourceColumnCount( index.parent() ) ) {
+  } else if ( role == Qt::TextAlignmentRole && index.column()>=d->sourceColumnCount() ) {
     return Qt::AlignRight;
 
   } else if ( role == Qt::ToolTipRole && d->mToolTipEnabled ) {
@@ -393,11 +393,11 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
 QVariant StatisticsProxyModel::headerData( int section, Qt::Orientation orientation, int role) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
-    if ( section == d->sourceColumnCount( QModelIndex() ) + 2 ) {
+    if ( section == d->sourceColumnCount() + 2 ) {
       return i18nc( "collection size", "Size" );
-    } else if ( section == d->sourceColumnCount( QModelIndex() ) + 1 ) {
+    } else if ( section == d->sourceColumnCount() + 1 ) {
       return i18nc( "number of entities in the collection", "Total" );
-    } else if ( section == d->sourceColumnCount( QModelIndex() ) ) {
+    } else if ( section == d->sourceColumnCount() ) {
       return i18nc( "number of unread entities in the collection", "Unread" );
     }
   }
@@ -407,7 +407,7 @@ QVariant StatisticsProxyModel::headerData( int section, Qt::Orientation orientat
 
 Qt::ItemFlags StatisticsProxyModel::flags( const QModelIndex & index ) const
 {
-  if ( index.column()>=d->sourceColumnCount( index.parent() ) ) {
+  if ( index.column()>=d->sourceColumnCount() ) {
     return KIdentityProxyModel::flags( index.sibling( index.row(), 0 ) )
          & ( Qt::ItemIsSelectable | Qt::ItemIsDragEnabled // Allowed flags
            | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled );
@@ -416,12 +416,12 @@ Qt::ItemFlags StatisticsProxyModel::flags( const QModelIndex & index ) const
   return KIdentityProxyModel::flags( index );
 }
 
-int StatisticsProxyModel::columnCount( const QModelIndex & parent ) const
+int StatisticsProxyModel::columnCount( const QModelIndex & /*parent*/ ) const
 {
   if ( sourceModel()==0 ) {
     return 0;
   } else {
-    return d->sourceColumnCount( parent )
+    return d->sourceColumnCount()
          + ( d->mExtraColumnsEnabled ? 3 : 0 );
   }
 }
@@ -443,6 +443,21 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
   return list;
 }
 
+QModelIndex StatisticsProxyModel::mapFromSource(const QModelIndex& sourceIndex) const
+{
+  if(sourceIndex.column()>=d->sourceColumnCount() ) {
+      return QModelIndex();
+  }
+  return KIdentityProxyModel::mapFromSource(sourceIndex);
+}
+
+QModelIndex StatisticsProxyModel::mapToSource(const QModelIndex& index) const
+{
+  if(index.column()>=d->sourceColumnCount() ) {
+      return QModelIndex();
+  }
+  return KIdentityProxyModel::mapToSource(index);
+}
 
 #include "statisticsproxymodel.moc"
 

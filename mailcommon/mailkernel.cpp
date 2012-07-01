@@ -276,8 +276,6 @@ Akonadi::Collection Kernel::trashCollectionFromResource( const Akonadi::Collecti
 
       if ( iface->isValid() ) {
         trashCol =  Akonadi::Collection( iface->trashCollection() );
-        delete iface;
-        return trashCol;
       }
       delete iface;
     }
