@@ -27,7 +27,7 @@
 #include <QAbstractItemView>
 #include <QWidget>
 
-namespace Akonadi {
+namespace KPIM {
   class StatisticsProxyModel;
 }
 
@@ -103,7 +103,7 @@ class MAILCOMMON_EXPORT FolderTreeWidget : public QWidget
 
     FolderTreeView *folderTreeView() const;
 
-    Akonadi::StatisticsProxyModel * statisticsProxyModel() const;
+    KPIM::StatisticsProxyModel * statisticsProxyModel() const;
 
     FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
 
