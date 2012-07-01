@@ -389,7 +389,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const QString parentUID = incidence->relatedTo();
   const bool hasParent = !parentUID.isEmpty();
   UnseenItem parentItem;
-  QMap<UnseenItem,Akonadi::Item::Id>::const_iterator parentIt = m_unseenItemToItemId.constEnd();
+  QHash<UnseenItem,Akonadi::Item::Id>::const_iterator parentIt = m_unseenItemToItemId.constEnd();
   bool knowParent = false;
   bool parentNotChanged = false;
   if ( hasParent ) {
@@ -415,7 +415,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
         Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
       } else {
         kDebug() << "m_unseenItemToItemId has size " << m_unseenItemToItemId.count();
-        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_unseenItemToItemId );
+        QHashIterator<UnseenItem, Akonadi::Item::Id> i( m_unseenItemToItemId );
         while ( i.hasNext() ) {
           i.next();
           if ( i.key().uid == ui.uid || i.value() == item.id() ) {
@@ -2125,4 +2125,9 @@ bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
 int Calendar::incidencesCount() const
 {
   return d->m_model->rowCount();
+}
+
+uint CalendarSupport::qHash( const UnseenItem &unseenItem )
+{
+  return qHash( QString::number( unseenItem.collection ) + unseenItem.uid );
 }
