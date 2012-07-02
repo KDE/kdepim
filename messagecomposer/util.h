@@ -78,7 +78,7 @@ namespace Util {
     MESSAGECOMPOSER_EXPORT QString cleanedUpHeaderString( const QString &s );
 
     void addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob);
-    bool sendMailDispatcherIsOnline( QWidget *parent = 0);
+    MESSAGECOMPOSER_EXPORT bool sendMailDispatcherIsOnline( QWidget *parent = 0);
 
 }
 
