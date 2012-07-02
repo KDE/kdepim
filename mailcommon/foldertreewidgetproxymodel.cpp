@@ -241,11 +241,15 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex &index, int role ) 
     const Akonadi::Collection collection =
       sourceModel()->data(
         rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    const Akonadi::AgentInstance instance =
-      Akonadi::AgentManager::self()->instance( collection.resource() );
-    if(collection.parentCollection() == Akonadi::Collection::root()) {
-      if(!instance.isOnline())
-        return i18n("%1 (Offline)",Akonadi::EntityRightsFilterModel::data(index,role).toString());
+    if ( !MailCommon::Util::isVirtualCollection( collection ) ) {
+
+      const Akonadi::AgentInstance instance =
+          Akonadi::AgentManager::self()->instance( collection.resource() );
+      if(collection.parentCollection() == Akonadi::Collection::root()) {
+         if(!instance.isOnline()) {
+            return i18n("%1 (Offline)",Akonadi::EntityRightsFilterModel::data(index,role).toString());
+         }
+      }
     }
   }
   return  Akonadi::EntityRightsFilterModel::data( index, role );
