@@ -17,8 +17,10 @@
 
 #include "sylpheedaddressbook.h"
 #include <KABC/Addressee>
+#include <kabc/contactgroup.h>
 
 #include <KDebug>
+#include <KLocale>
 
 #include <QDir>
 #include <QDebug>
@@ -27,7 +29,6 @@
 SylpheedAddressBook::SylpheedAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
-  //qDebug()<<" dir :"<<dir;
   const QStringList files = dir.entryList(QStringList("addrbook-[0-9]*.xml" ), QDir::Files, QDir::Name);
   Q_FOREACH( const QString& file, files ) {
     readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
@@ -63,19 +64,25 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     return;
   }
 
-  for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+  QDomElement e = domElement.firstChildElement();
+  if(e.isNull()) {
+    addAddressBookImportError( i18n("No contact found in %1").arg(filename) );
+    return;
+  }
+
+  for ( ; !e.isNull(); e = e.nextSiblingElement() ) {
     QString name;
     if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
       name = e.attribute( QLatin1String( "name" ) );
-      qDebug()<<" name :"<<name;
     }
       
     const QString tag = e.tagName();
     if ( tag == QLatin1String( "person" ) ) {
       KABC::Addressee address;
 //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
+      QString uidPerson;
       if ( e.hasAttribute( QLatin1String( "uid" ) ) ) {
-        //Nothing
+          uidPerson = e.attribute( QLatin1String( "uid" ) );
       }
       if ( e.hasAttribute( QLatin1String( "first-name" ) ) ) {
         address.setName( e.attribute( QLatin1String( "first-name" ) ) );
@@ -85,11 +92,12 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
         
       }
       if ( e.hasAttribute( QLatin1String( "nick-name" ) ) ) {
-        address.setNickName( QLatin1String( "nick-name" ) );
+        address.setNickName( e.attribute(QLatin1String( "nick-name" )) );
       }
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
-        //FIXME ????
+        address.setFormattedName(e.attribute(QLatin1String( "cn" )));
       }
+      QStringList uidAddress;
       for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
         const QString addressTag = addressElement.tagName();
         if ( addressTag == QLatin1String( "address-list" ) ) {
@@ -99,9 +107,13 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
             if ( tagAddressList == QLatin1String( "address" ) ) {
               if ( addresslist.hasAttribute( QLatin1String( "email" ) ) ) {
                 emails<<addresslist.attribute( QLatin1String( "email" ) );
+              } else if(addresslist.hasAttribute(QLatin1String("alias"))) {
+                //TODO:
+              } else if(addresslist.hasAttribute(QLatin1String("uid"))) {
+                  uidAddress<<addresslist.attribute(QLatin1String("uid"));
               }
             } else {
-              qDebug()<<" tagAddressList unknown :"<<tagAddressList;
+             kDebug()<<" tagAddressList unknown :"<<tagAddressList;
             }
           }
           if ( !emails.isEmpty() ) {
@@ -112,21 +124,60 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
           for ( QDomElement attributelist = addressElement.firstChildElement(); !attributelist.isNull(); attributelist = attributelist.nextSiblingElement() ) {
             const QString tagAttributeList = attributelist.tagName();
             if ( tagAttributeList == QLatin1String( "attribute" ) ) {
-              //TODO
+                if(attributelist.hasAttribute(QLatin1String("name"))) {
+                  const QString name = attributelist.attribute(QLatin1String("name"));
+                  const QString value = attributelist.text();
+                  address.insertCustom( QLatin1String( "KADDRESSBOOK" ), name, value );
+                }
             } else {
-              //TODO
+              kDebug()<<"tagAttributeList not implemented "<<tagAttributeList;
             }
           }
           
         } else {
-          qDebug()<<" addressTag unknown :"<<addressTag;
+          kDebug()<<" addressTag unknown :"<<addressTag;
         }
       }
+      if(!mAddressBookUid.contains(uidPerson)) {
+        mAddressBookUid.insert(uidPerson,uidAddress);
+      } else {
+        qDebug()<<" problem uidPerson already stored"<<uidPerson;
+      }
       createContact( address );
+    } else if(tag == QLatin1String("group")) {
+      QString name;
+      if ( e.hasAttribute( QLatin1String( "name" ) ) ) {
+        name = e.attribute( QLatin1String( "name" ) );
+      }
+      KABC::ContactGroup group(name);
+      //TODO: create Group
+      for ( QDomElement groupElement = e.firstChildElement(); !groupElement.isNull(); groupElement = groupElement.nextSiblingElement() ) {
+        const QString groupTag = groupElement.tagName();
+        if ( groupTag == QLatin1String( "member-list" ) ) {
+          for ( QDomElement memberlist = groupElement.firstChildElement(); !memberlist.isNull(); memberlist = memberlist.nextSiblingElement() ) {
+            const QString tagMemberList = memberlist.tagName();
+            if(tagMemberList == QLatin1String("member")) {
+                QString pid;
+                QString eid;
+                if(memberlist.hasAttribute(QLatin1String("pid"))) {
+                  pid = memberlist.attribute(QLatin1String("pid"));
+                }
+                if(memberlist.hasAttribute(QLatin1String("eid"))) {
+                    eid = memberlist.attribute(QLatin1String("eid"));
+                }
+                if(!pid.isEmpty()&&!eid.isEmpty()) {
+                  //TODO
+                } else {
+                  qDebug()<<" Problem with group"<<name;
+                }
+               //TODO
+            }
+          }
+        }
+      }
+      createGroup(group);
     } else {
-      qDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
+      kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
     }
-      
-    qDebug()<<" tag :"<<tag;
   }
 }

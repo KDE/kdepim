@@ -21,15 +21,17 @@
 
 using namespace MessageList;
 
-CallbackNepomukResourceRetriever::CallbackNepomukResourceRetriever(QObject* parent): AsyncNepomukResourceRetriever(parent)
+CallbackNepomukResourceRetriever::CallbackNepomukResourceRetriever(QObject* parent)
+  : AsyncNepomukResourceRetriever(
+      QVector<QUrl>() << Nepomuk::Resource::tagUri() << Nepomuk::Resource::annotationUri() << Nepomuk::Resource::descriptionUri(),
+      parent )
 {
 }
 
 void CallbackNepomukResourceRetriever::requestResource(Core::MessageItemPrivate* item, const QUrl& url)
 {
   m_pendingCallbacks.insert( url, item );
-  AsyncNepomukResourceRetriever::requestResource( url,
-    QVector<QUrl>() << Nepomuk::Resource::tagUri() << Nepomuk::Resource::annotationUri() << Nepomuk::Resource::descriptionUri() );
+  AsyncNepomukResourceRetriever::requestResource( url );
 }
 
 void CallbackNepomukResourceRetriever::cancelCallbackRequest(const QUrl& url)

@@ -226,6 +226,8 @@ void TranslatorWidget::slotFromLanguageChanged( int index )
 void TranslatorWidget::setTextToTranslate( const QString& text)
 {
   d->inputText->setPlainText( text );
+  d->translatedText->clear();
+  slotTranslate();
 }
 
 

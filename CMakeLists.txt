@@ -108,14 +108,14 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION beta2)
+set(KDEPIM_DEV_VERSION pre)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.9${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.10${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -191,7 +191,7 @@ else()
 
 # Otherwise...
 ############### Find the stuff we need ###############
-  set(AKONADI_MIN_VERSION 1.4.91)
+  set(AKONADI_MIN_VERSION 1.7.90)
   find_package(Akonadi QUIET NO_MODULE ${AKONADI_MIN_VERSION})
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "${AKONADI_MIN_VERSION}" "Akonadi is required to build KDEPIM")
 
@@ -204,8 +204,8 @@ else()
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  set(SDO_MIN_VERSION 0.9)
-  set(SOPRANO_MIN_VERSION 2.3.70)
+  set(SDO_MIN_VERSION 0.10)
+  set(SOPRANO_MIN_VERSION 2.7.56)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
   macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "Ontologies necessary for the Nepomuk semantic desktop.")

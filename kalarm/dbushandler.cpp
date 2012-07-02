@@ -21,6 +21,7 @@
 #include "kalarm.h"
 
 #include "alarmcalendar.h"
+#include "alarmtime.h"
 #include "functions.h"
 #include "kalarmapp.h"
 #include "kamail.h"
@@ -69,6 +70,11 @@ bool DBusHandler::cancelEvent(const QString& eventId)
 bool DBusHandler::triggerEvent(const QString& eventId)
 {
     return theApp()->dbusTriggerEvent(eventId);
+}
+
+QString DBusHandler::list()
+{
+    return theApp()->dbusList();
 }
 
 bool DBusHandler::scheduleMessage(const QString& message, const QString& startDateTime, int lateCancel, unsigned flags,
@@ -445,7 +451,7 @@ KDateTime DBusHandler::convertDateTime(const QString& dateTime, const KDateTime&
     }
     KDateTime result;
     if (!error)
-        result = KAlarm::applyTimeZone(zone, date, time, haveTime, defaultDt);
+        result = AlarmTime::applyTimeZone(zone, date, time, haveTime, defaultDt);
     if (error  ||  !result.isValid())
     {
         if (!defaultDt.isValid())

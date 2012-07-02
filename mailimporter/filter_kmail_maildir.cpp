@@ -48,9 +48,9 @@ FilterKMail_maildir::~FilterKMail_maildir()
 void FilterKMail_maildir::import()
 {
   setCountDuplicates(0);
-  QString _homeDir = QDir::homePath();
+  const QString homeDir = QDir::homePath();
 
-  KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
+  KFileDialog *kfd = new KFileDialog( homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
   kfd->exec();
   const QString maildir = kfd->selectedFile();

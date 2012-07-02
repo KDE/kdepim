@@ -94,7 +94,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)),SLOT(initListOfCollection()) );
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionUnsubscribed(Akonadi::Collection)),SLOT(initListOfCollection()) );
 
-  
   initListOfCollection();
 
 }
@@ -204,7 +203,7 @@ void KMSystemTray::updateCount()
   p.setBrush( Qt::NoBrush );
   p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
   p.setOpacity( 1.0 );
-  p.drawText( overlayPixmap.rect(), Qt::AlignCenter, countString );
+  p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
   p.end();
 
   QPixmap iconPixmap = mIcon.pixmap(overlaySize, overlaySize);
@@ -281,17 +280,17 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
   for ( int row = 0; row < rowCount; ++row ) {
     const QModelIndex index = model->index( row, 0, parentIndex );
     const Akonadi::Collection collection = model->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( excludeFolder( collection ) )
-      continue;
-    Akonadi::CollectionStatistics statistics = collection.statistics();
-    const qint64 count = qMax( 0LL, statistics.unreadCount() );
-    if ( count > 0 ) {
-      const QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, false );
-      if ( col && col->ignoreNewMail() )
-        continue;
+    qint64 count = 0;
+    if ( !excludeFolder( collection ) ) {
+      Akonadi::CollectionStatistics statistics = collection.statistics();
+      count = qMax( 0LL, statistics.unreadCount() );
+      if ( count > 0 ) {
+        const QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, false );
+        if ( col && !col->ignoreNewMail() ) {
+          mCount += count;
+        }
+      }
     }
-    mCount += count;
-
     QString label = parentName.isEmpty() ? QLatin1String("") : QString(parentName + QLatin1String("->"));
     label += model->data( index ).toString();
     label.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
@@ -329,11 +328,23 @@ void KMSystemTray::hideKMail()
 void KMSystemTray::initListOfCollection()
 {
   mCount = 0;
+  const QAbstractItemModel *model = KMKernel::self()->entityTreeModel();
+  if(model->rowCount() == 0) {
+    QTimer::singleShot(1000,this,SLOT(initListOfCollection()));
+    return;
+  }
+  unreadMail( model );
+
   if ( mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) {
-    setStatus( KStatusNotifierItem::Passive );
+    if(status() == KStatusNotifierItem::Passive && (mCount > 0)) {
+      setStatus( KStatusNotifierItem::Active );
+    } else if( status() == KStatusNotifierItem::Active && (mCount == 0) ) {
+      setStatus( KStatusNotifierItem::Passive );
+    }
   }
 
-  unreadMail( KMKernel::self()->entityTreeModel() );
+  //kDebug()<<" mCount :"<<mCount;
+  updateCount();
 }
 
 void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelIndex& parentIndex  )
@@ -343,19 +354,18 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
     const QModelIndex index = model->index( row, 0, parentIndex );
     const Akonadi::Collection collection = model->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
 
-    if ( excludeFolder( collection ) )
-      continue;
+    if ( !excludeFolder( collection ) ) {
 
-    const Akonadi::CollectionStatistics statistics = collection.statistics();
-    const qint64 count = qMax( 0LL, statistics.unreadCount() );
+      const Akonadi::CollectionStatistics statistics = collection.statistics();
+      const qint64 count = qMax( 0LL, statistics.unreadCount() );
 
-    if ( count > 0 ) {
-      const QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, false );
-      if ( col && !col->ignoreNewMail() ) {
-        mCount += count;
+      if ( count > 0 ) {
+        const QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, false );
+        if ( col && !col->ignoreNewMail() ) {
+          mCount += count;
+        }
       }
     }
-
     if ( model->rowCount( index ) > 0 ) {
       unreadMail( model, index );
     }
@@ -365,14 +375,6 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
                                   : i18np("1 unread message",
                                           "%1 unread messages",
                                           mCount));
-  // Make sure the icon will be displayed
-  if ( ( mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) &&
-       status() == KStatusNotifierItem::Passive && mCount > 0) {
-    setStatus( KStatusNotifierItem::Active );
-  }
-
-  //kDebug()<<" mCount :"<<mCount;
-  updateCount();
 }
 
 bool KMSystemTray::hasUnreadMail() const
@@ -413,6 +415,12 @@ void KMSystemTray::slotCollectionStatisticsChanged( Akonadi::Collection::Id id,c
 
 bool KMSystemTray::excludeFolder( const Akonadi::Collection& collection ) const
 {
+  if(!collection.isValid()) {
+    return true;
+  }
+  if(!collection.contentMimeTypes().contains(KMime::Message::mimeType())) {
+    return true;
+  }
   if ( CommonKernel->outboxCollectionFolder() == collection ||
        CommonKernel->sentCollectionFolder() == collection ||
        CommonKernel->templatesCollectionFolder() == collection ||
@@ -423,7 +431,6 @@ bool KMSystemTray::excludeFolder( const Akonadi::Collection& collection ) const
 
   if ( MailCommon::Util::isVirtualCollection( collection ) )
     return true;
-  
   return false;
 }
 }

@@ -97,6 +97,8 @@ class KDEPIM_EXPORT StatisticsProxyModel : public KIdentityProxyModel
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
     virtual void connectNotify(const char* signal);
 
+    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+    QModelIndex mapToSource(const QModelIndex& sourceIndex) const;
   private:
     //@cond PRIVATE
     class Private;

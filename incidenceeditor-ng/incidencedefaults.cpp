@@ -384,12 +384,15 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
   incidence->clearTempFiles();
 
   const KCalCore::Person::Ptr organizerAsPerson = d->organizerAsPerson();
-  incidence->setOrganizer( organizerAsPerson );
 #ifdef KDEPIM_ENTERPRISE_BUILD
   incidence->addAttendee( d->organizerAsAttendee( organizerAsPerson ) );
 #endif
   foreach ( const KCalCore::Attendee::Ptr &attendee, d->mAttendees ) {
     incidence->addAttendee( attendee );
+  }
+  // Ical standard: No attendees -> must not have an organizer!
+  if ( incidence->attendeeCount() ) {
+    incidence->setOrganizer( organizerAsPerson );
   }
 
   foreach ( const KCalCore::Attachment::Ptr &attachment, d->mAttachments ) {

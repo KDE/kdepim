@@ -16,20 +16,20 @@
 */
 
 
-#ifndef BACKUPMAILAPPLICATION_H
-#define BACKUPMAILAPPLICATION_H
+#ifndef BACKUPMAILWINDOW_H
+#define BACKUPMAILWINDOW_H
 #include <kxmlguiwindow.h>
 
 class BackupMailWidget;
-class BackupData;
-class RestoreData;
+class ExportMailJob;
+class ImportMailJob;
 
-class BackupMailApplication: public KXmlGuiWindow
+class BackupMailWindow: public KXmlGuiWindow
 {
   Q_OBJECT
 public:
-  explicit BackupMailApplication(QWidget *parent=0);
-  ~BackupMailApplication();
+  explicit BackupMailWindow(QWidget *parent=0);
+  ~BackupMailWindow();
 private Q_SLOTS:
   void slotBackupData();
   void slotRestoreData();
@@ -41,10 +41,10 @@ private:
   bool canZip() const;
   void setupActions(bool canZipFile);
   BackupMailWidget *mBackupMailWidget;
-  BackupData *mBackupData;
-  RestoreData *mRestoreData;
+  ExportMailJob *mBackupData;
+  ImportMailJob *mRestoreData;
 };
 
 
-#endif /* BACKUPMAILAPPLICATION_H */
+#endif /* BackupMailWindow_H */
 

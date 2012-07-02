@@ -7,11 +7,11 @@ include_directories(${AKONADI_INCLUDE_DIR} ${SOPRANO_INCLUDE_DIR} ${CMAKE_SOURCE
 
 set(backupmail_SRCS
   main.cpp
-  abstractdata.cpp
-  backupmailapplication.cpp
+  abstractimportexportjob.cpp
+  backupmailwindow.cpp
   backupmailwidget.cpp
-  backupdata.cpp
-  restoredata.cpp
+  exportmailjob.cpp
+  importmailjob.cpp
   backupmailkernel.cpp
   backupmailutil.cpp
   selecttypewidget.cpp
@@ -42,7 +42,7 @@ target_link_libraries(backupmail
 install(TARGETS backupmail ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES
-    backupmailapplication.rc
+    backupmail.rc
     DESTINATION ${DATA_INSTALL_DIR}/backupmail
 )
 

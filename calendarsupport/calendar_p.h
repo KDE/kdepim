@@ -63,7 +63,14 @@ struct UnseenItem
     }
     return uid < other.uid;
   }
+
+  bool operator==( const UnseenItem &other ) const
+  {
+    return other.collection == collection && other.uid == uid;
+  }
 };
+
+uint qHash( const UnseenItem &unseenItem );
 
 class Calendar::Private : public QObject
 {
@@ -117,19 +124,19 @@ class Calendar::Private : public QObject
     //parent to children map for alread cached children
     QHash<Akonadi::Item::Id, QList<Akonadi::Item::Id> > m_parentToChildren;
 
-    QMap<UnseenItem, Akonadi::Item::Id> m_unseenItemToItemId;
+    QHash<UnseenItem, Akonadi::Item::Id> m_unseenItemToItemId;
 
     QHash<QString,Akonadi::Item::Id> m_uidToItemId;
 
     // child to parent map, unknown/not cached parent items
     QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent;
 
-    QMap<UnseenItem, QList<Akonadi::Item::Id> > m_unseenParentToChildren;
+    QHash<UnseenItem, QList<Akonadi::Item::Id> > m_unseenParentToChildren;
 
     // on start dates/due dates of non-recurring, single-day Incidences
-    QMultiHash<QString, Akonadi::Item::Id> m_itemIdsForDate;
+    QMultiHash<int, Akonadi::Item::Id> m_itemIdsForDate; // date is a julian day
 
-    QHash<Akonadi::Item::Id, QString> m_itemDateForItemId;
+    QHash<Akonadi::Item::Id, int> m_itemDateForItemId;
 
     // From search folders.
     QHash<Akonadi::Item::Id, QList<Akonadi::Item> > m_virtualItems;

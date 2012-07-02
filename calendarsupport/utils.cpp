@@ -564,7 +564,6 @@ QList<QDate> CalendarSupport::workDays( const QDate &startDate,
     const int listCount( list.count() );
     for ( int i = 0; i < listCount; ++i ) {
       const Holiday &h = list.at( i );
-      const QString dateString = h.date().toString();
       if ( h.dayType() == Holiday::NonWorkday ) {
         result.removeAll( h.date() );
       }

@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKUPDATA_H
-#define BACKUPDATA_H
+#ifndef ExportMailJob_H
+#define ExportMailJob_H
 
-#include "abstractdata.h"
+#include "abstractimportexportjob.h"
 #include <KSharedConfig>
 class KUrl;
 
@@ -26,14 +26,17 @@ namespace Akonadi {
   class AgentInstance;
 }
 
-class BackupData : public AbstractData
+class ExportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit BackupData(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString& filename, QObject *parent);
-  ~BackupData();
-  void run();
+  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename);
+  ~ExportMailJob();
+  void start();
+
 private:
   void startBackup();
+
+  KUrl subdirPath(const KUrl &url ) const;
 
   void backupTransports();
   void backupResources();
@@ -42,7 +45,7 @@ private:
   void backupIdentity();
   void backupAkonadiDb();
   void backupNepomuk();
-  void writeDirectory(const QString& path, const QString &currentPath, KZip *mailArchive);
+  void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
   void storeResources(const QString&identifier, const QString& path);
   KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
   void backupFile(const QString&filename, const QString& path, const QString&storedName);
@@ -50,4 +53,4 @@ private:
 
 };
 
-#endif // BACKUPDATA_H
+#endif // ExportMailJob_H

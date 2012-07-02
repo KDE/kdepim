@@ -15,9 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTDATA_H
-#define ABSTRACTDATA_H
-#include <QThread>
+#ifndef ABSTRACTIMPORTEXPORTJOB_H
+#define ABSTRACTIMPORTEXPORTJOB_H
+
 #include "backupmailutil.h"
 
 class KZip;
@@ -27,12 +27,14 @@ namespace KPIMIdentities {
   class IdentityManager;
 }
 
-class AbstractData : public QThread
+class AbstractImportExportJob : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractData(QWidget *widget, const QString& filename, BackupMailUtil::BackupTypes typeSelected, QObject *parent);
-  ~AbstractData();
+  explicit AbstractImportExportJob(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
+  ~AbstractImportExportJob();
+
+  virtual void start() = 0;
 
 Q_SIGNALS:
   void info(const QString&);
@@ -48,4 +50,4 @@ protected:
   QWidget *mParent;
 };
 
-#endif // ABSTRACTDATA_H
+#endif // ABSTRACTIMPORTEXPORTJOB_H

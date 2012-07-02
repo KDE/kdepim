@@ -99,6 +99,7 @@ class KAlarmApp : public KUniqueApplication
                                          const QStringList& mailAttachments = QStringList());
         bool               dbusTriggerEvent(const QString& eventID)   { return dbusHandleEvent(eventID, EVENT_TRIGGER); }
         bool               dbusDeleteEvent(const QString& eventID)    { return dbusHandleEvent(eventID, EVENT_CANCEL); }
+        QString            dbusList();
 
     public slots:
         void               processQueue();
@@ -197,6 +198,10 @@ class KAlarmApp : public KUniqueApplication
         QString            createTempScriptFile(const QString& command, bool insertShell, const KAEvent&, const KAAlarm&) const;
         void               commandErrorMsg(const ShellProcess*, const KAEvent&, const KAAlarm*, int flags = 0);
         void               purge(int daysToKeep);
+#ifdef USE_AKONADI
+        bool               checkResourcesPopulated();
+#endif
+        QStringList        scheduledAlarmList();
 
         static KAlarmApp*  theInstance;          // the one and only KAlarmApp instance
         static int         mActiveCount;         // number of active instances without main windows

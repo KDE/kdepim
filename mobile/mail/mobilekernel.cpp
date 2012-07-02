@@ -94,6 +94,7 @@ MessageSender* MobileKernel::msgSender()
 void MobileKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
  //TODO: implement
+  Q_UNUSED( col );
 }
 
 Akonadi::Entity::Id MobileKernel::lastSelectedFolder()
