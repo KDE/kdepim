@@ -665,8 +665,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       job->addressAttribute().setTo( QStringList() << KPIMUtils::extractEmailAddress(
                                        KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
-      job->transportAttribute().setTransportId(
-        MailTransport::TransportManager::self()->defaultTransportId() );
+      job->transportAttribute().setTransportId(transport->id());
 
       if ( transport && transport->specifySenderOverwriteAddress() ) {
         job->addressAttribute().setFrom(
