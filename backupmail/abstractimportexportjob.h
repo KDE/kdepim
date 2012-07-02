@@ -22,6 +22,7 @@
 
 class KZip;
 class QWidget;
+class QProgressDialog;
 namespace KPIMIdentities {
   class Identity;
   class IdentityManager;
@@ -44,10 +45,13 @@ protected:
   bool openArchive(bool write);
 
 protected:
+  QProgressDialog *progressDialog();
+
   BackupMailUtil::BackupTypes mTypeSelected;
   KZip *mArchive;
   KPIMIdentities::IdentityManager *mIdentityManager;
   QWidget *mParent;
+  QProgressDialog *mProgressDialog;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

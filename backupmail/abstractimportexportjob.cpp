@@ -27,7 +27,8 @@ AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString
     mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
-    mParent(parent)
+    mParent(parent),
+    mProgressDialog(0)
 {
 }
 
@@ -36,6 +37,11 @@ AbstractImportExportJob::~AbstractImportExportJob()
   closeArchive();
   delete mArchive;
   delete mIdentityManager;
+}
+
+QProgressDialog *AbstractImportExportJob::progressDialog()
+{
+  return mProgressDialog;
 }
 
 void AbstractImportExportJob::closeArchive()
