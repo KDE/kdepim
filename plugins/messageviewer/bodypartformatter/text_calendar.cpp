@@ -76,6 +76,8 @@ using namespace KCalCore;
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 
+using namespace MailTransport;
+
 namespace {
 
 static bool hasMyWritableEventsFolders( const QString &family )
@@ -598,23 +600,22 @@ class UrlHandler : public Interface::BodyPartURLHandler
         msg->setHeader( x_header );
       }
 
-#if 0 //TODO: Review // Shouldn't be necessary anymore
       const bool identityHasTransport = !identity.transport().isEmpty();
+      QString transportName;
       if ( !nullIdentity && identityHasTransport ) {
-        msg->setHeaderField( "X-KMail-Transport", identity.transport() );
+          transportName = identity.transport();
       } else if ( !nullIdentity && identity.isDefault() ) {
-        msg->setHeaderField( "X-KMail-Transport",
-                             TransportManager::self()->defaultTransportName() );
+          transportName = TransportManager::self()->defaultTransportName();
       } else {
-        const QString transport = askForTransport( nullIdentity );
-        if ( transport.isEmpty() ) {
-          return false; // user canceled transport selection dialog
-        }
-        msg->setHeaderField( "X-KMail-Transport", transport );
+          transportName = TransportManager::self()->defaultTransportName();
       }
-#else
-      kDebug() << "AKONADI PORT: Disabled code in " << Q_FUNC_INFO;
-#endif
+
+      if(transportName.isEmpty()) {
+        if ( !TransportManager::self()->showTransportCreationDialog( 0, TransportManager::IfNoTransportExists ) )
+          return false;
+        transportName = TransportManager::self()->defaultTransportName();
+      }
+      msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), transportName, "utf-8" ) );
 
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
@@ -658,15 +659,14 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 #else
       msg->assemble();
-      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( MailTransport::TransportManager::self()->defaultTransportName() );
+      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( transportName );
 
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
 
       job->addressAttribute().setTo( QStringList() << KPIMUtils::extractEmailAddress(
                                        KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
-      job->transportAttribute().setTransportId(
-        MailTransport::TransportManager::self()->defaultTransportId() );
+      job->transportAttribute().setTransportId(transport->id());
 
       if ( transport && transport->specifySenderOverwriteAddress() ) {
         job->addressAttribute().setFrom(

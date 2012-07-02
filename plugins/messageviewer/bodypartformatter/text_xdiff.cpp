@@ -88,19 +88,19 @@ namespace {
       QString html = "<br><div align=\"center\">";
       html += "<pre " + tableStyle + '>';
 
-      const QStringList lines = diff.split( '\n' );
+      const QStringList lines = diff.split( QLatin1Char('\n') );
       QStringList::ConstIterator end( lines.end() );
       for ( QStringList::ConstIterator it = lines.begin(); it != end; ++it ) {
         const QString line( Qt::escape( *it ) );
         QString style;
         if ( !line.isEmpty() ) {
-          if ( line.startsWith( "+++" ) ) {
+          if ( line.startsWith( QLatin1String("+++") ) ) {
             style = fileAddStyle;
           } else if ( line.startsWith( QLatin1String("---") ) ) {
             style = fileRemoveStyle;
-          } else if ( line.startsWith( '+' ) || line.startsWith( '>' ) ) {
+          } else if ( line.startsWith( QLatin1Char('+') ) || line.startsWith( QLatin1Char('>') ) ) {
             style = addedLineStyle;
-          } else if ( line.startsWith( '-' ) || line.startsWith( '<' ) ) {
+          } else if ( line.startsWith( QLatin1Char('-') ) || line.startsWith( QLatin1Char('<') ) ) {
             style = removedLineStyle;
           } else if ( line.startsWith( QLatin1String("==") ) ) {
             style = sepStyle;
