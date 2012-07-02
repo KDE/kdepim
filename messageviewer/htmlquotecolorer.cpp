@@ -40,6 +40,10 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
 #ifndef KDEPIM_NO_WEBKIT
   // Create a DOM Document from the HTML source
   QWebPage page(0);
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+  page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
+  page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+
   QWebFrame *frame = page.mainFrame();
   frame->setHtml( htmlSource );
   
