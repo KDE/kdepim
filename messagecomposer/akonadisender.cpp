@@ -93,6 +93,9 @@ bool AkonadiSender::doSend( const KMime::Message::Ptr &aMsg, short sendNow  )
 bool AkonadiSender::doSendQueued( const QString &customTransport )
 {
   kDebug() << "Sending queued message with custom transport:" << customTransport;
+  if ( !Message::Util::sendMailDispatcherIsOnline() )
+    return false;
+
   mCustomTransport = customTransport;
 
   DispatcherInterface *dispatcher = new DispatcherInterface();
