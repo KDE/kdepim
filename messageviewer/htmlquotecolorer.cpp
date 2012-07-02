@@ -44,6 +44,8 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 
+  page.settings()->setAttribute( QWebSettings::AutoLoadImages, false );
+
   QWebFrame *frame = page.mainFrame();
   frame->setHtml( htmlSource );
   
