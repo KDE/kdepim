@@ -194,10 +194,8 @@ class StatisticsProxyModel::Private
     void sourceLayoutAboutToBeChanged();
     void sourceLayoutChanged();
 
-    QVector<QModelIndex> m_nonPersistent;
-    QVector<QModelIndex> m_nonPersistentFirstColumn;
-    QVector<QPersistentModelIndex> m_persistent;
-    QVector<QPersistentModelIndex> m_persistentFirstColumn;
+    QVector<QModelIndex> m_proxyIndexes;
+    QVector<QPersistentModelIndex> m_persistentSourceFirstColumn;
 
     StatisticsProxyModel *mParent;
 
@@ -236,15 +234,15 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
 
 void StatisticsProxyModel::Private::sourceLayoutAboutToBeChanged()
 {
+  // KIdentityProxyModel took care of the first columnCount() columns
+  // We have to take care of the extra columns (by storing persistent indexes in column 0,
+  // waiting for the source to update them, and then looking at where they ended up)
   QModelIndexList persistent = mParent->persistentIndexList();
   const int columnCount = mParent->sourceModel()->columnCount();
-  foreach( const QModelIndex &idx, persistent ) {
-    if ( idx.column() >= columnCount ) {
-      m_nonPersistent.push_back( idx );
-      m_persistent.push_back( idx );
-      const QModelIndex firstColumn = idx.sibling( 0, idx.column() );
-      m_nonPersistentFirstColumn.push_back( firstColumn );
-      m_persistentFirstColumn.push_back( firstColumn );
+  foreach( const QModelIndex &proxyPersistentIndex, persistent ) {
+    if ( proxyPersistentIndex.column() >= columnCount ) {
+      m_proxyIndexes << proxyPersistentIndex;
+      m_persistentSourceFirstColumn << QPersistentModelIndex( sourceIndexAtFirstColumn( proxyPersistentIndex ) );
     }
   }
 }
@@ -254,14 +252,13 @@ void StatisticsProxyModel::Private::sourceLayoutChanged()
   QModelIndexList oldList;
   QModelIndexList newList;
 
-  const int columnCount = mParent->sourceModel()->columnCount();
-
-  for( int i = 0; i < m_persistent.size(); ++i ) {
-    const QModelIndex persistentIdx = m_persistent.at( i );
-    const QModelIndex nonPersistentIdx = m_nonPersistent.at( i );
-    if ( m_persistentFirstColumn.at( i ) != m_nonPersistentFirstColumn.at( i ) && persistentIdx.column() >= columnCount ) {
-      oldList.append( nonPersistentIdx );
-      newList.append( persistentIdx );
+  for( int i = 0; i < m_proxyIndexes.size(); ++i ) {
+    const QModelIndex oldProxyIndex = m_proxyIndexes.at( i );
+    const QModelIndex proxyIndexFirstCol = mParent->mapFromSource( m_persistentSourceFirstColumn.at( i ) );
+    const QModelIndex newProxyIndex = proxyIndexFirstCol.sibling( proxyIndexFirstCol.row(), oldProxyIndex.column() );
+    if ( newProxyIndex != oldProxyIndex ) {
+      oldList.append( oldProxyIndex );
+      newList.append( newProxyIndex );
     }
   }
   mParent->changePersistentIndexList( oldList, newList );
@@ -506,7 +503,6 @@ QModelIndex StatisticsProxyModel::mapToSource(const QModelIndex& index) const
   if (!index.isValid())
     return QModelIndex();
   Q_ASSERT(index.model() == this);
-  Q_ASSERT(index.column() < d->sourceColumnCount());
   if (index.column() >= d->sourceColumnCount() ) {
       return QModelIndex();
   }
