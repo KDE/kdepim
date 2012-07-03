@@ -21,6 +21,7 @@
 #include <KZip>
 #include <KLocale>
 #include <QWidget>
+#include <QProgressDialog>
 
 AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
   : QObject(parent),
@@ -42,6 +43,26 @@ AbstractImportExportJob::~AbstractImportExportJob()
 QProgressDialog *AbstractImportExportJob::progressDialog()
 {
   return mProgressDialog;
+}
+
+void AbstractImportExportJob::createProgressDialog()
+{
+  if(!mProgressDialog) {
+    mProgressDialog = new QProgressDialog();
+    connect(mProgressDialog, SIGNAL(canceled()), this, SLOT(slotCancel()));
+  }
+}
+
+void AbstractImportExportJob::slotCancel()
+{
+  //TODO
+}
+
+void AbstractImportExportJob::increaseProgressDialog(int value)
+{
+  if(mProgressDialog) {
+    mProgressDialog->setValue(value);
+  }
 }
 
 void AbstractImportExportJob::closeArchive()

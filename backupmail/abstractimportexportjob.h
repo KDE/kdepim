@@ -37,6 +37,9 @@ public:
 
   virtual void start() = 0;
 
+public Q_SLOTS:
+  void slotCancel();
+
 Q_SIGNALS:
   void info(const QString&);
   void error(const QString&);
@@ -46,6 +49,8 @@ protected:
 
 protected:
   QProgressDialog *progressDialog();
+  void increaseProgressDialog(int value);
+  void createProgressDialog();
 
   BackupMailUtil::BackupTypes mTypeSelected;
   KZip *mArchive;
