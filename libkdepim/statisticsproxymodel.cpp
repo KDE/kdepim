@@ -262,6 +262,8 @@ void StatisticsProxyModel::Private::sourceLayoutChanged()
     }
   }
   mParent->changePersistentIndexList( oldList, newList );
+  m_persistentSourceFirstColumn.clear();
+  m_proxyIndexes.clear();
 }
 
 void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
