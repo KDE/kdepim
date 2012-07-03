@@ -36,7 +36,6 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocalizedstring.h>
-
 static const char version[] = "0.8.1";
 
 bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory);
@@ -456,7 +455,7 @@ int handleKABC2Mutt(int argc, char** argv)
 
     client.setInputFormat("email");
     client.setOutputFormat("mutt");
-
+    client.setInputCodec("UTF-8");
     QString options = args->getOption("format");
 
     if (args->isSet("alternate-key-format"))
