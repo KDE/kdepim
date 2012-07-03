@@ -59,7 +59,7 @@ void ArchiveJob::execute()
     backupJob->start();
     const QString summary = i18n("Start to archive %1",realPath );
     const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-    KNotification::event( "archivemailstarted",
+    KNotification::event( QLatin1String("archivemailstarted"),
                           summary,
                           pixmap,
                           0,
@@ -73,7 +73,7 @@ void ArchiveJob::slotError(const QString& error)
   Akonadi::Collection collection(mInfo->saveCollectionId());
   const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
-  KNotification::event( "archivemailerror",
+  KNotification::event( QLatin1String("archivemailerror"),
                         error,
                         pixmap,
                         0,
@@ -86,7 +86,7 @@ void ArchiveJob::slotBackupDone(const QString& info)
   Akonadi::Collection collection(mInfo->saveCollectionId());
   const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
-  KNotification::event( "archivemailfinished",
+  KNotification::event( QLatin1String("archivemailfinished"),
                         info,
                         pixmap,
                         0,
