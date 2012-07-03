@@ -45,7 +45,7 @@ BackupMailWindow::BackupMailWindow(QWidget *parent)
 
   bool canZipFile = canZip();
   setupActions(canZipFile);
-  setupGUI(Default,"backupmailwindow.rc");
+  setupGUI(Default,"backupmail.rc");
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
