@@ -49,9 +49,13 @@ QProgressDialog *AbstractImportExportJob::progressDialog()
 void AbstractImportExportJob::createProgressDialog()
 {
   if(!mProgressDialog) {
-    mProgressDialog = new QProgressDialog();
+    mProgressDialog = new QProgressDialog(mParent);
+    mProgressDialog->setWindowModality(Qt::WindowModal);
+    mProgressDialog->setMinimum(0);
+    mProgressDialog->setMaximum(7);
     connect(mProgressDialog, SIGNAL(canceled()), this, SLOT(slotCancel()));
   }
+  mProgressDialog->setValue(0);
 }
 
 void AbstractImportExportJob::slotCancel()

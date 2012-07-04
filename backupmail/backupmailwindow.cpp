@@ -89,6 +89,7 @@ void BackupMailWindow::slotBackupData()
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
+    mBackupMailWidget->clear();
     delete mBackupData;
     mBackupData = new ExportMailJob(this,typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
@@ -124,6 +125,8 @@ void BackupMailWindow::slotRestoreData()
   if(dialog->exec()) {
     BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
     delete dialog;
+    mBackupMailWidget->clear();
+    delete mRestoreData;
     mRestoreData = new ImportMailJob(this,typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
