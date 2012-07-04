@@ -93,17 +93,12 @@ void BackupMailWindow::slotBackupData()
     mBackupData = new ExportMailJob(this,typeSelected,filename);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-    connect(mBackupData,SIGNAL(finished()),SLOT(slotBackupDataFinished()));
     mBackupData->start();
+    delete mBackupData;
+    mBackupData = 0;
   } else {
     delete dialog;
   }
-}
-
-void BackupMailWindow::slotBackupDataFinished()
-{
-  mBackupData->deleteLater();
-  mBackupData = 0;
 }
 
 void BackupMailWindow::slotAddInfo(const QString& info)
@@ -132,17 +127,12 @@ void BackupMailWindow::slotRestoreData()
     mRestoreData = new ImportMailJob(this,typeSelected,filename);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-    connect(mRestoreData,SIGNAL(finished()),SLOT(slotRestoreDataFinished()));
     mRestoreData->start();
+    delete mRestoreData;
+    mRestoreData = 0;
   } else {
     delete dialog;
   }
-}
-
-void BackupMailWindow::slotRestoreDataFinished()
-{
-  mRestoreData->deleteLater();
-  mRestoreData = 0;
 }
 
 bool BackupMailWindow::canZip() const
