@@ -375,6 +375,8 @@ public:
 
   void saveCurrentSelection();
 
+  void updateTagComboBox();
+
 public slots:
   /**
    * Selects all the items in the current folder.
