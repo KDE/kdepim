@@ -51,6 +51,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("ldap_"))) {
         insertIntoMap( line );
       }
+    } else {
+        kDebug()<<" unstored line :"<<line;
     }
   }
   const QString mailAccountPreference = mHashConfig.value( QLatin1String( "mail.accountmanager.accounts" ) ).toString();
