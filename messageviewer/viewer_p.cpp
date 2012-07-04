@@ -1970,10 +1970,17 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
       mNodeHelper->writeNodeToTempFile( node );
-      QString href = mNodeHelper->asHREF( node, "header" );
+      const QString href = mNodeHelper->asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
-      html += "<img style=\"vertical-align:middle;\" src=\"" + info.icon + "\"/>&nbsp;";
+      QString imageMaxSize;
+      if(!info.icon.isEmpty()) {
+        QImage tmpImg(info.icon);
+        if(tmpImg.width() > 48 || tmpImg.height() > 48) {
+           imageMaxSize = QLatin1String("width=\"48\" height=\"48\"");
+        }
+      }
+      html += QString::fromLatin1("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + "\"/>&nbsp;";
       if ( headerStyle() == HeaderStyle::enterprise() ) {
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
@@ -2456,7 +2463,6 @@ QString ViewerPrivate::attachmentInjectionHtml() const
     link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
   }
-
   return html;
 }
 
