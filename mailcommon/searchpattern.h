@@ -104,6 +104,12 @@ class MAILCOMMON_EXPORT SearchRule
       FuncNotEndWith
     };
 
+    enum RequiredPart {
+      Envelope = 0,
+      Header,
+      CompleteMessage
+    };
+
     /**
      * Creates new new search rule.
      *
@@ -195,10 +201,9 @@ class MAILCOMMON_EXPORT SearchRule
     virtual bool isEmpty() const = 0;
 
     /**
-     * Returns true if the rule depends on a complete message,
-     * otherwise returns false.
-     */
-    virtual bool requiresBody() const;
+     * Returns the required part from the item that is needed for the search to
+     * operate. See @ref RequiredPart */
+    virtual SearchRule::RequiredPart requiredPart() const = 0;
 
     /**
      * Saves the object into a given config @p group.
@@ -356,10 +361,10 @@ class SearchRuleString : public SearchRule
     virtual bool isEmpty() const ;
 
     /**
-     * @copydoc SearchRule::requiresBody()
+     * @copydoc SearchRule::requiredPart()
      */
-    virtual bool requiresBody() const;
-
+    virtual RequiredPart requiredPart() const;
+    
     /**
      * @copydoc SearchRule::matches()
      */
@@ -424,6 +429,11 @@ class SearchRuleNumerical : public SearchRule
      */
     virtual bool matches( const Akonadi::Item &item ) const;
 
+    /**
+     * @copydoc SearchRule::requiredPart()
+     */
+    virtual RequiredPart requiredPart() const;
+
     // Optimized matching not implemented, will use the unoptimized matching
     // from SearchRule
     using SearchRule::matches;
@@ -472,6 +482,11 @@ class SearchRuleDate : public SearchRule
      * @copydoc SearchRule::matches()
      */
     virtual bool matches( const Akonadi::Item &item ) const;
+
+    /**
+     * @copydoc SearchRule::requiredPart()
+     */
+    virtual RequiredPart requiredPart() const;
 
     // Optimized matching not implemented, will use the unoptimized matching
     // from SearchRule
@@ -571,6 +586,11 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
     virtual bool isEmpty() const ;
     virtual bool matches( const Akonadi::Item &item ) const;
 
+     /**
+     * @copydoc SearchRule::requiredPart()
+     */
+   virtual RequiredPart requiredPart() const;
+
 #ifndef KDEPIM_NO_NEPOMUK
     virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 #endif
@@ -660,10 +680,10 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     bool matches( const Akonadi::Item &item, bool ignoreBody = false ) const;
 
     /**
-     * Returns true if the pattern only depends the DwString that backs a message.
-     */
-    bool requiresBody() const;
-
+     * Returns the required part from the item that is needed for the search to
+     * operate. See @ref RequiredPart */
+    SearchRule::RequiredPart requiredPart() const;
+    
     /**
      * Removes all empty rules from the list. You should call this
      * method whenever the user had had control of the rules outside of
@@ -781,4 +801,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 };
 
 }
+
+Q_DECLARE_METATYPE(MailCommon::SearchRule::RequiredPart)
+
 #endif /* MAILCOMMON_SEARCHPATTERN_H_ */

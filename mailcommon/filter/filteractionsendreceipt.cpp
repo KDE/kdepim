@@ -22,8 +22,8 @@
 #include "../mailkernel.h"
 #include "../mailutil.h"
 
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
+#include "messagecomposer/messagefactory.h"
+#include "messagecomposer/messagesender.h"
 
 #include <KDE/KLocale>
 
@@ -52,6 +52,12 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
 
   return GoOn;
 }
+
+SearchRule::RequiredPart FilterActionSendReceipt::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
 
 FilterAction* FilterActionSendReceipt::newAction()
 {

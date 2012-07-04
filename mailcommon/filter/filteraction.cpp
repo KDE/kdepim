@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
+ * Copyright (C) 2012 Andras Mantia <amantia@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,11 +49,6 @@ QString FilterAction::label() const
 QString FilterAction::name() const
 {
   return mName;
-}
-
-bool FilterAction::requiresBody() const
-{
-  return true;
 }
 
 bool FilterAction::isEmpty() const

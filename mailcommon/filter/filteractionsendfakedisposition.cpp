@@ -85,6 +85,12 @@ FilterAction::ReturnCode FilterActionSendFakeDisposition::process( ItemContext &
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionSendFakeDisposition::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
+
 void FilterActionSendFakeDisposition::argsFromString( const QString &argsStr )
 {
   if ( argsStr.length() == 1 ) {

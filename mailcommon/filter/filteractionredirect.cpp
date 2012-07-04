@@ -64,3 +64,8 @@ FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) c
 
   return GoOn;
 }
+
+SearchRule::RequiredPart FilterActionRedirect::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}

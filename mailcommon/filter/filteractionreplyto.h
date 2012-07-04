@@ -33,6 +33,7 @@ class FilterActionReplyTo: public FilterActionWithAddress
   public:
     FilterActionReplyTo( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
+    virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
 };
 

@@ -38,6 +38,8 @@ class FilterActionAddHeader: public FilterActionWithStringList
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void clearParamWidget( QWidget *paramWidget ) const;
 
+    virtual SearchRule::RequiredPart requiredPart() const;
+
     virtual QString argsAsString() const;
     virtual void argsFromString( const QString &argsStr );
 

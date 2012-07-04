@@ -37,6 +37,12 @@ FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) con
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionDelete::requiredPart() const
+{
+  return SearchRule::Envelope;
+}
+
+
 QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
 {
     QLabel *lab = new QLabel(parent);

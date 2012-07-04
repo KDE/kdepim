@@ -19,9 +19,9 @@
 
 #include "filteractionaddtoaddressbook.h"
 
-#include <messageviewer/minimumcombobox.h>
+#include "messageviewer/minimumcombobox.h"
 
-#include <libkdepim/addcontactjob.h>
+#include "libkdepim/addcontactjob.h"
 
 #include <KDE/Akonadi/CollectionComboBox>
 #include <KDE/KABC/Addressee>
@@ -81,11 +81,17 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process( ItemContext &con
       contact.insertCategory( mCategory );
 
     KPIM::AddContactJob *job = new KPIM::AddContactJob( contact, Akonadi::Collection( mCollectionId ) );
-    job->start();
+    job->start();    
   }
 
   return GoOn;
 }
+
+SearchRule::RequiredPart FilterActionAddToAddressBook::requiredPart() const
+{
+  return SearchRule::Envelope;
+}
+
 
 QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) const
 {

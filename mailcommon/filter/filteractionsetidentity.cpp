@@ -74,6 +74,12 @@ FilterAction::ReturnCode FilterActionSetIdentity::process( ItemContext &context 
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionSetIdentity::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
+
 QWidget* FilterActionSetIdentity::createParamWidget( QWidget *parent ) const
 {
   KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );

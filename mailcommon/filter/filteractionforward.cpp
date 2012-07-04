@@ -79,6 +79,11 @@ FilterAction::ReturnCode FilterActionForward::process( ItemContext &context ) co
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionForward::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
 QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
 {
   QWidget *addressAndTemplate = new QWidget( parent );

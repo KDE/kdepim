@@ -27,6 +27,7 @@
 #include "filteraction.h"
 #include "filterimporterexporter.h"
 #include "mailfilter.h"
+#include "searchpattern.h"
 
 #include <KDialog>
 
@@ -137,7 +138,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
      */
     QList<MailCommon::MailFilter *> filtersForSaving( bool closeAfterSaving ) const;
 
-    QStringList selectedFilterId( bool &requiresBody ) const;
+    QStringList selectedFilterId( SearchRule::RequiredPart &requiredPart ) const;
 
   signals:
     /**

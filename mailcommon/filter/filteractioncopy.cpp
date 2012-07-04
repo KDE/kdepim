@@ -21,6 +21,7 @@
 
 #include <KDE/Akonadi/ItemCopyJob>
 #include <KDE/KLocale>
+// #include <KDE/KMessageBox>
 
 using namespace MailCommon;
 
@@ -32,14 +33,30 @@ FilterActionCopy::FilterActionCopy( QObject *parent )
 FilterAction::ReturnCode FilterActionCopy::process( ItemContext &context ) const
 {
   // copy the message 1:1
-  new Akonadi::ItemCopyJob( context.item(), mFolder, 0 ); // TODO handle error
+  Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( context.item(), mFolder, 0 );
+  connect(job, SIGNAL(result(KJob*)), this, SLOT(jobFinished(KJob*)));
 
   return GoOn;
 }
 
+void FilterActionCopy::jobFinished(KJob* job)
+{
+  if (job->error()) {
+    kError() << "Error while moving mail: " << job->errorString();
+//     KMessageBox::error(0, i18n("<qt>Error while copying the mail.<br/>The error was: <b>%1</b>.</qt>").arg(job->errorString()),
+//                           i18n("Filter error"));
+  }
+}
+
+
 bool FilterActionCopy::requiresBody() const
 {
   return false;
+}
+
+SearchRule::RequiredPart FilterActionCopy::requiredPart() const
+{
+    return SearchRule::Envelope;
 }
 
 FilterAction* FilterActionCopy::newAction()
