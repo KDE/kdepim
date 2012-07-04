@@ -47,7 +47,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.accountmanager.")) ||
          line.contains(QLatin1String("mailnews."))||
          line.contains(QLatin1String("mail.compose."))||
-         line.contains(QLatin1String("mail.spellcheck"))) {
+         line.contains(QLatin1String("mail.spellcheck")) ||
+         line.contains(QLatin1String("ldap_"))) {
         insertIntoMap( line );
       }
     }
@@ -59,10 +60,25 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   readTransport();
   readAccount();
   readGlobalSettings();
+  readLdapSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
+}
+
+void ThunderbirdSettings::readLdapSettings()
+{
+  //TODO:
+
+#if 0
+  prefs.js:user_pref("ldap_2.servers.rr.auth.dn", "45");
+  prefs.js:user_pref("ldap_2.servers.rr.auth.saslmech", "");
+  prefs.js:user_pref("ldap_2.servers.rr.description", "rr");
+  prefs.js:user_pref("ldap_2.servers.rr.filename", "ldap.mab");
+  prefs.js:user_pref("ldap_2.servers.rr.maxHits", 100);
+  prefs.js:user_pref("ldap_2.servers.rr.uri", "ldap://ll/xx??sub?(objectclass=*)");
+#endif
 }
 
 void ThunderbirdSettings::readGlobalSettings()
@@ -332,7 +348,10 @@ void ThunderbirdSettings::readAccount()
     const QString identityConfig = QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".identities" );
     if ( mHashConfig.contains( identityConfig ) )
     {
-      readIdentity(mHashConfig.value(identityConfig).toString() );
+      const QStringList idList = mHashConfig.value(identityConfig).toString().split(QLatin1Char(','));
+      Q_FOREACH(const QString& id, idList) {
+        readIdentity( id );
+      }
     }
   }
 }

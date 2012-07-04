@@ -35,7 +35,7 @@ private:
   void readIdentity( const QString& account );
   void readTransport();
   void readGlobalSettings();
-
+  void readLdapSettings();
   void insertIntoMap( const QString& line );
 
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
