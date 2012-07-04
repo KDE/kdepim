@@ -37,6 +37,11 @@ BackupMailWidget::~BackupMailWidget()
 
 }
 
+void BackupMailWidget::clear()
+{
+  mCustomLogWidget->clear();
+}
+
 void BackupMailWidget::addInfoLogEntry( const QString& log )
 {
   mCustomLogWidget->addInfoLogEntry(log);

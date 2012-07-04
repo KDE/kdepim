@@ -32,13 +32,13 @@ class AbstractImportExportJob : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractImportExportJob(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
+  explicit AbstractImportExportJob(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
   ~AbstractImportExportJob();
 
   virtual void start() = 0;
 
-public Q_SLOTS:
-  void slotCancel();
+  bool wasCanceled() const;
+
 
 Q_SIGNALS:
   void info(const QString&);
@@ -49,14 +49,17 @@ protected:
 
 protected:
   QProgressDialog *progressDialog();
-  void increaseProgressDialog(int value);
+  void increaseProgressDialog();
   void createProgressDialog();
+
+  void showInfo(const QString&text);
 
   BackupMailUtil::BackupTypes mTypeSelected;
   KZip *mArchive;
   KPIMIdentities::IdentityManager *mIdentityManager;
   QWidget *mParent;
   QProgressDialog *mProgressDialog;
+  int mNumberOfStep;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

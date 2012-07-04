@@ -47,32 +47,39 @@ void SelectTypeWidget::slotTypeClicked()
   Q_EMIT itemSelected(selected);
 }
 
-BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected() const
+BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected(int & numberOfStep) const
 {
+  numberOfStep = 0;
   BackupMailUtil::BackupTypes types = BackupMailUtil::None;
   if(ui->resources->isChecked())
   {
     types|= BackupMailUtil::Resources;
+    numberOfStep++;
   }
   if(ui->mailtransport->isChecked())
   {
     types|= BackupMailUtil::MailTransport;
+    numberOfStep++;
   }
   if(ui->config->isChecked())
   {
     types|= BackupMailUtil::Config;
+    numberOfStep++;
   }
   if(ui->identity->isChecked())
   {
     types|= BackupMailUtil::Identity;
+    numberOfStep++;
   }
   if(ui->mails->isChecked())
   {
     types|= BackupMailUtil::Mails;
+    numberOfStep++;
   }
   if(ui->akonadi->isChecked())
   {
     types|= BackupMailUtil::AkonadiDb;
+    numberOfStep++;
   }
   return types;
 }

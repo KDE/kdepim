@@ -47,9 +47,12 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.accountmanager.")) ||
          line.contains(QLatin1String("mailnews."))||
          line.contains(QLatin1String("mail.compose."))||
-         line.contains(QLatin1String("mail.spellcheck"))) {
+         line.contains(QLatin1String("mail.spellcheck")) ||
+         line.contains(QLatin1String("ldap_"))) {
         insertIntoMap( line );
       }
+    } else {
+        kDebug()<<" unstored line :"<<line;
     }
   }
   const QString mailAccountPreference = mHashConfig.value( QLatin1String( "mail.accountmanager.accounts" ) ).toString();
@@ -59,10 +62,38 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   readTransport();
   readAccount();
   readGlobalSettings();
+  readLdapSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
+}
+
+void ThunderbirdSettings::readLdapSettings()
+{
+  //TODO: verify others variable
+  //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
+  Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
+    const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapDescription)) {
+    }
+    const QString ldapAuthDn = QString::fromLatin1("%1.auth.dn").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapAuthDn)) {
+    }
+    const QString ldapAuthSaslMech = QString::fromLatin1("%1.auth.saslmech").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapAuthSaslMech)) {
+    }
+    const QString ldapFilename = QString::fromLatin1("%1.filename").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapFilename)) {
+    }
+    const QString ldapMaxHits = QString::fromLatin1("%1.maxHits").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapMaxHits)) {
+    }
+    const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapUri)) {
+    }
+  }
+
 }
 
 void ThunderbirdSettings::readGlobalSettings()
@@ -332,7 +363,10 @@ void ThunderbirdSettings::readAccount()
     const QString identityConfig = QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".identities" );
     if ( mHashConfig.contains( identityConfig ) )
     {
-      readIdentity(mHashConfig.value(identityConfig).toString() );
+      const QStringList idList = mHashConfig.value(identityConfig).toString().split(QLatin1Char(','));
+      Q_FOREACH(const QString& id, idList) {
+        readIdentity( id );
+      }
     }
   }
 }
@@ -534,5 +568,9 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
       const int value = valueStr.toInt();
       mHashConfig.insert( key, value );
     }
+  }
+  if(key.contains(QLatin1String("ldap_")) && key.endsWith(QLatin1String(".description"))) {
+    QString ldapAccountName = key;
+    mLdapAccountList.append(ldapAccountName.remove(QLatin1String(".description")));
   }
 }

@@ -32,7 +32,7 @@ namespace MailCommon {
 class ImportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename);
+  explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename, int numberOfStep);
   ~ImportMailJob();
   void start();
 private:

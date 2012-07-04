@@ -40,8 +40,8 @@
 #include <QDebug>
 #include <QDir>
 
-ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
-  :AbstractImportExportJob(parent,filename,typeSelected)
+ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename,int numberOfStep)
+  :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep)
 {
 }
 
@@ -59,26 +59,70 @@ void ExportMailJob::startBackup()
   if(!openArchive(true))
     return;
 
-  if(mTypeSelected & BackupMailUtil::Identity)
+  createProgressDialog();
+
+  if(mTypeSelected & BackupMailUtil::Identity) {
     backupIdentity();
-  if(mTypeSelected & BackupMailUtil::MailTransport)
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
+  if(mTypeSelected & BackupMailUtil::MailTransport) {
     backupTransports();
-  if(mTypeSelected & BackupMailUtil::Mails)
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
+  if(mTypeSelected & BackupMailUtil::Mails) {
     backupMails();
-  if(mTypeSelected & BackupMailUtil::Resources)
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
+  if(mTypeSelected & BackupMailUtil::Resources) {
     backupResources();
-  if(mTypeSelected & BackupMailUtil::Config)
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
+  if(mTypeSelected & BackupMailUtil::Config) {
     backupConfig();
-  if(mTypeSelected & BackupMailUtil::AkonadiDb)
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
+  if(mTypeSelected & BackupMailUtil::AkonadiDb) {
     backupAkonadiDb();
-  if(mTypeSelected & BackupMailUtil::Nepomuk)
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
+  if(mTypeSelected & BackupMailUtil::Nepomuk) {
     backupNepomuk();
+    increaseProgressDialog();
+    if(wasCanceled()) {
+      closeArchive();
+      return;
+    }
+  }
   closeArchive();
 }
 
 void ExportMailJob::backupTransports()
 {
-  Q_EMIT info(i18n("Backing up transports..."));
+  showInfo(i18n("Backing up transports..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
   const QString mailtransportsStr("mailtransports");
@@ -103,7 +147,7 @@ void ExportMailJob::backupTransports()
 
 void ExportMailJob::backupResources()
 {
-  Q_EMIT info(i18n("Backing up resources..."));
+  showInfo(i18n("Backing up resources..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
   Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
@@ -129,7 +173,7 @@ void ExportMailJob::backupResources()
 
 void ExportMailJob::backupConfig()
 {
-  Q_EMIT info(i18n("Backing up config..."));
+  showInfo(i18n("Backing up config..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   QList<MailCommon::MailFilter*> lstFilter = MailCommon::FilterManager::instance()->filters();
   if(!lstFilter.isEmpty()) {
@@ -284,7 +328,7 @@ void ExportMailJob::backupConfig()
 
 void ExportMailJob::backupIdentity()
 {
-  Q_EMIT info(i18n("Backing up identity..."));
+  showInfo(i18n("Backing up identity..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   const QString emailidentitiesStr("emailidentities");
   const QString emailidentitiesrc = KStandardDirs::locateLocal( "config",  emailidentitiesStr);
@@ -335,7 +379,7 @@ KUrl ExportMailJob::resourcePath(const Akonadi::AgentInstance& agent) const
 
 void ExportMailJob::backupMails()
 {
-  Q_EMIT info(i18n("Backing up Mails..."));
+  showInfo(i18n("Backing up Mails..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
   const Akonadi::AgentInstance::List list = manager->instances();
@@ -432,7 +476,7 @@ bool ExportMailJob::backupMailData(const KUrl& url,const QString& archivePath)
 
 void ExportMailJob::backupAkonadiDb()
 {
-  Q_EMIT info(i18n("Backing up Akonadi Database..."));
+  showInfo(i18n("Backing up Akonadi Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   AkonadiDataBase akonadiDataBase;
   const QString dbDriver(akonadiDataBase.driver());
@@ -484,7 +528,7 @@ void ExportMailJob::backupAkonadiDb()
 
 void ExportMailJob::backupNepomuk()
 {
-  Q_EMIT info(i18n("Backing up Nepomuk Database..."));
+  showInfo(i18n("Backing up Nepomuk Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
