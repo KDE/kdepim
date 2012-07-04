@@ -44,6 +44,7 @@ private:
   QHash<QString, QVariant> mHashConfig;
   QHash<QString, QString> mHashSmtp;
   QStringList mAccountList;
+  QStringList mLdapAccountList;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */

@@ -69,16 +69,29 @@ ThunderbirdSettings::~ThunderbirdSettings()
 
 void ThunderbirdSettings::readLdapSettings()
 {
-  //TODO:
+  //TODO: verify others variable
+  //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
+  Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
+    const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapDescription)) {
+    }
+    const QString ldapAuthDn = QString::fromLatin1("%1.auth.dn").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapAuthDn)) {
+    }
+    const QString ldapAuthSaslMech = QString::fromLatin1("%1.auth.saslmech").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapAuthSaslMech)) {
+    }
+    const QString ldapFilename = QString::fromLatin1("%1.filename").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapFilename)) {
+    }
+    const QString ldapMaxHits = QString::fromLatin1("%1.maxHits").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapMaxHits)) {
+    }
+    const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
+    if(mHashConfig.contains(ldapUri)) {
+    }
+  }
 
-#if 0
-  prefs.js:user_pref("ldap_2.servers.rr.auth.dn", "45");
-  prefs.js:user_pref("ldap_2.servers.rr.auth.saslmech", "");
-  prefs.js:user_pref("ldap_2.servers.rr.description", "rr");
-  prefs.js:user_pref("ldap_2.servers.rr.filename", "ldap.mab");
-  prefs.js:user_pref("ldap_2.servers.rr.maxHits", 100);
-  prefs.js:user_pref("ldap_2.servers.rr.uri", "ldap://ll/xx??sub?(objectclass=*)");
-#endif
 }
 
 void ThunderbirdSettings::readGlobalSettings()
@@ -553,5 +566,9 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
       const int value = valueStr.toInt();
       mHashConfig.insert( key, value );
     }
+  }
+  if(key.contains(QLatin1String("ldap_")) && key.endsWith(QLatin1String(".description"))) {
+    QString ldapAccountName = key;
+    mLdapAccountList.append(ldapAccountName.remove(QLatin1String(".description")));
   }
 }
