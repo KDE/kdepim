@@ -945,7 +945,7 @@ void ObjectTreeParser::writeCertificateImportResult( const GpgME::ImportResult &
     if ( nSKUnc )
       comment += i18np( "1 secret key was unchanged.",
                         "%1 secret keys were unchanged.", nSKUnc ) + "<br/>";
-    comment += "&nbsp;<br/>";
+    comment += QLatin1String("&nbsp;<br/>");
     htmlWriter()->queue( comment );
     if ( !nImp && !nSKImp ) {
       htmlWriter()->queue( "<hr>" );
@@ -2940,7 +2940,7 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
   Kpgp::Module* pgp = Kpgp::Module::getKpgp();
   assert(pgp != 0);
   const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
+  //QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
 
   inlineSignatureState  = KMMsgNotSigned;
   inlineEncryptionState = KMMsgNotEncrypted;
