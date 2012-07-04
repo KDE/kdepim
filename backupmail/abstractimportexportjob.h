@@ -52,7 +52,6 @@ protected:
   void increaseProgressDialog();
   void createProgressDialog();
 
-  void setProgressDialogLabel(const QString& text);
   void showInfo(const QString&text);
 
   BackupMailUtil::BackupTypes mTypeSelected;

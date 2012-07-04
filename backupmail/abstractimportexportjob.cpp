@@ -58,13 +58,6 @@ void AbstractImportExportJob::createProgressDialog()
   mProgressDialog->setValue(0);
 }
 
-void AbstractImportExportJob::setProgressDialogLabel(const QString& text)
-{
-  if(mProgressDialog) {
-    mProgressDialog->setLabelText(text);
-  }
-}
-
 
 bool AbstractImportExportJob::wasCanceled() const
 {
