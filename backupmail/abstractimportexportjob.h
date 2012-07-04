@@ -37,8 +37,8 @@ public:
 
   virtual void start() = 0;
 
-public Q_SLOTS:
-  void slotCancel();
+  bool wasCanceled() const;
+
 
 Q_SIGNALS:
   void info(const QString&);
@@ -51,6 +51,9 @@ protected:
   QProgressDialog *progressDialog();
   void increaseProgressDialog();
   void createProgressDialog();
+
+  void setProgressDialogLabel(const QString& text);
+  void showInfo(const QString&text);
 
   BackupMailUtil::BackupTypes mTypeSelected;
   KZip *mArchive;

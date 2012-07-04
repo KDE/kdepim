@@ -53,15 +53,24 @@ void AbstractImportExportJob::createProgressDialog()
     mProgressDialog->setWindowModality(Qt::WindowModal);
     mProgressDialog->setMinimum(0);
     mProgressDialog->setMaximum(mNumberOfStep);
-    connect(mProgressDialog, SIGNAL(canceled()), this, SLOT(slotCancel()));
   }
   mProgressDialog->show();
   mProgressDialog->setValue(0);
 }
 
-void AbstractImportExportJob::slotCancel()
+void AbstractImportExportJob::setProgressDialogLabel(const QString& text)
 {
-  //TODO
+  if(mProgressDialog) {
+    mProgressDialog->setLabelText(text);
+  }
+}
+
+
+bool AbstractImportExportJob::wasCanceled() const
+{
+  if(mProgressDialog)
+    return mProgressDialog->wasCanceled();
+  return false;
 }
 
 void AbstractImportExportJob::increaseProgressDialog()
@@ -92,5 +101,12 @@ bool AbstractImportExportJob::openArchive(bool write)
 }
 
 
+void AbstractImportExportJob::showInfo(const QString&text)
+{
+  if(mProgressDialog) {
+    mProgressDialog->setLabelText(text);
+  }
+  Q_EMIT info(text);
+}
 
 #include "abstractimportexportjob.moc"
