@@ -90,9 +90,9 @@ FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) con
   return GoOn;
 }
 
-bool FilterActionAddTag::requiresBody() const
+SearchRule::RequiredPart FilterActionAddTag::requiredPart() const
 {
-  return false;
+  return SearchRule::Envelope;
 }
 
 void FilterActionAddTag::argsFromString( const QString &argsStr )

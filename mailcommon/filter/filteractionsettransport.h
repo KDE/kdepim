@@ -33,6 +33,7 @@ class FilterActionSetTransport: public FilterAction
   public:
     FilterActionSetTransport( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
+    virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction *newAction();
     virtual QWidget *createParamWidget( QWidget *parent ) const;
     /**

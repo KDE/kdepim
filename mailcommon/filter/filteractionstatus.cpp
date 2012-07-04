@@ -63,6 +63,11 @@ bool FilterActionStatus::requiresBody() const
   return false;
 }
 
+SearchRule::RequiredPart FilterActionStatus::requiredPart() const
+{
+    return SearchRule::Envelope;
+}
+
 bool FilterActionStatus::isEmpty() const
 {
   return false;

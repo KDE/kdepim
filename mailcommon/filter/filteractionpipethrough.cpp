@@ -37,3 +37,9 @@ FilterAction::ReturnCode FilterActionPipeThrough::process( ItemContext &context 
 {
   return FilterActionWithCommand::genericProcess( context, true ); // use output
 }
+
+SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+

@@ -72,6 +72,12 @@ bool FilterActionPlaySound::requiresBody() const
   return false;
 }
 
+SearchRule::RequiredPart FilterActionPlaySound::requiredPart() const
+{
+    return SearchRule::Envelope;
+}
+
+
 bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
   bool needUpdate = false;

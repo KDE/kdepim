@@ -87,7 +87,7 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
       line.remove( QLatin1String( "^(To|Cc):" ) );
       fieldName = "<recipients>";
     } else {
-      qDebug()<<" line condition not parsed :"<<line;
+      kDebug()<<" line condition not parsed :"<<line;
     }
     SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
     filter->pattern()->append( rule );

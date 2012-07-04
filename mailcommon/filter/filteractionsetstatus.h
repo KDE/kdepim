@@ -32,6 +32,7 @@ class FilterActionSetStatus: public FilterActionStatus
   public:
     FilterActionSetStatus( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
+    virtual SearchRule::RequiredPart requiredPart() const;
 
     static FilterAction* newAction();
 

@@ -142,6 +142,12 @@ void FilterActionAddHeader::clearParamWidget( QWidget *paramWidget ) const
   lineEdit->clear();
 }
 
+SearchRule::RequiredPart FilterActionAddHeader::requiredPart() const
+{
+    return SearchRule::CompleteMessage;
+}
+
+
 QString FilterActionAddHeader::argsAsString() const
 {
   QString result = mParameter;

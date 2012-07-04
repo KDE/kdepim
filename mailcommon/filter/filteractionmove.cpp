@@ -53,3 +53,9 @@ bool FilterActionMove::requiresBody() const
 {
   return false;
 }
+
+SearchRule::RequiredPart FilterActionMove::requiredPart() const
+{
+    return SearchRule::Envelope;
+}
+

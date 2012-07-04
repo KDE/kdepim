@@ -142,7 +142,7 @@ void FilterManager::filter( const Akonadi::Item &item, const QString &identifier
   d->mMailFilterAgentInterface->filter( item.id(), identifier, 0 /*FilterManager::FilterRequires::Unknown*/ );
 }
 
-void FilterManager::filter(const qlonglong &id, const QString &identifier , FilterRequires requires) const
+void FilterManager::filter(const qlonglong& id, const QString& identifier, SearchRule::RequiredPart requires) const
 {
   d->mMailFilterAgentInterface->filter( id, identifier, static_cast<int>(requires) );
 }
@@ -163,7 +163,7 @@ void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set )
 }
 
 
-void FilterManager::filter(const Akonadi::Item::List &messages, FilterRequires requires, const QStringList& listFilters) const
+void FilterManager::filter(const Akonadi::Item::List& messages, SearchRule::RequiredPart requires, const QStringList& listFilters) const
 {
     QVector<qlonglong> itemIds;
 

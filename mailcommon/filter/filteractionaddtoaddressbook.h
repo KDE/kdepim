@@ -35,6 +35,8 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
     virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
 
+    virtual SearchRule::RequiredPart requiredPart() const;
+
     virtual bool isEmpty() const;
 
     virtual QWidget* createParamWidget( QWidget *parent ) const;

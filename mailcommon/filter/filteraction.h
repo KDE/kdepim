@@ -21,6 +21,7 @@
 #define MAILCOMMON_FILTERACTION_H
 
 #include "../mailcommon_export.h"
+#include "../searchpattern.h"
 
 #include "itemcontext.h"
 
@@ -66,7 +67,8 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
                                ///  (e.g. "disk full").
     };
 
-    /**
+
+  /**
      * Creates a new filter action.
      *
      * The action is initialized with an identifier @p name and
@@ -103,10 +105,9 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
     virtual ReturnCode process( ItemContext &context ) const = 0;
 
     /**
-     * Determines if the action depends on the body of the message
-     */
-    virtual bool requiresBody() const;
-
+     * Returns the required part from the item that is needed for the action to
+     * operate. See @ref SearchRule::RequiredPart */
+    virtual SearchRule::RequiredPart requiredPart() const = 0;
     /**
      * Determines whether this action is valid. But this is just a
      * quick test. Eg., actions that have a mail address as parameter
