@@ -38,6 +38,7 @@ AbstractImportExportJob::~AbstractImportExportJob()
   closeArchive();
   delete mArchive;
   delete mIdentityManager;
+  delete mProgressDialog;
 }
 
 QProgressDialog *AbstractImportExportJob::progressDialog()
