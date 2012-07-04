@@ -87,11 +87,12 @@ void BackupMailWindow::slotBackupData()
     return;
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
-    BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
+    int numberOfStep = 0;
+    BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
     delete dialog;
     mBackupMailWidget->clear();
     delete mBackupData;
-    mBackupData = new ExportMailJob(this,typeSelected,filename);
+    mBackupData = new ExportMailJob(this,typeSelected,filename,numberOfStep);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     mBackupData->start();
@@ -123,11 +124,12 @@ void BackupMailWindow::slotRestoreData()
 
   SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
   if(dialog->exec()) {
-    BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected();
+    int numberOfStep = 0;
+    BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
     delete dialog;
     mBackupMailWidget->clear();
     delete mRestoreData;
-    mRestoreData = new ImportMailJob(this,typeSelected,filename);
+    mRestoreData = new ImportMailJob(this,typeSelected,filename, numberOfStep);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     mRestoreData->start();

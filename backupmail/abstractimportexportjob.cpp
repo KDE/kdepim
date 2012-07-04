@@ -23,13 +23,14 @@
 #include <QWidget>
 #include <QProgressDialog>
 
-AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
+AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
   : QObject(parent),
     mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
     mParent(parent),
-    mProgressDialog(0)
+    mProgressDialog(0),
+    mNumberOfStep(numberOfStep)
 {
 }
 
@@ -38,7 +39,6 @@ AbstractImportExportJob::~AbstractImportExportJob()
   closeArchive();
   delete mArchive;
   delete mIdentityManager;
-  delete mProgressDialog;
 }
 
 QProgressDialog *AbstractImportExportJob::progressDialog()
@@ -52,9 +52,10 @@ void AbstractImportExportJob::createProgressDialog()
     mProgressDialog = new QProgressDialog(mParent);
     mProgressDialog->setWindowModality(Qt::WindowModal);
     mProgressDialog->setMinimum(0);
-    mProgressDialog->setMaximum(7);
+    mProgressDialog->setMaximum(mNumberOfStep);
     connect(mProgressDialog, SIGNAL(canceled()), this, SLOT(slotCancel()));
   }
+  mProgressDialog->show();
   mProgressDialog->setValue(0);
 }
 
@@ -63,10 +64,10 @@ void AbstractImportExportJob::slotCancel()
   //TODO
 }
 
-void AbstractImportExportJob::increaseProgressDialog(int value)
+void AbstractImportExportJob::increaseProgressDialog()
 {
   if(mProgressDialog) {
-    mProgressDialog->setValue(value);
+    mProgressDialog->setValue(mProgressDialog->value()+1);
   }
 }
 

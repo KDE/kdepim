@@ -40,8 +40,8 @@
 #include <QDebug>
 #include <QDir>
 
-ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename)
-  :AbstractImportExportJob(parent,filename,typeSelected)
+ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename,int numberOfStep)
+  :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep)
 {
 }
 
@@ -59,20 +59,36 @@ void ExportMailJob::startBackup()
   if(!openArchive(true))
     return;
 
-  if(mTypeSelected & BackupMailUtil::Identity)
+  createProgressDialog();
+
+  if(mTypeSelected & BackupMailUtil::Identity) {
     backupIdentity();
-  if(mTypeSelected & BackupMailUtil::MailTransport)
+    increaseProgressDialog();
+  }
+  if(mTypeSelected & BackupMailUtil::MailTransport) {
     backupTransports();
-  if(mTypeSelected & BackupMailUtil::Mails)
+    increaseProgressDialog();
+  }
+  if(mTypeSelected & BackupMailUtil::Mails) {
     backupMails();
-  if(mTypeSelected & BackupMailUtil::Resources)
+    increaseProgressDialog();
+  }
+  if(mTypeSelected & BackupMailUtil::Resources) {
     backupResources();
-  if(mTypeSelected & BackupMailUtil::Config)
+    increaseProgressDialog();
+  }
+  if(mTypeSelected & BackupMailUtil::Config) {
     backupConfig();
-  if(mTypeSelected & BackupMailUtil::AkonadiDb)
+    increaseProgressDialog();
+  }
+  if(mTypeSelected & BackupMailUtil::AkonadiDb) {
     backupAkonadiDb();
-  if(mTypeSelected & BackupMailUtil::Nepomuk)
+    increaseProgressDialog();
+  }
+  if(mTypeSelected & BackupMailUtil::Nepomuk) {
     backupNepomuk();
+    increaseProgressDialog();
+  }
   closeArchive();
 }
 

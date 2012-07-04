@@ -32,7 +32,7 @@ class AbstractImportExportJob : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractImportExportJob(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected);
+  explicit AbstractImportExportJob(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
   ~AbstractImportExportJob();
 
   virtual void start() = 0;
@@ -49,7 +49,7 @@ protected:
 
 protected:
   QProgressDialog *progressDialog();
-  void increaseProgressDialog(int value);
+  void increaseProgressDialog();
   void createProgressDialog();
 
   BackupMailUtil::BackupTypes mTypeSelected;
@@ -57,6 +57,7 @@ protected:
   KPIMIdentities::IdentityManager *mIdentityManager;
   QWidget *mParent;
   QProgressDialog *mProgressDialog;
+  int mNumberOfStep;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H
