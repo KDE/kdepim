@@ -59,7 +59,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     QByteArray result = proc.readAll();
     proc.close();
     if(!result.isEmpty()) {
-      result = result.replace('\n',",");
+        result = result.replace('\n',',');
       const QString value(result.trimmed());
       const QStringList listAddressBook = value.split(QLatin1Char(','));
       //qDebug()<<" listAddressBook"<<listAddressBook;

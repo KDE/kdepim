@@ -94,7 +94,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
         it.next();
         addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("name"), (it).key());
         addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("value"), (it).value());
-        currentHeader++;
+        ++currentHeader;
     }
   }
 }
@@ -227,6 +227,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
         break;
       default:
         kDebug()<<" unknown ssl_pop value "<<sslPop;
+        break;
     }
   }
   if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
