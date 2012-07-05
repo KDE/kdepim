@@ -36,7 +36,6 @@ class FilterActionCopy: public FilterActionWithFolder
   public:
     FilterActionCopy( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual bool requiresBody() const;
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
 

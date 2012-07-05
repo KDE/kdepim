@@ -28,7 +28,6 @@ class FilterActionStatus : public FilterActionWithStringList
   Q_OBJECT
 public:
     FilterActionStatus(const char *name, const QString &label, QObject *parent = 0);
-    virtual bool requiresBody() const;
     virtual SearchRule::RequiredPart requiredPart() const;
     virtual bool isEmpty() const;
     virtual void argsFromString( const QString &argsStr );

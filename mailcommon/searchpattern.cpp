@@ -444,13 +444,14 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
        kasciistricmp( f, "<status>" ) == 0 ||
        kasciistricmp( f, "<tag>" ) == 0 ||
        kasciistricmp( f, "Subject" ) == 0 ||
-       kasciistricmp( f, "From" ) == 0 )
+       kasciistricmp( f, "From" ) == 0 ) {
       part = Envelope;
-  if ( kasciistricmp( f, "<message>" ) == 0 ||
-       kasciistricmp( f, "<body>" ) == 0 )
+  } else if ( kasciistricmp( f, "<message>" ) == 0 ||
+       kasciistricmp( f, "<body>" ) == 0 ) {
       part = CompleteMessage;
+  }
 
-  return part; 
+  return part;
 }
 
 
@@ -1505,7 +1506,7 @@ static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 }
 #endif
 
-Nepomuk::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const 
+Nepomuk::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
 {
   const Nepomuk::Resource parentResource( url );
   if( !parentResource.exists() ) {
@@ -1564,7 +1565,7 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
       const Nepomuk::Query::AndTerm andTerm( orTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
     }
-      
+
   } else {
     outerGroup.addSubTerm( innerGroup );
   }

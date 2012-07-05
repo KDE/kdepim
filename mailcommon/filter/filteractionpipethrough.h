@@ -31,6 +31,7 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionPipeThrough: public FilterActionWithCommand
 {
+  Q_OBJECT
   public:
     FilterActionPipeThrough( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;

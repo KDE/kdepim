@@ -108,16 +108,16 @@ class FilterManager: public QObject
 
     /**
      * For ad-hoc filters.
-     * 
+     *
      * Applies @p filter to message @p item.
      * Return codes are as with the above method.
      */
-    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requestedPart, const MailCommon::MailFilter *filter );
+    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requiredPart, const MailCommon::MailFilter *filter );
 
     void filter( qlonglong itemId, FilterSet set, const QString &accountId );
-    void filter( qlonglong itemId, const QString &filterId, MailCommon::SearchRule::RequiredPart requires );
+    void filter( qlonglong itemId, const QString &filterId, MailCommon::SearchRule::RequiredPart requiredPart );
 
-    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requires, const QStringList& listFilters );
+    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList& listFilters );
 
     /**
      * Applies the filters on the given @p messages.

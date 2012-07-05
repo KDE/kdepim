@@ -67,11 +67,6 @@ FilterAction::ReturnCode FilterActionPlaySound::process( ItemContext& ) const
   return GoOn;
 }
 
-bool FilterActionPlaySound::requiresBody() const
-{
-  return false;
-}
-
 SearchRule::RequiredPart FilterActionPlaySound::requiredPart() const
 {
     return SearchRule::Envelope;

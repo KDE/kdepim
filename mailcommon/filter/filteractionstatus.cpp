@@ -58,11 +58,6 @@ FilterActionStatus::FilterActionStatus(const char *name, const QString &label, Q
     mParameter = mParameterList.at( 0 );
 }
 
-bool FilterActionStatus::requiresBody() const
-{
-  return false;
-}
-
 SearchRule::RequiredPart FilterActionStatus::requiredPart() const
 {
     return SearchRule::Envelope;

@@ -257,8 +257,8 @@ SearchRule::RequiredPart MailFilter::requiredPart() const
                                              boost::bind(&MailCommon::FilterAction::requiredPart, _2) ))->requiredPart();
   }
   requiredPart = qMax( requiredPart, requiredPartByActions);
-  
-  return (SearchRule::RequiredPart) requiredPart;  
+
+  return static_cast<SearchRule::RequiredPart>(requiredPart);
 }
 
 bool MailFilter::folderRemoved( const Akonadi::Collection & aFolder, const Akonadi::Collection& aNewFolder )
