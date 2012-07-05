@@ -32,9 +32,11 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
-#include <Nepomuk/Resource>
-#include <Nepomuk/Vocabulary/NIE>
-#include <Nepomuk/Variant>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Vocabulary/NIE>
+#include <Nepomuk2/Variant>
+
+#include <Nepomuk2/ResourceWatcher>
 
 
 #include <KDE/KLocale>
@@ -47,7 +49,6 @@
 #include "core/settings.h"
 #include "messagelistutil.h"
 
-#include "private/nepomuk/resourcewatcher.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -65,7 +66,7 @@ public:
   void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onSelectionChanged();
   void loadSettings();
-  void statementChanged(const Nepomuk::Resource &statement );
+  void statementChanged(const Nepomuk2::Resource &statement );
 
   StorageModel * const q;
 
@@ -119,17 +120,17 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   d->mModel = itemFilter;
 
   kDebug() << "Using model:" << model->metaObject()->className();
-  Nepomuk::ResourceWatcher *watcher = new Nepomuk::ResourceWatcher(this);
-  watcher->addProperty(Nepomuk::Types::Property(Soprano::Vocabulary::NAO::hasTag()));
-  watcher->addProperty(Nepomuk::Types::Property(Soprano::Vocabulary::NAO::description()));
-  connect(watcher, SIGNAL(propertyChanged(Nepomuk::Resource,Nepomuk::Types::Property,QVariantList,QVariantList)),
-          this, SLOT(statementChanged(Nepomuk::Resource)));
-  connect(watcher, SIGNAL(propertyRemoved(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)),
-          this, SLOT(statementChanged(Nepomuk::Resource)));
-  connect(watcher, SIGNAL(propertyAdded(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)),
-          this, SLOT(statementChanged(Nepomuk::Resource)));
-  connect(watcher, SIGNAL(resourceCreated(Nepomuk::Resource,QList<QUrl>)),
-          this, SLOT(statementChanged(Nepomuk::Resource)));
+  Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
+  watcher->addProperty(Nepomuk2::Types::Property(Soprano::Vocabulary::NAO::hasTag()));
+  watcher->addProperty(Nepomuk2::Types::Property(Soprano::Vocabulary::NAO::description()));
+  connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
+          this, SLOT(statementChanged(Nepomuk2::Resource)));
+  connect(watcher, SIGNAL(propertyRemoved(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariant)),
+          this, SLOT(statementChanged(Nepomuk2::Resource)));
+  connect(watcher, SIGNAL(propertyAdded(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariant)),
+          this, SLOT(statementChanged(Nepomuk2::Resource)));
+  connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+          this, SLOT(statementChanged(Nepomuk2::Resource)));
   watcher->start();
 
   connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -425,9 +426,9 @@ void StorageModel::prepareForScan()
 
 }
 
-void StorageModel::Private::statementChanged( const Nepomuk::Resource &statement )
+void StorageModel::Private::statementChanged( const Nepomuk2::Resource &statement )
 {
-  const Akonadi::Item item = Item::fromUrl( statement.property(Nepomuk::Vocabulary::NIE::url()).toUrl() );
+  const Akonadi::Item item = Item::fromUrl( statement.property(Nepomuk2::Vocabulary::NIE::url()).toUrl() );
   if ( !item.isValid() ) {
     return;
   }

@@ -981,7 +981,7 @@ void Widget::fillMessageTagCombo( KComboBox* /*combo*/ )
   // nothing here: must be overridden in derived classes
 }
 
-void Widget::tagIdSelected( QVariant data )
+void Widget::tagIdSelected( const QVariant& data )
 {
   QString tagId = data.toString();
 

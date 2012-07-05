@@ -24,10 +24,12 @@ namespace MailCommon {
 
 class FilterActionUnsetStatus: public FilterActionStatus
 {
+  Q_OBJECT
   public:
     FilterActionUnsetStatus( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-
+    virtual SearchRule::RequiredPart requiredPart() const;
+    
     static FilterAction* newAction();
 };
 }

@@ -35,8 +35,6 @@ private Q_SLOTS:
   void slotRestoreData();
   void slotAddInfo(const QString& info);
   void slotAddError(const QString& info);
-  void slotBackupDataFinished();
-  void slotRestoreDataFinished();
 private:
   bool canZip() const;
   void setupActions(bool canZipFile);

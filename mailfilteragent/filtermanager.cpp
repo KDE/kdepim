@@ -1,6 +1,22 @@
 // -*- mode: C++; c-file-style: "gnu" -*-
-// kmfiltermgr.cpp
-
+/* Copyright: before 2012: missing, see KMail copyrights
+ * Copyright (C) 2012 Andras Mantia <amantia@kde.org> *
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ */
 #include "filtermanager.h"
 
 #include <akonadi/agentmanager.h>
@@ -43,7 +59,7 @@ class FilterManager::Private
   public:
     Private( FilterManager *qq )
       : q( qq ),
-        mRequiresBody( false ), mInboundFiltersExist( false )
+        mRequiredPart( SearchRule::Envelope ), mInboundFiltersExist( false )
     {
     }
 
@@ -64,7 +80,7 @@ class FilterManager::Private
 */
     FilterManager *q;
     QList<MailCommon::MailFilter *> mFilters;
-    bool mRequiresBody;
+    SearchRule::RequiredPart mRequiredPart;
     bool mInboundFiltersExist;
 };
 
@@ -99,6 +115,8 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
   if(listMailFilters.isEmpty())
       listMailFilters = mFilters;
 
+  SearchRule::RequiredPart requestedPart = q->sender()->property( "requiredPart" ).value<SearchRule::RequiredPart>();
+
   foreach ( const Akonadi::Item &item, items ) {
     if ( progressItem ) {
       progressItem->incCompletedItems();
@@ -115,7 +133,7 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
       }
     }
 
-    const int filterResult = q->process( listMailFilters, item, filterSet );
+    const int filterResult = q->process( listMailFilters, item, requestedPart, filterSet );
     if ( filterResult == 2 ) {
       // something went horribly wrong (out of space?)
       //CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
@@ -149,6 +167,8 @@ void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
     return;
   }
 
+  SearchRule::RequiredPart requestedPart = fetchJob->property( "requiredPart" ).value<SearchRule::RequiredPart>();
+
   if ( job->property( "filterId" ).isValid() ) {
     const QString filterId = job->property( "filterId" ).toString();
 
@@ -166,12 +186,12 @@ void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
       return;
     }
 
-    q->process( items.first(), wantedFilter );
+    q->process( items.first(), requestedPart, wantedFilter );
   } else {
     const FilterManager::FilterSet set = static_cast<FilterManager::FilterSet>( job->property( "filterSet" ).toInt() );
     const QString accountId = job->property( "accountId" ).toString();
 
-    q->process( items.first(), set, !accountId.isEmpty(), accountId );
+    q->process( items.first(), requestedPart, set, !accountId.isEmpty(), accountId );
   }
 }
 
@@ -317,9 +337,12 @@ void FilterManager::readConfig()
   QStringList emptyFilters;
   d->mFilters = FilterImporterExporter::readFiltersFromConfig( config, emptyFilters );
 
-  // check if at least one filter requires the message body
-  d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
-                                   boost::bind( &MailCommon::MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
+  d->mRequiredPart = SearchRule::Envelope;
+  if (!d->mFilters.isEmpty()){
+    QList<MailFilter*>::const_iterator it = std::max_element(d->mFilters.constBegin(), d->mFilters.constEnd(),
+                                                             boost::bind(&MailCommon::MailFilter::requiredPart, _1) < boost::bind(&MailCommon::MailFilter::requiredPart, _2));
+    d->mRequiredPart = (*it)->requiredPart();
+  }
   // check if at least one filter is to be applied on inbound mail
   d->mInboundFiltersExist = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
                                           boost::bind( &MailCommon::MailFilter::applyOnInbound, _1 ) ) != d->mFilters.constEnd();
@@ -345,36 +368,35 @@ void FilterManager::filter( qlonglong itemId, FilterSet set, const QString &acco
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ), this );
   job->setProperty( "filterSet", static_cast<int>(set) );
   job->setProperty( "accountId", accountId );
-  if ( d->mRequiresBody )
+  if ( d->mRequiredPart == SearchRule::CompleteMessage )
     job->fetchScope().fetchFullPayload( true );
-  else
+  else if ( d->mRequiredPart == SearchRule::Header )
     job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  else
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
 }
 
-void FilterManager::filter(qlonglong itemId, const QString &filterId , FilterRequires requires)
+void FilterManager::filter(qlonglong itemId, const QString& filterId, SearchRule::RequiredPart requiredPart)
 {
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ), this );
   job->setProperty( "filterId", filterId );
-  if( requires == Unknown) {
-      if ( d->mRequiresBody )
-          job->fetchScope().fetchFullPayload( true );
-      else
-          job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
-  } else if( requires == FullMessage ) {
-      job->fetchScope().fetchFullPayload( true );
-  } else if( requires == HeaderMessage ) {
-      job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
-  }
+
+  if ( requiredPart == SearchRule::CompleteMessage )
+    job->fetchScope().fetchFullPayload( true );
+  else if ( requiredPart == SearchRule::Header )
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  else
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
 
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
 }
 
-int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFilter *filter )
+int FilterManager::process( const Akonadi::Item& item, SearchRule::RequiredPart requiredPart, const MailFilter* filter )
 {
   if ( !filter->isEnabled() ) {
     return 1;
@@ -393,7 +415,7 @@ int FilterManager::process( const Akonadi::Item &item, const MailCommon::MailFil
       return 1;
     }
 
-    ItemContext context( item );
+    ItemContext context( item, requiredPart );
 
     if ( filter->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
       return 2;
@@ -427,12 +449,18 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
       }
     } else if ( context.needsPayloadStore() ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+        //The below is a safety check to ignore modifying payloads if it was not requested,
+        //as in that case we might change the payload to an invalid one
+        modifyJob->setIgnorePayload( !context.needsFullPayload() );
         if(itemCanDelete) {
           modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
         }
         connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else if ( context.needsFlagStore() ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+        //The below is a safety check to ignore modifying payloads if it was not requested,
+        //as in that case we might change the payload to an invalid one
+        modifyJob->setIgnorePayload( !context.needsFullPayload() );
         if(itemCanDelete) {
           modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
           modifyJob->setIgnorePayload( true );
@@ -457,11 +485,16 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
 }
 
 
-int FilterManager::process( const QList<MailFilter*>& mailFilters, const Akonadi::Item &item, FilterSet set, bool account, const QString &accountId )
+int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item& item, SearchRule::RequiredPart requestedPart, FilterManager::FilterSet set, bool account, const QString& accountId )
 {
     if ( set == NoSet ) {
       kDebug() << "FilterManager: process() called with not filter set selected";
       emit itemNotMoved( item );
+      return 1;
+    }
+
+    if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+      kError() << "Filter is null or item doesn't have correct payload.";
       return 1;
     }
 
@@ -472,7 +505,7 @@ int FilterManager::process( const QList<MailFilter*>& mailFilters, const Akonadi
       return 1;
     }
 
-    ItemContext context( item );
+    ItemContext context( item, requestedPart );
     QList<MailCommon::MailFilter*>::const_iterator end( mailFilters.constEnd() );
     for ( QList<MailCommon::MailFilter*>::const_iterator it = mailFilters.constBegin();
           !stopIt && it != end ; ++it ) {
@@ -511,15 +544,10 @@ int FilterManager::process( const QList<MailFilter*>& mailFilters, const Akonadi
 }
 
 
-int FilterManager::process( const Akonadi::Item &item, FilterSet set,
-                            bool account, const QString &accountId )
+int FilterManager::process( const Akonadi::Item &item,  SearchRule::RequiredPart requestedPart,
+                            FilterSet set, bool account, const QString &accountId )
 {
-  return process( d->mFilters, item, set, account, accountId );
-}
-
-int FilterManager::process( const Akonadi::Item &item, const QList<MailFilter*>& mailFilters )
-{
-  return process( mailFilters, item );
+  return process( d->mFilters, item, requestedPart, set, account, accountId );
 }
 
 QString FilterManager::createUniqueName( const QString &name ) const
@@ -546,9 +574,9 @@ QString FilterManager::createUniqueName( const QString &name ) const
   return uniqueName;
 }
 
-bool FilterManager::requiresFullMailBody() const
+MailCommon::SearchRule::RequiredPart FilterManager::requiredPart() const
 {
-  return d->mRequiresBody;
+  return d->mRequiredPart;
 }
 
 #ifndef NDEBUG
@@ -560,7 +588,7 @@ void FilterManager::dump() const
 }
 #endif
 
-void FilterManager::applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, FilterManager::FilterRequires requires, const QStringList& listFilters )
+void FilterManager::applySpecificFilters(const QList< Akonadi::Item >& selectedMessages, SearchRule::RequiredPart requiredPart, const QStringList& listFilters )
 {
     const int msgCountToFilter = selectedMessages.size();
 
@@ -572,20 +600,18 @@ void FilterManager::applySpecificFilters(const QList<Akonadi::Item> &selectedMes
     progressItem->setTotalItems( msgCountToFilter );
 
     Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
-    if( requires == Unknown) {
-        if ( d->mRequiresBody )
-            itemFetchJob->fetchScope().fetchFullPayload( true );
-        else
-            itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
-    } else if( requires == FullMessage ) {
+    if( requiredPart == SearchRule::CompleteMessage ) {
         itemFetchJob->fetchScope().fetchFullPayload( true );
-    } else if( requires == HeaderMessage ) {
+    } else if( requiredPart == SearchRule::Header ) {
         itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+    } else {
+        itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
     }
 
     itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
     itemFetchJob->setProperty( "listFilters", QVariant::fromValue( listFilters ) );
+    itemFetchJob->setProperty( "requestedPart", QVariant::fromValue(requiredPart) );
 
     connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
              this, SLOT(slotItemsFetchedForFilter(Akonadi::Item::List)) );
@@ -605,13 +631,17 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, 
   progressItem->setTotalItems( msgCountToFilter );
 
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
-  if ( d->mRequiresBody )
+  if ( d->mRequiredPart == SearchRule::CompleteMessage )
     itemFetchJob->fetchScope().fetchFullPayload( true );
-  else
+  else if ( d->mRequiredPart == SearchRule::Header )
     itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  else
+    itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
+
   itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
   itemFetchJob->setProperty( "filterSet", QVariant::fromValue( static_cast<int>( filterSet ) ) );
+  itemFetchJob->setProperty( "requestedPart", QVariant::fromValue(d->mRequiredPart) );
 
   connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
            this, SLOT(slotItemsFetchedForFilter(Akonadi::Item::List)) );

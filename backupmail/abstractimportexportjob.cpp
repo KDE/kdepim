@@ -21,13 +21,16 @@
 #include <KZip>
 #include <KLocale>
 #include <QWidget>
+#include <QProgressDialog>
 
-AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected)
+AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
   : QObject(parent),
     mTypeSelected(typeSelected),
     mArchive(new KZip(filename)),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
-    mParent(parent)
+    mParent(parent),
+    mProgressDialog(0),
+    mNumberOfStep(numberOfStep)
 {
 }
 
@@ -36,6 +39,38 @@ AbstractImportExportJob::~AbstractImportExportJob()
   closeArchive();
   delete mArchive;
   delete mIdentityManager;
+}
+
+QProgressDialog *AbstractImportExportJob::progressDialog()
+{
+  return mProgressDialog;
+}
+
+void AbstractImportExportJob::createProgressDialog()
+{
+  if(!mProgressDialog) {
+    mProgressDialog = new QProgressDialog(mParent);
+    mProgressDialog->setWindowModality(Qt::WindowModal);
+    mProgressDialog->setMinimum(0);
+    mProgressDialog->setMaximum(mNumberOfStep);
+  }
+  mProgressDialog->show();
+  mProgressDialog->setValue(0);
+}
+
+
+bool AbstractImportExportJob::wasCanceled() const
+{
+  if(mProgressDialog)
+    return mProgressDialog->wasCanceled();
+  return false;
+}
+
+void AbstractImportExportJob::increaseProgressDialog()
+{
+  if(mProgressDialog) {
+    mProgressDialog->setValue(mProgressDialog->value()+1);
+  }
 }
 
 void AbstractImportExportJob::closeArchive()
@@ -59,5 +94,12 @@ bool AbstractImportExportJob::openArchive(bool write)
 }
 
 
+void AbstractImportExportJob::showInfo(const QString&text)
+{
+  if(mProgressDialog) {
+    mProgressDialog->setLabelText(text);
+  }
+  Q_EMIT info(text);
+}
 
 #include "abstractimportexportjob.moc"

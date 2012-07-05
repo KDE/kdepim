@@ -1,6 +1,7 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
  * kmail: KDE mail client
  * Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
+ * Copyright (C) 2012 Andras Mantia <amantia@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +41,10 @@ using MailCommon::FilterLog;
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <krandom.h>
+
+#include <algorithm>
+#include <boost/bind.hpp>
+
 
 using namespace MailCommon;
 
@@ -233,15 +238,27 @@ MailFilter::AccountType MailFilter::applicability() const
   return mApplicability;
 }
 
-bool MailFilter::requiresBody()
+SearchRule::RequiredPart MailFilter::requiredPart() const
 {
-  if (pattern() && pattern()->requiresBody())
-    return true; // no pattern means always matches?
-  QListIterator<FilterAction*> it( *actions() );
-  while ( it.hasNext() )
-    if ( it.next()->requiresBody() )
-      return true;
-  return false;
+  //find the required message part needed for the filter
+  //this can be either only the Envelope, all Header or the CompleteMessage
+  //Makes the assumption that  Envelope < Header < CompleteMessage
+  int requiredPart = SearchRule::Envelope;
+
+  if (pattern())
+    requiredPart = qMax( requiredPart, (int)pattern()->requiredPart() ) ; // no pattern means always matches?
+
+  int requiredPartByActions = SearchRule::Envelope;
+
+  QList<FilterAction*> actionList = *actions();
+  if (!actionList.isEmpty()) {
+    requiredPartByActions = (*std::max_element(actionList.constBegin(), actionList.constEnd(),
+                                             boost::bind(&MailCommon::FilterAction::requiredPart, _1) <
+                                             boost::bind(&MailCommon::FilterAction::requiredPart, _2) ))->requiredPart();
+  }
+  requiredPart = qMax( requiredPart, requiredPartByActions);
+
+  return static_cast<SearchRule::RequiredPart>(requiredPart);
 }
 
 bool MailFilter::folderRemoved( const Akonadi::Collection & aFolder, const Akonadi::Collection& aNewFolder )

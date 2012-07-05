@@ -907,4 +907,14 @@ void Pane::saveCurrentSelection()
     w->saveCurrentSelection();
   }
 }
+
+void Pane::updateTagComboBox()
+{
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    w->populateStatusFilterCombo();
+  }
+}
+
+
 #include "pane.moc"

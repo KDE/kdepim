@@ -73,18 +73,23 @@ using namespace KHolidays;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Incidence::Ptr>() ?
-    item.payload<KCalCore::Incidence::Ptr>() :
-    KCalCore::Incidence::Ptr();
+  try {
+    return item.payload<KCalCore::Incidence::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return KCalCore::Incidence::Ptr();
+  }
 }
 
 KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Event::Ptr>() ?
-    item.payload<KCalCore::Event::Ptr>() :
-    KCalCore::Event::Ptr();
+  try {
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent )
+      return item.payload<KCalCore::Event::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return item.payload<KCalCore::Event::Ptr>();
+  }
+  return KCalCore::Event::Ptr();
 }
 
 KCalCore::Event::List CalendarSupport::eventsFromItems( const Akonadi::Item::List &items )
@@ -111,18 +116,26 @@ KCalCore::Incidence::List CalendarSupport::incidencesFromItems( const Akonadi::I
 
 KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Todo::Ptr>() ?
-    item.payload<KCalCore::Todo::Ptr>() :
-    KCalCore::Todo::Ptr();
+  try {
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo )
+      return item.payload<KCalCore::Todo::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return item.payload<KCalCore::Todo::Ptr>();
+  }
+  return KCalCore::Todo::Ptr();
 }
 
 KCalCore::Journal::Ptr CalendarSupport::journal( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Journal::Ptr>() ?
-    item.payload<KCalCore::Journal::Ptr>() :
-    KCalCore::Journal::Ptr();
+  try {
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal )
+      return item.payload<KCalCore::Journal::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return item.payload<KCalCore::Journal::Ptr>();
+  }
+  return KCalCore::Journal::Ptr();
 }
 
 bool CalendarSupport::hasIncidence( const Akonadi::Item &item )

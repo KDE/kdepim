@@ -83,6 +83,12 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionRewriteHeader::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
+
 QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 {
   QWidget *widget = new QWidget( parent );

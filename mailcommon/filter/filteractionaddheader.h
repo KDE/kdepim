@@ -30,6 +30,7 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddHeader: public FilterActionWithStringList
 {
+  Q_OBJECT
   public:
     FilterActionAddHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
@@ -37,6 +38,8 @@ class FilterActionAddHeader: public FilterActionWithStringList
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
     virtual void applyParamWidgetValue( QWidget *paramWidget );
     virtual void clearParamWidget( QWidget *paramWidget ) const;
+
+    virtual SearchRule::RequiredPart requiredPart() const;
 
     virtual QString argsAsString() const;
     virtual void argsFromString( const QString &argsStr );

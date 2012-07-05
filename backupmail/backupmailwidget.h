@@ -32,6 +32,7 @@ public:
   ~BackupMailWidget();
   void addInfoLogEntry( const QString& log );
   void addErrorLogEntry( const QString& log );
+  void clear();
 
 private:
   KPIM::CustomLogWidget *mCustomLogWidget;

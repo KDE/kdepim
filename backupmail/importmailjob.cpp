@@ -51,8 +51,8 @@
 
 using namespace Akonadi;
 
-ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename)
-  :AbstractImportExportJob(parent,filename,typeSelected), mArchiveDirectory(0)
+ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename, int numberOfStep)
+  :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep), mArchiveDirectory(0)
 {
   mTempDir = new KTempDir();
   mTempDirName = mTempDir->name();

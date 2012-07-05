@@ -1,6 +1,7 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
   Author: Marc Mutz <mutz@kde.org>
+  Copyright (C) 2012 Andras Mantia <amantia@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -56,6 +57,10 @@ using MailCommon::FilterLog;
 #include <QDataStream>
 #include <QRegExp>
 #include <QXmlStreamWriter>
+
+#include <algorithm>
+#include <boost/bind.hpp>
+
 
 using namespace MailCommon;
 
@@ -274,11 +279,6 @@ const QString SearchRule::asString() const
   return result;
 }
 
-bool SearchRule::requiresBody() const
-{
-  return true;
-}
-
 #ifndef KDEPIM_NO_NEPOMUK
 
 Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
@@ -436,14 +436,24 @@ bool SearchRuleString::isEmpty() const
   return field().trimmed().isEmpty() || contents().isEmpty();
 }
 
-bool SearchRuleString::requiresBody() const
+SearchRule::RequiredPart SearchRuleString::requiredPart() const
 {
-  if ( !field().startsWith( '<' ) || field() == "<recipients>" ) {
-    return false;
+  const QByteArray f = field();
+  SearchRule::RequiredPart part = Header;
+  if ( kasciistricmp( f, "<recipients>" ) == 0 ||
+       kasciistricmp( f, "<status>" ) == 0 ||
+       kasciistricmp( f, "<tag>" ) == 0 ||
+       kasciistricmp( f, "Subject" ) == 0 ||
+       kasciistricmp( f, "From" ) == 0 ) {
+      part = Envelope;
+  } else if ( kasciistricmp( f, "<message>" ) == 0 ||
+       kasciistricmp( f, "<body>" ) == 0 ) {
+      part = CompleteMessage;
   }
 
-  return true;
+  return part;
 }
+
 
 bool SearchRuleString::matches( const Akonadi::Item &item ) const
 {
@@ -943,6 +953,12 @@ bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
   return rc;
 }
 
+SearchRule::RequiredPart SearchRuleNumerical::requiredPart() const
+{
+  return SearchRule::Envelope;
+}
+
+
 bool SearchRuleNumerical::matchesInternal( long numericalValue,
     long numericalMsgContents, const QString & msgContents ) const
 {
@@ -1088,6 +1104,12 @@ bool SearchRuleDate::matchesInternal( const QDate& dateValue,
   return false;
 }
 
+SearchRule::RequiredPart SearchRuleDate::requiredPart() const
+{
+  return SearchRule::Envelope;
+}
+
+
 #ifndef KDEPIM_NO_NEPOMUK
 
 void SearchRuleDate::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
@@ -1185,6 +1207,12 @@ bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
   return rc;
 }
 
+SearchRule::RequiredPart SearchRuleStatus::requiredPart() const
+{
+  return SearchRule::Envelope;
+}
+
+
 #ifndef KDEPIM_NO_NEPOMUK
 void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm,
                                    const QString &tagId ) const
@@ -1273,7 +1301,7 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
   switch ( mOperator ) {
   case OpAnd: // all rules must match
     for ( it = constBegin(); it != end; ++it ) {
-      if ( !( (*it)->requiresBody() && ignoreBody ) ) {
+      if ( !( (*it)->requiredPart() == SearchRule::CompleteMessage && ignoreBody ) ) {
         if ( !(*it)->matches( item ) ) {
           return false;
         }
@@ -1283,7 +1311,7 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
 
   case OpOr:  // at least one rule must match
     for ( it = constBegin(); it != end; ++it ) {
-      if ( !( (*it)->requiresBody() && ignoreBody ) ) {
+      if ( !( (*it)->requiredPart() == MailCommon::SearchRule::CompleteMessage && ignoreBody ) ) {
         if ( (*it)->matches( item ) ) {
           return true;
         }
@@ -1299,17 +1327,18 @@ bool SearchPattern::matches( const Akonadi::Item &item, bool ignoreBody ) const
   }
 }
 
-bool SearchPattern::requiresBody() const
+SearchRule::RequiredPart SearchPattern::requiredPart() const
 {
-  QList<SearchRule::Ptr>::const_iterator it;
-  QList<SearchRule::Ptr>::const_iterator end( constEnd() );
-  for ( it = constBegin(); it != end; ++it ) {
-    if ( (*it)->requiresBody() ) {
-      return true;
-    }
+  SearchRule::RequiredPart reqPart = SearchRule::Envelope;
+
+  if (!isEmpty()) {
+    reqPart = (*std::max_element(constBegin(), constEnd(),
+                                 boost::bind(&MailCommon::SearchRule::requiredPart, _1) <
+                                 boost::bind(&MailCommon::SearchRule::requiredPart, _2) ))->requiredPart();
   }
-  return false;
+  return reqPart;
 }
+
 
 void SearchPattern::purify()
 {
@@ -1477,7 +1506,7 @@ static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 }
 #endif
 
-Nepomuk::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const 
+Nepomuk::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
 {
   const Nepomuk::Resource parentResource( url );
   if( !parentResource.exists() ) {
@@ -1536,7 +1565,7 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
       const Nepomuk::Query::AndTerm andTerm( orTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
     }
-      
+
   } else {
     outerGroup.addSubTerm( innerGroup );
   }

@@ -216,7 +216,7 @@ protected:
    */
   virtual void viewJobBatchTerminated();
 
-  void tagIdSelected( QVariant data );
+  void tagIdSelected(const QVariant &data );
 
 Q_SIGNALS:
   /**

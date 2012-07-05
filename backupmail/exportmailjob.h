@@ -29,7 +29,7 @@ namespace Akonadi {
 class ExportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename);
+  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename, int numberOfStep);
   ~ExportMailJob();
   void start();
 

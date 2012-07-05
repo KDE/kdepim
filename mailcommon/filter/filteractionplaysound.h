@@ -36,11 +36,12 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionPlaySound : public FilterActionWithTest
 {
+  Q_OBJECT
   public:
     FilterActionPlaySound(  );
     ~FilterActionPlaySound();
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual bool requiresBody() const;
+    virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
