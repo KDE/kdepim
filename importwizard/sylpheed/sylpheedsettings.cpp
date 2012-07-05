@@ -74,7 +74,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
   QMap<QString, QString> header;
   while ( !stream.atEnd() ) {
     const QString line = stream.readLine();
-    QStringList lst = line.split(QLatin1Char(':'));
+    const QStringList lst = line.split(QLatin1Char(':'));
     if(lst.count() == 3) {
       QString str = lst.at(2);
       str.remove(0,1);
@@ -88,7 +88,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
        newValue+=oldValue;
     }
     addKmailConfig( QLatin1String("General"),QLatin1String("mime-header-count"), newValue);
-    int currentHeader = (oldValue>0) ? oldValue-1 : 0;
+    int currentHeader = (oldValue>0) ? oldValue : 0;
     for (QMapIterator<QString, QString> it(header);  it.hasNext();  )
     {
         it.next();
