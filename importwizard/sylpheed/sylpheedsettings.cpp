@@ -270,8 +270,9 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
     settings.insert( QLatin1String( "Safety" ), QLatin1String( "SSL" ) );
     break;
   case 2:
-    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
     //TLS
+    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
+    break;
   default:
     kDebug()<<" sslimap unknown "<<sslimap;
     break;
@@ -297,6 +298,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
       break;
     case 4: //Plain
       settings.insert(QLatin1String("Authentication"),MailTransport::Transport::EnumAuthenticationType::PLAIN);
+      break;
     default:
       kDebug()<<" imap auth unknown "<<auth;
       break;
