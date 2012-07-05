@@ -671,13 +671,13 @@ void KMFilterDialog::slotFetchItemsForFolderDone( KJob *job )
     filtersId = fjob->property( "listFilters" ).toStringList();
   }
 
-  SearchRule::RequiredPart requires = SearchRule::Envelope;
+  SearchRule::RequiredPart requiredPart = SearchRule::Envelope;
   if ( fjob->property( "requiredPart" ).isValid() ) {
-    requires = fjob->property( "requiredPart" ).value<SearchRule::RequiredPart>();
+        requiredPart = fjob->property( "requiredPart" ).value<SearchRule::RequiredPart>();
   }
   Akonadi::Item::List items = fjob->items();
   mRunNow->setEnabled( true );
-  MailCommon::FilterManager::instance()->filter( items, requires, filtersId );
+  MailCommon::FilterManager::instance()->filter( items, requiredPart, filtersId );
 }
 
 void KMFilterDialog::slotSaveSize() {
@@ -1347,7 +1347,7 @@ QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
   return listWidgetItem;
 }
 
-QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart& requiredPart ) const
+QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart &requiredPart ) const
 {
   QStringList listFilterId;
   requiredPart = SearchRule::Envelope;

@@ -91,7 +91,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     void filter( const Akonadi::Item &item, const QString &identifier ) const;
 
     void filter( const qlonglong &id, const QString &identifier,
-                 SearchRule::RequiredPart requires ) const;
+                 SearchRule::RequiredPart requiredPart ) const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -118,7 +118,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
 
     void filter( const QVector<qlonglong> &itemIds, FilterSet set = Explicit ) const;
 
-    void filter( const Akonadi::Item::List &messages, SearchRule::RequiredPart requires,
+    void filter( const Akonadi::Item::List &messages, SearchRule::RequiredPart requiredPart,
                  const QStringList &listFilters ) const;
 
     /// Manage filters interface

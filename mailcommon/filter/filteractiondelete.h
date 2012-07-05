@@ -29,6 +29,7 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionDelete : public FilterActionWithNone
 {
+  Q_OBJECT
   public:
     FilterActionDelete( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;

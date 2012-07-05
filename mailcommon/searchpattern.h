@@ -364,7 +364,7 @@ class SearchRuleString : public SearchRule
      * @copydoc SearchRule::requiredPart()
      */
     virtual RequiredPart requiredPart() const;
-    
+
     /**
      * @copydoc SearchRule::matches()
      */
@@ -514,7 +514,7 @@ class SearchRuleDate : public SearchRule
 
 
 
-  
+
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
 struct MessageStatusInfo {
@@ -683,7 +683,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      * Returns the required part from the item that is needed for the search to
      * operate. See @ref RequiredPart */
     SearchRule::RequiredPart requiredPart() const;
-    
+
     /**
      * Removes all empty rules from the list. You should call this
      * method whenever the user had had control of the rules outside of

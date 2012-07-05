@@ -21,7 +21,6 @@
 
 #include <KDE/Akonadi/ItemCopyJob>
 #include <KDE/KLocale>
-// #include <KDE/KMessageBox>
 
 using namespace MailCommon;
 
@@ -43,16 +42,9 @@ void FilterActionCopy::jobFinished(KJob* job)
 {
   if (job->error()) {
     kError() << "Error while moving mail: " << job->errorString();
-//     KMessageBox::error(0, i18n("<qt>Error while copying the mail.<br/>The error was: <b>%1</b>.</qt>").arg(job->errorString()),
-//                           i18n("Filter error"));
   }
 }
 
-
-bool FilterActionCopy::requiresBody() const
-{
-  return false;
-}
 
 SearchRule::RequiredPart FilterActionCopy::requiredPart() const
 {
