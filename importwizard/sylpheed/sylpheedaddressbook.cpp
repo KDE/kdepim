@@ -134,7 +134,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       if(!mAddressBookUid.contains(uidPerson)) {
         mAddressBookUid.insert(uidPerson,uidAddress);
       } else {
-        qDebug()<<" problem uidPerson already stored"<<uidPerson;
+        kDebug()<<" problem uidPerson already stored"<<uidPerson;
       }
       createContact( address );
     } else if(tag == QLatin1String("group")) {
