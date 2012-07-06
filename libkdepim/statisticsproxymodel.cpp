@@ -389,8 +389,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
                              EntityTreeModel::CollectionRole ).value<Collection>();
 
     if ( collection.isValid() && collection.statistics().count()>0 ) {
-      const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn( index );
-      return d->toolTipForCollection( sourceIndex, collection );
+      return d->toolTipForCollection( index, collection );
     }
 
   } else if ( role == Qt::DecorationRole && index.column() == 0 ) {
