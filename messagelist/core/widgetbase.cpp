@@ -240,6 +240,7 @@ void Widget::changeQuicksearchVisibility()
     lineEdit->setVisible( !visible );
     comboBox->setVisible( !visible );
     fullSearchButton->setVisible( !visible );
+    d->mLockSearch->setVisible( !visible );
     Settings::self()->setShowQuickSearch( !visible );
   }
 }
