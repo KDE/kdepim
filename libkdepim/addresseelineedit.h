@@ -54,7 +54,7 @@ namespace KPIM {
   typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
 }
 
-namespace Nepomuk {
+namespace Nepomuk2 {
   namespace Query {
     class Result;
   }
@@ -196,7 +196,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
     Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
 #ifndef KDEPIM_NO_NEPOMUK
-    Q_PRIVATE_SLOT( d, void slotNepomukHits( const QList<Nepomuk::Query::Result>& ) )
+    Q_PRIVATE_SLOT( d, void slotNepomukHits( const QList<Nepomuk2::Query::Result>& ) )
     Q_PRIVATE_SLOT( d, void slotNepomukSearchFinished() )
 #endif
     //@endcond

@@ -59,7 +59,7 @@ public:
   void invalidateAnnotationCache();
 
   /// Callback for async Nepomuk resource retrieval.
-  void resourceReceived( const Nepomuk::Resource &resource );
+  void resourceReceived( const Nepomuk2::Resource &resource );
 
   QByteArray mMessageIdMD5;            ///< always set
   QByteArray mInReplyToIdMD5;          ///< set only if we're doing threading
@@ -94,7 +94,7 @@ public:
 private:
 
   // This creates mTagList and fills it with useful data
-  void fillTagList(const Nepomuk::Resource& resource) const;
+  void fillTagList(const Nepomuk2::Resource& resource) const;
 
   // List of all tags. If this is 0, it means we have not yet calculated this list. It is calculated
   // on demand when needed.

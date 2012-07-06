@@ -37,11 +37,11 @@
 #include <Akonadi/ItemFetchScope>
 
 #ifndef KDEPIM_NO_NEPOMUK
-#include <Nepomuk/Query/Query>
-#include <Nepomuk/Query/QueryServiceClient>
-#include <Nepomuk/Query/Result>
-#include <Nepomuk/Resource>
-#include <Nepomuk/Vocabulary/NCO>
+#include <Nepomuk2/Query/Query>
+#include <Nepomuk2/Query/QueryServiceClient>
+#include <Nepomuk2/Query/Result>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Vocabulary/NCO>
 #endif
 
 #include <KPIMUtils/Email>
@@ -163,7 +163,7 @@ class AddresseeLineEditStatic
     // a list of akonadi items (contacts) that have not had their collection fetched yet
     Akonadi::Item::List akonadiPendingItems;
 #ifndef KDEPIM_NO_NEPOMUK
-    Nepomuk::Query::QueryServiceClient* nepomukSearchClient;
+    Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
 #endif
     int nepomukCompletionSource;
 };
@@ -248,7 +248,7 @@ class AddresseeLineEdit::Private
 #ifndef KDEPIM_NO_NEPOMUK
     void startNepomukSearch();
     void stopNepomukSearch();
-    void slotNepomukHits( const QList<Nepomuk::Query::Result>& result );
+    void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
     void slotNepomukSearchFinished();
 #endif
     static KCompletion::CompOrder completionOrder();
@@ -281,7 +281,7 @@ void AddresseeLineEdit::Private::init()
 
 #ifndef KDEPIM_NO_NEPOMUK
     if ( !s_static->nepomukSearchClient ) {
-      s_static->nepomukSearchClient = new Nepomuk::Query::QueryServiceClient;
+      s_static->nepomukSearchClient = new Nepomuk2::Query::QueryServiceClient;
       s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
     }
 #endif
@@ -306,8 +306,8 @@ void AddresseeLineEdit::Private::init()
                   SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)) );
 
 #ifndef KDEPIM_NO_NEPOMUK
-      q->connect( s_static->nepomukSearchClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
-                  q, SLOT(slotNepomukHits(QList<Nepomuk::Query::Result>)) );
+      q->connect( s_static->nepomukSearchClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+                  q, SLOT(slotNepomukHits(QList<Nepomuk2::Query::Result>)) );
       q->connect( s_static->nepomukSearchClient, SIGNAL(finishedListing()), q, SLOT(slotNepomukSearchFinished()));
 #endif
       m_completionInitialized = true;
@@ -363,9 +363,9 @@ void AddresseeLineEdit::Private::startNepomukSearch()
     return;
   }
   const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
-  Nepomuk::Query::RequestPropertyMap requestPropertyMap;
-  requestPropertyMap.insert( "email", Nepomuk::Vocabulary::NCO::hasEmailAddress() );
-  requestPropertyMap.insert( "fullname", Nepomuk::Vocabulary::NCO::fullname() );
+  Nepomuk2::Query::RequestPropertyMap requestPropertyMap;
+  requestPropertyMap.insert( "email", Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
+  requestPropertyMap.insert( "fullname", Nepomuk2::Vocabulary::NCO::fullname() );
   const bool result = s_static->nepomukSearchClient->sparqlQuery( query, requestPropertyMap );
   if (!result) {
     kDebug() << "Starting the nepomuk lookup failed. Search string: " << m_searchString;
@@ -377,20 +377,20 @@ void AddresseeLineEdit::Private::stopNepomukSearch()
   s_static->nepomukSearchClient->close();
 }
 
-void AddresseeLineEdit::Private::slotNepomukHits( const QList<Nepomuk::Query::Result>& results )
+void AddresseeLineEdit::Private::slotNepomukHits( const QList<Nepomuk2::Query::Result>& results )
 {
   if ( results.isEmpty() || ( !q->hasFocus() && !q->completionBox()->hasFocus() ) ) {
     return;
   }
   // Extract and process the hits
-  Q_FOREACH( const Nepomuk::Query::Result& result, results) {
-    Soprano::Node node = result.requestProperty( Nepomuk::Vocabulary::NCO::hasEmailAddress() );
+  Q_FOREACH( const Nepomuk2::Query::Result& result, results) {
+    Soprano::Node node = result.requestProperty( Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
     if ( node.isValid() && node.isLiteral() ) {
       const QString email = node.literal().toString();
       KABC::Addressee contact;
       contact.insertEmail( email );
       // extract name, if we have one
-      Soprano::Node nodeName = result.requestProperty( Nepomuk::Vocabulary::NCO::fullname() );
+      Soprano::Node nodeName = result.requestProperty( Nepomuk2::Vocabulary::NCO::fullname() );
       if ( nodeName.isValid() && nodeName.isLiteral() ) {
         const QString name = nodeName.literal().toString();
         contact.setFormattedName( name );

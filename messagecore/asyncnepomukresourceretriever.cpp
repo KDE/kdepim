@@ -24,9 +24,9 @@
 #include <QtCore/QThreadPool>
 
 #include <KDebug>
-#include <Nepomuk/Resource>
-#include <Nepomuk/Variant>
-#include <Nepomuk/ResourceManager>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Variant>
+#include <Nepomuk2/ResourceManager>
 
 using namespace MessageCore;
 
@@ -43,11 +43,11 @@ class NepomukResourceRetrieverRunnable : public QRunnable
 
     void run()
     {
-      Nepomuk::Resource resource( m_url );
+      Nepomuk2::Resource resource( m_url );
       foreach ( const QUrl &prop, m_props )
         resource.property( prop ); // loads and caches this property
       QMetaObject::invokeMethod( m_retriever, "resourceRetrievalDone", Qt::QueuedConnection,
-                                 Q_ARG(QUrl, m_url), Q_ARG(Nepomuk::Resource, resource) );
+                                 Q_ARG(QUrl, m_url), Q_ARG(Nepomuk2::Resource, resource) );
     }
 
   private:
@@ -62,7 +62,7 @@ class AsyncNepomukResourceRetrieverPrivate
     AsyncNepomukResourceRetrieverPrivate( AsyncNepomukResourceRetriever *parent ) : m_parent( parent ), m_running( false ), m_nepomukInitialized(false)
     {
       m_nepomukPool.setMaxThreadCount( 1 );
-      qRegisterMetaType<Nepomuk::Resource>();
+      qRegisterMetaType<Nepomuk2::Resource>();
     }
 
     void createRunnable()
@@ -79,7 +79,7 @@ class AsyncNepomukResourceRetrieverPrivate
       m_requestedProperties.remove( url );
     }
 
-    void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &res )
+    void resourceRetrievalDone( const QUrl &url, const Nepomuk2::Resource &res )
     {
       QMutexLocker locker( &m_mutex );
       m_running = false;
@@ -111,12 +111,12 @@ AsyncNepomukResourceRetriever::AsyncNepomukResourceRetriever(const QVector<QUrl>
   d( new AsyncNepomukResourceRetrieverPrivate( this ) )
 {
   d->m_properties = properties;
-  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
+  connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
            SLOT(nepomukStarted()) );
-  connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
+  connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
            SLOT(nepomukStopped()) );
 
-  d->m_nepomukInitialized = Nepomuk::ResourceManager::instance()->initialized();
+  d->m_nepomukInitialized = Nepomuk2::ResourceManager::instance()->initialized();
 }
 
 AsyncNepomukResourceRetriever::~AsyncNepomukResourceRetriever()
@@ -157,7 +157,7 @@ void AsyncNepomukResourceRetriever::cancelRequest(const QUrl & url)
   }
 }
 
-void AsyncNepomukResourceRetriever::resourceAvailable(const QUrl& url, const Nepomuk::Resource& resource)
+void AsyncNepomukResourceRetriever::resourceAvailable(const QUrl& url, const Nepomuk2::Resource& resource)
 {
   emit resourceReceived( url, resource );
 }

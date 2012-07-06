@@ -140,6 +140,7 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer
   ${KDEPIMLIBS_KIMAP_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
+  ${NEPOMUK_CORE_LIBRARY}
 )
 
 if(NOT KDEPIM_NO_NEPOMUK)

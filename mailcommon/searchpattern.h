@@ -25,8 +25,8 @@
 #include <Akonadi/KMime/MessageStatus>
 
 #ifndef KDEPIM_NO_NEPOMUK
-#include <Nepomuk/Query/GroupTerm>
-#include <Nepomuk/Query/ComparisonTerm>
+#include <Nepomuk2/Query/GroupTerm>
+#include <Nepomuk2/Query/ComparisonTerm>
 #endif
 
 #include <KLocale>
@@ -270,7 +270,7 @@ class MAILCOMMON_EXPORT SearchRule
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const = 0;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const = 0;
 #endif
 
     /**
@@ -290,13 +290,13 @@ class MAILCOMMON_EXPORT SearchRule
     /**
      * Converts the rule function into the corresponding Nepomuk query operator.
      */
-    Nepomuk::Query::ComparisonTerm::Comparator nepomukComparator() const;
+    Nepomuk2::Query::ComparisonTerm::Comparator nepomukComparator() const;
 
     /**
      * Adds @p term to @p termGroup and adds a negation term inbetween if needed.
      */
-    void addAndNegateTerm( const Nepomuk::Query::Term &term,
-                           Nepomuk::Query::GroupTerm &termGroup ) const;
+    void addAndNegateTerm( const Nepomuk2::Query::Term &term,
+                           Nepomuk2::Query::GroupTerm &termGroup ) const;
 #endif
     /**
      * Converts the rule function into the corresponding Xesam query operator.
@@ -380,7 +380,7 @@ class SearchRuleString : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
 #endif
 
     /**
@@ -393,9 +393,9 @@ class SearchRuleString : public SearchRule
     /**
      * @copydoc SearchRule::addPersonTerms()
      */
-    void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
-    void addHeaderTerm( Nepomuk::Query::GroupTerm &groupTerm,
-                        const Nepomuk::Query::Term &field ) const;
+    void addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QUrl &field ) const;
+    void addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
+                        const Nepomuk2::Query::Term &field ) const;
 #endif
 };
 
@@ -449,7 +449,7 @@ class SearchRuleNumerical : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
 #endif
 
     /**
@@ -502,7 +502,7 @@ class SearchRuleDate : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
 #endif
 
     /**
@@ -592,7 +592,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
    virtual RequiredPart requiredPart() const;
 
 #ifndef KDEPIM_NO_NEPOMUK
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
 #endif
 
     //Not possible to implement optimized form for status searching
@@ -606,7 +606,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 
   private:
 #ifndef KDEPIM_NO_NEPOMUK
-    void addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const QString &tagId ) const;
+    void addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QString &tagId ) const;
 #endif
 
   private:
@@ -795,7 +795,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      * to "<i18n("unnamed")>", and the boolean operator to @p OpAnd.
      */
     void init();
-    Nepomuk::Query::ComparisonTerm createChildTerm( const KUrl& url, bool& empty ) const;
+    Nepomuk2::Query::ComparisonTerm createChildTerm( const KUrl& url, bool& empty ) const;
     QString  mName;
     Operator mOperator;
 };

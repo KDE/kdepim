@@ -27,18 +27,18 @@ using MailCommon::FilterLog;
 #include <ontologies/nmo.h>
 #include <ontologies/nco.h>
 
-#include <Nepomuk/Tag>
-#include <Nepomuk/Query/Query>
-#include <Nepomuk/Query/AndTerm>
-#include <Nepomuk/Query/OrTerm>
-#include <Nepomuk/Query/LiteralTerm>
-#include <Nepomuk/Query/ResourceTerm>
-#include <Nepomuk/Query/NegationTerm>
-#include <Nepomuk/Query/ResourceTypeTerm>
-#include <Nepomuk/Vocabulary/PIMO>
+#include <Nepomuk2/Tag>
+#include <Nepomuk2/Query/Query>
+#include <Nepomuk2/Query/AndTerm>
+#include <Nepomuk2/Query/OrTerm>
+#include <Nepomuk2/Query/LiteralTerm>
+#include <Nepomuk2/Query/ResourceTerm>
+#include <Nepomuk2/Query/NegationTerm>
+#include <Nepomuk2/Query/ResourceTypeTerm>
+#include <Nepomuk2/Vocabulary/PIMO>
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDF>
-#include <Nepomuk/Vocabulary/NIE>
+#include <Nepomuk2/Vocabulary/NIE>
 #endif
 
 #include <Akonadi/Contact/ContactSearchJob>
@@ -281,43 +281,43 @@ const QString SearchRule::asString() const
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
+Nepomuk2::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
 {
   switch ( function() ) {
   case SearchRule::FuncContains:
   case SearchRule::FuncContainsNot:
-    return Nepomuk::Query::ComparisonTerm::Contains;
+    return Nepomuk2::Query::ComparisonTerm::Contains;
 
   case SearchRule::FuncEquals:
   case SearchRule::FuncNotEqual:
-    return Nepomuk::Query::ComparisonTerm::Equal;
+    return Nepomuk2::Query::ComparisonTerm::Equal;
 
   case SearchRule::FuncIsGreater:
-    return Nepomuk::Query::ComparisonTerm::Greater;
+    return Nepomuk2::Query::ComparisonTerm::Greater;
 
   case SearchRule::FuncIsGreaterOrEqual:
-      return Nepomuk::Query::ComparisonTerm::GreaterOrEqual;
+      return Nepomuk2::Query::ComparisonTerm::GreaterOrEqual;
 
   case SearchRule::FuncIsLess:
-    return Nepomuk::Query::ComparisonTerm::Smaller;
+    return Nepomuk2::Query::ComparisonTerm::Smaller;
 
   case SearchRule::FuncIsLessOrEqual:
-    return Nepomuk::Query::ComparisonTerm::SmallerOrEqual;
+    return Nepomuk2::Query::ComparisonTerm::SmallerOrEqual;
 
   case SearchRule::FuncRegExp:
   case SearchRule::FuncNotRegExp:
-    return Nepomuk::Query::ComparisonTerm::Regexp;
+    return Nepomuk2::Query::ComparisonTerm::Regexp;
 
   case SearchRule::FuncStartWith:
   case SearchRule::FuncNotStartWith:
   case SearchRule::FuncEndWith:
   case SearchRule::FuncNotEndWith:
-    return Nepomuk::Query::ComparisonTerm::Regexp;
+    return Nepomuk2::Query::ComparisonTerm::Regexp;
   default:
     kDebug() << "Unhandled function type: " << function();
   }
 
-  return Nepomuk::Query::ComparisonTerm::Equal;
+  return Nepomuk2::Query::ComparisonTerm::Equal;
 }
 
 bool SearchRule::isNegated() const
@@ -339,11 +339,11 @@ bool SearchRule::isNegated() const
   return negate;
 }
 
-void SearchRule::addAndNegateTerm( const Nepomuk::Query::Term &term,
-                                   Nepomuk::Query::GroupTerm &termGroup ) const
+void SearchRule::addAndNegateTerm( const Nepomuk2::Query::Term &term,
+                                   Nepomuk2::Query::GroupTerm &termGroup ) const
 {
   if ( isNegated() ) {
-    Nepomuk::Query::NegationTerm neg;
+    Nepomuk2::Query::NegationTerm neg;
     neg.setSubTerm( term );
     termGroup.addSubTerm( neg );
   } else {
@@ -499,8 +499,8 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     msgContents += ", " + msg->bcc()->asUnicodeString();
   } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
 #ifndef KDEPIM_NO_NEPOMUK
-    const Nepomuk::Resource res( item.url() );
-    foreach ( const Nepomuk::Tag &tag, res.tags() ) {
+    const Nepomuk2::Resource res( item.url() );
+    foreach ( const Nepomuk2::Tag &tag, res.tags() ) {
       msgContents += tag.label();
     }
     logContents = false;
@@ -572,39 +572,39 @@ QString SearchRule::quote( const QString &content ) const
   return newContent;
 }
 
-void SearchRuleString::addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm,
+void SearchRuleString::addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                                       const QUrl &field ) const
 {
   // TODO split contents() into address/name and adapt the query accordingly
-  const Nepomuk::Query::ComparisonTerm valueTerm(
+  const Nepomuk2::Query::ComparisonTerm valueTerm(
     Vocabulary::NCO::emailAddress(),
-    Nepomuk::Query::LiteralTerm( contents() ),
+    Nepomuk2::Query::LiteralTerm( contents() ),
     nepomukComparator() );
 
-  const Nepomuk::Query::ComparisonTerm addressTerm(
+  const Nepomuk2::Query::ComparisonTerm addressTerm(
     Vocabulary::NCO::hasEmailAddress(),
     valueTerm,
-    Nepomuk::Query::ComparisonTerm::Equal );
+    Nepomuk2::Query::ComparisonTerm::Equal );
 
-  const Nepomuk::Query::ComparisonTerm personTerm(
+  const Nepomuk2::Query::ComparisonTerm personTerm(
     field,
     addressTerm,
-    Nepomuk::Query::ComparisonTerm::Equal );
+    Nepomuk2::Query::ComparisonTerm::Equal );
 
   groupTerm.addSubTerm( personTerm );
 }
 
-void SearchRuleString::addHeaderTerm( Nepomuk::Query::GroupTerm &groupTerm,
-                                      const Nepomuk::Query::Term &field ) const
+void SearchRuleString::addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
+                                      const Nepomuk2::Query::Term &field ) const
 {
-  const Nepomuk::Query::ComparisonTerm headerName(
+  const Nepomuk2::Query::ComparisonTerm headerName(
     Vocabulary::NMO::headerName(),
     field,
-    Nepomuk::Query::ComparisonTerm::Equal );
+    Nepomuk2::Query::ComparisonTerm::Equal );
 
-  const Nepomuk::Query::ComparisonTerm headerTerm(
+  const Nepomuk2::Query::ComparisonTerm headerTerm(
     Vocabulary::NMO::headerValue(),
-    Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+    Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
     nepomukComparator() );
 
   groupTerm.addSubTerm( headerName );
@@ -612,43 +612,43 @@ void SearchRuleString::addHeaderTerm( Nepomuk::Query::GroupTerm &groupTerm,
 
 }
 
-void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
+void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
-  Nepomuk::Query::OrTerm termGroup;
+  Nepomuk2::Query::OrTerm termGroup;
   if ( kasciistricmp( field(), "<message>" ) == 0 ||
        kasciistricmp( field(), "<recipients>" ) == 0  ||
        kasciistricmp( field(), "<any header>" ) == 0 ) {
 
-    const Nepomuk::Query::ComparisonTerm valueTerm(
+    const Nepomuk2::Query::ComparisonTerm valueTerm(
       Vocabulary::NCO::emailAddress(),
-      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
       nepomukComparator() );
 
-    const Nepomuk::Query::ComparisonTerm addressTerm(
+    const Nepomuk2::Query::ComparisonTerm addressTerm(
       Vocabulary::NCO::hasEmailAddress(),
       valueTerm,
-      Nepomuk::Query::ComparisonTerm::Equal );
+      Nepomuk2::Query::ComparisonTerm::Equal );
 
-    const Nepomuk::Query::ComparisonTerm personTerm(
+    const Nepomuk2::Query::ComparisonTerm personTerm(
       Vocabulary::NMO::to(),
       addressTerm,
-      Nepomuk::Query::ComparisonTerm::Equal );
+      Nepomuk2::Query::ComparisonTerm::Equal );
 
-    const Nepomuk::Query::ComparisonTerm personTermTo(
+    const Nepomuk2::Query::ComparisonTerm personTermTo(
       Vocabulary::NMO::cc(),
       personTerm,
-      Nepomuk::Query::ComparisonTerm::Equal );
+      Nepomuk2::Query::ComparisonTerm::Equal );
 
-    const Nepomuk::Query::ComparisonTerm personTermCC(
+    const Nepomuk2::Query::ComparisonTerm personTermCC(
       Vocabulary::NMO::bcc(),
       personTermTo,
-      Nepomuk::Query::ComparisonTerm::Equal );
+      Nepomuk2::Query::ComparisonTerm::Equal );
 
     if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
-      const Nepomuk::Query::ComparisonTerm personTermBCC(
+      const Nepomuk2::Query::ComparisonTerm personTermBCC(
         Vocabulary::NMO::from(),
         personTermTo,
-        Nepomuk::Query::ComparisonTerm::Equal );
+        Nepomuk2::Query::ComparisonTerm::Equal );
       termGroup.addSubTerm( personTermBCC );
     } else {
       termGroup.addSubTerm( personTermCC );
@@ -668,62 +668,62 @@ void SearchRuleString::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
   if ( kasciistricmp( field(), "subject" ) == 0 ||
        kasciistricmp( field(), "<any header>" ) == 0 ||
        kasciistricmp( field(), "<message>" ) == 0 ) {
-    const Nepomuk::Query::ComparisonTerm subjectTerm(
+    const Nepomuk2::Query::ComparisonTerm subjectTerm(
       Vocabulary::NMO::messageSubject(),
-      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
       nepomukComparator() );
     termGroup.addSubTerm( subjectTerm );
   }
   if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
-    const Nepomuk::Query::ComparisonTerm replyToTerm(
+    const Nepomuk2::Query::ComparisonTerm replyToTerm(
       Vocabulary::NMO::messageReplyTo(),
-      Nepomuk::Query::LiteralTerm( quote(contents() ) ),
+      Nepomuk2::Query::LiteralTerm( quote(contents() ) ),
       nepomukComparator() );
     termGroup.addSubTerm( replyToTerm );
   }
 
   if ( kasciistricmp( field(), "list-id" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "List-Id" ) );
+    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "List-Id" ) );
   } else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
     //TODO
   } else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "X-Loop" ) );
+    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Loop" ) );
   } else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "X-Mailing-List" ) );
+    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Mailing-List" ) );
   } else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "X-Spam-Flag" ) );
+    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Spam-Flag" ) );
   }
 
   // TODO complete for other headers, generic headers
 
   if ( kasciistricmp( field(), "organization" )  == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk::Query::LiteralTerm( "Organization" ) );
+    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "Organization" ) );
   }
 
   if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
-    const Nepomuk::Tag tag( contents() );
+    const Nepomuk2::Tag tag( contents() );
     if ( tag.exists() ) {
-      addAndNegateTerm(Nepomuk::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk::Query::ResourceTerm( tag ), Nepomuk::Query::ComparisonTerm::Equal ),groupTerm );
+      addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
     }
   }
 
   if ( field() == "<body>" || field() == "<message>" ) {
-    const Nepomuk::Query::ComparisonTerm bodyTerm(
+    const Nepomuk2::Query::ComparisonTerm bodyTerm(
       Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
       nepomukComparator() );
 
     termGroup.addSubTerm( bodyTerm );
 
-    const Nepomuk::Query::ComparisonTerm attachmentBodyTerm(
+    const Nepomuk2::Query::ComparisonTerm attachmentBodyTerm(
       Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk::Query::LiteralTerm( quote( contents() ) ),
+      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
       nepomukComparator() );
 
-    const Nepomuk::Query::ComparisonTerm attachmentTerm(
+    const Nepomuk2::Query::ComparisonTerm attachmentTerm(
       Vocabulary::NIE::isPartOf(),
       attachmentBodyTerm,
-      Nepomuk::Query::ComparisonTerm::Equal );
+      Nepomuk2::Query::ComparisonTerm::Equal );
 
     termGroup.addSubTerm( attachmentTerm );
   }
@@ -1014,20 +1014,20 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-void SearchRuleNumerical::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
+void SearchRuleNumerical::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
   if ( kasciistricmp( field(), "<size>" ) == 0 ) {
-    const Nepomuk::Query::ComparisonTerm sizeTerm(
+    const Nepomuk2::Query::ComparisonTerm sizeTerm(
       Vocabulary::NIE::byteSize(),
-      Nepomuk::Query::LiteralTerm( contents().toInt() ),
+      Nepomuk2::Query::LiteralTerm( contents().toInt() ),
       nepomukComparator() );
     addAndNegateTerm( sizeTerm, groupTerm );
   } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
     QDate date = QDate::currentDate();
     date = date.addDays( contents().toInt() );
-    const Nepomuk::Query::ComparisonTerm dateTerm(
+    const Nepomuk2::Query::ComparisonTerm dateTerm(
       Vocabulary::NMO::sentDate(),
-      Nepomuk::Query::LiteralTerm( date ),
+      Nepomuk2::Query::LiteralTerm( date ),
       nepomukComparator() );
     addAndNegateTerm( dateTerm, groupTerm );
   }
@@ -1112,12 +1112,12 @@ SearchRule::RequiredPart SearchRuleDate::requiredPart() const
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-void SearchRuleDate::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
+void SearchRuleDate::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
     const QDate date = QDate::fromString( contents(), Qt::ISODate );
-    const Nepomuk::Query::ComparisonTerm dateTerm(
+    const Nepomuk2::Query::ComparisonTerm dateTerm(
       Vocabulary::NMO::sentDate(),
-      Nepomuk::Query::LiteralTerm( date ),
+      Nepomuk2::Query::LiteralTerm( date ),
       nepomukComparator() );
     addAndNegateTerm( dateTerm, groupTerm );
 }
@@ -1214,20 +1214,20 @@ SearchRule::RequiredPart SearchRuleStatus::requiredPart() const
 
 
 #ifndef KDEPIM_NO_NEPOMUK
-void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm,
+void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                                    const QString &tagId ) const
 {
   // TODO handle function() == NOT
-  const Nepomuk::Tag tag( tagId );
+  const Nepomuk2::Tag tag( tagId );
   addAndNegateTerm(
-    Nepomuk::Query::ComparisonTerm(
+    Nepomuk2::Query::ComparisonTerm(
       Soprano::Vocabulary::NAO::hasTag(),
-      Nepomuk::Query::ResourceTerm( tag.resourceUri() ),
-      Nepomuk::Query::ComparisonTerm::Equal ),
+      Nepomuk2::Query::ResourceTerm( tag.resourceUri() ),
+      Nepomuk2::Query::ComparisonTerm::Equal ),
     groupTerm );
 }
 
-void SearchRuleStatus::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
+void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
   bool read = false;
   if ( function() == FuncContains || function() == FuncEquals ) {
@@ -1239,10 +1239,10 @@ void SearchRuleStatus::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
   }
 
   groupTerm.addSubTerm(
-    Nepomuk::Query::ComparisonTerm(
+    Nepomuk2::Query::ComparisonTerm(
       Vocabulary::NMO::isRead(),
-      Nepomuk::Query::LiteralTerm( read ),
-      Nepomuk::Query::ComparisonTerm::Equal ) );
+      Nepomuk2::Query::LiteralTerm( read ),
+      Nepomuk2::Query::ComparisonTerm::Equal ) );
 
   if ( mStatus.isImportant() ) {
     addTagTerm( groupTerm, "important" );
@@ -1497,24 +1497,24 @@ QString SearchPattern::asString() const
 
 #ifndef KDEPIM_NO_NEPOMUK
 
-static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
+static Nepomuk2::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 {
   if ( op == SearchPattern::OpOr ) {
-    return Nepomuk::Query::OrTerm();
+    return Nepomuk2::Query::OrTerm();
   }
-  return Nepomuk::Query::AndTerm();
+  return Nepomuk2::Query::AndTerm();
 }
 #endif
 
-Nepomuk::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
+Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
 {
-  const Nepomuk::Resource parentResource( url );
+  const Nepomuk2::Resource parentResource( url );
   if( !parentResource.exists() ) {
     empty = true;
-    return Nepomuk::Query::ComparisonTerm();
+    return Nepomuk2::Query::ComparisonTerm();
   }
   empty = false;
-  const Nepomuk::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
+  const Nepomuk2::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk2::Query::ResourceTerm( parentResource ) );
   return isChildTerm;
 }
 
@@ -1522,15 +1522,15 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
 {
 #ifndef KDEPIM_NO_NEPOMUK
 
-  Nepomuk::Query::Query query;
+  Nepomuk2::Query::Query query;
 
-  Nepomuk::Query::AndTerm outerGroup;
-  const Nepomuk::Types::Class cl( Vocabulary::NMO::Email() );
-  const Nepomuk::Query::ResourceTypeTerm typeTerm( cl );
-  const Nepomuk::Query::Query::RequestProperty itemIdProperty(
+  Nepomuk2::Query::AndTerm outerGroup;
+  const Nepomuk2::Types::Class cl( Vocabulary::NMO::Email() );
+  const Nepomuk2::Query::ResourceTypeTerm typeTerm( cl );
+  const Nepomuk2::Query::Query::RequestProperty itemIdProperty(
     Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
 
-  Nepomuk::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
+  Nepomuk2::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
   const_iterator end( constEnd() );
   for ( const_iterator it = constBegin(); it != end; ++it ) {
     (*it)->addQueryTerms( innerGroup );
@@ -1543,17 +1543,17 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
     const int numberOfUrl = urlList.count();
     if ( numberOfUrl == 1 ) {
       bool empty = false;
-      const Nepomuk::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
+      const Nepomuk2::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
       if ( empty )
         return QString();
-      const Nepomuk::Query::AndTerm andTerm( isChildTerm, innerGroup );
+      const Nepomuk2::Query::AndTerm andTerm( isChildTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
     } else {
-      QList<Nepomuk::Query::Term> term;
+      QList<Nepomuk2::Query::Term> term;
       bool allIsEmpty = true;
       for ( int i = 0; i < numberOfUrl; ++i ) {
         bool empty = false;
-        const Nepomuk::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
+        const Nepomuk2::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
         if ( !empty ) {
           term<<childTerm;
           allIsEmpty = false;
@@ -1561,8 +1561,8 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
       }
       if(allIsEmpty)
         return QString();
-      const Nepomuk::Query::OrTerm orTerm( term );
-      const Nepomuk::Query::AndTerm andTerm( orTerm, innerGroup );
+      const Nepomuk2::Query::OrTerm orTerm( term );
+      const Nepomuk2::Query::AndTerm andTerm( orTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
     }
 
