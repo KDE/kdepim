@@ -1344,12 +1344,12 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
-bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
+Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
 {
   if ( attachmentKeywords.isEmpty() )
-    return false;
+    return NoMissingAttachmentFound;
   if ( m_attachmentModel->rowCount() > 0 ) {
-    return false;
+    return NoMissingAttachmentFound;
   }
 
   QStringList attachWordsList = attachmentKeywords;
@@ -1383,7 +1383,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
   }
 
   if ( !gotMatch )
-    return false;
+    return NoMissingAttachmentFound;
 
   int rc = KMessageBox::warningYesNoCancel( m_editor,
                                             i18n("The message you have composed seems to refer to an "
@@ -1393,12 +1393,13 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
                                             KGuiItem(i18n("&Attach File...")),
                                             KGuiItem(i18n("&Send as Is")) );
   if ( rc == KMessageBox::Cancel )
-    return true;
+    return FoundMissingAttachmentAndCancel;
   if ( rc == KMessageBox::Yes ) {
     m_attachmentController->showAddAttachmentDialog();
+    return FoundMissingAttachmentAndAddedAttachment;
   }
 
-  return false;
+  return FoundMissingAttachmentAndSending;
 }
 
 

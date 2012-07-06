@@ -249,6 +249,7 @@ void ThunderbirdSettings::readAccount()
           case 3:
             //SSL/TLS
             settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
+            break;
           default:
             kDebug()<<" socketType "<<socketType;
         }
@@ -314,6 +315,7 @@ void ThunderbirdSettings::readAccount()
           case 3:
             //SSL/TLS
             settings.insert( QLatin1String( "UseSSL" ), true );
+            break;
           default:
             kDebug()<<" socketType "<<socketType;
         }
