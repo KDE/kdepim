@@ -538,7 +538,9 @@ void ThunderbirdSettings::readIdentity( const QString& account )
       //TODO not implemented in kmail
     }
   }
-    
+  const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
+  //TODO implement it in kmail
+
   newIdentity->setSignature( signature );
 
   storeIdentity(newIdentity);
