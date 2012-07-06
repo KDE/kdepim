@@ -152,6 +152,7 @@ Widget::Widget( QWidget *pParent )
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
   d->mStatusFilterCombo = new KComboBox( this ) ;
   d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
+  d->mStatusFilterCombo->setMaximumWidth(300);
   g->addWidget( d->mStatusFilterCombo, 0, 1 );
 
   // The "Open Full Search" button
