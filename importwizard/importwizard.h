@@ -42,6 +42,7 @@ public:
 
   void next();
   void reject();
+  void back();
   
   ImportMailPage* importMailPage() const;
   ImportFilterPage* importFilterPage() const;

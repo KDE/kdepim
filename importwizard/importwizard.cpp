@@ -251,6 +251,34 @@ void ImportWizard::next()
   }
 }
 
+void ImportWizard::back()
+{
+  if( currentPage() == mPage1 ) {
+    return;
+  } else if( currentPage() == mPage2 ) {
+    KAssistantDialog::back();
+  } else if( currentPage() == mPage3 ) {
+    KAssistantDialog::back();
+  } else if( currentPage() == mPage4 ) {
+    mImportMailPage->setImportButtonEnabled(true);
+    KAssistantDialog::back();
+  } else if( currentPage() == mPage5 ) {
+    mImportFilterPage->setImportButtonEnabled(true);
+    KAssistantDialog::back();
+  } else if( currentPage() == mPage6 ) {
+    mImportSettingPage->setImportButtonEnabled(true);
+    KAssistantDialog::back();
+  } else if( currentPage() == mPage7 ) {
+    mImportAddressbookPage->setImportButtonEnabled(true);
+    KAssistantDialog::back();
+  } else if( currentPage() == mPage8 ) {
+    mImportCalendarPage->setImportButtonEnabled(true);
+    KAssistantDialog::back();
+  } else {
+    KAssistantDialog::next();
+  }
+}
+
 void ImportWizard::reject()
 {
   KAssistantDialog::reject();
