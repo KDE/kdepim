@@ -372,8 +372,9 @@ void FolderTreeWidget::clearFilter()
 {
   d->filter.clear();
   applyFilter( d->filter );
-  if ( !d->folderTreeView->selectionModel()->selectedIndexes().isEmpty() ) {
-    d->folderTreeView->scrollTo( d->folderTreeView->selectionModel()->selectedIndexes().first() );
+  const QModelIndexList lst = d->folderTreeView->selectionModel()->selectedIndexes();
+  if ( !lst.isEmpty() ) {
+    d->folderTreeView->scrollTo( lst.first() );
   }
 }
 
