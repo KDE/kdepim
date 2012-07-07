@@ -236,6 +236,7 @@ void TranslatorWidget::slotTranslate()
   const QString textToTranslate = d->inputText->toPlainText();
   if ( textToTranslate.isEmpty() )
     return;
+  d->translatedText->clear();
 
   const QString from = d->from->itemData(d->from->currentIndex()).toString();
   const QString to = d->to->itemData(d->to->currentIndex()).toString();

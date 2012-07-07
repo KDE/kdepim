@@ -457,6 +457,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   
   const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
 
+
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
   {
@@ -519,12 +520,23 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     }
   }
 
+  //fcc_reply_follows_parent not implemented in kmail
   if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
   {
-    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    const int useSpecificFccFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    if ( useSpecificFccFolder == 1 )
+    {
+      const QString fccFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      newIdentity->setFcc( fccFolder );
+    }
+  }
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".tmpl_folder_picker_mode" ) ) )
+  {
+    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".tmpl_folder_picker_mode" ) ).toInt();
     if ( useSpecificTemplateFolder == 1 )
     {
-      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
       newIdentity->setTemplates( templateFolder );
     }
   }
@@ -535,11 +547,11 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
     if ( attachVcard ) {
       const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
-      //TODO not implemented in kmail
+      //TODO: not implemented in kmail
     }
   }
   const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
-  //TODO implement it in kmail
+  //TODO: implement it in kmail
 
   newIdentity->setSignature( signature );
 
