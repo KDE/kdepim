@@ -457,6 +457,10 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   
   const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
 
+  if(mHashConfig.contains(fcc)) {
+    newIdentity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(mHashConfig.value(fcc).toString()));
+  }
+
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
   {
@@ -535,11 +539,11 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
     if ( attachVcard ) {
       const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
-      //TODO not implemented in kmail
+      //TODO: not implemented in kmail
     }
   }
   const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
-  //TODO implement it in kmail
+  //TODO: implement it in kmail
 
   newIdentity->setSignature( signature );
 
