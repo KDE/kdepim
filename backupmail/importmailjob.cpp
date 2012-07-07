@@ -512,7 +512,6 @@ void ImportMailJob::restoreMails()
           mHashResources.insert(filename,newResource);
       } else {
         kDebug()<<" resource name not supported "<<resourceName;
-        continue;
       }
       //qDebug()<<"url "<<url;
     }
