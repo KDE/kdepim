@@ -76,11 +76,11 @@ static QString incidencesForToString( CollectionGeneralPage::IncidencesFor type 
 {
   switch ( type ) {
   case CollectionGeneralPage::IncForNobody:
-    return "nobody";
+    return QLatin1String("nobody");
   case CollectionGeneralPage::IncForAdmins:
-    return "admins";
+    return QLatin1String("admins");
   case CollectionGeneralPage::IncForReaders:
-    return "readers";
+    return QLatin1String("readers");
   }
 
   return QString(); // can't happen
@@ -88,13 +88,13 @@ static QString incidencesForToString( CollectionGeneralPage::IncidencesFor type 
 
 static CollectionGeneralPage::IncidencesFor incidencesForFromString( const QString &string )
 {
-  if ( string == "nobody" ) {
+  if ( string == QLatin1String("nobody") ) {
     return CollectionGeneralPage::IncForNobody;
   }
-  if ( string == "admins" ) {
+  else if ( string == QLatin1String("admins") ) {
     return CollectionGeneralPage::IncForAdmins;
   }
-  if ( string == "readers" ) {
+  else if ( string == QLatin1String("readers") ) {
     return CollectionGeneralPage::IncForReaders;
   }
 
