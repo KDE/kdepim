@@ -457,9 +457,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   
   const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
 
-  if(mHashConfig.contains(fcc)) {
-    newIdentity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(mHashConfig.value(fcc).toString()));
-  }
 
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
@@ -523,12 +520,23 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     }
   }
 
+  //fcc_reply_follows_parent not implemented in kmail
   if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
   {
-    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    const int useSpecificFccFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    if ( useSpecificFccFolder == 1 )
+    {
+      const QString fccFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      newIdentity->setFcc( fccFolder );
+    }
+  }
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".tmpl_folder_picker_mode" ) ) )
+  {
+    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".tmpl_folder_picker_mode" ) ).toInt();
     if ( useSpecificTemplateFolder == 1 )
     {
-      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
       newIdentity->setTemplates( templateFolder );
     }
   }
