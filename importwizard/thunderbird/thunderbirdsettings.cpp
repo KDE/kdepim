@@ -485,8 +485,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
     newIdentity->setCc( cc );
   }
-  const QString draft = MailCommon::Util::convertFolderPathToCollectionStr(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
-  newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
   newIdentity->setReplyToAddr( replyTo );
