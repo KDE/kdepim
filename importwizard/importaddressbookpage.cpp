@@ -41,5 +41,9 @@ void ImportAddressbookPage::addImportError( const QString& log )
   ui->logAddressbook->addErrorLogEntry( log );
 }
 
+void ImportAddressbookPage::setImportButtonEnabled(bool enabled)
+{
+  ui->importAddressBook->setEnabled(enabled);
+}
 
 #include "importaddressbookpage.moc"
