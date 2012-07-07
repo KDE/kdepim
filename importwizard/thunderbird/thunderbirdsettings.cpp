@@ -450,6 +450,15 @@ void ThunderbirdSettings::readTransport()
   }
 }
 
+QString convertThunderbirdPath(const QString& path)
+{
+  QString newPath;
+  KUrl url(path);
+  newPath = url.path();
+  newPath.remove(0,1);
+  return MailCommon::Util::convertFolderPathToCollectionStr(newPath);
+}
+
 void ThunderbirdSettings::readIdentity( const QString& account )
 {
   KPIMIdentities::Identity* newIdentity = createIdentity();
@@ -513,7 +522,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const int useSpecificDraftFolder = mHashConfig.value(  identity + QLatin1String( ".drafts_folder_picker_mode" ) ).toInt();
     if ( useSpecificDraftFolder == 1 )
     {
-      const QString draftFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
+      const QString draftFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
       newIdentity->setDrafts( draftFolder );
     }
   }
@@ -524,7 +533,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const int useSpecificFccFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
     if ( useSpecificFccFolder == 1 )
     {
-      const QString fccFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      const QString fccFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
       newIdentity->setFcc( fccFolder );
     }
   }
@@ -534,7 +543,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".tmpl_folder_picker_mode" ) ).toInt();
     if ( useSpecificTemplateFolder == 1 )
     {
-      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
+      const QString templateFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
       newIdentity->setTemplates( templateFolder );
     }
   }
