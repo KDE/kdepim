@@ -288,7 +288,7 @@ void ImportMailJob::restoreResources()
             settings.insert(QLatin1String("FilterCheckSize"),general.readEntry("filterCheckSize"));
           }
           if(general.hasKey(QLatin1String("targetCollection"))) {
-            const int collection = MailCommon::Util::convertFolderPathToCollectionId(general.readEntry("targetCollection"));
+            const Akonadi::Collection::Id collection = MailCommon::Util::convertFolderPathToCollectionId(general.readEntry("targetCollection"));
             if(collection != -1)
               settings.insert(QLatin1String("TargetCollection"),collection);
           }
@@ -376,7 +376,7 @@ void ImportMailJob::restoreResources()
             settings.insert(QLatin1String("UseDefaultIdentity"),cache.readEntry("UseDefaultIdentity",true));
           }
           if(cache.hasKey(QLatin1String("TrashCollection"))) {
-            const int collection = MailCommon::Util::convertFolderPathToCollectionId(cache.readEntry("TrashCollection"));
+            const Akonadi::Collection::Id collection = MailCommon::Util::convertFolderPathToCollectionId(cache.readEntry("TrashCollection"));
             if(collection != -1) {
               settings.insert(QLatin1String("TrashCollection"),collection);
             } else {
@@ -808,7 +808,7 @@ void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfigura
     if(!path.isEmpty())
     {
       KConfigGroup oldGroup = templateConfig->group(str);
-      Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
+      const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
       if(id!=-1) {
         KConfigGroup newGroup( templateConfig, templateGroupPattern + QString::number(id));
         oldGroup.copyTo( &newGroup );
@@ -848,7 +848,7 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     const QString path = str.right(str.length()-folderGroupPattern.length());
     if(!path.isEmpty()) {
       KConfigGroup oldGroup = kmailConfig->group(str);
-      Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
+      const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
       if(id!=-1) {
         KConfigGroup newGroup( kmailConfig, folderGroupPattern + QString::number(id));
         oldGroup.copyTo( &newGroup );
@@ -879,8 +879,10 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     if(composerGroup.hasKey(previousStr)) {
       const QString path = composerGroup.readEntry(previousStr);
       if(!path.isEmpty()) {
-        Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
-        composerGroup.writeEntry(previousStr,id);
+        const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
+        if(id != -1) {
+          composerGroup.writeEntry(previousStr,id);
+        }
       }
     }
     const QString previousIdentityStr("previous-identity");
@@ -903,8 +905,10 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     if(generalGroup.hasKey(startupFolderStr)) {
       const QString path = generalGroup.readEntry(startupFolderStr);
       if(!path.isEmpty()) {
-        Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
-        generalGroup.writeEntry(startupFolderStr,id);
+        const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
+        if(id != -1) {
+          generalGroup.writeEntry(startupFolderStr,id);
+        }
       }
     }
   }
