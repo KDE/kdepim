@@ -19,6 +19,7 @@
 #define ImportMailJob_H
 
 #include "abstractimportexportjob.h"
+#include <Akonadi/Collection>
 #include <QStringList>
 #include <QHash>
 
@@ -51,12 +52,13 @@ private:
   void storeMailArchiveResource(const KArchiveDirectory*dir);
 
   void copyToFile(const KArchiveFile * file, const QString& dest, const QString&filename,const QString& prefix);
-
+  Akonadi::Collection::Id convertPathToId(const QString& path);
 
   QHash<QString, QString> mHashMailArchive;
   QHash<uint, uint> mHashIdentity;
   QHash<int, int> mHashTransport;
   QHash<QString, QString> mHashResources;
+  QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
   QStringList mFileList;
   QString mTempDirName;
   const KArchiveDirectory* mArchiveDirectory;

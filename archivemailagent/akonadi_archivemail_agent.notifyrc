@@ -1,5 +1,6 @@
 [Global]
 Comment=Archive Mail Agent
+Comment[ca]=Agent d'arxivat de correus
 Comment[da]=Agent til mail-arkivering
 Comment[el]=Πράκτορας αρχειοθέτησης αλληλογραφίας
 Comment[es]=Agente de archivado de correo
@@ -23,6 +24,7 @@ Comment[uk]=Агент архівування пошти
 Comment[x-test]=xxArchive Mail Agentxx
 Comment[zh_TW]=歸檔郵件代理程式
 Name=Archive Mail Agent
+Name[ca]=Agent d'arxivat de correus
 Name[da]=Agent til mail-arkivering
 Name[el]=Πράκτορας αρχειοθέτησης αλληλογραφίας
 Name[es]=Agente de archivado de correo
@@ -48,6 +50,7 @@ Name[zh_TW]=歸檔郵件代理程式
 
 [Event/archivemailfinished]
 Name=Archive Mail finished
+Name[ca]=Ha finalitzat l'arxivat de correus
 Name[da]=Mail-arkivering gennemført
 Name[el]=Η αρχειοθέτηση της αλληλογραφίας ολοκληρώθηκε
 Name[es]=Archivado de correo terminado
@@ -74,6 +77,7 @@ Action=Popup
 
 [Event/archivemailstarted]
 Name=Archive Mail started
+Name[ca]=S'ha iniciat l'arxivat de correus
 Name[da]=Mail-arkivering startet
 Name[el]=Η αρχειοθέτηση της αλληλογραφίας ξεκίνησε
 Name[es]=Archivado de correo iniciado
@@ -98,6 +102,7 @@ Action=Popup
 
 [Event/archivemailerror]
 Name=Archive Mail Error
+Name[ca]=Error d'arxivat de correus
 Name[da]=Fejl i mail-arkivering
 Name[el]=Σφάλμα στην αρχειοθέτηση της αλληλογραφίας
 Name[es]=Error de archivado de correo

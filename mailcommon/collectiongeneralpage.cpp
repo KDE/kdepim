@@ -593,15 +593,17 @@ void CollectionGeneralPage::slotFolderContentsSelectionChanged( int )
 
 void CollectionGeneralPage::slotNameChanged( const QString &name )
 {
+#ifndef QT_NO_STYLE_STYLESHEET
   QString styleSheet;
   if ( name.contains( QLatin1Char( '/' ) ) || name.isEmpty() ) {
-    const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
-    KStatefulBrush bgBrush( KColorScheme::View, bgColorScheme );
-    styleSheet = QString( "QLineEdit{ background-color:%1 }" ).
-                   arg( bgBrush.brush( this ).color().name() );
+    if(mColorName.isEmpty()) {
+      const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
+      KStatefulBrush bgBrush( KColorScheme::View, bgColorScheme );
+      mColorName = bgBrush.brush( this ).color().name();
+    }
+    styleSheet = QString::fromLatin1( "QLineEdit{ background-color:%1 }" ).
+                   arg( mColorName );
   }
-
-#ifndef QT_NO_STYLE_STYLESHEET
   setStyleSheet(styleSheet);
 #endif
 }
