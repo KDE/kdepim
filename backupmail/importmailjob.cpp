@@ -844,7 +844,6 @@ void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfigura
       }
       oldGroup.deleteGroup();
     }
-
   }
   templateConfig->sync();
 }
@@ -895,6 +894,8 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         const Akonadi::Collection::Id id = convertPathToId(path);
         if(id != -1) {
           composerGroup.writeEntry(previousStr,id);
+        } else {
+          composerGroup.deleteEntry(previousStr);
         }
       }
     }
@@ -921,6 +922,8 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         const Akonadi::Collection::Id id = convertPathToId(path);
         if(id != -1) {
           generalGroup.writeEntry(startupFolderStr,id);
+        } else {
+          generalGroup.deleteEntry(startupFolderStr);
         }
       }
     }
