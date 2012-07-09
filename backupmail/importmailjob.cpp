@@ -289,8 +289,9 @@ void ImportMailJob::restoreResources()
           }
           if(general.hasKey(QLatin1String("targetCollection"))) {
             const Akonadi::Collection::Id collection = convertPathToId(general.readEntry("targetCollection"));
-            if(collection != -1)
+            if(collection != -1) {
               settings.insert(QLatin1String("TargetCollection"),collection);
+            }
           }
           if(general.hasKey(QLatin1String("precommand"))) {
             settings.insert(QLatin1String("Precommand"),general.readEntry("precommand"));
@@ -697,15 +698,27 @@ void ImportMailJob::restoreIdentity()
       }
       const QString fcc(QLatin1String("Fcc"));
       if(group.hasKey(fcc)) {
-        group.writeEntry(fcc,convertPathToId(group.readEntry(fcc)));
+        const Akonadi::Collection::Id fccId = convertPathToId(group.readEntry(fcc));
+        if(fccId != -1 )
+          group.writeEntry(fcc,fccId);
+        else
+          group.deleteEntry(fcc);
       }
       const QString draft = QLatin1String("Drafts");
       if(group.hasKey(draft)) {
-        group.writeEntry(draft,convertPathToId(group.readEntry(draft)));
+        const Akonadi::Collection::Id draftId = convertPathToId(group.readEntry(draft));
+        if(draftId != -1)
+          group.writeEntry(draft,draftId);
+        else
+          group.deleteEntry(draft);
       }
       const QString templates = QLatin1String("Templates");
       if(group.hasKey(templates)) {
-        group.writeEntry(templates,convertPathToId(group.readEntry(templates)));
+        const Akonadi::Collection::Id templateId = convertPathToId(group.readEntry(templates));
+        if(templateId != -1)
+          group.writeEntry(templates,templateId);
+        else
+          group.deleteEntry(templates);
       }
       group.sync();
       KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( QString() );
@@ -831,7 +844,6 @@ void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfigura
       }
       oldGroup.deleteGroup();
     }
-
   }
   templateConfig->sync();
 }
@@ -882,6 +894,8 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         const Akonadi::Collection::Id id = convertPathToId(path);
         if(id != -1) {
           composerGroup.writeEntry(previousStr,id);
+        } else {
+          composerGroup.deleteEntry(previousStr);
         }
       }
     }
@@ -908,6 +922,8 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         const Akonadi::Collection::Id id = convertPathToId(path);
         if(id != -1) {
           generalGroup.writeEntry(startupFolderStr,id);
+        } else {
+          generalGroup.deleteEntry(startupFolderStr);
         }
       }
     }
