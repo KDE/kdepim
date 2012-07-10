@@ -72,7 +72,7 @@ public:
 	///
 	/// Return error status
 
-	MorkErrors error();
+    MorkErrors error() const;
 
 	///
 	/// Returns all tables of specified scope
@@ -93,10 +93,6 @@ public:
 	/// Return value of specified column oid
 
 	std::string &getColumn( int oid );
-
-#ifndef QT_NO_DEBUG
-	void debugWrite( const QString &path );
-#endif // QT_NO_DEBUG
 
 
 protected: // Members

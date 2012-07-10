@@ -62,7 +62,7 @@ bool MorkParser::open( const QString &path )
 //	=============================================================
 //	MorkParser::error
 
-inline MorkErrors MorkParser::error()
+inline MorkErrors MorkParser::error() const
 {
 	return error_;
 }
@@ -608,103 +608,4 @@ std::string &MorkParser::getColumn( int oid )
 	return *foundIter;
 }
 
-
-#ifndef QT_NO_DEBUG
-
-//	=============================================================
-//	MorkParser::debugWrite
-
-void MorkParser::debugWrite( const QString & )//path )
-{
-	//QFile outfile( path );
-	//outfile.open( QIODevice::WriteOnly );
-	//QTextStream output( &outfile );
-
-	//output.setCodec( "utf-8" );
-
-	//output << "Column Dict:\r\n";
-	//output << "=============================================\r\n\r\n";
-
-	//// columns dict
-	//for ( MorkDict::iterator iter = columns_.begin();
-	//	iter != columns_.end(); iter++ )
-	//{
-	//	output	<< QString::number( iter.key(), 16 ).toUpper() 
-	//			<< " : " 
-	//			<< iter->second.c_str() 
-	//			<< "\r\n";
-	//}
-
-	//// values dict
-	//output << "\r\nValues Dict:\r\n";
-	//output << "=============================================\r\n\r\n";
-
-	//for ( MorkDict::iterator iter = values_.begin();
-	//	iter != values_.end(); iter++ )
-	//{
-	//	output	<< QString::number( iter->first, 16 ).toUpper() 
-	//			<< " : " 
-	//			<< QString::fromUtf8( iter->second.c_str() )
-	//			<< "\r\n";
-	//}
-
-	//output << "\r\nData:\r\n";
-	//output << "=============================================\r\n\r\n";
-
-	//// Mork data
-	//for ( TableScopeMap::iterator iter = mork_.begin();
-	//	iter != mork_.end(); iter++ )
-	//{
-	//	output << "\r\n Scope:" << QString::number( iter->first, 16 ).toUpper() << "\r\n";
-
-	//	for ( MorkTableMap::iterator TableIter = iter->second.begin();
-	//		TableIter != iter->second.end(); TableIter++ )
-	//	{
-	//		output	<< "\t Table:" 
-	//				<< ( ( int ) TableIter->first < 0 ? "-" : " " )
-	//				<< QString::number( abs( TableIter->first ), 16 ).toUpper() << "\r\n";
-
-	//		for ( RowScopeMap::iterator RowScopeIter = TableIter->second.begin();
-	//			RowScopeIter != TableIter->second.end(); RowScopeIter++ )
-	//		{
-	//			output << "\t\t RowScope:" << QString::number( RowScopeIter->first, 16 ).toUpper() << "\r\n";
-
-	//			for ( MorkRowMap::iterator RowIter = RowScopeIter->second.begin();
-	//				RowIter != RowScopeIter->second.end(); RowIter++ )
-	//			{
-	//				output	<< "\t\t\t Row Id:" 
-	//						<< ( ( int ) RowIter->first < 0 ? "-" : " ")
-	//						<< QString::number( abs( RowIter->first ), 16 ).toUpper() << "\r\n";
-	//				output << "\t\t\t\t Cells:\r\n";
-
-	//				for ( MorkCells::iterator CellsIter = RowIter->second.begin();
-	//					CellsIter != RowIter->second.end(); CellsIter++ )
-	//				{
-	//					// Write ids
-	//					output	<< "\t\t\t\t\t"
-	//							<< QString::number( CellsIter.key(), 16 ).toUpper()
-	//							<< " : "
-	//							<< QString::number( *CellsIter, 16 ).toUpper()
-	//							<< "  =>  ";
-
-	//					MorkDict::iterator FoundIter = values_.find( *CellsIter );
-
-	//					if ( FoundIter != values_.end() )
-	//					{
-	//						// Write string values
-	//						output	<< columns_[ CellsIter.key() ].c_str()
-	//								<< " : "
-	//								<< QString::fromUtf8( FoundIter->second.c_str() )
-	//								<< "\r\n";
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
-	//output.flush();
-}
-
-#endif // QT_NO_DEBUG
 
