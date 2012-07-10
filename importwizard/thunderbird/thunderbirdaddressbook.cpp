@@ -18,12 +18,23 @@
 #include "thunderbirdaddressbook.h"
 
 
-ThunderBirdAddressBook::ThunderBirdAddressBook(ImportWizard *parent)
+ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
+  const QStringList files = dir.entryList(QStringList("impab-[0-9]*.map" ), QDir::Files, QDir::Name);
+  Q_FOREACH( const QString& file, files ) {
+    readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
+  }
+  readAddressBook(dir.path() + QLatin1String( "/abook.mab" ) );
+  cleanUp();
 }
 
 ThunderBirdAddressBook::~ThunderBirdAddressBook()
 {
 
+}
+
+void ThunderBirdAddressBook::readAddressBook( const QString& filename )
+{
+    //TODO:
 }
