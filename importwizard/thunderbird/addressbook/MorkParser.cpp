@@ -15,15 +15,13 @@
 #include "MorkParser.h"
 #include <QtCore>
 
-std::string g_Empty = "";
-
 //	=============================================================
 //	MorkParser::MorkParser
 
 MorkParser::MorkParser( int DefaultScope )
 {
 	initVars();
-	defaultScope_ = DefaultScope;
+    mDefaultScope = DefaultScope;
 }
 
 //	=============================================================
@@ -52,7 +50,7 @@ bool MorkParser::open( const QString &path )
 		return false;
 	}
 
-	morkData_ = MorkFile.readAll();
+    mMorkData = MorkFile.readAll();
 	MorkFile.close();
 
 	// Parse mork
@@ -73,10 +71,10 @@ MorkErrors MorkParser::error() const
 void MorkParser::initVars()
 {
     mError = NoError;
-	morkPos_ = 0;
+    mMorkPos = 0;
 	nowParsing_ = NPValues;
-	currentCells_ = 0;
-	nextAddValueId_ = 0x7fffffff;
+    mCurrentCells = 0;
+    mNextAddValueId = 0x7fffffff;
 }
 
 //	=============================================================
@@ -155,14 +153,14 @@ bool MorkParser::isWhiteSpace( char c )
 //	=============================================================
 //	MorkParser::nextChar
 
-inline char MorkParser::nextChar()
+char MorkParser::nextChar()
 {
 	char cur = 0;
 
-	if ( morkPos_ < morkData_.length() )
+    if ( mMorkPos < mMorkData.length() )
 	{
-		cur = morkData_[ morkPos_ ];
-		morkPos_++;
+        cur = mMorkData[ mMorkPos ];
+        mMorkPos++;
 	}
 
 	if ( !cur )
@@ -189,11 +187,11 @@ bool MorkParser::parseDict()
 			switch ( cur )
 			{
 			case '<':
-				if ( morkData_.mid( morkPos_ - 1, strlen( MorkDictColumnMeta ) ) 
+                if ( mMorkData.mid( mMorkPos - 1, strlen( MorkDictColumnMeta ) )
 					== MorkDictColumnMeta )
 				{
 					nowParsing_ = NPColumns;
-					morkPos_ += strlen( MorkDictColumnMeta ) - 1;
+                    mMorkPos += strlen( MorkDictColumnMeta ) - 1;
 				}
 				break;
 			case '(':
@@ -215,13 +213,13 @@ bool MorkParser::parseDict()
 //	=============================================================
 //	MorkParser::parseComment
 
-inline bool MorkParser::parseComment()
+bool MorkParser::parseComment()
 {
 	char cur = nextChar();
-	if ( '/' != cur ) return false;
+    if ( '/' != cur )
+        return false;
 
-	while ( cur != '\r' && cur != '\n' && cur )
-	{
+    while ( cur != '\r' && cur != '\n' && cur ) {
 		cur = nextChar();
 	}
 
@@ -240,10 +238,8 @@ bool MorkParser::parseCell()
 	int Corners = 0;
 
 	// Column = Value
-	std::string Column;
-	std::string Text;
-	Column.reserve( 4 );
-	Text.reserve( 32 );
+    QString Column;
+    QString Text;
 
 	char cur = nextChar();
 
@@ -255,11 +251,11 @@ bool MorkParser::parseCell()
 		case '^':
 			// Oids
 			Corners++;
-			if ( 1 == Corners )
+            if ( Corners == 1 )
 			{
 				bColumnOid = true;
 			}
-			else if ( 2 == Corners )
+            else if ( Corners == 2 )
 			{
 				bColumn = false;
 				bValueOid = true;
@@ -295,10 +291,10 @@ bool MorkParser::parseCell()
 		case '$':
 			{
 				// Get next two chars
-				std::string HexChar;
+                QString HexChar;
 				HexChar += nextChar();
 				HexChar += nextChar();
-				Text += ( char ) QString( HexChar.c_str() ).toInt( 0, 16 );
+                Text += ( char ) HexChar.toInt( 0, 16 );
 			}
 			break;
 		default:
@@ -316,45 +312,44 @@ bool MorkParser::parseCell()
 
 		cur = nextChar();
 	}
-
 	// Apply column and text
-	int ColumnId = QString( Column.c_str() ).toInt( 0, 16 );
+    int ColumnId = Column.toInt( 0, 16 );
 
 	if ( NPRows != nowParsing_ )
 	{
 		// Dicts
-		if ( "" != Text )
+        if ( !Text.isEmpty() )
 		{
 			if ( nowParsing_ == NPColumns )
 			{
-				columns_[ ColumnId ] = Text;
+                mColumns[ ColumnId ] = Text;
 			}
 			else
 			{
-				values_[ ColumnId ] = Text;
+                mValues[ ColumnId ] = Text;
+                qDebug()<<" ColumnId "<<ColumnId<<" Value : "<<Text;
 			}
 		}
 	}
 	else
 	{
-		if ( "" != Text )
+        if ( !Text.isEmpty() )
 		{
 			// Rows
-			int ValueId = QString( Text.c_str() ).toInt( 0, 16 );
+            int ValueId = Text.toInt( 0, 16 );
 
 			if ( bValueOid  )
 			{
-				( *currentCells_ )[ ColumnId ] = ValueId;
+                ( *mCurrentCells )[ ColumnId ] = ValueId;
 			}
 			else
 			{
-				nextAddValueId_--;
-				values_[ nextAddValueId_ ] = Text;
-				( *currentCells_ )[ ColumnId ] = nextAddValueId_;
+                mNextAddValueId--;
+                mValues[ mNextAddValueId ] = Text;
+                ( *mCurrentCells )[ ColumnId ] = mNextAddValueId;
 			}
 		}
 	}
-
 	return Result;
 }
 
@@ -364,7 +359,7 @@ bool MorkParser::parseCell()
 bool MorkParser::parseTable()
 {
 	bool Result = true;
-	std::string TextId;
+    QString TextId;
 	int Id = 0, Scope = 0;
 
 	char cur = nextChar();
@@ -380,7 +375,7 @@ bool MorkParser::parseTable()
 		cur = nextChar();
 	}
 
-	parseScopeId( TextId, &Id, &Scope );
+    parseScopeId( TextId, Id, Scope );
 
 	// Parse the table
 	while ( Result && cur != '}' && cur )
@@ -400,7 +395,7 @@ bool MorkParser::parseTable()
 				break;
 			default:
 				{
-					std::string JustId;
+                    QString JustId;
 					while ( !isWhiteSpace( cur ) && cur )
 					{
 						JustId += cur;
@@ -413,7 +408,7 @@ bool MorkParser::parseTable()
 					}
 
 					int JustIdNum = 0, JustScopeNum = 0;
-					parseScopeId( JustId, &JustIdNum, &JustScopeNum );
+                    parseScopeId( JustId, JustIdNum, JustScopeNum );
 
 					setCurrentRow( Scope, Id, JustScopeNum, JustIdNum );
 				}
@@ -430,46 +425,46 @@ bool MorkParser::parseTable()
 //	=============================================================
 //	MorkParser::parseScopeId
 
-void MorkParser::parseScopeId( const std::string &TextId, int *Id, int *Scope )
+void MorkParser::parseScopeId( const QString &textId, int &Id, int &Scope )
 {
 	int Pos = 0;
 
-	if ( ( Pos = TextId.find( ':' ) ) >= 0 )
+    if ( ( Pos = textId.indexOf( QLatin1Char(':') ) ) >= 0 )
 	{
-		std::string tId = TextId.substr( 0, Pos );
-		std::string tSc = TextId.substr( Pos + 1, TextId.length() - Pos );
+        QString tId = textId.mid( 0, Pos );
+        QString tSc = textId.mid( Pos + 1, textId.length() - Pos );
 
-		if ( tSc.length() > 1 && '^' == tSc[ 0 ] )
+        if ( tSc.length() > 1 && tSc[ 0 ] == '^' )
 		{
 			// Delete '^'
-			tSc.erase( 0, 1 );
+            tSc.remove( 0, 1 );
 		}
 
-		*Id = QString( tId.c_str() ).toInt( 0, 16 );
-		*Scope = QString( tSc.c_str() ).toInt( 0, 16 );
+        Id =  tId.toInt( 0, 16 );
+        Scope = tSc.toInt( 0, 16 );
 	}
 	else
 	{
-		*Id = QString( TextId.c_str() ).toInt( 0, 16 );
+        Id = textId.toInt( 0, 16 );
 	}
 }
 
 //	=============================================================
 //	MorkParser::setCurrentRow
 
-inline void MorkParser::setCurrentRow( int TableScope, int TableId, int RowScope, int RowId )
+void MorkParser::setCurrentRow( int TableScope, int TableId, int RowScope, int RowId )
 {
 	if ( !RowScope )
 	{
-		RowScope = defaultScope_;
+        RowScope = mDefaultScope;
 	}
 
 	if ( !TableScope )
 	{
-		TableScope = defaultScope_;
+        TableScope = mDefaultScope;
 	}
 
-	currentCells_ = &( mork_[ abs( TableScope ) ][ abs( TableId ) ][ abs( RowScope ) ][ abs( RowId ) ] );
+    mCurrentCells = &( mMork[ abs( TableScope ) ][ abs( TableId ) ][ abs( RowScope ) ][ abs( RowId ) ] );
 }
 
 //	=============================================================
@@ -478,7 +473,7 @@ inline void MorkParser::setCurrentRow( int TableScope, int TableId, int RowScope
 bool MorkParser::parseRow( int TableId, int TableScope )
 {
 	bool Result = true;
-	std::string TextId;
+    QString TextId;
 	int Id = 0, Scope = 0;
 	nowParsing_ = NPRows;
 
@@ -495,7 +490,7 @@ bool MorkParser::parseRow( int TableId, int TableScope )
 		cur = nextChar();
 	}
 
-	parseScopeId( TextId, &Id, &Scope );
+    parseScopeId( TextId, Id, Scope );
 	setCurrentRow( TableScope, TableId, Scope, Id );
 
 	// Parse the row
@@ -536,7 +531,7 @@ bool MorkParser::parseGroup()
 
 bool MorkParser::parseMeta( char c )
 {
-	char cur = nextChar();
+    char cur = nextChar();
 
 	while ( cur != c && cur )
 	{
@@ -552,9 +547,9 @@ bool MorkParser::parseMeta( char c )
 MorkTableMap *MorkParser::getTables( int TableScope )
 {
 	TableScopeMap::iterator iter;
-	iter = mork_.find( TableScope );
+    iter = mMork.find( TableScope );
 
-	if ( iter == mork_.end() )
+    if ( iter == mMork.end() )
 	{
 		return 0;
 	}
@@ -581,13 +576,13 @@ MorkRowMap *MorkParser::getRows( int RowScope, RowScopeMap *table )
 //	=============================================================
 //	MorkParser::getValue
 
-const std::string &MorkParser::getValue( int oid )
+QString MorkParser::getValue( int oid )
 {
-    MorkDict::ConstIterator foundIter = values_.constFind( oid );
+    MorkDict::ConstIterator foundIter = mValues.constFind( oid );
 
-    if ( foundIter == values_.constEnd() )
+    if ( foundIter == mValues.constEnd() )
 	{
-		return g_Empty;
+        return QString();
 	}
 
 	return *foundIter;
@@ -596,13 +591,13 @@ const std::string &MorkParser::getValue( int oid )
 //	=============================================================
 //	MorkParser::getColumn
 
-const std::string &MorkParser::getColumn( int oid )
+QString MorkParser::getColumn( int oid )
 {
-    MorkDict::ConstIterator foundIter = columns_.constFind( oid );
+    MorkDict::ConstIterator foundIter = mColumns.constFind( oid );
 
-    if ( foundIter == columns_.constEnd() )
+    if ( foundIter == mColumns.constEnd() )
 	{
-		return g_Empty;
+        return QString();
 	}
 
 	return *foundIter;
