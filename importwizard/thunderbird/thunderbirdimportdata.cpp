@@ -63,7 +63,7 @@ bool ThunderbirdImportData::foundMailer() const
 
 bool ThunderbirdImportData::importAddressBook()
 {
-  const QDir addressbookDir(mPath);
+  const QDir addressbookDir(mPath+defaultProfile());
   ThunderBirdAddressBook account( addressbookDir, mImportWizard );
   return true;
 }
@@ -118,5 +118,6 @@ AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::AddressBooks;
   return options;
 }

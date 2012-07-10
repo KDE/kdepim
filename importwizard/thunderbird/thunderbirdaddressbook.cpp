@@ -16,7 +16,10 @@
 */
 
 #include "thunderbirdaddressbook.h"
+#include "addressbook/MorkParser.h"
 
+#include <KABC/Addressee>
+#include <kabc/contactgroup.h>
 
 ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
@@ -36,5 +39,38 @@ ThunderBirdAddressBook::~ThunderBirdAddressBook()
 
 void ThunderBirdAddressBook::readAddressBook( const QString& filename )
 {
-    //TODO:
+  MorkParser mork;
+  if ( !mork.open( filename ) )
+  {
+      qDebug()<<" error during read file "<<filename<<" Error type "<<mork.error();
+      return;
+  }
+  MorkTableMap *tables = mork.getTables(0x80);
+  MorkTableMap::iterator tableIterEnd(tables->end());
+  MorkRowMap *rows = 0;
+  if ( tables ) {
+    for ( MorkTableMap::iterator tableIter = tables->begin(); tableIter != tableIterEnd; ++tableIter ) {
+      if ( tableIter.key() != 0 ) {
+        rows = mork.getRows( 0x80, &tableIter.value() );
+        if(rows) {
+          MorkRowMap::iterator endRow(rows->end());
+          for ( MorkRowMap::iterator rowIter = rows->begin(); rowIter != endRow; ++rowIter ) {
+            if(rowIter.key() != 0) {
+                KABC::Addressee address;
+                MorkCells cells = rowIter.value();
+                MorkCells::iterator endCellIter = cells.end();
+                for ( MorkCells::iterator cellsIter = cells.begin();cellsIter != endCellIter; ++cellsIter ) {
+                    //qDebug()<<" mork.getValue(cellsIter.value())"<<mork.getValue(cellsIter.value());
+                    qDebug()<<" cellsIter.value()"<<cellsIter.value()<< "cellsIter.key()"<<cellsIter.key();
+                    QString value = QString(mork.getValue(cellsIter.value()).c_str());
+                    QString column = QString(mork.getValue(cellsIter.key()).c_str());
+                    qDebug()<<" value :"<<value<<" column"<<column;
+                }
+                //TODO
+            }
+          }
+        }
+      }
+    }
+  }
 }
