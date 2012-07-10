@@ -32,6 +32,7 @@ public:
   bool importSettings();
   bool importMails();
   bool importFilters();
+  bool importAddressBook();
   QString name() const;
 private:
   QString defaultProfile();
