@@ -39,7 +39,7 @@ bool MorkParser::open( const QString &path )
 	if ( !MorkFile.exists() || 
 		!MorkFile.open( QIODevice::ReadOnly ) )
 	{
-		error_ = FailedToOpen;
+        mError = FailedToOpen;
 		return false;
 	}
 
@@ -48,7 +48,7 @@ bool MorkParser::open( const QString &path )
 
 	if ( !MagicHeader.contains( MorkMagicHeader ) )
 	{
-		error_ = UnsupportedVersion;
+        mError = UnsupportedVersion;
 		return false;
 	}
 
@@ -62,9 +62,9 @@ bool MorkParser::open( const QString &path )
 //	=============================================================
 //	MorkParser::error
 
-inline MorkErrors MorkParser::error() const
+MorkErrors MorkParser::error() const
 {
-	return error_;
+    return mError;
 }
 
 //	=============================================================
@@ -72,7 +72,7 @@ inline MorkErrors MorkParser::error() const
 
 void MorkParser::initVars()
 {
-	error_ = NoError;
+    mError = NoError;
 	morkPos_ = 0;
 	nowParsing_ = NPValues;
 	currentCells_ = 0;
@@ -121,7 +121,7 @@ bool MorkParser::parse()
 				// Group
 				break;
 			default:
-				error_ = DefectedFormat;
+                mError = DefectedFormat;
 				Result = false;
 				break;
 			}
@@ -567,10 +567,10 @@ MorkTableMap *MorkParser::getTables( int TableScope )
 
 MorkRowMap *MorkParser::getRows( int RowScope, RowScopeMap *table )
 {
-	RowScopeMap::iterator iter;
-	iter = table->find( RowScope );
+    RowScopeMap::iterator iter;
+    iter = table->find( RowScope );
 
-	if ( iter == table->end() )
+    if ( iter == table->end() )
 	{
 		return 0;
 	}
@@ -581,11 +581,11 @@ MorkRowMap *MorkParser::getRows( int RowScope, RowScopeMap *table )
 //	=============================================================
 //	MorkParser::getValue
 
-std::string &MorkParser::getValue( int oid )
+const std::string &MorkParser::getValue( int oid )
 {
-	MorkDict::iterator foundIter = values_.find( oid );
+    MorkDict::ConstIterator foundIter = values_.constFind( oid );
 
-	if ( values_.end() == foundIter )
+    if ( foundIter == values_.constEnd() )
 	{
 		return g_Empty;
 	}
@@ -596,11 +596,11 @@ std::string &MorkParser::getValue( int oid )
 //	=============================================================
 //	MorkParser::getColumn
 
-std::string &MorkParser::getColumn( int oid )
+const std::string &MorkParser::getColumn( int oid )
 {
-	MorkDict::iterator foundIter = columns_.find( oid );
+    MorkDict::ConstIterator foundIter = columns_.constFind( oid );
 
-	if ( columns_.end() == foundIter )
+    if ( foundIter == columns_.constEnd() )
 	{
 		return g_Empty;
 	}

@@ -82,17 +82,17 @@ public:
 	///
 	/// Rerturns all rows under specified scope
 
-	MorkRowMap *getRows( int rowScope, RowScopeMap *table );
+    MorkRowMap *getRows( int rowScope, RowScopeMap *table );
 
 	///
 	/// Return value of specified value oid
 
-	std::string &getValue( int oid );
+    const std::string &getValue( int oid );
 
 	///
 	/// Return value of specified column oid
 
-	std::string &getColumn( int oid );
+    const std::string &getColumn( int oid );
 
 
 protected: // Members
@@ -100,7 +100,7 @@ protected: // Members
 	void initVars();
 
 	bool isWhiteSpace( char c );
-	char nextChar();
+    char nextChar();
 
 	void parseScopeId( const std::string &TextId, int *Id, int *Scope );
 	void setCurrentRow( int TableScope, int TableId, int RowScope, int RowId );
@@ -111,9 +111,9 @@ protected: // Members
 	bool parseComment();
 	bool parseCell();
 	bool parseTable();
-	bool parseMeta( char c );
+    bool parseMeta( char c );
 	bool parseRow( int TableId, int TableScope );
-	bool parseGroup();
+    bool parseGroup();
 
 protected: // Data
 
@@ -126,7 +126,7 @@ protected: // Data
 	MorkCells *currentCells_;
 
 	// Error status of last operation
-	MorkErrors error_;
+    MorkErrors mError;
 
 	// All Mork data
 	QByteArray morkData_;
