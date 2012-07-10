@@ -21,7 +21,7 @@
 class QString;
 // Types
 
-typedef QMap< int, std::string > MorkDict;
+typedef QMap< int, QString > MorkDict;
 typedef QMap< int, int > MorkCells;					// ColumnId : ValueId
 typedef QMap< int, MorkCells > MorkRowMap;			// Row id
 typedef QMap< int, MorkRowMap > RowScopeMap;		// Row scope
@@ -87,12 +87,12 @@ public:
 	///
 	/// Return value of specified value oid
 
-    const std::string &getValue( int oid );
+    QString getValue( int oid );
 
 	///
 	/// Return value of specified column oid
 
-    const std::string &getColumn( int oid );
+    QString getColumn( int oid );
 
 
 protected: // Members
@@ -102,7 +102,7 @@ protected: // Members
 	bool isWhiteSpace( char c );
     char nextChar();
 
-	void parseScopeId( const std::string &TextId, int *Id, int *Scope );
+    void parseScopeId(const QString &TextId, int &Id, int &Scope );
 	void setCurrentRow( int TableScope, int TableId, int RowScope, int RowId );
 
 	// Parse methods
@@ -118,22 +118,22 @@ protected: // Members
 protected: // Data
 
 	// Columns in mork means value names
-	MorkDict columns_;
-	MorkDict values_;
+    MorkDict mColumns;
+    MorkDict mValues;
 
 	// All mork file data
-	TableScopeMap mork_;
-	MorkCells *currentCells_;
+    TableScopeMap mMork;
+    MorkCells *mCurrentCells;
 
 	// Error status of last operation
     MorkErrors mError;
 
 	// All Mork data
-	QByteArray morkData_;
+    QByteArray mMorkData;
 
-	int morkPos_;
-	int nextAddValueId_;
-	int defaultScope_;
+    int mMorkPos;
+    int mNextAddValueId;
+    int mDefaultScope;
 
 	// Indicates intity is being parsed
 	enum { NPColumns, NPValues, NPRows } nowParsing_;

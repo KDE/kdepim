@@ -58,12 +58,12 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
             if(rowIter.key() != 0) {
                 KABC::Addressee address;
                 MorkCells cells = rowIter.value();
+                qDebug()<<" cells "<<cells;
                 MorkCells::iterator endCellIter = cells.end();
                 for ( MorkCells::iterator cellsIter = cells.begin();cellsIter != endCellIter; ++cellsIter ) {
-                    //qDebug()<<" mork.getValue(cellsIter.value())"<<mork.getValue(cellsIter.value());
-                    qDebug()<<" cellsIter.value()"<<cellsIter.value()<< "cellsIter.key()"<<cellsIter.key();
-                    QString value = QString(mork.getValue(cellsIter.value()).c_str());
-                    QString column = QString(mork.getValue(cellsIter.key()).c_str());
+                    //qDebug()<<" cellsIter.value()"<<cellsIter.value()<< "cellsIter.key()"<<cellsIter.key();
+                    QString value = mork.getValue(cellsIter.value());
+                    QString column = mork.getValue(cellsIter.key());
                     qDebug()<<" value :"<<value<<" column"<<column;
                 }
                 //TODO
