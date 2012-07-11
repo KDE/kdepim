@@ -102,8 +102,9 @@ ImportWizard::ImportWizard(QWidget *parent)
 #ifdef Q_OS_MAC
   addImportModule(new MailAppImportData(this));
 #endif
-  addImportModule(new PMailImportData(this));
+
 #ifdef Q_OS_WIN
+  addImportModule(new PMailImportData(this));
   addImportModule(new TheBatImportData(this));
 #endif
 
@@ -251,32 +252,27 @@ void ImportWizard::next()
   }
 }
 
+void ImportWizard::enableAllImportButton()
+{
+  mImportMailPage->setImportButtonEnabled(true);
+  mImportFilterPage->setImportButtonEnabled(true);
+  mImportSettingPage->setImportButtonEnabled(true);
+  mImportAddressbookPage->setImportButtonEnabled(true);
+  mImportCalendarPage->setImportButtonEnabled(true);
+}
+
 void ImportWizard::back()
 {
   if( currentPage() == mPage1 ) {
     return;
-  } else if( currentPage() == mPage2 ) {
-    KAssistantDialog::back();
-  } else if( currentPage() == mPage3 ) {
-    KAssistantDialog::back();
-  } else if( currentPage() == mPage4 ) {
-    mImportMailPage->setImportButtonEnabled(true);
-    KAssistantDialog::back();
-  } else if( currentPage() == mPage5 ) {
-    mImportFilterPage->setImportButtonEnabled(true);
-    KAssistantDialog::back();
-  } else if( currentPage() == mPage6 ) {
-    mImportSettingPage->setImportButtonEnabled(true);
-    KAssistantDialog::back();
-  } else if( currentPage() == mPage7 ) {
-    mImportAddressbookPage->setImportButtonEnabled(true);
-    KAssistantDialog::back();
-  } else if( currentPage() == mPage8 ) {
-    mImportCalendarPage->setImportButtonEnabled(true);
-    KAssistantDialog::back();
-  } else {
-    KAssistantDialog::next();
+  } else if( currentPage() == mPage4 ||
+             currentPage() == mPage5 ||
+             currentPage() == mPage6 ||
+             currentPage() == mPage7 ||
+             currentPage() == mPage8 ) {
+    enableAllImportButton();
   }
+  KAssistantDialog::back();
 }
 
 void ImportWizard::reject()
