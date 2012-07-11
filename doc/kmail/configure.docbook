@@ -566,8 +566,8 @@ address book entry.</para>
 <term><guilabel>Input Field Below</guilabel></term>
 <listitem>
 <para>Use this field to enter an arbitrary X-Face string.
-Examples are available at <ulink url="http://www.xs4all.nl/~ace/X-Faces/"
->http://www.xs4all.nl/~ace/X-Faces/</ulink>
+Examples are available at <ulink url="http://ace.home.xs4all.nl/X-Faces/"
+>http://ace.home.xs4all.nl/X-Faces/</ulink>
 </para>
 </listitem>
 </varlistentry>
