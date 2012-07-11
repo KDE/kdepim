@@ -323,11 +323,12 @@ bool MorkParser::parseCell()
 			if ( nowParsing_ == NPColumns )
 			{
                 mColumns[ ColumnId ] = Text;
+                //qDebug()<<" column :"<<ColumnId<<" Text "<<Text;
 			}
 			else
 			{
                 mValues[ ColumnId ] = Text;
-                qDebug()<<" ColumnId "<<ColumnId<<" Value : "<<Text;
+                //qDebug()<<" ColumnId "<<ColumnId<<" Value : "<<Text;
 			}
 		}
 	}
