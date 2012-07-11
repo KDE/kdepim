@@ -107,6 +107,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("PhoneticLastName" ) ) {
                 } else if( column == QLatin1String("DisplayName" ) ) {
                 } else if( column == QLatin1String("NickName" ) ) {
+                  contact.setNickName(value);
                 } else if( column == QLatin1String("PrimaryEmail" ) ) {
                   contact.setEmails(QStringList()<<value);
                 } else if( column == QLatin1String("LowercasePrimaryEmail" ) ) {
