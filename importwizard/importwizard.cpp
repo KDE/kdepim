@@ -102,8 +102,9 @@ ImportWizard::ImportWizard(QWidget *parent)
 #ifdef Q_OS_MAC
   addImportModule(new MailAppImportData(this));
 #endif
-  addImportModule(new PMailImportData(this));
+
 #ifdef Q_OS_WIN
+  addImportModule(new PMailImportData(this));
   addImportModule(new TheBatImportData(this));
 #endif
 
