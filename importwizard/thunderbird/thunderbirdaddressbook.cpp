@@ -93,7 +93,11 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("PhotoType" ) ) {
                 } else if( column == QLatin1String("PreferDisplayName" ) ) {
                 } else if( column == QLatin1String("PhotoURI" ) ) {
+                  KABC::Picture photo;
+                  photo.setUrl(value);
+                  contact.setLogo(photo);
                 } else if( column == QLatin1String("PhotoName" ) ) {
+                    //TODO: verify it
                 } else if( column == QLatin1String("DbRowID" ) ) {
                 } else if( column == QLatin1String("ns:addrbk:db:row:scope:card:all" ) ) {
                 } else if( column == QLatin1String("ns:addrbk:db:row:scope:list:all" ) ) {
