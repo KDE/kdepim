@@ -162,7 +162,7 @@ you want to use a local mailbox file, please see the <link linkend="faq-file-loc
 about file locking</link>.</para>
 
 <para>You will then be presented with
-the <guilabel>Akonadi.Resource</guilabel> window. First, fill in the
+the <guilabel>Akonadi Resource</guilabel> window. First, fill in the
 <guilabel>Account name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Username</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Incoming mail server</guilabel> should be filled in with the appropriate information
