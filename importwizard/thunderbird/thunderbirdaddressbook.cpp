@@ -36,6 +36,7 @@ ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *pa
   Q_FOREACH( const QString& file, files ) {
     readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
   }
+  readAddressBook(dir.path() + QLatin1String( "/history.mab" ) );
 
   cleanUp();
 }
@@ -64,15 +65,21 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
           MorkRowMap::iterator endRow(rows->end());
           for ( MorkRowMap::iterator rowIter = rows->begin(); rowIter != endRow; ++rowIter ) {
             if(rowIter.key() != 0) {
-              KABC::Addressee address;
+              KABC::Addressee contact;
               MorkCells cells = rowIter.value();
               MorkCells::iterator endCellIter = cells.end();
+              KABC::Address homeAddr = KABC::Address( KABC::Address::Home );
+              KABC::Address workAddr = KABC::Address( KABC::Address::Work );
+              int birthday = -1;
+              int birthmonth = -1;
+              int birthyear = -1;
+
+
               for ( MorkCells::iterator cellsIter = cells.begin();cellsIter != endCellIter; ++cellsIter ) {
                 const QString value = mork.getValue(cellsIter.value());
                 const QString column = mork.getColumn(cellsIter.key());
-                if(column == QLatin1String("LastModifiedDate")) {
-
-                } else if( column == QLatin1String("LastModifiedDate" ) ) {
+                qDebug()<<"column :"<<column<<" value :"<<value;
+                if( column == QLatin1String("LastModifiedDate" ) ) {
                 } else if( column == QLatin1String("RecordKey" ) ) {
                 } else if( column == QLatin1String("AddrCharSet" ) ) {
                 } else if( column == QLatin1String("LastRecordKey" ) ) {
@@ -92,43 +99,60 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("ns:addrbk:db:row:scope:list:all" ) ) {
                 } else if( column == QLatin1String("ns:addrbk:db:row:scope:data:all" ) ) {
                 } else if( column == QLatin1String("FirstName" ) ) {
-                  address.setName(value);
+                  contact.setName(value);
                 } else if( column == QLatin1String("LastName" ) ) {
-                  address.setFamilyName(value);
+                  contact.setFamilyName(value);
                 } else if( column == QLatin1String("PhoneticFirstName" ) ) {
                 } else if( column == QLatin1String("PhoneticLastName" ) ) {
                 } else if( column == QLatin1String("DisplayName" ) ) {
                 } else if( column == QLatin1String("NickName" ) ) {
+                  contact.setNickName(value);
                 } else if( column == QLatin1String("PrimaryEmail" ) ) {
+                  contact.setEmails(QStringList()<<value);
                 } else if( column == QLatin1String("LowercasePrimaryEmail" ) ) {
                 } else if( column == QLatin1String("SecondEmail" ) ) {
                 } else if( column == QLatin1String("PreferMailFormat" ) ) {
                 } else if( column == QLatin1String("PopularityIndex" ) ) {
                 } else if( column == QLatin1String("AllowRemoteContent" ) ) {
                 } else if( column == QLatin1String("WorkPhone" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Work ) );
                 } else if( column == QLatin1String("HomePhone" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Home ) );
                 } else if( column == QLatin1String("FaxNumber" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Fax ) );
                 } else if( column == QLatin1String("PagerNumber" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Pager ) );
                 } else if( column == QLatin1String("CellularNumber" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Cell ) );
                 } else if( column == QLatin1String("WorkPhoneType" ) ) {
                 } else if( column == QLatin1String("HomePhoneType" ) ) {
                 } else if( column == QLatin1String("FaxNumberType" ) ) {
                 } else if( column == QLatin1String("PagerNumberType" ) ) {
                 } else if( column == QLatin1String("CellularNumberType" ) ) {
                 } else if( column == QLatin1String("HomeAddress" ) ) {
+                  homeAddr.setStreet(value);
                 } else if( column == QLatin1String("HomeAddress2" ) ) {
                 } else if( column == QLatin1String("HomeCity" ) ) {
+                  homeAddr.setLocality(value);
                 } else if( column == QLatin1String("HomeState" ) ) {
                 } else if( column == QLatin1String("HomeZipCode" ) ) {
+                  homeAddr.setPostalCode(value);
                 } else if( column == QLatin1String("HomeCountry" ) ) {
+                  homeAddr.setCountry(value);
                 } else if( column == QLatin1String("WorkAddress" ) ) {
+                  workAddr.setStreet(value);
                 } else if( column == QLatin1String("WorkAddress2" ) ) {
                 } else if( column == QLatin1String("WorkCity" ) ) {
                 } else if( column == QLatin1String("WorkState" ) ) {
+                  workAddr.setRegion(value);
                 } else if( column == QLatin1String("WorkZipCode" ) ) {
+                  workAddr.setPostalCode(value);
                 } else if( column == QLatin1String("WorkCountry") ) {
+                  workAddr.setCountry(value);
                 } else if( column == QLatin1String("JobTitle" ) ) {
+                  contact.setTitle(value);
                 } else if( column == QLatin1String("Department" ) ) {
+                  contact.setDepartment(value);
                 } else if( column == QLatin1String("Company" ) ) {
                 } else if( column == QLatin1String("_AimScreenName" ) ) {
                 } else if( column == QLatin1String("AnniversaryYear" ) ) {
@@ -139,20 +163,35 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("WebPage1" ) ) {
                 } else if( column == QLatin1String("WebPage2" ) ) {
                 } else if( column == QLatin1String("BirthYear" ) ) {
+                    birthyear = value.toInt();
                 } else if( column == QLatin1String("BirthMonth" ) ) {
+                    birthmonth = value.toInt();
                 } else if( column == QLatin1String("BirthDay" ) ) {
+                    birthday = value.toInt();
                 } else if( column == QLatin1String("Custom1" ) ) {
                 } else if( column == QLatin1String("Custom2" ) ) {
                 } else if( column == QLatin1String("Custom3" ) ) {
                 } else if( column == QLatin1String("Custom4" ) ) {
                 } else if( column == QLatin1String("Notes" ) ) {
+                  contact.setNote(value);
                 } else {
                   kDebug()<<" Columnn not implemented "<<column;
                 }
 
                 //qDebug()<<" value :"<<value<<" column"<<column;
               }
-              createContact( address );
+
+              if(!homeAddr.isEmpty())
+                contact.insertAddress(homeAddr);
+              if(!workAddr.isEmpty())
+                contact.insertAddress(workAddr);
+
+              QDateTime birthDate( QDate( birthyear, birthmonth, birthday ) );
+              if(birthDate.isValid()) {
+                  contact.setBirthday( birthDate );
+              }
+              createContact( contact );
+              qDebug()<<"-----------------------";
             }
           }
         }
