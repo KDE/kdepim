@@ -68,7 +68,6 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
               KABC::Addressee contact;
               MorkCells cells = rowIter.value();
               MorkCells::iterator endCellIter = cells.end();
-              KABC::PhoneNumber phone;
               KABC::Address homeAddr = KABC::Address( KABC::Address::Home );
               KABC::Address workAddr = KABC::Address( KABC::Address::Work );
               int birthday = -1;
@@ -116,10 +115,15 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("PopularityIndex" ) ) {
                 } else if( column == QLatin1String("AllowRemoteContent" ) ) {
                 } else if( column == QLatin1String("WorkPhone" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Work ) );
                 } else if( column == QLatin1String("HomePhone" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Home ) );
                 } else if( column == QLatin1String("FaxNumber" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Fax ) );
                 } else if( column == QLatin1String("PagerNumber" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Pager ) );
                 } else if( column == QLatin1String("CellularNumber" ) ) {
+                  contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Cell ) );
                 } else if( column == QLatin1String("WorkPhoneType" ) ) {
                 } else if( column == QLatin1String("HomePhoneType" ) ) {
                 } else if( column == QLatin1String("FaxNumberType" ) ) {
@@ -140,12 +144,15 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("WorkAddress2" ) ) {
                 } else if( column == QLatin1String("WorkCity" ) ) {
                 } else if( column == QLatin1String("WorkState" ) ) {
+                  workAddr.setRegion(value);
                 } else if( column == QLatin1String("WorkZipCode" ) ) {
                   workAddr.setPostalCode(value);
                 } else if( column == QLatin1String("WorkCountry") ) {
                   workAddr.setCountry(value);
                 } else if( column == QLatin1String("JobTitle" ) ) {
+                  contact.setTitle(value);
                 } else if( column == QLatin1String("Department" ) ) {
+                  contact.setDepartment(value);
                 } else if( column == QLatin1String("Company" ) ) {
                 } else if( column == QLatin1String("_AimScreenName" ) ) {
                 } else if( column == QLatin1String("AnniversaryYear" ) ) {
@@ -173,7 +180,6 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
 
                 //qDebug()<<" value :"<<value<<" column"<<column;
               }
-              contact.insertPhoneNumber(phone);
 
               if(!homeAddr.isEmpty())
                 contact.insertAddress(homeAddr);
