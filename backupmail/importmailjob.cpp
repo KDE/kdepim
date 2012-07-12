@@ -421,10 +421,11 @@ void ImportMailJob::restoreMails()
   QDir dir(mTempDirName);
   dir.mkdir(BackupMailUtil::mailsPath());
   const QString copyToDirName(mTempDirName + QLatin1Char('/') + BackupMailUtil::mailsPath());
-  QHashIterator<QString, QString> res(mHashResources);
+  QHashIterator<QString, QString> res(mHashMailArchive);
   while (res.hasNext()) {
     res.next();
     const QString resourceFile = res.key();
+
     const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(resourceFile);
     if(fileResouceEntry && fileResouceEntry->isFile()) {
       const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
@@ -631,7 +632,6 @@ void ImportMailJob::restoreConfig()
     }
   }
 
-
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
   if( templatesconfigurationentry &&  templatesconfigurationentry->isFile()) {
@@ -664,7 +664,6 @@ void ImportMailJob::restoreConfig()
     }
   }
 
-
   Q_EMIT info(i18n("Config restored."));
 }
 
@@ -681,7 +680,6 @@ void ImportMailJob::restoreIdentity()
   if(identity && identity->isFile()) {
     const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
     fileIdentity->copyTo(mTempDirName);
-
     KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') +QLatin1String("emailidentities"));
     KConfigGroup general = identityConfig->group(QLatin1String("General"));
     const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
