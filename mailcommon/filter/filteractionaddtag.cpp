@@ -22,7 +22,8 @@
 #include "filteractionmissingargumentdialog.h"
 
 #ifndef KDEPIM_NO_NEPOMUK
-#include <nepomuk/tag.h>
+#include <nepomuk2/tag.h>
+#include <Nepomuk2/Resource>
 #endif
 
 #include <QtGui/QTextDocument>
@@ -48,9 +49,9 @@ bool FilterActionAddTag::isEmpty() const
 void FilterActionAddTag::initializeTagList()
 {
 #ifndef KDEPIM_NO_NEPOMUK
-  foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+  foreach( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
     mParameterList.append( tag.label() );
-    mLabelList.append( tag.resourceUri().toString() );
+    mLabelList.append( tag.uri().toString() );
   }
 #endif
 }
@@ -83,7 +84,7 @@ FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) con
   if ( index == -1 )
     return ErrorButGoOn;
 
-  Nepomuk::Resource resource( context.item().url() );
+  Nepomuk2::Resource resource( context.item().url() );
   resource.addTag( mParameter );
 #endif
 

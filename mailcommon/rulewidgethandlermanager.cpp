@@ -35,7 +35,7 @@
 #include <messageviewer/minimumcombobox.h>
 
 #ifndef KDEPIM_NO_NEPOMUK
-#include <Nepomuk/Tag>
+#include <Nepomuk2/Tag>
 #endif
 
 #include <KDebug>
@@ -663,11 +663,11 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
   if ( number == 2 ) {
     MessageViewer::MinimumComboBox *combo =  new MessageViewer::MinimumComboBox( valueStack );
     combo->setObjectName( "categoryCombo" );
-    foreach ( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+    foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
       if ( tag.genericIcon().isEmpty() ) {
-        combo->addItem( tag.label(), tag.resourceUri() );
+        combo->addItem( tag.label(), tag.uri() );
       } else {
-        combo->addItem( KIcon( tag.genericIcon() ), tag.label(), tag.resourceUri() );
+        combo->addItem( KIcon( tag.genericIcon() ), tag.label(), tag.uri() );
       }
     }
     QObject::connect( combo, SIGNAL(activated(int)),
@@ -1503,12 +1503,14 @@ QWidget *TagRuleWidgetHandler::createValueWidget( int number,
     valueCombo->setObjectName( "tagRuleValueCombo" );
     valueCombo->setEditable( true );
     valueCombo->addItem( QString() ); // empty entry for user input
-    foreach ( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+    foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
       QString iconName( "mail-tagged" );
+#if 0 //FIXME NEPOMUK-CORE
       if ( !tag.symbols().isEmpty() ) {
         iconName = tag.symbols().first();
       }
-      valueCombo->addItem( KIcon( iconName ), tag.label(), tag.resourceUri() );
+#endif      
+      valueCombo->addItem( KIcon( iconName ), tag.label(), tag.uri() );
     }
     valueCombo->adjustSize();
     QObject::connect( valueCombo, SIGNAL(activated(int)),
@@ -1672,7 +1674,7 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     // set combo box value
     int valueIndex = -1;
     int tagIndex = 0;
-    foreach ( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+    foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
       if ( tag.label() == rule->contents() ) {
         valueIndex = tagIndex;
         break;
