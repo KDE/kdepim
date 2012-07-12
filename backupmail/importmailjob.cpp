@@ -124,8 +124,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir)
       const QStringList lst = resourceDir->entries();
       if(lst.count() == 2) {
         const QString name(lst.at(0));
-        //qDebug()<<" lst.at(0)"<<lst.at(0)<<"lst.at(1)"<<lst.at(1);
-        if(name.endsWith(QLatin1String("_rc"))&&
+        if(name.endsWith(QLatin1String("rc"))&&
            (name.contains(QLatin1String("akonadi_mbox_resource_")) ||
             name.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ||
             name.contains(QLatin1String("akonadi_maildir_resource_")))) {
