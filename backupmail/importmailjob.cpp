@@ -509,6 +509,9 @@ void ImportMailJob::restoreMails()
                                                                        , filename, settings );
         if(!newResource.isEmpty())
           mHashResources.insert(filename,newResource);
+
+        const QString mailFile = res.value();
+        //TODO import them
       } else {
         kDebug()<<" resource name not supported "<<resourceName;
       }
