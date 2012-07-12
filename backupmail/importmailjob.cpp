@@ -78,8 +78,7 @@ void ImportMailJob::startRestore()
     return;
   mArchiveDirectory = mArchive->directory();
   searchAllFiles(mArchiveDirectory,QString());
-  //qDebug()<<" mFileList :"<<mFileList;
-  if(!mFileList.isEmpty()) {
+  if(!mFileList.isEmpty()|| !mHashMailArchive.isEmpty()) {
     if(mTypeSelected & BackupMailUtil::MailTransport)
       restoreTransports();
     if(mTypeSelected & BackupMailUtil::Resources)
@@ -425,7 +424,6 @@ void ImportMailJob::restoreMails()
   while (res.hasNext()) {
     res.next();
     const QString resourceFile = res.key();
-
     const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(resourceFile);
     if(fileResouceEntry && fileResouceEntry->isFile()) {
       const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
