@@ -78,8 +78,7 @@ void ImportMailJob::startRestore()
     return;
   mArchiveDirectory = mArchive->directory();
   searchAllFiles(mArchiveDirectory,QString());
-  //qDebug()<<" mFileList :"<<mFileList;
-  if(!mFileList.isEmpty()) {
+  if(!mFileList.isEmpty()|| !mHashMailArchive.isEmpty()) {
     if(mTypeSelected & BackupMailUtil::MailTransport)
       restoreTransports();
     if(mTypeSelected & BackupMailUtil::Resources)
@@ -421,7 +420,7 @@ void ImportMailJob::restoreMails()
   QDir dir(mTempDirName);
   dir.mkdir(BackupMailUtil::mailsPath());
   const QString copyToDirName(mTempDirName + QLatin1Char('/') + BackupMailUtil::mailsPath());
-  QHashIterator<QString, QString> res(mHashResources);
+  QHashIterator<QString, QString> res(mHashMailArchive);
   while (res.hasNext()) {
     res.next();
     const QString resourceFile = res.key();
@@ -631,7 +630,6 @@ void ImportMailJob::restoreConfig()
     }
   }
 
-
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
   if( templatesconfigurationentry &&  templatesconfigurationentry->isFile()) {
@@ -664,7 +662,6 @@ void ImportMailJob::restoreConfig()
     }
   }
 
-
   Q_EMIT info(i18n("Config restored."));
 }
 
@@ -679,10 +676,8 @@ void ImportMailJob::restoreIdentity()
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   const KArchiveEntry* identity = mArchiveDirectory->entry(path);
   if(identity && identity->isFile()) {
-
     const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
     fileIdentity->copyTo(mTempDirName);
-
     KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') +QLatin1String("emailidentities"));
     KConfigGroup general = identityConfig->group(QLatin1String("General"));
     const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
@@ -730,6 +725,7 @@ void ImportMailJob::restoreIdentity()
           mIdentityManager->setAsDefault(identity->uoid());
         }
       }
+      mIdentityManager->commit();
     }
     Q_EMIT info(i18n("Identities restored."));
   } else {
