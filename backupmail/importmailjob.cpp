@@ -679,7 +679,7 @@ void ImportMailJob::restoreIdentity()
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   const KArchiveEntry* identity = mArchiveDirectory->entry(path);
   if(identity && identity->isFile()) {
-
+      qDebug()<<" SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS";
     const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
     fileIdentity->copyTo(mTempDirName);
 
@@ -689,6 +689,7 @@ void ImportMailJob::restoreIdentity()
 
     const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
     Q_FOREACH(const QString&identityStr, identityList) {
+        qDebug()<<" 55555555555555555555555555555555";
       KConfigGroup group = identityConfig->group(identityStr);
       int oldUid = -1;
       const QString uidStr("uoid");
@@ -730,6 +731,7 @@ void ImportMailJob::restoreIdentity()
           mIdentityManager->setAsDefault(identity->uoid());
         }
       }
+      mIdentityManager->commit();
     }
     Q_EMIT info(i18n("Identities restored."));
   } else {
