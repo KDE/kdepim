@@ -129,9 +129,9 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
            (name.contains(QLatin1String("akonadi_mbox_resource_")) ||
             name.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ||
             name.contains(QLatin1String("akonadi_maildir_resource_")))) {
-          mHashMailArchive.insert(archPath + name,lst.at(1));
+          mHashMailArchive.insert(archPath + name,archPath +lst.at(1));
         } else {
-          mHashMailArchive.insert(lst.at(1),archPath + name);
+          mHashMailArchive.insert(archPath +lst.at(1),archPath + name);
         }
       } else {
         kDebug()<<" lst.at(0)"<<lst.at(0);
