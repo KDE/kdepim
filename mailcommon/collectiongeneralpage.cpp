@@ -480,19 +480,24 @@ void CollectionGeneralPage::save( Collection &collection )
 {
   if ( mNameEdit ) {
     if ( !mIsLocalSystemFolder ) {
+      const QString nameFolder(mNameEdit->text().trimmed());
+      bool canRenameFolder =  !(nameFolder.startsWith( QLatin1Char('.') ) ||
+                               nameFolder.endsWith( QLatin1Char('.') ) ||
+                               nameFolder.contains( QLatin1Char( '/' ) ) ||
+                               nameFolder.isEmpty());
+
       if ( mIsResourceFolder && collection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-        collection.setName( mNameEdit->text() );
+        collection.setName( nameFolder );
         Akonadi::AgentInstance instance =
           Akonadi::AgentManager::self()->instance( collection.resource() );
-
-        instance.setName( mNameEdit->text() );
-      } else {
+        instance.setName( nameFolder );
+      } else if(canRenameFolder) {
         if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
              !collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() ) {
           collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName(
-            mNameEdit->text() );
-        } else if( !mNameEdit->text().isEmpty() ) {
-          collection.setName( mNameEdit->text() );
+            nameFolder );
+        } else if( !nameFolder.isEmpty() ) {
+          collection.setName( nameFolder );
         }
       }
     }
