@@ -49,7 +49,7 @@ private:
   void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString &filename, const QString &prefix);
   QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
   void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
-  void storeMailArchiveResource(const KArchiveDirectory*dir);
+  void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);
 
   void copyToFile(const KArchiveFile * file, const QString& dest, const QString&filename,const QString& prefix);
   Akonadi::Collection::Id convertPathToId(const QString& path);
