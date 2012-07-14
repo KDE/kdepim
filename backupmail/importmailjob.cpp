@@ -233,6 +233,7 @@ void ImportMailJob::restoreTransports()
 
 void ImportMailJob::restoreResources()
 {
+  Q_EMIT info(i18n("Restore resources..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   Q_FOREACH(const QString& filename, mFileList) {
     if(filename.startsWith(BackupMailUtil::resourcesPath())) {
@@ -412,10 +413,12 @@ void ImportMailJob::restoreResources()
       }
     }
   }
+  Q_EMIT info(i18n("Resources restored."));
 }
 
 void ImportMailJob::restoreMails()
 {
+  Q_EMIT info(i18n("Restore mails..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
   QDir dir(mTempDirName);
   dir.mkdir(BackupMailUtil::mailsPath());
@@ -518,6 +521,7 @@ void ImportMailJob::restoreMails()
       //qDebug()<<"url "<<url;
     }
   }
+  Q_EMIT info(i18n("Mails restored."));
 }
 
 void ImportMailJob::copyToFile(const KArchiveFile * archivefile, const QString& dest, const QString&filename, const QString&prefix)
@@ -742,7 +746,7 @@ void ImportMailJob::restoreAkonadiDb()
     Q_EMIT error(i18n("akonadi database file could not be found in the archive."));
     return;
   }
-
+  Q_EMIT info(i18n("Restore Akonadi Database..."));
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
   const KArchiveEntry* akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
