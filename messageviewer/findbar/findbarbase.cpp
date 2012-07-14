@@ -156,6 +156,7 @@ void FindBarBase::messageInfo( bool backward, bool isAutoSearch, bool found )
 
 void FindBarBase::setFoundMatch( bool match )
 {
+#ifndef QT_NO_STYLE_STYLESHEET
   QString styleSheet;
 
   if (!m_search->text().isEmpty()) {
@@ -172,7 +173,6 @@ void FindBarBase::setFoundMatch( bool match )
                  .arg(bgBrush.brush(m_search).color().name());
   }
 
-#ifndef QT_NO_STYLE_STYLESHEET
   m_search->setStyleSheet(styleSheet);
 #endif
 
