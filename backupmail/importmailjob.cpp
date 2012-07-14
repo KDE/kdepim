@@ -104,7 +104,7 @@ void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&pre
     if (entry && entry->isDirectory()) {
       const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
       if(entryName == QLatin1String("mails")) {
-        storeMailArchiveResource(static_cast<const KArchiveDirectory*>(entry));
+        storeMailArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
       } else {
         searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
       }
@@ -115,7 +115,7 @@ void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&pre
   }
 }
 
-void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir)
+void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const QString& prefix)
 {
   Q_FOREACH(const QString& entryName, dir->entries()) {
     const KArchiveEntry *entry = dir->entry(entryName);
@@ -123,14 +123,15 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir)
       const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
       const QStringList lst = resourceDir->entries();
       if(lst.count() == 2) {
+        const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
         const QString name(lst.at(0));
         if(name.endsWith(QLatin1String("rc"))&&
            (name.contains(QLatin1String("akonadi_mbox_resource_")) ||
             name.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ||
             name.contains(QLatin1String("akonadi_maildir_resource_")))) {
-          mHashMailArchive.insert(name,lst.at(1));
+          mHashMailArchive.insert(archPath + name,archPath +lst.at(1));
         } else {
-          mHashMailArchive.insert(lst.at(1),name);
+          mHashMailArchive.insert(archPath +lst.at(1),archPath + name);
         }
       } else {
         kDebug()<<" lst.at(0)"<<lst.at(0);
@@ -446,7 +447,6 @@ void ImportMailJob::restoreMails()
         newUrl= url;
       }
       QMap<QString, QVariant> settings;
-
       if(resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
         const QString dataFile = res.value();
         const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
