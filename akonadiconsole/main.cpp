@@ -24,7 +24,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
-#include "mainwindow.h"
+#include "instanceselector.h"
 
 #include <stdlib.h>
 
@@ -57,10 +57,7 @@ int main( int argc, char **argv )
 
   KApplication app;
 
-  MainWindow *window = new MainWindow;
-  if ( args->isSet( "remote" ) )
-    window->setWindowTitle( i18n( "Remote Akonadi Console (%1)", args->getOption( "remote" ) ) );
-  window->show();
+  InstanceSelector instanceSelector( args->isSet( "remote" ) ? args->getOption( "remote" ) : QString() );
 
   return app.exec();
 }
