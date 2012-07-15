@@ -48,7 +48,7 @@
 #include <KDE/KXMLGUIClient>
 #include <KDE/KXMLGUIFactory>
 
-#include <Nepomuk/Tag>
+#include <Nepomuk2/Tag>
 #include "core/groupheaderitem.h"
 
 namespace MessageList
@@ -205,14 +205,16 @@ void Widget::fillMessageTagCombo( KComboBox * combo )
     return;
   }
   const QStringList tagSelectedLst = tagSelected.split(QLatin1String(","));
-  foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
-    const QString id = nepomukTag.resourceUri().toString();
+  foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
+    const QString id = nepomukTag.uri().toString();
     if(tagSelectedLst.contains(id)) {
       QString iconName = QLatin1String( "mail-tagged" );
       const QString label = nepomukTag.label();
+#if 0 //FIXME NEPOMUK-CORE      
       if ( !nepomukTag.symbols().isEmpty() )
         iconName = nepomukTag.symbols().first();
-      const QString id = nepomukTag.resourceUri().toString();
+#endif
+      const QString id = nepomukTag.uri().toString();
       combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
     }
   }

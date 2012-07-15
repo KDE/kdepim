@@ -1222,7 +1222,7 @@ void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
   addAndNegateTerm(
     Nepomuk2::Query::ComparisonTerm(
       Soprano::Vocabulary::NAO::hasTag(),
-      Nepomuk2::Query::ResourceTerm( tag.resourceUri() ),
+      Nepomuk2::Query::ResourceTerm( tag.uri() ),
       Nepomuk2::Query::ComparisonTerm::Equal ),
     groupTerm );
 }

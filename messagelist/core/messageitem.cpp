@@ -198,7 +198,7 @@ void MessageItemPrivate::fillTagList( const Nepomuk2::Resource &resource ) const
       */
       MessageItem::Tag *messageListTag =
           new MessageItem::Tag( SmallIcon( symbol ),
-                   nepomukTag.label(), nepomukTag.resourceUri().toString() );
+                   nepomukTag.label(), nepomukTag.uri().toString() );
       if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
         const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
         messageListTag->setTextColor( QColor( name ) );

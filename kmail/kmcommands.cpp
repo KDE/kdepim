@@ -40,6 +40,9 @@
 // The type of async operation supported by KMCommand is retrieval
 // of messages from an IMAP server.
 
+#include <Nepomuk2/Tag>
+#include <nepomuk2/resource.h>
+
 #include "kmcommands.h"
 #include "collectionpane.h"
 #include "mailkernel.h"
@@ -137,7 +140,8 @@ using namespace KMime;
 #include "kleo/cryptobackend.h"
 #include "kleo/cryptobackendfactory.h"
 
-#include <nepomuk/tag.h>
+#include <Nepomuk2/Tag>
+#include <nepomuk2/resource.h>
 
 #include <gpgme++/error.h>
 
@@ -961,6 +965,16 @@ KMCommand::Result KMForwardAttachedCommand::execute()
   return OK;
 }
 
+KMRedirectCommand::KMRedirectCommand( QWidget *parent,
+                                      const QList<Akonadi::Item> &msgList )
+  : KMCommand( parent, msgList )
+{
+  fetchScope().fetchFullPayload( true );
+  fetchScope().fetchAttribute<MailTransport::SentBehaviourAttribute>();
+  fetchScope().fetchAttribute<MailTransport::TransportAttribute>();
+
+  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+}
 
 KMRedirectCommand::KMRedirectCommand( QWidget *parent,
                                       const Akonadi::Item &msg )
@@ -975,8 +989,6 @@ KMRedirectCommand::KMRedirectCommand( QWidget *parent,
 
 KMCommand::Result KMRedirectCommand::execute()
 {
-  const Akonadi::Item item = retrievedMessage();
-
   const MailCommon::RedirectDialog::SendMode sendMode = MessageComposer::MessageComposerSettings::self()->sendImmediate()
                                                           ? MailCommon::RedirectDialog::SendNow
                                                           : MailCommon::RedirectDialog::SendLater;
@@ -989,46 +1001,49 @@ KMCommand::Result KMRedirectCommand::execute()
   if ( !TransportManager::self()->showTransportCreationDialog( parentWidget(), TransportManager::IfNoTransportExists ) )
     return Failed;
 
-
-  const KMime::Message::Ptr msg = MessageCore::Util::message( item );
-  if ( !msg )
-    return Failed;
-
-  MessageFactory factory( msg, item.id(), MailCommon::Util::updatedCollection(item.parentCollection()) );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-
-  const MailTransport::TransportAttribute *transportAttribute = item.attribute<MailTransport::TransportAttribute>();
-  int transportId = -1;
-  if ( transportAttribute ) {
-    transportId = transportAttribute->transportId();
-    const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
-    if ( !transport ) {
-      transportId = -1;
-    }
-  }
-
-  const MailTransport::SentBehaviourAttribute *sentAttribute = item.attribute<MailTransport::SentBehaviourAttribute>();
-  QString fcc;
-  if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
-    fcc =  QString::number( sentAttribute->moveToCollection().id() );
-
-  const KMime::Message::Ptr newMsg = factory.createRedirect( dlg->to(), transportId, fcc );
-  if ( !newMsg )
-    return Failed;
-
-  MessageStatus status;
-  status.setStatusFromFlags( item.flags() );
-  if ( !status.isRead() )
-    FilterAction::sendMDN( item, KMime::MDN::Dispatched );
-
   const MessageSender::SendMethod method = (dlg->sendMode() == MailCommon::RedirectDialog::SendNow)
                                              ? MessageSender::SendImmediate
                                              : MessageSender::SendLater;
 
-  if ( !kmkernel->msgSender()->send( newMsg, method ) ) {
-    kDebug() << "KMRedirectCommand: could not redirect message (sending failed)";
-    return Failed; // error: couldn't send
+  const QString to = dlg->to();
+  foreach( const Akonadi::Item &item, retrievedMsgs() ) {
+    const KMime::Message::Ptr msg = MessageCore::Util::message( item );
+    if ( !msg )
+      return Failed;
+
+    MessageFactory factory( msg, item.id(), MailCommon::Util::updatedCollection(item.parentCollection()) );
+    factory.setIdentityManager( KMKernel::self()->identityManager() );
+    factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
+
+    const MailTransport::TransportAttribute *transportAttribute = item.attribute<MailTransport::TransportAttribute>();
+    int transportId = -1;
+    if ( transportAttribute ) {
+      transportId = transportAttribute->transportId();
+      const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
+      if ( !transport ) {
+        transportId = -1;
+      }
+    }
+
+    const MailTransport::SentBehaviourAttribute *sentAttribute = item.attribute<MailTransport::SentBehaviourAttribute>();
+    QString fcc;
+    if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
+      fcc =  QString::number( sentAttribute->moveToCollection().id() );
+
+    const KMime::Message::Ptr newMsg = factory.createRedirect( to, transportId, fcc );
+    if ( !newMsg )
+      return Failed;
+
+    MessageStatus status;
+    status.setStatusFromFlags( item.flags() );
+    if ( !status.isRead() )
+      FilterAction::sendMDN( item, KMime::MDN::Dispatched );
+
+
+    if ( !kmkernel->msgSender()->send( newMsg, method ) ) {
+      kDebug() << "KMRedirectCommand: could not redirect message (sending failed)";
+      return Failed; // error: couldn't send
+    }
   }
 
   return OK;
@@ -1183,15 +1198,15 @@ KMCommand::Result KMSetTagCommand::execute()
 {
   QStringList tagSelectedlst;
   Q_FOREACH( const Akonadi::Item& item, mItem ) {
-    Nepomuk::Resource n_resource( item.url() );
-    QList<Nepomuk::Tag> n_tag_list;
+    Nepomuk2::Resource n_resource( item.url() );
+    QList<Nepomuk2::Tag> n_tag_list;
     if ( mMode != CleanExistingAndAddNew ){
       n_tag_list = n_resource.tags();
     }
 
     Q_FOREACH( const QString &tagLabel, mTagLabel ) {
-      const Nepomuk::Tag n_tag( tagLabel );
-      const QString tagUri(n_tag.resourceUri().toString());
+      const Nepomuk2::Tag n_tag( tagLabel );
+      const QString tagUri(n_tag.uri().toString());
       if ( mMode == CleanExistingAndAddNew ) {
         n_resource.addTag( n_tag );
         if(!tagSelectedlst.contains(tagUri))
@@ -1205,7 +1220,7 @@ KMCommand::Result KMSetTagCommand::execute()
         } else if ( mMode == Toggle ) {
           const int numberOfTag( n_tag_list.count() );
           for (int i = 0; i < numberOfTag; ++i ) {
-            if ( n_tag_list[i].resourceUri() == tagLabel ) {
+            if ( n_tag_list[i].uri() == tagLabel ) {
               n_tag_list.removeAt( i );
               break;
             }
@@ -1231,20 +1246,6 @@ KMCommand::Result KMSetTagCommand::execute()
 
   return OK;
 }
-
-KMFilterCommand::KMFilterCommand( const QByteArray &field, const QString &value )
-  : mField( field ), mValue( value )
-{
-}
-
-KMCommand::Result KMFilterCommand::execute()
-{
-  FilterIf->openFilterDialog( false );
-  FilterIf->createFilter( mField, mValue );
-
-  return OK;
-}
-
 
 KMFilterActionCommand::KMFilterActionCommand( QWidget *parent,
                                               const QVector<qlonglong> &msgListId,
