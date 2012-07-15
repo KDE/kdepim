@@ -19,6 +19,7 @@
 
 #include "dbaccess.h"
 
+#include <akonadi/servermanager.h>
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QSettings>
@@ -36,7 +37,7 @@ class DbAccessPrivate
   public:
     DbAccessPrivate()
     {
-      const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+      const QString serverConfigFile = saveDir( "config" ) + QLatin1String("/akonadiserverrc");
       QSettings settings( serverConfigFile, QSettings::IniFormat );
 
       const QString driver = settings.value( "General/Driver", "QMYSQL" ).toString();
@@ -50,6 +51,16 @@ class DbAccessPrivate
       if ( !database.open() ) {
         KMessageBox::error( 0, i18n( "Failed to connect to database: %1", database.lastError().text() ) );
       }
+    }
+
+    QString saveDir(const char* resource, const QString& relPath = QString() )
+    {
+      QString fullRelPath = QLatin1String("akonadi");
+      if ( ServerManager::hasInstanceIdentifier() )
+        fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
+      if ( !relPath.isEmpty() )
+        fullRelPath += QLatin1Char('/') + relPath;
+      return XdgBaseDirs::saveDir( resource, fullRelPath );
     }
 
     QSqlDatabase database;
