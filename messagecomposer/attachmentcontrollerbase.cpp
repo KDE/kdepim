@@ -402,7 +402,7 @@ void AttachmentControllerBase::createActions()
   connect( d->saveAsContextAction, SIGNAL(triggered(bool)),
       this, SLOT(saveSelectedAttachmentAs()) );
 
-  d->propertiesAction = new KAction( i18n( "Attachment Pr&operties" ), this ); // TODO why no '...'?
+  d->propertiesAction = new KAction( i18n( "Attachment Pr&operties..." ), this );
   d->propertiesContextAction = new KAction( i18n( "Properties" ), this );
   connect( d->propertiesAction, SIGNAL(triggered(bool)),
       this, SLOT(selectedAttachmentProperties()) );
