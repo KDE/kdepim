@@ -30,54 +30,67 @@
 
 #include "jobscheduler.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
 
 #include <QList>
 
 class KJob;
 
 namespace MailCommon {
+
 class ExpireCollectionAttribute;
 
 class ExpireJob : public ScheduledJob
 {
   Q_OBJECT
-public:
-  explicit ExpireJob( const Akonadi::Collection& folder, bool immediate );
-  virtual ~ExpireJob();
+  public:
+    explicit ExpireJob( const Akonadi::Collection &folder, bool immediate );
+    virtual ~ExpireJob();
 
-  virtual void execute();
-  virtual void kill();
+    virtual void execute();
+    virtual void kill();
 
-private slots:
-  void slotDoWork();
-  void slotMessagesMoved( KJob *job );
-  void itemFetchResult( KJob* job );
+  private slots:
+    void slotDoWork();
+    void slotExpireDone( KJob *job );
+    void slotMoveDone( KJob *job );
+    void itemFetchResult( KJob *job );
 
-private:
-  void done();
+  private:
+    void done();
 
-private:
-  QList<Akonadi::Item> mRemovedMsgs;
-  int mMaxUnreadTime;
-  int mMaxReadTime;
-  Akonadi::Collection mMoveToFolder;
+  private:
+    QList<Akonadi::Item> mRemovedMsgs;
+    int mMaxUnreadTime;
+    int mMaxReadTime;
+    Akonadi::Collection mMoveToFolder;
 };
 
 /// A scheduled "expire mails in this folder" task.
 class ScheduledExpireTask : public ScheduledTask
 {
-public:
-  /// If immediate is set, the job will execute synchronously. This is used when
-  /// the user requests explicitly that the operation should happen immediately.
-  ScheduledExpireTask( const Akonadi::Collection& folder, bool immediate )
-    : ScheduledTask( folder, immediate ) {}
-  virtual ~ScheduledExpireTask() {}
-  virtual ScheduledJob* run() {
-    return folder().isValid() ? new ExpireJob( folder(), isImmediate() ) : 0;
-  }
-  virtual int taskTypeId() const { return 1; }
+  public:
+    /// If immediate is set, the job will execute synchronously. This is used when
+    /// the user requests explicitly that the operation should happen immediately.
+    ScheduledExpireTask( const Akonadi::Collection &folder, bool immediate )
+      : ScheduledTask( folder, immediate )
+    {
+    }
+
+    virtual ~ScheduledExpireTask()
+    {
+    }
+
+    virtual ScheduledJob *run()
+    {
+      return folder().isValid() ? new ExpireJob( folder(), isImmediate() ) : 0;
+    }
+
+    virtual int taskTypeId() const
+    {
+      return 1;
+    }
 };
 
 } // namespace

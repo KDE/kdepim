@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2010 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -18,61 +18,69 @@
 
 #include "entitycollectionorderproxymodel.h"
 #include "mailkernel.h"
+#include "mailutil.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <kdebug.h>
-
+#include <Akonadi/Collection>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/KMime/SpecialMailCollections>
+#include <Akonadi/AgentManager>
 
 namespace MailCommon {
 
 class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
 {
-public:
-  EntityCollectionOrderProxyModelPrivate()
-    : manualSortingActive( false )
-  {
-  }
-
-  int collectionRank( const Akonadi::Collection &collection ) {
-
-    const Akonadi::Collection::Id id = collection.id();
-    if ( collectionRanks.contains( id ) ) {
-      return collectionRanks[ id ];
+  public:
+    EntityCollectionOrderProxyModelPrivate()
+      : manualSortingActive( false )
+    {
     }
 
-    int rank = 100;
-    if ( Kernel::folderIsInbox( collection, true ) ) {
-      rank = 1;
-    } else if ( Kernel::self()->folderIsDraftOrOutbox( collection ) ) {
+    int collectionRank( const Akonadi::Collection &collection )
+    {
+      const Akonadi::Collection::Id id = collection.id();
+      if ( collectionRanks.contains( id ) ) {
+        return collectionRanks[ id ];
+      }
+
+      int rank = 100;
+      if ( Kernel::folderIsInbox( collection, true ) ) {
+        rank = 1;
+      } else if ( Kernel::self()->folderIsDraftOrOutbox( collection ) ) {
         if ( Kernel::self()->folderIsDrafts( collection ) ) {
           rank = 5;
         } else {
           rank = 2;
         }
-    } else if ( Kernel::self()->folderIsSentMailFolder( collection ) ) {
-      rank = 3;
-    } else if ( Kernel::self()->folderIsTrash( collection ) ) {
-      rank = 4;
-    } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
-      rank = 6;
+      } else if ( Kernel::self()->folderIsSentMailFolder( collection ) ) {
+        rank = 3;
+      } else if ( Kernel::self()->folderIsTrash( collection ) ) {
+        rank = 4;
+      } else if ( Kernel::self()->folderIsTemplates( collection ) ) {
+        rank = 6;
+      } else if ( MailCommon::Util::isVirtualCollection( collection ) ) {
+        rank = 200;
+      } else if( !topLevelOrder.isEmpty() ) {
+          if( collection.parentCollection() == Akonadi::Collection::root()) {
+              const int order = topLevelOrder.indexOf(collection.resource());
+              if( order != -1 ) {
+                  rank = order;
+              }
+          }
+      }
+      collectionRanks.insert( id, rank );
+      return rank;
     }
-    collectionRanks.insert( id, rank );
-    return rank;
-  }
 
-  bool manualSortingActive;
-  QMap<Akonadi::Collection::Id, int> collectionRanks;
+    bool manualSortingActive;
+    QMap<Akonadi::Collection::Id, int> collectionRanks;
+    QStringList topLevelOrder;
 };
 
-
-
-EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject* parent )
+EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject *parent )
   : EntityOrderProxyModel( parent ), d( new EntityCollectionOrderProxyModelPrivate() )
 {
-  setDynamicSortFilter(true);
-  setSortCaseSensitivity(Qt::CaseInsensitive);
+  setDynamicSortFilter( true );
+  setSortCaseSensitivity( Qt::CaseInsensitive );
   connect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
            this, SLOT(slotDefaultCollectionsChanged()) );
 
@@ -80,11 +88,11 @@ EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject* paren
 
 EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()
 {
-  if ( d->manualSortingActive )
+  if ( d->manualSortingActive ) {
     saveOrder();
+  }
   delete d;
 }
-
 
 void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
 {
@@ -94,12 +102,28 @@ void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
   }
 }
 
-bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QModelIndex & right ) const
+void EntityCollectionOrderProxyModel::setTopLevelOrder(const QStringList& list)
+{
+    d->topLevelOrder = list;
+    clearRanks();
+}
+
+void EntityCollectionOrderProxyModel::clearRanks()
+{
+    d->collectionRanks.clear();
+    invalidate();
+}
+
+bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex &left,
+                                                const QModelIndex &right ) const
 {
   if ( !d->manualSortingActive ) {
 
-    Akonadi::Collection leftData = left.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    Akonadi::Collection rightData = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    Akonadi::Collection leftData =
+      left.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    Akonadi::Collection rightData =
+      right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+
     int rankLeft = d->collectionRank( leftData );
     int rankRight = d->collectionRank( rightData );
 
@@ -116,15 +140,13 @@ bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QM
 
 void EntityCollectionOrderProxyModel::setManualSortingActive( bool active )
 {
-  if ( d->manualSortingActive == active )
+  if ( d->manualSortingActive == active ) {
     return;
+  }
+
   d->manualSortingActive = active;
   d->collectionRanks.clear();
-  if ( !active ) {
-    clearTreeOrder();
-  } else {
-    invalidate();
-  }
+  invalidate();
 }
 
 bool EntityCollectionOrderProxyModel::isManualSortingActive() const

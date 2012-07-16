@@ -20,9 +20,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include <config-strigi.h>
 #include "ctgendanalyzer.h"
-
-#include "config-strigi.h"
 
 #include <kabc/contactgroup.h>
 #include <kabc/contactgrouptool.h>

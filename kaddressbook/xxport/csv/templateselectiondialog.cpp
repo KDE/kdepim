@@ -1,23 +1,30 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "templateselectiondialog.h"
+
+#include <KConfig>
+#include <KLocale>
+#include <KMessageBox>
+#include <KPushButton>
+#include <KStandardDirs>
+#include <KVBox>
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QFile>
@@ -26,13 +33,6 @@
 #include <QtGui/QListView>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QStyledItemDelegate>
-
-#include <kconfig.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kpushbutton.h>
-#include <kstandarddirs.h>
-#include <kvbox.h>
 
 typedef struct {
   QString displayName;
@@ -51,47 +51,54 @@ class TemplatesModel : public QAbstractTableModel
 
     virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const
     {
-      if ( !parent.isValid() )
+      if ( !parent.isValid() ) {
         return mTemplates.count();
-      else
+      } else {
         return 0;
+      }
     }
 
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const
     {
-      if ( !parent.isValid() )
+      if ( !parent.isValid() ) {
         return 2;
-      else
+      } else {
         return 0;
+      }
     }
 
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const
     {
-      if ( !index.isValid() || index.row() >= mTemplates.count() || index.column() >= 2 )
+      if ( !index.isValid() || index.row() >= mTemplates.count() || index.column() >= 2 ) {
         return QVariant();
-
-      if ( role == Qt::DisplayRole ) {
-        if ( index.column() == 0 )
-          return mTemplates[ index.row() ].displayName;
-        else
-          return mTemplates[ index.row() ].fileName;
       }
 
-      if ( role == Qt::UserRole )
+      if ( role == Qt::DisplayRole ) {
+        if ( index.column() == 0 ) {
+          return mTemplates[ index.row() ].displayName;
+        } else {
+          return mTemplates[ index.row() ].fileName;
+        }
+      }
+
+      if ( role == Qt::UserRole ) {
         return mTemplates[ index.row() ].isDeletable;
+      }
 
       return QVariant();
     }
 
     virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() )
     {
-      if ( parent.isValid() || row < 0 || row >= mTemplates.count() )
+      if ( parent.isValid() || row < 0 || row >= mTemplates.count() ) {
         return false;
+      }
 
       beginRemoveRows( parent, row, row + count - 1 );
       for ( int i = 0; i < count; ++i ) {
-        if ( !QFile::remove( mTemplates[ row ].fileName ) )
+        if ( !QFile::remove( mTemplates[ row ].fileName ) ) {
           return false;
+        }
         mTemplates.removeAt( row );
       }
 
@@ -103,13 +110,15 @@ class TemplatesModel : public QAbstractTableModel
     {
       beginResetModel();
       mTemplates.clear();
-      const QStringList files = KGlobal::dirs()->findAllResources( "data" , "kaddressbook/csv-templates/*.desktop",
-                                                                   KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
+      const QStringList files =
+        KGlobal::dirs()->findAllResources( "data", "kaddressbook/csv-templates/*.desktop",
+                                           KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
       for ( int i = 0; i < files.count(); ++i ) {
         KConfig config( files.at( i ), KConfig::SimpleConfig );
 
-        if ( !config.hasGroup( "csv column map" ) )
+        if ( !config.hasGroup( "csv column map" ) ) {
           continue;
+        }
 
         KConfigGroup group( &config, "Misc" );
         TemplateInfo info;
@@ -141,25 +150,29 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
     {
     }
 
-    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
+                        const QModelIndex &index ) const
     {
       QStyledItemDelegate::paint( painter, option, index );
 
-      if ( index.data( Qt::UserRole ).toBool() )
+      if ( index.data( Qt::UserRole ).toBool() ) {
         mIcon.paint( painter, option.rect, Qt::AlignRight );
+      }
     }
 
-    QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
+    QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
     {
       QSize hint = QStyledItemDelegate::sizeHint( option, index );
 
-      if ( index.data( Qt::UserRole ).toBool() )
+      if ( index.data( Qt::UserRole ).toBool() ) {
         hint.setWidth( hint.width() + 16 );
+      }
 
       return hint;
     }
 
-    virtual bool editorEvent( QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index )
+    virtual bool editorEvent( QEvent *event, QAbstractItemModel *model,
+                              const QStyleOptionViewItem &option, const QModelIndex &index )
     {
       if ( event->type() == QEvent::MouseButtonRelease && index.data( Qt::UserRole ).toBool() ) {
         const QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
@@ -168,7 +181,10 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
 
         if ( buttonRect.contains( mouseEvent->pos() ) ) {
           const QString templateName = index.data( Qt::DisplayRole ).toString();
-          if ( KMessageBox::questionYesNo( 0, i18nc( "@label", "Do you really want to delete template '%1'?", templateName ) ) == KMessageBox::Yes ) {
+          if ( KMessageBox::questionYesNo(
+                 0,
+                 i18nc( "@label", "Do you really want to delete template '%1'?",
+                        templateName ) ) == KMessageBox::Yes ) {
             model->removeRows( index.row(), 1 );
             return true;
           }

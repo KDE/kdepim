@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
- * Copyright (C) 2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ class KActionCollection;
 class Ui_CustomTemplatesBase;
 
 namespace TemplateParser {
+class CustomTemplateItem;
 
 class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 {
@@ -55,7 +56,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void changed();
     void templatesUpdated();
 
-  private slots:
+  private Q_SLOTS:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
     void slotAddClicked();
@@ -66,9 +67,14 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotItemChanged( QTreeWidgetItem *item, int column );
     void slotHelpLinkClicked( const QString & );
     void slotNameChanged( const QString &text );
+    void slotDuplicateClicked();
 
   private:
+    bool nameAlreadyExists( const QString &str, QTreeWidgetItem *item = 0 );
     QString indexToType( int index );
+    QString createUniqueName( const QString &name ) const;
+    void iconFromType( CustomTemplates::Type type, CustomTemplateItem *item );
+
     /// These templates will be deleted when we're saving.
     QStringList mItemsToDelete;
 
@@ -125,9 +131,9 @@ class CustomTemplateItemDelegate : public QStyledItemDelegate
   public:
     explicit CustomTemplateItemDelegate( QObject *parent = 0 );
     ~CustomTemplateItemDelegate();
+    QWidget *createEditor ( QWidget *parent, const QStyleOptionViewItem &option,
+                            const QModelIndex &index ) const;
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                           const QModelIndex &index ) const;
     void setModelData( QWidget *editor, QAbstractItemModel *model,
                        const QModelIndex &index ) const;
 

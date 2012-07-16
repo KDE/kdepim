@@ -1,7 +1,7 @@
 /*
  *  collectionmodel.h  -  Akonadi collection models
  *  Program:  kalarm
- *  Copyright © 2010-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2010-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -174,8 +174,9 @@ class CollectionControlModel : public Akonadi::FavoriteCollectionsModel
 
         /** Enable or disable a collection (if it is valid) for specified alarm types.
          *  Note that this only changes the status for the specified alarm types.
+         *  \return alarm types which can be enabled
          */
-        static void setEnabled(const Akonadi::Collection&, CalEvent::Types, bool enabled);
+        static CalEvent::Types setEnabled(const Akonadi::Collection&, CalEvent::Types, bool enabled);
 
         /** Return whether a collection is both enabled and fully writable for a
          *  given alarm type, i.e. with create/delete/change rights and compatible
@@ -257,6 +258,11 @@ class CollectionControlModel : public Akonadi::FavoriteCollectionsModel
          */
         static Akonadi::Collection::List enabledCollections(CalEvent::Type, bool writable);
 
+        /** Return the collection ID for a given resource ID.
+         *  \return  collection ID, or -1 if the resource is not in KAlarm's list.
+         */
+        static Akonadi::Collection collectionForResource(const QString& resourceId);
+
         virtual QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const;
 
         /** Return a bulleted list of alarm types for inclusion in an i18n message. */
@@ -268,6 +274,8 @@ class CollectionControlModel : public Akonadi::FavoriteCollectionsModel
     private:
         explicit CollectionControlModel(QObject* parent = 0);
         void findEnabledCollections(const Akonadi::EntityMimeTypeFilterModel*, const QModelIndex& parent, Akonadi::Collection::List&) const;
+        CalEvent::Types setEnabledStatus(const Akonadi::Collection&, CalEvent::Types, bool inserted);
+        static CalEvent::Types checkTypesToEnable(const Akonadi::Collection&, const Akonadi::Collection::List&, CalEvent::Types);
 
         static CollectionControlModel* mInstance;
         static bool mAskDestination;

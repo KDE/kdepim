@@ -247,102 +247,20 @@ void AgentWidget::showChangeNotifications()
   if ( !agent.isValid() )
     return;
 
-  const QString fileName = QString::fromLatin1( "%1/akonadi/agent_config_%2_changes.dat" ).arg( KGlobal::dirs()->localxdgconfdir() ).arg( agent.identifier() );
-  QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) )
-    return;
+  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+                        "/Debug", QString() );
 
-  QDataStream stream( &file );
-  stream.setVersion( QDataStream::Qt_4_6 );
-
-  qulonglong size;
-  QByteArray sessionId, resource;
-  int type, operation;
-  qlonglong uid, parentCollection, parentDestCollection;
-  QString remoteId, mimeType;
-  QSet<QByteArray> itemParts;
-
-  QStringList list;
-
-  stream >> size;
-  for ( qulonglong i = 0; i < size; ++i ) {
-    stream >> sessionId;
-    stream >> type;
-    stream >> operation;
-    stream >> uid;
-    stream >> remoteId;
-    stream >> resource;
-    stream >> parentCollection;
-    stream >> parentDestCollection;
-    stream >> mimeType;
-    stream >> itemParts;
-
-    QString typeString;
-    switch ( type ) {
-      case NotificationMessage::Collection:
-        typeString = QLatin1String( "Collection" );
-        break;
-      case NotificationMessage::Item:
-        typeString = QLatin1String( "Item" );
-        break;
-      default:
-        typeString = QLatin1String( "InvalidType" );
-        break;
-    };
-
-    QString operationString;
-    switch ( operation ) {
-      case NotificationMessage::Add:
-        operationString = QLatin1String( "Add" );
-        break;
-      case NotificationMessage::Modify:
-        operationString = QLatin1String( "Modify" );
-        break;
-      case NotificationMessage::Move:
-        operationString = QLatin1String( "Move" );
-        break;
-      case NotificationMessage::Remove:
-        operationString = QLatin1String( "Remove" );
-        break;
-      case NotificationMessage::Link:
-        operationString = QLatin1String( "Link" );
-        break;
-      case NotificationMessage::Unlink:
-        operationString = QLatin1String( "Unlink" );
-        break;
-      case NotificationMessage::Subscribe:
-        operationString = QLatin1String( "Subscribe" );
-        break;
-      case NotificationMessage::Unsubscribe:
-        operationString = QLatin1String( "Unsubscribe" );
-        break;
-      default:
-        operationString = QLatin1String( "InvalidOp" );
-        break;
-    };
-
-    QStringList itemPartsList;
-    foreach( const QByteArray &b, itemParts )
-      itemPartsList.push_back( QString::fromLatin1(b) );
-
-    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
-                                             .arg( QString::fromLatin1( sessionId ) )
-                                             .arg( typeString )
-                                             .arg( operationString )
-                                             .arg( uid )
-                                             .arg( remoteId )
-                                             .arg( QString::fromLatin1( resource ) )
-                                             .arg( parentCollection )
-                                             .arg( parentDestCollection )
-                                             .arg( mimeType )
-                                             .arg( itemPartsList.join(QLatin1String(", " )) );
-
-    list << entry;
+  QDBusReply<QString> reply = iface.call("dumpNotificationListToString");
+  QString txt;
+  if ( reply.isValid() )
+    txt = reply.value();
+  else {
+    txt = reply.error().message();
   }
 
   QPointer<TextDialog> dlg = new TextDialog( this );
   dlg->setCaption( QLatin1String( "Change Notification Log" ) );
-  dlg->setText( list.join( QLatin1String( "\n" ) ) );
+  dlg->setText( txt );
 
   dlg->exec();
   delete dlg;

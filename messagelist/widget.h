@@ -221,6 +221,20 @@ public:
   QList<Akonadi::Item> selectionAsMessageItemList( bool includeCollapsedChildren = true ) const;
 
   /**
+   * Returns the currently selected Items id (bound to current StorageModel).
+   * The list may be empty if there are no selected messages or no StorageModel.
+   *
+   * If includeCollapsedChildren is true then the children of the selected but
+   * collapsed items are also added to the list.
+   *
+   * The returned list is guaranteed to be valid only until you return control
+   * to the main even loop. Don't store it for any longer. If you need to reference
+   * this set of messages at a later stage then take a look at createPersistentSet().
+   */
+
+  QVector<qlonglong> selectionAsMessageItemListId( bool includeCollapsedChildren ) const;
+
+  /**
    * Returns the Akonadi::Item bound to the current StorageModel that
    * are part of the current thread. The current thread is the thread
    * that contains currentMessageItem().

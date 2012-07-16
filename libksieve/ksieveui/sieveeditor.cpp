@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,6 +17,8 @@
  */
 
 #include "sieveeditor.h"
+#include "sievefindbar.h"
+
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
@@ -29,6 +31,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QShortcut>
 
 using namespace KSieveUi;
 
@@ -59,10 +62,24 @@ SieveEditor::SieveEditor( QWidget * parent )
   lay->addWidget( splitter );
   QList<int> size;
   size << 400 << 100;
+
   mTextEdit = new SieveTextEdit( splitter );
+  mFindBar = new SieveFindBar( mTextEdit, splitter );
+
+  QWidget *widget = new QWidget( splitter );
+  QVBoxLayout *layTextEdit = new QVBoxLayout;
+  layTextEdit->addWidget( mTextEdit );
+  layTextEdit->addWidget( mFindBar );
+  widget->setLayout( layTextEdit );
+
+  QShortcut *shortcut = new QShortcut( this );
+  shortcut->setKey( Qt::Key_F+Qt::CTRL );
+  connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+  connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
+   
   mDebugTextEdit = new QTextEdit;
   mDebugTextEdit->setReadOnly( true );
-  splitter->addWidget( mTextEdit );
+  splitter->addWidget( widget );
   splitter->addWidget( mDebugTextEdit );
   splitter->setSizes( size );
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
@@ -70,17 +87,26 @@ SieveEditor::SieveEditor( QWidget * parent )
   connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
   setMainWidget( mainWidget );
-  resize( 640,480);
+  resize( 800,600);
 }
 
 SieveEditor::~SieveEditor()
 {
 }
 
+void SieveEditor::slotFind()
+{
+  if ( mTextEdit->textCursor().hasSelection() )
+    mFindBar->setText( mTextEdit->textCursor().selectedText() );
+  mFindBar->show();
+  mFindBar->focusAndSetCursor();  
+}
+
 void SieveEditor::slotSaveAs()
 {
   KUrl url;
-  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+  const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+  QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
 
   fdlg->setMode( KFile::File );
   fdlg->setOperationMode( KFileDialog::Saving );
@@ -119,7 +145,8 @@ void SieveEditor::slotImport()
       return;
   }
   KUrl url;
-  QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+  const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+  QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
 
   fdlg->setMode( KFile::File );
   fdlg->setOperationMode( KFileDialog::Opening );
@@ -173,7 +200,7 @@ QString SieveEditor::script() const
 
 void SieveEditor::setScript( const QString & script )
 {
-  mTextEdit->append( script );
+  mTextEdit->setPlainText( script );
 }
 
 void SieveEditor::setDebugColor( const QColor& col )

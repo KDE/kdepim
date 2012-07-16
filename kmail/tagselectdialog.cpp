@@ -28,9 +28,12 @@
 
 #include "tagselectdialog.h"
 #include "tag.h"
-#include <Nepomuk/Resource>
-#include <Nepomuk/ResourceManager>
-#include <Nepomuk/Tag>
+
+#include <KListWidgetSearchLine>
+
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/ResourceManager>
+#include <Nepomuk2/Tag>
 #include <QGridLayout>
 #include <QListWidget>
 #include <akonadi/item.h>
@@ -52,15 +55,20 @@ TagSelectDialog::TagSelectDialog( QWidget * parent, int numberOfSelectedMessages
   setMainWidget( mainWidget );
 
   mListTag = new QListWidget( this );
+  mListWidgetSearchLine = new KListWidgetSearchLine(this,mListTag);
+  mListWidgetSearchLine->setClickMessage(i18n("Search tag"));
+  mListWidgetSearchLine->setClearButtonShown(true);
+
+  mainLayout->addWidget(mListWidgetSearchLine);
   mainLayout->addWidget( mListTag );
   
   QList<Tag::Ptr> tagList;
-  foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
+  foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
     tagList.append( Tag::fromNepomuk( nepomukTag ) );
   }
   qSort( tagList.begin(), tagList.end(), KMail::Tag::compare );
 
-  Nepomuk::Resource itemResource( selectedItem.url() );
+  Nepomuk2::Resource itemResource( selectedItem.url() );
 
   foreach( const Tag::Ptr &tag, tagList ) {
     QListWidgetItem *item = new QListWidgetItem( tag->tagName, mListTag );
@@ -68,12 +76,10 @@ TagSelectDialog::TagSelectDialog( QWidget * parent, int numberOfSelectedMessages
     item->setCheckState( Qt::Unchecked );
     mListTag->addItem( item );
 
-    if ( numberOfSelectedMessages == 1 )
-    {
-      const bool hasTag = itemResource.tags().contains(  Nepomuk::Tag( tag->tagName ) );
+    if ( numberOfSelectedMessages == 1 ) {
+      const bool hasTag = itemResource.tags().contains(  Nepomuk2::Tag( tag->tagName ) );
       item->setCheckState( hasTag ? Qt::Checked : Qt::Unchecked );
-    }
-    else {
+    } else {
       item->setCheckState( Qt::Unchecked );
     }    
   }

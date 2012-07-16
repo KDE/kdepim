@@ -20,7 +20,7 @@
 
 #include "findbarbase.h"
 
-class KTextBrowser;
+class QPlainTextEdit;
 
 namespace MessageViewer
 {
@@ -29,16 +29,18 @@ class FindBarSourceView : public FindBarBase
   Q_OBJECT
 
   public:
-    explicit FindBarSourceView( KTextBrowser * view, QWidget * parent = 0 );
+    explicit FindBarSourceView( QPlainTextEdit * view, QWidget * parent = 0 );
     virtual ~FindBarSourceView();
 
   private:
     FindBarSourceView( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
     void searchText( bool backward, bool isAutoSearch );
+    void updateHighLight(bool);
+    void updateSensitivity(bool);
 
   private:
-    KTextBrowser * m_view;
+    QPlainTextEdit * m_view;
 };
 }
 

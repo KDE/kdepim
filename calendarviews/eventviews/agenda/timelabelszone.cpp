@@ -35,7 +35,7 @@ using namespace EventViews;
 
 TimeLabelsZone::TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda )
   : QWidget( parent ), mAgenda( agenda ), mPrefs( preferences ),
-    mParent( dynamic_cast<AgendaView*>( parent ) )
+    mParent( qobject_cast<AgendaView*>( parent ) )
 {
   mTimeLabelsLayout = new QHBoxLayout( this );
   mTimeLabelsLayout->setMargin( 0 );
@@ -99,8 +99,12 @@ void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
 void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
 {
   if ( mAgenda && mAgenda->verticalScrollBar() ) {
+    // Scrolling the agenda will scroll the timelabel
     connect( mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
              area->verticalScrollBar(), SLOT(setValue(int)) );
+    // and vice-versa. ( this won't loop )
+    connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
+             mAgenda->verticalScrollBar(), SLOT(setValue(int)) );
 
     area->verticalScrollBar()->setValue( mAgenda->verticalScrollBar()->value() );
 

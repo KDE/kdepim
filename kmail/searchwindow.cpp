@@ -3,7 +3,7 @@
  * Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
  * Copyright (c) 2001 Aaron J. Seigo <aseigo@kde.org>
  * Copyright (c) 2010 Till Adam <adam@kde.org>
- * Copyright (c) 2011 Laurent Montel <montel@kde.org>
+ * Copyright (c) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
   QFrame *radioFrame = new QFrame( searchWidget );
   QVBoxLayout *radioLayout = new QVBoxLayout( radioFrame );
-  mChkbxAllFolders = new QRadioButton( i18n( "Search in &all local folders" ), searchWidget );
+  mChkbxAllFolders = new QRadioButton( i18n( "Search in &all folders" ), searchWidget );
 
   QHBoxLayout *hbl = new QHBoxLayout();
 
@@ -120,8 +120,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   mCbxFolders->setMustBeReadWrite( false );
   mCbxFolders->setNotAllowToCreateNewFolder( true );
 
-  mCbxFolders->setCollection( collection );
-
   mChkSubFolders = new QCheckBox( i18n( "I&nclude sub-folders" ), searchWidget );
   mChkSubFolders->setChecked( true );
 
@@ -131,16 +129,11 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   hbl->addWidget( mChkSubFolders );
   radioLayout->addLayout( hbl );
 
-  mChkbxSpecificFolders->hide();
-  mChkSubFolders->hide();
-  mCbxFolders->hide();
-  mChkbxAllFolders->hide();
-
   QGroupBox *patternGroupBox = new QGroupBox( searchWidget );
   QHBoxLayout *layout = new QHBoxLayout( patternGroupBox );
   layout->setContentsMargins( 0, 0, 0, 0 );
 
-  mPatternEdit = new SearchPatternEdit( searchWidget, false, false );
+  mPatternEdit = new SearchPatternEdit( searchWidget );
   layout->addWidget( mPatternEdit );
   patternGroupBox->setFlat( true );
 
@@ -149,6 +142,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   if ( !collection.hasAttribute<Akonadi::PersistentSearchAttribute>() ) {
     // it's not a search folder, make a new search
     mSearchPattern.append( SearchRule::createInstance( "Subject" ) );
+    mCbxFolders->setCollection( collection );
   } else {
     // it's a search folder
     if ( collection.hasAttribute<Akonadi::SearchDescriptionAttribute>() ) {
@@ -168,7 +162,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
     } else {
       // it's a search folder, but not one of ours, warn the user that we can't edit it
       // FIXME show results, but disable edit GUI
-      kWarning() << "This search was not created with KMail. It can not be edited within it.";
+      kWarning() << "This search was not created with KMail. It cannot be edited within it.";
       mSearchPattern.clear();
     }
   }
@@ -422,13 +416,11 @@ void SearchWindow::setEnabledSearchButton( bool )
 
 void SearchWindow::updateCollectionStatistic(Akonadi::Collection::Id id,Akonadi::CollectionStatistics statistic)
 {
-  QString genMsg, detailMsg;
+  QString genMsg;
   if ( id == mFolder.id() ) {
     genMsg = i18np( "%1 match", "%1 matches", statistic.count() );
-    detailMsg = i18n( "Searching in %1", mFolder.name() );
   }
   mStatusBar->changeItem( genMsg, 0 );
-  mStatusBar->changeItem( detailMsg, 1 );
 }
 
 void SearchWindow::keyPressEvent( QKeyEvent *event )
@@ -480,18 +472,18 @@ void SearchWindow::slotSearch()
   }
 
   mSearchFolderEdt->setEnabled( false );
-#if 0
-  if ( mChkbxAllFolders->isChecked() ) {
-    search->setRecursive( true );
-  } else {
-    search->setRoot( mCbxFolders->folder() );
-    search->setRecursive( mChkSubFolders->isChecked() );
+
+  KUrl::List urls;
+  if ( !mChkbxAllFolders->isChecked() ) {
+    const Akonadi::Collection col = mCbxFolders->collection();
+    urls<< col.url( Akonadi::Collection::UrlShort );
+    if ( mChkSubFolders->isChecked() ) {
+      childCollectionsFromSelectedCollection( col, urls );
+    }
   }
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
 
   mPatternEdit->updateSearchPattern();
+
   SearchPattern searchPattern( mSearchPattern );
   searchPattern.purify();
   enableGUI();
@@ -503,12 +495,12 @@ void SearchWindow::slotSearch()
   const QString query = searchPattern.asXesamQuery();
   const QString queryLanguage = "XESAM";
 #else
-  const QString query = searchPattern.asSparqlQuery();
+  const QString query = searchPattern.asSparqlQuery(urls);
   const QString queryLanguage = "SPARQL";
 #endif
 
-  kDebug() << queryLanguage;
-  kDebug() << query;
+  qDebug() << queryLanguage;
+  qDebug() << query;
   if ( query.isEmpty() )
     return;
   mSearchFolderOpenBtn->setEnabled( true );
@@ -558,8 +550,12 @@ void SearchWindow::searchDone( KJob* job )
       Q_ASSERT( !search.isEmpty() );
       Akonadi::SearchDescriptionAttribute *searchDescription = mFolder.attribute<Akonadi::SearchDescriptionAttribute>( Akonadi::Entity::AddIfMissing );
       searchDescription->setDescription( search );
-      const Akonadi::Collection collection = mCbxFolders->collection();
-      searchDescription->setBaseCollection( collection );
+      if ( !mChkbxAllFolders->isChecked() ) {
+        const Akonadi::Collection collection = mCbxFolders->collection();
+        searchDescription->setBaseCollection( collection );
+      } else {
+        searchDescription->setBaseCollection( Akonadi::Collection() );
+      }
       searchDescription->setRecursive( mChkSubFolders->isChecked() );
       new Akonadi::CollectionModifyJob( mFolder, this );
       mSearchJob = 0;
@@ -844,6 +840,35 @@ void SearchWindow::setSearchPattern( const SearchPattern &pattern )
   mSearchPattern = pattern;
   mPatternEdit->setSearchPattern( &mSearchPattern );
 }
+
+
+void SearchWindow::childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List&lstUrlCollection )
+{  
+  if ( collection.isValid() )  {
+    QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KMKernel::self()->collectionModel(), collection );
+    if ( idx.isValid() ) {
+      getChildren( KMKernel::self()->collectionModel(), idx, lstUrlCollection );
+    }
+  }
+}
+
+void SearchWindow::getChildren( const QAbstractItemModel *model,
+                                const QModelIndex &parentIndex,
+                                KUrl::List &list )
+{
+  const int rowCount = model->rowCount( parentIndex );
+  for ( int row = 0; row < rowCount; ++row ) {
+    const QModelIndex index = model->index( row, 0, parentIndex );
+    if ( model->rowCount( index ) > 0 ) {
+      
+      getChildren( model, index, list );
+    }
+    Akonadi::Collection c = model->data(index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( c.isValid() )
+      list << c.url( Akonadi::Collection::UrlShort );
+  }
+}
+
 
 }
 

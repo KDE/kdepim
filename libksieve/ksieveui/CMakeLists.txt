@@ -3,6 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libksieve )
 add_subdirectory( tests )
 
 set(ksieveui_LIB_SRCS
+    sievelinenumberarea.cpp
     managesievescriptsdialog.cpp
     sievedebugdialog.cpp
     util.cpp
@@ -11,6 +12,7 @@ set(ksieveui_LIB_SRCS
     sievesyntaxhighlighter.cpp
     sievetextedit.cpp
     sieveeditor.cpp
+    sievefindbar.cpp
    )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

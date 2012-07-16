@@ -23,26 +23,34 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef SEARCHDIALOG_H
-#define SEARCHDIALOG_H
 
-#include "ui_searchdialog_base.h"
-#include <kcalcore/incidence.h>
+#ifndef KORG_SEARCHDIALOG_H
+#define KORG_SEARCHDIALOG_H
+
 #include <KDialog>
+
+class CalendarView;
+
+namespace Ui {
+  class SearchDialog;
+}
+
+namespace EventViews {
+  class ListView;
+}
 
 namespace Akonadi {
   class Item;
 }
 
-using namespace KCalCore;
+namespace KCalCore {
+  class Incidence;
+}
 
-class CalendarView;
-class KOListView;
-class QRegExp;
-
-class SearchDialog : public KDialog, private Ui::SearchDialog
+class SearchDialog : public KDialog
 {
   Q_OBJECT
+
   public:
     explicit SearchDialog( CalendarView *calendarview );
     virtual ~SearchDialog();
@@ -50,7 +58,10 @@ class SearchDialog : public KDialog, private Ui::SearchDialog
     void updateView();
 
   public slots:
-    void changeIncidenceDisplay( Incidence *, int ) { updateView(); }
+    void changeIncidenceDisplay( KCalCore::Incidence *, int )
+    {
+      updateView();
+    }
 
   protected slots:
     void doSearch();
@@ -64,9 +75,10 @@ class SearchDialog : public KDialog, private Ui::SearchDialog
   private:
     void search( const QRegExp & );
 
-    CalendarView *m_calendarview;
+    Ui::SearchDialog *m_ui;
+    CalendarView *m_calendarview; // parent
     QList<Akonadi::Item> mMatchedEvents;
-    KOListView *listView;
+    EventViews::ListView *listView;
 };
 
 #endif

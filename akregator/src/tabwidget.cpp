@@ -89,6 +89,8 @@ public:
 void TabWidget::Private::updateTabBarVisibility()
 {
     q->setTabBarHidden( ( q->count() <= 1 ) && !Settings::alwaysShowTabBar() );
+    if (q->count() >= 1 && Settings::closeButtonOnTabs())
+        q->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
 }
 
 TabWidget::TabWidget(QWidget * parent)
@@ -408,6 +410,15 @@ void TabWidget::initiateDrag(int tab)
         drag->start();
     }
 }
+
+void TabWidget::slotReloadAllTabs()
+{
+  Q_FOREACH(Frame* frame,d->frames.values())
+  {
+    frame->slotReload();
+  }
+}
+
 
 void TabWidget::slotCloseRequest(QWidget* widget)
 {

@@ -60,6 +60,7 @@ class BrowserWidget: public QWidget
 
   public slots:
     void dumpToXml();
+    void clearCache();
 
   private slots:
     void itemActivated( const QModelIndex &index );
@@ -74,6 +75,8 @@ class BrowserWidget: public QWidget
     void clear();
 
   private:
+    Akonadi::Collection currentCollection() const;
+
     AkonadiBrowserModel *mBrowserModel;
     Akonadi::EntityTreeView *mCollectionView;
     KPIM::StatisticsProxyModel *statisticsProxyModel;

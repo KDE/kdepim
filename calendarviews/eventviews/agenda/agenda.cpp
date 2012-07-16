@@ -540,7 +540,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
   }
 }
 
-bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
+bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
 {
 #ifndef QT_NO_DRAGANDDROP
   const QMimeData *md = de->mimeData();
@@ -569,8 +569,8 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
     }
 
     const QList<KUrl> incidenceUrls = CalendarSupport::incidenceItemUrls( md );
-    const KCalCore::Incidence::List incidences
-                                      = CalendarSupport::incidences( md, d->mCalendar->timeSpec() );
+    const KCalCore::Incidence::List incidences =
+      CalendarSupport::incidences( md, d->mCalendar->timeSpec() );
 
     Q_ASSERT( !incidenceUrls.isEmpty() || !incidences.isEmpty() );
 

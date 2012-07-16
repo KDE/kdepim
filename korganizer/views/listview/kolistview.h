@@ -23,30 +23,19 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOLISTVIEW_H
-#define KOLISTVIEW_H
+
+#ifndef KORG_VIEWS_KOLISTVIEW_H
+#define KORG_VIEWS_KOLISTVIEW_H
 
 #include "koeventview.h"
 
-#include <KCalCore/Incidence>
-
-#include <calendarviews/eventviews/list/listview.h>
-
-#include <QHash>
-#include <QList>
-
-using namespace KCalCore;
-
-namespace CalendarSupport {
-  class Calendar;
-}
-
-class KOListView;
-class KOEventPopupMenu;
+#include <KCalCore/Incidence> //for KCalCore::DateList typedef
 
 namespace EventViews {
   class ListView;
 }
+
+class QModelIndex;
 
 class KOListView : public KOEventView
 {
@@ -59,9 +48,7 @@ class KOListView : public KOEventView
     virtual int maxDatesHint() const;
     virtual int currentDateCount() const;
     virtual Akonadi::Item::List selectedIncidences();
-    virtual DateList selectedIncidenceDates();
-
-    void showDates( bool show );
+    virtual KCalCore::DateList selectedIncidenceDates();
 
     // Shows all incidences of the calendar
     void showAll();
@@ -84,9 +71,6 @@ class KOListView : public KOEventView
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();
-
-    void showDates();
-    void hideDates();
 
     void changeIncidenceDisplay( const Akonadi::Item &, int );
 

@@ -23,6 +23,7 @@ What it is
 * kalarm: gui for setting up personal alarm messages, emails and commands
 * kjots: manager for several "books" with a subject and notes
 * kmail: the KDE mail client
+* importwizard: tool for importing mail/filter/settings/bookmarks from other programs
 * kmailcvt: tool for importing mail related data from other programs
 * knode: Usenet client
 * knotes: popup notes application
@@ -32,6 +33,7 @@ What it is
 * korganizer: a calendar-of-events, todo-list manager, journal 
 * ksendemail: commandline email tool.
 * ktimetracker: Time tracker.
+* ktnef: Viewer for mail attachments using TNEF format
 
 
 Mailing List, getting involved

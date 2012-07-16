@@ -9,6 +9,7 @@ add_subdirectory(pics)
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR} )
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)
@@ -49,6 +50,7 @@ set(kdepim_LIB_SRCS
    uistatesaver.cpp
    nepomukwarning.cpp
    statisticsproxymodel.cpp
+   customlogwidget.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)
@@ -79,7 +81,14 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  ${NEPOMUK_CORE_LIBRARY}
 )
+
+  target_link_libraries(kdepim
+    ${NEPOMUK_QUERY_LIBRARIES}
+    ${SOPRANO_LIBRARIES}
+  )
+
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KRESOURCES_LIBS}

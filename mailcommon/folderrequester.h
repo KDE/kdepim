@@ -31,89 +31,111 @@
 
 #include "mailcommon_export.h"
 
+#include <Akonadi/Collection>
+
 #include <KLineEdit>
-#include <akonadi/collection.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
-class QKeyEvent; 
+class QKeyEvent;
 
 class KJob;
 
 namespace MailCommon {
 
-
 /**
-   * A widget that contains a KLineEdit which shows the current folder
-   * and a button that fires a FolderSelectionDialog
-   * The dialog is set to disable readonly folders by default
-   * Search folders are excluded
-   *
-   * @todo This should be cleaned up and go into libakonadi. This includes:
-   * - s/Folder/Collection/g
-   * - Use Akonadi::CollectionDialog instead of MailCommon::FolderSelectionDialog
-   *  - merge that into CollectionDialog
-   *  - or allow to replace the built-in dialog by your own
-   * - Allow to pass in an existing ETM, to remove the Kernel dependency
-   */
-  class MAILCOMMON_EXPORT FolderRequester: public QWidget
-  {
-    Q_OBJECT
+ * A widget that contains a KLineEdit which shows the current folder
+ * and a button that fires a FolderSelectionDialog
+ * The dialog is set to disable readonly folders by default
+ * Search folders are excluded
+ *
+ * @todo This should be cleaned up and go into libakonadi. This includes:
+ * - s/Folder/Collection/g
+ * - Use Akonadi::CollectionDialog instead of MailCommon::FolderSelectionDialog
+ *  - merge that into CollectionDialog
+ *  - or allow to replace the built-in dialog by your own
+ * - Allow to pass in an existing ETM, to remove the Kernel dependency
+ */
+class MAILCOMMON_EXPORT FolderRequester: public QWidget
+{
+  Q_OBJECT
 
-    public:
-      /**
-       * Constructor
-       * @param parent the parent widget
-       */
-      explicit FolderRequester( QWidget* parent = 0 );
-      virtual ~FolderRequester();
+  public:
+    /**
+     * Constructor
+     * @param parent the parent widget
+     */
+    explicit FolderRequester( QWidget *parent = 0 );
+    virtual ~FolderRequester();
 
-      /** Returns the selected collection. */
-      Akonadi::Collection collection() const;
+    /**
+     * Returns the selected collection.
+     */
+    Akonadi::Collection collection() const;
 
-      /** Preset the folder to @p collection. */
-      void setCollection( const Akonadi::Collection& collection );
+    /**
+     * Presets the folder to the collection @p collection.
+     * Disable fetchcollection when not necessary @p fetchCollection
+     */
+    void setCollection(const Akonadi::Collection &collection , bool fetchCollection = true );
 
-      /** Returns @c true if there's a valid collection set on this widget. */
-      bool hasCollection() const;
+    /**
+     * Returns @c true if there's a valid collection set on this widget.
+     */
+    bool hasCollection() const;
 
-      /**
-       * Set if readonly folders should be disabled
-       * Be aware that if you disable this the user can also select the
-       * 'Local Folders' folder which has no valid folder associated
-       */
-      void setMustBeReadWrite( bool readwrite )
-      { mMustBeReadWrite = readwrite; }
+    /**
+     * Sets if readonly folders should be disabled.
+     * Be aware that if you disable this the user can also select the
+     * 'Local Folders' folder which has no valid folder associated
+     */
+    void setMustBeReadWrite( bool readwrite )
+    {
+      mMustBeReadWrite = readwrite;
+    }
 
-      /** Set if the outbox should be shown */
-      void setShowOutbox( bool show )
-      { mShowOutbox = show; }
+    /**
+     * Sets if the outbox should be shown.
+     */
+    void setShowOutbox( bool show )
+    {
+      mShowOutbox = show;
+    }
 
-      void setNotAllowToCreateNewFolder( bool notCreateNewFolder )
-      { mNotCreateNewFolder = notCreateNewFolder; }
-    protected slots:
-      /** Open the folder dialog */
-      void slotOpenDialog();
+    void setNotAllowToCreateNewFolder( bool notCreateNewFolder )
+    {
+      mNotCreateNewFolder = notCreateNewFolder;
+    }
 
-      /** Update the information we have about the current folder. */
-      void slotCollectionsReceived( KJob* );
+  protected slots:
+    /**
+     * Opens the folder dialog.
+     */
+    void slotOpenDialog();
 
-    signals:
-      /** Emitted when the folder changed */
-      void folderChanged( const Akonadi::Collection& );
+    /**
+     * Updates the information we have about the current folder.
+     */
+    void slotCollectionsReceived( KJob * );
 
-    protected:
-      /** Capture space key to open the dialog */
-      virtual void keyPressEvent( QKeyEvent * e );
-      void setCollectionFullPath( const Akonadi::Collection&col );
+  signals:
+    /**
+     * Emitted when the folder changed.
+     */
+    void folderChanged( const Akonadi::Collection & );
 
-    protected:
-      Akonadi::Collection mCollection;
-      KLineEdit* edit;
-      bool mMustBeReadWrite;
-      bool mShowOutbox;
-      bool mNotCreateNewFolder;
-  };
+  protected:
+    /** Capture space key to open the dialog */
+    virtual void keyPressEvent( QKeyEvent *e );
+    void setCollectionFullPath( const Akonadi::Collection &col );
+
+  protected:
+    Akonadi::Collection mCollection;
+    KLineEdit *edit;
+    bool mMustBeReadWrite;
+    bool mShowOutbox;
+    bool mNotCreateNewFolder;
+};
 
 }
 

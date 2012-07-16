@@ -1,7 +1,7 @@
 /*
  *  editdlgtypes.cpp  -  dialogs to create or edit alarm or alarm template types
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #include "lineedit.h"
 #include "mainwindow.h"
 #include "messagebox.h"
+#include "messagewin.h"
 #include "pickfileradio.h"
 #include "preferences.h"
 #include "radiobutton.h"
@@ -316,7 +317,7 @@ void EditDisplayAlarmDlg::type_initValues(const KAEvent* event)
         reminder()->setOnceOnly(event->reminderOnceOnly());
         reminder()->enableOnceOnly(recurs);
         if (mSpecialActionsButton)
-            mSpecialActionsButton->setActions(event->preAction(), event->postAction(), event->cancelOnPreActionError(), event->dontShowPreActionError());
+            mSpecialActionsButton->setActions(event->preAction(), event->postAction(), event->extraActionOptions());
         Preferences::SoundType soundType = event->speak()                ? Preferences::Sound_Speak
                                          : event->beep()                 ? Preferences::Sound_Beep
                                          : !event->audioFile().isEmpty() ? Preferences::Sound_File
@@ -343,8 +344,16 @@ void EditDisplayAlarmDlg::type_initValues(const KAEvent* event)
         reminder()->setMinutes(0, false);
         reminder()->enableOnceOnly(isTimedRecurrence());   // must be called after mRecurrenceEdit is set up
         if (mSpecialActionsButton)
-            mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(),
-                                              Preferences::defaultCancelOnPreActionError(), Preferences::defaultDontShowPreActionError());
+        {
+            KAEvent::ExtraActionOptions opts(0);
+            if (Preferences::defaultExecPreActionOnDeferral())
+                opts |= KAEvent::ExecPreActOnDeferral;
+            if (Preferences::defaultCancelOnPreActionError())
+                opts |= KAEvent::CancelOnPreActError;
+            if (Preferences::defaultDontShowPreActionError())
+                opts |= KAEvent::DontShowPreActError;
+            mSpecialActionsButton->setActions(Preferences::defaultPreAction(), Preferences::defaultPostAction(), opts);
+        }
         mSoundPicker->set(Preferences::defaultSoundType(), Preferences::defaultSoundFile(),
                           Preferences::defaultSoundVolume(), -1, 0, (Preferences::defaultSoundRepeat() ? 0 : -1));
     }
@@ -488,9 +497,9 @@ void EditDisplayAlarmDlg::saveState(const KAEvent* event)
     mSavedAutoClose   = lateCancel()->isAutoClose();
     if (mSpecialActionsButton)
     {
-        mSavedPreAction       = mSpecialActionsButton->preAction();
-        mSavedPostAction      = mSpecialActionsButton->postAction();
-        mSavedPreActionCancel = mSpecialActionsButton->cancelOnError();
+        mSavedPreAction        = mSpecialActionsButton->preAction();
+        mSavedPostAction       = mSpecialActionsButton->postAction();
+        mSavedPreActionOptions = mSpecialActionsButton->options();
     }
 }
 
@@ -515,9 +524,9 @@ bool EditDisplayAlarmDlg::type_stateChanged() const
         return true;
     if (mSpecialActionsButton)
     {
-        if (mSavedPreAction       != mSpecialActionsButton->preAction()
-        ||  mSavedPostAction      != mSpecialActionsButton->postAction()
-        ||  mSavedPreActionCancel != mSpecialActionsButton->cancelOnError())
+        if (mSavedPreAction        != mSpecialActionsButton->preAction()
+        ||  mSavedPostAction       != mSpecialActionsButton->postAction()
+        ||  mSavedPreActionOptions != mSpecialActionsButton->options())
             return true;
     }
     if (mSavedSoundType == Preferences::Sound_File)
@@ -568,7 +577,7 @@ void EditDisplayAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, con
         event.setReminder(reminder()->minutes(), reminder()->isOnceOnly());
     if (mSpecialActionsButton  &&  mSpecialActionsButton->isEnabled())
         event.setActions(mSpecialActionsButton->preAction(), mSpecialActionsButton->postAction(),
-                         mSpecialActionsButton->cancelOnError(), mSpecialActionsButton->dontShowError());
+                         mSpecialActionsButton->options());
 }
 
 /******************************************************************************
@@ -590,8 +599,8 @@ KAEvent::Flags EditDisplayAlarmDlg::getAlarmFlags() const
 }
 
 /******************************************************************************
-*  Called when one of the alarm display type combo box is changed, to display
-*  the appropriate set of controls for that action type.
+* Called when one of the alarm display type combo box is changed, to display
+* the appropriate set of controls for that action type.
 */
 void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
 {
@@ -971,11 +980,14 @@ bool EditCommandAlarmDlg::type_validate(bool trial)
 }
 
 /******************************************************************************
+* Called when the Try action has been executed.
 * Tell the user the result of the Try action.
 */
-void EditCommandAlarmDlg::type_trySuccessMessage(ShellProcess* proc, const QString& text)
+void EditCommandAlarmDlg::type_executedTry(const QString& text, void* result)
 {
-    if (mCmdOutputGroup->checkedButton() != mCmdExecInTerm)
+    ShellProcess* proc = (ShellProcess*)result;
+    if (proc  &&  proc != (void*)-1
+    &&  mCmdOutputGroup->checkedButton() != mCmdExecInTerm)
     {
         theApp()->commandMessage(proc, this);
         KAMessageBox::information(this, i18nc("@info", "Command executed: <icode>%1</icode>", text));
@@ -1128,9 +1140,6 @@ void EditEmailAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     mEmailAttachList->setMinimumSize(mEmailAttachList->sizeHint());
     if (mEmailAttachList->lineEdit())
         mEmailAttachList->lineEdit()->setReadOnly(true);
-//Q3ListBox* list = mEmailAttachList->listBox();
-//QRect rect = list->geometry();
-//list->setGeometry(rect.left() - 50, rect.top(), rect.width(), rect.height());
     label->setBuddy(mEmailAttachList);
     mEmailAttachList->setWhatsThis(i18nc("@info:whatsthis", "Files to send as attachments to the email."));
     grid->addWidget(mEmailAttachList, 0, 1);
@@ -1367,10 +1376,21 @@ bool EditEmailAlarmDlg::type_validate(bool trial)
 }
 
 /******************************************************************************
+* Called when the Try action is about to be executed.
+*/
+void EditEmailAlarmDlg::type_aboutToTry()
+{
+    // Disconnect any previous connections, to prevent multiple messages being output
+    disconnect(theApp(), SIGNAL(execAlarmSuccess()), this, SLOT(slotTrySuccess()));
+    connect(theApp(), SIGNAL(execAlarmSuccess()), SLOT(slotTrySuccess()));
+}
+
+/******************************************************************************
 * Tell the user the result of the Try action.
 */
-void EditEmailAlarmDlg::type_trySuccessMessage(ShellProcess*, const QString&)
+void EditEmailAlarmDlg::slotTrySuccess()
 {
+    disconnect(theApp(), SIGNAL(execAlarmSuccess()), this, SLOT(slotTrySuccess()));
     QString msg;
     QString to = KAEvent::joinEmailAddresses(mEmailAddresses, "<nl/>");
     to.replace('<', "&lt;");
@@ -1465,7 +1485,8 @@ bool EditEmailAlarmDlg::checkText(QString& result, bool showErrorMessage) const
 *   event   != to initialise the dialog to show the specified event's data.
 */
 EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, QWidget* parent, GetResourceType getResource)
-    : EditAlarmDlg(Template, KAEvent::AUDIO, parent, getResource)
+    : EditAlarmDlg(Template, KAEvent::AUDIO, parent, getResource),
+      mMessageWin(0)
 {
     kDebug() << "New";
     init(0);
@@ -1473,10 +1494,14 @@ EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, QWidget* parent, GetResource
 
 EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, const KAEvent* event, bool newAlarm, QWidget* parent,
                                      GetResourceType getResource, bool readOnly)
-    : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly)
+    : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly),
+      mMessageWin(0)
 {
     kDebug() << "Event.id()";
     init(event);
+    KPushButton* tryButton = button(Try);
+    tryButton->setEnabled(!MessageWin::isAudioPlaying());
+    connect(theApp(), SIGNAL(audioPlaying(bool)), SLOT(slotAudioPlaying(bool)));
 }
 
 /******************************************************************************
@@ -1627,6 +1652,66 @@ bool EditAudioAlarmDlg::checkText(QString& result, bool showErrorMessage) const
     }
     result = url.pathOrUrl();
     return true;
+}
+
+/******************************************************************************
+* Called when the Try button is clicked.
+* If the audio file is currently playing (as a result of previously clicking
+* the Try button), cancel playback. Otherwise, play the audio file.
+*/
+void EditAudioAlarmDlg::slotTry()
+{
+    if (!MessageWin::isAudioPlaying())
+        EditAlarmDlg::slotTry();   // play the audio file
+    else if (mMessageWin)
+    {
+        mMessageWin->stopAudio();
+        mMessageWin = 0;
+    }
+}
+
+/******************************************************************************
+* Called when the Try action has been executed.
+*/
+void EditAudioAlarmDlg::type_executedTry(const QString&, void* result)
+{
+    mMessageWin = (MessageWin*)result;    // note which MessageWin controls the audio playback
+    if (mMessageWin)
+    {
+        slotAudioPlaying(true);
+        connect(mMessageWin, SIGNAL(destroyed(QObject*)), SLOT(audioWinDestroyed()));
+    }
+}
+
+/******************************************************************************
+* Called when audio playing starts or stops.
+* Enable/disable/toggle the Try button.
+*/
+void EditAudioAlarmDlg::slotAudioPlaying(bool playing)
+{
+    KPushButton* tryButton = button(Try);
+    if (!playing)
+    {
+        // Nothing is playing, so enable the Try button
+        tryButton->setEnabled(true);
+        tryButton->setCheckable(false);
+        tryButton->setChecked(false);
+        mMessageWin = 0;
+    }
+    else if (mMessageWin)
+    {
+        // The test sound file is playing, so enable the Try button and depress it
+        tryButton->setEnabled(true);
+        tryButton->setCheckable(true);
+        tryButton->setChecked(true);
+    }
+    else
+    {
+        // An alarm is playing, so disable the Try button
+        tryButton->setEnabled(false);
+        tryButton->setCheckable(false);
+        tryButton->setChecked(false);
+    }
 }
 
 

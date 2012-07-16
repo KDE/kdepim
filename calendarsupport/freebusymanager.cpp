@@ -198,7 +198,7 @@ void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
     emit freeBusyUrlRetrieved( email, replaceVariablesUrl( cachedUrl, email ) );
     return;
   }
-  // Try with the url configurated by preferred email in kcontactmanager
+  // Try with the url configured by preferred email in kcontactmanager
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::Email, email );
   job->setProperty( "contactEmail", QVariant::fromValue( email ) );

@@ -38,6 +38,7 @@
 
 #include <utils/kdlogtextwidget.h>
 
+#include <KDebug>
 #include <KProcess>
 #include <KMessageBox>
 #include <KLocale>
@@ -52,7 +53,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QPointer>
-#include <QDebug>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 
@@ -149,7 +149,7 @@ private:
         if ( dialog )
             dialog->message( msg );
         else
-            qDebug() << msg;
+            kDebug() << msg;
     }
 
 private:
@@ -260,22 +260,24 @@ void GnuPGProcessCommand::doCancel() {
 
 void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
     if ( !canceled )
-        if ( status == QProcess::CrashExit )
+        if ( status == QProcess::CrashExit ) {
             error( q->crashExitMessage( arguments ), q->errorCaption() );
-        else if ( ignoresSuccessOrFailure )
-            if ( dialog )
+        } else if ( ignoresSuccessOrFailure ) {
+            if ( dialog ) {
                 message( i18n("Process finished") );
-            else
+            } else {
                 ;
-        else if ( code )
+            }
+        } else if ( code ) {
             error( q->errorExitMessage( arguments ), q->errorCaption() );
-        else {
+        } else {
             q->postSuccessHook( parentWidgetOrView() );
             const QString successMessage = q->successMessage( arguments );
-            if ( dialog )
+            if ( dialog ) {
                 message( successMessage );
-            else
+            } else {
                 information( successMessage, q->successCaption() );
+            }
         }
     if ( dialog )
         dialog->setComplete( true );

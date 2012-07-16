@@ -34,7 +34,7 @@
 #include "messageviewer/csshelper.h"
 #include "messageviewer/globalsettings.h"
 
-#include <Nepomuk/Resource>
+#include <Nepomuk2/Resource>
 
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/kmime/messageparts.h>
@@ -48,6 +48,11 @@
 #include <KStandardDirs>
 #include <KRun>
 #include <KMenu>
+#include <KUriFilterData>
+#include <KToolInvocation>
+#include <KUriFilter>
+#include <KStringHandler>
+#include <KPrintPreview>
 
 #include <QVariant>
 #include <qwidget.h>
@@ -55,7 +60,8 @@
 #include <Akonadi/Monitor>
 #include <mailutil.h>
 #include <asyncnepomukresourceretriever.h>
-#include <nepomuk/resourcemanager.h>
+#include <nepomuk2/resourcemanager.h>
+#include <Soprano/Vocabulary/NAO>
 
 using namespace KMail;
 
@@ -65,7 +71,9 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
     mActionCollection( ac ),
     mMessageView( 0 ),
     mRedirectAction( 0 ),
-    mAsynNepomukRetriever( new MessageCore::AsyncNepomukResourceRetriever( this ) ),
+    mPrintPreviewAction( 0 ),
+    mAsynNepomukRetriever( new MessageCore::AsyncNepomukResourceRetriever( QVector<QUrl>() <<  Soprano::Vocabulary::NAO::annotation().toString()
+                                                                           << Soprano::Vocabulary::NAO::description().toString(), this ) ),
     mCustomTemplatesMenu( 0 )
 {
   mReplyActionMenu = new KActionMenu( KIcon("mail-reply-sender"), i18nc("Message->","&Reply"), this );
@@ -131,6 +139,9 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
     KAction * action = mainwin->akonadiStandardAction( Akonadi::StandardMailActionManager::MarkMailAsRead );
     mStatusMenu->addAction( action );
 
+    action = mainwin->akonadiStandardAction( Akonadi::StandardMailActionManager::MarkMailAsUnread );
+    mStatusMenu->addAction( action );
+
     mStatusMenu->addSeparator();
     action = mainwin->akonadiStandardAction( Akonadi::StandardMailActionManager::MarkMailAsImportant );
     mStatusMenu->addAction( action );
@@ -152,6 +163,8 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
            this, SLOT(annotateMessage()) );
 
   mPrintAction = KStandardAction::print( this, SLOT(slotPrintMsg()), mActionCollection );
+  if(KPrintPreview::isAvailable())
+    mPrintPreviewAction = KStandardAction::printPreview( this, SLOT(slotPrintPreviewMsg()), mActionCollection );
 
   mForwardActionMenu  = new KActionMenu(KIcon("mail-forward"), i18nc("Message->","&Forward"), this);
   mActionCollection->addAction("message_forward", mForwardActionMenu );
@@ -194,7 +207,7 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
   connect( mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemModified(Akonadi::Item,QSet<QByteArray>)));
   connect( mMonitor, SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
 
-  connect( mAsynNepomukRetriever, SIGNAL(resourceReceived(QUrl,Nepomuk::Resource)), SLOT(updateAnnotateAction(QUrl,Nepomuk::Resource)) );
+  connect( mAsynNepomukRetriever, SIGNAL(resourceReceived(QUrl,Nepomuk2::Resource)), SLOT(updateAnnotateAction(QUrl,Nepomuk2::Resource)) );
 
   mCustomTemplatesMenu = new TemplateParser::CustomTemplatesMenu( parent, ac );
 
@@ -299,10 +312,10 @@ void MessageActions::updateActions()
   mReplyListAction->setEnabled( hasPayload );
   mNoQuoteReplyAction->setEnabled( hasPayload );
 
-  if ( Nepomuk::ResourceManager::instance()->initialized() )
+  if ( Nepomuk2::ResourceManager::instance()->initialized() )
   {
     mAnnotateAction->setEnabled( uniqItem );
-    mAsynNepomukRetriever->requestResource( mCurrentItem.url(), QVector<QUrl>() << Nepomuk::Resource::descriptionUri() << Nepomuk::Resource::annotationUri() );
+    mAsynNepomukRetriever->requestResource( mCurrentItem.url() );
   }
   else
   {
@@ -312,11 +325,16 @@ void MessageActions::updateActions()
   mStatusMenu->setEnabled( multiVisible );
 
   if ( mCurrentItem.hasPayload<KMime::Message::Ptr>() ) {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentItem );
-    job->fetchScope().fetchAllAttributes();
-    job->fetchScope().fetchFullPayload( true );
-    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotUpdateActionsFetchDone(KJob*)) );
+    if ( mCurrentItem.loadedPayloadParts().contains("RFC822") ) {
+      updateMailingListActions( mCurrentItem );
+    } else
+    {
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentItem );
+      job->fetchScope().fetchAllAttributes();
+      job->fetchScope().fetchFullPayload( true );
+      job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+      connect( job, SIGNAL(result(KJob*)), SLOT(slotUpdateActionsFetchDone(KJob*)) );
+    }
   }
   mEditAction->setEnabled( uniqItem );
 }
@@ -508,12 +526,20 @@ void MessageActions::slotMailingListFilter()
   command->start();
 }
 
-
-void MessageActions::slotPrintMsg()
+void MessageActions::printMessage(bool preview)
 {
   if ( mMessageView )
   {
-    mMessageView->viewer()->print();
+    bool result = false;
+    if(GlobalSettings::self()->printSelectedText()) {
+      result = mMessageView->printSelectedText(preview);
+    }
+    if(!result) {
+      if(preview)
+        mMessageView->viewer()->printPreview();
+      else
+        mMessageView->viewer()->print();
+    }
   }
   else
   {
@@ -527,10 +553,21 @@ void MessageActions::slotPrintMsg()
                           0,
                           false, false,
                           useFixedFont, overrideEncoding );
+    command->setPrintPreview(preview);
     command->start();
   }
+
 }
 
+void MessageActions::slotPrintPreviewMsg()
+{
+  printMessage(true);
+}
+
+void MessageActions::slotPrintMsg()
+{
+  printMessage(false);
+}
 
 /**
  * This adds a list of actions to mMailingListActionMenu mapping the identifier item to
@@ -600,10 +637,10 @@ void MessageActions::annotateMessage()
   MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( url );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   if ( dialog->exec() )
-    mAsynNepomukRetriever->requestResource( url, QVector<QUrl>() << Nepomuk::Resource::descriptionUri() << Nepomuk::Resource::annotationUri() );
+    mAsynNepomukRetriever->requestResource( url );
 }
 
-void MessageActions::updateAnnotateAction( const QUrl &url, const Nepomuk::Resource &resource )
+void MessageActions::updateAnnotateAction( const QUrl &url, const Nepomuk2::Resource &resource )
 {
   if( mCurrentItem.isValid() && mCurrentItem.url() == url ) {
     if ( resource.description().isEmpty() )
@@ -611,6 +648,75 @@ void MessageActions::updateAnnotateAction( const QUrl &url, const Nepomuk::Resou
     else
       mAnnotateAction->setText( i18n( "Edit Note...") );
   }
+}
+
+void MessageActions::addWebShortcutsMenu( KMenu *menu, const QString & text )
+{
+    if ( text.isEmpty() )
+        return;
+
+    QString searchText = text;
+    searchText = searchText.replace( QLatin1Char('\n'), QLatin1Char(' ') ).replace( QLatin1Char('\r'), QLatin1Char(' ') ).simplified();
+
+    if ( searchText.isEmpty() )
+        return;
+
+    KUriFilterData filterData( searchText );
+
+    filterData.setSearchFilteringOptions( KUriFilterData::RetrievePreferredSearchProvidersOnly );
+
+    if ( KUriFilter::self()->filterSearchUri( filterData, KUriFilter::NormalTextFilter ) )
+    {
+        const QStringList searchProviders = filterData.preferredSearchProviders();
+
+        if ( !searchProviders.isEmpty() )
+        {
+            KMenu *webShortcutsMenu = new KMenu( menu );
+            webShortcutsMenu->setIcon( KIcon( "preferences-web-browser-shortcuts" ) );
+
+            const QString squeezedText = KStringHandler::rsqueeze( searchText, 21 );
+            webShortcutsMenu->setTitle( i18n( "Search for '%1' with", squeezedText ) );
+
+            KAction *action = 0;
+
+            foreach( const QString &searchProvider, searchProviders )
+            {
+                action = new KAction( searchProvider, webShortcutsMenu );
+                action->setIcon( KIcon( filterData.iconNameForPreferredSearchProvider( searchProvider ) ) );
+                action->setData( filterData.queryForPreferredSearchProvider( searchProvider ) );
+                connect( action, SIGNAL(triggered()), this, SLOT(slotHandleWebShortcutAction()) );
+                webShortcutsMenu->addAction( action );
+            }
+
+            webShortcutsMenu->addSeparator();
+
+            action = new KAction( i18n( "Configure Web Shortcuts..." ), webShortcutsMenu );
+            action->setIcon( KIcon( "configure" ) );
+            connect( action, SIGNAL(triggered()), this, SLOT(slotConfigureWebShortcuts()) );
+            webShortcutsMenu->addAction( action );
+
+            menu->addMenu(webShortcutsMenu);
+        }
+    }
+}
+
+void MessageActions::slotHandleWebShortcutAction()
+{
+  KAction *action = qobject_cast<KAction*>( sender() );
+
+  if (action)
+  {
+      KUriFilterData filterData( action->data().toString() );
+      if ( KUriFilter::self()->filterSearchUri( filterData, KUriFilter::WebShortcutFilter ) )
+      {
+          KToolInvocation::invokeBrowser( filterData.uri().url() );
+      }
+  }
+}
+
+void MessageActions::slotConfigureWebShortcuts()
+{
+ KToolInvocation::kdeinitExec( QLatin1String("kcmshell4"), QStringList() << QLatin1String("ebrowsing") );
 }
 
 #include "messageactions.moc"

@@ -27,8 +27,8 @@
 #include <akonadi/kmime/messageflags.h>
 
 #include <QtCore/QTimer>
-
 using namespace MessageViewer;
+K_GLOBAL_STATIC( Akonadi::Item::List, sListItem )
 
 class MarkMessageReadHandler::Private
 {
@@ -54,6 +54,7 @@ void MarkMessageReadHandler::Private::handleMessages()
   
   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
   modifyJob->setIgnorePayload( true );
+  sListItem->removeAll(item);
 }
 
 
@@ -73,11 +74,13 @@ MarkMessageReadHandler::~MarkMessageReadHandler()
 
 void MarkMessageReadHandler::setItem( const Akonadi::Item &item )
 {
-  if ( d->mItemQueue == item || item.hasFlag(Akonadi::MessageFlags::Queued) )
+  if ( sListItem->contains(item) || d->mItemQueue == item || item.hasFlag(Akonadi::MessageFlags::Queued) )
     return;
   d->mTimer.stop();
 
+  sListItem->removeAll(d->mItemQueue);
   d->mItemQueue = item;
+  sListItem->append(item);
   if ( item.hasFlag( Akonadi::MessageFlags::Seen ) )
     return;
 

@@ -32,6 +32,8 @@
 
 #include <kurl.h>
 
+#include <solid/networking.h>
+
 #include <QPixmap>
 #include <QPointer>
 #include <QWidget>
@@ -102,11 +104,18 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
          */
         void addFeedToGroup(const QString& url, const QString& group);
 
+        boost::shared_ptr<FeedList> allFeedsList()
+        {
+            return m_feedList;
+        }
+
         /** session management **/
         void readProperties(const KConfigGroup & config);
         void saveProperties(KConfigGroup & config);
 
-
+        //Returns true if networking is available
+        bool isNetworkAvailable();
+        
         enum ViewMode { NormalView=0,
                         WidescreenView,
                         CombinedView };
@@ -174,6 +183,9 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         /** opens the homepage of the currently selected feed */
         void slotOpenHomepage();
 
+        /** reloads all open tabs */
+        void slotReloadAllTabs();
+        
         /** toggles the keep flag of the currently selected article */
         void slotArticleToggleKeepFlag(bool enabled);
         /** deletes the currently selected article */
@@ -211,6 +223,9 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         void slotSendLink() { sendArticle(); }
         void slotSendFile() { sendArticle(true); }
+
+        void slotNetworkStatusChanged(Solid::Networking::Status status);
+
 
     protected:
 
@@ -263,6 +278,7 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         bool m_shuttingDown;
         bool m_displayingAboutPage;
+        bool m_networkAvailable;
 
         ActionManagerImpl* m_actionManager;
         FeedListManagementImpl* const m_feedListManagementInterface;

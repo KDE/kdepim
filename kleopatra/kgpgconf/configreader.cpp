@@ -37,12 +37,12 @@
 #include <gpgme++/global.h>
 #include <gpgme++/engineinfo.h>
 
+#include <KDebug>
 #include <KLocale>
 #include <KStandardDirs>
 
 #include <QBuffer>
 #include <QByteArray>
-#include <QDebug>
 #include <QMap>
 #include <QProcess>
 #include <QStringList>
@@ -154,7 +154,7 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     }
     entry->setArgType( argType, flags & GPGCONF_FLAG_LIST ? ConfigEntry::List : ConfigEntry::NoList );
     if ( !ok )
-        qWarning() <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
+        kWarning() << "Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
     entry->unsetDirty();
     return entry.release();
 }
@@ -206,7 +206,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             // This happens on lines like
             // dirmngr[31465]: error opening `/home/dfaure/.gnupg/dirmngr_ldapservers.conf': No such file or directory
             // so let's not bother the user with it.
-            //kWarning(5150) <<"Parse error on gpgconf --list-options output:" << line;
+            //kWarning() <<"Parse error on gpgconf --list-options output:" << line;
         }
     }
     if ( currentGroup.get() && !currentGroup->isEmpty() )

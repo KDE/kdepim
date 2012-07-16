@@ -19,7 +19,8 @@
 
 #include "annotationdialog.h"
 
-#include <Nepomuk/Resource>
+#include <Nepomuk2/Resource>
+#include <Soprano/Vocabulary/NAO>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -46,9 +47,9 @@ class AnnotationEditDialog::Private
 AnnotationEditDialog::AnnotationEditDialog( const QUrl &uri, QWidget *parent )
   : KDialog( parent ), d( new Private( uri ) )
 {
-  Nepomuk::Resource resource( d->mNepomukResourceUri );
+  Nepomuk2::Resource resource( d->mNepomukResourceUri );
 
-  d->mHasAnnotation = resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
+  d->mHasAnnotation = resource.hasProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );
   if ( d->mHasAnnotation ) {
     setCaption( i18n( "Edit Note" ) );
     setButtons( Ok | Cancel | User1 );
@@ -83,11 +84,12 @@ void AnnotationEditDialog::slotButtonClicked( int button )
   if ( button == KDialog::Ok ) {
     bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
     if ( !textIsEmpty ) {
-      Nepomuk::Resource resource( d->mNepomukResourceUri );
+      Nepomuk2::Resource resource( d->mNepomukResourceUri );
       resource.setDescription( d->mTextEdit->toPlainText() );
     } else if ( d->mHasAnnotation && textIsEmpty ) {
-      Nepomuk::Resource resource( d->mNepomukResourceUri );
-      resource.removeProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
+      Nepomuk2::Resource resource( d->mNepomukResourceUri );
+
+      resource.removeProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );
     }
 
     accept();
@@ -98,8 +100,8 @@ void AnnotationEditDialog::slotButtonClicked( int button )
                               i18n( "Do you really want to delete this note?" ),
                               i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), "edit-delete" ) );
     if ( answer == KMessageBox::Continue ) {
-      Nepomuk::Resource resource( d->mNepomukResourceUri );
-      resource.removeProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
+      Nepomuk2::Resource resource( d->mNepomukResourceUri );
+      resource.removeProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );
       accept();
     }
   }

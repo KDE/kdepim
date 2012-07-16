@@ -19,31 +19,25 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+
 #ifndef KORG_HTMLEXPORTJOB_H
 #define KORG_HTMLEXPORTJOB_H
-
-#include <kjob.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
-
-class QTextStream;
-
-namespace KCalCore {
-  class Calendar;
-}
+#include <KJob>
 
 namespace CalendarSupport {
   class Calendar;
 }
 
+class QTextStream;
+
 namespace KOrg {
 
 class HTMLExportSettings;
+class MainWindow;
 
 /**
   This class provides the functions to export a calendar as a HTML page.
@@ -54,9 +48,17 @@ class HtmlExportJob : public KJob
   public:
     /**
       Create new HTML exporter for calendar.
+      @param calendar is a pointer to a CalendarSupport::Calendar instance.
+      @param settings is a pointer to an HTMLExportSettings instance.
+      @param autoMode if true, indicates that this export is for an autosave;
+                      if false, then the export is explicitly user invoked.
+      @param mainWindow is a pointer to KOrganizer MainWindow.
+      @param parent is a pointer to the parent CalendarView.
     */
     HtmlExportJob( CalendarSupport::Calendar *calendar,
-                   HTMLExportSettings *settings, QWidget *parent = 0 );
+                   HTMLExportSettings *settings, bool autoMode,
+                   KOrg::MainWindow *mainWindow,
+                   QWidget *parent = 0 );
 
     virtual ~HtmlExportJob();
 

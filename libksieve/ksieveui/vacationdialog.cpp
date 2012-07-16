@@ -159,7 +159,8 @@ AddrSpecList VacationDialog::mailAliases() const {
   parseAddressList( s, text.end(), al );
 
   AddrSpecList asl;
-  for ( AddressList::const_iterator it = al.constBegin() ; it != al.constEnd() ; ++it ) {
+  AddressList::const_iterator end(al.constEnd());
+  for ( AddressList::const_iterator it = al.constBegin() ; it != end; ++it ) {
     const MailboxList & mbl = (*it).mailboxList;
     for ( MailboxList::const_iterator jt = mbl.constBegin() ; jt != mbl.constEnd() ; ++jt )
       asl.push_back( (*jt).addrSpec() );
@@ -169,7 +170,8 @@ AddrSpecList VacationDialog::mailAliases() const {
 
 void VacationDialog::setMailAliases( const AddrSpecList & aliases ) {
   QStringList sl;
-  for ( AddrSpecList::const_iterator it = aliases.constBegin() ; it != aliases.constEnd() ; ++it )
+  AddrSpecList::const_iterator end(aliases.constEnd());
+  for ( AddrSpecList::const_iterator it = aliases.constBegin() ; it != end; ++it )
     sl.push_back( (*it).asString() );
   mMailAliasesEdit->setText( sl.join(", ") );
 }

@@ -1,7 +1,7 @@
 /*
  *  akonadimodel.h  -  KAlarm calendar file access using Akonadi
  *  Program:  kalarm
- *  Copyright © 2010-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2010-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,10 +21,13 @@
 #ifndef AKONADIMODEL_H
 #define AKONADIMODEL_H
 
+#include "eventid.h"
+
 #include <kalarmcal/kacalendar.h>
 #include <kalarmcal/kaevent.h>
 
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/servermanager.h>
 
 #include <QSize>
 #include <QColor>
@@ -74,6 +77,8 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         struct Event
         {
             Event(const KAEvent& e, const Akonadi::Collection& c) : event(e), collection(c) {}
+            EventId eventId() const       { return EventId(collection.id(), event.id()); }
+            bool    isConsistent() const  { return event.collectionId() == collection.id(); }
             KAEvent             event;
             Akonadi::Collection collection;
         };
@@ -139,7 +144,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         /** Return the alarm with the specified unique identifier.
          *  @return the event, or invalid event if no such event exists.
          */
-        KAEvent event(const Akonadi::Item&) const;
+        KAEvent event(const Akonadi::Item& item) const  { return event(item, QModelIndex(), 0); }
         KAEvent event(Akonadi::Item::Id) const;
         KAEvent event(const QModelIndex&) const;
         using QObject::event;   // prevent warning about hidden virtual method
@@ -233,6 +238,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         virtual int entityColumnCount(HeaderGroup) const;
 
     private slots:
+        void checkResources(Akonadi::ServerManager::State);
         void slotCollectionChanged(const Akonadi::Collection& c, const QSet<QByteArray>& attrNames)
                        { setCollectionChanged(c, attrNames, false); }
         void slotCollectionRemoved(const Akonadi::Collection&);
@@ -273,8 +279,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         };
 
         AkonadiModel(Akonadi::ChangeRecorder*, QObject* parent);
-        QString   alarmTimeText(const DateTime&) const;
-        QString   timeToAlarmText(const DateTime&) const;
+        KAEvent   event(const Akonadi::Item&, const QModelIndex&, Akonadi::Collection*) const;
         void      signalDataChanged(bool (*checkFunc)(const Akonadi::Item&), int startColumn, int endColumn, const QModelIndex& parent);
         void      setCollectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&, bool rowInserted);
         void      queueItemModifyJob(const Akonadi::Item&);
@@ -312,6 +317,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         QList<Akonadi::Collection::Id> mCollectionsDeleting;  // collections currently being removed
         QList<Akonadi::Collection::Id> mCollectionsDeleted;   // collections recently removed
         QQueue<Event>   mPendingEventChanges;   // changed events with changedEvent() signal pending
+        bool            mResourcesChecked;      // whether resource existence has been checked yet
 };
 
 #endif // AKONADIMODEL_H

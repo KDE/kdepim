@@ -1025,7 +1025,7 @@ Kleo::Action Kleo::KeyResolver::checkEncryptionPreferences( bool encryptionReque
 
   if ( !encryptionRequested && !mOpportunisticEncyption ) {
     // try to minimize crypto ops (including key lookups) by only
-    // looking up keys when at least one the the encryption
+    // looking up keys when at least one of the encryption
     // preferences needs it:
     EncryptionPreferenceCounter count( 0, UnknownPreference );
     count.process( d->mPrimaryEncryptionKeys );

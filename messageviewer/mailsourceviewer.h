@@ -34,7 +34,7 @@
 
 #include <QSyntaxHighlighter>
 #include <KTabWidget>
-#include <KTextBrowser>
+#include <QPlainTextEdit>
 #include <KDialog>
 class QString;
 class QWidget;
@@ -55,8 +55,8 @@ class MailSourceViewTextBrowser;
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:
-  MailSourceHighlighter( KTextBrowser* browser )
-    : QSyntaxHighlighter( browser )
+  MailSourceHighlighter( QTextDocument * textdocument )
+    : QSyntaxHighlighter( textdocument )
   {}
 protected:
   virtual void highlightBlock ( const QString & text );
@@ -65,8 +65,8 @@ protected:
 class HTMLSourceHighlighter : public QSyntaxHighlighter
 {
 public:
-  HTMLSourceHighlighter( KTextBrowser* browser )
-    : QSyntaxHighlighter( browser )
+  HTMLSourceHighlighter( QTextDocument * textdocument )
+    : QSyntaxHighlighter( textdocument )
   {}
 protected:
   virtual void highlightBlock ( const QString & text );
@@ -88,13 +88,15 @@ private:
   FindBarSourceView *mFindBar;
 };
   
-class MailSourceViewTextBrowser: public KTextBrowser
+class MailSourceViewTextBrowser: public QPlainTextEdit
 {
   Q_OBJECT
 public:
   explicit MailSourceViewTextBrowser( QWidget *parent = 0 );
 protected:
   virtual void contextMenuEvent( QContextMenuEvent *event );
+private slots:
+  void slotSpeakText();
 signals:
   void findText();
 };

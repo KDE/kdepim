@@ -21,6 +21,7 @@
 #include "incidenceviewer.h"
 #include "incidenceviewer_p.h"
 #include "attachmenthandler.h"
+#include "calendar.h"
 #include "utils.h"
 
 #include "libkdepimdbusinterfaces/urihandler.h"
@@ -86,7 +87,7 @@ class IncidenceViewer::Private
 
       if ( mCurrentItem.isValid() ) {
         text = KCalUtils::IncidenceFormatter::extensiveDisplayStr(
-          CalendarSupport::displayName( mParentCollection ),
+          CalendarSupport::displayName( mCalendar, mParentCollection ),
           CalendarSupport::incidence( mCurrentItem ),
           mDate, KSystemTimeZones::local() );
         text.prepend( mHeaderText );
@@ -122,6 +123,7 @@ class IncidenceViewer::Private
       mAttachmentHandler->view( attachmentName, CalendarSupport::incidence( mCurrentItem ) );
     }
 
+    Calendar *mCalendar;
     IncidenceViewer *mParent;
     TextBrowser *mBrowser;
     Akonadi::Item mCurrentItem;
@@ -135,8 +137,21 @@ class IncidenceViewer::Private
     AttachmentHandler *mAttachmentHandler;
 };
 
+IncidenceViewer::IncidenceViewer( CalendarSupport::Calendar *calendar, QWidget *parent )
+  : QWidget( parent ), d( new Private( this ) )
+{
+  d->mCalendar = calendar;
+  init();
+}
+
 IncidenceViewer::IncidenceViewer( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
+{
+  d->mCalendar = 0;
+  init();
+}
+
+void IncidenceViewer::init()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
@@ -156,6 +171,11 @@ IncidenceViewer::IncidenceViewer( QWidget *parent )
 IncidenceViewer::~IncidenceViewer()
 {
   delete d;
+}
+
+void IncidenceViewer::setCalendar( Calendar *calendar )
+{
+  d->mCalendar = calendar;
 }
 
 Akonadi::Item IncidenceViewer::incidence() const

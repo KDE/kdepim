@@ -65,6 +65,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QProcess>
+#include <QFile>
 
 #include <algorithm>
 
@@ -265,7 +266,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
   const QStringList urlParts = urlPath.mid( 10 ).split( '/' );
   if ( urlParts.size() != 3 )
     return 0;
-  KMime::ContentIndex index( urlParts[1] );
+  //KMime::ContentIndex index( urlParts[1] );
   *path = KUrl::fromPercentEncoding( urlParts[2].toLatin1() );
   return w->nodeFromUrl( urlParts[1] );
 }
@@ -440,6 +441,10 @@ namespace {
       if ( urlPath == QLatin1String( "showHTML" ) ) {
         w->setHtmlOverride( !w->htmlOverride() );
         w->update( Viewer::Force );
+        return true;
+      }
+      else if ( urlPath == QLatin1String( "goOnline" ) ) {
+        w->goOnline();
         return true;
       }
       else if ( urlPath == QLatin1String( "loadExternal" ) ) {
@@ -806,7 +811,8 @@ namespace {
     const KUrl tUrl = window->nodeHelper()->tempFileUrlFromNode( node );
     const QString fileName = tUrl.path();
     if ( !fileName.isEmpty() ) {
-      KPIMUtils::checkAndCorrectPermissionsIfPossible( fileName, false, true, true );
+      QFile f(fileName);
+      f.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ReadUser|QFile::ReadGroup|QFile::ReadOther);
       const QString icon = window->nodeHelper()->iconName( node, KIconLoader::Small );
       QDrag *drag = new QDrag( window->viewer() );
       QMimeData *mimeData = new QMimeData();

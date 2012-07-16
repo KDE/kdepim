@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData(PROGRAM_NAME, 0, ki18n("KAlarm"), KALARM_VERSION,
         ki18n("Personal alarm message, command and email scheduler for KDE"),
         KAboutData::License_GPL,
-        ki18n("Copyright 2001-2011, David Jarvie"), KLocalizedString(), "http://www.astrojar.org.uk/kalarm");
+        ki18n("Copyright 2001-2012, David Jarvie"), KLocalizedString(), "http://www.astrojar.org.uk/kalarm");
     aboutData.addAuthor(ki18n("David Jarvie"), KLocalizedString(), "djarvie@kde.org");
     aboutData.setOrganizationDomain("kde.org");
 
@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
     options.add("korganizer", ki18n("Show alarm as an event in KOrganizer"));
     options.add("l");
     options.add("late-cancel <period>", ki18n("Cancel alarm if more than 'period' late when triggered"), "1");
+    options.add("list", ki18n("Output list of scheduled alarms to stdout"));
     options.add("L");
     options.add("login", ki18n("Repeat alarm at every login"));
     options.add("m");

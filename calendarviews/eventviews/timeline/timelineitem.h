@@ -66,7 +66,8 @@ class TimelineItem : public QObject
 class TimelineSubItem : public QStandardItem
 {
   public:
-    TimelineSubItem( const Akonadi::Item &incidence, TimelineItem *parent );
+    TimelineSubItem( CalendarSupport::Calendar *calendar,
+                     const Akonadi::Item &incidence, TimelineItem *parent );
     ~TimelineSubItem();
 
     Akonadi::Item  incidence() const
@@ -98,6 +99,7 @@ class TimelineSubItem : public QStandardItem
     void updateToolTip();
 
   private:
+    CalendarSupport::Calendar *mCalendar;
     Akonadi::Item mIncidence;
     KDateTime mStart;
     TimelineItem *mParent;

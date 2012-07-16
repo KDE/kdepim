@@ -36,6 +36,12 @@
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 
+#include <Nepomuk2/Query/Query>
+#include <Nepomuk2/Query/QueryServiceClient>
+#include <Nepomuk2/Query/Result>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Vocabulary/NCO>
+
 #include <KPIMUtils/Email>
 
 #include <KLDAP/LdapServer>
@@ -75,8 +81,13 @@ class AddresseeLineEditStatic
       : completion( new KMailCompletion ),
         ldapTimer( 0 ),
         ldapSearch( 0 ),
-        ldapLineEdit( 0 )
+        ldapLineEdit( 0 ),
+        nepomukSearchClient( 0 ),
+        nepomukCompletionSource( 0 )
     {
+      KConfig config( QLatin1String( "kpimcompletionorder" ) );
+      const KConfigGroup group( &config, QLatin1String( "General" ) );
+      useNepomukCompletion = group.readEntry( "UseNepomuk", false );
     }
 
     ~AddresseeLineEditStatic()
@@ -84,6 +95,50 @@ class AddresseeLineEditStatic
       delete completion;
       delete ldapTimer;
       delete ldapSearch;
+      delete nepomukSearchClient;
+    }
+
+    void slotEditCompletionOrder()
+    {
+        CompletionOrderEditor editor( ldapSearch, 0 );
+        if( editor.exec() ) {
+            updateLDAPWeights();
+        }
+    }
+
+    void updateLDAPWeights()
+    {
+      /* Add completion sources for all ldap server, 0 to n. Added first so
+       * that they map to the LdapClient::clientNumber() */
+      ldapSearch->updateCompletionWeights();
+      int clientIndex = 0;
+      foreach ( const KLDAP::LdapClient *client, ldapSearch->clients() ) {
+        const int sourceIndex =
+          addCompletionSource( QLatin1String( "LDAP server: " ) + client->server().host(),
+                                  client->completionWeight() );
+
+        ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
+
+        clientIndex++;
+      }
+    }
+
+    int addCompletionSource( const QString &source, int weight )
+    {
+      QMap<QString,int>::iterator it = completionSourceWeights.find( source );
+      if ( it == completionSourceWeights.end() ) {
+        completionSourceWeights.insert( source, weight );
+      } else {
+        completionSourceWeights[source] = weight;
+      }
+
+      const int sourceIndex = completionSources.indexOf( source );
+      if ( sourceIndex == -1 ) {
+        completionSources.append( source );
+        return completionSources.size() - 1;
+      } else {
+        return sourceIndex;
+      }
     }
 
     KMailCompletion *completion;
@@ -104,6 +159,9 @@ class AddresseeLineEditStatic
     QMap<Akonadi::Collection::Id, int> akonadiCollectionToCompletionSourceMap;
     // a list of akonadi items (contacts) that have not had their collection fetched yet
     Akonadi::Item::List akonadiPendingItems;
+    Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
+    bool useNepomukCompletion;
+    int nepomukCompletionSource;
 };
 
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
@@ -165,7 +223,6 @@ class AddresseeLineEdit::Private
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
-    void updateLDAPWeights();
     void setCompletedItems( const QStringList &items, bool autoSuggest );
     void addCompletionItem( const QString &string, int weight, int source,
                             const QStringList *keyWords = 0 );
@@ -184,7 +241,10 @@ class AddresseeLineEdit::Private
     void slotUserCancelled( const QString & );
     void slotAkonadiSearchResult( KJob * );
     void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
-
+    void startNepomukSearch();
+    void stopNepomukSearch();
+    void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
+    void slotNepomukSearchFinished();
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -210,9 +270,15 @@ void AddresseeLineEdit::Private::init()
     if ( !s_static->ldapTimer ) {
       s_static->ldapTimer = new QTimer;
       s_static->ldapSearch = new KLDAP::LdapClientSearch;
+
     }
 
-    updateLDAPWeights();
+    if ( !s_static->nepomukSearchClient ) {
+      s_static->nepomukSearchClient = new Nepomuk2::Query::QueryServiceClient;
+      s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
+    }
+
+    s_static->updateLDAPWeights();
 
     if ( !m_completionInitialized ) {
       q->setCompletionObject( s_static->completion, false );
@@ -231,6 +297,9 @@ void AddresseeLineEdit::Private::init()
       q->connect( s_static->ldapSearch, SIGNAL(searchData(KLDAP::LdapResult::List)),
                   SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)) );
 
+      q->connect( s_static->nepomukSearchClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+                  q, SLOT(slotNepomukHits(QList<Nepomuk2::Query::Result>)) );
+      q->connect( s_static->nepomukSearchClient, SIGNAL(finishedListing()), q, SLOT(slotNepomukSearchFinished()));
       m_completionInitialized = true;
     }
   }
@@ -261,20 +330,75 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
   s_static->ldapLineEdit = 0;
 }
 
-void AddresseeLineEdit::Private::updateLDAPWeights()
+
+static const char* sparqlquery =
+    //"select distinct ?email where { ?r a nco:Contact . ?r nco:hasEmailAddress ?v . ?v nco:emailAddress ?email . FILTER regex(str(?email), \"\\\\b%1\", \"i\")}";
+    "select distinct ?email ?fullname where { ?r a nco:Contact . ?r nco:hasEmailAddress ?v .  ?v nco:emailAddress ?email . "
+    "{ FILTER regex( str(?email), \"\\\\b%1\", \"i\") . ?r nco:fullname ?fullname } "
+    "union "
+    "{ ?r nco:fullname ?fullname . FILTER regex( str(?fullname), \"\\\\b%1\", \"i\") } "
+    "union "
+    "{ ?r nco:fullname ?fullname . ?r nco:nameFamily ?family . FILTER regex( str(?family), \"\\\\b%1\", \"i\") } "
+    "union "
+    "{ ?r nco:fullname ?fullname . ?r nco:nameGiven ?given . FILTER regex( str(?given), \"\\\\b%1\", \"i\") } "
+    "} ";
+
+void AddresseeLineEdit::Private::startNepomukSearch()
 {
-  /* Add completion sources for all ldap server, 0 to n. Added first so
-   * that they map to the LdapClient::clientNumber() */
-  s_static->ldapSearch->updateCompletionWeights();
-  int clientIndex = 0;
-  foreach ( const KLDAP::LdapClient *client, s_static->ldapSearch->clients() ) {
-    const int sourceIndex =
-      q->addCompletionSource( QLatin1String( "LDAP server: " ) + client->server().host(),
-                              client->completionWeight() );
+  // We do a word boundary substring search, which will easily yield hundreds
+  // of hits. Since the nepomuk search is mostly an auxiliary measure,
+  // we limit it to substrings of size 3 or larger.
+  if ( m_searchString.size() <= 2 || !s_static->useNepomukCompletion ) {
+    return;
+  }
+  const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
+  Nepomuk2::Query::RequestPropertyMap requestPropertyMap;
+  requestPropertyMap.insert( "email", Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
+  requestPropertyMap.insert( "fullname", Nepomuk2::Vocabulary::NCO::fullname() );
+  const bool result = s_static->nepomukSearchClient->sparqlQuery( query, requestPropertyMap );
+  if (!result) {
+    kDebug() << "Starting the nepomuk lookup failed. Search string: " << m_searchString;
+  }
+}
 
-    s_static->ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
+void AddresseeLineEdit::Private::stopNepomukSearch()
+{
+  s_static->nepomukSearchClient->close();
+}
 
-    clientIndex++;
+void AddresseeLineEdit::Private::slotNepomukHits( const QList<Nepomuk2::Query::Result>& results )
+{
+  if ( results.isEmpty() || ( !q->hasFocus() && !q->completionBox()->hasFocus() ) ) {
+    return;
+  }
+  // Extract and process the hits
+  Q_FOREACH( const Nepomuk2::Query::Result& result, results) {
+    Soprano::Node node = result.requestProperty( Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
+    if ( node.isValid() && node.isLiteral() ) {
+      const QString email = node.literal().toString();
+      KABC::Addressee contact;
+      contact.insertEmail( email );
+      // extract name, if we have one
+      Soprano::Node nodeName = result.requestProperty( Nepomuk2::Vocabulary::NCO::fullname() );
+      if ( nodeName.isValid() && nodeName.isLiteral() ) {
+        const QString name = nodeName.literal().toString();
+        contact.setFormattedName( name );
+      }
+      Q_ASSERT(s_static);
+      q->addContact( contact, 1, s_static->nepomukCompletionSource );
+    }
+  }
+}
+
+void AddresseeLineEdit::Private::slotNepomukSearchFinished()
+{
+  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {
+    // only complete again if the user didn't change the selection while
+    // we were waiting; otherwise the completion box will be closed
+    const QListWidgetItem *current = q->completionBox()->currentItem();
+    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
+      doCompletion( m_lastSearchMode );
+    }
   }
 }
 
@@ -410,7 +534,8 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
 
     // Sort the sections
     QList<SourceWithWeight> sourcesAndWeights;
-    for ( int i = 0; i < s_static->completionSources.size(); i++ ) {
+    const int numberOfCompletionSources(s_static->completionSources.size());
+    for ( int i = 0; i < numberOfCompletionSources; ++i ) {
       SourceWithWeight sww;
       sww.sourceName = s_static->completionSources[i];
       sww.weight = s_static->completionSourceWeights[sww.sourceName];
@@ -420,7 +545,8 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
     qSort( sourcesAndWeights.begin(), sourcesAndWeights.end() );
 
     // Add the sections and their items to the final sortedItems result list
-    for ( int i = 0; i < sourcesAndWeights.size(); i++ ) {
+    const int numberOfSources(sourcesAndWeights.size());
+    for ( int i = 0; i < numberOfSources; ++i ) {
       const QStringList sectionItems = sections[sourcesAndWeights[i].index];
       if ( !sectionItems.isEmpty() ) {
         sortedItems.append( sourcesAndWeights[i].sourceName );
@@ -444,11 +570,12 @@ void AddresseeLineEdit::Private::updateSearchString()
   bool inQuote = false;
   uint searchStringLength = m_searchString.length();
   for ( uint i = 0; i < searchStringLength; ++i ) {
-    if ( m_searchString[ i ] == QLatin1Char( '"' ) ) {
+      const QChar searchChar = m_searchString[ i ];
+    if ( searchChar == QLatin1Char( '"' ) ) {
       inQuote = !inQuote;
     }
 
-    if ( m_searchString[ i ] == '\\' &&
+    if ( searchChar == '\\' &&
          ( i + 1 ) < searchStringLength && m_searchString[ i + 1 ] == QLatin1Char( '"' ) ) {
       ++i;
     }
@@ -458,8 +585,8 @@ void AddresseeLineEdit::Private::updateSearchString()
     }
 
     if ( i < searchStringLength &&
-         ( m_searchString[ i ] == ',' ||
-           ( m_useSemicolonAsSeparator && m_searchString[ i ] == ';' ) ) ) {
+         ( searchChar == ',' ||
+           ( m_useSemicolonAsSeparator && searchChar == ';' ) ) ) {
       n = i;
     }
   }
@@ -489,7 +616,7 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   contactJob->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
-                        Akonadi::ContactSearchJob::ContainsMatch );
+                        Akonadi::ContactSearchJob::ContainsWordBoundaryMatch );
   groupJob->setQuery( Akonadi::ContactGroupSearchJob::Name, m_searchString,
                       Akonadi::ContactGroupSearchJob::StartsWithMatch );
   // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
@@ -649,6 +776,7 @@ void AddresseeLineEdit::Private::slotCompletion()
   }
 
   akonadiPerformSearch();
+  startNepomukSearch();
   doCompletion( false );
 }
 
@@ -702,7 +830,7 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
     contact.setEmails( result.email );
 
     if ( !s_static->ldapClientToCompletionSourceMap.contains( result.clientNumber ) ) {
-      updateLDAPWeights(); // we got results from a new source, so update the completion sources
+      s_static->updateLDAPWeights(); // we got results from a new source, so update the completion sources
     }
 
     q->addContact( contact, result.completionWeight,
@@ -726,12 +854,10 @@ void AddresseeLineEdit::Private::slotEditCompletionOrder()
 {
   init(); // for s_static->ldapSearch
 #ifndef Q_OS_WINCE
-  CompletionOrderEditor editor( s_static->ldapSearch, q );
-  editor.exec();
-#endif
-  if ( m_useCompletion ) {
-    updateLDAPWeights();
+  if(m_useCompletion){
+      s_static->slotEditCompletionOrder();
   }
+#endif
 }
 
 void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
@@ -740,6 +866,9 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
     stopLDAPLookup();
   }
 
+  if ( s_static->nepomukSearchClient ) {
+    stopNepomukSearch();
+  }
   q->userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
 }
 
@@ -852,7 +981,9 @@ AddresseeLineEdit::~AddresseeLineEdit()
   if ( s_static->ldapSearch && s_static->ldapLineEdit == this ) {
     d->stopLDAPLookup();
   }
-
+  if( s_static->nepomukSearchClient ) {
+    d->stopNepomukSearch();
+  }
   delete d;
 }
 
@@ -880,6 +1011,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *event )
     //TODO: add LDAP substring lookup, when it becomes available in KPIM::LDAPSearch
     d->updateSearchString();
     d->akonadiPerformSearch();
+    d->startNepomukSearch();
     d->doCompletion( true );
     accept = true;
   } else if ( KStandardShortcut::shortcut( KStandardShortcut::TextCompletion ).contains( key ) ) {
@@ -888,6 +1020,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *event )
     if ( len == cursorPosition() ) { // at End?
       d->updateSearchString();
       d->akonadiPerformSearch();
+      d->startNepomukSearch();
       d->doCompletion( true );
       accept = true;
     }
@@ -1001,9 +1134,7 @@ void AddresseeLineEdit::paste()
     d->m_smartPaste = true;
   }
 
-#ifndef QT_NO_CLIPBOARD
   KLineEdit::paste();
-#endif
   d->m_smartPaste = false;
 }
 
@@ -1227,20 +1358,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
 
 int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int weight )
 {
-  QMap<QString,int>::iterator it = s_static->completionSourceWeights.find( source );
-  if ( it == s_static->completionSourceWeights.end() ) {
-    s_static->completionSourceWeights.insert( source, weight );
-  } else {
-    s_static->completionSourceWeights[source] = weight;
-  }
-
-  const int sourceIndex = s_static->completionSources.indexOf( source );
-  if ( sourceIndex == -1 ) {
-    s_static->completionSources.append( source );
-    return s_static->completionSources.size() - 1;
-  } else {
-    return sourceIndex;
-  }
+    return s_static->addCompletionSource(source,weight);
 }
 
 bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )

@@ -1,7 +1,7 @@
 /*
  *  akonadimodel.cpp  -  KAlarm calendar file access using Akonadi
  *  Program:  kalarm
- *  Copyright © 2007-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2007-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  */
 
 #include "akonadimodel.h"
+#include "alarmtime.h"
 #include "autoqpointer.h"
 #include "calendarmigrator.h"
 #include "mainwindow.h"
@@ -91,7 +92,8 @@ AkonadiModel* AkonadiModel::instance()
 */
 AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     : EntityTreeModel(monitor, parent),
-      mMonitor(monitor)
+      mMonitor(monitor),
+      mResourcesChecked(false)
 {
     // Set lazy population to enable the contents of unselected collections to be ignored
     setItemPopulationStrategy(LazyPopulation);
@@ -136,24 +138,23 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     connect(this, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(slotRowsAboutToBeRemoved(QModelIndex,int,int)));
     connect(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotMonitoredItemChanged(Akonadi::Item,QSet<QByteArray>)));
 
-    // Check whether there are any KAlarm resources configured
-    bool found = false;
-    AgentInstance::List agents = AgentManager::self()->instances();
-    foreach (const AgentInstance& agent, agents)
+    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+                                   SLOT(checkResources(Akonadi::ServerManager::State)));
+    checkResources(ServerManager::state());
+}
+
+/******************************************************************************
+* Called when the server manager is running, i.e. the agent manager knows about
+* all existing resources.
+* Once it is running, if necessary migrate any KResources alarm calendars from
+* pre-Akonadi versions of KAlarm, or create default Akonadi calendar resources
+* if any are missing.
+*/
+void AkonadiModel::checkResources(ServerManager::State state)
+{
+    if (!mResourcesChecked  &&  state == ServerManager::Running)
     {
-        QString type = agent.type().identifier();
-        if (type == QLatin1String("akonadi_kalarm_resource")
-        ||  type == QLatin1String("akonadi_kalarm_dir_resource"))
-        {
-            found = true;
-            break;
-        }
-    }
-    if (!found)
-    {
-        // There are no KAlarm Akonadi resources.
-        // Migrate any KResources alarm calendars from pre-Akonadi versions of KAlarm,
-        // or create default calendars.
+        mResourcesChecked = true;
         CalendarMigrator::execute();
     }
 }
@@ -281,8 +282,8 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                             break;
                         case Qt::DisplayRole:
                             if (event.expired())
-                                return alarmTimeText(event.startDateTime());
-                            return alarmTimeText(event.nextTrigger(KAEvent::DISPLAY_TRIGGER));
+                                return AlarmTime::alarmTimeText(event.startDateTime());
+                            return AlarmTime::alarmTimeText(event.nextTrigger(KAEvent::DISPLAY_TRIGGER));
                         case SortRole:
                         {
                             DateTime due;
@@ -306,7 +307,7 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                         case Qt::DisplayRole:
                             if (event.expired())
                                 return QString();
-                            return timeToAlarmText(event.nextTrigger(KAEvent::DISPLAY_TRIGGER));
+                            return AlarmTime::timeToAlarmText(event.nextTrigger(KAEvent::DISPLAY_TRIGGER));
                         case SortRole:
                         {
                             if (event.expired())
@@ -669,71 +670,6 @@ QVariant AkonadiModel::entityHeaderData(int section, Qt::Orientation orientation
 }
 
 /******************************************************************************
-* Return the alarm time text in the form "date time".
-*/
-QString AkonadiModel::alarmTimeText(const DateTime& dateTime) const
-{
-    if (!dateTime.isValid())
-        return i18nc("@info/plain Alarm never occurs", "Never");
-    KLocale* locale = KGlobal::locale();
-    KDateTime kdt = dateTime.effectiveKDateTime().toTimeSpec(Preferences::timeZone());
-    QString dateTimeText = locale->formatDate(kdt.date(), KLocale::ShortDate);
-    if (!dateTime.isDateOnly()
-    ||  (!dateTime.isClockTime()  &&  kdt.utcOffset() != dateTime.utcOffset()))
-    {
-        // Display the time of day if it's a date/time value, or if it's
-        // a date-only value but it's in a different time zone
-        dateTimeText += QLatin1Char(' ');
-        QString time = locale->formatTime(kdt.time());
-        if (mTimeHourPos == -2)
-        {
-            // Initialise the position of the hour within the time string, if leading
-            // zeroes are omitted, so that displayed times can be aligned with each other.
-            mTimeHourPos = -1;     // default = alignment isn't possible/sensible
-            if (QApplication::isLeftToRight())    // don't try to align right-to-left languages
-            {
-                QString fmt = locale->timeFormat();
-                int i = fmt.indexOf(QRegExp("%[kl]"));   // check if leading zeroes are omitted
-                if (i >= 0  &&  i == fmt.indexOf(QLatin1Char('%')))   // and whether the hour is first
-                    mTimeHourPos = i;             // yes, so need to align
-            }
-        }
-        if (mTimeHourPos >= 0  &&  (int)time.length() > mTimeHourPos + 1
-        &&  time[mTimeHourPos].isDigit()  &&  !time[mTimeHourPos + 1].isDigit())
-            dateTimeText += QLatin1Char('~');     // improve alignment of times with no leading zeroes
-        dateTimeText += time;
-    }
-    return dateTimeText + QLatin1Char(' ');
-}
-
-/******************************************************************************
-* Return the time-to-alarm text.
-*/
-QString AkonadiModel::timeToAlarmText(const DateTime& dateTime) const
-{
-    if (!dateTime.isValid())
-        return i18nc("@info/plain Alarm never occurs", "Never");
-    KDateTime now = KDateTime::currentUtcDateTime();
-    if (dateTime.isDateOnly())
-    {
-        int days = now.date().daysTo(dateTime.date());
-        // xgettext: no-c-format
-        return i18nc("@info/plain n days", "%1d", days);
-    }
-    int mins = (now.secsTo(dateTime.effectiveKDateTime()) + 59) / 60;
-    if (mins < 0)
-        return QString();
-    char minutes[3] = "00";
-    minutes[0] = (mins%60) / 10 + '0';
-    minutes[1] = (mins%60) % 10 + '0';
-    if (mins < 24*60)
-        return i18nc("@info/plain hours:minutes", "%1:%2", mins/60, minutes);
-    int days = mins / (24*60);
-    mins = mins % (24*60);
-    return i18nc("@info/plain days hours:minutes", "%1d %2:%3", days, mins/60, minutes);
-}
-
-/******************************************************************************
 * Recursive function to emit the dataChanged() signal for all items in a
 * specified column range.
 */
@@ -879,8 +815,8 @@ QColor AkonadiModel::foregroundColor(const Akonadi::Collection& collection, cons
         colour = Preferences::archivedColour();
     else if (mimeTypes.contains(KAlarmCal::MIME_TEMPLATE))
         colour = KColorScheme(QPalette::Active).foreground(KColorScheme::LinkText).color();
-    if (colour.isValid()  &&  (collection.rights() & writableRights) != writableRights)
-        return KColorUtils::lighten(colour, 0.25);
+    if (colour.isValid()  &&  isWritable(collection) <= 0)
+        return KColorUtils::lighten(colour, 0.2);
     return colour;
 }
 
@@ -1054,7 +990,7 @@ QString AkonadiModel::repeatOrder(const KAEvent& event) const
 }
 
 /******************************************************************************
-*  Return the icon associated with the event's action.
+* Return the icon associated with the event's action.
 */
 QPixmap* AkonadiModel::eventIcon(const KAEvent& event) const
 {
@@ -1260,24 +1196,37 @@ void AkonadiModel::getChildEvents(const QModelIndex& parent, CalEvent::Type type
 }
 #endif
 
-KAEvent AkonadiModel::event(const QModelIndex& index) const
-{
-    return event(index.data(ItemRole).value<Item>());
-}
-
 KAEvent AkonadiModel::event(Item::Id itemId) const
 {
     QModelIndex ix = itemIndex(itemId);
     if (!ix.isValid())
         return KAEvent();
-    return event(ix);
+    return event(ix.data(ItemRole).value<Item>(), ix, 0);
 }
 
-KAEvent AkonadiModel::event(const Item& item) const
+KAEvent AkonadiModel::event(const QModelIndex& index) const
+{
+    return event(index.data(ItemRole).value<Item>(), index, 0);
+}
+
+KAEvent AkonadiModel::event(const Item& item, const QModelIndex& index, Collection* collection) const
 {
     if (!item.isValid()  ||  !item.hasPayload<KAEvent>())
         return KAEvent();
-    return item.payload<KAEvent>();
+    const QModelIndex ix = index.isValid() ? index : itemIndex(item.id());
+    if (!ix.isValid())
+        return KAEvent();
+    KAEvent e = item.payload<KAEvent>();
+    if (e.isValid())
+    {
+
+        Collection c = data(ix, ParentCollectionRole).value<Collection>();
+        // Set collection ID using a const method, to avoid unnecessary copying of KAEvent
+        e.setCollectionId_const(c.id());
+        if (collection)
+            *collection = c;
+    }
+    return e;
 }
 
 #if 0
@@ -1316,7 +1265,7 @@ AkonadiModel::Result AkonadiModel::addEvent(KAEvent* event, CalEvent::Type type,
 * have been added successfully. Note that the first signal may be emitted
 * before this function returns.
 * Reply = true if item creation has been scheduled for all events,
-*         false if at least one item creation failed to be scheduled.
+*       = false if at least one item creation failed to be scheduled.
 */
 bool AkonadiModel::addEvents(const KAEvent::List& events, Collection& collection)
 {
@@ -1574,19 +1523,22 @@ void AkonadiModel::slotRowsInserted(const QModelIndex& parent, int start, int en
         const Collection collection = ix.data(CollectionRole).value<Collection>();
         if (collection.isValid())
         {
-            // A collection has been inserted
+            // A collection has been inserted.
+            // Ignore it if it isn't owned by a valid resource.
             kDebug() << "Collection" << collection.id() << collection.name();
-
-            QSet<QByteArray> attrs;
-            attrs += CollectionAttribute::name();
-            setCollectionChanged(collection, attrs, true);
-            emit collectionAdded(collection);
-
-            if (!mCollectionsBeingCreated.contains(collection.remoteId())
-            &&  (collection.rights() & writableRights) == writableRights)
+            if (AgentManager::self()->instance(collection.resource()).isValid())
             {
-                // Update to current KAlarm format if necessary, and if the user agrees
-                CalendarMigrator::updateToCurrentFormat(collection, false, MainWindow::mainMainWindow());
+                QSet<QByteArray> attrs;
+                attrs += CollectionAttribute::name();
+                setCollectionChanged(collection, attrs, true);
+                emit collectionAdded(collection);
+
+                if (!mCollectionsBeingCreated.contains(collection.remoteId())
+                &&  (collection.rights() & writableRights) == writableRights)
+                {
+                    // Update to current KAlarm format if necessary, and if the user agrees
+                    CalendarMigrator::updateToCurrentFormat(collection, false, MainWindow::mainMainWindow());
+                }
             }
         }
         else
@@ -1629,10 +1581,11 @@ AkonadiModel::EventList AkonadiModel::eventList(const QModelIndex& parent, int s
     EventList events;
     for (int row = start;  row <= end;  ++row)
     {
+        Collection c;
         QModelIndex ix = index(row, 0, parent);
-        KAEvent evnt = event(ix.data(ItemRole).value<Item>());
+        KAEvent evnt = event(ix.data(ItemRole).value<Item>(), ix, &c);
         if (evnt.isValid())
-            events += Event(evnt, data(ix, ParentCollectionRole).value<Collection>());
+            events += Event(evnt, c);
     }
     return events;
 }
@@ -1734,7 +1687,9 @@ void AkonadiModel::slotMonitoredItemChanged(const Akonadi::Item& item, const QSe
         {
             // Wait to ensure that the base EntityTreeModel has processed the
             // itemChanged() signal first, before we emit eventChanged().
-            mPendingEventChanges.enqueue(Event(evnt, data(index, ParentCollectionRole).value<Collection>()));
+            Collection c = data(index, ParentCollectionRole).value<Collection>();
+            evnt.setCollectionId(c.id());
+            mPendingEventChanges.enqueue(Event(evnt, c));
             QTimer::singleShot(0, this, SLOT(slotEmitEventChanged()));
             break;
         }

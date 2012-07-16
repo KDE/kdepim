@@ -1,7 +1,7 @@
 /*
  *  functions.h  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2004-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2004-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@
 /**  @file functions.h - miscellaneous functions */
 
 #include "editdlg.h"
+#ifdef USE_AKONADI
+#include "eventid.h"
+#endif
 
 #include <kalarmcal/kaevent.h>
 #ifdef USE_AKONADI
@@ -48,6 +51,9 @@ class KToggleAction;
 class AlarmResource;
 class MainWindow;
 class TemplateMenuAction;
+#ifdef USE_AKONADI
+class AlarmListModel;
+#endif
 
 namespace KAlarm
 {
@@ -105,11 +111,12 @@ bool                editNewAlarm(const QString& templateName, QWidget* parent = 
 void                editNewAlarm(EditAlarmDlg::Type, QWidget* parent = 0);
 void                editNewAlarm(KAEvent::SubAction, QWidget* parent = 0, const AlarmText* = 0);
 void                editNewAlarm(const KAEvent* preset, QWidget* parent = 0);
-bool                editAlarm(const QString& eventID, QWidget* parent = 0);
 void                editAlarm(KAEvent*, QWidget* parent = 0);
 #ifdef USE_AKONADI
+bool                editAlarmById(const EventId& eventID, QWidget* parent = 0);
 void                updateEditedAlarm(EditAlarmDlg*, KAEvent&, Akonadi::Collection&);
 #else
+bool                editAlarmById(const QString& eventID, QWidget* parent = 0);
 void                updateEditedAlarm(EditAlarmDlg*, KAEvent&, AlarmResource*);
 #endif
 void                viewAlarm(const KAEvent*, QWidget* parent = 0);
@@ -130,9 +137,16 @@ void                refreshAlarms();
 void                refreshAlarmsIfQueued();    // must only be called from KAlarmApp::processQueue()
 QString             runKMail(bool minimise);
 
+#ifdef USE_AKONADI
+QStringList         dontShowErrors(const EventId&);
+bool                dontShowErrors(const EventId&, const QString& tag);
+void                setDontShowErrors(const EventId&, const QStringList& tags = QStringList());
+void                setDontShowErrors(const EventId&, const QString& tag);
+#else
 QStringList         dontShowErrors(const QString& eventId);
 bool                dontShowErrors(const QString& eventId, const QString& tag);
 void                setDontShowErrors(const QString& eventId, const QStringList& tags = QStringList());
+#endif
 void                setDontShowErrors(const QString& eventId, const QString& tag);
 
 enum         // 'options' parameter values for addEvent(). May be OR'ed together.
@@ -172,12 +186,14 @@ inline UpdateStatus deleteTemplate(const QString& eventID, QWidget* msgParent = 
 void                deleteDisplayEvent(const QString& eventID);
 #ifdef USE_AKONADI
 UpdateStatus        reactivateEvent(KAEvent&, Akonadi::Collection* = 0, QWidget* msgParent = 0, bool showKOrgErr = true);
-UpdateStatus        reactivateEvents(QVector<KAEvent>&, QStringList& ineligibleIDs, Akonadi::Collection* = 0, QWidget* msgParent = 0, bool showKOrgErr = true);
+UpdateStatus        reactivateEvents(QVector<KAEvent>&, QVector<EventId>& ineligibleIDs, Akonadi::Collection* = 0, QWidget* msgParent = 0, bool showKOrgErr = true);
 UpdateStatus        enableEvents(QVector<KAEvent>&, bool enable, QWidget* msgParent = 0);
+QVector<KAEvent>    getSortedActiveEvents(QObject* parent, AlarmListModel** model = 0);
 #else
 UpdateStatus        reactivateEvent(KAEvent&, AlarmResource* = 0, QWidget* msgParent = 0, bool showKOrgErr = true);
 UpdateStatus        reactivateEvents(KAEvent::List&, QStringList& ineligibleIDs, AlarmResource* = 0, QWidget* msgParent = 0, bool showKOrgErr = true);
 UpdateStatus        enableEvents(KAEvent::List&, bool enable, QWidget* msgParent = 0);
+KAEvent::List       getSortedActiveEvents(const KDateTime& startTime = KDateTime(), const KDateTime& endTime = KDateTime());
 #endif
 void                purgeArchive(int purgeDays);    // must only be called from KAlarmApp::processQueue()
 void                displayUpdateError(QWidget* parent, UpdateStatus, UpdateError, int nAlarms, int nKOrgAlarms = 1, bool showKOrgError = true);
@@ -186,10 +202,6 @@ QStringList         checkRtcWakeConfig(bool checkEventExists = false);
 void                deleteRtcWakeConfig();
 void                cancelRtcWake(QWidget* msgParent, const QString& eventId = QString());
 bool                setRtcWakeTime(unsigned triggerTime, QWidget* parent);
-
-bool                convertTimeString(const QByteArray& timeString, KDateTime& dateTime, const KDateTime& defaultDt = KDateTime(), bool allowTZ = true);
-KDateTime           applyTimeZone(const QString& tzstring, const QDate& date, const QTime& time,
-                                  bool haveTime, const KDateTime& defaultDt = KDateTime());
 
 /** Return a prompt string to ask the user whether to convert the calendar to the
  *  current format.

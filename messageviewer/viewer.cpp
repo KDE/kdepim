@@ -51,11 +51,12 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
 {
   connect( d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
           SIGNAL(replaceMsgByUnencryptedVersion()) );
-  connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)),
-           SIGNAL(popupMenu(Akonadi::Item,KUrl,QPoint)) );
+  connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
+           SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)) );
   connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
            SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
   connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
+  connect( d_ptr, SIGNAL(resumeNetworkJobs()), SIGNAL(resumeNetworkJobs()) );
   connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
            SIGNAL(showReader(KMime::Content*,bool,QString)) );
   connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );
@@ -124,6 +125,18 @@ void Viewer::printMessage( const Akonadi::Item &msg )
 {
   Q_D( Viewer );
   d->printMessage( msg );
+}
+
+void Viewer::printPreviousMessage( const Akonadi::Item &message )
+{
+  Q_D( Viewer );
+  d->printPreviousMessage( message );
+}
+
+void Viewer::printPreview()
+{
+  Q_D(Viewer);
+  d->slotPrintPreview();
 }
 
 void Viewer::print()
@@ -206,9 +219,9 @@ void Viewer::slotScrollNext()
   d->mViewer->scrollPageDown( 80 );
 }
 
-QString Viewer::selectedText()
+QString Viewer::selectedText() const
 {
-  Q_D(Viewer);
+  Q_D(const Viewer);
   QString temp = d->mViewer->selectedText();
   return temp;
 }
@@ -318,6 +331,13 @@ void Viewer::slotFind()
   d->slotFind();
 }
 
+void Viewer::slotTranslate()
+{
+  Q_D(Viewer);
+  d->slotTranslate();
+}
+
+
 const AttachmentStrategy * Viewer::attachmentStrategy() const
 {
   Q_D(const Viewer);
@@ -399,6 +419,26 @@ KAction *Viewer::copyAction()
   return d->mCopyAction;
 }
 
+KAction *Viewer::speakTextAction()
+{
+  Q_D( Viewer );
+  return d->mSpeakTextAction;
+}
+
+KAction *Viewer::copyImageLocation()
+{
+  Q_D( Viewer );
+  return d->mCopyImageLocation;
+}
+
+KAction *Viewer::translateAction()
+{
+  Q_D( Viewer );
+  return d->mTranslateAction;
+}
+
+
+
 KAction *Viewer::urlOpenAction()
 {
   Q_D( Viewer );
@@ -421,6 +461,12 @@ KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );
   return d->mClickedUrl;
+}
+
+KUrl Viewer::imageUrlClicked() const
+{
+  Q_D( const Viewer );
+  return d->mImageUrl;
 }
 
 void Viewer::update( MessageViewer::Viewer::UpdateMode updateMode )
@@ -545,7 +591,8 @@ bool Viewer::zoomTextOnly() const
   Q_D(const Viewer);
   return d->mZoomTextOnly;
 }
-  
+
+
 }
 
 #include "viewer.moc"

@@ -33,16 +33,18 @@ AboutData::AboutData()
                 ki18n( "Copyright © 1997–1999 Preston Brown\n"
                        "Copyright © 2000–2004, 2007 Cornelius Schumacher\n"
                        "Copyright © 2004–2005 Reinhold Kainhofer\n"
-                       "Copyright © 2006–2010 Allen Winter" ),
+                       "Copyright © 2006–2012 Allen Winter" ),
                 KLocalizedString(),
                 "http://korganizer.kde.org" )
 {
 #if defined( KDEPIM_GIT_REVISION_STRING ) && defined( KDEPIM_GIT_LAST_CHANGE )
-  QByteArray versionInfo( korgVersion );
-  versionInfo += '-' + QByteArray( KDEPIM_GIT_REVISION_STRING ) +
-                 ' ' +
-                 '(' + QByteArray( KDEPIM_GIT_LAST_CHANGE ) + ')';
-  setVersion( versionInfo );
+  const QByteArray rev( KDEPIM_GIT_REVISION_STRING );
+  const QByteArray last( KDEPIM_GIT_LAST_CHANGE );
+  if ( !rev.isEmpty() && !last.isEmpty() ) {
+    QByteArray versionInfo( korgVersion );
+    versionInfo += '-' + rev + ' ' + '(' + last + ')';
+    setVersion( versionInfo );
+  }
 #endif
 
   addAuthor( ki18n( "Allen Winter"),ki18n( "Maintainer" ),
@@ -54,8 +56,9 @@ AboutData::AboutData()
   addAuthor( ki18n( "Preston Brown"),ki18n( "Original Author" ),
              "pbrown@kde.org" );
   addCredit( ki18n( "Richard Apodaca" ) );
-  addCredit( ki18n( "Mike McQuaid" ) );
+  addCredit( ki18n( "Björn Balazs" ) );
   addCredit( ki18n( "Jan-Pascal van Best" ) );
+  addCredit( ki18n( "Bertjan Broeksema" ) );
   addCredit( ki18n( "Laszlo Boloni" ) );
   addCredit( ki18n( "Barry Benowitz" ) );
   addCredit( ki18n( "Christopher Beard" ) );
@@ -71,6 +74,7 @@ AboutData::AboutData()
   addCredit( ki18n( "Martin Koller" ) );
   addCredit( ki18n( "Uwe Koloska" ) );
   addCredit( ki18n( "Sergio Luis Martins" ) );
+  addCredit( ki18n( "Mike McQuaid" ) );
   addCredit( ki18n( "Glen Parker" ) );
   addCredit( ki18n( "Dan Pilone" ) );
   addCredit( ki18n( "Roman Rohr" ) );

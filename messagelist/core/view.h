@@ -428,8 +428,15 @@ protected:
   /**
    * Reimplemented in order to disable update of the geometries
    * while a job step is running (as it takes a very long time and it's called for every item insertion...)
+   * TODO: not true anymore, it's called after a delay.
    */
   virtual void updateGeometries();
+
+  /**
+   * Returns true if the vertical scrollbar should keep to the top or bottom
+   * while inserting items.
+   */
+  bool isScrollingLocked() const;
 
   /**
    *  Used to enable/disable the ignoring of updateGeometries() calls.

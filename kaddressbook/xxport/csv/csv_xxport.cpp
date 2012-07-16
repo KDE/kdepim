@@ -1,33 +1,32 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "csv_xxport.h"
-
 #include "contactfields.h"
 #include "csvimportdialog.h"
 
-#include <kfiledialog.h>
-#include <kio/netaccess.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <ktemporaryfile.h>
-#include <kurl.h>
+#include <KFileDialog>
+#include <KLocale>
+#include <KMessageBox>
+#include <KTemporaryFile>
+#include <KUrl>
+#include <KIO/NetAccess>
 
 #include <QtCore/QPointer>
 #include <QtCore/QTextCodec>
@@ -41,12 +40,17 @@ CsvXXPort::CsvXXPort( QWidget *parent )
 bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 {
   KUrl url = KFileDialog::getSaveUrl( KUrl( "addressbook.csv" ) );
-  if ( url.isEmpty() )
+  if ( url.isEmpty() ) {
       return true;
+  }
 
-  if ( QFileInfo(url.isLocalFile() ? url.toLocalFile() : url.path()).exists() ) {
-    if ( KMessageBox::questionYesNo( parentWidget(), i18n( "Do you want to overwrite file \"%1\"", url.isLocalFile() ? url.toLocalFile() : url.path() ) ) == KMessageBox::No )
+  if ( QFileInfo( url.isLocalFile() ? url.toLocalFile() : url.path() ).exists() ) {
+    if ( KMessageBox::questionYesNo(
+           parentWidget(),
+           i18n( "Do you want to overwrite file \"%1\"",
+                 url.isLocalFile() ? url.toLocalFile() : url.path() ) ) == KMessageBox::No ) {
       return true;
+    }
   }
 
   if ( !url.isLocalFile() ) {
@@ -89,8 +93,9 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
 
   // First output the column headings
   for ( int i = 0; i < fields.count(); ++i ) {
-    if ( !first )
+    if ( !first ) {
       stream << ",";
+    }
 
     // add quoting as defined in RFC 4180
     QString label = ContactFields::label( fields.at( i ) );
@@ -108,15 +113,18 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
     first = true;
 
     for ( int j = 0; j < fields.count(); ++j ) {
-      if ( !first )
+      if ( !first ) {
         stream << ",";
+      }
 
       QString content;
       if ( fields.at( j ) == ContactFields::Birthday ||
            fields.at( j ) == ContactFields::Anniversary ) {
-        const QDateTime dateTime = QDateTime::fromString( ContactFields::value( fields.at( j ), contact ), Qt::ISODate );
-        if ( dateTime.isValid() )
+        const QDateTime dateTime =
+          QDateTime::fromString( ContactFields::value( fields.at( j ), contact ), Qt::ISODate );
+        if ( dateTime.isValid() ) {
           content = dateTime.date().toString( Qt::ISODate );
+        }
       } else {
         content = ContactFields::value( fields.at( j ), contact ).replace( '\n', "\\n" );
       }
@@ -137,8 +145,9 @@ KABC::Addressee::List CsvXXPort::importContacts() const
   KABC::Addressee::List contacts;
 
   QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
-  if ( dlg->exec() && dlg )
+  if ( dlg->exec() && dlg ) {
     contacts = dlg->contacts();
+  }
 
   delete dlg;
 

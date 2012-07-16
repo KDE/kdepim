@@ -218,7 +218,7 @@ long as the dialog is not closed by clicking
 to the group, so make sure you checked the box and press
 <guibutton>OK</guibutton>. This group now appears in the tree view
 under the server entry it was chosen from; in our example this is
-<emphasis>My News Account</emphasis>. If you can not see the group,
+<emphasis>My News Account</emphasis>. If you cannot see the group,
 click on the cross next to the server entry or on the server entry
 itself; the list of subscribed newsgroups should appear.</para>
 
@@ -241,7 +241,7 @@ group: <application>leafnode</application> generates an article in
 every new subscribed group; this indicates that 
 <application>leafnode</application> will consider this group the next
 time it fetches articles. You can ignore an error message saying the
-article can not be found. If you select this article you tell
+article cannot be found. If you select this article you tell
 <application>leafnode</application> you are really interested in this
 group.</para> 
 
@@ -919,7 +919,7 @@ the more it is used.</para>
 </tip> 
 
 <para>Most of the time a quote is indicated by a prefixed &gt; on
-every line; however, there are other possible signs. If you can not directly
+every line; however, there are other possible signs. If you cannot directly
 recognize a quote the author did not obey the rules of proper
 quoting.</para> 
 
@@ -1260,7 +1260,7 @@ our case, we delete all parts except the question.</para>
 
 <para>With such a short text this is unnecessary, but this just an
 example: if you have to read a message 100 lines long again just to
-find an <citation>I agree</citation> at the end you will
+find an <quote>I agree</quote> at the end you will
 understand.... Aside from this, it makes articles smaller so they use
 less space on the server.</para> 
 

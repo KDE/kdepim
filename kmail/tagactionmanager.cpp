@@ -22,7 +22,8 @@
 #include "messageactions.h"
 
 #include "messagecore/taglistmonitor.h"
-#include <nepomuk/tag.h>
+#include <nepomuk2/tag.h>
+#include <Nepomuk2/ResourceManager>
 
 #include <KAction>
 #include <KActionCollection>
@@ -32,6 +33,8 @@
 #include <KXMLGUIClient>
 
 #include <QSignalMapper>
+#include <soprano/nao.h>
+//#include <nepomuk/resourcewatcher.h>
 
 using namespace KMail;
 
@@ -52,6 +55,18 @@ TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCo
   KAction *separator = new KAction( this );
   separator->setSeparator( true );
   mMessageActions->messageStatusMenu()->menu()->addAction( separator );
+  connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
+           SLOT(slotNepomukStarted()) );
+  connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
+           SLOT(slotNepomukStopped()) );
+
+#if 0
+  Nepomuk::ResourceWatcher* watcher = new Nepomuk::ResourceWatcher(this);
+  watcher->addType(Soprano::Vocabulary::NAO::Tag());
+  connect(watcher, SIGNAL(propertyAdded(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)), this, SLOT(tagsChanged()));
+  connect(watcher, SIGNAL(propertyRemoved(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)),this, SLOT(tagsChanged()));
+  watcher->start();
+#endif
 }
 
 TagActionManager::~TagActionManager()
@@ -121,16 +136,17 @@ void TagActionManager::createActions()
   clearActions();
 
 
-  const QList<Nepomuk::Tag> alltags( Nepomuk::Tag::allTags() );
-  if ( alltags.isEmpty() )
-    return;
+  if ( mTags.isEmpty() ) {
+    const QList<Nepomuk2::Tag> alltags( Nepomuk2::Tag::allTags() );
+    if ( alltags.isEmpty() )
+      return;
 
-  // Build a sorted list of tags
-  QList<Tag::Ptr> tagList;
-  foreach( const Nepomuk::Tag &nepomukTag, alltags ) {
-    tagList.append( Tag::fromNepomuk( nepomukTag ) );
+    // Build a sorted list of tags
+    foreach( const Nepomuk2::Tag &nepomukTag, alltags ) {
+      mTags.append( Tag::fromNepomuk( nepomukTag ) );
+    }
+    qSort( mTags.begin(), mTags.end(), KMail::Tag::compare );
   }
-  qSort( tagList.begin(), tagList.end(), KMail::Tag::compare );
 
   //Use a mapper to understand which tag button is triggered
   mMessageTagToggleMapper = new QSignalMapper( this );
@@ -139,7 +155,8 @@ void TagActionManager::createActions()
 
   // Create a action for each tag and plug it into various places
   int i = 0;
-  foreach( const Tag::Ptr &tag, tagList ) {
+  const int numberOfTag(mTags.count());
+  foreach( const Tag::Ptr &tag, mTags ) {
     if ( i< s_numberMaxTag )
       createTagAction( tag,true );
     else
@@ -147,7 +164,7 @@ void TagActionManager::createActions()
       if ( tag->inToolbar || !tag->shortcut.isEmpty() )
         createTagAction( tag, false );
 
-      if ( i == s_numberMaxTag && i <tagList.count() )
+      if ( i == s_numberMaxTag && i < numberOfTag )
       {
         mSeparatorAction = new KAction( this );
         mSeparatorAction->setSeparator( true );
@@ -175,16 +192,16 @@ void TagActionManager::updateActionStates( int numberOfSelectedMessages,
   if ( numberOfSelectedMessages == 1 )
   {
     Q_ASSERT( selectedItem.isValid() );
-    Nepomuk::Resource itemResource( selectedItem.url() );
+    Nepomuk2::Resource itemResource( selectedItem.url() );
     for ( ; it != end; ++it ) {
-      const bool hasTag = itemResource.tags().contains( Nepomuk::Tag( it.key() ) );
+      const bool hasTag = itemResource.tags().contains( Nepomuk2::Tag( it.key() ) );
       it.value()->setChecked( hasTag );
       it.value()->setEnabled( true );
     }
   }
   else if ( numberOfSelectedMessages > 1 ) {
     for ( ; it != end; ++it ) {
-      Nepomuk::Tag tag( it.key() );
+      Nepomuk2::Tag tag( it.key() );
       it.value()->setChecked( false );
       it.value()->setEnabled( true );
       it.value()->setText( i18n("Toggle Message Tag %1", tag.label() ) );
@@ -199,7 +216,19 @@ void TagActionManager::updateActionStates( int numberOfSelectedMessages,
 
 void TagActionManager::tagsChanged()
 {
+  mTags.clear(); // re-read the tags
   createActions();
+}
+
+void TagActionManager::slotNepomukStarted()
+{
+  tagsChanged();
+}
+
+void TagActionManager::slotNepomukStopped()
+{
+  mTags.clear();
+  clearActions();
 }
 
 

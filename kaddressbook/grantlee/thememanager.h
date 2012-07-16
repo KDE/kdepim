@@ -1,12 +1,12 @@
 /*
-  This file is part of the Grantlee template system.
+  This file is part of KAddressBook.
 
   Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either version
-  2 of the Licence, or (at your option) any later version.
+  2 of the License, or (at your option) any later version.
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,12 +20,11 @@
 #ifndef GRANTLEE_THEMEMANAGER_H
 #define GRANTLEE_THEMEMANAGER_H
 
-#include <QtCore/QObject>
-
 #include "theme.h"
 
-namespace Grantlee
-{
+#include <QtCore/QObject>
+
+namespace Grantlee {
 
 /**
  *
@@ -41,7 +40,7 @@ class ThemeManager : public QObject
      * @param themesPath The path to the top-level directory of the theme directories.
      * @param parent The parent object.
      */
-    ThemeManager( const QString &themesPath = QString(), QObject *parent = 0 );
+    explicit ThemeManager( const QString &themesPath = QString(), QObject *parent = 0 );
 
     /**
      * Destroys the theme manager.
@@ -83,7 +82,7 @@ class ThemeManager : public QObject
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void directoryChanged() )
     //@endcond

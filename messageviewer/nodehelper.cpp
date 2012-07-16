@@ -527,15 +527,21 @@ QString NodeHelper::cleanSubject( KMime::Message *message )
                        true, QString() ).trimmed();
 }
 
-QString NodeHelper::cleanSubject( KMime::Message *message, const QStringList & prefixRegExps,
+QString NodeHelper::cleanSubject( KMime::Message *message,
+                                  const QStringList &prefixRegExps,
                                   bool replace,
-                                  const QString & newPrefix )
+                                  const QString &newPrefix )
 {
-  return NodeHelper::replacePrefixes( message->subject()->asUnicodeString(), prefixRegExps, replace,
-                                      newPrefix );
+  QString cleanStr;
+  if ( message ) {
+    cleanStr =
+      NodeHelper::replacePrefixes(
+        message->subject()->asUnicodeString(), prefixRegExps, replace, newPrefix );
+  }
+  return cleanStr;
 }
 
-void NodeHelper::setOverrideCodec( KMime::Content* node, const QTextCodec* codec )
+void NodeHelper::setOverrideCodec( KMime::Content * node, const QTextCodec* codec )
 {
   if ( !node )
     return;
@@ -753,7 +759,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
        {
          const QTextCodec *codec = codecForName(encoding);
          if (!codec) {
-           kDebug() << "Auto-Charset: Something is wrong and I can not get a codec:" << encoding;
+           kDebug() << "Auto-Charset: Something is wrong and I cannot get a codec:" << encoding;
          } else {
            if (codec->canEncode(text))
               return encoding;
@@ -892,7 +898,8 @@ NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo( KMime::Cont
 {
   AttachmentDisplayInfo info;
   info.icon = iconName( node, KIconLoader::Small );
-  info.label = fileName( node );
+  const QString name = node->contentType()->name();
+  info.label = name.isEmpty() ? fileName( node ) : name;
   if( info.label.isEmpty() ) {
     info.label = node->contentDescription()->asUnicodeString();
   }

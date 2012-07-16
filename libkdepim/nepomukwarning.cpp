@@ -19,7 +19,7 @@
 
 #include "nepomukwarning.h"
 
-#include <Nepomuk/ResourceManager>
+#include <Nepomuk2/ResourceManager>
 
 #include <KAction>
 #include <KConfig>
@@ -45,12 +45,12 @@ KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *pa
                    "Many important features of this software depend on the "
                    "semantic desktop system and will not work correctly without it." ) );
 
-    connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
+    connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
              SLOT(animatedHide()) );
-    connect( Nepomuk::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
+    connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
              SLOT(animatedShow()) );
 
-    setVisible( !Nepomuk::ResourceManager::instance()->initialized() );
+    setVisible( !Nepomuk2::ResourceManager::instance()->initialized() );
 
     KAction *action = this->findChild<KAction *>(); // should give us the close action...
     if ( action ) {

@@ -112,6 +112,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      kmsearchfilterproxymodel.cpp
      kmknotify.cpp
      tagselectdialog.cpp
+     accountconfigorderdialog.cpp
 
   )
 
@@ -139,6 +140,10 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
     ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml
   )
+  qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
+    ${CMAKE_SOURCE_DIR}/archivemailagent/org.freedesktop.Akonadi.ArchiveMailAgent.xml
+  )
+
 
   kde4_add_ui_files(kmailprivate_LIB_SRCS
     ui/composercryptoconfiguration.ui
@@ -207,6 +212,8 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     ${QT_QTSCRIPT_LIBRARY}
     ${NEPOMUK_LIBRARIES}
     ${NEPOMUK_QUERY_LIBRARIES}
+    ${KDE4_KPRINTUTILS_LIBS}
+    ${NEPOMUK_CORE_LIBRARY}
   )
 
   set_target_properties(kmailprivate

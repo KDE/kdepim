@@ -34,9 +34,9 @@ namespace Strigi {
 class STREAMS_EXPORT KmpSearcher {
 private:
     std::string m_query;
-    int32_t* table;
-    int32_t len;
-    int32_t maxlen;
+    qint32* table;
+    qint32 len;
+    qint32 maxlen;
 public:
     KmpSearcher() :table(0) { }
     KmpSearcher(const std::string& query);
@@ -46,7 +46,7 @@ public:
         }
     }
     void setQuery(const std::string& query);
-    int32_t queryLength() const { return len; }
+    qint32 queryLength() const { return len; }
     std::string query() const { return m_query; }
     /**
      * @brief Find the needle in @p haystack.
@@ -55,7 +55,7 @@ public:
      * @return         a pointer to the start of the match if a match is found
      *                 Otherwise @c 0.
      **/
-    const char* search(const char* haystack, int32_t haylen) const;
+    const char* search(const char* haystack, qint32 haylen) const;
 };
 
 } // end namespace Strigi

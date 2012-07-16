@@ -39,11 +39,11 @@
 #include <KIcon>
 #include <KLocale>
 #include <KWindowSystem>
+#include <KDebug>
 
 #include <QTimer>
 #include <QApplication>
 #include <QPointer>
-#include <QDebug>
 #include <QWidget>
 
 #include <cassert>
@@ -186,8 +186,7 @@ bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
 void SystemTrayIcon::setAttentionWanted( bool on ) {
     if ( d->attentionWanted() == on )
         return;
-    qDebug() << "SystemTrayIcon::setAttentionWanted:"
-             << d->attentionWanted() << "->" << on;
+    kDebug() << d->attentionWanted() << "->" << on;
     d->setAttentionWantedImpl( on );
 }
 

@@ -703,8 +703,39 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
         messagePart.status = i18n("Different results for signatures");
       }
     }
-    if ( messagePart.status_code & GPGME_SIG_STAT_GOOD )
+    if ( messagePart.status_code & GPGME_SIG_STAT_GOOD ) {
       messagePart.isGoodSignature = true;
+      if ( !doCheck ) {
+        // We have a good signature but did not do a verify,
+        // this means the signature was already validated before by
+        // decryptverify for example.
+        Q_ASSERT( !key.keyID() ); // There should be no key set without doCheck
+
+        // Search for the key by it's fingerprint so that we can check for
+        // trust etc.
+        Kleo::KeyListJob * job = cryptProto->keyListJob( false ); // local, no sigs
+        if ( !job ) {
+          kDebug() << "The Crypto backend does not support listing keys. ";
+        } else {
+          std::vector<GpgME::Key> found_keys;
+          // As we are local it is ok to make this synchronous
+          GpgME::KeyListResult res = job->exec( QStringList( signature.fingerprint() ), false, found_keys );
+          if ( res.error() ) {
+            kDebug() << "Error while searching key for Fingerprint: " << signature.fingerprint();
+          }
+          if ( found_keys.size() > 1 ) {
+            // Should not Happen
+            kDebug() << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
+          }
+          if ( found_keys.size() != 1 ) {
+            // Should not Happen at this point
+            kDebug() << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+          } else {
+            key = found_keys[0];
+          }
+        }
+      }
+    }
 
     // save extended signature status flags
     messagePart.sigSummary = signature.summary();
@@ -914,7 +945,7 @@ void ObjectTreeParser::writeCertificateImportResult( const GpgME::ImportResult &
     if ( nSKUnc )
       comment += i18np( "1 secret key was unchanged.",
                         "%1 secret keys were unchanged.", nSKUnc ) + "<br/>";
-    comment += "&nbsp;<br/>";
+    comment += QLatin1String("&nbsp;<br/>");
     htmlWriter()->queue( comment );
     if ( !nImp && !nSKImp ) {
       htmlWriter()->queue( "<hr>" );
@@ -2151,7 +2182,8 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( !htmlWriter() || !msgPart )
     return;
 
-  QString label = NodeHelper::fileName( msgPart );
+  const QString name = msgPart->contentType()->name();
+  QString label = name.isEmpty() ? NodeHelper::fileName( msgPart ) : name;
   if ( label.isEmpty() )
     label = i18nc( "display name for an unnamed attachment", "Unnamed" );
   label = StringUtil::quoteHtmlChars( label, true );
@@ -2161,12 +2193,10 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( label == comment )
     comment.clear();
 
-  QString fileName = mNodeHelper->writeNodeToTempFile( msgPart );
   QString href = mNodeHelper->asHREF( msgPart, "body" );
 
-  QString iconName;
-
   if ( inlineImage ) {
+    const QString fileName = mNodeHelper->writeNodeToTempFile( msgPart );
     // show the filename of the image below the embedded image
     htmlWriter()->queue( "<div><a href=\"" + href + "\">"
                          "<img src=\"file:///" + fileName + "\" border=\"0\" style=\"max-width: 100%\"/></a>"
@@ -2176,10 +2206,10 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
                           "<div>" + comment + "</div><br/>" );
   } else {
     // show the filename next to the image
-    iconName = mNodeHelper->iconName( msgPart );
+    const QString iconName = mNodeHelper->iconName( msgPart );
     if( iconName.right( 14 ) == QLatin1String( "mime_empty.png" ) ) {
       mNodeHelper->magicSetType( msgPart );
-      iconName = mNodeHelper->iconName( msgPart );
+      //iconName = mNodeHelper->iconName( msgPart );
     }
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
                           iconName + "\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/>" + label +
@@ -2910,7 +2940,7 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
   Kpgp::Module* pgp = Kpgp::Module::getKpgp();
   assert(pgp != 0);
   const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
+  //QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
 
   inlineSignatureState  = KMMsgNotSigned;
   inlineEncryptionState = KMMsgNotEncrypted;

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- krazy:excludeall=tipsandthis -->
 <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
@@ -24,27 +25,22 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
 
     <entry name="TemplateNewMessage" type="String" key="TemplateNewMessage">
       <label>Message template for new message</label>
-      <whatsthis></whatsthis>
       <default code="true">DefaultTemplates::defaultNewMessage()</default>
     </entry>
     <entry name="TemplateReply" type="String" key="TemplateReply">
       <label>Message template for reply</label>
-      <whatsthis></whatsthis>
       <default code="true">DefaultTemplates::defaultReply()</default>
     </entry>
     <entry name="TemplateReplyAll" type="String" key="TemplateReplyAll">
       <label>Message template for reply to all</label>
-      <whatsthis></whatsthis>
       <default code="true">DefaultTemplates::defaultReplyAll()</default>
     </entry>
     <entry name="TemplateForward" type="String" key="TemplateForward">
       <label>Message template for forward</label>
-      <whatsthis></whatsthis>
       <default code="true">DefaultTemplates::defaultForward()</default>
     </entry>
     <entry name="QuoteString" type="String" key="QuoteString">
       <label>Quote characters</label>
-      <whatsthis></whatsthis>
       <default code="true">DefaultTemplates::defaultQuoteString()</default>
     </entry>
 

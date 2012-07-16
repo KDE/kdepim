@@ -49,6 +49,8 @@ set(libmessageviewer_SRCS
   chiasmuskeyselector.cpp
   configurewidget.cpp
   contactphotomemento.cpp
+  contactdisplaymessagememento.cpp
+  contactabstractmemento.cpp
   csshelper.cpp
   csshelperbase.cpp
   editorwatcher.cpp
@@ -84,6 +86,12 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   renamefiledialog.cpp
+  translator/translatorutil.cpp
+  translator/translatorwidget.cpp
+  translator/abstracttranslator.cpp
+  translator/babelfishtranslator.cpp
+  translator/googletranslator.cpp
+  minimumcombobox.cpp
   ${_mailwebview_cpp}
 )
 
@@ -107,6 +115,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
+  ${KDE4_KPRINTUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
 )

@@ -1,4 +1,5 @@
 /* Copyright 2010 Thomas McGuire <mcguire@kde.org>
+   Copyright 2012 Laurent Montel <montel@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -20,12 +21,13 @@
 
 #include "messagetag.h"
 
-#include <Nepomuk/Tag>
-#include <Nepomuk/Variant>
+#include <soprano/nao.h>
+#include <Nepomuk2/Tag>
+#include <Nepomuk2/Variant>
 
 using namespace KMail;
 
-Tag::Ptr Tag::fromNepomuk( const Nepomuk::Tag& nepomukTag )
+Tag::Ptr Tag::fromNepomuk( const Nepomuk2::Tag& nepomukTag )
 {
   Tag::Ptr tag( new Tag() );
   tag->tagName = nepomukTag.label();
@@ -34,8 +36,7 @@ Tag::Ptr Tag::fromNepomuk( const Nepomuk::Tag& nepomukTag )
     tag->iconName = "mail-tagged";
   else
     tag->iconName = nepomukTag.symbols().first();
-
-  tag->nepomukResourceUri = nepomukTag.resourceUri();
+  tag->nepomukResourceUri = nepomukTag.uri();
 
   if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
     const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
@@ -75,9 +76,15 @@ Tag::Ptr Tag::fromNepomuk( const Nepomuk::Tag& nepomukTag )
 
 void Tag::saveToNepomuk( SaveFlags saveFlags ) const
 {
-  Nepomuk::Tag nepomukTag( nepomukResourceUri );
+  Nepomuk2::Tag nepomukTag( nepomukResourceUri );
+
   nepomukTag.setLabel( tagName );
-  nepomukTag.setSymbols( QStringList( iconName ) );
+
+  Nepomuk2::Resource symbol( QUrl(), Soprano::Vocabulary::NAO::FreeDesktopIcon() );
+  symbol.setProperty( Soprano::Vocabulary::NAO::iconName(), iconName );
+
+  nepomukTag.setProperty( Soprano::Vocabulary::NAO::hasSymbol(), symbol );
+
   nepomukTag.setProperty( Vocabulary::MessageTag::priority(), priority );
   nepomukTag.setProperty( Vocabulary::MessageTag::inToolbar(), inToolbar );
   nepomukTag.setProperty( Vocabulary::MessageTag::shortcut(), shortcut.toString() );

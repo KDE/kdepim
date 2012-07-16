@@ -37,6 +37,7 @@ class KComboBox;
 
 namespace Akonadi
 {
+  class Collection;
   class MessageStatus;
 }
 
@@ -124,6 +125,13 @@ public:
    */
   bool selectionEmpty() const;
 
+  /**
+   * Sets the current folder.
+   */
+  void setCurrentFolder( const Akonadi::Collection &collection );
+
+  void saveCurrentSelection();
+
 public slots:
 
   /**
@@ -208,7 +216,7 @@ protected:
    */
   virtual void viewJobBatchTerminated();
 
-  void tagIdSelected( QVariant data );
+  void tagIdSelected(const QVariant &data );
 
 Q_SIGNALS:
   /**

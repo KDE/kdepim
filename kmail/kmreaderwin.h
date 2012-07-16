@@ -40,6 +40,7 @@ namespace MessageViewer {
 namespace Akonadi {
   class Item;
 }
+class KJob;
 
 /**
    This class implements a "reader window", that is a window
@@ -135,10 +136,14 @@ public:
   KAction *copyAction();
   KAction *selectAllAction();
   KAction *copyURLAction();
+  KAction *copyImageLocation();
   KAction *urlOpenAction();
   KAction *urlSaveAsAction() { return mUrlSaveAsAction; }
   KAction *addBookmarksAction() { return mAddBookmarksAction;}
   KAction *toggleMimePartTreeAction();
+  KAction *speakTextAction();
+  KAction* translateAction();
+  KAction* downloadImageToDiskAction() const;
 
   Akonadi::Item message() const;
 
@@ -149,6 +154,7 @@ public:
 
   MessageViewer::CSSHelper* cssHelper() const;
 
+  bool printSelectedText(bool preview);
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -177,9 +183,14 @@ public slots:
   void slotShowReader( KMime::Content* , bool, const QString& );
   void slotShowMessage( KMime::Message::Ptr message, const QString& encoding );
   void slotDeleteMessage( const Akonadi::Item& );
+  void slotSaveImageOnDisk();
+
+  void slotPrintComposeResult( KJob *job );
 protected:
 
   KUrl urlClicked() const;
+  KUrl imageUrlClicked() const;
+
 private:
   void createActions();
 private:
@@ -187,7 +198,7 @@ private:
   KActionCollection *mActionCollection;
 
   KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
-    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction;
+    *mAddAddrBookAction, *mOpenAddrBookAction, *mUrlSaveAsAction, *mAddBookmarksAction,*mImageUrlSaveAsAction;
 
   MessageViewer::Viewer *mViewer;
 };

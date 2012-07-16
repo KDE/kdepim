@@ -30,31 +30,22 @@
 #include "koglobals.h"
 #include "koprefs.h"
 
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-
-#include <kcalutils/icaldrag.h>
-#include <kcalutils/vcaldrag.h>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 
 #include <KCalendarSystem>
 #include <KIcon>
-#include <KLocale>
 #include <KMenu>
 
 #include <QMouseEvent>
 #include <QPainter>
-#include <QPen>
 #include <QToolTip>
 
 // ============================================================================
 //  K O D A Y M A T R I X
 // ============================================================================
-
-using namespace KCalCore;
-using namespace KCalUtils;
 
 const int KODayMatrix::NOSELECTION = -1000;
 const int KODayMatrix::NUMDAYS = 42;
@@ -114,7 +105,7 @@ KODayMatrix::~KODayMatrix()
   delete [] mDayLabels;
 }
 
-void KODayMatrix::addSelectedDaysTo( DateList &selDays )
+void KODayMatrix::addSelectedDaysTo( KCalCore::DateList &selDays )
 {
   if ( mSelStart == NOSELECTION ) {
     return;
@@ -283,10 +274,10 @@ void KODayMatrix::updateJournals()
   const Akonadi::Item::List items = mCalendar->incidences();
 
   foreach ( const Akonadi::Item & item, items ) {
-    Incidence::Ptr inc = CalendarSupport::incidence( item );
+    KCalCore::Incidence::Ptr inc = CalendarSupport::incidence( item );
     Q_ASSERT( inc );
     QDate d = inc->dtStart().toTimeSpec( mCalendar->timeSpec() ).date();
-    if ( inc->type() == Incidence::TypeJournal &&
+    if ( inc->type() == KCalCore::Incidence::TypeJournal &&
          d >= mDays[0] &&
          d <= mDays[NUMDAYS-1] &&
          !mEvents.contains( d ) ) {
@@ -317,19 +308,20 @@ void KODayMatrix::updateTodos()
       // No point in wasting cpu, all days are bold already
       break;
     }
-    const Todo::Ptr t = CalendarSupport::todo( item );
+    const KCalCore::Todo::Ptr t = CalendarSupport::todo( item );
     Q_ASSERT( t );
     if ( t->hasDueDate() ) {
       ushort recurType = t->recurrenceType();
 
       if ( t->recurs() &&
-           !( recurType == Recurrence::rDaily && !KOPrefs::instance()->mDailyRecur ) &&
-           !( recurType == Recurrence::rWeekly && !KOPrefs::instance()->mWeeklyRecur ) )  {
+           !( recurType == KCalCore::Recurrence::rDaily && !KOPrefs::instance()->mDailyRecur ) &&
+           !( recurType == KCalCore::Recurrence::rWeekly && !KOPrefs::instance()->mWeeklyRecur ) ) {
 
         // It's a recurring todo, find out in which days it occurs
-        DateTimeList timeDateList = t->recurrence()->timesInInterval(
-                                          KDateTime( mDays[0], mCalendar->timeSpec() ),
-                                          KDateTime( mDays[NUMDAYS-1], mCalendar->timeSpec() ) );
+        KCalCore::DateTimeList timeDateList =
+          t->recurrence()->timesInInterval(
+            KDateTime( mDays[0], mCalendar->timeSpec() ),
+            KDateTime( mDays[NUMDAYS-1], mCalendar->timeSpec() ) );
 
         foreach ( const KDateTime &dt, timeDateList ) {
           d = dt.toTimeSpec( mCalendar->timeSpec() ).date();
@@ -363,7 +355,7 @@ void KODayMatrix::updateEvents()
       // No point in wasting cpu, all days are bold already
       break;
     }
-    const Event::Ptr event = CalendarSupport::event( item );
+    const KCalCore::Event::Ptr event = CalendarSupport::event( item );
     Q_ASSERT( event );
     const ushort recurType = event->recurrenceType();
 
@@ -375,10 +367,10 @@ void KODayMatrix::updateEvents()
     const int secsToAdd = event->allDay() ? 0 : -1;
     const KDateTime dtEnd = event->dtEnd().toTimeSpec( mCalendar->timeSpec() ).addSecs( secsToAdd );
 
-    if ( !( recurType == Recurrence::rDaily  && !KOPrefs::instance()->mDailyRecur ) &&
-         !( recurType == Recurrence::rWeekly && !KOPrefs::instance()->mWeeklyRecur ) ) {
+    if ( !( recurType == KCalCore::Recurrence::rDaily  && !KOPrefs::instance()->mDailyRecur ) &&
+         !( recurType == KCalCore::Recurrence::rWeekly && !KOPrefs::instance()->mWeeklyRecur ) ) {
 
-      DateTimeList timeDateList;
+      KCalCore::DateTimeList timeDateList;
       const bool isRecurrent = event->recurs();
       const int eventDuration = dtStart.daysTo( dtEnd );
 
@@ -396,7 +388,7 @@ void KODayMatrix::updateEvents()
         }
       }
 
-      DateTimeList::iterator t;
+      KCalCore::DateTimeList::iterator t;
       for ( t=timeDateList.begin(); t != timeDateList.end(); ++t ) {
         //This could be a multiday event, so iterate from dtStart() to dtEnd()
         QDate d = t->toTimeSpec( mCalendar->timeSpec() ).date();
@@ -568,14 +560,14 @@ void KODayMatrix::mouseReleaseEvent( QMouseEvent *e )
     }
   }
 
-  DateList daylist;
+  KCalCore::DateList daylist;
   if ( mSelStart < 0 ) {
     mSelStart = 0;
   }
   for ( int i = mSelStart; i <= mSelEnd; ++i ) {
     daylist.append( mDays[i] );
   }
-  emit selected( static_cast<const DateList>(daylist) );
+  emit selected( static_cast<const KCalCore::DateList>(daylist) );
 }
 
 void KODayMatrix::mouseMoveEvent( QMouseEvent *e )
@@ -615,7 +607,6 @@ enum {
   DRAG_CANCEL = 2
 };
 
-#ifndef KORG_NODND
 void KODayMatrix::dragEnterEvent( QDragEnterEvent *e )
 {
   e->acceptProposedAction();
@@ -630,9 +621,7 @@ void KODayMatrix::dragEnterEvent( QDragEnterEvent *e )
 //  setPalette(my_HilitePalette);
 //  update();
 }
-#endif
 
-#ifndef KORG_NODND
 void KODayMatrix::dragMoveEvent( QDragMoveEvent *e )
 {
   const QMimeData *md = e->mimeData();
@@ -642,18 +631,14 @@ void KODayMatrix::dragMoveEvent( QDragMoveEvent *e )
   }
   e->accept();
 }
-#endif
 
-#ifndef KORG_NODND
 void KODayMatrix::dragLeaveEvent( QDragLeaveEvent *dl )
 {
   Q_UNUSED( dl );
 //  setPalette(oldPalette);
 //  update();
 }
-#endif
 
-#ifndef KORG_NODND
 void KODayMatrix::dropEvent( QDropEvent *e )
 {
   if ( !mCalendar ) {
@@ -688,7 +673,7 @@ void KODayMatrix::dropEvent( QDropEvent *e )
     } else if ( keyboardModifiers & Qt::ShiftModifier ) {
       action = DRAG_MOVE;
     } else {
-      QAction *copy = 0, *move = 0, *cancel = 0;
+      QAction *copy = 0, *move = 0;
       KMenu *menu = new KMenu( this );
       if ( exist ) {
         move = menu->addAction( KOGlobals::self()->smallIcon( "edit-paste" ), i18n( "&Move" ) );
@@ -699,7 +684,8 @@ void KODayMatrix::dropEvent( QDropEvent *e )
         move = menu->addAction( KOGlobals::self()->smallIcon( "list-add" ), i18n( "&Add" ) );
       }
       menu->addSeparator();
-      cancel = menu->addAction( KOGlobals::self()->smallIcon( "process-stop" ), i18n( "&Cancel" ) );
+      /*QAction *cancel =*/
+      menu->addAction( KOGlobals::self()->smallIcon( "process-stop" ), i18n( "&Cancel" ) );
       QAction *a = menu->exec( QCursor::pos() );
       if ( a == copy ) {
         action = DRAG_COPY;
@@ -720,7 +706,6 @@ void KODayMatrix::dropEvent( QDropEvent *e )
     }
   }
 }
-#endif
 
 // ----------------------------------------------------------------------------
 //  P A I N T   E V E N T   H A N D L I N G

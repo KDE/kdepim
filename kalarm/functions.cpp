@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include "eventlistmodel.h"
 #endif
 #include "alarmcalendar.h"
+#include "alarmtime.h"
 #include "autoqpointer.h"
 #include "alarmlistview.h"
 #include "editdlg.h"
@@ -136,7 +137,7 @@ namespace KAlarm
 Private* Private::mInstance = 0;
 
 /******************************************************************************
-*  Display a main window with the specified event selected.
+* Display a main window with the specified event selected.
 */
 #ifdef USE_AKONADI
 MainWindow* displayMainWindowSelected(Akonadi::Item::Id eventId)
@@ -482,13 +483,21 @@ UpdateStatus modifyEvent(KAEvent& oldEvent, KAEvent& newEvent, QWidget* msgParen
     }
     else
     {
+#ifdef USE_AKONADI
+        EventId oldId(oldEvent);
+#else
         QString oldId = oldEvent.id();
+#endif
         if (oldEvent.copyToKOrganizer())
         {
             // Tell KOrganizer to delete its old event.
             // But ignore errors, because the user could have manually
             // deleted it since KAlarm asked KOrganizer to set it up.
+#ifdef USE_AKONADI
+            deleteFromKOrganizer(oldId.eventId());
+#else
             deleteFromKOrganizer(oldId);
+#endif
         }
 #ifdef USE_AKONADI
         // Update the event in the calendar file, and get the new event ID
@@ -687,7 +696,11 @@ UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParen
             deleteWakeFromSuspendAlarm = true;
 
         // Remove "Don't show error messages again" for this alarm
+#ifdef USE_AKONADI
+        setDontShowErrors(EventId(*event));
+#else
         setDontShowErrors(id);
+#endif
     }
 
     if (warnErr == events.count())
@@ -786,10 +799,11 @@ UpdateStatus reactivateEvent(KAEvent& event, Collection* calendar, QWidget* msgP
 UpdateStatus reactivateEvent(KAEvent& event, AlarmResource* calendar, QWidget* msgParent, bool showKOrgErr)
 #endif
 {
-    QStringList ids;
 #ifdef USE_AKONADI
+    QVector<EventId> ids;
     QVector<KAEvent> events(1, event);
 #else
+    QStringList ids;
     KAEvent::List events;
     events += &event;
 #endif
@@ -797,7 +811,7 @@ UpdateStatus reactivateEvent(KAEvent& event, AlarmResource* calendar, QWidget* m
 }
 
 #ifdef USE_AKONADI
-UpdateStatus reactivateEvents(QVector<KAEvent>& events, QStringList& ineligibleIDs, Collection* col, QWidget* msgParent, bool showKOrgErr)
+UpdateStatus reactivateEvents(QVector<KAEvent>& events, QVector<EventId>& ineligibleIDs, Collection* col, QWidget* msgParent, bool showKOrgErr)
 #else
 UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs, AlarmResource* resource, QWidget* msgParent, bool showKOrgErr)
 #endif
@@ -843,7 +857,11 @@ UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs,
             if (event->category() != CalEvent::ARCHIVED
             ||  !event->occursAfter(now, true))
             {
+#ifdef USE_AKONADI
+                ineligibleIDs += EventId(*event);
+#else
                 ineligibleIDs += event->id();
+#endif
                 continue;
             }
             ++count;
@@ -893,7 +911,7 @@ UpdateStatus reactivateEvents(KAEvent::List& events, QStringList& ineligibleIDs,
 #endif
 
 #ifdef USE_AKONADI
-            if (cal->event(event->id())    // no error if event doesn't exist in archived resource
+            if (cal->event(EventId(*event))  // no error if event doesn't exist in archived resource
             &&  !cal->deleteEvent(*event, false))   // don't save calendar after deleting
 #else
             if (cal->event(oldid)    // no error if event doesn't exist in archived resource
@@ -967,7 +985,11 @@ UpdateStatus enableEvents(KAEvent::List& events, bool enable, QWidget* msgParent
                 // If we're disabling a display alarm, close any message window
                 if (!enable  &&  (event->actionTypes() & KAEvent::ACT_DISPLAY))
                 {
+#ifdef USE_AKONADI
+                    MessageWin* win = MessageWin::findEvent(EventId(*event));
+#else
                     MessageWin* win = MessageWin::findEvent(event->id());
+#endif
                     delete win;
                 }
 
@@ -1035,6 +1057,53 @@ void purgeArchive(int purgeDays)
     if (!events.isEmpty())
         AlarmCalendar::resources()->purgeEvents(events);   // delete the events and save the calendar
 }
+
+#ifdef USE_AKONADI
+/******************************************************************************
+* Display an error message about an error when saving an event.
+* If 'model' is non-null, the AlarmListModel* which it points to is used; if
+* that is null, it is created.
+*/
+QVector<KAEvent> getSortedActiveEvents(QObject* parent, AlarmListModel** model)
+{
+    AlarmListModel* mdl = 0;
+    if (!model)
+        model = &mdl;
+    if (!*model)
+    {
+        *model = new AlarmListModel(parent);
+        (*model)->setEventTypeFilter(CalEvent::ACTIVE);
+        (*model)->sort(AlarmListModel::TimeColumn);
+    }
+    QVector<KAEvent> result;
+    for (int i = 0, count = (*model)->rowCount();  i < count;  ++i)
+    {
+        KAEvent event = (*model)->event(i);
+        if (event.enabled()  &&  !event.expired())
+            result += event;
+    }
+    return result;
+}
+#else
+/******************************************************************************
+* Display an error message about an error when saving an event.
+*/
+KAEvent::List getSortedActiveEvents(const KDateTime& startTime, const KDateTime& endTime)
+{
+    KAEvent::List events;
+    if (endTime.isValid())
+        events = AlarmCalendar::resources()->events(startTime, endTime, CalEvent::ACTIVE);
+    else
+        events = AlarmCalendar::resources()->events(CalEvent::ACTIVE);
+    KAEvent::List result;
+    for (i = 0, count = events.count();  i < count;  ++i)
+    {
+        if (event->enabled()  &&  !event->expired())
+            result += event;
+    }
+    return result;
+}
+#endif
 
 /******************************************************************************
 * Display an error message about an error when saving an event.
@@ -1255,16 +1324,26 @@ void editNewTemplate(const KAEvent* preset, QWidget* parent)
 * if so, delete it from the config if it has expired.
 * If 'checkExists' is true, the config entry will only be returned if the
 * event exists.
-* Reply = config entry: [0] = event ID, [1] = trigger time (time_t).
+* Reply = config entry: [0] = event's collection ID (Akonadi only),
+*                       [1] = event ID,
+*                       [2] = trigger time (time_t).
 *       = empty list if none or expired.
 */
 QStringList checkRtcWakeConfig(bool checkEventExists)
 {
     KConfigGroup config(KGlobal::config(), "General");
     QStringList params = config.readEntry("RtcWake", QStringList());
+#ifdef USE_AKONADI
+    if (params.count() == 3  &&  params[2].toUInt() > KDateTime::currentUtcDateTime().toTime_t())
+#else
     if (params.count() == 2  &&  params[1].toUInt() > KDateTime::currentUtcDateTime().toTime_t())
+#endif
     {
+#ifdef USE_AKONADI
+        if (checkEventExists  &&  !AlarmCalendar::getEvent(EventId(params[0].toLongLong(), params[1])))
+#else
         if (checkEventExists  &&  !AlarmCalendar::getEvent(params[0]))
+#endif
             return QStringList();
         return params;                   // config entry is valid
     }
@@ -1426,7 +1505,11 @@ void editAlarm(KAEvent* event, QWidget* parent)
         viewAlarm(event, parent);
         return;
     }
+#ifdef USE_AKONADI
+    EventId id(*event);
+#else
     QString id = event->id();
+#endif
     // Use AutoQPointer to guard against crash on application exit while
     // the dialogue is still open. It prevents double deletion (both on
     // deletion of parent, and on return from this function).
@@ -1469,20 +1552,35 @@ void editAlarm(KAEvent* event, QWidget* parent)
 }
 
 /******************************************************************************
-* Display the alarm edit dialog to edit a specified alarm.
-* An error occurs if the alarm is read-only or expired.
+* Display the alarm edit dialog to edit the alarm with the specified ID.
+* An error occurs if the alarm is not found, if there is more than one alarm
+* with the same ID, or if it is read-only or expired.
 */
-bool editAlarm(const QString& eventID, QWidget* parent)
+#ifdef USE_AKONADI
+bool editAlarmById(const EventId& id, QWidget* parent)
+#else
+bool editAlarmById(const QString& eventID, QWidget* parent)
+#endif
 {
+#ifdef USE_AKONADI
+    const QString eventID(id.eventId());
+    KAEvent* event = AlarmCalendar::resources()->event(id, true);
+    if (!event)
+    {
+        if (id.collectionId() != -1)    
+            kWarning() << "Event ID not found, or duplicated:" << eventID;
+        else
+            kWarning() << "Event ID not found:" << eventID;
+        return false;
+    }
+    if (AlarmCalendar::resources()->eventReadOnly(event->itemId()))
+#else
     KAEvent* event = AlarmCalendar::resources()->event(eventID);
     if (!event)
     {
         kError() << eventID << ": event ID not found";
         return false;
     }
-#ifdef USE_AKONADI
-    if (AlarmCalendar::resources()->eventReadOnly(event->itemId()))
-#else
     if (AlarmCalendar::resources()->eventReadOnly(eventID))
 #endif
     {
@@ -1579,7 +1677,11 @@ void updateEditedAlarm(EditAlarmDlg* editDlg, KAEvent& event, AlarmResource* cal
 
     // Update the displayed lists and the calendar file
     UpdateStatus status;
+#ifdef USE_AKONADI
+    if (AlarmCalendar::resources()->event(EventId(event)))
+#else
     if (AlarmCalendar::resources()->event(event.id()))
+#endif
     {
         // The old alarm hasn't expired yet, so replace it
         Undo::Event undo(event, calendar);
@@ -1677,7 +1779,11 @@ void refreshAlarmsIfQueued()
             KAEvent* event = events[i];
             if (!event->enabled()  &&  (event->actionTypes() & KAEvent::ACT_DISPLAY))
             {
+#ifdef USE_AKONADI
+                MessageWin* win = MessageWin::findEvent(EventId(*event));
+#else
                 MessageWin* win = MessageWin::findEvent(event->id());
+#endif
                 delete win;
             }
         }
@@ -1688,9 +1794,9 @@ void refreshAlarmsIfQueued()
 }
 
 /******************************************************************************
-*  Start KMail if it isn't already running, optionally minimised.
-*  Reply = reason for failure to run KMail (which may be the empty string)
-*        = null string if success.
+* Start KMail if it isn't already running, optionally minimised.
+* Reply = reason for failure to run KMail (which may be the empty string)
+*       = null string if success.
 */
 QString runKMail(bool minimise)
 {
@@ -1805,22 +1911,35 @@ void Private::windowAdded(WId w)
 /******************************************************************************
 * Return the Don't-show-again error message tags set for a specified alarm ID.
 */
+#ifdef USE_AKONADI
+QStringList dontShowErrors(const EventId& eventId)
+#else
 QStringList dontShowErrors(const QString& eventId)
+#endif
 {
     if (eventId.isEmpty())
         return QStringList();
     KConfig config(KStandardDirs::locateLocal("appdata", ALARM_OPTS_FILE));
     KConfigGroup group(&config, DONT_SHOW_ERRORS_GROUP);
-    return group.readEntry(eventId, QStringList());
+#ifdef USE_AKONADI
+    const QString id = QString("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
+#else
+    const QString id(eventId);
+#endif
+    return group.readEntry(id, QStringList());
 }
 
 /******************************************************************************
 * Check whether the specified Don't-show-again error message tag is set for an
 * alarm ID.
 */
+#ifdef USE_AKONADI
+bool dontShowErrors(const EventId& eventId, const QString& tag)
+#else
 bool dontShowErrors(const QString& eventId, const QString& tag)
+#endif
 {
-    if (tag.isEmpty()  ||  eventId.isEmpty())
+    if (tag.isEmpty())
         return false;
     QStringList tags = dontShowErrors(eventId);
     return tags.indexOf(tag) >= 0;
@@ -1830,16 +1949,25 @@ bool dontShowErrors(const QString& eventId, const QString& tag)
 * Reset the Don't-show-again error message tags for an alarm ID.
 * If 'tags' is empty, the config entry is deleted.
 */
+#ifdef USE_AKONADI
+void setDontShowErrors(const EventId& eventId, const QStringList& tags)
+#else
 void setDontShowErrors(const QString& eventId, const QStringList& tags)
+#endif
 {
     if (eventId.isEmpty())
         return;
     KConfig config(KStandardDirs::locateLocal("appdata", ALARM_OPTS_FILE));
     KConfigGroup group(&config, DONT_SHOW_ERRORS_GROUP);
+#ifdef USE_AKONADI
+    const QString id = QString("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
+#else
+    const QString id(eventId);
+#endif
     if (tags.isEmpty())
-        group.deleteEntry(eventId);
+        group.deleteEntry(id);
     else
-        group.writeEntry(eventId, tags);
+        group.writeEntry(id, tags);
     group.sync();
 }
 
@@ -1847,26 +1975,35 @@ void setDontShowErrors(const QString& eventId, const QStringList& tags)
 * Set the specified Don't-show-again error message tag for an alarm ID.
 * Existing tags are unaffected.
 */
+#ifdef USE_AKONADI
+void setDontShowErrors(const EventId& eventId, const QString& tag)
+#else
 void setDontShowErrors(const QString& eventId, const QString& tag)
+#endif
 {
-    if (tag.isEmpty()  ||  eventId.isEmpty())
+    if (eventId.isEmpty()  ||  tag.isEmpty())
         return;
     KConfig config(KStandardDirs::locateLocal("appdata", ALARM_OPTS_FILE));
     KConfigGroup group(&config, DONT_SHOW_ERRORS_GROUP);
-    QStringList tags = group.readEntry(eventId, QStringList());
+#ifdef USE_AKONADI
+    const QString id = QString("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
+#else
+    const QString id(eventId);
+#endif
+    QStringList tags = group.readEntry(id, QStringList());
     if (tags.indexOf(tag) < 0)
     {
         tags += tag;
-        group.writeEntry(eventId, tags);
+        group.writeEntry(id, tags);
         group.sync();
     }
 }
 
 /******************************************************************************
-*  Read the size for the specified window from the config file, for the
-*  current screen resolution.
-*  Reply = true if size set in the config file, in which case 'result' is set
-*        = false if no size is set, in which case 'result' is unchanged.
+* Read the size for the specified window from the config file, for the
+* current screen resolution.
+* Reply = true if size set in the config file, in which case 'result' is set
+*       = false if no size is set, in which case 'result' is unchanged.
 */
 bool readConfigWindowSize(const char* window, QSize& result, int* splitterWidth)
 {
@@ -1883,8 +2020,8 @@ bool readConfigWindowSize(const char* window, QSize& result, int* splitterWidth)
 }
 
 /******************************************************************************
-*  Write the size for the specified window to the config file, for the
-*  current screen resolution.
+* Write the size for the specified window to the config file, for the
+* current screen resolution.
 */
 void writeConfigWindowSize(const char* window, const QSize& size, int splitterWidth)
 {
@@ -2044,192 +2181,12 @@ QString browseFile(const QString& caption, QString& defaultDir, const QString& i
     if (!initialFile.isEmpty())
         fileDlg->setSelection(initialFile);
     if (fileDlg->exec() != QDialog::Accepted)
-        return fileDlg ? QString("") : QString();
+        return fileDlg ? QString("") : QString();  // return null only if dialog was deleted
     KUrl url = fileDlg->selectedUrl();
     if (url.isEmpty())
-        return QString("");
-    defaultDir = url.isLocalFile() ? url.toLocalFile() : url.path();
+        return QString("");   // return empty, non-null string
+    defaultDir = url.isLocalFile() ? url.upUrl().toLocalFile() : url.directory();
     return (mode & KFile::LocalOnly) ? url.pathOrUrl() : url.prettyUrl();
-}
-
-/******************************************************************************
-* Convert a date/time specification string into a local date/time or date value.
-* Parameters:
-*   timeString  = in the form [[[yyyy-]mm-]dd-]hh:mm [TZ] or yyyy-mm-dd [TZ].
-*   dateTime  = receives converted date/time value.
-*   defaultDt = default date/time used for missing parts of timeString, or null
-*               to use current date/time.
-*   allowTZ   = whether to allow a time zone specifier in timeString.
-* Reply = true if successful.
-*/
-bool convertTimeString(const QByteArray& timeString, KDateTime& dateTime, const KDateTime& defaultDt, bool allowTZ)
-{
-#define MAX_DT_LEN 19
-    int i = timeString.indexOf(' ');
-    if (i > MAX_DT_LEN  ||  (i >= 0 && !allowTZ))
-        return false;
-    QString zone = (i >= 0) ? QString::fromLatin1(timeString.mid(i)) : QString();
-    char timeStr[MAX_DT_LEN+1];
-    strcpy(timeStr, timeString.left(i >= 0 ? i : MAX_DT_LEN));
-    int dt[5] = { -1, -1, -1, -1, -1 };
-    char* s;
-    char* end;
-    bool noTime;
-    // Get the minute value
-    if ((s = strchr(timeStr, ':')) == 0)
-        noTime = true;
-    else
-    {
-        noTime = false;
-        *s++ = 0;
-        dt[4] = strtoul(s, &end, 10);
-        if (end == s  ||  *end  ||  dt[4] >= 60)
-            return false;
-        // Get the hour value
-        if ((s = strrchr(timeStr, '-')) == 0)
-            s = timeStr;
-        else
-            *s++ = 0;
-        dt[3] = strtoul(s, &end, 10);
-        if (end == s  ||  *end  ||  dt[3] >= 24)
-            return false;
-    }
-    bool noDate = true;
-    if (s != timeStr)
-    {
-        noDate = false;
-        // Get the day value
-        if ((s = strrchr(timeStr, '-')) == 0)
-            s = timeStr;
-        else
-            *s++ = 0;
-        dt[2] = strtoul(s, &end, 10);
-        if (end == s  ||  *end  ||  dt[2] == 0  ||  dt[2] > 31)
-            return false;
-        if (s != timeStr)
-        {
-            // Get the month value
-            if ((s = strrchr(timeStr, '-')) == 0)
-                s = timeStr;
-            else
-                *s++ = 0;
-            dt[1] = strtoul(s, &end, 10);
-            if (end == s  ||  *end  ||  dt[1] == 0  ||  dt[1] > 12)
-                return false;
-            if (s != timeStr)
-            {
-                // Get the year value
-                dt[0] = strtoul(timeStr, &end, 10);
-                if (end == timeStr  ||  *end)
-                    return false;
-            }
-        }
-    }
-
-    QDate date;
-    if (dt[0] >= 0)
-        date = QDate(dt[0], dt[1], dt[2]);
-    QTime time(0, 0, 0);
-    if (noTime)
-    {
-        // No time was specified, so the full date must have been specified
-        if (dt[0] < 0  ||  !date.isValid())
-            return false;
-        dateTime = KAlarm::applyTimeZone(zone, date, time, false, defaultDt);
-    }
-    else
-    {
-        // Compile the values into a date/time structure
-        time.setHMS(dt[3], dt[4], 0);
-        if (dt[0] < 0)
-        {
-            // Some or all of the date was omitted.
-            // Use the default date/time if provided.
-            if (defaultDt.isValid())
-            {
-                dt[0] = defaultDt.date().year();
-                date.setYMD(dt[0],
-                            (dt[1] < 0 ? defaultDt.date().month() : dt[1]),
-                            (dt[2] < 0 ? defaultDt.date().day() : dt[2]));
-            }
-            else
-                date.setYMD(2000, 1, 1);  // temporary substitute for date
-        }
-        dateTime = KAlarm::applyTimeZone(zone, date, time, true, defaultDt);
-        if (!dateTime.isValid())
-            return false;
-        if (dt[0] < 0)
-        {
-            // Some or all of the date was omitted.
-            // Use the current date in the specified time zone as default.
-            KDateTime now = KDateTime::currentDateTime(dateTime.timeSpec());
-            date = dateTime.date();
-            date.setYMD(now.date().year(),
-                        (dt[1] < 0 ? now.date().month() : dt[1]),
-                        (dt[2] < 0 ? now.date().day() : dt[2]));
-            if (!date.isValid())
-                return false;
-            if (noDate  &&  time < now.time())
-                date = date.addDays(1);
-            dateTime.setDate(date);
-        }
-    }
-    return dateTime.isValid();
-}
-
-/******************************************************************************
-* Convert a time zone specifier string and apply it to a given date and/or time.
-* The time zone specifier is a system time zone name, e.g. "Europe/London",
-* "UTC" or "Clock". If no time zone is specified, it defaults to the local time
-* zone.
-* If 'defaultDt' is valid, it supplies the time spec and default date.
-*/
-KDateTime applyTimeZone(const QString& tzstring, const QDate& date, const QTime& time,
-                        bool haveTime, const KDateTime& defaultDt)
-{
-    bool error = false;
-    KDateTime::Spec spec = KDateTime::LocalZone;
-    QString zone = tzstring.trimmed();
-    if (!zone.isEmpty())
-    {
-        if (zone == QLatin1String("Clock"))
-            spec = KDateTime::ClockTime;
-        else if (zone == QLatin1String("UTC"))
-            spec = KDateTime::UTC;
-        else
-        {
-            KTimeZone tz = KSystemTimeZones::zone(zone);
-            error = !tz.isValid();
-            if (!error)
-                spec = tz;
-        }
-    }
-    else if (defaultDt.isValid())
-        spec = defaultDt.timeSpec();
-
-    KDateTime result;
-    if (!error)
-    {
-        if (!date.isValid())
-        {
-            // It's a time without a date
-            if (defaultDt.isValid())
-                   result = KDateTime(defaultDt.date(), time, spec);
-            else if (spec == KDateTime::LocalZone  ||  spec == KDateTime::ClockTime)
-                result = KDateTime(KDateTime::currentLocalDate(), time, spec);
-        }
-        else if (haveTime)
-        {
-            // It's a date and time
-            result = KDateTime(date, time, spec);
-        }
-        else
-        {
-            // It's a date without a time
-            result = KDateTime(date, spec);
-        }
-    }
-    return result;
 }
 
 /******************************************************************************
@@ -2267,7 +2224,7 @@ void setTestModeConditions()
     if (!newTime.isEmpty())
     {
         KDateTime dt;
-        if (convertTimeString(newTime, dt, KDateTime::realCurrentLocalDateTime(), true))
+        if (AlarmTime::convertTimeString(newTime, dt, KDateTime::realCurrentLocalDateTime(), true))
             setSimulatedSystemTime(dt);
     }
 }

@@ -218,12 +218,13 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
            "Select this option to archive events if they ended before the date given above." ) );
   typeLayout->addWidget( mEvents );
 
-  mTodos = new QCheckBox( i18nc( "@option:check", "Archive &To-dos" ) );
+  mTodos = new QCheckBox( i18nc( "@option:check", "Archive Completed &To-dos" ) );
   mTodos->setToolTip(
-    i18nc( "@option:check", "Archive or purge to-dos" ) );
+    i18nc( "@option:check", "Archive or purge completed to-dos" ) );
   mTodos->setWhatsThis(
     i18nc( "@info:whatsthis",
-           "Select this option to archive to-dos if they finished before the date given above." ) );
+           "Select this option to archive to-dos if they were completed "
+           "before the date given above." ) );
   typeLayout->addWidget( mTodos );
 
   mDeleteCb = new QCheckBox( i18nc( "@option:check", "&Delete only, do not save" ), topFrame );

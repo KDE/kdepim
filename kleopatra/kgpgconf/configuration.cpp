@@ -32,9 +32,9 @@
 
 #include "configuration.h"
 
+#include <KDebug>
 #include <KLocale>
 
-#include <QDebug>
 #include <QStringList>
 
 #include <cassert>
@@ -73,7 +73,7 @@ static QString urlpart_decode( const QString& str )
 
 static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
 {
-    if ( argType == ConfigEntry::LdapUrl ) { 
+    if ( argType == ConfigEntry::LdapUrl ) {
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
         QStringList items = str.split( ':' );
         if ( items.count() == 5 )
@@ -90,7 +90,7 @@ static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
             return url;
         }
         else
-            qWarning() << "parseURL: malformed LDAP server:" << str;
+            kWarning() << "parseURL: malformed LDAP server:" << str;
   }
   // other URLs : assume wellformed URL syntax.
   return KUrl( str );
@@ -589,7 +589,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
           if( val.startsWith( '"' ) )
             val = val.mid( 1 );
           else  // see README.gpgconf
-            qWarning() <<"String value should start with '\"' :" << val;
+            kWarning() << "String value should start with '\"' :" << val;
         }
       }
       lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
@@ -604,7 +604,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
         if( val.startsWith( '"' ) )
           val = val.mid( 1 );
         else // see README.gpgconf
-          qWarning() <<"String value should start with '\"' :" << val;
+          kWarning() << "String value should start with '\"' :" << val;
       }
     }
     return QVariant( unescape ? gpgconf_unescape( val ) : val );

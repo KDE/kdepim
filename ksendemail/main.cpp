@@ -65,4 +65,7 @@ int main( int argc, char **argv )
 
   MailerService *ms = new MailerService();
   ms->processArgs( args );
+  args->clear();
+  delete ms;
+  return 0;
 }

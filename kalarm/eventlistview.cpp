@@ -177,8 +177,8 @@ KAEvent::List EventListView::selectedEvents() const
 }
 
 /******************************************************************************
-*  Called when the Find action is selected.
-*  Display the non-modal Find dialog.
+* Called when the Find action is selected.
+* Display the non-modal Find dialog.
 */
 void EventListView::slotFind()
 {
@@ -191,7 +191,7 @@ void EventListView::slotFind()
 }
 
 /******************************************************************************
-*  Called when the Find Next or Find Prev action is selected.
+* Called when the Find Next or Find Prev action is selected.
 */
 void EventListView::findNext(bool forward)
 {
@@ -286,7 +286,6 @@ bool EventListDelegate::editorEvent(QEvent* e, QAbstractItemModel* model, const 
             kError() << "Invalid cast to ItemListModel*";
         else
         {
-kDebug()<<"Cast works!!!!!!!!!!!!";
             KAEvent event = itemModel->event(index);
             edit(&event, static_cast<EventListView*>(parent()));
             return true;

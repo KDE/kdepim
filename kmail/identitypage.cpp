@@ -105,8 +105,6 @@ void IdentityPage::load()
 
 void IdentityPage::save()
 {
-  Q_ASSERT( !mIdentityDialog );
-
   mIdentityManager->sort();
   mIdentityManager->commit();
 
@@ -180,6 +178,7 @@ void IdentityPage::slotNewIdentity()
     }
 
     slotModifyIdentity();
+    updateButtons();
   }
 }
 
@@ -202,7 +201,7 @@ void IdentityPage::slotModifyIdentity()
   if ( mIdentityDialog->exec() == QDialog::Accepted ) {
     mIdentityDialog->updateIdentity( item->identity() );
     item->redisplay();
-    emit changed( true );
+    save();
   }
 
   delete mIdentityDialog;
@@ -237,6 +236,7 @@ void IdentityPage::slotRemoveIdentity()
         mIPage.mIdentityList->currentItem()->setSelected( true );
       }
       refreshList();
+      updateButtons();
     }
   }
 }
@@ -264,7 +264,7 @@ void IdentityPage::slotRenameIdentity( KMail::IdentityListViewItem *item , const
        !mIdentityManager->shadowIdentities().contains( newName ) ) {
     KPIMIdentities::Identity &ident = item->identity();
     ident.setIdentityName( newName );
-    emit changed( true );
+    save();
   }
   item->redisplay();
 }
@@ -312,16 +312,20 @@ void IdentityPage::refreshList()
       item->redisplay();
     }
   }
-  emit changed( true );
+  save();
 }
 
 void IdentityPage::slotIdentitySelectionChanged()
+{
+  updateButtons();
+}
+
+void IdentityPage::updateButtons()
 {
   IdentityListViewItem *item = 0;
   if ( !mIPage.mIdentityList->selectedItems().isEmpty() ) {
     item = dynamic_cast<IdentityListViewItem*>( mIPage.mIdentityList->selectedItems()[0] );
   }
-
   mIPage.mRemoveButton->setEnabled( item && mIPage.mIdentityList->topLevelItemCount() > 1 );
   mIPage.mModifyButton->setEnabled( item );
   mIPage.mRenameButton->setEnabled( item );

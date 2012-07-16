@@ -345,7 +345,7 @@ void FreeBusyItemModel::updateFreeBusyData( const FreeBusyItem::Ptr &item )
 void FreeBusyItemModel::timerEvent( QTimerEvent *event )
 {
   killTimer( event->timerId() );
-  Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
+  Q_FOREACH ( FreeBusyItem::Ptr item, mFreeBusyItems ) {
     if ( item->updateTimerID() == event->timerId() ) {
       item->setUpdateTimerID( 0 );
       item->startDownload( mForceDownload );
@@ -385,7 +385,7 @@ void FreeBusyItemModel::autoReload()
 
 void FreeBusyItemModel::reload()
 {
-  Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
+  Q_FOREACH ( FreeBusyItem::Ptr item, mFreeBusyItems ) {
     if ( mForceDownload ) {
       item->startDownload( mForceDownload );
     } else {

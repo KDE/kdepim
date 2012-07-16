@@ -34,22 +34,38 @@
 #include <kabc/addressee.h>
 #include <KDialog>
 #include <QStringList>
-
 class KConfig;
 class KEditListBox;
 class KEditListWidget;
+class KPushButton;
+class QListWidget;
+class KLineEdit;
 
 namespace KPIM {
 
 class KDEPIM_EXPORT RecentAddressDialog : public KDialog
 {
+    Q_OBJECT
   public:
     RecentAddressDialog( QWidget *parent );
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
+    void addAddresses(KConfig *config);
+
+  private slots:
+    void slotAddItem();
+    void slotRemoveItem();
+    void slotSelectionChanged();
+    void slotTypedSomething(const QString&);
+  protected:
+    void updateButtonState();
+    bool eventFilter( QObject* o, QEvent* e );
 
   private:
     KEditListWidget *mEditor;
+    KPushButton* mNewButton, *mRemoveButton;
+    QListWidget *mListView;
+    KLineEdit *mLineEdit;
 };
 
 /**

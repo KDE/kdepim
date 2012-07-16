@@ -116,6 +116,8 @@ void Akregator::SelectionController::setFeedSelector( QAbstractItemView* feedSel
              this, SLOT(subscriptionContextMenuRequested(QPoint)) );
     connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
              this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
+    connect( m_feedSelector, SIGNAL(activated(QModelIndex)),
+             this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
 
 }
 
@@ -146,6 +148,11 @@ Akregator::Article Akregator::SelectionController::currentArticle() const
     if ( !m_articleLister || !m_articleLister->articleSelectionModel() )
         return Article();
     return ::articleForIndex( m_articleLister->articleSelectionModel()->currentIndex(), m_feedList.get() );
+}
+
+QModelIndex SelectionController::currentArticleIndex() const
+{
+    return m_articleLister->articleSelectionModel()->currentIndex();
 }
 
 QList<Akregator::Article> Akregator::SelectionController::selectedArticles() const

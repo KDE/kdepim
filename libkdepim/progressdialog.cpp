@@ -171,7 +171,7 @@ TransactionItem::TransactionItem( QWidget *parent,
   h->layout()->addWidget( mProgress );
 
   if ( item->canBeCanceled() ) {
-    mCancelButton = new QPushButton( SmallIcon( "list-remove" ), QString(), h );
+    mCancelButton = new QPushButton( SmallIcon( "dialog-cancel" ), QString(), h );
     mCancelButton->setToolTip( i18n( "Cancel this operation." ) );
     connect ( mCancelButton, SIGNAL(clicked()),
               this, SLOT(slotItemCanceled()));

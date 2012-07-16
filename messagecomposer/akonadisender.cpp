@@ -93,6 +93,9 @@ bool AkonadiSender::doSend( const KMime::Message::Ptr &aMsg, short sendNow  )
 bool AkonadiSender::doSendQueued( const QString &customTransport )
 {
   kDebug() << "Sending queued message with custom transport:" << customTransport;
+  if ( !Message::Util::sendMailDispatcherIsOnline() )
+    return false;
+
   mCustomTransport = customTransport;
 
   DispatcherInterface *dispatcher = new DispatcherInterface();
@@ -135,7 +138,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
       kDebug()<<" No transport defined. Need to create it";
       return;
   }
-  if ( !Message::Util::sendMailDispatcherIsOnline() )
+  if ( (method == MessageSender::SendImmediate) && !Message::Util::sendMailDispatcherIsOnline() )
     return;
   
   kDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
@@ -156,7 +159,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
 
   Message::Util::addSendReplyForwardAction(message, qjob);
   
-  MessageCore::StringUtil::removePrivateHeaderFields( message );
+  MessageCore::StringUtil::removePrivateHeaderFields( message,false );
   message->assemble();
 
   // Queue the message.

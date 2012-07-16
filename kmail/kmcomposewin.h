@@ -102,6 +102,11 @@ namespace MailCommon
   class FolderRequester;
 }
  
+namespace MessageViewer
+{
+  class TranslatorWidget;
+}
+
 //-----------------------------------------------------------------------------
 class KMComposeWin : public KMail::Composer
 {
@@ -275,7 +280,7 @@ class KMComposeWin : public KMail::Composer
      * Set whether the message should be treated as modified or not.
      */
     void setModified( bool modified );
-  void slotFetchJob(KJob*);
+    void slotFetchJob(KJob*);
 
   private slots:
      /**
@@ -293,6 +298,8 @@ class KMComposeWin : public KMail::Composer
      * Actions:
      */
     void slotPrint();
+    void slotPrintPreview();
+
     void slotInsertRecentFile( const KUrl & );
     void slotRecentListFileClear();
 
@@ -318,6 +325,7 @@ class KMComposeWin : public KMail::Composer
     void slotPasteAsAttachment();
     void slotFormatReset();
     void slotMarkAll();
+    void slotTranslatorWasClosed();
 
   void slotFolderRemoved( const Akonadi::Collection& );
     void slotLanguageChanged( const QString &language );
@@ -446,7 +454,8 @@ class KMComposeWin : public KMail::Composer
   private:
     Kleo::CryptoMessageFormat cryptoMessageFormat() const;
     QString overwriteModeStr() const;
-
+    void printComposeResult( KJob *job, bool preview );
+    void printComposer(bool preview);
     /**
      * Install grid management and header fields. If fields exist that
      * should not be there they are removed. Those that are needed are
@@ -525,10 +534,7 @@ class KMComposeWin : public KMail::Composer
      */
     void setSigning( bool sign, bool setByUser = false );
 
-    /**
-      Returns true if the user forgot to attach something.
-    */
-    bool userForgotAttachment();
+    Message::ComposerViewBase::MissingAttachment userForgotAttachment();
 
     /**
      * Decrypt an OpenPGP block or strip off the OpenPGP envelope of a text
@@ -624,7 +630,7 @@ class KMComposeWin : public KMail::Composer
     KToggleAction *mSubjectAction;
     KToggleAction *mIdentityAction, *mTransportAction, *mFccAction;
     KToggleAction *mWordWrapAction, *mFixedFontAction, *mAutoSpellCheckingAction;
-    KToggleAction *mDictionaryAction, *mSnippetAction;
+    KToggleAction *mDictionaryAction, *mSnippetAction, *mTranslateAction;
 
     KToggleAction *markupAction;
     KAction *actionFormatReset;
@@ -633,8 +639,6 @@ class KMComposeWin : public KMail::Composer
     KSelectAction *mCryptoModuleAction;
 
     KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
-
-  //bool mAlwaysSend;
   
     QFont mSaveFont;
     QSplitter *mHeadersToEditorSplitter;
@@ -661,6 +665,7 @@ class KMComposeWin : public KMail::Composer
 
 
     SnippetWidget *mSnippetWidget;
+    MessageViewer::TranslatorWidget *mTranslatorWidget;
 
     QLabel *mSignatureStateIndicator;
   QLabel *mEncryptionStateIndicator;

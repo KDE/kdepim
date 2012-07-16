@@ -86,6 +86,7 @@ class KDEPIM_EXPORT StatisticsProxyModel : public KIdentityProxyModel
 
 
     virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
+    virtual QModelIndex parent(const QModelIndex& child) const;
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
     virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
@@ -96,6 +97,12 @@ class KDEPIM_EXPORT StatisticsProxyModel : public KIdentityProxyModel
 
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
     virtual void connectNotify(const char* signal);
+
+    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+    QModelIndex mapToSource(const QModelIndex& sourceIndex) const;
+    QModelIndex buddy(const QModelIndex &index) const;
+
+    QItemSelection mapSelectionToSource(const QItemSelection& selection) const;
 
   private:
     //@cond PRIVATE

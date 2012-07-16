@@ -133,7 +133,8 @@ void WebKitPartHtmlWriter::resolveCidUrls()
 #ifndef KDEPIM_NO_WEBKIT
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
-  for( QWebElementCollection::iterator it = images.begin(); it != images.end(); ++it )
+  QWebElementCollection::iterator end(images.end());
+  for( QWebElementCollection::iterator it = images.begin(); it != end; ++it )
   {
     KUrl url( (*it).attribute( "src" ) );
     if ( url.protocol() == QLatin1String( "cid" ) )

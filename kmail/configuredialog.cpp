@@ -43,6 +43,7 @@
 #include "kmmainwidget.h"
 #include "composer.h"
 #include "tag.h"
+#include "accountconfigorderdialog.h"
 
 #include "foldertreewidget.h"
 
@@ -110,7 +111,8 @@ using MailTransport::TransportManagementWidget;
 #include <KIconButton>
 #include <KColorScheme>
 #include <KComboBox>
-#include <Nepomuk/Tag>
+#include <Nepomuk2/Tag>
+#include <KCModuleProxy>
 
 // Qt headers:
 #include <QCheckBox>
@@ -142,11 +144,11 @@ using MailTransport::TransportManagementWidget;
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/agentinstancecreatejob.h>
 
-#include <nepomuk/resourcemanager.h>
+#include <nepomuk2/resourcemanager.h>
 
 #include <libkdepim/nepomukwarning.h>
 using namespace MailCommon;
-
+using namespace KMail;
 namespace {
 
   static const char * lockedDownWarning =
@@ -465,6 +467,8 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
 
   connect( mAccountsReceiving.mOtherNewMailActionsButton, SIGNAL(clicked()),
            this, SLOT(slotEditNotifications()) );
+  connect( mAccountsReceiving.customizeAccountOrder,SIGNAL(clicked()),this,SLOT(slotCustomizeAccountOrder()));
+
   slotAccountSelected( mAccountsReceiving.mAccountList->currentAgentInstance() );
 
 }
@@ -472,6 +476,12 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
 AccountsPageReceivingTab::~AccountsPageReceivingTab()
 {
   mRetrievalHash.clear();
+}
+
+void AccountsPageReceivingTab::slotCustomizeAccountOrder()
+{
+    AccountConfigOrderDialog dlg(this);
+    dlg.exec();
 }
 
 void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, const QPoint & pos )
@@ -943,6 +953,7 @@ static const struct {
   { "ColorbarForegroundPlain", I18N_NOOP("HTML Status Bar Foreground - No HTML Message") },
   { "ColorbarBackgroundHTML",  I18N_NOOP("HTML Status Bar Background - HTML Message") },
   { "ColorbarForegroundHTML",  I18N_NOOP("HTML Status Bar Foreground - HTML Message") },
+  { "BrokenAccountColor",  I18N_NOOP("Broken Account - Folder Text Color") },
 };
 static const int numColorNames = sizeof colorNames / sizeof *colorNames;
 
@@ -1018,6 +1029,8 @@ void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
 
   KConfigGroup messageListView( KMKernel::self()->config(), "MessageListView::Colors" );
 
+  KConfigGroup collectionFolderView( KMKernel::self()->config(), "CollectionFolderView" );
+
   static const QColor defaultColor[ numColorNames ] = {
     QColor( 0x00, 0x80, 0x00 ), // quoted l1
     QColor( 0x00, 0x70, 0x00 ), // quoted l2
@@ -1038,7 +1051,8 @@ void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
     Qt::lightGray, // colorbar plain bg
     Qt::black,     // colorbar plain fg
     Qt::black,     // colorbar html  bg
-    Qt::white      // colorbar html  fg
+    Qt::white,     // colorbar html  fg
+    scheme.foreground(KColorScheme::NegativeText).color()  //Broken Account Color
   };
 
   for ( int i = 0 ; i < numColorNames ; i++ ) {
@@ -1048,7 +1062,10 @@ void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
            configName == QLatin1String( "ImportantMessageColor" ) ||
            configName == QLatin1String( "TodoMessageColor" ) ) {
         mColorList->setColorSilently( i, messageListView.readEntry( configName, defaultColor[i] ) );
-        }
+      }
+      else if( configName == QLatin1String("BrokenAccountColor")) {
+        mColorList->setColorSilently( i, collectionFolderView.readEntry(configName,defaultColor[i]));
+      }
       else
         mColorList->setColorSilently( i, reader.readEntry( configName, defaultColor[i] ) );
     } else {
@@ -1069,6 +1086,7 @@ void AppearancePage::ColorsTab::save()
 {
   KConfigGroup reader( KMKernel::self()->config(), "Reader" );
   KConfigGroup messageListView( KMKernel::self()->config(), "MessageListView::Colors" );
+  KConfigGroup collectionFolderView( KMKernel::self()->config(), "CollectionFolderView" );
   bool customColors = mCustomColorCheck->isChecked();
   MessageCore::GlobalSettings::self()->setUseDefaultColors( !customColors );
 
@@ -1082,6 +1100,9 @@ void AppearancePage::ColorsTab::save()
       if ( customColors || messageListView.hasKey( configName ) )
         messageListView.writeEntry( configName, mColorList->color(i) );
 
+    } else if( configName == QLatin1String("BrokenAccountColor")) {
+        if ( customColors || collectionFolderView.hasKey( configName ) )
+            collectionFolderView.writeEntry(configName,mColorList->color(i));
     } else {
       if ( customColors || reader.hasKey( configName ) )
         reader.writeEntry( configName, mColorList->color(i) );
@@ -1253,6 +1274,13 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
   connect( mHideTabBarWithSingleTab, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
 
+  mTabsHaveCloseButton = new QCheckBox(
+                 MessageList::Core::Settings::self()->tabsHaveCloseButtonItem()->label(), group );
+  gvlay->addWidget(  mTabsHaveCloseButton );
+
+  connect( mTabsHaveCloseButton, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+
   // "Aggregation"
   using MessageList::Utils::AggregationComboBox;
   mAggregationComboBox = new AggregationComboBox( group );
@@ -1366,8 +1394,7 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
       mCustomDateFormatEdit->setWhatsThis( mCustomDateWhatsThis );
       radio->setWhatsThis( mCustomDateWhatsThis );
       gvlay->addWidget( hbox );
-    }
-  } // end for loop populating mDateDisplay
+    }  } // end for loop populating mDateDisplay
 
   vlay->addWidget( mDateDisplay );
   connect( mDateDisplay, SIGNAL(clicked(int)),
@@ -1398,8 +1425,14 @@ void AppearancePage::HeadersTab::slotSelectDefaultTheme()
 void AppearancePage::HeadersTab::doLoadOther()
 {
   // "General Options":
-  mDisplayMessageToolTips->setChecked( MessageList::Core::Settings::self()->messageToolTipEnabled() );
-  mHideTabBarWithSingleTab->setChecked( MessageList::Core::Settings::self()->autoHideTabBarWithSingleTab() );
+  mDisplayMessageToolTips->setChecked(
+    MessageList::Core::Settings::self()->messageToolTipEnabled() );
+
+  mHideTabBarWithSingleTab->setChecked(
+    MessageList::Core::Settings::self()->autoHideTabBarWithSingleTab() );
+
+  mTabsHaveCloseButton->setChecked(
+    MessageList::Core::Settings::self()->tabsHaveCloseButton() );
 
   // "Aggregation":
   slotSelectDefaultAggregation();
@@ -1414,8 +1447,15 @@ void AppearancePage::HeadersTab::doLoadOther()
 
 void AppearancePage::HeadersTab::doLoadFromGlobalSettings()
 {
-  mDisplayMessageToolTips->setChecked( MessageList::Core::Settings::self()->messageToolTipEnabled() );
-  mHideTabBarWithSingleTab->setChecked( MessageList::Core::Settings::self()->autoHideTabBarWithSingleTab() );
+  mDisplayMessageToolTips->setChecked(
+    MessageList::Core::Settings::self()->messageToolTipEnabled() );
+
+  mHideTabBarWithSingleTab->setChecked(
+    MessageList::Core::Settings::self()->autoHideTabBarWithSingleTab() );
+
+  mTabsHaveCloseButton->setChecked(
+    MessageList::Core::Settings::self()->tabsHaveCloseButton() );
+
   // "Aggregation":
   slotSelectDefaultAggregation();
 
@@ -1447,9 +1487,16 @@ void AppearancePage::HeadersTab::setDateDisplay( int num, const QString & format
 
 void AppearancePage::HeadersTab::save()
 {
-  MessageList::Core::Settings::self()->setMessageToolTipEnabled( mDisplayMessageToolTips->isChecked() );
-  MessageList::Core::Settings::self()->setAutoHideTabBarWithSingleTab( mHideTabBarWithSingleTab->isChecked() );
+  MessageList::Core::Settings::self()->
+    setMessageToolTipEnabled( mDisplayMessageToolTips->isChecked() );
 
+  MessageList::Core::Settings::self()->
+    setAutoHideTabBarWithSingleTab( mHideTabBarWithSingleTab->isChecked() );
+
+  MessageList::Core::Settings::self()->
+    setTabsHaveCloseButton( mTabsHaveCloseButton->isChecked() );
+
+  KMKernel::self()->savePaneSelection();
   // "Aggregation"
   mAggregationComboBox->writeDefaultConfig();
 
@@ -1603,7 +1650,7 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
   maingrid->setMargin( KDialog::marginHint() );
   maingrid->setSpacing( KDialog::spacingHint() );
 
-  mNepomukActive = Nepomuk::ResourceManager::instance()->initialized();
+  mNepomukActive = Nepomuk2::ResourceManager::instance()->initialized();
   if ( mNepomukActive ) {
 
     //Lefthand side Listbox and friends
@@ -1813,7 +1860,8 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
              this, SLOT(slotSelectionChanged()) );
   } else {
     QLabel *lab = new QLabel;
-    lab->setText( i18n( "The Nepomuk semantic search service is not available. We can not configurate tags. You can enable it in \"System Settings\"" ) );
+    lab->setText( i18n( "The Nepomuk semantic search service is not available. We cannot configure tags. You can enable it in \"System Settings\"" ) );
+    lab->setWordWrap(true);
     maingrid->addWidget( lab );
   }
 }
@@ -1996,7 +2044,7 @@ void AppearancePage::MessageTagTab::slotRemoveTag()
     QListWidgetItem * item = mTagListBox->takeItem( mTagListBox->currentRow() );
     TagListWidgetItem *tagItem = static_cast<TagListWidgetItem*>( item );
     KMail::Tag::Ptr tmp_desc = tagItem->kmailTag();
-    Nepomuk::Tag nepomukTag( tmp_desc->nepomukResourceUri );
+    Nepomuk2::Tag nepomukTag( tmp_desc->nepomukResourceUri );
     nepomukTag.remove();
     mPreviousTag = -1;
 
@@ -2047,7 +2095,7 @@ void AppearancePage::MessageTagTab::slotAddNewTag()
 {
   const int tmp_priority = mTagListBox->count();
   const QString newTagName = mTagAddLineEdit->text();
-  Nepomuk::Tag nepomukTag( newTagName );
+  Nepomuk2::Tag nepomukTag( newTagName );
   nepomukTag.setLabel( newTagName );
 
   KMail::Tag::Ptr tag = KMail::Tag::fromNepomuk( nepomukTag );
@@ -2067,7 +2115,7 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
 
   mTagListBox->clear();
   QList<KMail::TagPtr> msgTagList;
-  foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
+  foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
     KMail::Tag::Ptr tag = KMail::Tag::fromNepomuk( nepomukTag );
     msgTagList.append( tag );
   }
@@ -2945,6 +2993,7 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
 
   // "name" and "value" line edits and labels:
   mTagNameEdit = new KLineEdit( this );
+  mTagNameEdit->setClearButtonShown(true);
   mTagNameEdit->setEnabled( false );
   mTagNameLabel = new QLabel( i18nc("@label:textbox Name of the mime header.","&Name:"), this );
   mTagNameLabel->setBuddy( mTagNameEdit );
@@ -2955,6 +3004,7 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
            this, SLOT(slotMimeHeaderNameChanged(QString)) );
 
   mTagValueEdit = new KLineEdit( this );
+  mTagValueEdit->setClearButtonShown(true);
   mTagValueEdit->setEnabled( false );
   mTagValueLabel = new QLabel( i18n("&Value:"), this );
   mTagValueLabel->setBuddy( mTagValueEdit );
@@ -3099,7 +3149,7 @@ void ComposerPage::HeadersTab::save()
   for ( int i = 0; i < numberOfEntry; ++i ) {
     item = mTagList->topLevelItem( i );
     if( !item->text(0).isEmpty() ) {
-      KConfigGroup config( KMKernel::self()->config(), QString::fromLatin1("Mime #").arg( numValidEntries ) );
+      KConfigGroup config( KMKernel::self()->config(), QString::fromLatin1("Mime #%1").arg( numValidEntries ) );
       config.writeEntry( "name",  item->text( 0 ) );
       config.writeEntry( "value", item->text( 1 ) );
       numValidEntries++;
@@ -3909,6 +3959,9 @@ MiscPage::MiscPage( const KComponentData &instance, QWidget *parent )
 
   mInviteTab = new InviteTab();
   addTab( mInviteTab, i18n("Invitations" ) );
+
+  mProxyTab = new ProxyTab();
+  addTab( mProxyTab, i18n("Proxy" ) );
 }
 
 QString MiscPage::FolderTab::helpAnchor() const
@@ -3947,6 +4000,8 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent )
            mMMTab.mDelayedMarkTime, SLOT(setEnabled(bool)));
   connect( mMMTab.mDelayedMarkAsRead, SIGNAL(toggled(bool)),
            this , SLOT(slotEmitChanged()) );
+  connect( mMMTab.mPrintEmptySelectedText, SIGNAL(toggled(bool)),
+           this, SLOT(slotEmitChanged()) );
   connect( mMMTab.mShowPopupAfterDnD, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
   connect( mOnStartupOpenFolder, SIGNAL(folderChanged(Akonadi::Collection)),
@@ -3965,6 +4020,7 @@ void MiscPage::FolderTab::doLoadFromGlobalSettings()
   mMMTab.mDelayedMarkAsRead->setChecked( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() );
   mMMTab.mDelayedMarkTime->setValue( MessageViewer::GlobalSettings::self()->delayedMarkTime() );
   mMMTab.mShowPopupAfterDnD->setChecked( GlobalSettings::self()->showPopupAfterDnD() );
+  mMMTab.mPrintEmptySelectedText->setChecked(GlobalSettings::self()->printSelectedText());
   doLoadOther();
 }
 
@@ -3988,6 +4044,7 @@ void MiscPage::FolderTab::save()
   GlobalSettings::self()->setShowPopupAfterDnD( mMMTab.mShowPopupAfterDnD->isChecked() );
   GlobalSettings::self()->setExcludeImportantMailFromExpiry(
         mMMTab.mExcludeImportantFromExpiry->isChecked() );
+  GlobalSettings::self()->setPrintSelectedText(mMMTab.mPrintEmptySelectedText->isChecked());
 }
 
 
@@ -4015,6 +4072,24 @@ void MiscPage::InviteTab::doResetToDefaultsOther()
 {
   mInvitationUi->doResetToDefaultsOther();
 }
+
+
+MiscPageProxyTab::MiscPageProxyTab( QWidget* parent )
+  : ConfigModuleTab( parent )
+{
+  KCModuleInfo proxyInfo("proxy.desktop");
+  mProxyModule = new KCModuleProxy(proxyInfo, parent);
+  QHBoxLayout *l = new QHBoxLayout( this );
+  l->setContentsMargins( 0 , 0, 0, 0 );
+  l->addWidget( mProxyModule );
+  connect(mProxyModule,SIGNAL(changed(bool)), this, SLOT(slotEmitChanged()));
+}
+
+void MiscPage::ProxyTab::save()
+{
+  mProxyModule->save();
+}
+
 
 //----------------------------
 #include "configuredialog.moc"

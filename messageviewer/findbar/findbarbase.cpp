@@ -1,5 +1,5 @@
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010,2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -88,7 +88,7 @@ FindBarBase::FindBarBase( QWidget * parent )
   connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
   connect( m_findNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
   connect( m_findPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
-  connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged()) );
+  connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
   connect( m_search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
   connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
   setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -107,6 +107,11 @@ QMenu* FindBarBase::optionsMenu()
 QString FindBarBase::text() const
 {
   return m_search->text();
+}
+
+void FindBarBase::setText( const QString&text )
+{
+  m_search->setText( text );
 }
 
 void FindBarBase::focusAndSetCursor()
@@ -151,23 +156,21 @@ void FindBarBase::messageInfo( bool backward, bool isAutoSearch, bool found )
 
 void FindBarBase::setFoundMatch( bool match )
 {
+#ifndef QT_NO_STYLE_STYLESHEET
   QString styleSheet;
 
   if (!m_search->text().isEmpty()) {
-    KColorScheme::BackgroundRole bgColorScheme;
-
+    if(mNegativeBackground.isEmpty()) {
+      KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
+      mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(m_search).color().name());
+      bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
+      mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(m_search).color().name());
+    }
     if (match)
-      bgColorScheme = KColorScheme::PositiveBackground;
+      styleSheet = mPositiveBackground;
     else
-      bgColorScheme = KColorScheme::NegativeBackground;
-
-    KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
-
-    styleSheet = QString("QLineEdit{ background-color:%1 }")
-                 .arg(bgBrush.brush(m_search).color().name());
+      styleSheet = mNegativeBackground;
   }
-
-#ifndef QT_NO_STYLE_STYLESHEET
   m_search->setStyleSheet(styleSheet);
 #endif
 
@@ -190,14 +193,22 @@ void FindBarBase::findPrev()
   searchText( true, false );
 }
 
-void FindBarBase::caseSensitivityChanged()
+void FindBarBase::caseSensitivityChanged(bool b)
 {
-  clearSelections();
+  updateSensitivity( b );
 }
 
-void FindBarBase::highlightAllChanged()
+void FindBarBase::updateSensitivity( bool )
 {
-  clearSelections();
+}
+
+void FindBarBase::slotHighlightAllChanged(bool b)
+{
+  updateHighLight(b);
+}
+
+void FindBarBase::updateHighLight( bool )
+{
 }
 
 void FindBarBase::clearSelections()
@@ -219,7 +230,7 @@ bool FindBarBase::event(QEvent* e)
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
-    if (e->type() == QEvent::ShortcutOverride) {
+    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
@@ -229,7 +240,10 @@ bool FindBarBase::event(QEvent* e)
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
           e->accept();
-          findNext();
+          if ( kev->modifiers() & Qt::ShiftModifier )
+            findPrev();
+          else if ( kev->modifiers() == Qt::NoModifier )
+            findNext();
           return true;
         }
     }

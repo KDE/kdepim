@@ -116,7 +116,7 @@ help you keep your schedule. </para></abstract>
 <keyword>manager</keyword>
 <keyword>time</keyword>
 <keyword>schedule</keyword>
-<keyword>alarm</keyword>
+<keyword>reminder</keyword>
 <keyword>appointment</keyword>
 <keyword>event</keyword>
 <keyword>journal</keyword>
@@ -1078,8 +1078,8 @@ many different items in a compact fashion. It is also useful if your
 events are spread out over a long time period that would not be displayed
 completely on the screen when using one of the other views.</para>
 
-<para>The items are displayed one per line. Columns show if an alarm is set
-(a bell icon displayed in it means the alarm is set),  if it repeats multiple
+<para>The items are displayed one per line. Columns show if a reminder is set
+(a bell icon displayed in it means the reminder is set),  if it repeats multiple
 times (a chasing-arrows icon means a repeating event), the start and end time
 information. Hovering the mouse over an item will bring up a
 tooltip with detailed information about the item.</para>
@@ -1112,7 +1112,7 @@ them in the date navigator.</para>
 on the right is provided when the whole day cannot be displayed on a single
 screen (which is the usual case). Each rectangle in the view represents an
 individual event or to-do due for that time, and displays the start and end time
-and summary. A <guiicon>bell</guiicon> icon is displayed if an alarm is set, and
+and summary. A <guiicon>bell</guiicon> icon is displayed if a reminder is set, and
 a <guiicon>chasing-arrows</guiicon> icon is displayed if it repeats multiple
 times. Hovering the mouse over an calendar item will bring up a tooltip
 with the item detailed information. To make &korganizer; show a red line
@@ -1241,7 +1241,7 @@ menu item.</para>
 month in a familiar month calendar layout. Each cell in the view
 represents a day, and each day contains all of the events that can fit in the
 area provided (maximizing the window will enable you to see more appointments).
-Information on repeating and alarm status is indicated through
+Information on repeating and reminder status is indicated through
 <guiicon>bell</guiicon> and <guiicon>chasing arrows</guiicon> icons, just like
 in other views.</para>
 
@@ -1934,7 +1934,7 @@ can specify the agenda of the meeting.</para>
 things that you need to do. To-dos are tasks, that may or may not be
 scheduled. There are short-term and long-term to-dos. For instance you should go
 to a hairdresser within a week, and you should sell your old car within a
-year. You likely do not want an alarm go off at a particular time, you just
+year. You likely do not want a reminder go off at a particular time, you just
 want to have a list of things that you must do, and dates when they must be
 finished at the latest (date due).</para>
 
@@ -2573,7 +2573,7 @@ some other manner such that &korganizer; cannot guess its duration,
 <term><guilabel>Reminders</guilabel></term>
 <listitem><para>
 Select a <guilabel>Default reminder time</guilabel> to determine how long before 
-the actual event's scheduled time will the alarm activate.</para>
+the actual event's scheduled time the reminder will activate.</para>
 <para>Set a file to be used as the default sound file for new reminders. You can 
 always specify another file in the Advanced Reminder accessible from the 
 Event or To-do editors.</para>
@@ -2681,7 +2681,7 @@ in the agenda view.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Show icons in agenda view items</guilabel></term>
-<listitem><para>Check this box to display icons (alarm, recursion &etc;) 
+<listitem><para>Check this box to display icons (reminder, recursion &etc;)
 in agenda view items</para></listitem>
 </varlistentry>
 
@@ -2773,7 +2773,8 @@ only appear when needed.</para></listitem>
 not in 4.6.0 -->
 <varlistentry>
 <term><guilabel>Display Options</guilabel></term>
-<listitem><para>Use the first four check boxes to display the time, icons (alarm, recursion &etc;), 
+<listitem><para>Use the first four check boxes to display the time, icons
+(reminder, recursion &etc;),
 to-dos or journals in month view.</para></listitem>
 </varlistentry>
 
@@ -3744,7 +3745,7 @@ events.</action></para>
 <guimenuitem>Make active</guimenuitem>
 </menuchoice></term>
 <listitem><para>If you opened more than one calendar, only one calendar can
-display alarms; only one calendar can be active. Click the <guilabel>Make
+display reminders; only one calendar can be active. Click the <guilabel>Make
 active</guilabel> menu item to <action>activate the current calendar
 window.</action></para>
 <para>The active calendar is loaded as default calendar when starting

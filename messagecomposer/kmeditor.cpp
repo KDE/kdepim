@@ -1,7 +1,7 @@
 /*
  * kmeditor.cpp
  *
- * Copyright 2007 Laurent Montel <montel@kde.org>
+ * Copyright 2007, 2008, 2009, 2010, 2011, 2012 Laurent Montel <montel@kde.org>
  * Copyright 2008 Thomas McGuire <mcguire@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -39,6 +39,7 @@
 #include <QShortcut>
 #include <QTextLayout>
 #include <QTimer>
+#include <QDebug>
 
 using namespace KPIMTextEdit;
 
@@ -127,20 +128,57 @@ void KMeditorPrivate::startExternalEditor()
   mExtEditorTempFile->close();
 
   mExtEditorProcess = new KProcess();
-    // construct command line...
-  QStringList command = extEditorPath.split( QLatin1Char( ' ' ), QString::SkipEmptyParts );
+  // construct command line...
+  const QString commandLine = extEditorPath.trimmed();
+  QStringList command;
+  bool doubleQuoteFound = false;
   bool filenameAdded = false;
-  QStringList::Iterator end = command.end();
-  for ( QStringList::Iterator it = command.begin(); it != end; ++it ) {
-    if ( ( *it ).contains( QLatin1String( "%f" ) ) ) {
-      ( *it ).replace( QRegExp( QLatin1String( "%f" ) ), mExtEditorTempFile->fileName() );
-      filenameAdded = true;
+  QString arg;
+  const int commandLineLength( commandLine.length() );
+  for(int i = 0; i < commandLineLength; ++i) {
+    const QChar letter( commandLine.at(i) );
+    if ( doubleQuoteFound ) {
+      if ( letter != QLatin1Char('"') ) {
+        arg.append(letter);
+      } else {
+        doubleQuoteFound = false;
+        command<<arg;
+        arg.clear();
+      }
+    } else {
+      if( letter == QLatin1Char('%') ) { //Be safe
+        if ( i+1 >= commandLineLength ) {
+          arg.append( letter );
+          command<<arg;
+          arg.clear();
+          break;
+        }
+        i++; //look at next char
+        if( commandLine.at(i) == QLatin1Char('f') ) {
+          filenameAdded = true;
+          command<<mExtEditorTempFile->fileName();
+        } else if(  commandLine.at(i) == QLatin1Char('l') ) {
+          command<<QString::number(q->textCursor().blockNumber() + 1);  // line number
+        } else {
+          arg.append( letter );
+          arg.append( commandLine.at(i) );
+        }
+      } else if( letter == QLatin1Char('"') ) {
+        doubleQuoteFound = true;
+      } else if( letter == QLatin1Char(' ') ) {
+          if ( !arg.isEmpty() ) {
+            command<<arg;
+            arg.clear();
+          }
+      } else {
+        arg.append( letter );
+      }
     }
-    else if ( ( *it ).contains( QLatin1String( "%l" ) ) ) {
-      ( *it ).replace( QRegExp( QLatin1String( "%l" ) ), QString::number(q->textCursor().blockNumber() + 1) );  // line number
-    }
-    ( *mExtEditorProcess ) << ( *it );
   }
+  if ( !arg.isEmpty() )
+    command<<arg;
+  ( *mExtEditorProcess ) << command;
+
   if ( !filenameAdded ) { // no %f in the editor command
     ( *mExtEditorProcess ) << mExtEditorTempFile->fileName();
   }
@@ -444,7 +482,8 @@ void KMeditor::setCursorPositionFromStart( unsigned int pos )
 {
   if ( pos > 0 ) {
     QTextCursor cursor = textCursor();
-    cursor.setPosition( pos );
+    //Fix html pos cursor
+    cursor.setPosition( qMin( pos,(unsigned int)cursor.document()->characterCount ()-1) );
     setTextCursor( cursor );
     ensureCursorVisible();
   }

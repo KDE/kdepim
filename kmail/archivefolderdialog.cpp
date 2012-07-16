@@ -30,6 +30,7 @@
 #include <kcombobox.h>
 #include <kurlrequester.h>
 #include <kmessagebox.h>
+#include <KMimeType>
 
 #include <qlabel.h>
 #include <qcheckbox.h>
@@ -106,7 +107,7 @@ ArchiveFolderDialog::ArchiveFolderDialog( QWidget *parent )
   row++;
 
   // TODO: Make this appear more dangerous!
-  mDeleteCheckBox = new QCheckBox( i18n( "&Delete folders after completion" ), mainWidget );
+  mDeleteCheckBox = new QCheckBox( i18n( "&Delete folder and subfolders after completion" ), mainWidget );
   mainLayout->addWidget( mDeleteCheckBox, row, 0, 1, 2, Qt::AlignLeft );
   row++;
 
@@ -136,10 +137,7 @@ bool canRemoveFolder( const Akonadi::Collection& col )
     && ( col.rights() & Akonadi::Collection::CanDeleteCollection )
     && !folder->isStructural()
     && !folder->isSystemFolder()
-#ifndef KDEPIM_NO_NEPOMUK    
-    && ( col.resource() != QLatin1String( "akonadi_nepomuktag_resource" ) 
-#endif		    
-    );
+    && ( col.resource() != QLatin1String( "akonadi_nepomuktag_resource" ) );
 }
 
 void ArchiveFolderDialog::slotRecursiveCheckboxClicked()
@@ -197,13 +195,7 @@ void ArchiveFolderDialog::slotButtonClicked( int button )
 
 void ArchiveFolderDialog::slotFixFileExtension()
 {
-  // KDE4: use KMimeType::extractKnownExtension() here
   const int numExtensions = 4;
-
-  // These extensions are sorted differently, .tar has to come last, or it will match before giving
-  // the more specific ones time to match.
-  const char *sortedExtensions[numExtensions] = { ".zip", ".tar.bz2", ".tar.gz", ".tar" };
-
   // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
 
@@ -212,13 +204,9 @@ void ArchiveFolderDialog::slotFixFileExtension()
     fileName = standardArchivePath( mFolderRequester->hasCollection() ?
                                     mFolderRequester->collection().name() : QString() );
 
-  // First, try to find the extension of the file name and remove it
-  for( int i = 0; i < numExtensions; ++i ) {
-    const int index = fileName.toLower().lastIndexOf( sortedExtensions[i] );
-    if ( index != -1 ) {
-      fileName = fileName.left( fileName.length() - QString( sortedExtensions[i] ).length() );
-      break;
-    }
+  const QString extension = KMimeType::extractKnownExtension(fileName);
+  if(!extension.isEmpty()) {
+    fileName = fileName.left( fileName.length() - extension.length() - 1 );
   }
 
   // Now, we've got a filename without an extension, simply append the correct one

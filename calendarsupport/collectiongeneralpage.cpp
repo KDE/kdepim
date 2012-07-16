@@ -59,6 +59,11 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   hbox->addWidget( label );
 
   mNameEdit = new KLineEdit( this );
+  mNameEdit->setToolTip(
+    i18nc( "@info:tooltip", "Set the folder name" ) );
+  mNameEdit->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Enter a name here to set the name of this folder." ) );
   label->setBuddy( mNameEdit );
   hbox->addWidget( mNameEdit );
 
@@ -67,7 +72,13 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
 
-  mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block alarms locally" ), this );
+  mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block reminders locally" ), this );
+  mBlockAlarmsCheckBox->setToolTip(
+    i18nc( "@info:tooltip", "Ignore reminders from this calendar" ) );
+  mBlockAlarmsCheckBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you do not want to receive reminders from items "
+           "associated with this calendar." ) );
   hbox->addWidget( mBlockAlarmsCheckBox );
   hbox->addStretch( 1 );
 
@@ -76,6 +87,11 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   topLayout->addItem( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
   mIconCheckBox = new QCheckBox( i18nc( "@option:check", "&Use custom icon:" ), this );
+  mIconCheckBox->setToolTip(
+    i18nc( "@info:tooltip", "Set a custom icon" ) );
+  mIconCheckBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Check this box if you want to set a custom icon for this folder." ) );
   mIconButton = new KIconButton( this );
   mIconButton->setIconSize( 16 );
   hbox->addWidget( mIconCheckBox );

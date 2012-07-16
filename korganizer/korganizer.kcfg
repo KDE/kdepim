@@ -14,12 +14,14 @@
   <group name="Save Settings">
     <entry type="Bool" key="Auto Export">
       <label>Export to HTML periodically</label>
-      <whatsthis>Check this box to export the calendar to a HTML-file periodically. By default, this file will be called calendar.html and placed in the user home folder.</whatsthis>
+      <tooltip>Automatically export your calendar to an HTML file</tooltip>
+      <whatsthis>Check this box to export the calendar to a HTML-file periodically. By default, this file will be called calendar.html and placed in the user home folder. You can change the file location by selecting the &quot;Export Web page&quot; option under the &quot;Export&quot; menu.</whatsthis>
       <default>false</default>
     </entry>
 
     <entry type="Int" key="Auto Export Interval">
       <label>Export &amp;interval in minutes</label>
+      <tooltip>Interval between periodic HTML exports, in minutes</tooltip>
       <whatsthis>Set the interval between automatic exporting of calendar events in minutes here.</whatsthis>
       <default>10</default>
       <min>1</min>
@@ -27,6 +29,7 @@
 
     <entry type="Bool" key="Confirm Deletes" name="Confirm">
       <label>Confirm deletes</label>
+      <tooltip>Always confirm when deleting items</tooltip>
       <whatsthis>Check this box to display a confirmation dialog when deleting items.</whatsthis>
       <default>true</default>
     </entry>
@@ -115,7 +118,7 @@
 
     <entry type="Int" key="Next X Days">
       <label>Next x days</label>
-      <whatsthis>Select the number of &quot;x&quot; days to be displayed in the next days view. To access the  the next &quot;x&quot; days view, choose the &quot;Next X Days&quot; menu item from the &quot;View&quot; menu.</whatsthis>
+      <whatsthis>Select the number of &quot;x&quot; days to be displayed in the next days view. To access the next &quot;x&quot; days view, choose the &quot;Next X Days&quot; menu item from the &quot;View&quot; menu.</whatsthis>
       <tooltip>Show this many days at a time in the Next &quot;x&quot; days view</tooltip>
       <default>3</default>
     </entry>
@@ -202,22 +205,22 @@
       <choices>
         <choice name="CategoryInsideResourceOutside">
           <label>Category inside, calendar outside</label>
-          <whatsthis>Select the "Category inside, calendar outside" option if you would like to draw calendar items in their associated category color, with the item's border drawn in the color of its calendar.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <whatsthis>Select the "Category inside, calendar outside" option if you would like to draw calendar items in their associated category color, with the item's border drawn in the color of its calendar. Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
           <tooltip>Draw agenda items in their category color inside and calendar color for their border</tooltip>
         </choice>
         <choice name="ResourceInsideCategoryOutside">
           <label>Calendar inside, category outside</label>
-          <whatsthis>Select the "Calendar inside, category outside" option if you would like to draw calendar items in their associated calendar color, with the item's border drawn in the color of its category.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <whatsthis>Select the "Calendar inside, category outside" option if you would like to draw calendar items in their associated calendar color, with the item's border drawn in the color of its category. Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
           <tooltip>Draw agenda items in their calendar color inside and category color for their border</tooltip>
         </choice>
         <choice name="CategoryOnly">
           <label>Only category</label>
-          <whatsthis>Select the "Only category" option if you would like to draw calendar items (both inside and border) in the color of their associated category.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <whatsthis>Select the "Only category" option if you would like to draw calendar items (both inside and border) in the color of their associated category. Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
           <tooltip>Draw agenda items using their category color for the inside and border</tooltip>
         </choice>
         <choice name="ResourceOnly">
           <label>Only calendar</label>
-          <whatsthis>Select the "Only calendar" option if you would like to draw calendar items (both inside and border) in the color of their calendar.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <whatsthis>Select the "Only calendar" option if you would like to draw calendar items (both inside and border) in the color of their calendar. Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
           <tooltip>Draw agenda items using their calendar color for the inside and border</tooltip>
         </choice>
       </choices>

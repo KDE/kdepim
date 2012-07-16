@@ -37,6 +37,8 @@
 
 #include <dialogs/certificatedetailsdialog.h>
 
+#include <KDebug>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -134,7 +136,7 @@ void DetailsCommand::doStart() {
     if ( keys.size() == 1 )
         key = keys.front();
     else
-        qWarning( "DetailsCommand::doStart: can only work with one certificate at a time" );
+        kWarning() << "can only work with one certificate at a time";
 
     if ( key.isNull() ) {
         d->finished();

@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2009, 2010 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -17,70 +17,74 @@
 */
 
 #include "foldertreewidget.h"
-#include "foldertreeview.h"
-#include "imapaclattribute.h"
-#include "foldertreewidgetproxymodel.h"
-#include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
+#include "foldertreeview.h"
+#include "foldertreewidgetproxymodel.h"
+#include "imapaclattribute.h"
+#include "mailkernel.h"
 #include "mailutil.h"
 
-#include "messageviewer/globalsettings.h"
-#include "messagecore/globalsettings.h"
-
-#include <akonadi/attributefactory.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/session.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/collection.h>
-#include <libkdepim/statisticsproxymodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <akonadi/recursivecollectionfilterproxymodel.h>
-#include <akonadi/etmviewstatesaver.h>
-#include <krecursivefilterproxymodel.h>
+
+#include <libkdepim/statisticsproxymodel.h>
+
+#include <messageviewer/globalsettings.h>
+
+#include <messagecore/globalsettings.h>
+
+#include <Akonadi/AttributeFactory>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/Collection>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/EntityTreeView>
+#include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Session>
+
+#include <KLineEdit>
+#include <KLocalizedString>
 
 #include <QKeyEvent>
 #include <QLabel>
-
-#include <klineedit.h>
-#include <klocalizedstring.h>
 
 namespace MailCommon {
 
 class FolderTreeWidget::FolderTreeWidgetPrivate
 {
-public:
-  FolderTreeWidgetPrivate()
-    :filterModel( 0 ),
-     folderTreeView( 0 ),
-     quotaModel( 0 ),
-     readableproxy( 0 ),
-     entityOrderProxy( 0 ),
-     filterFolderLineEdit( 0 ),
-     saver( 0 ),
-     label( 0 ),
-     dontKeyFilter( false )
-  {
-  }
-  QString filter;
-  QString oldFilterStr;
-  KPIM::StatisticsProxyModel *filterModel;
-  FolderTreeView *folderTreeView;
-  Akonadi::QuotaColorProxyModel *quotaModel;
-  FolderTreeWidgetProxyModel *readableproxy;
-  EntityCollectionOrderProxyModel *entityOrderProxy;
-  KLineEdit *filterFolderLineEdit;
-  QPointer<Akonadi::ETMViewStateSaver> saver;
-  QStringList expandedItems;
-  QString currentItem;
-  QLabel *label;
-  bool dontKeyFilter;
+  public:
+    FolderTreeWidgetPrivate()
+      : filterModel( 0 ),
+        folderTreeView( 0 ),
+        quotaModel( 0 ),
+        readableproxy( 0 ),
+        entityOrderProxy( 0 ),
+        filterFolderLineEdit( 0 ),
+        saver( 0 ),
+        label( 0 ),
+        dontKeyFilter( false )
+    {
+    }
+
+    QString filter;
+    QString oldFilterStr;
+    KPIM::StatisticsProxyModel *filterModel;
+    FolderTreeView *folderTreeView;
+    Akonadi::QuotaColorProxyModel *quotaModel;
+    FolderTreeWidgetProxyModel *readableproxy;
+    EntityCollectionOrderProxyModel *entityOrderProxy;
+    KLineEdit *filterFolderLineEdit;
+    QPointer<Akonadi::ETMViewStateSaver> saver;
+    QStringList expandedItems;
+    QString currentItem;
+    QLabel *label;
+    bool dontKeyFilter;
 };
 
-
-FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy )
+FolderTreeWidget::FolderTreeWidget(
+  QWidget *parent, KXMLGUIClient *xmlGuiClient,
+  FolderTreeWidget::TreeViewOptions options,
+  FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
   Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
@@ -88,35 +92,32 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );
 
-  connect( d->folderTreeView, SIGNAL(manualSortingChanged(bool)), this, SLOT(slotManualSortingChanged(bool)) );
+  connect( d->folderTreeView, SIGNAL(manualSortingChanged(bool)),
+           this, SLOT(slotManualSortingChanged(bool)) );
 
   QVBoxLayout *lay = new QVBoxLayout( this );
   lay->setMargin( 0 );
 
-  d->label = new QLabel( i18n("You can start typing to filter the list of folders."), this);
+  d->label = new QLabel( i18n( "You can start typing to filter the list of folders." ), this );
   lay->addWidget( d->label );
 
   d->filterFolderLineEdit = new KLineEdit( this );
   d->filterFolderLineEdit->setClearButtonShown( true );
-  d->filterFolderLineEdit->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
-                                                   "textbox, verb to search", "Search" ) );
+  d->filterFolderLineEdit->setClickMessage(
+    i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
+           "Search" ) );
   lay->addWidget( d->filterFolderLineEdit );
-
-  Akonadi::RecursiveCollectionFilterProxyModel *recurfilter = new Akonadi::RecursiveCollectionFilterProxyModel( this );
-  recurfilter->addContentMimeTypeInclusionFilter( KMime::Message::mimeType() );
-  recurfilter->setSourceModel( KernelIf->collectionModel() );
 
   // ... with statistics...
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
-  d->quotaModel->setSourceModel( recurfilter );
+  d->quotaModel->setSourceModel( KernelIf->collectionModel() );
 
   d->filterModel = new KPIM::StatisticsProxyModel( this );
   d->filterModel->setSourceModel( d->quotaModel );
 
-
   d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->filterModel );
-
+  d->readableproxy->addContentMimeTypeInclusionFilter( KMime::Message::mimeType() );
 
   connect( d->folderTreeView, SIGNAL(changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)),
            this, SLOT(slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)) );
@@ -125,7 +126,6 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->folderTreeView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->folderTreeView->installEventFilter( this );
 
-
   //Order proxy
   d->entityOrderProxy = new EntityCollectionOrderProxyModel( this );
   d->entityOrderProxy->setSourceModel( d->readableproxy );
@@ -133,8 +133,9 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   d->entityOrderProxy->setOrderConfig( grp );
   d->folderTreeView->setModel( d->entityOrderProxy );
 
-  if ( options & UseDistinctSelectionModel )
+  if ( options & UseDistinctSelectionModel ) {
     d->folderTreeView->setSelectionModel( new QItemSelectionModel( d->entityOrderProxy, this ) );
+  }
 
   lay->addWidget( d->folderTreeView );
 
@@ -147,9 +148,11 @@ FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient
   } else {
     d->filterFolderLineEdit->hide();
   }
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()));
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
-  readConfig();
+
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
+           this, SLOT(slotGeneralFontChanged()));
+  connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+           this, SLOT(slotGeneralPaletteChanged()));
 }
 
 FolderTreeWidget::~FolderTreeWidget()
@@ -157,7 +160,7 @@ FolderTreeWidget::~FolderTreeWidget()
   delete d;
 }
 
-void FolderTreeWidget::slotFilterFixedString( const QString& text )
+void FolderTreeWidget::slotFilterFixedString( const QString &text )
 {
   delete d->saver;
   if ( d->oldFilterStr.isEmpty() ) {
@@ -167,19 +170,18 @@ void FolderTreeWidget::slotFilterFixedString( const QString& text )
     d->expandedItems = saver.expansionKeys();
     d->currentItem = saver.currentIndexKey();
   } else if ( text.isEmpty() ) {
-
     d->saver = new Akonadi::ETMViewStateSaver;
     d->saver->setView( folderTreeView() );
     QString currentIndex = d->saver->currentIndexKey();
-    if( d->saver->selectionKeys().isEmpty() )
-	currentIndex = d->currentItem;
-    else if( !currentIndex.isEmpty() )
-        d->expandedItems<<currentIndex;
+    if( d->saver->selectionKeys().isEmpty() ) {
+      currentIndex = d->currentItem;
+    } else if( !currentIndex.isEmpty() ) {
+      d->expandedItems << currentIndex;
+    }
     d->saver->restoreExpanded( d->expandedItems );
     d->saver->restoreCurrentItem( currentIndex );
   } else {
     d->folderTreeView->expandAll();
-
   }
   d->oldFilterStr = text;
   d->readableproxy->setFilterFolder( text );
@@ -192,8 +194,12 @@ void FolderTreeWidget::disableContextMenuAndExtraColumn()
 
 void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection &collection )
 {
-  const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( d->folderTreeView->model(), collection );
-  d->folderTreeView->selectionModel()->select( index, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows );
+  const QModelIndex index =
+    Akonadi::EntityTreeModel::modelIndexForCollection( d->folderTreeView->model(), collection );
+
+  d->folderTreeView->selectionModel()->select( index,
+                                               QItemSelectionModel::SelectCurrent |
+                                               QItemSelectionModel::Rows );
   d->folderTreeView->setExpanded( index, true );
   d->folderTreeView->scrollTo( index );
 }
@@ -208,7 +214,6 @@ QAbstractItemView::SelectionMode FolderTreeWidget::selectionMode() const
   return d->folderTreeView->selectionMode();
 }
 
-
 QItemSelectionModel * FolderTreeWidget::selectionModel () const
 {
   return d->folderTreeView->selectionModel();
@@ -219,15 +224,15 @@ QModelIndex FolderTreeWidget::currentIndex() const
   return d->folderTreeView->currentIndex();
 }
 
-
 Akonadi::Collection FolderTreeWidget::selectedCollection() const
 {
-  if ( d->folderTreeView->selectionMode() == QAbstractItemView::SingleSelection ){
+  if ( d->folderTreeView->selectionMode() == QAbstractItemView::SingleSelection ) {
     Akonadi::Collection::List lstCollection = selectedCollections();
-    if ( lstCollection.isEmpty() )
+    if ( lstCollection.isEmpty() ) {
       return Akonadi::Collection();
-    else
+    } else {
       return lstCollection.at( 0 );
+    }
   }
 
   return Akonadi::Collection();
@@ -241,16 +246,18 @@ Akonadi::Collection::List FolderTreeWidget::selectedCollections() const
   foreach ( const QModelIndex &index, selectedIndexes ) {
     if ( index.isValid() ) {
       const Akonadi::Collection collection =
-          index.model()->data( index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-      if ( collection.isValid() )
+        index.model()->data(
+          index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( collection.isValid() ) {
         collections.append( collection );
+      }
     }
   }
 
   return collections;
 }
 
-FolderTreeView* FolderTreeWidget::folderTreeView() const
+FolderTreeView *FolderTreeWidget::folderTreeView() const
 {
   return d->folderTreeView;
 }
@@ -258,7 +265,7 @@ FolderTreeView* FolderTreeWidget::folderTreeView() const
 void FolderTreeWidget::slotGeneralFontChanged()
 {
   // Custom/System font support
-  if (MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
+  if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     setFont( KGlobalSettings::generalFont() );
   }
 }
@@ -271,29 +278,30 @@ void FolderTreeWidget::slotGeneralPaletteChanged()
 void FolderTreeWidget::readConfig()
 {
   // Custom/System font support
-  if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
+  if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-    setFont( fontConfig.readEntry("folder-font", KGlobalSettings::generalFont() ) );
+    setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
   } else {
     setFont( KGlobalSettings::generalFont() );
   }
 
-  KConfigGroup mainFolderView( KernelIf->config(), "MainFolderView" );
-  const int checkedFolderToolTipsPolicy = mainFolderView.readEntry( "ToolTipDisplayPolicy", 0 );
-  changeToolTipsPolicyConfig( ( ToolTipDisplayPolicy )checkedFolderToolTipsPolicy );
-
+  d->folderTreeView->readConfig();
   d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
+  d->readableproxy->readConfig();
+
+  KConfigGroup readerConfig( KernelIf->config(), "AccountOrder" );
+  const QStringList listOrder = readerConfig.readEntry( "order", QStringList() );
+  d->entityOrderProxy->setTopLevelOrder(listOrder);
 
   readQuotaConfig();
 }
 
-void FolderTreeWidget::restoreHeaderState( const QByteArray& data )
+void FolderTreeWidget::restoreHeaderState( const QByteArray &data )
 {
   d->folderTreeView->restoreHeaderState( data );
 }
 
-
-void FolderTreeWidget::slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy)
+void FolderTreeWidget::slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy )
 {
   changeToolTipsPolicyConfig( policy );
 }
@@ -323,13 +331,13 @@ void FolderTreeWidget::readQuotaConfig()
   qreal threshold = 100;
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KConfigGroup readerConfig( KernelIf->config(), "Reader" );
-    quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor  );
+    quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor );
     threshold = SettingsIf->closeToQuotaThreshold();
   }
   quotaWarningParameters( quotaColor, threshold );
 }
 
-KPIM::StatisticsProxyModel * FolderTreeWidget::statisticsProxyModel() const
+KPIM::StatisticsProxyModel *FolderTreeWidget::statisticsProxyModel() const
 {
   return d->filterModel;
 }
@@ -351,8 +359,11 @@ KLineEdit *FolderTreeWidget::filterFolderLineEdit() const
 
 void FolderTreeWidget::applyFilter( const QString &filter )
 {
-  d->label->setText( filter.isEmpty() ? i18n( "You can start typing to filter the list of folders." )
-                                      : i18n( "Path: (%1)", filter ) );
+  d->label->setText(
+    filter.isEmpty() ?
+      i18n( "You can start typing to filter the list of folders." ) :
+      i18n( "Path: (%1)", filter ) );
+
   d->readableproxy->setFilterFolder( filter );
   d->folderTreeView->expandAll();
 }
@@ -361,49 +372,53 @@ void FolderTreeWidget::clearFilter()
 {
   d->filter.clear();
   applyFilter( d->filter );
-  if ( !d->folderTreeView->selectionModel()->selectedIndexes().isEmpty() )
-    d->folderTreeView->scrollTo( d->folderTreeView->selectionModel()->selectedIndexes().first() );
+  const QModelIndexList lst = d->folderTreeView->selectionModel()->selectedIndexes();
+  if ( !lst.isEmpty() ) {
+    d->folderTreeView->scrollTo( lst.first() );
+  }
 }
 
 void FolderTreeWidget::slotManualSortingChanged( bool active )
 {
   d->entityOrderProxy->setManualSortingActive( active );
+  d->folderTreeView->setManualSortingActive( active );
 }
 
-bool FolderTreeWidget::eventFilter( QObject* o, QEvent *e )
+bool FolderTreeWidget::eventFilter( QObject *o, QEvent *e )
 {
   Q_UNUSED( o );
-  if ( d->dontKeyFilter )
+  if ( d->dontKeyFilter ) {
     return false;
+  }
 
   if ( e->type() == QEvent::KeyPress ) {
     const QKeyEvent* const ke = static_cast<QKeyEvent*>( e );
-    switch( ke->key() )
+    switch( ke->key() ) {
+    case Qt::Key_Backspace:
     {
-      case Qt::Key_Backspace:
-        {
-        const int filterLength(d->filter.length() );
-        if ( filterLength > 0 )
-          d->filter.truncate( filterLength-1 );
+      const int filterLength( d->filter.length() );
+      if ( filterLength > 0 ) {
+        d->filter.truncate( filterLength-1 );
+      }
+      applyFilter( d->filter );
+      return false;
+    }
+    break;
+    case Qt::Key_Delete:
+      d->filter.clear();
+      applyFilter( d->filter );
+      return false;
+      break;
+    default:
+    {
+      const QString s = ke->text();
+      if ( !s.isEmpty() && s.at( 0 ).isPrint() ) {
+        d->filter += s;
         applyFilter( d->filter );
         return false;
-        }
-        break;
-      case Qt::Key_Delete:
-        d->filter.clear();
-        applyFilter( d->filter);
-        return false;
-        break;
-      default:
-      {
-        const QString s = ke->text();
-        if ( !s.isEmpty() && s.at( 0 ).isPrint() ) {
-          d->filter += s;
-          applyFilter( d->filter );
-          return false;
-        }
       }
-      break;
+    }
+    break;
     }
   }
   return false;

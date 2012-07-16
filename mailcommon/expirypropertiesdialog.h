@@ -29,10 +29,10 @@ protected slots:
     void accept();
     void slotUpdateControls();
     void slotCollectionModified(KJob* job);
-
+    void slotChanged();
 private:
     Akonadi::Collection mCollection;
-
+    bool mChanged;
     QCheckBox *expireReadMailCB;
     KIntSpinBox *expireReadMailSB;
     QCheckBox *expireUnreadMailCB;

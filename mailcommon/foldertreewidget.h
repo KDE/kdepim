@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2009, 2010 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  The program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -22,18 +22,19 @@
 #include "mailcommon_export.h"
 #include "foldertreewidgetproxymodel.h"
 
-#include <QWidget>
+#include <Akonadi/Collection>
 
 #include <QAbstractItemView>
-#include <akonadi/collection.h>
-
-class KXMLGUIClient;
-class QItemSelectionModel;
-class KLineEdit;
+#include <QWidget>
 
 namespace KPIM {
   class StatisticsProxyModel;
 }
+
+class KLineEdit;
+class KXMLGUIClient;
+
+class QItemSelectionModel;
 
 namespace MailCommon {
 
@@ -41,7 +42,7 @@ class EntityCollectionOrderProxyModel;
 class FolderTreeView;
 
 /**
- * This is the widget that shows the main folder tree in KMail.
+ * This is the widget that shows the main folder tree.
  *
  * It consists of the view (FolderTreeView) and a search line.
  * Internally, several proxy models are used on top of a entity tree model.
@@ -49,93 +50,92 @@ class FolderTreeView;
 class MAILCOMMON_EXPORT FolderTreeWidget : public QWidget
 {
   Q_OBJECT
-public:
-  enum TreeViewOption
-  {
-    None = 0,
-    ShowUnreadCount = 1,
-    UseLineEditForFiltering = 2,
-    UseDistinctSelectionModel = 4,
-    ShowCollectionStatisticAnimation = 8,
-    DontKeyFilter = 16
-  };
-  Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
-  FolderTreeWidget( QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
-                    TreeViewOptions options = (TreeViewOptions) (ShowUnreadCount|ShowCollectionStatisticAnimation),
-                    FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None );
-  ~FolderTreeWidget();
+  public:
+    enum TreeViewOption {
+      None = 0,
+      ShowUnreadCount = 1,
+      UseLineEditForFiltering = 2,
+      UseDistinctSelectionModel = 4,
+      ShowCollectionStatisticAnimation = 8,
+      DontKeyFilter = 16
+    };
+    Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
-  /**
-   * The possible tooltip display policies.
-   */
-  enum ToolTipDisplayPolicy
-  {
-    DisplayAlways,           ///< Always display a tooltip when hovering over an item
-    DisplayWhenTextElided,   ///< Display the tooltip if the item text is actually elided
-    DisplayNever             ///< Nevery display tooltips
-  };
+    explicit FolderTreeWidget(
+      QWidget *parent = 0,
+      KXMLGUIClient *xmlGuiClient = 0,
+      TreeViewOptions options = (TreeViewOptions)( ShowUnreadCount |
+                                                   ShowCollectionStatisticAnimation ),
+      FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None );
+    ~FolderTreeWidget();
 
-  /**
-   * The available sorting policies.
-   */
-  enum SortingPolicy
-  {
-    SortByCurrentColumn,      ///< Columns are clickable, sorting is by the current column
-    SortByDragAndDropKey      ///< Columns are NOT clickable, sorting is done by drag and drop
-  };
+    /**
+     * The possible tooltip display policies.
+     */
+    enum ToolTipDisplayPolicy {
+      DisplayAlways,           ///< Always display a tooltip when hovering over an item
+      DisplayWhenTextElided,   ///< Display the tooltip if the item text is actually elided
+      DisplayNever             ///< Nevery display tooltips
+    };
 
+    /**
+     * The available sorting policies.
+     */
+    enum SortingPolicy {
+      SortByCurrentColumn,      ///< Columns are clickable, sorting is by the current column
+      SortByDragAndDropKey      ///< Columns are NOT clickable, sorting is done by drag and drop
+    };
 
+    void selectCollectionFolder( const Akonadi::Collection & col );
 
-  void selectCollectionFolder( const Akonadi::Collection & col );
+    void setSelectionMode( QAbstractItemView::SelectionMode mode );
 
-  void setSelectionMode( QAbstractItemView::SelectionMode mode );
+    QAbstractItemView::SelectionMode selectionMode() const;
 
-  QAbstractItemView::SelectionMode selectionMode() const;
+    QItemSelectionModel * selectionModel () const;
 
-  QItemSelectionModel * selectionModel () const;
+    QModelIndex currentIndex() const;
 
-  QModelIndex currentIndex() const;
+    Akonadi::Collection selectedCollection() const;
 
-  Akonadi::Collection selectedCollection() const;
+    Akonadi::Collection::List selectedCollections() const;
 
-  Akonadi::Collection::List selectedCollections() const;
+    FolderTreeView *folderTreeView() const;
 
-  FolderTreeView *folderTreeView() const;
+    KPIM::StatisticsProxyModel * statisticsProxyModel() const;
 
-  KPIM::StatisticsProxyModel * statisticsProxyModel() const;
+    FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
 
-  FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
+    EntityCollectionOrderProxyModel *entityOrderProxy() const;
 
-  EntityCollectionOrderProxyModel *entityOrderProxy() const;
+    void quotaWarningParameters( const QColor &color, qreal threshold );
+    void readQuotaConfig();
 
-  void quotaWarningParameters( const QColor &color, qreal threshold );
-  void readQuotaConfig();
+    KLineEdit *filterFolderLineEdit() const;
+    void applyFilter( const QString & );
+    void clearFilter();
 
-  KLineEdit *filterFolderLineEdit() const;
-  void applyFilter( const QString& );
-  void clearFilter();
+    void disableContextMenuAndExtraColumn();
 
-  void disableContextMenuAndExtraColumn();
+    void readConfig();
 
-  void readConfig();
+    void restoreHeaderState( const QByteArray &data );
 
-  void restoreHeaderState( const QByteArray& data );
+  protected:
+    void changeToolTipsPolicyConfig( ToolTipDisplayPolicy );
 
-protected:
-  void changeToolTipsPolicyConfig( ToolTipDisplayPolicy );
+  protected slots:
+    void slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
+    void slotManualSortingChanged( bool );
+    void slotFilterFixedString( const QString & );
+    void slotGeneralFontChanged();
+    void slotGeneralPaletteChanged();
 
-protected slots:
-  void slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
-  void slotManualSortingChanged( bool );
-  void slotFilterFixedString( const QString& );
-  void slotGeneralFontChanged();
-  void slotGeneralPaletteChanged();
-
-private:
-  virtual bool eventFilter( QObject*o, QEvent *e );
-  class FolderTreeWidgetPrivate;
-  FolderTreeWidgetPrivate * const d;
+  private:
+    virtual bool eventFilter( QObject *o, QEvent *e );
+    class FolderTreeWidgetPrivate;
+    FolderTreeWidgetPrivate *const d;
 
 };
 

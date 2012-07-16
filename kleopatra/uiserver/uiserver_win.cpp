@@ -87,7 +87,7 @@ void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileNam
         if ( ::listen( (SOCKET)sock, SOMAXCONN ) )
             throw_<std::runtime_error>( i18n( "Could not listen to socket: %1", systemErrorString() ) );
 
-        if ( !setSocketDescriptor( (int)sock  ) )
+        if ( !setSocketDescriptor( (intptr_t)sock  ) )
             throw_<std::runtime_error>( i18n( "Could not pass socket to Qt: %1. This should not happen, please report this bug.", errorString() ) );
 
     } catch ( ... ) {

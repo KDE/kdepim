@@ -29,12 +29,12 @@
 
 #include <akonadi/item.h>
 
-#include <Nepomuk/Resource>
-#include <Nepomuk/Tag>
-#include <Nepomuk/Variant>
-#include <nepomuk/nmo.h>
-#include <nepomuk/resourcemanager.h>
-
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Tag>
+#include <Nepomuk2/Variant>
+#include <nepomuk2/nmo.h>
+#include <nepomuk2/resourcemanager.h>
+#include <Soprano/Vocabulary/NAO>
 #include <KIconLoader>
 
 using namespace MessageList::Core;
@@ -179,7 +179,7 @@ const MessageItem::Tag* MessageItemPrivate::bestTag() const
   return best;
 }
 
-void MessageItemPrivate::fillTagList( const Nepomuk::Resource &resource ) const
+void MessageItemPrivate::fillTagList( const Nepomuk2::Resource &resource ) const
 {
   Q_ASSERT( !mTagList );
   mTagList = new QList<MessageItem::Tag*>;
@@ -187,16 +187,16 @@ void MessageItemPrivate::fillTagList( const Nepomuk::Resource &resource ) const
   // TODO: The tag pointers here could be shared between all items, there really is no point in
   //       creating them for each item that has tags
 
-  const QList< Nepomuk::Tag > nepomukTagList = resource.tags();
+  const QList< Nepomuk2::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
-    foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
+    foreach( const Nepomuk2::Tag &nepomukTag, nepomukTagList ) {
       QString symbol = QLatin1String( "mail-tagged" );
       if ( !nepomukTag.symbols().isEmpty() ) {
         symbol = nepomukTag.symbols().first();
       }
       MessageItem::Tag *messageListTag =
           new MessageItem::Tag( SmallIcon( symbol ),
-                   nepomukTag.label(), nepomukTag.resourceUri().toString() );
+                   nepomukTag.label(), nepomukTag.uri().toString() );
       if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
         const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
         messageListTag->setTextColor( QColor( name ) );
@@ -238,12 +238,12 @@ bool MessageItemPrivate::tagListInitialized() const
   return mTagList != 0;
 }
 
-void MessageItemPrivate::resourceReceived(const Nepomuk::Resource& resource)
+void MessageItemPrivate::resourceReceived(const Nepomuk2::Resource& resource)
 {
   if ( !mTagList )
     fillTagList( resource );
 
-  if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
+  if ( resource.hasProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) ) ) {
     mHasAnnotation = !resource.description().isEmpty();
   } else {
     mHasAnnotation = false;
@@ -288,7 +288,7 @@ QString MessageItem::annotation() const
   Q_D( const MessageItem );
   if ( hasAnnotation() ) {
     kDebug();
-    Nepomuk::Resource resource( d->mAkonadiItem.url() );
+    Nepomuk2::Resource resource( d->mAkonadiItem.url() );
     return resource.description();
   }
   else
@@ -297,7 +297,7 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
-  if( !Nepomuk::ResourceManager::instance()->initialized() )
+  if( !Nepomuk2::ResourceManager::instance()->initialized() )
       return;
   Q_D( MessageItem );
   if ( d->mAnnotationDialog.data() )
@@ -312,9 +312,9 @@ void MessageItem::editAnnotation()
 QString MessageItem::contentSummary() const
 {
   Q_D( const MessageItem );
-  Nepomuk::Resource mail( d->mAkonadiItem.url() );
+  Nepomuk2::Resource mail( d->mAkonadiItem.url() );
   const QString content =
-      mail.property( Nepomuk::Vocabulary::NMO::plainTextMessageContent() ).toString();
+      mail.property( Nepomuk2::Vocabulary::NMO::plainTextMessageContent() ).toString();
   // Extract the first 5 non-empty, non-quoted lines from the content and return it
   int numLines = 0;
   const int maxLines = 5;
@@ -375,7 +375,11 @@ void MessageItem::invalidateAnnotationCache()
 QColor MessageItem::textColor() const
 {
   Q_D( const MessageItem );
-  QColor clr;
+  const Tag *bestTag = d->bestTag();
+  if ( bestTag != 0 ) {
+    return bestTag->textColor();
+  }
+  QColor clr; 
   Akonadi::MessageStatus messageStatus = status();
   if ( !messageStatus.isRead() ) {
     clr = d->mColorUnreadMessage;
@@ -383,11 +387,6 @@ QColor MessageItem::textColor() const
     clr = d->mColorImportantMessage;
   } else if ( messageStatus.isToAct() ) {
     clr = d->mColorToDoMessage;
-  }
-
-  const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 ) {
-    clr = bestTag->textColor();
   }
 
   return clr;

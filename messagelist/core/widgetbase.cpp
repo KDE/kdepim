@@ -53,6 +53,7 @@
 #include <KDE/KMenu>
 #include <KDE/KStandardDirs>
 
+#include <akonadi/collection.h>
 #include <akonadi/kmime/messagestatus.h>
 
 using namespace MessageList::Core;
@@ -116,7 +117,7 @@ public:
   bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
   int mFirstTagInComboIndex;             ///< the index of the combobox where the first tag starts
-
+  KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
 };
 
 Widget::Widget( QWidget *pParent )
@@ -168,6 +169,7 @@ Widget::Widget( QWidget *pParent )
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
   d->mStatusFilterCombo = new KComboBox( this ) ;
   d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
+  d->mStatusFilterCombo->setMaximumWidth(300);
   g->addWidget( d->mStatusFilterCombo, 0, 2 );
 
   // The "Open Full Search" button
@@ -239,6 +241,7 @@ void Widget::changeQuicksearchVisibility()
     lineEdit->setVisible( !visible );
     comboBox->setVisible( !visible );
     fullSearchButton->setVisible( !visible );
+    d->mLockSearch->setVisible( !visible );
     Settings::self()->setShowQuickSearch( !visible );
   }
 }
@@ -384,11 +387,8 @@ void Widget::Private::setDefaultSortOrderForStorageModel( const StorageModel * s
   checkSortOrder( storageModel );
 }
 
-void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preSelectionMode )
+void Widget::saveCurrentSelection()
 {
-  if ( storageModel == d->mStorageModel )
-    return; // nuthin to do here
-
   if ( d->mStorageModel )
   {
     // Save the current selection
@@ -398,7 +398,14 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
         lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
       );
   }
+}
 
+void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preSelectionMode )
+{
+  if ( storageModel == d->mStorageModel )
+    return; // nuthin to do here
+
+  saveCurrentSelection();
   d->setDefaultAggregationForStorageModel( storageModel );
   d->setDefaultThemeForStorageModel( storageModel );
   d->setDefaultSortOrderForStorageModel( storageModel );
@@ -976,7 +983,7 @@ void Widget::fillMessageTagCombo( KComboBox* /*combo*/ )
   // nothing here: must be overridden in derived classes
 }
 
-void Widget::tagIdSelected( QVariant data )
+void Widget::tagIdSelected( const QVariant& data )
 {
   QString tagId = data.toString();
 
@@ -1077,6 +1084,7 @@ void Widget::searchTimerFired()
 
   const QString text = d->mSearchEdit->text();
 
+  d->mFilter->setCurrentFolder( d->mCurrentFolderUrl );
   d->mFilter->setSearchString( text );
   if ( d->mFilter->isEmpty() ) {
     resetFilter();
@@ -1165,5 +1173,9 @@ bool Widget::selectionEmpty() const
   return d->mView->selectionEmpty();
 }
 
+void Widget::setCurrentFolder( const Akonadi::Collection &collection )
+{
+  d->mCurrentFolderUrl = collection.url( Akonadi::Collection::UrlShort );
+}
 
 #include "widgetbase.moc"

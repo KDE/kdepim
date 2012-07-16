@@ -177,6 +177,11 @@ public:
   void setSortOrder( const SortOrder * sortOrder );
 
   /**
+   * Returns the sort order
+   */
+  const SortOrder * sortOrder() const;
+
+  /**
    * Sets the Filter to be applied on messages. filter may be null (no filter is applied).
    * The pointer ownership remains of the caller which must ensure its validity until the next
    * call to setFilter() or until this Model dies. The caller, in fact, is Widget which
@@ -240,6 +245,7 @@ private:
   Q_PRIVATE_SLOT(d, void slotStorageModelDataChanged( const QModelIndex &, const QModelIndex & ))
   Q_PRIVATE_SLOT(d, void slotStorageModelHeaderDataChanged( Qt::Orientation, int, int ))
   Q_PRIVATE_SLOT(d, void slotStorageModelLayoutChanged())
+  Q_PRIVATE_SLOT(d, void slotApplyFilter())
 
   friend class ModelPrivate;
   ModelPrivate * const d;

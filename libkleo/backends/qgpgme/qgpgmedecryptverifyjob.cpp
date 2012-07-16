@@ -79,7 +79,7 @@ static QGpgMEDecryptVerifyJob::result_type decrypt_verify( Context * ctx, QThrea
     const std::pair<DecryptionResult,VerificationResult> res = ctx->decryptAndVerify( indata, outdata );
     Error ae;
     const QString log = _detail::audit_log_as_html( ctx, ae );
-    kDebug(5150) << "end";
+    kDebug(5150) << "End no plainText. Error: " << ae;
     return make_tuple( res.first, res.second, out.data(), log, ae );
   } else {
     QGpgME::QIODeviceDataProvider out( plainText );
@@ -88,7 +88,7 @@ static QGpgMEDecryptVerifyJob::result_type decrypt_verify( Context * ctx, QThrea
     const std::pair<DecryptionResult,VerificationResult> res = ctx->decryptAndVerify( indata, outdata );
     Error ae;
     const QString log = _detail::audit_log_as_html( ctx, ae );
-    kDebug(5150) << "end";
+    kDebug(5150) << "End plainText. Error: " << ae;
     return make_tuple( res.first, res.second, QByteArray(), log, ae );
   }
 

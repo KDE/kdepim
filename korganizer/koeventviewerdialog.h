@@ -21,14 +21,16 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOEVENTVIEWERDIALOG_H
-#define KOEVENTVIEWERDIALOG_H
+
+#ifndef KORG_KOEVENTVIEWERDIALOG_H
+#define KORG_KOEVENTVIEWERDIALOG_H
 
 #include "korganizer_export.h"
 
-#include <KDE/KDialog>
+#include <KDialog>
 
 namespace CalendarSupport {
+  class Calendar;
   class IncidenceViewer;
 }
 
@@ -43,7 +45,7 @@ class KORGANIZER_EVENTVIEWER_EXPORT KOEventViewerDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit KOEventViewerDialog( QWidget *parent = 0 );
+    explicit KOEventViewerDialog( CalendarSupport::Calendar *calendar, QWidget *parent = 0 );
     virtual ~KOEventViewerDialog();
 
     void setIncidence( const Akonadi::Item &incidence, const QDate &date );

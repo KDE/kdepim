@@ -376,8 +376,8 @@ void AttachmentControllerBase::createActions()
   connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
   connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
-  d->removeAction = new KAction( i18n( "&Remove Attachment" ), this );
-  d->removeContextAction = new KAction( i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
+  d->removeAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
+  d->removeContextAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
   connect( d->removeAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
   connect( d->removeContextAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
 
@@ -402,7 +402,7 @@ void AttachmentControllerBase::createActions()
   connect( d->saveAsContextAction, SIGNAL(triggered(bool)),
       this, SLOT(saveSelectedAttachmentAs()) );
 
-  d->propertiesAction = new KAction( i18n( "Attachment Pr&operties" ), this ); // TODO why no '...'?
+  d->propertiesAction = new KAction( i18n( "Attachment Pr&operties..." ), this );
   d->propertiesContextAction = new KAction( i18n( "Properties" ), this );
   connect( d->propertiesAction, SIGNAL(triggered(bool)),
       this, SLOT(selectedAttachmentProperties()) );

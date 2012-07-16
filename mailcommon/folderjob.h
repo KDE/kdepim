@@ -1,13 +1,12 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
  *
- *  This file is part of KMail, the KDE mail client.
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *
- *  KMail is free software; you can redistribute it and/or modify it
+ *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
- *  KMail is distributed in the hope that it will be useful, but
+ *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  General Public License for more details.
@@ -31,79 +30,86 @@
 #ifndef MAILCOMMON_FOLDERJOB_H
 #define MAILCOMMON_FOLDERJOB_H
 
-#include <kmime/kmime_message.h>
-#include <QList>
-#include <QString>
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
+#include "mailcommon_export.h"
 
 namespace MailCommon {
 
-class FolderJob : public QObject
+class MAILCOMMON_EXPORT FolderJob : public QObject
 {
   Q_OBJECT
 
-public:
-  FolderJob();
+  public:
+    FolderJob();
 
-  virtual ~FolderJob();
+    virtual ~FolderJob();
 
-  /**
-   * Start the job
-   */
-  void start();
+    /**
+     * Start the job
+     */
+    void start();
 
-  /**
-   * Interrupt the job. Note that the finished() and result() signal
-   * will be emitted, unless you called setPassiveDestructor(true) before.
-   * This kills the job, don't use it afterwards.
-   */
-  virtual void kill();
+    /**
+     * Interrupt the job. Note that the finished() and result() signal
+     * will be emitted, unless you called setPassiveDestructor(true) before.
+     * This kills the job, don't use it afterwards.
+     */
+    virtual void kill();
 
-  /**
-   * @return the error code of the job. This must only be called from
-   * the slot connected to the finished() signal.
-   */
-  int error() const { return mErrorCode; }
+    /**
+     * @return the error code of the job. This must only be called from
+     * the slot connected to the finished() signal.
+     */
+    int error() const
+    {
+      return mErrorCode;
+    }
 
-  /**
-   * @return true if this job can be canceled, e.g. to exit the application
-   */
-  bool isCancellable() const { return mCancellable; }
+    /**
+     * @return true if this job can be canceled, e.g. to exit the application
+     */
+    bool isCancellable() const
+    {
+      return mCancellable;
+    }
 
-  /**
-   * Call this to change the "cancellable" property of this job.
-   * By default, tListMessages, tGetMessage, tGetFolder and tCheckUidValidity
-   * are cancellable, the others are not. But when copying, a non-cancellable
-   * tGetMessage is needed.
-   */
-  void setCancellable( bool b ) { mCancellable = b; }
+    /**
+     * Call this to change the "cancellable" property of this job.
+     * By default, tListMessages, tGetMessage, tGetFolder and tCheckUidValidity
+     * are cancellable, the others are not. But when copying, a non-cancellable
+     * tGetMessage is needed.
+     */
+    void setCancellable( bool b )
+    {
+      mCancellable = b;
+    }
 
-signals:
-  /**
-   * Emitted when the job finishes all processing.
-   */
-  void finished();
+  signals:
+    /**
+     * Emitted when the job finishes all processing.
+     */
+    void finished();
 
-  /**
-   * Emitted when the job finishes all processing.
-   * More convenient signal than finished(), since it provides a pointer to the job.
-   * This signal is emitted by the FolderJob destructor => do NOT downcast
-   * the job to a subclass!
-   */
-  void result( FolderJob* job );
+    /**
+     * Emitted when the job finishes all processing.
+     * More convenient signal than finished(), since it provides a pointer to the job.
+     * This signal is emitted by the FolderJob destructor => do NOT downcast
+     * the job to a subclass!
+     */
+    void result( FolderJob *job );
 
-protected:
-  /**
-   * Has to be reimplemented. It's called by the start() method. Should
-   * start the processing of the specified job function.
-   */
-  virtual void execute()=0;
+  protected:
+    /**
+     * Has to be reimplemented. It's called by the start() method. Should
+     * start the processing of the specified job function.
+     */
+    virtual void execute() = 0;
 
-  Akonadi::Collection mSrcFolder;
-  int                 mErrorCode;
+    Akonadi::Collection mSrcFolder;
+    int                 mErrorCode;
 
-  bool                mStarted;
-  bool                mCancellable;
+    bool                mStarted;
+    bool                mCancellable;
 };
 
 }

@@ -458,7 +458,8 @@ QString Vacation::composeScript( const QString & messageText,
   if ( !addrSpecs.empty() ) {
     addressesArgument += ":addresses [ ";
     QStringList sl;
-    for ( AddrSpecList::const_iterator it = addrSpecs.begin() ; it != addrSpecs.end() ; ++it ) {
+    AddrSpecList::const_iterator end = addrSpecs.constEnd();
+    for ( AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it ) {
       sl.push_back( '"' + (*it).asString().replace( '\\', "\\\\" ).replace( '"', "\\\"" ) + '"' );
       aliases.push_back( (*it).asString() );
     }
@@ -556,7 +557,8 @@ QStringList Vacation::defaultMailAliases()
 {
   QStringList sl;
   KPIMIdentities::IdentityManager manager( true );
-  for ( KPIMIdentities::IdentityManager::ConstIterator it = manager.begin(); it != manager.end() ; ++it ) {
+  KPIMIdentities::IdentityManager::ConstIterator end(manager.end());
+  for ( KPIMIdentities::IdentityManager::ConstIterator it = manager.begin(); it != end ; ++it ) {
     if ( !(*it).primaryEmailAddress().isEmpty() ) {
       sl.push_back( (*it).primaryEmailAddress() );
     }
@@ -581,8 +583,8 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                << script;
   mSieveJob = 0; // job deletes itself after returning from this slot!
 
-  if ( !mCheckOnly && mUrl.protocol() == "sieve" && !job->sieveCapabilities().isEmpty() &&
-       !job->sieveCapabilities().contains("vacation") ) {
+  if ( !mCheckOnly && mUrl.protocol() == QLatin1String("sieve") && !job->sieveCapabilities().isEmpty() &&
+       !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
     KMessageBox::sorry( 0, i18n( "Your server did not list \"vacation\" in "
                                  "its list of supported Sieve extensions;\n"
                                  "without it, KMail cannot install out-of-"

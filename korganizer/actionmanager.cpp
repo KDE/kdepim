@@ -7,6 +7,7 @@
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
   Copyright (c) 2010 Laurent Montel <montel@kde.org>
+  Copyright (c) 2012 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,9 +29,12 @@
 */
 
 #include "actionmanager.h"
+#include "akonadicollectionview.h"
 #include "calendaradaptor.h"
 #include "calendarview.h"
 #include "history.h"
+#include "htmlexportjob.h"
+#include "htmlexportsettings.h"
 #include "importdialog.h"
 #include "kocore.h"
 #include "kodialogmanager.h"
@@ -39,78 +43,62 @@
 #include "koviewmanager.h"
 #include "kowindowlist.h"
 #include "reminderclient.h"
-#include "akonadicollectionview.h"
-#include "htmlexportjob.h"
-#include "htmlexportsettings.h"
 
-#include <KCalCore/FileStorage>
+#include <akonadi_next/kcolumnfilterproxymodel.h>
+using namespace Future;
 
-#include <KMime/KMimeMessage>
-
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/calendaradaptor.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/eventarchiver.h>
-#include <calendarsupport/freebusymanager.h>
-#include <calendarsupport/groupware.h>
-#include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
 #include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/groupwareintegration.h>
 
-#include <akonadi_next/kcolumnfilterproxymodel.h>
-
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Session>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/AgentManager>
 #include <Akonadi/AgentInstanceCreateJob>
-#include <akonadi/etmviewstatesaver.h>
+#include <Akonadi/AgentManager>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeView>
+#include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Session>
 
-#include <kcheckableproxymodel.h>
+#include <KCalCore/FileStorage>
+#include <KCalCore/ICalFormat>
+
 #include <KHolidays/Holidays>
-#include <kmimetypetrader.h>
-#include <kio/job.h>
+
+#include <KMime/KMimeMessage>
+
 #include <KAction>
 #include <KActionCollection>
+#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KCmdLineArgs>
 #include <KFileDialog>
+#include <KGlobalSettings>
 #include <KMenu>
-#include <KNotification>
+#include <KMenuBar>
+#include <KMessageBox>
+#include <KMimeTypeTrader>
 #include <KProcess>
-#include <KRecentFilesAction>
 #include <KSelectAction>
+#include <KSelectionProxyModel>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStandardDirs>
-#include <KSystemTimeZone>
+#include <KSystemTimeZones>
 #include <KTemporaryFile>
 #include <KTipDialog>
-#include <KMenuBar>
 #include <KToggleAction>
 #include <KWindowSystem>
 #include <KIO/NetAccess>
-#include <kcmdlineargs.h>
-#include <knewstuff3/downloaddialog.h>
-
-#include <kselectionproxymodel.h>
+#include <KNS3/DownloadDialog>
 
 #include <QApplication>
-#include <QTimer>
-#include <QDebug>
-#include <QTemporaryFile>
-
-#include <akonadi/entitytreeview.h>
-#include <QVBoxLayout>
-
-using namespace Future;
-using namespace KCalCore;
 
 KOWindowList *ActionManager::mWindowList = 0;
 
@@ -198,11 +186,7 @@ void ActionManager::init()
     mAutoExportTimer->start( 1000 * 60 * KOPrefs::instance()->mAutoExportInterval );
   }
 
-  // per default (no calendars activated) disable actions
-  slotResourcesChanged( false );
-
   // set up autoSaving stuff
-
   mAutoArchiveTimer = new QTimer( this );
   mAutoArchiveTimer->setSingleShot( true );
   connect( mAutoArchiveTimer, SIGNAL(timeout()), SLOT(slotAutoArchive()) );
@@ -296,7 +280,6 @@ void ActionManager::createCalendarAkonadi()
   mCalendarView->addExtension( &factory );
   mCollectionView = factory.collectionView();
   mCollectionView->setObjectName( "Resource View" );
-  connect( mCollectionView, SIGNAL(resourcesChanged(bool)), SLOT(slotResourcesChanged(bool)));
   connect( mCollectionView, SIGNAL(resourcesAddedRemoved()), SLOT(slotResourcesAddedRemoved()));
   connect( mCollectionView, SIGNAL(defaultResourceChanged(Akonadi::Collection)),
            SLOT(slotDefaultResourceChanged(Akonadi::Collection)) );
@@ -343,8 +326,9 @@ void ActionManager::createCalendarAkonadi()
            mCalendarView, SLOT(showErrorMessage(QString)) );
   connect( mCalendarView, SIGNAL(configChanged()), SLOT(updateConfig()) );
 
-  mCalendar->setOwner( Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                               CalendarSupport::KCalPrefs::instance()->email() ) );
+  mCalendar->setOwner(
+    KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                      CalendarSupport::KCalPrefs::instance()->email() ) );
 
 }
 
@@ -474,7 +458,7 @@ void ActionManager::initActions()
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showWhatsNextView()) );
 
-  action = new KAction( KIcon( "view-calendar-month" ), i18n( "&Month View" ), this );
+  action = new KAction( KIcon( "view-calendar-month" ), i18n( "&Month" ), this );
   mACollection->addAction( "view_month", action );
   connect( action, SIGNAL(triggered(bool)),
            mCalendarView->viewManager(), SLOT(showMonthView()) );
@@ -822,19 +806,6 @@ void ActionManager::initActions()
   QAction *a = mACollection->addAction( KStandardAction::TipofDay, this,
                                         SLOT(showTip()) );
   mACollection->addAction( "help_tipofday", a );
-}
-
-void ActionManager::slotResourcesChanged( bool enabled )
-{
-  mNewEventAction->setEnabled( enabled );
-  mNewTodoAction->setEnabled( enabled );
-
-  Akonadi::Item item = mCalendarView->currentSelection();
-  mNewSubtodoAction->setEnabled( enabled && CalendarSupport::hasTodo( item ) );
-
-  mNewJournalAction->setEnabled( enabled );
-
-  mCalendarView->setCreatingEnabled( enabled );
 }
 
 void ActionManager::setItems( const QStringList &lst, int idx )
@@ -1220,23 +1191,51 @@ void ActionManager::exportHTML()
   }
   settings->setDateStart( QDateTime( qd1 ) );
   settings->setDateEnd( QDateTime( qd2 ) );
-  exportHTML( settings );
+
+  exportHTML( settings, true/*autoMode*/ );
 }
 
-void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings )
+void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings, bool autoMode )
 {
-  if ( !settings || settings->outputFile().isEmpty() ) {
-    kWarning() << "Settings is null, or the output file is empty " << settings;
+  if ( !settings ) {
+    kWarning() << "Settings is null" << settings;
     return;
   }
 
-  if ( QFileInfo( settings->outputFile() ).exists() ) {
-    if( KMessageBox::warningContinueCancel(
+  if ( settings->outputFile().isEmpty() ) {
+    int result = KMessageBox::questionYesNo(
+      dialogParent(),
+      i18n( "The HTML calendar export file has not been specified yet.\n"
+            "Do you want to set it now?\n\n"
+            "If you answer \"no\" then this export operation will be canceled" ),
+      QString() );
+    if ( result == KMessageBox::No ) {
+      mMainWindow->showStatusMessage(
+        i18nc( "@info:status",
+               "Calendar HTML operation canceled due to unspecified output file name" ) );
+      return;
+    }
+
+    const QString fileName =
+      KFileDialog::getSaveFileName(
+        KGlobalSettings::documentPath(),
+        i18n( "*.html|HTML Files" ),
+        dialogParent(),
+        i18n( "Select path for HTML calendar export" ) );
+    settings->setOutputFile( fileName );
+    settings->writeConfig();
+  }
+
+  if ( !autoMode && QFileInfo( settings->outputFile() ).exists() ) {
+    if ( KMessageBox::warningContinueCancel(
           dialogParent(),
           i18n( "Do you want to overwrite file \"%1\"?",
                 settings->outputFile() ),
           QString(),
           KStandardGuiItem::overwrite() ) == KMessageBox::Cancel ) {
+      mMainWindow->showStatusMessage(
+        i18nc( "@info:status",
+               "Calendar HTML operation canceled due to output file overwrite" ) );
       return;
     }
   }
@@ -1248,12 +1247,12 @@ void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings )
   settings->setCreditURL( "http://korganizer.kde.org" );
 
   KOrg::HtmlExportJob *exportJob =
-    new KOrg::HtmlExportJob( mCalendarView->calendar(), settings, view() );
+    new KOrg::HtmlExportJob( mCalendarView->calendar(), settings, autoMode, mMainWindow, view() );
 
   if ( KOGlobals::self()->holidays() ) {
     KHolidays::Holiday::List holidays = KOGlobals::self()->holidays()->holidays(
                                         settings->dateStart().date(), settings->dateEnd().date() );
-    foreach ( KHolidays::Holiday holiday, holidays ) {
+    foreach ( const KHolidays::Holiday &holiday, holidays ) {
       exportJob->addHoliday( holiday.date(), holiday.text() );
     }
   }
@@ -1609,14 +1608,14 @@ void ActionManager::downloadNewStuff()
       new CalendarSupport::CalendarAdaptor(
         mCalendar, mCalendarView, true/*use default collection*/ ) );
 
-    FileStorage storage( cal );
+    KCalCore::FileStorage storage( cal );
     storage.setFileName( file );
-    storage.setSaveFormat( new ICalFormat );
+    storage.setSaveFormat( new KCalCore::ICalFormat );
     if ( !storage.load() ) {
       KMessageBox::error( mCalendarView, i18n( "Could not load calendar %1.", file ) );
     } else {
       QStringList eventList;
-      foreach ( Event::Ptr e, cal->events() ) {
+      foreach ( KCalCore::Event::Ptr e, cal->events() ) {
         eventList.append( e->summary() );
       }
 
@@ -1640,12 +1639,12 @@ QString ActionManager::localFileName()
   return mFile;
 }
 
-class ActionManager::ActionStringsVisitor : public Visitor
+class ActionManager::ActionStringsVisitor : public KCalCore::Visitor
 {
   public:
     ActionStringsVisitor() : mShow( 0 ), mEdit( 0 ), mDelete( 0 ) {}
 
-    bool act( IncidenceBase::Ptr incidence, QAction *show, QAction *edit, QAction *del )
+    bool act( KCalCore::IncidenceBase::Ptr incidence, QAction *show, QAction *edit, QAction *del )
     {
       mShow = show;
       mEdit = edit;
@@ -1654,7 +1653,7 @@ class ActionManager::ActionStringsVisitor : public Visitor
     }
 
   protected:
-    bool visit( Event::Ptr )
+    bool visit( KCalCore::Event::Ptr )
     {
       if ( mShow ) {
         mShow->setText( i18n( "&Show Event" ) );
@@ -1668,7 +1667,7 @@ class ActionManager::ActionStringsVisitor : public Visitor
       return true;
     }
 
-    bool visit( Todo::Ptr )
+    bool visit( KCalCore::Todo::Ptr )
     {
       if ( mShow ) {
         mShow->setText( i18n( "&Show To-do" ) );
@@ -1682,12 +1681,12 @@ class ActionManager::ActionStringsVisitor : public Visitor
       return true;
     }
 
-    bool visit( Journal::Ptr )
+    bool visit( KCalCore::Journal::Ptr )
     {
       return assignDefaultStrings();
     }
 
-    bool visit( FreeBusy::Ptr ) // to inhibit hidden virtual compile warning
+    bool visit( KCalCore::FreeBusy::Ptr ) // to inhibit hidden virtual compile warning
     {
       return false;
     }
@@ -2085,7 +2084,8 @@ void ActionManager::slotAutoArchive()
 
   mAutoArchiveTimer->stop();
   CalendarSupport::EventArchiver archiver;
-  connect( &archiver, SIGNAL(eventsDeleted()), mCalendarView, SLOT(updateView()) ); //AKONADI_PORT this signal shouldn't be needed anymore?
+  connect( &archiver, SIGNAL(eventsDeleted()),  //AKONADI_PORT: this signal
+           mCalendarView, SLOT(updateView()) ); //shouldn't be needed anymore?
   //AKONADI_PORT avoid this local incidence changer copy...
   CalendarSupport::IncidenceChanger changer( mCalendar, 0, Akonadi::Collection().id() );
   archiver.runAuto( mCalendarView->calendar(), &changer, mCalendarView, false /*no gui*/);

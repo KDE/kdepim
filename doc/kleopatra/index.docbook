@@ -114,7 +114,7 @@
 
 </bookinfo>
 
-<chapter id="introduction"> <title>Introduction</title> 
+<chapter id="introduction"> <title>Introduction</title>
 
 <para>&kleopatra; is the &kde; tool for managing X.509 and OpenPGP certificates in
 the &gpgsm; and &gpg; keyboxes and for retrieving certificates from
@@ -126,7 +126,7 @@ menu, as well as from the command line. The &kleopatra; executable is
 named <userinput><command>kleopatra</command></userinput>.</para>
 
 <note><para>This program is named after Cleopatra, a famous female
-Egyptian pharaoh that lived at the time of Julius Caesar, with whom 
+Egyptian pharaoh that lived at the time of Julius Caesar, with whom
 she had a child, Caesarion, unacknowledged as his heir.</para>
 
 <para>The name was chosen since this program originates from the
@@ -208,16 +208,18 @@ selected.</para-->
 signatures in emails, since certificates are embedded in the
 signatures made using them most of the time. However, if you need to
 send a mail to someone you have not yet had contact with, you need to
-fetch the certificate from an &ldap; folder (although &gpgsm; can do
+fetch the certificate from an &ldap; folder (although <ulink
+url="http://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPGSM.html#Invoking-GPGSM">
+&gpgsm;</ulink> can do
 this automatically), or from a file. You also need to import your own
 certificate after receiving the &ca; answer to your certification
 request.</para>
 
-<para>To search for a certificate in an &ldap; directory, select 
+<para>To search for a certificate in an &ldap; directory, select
 <!--### xref-->
 <menuchoice><guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server</guimenuitem></menuchoice>
 and enter some text (&eg; the name of the person
-you want the certificate for) into the line edit of the <guilabel>Keyserver 
+you want the certificate for) into the line edit of the <guilabel>Keyserver
 Certificate Lookup</guilabel> dialog, then click on the
 <guilabel>Search</guilabel> button. The results will be displayed in the
 key list below the search bar, where you can select certificates to
@@ -257,7 +259,7 @@ just as you would to for <quote>normal</quote> certificates.</para>
 
 <para>The menu item <xref linkend="file-new-key-pair"/> starts the
 <guilabel>Certificate Creation Wizard</guilabel> which will guide you through a
-number of steps to create a certificate request.</para> 
+number of steps to create a certificate request.</para>
 <para>Whenever you are done with a step in
 the wizard, press <guibutton>Next</guibutton> to go to the next step
 (or <guibutton>Back</guibutton> to review steps that are already
@@ -270,19 +272,19 @@ time by pressing the <guibutton>Cancel</guibutton> button.
 
 <varlistentry>
 <term><guilabel>Create a personal OpenPGP key pair</guilabel></term>
-<listitem><para>OpenPGP key pairs are created locally, and certified by your friends and 
-acquaintances. There is no central certification authority; instead, every 
-individual creates a personal Web Of Trust by certifying other user's key 
+<listitem><para>OpenPGP key pairs are created locally, and certified by your friends and
+acquaintances. There is no central certification authority; instead, every
+individual creates a personal Web Of Trust by certifying other user's key
 pairs with his own certificate.</para>
-<para>You have to enter a <guilabel>Name</guilabel>, <guilabel>EMail</guilabel> and 
+<para>You have to enter a <guilabel>Name</guilabel>, <guilabel>EMail</guilabel> and
 optional a <guilabel>Comment</guilabel>.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Create a personal X.509 key pair and certification request</guilabel></term>
 <listitem>
-<para>X.509 key pairs are created locally, but certified centrally by a 
-certification authority (&ca;). &ca;s can certify other &ca;s, creating a central, 
+<para>X.509 key pairs are created locally, but certified centrally by a
+certification authority (&ca;). &ca;s can certify other &ca;s, creating a central,
 hierarchical chain of trust.</para>
 <para>The next step in the wizard is to type in your personal data
 for the certificate. The fields to fill out are:
@@ -300,7 +302,7 @@ sending mail to when they use your certificate.</para>
 </listitem>
 <listitem>
 <para><guilabel>Organizational unit (OU):</guilabel> The organizational unit you are
-in (for example, "Logistics");</para> 
+in (for example, "Logistics");</para>
 </listitem>
 <listitem>
 <para><guilabel>Organization (O):</guilabel> The organization you represent
@@ -333,7 +335,7 @@ has some less often used functions that help you manage your local
 keybox.</para>
 
 <para>These functions include deleting certificates from the local
-keybox with <xref linkend="certificates-delete"/>, as well 
+keybox with <xref linkend="certificates-delete"/>, as well
 as manual handling of CRLs (<xref linkend="certificates-refresh-x509"/>,
 <xref linkend="crls-clear-crl-cache"/>, <xref linkend="crls-dump-crl-cache"/>).
 </para>
@@ -1277,7 +1279,7 @@ varlistentry id="certificates-download">
           </listitem>
         </varlistentry>
 
-<!-- no longer provided 
+<!-- no longer provided
 that is wrong
 "Clear CRL Cache"+"Dump CRL Cache" are still in the gui of 4.5 + trunk
 -->
@@ -1981,7 +1983,7 @@ itself, of course.</para></note>
 the known attributes (<guilabel>Available attributes</guilabel>), and
 one describing the <guilabel>Current attribute order</guilabel>.</para>
 
-<para>Both lists contain entries described by the short from of the
+<para>Both lists contain entries described by the short form of the
 attribute (&eg; <guilabel>CN</guilabel>) as well as the spelled-out
 form (<guilabel>Common Name</guilabel>).</para>
 
@@ -2056,8 +2058,8 @@ button.</para>
         <para>
           Here you can configure some aspects of the email operations
           of &kleopatra;'s &uiserver;. Currently, you can only
-          configure whether to use <quote>Quick Mode</quote> for
-          signing and encrypting emails, respectively.
+          configure whether or not to use <quote>Quick Mode</quote> for
+          signing and encrypting emails, individually.
         </para>
         <para>
           When <quote>Quick Mode</quote> is enabled, no dialog is
@@ -2140,7 +2142,7 @@ button.</para>
                 for interval scheduling of <xref
                   linkend="certificates-refresh-openpgp"/> or <xref
                   linkend="certificates-refresh-x509"/>.
-              </para> 
+              </para>
               <note>
                 <para>
                   Validation is performed implicitly whenever significant
@@ -2607,7 +2609,7 @@ with all other config keys in &kde; applications as well.</para></tip>
 
 <para>
 <programlisting>
-[CertificateCreationWizard] 
+[CertificateCreationWizard]
 ;Disallow to copy personal data from the addressbook, do not allow local override
 ShowSetWhoAmI[$i]=false
 
@@ -2691,7 +2693,7 @@ C=DE
             RSAKeySizes = 1536,-2048,3072
             </programlisting>
           </para>
-              
+
 
           <para>
             The above would restrict allowed <acronym>RSA</acronym>
@@ -3513,7 +3515,7 @@ and &Jesper.Pedersen;., copyright 2004 &Daniel.Molkentin;, copyright 2004, 2007,
 &underGPL;
 </chapter>
 
-&documentation.index; 
+&documentation.index;
 </book>
 
 <!--

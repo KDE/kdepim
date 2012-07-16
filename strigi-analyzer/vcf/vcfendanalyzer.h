@@ -23,7 +23,6 @@
 
 #define STRIGI_IMPORT_API
 
-#include "config-strigi.h"
 #include "pimstrigi-analyzer_export.h"
 
 #include <kabc/vcardconverter.h>
@@ -90,10 +89,10 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfFactoryFactory : public Strigi::AnalyzerFacto
     std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const;
 };
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 STRIGI_ANALYZER_FACTORY( VcfFactoryFactory )
 #else
-EXPORT_PLUGIN(Strigi_Plugin_Vcf,VcfFactoryFactory)
+EXPORT_PLUGIN( Strigi_Plugin_Vcf,VcfFactoryFactory )
 #endif
 
 #endif

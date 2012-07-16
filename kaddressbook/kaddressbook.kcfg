@@ -8,13 +8,54 @@
   <group name="Window">
     <entry type="Bool" name="UseSimpleMode">
       <default>false</default>
+      <tooltip>Set the view to \"Simple Mode\"</tooltip>
+      <whatsthis>Set this option to true if you want to use the simple view mode instead of the normal view mode where a list of all your address books and contacts are shown on the display.</whatsthis>
+    </entry>
+  </group>
+
+  <group name="Printing">
+    <entry type="String" name="DefaultFileName">
+      <default>addressbook.pdf</default>
+      <tooltip>Default print file name</tooltip>
+      <whatsthis>Set the name of the default print file.</whatsthis>
+    </entry>
+    <entry type="Int" name="PrintingStyle">
+      <label>Printing style</label>
+      <tooltip>Set the printing style</tooltip>
+      <whatsthis>KAddressbok can print the contacts in several styles. With this combobox you can choose one of this.</whatsthis>
+      <default>0</default>
+    </entry>
+    <entry type="Enum" name="SortOrder">
+      <choices>
+        <choice name="Ascending" />
+        <choice name="Descending" />
+      </choices>
+      <label>Default sort order</label>
+      <tooltip>Sort order</tooltip>
+      <whatsthis>Choose the sorting order for the printed contacts.</whatsthis>
+      <default>Ascending</default>
     </entry>
   </group>
 
   <group name="Views">
     <entry type="IntList" name="ContactModelColumns">
       <default>0</default>
+      <tooltip>View columns</tooltip>
+      <whatsthis>Set the number of contact model view columns.</whatsthis>
     </entry>
+
+    <entry type="Enum" name="ViewMode">
+      <choices>
+        <choice name="Dummy" />
+        <choice name="Simple" />
+        <choice name="TwoColumn" />
+        <choice name="ThreeColumn" />
+      </choices>
+      <default>3</default>
+      <label>Viewing mode</label>
+      <tooltip>Viewing mode (number of columns)</tooltip>
+      <whatsthis>Choose the layout for the main view</whatsthis>
+      </entry>
   </group>
 
 </kcfg>

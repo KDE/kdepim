@@ -203,7 +203,7 @@ class KNComposer : public KXmlGuiWindow {
 
     // DND handling
     /**
-      Reimplemted to accept list of URI as drag content
+      Reimplemented to accept list of URI as drag content
     */
     virtual void dragEnterEvent( QDragEnterEvent *event );
     /**
@@ -219,12 +219,12 @@ class KNComposer : public KXmlGuiWindow {
     /**
       Character set used to encode the out-going message.
 
-      This is going to end in the mime header of the message
+      This is going to end up in the mime header of the message
       so it should be a valid encoding as per
       @link http://www.iana.org/assignments/character-sets IANA character-set encoding @endlink
-      and not be empty; both issue are taken care of by setCharset().
+      and not be empty; both issues are taken care of by setCharset().
 
-      As a consequence this can not used directly as input of methods from KCharset.
+      As a consequence this cannot be used directly as input of methods from KCharset.
     */
     QString mCharset;
 };

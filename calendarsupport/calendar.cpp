@@ -264,7 +264,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
 
-  // TODO: remove this debug message in a few months
+  /*
   kDebug() << "id=" << item.id()
            << "version=" << item.revision()
            << "alreadyExisted=" << alreadyExisted
@@ -272,6 +272,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
            << "; uid = " << incidence->uid()
            << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
            << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
+    */
 
   if ( mode != AssertExists && alreadyExisted ) {
     // An item from a virtual folder was inserted and we already have an item with
@@ -340,17 +341,17 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     m_itemDateForItemId.remove( item.id() );
   }
 
-  QString date;
+  int julian = -1;
   if ( const KCalCore::Todo::Ptr t = CalendarSupport::todo( item ) ) {
     if ( t->hasDueDate() ) {
-      date = t->dtDue().date().toString();
+      julian = t->dtDue().date().toJulianDay();
     }
   } else if ( const KCalCore::Event::Ptr e = CalendarSupport::event( item ) ) {
     if ( !e->recurs() && !e->isMultiDay() ) {
-      date = e->dtStart().date().toString();
+      julian = e->dtStart().date().toJulianDay();
     }
   } else if ( const KCalCore::Journal::Ptr j = CalendarSupport::journal( item ) ) {
-    date = j->dtStart().date().toString();
+    julian = j->dtStart().date().toJulianDay();
   } else {
     kError() << "Item id is " << item.id()
              << item.hasPayload<KCalCore::Incidence::Ptr>()
@@ -367,9 +368,9 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     return;
   }
 
-  if ( !m_itemIdsForDate.contains( date, item.id() ) && !date.isEmpty() ) {
-    m_itemIdsForDate.insert( date, item.id() );
-    m_itemDateForItemId.insert( item.id(), date );
+  if ( !m_itemIdsForDate.contains( julian, item.id() ) && julian != -1 ) {
+    m_itemIdsForDate.insert( julian, item.id() );
+    m_itemDateForItemId.insert( item.id(), julian );
   }
 
   m_itemMap.insert( id, item );
@@ -388,7 +389,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const QString parentUID = incidence->relatedTo();
   const bool hasParent = !parentUID.isEmpty();
   UnseenItem parentItem;
-  QMap<UnseenItem,Akonadi::Item::Id>::const_iterator parentIt = m_unseenItemToItemId.constEnd();
+  QHash<UnseenItem,Akonadi::Item::Id>::const_iterator parentIt = m_unseenItemToItemId.constEnd();
   bool knowParent = false;
   bool parentNotChanged = false;
   if ( hasParent ) {
@@ -414,7 +415,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
         Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
       } else {
         kDebug() << "m_unseenItemToItemId has size " << m_unseenItemToItemId.count();
-        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_unseenItemToItemId );
+        QHashIterator<UnseenItem, Akonadi::Item::Id> i( m_unseenItemToItemId );
         while ( i.hasNext() ) {
           i.next();
           if ( i.key().uid == ui.uid || i.value() == item.id() ) {
@@ -544,10 +545,15 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   UnseenItem unseen_item;
   UnseenItem unseen_parent;
 
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  if ( !incidence ) {
+    return;
+  }
+
   unseen_item.collection = unseen_parent.collection = item.storageCollectionId();
 
-  unseen_item.uid   = CalendarSupport::incidence( item )->uid();
-  unseen_parent.uid = CalendarSupport::incidence( item )->relatedTo();
+  unseen_item.uid   = incidence->uid();
+  unseen_parent.uid = incidence->relatedTo();
 
   m_uidToItemId.remove( unseen_item.uid );
 
@@ -570,9 +576,19 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   m_unseenItemToItemId.remove( unseen_item );
   m_itemDateForItemId.remove( item.id() );
 
-  const QList<QString> entriesToDelete = m_itemIdsForDate.keys( item.id() );
-  foreach ( const QString &entryToDelete, entriesToDelete ) {
-    m_itemIdsForDate.remove( entryToDelete );
+  if ( const KCalCore::Event::Ptr e = incidence.dynamicCast<KCalCore::Event>() ) {
+    if ( !e->recurs() ) {
+      m_itemIdsForDate.remove( e->dtStart().date().toJulianDay(), item.id() );
+    }
+  } else if ( const KCalCore::Todo::Ptr t = incidence.dynamicCast<KCalCore::Todo>( ) ) {
+    if ( t->hasDueDate() ) {
+      m_itemIdsForDate.remove( t->dtDue().date().toJulianDay(), item.id() );
+    }
+  } else if ( const KCalCore::Journal::Ptr j = incidence.dynamicCast<KCalCore::Journal>() ) {
+    m_itemIdsForDate.remove( j->dtStart().date().toJulianDay(), item.id() );
+  } else {
+    kError() << "Unsupported incidence type: " << incidence;
+    Q_ASSERT( false );
   }
 }
 
@@ -606,22 +622,6 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
              << " calendar = "
              << q;
     */
-
-    if ( const KCalCore::Event::Ptr e = incidence.dynamicCast<KCalCore::Event>() ) {
-      if ( !e->recurs() ) {
-        m_itemIdsForDate.remove( e->dtStart().date().toString(), item.id() );
-      }
-    } else if ( const KCalCore::Todo::Ptr t = incidence.dynamicCast<KCalCore::Todo>( ) ) {
-      if ( t->hasDueDate() ) {
-        m_itemIdsForDate.remove( t->dtDue().date().toString(), item.id() );
-      }
-    } else if ( const KCalCore::Journal::Ptr j = incidence.dynamicCast<KCalCore::Journal>() ) {
-      m_itemIdsForDate.remove( j->dtStart().date().toString(), item.id() );
-    } else {
-      kError() << "Unsupported incidence type: " << incidence;
-      Q_ASSERT( false );
-      continue;
-    }
 
     // oldItem will almost always be the same as item, but, when you move an
     // item from one collection and the destination collection isn't selected,
@@ -775,10 +775,10 @@ Akonadi::Item::List Calendar::rawTodos( TodoSortField sortField,
 Akonadi::Item::List Calendar::rawTodosForDate( const QDate &date )
 {
   Akonadi::Item::List todoList;
-  QString dateStr = date.toString();
-  QMultiHash<QString, Akonadi::Item::Id>::const_iterator it =
-    d->m_itemIdsForDate.constFind( dateStr );
-  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == dateStr ) {
+  const int julian = date.toJulianDay();
+  QMultiHash<int, Akonadi::Item::Id>::const_iterator it =
+    d->m_itemIdsForDate.constFind( julian );
+  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == julian ) {
     if ( CalendarSupport::todo( d->m_itemMap[it.value()] ) ) {
       todoList.append( d->m_itemMap[it.value()] );
     }
@@ -833,13 +833,13 @@ Akonadi::Item::List Calendar::rawEventsForDate( const QDate &date,
 {
   Akonadi::Item::List eventList;
   // Find the hash for the specified date
-  const QString dateStr = date.toString();
+  const int julian = date.toJulianDay();
   // Iterate over all non-recurring, single-day events that start on this date
-  QMultiHash<QString, Akonadi::Item::Id>::const_iterator it =
-    d->m_itemIdsForDate.constFind( dateStr );
+  QMultiHash<int, Akonadi::Item::Id>::const_iterator it =
+    d->m_itemIdsForDate.constFind( julian );
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime kdt( date, ts );
-  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == dateStr ) {
+  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == julian ) {
     if ( KCalCore::Event::Ptr ev = CalendarSupport::event( d->m_itemMap[it.value()] ) ) {
       KDateTime end( ev->dtEnd().toTimeSpec( ev->dtStart() ) );
       if ( ev->allDay() ) {
@@ -992,10 +992,10 @@ Akonadi::Item::List Calendar::rawJournals( JournalSortField sortField,
 Akonadi::Item::List Calendar::rawJournalsForDate( const QDate &date )
 {
   Akonadi::Item::List journalList;
-  QString dateStr = date.toString();
-  QMultiHash<QString, Akonadi::Item::Id>::const_iterator it =
-    d->m_itemIdsForDate.constFind( dateStr );
-  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == dateStr ) {
+  const int julian = date.toJulianDay();
+  QMultiHash<int, Akonadi::Item::Id>::const_iterator it =
+    d->m_itemIdsForDate.constFind( julian );
+  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == julian ) {
     if ( CalendarSupport::journal( d->m_itemMap[it.value()] ) ) {
       journalList.append( d->m_itemMap[it.value()] );
     }
@@ -2119,4 +2119,9 @@ bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
 int Calendar::incidencesCount() const
 {
   return d->m_model->rowCount();
+}
+
+uint CalendarSupport::qHash( const UnseenItem &unseenItem )
+{
+  return qHash( QString::number( unseenItem.collection ) + unseenItem.uid );
 }

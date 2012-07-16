@@ -107,7 +107,7 @@ namespace StringUtil
   /**
    * Removes all private header fields (e.g. *Status: and X-KMail-*) from the given @p message.
    */
-  MESSAGECORE_EXPORT void removePrivateHeaderFields( const KMime::Message::Ptr &message );
+  MESSAGECORE_EXPORT void removePrivateHeaderFields(const KMime::Message::Ptr &message , bool removeIdentityTag = true);
   
   /**
    * Returns the @p message contents with the headers that should not be sent stripped off.

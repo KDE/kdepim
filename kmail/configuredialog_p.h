@@ -55,6 +55,7 @@ class KIconButton;
 class KKeySequenceWidget;
 class KComboBox;
 class ColorListBox;
+class KCModuleProxy;
 
 namespace MessageList {
   namespace Utils {
@@ -190,6 +191,7 @@ private slots:
   void slotRestartSelectedAccount();
   void slotEditNotifications();
   void slotShowMailCheckMenu( const QString &, const QPoint & );
+  void slotCustomizeAccountOrder();
   void slotIncludeInCheckChanged( bool checked );
   void slotOfflineOnShutdownChanged( bool checked );
   void slotCheckOnStatupChanged( bool checked );
@@ -329,6 +331,7 @@ private: // methods
 private: // data
   QCheckBox    *mDisplayMessageToolTips;
   QCheckBox    *mHideTabBarWithSingleTab;
+  QCheckBox    *mTabsHaveCloseButton;
   MessageList::Utils::AggregationComboBox *mAggregationComboBox;
   MessageList::Utils::ThemeComboBox *mThemeComboBox;
   KButtonGroup *mDateDisplay;
@@ -856,6 +859,17 @@ private:
   MessageViewer::InvitationSettings *mInvitationUi;
 };
 
+
+class MiscPageProxyTab : public ConfigModuleTab  {
+  Q_OBJECT
+public:
+  MiscPageProxyTab( QWidget * parent=0 );
+  void save();
+private:
+  KCModuleProxy *mProxyModule;
+};
+
+
 class KMAIL_EXPORT MiscPage : public ConfigModuleWithTabs {
   Q_OBJECT
 public:
@@ -864,10 +878,11 @@ public:
 
   typedef MiscPageFolderTab FolderTab;
   typedef MiscPageInviteTab InviteTab;
-
+  typedef MiscPageProxyTab ProxyTab;
 private:
   FolderTab * mFolderTab;
   InviteTab * mInviteTab;
+  ProxyTab * mProxyTab;
 };
 
 #endif // _CONFIGURE_DIALOG_PRIVATE_H_

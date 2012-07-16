@@ -6,9 +6,16 @@ add_subdirectory(tests)
 
 include_directories( ${Boost_INCLUDE_DIR} 
                      ${SOPRANO_INCLUDE_DIR}
+		     ${NEPOMUK_CORE_INCLUDE_DIR}
                    )
 
 ########### next target ###############
+
+configure_file(messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
+
+install(FILES  messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
+
+
 
 set(messagecore_LIB_SRCS
 
@@ -60,13 +67,12 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${NEPOMUK_CORE_LIBRARY}
 )
 
-if(NOT KDEPIM_NO_NEPOMUK)
 target_link_libraries(messagecore
   ${NEPOMUK_LIBRARIES}
 )
-endif(NOT KDEPIM_NO_NEPOMUK)
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KMIME_LIBS}

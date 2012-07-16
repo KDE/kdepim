@@ -42,11 +42,13 @@ class KLineEdit;
 class KMMainWidget;
 class KStatusBar;
 class KMSearchMessageModel;
-
+class QAbstractItemModel;
+class QModelIndex;
 namespace Akonadi {
 class EntityTreeView;
 class ItemModel;
 class StandardMailActionManager;
+class EntityMimeTypeFilterModel;
 }
 
 namespace KMime {
@@ -124,6 +126,10 @@ class SearchWindow: public KDialog, virtual public KXMLGUIClient
     virtual void closeEvent( QCloseEvent* );
 
     void createSearchModel();
+  
+    void childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List &list );
+    void getChildren( const QAbstractItemModel *model, const QModelIndex &parentIndex, KUrl::List &list );
+
   
   private Q_SLOTS:
     void updateCollectionStatistic(Akonadi::Collection::Id,Akonadi::CollectionStatistics);

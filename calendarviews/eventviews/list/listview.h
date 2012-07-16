@@ -25,20 +25,14 @@
 #define EVENTVIEWS_LISTVIEW_H
 
 #include "eventview.h"
-#include "customlistviewitem.h"
-
-#include <KCalCore/Incidence>
-
-#include <KConfig>
-
-#include <QHash>
-#include <QList>
 
 namespace CalendarSupport {
   class Calendar;
 }
 
-typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
+class KConfig;
+
+class QModelIndex;
 
 /**
   This class provides a multi-column list view of events.  It can
@@ -53,8 +47,6 @@ typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
 
 namespace EventViews {
 
-class ListView;
-
 class EVENTVIEWS_EXPORT ListView : public EventView
 {
   Q_OBJECT
@@ -66,8 +58,6 @@ class EVENTVIEWS_EXPORT ListView : public EventView
     virtual int currentDateCount() const;
     virtual Akonadi::Item::List selectedIncidences() const;
     virtual KCalCore::DateList selectedIncidenceDates() const;
-
-    void showDates( bool show );
 
     // Shows all incidences of the calendar
     void showAll();
@@ -87,9 +77,6 @@ class EVENTVIEWS_EXPORT ListView : public EventView
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();
-
-    void showDates();
-    void hideDates();
 
     void changeIncidenceDisplay( const Akonadi::Item &, int );
 

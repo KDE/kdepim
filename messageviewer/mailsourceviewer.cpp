@@ -32,6 +32,7 @@
 #include <config-messageviewer.h>
 
 #include "mailsourceviewer.h"
+#include "util.h"
 #include "findbar/findbarsourceview.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
@@ -46,6 +47,7 @@
 #include <QtGui/QTabBar>
 #include <QtGui/QVBoxLayout>
 #include <QContextMenuEvent>
+#include <QDebug>
 #include <QMenu>
 
 namespace MessageViewer {
@@ -57,7 +59,7 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
   QVBoxLayout *lay = new QVBoxLayout;
   setLayout( lay );  
   mTextBrowser = new MailSourceViewTextBrowser();
-  mTextBrowser->setLineWrapMode( QTextEdit::NoWrap );
+  mTextBrowser->setLineWrapMode( QPlainTextEdit::NoWrap );
   mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
   connect( mTextBrowser, SIGNAL(findText()), SLOT(slotFind()) );
   lay->addWidget( mTextBrowser );
@@ -70,13 +72,15 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
 
 void MailSourceViewTextBrowserWidget::slotFind()
 {
+  if ( mTextBrowser->textCursor().hasSelection() )
+    mFindBar->setText( mTextBrowser->textCursor().selectedText() );
   mFindBar->show();
   mFindBar->focusAndSetCursor();  
 }
 
 void MailSourceViewTextBrowserWidget::setText( const QString& text )
 {
-  mTextBrowser->setText( text );
+  mTextBrowser->setPlainText( text );
 }
 
 void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
@@ -90,13 +94,13 @@ MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textB
 }
   
 MailSourceViewTextBrowser::MailSourceViewTextBrowser( QWidget *parent )
-  :KTextBrowser( parent )
+  :QPlainTextEdit( parent )
 {
 }
 
 void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
 {
-  QMenu *popup = createStandardContextMenu(event->pos());
+  QMenu *popup = createStandardContextMenu();
   if (popup) {
     popup->addSeparator();
     popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
@@ -104,12 +108,24 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
                                           popup->actions() );
+    popup->addSeparator();
+    popup->addAction( KIcon("preferences-desktop-text-to-speech"),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
     popup->exec( event->globalPos() );
     delete popup;
   }
 }
 
+void MailSourceViewTextBrowser::slotSpeakText()
+{
+  QString text;
+  if ( textCursor().hasSelection() ) {
+    text = textCursor().selectedText();
+  } else {
+    text = toPlainText();
+  }
+  MessageViewer::Util::speakSelectedText( text, this);
+}
   
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :
@@ -230,7 +246,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   mHtmlBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
   mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
-  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser->textBrowser() );
+  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser->textBrowser()->document() );
 #endif
 
   mTabWidget->setCurrentIndex( 0 );
@@ -248,7 +264,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
                   IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
-  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser->textBrowser() );
+  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser->textBrowser()->document() );
   mRawBrowser->textBrowser()->setFocus();
 }
 

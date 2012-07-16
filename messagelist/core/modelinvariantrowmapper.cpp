@@ -126,7 +126,9 @@ void ModelInvariantRowMapperPrivate::indexDead( ModelInvariantIndex * invariant 
 
   Q_ASSERT( invariant->d->rowMapperSerial() < mCurrentShiftSerial );
 
-  Q_ASSERT( mRowShiftList ); // index has no current serial: we _must_ have a shift for it
+  if ( !mRowShiftList ) {
+    return; // not found (not requested yet or invalid index at all)
+  }
 
   uint invariantShiftIndex = invariant->d->rowMapperSerial() - mRemovedShiftCount;
 

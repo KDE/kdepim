@@ -1,22 +1,21 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Tobias Koenig <tokoe@kdab.com>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+    Author Tobias Koenig <tokoe@kdab.com>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #ifndef MAILCOMMON_SNIPPETSMANAGER_H
@@ -24,7 +23,7 @@
 
 #include "mailcommon_export.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class KActionCollection;
 
@@ -38,15 +37,15 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
 {
   Q_OBJECT
 
-  Q_PROPERTY( QAbstractItemModel* model READ model )
-  Q_PROPERTY( QItemSelectionModel* selectionModel READ selectionModel )
-  Q_PROPERTY( QAction* addSnippetAction READ addSnippetAction )
-  Q_PROPERTY( QAction* editSnippetAction READ editSnippetAction )
-  Q_PROPERTY( QAction* deleteSnippetAction READ deleteSnippetAction )
-  Q_PROPERTY( QAction* addSnippetGroupAction READ addSnippetGroupAction )
-  Q_PROPERTY( QAction* editSnippetGroupAction READ editSnippetGroupAction )
-  Q_PROPERTY( QAction* deleteSnippetGroupAction READ deleteSnippetGroupAction )
-  Q_PROPERTY( QAction* insertSnippetAction READ insertSnippetAction )
+  Q_PROPERTY( QAbstractItemModel *model READ model )
+  Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
+  Q_PROPERTY( QAction *addSnippetAction READ addSnippetAction )
+  Q_PROPERTY( QAction *editSnippetAction READ editSnippetAction )
+  Q_PROPERTY( QAction *deleteSnippetAction READ deleteSnippetAction )
+  Q_PROPERTY( QAction *addSnippetGroupAction READ addSnippetGroupAction )
+  Q_PROPERTY( QAction *editSnippetGroupAction READ editSnippetGroupAction )
+  Q_PROPERTY( QAction *deleteSnippetGroupAction READ deleteSnippetGroupAction )
+  Q_PROPERTY( QAction *insertSnippetAction READ insertSnippetAction )
 
   Q_PROPERTY( bool snippetGroupSelected READ snippetGroupSelected )
   Q_PROPERTY( QString selectedName READ selectedName )
@@ -55,10 +54,12 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
     /**
      * Creates a new snippets manager.
      *
-     * @param actionCollection The action collection where the manager will register the snippet shortcuts at.
+     * @param actionCollection The action collection where the manager will
+     *                         register the snippet shortcuts at.
      * @param parent The parent object.
      */
-    explicit SnippetsManager( KActionCollection *actionCollection, QObject *parent = 0, QWidget *widget = 0 );
+    explicit SnippetsManager( KActionCollection *actionCollection,
+                              QObject *parent = 0, QWidget *widget = 0 );
 
     /**
      * Destroys the snippets manager.
@@ -146,7 +147,7 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void selectionChanged() )
     Q_PRIVATE_SLOT( d, void addSnippet() )

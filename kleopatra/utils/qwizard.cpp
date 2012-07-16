@@ -788,7 +788,7 @@ void QWizardPrivate::addField(const QWizardField &field)
     myField.resolve(defaultPropertyTable);
 
     if (fieldIndexMap.contains(myField.name)) {
-        qWarning("QWizardPage::addField: Duplicate field '%s'", qPrintable(myField.name));
+        kWarning() << "Duplicate field '" << qPrintable(myField.name) << "'";
         return;
     }
 
@@ -2221,17 +2221,17 @@ void QWizard::setPage(int theid, QWizardPage *page)
     Q_D(QWizard);
 
     if (!page) {
-        qWarning("QWizard::setPage: Cannot insert null page");
+        kWarning() << "Cannot insert null page";
         return;
     }
 
     if (theid == -1) {
-        qWarning("QWizard::setPage: Cannot insert page with ID -1");
+        kWarning() << "Cannot insert page with ID -1";
         return;
     }
 
     if (d->pageMap.contains(theid)) {
-        qWarning("QWizard::setPage: Page with duplicate ID %d ignored", theid);
+        kWarning() << "Page with duplicate ID " << theid << " ignored";
         return;
     }
 
@@ -2415,7 +2415,7 @@ void QWizard::setStartId(int theid)
     }
 
     if (!d->pageMap.contains(newStart)) {
-        qWarning("QWizard::setStartId: Invalid page ID %d", newStart);
+        kWarning() << "Invalid page ID " << newStart;
         return;
     }
     d->start = newStart;
@@ -2475,12 +2475,12 @@ void QWizard::setField(const QString &name, const QVariant &value)
     if (index != -1) {
         const QWizardField &field = d->fields.at(index);
         if (!field.object->setProperty(field.property, value))
-            qWarning("QWizard::setField: Couldn't write to property '%s'",
-                     field.property.constData());
+          kWarning() << "Couldn't write to property '"
+                     << field.property.constData() << "'";
         return;
     }
 
-    qWarning("QWizard::setField: No such field '%s'", qPrintable(name));
+    kWarning() << "No such field '" << qPrintable(name) << "'";
 }
 
 /*!
@@ -2500,7 +2500,7 @@ QVariant QWizard::field(const QString &name) const
         return field.object->property(field.property);
     }
 
-    qWarning("QWizard::field: No such field '%s'", qPrintable(name));
+    kWarning() << "No such field '" << qPrintable(name) << "'";
     return QVariant();
 }
 
@@ -2719,8 +2719,8 @@ void QWizard::setButtonLayout(const QList<WizardButton> &layout)
         for (int j = 0; j < i; ++j) {
             WizardButton button2 = layout.at(j);
             if (button2 == button1) {
-                qWarning("QWizard::setButtonLayout: Duplicate button in layout");
-                return;
+              kWarning() << "Duplicate button in layout");
+              return;
             }
         }
     }
@@ -3100,11 +3100,11 @@ void QWizard::next()
         int next = nextId();
         if (next != -1) {
             if (d->history.contains(next)) {
-                qWarning("QWizard::next: Page %d already met", next);
+                kWarning() << "Page " << next << " already met";
                 return;
             }
             if (!d->pageMap.contains(next)) {
-                qWarning("QWizard::next: No such page %d", next);
+                kWarning() << "No such page " << next;
                 return;
             }
             d->switchToPage(next, QWizardPrivate::Forward);

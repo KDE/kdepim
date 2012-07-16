@@ -24,17 +24,14 @@
 */
 
 #include "kodialogmanager.h"
-#ifndef KORG_NOARCHIVE
-#include <calendarsupport/archivedialog.h>
-#endif
 #include "calendarview.h"
-#include "koglobals.h"
-#include "koprefs.h"
 #include "filtereditdialog.h"
+#include "koprefs.h"
 #include "searchdialog.h"
 
-#include <calendarsupport/utils.h>
+#include <calendarsupport/archivedialog.h>
 #include <calendarsupport/categoryconfig.h>
+#include <calendarsupport/utils.h>
 
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/incidencedialog.h>
@@ -42,25 +39,20 @@
 
 #include <Akonadi/Item>
 
-#include <kcalcore/visitor.h>
-#include <kcalcore/incidencebase.h>
+#include <KCalCore/Visitor>
 
 #include <KCMultiDialog>
-#include <KLocale>
-#include <KMessageBox>
 
 using namespace KOrg;
-using namespace KCalCore;
-using namespace CalendarSupport;
 
 // FIXME: Handle KOEventViewerDialogs in dialog manager.
 
-class KODialogManager::DialogManagerVisitor : public Visitor
+class KODialogManager::DialogManagerVisitor : public KCalCore::Visitor
 {
   public:
     DialogManagerVisitor() : mDialogManager( 0 ) {}
 
-    bool act( IncidenceBase::Ptr incidence, KODialogManager *manager )
+    bool act( KCalCore::IncidenceBase::Ptr incidence, KODialogManager *manager )
     {
       mDialogManager = manager;
       return incidence->accept( *this, incidence );
@@ -143,7 +135,6 @@ void KODialogManager::showSearchDialog()
 
 void KODialogManager::showArchiveDialog()
 {
-#ifndef KORG_NOARCHIVE
   if ( !mArchiveDialog ) {
     mArchiveDialog =
       new CalendarSupport::ArchiveDialog( mMainView->calendar(), mMainView->incidenceChanger() );
@@ -157,10 +148,9 @@ void KODialogManager::showArchiveDialog()
 
   // Workaround.
   QApplication::restoreOverrideCursor();
-#endif
 }
 
-void KODialogManager::showFilterEditDialog( QList<CalFilter*> *filters )
+void KODialogManager::showFilterEditDialog( QList<KCalCore::CalFilter*> *filters )
 {
   createCategoryEditor();
   if ( !mFilterEditDialog ) {
@@ -178,14 +168,15 @@ void KODialogManager::showFilterEditDialog( QList<CalFilter*> *filters )
 
 IncidenceEditorNG::IncidenceDialog *KODialogManager::createDialog( const Akonadi::Item &item )
 {
-  const Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
     return 0;
   }
 
   IncidenceEditorNG::IncidenceDialog *dialog =
-    IncidenceEditorNG::IncidenceDialogFactory::create( false/*needs initial saving?*/,
-                                                       incidence->type(), mMainView );
+    IncidenceEditorNG::IncidenceDialogFactory::create(
+      false/*needs initial saving?*/,
+      incidence->type(), mMainView );
 
   return dialog;
 }
@@ -225,10 +216,15 @@ void KODialogManager::updateSearchDialog()
 void KODialogManager::createCategoryEditor()
 {
   if ( mCategoryEditDialog == 0 ) {
-    CategoryConfig *cc = new CategoryConfig( KOPrefs::instance(), this );
-    mCategoryEditDialog = new IncidenceEditorNG::CategoryEditDialog( cc, mMainView );
+    CalendarSupport::CategoryConfig *cc =
+      new CalendarSupport::CategoryConfig( KOPrefs::instance(), this );
+
+    mCategoryEditDialog =
+      new IncidenceEditorNG::CategoryEditDialog( cc, mMainView );
+
     mCategoryEditDialog->setModal( true );
     mCategoryEditDialog->setHelp( "categories-view", "korganizer" );
+
     connect( mMainView, SIGNAL(categoriesChanged()),
              mCategoryEditDialog, SLOT(reload()) );
     connect( mCategoryEditDialog, SIGNAL(categoryConfigChanged()),

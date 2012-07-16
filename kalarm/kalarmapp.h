@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.h  -  the KAlarm application object
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@
 
 /** @file kalarmapp.h - the KAlarm application object */
 
+#ifdef USE_AKONADI
+#include "eventid.h"
+#endif
 #include "kamail.h"
 #include "preferences.h"
 
@@ -79,7 +82,6 @@ class KAlarmApp : public KUniqueApplication
         ShellProcess*      execCommandAlarm(const KAEvent&, const KAAlarm&, const QObject* receiver = 0, const char* slot = 0);
         void               alarmCompleted(const KAEvent&);
         void               rescheduleAlarm(KAEvent& e, const KAAlarm& a)   { rescheduleAlarm(e, a, true); }
-        bool               deleteEvent(const QString& eventID)         { return handleEvent(eventID, EVENT_CANCEL); }
         void               purgeAll()             { purge(0); }
         void               commandMessage(ShellProcess*, QWidget* parent);
         void               notifyAudioPlaying(bool playing);
@@ -97,8 +99,14 @@ class KAlarmApp : public KUniqueApplication
 #endif
                                          const QString& mailSubject = QString(),
                                          const QStringList& mailAttachments = QStringList());
+#ifdef USE_AKONADI
+        bool               dbusTriggerEvent(const EventId& eventID)   { return dbusHandleEvent(eventID, EVENT_TRIGGER); }
+        bool               dbusDeleteEvent(const EventId& eventID)    { return dbusHandleEvent(eventID, EVENT_CANCEL); }
+#else
         bool               dbusTriggerEvent(const QString& eventID)   { return dbusHandleEvent(eventID, EVENT_TRIGGER); }
         bool               dbusDeleteEvent(const QString& eventID)    { return dbusHandleEvent(eventID, EVENT_CANCEL); }
+#endif
+        QString            dbusList();
 
     public slots:
         void               processQueue();
@@ -155,27 +163,35 @@ class KAlarmApp : public KUniqueApplication
             ~ProcData();
             enum { PRE_ACTION = 0x01, POST_ACTION = 0x02, RESCHEDULE = 0x04, ALLOW_DEFER = 0x08,
                    TEMP_FILE = 0x10, EXEC_IN_XTERM = 0x20, DISP_OUTPUT = 0x40 };
-            bool                 preAction() const   { return flags & PRE_ACTION; }
-            bool                 postAction() const  { return flags & POST_ACTION; }
-            bool                 reschedule() const  { return flags & RESCHEDULE; }
-            bool                 allowDefer() const  { return flags & ALLOW_DEFER; }
-            bool                 tempFile() const    { return flags & TEMP_FILE; }
-            bool                 execInXterm() const { return flags & EXEC_IN_XTERM; }
-            bool                 dispOutput() const  { return flags & DISP_OUTPUT; }
-            ShellProcess*          process;
-            KAEvent*               event;
-            KAAlarm*               alarm;
-            QPointer<QWidget>      messageBoxParent;
-            QStringList            tempFiles;
-            int                    flags;
+            bool  preAction() const   { return flags & PRE_ACTION; }
+            bool  postAction() const  { return flags & POST_ACTION; }
+            bool  reschedule() const  { return flags & RESCHEDULE; }
+            bool  allowDefer() const  { return flags & ALLOW_DEFER; }
+            bool  tempFile() const    { return flags & TEMP_FILE; }
+            bool  execInXterm() const { return flags & EXEC_IN_XTERM; }
+            bool  dispOutput() const  { return flags & DISP_OUTPUT; }
+            ShellProcess*     process;
+            KAEvent*          event;
+            KAAlarm*          alarm;
+            QPointer<QWidget> messageBoxParent;
+            QStringList       tempFiles;
+            int               flags;
         };
-        struct DcopQEntry
+        struct ActionQEntry
         {
-            DcopQEntry(EventFunc f, const QString& id) : function(f), eventId(id) { }
-            DcopQEntry(const KAEvent& e, EventFunc f = EVENT_HANDLE) : function(f), event(e) { }
-            DcopQEntry() { }
+#ifdef USE_AKONADI
+            ActionQEntry(EventFunc f, const EventId& id) : function(f), eventId(id) { }
+#else
+            ActionQEntry(EventFunc f, const QString& id) : function(f), eventId(id) { }
+#endif
+            ActionQEntry(const KAEvent& e, EventFunc f = EVENT_HANDLE) : function(f), event(e) { }
+            ActionQEntry() { }
             EventFunc  function;
+#ifdef USE_AKONADI
+            EventId    eventId;
+#else
             QString    eventId;
+#endif
             KAEvent    event;
         };
 
@@ -183,17 +199,29 @@ class KAlarmApp : public KUniqueApplication
         bool               quitIf(int exitCode, bool force = false);
         bool               checkSystemTray();
         void               startProcessQueue();
-        void               queueAlarmId(const QString& id);
+        void               queueAlarmId(const KAEvent&);
+#ifdef USE_AKONADI
+        bool               dbusHandleEvent(const EventId&, EventFunc);
+        bool               handleEvent(const EventId&, EventFunc, bool checkDuplicates = false);
+#else
         bool               dbusHandleEvent(const QString& eventID, EventFunc);
         bool               handleEvent(const QString& eventID, EventFunc);
-        int                rescheduleAlarm(KAEvent&, const KAAlarm&, bool updateCalAndDisplay, const KDateTime& nextDt = KDateTime());
+#endif
+        int                rescheduleAlarm(KAEvent&, const KAAlarm&, bool updateCalAndDisplay,
+                                           const KDateTime& nextDt = KDateTime());
         bool               cancelAlarm(KAEvent&, KAAlarm::Type, bool updateCalAndDisplay);
         bool               cancelReminderAndDeferral(KAEvent&);
-        ShellProcess*      doShellCommand(const QString& command, const KAEvent&, const KAAlarm*, int flags = 0, const QObject* receiver = 0, const char* slot = 0);
-        QString            composeXTermCommand(const QString& command, const KAEvent&, const KAAlarm*, int flags, QString& tempScriptFile) const;
+        ShellProcess*      doShellCommand(const QString& command, const KAEvent&, const KAAlarm*,
+                                          int flags = 0, const QObject* receiver = 0, const char* slot = 0);
+        QString            composeXTermCommand(const QString& command, const KAEvent&, const KAAlarm*,
+                                               int flags, QString& tempScriptFile) const;
         QString            createTempScriptFile(const QString& command, bool insertShell, const KAEvent&, const KAAlarm&) const;
         void               commandErrorMsg(const ShellProcess*, const KAEvent&, const KAAlarm*, int flags = 0);
         void               purge(int daysToKeep);
+#ifdef USE_AKONADI
+        bool               checkResourcesPopulated();
+#endif
+        QStringList        scheduledAlarmList();
 
         static KAlarmApp*  theInstance;          // the one and only KAlarmApp instance
         static int         mActiveCount;         // number of active instances without main windows
@@ -209,12 +237,12 @@ class KAlarmApp : public KUniqueApplication
         int                mArchivedPurgeDays;   // how long to keep archived alarms, 0 = don't keep, -1 = keep indefinitely
         int                mPurgeDaysQueued;     // >= 0 to purge the archive calendar from KAlarmApp::processLoop()
         QList<ProcData*>   mCommandProcesses;    // currently active command alarm processes
-        QQueue<DcopQEntry> mDcopQueue;           // DCOP command queue
+        QQueue<ActionQEntry> mActionQueue;       // queued commands and actions
         mutable OrgKdeKSpeechInterface* mKSpeech;// KSpeech D-Bus interface object
         int                mPendingQuitCode;     // exit code for a pending quit
         bool               mPendingQuit;         // quit once the DCOP command and shell command queues have been processed
         bool               mCancelRtcWake;       // cancel RTC wake on quitting
-        bool               mProcessingQueue;     // a mDcopQueue entry is currently being processed
+        bool               mProcessingQueue;     // a mActionQueue entry is currently being processed
         bool               mNoSystemTray;        // no system tray exists
         bool               mSessionClosingDown;  // session manager is closing the application
         bool               mOldShowInSystemTray; // showing in system tray was selected

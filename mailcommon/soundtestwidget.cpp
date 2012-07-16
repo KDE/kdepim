@@ -18,15 +18,16 @@
 
 #include "soundtestwidget.h"
 
-#include <kfiledialog.h>
-#include <kiconloader.h>
-#include <klocalizedstring.h>
-#include <kstandarddirs.h>
-#include <kurlrequester.h>
-#include <phonon/mediaobject.h>
+#include <KFileDialog>
+#include <KIconLoader>
+#include <KLocalizedString>
+#include <KStandardDirs>
+#include <KUrlRequester>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPushButton>
+#include <QHBoxLayout>
+#include <QPushButton>
+
+#include <phonon/mediaobject.h>
 
 using namespace MailCommon;
 
@@ -64,11 +65,12 @@ void SoundTestWidget::slotUrlChanged( const QString &url )
   emit textChanged( url );
 }
 
-void SoundTestWidget::openSoundDialog( KUrlRequester* )
+void SoundTestWidget::openSoundDialog( KUrlRequester * )
 {
   static bool init = true;
-  if ( !init )
+  if ( !init ) {
     return;
+  }
 
   init = false;
 
@@ -76,7 +78,9 @@ void SoundTestWidget::openSoundDialog( KUrlRequester* )
   fileDialog->setCaption( i18n( "Select Sound File" ) );
 
   QStringList filters;
-  filters << "audio/x-wav" << "audio/mpeg" << "application/ogg"
+  filters << "audio/x-wav"
+          << "audio/mpeg"
+          << "application/ogg"
           << "audio/x-adpcm";
 
   fileDialog->setMimeFilter( filters );
@@ -102,13 +106,16 @@ void SoundTestWidget::openSoundDialog( KUrlRequester* )
 void SoundTestWidget::playSound()
 {
   const QString parameter = m_urlRequester->lineEdit()->text();
-  if ( parameter.isEmpty() )
+  if ( parameter.isEmpty() ) {
     return ;
+  }
 
   const QString file = QLatin1String( "file:" );
-  const QString play = (parameter.startsWith( file ) ? parameter.mid( file.length() ) : parameter);
+  const QString play = ( parameter.startsWith( file ) ?
+                           parameter.mid( file.length() ) :
+                           parameter );
 
-  Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory, play );
+  Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, play );
   player->play();
   connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
 }

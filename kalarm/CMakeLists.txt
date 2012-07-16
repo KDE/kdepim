@@ -6,8 +6,16 @@ add_definitions(-DQT_STRICT_ITERATORS)
 option(KALARM_USE_AKONADI "Build to use Akonadi" ON)
 
 # Kalarm from kdepim master needs kdepimlibs 4.7
-if(NOT ${KDE_VERSION} VERSION_GREATER 4.6.40)
+if(${KDE_VERSION} VERSION_LESS 4.6.40)
   set(KALARM_USE_AKONADI FALSE)
+endif()
+
+if(KALARM_USE_KRESOURCES AND KALARM_USE_AKONADI)
+    message(STATUS "Kalarmcal (in kdepimlibs) was built to use KResources, not Akonadi. KAlarm will NOT be built with Akonadi support.")
+    set(KALARM_USE_AKONADI FALSE)
+elseif(NOT KALARM_USE_KRESOURCES AND NOT KALARM_USE_AKONADI)
+    message(STATUS "Kalarmcal (in kdepimlibs) was built to use Akonadi, not KResources. KAlarm will be built WITH Akonadi support.")
+    set(KALARM_USE_AKONADI TRUE)
 endif()
 
 if(KALARM_USE_AKONADI)
@@ -100,6 +108,7 @@ set(kalarm_bin_SRCS ${libkalarm_SRCS}
     functions.cpp
     fontcolour.cpp
     fontcolourbutton.cpp
+    alarmtime.cpp
     alarmtimewidget.cpp
     specialactions.cpp
     reminder.cpp
@@ -130,6 +139,7 @@ set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
     collectionmodel.cpp
     itemlistmodel.cpp
     calendarmigrator.cpp
+    eventid.cpp
    )
 else(KALARM_USE_AKONADI)
 set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
@@ -216,6 +226,7 @@ else(KALARM_USE_AKONADI)
         ${X11_X11_LIB}
     )
 endif(KALARM_USE_AKONADI)
+
 
 install(TARGETS kalarm_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 #endif (UNIX)

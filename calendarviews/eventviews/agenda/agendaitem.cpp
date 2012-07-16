@@ -1377,7 +1377,7 @@ bool AgendaItem::event( QEvent *event )
       QToolTip::showText(
         helpEvent->globalPos(),
         KCalUtils::IncidenceFormatter::toolTipStr(
-          CalendarSupport::displayName( mIncidence.parentCollection() ),
+          CalendarSupport::displayName( mCalendar, mIncidence.parentCollection() ),
           CalendarSupport::incidence( mIncidence ),
           mDate, true, mEventView->preferences()->timeSpec() ),
         this );

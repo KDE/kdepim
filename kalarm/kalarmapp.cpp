@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.cpp  -  the KAlarm application object
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include "alarmcalendar.h"
 #include "alarmlistview.h"
+#include "alarmtime.h"
 #include "autoqpointer.h"
 #include "commandoptions.h"
 #include "dbushandler.h"
@@ -133,7 +134,7 @@ KAlarmApp::KAlarmApp()
     connect(mAlarmTimer, SIGNAL(timeout()), SLOT(checkNextDueAlarm()));
 
     setQuitOnLastWindowClosed(false);
-    Preferences::self()->readConfig();
+    Preferences::self();    // read KAlarm configuration
     if (!Preferences::noAutoStart())
     {
         Preferences::setAutoStart(true);
@@ -328,21 +329,53 @@ int KAlarmApp::newInstance()
                 EventFunc function = (command == CommandOptions::TRIGGER_EVENT) ? EVENT_TRIGGER : EVENT_CANCEL;
                 if (!initCheck(true))   // open the calendar, don't start processing execution queue yet
                     exitCode = 1;
+                else if (!checkResourcesPopulated()) // wait for Akonadi resources to be populated
+                    exitCode = 1;    // Akonadi not running
                 else
                 {
-                    startProcessQueue();        // start processing the execution queue
+                    startProcessQueue();      // start processing the execution queue
+                    dontRedisplay = true;
+#ifdef USE_AKONADI
+                    if (!handleEvent(options.eventId(), function, true))
+#else
                     if (!handleEvent(options.eventId(), function))
+#endif
+                    {
+#ifdef USE_AKONADI
+                        CommandOptions::printError(i18nc("@info:shell", "%1: Event <resource>%2</resource> not found, or not unique", "--" + options.commandName(), options.eventId().eventId()));
+#else
+                        CommandOptions::printError(i18nc("@info:shell", "%1: Event <resource>%2</resource> not found", "--" + options.commandName(), options.eventId()));
+#endif
                         exitCode = 1;
+                    }
                 }
                 break;
             }
+            case CommandOptions::LIST:
+                // Output a list of scheduled alarms to stdout
+                if (!initCheck(true))   // open the calendar, don't start processing execution queue yet
+                    exitCode = 1;
+                else if (!checkResourcesPopulated()) // wait for Akonadi resources to be populated
+                    exitCode = 1;    // Akonadi not running
+                else
+                {
+                    dontRedisplay = true;
+                    QStringList alarms = scheduledAlarmList();
+                    for (int i = 0, count = alarms.count();  i < count;  ++i)
+                        std::cout << alarms[i].toUtf8().constData() << std::endl;
+                }
+                break;
             case CommandOptions::EDIT:
                 // Edit a specified existing alarm
                 if (!initCheck())
                     exitCode = 1;
-                else if (!KAlarm::editAlarm(options.eventId()))
+                else if (!KAlarm::editAlarmById(options.eventId()))
                 {
-                    CommandOptions::printError(i18nc("@info:shell", "<icode>%1</icode>: Event <resource>%2</resource> not found, or not editable", QString::fromLatin1("--edit"), options.eventId()));
+#ifdef USE_AKONADI
+                    CommandOptions::printError(i18nc("@info:shell", "%1: Event <resource>%2</resource> not found, or not editable", "--" + options.commandName(), options.eventId().eventId()));
+#else
+                    CommandOptions::printError(i18nc("@info:shell", "%1: Event <resource>%2</resource> not found, or not editable", "--" + options.commandName(), options.eventId()));
+#endif
                     exitCode = 1;
                 }
                 break;
@@ -517,7 +550,7 @@ void KAlarmApp::checkKtimezoned()
     done = true;
 #if KDE_IS_VERSION(4,5,70)
     if (!KSystemTimeZones::isTimeZoneDaemonAvailable())
-    {    
+    {
         kDebug() << "ktimezoned not running: using UTC only";
         KAMessageBox::information(MainWindow::mainMainWindow(),
                                   i18nc("@info", "Time zones are not accessible:<nl/>KAlarm will use the UTC time zone.<nl/><nl/>(The KDE time zone service is not available:<nl/>check that <application>ktimezoned</application> is installed.)"),
@@ -563,7 +596,7 @@ bool KAlarmApp::quitIf(int exitCode, bool force)
             if (checkSystemTray())
                 return false;
         }
-        if (!mDcopQueue.isEmpty()  ||  !mCommandProcesses.isEmpty())
+        if (!mActionQueue.isEmpty()  ||  !mCommandProcesses.isEmpty())
         {
             // Don't quit yet if there are outstanding actions on the execution queue
             mPendingQuit = true;
@@ -708,7 +741,7 @@ void KAlarmApp::checkNextDueAlarm()
     if (interval <= 0)
     {
         // Queue the alarm
-        queueAlarmId(nextEvent->id());
+        queueAlarmId(*nextEvent);
         kDebug() << nextEvent->id() << ": due now";
         QTimer::singleShot(0, this, SLOT(processQueue()));
     }
@@ -741,14 +774,19 @@ void KAlarmApp::checkNextDueAlarm()
 * Also called when the execution queue has finished processing to check for the
 * next alarm.
 */
-void KAlarmApp::queueAlarmId(const QString& id)
+void KAlarmApp::queueAlarmId(const KAEvent& event)
 {
-    for (int i = 0, end = mDcopQueue.count();  i < end;  ++i)
+#ifdef USE_AKONADI
+    EventId id(event);
+#else
+    const QString id(event.id());
+#endif
+    for (int i = 0, end = mActionQueue.count();  i < end;  ++i)
     {
-        if (mDcopQueue[i].function == EVENT_HANDLE  &&  mDcopQueue[i].eventId == id)
+        if (mActionQueue[i].function == EVENT_HANDLE  &&  mActionQueue[i].eventId == id)
             return;  // the alarm is already queued
     }
-    mDcopQueue.enqueue(DcopQEntry(EVENT_HANDLE, id));
+    mActionQueue.enqueue(ActionQEntry(EVENT_HANDLE, id));
 }
 
 /******************************************************************************
@@ -797,16 +835,16 @@ void KAlarmApp::processQueue()
                 if (!cancelReminderAndDeferral(event))
                 {
                     if (mAlarmsEnabled)
-                        queueAlarmId(event.id());
+                        queueAlarmId(event);
                 }
             }
             mLoginAlarmsDone = true;
         }
 
         // Process queued events
-        while (!mDcopQueue.isEmpty())
+        while (!mActionQueue.isEmpty())
         {
-            DcopQEntry& entry = mDcopQueue.head();
+            ActionQEntry& entry = mActionQueue.head();
             if (entry.eventId.isEmpty())
             {
                 // It's a new alarm
@@ -824,7 +862,7 @@ void KAlarmApp::processQueue()
             }
             else
                 handleEvent(entry.eventId, entry.function);
-            mDcopQueue.dequeue();
+            mActionQueue.dequeue();
         }
 
         // Purge the default archived alarms resource if it's time to do so
@@ -862,7 +900,7 @@ void KAlarmApp::atLoginEventAdded(const KAEvent& event)
     {
         if (mAlarmsEnabled)
         {
-            mDcopQueue.enqueue(DcopQEntry(EVENT_HANDLE, ev.id()));
+            mActionQueue.enqueue(ActionQEntry(EVENT_HANDLE, EventId(ev)));
             if (mInitialised)
                 QTimer::singleShot(0, this, SLOT(processQueue()));
         }
@@ -879,7 +917,7 @@ void KAlarmApp::removeWindow(TrayWindow*)
 }
 
 /******************************************************************************
-*  Display or close the system tray icon.
+* Display or close the system tray icon.
 */
 bool KAlarmApp::displayTrayIcon(bool show, MainWindow* parent)
 {
@@ -1126,6 +1164,38 @@ void KAlarmApp::purge(int daysToKeep)
 
 
 /******************************************************************************
+* Output a list of pending alarms, with their next scheduled occurrence.
+*/
+QStringList KAlarmApp::scheduledAlarmList()
+{
+#ifdef USE_AKONADI
+    QVector<KAEvent> events = KAlarm::getSortedActiveEvents(this);
+#else
+    KAEvent::List events = KAlarm::getSortedActiveEvents();
+#endif
+    QStringList alarms;
+    for (int i = 0, count = events.count();  i < count;  ++i)
+    {
+#ifdef USE_AKONADI
+        KAEvent* event = &events[i];
+#else
+        KAEvent* event = events[i];
+#endif
+        KDateTime dateTime = event->nextTrigger(KAEvent::DISPLAY_TRIGGER).effectiveKDateTime().toLocalZone();
+#ifdef USE_AKONADI
+        QString text(QString::number(event->collectionId()) + ":");
+#else
+        QString text;
+#endif
+        text += event->id() + ' '
+             +  dateTime.toString("%Y%m%dT%H%M ")
+             +  AlarmText::summary(events[i], 1);
+        alarms << text;
+    }
+    return alarms;
+}
+
+/******************************************************************************
 * Enable or disable alarm monitoring.
 */
 void KAlarmApp::setAlarmsEnabled(bool enabled)
@@ -1205,7 +1275,7 @@ bool KAlarmApp::scheduleEvent(KAEvent::SubAction action, const QString& text, co
         // Alarm is due for display already.
         // First execute it once without adding it to the calendar file.
         if (!mInitialised)
-            mDcopQueue.enqueue(DcopQEntry(event, EVENT_TRIGGER));
+            mActionQueue.enqueue(ActionQEntry(event, EVENT_TRIGGER));
         else
             execAlarm(event, event.firstAlarm(), false);
         // If it's a recurring alarm, reschedule it for its next occurrence
@@ -1216,7 +1286,7 @@ bool KAlarmApp::scheduleEvent(KAEvent::SubAction action, const QString& text, co
     }
 
     // Queue the alarm for insertion into the calendar file
-    mDcopQueue.enqueue(DcopQEntry(event));
+    mActionQueue.enqueue(ActionQEntry(event));
     if (mInitialised)
         QTimer::singleShot(0, this, SLOT(processQueue()));
     return true;
@@ -1227,13 +1297,26 @@ bool KAlarmApp::scheduleEvent(KAEvent::SubAction action, const QString& text, co
 * Optionally display the event. Delete the event from the calendar file and
 * from every main window instance.
 */
+#ifdef USE_AKONADI
+bool KAlarmApp::dbusHandleEvent(const EventId& eventID, EventFunc function)
+#else
 bool KAlarmApp::dbusHandleEvent(const QString& eventID, EventFunc function)
+#endif
 {
     kDebug() << eventID;
-    mDcopQueue.append(DcopQEntry(function, eventID));
+    mActionQueue.append(ActionQEntry(function, eventID));
     if (mInitialised)
         QTimer::singleShot(0, this, SLOT(processQueue()));
     return true;
+}
+
+/******************************************************************************
+* Called in response to a D-Bus request to list all pending alarms.
+*/
+QString KAlarmApp::dbusList()
+{
+    kDebug();
+    return scheduledAlarmList().join("\n") + '\n';
 }
 
 /******************************************************************************
@@ -1243,19 +1326,37 @@ bool KAlarmApp::dbusHandleEvent(const QString& eventID, EventFunc function)
 * c) Reschedule the event for its next repetition. If none remain, delete it.
 * If the event is deleted, it is removed from the calendar file and from every
 * main window instance.
-* Reply = false if event ID not found.
+* Reply = false if event ID not found, or if more than one event with the same
+*         ID is found.
 */
+#ifdef USE_AKONADI
+bool KAlarmApp::handleEvent(const EventId& id, EventFunc function, bool checkDuplicates)
+#else
 bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
+#endif
 {
     // Delete any expired wake-on-suspend config data
     KAlarm::checkRtcWakeConfig();
 
+#ifdef USE_AKONADI
+    const QString eventID(id.eventId());
+    KAEvent* event = AlarmCalendar::resources()->event(id, checkDuplicates);
+    if (!event)
+    {
+        if (id.collectionId() != -1)
+            kWarning() << "Event ID not found, or duplicated:" << eventID;
+        else
+            kWarning() << "Event ID not found:" << eventID;
+        return false;
+    }
+#else
     KAEvent* event = AlarmCalendar::resources()->event(eventID);
     if (!event)
     {
         kWarning() << "Event ID not found:" << eventID;
         return false;
     }
+#endif
     switch (function)
     {
         case EVENT_CANCEL:
@@ -1496,7 +1597,7 @@ int KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool update
     event.startChanges();
     if (alarm.repeatAtLogin())
     {
-        // Leave an alarm which repeats at every login until its main alarm triggers 
+        // Leave an alarm which repeats at every login until its main alarm triggers
         if (!event.reminderActive()  &&  event.reminderMinutes() < 0)
         {
             // Executing an at-login alarm: first schedule the reminder
@@ -1536,7 +1637,7 @@ int KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool update
                         // Note that at-login reminders are scheduled in execAlarm().
                         event.activateReminderAfter(last);
                         updateCalAndDisplay = true;
-                    }         
+                    }
                     if (cancelAlarm(event, alarm.type(), updateCalAndDisplay))
                         return -1;
                     break;
@@ -1586,7 +1687,7 @@ int KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool update
             // Set the reminder which is now due after the last main alarm trigger.
             // Note that at-login reminders are scheduled in execAlarm().
             event.activateReminderAfter(last);
-        }         
+        }
     }
     event.endChanges();
     if (update)
@@ -1636,6 +1737,7 @@ bool KAlarmApp::cancelReminderAndDeferral(KAEvent& event)
 /******************************************************************************
 * Execute an alarm by displaying its message or file, or executing its command.
 * Reply = ShellProcess instance if a command alarm
+*       = MessageWin if an audio alarm
 *       != 0 if successful
 *       = -1 if execution has not completed
 *       = 0 if the alarm is disabled, or if an error message was output.
@@ -1672,17 +1774,23 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
         {
             // Display a message, file or command output, provided that the same event
             // isn't already being displayed
+#ifdef USE_AKONADI
+            MessageWin* win = MessageWin::findEvent(EventId(event));
+#else
             MessageWin* win = MessageWin::findEvent(event.id());
+#endif
             // Find if we're changing a reminder message to the real message
             bool reminder = (alarm.type() & KAAlarm::REMINDER_ALARM);
             bool replaceReminder = !reminder && win && (win->alarmType() & KAAlarm::REMINDER_ALARM);
-            if (!reminder  &&  !event.deferred()
+            if (!reminder
+            &&  (!event.deferred() || (event.extraActionOptions() & KAEvent::ExecPreActOnDeferral))
             &&  (replaceReminder || !win)  &&  !noPreAction
             &&  !event.preAction().isEmpty())
             {
-                // It's not a reminder or a deferred alarm, and there is no message window
-                // (other than a reminder window) currently displayed for this alarm,
-                // and we need to execute a command before displaying the new window.
+                // It's not a reminder alarm, and it's not a deferred alarm unless the
+                // pre-alarm action applies to deferred alarms, and there is no message
+                // window (other than a reminder window) currently displayed for this
+                // alarm, and we need to execute a command before displaying the new window.
                 //
                 // NOTE: The pre-action is not executed for a recurring alarm if an
                 // alarm message window for a previous occurrence is still visible.
@@ -1776,19 +1884,23 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
         {
             // Play the sound, provided that the same event
             // isn't already playing
+#ifdef USE_AKONADI
+            MessageWin* win = MessageWin::findEvent(EventId(event));
+#else
             MessageWin* win = MessageWin::findEvent(event.id());
+#endif
             if (!win)
             {
                 // There isn't already a message for this event.
                 int flags = (reschedule ? 0 : MessageWin::NO_RESCHEDULE) | MessageWin::ALWAYS_HIDE;
-                new MessageWin(&event, alarm, flags);
+                win = new MessageWin(&event, alarm, flags);
             }
             else
             {
                 // There's an existing message window: replay the sound
                 win->repeat(alarm);    // N.B. this reschedules the alarm
             }
-            break;
+            return win;
         }
         default:
             return 0;
@@ -2204,7 +2316,8 @@ bool KAlarmApp::initCheck(bool calendarOnly)
          */
         AlarmCalendar::displayCalendar()->open();
 
-        AlarmCalendar::resources()->open();
+        if (!AlarmCalendar::resources()->open())
+            return false;
         setArchivePurgeDays();
 
         firstTime = false;
@@ -2214,6 +2327,19 @@ bool KAlarmApp::initCheck(bool calendarOnly)
         startProcessQueue();      // start processing the execution queue
     return true;
 }
+
+#ifdef USE_AKONADI
+/******************************************************************************
+* Wait until the Akonadi resources are fully populated with alarms.
+*/
+bool KAlarmApp::checkResourcesPopulated()
+{
+#ifdef __GNUC__
+#warning Wait for Akonadi resources to be populated
+#endif
+return true;
+}
+#endif
 
 /******************************************************************************
 * Called when an audio thread starts or stops.
@@ -2237,7 +2363,11 @@ void setEventCommandError(const KAEvent& event, KAEvent::CmdErrType err)
     if (err == KAEvent::CMD_ERROR_POST  &&  event.commandError() == KAEvent::CMD_ERROR_PRE)
         err = KAEvent::CMD_ERROR_PRE_POST;
     event.setCommandError(err);
+#ifdef USE_AKONADI
+    KAEvent* ev = AlarmCalendar::resources()->event(EventId(event));
+#else
     KAEvent* ev = AlarmCalendar::resources()->event(event.id());
+#endif
     if (ev  &&  ev->commandError() != err)
         ev->setCommandError(err);
 #ifdef USE_AKONADI
@@ -2251,7 +2381,11 @@ void clearEventCommandError(const KAEvent& event, KAEvent::CmdErrType err)
 {
     KAEvent::CmdErrType newerr = static_cast<KAEvent::CmdErrType>(event.commandError() & ~err);
     event.setCommandError(newerr);
+#ifdef USE_AKONADI
+    KAEvent* ev = AlarmCalendar::resources()->event(EventId(event));
+#else
     KAEvent* ev = AlarmCalendar::resources()->event(event.id());
+#endif
     if (ev)
     {
         newerr = static_cast<KAEvent::CmdErrType>(ev->commandError() & ~err);

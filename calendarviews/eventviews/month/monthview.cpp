@@ -544,6 +544,7 @@ void MonthView::reloadIncidences()
       }
 
       MonthItem *manager = new IncidenceMonthItem( d->scene,
+                                                   calendar(),
                                                    aitem,
                                                    t->toTimeSpec( timeSpec ).date() );
       d->scene->mManagerList << manager;

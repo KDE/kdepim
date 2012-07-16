@@ -61,7 +61,7 @@ KMailMobileApplication::KMailMobileApplication( const KCmdLineOptions &applicati
 {
 };
 
-int KMailMobileApplication::KMailMobileApplication::newInstance()
+int KMailMobileApplication::newInstance()
 {
   KDeclarativeApplication<MainView>::newInstance();
   if ( m_mainView ) {

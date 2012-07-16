@@ -398,8 +398,7 @@ void MultiAgendaView::showDates( const QDate &start, const QDate &end, const QDa
   }
 }
 
-void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList,
-                                      const QDate &date )
+void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
   foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->showIncidences( incidenceList, date );
@@ -497,7 +496,7 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
 
 void MultiAgendaView::Private::addView( const Akonadi::Collection &collection )
 {
-  AgendaView *av = createView( CalendarSupport::displayName( collection ) );
+  AgendaView *av = createView( CalendarSupport::displayName( q->calendar(), collection ) );
   av->setCollectionId( collection.id() );
 }
 

@@ -9,7 +9,7 @@
 <guimenuitem>KNode</guimenuitem> launches the program.</para>
 
 <tip>
-<para>If the entry for &knode; can not be found or if &knode; does
+<para>If the entry for &knode; cannot be found or if &knode; does
 not appear after clicking on the menu entry, read <link
 linkend="faq">Questions and Answers</link>.</para>
 </tip>
@@ -1440,7 +1440,7 @@ completely.</para>
 <tip>
 <para>It is recommended to use no more than 76 characters even if
 you are able to display more: many Usenet users use text-based
-newsreaders which can not display more than 80 characters and it is
+newsreaders which cannot display more than 80 characters and it is
 difficult to read your articles in such a newsreader if you increase
 this value &mdash; this would reduce the probability of your articles
 being read at all.</para>
@@ -1769,7 +1769,7 @@ deleted.</para>
 the discussion has ended.</para>
 
 <caution>
-<para>&knode; can not predict whether there will be a reply after the set
+<para>&knode; cannot predict whether there will be a reply after the set
 conditions are fulfilled; you will have to find your own settings for
 this. Some newsgroups have days between replies; others only hours. Use
 your own judgement.</para>

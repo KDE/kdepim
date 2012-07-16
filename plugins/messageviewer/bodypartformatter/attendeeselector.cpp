@@ -44,6 +44,7 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
 
   connect( ui.attendeeList, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()) );
+  enableButtonOk( false );
 }
 
 QStringList AttendeeSelector::attendees() const
@@ -67,11 +68,13 @@ void AttendeeSelector::addClicked()
   if ( !ui.attendeeEdit->text().isEmpty() )
     ui.attendeeList->addItem( ui.attendeeEdit->text() );
   ui.attendeeEdit->clear();
+  enableButtonOk( true );
 }
 
 void AttendeeSelector::removeClicked()
 {
   delete ui.attendeeList->takeItem( ui.attendeeList->currentRow() );
+  enableButtonOk( ( ui.attendeeList->count()>0 ) );
 }
 
 void AttendeeSelector::textChanged( const QString &text )

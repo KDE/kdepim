@@ -104,6 +104,14 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
       message->bcc()->addAddress( mailbox );
   }
 
+  if ( ident.cc().isEmpty() )
+    message->cc()->clear();
+  else {
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.cc() );
+    foreach ( const KMime::Types::Mailbox &mailbox, mailboxes )
+      message->cc()->addAddress( mailbox );
+  }
+
   if ( ident.organization().isEmpty() )
     message->removeHeader("Organization");
   else {

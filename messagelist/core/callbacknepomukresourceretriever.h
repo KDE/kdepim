@@ -39,7 +39,7 @@ class CallbackNepomukResourceRetriever : public MessageCore::AsyncNepomukResourc
     void cancelCallbackRequest( const QUrl &url );
 
   protected:
-    virtual void resourceAvailable(const QUrl& url, const Nepomuk::Resource& resource);
+    virtual void resourceAvailable(const QUrl& url, const Nepomuk2::Resource& resource);
 
   private:
     QHash<QUrl, Core::MessageItemPrivate*> m_pendingCallbacks;

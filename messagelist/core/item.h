@@ -372,6 +372,9 @@ public:
                      const QString &receiver,
                      bool useReceiver );
 
+  void setItemId(qint64 id);
+  qint64 itemId() const;
+
   /**
    * This is meant to be called right after the constructor for MessageItem objects.
    * It sets up several items at once (so even if not inlined it's still a single call).

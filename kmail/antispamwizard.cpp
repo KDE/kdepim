@@ -42,9 +42,10 @@
 #include "mailcommon/mailutil.h"
 #include "mailcommon/imapsettings.h"
 #include "mailcommon/mailkernel.h"
-#include "mailcommon/mailfilter.h"
-#include "mailcommon/filteraction.h"
-#include "mailcommon/filtermanager.h"
+#include "mailcommon/filter/mailfilter.h"
+#include "mailcommon/filter/filteraction.h"
+#include "mailcommon/filter/filteractiondict.h"
+#include "mailcommon/filter/filtermanager.h"
 
 #include <Akonadi/AgentInstance>
 
@@ -914,7 +915,7 @@ ASWizPage::ASWizPage( QWidget * parent, const char * name,
   mLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding ) );
 
   mBannerLabel = new QLabel( this );
-  mBannerLabel->setPixmap( /*UserIcon(banner)*/KIconLoader::global()->iconPath(banner, KIconLoader::User) );
+  mBannerLabel->setPixmap( UserIcon(banner) );
   mBannerLabel->setScaledContents( false );
   mBannerLabel->setFrameShape( QFrame::StyledPanel );
   mBannerLabel->setFrameShadow( QFrame::Sunken );
@@ -1203,6 +1204,7 @@ ASWizVirusRulesPage::ASWizVirusRulesPage( QWidget * parent, const char * name )
   optReadableProxy |= FolderTreeWidgetProxyModel::HideOutboxFolder;
 
   mFolderTree = new FolderTreeWidget( this, 0, opt, optReadableProxy );
+  mFolderTree->readConfig();
   mFolderTree->folderTreeView()->expandAll();
   mFolderTree->folderTreeWidgetProxyModel()->setAccessRights( Akonadi::Collection::CanCreateCollection );
 

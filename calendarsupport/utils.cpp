@@ -23,6 +23,7 @@
 */
 
 #include "utils.h"
+#include "calendar.h"
 #include "kcalprefs.h"
 #include "mailclient.h"
 #include "mailscheduler.h"
@@ -72,18 +73,23 @@ using namespace KHolidays;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Incidence::Ptr>() ?
-    item.payload<KCalCore::Incidence::Ptr>() :
-    KCalCore::Incidence::Ptr();
+  try {
+    return item.payload<KCalCore::Incidence::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return KCalCore::Incidence::Ptr();
+  }
 }
 
 KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Event::Ptr>() ?
-    item.payload<KCalCore::Event::Ptr>() :
-    KCalCore::Event::Ptr();
+  try {
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent )
+      return item.payload<KCalCore::Event::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return KCalCore::Event::Ptr();
+  }
+  return KCalCore::Event::Ptr();
 }
 
 KCalCore::Event::List CalendarSupport::eventsFromItems( const Akonadi::Item::List &items )
@@ -110,18 +116,26 @@ KCalCore::Incidence::List CalendarSupport::incidencesFromItems( const Akonadi::I
 
 KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Todo::Ptr>() ?
-    item.payload<KCalCore::Todo::Ptr>() :
-    KCalCore::Todo::Ptr();
+  try {
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo )
+      return item.payload<KCalCore::Todo::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return KCalCore::Todo::Ptr();
+  }
+  return KCalCore::Todo::Ptr();
 }
 
 KCalCore::Journal::Ptr CalendarSupport::journal( const Akonadi::Item &item )
 {
-  return
-    item.hasPayload<KCalCore::Journal::Ptr>() ?
-    item.payload<KCalCore::Journal::Ptr>() :
-    KCalCore::Journal::Ptr();
+  try {
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal )
+      return item.payload<KCalCore::Journal::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return KCalCore::Journal::Ptr();
+  }
+  return KCalCore::Journal::Ptr();
 }
 
 bool CalendarSupport::hasIncidence( const Akonadi::Item &item )
@@ -334,7 +348,6 @@ bool CalendarSupport::mimeDataHasIncidence( const QMimeData *mimeData )
          !incidences( mimeData, KDateTime::Spec() ).isEmpty();
 }
 
-
 KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
                                              const KDateTime::Spec &spec )
 {
@@ -481,6 +494,60 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
 }
 
+QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collection &c )
+{
+  const QString cName = c.name();
+
+  if ( !c.resource().contains( "kolabproxy" ) ) {
+    // Not groupware so the collection is "mine"
+    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+    if ( attr && !attr->displayName().isEmpty() ) {
+      return i18n( "My %1", attr->displayName() );
+    } else {
+      return i18n( "My %1", cName );
+    }
+  } else {
+    QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
+    QString ownerStr;        // folder owner; "fred", "ethel", etc
+    QString nameStr;         // folder name: "Public", "Test", etc
+    if ( calendar ) {
+      Akonadi::Collection p = c.parentCollection();
+      while ( p != Akonadi::Collection::root() ) {
+        Akonadi::Collection tCol = calendar->collection( p.id() );
+        const QString tName = tCol.name();
+        if ( tName != i18n( "Calendar" ) &&
+             tName != i18n( "Tasks" ) &&
+             tName != i18n( "Journal" ) &&
+             tName != i18n( "Notes" ) ) {
+          ownerStr = tName;
+          break;
+        } else {
+          nameStr = typeStr;
+          typeStr = tName;
+        }
+        p = p.parentCollection();
+      }
+    }
+
+    if ( !ownerStr.isEmpty() ) {
+      if ( ownerStr.toUpper() != QString( "INBOX" ) ) {
+        if ( nameStr.isEmpty() ) {
+          return i18nc( "%1 is folder owner name, %2 is folder contents",
+                        "%1's %2", ownerStr, typeStr );
+        } else {
+          return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
+                        "%1's %2 %3", ownerStr, nameStr, typeStr );
+        }
+      } else {
+        return i18nc( "%1 is folder contents",
+                      "My Shared %1", typeStr );
+      }
+    } else {
+      return typeStr;
+    }
+  }
+}
+
 QString CalendarSupport::subMimeTypeForIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   return incidence->mimeType();
@@ -510,7 +577,6 @@ QList<QDate> CalendarSupport::workDays( const QDate &startDate,
     const int listCount( list.count() );
     for ( int i = 0; i < listCount; ++i ) {
       const Holiday &h = list.at( i );
-      const QString dateString = h.date().toString();
       if ( h.dayType() == Holiday::NonWorkday ) {
         result.removeAll( h.date() );
       }
@@ -549,7 +615,7 @@ void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
   }
 
   QPointer<PublishDialog> publishdlg = new PublishDialog;
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     const QString recipients = publishdlg->addresses();
     if ( incidence->organizer()->isEmpty() ) {
       incidence->setOrganizer( Person::Ptr(
@@ -604,7 +670,7 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calend
       publishdlg->addAttendee( *it );
     }
   }
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
     inc->clearAttendees();

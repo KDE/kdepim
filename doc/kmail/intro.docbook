@@ -45,6 +45,10 @@ linkend="transfer-mail-and-settings">FAQ</link> to a safe place.</para>
 
 </itemizedlist>
 
+<note><para>If you experience any problems migrating to &kmail; 2 in &kde; 
+4.8 please read the chapter <link linkend="troubleshooting">Troubleshooting</link>.
+</para></note>
+
 <para>&kmail;'s homepage can be found at <ulink
 url="http://userbase.kde.org/KMail">http://userbase.kde.org/KMail</ulink>. There you will
 find useful links, &eg; to the user and developer mailing lists.

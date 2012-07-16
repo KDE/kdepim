@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2011, 2012 Montel Laurent <montel@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,6 +36,9 @@
 #include <KLocale>
 #include <KConfig>
 #include <KStandardDirs>
+
+using namespace KMail;
+
 KMKnotify::KMKnotify( QWidget * parent )
   :KDialog( parent ), m_changed( false )
 {
@@ -91,6 +94,8 @@ void KMKnotify::initCombobox()
   QStringList lstNotify;
   lstNotify<< QLatin1String( "kmail2/kmail2.notifyrc" );
   lstNotify<< QLatin1String( "akonadi_maildispatcher_agent/akonadi_maildispatcher_agent.notifyrc" ); 
+  lstNotify<< QLatin1String( "akonadi_mailfilter_agent/akonadi_mailfilter_agent.notifyrc" );
+  lstNotify<< QLatin1String("akonadi_archivemail_agent/akonadi_archivemail_agent.notifyrc");
    //TODO add other notifyrc here if necessary
 
   Q_FOREACH( const QString& notify, lstNotify )

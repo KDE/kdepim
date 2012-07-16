@@ -18,18 +18,21 @@
 */
 
 #include "callbacknepomukresourceretriever.h"
+#include <Soprano/Vocabulary/NAO>
 
 using namespace MessageList;
 
-CallbackNepomukResourceRetriever::CallbackNepomukResourceRetriever(QObject* parent): AsyncNepomukResourceRetriever(parent)
+CallbackNepomukResourceRetriever::CallbackNepomukResourceRetriever(QObject* parent)
+  : AsyncNepomukResourceRetriever( QVector<QUrl>() <<  Soprano::Vocabulary::NAO::hasTag().toString()
+                                                   << Soprano::Vocabulary::NAO::annotation().toString()
+                                                   << Soprano::Vocabulary::NAO::description().toString(), parent )
 {
 }
 
 void CallbackNepomukResourceRetriever::requestResource(Core::MessageItemPrivate* item, const QUrl& url)
 {
   m_pendingCallbacks.insert( url, item );
-  AsyncNepomukResourceRetriever::requestResource( url,
-    QVector<QUrl>() << Nepomuk::Resource::tagUri() << Nepomuk::Resource::annotationUri() << Nepomuk::Resource::descriptionUri() );
+  AsyncNepomukResourceRetriever::requestResource( url );
 }
 
 void CallbackNepomukResourceRetriever::cancelCallbackRequest(const QUrl& url)
@@ -38,7 +41,7 @@ void CallbackNepomukResourceRetriever::cancelCallbackRequest(const QUrl& url)
   AsyncNepomukResourceRetriever::cancelRequest( url );
 }
 
-void CallbackNepomukResourceRetriever::resourceAvailable(const QUrl& url, const Nepomuk::Resource& resource)
+void CallbackNepomukResourceRetriever::resourceAvailable(const QUrl& url, const Nepomuk2::Resource& resource)
 {
   Core::MessageItemPrivate* item = m_pendingCallbacks.take( url );
   if ( item )

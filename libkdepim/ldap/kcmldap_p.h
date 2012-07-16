@@ -41,9 +41,6 @@ class KCMLdap : public KCModule
     virtual void save();
     virtual void defaults();
 
-  Q_SIGNALS:
-    void changed( bool );
-
   private Q_SLOTS:
     void slotAddHost();
     void slotEditHost();

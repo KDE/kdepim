@@ -36,6 +36,7 @@
 #include <mailcommon/mailkernel.h>
 #include <KLocalizedString>
 #include <KMime/Message>
+#include <KNotification>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -79,6 +80,22 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
   Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
+  //Enabled or not filterlogdialog
+  KSharedConfig::Ptr config = KGlobal::config();
+  if ( config->hasGroup( "FilterLog" ) ) {
+    KConfigGroup group( config, "FilterLog" );
+    if ( group.hasKey( "Enabled" ) ) {
+      if ( group.readEntry( "Enabled", false ) ) {
+          m_filterLogDialog = new FilterLogDialog( 0 );
+          const QPixmap pixmap = KIcon( "view-filter" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+          KNotification *notify = new KNotification( "mailfilterlogenabled" );
+          notify->setComponentData( componentData() );
+          notify->setPixmap( pixmap );
+          notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
+          notify->sendEvent();
+      }
+    }
+  }
 }
 
 void MailFilterAgent::initializeCollections()
@@ -100,11 +117,13 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
   changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  changeRecorder()->itemFetchScope().setCacheOnly( true );
-  if (m_filterManager->requiresFullMailBody()) {
+  mRequestedPart = m_filterManager->requiredPart();
+  if (mRequestedPart == MailCommon::SearchRule::CompleteMessage) {
     changeRecorder()->itemFetchScope().fetchFullPayload();
-  } else {
+  } else if (mRequestedPart == MailCommon::SearchRule::Header) {
     changeRecorder()->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  } else {
+    changeRecorder()->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
   }
   changeRecorder()->fetchCollection( true );
   changeRecorder()->setChangeRecordingEnabled( false );
@@ -134,7 +153,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   if ( status.isRead() || status.isSpam() || status.isIgnored() )
     return;
 
-  m_filterManager->process( item, FilterManager::Inbound, true, collection.resource() );
+  m_filterManager->process( item, mRequestedPart, FilterManager::Inbound, true, collection.resource() );
 }
 
 void MailFilterAgent::mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection& )
@@ -169,14 +188,25 @@ void MailFilterAgent::filterItems( const QVector<qlonglong> &itemIds, int filter
   m_filterManager->applyFilters( items, static_cast<FilterManager::FilterSet>(filterSet) );
 }
 
+void MailFilterAgent::applySpecificFilters( const QVector<qlonglong> &itemIds, int requires, const QStringList& listFilters )
+{
+  QList<Akonadi::Item> items;
+  foreach ( qlonglong id, itemIds ) {
+    items << Akonadi::Item( id );
+  }
+
+  m_filterManager->applySpecificFilters( items, static_cast<MailCommon::SearchRule::RequiredPart>(requires),listFilters );
+}
+
+
 void MailFilterAgent::filterItem( qlonglong item, int filterSet, const QString &resourceId )
 {
   m_filterManager->filter( item, static_cast<FilterManager::FilterSet>( filterSet ), resourceId );
 }
 
-void MailFilterAgent::filter( qlonglong item, const QString &filterIdentifier )
+void MailFilterAgent::filter(qlonglong item, const QString &filterIdentifier , int requires)
 {
-  m_filterManager->filter( item, filterIdentifier );
+  m_filterManager->filter( item, filterIdentifier, static_cast<MailCommon::SearchRule::RequiredPart>(requires) );
 }
 
 void MailFilterAgent::reload()

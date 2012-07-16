@@ -122,8 +122,8 @@ void PublishDialog::addItem()
   QListWidgetItem *item = new QListWidgetItem( mUI.mListWidget );
   mUI.mListWidget->addItem( item );
   mUI.mListWidget->setItemSelected( item, true );
-  mUI.mNameLineEdit->setText( i18n( "(EmptyName)" ) );
-  mUI.mEmailLineEdit->setText( i18n( "(EmptyEmail)" ) );
+  mUI.mNameLineEdit->setClickMessage( i18n( "(EmptyName)" ) );
+  mUI.mEmailLineEdit->setClickMessage( i18n( "(EmptyEmail)" ) );
 
   mUI.mRemove->setEnabled( true );
 }
@@ -180,6 +180,7 @@ void PublishDialog::openAddressbook()
       }
     }
   }
+  delete dialog.data();
 }
 
 void PublishDialog::updateItem()

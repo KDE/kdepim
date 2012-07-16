@@ -122,7 +122,7 @@ namespace {
         size_t operator()( const Sender & sender ) const {
             const size_t result = sender.signingCertificateCandidates( proto ).size();
             qDebug( "count_signing_certificates( %9s %20s ) == %2lu",
-                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unkown>,",
+                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unknown>,",
                     qPrintable( sender.mailbox().prettyAddress() ), result );
             return result;
         }
@@ -135,7 +135,7 @@ namespace {
         size_t operator()( const Sender & sender ) const {
             const size_t result = sender.encryptToSelfCertificateCandidates( proto ).size();
             qDebug( "count_encrypt_certificates( %9s %20s ) == %2lu",
-                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unkown>,",
+                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unknown>,",
                     qPrintable( sender.mailbox().prettyAddress() ), result );
             return result;
         }
@@ -143,7 +143,7 @@ namespace {
         size_t operator()( const Recipient & recipient ) const {
             const size_t result = recipient.encryptionCertificateCandidates( proto ).size();
             qDebug( "count_encrypt_certificates( %9s %20s ) == %2lu",
-                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unkown>,",
+                    proto == OpenPGP ? "OpenPGP," : proto == CMS ? "CMS," : "<unknown>,",
                     qPrintable( recipient.mailbox().prettyAddress() ), result );
             return result;
         }
@@ -523,7 +523,7 @@ void NewSignEncryptEMailController::doTaskDone( const Task * task, const shared_
         if ( !that )
             return;
     }
-    
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
@@ -545,7 +545,7 @@ void NewSignEncryptEMailController::cancel() {
         d->dialog->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        qDebug( "Caught exception: %s", e.what() );
+        kDebug() << "Caught exception: " << e.what();
     }
 }
 
@@ -555,7 +555,7 @@ void NewSignEncryptEMailController::Private::cancelAllTasks() {
     // signal emissions.
     runnable.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( cms )
         cms->cancel();
     if ( openpgp )

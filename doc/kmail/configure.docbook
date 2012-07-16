@@ -1215,10 +1215,13 @@ is only useful for advanced users.</para>
 <title>Attachments</title>
 
 <para>If you have to send attachments with filenames containing non-English
-characters to users of Outlook(TM) or Outlook Express(TM) then you might want
-to check the <guilabel>Outlook-compatible attachment naming</guilabel> option.
-&kmail; will then encode the attachment names in a non-standard way that is
-understood by Outlook(TM).</para>
+characters to users of
+<application><trademark class="trade">Outlook</trademark></application> or
+<application><trademark class="trade">Outlook Express</trademark></application>
+then you might want to check the <guilabel>Outlook-compatible attachment naming</guilabel>
+option. &kmail; will then encode the attachment names in a non-standard way that
+is understood by <application><trademark class="trade">Outlook</trademark></application>.
+</para>
 <para>Note that &kmail; will create non-standard compliant messages, and
 consequently it is possible that your messages will not be understood by
 standard-compliant mail clients. So, unless you have no other choice, you
@@ -2208,7 +2211,7 @@ sect2 id="configure-misc-groupware">
 <para>Default format is <guilabel>Standard (Ical/Vcard)</guilabel> for calendar folders (Ical) and addressbook folders (Vcard). This makes all Kontact features available.</para>
 </listitem>
 <listitem>
-<para><guilabel>Kolab</guilabel> users should choose <guilabel>Kolab XML</guilabel>. This format uses a custom model that matches more closely to the one used in Microsoft Outlook(tm) and gives better compatibility.</para>
+<para><guilabel>Kolab</guilabel> users should choose <guilabel>Kolab XML</guilabel>. This format uses a custom model that matches more closely to the one used in <application><trademark class="trade">Microsoft Outlook</trademark></application> and gives better compatibility.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -2216,7 +2219,7 @@ sect2 id="configure-misc-groupware">
 <varlistentry>
 <term><guilabel>Language of the groupware folders</guilabel></term>
 <listitem>
-<para>Choose between the available languages to set the folder names of the <guilabel>IMAP</guilabel> storage to your local language. Note that this option is only aimed for compatibility with Microsoft Outlook(tm). It is not recommended to change its default unless you have to, since it makes changing languages impossible.</para>
+<para>Choose between the available languages to set the folder names of the <guilabel>IMAP</guilabel> storage to your local language. Note that this option is only aimed for compatibility with <application><trademark class="trade">Microsoft Outlook</trademark></application>. It is not recommended to change its default unless you have to, since it makes changing languages impossible.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -2242,19 +2245,19 @@ sect2 id="configure-misc-groupware">
 <varlistentry>
 <term><guilabel>Mangle From:/To: headers in replies to invitations</guilabel></term>
 <listitem>
-<para>Enable this option to make Microsoft Outlook(tm) understand your answers to invitations replies.</para>
+<para>Enable this option to make <application><trademark class="trade">Microsoft Outlook</trademark></application> understand your answers to invitations replies.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Send invitations in the mail body</guilabel></term>
 <listitem>
-<para>Invitations use to be send as attachments to a mail. By enabling this option, you let the invitation mails to be sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para>
+<para>Invitations are usually sent as attachments to a mail. When this option is enabled, invitation are sent in the text of the mail, which is necessary to send invitations and replies to <application><trademark class="trade">Microsoft Outlook</trademark></application>.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Exchange compatible invitations naming</guilabel></term>
 <listitem>
-<para>Microsoft Outlook, when used in combination with a Microsoft Exchange
+<para><application><trademark class="trade">Microsoft Outlook</trademark></application>, when used in combination with a Microsoft Exchange
 server, has a problem understanding standards-compliant groupware e-mail.
 Enable this option to send groupware invitations in a way that Microsoft
 Exchange understands. The invitation will be sent as an attachment with name <filename>ical.ics</filename>.</para>
@@ -2263,14 +2266,14 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 <varlistentry>
 <term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
 <listitem>
-<para>When the user provides comments when responding to invitations, send the comment in way that Microsoft Outlook(tm) understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
+<para>When the user provides comments when responding to invitations, send the comment in way that <application><trademark class="trade">Microsoft Outlook</trademark></application> understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Show invitation update differences in the Outlook style</guilabel></term>
 <listitem>
 <para>When viewing updated invitations, this option enables the differences between the previous
-and current invitations to be displayed in a way very much like Microsoft Outlook(tm). 
+and current invitations to be displayed in a way very much like <application><trademark class="trade">Microsoft Outlook</trademark></application>. 
 This is the default. The user can turn this option off if they want to see the invitation
 update differences shown in the "classic" KMail style.
 </para>
@@ -2492,7 +2495,7 @@ To enable this feature, add a line reading (under [General] section):
 <varlistentry>
 <term><guilabel>AutoLostFoundMove</guilabel></term>
 <listitem><para>Activate this option to automate the handling of not yet uploaded messages in disconnected IMAP
-folders that can not be uploaded. This can happen if the folder was removed from the server or your access
+folders that cannot be uploaded. This can happen if the folder was removed from the server or your access
 rights have been restricted. Such messages will automatically moved to a newly created lost+found folder if
 this option is enabled, you will be ask how to proceed every time otherwise.
 </para>

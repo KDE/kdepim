@@ -35,64 +35,51 @@
 #include "datenavigator.h"
 #include "datenavigatorcontainer.h"
 #include "exportwebdialog.h"
-#include "history.h"
 #include "kocorehelper.h"
+#include "kodaymatrix.h"
 #include "kodialogmanager.h"
 #include "koeventviewerdialog.h"
 #include "koglobals.h"
+#include "kohelper.h"
+#include "koprefs.h"
 #include "koviewmanager.h"
-#include "navigatorbar.h"
-#include "publishdialog.h"
-#include "kodaymatrix.h"
+#include "history.h"
 #include "htmlexportsettings.h"
+#include "navigatorbar.h"
 #include "views/agendaview/koagendaview.h"
 #include "views/monthview/monthview.h"
 #include "views/multiagendaview/multiagendaview.h"
 #include "views/todoview/kotodoview.h"
-#include "kohelper.h"
+
+#include <calendarsupport/calendaradaptor.h>
+#include <calendarsupport/categoryconfig.h>
+#include <calendarsupport/collectiongeneralpage.h>
+#include <calendarsupport/collectionselection.h>
+#include <calendarsupport/dndfactory.h>
+#include <calendarsupport/freebusymanager.h>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
+#include <calendarsupport/next/incidenceviewer.h>
+
+#include <incidenceeditor-ng/incidencedefaults.h>
+#include <incidenceeditor-ng/incidencedialog.h>
+#include <incidenceeditor-ng/incidencedialogfactory.h>
 
 #include <libkdepim/pimmessagebox.h>
 
-#include <incidenceeditor-ng/incidencedialog.h>
-#include <incidenceeditor-ng/incidencedefaults.h>
-#include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <Akonadi/CollectionPropertiesDialog>
+#include <Akonadi/Control>
 
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/utils.h>
-#include <calendarsupport/calendaradaptor.h>
-#include <calendarsupport/collectiongeneralpage.h>
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/groupware.h>
-#include <calendarsupport/freebusymanager.h>
-#include <calendarsupport/mailclient.h>
-#include <calendarsupport/mailscheduler.h>
-#include <calendarsupport/dndfactory.h>
-#include <calendarsupport/incidencechanger.h>
-#include <calendarsupport/next/incidenceviewer.h>
-#include <calendarsupport/kcalprefs.h>
-
-#include <akonadi/control.h>
-#include <akonadi/collectionpropertiesdialog.h>
-
-#include <KCalCore/FileStorage>
-#include <KCalCore/Calendar>
 #include <KCalCore/CalFilter>
-#include <KCalCore/FreeBusy>
+#include <KCalCore/FileStorage>
 #include <KCalCore/ICalFormat>
 #include <KCalCore/VCalFormat>
 
-#include <KCalUtils/Stringify>
 #include <KCalUtils/ICalDrag>
-#include <KCalUtils/Scheduler>
+#include <KCalUtils/Stringify>
 
 #include <KHolidays/Holidays>
 
-#include <KPIMIdentities/IdentityManager>
-
-#include <mailtransport/transportmanager.h>
-
-#include <KDialog>
 #include <KFileDialog>
 #include <KNotification>
 #include <KRun>
@@ -100,14 +87,10 @@
 
 #include <QApplication>
 #include <QClipboard>
-#include <QFile>
+#include <QItemSelectionModel>
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QVBoxLayout>
-
-using namespace KHolidays;
-using namespace KCalUtils;
-using namespace IncidenceEditorNG;
 
 CalendarView::CalendarView( QWidget *parent )
   : CalendarViewBase( parent ),
@@ -124,7 +107,6 @@ CalendarView::CalendarView( QWidget *parent )
   mReadOnly = false;
 
   mCalPrinter = 0;
-  mCreatingEnabled = false;
 
   mDateNavigator = new DateNavigator( this );
   mDateChecker = new DateChecker( this );
@@ -148,7 +130,7 @@ CalendarView::CalendarView( QWidget *parent )
 
   mEventViewerBox = new KVBox( mLeftSplitter );
   mEventViewerBox->setMargin( 0 );
-  mEventViewer = new CalendarSupport::IncidenceViewer( mEventViewerBox );
+  mEventViewer = new CalendarSupport::IncidenceViewer( mCalendar, mEventViewerBox );
   mEventViewer->setObjectName( "EventViewer" );
 
   KVBox *rightBox = new KVBox( mPanner );
@@ -246,7 +228,7 @@ CalendarView::CalendarView( QWidget *parent )
   mViewManager->connectView( mTodoList );
 
   KOGlobals::self()->
-      setHolidays( new HolidayRegion( KOPrefs::instance()->mHolidays ) );
+    setHolidays( new KHolidays::HolidayRegion( KOPrefs::instance()->mHolidays ) );
 
   connect( QApplication::clipboard(), SIGNAL(dataChanged()),
            SLOT(checkClipboard()) );
@@ -303,6 +285,8 @@ void CalendarView::setCalendar( CalendarSupport::Calendar *cal )
   mDateNavigatorContainer->setCalendar( mCalendar );
 
   mTodoList->setCalendar( mCalendar );
+
+  mEventViewer->setCalendar( mCalendar );
 }
 
 void CalendarView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
@@ -423,7 +407,7 @@ bool CalendarView::openCalendar( const QString &filename, bool merge )
 
   // merge in a file
   adaptor->startBatchAdding();
-  FileStorage storage( adaptor );
+  KCalCore::FileStorage storage( adaptor );
   storage.setFileName( filename );
   loadedSuccesfully = storage.load();
   adaptor->endBatchAdding();
@@ -459,9 +443,9 @@ bool CalendarView::saveCalendar( const QString &filename )
   CalendarSupport::CalendarAdaptor::Ptr adaptor(
     new CalendarSupport::CalendarAdaptor( mCalendar, this ) );
 
-  FileStorage storage( adaptor );
+  KCalCore::FileStorage storage( adaptor );
   storage.setFileName( filename );
-  storage.setSaveFormat( new ICalFormat );
+  storage.setSaveFormat( new KCalCore::ICalFormat );
 
   return storage.save();
 }
@@ -560,8 +544,7 @@ void CalendarView::readFilterSettings( KConfig *config )
   QStringList::ConstIterator it = filterList.constBegin();
   QStringList::ConstIterator end = filterList.constEnd();
   while ( it != end ) {
-    CalFilter *filter;
-    filter = new CalFilter( *it );
+    KCalCore::CalFilter *filter = new KCalCore::CalFilter( *it );
     KConfigGroup filterConfig( config, "Filter_" + (*it) );
     filter->setCriteria( filterConfig.readEntry( "Criteria", 0 ) );
     filter->setCategoryList( filterConfig.readEntry( "CategoryList", QStringList() ) );
@@ -586,7 +569,7 @@ void CalendarView::writeFilterSettings( KConfig *config )
 {
   QStringList filterList;
 
-  foreach ( CalFilter *filter, mFilters ) {
+  foreach ( KCalCore::CalFilter *filter, mFilters ) {
     filterList << filter->name();
     KConfigGroup filterConfig( config, "Filter_" + filter->name() );
     filterConfig.writeEntry( "Criteria", filter->criteria() );
@@ -660,7 +643,7 @@ void CalendarView::updateConfig( const QByteArray &receiver )
     mCalPrinter = 0;
   }
 
-  KOGlobals::self()->setHolidays( new HolidayRegion( KOPrefs::instance()->mHolidays ) );
+  KOGlobals::self()->setHolidays( new KHolidays::HolidayRegion( KOPrefs::instance()->mHolidays ) );
 
   // Only set a new time zone if it changed. This prevents the window
   // from being modified on start
@@ -719,7 +702,7 @@ void CalendarView::incidenceAddFinished( const Akonadi::Item &incidence, bool su
 
 void CalendarView::incidenceChangeFinished(
   const Akonadi::Item &oldIncidence_, const Akonadi::Item &newIncidence_,
-  CalendarSupport::IncidenceChanger::WhatChanged modification, bool success )
+  CalendarSupport::IncidenceChanger::WhatChanged modified, bool success )
 {
   if ( !success ) {
     kError() << "Incidence not chanded, job reported error";
@@ -734,8 +717,8 @@ void CalendarView::incidenceChangeFinished(
     return;
   }
 
-  Incidence::Ptr oldIncidence = CalendarSupport::incidence( oldIncidence_ );
-  Incidence::Ptr newIncidence = CalendarSupport::incidence( newIncidence_ );
+  KCalCore::Incidence::Ptr oldIncidence = CalendarSupport::incidence( oldIncidence_ );
+  KCalCore::Incidence::Ptr newIncidence = CalendarSupport::incidence( newIncidence_ );
 
   history()->recordEdit( oldIncidence_, newIncidence_ );
 
@@ -744,11 +727,11 @@ void CalendarView::incidenceChangeFinished(
   // as well.
   if ( newIncidence->type() == Incidence::TypeTodo &&
        KOPrefs::instance()->recordTodosInJournals() &&
-       ( modification == CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED ||
-         modification == CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED_WITH_RECURRENCE ) ) {
-    Todo::Ptr todo = CalendarSupport::todo( newIncidence_ );
+       ( modified == CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED ||
+         modified == CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED_WITH_RECURRENCE ) ) {
+    KCalCore::Todo::Ptr todo = CalendarSupport::todo( newIncidence_ );
     if ( todo->isCompleted() ||
-         modification == CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED_WITH_RECURRENCE ) {
+         modified == CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED_WITH_RECURRENCE ) {
       QString timeStr = KGlobal::locale()->formatTime( QTime::currentTime() );
       QString description = i18n( "Todo completed: %1 (%2)", newIncidence->summary(), timeStr );
 
@@ -807,8 +790,8 @@ void CalendarView::incidenceDeleteFinished( const Akonadi::Item &item, bool succ
 
 void CalendarView::checkForFilteredChange( const Akonadi::Item &item )
 {
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  CalFilter *filter = calendar()->filter();
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  KCalCore::CalFilter *filter = calendar()->filter();
   if ( filter && !filter->filterIncidence( incidence ) ) {
     // Incidence is filtered and thus not shown in the view, tell the
     // user so that he isn't surprised if his new event doesn't show up
@@ -904,7 +887,7 @@ int CalendarView::msgItemDelete( const Akonadi::Item &item )
 void CalendarView::edit_cut()
 {
   const Akonadi::Item item = selectedIncidence();
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence || !mChanger ) {
     KNotification::beep();
     return;
@@ -951,7 +934,7 @@ void CalendarView::edit_copy()
     return;
   }
 
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Akonadi::Item::List items;
   int km = KMessageBox::Yes;
 
@@ -1002,23 +985,23 @@ void CalendarView::edit_paste()
 
   KOrg::BaseView *curView = mViewManager->currentView();
 
-  KOAgendaView *aView = mViewManager->agendaView();
-  MonthView *mView = mViewManager->monthView();
+  KOAgendaView *agendaView = mViewManager->agendaView();
+  MonthView *monthView = mViewManager->monthView();
 
   if ( !curView ) {
     return;
   }
 
-  if ( curView == aView && aView->selectionStart().isValid() ) {
-    date = aView->selectionStart().date();
-    endDT = aView->selectionEnd();
-    useEndTime = !aView->selectedIsSingleCell();
-    if ( !aView->selectedIsAllDay() ) {
-      time = aView->selectionStart().time();
+  if ( curView == agendaView && agendaView->selectionStart().isValid() ) {
+    date = agendaView->selectionStart().date();
+    endDT = agendaView->selectionEnd();
+    useEndTime = !agendaView->selectedIsSingleCell();
+    if ( !agendaView->selectedIsAllDay() ) {
+      time = agendaView->selectionStart().time();
       timeSet = true;
     }
-  } else if ( curView == mView && mView->selectionStart().isValid() ) {
-    date = mView->selectionStart().date();
+  } else if ( curView == monthView && monthView->selectionStart().isValid() ) {
+    date = monthView->selectionStart().date();
   } else if ( !mDateNavigator->selectedDates().isEmpty() &&
               curView->supportsDateNavigation() ) {
     // default to the selected date from the navigator
@@ -1064,12 +1047,12 @@ void CalendarView::edit_paste()
   for ( it = pastedIncidences.begin(); it != pastedIncidences.end(); ++it ) {
     // FIXME: use a visitor here
     if ( ( *it )->type() == Incidence::TypeEvent ) {
-      Event::Ptr pastedEvent = ( *it ).staticCast<Event>();
+      KCalCore::Event::Ptr pastedEvent = ( *it ).staticCast<Event>();
       // only use selected area if event is of the same type (all-day or non-all-day
       // as the current selection is
-      if ( aView && endDT.isValid() && useEndTime ) {
-        if ( ( pastedEvent->allDay() && aView->selectedIsAllDay() ) ||
-             ( !pastedEvent->allDay() && !aView->selectedIsAllDay() ) ) {
+      if ( agendaView && endDT.isValid() && useEndTime ) {
+        if ( ( pastedEvent->allDay() && agendaView->selectedIsAllDay() ) ||
+             ( !pastedEvent->allDay() && !agendaView->selectedIsAllDay() ) ) {
           KDateTime kdt( endDT, CalendarSupport::KCalPrefs::instance()->timeSpec() );
           pastedEvent->setDtEnd( kdt.toTimeSpec( pastedEvent->dtEnd().timeSpec() ) );
         }
@@ -1077,38 +1060,41 @@ void CalendarView::edit_paste()
 
       pastedEvent->setRelatedTo( QString() );
       if ( selectedCollection.isValid() ) {
-        mChanger->addIncidence( Event::Ptr( pastedEvent->clone() ), selectedCollection, this );
+        mChanger->addIncidence( KCalCore::Event::Ptr( pastedEvent->clone() ),
+                                selectedCollection, this );
       } else {
-        mChanger->addIncidence( Event::Ptr( pastedEvent->clone() ), this, selectedCollection,
-                                dialogCode );
+        mChanger->addIncidence( KCalCore::Event::Ptr( pastedEvent->clone() ),
+                                this, selectedCollection, dialogCode );
       }
     } else if ( ( *it )->type() == Incidence::TypeTodo ) {
-      Todo::Ptr pastedTodo = ( *it ).staticCast<Todo>();
+      KCalCore::Todo::Ptr pastedTodo = ( *it ).staticCast<Todo>();
       Akonadi::Item _selectedTodoItem = selectedTodo();
 
       // if we are cutting a hierarchy only the root
       // should be son of _selectedTodo
-      Todo::Ptr _selectedTodo = CalendarSupport::todo( _selectedTodoItem );
+      KCalCore::Todo::Ptr _selectedTodo = CalendarSupport::todo( _selectedTodoItem );
       if ( _selectedTodo && pastedTodo->relatedTo().isEmpty() ) {
         pastedTodo->setRelatedTo( _selectedTodo->uid() );
       }
 
       if ( selectedCollection.isValid() ) {
         // When pasting multiple incidences, don't ask which collection to use, for each one
-        mChanger->addIncidence( Todo::Ptr( pastedTodo->clone() ), selectedCollection, this );
+        mChanger->addIncidence( KCalCore::Todo::Ptr( pastedTodo->clone() ),
+                                selectedCollection, this );
       } else {
-        mChanger->addIncidence( Todo::Ptr( pastedTodo->clone() ), this, selectedCollection,
-                                dialogCode );
+        mChanger->addIncidence( KCalCore::Todo::Ptr( pastedTodo->clone() ),
+                                this, selectedCollection, dialogCode );
       }
 
     } else if ( ( *it )->type() == Incidence::TypeJournal ) {
 
       if ( selectedCollection.isValid() ) {
         // When pasting multiple incidences, don't ask which collection to use, for each one
-        mChanger->addIncidence( Incidence::Ptr( ( *it )->clone() ), selectedCollection, this );
+        mChanger->addIncidence( KCalCore::Incidence::Ptr( ( *it )->clone() ),
+                                selectedCollection, this );
       } else {
-        mChanger->addIncidence( Incidence::Ptr( ( *it )->clone() ), this, selectedCollection,
-                                dialogCode );
+        mChanger->addIncidence( KCalCore::Incidence::Ptr( ( *it )->clone() ),
+                                this, selectedCollection, dialogCode );
       }
     }
   }
@@ -1135,7 +1121,8 @@ void CalendarView::dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt,
   }
 }
 
-IncidenceEditorNG::IncidenceDialog *CalendarView::newEventEditor( const Event::Ptr &event )
+IncidenceEditorNG::IncidenceDialog *CalendarView::newEventEditor(
+  const KCalCore::Event::Ptr &event )
 {
   Akonadi::Item item;
   item.setPayload( event );
@@ -1152,92 +1139,82 @@ IncidenceEditorNG::IncidenceDialog *CalendarView::newEventEditor( const Event::P
 
 void CalendarView::newEvent()
 {
-  if ( mCreatingEnabled ) {
-    newEvent( QDateTime(), QDateTime() );
-  }
+  newEvent( QDateTime(), QDateTime() );
 }
 
 void CalendarView::newEvent( const QDate &dt )
 {
-  if ( mCreatingEnabled ) {
-    QDateTime startDt( dt, CalendarSupport::KCalPrefs::instance()->mStartTime.time() );
-    QTime duration = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
-    QTime time = startDt.time();
+  QDateTime startDt( dt, CalendarSupport::KCalPrefs::instance()->mStartTime.time() );
+  QTime duration = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  QTime time = startDt.time();
 
-    time = time.addSecs( duration.hour() * 3600 +
-                         duration.minute() * 60 +
-                         duration.second() );
-    QDateTime endDt( startDt );
-    endDt.setTime( time );
-    newEvent( startDt, endDt );
-  }
+  time = time.addSecs( duration.hour() * 3600 +
+                        duration.minute() * 60 +
+                        duration.second() );
+  QDateTime endDt( startDt );
+  endDt.setTime( time );
+  newEvent( startDt, endDt );
 }
 
 void CalendarView::newEvent( const QDateTime &startDt )
 {
-  if ( mCreatingEnabled ) {
-    newEvent( startDt, startDt );
-  }
+  newEvent( startDt, startDt );
 }
 
 void CalendarView::newEvent( const QDateTime &startDtParam, const QDateTime &endDtParam,
                              bool allDay )
 {
-  if ( mCreatingEnabled ) {
-    // Let the current view change the default start/end datetime
-    QDateTime startDt( startDtParam );
-    QDateTime endDt( endDtParam );
+  // Let the current view change the default start/end datetime
+  QDateTime startDt( startDtParam );
+  QDateTime endDt( endDtParam );
 
-    // Adjust the start/end date times (i.e. replace invalid values by defaults,
-    // and let the view adjust the type.
-    dateTimesForNewEvent( startDt, endDt, allDay );
+  // Adjust the start/end date times (i.e. replace invalid values by defaults,
+  // and let the view adjust the type.
+  dateTimesForNewEvent( startDt, endDt, allDay );
 
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
-    defaults.setStartDateTime( KDateTime( startDt ) );
-    defaults.setEndDateTime( KDateTime( endDt ) );
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  defaults.setStartDateTime( KDateTime( startDt ) );
+  defaults.setEndDateTime( KDateTime( endDt ) );
 
-    Event::Ptr event( new Event );
-    defaults.setDefaults( event );
-    event->setAllDay( allDay );
+  KCalCore::Event::Ptr event( new Event );
+  defaults.setDefaults( event );
+  event->setAllDay( allDay );
 
-    IncidenceEditorNG::IncidenceDialog *eventEditor = newEventEditor( event );
-    Q_ASSERT( eventEditor );
+  IncidenceEditorNG::IncidenceDialog *eventEditor = newEventEditor( event );
+  Q_ASSERT( eventEditor );
 
-    // Fallsback to the default collection defined in config
-    eventEditor->selectCollection( defaultCollection( KCalCore::Event::eventMimeType() ) );
-  }
+  // Fallsback to the default collection defined in config
+  eventEditor->selectCollection( defaultCollection( KCalCore::Event::eventMimeType() ) );
 }
 
 void CalendarView::newEvent( const QString &summary, const QString &description,
                              const QStringList &attachments, const QStringList &attendees,
                              const QStringList &attachmentMimetypes, bool inlineAttachment )
 {
-  if ( mCreatingEnabled ) {
-    // Adjust the start/end date times (i.e. replace invalid values by defaults,
-    // and let the view adjust the type.
-    QDateTime startDt;
-    QDateTime endDt;
-    bool allDay = false;
-    dateTimesForNewEvent( startDt, endDt, allDay );
+  // Adjust the start/end date times (i.e. replace invalid values by defaults,
+  // and let the view adjust the type.
+  QDateTime startDt;
+  QDateTime endDt;
+  bool allDay = false;
+  dateTimesForNewEvent( startDt, endDt, allDay );
 
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
-    defaults.setStartDateTime( KDateTime( startDt ) );
-    defaults.setEndDateTime( KDateTime( endDt ) );
-    // if attach or attendee list is empty, these methods don't do anything, so
-    // it's safe to call them in every case
-    defaults.setAttachments( attachments, attachmentMimetypes, QStringList(), inlineAttachment );
-    defaults.setAttendees( attendees );
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  defaults.setStartDateTime( KDateTime( startDt ) );
+  defaults.setEndDateTime( KDateTime( endDt ) );
+  // if attach or attendee list is empty, these methods don't do anything, so
+  // it's safe to call them in every case
+  defaults.setAttachments( attachments, attachmentMimetypes, QStringList(), inlineAttachment );
+  defaults.setAttendees( attendees );
 
-    Event::Ptr event( new Event );
-    defaults.setDefaults( event );
+  KCalCore::Event::Ptr event( new Event );
+  defaults.setDefaults( event );
 
-    event->setSummary( summary );
-    event->setDescription( description );
-    event->setAllDay( allDay );
-    newEventEditor( event );
-  }
+  event->setSummary( summary );
+  event->setDescription( description );
+  event->setAllDay( allDay );
+  newEventEditor( event );
 }
 
 void CalendarView::newTodo( const QString &summary, const QString &description,
@@ -1245,15 +1222,14 @@ void CalendarView::newTodo( const QString &summary, const QString &description,
                             const QStringList &attachmentMimetypes,
                             bool inlineAttachment )
 {
-  if ( mCreatingEnabled ) {
-    Akonadi::Collection defaultCol = defaultCollection( Todo::todoMimeType() );
+  Akonadi::Collection defaultCol = defaultCollection( Todo::todoMimeType() );
 
-    IncidenceDialogFactory::createTodoEditor( summary, description, attachments,
-                                              attendees, attachmentMimetypes,
-                                              QStringList()/* attachment labels */,
-                                              inlineAttachment, defaultCol,
-                                              this/* parent */ );
-  }
+  IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor(
+    summary, description, attachments,
+    attendees, attachmentMimetypes,
+    QStringList()/* attachment labels */,
+    inlineAttachment, defaultCol,
+    this/* parent */ );
 }
 
 void CalendarView::newTodo()
@@ -1263,100 +1239,88 @@ void CalendarView::newTodo()
 
 void CalendarView::newTodo( const Akonadi::Collection &collection )
 {
-  if ( mCreatingEnabled ) {
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
 
-    bool allDay = true;
-    if ( mViewManager->currentView()->isEventView() ) {
-      QDateTime startDt;
-      QDateTime endDt;
-      dateTimesForNewEvent( startDt, endDt, allDay );
+  bool allDay = true;
+  if ( mViewManager->currentView()->isEventView() ) {
+    QDateTime startDt;
+    QDateTime endDt;
+    dateTimesForNewEvent( startDt, endDt, allDay );
 
-      defaults.setStartDateTime( KDateTime( startDt ) );
-      defaults.setEndDateTime( KDateTime( endDt ) );
-    }
-
-    Todo::Ptr todo( new Todo );
-    defaults.setDefaults( todo );
-    todo->setAllDay( allDay );
-
-    Akonadi::Item item;
-    item.setPayload( todo );
-
-    IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
-
-    dialog->load( item );
+    defaults.setStartDateTime( KDateTime( startDt ) );
+    defaults.setEndDateTime( KDateTime( endDt ) );
   }
+
+  KCalCore::Todo::Ptr todo( new Todo );
+  defaults.setDefaults( todo );
+  todo->setAllDay( allDay );
+
+  Akonadi::Item item;
+  item.setPayload( todo );
+
+  IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
+
+  dialog->load( item );
 }
 
 void CalendarView::newTodo( const QDate &date )
 {
-  if ( mCreatingEnabled ) {
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
-    defaults.setEndDateTime( KDateTime( date, QTime::currentTime() ) );
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  defaults.setEndDateTime( KDateTime( date, QTime::currentTime() ) );
 
-    Todo::Ptr todo( new Todo );
-    defaults.setDefaults( todo );
-    todo->setAllDay( true );
+  KCalCore::Todo::Ptr todo( new Todo );
+  defaults.setDefaults( todo );
+  todo->setAllDay( true );
 
-    Akonadi::Item item;
-    item.setPayload( todo );
+  Akonadi::Item item;
+  item.setPayload( todo );
 
-    IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item );
-    dialog->load( item );
-  }
+  IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item );
+  dialog->load( item );
 }
 
 void CalendarView::newJournal()
 {
-  if ( mCreatingEnabled ) {
-    newJournal( QString(), activeDate( true ) );
-  }
+  newJournal( QString(), activeDate( true ) );
 }
 
 void CalendarView::newJournal( const QDate &date )
 {
-  if ( mCreatingEnabled ) {
-    newJournal( QString(), date.isValid() ? date : activeDate( true ) );
-  }
+  newJournal( QString(), date.isValid() ? date : activeDate( true ) );
 }
 
 void CalendarView::newJournal( const Akonadi::Collection &collection )
 {
-  if ( mCreatingEnabled ) {
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
 
-    Journal::Ptr journal( new Journal );
-    defaults.setDefaults( journal );
+  Journal::Ptr journal( new Journal );
+  defaults.setDefaults( journal );
 
-    Akonadi::Item item;
-    item.setPayload( journal );
-    IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
-    dialog->load( item );
-  }
+  Akonadi::Item item;
+  item.setPayload( journal );
+  IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
+  dialog->load( item );
 }
 
 void CalendarView::newJournal( const QString &text, const QDate &date )
 {
-  if ( mCreatingEnabled ) {
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
 
-    Journal::Ptr journal( new Journal );
-    defaults.setStartDateTime( KDateTime( date ) );
-    defaults.setDefaults( journal );
+  Journal::Ptr journal( new Journal );
+  defaults.setStartDateTime( KDateTime( date ) );
+  defaults.setDefaults( journal );
 
-    journal->setSummary( text );
+  journal->setSummary( text );
 
-    Akonadi::Item item;
-    item.setPayload( journal );
+  Akonadi::Item item;
+  item.setPayload( journal );
 
-    IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item );
-    dialog->load( item );
-  }
+  IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item );
+  dialog->load( item );
 }
 
 KOrg::BaseView *CalendarView::currentView() const
@@ -1374,77 +1338,63 @@ void CalendarView::configureCurrentView()
 
 void CalendarView::newSubTodo()
 {
-  if ( mCreatingEnabled ) {
-    const Akonadi::Item item = selectedTodo();
-    if ( CalendarSupport::hasTodo( item ) ) {
-      newSubTodo( item );
-    }
-  } else {
-    kWarning() << "newSubTodo() called, but creating is disabled";
+  const Akonadi::Item item = selectedTodo();
+  if ( CalendarSupport::hasTodo( item ) ) {
+    newSubTodo( item );
   }
 }
 
 void CalendarView::newSubTodo( const Akonadi::Collection &collection )
 {
-  if ( mCreatingEnabled ) {
-    if ( !CalendarSupport::hasTodo( selectedTodo() ) ) {
-      kWarning() << "CalendarSupport::hasTodo() is false";
-      return;
-    }
-
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
-    defaults.setRelatedIncidence( CalendarSupport::incidence( selectedTodo() ) );
-
-    Todo::Ptr todo( new Todo );
-    defaults.setDefaults( todo );
-
-    Akonadi::Item item;
-    item.setPayload( todo );
-
-    IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
-    dialog->load( item );
-  } else {
-    kWarning() << "newSubTodo(Collection) called, but creating is disabled";
+  if ( !CalendarSupport::hasTodo( selectedTodo() ) ) {
+    kWarning() << "CalendarSupport::hasTodo() is false";
+    return;
   }
+
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  defaults.setRelatedIncidence( CalendarSupport::incidence( selectedTodo() ) );
+
+  KCalCore::Todo::Ptr todo( new Todo );
+  defaults.setDefaults( todo );
+
+  Akonadi::Item item;
+  item.setPayload( todo );
+
+  IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
+  dialog->load( item );
 }
 
 void CalendarView::newSubTodo( const Akonadi::Item &parentTodo )
 {
-  if ( mCreatingEnabled ) {
-    IncidenceEditorNG::IncidenceDefaults defaults =
-      IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
-    defaults.setRelatedIncidence( CalendarSupport::incidence( parentTodo ) );
+  IncidenceEditorNG::IncidenceDefaults defaults =
+    IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  defaults.setRelatedIncidence( CalendarSupport::incidence( parentTodo ) );
 
-    Todo::Ptr todo( new Todo );
-    defaults.setDefaults( todo );
+  KCalCore::Todo::Ptr todo( new Todo );
+  defaults.setDefaults( todo );
 
-    Q_ASSERT( !todo->relatedTo().isEmpty() );
+  Q_ASSERT( !todo->relatedTo().isEmpty() );
 
-    Akonadi::Item item;
-    item.setPayload( todo );
+  Akonadi::Item item;
+  item.setPayload( todo );
 
-    // Don't use parentTodo.parentCollection() because that can be a search folder.
-    Akonadi::Collection collection = mCalendar->collection( parentTodo.storageCollectionId() );
-    IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
-    dialog->load( item );
-  } else {
-    kWarning() << "newSubTodo(Item) called, but creating is disabled";
-  }
+  // Don't use parentTodo.parentCollection() because that can be a search folder.
+  Akonadi::Collection collection = mCalendar->collection( parentTodo.storageCollectionId() );
+  IncidenceEditorNG::IncidenceDialog *dialog = createIncidenceEditor( item, collection );
+  dialog->load( item );
 }
 
 void CalendarView::newFloatingEvent()
 {
-  if ( mCreatingEnabled ) {
-    const QDate date = activeDate();
-    newEvent( QDateTime( date, QTime( 12, 0, 0 ) ),
-              QDateTime( date, QTime( 12, 0, 0 ) ), true );
-  }
+  const QDate date = activeDate();
+  newEvent( QDateTime( date, QTime( 12, 0, 0 ) ),
+            QDateTime( date, QTime( 12, 0, 0 ) ), true );
 }
 
 bool CalendarView::addIncidence( const QString &ical )
 {
-  ICalFormat format;
+  KCalCore::ICalFormat format;
   format.setTimeSpec( mCalendar->timeSpec() );
   Incidence::Ptr incidence( format.fromString( ical ) );
   return addIncidence( incidence );
@@ -1606,9 +1556,9 @@ void CalendarView::toggleTodoCompleted( const Akonadi::Item &todoItem )
     return;
   }
 
-  Todo::Ptr todo = CalendarSupport::todo( todoItem );
+  KCalCore::Todo::Ptr todo = CalendarSupport::todo( todoItem );
   Q_ASSERT( todo );
-  Todo::Ptr oldtodo( todo->clone() );
+  KCalCore::Todo::Ptr oldtodo( todo->clone() );
 
   if ( todo->isCompleted() ) {
     todo->setPercentComplete( 0 );
@@ -2050,16 +2000,16 @@ void CalendarView::exportICalendar()
         return;
       }
     }
-    ICalFormat *format = new ICalFormat;
+    KCalCore::ICalFormat *format = new KCalCore::ICalFormat;
 
     CalendarSupport::CalendarAdaptor::Ptr calendar(
       new CalendarSupport::CalendarAdaptor( mCalendar, this ) );
 
-    FileStorage storage( calendar, filename, format );
+    KCalCore::FileStorage storage( calendar, filename, format );
     if ( !storage.save() ) {
       QString errmess;
       if ( format->exception() ) {
-        errmess = Stringify::errorMessage( *format->exception() );
+        errmess = KCalUtils::Stringify::errorMessage( *format->exception() );
       } else {
         errmess = i18nc( "save failure cause unknown", "Reason unknown" );
       }
@@ -2102,16 +2052,16 @@ void CalendarView::exportVCalendar()
         return;
       }
     }
-    VCalFormat *format = new VCalFormat;
+    KCalCore::VCalFormat *format = new KCalCore::VCalFormat;
 
     CalendarSupport::CalendarAdaptor::Ptr calendar(
       new CalendarSupport::CalendarAdaptor( mCalendar, this ) );
 
-    FileStorage storage( calendar, filename, format );
+    KCalCore::FileStorage storage( calendar, filename, format );
     if ( !storage.save() ) {
       QString errmess;
       if ( format->exception() ) {
-        errmess = Stringify::errorMessage( *format->exception() );
+        errmess = KCalUtils::Stringify::errorMessage( *format->exception() );
       } else {
         errmess = i18nc( "save failure cause unknown", "Reason unknown" );
       }
@@ -2203,13 +2153,11 @@ void CalendarView::processIncidenceSelection( const Akonadi::Item &item, const Q
 
 void CalendarView::checkClipboard()
 {
-#ifndef KORG_NODND
-  if ( ICalDrag::canDecode( QApplication::clipboard()->mimeData() ) ) {
+  if ( KCalUtils::ICalDrag::canDecode( QApplication::clipboard()->mimeData() ) ) {
     emit pasteEnabled( true );
   } else {
     emit pasteEnabled( false );
   }
-#endif
 }
 
 void CalendarView::showDates( const DateList &selectedDates, const QDate &preferredMonth )
@@ -2239,7 +2187,7 @@ void CalendarView::updateFilter()
   }
 
   filters << i18n( "No filter" );
-  foreach ( CalFilter *filter, mFilters ) {
+  foreach ( KCalCore::CalFilter *filter, mFilters ) {
     if ( filter ) {
       filters << filter->name();
     }
@@ -2254,7 +2202,7 @@ void CalendarView::updateFilter()
 
 void CalendarView::filterActivated( int filterNo )
 {
-  CalFilter *newFilter = 0;
+  KCalCore::CalFilter *newFilter = 0;
   if ( filterNo > 0 && filterNo <= int( mFilters.count() ) ) {
     newFilter = mFilters.at( filterNo - 1 );
   }
@@ -2305,7 +2253,7 @@ void CalendarView::takeOverCalendar()
 {
   const Akonadi::Item::List items = mCalendar->rawIncidences();
 
-  Q_FOREACH( const Akonadi::Item &item, items ) {
+  Q_FOREACH ( const Akonadi::Item &item, items ) {
     Incidence::Ptr i = CalendarSupport::incidence( item );
     i->setOrganizer( Person::Ptr( new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
                                               CalendarSupport::KCalPrefs::instance()->email() ) ) );
@@ -2389,7 +2337,7 @@ void CalendarView::showLeftFrame( bool show )
 Akonadi::Item CalendarView::selectedTodo()
 {
   const Akonadi::Item item = currentSelection();
-  if ( const Todo::Ptr t = CalendarSupport::todo( item ) ) {
+  if ( const KCalCore::Todo::Ptr t = CalendarSupport::todo( item ) ) {
     return item;
   }
 
@@ -2399,7 +2347,7 @@ Akonadi::Item CalendarView::selectedTodo()
   if ( !selectedIncidences.isEmpty() ) {
     incidence = selectedIncidences.first();
   }
-  if ( const Todo::Ptr t = CalendarSupport::todo( item ) ) {
+  if ( const KCalCore::Todo::Ptr t = CalendarSupport::todo( item ) ) {
     return item;
   }
   return Akonadi::Item();
@@ -2486,7 +2434,7 @@ void CalendarView::pasteIncidence()
 
 void CalendarView::showIncidence( const Akonadi::Item &item )
 {
-  KOEventViewerDialog *eventViewer = new KOEventViewerDialog( this );
+  KOEventViewerDialog *eventViewer = new KOEventViewerDialog( mCalendar, this );
   eventViewer->setIncidence( item, QDate() );
   // Disable the Edit button for read-only Incidences.
   if ( !mCalendar->hasChangeRights( item ) ) {
@@ -2564,7 +2512,7 @@ bool CalendarView::editIncidence( const Akonadi::Item &item, bool isCounter )
 
 void CalendarView::deleteSubTodosIncidence ( const Akonadi::Item &todoItem )
 {
-  const Todo::Ptr todo = CalendarSupport::todo( todoItem );
+  const KCalCore::Todo::Ptr todo = CalendarSupport::todo( todoItem );
   if ( !todo ) {
     return;
   }
@@ -2582,7 +2530,7 @@ void CalendarView::deleteSubTodosIncidence ( const Akonadi::Item &todoItem )
 
 void CalendarView::deleteTodoIncidence ( const Akonadi::Item &todoItem, bool force )
 {
-  const Todo::Ptr todo = CalendarSupport::todo( todoItem );
+  const KCalCore::Todo::Ptr todo = CalendarSupport::todo( todoItem );
   if ( !todo ) {
     return ;
   }
@@ -2760,7 +2708,7 @@ bool CalendarView::deleteIncidence( const Akonadi::Item &item, bool force )
 
 bool CalendarView::purgeCompletedSubTodos( const Akonadi::Item &todoItem, bool &allPurged )
 {
-  const Todo::Ptr todo = CalendarSupport::todo( todoItem );
+  const KCalCore::Todo::Ptr todo = CalendarSupport::todo( todoItem );
   if ( !todo ) {
     return true;
   }
@@ -2804,7 +2752,7 @@ void CalendarView::purgeCompleted()
     Akonadi::Item::List rootTodos;
     Akonadi::Item::List::ConstIterator it;
     for ( it = todos.constBegin(); it != todos.constEnd(); ++it ) {
-      Todo::Ptr aTodo = CalendarSupport::todo( *it );
+      KCalCore::Todo::Ptr aTodo = CalendarSupport::todo( *it );
       if ( aTodo && aTodo->relatedTo().isEmpty() ) { // top level todo //REVIEW(AKONADI_PORT)
         rootTodos.append( *it );
       }
@@ -2879,7 +2827,7 @@ void CalendarView::addIncidenceOn( const Akonadi::Item &itemadd, const QDate &dt
   Incidence::Ptr incidence( CalendarSupport::incidence( item )->clone() );
   incidence->recreate();
 
-  if ( const Event::Ptr event = incidence.dynamicCast<Event>() ) {
+  if ( const KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>() ) {
 
     // Adjust date
     KDateTime start = event->dtStart();
@@ -2892,7 +2840,7 @@ void CalendarView::addIncidenceOn( const Akonadi::Item &itemadd, const QDate &dt
     event->setDtStart( start );
     event->setDtEnd( end );
 
-  } else if ( const Todo::Ptr todo = incidence.dynamicCast<Todo>() ) {
+  } else if ( const KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>() ) {
     KDateTime due = todo->dtDue();
     due.setDate( dt );
 
@@ -2923,11 +2871,11 @@ void CalendarView::moveIncidenceTo( const Akonadi::Item &itemmove, const QDate &
     addIncidenceOn( itemmove, dt );
     return;
   }
-  Incidence::Ptr incidence = CalendarSupport::incidence( itemmove );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( itemmove );
 
-  Incidence::Ptr oldIncidence( incidence->clone() );
+  KCalCore::Incidence::Ptr oldIncidence( incidence->clone() );
 
-  if ( const Event::Ptr event = incidence.dynamicCast<Event>() ) {
+  if ( const KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>() ) {
     // Adjust date
     KDateTime start = event->dtStart();
     KDateTime end = event->dtEnd();
@@ -2939,7 +2887,7 @@ void CalendarView::moveIncidenceTo( const Akonadi::Item &itemmove, const QDate &
     event->setDtStart( start );
     event->setDtEnd( end );
 
-  } if ( const Todo::Ptr todo = incidence.dynamicCast<Todo>() ) {
+  } if ( const KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>() ) {
     KDateTime due = todo->dtDue();
     due.setDate( dt );
 
@@ -3006,11 +2954,6 @@ void CalendarView::getIncidenceHierarchy( const Akonadi::Item &item,
   }
 }
 
-void CalendarView::setCreatingEnabled( bool enabled )
-{
-  mCreatingEnabled = enabled;
-}
-
 Akonadi::Collection CalendarView::defaultCollection( const QLatin1String &mimeType ) const
 {
   bool supportsMimeType;
@@ -3050,7 +2993,7 @@ IncidenceEditorNG::IncidenceDialog *CalendarView::createIncidenceEditor(
   const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   IncidenceEditorNG::IncidenceDialog *dialog = mDialogManager->createDialog( item );
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
 
   if ( collection.isValid() ) {

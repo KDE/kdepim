@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
- * Copyright (C) 2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2011,2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,11 +41,11 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi->mAdd->setIcon( KIcon( "list-add" ) );
   mUi->mAdd->setEnabled( false );
   mUi->mRemove->setIcon( KIcon( "list-remove" ) );
+  mUi->mDuplicate->setIcon( KIcon( "edit-copy" ) );
 
   mUi->mList->setColumnWidth( 0, 100 );
   mUi->mList->header()->setStretchLastSection( true );
   mUi->mList->setItemDelegate( new CustomTemplateItemDelegate( this ) );
-
   mUi->mEditFrame->setEnabled( false );
 
   mUi->mName->setTrapReturnKey( true );
@@ -69,6 +69,8 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
            this, SLOT(slotAddClicked()) );
   connect( mUi->mRemove, SIGNAL(clicked()),
            this, SLOT(slotRemoveClicked()) );
+  connect( mUi->mDuplicate, SIGNAL(clicked()),
+           this, SLOT(slotDuplicateClicked()) );
   connect( mUi->mList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
            this, SLOT(slotListSelectionChanged()) );
   connect( mUi->mList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
@@ -94,27 +96,6 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi->mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
   connect( mUi->mHelp, SIGNAL(linkActivated(QString)),
           SLOT(slotHelpLinkClicked(QString)) );
-
-  const QString toToolTip = i18n( "Additional recipients of the message" );
-  const QString ccToolTip = i18n( "Additional recipients who get a copy of the message" );
-  const QString toWhatsThis =
-    i18n( "When using this template, the default recipients are those you enter here. "
-          "This is a comma-separated list of mail addresses." );
-  const QString ccWhatsThis =
-    i18n( "When using this template, the recipients you enter here will by default "
-          "get a copy of this message. This is a comma-separated list of mail addresses." );
-
-  KLineEdit *ccLineEdit = mUi->mCCEdit->lineEdit();
-  KLineEdit *toLineEdit = mUi->mToEdit->lineEdit();
-
-  mUi->mCCLabel->setToolTip( ccToolTip );
-  ccLineEdit->setToolTip( ccToolTip );
-  mUi->mToLabel->setToolTip( toToolTip );
-  toLineEdit->setToolTip( toToolTip );
-  mUi->mCCLabel->setWhatsThis( ccWhatsThis );
-  ccLineEdit->setWhatsThis( ccWhatsThis );
-  mUi->mToLabel->setWhatsThis( toWhatsThis );
-  toLineEdit->setWhatsThis( toWhatsThis );
 
   slotNameChanged( mUi->mName->text() );
 }
@@ -194,9 +175,29 @@ void CustomTemplates::slotTextChanged()
   }
 }
 
+void CustomTemplates::iconFromType( CustomTemplates::Type type, CustomTemplateItem *item )
+{
+  switch ( type ) {
+  case TReply:
+    item->setIcon( 0, mReplyPix );
+    break;
+  case TReplyAll:
+    item->setIcon( 0, mReplyAllPix );
+    break;
+  case TForward:
+    item->setIcon( 0, mForwardPix );
+    break;
+  default:
+    item->setIcon( 0, QPixmap() );
+    break;
+  };
+
+}
+
 void CustomTemplates::load()
 {
   const QStringList list = GlobalSettings::self()->customTemplates();
+  mUi->mList->clear();
   QStringList::const_iterator end( list.constEnd() );
   for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
     CTemplates t(*it);
@@ -206,24 +207,11 @@ void CustomTemplates::load()
                                                        shortcut, type, t.to(), t.cC() );
     item->setText( 1, *it );
     item->setText( 0, indexToType( type ) );
-
-    switch ( type ) {
-    case TReply:
-      item->setIcon( 0, mReplyPix );
-      break;
-    case TReplyAll:
-      item->setIcon( 0, mReplyAllPix );
-      break;
-    case TForward:
-      item->setIcon( 0, mForwardPix );
-      break;
-    default:
-      item->setIcon( 0, QPixmap() );
-      break;
-    };
+    iconFromType( type, item );
   }
 
   mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem() );
+  mUi->mDuplicate->setEnabled( mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem() );
 }
 
 void CustomTemplates::save()
@@ -274,21 +262,29 @@ void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
   mUi->mEdit->setFocus();
 }
 
+bool CustomTemplates::nameAlreadyExists( const QString &str, QTreeWidgetItem *item )
+{
+  QTreeWidgetItemIterator lit( mUi->mList );
+  while ( *lit ) {
+    const QString name = ( *lit )->text( 1 );
+    if ( ( name == str ) && ( (*lit) != item ) ) {
+      KMessageBox::error(
+        this,
+        i18n( "A template with same name already exists." ),
+        i18n( "Can not create template" ) );
+      return true;
+    }
+    ++lit;
+  }
+  return false;
+}
+
 void CustomTemplates::slotAddClicked()
 {
   const QString str = mUi->mName->text();
   if ( !str.isEmpty() ) {
-    QTreeWidgetItemIterator lit( mUi->mList );
-    while ( *lit ) {
-      const QString name = ( *lit )->text( 1 );
-      if ( name == str ) {
-        KMessageBox::error(
-          this,
-          i18n( "A template with same name already exists." ),
-          i18n( "Can not create template" ) );
-        return;
-      }
-      ++lit;
+    if ( nameAlreadyExists( str ) ) {
+      return;
     }
 
     // KShortcut::null() doesn't seem to be present, although documented
@@ -302,12 +298,69 @@ void CustomTemplates::slotAddClicked()
     item->setText( 1, str );
     mUi->mList->setCurrentItem( item );
     mUi->mRemove->setEnabled( true );
+    mUi->mDuplicate->setEnabled( true );
     mUi->mName->clear();
     mUi->mKeySequenceWidget->setEnabled( false );
     if ( !mBlockChangeSignal ) {
       emit changed();
     }
   }
+}
+
+QString CustomTemplates::createUniqueName( const QString &name ) const
+{
+  QString uniqueName = name;
+
+  int counter = 0;
+  bool found = true;
+
+  while ( found ) {
+    found = false;
+
+    QTreeWidgetItemIterator lit( mUi->mList );
+    while ( *lit ) {
+      const QString itemName = ( *lit )->text( 1 );
+      if ( !itemName.compare( uniqueName ) ) {
+        found = true;
+        ++counter;
+        uniqueName = name;
+        uniqueName += QString( " (" ) + QString::number( counter ) + QString( ")" );
+        break;
+      }
+      lit++;
+    }
+  }
+
+  return uniqueName;
+}
+
+void CustomTemplates::slotDuplicateClicked()
+{
+  QTreeWidgetItem *currentItem = mUi->mList->currentItem();
+  if ( !currentItem ) {
+    return;
+  }
+  CustomTemplateItem * origItem = static_cast<CustomTemplateItem*>( currentItem );
+  const QString templateName = createUniqueName( origItem->text( 1 ) );
+  // KShortcut::null() doesn't seem to be present, although documented
+  // see slotShortcutChanged(). oh, and you should look up documentation on the EBN!
+  // FIXME There must be a better way of doing this...
+  QKeySequence nullShortcut;
+  CustomTemplates::Type type =  origItem->customType();
+  CustomTemplateItem *item =
+      new CustomTemplateItem( mUi->mList, templateName, origItem->content(), nullShortcut, type,
+                              origItem->to(), origItem->cc() );
+  item->setText( 0, indexToType( type ) );
+  item->setText( 1, templateName );
+  iconFromType( type, item );
+
+  mUi->mList->setCurrentItem( item );
+  mUi->mRemove->setEnabled( true );
+  mUi->mDuplicate->setEnabled( true );
+  mUi->mName->clear();
+  mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
+
+  emit changed();
 }
 
 void CustomTemplates::slotRemoveClicked()
@@ -318,11 +371,20 @@ void CustomTemplates::slotRemoveClicked()
   }
 
   const QString templateName = item->text( 1 );
-  mItemsToDelete.append( templateName );
-  delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
-  mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
-  if ( !mBlockChangeSignal ) {
-    emit changed();
+
+  if ( KMessageBox::warningContinueCancel(
+         this,
+         i18nc( "@info", "Do you really want to remove template \"%1\"?", templateName ),
+         i18nc( "@title:window", "Remove Template?" ),
+         KStandardGuiItem::remove(),
+         KStandardGuiItem::cancel() ) == KMessageBox::Continue ) {
+    mItemsToDelete.append( templateName );
+    delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
+    mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
+    mUi->mDuplicate->setEnabled( mUi->mList->topLevelItemCount() > 0 );
+    if ( !mBlockChangeSignal ) {
+      emit changed();
+    }
   }
 }
 
@@ -332,12 +394,15 @@ void CustomTemplates::slotListSelectionChanged()
   if ( item ) {
     mUi->mEditFrame->setEnabled( true );
     mUi->mRemove->setEnabled(true);
+    mUi->mDuplicate->setEnabled(true);
     CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
     mBlockChangeSignal = true;
     mUi->mEdit->setText( vitem->content() );
     mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut(),
                                              KKeySequenceWidget::NoValidate );
-    mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( vitem->customType() ) ) );
+    CustomTemplates::Type type =  vitem->customType();
+
+    mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( type ) ) );
     mUi->mToEdit->setText( vitem->to() );
     mUi->mCCEdit->setText( vitem->cc() );
     mBlockChangeSignal = false;
@@ -347,7 +412,7 @@ void CustomTemplates::slotListSelectionChanged()
     // a universal, as otherwise we won't know what sort of action to do when the
     // key sequence is activated!
     // This agrees with KMMainWidget::updateCustomTemplateMenus() -- marten
-    mUi->mKeySequenceWidget->setEnabled( vitem->customType() != TUniversal );
+    mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
   } else {
     mUi->mEditFrame->setEnabled( false );
     mUi->mEdit->clear();
@@ -366,22 +431,9 @@ void CustomTemplates::slotTypeActivated( int index )
     CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
     CustomTemplates::Type customtype = static_cast<Type>(index);
     vitem->setCustomType( customtype );
-    mUi->mList->currentItem()->setText( 0, indexToType( customtype ) );
+    vitem->setText( 0, indexToType( customtype ) );
 
-    switch ( customtype ) {
-    case TReply:
-      mUi->mList->currentItem()->setIcon( 0, mReplyPix );
-      break;
-    case TReplyAll:
-      mUi->mList->currentItem()->setIcon( 0, mReplyAllPix );
-      break;
-    case TForward:
-      mUi->mList->currentItem()->setIcon( 0, mForwardPix );
-      break;
-    default:
-      mUi->mList->currentItem()->setIcon( 0, QPixmap() );
-      break;
-    };
+    iconFromType( customtype, vitem );
 
     // see slotListSelectionChanged() above
     mUi->mKeySequenceWidget->setEnabled( customtype != TUniversal );
@@ -414,6 +466,10 @@ void CustomTemplates::slotItemChanged( QTreeWidgetItem *item, int column )
       const QString newName = vitem->text( 1 );
       if( !newName.isEmpty() ) {
         const QString oldName = vitem->oldName();
+        if ( nameAlreadyExists( newName, item ) ) {
+          vitem->setText( 1, oldName );
+          return;
+        }
         if ( newName != oldName ) {
           mItemsToDelete.append( oldName );
           vitem->setOldName( newName );
@@ -435,26 +491,24 @@ CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
 {
 }
 
-QWidget *CustomTemplateItemDelegate::createEditor( QWidget *parent,
-                                                   const QStyleOptionViewItem &/*option*/,
-                                                   const QModelIndex &index ) const
-{
-  if ( index.column() == 1 ) {
-    KLineEdit *lineEdit = new KLineEdit( parent );
-    lineEdit->setFrame( false );
-    return lineEdit;
-  }
-  return 0;
-}
-
 void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemModel *model,
                                                const QModelIndex &index ) const
 {
   KLineEdit *lineEdit = static_cast<KLineEdit*>( editor );
   const QString text = lineEdit->text();
   if( !text.isEmpty() ) {
-    model->setData( index, lineEdit->text(), Qt::EditRole );
+    model->setData( index, text, Qt::EditRole );
   }
+}
+
+QWidget *CustomTemplateItemDelegate::createEditor( QWidget *parent,
+                                                   const QStyleOptionViewItem &option,
+                                                   const QModelIndex &index ) const
+{
+  if ( index.column() == 1 ) {
+    return QStyledItemDelegate::createEditor( parent, option, index );
+  }
+  return 0;
 }
 
 CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,

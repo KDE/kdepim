@@ -1294,8 +1294,9 @@ pane</guilabel>.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Starts up <ulink url="help:kaddressbook">&kaddressbook;</ulink>,
-the &kde; address book.</para>
+<para>Starts up &kaddressbook;, the &kde; address book. If this menu item is disabled
+and greyed out either &kaddressbook; is not installed or the program was not 
+found.</para>
 </listitem>
 </varlistentry>
 
@@ -2153,7 +2154,7 @@ attachment window.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Uses <ulink url="/sonnet/">&sonnet;</ulink> to check the spelling in the body of your
+<para>Uses <ulink url="help:/sonnet/">&sonnet;</ulink> to check the spelling in the body of your
 message. Note that
 you have to configure &sonnet; with <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Spellchecker...</guimenuitem></menuchoice> if you use it for the
@@ -2169,7 +2170,7 @@ first time.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up <ulink url="/kaddressbook/">&kaddressbook;</ulink>.</para>
+<para>Opens up <ulink url="help:/kaddressbook">&kaddressbook;</ulink>.</para>
 </listitem>
 </varlistentry>
 <!-- Save Distribution List missing lueck 31.05.2011-->
@@ -2204,7 +2205,7 @@ tools to change certain properties of the composed text.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Allows you to configure <ulink url="/sonnet/">&sonnet;</ulink>, &kde;'s spellchecker.</para>
+<para>Allows you to configure <ulink url="help:/sonnet/">&sonnet;</ulink>, &kde;'s spellchecker.</para>
 </listitem>
 </varlistentry>
 

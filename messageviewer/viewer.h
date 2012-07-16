@@ -175,11 +175,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   void printMessage( const Akonadi::Item &msg );
 
+  void printPreviousMessage( const Akonadi::Item &message );
+
   /** Print the currently displayed message */
   void print();
-
-  /** Return selected text */
-  QString selectedText();
+  void printPreview();
 
   /** Get the html override setting */
   bool htmlOverride() const;
@@ -262,6 +262,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *copyURLAction();
   KAction *copyAction();
   KAction *urlOpenAction();
+  KAction *speakTextAction();
+  KAction *copyImageLocation();
+  KAction *translateAction();
 
   const HeaderStrategy * headerStrategy() const;
 
@@ -272,6 +275,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void writeConfig( bool withSync=true );
 
   KUrl urlClicked() const;
+  KUrl imageUrlClicked() const;
 
   void readConfig();
 
@@ -310,6 +314,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   void removeMessageLoadedHandler( AbstractMessageLoadedHandler *handler );
 
+
+  QString selectedText() const;
+
 signals:
 
   /**
@@ -325,7 +332,7 @@ signals:
   void replaceMsgByUnencryptedVersion();
 
   /** The user presses the right mouse button. 'url' may be 0. */
-  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
+  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const KUrl &imageUrl, const QPoint& mousePos);
 
   /**
    * The message viewer handles some types of urls itself, most notably http(s)
@@ -346,6 +353,8 @@ signals:
   /// Emitted when the item, previously set with setMessageItem, has been removed.
   void itemRemoved();
 
+  void resumeNetworkJobs();
+
 public slots:
 
   /**
@@ -360,6 +369,7 @@ public slots:
   void slotScrollNext();
   void slotJumpDown();
   void slotFind();
+  void slotTranslate();
   void slotSaveMessage();
   void slotAttachmentSaveAs();
   void slotAttachmentSaveAll();

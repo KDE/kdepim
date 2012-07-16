@@ -48,7 +48,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
      */
     static QString configIdString( uint id );
 
-  public slots:
+  public Q_SLOTS:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
 
@@ -59,7 +59,10 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
     QString strOrBlank( const QString &str );
     QString mHelpString;
 
-  private slots:
+  private:
+    KTextEdit *currentTextEdit() const;
+
+  private Q_SLOTS:
     void slotHelpLinkClicked( const QString & );
 };
 

@@ -441,8 +441,9 @@ void FolderTreeWidgetItem::setLabelText( const QString &label )
   mLabelText = label;
   // We set the text of the item so QStyle will compute the height correctly
   FolderTreeWidget * tree = dynamic_cast< FolderTreeWidget * >( treeWidget() );
+  Q_ASSERT ( tree );
   int idx = tree->labelColumnIndex();
-  if ( tree && idx >= 0 )
+  if ( idx >= 0 )
   {
     setText( idx, label );
     setTextAlignment( idx, Qt::AlignRight );

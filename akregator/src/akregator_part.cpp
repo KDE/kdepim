@@ -126,6 +126,11 @@ namespace {
         dot.setAttribute("xmlUrl","http://www.kde.org/dotkdeorg.rdf");
         mainFolder.appendChild(dot);
 
+        QDomElement linuxFeeds = doc.createElement( "outline" );
+        linuxFeeds.setAttribute("text",i18n("Linux.com"));
+        linuxFeeds.setAttribute("xmlUrl","https://www.linux.com/rss/feeds.php");
+        mainFolder.appendChild(linuxFeeds);
+
         QDomElement planetkde = doc.createElement( "outline" );
         planetkde.setAttribute("text",i18n("Planet KDE"));
         planetkde.setAttribute("xmlUrl","http://planetkde.org/rss20.xml");
@@ -145,6 +150,26 @@ namespace {
         look.setAttribute("text",i18n("KDE Look"));
         look.setAttribute("xmlUrl","http://www.kde.org/kde-look-content.rdf");
         mainFolder.appendChild(look);
+
+        // hungarian feed(s)
+        QDomElement hungarianFolder = doc.createElement( "outline" );
+        hungarianFolder.setAttribute("text",i18n("Hungarian feeds"));
+        mainFolder.appendChild(hungarianFolder);
+
+        QDomElement hungarianKde = doc.createElement( "outline" );
+        hungarianKde.setAttribute("text",i18n("KDE.HU"));
+        hungarianKde.setAttribute("xmlUrl","http://kde.hu/rss.xml");
+        hungarianFolder.appendChild(hungarianKde);
+
+        // spanish feed(s)
+        QDomElement spanishFolder = doc.createElement( "outline" );
+        spanishFolder.setAttribute("text",i18n("Spanish feeds"));
+        mainFolder.appendChild(spanishFolder);
+
+        QDomElement spanishKde = doc.createElement( "outline" );
+        spanishKde.setAttribute("text",i18n("Planet KDE España"));
+        spanishKde.setAttribute("xmlUrl","http://planet.kde-espana.es/");
+        spanishFolder.appendChild(spanishKde);
 
         return doc;
     }
@@ -250,9 +275,6 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
         QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
         NotificationManager::self()->setWidget(notificationParent, componentData());
 
-        QAction* action = TrayIcon::getInstance()->actionCollection()->action(KStandardAction::name(KStandardAction::Quit));
-        connect(action, SIGNAL(triggered(bool)), kapp, SLOT(quit()));
-
         connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
         connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
                 this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
@@ -323,10 +345,6 @@ void Part::slotSettingsChanged()
 
         if ( isTrayIconEnabled() )
             trayIcon->setStatus( KStatusNotifierItem::Active );
-
-        QAction *action;
-        action = TrayIcon::getInstance()->actionCollection()->action(KStandardAction::name(KStandardAction::Quit));
-        connect(action, SIGNAL(triggered(bool)), kapp, SLOT(quit()));
 
         connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
         connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),

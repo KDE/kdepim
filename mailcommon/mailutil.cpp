@@ -36,83 +36,90 @@
 **
 *******************************************************************************/
 
-
 #include "mailutil.h"
 #include "mailutil_p.h"
 
-#include "imapsettings.h"
-#include "pop3settings.h"
-#include "mailkernel.h"
 #include "calendarinterface.h"
 #include "expirejob.h"
-
-#include "messagecore/stringutil.h"
-#include "messagecomposer/messagehelper.h"
-
-#include <kmime/kmime_message.h>
-#include <kpimutils/email.h>
-#include <kimap/loginjob.h>
-#include <kmenu.h>
-#include <kmessagebox.h>
-#include <mailtransport/transport.h>
-#include <Akonadi/AgentManager>
-#include <Akonadi/EntityTreeModel>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/kmime/messageparts.h>
+#include "foldercollection.h"
+#include "pop3settings.h"
+#include "imapsettings.h"
+#include "mailkernel.h"
+#include "filter/filteractionmissingargumentdialog.h"
 
 #include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 
-#include <KStandardDirs>
-#include <kascii.h>
-#include <KCharsets>
-#include <KJob>
-#include <kio/jobuidelegate.h>
-#include <KLocale>
-#include <KColorScheme>
-
-#include <stdlib.h>
-
-#include "foldercollection.h"
-#include <KDBusServiceStarter>
+#include <messagecore/stringutil.h>
 #include <messagecore/messagehelpers.h>
+
+#include <messagecomposer/messagehelper.h>
+
+#include <Akonadi/AgentManager>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/KMime/MessageParts>
+
+#include <KIMAP/LoginJob>
+
+#include <KMime/KMimeMessage>
+
+#include <KPIMUtils/Email>
+
+#include <Mailtransport/Transport>
+
+#include <KCharsets>
+#include <KColorScheme>
+#include <KDBusServiceStarter>
+#include <KJob>
+#include <KLocale>
+#include <KMenu>
+#include <KMessageBox>
+#include <KStandardDirs>
 #include <KTemporaryFile>
+#include <KIO/JobUiDelegate>
 
-
-OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface( const QString &ident )
+OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface(
+  const QString &ident )
 {
-  return new OrgKdeAkonadiImapSettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+  return
+    new OrgKdeAkonadiImapSettingsInterface(
+      "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
 }
 
-OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface( const QString &ident )
+OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
+  const QString &ident )
 {
-  return new OrgKdeAkonadiPOP3SettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+  return
+    new OrgKdeAkonadiPOP3SettingsInterface(
+      "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
 }
 
-
-bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection & collection)
+bool MailCommon::Util::isVirtualCollection( const Akonadi::Collection &collection )
 {
-  return MailCommon::Util::isVirtualCollection(collection.resource());
+  return MailCommon::Util::isVirtualCollection( collection.resource() );
 }
 
-bool MailCommon::Util::isVirtualCollection(const QString& resource)
+bool MailCommon::Util::isVirtualCollection( const QString &resource )
 {
-  return (
-#ifndef KDEPIM_NO_NEPOMUK
-              resource == QLatin1String( "akonadi_nepomuktag_resource" ) ||
-#endif
-              resource == QLatin1String( "akonadi_search_resource" ) );
+  return
+    (
+      resource == QLatin1String( "akonadi_nepomuktag_resource" ) ||
+      resource == QLatin1String( "akonadi_search_resource" ) );
 }
 
-
-QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collection )
+QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection &collection )
 {
   QString fullPath;
-  QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), collection );
-  if ( !idx.isValid() )
+
+  QModelIndex idx =
+    Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), collection );
+  if ( !idx.isValid() ) {
     return fullPath;
+  }
+
   fullPath = idx.data().toString();
   idx = idx.parent();
   while ( idx != QModelIndex() ) {
@@ -122,14 +129,17 @@ QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collect
   return fullPath;
 }
 
-void MailCommon::Util::showJobErrorMessage( KJob *job )
+bool MailCommon::Util::showJobErrorMessage( KJob *job )
 {
   if ( job->error() ) {
-    if ( static_cast<KIO::Job*>( job )->ui() )
+    if ( static_cast<KIO::Job*>( job )->ui() ) {
       static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
-    else
-      kDebug()<<" job->errorString() :"<<job->errorString();
+    } else {
+      kDebug() << " job->errorString() :"<<job->errorString();
+    }
+    return true;
   }
+  return false;
 }
 
 Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailDispacher )
@@ -137,16 +147,14 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailD
   Akonadi::AgentInstance::List relevantInstances;
   foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
     const QStringList capabilities( instance.type().capabilities() );
-    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) )
-    {
+    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) ) {
       if ( capabilities.contains( "Resource" ) &&
            !capabilities.contains( "Virtual" ) &&
            !capabilities.contains( "MailTransport" ) )
       {
         relevantInstances << instance;
-      }
-      else if ( !excludeMailDispacher && instance.identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) )
-      {
+      } else if ( !excludeMailDispacher &&
+                  instance.identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
         relevantInstances << instance;
       }
     }
@@ -158,7 +166,8 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailD
 void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 {
   // FIXME: this function returns void, but there can be errors.
-  // FIXME: this function should be inside a QObject, and async, and emit a signal when korg registered itself successfuly
+  // FIXME: this function should be inside a QObject, and async,
+  //         and emit a signal when korg registered itself successfuly
 
   QString error;
   bool result = true;
@@ -170,8 +179,9 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
   if ( !interface->isValid() ) {
     kDebug() << "Starting korganizer...";
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
-                                                            QDBusServiceWatcher::WatchForRegistration );
+    QDBusServiceWatcher *watcher =
+      new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
+                               QDBusServiceWatcher::WatchForRegistration );
     QEventLoop loop;
     watcher->connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
     result = QProcess::startDetached( "korganizer-mobile" );
@@ -206,14 +216,14 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
       if ( switchTo ) {
         iface.call( "newInstance" ); // activate korganizer window
       }
-#if 0 //Not exist     
+#if 0 //Not exist
       QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
                                "org.kde.KUniqueApplication" );
       QDBusReply<bool> r = pimIface.call( "load" );
       if ( !r.isValid() || !r.value() ) {
         kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
       }
-#endif      
+#endif
     } else {
       kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
     }
@@ -225,7 +235,8 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
   }
 }
 
-static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type, const Akonadi::Item &mailItem )
+static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type,
+                                     const Akonadi::Item &mailItem )
 {
   Akonadi::Item item( mailItem );
 
@@ -234,15 +245,17 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
     job->fetchScope().fetchFullPayload();
     if ( job->exec() ) {
-      if ( job->items().count() == 1 )
+      if ( job->items().count() == 1 ) {
         item = job->items().first();
+      }
     }
   }
 
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
 
-  if ( !msg )
+  if ( !msg ) {
     return false;
+  }
 
   bool isInlineAttachment = false;
   QStringList attachmentUris;
@@ -255,8 +268,11 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     return false;
   }
 
-  const QString incidenceDescription = i18n( "From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
-                                             msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
+  const QString incidenceDescription =
+    i18n( "From: %1\nTo: %2\nSubject: %3",
+          msg->from()->asUnicodeString(),
+          msg->to()->asUnicodeString(),
+          msg->subject()->asUnicodeString() );
 
   QStringList attachmentLabels;
   attachmentLabels << msg->subject()->asUnicodeString();
@@ -265,72 +281,76 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   attachmentMimeTypes << QLatin1String( "message/rfc822" );
 
   int action = IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod();
-  if ( IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod() == IncidenceEditorNG::GlobalSettings::Ask ) {
+  if ( IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod() ==
+       IncidenceEditorNG::GlobalSettings::Ask ) {
     MailCommon::AttachmentSelectionDialog dialog;
 
-    if ( !dialog.exec() )
+    if ( !dialog.exec() ) {
       return true; // canceled by user
+    }
 
     switch ( dialog.attachmentType() ) {
-      case MailCommon::AttachmentSelectionDialog::AttachAsLink:
-        action = IncidenceEditorNG::GlobalSettings::Link;
-        break;
-      case MailCommon::AttachmentSelectionDialog::AttachInline:
-        action = IncidenceEditorNG::GlobalSettings::InlineFull;
-        break;
-      case MailCommon::AttachmentSelectionDialog::AttachWithoutAttachments:
-        action = IncidenceEditorNG::GlobalSettings::InlineBody;
-        break;
+    case MailCommon::AttachmentSelectionDialog::AttachAsLink:
+      action = IncidenceEditorNG::GlobalSettings::Link;
+      break;
+    case MailCommon::AttachmentSelectionDialog::AttachInline:
+      action = IncidenceEditorNG::GlobalSettings::InlineFull;
+      break;
+    case MailCommon::AttachmentSelectionDialog::AttachWithoutAttachments:
+      action = IncidenceEditorNG::GlobalSettings::InlineBody;
+      break;
     }
   }
 
   switch ( action ) {
-    case IncidenceEditorNG::GlobalSettings::Link:
-      attachmentUris << mailItem.url( Akonadi::Item::UrlWithMimeType ).url();
-      isInlineAttachment = false;
-      break;
-    case IncidenceEditorNG::GlobalSettings::InlineFull:
+  case IncidenceEditorNG::GlobalSettings::Link:
+    attachmentUris << mailItem.url( Akonadi::Item::UrlWithMimeType ).url();
+    isInlineAttachment = false;
+    break;
+  case IncidenceEditorNG::GlobalSettings::InlineFull:
+    tf.write( msg->encodedContent() );
+    tf.flush();
+
+    attachmentUris << tf.fileName();
+    isInlineAttachment = true;
+    break;
+  case IncidenceEditorNG::GlobalSettings::InlineBody:
+  {
+    if ( msg.get() == msg->textContent() || msg->textContent() == 0 ) { // no attachments
       tf.write( msg->encodedContent() );
       tf.flush();
 
       attachmentUris << tf.fileName();
       isInlineAttachment = true;
-      break;
-    case IncidenceEditorNG::GlobalSettings::InlineBody:
-    {
-      if ( msg.get() == msg->textContent() || msg->textContent() == 0 ) { // no attachments
-        tf.write( msg->encodedContent() );
-        tf.flush();
-
-        attachmentUris << tf.fileName();
-        isInlineAttachment = true;
-      } else {
-        if ( KMessageBox::warningContinueCancel(
-               0,
-               i18n( "Removing attachments from an email might invalidate its signature." ),
-               i18n( "Remove Attachments" ), KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-               "BodyOnlyInlineAttachment" ) != KMessageBox::Continue ) {
-          return true; // canceled by user
-        }
-
-        KMime::Message::Ptr newMsg( new KMime::Message() );
-        newMsg->setHead( msg->head() );
-        newMsg->setBody( msg->textContent()->body() );
-        newMsg->parse();
-        newMsg->contentTransferEncoding()->from7BitString(
-              msg->textContent()->contentTransferEncoding()->as7BitString() );
-        newMsg->contentType()->from7BitString( msg->textContent()->contentType()->as7BitString() );
-        newMsg->assemble();
-        tf.write( newMsg->encodedContent() );
-        tf.flush();
-
-        attachmentUris << tf.fileName();
-        isInlineAttachment = true;
+    } else {
+      if ( KMessageBox::warningContinueCancel(
+             0,
+             i18n( "Removing attachments from an email might invalidate its signature." ),
+             i18n( "Remove Attachments" ),
+             KStandardGuiItem::cont(),
+             KStandardGuiItem::cancel(),
+             "BodyOnlyInlineAttachment" ) != KMessageBox::Continue ) {
+        return true; // canceled by user
       }
-      break;
+
+      KMime::Message::Ptr newMsg( new KMime::Message() );
+      newMsg->setHead( msg->head() );
+      newMsg->setBody( msg->textContent()->body() );
+      newMsg->parse();
+      newMsg->contentTransferEncoding()->from7BitString(
+        msg->textContent()->contentTransferEncoding()->as7BitString() );
+      newMsg->contentType()->from7BitString( msg->textContent()->contentType()->as7BitString() );
+      newMsg->assemble();
+      tf.write( newMsg->encodedContent() );
+      tf.flush();
+
+      attachmentUris << tf.fileName();
+      isInlineAttachment = true;
     }
-    default:
-      return false;
+    break;
+  }
+  default:
+    return false;
   }
   kDebug() << "AttachmentUris = " << attachmentUris
            << "; isInlineAttachment = " << isInlineAttachment
@@ -339,31 +359,35 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
 #ifndef KDEPIM_MOBILE_UI
   kDebug() << "desktop";
   switch ( type ) {
-    case KCalCore::IncidenceBase::TypeEvent:
-      IncidenceEditorNG::IncidenceDialogFactory::createEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
-                                                                    incidenceDescription,
-                                                                    attachmentUris,
-                                                                    QStringList() /* attendees */,
-                                                                    attachmentMimeTypes,
-                                                                    attachmentLabels,
-                                                                    isInlineAttachment,
-                                                                    Akonadi::Collection(),
-                                                                    true /* cleanup temp files */ );
-      break;
-    case KCalCore::IncidenceBase::TypeTodo:
-      IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
-                                                                   incidenceDescription,
-                                                                   attachmentUris,
-                                                                   QStringList() /* attendees */,
-                                                                   attachmentMimeTypes,
-                                                                   attachmentLabels,
-                                                                   isInlineAttachment,
-                                                                   Akonadi::Collection(),
-                                                                   true /* cleanup temp files */ );
-      break;
-    default:
-      Q_ASSERT( false );
-      break;
+  case KCalCore::IncidenceBase::TypeEvent:
+    IncidenceEditorNG::IncidenceDialogFactory::createEventEditor(
+      i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
+      incidenceDescription,
+      attachmentUris,
+      QStringList(), /* attendees */
+      attachmentMimeTypes,
+      attachmentLabels,
+      isInlineAttachment,
+      Akonadi::Collection(),
+      true /* cleanup temp files */);
+    break;
+
+  case KCalCore::IncidenceBase::TypeTodo:
+    IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor(
+      i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
+      incidenceDescription,
+      attachmentUris,
+      QStringList(), /* attendees */
+      attachmentMimeTypes,
+      attachmentLabels,
+      isInlineAttachment,
+      Akonadi::Collection(),
+      true /* cleanup temp files */);
+    break;
+
+  default:
+    Q_ASSERT( false );
+    break;
   }
 #else
   kDebug() << "mobile";
@@ -373,14 +397,26 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
                                            QDBusConnection::sessionBus() );
   switch( type ) {
-    case KCalCore::IncidenceBase::TypeEvent:
-      iface->openEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), incidenceDescription, attachmentUris,
-                              QStringList(), attachmentMimeTypes, isInlineAttachment );
-      break;
-    case KCalCore::IncidenceBase::TypeTodo:
-      iface->openTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), incidenceDescription, attachmentUris,
-                             QStringList(), attachmentMimeTypes, isInlineAttachment );
-      break;
+  case KCalCore::IncidenceBase::TypeEvent:
+    iface->openEventEditor(
+      i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
+      incidenceDescription,
+      attachmentUris,
+      QStringList(),
+      attachmentMimeTypes,
+      isInlineAttachment );
+    break;
+
+  case KCalCore::IncidenceBase::TypeTodo:
+    iface->openTodoEditor(
+      i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
+      incidenceDescription,
+      attachmentUris,
+      QStringList(),
+      attachmentMimeTypes,
+      isInlineAttachment );
+    break;
+
   default:
     Q_ASSERT( false );
     break;
@@ -402,11 +438,17 @@ bool MailCommon::Util::createEventFromMail( const Akonadi::Item &mailItem )
   return createIncidenceFromMail( KCalCore::IncidenceBase::TypeEvent, mailItem );
 }
 
-uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
+uint MailCommon::Util::folderIdentity( const Akonadi::Item &item )
 {
   uint id = 0;
-  if( item.isValid() && item.parentCollection().isValid() ) {
-    const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection(),false );
+  if ( item.isValid() && item.parentCollection().isValid() ) {
+    Akonadi::Collection col = item.parentCollection();
+    if( col.resource().isEmpty()) {
+      col = parentCollectionFromItem(item);
+    }
+    const QSharedPointer<FolderCollection> fd =
+      FolderCollection::forCollection( col, false );
+
     id = fd->identity();
   }
   return id;
@@ -415,21 +457,24 @@ uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
 static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &current )
 {
   // if we have children, return first child
-  if ( model->rowCount( current ) > 0 )
+  if ( model->rowCount( current ) > 0 ) {
     return model->index( 0, 0, current );
+  }
 
   // if we have siblings, return next sibling
   const QModelIndex parent = model->parent( current );
   const QModelIndex sibling = model->index( current.row() + 1, 0, parent );
 
-  if ( sibling.isValid() ) // found valid sibling
+  if ( sibling.isValid() ) { // found valid sibling
     return sibling;
+  }
 
-  if ( !parent.isValid() ) // our parent is the tree root and we have no siblings
+  if ( !parent.isValid() ) { // our parent is the tree root and we have no siblings
     return QModelIndex(); // we reached the bottom of the tree
+  }
 
   // We are the last child, the next index to check is our uncle, parent's first sibling
-  const QModelIndex parentsSibling = parent.sibling( parent.row()+1 , 0 );
+  const QModelIndex parentsSibling = parent.sibling( parent.row() + 1, 0 );
   if ( parentsSibling.isValid() ) {
     return parentsSibling;
   }
@@ -440,9 +485,11 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
   while ( currentParent.isValid() ) {
     // check if the parent has children except from us
     if ( model->rowCount( grandParent ) > currentParent.row() + 1 ) {
-      const QModelIndex index = indexBelow( model, model->index( currentParent.row() + 1, 0, grandParent ) );
-      if ( index.isValid() )
+      const QModelIndex index =
+        indexBelow( model, model->index( currentParent.row() + 1, 0, grandParent ) );
+      if ( index.isValid() ) {
         return index;
+      }
     }
 
     currentParent = grandParent;
@@ -454,8 +501,9 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
 
 static QModelIndex lastChildOf( QAbstractItemModel *model, const QModelIndex &current )
 {
-  if ( model->rowCount( current ) == 0 )
+  if ( model->rowCount( current ) == 0 ) {
     return current;
+  }
 
   return lastChildOf( model, model->index( model->rowCount( current ) - 1, 0, current ) );
 }
@@ -464,17 +512,22 @@ static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &cur
 {
   const QModelIndex parent = model->parent( current );
 
-  if ( current.row() == 0 ) // we have no previous siblings -> our parent is the next item above us
+  if ( current.row() == 0 ) {
+    // we have no previous siblings -> our parent is the next item above us
     return parent;
+  }
 
   // find previous sibling
   const QModelIndex previousSibling = model->index( current.row() - 1, 0, parent );
 
-  // the item above us is the last child (or grandchild, or grandgrandchild... etc) of our previous sibling
+  // the item above us is the last child (or grandchild, or grandgrandchild... etc)
+  // of our previous sibling
   return lastChildOf( model, previousSibling );
 }
 
-QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction,
+QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,
+                                                    const QModelIndex &current,
+                                                    SearchDirection direction,
                                                     bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) )
 {
   QModelIndex index = current;
@@ -485,22 +538,28 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
       index = indexAbove( model, index );
     }
 
-    if ( !index.isValid() ) // reach end or top of the model
+    if ( !index.isValid() ) { // reach end or top of the model
       return QModelIndex();
+    }
 
     // check if the index is a collection
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    const Akonadi::Collection collection =
+      index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
     if ( collection.isValid() ) {
 
       // check if it is unread
       if ( collection.statistics().unreadCount() > 0 ) {
-        if ( ignoreCollectionCallback && ignoreCollectionCallback( collection ) )
+        if ( ignoreCollectionCallback && ignoreCollectionCallback( collection ) ) {
           continue;
+        }
 
-        const QSharedPointer<FolderCollection> fCollection = FolderCollection::forCollection( collection, false );
-        if ( !fCollection->ignoreNewMail() )
+        const QSharedPointer<FolderCollection> fCollection =
+          FolderCollection::forCollection( collection, false );
+
+        if ( !fCollection->ignoreNewMail() ) {
           return index; // we found the next unread collection
+        }
       }
     }
   }
@@ -508,32 +567,63 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
   return QModelIndex(); // no unread collection found
 }
 
-Akonadi::Collection MailCommon::Util::parentCollectionFromItem(const Akonadi::Item& item)
+Akonadi::Collection MailCommon::Util::parentCollectionFromItem( const Akonadi::Item &item )
 {
-  const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), item.parentCollection() );
-  const Akonadi::Collection parentCollection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  return parentCollection;
+  return updatedCollection(item.parentCollection());
 }
 
-
-QString MailCommon::Util::realFolderPath( const QString& path )
+QString MailCommon::Util::realFolderPath( const QString &path )
 {
   QString realPath( path );
   realPath.remove( ".directory" );
   realPath.replace( "/.", "/" );
-  if ( !realPath.isEmpty() && ( realPath.at( 0 ) == '.' ) )
+  if ( !realPath.isEmpty() && ( realPath.at( 0 ) == '.' ) ) {
     realPath.remove( 0, 1 ); //remove first "."
+  }
   return realPath;
 }
 
 QColor MailCommon::Util::defaultQuotaColor()
 {
-    KColorScheme scheme( QPalette::Active, KColorScheme::View );
-    return scheme.foreground( KColorScheme::NegativeText ).color();
+  KColorScheme scheme( QPalette::Active, KColorScheme::View );
+  return scheme.foreground( KColorScheme::NegativeText ).color();
 }
 
-void MailCommon::Util::expireOldMessages( const Akonadi::Collection& collection, bool immediate )
+void MailCommon::Util::expireOldMessages( const Akonadi::Collection &collection, bool immediate )
 {
-  ScheduledExpireTask* task = new ScheduledExpireTask(collection, immediate);
+  ScheduledExpireTask *task = new ScheduledExpireTask( collection, immediate );
   KernelIf->jobScheduler()->registerTask( task );
 }
+
+Akonadi::Collection MailCommon::Util::updatedCollection( const Akonadi::Collection& col )
+{
+  const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), col );
+  const Akonadi::Collection collection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  return collection;
+}
+
+Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId=-1;
+  bool exactPath = false;
+  Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
+  if ( lst.count() == 1 && exactPath )
+    newFolderId = lst.at( 0 ).id();
+  else {
+    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
+    if ( dlg->exec() ) {
+      newFolderId = dlg->selectedCollection().id();
+    }
+    delete dlg;
+  }
+  return newFolderId;
+}
+
+QString MailCommon::Util::convertFolderPathToCollectionStr( const QString& folder)
+{
+  Akonadi::Collection::Id newFolderId= MailCommon::Util::convertFolderPathToCollectionId(folder);
+  if(newFolderId == -1 )
+    return QString();
+  return QString::number(newFolderId);
+}
+

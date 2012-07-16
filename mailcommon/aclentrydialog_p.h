@@ -20,8 +20,9 @@
 #ifndef MAILCOMMON_ACLENTRYDIALOG_P_H
 #define MAILCOMMON_ACLENTRYDIALOG_P_H
 
-#include <kdialog.h>
-#include <kimap/acl.h>
+#include <KIMAP/Acl>
+
+#include <KDialog>
 
 namespace MailCommon {
 
@@ -68,7 +69,7 @@ class AclEntryDialog : public KDialog
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void slotSelectAddresses() )
     Q_PRIVATE_SLOT( d, void slotChanged() )

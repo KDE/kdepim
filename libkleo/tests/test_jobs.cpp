@@ -45,8 +45,6 @@
 #include <kapplication.h>
 
 #include <memory>
-//Added by qt3to4:
-#include <Q3CString>
 
 static const char * protocol = 0;
 
@@ -63,7 +61,7 @@ static void testSign()
   std::auto_ptr<Kleo::KeyListJob> listJob( proto->keyListJob( false, false, true ) ); // use validating keylisting
   if ( listJob.get() ) {
       // ##### Adjust this to your own identity
-      listJob->exec( QStringList( "faure@kde.org" ), true /*secret*/, signingKeys );
+      listJob->exec( QStringList( "kloecker@kde.org" ), true /*secret*/, signingKeys );
       assert( !signingKeys.empty() );
   } else {
       assert( 0 ); // job failed
@@ -71,9 +69,8 @@ static void testSign()
 
   Kleo::SignJob* job = proto->signJob( true, true );
 
-  Q3CString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
-  QByteArray plainText = QByteArray( cText.data(), cText.length() ); // hrmpf...
-  kDebug(5150) <<"plainText=" << cText.data();
+  QByteArray plainText = "Hallo Leute\n"; // like gpgme's t-sign.c
+  kDebug(5150) <<"plainText=" << plainText;
 
   kDebug(5150) <<" signing with" << signingKeys[0].primaryFingerprint();
 
@@ -89,7 +86,7 @@ static void testSign()
     return;
   }
   kDebug(5150) <<"signing resulted in signature="
-	    << Q3CString( signature.data(), signature.size() + 1 );
+	    << signature;
 }
 
 int main( int argc, char** argv ) {

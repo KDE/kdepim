@@ -2,7 +2,7 @@
 #define SIEVETEXTEDIT_H
 
 
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,27 +22,40 @@
 
 #include "ksieveui_export.h"
 
-#include <KTextEdit>
+#include <QPlainTextEdit>
 class QCompleter;
 
 namespace KSieveUi {
+class SieveLineNumberArea;
 
-class KSIEVEUI_EXPORT SieveTextEdit : public KTextEdit
+class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 {
   Q_OBJECT
 public:
   explicit SieveTextEdit( QWidget *parent );
   virtual ~SieveTextEdit();
-
+  
+  void lineNumberAreaPaintEvent(QPaintEvent *event);
+  int lineNumberAreaWidth();
+  
 
 protected slots:
   void slotInsertCompletion( const QString& );
   QString wordUnderCursor();
+  void updateLineNumberAreaWidth(int newBlockCount);
+  void updateLineNumberArea(const QRect &, int);
+
 protected:
   void initCompleter();
-  void keyPressEvent(QKeyEvent* e);  
+  void keyPressEvent(QKeyEvent* e);
+  void resizeEvent(QResizeEvent *event);
+  void contextMenuEvent( QContextMenuEvent *event );
+  
+signals:
+  void findText();
 private:
   QCompleter *m_completer;
+  SieveLineNumberArea *m_sieveLineNumberArea;
 };
 
 }

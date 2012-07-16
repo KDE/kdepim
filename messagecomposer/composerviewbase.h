@@ -81,7 +81,8 @@ public:
   virtual ~ComposerViewBase();
 
   enum Confirmation { LetUserConfirm, NoConfirmationNeeded };
-  
+  enum MissingAttachment { NoMissingAttachmentFound, FoundMissingAttachmentAndSending, FoundMissingAttachmentAndAddedAttachment, FoundMissingAttachmentAndCancel };
+
   /**
    * Set the message to be opened in the composer window, and set the internal data structures to
    *  keep track of it.
@@ -193,9 +194,12 @@ public:
    * Check if the mail has references to attachments, but no attachments are added to it.
    * If missing attachments are found, a dialog to add new attachments is shown.
    * @param attachmentKeywords a list with the keywords that indicate an attachment should be present
-   * @return true, if the mail might miss attachments, usually sending should be aborted, false otherwise
+   * @return NoMissingAttachmentFound, if there is attachment in email
+   *         FoundMissingAttachmentAndCancelSending, if mail might miss attachment but sending
+   *         FoundMissingAttachmentAndAddedAttachment, if mail might miss attachment and we added an attachment
+   *         FoundMissingAttachmentAndCancel, if mail might miss attachment and cancel sending
    */
-  bool checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
+  ComposerViewBase::MissingAttachment checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
 
 public slots:
 
@@ -262,6 +266,8 @@ private:
   void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart );
   QStringList cleanEmailList( const QStringList& emails );
   void saveRecentAddresses( KMime::Message::Ptr ptr );
+  void updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type );
+
   /**
   * Writes out autosave data to the disk from the KMime::Message message.
   * Also appends the msgNum to the filename as a message can have a number of

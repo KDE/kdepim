@@ -3,6 +3,7 @@
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (c) 2012 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,79 +24,151 @@
   without including the source code for Qt in the source distribution.
 */
 
+//TODO: put a reminder and/or recurs icon on the item?
+// remove customlistitem.h
+
 #include "listview.h"
 #include "helper.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/utils.h>
-#include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/incidencechanger.h>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
 
 #include <KCalUtils/IncidenceFormatter>
-#include <KCalCore/Todo>
+using namespace KCalUtils;
+
 #include <KCalCore/Visitor>
-#include <KCalCore/Journal>
+using namespace KCalCore;
 
 #include <KIconLoader>
 
-#include <QTreeWidget>
 #include <QBoxLayout>
-#include <QStyle>
 #include <QHeaderView>
+#include <QTreeWidget>
 
 using namespace EventViews;
-using namespace KCalUtils;
-using namespace KCalCore;
-
-class ListView::Private
-{
-  public:
-  Private( ListView *mListView ): q( mListView )
-  {
-  }
-
-  ~Private()
-  {
-  }
-  void addIncidences( const Akonadi::Item::List &incidenceList, const QDate & );
-  void addIncidence( const Akonadi::Item &, const QDate &date );
-  ListViewItem *getItemForIncidence( const Akonadi::Item & );
-
-  QTreeWidget *mTreeWidget;
-  ListViewItem *mActiveItem;
-  QHash<Akonadi::Item::Id,Akonadi::Item> mItems;
-  QHash<Akonadi::Item::Id, QDate> mDateList;
-  QDate mStartDate;
-  QDate mEndDate;
-  DateList mSelectedDates;
-
-  // if it's non interactive we disable context menu, and incidence editing
-  bool mIsNonInteractive;
-  class ListItemVisitor;
-
-  private:
-    ListView *const q;
-};
 
 enum {
   Summary_Column = 0,
-  Reminder_Column,
-  Recurs_Column,
   StartDateTime_Column,
   EndDateTime_Column,
   Categories_Column,
   Dummy_EOF_Column // Dummy enum value for iteration purposes only. Always keep at the end.
 };
 
+static QString cleanSummary( const QString &summary, const KDateTime &next )
+{
+  static QString etc = i18nc( "@label an elipsis", "..." );
+  int maxLen = 40;
+
+  QString retStr = summary;
+  retStr.replace( '\n', ' ' );
+  if ( retStr.length() > maxLen ) {
+    maxLen -= etc.length();
+    retStr = retStr.left( maxLen );
+    retStr += etc;
+  }
+  if ( next.isValid() ) {
+    const QString dateStr =
+      KGlobal::locale()->formatDate(
+        next.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
+        KLocale::ShortDate );
+    retStr = i18nc( "%1 is an item summary. %2 is the date when this item reoccurs",
+                    "%1 (next: %2)", retStr, dateStr );
+  }
+  return retStr;
+}
+
+class ListViewItem : public QTreeWidgetItem
+{
+  public:
+    ListViewItem( const Akonadi::Item &incidence, QTreeWidget *parent )
+      : QTreeWidgetItem( parent ), mTreeWidget( parent ), mIncidence( incidence )
+    {
+    }
+
+    bool operator<( const QTreeWidgetItem & other ) const;
+
+    const QTreeWidget *mTreeWidget;
+    const Akonadi::Item mIncidence;
+    KDateTime start;
+    KDateTime end;
+};
+
+bool ListViewItem::operator<( const QTreeWidgetItem &other ) const
+{
+  const ListViewItem *otheritem = static_cast<const ListViewItem *>( &other );
+
+  switch( treeWidget()->sortColumn() ) {
+
+  case StartDateTime_Column:
+  {
+    return otheritem->start < start;
+  }
+  case EndDateTime_Column:
+  {
+    KDateTime thisEnd;
+    Incidence::Ptr thisInc = CalendarSupport::incidence( mIncidence );
+    thisEnd = thisInc->dateTime( Incidence::RoleDisplayEnd );
+
+    KDateTime otherEnd;
+    Incidence::Ptr otherInc = CalendarSupport::incidence( otheritem->mIncidence );
+    otherEnd = otherInc->dateTime( Incidence::RoleDisplayEnd );
+
+    return otherEnd < thisEnd;
+  }
+  default:
+    return QTreeWidgetItem::operator < ( other );
+  }
+}
+
+class ListView::Private
+{
+  public:
+    Private( ListView *mListView ): q( mListView )
+    {
+    }
+
+    ~Private()
+    {
+    }
+
+    void addIncidences( CalendarSupport::Calendar *calendar,
+                        const Akonadi::Item::List &incidenceList, const QDate &date );
+    void addIncidence( CalendarSupport::Calendar *calendar,
+                       const Akonadi::Item &, const QDate &date );
+    ListViewItem *getItemForIncidence( const Akonadi::Item & );
+
+    QTreeWidget *mTreeWidget;
+    ListViewItem *mActiveItem;
+    QHash<Akonadi::Item::Id,Akonadi::Item> mItems;
+    QHash<Akonadi::Item::Id, QDate> mDateList;
+    QDate mStartDate;
+    QDate mEndDate;
+    DateList mSelectedDates;
+
+    // if it's non interactive we disable context menu, and incidence editing
+    bool mIsNonInteractive;
+    class ListItemVisitor;
+
+  private:
+    ListView *const q;
+};
+
 /**
-  This class provides the initialization of a KOListViewItem for calendar
+  This class provides the initialization of a ListViewItem for calendar
   components using the Incidence::Visitor.
 */
 class ListView::Private::ListItemVisitor : public KCalCore::Visitor
 {
   public:
-    ListItemVisitor( ListViewItem *item ) : mItem( item ) {}
-    ~ListItemVisitor() {}
+    ListItemVisitor( ListViewItem *item, QDate dt ) : mItem( item ), mStartDate( dt )
+    {
+    }
+    ~ListItemVisitor()
+    {
+    }
 
     bool visit( Event::Ptr );
     bool visit( Todo::Ptr );
@@ -104,31 +177,15 @@ class ListView::Private::ListItemVisitor : public KCalCore::Visitor
     { // to inhibit hidden virtual compile warning
       return true;
     };
+
   private:
     ListViewItem *mItem;
+    QDate mStartDate;
 };
 
 bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
 {
-  mItem->setText( Summary_Column, e->summary() );
-  if ( e->hasEnabledAlarms() ) {
-    static const QPixmap alarmPxmp = SmallIcon( "appointment-reminder" );
-    mItem->setIcon( Reminder_Column, alarmPxmp );
-    mItem->setSortKey( Reminder_Column, "1" );
-  } else {
-    mItem->setSortKey( Reminder_Column, "0" );
-  }
-
-  if ( e->recurs() ) {
-    static const QPixmap recurPxmp = SmallIcon( "appointment-recurring" );
-    mItem->setIcon( Recurs_Column, recurPxmp );
-    mItem->setSortKey( Recurs_Column, "1" );
-  } else {
-    mItem->setSortKey( Recurs_Column, "0" );
-  }
-
   QPixmap eventPxmp;
-
   if ( e->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     eventPxmp = cachedSmallIcon( "view-calendar-wedding-anniversary" );
   } else if ( e->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
@@ -136,24 +193,30 @@ bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
   } else {
     eventPxmp = cachedSmallIcon( e->iconName() );
   }
-
   mItem->setIcon( Summary_Column, eventPxmp );
 
-  mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                    e->dtStart(), e->allDay(), true,
-                    CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+  KDateTime next;
+  mItem->start = e->dateTime( Incidence::RoleDisplayStart );
+  mItem->end = e->dateTime( Incidence::RoleDisplayEnd );
+  if ( e->recurs() ) {
+    const int duration = e->dtStart().secsTo( e->dtEnd() );
+    KDateTime kdt = KDateTime::currentDateTime(
+      CalendarSupport::KCalPrefs::instance()->timeSpec() );
+    kdt = kdt.addSecs( -1 );
+    mItem->start.setDate( e->recurrence()->getNextDateTime( kdt ).date() );
+    mItem->end = mItem->start.addSecs( duration );
+    next = e->recurrence()->getNextDateTime( mItem->start );
+  }
 
-  mItem->setSortKey( StartDateTime_Column, e->dtStart().toTimeSpec(
-                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).
-                         toString( KDateTime::ISODate ) );
+  mItem->setText( Summary_Column, cleanSummary( e->summary(), next ) );
+
+  mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
+                    mItem->start, e->allDay(), true,
+                    CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   mItem->setText( EndDateTime_Column, IncidenceFormatter::dateTimeToString(
-                    e->dtEnd(), e->allDay(), true,
+                    mItem->end, e->allDay(), true,
                     CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
-
-  mItem->setSortKey( EndDateTime_Column, e->dtEnd().toTimeSpec(
-                       CalendarSupport::KCalPrefs::instance()->timeSpec() ).
-                         toString( KDateTime::ISODate ) );
 
   mItem->setText( Categories_Column, e->categoriesStr() );
 
@@ -163,42 +226,22 @@ bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
 bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
 {
   mItem->setIcon( Summary_Column, cachedSmallIcon( t->iconName() ) );
-  mItem->setText( Summary_Column, t->summary() );
-  if ( t->hasEnabledAlarms() ) {
-    static const QPixmap alarmPxmp = SmallIcon( "appointment-reminder" );
-    mItem->setIcon( Reminder_Column, alarmPxmp );
-    mItem->setSortKey( Reminder_Column, "1" );
-  } else {
-    mItem->setSortKey( Reminder_Column, "0" );
-  }
 
-  if ( t->recurs() ) {
-    static const QPixmap recurPxmp = SmallIcon( "appointment-recurring" );
-    mItem->setIcon( Recurs_Column, recurPxmp );
-    mItem->setSortKey( Recurs_Column, "1" );
-  } else {
-    mItem->setSortKey( Recurs_Column, "0" );
-  }
+  mItem->setText( Summary_Column, cleanSummary( t->summary(), KDateTime() ) );
 
   if ( t->hasStartDate() ) {
     mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                      t->dtStart(), t->allDay(), true,
+                      t->dateTime( Incidence::RoleDisplayStart ), t->allDay(), true,
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
-    mItem->setSortKey( StartDateTime_Column, t->dtStart().toTimeSpec(
-                         CalendarSupport::KCalPrefs::instance()->timeSpec() ).
-                           toString( KDateTime::ISODate ) );
   } else {
     mItem->setText( StartDateTime_Column, "---" );
   }
 
   if ( t->hasDueDate() ) {
     mItem->setText( EndDateTime_Column, IncidenceFormatter::dateTimeToString(
-                      t->dtDue(), t->allDay(), true,
+                      t->dateTime( Incidence::RoleDisplayEnd ), t->allDay(), true,
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
-    mItem->setSortKey( EndDateTime_Column, t->dtDue().toTimeSpec(
-                         CalendarSupport::KCalPrefs::instance()->timeSpec() ).
-                           toString( KDateTime::ISODate ) );
   } else {
     mItem->setText( EndDateTime_Column, "---" );
   }
@@ -212,15 +255,15 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
   static const QPixmap jrnalPxmp = SmallIcon( j->iconName() );
   mItem->setIcon( Summary_Column, jrnalPxmp );
   if ( j->summary().isEmpty() ) {
-    mItem->setText( Summary_Column, j->description().section( '\n', 0, 0 ) );
+    mItem->setText( Summary_Column,
+                    cleanSummary( j->description().section( '\n', 0, 0 ),
+                                  KDateTime() ) );
   } else {
-    mItem->setText( Summary_Column, j->summary() );
+    mItem->setText( Summary_Column, cleanSummary( j->summary(), KDateTime() ) );
   }
   mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                  j->dtStart(), j->allDay(), true,
-                  CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
-
-  mItem->setSortKey( StartDateTime_Column, j->dtStart().toString( KDateTime::ISODate ) );
+                    j->dateTime( Incidence::RoleDisplayStart ), j->allDay(), true,
+                    CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   return true;
 }
@@ -234,19 +277,17 @@ ListView::ListView( CalendarSupport::Calendar *calendar,
   d->mIsNonInteractive = nonInteractive;
 
   d->mTreeWidget = new QTreeWidget( this );
-  d->mTreeWidget->setColumnCount( 6 );
-  d->mTreeWidget->headerItem()->setText( 0, i18n( "Summary" ) );
-  d->mTreeWidget->headerItem()->setText( 1, i18n( "Reminder" ) );
-  d->mTreeWidget->headerItem()->setText( 2, i18n( "Recurs" ) );
-  d->mTreeWidget->headerItem()->setText( 3, i18n( "Start Date/Time" ) );
-  d->mTreeWidget->headerItem()->setText( 4, i18n( "End Date/Time" ) );
-  d->mTreeWidget->headerItem()->setText( 5, i18n( "Categories" ) );
+  d->mTreeWidget->setColumnCount( 4 );
+  d->mTreeWidget->setSortingEnabled( true );
+  d->mTreeWidget->headerItem()->setText( Summary_Column, i18n( "Summary" ) );
+  d->mTreeWidget->headerItem()->setText( StartDateTime_Column, i18n( "Start Date/Time" ) );
+  d->mTreeWidget->headerItem()->setText( EndDateTime_Column, i18n( "End Date/Time" ) );
+  d->mTreeWidget->headerItem()->setText( Categories_Column, i18n( "Categories" ) );
 
+  d->mTreeWidget->setWordWrap( true );
+  d->mTreeWidget->setAllColumnsShowFocus( true );
   d->mTreeWidget->setContextMenuPolicy( Qt::CustomContextMenu );
-
-  // d->mTreeWidget->setColumnAlignment( StartDateTime_Column, Qt::AlignHCenter );
-
-  //d->mTreeWidget->setColumnAlignment( EndDateTime_Column, Qt::AlignHCenter );
+  d->mTreeWidget->setRootIsDecorated( false );
 
   QBoxLayout *layoutTop = new QVBoxLayout( this );
   layoutTop->setMargin( 0 );
@@ -263,6 +304,8 @@ ListView::ListView( CalendarSupport::Calendar *calendar,
   //d->mTreeWidget->restoreLayout( KOGlobals::self()->config(), "ListView Layout" );
 
   d->mSelectedDates.append( QDate::currentDate() );
+
+  updateView();
 }
 
 ListView::~ListView()
@@ -282,7 +325,7 @@ Akonadi::Item::List ListView::selectedIncidences() const
                           d->mTreeWidget->selectedItems().first() ;
   if ( item ) {
     ListViewItem *i = static_cast<ListViewItem *>( item );
-    eventList.append( d->mItems.value( i->data() ) );
+    eventList.append( i->mIncidence );
   }
   return eventList;
 }
@@ -292,38 +335,12 @@ DateList ListView::selectedIncidenceDates() const
   return d->mSelectedDates;
 }
 
-void ListView::showDates( bool show )
-{
-  // Shouldn't we set it to a value greater 0? When showDates is called with
-  // show == true at first, then the columnwidths are set to zero.
-  static int oldColWidth1 = 0;
-  static int oldColWidth3 = 0;
-
-  if ( !show ) {
-    oldColWidth1 = d->mTreeWidget->columnWidth( 1 );
-    oldColWidth3 = d->mTreeWidget->columnWidth( 3 );
-    d->mTreeWidget->setColumnWidth( 1, 0 );
-    d->mTreeWidget->setColumnWidth( 3, 0 );
-  } else {
-    d->mTreeWidget->setColumnWidth( 1, oldColWidth1 );
-    d->mTreeWidget->setColumnWidth( 3, oldColWidth3 );
-  }
-  d->mTreeWidget->repaint();
-}
-
-void ListView::showDates()
-{
-  showDates( true );
-}
-
-void ListView::hideDates()
-{
-  showDates( false );
-}
-
 void ListView::updateView()
 {
-  kDebug() << "not implemented yet";
+  for ( int col = 0; col < Dummy_EOF_Column; ++col ) {
+    d->mTreeWidget->resizeColumnToContents( col );
+  }
+  d->mTreeWidget->sortItems( StartDateTime_Column, Qt::DescendingOrder );
 }
 
 void ListView::showDates( const QDate &start, const QDate &end, const QDate &preferredMonth )
@@ -334,12 +351,29 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
   d->mStartDate = start;
   d->mEndDate = end;
 
+  KDateTime kStart( start );
+  const QString startStr =
+    KGlobal::locale()->formatDate(
+      kStart.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
+      KLocale::ShortDate );
+
+  KDateTime kEnd( end );
+  const QString endStr =
+    KGlobal::locale()->formatDate(
+      kEnd.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
+      KLocale::ShortDate );
+
+  d->mTreeWidget->headerItem()->setText( Summary_Column,
+                                         i18n( "Summary [%1 - %2]", startStr, endStr ) );
+
   QDate date = start;
   while ( date <= end ) {
-    d->addIncidences( calendar()->incidences( date ), date );
+    d->addIncidences( calendar(), calendar()->incidences( date ), date );
     d->mSelectedDates.append( date );
     date = date.addDays( 1 );
   }
+
+  updateView();
 
   emit incidenceSelected( Akonadi::Item(), QDate() );
 }
@@ -347,18 +381,20 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
 void ListView::showAll()
 {
   const Akonadi::Item::List incidenceList = calendar()->incidences();
-  d->addIncidences( incidenceList, QDate() );
+  d->addIncidences( calendar(), incidenceList, QDate() );
 }
 
-void ListView::Private::addIncidences( const Akonadi::Item::List &incidenceList,
+void ListView::Private::addIncidences( CalendarSupport::Calendar *calendar,
+                                       const Akonadi::Item::List &incidenceList,
                                        const QDate &date )
 {
   Q_FOREACH ( const Akonadi::Item & i, incidenceList ) {
-    addIncidence( i, date );
+    addIncidence( calendar, i, date );
   }
 }
 
-void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &date )
+void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
+                                      const Akonadi::Item &aitem, const QDate &date )
 {
   if ( !CalendarSupport::hasIncidence( aitem ) || mItems.contains( aitem.id() ) ) {
     return;
@@ -375,21 +411,22 @@ void ListView::Private::addIncidence( const Akonadi::Item &aitem, const QDate &d
     if ( years > 0 ) {
       tinc = Incidence::Ptr( tinc->clone() );
       tinc->setReadOnly( false );
-      tinc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, tinc->summary() ) );
+      tinc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years,
+                               cleanSummary( tinc->summary(), KDateTime() ) ) );
       tinc->setReadOnly( true );
     }
   }
-  ListViewItem *item = new ListViewItem( aitem.id(), mTreeWidget, q );
+  ListViewItem *item = new ListViewItem( aitem, mTreeWidget );
 
   // set tooltips
   for ( int col = 0; col < Dummy_EOF_Column; ++col ) {
     item->setToolTip( col,
                       IncidenceFormatter::toolTipStr(
-                        CalendarSupport::displayName( aitem.parentCollection() ),
+                        CalendarSupport::displayName( calendar, aitem.parentCollection() ),
                         CalendarSupport::incidence( aitem ) ) );
   }
 
-  ListItemVisitor v( item );
+  ListItemVisitor v( item, mStartDate );
   if ( !tinc->accept( v, tinc ) ) {
     delete item;
   }
@@ -401,7 +438,9 @@ void ListView::showIncidences( const Akonadi::Item::List &incidenceList, const Q
 {
   clear();
 
-  d->addIncidences( incidenceList, date );
+  d->addIncidences( calendar(), incidenceList, date );
+
+  updateView();
 
   // After new creation of list view no events are selected.
   emit incidenceSelected( Akonadi::Item(), date );
@@ -427,7 +466,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
   case CalendarSupport::IncidenceChanger::INCIDENCEADDED:
   {
     if ( date >= f && date <= l ) {
-      d->addIncidence( aitem, date );
+      d->addIncidence( calendar(), aitem, date );
     }
     break;
   }
@@ -440,7 +479,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
       d->mDateList.remove( aitem.id() );
     }
     if ( date >= f && date <= l ) {
-      d->addIncidence( aitem, date );
+      d->addIncidence( calendar(), aitem, date );
     }
     break;
   }
@@ -460,7 +499,7 @@ ListViewItem *ListView::Private::getItemForIncidence( const Akonadi::Item &aitem
   int index = 0;
   while ( QTreeWidgetItem *it = mTreeWidget->topLevelItem( index ) ) {
     ListViewItem *item = static_cast<ListViewItem *>( it );
-    if ( item->data() == aitem.id() ) {
+    if ( item->mIncidence.id() == aitem.id() ) {
       return item;
     }
     ++index;
@@ -491,7 +530,7 @@ void ListView::popupMenu( const QPoint &point )
   d->mActiveItem = static_cast<ListViewItem *>( d->mTreeWidget->itemAt( point ) );
 
   if ( d->mActiveItem && !d->mIsNonInteractive ) {
-    const Akonadi::Item aitem = d->mItems.value( d->mActiveItem->data() );
+    const Akonadi::Item aitem = d->mActiveItem->mIncidence;
     // FIXME: For recurring incidences we don't know the date of this
     // occurrence, there's no reference to it at all!
 
@@ -530,7 +569,7 @@ void ListView::processSelectionChange()
     if ( !item ) {
       emit incidenceSelected( Akonadi::Item(), QDate() );
     } else {
-      emit incidenceSelected( d->mItems.value( item->data() ), d->mDateList.value( item->data() ) );
+      emit incidenceSelected( item->mIncidence, d->mDateList.value( item->mIncidence.id() ) );
     }
   }
 }

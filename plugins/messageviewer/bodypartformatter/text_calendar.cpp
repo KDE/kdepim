@@ -76,6 +76,8 @@ using namespace KCalCore;
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 
+using namespace MailTransport;
+
 namespace {
 
 static bool hasMyWritableEventsFolders( const QString &family )
@@ -278,16 +280,16 @@ static QString directoryForStatus( Attendee::PartStat status )
   QString dir;
   switch ( status ) {
   case Attendee::Accepted:
-    dir = "accepted";
+    dir = QLatin1String( "accepted" );
     break;
   case Attendee::Tentative:
-    dir = "tentative";
+    dir = QLatin1String( "tentative" );
     break;
   case Attendee::Declined:
-    dir = "cancel";
+    dir = QLatin1String( "cancel" );
     break;
   case Attendee::Delegated:
-    dir = "delegated";
+    dir = QLatin1String( "delegated" );
     break;
   default:
     break;
@@ -342,7 +344,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       bool rsvp = true; // better send superfluously than not at all
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      Attendee::List::ConstIterator end( attendees.constEnd() );      
+      Attendee::List::ConstIterator end( attendees.constEnd() );
       for ( it = attendees.constBegin(); it != end; ++it ) {
         if ( it == attendees.constBegin() ) {
           rsvp = (*it)->RSVP(); // use what the first one has
@@ -362,7 +364,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
       Attendee::List::ConstIterator end = attendees.constEnd();
-      
+
       for ( it = attendees.constBegin(); it != end; ++it ) {
         if ( it == attendees.constBegin() ) {
           role = (*it)->role(); // use what the first one has
@@ -387,7 +389,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( attachments.count() > 0 ) {
         Attachment::List::ConstIterator it;
         Attachment::List::ConstIterator end = attachments.constEnd();
-        
+
         for ( it = attachments.constBegin(); it != end; ++it ) {
           if ( (*it)->label() == name ) {
             attachment = *it;
@@ -598,23 +600,22 @@ class UrlHandler : public Interface::BodyPartURLHandler
         msg->setHeader( x_header );
       }
 
-#if 0 //TODO: Review // Shouldn't be necessary anymore
       const bool identityHasTransport = !identity.transport().isEmpty();
+      QString transportName;
       if ( !nullIdentity && identityHasTransport ) {
-        msg->setHeaderField( "X-KMail-Transport", identity.transport() );
+          transportName = identity.transport();
       } else if ( !nullIdentity && identity.isDefault() ) {
-        msg->setHeaderField( "X-KMail-Transport",
-                             TransportManager::self()->defaultTransportName() );
+          transportName = TransportManager::self()->defaultTransportName();
       } else {
-        const QString transport = askForTransport( nullIdentity );
-        if ( transport.isEmpty() ) {
-          return false; // user canceled transport selection dialog
-        }
-        msg->setHeaderField( "X-KMail-Transport", transport );
+          transportName = TransportManager::self()->defaultTransportName();
       }
-#else
-      kDebug() << "AKONADI PORT: Disabled code in " << Q_FUNC_INFO;
-#endif
+
+      if(transportName.isEmpty()) {
+        if ( !TransportManager::self()->showTransportCreationDialog( 0, TransportManager::IfNoTransportExists ) )
+          return false;
+        transportName = TransportManager::self()->defaultTransportName();
+      }
+      msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), transportName, "utf-8" ) );
 
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
@@ -658,12 +659,27 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 #else
       msg->assemble();
+      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( transportName );
+
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
+
+      job->addressAttribute().setTo( QStringList() << KPIMUtils::extractEmailAddress(
+                                       KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
+      job->transportAttribute().setTransportId(transport->id());
+
+      if ( transport && transport->specifySenderOverwriteAddress() ) {
+        job->addressAttribute().setFrom(
+          KPIMUtils::extractEmailAddress(
+            KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
+      } else {
+        job->addressAttribute().setFrom(
+          KPIMUtils::extractEmailAddress(
+            KPIMUtils::normalizeAddressesAndEncodeIdn( msg->from()->asUnicodeString() ) ) );
+      }
+
       job->setMessage( msg );
-      job->addressAttribute().setTo( QStringList() << to );
-      job->transportAttribute().setTransportId(
-        MailTransport::TransportManager::self()->defaultTransportId() );
+
       if( ! job->exec() ) {
         kWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
@@ -890,7 +906,12 @@ class UrlHandler : public Interface::BodyPartURLHandler
         if ( !ok ) {
           return true;
         }
-        if ( !comment.isEmpty() ) {
+        if ( comment.isEmpty() ) {
+          KMessageBox::error(
+            0,
+            i18n( "You forgot to add proposal. Please add it. Thanks" ) );
+          return true;
+        } else {
           if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
@@ -1131,7 +1152,14 @@ class UrlHandler : public Interface::BodyPartURLHandler
         if ( !ok ) {
           return true;
         }
-        if ( !comment.isEmpty() ) {
+        if ( comment.isEmpty() ) {
+          KMessageBox::error(
+            0,
+            i18n( "You forgot to add proposal. Please add it. Thanks" ) );
+          return true;
+
+        }
+        else {
           if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {

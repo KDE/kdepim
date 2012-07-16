@@ -1,5 +1,5 @@
 /*
-    Copyright (c) a2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,7 +21,7 @@
 #define ATTENDEESELECTOR_H_H
 
 #include <kdialog.h>
-#include "ui_ui_attendeeselector.h"
+#include "ui_attendeeselector.h"
 
 /**
   Dialog to select a set off attendees.

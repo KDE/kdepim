@@ -176,6 +176,8 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
              this, SLOT(slotFramesChanged()));
     connect( Kernel::self()->frameManager(), SIGNAL(signalFrameRemoved(int)),
              this, SLOT(slotFramesChanged()));
+    connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+             this,SLOT(slotNetworkStatusChanged(Solid::Networking::Status)));
 
     m_tabWidget->setWhatsThis( i18n("You can view multiple articles in several open tabs."));
 
@@ -233,7 +235,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
 
     m_articleViewer = new ArticleViewer(m_articleSplitter);
     m_actionManager->initArticleViewer(m_articleViewer);
-    m_articleListView->setFocusProxy(m_articleViewer);
+//    m_articleListView->setFocusProxy(m_articleViewer);
     setFocusProxy( m_articleViewer );
 
     connect( m_articleViewer, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)),
@@ -304,6 +306,12 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
         m_searchBar->slotSetStatus( Settings::statusFilter() );
         m_searchBar->slotSetText( Settings::textFilter() );
     }
+
+        //Check network status
+    if(Solid::Networking::status() == Solid::Networking::Connected ||Solid::Networking::status() == Solid::Networking::Unknown)
+     this->m_networkAvailable=true;
+    else if(Solid::Networking::status() == Solid::Networking::Unconnected)
+      this->m_networkAvailable=false;
 }
 
 void Akregator::MainWidget::slotOnShutdown()
@@ -769,15 +777,20 @@ void Akregator::MainWidget::slotDoIntervalFetches()
 
 void Akregator::MainWidget::slotFetchCurrentFeed()
 {
-    if ( !m_selectionController->selectedSubscription() )
+    if ( !m_selectionController->selectedSubscription())
         return;
-    m_selectionController->selectedSubscription()->slotAddToFetchQueue(Kernel::self()->fetchQueue());
+    if(isNetworkAvailable())
+      m_selectionController->selectedSubscription()->slotAddToFetchQueue(Kernel::self()->fetchQueue());
+    else
+      m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
 }
 
 void Akregator::MainWidget::slotFetchAllFeeds()
 {
-    if ( m_feedList )
+    if ( m_feedList && isNetworkAvailable() )
         m_feedList->addToFetchQueue( Kernel::self()->fetchQueue() );
+    else if (m_feedList)
+        m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
 }
 
 void Akregator::MainWidget::slotFetchingStarted()
@@ -811,6 +824,9 @@ void Akregator::MainWidget::slotArticleSelected(const Akregator::Article& articl
     maai->setChecked( article.keep() );
 
     m_articleViewer->showArticle( article );
+    if (m_selectionController->selectedArticles().count() == 0) {
+        m_articleListView->setCurrentIndex(m_selectionController->currentArticleIndex());
+    }
 
     if ( article.isNull() || article.status() == Akregator::Read )
         return;
@@ -1150,6 +1166,32 @@ void Akregator::MainWidget::saveProperties(KConfigGroup & config)
 void Akregator::MainWidget::ensureArticleTabVisible()
 {
     m_tabWidget->setCurrentWidget( m_mainFrame );
+}
+
+void MainWidget::slotReloadAllTabs()
+{
+  this->m_tabWidget->slotReloadAllTabs();
+}
+
+
+bool MainWidget::isNetworkAvailable()
+{
+  return m_networkAvailable;
+}
+
+void MainWidget::slotNetworkStatusChanged(Solid::Networking::Status status)
+{
+  if(status==Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown)
+  {
+    m_networkAvailable=true;
+    m_mainFrame->slotSetStatusText(i18n("Networking is available now."));
+    this->slotFetchAllFeeds();
+  }
+  else if(Solid::Networking::Unconnected)
+  {
+    m_networkAvailable=false;
+    m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
+  }
 }
 
 #include "mainwidget.moc"

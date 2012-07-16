@@ -75,7 +75,7 @@ public:
   virtual QModelIndex parent( const QModelIndex &index ) const;
   virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
-  virtual QMimeData* mimeData( QList< MessageList::Core::MessageItem* > ) const;
+  virtual QMimeData* mimeData( const QList< MessageList::Core::MessageItem* >& ) const;
   using MessageList::Core::StorageModel::mimeData;
 
   virtual void prepareForScan();
@@ -89,7 +89,7 @@ private:
   Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))
   Q_PRIVATE_SLOT(d, void onSelectionChanged())
   Q_PRIVATE_SLOT(d, void loadSettings())
-  Q_PRIVATE_SLOT(d, void statementChanged( const Soprano::Statement & ))
+  Q_PRIVATE_SLOT(d, void statementChanged( const Nepomuk2::Resource & ))
 
   class Private;
   Private * const d;

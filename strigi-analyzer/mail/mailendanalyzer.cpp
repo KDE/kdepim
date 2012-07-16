@@ -21,7 +21,6 @@
 */
 
 #include "mailendanalyzer.h"
-
 #include "messageanalyzer.h"
 
 #include <strigi/fieldtypes.h>
@@ -38,7 +37,7 @@
 using namespace StrigiEndAnalyzer;
 
 static int s_fakeArgumentCount = 1;
-static char* s_fakeArgumentVector[2] = { "mailendanalyzer", NULL };
+static char *s_fakeArgumentVector[2] = { "mailendanalyzer", NULL };
 
 MailEndAnalyzer::MailEndAnalyzer( const MailEndAnalyzerFactory *factory )
   : m_factory( factory ),
@@ -180,8 +179,8 @@ std::list<Strigi::StreamEndAnalyzerFactory*> MailFactoryFactory::streamEndAnalyz
   return list;
 }
 
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
 STRIGI_ANALYZER_FACTORY( StrigiEndAnalyzer::MailFactoryFactory )
 #else
-EXPORT_PLUGIN(Strigi_Plugin_Mail,StrigiEndAnalyzer::MailFactoryFactory)
+EXPORT_PLUGIN( Strigi_Plugin_Mail,StrigiEndAnalyzer::MailFactoryFactory )
 #endif

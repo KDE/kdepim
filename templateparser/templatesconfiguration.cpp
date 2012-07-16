@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ * Copyright (C) 2012 Laurent Montel <montel@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,10 +91,36 @@ void TemplatesConfiguration::slotTextChanged()
 
 void TemplatesConfiguration::resetToDefault()
 {
-  textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
-  textEdit_reply->setText( DefaultTemplates::defaultReply() );
-  textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
-  textEdit_forward->setText( DefaultTemplates::defaultForward() );
+  const int choice =
+    KMessageBox::questionYesNoCancel(
+      0,
+      i18n( "Do you want to reset current template or all templates to default?" ),
+      i18n( "Reset to default" ),
+      KGuiItem( i18n( "Reset Current Template" ) ),
+      KGuiItem( i18n( "Reset All Templates" ) ),
+      KStandardGuiItem::cancel() );
+
+  if ( choice == KMessageBox::Cancel ) {
+    return;
+  } else if ( choice == KMessageBox::Yes ) {
+    const int toolboxCurrentIndex( toolBox1->currentIndex() );
+    if( toolBox1->widget( toolboxCurrentIndex ) == page_new ) {
+      textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
+    } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply ) {
+      textEdit_reply->setText( DefaultTemplates::defaultReply() );
+    } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply_all ) {
+      textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
+    } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
+      textEdit_forward->setText( DefaultTemplates::defaultForward() );
+    } else {
+      kDebug() << "Unknown current page in TemplatesConfiguration!";
+    }
+  } else {
+    textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
+    textEdit_reply->setText( DefaultTemplates::defaultReply() );
+    textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
+    textEdit_forward->setText( DefaultTemplates::defaultForward() );
+  }
   lineEdit_quote->setText( DefaultTemplates::defaultQuoteString() );
 }
 
@@ -291,20 +318,30 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
   t.writeConfig();
 }
 
-void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
+KTextEdit *TemplatesConfiguration::currentTextEdit() const
 {
   KTextEdit *edit;
 
-  if( toolBox1->widget( toolBox1->currentIndex() ) == page_new ) {
+  const int toolboxCurrentIndex( toolBox1->currentIndex() );
+  if( toolBox1->widget( toolboxCurrentIndex ) == page_new ) {
     edit = textEdit_new;
-  } else if( toolBox1->widget( toolBox1->currentIndex() ) == page_reply ) {
+  } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply ) {
     edit = textEdit_reply;
-  } else if( toolBox1->widget( toolBox1->currentIndex() ) == page_reply_all ) {
+  } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply_all ) {
     edit = textEdit_reply_all;
-  } else if( toolBox1->widget( toolBox1->currentIndex() ) == page_forward ) {
+  } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
     edit = textEdit_forward;
   } else {
     kDebug() << "Unknown current page in TemplatesConfiguration!";
+    edit = 0;
+  }
+  return edit;
+}
+
+void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
+{
+  KTextEdit *edit = currentTextEdit();
+  if ( !edit ) {
     return;
   }
 

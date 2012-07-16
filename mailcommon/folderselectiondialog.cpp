@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2009, 2010 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -18,20 +18,20 @@
 
 #include "folderselectiondialog.h"
 
-#include "foldertreewidget.h"
-#include "foldertreeview.h"
 #include "foldercollection.h"
+#include "foldertreeview.h"
+#include "foldertreewidget.h"
 #include "foldertreewidgetproxymodel.h"
 #include "mailkernel.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionCreateJob>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeModel>
 
+#include <KInputDialog>
 #include <KLocale>
-#include <kinputdialog.h>
-#include <kmessagebox.h>
+#include <KMessageBox>
 
 #include <QKeyEvent>
 #include <QVBoxLayout>
@@ -40,16 +40,16 @@ namespace MailCommon {
 
 class FolderSelectionDialog::FolderSelectionDialogPrivate
 {
-public:
-  FolderSelectionDialogPrivate()
-    : folderTreeWidget( 0 ),
-      mNotAllowToCreateNewFolder( false ),
-      mUseGlobalSettings( true )
-  {
-  }
-  FolderTreeWidget *folderTreeWidget;
-  bool mNotAllowToCreateNewFolder;
-  bool mUseGlobalSettings;
+  public:
+    FolderSelectionDialogPrivate()
+      : folderTreeWidget( 0 ),
+        mNotAllowToCreateNewFolder( false ),
+        mUseGlobalSettings( true )
+    {
+    }
+    FolderTreeWidget *folderTreeWidget;
+    bool mNotAllowToCreateNewFolder;
+    bool mUseGlobalSettings;
 };
 
 FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOptions options )
@@ -58,33 +58,46 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   setObjectName( "folder dialog" );
 
   d->mNotAllowToCreateNewFolder = ( options & FolderSelectionDialog::NotAllowToCreateNewFolder );
-  if ( d->mNotAllowToCreateNewFolder )
+
+  if ( d->mNotAllowToCreateNewFolder ) {
     setButtons( Ok | Cancel );
-  else {
+  } else {
     setButtons( Ok | Cancel | User1 );
-    setButtonGuiItem( User1, KGuiItem( i18n("&New Subfolder..."), "folder-new",
-                                       i18n("Create a new subfolder under the currently selected folder") ) );
+    setButtonGuiItem(
+      User1,
+      KGuiItem( i18n( "&New Subfolder..." ), "folder-new",
+                i18n( "Create a new subfolder under the currently selected folder" ) ) );
   }
 
   QWidget *widget = mainWidget();
   QVBoxLayout *layout = new QVBoxLayout( widget );
   layout->setMargin( 0 );
-  FolderTreeWidget::TreeViewOptions opt= FolderTreeWidget::None;
-  if ( options & FolderSelectionDialog::ShowUnreadCount )
+
+  FolderTreeWidget::TreeViewOptions opt = FolderTreeWidget::None;
+  if ( options & FolderSelectionDialog::ShowUnreadCount ) {
     opt |= FolderTreeWidget::ShowUnreadCount;
+  }
   opt |= FolderTreeWidget::UseDistinctSelectionModel;
 
-  FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None;
+  FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy =
+    FolderTreeWidgetProxyModel::None;
 
-  if ( options & FolderSelectionDialog::HideVirtualFolder )
+  if ( options & FolderSelectionDialog::HideVirtualFolder ) {
     optReadableProxy |= FolderTreeWidgetProxyModel::HideVirtualFolder;
-  optReadableProxy |= FolderTreeWidgetProxyModel::HideSpecificFolder;
-  if ( options & FolderSelectionDialog::HideOutboxFolder )
-    optReadableProxy |= FolderTreeWidgetProxyModel::HideOutboxFolder;
+  }
 
-  d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
+  optReadableProxy |= FolderTreeWidgetProxyModel::HideSpecificFolder;
+
+  if ( options & FolderSelectionDialog::HideOutboxFolder ) {
+    optReadableProxy |= FolderTreeWidgetProxyModel::HideOutboxFolder;
+  }
+
+  d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy );
+  d->folderTreeWidget->readConfig();
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
   d->folderTreeWidget->folderTreeWidgetProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
+  //Necessary otherwise we overwrite tooltip config for all application
+  d->folderTreeWidget->folderTreeView()->disableSaveConfig();
   d->folderTreeWidget->folderTreeView()->setTooltipsPolicy( FolderTreeWidget::DisplayNever );
 #ifndef QT_NO_DRAGANDDROP
   d->folderTreeWidget->folderTreeView()->setDragDropMode( QAbstractItemView::NoDragDrop );
@@ -97,13 +110,17 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
     connect( this, SIGNAL(user1Clicked()), this, SLOT(slotAddChildFolder()) );
   }
 
-  connect( d->folderTreeWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+  connect( d->folderTreeWidget->selectionModel(),
+           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(slotSelectionChanged()) );
-  connect( d->folderTreeWidget->folderTreeWidgetProxyModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+  connect( d->folderTreeWidget->folderTreeWidgetProxyModel(),
+           SIGNAL(rowsInserted(QModelIndex,int,int)),
            this, SLOT(rowsInserted(QModelIndex,int,int)) );
 
-  connect( d->folderTreeWidget->folderTreeView(), SIGNAL(doubleClicked(QModelIndex)),
-           this, SLOT(accept()) );
+  connect( d->folderTreeWidget->folderTreeView(),
+           SIGNAL(doubleClicked(QModelIndex)),
+           this, SLOT(slotDoubleClick(QModelIndex)) );
+
   d->mUseGlobalSettings = !( options & NotUseGlobalSettings );
   readConfig();
 
@@ -115,46 +132,60 @@ FolderSelectionDialog::~FolderSelectionDialog()
   delete d;
 }
 
+void FolderSelectionDialog::slotDoubleClick(const QModelIndex& index)
+{
+  const bool hasSelectedCollection =
+    ( d->folderTreeWidget->selectionModel()->selectedIndexes().count() > 0 );
+  if(hasSelectedCollection) {
+     accept();
+  }
+}
+
 void FolderSelectionDialog::focusTreeView()
 {
   d->folderTreeWidget->folderTreeView()->expandAll();
   d->folderTreeWidget->folderTreeView()->setFocus();
 }
 
-void FolderSelectionDialog::showEvent( QShowEvent*event )
+void FolderSelectionDialog::showEvent( QShowEvent *event )
 {
-  if ( !event->spontaneous () )
+  if ( !event->spontaneous () ) {
     focusTreeView();
+  }
   KDialog::showEvent( event );
 }
 
-
-void FolderSelectionDialog::rowsInserted( const QModelIndex&, int, int )
+void FolderSelectionDialog::rowsInserted( const QModelIndex &, int, int )
 {
   d->folderTreeWidget->folderTreeView()->expandAll();
 }
 
-bool FolderSelectionDialog::canCreateCollection( Akonadi::Collection & parentCol )
+bool FolderSelectionDialog::canCreateCollection( Akonadi::Collection &parentCol )
 {
   parentCol = selectedCollection();
-  if ( !parentCol.isValid() )
+  if ( !parentCol.isValid() ) {
     return false;
- if ( ( parentCol.rights() & Akonadi::Collection::CanCreateCollection )
-       && parentCol.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) ) {
-   return true;
- }
- return false;
+  }
+
+  if ( ( parentCol.rights() & Akonadi::Collection::CanCreateCollection ) &&
+      parentCol.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) ) {
+    return true;
+  }
+  return false;
 }
 
 void FolderSelectionDialog::slotAddChildFolder()
 {
   Akonadi::Collection parentCol;
-  if ( canCreateCollection( parentCol ) ){
-    const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder"),
-                                                i18nc( "@label:textbox, name of a thing", "Name"),
-                                                QString(), 0, this );
-    if ( name.isEmpty() )
+  if ( canCreateCollection( parentCol ) ) {
+    const QString name = KInputDialog::getText(
+      i18nc( "@title:window", "New Folder" ),
+      i18nc( "@label:textbox, name of a thing", "Name" ),
+      QString(), 0, this );
+
+    if ( name.isEmpty() ) {
       return;
+    }
 
     Akonadi::Collection col;
     col.setName( name );
@@ -164,24 +195,27 @@ void FolderSelectionDialog::slotAddChildFolder()
   }
 }
 
-void FolderSelectionDialog::collectionCreationResult(KJob* job)
+void FolderSelectionDialog::collectionCreationResult( KJob *job )
 {
   if ( job->error() ) {
-    KMessageBox::error( this, i18n("Could not create folder: %1", job->errorString()),
-                        i18n("Folder creation failed") );
+    KMessageBox::error(
+      this,
+      i18n( "Could not create folder: %1", job->errorString() ),
+      i18n( "Folder creation failed" ) );
   }
 }
 
 void FolderSelectionDialog::slotSelectionChanged()
 {
-  const bool enablebuttons = ( d->folderTreeWidget->selectionModel()->selectedIndexes().count() > 0 );
-  enableButton(KDialog::Ok, enablebuttons);
+  const bool enablebuttons =
+    ( d->folderTreeWidget->selectionModel()->selectedIndexes().count() > 0 );
+  enableButton( KDialog::Ok, enablebuttons );
 
   if ( !d->mNotAllowToCreateNewFolder ) {
     Akonadi::Collection parent;
-    enableButton(KDialog::User1, canCreateCollection( parent ) );
+    enableButton( KDialog::User1, canCreateCollection( parent ) );
     if ( parent.isValid() ) {
-      const QSharedPointer<FolderCollection> fd(FolderCollection::forCollection( parent, false ) );
+      const QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( parent, false ) );
       enableButton( KDialog::Ok, fd->canCreateMessages() );
     }
   }
@@ -196,7 +230,6 @@ QAbstractItemView::SelectionMode FolderSelectionDialog::selectionMode() const
 {
   return d->folderTreeWidget->selectionMode();
 }
-
 
 Akonadi::Collection FolderSelectionDialog::selectedCollection() const
 {
@@ -213,18 +246,19 @@ Akonadi::Collection::List FolderSelectionDialog::selectedCollections() const
   return d->folderTreeWidget->selectedCollections();
 }
 
-static const char * myConfigGroupName = "FolderSelectionDialog";
+static const char *myConfigGroupName = "FolderSelectionDialog";
 
 void FolderSelectionDialog::readConfig()
 {
   KConfigGroup group( KernelIf->config(), myConfigGroupName );
 
   const QSize size = group.readEntry( "Size", QSize() );
-  if ( size.isValid() )
+  if ( size.isValid() ) {
     resize( size );
-  else
+  } else {
     resize( 500, 300 );
-  
+  }
+
   if ( d->mUseGlobalSettings ) {
     const Akonadi::Collection::Id id = SettingsIf->lastSelectedFolder();
     if ( id > -1 ) {
@@ -232,7 +266,6 @@ void FolderSelectionDialog::readConfig()
       d->folderTreeWidget->selectCollectionFolder( col );
     }
   }
-
 }
 
 void FolderSelectionDialog::writeConfig()
@@ -242,8 +275,9 @@ void FolderSelectionDialog::writeConfig()
 
   if ( d->mUseGlobalSettings ) {
     Akonadi::Collection col = selectedCollection();
-    if ( col.isValid() )
+    if ( col.isValid() ) {
       SettingsIf->setLastSelectedFolder( col.id() );
+    }
   }
 }
 
@@ -253,6 +287,5 @@ void FolderSelectionDialog::hideEvent( QHideEvent * )
 }
 
 }
-
 
 #include "folderselectiondialog.moc"

@@ -19,7 +19,7 @@
 
 
 #include "mobilekernel.h"
-#include <mailcommon/filteraction.h>
+#include <mailcommon/filter/filteraction.h>
 #include <mailcommon/mailkernel.h>
 #include <mailcommon/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
@@ -94,6 +94,7 @@ MessageSender* MobileKernel::msgSender()
 void MobileKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
  //TODO: implement
+  Q_UNUSED( col );
 }
 
 Akonadi::Entity::Id MobileKernel::lastSelectedFolder()

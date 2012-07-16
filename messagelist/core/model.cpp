@@ -344,11 +344,24 @@ void Model::setSortOrder( const SortOrder * sortOrder )
   d->mSortOrder = sortOrder;
 }
 
+const SortOrder * Model::sortOrder() const
+{
+  return d->mSortOrder;
+}
+
 void Model::setFilter( const Filter *filter )
 {
   d->mFilter = filter;
 
-  QList< Item * > * childList = d->mRootItem->childItems();
+  if (d->mFilter)
+    connect( d->mFilter, SIGNAL(finished()), this, SLOT(slotApplyFilter()) );
+
+  d->slotApplyFilter();
+}
+
+void ModelPrivate::slotApplyFilter()
+{
+  QList< Item * > * childList = mRootItem->childItems();
   if ( !childList )
     return;
 
@@ -357,7 +370,7 @@ void Model::setFilter( const Filter *filter )
   QApplication::setOverrideCursor( Qt::WaitCursor );
   QList< Item * >::ConstIterator end = childList->constEnd();
   for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
-    d->applyFilterToSubtree( *it, idx );
+    applyFilterToSubtree( *it, idx );
 
   QApplication::restoreOverrideCursor();
 }
@@ -398,38 +411,6 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
   if ( childrenMatch )
   {
     mView->setRowHidden( thisIndex.row(), parentIndex, false );
-
-    // Expanding parents of matching items is an EXTREMELY desiderable feature... but...
-    //
-    // FIXME TrollTech: THIS IS PATHETICALLY SLOW
-    //                  It can take ~20 minutes on a tree with ~11000 items.
-    //                  Without this call the same tree is scanned in a couple of seconds.
-    //                  The complexity growth is almost certainly (close to) exponential.
-    //
-    // It ends up in _very_ deep recursive stacks like these:
-    //
-    // #0  0x00002b37e1e03f03 in QTreeViewPrivate::viewIndex (this=0xbd9ff0, index=@0x7fffd327a420) at itemviews/qtreeview.cpp:3195
-    // #1  0x00002b37e1e07ea6 in QTreeViewPrivate::layout (this=0xbd9ff0, i=8239) at itemviews/qtreeview.cpp:3013
-    // #2  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8238) at itemviews/qtreeview.cpp:2994
-    // #3  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8237) at itemviews/qtreeview.cpp:2994
-    // #4  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8236) at itemviews/qtreeview.cpp:2994
-    // #5  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8235) at itemviews/qtreeview.cpp:2994
-    // #6  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8234) at itemviews/qtreeview.cpp:2994
-    // #7  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8233) at itemviews/qtreeview.cpp:2994
-    // #8  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8232) at itemviews/qtreeview.cpp:2994
-    // #9  0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8231) at itemviews/qtreeview.cpp:2994
-    // #10 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8230) at itemviews/qtreeview.cpp:2994
-    // #11 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8229) at itemviews/qtreeview.cpp:2994
-    // #12 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8228) at itemviews/qtreeview.cpp:2994
-    // #13 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8227) at itemviews/qtreeview.cpp:2994
-    // #14 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8226) at itemviews/qtreeview.cpp:2994
-    // #15 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8225) at itemviews/qtreeview.cpp:2994
-    // #16 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8224) at itemviews/qtreeview.cpp:2994
-    // #17 0x00002b37e1e0810e in QTreeViewPrivate::layout (this=0xbd9ff0, i=8223) at itemviews/qtreeview.cpp:2994
-    // ....
-    //
-    // UPDATE: Olivier Goffart seems to have fixed this: re-check and re-enable for qt 4.5.
-    //
 
     if ( !mView->isExpanded( thisIndex ) )
       mView->expand( thisIndex );
@@ -525,13 +506,12 @@ QVariant Model::headerData(int section, Qt::Orientation, int role) const
     return QVariant( i18n( "Sender" ) );
   }
 
-  if ( ( role == Qt::DisplayRole ) && column->pixmapName().isEmpty() )
+  const bool columnPixmapEmpty(column->pixmapName().isEmpty());
+  if ( ( role == Qt::DisplayRole ) && columnPixmapEmpty )
     return QVariant( column->label() );
-
-  if ( ( role == Qt::ToolTipRole ) && !column->pixmapName().isEmpty() )
+  else if ( ( role == Qt::ToolTipRole ) && !columnPixmapEmpty )
     return QVariant( column->label() );
-
-  if ( ( role == Qt::DecorationRole ) && !column->pixmapName().isEmpty() )
+  else if ( ( role == Qt::DecorationRole ) && !columnPixmapEmpty )
     return QVariant( KIcon( column->pixmapName() ) );
 
   return QVariant();
@@ -681,11 +661,9 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   d->mViewItemJobStepChunkTimeout = 100;
   d->mViewItemJobStepIdleInterval = 10;
   d->mViewItemJobStepMessageCheckCount = 10;
-  if ( d->mPersistentSetManager )
-  {
-    delete d->mPersistentSetManager;
-    d->mPersistentSetManager = 0;
-  }
+  delete d->mPersistentSetManager;
+  d->mPersistentSetManager = 0;
+
   d->mTodayDate = QDate::currentDate();
 
   if ( d->mStorageModel )
@@ -2856,10 +2834,22 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
 
         if( pParent ) // very likely
         {
-          if ( pParent == mi )
+          // Take care of self-referencing (which is always possible)
+          // and circular In-Reply-To reference loops which are possible
+          // in case this item was found to be a perfect parent for some
+          // imperfectly threaded message just above.
+          if (
+               ( mi == pParent ) ||              // self referencing message
+               (
+                 ( mi->childItemCount() > 0 ) && // mi already has children, this is fast to determine
+                 pParent->hasAncestor( mi )      // pParent is in the mi's children tree
+               )
+             )
           {
-            // Bad, bad message.. it has In-Reply-To equal to MessageId...
+            // Bad, bad message.. it has In-Reply-To equal to Message-Id
+            // or it's in a circular In-Reply-To reference loop.
             // Will wait for Pass2 with References-Id only
+            kWarning() << "Circular In-Reply-To reference loop detected in the message tree";
             mUnassignedMessageListForPass2.append( mi );
           } else {
             // wow, got a perfect parent for this message!
@@ -3941,37 +3931,7 @@ void ModelPrivate::viewItemJobStep()
   // the current item in the sample place when items are added or removed...
   QRect rectBeforeViewItemJobStep;
 
-  // There is another popular requisite: people want the view to automatically
-  // scroll in order to show new arriving mail. This actually makes sense
-  // only when the view is sorted by date and the new mail is (usually) either
-  // appended at the bottom or inserted at the top. It would be also confusing
-  // when the user is browsing some other thread in the meantime.
-  //
-  // So here we make a simple guess: if the view is scrolled somewhere in the
-  // middle then we assume that the user is browsing other threads and we
-  // try to keep the currently selected item steady on the screen.
-  // When the view is "locked" to the top (scrollbar value 0) or to the
-  // bottom (scrollbar value == maximum) then we assume that the user
-  // isn't browsing and we should attempt to show the incoming messages
-  // by keeping the view "locked".
-  //
-  // The "locking" also doesn't make sense in the first big fill view job.
-
-  int scrollBarPositionBeforeViewItemJobStep = mView->verticalScrollBar()->value();
-  int scrollBarMaximumBeforeViewItemJobStep = mView->verticalScrollBar()->maximum();
-
-  bool lockView = (
-                    // not the first loading job
-                    !mLoading
-                  ) && (
-                    // messages sorted by date
-                    ( mSortOrder->messageSorting() == SortOrder::SortMessagesByDateTime ) ||
-                    ( mSortOrder->messageSorting() == SortOrder::SortMessagesByDateTimeOfMostRecent )
-                  ) && (
-                    // scrollbar at top or bottom
-                    ( scrollBarPositionBeforeViewItemJobStep == 0 ) ||
-                    ( scrollBarPositionBeforeViewItemJobStep == scrollBarMaximumBeforeViewItemJobStep )
-                  );
+  const bool lockView = mView->isScrollingLocked();
 
   // This is generally SLOW AS HELL... (so we avoid it if we lock the view and thus don't need it)
   if ( mCurrentItemToRestoreAfterViewItemJobStep && ( !lockView ) )
@@ -4140,16 +4100,8 @@ void ModelPrivate::viewItemJobStep()
     }
 
     // FIXME: If it was selected before the change, then re-select it (it may happen that it's not)
-    if ( lockView )
+    if ( !lockView )
     {
-      // we prefer to keep the view locked to the top or bottom
-      if ( scrollBarPositionBeforeViewItemJobStep != 0 )
-      {
-        // we wanted the view to be locked to the bottom
-        if ( mView->verticalScrollBar()->value() != mView->verticalScrollBar()->maximum() )
-          mView->verticalScrollBar()->setValue( mView->verticalScrollBar()->maximum() );
-      } // else we wanted the view to be locked to top and we shouldn't need to do anything
-    } else {
       // we prefer to keep the currently selected item steady in the view
       QRect rectAfterViewItemJobStep = mView->visualRect( q->index( mCurrentItemToRestoreAfterViewItemJobStep, 0 ) );
       if ( rectBeforeViewItemJobStep.y() != rectAfterViewItemJobStep.y() )
@@ -4176,16 +4128,6 @@ void ModelPrivate::viewItemJobStep()
     // tell the view that we have a new current, this time with no insulation
     mView->slotSelectionChanged( QItemSelection(), QItemSelection() );
   }
-
-  if ( lockView )
-  {
-    if ( scrollBarPositionBeforeViewItemJobStep != 0 )
-    {
-      // we wanted the view to be locked to the bottom
-      if ( mView->verticalScrollBar()->value() != mView->verticalScrollBar()->maximum() )
-        mView->verticalScrollBar()->setValue( mView->verticalScrollBar()->maximum() );
-    } // else we wanted the view to be locked to top and we shouldn't need to do anything
-  }
 }
 
 void ModelPrivate::slotStorageModelRowsInserted( const QModelIndex &parent, int from, int to )
@@ -4206,66 +4148,80 @@ void ModelPrivate::slotStorageModelRowsInserted( const QModelIndex &parent, int 
   for ( int idx = 0; idx < jobCount; idx++ )
   {
     ViewItemJob * job = mViewItemJobs.at( idx );
-    if ( job->currentPass() == ViewItemJob::Pass1Fill )
+
+    if ( job->currentPass() != ViewItemJob::Pass1Fill )
     {
-      //
-      // The following cases are possible:
-      //
-      //               from  to
-      //                 |    |                              -> shift up job
-      //               from             to
-      //                 |              |                    -> shift up job
-      //               from                            to
-      //                 |                             |     -> shift up job
-      //                           from   to
-      //                             |     |                 -> split job
-      //                           from                to
-      //                             |                 |     -> split job
-      //                                     from      to
-      //                                       |       |     -> job unaffected
-      //
-      //
-      // FOLDER
-      // |-------------------------|---------|--------------|
-      // 0                   currentIndex endIndex         count
-      //                           +-- job --+
-
-      //
-
-      if ( from > job->endIndex() )
-      {
-        // The change is completely above the job, the job is not affected
-      } else if( from > job->currentIndex() ) // and from <= job->endIndex()
-      {
-        // The change starts in the middle of the job in a way that it must be split in two.
-        // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1.
-        // We use the existing job for this.
-        job->setEndIndex( from - 1 );
-
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-
-        // The second part would range from "from" to job->endIndex() but must
-        // be shifted up by count. We add a new job for this.
-        ViewItemJob * newJob = new ViewItemJob( from + count, job->endIndex() + count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
-
-        Q_ASSERT( newJob->currentIndex() <= newJob->endIndex() );
-
-        idx++; // we can skip this job in the loop, it's already ok
-        jobCount++; // and our range increases by one.
-        mViewItemJobs.insert( idx, newJob );
-
-      } else {
-        // The change starts below (or exactly on the beginning of) the job.
-        // The job must be shifted up.
-        job->setCurrentIndex( job->currentIndex() + count );
-        job->setEndIndex( job->endIndex() + count );
-
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-      }
-    } else {
       // The job is a cleanup or in a later pass: the storage has been already accessed
       // and the messages created... no need to care anymore: the invariant row mapper will do the job.
+      continue;
     }
+
+    if ( job->currentIndex() > job->endIndex() )
+    {
+      // The job finished the Pass1Fill but still waits for the pass indicator to be
+      // changed. This is unlikely but still may happen if the job has been interrupted
+      // and then a call to slotStorageModelRowsRemoved() caused it to be forcibly completed.
+      continue;
+    }
+
+    //
+    // The following cases are possible:
+    //
+    //               from  to
+    //                 |    |                              -> shift up job
+    //               from             to
+    //                 |              |                    -> shift up job
+    //               from                            to
+    //                 |                             |     -> shift up job
+    //                           from   to
+    //                             |     |                 -> split job
+    //                           from                to
+    //                             |                 |     -> split job
+    //                                     from      to
+    //                                       |       |     -> job unaffected
+    //
+    //
+    // FOLDER
+    // |-------------------------|---------|--------------|
+    // 0                   currentIndex endIndex         count
+    //                           +-- job --+
+    //
+
+    if ( from > job->endIndex() )
+    {
+      // The change is completely above the job, the job is not affected
+      continue;
+    }
+
+    if( from > job->currentIndex() ) // and from <= job->endIndex()
+    {
+      // The change starts in the middle of the job in a way that it must be split in two.
+      // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1.
+      // The second part ranges from "from" to job->endIndex() that are now shifted up by count steps.
+
+      // First add a new job for the second part.
+      ViewItemJob * newJob = new ViewItemJob( from + count, job->endIndex() + count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
+
+      Q_ASSERT( newJob->currentIndex() <= newJob->endIndex() );
+
+      idx++; // we can skip this job in the loop, it's already ok
+      jobCount++; // and our range increases by one.
+      mViewItemJobs.insert( idx, newJob );
+
+      // Then limit the original job to the first part
+      job->setEndIndex( from - 1 );
+
+      Q_ASSERT( job->currentIndex() <= job->endIndex() );
+
+      continue;
+    }
+
+    // The change starts below (or exactly on the beginning of) the job.
+    // The job must be shifted up.
+    job->setCurrentIndex( job->currentIndex() + count );
+    job->setEndIndex( job->endIndex() + count );
+
+    Q_ASSERT( job->currentIndex() <= job->endIndex() );
   }
 
   bool newJobNeeded = true;
@@ -4324,94 +4280,113 @@ void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int f
   for ( int idx = 0; idx < jobCount; idx++ )
   {
     ViewItemJob * job = mViewItemJobs.at( idx );
-    if ( job->currentPass() == ViewItemJob::Pass1Fill )
+
+    if ( job->currentPass() != ViewItemJob::Pass1Fill )
     {
-      //
-      // The following cases are possible:
-      //
-      //               from  to
-      //                 |    |                              -> shift down job
-      //               from             to
-      //                 |              |                    -> shift down and crop job
-      //               from                            to
-      //                 |                             |     -> kill job
-      //                           from   to
-      //                             |     |                 -> split job, crop and shift
-      //                           from                to
-      //                             |                 |     -> crop job
-      //                                     from      to
-      //                                       |       |     -> job unaffected
-      //
-      //
-      // FOLDER
-      // |-------------------------|---------|--------------|
-      // 0                   currentIndex endIndex         count
-      //                           +-- job --+
-
-      //
-
-      if ( from > job->endIndex() )
-      {
-        // The change is completely above the job, the job is not affected
-      } else if( from > job->currentIndex() ) // and from <= job->endIndex()
-      {
-        // The change starts in the middle of the job and ends in the middle or after the job.
-
-        // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1
-        // We use the existing job for this.
-        job->setEndIndex( from - 1 ); // stop before the first removed row
-
-        Q_ASSERT( job->currentIndex() <= job->endIndex() );
-
-        if ( to < job->endIndex() )
-        {
-          // The change ends inside the job and a part of it can be completed.
-          // We create a new job for the shifted remaining part. It would actually
-          // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
-          // since count = ( to - from ) + 1 so from = to + 1 - count
-
-          ViewItemJob * newJob = new ViewItemJob( from, job->endIndex() - count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
-
-          Q_ASSERT( newJob->currentIndex() < newJob->endIndex() );
-
-          idx++; // we can skip this job in the loop, it's already ok
-          jobCount++; // and our range increases by one.
-          mViewItemJobs.insert( idx, newJob );
-        } // else the change includes completely the end of the job and no other part of it can be completed.
-      } else {
-        // The change starts below (or exactly on the beginning of) the job. ( from <= job->currentIndex() )
-        if ( to >= job->endIndex() )
-        {
-          // The change completely covers the job: kill it
-
-          // We don't delete the job since we want the other passes to be completed
-          // This is because the Pass1Fill may have already filled mUnassignedMessageListForPass2
-          // and may have set mOldestItem and mNewestItem. We *COULD* clear the unassigned
-          // message list with clearUnassignedMessageLists() but mOldestItem and mNewestItem
-          // could be still dangling pointers. So we just move the current index of the job
-          // after the end (so storage model scan terminates) and let it complete spontaneously.
-          job->setCurrentIndex( job->endIndex() + 1 );
-
-        } else if ( to >= job->currentIndex() )
-        {
-          // The change partially covers the job. Only a part of it can be completed
-          // and it must be shifted down. It would actually
-          // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
-          // since count = ( to - from ) + 1 so from = to + 1 - count
-          job->setCurrentIndex( from );
-          job->setEndIndex( job->endIndex() - count );
-
-          Q_ASSERT( job->currentIndex() <= job->endIndex() );
-        } else {
-          // The change is completely below the job: it must be shifted down.
-          job->setCurrentIndex( job->currentIndex() - count );
-          job->setEndIndex( job->endIndex() - count );
-        }
-      }
-    } else {
       // The job is a cleanup or in a later pass: the storage has been already accessed
       // and the messages created... no need to care: we will invalidate the messages in a while.
+      continue;
     }
+
+    if ( job->currentIndex() > job->endIndex() )
+    {
+      // The job finished the Pass1Fill but still waits for the pass indicator to be
+      // changed. This is unlikely but still may happen if the job has been interrupted
+      // and then a call to slotStorageModelRowsRemoved() caused it to be forcibly completed.
+      continue;
+    }
+
+    //
+    // The following cases are possible:
+    //
+    //               from  to
+    //                 |    |                              -> shift down job
+    //               from             to
+    //                 |              |                    -> shift down and crop job
+    //               from                            to
+    //                 |                             |     -> kill job
+    //                           from   to
+    //                             |     |                 -> split job, crop and shift
+    //                           from                to
+    //                             |                 |     -> crop job
+    //                                     from      to
+    //                                       |       |     -> job unaffected
+    //
+    //
+    // FOLDER
+    // |-------------------------|---------|--------------|
+    // 0                   currentIndex endIndex         count
+    //                           +-- job --+
+    //
+
+    if ( from > job->endIndex() )
+    {
+      // The change is completely above the job, the job is not affected
+      continue;
+    }
+
+    if( from > job->currentIndex() ) // and from <= job->endIndex()
+    {
+      // The change starts in the middle of the job and ends in the middle or after the job.
+      // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1
+      // We use the existing job for this.
+      job->setEndIndex( from - 1 ); // stop before the first removed row
+
+      Q_ASSERT( job->currentIndex() <= job->endIndex() );
+
+      if ( to < job->endIndex() )
+      {
+        // The change ends inside the job and a part of it can be completed.
+
+        // We create a new job for the shifted remaining part. It would actually
+        // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
+        // since count = ( to - from ) + 1 so from = to + 1 - count
+
+        ViewItemJob * newJob = new ViewItemJob( from, job->endIndex() - count, job->chunkTimeout(), job->idleInterval(), job->messageCheckCount() );
+
+        Q_ASSERT( newJob->currentIndex() < newJob->endIndex() );
+
+        idx++; // we can skip this job in the loop, it's already ok
+        jobCount++; // and our range increases by one.
+        mViewItemJobs.insert( idx, newJob );
+      } // else the change includes completely the end of the job and no other part of it can be completed.
+
+      continue;
+    }
+
+    // The change starts below (or exactly on the beginning of) the job. ( from <= job->currentIndex() )
+    if ( to >= job->endIndex() )
+    {
+      // The change completely covers the job: kill it
+
+      // We don't delete the job since we want the other passes to be completed
+      // This is because the Pass1Fill may have already filled mUnassignedMessageListForPass2
+      // and may have set mOldestItem and mNewestItem. We *COULD* clear the unassigned
+      // message list with clearUnassignedMessageLists() but mOldestItem and mNewestItem
+      // could be still dangling pointers. So we just move the current index of the job
+      // after the end (so storage model scan terminates) and let it complete spontaneously.
+      job->setCurrentIndex( job->endIndex() + 1 );
+
+      continue;
+    }
+
+    if ( to >= job->currentIndex() )
+    {
+      // The change partially covers the job. Only a part of it can be completed
+      // and it must be shifted down. It would actually
+      // range from to + 1 up to job->endIndex(), but we need to shift it down by count.
+      // since count = ( to - from ) + 1 so from = to + 1 - count
+      job->setCurrentIndex( from );
+      job->setEndIndex( job->endIndex() - count );
+
+      Q_ASSERT( job->currentIndex() <= job->endIndex() );
+
+      continue;
+    }
+
+    // The change is completely below the job: it must be shifted down.
+    job->setCurrentIndex( job->currentIndex() - count );
+    job->setEndIndex( job->endIndex() - count );
   }
 
   // This will invalidate the ModelInvariantIndex-es that have been removed and return

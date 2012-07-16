@@ -57,12 +57,6 @@
 </answer>
 </qandaentry>
 
-<qandaentry><question><para>Why KMail2 doesn't send mail?</para></question>
-<answer>
-  <para>Some users find that mail does not go out, and it appears that &SMTP; is missing, even though the <guimenuitem>Settings</guimenuitem> page looks correct. It has been reported that this is cured by opening <application>akonadiconsole</application> and adding <guilabel>Mail Dispatcher Agent</guilabel>.</para>
-</answer>
-</qandaentry>
-
 <qandaentry><question><para>How to store sent mails in a special folder?</para></question>
 <answer>
   <para><emphasis>Symptom:</emphasis> You want to store mails in a special folder. Maybe you are using an IMAP server and want to store your mails on the server, not in the client.</para>
@@ -97,7 +91,7 @@
   </markup></screen>
   </para>
   <para>If you have <emphasis>maildir</emphasis> folders, each recipe must end with a <quote>/</quote>. If your folders are <emphasis>mbox</emphasis>, just omit the <quote>/</quote></para>
-  <para>If you have been using <guilabel>bogofilter</guilabel> with &kmail; you will already have a <emphasis>wordlist</emphasis>. This can be used at server level, too, so you won't have to start training from scratch. The trick is to set this before the <guilabel>procmail</guilabel> recipes:</para>
+  <para>If you have been using <guilabel>bogofilter</guilabel> with &kmail; you will already have a <emphasis>wordlist</emphasis>. This can be used at server level, too, so you will not have to start training from scratch. The trick is to set this before the <guilabel>procmail</guilabel> recipes:</para>
   <para><screen><markup>:0fw
  | bogofilter -e -p
 
@@ -143,7 +137,7 @@ Each one of those column headers needs to be clicked on, and your new custom fon
 <answer>
   <para><emphasis>Symptom:</emphasis> You are using &kmail; on a netbook, and find that the <emphasis>tooltips</emphasis> over folders hide too many folder names</para>
   <para><emphasis>Solution:</emphasis> Right-clicking on the header of the <guilabel>Folder List</guilabel> and unselect <guilabel>Display Tooltips</guilabel>.
-  In the settings dialog you can also select <guilabel>When Text Obscured</guilabel>. <guilabel>When Text Obscured</guilabel> is handy for folders that have long names, so that only part of the name is displayed. Folders where you can see the full name won't pop up the tooltip.</para>
+  In the settings dialog you can also select <guilabel>When Text Obscured</guilabel>. <guilabel>When Text Obscured</guilabel> is handy for folders that have long names, so that only a part of the name is displayed. Folders where you can see the full name will not pop up the tooltip.</para>
 </answer>
 </qandaentry>
 
@@ -195,8 +189,8 @@ Each one of those column headers needs to be clicked on, and your new custom fon
 </answer>
 </qandaentry>
 
-<qandaentry><question><para>Why I cannot copy mail to a USB stick?</para></question>
-<answer><para><emphasis>Symptom:</emphasis> You are setting up a new computer and want to transfer all your mail. You decide to copy everything to a usb stick. The job starts, then you start to get failure message,</para>
+<qandaentry><question><para>Why am I not able to copy mails to a USB stick?</para></question>
+<answer><para><emphasis>Symptom:</emphasis> You are setting up a new computer and want to transfer all your mail. You decide to copy everything to a USB stick. The job starts, then you start to get failure message,</para>
 <screen>Unable to copy ............Invalid argument</screen>
 <para><emphasis>Solution:</emphasis> Your usb stick is <ulink url="http://wiki.linuxquestions.org/wiki/VFAT">(V)FAT</ulink> formatted, and thus can't handle <emphasis>maildir</emphasis> folder names (nor can it handle <emphasis>permissions</emphasis>, which can cause many other problems). You have two choices. Either format your <acronym>USB</acronym> stick as ext2 (in which case you should be aware it can't be read on &Windows; OSes without installing additional software there) or create a tar file of all your mail, copy that to the stick and extract it to your new host.</para>
 </answer>
@@ -526,7 +520,7 @@ mail. In order to use <application>procmail</application> and &kmail; you need
 to set up &kmail; so that it will fetch new
 mail from the spoolfiles in which <application>procmail</application>
 drops your mail. Do <emphasis>not</emphasis> set up procmail to deliver
-mail in a &kmail; folder, this  cannot work.</para>
+mail in a &kmail; folder, this cannot work.</para>
 
 <para>For each procmail spoolfile you then need to create an account
 from which &kmail; will fetch new mail; you also need to make sure you
@@ -693,10 +687,10 @@ Is there any documentation on the available interfaces?</para></question>
 <qandaentry>
 <question><para>I am only using &imap;, can I get rid of those Local Folders in
 the folder list or at least keep them collapsed all the time?</para></question>
-<answer><para>No you can not get rid of them. The local folders function as a
+<answer><para>No, you cannot get rid of them. The local folders function as a
 fallback when the &imap; server is unreachable. Although you only use &imap;,
 &kmail; uses the outbox for sending the messages. If we hide all local folders
-you won't be able to fix messages in the outbox which can not be send for some
+you will not be able to fix messages in the outbox which cannot be send for some
 reason. But it is possible to keep the local folders collapsed. What
 you have to do is go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>
 Configure &kmail;...</guimenuitem></menuchoice> and go to the section Misc,

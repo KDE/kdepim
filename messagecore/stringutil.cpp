@@ -677,7 +677,7 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
   return result;
 }
 
-void removePrivateHeaderFields( const KMime::Message::Ptr &message )
+void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeIdentityTag )
 {
   message->removeHeader( "Status" );
   message->removeHeader( "X-Status" );
@@ -685,7 +685,6 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &message )
   message->removeHeader( "X-KMail-SignatureState" );
   message->removeHeader( "X-KMail-MDN-Sent" );
   message->removeHeader( "X-KMail-Transport" );
-  message->removeHeader( "X-KMail-Identity" );
   message->removeHeader( "X-KMail-Fcc" );
   message->removeHeader( "X-KMail-Redirect-From" );
   message->removeHeader( "X-KMail-Link-Message" );
@@ -695,6 +694,12 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &message )
   message->removeHeader( "X-KMail-Templates" );
   message->removeHeader( "X-KMail-Drafts" );
   message->removeHeader( "X-KMail-Tag" );
+  message->removeHeader( "X-KMail-UnExpanded-To" );
+  message->removeHeader( "X-KMail-UnExpanded-CC" );
+  message->removeHeader( "X-KMail-UnExpanded-BCC" );
+
+  if(removeIdentityTag)
+    message->removeHeader( "X-KMail-Identity" );
 }
 
 QByteArray asSendableString( const KMime::Message::Ptr &originalMessage )

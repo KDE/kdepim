@@ -27,38 +27,23 @@
 // Journal Entry
 
 #include "journalview.h"
-#include "kodialogmanager.h"
-#include "koglobals.h"
-#include "kocorehelper.h"
 #include "calprinter.h"
+#include "kocorehelper.h"
+#include "koglobals.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/utils.h>
+
+#include <KCalCore/Journal>
 
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KDebug>
 #include <KDialog>
-#include <KGlobal>
-#include <KLocale>
-#include <KLineEdit>
-#include <KStandardGuiItem>
-#include <KMessageBox>
-#include <KVBox>
 #include <KTextBrowser>
 
-#include <QLabel>
-#include <QLayout>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QPixmap>
-#include <QGridLayout>
 #include <QEvent>
-
-#include "journalview.moc"
-
-using namespace KCalUtils;
+#include <QHBoxLayout>
+#include <QPushButton>
 
 JournalDateView::JournalDateView( CalendarSupport::Calendar *calendar, QWidget *parent )
   : KVBox( parent ), mCalendar( calendar )
@@ -164,7 +149,6 @@ JournalView::JournalView( const Akonadi::Item &j,
   mDirty = false;
   mWriteInProgress = false;
   mChanger = 0;
-  mCalendar = 0;
 
   QVBoxLayout *verticalLayout = new QVBoxLayout( this );
   verticalLayout->setSpacing( KDialog::spacingHint() );
@@ -261,7 +245,7 @@ void JournalView::editItem()
 
 void JournalView::printItem()
 {
-  if ( const Journal::Ptr j = CalendarSupport::journal( mJournal ) ) {
+  if ( const KCalCore::Journal::Ptr j = CalendarSupport::journal( mJournal ) ) {
     KOCoreHelper helper;
     CalPrinter printer( this, mCalendar, &helper, true );
     connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
@@ -306,7 +290,7 @@ void JournalView::readJournal( const Akonadi::Item &j )
 {
   int baseFontSize = KGlobalSettings::generalFont().pointSize();
   mJournal = j;
-  const Journal::Ptr journal = CalendarSupport::journal( j );
+  const KCalCore::Journal::Ptr journal = CalendarSupport::journal( j );
   mBrowser->clear();
   QTextCursor cursor = QTextCursor( mBrowser->textCursor() );
   cursor.movePosition( QTextCursor::Start );
@@ -325,7 +309,7 @@ void JournalView::readJournal( const Akonadi::Item &j )
   QTextCharFormat dateFormat = bodyFormat;
   dateFormat.setFontWeight( QFont::Bold );
   dateFormat.setFontPointSize( baseFontSize + 1 );
-  cursor.insertText( IncidenceFormatter::dateTimeToString(
+  cursor.insertText( KCalUtils::IncidenceFormatter::dateTimeToString(
                        journal->dtStart(), journal->allDay() ), dateFormat );
   cursor.insertBlock();
   cursor.insertBlock();
@@ -343,3 +327,5 @@ void JournalView::readJournal( const Akonadi::Item &j )
   }
 
 }
+
+#include "journalview.moc"

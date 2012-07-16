@@ -23,6 +23,8 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
+#include "mailcommon/searchpattern.h"
+
 namespace MailCommon {
 class MailFilter;
 class ItemContext;
@@ -44,6 +46,13 @@ class FilterManager: public QObject
       Explicit = 0x4,
       BeforeOutbound = 0x8,
       All = Inbound|BeforeOutbound|Outbound|Explicit
+    };
+
+    enum FilterRequires
+    {
+        Unknown = 0,
+        HeaderMessage = 1,
+        FullMessage = 2
     };
 
     /**
@@ -89,19 +98,26 @@ class FilterManager: public QObject
      *          0 otherwise. If the caller does not any longer own the message
      *                       he *must* not delete the message or do similar stupid things. ;-)
      */
-    int process( const Akonadi::Item &item, FilterSet set = Inbound,
+    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requestedPart,
+                 FilterSet set = Inbound,
+                 bool account = false, const QString &accountId = QString() );
+
+    int process( const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item &item,
+                 MailCommon::SearchRule::RequiredPart requestedPart, FilterSet set = Inbound,
                  bool account = false, const QString &accountId = QString() );
 
     /**
      * For ad-hoc filters.
-     * 
+     *
      * Applies @p filter to message @p item.
      * Return codes are as with the above method.
      */
-    int process( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
+    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requiredPart, const MailCommon::MailFilter *filter );
 
     void filter( qlonglong itemId, FilterSet set, const QString &accountId );
-    void filter( qlonglong itemId, const QString &filterId );
+    void filter( qlonglong itemId, const QString &filterId, MailCommon::SearchRule::RequiredPart requiredPart );
+
+    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList& listFilters );
 
     /**
      * Applies the filters on the given @p messages.
@@ -111,7 +127,7 @@ class FilterManager: public QObject
     /**
      * Returns whether the configured filters need the full mail content.
      */
-    bool requiresFullMailBody() const;
+    MailCommon::SearchRule::RequiredPart requiredPart() const;
 
 
     void mailCollectionRemoved( const Akonadi::Collection& collection );

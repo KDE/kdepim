@@ -1,7 +1,7 @@
 /*
  *  editdlgtypes.h  -  dialogues to create or edit alarm or alarm template types
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -50,6 +50,7 @@ class CommandEdit;
 class LineEdit;
 class TextEdit;
 class SoundWidget;
+class MessageWin;
 class PickLogFileRadio;
 
 
@@ -88,7 +89,6 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
         virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial) { Q_UNUSED(trial); return true; }
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString&)  {}
         virtual CheckBox* type_createConfirmAckCheckbox(QWidget* parent)  { mConfirmAck = createConfirmAckCheckbox(parent); return mConfirmAck; }
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
 
@@ -140,7 +140,7 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         int                 mSavedReminder;         // mReminder value
         bool                mSavedAutoClose;        // mLateCancel->isAutoClose() value
         bool                mSavedOnceOnly;         // mReminder once-only status
-        bool                mSavedPreActionCancel;  // mSpecialActionsButton cancel on pre-alarm action error
+        KAEvent::ExtraActionOptions mSavedPreActionOptions; // mSpecialActionsButton pre-alarm action options
 };
 
 
@@ -172,7 +172,7 @@ class EditCommandAlarmDlg : public EditAlarmDlg
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
         virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial);
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString& text);
+        virtual void    type_executedTry(const QString& text, void* obj);
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
 
     private slots:
@@ -230,10 +230,11 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
         virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial);
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString& text);
+        virtual void    type_aboutToTry();
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
 
     private slots:
+        void            slotTrySuccess();
         void            openAddressBook();
         void            slotAddAttachment();
         void            slotRemoveAttachment();
@@ -295,8 +296,18 @@ class EditAudioAlarmDlg : public EditAlarmDlg
         virtual void    type_setEvent(KAEvent&, const KDateTime&, const QString& text, int lateCancel, bool trial);
         virtual KAEvent::Flags getAlarmFlags() const;
         virtual bool    type_validate(bool trial) { Q_UNUSED(trial); return true; }
-        virtual void    type_trySuccessMessage(ShellProcess*, const QString&)  {}
+        virtual void    type_executedTry(const QString& text, void* obj);
         virtual bool    checkText(QString& result, bool showErrorMessage = true) const;
+
+    protected slots:
+        virtual void    slotTry();
+
+    private slots:
+        void            audioWinDestroyed()  { slotAudioPlaying(false); }
+        void            slotAudioPlaying(bool playing);
+
+    private:
+        MessageWin*         mMessageWin;       // MessageWin controlling test audio playback
 
         // Audio alarm options
         SoundWidget*        mSoundConfig;

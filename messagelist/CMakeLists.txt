@@ -12,6 +12,7 @@ add_subdirectory(tests)
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${SOPRANO_INCLUDE_DIR}
+    ${NEPOMUK_CORE_INCLUDE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -52,6 +53,7 @@ set(libmessagelist_SRCS
     widget.cpp
     messagelistutil.cpp
 )
+
 
 set(libmessagelist_core_HEADERS
     core/enums.h
@@ -102,6 +104,8 @@ target_link_libraries(messagelist
     ${KDEPIMLIBS_KMIME_LIBS}
     ${NEPOMUK_LIBRARIES}
     ${SOPRANO_LIBRARIES}
+    ${NEPOMUK_CORE_LIBRARY}
+    nepomukquery
     messagecore
     niefast_apps
 )

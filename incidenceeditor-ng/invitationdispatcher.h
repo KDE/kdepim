@@ -54,7 +54,7 @@ class  INCIDENCEEDITORS_NG_EXPORT InvitationDispatcher : public QObject
     void setItemManager( EditorItemManager *manager );
 
   private:
-    InvitationDispatcherPrivate * const d_ptr;
+    InvitationDispatcherPrivate *const d_ptr;
     Q_DECLARE_PRIVATE( InvitationDispatcher )
     Q_DISABLE_COPY( InvitationDispatcher )
 

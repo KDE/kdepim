@@ -79,7 +79,7 @@ void Session::connectToHost( const KUrl &url )
     return;
 
   m_url = url;
-  m_socket->connectToHost( url.host(), url.port() ? url.port() : 2000 );
+  m_socket->connectToHost( url.host(), url.port() ? url.port() : 4190 );
   m_state = PreTlsCapabilities;
 }
 
@@ -170,12 +170,12 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
               disconnectFromHost();
               return;
             }
-
             if ( !allowUnencrypted() && QSslSocket::supportsSsl() && !m_supportsStartTls &&
                   KMessageBox::warningContinueCancel( 0,
                             i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
                                   "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
-                            i18n("Server Does Not Advertise TLS"), KGuiItem(i18n("&Start TLS nonetheless")), KStandardGuiItem::cancel() ) != KMessageBox::Continue )
+                                                      i18n("Server Does Not Advertise TLS"), KGuiItem(i18n("&Start TLS nonetheless")), KStandardGuiItem::cancel(),
+                                                      QString::fromLatin1( "ask_starttls_%1" ).arg(m_url.host() )  ) != KMessageBox::Continue )
             {
               m_errorMsg = KIO::buildErrorString( KIO::ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
               disconnectFromHost();

@@ -22,9 +22,9 @@
 
 #include "mailcommon_export.h"
 
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class QAbstractItemModel;
 class QAction;
@@ -37,11 +37,11 @@ class MAILCOMMON_EXPORT AclManager : public QObject
   Q_OBJECT
 
   Q_PROPERTY( Akonadi::Collection collection READ collection WRITE setCollection NOTIFY collectionChanged )
-  Q_PROPERTY( QAbstractItemModel* model READ model )
-  Q_PROPERTY( QItemSelectionModel* selectionModel READ selectionModel )
-  Q_PROPERTY( QAction* addAction READ addAction )
-  Q_PROPERTY( QAction* editAction READ editAction )
-  Q_PROPERTY( QAction* deleteAction READ deleteAction )
+  Q_PROPERTY( QAbstractItemModel *model READ model )
+  Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
+  Q_PROPERTY( QAction *addAction READ addAction )
+  Q_PROPERTY( QAction *editAction READ editAction )
+  Q_PROPERTY( QAction *deleteAction READ deleteAction )
 
   public:
     /**
@@ -108,7 +108,7 @@ class MAILCOMMON_EXPORT AclManager : public QObject
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void selectionChanged() )
     Q_PRIVATE_SLOT( d, void addAcl() )

@@ -21,9 +21,11 @@
 
 #include "mailcommon_export.h"
 
-#include <kdialog.h>
-#include <kmime/kmime_message.h>
 #include <messagecomposer/messagefactory.h>
+
+#include <KMime/KMimeMessage>
+
+#include <KDialog>
 
 namespace MailCommon {
 

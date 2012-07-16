@@ -42,6 +42,7 @@
 #include <QPaintEvent>
 #include <QTextDocument>
 #include <QApplication>
+#include <QScrollBar>
 
 #include <KMenu>
 #include <KLocale>
@@ -174,11 +175,63 @@ void View::ignoreUpdateGeometries( bool ignore )
   d->mIgnoreUpdateGeometries = ignore;
 }
 
+bool View::isScrollingLocked() const
+{
+  // There is another popular requisite: people want the view to automatically
+  // scroll in order to show new arriving mail. This actually makes sense
+  // only when the view is sorted by date and the new mail is (usually) either
+  // appended at the bottom or inserted at the top. It would be also confusing
+  // when the user is browsing some other thread in the meantime.
+  //
+  // So here we make a simple guess: if the view is scrolled somewhere in the
+  // middle then we assume that the user is browsing other threads and we
+  // try to keep the currently selected item steady on the screen.
+  // When the view is "locked" to the top (scrollbar value 0) or to the
+  // bottom (scrollbar value == maximum) then we assume that the user
+  // isn't browsing and we should attempt to show the incoming messages
+  // by keeping the view "locked".
+  //
+  // The "locking" also doesn't make sense in the first big fill view job.
+  // [Well this concept is pre-akonadi. Now the loading is all async anyway...
+  //  So all this code is actually triggered during the initial loading, too.]
+  const int scrollBarPosition = verticalScrollBar()->value();
+  const int scrollBarMaximum = verticalScrollBar()->maximum();
+  const SortOrder* sortOrder = d->mModel->sortOrder();
+  const bool lockView = (
+                    // not the first loading job
+                    !d->mModel->isLoading()
+                  ) && (
+                    // messages sorted by date
+                    ( sortOrder->messageSorting() == SortOrder::SortMessagesByDateTime ) ||
+                    ( sortOrder->messageSorting() == SortOrder::SortMessagesByDateTimeOfMostRecent )
+                  ) && (
+                    // scrollbar at top (Descending order) or bottom (Ascending order)
+                    ( scrollBarPosition == 0 && sortOrder->messageSortDirection() == SortOrder::Descending ) ||
+                    ( scrollBarPosition == scrollBarMaximum && sortOrder->messageSortDirection() == SortOrder::Ascending )
+                  );
+  return lockView;
+}
+
 void View::updateGeometries()
 {
-  if( d->mIgnoreUpdateGeometries )
+  if( d->mIgnoreUpdateGeometries || !d->mModel )
     return;
+
+  const int scrollBarPositionBefore = verticalScrollBar()->value();
+  const bool lockView = isScrollingLocked();
+
   QTreeView::updateGeometries();
+
+  if ( lockView )
+  {
+    // we prefer to keep the view locked to the top or bottom
+    if ( scrollBarPositionBefore != 0 )
+    {
+      // we wanted the view to be locked to the bottom
+      if ( verticalScrollBar()->value() != verticalScrollBar()->maximum() )
+        verticalScrollBar()->setValue( verticalScrollBar()->maximum() );
+    } // else we wanted the view to be locked to top and we shouldn't need to do anything
+  }
 }
 
 StorageModel * View::storageModel() const
@@ -496,7 +549,6 @@ void View::applyThemeColumns()
   // But seems to work most of the times...
 
   idx = 0;
-  totalVisibleWidth = 0;
 
   end = columns.constEnd();
   for ( it = columns.constBegin(); it != end; ++it )
@@ -504,16 +556,15 @@ void View::applyThemeColumns()
     if ( ( *it )->currentlyVisible() )
     {
       //kDebug() << "Resize section " << idx << " to " << lColumnWidths[ idx ];
-      ( *it )->setCurrentWidth( lColumnWidths[ idx ] );
-      header()->resizeSection( idx, lColumnWidths[ idx ] );
-      totalVisibleWidth += lColumnWidths[ idx ];
+      const int columnWidth( lColumnWidths[ idx ] );
+      ( *it )->setCurrentWidth( columnWidth );
+      header()->resizeSection( idx, columnWidth );
     } else {
       ( *it )->setCurrentWidth( -1 );
     }
     idx++;
   }
 
-  totalVisibleWidth = 0;
   idx = 0;
 
   bool bTriggeredQtBug = false;
@@ -526,7 +577,6 @@ void View::applyThemeColumns()
       {
         bTriggeredQtBug = true;
       }
-      totalVisibleWidth += header()->sectionSize( idx );
     }
     idx++;
   }
@@ -620,11 +670,11 @@ void View::resizeEvent( QResizeEvent * e )
   bool oldSave = d->mSaveThemeColumnStateOnSectionResize;
   d->mSaveThemeColumnStateOnSectionResize = false;
 
-  if ( ( header()->count() - header()->hiddenSectionCount() ) < 2 )
+  const int count = header()->count();
+  if ( ( count - header()->hiddenSectionCount() ) < 2 )
   {
     // a single column visible: resize it
     int visibleIndex;
-    int count = header()->count();
     for ( visibleIndex = 0; visibleIndex < count; visibleIndex++ )
     {
       if ( !header()->isSectionHidden( visibleIndex ) )
@@ -700,7 +750,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
 
   const QList< Theme::Column * > & columns = d->mTheme->columns();
 
-  if ( columns.count() < 1 )
+  if ( columns.isEmpty() )
     return; // bad theme
 
   // the menu for the columns
@@ -1133,10 +1183,8 @@ Item * View::messageItemAfter( Item * referenceItem, MessageTypeFilter messageTy
 
   QModelIndex parentIndex = d->mModel->index( below->parent(), 0 );
   QModelIndex belowIndex = d->mModel->index( below, 0 );
-  int belowRowIdx = below->parent()->indexOfChildItem( below );
 
   Q_ASSERT( belowIndex.isValid() );
-  Q_ASSERT( belowRowIdx >= 0 );
 
   while (
           // is not a message (we want messages, don't we ?)
@@ -1144,7 +1192,7 @@ Item * View::messageItemAfter( Item * referenceItem, MessageTypeFilter messageTy
           // message filter doesn't match
           ( !message_type_matches( below, messageTypeFilter ) ) ||
           // is hidden (and we don't want hidden items as they arent "officially" in the view)
-          isRowHidden( belowRowIdx, parentIndex ) ||
+          isRowHidden( belowIndex.row(), parentIndex ) ||
           // is not enabled or not selectable
           ( ( d->mModel->flags( belowIndex ) & ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) ) != ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) )
     )
@@ -1183,10 +1231,8 @@ Item * View::messageItemAfter( Item * referenceItem, MessageTypeFilter messageTy
 
     parentIndex = d->mModel->index( below->parent(), 0 );
     belowIndex = d->mModel->index( below, 0 );
-    belowRowIdx = below->parent()->indexOfChildItem( below );
 
     Q_ASSERT( belowIndex.isValid() );
-    Q_ASSERT( belowRowIdx >= 0 );
   }
 
   return below;
@@ -1269,10 +1315,8 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
 
   QModelIndex parentIndex = d->mModel->index( above->parent(), 0 );
   QModelIndex aboveIndex = d->mModel->index( above, 0 );
-  int aboveRowIdx = above->parent()->indexOfChildItem( above );
 
   Q_ASSERT( aboveIndex.isValid() );
-  Q_ASSERT( aboveRowIdx >= 0 );
 
   while (
           // is not a message (we want messages, don't we ?)
@@ -1287,7 +1331,7 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
             ( ! isDisplayedWithParentsExpanded( above ) )
           ) ||
           // is hidden
-          isRowHidden( aboveRowIdx, parentIndex ) ||
+          isRowHidden( aboveIndex.row(), parentIndex ) ||
           // is not enabled or not selectable
           ( ( d->mModel->flags( aboveIndex ) & ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) ) != ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) )
     )
@@ -1318,10 +1362,8 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
 
     parentIndex = d->mModel->index( above->parent(), 0 );
     aboveIndex = d->mModel->index( above, 0 );
-    aboveRowIdx = above->parent()->indexOfChildItem( above );
 
     Q_ASSERT( aboveIndex.isValid() );
-    Q_ASSERT( aboveRowIdx >= 0 );
   }
 
   return above;
@@ -2356,11 +2398,11 @@ bool View::event( QEvent *e )
 
       if ( textIsLeftToRight ) {
         tip += htmlCodeForStandardRow.arg( i18n( "From" ) ).arg( MessageCore::StringUtil::stripEmailAddr( mi->sender() ) );
-        tip += htmlCodeForStandardRow.arg( i18nc( "Receiver of the emial", "To" ) ).arg( MessageCore::StringUtil::stripEmailAddr( mi->receiver() ) );
+        tip += htmlCodeForStandardRow.arg( i18nc( "Receiver of the email", "To" ) ).arg( MessageCore::StringUtil::stripEmailAddr( mi->receiver() ) );
         tip += htmlCodeForStandardRow.arg( i18n( "Date" ) ).arg( mi->formattedDate() );
       } else {
         tip += htmlCodeForStandardRow.arg(  MessageCore::StringUtil::stripEmailAddr( mi->sender() ) ).arg( i18n( "From" ) );
-        tip += htmlCodeForStandardRow.arg(  MessageCore::StringUtil::stripEmailAddr( mi->receiver() ) ).arg( i18nc( "Receiver of the emial", "To" ) );
+        tip += htmlCodeForStandardRow.arg(  MessageCore::StringUtil::stripEmailAddr( mi->receiver() ) ).arg( i18nc( "Receiver of the email", "To" ) );
         tip += htmlCodeForStandardRow.arg(  mi->formattedDate() ).arg( i18n( "Date" ) );
       }
 

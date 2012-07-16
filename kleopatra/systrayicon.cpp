@@ -63,7 +63,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QPointer>
-#include <QDebug>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>

@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 #include <akonadi/item.h>
-#include <Nepomuk/Resource>
+#include <Nepomuk2/Resource>
 
 namespace MessageCore {
 
@@ -37,22 +37,25 @@ class MESSAGECORE_EXPORT AsyncNepomukResourceRetriever : public QObject
 {
   Q_OBJECT
   public:
-    explicit AsyncNepomukResourceRetriever(QObject* parent = 0);
+    explicit AsyncNepomukResourceRetriever( const QVector<QUrl> &properties, QObject* parent = 0 );
     ~AsyncNepomukResourceRetriever();
 
-    void requestResource( const QUrl &url, const QVector<QUrl> &properties );
+    void requestResource( const QUrl &url );
     void cancelRequest( const QUrl &url );
 
   Q_SIGNALS:
-    void resourceReceived( const QUrl &url, const Nepomuk::Resource &resource );
+    void resourceReceived( const QUrl &url, const Nepomuk2::Resource &resource );
+  protected Q_SLOTS:
+    void nepomukStarted();
+    void nepomukStopped();
 
   protected:
-    virtual void resourceAvailable( const QUrl &url, const Nepomuk::Resource &resource );
+    virtual void resourceAvailable( const QUrl &url, const Nepomuk2::Resource &resource );
 
   private:
     AsyncNepomukResourceRetrieverPrivate* const d;
     friend class AsyncNepomukResourceRetrieverPrivate;
-    Q_PRIVATE_SLOT( d, void resourceRetrievalDone( const QUrl &url, const Nepomuk::Resource &resource ) )
+    Q_PRIVATE_SLOT( d, void resourceRetrievalDone( const QUrl &url, const Nepomuk2::Resource &resource ) )
 };
 
 }

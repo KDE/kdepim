@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="8">
+<kpartgui name="kaddressbook" version="10">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -44,11 +44,17 @@
       <Action name="akonadi_resource_delete"/>
     </Menu>
 
-    <Menu name="settings"><text>&amp;Settings</text>
-      <Action name="options_show_simplegui"/>
+    <Menu name="view" noMerge="1"><text>&amp;View</text>
+      <Action name="view_mode_simple"/>
+      <Action name="view_mode_2columns"/>
+      <Action name="view_mode_3columns"/>
+      <Separator/>
       <Action name="options_show_qrcodes"/>
     </Menu>
 
+    <Menu name="settings"><text>&amp;Settings</text>
+      <Action name="kaddressbook_configure" />
+    </Menu>
   </MenuBar>
 
   <Menu name="akonadi_collectionview_contextmenu">

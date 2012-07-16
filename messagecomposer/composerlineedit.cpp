@@ -221,9 +221,7 @@ void ComposerLineEdit::editRecentAddresses()
   dlg->setAddresses( KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses() );
   if ( dlg->exec() && dlg ) {
     KPIM::RecentAddresses::self( m_recentAddressConfig )->clear();
-    const QStringList addrList = dlg->addresses();
-    for ( QStringList::const_iterator it = addrList.constBegin(), end = addrList.constEnd() ; it != end ; ++it )
-      KPIM::RecentAddresses::self( MessageComposerSettings::self()->config() )->add( *it );
+    dlg->addAddresses(m_recentAddressConfig);
     loadContacts();
   }
 }

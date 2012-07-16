@@ -294,9 +294,11 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 //-----------------------------------------------------------------
 // INCIDENCEMONTHITEM
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
+                                        CalendarSupport::Calendar *calendar,
                                         const Akonadi::Item &aitem,
                                         const QDate &recurStartDate )
-  : MonthItem( monthScene ), mIncidence( aitem.payload<Incidence::Ptr>() ),
+  : MonthItem( monthScene ), mCalendar( calendar ),
+    mIncidence( aitem.payload<Incidence::Ptr>() ),
     mAkonadiItemId( aitem.id() )
 {
   mIsEvent = CalendarSupport::hasEvent( aitem );
@@ -551,7 +553,7 @@ QString IncidenceMonthItem::text( bool end ) const
 QString IncidenceMonthItem::toolTipText( const QDate &date ) const
 {
   return KCalUtils::IncidenceFormatter::toolTipStr(
-    CalendarSupport::displayName( akonadiItem().parentCollection() ),
+    CalendarSupport::displayName( mCalendar, akonadiItem().parentCollection() ),
     mIncidence,
     date, true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
 }

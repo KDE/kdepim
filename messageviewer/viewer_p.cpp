@@ -3,7 +3,7 @@
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
   Copyright (c) 2010 Torgny Nyblom <nyblom@kde.org>
-  Copyright (c) 2011 Laurent Montel <montel@kde.org>
+  Copyright (c) 2011, 2012 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -57,6 +57,10 @@
 #include <KTempDir>
 #include <KTemporaryFile>
 #include <KToggleAction>
+#include <KPrintPreview>
+
+#include <kfileitemactions.h>
+#include <KFileItemListProperties>
 
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
@@ -90,6 +94,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
+
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
@@ -125,6 +130,7 @@
 #include "vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
+#include "translator/translatorwidget.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -158,6 +164,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mNodeHelper( new NodeHelper ),
     mViewer( 0 ),
     mFindBar( 0 ),
+    mTranslatorWidget(0),
     mAttachmentStrategy( 0 ),
     mHeaderStrategy( 0 ),
     mHeaderStyle( 0 ),
@@ -183,8 +190,9 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomTextOnlyAction( 0 ),
     mZoomInAction( 0 ),
     mZoomOutAction( 0 ),
-    mZoomResetAction( 0 ), 
+    mZoomResetAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
+    mSpeakTextAction(0),
     mCanStartDrag( false ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
@@ -208,12 +216,11 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
   mZoomTextOnly = false;
-  
+
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
   mExternalWindow  = ( aParent == mainWindow );
-  mSplitterSizes << 180 << 100;
   mPrinting = false;
 
   createWidgets();
@@ -316,6 +323,13 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
+  bool deletedAttachment = false;
+  if(node->contentType(false)) {
+    deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
+  }
+  if(deletedAttachment)
+    return;
+
   const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
   if ( isEncapsulatedMessage ) {
 
@@ -345,7 +359,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
-    // consider the filename if mimetype can not be found by content-type
+    // consider the filename if mimetype cannot be found by content-type
     mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
 
   }
@@ -368,7 +382,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     Util::saveContents( mMainWindow, KMime::Content::List() << node );
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
-    attachmentOpen( node );
+    if( offer )
+      attachmentOpen( node, offer );
+    else
+      attachmentOpen( node );
   } else if ( choice == AttachmentDialog::OpenWith ) {
     attachmentOpenWith( node );
   } else { // Cancel
@@ -400,16 +417,43 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
      != KMessageBox::Continue ) {
     return false; //cancelled
   }
-
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
+  QString filename;
+  QString name;
+  QByteArray mimetype;
+  if(node->contentDisposition(false)) {
+    filename = node->contentDisposition()->filename();
+  }
+
+  if(node->contentType(false)) {
+    name = node->contentType()->name();
+    mimetype = node->contentType()->mimeType();
+  }
 
   parent->removeContent( node, true );
+
+  // text/plain part:
+  KMime::Content* deletePart = new KMime::Content(parent);
+  deletePart->contentType()->setMimeType( "text/x-moz-deleted" );
+  deletePart->contentType()->setName(QString::fromLatin1("Deleted: %1").arg(name),"utf8");
+  deletePart->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
+  deletePart->contentDisposition()->setFilename(QString::fromLatin1("Deleted: %1").arg(name));
+
+  deletePart->contentType()->setCharset( "utf-8" );
+  deletePart->contentTransferEncoding()->from7BitString( "7bit" );
+  QByteArray bodyMessage = QByteArray("\nYou deleted an attachment from this message. The original MIME headers for the attachment were:");
+  bodyMessage +=("\nContent-Type: ") + mimetype;
+  bodyMessage +=("\nname=\"") + name.toUtf8() + "\"";
+  bodyMessage +=("\nfilename=\"") + filename.toUtf8() + "\"";
+  deletePart->setBody(bodyMessage);
+  parent->addContent( deletePart );
+
+
   parent->assemble();
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
   mMimePartModel->setRoot( modifiedMessage );
-
   mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
@@ -460,25 +504,107 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
+void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
+{
+  const QString contentTypeStr = node->contentType()->mimeType();
+  const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
+  if (!offers.isEmpty()) {
+    QMenu* menu = topMenu;
+    QActionGroup *actionGroup = new QActionGroup( menu );
+    connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
+
+    if (offers.count() > 1) { // submenu 'open with'
+      menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
+      menu->menuAction()->setObjectName("openWith_submenu"); // for the unittest
+      topMenu->addMenu(menu);
+    }
+    //kDebug() << offers.count() << "offers" << topMenu << menu;
+
+    KService::List::ConstIterator it = offers.constBegin();
+    for(; it != offers.constEnd(); it++) {
+      KAction* act = createAppAction(*it,
+                                        // no submenu -> prefix single offer
+                                        menu == topMenu, actionGroup);
+      menu->addAction(act);
+    }
+
+    QString openWithActionName;
+    if (menu != topMenu) { // submenu
+      menu->addSeparator();
+      openWithActionName = i18nc("@action:inmenu Open With", "&Other...");
+    } else {
+      openWithActionName = i18nc("@title:menu", "&Open With...");
+    }
+    KAction *openWithAct = new KAction(this);
+    openWithAct->setText(openWithActionName);
+    QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+    menu->addAction(openWithAct);
+  }
+  else { // no app offers -> Open With...
+    KAction *act = new KAction(this);
+    act->setText(i18nc("@title:menu", "&Open With..."));
+    QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+    topMenu->addAction(act);
+  }
+}
+
+void ViewerPrivate::slotOpenWithDialog()
+{
+  if ( !mCurrentContent )
+    return;
+  attachmentOpenWith( mCurrentContent );
+}
+
+KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup )
+{
+  QString actionName(service->name().replace('&', "&&"));
+  if (singleOffer) {
+    actionName = i18n("Open &with %1", actionName);
+  } else {
+    actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
+  }
+
+  KAction *act = new KAction(this);
+  act->setIcon(KIcon(service->icon()));
+  act->setText(actionName);
+  actionGroup->addAction( act );
+  act->setData(QVariant::fromValue(service));
+  return act;
+}
+
+void ViewerPrivate::slotOpenWithAction(QAction *act)
+{
+  if(!mCurrentContent)
+    return;
+
+  KService::Ptr app = act->data().value<KService::Ptr>();
+  attachmentOpen( mCurrentContent, app );
+}
+
+
 void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & globalPos )
 {
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
   QAction *action;
-
+  bool deletedAttachment = false;
+  if(node->contentType(false)) {
+    deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
+  }
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
   connect( attachmentMapper, SIGNAL(mapped(int)),
            this, SLOT(slotHandleAttachment(int)) );
 
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Open );
 
-  action = menu->addAction(i18n("Open With..."));
-  connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
-  attachmentMapper->setMapping( action, Viewer::OpenWith );
+  if(!deletedAttachment)
+    createOpenWithMenu( menu, node );
 
   action = menu->addAction(i18nc("to view something", "View") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::View );
 
@@ -491,10 +617,12 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Save );
 
   action = menu->addAction(SmallIcon("edit-copy"), i18n("Copy") );
+  action->setEnabled(!deletedAttachment);
   connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
   attachmentMapper->setMapping( action, Viewer::Copy );
 
@@ -514,7 +642,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
     action = menu->addAction(SmallIcon("edit-delete"), i18n("Delete Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
     attachmentMapper->setMapping( action, Viewer::Delete );
-    action->setEnabled( canChange );
+    action->setEnabled( canChange && !deletedAttachment );
   }
   if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive )
        && Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" )) {
@@ -539,7 +667,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 {
   QFileInfo atmFileInfo( atmFileName );
 
-  // tempfile name ist /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
+  // tempfile name is /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
   KTempDir *linkDir = new KTempDir( KStandardDirs::locateLocal( "tmp", "attachments" ) );
   QString linkPath = linkDir->name() + atmFileInfo.fileName();
   QFile *linkFile = new QFile( linkPath );
@@ -571,7 +699,7 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
   }
 
   if ( mimetype.isNull() ) {
-    // consider the filename if mimetype can not be found by content-type
+    // consider the filename if mimetype cannot be found by content-type
     mimetype = KMimeType::findByPath( fileName, 0, true /* no disk access */ );
   }
   if ( ( mimetype->name() == "application/octet-stream" )
@@ -631,6 +759,11 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
+  attachmentOpen( node, offer );
+}
+
+void ViewerPrivate::attachmentOpen( KMime::Content *node, KService::Ptr offer )
+{
   const QString name = mNodeHelper->writeNodeToTempFile( node );
   KUrl::List lst;
   KUrl url;
@@ -763,7 +896,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage( KJob* job )
   if ( !col.isValid() )
     return;
   Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
-  QString itemResource = col.resource();
+  const QString itemResource = col.resource();
   Akonadi::AgentInstance resourceInstance;
   foreach ( const Akonadi::AgentInstance &instance, instances ) {
     if ( instance.identifier() == itemResource ) {
@@ -970,8 +1103,8 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
-  connect( mViewer, SIGNAL(popupMenu(QUrl,QPoint)),
-           SLOT(slotUrlPopup(QUrl,QPoint)) );
+  connect( mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
+           SLOT(slotUrlPopup(QUrl,QUrl,QPoint)) );
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -1046,7 +1179,7 @@ void ViewerPrivate::readConfig()
 
   mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
   setZoomTextOnly( mZoomTextOnly );
-  
+
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1055,14 +1188,6 @@ void ViewerPrivate::readConfig()
   raction = actionForAttachmentStrategy( attachmentStrategy() );
   if ( raction )
     raction->setChecked( true );
-
-  const int mimeH = GlobalSettings::self()->mimePaneHeight();
-  const int messageH = GlobalSettings::self()->messagePaneHeight();
-  mSplitterSizes.clear();
-  if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
-    mSplitterSizes << messageH << mimeH;
-  else
-    mSplitterSizes << mimeH << messageH;
 
   adjustLayout();
 
@@ -1077,7 +1202,7 @@ void ViewerPrivate::readConfig()
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
   mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
 #endif
-  
+
   if ( mMessage )
     update();
   mColorBar->update();
@@ -1106,7 +1231,7 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
 
   if ( mHeaderStyle == style && mHeaderStrategy == strategy )
     return;
-  
+
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   if ( mHeaderOnlyAttachmentsAction ) {
@@ -1120,7 +1245,7 @@ void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
     }
   }
   update( Viewer::Force );
-  
+
   if( !mExternalWindow && writeInConfigFile)
     writeConfig();
 
@@ -1176,8 +1301,21 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
 #endif
 }
 
+void ViewerPrivate::printPreviousMessage( const Akonadi::Item &message )
+{
+// wince does not support printing
+#ifndef Q_OS_WINCE
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
+  connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
+  setMessageItem( message, Viewer::Force );
+#endif
+}
+
+
 void ViewerPrivate::resetStateForNewMessage()
 {
+  mClickedUrl.clear();
+  mImageUrl.clear();
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
@@ -1187,6 +1325,8 @@ void ViewerPrivate::resetStateForNewMessage()
   setShowSignatureDetails( false );
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
   mFindBar->closeBar();
+  mTranslatorWidget->slotCloseWidget();
+
   if ( mPrinting )
     mLevelQuote = -1;
 }
@@ -1298,11 +1438,19 @@ void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 void ViewerPrivate::adjustLayout()
 {
 #ifndef QT_NO_TREEVIEW
+  const int mimeH = GlobalSettings::self()->mimePaneHeight();
+  const int messageH = GlobalSettings::self()->messagePaneHeight();
+  QList<int> splitterSizes;
+  if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
+    splitterSizes << messageH << mimeH;
+  else
+    splitterSizes << mimeH << messageH;
+
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
     mSplitter->insertWidget( 0, mMimePartTree );
-  mSplitter->setSizes( mSplitterSizes );
+  mSplitter->setSizes( splitterSizes );
 
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
        mMsgDisplay )
@@ -1338,6 +1486,7 @@ void ViewerPrivate::createWidgets() {
   QVBoxLayout * vlay = new QVBoxLayout( q );
   vlay->setMargin( 0 );
   mSplitter = new QSplitter( Qt::Vertical, q );
+  connect(mSplitter, SIGNAL(splitterMoved(int,int)), this, SLOT(saveSplitterSizes()));
   mSplitter->setObjectName( "mSplitter" );
   mSplitter->setChildrenCollapsible( false );
   vlay->addWidget( mSplitter );
@@ -1374,6 +1523,7 @@ void ViewerPrivate::createWidgets() {
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
+  mTranslatorWidget = new TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif
@@ -1385,6 +1535,7 @@ void ViewerPrivate::slotMimePartDestroyed()
 #ifndef QT_NO_TREEVIEW
   //root is either null or a modified tree that we need to clean up
   delete mMimePartModel->root();
+  mMimePartModel->setRoot(0);
 #endif
 }
 
@@ -1558,7 +1709,7 @@ void ViewerPrivate::createActions()
   connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
   mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
 
-  
+
   // Show message structure viewer
   mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
   ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
@@ -1573,7 +1724,8 @@ void ViewerPrivate::createActions()
   mSaveMessageAction = new KAction(i18n("&Save message"), this);
   ac->addAction("save_message", mSaveMessageAction);
   connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
-  mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+  //Laurent: conflict with kmail shortcut
+  //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   //
   // Scroll actions
@@ -1612,6 +1764,27 @@ void ViewerPrivate::createActions()
   connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
            SLOT(slotToggleHtmlMode()) );
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+
+
+  mSpeakTextAction = new KAction(i18n("Speak Text"),this);
+  mSpeakTextAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
+  ac->addAction( "speak_text", mSpeakTextAction );
+  connect( mSpeakTextAction, SIGNAL(triggered(bool)),
+           this, SLOT(slotSpeakText()) );
+
+  mCopyImageLocation = new KAction(i18n("Copy Image Location"),this);
+  mCopyImageLocation->setIcon(KIcon("view-media-visualization"));
+  ac->addAction("copy_image_location", mCopyImageLocation);
+  mCopyImageLocation->setShortcutConfigurable( false );
+  connect( mCopyImageLocation, SIGNAL(triggered(bool)),
+           SLOT(slotCopyImageLocation()) );
+
+  mTranslateAction = new KAction(i18n("Translate..."),this);
+  mTranslateAction->setIcon(KIcon("preferences-desktop-locale"));
+  ac->addAction("translate_text", mTranslateAction);
+  connect( mTranslateAction, SIGNAL(triggered(bool)),
+           SLOT(slotTranslate()) );
+
 }
 
 
@@ -1620,8 +1793,17 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 #ifndef QT_NO_TREEVIEW
   if ( !content )
     return;
+
+  bool deletedAttachment = false;
+  if(content->contentType(false)) {
+    deletedAttachment = (content->contentType()->mimeType() == "text/x-moz-deleted");
+  }
+  if(deletedAttachment)
+    return;
+
   const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
   const bool isRoot = ( content == mMessage.get() );
+  const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
   KMenu popup;
 
@@ -1632,7 +1814,11 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
                        this, SLOT(slotAttachmentOpen()) );
-      popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
+
+      if(selectedContents().count() == 1)
+        createOpenWithMenu(&popup,content);
+      else
+        popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );
     }
   }
@@ -1643,17 +1829,21 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                    SLOT(slotSaveAsEncoded()) );
   */
 
-  popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT(slotAttachmentSaveAll()) );
+  if( !contents.isEmpty() ) {
+    popup.addAction( i18n( "Save All Attachments..." ), this,
+                     SLOT(slotAttachmentSaveAll()) );
+  }
 
   // edit + delete only for attachments
   if ( !isRoot ) {
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
                        this, SLOT(slotAttachmentCopy()) );
+#if 0  //FIXME Laurent Comment for the moment it crash see Bug 287177
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT(slotAttachmentDelete()) );
+#endif
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT(slotAttachmentEdit()) );
@@ -1765,12 +1955,13 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      const bool result = ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() );
+      if ( result )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType().toLower() == "message" ||  node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
+      if ( result )
         html += "</div>";
     }
   } else {
@@ -1779,10 +1970,17 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
       mNodeHelper->writeNodeToTempFile( node );
-      QString href = mNodeHelper->asHREF( node, "header" );
+      const QString href = mNodeHelper->asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
-      html += "<img style=\"vertical-align:middle;\" src=\"" + info.icon + "\"/>&nbsp;";
+      QString imageMaxSize;
+      if(!info.icon.isEmpty()) {
+        QImage tmpImg(info.icon);
+        if(tmpImg.width() > 48 || tmpImg.height() > 48) {
+           imageMaxSize = QLatin1String("width=\"48\" height=\"48\"");
+        }
+      }
+      html += QString::fromLatin1("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + "\"/>&nbsp;";
       if ( headerStyle() == HeaderStyle::enterprise() ) {
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
@@ -1898,10 +2096,12 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   emit showStatusBarMessage( msg );
 }
 
-void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
+void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const QPoint& aPos)
 {
   const KUrl url( aUrl );
+  const KUrl iUrl( imageUrl );
   mClickedUrl = url;
+  mImageUrl = iUrl;
 
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
@@ -1915,21 +2115,34 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
     mCopyURLAction->setText( i18n( "Copy Link Address" ) );
   }
 
-  emit popupMenu( mMessageItem, aUrl, aPos );
+  emit popupMenu( mMessageItem, aUrl, imageUrl, aPos );
 }
 
 void ViewerPrivate::slotToggleHtmlMode()
 {
+  if(mColorBar->isNormal())
+    return;
   setHtmlOverride( !htmlMail() );
   update( Viewer::Force );
 }
 
 void ViewerPrivate::slotFind()
 {
+#if QT_VERSION >= 0x040800
+  if ( mViewer->hasSelection() )
+    mFindBar->setText( mViewer->selectedText() );
+#endif
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
 
+void ViewerPrivate::slotTranslate()
+{
+  const QString text = mViewer->selectedText();
+  mTranslatorWidget->show();
+  if(!text.isEmpty())
+    mTranslatorWidget->setTextToTranslate(text);
+}
 
 void ViewerPrivate::slotToggleFixedFont()
 {
@@ -2179,17 +2392,31 @@ void ViewerPrivate::slotDelayedResize()
   mSplitter->setGeometry( 0, 0, q->width(), q->height() );
 }
 
+void ViewerPrivate::slotPrintPreview()
+{
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
+  // wince does not support printing
+#ifndef Q_OS_WINCE
+  if ( !mMessage )
+    return;
+  QPrinter printer;
+  KPrintPreview previewdlg( &printer/*, mViewer*/ );
+  mViewer->print( &printer );
+  previewdlg.exec();
+#endif
+}
 
 void ViewerPrivate::slotPrintMsg()
 {
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
-  if ( !mMessage ) return;
 
 // wince does not support printing
 #ifndef Q_OS_WINCE
+  if ( !mMessage )
+    return;
   QPrinter printer;
 
-  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
+  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer/*, mViewer*/ ) );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     mViewer->print( &printer );
   }
@@ -2236,7 +2463,6 @@ QString ViewerPrivate::attachmentInjectionHtml() const
     link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
   }
-
   return html;
 }
 
@@ -2345,7 +2571,7 @@ void ViewerPrivate::slotAttachmentCopy()
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
 {
-#ifndef QT_NO_CLIPBOARD	
+#ifndef QT_NO_CLIPBOARD
   if ( contents.isEmpty() )
     return;
 
@@ -2428,7 +2654,6 @@ void ViewerPrivate::slotLevelQuote( int l )
 
 void ViewerPrivate::slotHandleAttachment( int choice )
 {
-  //mAtmUpdate = true;
   if(!mCurrentContent)
     return;
   if ( choice == Viewer::Delete ) {
@@ -2455,6 +2680,19 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   else {
     kDebug() << " not implemented :" << choice;
   }
+}
+
+void ViewerPrivate::slotSpeakText()
+{
+  const QString text = mViewer->selectedText();
+  MessageViewer::Util::speakSelectedText( text, mMainWindow);
+}
+
+void ViewerPrivate::slotCopyImageLocation()
+{
+#ifndef QT_NO_CLIPBOARD
+  QApplication::clipboard()->setText( mImageUrl.url() );
+#endif
 }
 
 void ViewerPrivate::slotCopySelectedText()
@@ -2509,9 +2747,18 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if( !mMessageItem.hasPayload<KMime::Message::Ptr>() )
+  if ( !mMessageItem.isValid() ) {
     return;
-  Util::saveMessageInMbox( QList<Akonadi::Item>()<<mMessageItem, mMainWindow );  
+  }
+
+  if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+    if ( mMessageItem.isValid() ) {
+      kWarning() << "Payload is not a MessagePtr!";
+    }
+    return;
+  }
+
+  Util::saveMessageInMbox( QList<Akonadi::Item>() << mMessageItem, mMainWindow );
 }
 
 void ViewerPrivate::saveRelativePosition()
@@ -2868,27 +3115,27 @@ void ViewerPrivate::slotMessageRendered()
 
 void ViewerPrivate::setZoomFactor( qreal zoomFactor )
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   mViewer->setZoomFactor ( zoomFactor );
-#endif  
+#endif
 }
 
 
 void ViewerPrivate::slotZoomIn()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   if( mZoomFactor >= 300 )
     return;
   mZoomFactor += zoomBy;
   if( mZoomFactor > 300 )
     mZoomFactor = 300;
   mViewer->setZoomFactor( mZoomFactor/100.0 );
-#endif  
+#endif
 }
 
 void ViewerPrivate::slotZoomOut()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   if ( mZoomFactor <= 100 )
     return;
   mZoomFactor -= zoomBy;
@@ -2905,9 +3152,9 @@ void ViewerPrivate::setZoomTextOnly( bool textOnly )
   {
     mZoomTextOnlyAction->setChecked( mZoomTextOnly );
   }
-#ifndef KDEPIM_NO_WEBKIT    
+#ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
-#endif  
+#endif
 }
 
 void ViewerPrivate::slotZoomTextOnly()
@@ -2917,11 +3164,17 @@ void ViewerPrivate::slotZoomTextOnly()
 
 void ViewerPrivate::slotZoomReset()
 {
-#ifndef KDEPIM_NO_WEBKIT  
+#ifndef KDEPIM_NO_WEBKIT
   mZoomFactor = 100;
   mViewer->setZoomFactor( 1.0 );
 #endif
 }
+
+void ViewerPrivate::goOnline()
+{
+  emit resumeNetworkJobs();
+}
+
 
 
 #include "viewer_p.moc"

@@ -196,7 +196,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
 
-  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), m_transport->currentText(), "utf-8" ) );
+  const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+
+  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
+ 
+  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
+  m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Identity", m_msg.get(), QString::number( identity.uoid() ), "utf-8" ));
 
   // Save the quote prefix which is used for this message. Each message can have
   // a different quote prefix, for example depending on the original sender.
@@ -253,7 +258,8 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
 
-  Message::Util::sendMailDispatcherIsOnline( m_parentWidget );
+  if( mSendMethod == MessageSender::SendImmediate )
+    Message::Util::sendMailDispatcherIsOnline( m_parentWidget );
 
   readyForSending();
 }
@@ -653,7 +659,7 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
 
   fillQueueJobHeaders( qjob, message, infoPart );
 
-  MessageCore::StringUtil::removePrivateHeaderFields( message );
+  MessageCore::StringUtil::removePrivateHeaderFields( message, false );
 
   QMapIterator<QByteArray, QString> customHeader(m_customHeader);
   while (customHeader.hasNext()) {
@@ -1115,24 +1121,41 @@ KPIMIdentities::IdentityCombo* Message::ComposerViewBase::identityCombo()
   return m_identityCombo;
 }
 
-void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
+void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type )
 {
-  if ( oldIdent.bcc() != ident.bcc() ) {
-    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdent.bcc() );
+  QString oldIdentList;
+  QString newIdentList;
+  if ( type == MessageComposer::Recipient::Bcc ) {
+    oldIdentList = oldIdent.bcc();
+    newIdentList = ident.bcc();
+    
+  } else if ( type == MessageComposer::Recipient::Cc ) {
+    oldIdentList = oldIdent.cc();
+    newIdentList = ident.cc();
+  } else {
+    return;
+  }
+    
+  if ( oldIdentList != newIdentList ) {
+    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdentList );
     foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
       m_recipientsEditor->removeRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
-                                           MessageComposer::Recipient::Bcc );
+                                           type );
     }
 
-    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
+    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( newIdentList );
     foreach ( const KMime::Types::Mailbox &recipient, newRecipients ) {
       m_recipientsEditor->addRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
-                                        MessageComposer::Recipient::Bcc );
+                                        type );
     }
-
     m_recipientsEditor->setFocusBottom();
   }
+}
 
+void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
+{
+  updateRecipients( ident, oldIdent, MessageComposer::Recipient::Bcc );
+  updateRecipients( ident, oldIdent, MessageComposer::Recipient::Cc );
 
   KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>
                                                ( oldIdent ).signature();
@@ -1160,6 +1183,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
                                KRichTextWidget::SupportRuleLine |
                                KRichTextWidget::SupportHyperlinks );
   m_editor->enableImageActions();
+  m_editor->enableEmoticonActions();
 
   m_editor->document()->setModified( false );
 
@@ -1320,12 +1344,12 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
-bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
+Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
 {
   if ( attachmentKeywords.isEmpty() )
-    return false;
+    return NoMissingAttachmentFound;
   if ( m_attachmentModel->rowCount() > 0 ) {
-    return false;
+    return NoMissingAttachmentFound;
   }
 
   QStringList attachWordsList = attachmentKeywords;
@@ -1359,7 +1383,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
   }
 
   if ( !gotMatch )
-    return false;
+    return NoMissingAttachmentFound;
 
   int rc = KMessageBox::warningYesNoCancel( m_editor,
                                             i18n("The message you have composed seems to refer to an "
@@ -1369,12 +1393,13 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
                                             KGuiItem(i18n("&Attach File...")),
                                             KGuiItem(i18n("&Send as Is")) );
   if ( rc == KMessageBox::Cancel )
-    return true;
+    return FoundMissingAttachmentAndCancel;
   if ( rc == KMessageBox::Yes ) {
     m_attachmentController->showAddAttachmentDialog();
+    return FoundMissingAttachmentAndAddedAttachment;
   }
 
-  return false;
+  return FoundMissingAttachmentAndSending;
 }
 
 

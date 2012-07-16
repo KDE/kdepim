@@ -48,7 +48,7 @@
 #include <KDE/KXMLGUIClient>
 #include <KDE/KXMLGUIFactory>
 
-#include <Nepomuk/Tag>
+#include <Nepomuk2/Tag>
 #include "core/groupheaderitem.h"
 
 namespace MessageList
@@ -199,13 +199,22 @@ void Widget::focusQuickSearch()
 
 void Widget::fillMessageTagCombo( KComboBox * combo )
 {
-  foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
-    QString iconName = QLatin1String( "mail-tagged" );
-    const QString label = nepomukTag.label();
-    if ( !nepomukTag.symbols().isEmpty() )
-      iconName = nepomukTag.symbols().first();
-    const QString id = nepomukTag.resourceUri().toString();
-    combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
+  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListView");
+  QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
+  if(tagSelected.isEmpty()) {
+    return;
+  }
+  const QStringList tagSelectedLst = tagSelected.split(QLatin1String(","));
+  foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
+    const QString id = nepomukTag.uri().toString();
+    if(tagSelectedLst.contains(id)) {
+      QString iconName = QLatin1String( "mail-tagged" );
+      const QString label = nepomukTag.label();
+      if ( !nepomukTag.symbols().isEmpty() )
+        iconName = nepomukTag.symbols().first();
+      const QString id = nepomukTag.uri().toString();
+      combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
+    }
   }
 }
 
@@ -442,6 +451,7 @@ void Widget::viewStartDragRequest()
     if ( ( c.rights() & Collection::CanDeleteItem ) == 0 ) {
       // So the drag will be read-only
       readOnly = true;
+      break;
     }
   }
 
@@ -548,6 +558,20 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedCh
   }
   return lstMiPtr;
 }
+
+QVector<qlonglong> Widget::selectionAsMessageItemListId( bool includeCollapsedChildren ) const
+{
+  QVector<qlonglong> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList( includeCollapsedChildren );
+  if ( lstMi.isEmpty() ) {
+     return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->itemForRow( it->currentModelIndexRow() ).id() );
+  }
+  return lstMiPtr;
+}
+
 
 QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 {

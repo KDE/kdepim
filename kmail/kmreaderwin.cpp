@@ -39,7 +39,6 @@
 #include "messageviewer/mailwebview.h"
 #include "messageviewer/markmessagereadhandler.h"
 #include "messageviewer/globalsettings.h"
-
 #include "messageviewer/csshelper.h"
 using MessageViewer::CSSHelper;
 #include "util.h"
@@ -50,9 +49,15 @@ using namespace KMime;
 
 #include "messageviewer/viewer.h"
 using namespace MessageViewer;
+#include <messagecore/globalsettings.h>
+
 #include "messageviewer/attachmentstrategy.h"
 #include "messagecomposer/messagesender.h"
 #include "messagecomposer/messagefactory.h"
+#include "messagecomposer/composer.h"
+#include "messagecomposer/textpart.h"
+#include "messagecomposer/infopart.h"
+#include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 
 #include "messagecore/messagehelpers.h"
@@ -108,6 +113,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   connect( mViewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
            this, SLOT(slotUrlClicked(Akonadi::Item,KUrl)) );
   connect( mViewer, SIGNAL(requestConfigSync()), kmkernel, SLOT(slotRequestConfigSync()), Qt::QueuedConnection ); // happens anyway on shutdown, so we can skip it there with using a queued connection
+  connect( mViewer, SIGNAL(resumeNetworkJobs()), kmkernel, SLOT(resumeNetworkJobs()));
   connect( mViewer, SIGNAL(showReader(KMime::Content*,bool,QString)),
            this, SLOT(slotShowReader(KMime::Content*,bool,QString)) );
   connect( mViewer, SIGNAL(showMessage(KMime::Message::Ptr,QString)),
@@ -138,6 +144,7 @@ void KMReaderWin::createActions()
   mMailToComposeAction = new KAction( KIcon( "mail-message-new" ),
                                       i18n( "New Message To..." ), this );
   ac->addAction("mail_new", mMailToComposeAction );
+  mMailToComposeAction->setShortcutConfigurable( false );
   connect( mMailToComposeAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoCompose()) );
 
@@ -145,19 +152,23 @@ void KMReaderWin::createActions()
   mMailToReplyAction = new KAction( KIcon( "mail-reply-sender" ),
                                     i18n( "Reply To..." ), this );
   ac->addAction( "mailto_reply", mMailToReplyAction );
+  mMailToReplyAction->setShortcutConfigurable( false );
   connect( mMailToReplyAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoReply()) );
 
   // forward to
   mMailToForwardAction = new KAction( KIcon( "mail-forward" ),
                                       i18n( "Forward To..." ), this );
+  mMailToForwardAction->setShortcutConfigurable( false );		                                      
   ac->addAction( "mailto_forward", mMailToForwardAction );
   connect( mMailToForwardAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoForward()) );
 
+
   // add to addressbook
   mAddAddrBookAction = new KAction( KIcon( "contact-new" ),
                                     i18n( "Add to Address Book" ), this );
+  mAddAddrBookAction->setShortcutConfigurable( false );
   ac->addAction( "add_addr_book", mAddAddrBookAction );
   connect( mAddAddrBookAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoAddAddrBook()) );
@@ -165,11 +176,13 @@ void KMReaderWin::createActions()
   // open in addressbook
   mOpenAddrBookAction = new KAction( KIcon( "view-pim-contacts" ),
                                      i18n( "Open in Address Book" ), this );
+  mOpenAddrBookAction->setShortcutConfigurable( false );
   ac->addAction( "openin_addr_book", mOpenAddrBookAction );
   connect( mOpenAddrBookAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoOpenAddrBook()) );
   // bookmark message
   mAddBookmarksAction = new KAction( KIcon( "bookmark-new" ), i18n( "Bookmark This Link" ), this );
+  mAddBookmarksAction->setShortcutConfigurable( false );
   ac->addAction( "add_bookmarks", mAddBookmarksAction );
   connect( mAddBookmarksAction, SIGNAL(triggered(bool)),
            SLOT(slotAddBookmarks()) );
@@ -177,6 +190,7 @@ void KMReaderWin::createActions()
   // save URL as
   mUrlSaveAsAction = new KAction( i18n( "Save Link As..." ), this );
   ac->addAction( "saveas_url", mUrlSaveAsAction );
+  mUrlSaveAsAction->setShortcutConfigurable( false );
   connect( mUrlSaveAsAction, SIGNAL(triggered(bool)), SLOT(slotUrlSave()) );
 
   // find text
@@ -184,6 +198,12 @@ void KMReaderWin::createActions()
   ac->addAction("find_in_messages", action );
   connect(action, SIGNAL(triggered(bool)), SLOT(slotFind()));
   action->setShortcut(KStandardShortcut::find());
+
+  // save Image On Disk
+  mImageUrlSaveAsAction = new KAction( i18n( "Save Image On Disk..." ), this );
+  ac->addAction( "saveas_imageurl", mImageUrlSaveAsAction );
+  mImageUrlSaveAsAction->setShortcutConfigurable( false );
+  connect( mImageUrlSaveAsAction, SIGNAL(triggered(bool)), SLOT(slotSaveImageOnDisk()) );
 
 }
 
@@ -434,7 +454,10 @@ void KMReaderWin::slotMailtoForward()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoAddAddrBook()
 {
-  const QString emailString = KPIMUtils::decodeMailtoUrl( urlClicked() );
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;
+  const QString emailString = KPIMUtils::decodeMailtoUrl( url );
 
   KPIM::AddEmailAddressJob *job = new KPIM::AddEmailAddressJob( emailString, mMainWindow, this );
   job->start();
@@ -443,7 +466,10 @@ void KMReaderWin::slotMailtoAddAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoOpenAddrBook()
 {
-  const QString emailString = KPIMUtils::decodeMailtoUrl( urlClicked() );
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;	
+  const QString emailString = KPIMUtils::decodeMailtoUrl( url );
 
   KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( emailString, mMainWindow, this );
   job->start();
@@ -452,15 +478,31 @@ void KMReaderWin::slotMailtoOpenAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotAddBookmarks()
 {
-    KMCommand *command = new KMAddBookmarksCommand( urlClicked(), this );
-    command->start();
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;
+  KMCommand *command = new KMAddBookmarksCommand( url, this );
+  command->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlSave()
 {
-  KMCommand *command = new KMUrlSaveCommand( urlClicked(), mMainWindow );
+  const KUrl url = urlClicked();
+  if( url.isEmpty() )
+    return;
+  KMCommand *command = new KMUrlSaveCommand( url, mMainWindow );
   command->start();
+}
+
+void KMReaderWin::slotSaveImageOnDisk()
+{
+  const KUrl url = imageUrlClicked();
+  if( url.isEmpty() )
+    return;
+  KMCommand *command = new KMUrlSaveCommand( url, mMainWindow );
+  command->start();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -525,6 +567,11 @@ KAction *KMReaderWin::copyURLAction()
   return mViewer->copyURLAction();
 }
 
+KAction *KMReaderWin::copyImageLocation()
+{
+  return mViewer->copyImageLocation();
+}
+
 KAction *KMReaderWin::copyAction()
 {
   return mViewer->copyAction();
@@ -536,6 +583,21 @@ KAction *KMReaderWin::urlOpenAction()
 void KMReaderWin::setPrinting(bool enable)
 {
   mViewer->setPrinting( enable );
+}
+
+KAction* KMReaderWin::speakTextAction()
+{
+  return mViewer->speakTextAction();
+}
+
+KAction* KMReaderWin::downloadImageToDiskAction() const
+{
+  return mImageUrlSaveAsAction;
+}
+
+KAction* KMReaderWin::translateAction()
+{
+  return mViewer->translateAction();
 }
 
 void KMReaderWin::clear(bool force )
@@ -560,6 +622,11 @@ KUrl KMReaderWin::urlClicked() const
   return mViewer->urlClicked();
 }
 
+KUrl KMReaderWin::imageUrlClicked() const
+{
+  return mViewer->imageUrlClicked();
+}
+
 void KMReaderWin::update( bool force )
 {
   mViewer->update( force ? Viewer::Force : Viewer::Delayed );
@@ -567,13 +634,14 @@ void KMReaderWin::update( bool force )
 
 void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
 {
-  uint identity = 0;
   if ( item.isValid() && item.parentCollection().isValid() ) {
-    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection(), false );
-    if ( fd )
-      identity = fd->identity();
+    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection(
+        MailCommon::Util::updatedCollection( item.parentCollection() ), false );
+    KMail::Util::handleClickedURL( url, fd );
+    return;
   }
-  KMail::Util::handleClickedURL( url, identity );
+  //No folder so we can't have identity and template.
+  KMail::Util::handleClickedURL( url );
 }
 
 void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const QString &encoding )
@@ -596,6 +664,57 @@ void KMReaderWin::slotDeleteMessage(const Akonadi::Item& item)
   KMTrashMsgCommand *command = new KMTrashMsgCommand( item.parentCollection(), item, -1 );
   command->start();
 }
+
+bool KMReaderWin::printSelectedText(bool preview)
+{
+  const QString str = mViewer->selectedText();
+  if(str.isEmpty())
+    return false;
+  ::Message::Composer* composer = new ::Message::Composer;
+  composer->textPart()->setCleanPlainText(str);
+  composer->textPart()->setWrappedPlainText(str);
+  KMime::Message::Ptr messagePtr = message().payload<KMime::Message::Ptr>();
+  composer->infoPart()->setFrom(messagePtr->from()->asUnicodeString());
+  composer->infoPart()->setTo(QStringList()<<messagePtr->to()->asUnicodeString());
+  composer->infoPart()->setCc(QStringList()<<messagePtr->cc()->asUnicodeString());
+  composer->infoPart()->setSubject(messagePtr->subject()->asUnicodeString());
+  composer->setProperty("preview",preview);
+  connect( composer, SIGNAL(result(KJob*)),
+           this, SLOT(slotPrintComposeResult(KJob*)) );
+  composer->start();
+  return true;
+}
+
+void KMReaderWin::slotPrintComposeResult( KJob *job )
+{
+  const bool preview = job->property("preview").toBool();
+  Q_ASSERT( dynamic_cast< ::Message::Composer* >( job ) );
+
+  ::Message::Composer* composer = dynamic_cast< ::Message::Composer* >( job );
+  if( composer->error() == ::Message::Composer::NoError ) {
+
+    Q_ASSERT( composer->resultMessages().size() == 1 );
+    Akonadi::Item printItem;
+    printItem.setPayload<KMime::Message::Ptr>( composer->resultMessages().first() );
+    //FIXME
+    //const bool isHtml = ( mComposerBase->editor()->textMode() == KMeditor::Rich );
+    const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+
+    KMPrintCommand *command = new KMPrintCommand( this, printItem,0,
+                                             0, false, false,useFixedFont, overrideEncoding );
+    command->setPrintPreview( preview );
+    command->start();
+  } else {
+    if ( static_cast<KIO::Job*>(job)->ui() ) {
+      static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    } else {
+      kWarning() << "Composer for printing failed:" << composer->errorString();
+    }
+  }
+
+}
+
 
 #include "kmreaderwin.moc"
 

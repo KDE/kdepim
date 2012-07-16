@@ -3,7 +3,7 @@
 
 
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010,2011 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -41,13 +41,16 @@ class FindBarBase : public QWidget
     virtual ~FindBarBase();
 
     QString text() const;
-
+    void setText( const QString&text );
     void focusAndSetCursor();
     
   protected:
     virtual bool event(QEvent* e);
     virtual void clearSelections();
+    virtual void updateHighLight(bool);
     virtual void searchText( bool backward, bool isAutoSearch );
+    virtual void updateSensitivity( bool );
+
     void setFoundMatch( bool match );
     void messageInfo( bool backward, bool isAutoSearch, bool found );
     QMenu *optionsMenu();
@@ -59,11 +62,13 @@ class FindBarBase : public QWidget
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
   private slots:
-    void caseSensitivityChanged();
-    void highlightAllChanged();
+    void caseSensitivityChanged(bool);
+    void slotHighlightAllChanged(bool);
     void slotClearSearch();
 
   protected:
+    QString mPositiveBackground;
+    QString mNegativeBackground;
     QString mLastSearchStr;
     KLineEdit * m_search;
     QAction * m_caseSensitiveAct;

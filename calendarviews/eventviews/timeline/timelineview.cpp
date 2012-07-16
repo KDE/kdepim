@@ -369,7 +369,8 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
                                  static_cast<QStandardItemModel*>( d->mGantt->model() ),
                                  d->mGantt );
         d->mLeftView->addTopLevelItem(
-          new QTreeWidgetItem( QStringList() << CalendarSupport::displayName( collection ) ) );
+          new QTreeWidgetItem(
+            QStringList() << CalendarSupport::displayName( calendar(), collection ) ) );
         const QColor resourceColor = EventViews::resourceColor( collection, preferences() );
         if ( resourceColor.isValid() ) {
           item->setColor( resourceColor );

@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  kmsearchpattern.h
-  Author: Marc Mutz <Marc@Mutz.com>
+
+  Author: Marc Mutz <mutz@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,16 +22,16 @@
 
 #include "mailcommon_export.h"
 
-#include <akonadi/kmime/messagestatus.h>
-#include <klocale.h>
+#include <Akonadi/KMime/MessageStatus>
 
-#ifndef KDEPIM_NO_NEPOMUK
-#include <Nepomuk/Query/GroupTerm>
-#include <Nepomuk/Query/ComparisonTerm>
-#endif
+#include <Nepomuk2/Query/GroupTerm>
+#include <Nepomuk2/Query/ComparisonTerm>
 
-#include <QtCore/QList>
-#include <QtCore/QString>
+#include <KLocale>
+#include <KUrl>
+
+#include <QList>
+#include <QString>
 
 #include <boost/shared_ptr.hpp>
 
@@ -40,11 +40,11 @@ using Akonadi::MessageStatus;
 class QXmlStreamWriter;
 
 namespace Akonadi {
-class Item;
+  class Item;
 }
 
 namespace KMime {
-class Message;
+  class Message;
 }
 
 class KConfigGroup;
@@ -102,6 +102,12 @@ class MAILCOMMON_EXPORT SearchRule
       FuncNotEndWith
     };
 
+    enum RequiredPart {
+      Envelope = 0,
+      Header,
+      CompleteMessage
+    };
+
     /**
      * Creates new new search rule.
      *
@@ -120,7 +126,7 @@ class MAILCOMMON_EXPORT SearchRule
     /**
      * Initializes this rule with an @p other rule.
      */
-    const SearchRule& operator=( const SearchRule &other );
+    const SearchRule &operator=( const SearchRule &other );
 
     /**
      * Creates a new search rule of a certain type by instantiating the
@@ -193,11 +199,9 @@ class MAILCOMMON_EXPORT SearchRule
     virtual bool isEmpty() const = 0;
 
     /**
-     * Returns true if the rule depends on a complete message,
-     * otherwise returns false.
-     */
-    virtual bool requiresBody() const;
-
+     * Returns the required part from the item that is needed for the search to
+     * operate. See @ref RequiredPart */
+    virtual SearchRule::RequiredPart requiredPart() const = 0;
 
     /**
      * Saves the object into a given config @p group.
@@ -260,45 +264,43 @@ class MAILCOMMON_EXPORT SearchRule
      */
     const QString asString() const;
 
-#ifndef KDEPIM_NO_NEPOMUK 
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const = 0;
-#endif  
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const = 0;
 
     /**
      * Adds a serialization of the rule in XESAM format into the stream.
      */
-    virtual void addXesamClause( QXmlStreamWriter& stream ) const = 0;
+    virtual void addXesamClause( QXmlStreamWriter &stream ) const = 0;
 
-    QDataStream& operator>>( QDataStream& ) const;
+    QDataStream &operator>>( QDataStream & ) const;
 
-
-protected:
+  protected:
     /**
      * Helper that returns whether the rule has a negated function.
      */
     bool isNegated() const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * Converts the rule function into the corresponding Nepomuk query operator.
      */
-    Nepomuk::Query::ComparisonTerm::Comparator nepomukComparator() const;
+    Nepomuk2::Query::ComparisonTerm::Comparator nepomukComparator() const;
 
     /**
      * Adds @p term to @p termGroup and adds a negation term inbetween if needed.
      */
-    void addAndNegateTerm( const Nepomuk::Query::Term &term, Nepomuk::Query::GroupTerm &termGroup ) const;
-#endif
+    void addAndNegateTerm( const Nepomuk2::Query::Term &term,
+                           Nepomuk2::Query::GroupTerm &termGroup ) const;
     /**
      * Converts the rule function into the corresponding Xesam query operator.
      */
     QString xesamComparator() const;
 
-  private:
-    static Function configValueToFunc( const char* );
+protected:
+    QString quote( const QString &content ) const;
+private:
+    static Function configValueToFunc( const char * );
     static QString functionToString( Function );
 
     QByteArray mField;
@@ -308,7 +310,7 @@ protected:
 
 // Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore
 #ifdef _MSC_VER
-uint qHash(SearchRule::Ptr sr);
+uint qHash( SearchRule::Ptr sr );
 #endif
 
 /**
@@ -340,7 +342,7 @@ class SearchRuleString : public SearchRule
     /**
      * Initializes this rule with an @p other rule.
      */
-    const SearchRuleString& operator=( const SearchRuleString &other );
+    const SearchRuleString &operator=( const SearchRuleString &other );
 
     /**
      * Destroys the string search rule.
@@ -353,9 +355,9 @@ class SearchRuleString : public SearchRule
     virtual bool isEmpty() const ;
 
     /**
-     * @copydoc SearchRule::requiresBody()
+     * @copydoc SearchRule::requiredPart()
      */
-    virtual bool requiresBody() const;
+    virtual RequiredPart requiredPart() const;
 
     /**
      * @copydoc SearchRule::matches()
@@ -368,28 +370,24 @@ class SearchRuleString : public SearchRule
      */
     bool matchesInternal( const QString &contents ) const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
-#endif
-    
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
+
     /**
-     * @copydoc SearchRule::addXesamClause(QXmlStreamWriter& stream )
+     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
      */
-    virtual void addXesamClause(QXmlStreamWriter &stream) const;
-private:
-#ifndef KDEPIM_NO_NEPOMUK
+    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
+
+  private:
     /**
      * @copydoc SearchRule::addPersonTerms()
      */
-    void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
-    void addHeaderTerm (Nepomuk::Query::GroupTerm& groupTerm, const Nepomuk::Query::Term& field) const;
-
-#endif
+    void addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QUrl &field ) const;
+    void addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
+                        const Nepomuk2::Query::Term &field ) const;
 };
-
 
 /**
  * @short This class represents a search pattern rule operating on numerical values.
@@ -401,7 +399,7 @@ class SearchRuleNumerical : public SearchRule
 {
   public:
     /**
-     * Creates new new numerical search rule.
+     * Creates new numerical search rule.
      *
      * @param field The field to search in.
      * @param function The function to use for searching.
@@ -421,6 +419,11 @@ class SearchRuleNumerical : public SearchRule
      */
     virtual bool matches( const Akonadi::Item &item ) const;
 
+    /**
+     * @copydoc SearchRule::requiredPart()
+     */
+    virtual RequiredPart requiredPart() const;
+
     // Optimized matching not implemented, will use the unoptimized matching
     // from SearchRule
     using SearchRule::matches;
@@ -431,106 +434,165 @@ class SearchRuleNumerical : public SearchRule
      */
     bool matchesInternal( long numericalValue, long numericalContents,
                           const QString &contents ) const;
-                          
-#ifndef KDEPIM_NO_NEPOMUK
+
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
-#endif
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
 
     /**
-     * @copydoc SearchRule::addXesamClause(QXmlStreamWriter& stream )
+     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
      */
-    virtual void addXesamClause(QXmlStreamWriter &stream) const;
+    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 };
+
+
+class SearchRuleDate : public SearchRule
+{
+  public:
+    /**
+     * Creates new date search rule.
+     *
+     * @param field The field to search in.
+     * @param function The function to use for searching.
+     * @param contents The contents to search for.
+     */
+    explicit SearchRuleDate( const QByteArray &field = 0,
+                                  Function function = FuncContains,
+                                  const QString &contents = QString() );
+
+    /**
+     * @copydoc SearchRule::isEmpty()
+     */
+    virtual bool isEmpty() const ;
+
+    /**
+     * @copydoc SearchRule::matches()
+     */
+    virtual bool matches( const Akonadi::Item &item ) const;
+
+    /**
+     * @copydoc SearchRule::requiredPart()
+     */
+    virtual RequiredPart requiredPart() const;
+
+    // Optimized matching not implemented, will use the unoptimized matching
+    // from SearchRule
+    using SearchRule::matches;
+
+    /**
+     * A helper method for the main matches() method.
+     * Does the actual comparing.
+     */
+    bool matchesInternal( const QDate& dateValue, const QDate& msgDate ) const;
+
+    /**
+     * @copydoc SearchRule::addQueryTerms()
+     */
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
+
+    /**
+     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
+     */
+    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
+};
+
+
+
+
 
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
-  struct MessageStatusInfo {
-    const char *text;
-    const char *icon;
-  };
+struct MessageStatusInfo {
+  const char *text;
+  const char *icon;
+};
 
-  // If you change the ordering here; also do it in the enum below
-  static const MessageStatusInfo StatusValues[] = {
-    { I18N_NOOP2( "message status", "Important" ),              "emblem-important"    },
-    { I18N_NOOP2( "message status", "Action Item" ),            "mail-task"           },
-    { I18N_NOOP2( "message status", "Unread" ),                 "mail-unread"         },
-    { I18N_NOOP2( "message status", "Read" ),                   "mail-read"           },
-    { I18N_NOOP2( "message status", "Deleted" ),                "mail-deleted"        },
-    { I18N_NOOP2( "message status", "Replied" ),                "mail-replied"        },
-    { I18N_NOOP2( "message status", "Forwarded" ),              "mail-forwarded"      },
-    { I18N_NOOP2( "message status", "Queued" ),                 "mail-queued"         },
-    { I18N_NOOP2( "message status", "Sent" ),                   "mail-sent"           },
-    { I18N_NOOP2( "message status", "Watched" ),                "mail-thread-watch"   },
-    { I18N_NOOP2( "message status", "Ignored" ),                "mail-thread-ignored" },
-    { I18N_NOOP2( "message status", "Spam" ),                   "mail-mark-junk"      },
-    { I18N_NOOP2( "message status", "Ham" ),                    "mail-mark-notjunk"   },
-    { I18N_NOOP2( "message status", "Has Attachment"),          "mail-attachment"     } //must be last
-  };
-  // If you change the ordering here; also do it in the array above
-  enum StatusValueTypes {
-    StatusImportant = 0,
-    StatusToAct = 1,
-    StatusUnread = 2,
-    StatusRead = 3,
-    StatusDeleted = 4,
-    StatusReplied = 5,
-    StatusForwarded = 6,
-    StatusQueued = 7,
-    StatusSent = 8,
-    StatusWatched = 9,
-    StatusIgnored = 10,
-    StatusSpam = 11,
-    StatusHam = 12,
-    StatusHasAttachment = 13 //must be last
-  };
+// If you change the ordering here; also do it in the enum below
+static const MessageStatusInfo StatusValues[] =
+{
+  { I18N_NOOP2( "message status", "Important" ),     "emblem-important"    },
+  { I18N_NOOP2( "message status", "Action Item" ),   "mail-task"           },
+  { I18N_NOOP2( "message status", "Unread" ),        "mail-unread"         },
+  { I18N_NOOP2( "message status", "Read" ),          "mail-read"           },
+  { I18N_NOOP2( "message status", "Deleted" ),       "mail-deleted"        },
+  { I18N_NOOP2( "message status", "Replied" ),       "mail-replied"        },
+  { I18N_NOOP2( "message status", "Forwarded" ),     "mail-forwarded"      },
+  { I18N_NOOP2( "message status", "Queued" ),        "mail-queued"         },
+  { I18N_NOOP2( "message status", "Sent" ),          "mail-sent"           },
+  { I18N_NOOP2( "message status", "Watched" ),       "mail-thread-watch"   },
+  { I18N_NOOP2( "message status", "Ignored" ),       "mail-thread-ignored" },
+  { I18N_NOOP2( "message status", "Spam" ),          "mail-mark-junk"      },
+  { I18N_NOOP2( "message status", "Ham" ),           "mail-mark-notjunk"   },
+  { I18N_NOOP2( "message status", "Has Attachment"), "mail-attachment"     } //must be last
+};
 
-  static const int StatusValueCount =
-    sizeof( StatusValues ) / sizeof( MessageStatusInfo );
-  // we want to show all status entries in the quick search bar, but only the
-  // ones up to attachment in the search/filter dialog, because there the
-  // attachment case is handled separately.
-  static const int StatusValueCountWithoutHidden = StatusValueCount - 1;
+// If you change the ordering here; also do it in the array above
+enum StatusValueTypes {
+  StatusImportant = 0,
+  StatusToAct = 1,
+  StatusUnread = 2,
+  StatusRead = 3,
+  StatusDeleted = 4,
+  StatusReplied = 5,
+  StatusForwarded = 6,
+  StatusQueued = 7,
+  StatusSent = 8,
+  StatusWatched = 9,
+  StatusIgnored = 10,
+  StatusSpam = 11,
+  StatusHam = 12,
+  StatusHasAttachment = 13 //must be last
+};
 
+static const int StatusValueCount =
+  sizeof( StatusValues ) / sizeof( MessageStatusInfo );
+// we want to show all status entries in the quick search bar, but only the
+// ones up to attachment in the search/filter dialog, because there the
+// attachment case is handled separately.
+static const int StatusValueCountWithoutHidden = StatusValueCount - 1;
 
-/** This class represents a search to be performed against the status of a
+/**
+ *  This class represents a search to be performed against the status of a
  *  messsage. The status is represented by a bitfield.
-    @short This class represents a search pattern rule operating on message
-    status.
-*/
+ *
+ *  @short This class represents a search pattern rule operating on message
+ *  status.
+ */
 class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 {
-public:
-   explicit SearchRuleStatus( const QByteArray & field=0, Function function=FuncContains,
-                                const QString & contents=QString() );
-   explicit SearchRuleStatus( Akonadi::MessageStatus status, Function function=FuncContains );
+  public:
+    explicit SearchRuleStatus( const QByteArray &field = 0,
+                               Function function = FuncContains,
+                               const QString &contents = QString() );
 
-   virtual bool isEmpty() const ;
-   virtual bool matches( const Akonadi::Item &item ) const;
-   
-#ifndef KDEPIM_NO_NEPOMUK
-   virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
-#endif   
+    explicit SearchRuleStatus( Akonadi::MessageStatus status,
+                               Function function = FuncContains );
 
-   //Not possible to implement optimized form for status searching
-   using SearchRule::matches;
+    virtual bool isEmpty() const ;
+    virtual bool matches( const Akonadi::Item &item ) const;
 
+     /**
+     * @copydoc SearchRule::requiredPart()
+     */
+   virtual RequiredPart requiredPart() const;
 
-  static Akonadi::MessageStatus statusFromEnglishName(const QString&);
-  /**
-   * @copydoc SearchRule::addXesamClause(QXmlStreamWriter& stream )
-   */
-  virtual void addXesamClause(QXmlStreamWriter &stream) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
 
-private:
-#ifndef KDEPIM_NO_NEPOMUK
-  void addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const QString &tagId ) const;
-#endif
-  
-private:
-   Akonadi::MessageStatus mStatus;
+    //Not possible to implement optimized form for status searching
+    using SearchRule::matches;
+
+    static Akonadi::MessageStatus statusFromEnglishName( const QString & );
+    /**
+     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
+     */
+    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
+
+  private:
+    void addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QString &tagId ) const;
+
+  private:
+    Akonadi::MessageStatus mStatus;
 };
 
 // ------------------------------------------------------------------------
@@ -551,126 +613,177 @@ private:
     reuse a rule in another pattern, make a deep copy of that rule.
 
     @short An abstraction of a search over messages.
-    @author Marc Mutz <Marc@Mutz.com>
+    @author Marc Mutz <mutz@kde.org>
 */
 class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 {
 
-public:
-  /** Boolean operators that connect the return values of the
-      individual rules. A pattern with @p OpAnd will match iff all
-      it's rules match, whereas a pattern with @p OpOr will match iff
-      any of it's rules matches.
-  */
-  enum Operator { OpAnd, OpOr };
+  public:
+    /**
+     * Boolean operators that connect the return values of the
+     * individual rules. A pattern with @p OpAnd will match iff all
+     *  it's rules match, whereas a pattern with @p OpOr will match if
+     *  any of it's rules matches.
+     */
+    enum Operator {
+      OpAnd,
+      OpOr,
+      OpAll
+    };
 
-  /** Constructor which provides a pattern with minimal, but
-      sufficient initialization. Unmodified, such a pattern will fail
-      to match any KMime::Message. You can query for such an empty
-      rule by using isEmpty, which is inherited from QPtrList.
-  */
-  SearchPattern();
+    /**
+     * Constructor which provides a pattern with minimal, but
+     * sufficient initialization. Unmodified, such a pattern will fail
+     * to match any KMime::Message. You can query for such an empty
+     * rule by using isEmpty, which is inherited from QPtrList.
+     */
+    SearchPattern();
 
-  /** Constructor that initializes from a given KConfig group, if
-      given. This feature is mainly (solely?) used in KMFilter,
-      as we don't allow to store search patterns in the config (yet).
-  */
-  SearchPattern( const KConfigGroup & config );
+    /**
+     * Constructor that initializes from a given KConfig group, if
+     * given. This feature is mainly (solely?) used in KMFilter,
+     * as we don't allow to store search patterns in the config (yet).
+     */
+    SearchPattern( const KConfigGroup &config );
 
-  /** Destructor. Deletes all stored rules! */
-  ~SearchPattern();
+    /** Destructor. Deletes all stored rules! */
+    ~SearchPattern();
 
-  /** The central function of this class. Tries to match the set of
-      rules against a KMime::Message. It's virtual to allow derived
-      classes with added rules to reimplement it, yet reimplemented
-      methods should and (&&) the result of this function with their
-      own result or else most functionality is lacking, or has to be
-      reimplemented, since the rules are private to this class.
+    /**
+     * The central function of this class. Tries to match the set of
+     * rules against a KMime::Message. It's virtual to allow derived
+     * classes with added rules to reimplement it, yet reimplemented
+     * methods should and (&&) the result of this function with their
+     * own result or else most functionality is lacking, or has to be
+     * reimplemented, since the rules are private to this class.
+     *
+     * @return true if the match was successful, false otherwise.
+     */
+    bool matches( const Akonadi::Item &item, bool ignoreBody = false ) const;
 
-      @return true if the match was successful, false otherwise.
-  */
-  bool matches( const Akonadi::Item &item, bool ignoreBody = false ) const;
+    /**
+     * Returns the required part from the item that is needed for the search to
+     * operate. See @ref RequiredPart */
+    SearchRule::RequiredPart requiredPart() const;
 
-  /** Returns true if the pattern only depends the DwString that backs
-      a message */
-  bool requiresBody() const;
+    /**
+     * Removes all empty rules from the list. You should call this
+     * method whenever the user had had control of the rules outside of
+     * this class. (e.g. after editing it with SearchPatternEdit).
+     */
+    void purify();
 
-  /** Removes all empty rules from the list. You should call this
-      method whenever the user had had control of the rules outside of
-      this class. (e.g. after editing it with SearchPatternEdit).
-  */
-  void purify();
+    /**
+     * Reads a search pattern from a KConfigGroup. If it does not find
+     * a valid saerch pattern in the preset group, initializes the pattern
+     * as if it were constructed using the default constructor.
+     *
+     * For backwards compatibility with previous versions of KMail, it
+     * checks for old-style filter rules (e.g. using @p OpIgnore)
+     * in @p config und converts them to the new format on writeConfig.
+     *
+     * Derived classes reimplementing readConfig() should also call this
+     * method, or else the rules will not be loaded.
+     */
+    void readConfig( const KConfigGroup &config );
 
-  /** Reads a search pattern from a KConfigGroup. If it does not find
-      a valid saerch pattern in the preset group, initializes the pattern
-      as if it were constructed using the default constructor.
+    /**
+     * Writes itself into @p config. Tries to delete old-style keys by
+     * overwriting them with QString().
+     *
+     * Derived classes reimplementing writeConfig() should also call this
+     * method, or else the rules will not be stored.
+     */
+    void writeConfig( KConfigGroup &config ) const;
 
-      For backwards compatibility with previous versions of KMail, it
-      checks for old-style filter rules (e.g. using @p OpIgnore)
-      in @p config und converts them to the new format on writeConfig.
+    /**
+     * Returns the name of the search pattern.
+     */
+    QString name() const
+    {
+      return mName;
+    }
 
-      Derived classes reimplementing readConfig() should also call this
-      method, or else the rules will not be loaded.
-  */
-  void readConfig( const KConfigGroup & config );
+    /**
+     * Sets the name of the search pattern. KMFilter uses this to
+     * store it's own name, too.
+     */
+    void setName( const QString &newName )
+    {
+      mName = newName;
+    }
 
-  /** Writes itself into @p config. Tries to delete old-style keys by
-      overwriting them with QString().
+    /**
+     * Returns the filter operator.
+     */
+    SearchPattern::Operator op() const
+    {
+      return mOperator;
+    }
 
-      Derived classes reimplementing writeConfig() should also call this
-      method, or else the rules will not be stored.
-  */
-  void writeConfig( KConfigGroup & config ) const;
+    /**
+     * Sets the filter operator.
+     */
+    void setOp( SearchPattern::Operator aOp )
+    {
+      mOperator = aOp;
+    }
 
-  /** Get the name of the search pattern. */
-  QString name() const { return mName; }
-  /** Set the name of the search pattern. KMFilter uses this to
-      store it's own name, too. */
-  void setName( const QString & newName ) { mName = newName ; }
+    /**
+     * Returns the pattern as string. For debugging.
+     */
+    QString asString() const;
 
-  /** Get the filter operator */
-  SearchPattern::Operator op() const { return mOperator; }
-  /** Set the filter operator */
-  void setOp( SearchPattern::Operator aOp ) { mOperator = aOp; }
+    /**
+     * Returns the pattern as a SPARQL query.
+     */
+    QString asSparqlQuery(const KUrl::List& url = KUrl::List()) const;
 
-  /** Returns the pattern as string. For debugging.*/
-  QString asString() const;
+    /**
+     * Returns the pattern as a XESAM query.
+     */
+    QString asXesamQuery() const;
 
-  /** Returns the pattern as a SPARQL query. */
-  QString asSparqlQuery() const;
+    /**
+     * Overloaded assignment operator. Makes a deep copy.
+     */
+    const SearchPattern &operator=( const SearchPattern &aPattern );
 
-  /** Returns the pattern as a XESAM query. */
-  QString asXesamQuery() const;
+    /**
+     * Writes the pattern into a byte array for persistance purposes.
+     */
+    QByteArray serialize() const;
 
-  /** Overloaded assignment operator. Makes a deep copy. */
-  const SearchPattern & operator=( const SearchPattern & aPattern );
+    /**
+     * Constructs the pattern from a byte array serialization.
+     */
+    void deserialize( const QByteArray & );
 
-  /** Writes the pattern into a byte array for persistance purposes. */
-  QByteArray serialize() const;
+    QDataStream &operator>>( QDataStream &s ) const;
+    QDataStream &operator<<( QDataStream &s );
 
-  /** Constructs the pattern from a byte array serialization. */
-  void deserialize( const QByteArray& );
+  private:
+    /**
+     * Tries to import a legacy search pattern, ie. one that still has
+     * e.g. the @p unless or @p ignore operator which were useful as long as
+     * the number of rules was restricted to two. This method is called from
+     * readConfig, which detects legacy configurations and also makes sure
+     * that this method is called from an initialized object.
+     */
+    void importLegacyConfig( const KConfigGroup &config );
 
-  QDataStream & operator>>( QDataStream & s ) const;
-  QDataStream & operator<<( QDataStream & s );
-
-private:
-  /** Tries to import a legacy search pattern, ie. one that still has
-      e.g. the @p unless or @p ignore operator which were useful as
-      long as the number of rules was restricted to two. This method
-      is called from readConfig, which detects legacy configurations
-      and also makes sure that this method is called from an initialized
-      object.
-  */
-  void importLegacyConfig( const KConfigGroup & config );
-
-  /** Initializes the object. Clears the list of rules, sets the name
-      to "<i18n("unnamed")>", and the boolean operator to @p OpAnd. */
-  void init();
-
-  QString  mName;
-  Operator mOperator;
+    /**
+     * Initializes the object. Clears the list of rules, sets the name
+     * to "<i18n("unnamed")>", and the boolean operator to @p OpAnd.
+     */
+    void init();
+    Nepomuk2::Query::ComparisonTerm createChildTerm( const KUrl& url, bool& empty ) const;
+    QString  mName;
+    Operator mOperator;
 };
 
 }
+
+Q_DECLARE_METATYPE(MailCommon::SearchRule::RequiredPart)
+
 #endif /* MAILCOMMON_SEARCHPATTERN_H_ */

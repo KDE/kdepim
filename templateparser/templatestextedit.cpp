@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -162,7 +162,7 @@ void TemplatesTextEdit::keyPressEvent( QKeyEvent *e )
     }
   }
   KTextEdit::keyPressEvent( e );
-  QString text = wordUnderCursor();
+  const QString text = wordUnderCursor();
   if( text.length() < 2 ) {
     // min 2 char for completion
     return;

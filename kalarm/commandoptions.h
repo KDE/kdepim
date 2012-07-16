@@ -1,7 +1,7 @@
 /*
  *  commandoptions.h  -  extract command line options
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,9 @@
 #define COMMANDOPTIONS_H
 
 #include "editdlg.h"
+#ifdef USE_AKONADI
+#include "eventid.h"
+#endif
 
 #include <kalarmcal/kaevent.h>
 #include <kalarmcal/karecurrence.h>
@@ -47,11 +50,17 @@ class CommandOptions
             EDIT,             // --edit
             EDIT_NEW_PRESET,  // --edit-new-preset
             EDIT_NEW,         // --edit-new-display, --edit-new-command, --edit-new-email
-            NEW               // --file, --exec-display, --exec, --mail, message
+            NEW,              // --file, --exec-display, --exec, --mail, message
+            LIST              // --list
         };
         CommandOptions();
         Command             command() const           { return mCommand; }
+        QString             commandName() const       { return QString::fromLatin1(mCommandName); }
+#ifdef USE_AKONADI
+        EventId             eventId() const           { return mEventId; }
+#else
         QString             eventId() const           { return mEventId; }
+#endif
         QString             templateName() const      { return mTemplateName; }
         EditAlarmDlg::Type  editType() const          { return mEditType; }
         KAEvent::SubAction  editAction() const        { return mEditAction; }
@@ -95,7 +104,11 @@ class CommandOptions
         QString             mError;          // error message
         Command             mCommand;        // the selected command
         QByteArray          mCommandName;    // option string for the selected command
+#ifdef USE_AKONADI
+        EventId             mEventId;        // TRIGGER_EVENT, CANCEL_EVENT, EDIT: event ID
+#else
         QString             mEventId;        // TRIGGER_EVENT, CANCEL_EVENT, EDIT: event ID
+#endif
         QString             mTemplateName;   // EDIT_NEW_PRESET: template name
         EditAlarmDlg::Type  mEditType;       // NEW, EDIT_NEW_*: alarm edit type
         KAEvent::SubAction  mEditAction;     // NEW: alarm edit sub-type

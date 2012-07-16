@@ -80,6 +80,8 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     IncidenceRecurrence *mIeRecurrence;
     bool mInitiallyDirty;
     Akonadi::Item mItem;
+    QString typeToString( const int type ) const;
+
   public:
     EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
     ~EventOrTodoDialogPrivate();
@@ -199,10 +201,13 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
 {
   QString tabText;
   if ( newCount > 0 ) {
-    tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo",
-                     "Reminder (%1)", newCount );
+    tabText =
+      i18nc( "@title:tab Tab to configure the reminders of an event or todo",
+             "Reminder (%1)", newCount );
   } else {
-    tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo", "Reminder" );
+    tabText =
+      i18nc( "@title:tab Tab to configure the reminders of an event or todo",
+             "Reminder" );
   }
 
   mUi->mTabWidget->setTabText( AlarmsTab, tabText );
@@ -210,8 +215,9 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
 
 void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorNG::RecurrenceType type )
 {
-  QString tabText = i18nc( "@title:tab Tab to configure the recurrence of an event or todo",
-                           "Rec&urrence" );
+  QString tabText =
+    i18nc( "@title:tab Tab to configure the recurrence of an event or todo",
+           "Rec&urrence" );
 
   // Keep this numbers in sync with the items in mUi->mRecurrenceTypeCombo. I
   // tried adding an enum to IncidenceRecurrence but for whatever reason I could
@@ -239,38 +245,60 @@ void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorNG::Recurr
   mUi->mTabWidget->setTabText( RecurrenceTab, tabText );
 }
 
+QString EventOrTodoDialogPrivate::typeToString( const int type ) const
+{
+  // Do not translate.
+  switch( type ) {
+  case KCalCore::Incidence::TypeEvent:
+    return "Event";
+  case KCalCore::Incidence::TypeTodo:
+    return "Todo";
+  case KCalCore::Incidence::TypeJournal:
+    return "Journal";
+  default:
+    return "Unknown";
+  }
+}
+
 void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
 {
   Q_Q( EventOrTodoDialog );
 
   KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
 
-  QStringList typeStrings;
-  typeStrings << "Event" << "Todo" << "Journal";
-  const QString fileName = KStandardDirs::locateLocal( "data",
-                                                       "korganizer/templates/" +
-                                                       typeStrings[mEditor->type()] + '/' +
-                                                       templateName );
+  const QString fileName = KStandardDirs::locateLocal(
+    "data",
+    "korganizer/templates/" +
+    typeToString( mEditor->type() ) + '/' +
+    templateName );
 
   if ( fileName.isEmpty() ) {
-    KMessageBox::error( q, i18nc( "@info", "Unable to find template '%1'.", fileName ) );
+    KMessageBox::error(
+      q,
+      i18nc( "@info", "Unable to find template '%1'.", fileName ) );
     return;
   }
 
   KCalCore::ICalFormat format;
   if ( !format.load( cal, fileName ) ) {
-    KMessageBox::error( q, i18nc( "@info", "Error loading template file '%1'.", fileName ) );
+    KMessageBox::error(
+      q,
+      i18nc( "@info", "Error loading template file '%1'.", fileName ) );
     return;
   }
 
   KCalCore::Incidence::List incidences = cal->incidences();
   if ( incidences.isEmpty() ) {
-    KMessageBox::error( q, i18nc( "@info", "Template does not contain a valid incidence." ) );
+    KMessageBox::error(
+      q,
+      i18nc( "@info", "Template does not contain a valid incidence." ) );
     return;
   }
 
   mIeDateTime->setActiveDate( QDate() );
-  mEditor->load( KCalCore::Incidence::Ptr( incidences.first()->clone() ) );
+  KCalCore::Incidence::Ptr newInc = KCalCore::Incidence::Ptr( incidences.first()->clone() );
+  newInc->setUid( KCalCore::CalFormat::createUniqueId() );
+  mEditor->load( newInc );
 }
 
 void EventOrTodoDialogPrivate::manageTemplates()
@@ -298,15 +326,40 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
 {
   Q_ASSERT( ! templateName.isEmpty() );
 
-  KCalCore::Incidence::Ptr incidence( new KCalCore::Event );
-  mEditor->save( incidence );
-
-  QString fileName = "templates/" + incidence->typeStr();
-  fileName.append( '/' + templateName );
-  fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
-
   KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
-  cal->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
+
+  switch( mEditor->type() ) {
+  case KCalCore::Incidence::TypeEvent:
+  {
+    KCalCore::Event::Ptr event( new KCalCore::Event() );
+    mEditor->save( event );
+    cal->addEvent( KCalCore::Event::Ptr( event->clone() ) );
+    break;
+  }
+  case KCalCore::Incidence::TypeTodo:
+  {
+    KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+    mEditor->save( todo );
+    cal->addTodo( KCalCore::Todo::Ptr( todo->clone() ) );
+    break;
+  }
+  case KCalCore::Incidence::TypeJournal:
+  {
+    KCalCore::Journal::Ptr journal( new KCalCore::Journal );
+    mEditor->save( journal );
+    cal->addJournal( KCalCore::Journal::Ptr( journal->clone() ) );
+    break;
+  }
+  default:
+    Q_ASSERT_X( false, "saveTemplate", "Fix your program" );
+  }
+
+  const QString fileName = KStandardDirs::locateLocal(
+    "data",
+    "korganizer/templates/" +
+    typeToString( mEditor->type() ) + '/' +
+    templateName );
+
   KCalCore::ICalFormat format;
   format.save( cal, fileName );
 }
@@ -322,26 +375,30 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( AttachmentsTab,
-                                 i18nc( "@title:tab Tab to modify attachments of an event or todo",
-                                        "Attac&hments (%1)", newCount ) );
+    mUi->mTabWidget->setTabText(
+      AttachmentsTab,
+      i18nc( "@title:tab Tab to modify attachments of an event or todo",
+             "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( AttachmentsTab,
-                                 i18nc( "@title:tab Tab to modify attachments of an event or todo",
-                                        "Attac&hments" ) );
+    mUi->mTabWidget->setTabText(
+      AttachmentsTab,
+      i18nc( "@title:tab Tab to modify attachments of an event or todo",
+             "Attac&hments" ) );
   }
 }
 
 void EventOrTodoDialogPrivate::updateAttendeeCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( AttendeesTab,
-                                 i18nc( "@title:tab Tab to modify attendees of an event or todo",
-                                        "&Attendees (%1)", newCount ) );
+    mUi->mTabWidget->setTabText(
+      AttendeesTab,
+      i18nc( "@title:tab Tab to modify attendees of an event or todo",
+             "&Attendees (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( AttendeesTab,
-                                 i18nc( "@title:tab Tab to modify attendees of an event or todo",
-                                        "&Attendees" ) );
+    mUi->mTabWidget->setTabText(
+      AttendeesTab,
+      i18nc( "@title:tab Tab to modify attendees of an event or todo",
+             "&Attendees" ) );
   }
 }
 
@@ -659,8 +716,10 @@ void EventOrTodoDialog::slotButtonClicked( int button )
   }
   case KDialog::Cancel:
     if ( d->isDirty() &&
-         KMessageBox::questionYesNo( this, i18nc( "@info", "Do you really want to cancel?" ),
-                 i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
+         KMessageBox::questionYesNo(
+           this,
+           i18nc( "@info", "Do you really want to cancel?" ),
+           i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
       KDialog::reject(); // Discard current changes
     } else if ( !d->isDirty() ) {
       KDialog::reject(); // No pending changes, just close the dialog.

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>743</width>
     <height>480</height>
    </rect>
   </property>
@@ -55,13 +55,43 @@
              <height>0</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string comment="@info:tooltip">Enter a name for the custom template</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">To create a custom template, first enter a name for that template and press the '+' button.</string>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="KPushButton" name="mAdd"/>
+          <widget class="KPushButton" name="mAdd">
+           <property name="toolTip">
+            <string comment="@info:tooltip">Add a new custom template</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Press this button if you want to create a new custom template with the specified name</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <widget class="KPushButton" name="mRemove"/>
+          <widget class="KPushButton" name="mRemove">
+           <property name="toolTip">
+            <string comment="@info:tooltip">Remove the selected custom template</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Press this button if you want to remove the currently selected custom template</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="KPushButton" name="mDuplicate">
+           <property name="toolTip">
+            <string comment="@info:tooltip">Remove the selected custom template</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Press this button if you want to remove the currently selected custom template</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -73,6 +103,12 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string comment="@info:tooltip">List of custom templates available</string>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">This is a list of all the custom templates available.</string>
+         </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
@@ -81,12 +117,12 @@
          </property>
          <column>
           <property name="text">
-           <string>Type</string>
+           <string comment="@title:column Type of custom template">Type</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string comment="Name of the custom template.">Name</string>
+           <string comment="@title:column Name of the custom template.">Name</string>
           </property>
          </column>
         </widget>
@@ -124,7 +160,7 @@
            <item>
             <widget class="QLabel" name="mCCLabel">
              <property name="text">
-              <string>CC:</string>
+              <string comment="@label">CC:</string>
              </property>
             </widget>
            </item>
@@ -140,6 +176,12 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string comment="@info:tooltip">Additional recipients of the message</string>
+             </property>
+             <property name="whatsThis">
+              <string comment="@info:whatsthis">When using this template, the default recipients are those you enter here.  This is a comma-separated list of mail addresses.</string>
+             </property>
             </widget>
            </item>
            <item>
@@ -149,6 +191,12 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string comment="@info:tooltip">Additional recipients who get a copy of the message</string>
+             </property>
+             <property name="whatsThis">
+              <string comment="@info:whatsthis">When using this template, the recipients you enter here will by default get a copy of this message.  This is a comma-separated list of mail addresses.</string>
              </property>
             </widget>
            </item>
@@ -163,6 +211,12 @@
            <horstretch>3</horstretch>
            <verstretch>1</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string comment="@info:tooltip">The custom template</string>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">This area contains the associated custom template.</string>
          </property>
          <property name="lineWrapMode">
           <enum>QTextEdit::NoWrap</enum>
@@ -184,22 +238,22 @@
           <widget class="KComboBox" name="mType">
            <item>
             <property name="text">
-             <string comment="Universal custom template type.">Universal</string>
+             <string comment="@item:inlistbox Universal custom template type.">Universal</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Reply</string>
+             <string comment="@item:inlistbox Custom template type for message replies">Reply</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Reply to All</string>
+             <string comment="@item:inlistbox Custom template type for reply-to-all messages">Reply to All</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string comment="Template type for forwarding messages.">Forward</string>
+             <string comment="@item:inlistbox Custom template type for messsage forwards">Forward</string>
             </property>
            </item>
           </widget>
@@ -207,7 +261,7 @@
          <item row="0" column="1">
           <widget class="QLabel" name="textLabel1_2">
            <property name="text">
-            <string>Shortc&amp;ut:</string>
+            <string comment="@label">Shortc&amp;ut:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -226,7 +280,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>&amp;Template type:</string>
+            <string comment="@label">&amp;Template type:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

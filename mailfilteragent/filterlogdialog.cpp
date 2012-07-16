@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -27,7 +28,7 @@
 */
 
 #include "filterlogdialog.h"
-#include <mailcommon/filterlog.h>
+#include <mailcommon/filter/filterlog.h>
 #include <messageviewer/autoqpointer.h>
 
 #include <kdebug.h>
@@ -49,7 +50,7 @@
 using namespace MailCommon;
 
 FilterLogDialog::FilterLogDialog( QWidget * parent )
-  : KDialog( parent )
+  : KDialog( parent ), mIsInitialized( false )
 {
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
@@ -65,10 +66,10 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   mTextEdit->setReadOnly( true );
   mTextEdit->setLineWrapMode ( KTextEdit::NoWrap );
 
-  QString text;
   const QStringList logEntries = FilterLog::instance()->logEntries();
+  QStringList::ConstIterator end( logEntries.constEnd() ); 
   for ( QStringList::ConstIterator it = logEntries.constBegin();
-        it != logEntries.constEnd(); ++it )
+        it != end; ++it )
   {
     mTextEdit->append(*it);
   }
@@ -162,8 +163,50 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   setInitialSize( QSize( 500, 500 ) );
   connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
   connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+  readConfig();
+  mIsInitialized = true;
 }
 
+void FilterLogDialog::readConfig()
+{
+  KSharedConfig::Ptr config = KGlobal::config();
+  KConfigGroup group( config, "FilterLog" );
+  const bool isEnabled = group.readEntry( "Enabled", false );
+  const bool isLogPatternDescription = group.readEntry( "LogPatternDescription", false );
+  const bool isLogRuleResult = group.readEntry( "LogRuleResult", false );
+  const bool isLogPatternResult = group.readEntry( "LogPatternResult", false );
+  const bool isLogAppliedAction = group.readEntry( "LogAppliedAction", false );
+  const int maxLogSize = group.readEntry( "maxLogSize", -1 );
+
+  if ( isEnabled !=FilterLog::instance()->isLogging() )  
+    FilterLog::instance()->setLogging( isEnabled );
+  if ( isLogPatternDescription != FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternDescription ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::PatternDescription, isLogPatternDescription );
+  if (  isLogRuleResult!= FilterLog::instance()->isContentTypeEnabled( FilterLog::RuleResult ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::RuleResult, isLogRuleResult);
+  if ( isLogPatternResult != FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternResult ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::PatternResult,isLogPatternResult );
+  if ( isLogAppliedAction != FilterLog::instance()->isContentTypeEnabled( FilterLog::AppliedAction ) )
+    FilterLog::instance()->setContentTypeEnabled( FilterLog::AppliedAction,isLogAppliedAction ); 
+  if ( FilterLog::instance()->maxLogSize() != maxLogSize )
+    FilterLog::instance()->setMaxLogSize( maxLogSize );  
+}
+
+void FilterLogDialog::writeConfig()
+{
+  if ( !mIsInitialized )
+    return;
+  
+  KSharedConfig::Ptr config = KGlobal::config();
+  KConfigGroup group( config, "FilterLog" );
+  group.writeEntry( "Enabled", FilterLog::instance()->isLogging() );
+  group.writeEntry( "LogPatternDescription", FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternDescription ) );
+  group.writeEntry( "LogRuleResult", FilterLog::instance()->isContentTypeEnabled( FilterLog::RuleResult ) );
+  group.writeEntry( "LogPatternResult", FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternResult ) );
+  group.writeEntry( "LogAppliedAction", FilterLog::instance()->isContentTypeEnabled( FilterLog::AppliedAction ) );
+  group.writeEntry( "maxLogSize", ( int )( FilterLog::instance()->maxLogSize() ) );
+  group.sync();
+}
 
 void FilterLogDialog::slotLogEntryAdded(const QString& logEntry )
 {
@@ -175,8 +218,9 @@ void FilterLogDialog::slotLogShrinked()
 {
   // limit the size of the shown log lines as soon as
   // the log has reached it's memory limit
-  if ( mTextEdit->document()->maximumBlockCount () <= 0 )
+  if ( mTextEdit->document()->maximumBlockCount () <= 0 ) {
     mTextEdit->document()->setMaximumBlockCount( mTextEdit->document()->blockCount() );
+  }
 }
 
 
@@ -194,8 +238,13 @@ void FilterLogDialog::slotLogStateChanged()
 
   // value in the QSpinBox is in KB while it's in Byte in the FilterLog
   int newLogSize = FilterLog::instance()->maxLogSize() / 1024;
-  if ( mLogMemLimitSpin->value() != newLogSize )
-    mLogMemLimitSpin->setValue( newLogSize );
+  if ( mLogMemLimitSpin->value() != newLogSize ) {
+    if(newLogSize <= 0)
+      mLogMemLimitSpin->setValue( 1 );
+    else
+      mLogMemLimitSpin->setValue( newLogSize );
+  }
+  writeConfig();
 }
 
 
@@ -231,7 +280,11 @@ void FilterLogDialog::slotSwitchLogState()
 
 void FilterLogDialog::slotChangeLogMemLimit( int value )
 {
-  FilterLog::instance()->setMaxLogSize( value * 1024 );
+  mTextEdit->document()->setMaximumBlockCount( 0 ); //Reset value
+  if(value == 1) //unilimited
+    FilterLog::instance()->setMaxLogSize(-1);
+  else
+    FilterLog::instance()->setMaxLogSize( value * 1024 );
 }
 
 
@@ -248,8 +301,9 @@ void FilterLogDialog::slotUser2()
   MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
   fdlg->setMode( KFile::File );
-  fdlg->setSelection( "kmail-filter.log" );
+  fdlg->setSelection( "kmail-filter.html" );
   fdlg->setOperationMode( KFileDialog::Saving );
+  fdlg->setConfirmOverwrite(true);
   if ( fdlg->exec() == QDialog::Accepted && fdlg )
   {
     const QString fileName = fdlg->selectedFile();

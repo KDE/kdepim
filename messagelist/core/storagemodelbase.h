@@ -117,7 +117,7 @@ public:
    * The implementation-specific mime data for this list of items.
    *    Called when the user initiates a drag from the messagelist.
    */
-  virtual QMimeData* mimeData( QList< MessageItem* > ) const = 0;
+  virtual QMimeData* mimeData( const QList< MessageItem* >& ) const = 0;
   using QAbstractItemModel::mimeData;
 };
 

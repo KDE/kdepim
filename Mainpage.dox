@@ -9,6 +9,9 @@
 	* <table width="100%">
 	* <tr><th>Applications</th><th>Components</th><th>Libraries</th></tr>
 	* <tr><td valign="top">
+        * - <a href="blogilo/html/index.html"><b>blogilo</b></a>
+        *   (<a href="blogilo/html/classes.html">classes</a>)\n
+        *   <i>Blogging client.</i>
         * - <a href="kaddressbook/html/index.html"><b>kaddressbook</b></a>
         *   (<a href="kaddressbook/html/classes.html">classes</a>)\n
         *   <i>Keeps your addresses on file.</i>
@@ -20,7 +23,7 @@
         *   <i>A personal alarm message, command and email scheduler.</i>
         * - <a href="kjots/html/index.html"><b>kjots</b></a>
         *   (<a href="kjots/html/classes.html">classes</a>)\n
-        *   <i>A time tracker.</i>
+        *   <i>A note taker.</i>
         * - <a href="kleopatra/html/index.html"><b>kleopatra</b></a>
         *   (<a href="kleopatra/html/classes.html">classes</a>)\n
         *   <i>KDE Key Manager.</i>
@@ -47,13 +50,16 @@
         *   <i>An alarm client for KOrganizer.</i>
         * - <a href="ktimetracker/html/index.html"><b>ktimetracker</b></a>
         *   (<a href="ktimetracker/html/classes.html">classes</a>)\n
-        *   <i>A note taker.</i>
+        *   <i>A time tracker.</i>
 	* </td>
         *
         * <td valign="top">
         * - <a href="calendarsupport/html/index.html"><b>calendarsupport</b></a>
         *   (<a href="calendarsupport/html/classes.html">classes</a>)\n
         *   <i>Calendar support tools and utilities.</i>
+        * - <a href="mailcommon/html/index.html"><b>mailcommon</b></a>
+        *   (<a href="mailcommon/html/classes.html">classes</a>)\n
+        *   <i>Mail message filtering, archiving, expiry, annotations, etc.</i>
         * - <a href="messageviewer/html/index.html"><b>messageviewer</b></a>
         *   (<a href="messageviewer/html/classes.html">classes</a>)\n
         *   <i>A widget that can show a KMime::Message in a nice way.</i>

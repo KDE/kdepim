@@ -196,6 +196,11 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
     }
   }
 
+  // Must not have an organizer for items without attendees
+  if ( !incidence->attendeeCount() ) {
+    return;
+  }
+
   if ( mUi->mOrganizerStack->currentIndex() == 0 ) {
     incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
   } else {
@@ -493,7 +498,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   AttendeeData::Ptr currentOrganizerAttendee;
   AttendeeData::Ptr newOrganizerAttendee;
 
-  Q_FOREACH( AttendeeData::Ptr attendee, mAttendeeEditor->attendees() ) {
+  Q_FOREACH ( AttendeeData::Ptr attendee, mAttendeeEditor->attendees() ) {
     if ( attendee->fullName() == mOrganizer ) {
       currentOrganizerAttendee = attendee;
     }

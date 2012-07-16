@@ -109,7 +109,7 @@ class TemplatesInsertCommand : public QPushButton
     void insertCommand( TemplatesInsertCommand::Command cmd );
     void insertCommand( const QString &cmd, int adjustCursor = 0 );
 
-  public slots:
+  public Q_SLOTS:
     void slotMapped( int cmd );
 
   protected:

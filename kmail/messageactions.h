@@ -32,6 +32,7 @@ class KActionMenu;
 class KActionCollection;
 class KXMLGUIClient;
 class KMReaderWin;
+class KMenu;
 
 namespace Akonadi {
   class Item;
@@ -42,7 +43,7 @@ namespace MessageCore {
   class AsyncNepomukResourceRetriever;
 }
 
-namespace Nepomuk {
+namespace Nepomuk2 {
   class Resource;
 }
 
@@ -91,10 +92,14 @@ class MessageActions : public QObject
     KAction* editAction() const { return mEditAction; }
     KAction* annotateAction() const { return mAnnotateAction; }
     KAction* printAction() const { return mPrintAction; }
+    KAction* printPreviewAction() const { return mPrintPreviewAction; }
     KAction* listFilterAction() const { return mListFilterAction; }
 
     KActionMenu* mailingListActionMenu() const { return mMailingListActionMenu; }
     TemplateParser::CustomTemplatesMenu* customTemplatesMenu() const;
+
+    void addWebShortcutsMenu( KMenu *menu, const QString & text );
+
 
   signals:
 
@@ -114,9 +119,11 @@ class MessageActions : public QObject
     void addMailingListAction( const QString &item, const KUrl &url );
     void addMailingListActions( const QString &item, const KUrl::List &list );
     void updateMailingListActions( const Akonadi::Item& messageItem );
+    void printMessage(bool preview);
+
 
   private slots:
-    void updateAnnotateAction(const QUrl& url, const Nepomuk::Resource& resource);
+    void updateAnnotateAction(const QUrl& url, const Nepomuk2::Resource& resource);
     void slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers );
     void slotItemRemoved(const Akonadi::Item& item);
 
@@ -128,8 +135,13 @@ class MessageActions : public QObject
     void slotCreateTodo();
     void slotRunUrl( QAction *urlAction );
     void slotPrintMsg();
+    void slotPrintPreviewMsg();
+
     void slotUpdateActionsFetchDone( KJob* job );
     void slotMailingListFilter();
+    void slotHandleWebShortcutAction();
+    void slotConfigureWebShortcuts();
+
 
   private:
     QWidget *mParent;
@@ -146,7 +158,7 @@ class MessageActions : public QObject
     KActionMenu *mStatusMenu;
     KActionMenu *mForwardActionMenu;
     KActionMenu *mMailingListActionMenu;
-    KAction *mEditAction, *mAnnotateAction, *mPrintAction;
+    KAction *mEditAction, *mAnnotateAction, *mPrintAction, *mPrintPreviewAction;
     bool mKorganizerIsOnSystem;
     Akonadi::Monitor *mMonitor;
     MessageCore::AsyncNepomukResourceRetriever *mAsynNepomukRetriever;

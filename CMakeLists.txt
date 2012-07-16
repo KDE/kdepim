@@ -3,17 +3,15 @@ project(kdepim)
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-
 ############### Build Options ###############
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
-option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
+option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkleo and kleopatra" FALSE)
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
-option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 if(KDEPIM_BUILD_STATIC)
@@ -24,10 +22,6 @@ endif()
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-
-if(KDEPIM_NO_NEPOMUK)
-  add_definitions(-DKDEPIM_NO_NEPOMUK)
-endif()
 
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
@@ -41,24 +35,16 @@ if(WINCE)
     add_definitions(-DKDEPIM_STATIC_LIBS)
 endif()
 
-
-# Default
-set(KDEPIM_BUILD_EVERYTHING TRUE)
-
-# if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 if(KDEPIM_ENTERPRISE_BUILD)
-  set(KDEPIM_ONLY_KLEO FALSE)
-  set(KDEPIM_BUILD_EVERYTHING FALSE)
   message(STATUS "Enterprise build is enabled.")
-else()
-  # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
-  if(KDEPIM_ONLY_KLEO)
-    set(KDEPIM_BUILD_EVERYTHING FALSE)
-    set(KDEPIM_BUILD_MOBILE FALSE)
-    set(KDEPIM_MOBILE_UI FALSE)
-    set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
-    message(STATUS "Only libkleo and Kleopatra will be built.")
-  endif()
+endif()
+
+# if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
+if(KDEPIM_ONLY_KLEO)
+ set(KDEPIM_BUILD_MOBILE FALSE)
+ set(KDEPIM_MOBILE_UI FALSE)
+ set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
+ message(STATUS "Only libkleo and Kleopatra will be built.")
 endif()
 
 if(KDEPIM_MOBILE_UI)
@@ -124,7 +110,7 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.9${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.10${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -140,7 +126,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.7.80 REQUIRED)
+find_package(KdepimLibs 4.9.51 REQUIRED)
 
 ############### Load the CTest options ###############
 
@@ -158,7 +144,6 @@ endif()
 # in the KDE build system, this is the same as CMAKE_BINARY_DIR.
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR}/CTestCustom.cmake)
 
-
 ############### search Boost ###############
 
 find_package(Boost 1.34.0)
@@ -167,7 +152,6 @@ macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.or
 # Kleopatra needs to know if the topological.hpp header exists (part of Boost_graph).
 find_path(Boost_TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
 macro_log_feature(Boost_TOPOLOGICAL_SORT_DIR "The Boost Topological_sort header" "topological_sort.hpp (part of Boost_graph)" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
-
 
 ############### Windows specific ###############
 
@@ -183,7 +167,6 @@ else()
     set (KDE4_ICON_DIR  ${CMAKE_INSTALL_PREFIX}/share/icons)
 endif()
 
-
 ############### ONLY_KLEO ###############
 
 # The KDEPIM_ONLY_KLEO option is true
@@ -192,19 +175,18 @@ if(KDEPIM_ONLY_KLEO)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" TRUE "" "QGpgME is required to build Kleopatra.")
 
   add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} -DQT3_SUPPORT_WARNINGS)
-  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR})
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR})
   include(kleopatra/ConfigureChecks.cmake)
 
   add_subdirectory(libkleo)
   if(Boost_TOPOLOGICAL_SORT_DIR)
-    macro_optional_add_subdirectory(kleopatra)
+    add_subdirectory(kleopatra)
   endif()
-
 else()
 
 # Otherwise...
 ############### Find the stuff we need ###############
-  set(AKONADI_MIN_VERSION 1.4.91)
+  set(AKONADI_MIN_VERSION 1.7.90)
   find_package(Akonadi QUIET NO_MODULE ${AKONADI_MIN_VERSION})
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "${AKONADI_MIN_VERSION}" "Akonadi is required to build KDEPIM")
 
@@ -217,8 +199,8 @@ else()
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  set(SDO_MIN_VERSION 0.6.51)
-  set(SOPRANO_MIN_VERSION 2.3.70)
+  set(SDO_MIN_VERSION 0.10)
+  set(SOPRANO_MIN_VERSION 2.7.56)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
   macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "Ontologies necessary for the Nepomuk semantic desktop.")
@@ -228,70 +210,69 @@ else()
   include(SopranoAddOntology)
 
   find_package(Grantlee QUIET NO_MODULE)
-  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots and KaddressBook." )
+  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.gitorious.org/grantlee/pages/Home" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
-if(NOT KDEPIM_NO_NEPOMUK)
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
-endif()
-  
+  find_package(NepomukCore)
+  macro_log_feature(NepomukCore_FOUND "NepomukCore" "The NepomukCore libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+
   find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 
 ############### Desktop vs. Mobile options ##############
 
-if(KDEPIM_MOBILE_UI)
-  macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
-  add_definitions( -DKDEPIM_MOBILE_UI )
-else()
-  macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" FALSE "4.7" "Required for building the mobile applications")
-  if(NOT QT_QTDECLARATIVE_FOUND)
-    message(STATUS "The Qt Declarative (QML) module was not found. The mobile applications will not be built.")
-    set(KDEPIM_BUILD_MOBILE FALSE)
+  if(KDEPIM_MOBILE_UI)
+    macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
+    add_definitions( -DKDEPIM_MOBILE_UI )
+  else()
+    macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" FALSE "4.7" "Required for building the mobile applications")
+    if(NOT QT_QTDECLARATIVE_FOUND)
+      message(STATUS "The Qt Declarative (QML) module was not found. The mobile applications will not be built.")
+      set(KDEPIM_BUILD_MOBILE FALSE)
+    endif()
   endif()
-endif()
 
 ############### Needed commands before building anything ###############
 
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} ${AKONADI_DEFINITIONS})
+  add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} ${AKONADI_DEFINITIONS})
 
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
 
-if(NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
-  add_definitions( -DKDEPIM_NO_KRESOURCES )
-endif()
+  if(NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
+    add_definitions( -DKDEPIM_NO_KRESOURCES )
+  endif()
 
 ############### Macros ###############
 
-# generates a D-Bus interface description from a KConfigXT file
-macro(kcfg_generate_dbus_interface _kcfg _name)
-  add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
-    COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
-    ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
-    ${_kcfg}
-    > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
-    DEPENDS ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
-    ${_kcfg}
-    )
-endmacro(kcfg_generate_dbus_interface)
-
+  # generates a D-Bus interface description from a KConfigXT file
+  macro(kcfg_generate_dbus_interface _kcfg _name)
+    add_custom_command(
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+      COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
+      ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
+      ${_kcfg}
+      > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+      DEPENDS ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
+      ${_kcfg}
+      )
+  endmacro(kcfg_generate_dbus_interface)
 
 ############### Code used in several places ###############
 # TODO Remove from the top CMakeLists.
 
 # used in knotes, kontact/plugins/knotes, wizard
-set(libknotesresources_SRCS
-  ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
-  ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
-  ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
-  ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
-)
+  set(libknotesresources_SRCS
+    ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
+  )
 
 # used in knotes, kontact/plugins/knotes
-set(libknoteseditor_SRCS
-  ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
-)
+  set(libknoteseditor_SRCS
+    ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
+  )
 
 ############### Now, we add the PIM components ###############
 
@@ -312,94 +293,84 @@ set(libknoteseditor_SRCS
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(messagecore)
-if(NOT WINCE)
-  add_subdirectory(messagelist)
-else()
-  # We need to compile runtime in kdepim because of the static
-  # linking of korgac and the applications need to link against
-  # plugins like the serializer plugins. If the korgac would
-  # move to runtime this can be avoided
-  add_subdirectory(runtime)
-endif()
+  if(NOT WINCE)
+    add_subdirectory(messagelist)
+  else()
+    # We need to compile runtime in kdepim because of the static
+    # linking of korgac and the applications need to link against
+    # plugins like the serializer plugins. If the korgac would
+    # move to runtime this can be avoided
+    add_subdirectory(runtime)
+  endif()
   add_subdirectory(templateparser)
 
   if(QGPGME_FOUND)
     if(Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
     endif()
-
-    # The following components depend on QGpgME.
-    set(MESSAGEVIEWER_SUPPORTED TRUE)
-    add_subdirectory(messageviewer)
-    macro_optional_add_subdirectory(messagecomposer)
-    add_subdirectory(mailcommon) # TODO: does this make sense?!?
-    add_subdirectory(mailfilteragent)
-    macro_optional_add_subdirectory(kmail)
-
-    if(KDEPIM_BUILD_MOBILE)
-      add_subdirectory(mobile)
-    endif()
-
-    if(KDEPIM_BUILD_EXAMPLES)
-      add_subdirectory(examples)
-    endif()
-
-    # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
-    if(BUILD_kmail)
-      set(KMAIL_SUPPORTED TRUE)
-      add_definitions(-DKMAIL_SUPPORTED)
-    endif()
-
-    if(KDEPIM_BUILD_DESKTOP)
-      macro_optional_add_subdirectory(kmailcvt)
-      macro_optional_add_subdirectory(ksendemail)
-    endif()
-
-    macro_optional_add_subdirectory(korganizer)
-
   endif()
 
-  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(knode)
+  # The following components depend on QGpgME.
+  set(MESSAGEVIEWER_SUPPORTED TRUE)
+  add_subdirectory(messageviewer)
+  macro_optional_add_subdirectory(messagecomposer)
+  add_subdirectory(mailcommon) # TODO: does this make sense?!?
+  add_subdirectory(mailfilteragent)
+  macro_optional_add_subdirectory(kmail)
+
+  if(KDEPIM_BUILD_MOBILE)
+    add_subdirectory(mobile)
   endif()
 
+  if(KDEPIM_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+  endif()
+
+  # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
+  if(BUILD_kmail)
+    set(KMAIL_SUPPORTED TRUE)
+    add_definitions(-DKMAIL_SUPPORTED)
+  endif()
+
+  macro_optional_add_subdirectory(korganizer)
   if(KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(akregator)
+    macro_optional_add_subdirectory(archivemailagent)
+    macro_optional_add_subdirectory(importwizard)
+    macro_optional_add_subdirectory(kaddressbook)
+    macro_optional_add_subdirectory(kmailcvt)
+    macro_optional_add_subdirectory(knotes)
+    macro_optional_add_subdirectory(ksendemail)
+    macro_optional_add_subdirectory(ktnef)
+    macro_optional_add_subdirectory(mailimporter)
+    macro_optional_add_subdirectory(backupmail)
+
+    if(KDEPIMLIBS_KCAL_LIBRARY)
+      macro_optional_add_subdirectory(blogilo)
+    endif()
+
+    if(Grantlee_FOUND)
+      macro_optional_add_subdirectory(kjots)
+    endif()
+
+    if(KDEPIMLIBS_KRESOURCES_LIBRARY)
+      macro_optional_add_subdirectory(kalarm)
+
+      if(QT_QT3SUPPORT_FOUND)
+        macro_optional_add_subdirectory(knode)
+      endif()
+
+      if(Q_WS_X11)
+        macro_optional_add_subdirectory(ktimetracker)
+      endif()
+
+    endif()
+    macro_optional_add_subdirectory(kontact) # must be the last one.
   endif()
 
   macro_optional_add_subdirectory(akonadiconsole)
-
-  if(KDEPIMLIBS_KCAL_LIBRARY AND KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(blogilo)
-  endif()
-
   macro_optional_add_subdirectory(console)
-
-  if(Grantlee_FOUND AND KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(kjots)
-  endif()
-
-  if(KDEPIMLIBS_KRESOURCES_LIBRARY)
-    macro_optional_add_subdirectory(knotes)
-  endif()
-
   macro_optional_add_subdirectory(strigi-analyzer)
-
-  if(KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(kalarm)
-  endif()
-
-  if(KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(kaddressbook)
-  endif()
-
-  if(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(ktimetracker)
-  endif()
-
-  if(KDEPIM_BUILD_DESKTOP)
-    macro_optional_add_subdirectory(kontact) # must be the last one.
-  endif()
 
   # These targets depend on optional applications
   if(KDEPIMLIBS_KRESOURCES_LIBRARY)

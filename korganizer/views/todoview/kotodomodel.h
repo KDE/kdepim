@@ -22,18 +22,14 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KOTODOMODEL_H
-#define KOTODOMODEL_H
-
-#include <kcalcore/todo.h>
+#ifndef KORG_VIEWS_KOTODOMODEL_H
+#define KORG_VIEWS_KOTODOMODEL_H
 
 #include <QAbstractItemModel>
-#include <QString>
-#include <QHash>
 
 #include <Akonadi/Item>
 
-using namespace KCalCore;
+#include <KCalCore/Todo>
 
 namespace CalendarSupport {
   class Calendar;
@@ -104,13 +100,11 @@ class KOTodoModel : public QAbstractItemModel
     virtual bool setData( const QModelIndex &index, const QVariant &value,
                           int role );
 
-#ifndef KORG_NODND
     virtual Qt::DropActions supportedDropActions() const;
     virtual QStringList mimeTypes() const;
     virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action,
                                int row, int column, const QModelIndex &parent );
-#endif
 
   public Q_SLOTS:
     /** Sets if the model should provide a hirarchical view on todos or not.

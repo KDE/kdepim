@@ -1,6 +1,6 @@
 /*
  * This file is part of KMail.
- * Copyright (c) 2011 Laurent Montel <montel@kde.org>
+ * Copyright (c) 2011,2012 Laurent Montel <montel@kde.org>
  *
  * Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
  *
@@ -50,6 +50,7 @@
 #include "mailkernel.h"
 #include "custommimeheader.h"
 #include <messagecomposer/kmsubjectlineedit.h>
+#include "messageviewer/translator/translatorwidget.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -130,6 +131,8 @@
 #include <ktoolinvocation.h>
 #include <sonnet/dictionarycombobox.h>
 #include <krun.h>
+#include <KIO/JobUiDelegate>
+#include <KPrintPreview>
 
 // Qt includes
 #include <QClipboard>
@@ -187,7 +190,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mReplyToAction( 0 ), mSubjectAction( 0 ),
     mIdentityAction( 0 ), mTransportAction( 0 ), mFccAction( 0 ),
     mWordWrapAction( 0 ), mFixedFontAction( 0 ), mAutoSpellCheckingAction( 0 ),
-    mDictionaryAction( 0 ), mSnippetAction( 0 ),
+    mDictionaryAction( 0 ), mSnippetAction( 0 ), mTranslateAction(0),
     mCodecAction( 0 ),
     mCryptoModuleAction( 0 ),
     mEncryptChiasmusAction( 0 ),
@@ -402,6 +405,10 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
   mBtnFcc->setFocusPolicy( Qt::NoFocus );
   mBtnTransport->setFocusPolicy( Qt::NoFocus );
   mBtnDictionary->setFocusPolicy( Qt::NoFocus );
+
+  mTranslatorWidget = new MessageViewer::TranslatorWidget(this);
+  connect(mTranslatorWidget,SIGNAL(translatorWasClosed()),this,SLOT(slotTranslatorWasClosed()));
+  mSplitter->addWidget(mTranslatorWidget);
 
   Message::AttachmentModel* attachmentModel = new Message::AttachmentModel( this );
   KMail::AttachmentView *attachmentView = new KMail::AttachmentView( attachmentModel, mSplitter );
@@ -980,7 +987,7 @@ void KMComposeWin::applyTemplate( uint uoid )
     TemplateParser::TemplateParser parser( mMsg, mode );
     parser.setSelection( mTextSelection );
     parser.setAllowDecryption( MessageViewer::GlobalSettings::self()->automaticDecrypt() );
-
+    parser.setIdentityManager( KMKernel::self()->identityManager() );
     if ( !mCustomTemplate.isEmpty() )
       parser.process( mCustomTemplate, KMime::Message::Ptr() );
     else
@@ -1016,7 +1023,7 @@ void KMComposeWin::slotDelayedApplyTemplate( KJob *job )
   parser.setSelection( mTextSelection );
   parser.setAllowDecryption( MessageViewer::GlobalSettings::self()->automaticDecrypt() );
   parser.setWordWrap( MessageComposer::MessageComposerSettings::self()->wordWrap(), MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
-
+  parser.setIdentityManager( KMKernel::self()->identityManager() );
   foreach ( const Akonadi::Item &item, items ) {
     if ( !mCustomTemplate.isEmpty() )
       parser.process( mCustomTemplate, MessageCore::Util::message( item ) );
@@ -1173,6 +1180,8 @@ void KMComposeWin::setupActions( void )
            mComposerBase->recipientsEditor(), SLOT(saveDistributionList()) );
 
   KStandardAction::print( this, SLOT(slotPrint()), actionCollection() );
+  if(KPrintPreview::isAvailable())
+    KStandardAction::printPreview( this, SLOT(slotPrintPreview()), actionCollection() );
   KStandardAction::close( this, SLOT(slotClose()), actionCollection() );
 
   KStandardAction::undo( this, SLOT(slotUndo()), actionCollection() );
@@ -1297,6 +1306,12 @@ void KMComposeWin::setupActions( void )
   action->setIconText( i18n("Spellchecker") );
   actionCollection()->addAction( "setup_spellchecker", action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSpellcheckConfig()) );
+
+  mTranslateAction = new KToggleAction( i18n("&Translator"), this );
+  actionCollection()->addAction( "translator", mTranslateAction );
+  mTranslateAction->setChecked(false);
+  connect(mTranslateAction, SIGNAL(triggered(bool)), mTranslatorWidget,SLOT(setVisible(bool)));
+
 
   if ( Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) ) {
     KToggleAction *a = new KToggleAction( KIcon( "chiasmus_chi" ), i18n("Encrypt Message with Chiasmus..."), this );
@@ -1788,15 +1803,15 @@ bool KMComposeWin::queryClose ()
 }
 
 //-----------------------------------------------------------------------------
-bool KMComposeWin::userForgotAttachment()
+Message::ComposerViewBase::MissingAttachment KMComposeWin::userForgotAttachment()
 {
   bool checkForForgottenAttachments = mCheckForForgottenAttachments && GlobalSettings::self()->showForgottenAttachmentWarning();
 
   if ( !checkForForgottenAttachments )
-    return false;
+    return Message::ComposerViewBase::NoMissingAttachmentFound;
 
   mComposerBase->setSubject( subject() ); //be sure the composer knows the subject
-  bool missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
+  Message::ComposerViewBase::MissingAttachment missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
 
   return missingAttachments;
 }
@@ -2213,7 +2228,10 @@ void KMComposeWin::slotPasteAsAttachment()
 void KMComposeWin::slotFetchJob(KJob*job)
 {
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    if ( static_cast<KIO::Job*>(job)->ui() )
+      static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    else
+      kDebug()<<" job->errorString() :"<<job->errorString();
     return;
   }
   Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
@@ -2527,17 +2545,34 @@ void KMComposeWin::ignoreStickyFields()
   mBtnIdentity->setEnabled( false );
 }
 
-//-----------------------------------------------------------------------------
+
 void KMComposeWin::slotPrint()
+{
+  printComposer(false);
+}
+
+void KMComposeWin::slotPrintPreview()
+{
+  printComposer(true);
+}
+
+void KMComposeWin::printComposer(bool preview)
 {
   Message::Composer* composer = createSimpleComposer();
   mMiscComposers.append( composer );
+  composer->setProperty("preview",preview);
   connect( composer, SIGNAL(result(KJob*)),
            this, SLOT(slotPrintComposeResult(KJob*)) );
   composer->start();
 }
 
 void KMComposeWin::slotPrintComposeResult( KJob *job )
+{
+  const bool preview = job->property("preview").toBool();
+  printComposeResult( job, preview );
+}
+
+void KMComposeWin::printComposeResult( KJob *job, bool preview )
 {
   Q_ASSERT( dynamic_cast< Message::Composer* >( job ) );
   Message::Composer* composer = dynamic_cast< Message::Composer* >( job );
@@ -2549,13 +2584,19 @@ void KMComposeWin::slotPrintComposeResult( KJob *job )
     Q_ASSERT( composer->resultMessages().size() == 1 );
     Akonadi::Item printItem;
     printItem.setPayload<KMime::Message::Ptr>( composer->resultMessages().first() );
-    KMCommand *command = new KMPrintCommand( this, printItem,0,
-                                             0, ( mComposerBase->editor()->textMode() == KMeditor::Rich ) );
+    const bool isHtml = ( mComposerBase->editor()->textMode() == KMeditor::Rich );
+    KMPrintCommand *command = new KMPrintCommand( this, printItem,0,
+                                             0, isHtml, isHtml );
+    command->setPrintPreview( preview );
     command->start();
   } else {
-    // TODO: error reporting to the user
-    kWarning() << "Composer for printing failed:" << composer->errorString();
+    if ( static_cast<KIO::Job*>(job)->ui() ) {
+      static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    } else {
+      kWarning() << "Composer for printing failed:" << composer->errorString();
+    }
   }
+
 }
 
 //----------------------------------------------------------------------------
@@ -2563,12 +2604,10 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
                            MessageSender::SaveIn saveIn )
 {
   // TODO integrate with MDA online status
-  if ( method != MessageSender::SendLater && KMKernel::self()->isOffline() ) {
-    KMessageBox::information( this,
-                              i18n("KMail is currently in offline mode. "
-                                   "Your messages will be kept in the outbox until you go online."),
-                              i18n("Online/Offline"), "kmailIsOffline" );
-    method = MessageSender::SendLater;
+  if ( method == MessageSender::SendImmediate ) {
+    if( !Message::Util::sendMailDispatcherIsOnline() ) {
+      method = MessageSender::SendLater;
+    }
   }
 
   if ( saveIn == MessageSender::SaveInNone ) { // don't save as draft or template, send immediately
@@ -2621,7 +2660,9 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
       }
     }
 
-    if ( userForgotAttachment() ) {
+    const Message::ComposerViewBase::MissingAttachment forgotAttachment = userForgotAttachment();
+    if ( (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndAddedAttachment) ||
+         (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndCancel) ) {
       return;
     }
 
@@ -2655,14 +2696,17 @@ void KMComposeWin::slotDoDelayedSend( KJob *job )
 {
   if ( job->error() ) {
     KMessageBox::error( this, job->errorText() );
+    setEnabled(true);
     return;
   }
 
   const AddressValidationJob *validateJob = qobject_cast<AddressValidationJob*>( job );
 
   // Abort sending if one of the recipient addresses is invalid ...
-  if ( !validateJob->isValid() )
+  if ( !validateJob->isValid() ) {
+    setEnabled(true);
     return;
+  }
 
   // ... otherwise continue as usual
   const MessageSender::SendMethod method = static_cast<MessageSender::SendMethod>( job->property( "method" ).toInt() );
@@ -3274,4 +3318,9 @@ void KMComposeWin::slotLanguageChanged( const QString &language )
 void KMComposeWin::slotFccFolderChanged(const Akonadi::Collection& collection)
 {
   mComposerBase->setFcc( collection );
+}
+
+void KMComposeWin::slotTranslatorWasClosed()
+{
+  mTranslateAction->setChecked(false);
 }

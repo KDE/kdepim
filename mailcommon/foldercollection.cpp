@@ -1,12 +1,12 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+
   Copyright (c) 2009,2010,2011 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -17,43 +17,44 @@
 */
 
 #include "foldercollection.h"
-#include "mailutil.h"
 #include "imapsettings.h"
-#include "expirejob.h"
-#include "jobscheduler.h"
+#include "mailkernel.h"
+#include "mailutil.h"
 
-#include <kdebug.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <kio/jobuidelegate.h>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+
+using namespace Akonadi;
+
+#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+
+#include <KDebug>
 
 #include <QMutex>
 #include <QMutexLocker>
-#include <QWeakPointer>
-#include "mailkernel.h"
-
-using namespace Akonadi;
+#include <QSharedPointer>
 
 namespace MailCommon {
 
 static QMutex mapMutex;
-static QMap<Collection::Id,QWeakPointer<FolderCollection> > fcMap;
+static QMap<Collection::Id,QSharedPointer<FolderCollection> > fcMap;
 
-
-QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll, bool writeConfig )
+QSharedPointer<FolderCollection> FolderCollection::forCollection(
+  const Akonadi::Collection &coll, bool writeConfig )
 {
   QMutexLocker lock( &mapMutex );
 
-  QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() ).toStrongRef();
+  QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() );
 
   if ( !sptr ) {
     sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
     fcMap.insert( coll.id(), sptr );
   } else {
-    if ( !sptr->isWriteConfig() && writeConfig )
+    sptr->setCollection( coll );
+    if ( !sptr->isWriteConfig() && writeConfig ) {
       sptr->setWriteConfig( true );
+    }
   }
 
   return sptr;
@@ -67,7 +68,7 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
     mWriteConfig( writeconfig ),
     mOldIgnoreNewMail( false )
 {
-  assert( col.isValid() );
+  Q_ASSERT( col.isValid() );
   mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
 
   readConfig();
@@ -78,8 +79,15 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
 FolderCollection::~FolderCollection()
 {
   //kDebug()<<" FolderCollection::~FolderCollection"<<this;
-  if ( mWriteConfig )
+  if ( mWriteConfig ) {
     writeConfig();
+  }
+}
+
+void FolderCollection::clearCache()
+{
+  QMutexLocker lock( &mapMutex );
+  fcMap.clear();
 }
 
 bool FolderCollection::isWriteConfig() const
@@ -142,19 +150,18 @@ Akonadi::Collection FolderCollection::collection() const
   return mCollection;
 }
 
-void FolderCollection::setCollection( const Akonadi::Collection& collection)
+void FolderCollection::setCollection( const Akonadi::Collection &collection )
 {
   mCollection = collection;
 }
 
-
 void FolderCollection::slotIdentitiesChanged()
 {
   uint defaultIdentity =  KernelIf->identityManager()->defaultIdentity().uoid();
-  // The default identity may have changed, therefore set it again
-  // if necessary
-  if ( mUseDefaultIdentity )
+  // The default identity may have changed, therefore set it again if necessary
+  if ( mUseDefaultIdentity ) {
     mIdentity = defaultIdentity;
+  }
 
   // Fall back to the default identity if the one used currently is invalid
   if ( KernelIf->identityManager()->identityForUoid( mIdentity ).isNull() ) {
@@ -163,27 +170,26 @@ void FolderCollection::slotIdentitiesChanged()
   }
 }
 
-QString FolderCollection::configGroupName(const Akonadi::Collection& col)
+QString FolderCollection::configGroupName( const Akonadi::Collection &col )
 {
   return QString::fromLatin1( "Folder-%1" ).arg( QString::number( col.id() ) );
 }
 
 void FolderCollection::readConfig()
 {
-  const KConfigGroup configGroup( KernelIf->config(), configGroupName(mCollection) );
+  const KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
   mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
   mMailingList.readConfig( configGroup );
 
   mUseDefaultIdentity = configGroup.readEntry( "UseDefaultIdentity", true );
   uint defaultIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
-  mIdentity = configGroup.readEntry("Identity", defaultIdentity );
+  mIdentity = configGroup.readEntry( "Identity", defaultIdentity );
   slotIdentitiesChanged();
 
   mPutRepliesInSameFolder = configGroup.readEntry( "PutRepliesInSameFolder", false );
   mHideInSelectionDialog = configGroup.readEntry( "HideInSelectionDialog", false );
   mIgnoreNewMail = configGroup.readEntry( "IgnoreNewMail", false );
   mOldIgnoreNewMail = mIgnoreNewMail;
-
 
   const QString shortcut( configGroup.readEntry( "Shortcut" ) );
   if ( !shortcut.isEmpty() ) {
@@ -199,11 +205,10 @@ bool FolderCollection::isValid() const
 
 void FolderCollection::writeConfig() const
 {
-  KConfigGroup configGroup( KernelIf->config(), configGroupName(mCollection) );
+  KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
 
-  configGroup.writeEntry("MailingListEnabled", mMailingListEnabled);
+  configGroup.writeEntry( "MailingListEnabled", mMailingListEnabled );
   mMailingList.writeConfig( configGroup );
-
 
   configGroup.writeEntry( "UseDefaultIdentity", mUseDefaultIdentity );
 
@@ -211,7 +216,9 @@ void FolderCollection::writeConfig() const
     uint defaultIdentityId = -1;
 
     if ( mCollection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
+      OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
+        Util::createImapSettingsInterface( mCollection.resource() );
+
       if ( imapSettingsInterface->isValid() ) {
         QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
         if ( reply.isValid() ) {
@@ -223,22 +230,31 @@ void FolderCollection::writeConfig() const
       defaultIdentityId = KernelIf->identityManager()->defaultIdentity().uoid();
     }
 
-    if ( mIdentity != defaultIdentityId )
+    if ( mIdentity != defaultIdentityId ) {
       configGroup.writeEntry( "Identity", mIdentity );
-    else
+    } else {
       configGroup.deleteEntry( "Identity" );
-
+    }
   } else {
-    configGroup.deleteEntry("Identity");
+    configGroup.deleteEntry( "Identity" );
   }
 
   configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
-  configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
-  configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
-  if ( !mShortcut.isEmpty() )
-    configGroup.writeEntry( "Shortcut", mShortcut.toString() );
+  if(mHideInSelectionDialog)
+      configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
   else
+      configGroup.deleteEntry("HideInSelectionDialog");
+  if(mIgnoreNewMail)
+      configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
+  else
+      configGroup.deleteEntry("IgnoreNewMail");
+
+  if ( !mShortcut.isEmpty() ) {
+    configGroup.writeEntry( "Shortcut", mShortcut.toString() );
+  } else {
     configGroup.deleteEntry( "Shortcut" );
+  }
+
   if ( mIgnoreNewMail != mOldIgnoreNewMail ) {
     KernelIf->updateSystemTray();
   }
@@ -255,8 +271,9 @@ void FolderCollection::setUseDefaultIdentity( bool useDefaultIdentity )
 {
   if ( mUseDefaultIdentity != useDefaultIdentity ) {
     mUseDefaultIdentity = useDefaultIdentity;
-    if ( mUseDefaultIdentity )
+    if ( mUseDefaultIdentity ) {
       mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+    }
     KernelIf->syncConfig();
   }
 }
@@ -273,39 +290,42 @@ uint FolderCollection::identity() const
 {
   if ( mUseDefaultIdentity ) {
     int identityId = -1;
-    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
+    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
+      Util::createImapSettingsInterface( mCollection.resource() );
+
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
       if( useDefault.isValid() && useDefault.value() ) {
-	delete imapSettingsInterface;
+        delete imapSettingsInterface;
         return mIdentity;
       }
 
-       QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
+      QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
       if ( remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0 ) {
         identityId = remoteAccountIdent;
       }
     }
     delete imapSettingsInterface;
-    if ( identityId != -1 && !KernelIf->identityManager()->identityForUoid( identityId ).isNull() )
+    if ( identityId != -1 &&
+         !KernelIf->identityManager()->identityForUoid( identityId ).isNull() ) {
       return identityId;
+    }
   }
   return mIdentity;
 }
-
 
 QString FolderCollection::mailingListPostAddress() const
 {
   if ( mMailingList.features() & MailingList::Post ) {
     KUrl::List post = mMailingList.postUrls();
     KUrl::List::const_iterator end( post.constEnd() );
-    for( KUrl::List::const_iterator it = post.constBegin(); it != end; ++it ) {
+    for ( KUrl::List::const_iterator it = post.constBegin(); it != end; ++it ) {
       // We check for isEmpty because before 3.3 postAddress was just an
       // email@kde.org and that leaves protocol() field in the kurl class
       const QString protocol = (*it).protocol();
-      if ( protocol == QLatin1String( "mailto" ) ||
-           protocol.isEmpty() )
+      if ( protocol == QLatin1String( "mailto" ) || protocol.isEmpty() ) {
         return (*it).path();
+      }
     }
   }
   return QString();
@@ -319,16 +339,16 @@ void FolderCollection::setMailingListEnabled( bool enabled )
   }
 }
 
-void FolderCollection::setMailingList( const MailingList& mlist )
+void FolderCollection::setMailingList( const MailingList &mlist )
 {
-  if ( mMailingList == mlist )
+  if ( mMailingList == mlist ) {
     return;
-  
+  }
+
   mMailingList = mlist;
   writeConfig();
 }
 
 }
-
 
 #include "foldercollection.moc"

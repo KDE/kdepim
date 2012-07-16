@@ -339,7 +339,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         } else if ( mDebug ) {
           KMessageBox::error(
             0,
-            i18nc( "@info:status",
+            i18nc( "@info",
                    "Cannot insert content from file %1: %2", path, file.errorString() ) );
         }
 
@@ -378,7 +378,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         } else if ( mDebug ) {
           KMessageBox::error(
             0,
-            i18nc( "@info:status",
+            i18nc( "@info",
                    "Cannot insert content from file %1: %2", path, file.errorString() ) );
         }
 
@@ -480,8 +480,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QString q;
         int len = parseQuotes( "MSGPIPE=", cmd, q );
         i += len;
-        QString pipe_cmd = q;
         if ( mOrigMsg ) {
+          QString pipe_cmd = q;
           const QString str = pipe( pipe_cmd, mOrigMsg->encodedContent() );
           plainBody.append( str );
 
@@ -561,8 +561,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           const QString to = mOrigMsg->to()->asUnicodeString();
           const QString cc = mOrigMsg->cc()->asUnicodeString();
           if ( !to.isEmpty() ) {
-            plainBody.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
-            const QString body = plainToHtml( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+            QString toLine =  i18nc( "@item:intext email To", "To:" ) + QLatin1Char( ' ' ) + to;
+            plainBody.append( toLine );
+            const QString body = plainToHtml( toLine );
             htmlBody.append( body );
           }
           if ( !to.isEmpty() && !cc.isEmpty() ) {
@@ -571,8 +572,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
             htmlBody.append( str );
           }
           if ( !cc.isEmpty() ) {
-            plainBody.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
-            const QString str = plainToHtml( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+            QString ccLine = i18nc( "@item:intext email CC", "CC:" ) + QLatin1Char( ' ' ) +  cc;
+            plainBody.append( ccLine );
+            const QString str = plainToHtml( ccLine );
             htmlBody.append( str );
           }
         }
@@ -588,8 +590,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "CCNAME" ) ) ) {
         kDebug() << "Command: CCNAME";
         i += strlen( "CCNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString( ) );
         plainBody.append( str );
         const QString body = plainToHtml( str );
         htmlBody.append( body );
@@ -597,8 +599,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "CCFNAME" ) ) ) {
         kDebug() << "Command: CCFNAME";
         i += strlen( "CCFNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString( ) );
         plainBody.append( getFName( str ) );
         const QString body = plainToHtml( getFName( str ) );
         htmlBody.append( body );
@@ -606,8 +608,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "CCLNAME" ) ) ) {
         kDebug() << "Command: CCLNAME";
         i += strlen( "CCLNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString( ) );
         plainBody.append( getLName( str ) );
         const QString body = plainToHtml( getLName( str ) );
         htmlBody.append( body );
@@ -623,8 +625,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "TONAME" ) ) ) {
         kDebug() << "Command: TONAME";
         i += strlen( "TONAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->to()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString( ) );
         plainBody.append( str );
         const QString body = plainToHtml( str );
         htmlBody.append( body );
@@ -632,8 +634,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "TOFNAME" ) ) ) {
         kDebug() << "Command: TOFNAME";
         i += strlen( "TOFNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->to()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString( ) );
         plainBody.append( getFName( str ) );
         const QString body = plainToHtml( getFName( str ) );
         htmlBody.append( body );
@@ -641,8 +643,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "TOLNAME" ) ) ) {
         kDebug() << "Command: TOLNAME";
         i += strlen( "TOLNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->to()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString( ) );
         plainBody.append( getLName( str ) );
         const QString body = plainToHtml( getLName( str ) );
         htmlBody.append( body );
@@ -666,8 +668,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "FROMNAME" ) ) ) {
         kDebug() << "Command: FROMNAME";
         i += strlen( "FROMNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->from()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString( ) );
         plainBody.append( str );
         const QString body = plainToHtml( str );
         htmlBody.append( body );
@@ -675,8 +677,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "FROMFNAME" ) ) ) {
         kDebug() << "Command: FROMFNAME";
         i += strlen( "FROMFNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->from()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString( ) );
         plainBody.append( getFName( str ) );
         const QString body = plainToHtml( getFName( str ) );
         htmlBody.append( body );
@@ -684,8 +686,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "FROMLNAME" ) ) ) {
         kDebug() << "Command: FROMLNAME";
         i += strlen( "FROMLNAME" );
-        const QByteArray str =
-          MessageCore::StringUtil::stripEmailAddr( mMsg->from()->as7BitString( false ) );
+        const QString str =
+          MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString( ) );
         plainBody.append( getLName( str ) );
         const QString body = plainToHtml( getLName( str ) );
         htmlBody.append( body );
@@ -781,8 +783,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCNAME";
         i += strlen( "OCCNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString( ) );
           plainBody.append( str );
           const QString body = plainToHtml( str );
           htmlBody.append( body );
@@ -792,8 +794,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCFNAME";
         i += strlen( "OCCFNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString( ) );
           plainBody.append( getFName( str ) );
           const QString body = plainToHtml( getFName( str ) );
           htmlBody.append( body );
@@ -803,8 +805,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCLNAME";
         i += strlen( "OCCLNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString( ) );
           plainBody.append( getLName( str ) );
           const QString body = plainToHtml( getLName( str ) );
           htmlBody.append( body );
@@ -824,8 +826,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTONAME";
         i += strlen( "OTONAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString( ) );
           plainBody.append( str );
           const QString body = plainToHtml( str );
           htmlBody.append( body );
@@ -835,8 +837,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTOFNAME";
         i += strlen( "OTOFNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString( ) );
           plainBody.append( getFName( str ) );
           const QString body = plainToHtml( getFName( str ) );
           htmlBody.append( body );
@@ -846,8 +848,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTOLNAME";
         i += strlen( "OTOLNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString( ) );
           plainBody.append( getLName( str ) );
           const QString body = plainToHtml( getLName( str ) );
           htmlBody.append( body );
@@ -887,8 +889,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMNAME";
         i += strlen( "OFROMNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           plainBody.append( str );
           const QString body = plainToHtml( str );
           htmlBody.append( body );
@@ -898,8 +900,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMFNAME";
         i += strlen( "OFROMFNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           plainBody.append( getFName( str ) );
           const QString body = plainToHtml( getFName( str ) );
           htmlBody.append( body );
@@ -909,8 +911,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMLNAME";
         i += strlen( "OFROMLNAME" );
         if ( mOrigMsg ) {
-          const QByteArray str =
-            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->as7BitString( false ) );
+          const QString str =
+            MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           plainBody.append( getLName( str ) );
           const QString body = plainToHtml( getLName( str ) );
           htmlBody.append( body );
@@ -1130,7 +1132,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "CURSOR" );
         KMime::Headers::Generic *header =
           new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(),
-                                       QString::number( plainBody.length()-1 ), "utf-8" );
+                                       QString::number( plainBody.length() ), "utf-8" );
         mMsg->setHeader( header );
         //FIXME HTML part for header remaining
       } else if ( cmd.startsWith( QLatin1String( "SIGNATURE" ) ) ) {
@@ -1299,8 +1301,8 @@ KMime::Content *TemplateParser::createMultipartMixed( const MessageCore::Attachm
     if ( attachment->contentType( false ) ) {
       if ( !attachment->contentType()->hasParameter( "name" ) &&
            !attachment->contentType()->hasParameter( "filename" ) ) {
-        attachment->contentType()->setParameter( "name",
-                                                 i18n( "Attachment %1", attachmentNumber ) );
+        attachment->contentType()->setParameter(
+          "name", i18nc( "@item:intext", "Attachment %1", attachmentNumber ) );
       }
     }
     attachmentNumber++;
@@ -1491,7 +1493,7 @@ QString TemplateParser::findTemplate()
     return QString();
   }
 
-  mQuoteString = DefaultTemplates::defaultQuoteString();
+  mQuoteString = GlobalSettings::self()->quoteString();
   return tmpl;
 }
 

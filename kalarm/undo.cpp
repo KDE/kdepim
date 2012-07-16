@@ -1,7 +1,7 @@
 /*
  *  undo.cpp  -  undo/redo facility
  *  Program:  kalarm
- *  Copyright © 2005-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2005-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ static int maxCount = 12;
 
 // Simplify access to Undo::Event struct
 #ifdef USE_AKONADI
-#define RESOURCE_PARAM_TYPE  Collection&
+#define RESOURCE_PARAM_TYPE  const Collection&
 #define EVENT_RESOURCE collection
 #else
 #define RESOURCE_PARAM_TYPE  AlarmResource*
@@ -137,19 +137,19 @@ class UndoAdd : public UndoItem
 #else
         virtual AlarmResource* resource() const  { return mResource; }
 #endif
-        virtual QString    eventID() const       { return mEventID; }
-        virtual QString    newEventID() const    { return mEventID; }
+        virtual QString    eventID() const       { return mEventId; }
+        virtual QString    newEventID() const    { return mEventId; }
         virtual UndoItem*  restore()             { return doRestore(); }
     protected:
         UndoItem*          doRestore(bool setArchive = false);
         virtual UndoItem*  createRedo(const KAEvent&, RESOURCE_PARAM_TYPE);
     private:
 #ifdef USE_AKONADI
-                Collection     mResource;  // collection containing the event
+        Collection     mResource;  // collection containing the event
 #else
         AlarmResource* mResource;  // resource calendar containing the event
 #endif
-        QString        mEventID;
+        QString        mEventId;
         QString        mDescription;
 };
 
@@ -167,18 +167,18 @@ class UndoEdit : public UndoItem
 #else
         virtual AlarmResource* resource() const  { return mResource; }
 #endif
-        virtual QString    eventID() const       { return mNewEventID; }
+        virtual QString    eventID() const       { return mNewEventId; }
         virtual QString    oldEventID() const    { return mOldEvent->id(); }
-        virtual QString    newEventID() const    { return mNewEventID; }
+        virtual QString    newEventID() const    { return mNewEventId; }
         virtual UndoItem*  restore();
     private:
 #ifdef USE_AKONADI
-                Collection     mResource;  // collection containing the event
+        Collection     mResource;  // collection containing the event
 #else
         AlarmResource* mResource;  // resource calendar containing the event
 #endif
         KAEvent*       mOldEvent;
-        QString        mNewEventID;
+        QString        mNewEventId;
         QString        mDescription;
         QStringList    mDontShowErrors;
 };
@@ -205,7 +205,7 @@ class UndoDelete : public UndoItem
         virtual UndoItem*  createRedo(const KAEvent&, RESOURCE_PARAM_TYPE);
     private:
 #ifdef USE_AKONADI
-                Collection     mResource;  // collection containing the event
+        Collection     mResource;  // collection containing the event
 #else
         AlarmResource* mResource;  // resource calendar containing the event
 #endif
@@ -278,7 +278,7 @@ Undo::List  Undo::mRedoList;
 
 
 /******************************************************************************
-*  Create the one and only instance of the Undo class.
+* Create the one and only instance of the Undo class.
 */
 Undo* Undo::instance()
 {
@@ -288,7 +288,7 @@ Undo* Undo::instance()
 }
 
 /******************************************************************************
-*  Clear the lists of undo and redo items.
+* Clear the lists of undo and redo items.
 */
 void Undo::clear()
 {
@@ -305,8 +305,8 @@ void Undo::clear()
 }
 
 /******************************************************************************
-*  Create an undo item and add it to the list of undos.
-*  N.B. The base class constructor adds the object to the undo list.
+* Create an undo item and add it to the list of undos.
+* N.B. The base class constructor adds the object to the undo list.
 */
 void Undo::saveAdd(const KAEvent& event, RESOURCE_PARAM_TYPE resource, const QString& name)
 {
@@ -373,7 +373,7 @@ void Undo::saveReactivates(const EventList& events, const QString& name)
 }
 
 /******************************************************************************
-*  Remove any redos which are made invalid by a new undo.
+* Remove any redos which are made invalid by a new undo.
 */
 void Undo::removeRedos(const QString& eventID)
 {
@@ -402,8 +402,8 @@ void Undo::removeRedos(const QString& eventID)
 }
 
 /******************************************************************************
-*  Undo or redo a specified item.
-*  Reply = true if success, or if the item no longer exists.
+* Undo or redo a specified item.
+* Reply = true if success, or if the item no longer exists.
 */
 bool Undo::undo(int i, Undo::Type type, QWidget* parent, const QString& action)
 {
@@ -449,7 +449,7 @@ bool Undo::undo(int i, Undo::Type type, QWidget* parent, const QString& action)
 }
 
 /******************************************************************************
-*  Add an undo item to the start of one of the lists.
+* Add an undo item to the start of one of the lists.
 */
 void Undo::add(UndoItem* item, bool undo)
 {
@@ -473,7 +473,7 @@ void Undo::add(UndoItem* item, bool undo)
 }
 
 /******************************************************************************
-*  Remove an undo item from one of the lists.
+* Remove an undo item from one of the lists.
 */
 void Undo::remove(UndoItem* item, bool undo)
 {
@@ -483,7 +483,7 @@ void Undo::remove(UndoItem* item, bool undo)
 }
 
 /******************************************************************************
-*  Replace an undo item in one of the lists.
+* Replace an undo item in one of the lists.
 */
 void Undo::replace(UndoItem* old, UndoItem* New)
 {
@@ -501,7 +501,7 @@ void Undo::replace(UndoItem* old, UndoItem* New)
 }
 
 /******************************************************************************
-*  Return the action description of the latest undo/redo item.
+* Return the action description of the latest undo/redo item.
 */
 QString Undo::actionText(Undo::Type type)
 {
@@ -510,7 +510,7 @@ QString Undo::actionText(Undo::Type type)
 }
 
 /******************************************************************************
-*  Return the action description of the undo/redo item with the specified ID.
+* Return the action description of the undo/redo item with the specified ID.
 */
 QString Undo::actionText(Undo::Type type, int id)
 {
@@ -519,7 +519,7 @@ QString Undo::actionText(Undo::Type type, int id)
 }
 
 /******************************************************************************
-*  Return the alarm description of the undo/redo item with the specified ID.
+* Return the alarm description of the undo/redo item with the specified ID.
 */
 QString Undo::description(Undo::Type type, int id)
 {
@@ -528,10 +528,10 @@ QString Undo::description(Undo::Type type, int id)
 }
 
 /******************************************************************************
-*  Return the descriptions of all undo or redo items, in order latest first.
-*  For alarms which have undergone more than one change, only the first one is
-*  listed, to force dependent undos to be executed in their correct order.
-*  If 'ids' is non-null, also returns a list of their corresponding IDs.
+* Return the descriptions of all undo or redo items, in order latest first.
+* For alarms which have undergone more than one change, only the first one is
+* listed, to force dependent undos to be executed in their correct order.
+* If 'ids' is non-null, also returns a list of their corresponding IDs.
 */
 QList<int> Undo::ids(Undo::Type type)
 {
@@ -585,7 +585,7 @@ QList<int> Undo::ids(Undo::Type type)
 }
 
 /******************************************************************************
-*  Emit the appropriate 'changed' signal.
+* Emit the appropriate 'changed' signal.
 */
 void Undo::emitChanged()
 {
@@ -594,7 +594,7 @@ void Undo::emitChanged()
 }
 
 /******************************************************************************
-*  Return the item with the specified ID.
+* Return the item with the specified ID.
 */
 UndoItem* Undo::getItem(int id, Undo::Type type)
 {
@@ -611,7 +611,7 @@ UndoItem* Undo::getItem(int id, Undo::Type type)
 }
 
 /******************************************************************************
-*  Find an item with the specified ID.
+* Find an item with the specified ID.
 */
 int Undo::findItem(int id, Undo::Type type)
 {
@@ -637,8 +637,8 @@ KAlarm::UpdateStatus UndoItem::mRestoreWarningKorg;
 int                  UndoItem::mRestoreWarningCount;
 
 /******************************************************************************
-*  Constructor.
-*  Optionally appends the undo to the list of undos.
+* Constructor.
+* Optionally appends the undo to the list of undos.
 */
 UndoItem::UndoItem(Undo::Type type, const QString& name)
     : mName(name),
@@ -655,8 +655,8 @@ UndoItem::UndoItem(Undo::Type type, const QString& name)
 }
 
 /******************************************************************************
-*  Destructor.
-*  Removes the undo from the list (if it's in the list).
+* Destructor.
+* Removes the undo from the list (if it's in the list).
 */
 UndoItem::~UndoItem()
 {
@@ -665,7 +665,7 @@ UndoItem::~UndoItem()
 }
 
 /******************************************************************************
-*  Return the description of an event.
+* Return the description of an event.
 */
 QString UndoItem::description(const KAEvent& event) const
 {
@@ -673,7 +673,7 @@ QString UndoItem::description(const KAEvent& event) const
 }
 
 /******************************************************************************
-*  Return the action description of an add or delete Undo/Redo item for displaying.
+* Return the action description of an add or delete Undo/Redo item for displaying.
 */
 QString UndoItem::addDeleteActionText(CalEvent::Type calendar, bool add)
 {
@@ -712,10 +712,10 @@ UndoMulti<T>::UndoMulti(Undo::Type type, const Undo::EventList& events, const QS
 }
 
 /******************************************************************************
-*  Undo the item, i.e. restore multiple alarms which were deleted (or delete
-*  alarms which were restored).
-*  Create a redo item to delete (or restore) the alarms again.
-*  Reply = redo item.
+* Undo the item, i.e. restore multiple alarms which were deleted (or delete
+* alarms which were restored).
+* Create a redo item to delete (or restore) the alarms again.
+* Reply = redo item.
 */
 template <class T>
 UndoItem* UndoMulti<T>::restore()
@@ -738,11 +738,11 @@ UndoItem* UndoMulti<T>::restore()
 }
 
 /******************************************************************************
-*  If one of the multiple items has the specified ID, delete it.
-*  If an item is deleted and there is only one item left, the UndoMulti
-*  instance is removed from its list and replaced by the remaining UndoItem instead.
-*  Reply = true if this instance was replaced. The caller must delete it.
-*        = false otherwise.
+* If one of the multiple items has the specified ID, delete it.
+* If an item is deleted and there is only one item left, the UndoMulti
+* instance is removed from its list and replaced by the remaining UndoItem instead.
+* Reply = true if this instance was replaced. The caller must delete it.
+*       = false otherwise.
 */
 template <class T>
 bool UndoMulti<T>::deleteID(const QString& id)
@@ -780,7 +780,7 @@ bool UndoMulti<T>::deleteID(const QString& id)
 UndoAdd::UndoAdd(Undo::Type type, const Undo::Event& undo, const QString& name)
     : UndoItem(type, name),
       mResource(undo.EVENT_RESOURCE),
-      mEventID(undo.event.id())
+      mEventId(undo.event.id())
 {
     setCalendar(undo.event.category());
     mDescription = UndoItem::description(undo.event);    // calendar must be set before calling this
@@ -789,7 +789,7 @@ UndoAdd::UndoAdd(Undo::Type type, const Undo::Event& undo, const QString& name)
 UndoAdd::UndoAdd(Undo::Type type, const KAEvent& event, RESOURCE_PARAM_TYPE resource, const QString& name)
     : UndoItem(type, name),
       mResource(resource),
-      mEventID(event.id())
+      mEventId(event.id())
 {
     setCalendar(event.category());
     mDescription = UndoItem::description(event);    // calendar must be set before calling this
@@ -798,22 +798,26 @@ UndoAdd::UndoAdd(Undo::Type type, const KAEvent& event, RESOURCE_PARAM_TYPE reso
 UndoAdd::UndoAdd(Undo::Type type, const KAEvent& event, RESOURCE_PARAM_TYPE resource, const QString& name, CalEvent::Type cal)
     : UndoItem(type, name),
       mResource(resource),
-      mEventID(CalEvent::uid(event.id(), cal))    // convert if old-style event ID
+      mEventId(CalEvent::uid(event.id(), cal))    // convert if old-style event ID
 {
     setCalendar(cal);
     mDescription = UndoItem::description(event);    // calendar must be set before calling this
 }
 
 /******************************************************************************
-*  Undo the item, i.e. delete the alarm which was added.
-*  Create a redo item to add the alarm back again.
-*  Reply = redo item.
+* Undo the item, i.e. delete the alarm which was added.
+* Create a redo item to add the alarm back again.
+* Reply = redo item.
 */
 UndoItem* UndoAdd::doRestore(bool setArchive)
 {
     // Retrieve the current state of the alarm
-    kDebug() << mEventID;
-    const KAEvent* ev = AlarmCalendar::getEvent(mEventID);
+    kDebug() << mEventId;
+#ifdef USE_AKONADI
+    const KAEvent* ev = AlarmCalendar::getEvent(EventId(mResource.id(), mEventId));
+#else
+    const KAEvent* ev = AlarmCalendar::getEvent(mEventId);
+#endif
     if (!ev)
     {
         mRestoreError = ERR_NOT_FOUND;    // alarm is no longer in calendar
@@ -873,7 +877,7 @@ UndoItem* UndoAdd::doRestore(bool setArchive)
 }
 
 /******************************************************************************
-*  Create a redo item to add the alarm back again.
+* Create a redo item to add the alarm back again.
 */
 UndoItem* UndoAdd::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE resource)
 {
@@ -882,7 +886,7 @@ UndoItem* UndoAdd::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE resource
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoAdd::defaultActionText() const
 {
@@ -896,7 +900,7 @@ QString UndoAdd::defaultActionText() const
 =============================================================================*/
 
 /******************************************************************************
-*  Create a redo item to add the alarms again.
+* Create a redo item to add the alarms again.
 */
 UndoItem* UndoAdds::createRedo(Undo::List* undos)
 {
@@ -905,7 +909,7 @@ UndoItem* UndoAdds::createRedo(Undo::List* undos)
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoAdds::defaultActionText() const
 {
@@ -923,7 +927,7 @@ UndoEdit::UndoEdit(Undo::Type type, const KAEvent& oldEvent, const QString& newE
     : UndoItem(type),
       mResource(resource),
       mOldEvent(new KAEvent(oldEvent)),
-      mNewEventID(newEventID),
+      mNewEventId(newEventID),
       mDescription(description),
       mDontShowErrors(dontShowErrors)
 {
@@ -936,15 +940,19 @@ UndoEdit::~UndoEdit()
 }
 
 /******************************************************************************
-*  Undo the item, i.e. undo an edit to a previously existing alarm.
-*  Create a redo item to reapply the edit.
-*  Reply = redo item.
+* Undo the item, i.e. undo an edit to a previously existing alarm.
+* Create a redo item to reapply the edit.
+* Reply = redo item.
 */
 UndoItem* UndoEdit::restore()
 {
-    kDebug() << mNewEventID;
+    kDebug() << mNewEventId;
     // Retrieve the current state of the alarm
-    const KAEvent* event = AlarmCalendar::getEvent(mNewEventID);
+#ifdef USE_AKONADI
+    const KAEvent* event = AlarmCalendar::getEvent(EventId(mResource.id(), mNewEventId));
+#else
+    const KAEvent* event = AlarmCalendar::getEvent(mNewEventId);
+#endif
     if (!event)
     {
         mRestoreError = ERR_NOT_FOUND;    // alarm is no longer in calendar
@@ -954,7 +962,11 @@ UndoItem* UndoEdit::restore()
 
     // Create a redo item to restore the edit
     Undo::Type t = (type() == Undo::UNDO) ? Undo::REDO : (type() == Undo::REDO) ? Undo::UNDO : Undo::NONE;
-    UndoItem* undo = new UndoEdit(t, newEvent, mOldEvent->id(), mResource, KAlarm::dontShowErrors(mNewEventID), mDescription);
+#ifdef USE_AKONADI
+    UndoItem* undo = new UndoEdit(t, newEvent, mOldEvent->id(), mResource, KAlarm::dontShowErrors(EventId(newEvent)), mDescription);
+#else
+    UndoItem* undo = new UndoEdit(t, newEvent, mOldEvent->id(), mResource, KAlarm::dontShowErrors(mNewEventId), mDescription);
+#endif
 
     switch (calendar())
     {
@@ -977,7 +989,11 @@ UndoItem* UndoEdit::restore()
                         mRestoreWarningKorg = status;
                     // fall through to default
                 default:
+#ifdef USE_AKONADI
+                    KAlarm::setDontShowErrors(EventId(*mOldEvent), mDontShowErrors);
+#else
                     KAlarm::setDontShowErrors(mOldEvent->id(), mDontShowErrors);
+#endif
                     break;
             }
             break;
@@ -996,7 +1012,7 @@ UndoItem* UndoEdit::restore()
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoEdit::defaultActionText() const
 {
@@ -1042,9 +1058,9 @@ UndoDelete::~UndoDelete()
 }
 
 /******************************************************************************
-*  Undo the item, i.e. restore an alarm which was deleted.
-*  Create a redo item to delete the alarm again.
-*  Reply = redo item.
+* Undo the item, i.e. restore an alarm which was deleted.
+* Create a redo item to delete the alarm again.
+* Reply = redo item.
 */
 UndoItem* UndoDelete::restore()
 {
@@ -1107,7 +1123,11 @@ UndoItem* UndoDelete::restore()
                         break;
                 }
             }
+#ifdef USE_AKONADI
+            KAlarm::setDontShowErrors(EventId(*mEvent), mDontShowErrors);
+#else
             KAlarm::setDontShowErrors(mEvent->id(), mDontShowErrors);
+#endif
             break;
         case CalEvent::TEMPLATE:
 #ifdef USE_AKONADI
@@ -1141,7 +1161,7 @@ UndoItem* UndoDelete::restore()
 }
 
 /******************************************************************************
-*  Create a redo item to archive the alarm again.
+* Create a redo item to archive the alarm again.
 */
 UndoItem* UndoDelete::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE resource)
 {
@@ -1150,7 +1170,7 @@ UndoItem* UndoDelete::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE resou
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoDelete::defaultActionText() const
 {
@@ -1164,7 +1184,7 @@ QString UndoDelete::defaultActionText() const
 =============================================================================*/
 
 /******************************************************************************
-*  Create a redo item to delete the alarms again.
+* Create a redo item to delete the alarms again.
 */
 UndoItem* UndoDeletes::createRedo(Undo::List* undos)
 {
@@ -1173,7 +1193,7 @@ UndoItem* UndoDeletes::createRedo(Undo::List* undos)
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoDeletes::defaultActionText() const
 {
@@ -1203,9 +1223,9 @@ QString UndoDeletes::defaultActionText() const
 =============================================================================*/
 
 /******************************************************************************
-*  Undo the item, i.e. re-archive the alarm which was reactivated.
-*  Create a redo item to reactivate the alarm back again.
-*  Reply = redo item.
+* Undo the item, i.e. re-archive the alarm which was reactivated.
+* Create a redo item to reactivate the alarm back again.
+* Reply = redo item.
 */
 UndoItem* UndoReactivate::restore()
 {
@@ -1223,7 +1243,7 @@ UndoItem* UndoReactivate::restore()
 }
 
 /******************************************************************************
-*  Create a redo item to add the alarm back again.
+* Create a redo item to add the alarm back again.
 */
 UndoItem* UndoReactivate::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE resource)
 {
@@ -1232,7 +1252,7 @@ UndoItem* UndoReactivate::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE r
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoReactivate::defaultActionText() const
 {
@@ -1246,9 +1266,9 @@ QString UndoReactivate::defaultActionText() const
 =============================================================================*/
 
 /******************************************************************************
-*  Undo the item, i.e. reactivate an alarm which was archived.
-*  Create a redo item to archive the alarm again.
-*  Reply = redo item.
+* Undo the item, i.e. reactivate an alarm which was archived.
+* Create a redo item to archive the alarm again.
+* Reply = redo item.
 */
 UndoItem* UndoDeactivate::restore()
 {
@@ -1267,7 +1287,7 @@ UndoItem* UndoDeactivate::restore()
 }
 
 /******************************************************************************
-*  Create a redo item to archive the alarm again.
+* Create a redo item to archive the alarm again.
 */
 UndoItem* UndoDeactivate::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE resource)
 {
@@ -1276,7 +1296,7 @@ UndoItem* UndoDeactivate::createRedo(const KAEvent& event, RESOURCE_PARAM_TYPE r
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoDeactivate::defaultActionText() const
 {
@@ -1290,7 +1310,7 @@ QString UndoDeactivate::defaultActionText() const
 =============================================================================*/
 
 /******************************************************************************
-*  Create a redo item to reactivate the alarms again.
+* Create a redo item to reactivate the alarms again.
 */
 UndoItem* UndoReactivates::createRedo(Undo::List* undos)
 {
@@ -1299,7 +1319,7 @@ UndoItem* UndoReactivates::createRedo(Undo::List* undos)
 }
 
 /******************************************************************************
-*  Return the action description of the Undo item for displaying.
+* Return the action description of the Undo item for displaying.
 */
 QString UndoReactivates::defaultActionText() const
 {
@@ -1316,7 +1336,11 @@ Undo::Event::Event(const KAEvent& e, RESOURCE_PARAM_TYPE r)
       EVENT_RESOURCE(r)
 {
     if (e.category() == CalEvent::ACTIVE)
+#ifdef USE_AKONADI
+        dontShowErrors = KAlarm::dontShowErrors(EventId(e));
+#else
         dontShowErrors = KAlarm::dontShowErrors(e.id());
+#endif
 }
 
 // vim: et sw=4:

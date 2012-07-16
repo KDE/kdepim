@@ -50,10 +50,10 @@ public:
       mXmlGuiClient( 0 ),
       mActionMenu( 0 ),
       mCloseTabAction( 0 ),
-      mActivateNextTabAction( 0 ), 
+      mActivateNextTabAction( 0 ),
       mActivatePreviousTabAction( 0 ),
       mMoveTabLeftAction( 0 ),
-      mMoveTabRightAction( 0 ), 
+      mMoveTabRightAction( 0 ),
       mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
@@ -147,6 +147,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   connect( d->mCloseTabButton, SIGNAL(clicked()),
            SLOT(onCloseTabClicked()) );
 
+  setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
+  connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)) );
+
   createNewTab();
   setMovable( true );
 
@@ -161,6 +164,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
   connect( Core::Settings::self(), SIGNAL(configChanged()),
            this, SLOT(updateTabControls()) );
+
+  connect( this, SIGNAL(mouseDoubleClick()),
+           this, SLOT(createNewTab()) );
 
   connect( this, SIGNAL(mouseMiddleClick(QWidget*)),
            this, SLOT(closeTab(QWidget*)) );
@@ -460,12 +466,12 @@ void Pane::Private::moveTabForward()
   const int currentIndex = q->tabBar()->currentIndex();
   if ( currentIndex == q->tabBar()->count()-1 )
     return;
-  q->tabBar()->moveTab( currentIndex, currentIndex+1 );  
+  q->tabBar()->moveTab( currentIndex, currentIndex+1 );
 }
 
 void Pane::Private::moveTabBackward()
 {
-  const int currentIndex = q->tabBar()->currentIndex();  
+  const int currentIndex = q->tabBar()->currentIndex();
   if ( currentIndex == 0 )
     return;
   q->tabBar()->moveTab( currentIndex, currentIndex-1 );
@@ -481,8 +487,8 @@ void Pane::Private::activateNextTab()
 
   if( indexTab == numberOfTab )
     indexTab = 0;
-  
-  q->tabBar()->setCurrentIndex( indexTab );  
+
+  q->tabBar()->setCurrentIndex( indexTab );
 }
 
 void Pane::Private::activatePreviousTab()
@@ -535,6 +541,7 @@ void Pane::Private::onCurrentTabChanged()
   emit q->currentTabChanged();
 
   Widget *w = static_cast<Widget*>( q->currentWidget() );
+
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
   disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -595,10 +602,11 @@ MessageList::StorageModel *Pane::createStorageModel( QAbstractItemModel *model, 
   return new MessageList::StorageModel( model, selectionModel, parent );
 }
 
-void Pane::setCurrentFolder( const Akonadi::Collection &, bool, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
+void Pane::setCurrentFolder( const Akonadi::Collection &collection, bool, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
   if ( w ) {
+    w->setCurrentFolder( collection );
     QItemSelectionModel *s = d->mWidgetSelectionHash[w];
     MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
     w->setStorageModel( m, preSelectionMode );
@@ -690,11 +698,22 @@ void Pane::Private::updateTabControls()
     mMoveTabRightAction->setEnabled( enableAction );
   if ( mMoveTabLeftAction )
     mMoveTabLeftAction->setEnabled( enableAction );
-      
+
   if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
     q->tabBar()->setVisible( enableAction );
   } else {
     q->tabBar()->setVisible( true );
+  }
+
+  const bool hasCloseButton(Core::Settings::self()->tabsHaveCloseButton());
+  q->setTabsClosable( hasCloseButton );
+  if( hasCloseButton ) {
+    const int numberOfTab(q->count());
+    if( numberOfTab ==1) {
+      q->tabBar()->tabButton(0, QTabBar::RightSide)->setEnabled(false);
+    } else if(numberOfTab > 1) {
+      q->tabBar()->tabButton(0, QTabBar::RightSide)->setEnabled(true);
+    }
   }
 }
 
@@ -736,6 +755,15 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChil
     return QList<Akonadi::Item>();
   }
   return w->selectionAsMessageItemList( includeCollapsedChildren );
+}
+
+QVector<qlonglong> Pane::selectionAsMessageItemListId( bool includeCollapsedChildren ) const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QVector<qlonglong>();
+  }
+  return w->selectionAsMessageItemListId( includeCollapsedChildren );
 }
 
 
@@ -879,6 +907,22 @@ void Pane::resetModelStorage()
 void Pane::setPreferEmptyTab( bool emptyTab )
 {
   d->mPreferEmptyTab = emptyTab;
+}
+
+void Pane::saveCurrentSelection()
+{
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    w->saveCurrentSelection();
+  }
+}
+
+void Pane::updateTagComboBox()
+{
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    w->populateStatusFilterCombo();
+  }
 }
 
 

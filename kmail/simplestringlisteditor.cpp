@@ -62,6 +62,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
   hlay->setMargin( 0 );
 
   mListBox = new QListWidget( this );
+  mListBox->setSelectionMode(QAbstractItemView::ExtendedSelection);
   hlay->addWidget( mListBox, 1 );
 
   if ( buttons == None ) {
@@ -141,7 +142,9 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
 
   vlay->addStretch( 1 ); // spacer
 
-  connect( mListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), 
+  connect( mListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+           this, SLOT(slotSelectionChanged()) );
+  connect( mListBox, SIGNAL(itemSelectionChanged()),
            this, SLOT(slotSelectionChanged()) );
 }
 
@@ -216,10 +219,13 @@ void SimpleStringListEditor::slotAdd() {
 }
 
 void SimpleStringListEditor::slotRemove() {
-  if ( mListBox->currentItem() ) {
-    delete mListBox->takeItem( mListBox->currentRow() );
+    QList<QListWidgetItem *> selectedItems = mListBox->selectedItems();
+    if(selectedItems.isEmpty())
+        return;
+    Q_FOREACH(QListWidgetItem *item, selectedItems) {
+        delete mListBox->takeItem(mListBox->row(item));
+    }
     emit changed();
-  }
 }
 
 void SimpleStringListEditor::slotModify() {
@@ -237,45 +243,107 @@ void SimpleStringListEditor::slotModify() {
   emit changed();
 }
 
+QList<QListWidgetItem*> SimpleStringListEditor::selectedItems() const 
+{
+  QList<QListWidgetItem*> listWidgetItem;
+  const int numberOfFilters = mListBox->count();
+  for ( int i = 0; i<numberOfFilters; ++i ) {
+    if ( mListBox->item(i)->isSelected() ) {
+      listWidgetItem << mListBox->item(i);
+    }
+  }
+  return listWidgetItem;
+}
+
 void SimpleStringListEditor::slotUp() {
-  QListWidgetItem *item = mListBox->currentItem();
-  int row = mListBox->currentRow();
-  if ( !item || row == 0 ) return;
 
-  mListBox->takeItem( row );
-  mListBox->insertItem( row - 1, item );
-  mListBox->setCurrentItem( item );
+  QList<QListWidgetItem*> listWidgetItem = selectedItems();
+  if ( listWidgetItem.isEmpty() ) {
+    return;
+  }
 
-  emit changed();
+  const int numberOfItem( listWidgetItem.count() );
+  if ( ( numberOfItem == 1 ) && ( mListBox->currentRow() == 0 ) ) {
+    kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+    return;
+  }
+  bool wasMoved = false;
+
+  for ( int i = 0; i<numberOfItem; ++i ) {
+    const int posItem = mListBox->row( listWidgetItem.at( i ) );
+    if ( posItem == i ) {
+      continue;
+    }
+    QListWidgetItem *item = mListBox->takeItem( posItem );
+    mListBox->insertItem( posItem - 1, item );
+    
+    wasMoved = true;
+  }
+  
+  if ( wasMoved ) {
+    emit changed();
+  }  
 }
 
 void SimpleStringListEditor::slotDown() {
-  QListWidgetItem *item = mListBox->currentItem();
-  int row = mListBox->currentRow();
-  if ( !item || row >= mListBox->count() - 1 ) return;
+  QList<QListWidgetItem*> listWidgetItem = selectedItems();
+  if ( listWidgetItem.isEmpty() ) {
+    return;
+  }
 
-  mListBox->takeItem( row );
-  mListBox->insertItem( row + 1, item );
-  mListBox->setCurrentItem( item );
+  const int numberOfElement( mListBox->count() );
+  const int numberOfItem( listWidgetItem.count() );
+  if ( ( numberOfItem == 1 ) && ( mListBox->currentRow() == numberOfElement - 1 ) ) {
+    kDebug() << "Called while the _last_ filter is selected, ignoring.";
+    return;
+  }
 
-  emit changed();
+  int j = 0;
+  bool wasMoved = false;
+  for ( int i = numberOfItem-1; i>= 0; --i, j++ ) {
+    const int posItem = mListBox->row( listWidgetItem.at( i ) );
+    if ( posItem == ( numberOfElement-1 -j ) ) {
+      continue;
+    }
+    QListWidgetItem *item = mListBox->takeItem( posItem );
+    mListBox->insertItem( posItem + 1, item );
+    wasMoved = true;
+  }
+
+  if ( wasMoved ) {
+    emit changed();
+  }
 }
 
 void SimpleStringListEditor::slotSelectionChanged() {
 
-  QListWidgetItem * item = mListBox->currentItem();
-  int row = mListBox->currentRow();
-
+  QList<QListWidgetItem *> lstSelectedItems = mListBox->selectedItems();
+  const int numberOfItemSelected( lstSelectedItems.count() );
+  const bool uniqItemSelected = ( numberOfItemSelected == 1 );
   // if there is one, item will be non-null (ie. true), else 0
   // (ie. false):
   if ( mRemoveButton )
-    mRemoveButton->setEnabled( item );
+    mRemoveButton->setEnabled( !lstSelectedItems.isEmpty() );
+
   if ( mModifyButton )
-    mModifyButton->setEnabled( item );
-  if ( mUpButton )
-    mUpButton->setEnabled( item && row > 0 );
-  if ( mDownButton )
-    mDownButton->setEnabled( item && row < mListBox->count() - 1 );
+    mModifyButton->setEnabled( uniqItemSelected );
+
+  const int currentIndex = mListBox->currentRow();
+
+  const bool aItemIsSelected = !lstSelectedItems.isEmpty();
+  const bool allItemSelected = ( mListBox->count() == numberOfItemSelected );
+  const bool theLast = ( currentIndex >= mListBox->count() - 1 );
+  const bool theFirst = ( currentIndex == 0 );
+
+  if ( mUpButton ) {
+    mUpButton->setEnabled( aItemIsSelected && ( ( uniqItemSelected && !theFirst ) ||
+                         ( !uniqItemSelected ) ) && !allItemSelected );
+  }
+  if ( mDownButton ) {
+    mDownButton->setEnabled( aItemIsSelected &&
+                            ( ( uniqItemSelected && !theLast ) ||
+                            ( !uniqItemSelected ) ) && !allItemSelected );
+  }
 }
 
 

@@ -9,13 +9,13 @@
 #include <QObject>
 #include <QPointer>
 #include <QDBusObjectPath>
+#include <Solid/Networking>
 
 #include <kurl.h>
 
 #include "kmail_export.h"
 #include "globalsettings.h"
 #include <kcomponentdata.h>
-#include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/servermanager.h>
 
 #define kmkernel KMKernel::self()
@@ -51,6 +51,7 @@ class KJob;
 namespace KMail {
   class MailServiceImpl;
   class UndoStack;
+  class KMSystemTray;
 }
 namespace KPIM { class ProgressDialog; }
 using KMail::MailServiceImpl;
@@ -68,7 +69,6 @@ class KMMainWin;
 class KMainWindow;
 class KMMainWidget;
 class ConfigureDialog;
-class KMSystemTray;
 
 namespace MailCommon {
   class Kernel;
@@ -270,6 +270,7 @@ public Q_SLOTS:
 
   Q_SCRIPTABLE int viewMessage( const QString & messageFile );
 
+  Q_SCRIPTABLE void updateConfig();
 /**
  * End of D-Bus callable stuff
  */
@@ -326,7 +327,7 @@ public:
                const KUrl &messageFile, const KUrl::List &attach,
                const QStringList &customHeaders );
 
-  bool isImapFolder( const Akonadi::Collection& ) const;
+  bool isImapFolder(const Akonadi::Collection& , bool &isOnline) const;
 
   //sets online status for akonadi accounts. true for online, false for offline
   void setAccountStatus(bool);
@@ -370,8 +371,8 @@ public:
    */
   bool haveSystemTrayApplet() const;
 
-  bool registerSystemTrayApplet( KMSystemTray* );
-  bool unregisterSystemTrayApplet( KMSystemTray* );
+  bool registerSystemTrayApplet( KMail::KMSystemTray* );
+  bool unregisterSystemTrayApplet( KMail::KMSystemTray* );
 
   QTextCodec *networkCodec() { return netCodec; }
 
@@ -408,6 +409,10 @@ public:
   void checkFolderFromResources( const Akonadi::Collection::List& collectionList );
 
   const QAbstractItemModel* treeviewModelSelection();
+
+  void savePaneSelection();
+
+  void updatePaneTagComboBox();
 
 protected:
   void agentInstanceBroken( const Akonadi::AgentInstance& instance );
@@ -462,11 +467,13 @@ private slots:
 
   void akonadiStateChanged( Akonadi::ServerManager::State );
   void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
-  void instanceError(const Akonadi::AgentInstance& instance, const QString & message);
+  void slotInstanceError(const Akonadi::AgentInstance& instance, const QString & message);
+  void slotInstanceWarning(const Akonadi::AgentInstance&instance, const QString& message);
   void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
   void slotCollectionRemoved(const Akonadi::Collection& col);
   void slotDeleteIdentity( uint identity);
   void slotInstanceRemoved(const Akonadi::AgentInstance&);
+  void slotSystemNetworkStatusChanged( Solid::Networking::Status );
   
 private:
   void migrateFromKMail1();
@@ -500,8 +507,10 @@ private:
   KMMainWin *mWin;
   MailServiceImpl *mMailService;
 
-  QList<KMSystemTray*> systemTrayApplets;
+  Solid::Networking::Status mSystemNetworkStatus;
 
+  QList<KMail::KMSystemTray*> systemTrayApplets;
+  QHash<QString, bool> mResourceCryptoSettingCache;
   MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
   Akonadi::EntityTreeModel *mEntityTreeModel;
   Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

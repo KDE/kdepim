@@ -1,24 +1,24 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+  This file is part of KAddressBook.
+  Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
 #ifndef PRINTSTYLE_H
@@ -26,7 +26,7 @@
 
 #include "contactfields.h"
 
-#include <kabc/addressee.h>
+#include <KABC/Addressee>
 
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
@@ -74,7 +74,7 @@ class PrintStyle : public QObject
      *
      * @wizard The wizard the style belongs to.
      */
-    explicit PrintStyle( PrintingWizard* wizard );
+    explicit PrintStyle( PrintingWizard *wizard );
 
     /**
      * Destroys the print style.
@@ -96,7 +96,7 @@ class PrintStyle : public QObject
      * An invalid pixmap is returned by default, which means no preview
      * is available.
      */
-    const QPixmap& preview() const;
+    const QPixmap &preview() const;
 
     /**
      * Hides all style specific pages in the printing wizard.
@@ -126,17 +126,18 @@ class PrintStyle : public QObject
      *                 without any prefix.
      * @returns Whether the image was loaded successfully.
      */
-    bool setPreview( const QString& fileName );
+    bool setPreview( const QString &fileName );
 
     /**
      * Sets the preview @p image.
      */
-    void setPreview( const QPixmap& image );
+    void setPreview( const QPixmap &image );
 
     /**
      * Sets the preferred sort options for this printing style.
      */
-    void setPreferredSortOptions( ContactFields::Field, Qt::SortOrder sortOrder = Qt::AscendingOrder );
+    void setPreferredSortOptions( ContactFields::Field,
+                                  Qt::SortOrder sortOrder = Qt::AscendingOrder );
 
     /**
      * Returns the printing wizard that is responsible for this style.
@@ -163,7 +164,6 @@ class PrintStyle : public QObject
     Qt::SortOrder mSortOrder;
 };
 
-
 /**
  * The factories are used to have all object of the respective
  * print style created in one place.
@@ -171,7 +171,7 @@ class PrintStyle : public QObject
 class PrintStyleFactory
 {
   public:
-    explicit PrintStyleFactory( PrintingWizard* parent );
+    explicit PrintStyleFactory( PrintingWizard *parent );
     virtual ~PrintStyleFactory();
 
     virtual PrintStyle *create() const = 0;
@@ -183,7 +183,7 @@ class PrintStyleFactory
     virtual QString description() const = 0;
 
   protected:
-    PrintingWizard* mParent;
+    PrintingWizard *mParent;
 };
 
 }

@@ -172,7 +172,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */
-    void slotIncidencesDropped( const KCalCore::Incidence::List & incidences, const QPoint &, bool );
+    void slotIncidencesDropped( const KCalCore::Incidence::List &incidences,
+                                const QPoint &, bool );
     void slotIncidencesDropped( const QList<KUrl>& incidences, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );

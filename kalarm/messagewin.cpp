@@ -1,7 +1,7 @@
 /*
  *  messagewin.cpp  -  displays an alarm message
  *  Program:  kalarm
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -161,7 +161,11 @@ enum {
 
 
 QList<MessageWin*> MessageWin::mWindowList;
+#ifdef USE_AKONADI
+QMap<EventId, unsigned> MessageWin::mErrorMessages;
+#else
 QMap<QString, unsigned> MessageWin::mErrorMessages;
+#endif
 // There can only be one audio thread at a time: trying to play multiple
 // sound files simultaneously would result in a cacophony, and besides
 // that, Phonon currently crashes...
@@ -169,10 +173,10 @@ QPointer<AudioThread> MessageWin::mAudioThread;
 MessageWin*           MessageWin::mAudioOwner = 0;
 
 /******************************************************************************
-*  Construct the message window for the specified alarm.
-*  Other alarms in the supplied event may have been updated by the caller, so
-*  the whole event needs to be stored for updating the calendar file when it is
-*  displayed.
+* Construct the message window for the specified alarm.
+* Other alarms in the supplied event may have been updated by the caller, so
+* the whole event needs to be stored for updating the calendar file when it is
+* displayed.
 */
 MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
     : MainWindowBase(0, static_cast<Qt::WFlags>(WFLAGS | WFLAGS2 | ((flags & ALWAYS_HIDE) || getWorkAreaAndModal() ? Qt::WindowType(0) : Qt::X11BypassWindowManagerHint))),
@@ -182,8 +186,10 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
       mFgColour(event->fgColour()),
 #ifdef USE_AKONADI
       mEventItemId(event->itemId()),
+      mEventId(*event),
+#else
+      mEventId(event->id()),
 #endif
-      mEventID(event->id()),
       mAudioFile(event->audioFile()),
       mVolume(event->soundVolume()),
       mFadeVolume(event->fadeVolume()),
@@ -207,7 +213,7 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
 #ifdef USE_AKONADI
       mCollection(AlarmCalendar::resources()->collectionForEvent(mEventItemId)),
 #else
-      mResource(AlarmCalendar::resources()->resourceForEvent(mEventID)),
+      mResource(AlarmCalendar::resources()->resourceForEvent(mEventId)),
 #endif
       mTimeLabel(0),
       mRemainingText(0),
@@ -254,9 +260,9 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
 #ifdef USE_AKONADI
         bool readonly = AlarmCalendar::resources()->eventReadOnly(mEventItemId);
 #else
-        bool readonly = AlarmCalendar::resources()->eventReadOnly(mEventID);
+        bool readonly = AlarmCalendar::resources()->eventReadOnly(mEventId);
 #endif
-        mShowEdit = !mEventID.isEmpty()  &&  !readonly;
+        mShowEdit = !mEventId.isEmpty()  &&  !readonly;
         mNoDefer  = readonly || (flags & NO_DEFER) || alarm.repeatAtLogin();
         initView();
     }
@@ -274,23 +280,33 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
 }
 
 /******************************************************************************
-*  Display an error message window.
-*  If 'dontShowAgain' is non-null, a "Don't show again" option is displayed. Note
-*  that the option is specific to 'event'.
+* Display an error message window.
+* If 'dontShowAgain' is non-null, a "Don't show again" option is displayed. Note
+* that the option is specific to 'event'.
 */
 void MessageWin::showError(const KAEvent& event, const DateTime& alarmDateTime,
                            const QStringList& errmsgs, const QString& dontShowAgain)
 {
+#ifdef USE_AKONADI
+    if (!dontShowAgain.isEmpty()
+    &&  KAlarm::dontShowErrors(EventId(event), dontShowAgain))
+#else
     if (!dontShowAgain.isEmpty()
     &&  KAlarm::dontShowErrors(event.id(), dontShowAgain))
+#endif
         return;
 
     // Don't pile up duplicate error messages for the same alarm
     for (int i = 0, end = mWindowList.count();  i < end;  ++i)
     {
         MessageWin* w = mWindowList[i];
-        if (w->mErrorWindow  &&  w->mEventID == event.id()
+#ifdef USE_AKONADI
+        if (w->mErrorWindow  &&  w->mEventId == EventId(event)
         &&  w->mErrorMsgs == errmsgs  &&  w->mDontShowAgain == dontShowAgain)
+#else
+        if (w->mErrorWindow  &&  w->mEventId == event.id()
+        &&  w->mErrorMsgs == errmsgs  &&  w->mDontShowAgain == dontShowAgain)
+#endif
             return;
     }
 
@@ -298,9 +314,9 @@ void MessageWin::showError(const KAEvent& event, const DateTime& alarmDateTime,
 }
 
 /******************************************************************************
-*  Construct the message window for a specified error message.
-*  If 'dontShowAgain' is non-null, a "Don't show again" option is displayed. Note
-*  that the option is specific to 'event'.
+* Construct the message window for a specified error message.
+* If 'dontShowAgain' is non-null, a "Don't show again" option is displayed. Note
+* that the option is specific to 'event'.
 */
 MessageWin::MessageWin(const KAEvent* event, const DateTime& alarmDateTime,
                        const QStringList& errmsgs, const QString& dontShowAgain)
@@ -309,8 +325,10 @@ MessageWin::MessageWin(const KAEvent* event, const DateTime& alarmDateTime,
       mDateTime(alarmDateTime),
 #ifdef USE_AKONADI
       mEventItemId(event->itemId()),
+      mEventId(*event),
+#else
+      mEventId(event->id()),
 #endif
-      mEventID(event->id()),
       mAlarmType(KAAlarm::MAIN_ALARM),
       mAction(event->actionSubType()),
       mKMailSerialNumber(0),
@@ -358,8 +376,8 @@ MessageWin::MessageWin(const KAEvent* event, const DateTime& alarmDateTime,
 }
 
 /******************************************************************************
-*  Construct the message window for restoration by session management.
-*  The window is initialised by readProperties().
+* Construct the message window for restoration by session management.
+* The window is initialised by readProperties().
 */
 MessageWin::MessageWin()
     : MainWindowBase(0, WFLAGS),
@@ -396,10 +414,10 @@ MessageWin::MessageWin()
 */
 MessageWin::~MessageWin()
 {
-    kDebug() << mEventID;
+    kDebug() << mEventId;
     if (mAudioOwner == this  &&  mAudioThread)
         mAudioThread->quit();
-    mErrorMessages.remove(mEventID);
+    mErrorMessages.remove(mEventId);
     mWindowList.removeAll(this);
     if (!mRecreating)
     {
@@ -411,7 +429,7 @@ MessageWin::~MessageWin()
 }
 
 /******************************************************************************
-*  Construct the message window.
+* Construct the message window.
 */
 void MessageWin::initView()
 {
@@ -974,13 +992,15 @@ void MessageWin::saveProperties(KConfigGroup& config)
 {
     if (mShown  &&  !mErrorWindow  &&  !mAlwaysHide)
     {
-        config.writeEntry("EventID", mEventID);
 #ifdef USE_AKONADI
+        config.writeEntry("EventID", mEventId.eventId());
         config.writeEntry("EventItemID", mEventItemId);
+#else
+        config.writeEntry("EventID", mEventId);
 #endif
         config.writeEntry("AlarmType", static_cast<int>(mAlarmType));
         if (mAlarmType == KAAlarm::INVALID_ALARM)
-            kError() << "Invalid alarm: id=" << mEventID << ", alarm count=" << mEvent.alarmCount();
+            kError() << "Invalid alarm: id=" << mEventId << ", alarm count=" << mEvent.alarmCount();
         config.writeEntry("Message", mMessage);
         config.writeEntry("Type", static_cast<int>(mAction));
         config.writeEntry("Font", mFont);
@@ -1033,15 +1053,18 @@ void MessageWin::saveProperties(KConfigGroup& config)
 void MessageWin::readProperties(const KConfigGroup& config)
 {
     mInvalid             = config.readEntry("Invalid", false);
-    mEventID             = config.readEntry("EventID");
 #ifdef USE_AKONADI
     mEventItemId         = config.readEntry("EventItemID", Akonadi::Item::Id(-1));
+    mCollection          = AkonadiModel::instance()->collectionForItem(mEventItemId);
+    mEventId             = EventId(mCollection.id(), config.readEntry("EventID"));
+#else
+    mEventId             = config.readEntry("EventID");
 #endif
     mAlarmType           = static_cast<KAAlarm::Type>(config.readEntry("AlarmType", 0));
     if (mAlarmType == KAAlarm::INVALID_ALARM)
     {
         mInvalid = true;
-        kError() << "Invalid alarm: id=" << mEventID;
+        kError() << "Invalid alarm: id=" << mEventId;
     }
     mMessage             = config.readEntry("Message");
     mAction              = static_cast<KAEvent::SubAction>(config.readEntry("Type", 0));
@@ -1088,20 +1111,18 @@ void MessageWin::readProperties(const KConfigGroup& config)
 #else
     mResource            = 0;
 #endif
-    kDebug() << mEventID;
+    kDebug() << mEventId;
     if (mAlarmType != KAAlarm::INVALID_ALARM)
     {
         // Recreate the event from the calendar file (if possible)
-        if (!mEventID.isEmpty())
+        if (!mEventId.isEmpty())
         {
-            KAEvent* event = AlarmCalendar::resources()->event(mEventID);
+            KAEvent* event = AlarmCalendar::resources()->event(mEventId);
             if (event)
             {
                 mEvent = *event;
-#ifdef USE_AKONADI
-                mCollection = AkonadiModel::instance()->collectionForItem(mEventItemId);
-#else
-                mResource = AlarmCalendar::resources()->resourceForEvent(mEventID);
+#ifndef USE_AKONADI
+                mResource = AlarmCalendar::resources()->resourceForEvent(mEventId);
 #endif
                 mShowEdit = true;
             }
@@ -1121,10 +1142,10 @@ void MessageWin::readProperties(const KConfigGroup& config)
 }
 
 /******************************************************************************
-*  Redisplay alarms which were being shown when the program last exited.
-*  Normally, these alarms will have been displayed by session restoration, but
-*  if the program crashed or was killed, we can redisplay them here so that
-*  they won't be lost.
+* Redisplay alarms which were being shown when the program last exited.
+* Normally, these alarms will have been displayed by session restoration, but
+* if the program crashed or was killed, we can redisplay them here so that
+* they won't be lost.
 */
 void MessageWin::redisplayAlarms()
 {
@@ -1143,10 +1164,11 @@ void MessageWin::redisplayAlarms()
             bool showDefer, showEdit;
 #ifdef USE_AKONADI
             reinstateFromDisplaying(events[i], event, collection, showEdit, showDefer);
+            if (!findEvent(EventId(event)))
 #else
             reinstateFromDisplaying(events[i], event, resource, showEdit, showDefer);
-#endif
             if (!findEvent(event.id()))
+#endif
             {
                 // This event should be displayed, but currently isn't being
                 KAAlarm alarm = event.convertDisplayingAlarm();
@@ -1176,8 +1198,8 @@ void MessageWin::redisplayAlarms()
 }
 
 /******************************************************************************
-*  Retrieves the event with the current ID from the displaying calendar file,
-*  or if not found there, from the archive calendar.
+* Retrieves the event with the current ID from the displaying calendar file,
+* or if not found there, from the archive calendar.
 */
 #ifdef USE_AKONADI
 bool MessageWin::retrieveEvent(KAEvent& event, Akonadi::Collection& resource, bool& showEdit, bool& showDefer)
@@ -1186,26 +1208,36 @@ bool MessageWin::retrieveEvent(KAEvent& event, AlarmResource*& resource, bool& s
 #endif
 {
 #ifdef USE_AKONADI
-    Event::Ptr kcalEvent = AlarmCalendar::displayCalendar()->kcalEvent(CalEvent::uid(mEventID, CalEvent::DISPLAYING));
+    Event::Ptr kcalEvent = AlarmCalendar::displayCalendar()->kcalEvent(CalEvent::uid(mEventId.eventId(), CalEvent::DISPLAYING));
 #else
-    const Event* kcalEvent = AlarmCalendar::displayCalendar()->kcalEvent(CalEvent::uid(mEventID, CalEvent::DISPLAYING));
+    const Event* kcalEvent = AlarmCalendar::displayCalendar()->kcalEvent(CalEvent::uid(mEventId, CalEvent::DISPLAYING));
 #endif
     if (!reinstateFromDisplaying(kcalEvent, event, resource, showEdit, showDefer))
     {
         // The event isn't in the displaying calendar.
         // Try to retrieve it from the archive calendar.
-        KAEvent* ev = AlarmCalendar::resources()->event(CalEvent::uid(mEventID, CalEvent::ARCHIVED));
+#ifdef USE_AKONADI
+        KAEvent* ev = 0;
+        Akonadi::Collection archiveCol = CollectionControlModel::getStandard(CalEvent::ARCHIVED);
+        if (archiveCol.isValid())
+            ev = AlarmCalendar::resources()->event(EventId(archiveCol.id(), CalEvent::uid(mEventId.eventId(), CalEvent::ARCHIVED)));
+#else
+        KAEvent* ev = AlarmCalendar::resources()->event(CalEvent::uid(mEventId, CalEvent::ARCHIVED));
+#endif
         if (!ev)
             return false;
         event = *ev;
         event.setArchive();     // ensure that it gets re-archived if it's saved
         event.setCategory(CalEvent::ACTIVE);
-        if (mEventID != event.id())
-            kError() << "Wrong event ID";
-        event.setEventId(mEventID);
 #ifdef USE_AKONADI
+        if (mEventId.eventId() != event.id())
+            kError() << "Wrong event ID";
+        event.setEventId(mEventId.eventId());
         resource  = Akonadi::Collection();
 #else
+        if (mEventId != event.id())
+            kError() << "Wrong event ID";
+        event.setEventId(mEventId);
         resource  = 0;
 #endif
         showEdit  = true;
@@ -1216,8 +1248,8 @@ bool MessageWin::retrieveEvent(KAEvent& event, AlarmResource*& resource, bool& s
 }
 
 /******************************************************************************
-*  Retrieves the displayed event from the calendar file, or if not found there,
-*  from the displaying calendar.
+* Retrieves the displayed event from the calendar file, or if not found there,
+* from the displaying calendar.
 */
 #ifdef USE_AKONADI
 bool MessageWin::reinstateFromDisplaying(const Event::Ptr& kcalEvent, KAEvent& event, Akonadi::Collection& collection, bool& showEdit, bool& showDefer)
@@ -1371,17 +1403,21 @@ bool MessageWin::isSpread(const QPoint& topLeft)
 }
 
 /******************************************************************************
-*  Returns the existing message window (if any) which is displaying the event
-*  with the specified ID.
+* Returns the existing message window (if any) which is displaying the event
+* with the specified ID.
 */
-MessageWin* MessageWin::findEvent(const QString& eventID)
+#ifdef USE_AKONADI
+MessageWin* MessageWin::findEvent(const EventId& eventId)
+#else
+MessageWin* MessageWin::findEvent(const QString& eventId)
+#endif
 {
-    if (!eventID.isEmpty())
+    if (!eventId.isEmpty())
     {
         for (int i = 0, end = mWindowList.count();  i < end;  ++i)
         {
             MessageWin* w = mWindowList[i];
-            if (w->mEventID == eventID  &&  !w->mErrorWindow)
+            if (w->mEventId == eventId  &&  !w->mErrorWindow)
                 return w;
         }
     }
@@ -1389,7 +1425,7 @@ MessageWin* MessageWin::findEvent(const QString& eventID)
 }
 
 /******************************************************************************
-*  Beep and play the audio file, as appropriate.
+* Beep and play the audio file, as appropriate.
 */
 void MessageWin::playAudio()
 {
@@ -1458,13 +1494,15 @@ void MessageWin::startAudio()
     else
     {
         kDebug() << QThread::currentThread();
-        theApp()->notifyAudioPlaying(true);
         mAudioThread = new AudioThread(this, mAudioFile, mVolume, mFadeVolume, mFadeSeconds, mAudioRepeatPause);
         mAudioOwner = this;
         connect(mAudioThread, SIGNAL(readyToPlay()), SLOT(playReady()));
         connect(mAudioThread, SIGNAL(finished()), SLOT(playFinished()));
         if (mSilenceButton)
             connect(mSilenceButton, SIGNAL(clicked()), mAudioThread, SLOT(quit()));
+        // Notify after creating mAudioThread, so that isAudioPlaying() will
+        // return the correct value.
+        theApp()->notifyAudioPlaying(true);
         mAudioThread->start();
     }
 }
@@ -1512,7 +1550,7 @@ void MessageWin::playFinished()
 {
     if (mSilenceButton)
         mSilenceButton->setEnabled(false);
-    if (!mAudioThread->error().isEmpty())
+    if (mAudioThread  &&  !mAudioThread->error().isEmpty())
     {
         if (!haveErrorMessage(ErrMsg_AudioFile))
         {
@@ -1520,8 +1558,10 @@ void MessageWin::playFinished()
             clearErrorMessage(ErrMsg_AudioFile);
         }
     }
-    theApp()->notifyAudioPlaying(false);
     delete mAudioThread.data();
+    // Notify after deleting mAudioThread, so that isAudioPlaying() will
+    // return the correct value.
+    theApp()->notifyAudioPlaying(false);
     mAudioOwner = 0;
     if (mAlwaysHide)
         close();
@@ -1613,10 +1653,10 @@ void AudioThread::run()
 }
 
 /******************************************************************************
-*  Called when the audio file has loaded and is ready to play, or when play
-*  has completed.
-*  If it is ready to play, start playing it (for the first time or repeated).
-*  If play has not yet completed, wait a bit longer.
+* Called when the audio file has loaded and is ready to play, or when play
+* has completed.
+* If it is ready to play, start playing it (for the first time or repeated).
+* If play has not yet completed, wait a bit longer.
 */
 void AudioThread::checkAudioPlay()
 {
@@ -1707,8 +1747,8 @@ QString AudioThread::error() const
 }
 
 /******************************************************************************
-*  Raise the alarm window, re-output any required audio notification, and
-*  reschedule the alarm in the calendar file.
+* Raise the alarm window, re-output any required audio notification, and
+* reschedule the alarm in the calendar file.
 */
 void MessageWin::repeat(const KAAlarm& alarm)
 {
@@ -1721,7 +1761,7 @@ void MessageWin::repeat(const KAAlarm& alarm)
         delete mDeferDlg;
         mDeferDlg = 0;
     }
-    KAEvent* event = mEventID.isNull() ? 0 : AlarmCalendar::resources()->event(mEventID);
+    KAEvent* event = mEventId.isEmpty() ? 0 : AlarmCalendar::resources()->event(mEventId);
     if (event)
     {
         mAlarmType = alarm.type();    // store new alarm type for use if it is later deferred
@@ -1745,10 +1785,10 @@ void MessageWin::repeat(const KAAlarm& alarm)
 }
 
 /******************************************************************************
-*  Display the window.
-*  If windows are being positioned away from the mouse cursor, it is initially
-*  positioned at the top left to slightly reduce the number of times the
-*  windows need to be moved in showEvent().
+* Display the window.
+* If windows are being positioned away from the mouse cursor, it is initially
+* positioned at the top left to slightly reduce the number of times the
+* windows need to be moved in showEvent().
 */
 void MessageWin::show()
 {
@@ -1768,7 +1808,7 @@ void MessageWin::show()
 }
 
 /******************************************************************************
-*  Returns the window's recommended size exclusive of its frame.
+* Returns the window's recommended size exclusive of its frame.
 */
 QSize MessageWin::sizeHint() const
 {
@@ -1802,9 +1842,9 @@ QSize MessageWin::sizeHint() const
 }
 
 /******************************************************************************
-*  Called when the window is shown.
-*  The first time, output any required audio notification, and reschedule or
-*  delete the event from the calendar file.
+* Called when the window is shown.
+* The first time, output any required audio notification, and reschedule or
+* delete the event from the calendar file.
 */
 void MessageWin::showEvent(QShowEvent* se)
 {
@@ -1898,7 +1938,7 @@ void MessageWin::showEvent(QShowEvent* se)
 }
 
 /******************************************************************************
-*  Called when the window has been moved.
+* Called when the window has been moved.
 */
 void MessageWin::moveEvent(QMoveEvent* e)
 {
@@ -1929,8 +1969,8 @@ void MessageWin::frameDrawn()
 }
 
 /******************************************************************************
-*  Called when the window has been displayed properly (in its correct position),
-*  to play sounds and reschedule the event.
+* Called when the window has been displayed properly (in its correct position),
+* to play sounds and reschedule the event.
 */
 void MessageWin::displayComplete()
 {
@@ -1949,7 +1989,7 @@ void MessageWin::displayComplete()
 }
 
 /******************************************************************************
-*  Enable the window's buttons.
+* Enable the window's buttons.
 */
 void MessageWin::enableButtons()
 {
@@ -1964,7 +2004,7 @@ void MessageWin::enableButtons()
 }
 
 /******************************************************************************
-*  Called when the window's size has changed (before it is painted).
+* Called when the window's size has changed (before it is painted).
 */
 void MessageWin::resizeEvent(QResizeEvent* re)
 {
@@ -1989,8 +2029,8 @@ void MessageWin::resizeEvent(QResizeEvent* re)
 }
 
 /******************************************************************************
-*  Called when a close event is received.
-*  Only quits the application if there is no system tray icon displayed.
+* Called when a close event is received.
+* Only quits the application if there is no system tray icon displayed.
 */
 void MessageWin::closeEvent(QCloseEvent* ce)
 {
@@ -2008,29 +2048,33 @@ void MessageWin::closeEvent(QCloseEvent* ce)
                 return;
             }
         }
-        if (!mEventID.isNull())
+        if (!mEventId.isEmpty())
         {
             // Delete from the display calendar
-            KAlarm::deleteDisplayEvent(CalEvent::uid(mEventID, CalEvent::DISPLAYING));
+#ifdef USE_AKONADI
+            KAlarm::deleteDisplayEvent(CalEvent::uid(mEventId.eventId(), CalEvent::DISPLAYING));
+#else
+            KAlarm::deleteDisplayEvent(CalEvent::uid(mEventId, CalEvent::DISPLAYING));
+#endif
         }
     }
     MainWindowBase::closeEvent(ce);
 }
 
 /******************************************************************************
-*  Called when the OK button is clicked.
+* Called when the OK button is clicked.
 */
 void MessageWin::slotOk()
 {
     if (mDontShowAgainCheck  &&  mDontShowAgainCheck->isChecked())
-        KAlarm::setDontShowErrors(mEventID, mDontShowAgain);
+        KAlarm::setDontShowErrors(mEventId, mDontShowAgain);
     close();
 }
 
 #ifdef KMAIL_SUPPORTED
 /******************************************************************************
-*  Called when the KMail button is clicked.
-*  Tells KMail to display the email message displayed in this message window.
+* Called when the KMail button is clicked.
+* Tells KMail to display the email message displayed in this message window.
 */
 void MessageWin::slotShowKMailMessage()
 {
@@ -2171,15 +2215,15 @@ void MessageWin::checkDeferralLimit()
 }
 
 /******************************************************************************
-*  Called when the Defer... button is clicked.
-*  Displays the defer message dialog.
+* Called when the Defer... button is clicked.
+* Displays the defer message dialog.
 */
 void MessageWin::slotDefer()
 {
     mDeferDlg = new DeferAlarmDlg(KDateTime::currentDateTime(Preferences::timeZone()).addSecs(60), mDateTime.isDateOnly(), false, this);
     mDeferDlg->setObjectName("DeferDlg");    // used by LikeBack
     mDeferDlg->setDeferMinutes(mDefaultDeferMinutes > 0 ? mDefaultDeferMinutes : Preferences::defaultDeferTime());
-    mDeferDlg->setLimit(mEventID);
+    mDeferDlg->setLimit(mEvent);
     if (!Preferences::modalMessages())
         lower();
     if (mDeferDlg->exec() == QDialog::Accepted)
@@ -2188,11 +2232,11 @@ void MessageWin::slotDefer()
         int      delayMins = mDeferDlg->deferMinutes();
         // Fetch the up-to-date alarm from the calendar. Note that it could have
         // changed since it was displayed.
-        const KAEvent* event = mEventID.isNull() ? 0 : AlarmCalendar::resources()->event(mEventID);
+        const KAEvent* event = mEventId.isEmpty() ? 0 : AlarmCalendar::resources()->event(mEventId);
         if (event)
         {
             // The event still exists in the active calendar
-            kDebug() << "Deferring event" << mEventID;
+            kDebug() << "Deferring event" << mEventId;
             KAEvent newev(*event);
             newev.defer(dateTime, (mAlarmType & KAAlarm::REMINDER_ALARM), true);
             newev.setDeferDefaultMinutes(delayMins);
@@ -2226,7 +2270,7 @@ void MessageWin::slotDefer()
                 mEditButton->setEnabled(false);
                 return;
             }
-            kDebug() << "Deferring retrieved event" << mEventID;
+            kDebug() << "Deferring retrieved event" << mEventId;
             event.defer(dateTime, (mAlarmType & KAAlarm::REMINDER_ALARM), true);
             event.setDeferDefaultMinutes(delayMins);
             event.setCommandError(mCommandError);
@@ -2260,15 +2304,15 @@ void MessageWin::slotDefer()
 }
 
 /******************************************************************************
-*  Called when the KAlarm icon button in the message window is clicked.
-*  Displays the main window, with the appropriate alarm selected.
+* Called when the KAlarm icon button in the message window is clicked.
+* Displays the main window, with the appropriate alarm selected.
 */
 void MessageWin::displayMainWindow()
 {
 #ifdef USE_AKONADI
     KAlarm::displayMainWindowSelected(mEventItemId);
 #else
-    KAlarm::displayMainWindowSelected(mEventID);
+    KAlarm::displayMainWindowSelected(mEventId);
 #endif
 }
 
@@ -2279,21 +2323,21 @@ void MessageWin::displayMainWindow()
 */
 bool MessageWin::haveErrorMessage(unsigned msg) const
 {
-    if (!mErrorMessages.contains(mEventID))
-        mErrorMessages.insert(mEventID, 0);
-    bool result = (mErrorMessages[mEventID] & msg);
-    mErrorMessages[mEventID] |= msg;
+    if (!mErrorMessages.contains(mEventId))
+        mErrorMessages.insert(mEventId, 0);
+    bool result = (mErrorMessages[mEventId] & msg);
+    mErrorMessages[mEventId] |= msg;
     return result;
 }
 
 void MessageWin::clearErrorMessage(unsigned msg) const
 {
-    if (mErrorMessages.contains(mEventID))
+    if (mErrorMessages.contains(mEventId))
     {
-        if (mErrorMessages[mEventID] == msg)
-            mErrorMessages.remove(mEventID);
+        if (mErrorMessages[mEventId] == msg)
+            mErrorMessages.remove(mEventId);
         else
-            mErrorMessages[mEventID] &= ~msg;
+            mErrorMessages[mEventId] &= ~msg;
     }
 }
 

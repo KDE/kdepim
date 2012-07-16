@@ -19,23 +19,24 @@
 #include "kselfilterpage.h"
 
 // Filter includes
-#include "filter_mbox.hxx"
-#include "filter_oe.hxx"
-#include "filter_outlook.hxx"
-#include "filter_pmail.hxx"
-#include "filter_plain.hxx"
-#include "filter_evolution.hxx"
-#include "filter_mailapp.hxx"
-#include "filter_evolution_v2.hxx"
-#include "filter_opera.hxx"
-#include "filter_thunderbird.hxx"
-#include "filter_kmail_maildir.hxx"
-#include "filter_kmail_archive.hxx"
-#include "filter_sylpheed.hxx"
-#include "filter_thebat.hxx"
-#include "filter_lnotes.hxx"
+#include <filter_mbox.h>
+#include <filter_oe.h>
+#include <filter_pmail.h>
+#include <filter_plain.h>
+#include <filter_evolution.h>
+#include <filter_mailapp.h>
+#include <filter_evolution_v2.h>
+#include <filter_opera.h>
+#include <filter_thunderbird.h>
+#include <filter_kmail_maildir.h>
+#include <filter_kmail_archive.h>
+#include <filter_sylpheed.h>
+#include <filter_thebat.h>
+#include <filter_lnotes.h>
 
-#include "filters.hxx"
+#include <filters.h>
+
+#include <filter_evolution_v3.h>
 
 // KDE includes
 #include <kstandarddirs.h>
@@ -49,72 +50,72 @@
 #include <akonadi/collectionrequester.h>
 #include <akonadi/control.h>
 
+using namespace MailImporter;
 
+KSelFilterPage::KSelFilterPage(QWidget *parent )
+  : QWidget(parent)
+{
+  mWidget = new Ui::KSelFilterPageDlg;
+  mWidget->setupUi( this );
+  mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+  connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
-KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
+  // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
+  // The former approach was overengineered and only worked around problems in the design
+  // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
+  // Patches appreciated. (danimo)
 
-	mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
-	connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+  addFilter(new MailImporter::FilterKMailArchive);
+  addFilter(new MailImporter::FilterMBox);
+  addFilter(new MailImporter::FilterEvolution);
+  addFilter(new MailImporter::FilterEvolution_v2);
+  addFilter(new MailImporter::FilterEvolution_v3);
+  addFilter(new MailImporter::FilterKMail_maildir);
+  addFilter(new MailImporter::FilterMailApp);
+  addFilter(new MailImporter::FilterOpera);
+  addFilter(new MailImporter::FilterSylpheed);
+  addFilter(new MailImporter::FilterThunderbird);
+  addFilter(new MailImporter::FilterTheBat);
+  addFilter(new MailImporter::FilterOE);
+  addFilter(new MailImporter::FilterPMail);
+  addFilter(new MailImporter::FilterLNotes);
+  addFilter(new MailImporter::FilterPlain);
 
-	// Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
-        // The former approach was overengineered and only worked around problems in the design
-        // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
-        // Patches appreciated. (danimo)
-
-        addFilter(new FilterKMailArchive);
-        addFilter(new FilterMBox);
-        addFilter(new FilterEvolution);
-        addFilter(new FilterEvolution_v2);
-        addFilter(new FilterKMail_maildir);
-        addFilter(new FilterMailApp);
-        addFilter(new FilterOpera);
-        addFilter(new FilterSylpheed);
-        addFilter(new FilterThunderbird);
-        addFilter(new FilterTheBat);
-        addFilter(new FilterOE);
-//        addFilter(new FilterOutlook);
-        addFilter(new FilterPMail);
-        addFilter(new FilterLNotes);
-        addFilter(new FilterPlain);
-
-        // Ensure we return the correct type of Akonadi collection.
-        mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
-        mCollectionRequestor->setCollection(Akonadi::Collection());
-        mCollectionRequestor->setAccessRightsFilter(
-          Akonadi::Collection::CanCreateCollection |
-          Akonadi::Collection::CanCreateItem );
-        mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
+  // Ensure we return the correct type of Akonadi collection.
+  mWidget->mCollectionRequestor->setMustBeReadWrite(true);
 }
 
 KSelFilterPage::~KSelFilterPage() {
-	qDeleteAll(mFilterList);
-	mFilterList.clear();
+  qDeleteAll(mFilterList);
+  mFilterList.clear();
+  delete mWidget;
 }
 
 void KSelFilterPage::filterSelected(int i)
 {
-	QString info = mFilterList.at(i)->info();
-	const QString author = mFilterList.at(i)->author();
-	if(!author.isEmpty())
-		info += i18n("<p><i>Written by %1.</i></p>", author);
-	mDesc->setText(info);
+  QString info = mFilterList.at(i)->info();
+  const QString author = mFilterList.at(i)->author();
+  if(!author.isEmpty())
+    info += i18n("<p><i>Written by %1.</i></p>", author);
+  mWidget->mDesc->setText(info);
 }
 
 void KSelFilterPage::addFilter(Filter *f)
 {
-	mFilterList.append(f);
-	mFilterCombo->addItem(f->name());
-	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
+  mFilterList.append(f);
+  mWidget->mFilterCombo->addItem(f->name());
+  if (mWidget->mFilterCombo->count() == 1)
+    filterSelected(0); // Setup description box with fist filter selected
 }
 
 bool KSelFilterPage::removeDupMsg_checked() const
 {
-        return remDupMsg->isChecked();
+  return mWidget->remDupMsg->isChecked();
 }
 
 Filter * KSelFilterPage::getSelectedFilter(void)
 {
-	return mFilterList.at(mFilterCombo->currentIndex());
+  return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }
 
 #include "kselfilterpage.moc"

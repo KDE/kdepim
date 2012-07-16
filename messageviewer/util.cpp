@@ -63,9 +63,12 @@
 #include <kdebug.h>
 #include <KMimeType>
 #include <KTemporaryFile>
+#include <ktoolinvocation.h>
 
 #include <QTextCodec>
 #include <QWidget>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
 
 using namespace MessageViewer;
 
@@ -465,7 +468,7 @@ bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *paren
   return Util::saveContents( parent, contents );
 }
 
-bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent)
+bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent, bool appendMessages )
 {
 
   QString fileName;
@@ -473,13 +476,19 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
     return true;
   const Akonadi::Item msgBase = retrievedMsgs.first();
 
-  fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject (  msgBase.payload<KMime::Message::Ptr>().get() ).trimmed() );
+  if( msgBase.hasPayload<KMime::Message::Ptr>() )
+    fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject (  msgBase.payload<KMime::Message::Ptr>().get() ).trimmed() );
+  else
+    fileName = i18n("message");
 
   if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
     fileName += ".mbox";
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent );
+  KFileDialog::Option options = static_cast<KFileDialog::Option>(0);
+  if( !appendMessages )
+      options = KFileDialog::ConfirmOverwrite;
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent, i18np("Save Message", "Save Messages", retrievedMsgs.count() ), options);
 
   if ( url.isEmpty() )
     return true;
@@ -488,12 +497,19 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   if ( localFileName.isEmpty() )
     return true;
 
-  KMBox::MBox mbox;
-  if ( !mbox.load( localFileName ) ) {
-    //TODO: error
-    return false;
+  if( !appendMessages ) {
+      QFile::remove(localFileName);
   }
 
+  KMBox::MBox mbox;
+  if ( !mbox.load( localFileName ) ) {
+      if( appendMessages ) {
+         KMessageBox::error( parent, i18n("File %1 could not be loaded.",localFileName) , i18n( "Error loading message" ) );
+      } else {
+	 KMessageBox::error( parent, i18n("File %1 could not be created.",localFileName) , i18n( "Error saving message" ) );
+      }
+      return false;
+  }
   foreach ( const Akonadi::Item &item, retrievedMsgs ) {
     if ( item.hasPayload<KMime::Message::Ptr>() ) {
       mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
@@ -501,8 +517,29 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   }
 
   if ( !mbox.save() ) {
-    //TODO: error
-    return false;
+      KMessageBox::error( parent, i18n("We can not save message.") , i18n( "Error saving message" ) );
+      return false;
   }
+  return true;
+}
+
+
+bool Util::speakSelectedText( const QString& text, QWidget *parent)
+{
+  if(text.isEmpty())
+    return false;
+
+  // If KTTSD not running, start it.
+  if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd"))
+  {
+    QString error;
+    if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error))
+    {
+      KMessageBox::error(parent, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+      return false;
+    }
+  }
+  QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
+  ktts.asyncCall("say", text, 0);
   return true;
 }

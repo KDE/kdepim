@@ -4,19 +4,21 @@
 #define KMCommands_h
 
 #include "kmail_export.h"
-#include <kmime/kmime_message.h>
 #include "messagecomposer/messagefactory.h"
+#include "messagelist/core/view.h"
+#include "searchpattern.h"
 
 #include <akonadi/kmime/messagestatus.h>
-#include <messagelist/core/view.h>
-using Akonadi::MessageStatus;
 #include <kio/job.h>
+#include <kmime/kmime_message.h>
 
 #include <QPointer>
 #include <QList>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/collection.h>
+
+using Akonadi::MessageStatus;
 
 class KProgressDialog;
 class KMMainWidget;
@@ -130,7 +132,7 @@ protected:
 
 private:
   // ProgressDialog for transferring messages
-  KProgressDialog* mProgressDialog;
+  QWeakPointer<KProgressDialog> mProgressDialog;
   //Currently only one async command allowed at a time
   static int mCountJobs;
   int mCountMsgs;
@@ -363,6 +365,7 @@ class KMAIL_EXPORT KMRedirectCommand : public KMCommand
 
 public:
   KMRedirectCommand( QWidget *parent, const Akonadi::Item &msg );
+  KMRedirectCommand( QWidget *parent, const QList<Akonadi::Item> &msgList );
 
 private:
   virtual Result execute();
@@ -383,6 +386,7 @@ public:
 
   void setOverrideFont( const QFont& );
   void setAttachmentStrategy( const MessageViewer::AttachmentStrategy *strategy );
+  void setPrintPreview( bool preview );
 
 private:
   virtual Result execute();
@@ -390,11 +394,12 @@ private:
   MessageViewer::HeaderStyle *mHeaderStyle;
   const MessageViewer::HeaderStrategy *mHeaderStrategy;
   const MessageViewer::AttachmentStrategy *mAttachmentStrategy;
+  QFont mOverrideFont;
+  QString mEncoding;
   bool mHtmlOverride;
   bool mHtmlLoadExtOverride;
   bool mUseFixedFont;
-  QFont mOverrideFont;
-  QString mEncoding;
+  bool mPrintPreview;
 };
 
 class KMAIL_EXPORT KMSetStatusCommand : public KMCommand
@@ -436,23 +441,6 @@ private:
   SetTagMode mMode;
 };
 
-/* This command is used to create a filter based on the user's
-    decision, e.g. filter by From header */
-class KMAIL_EXPORT KMFilterCommand : public KMCommand
-{
-  Q_OBJECT
-
-public:
-  KMFilterCommand( const QByteArray &field, const QString &value );
-
-private:
-  virtual Result execute();
-
-  QByteArray mField;
-  QString mValue;
-};
-
-
 /* This command is used to apply a single filter (AKA ad-hoc filter)
     to a set of messages */
 class KMAIL_EXPORT KMFilterActionCommand : public KMCommand
@@ -460,12 +448,15 @@ class KMAIL_EXPORT KMFilterActionCommand : public KMCommand
   Q_OBJECT
 
 public:
-  KMFilterActionCommand( QWidget *parent,
-                         const QList<Akonadi::Item> &msgList, const QString &filterId );
+  KMFilterActionCommand(QWidget *parent,
+                         const QVector<qlonglong> &msgListId, const QString &filterId,
+                        MailCommon::SearchRule::RequiredPart requiredPart);
 
 private:
   virtual Result execute();
+  QVector<qlonglong> mMsgListId;
   QString mFilterId;
+  MailCommon::SearchRule::RequiredPart mRequiredPart;
 };
 
 
@@ -474,13 +465,14 @@ class KMAIL_EXPORT KMMetaFilterActionCommand : public QObject
   Q_OBJECT
 
 public:
-  KMMetaFilterActionCommand( const QString &filterId, KMMainWidget *main );
+  KMMetaFilterActionCommand( const QString &filterId, MailCommon::SearchRule::RequiredPart requiredPart, KMMainWidget *main );
 
 public slots:
   void start();
 
 private:
   QString mFilterId;
+  MailCommon::SearchRule::RequiredPart mRequiredPart;
   KMMainWidget *mMainWidget;
 };
 
@@ -511,7 +503,6 @@ private:
   virtual Result execute();
 
   Akonadi::Collection mDestFolder;
-  QList<Akonadi::Item> mMsgList;
 };
 
 namespace KPIM {
@@ -570,5 +561,6 @@ public:
 private:
   virtual Result execute();
 };
+
 
 #endif /*KMCommands_h*/

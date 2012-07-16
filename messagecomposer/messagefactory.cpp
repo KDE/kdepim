@@ -442,7 +442,8 @@ KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Mess
 {
   // remove headers that shouldn't be forwarded
   MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
-  fwdMsg->removeHeader("BCC");
+  fwdMsg->removeHeader("Bcc");
+  fwdMsg->assemble();
   // set the part
   KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
   msgPart->contentType()->setMimeType( "message/rfc822" );
@@ -711,8 +712,8 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
       id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
 
     MessageCore::StringUtil::removePrivateHeaderFields( fMsg );
-    fMsg->bcc()->clear();
-
+    fMsg->removeHeader("Bcc");
+    fMsg->assemble();
     KMime::Content* part = new KMime::Content( digest );
 
     part->contentType()->setMimeType( "message/rfc822" );

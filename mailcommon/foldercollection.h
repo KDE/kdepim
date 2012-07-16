@@ -1,12 +1,11 @@
 /*
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2009 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -21,132 +20,164 @@
 
 #include "mailcommon_export.h"
 
-#include <kshortcut.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <KIO/Job>
-#include <ksharedconfig.h>
-
-#include "messagecore/mailinglist.h"
+#include <messagecore/mailinglist.h>
 using MessageCore::MailingList;
 
-namespace MailCommon {
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionStatistics>
 
+#include <KSharedConfig>
+#include <KShortcut>
+#include <KIO/Job>
+
+namespace MailCommon {
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
   Q_OBJECT
-public:
-  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll, bool writeConfig = true );
 
-  ~FolderCollection();
+  public:
+    static QSharedPointer<FolderCollection> forCollection(
+      const Akonadi::Collection &coll, bool writeConfig = true );
 
-  Akonadi::Collection collection() const;
-  void setCollection( const Akonadi::Collection& collection);
+    ~FolderCollection();
 
-  static QString configGroupName(const Akonadi::Collection& col);
+    Akonadi::Collection collection() const;
+    void setCollection( const Akonadi::Collection &collection );
 
+    static QString configGroupName( const Akonadi::Collection &col );
+    static void clearCache();
 
-  bool isWriteConfig() const;
-  void setWriteConfig( bool writeConfig );
+    bool isWriteConfig() const;
+    void setWriteConfig( bool writeConfig );
 
-  void writeConfig() const;
-  void readConfig();
+    void writeConfig() const;
+    void readConfig();
 
-  QString name() const;
+    QString name() const;
 
-  bool isReadOnly() const;
+    bool isReadOnly() const;
 
-  bool isStructural() const;
+    bool isStructural() const;
 
-  bool isSystemFolder() const;
+    bool isSystemFolder() const;
 
-  qint64 count() const;
+    qint64 count() const;
 
-  bool canDeleteMessages() const;
+    bool canDeleteMessages() const;
 
-  bool canCreateMessages() const;
+    bool canCreateMessages() const;
 
-  bool isValid() const;
+    bool isValid() const;
 
-  Akonadi::Collection::Rights rights() const;
+    Akonadi::Collection::Rights rights() const;
 
-  Akonadi::CollectionStatistics statistics() const;
+    Akonadi::CollectionStatistics statistics() const;
 
-  const KShortcut &shortcut() const { return mShortcut; }
+    void setShortcut( const KShortcut & );
+    const KShortcut &shortcut() const
+    {
+      return mShortcut;
+    }
 
-  void setShortcut( const KShortcut& );
+    /**
+     *  Get / set whether the default identity should be used instead of the
+     *  identity specified by setIdentity().
+     */
+    void setUseDefaultIdentity( bool useDefaultIdentity );
+    bool useDefaultIdentity() const
+    {
+      return mUseDefaultIdentity;
+    }
 
-  /** Get / set whether the default identity should be used instead of the
-   *  identity specified by setIdentity(). */
-  void setUseDefaultIdentity( bool useDefaultIdentity );
-  bool useDefaultIdentity() const { return mUseDefaultIdentity; }
+    void setIdentity( uint identity );
+    uint identity() const;
 
-  void setIdentity(uint identity);
-  uint identity() const;
+    /**
+     * Returns true if this folder is associated with a mailing-list.
+     */
+    void setMailingListEnabled( bool enabled );
+    bool isMailingListEnabled() const
+    {
+      return mMailingListEnabled;
+    }
 
+    void setMailingList( const MailingList &mlist );
 
-  /** Returns true if this folder is associated with a mailing-list. */
-  void setMailingListEnabled( bool enabled );
-  bool isMailingListEnabled() const { return mMailingListEnabled; }
+    MailingList mailingList() const
+    {
+      return mMailingList;
+    }
 
-  void setMailingList( const MailingList& mlist );
-  MailingList mailingList() const
-  { return mMailingList; }
+    /**
+     * Returns true if the replies to mails from this folder should be
+     * put in the same folder.
+     */
+    bool putRepliesInSameFolder() const
+    {
+      return mPutRepliesInSameFolder;
+    }
+    void setPutRepliesInSameFolder( bool b )
+    {
+      mPutRepliesInSameFolder = b;
+    }
 
+    /**
+     * Returns true if this folder should be hidden from all folder selection dialogs
+     */
+    bool hideInSelectionDialog() const
+    {
+      return mHideInSelectionDialog;
+    }
+    void setHideInSelectionDialog( bool hide )
+    {
+      mHideInSelectionDialog = hide;
+    }
 
-  /**
-   * Returns true if the replies to mails from this folder should be
-   * put in the same folder.
-   */
-  bool putRepliesInSameFolder() const { return mPutRepliesInSameFolder; }
-  void setPutRepliesInSameFolder( bool b ) { mPutRepliesInSameFolder = b; }
+    /**
+     * Returns true if the user doesn't want to get notified about new mail
+     * in this folder.
+     */
+    bool ignoreNewMail() const
+    {
+      return mIgnoreNewMail;
+    }
+    void setIgnoreNewMail( bool b )
+    {
+      mIgnoreNewMail = b;
+    }
 
-  /**
-   * Returns true if this folder should be hidden from all folder selection dialogs
-   */
-  bool hideInSelectionDialog() const { return mHideInSelectionDialog; }
-  void setHideInSelectionDialog( bool hide ) { mHideInSelectionDialog = hide; }
+    QString mailingListPostAddress() const;
 
-  /**
-   * Returns true if the user doesn't want to get notified about new mail
-   * in this folder.
-   */
-  bool ignoreNewMail() const { return mIgnoreNewMail; }
-  void setIgnoreNewMail( bool b ) { mIgnoreNewMail = b; }
+  protected slots:
+    void slotIdentitiesChanged();
 
-  QString mailingListPostAddress() const;
+  private:
+    explicit FolderCollection( const Akonadi::Collection &col, bool writeconfig );
 
-protected slots:
-  void slotIdentitiesChanged();
+    Akonadi::Collection mCollection;
 
-private:
+    /** Mailing list attributes */
+    bool                mMailingListEnabled;
+    MailingList         mMailingList;
 
-  explicit FolderCollection( const Akonadi::Collection& col, bool writeconfig );
+    bool mUseDefaultIdentity;
+    uint mIdentity;
 
-  Akonadi::Collection mCollection;
+    /** Should new mail in this folder be ignored? */
+    bool mIgnoreNewMail;
 
-  /** Mailing list attributes */
-  bool                mMailingListEnabled;
-  MailingList         mMailingList;
+    /** Should replies to messages in this folder be put in here? */
+    bool mPutRepliesInSameFolder;
 
-  bool mUseDefaultIdentity;
-  uint mIdentity;
+    /** Should this folder be hidden in the folder selection dialog? */
+    bool mHideInSelectionDialog;
 
-  /** Should new mail in this folder be ignored? */
-  bool mIgnoreNewMail;
+    /** shortcut associated with this folder or null, if none is configured. */
+    KShortcut mShortcut;
+    bool mWriteConfig;
 
-  /** Should replies to messages in this folder be put in here? */
-  bool mPutRepliesInSameFolder;
-
-  /** Should this folder be hidden in the folder selection dialog? */
-  bool mHideInSelectionDialog;
-
-  /** shortcut associated with this folder or null, if none is configured. */
-  KShortcut mShortcut;
-  bool mWriteConfig;
-
-  bool mOldIgnoreNewMail;
+    bool mOldIgnoreNewMail;
 };
 
 }

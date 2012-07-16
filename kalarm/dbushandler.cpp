@@ -1,7 +1,7 @@
 /*
  *  dbushandler.cpp  -  handler for D-Bus calls by other applications
  *  Program:  kalarm
- *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include "kalarm.h"
 
 #include "alarmcalendar.h"
+#include "alarmtime.h"
 #include "functions.h"
 #include "kalarmapp.h"
 #include "kamail.h"
@@ -63,12 +64,25 @@ DBusHandler::DBusHandler()
 
 bool DBusHandler::cancelEvent(const QString& eventId)
 {
+#ifdef USE_AKONADI
+    return theApp()->dbusDeleteEvent(EventId(eventId));
+#else
     return theApp()->dbusDeleteEvent(eventId);
+#endif
 }
 
 bool DBusHandler::triggerEvent(const QString& eventId)
 {
+#ifdef USE_AKONADI
+    return theApp()->dbusTriggerEvent(EventId(eventId));
+#else
     return theApp()->dbusTriggerEvent(eventId);
+#endif
+}
+
+QString DBusHandler::list()
+{
+    return theApp()->dbusList();
 }
 
 bool DBusHandler::scheduleMessage(const QString& message, const QString& startDateTime, int lateCancel, unsigned flags,
@@ -242,7 +256,11 @@ bool DBusHandler::scheduleAudio(const QString& audioUrl, int volumePercent, cons
 
 bool DBusHandler::edit(const QString& eventID)
 {
-    return KAlarm::editAlarm(eventID);
+#ifdef USE_AKONADI
+    return KAlarm::editAlarmById(EventId(eventID));
+#else
+    return KAlarm::editAlarmById(eventID);
+#endif
 }
 
 bool DBusHandler::editNew(int type)
@@ -445,7 +463,7 @@ KDateTime DBusHandler::convertDateTime(const QString& dateTime, const KDateTime&
     }
     KDateTime result;
     if (!error)
-        result = KAlarm::applyTimeZone(zone, date, time, haveTime, defaultDt);
+        result = AlarmTime::applyTimeZone(zone, date, time, haveTime, defaultDt);
     if (error  ||  !result.isValid())
     {
         if (!defaultDt.isValid())

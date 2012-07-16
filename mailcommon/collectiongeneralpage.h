@@ -1,11 +1,11 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
   Copyright (c) 2009 Montel Laurent <montel@kde.org>
 
-  KMail is free software; you can redistribute it and/or modify it
+  This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
-  KMail is distributed in the hope that it will be useful, but
+  This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
@@ -15,16 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MAILCOMMON_COLLECTIONGENERALPAGE_H
 #define MAILCOMMON_COLLECTIONGENERALPAGE_H
 
 #include "mailcommon_export.h"
 
-#include <akonadi/collectionpropertiespage.h>
+#include <Akonadi/CollectionPropertiesPage>
 
 class KComboBox;
 class KLineEdit;
+
 class QCheckBox;
 
 template <typename T> class QSharedPointer;
@@ -48,8 +48,7 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
     void load( const Akonadi::Collection &collection );
     void save( Akonadi::Collection &collection );
 
-    enum FolderContentsType
-    {
+    enum FolderContentsType {
       ContentsTypeMail = 0,
       ContentsTypeCalendar,
       ContentsTypeContact,
@@ -59,22 +58,22 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
       ContentsTypeLast = ContentsTypeJournal
     };
 
-    enum IncidencesFor
-    {
+    enum IncidencesFor {
       IncForNobody,
       IncForAdmins,
       IncForReaders
     };
 
   protected:
-    void init( const Akonadi::Collection& );
+    void init( const Akonadi::Collection & );
 
   private Q_SLOTS:
     void slotIdentityCheckboxChanged();
     void slotFolderContentsSelectionChanged( int );
-    void slotNameChanged( const QString& name );
+    void slotNameChanged( const QString &name );
 
   private:
+    QString mColorName;
     KComboBox *mContentsComboBox;
     KComboBox *mIncidencesForComboBox;
     QCheckBox *mSharedSeenFlagsCheckBox;
