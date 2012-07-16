@@ -66,7 +66,6 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   mTextEdit->setReadOnly( true );
   mTextEdit->setLineWrapMode ( KTextEdit::NoWrap );
 
-  QString text;
   const QStringList logEntries = FilterLog::instance()->logEntries();
   QStringList::ConstIterator end( logEntries.constEnd() ); 
   for ( QStringList::ConstIterator it = logEntries.constBegin();
