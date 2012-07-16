@@ -233,7 +233,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
 
     m_articleViewer = new ArticleViewer(m_articleSplitter);
     m_actionManager->initArticleViewer(m_articleViewer);
-    m_articleListView->setFocusProxy(m_articleViewer);
+//    m_articleListView->setFocusProxy(m_articleViewer);
     setFocusProxy( m_articleViewer );
 
     connect( m_articleViewer, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)),
@@ -811,6 +811,9 @@ void Akregator::MainWidget::slotArticleSelected(const Akregator::Article& articl
     maai->setChecked( article.keep() );
 
     m_articleViewer->showArticle( article );
+    if (m_selectionController->selectedArticles().count() == 0) {
+        m_articleListView->setCurrentIndex(m_selectionController->currentArticleIndex());
+    }
 
     if ( article.isNull() || article.status() == Akregator::Read )
         return;

@@ -110,7 +110,6 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
   changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  changeRecorder()->itemFetchScope().setCacheOnly( true );
   if (m_filterManager->requiresFullMailBody()) {
     changeRecorder()->itemFetchScope().fetchFullPayload();
   } else {
