@@ -86,9 +86,6 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
   IncidenceFetchJob *job = new IncidenceFetchJob();
 
 /*
-#ifdef KDEPIM_NO_NEPOMUK
-  IncidenceFetchJob *job = new IncidenceFetchJob();
-#else
   IncidenceSearchJob *job = new IncidenceSearchJob();
 #endif
 */
@@ -387,11 +384,7 @@ void NepomukCalendar::searchResult( KJob *job )
 
     IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
 /*
-#ifdef KDEPIM_NO_NEPOMUK
-    IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
-#else
     IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
-#endif
 */
     const Akonadi::Item::List list = searchJob->items();
     foreach ( const Akonadi::Item &item, list ) {

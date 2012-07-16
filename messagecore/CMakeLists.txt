@@ -70,11 +70,9 @@ target_link_libraries(messagecore
   ${NEPOMUK_CORE_LIBRARY}
 )
 
-if(NOT KDEPIM_NO_NEPOMUK)
 target_link_libraries(messagecore
   ${NEPOMUK_LIBRARIES}
 )
-endif(NOT KDEPIM_NO_NEPOMUK)
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KMIME_LIBS}

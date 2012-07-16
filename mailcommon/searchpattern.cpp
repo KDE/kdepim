@@ -22,7 +22,6 @@
 #include "filterlog.h"
 using MailCommon::FilterLog;
 
-#ifndef KDEPIM_NO_NEPOMUK
 #include <ontologies/nie.h>
 #include <ontologies/nmo.h>
 #include <ontologies/nco.h>
@@ -39,7 +38,6 @@ using MailCommon::FilterLog;
 #include <Soprano/Vocabulary/NAO>
 #include <Soprano/Vocabulary/RDF>
 #include <Nepomuk2/Vocabulary/NIE>
-#endif
 
 #include <Akonadi/Contact/ContactSearchJob>
 
@@ -279,7 +277,6 @@ const QString SearchRule::asString() const
   return result;
 }
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 Nepomuk2::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
 {
@@ -351,7 +348,6 @@ void SearchRule::addAndNegateTerm( const Nepomuk2::Query::Term &term,
   }
 }
 
-#endif
 
 QString SearchRule::xesamComparator() const
 {
@@ -498,13 +494,11 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     msgContents += ", " + msg->cc()->asUnicodeString();
     msgContents += ", " + msg->bcc()->asUnicodeString();
   } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
-#ifndef KDEPIM_NO_NEPOMUK
     const Nepomuk2::Resource res( item.url() );
     foreach ( const Nepomuk2::Tag &tag, res.tags() ) {
       msgContents += tag.label();
     }
     logContents = false;
-#endif
   } else {
     // make sure to treat messages with multiple header lines for
     // the same header correctly
@@ -546,7 +540,6 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
   return rc;
 }
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 QString SearchRule::quote( const QString &content ) const
 {
@@ -732,7 +725,6 @@ void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
     addAndNegateTerm( termGroup, groupTerm );
   }
 }
-#endif
 
 // helper, does the actual comparing
 bool SearchRuleString::matchesInternal( const QString &msgContents ) const
@@ -1012,7 +1004,6 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
   return false;
 }
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 void SearchRuleNumerical::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
@@ -1032,7 +1023,6 @@ void SearchRuleNumerical::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm )
     addAndNegateTerm( dateTerm, groupTerm );
   }
 }
-#endif
 
 void SearchRuleNumerical::addXesamClause( QXmlStreamWriter &stream ) const
 {
@@ -1110,7 +1100,6 @@ SearchRule::RequiredPart SearchRuleDate::requiredPart() const
 }
 
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 void SearchRuleDate::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
@@ -1121,7 +1110,6 @@ void SearchRuleDate::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) cons
       nepomukComparator() );
     addAndNegateTerm( dateTerm, groupTerm );
 }
-#endif
 
 void SearchRuleDate::addXesamClause( QXmlStreamWriter &stream ) const
 {
@@ -1213,7 +1201,6 @@ SearchRule::RequiredPart SearchRuleStatus::requiredPart() const
 }
 
 
-#ifndef KDEPIM_NO_NEPOMUK
 void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                                    const QString &tagId ) const
 {
@@ -1256,7 +1243,6 @@ void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
 
   // TODO
 }
-#endif
 
 void SearchRuleStatus::addXesamClause( QXmlStreamWriter &stream ) const
 {
@@ -1495,7 +1481,6 @@ QString SearchPattern::asString() const
   return result;
 }
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 static Nepomuk2::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 {
@@ -1504,7 +1489,6 @@ static Nepomuk2::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
   }
   return Nepomuk2::Query::AndTerm();
 }
-#endif
 
 Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
 {
@@ -1520,7 +1504,6 @@ Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url,
 
 QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
 {
-#ifndef KDEPIM_NO_NEPOMUK
 
   Nepomuk2::Query::Query query;
 
@@ -1573,9 +1556,6 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );
   return query.toSparqlQuery();
-#else
-  return QString(); //TODO what to return in this case?
-#endif
 }
 
 QString MailCommon::SearchPattern::asXesamQuery() const

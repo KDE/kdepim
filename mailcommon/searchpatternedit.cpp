@@ -326,9 +326,7 @@ void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
   mFilterFieldList.append( SpecialRuleFields[To].getLocalizedDisplayName() );
   mFilterFieldList.append( SpecialRuleFields[CC].getLocalizedDisplayName() );
   mFilterFieldList.append( SpecialRuleFields[Status].getLocalizedDisplayName() );
-#ifndef KDEPIM_NO_NEPOMUK
   mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName() );
-#endif
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );

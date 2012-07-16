@@ -106,9 +106,7 @@ bool MailCommon::Util::isVirtualCollection( const QString &resource )
 {
   return
     (
-#ifndef KDEPIM_NO_NEPOMUK
       resource == QLatin1String( "akonadi_nepomuktag_resource" ) ||
-#endif
       resource == QLatin1String( "akonadi_search_resource" ) );
 }
 

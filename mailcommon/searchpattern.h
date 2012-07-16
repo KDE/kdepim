@@ -24,10 +24,8 @@
 
 #include <Akonadi/KMime/MessageStatus>
 
-#ifndef KDEPIM_NO_NEPOMUK
 #include <Nepomuk2/Query/GroupTerm>
 #include <Nepomuk2/Query/ComparisonTerm>
-#endif
 
 #include <KLocale>
 #include <KUrl>
@@ -266,12 +264,10 @@ class MAILCOMMON_EXPORT SearchRule
      */
     const QString asString() const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * Adds query terms to the given term group.
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const = 0;
-#endif
 
     /**
      * Adds a serialization of the rule in XESAM format into the stream.
@@ -286,7 +282,6 @@ class MAILCOMMON_EXPORT SearchRule
      */
     bool isNegated() const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * Converts the rule function into the corresponding Nepomuk query operator.
      */
@@ -297,7 +292,6 @@ class MAILCOMMON_EXPORT SearchRule
      */
     void addAndNegateTerm( const Nepomuk2::Query::Term &term,
                            Nepomuk2::Query::GroupTerm &termGroup ) const;
-#endif
     /**
      * Converts the rule function into the corresponding Xesam query operator.
      */
@@ -376,12 +370,10 @@ class SearchRuleString : public SearchRule
      */
     bool matchesInternal( const QString &contents ) const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
-#endif
 
     /**
      * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
@@ -389,14 +381,12 @@ class SearchRuleString : public SearchRule
     virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 
   private:
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * @copydoc SearchRule::addPersonTerms()
      */
     void addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QUrl &field ) const;
     void addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                         const Nepomuk2::Query::Term &field ) const;
-#endif
 };
 
 /**
@@ -445,12 +435,10 @@ class SearchRuleNumerical : public SearchRule
     bool matchesInternal( long numericalValue, long numericalContents,
                           const QString &contents ) const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
-#endif
 
     /**
      * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
@@ -498,12 +486,10 @@ class SearchRuleDate : public SearchRule
      */
     bool matchesInternal( const QDate& dateValue, const QDate& msgDate ) const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
-#endif
 
     /**
      * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
@@ -591,9 +577,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
      */
    virtual RequiredPart requiredPart() const;
 
-#ifndef KDEPIM_NO_NEPOMUK
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
-#endif
 
     //Not possible to implement optimized form for status searching
     using SearchRule::matches;
@@ -605,9 +589,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
     virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 
   private:
-#ifndef KDEPIM_NO_NEPOMUK
     void addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QString &tagId ) const;
-#endif
 
   private:
     Akonadi::MessageStatus mStatus;

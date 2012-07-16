@@ -34,9 +34,7 @@
 #include <messageviewer/stl_util.h>
 #include <messageviewer/minimumcombobox.h>
 
-#ifndef KDEPIM_NO_NEPOMUK
 #include <Nepomuk2/Tag>
-#endif
 
 #include <KDebug>
 #include <KIconLoader>
@@ -202,7 +200,6 @@ class StatusRuleWidgetHandler : public MailCommon::RuleWidgetHandler
     int currentStatusValue( const QStackedWidget *valueStack ) const;
 };
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 class TagRuleWidgetHandler : public MailCommon::RuleWidgetHandler
 {
@@ -248,7 +245,6 @@ class TagRuleWidgetHandler : public MailCommon::RuleWidgetHandler
                  QStackedWidget *valueStack ) const;
 };
 
-#endif
 
 class NumericRuleWidgetHandler : public MailCommon::RuleWidgetHandler
 {
@@ -399,9 +395,7 @@ class NumericDoubleRuleWidgetHandler : public MailCommon::RuleWidgetHandler
 
 MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
 {
-#ifndef KDEPIM_NO_NEPOMUK
   registerHandler( new TagRuleWidgetHandler() );
-#endif
   registerHandler( new DateRuleWidgetHandler() );
   registerHandler( new NumericRuleWidgetHandler() );
   registerHandler( new StatusRuleWidgetHandler() );
@@ -606,11 +600,9 @@ static const struct {
   { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
   { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },
   { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) }
-#ifndef KDEPIM_NO_NEPOMUK
   ,
   { SearchRule::FuncIsInCategory,       I18N_NOOP( "is in category" ) },
   { SearchRule::FuncIsNotInCategory,    I18N_NOOP( "is not in category" ) }
-#endif
 };
 static const int TextFunctionCount =
   sizeof( TextFunctions ) / sizeof( *TextFunctions );
@@ -658,7 +650,6 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
   }
 
 //FIXME: review what is this about, why is nepomuk used
-#ifndef KDEPIM_NO_NEPOMUK
 
   if ( number == 2 ) {
     MessageViewer::MinimumComboBox *combo =  new MessageViewer::MinimumComboBox( valueStack );
@@ -674,7 +665,6 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
                       receiver, SLOT(slotValueChanged()) );
     return combo;
   }
-#endif
 
   return 0;
 }
@@ -707,7 +697,6 @@ SearchRule::Function TextRuleWidgetHandler::function( const QByteArray &,
 QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
                                              SearchRule::Function func ) const
 {
-#ifndef KDEPIM_NO_NEPOMUK
   // here we gotta check the combobox which contains the categories
   if ( func  == SearchRule::FuncIsInCategory ||
        func  == SearchRule::FuncIsNotInCategory ) {
@@ -719,7 +708,6 @@ QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
       return QString();
     }
   }
-#endif
 
   //in other cases of func it is a lineedit
   const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit*>( "regExpLineEdit" );
@@ -842,7 +830,6 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     QWidget *w = valueStack->findChild<QWidget*>( "textRuleValueHider" );
     valueStack->setCurrentWidget( w );
   }
-#ifndef KDEPIM_NO_NEPOMUK
   else if ( func == SearchRule::FuncIsInCategory ||
             func == SearchRule::FuncIsNotInCategory ) {
     MessageViewer::MinimumComboBox *combo = valueStack->findChild<MessageViewer::MinimumComboBox*>( "categoryCombo" );
@@ -862,7 +849,6 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     combo->blockSignals( false );
     valueStack->setCurrentWidget( combo );
   }
-#endif
   else {
     RegExpLineEdit *lineEdit =
       valueStack->findChild<RegExpLineEdit*>( "regExpLineEdit" );
@@ -894,12 +880,10 @@ bool TextRuleWidgetHandler::update( const QByteArray &,
        func == SearchRule::FuncIsNotInAddressbook ) {
     valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( "textRuleValueHider" ) );
   }
-#ifndef KDEPIM_NO_NEPOMUK
   else if ( func == SearchRule::FuncIsInCategory ||
             func == SearchRule::FuncIsNotInCategory ) {
     valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( "categoryCombo" ) );
   }
-#endif
   else {
     RegExpLineEdit *lineEdit =
       valueStack->findChild<RegExpLineEdit*>( "regExpLineEdit" );
@@ -1440,7 +1424,6 @@ bool StatusRuleWidgetHandler::update( const QByteArray &field,
 
 } // anonymous namespace for StatusRuleWidgetHandler
 
-#ifndef KDEPIM_NO_NEPOMUK
 
 //=============================================================================
 //
@@ -1728,7 +1711,6 @@ bool TagRuleWidgetHandler::update( const QByteArray &field,
 
 } // anonymous namespace for TagRuleWidgetHandler
 
-#endif
 
 //=============================================================================
 //

@@ -143,13 +143,11 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer
   ${NEPOMUK_CORE_LIBRARY}
 )
 
-if(NOT KDEPIM_NO_NEPOMUK)
-  target_link_libraries(mailcommon
-    ${NEPOMUK_QUERY_LIBRARIES}
-    ${SOPRANO_LIBRARIES}
-    niefast_apps
-  )
-endif()
+target_link_libraries(mailcommon
+  ${NEPOMUK_QUERY_LIBRARIES}
+  ${SOPRANO_LIBRARIES}
+  niefast_apps
+)
 
 if(NOT WINCE)
   target_link_libraries(mailcommon incidenceeditorsng)

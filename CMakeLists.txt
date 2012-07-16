@@ -12,7 +12,6 @@ option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FA
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkleo and kleopatra" FALSE)
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
-option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 if(KDEPIM_BUILD_STATIC)
@@ -23,10 +22,6 @@ endif()
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-
-if(KDEPIM_NO_NEPOMUK)
-  add_definitions(-DKDEPIM_NO_NEPOMUK)
-endif()
 
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
@@ -217,12 +212,10 @@ else()
   find_package(Grantlee QUIET NO_MODULE)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.gitorious.org/grantlee/pages/Home" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
-  if(NOT KDEPIM_NO_NEPOMUK)
-    find_package(Nepomuk)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
-    find_package(NepomukCore)
-    macro_log_feature(NepomukCore_FOUND "NepomukCore" "The NepomukCore libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
-  endif()
+  find_package(Nepomuk)
+  macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+  find_package(NepomukCore)
+  macro_log_feature(NepomukCore_FOUND "NepomukCore" "The NepomukCore libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
