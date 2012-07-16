@@ -210,10 +210,8 @@ void Widget::fillMessageTagCombo( KComboBox * combo )
     if(tagSelectedLst.contains(id)) {
       QString iconName = QLatin1String( "mail-tagged" );
       const QString label = nepomukTag.label();
-#if 0 //FIXME NEPOMUK-CORE      
       if ( !nepomukTag.symbols().isEmpty() )
         iconName = nepomukTag.symbols().first();
-#endif
       const QString id = nepomukTag.uri().toString();
       combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
     }
