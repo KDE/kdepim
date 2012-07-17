@@ -264,6 +264,13 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
 
+  if ( m_uidToItemId.contains( incidence->uid() ) && !alreadyExisted ) {
+    // We only allow duplicate UIDs if they have the same item id, for example
+    // when using virtual folders.
+    kWarning() << "Discarding duplicate incidence with uid " << incidence->uid();
+    return;
+  }
+
   /*
   kDebug() << "id=" << item.id()
            << "version=" << item.revision()
@@ -609,6 +616,12 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
     }
 
     Akonadi::Item oldItem( m_itemMap.take( item.id() ) );
+
+    if ( !oldItem.isValid() ) {
+      // Can happen if this was an incidence which we didn't accept.
+      // Like when two items have different id but equal uid, we discard one.
+      continue;
+    }
 
     removeItemFromMaps( oldItem );
 
