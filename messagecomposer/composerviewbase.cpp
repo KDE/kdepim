@@ -1184,6 +1184,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
                                KRichTextWidget::SupportHyperlinks );
   m_editor->enableImageActions();
   m_editor->enableEmoticonActions();
+  m_editor->enableInsertHtmlActions();
 
   m_editor->document()->setModified( false );
 
