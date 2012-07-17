@@ -51,6 +51,8 @@
 
 using namespace Akonadi;
 
+static const QString storeMails = QLatin1String("backupmail/");
+
 ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename, int numberOfStep)
   :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep), mArchiveDirectory(0)
 {
@@ -433,18 +435,20 @@ void ImportMailJob::restoreMails()
       const KUrl url = BackupMailUtil::resourcePath(resourceConfig);
       const QString filename(file->name());
 
-      KUrl newUrl;
-      if(QFile(url.path()).exists()) {
-        QString newFileName = url.path();
+      KUrl newUrl = url;
+      if(!url.path().contains(QDir::homePath())) {
+          qDebug()<<" url "<<url.path();
+          newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storeMails + url.fileName());
+      }
+      if(QFile(newUrl.path()).exists()) {
+        QString newFileName = newUrl.path();
         for(int i = 0;; ++i) {
-          newFileName = url.path() + QString::fromLatin1("_%1").arg(i);
+          newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
           if(!QFile(newFileName).exists()) {
             break;
           }
         }
-        newUrl.setFileName(newFileName);
-      } else {
-        newUrl= url;
+        newUrl=KUrl(newFileName);
       }
       QMap<QString, QVariant> settings;
       if(resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
