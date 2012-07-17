@@ -434,10 +434,10 @@ void ImportMailJob::restoreMails()
       const QString filename(file->name());
 
       KUrl newUrl;
-      if(QFile(url.fileName()).exists()) {
-        QString newFileName = url.fileName();
+      if(QFile(url.path()).exists()) {
+        QString newFileName = url.path();
         for(int i = 0;; ++i) {
-          newFileName = url.fileName() + QString::fromLatin1("_%1").arg(i);
+          newFileName = url.path() + QString::fromLatin1("_%1").arg(i);
           if(!QFile(newFileName).exists()) {
             break;
           }
