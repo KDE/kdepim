@@ -1828,12 +1828,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     }
   }
 
-  /*
-   * FIXME make optional?
-  popup.addAction( i18n( "Save as &Encoded..." ), this,
-                   SLOT(slotSaveAsEncoded()) );
-  */
-
   if( !contents.isEmpty() ) {
     popup.addAction( i18n( "Save All Attachments..." ), this,
                      SLOT(slotAttachmentSaveAll()) );
