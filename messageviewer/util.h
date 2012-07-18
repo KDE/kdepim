@@ -125,7 +125,7 @@ namespace Util {
     bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent ); 
 
     bool MESSAGEVIEWER_EXPORT speakSelectedText( const QString& text, QWidget *parent);
-    KAction* MESSAGEVIEWER_EXPORT createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
+    MESSAGEVIEWER_EXPORT KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
 }
 
 }
