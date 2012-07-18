@@ -522,9 +522,10 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
 
     KService::List::ConstIterator it = offers.constBegin();
     for(; it != offers.constEnd(); it++) {
-      KAction* act = createAppAction(*it,
+      KAction* act = MessageViewer::Util::createAppAction(*it,
                                         // no submenu -> prefix single offer
-                                        menu == topMenu, actionGroup);
+                                        menu == topMenu, actionGroup,this);
+      mOpenWithActions.append(act);
       menu->addAction(act);
     }
 
@@ -557,23 +558,6 @@ void ViewerPrivate::slotOpenWithDialog()
   attachmentOpenWith( mCurrentContent );
 }
 
-KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup )
-{
-  QString actionName(service->name().replace('&', "&&"));
-  if (singleOffer) {
-    actionName = i18n("Open &with %1", actionName);
-  } else {
-    actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
-  }
-
-  KAction *act = new KAction(this);
-  act->setIcon(KIcon(service->icon()));
-  act->setText(actionName);
-  actionGroup->addAction( act );
-  act->setData(QVariant::fromValue(service));
-  mOpenWithActions.append(act);
-  return act;
-}
 
 void ViewerPrivate::slotOpenWithAction(QAction *act)
 {
