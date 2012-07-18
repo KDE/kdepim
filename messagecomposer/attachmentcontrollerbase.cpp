@@ -86,6 +86,7 @@ class Message::AttachmentControllerBase::Private
     void attachPublicKeyJobResult( KJob *job ); // slot
     void slotAttachmentContentCreated( KJob *job ); // slot
     void addAttachmentPart( AttachmentPart::Ptr part );
+    void selectedAllAttachment();
 
     AttachmentControllerBase *const q;
     bool encryptEnabled;
@@ -112,6 +113,7 @@ class Message::AttachmentControllerBase::Private
     QAction *propertiesContextAction;
     QAction *addAction;
     QAction *addContextAction;
+    QAction *selectAllAction;
 
     // If part p is compressed, uncompressedParts[p] is the uncompressed part.
     QHash<AttachmentPart::Ptr, AttachmentPart::Ptr> uncompressedParts;
@@ -138,6 +140,7 @@ AttachmentControllerBase::Private::Private( AttachmentControllerBase *qq )
   , propertiesContextAction( 0 )
   , addAction( 0 )
   , addContextAction( 0 )
+  , selectAllAction( 0 )
 {
 }
 
@@ -318,6 +321,7 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult( KJob *job )
   q->addAttachment( part );
 }
 
+
 static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
 {
   KTemporaryFile *file = new KTemporaryFile;
@@ -409,6 +413,11 @@ void AttachmentControllerBase::createActions()
   connect( d->propertiesContextAction, SIGNAL(triggered(bool)),
       this, SLOT(selectedAttachmentProperties()) );
 
+  d->selectAllAction = new KAction( i18n("Select All"), this);
+  connect( d->selectAllAction, SIGNAL(triggered(bool)),
+      this, SIGNAL(selectedAllAttachment()) );
+
+
   // Create a context menu for the attachment view.
   Q_ASSERT( d->contextMenu == 0 ); // Not called twice.
   d->contextMenu = new QMenu( d->wParent );
@@ -420,6 +429,8 @@ void AttachmentControllerBase::createActions()
   d->contextMenu->addAction( d->saveAsContextAction );
   d->contextMenu->addAction( d->propertiesContextAction );
   d->contextMenu->addSeparator();
+  d->contextMenu->addAction( d->selectAllAction);
+  d->contextMenu->addSeparator();
   d->contextMenu->addAction( d->addContextAction );
 
   // Insert the actions into the composer window's menu.
@@ -430,6 +441,7 @@ void AttachmentControllerBase::createActions()
   collection->addAction( QLatin1String( "remove" ), d->removeAction );
   collection->addAction( QLatin1String( "attach_save" ), d->saveAsAction );
   collection->addAction( QLatin1String( "attach_properties" ), d->propertiesAction );
+  collection->addAction( QLatin1String( "select_all_attachment"), d->selectAllAction);
   
 
   setSelectedParts( AttachmentPart::List());
