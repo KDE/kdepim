@@ -539,12 +539,14 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     openWithAct->setText(openWithActionName);
     QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
+    mOpenWithActions.append(openWithAct);
   }
   else { // no app offers -> Open With...
     KAction *act = new KAction(this);
     act->setText(i18nc("@title:menu", "&Open With..."));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
+    mOpenWithActions.append(act);
   }
 }
 
@@ -569,6 +571,7 @@ KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singl
   act->setText(actionName);
   actionGroup->addAction( act );
   act->setData(QVariant::fromValue(service));
+  mOpenWithActions.append(act);
   return act;
 }
 
@@ -655,6 +658,8 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( globalPos );
   delete menu;
+  qDeleteAll(mOpenWithActions);
+  mOpenWithActions.clear();
 }
 
 void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString& fileName )
@@ -1853,6 +1858,8 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
+  qDeleteAll(mOpenWithActions);
+  mOpenWithActions.clear();
 #endif
 
 }

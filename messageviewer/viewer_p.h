@@ -675,6 +675,7 @@ public:
   Akonadi::Monitor mMonitor;
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
+  QList<QAction*> mOpenWithActions;
   Akonadi::Item::Id mPreviouslyViewedItem;
 
   // zoom Factor
