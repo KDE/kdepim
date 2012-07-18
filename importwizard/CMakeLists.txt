@@ -39,7 +39,11 @@ pmail/pmailimportdata.cpp
 thebat/thebatimportdata.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${SOPRANO_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
+                    ${CMAKE_SOURCE_DIR}/mailcommon 
+                    ${NEPOMUK_CORE_INCLUDE_DIR}
+                    ${SOPRANO_INCLUDE_DIR})
+
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(importwizard_SRCS 

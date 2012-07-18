@@ -1,6 +1,10 @@
 project(backupmail)
 
-include_directories(${AKONADI_INCLUDE_DIR} ${SOPRANO_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
+include_directories(${AKONADI_INCLUDE_DIR} 
+                    ${SOPRANO_INCLUDE_DIR} 
+                    ${CMAKE_SOURCE_DIR}/libkdepim
+                    ${NEPOMUK_CORE_INCLUDE_DIR}
+)
 
 
 ########### next target ###############
