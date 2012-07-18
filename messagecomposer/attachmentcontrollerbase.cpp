@@ -29,6 +29,7 @@
 #include "messagecomposer/globalpart.h"
 #include "messageviewer/editorwatcher.h"
 #include "messageviewer/nodehelper.h"
+#include "messageviewer/util.h"
 
 #include <akonadi/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
@@ -47,6 +48,7 @@
 #include <KPushButton>
 #include <KRun>
 #include <KTemporaryFile>
+#include <KFileItemActions>
 
 #include <kpimutils/kfileio.h>
 
@@ -87,6 +89,7 @@ class Message::AttachmentControllerBase::Private
     void slotAttachmentContentCreated( KJob *job ); // slot
     void addAttachmentPart( AttachmentPart::Ptr part );
     void selectedAllAttachment();
+    void createOpenWithMenu( QMenu *topMenu, AttachmentPart::Ptr part );
 
     AttachmentControllerBase *const q;
     bool encryptEnabled;
@@ -96,6 +99,7 @@ class Message::AttachmentControllerBase::Private
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
     QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
 
+    QList<QAction*> openWithActions;
     AttachmentPart::List selectedParts;
     KActionCollection *mActionCollection;
     QAction *attachPublicKeyAction;
@@ -289,6 +293,57 @@ void AttachmentControllerBase::Private::editDone( MessageViewer::EditorWatcher *
   delete tempFile;
   // The watcher deletes itself.
 }
+
+
+void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, AttachmentPart::Ptr part )
+{
+  const QString contentTypeStr = QString::fromLatin1(part->mimeType());
+  const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
+  if (!offers.isEmpty()) {
+    QMenu* menu = topMenu;
+    QActionGroup *actionGroup = new QActionGroup( menu );
+    connect( actionGroup, SIGNAL(triggered(QAction*)), q, SLOT(slotOpenWithAction(QAction*)) );
+
+    if (offers.count() > 1) { // submenu 'open with'
+      menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
+      menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
+      topMenu->addMenu(menu);
+    }
+    //kDebug() << offers.count() << "offers" << topMenu << menu;
+
+    KService::List::ConstIterator it = offers.constBegin();
+    KService::List::ConstIterator end = offers.constEnd();
+    for(; it != end; ++it) {
+      KAction* act = MessageViewer::Util::createAppAction(*it,
+                                        // no submenu -> prefix single offer
+                                        menu == topMenu, actionGroup,q);
+      openWithActions.append(act);
+      menu->addAction(act);
+    }
+
+    QString openWithActionName;
+    if (menu != topMenu) { // submenu
+      menu->addSeparator();
+      openWithActionName = i18nc("@action:inmenu Open With", "&Other...");
+    } else {
+      openWithActionName = i18nc("@title:menu", "&Open With...");
+    }
+    KAction *openWithAct = new KAction(q);
+    openWithAct->setText(openWithActionName);
+    QObject::connect(openWithAct, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
+    menu->addAction(openWithAct);
+    openWithActions.append(openWithAct);
+  }
+  else { // no app offers -> Open With...
+    KAction *act = new KAction(q);
+    act->setText(i18nc("@title:menu", "&Open With..."));
+    QObject::connect(act, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
+    topMenu->addAction(act);
+    openWithActions.append(act);
+  }
+}
+
+
 
 void AttachmentControllerBase::exportPublicKey( const QString &fingerprint )
 {
@@ -494,6 +549,39 @@ void AttachmentControllerBase::showContextMenu()
 
   menu->exec( QCursor::pos() );
   delete menu;
+}
+
+void AttachmentControllerBase::slotOpenWithDialog()
+{
+
+}
+
+void AttachmentControllerBase::slotOpenWithAction(QAction*act)
+{
+  KService::Ptr app = act->data().value<KService::Ptr>();
+  Q_ASSERT( d->selectedParts.count() == 1 );
+
+  KTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
+  if( !tempFile ) {
+    KMessageBox::sorry( d->wParent,
+         i18n( "KMail was unable to write the attachment to a temporary file." ),
+         i18n( "Unable to open attachment" ) );
+    return;
+  }
+  KUrl::List lst;
+  KUrl url;
+  url.setPath( tempFile->fileName());
+  lst.append( url );
+
+  if ( !KRun::run( *app, lst, 0, false )) {
+    delete tempFile;
+    tempFile = 0;
+  } else {
+    // The file was opened.  Delete it only when the composer is closed
+    // (and this object is destroyed).
+    tempFile->setParent( this ); // Manages lifetime.
+  }
+
 }
 
 void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )

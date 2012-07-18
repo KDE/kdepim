@@ -36,7 +36,7 @@
 #include "messagecomposer_export.h"
 
 class KActionCollection;
-
+class QAction;
 namespace Message {
 class AttachmentModel;
 }
@@ -92,6 +92,8 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 
   private slots:
     void slotPutResult(KJob *job);
+    void slotOpenWithDialog();
+    void slotOpenWithAction(QAction*act);
 
   private:
     class Private;
