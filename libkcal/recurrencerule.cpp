@@ -964,6 +964,14 @@ bool RecurrenceRule::dateMatchesRules( const QDateTime &qdt ) const
 bool RecurrenceRule::recursOn( const QDate &qd ) const
 {
   int i, iend;
+
+  if ( !qd.isValid() ) {
+    // Don't check on invalid Dates
+    kdWarning() << k_funcinfo << " Called with invalid date: " << qd << endl;
+    kdWarning() << kdBacktrace();
+    return false;
+  }
+
   if ( doesFloat() ) {
     // It's a date-only rule, so it has no time specification.
     if ( qd < mDateStart.date() ) {
