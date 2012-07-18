@@ -452,6 +452,12 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 {
   Event::List eventList;
 
+  // Don't check for events on invalid dates
+  // Fix for issue4850
+  if ( !qd.isValid() ) {
+    return eventList;
+  }
+
   EventDictIterator it( mEvents );
   for( ; it.current(); ++it ) {
     Event *event = *it;
