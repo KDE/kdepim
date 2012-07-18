@@ -1858,6 +1858,8 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
+  qDeleteAll(mOpenWithActions);
+  mOpenWithActions.clear();
 #endif
 
 }
