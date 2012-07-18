@@ -521,7 +521,8 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     //kDebug() << offers.count() << "offers" << topMenu << menu;
 
     KService::List::ConstIterator it = offers.constBegin();
-    for(; it != offers.constEnd(); it++) {
+    KService::List::ConstIterator end = offers.constEnd();
+    for(; it != end; ++it) {
       KAction* act = MessageViewer::Util::createAppAction(*it,
                                         // no submenu -> prefix single offer
                                         menu == topMenu, actionGroup,this);
