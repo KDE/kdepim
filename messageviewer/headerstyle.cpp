@@ -842,7 +842,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     //if ( strategy->showHeader( "date" ) )
     headerStr +=
       "     <tr> \n"
-      "      <td style=\"font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right; "+borderSettings+"\">"+i18n("From: ")+"</td> \n"
+      "      <td style=\"font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right; vertical-align:top; "+borderSettings+"\">"+i18n("From: ")+"</td> \n"
       "      <td style=\""+borderSettings+"\">"+ fromPart +"</td> "
       "     </tr> ";
   }
@@ -851,7 +851,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if ( strategy->showHeader( "to" ) ) {
     headerStr +=
       "     <tr> "
-      "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
+      "      <td style=\"font-size: 10px; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
       StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
@@ -862,7 +862,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
     headerStr +=
       "     <tr> "
-      "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
+      "      <td style=\"font-size: 10px; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
       StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
@@ -873,7 +873,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
     headerStr +=
       "     <tr> "
-      "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
+      "      <td style=\"font-size: 10px; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
       StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "

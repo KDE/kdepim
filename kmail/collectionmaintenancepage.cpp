@@ -26,8 +26,9 @@
 #include <Akonadi/ChangeRecorder>
 
 #include <Soprano/Vocabulary/NAO>
-#include <Nepomuk/Variant>
-#include <Nepomuk/ResourceManager>
+#include <Nepomuk2/Variant>
+#include <Nepomuk2/ResourceManager>
+#include <nepomuk2/datamanagement.h>
 
 #include <QLabel>
 #include <KDialog>
@@ -92,7 +93,7 @@ void CollectionMaintenancePage::init(const Akonadi::Collection & col)
   indexingLayout->addWidget( mIndexingEnabled );
 
   mLastIndexed = new QLabel( i18n( "Still not indexed." ) );
-  if(!Nepomuk::ResourceManager::instance()->initialized())
+  if(!Nepomuk2::ResourceManager::instance()->initialized())
     mLastIndexed->hide();
 
   indexingLayout->addWidget( mLastIndexed );
@@ -108,13 +109,18 @@ void CollectionMaintenancePage::load(const Collection & col)
   if ( col.isValid() ) {
     updateLabel( col.statistics().count(), col.statistics().unreadCount(), col.statistics().size() );
     Akonadi::IndexPolicyAttribute *attr = col.attribute<Akonadi::IndexPolicyAttribute>();
-    mIndexingEnabled->setChecked( !attr || attr->indexingEnabled() );
-    KUrl url = col.url( Akonadi::Collection::UrlShort );
-    if(!url.isEmpty()) {
-      const Nepomuk::Resource parentResource( url );
-      const QDateTime dt = parentResource.property( Soprano::Vocabulary::NAO::lastModified() ).toDateTime();
-      if(dt.isValid()) {
-        mLastIndexed->setText(i18n("Folder was indexed: %1",KGlobal::locale()->formatDate(dt.date())));
+    const bool indexingWasEnabled(!attr || attr->indexingEnabled());
+    mIndexingEnabled->setChecked( indexingWasEnabled );
+    if(!indexingWasEnabled)
+      mLastIndexed->hide();
+    else {
+      KUrl url = col.url( Akonadi::Collection::UrlShort );
+      if(!url.isEmpty()) {
+        const Nepomuk2::Resource parentResource( url );
+        const QDateTime dt = parentResource.property( Soprano::Vocabulary::NAO::lastModified() ).toDateTime();
+        if(dt.isValid()) {
+          mLastIndexed->setText(i18n("Folder was indexed: %1",KGlobal::locale()->formatDate(dt.date())));
+        }
       }
     }
   }
@@ -133,7 +139,12 @@ void CollectionMaintenancePage::save(Collection &collection )
   if ( !collection.hasAttribute<Akonadi::IndexPolicyAttribute>() && mIndexingEnabled->isChecked() )
     return;
   Akonadi::IndexPolicyAttribute *attr = collection.attribute<Akonadi::IndexPolicyAttribute>( Akonadi::Collection::AddIfMissing );
-  attr->setIndexingEnabled( mIndexingEnabled->isChecked() );
+  if( mIndexingEnabled->isChecked() )
+    attr->setIndexingEnabled( true );
+  else {
+    attr->setIndexingEnabled( false ); 
+    Nepomuk2::removeResources( QList <QUrl>() << collection.url() );
+  }
 }
 
 void CollectionMaintenancePage::updateCollectionStatistic(Akonadi::Collection::Id id, const Akonadi::CollectionStatistics& statistic)

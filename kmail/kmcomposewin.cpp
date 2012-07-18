@@ -51,6 +51,7 @@
 #include "custommimeheader.h"
 #include <messagecomposer/kmsubjectlineedit.h>
 #include "messageviewer/translator/translatorwidget.h"
+#include "insertspecialchar.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -197,6 +198,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mDummyComposer( 0 ),
     mLabelWidth( 0 ),
     mComposerBase( 0 ),
+    mInsertSpecialChar( 0 ),
     mSignatureStateIndicator( 0 ), mEncryptionStateIndicator( 0 ),
     mPreventFccOverwrite( false ),
     mCheckForForgottenAttachments( true ),
@@ -1294,6 +1296,12 @@ void KMComposeWin::setupActions( void )
   actionCollection()->addAction( "insert_signature_at_cursor_position", action );
   connect( action, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(insertSignatureAtCursor()) );
 
+
+  action = new KAction( i18n("Insert Special Character"), this );
+  actionCollection()->addAction( "insert_special_character", action );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(insertSpecialCharacter()) );
+
+
   mComposerBase->attachmentController()->createActions();
 
   setStandardToolBarMenuEnabled( true );
@@ -1803,15 +1811,15 @@ bool KMComposeWin::queryClose ()
 }
 
 //-----------------------------------------------------------------------------
-bool KMComposeWin::userForgotAttachment()
+Message::ComposerViewBase::MissingAttachment KMComposeWin::userForgotAttachment()
 {
   bool checkForForgottenAttachments = mCheckForForgottenAttachments && GlobalSettings::self()->showForgottenAttachmentWarning();
 
   if ( !checkForForgottenAttachments )
-    return false;
+    return Message::ComposerViewBase::NoMissingAttachmentFound;
 
   mComposerBase->setSubject( subject() ); //be sure the composer knows the subject
-  bool missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
+  Message::ComposerViewBase::MissingAttachment missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
 
   return missingAttachments;
 }
@@ -2660,7 +2668,9 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
       }
     }
 
-    if ( userForgotAttachment() ) {
+    const Message::ComposerViewBase::MissingAttachment forgotAttachment = userForgotAttachment();
+    if ( (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndAddedAttachment) ||
+         (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndCancel) ) {
       return;
     }
 
@@ -2897,6 +2907,7 @@ void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirma
 
   mComposerBase->editor()->switchToPlainText();
   mComposerBase->editor()->setActionsEnabled( false );
+
   slotUpdateFont();
   if ( toolBar( "htmlToolBar" )->isVisible() ) {
     // See the comment in enableHtml() why we use a singleshot timer, similar situation here.
@@ -3321,4 +3332,18 @@ void KMComposeWin::slotFccFolderChanged(const Akonadi::Collection& collection)
 void KMComposeWin::slotTranslatorWasClosed()
 {
   mTranslateAction->setChecked(false);
+}
+
+void KMComposeWin::insertSpecialCharacter()
+{
+  if(!mInsertSpecialChar) {
+    mInsertSpecialChar = new InsertSpecialChar(this);
+    connect(mInsertSpecialChar,SIGNAL(charSelected(QChar)),this,SLOT(charSelected(QChar)));
+  }
+  mInsertSpecialChar->show();
+}
+
+void KMComposeWin::charSelected(const QChar& c)
+{
+  mComposerBase->editor()->insertPlainText(c);
 }

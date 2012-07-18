@@ -18,6 +18,7 @@
 #include "thunderbirdimportdata.h"
 #include "importfilterinfogui.h"
 #include "thunderbirdsettings.h"
+#include "thunderbirdaddressbook.h"
 
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
@@ -58,6 +59,13 @@ bool ThunderbirdImportData::foundMailer() const
   if ( directory.exists() )
     return true;
   return false;
+}
+
+bool ThunderbirdImportData::importAddressBook()
+{
+  const QDir addressbookDir(mPath+defaultProfile());
+  ThunderBirdAddressBook account( addressbookDir, mImportWizard );
+  return true;
 }
 
 QString ThunderbirdImportData::name() const
@@ -110,5 +118,6 @@ AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::AddressBooks;
   return options;
 }

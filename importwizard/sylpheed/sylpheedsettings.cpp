@@ -74,7 +74,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
   QMap<QString, QString> header;
   while ( !stream.atEnd() ) {
     const QString line = stream.readLine();
-    QStringList lst = line.split(QLatin1Char(':'));
+    const QStringList lst = line.split(QLatin1Char(':'));
     if(lst.count() == 3) {
       QString str = lst.at(2);
       str.remove(0,1);
@@ -88,13 +88,13 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
        newValue+=oldValue;
     }
     addKmailConfig( QLatin1String("General"),QLatin1String("mime-header-count"), newValue);
-    int currentHeader = (oldValue>0) ? oldValue-1 : 0;
+    int currentHeader = (oldValue>0) ? oldValue : 0;
     for (QMapIterator<QString, QString> it(header);  it.hasNext();  )
     {
         it.next();
         addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("name"), (it).key());
         addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("value"), (it).value());
-        currentHeader++;
+        ++currentHeader;
     }
   }
 }
@@ -227,6 +227,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
         break;
       default:
         kDebug()<<" unknown ssl_pop value "<<sslPop;
+        break;
     }
   }
   if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
@@ -270,8 +271,9 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
     settings.insert( QLatin1String( "Safety" ), QLatin1String( "SSL" ) );
     break;
   case 2:
-    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
     //TLS
+    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
+    break;
   default:
     kDebug()<<" sslimap unknown "<<sslimap;
     break;
@@ -297,6 +299,7 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
       break;
     case 4: //Plain
       settings.insert(QLatin1String("Authentication"),MailTransport::Transport::EnumAuthenticationType::PLAIN);
+      break;
     default:
       kDebug()<<" imap auth unknown "<<auth;
       break;

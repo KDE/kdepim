@@ -6,6 +6,7 @@ add_subdirectory(tests)
 
 include_directories( ${Boost_INCLUDE_DIR} 
                      ${SOPRANO_INCLUDE_DIR}
+		     ${NEPOMUK_CORE_INCLUDE_DIR}
                    )
 
 ########### next target ###############
@@ -66,13 +67,12 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${NEPOMUK_CORE_LIBRARY}
 )
 
-if(NOT KDEPIM_NO_NEPOMUK)
 target_link_libraries(messagecore
   ${NEPOMUK_LIBRARIES}
 )
-endif(NOT KDEPIM_NO_NEPOMUK)
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KMIME_LIBS}

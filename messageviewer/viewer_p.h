@@ -282,7 +282,6 @@ private:
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
   void createOpenWithMenu( KMenu *topMenu, KMime::Content* node );
-  KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup);
 public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
@@ -675,6 +674,7 @@ public:
   Akonadi::Monitor mMonitor;
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
+  QList<QAction*> mOpenWithActions;
   Akonadi::Item::Id mPreviouslyViewedItem;
 
   // zoom Factor
@@ -684,6 +684,4 @@ public:
 
 }
 
-Q_DECLARE_METATYPE(KService::Ptr)
-  
 #endif

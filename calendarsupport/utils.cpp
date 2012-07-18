@@ -87,7 +87,7 @@ KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
     if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent )
       return item.payload<KCalCore::Event::Ptr>();
   } catch( Akonadi::PayloadException ) {
-    return item.payload<KCalCore::Event::Ptr>();
+    return KCalCore::Event::Ptr();
   }
   return KCalCore::Event::Ptr();
 }
@@ -121,7 +121,7 @@ KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
     if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo )
       return item.payload<KCalCore::Todo::Ptr>();
   } catch( Akonadi::PayloadException ) {
-    return item.payload<KCalCore::Todo::Ptr>();
+    return KCalCore::Todo::Ptr();
   }
   return KCalCore::Todo::Ptr();
 }
@@ -133,7 +133,7 @@ KCalCore::Journal::Ptr CalendarSupport::journal( const Akonadi::Item &item )
     if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal )
       return item.payload<KCalCore::Journal::Ptr>();
   } catch( Akonadi::PayloadException ) {
-    return item.payload<KCalCore::Journal::Ptr>();
+    return KCalCore::Journal::Ptr();
   }
   return KCalCore::Journal::Ptr();
 }

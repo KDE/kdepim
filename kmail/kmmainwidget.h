@@ -191,6 +191,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     }
     void savePaneSelection();
 
+    void updatePaneTagComboBox();
+
   public slots:
     // Moving messages around
     /**
@@ -458,6 +460,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotCreateNewTab( bool );
     void slotShowNotification();
     void slotConfigureAutomaticArchiving();
+    void slotExportData();
   private:
     void updateHtmlMenuEntry();
 
@@ -526,6 +529,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
      */
     void refreshFavoriteFoldersViewProperties();
     bool excludeSpecialFolder( const Akonadi::Collection &collection );
+
+    void openFilterDialog(const QByteArray &field, const QString &value);
 
   private slots:
     /**

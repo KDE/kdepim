@@ -27,10 +27,10 @@
 
 #include <Akonadi/KMime/MessageStatus>
 #include <KUrl>
-#include <Nepomuk/Query/Query>
-#include <Nepomuk/Query/Result>
+#include <Nepomuk2/Query/Query>
+#include <Nepomuk2/Query/Result>
 
-namespace Nepomuk {
+namespace Nepomuk2 {
   namespace Query {
     class QueryServiceClient;
   }
@@ -121,7 +121,7 @@ Q_SIGNALS:
   void finished();
 
 private Q_SLOTS:
-  void newEntries( const QList<Nepomuk::Query::Result>& );
+  void newEntries( const QList<Nepomuk2::Query::Result>& );
   void finishedListing();
 
 private:
@@ -129,7 +129,7 @@ private:
   QStringList mSearchList;
   KUrl mCurrentFolder;
   QSet<qint64> mMatchingItemIds;
-  Nepomuk::Query::QueryServiceClient *mQueryClient;
+  Nepomuk2::Query::QueryServiceClient *mQueryClient;
 };
 
 } // namespace Core

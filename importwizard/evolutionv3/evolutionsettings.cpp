@@ -46,7 +46,7 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
   QDomElement config = doc.documentElement();
 
   if ( config.isNull() ) {
-    kDebug() << "No config found";
+    kDebug() << "No config found in filename "<<filename;
     return;
   }
   for ( QDomElement e = config.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
@@ -59,9 +59,9 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
         } else if ( attr == QLatin1String( "signatures" ) ) {
           readSignatures( e );
         } else if( attr == QLatin1String("send_recv_all_on_start")) {
-          //TODO
+          //TODO: implement it.
         } else if( attr == QLatin1String("send_recv_on_start")) {
-          //TODO
+          //TODO: implement it.
         } else {
           kDebug()<<" attr unknown "<<attr;
         }
@@ -86,7 +86,7 @@ void EvolutionSettings::readSignatures(const QDomElement &account)
 
 void EvolutionSettings::extractSignatureInfo( const QString&info )
 {
-  kDebug()<<" signature info "<<info;
+  //kDebug()<<" signature info "<<info;
   QDomDocument signature;
   if ( !EvolutionUtil::loadInDomDocument( info, signature ) )
     return;
@@ -105,30 +105,25 @@ void EvolutionSettings::extractSignatureInfo( const QString&info )
     const QString signatureName = e.attribute( QLatin1String( "name" ) ); //Use it ?
     const QString format = e.attribute( QLatin1String( "text" ) );
     const bool automatic = ( e.attribute( QLatin1String( "auto" ) ) == QLatin1String( "true" ) );
-
-    if ( format == QLatin1String( "text/html" ) ) {
-      signature.setInlinedHtml( true );
-    } else if ( format == QLatin1String( "text/plain" ) ) {
-      signature.setInlinedHtml( false );
-    }
-    
-    
-    if ( tag == QLatin1String( "filename" ) ) {
-      if ( e.hasAttribute( QLatin1String( "script" ) ) && e.attribute( QLatin1String( "script" ) ) == QLatin1String( "true" ) ){
-        signature.setUrl( e.text(), true );
-        signature.setType( KPIMIdentities::Signature::FromCommand );
+    if(automatic) {
+      //TODO:
+    } else {
+      if ( format == QLatin1String( "text/html" ) ) {
+        signature.setInlinedHtml( true );
+      } else if ( format == QLatin1String( "text/plain" ) ) {
+        signature.setInlinedHtml( false );
       }
-      else {
-        signature.setUrl( QDir::homePath() + QLatin1String( ".local/share/evolution/signatures/" ) + e.text(), false );
-        signature.setType( KPIMIdentities::Signature::FromFile );
-
+    
+      if ( tag == QLatin1String( "filename" ) ) {
+        if ( e.hasAttribute( QLatin1String( "script" ) ) && e.attribute( QLatin1String( "script" ) ) == QLatin1String( "true" ) ){
+          signature.setUrl( e.text(), true );
+          signature.setType( KPIMIdentities::Signature::FromCommand );
+        } else {
+          signature.setUrl( QDir::homePath() + QLatin1String( ".local/share/evolution/signatures/" ) + e.text(), false );
+          signature.setType( KPIMIdentities::Signature::FromFile );
+        }
       }
     }
-    
-    if ( automatic ) {
-      // TODO
-    }
-    
     mMapSignature.insert( uid, signature );
         
     kDebug()<<" signature tag :"<<tag;

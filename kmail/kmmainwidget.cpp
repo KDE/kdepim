@@ -164,7 +164,7 @@
 #include <kaction.h>
 #include <ktreewidgetsearchline.h>
 #include <Solid/Networking>
-#include <nepomuk/resourcemanager.h>
+#include <nepomuk2/resourcemanager.h>
 
 // Qt includes
 #include <QByteArray>
@@ -1428,7 +1428,7 @@ void KMMainWidget::slotFocusQuickSearch()
 bool KMMainWidget::slotSearch()
 {
   // check if we can search at all, ie. Nepomuk is running and email indexing is enabled
-  if ( !Nepomuk::ResourceManager::instance()->initialized() ) {
+  if ( !Nepomuk2::ResourceManager::instance()->initialized() ) {
     KMessageBox::information( this, i18n( "The Nepomuk semantic search service is not available. Searching is not possible without it. "
                                           "You can enable it in \"System Settings\"." ), i18n( "Search Not Available" ) );
     return false;
@@ -2332,10 +2332,11 @@ void KMMainWidget::slotSetThreadStatusIgnored()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotRedirectMsg()
 {
-  const Akonadi::Item msg = mMessagePane->currentItem();
-  if ( !msg.isValid() )
+  const QList<Akonadi::Item> selectedMessages = mMessagePane->selectionAsMessageItemList();
+  if ( selectedMessages.isEmpty() )
     return;
-  KMCommand *command = new KMRedirectCommand( this, msg );
+
+  KMCommand *command = new KMRedirectCommand( this, selectedMessages );
   command->start();
 }
 
@@ -2414,6 +2415,12 @@ void KMMainWidget::slotNoQuoteReplyToMsg()
   command->start();
 }
 
+void KMMainWidget::openFilterDialog(const QByteArray &field, const QString &value)
+{
+  FilterIf->openFilterDialog( false );
+  FilterIf->createFilter( field, value );
+}
+
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotSubjectFilter()
 {
@@ -2421,8 +2428,7 @@ void KMMainWidget::slotSubjectFilter()
   if ( !msg )
     return;
 
-  KMCommand *command = new KMFilterCommand( "Subject", msg->subject()->asUnicodeString() );
-  command->start();
+  openFilterDialog("Subject", msg->subject()->asUnicodeString());
 }
 
 //-----------------------------------------------------------------------------
@@ -2433,12 +2439,10 @@ void KMMainWidget::slotFromFilter()
     return;
 
   AddrSpecList al = MessageHelper::extractAddrSpecs( msg, "From" );
-  KMCommand *command;
   if ( al.empty() )
-    command = new KMFilterCommand( "From",  msg->from()->asUnicodeString() );
+    openFilterDialog("From",  msg->from()->asUnicodeString());
   else
-    command = new KMFilterCommand( "From",  al.front().asString() );
-  command->start();
+    openFilterDialog("From",  al.front().asString());
 }
 
 //-----------------------------------------------------------------------------
@@ -2447,8 +2451,7 @@ void KMMainWidget::slotToFilter()
   KMime::Message::Ptr msg = mMessagePane->currentMessage();
   if ( !msg )
     return;
-  KMCommand *command = new KMFilterCommand( "To",  msg->to()->asUnicodeString() );
-  command->start();
+  openFilterDialog("To",  msg->to()->asUnicodeString());
 }
 
 //-----------------------------------------------------------------------------
@@ -3208,7 +3211,7 @@ void KMMainWidget::setupActions()
     action->setEnabled(usableKWatchGnupg);
   }
   {
-    KAction *action = new KAction(KIcon("document-import"), i18n("&Import Messages"), this);
+    KAction *action = new KAction(KIcon("document-import"), i18n("&Import Messages..."), this);
     actionCollection()->addAction("import", action );
     connect(action, SIGNAL(triggered(bool)), SLOT(slotImport()));
     if (KStandardDirs::findExe("kmailcvt").isEmpty()) action->setEnabled(false);
@@ -3595,9 +3598,6 @@ void KMMainWidget::setupActions()
     connect(action, SIGNAL(triggered(bool)), SLOT(slotNextUnreadFolder()));
     action->setShortcut(QKeySequence(Qt::ALT+Qt::Key_Plus));
     action->setHelpText(i18n("Go to the next folder with unread messages"));
-    KShortcut shortcut = KShortcut(action->shortcuts());
-    shortcut.setAlternate( QKeySequence( Qt::CTRL+Qt::Key_Plus ) );
-    action->setShortcuts( shortcut );
   }
   {
     KAction *action = new KAction(i18n("Previous Unread F&older"), this);
@@ -3605,9 +3605,6 @@ void KMMainWidget::setupActions()
     action->setShortcut(QKeySequence(Qt::ALT+Qt::Key_Minus));
     action->setHelpText(i18n("Go to the previous folder with unread messages"));
     connect(action, SIGNAL(triggered(bool)), SLOT(slotPrevUnreadFolder()));
-    KShortcut shortcut = KShortcut(action->shortcuts());
-    shortcut.setAlternate( QKeySequence( Qt::CTRL+Qt::Key_Minus ) );
-    action->setShortcuts( shortcut );
   }
   {
     KAction *action = new KAction(i18nc("Go->","Next Unread &Text"), this);
@@ -3682,6 +3679,13 @@ void KMMainWidget::setupActions()
                SLOT(slotApplyFiltersOnFolder()) );
 
   }
+
+  {
+      KAction *action = new KAction(KIcon("backup-mail"), i18n("&Export KMail Data..."), this);
+      actionCollection()->addAction("kmail_export_data", action );
+      connect(action, SIGNAL(triggered(bool)), this, SLOT(slotExportData()));
+  }
+
   actionCollection()->addAction(KStandardAction::Undo,  "kmail_undo", this, SLOT(slotUndo()));
 
   KStandardAction::tipOfDay( this, SLOT(slotShowTip()), actionCollection() );
@@ -3938,7 +3942,7 @@ void KMMainWidget::updateMessageActionsDelayed()
   mMsgActions->editAction()->setEnabled( single_actions );
   mUseAction->setEnabled( single_actions && CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
   filterMenu()->setEnabled( single_actions );
-  mMsgActions->redirectAction()->setEnabled( single_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
+  mMsgActions->redirectAction()->setEnabled( /*single_actions &&*/mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
 
   if ( mMsgActions->customTemplatesMenu() )
   {
@@ -4114,6 +4118,11 @@ void KMMainWidget::updateHtmlMenuEntry()
 //-----------------------------------------------------------------------------
 void KMMainWidget::updateFolderMenu()
 {
+  if(!CommonKernel->outboxCollectionFolder().isValid()) {
+    QTimer::singleShot(1000,this,SLOT(updateFolderMenu()));
+    return;
+  }
+
   const bool folderWithContent = mCurrentFolder && !mCurrentFolder->isStructural();
   bool multiFolder = false;
   if ( mFolderTreeWidget ) {
@@ -4123,11 +4132,10 @@ void KMMainWidget::updateFolderMenu()
                                                   !multiFolder &&
                                                   !mCurrentFolder->isSystemFolder() );
 
-
   QList< QAction* > actionlist;
-  if ( mCurrentFolder && mCurrentFolder->collection().id() == CommonKernel->outboxCollectionFolder().id() &&
-      CommonKernel->outboxCollectionFolder().statistics().count() > 0 ) {
+  if ( mCurrentFolder && mCurrentFolder->collection().id() == CommonKernel->outboxCollectionFolder().id() && (mCurrentFolder->collection()).statistics().count() > 0) {
     kDebug() << "Enabling send queued";
+    mSendQueued->setEnabled(true);
     actionlist << mSendQueued;
   }
 //   if( mCurrentFolder && mCurrentFolder->collection().id() != CommonKernel->trashCollectionFolder().id() ) {
@@ -4631,5 +4639,26 @@ void KMMainWidget::savePaneSelection()
 void KMMainWidget::slotConfigureAutomaticArchiving()
 {
   OrgFreedesktopAkonadiArchiveMailAgentInterface archiveMailInterface(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"), QLatin1String("/ArchiveMailAgent"),QDBusConnection::sessionBus(), this);
-  archiveMailInterface.showConfigureDialog(winId());
+  if(archiveMailInterface.isValid()) {
+      archiveMailInterface.showConfigureDialog(winId());
+  } else {
+      KMessageBox::error(this,i18n("Archive Mail Agent was not registered."));
+  }
+}
+
+void KMMainWidget::updatePaneTagComboBox()
+{
+  if(mMessagePane) {
+    mMessagePane->updateTagComboBox();
+  }
+}
+
+
+void KMMainWidget::slotExportData()
+{
+    const QString path = KStandardDirs::findExe( QLatin1String("backupmail" ) );
+    if( !QProcess::startDetached( path ) )
+      KMessageBox::error( this, i18n( "Could not start backupmail. "
+                                      "Please check your installation." ),
+                         i18n( "Unable to start backupmail" ) );
 }

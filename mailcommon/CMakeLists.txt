@@ -7,6 +7,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${SOPRANO_INCLUDE_DIR}
+  ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -140,15 +141,14 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer
   ${KDEPIMLIBS_KIMAP_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
+  ${NEPOMUK_CORE_LIBRARY}
 )
 
-if(NOT KDEPIM_NO_NEPOMUK)
-  target_link_libraries(mailcommon
-    ${NEPOMUK_QUERY_LIBRARIES}
-    ${SOPRANO_LIBRARIES}
-    niefast_apps
-  )
-endif()
+target_link_libraries(mailcommon
+  ${NEPOMUK_QUERY_LIBRARIES}
+  ${SOPRANO_LIBRARIES}
+  niefast_apps
+)
 
 if(NOT WINCE)
   target_link_libraries(mailcommon incidenceeditorsng)

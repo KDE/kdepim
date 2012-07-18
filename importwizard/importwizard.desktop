@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Import Wizard
+Name[ca]=Assistent d'importació
 Name[da]=Importguide
 Name[de]=Import-Assistent 
 Name[el]=Οδηγός εισαγωγής
@@ -15,6 +16,7 @@ Name[nl]=Assistent voor importeren
 Name[pl]=Asystent importu
 Name[pt]=Assistente de Importação
 Name[pt_BR]=Assistente de importação
+Name[sl]=Čarovnik za uvoz
 Name[sr]=Чаробњак за увоз
 Name[sr@ijekavian]=Чаробњак за увоз
 Name[sr@ijekavianlatin]=Čarobnjak za uvoz
@@ -29,6 +31,7 @@ Type=Application
 NoDisplay=true
 Icon=kontact-import-wizard
 Comment=Launch the import wizard to migrate data from mailer as thunderbird/evolution etc.
+Comment[ca]=Engega l'assistent d'importació per migrar les dades dels agents de correus com el Thunderbird/Evolution etc.
 Comment[da]=Kør importguiden for at migrere data fra e-mail-programmer såsom Thunderbird, Evolution osv.
 Comment[el]=Εκτελέστε τον οδηγό εισαγωγής για να μεταφέρετε δεδομένα από πελάτες αλληλογραφίας όπως το thunderbird, evolution κλπ.
 Comment[es]=Lanza el asistente de importación para migrar datos desde un gestor de correo como thunderbird/evolution, etc.

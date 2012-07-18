@@ -705,7 +705,16 @@ void Pane::Private::updateTabControls()
     q->tabBar()->setVisible( true );
   }
 
-  q->setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
+  const bool hasCloseButton(Core::Settings::self()->tabsHaveCloseButton());
+  q->setTabsClosable( hasCloseButton );
+  if( hasCloseButton ) {
+    const int numberOfTab(q->count());
+    if( numberOfTab ==1) {
+      q->tabBar()->tabButton(0, QTabBar::RightSide)->setEnabled(false);
+    } else if(numberOfTab > 1) {
+      q->tabBar()->tabButton(0, QTabBar::RightSide)->setEnabled(true);
+    }
+  }
 }
 
 Item Pane::currentItem() const

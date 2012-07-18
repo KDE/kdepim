@@ -64,11 +64,13 @@
 #include <KMimeType>
 #include <KTemporaryFile>
 #include <ktoolinvocation.h>
+#include <KAction>
 
 #include <QTextCodec>
 #include <QWidget>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
+#include <QActionGroup>
 
 using namespace MessageViewer;
 
@@ -542,4 +544,21 @@ bool Util::speakSelectedText( const QString& text, QWidget *parent)
   QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
   ktts.asyncCall("say", text, 0);
   return true;
+}
+
+KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
+{
+  QString actionName(service->name().replace('&', "&&"));
+  if (singleOffer) {
+    actionName = i18n("Open &with %1", actionName);
+  } else {
+    actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
+  }
+
+  KAction *act = new KAction(parent);
+  act->setIcon(KIcon(service->icon()));
+  act->setText(actionName);
+  actionGroup->addAction( act );
+  act->setData(QVariant::fromValue(service));
+  return act;
 }

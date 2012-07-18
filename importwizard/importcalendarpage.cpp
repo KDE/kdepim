@@ -41,5 +41,10 @@ void ImportCalendarPage::addImportError( const QString& log )
   ui->logCalendar->addErrorLogEntry( log );
 }
 
+void ImportCalendarPage::setImportButtonEnabled(bool enabled)
+{
+  ui->importCalendar->setEnabled(enabled);
+}
+
 
 #include "importcalendarpage.moc"

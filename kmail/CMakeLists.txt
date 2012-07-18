@@ -35,6 +35,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${NEPOMUK_INCLUDES}
+  ${NEPOMUK_CORE_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
  )
 
@@ -113,7 +114,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      kmknotify.cpp
      tagselectdialog.cpp
      accountconfigorderdialog.cpp
-
+     insertspecialchar.cpp
   )
 
   soprano_add_ontology(kmailprivate_LIB_SRCS
@@ -213,6 +214,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     ${NEPOMUK_LIBRARIES}
     ${NEPOMUK_QUERY_LIBRARIES}
     ${KDE4_KPRINTUTILS_LIBS}
+    ${NEPOMUK_CORE_LIBRARY}
   )
 
   set_target_properties(kmailprivate

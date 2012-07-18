@@ -21,9 +21,8 @@
 
 #include "filteractionmissingargumentdialog.h"
 
-#ifndef KDEPIM_NO_NEPOMUK
-#include <nepomuk/tag.h>
-#endif
+#include <nepomuk2/tag.h>
+#include <Nepomuk2/Resource>
 
 #include <QtGui/QTextDocument>
 
@@ -47,12 +46,10 @@ bool FilterActionAddTag::isEmpty() const
 
 void FilterActionAddTag::initializeTagList()
 {
-#ifndef KDEPIM_NO_NEPOMUK
-  foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+  foreach( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
     mParameterList.append( tag.label() );
-    mLabelList.append( tag.resourceUri().toString() );
+    mLabelList.append( tag.uri().toString() );
   }
-#endif
 }
 
 bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
@@ -61,7 +58,6 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
   argsFromString( argsStr );
   if( mParameterList.isEmpty() )
     return false;
-#ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 ) {
     FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
@@ -71,21 +67,18 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
     }
     delete dlg;
   }
-#endif
   return needUpdate;
 }
 
 
 FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
-#ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 )
     return ErrorButGoOn;
 
-  Nepomuk::Resource resource( context.item().url() );
+  Nepomuk2::Resource resource( context.item().url() );
   resource.addTag( mParameter );
-#endif
 
   return GoOn;
 }

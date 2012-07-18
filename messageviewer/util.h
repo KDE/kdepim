@@ -41,10 +41,13 @@
 #include "messageviewer_export.h"
 #include "kmime/kmime_content.h"
 #include <QString>
+#include <KService>
 
 class KUrl;
 class QWidget;
 class QStringList;
+class QActionGroup;
+class KAction;
 
 namespace KMime {
   class Content;
@@ -122,9 +125,9 @@ namespace Util {
     bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent ); 
 
     bool MESSAGEVIEWER_EXPORT speakSelectedText( const QString& text, QWidget *parent);
-
+    KAction* MESSAGEVIEWER_EXPORT createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
 }
 
 }
-
+Q_DECLARE_METATYPE(KService::Ptr)
 #endif

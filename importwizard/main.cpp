@@ -19,11 +19,12 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
-#include <KApplication>
+#include <KUniqueApplication>
 
 #include "importwizard.h"
 
 #include "kdepim-version.h"
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
@@ -39,8 +40,13 @@ int main(int argc, char *argv[])
 
   KCmdLineOptions options;
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+  KUniqueApplication::addCmdLineOptions();
 
-  KApplication a;
+  if ( !KUniqueApplication::start() ) {
+      fprintf( stderr, "importwizard is already running!\n" );
+      exit( 0 );
+  }
+  KUniqueApplication a;
 
   ImportWizard *wizard = new ImportWizard();
   a.setTopWidget(wizard);

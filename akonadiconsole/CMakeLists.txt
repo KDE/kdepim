@@ -25,6 +25,7 @@ set(akonadiconsole_bin_SRCS
   dbbrowser.cpp
   dbconsole.cpp
   debugwidget.cpp
+  instanceselector.cpp
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
@@ -67,6 +68,7 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   collectionaclpage.ui
   dbbrowser.ui
   dbconsole.ui
+  instanceselector.ui
   rawsocketconsole.ui
 )
 

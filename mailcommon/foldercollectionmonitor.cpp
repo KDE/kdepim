@@ -48,9 +48,7 @@ FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
   mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
   mMonitor->setMimeTypeMonitored(QString::fromLatin1( "inode/directory" ));
   mMonitor->setResourceMonitored( "akonadi_search_resource", true );
-#ifndef KDEPIM_NO_NEPOMUK
   mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource", true );
-#endif
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
 }
 

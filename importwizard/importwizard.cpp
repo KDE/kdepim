@@ -102,8 +102,9 @@ ImportWizard::ImportWizard(QWidget *parent)
 #ifdef Q_OS_MAC
   addImportModule(new MailAppImportData(this));
 #endif
-  addImportModule(new PMailImportData(this));
+
 #ifdef Q_OS_WIN
+  addImportModule(new PMailImportData(this));
   addImportModule(new TheBatImportData(this));
 #endif
 
@@ -142,6 +143,7 @@ void ImportWizard::slotProgramDoubleClicked()
 void ImportWizard::slotImportAddressbookClicked()
 {
   addFinishInfo( i18n( "Import addressbook from %1...", mSelectedPim->name() ) );
+  mImportAddressbookPage->setImportButtonEnabled(false);
   const bool result = mSelectedPim->importAddressBook();
   setValid(mPage6,result);
 }
@@ -149,6 +151,7 @@ void ImportWizard::slotImportAddressbookClicked()
 void ImportWizard::slotImportFiltersClicked()
 {
   addFinishInfo( i18n( "Import filters from %1...", mSelectedPim->name() ) );
+  mImportFilterPage->setImportButtonEnabled(false);
   const bool result = mSelectedPim->importFilters();
   setValid(mPage4,result);
 }
@@ -156,7 +159,7 @@ void ImportWizard::slotImportFiltersClicked()
 void ImportWizard::slotImportMailsClicked()
 {
   addFinishInfo( i18n( "Import mails from %1...", mSelectedPim->name() ) );
-
+  mImportMailPage->setImportButtonEnabled(false);
   const bool result = mSelectedPim->importMails();
   setValid(mPage3,result);
 }
@@ -164,7 +167,7 @@ void ImportWizard::slotImportMailsClicked()
 void ImportWizard::slotImportSettingsClicked()
 {
   addFinishInfo( i18n( "Import settings from %1...", mSelectedPim->name() ) );
-
+  mImportSettingPage->setImportButtonEnabled(false);
   const bool result = mSelectedPim->importSettings();
   setValid(mPage5,result);
 }
@@ -172,7 +175,7 @@ void ImportWizard::slotImportSettingsClicked()
 void ImportWizard::slotImportCalendarClicked()
 {
   addFinishInfo( i18n( "Import calendar from %1...", mSelectedPim->name() ) );
-
+  mImportCalendarPage->setImportButtonEnabled(false);
   const bool result = mSelectedPim->importCalendar();
   setValid(mPage7,result);
 }
@@ -247,6 +250,29 @@ void ImportWizard::next()
   } else {
     KAssistantDialog::next();
   }
+}
+
+void ImportWizard::enableAllImportButton()
+{
+  mImportMailPage->setImportButtonEnabled(true);
+  mImportFilterPage->setImportButtonEnabled(true);
+  mImportSettingPage->setImportButtonEnabled(true);
+  mImportAddressbookPage->setImportButtonEnabled(true);
+  mImportCalendarPage->setImportButtonEnabled(true);
+}
+
+void ImportWizard::back()
+{
+  if( currentPage() == mPage1 ) {
+    return;
+  } else if( currentPage() == mPage4 ||
+             currentPage() == mPage5 ||
+             currentPage() == mPage6 ||
+             currentPage() == mPage7 ||
+             currentPage() == mPage8 ) {
+    enableAllImportButton();
+  }
+  KAssistantDialog::back();
 }
 
 void ImportWizard::reject()

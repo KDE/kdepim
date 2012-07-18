@@ -31,7 +31,7 @@
 #include <messagelist/messagelist_export.h>
 #include "theme.h"
 
-namespace Nepomuk {
+namespace Nepomuk2 {
 class Resource;
 }
 

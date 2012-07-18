@@ -21,12 +21,12 @@
 #include "core/filter.h"
 #include "core/messageitem.h"
 
-#include <KDE/Nepomuk/Query/AndTerm>
-#include <KDE/Nepomuk/Query/ComparisonTerm>
-#include <KDE/Nepomuk/Query/LiteralTerm>
-#include <KDE/Nepomuk/Query/QueryServiceClient>
-#include <KDE/Nepomuk/Query/ResourceTerm>
-#include <KDE/Nepomuk/Vocabulary/NIE>
+#include <Nepomuk2/Query/AndTerm>
+#include <Nepomuk2/Query/ComparisonTerm>
+#include <Nepomuk2/Query/LiteralTerm>
+#include <Nepomuk2/Query/QueryServiceClient>
+#include <Nepomuk2/Query/ResourceTerm>
+#include <Nepomuk2/Vocabulary/NIE>
 
 #include <ontologies/nie.h>
 #include <ontologies/nmo.h>
@@ -36,10 +36,10 @@
 using namespace MessageList::Core;
 
 Filter::Filter()
-  : mQueryClient( new Nepomuk::Query::QueryServiceClient( this ) )
+  : mQueryClient( new Nepomuk2::Query::QueryServiceClient( this ) )
 {
-  connect( mQueryClient, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
-           this, SLOT(newEntries(QList<Nepomuk::Query::Result>)) );
+  connect( mQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+           this, SLOT(newEntries(QList<Nepomuk2::Query::Result>)) );
   connect( mQueryClient, SIGNAL(finishedListing()),
            this, SLOT(finishedListing()) );
 }
@@ -132,22 +132,22 @@ void Filter::setSearchString( const QString &search )
     mQueryClient->close();
     return;
   }
-  const Nepomuk::Resource parentResource( mCurrentFolder );
+  const Nepomuk2::Resource parentResource( mCurrentFolder );
   if( !parentResource.exists() ) {
      mQueryClient->close();
      return;
   }
-  const Nepomuk::Query::ComparisonTerm isChildTerm( Nepomuk::Vocabulary::NIE::isPartOf(), Nepomuk::Query::ResourceTerm( parentResource ) );
+  const Nepomuk2::Query::ComparisonTerm isChildTerm( Nepomuk2::Vocabulary::NIE::isPartOf(), Nepomuk2::Query::ResourceTerm( parentResource ) );
 
-  const Nepomuk::Query::ComparisonTerm bodyTerm(
+  const Nepomuk2::Query::ComparisonTerm bodyTerm(
       Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk::Query::LiteralTerm( QString::fromLatin1( "\'%1\'" ).arg( mSearchString ) ),
-      Nepomuk::Query::ComparisonTerm::Contains );
+      Nepomuk2::Query::LiteralTerm( QString::fromLatin1( "\'%1\'" ).arg( mSearchString ) ),
+      Nepomuk2::Query::ComparisonTerm::Contains );
 
-  const Nepomuk::Query::AndTerm andTerm( isChildTerm, bodyTerm );
+  const Nepomuk2::Query::AndTerm andTerm( isChildTerm, bodyTerm );
 
-  Nepomuk::Query::Query query( andTerm );
-  query.setRequestProperties( QList<Nepomuk::Query::Query::RequestProperty>() << Nepomuk::Types::Property( Akonadi::ItemSearchJob::akonadiItemIdUri() ) );
+  Nepomuk2::Query::Query query( andTerm );
+  query.setRequestProperties( QList<Nepomuk2::Query::Query::RequestProperty>() << Nepomuk2::Types::Property( Akonadi::ItemSearchJob::akonadiItemIdUri() ) );
 
   mMatchingItemIds.clear();
   mQueryClient->close();
@@ -157,9 +157,9 @@ void Filter::setSearchString( const QString &search )
   }
 }
 
-void Filter::newEntries( const QList<Nepomuk::Query::Result> &entries )
+void Filter::newEntries( const QList<Nepomuk2::Query::Result> &entries )
 {
-  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
+  Q_FOREACH( const Nepomuk2::Query::Result &result, entries ) {
     const Soprano::Node &property = result.requestProperty( Akonadi::ItemSearchJob::akonadiItemIdUri() );
     if ( !(property.isValid() && property.isLiteral() && property.literal().isString()) ) {
       continue;

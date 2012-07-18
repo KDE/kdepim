@@ -42,6 +42,7 @@ public:
 
   void next();
   void reject();
+  void back();
   
   ImportMailPage* importMailPage() const;
   ImportFilterPage* importFilterPage() const;
@@ -68,6 +69,7 @@ private:
   void addImportModule(AbstractImporter *);
   void checkModules();
   void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
+  void enableAllImportButton();
 
   QMap<QString, AbstractImporter*> mlistImport;
 

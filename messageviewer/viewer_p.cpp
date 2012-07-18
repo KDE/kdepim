@@ -522,9 +522,10 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
 
     KService::List::ConstIterator it = offers.constBegin();
     for(; it != offers.constEnd(); it++) {
-      KAction* act = createAppAction(*it,
+      KAction* act = MessageViewer::Util::createAppAction(*it,
                                         // no submenu -> prefix single offer
-                                        menu == topMenu, actionGroup);
+                                        menu == topMenu, actionGroup,this);
+      mOpenWithActions.append(act);
       menu->addAction(act);
     }
 
@@ -539,12 +540,14 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     openWithAct->setText(openWithActionName);
     QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
+    mOpenWithActions.append(openWithAct);
   }
   else { // no app offers -> Open With...
     KAction *act = new KAction(this);
     act->setText(i18nc("@title:menu", "&Open With..."));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
+    mOpenWithActions.append(act);
   }
 }
 
@@ -555,22 +558,6 @@ void ViewerPrivate::slotOpenWithDialog()
   attachmentOpenWith( mCurrentContent );
 }
 
-KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup )
-{
-  QString actionName(service->name().replace('&', "&&"));
-  if (singleOffer) {
-    actionName = i18n("Open &with %1", actionName);
-  } else {
-    actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
-  }
-
-  KAction *act = new KAction(this);
-  act->setIcon(KIcon(service->icon()));
-  act->setText(actionName);
-  actionGroup->addAction( act );
-  act->setData(QVariant::fromValue(service));
-  return act;
-}
 
 void ViewerPrivate::slotOpenWithAction(QAction *act)
 {
@@ -655,6 +642,8 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( globalPos );
   delete menu;
+  qDeleteAll(mOpenWithActions);
+  mOpenWithActions.clear();
 }
 
 void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString& fileName )
@@ -1823,12 +1812,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     }
   }
 
-  /*
-   * FIXME make optional?
-  popup.addAction( i18n( "Save as &Encoded..." ), this,
-                   SLOT(slotSaveAsEncoded()) );
-  */
-
   if( !contents.isEmpty() ) {
     popup.addAction( i18n( "Save All Attachments..." ), this,
                      SLOT(slotAttachmentSaveAll()) );
@@ -1853,6 +1836,8 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
+  qDeleteAll(mOpenWithActions);
+  mOpenWithActions.clear();
 #endif
 
 }

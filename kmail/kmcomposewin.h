@@ -66,6 +66,7 @@ class KToggleAction;
 class KUrl;
 class KRecentFilesAction;
 class SnippetWidget;
+class InsertSpecialChar;
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -429,7 +430,8 @@ class KMComposeWin : public KMail::Composer
     virtual void setAutoSaveFileName( const QString& fileName );
     void slotSpellCheckingLanguage(const QString& language);
     void forceAutoSaveMessage();
-  
+    void insertSpecialCharacter();
+    void charSelected(const QChar& c);
 
   public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.
@@ -534,10 +536,7 @@ class KMComposeWin : public KMail::Composer
      */
     void setSigning( bool sign, bool setByUser = false );
 
-    /**
-      Returns true if the user forgot to attach something.
-    */
-    bool userForgotAttachment();
+    Message::ComposerViewBase::MissingAttachment userForgotAttachment();
 
     /**
      * Decrypt an OpenPGP block or strip off the OpenPGP envelope of a text
@@ -669,7 +668,7 @@ class KMComposeWin : public KMail::Composer
 
     SnippetWidget *mSnippetWidget;
     MessageViewer::TranslatorWidget *mTranslatorWidget;
-
+    QPointer<InsertSpecialChar> mInsertSpecialChar;
     QLabel *mSignatureStateIndicator;
   QLabel *mEncryptionStateIndicator;
   MailCommon::FolderRequester *mFccFolder;
@@ -677,6 +676,7 @@ class KMComposeWin : public KMail::Composer
     bool mCheckForForgottenAttachments;
     bool mIgnoreStickyFields;
   bool mWasModified;
+
 };
 
 #endif

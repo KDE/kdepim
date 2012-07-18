@@ -86,6 +86,7 @@ class Message::AttachmentControllerBase::Private
     void attachPublicKeyJobResult( KJob *job ); // slot
     void slotAttachmentContentCreated( KJob *job ); // slot
     void addAttachmentPart( AttachmentPart::Ptr part );
+    void selectedAllAttachment();
 
     AttachmentControllerBase *const q;
     bool encryptEnabled;
@@ -95,7 +96,6 @@ class Message::AttachmentControllerBase::Private
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
     QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
 
-    QMenu *contextMenu;
     AttachmentPart::List selectedParts;
     KActionCollection *mActionCollection;
     QAction *attachPublicKeyAction;
@@ -112,6 +112,7 @@ class Message::AttachmentControllerBase::Private
     QAction *propertiesContextAction;
     QAction *addAction;
     QAction *addContextAction;
+    QAction *selectAllAction;
 
     // If part p is compressed, uncompressedParts[p] is the uncompressed part.
     QHash<AttachmentPart::Ptr, AttachmentPart::Ptr> uncompressedParts;
@@ -123,7 +124,6 @@ AttachmentControllerBase::Private::Private( AttachmentControllerBase *qq )
   , signEnabled( false )
   , model( 0 )
   , wParent( 0 )
-  , contextMenu( 0 )
   , attachPublicKeyAction( 0 )
   , attachMyPublicKeyAction( 0 )
   , openContextAction( 0 )
@@ -138,6 +138,7 @@ AttachmentControllerBase::Private::Private( AttachmentControllerBase *qq )
   , propertiesContextAction( 0 )
   , addAction( 0 )
   , addContextAction( 0 )
+  , selectAllAction( 0 )
 {
 }
 
@@ -318,6 +319,7 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult( KJob *job )
   q->addAttachment( part );
 }
 
+
 static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
 {
   KTemporaryFile *file = new KTemporaryFile;
@@ -376,8 +378,8 @@ void AttachmentControllerBase::createActions()
   connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
   connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
-  d->removeAction = new KAction( i18n( "&Remove Attachment" ), this );
-  d->removeContextAction = new KAction( i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
+  d->removeAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
+  d->removeContextAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
   connect( d->removeAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
   connect( d->removeContextAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
 
@@ -402,25 +404,16 @@ void AttachmentControllerBase::createActions()
   connect( d->saveAsContextAction, SIGNAL(triggered(bool)),
       this, SLOT(saveSelectedAttachmentAs()) );
 
-  d->propertiesAction = new KAction( i18n( "Attachment Pr&operties" ), this ); // TODO why no '...'?
+  d->propertiesAction = new KAction( i18n( "Attachment Pr&operties..." ), this );
   d->propertiesContextAction = new KAction( i18n( "Properties" ), this );
   connect( d->propertiesAction, SIGNAL(triggered(bool)),
       this, SLOT(selectedAttachmentProperties()) );
   connect( d->propertiesContextAction, SIGNAL(triggered(bool)),
       this, SLOT(selectedAttachmentProperties()) );
 
-  // Create a context menu for the attachment view.
-  Q_ASSERT( d->contextMenu == 0 ); // Not called twice.
-  d->contextMenu = new QMenu( d->wParent );
-  d->contextMenu->addAction( d->openContextAction );
-  d->contextMenu->addAction( d->viewContextAction );
-  d->contextMenu->addAction( d->editContextAction );
-  d->contextMenu->addAction( d->editWithContextAction );
-  d->contextMenu->addAction( d->removeContextAction );
-  d->contextMenu->addAction( d->saveAsContextAction );
-  d->contextMenu->addAction( d->propertiesContextAction );
-  d->contextMenu->addSeparator();
-  d->contextMenu->addAction( d->addContextAction );
+  d->selectAllAction = new KAction( i18n("Select All"), this);
+  connect( d->selectAllAction, SIGNAL(triggered(bool)),
+      this, SIGNAL(selectedAllAttachment()) );
 
   // Insert the actions into the composer window's menu.
   KActionCollection *collection = d->mActionCollection;
@@ -430,6 +423,7 @@ void AttachmentControllerBase::createActions()
   collection->addAction( QLatin1String( "remove" ), d->removeAction );
   collection->addAction( QLatin1String( "attach_save" ), d->saveAsAction );
   collection->addAction( QLatin1String( "attach_properties" ), d->propertiesAction );
+  collection->addAction( QLatin1String( "select_all_attachment"), d->selectAllAction);
   
 
   setSelectedParts( AttachmentPart::List());
@@ -469,7 +463,37 @@ void AttachmentControllerBase::compressAttachment( AttachmentPart::Ptr part, boo
 void AttachmentControllerBase::showContextMenu()
 {
   emit refreshSelection();
-  d->contextMenu->popup( QCursor::pos() );
+
+
+  const int numberOfParts(d->selectedParts.count());
+  QMenu *menu = new QMenu;
+
+  const bool enableEditAction = (numberOfParts == 1) &&
+                                ( !d->selectedParts.first()->isMessageOrMessageCollection() );
+
+  if(numberOfParts>0) {
+    menu->addAction(d->openContextAction);
+    menu->addAction(d->viewContextAction);
+  }
+  if(enableEditAction) {
+    menu->addAction(d->editWithContextAction);
+    menu->addAction(d->editContextAction);
+  }
+  if(numberOfParts>0) {
+    menu->addAction(d->removeContextAction);
+  }
+  if(numberOfParts == 1) {
+    menu->addAction(d->saveAsContextAction);
+    menu->addAction(d->propertiesContextAction);
+  }
+
+  menu->addSeparator();
+  menu->addAction(d->selectAllAction);
+  menu->addSeparator();
+  menu->addAction(d->addContextAction);
+
+  menu->exec( QCursor::pos() );
+  delete menu;
 }
 
 void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
