@@ -140,7 +140,7 @@ standard values.</para>
 <listitem>
 <para>Uses the values from <menuchoice><guimenu>Account Details</guimenu>
 <guimenuitem>Password &amp; User Account</guimenuitem></menuchoice> in the
-&systemsettings; category <guilabel>Application Appearance and Behavior</guilabel>.</para>
+&systemsettings; category <guilabel>Common Appearance and Behavior</guilabel>.</para>
 </listitem>
 </varlistentry>
 
