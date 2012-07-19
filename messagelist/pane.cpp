@@ -393,17 +393,20 @@ void Pane::focusQuickSearch()
 
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  Widget *w = static_cast<Widget*>( q->currentWidget() );
-  QItemSelectionModel *s = mWidgetSelectionHash[w];
-
-  s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
-  s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
-
+  Widget *w = 0;
+  QItemSelectionModel *s = 0;
   if ( mPreferEmptyTab ) {
     q->createNewTab();
     w = static_cast<Widget*>( q->currentWidget() );
     s = mWidgetSelectionHash[w];
   }
+	
+  w = static_cast<Widget*>( q->currentWidget() );
+  s = mWidgetSelectionHash[w];
+
+  s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
+  s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
+
 
   QString label;
   QIcon icon = KIcon( QLatin1String( "folder" ) );
