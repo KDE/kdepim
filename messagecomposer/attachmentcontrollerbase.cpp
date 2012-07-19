@@ -99,7 +99,6 @@ class Message::AttachmentControllerBase::Private
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
     QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
 
-    QList<QAction*> openWithActions;
     AttachmentPart::List selectedParts;
     KActionCollection *mActionCollection;
     QAction *attachPublicKeyAction;
@@ -316,8 +315,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
     for(; it != end; ++it) {
       KAction* act = MessageViewer::Util::createAppAction(*it,
                                         // no submenu -> prefix single offer
-                                        menu == topMenu, actionGroup,q);
-      openWithActions.append(act);
+                                        menu == topMenu, actionGroup,menu);
       menu->addAction(act);
     }
 
@@ -328,18 +326,16 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
     } else {
       openWithActionName = i18nc("@title:menu", "&Open With...");
     }
-    KAction *openWithAct = new KAction(q);
+    KAction *openWithAct = new KAction(menu);
     openWithAct->setText(openWithActionName);
     QObject::connect(openWithAct, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
-    openWithActions.append(openWithAct);
   }
   else { // no app offers -> Open With...
-    KAction *act = new KAction(q);
+    KAction *act = new KAction(topMenu);
     act->setText(i18nc("@title:menu", "&Open With..."));
     QObject::connect(act, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
-    openWithActions.append(act);
   }
 }
 
@@ -552,8 +548,6 @@ void AttachmentControllerBase::showContextMenu()
 
   menu->exec( QCursor::pos() );
   delete menu;
-  qDeleteAll(d->openWithActions);
-  d->openWithActions.clear();
 }
 
 void AttachmentControllerBase::slotOpenWithDialog()
