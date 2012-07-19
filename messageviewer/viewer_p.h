@@ -280,7 +280,7 @@ private:
   void initHtmlWidget();
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
-  void createOpenWithMenu( KMenu *topMenu, KMime::Content* node );
+  void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr );
 public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
