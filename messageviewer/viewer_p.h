@@ -282,7 +282,7 @@ private:
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
   void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr );
-  KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup);
+  KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QMenu *menu);
 public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
@@ -675,7 +675,6 @@ public:
   Akonadi::Monitor mMonitor;
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
-  QList<QAction*> mOpenWithActions;
   Akonadi::Item::Id mPreviouslyViewedItem;
 
   // zoom Factor

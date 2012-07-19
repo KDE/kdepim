@@ -523,7 +523,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
     for(; it != offers.constEnd(); it++) {
       KAction* act = createAppAction(*it,
                                         // no submenu -> prefix single offer
-                                        menu == topMenu, actionGroup);
+                                        menu == topMenu, actionGroup, menu);
       menu->addAction(act);
     }
 
@@ -534,18 +534,16 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
     } else {
       openWithActionName = i18nc("@title:menu", "&Open With...");
     }
-    KAction *openWithAct = new KAction(this);
+    KAction *openWithAct = new KAction(menu);
     openWithAct->setText(openWithActionName);
     QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
-    mOpenWithActions.append(openWithAct);
   }
   else { // no app offers -> Open With...
-    KAction *act = new KAction(this);
+    KAction *act = new KAction(topMenu);
     act->setText(i18nc("@title:menu", "&Open With..."));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
-    mOpenWithActions.append(act);
   }
 }
 
@@ -557,7 +555,7 @@ void ViewerPrivate::slotOpenWithDialog()
   }
 }
 
-KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup )
+KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QMenu *menu)
 {
   QString actionName(service->name().replace('&', "&&"));
   if (singleOffer) {
@@ -566,12 +564,11 @@ KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singl
     actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
   }
 
-  KAction *act = new KAction(this);
+  KAction *act = new KAction(menu);
   act->setIcon(KIcon(service->icon()));
   act->setText(actionName);
   actionGroup->addAction( act );
   act->setData(QVariant::fromValue(service));
-  mOpenWithActions.append(act);
   return act;
 }
 
@@ -658,8 +655,6 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( globalPos );
   delete menu;
-  qDeleteAll(mOpenWithActions);
-  mOpenWithActions.clear();
 }
 
 void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString& fileName )
@@ -1858,8 +1853,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
-  qDeleteAll(mOpenWithActions);
-  mOpenWithActions.clear();
 #endif
 
 }
