@@ -565,7 +565,7 @@ void ViewerPrivate::slotOpenWithAction(QAction *act)
   KService::Ptr app = act->data().value<KService::Ptr>();
   KMime::Content::List contents = selectedContents();
   if(contents.count() == 1) {
-    attachmentOpen( contents.first(),app );
+    attachmentOpenWith( contents.first(),app );
   }
 }
 
