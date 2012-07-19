@@ -64,7 +64,8 @@ class MonthViewPrivate : public CalendarSupport::Calendar::CalendarObserver
     MonthScene                      *scene;
     QDate                            selectedItemDate;
     Akonadi::Item::Id                selectedItemId;
-    MonthGraphicsView *view;
+    MonthGraphicsView               *view;
+    QToolButton                     *fullView;
 
     // List of uids for QDate
     QMap<QDate, QStringList > mBusyDays;
@@ -190,34 +191,64 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     // push buttons to the bottom
     rightLayout->addStretch( 1 );
 
+    d->fullView = new QToolButton( this );
+    d->fullView->setIcon( KIcon( "arrow-left-double" ) );
+    d->fullView->setAutoRaise( true );
+    d->fullView->setCheckable( true );
+    d->fullView->setChecked( preferences()->fullViewMonth() );
+    d->fullView->isChecked() ?
+      d->fullView->setToolTip( i18nc( "@info:tooltip",
+                                      "Display calendar in a normal size" ) ) :
+      d->fullView->setToolTip( i18nc( "@info:tooltip",
+                                      "Display calendar in a full window" ) );
+    d->fullView->setWhatsThis(
+      i18nc( "@info:whatsthis",
+             "Click this button and the month view will be enlarged to fill the "
+             "maximum available window space / or shrunk back to its normal size." ) );
+    connect( d->fullView, SIGNAL(clicked()),
+             this, SLOT(changeFullView()) );
+
     QToolButton *minusMonth = new QToolButton( this );
     minusMonth->setIcon( KIcon( "arrow-up-double" ) );
-    minusMonth->setToolTip( i18n( "Go back one month" ) );
     minusMonth->setAutoRaise( true );
+    minusMonth->setToolTip( i18nc( "@info:tooltip", "Go back one month" ) );
+    minusMonth->setWhatsThis(
+      i18nc( "@info:whatsthis",
+             "Click this button and the view will be scrolled back in time by 1 month." ) );
     connect( minusMonth, SIGNAL(clicked()),
             this, SLOT(moveBackMonth()) );
 
     QToolButton *minusWeek = new QToolButton( this );
     minusWeek->setIcon( KIcon( "arrow-up" ) );
-    minusWeek->setToolTip( i18n( "Go back one week" ) );
     minusWeek->setAutoRaise( true );
+    minusWeek->setToolTip( i18nc( "@info:tooltip", "Go back one week" ) );
+    minusWeek->setWhatsThis(
+      i18nc( "@info:whatsthis",
+             "Click this button and the view will be scrolled back in time by 1 week." ) );
     connect( minusWeek, SIGNAL(clicked()),
             this, SLOT(moveBackWeek()) );
 
     QToolButton *plusWeek = new QToolButton( this );
     plusWeek->setIcon( KIcon( "arrow-down" ) );
-    plusWeek->setToolTip( i18n( "Go forward one week" ) );
     plusWeek->setAutoRaise( true );
+    plusWeek->setToolTip( i18nc( "@info:tooltip", "Go forward one week" ) );
+    plusWeek->setWhatsThis(
+      i18nc( "@info:whatsthis",
+             "Click this button and the view will be scrolled forward in time by 1 week." ) );
     connect( plusWeek, SIGNAL(clicked()),
             this, SLOT(moveFwdWeek()) );
 
     QToolButton *plusMonth = new QToolButton( this );
     plusMonth->setIcon( KIcon( "arrow-down-double" ) );
-    plusMonth->setToolTip( i18n( "Go forward one month" ) );
     plusMonth->setAutoRaise( true );
+    plusMonth->setToolTip( i18nc( "@info:tooltip", "Go forward one month" ) );
+    plusMonth->setWhatsThis(
+      i18nc( "@info:whatsthis",
+             "Click this button and the view will be scrolled forward in time by 1 month." ) );
     connect( plusMonth, SIGNAL(clicked()),
             this, SLOT(moveFwdMonth()) );
 
+    rightLayout->addWidget( d->fullView );
     rightLayout->addWidget( minusMonth );
     rightLayout->addWidget( minusWeek );
     rightLayout->addWidget( plusWeek );
@@ -411,6 +442,22 @@ void MonthView::keyReleaseEvent( QKeyEvent *event )
   }
 }
 
+void MonthView::changeFullView()
+{
+  bool fullView = d->fullView->isChecked();
+
+  fullView ?
+    d->fullView->setToolTip( i18nc( "@info:tooltip",
+                                    "Display calendar in a normal size" ) ) :
+    d->fullView->setToolTip( i18nc( "@info:tooltip",
+                                    "Display calendar in a full window" ) );
+
+  preferences()->setFullViewMonth( fullView );
+  preferences()->writeConfig();
+
+  emit fullViewChanged( fullView );
+}
+
 void MonthView::moveBackMonth()
 {
   d->moveStartDate( 0, -1 );
@@ -573,7 +620,7 @@ void MonthView::reloadIncidences()
         MonthItem *holidayItem =
           new HolidayMonthItem(
             d->scene, date,
-            holidays.join( i18nc( "delimiter for joining holiday names", "," ) ) );
+            holidays.join( i18nc( "@item:intext delimiter for joining holiday names", "," ) ) );
         d->scene->mManagerList << holidayItem;
       }
     }
