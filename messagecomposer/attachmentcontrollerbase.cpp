@@ -558,24 +558,7 @@ void AttachmentControllerBase::showContextMenu()
 
 void AttachmentControllerBase::slotOpenWithDialog()
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
-    if( !tempFile ) {
-      KMessageBox::sorry( d->wParent,
-           i18n( "KMail was unable to write the attachment to a temporary file." ),
-           i18n( "Unable to open attachment" ) );
-      return;
-    }
-    KUrl::List lst;
-    KUrl url = KUrl::fromPath(tempFile->fileName());
-    lst.append( url );
-    if ( !KRun::displayOpenWithDialog( lst, d->wParent, false )) {
-      delete tempFile;
-      tempFile = 0;
-    } else {
-      // The file was opened.  Delete it only when the composer is closed
-      // (and this object is destroyed).
-      tempFile->setParent( this ); // Manages lifetime.
-    }
+  openWith();
 }
 
 void AttachmentControllerBase::slotOpenWithAction(QAction*act)
@@ -583,18 +566,28 @@ void AttachmentControllerBase::slotOpenWithAction(QAction*act)
   KService::Ptr app = act->data().value<KService::Ptr>();
   Q_ASSERT( d->selectedParts.count() == 1 );
 
+  openWith(app);
+}
+
+void AttachmentControllerBase::openWith(KService::Ptr offer)
+{
   KTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
   if( !tempFile ) {
     KMessageBox::sorry( d->wParent,
-         i18n( "KMail was unable to write the attachment to a temporary file." ),
-         i18n( "Unable to open attachment" ) );
+        i18n( "KMail was unable to write the attachment to a temporary file." ),
+        i18n( "Unable to open attachment" ) );
     return;
   }
   KUrl::List lst;
   KUrl url = KUrl::fromPath(tempFile->fileName());
   lst.append( url );
-
-  if ( !KRun::run( *app, lst, d->wParent, false )) {
+  bool result = false;
+  if(offer) {
+    result = KRun::run( *offer, lst, d->wParent, false );
+  } else {
+    result = KRun::displayOpenWithDialog( lst, d->wParent, false );
+  }
+  if ( !result ) {
     delete tempFile;
     tempFile = 0;
   } else {
@@ -602,7 +595,6 @@ void AttachmentControllerBase::slotOpenWithAction(QAction*act)
     // (and this object is destroyed).
     tempFile->setParent( this ); // Manages lifetime.
   }
-
 }
 
 void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
@@ -610,8 +602,8 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
   KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
   if( !tempFile ) {
     KMessageBox::sorry( d->wParent,
-         i18n( "KMail was unable to write the attachment to a temporary file." ),
-         i18n( "Unable to open attachment" ) );
+      i18n( "KMail was unable to write the attachment to a temporary file." ),
+      i18n( "Unable to open attachment" ) );
     return;
   }
 
