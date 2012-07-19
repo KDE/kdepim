@@ -281,7 +281,7 @@ private:
   void initHtmlWidget();
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
-  void createOpenWithMenu( KMenu *topMenu, KMime::Content* node );
+  void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr );
   KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup);
 public:
   /** Event filter */
