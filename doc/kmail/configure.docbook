@@ -484,7 +484,7 @@ be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 
 <para>To read the text from a text file you select
-obtain signature text from <guilabel>File</guilabel>. Enter the
+<guilabel>Obtain signature text from</guilabel>-&gt;<guilabel>File</guilabel>. Enter the
 filename in the <guilabel>Specify file</guilabel> edit field or hit
 the button to the right of it to browse your filesystem. If you want
 to edit the file, hit the <guilabel>Edit File</guilabel>
