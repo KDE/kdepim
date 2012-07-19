@@ -150,7 +150,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
   connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)) );
 
-  createNewTab();
+  readConfig();
   setMovable( true );
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -943,6 +943,15 @@ void Pane::readConfig()
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
   QList<Akonadi::Collection::Id> collectionId = conf.readEntry(QLatin1String("tab"),QList<Akonadi::Collection::Id>());
+  if(collectionId.isEmpty()) {
+    createNewTab();
+  } else {
+    Q_FOREACH(const Akonadi::Collection::Id& id, collectionId) {
+      createNewTab();
+      setCurrentFolder(Akonadi::Collection(id));
+    }
+
+  }
 }
 
 
