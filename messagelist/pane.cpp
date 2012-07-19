@@ -397,8 +397,6 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   QItemSelectionModel *s = 0;
   if ( mPreferEmptyTab ) {
     q->createNewTab();
-    w = static_cast<Widget*>( q->currentWidget() );
-    s = mWidgetSelectionHash[w];
   }
 	
   w = static_cast<Widget*>( q->currentWidget() );
