@@ -789,7 +789,6 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
   part->setSigned( d->model->isSignSelected() );
   d->model->addAttachment( part );
 
-  // TODO I can't find this setting in the config dialog. Has it been removed?
   if( MessageComposer::MessageComposerSettings::self()->showMessagePartDialogOnAttach() ) {
     attachmentProperties( part );
   }
