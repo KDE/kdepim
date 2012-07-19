@@ -383,7 +383,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
     if( offer )
-      attachmentOpen( node, offer );
+      attachmentOpenWith( node, offer );
     else
       attachmentOpen( node );
   } else if ( choice == AttachmentDialog::OpenWith ) {
@@ -566,7 +566,7 @@ void ViewerPrivate::slotOpenWithAction(QAction *act)
     return;
 
   KService::Ptr app = act->data().value<KService::Ptr>();
-  attachmentOpen( mCurrentContent, app );
+  attachmentOpenWith( mCurrentContent, app );
 }
 
 
@@ -720,7 +720,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
 }
 
 
-void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
+void ViewerPrivate::attachmentOpenWith( KMime::Content *node, KService::Ptr offer )
 {
   QString name = mNodeHelper->writeNodeToTempFile( node );
   QString linkName = createAtmFileLink( name );
@@ -737,8 +737,14 @@ void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
 
   url.setPath( linkName );
   lst.append( url );
-  if ( (! KRun::displayOpenWithDialog(lst, mMainWindow, autoDelete)) && autoDelete ) {
-    QFile::remove( url.toLocalFile() );
+  if(offer) {
+    if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
+      QFile::remove(url.toLocalFile());
+    }
+  } else {
+    if ( (! KRun::displayOpenWithDialog(lst, mMainWindow, autoDelete)) && autoDelete ) {
+      QFile::remove( url.toLocalFile() );
+    }
   }
 }
 
@@ -749,31 +755,8 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
-  attachmentOpen( node, offer );
+  attachmentOpenWith( node, offer );
 }
-
-void ViewerPrivate::attachmentOpen( KMime::Content *node, KService::Ptr offer )
-{
-  const QString name = mNodeHelper->writeNodeToTempFile( node );
-  KUrl::List lst;
-  KUrl url;
-  bool autoDelete = true;
-  QString fname = createAtmFileLink( name );
-
-  if ( fname.isNull() ) {
-    autoDelete = false;
-    fname = name;
-  }
-
-  KPIMUtils::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
-
-  url.setPath( fname );
-  lst.append( url );
-  if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
-      QFile::remove(url.toLocalFile());
-  }
-}
-
 
 CSSHelper* ViewerPrivate::cssHelper() const
 {

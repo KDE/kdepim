@@ -227,8 +227,7 @@ public:
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
   KMime::Content::List selectedContents();
-  void attachmentOpenWith( KMime::Content *node );
-  void attachmentOpen( KMime::Content *node, KService::Ptr offer );
+  void attachmentOpenWith( KMime::Content *node, KService::Ptr offer = KService::Ptr() );
   void attachmentOpen( KMime::Content *node );
 
 
