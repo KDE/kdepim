@@ -527,7 +527,10 @@ void AttachmentControllerBase::showContextMenu()
                                 ( !d->selectedParts.first()->isMessageOrMessageCollection() );
 
   if(numberOfParts>0) {
-    menu->addAction(d->openContextAction);
+    if(numberOfParts == 1)
+      d->createOpenWithMenu(menu, d->selectedParts.first());
+    else
+      menu->addAction(d->openContextAction);
     menu->addAction(d->viewContextAction);
   }
   if(enableEditAction) {
@@ -549,11 +552,30 @@ void AttachmentControllerBase::showContextMenu()
 
   menu->exec( QCursor::pos() );
   delete menu;
+  qDeleteAll(d->openWithActions);
+  d->openWithActions.clear();
 }
 
 void AttachmentControllerBase::slotOpenWithDialog()
 {
-
+    KTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
+    if( !tempFile ) {
+      KMessageBox::sorry( d->wParent,
+           i18n( "KMail was unable to write the attachment to a temporary file." ),
+           i18n( "Unable to open attachment" ) );
+      return;
+    }
+    KUrl::List lst;
+    KUrl url = KUrl::fromPath(tempFile->fileName());
+    lst.append( url );
+    if ( !KRun::displayOpenWithDialog( lst, d->wParent, false )) {
+      delete tempFile;
+      tempFile = 0;
+    } else {
+      // The file was opened.  Delete it only when the composer is closed
+      // (and this object is destroyed).
+      tempFile->setParent( this ); // Manages lifetime.
+    }
 }
 
 void AttachmentControllerBase::slotOpenWithAction(QAction*act)
@@ -569,11 +591,10 @@ void AttachmentControllerBase::slotOpenWithAction(QAction*act)
     return;
   }
   KUrl::List lst;
-  KUrl url;
-  url.setPath( tempFile->fileName());
+  KUrl url = KUrl::fromPath(tempFile->fileName());
   lst.append( url );
 
-  if ( !KRun::run( *app, lst, 0, false )) {
+  if ( !KRun::run( *app, lst, d->wParent, false )) {
     delete tempFile;
     tempFile = 0;
   } else {
