@@ -175,6 +175,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
 Pane::~Pane()
 {
+  writeConfig();
   delete d;
 }
 
@@ -924,6 +925,24 @@ void Pane::updateTagComboBox()
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->populateStatusFilterCombo();
   }
+}
+
+void Pane::writeConfig()
+{
+  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
+  QList<Akonadi::Collection::Id> collectionId;
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    collectionId.append(w->currentCollection().id());
+  }
+  conf.writeEntry(QLatin1String("tab"),collectionId);
+  conf.sync();
+}
+
+void Pane::readConfig()
+{
+  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
+  QList<Akonadi::Collection::Id> collectionId = conf.readEntry(QLatin1String("tab"),QList<Akonadi::Collection::Id>());
 }
 
 

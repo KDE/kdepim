@@ -377,6 +377,11 @@ public:
 
   void updateTagComboBox();
 
+  void writeConfig();
+
+  void readConfig();
+
+
 public slots:
   /**
    * Selects all the items in the current folder.
