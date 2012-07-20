@@ -936,6 +936,7 @@ void Pane::writeConfig()
     collectionId.append(w->currentCollection().id());
   }
   conf.writeEntry(QLatin1String("tab"),collectionId);
+  conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
   conf.sync();
 }
 
@@ -950,7 +951,7 @@ void Pane::readConfig()
       createNewTab();
       setCurrentFolder(Akonadi::Collection(id));
     }
-
+    setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"),0));
   }
 }
 
