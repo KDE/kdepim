@@ -482,8 +482,14 @@ bool Session::saslClientStep(const QByteArray& challenge)
   const char *out = NULL;
   uint outlen;
 
+  const QByteArray challenge_decoded = QByteArray::fromBase64( challenge );
   do {
-    result = sasl_client_step( m_sasl_conn, challenge.isEmpty() ? 0 : challenge.data(), challenge.size(), &m_sasl_client_interact, &out, &outlen );
+    result =
+      sasl_client_step( m_sasl_conn,
+                        challenge_decoded.isEmpty() ? 0 : challenge_decoded.data(),
+                        challenge_decoded.size(),
+                        &m_sasl_client_interact,
+                        &out, &outlen );
     if ( result == SASL_INTERACT ) {
       if ( !saslInteract( m_sasl_client_interact ) ) {
         sasl_dispose( &m_sasl_conn );
