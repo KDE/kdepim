@@ -639,6 +639,22 @@ void ImportMailJob::restoreConfig()
       copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
     }
   }
+  const QString archiveconfigurationrcStr("akonadi_archivemail_agentrc");
+  const KArchiveEntry* archiveconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + archiveconfigurationrcStr);
+  if( archiveconfigurationentry &&  archiveconfigurationentry->isFile()) {
+    const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
+    const QString archiveconfigurationrc = KStandardDirs::locateLocal( "config",  archiveconfigurationrcStr);
+    if(QFile(archiveconfigurationrc).exists()) {
+      //TODO 4.10 allow to merge config.
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",archiveconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
+        importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+      }
+    } else {
+      importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+    }
+  }
+
+
 
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
@@ -654,6 +670,8 @@ void ImportMailJob::restoreConfig()
       importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
     }
   }
+
+
 
 
 
@@ -812,6 +830,33 @@ void ImportMailJob::restoreNepomuk()
   Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
   //TODO
 }
+
+
+void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix)
+{
+  copyToFile(archiveconfiguration,archiveconfigurationrc,filename,prefix);
+  KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
+
+  //adapt id
+  const QString archiveGroupPattern = QLatin1String( "ArchiveMailCollection " );
+  const QStringList archiveList = archiveConfig->groupList().filter( archiveGroupPattern );
+  Q_FOREACH(const QString& str, archiveList) {
+    const QString path = str.right(str.length()-archiveGroupPattern.length());
+    if(!path.isEmpty())
+    {
+      KConfigGroup oldGroup = archiveConfig->group(str);
+      const Akonadi::Collection::Id id = convertPathToId(path);
+      if(id!=-1) {
+        KConfigGroup newGroup( archiveConfig, archiveGroupPattern + QString::number(id));
+        oldGroup.copyTo( &newGroup );
+        newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
+      }
+      oldGroup.deleteGroup();
+    }
+  }
+  archiveConfig->sync();
+}
+
 
 
 void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
