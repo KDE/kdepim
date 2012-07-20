@@ -1,4 +1,15 @@
 
+Friday 20 July 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4314: Can't open attachment of an invitation mail (#10128
+* kolab/issue4849: Modification of Incidence can lead to wrong deletion (RT#10126)
+* kolab/issue4850: Recurring multi day event can cause calendar to hang under some circumstances
+
+
+
 Friday 22 June 2012
 
 Problems addressed
