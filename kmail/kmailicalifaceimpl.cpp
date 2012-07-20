@@ -835,6 +835,7 @@ Q_UINT32 KMailICalIfaceImpl::update( const QString& resource,
   kdDebug(5006) << attachmentURLs << "\n";
   kdDebug(5006) << attachmentMimetypes << "\n";
   kdDebug(5006) << attachmentNames << "\n";
+  kdDebug(5006) << subject << "\n";
   kdDebug(5006) << "deleted attachments:" << deletedAttachments << "\n";
 
   // Find the folder
@@ -848,7 +849,11 @@ Q_UINT32 KMailICalIfaceImpl::update( const QString& resource,
 
   KMMessage* msg = 0;
   if ( sernum != 0 ) {
-    msg = findMessageBySerNum( sernum, f );
+    if ( storageFormat( f ) == StorageXML ) {
+      msg = findMessageBySerNum( sernum, f, subject );
+    } else {
+      msg = findMessageBySerNum( sernum, f );
+    }
     if ( !msg ) return 0;
     // Message found - make a copy and update it:
     KMMessage* newMsg = new KMMessage( *msg );
@@ -1370,7 +1375,7 @@ KMMessage *KMailICalIfaceImpl::findMessageByUID( const QString& uid, KMFolder* f
 }
 
 // Find message matching a given serial number
-KMMessage *KMailICalIfaceImpl::findMessageBySerNum( Q_UINT32 serNum, KMFolder* folder )
+KMMessage *KMailICalIfaceImpl::findMessageBySerNum( Q_UINT32 serNum, KMFolder* folder, const QString& subject )
 {
   if( !folder ) return 0;
 
@@ -1386,6 +1391,44 @@ KMMessage *KMailICalIfaceImpl::findMessageBySerNum( Q_UINT32 serNum, KMFolder* f
       message = aFolder->getMsg( index );
     if (!message)
       kdWarning(5006) << "findMessageBySerNum( " << serNum << " ) invalid serial number\n" << endl;
+  }
+
+  // The Following code is aimed to avoid incidence loss where the
+  // wrong mail is updated and thus deleted.
+  //
+  // see Kolab Issue 4849, 4843, and several other corrupted index problems
+
+  // Safety check that found message has the same subject
+  if ( !subject.isEmpty() ) {
+    if ( message->subject() != subject ) {
+      // This should not happen!
+      kdWarning(5006) << k_funcinfo << " Subject check failed!" << endl
+                      << "Got: " << message->subject() << endl
+                      << "Expected: " << subject << endl;
+      sleep( 1 ); // Maybe it is caused by a weird threading situation
+      message = aFolder->getMsg( index );
+      if ( message == NULL || message->subject() == subject ) {
+        kdWarning(5006) << "Still got the wrong message: " << message->subject() << endl;
+        KMFolderCachedImap * cimapFolder = dynamic_cast<KMFolderCachedImap *> ( aFolder->storage() );
+        if ( cimapFolder != NULL ) {
+          cimapFolder->markForReindexing();
+        } else {
+          // This can't happen,..
+          kdWarning(5006) << "Folder is not a cached IMAP folder" << endl;
+        }
+        const QString errMsg = i18n("<qt>Kontact has detected a corruption in the folder: <br/> %1 <br/>"
+                                    "Your current changes could not be saved.<br/><br/>"
+                                    "It is <b>strongly</b> recommended that you restart Kontact now.<br/>"
+                                    "Quit now?</qt>").arg(folder->prettyURL());
+        if ( KMessageBox::warningYesNo( 0, errMsg, i18n("Invalid state detected") ) == KMessageBox::Yes ) {
+          qApp->quit();
+        } else {
+          return 0;
+        }
+      } else {
+        kdDebug(5006) << "Got the right message now, phew" << endl;
+      }
+    }
   }
   return message;
 }

@@ -201,8 +201,11 @@ public:
 
   /** Find message matching a given UID. */
   KMMessage* findMessageByUID( const QString& uid, KMFolder* folder );
-  /** Find message matching a given serial number. */
-  static KMMessage* findMessageBySerNum( Q_UINT32 serNum, KMFolder* folder );
+  /** Find message matching a given serial number.
+   * If a subject is passed the found message is checked for the subject
+   * and the user is alerted if it does not match.
+   */
+  static KMMessage* findMessageBySerNum( Q_UINT32 serNum, KMFolder* folder, const QString& subject = QString::null );
 
   /** Convenience function to delete a message. */
   void deleteMsg( KMMessage* msg );
@@ -226,6 +229,12 @@ public:
   // triggers fb re-generation
   void folderDeletedOnServer( const KURL& folderURL );
   void addFolderChange( KMFolder* folder, FolderChanges changes );
+
+  /**
+   * Marks a Folder for reindexing on the next startup of Kontact
+   * this should be called if a corruption was detected in a folder.
+   */
+  void markFolderForReindexing( KMFolder* folder );
 
   // See CachedImapJob::slotPutMessageResult
   bool isResourceQuiet() const;
