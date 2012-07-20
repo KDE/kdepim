@@ -406,7 +406,6 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
 
-
   QString label;
   QIcon icon = KIcon( QLatin1String( "folder" ) );
   QString toolTip;
@@ -432,6 +431,17 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
   q->setTabToolTip( index, toolTip);
+  if ( mPreferEmptyTab ) {
+    disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+              q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
+
+    mSelectionModel->select( mapSelectionFromSource( s->selection() ),
+                            QItemSelectionModel::ClearAndSelect );
+
+    connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
+
+  }
 }
 
 void Pane::Private::activateTab()
