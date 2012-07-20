@@ -348,6 +348,12 @@ void KMFolderCachedImap::readConfig()
   for ( QStringList::iterator it = delUids.begin(); it != delUids.end(); it++ ) {
     mDeletedUIDsSinceLastSync.insert( (*it).toULong(), 0);
   }
+  if ( config->readBoolEntry( "ReindexOnNextStart", false ) ) {
+    kdDebug( 5006 ) << "Recreating index in: " << folder()->idString() <<endl;
+    createIndexFromContents();
+    config->deleteEntry( "ReindexOnNextStart" );
+    config->sync();
+  }
 }
 
 void KMFolderCachedImap::writeConfig()
@@ -3272,4 +3278,9 @@ bool KMFolderCachedImap::mailCheckInProgress() const
   return mSyncState != SYNC_STATE_INITIAL;
 }
 
+void KMFolderCachedImap::markForReindexing()
+{
+  KConfigGroup configGroup( KMKernel::config(), "Folder-" + folder()->idString() );
+  configGroup.writeEntry( "ReindexOnNextStart", true);
+}
 #include "kmfoldercachedimap.moc"

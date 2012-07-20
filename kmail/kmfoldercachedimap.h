@@ -238,6 +238,9 @@ public:
 
   int createIndexFromContentsRecursive();
 
+  /** Write into the config that the folder should be reindexed on next start. */
+  void markForReindexing();
+
   //virtual void holdSyncs( bool hold ) { mHoldSyncs = hold; }
 
   /**
