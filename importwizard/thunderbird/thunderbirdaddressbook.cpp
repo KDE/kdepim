@@ -78,7 +78,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
               for ( MorkCells::iterator cellsIter = cells.begin();cellsIter != endCellIter; ++cellsIter ) {
                 const QString value = mork.getValue(cellsIter.value());
                 const QString column = mork.getColumn(cellsIter.key());
-                qDebug()<<"column :"<<column<<" value :"<<value;
+                kDebug()<<"column :"<<column<<" value :"<<value;
                 if( column == QLatin1String("LastModifiedDate" ) ) {
                 } else if( column == QLatin1String("RecordKey" ) ) {
                 } else if( column == QLatin1String("AddrCharSet" ) ) {
@@ -116,8 +116,10 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("LowercasePrimaryEmail" ) ) {
                 } else if( column == QLatin1String("SecondEmail" ) ) {
                 } else if( column == QLatin1String("PreferMailFormat" ) ) {
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String("MailPreferedFormatting"), value );
                 } else if( column == QLatin1String("PopularityIndex" ) ) {
                 } else if( column == QLatin1String("AllowRemoteContent" ) ) {
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String("MailAllowToRemoteContent"), value );
                 } else if( column == QLatin1String("WorkPhone" ) ) {
                   contact.insertPhoneNumber( KABC::PhoneNumber( value, KABC::PhoneNumber::Work ) );
                 } else if( column == QLatin1String("HomePhone" ) ) {
@@ -167,15 +169,19 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("WebPage1" ) ) {
                 } else if( column == QLatin1String("WebPage2" ) ) {
                 } else if( column == QLatin1String("BirthYear" ) ) {
-                    birthyear = value.toInt();
+                  birthyear = value.toInt();
                 } else if( column == QLatin1String("BirthMonth" ) ) {
-                    birthmonth = value.toInt();
+                  birthmonth = value.toInt();
                 } else if( column == QLatin1String("BirthDay" ) ) {
-                    birthday = value.toInt();
+                  birthday = value.toInt();
                 } else if( column == QLatin1String("Custom1" ) ) {
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom1", value );
                 } else if( column == QLatin1String("Custom2" ) ) {
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom2", value );
                 } else if( column == QLatin1String("Custom3" ) ) {
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom3", value );
                 } else if( column == QLatin1String("Custom4" ) ) {
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom4", value );
                 } else if( column == QLatin1String("Notes" ) ) {
                   contact.setNote(value);
                 } else {
@@ -195,7 +201,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                   contact.setBirthday( birthDate );
               }
               createContact( contact );
-              qDebug()<<"-----------------------";
+              kDebug()<<"-----------------------";
             }
           }
         }
