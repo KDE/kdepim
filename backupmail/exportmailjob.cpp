@@ -219,8 +219,10 @@ void ExportMailJob::backupConfig()
         KConfigGroup oldGroup = archiveConfig->group(str);
         const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
         if(!realPath.isEmpty()) {
-          KConfigGroup newGroup( archiveConfig, archiveGroupPattern + realPath);
+          const QString collectionPath(archiveGroupPattern + realPath);
+          KConfigGroup newGroup( archiveConfig, collectionPath);
           oldGroup.copyTo( &newGroup );
+          newGroup.writeEntry(QLatin1String("saveCollectionId"),collectionPath);
         }
         oldGroup.deleteGroup();
       }

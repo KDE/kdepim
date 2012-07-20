@@ -845,6 +845,7 @@ void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration
       if(id!=-1) {
         KConfigGroup newGroup( archiveConfig, archiveGroupPattern + QString::number(id));
         oldGroup.copyTo( &newGroup );
+        newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
       }
       oldGroup.deleteGroup();
     }
