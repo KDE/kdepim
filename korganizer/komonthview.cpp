@@ -280,7 +280,9 @@ void MonthViewItem::paint( QPainter *p )
        KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemCategoryInsideResourceOutside ) {
     frameColor = resourceColor();
   } else {
-    frameColor = catColor();
+    if ( mIncidence ) {
+      frameColor = catColor();
+    }
   }
 
   if ( mIncidence ) {
@@ -291,7 +293,9 @@ void MonthViewItem::paint( QPainter *p )
 
     if ( mIncidence->categories().isEmpty() &&
          KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemCategoryInsideResourceOutside ) {
-      bgColor = frameColor;
+      if ( frameColor.isValid() ) {
+        bgColor = frameColor;
+      }
     }
   }
 
