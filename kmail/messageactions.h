@@ -128,6 +128,7 @@ class MessageActions : public QObject
     void slotMailingListFilter();
 
   private:
+    QList<KAction*> mMailListActionList;
     QWidget *mParent;
     KActionCollection *mActionCollection;
     Akonadi::Item mCurrentItem;
