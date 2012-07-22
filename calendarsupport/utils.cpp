@@ -709,9 +709,11 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
   if ( incidence->attendeeCount() == 0 && method != iTIPPublish ) {
     KMessageBox::information(
       parentWidget,
-      i18n( "The item has no attendees." ),
-      QString(), //TODO: add a caption when string freeze is off
-      QLatin1String( "ScheduleNoIncidences" ) );
+      i18n( "The item '%1' has no attendees. "
+            "Therefore no groupware message will be sent.",
+            incidence->summary() ),
+      i18n( "Message Not Sent" ),
+      QLatin1String( "ScheduleNoAttendees" ) );
     return;
   }
 

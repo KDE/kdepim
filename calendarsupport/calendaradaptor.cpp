@@ -311,11 +311,12 @@ void CalendarAdaptor::deleteIncidenceFinished( KJob * j )
   KCalCore::Incidence::Ptr tmp = CalendarSupport::incidence( items.first() );
   Q_ASSERT( tmp );
   if ( job->error() ) {
-    KMessageBox::sorry( mParent,
-                        i18n( "Unable to delete incidence %1 \"%2\": %3",
-                              i18n( tmp->typeStr() ),
-                              tmp->summary(),
-                              job->errorString() ) );
+    KMessageBox::sorry(
+      mParent,
+      i18n( "Unable to delete incidence %1 \"%2\": %3",
+            i18n( tmp->typeStr() ),
+            tmp->summary(),
+            job->errorString() ) );
     return;
   }
 
@@ -379,9 +380,13 @@ void CalendarAdaptor::schedule( KCalCore::iTIPMethod method, const Akonadi::Item
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
   if ( incidence->attendeeCount() == 0 && method != KCalCore::iTIPPublish ) {
-    KMessageBox::information( mParent, i18n( "The item has no attendees." ),
-                              QString(), //TODO: add a caption when string freeze is off
-                              QLatin1String( "ScheduleNoIncidences" ) );
+    KMessageBox::information(
+      mParent,
+      i18n( "The item '%1' has no attendees. "
+            "Therefore no groupware message will be sent.",
+            incidence->summary() ),
+      i18n( "Message Not Sent" ),
+      QLatin1String( "ScheduleNoAttendees" ) );
     return;
   }
 
@@ -392,20 +397,22 @@ void CalendarAdaptor::schedule( KCalCore::iTIPMethod method, const Akonadi::Item
   // Send the mail
   MailScheduler scheduler( d->mCalendar );
   if ( scheduler.performTransaction( incidence, method ) ) {
-    KMessageBox::information( mParent,
-                              i18n( "The groupware message for item '%1' "
-                                    "was successfully sent.\nMethod: %2",
-                                    incidence->summary(),
-                                    KCalCore::ScheduleMessage::methodName( method ) ),
-                              i18n( "Sending Free/Busy" ),
-                              QLatin1String( "FreeBusyPublishSuccess" ) );
+    KMessageBox::information(
+      mParent,
+      i18n( "The groupware message for item '%1' "
+            "was successfully sent.\nMethod: %2",
+            incidence->summary(),
+            KCalCore::ScheduleMessage::methodName( method ) ),
+      i18n( "Sending Free/Busy" ),
+      QLatin1String( "FreeBusyPublishSuccess" ) );
   } else {
-    KMessageBox::error( mParent,
-                        i18nc( "Groupware message sending failed. "
-                               "%2 is request/reply/add/cancel/counter/etc.",
-                               "Unable to send the item '%1'.\nMethod: %2",
-                               incidence->summary(),
-                               KCalCore::ScheduleMessage::methodName( method ) ) );
+    KMessageBox::error(
+      mParent,
+      i18nc( "Groupware message sending failed. "
+             "%2 is request/reply/add/cancel/counter/etc.",
+             "Unable to send the item '%1'.\nMethod: %2",
+             incidence->summary(),
+             KCalCore::ScheduleMessage::methodName( method ) ) );
   }
 }
 
