@@ -880,12 +880,27 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
       "     </tr>\n";
   }
 
+  // attachments
+  QString attachment;
+  if( isTopLevel() ) {
+    attachment =
+      "<tr>"
+      "<td style='min-width: 6px; max-width: 6px; background: url("+imgpath+"left.png);'</td>"
+      "<td style='padding-right:20px;'>"
+        "<div class=\"noprint\" >"
+        "<div id=\"attachmentInjectionPoint\"></div>"
+        "</div>"
+      "</td>"
+      "<td style='min-width: 6px; max-width: 6px; background: url("+imgpath+"right.png);'</td>"
+      "</tr>";
+  }
+
   // header-bottom
   headerStr +=
     "    </table> \n"
     "   </td> \n"
     "   <td style=\"min-width: 6px; max-height: 15px; background: url("+imgpath+"right.png); \"></td> \n"
-    "  </tr> \n"
+    "  </tr> \n" + attachment +
     "  <tr> \n"
     "   <td style=\"min-width: 6px; background: url("+imgpath+"s_left.png); \"></td> \n"
     "   <td style=\"height: 35px; width: 80%; background: url("+imgpath+"sbar.png);\"> \n"
@@ -894,16 +909,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     "   <td style=\"min-width: 6px; background: url("+imgpath+"s_right.png); \"></td> \n"
     "  </tr> \n"
     " </table> \n";
-
-  // kmail icon
-  if( isTopLevel() ) {
-
-    // attachments
-    headerStr +=
-      "<div class=\"noprint\" style=\"position: absolute; top: 60px; right: 20px;\">"
-      "<div id=\"attachmentInjectionPoint\"></div>"
-      "</div>\n";
-  }
 
   if ( isPrinting() ) {
     //provide a bit more left padding when printing
