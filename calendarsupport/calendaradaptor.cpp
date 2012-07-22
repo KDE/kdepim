@@ -380,6 +380,7 @@ void CalendarAdaptor::schedule( KCalCore::iTIPMethod method, const Akonadi::Item
 
   if ( incidence->attendeeCount() == 0 && method != KCalCore::iTIPPublish ) {
     KMessageBox::information( mParent, i18n( "The item has no attendees." ),
+                              QString(), //TODO: add a caption when string freeze is off
                               QLatin1String( "ScheduleNoIncidences" ) );
     return;
   }
