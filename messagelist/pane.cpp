@@ -393,17 +393,17 @@ void Pane::focusQuickSearch()
 
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  Widget *w = static_cast<Widget*>( q->currentWidget() );
-  QItemSelectionModel *s = mWidgetSelectionHash[w];
+  Widget *w = 0;
+  QItemSelectionModel *s = 0;
+  if ( mPreferEmptyTab ) {
+    q->createNewTab();
+  }
+	
+  w = static_cast<Widget*>( q->currentWidget() );
+  s = mWidgetSelectionHash[w];
 
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
-
-  if ( mPreferEmptyTab ) {
-    q->createNewTab();
-    w = static_cast<Widget*>( q->currentWidget() );
-    s = mWidgetSelectionHash[w];
-  }
 
   QString label;
   QIcon icon = KIcon( QLatin1String( "folder" ) );
@@ -430,6 +430,17 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
   q->setTabToolTip( index, toolTip);
+  if ( mPreferEmptyTab ) {
+    disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+              q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
+
+    mSelectionModel->select( mapSelectionFromSource( s->selection() ),
+                            QItemSelectionModel::ClearAndSelect );
+
+    connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
+
+  }
 }
 
 void Pane::Private::activateTab()

@@ -504,9 +504,8 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
-void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
+void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr )
 {
-  const QString contentTypeStr = node->contentType()->mimeType();
   const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
   if (!offers.isEmpty()) {
     QMenu* menu = topMenu;
@@ -524,7 +523,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     for(; it != offers.constEnd(); it++) {
       KAction* act = createAppAction(*it,
                                         // no submenu -> prefix single offer
-                                        menu == topMenu, actionGroup);
+                                        menu == topMenu, actionGroup, menu);
       menu->addAction(act);
     }
 
@@ -535,13 +534,13 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     } else {
       openWithActionName = i18nc("@title:menu", "&Open With...");
     }
-    KAction *openWithAct = new KAction(this);
+    KAction *openWithAct = new KAction(menu);
     openWithAct->setText(openWithActionName);
     QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
   }
   else { // no app offers -> Open With...
-    KAction *act = new KAction(this);
+    KAction *act = new KAction(topMenu);
     act->setText(i18nc("@title:menu", "&Open With..."));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
@@ -550,12 +549,13 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
 
 void ViewerPrivate::slotOpenWithDialog()
 {
-  if ( !mCurrentContent )
-    return;
-  attachmentOpenWith( mCurrentContent );
+  KMime::Content::List contents = selectedContents();
+  if(contents.count() == 1) {
+    attachmentOpenWith( contents.first() );
+  }
 }
 
-KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup )
+KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QMenu *menu)
 {
   QString actionName(service->name().replace('&', "&&"));
   if (singleOffer) {
@@ -564,7 +564,7 @@ KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singl
     actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
   }
 
-  KAction *act = new KAction(this);
+  KAction *act = new KAction(menu);
   act->setIcon(KIcon(service->icon()));
   act->setText(actionName);
   actionGroup->addAction( act );
@@ -574,11 +574,11 @@ KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singl
 
 void ViewerPrivate::slotOpenWithAction(QAction *act)
 {
-  if(!mCurrentContent)
-    return;
-
   KService::Ptr app = act->data().value<KService::Ptr>();
-  attachmentOpen( mCurrentContent, app );
+  KMime::Content::List contents = selectedContents();
+  if(contents.count() == 1) {
+    attachmentOpen( contents.first(),app );
+  }
 }
 
 
@@ -601,7 +601,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Open );
 
   if(!deletedAttachment)
-    createOpenWithMenu( menu, node );
+    createOpenWithMenu( menu, node->contentType()->mimeType() );
 
   action = menu->addAction(i18nc("to view something", "View") );
   action->setEnabled(!deletedAttachment);
@@ -1816,7 +1816,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                        this, SLOT(slotAttachmentOpen()) );
 
       if(selectedContents().count() == 1)
-        createOpenWithMenu(&popup,content);
+        createOpenWithMenu(&popup,content->contentType()->mimeType());
       else
         popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );

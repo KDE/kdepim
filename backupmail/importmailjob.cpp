@@ -51,6 +51,8 @@
 
 using namespace Akonadi;
 
+static const QString storeMails = QLatin1String("backupmail/");
+
 ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename, int numberOfStep)
   :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep), mArchiveDirectory(0)
 {
@@ -433,18 +435,20 @@ void ImportMailJob::restoreMails()
       const KUrl url = BackupMailUtil::resourcePath(resourceConfig);
       const QString filename(file->name());
 
-      KUrl newUrl;
-      if(QFile(url.fileName()).exists()) {
-        QString newFileName = url.fileName();
+      KUrl newUrl = url;
+      if(!url.path().contains(QDir::homePath())) {
+          qDebug()<<" url "<<url.path();
+          newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storeMails + url.fileName());
+      }
+      if(QFile(newUrl.path()).exists()) {
+        QString newFileName = newUrl.path();
         for(int i = 0;; ++i) {
-          newFileName = url.fileName() + QString::fromLatin1("_%1").arg(i);
+          newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
           if(!QFile(newFileName).exists()) {
             break;
           }
         }
-        newUrl.setFileName(newFileName);
-      } else {
-        newUrl= url;
+        newUrl=KUrl(newFileName);
       }
       QMap<QString, QVariant> settings;
       if(resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
@@ -631,6 +635,22 @@ void ImportMailJob::restoreConfig()
       copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
     }
   }
+  const QString archiveconfigurationrcStr("akonadi_archivemail_agentrc");
+  const KArchiveEntry* archiveconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + archiveconfigurationrcStr);
+  if( archiveconfigurationentry &&  archiveconfigurationentry->isFile()) {
+    const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
+    const QString archiveconfigurationrc = KStandardDirs::locateLocal( "config",  archiveconfigurationrcStr);
+    if(QFile(archiveconfigurationrc).exists()) {
+      //TODO 4.10 allow to merge config.
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",archiveconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
+        importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+      }
+    } else {
+      importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+    }
+  }
+
+
 
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
@@ -646,6 +666,8 @@ void ImportMailJob::restoreConfig()
       importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
     }
   }
+
+
 
 
 
@@ -804,6 +826,33 @@ void ImportMailJob::restoreNepomuk()
   Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
   //TODO
 }
+
+
+void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix)
+{
+  copyToFile(archiveconfiguration,archiveconfigurationrc,filename,prefix);
+  KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
+
+  //adapt id
+  const QString archiveGroupPattern = QLatin1String( "ArchiveMailCollection " );
+  const QStringList archiveList = archiveConfig->groupList().filter( archiveGroupPattern );
+  Q_FOREACH(const QString& str, archiveList) {
+    const QString path = str.right(str.length()-archiveGroupPattern.length());
+    if(!path.isEmpty())
+    {
+      KConfigGroup oldGroup = archiveConfig->group(str);
+      const Akonadi::Collection::Id id = convertPathToId(path);
+      if(id!=-1) {
+        KConfigGroup newGroup( archiveConfig, archiveGroupPattern + QString::number(id));
+        oldGroup.copyTo( &newGroup );
+        newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
+      }
+      oldGroup.deleteGroup();
+    }
+  }
+  archiveConfig->sync();
+}
+
 
 
 void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
