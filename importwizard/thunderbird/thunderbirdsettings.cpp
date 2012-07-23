@@ -69,33 +69,43 @@ ThunderbirdSettings::~ThunderbirdSettings()
 {
 }
 
+
 void ThunderbirdSettings::readLdapSettings()
 {
   //TODO: verify others variable
   //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
   Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
+    ldapStruct ldap;
     const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
     if(mHashConfig.contains(ldapDescription)) {
+      ldap.description = mHashConfig.value(ldapDescription).toString();
     }
     const QString ldapAuthDn = QString::fromLatin1("%1.auth.dn").arg(ldapAccountName);
     if(mHashConfig.contains(ldapAuthDn)) {
+      ldap.dn = mHashConfig.value(ldapAuthDn).toString();
     }
     const QString ldapAuthSaslMech = QString::fromLatin1("%1.auth.saslmech").arg(ldapAccountName);
     if(mHashConfig.contains(ldapAuthSaslMech)) {
+      ldap.saslMech = mHashConfig.value(ldapAuthSaslMech).toString();
     }
     const QString ldapFilename = QString::fromLatin1("%1.filename").arg(ldapAccountName);
     if(mHashConfig.contains(ldapFilename)) {
+      ldap.fileName = mHashConfig.value(ldapFilename).toString();
     }
     const QString ldapMaxHits = QString::fromLatin1("%1.maxHits").arg(ldapAccountName);
     if(mHashConfig.contains(ldapMaxHits)) {
+      ldap.fileName = mHashConfig.value(ldapMaxHits).toInt();
     }
     const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
     if(mHashConfig.contains(ldapUri)) {
+      ldap.ldapUrl = KUrl(mHashConfig.value(ldapUri).toString());
     }
+
+    mergeLdap(ldap);
   }
 }
 
-void ThunderbirdSettings::mergeLdap()
+void ThunderbirdSettings::mergeLdap(const ldapStruct &ldap)
 {
   KSharedConfigPtr ldapConfig = KSharedConfig::openConfig( QLatin1String( "kabldaprc" ) );
   if(ldapConfig->hasGroup(QLatin1String("LDAP"))) {
