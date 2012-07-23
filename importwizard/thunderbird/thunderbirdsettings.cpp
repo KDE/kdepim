@@ -72,7 +72,6 @@ ThunderbirdSettings::~ThunderbirdSettings()
 
 void ThunderbirdSettings::readLdapSettings()
 {
-  //TODO: verify others variable
   //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
   Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
     ldapStruct ldap;
@@ -113,32 +112,40 @@ void ThunderbirdSettings::mergeLdap(const ldapStruct &ldap)
   if(ldapConfig->hasGroup(QLatin1String("LDAP"))) {
     grp = ldapConfig->group(QLatin1String("LDAP"));
     numberOfLdapSelected = grp.readEntry(QLatin1String("NumSelectedHosts"),0);
-    grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(numberOfLdapSelected+1));
+    grp.writeEntry(QLatin1String("NumSelectedHosts"),(numberOfLdapSelected+1));
   } else {
     grp = ldapConfig->group(QLatin1String("LDAP"));
-    grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(1));
+    grp.writeEntry(QLatin1String("NumSelectedHosts"),1);
+
+    KConfigGroup ldapSeach = ldapConfig->group(QLatin1String("LDAPSearch"));
+    ldapSeach.writeEntry(QLatin1String("SearchType"), 0);
   }
   const int port = ldap.ldapUrl.port();
   if(port!=-1)
     grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),port);
-  grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),ldap.ldapUrl.host());
-  grp.sync();
-#if 0
+  grp.writeEntry(QString::fromLatin1("SelectedHost%1").arg(numberOfLdapSelected),ldap.ldapUrl.host());
+  if(ldap.ldapUrl.scheme() == QLatin1String("ldaps")) {
+    grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected),QString::fromLatin1("SSL"));
+  } else if(ldap.ldapUrl.scheme() == QLatin1String("ldap")) {
+    grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected),QString::fromLatin1("None"));
+  } else {
+    qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
+  }
 
-    SelectedAuth0=Simple
-    SelectedBase0=dc=kdab,dc=com
-    SelectedBind0=uid=laurent,dc=kdab,dc=com
-    SelectedHost0=mail.kdab.com
-    SelectedMech0=DIGEST-MD5
-    SelectedPageSize0=0
-    SelectedPort0=636
-    SelectedPwdBind0=
-    SelectedSecurity0=SSL
-    SelectedSizeLimit0=0
-    SelectedTimeLimit0=0
-    SelectedUser0=
-    SelectedVersion0=3
-#endif
+  if(ldap.saslMech == QLatin1String("GSSAPI")) {
+    grp.writeEntry(QString::fromLatin1("SelectedMech%1").arg(numberOfLdapSelected),QString::fromLatin1("GSSAPI"));
+    grp.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(numberOfLdapSelected),QString::fromLatin1("SASL"));
+  } else if(ldap.saslMech.isEmpty()) {
+    grp.writeEntry(QString::fromLatin1("SelectedMech%1").arg(numberOfLdapSelected),QString::fromLatin1("PLAIN"));
+    grp.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(numberOfLdapSelected),QString::fromLatin1("Simple"));
+  } else {
+    qDebug()<<" Mech SASL undefined"<<ldap.saslMech;
+  }
+  grp.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(numberOfLdapSelected),QString::number(3));
+  grp.writeEntry(QString::fromLatin1("SelectedBind%1").arg(numberOfLdapSelected),ldap.dn);
+  //TODO: Verify selectedbase
+  grp.writeEntry(QString::fromLatin1("SelectedBase%1").arg(numberOfLdapSelected),ldap.ldapUrl.path());
+  grp.sync();
 }
 
 void ThunderbirdSettings::readGlobalSettings()

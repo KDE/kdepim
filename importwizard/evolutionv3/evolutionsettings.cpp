@@ -31,8 +31,17 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *parent )
+EvolutionSettings::EvolutionSettings( ImportWizard *parent )
     :AbstractSettings( parent )
+{
+}
+
+
+EvolutionSettings::~EvolutionSettings()
+{
+}
+
+void EvolutionSettings::loadAccount(const QString& filename)
 {
   //Read gconf file
   QFile file(filename);
@@ -70,8 +79,18 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
   }
 }
 
-EvolutionSettings::~EvolutionSettings()
+void EvolutionSettings::loadLdap(const QString& filename)
 {
+  QFile file(filename);
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    kDebug()<<" We can't open file"<<filename;
+    return;
+  }
+  QDomDocument doc;
+  if ( !EvolutionUtil::loadInDomDocument( &file, doc ) )
+    return;
+  QDomElement ldapConfig = doc.documentElement();
+  //TODO:
 }
 
 void EvolutionSettings::readSignatures(const QDomElement &account)

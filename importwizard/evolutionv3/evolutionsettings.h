@@ -32,8 +32,10 @@ class QDomElement;
 class EvolutionSettings : public AbstractSettings
 {
 public:
-  explicit EvolutionSettings(const QString& filename, ImportWizard *parent );
+  explicit EvolutionSettings(ImportWizard *parent );
   ~EvolutionSettings();
+  void loadAccount(const QString& filename);
+  void loadLdap(const QString& filename);
 private:
   void readAccount(const QDomElement &account);
   void extractAccountInfo(const QString& info);

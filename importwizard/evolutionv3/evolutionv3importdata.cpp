@@ -60,7 +60,12 @@ bool Evolutionv3ImportData::importSettings()
 {
   const QString accountFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/mail/%gconf.xml");
   if ( QFile( accountFile ).exists() ) {
-    EvolutionSettings account( accountFile, mImportWizard );
+    EvolutionSettings account( mImportWizard );
+    account.loadAccount(accountFile);
+    const QString ldapFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/addressbook/%gconf.xml");
+    if(QFile( ldapFile ).exists() ) {
+      account.loadLdap(ldapFile);
+    }
   } else {
     addImportSettingsInfo(i18n("Evolution settings not found."));
   }
