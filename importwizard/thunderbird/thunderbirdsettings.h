@@ -39,7 +39,7 @@ private:
   void insertIntoMap( const QString& line );
 
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
-  
+  void mergeLdap();
   
   QHash<QString, QVariant> mHashConfig;
   QHash<QString, QString> mHashSmtp;

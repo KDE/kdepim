@@ -93,7 +93,22 @@ void ThunderbirdSettings::readLdapSettings()
     if(mHashConfig.contains(ldapUri)) {
     }
   }
+}
 
+void ThunderbirdSettings::mergeLdap()
+{
+  KSharedConfigPtr ldapConfig = KSharedConfig::openConfig( QLatin1String( "kabldaprc" ) );
+  if(ldapConfig->hasGroup(QLatin1String("LDAP"))) {
+    KConfigGroup grp = ldapConfig->group(QLatin1String("LDAP"));
+    const int numberOfLdapSelected = grp.readEntry(QLatin1String("NumSelectedHosts"),0);
+    grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(numberOfLdapSelected+1));
+    grp.sync();
+    //Merge
+  } else { //create.
+    KConfigGroup grp = ldapConfig->group(QLatin1String("LDAP"));
+    grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(1));
+    grp.sync();
+  }
 }
 
 void ThunderbirdSettings::readGlobalSettings()
