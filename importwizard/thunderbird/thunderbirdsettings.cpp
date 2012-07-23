@@ -108,17 +108,37 @@ void ThunderbirdSettings::readLdapSettings()
 void ThunderbirdSettings::mergeLdap(const ldapStruct &ldap)
 {
   KSharedConfigPtr ldapConfig = KSharedConfig::openConfig( QLatin1String( "kabldaprc" ) );
+  int numberOfLdapSelected = 0;
+  KConfigGroup grp;
   if(ldapConfig->hasGroup(QLatin1String("LDAP"))) {
-    KConfigGroup grp = ldapConfig->group(QLatin1String("LDAP"));
-    const int numberOfLdapSelected = grp.readEntry(QLatin1String("NumSelectedHosts"),0);
+    grp = ldapConfig->group(QLatin1String("LDAP"));
+    numberOfLdapSelected = grp.readEntry(QLatin1String("NumSelectedHosts"),0);
     grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(numberOfLdapSelected+1));
-    grp.sync();
-    //Merge
-  } else { //create.
-    KConfigGroup grp = ldapConfig->group(QLatin1String("LDAP"));
+  } else {
+    grp = ldapConfig->group(QLatin1String("LDAP"));
     grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(1));
-    grp.sync();
   }
+  const int port = ldap.ldapUrl.port();
+  if(port!=-1)
+    grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),port);
+  grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),ldap.ldapUrl.host());
+  grp.sync();
+#if 0
+
+    SelectedAuth0=Simple
+    SelectedBase0=dc=kdab,dc=com
+    SelectedBind0=uid=laurent,dc=kdab,dc=com
+    SelectedHost0=mail.kdab.com
+    SelectedMech0=DIGEST-MD5
+    SelectedPageSize0=0
+    SelectedPort0=636
+    SelectedPwdBind0=
+    SelectedSecurity0=SSL
+    SelectedSizeLimit0=0
+    SelectedTimeLimit0=0
+    SelectedUser0=
+    SelectedVersion0=3
+#endif
 }
 
 void ThunderbirdSettings::readGlobalSettings()
