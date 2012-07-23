@@ -69,31 +69,76 @@ ThunderbirdSettings::~ThunderbirdSettings()
 {
 }
 
+
 void ThunderbirdSettings::readLdapSettings()
 {
   //TODO: verify others variable
   //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
   Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
+    ldapStruct ldap;
     const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
     if(mHashConfig.contains(ldapDescription)) {
+      ldap.description = mHashConfig.value(ldapDescription).toString();
     }
     const QString ldapAuthDn = QString::fromLatin1("%1.auth.dn").arg(ldapAccountName);
     if(mHashConfig.contains(ldapAuthDn)) {
+      ldap.dn = mHashConfig.value(ldapAuthDn).toString();
     }
     const QString ldapAuthSaslMech = QString::fromLatin1("%1.auth.saslmech").arg(ldapAccountName);
     if(mHashConfig.contains(ldapAuthSaslMech)) {
+      ldap.saslMech = mHashConfig.value(ldapAuthSaslMech).toString();
     }
     const QString ldapFilename = QString::fromLatin1("%1.filename").arg(ldapAccountName);
     if(mHashConfig.contains(ldapFilename)) {
+      ldap.fileName = mHashConfig.value(ldapFilename).toString();
     }
     const QString ldapMaxHits = QString::fromLatin1("%1.maxHits").arg(ldapAccountName);
     if(mHashConfig.contains(ldapMaxHits)) {
+      ldap.fileName = mHashConfig.value(ldapMaxHits).toInt();
     }
     const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
     if(mHashConfig.contains(ldapUri)) {
+      ldap.ldapUrl = KUrl(mHashConfig.value(ldapUri).toString());
     }
-  }
 
+    mergeLdap(ldap);
+  }
+}
+
+void ThunderbirdSettings::mergeLdap(const ldapStruct &ldap)
+{
+  KSharedConfigPtr ldapConfig = KSharedConfig::openConfig( QLatin1String( "kabldaprc" ) );
+  int numberOfLdapSelected = 0;
+  KConfigGroup grp;
+  if(ldapConfig->hasGroup(QLatin1String("LDAP"))) {
+    grp = ldapConfig->group(QLatin1String("LDAP"));
+    numberOfLdapSelected = grp.readEntry(QLatin1String("NumSelectedHosts"),0);
+    grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(numberOfLdapSelected+1));
+  } else {
+    grp = ldapConfig->group(QLatin1String("LDAP"));
+    grp.writeEntry(QLatin1String("NumSelectedHosts"),QString::number(1));
+  }
+  const int port = ldap.ldapUrl.port();
+  if(port!=-1)
+    grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),port);
+  grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),ldap.ldapUrl.host());
+  grp.sync();
+#if 0
+
+    SelectedAuth0=Simple
+    SelectedBase0=dc=kdab,dc=com
+    SelectedBind0=uid=laurent,dc=kdab,dc=com
+    SelectedHost0=mail.kdab.com
+    SelectedMech0=DIGEST-MD5
+    SelectedPageSize0=0
+    SelectedPort0=636
+    SelectedPwdBind0=
+    SelectedSecurity0=SSL
+    SelectedSizeLimit0=0
+    SelectedTimeLimit0=0
+    SelectedUser0=
+    SelectedVersion0=3
+#endif
 }
 
 void ThunderbirdSettings::readGlobalSettings()
