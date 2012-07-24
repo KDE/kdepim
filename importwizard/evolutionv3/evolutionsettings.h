@@ -38,7 +38,7 @@ public:
   void loadLdap(const QString& filename);
 private:
   void readAccount(const QDomElement &account);
-  void readLdap(const QDomElement &account);
+  void readLdap(const QString &account);
   void extractAccountInfo(const QString& info);
   void readSignatures(const QDomElement &account);
   void extractSignatureInfo( const QString&info );

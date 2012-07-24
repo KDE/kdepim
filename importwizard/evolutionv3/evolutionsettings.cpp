@@ -89,18 +89,33 @@ void EvolutionSettings::loadLdap(const QString& filename)
   QDomDocument doc;
   if ( !EvolutionUtil::loadInDomDocument( &file, doc ) )
     return;
-  qDebug()<<" void EvolutionSettings::loadLdap(const QString& filename)"<<filename;
   QDomElement ldapConfig = doc.documentElement();
   for ( QDomElement e = ldapConfig.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
     const QString tag = e.tagName();
-    qDebug()<<" tag :"<<tag;
     if ( tag == QLatin1String( "entry" ) ) {
+      for ( QDomElement serverConfig = e.firstChildElement(); !serverConfig.isNull(); serverConfig = serverConfig.nextSiblingElement() ) {
+        if(serverConfig.tagName() == QLatin1String("li")) {
+          QDomElement ldapValue = serverConfig.firstChildElement();
+          readLdap(ldapValue.text());
+        }
+      }
     }
   }
 }
 
-void EvolutionSettings::readLdap(const QDomElement &account)
+void EvolutionSettings::readLdap(const QString &ldapStr)
 {
+  kDebug()<<" ldap "<<ldapStr;
+  QDomDocument ldap;
+  if ( !EvolutionUtil::loadInDomDocument( ldapStr, ldap ) )
+    return;
+
+  QDomElement domElement = ldap.documentElement();
+
+  if ( domElement.isNull() ) {
+    kDebug() << "ldap not found";
+    return;
+  }
     //TODO
 }
 
