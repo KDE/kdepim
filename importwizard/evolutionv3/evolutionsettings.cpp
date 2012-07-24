@@ -31,8 +31,17 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *parent )
+EvolutionSettings::EvolutionSettings( ImportWizard *parent )
     :AbstractSettings( parent )
+{
+}
+
+
+EvolutionSettings::~EvolutionSettings()
+{
+}
+
+void EvolutionSettings::loadAccount(const QString& filename)
 {
   //Read gconf file
   QFile file(filename);
@@ -70,8 +79,44 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
   }
 }
 
-EvolutionSettings::~EvolutionSettings()
+void EvolutionSettings::loadLdap(const QString& filename)
 {
+  QFile file(filename);
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    kDebug()<<" We can't open file"<<filename;
+    return;
+  }
+  QDomDocument doc;
+  if ( !EvolutionUtil::loadInDomDocument( &file, doc ) )
+    return;
+  QDomElement ldapConfig = doc.documentElement();
+  for ( QDomElement e = ldapConfig.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    const QString tag = e.tagName();
+    if ( tag == QLatin1String( "entry" ) ) {
+      for ( QDomElement serverConfig = e.firstChildElement(); !serverConfig.isNull(); serverConfig = serverConfig.nextSiblingElement() ) {
+        if(serverConfig.tagName() == QLatin1String("li")) {
+          QDomElement ldapValue = serverConfig.firstChildElement();
+          readLdap(ldapValue.text());
+        }
+      }
+    }
+  }
+}
+
+void EvolutionSettings::readLdap(const QString &ldapStr)
+{
+  kDebug()<<" ldap "<<ldapStr;
+  QDomDocument ldap;
+  if ( !EvolutionUtil::loadInDomDocument( ldapStr, ldap ) )
+    return;
+
+  QDomElement domElement = ldap.documentElement();
+
+  if ( domElement.isNull() ) {
+    kDebug() << "ldap not found";
+    return;
+  }
+    //TODO
 }
 
 void EvolutionSettings::readSignatures(const QDomElement &account)
