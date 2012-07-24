@@ -817,9 +817,9 @@ void CalPrintDay::print( QPainter &p, int width, int height )
       }
       drawHeader( p, title, mFromDate, QDate(), headerBox );
       if ( mDayPrintType == Filofax ) {
-        drawDays( p, mFromDate, mToDate, daysBox, mSingleLineLimit,
-                  mShowNoteLines, mIncludeDescription,
-                  mExcludeConfidential, mExcludePrivate );
+        drawDays( p, mFromDate, mToDate, mStartTime, mEndTime, daysBox,
+                  mSingleLineLimit,  mShowNoteLines,
+                  mIncludeDescription, mExcludeConfidential, mExcludePrivate );
       } else if ( mDayPrintType == SingleTimetable ) {
         drawTimeTable( p, mFromDate, mToDate, mStartTime, mEndTime, daysBox,
                        mIncludeDescription, mExcludeTime, mExcludeConfidential,
@@ -1103,7 +1103,7 @@ void CalPrintWeek::print( QPainter &p, int width, int height )
       }
       drawHeader( p, title, curWeek.addDays( -6 ), QDate(), headerBox );
 
-      drawWeek( p, curWeek, weekBox, mSingleLineLimit,
+      drawWeek( p, curWeek, mStartTime, mEndTime, weekBox, mSingleLineLimit,
                 mShowNoteLines, mIncludeDescription,
                 mExcludeConfidential, mExcludePrivate );
 
@@ -1321,7 +1321,10 @@ void CalPrintMonth::print( QPainter &p, int width, int height )
 
     drawHeader( p, title, curMonth.addMonths( -1 ), curMonth.addMonths( 1 ),
                 headerBox );
-    drawMonthTable( p, curMonth, mWeekNumbers, mRecurDaily, mRecurWeekly,
+    drawMonthTable( p,
+                    curMonth, QTime(), QTime(),
+                    mWeekNumbers,
+                    mRecurDaily, mRecurWeekly,
                     mSingleLineLimit, mShowNoteLines, mIncludeDescription,
                     mExcludeConfidential, mExcludePrivate, monthBox );
 
