@@ -89,8 +89,19 @@ void EvolutionSettings::loadLdap(const QString& filename)
   QDomDocument doc;
   if ( !EvolutionUtil::loadInDomDocument( &file, doc ) )
     return;
+  qDebug()<<" void EvolutionSettings::loadLdap(const QString& filename)"<<filename;
   QDomElement ldapConfig = doc.documentElement();
-  //TODO:
+  for ( QDomElement e = ldapConfig.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    const QString tag = e.tagName();
+    qDebug()<<" tag :"<<tag;
+    if ( tag == QLatin1String( "entry" ) ) {
+    }
+  }
+}
+
+void EvolutionSettings::readLdap(const QDomElement &account)
+{
+    //TODO
 }
 
 void EvolutionSettings::readSignatures(const QDomElement &account)
