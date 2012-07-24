@@ -728,7 +728,7 @@ the <guilabel>Short folder list</guilabel> with the message preview pane using t
 bottom part of the window.</para>
 <para>If you want to have your favorite folders and a quick search field for folders at
 the top left of the main window select the next two options.</para>
-<!--Favorite folder view + Show folder quick search field-->
+<!--Show Favorite Folders View (Never, As Icons, As List) + Show folder quick search field-->
 
 <!--Folder Tooltips display additional information like the total number of messages, 
 unread messages and storage size when hoovering a folder with the mouse pointer 
