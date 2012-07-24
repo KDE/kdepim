@@ -26,17 +26,6 @@
 class ImportWizard;
 class KConfigGroup;
 
-struct ldapStruct
-{
-  KUrl ldapUrl;
-  QString dn;
-  QString saslMech;
-  QString fileName;
-  QString description;
-  int maxHint;
-
-};
-
 class ThunderbirdSettings : public AbstractSettings
 {
 public:

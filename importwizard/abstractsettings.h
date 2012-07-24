@@ -20,7 +20,7 @@
 
 #include "abstractbase.h"
 #include <KSharedConfig>
-
+#include <KUrl>
 #include <QObject>
 #include <QMap>
 
@@ -35,6 +35,17 @@ namespace KPIMIdentities {
 namespace MailTransport {
   class Transport;
 }
+
+struct ldapStruct
+{
+  KUrl ldapUrl;
+  QString dn;
+  QString saslMech;
+  QString fileName;
+  QString description;
+  int maxHint;
+
+};
 
 class AbstractSettings : public AbstractBase
 {

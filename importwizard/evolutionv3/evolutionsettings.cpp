@@ -105,7 +105,7 @@ void EvolutionSettings::loadLdap(const QString& filename)
 
 void EvolutionSettings::readLdap(const QString &ldapStr)
 {
-  kDebug()<<" ldap "<<ldapStr;
+  qDebug()<<" ldap "<<ldapStr;
   QDomDocument ldap;
   if ( !EvolutionUtil::loadInDomDocument( ldapStr, ldap ) )
     return;
@@ -116,7 +116,43 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
     kDebug() << "ldap not found";
     return;
   }
-    //TODO
+  //Ldap server
+  if(domElement.attribute(QLatin1String("base_uri")) == QLatin1String("ldap://")) {
+    for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+      const QString tag = e.tagName();
+      const QString name = e.attribute( QLatin1String( "name" ) );
+      qDebug()<<" name :"<<name;
+      const QString relative_uri = e.attribute( QLatin1String( "relative_uri" ) );
+      qDebug()<<" relative_uri"<<relative_uri;
+
+      QDomElement propertiesElement = e.firstChildElement();
+      if(!propertiesElement.isNull()) {
+        for ( QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement() ) {
+          const QString propertyTag = property.tagName();
+          if(propertyTag == QLatin1String("property")) {
+            if(property.hasAttribute(QLatin1String("name"))) {
+              const QString propertyName = property.attribute(QLatin1String("name"));
+              if(propertyName == QLatin1String("timeout")) {
+                qDebug()<<" timeout";
+              } else if(propertyName == QLatin1String("ssl")) {
+                qDebug()<<" ssl";
+              } else if(propertyName == QLatin1String("limit")) {
+                qDebug()<<" limit";
+              } else if(propertyName == QLatin1String("binddn")) {
+                qDebug()<<" binddn";
+              } else if(propertyName == QLatin1String("auth")) {
+                qDebug()<<" auth";
+              } else {
+                qDebug()<<" property unknown :"<<propertyName;
+              }
+            }
+          } else {
+            qDebug()<<" tag unknown :"<<propertyTag;
+          }
+        }
+      }
+    }
+  }
 }
 
 void EvolutionSettings::readSignatures(const QDomElement &account)
