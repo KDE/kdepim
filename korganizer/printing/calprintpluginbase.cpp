@@ -52,8 +52,6 @@
 
 using namespace KCalCore;
 
-static int maxDayBoxStrLen = 24;  //max length of strings in dayboxes
-
 static QString cleanStr( const QString &instr )
 {
   QString ret = instr;
@@ -1124,12 +1122,9 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
     p.save();
     setCategoryColors( p, currEvent );
     QString summaryStr = currEvent->summary();
-    summaryStr.truncate( maxDayBoxStrLen );
     if ( !currEvent->location().isEmpty() ) {
-      QString locationStr = currEvent->location();
-      locationStr.truncate( maxDayBoxStrLen );
       summaryStr = i18nc( "summary, location",
-                          "%1, %2", summaryStr, locationStr );
+                          "%1, %2", summaryStr, currEvent->location() );
     }
     drawIncidence( p, box, timeText,
                    summaryStr, currEvent->description(),
@@ -1188,12 +1183,9 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
       p.save();
       setCategoryColors( p, todo );
       QString summaryStr = todo->summary();
-      summaryStr.truncate( maxDayBoxStrLen );
       if ( !todo->location().isEmpty() ) {
-        QString locationStr = todo->location();
-        locationStr.truncate( maxDayBoxStrLen );
         summaryStr = i18nc( "summary, location",
-                            "%1, %2", summaryStr, locationStr );
+                            "%1, %2", summaryStr, todo->location() );
       }
 
       QString str;
@@ -1250,9 +1242,7 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox,
                               dayBox.height() - textY );
 
   QString summaryText = summary;
-  summaryText.truncate( maxDayBoxStrLen );
   QString descText = toPlainText( description );
-  descText.truncate( maxDayBoxStrLen );
   bool boxOverflow = false;
 
   if ( singleLineLimit ) {
