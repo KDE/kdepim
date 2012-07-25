@@ -1133,17 +1133,16 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
   const bool makesItBusy = KOEventView::makesWholeDayBusy( incidence );
   if ( incidence->doesRecur() ) {
     for ( uint i = 0; i < mCells.count(); ++i ) {
-      if ( incidence->recursOn( mCells[i]->date() ) ) {
-
-        // handle multiday events
-        const int length = gdv.startDate().daysTo( gdv.endDate().addSecs( floats ? 0 : -1 ).date() );
-        for ( int j = 0; j <= length && i+j < mCells.count(); ++j ) {
-          if ( makesItBusy ) {
-            Event::List &busyEvents = mBusyDays[mCells[i+j]->date()];
-            busyEvents.append( static_cast<Event*>( incidence ) );
-          }
-          mCells[i+j]->addIncidence( incidence, v, j );
+      // Check for the start dates of recurrences that still happen on the cell's date
+      // This is neccessary for multiday events that start before the date of the first cell
+      // and to correctly draw recurring events that recur before they are ended.
+      const QValueList<QDateTime> startDates = incidence->startDateTimesForDate( mCells[i]->date() );
+      for ( int j = 0; j < startDates.count(); j++ ){
+        if ( makesItBusy ) {
+          Event::List &busyEvents = mBusyDays[mCells[i+j]->date()];
+          busyEvents.append( static_cast<Event*>( incidence ) );
         }
+        mCells[i]->addIncidence( incidence, v, j );
       }
     }
   } else {
