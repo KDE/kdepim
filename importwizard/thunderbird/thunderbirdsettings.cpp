@@ -99,8 +99,15 @@ void ThunderbirdSettings::readLdapSettings()
     if(mHashConfig.contains(ldapUri)) {
       ldap.ldapUrl = KUrl(mHashConfig.value(ldapUri).toString());
       ldap.port = ldap.ldapUrl.port();
-    }
 
+      if(ldap.ldapUrl.scheme() == QLatin1String("ldaps")) {
+        ldap.useSSL = true;
+      } else if(ldap.ldapUrl.scheme() == QLatin1String("ldap")) {
+        ldap.useSSL = false;
+      } else {
+        qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
+      }
+    }
     mergeLdap(ldap);
   }
 }

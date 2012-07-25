@@ -161,12 +161,12 @@ void AbstractSettings::mergeLdap(const ldapStruct &ldap)
   if(port!=-1)
     grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),port);
   grp.writeEntry(QString::fromLatin1("SelectedHost%1").arg(numberOfLdapSelected),ldap.ldapUrl.host());
-  if(ldap.ldapUrl.scheme() == QLatin1String("ldaps")) {
+  if(ldap.useSSL) {
     grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected),QString::fromLatin1("SSL"));
-  } else if(ldap.ldapUrl.scheme() == QLatin1String("ldap")) {
-    grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected),QString::fromLatin1("None"));
+  } else if(ldap.useTLS){
+    grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected),QString::fromLatin1("TLS"));
   } else {
-    qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
+    grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected),QString::fromLatin1("None"));
   }
 
   if(ldap.saslMech == QLatin1String("GSSAPI")) {
@@ -182,5 +182,11 @@ void AbstractSettings::mergeLdap(const ldapStruct &ldap)
   grp.writeEntry(QString::fromLatin1("SelectedBind%1").arg(numberOfLdapSelected),ldap.dn);
   //TODO: Verify selectedbase
   grp.writeEntry(QString::fromLatin1("SelectedBase%1").arg(numberOfLdapSelected),ldap.ldapUrl.path());
+  if(ldap.timeout != -1) {
+    grp.writeEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(numberOfLdapSelected),ldap.timeout);
+  }
+  if(ldap.limit != -1) {
+    grp.writeEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(numberOfLdapSelected),ldap.limit);
+  }
   grp.sync();
 }

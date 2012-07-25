@@ -121,10 +121,14 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
     for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
       const QString name = e.attribute( QLatin1String( "name" ) );
       qDebug()<<" name :"<<name;
+      ldapStruct ldap;
       const QString relative_uri = e.attribute( QLatin1String( "relative_uri" ) );
+      const QString uri = e.attribute( QLatin1String( "uri" ) );
+      KUrl url(uri);
+      ldap.port = url.port();
+      ldap.ldapUrl = url;
       qDebug()<<" relative_uri"<<relative_uri;
 
-      ldapStruct ldap; //TODO
       QDomElement propertiesElement = e.firstChildElement();
       if(!propertiesElement.isNull()) {
         for ( QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement() ) {
@@ -133,13 +137,20 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
             if(property.hasAttribute(QLatin1String("name"))) {
               const QString propertyName = property.attribute(QLatin1String("name"));
               if(propertyName == QLatin1String("timeout")) {
-                qDebug()<<" timeout";
+                ldap.timeout = property.attribute(QLatin1String("value")).toInt();
               } else if(propertyName == QLatin1String("ssl")) {
-                qDebug()<<" ssl";
+                const QString value = property.attribute(QLatin1String("value"));
+                if(value == QLatin1String("always")) {
+                  ldap.useSSL = true;
+                } else if(value == QLatin1String("whenever_possible")) {
+                  ldap.useTLS = true;
+                } else {
+                  qDebug()<<" ssl attribute unknown"<<value;
+                }
               } else if(propertyName == QLatin1String("limit")) {
-                qDebug()<<" limit";
+                ldap.limit = property.attribute(QLatin1String("value")).toInt();
               } else if(propertyName == QLatin1String("binddn")) {
-                qDebug()<<" binddn";
+                ldap.dn = property.attribute(QLatin1String("value"));
               } else if(propertyName == QLatin1String("auth")) {
                 qDebug()<<" auth";
               } else {

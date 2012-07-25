@@ -40,7 +40,11 @@ struct ldapStruct
 {
   ldapStruct()
     : maxHint(-1),
-      port(-1)
+      port(-1),
+      limit(-1),
+      timeout(-1),
+      useSSL(false),
+      useTLS(false)
   {
   }
 
@@ -51,6 +55,10 @@ struct ldapStruct
   QString description;
   int maxHint;
   int port;
+  int limit;
+  int timeout;
+  bool useSSL;
+  bool useTLS;
 
 };
 
