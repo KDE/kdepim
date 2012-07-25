@@ -80,6 +80,8 @@ protected:
   void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
   int readKmailSettings( const QString&groupName, const QString& key);
 
+  void mergeLdap(const ldapStruct &ldap);
+
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;
   KSharedConfigPtr mKmailConfig;
