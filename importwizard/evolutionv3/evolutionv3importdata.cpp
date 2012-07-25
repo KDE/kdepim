@@ -107,7 +107,8 @@ bool Evolutionv3ImportData::importCalendar()
 {
   const QString calendarFile = QDir::homePath() + QLatin1String("/.gconf/apps/evolution/calendar/%gconf.xml");
   if ( QFile( calendarFile ).exists() ) {
-    EvolutionCalendar calendar( calendarFile, mImportWizard );
+    EvolutionCalendar calendar( mImportWizard );
+    calendar.loadCalendar(calendarFile);
   } else {
     addImportCalendarInfo(i18n("Evolution calendar not found."));
   }

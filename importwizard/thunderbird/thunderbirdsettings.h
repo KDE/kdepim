@@ -26,17 +26,6 @@
 class ImportWizard;
 class KConfigGroup;
 
-struct ldapStruct
-{
-  KUrl ldapUrl;
-  QString dn;
-  QString saslMech;
-  QString fileName;
-  QString description;
-  int maxHint;
-
-};
-
 class ThunderbirdSettings : public AbstractSettings
 {
 public:
@@ -51,7 +40,6 @@ private:
   void insertIntoMap( const QString& line );
 
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
-  void mergeLdap(const ldapStruct& ldap);
   
   QHash<QString, QVariant> mHashConfig;
   QHash<QString, QString> mHashSmtp;

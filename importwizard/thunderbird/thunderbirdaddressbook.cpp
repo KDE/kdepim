@@ -196,7 +196,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
               if(!workAddr.isEmpty())
                 contact.insertAddress(workAddr);
 
-              QDateTime birthDate( QDate( birthyear, birthmonth, birthday ) );
+              const QDateTime birthDate( QDate( birthyear, birthmonth, birthday ) );
               if(birthDate.isValid()) {
                   contact.setBirthday( birthDate );
               }
