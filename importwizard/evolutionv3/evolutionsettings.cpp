@@ -119,8 +119,8 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
   //Ldap server
   if(domElement.attribute(QLatin1String("base_uri")) == QLatin1String("ldap://")) {
     for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
-      const QString name = e.attribute( QLatin1String( "name" ) );
-      qDebug()<<" name :"<<name;
+      //const QString name = e.attribute( QLatin1String( "name" ) ); We don't use it in kmail
+
       ldapStruct ldap;
       const QString relative_uri = e.attribute( QLatin1String( "relative_uri" ) );
       const QString uri = e.attribute( QLatin1String( "uri" ) );
@@ -152,7 +152,17 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
               } else if(propertyName == QLatin1String("binddn")) {
                 ldap.dn = property.attribute(QLatin1String("value"));
               } else if(propertyName == QLatin1String("auth")) {
-                qDebug()<<" auth";
+                const QString value = property.attribute(QLatin1String("value"));
+                if(value == QLatin1String("ldap/simple-email")) {
+                    //TODO:
+                } else if( value == QLatin1String("none")) {
+                    //TODO:
+                } else if( value == QLatin1String("ldap/simple-binddn")) {
+                    //TODO:
+                } else {
+                    qDebug()<<" Unknown auth value "<<value;
+                }
+                qDebug()<<" auth"<<value;
               } else {
                 qDebug()<<" property unknown :"<<propertyName;
               }
