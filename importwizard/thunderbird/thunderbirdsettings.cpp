@@ -98,6 +98,7 @@ void ThunderbirdSettings::readLdapSettings()
     const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
     if(mHashConfig.contains(ldapUri)) {
       ldap.ldapUrl = KUrl(mHashConfig.value(ldapUri).toString());
+      ldap.port = ldap.ldapUrl.port();
     }
 
     mergeLdap(ldap);

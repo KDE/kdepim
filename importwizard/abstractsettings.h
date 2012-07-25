@@ -38,12 +38,19 @@ namespace MailTransport {
 
 struct ldapStruct
 {
+  ldapStruct()
+    : maxHint(-1),
+      port(-1)
+  {
+  }
+
   KUrl ldapUrl;
   QString dn;
   QString saslMech;
   QString fileName;
   QString description;
   int maxHint;
+  int port;
 
 };
 

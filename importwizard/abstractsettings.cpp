@@ -157,7 +157,7 @@ void AbstractSettings::mergeLdap(const ldapStruct &ldap)
     KConfigGroup ldapSeach = ldapConfig->group(QLatin1String("LDAPSearch"));
     ldapSeach.writeEntry(QLatin1String("SearchType"), 0);
   }
-  const int port = ldap.ldapUrl.port();
+  const int port = ldap.port;
   if(port!=-1)
     grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected),port);
   grp.writeEntry(QString::fromLatin1("SelectedHost%1").arg(numberOfLdapSelected),ldap.ldapUrl.host());

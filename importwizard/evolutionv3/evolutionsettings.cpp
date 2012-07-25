@@ -119,12 +119,12 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
   //Ldap server
   if(domElement.attribute(QLatin1String("base_uri")) == QLatin1String("ldap://")) {
     for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
-      const QString tag = e.tagName();
       const QString name = e.attribute( QLatin1String( "name" ) );
       qDebug()<<" name :"<<name;
       const QString relative_uri = e.attribute( QLatin1String( "relative_uri" ) );
       qDebug()<<" relative_uri"<<relative_uri;
 
+      ldapStruct ldap; //TODO
       QDomElement propertiesElement = e.firstChildElement();
       if(!propertiesElement.isNull()) {
         for ( QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement() ) {
@@ -150,6 +150,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
             qDebug()<<" tag unknown :"<<propertyTag;
           }
         }
+        mergeLdap(ldap);
       }
     }
   }
