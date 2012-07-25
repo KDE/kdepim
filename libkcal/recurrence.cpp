@@ -730,6 +730,9 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
       if ( (*rr)->recursOn( date ) )
         return times;
     }
+    // We are Floating and not excepted so we are done
+    times << QTime();
+    return times;
   }
 
   if ( startDate() == date ) times << startDateTime().time();
