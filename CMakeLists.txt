@@ -108,7 +108,7 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION rc2)
+set(KDEPIM_DEV_VERSION )
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
