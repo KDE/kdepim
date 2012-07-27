@@ -1,4 +1,13 @@
 
+Friday 27 July 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4851: Recurring multi day event not displayed in month view (rt#10129)
+
+
+
 Friday 20 July 2012
 
 Problems addressed
