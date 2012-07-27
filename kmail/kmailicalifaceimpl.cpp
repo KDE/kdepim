@@ -1407,7 +1407,11 @@ KMMessage *KMailICalIfaceImpl::findMessageBySerNum( Q_UINT32 serNum, KMFolder* f
                       << "Expected: " << subject << endl;
       sleep( 1 ); // Maybe it is caused by a weird threading situation
       message = aFolder->getMsg( index );
-      if ( message == NULL || message->subject() == subject ) {
+      if ( !message ) {
+        kdWarning(5006) << "Second getMsg returned 0" << endl;
+        return 0;
+      }
+      if ( message->subject() != subject ) {
         kdWarning(5006) << "Still got the wrong message: " << message->subject() << endl;
         KMFolderCachedImap * cimapFolder = dynamic_cast<KMFolderCachedImap *> ( aFolder->storage() );
         if ( cimapFolder != NULL ) {
