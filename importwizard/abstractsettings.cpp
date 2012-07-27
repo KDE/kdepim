@@ -99,6 +99,12 @@ void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bo
   addKmailConfig(groupName,QLatin1String("CheckOnStartup"), loginAtStartup);
 }
 
+void AbstractSettings::addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value )
+{
+  KConfigGroup group = mKmailConfig->group(groupName);
+  group.writeEntry(QLatin1String("name"),name);
+  group.writeEntry(QLatin1String("value"),value);
+}
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
 {

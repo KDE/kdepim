@@ -88,6 +88,8 @@ protected:
   void addKmailConfig( const QString& groupName, const QString& key, bool value);
   void addKmailConfig( const QString& groupName, const QString& key, int value);
 
+  void addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value );
+
   void addKNodeConfig(const QString& groupName, const QString& key, bool value);
   void addAkregatorConfig(const QString& groupName, const QString& key, bool value);
 
