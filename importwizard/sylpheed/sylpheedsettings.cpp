@@ -92,8 +92,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
     for (QMapIterator<QString, QString> it(header);  it.hasNext();  )
     {
         it.next();
-        addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("name"), (it).key());
-        addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("value"), (it).value());
+        addComposerHeaderGroup(QString::fromLatin1("Mime #%1").arg(currentHeader), (it).key(), (it).value());
         ++currentHeader;
     }
   }
