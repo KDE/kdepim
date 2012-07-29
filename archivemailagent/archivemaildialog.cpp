@@ -239,11 +239,10 @@ void ArchiveMailWidget::slotAddItem()
     if(verifyExistingArchive(info)) {
       KMessageBox::error(this,i18n("Cannot add a second archive for this folder. Modify the existing one instead."),i18n("Add Archive Mail"));
       delete info;
-      delete dialog;
-      return;
+    } else {
+      createOrUpdateItem(info);
+      updateButtons();
     }
-    createOrUpdateItem(info);
-    updateButtons();
   }
   delete dialog;
 }
