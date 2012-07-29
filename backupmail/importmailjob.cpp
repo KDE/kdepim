@@ -1007,3 +1007,14 @@ Akonadi::Collection::Id ImportMailJob::convertPathToId(const QString& path)
   }
   return id;
 }
+
+
+void ImportMailJob::mergeLdapConfig()
+{
+//TODO
+}
+
+void ImportMailJob::mergeKmailSnippetConfig()
+{
+    //TODO
+}
