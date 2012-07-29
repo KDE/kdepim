@@ -53,8 +53,8 @@ private:
   void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);
 
   void copyToFile(const KArchiveFile * file, const QString& dest, const QString&filename,const QString& prefix);
-  void mergeLdapConfig();
-  void mergeKmailSnippetConfig();
+  void mergeLdapConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
+  void mergeKmailSnippetConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
 
   Akonadi::Collection::Id convertPathToId(const QString& path);
 
