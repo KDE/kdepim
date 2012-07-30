@@ -308,7 +308,7 @@ void FilterLogDialog::slotUser2()
   {
     const QString fileName = fdlg->selectedFile();
 
-    if ( !FilterLog::instance()->saveToFile( fileName ) )
+    if ( !fileName.isEmpty() && !FilterLog::instance()->saveToFile( fileName ) )
     {
       KMessageBox::error( this,
                           i18n( "Could not write the file %1:\n"
