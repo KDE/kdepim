@@ -80,7 +80,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      *
      * This is used to debug problems with filters.
      */
-    void showFilterLogDialog();
+    void showFilterLogDialog(qlonglong windowId);
 
     /// Apply filters interface
 

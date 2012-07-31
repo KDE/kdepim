@@ -132,9 +132,9 @@ QString FilterManager::createUniqueFilterName( const QString &name ) const
   return d->mMailFilterAgentInterface->createUniqueName( name );
 }
 
-void FilterManager::showFilterLogDialog()
+void FilterManager::showFilterLogDialog(qlonglong windowId)
 {
-  d->mMailFilterAgentInterface->showFilterLogDialog();
+  d->mMailFilterAgentInterface->showFilterLogDialog(windowId);
 }
 
 void FilterManager::filter( const Akonadi::Item &item, const QString &identifier ) const

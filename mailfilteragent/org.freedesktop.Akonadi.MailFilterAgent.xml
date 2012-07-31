@@ -27,7 +27,9 @@
       <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="const QVector&lt;qlonglong&gt; &amp;"/>
     </method>
     <method name="reload"/>
-    <method name="showFilterLogDialog"/>
+    <method name="showFilterLogDialog">
+     <arg direction="in" type="x" name="windowId" />
+    </method>
     <signal name="filtersChanged"/>
   </interface>
 </node>

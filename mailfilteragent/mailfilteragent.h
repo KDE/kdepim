@@ -50,7 +50,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     void reload();
 
-    void showFilterLogDialog();
+    void showFilterLogDialog(qlonglong windowId = 0);
 
   private Q_SLOTS:
     void initializeCollections();

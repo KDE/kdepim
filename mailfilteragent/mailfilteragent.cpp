@@ -37,6 +37,7 @@
 #include <KLocalizedString>
 #include <KMime/Message>
 #include <KNotification>
+#include <KWindowSystem>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -214,14 +215,17 @@ void MailFilterAgent::reload()
   m_filterManager->readConfig();
 }
 
-void MailFilterAgent::showFilterLogDialog()
+void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
 {
-  if ( !m_filterLogDialog )
+  if ( !m_filterLogDialog ) {
     m_filterLogDialog = new FilterLogDialog( 0 );
-
+    //KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
+  }
+KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
   m_filterLogDialog->show();
   m_filterLogDialog->raise();
   m_filterLogDialog->activateWindow();
+  m_filterLogDialog->setModal(false);
 }
 
 AKONADI_AGENT_MAIN( MailFilterAgent )
