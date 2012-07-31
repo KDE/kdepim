@@ -838,26 +838,31 @@ void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration
   copyToFile(archiveconfiguration,archiveconfigurationrc,filename,prefix);
   KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
 
+  copyArchiveMailAgentConfigGroup(archiveConfig, archiveConfig);
+  archiveConfig->sync();
+}
+
+
+void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination)
+{
   //adapt id
   const QString archiveGroupPattern = QLatin1String( "ArchiveMailCollection " );
-  const QStringList archiveList = archiveConfig->groupList().filter( archiveGroupPattern );
+  const QStringList archiveList = archiveConfigOrigin->groupList().filter( archiveGroupPattern );
   Q_FOREACH(const QString& str, archiveList) {
     const QString path = str.right(str.length()-archiveGroupPattern.length());
     if(!path.isEmpty())
     {
-      KConfigGroup oldGroup = archiveConfig->group(str);
+      KConfigGroup oldGroup = archiveConfigOrigin->group(str);
       const Akonadi::Collection::Id id = convertPathToId(path);
       if(id!=-1) {
-        KConfigGroup newGroup( archiveConfig, archiveGroupPattern + QString::number(id));
+        KConfigGroup newGroup( archiveConfigDestination, archiveGroupPattern + QString::number(id));
         oldGroup.copyTo( &newGroup );
         newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
       }
       oldGroup.deleteGroup();
     }
   }
-  archiveConfig->sync();
 }
-
 
 
 void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
@@ -1085,7 +1090,6 @@ void ImportMailJob::mergeKmailSnippetConfig(const KArchiveFile * archivefile, co
 
 void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
 {
-  //TODO
   QDir dir(mTempDirName);
   dir.mkdir(prefix);
 
@@ -1095,4 +1099,7 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
   KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
 
   KSharedConfig::Ptr importingArchiveMailAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+
+  copyArchiveMailAgentConfigGroup(importingArchiveMailAgentConfig, existingConfig);
+  existingConfig->sync();
 }
