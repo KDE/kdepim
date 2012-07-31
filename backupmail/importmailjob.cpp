@@ -858,6 +858,10 @@ void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveCo
         KConfigGroup newGroup( archiveConfigDestination, archiveGroupPattern + QString::number(id));
         oldGroup.copyTo( &newGroup );
         newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
+        KUrl path = newGroup.readEntry("storePath",KUrl());
+        if(!QDir(path.path()).exists()) {
+          newGroup.writeEntry(QLatin1String("storePath"),KUrl(QDir::homePath()));
+        }
       }
       oldGroup.deleteGroup();
     }
