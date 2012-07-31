@@ -269,9 +269,13 @@ void SnippetsManager::Private::editSnippetGroup()
 
   SnippetDialog dlg( mActionCollection, true, mParent );
   dlg.setWindowTitle( i18nc( "@title:window", "Edit Group" ) );
-  dlg.setName( groupIndex.data( SnippetsModel::NameRole ).toString() );
+  const QString oldGroupName = groupIndex.data( SnippetsModel::NameRole ).toString();
+  dlg.setName( oldGroupName );
 
   if ( !dlg.exec() ) {
+    return;
+  }
+  if(oldGroupName == dlg.name()) {
     return;
   }
 
