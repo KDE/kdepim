@@ -1081,3 +1081,18 @@ void ImportMailJob::mergeKmailSnippetConfig(const KArchiveFile * archivefile, co
 
   KSharedConfig::Ptr importingKMailSnipperConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
 }
+
+
+void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+{
+  //TODO
+  QDir dir(mTempDirName);
+  dir.mkdir(prefix);
+
+  const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+  archivefile->copyTo(copyToDirName);
+
+  KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
+
+  KSharedConfig::Ptr importingArchiveMailAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+}
