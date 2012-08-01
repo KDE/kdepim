@@ -677,7 +677,6 @@ void ImportMailJob::restoreConfig()
     const KArchiveFile* kmailrc = static_cast<const KArchiveFile*>(kmail2rcentry);
     const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
     if(QFile(kmail2rc).exists()) {
-      //TODO 4.10 allow to merge config.
       if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
         importKmailConfig(kmailrc,kmail2rc,kmailStr,BackupMailUtil::configsPath());
       }
@@ -846,6 +845,10 @@ void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration
         KConfigGroup newGroup( archiveConfig, archiveGroupPattern + QString::number(id));
         oldGroup.copyTo( &newGroup );
         newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
+        KUrl path = newGroup.readEntry("storePath",KUrl());
+        if(!QDir(path.path()).exists()) {
+          newGroup.writeEntry(QLatin1String("storePath"),KUrl(QDir::homePath()));
+        }
       }
       oldGroup.deleteGroup();
     }

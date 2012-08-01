@@ -49,6 +49,8 @@ class KSIEVEUI_EXPORT Vacation : public QObject
 
     bool isUsable() const { return !mUrl.isEmpty(); }
 
+    void showVacationDialog();
+
     static QString defaultMessageText();
     static int defaultNotificationInterval();
     static QStringList defaultMailAliases();

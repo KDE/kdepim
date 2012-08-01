@@ -708,4 +708,13 @@ void Vacation::handlePutResult( KManageSieve::SieveJob *, bool success, bool act
   emit scriptActive( activated );
 }
 
+void Vacation::showVacationDialog()
+{
+  if(mDialog) {
+    mDialog->show();
+    mDialog->raise();
+    mDialog->activateWindow();
+  }
+}
+
 #include "vacation.moc"

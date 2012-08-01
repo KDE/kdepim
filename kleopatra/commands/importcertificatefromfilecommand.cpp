@@ -158,13 +158,7 @@ static QStringList get_file_name( QWidget * parent ) {
         const KConfigGroup group( config, "Import Certificate" );
         previousDir = group.readPathEntry( "last-open-file-directory", QDir::homePath() );
     }
-    // ### use Kleo::FileDialog?
-#ifndef QT_NO_FILEDIALOG
-    const QStringList files = QFileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
-#else
-    QStringList files;
-    files << Kleo::FileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
-#endif
+    const QStringList files = Kleo::FileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
     if ( !files.empty() )
         if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
             KConfigGroup group( config, "Import Certificate" );
