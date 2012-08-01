@@ -647,9 +647,11 @@ void ImportMailJob::restoreConfig()
     const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
     const QString archiveconfigurationrc = KStandardDirs::locateLocal( "config",  archiveconfigurationrcStr);
     if(QFile(archiveconfigurationrc).exists()) {
-      //TODO 4.10 allow to merge config.
-      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",archiveconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
+      const int result = KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?",labldaprcStr),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+      if( result == KMessageBox::Yes) {
         importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+      } else if(result == KMessageBox::No) {
+        mergeArchiveMailAgentConfig(archiveconfiguration,archiveconfigurationrcStr,BackupMailUtil::configsPath());
       }
     } else {
       importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
