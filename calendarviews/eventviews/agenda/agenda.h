@@ -37,6 +37,9 @@
 
 namespace CalendarSupport {
   class Calendar;
+}
+
+namespace Akonadi {
   class IncidenceChanger;
 }
 
@@ -159,7 +162,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setCalendar( CalendarSupport::Calendar *cal );
 
-    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     QList<AgendaItem::QPtr> agendaItems( const Akonadi::Item &item ) const;
 
@@ -206,8 +209,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void showNewEventPopupSignal();
 
     void incidenceSelected( const Akonadi::Item &, const QDate & );
-    void startMultiModify( const QString & );
-    void endMultiModify();
 
     void lowerYChanged( int );
     void upperYChanged( int );

@@ -226,7 +226,7 @@ void EventView::dayPassed( const QDate & )
   updateView();
 }
 
-void EventView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void EventView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   Q_D( EventView );
   d->mChanger = changer;
@@ -450,7 +450,7 @@ bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
   return false;
 }
 
-CalendarSupport::IncidenceChanger *EventView::changer() const
+Akonadi::IncidenceChanger *EventView::changer() const
 {
   Q_D( const EventView );
   return d->mChanger;

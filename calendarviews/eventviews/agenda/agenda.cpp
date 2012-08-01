@@ -33,7 +33,7 @@
 #include "prefs.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/incidencechanger.h>
+#include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Incidence>
@@ -242,7 +242,7 @@ class Agenda::Private
 
     // We need the calendar for drag'n'drop and for paint the ResourceColor
     CalendarSupport::Calendar *mCalendar;
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
 
     // size of border, where mouse action will resize the AgendaItem
     int mResizeBorderWidth;
@@ -1151,12 +1151,10 @@ void Agenda::endItemAction()
   d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
                                       d->mStartCell.y() == d->mEndCell.y() );
 
-  uint atomicOperationId = 0;
   bool addIncidence = false;
   if ( d->mItemMoved ) {
     bool modify = false;
     if ( incidence->recurs() ) {
-      atomicOperationId = d->mChanger->startAtomicOperation();
       const int res = d->mAgendaView->showMoveRecurDialog(
         CalendarSupport::incidence( d->mActionItem->incidence() ), d->mActionItem->itemDate() );
       switch ( res ) {
@@ -1168,13 +1166,13 @@ void Agenda::endItemAction()
       { // Just this occurrence
         // Dissociate this occurrence:
         // create clone of event, set relation to old event, set cloned event
-        // for mActionItem, add exception date to old event, changeIncidence
+        // for mActionItem, add exception date to old event, modifyIncidence
         // for the old event, remove the recurrence from the new copy and then
         // just go on with the newly adjusted mActionItem and let the usual
         // code take care of the new time!
         modify = true;
         multiModify = true;
-        emit startMultiModify( i18n( "Dissociate event from recurrence" ) );
+        d->mChanger->startAtomicOperation( i18n( "Dissociate event from recurrence" ) );
         KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
         KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
           inc, d->mActionItem->itemDate(), d->preferences()->timeSpec() ) );
@@ -1182,12 +1180,7 @@ void Agenda::endItemAction()
           // don't recreate items, they already have the correct position
           d->mAgendaView->enableAgendaUpdate( false );
 
-          d->mChanger->changeIncidence(
-            oldIncSaved,
-            inc,
-            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY,
-            this,
-            atomicOperationId );
+          d->mChanger->modifyIncidence( inc, oldIncSaved, this );
 
           Akonadi::Item item;
           item.setPayload( newInc );
@@ -1210,13 +1203,13 @@ void Agenda::endItemAction()
       { // All future occurrences
         // Dissociate this occurrence:
         // create clone of event, set relation to old event, set cloned event
-        // for mActionItem, add recurrence end date to old event, changeIncidence
+        // for mActionItem, add recurrence end date to old event, modifyIncidence
         // for the old event, adjust the recurrence for the new copy and then just
         // go on with the newly adjusted mActionItem and let the usual code take
         // care of the new time!
         modify = true;
         multiModify = true;
-        emit startMultiModify( i18n( "Split future recurrences" ) );
+        d->mChanger->startAtomicOperation( i18n( "Split future recurrences" ) );
         KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
         KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
           inc, d->mActionItem->itemDate(), d->preferences()->timeSpec(), false ) );
@@ -1231,11 +1224,7 @@ void Agenda::endItemAction()
           addIncidence = true;
 
           d->mAgendaView->enableAgendaUpdate( true );
-          d->mChanger->changeIncidence(
-            oldIncSaved,
-            inc,
-            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE,
-            this );
+          d->mChanger->modifyIncidence( inc, oldIncSaved, this );
         } else {
           KMessageBox::sorry(
             this,
@@ -1282,8 +1271,7 @@ void Agenda::endItemAction()
       // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
-      d->mAgendaView->updateEventDates( modif, atomicOperationId, addIncidence,
-                                        inc.parentCollection().id() );
+      d->mAgendaView->updateEventDates( modif, addIncidence, inc.parentCollection().id() );
 
       if ( addIncidence ) {
         // delete the one we dragged, there's a new one being added async, due to dissociation.
@@ -1292,8 +1280,7 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      d->mAgendaView->updateEventDates( placeItem, atomicOperationId, addIncidence,
-                                        inc.parentCollection().id() );
+      d->mAgendaView->updateEventDates( placeItem, addIncidence, inc.parentCollection().id() );
     }
   }
 
@@ -1301,7 +1288,7 @@ void Agenda::endItemAction()
   d->mItemMoved = false;
 
   if ( multiModify ) {
-    emit endMultiModify();
+    d->mChanger->endAtomicOperation();
   }
 }
 
@@ -2238,7 +2225,7 @@ void Agenda::setCalendar( CalendarSupport::Calendar *cal )
   d->mCalendar = cal;
 }
 
-void Agenda::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void Agenda::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   d->mChanger = changer;
 }

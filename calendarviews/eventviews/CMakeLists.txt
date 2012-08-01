@@ -85,6 +85,7 @@ target_link_libraries(eventviews
   akonadi_next
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
+  akonadi-calendar
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

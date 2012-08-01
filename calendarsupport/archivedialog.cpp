@@ -27,6 +27,8 @@
 #include "eventarchiver.h"
 #include "kcalprefs.h"
 
+#include <akonadi/calendar/incidencechanger.h>
+
 #include <KComboBox>
 #include <KDateComboBox>
 #include <KFileDialog>
@@ -53,7 +55,7 @@
 using namespace CalendarSupport;
 
 ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
-                              CalendarSupport::IncidenceChanger *changer,
+                              Akonadi::IncidenceChanger *changer,
                               QWidget *parent )
   : KDialog (parent)
 {

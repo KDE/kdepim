@@ -53,8 +53,11 @@ namespace KHolidays {
 namespace CalendarSupport {
   class Calendar;
   class CollectionSelection;
-  class IncidenceChanger;
   class KCalPrefs;
+}
+
+namespace Akonadi {
+  class IncidenceChanger;
 }
 
 class KCheckableProxyModel;
@@ -326,7 +329,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /**
       Assign a new incidence change helper object.
      */
-    virtual void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     /**
       Write all unsaved data back to calendar store.
@@ -480,7 +483,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
   protected:
     bool makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const;
-    CalendarSupport::IncidenceChanger *changer() const;
+    Akonadi::IncidenceChanger *changer() const;
 
    /**
      * reimplement to read view-specific settings.

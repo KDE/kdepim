@@ -74,7 +74,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     void updateView();
     void updateConfig();
 
-    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
   protected:
     void resizeEvent( QResizeEvent *event );

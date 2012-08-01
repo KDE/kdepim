@@ -49,6 +49,7 @@
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <akonadi/calendar/incidencechanger.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemfetchjob.h>
@@ -109,7 +110,7 @@ void MainView::doDelayedInit()
   mCalendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(),
                                              KSystemTimeZones::local() );
 
-  mChanger = new CalendarSupport::IncidenceChanger( mCalendar, this );
+  mChanger = new Akonadi::IncidenceChanger( this );
 
   CalendarSupport::FreeBusyManager::self()->setCalendar( mCalendar );
 

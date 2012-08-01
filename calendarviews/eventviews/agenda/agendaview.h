@@ -148,7 +148,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     /** Update event belonging to agenda item
         If the incidence is multi-day, item is the first one
     */
-    void updateEventDates( AgendaItem *item, uint atomicOperationId, bool addIncidence,
+    void updateEventDates( AgendaItem *item, bool addIncidence,
                            Akonadi::Collection::Id collectionId );
 
     QVector<bool> busyDayMask() const;
@@ -177,7 +177,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void slotIncidencesDropped( const QList<KUrl>& incidences, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     void zoomInHorizontally( const QDate &date=QDate() );
     void zoomOutHorizontally( const QDate &date=QDate() );

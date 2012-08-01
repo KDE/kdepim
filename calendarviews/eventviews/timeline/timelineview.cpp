@@ -38,7 +38,7 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/incidencechanger.h>
+#include <akonadi/calendar/incidencechanger.h>
 
 #include <QApplication>
 #include <QPainter>
@@ -426,14 +426,14 @@ void TimelineView::updateView()
 void TimelineView::changeIncidenceDisplay( const Akonadi::Item &incidence, int mode )
 {
   switch ( mode ) {
-  case CalendarSupport::IncidenceChanger::INCIDENCEADDED:
+  case Akonadi::IncidenceChanger::ChangeTypeCreate:
     d->insertIncidence( incidence );
     break;
-  case CalendarSupport::IncidenceChanger::INCIDENCEEDITED:
+  case Akonadi::IncidenceChanger::ChangeTypeModify:
     d->removeIncidence( incidence );
     d->insertIncidence( incidence );
     break;
-  case CalendarSupport::IncidenceChanger::INCIDENCEDELETED:
+  case Akonadi::IncidenceChanger::ChangeTypeDelete:
     d->removeIncidence( incidence );
     break;
   default:

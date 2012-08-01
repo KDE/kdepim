@@ -378,7 +378,7 @@ void MonthScene::resetAll()
   mClickedItem = 0;
 }
 
-CalendarSupport::IncidenceChanger *MonthScene::incidenceChanger() const
+Akonadi::IncidenceChanger *MonthScene::incidenceChanger() const
 {
   return mMonthView->changer();
 }

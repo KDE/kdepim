@@ -31,7 +31,7 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/incidencechanger.h>
+#include <akonadi/calendar/incidencechanger.h>
 
 #include <QStandardItemModel>
 #include <QResizeEvent>

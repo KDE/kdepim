@@ -33,11 +33,11 @@
 
 namespace Akonadi {
 class StandardCalendarActionManager;
+class IncidenceChanger;
 }
 
 namespace CalendarSupport {
 class Calendar;
-class IncidenceChanger;
 }
 
 namespace KPIMIdentities {
@@ -128,7 +128,7 @@ class MainView : public KDeclarativeMainView
     CalendarInterface* m_calendarIface;
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
     KPIMIdentities::IdentityManager* m_identityManager;
-    CalendarSupport::IncidenceChanger *m_changer;
+    Akonadi::IncidenceChanger *m_changer;
     static EventViews::PrefsPtr m_calendarPrefs;
     Akonadi::StandardCalendarActionManager *mActionManager;
 };

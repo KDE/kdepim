@@ -35,7 +35,7 @@
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/incidencechanger.h>
+#include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
@@ -1238,8 +1238,8 @@ void AgendaView::updateTimeBarWidth()
   d->mDummyAllDayLeft->setFixedWidth( 0 );
 }
 
-void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId,
-                                   bool addIncidence, Akonadi::Collection::Id collectionId )
+void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
+                                   Akonadi::Collection::Id collectionId )
 {
   kDebug() << item->text()
            << "; item->cellXLeft(): " << item->cellXLeft()
@@ -1381,11 +1381,10 @@ void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId,
   if ( addIncidence ) {
     Akonadi::Collection collection = calendar()->collection( collectionId );
     kDebug() << "Collection isValid() = " << collection.isValid();
-    result = changer()->addIncidence( incidence, collection, this, atomicOperationId );
+    result = changer()->createIncidence( incidence, collection, this );
   } else {
-    result = changer()->changeIncidence( oldIncidence, aitem,
-                                         CalendarSupport::IncidenceChanger::DATE_MODIFIED,
-                                         this, atomicOperationId );
+    //TODO_SERGIO: check all changer's return values
+    result = changer()->modifyIncidence( aitem, oldIncidence, this );
   }
 
   // Update the view correctly if an agenda item move was aborted by
@@ -1737,11 +1736,7 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
-        changer()->changeIncidence(
-          oldTodo,
-          existingTodoItem,
-          IncidenceChanger::DATE_MODIFIED,
-          this );
+        changer()->modifyIncidence( existingTodoItem, oldTodo, this );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );
@@ -1786,29 +1781,19 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
       newIncidence->setAllDay( allDay );
       newIncidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
 
-      changer()->changeIncidence( oldIncidence, existingItem,
-                                  CalendarSupport::IncidenceChanger::DATE_MODIFIED, this );
+      changer()->modifyIncidence( existingItem, oldIncidence, this );
     } else { // Create a new one
       // The drop came from another application create a new incidence
       incidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
       incidence->setAllDay( allDay );
       incidence->setUid( KCalCore::CalFormat::createUniqueId() );
       Akonadi::Collection collection( collectionId() );
-      int dialogCode = 0;
-      const bool added = collection.isValid() ?
-                                changer()->addIncidence( incidence, collection, this )            :
-                                changer()->addIncidence( incidence, this, collection, dialogCode );
+      const bool added = 1 != changer()->createIncidence( incidence, collection, this );
 
       if ( added ) {
         // TODO: make async
         if ( existingItem.isValid() ) { // Dragged from one agenda to another, delete origin
           changer()->deleteIncidence( existingItem );
-        }
-      } else {
-        if ( dialogCode != QDialog::Rejected ) {
-          KMessageBox::sorry( this,
-                              i18n( "Unable to save %1 \"%2\".",
-                              i18n( incidence->typeStr() ), incidence->summary() ) );
         }
       }
     }
@@ -1965,7 +1950,7 @@ void AgendaView::updateEventIndicators()
   updateEventIndicatorBottom( d->mAgenda->visibleContentsYMax() );
 }
 
-void AgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void AgendaView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   EventView::setIncidenceChanger( changer );
   d->mAgenda->setIncidenceChanger( changer );

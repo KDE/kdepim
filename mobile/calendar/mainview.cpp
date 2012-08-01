@@ -43,6 +43,7 @@
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <akonadi/calendar/incidencechanger.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionpropertiesdialog.h>
 #include <akonadi/entitytreemodel.h>
@@ -197,7 +198,7 @@ void MainView::doDelayedInit()
     IncidenceEditorNG::GroupwareIntegration::activate( m_calendar );
   }
 
-  m_changer = new CalendarSupport::IncidenceChanger( m_calendar, this );
+  m_changer = new Akonadi::IncidenceChanger( this );
 
   m_identityManager = new CalendarSupport::IdentityManager;
 

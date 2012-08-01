@@ -68,7 +68,8 @@ kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
 kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 
-target_link_libraries(calendarsupport
+target_link_libraries(
+  calendarsupport
   kdepimdbusinterfaces
   kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
@@ -83,6 +84,7 @@ target_link_libraries(calendarsupport
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
+  akonadi-calendar
 )
 
 set_target_properties(calendarsupport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

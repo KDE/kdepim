@@ -29,7 +29,7 @@
 #include "prefs_base.h" // Ugly, but needed for the Enums
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/incidencechanger.h>
+#include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -420,7 +420,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
     return;
   }
 
-  CalendarSupport::IncidenceChanger *changer = monthScene()->incidenceChanger();
+  Akonadi::IncidenceChanger *changer = monthScene()->incidenceChanger();
   if ( !changer ) {
     KMessageBox::sorry( parentWidget(), i18n( "Unable to save %1 \"%2\".",
                         i18n( mIncidence->typeStr() ), mIncidence->summary() ) );
@@ -447,11 +447,8 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
         if ( newInc ) {
            //TODO check return values
-          changer->changeIncidence(
-            oldIncSaved, item,
-            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, 0 );
-
-          changer->addIncidence( newInc, item.parentCollection(), parentWidget() );
+          changer->modifyIncidence( item, oldIncSaved );
+          changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
             parentWidget(),
@@ -471,11 +468,10 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
         if ( newInc ) {
            //TODO check return values
-          changer->changeIncidence(
-            oldIncSaved, item,
-            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, 0 );
+           //TODO_SERGIO: test all IncidenceChanger code
+          changer->modifyIncidence( item, oldIncSaved );
 
-          changer->addIncidence( newInc, item.parentCollection(), parentWidget() );
+          changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
             parentWidget(),
@@ -506,10 +502,8 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
       todo->setDtDue( todo->dtDue().addDays( startOffset ) );
     }
 
-    changer->changeIncidence( oldInc, item,
-                              CalendarSupport::IncidenceChanger::DATE_MODIFIED, 0 );
+    changer->modifyIncidence( item, oldInc );
   }
-
 }
 
 void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const QDate &date )

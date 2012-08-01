@@ -79,7 +79,7 @@ class EventViewPrivate
     PrefsPtr mPrefs;
     KCalPrefsPtr mKCalPrefs;
 
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
     EventView::Changes mChanges;
     Akonadi::Collection::Id mCollectionId;
 };

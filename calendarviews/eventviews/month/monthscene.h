@@ -34,7 +34,7 @@
 #include <QGraphicsView>
 #include <QMap>
 
-namespace CalendarSupport {
+namespace Akonadi {
   class IncidenceChanger;
 }
 
@@ -80,7 +80,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     bool initialized() { return mInitialized; }
     void setInitialized( bool i ) { mInitialized = i; }
     void resetAll();
-    CalendarSupport::IncidenceChanger *incidenceChanger() const;
+    Akonadi::IncidenceChanger *incidenceChanger() const;
 
     int totalHeight();
 

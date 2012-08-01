@@ -26,9 +26,10 @@
 
 #include "calendar.h"
 #include "calendaradaptor.h"
-#include "incidencechanger.h"
 #include "kcalprefs.h"
 #include "utils.h"
+
+#include <akonadi/calendar/incidencechanger.h>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/FileStorage>
@@ -57,14 +58,14 @@ EventArchiver::~EventArchiver()
 }
 
 void EventArchiver::runOnce( CalendarSupport::Calendar *calendar,
-                             CalendarSupport::IncidenceChanger *changer,
+                             Akonadi::IncidenceChanger *changer,
                              const QDate &limitDate, QWidget *widget )
 {
   run( calendar, changer, limitDate, widget, true, true );
 }
 
 void EventArchiver::runAuto( CalendarSupport::Calendar *calendar,
-                             CalendarSupport::IncidenceChanger *changer,
+                             Akonadi::IncidenceChanger *changer,
                              QWidget *widget, bool withGUI )
 {
   QDate limitDate( QDate::currentDate() );
@@ -86,7 +87,7 @@ void EventArchiver::runAuto( CalendarSupport::Calendar *calendar,
 }
 
 void EventArchiver::run( CalendarSupport::Calendar *calendar,
-                         CalendarSupport::IncidenceChanger *changer,
+                         Akonadi::IncidenceChanger *changer,
                          const QDate &limitDate, QWidget *widget,
                          bool withGUI, bool errorIfNone )
 {
@@ -142,7 +143,7 @@ void EventArchiver::run( CalendarSupport::Calendar *calendar,
   }
 }
 
-void EventArchiver::deleteIncidences( CalendarSupport::IncidenceChanger *changer,
+void EventArchiver::deleteIncidences( Akonadi::IncidenceChanger *changer,
                                       const QDate &limitDate, QWidget *widget,
                                       const Akonadi::Item::List &incidences, bool withGUI )
 {
@@ -167,15 +168,13 @@ void EventArchiver::deleteIncidences( CalendarSupport::IncidenceChanger *changer
   }
 
   for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
-    if ( changer->isNotDeleted( ( *it ).id() ) ) {
-      changer->deleteIncidence( *it, 0, widget );
-    }
-  }
+    changer->deleteIncidence( *it, widget );
+  } // TODO: emit only after hearing back from incidence changer
   emit eventsDeleted();
 }
 
 void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar,
-                                       CalendarSupport::IncidenceChanger *changer,
+                                       Akonadi::IncidenceChanger *changer,
                                        const QDate &limitDate, QWidget *widget,
                                        const Akonadi::Item::List &incidences, bool withGUI )
 {
@@ -289,13 +288,13 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar,
   QFile::remove( tmpFileName );
 
   // We don't want it to ask to send invitations for each incidence.
-  const uint atomicOperationId = changer->startAtomicOperation();
+  changer->startAtomicOperation( i18n( "Archiving events" ) );
 
   // Delete archived events from calendar
   foreach ( const Akonadi::Item &item, incidences ) {
-    changer->deleteIncidence( item, atomicOperationId, widget );
-  }
-  changer->endAtomicOperation( atomicOperationId );
+    changer->deleteIncidence( item, widget );
+  } // TODO: emit only after hearing back from incidence changer
+  changer->endAtomicOperation();
 
   emit eventsDeleted();
 }

@@ -31,7 +31,7 @@
 #include "helper.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/incidencechanger.h>
+#include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -463,14 +463,14 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
   }
 
   switch( action ) {
-  case CalendarSupport::IncidenceChanger::INCIDENCEADDED:
+  case Akonadi::IncidenceChanger::ChangeTypeCreate:
   {
     if ( date >= f && date <= l ) {
       d->addIncidence( calendar(), aitem, date );
     }
     break;
   }
-  case CalendarSupport::IncidenceChanger::INCIDENCEEDITED:
+  case Akonadi::IncidenceChanger::ChangeTypeModify:
   {
     item = d->getItemForIncidence( aitem );
     if ( item ) {
@@ -483,7 +483,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
     }
     break;
   }
-  case CalendarSupport::IncidenceChanger::INCIDENCEDELETED:
+  case Akonadi::IncidenceChanger::ChangeTypeDelete:
   {
     item = d->getItemForIncidence( aitem );
     delete item;

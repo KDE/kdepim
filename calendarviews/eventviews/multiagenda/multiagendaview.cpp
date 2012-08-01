@@ -534,7 +534,7 @@ void MultiAgendaView::Private::resizeScrollView( const QSize &size )
   mTopBox->resize( widgetWidth, height );
 }
 
-void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void MultiAgendaView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   EventView::setIncidenceChanger( changer );
   foreach ( AgendaView *agenda, d->mAgendaViews ) {

@@ -24,7 +24,6 @@
 #define CALENDARSUPPORT_ARCHIVEDIALOG_H
 
 #include "calendarsupport_export.h"
-#include "incidencechanger.h"
 
 #include <KDialog>
 
@@ -37,7 +36,7 @@ class QCheckBox;
 class QLabel;
 class QRadioButton;
 
-namespace KOrg {
+namespace Akonadi {
   class IncidenceChanger;
 }
 
@@ -50,8 +49,8 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
   Q_OBJECT
   public:
     explicit ArchiveDialog( CalendarSupport::Calendar *calendar,
-                            CalendarSupport::IncidenceChanger *changer, QWidget *parent=0 );
-    virtual ~ArchiveDialog();
+                            Akonadi::IncidenceChanger *changer, QWidget *parent=0 );
+    ~ArchiveDialog();
 
   signals:
     // connected by KODialogManager to CalendarView
@@ -74,7 +73,7 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
     KComboBox *mExpiryUnitsComboBox;
     QCheckBox *mEvents;
     QCheckBox *mTodos;
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
     CalendarSupport::Calendar *mCalendar;
 };
 

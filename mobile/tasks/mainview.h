@@ -35,12 +35,12 @@ class ConfigWidget;
 
 namespace Akonadi {
 class StandardCalendarActionManager;
+class IncidenceChanger;
 }
 
 namespace CalendarSupport {
 class Calendar;
 class CalendarUtils;
-class IncidenceChanger;
 }
 
 class MainView : public KDeclarativeMainView
@@ -93,7 +93,7 @@ class MainView : public KDeclarativeMainView
     TasksActionManager *mTasksActionManager;
     EventViews::PrefsPtr mCalendarPrefs;
     CalendarSupport::Calendar *mCalendar;
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
 };
 
 #endif // MAINVIEW_H
