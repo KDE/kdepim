@@ -219,9 +219,8 @@ void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
 {
   if ( !m_filterLogDialog ) {
     m_filterLogDialog = new FilterLogDialog( 0 );
-    //KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
   }
-KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
+  KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
   m_filterLogDialog->show();
   m_filterLogDialog->raise();
   m_filterLogDialog->activateWindow();
