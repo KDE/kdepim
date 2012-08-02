@@ -55,11 +55,11 @@ public:
 
 KMailMobileApplication::KMailMobileApplication(): KDeclarativeApplication<MainView>()
 {
-};
+}
 
 KMailMobileApplication::KMailMobileApplication( const KCmdLineOptions &applicationOptions ): KDeclarativeApplication<MainView>( applicationOptions )
 {
-};
+}
 
 int KMailMobileApplication::newInstance()
 {
