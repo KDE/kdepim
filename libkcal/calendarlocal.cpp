@@ -318,8 +318,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
             if ( incidence->type() == "Event" ) {
               endOffset = Duration( e->dtStart(), e->dtEnd() );
               endOffsetValid = true;
-            } else if ( incidence->type() == "Todo" &&
-                        t->hasStartDate() && t->hasDueDate() ) {
+            } else if ( incidence->type() == "Todo" ) {
               endOffset = Duration( t->dtStart(), t->dtDue() );
               endOffsetValid = true;
             }
@@ -340,13 +339,8 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
           continue;
         }
 
-        QDateTime baseStart;
-        if ( incidence->type() == "Event" ) {
-          baseStart = e->dtStart();
-        } else if ( incidence->type() == "Todo" ) {
-          baseStart = t->dtDue();
-        }
-        if ( alarmStart.isValid() && from > alarmStart ) {
+        QDateTime baseStart = incidence->dtStart();
+        if ( from > alarmStart ) {
           alarmStart = from;   // don't look earlier than the earliest alarm
           baseStart = (-offset).end( (-endOffset).end( alarmStart ) );
         }
