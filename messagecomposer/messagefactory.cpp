@@ -483,7 +483,7 @@ KMime::Message::Ptr MessageFactory::createResend()
   return msg;
 }
 
-KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int transportId, const QString& fcc )
+KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int transportId, const QString& fcc, int identity )
 {
   if ( !m_origMsg )
     return KMime::Message::Ptr();
@@ -493,10 +493,12 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int tr
   msg->setContent( m_origMsg->encodedContent() );
   msg->parse();
 
-  uint id = 0;
-  QString strId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed() : QString::fromLocal8Bit("");
-  if ( !strId.isEmpty())
-    id = strId.toUInt();
+  uint id = identity;
+  if(id == -1) {
+    QString strId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed() : QString::fromLocal8Bit("");
+    if ( !strId.isEmpty())
+      id = strId.toUInt();
+  }
   const KPIMIdentities::Identity & ident =
     m_identityManager->identityForUoidOrDefault( id );
 

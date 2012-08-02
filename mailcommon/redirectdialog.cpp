@@ -36,6 +36,14 @@
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
+#include <KDE/KPIMIdentities/Identity>
+#include <KDE/KPIMIdentities/IdentityCombo>
+#include <KDE/KPIMIdentities/IdentityManager>
+
+#include <KDE/Mailtransport/Transport>
+#include <KDE/Mailtransport/TransportComboBox>
+#include <KDE/Mailtransport/TransportManager>
+
 
 #include <KIconLoader>
 #include <KLocale>
@@ -69,6 +77,8 @@ class RedirectDialog::Private
 
     QString mResentTo;
     RedirectDialog::SendMode mSendMode;
+    KPIMIdentities::IdentityCombo *mComboboxIdentity;
+    MailTransport::TransportComboBox *mTransportCombobox;
 };
 
 void RedirectDialog::Private::slotUser1()
@@ -148,6 +158,14 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   d->mLabelTo->setBuddy( d->mBtnTo );
   d->mEditTo->setFocus();
 
+  hbox = new KHBox( vbox );
+  new QLabel(i18n("Identity:"),hbox);
+  d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager(),hbox);
+
+  hbox = new KHBox(vbox);
+  new QLabel(i18n("Transport:"),hbox);
+  d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
+
   setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), "mail-send" ) );
   setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), "mail-queue" ) );
   connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
@@ -169,6 +187,16 @@ QString RedirectDialog::to() const
 RedirectDialog::SendMode RedirectDialog::sendMode() const
 {
   return d->mSendMode;
+}
+
+int RedirectDialog::transportId() const
+{
+  return d->mTransportCombobox->currentTransportId();
+}
+
+int RedirectDialog::identity() const
+{
+  return d->mComboboxIdentity->currentIdentity();
 }
 
 void RedirectDialog::accept()
